@@ -22,33 +22,37 @@ function DateTime_Parse($time_stamp)
 }
 /*
 	The function for testing a link is a valid image
-	@param text $path The link to test for.
+	@param text $url The link to test for.
 	Major thanks to MagicTallGuy!
 	http://www.makewebgames.com/member/53425-magictallguy
 */
-function is_image($url)
+function checkRemoteFile($url = null)
 {
 	$url = filter_var($url, FILTER_VALIDATE_URL) ? filter_var($url, FILTER_SANITIZE_URL) : null;
     if(empty($url))
-        return false;	//Bad URL
-	if (@get_headers($url)[0] == 'HTTP/1.1 404 Not Found')
-	{
-		return false;	//URL Does Not Exist
-	}
-	else
-	{
-		return true;	//URL good.
-	}
+        return false;
+	$ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$url);
+    // don't download content
+    curl_setopt($ch, CURLOPT_NOBODY, 1);
+    curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    if(curl_exec($ch)!==FALSE)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
-function is_image2($url) {
+function isImage($url = null) {
     $url = filter_var($url, FILTER_VALIDATE_URL) ? filter_var($url, FILTER_SANITIZE_URL) : null;
     if(empty($url))
         return false;
     $params = ['http' => ['method' => 'HEAD']];
     $ctx = stream_context_create($params);
-    $fp = @fopen($url, 'rb', false, $ctx) or exit;
-	if (!file_exists($fp))
-		return false;	//File doesn't exist?
+    $fp = @checkRemoteFile($url);
     if(!$fp)
         return false;  // Problem with url
     $meta = stream_get_meta_data($fp);
@@ -65,7 +69,7 @@ function is_image2($url) {
             }
     fclose($fp);
     return false;
-}  
+}
 /*
 
 	The function for testing if a player is in the hospital.
@@ -1233,7 +1237,8 @@ function verify_csrf_code($formid, $code)
 function verify_user_password($input, $pass)
 {
 	global $set;
-    if (password_verify($input, $pass)) 
+	$pw=sha1($input);
+    if (password_verify($pw, $pass)) 
 	{
 		return true;
 	} 
@@ -1257,7 +1262,7 @@ function encode_password($password)
 		$options = [
 		'cost' => $set['Password_Effort'],
 		];
-		return password_hash("{$password}", PASSWORD_BCRYPT, $options);
+		return password_hash(sha1($password), PASSWORD_BCRYPT, $options);
 }
 
 /**
