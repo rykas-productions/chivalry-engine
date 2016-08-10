@@ -48,7 +48,6 @@ $userid=$db->fetch_row($uq);
 $DUNQuery=$db->query("SELECT `timestamp` FROM `login_attempts` WHERE `userid` = '{$userid['userid']}' AND `timestamp` > {$Day}");
 $HUNQuery=$db->query("SELECT `timestamp` FROM `login_attempts` WHERE `userid` = '{$userid['userid']}' AND `timestamp` > {$Hour}");
 $QHQuery=$db->query("SELECT `timestamp` FROM `login_attempts` WHERE `userid` = '{$userid['userid']}' AND `timestamp` > {$QuarterHour}");
-echo $db->fetch_single($DQuery);
 if ($db->num_rows($DUNQuery) >= 9)
 {
 	die("<h3>{$set['WebsiteName']} Error</h3>
