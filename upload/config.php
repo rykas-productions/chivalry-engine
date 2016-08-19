@@ -1,11 +1,0 @@
-<?php
-            $_CONFIG = array(
-	'hostname' => 'localhost',
-	'username' => 'pvpwars',
-	'password' => 'pvpwars',
-	'database' => 'cengine',
-	'persistent' => 0,
-	'driver' => 'mysqli',
-	'code' => 'òèV©RÒV]_#ˆ)·_rØ›MGŸ.‹,PŒ\+¡TÞŸf()’HÐèò zƒxëR8fÃ4æ’ì',
-);
-?>
