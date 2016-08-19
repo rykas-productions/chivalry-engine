@@ -581,6 +581,9 @@ EOF;
 	@unlink('./installer_head.php');
     @unlink('./installer_foot.php');
 	@unlink('./password_hash_test_generator.php');
+	$CronsStart=strtotime("midnight tomorrow");
+	$db->query("INSERT INTO `crons` (`file`, `nextUpdate`) VALUES ('crons/minute.php', $CronsStart),
+	('crons/fivemins.php', $CronsStart), ('crons/day.php', $CronsStart), ('crons/hour.php', $CronsStart);");
     $success = !file_exists('./installer.php');
     echo "<span style='color: "
             . ($success ? "green;'>Succeeded" : "red;'>Failed")
@@ -591,9 +594,9 @@ EOF;
         echo "Attempting to lock installer... ";
         @touch('./installer.lock');
         $success2 = file_exists('installer.lock');
-        echo "<span style='color: "
-                . ($success2 ? "green;'>Succeeded" : "red;'>Failed")
+        echo "<span style='color: " . ($success2 ? "green;'>Succeeded" : "red;'>Failed")
                 . "</span><br />";
+		echo "<br />Crons have been set to start tomorrow at midnight.";
         if ($success2)
         {
             echo "<span style='font-weight: bold;'>"
