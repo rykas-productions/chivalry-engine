@@ -262,10 +262,11 @@ $cpage = strip_tags(stripslashes($currentpage));
 			}
 			if ($_POST['ref'])
 			{
-				$db->query(
+				/*$db->query(
 						"UPDATE `users`
 						 SET `crystals` = `crystals` + {$set['ReferalKickback']}
 						 WHERE `userid` = {$_POST['ref']}");
+				*/
 				event_add($_POST['ref'],
 						"For refering $username to the game, you have earnt {$set['ReferalKickback']} valuable crystals!",
 						$c);
