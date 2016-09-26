@@ -26,26 +26,7 @@ function DateTime_Parse($time_stamp)
 	Major thanks to MagicTallGuy!
 	http://www.makewebgames.com/member/53425-magictallguy
 */
-function checkRemoteFile($url = null)
-{
-	$url = filter_var($url, FILTER_VALIDATE_URL) ? filter_var($url, FILTER_SANITIZE_URL) : null;
-    if(empty($url))
-        return false;
-	$ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL,$url);
-    // don't download content
-    curl_setopt($ch, CURLOPT_NOBODY, 1);
-    curl_setopt($ch, CURLOPT_FAILONERROR, 1);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    if(curl_exec($ch)!==FALSE)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
+
 function isImage($url = null) {
     $url = filter_var($url, FILTER_VALIDATE_URL) ? filter_var($url, FILTER_SANITIZE_URL) : null;
     if(empty($url))
