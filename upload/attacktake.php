@@ -20,11 +20,11 @@ if ($db->num_rows($od))
     $db->free_result($od);
     if ($r['hp'] == 1)
     {
-        echo "What a cheater you are.";
+        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ATT_HP']}");
+		exit($h->endpage());
     }
     else
     {
-        echo "You beat {$r['username']} ";
         $qe = $r['level'] * $r['level'] * $r['level'];
         $expgain = mt_rand($qe / 2, $qe);
 		if ($expgain < 0)
@@ -32,16 +32,15 @@ if ($db->num_rows($od))
 			$expgain=$expgain*-1;
 		}
         $expperc = round($expgain / $ir['xp_needed'] * 100);
-        echo "and gained $expperc% ($expgain) EXP!<br />
-You hide your weapons and drop {$r['username']} off outside the hospital entrance. Feeling satisfied, you walk home.";
+		alert('success',"{$lang['ATT_BEAT']} {$r['username']}!","{$lang['ATT_BEAT']} {$r['username']} {$lang['ATT_XP_1']} $expperc% ($expgain) {$lang['GEN_EXP']}. {$lang['ATT_XP_2']} {$r['username']} {$lang['ATT_XP_3']}");
         $hosptime = mt_rand(10, 40);
         $db->query(
                 "UPDATE `users` SET `xp` = `xp` + $expgain WHERE `userid` = $userid");
-        $hospreason = $db->escape("Used for experience by <a href='viewuser.php?u={$userid}'>{$ir['username']}</a>");
+        $hospreason = $db->escape("Used for experience by <a href='profile.php?u={$userid}'>{$ir['username']}</a>");
         $db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$r['userid']}");
 		put_infirmary($r['userid'],$hosptime,$hospreason);
         event_add($r['userid'],
-                "<a href='viewuser.php?u=$userid'>{$ir['username']}</a> attacked you and left you for experience.",
+                "<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you and left you for experience.",
                 $c, 'combat');
         $atklog = $db->escape($_SESSION['attacklog']);
         $db->query(
