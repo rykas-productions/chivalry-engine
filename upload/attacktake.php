@@ -36,7 +36,7 @@ if ($db->num_rows($od))
         $hosptime = mt_rand(10, 40);
         $db->query(
                 "UPDATE `users` SET `xp` = `xp` + $expgain WHERE `userid` = $userid");
-        $hospreason = $db->escape("Used for experience by <a href='profile.php?u={$userid}'>{$ir['username']}</a>");
+        $hospreason = $db->escape("Used for experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
         $db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$r['userid']}");
 		put_infirmary($r['userid'],$hosptime,$hospreason);
         event_add($r['userid'],
