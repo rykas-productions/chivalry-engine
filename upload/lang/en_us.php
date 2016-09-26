@@ -300,6 +300,9 @@ $lang['ATT_BU_TEXT1']="on the ground. You continue to punch and kick them until 
 $lang['ATT_BU_TEXT2']="You run home quickly and quietly, to not gain any unneeded attention.";
 $lang['ATT_L_TEXT1']="You lost to";
 $lang['ATT_L_TEXT2']="and lost";
+$lang['ATT_XP_1']="and gained";
+$lang['ATT_XP_2']="You hide your weapons and drop";
+$lang['ATT_XP_3']="off outside the infirmary. Feeling accomplished, you walk home.";
 
 //Forums
 $lang['FORUM_EMPTY_REPLY']="You are trying to submit an empty reply, which you cannot do! Please make sure you filled in the reply form!";
@@ -357,4 +360,10 @@ $lang['FORUM_EDIT_FORM_SUBMIT']="Edit Post";
 $lang['FORUM_EDIT_SUCCESS']="You have successfully edited a post!";
 $lang['FORUM_MOVE_TOPIC_DFDNE']="You are trying to move a topic to a forum that does not exist. Go back and try again, please.";
 $lang['FORUM_MOVE_TOPIC_DONE']="You have successfully moved the topic.";
+
+//Send Cash Form
+$lang['SCF_POSCASH']="You need to send at least 1 {$lang['INDEX_PRIMCURR']} to use this form.";
+$lang['SCF_UNE']="You cannot send {$lang['INDEX_PRIMCURR']} to a non-existent user!";
+$lang['SCF_NEC']="You are trying to send more {$lang['INDEX_PRIMCURR']} than you currently have!";
+$lang['SCF_SUCCESS']="{$lang['INDEX_PRIMCURR']} sent succuessfully.";
 ?>
