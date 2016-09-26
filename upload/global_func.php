@@ -1405,3 +1405,36 @@ function recache_topic($topic)
 {
     global $ir, $c, $userid, $h, $bbc, $db;
 }
+
+/* gets the contents of a file if it exists, otherwise grabs and caches */
+function get_fg_cache($file,$ip,$hours = 1,$fn = '',$fn_args = '') 
+{
+	$current_time = time(); $expire_time = $hours * 60 * 60; //
+	if(file_exists($file))
+	{
+		$file_time = filemtime($file);
+		if ($current_time - $expire_time < $file_time)
+		return file_get_contents($file);
+	}
+	else 
+	{
+		$content = update_fg_info($ip);
+		if($fn) { $content = $fn($content,$fn_args); }
+		file_put_contents($file,$content);
+		return $content;
+	}
+}
+
+/* gets content from a URL via curl */
+function update_fg_info($ip) {
+	global $db,$set;
+	$curl = curl_init();
+	curl_setopt_array($curl, array(
+		CURLOPT_URL => "https://api.fraudguard.io/ip/$ip",
+		CURLOPT_USERPWD => "{$set['FGUsername']}:{$set['FGPassword']}",
+		CURLOPT_SSL_VERIFYPEER => false,
+		CURLOPT_RETURNTRANSFER => true));
+	$content = curl_exec($curl);
+	curl_close($curl);
+	return $content;
+}
