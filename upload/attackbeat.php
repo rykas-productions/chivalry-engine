@@ -27,10 +27,10 @@ if ($db->num_rows($od) > 0)
 	}
 	$hosptime = mt_rand(75, 175) + floor($ir['level'] / 2);
 	alert('success',"{$lang['ATT_BEAT']} {$r['username']}!!","{$lang['ATT_BEAT']} {$r['username']} {$lang['ATT_BU_TEXT1']} {$hosptime} {$lang["GEN_MINUTES"]} {$lang['ATT_BU_TEXT2']}");
-	$hospreason = $db->escape("Brutally Hurt by <a href='viewuser.php?u={$userid}'>{$ir['username']}</a>");
+	$hospreason = $db->escape("Brutally Hurt by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 	$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$r['userid']}");
 	put_infirmary($r['userid'],$hosptime,$hospreason);
-	event_add($r['userid'], "<a href='viewuser.php?u=$userid'>{$ir['username']}</a> brutally attacked you and caused {$hosptime} minutes worth of damage.");
+	event_add($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> brutally attacked you and caused {$hosptime} minutes worth of damage.");
 	$atklog = $db->escape($_SESSION['attacklog']);
 	$db->query("INSERT INTO `attacklogs` VALUES(NULL, $userid, {$_GET['ID']}, 'won', " . time() . ", -1, '$atklog')");
 	$_SESSION['attackwon'] = 0;

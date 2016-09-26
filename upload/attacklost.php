@@ -36,7 +36,7 @@ put_infirmary($userid,$hosptime,$hospreason);
 $r['xp_needed'] = round($r['level']+($r['level'] * 115)+($r['level'] * 115));
 $qe2 = $ir['level'] * $ir['level'] * $ir['level'];
 $expperc2 = round($expgainp / $r['xp_needed'] * 100);
-event_add($_GET['ID'], "<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
+event_add($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
 $atklog = $db->escape($_SESSION['attacklog']);
 $db->query("UPDATE `users` SET `xp` = `xp` + {$expgainp} WHERE `userid` = {$_GET['ID']}");
 $db->query("UPDATE `users` SET `xp` = 0 WHERE `xp` < 0");
