@@ -289,19 +289,7 @@ else
 				  echo '<div id="staff" class="tab-pane fade in">';
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
-						
-						$curl = curl_init();
-
-						curl_setopt_array($curl, array(
-							CURLOPT_URL => "https://api.fraudguard.io/ip/$r[loginip]",
-							CURLOPT_USERPWD => "{$set['FGUsername']}:{$set['FGPassword']}",
-							CURLOPT_SSL_VERIFYPEER => false,
-							CURLOPT_RETURNTRANSFER => true
-						));
-
-						$resp = curl_exec($curl);
-						curl_close($curl);
-						$fg=json_decode($resp,true);
+						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",1),true);
 						echo "<table class='table table-bordered'>
 							<tr>
 								<th width='33%'>Data</th>
