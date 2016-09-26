@@ -18,10 +18,10 @@ echo "
 			<a href='?action=delall'>Delete All</a>
 		</td>
 		<td>
-			<a href=''>Archive</a>
+			<a href='#'>Archive</a>
 		</td>
 		<td>
-			<a href=''>Contacts</a>
+			<a href='#'>Contacts</a>
 		</td>
 	</tr>
 </table>
@@ -122,7 +122,12 @@ function read()
 {
 	global $db,$ir,$userid,$lang,$h,$parser;
 	$code = request_csrf_code('inbox_send');
-	$_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs(intval($_GET['msg'])) : null;
+	$_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs(intval($_GET['msg'])) : 0;
+	if ($_GET['msg'] == 0)
+	{
+		alert('danger','Oops.','Message does not exist.');
+		die($h->endpage());
+	}
 	if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0)
 	{
 		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ERROR_MAIL_UNOWNED']}");
