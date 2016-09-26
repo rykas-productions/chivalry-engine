@@ -145,7 +145,7 @@ class headers
 		<?php
 		if ($ir['mail'] > 0)
 		{
-			echo "<div class='alert alert-info'> <strong>{$lang['MENU_UNREADMAIL1']}</strong> {$lang['MENU_UNREADMAIL2']} {$ir['mail']} {$lang['MENU_UNREADMAIL3']} <a href='../mail.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}</div>";
+			echo "<div class='alert alert-info'> <strong>{$lang['MENU_UNREADMAIL1']}</strong> {$lang['MENU_UNREADMAIL2']} {$ir['mail']} {$lang['MENU_UNREADMAIL3']} <a href='../inbox.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}</div>";
 		}
 		if ($ir['notifications'] > 0)
 		{
