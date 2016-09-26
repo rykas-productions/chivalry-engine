@@ -234,7 +234,6 @@ class headers
 			<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 			<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 			<!-- Other JavaScript -->
-			<script src="../js/staff.js"></script>
 			<script src="../js/game.js"></script>
 		</body>
 			<footer>
