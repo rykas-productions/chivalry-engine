@@ -1409,12 +1409,22 @@ function recache_topic($topic)
 /* gets the contents of a file if it exists, otherwise grabs and caches */
 function get_fg_cache($file,$ip,$hours = 1,$fn = '',$fn_args = '') 
 {
-	$current_time = time(); $expire_time = $hours * 60 * 60; //
+	$current_time = time(); 
+	$expire_time = $hours * 60 * 60;
 	if(file_exists($file))
 	{
 		$file_time = filemtime($file);
 		if ($current_time - $expire_time < $file_time)
-		return file_get_contents($file);
+		{
+			return file_get_contents($file);
+		}
+		else
+		{
+			$content = update_fg_info($ip);
+			if($fn) { $content = $fn($content,$fn_args); }
+			file_put_contents($file,$content);
+			return $content;
+		}
 	}
 	else 
 	{
