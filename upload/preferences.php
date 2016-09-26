@@ -303,7 +303,7 @@ function pic_change()
 		$npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
 		if (!empty($npic))
 		{
-			if (is_image($npic) == false)
+			if (isImage($npic) == false)
 			{
 				alert('danger',"{$lang['ERROR_INVALID']}","{$lang['PIC_NOIMAGE']}");
 				die($h->endpage());
