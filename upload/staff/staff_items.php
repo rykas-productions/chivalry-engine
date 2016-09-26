@@ -56,6 +56,7 @@ function home()
 			</td>
 		</tr>
 	</table>";
+	$h->endpage();
 }
 function create()
 {
