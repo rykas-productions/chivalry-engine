@@ -16,9 +16,6 @@ class headers
     <meta name="description" content="">
     <meta name="author" content="">
 	<meta name="theme-color" content="#000000">
-	<noscript>
-		<meta http-equiv="refresh" content="0;url=no-script.php">
-	</noscript>
 
     <?php echo "<title>Chivalry Engine</title>"; ?>
 
@@ -138,6 +135,11 @@ if (empty($NoHeader))
     <!-- Page Content -->
     <div class="container">
 
+		<noscript>
+			<?php
+				alert('danger','Javascript Disabled!','You need to enable Javascript to use this website. Loads of features will not work without Javascript.');
+			?>
+		</noscript>
         <div class="row">
             <div class="col-lg-12 text-center">
 		<?php

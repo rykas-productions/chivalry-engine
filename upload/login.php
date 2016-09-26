@@ -17,9 +17,6 @@ if ($set['HTTPS_Support'] == 'true')
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A free-to-use and open source engine">
     <meta name="author" content="TheMasterGeneral">
-	<noscript>
-		<meta http-equiv="refresh" content="0;url=no-script.php">
-	</noscript>
 	<meta name="theme-color" content="#000000">
 
     <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
@@ -115,6 +112,11 @@ if ($set['HTTPS_Support'] == 'true')
 
     <!-- Page Content -->
     <div class="container">
+		<noscript>
+			<?php
+				alert('danger','Javascript Disabled!','You need to enable Javascript to use this website. Loads of features will not work without Javascript.');
+			?>
+		</noscript>
 
         <div class="row">
             <div class="col-lg-12 text-center">
