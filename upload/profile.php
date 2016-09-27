@@ -102,7 +102,7 @@ else
 				?>
 			</div>
 			<div class="col-lg-10">
-				<ul class="nav nav-tabs">
+				<ul class="nav nav-tabs nav-justified">
 				  <li class="active"><a data-toggle="tab" href="#info">Phyiscal Information</a></li>
 				  <li><a data-toggle="tab" href="#actions">Actions</a></li>
 				  <li><a data-toggle="tab" href="#financial">Financial Information</a></li>
