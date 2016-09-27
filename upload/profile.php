@@ -39,7 +39,7 @@ else
 	if ($db->num_rows($q) == 0)
 	{
 		$db->free_result($q);
-		alert("danger","Uh oh!","We could not find a user with the User ID you entered. You could be receiving this message because the player you are trying to view got deleted. Check your source again!");
+		alert("danger","{$lang['ERROR_NONUSER']}","{$lang['PROFILE_UNF']}");
 	}
 	else
     {
@@ -57,8 +57,8 @@ else
 		$user_name = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span> <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
         $on =
                 ($r['laston'] >= $_SERVER['REQUEST_TIME'] - 15 * 60)
-                        ? '<font color="green"><b>Online</b></font>'
-                        : '<font color="red"><b>Offline</b></font>';
+                        ? "<font color='green'><b>{$lang['GEN_ONLINE']}</b></font>"
+                        : "<font color='red'><b>{$lang['GEN_OFFLINE']}</b></font>";
         $ref_q =
                 $db->query(
                         "SELECT COUNT(`referalid`)
@@ -84,7 +84,7 @@ else
 		$r['daysold']=round((($CurrentTime-$r['registertime'])/(3600 * 24)));
 		
 		$rhpperc = round($r['hp'] / $r['maxhp'] * 100);
-		echo "<h3>Profile for {$r['username']}</h3>";
+		echo "<h3>{$lang['PROFILE_PROFOR']} {$r['username']}</h3>";
 		?>
 		
 		<div class="row">
@@ -94,22 +94,22 @@ else
 						<h3><b>{$r['username']} [{$r['userid']}]</b></h3>
 							{$r['user_level']}<br />
 							
-						Location: {$r['town_name']}<br />
-						Level: {$r['level']}<br />";
-						echo ($r['guild']) ? "Guild: <a href='#'>{$r['guild_name']}</a>" : '';
-						echo "HP: {$r['hp']}/{$r['maxhp']}<br />";
+						{$lang['PROFILE_LOCATION']} {$r['town_name']}<br />
+							{$lang['INDEX_LEVEL']}: {$r['level']}<br />";
+						echo ($r['guild']) ? "{$lang['PROFILE_GUILD']}: <a href='#'>{$r['guild_name']}</a>" : '';
+						echo "{$lang['INDEX_HP']}: {$r['hp']}/{$r['maxhp']}<br />";
 				
 				?>
 			</div>
 			<div class="col-lg-10">
 				<ul class="nav nav-tabs nav-justified">
-				  <li class="active"><a data-toggle="tab" href="#info">Phyiscal Information</a></li>
-				  <li><a data-toggle="tab" href="#actions">Actions</a></li>
-				  <li><a data-toggle="tab" href="#financial">Financial Information</a></li>
+				  <li class="active"><a data-toggle="tab" href="#info"><?php echo $lang['PROFILE_PI']; ?></a></li>
+				  <li><a data-toggle="tab" href="#actions"><?php echo $lang['PROFILE_ACTION']; ?></a></li>
+				  <li><a data-toggle="tab" href="#financial"><?php echo $lang['PROFILE_FINANCIAL']; ?></a></li>
 				  <?php
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
-					  echo "<li><a data-toggle='tab' href='#staff'>Staff</a></li>";
+					  echo "<li><a data-toggle='tab' href='#staff'>{$lang['PROFILE_STAFF']}</a></li>";
 					}
 				  ?>
 				</ul>
@@ -122,51 +122,50 @@ else
 						"
 						<table class='table table-bordered table-responsive'>
 							<tr>
-								<th width='25%'>Gender</th>
+								<th width='25%'>{$lang['REG_SEX']}</th>
 								<td>{$r['gender']}</td>
 							</tr>
 							<tr>
-								<th>Class</th>
+								<th>{$lang['INDEX_CLASS']}</th>
 								<td>{$r['class']}</td>
 							</tr>
 							<tr>
-								<th>Signed Up</th>
+								<th>{$lang['PROFILE_REGISTERED']}</th>
 								<td>{$sup}</td>
 							</tr>
 							<tr>
-								<th>Last Action</th>
+								<th>{$lang['PROFILE_ACTIVE']}</th>
 								<td>{$ula}</td>
 							</tr>
 							<tr>
-								<th>Last Login</th>
+								<th>{$lang['PROFILE_LOGIN']}</th>
 								<td>{$ull}</td>
 							</tr>
 							<tr>
-								<th>Age</th>
-								<td>{$r['daysold']} Days Old</td>
-							</tr>
-						</table>";
+								<th>{$lang['PROFILE_AGE']}</th>
+								<td>{$r['daysold']} {$lang['PROFILE_DAYS_OLD']}</td>
+							</tr>";
 						if (user_infirmary($r['userid']))
 						{
 							$InfirmaryRemain=round((($r['infirmary_out'] - $CurrentTime) / 60), 2);
 							echo "
-							<br />
-							<span style='font-weight: bold; color: red;'>
-							In the infirmary for {$InfirmaryRemain} minutes.
-							<br />
-							{$r['infirmary_reason']}
-							</span>";
+							<tr>
+								<th>{$lang['EXPLORE_INFIRM']}</th>
+								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_INFIRM']} {$lang['GEN_FOR']} {$InfirmaryRemain} {$lang["GEN_MINUTES"]}<br />
+								{$r['infirmary_reason']}
+								</td>
+							</tr>";
 						}
 						if (user_dungeon($r['userid']))
 						{
 							$DungeonRemain=round((($r['dungeon_out'] - $CurrentTime) / 60), 2);
 							echo "
-							<br />
-							<span style='font-weight: bold; color: red;'>
-							In the dungeon for {$DungeonRemain} minutes.
-							<br />
-							{$r['dungeon_reason']}
-							</span>";
+							<tr>
+								<th>{$lang['EXPLORE_DUNG']}</th>
+								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_DUNG']} {$lang['GEN_FOR']} {$DungeonRemain} {$lang["GEN_MINUTES"]}<br />
+								{$r['dungeon_reason']}
+								</td>
+							</tr>";
 						}
 						if ($r['fedjail'])
 						{
@@ -176,6 +175,8 @@ else
 							{$r['fed_reason']}
 							</span>";
 						}
+						
+						echo"</table>";
 						?>
 					</p>
 				  </div>
