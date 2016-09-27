@@ -1,7 +1,5 @@
 <?php
 require("globals_nonauth.php");
-$currentpage = $_SERVER['REQUEST_URI'];
-$cpage = strip_tags(stripslashes($currentpage));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -107,6 +105,13 @@ $cpage = strip_tags(stripslashes($currentpage));
     <!-- Page Content -->
     <div class="container">
 	<?php
+	$IP = $db->escape($_SERVER['REMOTE_ADDR']);
+	if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
+	{
+		alert('danger',"Hold Up.","Creating multiple accounts is against the rules. We're going to stop you here.");
+		require('footer.php');
+		exit;
+	}
 	if (!isset($_GET['REF']))
     {
         $_GET['REF'] = 0;
