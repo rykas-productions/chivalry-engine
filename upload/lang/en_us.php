@@ -1,6 +1,6 @@
 <?php
 /*
-	File: lang/danish.php
+	File: lang/en_us.php
 	Created: 6/1/2016 at 6:06PM Eastern Time
 	Info: The English language file.
 	Author: TheMasterGeneral
@@ -172,6 +172,7 @@ $lang['EXPLORE_PINTER']="Player Interaction";
 $lang['EXPLORE_FORUMS']="Forums";
 $lang['EXPLORE_NEWSPAPER']="Newspaper";
 $lang['EXPLORE_ACT']="Activities";
+$lang['EXPLORE_ANNOUNCEMENTS']="Announcements";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
