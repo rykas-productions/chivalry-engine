@@ -114,7 +114,7 @@ function basicsettings()
 					<small>Lower is faster and less secure.</small>
 				</th>
 				<td>
-					<input type='number' name='PWEffort' class='form-control' value='{$set['Password_Effort']}'>
+					<input type='number' name='PWEffort' min='5' max='20' class='form-control' value='{$set['Password_Effort']}'>
 				</td>
 			</tr>
 			<tr>
