@@ -110,10 +110,11 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Password Effort
+					Password Effort<br />
+					<small>Lower is faster and less secure.</small>
 				</th>
 				<td>
-					<input type='number' class='form-control' readonly='1' value='{$set['Password_Effort']}'>
+					<input type='number' name='PWEffort' class='form-control' value='{$set['Password_Effort']}'>
 				</td>
 			</tr>
 			<tr>
@@ -159,10 +160,15 @@ function basicsettings()
 	}
 	else
 	{
+		$GameName = (isset($_POST['gamename'])  && preg_match("/^[a-z0-9_.]+([\\s]{1}[a-z0-9_.]|[a-z0-9_.])+$/i", $_POST['gamename'])) ? $db->escape(strip_tags(stripslashes($_POST['gamename']))) : '';
 		$RefAward = (isset($_POST['refkb']) && is_numeric($_POST['refkb'])) ? abs(intval($_POST['refkb'])) : '';
-		$GameName= (isset($_POST['gamename'])) ? gpc_cleanup($_POST['gamename']) : '';
-		$Paypal = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'ppemail', FILTER_VALIDATE_EMAIL)) ? gpc_cleanup($_POST['ppemail']) : '';
-		$GameOwner=$db->escape(htmlentities($_POST['ownername'], ENT_QUOTES, 'ISO-8859-1'));
+		$AttackEnergy = (isset($_POST['attenc']) && is_numeric($_POST['attenc'])) ? abs(intval($_POST['attenc'])) : '';
+		$Paypal = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'ppemail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['ppemail'])) : '';
+		$GameOwner = (isset($_POST['ownername']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['ownername'])) ? $db->escape(strip_tags(stripslashes($_POST['ownername']))) : '';
+		$GameDesc =  (isset($_POST['gamedesc'])) ? $db->escape(strip_tags( stripslashes($_POST['gamedesc']))) : '';
+		$FGPW =  (isset($_POST['fgpw'])) ? $db->escape(strip_tags( stripslashes($_POST['fgpw']))) : '';
+		$FGUN =  (isset($_POST['fgun'])) ? $db->escape(strip_tags( stripslashes($_POST['fgun']))) : '';
+		$PasswordEffort = (isset($_POST['PWEffort']) && is_numeric($_POST['PWEffort'])) ? abs(intval($_POST['PWEffort'])) : '';
 		if (empty($GameName))
 		{
 			alert('danger',"{$lang['ERROR_INVALID']}","Invalid game name specified!");
@@ -183,44 +189,44 @@ function basicsettings()
 			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Refferal Kickback award specified.");
 			die($h->endpage());
 		}
+		elseif (empty($GameDesc))
+		{
+			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Game Description specified.");
+			die($h->endpage());
+		}
+		elseif (empty($AttackEnergy))
+		{
+			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Attack Energy Cost.");
+			die($h->endpage());
+		}
+		elseif (empty($FGPW))
+		{
+			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Fraud Guard IO Password.");
+			die($h->endpage());
+		}
+		elseif (empty($FGUN))
+		{
+			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Fraud Guard IO Username.");
+			die($h->endpage());
+		}
+		elseif (empty($PasswordEffort) || $PasswordEffort < 5 || $PasswordEffort > 20)
+		{
+			alert('danger',"{$lang['ERROR_INVALID']}","Empty or Invalid Password Hashing effort. Minimum of 5, maximum of 10.");
+			die($h->endpage());
+		}
 		else
 		{
-			$UserPermissionSelectQuery=$db->query("SELECT `p`.*,`u`.`username`,`u`.`userid` FROM `permissions` AS `p` INNER JOIN `users` AS `u` ON `u`.`userid` = `p`.`perm_user` WHERE `perm_user` = {$_POST['userid']}");
-			$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
-			staff_csrf_stdverify('staff_sett_1', '?action=basicset');
-			if ($db->num_rows($UserPermissionSelectQuery) == 0)
-			{
-				alert('danger',"All Permissions!","This user has all permissions allowed to them! We cannot display users who have all the permissions, only the users who has had their permissions tweaked.");
-				die($h->endpage());
-			}
-			else
-			{
-				echo
-				"Displaying {$UserName}'s Permissions.<br />
-				<small>Remember, this will only show permissions if the user's permissions have been tweaked.</small>
-				<table class='table table-bordered table-hover'>
-					<thead>
-						<tr>
-							<th>Permission Name</th>
-							<th>Disabled?</th>
-						</tr>
-					</thead>
-					<tbody>";
-				while ($UserPerm = $db->fetch_row($UserPermissionSelectQuery))
-				{
-					echo"<tr>
-							<td>
-								{$UserPerm['perm_name']}
-							</td>
-							<td>
-								{$UserPerm['perm_disable']}
-							</td>
-						</tr>
-							";
-				}
-				echo "</tbody></table>";
-				stafflog_add("Viewed <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s Permissions.");
-			}
+			$db->query("UPDATE `settings` SET `setting_value` = {$RefAward} WHERE `setting_name` = 'ReferalKickback'");
+			$db->query("UPDATE `settings` SET `setting_value` = {$AttackEnergy} WHERE `setting_name` = 'AttackEnergyCost'");
+			$db->query("UPDATE `settings` SET `setting_value` = {$PasswordEffort} WHERE `setting_name` = 'Password_Effort'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$GameName}' WHERE `setting_name` = 'WebsiteName'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$GameDesc}' WHERE `setting_name` = 'Website_Description'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$GameOwner}' WHERE `setting_name` = 'Website_Owner'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$Paypal}' WHERE `setting_name` = 'PaypalEmail'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$FGPW}' WHERE `setting_name` = 'FGPW'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$FGUN}' WHERE `setting_name` = 'FGUN'");
+			alert('success',"{$lang['ERROR_SUCCESS']}","Successfully updated the game settings.");
+			stafflog_add("Updated the game settings.");
 		}
 		$h->endpage();
 	}
