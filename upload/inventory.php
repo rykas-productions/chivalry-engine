@@ -157,11 +157,11 @@ else
         }
         if ($i['weapon'] > 0)
         {
-            echo " [<a href='equip_weapon.php?ID={$i['inv_id']}'>Equip Weapon</a>]";
+            echo " [<a href='equip.php?slot=weapon&ID={$i['inv_id']}'>Equip Weapon</a>]";
         }
         if ($i['armor'] > 0)
         {
-            echo " [<a href='equip_armor.php?ID={$i['inv_id']}'>Equip Armor</a>]";
+            echo " [<a href='equip.php?slot=armor&ID={$i['inv_id']}'>Equip Armor</a>]";
         }
         echo "</td>
         </tr>";
