@@ -1407,7 +1407,7 @@ function recache_topic($topic)
 }
 
 /* gets the contents of a file if it exists, otherwise grabs and caches */
-function get_fg_cache($file,$ip,$hours = 1,$fn = '',$fn_args = '') 
+function get_fg_cache($file,$ip,$hours = 1) 
 {
 	$current_time = time(); 
 	$expire_time = $hours * 60 * 60;
@@ -1421,7 +1421,6 @@ function get_fg_cache($file,$ip,$hours = 1,$fn = '',$fn_args = '')
 		else
 		{
 			$content = update_fg_info($ip);
-			if($fn) { $content = $fn($content,$fn_args); }
 			file_put_contents($file,$content);
 			return $content;
 		}
@@ -1429,7 +1428,6 @@ function get_fg_cache($file,$ip,$hours = 1,$fn = '',$fn_args = '')
 	else 
 	{
 		$content = update_fg_info($ip);
-		if($fn) { $content = $fn($content,$fn_args); }
 		file_put_contents($file,$content);
 		return $content;
 	}
