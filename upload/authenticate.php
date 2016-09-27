@@ -98,6 +98,7 @@ else
 	$encpsw = encode_password($raw_password);
 	$e_encpsw = $db->escape($encpsw);
 	$db->query("UPDATE `users` SET `password` = '{$e_encpsw}' WHERE `userid` = {$_SESSION['userid']}");
+	$db->query("DELETE FROM `login_attempts` WHERE `userid` = {$_SESSION['userid']}");
 	$loggedin_url = 'loggedin.php';
     header("Location: {$loggedin_url}");
     exit;
