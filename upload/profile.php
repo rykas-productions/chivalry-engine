@@ -53,6 +53,7 @@ else
                 ($r['last_login'] == 0) ? 'Never'
                         : DateTime_Parse($r['last_login']);
         $sup = date('F j, Y g:i:s a', $r['registertime']);
+		$displaypic = ($r['display_pic']) ? "<img src='{$r['display_pic']}' class='img-thumbnail img-responsive' width='250' height='250'>" : '';
 		$user_name = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span> <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
         $on =
                 ($r['laston'] >= $_SERVER['REQUEST_TIME'] - 15 * 60)
@@ -89,7 +90,7 @@ else
 		<div class="row">
 			<div class="col-lg-2">
 				<?php
-					echo "<img src='{$r['display_pic']}' class='img-thumbnail img-responsive' width='250' height='250'><br />
+					echo "{$displaypic}<br />
 						<h3><b>{$r['username']} [{$r['userid']}]</b></h3>
 							{$r['user_level']}<br />
 							
