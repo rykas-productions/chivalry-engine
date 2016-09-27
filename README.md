@@ -7,3 +7,6 @@ Feel free to add your own changes and submit them to TheMasterGeneral. If you wi
 
 # Requirements
 A web-server with PHP support. Crons not needed. Users need to have Javascript enabled or a lot of the core features won't work.
+
+# Dev Branch
+If you wish to send file tweaks, send them against the dev branch. Thank you!
