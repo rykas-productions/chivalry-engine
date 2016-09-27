@@ -127,6 +127,10 @@ $lang['GEN_AT']="at";
 $lang['GEN_EDITED']="edited";
 $lang['GEN_TIMES']="times.";
 $lang['GEN_RANK']='Rank';
+$lang['GEN_ONLINE']='Online';
+$lang['GEN_OFFLINE']='Offline';
+$lang['GEN_FOR']="for";
+$lang['GEN_INDAH']="In the";
 
 //Gym
 $lang['GYM_INFIRM'] = "While you are unconscious, you cannot train! Come back after you are feeling healthy!";
@@ -145,10 +149,10 @@ $lang['EXPLORE_IMARKET']="Item Market";
 $lang['EXPLORE_IAUCTION']="Item Auction";
 $lang['EXPLORE_TRADE']="Trading";
 $lang['EXPLORE_SCMARKET']="Secondary Currency Market";
-$lang['EXPLORE_FD']="Financial District";
+$lang['EXPLORE_FD']="Financial";
 $lang['EXPLORE_BANK']="Bank";
 $lang['EXPLORE_ESTATES']="Estates";
-$lang['EXPLORE_HL']="Hard Labor";
+$lang['EXPLORE_HL']="Labor";
 $lang['EXPLORE_MINE']="Mining";
 $lang['EXPLORE_WC']="Woodcutting";
 $lang['EXPLORE_FARM']="Farming";
@@ -168,7 +172,7 @@ $lang['EXPLORE_INFIRM']="Infirmary";
 $lang['EXPLORE_GYM']="Training";
 $lang['EXPLORE_JOB']="Your Job";
 $lang['EXPLORE_ACADEMY']="Local Academy";
-$lang['EXPLORE_PINTER']="Player Interaction";
+$lang['EXPLORE_PINTER']="Social";
 $lang['EXPLORE_FORUMS']="Forums";
 $lang['EXPLORE_NEWSPAPER']="Newspaper";
 $lang['EXPLORE_ACT']="Activities";
@@ -195,6 +199,7 @@ $lang['INDEX_WILL']="Will";
 $lang['INDEX_PN']="Personal Notepad";
 $lang['INDEX_PNSUCCESS']="Your personal notepad has been updated successfully.";
 $lang['INDEX_EXP']='XP';
+$lang['INDEX_HP']='HP';
 
 //Form Buttons
 $lang['FB_PN']="Update Notes";
@@ -367,4 +372,19 @@ $lang['SCF_POSCASH']="You need to send at least 1 {$lang['INDEX_PRIMCURR']} to u
 $lang['SCF_UNE']="You cannot send {$lang['INDEX_PRIMCURR']} to a non-existent user!";
 $lang['SCF_NEC']="You are trying to send more {$lang['INDEX_PRIMCURR']} than you currently have!";
 $lang['SCF_SUCCESS']="{$lang['INDEX_PRIMCURR']} sent succuessfully.";
+
+//Profile
+$lang['PROFILE_UNF']="We could not find a user with the User ID you entered. You could be receiving this message because the player you are trying to view got deleted. Check your source again!";
+$lang['PROFILE_PROFOR']="Profile For";
+$lang['PROFILE_LOCATION']="Location:";
+$lang['PROFILE_GUILD']="Guild";
+$lang['PROFILE_PI']="Phyiscal Information";
+$lang['PROFILE_ACTION']="Actions";
+$lang['PROFILE_FINANCIAL']="Financial Information";
+$lang['PROFILE_STAFF']="Staff Area";
+$lang['PROFILE_REGISTERED']="Registered";
+$lang['PROFILE_ACTIVE']="Last Active";
+$lang['PROFILE_LOGIN']="Last Login";
+$lang['PROFILE_AGE']="Age";
+$lang['PROFILE_DAYS_OLD']="days old.";
 ?>
