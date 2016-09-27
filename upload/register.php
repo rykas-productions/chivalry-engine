@@ -262,13 +262,12 @@ $cpage = strip_tags(stripslashes($currentpage));
 			}
 			if ($_POST['ref'])
 			{
-				/*$db->query(
+				$db->query(
 						"UPDATE `users`
-						 SET `crystals` = `crystals` + {$set['ReferalKickback']}
+						 SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']}
 						 WHERE `userid` = {$_POST['ref']}");
-				*/
 				event_add($_POST['ref'],
-						"For refering $username to the game, you have earnt {$set['ReferalKickback']} valuable crystals!",
+						"For refering $username to the game, you have earnt {$set['ReferalKickback']} valuable Secondary Currency(s)!",
 						$c);
 				$e_rip = $db->escape($rem_IP);
 				$db->query("INSERT INTO `referals`
