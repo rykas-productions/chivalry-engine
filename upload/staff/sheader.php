@@ -24,7 +24,7 @@ class headers
     <meta name="author" content="">
 	<meta name="theme-color" content="#000000">
 
-    <?php echo "<title>Chivalry Engine</title>"; ?>
+     <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
 
     <!-- CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -65,7 +65,7 @@ class headers
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php">Chivalry Engine</a>
+                <a class="navbar-brand" href="index.php"><?php echo "{$set['WebsiteName']}"; ?></a>
             </div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
