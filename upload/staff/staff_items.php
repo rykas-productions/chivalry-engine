@@ -323,7 +323,8 @@ function createitmgroup()
 		$name = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newitemtype', stripslashes($_POST['verf'])))
 		{
-			csrf_error('createitmgroup');
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
 		}
 		$q=$db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypename` = '{$name}'");
 		if ($db->num_rows($q) > 0)
@@ -373,12 +374,34 @@ function deleteitem()
 	}
 	else
 	{
-		staff_csrf_stdverify('staff_killitem', 'staff_items.php?action=killitem');
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_killitem', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
 		$_POST['item'] =(isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : '';
 		if (empty($_POST['item']))
 		{
 			alert('warning','Empty Input!','You did not specify an item to delete. Go back and try again.');
 			die($h->endpage());
 		}
+		$d =
+            $db->query(
+                    "SELECT `itmname`
+                     FROM `items`
+                     WHERE `itmid` = {$_POST['item']}");
+		if ($db->num_rows($d) == 0)
+		{
+			$db->free_result($d);
+			alert('danger',"Uh oh!","The item you chose to delete does not exist!");
+			die($h->endpage());
+		}
+		$itemname = $db->fetch_single($d);
+		$db->free_result($d);
+		$db->query("DELETE FROM `items` WHERE `itmid` = {$_POST['item']}");
+		$db->query("DELETE FROM `inventory` WHERE `inv_itemid` = {$_POST['item']}");
+		stafflog_add("Deleted item {$itemname}");
+		alert("success","Success!","The Item ({$itemname}) has been deleted from the game successfully.");
+		die($h->endpage());
 	}
 }

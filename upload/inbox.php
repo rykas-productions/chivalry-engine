@@ -58,9 +58,6 @@ case 'delall':
 case 'outbox':
     outbox();
     break;
-case 'compose':
-    compose();
-    break;
 default:
     home();
     break;
@@ -200,6 +197,7 @@ function send()
 	global $db,$lang,$ir,$userid,$h;
 	$subj = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['subject']))));
 	$msg = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['msg']))));
+	$sendto = (isset($_POST['sendto']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['sendto']) && ((strlen($_POST['sendto']) < 32) && (strlen($_POST['sendto']) >= 3))) ? $_POST['sendto'] : '';
 	if (!isset($_POST['verf']) || !verify_csrf_code('inbox_send', stripslashes($_POST['verf'])))
 	{
 		csrf_error('');
@@ -214,7 +212,6 @@ function send()
         alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['MAIL_INPUTLNEGTH']}");
         die($h->endpage());
     }
-	 $sendto = (isset($_POST['sendto']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['sendto']) && ((strlen($_POST['sendto']) < 32) && (strlen($_POST['sendto']) >= 3))) ? $_POST['sendto'] : '';
 	 if (empty($_POST['sendto']))
     {
 		alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['MAIL_NOUSER']}");
@@ -308,6 +305,15 @@ function outbox()
 function compose()
 {
 	global $db,$userid,$lang,$h;
+	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
+	if (isset($_GET['user']) && ($_GET['user'] > 0))	
+	{
+		$username=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}"));
+	}
+	else
+	{
+		$username='';
+	}
 	$code = request_csrf_code('inbox_send');
 	echo "
 	<form method='post' action='?action=send'>
@@ -317,7 +323,7 @@ function compose()
 			{$lang['MAIL_SENDTO']}
 		</th>
 		<td>
-			<input type='text' class='form-control' name='sendto' required='1'>
+			<input type='text' class='form-control' value='{$username}' name='sendto' required='1'>
 		</td>
 	</tr>
 	<tr>
