@@ -6,7 +6,6 @@ if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false)
 session_name('CENGINE');
 session_start();
 header('Content-Type: event-stream');
-header('Cache-control: private'); // IE 6 FIX
 
 if(isset($_GET['lang']))
 {
