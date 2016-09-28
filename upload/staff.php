@@ -41,43 +41,7 @@ foreach ($staff as $r)
 					{$on}
 				</td>
 				<td>
-				<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal' data-whatever='Admin'>Send {$r['username']} a Message</button>";
-					?>
-					<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-					  <div class="modal-dialog" role="document">
-						<div class="modal-content">
-						  <div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<div id="success"></div>
-							<h4 class="modal-title" id="ModalLabel">New message</h4>
-						  </div>
-						  <div class="modal-body">
-							<form id="mailpopupForm" name="mailpopupForm" action="js/script/sendmail.php">
-							  <div class="form-group">
-								<div id="result"></div>
-								<label for="recipient-name" class="control-label">Recipient:</label>
-								<input type="text" class="form-control" name="sendto" required="1" value="<?php echo $r['username']; ?>" id="recipient-name">
-							  </div>
-							  <div class="form-group">
-								<label for="message-text" class="control-label">Message:</label>
-								<textarea class="form-control" name="msg" required="1" id="message-text"></textarea>
-							  </div>
-							
-						  </div>
-						  <div class="modal-footer">
-						  <?php
-						  echo"
-							<input type='hidden' name='verf' value='{$code}' />";
-							?>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<input type="submit" value="Send Message" id="sendmessage" class="btn btn-primary">
-							</form>
-						  </div>
-						</div>
-					  </div>
-					</div>
-					<?php
-				echo"
+					<a href='inbox.php?action=compose&user={$r['userid']}'>Send {$r['username']} a Message</a>
 				</td>";
     }
 }
@@ -111,43 +75,8 @@ foreach ($staff as $r)
 					{$on}
 				</td>
 				<td>
-				<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal' data-whatever='Admin'>Send {$r['username']} a Message</button>";
-					?>
-					<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-					  <div class="modal-dialog" role="document">
-						<div class="modal-content">
-						  <div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<div id="success"></div>
-							<h4 class="modal-title" id="ModalLabel">New message</h4>
-						  </div>
-						  <div class="modal-body">
-							<form id="mailpopupForm" name="mailpopupForm" action="js/script/sendmail.php">
-							  <div class="form-group">
-								<div id="result"></div>
-								<label for="recipient-name" class="control-label">Recipient:</label>
-								<input type="text" class="form-control" name="sendto" required="1" value="<?php echo $r['username']; ?>" id="recipient-name">
-							  </div>
-							  <div class="form-group">
-								<label for="message-text" class="control-label">Message:</label>
-								<textarea class="form-control" name="msg" required="1" id="message-text"></textarea>
-							  </div>
-							
-						  </div>
-						  <div class="modal-footer">
-						  <?php
-						  echo"
-							<input type='hidden' name='verf' value='{$code}' />";
-							?>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<input type="submit" value="Send Message" id="sendmessage" class="btn btn-primary">
-							</form>
-						  </div>
-						</div>
-					  </div>
-					</div>
-					<?php
-				echo"</td>";
+					<a href='inbox.php?action=compose&user={$r['userid']}'>Send {$r['username']} a Message</a>
+				</td>";
     }
 }
 echo '</table>';
@@ -180,49 +109,9 @@ foreach ($staff as $r)
 					{$on}
 				</td>
 				<td>
-				<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal' data-whatever='Admin'>Send {$r['username']} a Message</button>";
-					?>
-					<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-					  <div class="modal-dialog" role="document">
-						<div class="modal-content">
-						  <div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<div id="success"></div>
-							<h4 class="modal-title" id="ModalLabel">New message</h4>
-						  </div>
-						  <div class="modal-body">
-							<form id="mailpopupForm" name="mailpopupForm" action="js/script/sendmail.php">
-							  <div class="form-group">
-								<div id="result"></div>
-								<label for="recipient-name" class="control-label">Recipient:</label>
-								<input type="text" class="form-control" name="sendto" required="1" value="<?php echo $r['username']; ?>" id="recipient-name">
-							  </div>
-							  <div class="form-group">
-								<label for="message-text" class="control-label">Message:</label>
-								<textarea class="form-control" name="msg" required="1" id="message-text"></textarea>
-							  </div>
-							
-						  </div>
-						  <div class="modal-footer">
-						  <?php
-						  echo"
-							<input type='hidden' name='verf' value='{$code}' />";
-							?>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<input type="submit" value="Send Message" id="sendmessage" class="btn btn-primary">
-							</form>
-						  </div>
-						</div>
-					  </div>
-					</div>
-					<?php
-				echo"
+					<a href='inbox.php?action=compose&user={$r['userid']}'>Send {$r['username']} a Message</a>
 				</td>";
     }
 }
 echo '</table>';
-
-
-
-
 $h->endpage();
