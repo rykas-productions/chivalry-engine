@@ -1,8 +1,30 @@
 <?php
 $menuhide = 1;
 $atkpage = 1;
+$tresder = mt_rand(100, 999);
 require("globals.php");
 $_GET['user'] =  (isset($_GET['user']) && is_numeric($_GET['user']))  ? abs(intval($_GET['user'])) : '';
+if (empty($_GET['nextstep']))
+{
+	$_GET['nextstep']=0;
+}
+if ($_GET['nextstep'] > 0)
+   {
+	      $_GET['tresde'] =
+        (isset($_GET['tresde']) && is_numeric($_GET['tresde']))
+                ? abs(intval($_GET['tresde'])) : 0;
+		if (!isset($_SESSION['tresde']))
+		{
+			$_SESSION['tresde'] = 0;
+		}
+		if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
+		{
+			die(
+					"Refreshing while attacking is a bannable offense... You can lose all your EXP for that.<br />
+					<a href='index.php'>Home</a>");
+		}
+		$_SESSION['tresde'] = $_GET['tresde'];
+   }
 if (!$_GET['user'])
 {
     alert("danger","Oh no!","You cannot attack no-one. Please make sure you are using the attack link found on profiles. <a href='index.php'>Go Home</a>.");
@@ -431,7 +453,7 @@ else
             {
                 echo '<b>Secondary Weapon:</b> ';
             }
-            echo "<a href='attack.php?nextstep=$ns&user={$_GET['user']}&weapon={$r['itmid']}'>{$r['itmname']}</a><br />";
+            echo "<a href='attack.php?nextstep=$ns&user={$_GET['user']}&weapon={$r['itmid']}&tresde=$tresder'>{$r['itmname']}</a><br />";
         }
     }
     else
