@@ -200,6 +200,17 @@ function lang_change()
 		<input type='submit' class='btn btn-default' value='{$lang['LANG_BUTTON']}'>
 		</form>";
 	}
+	else
+	{
+		$LangArray=[ "en", "es", "ger" ];
+		if (!in_array($_GET['lang'],$LangArray))
+		{
+			echo "You specified an invalid Language. Go back and try again.";
+		}
+	else
+	{
+	echo "You have successfully updated your language to {$_GET['lang']}.";
+	}
 }
 function pw_change()
 {
