@@ -440,4 +440,5 @@ $lang['POLL_VOTE_YVOTE']="Your Vote:";
 $lang['POLL_VOTE_TVOTE']="Total Votes:";
 $lang['POLL_VOTE_VOTEC']="Choose";
 $lang['POLL_VOTE_CAST']="Cast Vote";
+$lang['POLL_VOTE_NOCLOSED']="There are no closed polls at this moment. Come back later when the staff close a poll.";
 ?>
