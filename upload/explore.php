@@ -90,6 +90,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4><ul class='nav nav-tabs nav-justified'>
 			<div class='panel-body'>
 				<a href='forums.php'>{$lang['EXPLORE_FORUMS']}</a><br />
 				<a href='newspaper.php'>{$lang['EXPLORE_NEWSPAPER']}</a><br />
+				<a href='polling.php'>{$lang['POLL_TITLE']}</a><br />
 			</div>
 		</div>
 	</div>
