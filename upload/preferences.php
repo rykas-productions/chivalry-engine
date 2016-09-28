@@ -189,10 +189,10 @@ function lang_change()
 {
 	global $db,$h,$lang;
 	echo "<h2>Language Change</h2>";
-	if (empty($_GET['lang']))
+	if (empty($_POST['lang']))
 	{
 		echo "{$lang['LANG_INTRO']}<br />
-		<form method='get' action='?action=langchange'>
+		<form method='post' action='?action=langchange'>
 		<select name='lang' class='form form-control' type='dropdown'>
 			<option value='en'>English</option>
 			<option value='es'>Español</option>
@@ -203,13 +203,13 @@ function lang_change()
 	else
 	{
 		$LangArray=[ "en", "es", "ger" ];
-		if (!in_array($_GET['lang'],$LangArray))
+		if (!in_array($_POST['lang'],$LangArray))
 		{
 			echo "You specified an invalid Language. Go back and try again.";
 		}
 	else
 	{
-	echo "You have successfully updated your language to {$_GET['lang']}.";
+	echo "You have successfully updated your language to {$_POST['lang']}.";
 	}
 }
 function pw_change()
