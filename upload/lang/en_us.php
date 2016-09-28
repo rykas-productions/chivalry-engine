@@ -103,7 +103,7 @@ $lang["REG_REFID"] = "Referral ID";
 //CSRF Error
 $lang["CSRF_ERROR_TITLE"] = "Action Blocked!";
 $lang["CSRF_PREF_MENU"] = "You can try the action again by going";
-$lang["CSRF_ERROR_TEXT"] = "The change you were trying to do was blocked. It was blocked because you loaded another page on the game. If you have not loaded a different page during this time, change your password immediately, as another person may have access to your account!";
+$lang["CSRF_ERROR_TEXT"] = "The action you were trying to do was blocked. It was blocked because you loaded another page on the game. If you have not loaded a different page during this time, change your password immediately, as another person may have access to your account!";
 
 //Alert Titles
 $lang['ERROR_EMPTY'] = "Empty Input!";
@@ -131,6 +131,8 @@ $lang['GEN_ONLINE']='Online';
 $lang['GEN_OFFLINE']='Offline';
 $lang['GEN_FOR']="for";
 $lang['GEN_INDAH']="In the";
+$lang['GEN_YES']="Yes";
+$lang['GEN_NO']="No";
 
 //Gym
 $lang['GYM_INFIRM'] = "While you are unconscious, you cannot train! Come back after you are feeling healthy!";
@@ -387,4 +389,56 @@ $lang['PROFILE_ACTIVE']="Last Active";
 $lang['PROFILE_LOGIN']="Last Login";
 $lang['PROFILE_AGE']="Age";
 $lang['PROFILE_DAYS_OLD']="days old.";
+
+//Equip Items
+$lang['EQUIP_NOITEM']="Item cannot be found, and as a result, you cannot equip it.";
+$lang['EQUIP_NOITEM_TITLE']="Item does not exist!";
+$lang['EQUIP_NOTWEAPON']="The item you are trying to equip cannot be equipped as a weapon.";
+$lang['EQUIP_NOTWEAPON_TITLE']="Invalid Weapon!";
+$lang['EQUIP_NOSLOT']="You are trying to equip this item to an invalid or non-existent slot.";
+$lang['EQUIP_WEAPON_SUCCESS1']="You have successfully equipped";
+$lang['EQUIP_WEAPON_SUCCESS2']="as your";
+$lang['EQUIP_WEAPON_SLOT1']='Primary Weapon';
+$lang['EQUIP_WEAPON_SLOT2']='Secondary Weapon';
+$lang['EQUIP_WEAPON_TITLE']="Equip a Weapon";
+$lang['EQUIP_WEAPON_TEXT_FORM_1']="Please select the spot you wish to equip your";
+$lang['EQUIP_WEAPON_TEXT_FORM_2']="to. If you're already holding a weapon in the slot you choose, it will be moved back to your inventory.";
+$lang['EQUIP_WEAPON_EQUIPAS']="Equip As";
+
+//Polling Staff
+$lang['STAFF_POLL_TITLE']="Polling Administration";
+$lang['STAFF_POLL_TITLES']="Start a Poll";
+$lang['STAFF_POLL_TITLEE']="End a Poll";
+$lang['STAFF_POLL_START_INFO']="Ask a question, then give some possible responses.";
+$lang['STAFF_POLL_START_CHOICE']="Choice #";
+$lang['STAFF_POLL_START_QUESTION']="Question";
+$lang['STAFF_POLL_START_HIDE']="Hide results until the end of the poll?";
+$lang['STAFF_POLL_START_BUTTON']="Create Poll";
+$lang['STAFF_POLL_START_ERROR']="You need to have a question, and at least two answers!";
+$lang['STAFF_POLL_START_SUCCESS']="You have successfully opened a poll to the game.";
+$lang['STAFF_POLL_END_SUCCESS']="You have successfully closed an active poll.";
+$lang['STAFF_POLL_END_FORM']="Please select the poll you wish to close.";
+$lang['STAFF_POLL_END_BTN']="Close Selected Poll";
+$lang['STAFF_POLL_END_ERR']="You're attempting to close a non-existent poll.";
+
+//Polling
+$lang['POLL_TITLE']="Polling Booth";
+$lang['POLL_CYV']="Cast your vote today!";
+$lang['POLL_VOP']="View Previously Opened Polls";
+$lang['POLL_AVITP']="You can only vote once per poll.";
+$lang['POLL_PCNT']="You can't vote in a poll that does not exist, or has been previously closed.";
+$lang['POLL_VOTE_SUCCESS']="You have successfully casted your vote in this poll.";
+$lang['POLL_VOTE_NOPOLL']="There's no polls opened at this time. Come back later.";
+$lang['POLL_VOTE_CHOICE']="Choice";
+$lang['POLL_VOTE_VOTES']="Votes";
+$lang['POLL_VOTE_PERCENT_VOTES']="Percentage";
+$lang['POLL_VOTE_AV']="(Already Voted!)";
+$lang['POLL_VOTE_NV']="(Not Voted!)";
+$lang['POLL_VOTE_HIDDEN']="The results of this poll are hidden until its end.";
+$lang['POLL_VOTE_QUESTION']="Question:";
+$lang['POLL_VOTE_YVOTE']="Your Vote:";
+$lang['POLL_VOTE_TVOTE']="Total Votes:";
+$lang['POLL_VOTE_VOTEC']="Choose";
+$lang['POLL_VOTE_CAST']="Cast Vote";
+$lang['POLL_VOTE_CAST']="There are no closed polls at this moment. Come back later when the staff close a poll.";
 ?>
