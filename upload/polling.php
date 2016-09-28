@@ -171,7 +171,7 @@ function viewpolls()
 			$db->query("SELECT * FROM `polls` WHERE `active` = '0' ORDER BY `id` DESC");
 	if (!$db->num_rows($q))
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['POLL_VOTE_CAST']}");
+		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['POLL_VOTE_NOCLOSED']}");
 	}
 	else
 	{
