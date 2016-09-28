@@ -61,7 +61,7 @@ if (($ir['user_level']) == 'Admin')
 			</tr>
 			<tr>
 				<td><a href='staff_perms.php'>Permissions</a></td>
-				<td><a></a></td>
+				<td><a href='staff_polling.php'>Polling</a></td>
 			</tr>
 		</tbody>
 	</table>
