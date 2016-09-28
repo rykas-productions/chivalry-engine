@@ -160,6 +160,11 @@ function basicsettings()
 	}
 	else
 	{
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_sett_1', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
 		$GameName = (isset($_POST['gamename'])  && preg_match("/^[a-z0-9_.]+([\\s]{1}[a-z0-9_.]|[a-z0-9_.])+$/i", $_POST['gamename'])) ? $db->escape(strip_tags(stripslashes($_POST['gamename']))) : '';
 		$RefAward = (isset($_POST['refkb']) && is_numeric($_POST['refkb'])) ? abs(intval($_POST['refkb'])) : '';
 		$AttackEnergy = (isset($_POST['attenc']) && is_numeric($_POST['attenc'])) ? abs(intval($_POST['attenc'])) : '';
@@ -234,13 +239,14 @@ function basicsettings()
 function announce()
 {
 	global $db,$ir,$userid,$h;
-	$code = request_csrf_code('staff_announce');
 	if (!isset($_POST['announcement']))
 	{
+		$csrf=request_csrf_html('staff_announce');
 		echo "Here you may create an announcement. Please make sure whatever you are announcing is clear and concise.<br />
 		<form method='post'>
 			<textarea name='announcement' rows='5' class='form-control'></textarea>
 			<input type='submit' class='btn btn-default' value='Create Announcement'>
+			{$csrf}
 		</form>";
 	}
 	else
@@ -252,6 +258,11 @@ function announce()
 		}
 		else
 		{
+			if (!isset($_POST['verf']) || !verify_csrf_code('staff_announce', stripslashes($_POST['verf'])))
+			{
+				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				die($h->endpage());
+			}
 			$time=time();
 			$_POST['announcement'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['announcement']))));
 			$db->query("INSERT INTO `announcements` (`ann_id`, `ann_text`, `ann_time`, `ann_poster`) 
@@ -361,7 +372,7 @@ function restore()
 	}
 	else
 	{
-		$db->query("UPDATE `users` SET `hp`=`maxhp`,`energy`=`maxenergy`,`brave`=`maxbrave`");
+		$db->query("UPDATE `users` SET `hp`=`maxhp`,`energy`=`maxenergy`,`brave`=`maxbrave`,`will`=`maxwill`");
 		stafflog_add("Restored all users to their fullest.");
 		alert('success',"Success!","You have successfully restored all your users to their full health, brave and energy!");
 		$h->endpage();
