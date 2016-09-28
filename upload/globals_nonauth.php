@@ -5,8 +5,6 @@ if (strpos($_SERVER['PHP_SELF'], "globals_nonauth.php") !== false)
 }
 session_name('CENGINE');
 @session_start();
-header('Cache-control: private'); // IE 6 FIX
-
 if(isSet($_GET['lang']))
 {
 	$lang = $_GET['lang'];
