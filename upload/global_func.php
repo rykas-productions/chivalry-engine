@@ -905,7 +905,7 @@ function check_data()
 function check_level()
 {
     global $ir, $c, $userid, $db, $lang;
-    $ir['xp_needed'] = round($ir['level']+($ir['level'] * 115)+($ir['level'] * 115));
+    $ir['xp_needed'] = round($ir['level']+($ir['level'] * 20)+($ir['level'] * 20));
     if ($ir['xp'] >= $ir['xp_needed'])
     {
         $expu = $ir['xp'] - $ir['xp_needed'];
@@ -917,7 +917,7 @@ function check_level()
         $ir['maxbrave'] += 4;
         $ir['hp'] += 50;
         $ir['maxhp'] += 50;
-        $ir['xp_needed'] = round($ir['level']+($ir['level'] * 115)+($ir['level'] * 115));
+        $ir['xp_needed'] = round($ir['level']+($ir['level'] * 20)+($ir['level'] * 20));
         $db->query("UPDATE `users`  SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 4, `brave` = `brave` + 4,
                  `maxenergy` = `maxenergy` + 4, `maxbrave` = `maxbrave` + 4, `hp` = `hp` + 50, `maxhp` = `maxhp` + 50
                  WHERE `userid` = {$userid}");
