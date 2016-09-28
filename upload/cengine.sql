@@ -220,7 +220,14 @@ CREATE TABLE IF NOT EXISTS `guild` (
   `guild_level` int(11) unsigned NOT NULL,
   `guild_xp` int(11) unsigned NOT NULL,
   PRIMARY KEY (`guild_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `guild`
+--
+
+INSERT INTO `guild` (`guild_id`, `guild_town_id`, `guild_owner`, `guild_coowner`, `guild_primcurr`, `guild_seccurr`, `guild_hasarmory`, `guild_capacity`, `guild_name`, `guild_desc`, `guild_level`, `guild_xp`) VALUES
+(1, 1, 1, 1, 1, 1, 'false', 5, 'test', 'test', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -299,6 +306,13 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
   `timestamp` int(11) unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `login_attempts`
+--
+
+INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES
+('192.168.128.113', 6, 1466643890);
+
 -- --------------------------------------------------------
 
 --
@@ -346,7 +360,14 @@ CREATE TABLE IF NOT EXISTS `newspaper_ads` (
   `news_owner` int(11) unsigned NOT NULL,
   `news_text` text NOT NULL,
   PRIMARY KEY (`news_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `newspaper_ads`
+--
+
+INSERT INTO `newspaper_ads` (`news_id`, `news_cost`, `news_start`, `news_end`, `news_owner`, `news_text`) VALUES
+(1, 125000, 0, 4054546460, 1, 'hi');
 
 -- --------------------------------------------------------
 
@@ -430,8 +451,8 @@ INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES
 (2, 'RegistrationCaptcha', 'OFF'),
 (3, 'HTTPS_Support', 'false'),
 (4, 'AttackEnergyCost', '100'),
-(5, 'FGPassword', 'update'),
-(6, 'FGUsername', 'update'),
+(5, 'FGPassword', 'h8z7abKWPJjI10r9'),
+(6, 'FGUsername', '8WDgqcFYA0WPc3J5'),
 (7, 'MaxAttacksPerSession', '100');
 
 -- --------------------------------------------------------
@@ -536,6 +557,53 @@ CREATE TABLE IF NOT EXISTS `userstats` (
   `guard` bigint(11) unsigned NOT NULL,
   `iq` bigint(11) unsigned NOT NULL,
   `labor` bigint(11) unsigned NOT NULL,
+  PRIMARY KEY (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `polls`
+--
+
+CREATE TABLE IF NOT EXISTS `polls` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `active` enum('0','1') NOT NULL DEFAULT '0',
+  `question` text NOT NULL,
+  `choice1` text NOT NULL,
+  `choice2` text NOT NULL,
+  `choice3` text NOT NULL,
+  `choice4` text NOT NULL,
+  `choice5` text NOT NULL,
+  `choice6` text NOT NULL,
+  `choice7` text NOT NULL,
+  `choice8` text NOT NULL,
+  `choice9` text NOT NULL,
+  `choice10` text NOT NULL,
+  `voted1` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted2` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted3` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted4` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted5` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted6` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted7` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted8` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted9` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted10` int(10) unsigned NOT NULL DEFAULT '0',
+  `winner` tinyint(4) NOT NULL DEFAULT '0',
+  `hidden` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `uservotes`
+--
+
+CREATE TABLE IF NOT EXISTS `uservotes` (
+  `userid` int(11) unsigned NOT NULL,
+  `voted` text NOT NULL,
   PRIMARY KEY (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
