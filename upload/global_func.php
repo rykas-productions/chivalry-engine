@@ -298,7 +298,7 @@ function item_dropdown($ddname = "item", $selected = -1)
     }
     while ($r = $db->fetch_row($q))
     {
-        $ret .= "\n<option value='{$r['itmid']} [{$r['itmid']}]'";
+        $ret .= "\n<option value='{$r['itmid']}'";
         if ($selected == $r['itmid'])
         {
             $ret .= " selected='selected'";
