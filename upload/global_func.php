@@ -1053,7 +1053,7 @@ function item_remove($user, $itemid, $qty)
 /**
  * Constructs a drop-down listbox of all the forums in the game to let the user select one.
  * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
- * @param int $selected [optional] The <i>ID number</i> of the forum which should be selected by default.<br />
+ * @param int $selected [optional] The <i>ID number</i> of the forum w hich should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
@@ -1152,7 +1152,7 @@ function request_csrf_code($formid)
 {
     // Generate the token
 	$time=time();
-	$token=base64_encode(openssl_random_pseudo_bytes(32));
+	$token=hash('sha512',(openssl_random_pseudo_bytes(32)));
     // Insert/Update it
     $_SESSION["csrf_{$formid}"] =
             array('token' => $token, 'issued' => $time);
