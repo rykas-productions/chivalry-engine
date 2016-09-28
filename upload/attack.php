@@ -19,9 +19,8 @@ if ($_GET['nextstep'] > 0)
 		}
 		if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
 		{
-			die(
-					"Refreshing while attacking is a bannable offense... You can lose all your EXP for that.<br />
-					<a href='index.php'>Home</a>");
+			alert("danger","Oh no!","Refreshing while attacking is a bannable offense. You can lose all your experience for that. <a href='index.php'>Go Home</a>.");
+			die($h->endpage());
 		}
 		$_SESSION['tresde'] = $_GET['tresde'];
    }
