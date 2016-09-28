@@ -508,7 +508,7 @@ EOF;
              VALUES(NULL, 'Password_Effort', '{$pweffort}')");
     $ins_username =
             $db->escape(htmlentities($adm_username, ENT_QUOTES, 'ISO-8859-1'));
-    $encpsw = encode_password_effort($adm_pswd, $pweffort);
+    $encpsw = password_hash($adm_pswd);
     $e_encpsw = $db->escape($encpsw);
     $ins_email = $db->escape($adm_email);
     $IP = $db->escape($_SERVER['REMOTE_ADDR']);
@@ -615,15 +615,3 @@ EOF;
     }
 }
 require_once('installer_foot.php');
-function encode_password_effort($password, $cost, $already_hash = false)
-{
-    global $set;
-	$options = [
-    'cost' => $cost,
-	];
-	if (!$already_hash)
-    {
-	$password = password_hash("{$password}", PASSWORD_BCRYPT, $options);
-    }
-    return password_hash("{$password}", PASSWORD_BCRYPT, $options);
-}
