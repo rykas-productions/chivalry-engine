@@ -75,8 +75,8 @@ function addforum()
 					</th>
 					<td>
 						 <select name='auth' required='1' class='form-control' type='dropdown'>
-							<option value='public' {$check_p}>{$lang['STAFF_FORUM_ADD_AUTHORIZEP']}</option>
-							<option value='staff' {$check_s}>{$lang['STAFF_FORUM_ADD_AUTHORIZES']}</option>
+							<option value='public'>{$lang['STAFF_FORUM_ADD_AUTHORIZEP']}</option>
+							<option value='staff'>{$lang['STAFF_FORUM_ADD_AUTHORIZES']}</option>
 						</select>
 					</td>
 				</tr>
