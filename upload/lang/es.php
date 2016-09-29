@@ -8,6 +8,7 @@
 */
  
 $lang = array();
+global $ir,$fee,$gain;
 
 //Static
 $lang["HEADER_TITLE"] = "La caballería del motor Unreleased";
@@ -119,7 +120,19 @@ $lang["GEN_back"] = "espalda";
 $lang["GEN_INFIRM"] = "¡Inconsciente!";
 $lang["GEN_DUNG"] = "¡Bloqueado!";
 $lang["GEN_GREETING"] = "Hola";
-$lang["GEN_MINUTES"] = "minutes.";
+$lang["GEN_MINUTES"] = "minutos.";
+$lang['GEN_EXP']="Experiencia";	
+$lang['GEN_NEU']="Cuenta Eliminada";
+$lang['GEN_AT']="a";
+$lang['GEN_EDITED']="editado";
+$lang['GEN_TIMES']="veces.";
+$lang['GEN_RANK']='Rango';
+$lang['GEN_ONLINE']='En línea';	
+$lang['GEN_OFFLINE']='Desconectado';
+$lang['GEN_FOR']="para";
+$lang['GEN_INDAH']="En el";
+$lang['GEN_YES']="Sí";
+$lang['GEN_NO']="No";
 
 //Gym
 $lang['GYM_INFIRM'] = "Mientras que usted está inconsciente, no se puede entrenar! Vuelve después de que se siente saludable!";
@@ -165,6 +178,8 @@ $lang['EXPLORE_ACT']="Ocupaciones";
 $lang['EXPLORE_PINTER']="Interacción con los jugadores";
 $lang['EXPLORE_FORUMS']="Foros";
 $lang['EXPLORE_NEWSPAPER']="Periódico";
+$lang['EXPLORE_ACT']="Activities";			
+$lang['EXPLORE_ANNOUNCEMENTS']="Announcements";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Ya que estás en la enfermería, no se puede visitar la ciudad!";
@@ -185,6 +200,8 @@ $lang['INDEX_BRAVE']="Valiente";
 $lang['INDEX_WILL']="Será";
 $lang['INDEX_PN']="Bloc de notas personales";
 $lang['INDEX_PNSUCCESS']="Su libreta personal se ha actualizado correctamente.";
+$lang['INDEX_EXP']='XP';
+$lang['INDEX_HP']='HP';
 
 //Form Buttons
 $lang['FB_PN']="Actualizar Notas";
@@ -259,4 +276,192 @@ $lang['NOTIF_TITLE']='Últimas notificaciones fifthteen pertenecientes a usted .
 $lang['NOTIF_READ']='Notificación de lectura';
 $lang['NOTIF_UNREAD']='Sin notificación';
 $lang['NOTIF_DELETE']='Eliminar Notificación';
+
+//Bank
+$lang['BANK_BUY1']='Abrir una cuenta de banco hoy en día, justo ';
+$lang['BANK_BUYYES']='¡Inscríbeme!';
+$lang['BANK_SUCCESS']="Felicitaciones, usted compraron una cuenta bancaria para";
+$lang['BANK_SUCCESS1']='Empezar a usar mi cuenta!';
+$lang['BANK_FAIL']="No tienes suficiente {$lang['INDEX_PRIMCURR']} para comprar una cuenta bancaria. Volver más tarde cuando se tiene suficiente. Necesitas ";
+$lang['BANK_HOME']="Tu Actualmente tienes ";
+$lang['BANK_HOME1']=" en el banco de bajo nivel.";
+$lang['BANK_HOME2']="Al final de cada día, su saldo bancario se incrementará en un 2%.";
+$lang['BANK_DEPOSIT_WARNING']="Te costará";
+$lang['BANK_DEPOSITE_WARNING1']=" del dinero depositado, redondeando hacia arriba. La cuota máxima es de ";
+$lang['BANK_AMOUNT']="Cantidad:";
+$lang['BANK_DEPOSIT']="Depositar";
+$lang['BANK_WITHDRAW_WARNING']="Por suerte para ti, no hay ningún cargo sobre los retiros.";
+$lang['BANK_WITHDRAW']="Retirar";
+$lang['BANK_D_ERROR']="Usted está tratando de depositar dinero que no tienen ni siquiera!";
+$lang['BANK_D_SUCCESS']="De entregar ";
+$lang['BANK_D_SUCCESS1']=" a depositar. Después de la cuota (";
+$lang['BANK_D_SUCCESS2']=") se toma, ";
+$lang['BANK_D_SUCCESS3']=" se añade a su cuenta bancaria. <b> Ahora tiene ";
+$lang['BANK_D_SUCCESS4']=" en tu cuenta.</b>";
+
+//Attack
+$lang['ATT_NC']="Por favor, recuerde que las trampas en este juego no llegarán a ninguna parte ...";
+$lang['ATT_PDE']="El jugador que está tratando de acabado no existe.";
+$lang['ATT_HP']="Por favor, no actualizar o volver. ¡Gracias!";
+$lang['ATT_BEAT']="Vences";
+$lang['ATT_BU_TEXT1']="en el piso. Se continúa a golpear y patear ellos hasta que comienzan a sangrar. Una vez que la sangre comienza a mostrar, a romper sus extremidades. Sus acciones los pusieron en la enfermería ";
+$lang['ATT_BU_TEXT2']="Ejecuta casa rápidamente y en silencio, para no ganar ninguna atención que no sean necesarios.";
+$lang['ATT_L_TEXT1']="Ha perdido usted";
+$lang['ATT_L_TEXT2']="y perdió";
+$lang['ATT_XP_1']="y ganado";
+$lang['ATT_XP_2']="Usted oculta sus armas y gota";
+$lang['ATT_XP_3']="fuera fuera de la enfermería. Sintiéndose logrado, se puede caminar a casa.";
+
+//Forums
+$lang['FORUM_EMPTY_REPLY']="Usted está tratando de presentar una respuesta vacía, lo que no se puede hacer! Por favor asegúrese de que ha rellenado el formulario de respuesta!";
+$lang['FORUM_TOPIC_DNE_TITLE']="Inexistente Tema!";
+$lang['FORUM_TOPIC_DNE_TEXT']="Usted está tratando de interactuar con un tema que no existe. Comprobar su origen y vuelve a intentarlo.";
+$lang['FORUM_FORUM_DNE_TITLE']="Foro inexistente!";
+$lang['FORUM_FORUM_DNE_TEXT']="Usted está tratando de interactuar con un foro que no existe. Comprobar su origen y vuelve a intentarlo.";
+$lang['FORUM_POST_DNE_TITLE']="Inexistente Poste!";
+$lang['FORUM_POST_DNE_TEXT']="Usted está tratando de interactuar con un puesto que no existe. Comprobar su origen y vuelve a intentarlo.";
+$lang['FORUM_NOPERMISSION']="Usted está tratando de interactuar con un foro que no tienes permiso para interactuar con. Si esto es un error, por favor avisar a un administrador de inmediato!";
+$lang['FORUM_FORUMS']="Foros";
+$lang['FORUM_ON']="En";
+$lang['FORUM_IN']="En:";
+$lang['FORUM_BY']="Por:";
+$lang['FORUM_STAFFONLY']="Sólo Personal";
+$lang['FORUM_F_LP']="Última publicación";
+$lang['FORUM_F_TC']="Conde tema";
+$lang['FORUM_F_PC']="Recuento de entradas";
+$lang['FORUM_F_FN']="Nombre del Foro";
+$lang['FORUM_FORUMSHOME']="Inicio de los foros";
+$lang['FORUM_TOPICNAME']="Nombre del tema";
+$lang['FORUM_TOPICOPEN']="Tema abierto";
+$lang['FORUM_TOPIC_MOVE']="Mover Tema";
+$lang['FORUM_PAGES']="Páginas:";
+$lang['FORUM_TOPIC_MTT']="Para mover Tema:";
+$lang['FORUM_TOPIC_PIN']="Pin/Desanclar Tema";
+$lang['FORUM_TOPIC_LOCK']="Bloqueo/Desbloqueo Tema";
+$lang['FORUM_TOPIC_DELETE']="Eliminar Tema";
+$lang['FORUM_POST_EDIT']="Editar post";
+$lang['FORUM_POST_QUOTE']="Citar";
+$lang['FORUM_POST_DELETE']="Eliminar mensaje";
+$lang['FORUM_POST_EDIT_1']="Este mensaje fue editado por última";
+$lang['FORUM_NOSIG']="Sin firma";
+$lang['FORUM_POST_POSTED']="En replicó:";
+$lang['FORUM_POST_POST']='Enviar';
+$lang['FORUM_POST_REPLY']='Enviar respuesta';
+$lang['FORUM_POST_REPLY2']='Enviar respuesta al tema';
+$lang['FORUM_POST_REPLY_INFO']='Ingrese su respuesta aquí. Recuerde que puede usar BBCode! Por favor asegúrese de que no va a romper las reglas de juego de enviar el mensaje.';
+$lang['FORUM_POST_TIL']='Este tema está cerrado, y debido a esto, no se puede enviar una respuesta a este tema.';
+$lang['FORUM_MAX_CHAR_REPLY']="Al publicar en el foro, la entrada sólo puede contener 65.535 caracteres como máximo. Volver y probar otra vez!";
+$lang['FORUM_REPLY_SUCCESS']="Usted ha publicado con éxito su respuesta a este tema.";
+$lang['FORUM_TOPIC_FORM_TITLE']="Nombre del tema";
+$lang['FORUM_TOPIC_FORM_DESC']="Tema Descripción";
+$lang['FORUM_TOPIC_FORM_TEXT']="Texto tema";
+$lang['FORUM_TOPIC_FORM_BUTTON']="Mensaje Tema";
+$lang['FORUM_TOPIC_FORM_TITLE_LENGTH']="Nombres de los temas y descripciones sólo pueden ser de 255 caracteres de longitud, como máximo.";
+$lang['FORUM_TOPIC_FORM_PAGE']="Nuevo formulario Tema";
+$lang['FORUM_TOPIC_FORM_SUCCESS']="Usted ha publicado con éxito un nuevo tema en los foros!";
+$lang['FORUM_QUOTE_FORM_PAGENAME']="Citando un Post";
+$lang['FORUM_QUOTE_FORM_INFO']="Citando un Post...";
+$lang['FORUM_EDIT_FORM_INFO']="Edición de un mensaje...";
+$lang['FORUM_EDIT_FORM_PAGENAME']="Edición de un mensaje";
+$lang['FORUM_EDIT_NOPERMISSION']="No tiene permiso para editar este post. Si usted cree que esto es incorrecto, por favor deje un administrador sabe lo antes posible!";
+$lang['FORUM_EDIT_FORM_SUBMIT']="Editar post";
+$lang['FORUM_EDIT_SUCCESS']="Ha editado con éxito un mensaje!";
+$lang['FORUM_MOVE_TOPIC_DFDNE']="Usted está tratando de mover un tema a un foro que no existe. Volver y probar otra vez, por favor.";
+$lang['FORUM_MOVE_TOPIC_DONE']="Se ha mudado con éxito el tema.";
+
+//Send Cash Form
+$lang['SCF_POSCASH']="Es necesario enviar al menos 1 {$lang['INDEX_PRIMCURR']} para utilizar esta forma.";
+$lang['SCF_UNE']="No se puede enviar {$lang['INDEX_PRIMCURR']} a un usuario inexistente!";
+$lang['SCF_NEC']="Usted está intentando enviar más {$lang['INDEX_PRIMCURR']} lo que actualmente tiene!";
+$lang['SCF_SUCCESS']="{$lang['INDEX_PRIMCURR']} enviado correctamente.";
+
+//Profile
+$lang['PROFILE_UNF']="No pudimos encontrar un usuario con el ID de usuario que ha introducido. Usted podría estar recibiendo este mensaje porque el jugador que está tratando de vista se borraron. Compruebe que su fuente de nuevo!";
+$lang['PROFILE_PROFOR']="Perfil Para";
+$lang['PROFILE_LOCATION']="Ubicación:";
+$lang['PROFILE_GUILD']="Gremio";
+$lang['PROFILE_PI']="Información Física";
+$lang['PROFILE_ACTION']="Comportamiento";
+$lang['PROFILE_FINANCIAL']="Información financiera";
+$lang['PROFILE_STAFF']="Área Personal de";
+$lang['PROFILE_REGISTERED']="Registrado";
+$lang['PROFILE_ACTIVE']="Último Activo";
+$lang['PROFILE_LOGIN']="Último acceso";
+$lang['PROFILE_AGE']="Años";
+$lang['PROFILE_DAYS_OLD']="días de edad.";
+
+//Equip Items
+$lang['EQUIP_NOITEM']="El elemento no se puede encontrar, y como resultado, no se puede equiparla.";
+$lang['EQUIP_NOITEM_TITLE']="Elemento no existe!";
+$lang['EQUIP_NOTWEAPON']="El artículo que usted está tratando de equipar no puede estar equipado como un arma.";
+$lang['EQUIP_NOTWEAPON_TITLE']="Arma no válido!";
+$lang['EQUIP_NOSLOT']="Usted está tratando de dotar a este elemento a una ranura no válida o no existe.";
+$lang['EQUIP_WEAPON_SUCCESS1']="Usted ha equipado con éxito";
+$lang['EQUIP_WEAPON_SUCCESS2']="como tu";
+$lang['EQUIP_WEAPON_SLOT1']='Arma primaria';
+$lang['EQUIP_WEAPON_SLOT2']='Arma secundaria';
+$lang['EQUIP_WEAPON_TITLE']="Equipar un arma";
+$lang['EQUIP_WEAPON_TEXT_FORM_1']="Por favor, seleccione el punto que desea equipar su";
+$lang['EQUIP_WEAPON_TEXT_FORM_2']="a. Si ya está sosteniendo un arma en la ranura que elija, se trasladó de nuevo a su inventario.";
+$lang['EQUIP_WEAPON_EQUIPAS']="Como equipar";
+
+//Polling Staff
+$lang['STAFF_POLL_TITLE']="Administración de votación";
+$lang['STAFF_POLL_TITLES']="Iniciar una encuesta";
+$lang['STAFF_POLL_TITLEE']="Finalizar una encuesta";
+$lang['STAFF_POLL_START_INFO']="Hacer una pregunta, a continuación, dar algunas respuestas posibles.";
+$lang['STAFF_POLL_START_CHOICE']="Opción #";
+$lang['STAFF_POLL_START_QUESTION']="Pregunta";
+$lang['STAFF_POLL_START_HIDE']="Ocultar resultados hasta el final de la encuesta?";
+$lang['STAFF_POLL_START_BUTTON']="Crear Encuesta";
+$lang['STAFF_POLL_START_ERROR']="Usted necesita tener una pregunta, y al menos dos respuestas!";
+$lang['STAFF_POLL_START_SUCCESS']="Ha abierto con éxito una encuesta para el juego.";
+$lang['STAFF_POLL_END_SUCCESS']="Ha cerrado con éxito una encuesta activa.";
+$lang['STAFF_POLL_END_FORM']="Por favor, seleccione el sondeo que desea cerrar.";
+$lang['STAFF_POLL_END_BTN']="Cerrar seleccionada encuesta";
+$lang['STAFF_POLL_END_ERR']="Usted está tratando de cerrar una encuesta inexistente.";
+
+//Polling
+$lang['POLL_TITLE']="Cabina electoral";
+$lang['POLL_CYV']="Emitir su voto hoy!";
+$lang['POLL_VOP']="Ver Encuestas previamente abierto";
+$lang['POLL_AVITP']="Sólo se puede votar una vez por encuesta.";
+$lang['POLL_PCNT']="No se puede votar en una encuesta que no existe, o ha sido cerrado previamente.";
+$lang['POLL_VOTE_SUCCESS']="Usted ha fundido con éxito su voto en esta encuesta.";
+$lang['POLL_VOTE_NOPOLL']="No hay encuestas abiertas en este momento. Vuelve mas tarde.";
+$lang['POLL_VOTE_CHOICE']="Elección";
+$lang['POLL_VOTE_VOTES']="Votos";
+$lang['POLL_VOTE_PERCENT_VOTES']="Porcentaje";
+$lang['POLL_VOTE_AV']="(¡Ya votado!)";
+$lang['POLL_VOTE_NV']="(¡No ha votado!)";
+$lang['POLL_VOTE_HIDDEN']="Los resultados de esta encuesta están ocultas hasta su fin.";
+$lang['POLL_VOTE_QUESTION']="Pregunta:";
+$lang['POLL_VOTE_YVOTE']="Tu Voto:";
+$lang['POLL_VOTE_TVOTE']="Total de votos:";
+$lang['POLL_VOTE_VOTEC']="Escoger";
+$lang['POLL_VOTE_CAST']="Voto emitido";
+$lang['POLL_VOTE_NOCLOSED']="No hay encuestas cerradas en este momento. Volver más tarde cuando el personal se cierran una encuesta.";
+
+//Forum Staff
+$lang['STAFF_FORUM_ADD']="Añadir Categoría Foro";
+$lang['STAFF_FORUM_EDIT']="Edición Foro Categoría";
+$lang['STAFF_FORUM_DEL']="Eliminar Categoría Foro";
+$lang['STAFF_FORUM_ADD_NAME']="Nombre del Foro";
+$lang['STAFF_FORUM_ADD_DESC']="Descripción foro";
+$lang['STAFF_FORUM_ADD_AUTHORIZE']="Autorización";
+$lang['STAFF_FORUM_ADD_AUTHORIZEP']="Público";
+$lang['STAFF_FORUM_ADD_AUTHORIZES']="Sólo Personal";
+$lang['STAFF_FORUM_ADD_BTN']="Crear Foro";
+$lang['STAFF_FORUM_ADD_ERRNAME']="La entrada de nombre del foro era válida o vacía. Por favor, vuelva a comprobar y probar de nuevo.";
+$lang['STAFF_FORUM_ADD_ERRDESC']="La entrada Descripción foro fue válida o vacía. Por favor, vuelva a comprobar y probar de nuevo.";
+$lang['STAFF_FORUM_ADD_ERRNIU']="El nombre del foro ha elegido ya está en uso. Por favor, inténtelo de nuevo con un nuevo nombre.";
+$lang['STAFF_FORUM_ADD_SUCCESS']="Ha agregado una categoría de foro para el juego.";
+$lang['STAFF_FORUM_EDIT_ERRINV']="Se ha especificado un ID válido foro. Inténtalo de nuevo.";
+$lang['STAFF_FORUM_EDIT_BTN']="Edición Foro";
+$lang['STAFF_FORUM_EDIT_ERREMPTY']="Una o más entradas de la página anterior está vacía. Por favor, rellena el formulario y vuelve a intentarlo.";
+$lang['STAFF_FORUM_EDIT_SUCCESS']="Ha editado con éxito el foro.";
+$lang['STAFF_FORUM_DEL_BTN']="Eliminar Foro";
+$lang['STAFF_FORUM_DEL_INFO']="Eliminación de foros son permanentes. Esto también eliminará los mensajes dentro de ellos también.";
+$lang['STAFF_FORUM_EDIT_ERRFDNE']="El foro ha decidido eliminar no existe. Volver atrás y comprobar y volver a intentarlo.";
+$lang['STAFF_FORUM_DEL_SUCCESS']="Se ha eliminado el foro, junto con cualesquiera que sean los temas y mensajes estaban en ellos con anterioridad.";
 ?>
