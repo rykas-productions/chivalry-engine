@@ -7,9 +7,9 @@ session_name('CENGINE');
 session_start();
 header('Content-Type: event-stream');
 
-if(isset($_GET['lang']))
+if(isset($_POST['lang']))
 {
-	$lang = $_GET['lang'];
+	$lang = $_POST['lang'];
 	// register the session and set the cookie
 	$_SESSION['lang'] = $lang;
 	setcookie('lang', $lang, time() + (3600 * 24 * 30));
