@@ -4,6 +4,7 @@ if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
 }
+
 function csrf_error($goBackTo)
 {
     global $h,$lang;
@@ -201,15 +202,14 @@ function lang_change()
 	}
 	else
 	{
-		$LangArray=["en","es", "ger"];
+		$LangArray=[ "en", "es", "ger" ];
 		if (!in_array($_POST['lang'],$LangArray))
 		{
 			echo "You specified an invalid Language. Go back and try again.";
 		}
-		else
-		{
-			echo "You have successfully updated your language to {$_POST['lang']}.";
-		}
+	else
+	{
+	echo "You have successfully updated your language to {$_POST['lang']}.";
 	}
 }
 function pw_change()
