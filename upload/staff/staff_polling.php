@@ -21,26 +21,8 @@ case "closepoll":
     close();
     break;
 default:
-    home();
+    die();
     break;
-}
-function home()
-{
-	global $lang,$h;
-	echo "
-	<table class='table table-bordered'>
-		<tr>
-			<td>
-				<a href='?action=addpoll'>{$lang['STAFF_POLL_TITLES']}</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=closepoll'>{$lang['STAFF_POLL_TITLEE']}</a>
-			</td>
-		</tr>
-	</table>";
-	$h->endpage();
 }
 function add()
 {

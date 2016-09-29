@@ -37,34 +37,120 @@ if (($ir['user_level']) == 'Admin')
 		</tbody>
 	</table>
 	<hr />
-	<table class='table table-bordered'>
-		<tbody>
-			<tr>
-				<td><a href='staff_settings.php'>Admin</a></td>
-				<td><a>Modules</a></td>
-			</tr>
-			<tr>
-				<td><a href='staff_users.php'>Users</a></td>
-				<td><a href='staff_logs.php'>Logs</a></td>
-			</tr>
-			<tr>
-				<td><a href='staff_items.php'>Items</a></td>
-				<td><a>Shops</a></td>
-			</tr>
-			<tr>
-				<td><a>Academy</a></td>
-				<td><a>Jobs</a></td>
-			</tr>
-			<tr>
-				<td><a href='staff_forums.php'>Forums</a></td>
-				<td><a>Punishments</a></td>
-			</tr>
-			<tr>
-				<td><a href='staff_perms.php'>Permissions</a></td>
-				<td><a href='staff_polling.php'>Polling</a></td>
-			</tr>
-		</tbody>
-	</table>
+	<ul class='nav nav-tabs nav-justified'>
+		<li><a data-toggle='tab' href='#ADMIN'>Admin</a></li>
+		<li><a data-toggle='tab' href='#MODULES'>Modules</a></li>
+		<li><a data-toggle='tab' href='#USERS'>Users</a></li>
+		<li><a data-toggle='tab' href='#LOGS'>Logs</a></li>
+		<li><a data-toggle='tab' href='#ITEMS'>Items</a></li>
+		<li><a data-toggle='tab' href='#SHOPS'>Shops</a></li>
+		<li><a data-toggle='tab' href='#ACADEMY'>Academy</a></li>
+		<li><a data-toggle='tab' href='#JOBS'>Jobs</a></li>
+		<li><a data-toggle='tab' href='#FORUMS'>Forums</a></li>
+		<li><a data-toggle='tab' href='#PUNISH'>Punishments</a></li>
+		<li><a data-toggle='tab' href='#PERMISSION'>Permissions</a></li>
+		<li><a data-toggle='tab' href='#POLL'>Polling</a></li>
+	</ul>
+	<div class='tab-content'>
+		<div id='ADMIN' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					<a href='staff_settings.php?action=basicset'>Game Settings</a><br />
+					<a href='staff_settings.php?action=announce'>Create an Announcement</a><br />
+					<a href='staff_settings.php?action=diagnostics'>Game Diagnostics</a><br />
+					<a href='staff_settings.php?action=restore'>Restore Users</a><br />
+				</div>
+			</div>
+		</div>
+		<div id='MODULES' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					N/A
+				</div>
+			</div>
+		</div>
+		<div id='USERS' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					<a href='staff_users.php?action=createuser'>Create User</a><br />
+					<a href='staff_users.php?action=edituser'>Edit User</a><br />
+					<a href='staff_users.php?action=deleteuser'>Delete User</a><br />
+				</div>
+			</div>
+		</div>
+		<div id='LOGS' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					<a href='staff_logs.php?action=trainlogs'>Training Logs</a><br />
+					<a href='staff_logs.php?action=attacklogs'>Attack Logs</a><br />
+				</div>
+			</div>
+		</div>
+		<div id='ITEMS' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					<a href='staff_items.php?action=createitmgroup'>Create Item Group</a><br />
+					<a href='staff_items.php?action=create'>Create Item</a><br />
+					<a href='staff_items.php?action=delete'>Delete Item</a><br />
+					<a href='staff_items.php?action=edit'>Edit Item</a><br />
+				</div>
+			</div>
+		</div>
+		<div id='SHOPS' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					N/A
+				</div>
+			</div>
+		</div>
+		<div id='JOBS' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					N/A
+				</div>
+			</div>
+		</div>
+		<div id='ACADEMY' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					N/A
+				</div>
+			</div>
+		</div>
+		<div id='FORUMS' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					<a href='staff_forums.php?action=addforum'>{$lang['STAFF_FORUM_ADD']}</a><br />
+					<a href='staff_forums.php?action=editforum'>{$lang['STAFF_FORUM_EDIT']}</a><br />
+					<a href='staff_forums.php?action=delforum'>{$lang['STAFF_FORUM_DEL']}</a>
+				</div>
+			</div>
+		</div>
+		<div id='PUNISH' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					N/A
+				</div>
+			</div>
+		</div>
+		<div id='PERMISSION' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					<a href='staff_perms.php?action=viewperm'>View User's Permissions</a><br />
+					<a href='staff_perms.php?action=resetperm'>Reset User's Permissions</a><br />
+					<a href='staff_perms.php?action=editperm'>Edit Permissions</a>
+				</div>
+			</div>
+		</div>
+		<div id='POLL' class='tab-pane fade in'>
+			<div class='panel panel-default'>
+				<div class='panel-body'>
+					<a href='staff_polling.php?action=addpoll'>{$lang['STAFF_POLL_TITLES']}</a><br />
+					<a href='staff_polling.php?action=closepoll'>{$lang['STAFF_POLL_TITLEE']}</a><br />
+				</div>
+			</div>
+		</div>
+	</div>
 	        <hr />
         <h3>Last 20 Staff Actions</h3><hr />
         <table class='table table-bordered table-hover'>

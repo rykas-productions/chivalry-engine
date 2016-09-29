@@ -23,31 +23,8 @@ case "resetperm":
     resetperm();
     break;
 default:
-    home();
+    die();
     break;
-}
-function home()
-{
-	global $h,$lang;
-	echo "<h3>Game Logs</h3><hr />";
-	echo"
-	<table class='table table-bordered'>
-		<tr>
-			<td>
-				<a href='?action=trainlogs'>Training Logs</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=attacklogs'>Attack Logs</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='#'>Banking Logs</a>
-			</td>
-		</tr>
-	</table>";
 }
 function trainlogs()
 {

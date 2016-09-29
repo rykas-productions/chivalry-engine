@@ -24,30 +24,8 @@ case "resetperm":
     resetperm();
     break;
 default:
-    home();
+    die();
     break;
-}
-function home()
-{
-	global $h,$lang;
-	echo"
-	<table class='table table-bordered'>
-		<tr>
-			<td>
-				<a href='?action=viewperm'>View User's Permissions</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=editperm'>Edit Permissions</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=resetperm'>Reset User's Permissions</a>
-			</td>
-		</tr>
-	</table>";
 }
 function viewperm()
 {

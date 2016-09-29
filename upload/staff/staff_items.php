@@ -27,36 +27,8 @@ case "edit":
     edititem();
     break;
 default:
-    home();
+    die();
     break;
-}
-function home()
-{
-	global $h,$lang;
-	echo"
-	<table class='table table-bordered'>
-		<tr>
-			<td>
-				<a href='?action=create'>Create an Item</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=delete'>Delete an Item</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=edit'>Edit an Item</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=createitmgroup'>Create an Item Group</a>
-			</td>
-		</tr>
-	</table>";
-	$h->endpage();
 }
 function create()
 {

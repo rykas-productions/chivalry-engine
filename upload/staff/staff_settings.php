@@ -27,35 +27,8 @@ case "restore":
     restore();
     break;
 default:
-    home();
+    die();
     break;
-}
-function home()
-{
-	global $h,$lang;
-	echo"
-	<table class='table table-bordered'>
-		<tr>
-			<td>
-				<a href='?action=basicset'>Game Settings</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=announce'>Create an Announcement</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=diagnostics'>Game Diagnostics</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=restore'>Restore All Users</a>
-			</td>
-		</tr>
-	</table>";
 }
 function basicsettings()
 {
@@ -79,7 +52,7 @@ function basicsettings()
 					Owner's Name
 				</th>
 				<td>
-					<input type='text' name='ownername' class='form-control' required='1' value='{$set['WebsiteName']}'>
+					<input type='text' name='ownername' class='form-control' required='1' value='{$set['Website_Owner']}'>
 				</td>
 			</tr>
 			<tr>

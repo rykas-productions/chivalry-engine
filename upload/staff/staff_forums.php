@@ -16,31 +16,8 @@ case "delforum":
     delforum();
     break;
 default:
-    home();
+    die();
     break;
-}
-function home()
-{
-	global $h,$lang;
-	echo "
-	<table class='table table-bordered table-responsive'>
-		<tr>
-			<td>
-				<a href='?action=addforum'>{$lang['STAFF_FORUM_ADD']}</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=editforum'>{$lang['STAFF_FORUM_EDIT']}</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=delforum'>{$lang['STAFF_FORUM_DEL']}</a>
-			</td>
-		</tr>
-	</table>";
-	$h->endpage();
 }
 function addforum()
 {

@@ -24,45 +24,8 @@ switch ($_GET['action'])
 		resetperm();
 		break;
 	default:
-		home();
+		die();
 		break;
-}
-function home()
-{
-	global $h,$lang;
-	echo"
-	<table class='table table-bordered'>
-		<tr>
-			<td>
-				<a href='?action=createuser'>Create User</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=edituser'>Edit User</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=deleteuser'>Delete User</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=credituser'>Credit User</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=ipscan'>IP Look Up</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=viewinventory'>View User's Inventory</a>
-			</td>
-		</tr>
-	</table>";
 }
 function createuser()
 {
