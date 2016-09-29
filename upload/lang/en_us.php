@@ -441,4 +441,28 @@ $lang['POLL_VOTE_TVOTE']="Total Votes:";
 $lang['POLL_VOTE_VOTEC']="Choose";
 $lang['POLL_VOTE_CAST']="Cast Vote";
 $lang['POLL_VOTE_NOCLOSED']="There are no closed polls at this moment. Come back later when the staff close a poll.";
+
+//Forum Staff
+$lang['STAFF_FORUM_ADD']="Add Forum Category";
+$lang['STAFF_FORUM_EDIT']="Edit Forum Category";
+$lang['STAFF_FORUM_DEL']="Delete Forum Category";
+$lang['STAFF_FORUM_ADD_NAME']="Forum Name";
+$lang['STAFF_FORUM_ADD_DESC']="Forum Description";
+$lang['STAFF_FORUM_ADD_AUTHORIZE']="Authorization";
+$lang['STAFF_FORUM_ADD_AUTHORIZEP']="Public";
+$lang['STAFF_FORUM_ADD_AUTHORIZES']="Staff-Only";
+$lang['STAFF_FORUM_ADD_BTN']="Create Forum";
+$lang['STAFF_FORUM_ADD_ERRNAME']="The forum name input was either invalid or empty. Please recheck and try again.";
+$lang['STAFF_FORUM_ADD_ERRDESC']="The forum description input was either invalid or empty. Please recheck and try again.";
+$lang['STAFF_FORUM_ADD_ERRNIU']="The forum name you chose is already in use. Please try again with a new name.";
+$lang['STAFF_FORUM_ADD_SUCCESS']="You have successfully added a forum category to the game.";
+$lang['STAFF_FORUM_EDIT_ERRINV']="You specified an invalid forum ID. Try again.";
+$lang['STAFF_FORUM_EDIT_BTN']="Edit Forum";
+$lang['STAFF_FORUM_EDIT_ERREMPTY']="One or more inputs on the previous page is empty. Please fill the form and try again.";
+$lang['STAFF_FORUM_EDIT_SUCCESS']="You have successfully edited the forum.";
+$lang['STAFF_FORUM_DEL_BTN']="Delete Forum";
+$lang['STAFF_FORUM_DEL_INFO']="Deleting forums are permenant. This will also remove the posts inside them as well.";
+$lang['STAFF_FORUM_EDIT_ERRFDNE']="The forum you chose to delete does not exist. Go back and verify and try again.";
+$lang['STAFF_FORUM_DEL_SUCCESS']="Successfully deleted the forum, along with whatever topics and posts were in them previously.";
+
 ?>
