@@ -56,7 +56,7 @@ if (($ir['user_level']) == 'Admin')
 				<td><a>Jobs</a></td>
 			</tr>
 			<tr>
-				<td><a>Forums</a></td>
+				<td><a href='staff_forums.php'>Forums</a></td>
 				<td><a>Punishments</a></td>
 			</tr>
 			<tr>
