@@ -17,7 +17,7 @@ default:
 }
 function home()
 {
-	global $db,$userid,$lang,$ir;
+	global $db,$userid,$lang,$ir,$h;
 	$voterquery=1;
 	echo "{$lang['POLL_CYV']}<br />";
 	
@@ -165,7 +165,7 @@ function home()
 }
 function viewpolls()
 {
-	global $lang,$db,$userid,$ir;
+	global $db,$userid,$lang,$ir,$h;
 	echo "<a href='polling.php'>{$lang['POLL_CYV']}</a><br />";
 		$q =
 			$db->query("SELECT * FROM `polls` WHERE `active` = '0' ORDER BY `id` DESC");
