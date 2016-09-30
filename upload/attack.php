@@ -133,6 +133,16 @@ else if (user_dungeon($userid) == true)
     alert("danger","You're in Trouble!","You're in the dungeon at the moment. Try attacking later when you pay your debt to society! <a href='index.php'>Go Home</a>.");
     die($h->endpage());
 }
+else if (permission('CanBeAttack',$_GET['user']) == false)
+{
+    $_SESSION['attacking'] = 0;
+    $ir['attacking'] = 0;
+    $db->query("UPDATE `users`
+	SET `attacking` = 0
+	WHERE `userid` = {$userid}");
+    alert("danger","No Permission!","This user cannot be attacked by natural means. <a href='index.php'>Go Home</a>.");
+    die($h->endpage());
+}
 $_GET['weapon'] =
         (isset($_GET['weapon']) && is_numeric($_GET['weapon']))
                 ? abs(intval($_GET['weapon'])) : '';

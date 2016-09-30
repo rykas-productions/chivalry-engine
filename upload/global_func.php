@@ -1446,3 +1446,34 @@ function update_fg_info($ip) {
 	curl_close($curl);
 	return $content;
 }
+
+/**
+ * Tests to see if the user's permission is allowed or not.
+ *
+ * @param string $perm		The permission to test for
+ * @param int $user			The user to test on
+ *
+ * @return bool			Returns true if the user has this,
+ *						false if not.
+ */
+ function permission($perm,$user)
+ {
+	 global $db;
+	 $Query=$db->query("SELECT `perm_disable` FROM `permissions` WHERE `perm_name` = '{$perm}' AND `perm_user` = {$user}");
+	 if ($db->num_rows($Query) == 0)
+	 {
+		 return true;
+	 }
+	 $q=$db->fetch_single($Query);
+	 if ($q == 'true')
+	 {
+		 //User does not have this permission
+		 return false;
+	 }
+	 else
+	 {
+		 //User does have this permission
+		 return true;
+	 }
+	 
+ }
