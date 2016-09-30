@@ -32,7 +32,7 @@ Order By:
 	<a href='?st=$st&by=userid&ord=$ord'>User ID</a>&nbsp;|
 	<a href='?st=$st&by=username&ord=$ord'>Username</a>&nbsp;|
 	<a href='?st=$st&by=level&ord=$ord'>Level</a>&nbsp;|
-	<a href='?st=$st&by=money&ord=$ord'>Money</a>
+	<a href='?st=$st&by=primary_currency&ord=$ord'>Money</a>
 <br />
 <a href='?st=$st&by=$by&ord=asc'>Ascending</a>&nbsp;|
 <a href='?st=$st&by=$by&ord=desc'>Descending</a>
