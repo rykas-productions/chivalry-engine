@@ -93,6 +93,7 @@ if (($ir['user_level']) == 'Admin')
 					<a href='staff_items.php?action=create'>Create Item</a><br />
 					<a href='staff_items.php?action=delete'>Delete Item</a><br />
 					<a href='staff_items.php?action=edit'>Edit Item</a><br />
+					<a href='staff_items.php?action=giveitem'>Give Item</a><br />
 				</div>
 			</div>
 		</div>
