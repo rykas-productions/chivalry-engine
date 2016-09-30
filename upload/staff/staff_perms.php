@@ -55,7 +55,11 @@ function viewperm()
 		{
 			$UserPermissionSelectQuery=$db->query("SELECT `p`.*,`u`.`username`,`u`.`userid` FROM `permissions` AS `p` INNER JOIN `users` AS `u` ON `u`.`userid` = `p`.`perm_user` WHERE `perm_user` = {$_POST['userid']}");
 			$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
-			staff_csrf_stdverify('staff_perm_1', '?action=viewperm');
+			if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_1', stripslashes($_POST['verf'])))
+			{
+				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				die($h->endpage());
+			}
 			if ($db->num_rows($UserPermissionSelectQuery) == 0)
 			{
 				alert('danger',"All Permissions!","This user has all permissions allowed to them! We cannot display users who have all the permissions, only the users who has had their permissions tweaked.");
@@ -140,7 +144,11 @@ function editperm()
 	else
 	{
 		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
-		staff_csrf_stdverify('staff_perm_2', '?action=editperm');
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_2', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
 		if (empty($_POST['userid']))
 		{
 			alert('danger',"{$lang['ERROR_INVALID']}","You specified an invalid input. Try again!");
@@ -215,7 +223,11 @@ function resetperm()
 	else
 	{
 		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
-		staff_csrf_stdverify('staff_perm_3', '?action=resetperm');
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_3', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
 		if ($_POST['confirm'] != 'CONFIRM')
 		{
 			alert('danger','Confirm Action!','Go back and make sure you type CONFIRM in the box.');
