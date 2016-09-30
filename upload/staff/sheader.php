@@ -239,10 +239,14 @@ class headers
 		</body>
 			<footer>
 				<p>
-					<?php echo "<hr />{$lang['MENU_OUT']}";
+					<?php 
+					echo "<hr />
+					{$lang['MENU_TIN']}  
+						" . date('F j, Y') . " " . date('g:i:s a') . "<br />
+					{$lang['MENU_OUT']}";
 					?>
 					&copy; <?php echo date("Y");
-					echo"<br/>{$db->num_queries} queries executed.{$query_extra}";
+					echo"<br/>{$db->num_queries} {$lang['MENU_QE']}.{$query_extra}";
 					?>
 				</p>
 			</footer>
