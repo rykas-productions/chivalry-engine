@@ -26,6 +26,9 @@ case "delete":
 case "edit":
     edititem();
     break;
+case "giveitem":
+    giveitem();
+    break;
 default:
     die();
     break;
@@ -375,5 +378,103 @@ function deleteitem()
 		stafflog_add("Deleted item {$itemname}");
 		alert("success","Success!","The Item ({$itemname}) has been deleted from the game successfully.");
 		die($h->endpage());
+	}
+}
+function giveitem()
+{
+	global $lang,$db,$userid,$h;
+	if (!isset($_POST['user']) || !isset($_POST['item']))
+	{
+		echo "<h3>{$lang['STAFF_ITEM_GIVE_TITLE']}</h3>";
+		$csrf = request_csrf_html('staff_giveitem');
+		echo "
+		<form method='post'>
+			<table class='table table-bordered table-responsive'>
+				<tr>
+					<th>
+						{$lang['STAFF_ITEM_GIVE_FORM_USER']}
+					</th>
+					<td>
+						" . user_dropdown('user') . "
+					</td>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_ITEM_GIVE_FORM_ITEM']}
+					</th>
+					<td>
+						" . item_dropdown('item') . "
+					</td>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_ITEM_GIVE_FORM_QTY']}
+					</th>
+					<td>
+						<input type='number' required='1' class='form-control' name='qty' value='1' min='1' />
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_ITEM_GIVE_FORM_BTN']}' />
+					</td>
+				</tr>
+				{$csrf}
+			</table>
+		</form>";
+		$h->endpage();
+	}
+	else
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_giveitem', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+		$_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : '';
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : '';
+		$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(intval($_POST['qty'])) : '';
+		if (empty($_POST['item']))
+		{
+			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_ITEM_GIVE_SUB_NOITEM']}");
+			die($h->endpage());
+		}
+		elseif (empty($_POST['user']))
+		{
+			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_ITEM_GIVE_SUB_NOUSER']}");
+			die($h->endpage());
+		}
+		elseif (empty($_POST['qty']))
+		{
+			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_ITEM_GIVE_SUB_NOQTY']}");
+			die($h->endpage());
+		}
+		else
+		{
+			 $q = $db->query("SELECT `itmid`,`itmname` FROM `items` WHERE `itmid` = {$_POST['item']}");
+			 $q2 = $db->query("SELECT `userid`,`username` FROM `users` WHERE `userid` = {$_POST['user']}");
+			 if ($db->num_rows($q) == 0)
+			 {
+				alert('danger',"{$lang['ERROR_GEN']}","{$lang['STAFF_ITEM_GIVE_SUB_ITEMDNE']}");
+				die($h->endpage());
+			 }
+			 elseif ($db->num_rows($q2) == 0)
+			 {
+				alert('danger',"{$lang['ERROR_GEN']}","{$lang['STAFF_ITEM_GIVE_SUB_USERDNE']}");
+				die($h->endpage());
+			 }
+			 else
+			 {
+				$item=$db->fetch_row($q);
+				$user=$db->fetch_row($q2);
+				$db->free_result($q);
+				$db->free_result($q2);
+				item_add($_POST['user'], $_POST['item'], $_POST['qty']);
+				event_add($_POST['user'], "The administration has gifted you {$_POST['qty']}x {$item['itmname']}(s) to your inventory.");
+				stafflog_add("Gave {$_POST['qty']}x <a href='../iteminfo.php'>{$item['itmname']}</a> to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>");
+				alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_ITEM_GIVE_SUB_SUCCESS']}");
+				die($h->endpage());
+			 }
+		}
 	}
 }
