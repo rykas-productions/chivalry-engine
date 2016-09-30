@@ -465,4 +465,9 @@ $lang['STAFF_FORUM_DEL_INFO']="Deleting forums are permenant. This will also rem
 $lang['STAFF_FORUM_EDIT_ERRFDNE']="The forum you chose to delete does not exist. Go back and verify and try again.";
 $lang['STAFF_FORUM_DEL_SUCCESS']="Successfully deleted the forum, along with whatever topics and posts were in them previously.";
 
+//Item Use
+$lang['IU_UI']="You are trying to use an unspecified item. Check your link and try again!";
+$lang['IU_UNUSED_ITEM']="This item isn't configured to be used. You cannot use items with a configured use.";
+$lang['IU_ITEM_NOEXIST']="The item you are trying to use does not exist. Check your sources and try again.";
+$lang['IU_SUCCESS']="has been used successfully. Refresh for the changes to take effect.";
 ?>
