@@ -470,4 +470,18 @@ $lang['IU_UI']="You are trying to use an unspecified item. Check your link and t
 $lang['IU_UNUSED_ITEM']="This item isn't configured to be used. You cannot use items with a configured use.";
 $lang['IU_ITEM_NOEXIST']="The item you are trying to use does not exist. Check your sources and try again.";
 $lang['IU_SUCCESS']="has been used successfully. Refresh for the changes to take effect.";
+
+//Staff items
+$lang['STAFF_ITEM_GIVE_TITLE']="Giving Item to User";
+$lang['STAFF_ITEM_GIVE_FORM_USER']="User";
+$lang['STAFF_ITEM_GIVE_FORM_ITEM']="Item";
+$lang['STAFF_ITEM_GIVE_FORM_QTY']="Quantity";
+$lang['STAFF_ITEM_GIVE_FORM_BTN']="Give Item";
+$lang['STAFF_ITEM_GIVE_SUB_NOITEM']="You didn't specify the item you wish to give to the user.";
+$lang['STAFF_ITEM_GIVE_SUB_NOQTY']="You didn't specify the amount of the item you wish to give to the user.";
+$lang['STAFF_ITEM_GIVE_SUB_NOUSER']="You didn't specify the user you wish to give an item to.";
+$lang['STAFF_ITEM_GIVE_SUB_ITEMDNE']="The item you are trying to give away does not exist.";
+$lang['STAFF_ITEM_GIVE_SUB_USERDNE']="The user you are trying to give an item to does not exist.";
+$lang['STAFF_ITEM_GIVE_SUB_SUCCESS']="Item(s) have been gifted successfully.";
+
 ?>
