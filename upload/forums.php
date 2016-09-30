@@ -689,7 +689,7 @@ function reply()
     }
     if ($topic['ft_locked'] == 0)
     {
-        $_POST['fp_text'] = $db->escape(stripslashes($_POST['fp_text']));
+		$_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
         if ((strlen($_POST['fp_text']) > 65535))
         {
 			alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['FORUM_MAX_CHAR_REPLY']}");
