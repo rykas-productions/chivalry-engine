@@ -153,7 +153,7 @@ else
         	  	[<a href='imadd.php?ID={$i['inv_id']}'>Add To Market</a>]";
         if ($i['effect1_on'] || $i['effect2_on'] || $i['effect3_on'])
         {
-            echo " [<a href='itemuse.php?ID={$i['inv_id']}'>Use</a>]";
+            echo " [<a href='itemuse.php?item={$i['inv_id']}'>Use</a>]";
         }
         if ($i['weapon'] > 0)
         {

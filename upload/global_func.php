@@ -111,6 +111,17 @@ function put_infirmary($user,$time,$reason)
 	}
 }
 /*
+	The function for removing someone's infirmary time.
+	@param int $user The user to put in the infirmary
+	@param int $time The time (in minutes) to remove.
+*/
+function remove_infirmary($user,$time)
+{
+	global $db;
+	$TimeMath=$time*60;
+	$db->query("UPDATE `infirmary` SET `infirmary_out` = `infirmary_out` - '{$TimeMath}' WHERE `infirmary_user` = {$user}");
+}
+/*
 	The function for putting/adding onto someone's dungeon time.
 	@param int $user The user to put in the dungeon
 	@param int $time The time (in minutes) to add.
@@ -130,6 +141,17 @@ function put_dungeon($user,$time,$reason)
 	{
 		$db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` + {$TimeMath}, `dungeon_reason` = '{$reason}'");
 	}
+}
+/*
+	The function for removing someone's infirmary time.
+	@param int $user The user to put in the infirmary
+	@param int $time The time (in minutes) to remove.
+*/
+function remove_dungeon($user,$time)
+{
+	global $db;
+	$TimeMath=$time*60;
+	$db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` - '{$TimeMath}' WHERE `dungeon_user` = {$user}");
 }
 /*
 	The function for testing for a valid email.
