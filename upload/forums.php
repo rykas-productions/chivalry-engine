@@ -540,10 +540,9 @@ function viewtopic()
 			else
 			{
 				$av="";
-				$skin="";
 			}
-			$memb['signature'] = $memb['signature'] ? $parser->parse($memb['signature']) : "{$lang['FORUM_NOSIG']}";
-			$memb['signature'] = $parser->getAsHtml();
+			$memb['signature'] = $parser->parse($memb['signature']) ? $parser->parse($memb['signature']) : "NA";
+			$memb['signature'] = $parser->getAsHtml($memb['signature']);
         }
 		$parser->parse($r['fp_text']);
         $r['fp_text']=$parser->getAsHtml();
