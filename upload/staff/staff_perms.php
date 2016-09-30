@@ -35,7 +35,7 @@ function viewperm()
 		$csrf=request_csrf_html('staff_perm_1');
 		echo "Firstly, select a user from the dropdown to view their permissions.";
 		echo "<form method='post'>
-        	" . user_dropdown(NULL, 'userid')
+        	" . user_dropdown('userid')
                 . "
         	<br />
         	{$csrf}
@@ -109,7 +109,7 @@ function editperm()
 			<tbody>
 				<tr>
 					<th>Select A User</th>
-					<td>" . user_dropdown(NULL, 'userid') . "</td>
+					<td>" . user_dropdown('userid') . "</td>
 				</tr>
 				<tr>
 					<th>Select A Permission</th>
@@ -211,7 +211,7 @@ function resetperm()
 		echo "Select a user to reset their permissions.";
 		echo "
         	<form method='post'>
-			" . user_dropdown(NULL, 'userid') . "
+			" . user_dropdown('userid') . "
 			{$csrf}
 			<br />
 			<small>Please type <i>CONFIRM</i> to confirm the permission reset</small><br />
