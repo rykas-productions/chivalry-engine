@@ -301,6 +301,10 @@ function createitmgroup()
 			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
 			die($h->endpage());
 		}
+		if (empty($name))
+		{
+			alert('danger',"Uh Oh!","Item group name is empty.");
+		}
 		$q=$db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypename` = '{$name}'");
 		if ($db->num_rows($q) > 0)
 		{
