@@ -187,7 +187,7 @@ function create()
 		$itmtype = (isset($_POST['itmtype']) && is_numeric($_POST['itmtype'])) ? abs(intval($_POST['itmtype'])) : '';
 		$itmbuyprice = (isset($_POST['itembuy']) && is_numeric($_POST['itembuy'])) ? abs(intval($_POST['itembuy'])) : 0;
 		$itmsellprice = (isset($_POST['itemsell']) && is_numeric($_POST['itemsell'])) ? abs(intval($_POST['itemsell'])) : 0;
-		if (!isset($itmname) || !isset($itmdesc) || !isset($itmtype) || !isset($itmbuyprice) || !isset($itmsellprice))
+		if (empty($itmname) || empty($itmdesc) || empty($itmtype) || empty($itmbuyprice) || empty($itmsellprice))
 		{
 			alert('danger',"Missing Inputs!","You are missing one of the required fields. Please go back and try again.");
 			die($h->endpage());
