@@ -310,7 +310,7 @@ function createitmgroup()
 		}
 		stafflog_add("Added item type {$name}.");
 		alert('success',"Success!","You have successfully created an item group called {$name}.");
-		$db->query("INSERT INTO `itemtypes` VALUES(NULL, '{$_POST['name']}')");
+		$db->query("INSERT INTO `itemtypes` VALUES(NULL, '{$name}')");
 		
 	}
 	$h->endpage();
