@@ -108,8 +108,8 @@ function create()
 					</th>
 					<td>
 					<b>On?</b>
-						<input type='radio' class='form-control' name='effect{$i}on' value='1' /> Yes
-						<input type='radio' class='form-control' name='effect{$i}on' value='0' checked='checked' /> No
+						<input type='radio' class='form-control' name='effect{$i}on' value='true' /> Yes
+						<input type='radio' class='form-control' name='effect{$i}on' value='false' checked='checked' /> No
 					<br />
 					<b>Stat:</b> <select name='effect{$i}stat' type='dropdown' class='form-control'>
 						<option value='energy'>Energy</option>
@@ -206,7 +206,7 @@ function create()
 			alert("danger","Uh oh!","The item group you specified does not exist. Go back and try again, please.");
 			die($h->endpage());
 		}
-		$itmbuy = ($_POST['itembuyable'] == 'on') ? 1 : 0;
+		$itmbuy = ($_POST['itembuyable'] == 'true') ? 'true' : 'false';
 		for ($i = 1; $i <= 3; $i++)
 		{
 			$efxkey = "effect{$i}";
@@ -234,7 +234,7 @@ function create()
 							? abs(intval($_POST[$efxkey . 'amount'])) : 0;
 			$_POST[$efxkey . 'on'] =
 					(isset($_POST[$efxkey . 'on'])
-							&& in_array($_POST[$efxkey . 'on'], array('1', '0')))
+							&& in_array($_POST[$efxkey . 'on'], array('true', 'false')))
 							? $_POST[$efxkey . 'on'] : 0;
 			$effects[$i] =
 					$db->escape(
