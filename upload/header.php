@@ -20,7 +20,7 @@ class headers
     <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
 
     <!-- CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link href="css/bs2.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -226,10 +226,10 @@ if (empty($NoHeader))
 			<!-- /.container -->
 
 			<!-- jQuery Version 1.12.1 -->
-			<script src="js/jquery-1.12.0.min.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 			<!-- Bootstrap Core JavaScript -->
-			<script src="js/bootstrap.min.js"></script>
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 			<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 			<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 			<!-- Other JavaScript -->
