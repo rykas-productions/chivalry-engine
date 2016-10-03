@@ -298,6 +298,10 @@ $lang['BANK_D_SUCCESS1']=" to be deposited. After the fee (";
 $lang['BANK_D_SUCCESS2']=") is taken, ";
 $lang['BANK_D_SUCCESS3']=" is added to your bank account. <b>You now have ";
 $lang['BANK_D_SUCCESS4']=" in your account.</b>";
+$lang['BANK_W_FAIL']="You are trying to withdraw more {$lang['INDEX_PRIMCURR']} than you currently have in the bank.";
+$lang['BANK_W_SUCCESS']="You successfully withdrew";
+$lang['BANK_W_SUCCESS1']="from your bank account. You have";
+$lang['BANK_W_SUCCESS2']="left in your bank account.";
 
 //Attack
 $lang['ATT_NC']="Please remember that cheating in this game won't get you anywhere...";
