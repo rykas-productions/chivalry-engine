@@ -235,8 +235,6 @@ if (empty($NoHeader))
 			<!-- Other JavaScript -->
 			<script src="js/register.js"></script>
 			<script src="js/game.js"></script>
-			<script src="https://dl.dropboxusercontent.com/u/72961306/CEngine/analytics.js"></script>
-			<script> var consent = new analytics(function() { alert('Next Major Addition: Crimes')}); </script>
 		</body>
 			<footer>
 				<p>
