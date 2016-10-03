@@ -31,7 +31,7 @@ else
         {
             
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_SUCCESS']} " . number_format($bank_cost) . "<br />
-			<a href='bank.php'>{$lang['BANK_SUCCESS1']} </a>!");
+			<a href='bank.php'>{$lang['BANK_SUCCESS1']}</a>");
             $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$bank_cost}, `bank` = 0 WHERE `userid` = {$userid}");
         }
         else
@@ -41,9 +41,7 @@ else
     }
     else
     {
-        echo "{$lang['BANK_BUY1']}" . number_format($bank_cost)
-                . " {$lang['INDEX_PRIMCURR']}!<br />
-<a href='bank.php?buy'>{$lang['BANK_BUYYES']}</a>";
+        echo "{$lang['BANK_BUY1']}" . number_format($bank_cost) . " {$lang['INDEX_PRIMCURR']}!<br /> <a href='bank.php?buy'>{$lang['BANK_BUYYES']}</a>";
     }
 }
 function index()
@@ -55,7 +53,9 @@ function index()
 				<table class='table table-bordered'>
 					<tr>
 						<td width='50%'>
-{$lang['BANK_DEPOSIT_WARNING']} {$bank_feepercent}% {$lang['BANK_DEPOSITE_WARNING1']} " . number_format($bank_maxfee) . ".
+							{$lang['BANK_DEPOSIT_WARNING']} 
+							{$bank_feepercent}% 
+							{$lang['BANK_DEPOSITE_WARNING1']} " . number_format($bank_maxfee) . ".
 							<form action='bank.php?action=deposit' method='post'>
 								<b>{$lang['BANK_AMOUNT']}</b><br />
 								<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' required='1' name='deposit' value='{$ir['primary_currency']}'>
@@ -93,5 +93,21 @@ function deposit()
         $db->query("UPDATE `users` SET `bank` = `bank` + {$gain}, `primary_currency` = `primary_currency` - {$_POST['deposit']} WHERE `userid` = {$userid}");
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_D_SUCCESS']} " . number_format($_POST['deposit']) . "{$lang['BANK_D_SUCCESS1']}" . number_format($fee) . "{$lang['BANK_D_SUCCESS2']} " . number_format($gain) . "{$lang['BANK_D_SUCCESS3']} " . number_format($ir['bank']) . "{$lang['BANK_D_SUCCESS4']}");
     }
+}
+function withdraw()
+{
+	global $db, $ir, $lang, $userid, $h;
+	$_POST['withdraw'] = abs((int) $_POST['withdraw']);
+	if ($_POST['withdraw'] > $ir['bank'])
+    {
+		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_W_FAIL']}");
+    }
+	else
+	{
+		$gain = $_POST['withdraw'];
+		$ir['bank'] -= $gain;
+		$db->query("UPDATE `users` SET `bank` = `bank` - {$gain}, `primary_currency` = `primary_currency` + {$gain} WHERE `userid` = {$userid}");
+		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_W_SUCCESS']} " . number_format($_POST['withdraw']) . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS1']} " . $ir['bank'] . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS2']}");
+	}
 }
 $h->endpage();
