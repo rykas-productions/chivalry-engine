@@ -146,15 +146,29 @@ class headers
 		date_default_timezone_set($ir['timezone']); 
 		if ($ir['mail'] > 0)
 		{
-			echo "<div class='alert alert-info'> <strong>{$lang['MENU_UNREADMAIL1']}</strong> {$lang['MENU_UNREADMAIL2']} {$ir['mail']} {$lang['MENU_UNREADMAIL3']} <a href='../inbox.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}</div>";
+			alert('info',"{$lang['MENU_UNREADMAIL1']}","{$lang['MENU_UNREADMAIL2']} {$ir['mail']} {$lang['MENU_UNREADMAIL3']} <a href='inbox.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}");
 		}
 		if ($ir['notifications'] > 0)
 		{
-			echo "<div class='alert alert-info'> <strong>{$lang['MENU_UNREADNOTIF']}</strong> {$lang['MENU_UNREADMAIL2']} {$ir['notifications']} {$lang['MENU_UNREADNOTIF1']} <a href='../notifications.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}</div>";
+			alert('info',"{$lang['MENU_UNREADNOTIF']}","{$lang['MENU_UNREADMAIL2']} {$ir['notifications']} {$lang['MENU_UNREADNOTIF1']} <a href='notifications.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}");
 		}
 		if ($ir['announcements'] > 0)
 		{
-			echo "<div class='alert alert-info'> <strong>{$lang['MENU_UNREADANNONCE']}</strong> {$lang['MENU_UNREADANNONCE1']} {$ir['announcements']} {$lang['MENU_UNREADANNONCE2']} <a href='../announcements.php'>{$lang["GEN_HERE"]}</a>.</div>";
+			alert('info',"{$lang['MENU_UNREADANNONCE']}","{$lang['MENU_UNREADANNONCE1']} {$ir['announcements']} {$lang['MENU_UNREADANNONCE2']} <a href='announcements.php'>{$lang["GEN_HERE"]}</a>.");
+		}
+		if (user_infirmary($ir['userid']) == true)
+		{
+			$CurrentTime=time();
+			$InfirmaryOut=$db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
+			$InfirmaryRemain=round((($InfirmaryOut - $CurrentTime) / 60), 2);
+			alert('info',"{$lang['GEN_INFIRM']}","{$lang['MENU_INFIRMARY1']} {$InfirmaryRemain} {$lang['GEN_MINUTES']}");
+		}
+		if (user_dungeon($ir['userid']) == true)
+		{
+			$CurrentTime=time();
+			$DungeonOut=$db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
+			$DungeonRemain=round((($DungeonOut - $CurrentTime) / 60), 2);
+			alert('info',"{$lang["GEN_DUNG"]}","{$lang['MENU_DUNGEON1']} {$DungeonRemain} {$lang['GEN_MINUTES']}");
 		}
 		
 	}
