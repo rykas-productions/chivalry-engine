@@ -547,8 +547,8 @@ function viewtopic()
 		$parser->parse($r['fp_text']);
         $r['fp_text']=$parser->getAsHtml();
         echo "<tr>
-				<th align='center' width='33%'>{$lang['FORUM_POST_POST']} #{$no}</th>
-				<th align='center'>
+				<th width='25%'>{$lang['FORUM_POST_POST']} #{$no}</th>
+				<th>
 				{$lang['FORUM_POST_POSTED']} {$t} {$qlink} {$elink} {$dlink}
 				</th>
 			 </tr>
@@ -575,7 +575,7 @@ function viewtopic()
         }
         print
                 "</td>
-			   	 <td valign='top'>
+			   	 <td>
                     {$r['fp_text']}
                     {$edittext}<br />
 					<hr />
@@ -853,7 +853,7 @@ function newtopic()
         alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['FORUM_TOPIC_FORM_TITLE_LENGTH']}");
 		die($h->endpage());
     }
-    $_POST['fp_text'] = $db->escape(stripslashes($_POST['fp_text']));
+    $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
     if ((strlen($_POST['fp_text']) > 65535))
     {
         alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['FORUM_MAX_CHAR_REPLY']}");
