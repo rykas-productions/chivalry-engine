@@ -49,3 +49,7 @@ $parser->addCodeDefinition($builder->build());
 //Highlight
 $builder = new JBBCode\CodeDefinitionBuilder('highlight', '<mark>{param}</mark>');
 $parser->addCodeDefinition($builder->build());
+
+//Strikethrough
+$builder = new JBBCode\CodeDefinitionBuilder('s', '<s>{param}</s>');
+$parser->addCodeDefinition($builder->build());
