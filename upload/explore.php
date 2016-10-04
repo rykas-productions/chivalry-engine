@@ -5,6 +5,11 @@ if (user_infirmary($ir['userid']) == true)
 	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['ERRDE_EXPLORE']}");
 	die($h->endpage());
 }
+if (user_dungeon($ir['userid']) == true)
+{
+	alert('danger',"{$lang["GEN_DUNG"]}","{$lang['ERRDE_EXPLORE2']}");
+	die($h->endpage());
+}
 echo"<h4>{$lang['EXPLORE_INTRO']}</h4><ul class='nav nav-tabs nav-justified'>
 	<li><a data-toggle='tab' href='#SHOPS'>{$lang['EXPLORE_SHOP']}</a></li>
 	<li><a data-toggle='tab' href='#FD'>{$lang['EXPLORE_FD']}</a></li>
@@ -82,6 +87,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4><ul class='nav nav-tabs nav-justified'>
 				<a href='gym.php'>{$lang['EXPLORE_GYM']}</a><br />
 				<a href='#'>{$lang['EXPLORE_JOB']}</a><br />
 				<a href='#'>{$lang['EXPLORE_ACADEMY']}</a><br />
+				<a href='criminal.php'>{$lang['EXPLORE_CRIMES']}</a><br />
 			</div>
 		</div>
 	</div>
