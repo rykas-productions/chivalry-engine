@@ -607,6 +607,44 @@ CREATE TABLE IF NOT EXISTS `uservotes` (
   PRIMARY KEY (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Table structure for table `crimegroups`
+--
+
+CREATE TABLE IF NOT EXISTS `crimegroups` (
+  `cgID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `cgNAME` text NOT NULL,
+  `cgORDER` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cgID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `crimes`
+--
+
+CREATE TABLE IF NOT EXISTS `crimes` (
+  `crimeID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `crimeNAME` text NOT NULL,
+  `crimeBRAVE` int(11) unsigned NOT NULL,
+  `crimePERCFORM` text NOT NULL,
+  `crimePRICURMIN` int(11) unsigned NOT NULL,
+  `crimePRICURMAX` int(11) unsigned NOT NULL,
+  `crimeSECCURMIN` int(11) unsigned NOT NULL,
+  `crimeSECURMAX` int(11) unsigned NOT NULL,
+  `crimeITEMSUC` int(11) unsigned NOT NULL,
+  `crimeGROUP` int(11) unsigned NOT NULL,
+  `crimeITEXT` text NOT NULL,
+  `crimeSTEXT` text NOT NULL,
+  `crimeFTEXT` text NOT NULL,
+  `crimeDUNGMIN` int(11) unsigned NOT NULL,
+  `crimeDUNGMAX` int(11) unsigned NOT NULL,
+  `crimeDUNGREAS` text NOT NULL,
+  `crimeXP` int(11) NOT NULL,
+  PRIMARY KEY (`crimeID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
