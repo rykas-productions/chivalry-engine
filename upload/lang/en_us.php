@@ -34,8 +34,8 @@ $lang['MENU_UNREADMAIL2']='You have';
 $lang['MENU_UNREADMAIL3']='unread messages. Click';
 $lang['MENU_UNREADMAIL4']='to read them.';
 $lang['MENU_UNREADNOTIF1']='unread notifications. Click';
-$lang['MENU_INFIRMARY']='Infirmary!';
 $lang['MENU_INFIRMARY1']='You are in the infirmary for the next';
+$lang['MENU_DUNGEON1']='You are in the dungeon for the next';
 
 // Preferences
 $lang["PREF_CPASSWORD"] = "Change Password";
@@ -179,9 +179,11 @@ $lang['EXPLORE_FORUMS']="Forums";
 $lang['EXPLORE_NEWSPAPER']="Newspaper";
 $lang['EXPLORE_ACT']="Activities";
 $lang['EXPLORE_ANNOUNCEMENTS']="Announcements";
+$lang['EXPLORE_CRIMES']="Criminal Center";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
+$lang['ERRDE_EXPLORE2']="Since you are in the dungeon, you cannot visit the town!";
 $lang['ERRDE_PN']="Your personal notepad could not be updated due to the 65,655 character limit.";
 $lang['ERROR_MAIL_UNOWNED']='You cannot read this message as it was not sent to you!';
 $lang['ERROR_FORUM_VF']="Go back and try again for us, please. We done broke.";
@@ -488,4 +490,49 @@ $lang['STAFF_ITEM_GIVE_SUB_ITEMDNE']="The item you are trying to give away does 
 $lang['STAFF_ITEM_GIVE_SUB_USERDNE']="The user you are trying to give an item to does not exist.";
 $lang['STAFF_ITEM_GIVE_SUB_SUCCESS']="Item(s) have been gifted successfully.";
 
+//Staff Crimes
+$lang['STAFF_CRIME_TITLE']="Crimes";
+$lang['STAFF_CRIME_MENU_CREATE']="Create Crime";
+$lang['STAFF_CRIME_MENU_CREATECG']="Create Crime Group";
+$lang['STAFF_CRIME_NEW_TITLE']="Adding a new crime.";
+$lang['STAFF_CRIME_NEW_NAME']="Crime Name";
+$lang['STAFF_CRIME_NEW_BRAVECOST']="Bravery Cost";
+$lang['STAFF_CRIME_NEW_SUCFOR']="Success Formula";
+$lang['STAFF_CRIME_NEW_SUCPRIMIN']="Success Minimum {$lang['INDEX_PRIMCURR']}";
+$lang['STAFF_CRIME_NEW_SUCPRIMAX']="Success Maximum {$lang['INDEX_PRIMCURR']}";
+$lang['STAFF_CRIME_NEW_SUCSECMIN']="Success Minimum {$lang['INDEX_SECCURR']}";
+$lang['STAFF_CRIME_NEW_SUCSECMAX']="Success Maximum {$lang['INDEX_SECCURR']}";
+$lang['STAFF_CRIME_NEW_SUCITEM']="Success Item";
+$lang['STAFF_CRIME_NEW_GROUP']="Crime Group";
+$lang['STAFF_CRIME_NEW_ITEXT']="Initial Text";
+$lang['STAFF_CRIME_NEW_ITEXT_PH']="The text that is shown on starting the crime.";
+$lang['STAFF_CRIME_NEW_STEXT']="Success Text";
+$lang['STAFF_CRIME_NEW_STEXT_PH']="The text that is shown if the player succeeds at committing the crime.";
+$lang['STAFF_CRIME_NEW_JTEXT']="Failure Text";
+$lang['STAFF_CRIME_NEW_JTEXT_PH']="The text that is shown if the player fails the crime.";
+$lang['STAFF_CRIME_NEW_JTIMEMIN']="Minimum Dungeon Time";
+$lang['STAFF_CRIME_NEW_JTIMEMAX']="Maximum Dungeon Time";
+$lang['STAFF_CRIME_NEW_JREASON']="Dungeon Reason";
+$lang['STAFF_CRIME_NEW_XP']="Success Experience";
+$lang['STAFF_CRIME_NEW_BTN']="Create Crime";
+$lang['STAFF_CRIME_NEW_FAIL1']="You are missing one of the required inputs from the previous form.";
+$lang['STAFF_CRIME_NEW_FAIL2']="The item you chose does not appear to exist in-game. Please select a new item.";
+$lang['STAFF_CRIME_NEW_SUCCESS']="You have successfully added a crime to the game.";
+$lang['STAFF_CRIMEG_NEW_TITLE']="Adding a new Crime Group.";
+$lang['STAFF_CRIMEG_NEW_NAME']="Crime Group Name";
+$lang['STAFF_CRIMEG_NEW_ORDER']="Crime Group Order";
+$lang['STAFF_CRIMEG_NEW_BTN']="Create Crime Group";
+$lang['STAFF_CRIMEG_NEW_FAIL1']="At least one of the two inputs on the previous form are empty. Go back and correct that, please.";
+$lang['STAFF_CRIMEG_NEW_FAIL2']="You cannot have crime groups share order values.";
+$lang['STAFF_CRIMEG_NEW_SUCCESS']="You have successfully created a crime group.";
+
+//Criminal Center
+$lang['CRIME_TITLE']="Criminal Center";
+$lang['CRIME_ERROR_JI']="Only the healthy and free individuals can commit crimes.";
+$lang['CRIME_TABLE_CRIME']="Crime";
+$lang['CRIME_TABLE_CRIMES']="Crimes";
+$lang['CRIME_TABLE_COST']="Cost";
+$lang['CRIME_TABLE_COMMIT']="Commit";
+$lang['CRIME_COMMIT_INVALID']="You are trying to commit either a non-existent crime, or an unfinished one. Try again, and if the issue persists, please contact an admin.";
+$lang['CRIME_COMMIT_BRAVEBAD']="You aren't brave enough to commit this crime at this time. Come back later.";
 ?>
