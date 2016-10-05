@@ -135,11 +135,11 @@ function put_dungeon($user,$time,$reason)
 	$TimeMath=$time*60;
 	if ($Dungeon <= $CurrentTime)
 	{
-		$db->query("UPDATE `dungeon` SET `dungeon_out` = {$CurrentTime} + {$TimeMath}, `dungeon_in` = {$CurrentTime}, `dungeon_reason` = '{$reason}'");
+		$db->query("UPDATE `dungeon` SET `dungeon_out` = {$CurrentTime} + {$TimeMath}, `dungeon_in` = {$CurrentTime}, `dungeon_reason` = '{$reason}' WHERE `dungeon_user` = {$user}");
 	}
 	else
 	{
-		$db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` + {$TimeMath}, `dungeon_reason` = '{$reason}'");
+		$db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` + {$TimeMath}, `dungeon_reason` = '{$reason}' WHERE `dungeon_user` = {$user}");
 	}
 }
 /*
