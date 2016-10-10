@@ -99,6 +99,18 @@ $lang["REG_CPW"] = "Confirm Password";
 $lang["REG_SEX"] = "Gender";
 $lang["REG_CLASS"] = "Class";
 $lang["REG_REFID"] = "Referral ID";
+$lang['REG_UNIUERROR']="The username you chose is already in use. Go back and try again.";
+$lang['REG_SUCCESS']="You have successfully joined the game. Enjoy your stay and please be sure to read the game rules.";
+$lang['REG_EIUERROR']="The email you chose is already in use. Go back and try again.";
+$lang['REG_PWERROR']="You must enter a password and confirm it. Go back and try again.";
+$lang['REG_REFERROR']="The referral you specified does not exist in-game. Go back and verify again.";
+$lang['REG_REFMERROR']="The referral you specified shares the same IP as you. No creating multiple accounts. The admins have been alerted.";
+$lang['REG_VPWERROR']="The passwords you entered do not match. Go back and try again.";
+$lang['REG_CAPTCHAERROR']="You failed the captcha, or just didn't enter it. Go back and try again.";
+$lang['REG_GENDERERROR']="You specified an invalid gender. Please go back and try again.";
+$lang['REG_CLASSERROR']="You specified an invalid fighting class. Please go back and try again.";
+$lang['REG_EMAILERROR']="You did not enter a valid email, or failed to enter the email field. Please go back and try again.";
+$lang['REG_MULTIALERT']="Hold on there. We've detected that someone with your IP address has already registered. We're going to stop you here for now. If this is a false positive, please email the game owners.";
 
 //CSRF Error
 $lang["CSRF_ERROR_TITLE"] = "Action Blocked!";
