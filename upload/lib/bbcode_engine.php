@@ -53,3 +53,7 @@ $parser->addCodeDefinition($builder->build());
 //Strikethrough
 $builder = new JBBCode\CodeDefinitionBuilder('s', '<s>{param}</s>');
 $parser->addCodeDefinition($builder->build());
+
+//YouTube Video
+$builder = new JBBCode\CodeDefinitionBuilder('youtube', '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" id="ytplayer" type="text/html" src="https://www.youtube.com/embed/{param}/ frameborder="0"></iframe></div>');
+$parser->addCodeDefinition($builder->build());
