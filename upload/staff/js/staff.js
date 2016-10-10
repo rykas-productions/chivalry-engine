@@ -1,7 +1,7 @@
 /*
 Code by TheMasterGeneral
 Date: 2/8/2016
-Filename: register.js
+Filename: staff.js
 All Rights Reserved.
 */
 function CheckPasswords(password)

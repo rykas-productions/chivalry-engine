@@ -250,6 +250,7 @@ class headers
 			<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 			<!-- Other JavaScript -->
 			<script src="../js/game.js"></script>
+			<script src="js/staff.js"></script>
 		</body>
 			<footer>
 				<p>
