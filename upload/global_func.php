@@ -744,9 +744,9 @@ function house2_dropdown($ddname = "house", $selected = -1)
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
             $db->query(
-                    "SELECT `hWILL`, `hNAME`
-    				 FROM houses
-    				 ORDER BY `hNAME` ASC");
+                    "SELECT `house_will`, `house_name`
+    				 FROM `estates`
+    				 ORDER BY `house_will` ASC");
     if ($selected == -1)
     {
         $first = 0;
@@ -757,13 +757,13 @@ function house2_dropdown($ddname = "house", $selected = -1)
     }
     while ($r = $db->fetch_row($q))
     {
-        $ret .= "\n<option value='{$r['hWILL']}'";
-        if ($selected == $r['hWILL'] || $first == 0)
+        $ret .= "\n<option value='{$r['house_will']}'";
+        if ($selected == $r['house_will'] || $first == 0)
         {
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['hNAME']}</option>";
+        $ret .= ">{$r['house_name']} (Will: {$r['house_will']})</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
