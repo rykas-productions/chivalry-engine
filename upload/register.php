@@ -110,7 +110,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 	$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 	if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
 	{
-		alert('danger',"Hold Up.","Creating multiple accounts is against the rules. We're going to stop you here.");
+		alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['REG_MULTIALERT']}");
 		require('footer.php');
 		exit;
 	}
@@ -124,22 +124,16 @@ $cpage = strip_tags(stripslashes($currentpage));
         $_GET['REF']=$_GET['REF'];
     }
 	$username =
-        (isset($_POST['username'])
-                && preg_match(
-                        "/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
-                        $_POST['username'])
-                && ((strlen($_POST['username']) < 20)
-                        && (strlen($_POST['username']) >= 3)))
-                ? stripslashes($_POST['username']) : '';
+        (isset($_POST['username']) && preg_match( "/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username'])
+                && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
 	if (!empty($username))
 	{
 		if ($set['RegistrationCaptcha'] == 'ON')
 		{
-			if (!$_SESSION['captcha'] || !isset($_POST['captcha'])
-					|| $_SESSION['captcha'] != $_POST['captcha'])
+			if (!$_SESSION['captcha'] || !isset($_POST['captcha']) || $_SESSION['captcha'] != $_POST['captcha'])
 			{
 				unset($_SESSION['captcha']);
-				echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You failed the captcha test. Try again!</div>";
+				alert('danger',"{$lang['ERROR_INVALID']}","{$lang['REG_CAPTCHAERROR']}");
 				require("footer.php");
 				exit;
 			}
@@ -147,22 +141,20 @@ $cpage = strip_tags(stripslashes($currentpage));
 		}
 		if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email'])))
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> The email you entered is invalid or does not exist.</div>";
+			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['REG_EMAILERROR']}");
 			require("footer.php");
 			exit;
 		}
 		// Check Gender
-		if (!isset($_POST['gender'])
-				|| ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female'))
+		if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female'))
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You specified an invalid gender. You can only be male or female.</div>";
+			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['REG_GENDERERROR']}");
 			require("footer.php");
 			exit;
 		}
-		if (!isset($_POST['class'])
-				|| ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender'))
+		if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender'))
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You specified an invalid class. You can only be a warrior, rogue, or a defender.</div>";
+			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['REG_CLASSERROR']}");
 			require("footer.php");
 			exit;
 		}
@@ -175,59 +167,41 @@ $cpage = strip_tags(stripslashes($currentpage));
 		}
 		$e_username = $db->escape($username);
 		$e_email = $db->escape(stripslashes($_POST['email']));
-		$q =
-            $db->query(
-                    "SELECT COUNT(`userid`)
-                     FROM `users`
-                     WHERE `username` = '{$e_username}'");
-		$q2 =
-            $db->query(
-                    "SELECT COUNT(`userid`)
-    				 FROM `users`
-    				 WHERE `email` = '{$e_email}'");
+		$q = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$e_username}'");
+		$q2 = $db->query("SELECT COUNT(`userid`)  FROM `users` WHERE `email` = '{$e_email}'");
 		$u_check = $db->fetch_single($q);
 		$e_check = $db->fetch_single($q2);
 		$db->free_result($q);
 		$db->free_result($q2);
-		$base_pw =
-				(isset($_POST['password']) && is_string($_POST['password']))
-						? stripslashes($_POST['password']) : '';
-		$check_pw =
-				(isset($_POST['cpassword']) && is_string($_POST['cpassword']))
-						? stripslashes($_POST['cpassword']) : '';
+		$base_pw = (isset($_POST['password']) && is_string($_POST['password'])) ? stripslashes($_POST['password']) : '';
+		$check_pw = (isset($_POST['cpassword']) && is_string($_POST['cpassword'])) ? stripslashes($_POST['cpassword']) : '';
 		if ($u_check > 0)
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> Username in use. Please go back and try again?</div>";
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['REG_UNIUERROR']}");
 		}
 		else if ($e_check > 0)
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> Email in use. Please go back and enter a new email address.</div>";
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['REG_EIUERROR']}");		
 		}
 		else if (empty($base_pw) || empty($check_pw))
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You must enter a password and confirm it.</div>";
+			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['REG_PWERROR']}");	
 		}
 		else if ($base_pw != $check_pw)
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> Passwords did not match. Go back and try again.</div>";
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['REG_VPWERROR']}");	
 		}
 		else
 		{
-			$_POST['ref'] =
-					(isset($_POST['ref']) && is_numeric($_POST['ref']))
-							? abs(intval($_POST['ref'])) : '';
+			$_POST['ref'] = (isset($_POST['ref']) && is_numeric($_POST['ref'])) ? abs(intval($_POST['ref'])) : '';
 			$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 			if ($_POST['ref'])
 			{
-				$q =
-						$db->query(
-								"SELECT `lastip`
-								 FROM `users`
-								 WHERE `userid` = {$_POST['ref']}");
+				$q = $db->query("SELECT `lastip` FROM `users` WHERE `userid` = {$_POST['ref']}");
 				if ($db->num_rows($q) == 0)
 				{
 					$db->free_result($q);
-					echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> Referrer does not exist. Are you sure you entered the right ID?</div>";
+					alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['REG_REFERROR']}");
 					require("footer.php");
 					exit;
 				}
@@ -235,7 +209,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 				$db->free_result($q);
 				if ($rem_IP == $_SERVER['REMOTE_ADDR'])
 				{
-					echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> No creating multiple accounts! Bad boy! Admins have been alerted.</div>";
+					alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['REG_REFMERROR']}");
 					require("footer.php");
 					exit;
 				}
@@ -270,12 +244,9 @@ $cpage = strip_tags(stripslashes($currentpage));
 			}
 			if ($_POST['ref'])
 			{
-				$db->query(
-						"UPDATE `users`
-						 SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']}
-						 WHERE `userid` = {$_POST['ref']}");
+				$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']} WHERE `userid` = {$_POST['ref']}");
 				event_add($_POST['ref'],
-						"For refering $username to the game, you have earnt {$set['ReferalKickback']} valuable Secondary Currency(s)!",
+						"For refering $username to the game, you have earned {$set['ReferalKickback']} valuable Secondary Currency(s)!",
 						$c);
 				$e_rip = $db->escape($rem_IP);
 				$db->query("INSERT INTO `referals`
@@ -288,9 +259,11 @@ $cpage = strip_tags(stripslashes($currentpage));
 			$db->query("INSERT INTO `dungeon` 
 				(`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) 
 				VALUES ('{$i}', 'N/A', '0', '0');");
-			echo "You have signed up, enjoy the game.<br />
-			&gt; <a href='login.php'>Login</a>";
+			
+			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['REG_SUCCESS']}<br />
+			<a href='login.php'>{$lang['LOGIN_SIGNIN']}</a>");
 		}
+		require('footer.php');
 	}
 	else
 	{
@@ -349,14 +322,14 @@ $cpage = strip_tags(stripslashes($currentpage));
 				</td>
 			  </tr>";
     }
-    echo "
-			<tr>
+    echo "<tr>
 				<td colspan='3' align='center'>
-					<input type='submit' class='btn btn-default' value='Register Today!' />
+					<input type='submit' class='btn btn-default' value='{$lang["LOGIN_REGISTER"]}' />
 				</td>
 			</tr>
 	</table>
-	</form><br />
-	&gt; <a href='login.php'>Go Back</a>";
+	</form>
+	<br />
+	&gt; <a href='login.php'>{$lang["LOGIN_LOGIN"]}</a>";
 	}
-			require("footer.php");
+require("footer.php");
