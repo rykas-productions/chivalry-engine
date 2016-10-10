@@ -169,7 +169,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 		$e_gender = $db->escape(stripslashes($_POST['gender']));
 		$e_class = $db->escape(stripslashes($_POST['class']));
 		$sm = 100;
-		if (isset($_POST['promo']) && $_POST['promo'] == "CEGINE")
+		if (isset($_POST['promo']) && $_POST['promo'] == "CENGINE")
 		{
 			$sm += 100;
 		}
@@ -242,11 +242,12 @@ $cpage = strip_tags(stripslashes($currentpage));
 			}
 			$encpsw = encode_password($base_pw);
 			$e_encpsw = $db->escape($encpsw);
+			$profilepic="https://www.gravatar.com/avatar/" . md5(strtolower(trim($e_email)));
 			$CurrentTime=time();
 			$db->query("INSERT INTO `users`
-			(`username`,`email`,`password`,`level`,`gender`,`class`,`lastip`,`registerip`,`registertime`)
+			(`username`,`email`,`password`,`level`,`gender`,`class`,`lastip`,`registerip`,`registertime`,`display_pic`)
 			VALUES
-			('{$e_username}','{$e_email}','{$e_encpsw}','1','{$e_gender}','{$e_class}','{$IP}','{$IP}','{$CurrentTime}')");
+			('{$e_username}','{$e_email}','{$e_encpsw}','1','{$e_gender}','{$e_class}','{$IP}','{$IP}','{$CurrentTime}', '{$profilepic}')");
 			$i = $db->insert_id();
 			$db->query("UPDATE `users` SET `brave`='10',`maxbrave`='10',`hp`='100',`maxhp`='100',`maxwill`='100',`will`='100',`energy`='24',`maxenergy`='24' WHERE `userid`={$i}");
 			if ($e_class == 'Warrior')
