@@ -146,7 +146,16 @@ if ($set['HTTPS_Support'] == 'true')
 						</div>
 						<div class='panel-body'>";
 							$Rank=0;
-							$RankPlayerQuery=$db->query("SELECT `username`,`userid`,`level` FROM `users` ORDER BY `level` desc LIMIT 10");
+							$RankPlayerQuery = 
+							$db->query("SELECT u.`userid`, `level`, `username`,
+							`strength`, `agility`, `guard`, `labor`, `IQ`
+							FROM `users` AS `u`
+							INNER JOIN `userstats` AS `us`
+							 ON `u`.`userid` = `us`.`userid`
+							WHERE `u`.`user_level` != 'Admin' AND `u`.`user_level` != 'NPC'
+							ORDER BY (`strength` + `agility` + `guard` + `labor` + `IQ`) 
+							DESC, `u`.`userid` ASC
+							LIMIT 10");
 							while ($pdata=$db->fetch_row($RankPlayerQuery))
 							{
 								$Rank=$Rank+1;
