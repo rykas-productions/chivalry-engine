@@ -45,7 +45,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
+        <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -105,7 +105,7 @@ $cpage = strip_tags(stripslashes($currentpage));
     </nav>
 
     <!-- Page Content -->
-    <div class="container-fluid">
+    <div class="container">
 	<?php
 	$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 	if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
