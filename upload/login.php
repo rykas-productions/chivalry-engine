@@ -51,7 +51,7 @@ if ($set['HTTPS_Support'] == 'true')
 
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
+        <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -111,7 +111,7 @@ if ($set['HTTPS_Support'] == 'true')
     </nav>
 
     <!-- Page Content -->
-    <div class="container">
+    <div class="container-fluid">
 		<noscript>
 			<?php
 				alert('danger','Javascript Disabled!','You need to enable Javascript to use this website. Loads of features will not work without Javascript.');
