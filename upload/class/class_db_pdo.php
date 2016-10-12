@@ -134,7 +134,7 @@ class database
         {
             $result = $this->result;
         }
-        return $this->PDOS->rowCount($result);
+        return $result->rowCount($result);
     }
     function insert_id()
     {
