@@ -62,6 +62,7 @@ class database
 			'Attempted to connect to database at: ' . $this->host,
 			debug_backtrace(false));
 		}
+		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         $sth = new PDOStatement();
         // @overridecharset mysqli
         $this->connection_id = $conn;
@@ -100,8 +101,15 @@ class database
         $this->last_query = $query;
         $this->queries[] = $query;
         $this->num_queries++;
-        $this->result = $this->connection_id->query($this->last_query);
-        if ($this->result === false)
+		try
+		{
+			$this->result = $this->connection_id->query($this->last_query);
+		}
+		catch (PDOException $e)
+		{
+			echo 'Connection failed: ' . $e->getMessage();
+		}
+		if ($this->result === false)
         {
 			$ErrorInfo=$this->connection_id->errorInfo();
 			error_critical('Query Failed!',
@@ -110,10 +118,10 @@ class database
 			debug_backtrace(false));
         }
         return $this->result;
+		$this->PDOS->closeCursor();
     }
     function fetch_row($result = 0)
     {
-		global $PDOS;
         if (!$result)
         {
             $result = $this->result;
@@ -126,7 +134,7 @@ class database
         {
             $result = $this->result;
         }
-        return $this->connection_id->rowCount($result);
+        return $this->PDOS->rowCount($result);
     }
     function insert_id()
     {
@@ -138,14 +146,15 @@ class database
         {
             $result = $this->result;
         }
-        //Ugly hack here
-        $result->fetch();
-        $temp = fetch_row($result);
-        return $temp[0];
+		return  $result->fetchColumn();
     }
     function escape($text)
     {
-        return $this->connection_id->quote($text);
+		//Not using PDO's Quote function,
+		//as that'd ruin compatibility with
+		//existing code.
+		//(It places quotes around the text, already)
+        return strip_tags(stripslashes($text));
     }
     function affected_rows()
     {
@@ -153,6 +162,6 @@ class database
     }
     function free_result($result)
     {
-        return $this->connection_id->closeCursor($result);
+        return $this->PDOS->closeCursor($result);
     }
 }
