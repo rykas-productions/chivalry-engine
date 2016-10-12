@@ -7,10 +7,9 @@
 	Website: http://mastergeneral156.pcriot.com/
 */
 // Change to true to show the user more information (for development)
-define('DEBUG', true);
+define('DEBUG', false);
 
-function error_critical($human_error, $debug_error, $action,
-        $context = array())
+function error_critical($human_error, $debug_error, $action, $context = array())
 {
 	global $userid;
     // Clear anything that was going to be shown
@@ -39,9 +38,9 @@ function error_critical($human_error, $debug_error, $action,
     <?php echo "<title>{$set['WebsiteName']} - Critical Error</title>"; ?>
 
     <!-- CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link href="css/bs2.css" rel="stylesheet">
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <!-- Custom CSS -->
@@ -81,11 +80,13 @@ function error_critical($human_error, $debug_error, $action,
                 . '<br /><br /></pre>';
         // Only uncomment the below if you know what you're doing,
         // for debug purposes.
-        //if (is_array($context) && count($context) > 0)
-        //{
-        //    echo '<strong>Context at error time:</strong> ' . '<br /><br />'
-        //            . nl2br(print_r($context, true));
-        //}
+        /*
+		if (is_array($context) && count($context) > 0)
+        {
+            echo '<strong>Context at error time:</strong> ' . '<br /><br />'
+                    . nl2br(print_r($context, true));
+        }
+		*/
     }
     else
     {
@@ -161,11 +162,13 @@ function error_php($errno, $errstr, $errfile = '', $errline = 0,
                     . $errfile . ':' . $errline . '<br /><br />';
             // Only uncomment the below if you know what you're doing,
             // for debug purposes.
-            //if (is_array($errcontext) && count($errcontext) > 0)
-            //{
-            //    echo '<strong>Context at error time:</strong> '
-            //            . '<br /><br />' . nl2br(print_r($errcontext, true));
-            //}
+            /*
+			if (is_array($errcontext) && count($errcontext) > 0)
+            {
+				echo '<strong>Context at error time:</strong> '
+				. '<br /><br />' . nl2br(print_r($errcontext, true));
+			}
+			*/
 			echo "</pre>";
         }
     }

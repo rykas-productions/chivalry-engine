@@ -253,52 +253,50 @@ function diagnostics()
 	if (version_compare(phpversion(), '5.5.0') < 0)
     {
         $pv = '<span style="color: red">Failed</span>';
-        $pvf = 0;
     }
     else
     {
         $pv = "<span style='color: green'>Pass! PHP Version is " . phpversion();  "!</span>";
-        $pvf = 1;
     }
     if (is_writable('./'))
     {
         $wv = '<span style="color: green">Pass! Game folder is writable.</span>';
-        $wvf = 1;
     }
     else
     {
         $wv = '<span style="color: red">Fail!</span>';
-        $wvf = 0;
     }
     if (function_exists('mysqli_connect'))
     {
         $dv = '<span style="color: green">Pass! MySQLi detected!</span>';
-        $dvf = 1;
     }
     else
     {
         $dv = '<span style="color: red">Failed</span>';
-        $dvf = 0;
+    }
+	if (extension_loaded('pdo'))
+    {
+        $pdv = '<span style="color: green">Pass! We suggest you use PDO!</span>';
+    }
+	else
+    {
+        $pdv = '<span style="color: red">Failed... Use MySQLi instead!</span>';
     }
 	if (function_exists('openssl_random_pseudo_bytes'))
     {
         $ov = '<span style="color: green">Pass! OpenSSL Random Pseudo Bytes detected!</span>';
-        $ovf = 1;
     }
     else
     {
         $ov = '<span style="color: red">Failed...</span>';
-        $ovf = 0;
     }
 	if (function_exists('password_hash'))
     {
         $hv = '<span style="color: green">Pass! Using stronger password hash method.</span>';
-        $hvf = 1;
     }
     else
     {
         $hv = '<span style="color: red">Failed...</span>';
-        $hvf = 0;
     }
 	echo"<table class='table table-bordered table-hover'>
     		<tr>
@@ -308,6 +306,10 @@ function diagnostics()
     		<tr>
     			<td>Is the game folder writable?</td>
     			<td>{$wv}</td>
+    		</tr>
+			<tr>
+    			<td>Is PDO present?</td>
+    			<td>{$pdv}</td>
     		</tr>
     		<tr>
     			<td>Is MySQLi present?</td>

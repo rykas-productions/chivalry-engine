@@ -114,6 +114,16 @@ function diagnostics()
         $hv = '<span style="color: red">Failed...</span>';
         $hvf = 0;
     }
+	if (extension_loaded('pdo'))
+    {
+        $pdv = '<span style="color: green">Pass! We suggest you use PDO!</span>';
+        $pdf = 1;
+    }
+    else
+    {
+        $pdv = '<span style="color: red">Failed... Use MySQLi instead!</span>';
+        $pdf = 0;
+    }
     echo "
     <h3>Basic Diagnostic Results:</h3>
     <table class='table table-bordered table-hover'>
@@ -124,6 +134,10 @@ function diagnostics()
     		<tr>
     			<td>Is the game folder writable?</td>
     			<td>{$wv}</td>
+    		</tr>
+			<tr>
+    			<td>Is PDO present?</td>
+    			<td>{$pdv}</td>
     		</tr>
     		<tr>
     			<td>Is MySQLi present?</td>
@@ -177,7 +191,7 @@ function config()
     			<th colspan='2'>Database Config</th>
     		</tr>
     		<tr>
-    			<td align='center'>MySQL Driver</td>
+    			<td align='center'>Database Driver</td>
     			<td>
     				<select name='driver' class='form-control' type='dropdown'>
        ";
@@ -185,9 +199,17 @@ function config()
     {
         echo '<option value="mysqli">MySQLi Enhanced</option>';
     }
+		else
+	{
+		echo '<option>MySQLi not detected on your server.</option>';
+	}
+	if (extension_loaded('pdo'))
+    {
+        echo '<option value="pdo">PHP Data Objects (PDO)</option>';
+    }
 	else
 	{
-		echo '<option>No Database detected...</option>';
+		echo '<option>PDO not detected on your server.</option>';
 	}
     echo "
     				</select>
@@ -370,8 +392,8 @@ function install()
             isset($_POST['database']) ? gpc_cleanup($_POST['database']) : '';
     $db_driver =
             (isset($_POST['driver'])
-                    && in_array($_POST['driver'], array('mysql', 'mysqli'),
-                            true)) ? $_POST['driver'] : 'mysql';
+                    && in_array($_POST['driver'], array('pdo', 'mysqli'),
+                            true)) ? $_POST['driver'] : 'mysqli';
     $errors = array();
     if (empty($db_hostname))
     {
@@ -615,11 +637,3 @@ EOF;
     }
 }
 require_once('installer_foot.php');
-function encode_password($password)
-{
-    global $set;
-		$options = [
-		'cost' => $set['Password_Effort'],
-		];
-		return password_hash(sha1($password), PASSWORD_BCRYPT, $options);
-}

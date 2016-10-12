@@ -70,7 +70,7 @@ require "lib/basic_error_handler.php";
 set_error_handler('error_php');
 include "config.php";
 define("MONO_ON", 1);
-require "class/class_db_mysqli.php";
+require "class/class_db_{$_CONFIG['driver']}.php";
 require_once('global_func.php');
 $db = new database;
 $db->configure($_CONFIG['hostname'], $_CONFIG['username'],

@@ -180,6 +180,7 @@ if (!in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Secretary'))
 	header("Location: {$index}");
 }
 check_level();
+check_data();
 $h = new headers;
 $h->startheaders();
 $fm = number_format($ir['primary_currency']);
@@ -195,3 +196,7 @@ else
 {
     $h->userdata($ir, $lv, $fm, $cm);
 }
+foreach (glob("crons/*.php") as $filename) 
+{ 
+    include $filename; 
+} 
