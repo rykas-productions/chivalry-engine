@@ -52,24 +52,24 @@ else
 $lang = 'en';
 }
  
-switch ($lang) {
-  case 'en':
-  $lang_file = 'en_us.php';
-  break;
- 
-  case 'de':
-  $lang_file = 'de.php';
-  break;
- 
-  case 'es':
-  $lang_file = 'es.php';
-  break;
- 
-  default:
-  $lang_file = 'en_us.php';
+switch ($lang) 
+{
+	case 'en':
+		$lang_file = 'en_us.php';
+		break;
+	case 'fr':
+		$lang_file = 'fr_fr.php';
+		break;
+	case 'ger':
+		$lang_file = 'ger.php';
+		break;
+	case 'es':
+		$lang_file = 'es.php';
+		break;
+	default:
+		$lang_file = 'en_us.php';
  
 }
- 
 include_once '../lang/'.$lang_file;
 if (!isset($_SESSION['started']))
 {

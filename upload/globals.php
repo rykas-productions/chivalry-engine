@@ -31,6 +31,9 @@ switch ($lang)
 	case 'en':
 		$lang_file = 'en_us.php';
 		break;
+	case 'fr':
+		$lang_file = 'fr_fr.php';
+		break;
 	case 'ger':
 		$lang_file = 'ger.php';
 		break;

@@ -196,12 +196,13 @@ function lang_change()
 			<option value='en'>English</option>
 			<option value='es'>Español</option>
 			<option value='ger'>Deutsche</option>
+			<option value='fr'>Français</option>
 		<input type='submit' class='btn btn-default' value='{$lang['LANG_BUTTON']}'>
 		</form>";
 	}
 	else
 	{
-		$LangArray=["en","es", "ger"];
+		$LangArray=["en","es","ger","fr"];
 		if (!in_array($_POST['lang'],$LangArray))
 		{
 			echo "You specified an invalid Language. Go back and try again.";
