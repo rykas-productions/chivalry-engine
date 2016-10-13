@@ -9,7 +9,7 @@ function CheckPasswords(password)
 {
     $.ajax({
         type : "POST",
-        url : "check.php",
+        url : "js/script/check.php",
         data : "password=" + escape(password),
         success : function(resps)
         {
@@ -22,7 +22,7 @@ function CheckUsername(name)
 {
     $.ajax({
         type : "POST",
-        url : "checkun.php",
+        url : "js/script/checkun.php",
         data : "username=" + escape(name),
         success : function(resps)
         {
@@ -35,7 +35,7 @@ function OutputTeam(team)
 	var value = team.value;
     $.ajax({
         type : "POST",
-        url : "outputteam.php",
+        url : "js/script/outputteam.php",
         data : "team=" + escape(value),
         success : function(resps)
         {
@@ -48,7 +48,7 @@ function CheckEmail(email)
 {
     $.ajax({
         type : "POST",
-        url : "checkem.php",
+        url : "js/script/checkem.php",
         data : "email=" + escape(email),
         success : function(resps)
         {
@@ -59,16 +59,16 @@ function CheckEmail(email)
 
 function PasswordMatch()
 {
-    pwt1 = $("#pw1").val();
-    pwt2 = $("#pw2").val();
+    pwt1 = $("#password").val();
+    pwt2 = $("#cpassword").val();
     if (pwt1 == pwt2)
     {
-        document.getElementById('pw2').style.backgroundColor = '#dff0d8';
-		document.getElementById("submit").className = "btn btn-lg btn-success";
+        document.getElementById('cpassword').style.backgroundColor = '#dff0d8';
+		document.getElementById('password').style.backgroundColor = '#dff0d8';
     }
     else
     {
-        document.getElementById('pw2').style.backgroundColor = '#f2dede';
-		document.getElementById("submit").className = "btn btn-lg btn-danger";
+        document.getElementById('cpassword').style.backgroundColor = '#f2dede';
+		document.getElementById('password').style.backgroundColor = '#f2dede';
     }
 }
