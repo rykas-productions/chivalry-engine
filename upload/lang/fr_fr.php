@@ -30,11 +30,11 @@ $lang['MENU_UNREADMAIL1']='Nouvelles lettres ! ';
 $lang['MENU_UNREADNOTIF']='Nouveaux notifications ! ';
 $lang['MENU_UNREADANNONCE']='Nouveaux notifications des personels ! ';
 $lang['MENU_UNREADANNONCE1']='Il y a ';
+$lang['MENU_UNREADANNONCE2']='lettres des personels';
+$lang['MENU_UNREADMAIL2']='Il y a';
+$lang['MENU_UNREADMAIL3']='nouvelles lettres. Faire un clic ';
+$lang['MENU_UNREADMAIL4']='le.s lire.';
 
-$lang['MENU_UNREADANNONCE2']='';
-$lang['MENU_UNREADMAIL2']='You have';
-$lang['MENU_UNREADMAIL3']='unread messages. Click';
-$lang['MENU_UNREADMAIL4']='to read them.';
 $lang['MENU_UNREADNOTIF1']='unread notifications. Click';
 $lang['MENU_INFIRMARY1']='You are in the infirmary for the next';
 $lang['MENU_DUNGEON1']='You are in the dungeon for the next';
