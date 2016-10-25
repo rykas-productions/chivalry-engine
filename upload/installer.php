@@ -3,8 +3,8 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('0.0.29');
-$Build=('0029');
+$Version=('0.0.28');
+$Build=('0028');
 define('MONO_ON', 1);
 session_name('CENGINE');
 session_start();
@@ -272,7 +272,7 @@ function config()
     			<td align='center'>
     				Password Cost<br />
     				<small>How much resources should you allocate towards generating a user's password?<br /> 
-					Benchmark your server <a href='password_hash_test_generator.php'>here</a>. (Benchmark runs as soon as you click the link)</small>
+					Benchmark your server <a href='password_benchmark.php'>here</a>.</small>
     			</td>
     			<td><input type='number' class='form-control' value='10' required='1' min='5' max='15' name='password_effort'></td>
     		</tr>
