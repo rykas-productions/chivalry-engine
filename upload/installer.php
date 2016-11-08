@@ -546,6 +546,7 @@ EOF;
     $encpsw = password_hash($adm_pswd, PASSWORD_BCRYPT);
     $e_encpsw = $db->escape($encpsw);
     $ins_email = $db->escape($adm_email);
+	$profilepic="https://www.gravatar.com/avatar/" . md5(strtolower(trim($ins_email)));
     $IP = $db->escape($_SERVER['REMOTE_ADDR']);
     $ins_game_name =
             $db->escape(htmlentities($game_name, ENT_QUOTES, 'ISO-8859-1'));
@@ -558,8 +559,10 @@ EOF;
 	$db->query("INSERT INTO `users` 
 	(`username`, `user_level`, `email`, `password`, `gender`, 
 	`class`, `lastip`, `registerip`,
-	`registertime`) 
-	VALUES ('{$ins_username}', 'Admin', '{$ins_email}', '{$e_encpsw}', '{$adm_gender}', '{$adm_class}', '{$IP}', '{$IP}', '{$CurrentTime}');");
+	`registertime`,`display_pic`) 
+	VALUES ('{$ins_username}', 'Admin', '{$ins_email}', 
+	'{$e_encpsw}', '{$adm_gender}', '{$adm_class}', '{$IP}', 
+	'{$IP}', '{$CurrentTime}', '{$profilepic}');");
     $i = $db->insert_id();
 	$e_class = $adm_class;
     if ($e_class == 'Warrior')
