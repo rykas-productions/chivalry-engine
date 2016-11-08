@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
+-- version 4.0.10.14
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 30, 2016 at 08:17 PM
--- Server version: 5.6.17
--- PHP Version: 5.5.12
+-- Host: localhost:3306
+-- Generation Time: Nov 08, 2016 at 03:49 PM
+-- Server version: 10.0.27-MariaDB-cll-lve
+-- PHP Version: 5.4.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `cengine`
+-- Database: `chivalr3_cengine`
 --
 
 -- --------------------------------------------------------
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `announcements` (
   `ann_time` int(11) unsigned NOT NULL,
   `ann_poster` int(11) unsigned NOT NULL,
   PRIMARY KEY (`ann_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -49,7 +49,47 @@ CREATE TABLE IF NOT EXISTS `attacklogs` (
   `stole` tinyint(4) NOT NULL,
   `attacklog` text NOT NULL,
   PRIMARY KEY (`log_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `crimegroups`
+--
+
+CREATE TABLE IF NOT EXISTS `crimegroups` (
+  `cgID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `cgNAME` text NOT NULL,
+  `cgORDER` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cgID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `crimes`
+--
+
+CREATE TABLE IF NOT EXISTS `crimes` (
+  `crimeID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `crimeNAME` text NOT NULL,
+  `crimeBRAVE` int(11) unsigned NOT NULL,
+  `crimePERCFORM` text NOT NULL,
+  `crimePRICURMIN` int(11) unsigned NOT NULL,
+  `crimePRICURMAX` int(11) unsigned NOT NULL,
+  `crimeSECCURMIN` int(11) unsigned NOT NULL,
+  `crimeSECURMAX` int(11) unsigned NOT NULL,
+  `crimeITEMSUC` int(11) unsigned NOT NULL,
+  `crimeGROUP` int(11) unsigned NOT NULL,
+  `crimeITEXT` text NOT NULL,
+  `crimeSTEXT` text NOT NULL,
+  `crimeFTEXT` text NOT NULL,
+  `crimeDUNGMIN` int(11) unsigned NOT NULL,
+  `crimeDUNGMAX` int(11) unsigned NOT NULL,
+  `crimeDUNGREAS` text NOT NULL,
+  `crimeXP` int(11) NOT NULL,
+  PRIMARY KEY (`crimeID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -143,7 +183,8 @@ CREATE TABLE IF NOT EXISTS `forum_forums` (
   `ff_auth` enum('public','staff') NOT NULL,
   `ff_lp_time` int(10) unsigned NOT NULL,
   UNIQUE KEY `ff_id` (`ff_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 
 -- --------------------------------------------------------
 
@@ -162,7 +203,8 @@ CREATE TABLE IF NOT EXISTS `forum_posts` (
   `fp_editor_time` int(10) unsigned NOT NULL,
   `fp_text` text NOT NULL,
   PRIMARY KEY (`fp_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 
 -- --------------------------------------------------------
 
@@ -184,9 +226,8 @@ CREATE TABLE IF NOT EXISTS `forum_topics` (
   `ft_locked` tinyint(4) NOT NULL,
   PRIMARY KEY (`ft_id`),
   UNIQUE KEY `ft_id` (`ft_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 --
 -- Table structure for table `friends`
@@ -220,14 +261,7 @@ CREATE TABLE IF NOT EXISTS `guild` (
   `guild_level` int(11) unsigned NOT NULL,
   `guild_xp` int(11) unsigned NOT NULL,
   PRIMARY KEY (`guild_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `guild`
---
-
-INSERT INTO `guild` (`guild_id`, `guild_town_id`, `guild_owner`, `guild_coowner`, `guild_primcurr`, `guild_seccurr`, `guild_hasarmory`, `guild_capacity`, `guild_name`, `guild_desc`, `guild_level`, `guild_xp`) VALUES
-(1, 1, 1, 1, 1, 1, 'false', 5, 'test', 'test', 4, 1);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -255,9 +289,8 @@ CREATE TABLE IF NOT EXISTS `inventory` (
   `inv_userid` int(11) unsigned NOT NULL,
   `inv_qty` int(11) unsigned NOT NULL,
   PRIMARY KEY (`inv_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 --
 -- Table structure for table `items`
@@ -280,9 +313,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `weapon` int(11) unsigned NOT NULL,
   `armor` int(11) unsigned NOT NULL,
   PRIMARY KEY (`itmid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Table structure for table `itemtypes`
@@ -292,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `itemtypes` (
   `itmtypeid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `itmtypename` text NOT NULL,
   PRIMARY KEY (`itmtypeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -305,13 +336,6 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
   `userid` int(10) unsigned NOT NULL,
   `timestamp` int(11) unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `login_attempts`
---
-
-INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES
-('192.168.128.113', 6, 1466643890);
 
 -- --------------------------------------------------------
 
@@ -326,7 +350,7 @@ CREATE TABLE IF NOT EXISTS `logs_training` (
   `log_gain` int(11) unsigned NOT NULL,
   `log_time` int(11) unsigned NOT NULL,
   PRIMARY KEY (`log_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -344,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `mail_time` int(11) unsigned NOT NULL,
   PRIMARY KEY (`mail_id`),
   FULLTEXT KEY `mail_subject` (`mail_subject`,`mail_text`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -360,14 +384,7 @@ CREATE TABLE IF NOT EXISTS `newspaper_ads` (
   `news_owner` int(11) unsigned NOT NULL,
   `news_text` text NOT NULL,
   PRIMARY KEY (`news_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `newspaper_ads`
---
-
-INSERT INTO `newspaper_ads` (`news_id`, `news_cost`, `news_start`, `news_end`, `news_owner`, `news_text`) VALUES
-(1, 125000, 0, 4054546460, 1, 'hi');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -383,7 +400,7 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   `notif_text` text NOT NULL,
   PRIMARY KEY (`notif_id`),
   FULLTEXT KEY `notif_text` (`notif_text`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -402,6 +419,41 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `polls`
+--
+
+CREATE TABLE IF NOT EXISTS `polls` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `active` enum('0','1') NOT NULL DEFAULT '0',
+  `question` text NOT NULL,
+  `choice1` text NOT NULL,
+  `choice2` text NOT NULL,
+  `choice3` text NOT NULL,
+  `choice4` text NOT NULL,
+  `choice5` text NOT NULL,
+  `choice6` text NOT NULL,
+  `choice7` text NOT NULL,
+  `choice8` text NOT NULL,
+  `choice9` text NOT NULL,
+  `choice10` text NOT NULL,
+  `voted1` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted2` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted3` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted4` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted5` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted6` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted7` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted8` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted9` int(10) unsigned NOT NULL DEFAULT '0',
+  `voted10` int(10) unsigned NOT NULL DEFAULT '0',
+  `winner` tinyint(4) NOT NULL DEFAULT '0',
+  `hidden` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `referals`
 --
 
@@ -413,7 +465,7 @@ CREATE TABLE IF NOT EXISTS `referals` (
   `refered_ip` tinytext NOT NULL,
   `time` int(11) unsigned NOT NULL,
   PRIMARY KEY (`referalid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -427,7 +479,7 @@ CREATE TABLE IF NOT EXISTS `reports` (
   `reportee_id` int(11) unsigned NOT NULL,
   `report_text` text NOT NULL,
   PRIMARY KEY (`report_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -440,7 +492,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `setting_name` text NOT NULL,
   `setting_value` text NOT NULL,
   PRIMARY KEY (`setting_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `settings`
@@ -451,8 +503,8 @@ INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES
 (2, 'RegistrationCaptcha', 'OFF'),
 (3, 'HTTPS_Support', 'false'),
 (4, 'AttackEnergyCost', '100'),
-(5, 'FGPassword', 'h8z7abKWPJjI10r9'),
-(6, 'FGUsername', '8WDgqcFYA0WPc3J5'),
+(5, 'FGPassword', ''),
+(6, 'FGUsername', ''),
 (7, 'MaxAttacksPerSession', '100');
 
 -- --------------------------------------------------------
@@ -468,9 +520,7 @@ CREATE TABLE IF NOT EXISTS `stafflogs` (
   `action` text NOT NULL,
   `ip` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Table structure for table `town`
@@ -522,8 +572,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `maxenergy` int(11) unsigned NOT NULL DEFAULT '24',
   `brave` int(11) unsigned NOT NULL DEFAULT '10',
   `maxbrave` int(11) unsigned NOT NULL DEFAULT '10',
-  `primary_currency` int(11) unsigned NOT NULL,
-  `secondary_currency` int(11) unsigned NOT NULL,
+  `primary_currency` bigint(11) unsigned NOT NULL,
+  `secondary_currency` bigint(11) unsigned NOT NULL,
   `bank` bigint(11) NOT NULL DEFAULT '-1',
   `attacking` int(11) unsigned NOT NULL DEFAULT '0',
   `vip_days` int(11) unsigned NOT NULL,
@@ -542,7 +592,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `timezone` enum('Pacific/Wake','Pacific/Apia','America/Adak','America/Anchorage','America/Los_Angeles','America/Denver','America/Chicago','America/New_York','America/Halifax','America/Godthab','America/Noronha','Atlantic/Cape_Verde','Europe/London','Europe/Berlin','Europe/Bucharest','Europe/Moscow','Asia/Tehran','Asia/Muscat','Asia/Kabul','Asia/Karachi','Asia/Calcutta','Asia/Katmandu','Asia/Novosibirsks','America/Godthab','Asia/Rangoon','Asia/Bangkok','Australia/Perth','Asia/Tokyo','Australia/Darwin','Australia/Sydney','Asia/Magadan','Pacific/Auckland','Pacific/Tongatapu') NOT NULL DEFAULT 'Europe/London',
   `description` text NOT NULL,
   PRIMARY KEY (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -563,41 +613,6 @@ CREATE TABLE IF NOT EXISTS `userstats` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `polls`
---
-
-CREATE TABLE IF NOT EXISTS `polls` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `active` enum('0','1') NOT NULL DEFAULT '0',
-  `question` text NOT NULL,
-  `choice1` text NOT NULL,
-  `choice2` text NOT NULL,
-  `choice3` text NOT NULL,
-  `choice4` text NOT NULL,
-  `choice5` text NOT NULL,
-  `choice6` text NOT NULL,
-  `choice7` text NOT NULL,
-  `choice8` text NOT NULL,
-  `choice9` text NOT NULL,
-  `choice10` text NOT NULL,
-  `voted1` int(10) unsigned NOT NULL DEFAULT '0',
-  `voted2` int(10) unsigned NOT NULL DEFAULT '0',
-  `voted3` int(10) unsigned NOT NULL DEFAULT '0',
-  `voted4` int(10) unsigned NOT NULL DEFAULT '0',
-  `voted5` int(10) unsigned NOT NULL DEFAULT '0',
-  `voted6` int(10) unsigned NOT NULL DEFAULT '0',
-  `voted7` int(10) unsigned NOT NULL DEFAULT '0',
-  `voted8` int(10) unsigned NOT NULL DEFAULT '0',
-  `voted9` int(10) unsigned NOT NULL DEFAULT '0',
-  `voted10` int(10) unsigned NOT NULL DEFAULT '0',
-  `winner` tinyint(4) NOT NULL DEFAULT '0',
-  `hidden` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `uservotes`
 --
 
@@ -606,44 +621,6 @@ CREATE TABLE IF NOT EXISTS `uservotes` (
   `voted` text NOT NULL,
   PRIMARY KEY (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `crimegroups`
---
-
-CREATE TABLE IF NOT EXISTS `crimegroups` (
-  `cgID` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `cgNAME` text NOT NULL,
-  `cgORDER` int(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`cgID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `crimes`
---
-
-CREATE TABLE IF NOT EXISTS `crimes` (
-  `crimeID` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `crimeNAME` text NOT NULL,
-  `crimeBRAVE` int(11) unsigned NOT NULL,
-  `crimePERCFORM` text NOT NULL,
-  `crimePRICURMIN` int(11) unsigned NOT NULL,
-  `crimePRICURMAX` int(11) unsigned NOT NULL,
-  `crimeSECCURMIN` int(11) unsigned NOT NULL,
-  `crimeSECURMAX` int(11) unsigned NOT NULL,
-  `crimeITEMSUC` int(11) unsigned NOT NULL,
-  `crimeGROUP` int(11) unsigned NOT NULL,
-  `crimeITEXT` text NOT NULL,
-  `crimeSTEXT` text NOT NULL,
-  `crimeFTEXT` text NOT NULL,
-  `crimeDUNGMIN` int(11) unsigned NOT NULL,
-  `crimeDUNGMAX` int(11) unsigned NOT NULL,
-  `crimeDUNGREAS` text NOT NULL,
-  `crimeXP` int(11) NOT NULL,
-  PRIMARY KEY (`crimeID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
