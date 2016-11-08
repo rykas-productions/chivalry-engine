@@ -14,7 +14,6 @@ if (!isset($_SESSION['started']))
     $_SESSION['started'] = true;
 }
 require_once('installer_head.php');
-require_once('global_func.php');
 require_once('lib/installer_error_handler.php');
 set_error_handler('error_php');
 if (!isset($_GET['code']))
@@ -407,10 +406,24 @@ function install()
     {
         $errors[] = 'No Database database specified';
     }
-    if (!function_exists($db_driver . '_connect'))
-    {
-        $errors[] = 'Invalid database driver specified';
-    }
+	if ($db_driver = 'MySQLi')
+	{
+		if (!function_exists($db_driver . '_connect'))
+		{
+			$errors[] = 'Invalid database driver specified';
+		}
+	}
+	elseif ($db_driver = 'PDO')
+	{
+		if (!function_exists('PDO'))
+		{
+			$errors[] = 'Invalid database driver specified';
+		}
+	}
+	else
+	{
+		$errors[] = 'Invalid database driver specified';
+	}
     if (empty($adm_username)
             || !preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
                     $adm_username))
@@ -530,7 +543,7 @@ EOF;
              VALUES(NULL, 'Password_Effort', '{$pweffort}')");
     $ins_username =
             $db->escape(htmlentities($adm_username, ENT_QUOTES, 'ISO-8859-1'));
-    $encpsw = encode_password($adm_pswd);
+    $encpsw = password_hash($adm_pswd, PASSWORD_BCRYPT);
     $e_encpsw = $db->escape($encpsw);
     $ins_email = $db->escape($adm_email);
     $IP = $db->escape($_SERVER['REMOTE_ADDR']);
