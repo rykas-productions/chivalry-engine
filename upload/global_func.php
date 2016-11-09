@@ -1240,7 +1240,7 @@ function verify_csrf_code($formid, $code)
 function verify_user_password($input, $pass)
 {
 	global $set;
-	$pw=sha1($input);
+	$pw=$input;
     if (password_verify($pw, $pass)) 
 	{
 		return true;
@@ -1265,7 +1265,7 @@ function encode_password($password)
 		$options = [
 		'cost' => $set['Password_Effort'],
 		];
-		return password_hash(sha1($password), PASSWORD_BCRYPT, $options);
+		return password_hash($password, PASSWORD_BCRYPT, $options);
 }
 
 /**
@@ -1499,3 +1499,88 @@ function update_fg_info($ip) {
 	 }
 	 
  }
+ /*
+	Gets the user's operating system and inserts it into the database.
+	@param string $uagent	User agent to test with.
+ */
+ function getOS($uagent)
+ {
+	 global $db,$userid;
+	 $uagent=stripslashes(strip_tags($uagent));
+	$os_platform    =   "Unknown OS Platform";
+    $os_array       =   array(
+                            '/windows nt 10/i'     =>  'Windows 10',
+                            '/windows nt 6.3/i'     =>  'Windows 8.1',
+                            '/windows nt 6.2/i'     =>  'Windows 8',
+                            '/windows nt 6.1/i'     =>  'Windows 7',
+                            '/windows nt 6.0/i'     =>  'Windows Vista',
+                            '/windows nt 5.1/i'     =>  'Windows XP',
+							'/windows phone 8.0/i'	=>  'Windows Phone',
+                            '/windows xp/i'         =>  'Windows XP',
+                            '/macintosh|mac os x/i' =>  'Mac OS X',
+                            '/mac_powerpc/i'        =>  'Mac OS 9',
+                            '/linux/i'              =>  'Linux',
+                            '/ubuntu/i'             =>  'Ubuntu',
+                            '/iphone/i'             =>  'iPhone',
+                            '/ipod/i'               =>  'iPod',
+                            '/ipad/i'               =>  'iPad',
+                            '/android/i'            =>  'Android',
+                            '/blackberry/i'         =>  'BlackBerry',
+                            '/webos/i'              =>  'Mobile'
+                        );
+
+    foreach ($os_array as $regex => $value) 
+	{ 
+        if (preg_match($regex, $uagent)) 
+		{
+            $os_platform    =   $value;
+        }
+    }
+	$count=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
+	if ($count == 0)
+	{
+			$db->query("INSERT INTO `userdata` (`userid`, `useragent`, `screensize`, `os`, `browser`) VALUES ({$userid}, '{$uagent}', '', '{$os_platform}', '')");
+	}
+	else
+	{
+		$db->query("UPDATE `userdata` SET `useragent` = '{$uagent}', `os` = '{$os_platform}' WHERE `userid` = {$userid}");
+	}
+ }
+  /*
+	Gets the user's browser and inserts it into the database.
+	@param string $uagent	User agent to test with.
+ */
+ function getBrowser($uagent) 
+ {
+	global $db,$userid;
+	$user_agent=stripslashes(strip_tags($uagent));
+    $browser        =   "Unknown Browser";
+    $browser_array  =   array(
+                            '/msie/i'       =>  'Internet Explorer',
+                            '/firefox/i'    =>  'Firefox',
+                            '/safari/i'     =>  'Safari',
+                            '/chrome/i'     =>  'Chrome',
+                            '/edge/i'       =>  'Edge',
+                            '/opera/i'      =>  'Opera',
+                            '/netscape/i'   =>  'Netscape',
+                            '/maxthon/i'    =>  'Maxthon',
+                            '/konqueror/i'  =>  'Konqueror',
+                            '/mobile/i'     =>  'Handheld Browser'
+                        );
+    foreach ($browser_array as $regex => $value) 
+	{ 
+        if (preg_match($regex, $user_agent)) 
+		{
+            $browser    =   $value;
+        }
+    }
+	$count=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
+	if ($count == 0)
+	{
+			$db->query("INSERT INTO `userdata` (`userid`, `useragent`, `browser`) VALUES ({$userid}, '{$uagent}', '{$broswer}')");
+	}
+	else
+	{
+		$db->query("UPDATE `userdata` SET `useragent` = '{$uagent}', `browser` = '{$browser}' WHERE `userid` = {$userid}");
+	}
+}

@@ -177,6 +177,8 @@ if ($macropage && !$ir['verified'] && $set['validate_on'] == 1)
 }
 check_level();
 check_data();
+getOS($_SERVER['HTTP_USER_AGENT']);
+getBrowser($_SERVER['HTTP_USER_AGENT']);
 $h = new headers;
 if (isset($nohdr) == false || !$nohdr)
 {

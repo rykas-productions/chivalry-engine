@@ -39,3 +39,36 @@ $AverageSecondaryCurrencyPerPlayer=round($TotalSecondaryCurrency / $TotalUserCou
 
 //Select the total amount of guilds in the game.
 $TotalGuildCount=$db->fetch_single($db->query("SELECT COUNT(`guild_id`) FROM `guild`"));
+
+//Operating System
+$Win7=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Windows 7'"));
+$Win8=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Windows 8'"));
+$Win81=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Windows 8.1'"));
+$Win10=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Windows 10'"));
+$WinXP=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Windows XP'"));
+$WinV=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Windows Vista'"));
+$OSX=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Mac OS X'"));
+$OS9=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Mac OS 9'"));
+$Linux=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Linux'"));
+$Ubuntu=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Ubuntu'"));
+$iPhone=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'iPhone'"));
+$iPod=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'iPod'"));
+$iPad=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'iPad'"));
+$Android=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Android'"));
+$Blackberry=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Blackberry'"));
+$Mobile=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Mobile'"));
+$WinPho=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Windows Phone'"));
+$UnknownOS=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Unknown OS Platform'"));
+
+//Browser Choice
+$Chrome=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Chrome'"));
+$IE=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Internet Explorer'"));
+$FF=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Firefox'"));
+$Safari=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Safari'"));
+$Edge=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Edge'"));
+$Opera=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Opera'"));
+$NS=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Netscape'"));
+$Maxthon=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Maxthon'"));
+$Konqueror=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Konquerer'"));
+$MobileBro=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Handheld Browser'"));
+$UnknownBro=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Unknown Browser'"));
