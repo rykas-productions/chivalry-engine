@@ -108,12 +108,12 @@ $cpage = strip_tags(stripslashes($currentpage));
     <div class="container">
 	<?php
 	$IP = $db->escape($_SERVER['REMOTE_ADDR']);
-	if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
+	/*if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
 	{
 		alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['REG_MULTIALERT']}");
 		require('footer.php');
 		exit;
-	}
+	}*/
 	if (!isset($_GET['REF']))
     {
         $_GET['REF'] = 0;
@@ -216,12 +216,12 @@ $cpage = strip_tags(stripslashes($currentpage));
 			}
 			$encpsw = encode_password($base_pw);
 			$e_encpsw = $db->escape($encpsw);
-			$profilepic="https://www.gravatar.com/avatar/" . md5(strtolower(trim($e_email)));
+			$profilepic="https://www.gravatar.com/avatar/" . md5(strtolower(trim($e_email))) . "?s=250.jpg";
 			$CurrentTime=time();
 			$db->query("INSERT INTO `users`
-			(`username`,`email`,`password`,`level`,`gender`,`class`,`lastip`,`registerip`,`registertime`,`display_pic`)
+			(`username`,`email`,`password`,`level`,`gender`,`class`,`lastip`,`registerip`,`registertime`,`loginip`,`display_pic`)
 			VALUES
-			('{$e_username}','{$e_email}','{$e_encpsw}','1','{$e_gender}','{$e_class}','{$IP}','{$IP}','{$CurrentTime}', '{$profilepic}')");
+			('{$e_username}','{$e_email}','{$e_encpsw}','1','{$e_gender}','{$e_class}','{$IP}','{$IP}','{$CurrentTime}', '127.0.0.1', '{$profilepic}')");
 			$i = $db->insert_id();
 			$db->query("UPDATE `users` SET `brave`='10',`maxbrave`='10',`hp`='100',`maxhp`='100',`maxwill`='100',`will`='100',`energy`='24',`maxenergy`='24' WHERE `userid`={$i}");
 			if ($e_class == 'Warrior')
