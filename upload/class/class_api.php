@@ -378,4 +378,63 @@ class api
 			return false;
 		}
 	}
+	function GameAddNotification($user,$text)
+	{
+		event_add($user,$text);
+		return true;
+	}
+	function GameAddMail($user,$subj,$msg,$from)
+	{
+		global $db;
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$from = (isset($from) && is_numeric($from)) ? abs(intval($from)) : 0;
+		$subj = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($subj))));
+		$msg = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($msg))));
+		$time = time();
+		$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$user}");
+		if ($db->num_rows($userexist) == 0)
+		{
+			$db->free_result($userexist);
+			return false;
+		}
+		else
+		{
+			$db->free_result($userexist);
+			$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$from}");
+			if ($db->num_rows($userexist) == 0)
+			{
+				$db->free_result($userexist);
+				return false;
+			}
+			else
+			{
+				$db->query("INSERT INTO `mail` 
+				(`mail_to`, `mail_from`, `mail_status`, `mail_subject`, `mail_text`, `mail_time`) 
+				VALUES 
+				('{$user}', '{$from}', 'unread', '{$subj}', '{$msg}', '{$time}');");
+				return true;
+			}
+		}
+	}
+	function GameAddAnnouncement($text,$poster = 1)
+	{
+		global $db;
+		$text = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($text))));
+		$poster = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 1;
+		$time = time();
+		$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$poster}");
+		if ($db->num_rows($userexist) == 0)
+		{
+			$db->free_result($userexist);
+			return false;
+		}
+		else
+		{
+			$db->query("INSERT INTO `announcements` 
+			(`ann_text`, `ann_time`, `ann_poster`) 
+			VALUES 
+			('{$text}', '{$time}', '{$poster}');");
+			return true;
+		}
+	}
 }
