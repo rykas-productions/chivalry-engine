@@ -180,6 +180,8 @@ check_data();
 getOS($_SERVER['HTTP_USER_AGENT']);
 getBrowser($_SERVER['HTTP_USER_AGENT']);
 $h = new headers;
+include("class/class_api.php");
+$api = new api;
 if (isset($nohdr) == false || !$nohdr)
 {
     $h->startheaders();
