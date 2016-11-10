@@ -546,7 +546,7 @@ EOF;
     $encpsw = password_hash($adm_pswd, PASSWORD_BCRYPT);
     $e_encpsw = $db->escape($encpsw);
     $ins_email = $db->escape($adm_email);
-	$profilepic="https://www.gravatar.com/avatar/" . md5(strtolower(trim($ins_email)));
+	$profilepic="https://www.gravatar.com/avatar/" . md5(strtolower(trim($ins_email))) . "?s=250.jpg";
     $IP = $db->escape($_SERVER['REMOTE_ADDR']);
     $ins_game_name =
             $db->escape(htmlentities($game_name, ENT_QUOTES, 'ISO-8859-1'));
