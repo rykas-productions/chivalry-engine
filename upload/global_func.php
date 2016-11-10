@@ -1506,7 +1506,7 @@ function update_fg_info($ip) {
  function getOS($uagent)
  {
 	 global $db,$userid;
-	 $uagent=stripslashes(strip_tags($uagent));
+	 $uagent=$db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($uagent))));
 	$os_platform    =   "Unknown OS Platform";
     $os_array       =   array(
                             '/windows nt 10/i'     =>  'Windows 10',
@@ -1553,8 +1553,8 @@ function update_fg_info($ip) {
  function getBrowser($uagent) 
  {
 	global $db,$userid;
-	$user_agent=stripslashes(strip_tags($uagent));
-    $browser        =   "Unknown Browser";
+	$user_agent=$db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($uagent))));
+    $browser = "Unknown Browser";
     $browser_array  =   array(
                             '/msie/i'       =>  'Internet Explorer',
                             '/firefox/i'    =>  'Firefox',
@@ -1581,6 +1581,6 @@ function update_fg_info($ip) {
 	}
 	else
 	{
-		$db->query("UPDATE `userdata` SET `useragent` = '{$uagent}', `browser` = '{$browser}' WHERE `userid` = {$userid}");
+		$db->query("UPDATE `userdata` SET `useragent` = '{$user_agent}', `browser` = '{$browser}' WHERE `userid` = {$userid}");
 	}
 }
