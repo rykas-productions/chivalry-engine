@@ -378,11 +378,25 @@ class api
 			return false;
 		}
 	}
+	/*
+		Adds a notification for the specified user.
+		@param int user = User ID to send notification to.
+		@param text text = Notification text.
+		Returns true always.
+	*/
 	function GameAddNotification($user,$text)
 	{
 		event_add($user,$text);
 		return true;
 	}
+	/*
+		Adds an in-game message for the player specified.
+		@param int user = User ID message is sent to.
+		@param text subj = Message subject.
+		@param text msg = Message text.
+		@param int from = User ID message is from..
+		Returns true when message is sent. False if message fails.
+	*/
 	function GameAddMail($user,$subj,$msg,$from)
 	{
 		global $db;
@@ -416,6 +430,12 @@ class api
 			}
 		}
 	}
+	/*
+		Adds an in-game announcement.
+		@param text text = Announcement text.
+		@param int poster = User ID of poster. Optional. [Defaults = 1]
+		Returns true when announcement is made. False if fail.
+	*/
 	function GameAddAnnouncement($text,$poster = 1)
 	{
 		global $db;
