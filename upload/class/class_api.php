@@ -340,7 +340,9 @@ class api
 	*/
 	function UserStatusSet($user,$place,$time,$reason)
 	{
+		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$reason=$db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($reason))));
 		if ($place == 1)
 		{
 			if ($time >= 0)
