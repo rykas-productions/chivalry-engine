@@ -306,4 +306,74 @@ class api
 			return false;
 		}
 	}
+	/*
+		Tests the inputted user to see if they're in the dungeon or infirmary
+		@param int user = User ID to test against.
+		@param int status = Place to test. 1 = Infirmary, 2 = Dungeon
+		Returns true if user is in the dungeon/infirmary
+		Returns false if user is not in the dungeon/infirmary
+	*/
+	function UserStatus($user,$status)
+	{
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		if ($status == 1)
+		{
+			user_infirmary($user);
+		}
+		elseif ($status == 2)
+		{
+			user_dungeon($user);
+		}
+		else
+		{
+			return false;
+		}
+	}
+	/*
+		Places or removes dungeon/infirmary time on the specified user.
+		@param int user = User ID to test against.
+		@param int place = Place to test. 1 = Infirmary, 2 = Dungeon
+		@param int time = Minutes user is in infirmary/dungeon.
+		@param text reason = Reason why user is in the infirmary/dungeon.
+		Returns true if user is placed in the infirmary/dungeon, or is removed from it.
+		Returns false otherwise.
+	*/
+	function UserStatusSet($user,$place,$time,$reason)
+	{
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		if ($place == 1)
+		{
+			if ($time >= 0)
+			{
+				$time = (isset($time) && is_numeric($time)) ? abs(intval($time)) : 0;
+				put_infirmary($user,$time,$reason);
+				return true;
+			}
+			elseif ($time < 0)
+			{
+				$time = (isset($time) && is_numeric($time)) ? abs(intval($time)) : 0;
+				remove_infirmary($user,$time);
+				return true;
+			}
+		}
+		elseif ($place == 2)
+		{
+			if ($time >= 0)
+			{
+				$time = (isset($time) && is_numeric($time)) ? abs(intval($time)) : 0;
+				put_dungeon($user,$time,$reason);
+				return true;
+			}
+			elseif ($time < 0)
+			{
+				$time = (isset($time) && is_numeric($time)) ? abs(intval($time)) : 0;
+				remove_dungeon($user,$time);
+				return true;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
