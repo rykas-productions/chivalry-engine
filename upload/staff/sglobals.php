@@ -181,6 +181,10 @@ if (!in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Secretary'))
 }
 check_level();
 check_data();
+getOS($_SERVER['HTTP_USER_AGENT']);
+getBrowser($_SERVER['HTTP_USER_AGENT']);
+include("class/class_api.php");
+$api = new api;
 $h = new headers;
 $h->startheaders();
 $fm = number_format($ir['primary_currency']);

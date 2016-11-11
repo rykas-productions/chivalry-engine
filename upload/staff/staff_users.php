@@ -17,11 +17,11 @@ switch ($_GET['action'])
 	case "createuser":
 		createuser();
 		break;
-	case "editperm":
-		editperm();
+	case "edituser":
+		edituser();
 		break;
-	case "resetperm":
-		resetperm();
+	case "deleteuser":
+		deleteuser();
 		break;
 	default:
 		die();
@@ -389,6 +389,329 @@ function createuser()
 			stafflog_add("Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
 		}
 	}
-	
+}
+function edituser()
+{
+	global $db,$lang,$h,$userid;
+	if (!isset($_POST['step']))
+	{
+		$_POST['step'] = 0;
+	}
+	if ($_POST['step'] == 2)
+	{
+		/*if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser1', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}*/
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+		if (empty($_POST['user']))
+		{
+			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_USERS_EDIT_EMPTY']}");
+			die($h->endpage());
+		}
+		$d =  $db->query("SELECT `i`.*, `d`.*, `username`, 
+		`level`, `primary_currency`,`secondary_currency`, `equip_primary`,
+		`maxwill`, `bank`, `strength`, `agility`, `guard`, `equip_secondary`,
+		`labor`, `IQ`, `location`, `equip_armor`, `email`
+		 FROM `users` AS `u`
+		 INNER JOIN `userstats` AS `us`
+		 ON `u`.`userid` = `us`.`userid`
+		 INNER JOIN `dungeon` AS `d`
+		 ON `u`.`userid` = `d`.`dungeon_user`
+		 INNER JOIN `infirmary` AS `i`
+		 ON `u`.`userid` = `i`.`infirmary_user`
+		 WHERE `u`.`userid` = {$_POST['user']}");
+		if ($db->num_rows($d) == 0)
+		{
+			$db->free_result($d);
+			alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['STAFF_USERS_EDIT_DND']}");
+			die($h->endpage());
+		}
+		$itemi = $db->fetch_row($d);
+		$db->free_result($d);
+		$CurrentTime=time();
+		$itemi['hospreason'] = htmlentities($itemi['infirmary_reason'], ENT_QUOTES, 'ISO-8859-1');
+		$itemi['email'] = htmlentities($itemi['email'], ENT_QUOTES, 'ISO-8859-1');
+		$itemi['jail_reason'] = htmlentities($itemi['dungeon_reason'], ENT_QUOTES, 'ISO-8859-1');
+		$itemi['username'] = htmlentities($itemi['username'], ENT_QUOTES, 'ISO-8859-1');
+		$itemi['infirmary']= round(($itemi['infirmary_out'] - $CurrentTime) / 60);
+		$itemi['dungeon']= round(($itemi['dungeon_out'] - $CurrentTime) / 60);
+		if ($itemi['infirmary'] < 0) { $itemi['infirmary'] = 0; }
+		if ($itemi['dungeon'] < 0) { $itemi['dungeon'] = 0; }
+		$csrf = request_csrf_html('staff_edituser2');
+		echo "<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_USERS_EDIT_FORMTITLE']}
+					<input type='hidden' name='userid' value='{$_POST['user']}' />
+					<input type='hidden' name='step' value='3' />
+				</th>
+			</tr>
+			<tr>
+				<th width='33%'>
+					{$lang["REG_USERNAME"]}
+				</th>
+				<td>
+					<input type='text' class='form-control' required='1' name='username' value='{$itemi['username']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang["REG_EMAIL"]}
+				</th>
+				<td>
+					<input type='text' class='form-control' required='1' name='email' value='{$itemi['email']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					User Level
+				</th>
+				<td>
+					<select name='userlevel' class='form-control' required='1' type='dropdown'>
+						<option>NPC</option>
+						<option>Member</option>
+						<option>Admin</option>
+						<option>Forum Moderator</option>
+						<option>Assistant</option>
+						<option>Web Developer</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['INDEX_LEVEL']}
+				</th>
+				<td>
+					<input type='number' min='1' class='form-control' required='1' name='level' value='{$itemi['level']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['INDEX_PRIMCURR']}
+				</th>
+				<td>
+					<input type='number' min='1' class='form-control' required='1' name='prim_currency' value='{$itemi['primary_currency']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['EXPLORE_BANK']}
+				</th>
+				<td>
+					<input type='number' min='1' class='form-control' required='1' name='bank' value='{$itemi['bank']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['INDEX_SECCURR']}
+				</th>
+				<td>
+					<input type='number' min='0' class='form-control' required='1' name='sec_currency' value='{$itemi['secondary_currency']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_USERS_EDIT_FORM_INFIRM']}
+				</th>
+				<td>
+					<input type='number' min='0' class='form-control' required='1' name='infirmary' value='{$itemi['infirmary']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_USERS_EDIT_FORM_INFIRM_REAS']}
+				</th>
+				<td>
+					<input type='text' class='form-control' name='infirmary_reason' value='{$itemi['infirmary_reason']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_USERS_EDIT_FORM_DUNG']}
+				</th>
+				<td>
+					<input type='number' min='0' class='form-control' required='1' name='dungeon' value='{$itemi['dungeon']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_USERS_EDIT_FORM_DUNG_REAS']}
+				</th>
+				<td>
+					<input type='text' class='form-control' name='dungeonreason' value='{$itemi['dungeon_reason']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_USERS_EDIT_FORM_ESTATE']}
+				</th>
+				<td>
+					" . house2_dropdown("maxwill", $itemi['maxwill']) . "
+				</td>
+			</tr>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_USERS_EDIT_FORM_STATS']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['GEN_STR']}
+				</th>
+				<td>
+					<input type='number' min='1' class='form-control' required='1' name='strength' value='{$itemi['strength']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['GEN_AGL']}
+				</th>
+				<td>
+					<input type='number' min='1' class='form-control' required='1' name='agility' value='{$itemi['agility']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['GEN_GRD']}
+				</th>
+				<td>
+					<input type='number' min='1' class='form-control' required='1' name='guard' value='{$itemi['guard']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['GEN_LAB']}
+				</th>
+				<td>
+					<input type='number' min='1' class='form-control' required='1' name='labour' value='{$itemi['labor']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['GEN_IQ']}
+				</th>
+				<td>
+					<input type='number' min='1' class='form-control' required='1' name='IQ' value='{$itemi['IQ']}' />
+				</td>
+			</tr>
+			<tr>
+				<th colspan='2'>
+					Other
+				</th>
+			</tr>
+			<tr>
+				<th>
+					City
+				</th>
+				<td>
+					" . location_dropdown("city", $itemi['location']) . "
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Primary Weapon
+				</th>
+				<td>
+					" . weapon_dropdown("primary_weapon",$itemi['equip_primary']) . "
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Secondary Weapon
+				</th>
+				<td>
+					" . weapon_dropdown("secondary_weapon",$itemi['equip_secondary']) . "
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Armor
+				</th>
+				<td>
+					" . armor_dropdown("armor",$itemi['equip_armor']) . "
+				</td>
+			</tr>
+		</table>
+    	{$csrf}
+    	<input type='submit' value='Edit User' />
+    </form>
+       ";
+	}
+	elseif ($_POST['step'] == 3)
+	{
+		/*if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser2', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}*/
+		$username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username']) && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
+		$_POST['level'] = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 1;
+		$Money2 = (isset($_POST['sec_currency']) && is_numeric($_POST['sec_currency'])) ? abs(intval($_POST['sec_currency'])) : 0;
+		$Money = (isset($_POST['prim_currency']) && is_numeric($_POST['prim_currency'])) ? abs(intval($_POST['prim_currency'])) : 100;
+
+		
+		if (!isset($_POST['userlevel']) || ($_POST['userlevel'] != 'NPC' && $_POST['userlevel'] != 'Member' && $_POST['userlevel'] != 'Admin' && $_POST['userlevel'] != 'Forum Moderator' && $_POST['userlevel'] != 'Assistant' && $_POST['userlevel'] != 'Web Developer'))
+		{
+			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You specified an invalid user level. A user can only be an NPC, Admin, Member, Forum Moderator, Assistant, or Web Developer.</div>";
+			$h->endpage();
+			exit;
+		}
+	}
+	else
+	{
+		$csrf = request_csrf_html('staff_edituser1');
+		echo "{$lang['STAFF_USERS_EDIT_START']}
+    <br />
+	<table class='table table-bordered'>
+		<form method='post'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_USERS_EDIT_START']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_USERS_EDIT_USER']}
+				</th>
+				<td>
+					" . user_dropdown('user') . "
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					{$csrf}
+					<input type='hidden' name='step' value='2'>
+					<input type='submit' class='btn btn-default' value='{$lang['STAFF_USERS_EDIT_BTN']}' />
+				</th>
+			</tr>
+		</form>
+		<form method='post'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_USERS_EDIT_ELSE']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_USERS_EDIT_USER']}
+				</th>
+				<td>
+					<input class='form-control' type='number' min='1' name='user' />
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					{$csrf}
+					<input type='hidden' name='step' value='2'>
+					<input type='submit' class='btn btn-default' value='{$lang['STAFF_USERS_EDIT_BTN']}' />
+				</th>
+			</tr>
+		</form>
+	</table>
+	";
+	}
 }
 $h->endpage();

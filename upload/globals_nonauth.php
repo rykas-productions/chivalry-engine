@@ -79,6 +79,8 @@ $db->configure($_CONFIG['hostname'], $_CONFIG['username'],
         $_CONFIG['password'], $_CONFIG['database'], $_CONFIG['persistent']);
 $db->connect();
 $c = $db->connection_id;
+include("class/class_api.php");
+$api = new api;
 $set = array();
 $settq = $db->query("SELECT *
 					 FROM `settings`");

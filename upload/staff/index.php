@@ -65,7 +65,7 @@ if (($ir['user_level']) == 'Admin')
 		<div id='MODULES' class='tab-pane fade in'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
-					N/A
+					<a href='staff_criminal.php'>Crimes</a>
 				</div>
 			</div>
 		</div>
