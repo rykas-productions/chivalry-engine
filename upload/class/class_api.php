@@ -156,6 +156,46 @@ class api
 		
 	}
 	/*
+		Takes qunatity of currency type from the user specified.
+		@param int user = User ID to give currency to.
+		@param int type = Currency type. 1 for Primary, 2 for secondary
+		@param int money = Currency given.
+		Returns true if user has lost currency.
+		Returns false if user does not lose any currency.
+	*/
+	function UserTakeCurrency($user,$type,$quantity)
+	{
+		global $db;
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$type = (isset($type) && is_numeric($type)) ? abs(intval($type)) : 0;
+		$quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
+		$userexist=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
+		if ($userexist)
+		{
+			if ($type == 1)
+			{
+				$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$quantity} WHERE `userid` = {$user}");
+				$db->query("UPDATE `users` SET `primary_currency` = 0 WHERE `primary_currency` < 0");
+				return true;
+			}
+			elseif ($type == 2)
+			{
+				$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` - {$quantity} WHERE `userid` = {$user}");
+				$db->query("UPDATE `users` SET `secondary_currency` = 0 WHERE `secondary_currency` < 0");
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	/*
 		Tests to see what the user has equipped.
 		@param int user = User ID to test against.
 		@param int slot = Equipment slot to test. 1 = Primary, 2 = Secondary, 3 = Armor
