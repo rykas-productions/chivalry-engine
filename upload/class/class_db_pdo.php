@@ -74,7 +74,8 @@ class database
     {
         if ($this->connection_id)
         {
-            mysqli_close($this->connection_id);
+            $sth = null;
+			$conn = null;
             $this->connection_id = 0;
             return 1;
         }
@@ -82,18 +83,6 @@ class database
         {
             return 0;
         }
-    }
-    function change_db($database)
-    {
-        if (!mysqli_select_db($this->connection_id, $database))
-        {
-           $ErrorInfo=$this->connection_id->errorInfo();
-			error_critical('Database Change Failed!',
-			$ErrorInfo[1]  . ': ' . $ErrorInfo[2],
-			'Attempted to select database: ' . nl2br($this->last_query),
-			debug_backtrace(false));
-        }
-        $this->database = $database;
     }
     function query($query)
     {

@@ -87,20 +87,6 @@ class database
             return 0;
         }
     }
-
-    function change_db($database)
-    {
-        if (!mysqli_select_db($this->connection_id, $database))
-        {
-            error_critical('Database change failed',
-                    mysqli_errno($this->connection_id) . ': '
-                            . mysqli_error($this->connection_id),
-                    'Attempted to select database: ' . $database,
-                    debug_backtrace(false));
-        }
-        $this->database = $database;
-    }
-
     function query($query)
     {
         $this->last_query = $query;
