@@ -13,6 +13,9 @@ if (!defined('MONO_ON'))
 }
 class api
 {
+	/*
+		Returns the API version.
+	*/
 	function SystemReturnAPIVersion()
 	{
 		return "0.0.29";
@@ -444,7 +447,7 @@ class api
 	{
 		global $db;
 		$text = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($text))));
-		$poster = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 1;
+		$poster = (isset($poster) && is_numeric($poster)) ? abs(intval($poster)) : 1;
 		$time = time();
 		$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$poster}");
 		if ($db->num_rows($userexist) == 0)
@@ -460,6 +463,89 @@ class api
 			('{$text}', '{$time}', '{$poster}');");
 			$db->query("UPDATE `users` SET `announcements` = `announcements` + 1");
 			return true;
+		}
+	}
+	/*
+		Get the user's member level. Can test for exact member level, or if user is above specified member level.
+		@param int user = User to test on.
+		@param text level = Member level to test for. [Valid: npc, member, web dev, forum moderator, assistant, admin]
+		@param boolean exact = Return true if ranked ONLY specified level. [Default: false]
+		Returns true if user is exactly or equal to/above specified member level. False if not.
+	*/
+	function UserMemberLevelGet($user,$level,$exact=false)
+	{
+		$text = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($text))));
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		if ($user == 0)
+		{
+			return false;
+		}
+		else
+		{
+			$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$user}");
+			if ($db->num_rows($userexist) == 0)
+			{
+				$db->free_result($userexist);
+				return false;
+			}
+			else
+			{
+				$ulevel=$db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
+				if ($exact == true)
+				{
+					if ($level == $ulevel)
+					{
+						return true;
+					}
+				}
+				else
+				{
+					if ($level == 'member')
+					{
+						if ($ulevel == 'Member' || $ulevel == 'NPC')
+						{
+							return true;
+						}
+					}
+					elseif ($level == 'forum moderator')
+					{
+						if ($ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator')
+						{
+							return true;
+						}
+					}
+					elseif ($level == 'assistant')
+					{
+						if ($ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant')
+						{
+							return true;
+						}
+					}
+					elseif ($level == 'web dev')
+					{
+						if ($ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
+							 || $ulevel == 'Web Developer' )
+						{
+							return true;
+						}
+					}
+					elseif ($level == 'npc')
+					{
+						if ($ulevel == 'NPC')
+						{
+							return true;
+						}
+					}
+					elseif ($level == 'admin')
+					{
+						if ($ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
+							 || $ulevel == 'Web Developer' || $ulevel == 'Admin')
+						{
+							return true;
+						}
+					}
+				}
+			}
 		}
 	}
 }
