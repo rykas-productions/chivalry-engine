@@ -454,6 +454,7 @@ class api
 			(`ann_text`, `ann_time`, `ann_poster`) 
 			VALUES 
 			('{$text}', '{$time}', '{$poster}');");
+			$db->query("UPDATE `users` SET `announcements` = `announcements` + 1");
 			return true;
 		}
 	}
