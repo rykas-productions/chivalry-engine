@@ -13,6 +13,10 @@ if (!defined('MONO_ON'))
 }
 class api
 {
+	function SystemReturnAPIVersion()
+	{
+		return "0.0.29";
+	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
 		@param int user = User ID to test for.
