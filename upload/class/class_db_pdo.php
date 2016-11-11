@@ -16,11 +16,11 @@ if (!function_exists('error_critical'))
     // Umm...
     die('<h1>Error</h1>' . 'Error handler not present');
 }
-if (!extension_loaded('PDO'))
+if (!extension_loaded('pdo_mysql'))
 {
     // dl doesn't work anymore, crash
     error_critical('Database connection failed',
-            'PDO extension not present but required', 'N/A',
+            'PDO extension not present but required', 'Attempted to connect to database using PDO, which is not enabled on this server.',
             debug_backtrace(false));
 }
 class database

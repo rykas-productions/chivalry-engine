@@ -83,16 +83,6 @@ function diagnostics()
         $wv = '<span style="color: red">Fail!</span>';
         $wvf = 0;
     }
-    if (function_exists('mysqli_connect'))
-    {
-        $dv = '<span style="color: green">Pass! MySQLi detected!</span>';
-        $dvf = 1;
-    }
-    else
-    {
-        $dv = '<span style="color: red">Failed</span>';
-        $dvf = 0;
-    }
 	if (function_exists('openssl_random_pseudo_bytes'))
     {
         $ov = '<span style="color: green">Pass! OpenSSL Random Pseudo Bytes detected!</span>';
@@ -113,16 +103,21 @@ function diagnostics()
         $hv = '<span style="color: red">Failed...</span>';
         $hvf = 0;
     }
-	if (extension_loaded('pdo'))
+	if (extension_loaded('pdo_mysql'))
     {
-        $pdv = '<span style="color: green">Pass! We suggest you use PDO!</span>';
+        $pdv = '<span style="color: green">PDO detected. Please use PDO!</span>';
         $pdf = 1;
     }
-    else
+    elseif (function_exists('mysqli_connect'))
     {
-        $pdv = '<span style="color: red">Failed... Use MySQLi instead!</span>';
-        $pdf = 0;
+        $pdv = '<span style="color: orange">PDO not detected. Use MySQLi!</span>';
+        $pdf = 1;
     }
+	else
+	{
+		$pdv = '<span style="color: red">No acceptable database handler found. Installer will not continue.</span>';
+        $pdf = 0;
+	}
     echo "
     <h3>Basic Diagnostic Results:</h3>
     <table class='table table-bordered table-hover'>
@@ -135,12 +130,8 @@ function diagnostics()
     			<td>{$wv}</td>
     		</tr>
 			<tr>
-    			<td>Is PDO present?</td>
+    			<td>Database Recommendation?</td>
     			<td>{$pdv}</td>
-    		</tr>
-    		<tr>
-    			<td>Is MySQLi present?</td>
-    			<td>{$dv}</td>
     		</tr>
 			<tr>
     			<td>Password_Hash avaliable?</td>
@@ -158,7 +149,7 @@ function diagnostics()
         	</tr>
     </table>
        ";
-    if ($pvf + $wvf + $dvf + $hvf + $ovf < 5)
+    if ($pvf + $pdf + $wvf + $hvf + $ovf < 5)
     {
         echo "
 		<hr />
