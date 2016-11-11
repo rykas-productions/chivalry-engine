@@ -656,4 +656,31 @@ class api
 			return FILTER_SANITIZE_EMAIL($input);
 		}
 	}
+	/*
+		Returns the specified user's stat, optionally as a percent.
+		This function is quite powerful, as it gives the API user
+		full access to the user's table, as long as they don't use
+		the percent option on fields that don't have a max.
+		@param int user = User to test on.
+		@param text stat = User's table row to return.
+		@param boolean percent = Return as a percent. [Default: false]
+		Returns the value in the stat specified, optionally as a percent.
+		
+	*/
+	function UserInfoGet($user,$stat,$percent=false)
+	{
+		global $db;
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($stat))));
+		if ($percent == true)
+		{
+			$min=$db->fetch_single($db->query("SELECT `{$stat}` FROM `users` WHERE `userid` = {$user}"));
+			$max=$db->fetch_single($db->query("SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
+			return round($min / $max * 100);
+		}
+		else
+		{
+			return $db->fetch_single($db->query("SELECT `{$stat}` FROM `users` WHERE `userid` = {$user}"));
+		}
+	}
 }
