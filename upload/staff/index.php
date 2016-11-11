@@ -19,20 +19,46 @@ if (($ir['user_level']) == 'Admin')
 	<table class='table table-bordered table-hover'>
 		<tbody>
 			<tr>
-				<th>PHP Version Detected</th>
-				<td>{$PHPVersion}</td>
+				<th>
+					PHP Version Detected
+				</th>
+				<td>
+					{$PHPVersion}
+				</td>
 			</tr>
 			<tr>
-				<th>Database Version</th>
-				<td>{$MySQLIVersion}</td>
+				<th>
+					Database Version
+				</th>
+				<td>
+					{$MySQLIVersion}
+				</td>
 			</tr>
 			<tr>
-				<th>Chivalry Engine Version</th>
-				<td>{$set['Version_Number']} (Build Number: {$set['BuildNumber']})</td>
+				<th>
+					Chivalry Engine Version_Number
+				</th>
+				<td>
+					{$set['Version_Number']} (Build Number: {$set['BuildNumber']})
+				</td>
 			</tr>
 			<tr>
-				<th>Chivalry Engine Update?</th>
-				<td><iframe width='100%' height='35' style='border:none' src='http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}'>Your browser does not support iframes...</iframe></td>
+				<th>
+					Chivalry Engine Update?
+				</th>
+				<td>
+					<iframe width='100%' height='35' style='border:none' src='http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}'>
+						Your browser does not support iframes...
+					</iframe>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					API Version
+				</th>
+				<td>
+					{$api->SystemReturnAPIVersion()}
+				</td>
 			</tr>
 		</tbody>
 	</table>
