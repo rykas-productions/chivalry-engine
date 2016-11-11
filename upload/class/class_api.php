@@ -474,7 +474,8 @@ class api
 	*/
 	function UserMemberLevelGet($user,$level,$exact=false)
 	{
-		$text = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($text))));
+		global $db;
+		$level = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($level)))));
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		if ($user == 0)
 		{
@@ -502,41 +503,34 @@ class api
 				{
 					if ($level == 'member')
 					{
-						if ($ulevel == 'Member' || $ulevel == 'NPC')
+						if ($ulevel == 'Member' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
+							 || $ulevel == 'Web Developer' || $ulevel == 'Admin')
 						{
 							return true;
 						}
 					}
 					elseif ($level == 'forum moderator')
 					{
-						if ($ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator')
+						if ($ulevel == 'Forum Moderator' || $ulevel == 'Assistant' || $ulevel == 'Web Developer' || $ulevel == 'Admin')
 						{
 							return true;
 						}
 					}
 					elseif ($level == 'assistant')
 					{
-						if ($ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant')
+						if ($ulevel == 'Assistant' || $ulevel == 'Web Developer' || $ulevel == 'Admin')
 						{
 							return true;
 						}
 					}
 					elseif ($level == 'web dev')
 					{
-						if ($ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
-							 || $ulevel == 'Web Developer' )
+						if ($ulevel == 'Web Developer' || $ulevel == 'Admin')
 						{
 							return true;
 						}
 					}
 					elseif ($level == 'npc')
-					{
-						if ($ulevel == 'NPC')
-						{
-							return true;
-						}
-					}
-					elseif ($level == 'admin')
 					{
 						if ($ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
 							 || $ulevel == 'Web Developer' || $ulevel == 'Admin')
@@ -544,6 +538,50 @@ class api
 							return true;
 						}
 					}
+					elseif ($level == 'admin')
+					{
+						if ($ulevel == 'Admin')
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}
+	/*
+		Test to see whether or not the specified user has the item and optionally, an amount of the item.
+		@param int user = User to test on.
+		@param int item = Item ID to test for.
+		@param int qty = Quantity to test for. Optional. [Default: 1]
+		Returns true if the user has the item and requried quantity. False if otherwise.
+		
+	*/
+	function UserHasItem($user,$item,$qty=1)
+	{
+		global $db;
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$item = (isset($item ) && is_numeric($item)) ? abs(intval($item)) : 0;
+		$qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
+		if ($user == 0 || $item == 0 || $qty == 0)
+		{
+			return false;
+		}
+		else
+		{
+			$i=$db->fetch_single($db->query("SELECT `inv_qty` FROM `inventory` WHERE `inv_userid` = {$user} && `inv_itemid` = {$item}"));
+			if ($qty == 1)
+			{
+				if ($i >= 1)
+				{
+					return true;
+				}
+			}
+			else
+			{
+				if ($i >= $qty)
+				{
+					return true;
 				}
 			}
 		}
