@@ -183,7 +183,7 @@ check_level();
 check_data();
 getOS($_SERVER['HTTP_USER_AGENT']);
 getBrowser($_SERVER['HTTP_USER_AGENT']);
-include("class/class_api.php");
+include("../class/class_api.php");
 $api = new api;
 $h = new headers;
 $h->startheaders();
@@ -200,7 +200,7 @@ else
 {
     $h->userdata($ir, $lv, $fm, $cm);
 }
-foreach (glob("crons/*.php") as $filename) 
+foreach (glob("../crons/*.php") as $filename) 
 { 
     include $filename; 
 } 
