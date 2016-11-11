@@ -586,4 +586,34 @@ class api
 			}
 		}
 	}
+	/*
+		Filter the input. (Untested. May be unsafe!)
+		@param text type = Type of filter to apply. (int, float, text, url, email)
+		@param text input = Input to filter.
+		Returns the filtered input.
+	*/
+	function SystemFilterInput($type,$input)
+	{
+		$type == strtolower($type);
+		if ($type == 'int')
+		{
+			return FILTER_SANITIZE_NUMBER_INT($input);
+		}
+		if ($type == 'float')
+		{
+			return FILTER_SANITIZE_NUMBER_FLOAT($input);
+		}
+		if ($type == 'text')
+		{
+			return FILTER_SANITIZE_FULL_SPECIAL_CHARS(FILTER_SANITIZE_STRING($input));
+		}
+		if ($type == 'url')
+		{
+			return FILTER_SANITIZE_URL($input);
+		}
+		if ($type == 'email')
+		{
+			return FILTER_SANITIZE_EMAIL($input);
+		}
+	}
 }
