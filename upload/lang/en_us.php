@@ -8,8 +8,8 @@
 */
  
 $lang = array();
+ include("lib/modules/lang/en_us_tmg_mining.php");
 global $ir,$fee,$gain;
-
 //Static
 $lang["HEADER_TITLE"] = "Chivalry Engine Unreleased";
  
@@ -99,6 +99,13 @@ $lang["REG_CPW"] = "Confirm Password";
 $lang["REG_SEX"] = "Gender";
 $lang["REG_CLASS"] = "Class";
 $lang["REG_REFID"] = "Referral ID";
+$lang['REG_WARRIORCLASS']="Warrior Class!";
+$lang['REG_ROGUECLASS']="Rogue Class!";
+$lang['REG_DEFENDERCLASS']="Defnder Class!";
+$lang['REG_NOCLASS']="We need you to select a class, please.";
+$lang['REG_ROGUECLASS_INFO']="A rogue fighter has an easier time training agility, however, at the cost of not knowing how to train strength as well. They start the game with more agility, and less strength.";
+$lang['REG_DEFENDERCLASS_INFO']="A defending fighter has trained extensively in the art of blocking, thus making them a quick learner of the Guard skill, however, at the cost of being a slow learner at Agility. They start the game with more guard, but less agility.";
+$lang['REG_WARRIORCLASS_INFO']="A normal warrior has been trained to use brute strength to win combat situations. Because of this, they learn strength a lot quicker, but do not know how to guard as well. They begin the game with more strength, but less guard than others.";
 $lang['REG_UNIUERROR']="The username you chose is already in use. Go back and try again.";
 $lang['REG_SUCCESS']="You have successfully joined the game. Enjoy your stay and please be sure to read the game rules.";
 $lang['REG_EIUERROR']="The email you chose is already in use. Go back and try again.";
@@ -145,6 +152,12 @@ $lang['GEN_FOR']="for";
 $lang['GEN_INDAH']="In the";
 $lang['GEN_YES']="Yes";
 $lang['GEN_NO']="No";
+$lang['GEN_STR']="Strength";
+$lang['GEN_AGL']="Agility";
+$lang['GEN_GRD']="Guard";
+$lang['GEN_IQ']="IQ";
+$lang['GEN_LAB']="Labor";
+$lang['GEN_GOHOME']="Go Home";
 
 //Gym
 $lang['GYM_INFIRM'] = "While you are unconscious, you cannot train! Come back after you are feeling healthy!";
@@ -407,6 +420,9 @@ $lang['PROFILE_ACTIVE']="Last Active";
 $lang['PROFILE_LOGIN']="Last Login";
 $lang['PROFILE_AGE']="Age";
 $lang['PROFILE_DAYS_OLD']="days old.";
+$lang['PROFILE_REF']="Referrals";
+$lang['PROFILE_FRI']="Friends";
+$lang['PROFILE_ENE']="Enemies";
 
 //Equip Items
 $lang['EQUIP_NOITEM']="Item cannot be found, and as a result, you cannot equip it.";
@@ -538,6 +554,21 @@ $lang['STAFF_CRIMEG_NEW_FAIL1']="At least one of the two inputs on the previous 
 $lang['STAFF_CRIMEG_NEW_FAIL2']="You cannot have crime groups share order values.";
 $lang['STAFF_CRIMEG_NEW_SUCCESS']="You have successfully created a crime group.";
 
+//Staff Users
+$lang['STAFF_USERS_EDIT_START']="When you submit this form, you will be able to edit any aspect of the player you select.";
+$lang['STAFF_USERS_EDIT_USER']="User:";
+$lang['STAFF_USERS_EDIT_ELSE']="Or, you can manually type in a User's ID.";
+$lang['STAFF_USERS_EDIT_EMPTY']="You inputted an invalid user. Go back and try again.";
+$lang['STAFF_USERS_EDIT_DND']="The user you input does not exist.";
+$lang['STAFF_USERS_EDIT_BTN']="Edit User";
+$lang['STAFF_USERS_EDIT_FORMTITLE']="Editing User";
+$lang['STAFF_USERS_EDIT_FORM_INFIRM']="Infirmary Time";
+$lang['STAFF_USERS_EDIT_FORM_INFIRM_REAS']="Infirmary Reason";
+$lang['STAFF_USERS_EDIT_FORM_DUNG']="Dungeon Time";
+$lang['STAFF_USERS_EDIT_FORM_DUNG_REAS']="Dungeon Reason";
+$lang['STAFF_USERS_EDIT_FORM_ESTATE']="Estate";
+$lang['STAFF_USERS_EDIT_FORM_STATS']="User Stats";
+
 //Criminal Center
 $lang['CRIME_TITLE']="Criminal Center";
 $lang['CRIME_ERROR_JI']="Only the healthy and free individuals can commit crimes.";
@@ -547,4 +578,9 @@ $lang['CRIME_TABLE_COST']="Cost";
 $lang['CRIME_TABLE_COMMIT']="Commit";
 $lang['CRIME_COMMIT_INVALID']="You are trying to commit either a non-existent crime, or an unfinished one. Try again, and if the issue persists, please contact an admin.";
 $lang['CRIME_COMMIT_BRAVEBAD']="You aren't brave enough to commit this crime at this time. Come back later.";
+
+$lang['ATTACK_START_NOREFRESH']="Refreshing while attacking is a bannable offense. You can lose all your experience for that.";
+$lang['ATTACK_START_NOUSER']="You can only attack players specified. Did you use the attack link on the user's profile?";
+$lang['ATTACK_START_NOTYOU']="Depressed or not, you cannot attack yourself!";
+$lang['ATTACK_START_YOUNOHP']="You need HP to fight someone. Come back when you have more health!";
 ?>

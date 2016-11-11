@@ -13,14 +13,15 @@ else
 {
 	$q =
             $db->query(
-                    "SELECT `userid`, `user_level`, `laston`, `last_login`,
+                    "SELECT `u`.`userid`, `user_level`, `laston`, `last_login`,
                     `registertime`, `vip_days`, `username`, `gender`,
 					`primary_currency`, `secondary_currency`, `level`, `class`,
 					`display_pic`, `hp`, `maxhp`, `guild`,
                     `fedjail`, `bank`, `lastip`, `lastip`,
                     `loginip`, `registerip`, `staff_notes`, `town_name`,
                     `house_name`, `guild_name`, `fed_days`, `fed_reason`,
-					`infirmary_reason`, `infirmary_out`, `dungeon_reason`, `dungeon_out`
+					`infirmary_reason`, `infirmary_out`, `dungeon_reason`, `dungeon_out`,
+					`browser`, `os`, `screensize`
                     FROM `users` `u`
                     INNER JOIN `town` AS `t`
                     ON `u`.`location` = `t`.`town_id`
@@ -34,6 +35,8 @@ else
                     ON `g`.`guild_id` = `u`.`guild`
                     LEFT JOIN `fedjail` AS `f`
                     ON `f`.`fed_userid` = `u`.`userid`
+					LEFT JOIN `userdata` AS `ud`
+                    ON `ud`.`userid` = `u`.`userid`
                     WHERE `u`.`userid` = {$_GET['user']}");
 					
 	if ($db->num_rows($q) == 0)
@@ -260,27 +263,27 @@ else
 						"
 						<table class='table table-bordered table-responsive'>
 							<tr>
-								<th width='25%'>Gender</th>
+								<th width='25%'>{$lang['INDEX_PRIMCURR']}</th>
 								<td> " . number_format($r['primary_currency']) . "</td>
 							</tr>
 							<tr>
-								<th>Class</th>
+								<th>{$lang['INDEX_SECCURR']}</th>
 								<td>" . number_format($r['secondary_currency']) . "</td>
 							</tr>
 							<tr>
-								<th>Signed Up</th>
+								<th>{$lang['STAFF_USERS_EDIT_FORM_ESTATE']}</th>
 								<td>{$r['house_name']}</td>
 							</tr>
 							<tr>
-								<th>Last Action</th>
+								<th>{$lang['PROFILE_REF']}</th>
 								<td>" . number_format($ref) . "</td>
 							</tr>
 							<tr>
-								<th>Last Login</th>
+								<th>{$lang['PROFILE_FRI']}</th>
 								<td>" . number_format($friend) . "</td>
 							</tr>
 							<tr>
-								<th>Age</th>
+								<th>{$lang['PROFILE_ENE']}</th>
 								<td>" . number_format($enemy) . "</td>
 							</tr>
 						</table>";
@@ -321,6 +324,14 @@ else
 								<td>Risk Level<br />
 								<small>1 is low, 5 is high</small></td>
 								<td>{$fg['risk_level']}</td>
+							</tr>
+							<tr>
+								<td>
+									Broswer/OS
+								</td>
+								<td>
+									{$r['browser']} on {$r['os']}
+								</td>
 							</tr>
 					</table>
 					<form action='staffnotes.php' method='post'>
