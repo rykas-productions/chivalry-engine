@@ -671,16 +671,78 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($stat))));
-		if ($percent == true)
+		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
+		if (!in_array($ir['user_level'], array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
-			$min=$db->fetch_single($db->query("SELECT `{$stat}` FROM `users` WHERE `userid` = {$user}"));
-			$max=$db->fetch_single($db->query("SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
-			return round($min / $max * 100);
+			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.");
 		}
 		else
 		{
-			return $db->fetch_single($db->query("SELECT `{$stat}` FROM `users` WHERE `userid` = {$user}"));
+			if ($percent == true)
+			{
+				$min=$db->fetch_single($db->query("SELECT `{$stat}` FROM `users` WHERE `userid` = {$user}"));
+				$max=$db->fetch_single($db->query("SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
+				return round($min / $max * 100);
+			}
+			else
+			{
+				return $db->fetch_single($db->query("SELECT `{$stat}` FROM `users` WHERE `userid` = {$user}"));
+			}
+		}
+	}
+	/*
+		Set the specified user's stat to a value, optionally as a percent.
+		This function is quite powerful, as it gives the API user
+		full access to the user's table, as long as they don't use
+		the percent option on fields that don't have a max.
+		@param int user = User to test on.
+		@param text stat = User's table row to return.
+		@param int change = User to test on.
+		@param boolean percent = Return as a percent. [Default: false]
+		Returns the value in the stat specified, optionally as a percent.
+		
+	*/
+	function UserInfoSet($user,$stat,$change,$percent=false)
+	{
+		global $db;
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
+		if (!in_array($ir['user_level'], array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
+		{
+			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.");
+		}
+		else
+		{
+			if ($change > 0)
+			{
+				$change = (isset($change) && is_numeric($change)) ? abs(intval($change)) : 0;
+				if ($percent == true)
+				{
+					$db->query("UPDATE users SET `{$stat}` = `{$stat}` +((`max{$stat}`*0.{$change})+0.5) WHERE `{$stat}` < `max{$stat}` AND `userid` = {$user}");
+					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
+					return true;
+				}
+				else
+				{
+					$db->query("UPDATE users SET `{$stat}` = `{$stat}` + {$change} WHERE `userid` = {$user}");
+					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
+				}
+			}
+			else
+			{
+				$change = (isset($change) && is_numeric($change)) ? abs(intval($change)) : 0;
+				if ($percent == true)
+				{
+					$db->query("UPDATE users SET `{$stat}` = `{$stat}` -((`max{$stat}`*0.{$change})+0.5) WHERE `userid` = {$user}");
+					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` < 0");
+					return true;
+				}
+				else
+				{
+					$db->query("UPDATE users SET `{$stat}` = `{$stat}` - {$change} WHERE `userid` = {$user}");
+					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` < 0");
+				}
+			}
 		}
 	}
 }
