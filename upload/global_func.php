@@ -23,36 +23,20 @@ function DateTime_Parse($time_stamp)
 /*
 	The function for testing a link is a valid image
 	@param text $url The link to test for.
-	Major thanks to MagicTallGuy!
-	http://www.makewebgames.com/member/53425-magictallguy
 */
 
-function isImage($url = null) {
-    $url = filter_var($url, FILTER_VALIDATE_URL) ? filter_var($url, FILTER_SANITIZE_URL) : null;
-    if(empty($url))
-        return false;
-    $params = ['http' => ['method' => 'HEAD']];
-    $ctx = stream_context_create($params);
-    $fp = @checkRemoteFile($url);
-    if(!$fp)
-        return false;  // Problem with url
-    $meta = stream_get_meta_data($fp);
-    if ($meta === false) {
-        fclose($fp);
-        return false;  // Problem reading data from url
-    }
-    $wrapper_data = $meta['wrapper_data'];
-    if(is_array($wrapper_data))
-        foreach(array_keys($wrapper_data) as $hh)
-            if (substr($wrapper_data[$hh], 0, 19) == "Content-Type: image") {
-                fclose($fp);
-                return true;
-            }
-    fclose($fp);
-    return false;
+function isImage($url = null) 
+{
+    if(@is_array(getimagesize($url)))
+	{
+		return true;
+	} 
+	else 
+	{
+		return false;
+	}
 }
 /*
-
 	The function for testing if a player is in the hospital.
 	@param int $user The user who to test for.
 */
@@ -900,7 +884,7 @@ function event_add($userid, $text)
     $db->query(
             "INSERT INTO `notifications`
              VALUES(NULL, $userid, " . time() . ", 'unread', '$text')");
-    return 1;
+    return true;
 }
 /*
 Internal Function: Used to make sure users do not have more energy/brave/hp/etc. than their level allows.
@@ -996,42 +980,52 @@ function get_rank($stat, $mykey)
 function item_add($user, $itemid, $qty, $notid = 0)
 {
     global $db;
-    if ($notid > 0)
-    {
-        $q =
-                $db->query(
-                        "SELECT `inv_id`
-                         FROM `inventory`
-                         WHERE `inv_userid` = {$user}
-                         AND `inv_itemid` = {$itemid}
-                         AND `inv_id` != {$notid}
-                         LIMIT 1");
-    }
+	$ie=$db->fetch_single($db->query("SELECT COUNT(`itmname`) FROM `items` WHERE `itmid` = {$itemid}"));
+	if ($ie == 0)
+	{
+		return false;
+	}
     else
-    {
-        $q =
-                $db->query(
-                        "SELECT `inv_id`
-                         FROM `inventory`
-                         WHERE `inv_userid` = {$user}
-                         AND `inv_itemid` = {$itemid}
-                         LIMIT 1");
-    }
-    if ($db->num_rows($q) > 0)
-    {
-        $r = $db->fetch_row($q);
-        $db->query(
-                "UPDATE `inventory`
-                SET `inv_qty` = `inv_qty` + {$qty}
-                WHERE `inv_id` = {$r['inv_id']}");
-    }
-    else
-    {
-        $db->query(
-                "INSERT INTO `inventory`
-                 (`inv_itemid`, `inv_userid`, `inv_qty`)
-                 VALUES ({$itemid}, {$user}, {$qty})");
-    }
+	{
+		if ($notid > 0)
+		{
+			$q =
+					$db->query(
+							"SELECT `inv_id`
+							 FROM `inventory`
+							 WHERE `inv_userid` = {$user}
+							 AND `inv_itemid` = {$itemid}
+							 AND `inv_id` != {$notid}
+							 LIMIT 1");
+		}
+		else
+		{
+			$q =
+					$db->query(
+							"SELECT `inv_id`
+							 FROM `inventory`
+							 WHERE `inv_userid` = {$user}
+							 AND `inv_itemid` = {$itemid}
+							 LIMIT 1");
+		}
+		if ($db->num_rows($q) > 0)
+		{
+			$r = $db->fetch_row($q);
+			$db->query(
+					"UPDATE `inventory`
+					SET `inv_qty` = `inv_qty` + {$qty}
+					WHERE `inv_id` = {$r['inv_id']}");
+			return true;
+		}
+		else
+		{
+			$db->query(
+					"INSERT INTO `inventory`
+					 (`inv_itemid`, `inv_userid`, `inv_qty`)
+					 VALUES ({$itemid}, {$user}, {$qty})");
+			return true;
+		}
+	}
     $db->free_result($q);
 }
 
@@ -1045,30 +1039,40 @@ function item_add($user, $itemid, $qty, $notid = 0)
 function item_remove($user, $itemid, $qty)
 {
     global $db;
-    $q =
-            $db->query(
-                    "SELECT `inv_id`, `inv_qty`
-                     FROM `inventory`
-                     WHERE `inv_userid` = {$user}
-                     AND `inv_itemid` = {$itemid}
-                     LIMIT 1");
-    if ($db->num_rows($q) > 0)
-    {
-        $r = $db->fetch_row($q);
-        if ($r['inv_qty'] > $qty)
-        {
-            $db->query(
-                    "UPDATE `inventory`
-                     SET `inv_qty` = `inv_qty` - {$qty}
-                     WHERE `inv_id` = {$r['inv_id']}");
-        }
-        else
-        {
-            $db->query(
-                    "DELETE FROM `inventory`
-            		 WHERE `inv_id` = {$r['inv_id']}");
-        }
-    }
+	$ie=$db->fetch_single($db->query("SELECT COUNT(`itmname`) FROM `items` WHERE `itmid` = {$itemid}"));
+	if ($ie == 0)
+	{
+		return false;
+	}
+    else
+	{
+		$q =
+				$db->query(
+						"SELECT `inv_id`, `inv_qty`
+						 FROM `inventory`
+						 WHERE `inv_userid` = {$user}
+						 AND `inv_itemid` = {$itemid}
+						 LIMIT 1");
+		if ($db->num_rows($q) > 0)
+		{
+			$r = $db->fetch_row($q);
+			if ($r['inv_qty'] > $qty)
+			{
+				$db->query(
+						"UPDATE `inventory`
+						 SET `inv_qty` = `inv_qty` - {$qty}
+						 WHERE `inv_id` = {$r['inv_id']}");
+				return true;
+			}
+			else
+			{
+				$db->query(
+						"DELETE FROM `inventory`
+						 WHERE `inv_id` = {$r['inv_id']}");
+				return true;
+			}
+		}
+	}
     $db->free_result($q);
 }
 
