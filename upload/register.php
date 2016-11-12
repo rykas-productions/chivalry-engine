@@ -259,9 +259,15 @@ $cpage = strip_tags(stripslashes($currentpage));
 			$db->query("INSERT INTO `dungeon` 
 				(`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) 
 				VALUES ('{$i}', 'N/A', '0', '0');");
-			
+			session_regenerate_id();
+		$_SESSION['loggedin'] = 1;
+		$_SESSION['userid'] = $i;
+		$db->query(
+            "UPDATE `users`
+             SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}'
+             WHERE `userid` = {$i}");
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['REG_SUCCESS']}<br />
-			<a href='login.php'>{$lang['LOGIN_SIGNIN']}</a>");
+			<a href='loggedin.php'>{$lang['LOGIN_SIGNIN']}</a>");
 		}
 		require('footer.php');
 	}
