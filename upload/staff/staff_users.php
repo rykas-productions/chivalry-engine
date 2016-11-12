@@ -48,7 +48,7 @@ function createuser()
 							Username
 						</th>
 						<td>
-							<input type='text' id='username' required='1' onkeyup='CheckUsername(this.value);' class='form-control' minlength='3' name='username' maxlength='20'>
+							<input type='text' id='username' required='1' class='form-control' minlength='3' name='username' maxlength='20'>
 						</td>
 					</tr>
 					<tr>
@@ -56,7 +56,7 @@ function createuser()
 							Password
 						</th>
 						<td>
-							<input type='password' id='pw1' required='1' class='form-control' onkeyup='CheckPasswords(this.value);PasswordMatch();' name='password'>
+							<input type='password' id='pw1' required='1' class='form-control' name='password'>
 						</td>
 					</tr>
 					<tr>
@@ -64,7 +64,7 @@ function createuser()
 							Confirm Password
 						</th>
 						<td>
-							<input type='password' id='pw2' required='1' class='form-control' onkeyup='PasswordMatch();' name='cpw'>
+							<input type='password' id='pw2' required='1' class='form-control' name='cpw'>
 						</td>
 					</tr>
 					<tr>
@@ -72,7 +72,7 @@ function createuser()
 							Email
 						</th>
 						<td>
-							<input type='email' id='email' required='1' class='form-control' onkeyup='CheckEmail(this.value);' name='email'>
+							<input type='email' id='email' required='1' class='form-control' name='email'>
 						</td>
 					</tr>
 					<tr>
@@ -119,7 +119,7 @@ function createuser()
 							Class
 						</th>
 						<td>
-							<select name='class' id='class' class='form-control' onchange='UpdateStats(this.value)' required='1' type='dropdown'>
+							<select name='class' id='class' class='form-control' required='1' type='dropdown'>
 								<option value='Warrior'>Warrior</option>
 								<option value='Rogue'>Rogue</option>
 								<option value='Defender'>Defender</option>

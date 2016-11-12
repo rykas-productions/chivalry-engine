@@ -29,7 +29,7 @@ class headers
     <!-- CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link href="../css/bs2.css" rel="stylesheet">
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <!-- Custom CSS -->
@@ -241,16 +241,13 @@ class headers
 			</div>
 			<!-- /.container -->
 
-			<!-- jQuery Version 1.11.1 -->
+			<!-- jQuery Version 1.12.4 -->
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 			<!-- Bootstrap Core JavaScript -->
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-			<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-			<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-			<!-- Other JavaScript -->
-			<script src="../js/game.js"></script>
-			<script src="../js/register.js"></script>
+			<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+			<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 		</body>
 			<footer>
 				<p>
