@@ -69,8 +69,7 @@ function name_change()
 	{$lang['UNC_INTRO']}<br />
 	<div class='form-group'>
 	<form method='post'>
-    	<label for='username'>{$lang['UNC_NUN']}</label> 
-		<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' onkeyup='CheckUsername(this.value);' name='newname' />
+		<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' name='newname' />
     	<br />
 		<input type='hidden' name='verf' value='{$code}' />
     	<input type='submit' class='btn btn-default' value='{$lang['UNC_BUTTON']}' />
