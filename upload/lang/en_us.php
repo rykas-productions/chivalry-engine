@@ -8,7 +8,6 @@
 */
  
 $lang = array();
- include("lib/modules/lang/en_us_tmg_mining.php");
 global $ir,$fee,$gain;
 //Static
 $lang["HEADER_TITLE"] = "Chivalry Engine Unreleased";
