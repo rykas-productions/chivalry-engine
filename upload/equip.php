@@ -82,3 +82,61 @@ function weapon()
 	}
 	$h->endpage();
 }
+function armor()
+{
+	global $db,$lang,$h,$userid,$ir;
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs((int) $_GET['ID']) : 0;
+	$id =
+			$db->query(
+					"SELECT `armor`, `itmid`, `itmname`
+					FROM `inventory` AS `iv`
+					LEFT JOIN `items` AS `it`
+					ON `iv`.`inv_itemid` = `it`.`itmid`
+					WHERE `iv`.`inv_id` = {$_GET['ID']}
+					AND `iv`.`inv_userid` = $userid
+					LIMIT 1");
+	if ($db->num_rows($id) == 0)
+	{
+		$db->free_result($id);
+		alert('danger',"{$lang['EQUIP_NOITEM_TITLE']}","{$lang['EQUIP_NOITEM']}");
+		die($h->endpage());
+	}
+	else
+	{
+		$r = $db->fetch_row($id);
+		$db->free_result($id);
+	}
+	if (!$r['armor'])
+	{
+		alert('danger',"{$lang['EQUIP_NOTARMOR_TITLE']}","{$lang['EQUIP_NOTARMOR']}");
+		die($h->endpage());
+	}
+	if (isset($_POST['type']))
+	{
+		if ($_POST['type'] !== 'equip_armor')
+		{
+			alert('danger',"{$lang['EQUIP_NOSLOT_TITLE']}","{$lang['EQUIP_NOSLOT']}");
+			die($h->endpage());
+		}
+		if ($ir['equip_armor'] > 0)
+		{
+			item_add($userid, $ir['equip_armor'], 1);
+		}
+		item_remove($userid, $r['itmid'], 1);
+		$db->query(
+				"UPDATE `users`
+				 SET `equip_armor` = {$r['itmid']}
+				 WHERE `userid` = {$userid}");
+		alert('success',"","{$lang['EQUIP_WEAPON_SUCCESS1']} {$r['itmname']}.");
+	}
+	else
+	{
+		echo "<h3>{$lang['EQUIP_ARMOR_TITLE']}</h3><hr />
+	<form action='?slot=armor&ID={$_GET['ID']}' method='post'>
+	{$lang['EQUIP_ARMOR_TEXT_FORM_1']} {$r['itmname']} {$lang['EQUIP_ARMOR_TEXT_FORM_2']}<br />
+	<input type='hidden' name='type' value='equip_armor'  />
+	<input type='submit' class='btn btn-default' value='Equip Armor' />
+	</form>";
+	}
+	$h->endpage();
+}

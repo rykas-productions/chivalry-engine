@@ -429,6 +429,7 @@ $lang['EQUIP_NOITEM_TITLE']="Item does not exist!";
 $lang['EQUIP_NOTWEAPON']="The item you are trying to equip cannot be equipped as a weapon.";
 $lang['EQUIP_NOTWEAPON_TITLE']="Invalid Weapon!";
 $lang['EQUIP_NOSLOT']="You are trying to equip this item to an invalid or non-existent slot.";
+$lang['EQUIP_NOSLOT_TITLE']="Invalid Equipment Slot!";
 $lang['EQUIP_WEAPON_SUCCESS1']="You have successfully equipped";
 $lang['EQUIP_WEAPON_SUCCESS2']="as your";
 $lang['EQUIP_WEAPON_SLOT1']='Primary Weapon';
@@ -437,6 +438,11 @@ $lang['EQUIP_WEAPON_TITLE']="Equip a Weapon";
 $lang['EQUIP_WEAPON_TEXT_FORM_1']="Please select the spot you wish to equip your";
 $lang['EQUIP_WEAPON_TEXT_FORM_2']="to. If you're already holding a weapon in the slot you choose, it will be moved back to your inventory.";
 $lang['EQUIP_WEAPON_EQUIPAS']="Equip As";
+$lang['EQUIP_ARMOR_TITLE']="Equipping Armor";
+$lang['EQUIP_ARMOR_TEXT_FORM_1']="You're attempting to equip your ";
+$lang['EQUIP_ARMOR_TEXT_FORM_2']="to your armor slot. If you're already wearing armor, it will be moved back to your inventory.";
+$lang['EQUIP_NOTARMOR']="The item you are trying to equip cannot be equipped as armor.";
+$lang['EQUIP_NOTARMOR_TITLE']="Invalid Armor!";
 
 //Polling Staff
 $lang['STAFF_POLL_TITLE']="Polling Administration";
