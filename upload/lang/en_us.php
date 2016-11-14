@@ -157,6 +157,7 @@ $lang['GEN_GRD']="Guard";
 $lang['GEN_IQ']="IQ";
 $lang['GEN_LAB']="Labor";
 $lang['GEN_GOHOME']="Go Home";
+$lang['GEN_IUOF']="Invalid use of file!";
 
 //Gym
 $lang['GYM_INFIRM'] = "While you are unconscious, you cannot train! Come back after you are feeling healthy!";
@@ -602,4 +603,16 @@ $lang['ITEM_INFO_INFO']="Info";
 $lang['ITEM_INFO_ITEM']="Item";
 $lang['ITEM_INFO_EFFECT']="Effect #";
 $lang['ITEM_INFO_BY']="by";
+
+//Item sell
+$lang['ITEM_SELL_INFO']="Item Selling";
+$lang['ITEM_SELL_FORM1']="You are attempting to sell";
+$lang['ITEM_SELL_FORM2']="back to the game. Enter how many you wish to sell back. You have";
+$lang['ITEM_SELL_FORM3']="to sell.";
+$lang['ITEM_SELL_SUCCESS1']="You have successfully sold";
+$lang['ITEM_SELL_SUCCESS2']="(s) for";
+$lang['ITEM_SELL_BTN']="Sell Items";
+$lang['ITEM_SELL_ERROR1_TITLE']="Missing Items!";
+$lang['ITEM_SELL_BAD_QTY']="You are attempting to sell more items than you currently have in stock. Check your input and try again!";
+$lang['ITEM_SELL_ERROR1']="You are attempting to sell an item that you don't have, or just doesn't exist. Check your source and try again.";
 ?>
