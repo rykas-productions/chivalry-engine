@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 09, 2016 at 06:23 PM
+-- Generation Time: Nov 14, 2016 at 10:33 PM
 -- Server version: 5.7.14
--- PHP Version: 5.6.25
+-- PHP Version: 7.0.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -32,6 +32,7 @@ CREATE TABLE `announcements` (
   `ann_time` int(11) UNSIGNED NOT NULL,
   `ann_poster` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 
@@ -296,6 +297,20 @@ CREATE TABLE `items` (
   `armor` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Table structure for table `itemselllogs`
+--
+
+CREATE TABLE `itemselllogs` (
+  `logid` int(11) UNSIGNED NOT NULL,
+  `userid` int(11) UNSIGNED NOT NULL,
+  `item_id` int(11) UNSIGNED NOT NULL,
+  `price` int(11) UNSIGNED NOT NULL,
+  `qty` int(11) UNSIGNED NOT NULL,
+  `time` int(11) UNSIGNED NOT NULL,
+  `log` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 -- --------------------------------------------------------
 
 --
@@ -306,6 +321,7 @@ CREATE TABLE `itemtypes` (
   `itmtypeid` int(11) UNSIGNED NOT NULL,
   `itmtypename` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 
@@ -352,6 +368,22 @@ CREATE TABLE `mail` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `modules`
+--
+
+CREATE TABLE `modules` (
+  `module_id` int(11) UNSIGNED NOT NULL,
+  `module_name` text NOT NULL,
+  `module_author` text NOT NULL,
+  `module_pages` text NOT NULL,
+  `module_datatables` text NOT NULL,
+  `module_api_version` text NOT NULL,
+  `module_link` text NOT NULL,
+  `module_update` text NOT NULL,
+  `module_version` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `newspaper_ads`
 --
 
@@ -364,8 +396,6 @@ CREATE TABLE `newspaper_ads` (
   `news_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
 --
 -- Table structure for table `notifications`
 --
@@ -377,8 +407,6 @@ CREATE TABLE `notifications` (
   `notif_status` enum('unread','read') NOT NULL,
   `notif_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `permissions`
@@ -474,8 +502,8 @@ INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES
 (2, 'RegistrationCaptcha', 'OFF'),
 (3, 'HTTPS_Support', 'false'),
 (4, 'AttackEnergyCost', '100'),
-(5, 'FGPassword', 'NA'),
-(6, 'FGUsername', 'NA'),
+(5, 'FGPassword', ''),
+(6, 'FGUsername', ''),
 (7, 'MaxAttacksPerSession', '100');
 
 -- --------------------------------------------------------
@@ -490,6 +518,31 @@ CREATE TABLE `stafflogs` (
   `time` int(11) UNSIGNED NOT NULL,
   `action` text NOT NULL,
   `ip` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tmg_mines_data`
+--
+
+CREATE TABLE `tmg_mines_data` (
+  `mine_id` int(11) UNSIGNED NOT NULL,
+  `mine_location` int(11) UNSIGNED NOT NULL,
+  `mine_level` int(11) UNSIGNED NOT NULL,
+  `mine_copper_min` int(11) UNSIGNED NOT NULL,
+  `mine_copper_max` int(11) UNSIGNED NOT NULL,
+  `mine_silver_min` int(11) UNSIGNED NOT NULL,
+  `mine_silver_max` int(11) UNSIGNED NOT NULL,
+  `mine_gold_min` int(11) UNSIGNED NOT NULL,
+  `mine_gold_max` int(11) UNSIGNED NOT NULL,
+  `mine_pickaxe` int(11) UNSIGNED NOT NULL,
+  `mine_iq` int(11) UNSIGNED NOT NULL,
+  `mine_power_use` int(11) UNSIGNED NOT NULL,
+  `mine_copper_item` int(11) UNSIGNED NOT NULL,
+  `mine_silver_item` int(11) UNSIGNED NOT NULL,
+  `mine_gold_item` int(11) UNSIGNED NOT NULL,
+  `mine_gem_item` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -577,8 +630,6 @@ CREATE TABLE `users` (
   `timezone` enum('Pacific/Wake','Pacific/Apia','America/Adak','America/Anchorage','America/Los_Angeles','America/Denver','America/Chicago','America/New_York','America/Halifax','America/Godthab','America/Noronha','Atlantic/Cape_Verde','Europe/London','Europe/Berlin','Europe/Bucharest','Europe/Moscow','Asia/Tehran','Asia/Muscat','Asia/Kabul','Asia/Karachi','Asia/Calcutta','Asia/Katmandu','Asia/Novosibirsks','America/Godthab','Asia/Rangoon','Asia/Bangkok','Australia/Perth','Asia/Tokyo','Australia/Darwin','Australia/Sydney','Asia/Magadan','Pacific/Auckland','Pacific/Tongatapu') NOT NULL DEFAULT 'Europe/London',
   `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `userstats`
@@ -713,6 +764,12 @@ ALTER TABLE `items`
   ADD PRIMARY KEY (`itmid`);
 
 --
+-- Indexes for table `itemselllogs`
+--
+ALTER TABLE `itemselllogs`
+  ADD UNIQUE KEY `logid` (`logid`);
+
+--
 -- Indexes for table `itemtypes`
 --
 ALTER TABLE `itemtypes`
@@ -730,6 +787,12 @@ ALTER TABLE `logs_training`
 ALTER TABLE `mail`
   ADD PRIMARY KEY (`mail_id`);
 ALTER TABLE `mail` ADD FULLTEXT KEY `mail_subject` (`mail_subject`,`mail_text`);
+
+--
+-- Indexes for table `modules`
+--
+ALTER TABLE `modules`
+  ADD UNIQUE KEY `module_id` (`module_id`);
 
 --
 -- Indexes for table `newspaper_ads`
@@ -781,6 +844,18 @@ ALTER TABLE `stafflogs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tmg_mines_data`
+--
+ALTER TABLE `tmg_mines_data`
+  ADD PRIMARY KEY (`mine_id`);
+
+--
+-- Indexes for table `tmg_mining`
+--
+ALTER TABLE `tmg_mining`
+  ADD PRIMARY KEY (`userid`);
+
+--
 -- Indexes for table `town`
 --
 ALTER TABLE `town`
@@ -818,12 +893,12 @@ ALTER TABLE `uservotes`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `ann_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `ann_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `attacklogs`
 --
 ALTER TABLE `attacklogs`
-  MODIFY `log_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `log_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `crimegroups`
 --
@@ -878,17 +953,22 @@ ALTER TABLE `guild`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `inv_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `inv_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `itmid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `itmid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
+-- AUTO_INCREMENT for table `itemselllogs`
+--
+ALTER TABLE `itemselllogs`
+  MODIFY `logid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `itemtypes`
 --
 ALTER TABLE `itemtypes`
-  MODIFY `itmtypeid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `itmtypeid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `logs_training`
 --
@@ -898,7 +978,12 @@ ALTER TABLE `logs_training`
 -- AUTO_INCREMENT for table `mail`
 --
 ALTER TABLE `mail`
-  MODIFY `mail_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `mail_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
+-- AUTO_INCREMENT for table `modules`
+--
+ALTER TABLE `modules`
+  MODIFY `module_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `newspaper_ads`
 --
@@ -913,7 +998,7 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `perm_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `perm_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `polls`
 --
@@ -939,6 +1024,11 @@ ALTER TABLE `settings`
 --
 ALTER TABLE `stafflogs`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
+-- AUTO_INCREMENT for table `tmg_mines_data`
+--
+ALTER TABLE `tmg_mines_data`
+  MODIFY `mine_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `town`
 --
