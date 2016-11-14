@@ -588,4 +588,18 @@ $lang['ATTACK_START_NOREFRESH']="Refreshing while attacking is a bannable offens
 $lang['ATTACK_START_NOUSER']="You can only attack players specified. Did you use the attack link on the user's profile?";
 $lang['ATTACK_START_NOTYOU']="Depressed or not, you cannot attack yourself!";
 $lang['ATTACK_START_YOUNOHP']="You need HP to fight someone. Come back when you have more health!";
+
+//Item Info Page
+$lang['ITEM_INFO_LUIF']="Displaying item information for";
+$lang['ITEM_INFO_TYPE']="Type";
+$lang['ITEM_INFO_SPRICE']="Sell Price";
+$lang['ITEM_INFO_BPRICE_NO']="Item cannot be purchased in-game.";
+$lang['ITEM_INFO_SPRICE_NO']="Item cannot be sold in-game.";
+$lang['ITEM_INFO_BPRICE']="Buy Price";
+$lang['ITEM_INFO_WEAPON_HURT']="Weapon Rating";
+$lang['ITEM_INFO_ARMOR_HURT']="Armor Rating";
+$lang['ITEM_INFO_INFO']="Info";
+$lang['ITEM_INFO_ITEM']="Item";
+$lang['ITEM_INFO_EFFECT']="Effect #";
+$lang['ITEM_INFO_BY']="by";
 ?>
