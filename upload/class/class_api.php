@@ -645,15 +645,15 @@ class api
 		}
 		if ($type == 'text')
 		{
-			return FILTER_SANITIZE_FULL_SPECIAL_CHARS(FILTER_SANITIZE_STRING($input));
+			return  htmlentities(FILTER_SANITIZE_FULL_SPECIAL_CHARS(FILTER_SANITIZE_STRING($input)));
 		}
 		if ($type == 'url')
 		{
-			return FILTER_SANITIZE_URL($input);
+			return htmlentities(FILTER_SANITIZE_URL($input));
 		}
 		if ($type == 'email')
 		{
-			return FILTER_SANITIZE_EMAIL($input);
+			return  htmlentities(FILTER_SANITIZE_EMAIL($input));
 		}
 	}
 	/*
