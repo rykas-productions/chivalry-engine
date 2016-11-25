@@ -131,6 +131,7 @@ $lang['ERROR_SUCCESS'] = "Success!";
 $lang['ERROR_INVALID'] = "Invalid Input!";
 $lang['ERROR_SECURITY'] = "Security Error!";
 $lang['ERROR_NONUSER'] = "Nonexistent User!";
+$lang['ERROR_NOPERM'] ="No Permission!";
 
 //Generic
 $lang["GEN_HERE"] = "here";
@@ -158,6 +159,7 @@ $lang['GEN_IQ']="IQ";
 $lang['GEN_LAB']="Labor";
 $lang['GEN_GOHOME']="Go Home";
 $lang['GEN_IUOF']="Invalid use of file!";
+$lang['GEN_NOPERM']="You do not have the proper user level to view this page. If this is wrong, please contact an admin immediately!";
 
 //Gym
 $lang['GYM_INFIRM'] = "While you are unconscious, you cannot train! Come back after you are feeling healthy!";
@@ -615,4 +617,14 @@ $lang['ITEM_SELL_BTN']="Sell Items";
 $lang['ITEM_SELL_ERROR1_TITLE']="Missing Items!";
 $lang['ITEM_SELL_BAD_QTY']="You are attempting to sell more items than you currently have in stock. Check your input and try again!";
 $lang['ITEM_SELL_ERROR1']="You are attempting to sell an item that you don't have, or just doesn't exist. Check your source and try again.";
+
+//Staff jobs
+$lang['STAFF_JOB_CREATE_TITLE']="Create a Job";
+$lang['STAFF_JOB_CREATE_FORM_NAME']="Job Name";
+$lang['STAFF_JOB_CREATE_FORM_DESC']="Job Description";
+$lang['STAFF_JOB_CREATE_FORM_BOSS']="Job Manager";
+$lang['STAFF_JOB_CREATE_FORM_FIRST']="First Job Rank";
+$lang['STAFF_JOB_CREATE_FORM_RNAME']="Rank Name";
+$lang['STAFF_JOB_CREATE_FORM_PAYS']="Daily Payment";
+$lang['STAFF_JOB_CREATE_FORM_ACT']="Required Activity";
 ?>
