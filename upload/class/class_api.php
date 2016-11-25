@@ -637,23 +637,24 @@ class api
 		$type == strtolower($type);
 		if ($type == 'int')
 		{
-			return FILTER_SANITIZE_NUMBER_INT($input);
+			return filter_var($input, FILTER_SANITIZE_NUMBER_INT);
 		}
 		if ($type == 'float')
 		{
-			return FILTER_SANITIZE_NUMBER_FLOAT($input);
+			return filter_var($input, FILTER_SANITIZE_NUMBER_FLOAT);
 		}
 		if ($type == 'text')
 		{
-			return  htmlentities(FILTER_SANITIZE_FULL_SPECIAL_CHARS(FILTER_SANITIZE_STRING($input)));
+			$text = filter_var($input,FILTER_SANITIZE_STRING);
+			return htmlentities($text,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		}
 		if ($type == 'url')
 		{
-			return htmlentities(FILTER_SANITIZE_URL($input));
+			return htmlentities($input,FILTER_SANITIZE_URL);
 		}
 		if ($type == 'email')
 		{
-			return  htmlentities(FILTER_SANITIZE_EMAIL($input));
+			return  htmlentities($input,FILTER_SANITIZE_EMAIL);
 		}
 	}
 	/*
