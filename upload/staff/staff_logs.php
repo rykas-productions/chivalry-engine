@@ -28,7 +28,7 @@ default:
 }
 function trainlogs()
 {
-	global $h,$lang,$db,$ir;
+	global $h,$lang,$db,$ir,$api,$userid;
 	echo "<h3>Training Logs</h3><hr />";
     if (!isset($_GET['st']))
     {
@@ -37,12 +37,12 @@ function trainlogs()
     $st = abs(intval($_GET['st']));
     $app = 100;
     $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs_training`");
+    				 FROM `logs` WHERE `log_type` = 'training'");
     $logs = $db->fetch_single($q);
     $db->free_result($q);
     if ($logs == 0)
     {
-        alert("info","Nothing (Yet)","No one has trained yet. When someone does, it will show up here.");
+        alert("info","Nothing!","No one has trained yet. When someone does, it will show up here.");
         return;
     }
     $pages = ceil($logs / $app);
@@ -75,15 +75,15 @@ function trainlogs()
     			<th>Time</th>
 				<th>User</th>
     			<th>Stat Trained</th>
-    			<th>Stain Gain</th>
     		</tr>
 			</thead>
 			<tbody>
        ";
-	$LogsQuery=$db->query("SELECT `log_user`,`log_stat`,`log_gain`,`log_time`,`username`,`userid` 
-							FROM `logs_training` AS `lt`
+	$LogsQuery=$db->query("SELECT `log_user`,`log_text`,`log_time`,`username`,`userid` 
+							FROM `logs` AS `lt`
 							INNER JOIN `users` AS `u`
 							ON `lt`.`log_user` = `u`.`userid`
+							WHERE `log_type` = 'training'
 							ORDER BY `log_time` DESC
 							LIMIT $st, $app");
     while ($r = $db->fetch_row($LogsQuery))
@@ -98,10 +98,7 @@ function trainlogs()
 					<a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]
 				</td>
 				<td>
-					{$r['log_stat']}
-				</td>
-				<td>
-					{$r['log_gain']}
+					{$r['log_text']}
 				</td>
 			</tr>";
     }
@@ -133,11 +130,11 @@ function trainlogs()
         }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
-    stafflog_add("Viewed the Training Logs (Page $mypage)");
+	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the training logs.");
 }
 function attacklogs()
 {
-	global $db,$ir,$h,$lang;
+	global $db,$ir,$h,$lang,$userid,$api;
     echo "
 	<h3>Attack Logs</h3>
 	<hr />
@@ -148,8 +145,8 @@ function attacklogs()
     }
     $st = abs(intval($_GET['st']));
     $app = 100;
-    $q = $db->query("SELECT COUNT(`attacker`)
-    				 FROM `attacklogs`");
+    $q = $db->query("SELECT COUNT(`log_id`)
+    				 FROM `logs` WHERE `log_type` = 'attacking'");
     $attacks = $db->fetch_single($q);
     $db->free_result($q);
     if ($attacks == 0)
@@ -184,62 +181,27 @@ function attacklogs()
     <table class='table table-bordered table-hover table-reponsive'>
     		<tr>
     			<th>Time</th>
-    			<th>Attacker</th>
-    			<th>Attacked</th>
-    			<th>Who Won</th>
-    			<th>What Happened</th>
+    			<th>User</th>
+    			<th>What Happened?</th>
     		</tr>
        ";
     $q =
             $db->query(
-                    "SELECT `stole`, `result`, `attacked`, `attacker`, `time`,
-                     `u1`.`username` AS `un_attacker`,
-                     `u2`.`username` AS `un_attacked`
-                     FROM `attacklogs` AS `a`
-                     INNER JOIN `users` AS `u1`
-                     ON `a`.`attacker` = `u1`.`userid`
-                     INNER JOIN `users` AS `u2`
-                     ON `a`.`attacked` = `u2`.`userid`
-                     ORDER BY `a`.`time` DESC
+                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
+                     FROM `logs`
+					 WHERE `log_type` = 'attacking'
+                     ORDER BY `log_time` DESC
                      LIMIT $st, $app");
     while ($r = $db->fetch_row($q))
     {
+		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
 		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['time'])
+        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
                 . "</td>
-        	<td><a href='../profile.php?user={$r['attacker']}'>{$r['un_attacker']}</a> [{$r['attacker']}]</td>
-        	<td><a href='../profile.php?user={$r['attacked']}'>{$r['un_attacked']}</a> [{$r['attacked']}]</td>
+        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
+        	<td>{$r['log_text']}</td>
            ";
-        if ($r['result'] == "won")
-        {
-            echo "
-			<td><a href='../profile.php?user={$r['attacker']}'>{$r['un_attacker']}</a></td>
-			<td>
-   			";
-            if ($r['stole'] == -1)
-            {
-                echo "<a href='../profile.php?user={$r['attacker']}'>{$r['un_attacker']}</a> hospitalized <a href='../profile.php?user={$r['attacked']}'>{$r['un_attacked']}</a>.";
-            }
-            else if ($r['stole'] == -2)
-            {
-                echo "<a href='../profile.php?user={$r['attacker']}'>{$r['un_attacker']}</a> attacked <a href='../profile.php?user={$r['attacked']}'>{$r['un_attacked']}</a> and left them.";
-            }
-            else
-            {
-                echo "<a href='../profile.php?user={$r['attacker']}'>{$r['un_attacker']}</a> mugged "
-                        . money_formatter($r['stole'])
-                        . " from <a href='../profile.php?user={$r['attacked']}'>{$r['un_attacked']}</a>.";
-            }
-            echo '</td>';
-        }
-        else
-        {
-            echo "
-			<td><a href='../profile.php?user={$r['attacked']}'>{$r['un_attacked']}</a></td>
-			<td>Nothing</td>
-   			";
-        }
         echo '</tr>';
     }
     $db->free_result($q);
@@ -268,6 +230,6 @@ function attacklogs()
         }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
-    stafflog_add("Viewed the attack logs (Page $mypage)");
+	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the attack logs.");
 }
 $h->endpage();

@@ -21,7 +21,7 @@ default:
 }
 function addforum()
 {
-	global $lang,$h,$db,$userid;
+	global $lang,$h,$db,$userid,$api;
 	if (!isset($_POST['name']))
 	{
 		$csrf = request_csrf_html('staff_addforum');
@@ -99,14 +99,14 @@ function addforum()
 			$db->query("INSERT INTO `forum_forums` (`ff_name`, `ff_desc`, `ff_lp_t_id`, `ff_lp_poster_id`, `ff_auth`, `ff_lp_time`) 
 			VALUES ('{$name}', '{$desc}', '0', '0', '{$auth}', '0');");
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_FORUM_ADD_SUCCESS']}");
-			stafflog_add("Created a {$auth} Forum called {$name}.");
+			$api->SystemLogsAdd($userid,'staff',"Created a {$auth} Forum called {$name}.");
 			$h->endpage();
 		}
 	}
 }
 function editforum()
 {
-	global $db, $h, $lang;
+	global $db, $h, $lang, $userid, $api;
 				echo "<h3>Editing a Forum</h3><hr />";
     if (!isset($_POST['step']))
     {
@@ -147,7 +147,7 @@ function editforum()
 			$db->free_result($q);
 			$db->query("UPDATE `forum_forums` SET `ff_desc` = '$desc', `ff_name` = '$name', `ff_auth` = '$auth' WHERE `ff_id` = {$_POST['id']}");
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_FORUM_EDIT_SUCCESS']}");
-			stafflog_add("Edited forum $name");
+			$api->SystemLogsAdd($userid,'staff',"Edited forum {$name}");
 			break;
 		case "1":
 			$_POST['id'] = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : '';
@@ -230,7 +230,7 @@ function editforum()
 }
 function delforum()
 {
-	global $db, $h, $lang;
+	global $db, $h, $lang, $userid, $api;
 	echo "<h3>{$lang['STAFF_FORUM_DEL_BTN']}</h3><hr />";
 	if (!isset($_POST['forum']))
 	{
@@ -267,7 +267,7 @@ function delforum()
         $old = $db->fetch_single($q);
         $db->free_result($q);
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_FORUM_DEL_SUCCESS']}");
-		stafflog_add("Deleted forum {$old}, along with posts and topics posted inside.");
+		$api->SystemLogsAdd($userid,'staff',"Deleted forum {$old}, along with posts and topics posted inside.");
 	}
 	$h->endpage();
 }

@@ -192,21 +192,22 @@ if (($ir['user_level']) == 'Admin')
 				<tbody>";
 		$q =
                 $db->query(
-                        "SELECT `user`, `action`, `time`, `ip`, `username`
-                         FROM `stafflogs` AS `s`
+                        "SELECT `log_user`, `log_text`, `log_time`, `log_ip`, `username`
+                         FROM `logs` AS `s`
                          INNER JOIN `users` AS `u`
-                         ON `s`.`user` = `u`.`userid`
-                         ORDER BY `s`.`time` DESC
+                         ON `s`.`log_user` = `u`.`userid`
+						 WHERE `log_type` = 'staff'
+                         ORDER BY `s`.`log_time` DESC
                          LIMIT 20");
         while ($r = $db->fetch_row($q))
         {
             echo "
         	<tr>
-        		<td><a href='../profile.php?user={$r['user']}'>{$r['username']}</a> [{$r['user']}]</td>
-        		<td>{$r['action']}</td>
-        		<td>" . date('F j Y g:i:s a', $r['time'])
+        		<td><a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]</td>
+        		<td>{$r['log_text']}</td>
+        		<td>" . date('F j Y g:i:s a', $r['log_time'])
                     . "</td>
-        		<td>{$r['ip']}</td>
+        		<td>{$r['log_ip']}</td>
         	</tr>
            	";
         }

@@ -41,7 +41,7 @@ function home()
 }
 function new_crime_form()
 {
-	global $lang,$db,$userid;
+	global $lang,$db,$userid,$api;
 	if (!isset($_POST['name']))
 	{
 		$csrf = request_csrf_html('staff_newcrime');
@@ -235,12 +235,12 @@ function new_crime_form()
 		'{$_POST['stext']}', '{$_POST['jtext']}', '{$_POST['jtimemin']}', 
 		'{$_POST['jtimemax']}', '{$_POST['jreason']}', '{$_POST['xp']}');");
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_CRIME_NEW_SUCCESS']}");
-		stafflog_add("Created crime {$_POST['name']}");
+		$api->SystemLogsAdd($userid,'staff',"Created crime {$_POST['name']}");
 	}
 }
 function new_crimegroup_form()
 {
-	global $db,$lang,$h;
+	global $db,$lang,$h,$api,$userid;
 	if (isset($_POST['cgNAME']))
 	{
 		$_POST['cgNAME'] = (isset($_POST['cgNAME']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['cgNAME'])) ? $db->escape(strip_tags(stripslashes($_POST['cgNAME']))) : '';
@@ -265,7 +265,7 @@ function new_crimegroup_form()
 		$db->free_result($d);
 		$db->query("INSERT INTO `crimegroups` (`cgNAME`, `cgORDER`) VALUES('{$_POST['cgNAME']}', '{$_POST['cgORDER']}')");
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_CRIMEG_NEW_SUCCESS']}");
-		stafflog_add("Created Crime Group {$_POST['cgNAME']}");
+		$api->SystemLogsAdd($userid,'staff',"Created Crime Group {$_POST['cgNAME']}");
 		
 	}
 	else

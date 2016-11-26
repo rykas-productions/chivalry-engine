@@ -26,7 +26,7 @@ default:
 }
 function add()
 {
-	global $db,$lang,$h;
+	global $db,$lang,$h,$userid,$api;
 	if (isset($_POST['question']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_startpoll', stripslashes($_POST['verf'])))
@@ -60,7 +60,7 @@ function add()
                      '$choice7', '$choice8', '$choice9' ,'$choice10',
                      '{$_POST['hidden']}')");
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_POLL_START_SUCCESS']}");
-		stafflog_add("Started a game poll.");
+		$api->SystemLogsAdd($userid,'staff',"Started a game poll.");
 		$q=$db->query("SELECT `userid`, `username` FROM `users`");
 		while ($r = $db->fetch_row($q))
 		{
@@ -186,7 +186,7 @@ function add()
 }
 function close()
 {
-	global $db,$lang,$h;
+	global $db,$lang,$h,$api,$userid;
 	$_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs(intval($_POST['poll'])) : '';
     if (empty($_POST['poll']))
     {
@@ -230,7 +230,7 @@ function close()
         $db->free_result($q);
         $db->query("UPDATE `polls` SET `active` = '0' WHERE `id` = {$_POST['poll']}");
         alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_POLL_END_SUCCESS']}");
-		stafflog_add("Closed a game poll.");
+		$api->SystemLogsAdd($userid,'staff',"Closed a game poll.");
 		$q=$db->query("SELECT `userid`, `username` FROM `users`");
 		while ($r = $db->fetch_row($q))
 		{

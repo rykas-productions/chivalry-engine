@@ -32,7 +32,7 @@ default:
 }
 function basicsettings()
 {
-	global $h,$ir,$db,$lang,$set;
+	global $h,$ir,$db,$lang,$set,$api,$userid;
 	if (!isset($_POST['gamename']))
 	{
 		$csrf=request_csrf_html('staff_sett_1');
@@ -204,14 +204,14 @@ function basicsettings()
 			$db->query("UPDATE `settings` SET `setting_value` = '{$FGPW}' WHERE `setting_name` = 'FGPW'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$FGUN}' WHERE `setting_name` = 'FGUN'");
 			alert('success',"{$lang['ERROR_SUCCESS']}","Successfully updated the game settings.");
-			stafflog_add("Updated the game settings.");
+			$api->SystemLogsAdd($userid,'staff',"Updated game settings.");
 		}
 		$h->endpage();
 	}
 }
 function announce()
 {
-	global $db,$ir,$userid,$h;
+	global $db,$ir,$userid,$h,$api;
 	if (!isset($_POST['announcement']))
 	{
 		$csrf=request_csrf_html('staff_announce');
@@ -242,14 +242,14 @@ function announce()
 			VALUES (NULL, '{$_POST['announcement']}', '{$time}', '{$userid}');");
 			$db->query("UPDATE `users` SET `announcements` = `announcements` + 1");
 			alert('success','Success!','You have successfully created an announcement.');
-			stafflog_add("Posted an announcement.");
+			$api->SystemLogsAdd($userid,'staff',"Posted an announcement.");
 		}
 	}
 	$h->endpage();
 }
 function diagnostics()
 {
-	global $db,$h,$set;
+	global $db,$h,$set,$userid,$api;
 	if (version_compare(phpversion(), '5.5.0') < 0)
     {
         $pv = '<span style="color: red">Failed</span>';
@@ -331,12 +331,12 @@ function diagnostics()
         	</tr>
     </table>
        ";
-	   stafflog_add("Viewed game diagnostics.");
+	   $api->SystemLogsAdd($userid,'staff',"Viewed game diagnostics.");
 	$h->endpage();
 }
 function restore()
 {
-	global $db,$ir,$h;
+	global $db,$ir,$h,$api,$userid;
 	if (!isset($_POST['restore']))
 	{
 		echo "Here you can restore your userbase to 100% HP, Brave and energy. This may only be useful for testing, or if you wish to be nice to your player base.<br />
@@ -348,7 +348,7 @@ function restore()
 	else
 	{
 		$db->query("UPDATE `users` SET `hp`=`maxhp`,`energy`=`maxenergy`,`brave`=`maxbrave`,`will`=`maxwill`");
-		stafflog_add("Restored all users to their fullest.");
+		$api->SystemLogsAdd($userid,'staff',"Restored all users to their full HP/Brave/Energy.");
 		alert('success',"Success!","You have successfully restored all your users to their full health, brave and energy!");
 		$h->endpage();
 	}

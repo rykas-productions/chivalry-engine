@@ -29,7 +29,7 @@ switch ($_GET['action'])
 }
 function createuser()
 {
-	global $db,$h,$lang;
+	global $db,$h,$lang,$api,$userid;
 	if (!isset($_POST['username']))
 	{
 		$csrf=request_csrf_html('staff_user_1');
@@ -386,7 +386,7 @@ function createuser()
 			 $db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
 			$db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
 			echo "<div class='alert alert-success' role='alert'><strong>Success!</strong> You have successfully created a user!</div>";
-			stafflog_add("Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
+			$api->SystemLogsAdd($userid,'staff',"Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
 		}
 	}
 }

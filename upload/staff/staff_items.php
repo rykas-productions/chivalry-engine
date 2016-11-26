@@ -35,7 +35,7 @@ default:
 }
 function create()
 {
-	global $db,$ir,$h,$lang;
+	global $db,$ir,$h,$lang,$userid,$api;
 	if ($ir['user_level'] != 'Admin')
     {
         alert('danger','No Permission!','You have no permission to be here. If this is false, please contact an admin for help!');
@@ -255,14 +255,14 @@ function create()
                      '{$_POST['effect2on']}', '{$effects[2]}',
                      '{$_POST['effect3on']}', '{$effects[3]}', 
 					 {$weapon}, {$armor})");
-		stafflog_add("Created item {$itmname}.");
+		$api->SystemLogsAdd($userid,'staff',"Created item {$itmname}.");
 		alert('success',"Success!","You have successfully created an item called {$itmname}.");
 	}
 	$h->endpage();
 }
 function createitmgroup()
 {
-	global $db,$lang,$h,$ir;
+	global $db,$lang,$h,$ir,$api,$userid;
 	if ($ir['user_level'] != 'Admin')
     {
         alert('danger','No Permission!','You have no permission to be here. If this is false, please contact an admin for help!');
@@ -312,7 +312,7 @@ function createitmgroup()
 			alert("danger","Already Exists!","An item group with that name already exists. Please go back and enter a new name.");
 			die($h->endpage());
 		}
-		stafflog_add("Added item type {$name}.");
+		$api->SystemLogsAdd($userid,'staff',"Added item type {$name}.");
 		alert('success',"Success!","You have successfully created an item group called {$name}.");
 		$db->query("INSERT INTO `itemtypes` VALUES(NULL, '{$name}')");
 		
@@ -321,7 +321,7 @@ function createitmgroup()
 }
 function deleteitem()
 {
-	global $db,$ir,$h,$lang;
+	global $db,$ir,$h,$lang,$userid,$api;
 	if ($ir['user_level'] != 'Admin')
     {
         alert('danger','No Permission!','You have no permission to be here. If this is false, please contact an admin for help!');
@@ -379,14 +379,14 @@ function deleteitem()
 		$db->free_result($d);
 		$db->query("DELETE FROM `items` WHERE `itmid` = {$_POST['item']}");
 		$db->query("DELETE FROM `inventory` WHERE `inv_itemid` = {$_POST['item']}");
-		stafflog_add("Deleted item {$itemname}");
+		$api->SystemLogsAdd($userid,'staff',"Deleted item {$itemname}.");
 		alert("success","Success!","The Item ({$itemname}) has been deleted from the game successfully.");
 		die($h->endpage());
 	}
 }
 function giveitem()
 {
-	global $lang,$db,$userid,$h;
+	global $lang,$db,$userid,$h,$api;
 	if (!isset($_POST['user']) || !isset($_POST['item']))
 	{
 		echo "<h3>{$lang['STAFF_ITEM_GIVE_TITLE']}</h3>";
@@ -475,7 +475,7 @@ function giveitem()
 				$db->free_result($q2);
 				item_add($_POST['user'], $_POST['item'], $_POST['qty']);
 				event_add($_POST['user'], "The administration has gifted you {$_POST['qty']}x {$item['itmname']}(s) to your inventory.");
-				stafflog_add("Gave {$_POST['qty']}x <a href='../iteminfo.php'>{$item['itmname']}</a> to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>");
+				$api->SystemLogsAdd($userid,'staff',"Gave {$_POST['qty']}x <a href='../iteminfo.php'>{$item['itmname']}</a> to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
 				alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_ITEM_GIVE_SUB_SUCCESS']}");
 				die($h->endpage());
 			 }

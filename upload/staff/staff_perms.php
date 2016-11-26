@@ -29,7 +29,7 @@ default:
 }
 function viewperm()
 {
-	global $h,$ir,$db,$lang;
+	global $h,$ir,$db,$lang,$userid,$api;
 	if (!isset($_POST['userid']))
 	{
 		$csrf=request_csrf_html('staff_perm_1');
@@ -91,7 +91,7 @@ function viewperm()
 							";
 				}
 				echo "</tbody></table>";
-				stafflog_add("Viewed <a href='profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s Permissions.");
+				$api->SystemLogsAdd($userid,'staff',"Viewed <a href='profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s Permissions.");
 			}
 		}
 		$h->endpage();
@@ -99,7 +99,7 @@ function viewperm()
 }
 function editperm()
 {
-	global $h,$lang,$db,$ir;
+	global $h,$lang,$db,$ir,$userid,$api;
 	if (!isset($_POST['userid']))
 	{
 		$csrf=request_csrf_html('staff_perm_2');
@@ -178,7 +178,7 @@ function editperm()
 				else
 				{
 					$db->query("INSERT INTO `permissions` (`perm_id`, `perm_user`, `perm_name`, `perm_disable`) VALUES (NULL, '{$_POST['userid']}', '{$_POST['permission']}', 'true');");
-					stafflog_add("Disabled <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s {$_POST['permission']} permission.");
+					$api->SystemLogsAdd($userid,'staff',"Disabled <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s {$_POST['permission']} permission.");
 					alert('success',"Permission Updated!","You have successfully updated that {$UserName}'s {$_POST['permission']} permission to disabled/banned.");
 					die($h->endpage());
 				}
@@ -195,7 +195,7 @@ function editperm()
 				{
 					$db->query("DELETE FROM `permissions` WHERE `perm_user` = {$_POST['userid']} AND `perm_name` = '{$_POST['permission']}'");
 					alert('success',"Permission Updated!","You have successfully updated that {$UserName}'s {$_POST['permission']} permission to enabled/unbanned.");
-					stafflog_add("Enabled <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s {$_POST['permission']} permission.");
+					$api->SystemLogsAdd($userid,'staff',"Enabled <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s {$_POST['permission']} permission.");
 					die($h->endpage());
 				}
 			}
@@ -204,7 +204,7 @@ function editperm()
 }
 function resetperm()
 {
-	global $db,$lang,$h;
+	global $db,$lang,$h,$userid,$api;
 	if (!isset($_POST['userid']))
 	{
 		$csrf=request_csrf_html('staff_perm_3');
@@ -238,7 +238,7 @@ function resetperm()
 			$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
 			$db->query("DELETE FROM `permissions` WHERE `perm_user` = {$_POST['userid']}");
 			alert('success',"User's Permissions Reset!","You have successfully reset {$UserName}'s permissions.");
-			stafflog_add("Reset <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s permissions.");
+			$api->SystemLogsAdd($userid,'staff',"Reset <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s permissions.");
 			die($h->endpage());
 		}
 	}
