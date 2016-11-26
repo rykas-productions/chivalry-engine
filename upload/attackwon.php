@@ -43,10 +43,7 @@ if ($db->num_rows($od) > 0)
         event_add($r['userid'],
                 "<a href='viewuser.php?u=$userid'>{$ir['username']}</a> mugged you and stole "
                         . money_formatter($stole) . " Copper Coins.", $c);
-        $atklog = $db->escape($_SESSION['attacklog']);
-        $db->query(
-                "INSERT INTO `attacklogs` VALUES(NULL, $userid, {$_GET['ID']},
-                        'won', " . time() . ", $stole, '$atklog')");				
+		$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");					
 		$db->query(
 			"UPDATE `users` 
 			SET `kills` = `kills` + 1 

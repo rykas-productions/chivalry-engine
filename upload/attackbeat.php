@@ -31,8 +31,7 @@ if ($db->num_rows($od) > 0)
 	$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$r['userid']}");
 	put_infirmary($r['userid'],$hosptime,$hospreason);
 	event_add($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> brutally attacked you and caused {$hosptime} minutes worth of damage.");
-	$atklog = $db->escape($_SESSION['attacklog']);
-	$db->query("INSERT INTO `attacklogs` VALUES(NULL, $userid, {$_GET['ID']}, 'won', " . time() . ", -1, '$atklog')");
+	$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and brutally injured them, causing {$hosptime} minutes of damage.");
 	$_SESSION['attackwon'] = 0;
 	if ($r['user_level'] == 'NPC')
 	{

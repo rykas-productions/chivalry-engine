@@ -42,11 +42,7 @@ if ($db->num_rows($od))
         event_add($r['userid'],
                 "<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you and left you for experience.",
                 $c, 'combat');
-        $atklog = $db->escape($_SESSION['attacklog']);
-        $db->query(
-                "INSERT INTO `attacklogs` VALUES(NULL, $userid, {$_GET['ID']},
-                        'won', " . time() . ", -2, '$atklog')");
-						
+		$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and gained {$expperc}% Experience.");			
         $_SESSION['attackwon'] = 0;
 		if ($r['user_level'] == 'NPC')
 		{

@@ -174,7 +174,6 @@ if ($_GET['weapon'])
             $db->query(
                     "UPDATE `users` SET `energy` = `energy` - {$cost} "
                             . "WHERE `userid` = {$userid}");
-            $_SESSION['attacklog'] = '';
             $_SESSION['attackdmg'] = 0;
         }
         else
@@ -283,14 +282,10 @@ SQL;
                 "UPDATE `users` SET `hp` = `hp` - $mydamage WHERE `userid` = {$_GET['user']}");
         echo "<font color=red>{$_GET['nextstep']}. Using your {$r1['itmname']} you hit {$odata['username']} doing $mydamage damage ({$odata['hp']})</font><br />\n";
         $_SESSION['attackdmg'] += $mydamage;
-        $_SESSION['attacklog'] .=
-                "<font color=red>{$_GET['nextstep']}. Using {$youabbr} {$r1['itmname']} {$ir['username']} hit {$odata['username']} doing $mydamage damage ({$odata['hp']})</font><br />\n";
     }
     else
     {
         echo "<font color=red>{$_GET['nextstep']}. You tried to hit {$odata['username']} but missed ({$odata['hp']})</font><br />\n";
-        $_SESSION['attacklog'] .=
-                "<font color=red>{$_GET['nextstep']}. {$ir['username']} tried to hit {$odata['username']} but missed ({$odata['hp']})</font><br />\n";
     }
     if ($odata['hp'] <= 0)
     {
@@ -386,15 +381,11 @@ SQL;
             $db->query("UPDATE `users` SET `hp` = `hp` - $dam WHERE `userid` = $userid");
             $ns = $_GET['nextstep'] + 1;
             echo "<font color=blue>{$ns}. Using $oabbr $wep {$odata['username']} hit you doing $dam damage ({$youdata['hp']})</font><br />\n";
-            $_SESSION['attacklog'] .=
-                    "<font color=blue>{$ns}. Using $oabbr $wep {$odata['username']} hit {$ir['username']} doing $dam damage ({$youdata['hp']})</font><br />\n";
         }
         else
         {
             $ns = $_GET['nextstep'] + 1;
             echo "<font color=red>{$ns}. {$odata['username']} tried to hit you but missed ({$youdata['hp']})</font><br />\n";
-            $_SESSION['attacklog'] .=
-                    "<font color=blue>{$ns}. {$odata['username']} tried to hit {$ir['username']} but missed ({$youdata['hp']})</font><br />\n";
         }
         if ($youdata['hp'] <= 0)
         {
