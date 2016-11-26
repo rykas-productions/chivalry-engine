@@ -36,6 +36,7 @@ class database
     var $num_queries = 0;
     var $start_time;
     var $queries = array();
+	var $PDOS;
     function configure($host, $user, $pass, $database, $persistent = 0)
     {
         $this->host = $host;
@@ -139,11 +140,7 @@ class database
     }
     function escape($text)
     {
-		//Not using PDO's Quote function,
-		//as that'd ruin compatibility with
-		//existing code.
-		//(It places quotes around the text, already)
-        return strip_tags(stripslashes($text));
+		return substr($this->connection_id->quote($text), 1, -1);
     }
     function affected_rows()
     {
