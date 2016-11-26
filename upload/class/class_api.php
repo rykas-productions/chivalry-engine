@@ -756,9 +756,10 @@ class api
 	{
 		global $db;
 		$time = time();
+		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$input = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($input)))));
+		$input = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($input))));
 		$logtype = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($logtype)))));
-		$db->query("INSERT INTO `logs` (`log_id`, `log_type`, `log_user`, `log_time`, `log_text`) VALUES (NULL, '{$logtype}', '{$user}', '{$time}', '{$input}');");
+		$db->query("INSERT INTO `logs` (`log_id`, `log_type`, `log_user`, `log_time`, `log_text`, `log_ip`) VALUES (NULL, '{$logtype}', '{$user}', '{$time}', '{$input}', '{$IP}');");
 	}
 }
