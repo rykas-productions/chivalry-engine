@@ -33,23 +33,6 @@ CREATE TABLE `announcements` (
   `ann_poster` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
--- --------------------------------------------------------
-
---
--- Table structure for table `attacklogs`
---
-
-CREATE TABLE `attacklogs` (
-  `log_id` int(11) UNSIGNED NOT NULL,
-  `attacker` int(11) UNSIGNED NOT NULL,
-  `attacked` int(11) UNSIGNED NOT NULL,
-  `result` enum('won','lost') NOT NULL,
-  `time` int(11) UNSIGNED NOT NULL,
-  `stole` tinyint(4) NOT NULL,
-  `attacklog` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 -- --------------------------------------------------------
 
 --
@@ -338,16 +321,17 @@ CREATE TABLE `login_attempts` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `logs_training`
+-- Table structure for table `logs`
 --
 
-CREATE TABLE `logs_training` (
+CREATE TABLE `logs` (
   `log_id` int(11) UNSIGNED NOT NULL,
+  `log_type` text NOT NULL,
   `log_user` int(11) UNSIGNED NOT NULL,
-  `log_stat` enum('Strength','Agility','Guard','Labor') NOT NULL,
-  `log_gain` int(11) UNSIGNED NOT NULL,
-  `log_time` int(11) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `log_time` int(11) UNSIGNED NOT NULL,
+  `log_text` text NOT NULL,
+  `log_ip` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -666,12 +650,6 @@ ALTER TABLE `announcements`
   ADD PRIMARY KEY (`ann_id`);
 
 --
--- Indexes for table `attacklogs`
---
-ALTER TABLE `attacklogs`
-  ADD PRIMARY KEY (`log_id`);
-
---
 -- Indexes for table `crimegroups`
 --
 ALTER TABLE `crimegroups`
@@ -776,10 +754,10 @@ ALTER TABLE `itemtypes`
   ADD PRIMARY KEY (`itmtypeid`);
 
 --
--- Indexes for table `logs_training`
+-- Indexes for table `logs`
 --
-ALTER TABLE `logs_training`
-  ADD PRIMARY KEY (`log_id`);
+ALTER TABLE `logs`
+  ADD UNIQUE KEY `log_id` (`log_id`);
 
 --
 -- Indexes for table `mail`
@@ -895,11 +873,6 @@ ALTER TABLE `uservotes`
 ALTER TABLE `announcements`
   MODIFY `ann_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT for table `attacklogs`
---
-ALTER TABLE `attacklogs`
-  MODIFY `log_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
---
 -- AUTO_INCREMENT for table `crimegroups`
 --
 ALTER TABLE `crimegroups`
@@ -970,10 +943,10 @@ ALTER TABLE `itemselllogs`
 ALTER TABLE `itemtypes`
   MODIFY `itmtypeid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT for table `logs_training`
+-- AUTO_INCREMENT for table `logs`
 --
-ALTER TABLE `logs_training`
-  MODIFY `log_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `logs`
+  MODIFY `log_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `mail`
 --
