@@ -746,4 +746,19 @@ class api
 			}
 		}
 	}
+	/*
+		Adds an entry to the main logging data table.
+		@param int user = User who is attached to this log.
+		@param text logtype = Log type. Can be whatever. See available logs in staff panel for standardized names.
+		@param text input = Text to be entered in the log.
+	*/
+	function SystemLogsAdd($user,$logtype,$input)
+	{
+		global $db;
+		$time = time();
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$input = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($input)))));
+		$logtype = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($logtype)))));
+		$db->query("INSERT INTO `logs` (`log_id`, `log_type`, `log_user`, `log_time`, `log_text`) VALUES (NULL, '{$logtype}', '{$user}', '{$time}', '{$input}');");
+	}
 }
