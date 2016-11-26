@@ -1141,20 +1141,6 @@ function forum2_dropdown($ddname = "forum", $selected = -1)
 }
 
 /**
- * Records an action by a member of staff in the central staff log.
- * @param string $text The log's text. This should be fully sanitized for HTML, but not pre-escaped for database insertion.
- */
-function stafflog_add($text)
-{
-    global $db, $ir;
-    $IP = $db->escape($_SERVER['REMOTE_ADDR']);
-    $text = $db->escape($text);
-    $db->query(
-            "INSERT INTO `stafflogs`
-             VALUES(NULL, {$ir['userid']}, " . time() . ", '$text', '$IP')");
-}
-
-/**
  * Request that an anti-CSRF verification code be issued for a particular form in the game.
  * @param string $formid A unique string used to identify this form to match up its submission with the right token.
  * @return string The code issued to be added to the form.
