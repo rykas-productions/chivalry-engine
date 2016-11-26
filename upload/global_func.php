@@ -146,21 +146,6 @@ function valid_email($email)
     return (filter_var($email, FILTER_VALIDATE_EMAIL) === $email);
 }
 
-/*
-	The function for inputting a training log entry
-	@param int $user The user who trained
-	@param text $stat The stat trained
-	@param int $gain The amount the user gained.
-*/
-function traininglog_add($user,$stat,$gain)
-{
-	global $db;
-	$time=time();
-	$db->query("INSERT INTO `logs_training` 
-	(`log_user`, `log_stat`, `log_gain`, `log_time`) 
-	VALUES ('{$user}', '{$stat}', '{$gain}', '{$time}');");
-}
-
 /**
  * Constructs a drop-down listbox of all the item types in the game to let the user select one.
  * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
@@ -1243,7 +1228,6 @@ function verify_csrf_code($formid, $code)
  */
 function verify_user_password($input, $pass)
 {
-	global $set;
 	$pw=$input;
     if (password_verify($pw, $pass)) 
 	{
@@ -1280,9 +1264,7 @@ You can input whatever for the text
 
 function alert($type,$title,$text)
 {
-	echo "<div class='alert alert-{$type}'>
-  <strong>{$title}</strong> {$text}
-</div>";
+	echo "<div class='alert alert-{$type}'> <strong>{$title}</strong> {$text} </div>";
 }
 
 /**

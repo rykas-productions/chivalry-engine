@@ -114,7 +114,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
       You have gained {$gain} labour by moving {$_POST['amnt']} boxes.<br />
       You now have {$NewStatAmount} labour and {$EnergyLeft} energy left.";
         }
-		traininglog_add($userid,$stat,$gain);
+		$api->SystemLogsAdd($userid,'training',"Trained their {$stat} and gained {$gain}.");
         echo "<hr />";
         $ir['energy'] -= $_POST['amnt'];
         $ir[$stat] += $gain;
