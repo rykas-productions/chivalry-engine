@@ -486,9 +486,7 @@ INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES
 (2, 'RegistrationCaptcha', 'OFF'),
 (3, 'HTTPS_Support', 'false'),
 (4, 'AttackEnergyCost', '100'),
-(5, 'FGPassword', ''),
-(6, 'FGUsername', ''),
-(7, 'MaxAttacksPerSession', '100');
+(5, 'MaxAttacksPerSession', '100');
 
 -- --------------------------------------------------------
 
@@ -991,7 +989,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` tinyint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `setting_id` tinyint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `stafflogs`
 --
