@@ -1,11 +1,9 @@
 <?php
 $atkpage = 1;
 require_once('globals.php');
-$_GET['ID'] =
-        (isset($_GET['ID']) && is_numeric($_GET['ID']))
-                ? abs((int) $_GET['ID']) : 0;
-$_SESSION['attacking'] = 0;
-$ir['attacking'] = 0;
+$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs((int) $_GET['ID']) : 0;
+$_SESSION['attacking'] = 'false';
+$ir['attacking'] = 'false';
 $db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = $userid");
 $od =
         $db->query(
@@ -24,42 +22,26 @@ if ($db->num_rows($od) > 0)
     }
     else
     {
-        $stole = round($r['money'] / (rand(50, 1000) / 5));
+        $stole = round($r['primary_currency'] / (mt_rand(50, 1000) / 5));
         echo "You beat {$r['username']}!!<br />
-		You knock {$r['username']} on the floor a few times to make sure he is unconscious, "
-                . "then open his wallet, snatch " . money_formatter($stole)
-                . "  <img src='/images/statusbars/coppercoin.png' height='11' width='11' /> , and run home happily.";
-        $hosptime = rand(20, 40) + floor($ir['level'] / 8);
+		You knock {$r['username']} on the floor a few times to make sure he is unconscious, 
+		then open his wallet, snatch " . number_format($stole) . ", and run home happily.";
+        $hosptime = mt_rand(20, 40) + floor($ir['level'] / 8);
         $expgain = 0;
-        $db->query(
-                "UPDATE `users` SET `exp` = `exp` + $expgain, `money` = `money` + $stole WHERE `userid` = $userid");
-        $hospreason =
-                $db->escape(
-                        "Mugged by <a href='viewuser.php?u={$userid}'>{$ir['username']}</a>");
-        $db->query(
-                "UPDATE `users`
-                        SET `hp` = 1, `money` = `money` - $stole WHERE `userid` = {$r['userid']}");
-		hospitalize($r['userid'],$hosptime,$hospreason);
-        event_add($r['userid'],
-                "<a href='viewuser.php?u=$userid'>{$ir['username']}</a> mugged you and stole "
-                        . money_formatter($stole) . " Copper Coins.", $c);
+        $db->query("UPDATE `users` SET `xp` = `xp` + $expgain, `primary_currency` = `primary_currency` + $stole WHERE `userid` = $userid");
+        $hospreason = $db->escape("Mugged by <a href='viewuser.php?u={$userid}'>{$ir['username']}</a>");
+        $db->query("UPDATE `users` SET `hp` = 1, `primary_currency` = `primary_currency` - $stole WHERE `userid` = {$r['userid']}");
+		$api->UserStatusSet($r['userid'],1,$hosptime,$hospreason);
+        event_add($r['userid'], "<a href='viewuser.php?u=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.", $c);
 		$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");					
-		$db->query(
-			"UPDATE `users` 
-			SET `kills` = `kills` + 1 
-			WHERE userid={$userid}");
         $_SESSION['attackwon'] = 0;
-				if ($r['user_level'] == 0)
+		if ($r['user_level'] == 0)
 		{
-		        $db->query(
-                "UPDATE `users` SET `hp` = `maxhp`, `hospital` = 0
-                        WHERE `userid` = {$r['userid']}");
+		        $db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$r['userid']}");
 		}
-        if ($ir['gang'] > 0 && $r['gang'] > 0)
+        if ($ir['guild'] > 0 && $r['guild'] > 0)
         {
-            $gq =
-                    $db->query(
-                            "SELECT `gangRESPECT`, `gangID` FROM `gangs` WHERE `gangID` = {$r['gang']}");
+            $gq = $db->query("SELECT `gangRESPECT`, `gangID` FROM `gangs` WHERE `gangID` = {$r['guild']}");
             if ($db->num_rows($gq) > 0)
             {
                 $ga = $db->fetch_row($gq);
@@ -103,11 +85,9 @@ if ($db->num_rows($od) > 0)
             $db->free_result($gq);
         }
 
-        if ($r['user_level'] == 0)
+        if ($r['user_level'] == 'NPC')
         {
-            $q =
-                    $db->query(
-                            "SELECT `cb_money` FROM `challengebots` WHERE `cb_npcid` = {$r['userid']}");
+            $q = $db->query("SELECT `cb_money` FROM `challengebots` WHERE `cb_npcid` = {$r['userid']}");
             if ($db->num_rows($q) > 0)
             {
                 $cb = $db->fetch_row($q);
