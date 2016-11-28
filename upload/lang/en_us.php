@@ -593,6 +593,9 @@ $lang['STAFF_USERS_DEL_SUBFORM_CONFIRM1']=". Once deleted, they will not be able
 $lang['STAFF_USERS_DEL_SUB_INVALID']="You specified a user or command that's invalid.";
 $lang['STAFF_USERS_DEL_SUB_FAIL']="User was not deleted.";
 $lang['STAFF_USERS_DEL_SUB_SUCC']="User was deleted from the game.";
+$lang['STAFF_USERS_FL_SUB_SUCC']="User was successfully logged out from the game.";
+$lang['STAFF_USERS_FL_FORM_INFO']="Use this form to have a use auto-logged out when on their next action in game.";
+$lang['STAFF_USERS_FL_FORM_BTN']="Force Logout User";
 
 //Criminal Center
 $lang['CRIME_TITLE']="Criminal Center";
