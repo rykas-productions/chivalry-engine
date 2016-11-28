@@ -348,6 +348,8 @@ function restore()
 	else
 	{
 		$db->query("UPDATE `users` SET `hp`=`maxhp`,`energy`=`maxenergy`,`brave`=`maxbrave`,`will`=`maxwill`");
+		$db->query("UPDATE `dungeon` SET `dungeon_out` = 0");
+		$db->query("UPDATE `infirmary` SET `infirmary_out` = 0");
 		$api->SystemLogsAdd($userid,'staff',"Restored all users to their full HP/Brave/Energy.");
 		alert('success',"Success!","You have successfully restored all your users to their full health, brave and energy!");
 		$h->endpage();
