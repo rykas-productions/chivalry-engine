@@ -1,5 +1,5 @@
 <?php
-if (file_exists("installer.php") && (!file_exists("installer.lock")) 
+if (file_exists("installer.php") && (!file_exists("installer.lock"))) 
 {
 	header("Location: installer.php");
 	exit;
