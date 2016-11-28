@@ -815,4 +815,138 @@ function edituser()
 	";
 	}
 }
+function deleteuser()
+{
+	global $db,$userid,$lang,$h,$api,$ir;
+	if (!isset($_GET['step']))
+    {
+        $_GET['step'] = '0';
+    }
+    switch ($_GET['step'])
+    {
+		default:
+			$csrf = request_csrf_html('staff_deluser1');
+			echo "<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['STAFF_USERS_DEL_FORM_1']}
+					</th>
+				</tr>
+				<form action='?action=deleteuser&step=2' method='post'>
+				{$csrf}
+				<tr>
+					<th>
+						{$lang['STAFF_USERS_EDIT_USER']}
+					</th>
+					<td>
+						" . user_dropdown('user') . "
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_USERS_DEL_BTN']}' />
+					</td>
+				</tr>
+				</form>
+				<tr>
+					<th colspan='2'>
+						{$lang['STAFF_USERS_EDIT_ELSE']}
+					</th>
+				</tr>
+				<form action='?action=deleteuser&step=2' method='post'>
+				{$csrf}
+				<tr>
+					<th>
+						{$lang['STAFF_USERS_EDIT_USER']}
+					</th>
+					<td>
+						<input type='number' class='form-control' required='1' name='user' value='0' />
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_USERS_DEL_BTN']}' />
+					</td>
+				</tr>
+				</form>
+			</table>";
+			break;
+		case 2:
+			$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+			if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser1', stripslashes($_POST['verf'])))
+			{
+				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				die($h->endpage());
+			}
+			if (empty($_POST['user']) || $_POST['user'] == 1 || $_POST['user'] == $ir['userid'])
+			{
+				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+				die($h->endpage());
+			}
+			$d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
+			if ($db->num_rows($d) == 0)
+			{
+				$db->free_result($d);
+				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+				die($h->endpage());
+			}
+			$username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
+			$db->free_result($d);
+			$csrf = request_csrf_html('staff_deluser2');
+			echo "
+			<form action='?action=deleteuser&step=3' method='post'>
+			<input type='hidden' name='userid' value='{$_POST['user']}' />
+			{$csrf}
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+					 {$lang['STAFF_USERS_DEL_SUBFORM_CONFIRM']} {$username}{$lang['STAFF_USERS_DEL_SUBFORM_CONFIRM1']}
+					</th>
+				</tr>
+				<tr>
+					<td>
+						<input type='submit' class='btn btn-default' name='yesorno' value='Yes' />
+					</td>
+					<td>
+						<input type='submit' class='btn btn-default' name='yesorno' value='No' onclick=\"window.location='staff_users.php?action=deluser';\" />
+					</td>
+				</tr>
+			</table>
+			</form>";
+			break;
+		case 3:
+			if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser2', stripslashes($_POST['verf'])))
+			{
+				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				die($h->endpage());
+			}
+			$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
+			$_POST['yesorno'] = (isset($_POST['yesorno']) && in_array($_POST['yesorno'], array('Yes', 'No'))) ? $_POST['yesorno'] : '';
+			if ((empty($_POST['userid']) || empty($_POST['yesorno'])) || $_POST['userid'] == 1 || $_POST['userid'] == $ir['userid'])
+			{
+				alert('danger',"{$lang['ERROR_INVALID']}","{$lang['STAFF_USERS_DEL_SUB_INVALID']}");
+				die($h->endpage());
+			}
+			if ($_POST['yesorno'] == 'No')
+			{
+				alert('warning',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_DEL_SUB_FAIL']}");
+				die($h->endpage());
+			}
+			$d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}");
+			if ($db->num_rows($d) == 0)
+			{
+				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+				die($h->endpage());
+			}
+			$username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
+			$db->query("DELETE FROM `users` WHERE `userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `userstats` WHERE `userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['userid']}");
+			$api->SystemLogsAdd($userid,'staff',"Deleted user {$username} [{$_POST['userid']}].");
+			alert("success","{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_DEL_SUB_SUCC']}");
+			die($h->endpage());
+			break;
+	}
+}
 $h->endpage();
