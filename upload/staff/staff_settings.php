@@ -52,7 +52,7 @@ function basicsettings()
 					Owner's Name
 				</th>
 				<td>
-					<input type='text' name='ownername' class='form-control' required='1' value='{$set['Website_Owner']}'>
+					<input type='text' name='ownername' class='form-control' required='1' value='{$set['WebsiteOwner']}'>
 				</td>
 			</tr>
 			<tr>
