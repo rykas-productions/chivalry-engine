@@ -634,7 +634,7 @@ class api
 	*/
 	function SystemFilterInput($type,$input)
 	{
-		$type == strtolower($type);
+		$type = strtolower($type);
 		if ($type == 'int')
 		{
 			return filter_var($input, FILTER_SANITIZE_NUMBER_INT);
