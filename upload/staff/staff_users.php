@@ -36,11 +36,6 @@ function createuser()
 		echo "<hr /><h4>Creating a User</h4><hr />";
 		echo "Fill out the form!";
 		echo "
-				<div id='usernameresult'></div>
-				<div id='cpasswordresult'></div>
-				<div id='emailresult'></div>
-				<div id='teamresult'></div>
-				<div id='statresult'></div>
 			<table class='table table-bordered'>
 				<form method='post'>
 					<tr>
@@ -392,18 +387,18 @@ function createuser()
 }
 function edituser()
 {
-	global $db,$lang,$h,$userid;
+	global $db,$lang,$h,$userid,$api;
 	if (!isset($_POST['step']))
 	{
 		$_POST['step'] = 0;
 	}
 	if ($_POST['step'] == 2)
 	{
-		/*if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser1', stripslashes($_POST['verf'])))
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser1', stripslashes($_POST['verf'])))
 		{
 			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
 			die($h->endpage());
-		}*/
+		}
 		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
 		if (empty($_POST['user']))
 		{
@@ -501,7 +496,7 @@ function edituser()
 					{$lang['EXPLORE_BANK']}
 				</th>
 				<td>
-					<input type='number' min='1' class='form-control' required='1' name='bank' value='{$itemi['bank']}' />
+					<input type='number' min='-1' class='form-control' required='1' name='bank' value='{$itemi['bank']}' />
 				</td>
 			</tr>
 			<tr>
@@ -636,29 +631,135 @@ function edituser()
 			</tr>
 		</table>
     	{$csrf}
-    	<input type='submit' value='Edit User' />
+    	<input class='btn btn-default' type='submit' value='Edit User' />
     </form>
        ";
 	}
 	elseif ($_POST['step'] == 3)
 	{
-		/*if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser2', stripslashes($_POST['verf'])))
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser2', stripslashes($_POST['verf'])))
 		{
 			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
 			die($h->endpage());
-		}*/
+		}
 		$username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username']) && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
-		$_POST['level'] = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 1;
-		$Money2 = (isset($_POST['sec_currency']) && is_numeric($_POST['sec_currency'])) ? abs(intval($_POST['sec_currency'])) : 0;
-		$Money = (isset($_POST['prim_currency']) && is_numeric($_POST['prim_currency'])) ? abs(intval($_POST['prim_currency'])) : 100;
-
+		$email = (isset($_POST['email'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('email',$_POST['email'])))) : '';
+		$userlevel = (isset($_POST['userlevel'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text',$_POST['userlevel'])))) : 'Member';
+		$infirmaryr = (isset($_POST['infirmary_reason'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text',$_POST['infirmary_reason'])))) : 'Hurt';
+		$dungeonr = (isset($_POST['dungeonreason'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text',$_POST['dungeonreason'])))) : 'Locked Up';
 		
+		$user = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
+		$level = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 1;
+		$money2 = (isset($_POST['sec_currency']) && is_numeric($_POST['sec_currency'])) ? abs(intval($_POST['sec_currency'])) : 0;
+		$money = (isset($_POST['prim_currency']) && is_numeric($_POST['prim_currency'])) ? abs(intval($_POST['prim_currency'])) : 0;
+		$maxwill = (isset($_POST['maxwill']) && is_numeric($_POST['maxwill'])) ? abs(intval($_POST['maxwill'])) : 100;
+		$bank = (isset($_POST['int'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('int',$_POST['bank'])))) : -1;
+		$iq=(isset($_POST['IQ']) && is_numeric($_POST['IQ'])) ? abs(intval($_POST['IQ'])) : 1000;
+		$strength=(isset($_POST['strength']) && is_numeric($_POST['strength'])) ? abs(intval($_POST['strength'])) : 1000;
+		$agility=(isset($_POST['agility']) && is_numeric($_POST['agility'])) ? abs(intval($_POST['agility'])) : 1000;
+		$guard=(isset($_POST['guard']) && is_numeric($_POST['guard'])) ? abs(intval($_POST['guard'])) : 1000;
+		$labor=(isset($_POST['labor']) && is_numeric($_POST['labor'])) ? abs(intval($_POST['labor'])) : 1000;
+		
+		$equip_prim=(isset($_POST['primary_weapon']) && is_numeric($_POST['primary_weapon'])) ? abs(intval($_POST['primary_weapon'])) : 0;
+		$equip_sec=(isset($_POST['secondary_weapon']) && is_numeric($_POST['secondary_weapon'])) ? abs(intval($_POST['secondary_weapon'])) : 0;
+		$equip_armor=(isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
+		$city=(isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : 1;
+		
+		if (empty($username) || empty($email))
+		{
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_MISSINGSTUFF']}");
+			die($h->endpage());
+		}
+		$u_exists = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$user}");
+		if ($db->num_rows($u_exists) == 0)
+		{
+			$db->free_result($u_exists);
+			alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['STAFF_USERS_EDIT_DND']}");
+			die($h->endpage());
+		}
 		if (!isset($_POST['userlevel']) || ($_POST['userlevel'] != 'NPC' && $_POST['userlevel'] != 'Member' && $_POST['userlevel'] != 'Admin' && $_POST['userlevel'] != 'Forum Moderator' && $_POST['userlevel'] != 'Assistant' && $_POST['userlevel'] != 'Web Developer'))
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You specified an invalid user level. A user can only be an NPC, Admin, Member, Forum Moderator, Assistant, or Web Developer.</div>";
-			$h->endpage();
-			exit;
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_ULBAD']}");
+			die($h->endpage());
 		}
+		$h_exists = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$maxwill}");
+		if ($db->fetch_single($h_exists) == 0)
+		{
+			$db->free_result($h_exists);
+			alert("danger","{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_HBAD']}");
+			die($h->endpage());
+		}
+		$u = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$username}' AND `userid` != {$user}");
+		if ($db->fetch_single($u) != 0)
+		{
+			$db->free_result($u);
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_UNIU']}");
+			die($h->endpage());
+		}
+		$e = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$email}' AND `userid` != {$user}");
+		if ($db->fetch_single($e) != 0)
+		{
+			$db->free_result($e);
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_EIU']}");
+			die($h->endpage());
+		}
+		if ($equip_prim > 0)
+		{
+			$pwq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
+			if ($db->fetch_single($pwq) == 0)
+			{
+				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_WDNE']}");
+				die($h->endpage());
+			}
+		}
+		if ($equip_sec > 0)
+		{
+			$swq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
+			if ($db->fetch_single($swq) == 0)
+			{
+				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_WDNE']}");
+				die($h->endpage());
+			}
+		}
+		if ($equip_armor > 0)
+		{
+			$aq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
+			if ($db->fetch_single($aq) == 0)
+			{
+				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_ADNE']}");
+				die($h->endpage());
+			}
+		}
+		$CityQuery=$db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
+		if ($db->fetch_single($CityQuery) == 0)
+		{
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_TDNE']}");
+			die($h->endpage());
+		}
+		$db->free_result($u);
+		$db->free_result($e);
+		$db->free_result($h_exists);
+		$oldwill = $db->fetch_single($u_exists);
+		$db->free_result($u_exists);
+		$will = ($oldwill > $maxwill) ? $maxwill : $oldwill;
+		$energy = 20 + $_POST['level'] * 4;
+		$brave = 6 + $_POST['level'] * 4;
+		$hp = 50 + $_POST['level'] * 50;
+		$db->query("UPDATE `users` SET `username` = '{$username}', `level` = {$level}, `primary_currency` = {$money}, `secondary_currency` = {$money2},
+		`energy` = {$energy}, `maxenergy` = {$energy}, `brave` = {$brave}, `maxbrave` = {$brave}, `hp` = {$hp}, `maxhp` = {$hp}, `bank` = {$bank},
+		`equip_armor` = {$equip_armor}, `equip_primary` = {$equip_prim}, `equip_secondary` = {$equip_sec}, `location` = {$city}, `will`= {$will}, `maxwill` = {$maxwill},
+		`email` = '{$email}', `user_level` = '{$userlevel}' WHERE `userid` = {$user}");
+		$db->query("UPDATE `userstats` SET `strength` = {$strength}, `agility` = {$agility}, `guard` = {$guard}, `iq` = {$iq}, `labor` = {$labor} WHERE `userid` = {$user}");
+		if ($_POST['infirmary'] > 0)
+		{
+			$api->UserStatusSet($user,1,$_POST['infirmary'],$infirmaryr);
+		}
+		if ($_POST['dungeon'] > 0)
+		{
+			$api->UserStatusSet($user,2,$_POST['dungeon'],$dungeonr);
+		}
+		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_EDIT_SUB_SUCCESS']}");
+		$api->SystemLogsAdd($userid,'staff',"Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
 	}
 	else
 	{

@@ -576,6 +576,15 @@ $lang['STAFF_USERS_EDIT_FORM_DUNG']="Dungeon Time";
 $lang['STAFF_USERS_EDIT_FORM_DUNG_REAS']="Dungeon Reason";
 $lang['STAFF_USERS_EDIT_FORM_ESTATE']="Estate";
 $lang['STAFF_USERS_EDIT_FORM_STATS']="User Stats";
+$lang['STAFF_USERS_EDIT_SUB_MISSINGSTUFF']="You are missing some required information from the previous page. Go back and try again, please.";
+$lang['STAFF_USERS_EDIT_SUB_ULBAD']="You specified an invalid user level. Go back and try again.";
+$lang['STAFF_USERS_EDIT_SUB_UNIU']="The specified username is already in use. Go back and specify a new one.";
+$lang['STAFF_USERS_EDIT_SUB_HBAD']="The house you specified is invalid or non-existent. Go back and try again.";
+$lang['STAFF_USERS_EDIT_SUB_EIU']="The email input is already in use by another account. Go back and input an unusued and valid email address.";
+$lang['STAFF_USERS_EDIT_SUB_SUCCESS']="User's information has been updated successfully.";
+$lang['STAFF_USERS_EDIT_SUB_WDNE']="One of the weapons you specified does not exist, or cannot be equipped as a weapon. Go back and try again.";
+$lang['STAFF_USERS_EDIT_SUB_ADNE']="The armor you specified does not exist, or cannot be equipped as armor. Go back and try again.";
+$lang['STAFF_USERS_EDIT_SUB_TDNE']="The town you chose does not exist. Go back and try again.";
 
 //Criminal Center
 $lang['CRIME_TITLE']="Criminal Center";
