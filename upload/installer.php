@@ -199,7 +199,7 @@ function config()
     }
 	else
 	{
-		echo '<option>PDO not detected on your server.</option>';
+		echo '<option>No acceptable database handler detected on your server.</option>';
 	}
     echo "
     				</select>
@@ -221,7 +221,7 @@ function config()
     		</tr>
     		<tr>
     			<td align='center'>Password</td>
-    			<td><input type='text' name='password' class='form-control' required='1' value='' /></td>
+    			<td><input type='password' name='password' class='form-control' required='1' value='' /></td>
     		</tr>
     		<tr>
     			<td align='center'>
@@ -265,6 +265,20 @@ function config()
 					Benchmark your server <a href='password_benchmark.php'>here</a>.</small>
     			</td>
     			<td><input type='number' class='form-control' value='10' required='1' min='5' max='15' name='password_effort'></td>
+    		</tr>
+			<tr>
+    			<td align='center'>
+    				Fraudguard IO Username<br />
+    				<small><a href='https://fraudguard.io/'>https://fraudguard.io/</a></small>
+    			</td>
+    			<td><input type='text' name='fgun' class='form-control' required='1' /></td>
+    		</tr>
+			<tr>
+    			<td align='center'>
+    				Fraudguard IO Password<br />
+    				<small><a href='https://fraudguard.io/'>https://fraudguard.io/</a></small>
+    			</td>
+    			<td><input type='password' name='fgpw' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
     			<th colspan='2'>Admin User</th>
@@ -321,25 +335,15 @@ if (!function_exists('get_magic_quotes_gpc'))
         return 0;
     }
 }
-
 function gpc_cleanup($text)
 {
-    if (get_magic_quotes_gpc())
-    {
-        return stripslashes($text);
-    }
-    return $text;
+	return strip_tags(stripslashes($text));
 }
-
 function install()
 {
    global $Version,$Build;
    menuprint('sql');
-    $paypal =
-            (isset($_POST['paypal'])
-                    && filter_input(INPUT_POST, 'paypal',
-                            FILTER_VALIDATE_EMAIL))
-                    ? gpc_cleanup($_POST['paypal']) : '';
+    $paypal = (isset($_POST['paypal']) && filter_input(INPUT_POST, 'paypal', FILTER_VALIDATE_EMAIL)) ? gpc_cleanup($_POST['paypal']) : '';
     $adm_email =
             (isset($_POST['a_email'])
                     && filter_input(INPUT_POST, 'a_email',
