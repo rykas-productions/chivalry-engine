@@ -4,7 +4,7 @@ class headers
 
     function startheaders()
     {
-		global $ir, $set, $lang, $db, $NoHeader;
+		global $ir, $set, $lang, $db, $menuhide;
 		?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +14,7 @@ class headers
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="TheMasterGeneral">
 	<meta name="theme-color" content="#000000">
 
     <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
@@ -45,7 +45,7 @@ class headers
 
 </head>
 <?php
-if (empty($NoHeader))
+if (empty($menuhide))
 {
 	?>
 <body>
@@ -193,11 +193,8 @@ if (empty($NoHeader))
         }
         if ($dosessh && ($_SESSION['attacking'] == 'true' || $ir['attacking'] == 'true'))
         {
-            echo "You lost all your EXP for running from the fight.";
-            $db->query(
-                    "UPDATE `users`
-                     SET `xp` = 0, `attacking` = 'false'
-                     WHERE `userid` = $userid");
+           alert("warning","{$lang['ERROR_GENERIC']}","{$lang['MENU_XPLOST']}");
+            $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 'false' WHERE `userid` = $userid");
             $_SESSION['attacking'] = 'false';
         }
         $d = "";
