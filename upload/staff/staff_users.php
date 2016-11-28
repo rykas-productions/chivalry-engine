@@ -23,6 +23,9 @@ switch ($_GET['action'])
 	case "deleteuser":
 		deleteuser();
 		break;
+	case "logout":
+		logout();
+		break;
 	default:
 		die();
 		break;
@@ -948,5 +951,57 @@ function deleteuser()
 			die($h->endpage());
 			break;
 	}
+}
+function logout()
+{
+    global $db,$h,$userid,$lang,$api;
+    $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid']))  ? abs(intval($_POST['userid'])) : 0;
+    if (!empty($_POST['userid']))
+    {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_forcelogout', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+        $d = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
+        if ($db->fetch_single($d) == 0)
+        {
+            $db->free_result($d);
+            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+            die($h->endpage());
+        }
+        $db->free_result($d);
+        $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `userid` = {$_POST['userid']}");
+        $api->SystemLogsAdd($userid,'staff',"Forced User ID {$_POST['userid']} to logout.");
+		alert("success","{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_FL_SUB_SUCC']}");
+    }
+    else
+    {
+        $csrf = request_csrf_html('staff_forcelogout');
+		echo "
+		<form action='?action=logout' method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['STAFF_USERS_FL_FORM_INFO']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_USERS_EDIT_USER']}
+					</th>
+					<td>
+						" . user_dropdown('userid') . "
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_USERS_FL_FORM_BTN']}' />
+					</td>
+				</tr>
+			</table>
+			{$csrf}
+		</form>";
+    }
 }
 $h->endpage();

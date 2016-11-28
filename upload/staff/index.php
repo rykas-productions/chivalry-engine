@@ -101,6 +101,7 @@ if (($ir['user_level']) == 'Admin')
 					<a href='staff_users.php?action=createuser'>Create User</a><br />
 					<a href='staff_users.php?action=edituser'>Edit User</a><br />
 					<a href='staff_users.php?action=deleteuser'>Delete User</a><br />
+					<a href='staff_users.php?action=logout'>Force Logout</a><br />
 				</div>
 			</div>
 		</div>
