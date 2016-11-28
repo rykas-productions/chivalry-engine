@@ -569,6 +569,7 @@ $lang['STAFF_USERS_EDIT_ELSE']="Or, you can manually type in a User's ID.";
 $lang['STAFF_USERS_EDIT_EMPTY']="You inputted an invalid user. Go back and try again.";
 $lang['STAFF_USERS_EDIT_DND']="The user you input does not exist.";
 $lang['STAFF_USERS_EDIT_BTN']="Edit User";
+$lang['STAFF_USERS_DEL_BTN']="Delete User";
 $lang['STAFF_USERS_EDIT_FORMTITLE']="Editing User";
 $lang['STAFF_USERS_EDIT_FORM_INFIRM']="Infirmary Time";
 $lang['STAFF_USERS_EDIT_FORM_INFIRM_REAS']="Infirmary Reason";
@@ -585,6 +586,13 @@ $lang['STAFF_USERS_EDIT_SUB_SUCCESS']="User's information has been updated succe
 $lang['STAFF_USERS_EDIT_SUB_WDNE']="One of the weapons you specified does not exist, or cannot be equipped as a weapon. Go back and try again.";
 $lang['STAFF_USERS_EDIT_SUB_ADNE']="The armor you specified does not exist, or cannot be equipped as armor. Go back and try again.";
 $lang['STAFF_USERS_EDIT_SUB_TDNE']="The town you chose does not exist. Go back and try again.";
+$lang['STAFF_USERS_DEL_FORM_1']="You may use this form to delete a user from the game. This action is not reverisble. Be 100% sure.";
+$lang['STAFF_USERS_DEL_SUB_SECERROR']="You specified an invalid or non-existent user. Go back and try again.";
+$lang['STAFF_USERS_DEL_SUBFORM_CONFIRM']="Please confirm that you wish to delete";
+$lang['STAFF_USERS_DEL_SUBFORM_CONFIRM1']=". Once deleted, they will not be able to login from their account anymore.";
+$lang['STAFF_USERS_DEL_SUB_INVALID']="You specified a user or command that's invalid.";
+$lang['STAFF_USERS_DEL_SUB_FAIL']="User was not deleted.";
+$lang['STAFF_USERS_DEL_SUB_SUCC']="User was deleted from the game.";
 
 //Criminal Center
 $lang['CRIME_TITLE']="Criminal Center";
