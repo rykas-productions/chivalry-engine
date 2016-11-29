@@ -150,7 +150,7 @@ else
         	  <td>
         	  	[<a href='itemsend.php?ID={$i['inv_id']}'>Send</a>]
         	  	[<a href='itemsell.php?ID={$i['inv_id']}'>Sell</a>]
-        	  	[<a href='imadd.php?ID={$i['inv_id']}'>Add To Market</a>]";
+        	  	[<a href='itemmarket.php?action=add&ID={$i['inv_id']}'>Add To Market</a>]";
         if ($i['effect1_on'] || $i['effect2_on'] || $i['effect3_on'])
         {
             echo " [<a href='itemuse.php?item={$i['inv_id']}'>Use</a>]";
