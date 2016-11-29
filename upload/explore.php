@@ -25,7 +25,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4><ul class='nav nav-tabs nav-justified'>
 	<div id='SHOPS' class='tab-pane fade in'>
 		<div class='panel panel-default'>
 			<div class='panel-body'>
-				<a href='#'>{$lang['EXPLORE_LSHOP']}</a><br />
+				<a href='shops.php'>{$lang['EXPLORE_LSHOP']}</a><br />
 				<a href='#'>{$lang['EXPLORE_POSHOP']}</a><br />
 				<a href='#'>{$lang['EXPLORE_IMARKET']}</a><br />
 				<a href='#'>{$lang['EXPLORE_IAUCTION']}</a><br />
