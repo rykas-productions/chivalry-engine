@@ -163,7 +163,7 @@ function buy()
 					 WHERE `userid` = $userid");
 			$ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['SHOPS_BUY_SUCCESS']} {$_POST['qty']} {$itemd['itmname']}(s) {$lang['GEN_FOR']} {$price}.");
-			$api->SystemLogsAdd($userid,'itemsell',$ib_log);
+			$api->SystemLogsAdd($userid,'itembuy',$ib_log);
 		}
     $db->free_result($q);
 	}

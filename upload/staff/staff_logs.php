@@ -40,6 +40,9 @@ case "crimelogs":
 case "itemuselogs":
     itemuselogs();
     break;
+case "itembuylogs":
+    itembuylogs();
+    break;
 default:
     die();
     break;
@@ -1014,5 +1017,106 @@ function itemuselogs()
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the item use logs.");
+}
+function itembuylogs()
+{
+	global $db,$ir,$h,$lang,$userid,$api;
+	$logname='itembuy';
+    echo "
+	<h3>Item Buy Logs</h3>
+	<hr />
+ 	  ";
+    if (!isset($_GET['st']))
+    {
+        $_GET['st'] = 0;
+    }
+    $st = abs(intval($_GET['st']));
+    $app = 100;
+    $q = $db->query("SELECT COUNT(`log_id`)
+    				 FROM `logs` WHERE `log_type` = '{$logname}'");
+    $attacks = $db->fetch_single($q);
+    $db->free_result($q);
+    if ($attacks == 0)
+    {
+        echo "No items have been bought from the game yet.";
+        return;
+    }
+    $pages = ceil($attacks / $app);
+    echo '<ul class="pagination">Pages:&nbsp;<br />';
+    for ($i = 1; $i <= $pages; $i++)
+    {
+        $s = ($i - 1) * $app;
+		if ($s == $st)
+        {
+            echo "<li class='active'>";
+        }
+
+		else
+		{
+			echo "<li>";
+		}
+        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
+        echo "</li></a>&nbsp;";
+        if ($i % 25 == 0)
+        {
+            echo "<br /></center>";
+        }
+    }
+    echo "
+	</ul>
+    <br />
+    <table class='table table-bordered table-hover table-reponsive'>
+    		<tr>
+    			<th>Time</th>
+    			<th>User</th>
+    			<th>What Happened?</th>
+    		</tr>
+       ";
+    $q =
+            $db->query(
+                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
+                     FROM `logs`
+					 WHERE `log_type` = '{$logname}'
+                     ORDER BY `log_time` DESC
+                     LIMIT $st, $app");
+    while ($r = $db->fetch_row($q))
+    {
+		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
+        echo "
+		<tr>
+        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
+                . "</td>
+        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
+        	<td>{$r['log_text']}</td>
+           ";
+        echo '</tr>';
+    }
+    $db->free_result($q);
+    echo "
+    </table>
+    <center>
+    <ul class='pagination'>Pages:<br />
+       ";
+    for ($i = 1; $i <= $pages; $i++)
+    {
+        $s = ($i - 1) * $app;
+		if ($s == $st)
+        {
+            echo "<li class='active'>";
+        }
+
+		else
+		{
+			echo "<li>";
+		}
+        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
+        echo "</li></a>&nbsp;";
+        if ($i % 25 == 0)
+        {
+            echo "<br /></center>";
+        }
+    }
+    $mypage = floor($_GET['st'] / 100) + 1;
+	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the item buy logs.");
 }
 $h->endpage();
