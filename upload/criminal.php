@@ -60,7 +60,7 @@ function home()
 }
 function crime()
 {
-	global $db,$lang,$userid,$ir,$h;
+	global $db,$lang,$userid,$ir,$h,$api;
 	if (!isset($_GET['c']))
 	{
 		$_GET['c'] = 0;
@@ -111,6 +111,7 @@ function crime()
 				$title=$lang['ERROR_SUCCESS'];
 				$type='success';
 				$db->query("UPDATE `users` SET `xp` = `xp` + {$r['crimeXP']} WHERE `userid` = $userid");
+				$api->SystemLogsAdd($userid,'crime',"Successfully commited the {$r['crimeNAME']} crime.");
 			}
 			else
 			{
@@ -119,6 +120,7 @@ function crime()
 					$type='danger';
 					$dtime=mt_rand($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
 					put_dungeon($userid,$dtime,$r['crimeDUNGREAS']);
+					$api->SystemLogsAdd($userid,'crime',"Failed to commit the {$r['crimeNAME']} crime.");
 			}
 			alert("{$type}","{$title}","{$r['crimeITEXT']} {$text}");
 			die($h->endpage());

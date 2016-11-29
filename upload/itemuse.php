@@ -107,6 +107,7 @@ else
 		}
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$r['itmname']} {$lang['IU_SUCCESS']}");
 		item_remove($userid, $r['inv_itemid'], 1);
+		$api->SystemLogsAdd($userid,'itemuse',"Used a/an {$r['itmname']} item.");
 	}
 }
 $h->endpage();
