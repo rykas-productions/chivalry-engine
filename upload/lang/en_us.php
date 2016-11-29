@@ -35,6 +35,7 @@ $lang['MENU_UNREADMAIL4']='to read them.';
 $lang['MENU_UNREADNOTIF1']='unread notifications. Click';
 $lang['MENU_INFIRMARY1']='You are in the infirmary for the next';
 $lang['MENU_DUNGEON1']='You are in the dungeon for the next';
+$lang['MENU_XPLOST']="By running from the fight, you have lost all your experience!";
 
 // Preferences
 $lang["PREF_CPASSWORD"] = "Change Password";
@@ -132,6 +133,7 @@ $lang['ERROR_INVALID'] = "Invalid Input!";
 $lang['ERROR_SECURITY'] = "Security Error!";
 $lang['ERROR_NONUSER'] = "Nonexistent User!";
 $lang['ERROR_NOPERM'] ="No Permission!";
+$lang['ERROR_UNKNOWN'] ="Unknown Error!";
 
 //Generic
 $lang["GEN_HERE"] = "here";
@@ -159,6 +161,8 @@ $lang['GEN_IQ']="IQ";
 $lang['GEN_LAB']="Labor";
 $lang['GEN_GOHOME']="Go Home";
 $lang['GEN_IUOF']="Invalid use of file!";
+$lang['GEN_THEM']="Them";
+$lang['GEN_CONTINUE']="Continue";
 $lang['GEN_NOPERM']="You do not have the proper user level to view this page. If this is wrong, please contact an admin immediately!";
 
 //Gym
@@ -331,19 +335,6 @@ $lang['BANK_W_FAIL']="You are trying to withdraw more {$lang['INDEX_PRIMCURR']} 
 $lang['BANK_W_SUCCESS']="You successfully withdrew";
 $lang['BANK_W_SUCCESS1']="from your bank account. You have";
 $lang['BANK_W_SUCCESS2']="left in your bank account.";
-
-//Attack
-$lang['ATT_NC']="Please remember that cheating in this game won't get you anywhere...";
-$lang['ATT_PDE']="The player you are trying to finish does not exist.";
-$lang['ATT_HP']="Please do not refresh or go back. Thank you!";
-$lang['ATT_BEAT']="You beat";
-$lang['ATT_BU_TEXT1']="on the ground. You continue to punch and kick them until they begin to bleed. Once blood begins to show, you break their limbs. Your actions put them in the infirmary for ";
-$lang['ATT_BU_TEXT2']="You run home quickly and quietly, to not gain any unneeded attention.";
-$lang['ATT_L_TEXT1']="You lost to";
-$lang['ATT_L_TEXT2']="and lost";
-$lang['ATT_XP_1']="and gained";
-$lang['ATT_XP_2']="You hide your weapons and drop";
-$lang['ATT_XP_3']="off outside the infirmary. Feeling accomplished, you walk home.";
 
 //Forums
 $lang['FORUM_EMPTY_REPLY']="You are trying to submit an empty reply, which you cannot do! Please make sure you filled in the reply form!";
@@ -611,6 +602,50 @@ $lang['ATTACK_START_NOREFRESH']="Refreshing while attacking is a bannable offens
 $lang['ATTACK_START_NOUSER']="You can only attack players specified. Did you use the attack link on the user's profile?";
 $lang['ATTACK_START_NOTYOU']="Depressed or not, you cannot attack yourself!";
 $lang['ATTACK_START_YOUNOHP']="You need HP to fight someone. Come back when you have more health!";
+$lang['ATTACK_START_YOUINFIRM']="How do you expect to fight someone when you're nursing an injurt in the infirmary?";
+$lang['ATTACK_START_YOUDUNG']="How do you expect to fight someone when you're serving your debt to society in the dungeon?";
+$lang['ATTACK_START_YOUCHICKEN']="Chickeing out from one fight, and running to start another is not an honorable way to play.";
+$lang['ATTACK_START_NONUSER']="The person you have a grudge with does not exist. Check your source and try again.";
+$lang['ATTACK_START_UNKNOWNERROR']="An unknown error has occured. Go back and try again. If this error persists, contact an admin!";
+$lang['ATTACK_START_OPPNOHP']=" is low on HP. Come back when they have more health.";
+$lang['ATTACK_START_OPPINFIRM']=" is in the infirmary at the moment. Come back when they're out!";
+$lang['ATTACK_START_OPPDUNG']=" is in the dungeon at the moment. Come back when they're out!";
+$lang['ATTACK_START_OPPUNATTACK']="This user cannot be attacked by normal means.";
+$lang['ATTACK_START_YOUUNATTACK']="A magical force prevents you from attacking anyone.";
+$lang['ATTACK_FIGHT_STALEMATE']="Come back when you're stronger. This fight ends in stalemate.";
+$lang['ATTACK_FIGHT_LOWENG1']="You do not have enough energy for this fight. You need at least";
+$lang['ATTACK_FIGHT_LOWENG2']="%. You only have";
+$lang['ATTACK_FIGHT_BUGABUSE']="Abusing game bugs is against the game rules. You're losing your experience and going to the infirmary for this one.";
+$lang['ATTACK_FIGHT_BADWEAP']="The weapon you're trying to attack with doesn't exist or cannot be used as a weapon.";
+$lang['ATTACK_FIGHT_ATTACKY_HIT1']="Using your";
+$lang['ATTACK_FIGHT_ATTACKY_HIT2']="you hit";
+$lang['ATTACK_FIGHT_ATTACKY_HIT3']="doing";
+$lang['ATTACK_FIGHT_ATTACKY_HIT4']="damage.";
+$lang['ATTACK_FIGHT_ATTACKY_MISS1']="You tried to hit";
+$lang['ATTACK_FIGHT_ATTACKY_MISS2']="but missed.";
+$lang['ATTACK_FIGHT_ATTACKY_WIN1']="You have bested";
+$lang['ATTACK_FIGHT_ATTACKY_WIN2']="in battle. What do you wish to do with them now?";
+$lang['ATTACK_FIGHT_OUTCOME1']="Mug";
+$lang['ATTACK_FIGHT_OUTCOME2']="Beat";
+$lang['ATTACK_FIGHT_OUTCOME3']="Leave";
+$lang['ATTACK_FIGHT_ATTACK_HPREMAIN']="HP Remaining";
+$lang['ATTACK_FIGHT_ATTACK_FISTS']="Fists";
+$lang['ATTACK_FIGHT_ATTACKO_HIT1']="Using their";
+$lang['ATTACK_FIGHT_ATTACKO_HIT2']="hit you doing";
+$lang['ATTACK_FIGHT_ATTACKO_MISS']="tried to hit you, but, missed.";
+$lang['ATTACK_FIGHT_FINAL_GUILD']="is in the same guild as you! You cannot attack your fellow guild mates!";
+$lang['ATTACK_FIGHT_FINAL_CITY']="This player is not in the same town as you. You both need to be in the same town to fight each other.";
+$lang['ATTACK_FIGHT_START1']="Choose a weapon to attack with.";
+$lang['ATTACK_FIGHT_START2']="You do not have a weapon to attack with! You may want to go back.";
+$lang['ATTACK_FIGHT_END']="You have bested";
+$lang['ATTACK_FIGHT_END1']="You bested them in combat!";
+$lang['ATTACK_FIGHT_END2']="An evil thought comes into your mind as you stare at their unconscious body. You break their neck, and kick them until they start bleeding.";
+$lang['ATTACK_FIGHT_END3']="Your actions cause";
+$lang['ATTACK_FIGHT_END4']="of infirmary time.";
+$lang['ATTACK_FIGHT_END5']="You fell to";
+$lang['ATTACK_FIGHT_END6']="You lost this fight and lost some of your experience as a warrior!";
+$lang['ATTACK_FIGHT_END7']="Since you are an honorable warrior, you take them to the infirmary entrance. You leave their body there. This increases your experience.";
+$lang['ATTACK_FIGHT_END8']="Being a greedy warrior, you take a look at their pockets and grab some of their Primary Currency.";
 
 //Item Info Page
 $lang['ITEM_INFO_LUIF']="Displaying item information for";
