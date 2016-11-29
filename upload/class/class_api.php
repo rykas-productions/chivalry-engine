@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "0.0.29";
+		return "0.0.30";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -698,7 +698,7 @@ class api
 		the percent option on fields that don't have a max.
 		@param int user = User to test on.
 		@param text stat = User's table row to return.
-		@param int change = User to test on.
+		@param int change = Direction of change
 		@param boolean percent = Return as a percent. [Default: false]
 		Returns the value in the stat specified, optionally as a percent.
 		
@@ -708,7 +708,7 @@ class api
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
-		if (!in_array($ir['user_level'], array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
+		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
 			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.");
 		}
@@ -735,13 +735,13 @@ class api
 				if ($percent == true)
 				{
 					$db->query("UPDATE users SET `{$stat}` = `{$stat}` -((`max{$stat}`*0.{$change})+0.5) WHERE `userid` = {$user}");
-					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` < 0");
+					$db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
 					return true;
 				}
 				else
 				{
 					$db->query("UPDATE users SET `{$stat}` = `{$stat}` - {$change} WHERE `userid` = {$user}");
-					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` < 0");
+					$db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
 				}
 			}
 		}
