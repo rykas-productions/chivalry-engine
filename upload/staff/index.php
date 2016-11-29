@@ -134,7 +134,9 @@ if (($ir['user_level']) == 'Admin')
 		<div id='SHOPS' class='tab-pane fade in'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
-					N/A
+					<a href='staff_shops.php?action=newshop'>Create Shop</a><br />
+					<a href='staff_shops.php?action=delshop'>Delete Shop</a><br />
+					<a href='staff_shops.php?action=newitem'>Add Stock to Shop</a><br />
 				</div>
 			</div>
 		</div>
