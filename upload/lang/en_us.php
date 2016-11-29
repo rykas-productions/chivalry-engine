@@ -682,4 +682,8 @@ $lang['STAFF_JOB_CREATE_FORM_FIRST']="First Job Rank";
 $lang['STAFF_JOB_CREATE_FORM_RNAME']="Rank Name";
 $lang['STAFF_JOB_CREATE_FORM_PAYS']="Daily Payment";
 $lang['STAFF_JOB_CREATE_FORM_ACT']="Required Activity";
+
+//Staff logs
+$lang['STAFF_LOGS_USERS_FORM']="Select the user whose logs you wish to view.";
+$lang['STAFF_LOGS_USERS_FORM_BTN']="View Logs";
 ?>
