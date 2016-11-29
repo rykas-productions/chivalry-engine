@@ -262,6 +262,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 			session_regenerate_id();
 		$_SESSION['loggedin'] = 1;
 		$_SESSION['userid'] = $i;
+		$api->SystemLogsAdd($_SESSION['userid'],'login',"Successfully logged in.");
 		$db->query(
             "UPDATE `users`
              SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}'

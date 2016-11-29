@@ -2,12 +2,8 @@
 require_once('globals_nonauth.php');
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 $CurrentTime=time();
-$email =
-        (array_key_exists('email', $_POST) && is_string($_POST['email']))
-                ? $_POST['email'] : '';
-$password =
-        (array_key_exists('password', $_POST) && is_string($_POST['password']))
-                ? $_POST['password'] : '';
+$email = (array_key_exists('email', $_POST) && is_string($_POST['email'])) ? $_POST['email'] : '';
+$password = (array_key_exists('password', $_POST) && is_string($_POST['password'])) ? $_POST['password'] : '';
 
 $QuarterHour=($CurrentTime-900);
 $Hour=($CurrentTime-3600);
@@ -69,7 +65,7 @@ if ($db->num_rows($UQ) == 0)
 	$db->query("INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES ('{$IP}', '0', '{$CurrentTime}');");
     die(
             "<h3>{$set['WebsiteName']} Error</h3>
-	Incorrect login information.<br />
+	Incorrect login information.a<br />
 	<a href='login.php'>&gt; Back</a>");
 }
 else
@@ -100,6 +96,7 @@ else
 	$db->query("UPDATE `users` SET `password` = '{$e_encpsw}' WHERE `userid` = {$_SESSION['userid']}");
 	$db->query("DELETE FROM `login_attempts` WHERE `userid` = {$_SESSION['userid']}");
 	$loggedin_url = 'loggedin.php';
+	$api->SystemLogsAdd($_SESSION['userid'],'login',"Successfully logged in.");
     header("Location: {$loggedin_url}");
     exit;
 }
