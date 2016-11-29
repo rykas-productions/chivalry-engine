@@ -1,4 +1,5 @@
 <?php
+$atkpage = 1;
 require("globals.php");
 if (!isset($_GET['action']))
 {
@@ -24,9 +25,8 @@ default:
 }
 function attacking()
 {
-	global $db,$userid,$ir,$h,$lang,$api,$set;
+	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$menuhide = 1;
-	$atkpage = 1;
 	$tresder = mt_rand(100, 999);
 	$_GET['user'] =  (isset($_GET['user']) && is_numeric($_GET['user']))  ? abs(intval($_GET['user'])) : '';
 	if (empty($_GET['nextstep']))
@@ -448,8 +448,7 @@ function attacking()
 }
 function beat()
 {
-	global $db,$userid,$ir,$h,$lang,$api,$set;
-	$atkpage = 1;
+	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 'false';
 	$ir['attacking'] = 'false';
@@ -502,8 +501,7 @@ function beat()
 
 function lost()
 {
-	global $db,$userid,$ir,$h,$lang,$api,$set;
-	$atkpage = 1;
+	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 'false';
 	$_SESSION['attacklost'] = 'false';
@@ -537,15 +535,13 @@ function lost()
 	$qe2 = $ir['level'] * $ir['level'] * $ir['level'];
 	$expperc2 = round($expgainp / $r['xp_needed'] * 100);
 	event_add($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
-	$atklog = $db->escape($_SESSION['attacklog']);
-	$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and lost, gaining {$hosptime} minutes in the infirmary.");
+	$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$_GET['ID']}] and lost, gaining {$hosptime} minutes in the infirmary.");
 	$db->query("UPDATE `users` SET `xp` = `xp` + {$expgainp} WHERE `userid` = {$_GET['ID']}");
 	$db->query("UPDATE `users` SET `xp` = 0 WHERE `xp` < 0");
 }
 function xp()
 {
-	global $db,$userid,$ir,$h,$lang,$api,$set;
-	$atkpage = 1;
+	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 'false';
 	$ir['attacking'] = 'false';
@@ -604,8 +600,7 @@ function xp()
 }
 function mug()
 {
-	global $db,$userid,$ir,$h,$lang,$api,$set;
-	$atkpage = 1;
+	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 'false';
 	$ir['attacking'] = 'false';
