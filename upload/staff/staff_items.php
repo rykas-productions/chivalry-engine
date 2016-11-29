@@ -206,7 +206,7 @@ function create()
 			alert("danger","Uh oh!","The item group you specified does not exist. Go back and try again, please.");
 			die($h->endpage());
 		}
-		$itmbuy = ($_POST['itembuyable'] == 'true') ? 'true' : 'false';
+		$itmbuy = ($_POST['itembuyable'] == 'on') ? 'true' : 'false';
 		for ($i = 1; $i <= 3; $i++)
 		{
 			$efxkey = "effect{$i}";
