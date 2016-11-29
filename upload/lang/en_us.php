@@ -705,4 +705,26 @@ $lang['SHOPS_BUY_ERROR4']="The item you are trying to buy isn't purchaseable via
 $lang['SHOPS_BUY_SUCCESS']="You have successfully purchased";
 $lang['SHOPS_BUY_ERROR5']="You cannot buy items from shops outside of the city you are currently in. Check your source and try again.";
 
+//Staff shops
+$lang['STAFF_SHOP_FORM_TITLE']="Use this form to create a new shop.";
+$lang['STAFF_SHOP_FORM_OPTION1']="Shop's Name";
+$lang['STAFF_SHOP_FORM_OPTION2']="Shop's Description";
+$lang['STAFF_SHOP_FORM_OPTION3']="Shop's Location";
+$lang['STAFF_SHOP_FORM_BTN']="Create Shop";
+$lang['STAFF_SHOP_SUB_ERROR1']="Shop name or description is empty. Go back and try again.";
+$lang['STAFF_SHOP_SUB_ERROR2']="The location you chose for the shop to stay does not exist.";
+$lang['STAFF_SHOP_SUB_ERROR3']="A shop with the name you specified already exists!";
+$lang['STAFF_SHOP_SUB_SUCCESS']="Shop was created successfully.";
+$lang['STAFF_SHOP_DELFORM_TITLE']="Deleting a shop from the game will remove it from the game. Be sure of this action, as there's no confirmation.";
+$lang['STAFF_SHOP_DELFORM_FORM']="Shop:";
+$lang['STAFF_SHOP_DELFORM_FORM_BTN']="Delete Shop";
+$lang['STAFF_SHOP_DELFORM_SUB_ERROR1']="The shop is invalid or doesn't exist. Maybe you deleted it previously?";
+$lang['STAFF_SHOP_DELFORM_SUB_SUCCESS']="Shop has been successfully removed from the game.";
+$lang['STAFF_SHOP_IADDFORM_TITLE']="Use this form to add an item to a shop.";
+$lang['STAFF_SHOP_IADDFORM_TD1']="Item:";
+$lang['STAFF_SHOP_IADDFORM_BTN']="Add Item to Shop";
+$lang['STAFF_SHOP_IADDSUB_ERROR']="You're attempting to add an item to an invalid shop, or an invalid item to a shop. Go back and try again.";
+$lang['STAFF_SHOP_IADDSUB_ERROR2']="Item or shop is invalid or doesn't exist.";
+$lang['STAFF_SHOP_IADDSUB_ERROR3']="The item you are trying to add to this shop is already listed in this shop. It makes no sense to list the same item twice.";
+$lang['STAFF_SHOP_IADDSUB_SUCCESS']="Item has been successfully added to the stock of this shop.";
 ?>
