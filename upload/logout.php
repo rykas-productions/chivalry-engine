@@ -6,7 +6,7 @@ if (!isset($_SESSION['started']))
     session_regenerate_id();
     $_SESSION['started'] = true;
 }
-require_once('global_func.php');
+require_once('globals_nonauth.php');
 if (isset($_SESSION['userid']))
 {
     $sessid = (int) $_SESSION['userid'];
@@ -25,6 +25,7 @@ if (isset($_SESSION['userid']))
         die("<a href='login.php'>Continue to login...</a>");
     }
 }
+$api->SystemLogsAdd($_SESSION['userid'],'login',"Successfully logged out.");
 session_regenerate_id(true);
 session_unset();
 session_destroy();
