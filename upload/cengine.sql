@@ -1015,12 +1015,19 @@ ALTER TABLE `userdata`
 ALTER TABLE `users`
   MODIFY `userid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
   
-  CREATE TABLE `shops` (
+ CREATE TABLE `shops` (
   `shopID` int(11) NOT NULL auto_increment,
   `shopLOCATION` int(11) NOT NULL default '0',
   `shopNAME` varchar(255) NOT NULL default '',
   `shopDESCRIPTION` text NOT NULL,
   PRIMARY KEY  (`shopID`)
+) ENGINE=MyISAM ;
+
+CREATE TABLE `shopitems` (
+  `sitemID` int(11) NOT NULL auto_increment,
+  `sitemSHOP` int(11) NOT NULL default '0',
+  `sitemITEMID` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sitemID`)
 ) ENGINE=MyISAM ;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
