@@ -40,13 +40,8 @@ if (!empty($_POST['qty']) && !empty($_GET['ID']))
                      WHERE `userid` = $userid");
             $priceh = number_format($price);
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['ITEM_SELL_SUCCESS1']} {$_POST['qty']} {$r['itmname']}{$lang['ITEM_SELL_SUCCESS2']} {$priceh} {$lang['INDEX_PRIMCURR']}.");
-            $is_log =
-                    $db->escape(
-                            "{$ir['username']} sold {$_POST['qty']} {$r['itmname']}(s) for {$priceh}");
-            $db->query(
-                    "INSERT INTO `itemselllogs`
-                    VALUES (NULL, $userid, {$r['itmid']}, $price,
-                    {$_POST['qty']}, " . time() . ", '{$is_log}')");
+            $is_log =  $db->escape("{$ir['username']} sold {$_POST['qty']} {$r['itmname']}(s) for {$priceh}");
+            $api->SystemLogsAdd($userid,'itemsell',$is_log);
         }
     }
     $db->free_result($id);
