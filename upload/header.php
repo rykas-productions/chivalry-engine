@@ -175,7 +175,7 @@ if (empty($menuhide))
 	}
 	function userdata($ir, $lv, $fm, $cm, $dosessh = 1)
     {
-		global $db, $c, $userid, $set;
+		global $db, $c, $userid, $set,$lang;
 		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 		$db->query(
                 "UPDATE `users`
@@ -191,7 +191,7 @@ if (empty($menuhide))
         {
             $_SESSION['attacking'] = 'false';
         }
-        if ($dosessh && ($_SESSION['attacking'] == 'true' || $ir['attacking'] == 'true'))
+        if ($dosessh && ($_SESSION['attacking'] == false || $ir['attacking'] == true))
         {
            alert("warning","{$lang['ERROR_GENERIC']}","{$lang['MENU_XPLOST']}");
             $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 'false' WHERE `userid` = $userid");
