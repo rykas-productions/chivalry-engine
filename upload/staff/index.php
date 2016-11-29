@@ -108,6 +108,7 @@ if (($ir['user_level']) == 'Admin')
 		<div id='LOGS' class='tab-pane fade in'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
+					<a href='staff_logs.php?action=userlogs'>User Logs</a><br />
 					<a href='staff_logs.php?action=trainlogs'>Training Logs</a><br />
 					<a href='staff_logs.php?action=attacklogs'>Attack Logs</a><br />
 				</div>
