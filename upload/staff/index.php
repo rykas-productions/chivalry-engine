@@ -114,6 +114,7 @@ if (($ir['user_level']) == 'Admin')
 					<a href='staff_logs.php?action=loginlogs'>Login Logs</a><br />
 					<a href='staff_logs.php?action=itemselllogs'>Item Sell Logs</a><br />
 					<a href='staff_logs.php?action=equiplogs'>Equip Logs</a><br />
+					<a href='staff_logs.php?action=banklogs'>Banking Logs</a><br />
 				</div>
 			</div>
 		</div>

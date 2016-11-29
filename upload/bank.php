@@ -42,11 +42,12 @@ else
     else
     {
         echo "{$lang['BANK_BUY1']}" . number_format($bank_cost) . " {$lang['INDEX_PRIMCURR']}!<br /> <a href='bank.php?buy'>{$lang['BANK_BUYYES']}</a>";
-    }
+		$api->SystemLogsAdd($userid,'bank','Purchased bank account');
+	}
 }
 function index()
 {
-    global $lang,$ir,$bank_maxfee,$bank_feepercent;
+    global $lang,$ir,$bank_maxfee,$bank_feepercent,$api;
     echo "<b>{$lang['BANK_HOME']}" . number_format($ir['bank'])
             . " {$lang['BANK_HOME1']}</b><br />
 				{$lang['BANK_HOME2']}<br />
@@ -75,7 +76,7 @@ function index()
 }
 function deposit()
 {
-    global $db,$ir,$userid,$lang,$bank_maxfee,$bank_feepercent;
+    global $db,$ir,$userid,$lang,$bank_maxfee,$bank_feepercent,$api;
     $_POST['deposit'] = abs((int) $_POST['deposit']);
     if ($_POST['deposit'] > $ir['primary_currency'])
     {
@@ -92,11 +93,12 @@ function deposit()
         $ir['bank'] += $gain;
         $db->query("UPDATE `users` SET `bank` = `bank` + {$gain}, `primary_currency` = `primary_currency` - {$_POST['deposit']} WHERE `userid` = {$userid}");
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_D_SUCCESS']} " . number_format($_POST['deposit']) . "{$lang['BANK_D_SUCCESS1']}" . number_format($fee) . "{$lang['BANK_D_SUCCESS2']} " . number_format($gain) . "{$lang['BANK_D_SUCCESS3']} " . number_format($ir['bank']) . "{$lang['BANK_D_SUCCESS4']}");
-    }
+		$api->SystemLogsAdd($userid,'bank',"Deposited " . number_format($_POST['deposit']) . " Primary Currency.");
+	}
 }
 function withdraw()
 {
-	global $db, $ir, $lang, $userid, $h;
+	global $db, $ir, $lang, $userid, $h, $api;
 	$_POST['withdraw'] = abs((int) $_POST['withdraw']);
 	if ($_POST['withdraw'] > $ir['bank'])
     {
@@ -108,6 +110,7 @@ function withdraw()
 		$ir['bank'] -= $gain;
 		$db->query("UPDATE `users` SET `bank` = `bank` - {$gain}, `primary_currency` = `primary_currency` + {$gain} WHERE `userid` = {$userid}");
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_W_SUCCESS']} " . number_format($_POST['withdraw']) . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS1']} " . $ir['bank'] . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS2']}");
+		$api->SystemLogsAdd($userid,'bank',"Withdrew " . number_format($_POST['withdraw']) . " Primary Currency.");
 	}
 }
 $h->endpage();
