@@ -686,4 +686,23 @@ $lang['STAFF_JOB_CREATE_FORM_ACT']="Required Activity";
 //Staff logs
 $lang['STAFF_LOGS_USERS_FORM']="Select the user whose logs you wish to view.";
 $lang['STAFF_LOGS_USERS_FORM_BTN']="View Logs";
+
+//Shops
+$lang['SHOPS_HOME_INTRO']="You being looking though the town and you see a few shops.";
+$lang['SHOPS_HOME_OH']="This city sure isn't developed far enough to have shops, eh?";
+$lang['SHOPS_HOME_TH_1']="Shop's Name";
+$lang['SHOPS_HOME_TH_2']="Shop's Description";
+$lang['SHOPS_SHOP_TH_1']="Item Name";
+$lang['SHOPS_SHOP_TH_2']="Price";
+$lang['SHOPS_SHOP_TH_3']="Buy";
+$lang['SHOPS_SHOP_TD_1']="Qty:";
+$lang['SHOPS_BUY_ERROR1']="You are attempting to use this file incorrectly. Be sure you have specified both an item to buy, along with a quantity.";
+$lang['SHOPS_BUY_ERROR2']="YThe item you are trying to buy doesn't exist, isn't sold in this shop or just doesn't exist!";
+$lang['SHOPS_SHOP_ERROR1']="You are trying to access a shop in a different town than you are currently in!";
+$lang['SHOPS_SHOP_ERROR2']="You are trying to access a shop that is invalid or doesn't exist. Check your source and try again!";
+$lang['SHOPS_BUY_ERROR3']="You do not have enough Primary Currency to buy";
+$lang['SHOPS_BUY_ERROR4']="The item you are trying to buy isn't purchaseable via normal means.";
+$lang['SHOPS_BUY_SUCCESS']="You have successfully purchased";
+$lang['SHOPS_BUY_ERROR5']="You cannot buy items from shops outside of the city you are currently in. Check your source and try again.";
+
 ?>
