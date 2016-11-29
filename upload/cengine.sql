@@ -1029,6 +1029,16 @@ CREATE TABLE `shopitems` (
   `sitemITEMID` int(11) NOT NULL default '0',
   PRIMARY KEY  (`sitemID`)
 ) ENGINE=MyISAM ;
+
+CREATE TABLE `itemmarket` (
+  `imID` int(11) NOT NULL auto_increment,
+  `imITEM` int(11) NOT NULL default '0',
+  `imADDER` int(11) NOT NULL default '0',
+  `imPRICE` int(11) NOT NULL default '0',
+  `imCURRENCY` enum('money','crystals') NOT NULL default 'money',
+  `imQTY` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`imID`)
+) ENGINE=MyISAM ;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
