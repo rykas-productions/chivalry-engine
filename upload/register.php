@@ -123,10 +123,8 @@ $cpage = strip_tags(stripslashes($currentpage));
     {
         $_GET['REF']=$_GET['REF'];
     }
-	$username =
-        (isset($_POST['username']) && preg_match( "/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username'])
-                && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
-	if (!empty($username))
+	$username = (isset($_POST['username']) && is_string($_POST['username'])) ? stripslashes($_POST['username']) : '';
+	if (isset($username))
 	{
 		if ($set['RegistrationCaptcha'] == 'ON')
 		{
@@ -142,6 +140,18 @@ $cpage = strip_tags(stripslashes($currentpage));
 		if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email'])))
 		{
 			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['REG_EMAILERROR']}");
+			require("footer.php");
+			exit;
+		}
+		if (empty($username))
+		{
+			alert('danger',"{$lang['ERROR_INVALID']}","Check your username and try again.");
+			require("footer.php");
+			exit;
+		}
+		if (((strlen($username) > 20) OR (strlen($username) < 3)))
+		{
+			alert('danger',$lang['ERROR_LENGTH'],$lang['UNC_LENGTH_ERROR']);
 			require("footer.php");
 			exit;
 		}
