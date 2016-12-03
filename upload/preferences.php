@@ -75,9 +75,7 @@ function name_change()
 			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
 			die($h->endpage());
 		}
-		$_POST['newname'] =
-            (isset($_POST['newname']) && is_string($_POST['newname']))
-                    ? stripslashes($_POST['newname']) : '';
+		$_POST['newname'] = (isset($_POST['newname']) && is_string($_POST['newname'])) ? stripslashes($_POST['newname']) : '';
 		if (empty($_POST['newname']))
 		{
 			alert('danger',$lang['ERROR_EMPTY'],"{$lang['UNC_ERROR_1']}{$lang['GEN_HERE']}{$lang['UNC_ERROR_2']}");
@@ -86,11 +84,6 @@ function name_change()
 		elseif (((strlen($_POST['newname']) > 20) OR (strlen($_POST['newname']) < 3)))
 		{
 			alert('danger',$lang['ERROR_LENGTH'],$lang['UNC_LENGTH_ERROR']);
-			die($h->endpage());
-		}
-		if (!preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['newname']))
-		{
-			alert('danger',$lang['ERROR_INVALID'],$lang['UNC_INVALIDCHARCTERS']);
 			die($h->endpage());
 		}
 		$check_ex = $db->query('SELECT `userid` FROM `users` WHERE `username` = "' . $db->escape($_POST['newname']) . '"');
