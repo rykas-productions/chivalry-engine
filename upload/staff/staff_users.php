@@ -465,21 +465,6 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					User Level
-				</th>
-				<td>
-					<select name='userlevel' class='form-control' required='1' type='dropdown'>
-						<option>NPC</option>
-						<option>Member</option>
-						<option>Admin</option>
-						<option>Forum Moderator</option>
-						<option>Assistant</option>
-						<option>Web Developer</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th>
 					{$lang['INDEX_LEVEL']}
 				</th>
 				<td>
@@ -647,7 +632,6 @@ function edituser()
 		}
 		$username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username']) && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
 		$email = (isset($_POST['email'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('email',$_POST['email'])))) : '';
-		$userlevel = (isset($_POST['userlevel'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text',$_POST['userlevel'])))) : 'Member';
 		$infirmaryr = (isset($_POST['infirmary_reason'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text',$_POST['infirmary_reason'])))) : 'Hurt';
 		$dungeonr = (isset($_POST['dungeonreason'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text',$_POST['dungeonreason'])))) : 'Locked Up';
 		
@@ -656,7 +640,7 @@ function edituser()
 		$money2 = (isset($_POST['sec_currency']) && is_numeric($_POST['sec_currency'])) ? abs(intval($_POST['sec_currency'])) : 0;
 		$money = (isset($_POST['prim_currency']) && is_numeric($_POST['prim_currency'])) ? abs(intval($_POST['prim_currency'])) : 0;
 		$maxwill = (isset($_POST['maxwill']) && is_numeric($_POST['maxwill'])) ? abs(intval($_POST['maxwill'])) : 100;
-		$bank = (isset($_POST['int'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('int',$_POST['bank'])))) : -1;
+		$bank = (isset($_POST['bank'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('int',$_POST['bank'])))) : -1;
 		$iq=(isset($_POST['IQ']) && is_numeric($_POST['IQ'])) ? abs(intval($_POST['IQ'])) : 1000;
 		$strength=(isset($_POST['strength']) && is_numeric($_POST['strength'])) ? abs(intval($_POST['strength'])) : 1000;
 		$agility=(isset($_POST['agility']) && is_numeric($_POST['agility'])) ? abs(intval($_POST['agility'])) : 1000;
@@ -678,11 +662,6 @@ function edituser()
 		{
 			$db->free_result($u_exists);
 			alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['STAFF_USERS_EDIT_DND']}");
-			die($h->endpage());
-		}
-		if (!isset($_POST['userlevel']) || ($_POST['userlevel'] != 'NPC' && $_POST['userlevel'] != 'Member' && $_POST['userlevel'] != 'Admin' && $_POST['userlevel'] != 'Forum Moderator' && $_POST['userlevel'] != 'Assistant' && $_POST['userlevel'] != 'Web Developer'))
-		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_ULBAD']}");
 			die($h->endpage());
 		}
 		$h_exists = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$maxwill}");
@@ -751,7 +730,7 @@ function edituser()
 		$db->query("UPDATE `users` SET `username` = '{$username}', `level` = {$level}, `primary_currency` = {$money}, `secondary_currency` = {$money2},
 		`energy` = {$energy}, `maxenergy` = {$energy}, `brave` = {$brave}, `maxbrave` = {$brave}, `hp` = {$hp}, `maxhp` = {$hp}, `bank` = {$bank},
 		`equip_armor` = {$equip_armor}, `equip_primary` = {$equip_prim}, `equip_secondary` = {$equip_sec}, `location` = {$city}, `will`= {$will}, `maxwill` = {$maxwill},
-		`email` = '{$email}', `user_level` = '{$userlevel}' WHERE `userid` = {$user}");
+		`email` = '{$email}' WHERE `userid` = {$user}");
 		$db->query("UPDATE `userstats` SET `strength` = {$strength}, `agility` = {$agility}, `guard` = {$guard}, `iq` = {$iq}, `labor` = {$labor} WHERE `userid` = {$user}");
 		if ($_POST['infirmary'] > 0)
 		{
