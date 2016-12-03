@@ -48,9 +48,14 @@ if (!is_ajax())
 	elseif ($cash > $ir['primary_currency'])
 	{
 		alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['SCF_NEC']}");
+		exit;
+	}
+	elseif ($userid == $receive)
+	{
+		alert('danger',"No!","Why would you want to send yourself currency anyway?");
 	}
 	$receive = abs((int) $_POST['sendto']);
-	 if (empty($receive))
+	if (empty($receive))
     {
 		alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['SCF_UNE']}");
         exit;
