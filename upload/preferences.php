@@ -4,14 +4,6 @@ if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
 }
-function csrf_error($goBackTo)
-{
-    global $h,$lang;
-	echo "<div class='alert alert-danger'> <strong>{$lang['CSRF_ERROR_TITLE']}</strong> 
-	{$lang['CSRF_ERROR_TEXT']} {$lang['CSRF_PREF_MENU']} <a href='preferences.php?action={$goBackTo}'>{$lang['GEN_HERE']}.</div>";
-    $h->endpage();
-    exit;
-}
 switch ($_GET['action'])
 {
 case 'namechange':
@@ -61,26 +53,27 @@ echo "{$lang['PREF_WELCOME_1']} {$ir['username']}{$lang['PREF_WELCOME_2']}<br />
 function name_change()
 {
 	global $db,$ir,$userid,$h,$lang;
-	$code = request_csrf_code('prefs_namechange');
 	if (empty($_POST['newname']))
     {
-    echo "<div id='usernameresult'></div><br />
-	<h3>{$lang['UNC_TITLE']}</h3>
-	{$lang['UNC_INTRO']}<br />
-	<div class='form-group'>
-	<form method='post'>
-		<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' name='newname' />
-    	<br />
-		<input type='hidden' name='verf' value='{$code}' />
-    	<input type='submit' class='btn btn-default' value='{$lang['UNC_BUTTON']}' />
-		</div>
-	</form>";
+		$csrf = request_csrf_html('prefs_namechange');
+		echo "<br />
+		<h3>{$lang['UNC_TITLE']}</h3>
+		{$lang['UNC_INTRO']}<br />
+		<div class='form-group'>
+		<form method='post'>
+			<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' name='newname' />
+			<br />
+			{$csrf}
+			<input type='submit' class='btn btn-default' value='{$lang['UNC_BUTTON']}' />
+			</div>
+		</form>";
 	}
 	else
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_namechange', stripslashes($_POST['verf'])))
 		{
-			csrf_error('namechange');
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
 		}
 		$_POST['newname'] =
             (isset($_POST['newname']) && is_string($_POST['newname']))
@@ -217,7 +210,7 @@ function pw_change()
 	global $db,$ir,$lang;
 	if (empty($_POST['oldpw']))
 	{
-		$code = request_csrf_code('prefs_pwchange');
+		$csrf = request_csrf_html('prefs_changepw');
 		echo "
 	<h3>{$lang['PW_TITLE']}</h3>
 	<hr />
@@ -252,7 +245,7 @@ function pw_change()
 			<input type='submit' class='btn btn-default' value='{$lang['PW_BUTTON']}' />
 		</td>
 	</tr>
-    	<input type='hidden' name='verf' value='{$code}' />
+    	{$csrf}
     	
 	</form>
 	</table>
@@ -260,9 +253,10 @@ function pw_change()
 	}
 	else
 	{
-		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_pwchange', stripslashes($_POST['verf'])))
+		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepw', stripslashes($_POST['verf'])))
 		{
-			csrf_error('pwchange');
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
 		}
 		$oldpw = stripslashes($_POST['oldpw']);
 		$newpw = stripslashes($_POST['newpw']);
@@ -289,7 +283,7 @@ function pic_change()
 	global $db,$h,$lang,$userid,$ir;
 	if (!isset($_POST['newpic']))
 	{
-		$code = request_csrf_code('prefs_picchange');
+		$csrf = request_csrf_html('prefs_changepic');
 		echo "
 		<h3>{$lang['PIC_TITLE']}</h3>
 		<hr />
@@ -299,7 +293,7 @@ function pic_change()
 		{$lang['PIC_NEWPIC']}<br />
 		<form method='post'>
 			<input type='url' required='1' name='newpic' class='form-control' value='{$ir['display_pic']}' />
-			<input type='hidden' name='verf' value='{$code}' />
+				{$csrf}
 			<br />
 			<input type='submit' class='btn btn-default' value='Change Picture' />
 		</form>
@@ -307,9 +301,10 @@ function pic_change()
 	}
 	else
 	{
-		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_picchange', stripslashes($_POST['verf'])))
+		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepic', stripslashes($_POST['verf'])))
 		{
-			csrf_error('picchange');
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
 		}
 		$npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
 		if (!empty($npic))
