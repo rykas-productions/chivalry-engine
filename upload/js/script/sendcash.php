@@ -6,7 +6,7 @@
 	Author: TheMasterGeneral
 	Website: http://mastergeneral156.pcriot.com/
 */
-$NoHeader=1;
+$menuhide=1;
 error_reporting(E_ALL);
 require_once('../../globals.php');
 function csrf_error($goBackTo)
