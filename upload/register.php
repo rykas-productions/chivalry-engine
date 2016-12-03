@@ -124,7 +124,7 @@ $cpage = strip_tags(stripslashes($currentpage));
         $_GET['REF']=$_GET['REF'];
     }
 	$username = (isset($_POST['username']) && is_string($_POST['username'])) ? stripslashes($_POST['username']) : '';
-	if (isset($username))
+	if (!empty($username))
 	{
 		if ($set['RegistrationCaptcha'] == 'ON')
 		{
