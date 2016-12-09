@@ -782,4 +782,24 @@ class api
 			return $username;
 		}
 	}
+	/*
+		Returns the userid  of the username specified.
+		@param string name = User's ID we're trying to fetch.
+		On success, returns the user's id, on failure, it returns false.
+	*/
+	function SystemUsernametoID($name)
+	{
+		global $db;
+		$name = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($name))));
+		$id=$db->query("SELECT `userid` FROM `users` WHERE `username` = '{$name}'");
+		if ($db->num_rows($id) == 0)
+		{
+			return false;
+		}
+		else
+		{
+			$usrid=$db->fetch_single($id);
+			return $usrid;
+		}
+	}
 }
