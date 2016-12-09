@@ -762,4 +762,23 @@ class api
 		$logtype = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($logtype)))));
 		$db->query("INSERT INTO `logs` (`log_id`, `log_type`, `log_user`, `log_time`, `log_text`, `log_ip`) VALUES (NULL, '{$logtype}', '{$user}', '{$time}', '{$input}', '{$IP}');");
 	}
+	/*
+		Returns the username of the user id specified.
+		@param int user = User's name we're trying to fetch.
+		On success, returns the user id's name, on failure, it returns false.
+	*/
+	function SystemUserIDtoName($user)
+	{
+		global $db;
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$name=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}");
+		if ($db->num_rows($name) == 0)
+		{
+			return false;
+		}
+		else
+		{
+			return $name;
+		}
+	}
 }
