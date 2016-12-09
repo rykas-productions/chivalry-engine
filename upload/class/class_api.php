@@ -778,7 +778,8 @@ class api
 		}
 		else
 		{
-			return $name;
+			$username=$db->fetch_single($name);
+			return $username;
 		}
 	}
 }
