@@ -211,6 +211,7 @@ $lang['EXPLORE_NEWSPAPER']="Newspaper";
 $lang['EXPLORE_ACT']="Activities";
 $lang['EXPLORE_ANNOUNCEMENTS']="Announcements";
 $lang['EXPLORE_CRIMES']="Criminal Center";
+$lang['EXPLORE_TRAVEL']="Horse Travel";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
@@ -761,4 +762,18 @@ $lang['IMARKET_ADD_ERROR1']="You cannot add no items to the item market.";
 $lang['IMARKET_ADD_ERROR2']="You are trying to add an item you do not own.";
 $lang['IMARKET_ADD_ERROR3']="You do have not have enough of that item to add the quantity you wanted to onto the market.";
 $lang['IMARKET_ADD_SUB_SUCCESS']="You have successfully listed this item on the item market.";
+
+//Travel
+$lang['TRAVEL_TITLE']="Horse Travel";
+$lang['TRAVEL_TABLE']="Welcome to the horse stable. You can travel to other cities here, but at a cost. Where would you like to travel today? Note that as you progress further in the game, more locations will be made available to you. It will cost you ";
+$lang['TRAVEL_TABLE2']="{$lang['INDEX_PRIMCURR']} to travel today.";
+$lang['TRAVEL_TABLE_HEADER']="Town Name";
+$lang['TRAVEL_TABLE_LEVEL']="Minimum Level";
+$lang['TRAVEL_TABLE_GUILD']="Guild";
+$lang['TRAVEL_TABLE_TAX']="Income Tax";
+$lang['TRAVEL_TABLE_TRAVEL']="Travel";
+$lang['TRAVEL_ERROR_CASHLOW']="You do not have enoguh primary currecy to travel to this location. Go back and try again.";
+$lang['TRAVEL_ERROR_ALREADYTHERE']="You are already in this town! Why would you want to waste your money and travel to here again?";
+$lang['TRAVEL_ERROR_ERRORGEN']="This town does not exist, or your level isn't high enough to visit this town. Go back and try again.";
+$lang['TRAVEL_SUCCESS']="You have purchased a horse and traveled to";
 ?>
