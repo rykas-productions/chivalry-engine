@@ -802,4 +802,44 @@ class api
 			return $usrid;
 		}
 	}
+	/*
+		Returns the item name of the item id specified.
+		@param int itemid = Item's name we're trying to fetch.
+		On success, returns the item id's name, on failure, it returns false.
+	*/
+	function SystemItemIDtoName($itemid)
+	{
+		global $db;
+		$itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
+		$name=$db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$itemid}");
+		if ($db->num_rows($name) == 0)
+		{
+			return false;
+		}
+		else
+		{
+			$username=$db->fetch_single($name);
+			return $username;
+		}
+	}
+	/*
+		Returns the item id of the item specified.
+		@param string name = Item's ID we're trying to fetch.
+		On success, returns the item's id, on failure, it returns false.
+	*/
+	function SystemItemNametoID($name)
+	{
+		global $db;
+		$name = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($name))));
+		$id=$db->query("SELECT `itmid` FROM `items` WHERE `itmname` = '{$name}'");
+		if ($db->num_rows($id) == 0)
+		{
+			return false;
+		}
+		else
+		{
+			$itemid=$db->fetch_single($id);
+			return $itemid;
+		}
+	}
 }
