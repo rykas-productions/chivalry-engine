@@ -673,7 +673,7 @@ class api
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
-		if (!in_array($ir['user_level'], array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
+		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
 			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.");
 		}
@@ -840,6 +840,26 @@ class api
 		{
 			$itemid=$db->fetch_single($id);
 			return $itemid;
+		}
+	}
+	/*
+		Returns the town name of the town id specified.
+		@param int id = Town ID's name we're trying to getch.
+		On success, returns the town's name, on failure, it returns false.
+	*/
+	function SystemTownIDtoName($id)
+	{
+		global $db;
+		$id = (isset($id) && is_numeric($id)) ? abs(intval($id)) : 0;
+		$name=$db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$id}");
+		if ($db->num_rows($name) == 0)
+		{
+			return false;
+		}
+		else
+		{
+			$name=$db->fetch_single($name);
+			return $name;
 		}
 	}
 }
