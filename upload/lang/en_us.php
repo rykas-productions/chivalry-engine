@@ -45,6 +45,14 @@ $lang["PREF_CNAME"] = "Change Username";
 $lang["PREF_CTIME"] = "Change Timezone";
 $lang["PREF_CLANG"] = "Change Language";
 $lang["PREF_CPIC"] = "Change Display Picture";
+$lang["PREF_CTHM"] = "Change Theme";
+$lang["PREF_CTHM_FORM"] = "Select the theme you wish to change to. This action can be reverted at any time you want.";
+$lang["PREF_CTHM_FORM1"]="Select your theme";
+$lang["PREF_CTHM_FORMDD1"]="Default (Bright)";
+$lang["PREF_CTHM_FORMDD2"]="Alternative (Dark)";
+$lang['PREF_CTHM_FORMBTN']="Update Theme";
+$lang['PREF_CTHM_SUB_ERROR']="You are trying to use an non-existent theme.";
+$lang['PREF_CTHM_SUB_SUCCESS']="Your theme has been updated successfully. Effects will be noticeable on the next page load.";
 
 //Username Change
 $lang["UNC_TITLE"] = "Changing your username...";
@@ -776,4 +784,24 @@ $lang['TRAVEL_ERROR_CASHLOW']="You do not have enoguh primary currecy to travel 
 $lang['TRAVEL_ERROR_ALREADYTHERE']="You are already in this town! Why would you want to waste your money and travel to here again?";
 $lang['TRAVEL_ERROR_ERRORGEN']="This town does not exist, or your level isn't high enough to visit this town. Go back and try again.";
 $lang['TRAVEL_SUCCESS']="You have purchased a horse and traveled to";
+
+//Staff towns
+$lang['STAFF_TRAVEL_ADD']="Add a Town";
+$lang['STAFF_TRAVEL_EDIT']="Edit a Town";
+$lang['STAFF_TRAVEL_DEL']="Delete a Town";
+$lang['STAFF_TRAVEL_ADDTOWN_TABLE']="Use this form to add a town into the game.";
+$lang['STAFF_TRAVEL_ADDTOWN_TH1']="Town Name";
+$lang['STAFF_TRAVEL_ADDTOWN_TH2']="Minimum Level";
+$lang['STAFF_TRAVEL_ADDTOWN_TH3']="Tax Level";
+$lang['STAFF_TRAVEL_ADDTOWN_BTN']="Create Town";
+$lang['STAFF_TRAVEL_ADDTOWN_SUB_ERROR1']="You cnanot name a new town after a town which already exists.";
+$lang['STAFF_TRAVEL_ADDTOWN_SUB_ERROR2']="The town's tax rate must be between 0% and 20%";
+$lang['STAFF_TRAVEL_ADDTOWN_SUB_ERROR3']="The town's minimum level requirement mus be greater than 0.";
+$lang['STAFF_TRAVEL_ADDTOWN_SUB_SUCCESS']="You have successfully added this town into the game.";
+$lang['STAFF_TRAVEL_DELTOWN_TABLE']="Use this form to delete a town from the game.";
+$lang['STAFF_TRAVEL_DELTOWN_TH1']="Town";
+$lang['STAFF_TRAVEL_DELTOWN_BTN']="Delete Town";
+$lang['STAFF_TRAVEL_DELTOWN_SUB_ERROR1']="You cannot delete a non-existent town.";
+$lang['STAFF_TRAVEL_DELTOWN_SUB_ERROR2']="You cannot delete the first town.";
+$lang['STAFF_TRAVEL_DELTOWN_SUB_SUCCESS']="Town has been deleted successfully. Users and shops in this town have been moved to the starter town.";
 ?>
