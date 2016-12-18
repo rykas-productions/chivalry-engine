@@ -21,6 +21,9 @@ case 'pwchange':
 case 'picchange':
     pic_change();
     break;
+case 'themechange':
+    themechange();
+    break;
 default:
     prefs_home();
     break;
@@ -45,7 +48,7 @@ echo "{$lang['PREF_WELCOME_1']} {$ir['username']}{$lang['PREF_WELCOME_2']}<br />
 		</tr>
 		<tr>
 			<td><a href='?action=picchange'>{$lang['PREF_CPIC']}</a></td>
-			<td></td>
+			<td><a href='?action=themechange'>{$lang['PREF_CTHM']}</a></td>
 		</tr>
 	</tbody>
 </table>";
@@ -323,6 +326,54 @@ function pic_change()
              SET `display_pic` = "' . $db->escape($npic)
                     . '"
              WHERE `userid` = ' . $userid);
+	}
+}
+function themechange()
+{
+	global $db,$userid,$h,$lang;
+	if (isset($_POST['theme']))
+	{
+		$_POST['theme'] =  (isset($_POST['theme']) && is_numeric($_POST['theme']))  ? abs(intval($_POST['theme'])) : 1;
+		if ($_POST['theme'] < 1 || $_POST['theme'] > 2)
+		{
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['PREF_CTHM_SUB_ERROR']}");
+			die($h->endpage());
+		}
+		else
+		{
+			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['PREF_CTHM_SUB_SUCCESS']}");
+			$db->query("UPDATE `users` SET `theme` = {$_POST['theme']}");
+			die($h->endpage());
+		}
+	}
+	else
+	{
+		echo "
+		<form action='?action=themechange' method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['PREF_CTHM_FORM']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['PREF_CTHM_FORM1']}
+					</th>
+					<td>
+						<select name='theme' class='form-control' type='dropdown'>
+							<option value='1'>{$lang["PREF_CTHM_FORMDD1"]}</option>
+							<option value='2'>{$lang["PREF_CTHM_FORMDD2"]}</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['PREF_CTHM_FORMBTN']}'>
+					</td>
+				</tr>
+			</table>
+		</form>";
 	}
 }
 $h->endpage();
