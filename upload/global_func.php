@@ -1161,7 +1161,7 @@ function request_csrf_code($formid)
  */
 function randomizer()
 {
-	if (function_exists(openssl_random_pseudo_bytes))
+	if (function_exists('openssl_random_pseudo_bytes'))
 	{
 		return openssl_random_pseudo_bytes(32);
 	}
