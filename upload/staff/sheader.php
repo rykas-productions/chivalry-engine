@@ -113,28 +113,31 @@ class headers
                     echo"<img src='{$ir['display_pic']}' width='24' height='24'>";
 				}
 					 
-					echo" Hello, {$ir['username']}"; ?> <b class="caret"></b></a>
+					echo" {$lang['GEN_GREETING']}, {$ir['username']}"; ?> <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="../profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i class="fa fa-fw fa-user"></i> Profile</a>
+                            <a href="../profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i class="fa fa-fw fa-user"></i> <?php echo $lang['MENU_PROFILE']; ?></a>
                         </li>
                         <li>
-                            <a href="../preferences.php?action=menu"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                            <a href="../preferences.php?action=menu"><i class="fa fa-fw fa-gear"></i> <?php echo $lang['MENU_SETTINGS']; ?></a>
                         </li>
 						<?php
 							if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant')))
 							{
 								?><li class="divider"></li>
 								<li>
-									<a href="index.php"><i class="fa fa-fw fa fa-server"></i> Staff Panel</a>
+									<a href="index.php"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a>
 								</li><?php
 							}
 						
 						
 						?>
                         <li class="divider"></li>
+						<li>
+                            <a href="../gamerules.php"><i class="fa fa-fw fa-server"></i> <?php echo $lang['MENU_RULES']; ?></a>
+                        </li>
                         <li>
-                            <a href="../logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                            <a href="../logout.php"><i class="fa fa-fw fa-power-off"></i> <?php echo $lang['MENU_LOGOUT']; ?></a>
                         </li>
                     </ul>
                 </li>

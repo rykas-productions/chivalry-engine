@@ -121,13 +121,16 @@ if (empty($menuhide))
 							{
 								?><li class="divider"></li>
 								<li>
-									<a href="staff/"><i class="fa fa-fw fa fa-server"></i> <?php echo $lang['MENU_STAFF']; ?></a>
+									<a href="staff/"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a>
 								</li><?php
 							}
 						
 						
 						?>
                         <li class="divider"></li>
+						<li>
+                            <a href="gamerules.php"><i class="fa fa-fw fa-server"></i> <?php echo $lang['MENU_RULES']; ?></a>
+                        </li>
                         <li>
                             <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> <?php echo $lang['MENU_LOGOUT']; ?></a>
                         </li>

@@ -36,6 +36,7 @@ $lang['MENU_UNREADNOTIF1']='unread notifications. Click';
 $lang['MENU_INFIRMARY1']='You are in the infirmary for the next';
 $lang['MENU_DUNGEON1']='You are in the dungeon for the next';
 $lang['MENU_XPLOST']="By running from the fight, you have lost all your experience!";
+$lang['MENU_RULES']="Game Rules";
 
 // Preferences
 $lang["PREF_CPASSWORD"] = "Change Password";
