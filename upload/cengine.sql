@@ -1051,6 +1051,9 @@ INSERT INTO `settings`
 	`rule_text` TEXT NOT NULL , 
 	UNIQUE (`rule_id`)
 ) ENGINE = MyISAM;
+
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES  (NULL, 'bank_cost', '5000');
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'bank_maxfee', '5000'), (NULL, 'bank_feepercent', '10');
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

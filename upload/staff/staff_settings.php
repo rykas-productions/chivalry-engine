@@ -123,6 +123,30 @@ function basicsettings()
 					<textarea name='gamedesc' required='1' class='form-control' rows='5'>{$set['Website_Description']}</textarea>
 				</td>
 			</tr>
+			<tr>
+				<th>
+					Bank Purchasing Fee
+				</th>
+				<td>
+					<input type='number' name='bankbuy' class='form-control' min='1' required='1' value='{$set['bank_cost']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Bank Max Withdraw Fee
+				</th>
+				<td>
+					<input type='number' name='bankfee' class='form-control' min='1' required='1' value='{$set['bank_maxfee']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Bank Withdraw Fee Percent
+				</th>
+				<td>
+					<input type='number' name='bankfeepercent' class='form-control' min='1' required='1' value='{$set['bank_feepercent']}'>
+				</td>
+			</tr>
 		</table>";
 		
 		
@@ -146,7 +170,10 @@ function basicsettings()
 		$GameDesc =  (isset($_POST['gamedesc'])) ? $db->escape(strip_tags( stripslashes($_POST['gamedesc']))) : '';
 		$FGPW =  (isset($_POST['fgpw'])) ? $db->escape(strip_tags( stripslashes($_POST['fgpw']))) : '';
 		$FGUN =  (isset($_POST['fgun'])) ? $db->escape(strip_tags( stripslashes($_POST['fgun']))) : '';
-		$PasswordEffort = (isset($_POST['PWEffort']) && is_numeric($_POST['PWEffort'])) ? abs(intval($_POST['PWEffort'])) : '';
+		$PasswordEffort = (isset($_POST['PWEffort']) && is_numeric($_POST['PWEffort'])) ? abs(intval($_POST['PWEffort'])) : 10;
+		$BankFeePerc = (isset($_POST['bankfeepercent']) && is_numeric($_POST['bankfeepercent'])) ? abs(intval($_POST['bankfeepercent'])) : 10;
+		$BankFeeMax = (isset($_POST['bankfee']) && is_numeric($_POST['bankfee'])) ? abs(intval($_POST['bankfee'])) : 5000;
+		$BankCost = (isset($_POST['bankbuy']) && is_numeric($_POST['bankbuy'])) ? abs(intval($_POST['bankbuy'])) : 5000;
 		if (empty($GameName))
 		{
 			alert('danger',"{$lang['ERROR_INVALID']}","Invalid game name specified!");
@@ -203,6 +230,9 @@ function basicsettings()
 			$db->query("UPDATE `settings` SET `setting_value` = '{$Paypal}' WHERE `setting_name` = 'PaypalEmail'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$FGPW}' WHERE `setting_name` = 'FGPW'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$FGUN}' WHERE `setting_name` = 'FGUN'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$BankCost}' WHERE `setting_name` = 'bank_cost'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$BankFeeMax}' WHERE `setting_name` = 'bank_maxfee'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$BankFeePerc}' WHERE `setting_name` = 'bank_feepercent'");
 			alert('success',"{$lang['ERROR_SUCCESS']}","Successfully updated the game settings.");
 			$api->SystemLogsAdd($userid,'staff',"Updated game settings.");
 		}

@@ -1,8 +1,8 @@
 <?php
-$bank_cost = 50000;
-$bank_maxfee = 3000;
-$bank_feepercent = 15;
 require("globals.php");
+$bank_cost = $set['bank_cost'];
+$bank_maxfee = $set['bank_maxfee'];
+$bank_feepercent = $set['bank_feepercent'];
 echo "<h3>Bank</h3>";
 if ($ir['bank'] > -1)
 {
