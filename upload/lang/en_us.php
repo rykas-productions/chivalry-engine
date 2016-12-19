@@ -833,4 +833,15 @@ $lang['GUILD_VIEW_LEADER']="Guild Leader";
 $lang['GUILD_VIEW_COLEADER']="Guild Co-Leader";
 $lang['GUILD_VIEW_LEVEL']="Guild Level";
 $lang['GUILD_VIEW_MEMBERS']="Guild Members";
+
+//Staff rules
+$lang['STAFF_RULES_ADD_FORM']="Use this form to add rules into the game. Be clear and concise. The more difficult language and terminology you use, the less people may understand.";
+$lang['STAFF_RULES_ADD_BTN']="Add Rule";
+$lang['STAFF_RULES_ADD_SUBFAIL']="You cannot add a rule an empty rule.";
+$lang['STAFF_RULES_ADD_SUBSUCC']="You have successfully created a new rule.";
+
+//Game rules
+$lang['GAMERULES_TITLE']="Rules";
+$lang['GAMERULES_TEXT']="You are expected to follow these rules. You are also expected to check back on these fairly frequently as these rules may change without notice. Staff will not accept ignorance as an excuse if you break one of these rules.";
+
 ?>
