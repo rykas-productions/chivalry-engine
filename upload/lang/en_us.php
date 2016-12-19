@@ -220,6 +220,7 @@ $lang['EXPLORE_ACT']="Activities";
 $lang['EXPLORE_ANNOUNCEMENTS']="Announcements";
 $lang['EXPLORE_CRIMES']="Criminal Center";
 $lang['EXPLORE_TRAVEL']="Horse Travel";
+$lang['EXPLORE_GUILDLIST']="Guild List";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
@@ -804,4 +805,32 @@ $lang['STAFF_TRAVEL_DELTOWN_BTN']="Delete Town";
 $lang['STAFF_TRAVEL_DELTOWN_SUB_ERROR1']="You cannot delete a non-existent town.";
 $lang['STAFF_TRAVEL_DELTOWN_SUB_ERROR2']="You cannot delete the first town.";
 $lang['STAFF_TRAVEL_DELTOWN_SUB_SUCCESS']="Town has been deleted successfully. Users and shops in this town have been moved to the starter town.";
+
+//Guild Listing
+$lang['GUILD_LIST']="Guild listing";
+$lang['GUILD_LIST_TABLE1']="Guild Name";
+$lang['GUILD_LIST_TABLE2']="Guild Level";
+$lang['GUILD_LIST_TABLE3']="Member Count";
+$lang['GUILD_LIST_TABLE5']="Guild Leader";
+$lang['GUILD_LIST_TABLE4']="Hometown";
+
+//Guild create
+$lang['GUILD_CREATE']="Create a Guild";
+$lang['GUILD_CREATE_ERROR']="You do not have enough Primary Currency to buy purchase a guild. You need, at minimum, ";
+$lang['GUILD_CREATE_ERROR1']="You are not a high enough level to purchase a guild. You need to be, at minimum, ";
+$lang['GUILD_CREATE_ERROR2']="You cannot create a guild while you're currently a member of one.";
+$lang['GUILD_CREATE_ERROR3']="You cannot create a guild named after an already existing guild.";
+$lang['GUILD_CREATE_FORM']="Fill this form out to create your guild. Your guild's hometown will be set to the town you are currently located in.";
+$lang['GUILD_CREATE_FORM1']="Guild Name";
+$lang['GUILD_CREATE_FORM2']="Guild Description";
+$lang['GUILD_CREATE_BTN']="Create Guild for ";
+$lang['GUILD_CREATE_SUCCESS']="You have successfully created a guild!";
+
+//Guild Viewing
+$lang['GUILD_VIEW_GUILD']="Guild";
+$lang['GUILD_VIEW_ERROR']="You are trying to view a non-existent guild. Check your source and try again.";
+$lang['GUILD_VIEW_LEADER']="Guild Leader";
+$lang['GUILD_VIEW_COLEADER']="Guild Co-Leader";
+$lang['GUILD_VIEW_LEVEL']="Guild Level";
+$lang['GUILD_VIEW_MEMBERS']="Guild Members";
 ?>

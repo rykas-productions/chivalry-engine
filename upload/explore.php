@@ -76,7 +76,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4><ul class='nav nav-tabs nav-justified'>
 	<div id='GUILDS' class='tab-pane fade'>
 		<div class='panel panel-default'>
 			<div class='panel-body'>
-				
+				<a href='guilds.php'>{$lang['EXPLORE_GUILDLIST']}</a><br />
 			</div>
 		</div>
 	</div>
