@@ -896,23 +896,23 @@ function check_data()
 function check_level()
 {
     global $ir, $c, $userid, $db, $lang;
-    $ir['xp_needed'] = round(($ir['level'] + 3) * ($ir['level'] + 3) * ($ir['level'] + 3) * 2.5);
+    $ir['xp_needed'] = round(($ir['level'] + 2.25) * ($ir['level'] + 2.25) * ($ir['level'] + 2.25) * 2);
     if ($ir['xp'] >= $ir['xp_needed'])
     {
         $expu = $ir['xp'] - $ir['xp_needed'];
         $ir['level'] += 1;
         $ir['xp'] = $expu;
-        $ir['energy'] += 4;
-        $ir['brave'] += 4;
-        $ir['maxenergy'] += 4;
-        $ir['maxbrave'] += 4;
+        $ir['energy'] += 2;
+        $ir['brave'] += 2;
+        $ir['maxenergy'] += 2;
+        $ir['maxbrave'] += 2;
         $ir['hp'] += 50;
         $ir['maxhp'] += 50;
-        $ir['xp_needed'] = round(($ir['level'] + 3) * ($ir['level'] + 3) * ($ir['level'] + 3) * 2.5);
-        $db->query("UPDATE `users`  SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 4, `brave` = `brave` + 4,
-                 `maxenergy` = `maxenergy` + 4, `maxbrave` = `maxbrave` + 4, `hp` = `hp` + 50, `maxhp` = `maxhp` + 50
+        $ir['xp_needed'] = round(($ir['level'] + 2.25) * ($ir['level'] + 2.25) * ($ir['level'] + 2.25) * 2);
+        $db->query("UPDATE `users`  SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2, `brave` = `brave` + 2,
+                 `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2, `hp` = `hp` + 50, `maxhp` = `maxhp` + 50
                  WHERE `userid` = {$userid}");
-		$StatGain=round(($ir['level']*500)/mt_rand(2,6));
+		$StatGain=round(($ir['level']*100)/mt_rand(2,6));
 		$StatGainFormat=number_format($StatGain);
 		if ($ir['class'] == 'Warrior')
 		{
