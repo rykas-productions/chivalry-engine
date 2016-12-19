@@ -121,9 +121,12 @@ if ($set['HTTPS_Support'] == 'true')
         <div class="row">
             <div class="col-lg-12 text-center">
 			<?php
-			echo "<div class='panel panel-default'>
-				<div class='panel-heading'>About {$set['WebsiteName']}</div>
-				<div class='panel-body'>{$set['Website_Description']}</div>
+			echo "<div class='jumbotron'>
+				  <div class='container'>
+					<h1>{$set['WebsiteName']}</h1>
+					<p>{$set['Website_Description']}</p>
+					<p><a class='btn btn-primary btn-lg' href='register.php' role='button'>{$lang['LOGIN_REGISTER']} &raquo;</a></p>
+				  </div>
 				</div>";
 				$AnnouncementQuery=$db->query("SELECT `ann_text`,`ann_time` FROM `announcements` ORDER BY `ann_time` desc LIMIT 1");
 				$ANN=$db->fetch_row($AnnouncementQuery);
