@@ -1,5 +1,8 @@
 <?php
 require('globals_nonauth.php');
+$currentpage = $_SERVER['REQUEST_URI'];
+$cpage = strip_tags(stripslashes($currentpage));
+$domain=determine_game_urlbase();
 ?>
 <!DOCTYPE html>
 <html lang="en">
