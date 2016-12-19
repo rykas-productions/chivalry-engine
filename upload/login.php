@@ -1,9 +1,4 @@
 <?php
-if (file_exists("installer.php") && (!file_exists("installer.lock"))) 
-{
-	header("Location: installer.php");
-	exit;
-}
 require("globals_nonauth.php");
 $currentpage = $_SERVER['REQUEST_URI'];
 $cpage = strip_tags(stripslashes($currentpage));
@@ -55,7 +50,7 @@ if ($set['HTTPS_Support'] == 'true')
 <body>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">

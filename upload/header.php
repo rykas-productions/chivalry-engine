@@ -27,7 +27,7 @@ class headers
 	}
 	else
 	{
-		?> <link rel="stylesheet" href="css/bootstrap-darkly-min.css"> <?php
+		?> <link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css"> <?php
 	}
 	?>
 	<link href="css/bs2.css" rel="stylesheet">
@@ -60,7 +60,7 @@ if (empty($menuhide))
 <body>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">

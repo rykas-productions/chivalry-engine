@@ -34,7 +34,7 @@ class headers
 	}
 	else
 	{
-		?> <link rel="stylesheet" href="../css/bootstrap-darkly-min.css"> <?php
+		?> <link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css"> <?php
 	}
 	?>
 	<link href="../css/bs2.css" rel="stylesheet">
