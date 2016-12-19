@@ -1149,11 +1149,26 @@ function request_csrf_code($formid)
 {
     // Generate the token
 	$time=time();
-	$token=hash('sha512',(openssl_random_pseudo_bytes(32)));
+	$token=hash('sha512',(randomizer()));
     // Insert/Update it
     $_SESSION["csrf_{$formid}"] =
             array('token' => $token, 'issued' => $time);
     return $token;
+}
+/**
+ * Request a randomly generated phrase. Has a fallback in case the installation does not supported OpenSSL.
+ * Returns the randomly generated phrase.
+ */
+function randomizer()
+{
+	if (function_exists(openssl_random_pseudo_bytes))
+	{
+		return openssl_random_pseudo_bytes(32);
+	}
+	else
+	{
+		return sha1(decbin(mt_rand(0,1024)));
+	}
 }
 
 /**
