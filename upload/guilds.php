@@ -204,6 +204,14 @@ function view()
 			</tr>
 			<tr>
 				<th>
+					{$gd['guild_name']} {$lang['GUILD_VIEW_DESC']}
+				</th>
+				<td>
+					{$gd['guild_desc']}
+				</td>
+			</tr>
+			<tr>
+				<th>
 					{$lang['GUILD_VIEW_MEMBERS']}
 				</th>
 				<td>";

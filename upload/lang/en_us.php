@@ -846,6 +846,9 @@ $lang['GUILD_APP_ERROR']="You cannot send an application to a guild whilist you'
 $lang['GUILD_APP_BTN']="Submit Application";
 $lang['GUILD_APP_ERROR1']="You have already sent an application to join this guild. Please wait until you get a response before sending in another.";
 $lang['GUILD_APP_SUCC']="You have successfully sent in your application to join this guild!";
+$lang['GUILD_VIEW_DESC']="Guild's Description";
+
+
 //Staff rules
 $lang['STAFF_RULES_ADD_FORM']="Use this form to add rules into the game. Be clear and concise. The more difficult language and terminology you use, the less people may understand.";
 $lang['STAFF_RULES_ADD_BTN']="Add Rule";
