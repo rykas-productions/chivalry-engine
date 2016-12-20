@@ -99,7 +99,7 @@ else
 							
 						{$lang['PROFILE_LOCATION']} {$r['town_name']}<br />
 							{$lang['INDEX_LEVEL']}: {$r['level']}<br />";
-						echo ($r['guild']) ? "{$lang['PROFILE_GUILD']}: <a href='#'>{$r['guild_name']}</a>" : '';
+						echo ($r['guild']) ? "{$lang['PROFILE_GUILD']}: <a href='guilds.php?action=view&id={$r['guild']}'>{$r['guild_name']}</a><br />" : '';
 						echo "{$lang['INDEX_HP']}: {$r['hp']}/{$r['maxhp']}<br />";
 				
 				?>
@@ -294,7 +294,7 @@ else
 				  echo '<div id="staff" class="tab-pane fade in">';
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
-						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",1),true);
+						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",24),true);
 						echo "<table class='table table-bordered'>
 							<tr>
 								<th width='33%'>Data</th>
