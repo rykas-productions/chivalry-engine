@@ -1,9 +1,7 @@
 <?php
 require("globals.php");
 $AnnouncementCount = $ir['announcements'];
-$q =
-        $db->query(
-                "SELECT * FROM `announcements` ORDER BY `ann_time` DESC");
+$q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC");
 echo "<table class='table table-bordered table-hover table-responsive'>
 <thead>
 	<tr>
@@ -28,7 +26,7 @@ while ($r = $db->fetch_row($q))
 	$AnnouncementTime=date('F j Y, g:i:s a', $r['ann_time']);
     $r['ann_text'] = nl2br($r['ann_text']);
 	echo "<tr>
-		<td>{$AnnouncementTime}<br />Posted by: <a href='viewuser.php?user={$r['ann_poster']}'>{$Poster}</a>{$new}</td>
+		<td>{$AnnouncementTime}<br />Posted by: <a href='profile.php?user={$r['ann_poster']}'>{$Poster}</a>{$new}</td>
 		<td>{$r['ann_text']}</td>
 	</tr>";
 }
