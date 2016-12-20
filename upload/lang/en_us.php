@@ -834,7 +834,18 @@ $lang['GUILD_VIEW_LEADER']="Guild Leader";
 $lang['GUILD_VIEW_COLEADER']="Guild Co-Leader";
 $lang['GUILD_VIEW_LEVEL']="Guild Level";
 $lang['GUILD_VIEW_MEMBERS']="Guild Members";
-
+$lang['GUILD_VIEW_LOCATION']="Guild Location";
+$lang['GUILD_VIEW_USERS']="Guild Member List";
+$lang['GUILD_VIEW_APPLY']="Apply to Guild";
+$lang['GUILD_VIEW_LIST']="Memberlist for the";
+$lang['GUILD_VIEW_LIST2']="guild";
+$lang['GUILD_VIEW_ERROR']="You need to specify a guild you wish to view. Check your source and try again.";
+$lang['GUILD_APP_TITLE']="Filling out Application to join";
+$lang['GUILD_APP_INFO']="Type in a reason you should be in this guild. Be polite, honest and accurate with your information.";
+$lang['GUILD_APP_ERROR']="You cannot send an application to a guild whilist you're currently in one. Leave your current guild and try again.";
+$lang['GUILD_APP_BTN']="Submit Application";
+$lang['GUILD_APP_ERROR1']="You have already sent an application to join this guild. Please wait until you get a response before sending in another.";
+$lang['GUILD_APP_SUCC']="You have successfully sent in your application to join this guild!";
 //Staff rules
 $lang['STAFF_RULES_ADD_FORM']="Use this form to add rules into the game. Be clear and concise. The more difficult language and terminology you use, the less people may understand.";
 $lang['STAFF_RULES_ADD_BTN']="Add Rule";
