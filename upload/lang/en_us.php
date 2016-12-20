@@ -222,6 +222,8 @@ $lang['EXPLORE_ANNOUNCEMENTS']="Announcements";
 $lang['EXPLORE_CRIMES']="Criminal Center";
 $lang['EXPLORE_TRAVEL']="Horse Travel";
 $lang['EXPLORE_GUILDLIST']="Guild List";
+$lang['EXPLORE_YOURGUILD']="Your Guild";
+$lang['EXPLORE_TOPTEN']="Top 10 Players";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
@@ -859,4 +861,8 @@ $lang['STAFF_RULES_ADD_SUBSUCC']="You have successfully created a new rule.";
 $lang['GAMERULES_TITLE']="Rules";
 $lang['GAMERULES_TEXT']="You are expected to follow these rules. You are also expected to check back on these fairly frequently as these rules may change without notice. Staff will not accept ignorance as an excuse if you break one of these rules.";
 
+//View GUILD_APP_BTN
+$lang['VIEWGUILD_ERROR1']="You are not in a guild, so you cannot view your guild's information.";
+$lang['VIEWGUILD_ERROR2']="It looks like your guild's been deleted. Check with staff to update your account.";
+$lang['VIEWGUILD_TITLE']="Your Guild,";
 ?>
