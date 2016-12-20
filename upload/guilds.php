@@ -15,6 +15,9 @@ case 'view':
 case 'apply':
     apply();
     break;
+case 'memberlist':
+    memberlist();
+    break;
 default:
     menu();
     break;
@@ -211,7 +214,119 @@ function view()
 					echo number_format($cnt) . " / " . number_format($gd['guild_capacity']) . "
 				</td>
 			</tr>
+			<tr>
+				<th>
+					{$lang['GUILD_VIEW_LOCATION']}
+				</th>
+				<td>";
+				echo $api->SystemTownIDtoName($gd['guild_town_id']) . "
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<a href='?action=memberlist&id={$_GET['id']}'>{$lang['GUILD_VIEW_USERS']}</a>
+				</th>
+				<td>
+					<a href='?action=apply&id={$_GET['id']}'>{$lang['GUILD_VIEW_APPLY']}</a>
+				</td>
+			</tr>
 		</table>";
+	}
+}
+function memberlist()
+{
+	global $db,$userid,$ir,$api,$h,$lang;
+	$_GET['id'] = abs((int) $_GET['id']);
+	if (empty($_GET['id']))
+	{
+		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		die($h->endpage());
+	}
+	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+	if ($db->num_rows($gq) == 0)
+	{
+		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		die($h->endpage());
+	}
+	$gd = $db->fetch_row($gq);
+	echo "<h3>{$lang['GUILD_VIEW_LIST']} {$gd['guild_name']} {$lang['GUILD_VIEW_LIST2']}</h3>
+	<table class='table table-bordered'>
+		  	<tr>
+		  		<th>
+					{$lang['STAFF_ITEM_GIVE_FORM_USER']}
+				</th>
+		  		<th>
+					{$lang['INDEX_LEVEL']}
+				</th>
+		  	</tr>";
+	$q =  $db->query("SELECT `userid`, `username`, `level`
+                     FROM `users`
+                     WHERE `guild` = {$gd['guild_id']}
+                     ORDER BY `level` DESC");
+	while ($r = $db->fetch_row($q))
+    {
+        echo "<tr>
+        		<td>
+					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a>
+				</td>
+        		<td>
+					{$r['level']}
+				</td>
+			</tr>";
+    }
+	echo"</table>";
+}
+function apply()
+{
+	global $db,$userid,$ir,$api,$h,$lang;
+	$_GET['id'] = abs((int) $_GET['id']);
+	if (empty($_GET['id']))
+	{
+		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		die($h->endpage());
+	}
+	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+	if ($db->num_rows($gq) == 0)
+	{
+		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		die($h->endpage());
+	}
+	$gd = $db->fetch_row($gq);
+	if ($ir['guild'] > 0)
+	{
+		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_APP_ERROR']}");
+		die($h->endpage());
+	}
+	echo "<h3>{$lang['GUILD_APP_TITLE']} {$gd['guild_name']} {$lang['GUILD_VIEW_LIST2']}</h3><hr />";
+	if (isset($_POST['application']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code('guild_apply', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+		$cnt=$db->query("SELECT * FROM `guild_applications` WHERE `app_user` = {$userid} && `app_guild` = {$_GET['id']}");
+		if ($db->num_rows($cnt) > 0)
+		{
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_APP_ERROR1']}");
+		die($h->endpage());
+		}
+		$application = (isset($_POST['application']) && is_string($_POST['application'])) ? $db->escape(htmlentities(stripslashes($_POST['application']), ENT_QUOTES, 'ISO-8859-1')) : '';
+		$db->query("INSERT INTO `guild_applications` VALUES (NULL, {$userid}, {$_GET['id']}, '{$application}')");
+		$gev = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> sent an application to join this guild.");
+		$db->query("INSERT INTO `guild_events` VALUES (NULL, {$_GET['id']}, " . time() . ", '{$gev}')");
+		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['GUILD_APP_SUCC']}");
+	}
+	else
+	{
+		$csrf = request_csrf_html('guild_apply');
+		echo "
+		<form action='?action=apply&id={$_GET['id']}' method='post'>
+			{$lang['GUILD_APP_INFO']}<br />
+			<textarea name='application' class='form-control' required='1' rows='7' cols='40'></textarea><br />
+			{$csrf}
+			<input type='submit' class='btn btn-default' value='{$lang['GUILD_APP_BTN']}' />
+		</form>";
 	}
 }
 $h->endpage();
