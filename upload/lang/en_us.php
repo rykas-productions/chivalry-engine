@@ -614,6 +614,7 @@ $lang['CRIME_COMMIT_BRAVEBAD']="You aren't brave enough to commit this crime at 
 $lang['ATTACK_START_NOREFRESH']="Refreshing while attacking is a bannable offense. You can lose all your experience for that.";
 $lang['ATTACK_START_NOUSER']="You can only attack players specified. Did you use the attack link on the user's profile?";
 $lang['ATTACK_START_NOTYOU']="Depressed or not, you cannot attack yourself!";
+$lang['ATTACK_START_THEYLOWLEVEL']="You cannot attack players under level 2, who are also online.";
 $lang['ATTACK_START_YOUNOHP']="You need HP to fight someone. Come back when you have more health!";
 $lang['ATTACK_START_YOUINFIRM']="How do you expect to fight someone when you're nursing an injurt in the infirmary?";
 $lang['ATTACK_START_YOUDUNG']="How do you expect to fight someone when you're serving your debt to society in the dungeon?";

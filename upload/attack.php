@@ -69,9 +69,10 @@ function attacking()
 		die($h->endpage());
 	}
 	$youdata = $ir;
+	$laston = time() - 900;
 	$q = $db->query("SELECT `u`.`userid`, `hp`, `equip_armor`, `username`,
 	       `equip_primary`, `equip_secondary`, `guild`, `location`, `maxhp`,
-	       `guard`, `agility`, `strength`, `gender`
+	       `guard`, `agility`, `strength`, `gender`, `level`, `laston`
 			FROM `users` AS `u`
 			INNER JOIN `userstats` AS `us` ON `u`.`userid` = `us`.`userid`
 			WHERE `u`.`userid` = {$_GET['user']}
@@ -144,6 +145,14 @@ function attacking()
 		$ir['attacking'] = 0;
 		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_YOUUNATTACK']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
+		die($h->endpage());
+	}
+	else if ($odata['level'] < 3 && $odata['laston'] > $laston)
+	{
+		$_SESSION['attacking'] = 'false';
+		$ir['attacking'] = 0;
+		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_THEYLOWLEVEL']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	$_GET['weapon'] = (isset($_GET['weapon']) && is_numeric($_GET['weapon'])) ? abs(intval($_GET['weapon'])) : '';
