@@ -16,7 +16,7 @@ $cpage = strip_tags(stripslashes($currentpage));
     <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css">
 	<link href="css/bs2.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -171,9 +171,9 @@ $cpage = strip_tags(stripslashes($currentpage));
 		$e_gender = $db->escape(stripslashes($_POST['gender']));
 		$e_class = $db->escape(stripslashes($_POST['class']));
 		$sm = 100;
-		if (isset($_POST['promo']) && $_POST['promo'] == "CENGINE")
+		if (isset($_POST['promo']))
 		{
-			$sm += 100;
+			//$sm += 100;
 		}
 		$e_username = $db->escape($username);
 		$e_email = $db->escape(stripslashes($_POST['email']));
@@ -326,6 +326,11 @@ $cpage = strip_tags(stripslashes($currentpage));
 								<td><h4><?php echo"{$lang['REG_REFID']}"; ?></h4></td>
 								<?php echo "<td><input type='number' value='{$_GET['REF']}' class='form-control' id='ref' name='ref' min='0' placeholder='Enter the User ID of who referred you. (Optional)'></td>";
 							?>
+							</tr>
+							</tr>
+							<tr>
+								<td><h4><?php echo"{$lang['REG_PROMO']}"; ?></h4></td>
+								<?php echo "<td><input type='text' class='form-control' id='promo' name='promo' placeholder='Enter your promo code, if applicable.'></td>";?>
 							</tr>
 						</tbody>
 				
