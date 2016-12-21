@@ -589,7 +589,7 @@ function xp()
 			{
 				$expgain=$expgain*-1;
 			}
-			$expperc = round($expgain / $ir['xp_needed'] * 300);
+			$expperc = round($expgain / $ir['xp_needed'] * 100);
 			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END7']} ({$expperc}%, {$expgain})");
 			$hosptime = mt_rand(5, 30) + floor($ir['level'] / 10);
 			$db->query("UPDATE `users` SET `xp` = `xp` + $expgain WHERE `userid` = $userid");
