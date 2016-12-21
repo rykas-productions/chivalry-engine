@@ -645,11 +645,11 @@ function mug()
 			$stole = round($r['primary_currency'] / (mt_rand(50, 1000) / 5));
 			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END8']} (" . number_format($stole) . ")");
 			$hosptime = rand(20, 40) + floor($ir['level'] / 8);
-			$hospreason = $db->escape("Mugged by <a href='viewuser.php?u={$userid}'>{$ir['username']}</a>");
+			$hospreason = $db->escape("Mugged by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 			$db->query("UPDATE `users` SET `hp` = 1, `primary_currency` = `primary_currency` - {$stole} WHERE `userid` = {$r['userid']}");
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$stole} WHERE `userid` = {$userid}");
 			$api->UserStatusSet($r['userid'],1,$hosptime,$hospreason);
-			event_add($r['userid'], "<a href='viewuser.php?u=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
+			event_add($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
 			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");					
 			$_SESSION['attackwon'] = 'false';
 			if ($r['user_level'] == 0)
