@@ -189,6 +189,10 @@ else
 				  <br /><br /><form action='attack.php'>
 					<input type='hidden' name='user' value='{$r['userid']}'>
 					<input type='submit' class='btn btn-danger' value='Attack {$r['username']}'>
+					</form><br />
+					<form action='hirespy.php'>
+						<input type='hidden' name='user' value='{$r['userid']}'>
+						<input type='submit' class='btn btn-default' value='Spy on {$r['username']}'>
 					</form>
 				  "; ?>
 					<div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="Sending a Message">
