@@ -1552,6 +1552,7 @@ function update_fg_info($ip) {
                             '/netscape/i'   =>  'Netscape',
                             '/maxthon/i'    =>  'Maxthon',
                             '/konqueror/i'  =>  'Konqueror',
+							'/opr/i' 		=>  'Opera',
                             '/mobile/i'     =>  'Handheld Browser'
                         );
     foreach ($browser_array as $regex => $value) 
