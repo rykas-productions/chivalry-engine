@@ -1053,7 +1053,35 @@ INSERT INTO `settings`
 ) ENGINE = MyISAM;
 
 INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES  (NULL, 'bank_cost', '5000');
+ALTER TABLE `guild` ADD `guild_announcement` TEXT NOT NULL AFTER `guild_xp`;
 INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'bank_maxfee', '5000'), (NULL, 'bank_feepercent', '10');
+
+CREATE TABLE `promo_codes` (
+  `promo_id` int(11) UNSIGNED NOT NULL,
+  `promo_code` text NOT NULL,
+  `promo_item` int(11) UNSIGNED NOT NULL,
+  `promo_use` int(11) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `promo_codes`
+--
+ALTER TABLE `promo_codes`
+  ADD UNIQUE KEY `promo_id` (`promo_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `promo_codes`
+--
+ALTER TABLE `promo_codes`
+  MODIFY `promo_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
