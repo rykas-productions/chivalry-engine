@@ -1,5 +1,6 @@
 <?php
 require("globals.php");
+$tresder = (mt_rand(100, 999));
 if (user_infirmary($ir['userid']) == true)
 {
 	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['ERRDE_EXPLORE']}");
@@ -72,7 +73,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 				<div class='panel-body'>
 					<a href='#'>{$lang['EXPLORE_RR']}</a><br />
 					<a href='#'>{$lang['EXPLORE_HILO']}</a><br />
-					<a href='#'>{$lang['EXPLORE_ROULETTE']}</a><br />
+					<a href='roulette.php?tresde={$tresder}'>{$lang['EXPLORE_ROULETTE']}</a><br />
 				</div>
 			</div>
 		</div>

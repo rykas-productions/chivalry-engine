@@ -941,4 +941,22 @@ $lang['ESTATES_ERROR5']="You cannot sell your estate if you're nude and proud, b
 $lang['ESTATES_SUCCESS1']="You have successfully bought the";
 $lang['ESTATES_SUCCESS2']="You have sold your property for 75% of its original price and went back to being nude and proud.";
 $lang['ESTATES_INFO']="List below are estates you can buy. Estates have a will level. the better the will level, the more stats you will gain while training. So its recommended to buy the best estate for your level. Tap on the estate name to purchase the estate. Don't worry, you will be able to sell bought estates back to the game for 75% of its value.";
+
+//Roulette
+$lang['ROULETTE_TITLE']="Roulette";
+$lang['ROULETTE_INFO']="Ready to test your luck? Awesome! Here at the roulette table, the house always wins. To combat players losing all their wealth in one go, we've put in a bet restriction. At your level, you can only bet";
+$lang['ROULETTE_NOREFRESH']="Please do not refresh while playing roulette. Please use the links provided, thank you!";
+$lang['ROULETTE_TABLE1']="Bet";
+$lang['ROULETTE_TABLE2']="Pick #";
+$lang['ROULETTE_ERROR1']="You cannot bet more {$lang['INDEX_PRIMCURR']} than you currently have.";
+$lang['ROULETTE_ERROR2']="You are trying to place a bet higher than your currently allowed max bet.";
+$lang['ROULETTE_ERROR3']="You can only bet on the numbers between 0 and 36.";
+$lang['ROULETTE_ERROR4']="You must specify a bet larger than 0 {$lang['INDEX_PRIMCURR']}.";
+$lang['ROULETTE_LOST']=". You lose your bet. Sorry man.";
+$lang['ROULETTE_WIN']=" and won! You keep your bet, and pocket an extra";
+$lang['ROULETTE_BTN1']="Place Bet!";
+$lang['ROULETTE_BTN2']="Again. Same bet, please.";
+$lang['ROULETTE_BTN3']="Again, but with a different bet.";
+$lang['ROULETTE_BTN4']="I quit. I don't want to go broke.";
+$lang['ROULETTE_START']="You put in your bet and pull the handle down. Around and around the wheel spins. It stops and lands on";
 ?>
