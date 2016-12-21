@@ -3,7 +3,7 @@
 	File:    lang/fr_fr.php
 	Created: 2016/10/09, 20:32, US Central Time
 	Info:    The language file for French.
-           (Le document dâ€™ordinateur de la langue franÃ§ais)
+           (Le document d’ordinateur de la langue français)
 	Author:  PommeBleue
 	Website: http://newsuperyoshi.tumblr.com
 */
@@ -18,10 +18,10 @@ $lang["MENU_EXPLORE"] = "Explorer";
 $lang["MENU_MAIL"] = "Vos lettres";
 $lang["MENU_EVENT"] = "Notifications";
 $lang["MENU_INVENTORY"] = "Vos objects";
-$lang["MENU_OUT"] = "<i><small>Fait avec un logiciel de (Anglais) <a href='https://twitter.com/MasterGeneralYT'><font color=gray>TheMasterGeneral</font></a>. La utilisation est autorisÃ©e.</small></i>";
+$lang["MENU_OUT"] = "<i><small>Fait avec un logiciel de (Anglais) <a href='https://twitter.com/MasterGeneralYT'><font color=gray>TheMasterGeneral</font></a>. La utilisation est autorisée.</small></i>";
 $lang['MENU_PROFILE']='Je-moi';
-$lang['MENU_SETTINGS']='RÃ©glage';
-$lang['MENU_STAFF']='Lâ€™outil des personels';
+$lang['MENU_SETTINGS']='Réglage';
+$lang['MENU_STAFF']='L’outil des personels';
 $lang['MENU_LOGOUT']='Disconnexion';
 /* TODO: add code allowing proper time display in French. */
 $lang['MENU_TIN']='Nous sommes ';
@@ -30,11 +30,10 @@ $lang['MENU_UNREADMAIL1']='Nouvelles lettres ! ';
 $lang['MENU_UNREADNOTIF']='Nouveaux notifications ! ';
 $lang['MENU_UNREADANNONCE']='Nouveaux notifications des personels ! ';
 $lang['MENU_UNREADANNONCE1']='Il y a ';
-$lang['MENU_UNREADANNONCE2']='lettres des personels';
-$lang['MENU_UNREADMAIL2']='Il y a';
-$lang['MENU_UNREADMAIL3']='nouvelles lettres. Faire un clic ';
-$lang['MENU_UNREADMAIL4']='le.s lire.';
-
+$lang['MENU_UNREADANNONCE2']='';
+$lang['MENU_UNREADMAIL2']='You have';
+$lang['MENU_UNREADMAIL3']='unread messages. Click';
+$lang['MENU_UNREADMAIL4']='to read them.';
 $lang['MENU_UNREADNOTIF1']='unread notifications. Click';
 $lang['MENU_INFIRMARY1']='You are in the infirmary for the next';
 $lang['MENU_DUNGEON1']='You are in the dungeon for the next';

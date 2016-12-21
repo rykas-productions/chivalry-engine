@@ -174,7 +174,9 @@ if ($ir['force_logout'] != 'false')
     header("Location: {$login_url}");
     exit;
 }
-if (!in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Secretary')))
+include("../class/class_api.php");
+$api = new api;
+if (!$api->UserMemberLevelGet($userid,'forum moderator'))
 {
     $index=('../index.php');
 	header("Location: {$index}");
@@ -183,8 +185,6 @@ check_level();
 check_data();
 getOS($_SERVER['HTTP_USER_AGENT']);
 getBrowser($_SERVER['HTTP_USER_AGENT']);
-include("../class/class_api.php");
-$api = new api;
 $h = new headers;
 $h->startheaders();
 $fm = number_format($ir['primary_currency']);

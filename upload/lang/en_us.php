@@ -912,6 +912,20 @@ $lang['SPY_SUCCESS']="At about";
 $lang['SPY_SUCCESS1']="{$lang['INDEX_PRIMCURR']} per attempt, you have successfully found information on";
 $lang['SPY_SUCCESS2']="! Here is that information.";
 
+//Staff estates
+$lang['STAFF_ESTATE_ADD']="Create Estate";
+$lang['STAFF_ESTATE_ADD_TABLE']="Use this form to add an estate into the game.";
+$lang['STAFF_ESTATE_ADD_TH1']="Estate Name";
+$lang['STAFF_ESTATE_ADD_TH2']="Estate Cost";
+$lang['STAFF_ESTATE_ADD_TH3']="Estate Minimum Level";
+$lang['STAFF_ESTATE_ADD_TH4']="Estate Will Level";
+$lang['STAFF_ESTATE_ADD_BTN']="Create Estate";
+$lang['STAFF_ESTATE_ADD_ERROR1']="You cannot create more than one estate with the same name.";
+$lang['STAFF_ESTATE_ADD_ERROR2']="You cannot add an estate with the same will as another.";
+$lang['STAFF_ESTATE_ADD_ERROR3']="You cannot add an estate with a level requirement lower than 1.";
+$lang['STAFF_ESTATE_ADD_ERROR4']="You cannot add an estate with a will level equal to, or lower than, 100.";
+$lang['STAFF_ESTATE_ADD_SUCCESS']="Estate has been added to the game successfully.";
+
 //Estates
 $lang['ESTATES_START']="Your Current Estate:";
 $lang['ESTATES_SELL']="Sell Your Estate for 75%";

@@ -92,6 +92,9 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 			<li>
 				<a data-toggle='tab' href='#TOWN'>Towns</a>
 			</li>
+			<li>
+				<a data-toggle='tab' href='#ESTATES'>Estates</a>
+			</li>
 		</ul>
 		<div class='tab-content'>
 			<div id='ADMIN' class='tab-pane fade in'>
@@ -169,6 +172,13 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_towns.php?action=addtown'>{$lang['STAFF_TRAVEL_ADD']}</a><br />
 						<a href='staff_towns.php?action=edittown'>{$lang['STAFF_TRAVEL_EDIT']}</a><br />
 						<a href='staff_towns.php?action=deltown'>{$lang['STAFF_TRAVEL_DEL']}</a><br />
+					</div>
+				</div>
+			</div>
+			<div id='ESTATES' class='tab-pane fade in'>
+				<div class='panel panel-default'>
+					<div class='panel-body'>
+						<a href='staff_estates.php?action=addestate'>{$lang['STAFF_ESTATE_ADD']}</a><br />
 					</div>
 				</div>
 			</div>
