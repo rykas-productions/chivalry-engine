@@ -11,7 +11,7 @@ if (user_dungeon($ir['userid']) == true)
 	alert("danger","{$lang["GEN_DUNG"]}","{$lang['GYM_DUNG']}");
 	die($h->endpage());
 }
-$statnames =  array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labour" => "labour");
+$statnames =  array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor");
 if (!isset($_POST["amnt"]))
 {
     $_POST["amnt"] = 0;
