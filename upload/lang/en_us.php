@@ -173,6 +173,7 @@ $lang['GEN_GOHOME']="Go Home";
 $lang['GEN_IUOF']="Invalid use of file!";
 $lang['GEN_THEM']="Them";
 $lang['GEN_CONTINUE']="Continue";
+$lang['GEN_FOR_S']="for";
 $lang['GEN_NOPERM']="You do not have the proper user level to view this page. If this is wrong, please contact an admin immediately!";
 
 //Gym
@@ -910,4 +911,20 @@ $lang['SPY_FAIL3']="You attempt to get information on your target. You follow th
 $lang['SPY_SUCCESS']="At about";
 $lang['SPY_SUCCESS1']="{$lang['INDEX_PRIMCURR']} per attempt, you have successfully found information on";
 $lang['SPY_SUCCESS2']="! Here is that information.";
+
+//Estates
+$lang['ESTATES_START']="Your Current Estate:";
+$lang['ESTATES_SELL']="Sell Your Estate for 75%";
+$lang['ESTATES_TABLE1']="Estate Name";
+$lang['ESTATES_TABLE2']="Level Requirement";
+$lang['ESTATES_TABLE3']="Cost ({$lang['INDEX_PRIMCURR']})";
+$lang['ESTATES_TABLE4']="Will Level";
+$lang['ESTATES_ERROR1']="You are trying to purchase a non-existent estate. Check your source and try again.";
+$lang['ESTATES_ERROR2']="You cannot buy an estate that has less will than your current estate. That just wouldn't make sense.";
+$lang['ESTATES_ERROR3']="You do not have enough {$lang['INDEX_PRIMCURR']} to buy this estate";
+$lang['ESTATES_ERROR4']="You cannot buy an estate that has the same will of your current estate. That just wouldn't make sense.";
+$lang['ESTATES_ERROR5']="You cannot sell your estate if you're nude and proud, bud.";
+$lang['ESTATES_SUCCESS1']="You have successfully bought the";
+$lang['ESTATES_SUCCESS2']="You have sold your property for 75% of its original price and went back to being nude and proud.";
+$lang['ESTATES_INFO']="List below are estates you can buy. Estates have a will level. the better the will level, the more stats you will gain while training. So its recommended to buy the best estate for your level. Tap on the estate name to purchase the estate. Don't worry, you will be able to sell bought estates back to the game for 75% of its value.";
 ?>

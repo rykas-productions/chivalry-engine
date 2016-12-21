@@ -41,7 +41,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='bank.php'>{$lang['EXPLORE_BANK']}</a><br />
-					<a href='#'>{$lang['EXPLORE_ESTATES']}</a><br />
+					<a href='estates.php'>{$lang['EXPLORE_ESTATES']}</a><br />
 					<a href='travel.php'>{$lang['EXPLORE_TRAVEL']}</a><br />
 				</div>
 			</div>
