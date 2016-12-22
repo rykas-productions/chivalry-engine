@@ -1084,6 +1084,9 @@ ALTER TABLE `promo_codes`
   MODIFY `promo_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
   
   ALTER TABLE `estates` ADD `house_level` INT(11) UNSIGNED NULL DEFAULT '1' AFTER `house_will`;
+  ALTER TABLE `users` ADD `last_verified` INT(11) UNSIGNED NOT NULL AFTER `theme`;
+  ALTER TABLE `users` ADD `need_verify` TINYINT NOT NULL AFTER `last_verified`;
+  INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'reCaptcha_public', 'PleaseUpdate'), (NULL, 'reCaptcha_private', 'PleaseUpdate');
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

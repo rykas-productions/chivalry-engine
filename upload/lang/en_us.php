@@ -959,4 +959,14 @@ $lang['ROULETTE_BTN2']="Again. Same bet, please.";
 $lang['ROULETTE_BTN3']="Again, but with a different bet.";
 $lang['ROULETTE_BTN4']="I quit. I don't want to go broke.";
 $lang['ROULETTE_START']="You put in your bet and pull the handle down. Around and around the wheel spins. It stops and lands on";
+
+//High Low
+$lang['HILOW_INFO']="Welcome to High/Low. Here you will bet on whether or not the deal will draw a number lower or higher than the number shown. We don't want everyone betting away their life savings, so we've imposed a maximum bet of";
+$lang['HILOW_SHOWN']="Number Shown";
+$lang['HILOW_INFO']="Number Shown";
+
+//ReCaptcha
+$lang['RECAPTCHA_TITLE']="reCaptcha";
+$lang['RECAPTCHA_INFO']="This is a needed evil. Just verify that you're not a bot.";
+$lang['RECAPTCHA_BTN']="Verify";
 ?>

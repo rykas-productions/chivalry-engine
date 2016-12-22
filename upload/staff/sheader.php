@@ -260,6 +260,9 @@ class headers
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 			<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 			<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+			
+			<!-- Other JS -->
+			<script src='https://www.google.com/recaptcha/api.js'></script>
 		</body>
 			<footer>
 				<p>

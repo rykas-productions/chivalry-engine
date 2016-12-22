@@ -117,6 +117,23 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
+					Google's reCaptcha Public Key<br />
+					<small>(<a href='https://www.google.com/recaptcha/admin'>https://www.google.com/recaptcha/admin</a>)</small>
+				</th>
+				<td>
+					<input type='text' class='form-control' name='rcpublic' value='{$set['reCaptcha_public']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Google's reCaptcha Private Key
+				</th>
+				<td>
+					<input type='text' class='form-control' name='rcprivate' value='{$set['reCaptcha_private']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
 					Game Description
 				</th>
 				<td>
@@ -170,6 +187,8 @@ function basicsettings()
 		$GameDesc =  (isset($_POST['gamedesc'])) ? $db->escape(strip_tags( stripslashes($_POST['gamedesc']))) : '';
 		$FGPW =  (isset($_POST['fgpw'])) ? $db->escape(strip_tags( stripslashes($_POST['fgpw']))) : '';
 		$FGUN =  (isset($_POST['fgun'])) ? $db->escape(strip_tags( stripslashes($_POST['fgun']))) : '';
+		$rcpb =  (isset($_POST['rcpublic'])) ? $db->escape(strip_tags( stripslashes($_POST['rcpublic']))) : '';
+		$rcpr =  (isset($_POST['rcprivate'])) ? $db->escape(strip_tags( stripslashes($_POST['rcprivate']))) : '';
 		$PasswordEffort = (isset($_POST['PWEffort']) && is_numeric($_POST['PWEffort'])) ? abs(intval($_POST['PWEffort'])) : 10;
 		$BankFeePerc = (isset($_POST['bankfeepercent']) && is_numeric($_POST['bankfeepercent'])) ? abs(intval($_POST['bankfeepercent'])) : 10;
 		$BankFeeMax = (isset($_POST['bankfee']) && is_numeric($_POST['bankfee'])) ? abs(intval($_POST['bankfee'])) : 5000;
@@ -214,6 +233,16 @@ function basicsettings()
 			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Fraud Guard IO Username.");
 			die($h->endpage());
 		}
+		elseif (empty($rcpb))
+		{
+			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Google reCaptcha public key.");
+			die($h->endpage());
+		}
+		elseif (empty($rcpr))
+		{
+			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Google reCaptcha private key.");
+			die($h->endpage());
+		}
 		elseif (empty($PasswordEffort) || $PasswordEffort < 5 || $PasswordEffort > 20)
 		{
 			alert('danger',"{$lang['ERROR_INVALID']}","Empty or Invalid Password Hashing effort. Minimum of 5, maximum of 10.");
@@ -233,6 +262,8 @@ function basicsettings()
 			$db->query("UPDATE `settings` SET `setting_value` = '{$BankCost}' WHERE `setting_name` = 'bank_cost'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$BankFeeMax}' WHERE `setting_name` = 'bank_maxfee'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$BankFeePerc}' WHERE `setting_name` = 'bank_feepercent'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$rcpb}' WHERE `setting_name` = 'reCaptcha_public'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$rcpr}' WHERE `setting_name` = 'reCaptcha_private'");
 			alert('success',"{$lang['ERROR_SUCCESS']}","Successfully updated the game settings.");
 			$api->SystemLogsAdd($userid,'staff',"Updated game settings.");
 		}
