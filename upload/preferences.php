@@ -342,7 +342,7 @@ function themechange()
 		else
 		{
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['PREF_CTHM_SUB_SUCCESS']}");
-			$db->query("UPDATE `users` SET `theme` = {$_POST['theme']}");
+			$db->query("UPDATE `users` SET `theme` = {$_POST['theme']} WHERE `userid` = {$userid}");
 			die($h->endpage());
 		}
 	}
