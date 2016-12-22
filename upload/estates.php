@@ -30,6 +30,11 @@ if (isset($_GET['property']) && is_numeric($_GET['property']))
         alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR3']}");
 		die($h->endpage());
     }
+	else if ($np['house_level'] > $ir['level'])
+	{
+		alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR6']}");
+		die($h->endpage());
+	}
     else
     {
         $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$np['house_price']} , `will` = 0, `maxwill` = {$np['house_will']} WHERE `userid` = $userid");

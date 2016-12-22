@@ -938,6 +938,7 @@ $lang['ESTATES_ERROR2']="You cannot buy an estate that has less will than your c
 $lang['ESTATES_ERROR3']="You do not have enough {$lang['INDEX_PRIMCURR']} to buy this estate";
 $lang['ESTATES_ERROR4']="You cannot buy an estate that has the same will of your current estate. That just wouldn't make sense.";
 $lang['ESTATES_ERROR5']="You cannot sell your estate if you're nude and proud, bud.";
+$lang['ESTATES_ERROR6']="Your level is too low for this estate, my friend.";
 $lang['ESTATES_SUCCESS1']="You have successfully bought the";
 $lang['ESTATES_SUCCESS2']="You have sold your property for 75% of its original price and went back to being nude and proud.";
 $lang['ESTATES_INFO']="List below are estates you can buy. Estates have a will level. the better the will level, the more stats you will gain while training. So its recommended to buy the best estate for your level. Tap on the estate name to purchase the estate. Don't worry, you will be able to sell bought estates back to the game for 75% of its value.";
