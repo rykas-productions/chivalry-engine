@@ -92,33 +92,53 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
         $EnergyLeft = $ir['energy'] - $_POST['amnt'];
 		if ($stat == "strength")
         {
-            echo "You begin lifting some weights.<br />
-      You have gained {$gain} strength by doing {$_POST['amnt']} sets of weights.<br />
-      You now have {$NewStatAmount} strength and {$EnergyLeft} energy left.";
+            echo "	You begin lifting some weights.<br />
+					You have gained {$gain} strength by doing {$_POST['amnt']} sets of weights.<br />
+					You now have {$NewStatAmount} strength and {$EnergyLeft} energy left.";
+			$str_select="selected";
         }
         elseif ($stat == "agility")
         {
-            echo "You begin running on a treadmill.<br />
-      You have gained {$gain} agility by doing {$_POST['amnt']} minutes of running.<br />
-      You now have {$NewStatAmount} agility and {$EnergyLeft} energy left.";
+			echo "	You begin running on a treadmill.<br />
+					  You have gained {$gain} agility by doing {$_POST['amnt']} minutes of running.<br />
+					  You now have {$NewStatAmount} agility and {$EnergyLeft} energy left.";
+			$agl_select="selected";
         }
         elseif ($stat == "guard")
         {
-            echo "You jump into the pool and begin swimming.<br />
-      You have gained {$gain} guard by doing {$_POST['amnt']} minutes of swimming.<br />
-      You now have {$NewStatAmount} guard and {$EnergyLeft} energy left.";
+            echo "	You jump into the pool and begin swimming.<br />
+					You have gained {$gain} guard by doing {$_POST['amnt']} minutes of swimming.<br />
+					You now have {$NewStatAmount} guard and {$EnergyLeft} energy left.";
+			$grd_select="selected";
         }
         elseif ($stat == "labor")
         {
-            echo "You walk over to some boxes filled with gym equipment and start moving them.<br />
-      You have gained {$gain} labour by moving {$_POST['amnt']} boxes.<br />
-      You now have {$NewStatAmount} labour and {$EnergyLeft} energy left.";
+            echo "	You walk over to some boxes filled with gym equipment and start moving them.<br />
+					You have gained {$gain} labour by moving {$_POST['amnt']} boxes.<br />
+					You now have {$NewStatAmount} labour and {$EnergyLeft} energy left.";
+			$lab_select="selected";
         }
 		$api->SystemLogsAdd($userid,'training',"Trained their {$stat} and gained {$gain}.");
         echo "<hr />";
         $ir['energy'] -= $_POST['amnt'];
         $ir[$stat] += $gain;
 	}
+}
+if (!isset($str_select))
+{
+	$str_select='';
+}
+if (!isset($agl_select))
+{
+	$agl_select='';
+}
+if (!isset($grd_select))
+{
+	$grd_select='';
+}
+if (!isset($lab_select))
+{
+	$lab_select='';
 }
 $ir['strank'] = get_rank($ir['strength'], 'strength');
 $ir['agirank'] = get_rank($ir['agility'], 'agility');
@@ -131,10 +151,10 @@ You can train up to {$ir['energy']} times.<hr />
 		<form action='gym.php' method='post'>
 			<th>Stat to Train</th>
 			<td><select type='dropdown' name='stat' class='form-control'>
-<option value='Strength'>Strength (Have {$ir['strength']}, Ranked {$ir['strank']})
-<option value='Agility'>Agility (Have {$ir['agility']}, Ranked {$ir['agirank']})
-<option value='Guard'>Guard (Have {$ir['guard']}, Ranked {$ir['guarank']})
-<option value='Labor'>Labor (Have {$ir['labor']}, Ranked {$ir['labrank']})
+<option {$str_select} value='Strength'>Strength (Have {$ir['strength']}, Ranked {$ir['strank']})
+<option {$agl_select} value='Agility'>Agility (Have {$ir['agility']}, Ranked {$ir['agirank']})
+<option {$grd_select} value='Guard'>Guard (Have {$ir['guard']}, Ranked {$ir['guarank']})
+<option {$lab_select} value='Labor'>Labor (Have {$ir['labor']}, Ranked {$ir['labrank']})
 </select></td>
 	</tr>
 	<tr>
