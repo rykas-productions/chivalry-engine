@@ -453,6 +453,10 @@ $lang['EQUIP_ARMOR_TEXT_FORM_1']="You're attempting to equip your ";
 $lang['EQUIP_ARMOR_TEXT_FORM_2']="to your armor slot. If you're already wearing armor, it will be moved back to your inventory.";
 $lang['EQUIP_NOTARMOR']="The item you are trying to equip cannot be equipped as armor.";
 $lang['EQUIP_NOTARMOR_TITLE']="Invalid Armor!";
+$lang['EQUIP_OFF_ERROR1']="You are trying to unequip an item from a nonexistent slot.";
+$lang['EQUIP_OFF_ERROR2']="You don't have an item in that slot.";
+$lang['EQUIP_OFF_SUCCESS']="You've successfully unequipped the item from your";
+$lang['EQUIP_OFF_SUCCESS1']="slot.";
 
 //Polling Staff
 $lang['STAFF_POLL_TITLE']="Polling Administration";
