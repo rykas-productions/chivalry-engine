@@ -2,9 +2,7 @@
 require("globals.php");
 $code = request_csrf_code('inbox_send');
 $code2 = request_csrf_code('cash_send');
-$_GET['user'] =
-        (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user']))
-                : '';
+$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : '';
 if (!$_GET['user'])
 {
    alert("danger","Invalid Use","You must enter a User's ID to view their profile.");
@@ -193,6 +191,11 @@ else
 					<form action='hirespy.php'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
 						<input type='submit' class='btn btn-default' value='Spy on {$r['username']}'>
+					</form>
+					<br />
+					<form action='poke.php'>
+						<input type='hidden' name='user' value='{$r['userid']}'>
+						<input type='submit' class='btn btn-default' value='Poke {$r['username']}'>
 					</form>
 				  "; ?>
 					<div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="Sending a Message">

@@ -974,4 +974,13 @@ $lang['HILOW_INFO']="Number Shown";
 $lang['RECAPTCHA_TITLE']="reCaptcha";
 $lang['RECAPTCHA_INFO']="This is a needed evil. Just verify that you're not a bot.";
 $lang['RECAPTCHA_BTN']="Verify";
+
+//Poke
+$lang['POKE_TITLE']="Are you sure you wanna poke";
+$lang['POKE_TITLE1']="? Please do not harass users using this. Staff will find out, and they can remove your privledge to poke others.";
+$lang['POKE_ERROR1']="You need to specify a person you wish to poke.";
+$lang['POKE_ERROR2']="No, you cannot poke yourself!";
+$lang['POKE_ERROR3']="You cannot poke non-existent users!";
+$lang['POKE_BTN']="POKE!";
+$lang['POKE_SUCC']="You have successfully poked this user.";
 ?>
