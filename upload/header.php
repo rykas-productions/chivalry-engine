@@ -15,7 +15,6 @@ class headers
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="TheMasterGeneral">
-	<meta name="theme-color" content="#000000">
 
     <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
 
@@ -23,11 +22,17 @@ class headers
 	<?php
 	if ($ir['theme'] == 1)
 	{
-		?>  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <?php
+		?>  
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+			<meta name="theme-color" content="#e7e7e7">
+		<?php
 	}
 	else
 	{
-		?> <link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css"> <?php
+		?> 
+			<link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css"> 
+			<meta name="theme-color" content="#375a7f">
+		<?php
 	}
 	?>
 	<link href="css/bs2.css" rel="stylesheet">
