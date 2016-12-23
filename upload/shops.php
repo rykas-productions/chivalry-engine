@@ -119,53 +119,56 @@ function buy()
 	global $db,$lang,$userid,$ir,$api,$h;
 	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
 	$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(intval($_POST['qty'])) : '';
-	if (empty($_GET['ID']) OR empty($_POST['qty']))
+	if (permission('CanBuyFromGame',$userid) == true)
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR1']}");
-	}
-	else
-	{
-		$q = $db->query("SELECT `itmid`, `itmbuyprice`, `itmname`, `itmbuyable`, `shopLOCATION`
-						FROM `shopitems` AS `si`
-						INNER JOIN `shops` AS `s`
-						ON `si`.`sitemSHOP` = `s`.`shopID`
-						INNER JOIN `items` AS `i`
-						ON `si`.`sitemITEMID` = `i`.`itmid`
-						WHERE `sitemID` = {$_GET['ID']}");
-		if ($db->num_rows($q) == 0)
+		if (empty($_GET['ID']) OR empty($_POST['qty']))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR2']}");
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR1']}");
 		}
 		else
 		{
-			$itemd = $db->fetch_row($q);
-			if ($ir['primary_currency'] < ($itemd['itmbuyprice'] * $_POST['qty']))
+			$q = $db->query("SELECT `itmid`, `itmbuyprice`, `itmname`, `itmbuyable`, `shopLOCATION`
+							FROM `shopitems` AS `si`
+							INNER JOIN `shops` AS `s`
+							ON `si`.`sitemSHOP` = `s`.`shopID`
+							INNER JOIN `items` AS `i`
+							ON `si`.`sitemITEMID` = `i`.`itmid`
+							WHERE `sitemID` = {$_GET['ID']}");
+			if ($db->num_rows($q) == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR3']} {$_POST['qty']} {$itemd['itmname']}(s).");
-				die($h->endpage());
+				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR2']}");
 			}
-			if ($itemd['itmbuyable'] == 'false')
+			else
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR4']}");
-				die($h->endpage());
-			}
-			if ($itemd['shopLOCATION'] != $ir['location'])
-			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR5']}");
-				die($h->endpage());
-			}
+				$itemd = $db->fetch_row($q);
+				if ($ir['primary_currency'] < ($itemd['itmbuyprice'] * $_POST['qty']))
+				{
+					alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR3']} {$_POST['qty']} {$itemd['itmname']}(s).");
+					die($h->endpage());
+				}
+				if ($itemd['itmbuyable'] == 'false')
+				{
+					alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR4']}");
+					die($h->endpage());
+				}
+				if ($itemd['shopLOCATION'] != $ir['location'])
+				{
+					alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR5']}");
+					die($h->endpage());
+				}
 
-			$price = ($itemd['itmbuyprice'] * $_POST['qty']);
-			item_add($userid, $itemd['itmid'], $_POST['qty']);
-			$db->query(
-					"UPDATE `users`
-					 SET `primary_currency` = `primary_currency` - $price
-					 WHERE `userid` = $userid");
-			$ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['SHOPS_BUY_SUCCESS']} {$_POST['qty']} {$itemd['itmname']}(s) {$lang['GEN_FOR']} {$price}.");
-			$api->SystemLogsAdd($userid,'itembuy',$ib_log);
+				$price = ($itemd['itmbuyprice'] * $_POST['qty']);
+				item_add($userid, $itemd['itmid'], $_POST['qty']);
+				$db->query(
+						"UPDATE `users`
+						 SET `primary_currency` = `primary_currency` - $price
+						 WHERE `userid` = $userid");
+				$ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
+				alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['SHOPS_BUY_SUCCESS']} {$_POST['qty']} {$itemd['itmname']}(s) {$lang['GEN_FOR']} {$price}.");
+				$api->SystemLogsAdd($userid,'itembuy',$ib_log);
+			}
+		$db->free_result($q);
 		}
-    $db->free_result($q);
 	}
 }
 $h->endpage();
