@@ -49,7 +49,7 @@ class DefaultCodeDefinitionSet implements CodeDefinitionSet
         array_push($this->definitions, $builder->build());
 
         /* [img] image tag */
-        $builder = new CodeDefinitionBuilder('img', '<img src="{param}" height="150" width="150" />');
+        $builder = new CodeDefinitionBuilder('img', '<img src="{param}" class="img-responsive" />');
         $builder->setUseOption(false)->setParseContent(false)->setBodyValidator($urlValidator);
         array_push($this->definitions, $builder->build());
 
