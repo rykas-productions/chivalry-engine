@@ -862,4 +862,37 @@ class api
 			return $name;
 		}
 	}
+	/*
+		Function that does all the hard work when it comes to item buying.
+		@param int user = User to give item to, if bought successfully.
+		@param int currency = Currency type. [1 = Primary, 2 = Secondary]
+		@param int cost = Cost of item.
+		@param int qty = Quantity of item to buy.
+		Returns true if item was bought, false if the item does not exist, or cannot be bought.
+	*/
+	function GameBuyItem($user,$currency,$cost,$item,$qty=1)
+	{
+		global $db,$api;
+		$user= (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$currency = (isset($currency) && is_numeric($currency)) ? abs(intval($currency)) : 0;
+		$cost = (isset($cost) && is_numeric($cost)) ? abs(intval($cost)) : 0;
+		$qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
+		$item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
+		($currency == 1) ? $curr='primary' : $curr='secondary';
+		$user_currency=$db->fetch_single($db->query("SELECT `{$curr}_currency` FROM `users` WHERE `userid` = {$user}"));
+		if ($user_currency < $cost*$qty)
+		{
+			return false;
+		}
+		else if ($api->SystemItemIDtoName($item) == false)
+		{
+			return false;
+		}
+		else
+		{
+			$api->UserGiveItem($user,$item,$qty);
+			$db->query("UPDATE `users` SET `{$curr}_currency` = `{$curr}_currency` - {$cost} WHERE `userid` = {$user}");
+			return true;
+		}
+	}
 }
