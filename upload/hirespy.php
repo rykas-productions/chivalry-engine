@@ -44,12 +44,14 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 		{
 			event_add($_GET['user'],"An unknown user has attempted to spy on you and failed.");
 			alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_FAIL1']);
+			$api->SystemLogsAdd($userid,'spy',"Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) .  " and failed.");
 			die($h->endpage());
 		}
 		else
 		{
 			event_add($_GET['user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has attempted to spy on you and failed.");
 			alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_FAIL2']);
+			$api->SystemLogsAdd($userid,'spy',"Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) .  " and failed.");
 			die($h->endpage());
 		}
 	}
@@ -58,6 +60,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 		alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_FAIL3']);
 		$dungtime=mt_rand($ir['level'],$ir['level']*3);
 		$api->UserStatusSet($userid,2,$dungtime,"Stalkerish Tendencies");
+		$api->SystemLogsAdd($userid,'spy',"Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) .  " and was sent to the dungeon.");
 		die($h->endpage());
 	}
 	else
@@ -130,6 +133,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 				</td>
 			</tr>
 		</table>";
+		$api->SystemLogsAdd($userid,'spy',"Successfully spied on " . $api->SystemUserIDtoName($_GET['user']));
 	}
 }
 else
