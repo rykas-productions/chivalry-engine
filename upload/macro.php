@@ -14,14 +14,15 @@ if(isset($_POST['g-recaptcha-response']))
 	if($response['success'] == false) 
 	{
 		echo '<h2>You failed the captcha!</h2>';
-		$db->query("UPDATE users SET failed=failed+1 WHERE userid={$userid}");
 		header("Location: index.php");
+		$api->SystemLogsAdd($userid,'verify',"Verified unsuccessfully.");
 		exit;
 	} 
 	else 
 	{
 		$time=time();
 		$db->query("UPDATE users SET `last_verified`={$time}, `need_verify` = 0 WHERE userid={$userid}");
+		$api->SystemLogsAdd($userid,'verify',"Verified successfully.");
 		header("Location: index.php");
 	}
 }
