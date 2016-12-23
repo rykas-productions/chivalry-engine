@@ -213,6 +213,10 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_logs.php?action=itembuylogs'>Item Buy Logs</a><br />
 						<a href='staff_logs.php?action=itemmarketlogs'>Item Market Logs</a><br />
 						<a href='staff_logs.php?action=stafflogs'>Staff Logs</a><br />
+						<a href='staff_logs.php?action=spylogs'>Travel Logs</a><br />
+						<a href='staff_logs.php?action=verifylogs'>Verification Logs</a><br />
+						<a href='staff_logs.php?action=spylogs'>Spy Attempt Logs</a><br />
+						<a href='staff_logs.php?action=gamblinglogs'>Gambling Logs</a><br />
 					</div>
 				</div>
 			</div>
