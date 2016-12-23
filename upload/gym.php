@@ -12,21 +12,21 @@ if (user_dungeon($ir['userid']) == true)
 	die($h->endpage());
 }
 $statnames =  array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor");
-if (!isset($_POST["amnt"]))
+if (!isset($_GET["amnt"]))
 {
-    $_POST["amnt"] = 0;
+    $_GET["amnt"] = 0;
 }
-$_POST["amnt"] = abs((int) $_POST["amnt"]);
+$_GET["amnt"] = abs((int) $_GET["amnt"]);
 echo "<h3>Training</h3>";
-if (isset($_POST["stat"]) && $_POST["amnt"])
+if (isset($_GET["stat"]) && $_GET["amnt"])
 {
-	if (!isset($statnames[$_POST['stat']]))
+	if (!isset($statnames[$_GET['stat']]))
     {
 		alert("danger","{$lang['ERROR_INVALID']}","{$lang['GYM_INVALIDSTAT']}");
 		die($h->endpage());
 	}
-	$stat = $statnames[$_POST['stat']];
-    if ($_POST['amnt'] > $ir['energy'])
+	$stat = $statnames[$_GET['stat']];
+    if ($_GET['amnt'] > $ir['energy'])
     {
         alert("warning","{$lang['GYM_NEG']}","{$lang['GYM_NEG_DETAIL']}");
     }
@@ -34,7 +34,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
 	{
 		$gain = 0;
 		$extraecho='';
-        for ($i = 0; $i < $_POST['amnt']; $i++)
+        for ($i = 0; $i < $_GET['amnt']; $i++)
         {
             $gain +=
                     mt_rand(1, 4) / mt_rand(600, 1000) * mt_rand(500, 1000)
@@ -86,41 +86,41 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
         $db->query(
                 "UPDATE `users`
                  SET `will` = {$ir['will']},
-                 `energy` = `energy` - {$_POST['amnt']}
+                 `energy` = `energy` - {$_GET['amnt']}
                  WHERE `userid` = $userid");
 		$NewStatAmount = $ir[$stat] + $gain;
-        $EnergyLeft = $ir['energy'] - $_POST['amnt'];
+        $EnergyLeft = $ir['energy'] - $_GET['amnt'];
 		if ($stat == "strength")
         {
             echo "	You begin lifting some weights.<br />
-					You have gained {$gain} strength by doing {$_POST['amnt']} sets of weights.<br />
+					You have gained {$gain} strength by doing {$_GET['amnt']} sets of weights.<br />
 					You now have {$NewStatAmount} strength and {$EnergyLeft} energy left.";
 			$str_select="selected";
         }
         elseif ($stat == "agility")
         {
 			echo "	You begin running on a treadmill.<br />
-					  You have gained {$gain} agility by doing {$_POST['amnt']} minutes of running.<br />
+					  You have gained {$gain} agility by doing {$_GET['amnt']} minutes of running.<br />
 					  You now have {$NewStatAmount} agility and {$EnergyLeft} energy left.";
 			$agl_select="selected";
         }
         elseif ($stat == "guard")
         {
             echo "	You jump into the pool and begin swimming.<br />
-					You have gained {$gain} guard by doing {$_POST['amnt']} minutes of swimming.<br />
+					You have gained {$gain} guard by doing {$_GET['amnt']} minutes of swimming.<br />
 					You now have {$NewStatAmount} guard and {$EnergyLeft} energy left.";
 			$grd_select="selected";
         }
         elseif ($stat == "labor")
         {
             echo "	You walk over to some boxes filled with gym equipment and start moving them.<br />
-					You have gained {$gain} labour by moving {$_POST['amnt']} boxes.<br />
+					You have gained {$gain} labour by moving {$_GET['amnt']} boxes.<br />
 					You now have {$NewStatAmount} labour and {$EnergyLeft} energy left.";
 			$lab_select="selected";
         }
 		$api->SystemLogsAdd($userid,'training',"Trained their {$stat} and gained {$gain}.");
         echo "<hr />";
-        $ir['energy'] -= $_POST['amnt'];
+        $ir['energy'] -= $_GET['amnt'];
         $ir[$stat] += $gain;
 	}
 }
@@ -148,7 +148,7 @@ echo "Choose the stat you want to train and the times you want to train it.<br /
 You can train up to {$ir['energy']} times.<hr />
 <table class='table table-bordered'>
 	<tr>
-		<form action='gym.php' method='post'>
+		<form action='gym.php' method='get'>
 			<th>Stat to Train</th>
 			<td><select type='dropdown' name='stat' class='form-control'>
 <option {$str_select} value='Strength'>Strength (Have {$ir['strength']}, Ranked {$ir['strank']})
