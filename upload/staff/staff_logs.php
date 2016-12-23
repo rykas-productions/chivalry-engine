@@ -13,7 +13,7 @@ if (!isset($_GET['action']))
 }
 switch ($_GET['action'])
 {
-case "trainlogs":
+case "traininglogs":
     trainlogs();
     break;
 case "attacklogs":
@@ -49,30 +49,36 @@ case "itemmarketlogs":
 case "stafflogs":
     stafflogs();
     break;
+case "alllogs":
+    alllogs();
+    break;
 default:
     die();
     break;
 }
 function trainlogs()
 {
-	global $h,$lang,$db,$ir,$api,$userid;
-	echo "<h3>Training Logs</h3><hr />";
+	global $db,$ir,$h,$lang,$userid,$api;
+	$logname='training';
+    echo "
+	<h3>Training Logs</h3>
+	<hr />
+ 	  ";
     if (!isset($_GET['st']))
     {
         $_GET['st'] = 0;
     }
     $st = abs(intval($_GET['st']));
     $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = 'training'");
-    $logs = $db->fetch_single($q);
+    $q = $db->query("SELECT COUNT(`log_id`) FROM `logs` WHERE `log_type` = '{$logname}'");
+    $attacks = $db->fetch_single($q);
     $db->free_result($q);
-    if ($logs == 0)
+    if ($attacks == 0)
     {
-        alert("info","Nothing!","No one has trained yet. When someone does, it will show up here.");
+        echo "There haven't been any trainings yet.";
         return;
     }
-    $pages = ceil($logs / $app);
+    $pages = ceil($attacks / $app);
     echo '<ul class="pagination">Pages:&nbsp;<br />';
     for ($i = 1; $i <= $pages; $i++)
     {
@@ -86,55 +92,42 @@ function trainlogs()
 		{
 			echo "<li>";
 		}
-        echo "<a href='?action=trainlogs&st={$s}'>{$i}";
+        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
     <br />
-    <table class='table table-bordered table-hover'>
-			<thead>
+    <table class='table table-bordered table-hover table-reponsive'>
     		<tr>
     			<th>Time</th>
-				<th>User</th>
-    			<th>Stat Trained</th>
+    			<th>User</th>
+    			<th>What Happened?</th>
     		</tr>
-			</thead>
-			<tbody>
        ";
-	$LogsQuery=$db->query("SELECT `log_user`,`log_text`,`log_time`,`username`,`userid` 
-							FROM `logs` AS `lt`
-							INNER JOIN `users` AS `u`
-							ON `lt`.`log_user` = `u`.`userid`
-							WHERE `log_type` = 'training'
-							ORDER BY `log_time` DESC
-							LIMIT $st, $app");
-    while ($r = $db->fetch_row($LogsQuery))
+    $q =
+            $db->query(
+                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
+                     FROM `logs`
+					 WHERE `log_type` = '{$logname}'
+                     ORDER BY `log_time` DESC
+                     LIMIT $st, $app");
+    while ($r = $db->fetch_row($q))
     {
-        
-       echo "
-			<tr>
-				<td>
-					" . date("F j, Y, g:i:s a", $r['log_time']) . "
-				</td>
-				<td>
-					<a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]
-				</td>
-				<td>
-					{$r['log_text']}
-				</td>
-			</tr>";
+		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
+        echo "
+		<tr>
+        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
+                . "</td>
+        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
+        	<td>{$r['log_text']}</td>
+           ";
+        echo '</tr>';
     }
-    $db->free_result($LogsQuery);
+    $db->free_result($q);
     echo "
-    </tbody>
-	</table>
-    <br />
-	<center>
+    </table>
+    <center>
     <ul class='pagination'>Pages:<br />
        ";
     for ($i = 1; $i <= $pages; $i++)
@@ -149,15 +142,11 @@ function trainlogs()
 		{
 			echo "<li>";
 		}
-        echo "<a href='?action=trainlogs&st={$s}'>{$i}";
+        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the training logs.");
+	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
 }
 function attacklogs()
 {
@@ -197,10 +186,6 @@ function attacklogs()
 		}
         echo "<a href='?action=attacklogs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
@@ -251,10 +236,6 @@ function attacklogs()
 		}
         echo "<a href='?action=attacklogs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the attack logs.");
@@ -278,7 +259,7 @@ function userlogs()
 		$st = abs(intval($_GET['st']));
 		$app = 100;
 		$q = $db->query("SELECT COUNT(`log_id`)
-						 FROM `logs` WHERE `log_type` = 'training'");
+						 FROM `logs` WHERE `log_type` = 'training' AND `log_user` = {$_GET['user']}");
 		$logs = $db->fetch_single($q);
 		$db->free_result($q);
 		if ($logs == 0)
@@ -302,10 +283,6 @@ function userlogs()
 			}
 			echo "<a href='?action=userlogs&user={$user}&st={$s}'>{$i}";
 			echo "</li></a>&nbsp;";
-			if ($i % 25 == 0)
-			{
-				echo "<br /></center>";
-			}
 		}
 		echo "
 		</ul>
@@ -365,10 +342,6 @@ function userlogs()
 			}
 			echo "<a href='?action=userlogs&user={$user}&st={$s}'>{$i}";
 			echo "</li></a>&nbsp;";
-			if ($i % 25 == 0)
-			{
-				echo "<br /></center>";
-			}
 		}
 		$mypage = floor($_GET['st'] / 100) + 1;
 		$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of User ID {$user}'s user logs.");
@@ -459,10 +432,6 @@ function loginlogs()
 		}
         echo "<a href='?action=loginlogs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
@@ -513,10 +482,6 @@ function loginlogs()
 		}
         echo "<a href='?action=loginlogs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the login logs.");
@@ -559,10 +524,6 @@ function itemselllogs()
 		}
         echo "<a href='?action=itemselllogs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
@@ -613,10 +574,6 @@ function itemselllogs()
 		}
         echo "<a href='?action=itemselllogs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the login logs.");
@@ -659,10 +616,6 @@ function equiplogs()
 		}
         echo "<a href='?action=equiplogs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
@@ -713,10 +666,6 @@ function equiplogs()
 		}
         echo "<a href='?action=equiplogs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the equipping logs.");
@@ -760,10 +709,6 @@ function banklogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
@@ -814,10 +759,6 @@ function banklogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
@@ -861,10 +802,6 @@ function crimelogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
@@ -915,10 +852,6 @@ function crimelogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
@@ -962,10 +895,6 @@ function itemuselogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
@@ -1016,10 +945,6 @@ function itemuselogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the item use logs.");
@@ -1063,10 +988,6 @@ function itembuylogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
@@ -1117,10 +1038,6 @@ function itembuylogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the item buy logs.");
@@ -1164,10 +1081,6 @@ function itemmarketlogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
@@ -1218,10 +1131,6 @@ function itemmarketlogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the item market logs.");
@@ -1265,10 +1174,6 @@ function stafflogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     echo "
 	</ul>
@@ -1319,12 +1224,98 @@ function stafflogs()
 		}
         echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
-        if ($i % 25 == 0)
-        {
-            echo "<br /></center>";
-        }
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
+}
+function alllogs()
+{
+	global $db,$ir,$h,$lang,$userid,$api;
+    echo "
+	<h3>Game Logs</h3>
+	<hr />
+ 	  ";
+    if (!isset($_GET['st']))
+    {
+        $_GET['st'] = 0;
+    }
+    $st = abs(intval($_GET['st']));
+    $app = 100;
+    $q = $db->query("SELECT COUNT(`log_id`) FROM `logs`");
+    $attacks = $db->fetch_single($q);
+    $db->free_result($q);
+    if ($attacks == 0)
+    {
+        echo "There haven't been any game actions yet.";
+        return;
+    }
+    $pages = ceil($attacks / $app);
+    echo '<ul class="pagination">Pages:&nbsp;<br />';
+    for ($i = 1; $i <= $pages; $i++)
+    {
+        $s = ($i - 1) * $app;
+		if ($s == $st)
+        {
+            echo "<li class='active'>";
+        }
+
+		else
+		{
+			echo "<li>";
+		}
+        echo "<a href='?action=alllogs&st={$s}'>{$i}";
+        echo "</li></a>&nbsp;";
+    }
+    echo "
+	</ul>
+    <br />
+    <table class='table table-bordered table-hover table-reponsive'>
+    		<tr>
+    			<th>Time</th>
+    			<th>User</th>
+    			<th>What Happened?</th>
+    		</tr>
+       ";
+    $q =
+            $db->query(
+                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
+                     FROM `logs`
+                     ORDER BY `log_time` DESC
+                     LIMIT $st, $app");
+    while ($r = $db->fetch_row($q))
+    {
+		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
+        echo "
+		<tr>
+        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
+                . "</td>
+        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
+        	<td>{$r['log_text']}</td>
+           ";
+        echo '</tr>';
+    }
+    $db->free_result($q);
+    echo "
+    </table>
+    <center>
+    <ul class='pagination'>Pages:<br />
+       ";
+    for ($i = 1; $i <= $pages; $i++)
+    {
+        $s = ($i - 1) * $app;
+		if ($s == $st)
+        {
+            echo "<li class='active'>";
+        }
+
+		else
+		{
+			echo "<li>";
+		}
+        echo "<a href='?action=alllogs&st={$s}'>{$i}";
+        echo "</li></a>&nbsp;";
+    }
+    $mypage = floor($_GET['st'] / 100) + 1;
+	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the game logs.");
 }
 $h->endpage();

@@ -200,8 +200,9 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 			<div id='LOGS' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
+						<a href='staff_logs.php?action=alllogs'>Game Logs</a><br />
 						<a href='staff_logs.php?action=userlogs'>User Logs</a><br />
-						<a href='staff_logs.php?action=trainlogs'>Training Logs</a><br />
+						<a href='staff_logs.php?action=traininglogs'>Training Logs</a><br />
 						<a href='staff_logs.php?action=attacklogs'>Attack Logs</a><br />
 						<a href='staff_logs.php?action=loginlogs'>Login Logs</a><br />
 						<a href='staff_logs.php?action=itemselllogs'>Item Sell Logs</a><br />
