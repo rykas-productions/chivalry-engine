@@ -155,42 +155,45 @@ function read()
 		</td>
 	</tr>
 	</table>
-	<hr />
-	{$lang['MAIL_QUICKREPLY']}<br />
-	<form method='post' action='?action=send'>
-	<table class='table table-bordered'>
-	<tr>
-		<th>
-			{$lang['MAIL_SENDTO']}
-		</th>
-		<td>
-			<input type='text' class='form-control' readonly='1' name='sendto' required='1' value='{$username}'>
-		</td>
-	</tr>
-	<tr>
-		<th>
-			{$lang['MAIL_SUBJECT']}
-		</th>
-		<td>
-			<input type='text' class='form-control' maxlength='50' name='subject' value='{$msg['mail_subject']}'>
-		</td>
-	</tr>
-	<tr>
-		<th>
-			{$lang['MAIL_MESSAGE']}
-		</th>
-		<td>
-			<textarea class='form-control' rows='5' required='1' maxlength='65655' name='msg'></textarea>
-		</td>
-	</tr>
-	<tr>
-		<td colspan='2'>
-			<input type='submit' class='btn btn-default'  value='{$lang['MAIL_REPLYTO']} {$username}'>
-		</td>
-	</tr>
-	</table>
-	<input type='hidden' name='verf' value='{$code}' />
-	</form>";
+	<hr />";
+	if (permission('CanReplyMail',$userid) == true)
+	{
+		echo "{$lang['MAIL_QUICKREPLY']}<br />
+		<form method='post' action='?action=send'>
+		<table class='table table-bordered'>
+		<tr>
+			<th>
+				{$lang['MAIL_SENDTO']}
+			</th>
+			<td>
+				<input type='text' class='form-control' readonly='1' name='sendto' required='1' value='{$username}'>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				{$lang['MAIL_SUBJECT']}
+			</th>
+			<td>
+				<input type='text' class='form-control' maxlength='50' name='subject' value='{$msg['mail_subject']}'>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				{$lang['MAIL_MESSAGE']}
+			</th>
+			<td>
+				<textarea class='form-control' rows='5' required='1' maxlength='65655' name='msg'></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<input type='submit' class='btn btn-default'  value='{$lang['MAIL_REPLYTO']} {$username}'>
+			</td>
+		</tr>
+		</table>
+		<input type='hidden' name='verf' value='{$code}' />
+		</form>";
+	}
 }
 function send()
 {
@@ -314,41 +317,44 @@ function compose()
 	{
 		$username='';
 	}
-	$code = request_csrf_code('inbox_send');
-	echo "
-	<form method='post' action='?action=send'>
-	<table class='table table-bordered'>
-	<tr>
-		<th>
-			{$lang['MAIL_SENDTO']}
-		</th>
-		<td>
-			<input type='text' class='form-control' value='{$username}' name='sendto' required='1'>
-		</td>
-	</tr>
-	<tr>
-		<th>
-			{$lang['MAIL_SUBJECT']}
-		</th>
-		<td>
-			<input type='text' class='form-control' maxlength='50' name='subject'>
-		</td>
-	</tr>
-	<tr>
-		<th>
-			{$lang['MAIL_MESSAGE']}
-		</th>
-		<td>
-			<textarea class='form-control' rows='5' required='1' maxlength='65655' name='msg'></textarea>
-		</td>
-	</tr>
-	<tr>
-		<td colspan='2'>
-			<input type='submit' class='btn btn-default'  value='{$lang['MAIL_SENDMSG']}'>
-		</td>
-	</tr>
-	</table>
-	<input type='hidden' name='verf' value='{$code}' />
-	</form>";
+	if (permission('CanReplyMail',$userid) == true)
+	{
+		$code = request_csrf_code('inbox_send');
+		echo "
+		<form method='post' action='?action=send'>
+		<table class='table table-bordered'>
+		<tr>
+			<th>
+				{$lang['MAIL_SENDTO']}
+			</th>
+			<td>
+				<input type='text' class='form-control' value='{$username}' name='sendto' required='1'>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				{$lang['MAIL_SUBJECT']}
+			</th>
+			<td>
+				<input type='text' class='form-control' maxlength='50' name='subject'>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				{$lang['MAIL_MESSAGE']}
+			</th>
+			<td>
+				<textarea class='form-control' rows='5' required='1' maxlength='65655' name='msg'></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<input type='submit' class='btn btn-default'  value='{$lang['MAIL_SENDMSG']}'>
+			</td>
+		</tr>
+		</table>
+		<input type='hidden' name='verf' value='{$code}' />
+		</form>";
+	}
 }
 $h->endpage();
