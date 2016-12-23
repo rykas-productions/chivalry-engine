@@ -895,7 +895,7 @@ function check_data()
  */
 function check_level()
 {
-    global $ir, $c, $userid, $db, $lang;
+    global $ir, $userid, $db, $api;
     $ir['xp_needed'] = round(($ir['level'] + 2.25) * ($ir['level'] + 2.25) * ($ir['level'] + 2.25) * 2);
     if ($ir['xp'] >= $ir['xp_needed'])
     {
@@ -927,7 +927,8 @@ function check_level()
 			$Stat='guard';
 		}
 		$db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
-		event_add($userid, "You have successfully leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
+		event_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
+		$api->SystemLogsAdd($userid,'level',"Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
     }
 }
 
