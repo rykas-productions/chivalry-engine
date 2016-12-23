@@ -1,7 +1,4 @@
 <?php
-/*
-
-*/
 require('globals.php');
 $cost_of_travel = 250*$ir['level'];
 echo "<h3>{$lang['TRAVEL_TITLE']}</h3><hr />";
@@ -78,6 +75,7 @@ else
                      `location` = {$_GET['to']} WHERE `userid` = {$userid}");
 			$cityName = $db->fetch_single($q);
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['TRAVEL_SUCCESS']} " . $cityName . " {$lang['GEN_FOR']} " . number_format($cost_of_travel));
+			$api->SystemLogsAdd($userid,'travel',"Traveled to {$cityName}.");
 			die($h->endpage());
 		}
 		$db->free_result($q);
