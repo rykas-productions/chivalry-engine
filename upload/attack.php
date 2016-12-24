@@ -585,6 +585,13 @@ function xp()
 		{
 			$qe = $r['level'] * $r['level'] * $r['level'];
 			$expgain = mt_rand($qe / 2, $qe);
+			$ir['total']=$ir['strength']+$ir['agility']+$ir['guard'];
+			$ot=$db->fetch_row($db->query("SELECT * FROM `userstats` WHERE `userid` = {$r['userid']}"));
+			$ototal=$ot['strength'] + $ot['agility'] + $ot['guard'];
+			if (($ir['total']*0.9) > $ototal)
+			{
+				$expgain=$expgain*0.33;
+			}
 			if ($expgain < 0)
 			{
 				$expgain=$expgain*-1;
