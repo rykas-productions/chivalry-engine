@@ -168,13 +168,6 @@ if ($ir['force_logout'] != 'false')
     header("Location: {$login_url}");
     exit;
 }
-global $macropage;
-if ($macropage && !$ir['verified'] && $set['validate_on'] == 1)
-{
-    $macro_url = "macro1.php?refer=$macropage";
-    header("Location: {$macro_url}");
-    exit;
-}
 check_level();
 check_data();
 getOS($_SERVER['HTTP_USER_AGENT']);

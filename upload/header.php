@@ -4,7 +4,7 @@ class headers
 
     function startheaders()
     {
-		global $ir, $set, $lang, $db, $menuhide, $userid;
+		global $ir, $set, $lang, $db, $menuhide, $userid, $macropage;
 		?>
 <!DOCTYPE html>
 <html lang="en">
@@ -187,41 +187,42 @@ if (empty($menuhide))
 			alert('info',"{$lang["GEN_DUNG"]}","{$lang['MENU_DUNGEON1']} {$DungeonRemain} {$lang['GEN_MINUTES']}");
 		}
 		$time=time();
-		if ($ir['last_verified'] < $time-900 || $ir['need_verify'] == 1 && $userid > 1)
+		if (($ir['last_verified'] < ($time-900)) || ($ir['need_verify'] == 1))
 		{
-			echo "lol";
-			$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
-			?>
-				<div id="captcha" class="modal fade in show" role="dialog">
-				  <div class="modal-dialog">
+			if (isset($macropage))
+			{
+				$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
+				?>
+					<div id="captcha" class="modal fade in show" role="dialog">
+					  <div class="modal-dialog">
 
-					<!-- Modal content-->
-					<div class="modal-content">
-					  <div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title"><?php echo $lang['RECAPTCHA_TITLE']; ?></h4>
-					  </div>
-					  <div class="modal-body">
-						<p><?php echo $lang['RECAPTCHA_INFO']; ?>
-						<form action='macro.php' method='post'>
-							<center><div class='g-recaptcha' data-theme='dark' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div></center>
-						</p>
-					  </div>
-					  <div class="modal-footer">
-						
-							<input type='submit' value="<?php echo $lang['RECAPTCHA_BTN']; ?>" class="btn btn-default" data-dismiss="modal">
-						</form>
+						<!-- Modal content-->
+						<div class="modal-content">
+						  <div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title"><?php echo $lang['RECAPTCHA_TITLE']; ?></h4>
+						  </div>
+						  <div class="modal-body">
+							<p><?php echo $lang['RECAPTCHA_INFO']; ?>
+							<form action='macro.php' method='post'>
+								<center><div class='g-recaptcha' data-theme='dark' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div></center>
+							</p>
+						  </div>
+						  <div class="modal-footer">
+								<input type='hidden' value='<?php echo $macropage; ?>' name='page'>
+								<input type='submit' value="<?php echo $lang['RECAPTCHA_BTN']; ?>" class="btn btn-default" data-dismiss="modal">
+							</form>
+						  </div>
+						</div>
+
 					  </div>
 					</div>
-
-				  </div>
-				</div>
-			<?php
+				<?php
+			}
 		}
 		date_default_timezone_set($ir['timezone']);  
-		
 	}
-	}
+}
 	function userdata($ir, $lv, $fm, $cm, $dosessh = 1)
     {
 		global $db, $c, $userid, $set,$lang;

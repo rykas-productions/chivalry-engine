@@ -1,5 +1,5 @@
 <?php
-$marcopage = "gym.php";
+$macropage = "gym.php";
 require("globals.php");
 if (user_infirmary($ir['userid']) == true)
 {
