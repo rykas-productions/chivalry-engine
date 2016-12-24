@@ -31,6 +31,7 @@ if (!is_ajax())
     exit;
 }
 	$cash = abs((int) $_POST['cash']);
+	$receive = abs((int) $_POST['sendto']);
 	if (!isset($_POST['verf']) || !verify_csrf_code('cash_send', stripslashes($_POST['verf'])))
 	{
 		csrf_error('');
@@ -54,7 +55,6 @@ if (!is_ajax())
 	{
 		alert('danger',"No!","Why would you want to send yourself currency anyway?");
 	}
-	$receive = abs((int) $_POST['sendto']);
 	if (empty($receive))
     {
 		alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['SCF_UNE']}");
