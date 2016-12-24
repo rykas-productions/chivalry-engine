@@ -928,7 +928,7 @@ function check_level()
 		}
 		$db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
 		event_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
-		$api->SystemLogsAdd($userid,'level',"Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
+		SystemLogsAdd($userid,'level',"Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
     }
 }
 
@@ -1573,3 +1573,13 @@ function update_fg_info($ip) {
 		$db->query("UPDATE `userdata` SET `useragent` = '{$user_agent}', `browser` = '{$browser}' WHERE `userid` = {$userid}");
 	}
 }
+function SystemLogsAdd($user,$logtype,$input)
+	{
+		global $db;
+		$time = time();
+		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$input = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($input))));
+		$logtype = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($logtype)))));
+		$db->query("INSERT INTO `logs` (`log_id`, `log_type`, `log_user`, `log_time`, `log_text`, `log_ip`) VALUES (NULL, '{$logtype}', '{$user}', '{$time}', '{$input}', '{$IP}');");
+	}
