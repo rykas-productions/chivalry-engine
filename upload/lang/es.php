@@ -9,7 +9,6 @@
  
 $lang = array();
 global $ir,$fee,$gain;
-
 //Static
 $lang["HEADER_TITLE"] = "La caballería del motor Unreleased";
  
@@ -34,8 +33,10 @@ $lang['MENU_UNREADMAIL2']='Tienes';
 $lang['MENU_UNREADMAIL3']='mensajes no leídos. Hacer clic';
 $lang['MENU_UNREADMAIL4']='para leerlos.';
 $lang['MENU_UNREADNOTIF1']='notificaciones no leídas. Hacer clic';
-$lang['MENU_INFIRMARY']='¡Enfermería!';
 $lang['MENU_INFIRMARY1']='Usted está en la enfermería para la próxima';
+$lang['MENU_DUNGEON1']='Estás en la mazmorra para el próximo';
+$lang['MENU_XPLOST']="Al huir de la lucha, has perdido toda tu experiencia!";
+$lang['MENU_RULES']="Reglas del juego";
 
 // Preferences
 $lang["PREF_CPASSWORD"] = "Cambia la contraseña";
@@ -45,6 +46,14 @@ $lang["PREF_CNAME"] = "Cambie el nombre de usuario";
 $lang["PREF_CTIME"] = "Cambia Hora";
 $lang["PREF_CLANG"] = "Cambiar idioma";
 $lang["PREF_CPIC"] = "Cambiar imagen para mostrar";
+$lang["PREF_CTHM"] = "Cambiar de tema";
+$lang["PREF_CTHM_FORM"] = "Seleccione el tema al que desea cambiar. Esta acción se puede revertir en cualquier momento que desee.";
+$lang["PREF_CTHM_FORM1"]="Selecciona tu tema";
+$lang["PREF_CTHM_FORMDD1"]="Predeterminado (Brillante)";
+$lang["PREF_CTHM_FORMDD2"]="Alternativa (oscura)";
+$lang['PREF_CTHM_FORMBTN']="Actualizar Tema";
+$lang['PREF_CTHM_SUB_ERROR']="Estás intentando usar un tema inexistente.";
+$lang['PREF_CTHM_SUB_SUCCESS']="Su tema se ha actualizado correctamente. Los efectos se notarán en la carga de página siguiente.";
 
 //Username Change
 $lang["UNC_TITLE"] = "Cambiando su nombre de usuario ...";
@@ -99,6 +108,26 @@ $lang["REG_CPW"] = "Confirmar contraseña";
 $lang["REG_SEX"] = "Género";
 $lang["REG_CLASS"] = "Clase";
 $lang["REG_REFID"] = "Remisión ID";
+$lang["REG_PROMO"] = "Código promocional";
+$lang['REG_WARRIORCLASS']="Clase Guerrero!";
+$lang['REG_ROGUECLASS']="Clase Pícaro!";
+$lang['REG_DEFENDERCLASS']="Clase Defensor!";
+$lang['REG_NOCLASS']="We need you to select a class, please.";
+$lang['REG_ROGUECLASS_INFO']="A rogue fighter starts with more agility and less strength. Throughout their adventures, they'll gain agility much quicker than any other stat, and strength much slower than the others.";
+$lang['REG_DEFENDERCLASS_INFO']="A defender starts with more guard and less agility. Throughout their adventures, they'll gain guard much quicker than any other stat, and agility much slower than the others.";
+$lang['REG_WARRIORCLASS_INFO']="A warrior tarts with more strength and less guard. Throughout their adventures, they'll gain strength way quicker than any other stat, and guard much slower than the others.";
+$lang['REG_UNIUERROR']="The username you chose is already in use. Go back and try again.";
+$lang['REG_SUCCESS']="You have successfully joined the game. Enjoy your stay and please be sure to read the game rules.";
+$lang['REG_EIUERROR']="The email you chose is already in use. Go back and try again.";
+$lang['REG_PWERROR']="You must enter a password and confirm it. Go back and try again.";
+$lang['REG_REFERROR']="The referral you specified does not exist in-game. Go back and verify again.";
+$lang['REG_REFMERROR']="The referral you specified shares the same IP as you. No creating multiple accounts. The admins have been alerted.";
+$lang['REG_VPWERROR']="The passwords you entered do not match. Go back and try again.";
+$lang['REG_CAPTCHAERROR']="You failed the captcha, or just didn't enter it. Go back and try again.";
+$lang['REG_GENDERERROR']="You specified an invalid gender. Please go back and try again.";
+$lang['REG_CLASSERROR']="You specified an invalid fighting class. Please go back and try again.";
+$lang['REG_EMAILERROR']="You did not enter a valid email, or failed to enter the email field. Please go back and try again.";
+$lang['REG_MULTIALERT']="Hold on there. We've detected that someone with your IP address has already registered. We're going to stop you here for now. If this is a false positive, please email the game owners.";
 
 //CSRF Error
 $lang["CSRF_ERROR_TITLE"] = "Bloqueado Acción!";
@@ -113,6 +142,8 @@ $lang['ERROR_SUCCESS'] = "¡Éxito!";
 $lang['ERROR_INVALID'] = "¡Entrada inválida!";
 $lang['ERROR_SECURITY'] = "¡Error de seguridad!";
 $lang['ERROR_NONUSER'] = "Nonexistent User!";
+$lang['ERROR_NOPERM'] ="¡Sin autorización!";
+$lang['ERROR_UNKNOWN'] ="¡Error desconocido!";
 
 //Generic
 $lang["GEN_HERE"] = "aquí";
@@ -133,6 +164,17 @@ $lang['GEN_FOR']="para";
 $lang['GEN_INDAH']="En el";
 $lang['GEN_YES']="Sí";
 $lang['GEN_NO']="No";
+$lang['GEN_STR']="Fuerza";
+$lang['GEN_AGL']="Agilidad";
+$lang['GEN_GRD']="Guardia";
+$lang['GEN_IQ']="IQ";
+$lang['GEN_LAB']="Trabajo";
+$lang['GEN_GOHOME']="Vete a casa";
+$lang['GEN_IUOF']="¡El uso del archivo no es válido!";
+$lang['GEN_THEM']="Ellos";
+$lang['GEN_CONTINUE']="Continuar";
+$lang['GEN_FOR_S']="para";
+$lang['GEN_NOPERM']="No tiene el nivel de usuario adecuado para ver esta página. Si esto no es correcto, póngase en contacto con un administrador inmediatamente!";
 
 //Gym
 $lang['GYM_INFIRM'] = "Mientras que usted está inconsciente, no se puede entrenar! Vuelve después de que se siente saludable!";
@@ -177,14 +219,20 @@ $lang['EXPLORE_ACADEMY']="Academia local";
 $lang['EXPLORE_ACT']="Ocupaciones";
 $lang['EXPLORE_PINTER']="Interacción con los jugadores";
 $lang['EXPLORE_FORUMS']="Foros";
-$lang['EXPLORE_NEWSPAPER']="Periódico";
-$lang['EXPLORE_ACT']="Activities";			
+$lang['EXPLORE_NEWSPAPER']="Periódico";			
 $lang['EXPLORE_ANNOUNCEMENTS']="Announcements";
+$lang['EXPLORE_CRIMES']="Centro Criminal";
+$lang['EXPLORE_TRAVEL']="Viaje del caballo";
+$lang['EXPLORE_GUILDLIST']="Lista de Guild";
+$lang['EXPLORE_YOURGUILD']="Tu gremio";
+$lang['EXPLORE_TOPTEN']="Top 10 Jugadores";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Ya que estás en la enfermería, no se puede visitar la ciudad!";
+$lang['ERRDE_EXPLORE2']="Ya que estás en la mazmorra, no se puede visitar la ciudad!";
 $lang['ERRDE_PN']="Su libreta personal no podía ser actualizado debido al límite de 65.655 caracteres.";
-$lang['ERROR_MAIL_UNOWNED']='You cannot read this message as it was not sent to you!';
+$lang['ERROR_MAIL_UNOWNED']='¡No puedes leer este mensaje porque no te lo enviaron!';
+$lang['ERROR_FORUM_VF']="Vuelve e intenta nuevamente por nosotros, por favor. Hemos roto.";
 
 //Index
 $lang['INDEX_TITLE']="Información General";
@@ -298,19 +346,10 @@ $lang['BANK_D_SUCCESS1']=" a depositar. Después de la cuota (";
 $lang['BANK_D_SUCCESS2']=") se toma, ";
 $lang['BANK_D_SUCCESS3']=" se añade a su cuenta bancaria. <b> Ahora tiene ";
 $lang['BANK_D_SUCCESS4']=" en tu cuenta.</b>";
-
-//Attack
-$lang['ATT_NC']="Por favor, recuerde que las trampas en este juego no llegarán a ninguna parte ...";
-$lang['ATT_PDE']="El jugador que está tratando de acabado no existe.";
-$lang['ATT_HP']="Por favor, no actualizar o volver. ¡Gracias!";
-$lang['ATT_BEAT']="Vences";
-$lang['ATT_BU_TEXT1']="en el piso. Se continúa a golpear y patear ellos hasta que comienzan a sangrar. Una vez que la sangre comienza a mostrar, a romper sus extremidades. Sus acciones los pusieron en la enfermería ";
-$lang['ATT_BU_TEXT2']="Ejecuta casa rápidamente y en silencio, para no ganar ninguna atención que no sean necesarios.";
-$lang['ATT_L_TEXT1']="Ha perdido usted";
-$lang['ATT_L_TEXT2']="y perdió";
-$lang['ATT_XP_1']="y ganado";
-$lang['ATT_XP_2']="Usted oculta sus armas y gota";
-$lang['ATT_XP_3']="fuera fuera de la enfermería. Sintiéndose logrado, se puede caminar a casa.";
+$lang['BANK_W_FAIL']="Está intentando retirar más {$lang['INDEX_PRIMCURR']} de los que tiene actualmente en el banco.";
+$lang['BANK_W_SUCCESS']="Se retiró con éxito";
+$lang['BANK_W_SUCCESS1']="De su cuenta bancaria. Tienes";
+$lang['BANK_W_SUCCESS2']="Izquierda en su cuenta bancaria.";
 
 //Forums
 $lang['FORUM_EMPTY_REPLY']="Usted está tratando de presentar una respuesta vacía, lo que no se puede hacer! Por favor asegúrese de que ha rellenado el formulario de respuesta!";
@@ -389,6 +428,9 @@ $lang['PROFILE_ACTIVE']="Último Activo";
 $lang['PROFILE_LOGIN']="Último acceso";
 $lang['PROFILE_AGE']="Años";
 $lang['PROFILE_DAYS_OLD']="días de edad.";
+$lang['PROFILE_REF']="Referencias";
+$lang['PROFILE_FRI']="Amigos";
+$lang['PROFILE_ENE']="Enemigos";
 
 //Equip Items
 $lang['EQUIP_NOITEM']="El elemento no se puede encontrar, y como resultado, no se puede equiparla.";
@@ -396,14 +438,25 @@ $lang['EQUIP_NOITEM_TITLE']="Elemento no existe!";
 $lang['EQUIP_NOTWEAPON']="El artículo que usted está tratando de equipar no puede estar equipado como un arma.";
 $lang['EQUIP_NOTWEAPON_TITLE']="Arma no válido!";
 $lang['EQUIP_NOSLOT']="Usted está tratando de dotar a este elemento a una ranura no válida o no existe.";
+$lang['EQUIP_NOSLOT_TITLE']="Ranura de equipo no válida!";
 $lang['EQUIP_WEAPON_SUCCESS1']="Usted ha equipado con éxito";
 $lang['EQUIP_WEAPON_SUCCESS2']="como tu";
 $lang['EQUIP_WEAPON_SLOT1']='Arma primaria';
 $lang['EQUIP_WEAPON_SLOT2']='Arma secundaria';
+$lang['EQUIP_WEAPON_SLOT3']='Armadura';
 $lang['EQUIP_WEAPON_TITLE']="Equipar un arma";
 $lang['EQUIP_WEAPON_TEXT_FORM_1']="Por favor, seleccione el punto que desea equipar su";
 $lang['EQUIP_WEAPON_TEXT_FORM_2']="a. Si ya está sosteniendo un arma en la ranura que elija, se trasladó de nuevo a su inventario.";
 $lang['EQUIP_WEAPON_EQUIPAS']="Como equipar";
+$lang['EQUIP_ARMOR_TITLE']="Armadura de armadura";
+$lang['EQUIP_ARMOR_TEXT_FORM_1']="Estás intentando equipar tu ";
+$lang['EQUIP_ARMOR_TEXT_FORM_2']="A su ranura de la armadura. Si ya está usando armadura, se moverá de nuevo a su inventario.";
+$lang['EQUIP_NOTARMOR']="El artículo que intenta equipar no puede equiparse como armadura.";
+$lang['EQUIP_NOTARMOR_TITLE']="¡Armadura no válida!";
+$lang['EQUIP_OFF_ERROR1']="Está intentando descomponer un elemento de una ranura inexistente.";
+$lang['EQUIP_OFF_ERROR2']="No tiene un elemento en esa ranura.";
+$lang['EQUIP_OFF_SUCCESS']="Ha desagregado exitosamente el elemento de su";
+$lang['EQUIP_OFF_SUCCESS1']="espacio.";
 
 //Polling Staff
 $lang['STAFF_POLL_TITLE']="Administración de votación";
@@ -464,4 +517,59 @@ $lang['STAFF_FORUM_DEL_BTN']="Eliminar Foro";
 $lang['STAFF_FORUM_DEL_INFO']="Eliminación de foros son permanentes. Esto también eliminará los mensajes dentro de ellos también.";
 $lang['STAFF_FORUM_EDIT_ERRFDNE']="El foro ha decidido eliminar no existe. Volver atrás y comprobar y volver a intentarlo.";
 $lang['STAFF_FORUM_DEL_SUCCESS']="Se ha eliminado el foro, junto con cualesquiera que sean los temas y mensajes estaban en ellos con anterioridad.";
+
+//Item Use
+$lang['IU_UI']="Está intentando utilizar un elemento no especificado. Revisa tu enlace y vuelve a intentarlo!";
+$lang['IU_UNUSED_ITEM']="Este elemento no está configurado para utilizarse. No puede utilizar elementos con un uso configurado.";
+$lang['IU_ITEM_NOEXIST']="El elemento que intenta utilizar no existe. Compruebe sus fuentes y vuelva a intentarlo.";
+$lang['IU_SUCCESS']="hHa sido utilizado con éxito. Actualizar para que los cambios surtan efecto.";
+
+//Staff items
+$lang['STAFF_ITEM_GIVE_TITLE']="Dar un artículo al usuario";
+$lang['STAFF_ITEM_GIVE_FORM_USER']="Usuario";
+$lang['STAFF_ITEM_GIVE_FORM_ITEM']="ít";
+$lang['STAFF_ITEM_GIVE_FORM_QTY']="Cantidad";
+$lang['STAFF_ITEM_GIVE_FORM_BTN']="Dar un artículo";
+$lang['STAFF_ITEM_GIVE_SUB_NOITEM']="No especificó el elemento que desea dar al usuario.";
+$lang['STAFF_ITEM_GIVE_SUB_NOQTY']="No especificó la cantidad del elemento que desea dar al usuario.";
+$lang['STAFF_ITEM_GIVE_SUB_NOUSER']="No especificó el usuario al que desea asignar un elemento.";
+$lang['STAFF_ITEM_GIVE_SUB_ITEMDNE']="El elemento que intenta regalar no existe.";
+$lang['STAFF_ITEM_GIVE_SUB_USERDNE']="El usuario al que intenta dar un elemento no existe.";
+$lang['STAFF_ITEM_GIVE_SUB_SUCCESS']="Los artículos han sido dotados con éxito.";
+
+//Staff Crimes
+$lang['STAFF_CRIME_TITLE']="Crímenes";
+$lang['STAFF_CRIME_MENU_CREATE']="Crear crimen";
+$lang['STAFF_CRIME_MENU_CREATECG']="Crear grupo de crimen";
+$lang['STAFF_CRIME_NEW_TITLE']="Añadir un nuevo crimen.";
+$lang['STAFF_CRIME_NEW_NAME']="Nombre del crimen";
+$lang['STAFF_CRIME_NEW_BRAVECOST']="Costo de la valentía";
+$lang['STAFF_CRIME_NEW_SUCFOR']="Fórmula de éxito";
+$lang['STAFF_CRIME_NEW_SUCPRIMIN']="Éxito Mínimo {$lang['INDEX_PRIMCURR']}";
+$lang['STAFF_CRIME_NEW_SUCPRIMAX']="Máximo éxito {$lang['INDEX_PRIMCURR']}";
+$lang['STAFF_CRIME_NEW_SUCSECMIN']="Máximo éxito {$lang['INDEX_SECCURR']}";
+$lang['STAFF_CRIME_NEW_SUCSECMAX']="Máximo éxito {$lang['INDEX_SECCURR']}";
+$lang['STAFF_CRIME_NEW_SUCITEM']="Artículo de éxito";
+$lang['STAFF_CRIME_NEW_GROUP']="Grupo Del Delito";
+$lang['STAFF_CRIME_NEW_ITEXT']="Texto inicial";
+$lang['STAFF_CRIME_NEW_ITEXT_PH']="El texto que se muestra al iniciar el crimen.";
+$lang['STAFF_CRIME_NEW_STEXT']="Texto de éxito";
+$lang['STAFF_CRIME_NEW_STEXT_PH']="El texto que se muestra si el jugador logra cometer el crimen.";
+$lang['STAFF_CRIME_NEW_JTEXT']="Texto de error";
+$lang['STAFF_CRIME_NEW_JTEXT_PH']="El texto que se muestra si el jugador no comete el crimen.";
+$lang['STAFF_CRIME_NEW_JTIMEMIN']="Tiempo mínimo de la mazmorra";
+$lang['STAFF_CRIME_NEW_JTIMEMAX']="Tiempo máximo de la mazmorra";
+$lang['STAFF_CRIME_NEW_JREASON']="Razón de la mazmorra";
+$lang['STAFF_CRIME_NEW_XP']="Experiencia de éxito";
+$lang['STAFF_CRIME_NEW_BTN']="Crear crimen";
+$lang['STAFF_CRIME_NEW_FAIL1']="Falta una de las entradas requeridas del formulario anterior.";
+$lang['STAFF_CRIME_NEW_FAIL2']="El elemento que ha elegido no parece existir en el juego. Seleccione un elemento nuevo.";
+$lang['STAFF_CRIME_NEW_SUCCESS']="Has añadido con éxito un crimen al juego.";
+$lang['STAFF_CRIMEG_NEW_TITLE']="Agregar un nuevo Grupo de Delitos.";
+$lang['STAFF_CRIMEG_NEW_NAME']="Nombre del grupo de crimen";
+$lang['STAFF_CRIMEG_NEW_ORDER']="Orden del grupo criminal";
+$lang['STAFF_CRIMEG_NEW_BTN']="Crear grupo de crimen";
+$lang['STAFF_CRIMEG_NEW_FAIL1']="Al menos una de las dos entradas del formulario anterior está vacía. Vuelve y corrige eso, por favor.";
+$lang['STAFF_CRIMEG_NEW_FAIL2']="No puedes tener grupos de crimen que compartan valores de orden.";
+$lang['STAFF_CRIMEG_NEW_SUCCESS']="Ha creado con éxito un grupo de delincuencia.";
 ?>
