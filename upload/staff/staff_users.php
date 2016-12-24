@@ -988,16 +988,37 @@ function logout()
 }
 function changepw()
 {
-	global $db,$h,$lang;
+	global $db,$h,$userid,$lang,$api;
 	if ((isset($_POST['user'])) && (isset($_POST['pw'])))
 	{
-		
+		$pw = stripslashes($_POST['pw']);
+		$user = (isset($_POST['user']) && is_numeric($_POST['user']))  ? abs(intval($_POST['user'])) : 0;
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_changepw', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+		if (($user == 1) && ($userid > 1))
+		{
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_CP_ERROR']}");
+            die($h->endpage());
+		}
+		$ul=$db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
+		if (($ul == 'Admin') && ($userid > 1))
+		{
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_CP_ERROR1']}");
+            die($h->endpage());
+		}
+		$new_psw = $db->escape(encode_password($pw));
+		$db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$user}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_CP_SUCCESS']);
+		$api->SystemLogsAdd($userid,'staff',"Changed User ID {$user}'s password.");
 	}
 	else
 	{
-		$csrf = request_csrf_html('staff_forcelogout');
+		$csrf = request_csrf_html('staff_changepw');
 		echo "
-		<form action='?action=logout' method='post'>
+		<form action='?action=changepw' method='post'>
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
@@ -1009,7 +1030,15 @@ function changepw()
 						{$lang['STAFF_USERS_CP_USER']}
 					</th>
 					<td>
-						" . user_dropdown('userid') . "
+						" . user_dropdown('user') . "
+					</td>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_USERS_CP_PW']}
+					</th>
+					<td>
+						<input type='password' class='form-control' name='pw'>
 					</td>
 				</tr>
 				<tr>

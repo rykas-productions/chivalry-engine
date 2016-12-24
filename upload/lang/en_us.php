@@ -983,4 +983,13 @@ $lang['POKE_ERROR2']="No, you cannot poke yourself!";
 $lang['POKE_ERROR3']="You cannot poke non-existent users!";
 $lang['POKE_BTN']="POKE!";
 $lang['POKE_SUCC']="You have successfully poked this user.";
+
+//Staff Change PW
+$lang['STAFF_USERS_CP_FORM_INFO']="Use this form to change a user's password.";
+$lang['STAFF_USERS_CP_USER']="User";
+$lang['STAFF_USERS_CP_FORM_BTN']="Change Password";
+$lang['STAFF_USERS_CP_PW']="New Password";
+$lang['STAFF_USERS_CP_ERROR']="You cannot change the password for the admin account this way.";
+$lang['STAFF_USERS_CP_ERROR1']="You cannot change the password for other admin accounts this way.";
+$lang['STAFF_USERS_CP_SUCCESS']="User's password has been changed successfully.";
 ?>

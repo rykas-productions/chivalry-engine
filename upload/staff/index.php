@@ -121,6 +121,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_users.php?action=edituser'>Edit User</a><br />
 						<a href='staff_users.php?action=deleteuser'>Delete User</a><br />
 						<a href='staff_users.php?action=logout'>Force Logout</a><br />
+						<a href='staff_users.php?action=changepw'>Change User's Password</a><br />
 					</div>
 				</div>
 			</div>
