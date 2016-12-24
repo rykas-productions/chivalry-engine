@@ -26,6 +26,9 @@ switch ($_GET['action'])
 	case "logout":
 		logout();
 		break;
+	case "changepw":
+		changepw();
+		break;
 	default:
 		die();
 		break;
@@ -429,9 +432,9 @@ function edituser()
 		$itemi = $db->fetch_row($d);
 		$db->free_result($d);
 		$CurrentTime=time();
-		$itemi['hospreason'] = htmlentities($itemi['infirmary_reason'], ENT_QUOTES, 'ISO-8859-1');
+		$itemi['infirmary_reason'] = htmlentities($itemi['infirmary_reason'], ENT_QUOTES, 'ISO-8859-1');
 		$itemi['email'] = htmlentities($itemi['email'], ENT_QUOTES, 'ISO-8859-1');
-		$itemi['jail_reason'] = htmlentities($itemi['dungeon_reason'], ENT_QUOTES, 'ISO-8859-1');
+		$itemi['dungeon_reason'] = htmlentities($itemi['dungeon_reason'], ENT_QUOTES, 'ISO-8859-1');
 		$itemi['username'] = htmlentities($itemi['username'], ENT_QUOTES, 'ISO-8859-1');
 		$itemi['infirmary']= round(($itemi['infirmary_out'] - $CurrentTime) / 60);
 		$itemi['dungeon']= round(($itemi['dungeon_out'] - $CurrentTime) / 60);
@@ -982,5 +985,41 @@ function logout()
 			{$csrf}
 		</form>";
     }
+}
+function changepw()
+{
+	global $db,$h,$lang;
+	if ((isset($_POST['user'])) && (isset($_POST['pw'])))
+	{
+		
+	}
+	else
+	{
+		$csrf = request_csrf_html('staff_forcelogout');
+		echo "
+		<form action='?action=logout' method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['STAFF_USERS_CP_FORM_INFO']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_USERS_CP_USER']}
+					</th>
+					<td>
+						" . user_dropdown('userid') . "
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_USERS_CP_FORM_BTN']}' />
+					</td>
+				</tr>
+			</table>
+			{$csrf}
+		</form>";
+	}
 }
 $h->endpage();
