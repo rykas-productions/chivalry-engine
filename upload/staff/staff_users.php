@@ -479,7 +479,7 @@ function edituser()
 					{$lang['INDEX_PRIMCURR']}
 				</th>
 				<td>
-					<input type='number' min='1' class='form-control' required='1' name='prim_currency' value='{$itemi['primary_currency']}' />
+					<input type='number' min='0' class='form-control' required='1' name='prim_currency' value='{$itemi['primary_currency']}' />
 				</td>
 			</tr>
 			<tr>
