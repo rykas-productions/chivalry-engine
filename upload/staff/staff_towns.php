@@ -26,7 +26,7 @@ function addtown()
 	if (isset($_POST['name']))
 	{
 		$level = (isset($_POST['minlevel']) && is_numeric($_POST['minlevel'])) ? abs(intval($_POST['minlevel'])) : 1;
-		$name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(stripslashes($_POST['name'])) : '';
+		$name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
 		$tax = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs(intval($_POST['tax'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_addtown', stripslashes($_POST['verf'])))
 		{
