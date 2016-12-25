@@ -26,7 +26,7 @@ function addestate()
 	if (isset($_POST['name']))
 	{
 		$lvl = (isset($_POST['lvl']) && is_numeric($_POST['lvl'])) ? abs(intval($_POST['lvl'])) : 1;
-		$name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(stripslashes($_POST['name'])) : '';
+		$name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
 		$will = (isset($_POST['will']) && is_numeric($_POST['will'])) ? abs(intval($_POST['will'])) : 101;
 		$cost = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs(intval($_POST['cost'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_addestate', stripslashes($_POST['verf'])))
