@@ -249,7 +249,7 @@ function createuser()
 			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
 			die($h->endpage());
 		}
-		$username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username']) && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
+		$username = (isset($_POST['newname']) && is_string($_POST['newname'])) ? stripslashes($_POST['newname']) : '';
 		$pw = (isset($_POST['password']) && is_string($_POST['password'])) ? stripslashes($_POST['password']) : '';
 		$pw2 = (isset($_POST['cpw']) && is_string($_POST['cpw'])) ? stripslashes($_POST['cpw']) : '';
 		
@@ -291,6 +291,11 @@ function createuser()
 			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You specified an invalid user level. A user can only be an NPC, Admin, Member, Forum Moderator, Assistant, or Web Developer.</div>";
 			$h->endpage();
 			exit;
+		}
+		if (((strlen($username) > 20) OR (strlen($username) < 3)))
+		{
+			alert('danger',$lang['ERROR_LENGTH'],"The name you chose is either too long or too short.");
+			die($h->endpage());
 		}
 		if ($equip_prim > 0)
 		{
