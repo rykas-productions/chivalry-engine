@@ -912,7 +912,7 @@ function check_level()
         $db->query("UPDATE `users`  SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2, `brave` = `brave` + 2,
                  `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2, `hp` = `hp` + 50, `maxhp` = `maxhp` + 50
                  WHERE `userid` = {$userid}");
-		$StatGain=round(($ir['level']*100)/mt_rand(2,6));
+		$StatGain=round(($ir['level']*100)/Random(2,6));
 		$StatGainFormat=number_format($StatGain);
 		if ($ir['class'] == 'Warrior')
 		{
@@ -1168,7 +1168,7 @@ function randomizer()
 	}
 	else
 	{
-		return sha1(decbin(mt_rand(0,1024)));
+		return sha1(decbin(Random(0,1024)));
 	}
 }
 

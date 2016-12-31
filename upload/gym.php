@@ -42,9 +42,9 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
         for ($i = 0; $i < $_POST['amnt']; $i++)
         {
             $gain +=
-                    mt_rand(1, 4) / mt_rand(600, 1000) * mt_rand(500, 1000)
+                    Random(1, 4) / Random(600, 1000) * Random(500, 1000)
                             * (($ir['will'] + 25) / 175);
-            $ir['will'] -= mt_rand(1, 3);
+            $ir['will'] -= Random(1, 3);
             if ($ir['will'] < 0)
             {
                 $ir['will'] = 0;

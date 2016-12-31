@@ -1,6 +1,6 @@
 <?php
 require_once('globals.php');
-$tresder = (mt_rand(100, 999));
+$tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 250;
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs(intval($_GET['tresde'])) : 0;
 if (!isset($_SESSION['tresde']))
@@ -43,7 +43,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 		die($h->endpage());
     }
 	$slot = array();
-    $slot[1] = mt_rand(0, 36);
+    $slot[1] = Random(0, 36);
 	if ($slot[1] == $_POST['number'])
 	{
         $gain = $_POST['bet'] * 50;
@@ -65,7 +65,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 	}
 	alert($alerttype,$title,"{$lang['ROULETTE_START']} {$slot[1]}{$phrase}");
 	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
-	$tresder = mt_rand(100, 999);
+	$tresder = Random(100, 999);
 	echo "<br />
 	<form action='roulette.php?tresde={$tresder}' method='post'>
     	<input type='hidden' name='bet' value='{$_POST['bet']}' />

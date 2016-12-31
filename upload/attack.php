@@ -27,7 +27,7 @@ function attacking()
 {
 	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$menuhide = 1;
-	$tresder = mt_rand(100, 999);
+	$tresder = Random(100, 999);
 	$_GET['user'] =  (isset($_GET['user']) && is_numeric($_GET['user']))  ? abs(intval($_GET['user'])) : '';
 	if (empty($_GET['nextstep']))
 	{
@@ -209,9 +209,9 @@ function attacking()
 		}
 		$r1 = $db->fetch_row($qo);
 		$db->free_result($qo);
-		$mydamage = round(($r1['weapon'] * $youdata['strength'] / ($odata['guard'] / 1.5)) * (mt_rand(10000, 12000) / 10000));
+		$mydamage = round(($r1['weapon'] * $youdata['strength'] / ($odata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 		$hitratio = max(10, min(60 * $ir['agility'] / $odata['agility'], 95));
-		if (mt_rand(1, 100) <= $hitratio)
+		if (Random(1, 100) <= $hitratio)
 		{
 			if ($odata['equip_armor'] > 0)
 			{
@@ -231,14 +231,14 @@ function attacking()
 			{
 				$mydamage = 1;
 			}
-			$crit = mt_rand(1, 40);
+			$crit = Random(1, 40);
 			if ($crit == 17)
 			{
-				$mydamage *= mt_rand(20, 40) / 10;
+				$mydamage *= Random(20, 40) / 10;
 			}
 			else if ($crit == 25 OR $crit == 8)
 			{
-				$mydamage /= (mt_rand(20, 40) / 10);
+				$mydamage /= (Random(20, 40) / 10);
 			}
 			$mydamage = round($mydamage);
 			$odata['hp'] -= $mydamage;
@@ -280,7 +280,7 @@ function attacking()
 			if ($db->num_rows($eq) == 0)
 			{
 				$wep = "{$lang['ATTACK_FIGHT_ATTACK_FISTS']}";
-				$dam = round(round((($odata['strength']/$ir['guard'] / 100))+ 1)*(mt_rand(10000, 12000) / 10000));
+				$dam = round(round((($odata['strength']/$ir['guard'] / 100))+ 1)*(Random(10000, 12000) / 10000));
 			}
 			else
 			{
@@ -291,12 +291,12 @@ function attacking()
 					$cnt++;
 				}
 				$db->free_result($eq);
-				$weptouse = mt_rand(0, $cnt - 1);
+				$weptouse = Random(0, $cnt - 1);
 				$wep = $enweps[$weptouse]['itmname'];
-				$dam = round(($enweps[$weptouse]['weapon'] * $odata['strength'] / ($youdata['guard'] / 1.5)) * (mt_rand(10000, 12000) / 10000));
+				$dam = round(($enweps[$weptouse]['weapon'] * $odata['strength'] / ($youdata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 			}
 			$hitratio = max(10, min(60 * $odata['agility'] / $ir['agility'], 95));
-			if (mt_rand(1, 100) <= $hitratio)
+			if (Random(1, 100) <= $hitratio)
 			{
 				if ($ir['equip_armor'] > 0)
 				{
@@ -315,14 +315,14 @@ function attacking()
 				{
 					$dam = 1;
 				}
-				$crit = mt_rand(1, 40);
+				$crit = Random(1, 40);
 				if ($crit == 17)
 				{
-					$dam *= mt_rand(20, 40) / 10;
+					$dam *= Random(20, 40) / 10;
 				}
 				else if ($crit == 25 OR $crit == 8)
 				{
-					$dam /= (mt_rand(20, 40) / 10);
+					$dam /= (Random(20, 40) / 10);
 				}
 				$dam = round($dam);
 				$youdata['hp'] -= $dam;
@@ -488,7 +488,7 @@ function beat()
 			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_BUGABUSE']}");
 			die($h->endpage());
 		}
-		$hosptime = mt_rand(75, 175) + floor($ir['level'] / 2);
+		$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 		alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!!","{$lang['ATTACK_FIGHT_END2']} {$lang['ATTACK_FIGHT_END3']} {$hosptime} {$lang["GEN_MINUTES"]} {$lang['ATTACK_FIGHT_END4']}");
 		$hospreason = $db->escape("Beat up by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 		$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$r['userid']}");
@@ -528,7 +528,7 @@ function lost()
 	$r = $db->fetch_row($od);
 	$db->free_result($od);
 	$qe = $r['level'] * $r['level'] * $r['level'];
-	$expgain = mt_rand($qe / 2, $qe);
+	$expgain = Random($qe / 2, $qe);
 	if ($expgain < 0)
 	{
 		$expgain=$expgain*-1;
@@ -536,7 +536,7 @@ function lost()
 	$expgainp = $expgain / $ir['xp_needed'] * 100;
 	alert('danger',"{$lang['ATTACK_FIGHT_END5']} {$r['username']}!","{$lang['ATTACK_FIGHT_END6']} (" . number_format($expgainp, 2) . "%)!");
 	$db->query("UPDATE `users` SET `xp` = `xp` - {$expgain}, `attacking` = 0 WHERE `userid` = {$userid}");
-	$hosptime = mt_rand(75, 175) + floor($ir['level'] / 2);
+	$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 	$hospreason = 'Picked a fight and lost';
 	put_infirmary($userid,$hosptime,$hospreason);
 	//Give winner some XP
@@ -584,7 +584,7 @@ function xp()
 		else
 		{
 			$qe = $r['level'] * $r['level'] * $r['level'];
-			$expgain = mt_rand($qe / 2, $qe);
+			$expgain = Random($qe / 2, $qe);
 			$ir['total']=$ir['strength']+$ir['agility']+$ir['guard'];
 			$ot=$db->fetch_row($db->query("SELECT * FROM `userstats` WHERE `userid` = {$r['userid']}"));
 			$ototal=$ot['strength'] + $ot['agility'] + $ot['guard'];
@@ -598,7 +598,7 @@ function xp()
 			}
 			$expperc = round($expgain / $ir['xp_needed'] * 100);
 			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END7']} ({$expperc}%, {$expgain})");
-			$hosptime = mt_rand(5, 30) + floor($ir['level'] / 10);
+			$hosptime = Random(5, 30) + floor($ir['level'] / 10);
 			$db->query("UPDATE `users` SET `xp` = `xp` + $expgain WHERE `userid` = $userid");
 			$hospreason = $db->escape("Used for experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 			$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$r['userid']}");
@@ -649,7 +649,7 @@ function mug()
 		}
 		else
 		{
-			$stole = round($r['primary_currency'] / (mt_rand(50, 1000) / 5));
+			$stole = round($r['primary_currency'] / (Random(50, 1000) / 5));
 			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END8']} (" . number_format($stole) . ")");
 			$hosptime = rand(20, 40) + floor($ir['level'] / 8);
 			$hospreason = $db->escape("Mugged by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");

@@ -91,16 +91,16 @@ function crime()
 			eval($ec);
 			$ir['brave'] -= $r['crimeBRAVE'];
 			$db->query("UPDATE `users` SET `brave` = {$ir['brave']}  WHERE `userid` = $userid");
-			if (mt_rand(1, 100) <= $sucrate)
+			if (Random(1, 100) <= $sucrate)
 			{
 				if (!empty($r['crimePRICURMIN']))
 				{
-					$prim_currency=mt_rand($r['crimePRICURMIN'],$r['crimePRICURMAX']);
+					$prim_currency=Random($r['crimePRICURMIN'],$r['crimePRICURMAX']);
 					$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$prim_currency} WHERE `userid` = {$userid}");
 				}
 				if (!empty($r['crimeSECURMIN']))
 				{
-					$sec_currency=mt_rand($r['crimeSECURMIN'],$r['crimeSECCURMAX']);
+					$sec_currency=Random($r['crimeSECURMIN'],$r['crimeSECCURMAX']);
 					$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$sec_currency} WHERE `userid` = {$userid}");
 				}
 				if (!empty($r['crimeSUCCESSITEM']))
@@ -118,7 +118,7 @@ function crime()
 					$text=$r['crimeFTEXT'];
 					$title=$lang['ERROR_GENERIC'];;
 					$type='danger';
-					$dtime=mt_rand($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
+					$dtime=Random($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
 					put_dungeon($userid,$dtime,$r['crimeDUNGREAS']);
 					$api->SystemLogsAdd($userid,'crime',"Failed to commit the {$r['crimeNAME']} crime.");
 			}

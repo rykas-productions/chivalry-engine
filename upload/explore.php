@@ -1,6 +1,6 @@
 <?php
 require("globals.php");
-$tresder = (mt_rand(100, 999));
+$tresder = (Random(100, 999));
 if (user_infirmary($ir['userid']) == true)
 {
 	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['ERRDE_EXPLORE']}");

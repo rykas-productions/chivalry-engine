@@ -30,7 +30,7 @@ if ($db->num_rows($q) == 0)
 $r=$db->fetch_row($q);
 if (isset($_POST['do']) && (isset($_GET['user'])))
 {
-	$rand=mt_rand(1,4);
+	$rand=Random(1,4);
 	if ($ir['primary_currency'] < $r['level']*500)
 	{
 		alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_ERROR4']);
@@ -39,7 +39,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - " . $r['level']*500 . " WHERE `userid` = {$userid}");
 	if ($rand == 1 || $rand == 2)
 	{
-		$rand2=mt_rand(1,3);
+		$rand2=Random(1,3);
 		if ($rand2 <= 2)
 		{
 			event_add($_GET['user'],"An unknown user has attempted to spy on you and failed.");
@@ -58,7 +58,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 	elseif ($rand == 3)
 	{
 		alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_FAIL3']);
-		$dungtime=mt_rand($ir['level'],$ir['level']*3);
+		$dungtime=Random($ir['level'],$ir['level']*3);
 		$api->UserStatusSet($userid,2,$dungtime,"Stalkerish Tendencies");
 		$api->SystemLogsAdd($userid,'spy',"Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) .  " and was sent to the dungeon.");
 		die($h->endpage());
