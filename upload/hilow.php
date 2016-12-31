@@ -1,6 +1,6 @@
 <?php
 require("globals.php");
-$tresder = (mt_rand(100, 999));
+$tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 500;
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs(intval($_GET['tresde'])) : 0;
 if (!isset($_SESSION['tresde']))
@@ -32,8 +32,8 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher','lower'
 	}
 	else
 	{
-		$guessed = (isset($_SESSION['number']) && is_numeric($_SESSION['number'])) ? abs(intval($_SESSION['number'])) : mt_rand(1,100);
-		$numb=mt_rand(1,100);
+		$guessed = (isset($_SESSION['number']) && is_numeric($_SESSION['number'])) ? abs(intval($_SESSION['number'])) : Random(1,100);
+		$numb=Random(1,100);
 		$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$maxbet} WHERE `userid` = {$userid}");
 		if ($guessed > $numb && $_POST['change'] == 'higher')
 		{
@@ -71,7 +71,7 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher','lower'
 }
 else
 {
-	$numb=mt_rand(1,100);
+	$numb=Random(1,100);
 	$_SESSION['number']=$numb;
 	echo "{$lang['HILOW_INFO']}<br />
 	<table class='table table-bordered'>
