@@ -966,9 +966,20 @@ $lang['ROULETTE_BTN4']="I quit. I don't want to go broke.";
 $lang['ROULETTE_START']="You put in your bet and pull the handle down. Around and around the wheel spins. It stops and lands on";
 
 //High Low
-$lang['HILOW_INFO']="Welcome to High/Low. Here you will bet on whether or not the deal will draw a number lower or higher than the number shown. We don't want everyone betting away their life savings, so we've imposed a maximum bet of";
-$lang['HILOW_SHOWN']="Number Shown";
-$lang['HILOW_INFO']="Number Shown";
+$lang['HILOW_NOREFRESH']="Please do nto refresh while playing High/Low. Use the links we provide, thank you!";
+$lang['HILOW_INFO']="Welcome to High/Low. Here you will bet on whether or not the deal will draw a number lower or higher than the number shown. The number range is 1 through 100.";
+$lang['HILOW_SHOWN']="The game operator shows the number";
+$lang['HILOW_WATDO']="Select the button on how you feel the next number will be compared to this number.";
+$lang['HILOW_NOBET']="You do not have enough {$lang['INDEX_PRIMCURR']} to play High/Low. You need at least";
+$lang['HILOW_LOWER']="Lower";
+$lang['HILOW_HIGHER']="Higher";
+$lang['HIGHLOW_HIGH']="You've guessed the game operator would show a number higher than ";
+$lang['HIGHLOW_REVEAL']="The game operator reveals the number";
+$lang['HIGHLOW_LOSE']="You have lost this time, sorry bud.";
+$lang['HIGHLOW_WIN']="You have won this time, congratulations.";
+$lang['HIGHLOW_LOWER']="You've guessed the game operator would show a number lower than ";
+$lang['HIGHLOW_TIE']="The game operator shows the exact number as last time. You lose nothing.";
+$lang['HILOW_UNDEFINEDNUMBER']="The number from the last page wasn't defined... Weird. Stop tampering with shit, man.";
 
 //ReCaptcha
 $lang['RECAPTCHA_TITLE']="reCaptcha";

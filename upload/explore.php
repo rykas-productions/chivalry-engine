@@ -72,7 +72,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='#'>{$lang['EXPLORE_RR']}</a><br />
-					<a href='#'>{$lang['EXPLORE_HILO']}</a><br />
+					<a href='hilow.php?tresde={$tresder}'>{$lang['EXPLORE_HILO']}</a><br />
 					<a href='roulette.php?tresde={$tresder}'>{$lang['EXPLORE_ROULETTE']}</a><br />
 				</div>
 			</div>
