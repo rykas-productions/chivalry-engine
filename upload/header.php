@@ -263,9 +263,9 @@ if (empty($menuhide))
     {
         global $db, $ir, $lang;
         $query_extra = '';
-        if (isset($_GET['mysqldebug']) && $ir['user_level'] == 2)
+        if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
         {
-            $query_extra = '<br />' . implode('<br />', $db->queries);
+			?> <pre class='pre-scrollable'> <?php var_dump($db->queries) ?> </pre> <?php
         }
 		?>
 		</div>
