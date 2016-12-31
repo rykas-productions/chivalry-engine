@@ -126,7 +126,7 @@ function create()
 						<option value='primary_currency'>Primary Currency</option>
 						<option value='secondary_currency'>Secondary Currency</option>
 						<option value='cdays'>Education Days Left</option>
-						<option value='xp'>Crime XP</option>
+						<option value='xp'>Experience</option>
 						<option value='vip_days'>VIP Days</option>
 					</select>
 					<br />
