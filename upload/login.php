@@ -1,4 +1,9 @@
 <?php
+if ((!file_exists('./installer.lock')) && (file_exists('installer.php')))
+{
+	header("Location: installer.php");
+	die();
+}
 require("globals_nonauth.php");
 $currentpage = $_SERVER['REQUEST_URI'];
 $cpage = strip_tags(stripslashes($currentpage));
