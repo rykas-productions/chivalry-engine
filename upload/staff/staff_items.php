@@ -126,7 +126,8 @@ function create()
 						<option value='primary_currency'>Primary Currency</option>
 						<option value='secondary_currency'>Secondary Currency</option>
 						<option value='cdays'>Education Days Left</option>
-						<option value='crimexp'>Crime XP</option>
+						<option value='xp'>Crime XP</option>
+						<option value='vip_days'>VIP Days</option>
 					</select>
 					<br />
 					<b>Direction:</b> <select name='effect{$i}dir' class='form-control' type='dropdown'>
@@ -180,7 +181,7 @@ function create()
 		{
 			csrf_error('create');
 		}
-		$itmname = (isset($_POST['itemname']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['itemname'])) ? $db->escape(strip_tags(stripslashes($_POST['itemname']))) : '';
+		$itmname = (isset($_POST['itemname']) && is_string($_POST['itemname'])) ? stripslashes($_POST['itemname']) : '';
 		$itmdesc = (isset($_POST['itemdesc'])) ? $db->escape(strip_tags(stripslashes($_POST['itemdesc']))) : '';
 		$weapon = (isset($_POST['weapon']) && is_numeric($_POST['weapon'])) ? abs(intval($_POST['weapon'])) : 0;
 		$armor = (isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
@@ -216,7 +217,7 @@ function create()
 									array('energy', 'will', 'brave', 'hp',
 											'strength', 'agility', 'guard',
 											'labor', 'IQ', 'infirmary', 'dungeon',
-											'primary_currency', 'secondary_currency', 'cdays', 'crimexp')))
+											'primary_currency', 'secondary_currency', 'cdays', 'xp', 'vip_days')))
 							? $_POST[$efxkey . 'stat'] : 'energy';
 			$_POST[$efxkey . 'dir'] =
 					(isset($_POST[$efxkey . 'dir'])
