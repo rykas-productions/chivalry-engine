@@ -45,7 +45,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user']))
             item_remove($userid, $r['inv_itemid'], $_POST['qty']);
             item_add($_POST['user'], $r['inv_itemid'], $_POST['qty']);
 			alert('success',$lang['ERROR_SUCCESS'],"{$lang['ITEM_SEND_SUCC']} {$_POST['qty']} {$r['itmname']}s {$lang['ITEM_SEND_SUCC1']} {$rm['username']}.");
-			event_add($_POST['user'], "You been sent {$_POST['qty']} {$r['itmname']}(s) from <a href='profile.php?user=$userid'>{$ir['username']}</a>.");
+			event_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s) from <a href='profile.php?user=$userid'>{$ir['username']}</a>.");
 			$log =  $db->escape("{$ir['username']} sent {$_POST['qty']} {$r['itmname']}(s) to {$rm['username']} [{$_POST['user']}].");
 			$api->SystemLogsAdd($userid,'itemsend',$log);
 		}
