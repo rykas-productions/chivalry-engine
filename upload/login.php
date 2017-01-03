@@ -18,11 +18,10 @@ if ($set['HTTPS_Support'] == 'true')
 <head>
 	<center>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A free-to-use and open source engine">
-    <meta name="author" content="TheMasterGeneral">
-	<meta name="theme-color" content="#000000">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="TheMasterGeneral">
 
     <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
 

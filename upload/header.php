@@ -12,7 +12,7 @@ class headers
 			<center>
 			<meta charset="utf-8">
 			<meta http-equiv="X-UA-Compatible" content="IE=edge">
-			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 			<meta name="description" content="">
 			<meta name="author" content="TheMasterGeneral">
 
@@ -274,7 +274,7 @@ class headers
 			</div>
 			<!-- /.container -->
 
-			<!-- jQuery Version -->
+			<!-- jQuery Version 1.12.1 -->
 			<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
 			<!-- Bootstrap Core JavaScript -->
