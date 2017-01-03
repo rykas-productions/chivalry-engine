@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "16.12.28.1";
+		return "17.1.2.1";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -894,5 +894,62 @@ class api
 			$db->query("UPDATE `users` SET `{$curr}_currency` = `{$curr}_currency` - {$cost} WHERE `userid` = {$user}");
 			return true;
 		}
+	}
+	/*
+		Function to return the inputted value with a tax percent added onto it.
+		@param int number = Number to add a tax percent onto.
+		@param int tax = Tax percentage. Optional. (Number between 0-100) 
+		Returns the inputted value with a tax percent added onto it.
+		
+		If tax is omitted or entered as -1, it'll use the user's current town's guild owner.
+	*/
+	function SystemReturnTax($number,$tax=-1)
+	{
+		global $db,$ir;
+		$number = (isset($number) && is_numeric($number)) ? abs(intval($number)) : 0;
+		$tax = (isset($tax) && is_numeric($tax)) ? intval($tax) : -1;
+		if ($tax == -1)
+		{
+			$tax=$db->fetch_single($db->query("SELECT `town_tax` FROM `town` WHERE `town_id` = {$ir['location']}"));
+		}
+		return $number+($number*($tax/100));
+	}
+	/*
+		Function to return the tax value of the inputted number only (Ex: 10% of 100 is 10).
+		@param int number = Number to add a tax percent onto.
+		@param int tax = Tax percentage. Optional. (Number between 0-100) 
+		Returns just the added tax number to the inputted number
+		
+		If tax is omitted or entered as -1, it'll use the user's current town's guild owner.
+	*/
+	function SystemReturnTaxOnly($number,$tax=-1)
+	{
+		global $db,$ir;
+		$number = (isset($number) && is_numeric($number)) ? abs(intval($number)) : 0;
+		$tax = (isset($tax) && is_numeric($tax)) ? intval($tax) : 0;
+		if ($tax == -1)
+		{
+			$tax=$db->fetch_single($db->query("SELECT `town_tax` FROM `town` WHERE `town_id` = {$ir['location']}"));
+		}
+		return $number-$number+($number*($tax/100));
+	}
+	/*
+		Function to credit the inputted guild with the inputted number.
+		@param int number = Number to credit to the guild
+		@param int curr = Currency type. [1 = Primary, 2 = Secondary]
+		@param int guild = Guild ID. Optional. If left blank, will use the town's guild owner.
+	*/
+	function SystemCreditTax($number,$curr,$guild=-1)
+	{
+		global $db,$ir;
+		$number = (isset($number) && is_numeric($number)) ? abs(intval($number)) : 0;
+		$curr = (isset($curr) && is_numeric($curr)) ? abs(intval($curr)) : 1;
+		$guild = (isset($guild) && is_numeric($guild)) ? intval($guild) : -1;
+		($curr == 1) ? $cur='prim' : $cur='sec';
+		if ($guild == -1)
+		{
+			$guild=$db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$ir['location']}"));
+		}
+		$db->query("UPDATE `guild` SET `guild_{$cur}curr` = `guild_{$cur}curr` + {$number} WHERE `guild_id` = {$guild}");
 	}
 }

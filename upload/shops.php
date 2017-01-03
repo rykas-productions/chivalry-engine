@@ -51,7 +51,7 @@ function home()
 }
 function shop()
 {
-	global $db,$ir,$lang,$h;
+	global $db,$ir,$lang,$h,$api;
 	$_GET['shop'] = abs((int) $_GET['shop']);
 	$sd = $db->query("SELECT `shopLOCATION`, `shopNAME` FROM `shops` WHERE `shopID` = {$_GET['shop']}");
     if ($db->num_rows($sd) > 0)
@@ -84,14 +84,13 @@ function shop()
                 if ($lt != $r['itmtypename'])
                 {
                     $lt = $r['itmtypename'];
-                    echo "\n<tr>
+                    echo "<tr>
                     			<th colspan='5'>{$lt}</th>
                     		</tr>";
                 }
-                echo "\n<tr>
+                echo "<tr>
                 			<td><a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' title='{$r['itmdesc']}'>{$r['itmname']}</a></td>
-                			<td>" . number_format($r['itmbuyprice'])
-                        . "</td>
+                			<td>" . number_format($api->SystemReturnTax($r['itmbuyprice'])) . "</td>
                             <td>
                             	<form action='?action=buy&ID={$r['sitemID']}' method='post'>
                             		{$lang['SHOPS_SHOP_TD_1']} <input class='form-control' type='number' min='1' name='qty' value='1' />
@@ -141,7 +140,7 @@ function buy()
 			else
 			{
 				$itemd = $db->fetch_row($q);
-				if ($ir['primary_currency'] < ($itemd['itmbuyprice'] * $_POST['qty']))
+				if ($ir['primary_currency'] < ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty']))
 				{
 					alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR3']} {$_POST['qty']} {$itemd['itmname']}(s).");
 					die($h->endpage());
@@ -157,7 +156,7 @@ function buy()
 					die($h->endpage());
 				}
 
-				$price = ($itemd['itmbuyprice'] * $_POST['qty']);
+				$price = ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty']);
 				item_add($userid, $itemd['itmid'], $_POST['qty']);
 				$db->query(
 						"UPDATE `users`
@@ -166,6 +165,7 @@ function buy()
 				$ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
 				alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['SHOPS_BUY_SUCCESS']} {$_POST['qty']} {$itemd['itmname']}(s) {$lang['GEN_FOR']} {$price}.");
 				$api->SystemLogsAdd($userid,'itembuy',$ib_log);
+				$api->SystemCreditTax($api->SystemReturnTaxOnly($itemd['itmbuyprice']),1,-1);
 			}
 		$db->free_result($q);
 		}
