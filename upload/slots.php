@@ -45,6 +45,16 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 		$phrase="{$lang['ROULETTE_WIN']} " . number_format($gain);
 		$api->SystemLogsAdd($userid,'gambling',"Bet {$_POST['bet']} and won {$gain} in slots.");
 	}
+	else if ($slot[1] == $slot[2] || $slot[2] == $slot[3]
+            || $slot[1] == $slot[3])
+    {
+        $gain = $_POST['bet'] * 50;
+		$title="{$lang['ERROR_SUCCESS']}";
+		$alerttype='success';
+		$win=1;
+		$phrase="{$lang['ROULETTE_WIN']} " . number_format($gain);
+		$api->SystemLogsAdd($userid,'gambling',"Bet {$_POST['bet']} and won {$gain} in slots.");
+    }
 	else
 	{
 
