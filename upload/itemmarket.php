@@ -25,7 +25,7 @@ default:
 }
 function index()
 {
-	global $db,$lang,$h,$userid;
+	global $db,$lang,$h,$userid,$api;
 	echo "
 	<br />
 	<table class='table table-responsive table-bordered table-hover table-striped'>
@@ -65,13 +65,13 @@ function index()
         $ctprice = ($r['imPRICE'] * $r['imQTY']);
         if ($r['imCURRENCY'] == 'primary')
         {
-            $price = number_format($r['imPRICE']) . " {$lang['INDEX_PRIMCURR']}";
-            $tprice = number_format($ctprice) . " {$lang['INDEX_PRIMCURR']}";
+            $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " {$lang['INDEX_PRIMCURR']}";
+            $tprice = number_format($api->SystemReturnTax($ctprice)) . " {$lang['INDEX_PRIMCURR']}";
         }
         else
         {
-            $price = number_format($r['imPRICE']) . " {$lang['INDEX_SECCURR']}";
-            $tprice = number_format($ctprice) . " {$lang['INDEX_SECCURR']}";
+            $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " {$lang['INDEX_SECCURR']}";
+            $tprice = number_format($api->SystemReturnTax($ctprice)) . " {$lang['INDEX_SECCURR']}";
         }
         if ($r['imADDER'] == $userid)
         {
@@ -209,7 +209,7 @@ function buy()
 			}
 			$curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
 			$curre = ($r['imCURRENCY'] == 'primary') ? 'Primary Currency' : 'Secondary Currency';
-			$final_price = $r['imPRICE'] * $_POST['QTY'];
+			$final_price = $api->SystemReturnTax($r['imPRICE']*$_POST['QTY']);
 			if ($final_price > $ir[$curr])
 			{
 				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_SUB_ERROR2']}");
@@ -235,6 +235,14 @@ function buy()
 			$imb_log = $db->escape("Bought {$r['itmname']} x{$_POST['QTY']} from the item market for " . number_format($final_price) . " {$curre} from user ID {$r['imADDER']}");
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['IMARKET_BUY_SUB_SUCCESS']}");
 			$api->SystemLogsAdd($userid,'imarket',$imb_log);
+			if ($r['imCURRENCY'] == 'primary')
+			{
+				$api->SystemCreditTax($api->SystemReturnTaxOnly($final_price),1,-1);
+			}
+			else
+			{
+				$api->SystemCreditTax($api->SystemReturnTaxOnly($final_price),2,-1);
+			}
 	}
 }
 function gift()
@@ -286,7 +294,7 @@ function gift()
 		}
 		$curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
 		$curre = ($r['imCURRENCY'] == 'primary') ? 'Primary Currency' : 'Secondary Currency';
-		$final_price = $r['imPRICE'] * $_POST['QTY'];
+		$final_price = $api->SystemReturnTax($r['imPRICE']*$_POST['QTY']);
 		if ($final_price > $ir[$curr])
 		{
 			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_SUB_ERROR2']}");
@@ -320,6 +328,14 @@ function gift()
 		$imb_log = $db->escape("Bought {$r['itmname']} x{$_POST['QTY']} from the item market for " . number_format($final_price) . " {$curre} from User ID {$r['imADDER']} and gifted to User ID {$_POST['user']}");
 		$api->SystemLogsAdd($userid,'imarket',$imb_log);
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['IMARKET_GIFT_SUB_SUCCESS']}");
+		if ($r['imCURRENCY'] == 'primary')
+		{
+			$api->SystemCreditTax($api->SystemReturnTaxOnly($final_price),1,-1);
+		}
+		else
+		{
+			$api->SystemCreditTax($api->SystemReturnTaxOnly($final_price),2,-1);
+		}
 		
 	}
 	else
