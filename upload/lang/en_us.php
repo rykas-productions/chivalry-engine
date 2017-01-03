@@ -226,6 +226,7 @@ $lang['EXPLORE_TRAVEL']="Horse Travel";
 $lang['EXPLORE_GUILDLIST']="Guild List";
 $lang['EXPLORE_YOURGUILD']="Your Guild";
 $lang['EXPLORE_TOPTEN']="Top 10 Players";
+$lang['EXPLORE_SLOTS']="Slot Machines";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
@@ -1017,4 +1018,11 @@ $lang['ITEM_SEND_FORMTITLE2']="Alternatively, you can enter a user's id number."
 $lang['ITEM_SEND_TH']="User";
 $lang['ITEM_SEND_TH1']="Quantity to Send";
 $lang['ITEM_SEND_BTN']="Send Item(s)";
+
+//Slots
+$lang['SLOTS_INFO']="Welcome to the slots machine. Bet some of your hard earned cash for a slim chance to win big! At your level, we've imposed a betting restriction of ";
+$lang['SLOTS_TABLE1']="Bet";
+$lang['SLOTS_BTN']="Spin baby, spin!";
+$lang['SLOTS_TITLE']="Slot Machine";
+$lang['SLOTS_NOREFRESH']="Please do not refresh the page while gambling at the slot machines. Thank you!";
 ?>
