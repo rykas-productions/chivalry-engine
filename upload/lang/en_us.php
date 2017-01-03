@@ -778,6 +778,7 @@ $lang['IMARKET_GIFT_SUB_ERROR2']="You cannot buy an item from the market and gif
 $lang['IMARKET_GIFT_SUB_SUCCESS']="You have successfully bought the item and sent it out as a gift!";
 $lang['IMARKET_ADD_TITLE']="Fill this form out to add an item to the market.";
 $lang['IMARKET_ADD_TH1']="Currency Type";
+$lang['IMARKET_ADD_TH2']="Price per Item";
 $lang['IMARKET_ADD_BTN']="Add to Market";
 $lang['IMARKET_ADD_ERROR1']="You cannot add no items to the item market.";
 $lang['IMARKET_ADD_ERROR2']="You are trying to add an item you do not own.";

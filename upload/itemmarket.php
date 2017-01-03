@@ -466,7 +466,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['IMARKET_LISTING_TH4']}
+					{$lang['IMARKET_ADD_TH2']}
 				</th>
 				<td>
 					<input  type='number' min='1' required='1' class='form-control' name='price' value='0' />
