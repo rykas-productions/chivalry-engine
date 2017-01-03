@@ -1003,4 +1003,18 @@ $lang['STAFF_USERS_CP_PW']="New Password";
 $lang['STAFF_USERS_CP_ERROR']="You cannot change the password for the admin account this way.";
 $lang['STAFF_USERS_CP_ERROR1']="You cannot change the password for other admin accounts this way.";
 $lang['STAFF_USERS_CP_SUCCESS']="User's password has been changed successfully.";
+
+//Item Send
+$lang['ITEM_SEND_ERROR']="You are attempting to send a non-existent item, or you just do not have this item in your inventory.";
+$lang['ITEM_SEND_ERROR1']="You are trying to send more of this item than you currently have.";
+$lang['ITEM_SEND_ERROR2']="You are trying to send this item to a user that does not exist.";
+$lang['ITEM_SEND_ERROR3']="It makes no sense to send yourself an item.";
+$lang['ITEM_SEND_SUCC']="You have successfully sent";
+$lang['ITEM_SEND_SUCC1']="to";
+$lang['ITEM_SEND_FORMTITLE']="Enter who you wish to send";
+$lang['ITEM_SEND_FORMTITLE1']="along with the quantity you wish to send. You have";
+$lang['ITEM_SEND_FORMTITLE2']="Alternatively, you can enter a user's id number.";
+$lang['ITEM_SEND_TH']="User";
+$lang['ITEM_SEND_TH1']="Quantity to Send";
+$lang['ITEM_SEND_BTN']="Send Item(s)";
 ?>
