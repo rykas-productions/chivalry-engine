@@ -23,9 +23,9 @@ else
                     FROM `users` `u`
                     INNER JOIN `town` AS `t`
                     ON `u`.`location` = `t`.`town_id`
-					INNER JOIN `infirmary` AS `i`
+					LEFT JOIN `infirmary` AS `i`
 					ON `u`.`userid` = `i`.`infirmary_user`
-					INNER JOIN `dungeon` AS `d`
+					LEFT JOIN `dungeon` AS `d`
 					ON `u`.`userid` = `d`.`dungeon_user`
                     INNER JOIN `estates` AS `e`
                     ON `u`.`maxwill` = e.`house_will`
@@ -46,20 +46,12 @@ else
     {
 		$r = $db->fetch_row($q);
         $db->free_result($q);
-		$lon =
-                ($r['laston'] > 0) ? date('F j, Y g:i:s a', $r['laston'])
-                        : "Never";
+		$lon = ($r['laston'] > 0) ? date('F j, Y g:i:s a', $r['laston']) : "Never";
         $ula = ($r['laston'] == 0) ? 'Never' : DateTime_Parse($r['laston']);
-        $ull =
-                ($r['last_login'] == 0) ? 'Never'
-                        : DateTime_Parse($r['last_login']);
+        $ull = ($r['last_login'] == 0) ? 'Never'  : DateTime_Parse($r['last_login']);
         $sup = date('F j, Y g:i:s a', $r['registertime']);
 		$displaypic = ($r['display_pic']) ? "<img src='{$r['display_pic']}' class='img-thumbnail img-responsive' width='250' height='250'>" : '';
 		$user_name = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span> <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
-        $on =
-                ($r['laston'] >= $_SERVER['REQUEST_TIME'] - 15 * 60)
-                        ? "<font color='green'><b>{$lang['GEN_ONLINE']}</b></font>"
-                        : "<font color='red'><b>{$lang['GEN_OFFLINE']}</b></font>";
         $ref_q =
                 $db->query(
                         "SELECT COUNT(`referalid`)
@@ -82,7 +74,7 @@ else
         $enemy = $db->fetch_single($enemy_q);
         $db->free_result($enemy_q);
 		$CurrentTime=time();
-		$r['daysold']=round((($CurrentTime-$r['registertime'])/(3600 * 24)));
+		$r['daysold']=DateTime_Parse($r['registertime'], false);
 		
 		$rhpperc = round($r['hp'] / $r['maxhp'] * 100);
 		echo "<h3>{$lang['PROFILE_PROFOR']} {$r['username']}</h3>";
