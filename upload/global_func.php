@@ -5,7 +5,7 @@
 */
 function DateTime_Parse($time_stamp)
 {
-    $time_difference = ($_SERVER['REQUEST_TIME'] - $time_stamp);
+    $time_difference = (time() - $time_stamp);
     $unit =
             array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
     $lengths = array(60, 60, 24, 7, 4.35, 12);
@@ -21,10 +21,29 @@ function DateTime_Parse($time_stamp)
     return $date;
 }
 /*
+	Parses how much time until the timestamp given.
+	$param int $time_stamp for the timestamp.
+*/
+function TimeUntil_Parse($time_stamp)
+{
+	$time_difference = $time_stamp - time();
+	$unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
+    $lengths = array(60, 60, 24, 7, 4.35, 12);
+    for ($i = 0; $time_difference >= $lengths[$i]; $i++)
+    {
+        $time_difference = $time_difference / $lengths[$i];
+    }
+    $time_difference = round($time_difference);
+    $date =
+            $time_difference . ' ' . $unit[$i]
+                    . (($time_difference > 1 OR $time_difference < 1) ? 's'
+                            : '') . '';
+    return $date;
+}
+/*
 	The function for testing a link is a valid image
 	@param text $url The link to test for.
 */
-
 function isImage($url = null) 
 {
     if(@is_array(getimagesize($url)))
