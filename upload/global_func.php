@@ -2,8 +2,9 @@
 /*
 	Parses the time since the timestamp given.
 	@param int $time_stamp for time since.
+	@param boolean $ago to display the "ago" after the string. (Default = true)
 */
-function DateTime_Parse($time_stamp)
+function DateTime_Parse($time_stamp, $ago = true)
 {
     $time_difference = (time() - $time_stamp);
     $unit =
@@ -14,10 +15,14 @@ function DateTime_Parse($time_stamp)
         $time_difference = $time_difference / $lengths[$i];
     }
     $time_difference = round($time_difference);
-    $date =
-            $time_difference . ' ' . $unit[$i]
-                    . (($time_difference > 1 OR $time_difference < 1) ? 's'
-                            : '') . ' ago';
+	if ($ago == true)
+	{
+		$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . ' ago';
+	}
+	else
+	{
+		$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
+	}
     return $date;
 }
 /*
