@@ -174,17 +174,15 @@ class headers
 				}
 				if (user_infirmary($ir['userid']) == true)
 				{
-					$CurrentTime=time();
 					$InfirmaryOut=$db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
-					$InfirmaryRemain=round((($InfirmaryOut - $CurrentTime) / 60), 2);
-					alert('info',"{$lang['GEN_INFIRM']}","{$lang['MENU_INFIRMARY1']} {$InfirmaryRemain} {$lang['GEN_MINUTES']}");
+					$InfirmaryRemain=TimeUntil_Parse($InfirmaryOut);
+					alert('info',"{$lang['GEN_INFIRM']}","{$lang['MENU_INFIRMARY1']} {$InfirmaryRemain}.");
 				}
 				if (user_dungeon($ir['userid']) == true)
 				{
-					$CurrentTime=time();
 					$DungeonOut=$db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
-					$DungeonRemain=round((($DungeonOut - $CurrentTime) / 60), 2);
-					alert('info',"{$lang["GEN_DUNG"]}","{$lang['MENU_DUNGEON1']} {$DungeonRemain} {$lang['GEN_MINUTES']}");
+					$DungeonRemain=TimeUntil_Parse($DungeonOut);
+					alert('info',"{$lang["GEN_DUNG"]}","{$lang['MENU_DUNGEON1']} {$DungeonRemain}.");
 				}
 				$time=time();
 				if (($ir['last_verified'] < ($time-900)) || ($ir['need_verify'] == 1))
