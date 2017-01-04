@@ -23,6 +23,12 @@ $Defender=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHER
 //Select the Total Primary Currency in the game.
 $TotalPrimaryCurrency=$db->fetch_single($db->query("SELECT SUM(`primary_currency`) FROM `users` WHERE `user_level` != 'NPC'"));
 
+//Select the total for primary currency in bank.
+$TotalBank=$db->fetch_single($db->query("SELECT SUM(`bank`) FROM `users` WHERE `user_level` != 'NPC' AND `bank` > -1"));
+
+//All the primar currency
+$TotalBankandPC=$TotalBank+$TotalPrimaryCurrency;
+
 //Select the Total Secondary Currency in the game.
 $TotalSecondaryCurrency=$db->fetch_single($db->query("SELECT SUM(`secondary_currency`) FROM `users` WHERE `user_level` != 'NPC'"));
 
@@ -32,6 +38,7 @@ $TotalUserCount=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users
 //Figure out average primary currency per player by dividing the total primary currency by the total amount of users
 //then round up.
 $AveragePrimaryCurrencyPerPlayer=round($TotalPrimaryCurrency / $TotalUserCount);
+$AverageBank=round($TotalBank/$TotalUserCount);
 
 //Figure out average secondary currency per player by dividing the total secondary currency by the total amount of users
 //then round up.
