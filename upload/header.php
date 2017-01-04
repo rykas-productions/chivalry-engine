@@ -236,13 +236,13 @@ class headers
         }
         if (!isset($_SESSION['attacking']))
         {
-            $_SESSION['attacking'] = 'false';
+            $_SESSION['attacking'] = 0;
         }
-        if ($dosessh && ($_SESSION['attacking'] == false || $ir['attacking'] == true))
+        if ($dosessh && ($_SESSION['attacking'] || $ir['attacking']))
         {
            alert("warning","{$lang['ERROR_GENERIC']}","{$lang['MENU_XPLOST']}");
-            $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 'false' WHERE `userid` = $userid");
-            $_SESSION['attacking'] = 'false';
+            $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");
+            $_SESSION['attacking'] = 0;
         }
         $d = "";
         $u = $ir['username'];

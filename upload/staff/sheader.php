@@ -198,16 +198,13 @@ class headers
         }
         if (!isset($_SESSION['attacking']))
         {
-            $_SESSION['attacking'] = 'false';
+            $_SESSION['attacking'] = 0;
         }
-        if ($dosessh && ($_SESSION['attacking'] == 'true' || $ir['attacking'] == 'true'))
+        if ($dosessh && ($_SESSION['attacking'] || $ir['attacking']))
         {
-            echo "You lost all your EXP for running from the fight.";
-            $db->query(
-                    "UPDATE `users`
-                     SET `xp` = 0, `attacking` = 'false'
-                     WHERE `userid` = $userid");
-            $_SESSION['attacking'] = 'false';
+           alert("warning","{$lang['ERROR_GENERIC']}","{$lang['MENU_XPLOST']}");
+            $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");
+            $_SESSION['attacking'] = 0;
         }
 		$enperc = min((int) ($ir['energy'] / $ir['maxenergy'] * 100), 100);
         $wiperc = min((int) ($ir['will'] / $ir['maxwill'] * 100), 100);

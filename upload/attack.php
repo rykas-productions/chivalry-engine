@@ -27,6 +27,7 @@ function attacking()
 {
 	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$menuhide = 1;
+	$atkpage = 1;
 	$tresder = Random(100, 999);
 	$_GET['user'] =  (isset($_GET['user']) && is_numeric($_GET['user']))  ? abs(intval($_GET['user'])) : '';
 	if (empty($_GET['nextstep']))
@@ -86,72 +87,72 @@ function attacking()
 	$db->free_result($q);
 	if ($ir['attacking'] && $ir['attacking'] != $_GET['user'])
 	{
-		$_SESSION['attacklost'] = 'false';
+		$_SESSION['attacklost'] = 0;
 		alert("danger","{$lang['ERROR_UNKNOWN']}","{$lang['ATTACK_START_UNKNOWNERROR']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
-		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
 		die($h->endpage());
 	}
 	if ($odata['hp'] == 1)
 	{
-		$_SESSION['attacking'] = 'false';
+		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
 		alert("danger","{$lang['ERROR_GENERIC']}","{$odata['username']} {$lang['ATTACK_START_OPPNOHP']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if (user_infirmary($_GET['user']) == true)
 	{
-		$_SESSION['attacking'] = 'false';
+		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
 		alert("danger","{$lang['GEN_INFIRM']}","{$odata['username']} {$lang['ATTACK_START_OPPINFIRM']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if (user_infirmary($ir['userid']) == true)
 	{
-		$_SESSION['attacking'] = 'false';
+		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
 	   alert("danger","{$lang['GEN_INFIRM']}","{$lang['ATTACK_START_YOUINFIRM']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if (user_dungeon($_GET['user']) == true)
 	{
-		$_SESSION['attacking'] = 'false';
+		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
 		alert("danger","{$lang['GEN_DUNG']}","{$odata['username']} {$lang['ATTACK_START_OPPDUNG']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if (user_dungeon($userid) == true)
 	{
-		$_SESSION['attacking'] = 'false';
+		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
 		alert("danger","{$lang['GEN_DUNG']}","{$lang['ATTACK_START_YOUDUNG']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if (permission('CanBeAttack',$_GET['user']) == false)
 	{
-		$_SESSION['attacking'] = 'false';
+		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_OPPUNATTACK']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if (permission('CanAttack',$userid) == false)
 	{
-		$_SESSION['attacking'] = 'false';
+		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_YOUUNATTACK']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($odata['level'] < 3 && $odata['laston'] > $laston)
 	{
-		$_SESSION['attacking'] = 'false';
+		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_THEYLOWLEVEL']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -164,9 +165,9 @@ function attacking()
 		}
 		if ($_GET['nextstep'] >= $set['MaxAttacksPerSession'])
 		{
-			$_SESSION['attacking'] = 'false';
+			$_SESSION['attacking'] = 0;
 			$ir['attacking'] = 0;
-			$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = {$userid}");
+			$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
 			alert("warning","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_STALEMATE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 			die($h->endpage());
 		}
@@ -187,9 +188,9 @@ function attacking()
 				die($h->endpage());
 			}
 		}
-		$_SESSION['attacking'] = 'true';
+		$_SESSION['attacking'] = 1;
 		$ir['attacking'] = $odata['userid'];
-		$attackstatus_sql ="UPDATE `users` SET `attacking` = 'true' WHERE `userid` = {$userid}";
+		$attackstatus_sql ="UPDATE `users` SET `attacking` = {$ir['attacking']} WHERE `userid` = {$userid}";
 		$db->query($attackstatus_sql);
 		$_GET['nextstep'] = (isset($_GET['nextstep']) && is_numeric($_GET['nextstep'])) ? abs(intval($_GET['nextstep'])) : '';
 		if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary'])
@@ -459,9 +460,9 @@ function beat()
 {
 	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
-	$_SESSION['attacking'] = 'false';
-	$ir['attacking'] = 'false';
-	$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = $userid");
+	$_SESSION['attacking'] = 0;
+	$ir['attacking'] = 0;
+	$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = $userid");
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
@@ -512,8 +513,8 @@ function lost()
 {
 	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
-	$_SESSION['attacking'] = 'false';
-	$_SESSION['attacklost'] = 'false';
+	$_SESSION['attacking'] = 0;
+	$_SESSION['attacklost'] = 0;
 	if(!$_GET['ID']) 
 	{
 		alert('warning',"{$lang['CSRF_ERROR_TITLE']}","{$lang['ATT_NC']}");
@@ -552,9 +553,9 @@ function xp()
 {
 	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
-	$_SESSION['attacking'] = 'false';
-	$ir['attacking'] = 'false';
-	$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = $userid");
+	$_SESSION['attacking'] = 0;
+	$ir['attacking'] = 0;
+	$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = $userid");
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
@@ -618,9 +619,9 @@ function mug()
 {
 	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
-	$_SESSION['attacking'] = 'false';
-	$ir['attacking'] = 'false';
-	$db->query("UPDATE `users` SET `attacking` = 'false' WHERE `userid` = $userid");
+	$_SESSION['attacking'] = 0;
+	$ir['attacking'] = 0;
+	$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = $userid");
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
@@ -658,7 +659,7 @@ function mug()
 			$api->UserStatusSet($r['userid'],1,$hosptime,$hospreason);
 			event_add($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
 			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");					
-			$_SESSION['attackwon'] = 'false';
+			$_SESSION['attackwon'] = 0;
 			if ($r['user_level'] == 0)
 			{
 				$db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
