@@ -122,11 +122,11 @@ function addacademy()
 		{
 			csrf_error('create');
 		}
-		$academyname = $_POST['academyname'];
-		$academydesc = $_POST['academydesc'];
-		$academycost = $_POST['academycost'];
-		$academylevel = $_POST['academylvl'];
-		$academydays = $_POST['academyday'];
+		$academyname = (isset($_POST['academyname']) && is_string($_POST['academyname'])) ? stripslashes($_POST['academyname']) : '';
+		$academydesc = (isset($_POST['academydesc'];) && is_string($_POST['academydesc'];)) ? stripslashes($_POST['academydesc'];) : '';
+		$academycost = (isset($_POST['academycost']) && is_numeric($_POST['academycost'])) ? abs(intval($_POST['academycost'])) : '';
+		$academylvl = (isset($_POST['academylvl']) && is_numeric($_POST['academylvl'])) ? abs(intval($_POST['academylvl'])) : '';
+		$academydays = (isset($_POST['academyday']) && is_numeric($_POST['academyday'])) ? abs(intval($_POST['academyday'])) : '';
 		if (empty($academyname) || empty($academydesc) || empty($academycost) || empty($academylevel) || empty($academydays))
 		{
 			alert('danger',"Missing Inputs!","You are missing one of the required fields. Please go back and try again.");
@@ -139,7 +139,7 @@ function addacademy()
 			alert("danger","Course Already Exists!","An academic course with that name already exists. Go back and choose a different name.");
 			die($h->endpage());
 		}
-		for ($i = 1; $i <= 3; $i++)
+		for ($i = 1; $i <= 4; $i++)
 		{
 			$efxkey = "effect{$i}";
 			$_POST[$efxkey . 'stat'] =
