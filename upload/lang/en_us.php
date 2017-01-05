@@ -610,6 +610,56 @@ $lang['STAFF_USERS_FL_SUB_SUCC']="User was successfully logged out from the game
 $lang['STAFF_USERS_FL_FORM_INFO']="Use this form to have a use auto-logged out when on their next action in game.";
 $lang['STAFF_USERS_FL_FORM_BTN']="Force Logout User";
 
+//Academy
+
+$lang['STAFF_ACADEMY_ADD']="Create Academic Course";
+$lang['STAFF_ACADEMY_DEL']="Remove Academic Course";
+$lang['STAFF_ACADEMY_NAME']="Academy Name";
+$lang['STAFF_ACADEMY_DESC']="Academy Description";
+$lang['STAFF_ACADEMY_COST']="Academy Cost";
+$lang['STAFF_ACADEMY_LVL']="Academy Minimum Level";
+$lang['STAFF_ACADEMY_DAYS']="Academy Days";
+$lang['STAFF_ACADEMY_PERKS']="Academy Perks";
+$lang['STAFF_ACADEMY_PERK']="Perk";
+$lang['STAFF_ACADEMY_TOGGLE_DISP']="Give Perk?";
+$lang['STAFF_ACADEMY_TOGGLE_ON']="Yes!";
+$lang['STAFF_ACADEMY_TOGGLE_OFF']="No!";
+$lang['STAFF_ACADEMY_STAT']="Given Effect";
+$lang['STAFF_ACADEMY_OPTION_1']="Strength";
+$lang['STAFF_ACADEMY_OPTION_2']="Agility";
+$lang['STAFF_ACADEMY_OPTION_3']="Guard";
+$lang['STAFF_ACADEMY_OPTION_4']="Labor";
+$lang['STAFF_ACADEMY_OPTION_5']="IQ";
+$lang['STAFF_ACADEMY_DIRECTION']="Direction";
+$lang['STAFF_ACADEMY_INCREASE']="Increase";
+$lang['STAFF_ACADEMY_DECREASE']="Decrease";
+$lang['STAFF_ACADEMY_AMOUNT']="Given Amount";
+$lang['STAFF_ACADEMY_VALUE']="Value";
+$lang['STAFF_ACADEMY_PERCENT']="Percentage";
+$lang['STAFF_ACADEMY_CREATE']="Create Academy";
+$lang['STAFF_ACADEMY_DELETE_HEADER']="Deleting an Academy";
+$lang['STAFF_ACADEMY_DELETE_NOTICE']="The academy you select will be deleted permanently. There isn't a confirmation prompt, so be 100% sure.";
+$lang['STAFF_ACADEMY_DELETE_TITLE']="Academy";
+$lang['STAFF_ACADEMY_DELETE_BUTTON']="Remove Academy";
+$lang['ACADEMY_DESCRIPTION_EFFECT_1']="This course ";
+$lang['ACADEMY_DESCRIPTION_EFFECT_2']="your ";
+$lang['ACADEMY_DESCRIPTION_EFFECT_3']="by ";
+$lang['ACADEMY_INFO_NAME']="Course Name:";
+$lang['ACADEMY_INFO_DESC']="Course Description:";
+$lang['ACADEMY_INFO_COST']="Minimum Cost:";
+$lang['ACADEMY_INFO_LEVEL']="Minimum Level Required:";
+$lang['ACADEMY_INFO_DAYS']="Days to Complete:";
+$lang['ACADEMY_INFO_EFFECT']="Completion Effect #";
+$lang['ACADEMY_STARTED_COURSE']="Course Successfully Started!";
+$lang['ACADEMY_RETURN_HOME']="Return Home";
+$lang['ACADEMY_LOW_LEVEL_1']="Low Level!";
+$lang['ACADEMY_INSUFFICIENT_CURRENCY_1']="Short on Currency!";
+$lang['ACADEMY_IN_COURSE_1']="In Course";
+$lang['ACADEMY_LOW_LEVEL_2']="Try gaining more levels before attempting this course";
+$lang['ACADEMY_INSUFFICIENT_CURRENCY_2']="Try gaining some more primary currency before joining this course";
+$lang['ACADEMY_IN_COURSE_2']="You are already in a course! Please wait for it to finish and try again<br>It will finish in:";
+$lang['ACADEMY_IN_COURSE_3']="days";
+
 //Criminal Center
 $lang['CRIME_TITLE']="Criminal Center";
 $lang['CRIME_ERROR_JI']="Only the healthy and free individuals can commit crimes.";

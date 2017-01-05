@@ -327,6 +327,42 @@ function item_dropdown($ddname = "item", $selected = -1)
 }
 
 /**
+* Too lazy to put a description
+**/
+
+function academy_dropdown ($acadname = "academy", $selected = -1)
+{
+	global $db;
+    $ret = "<select name='$acadname' class='form-control' type='dropdown'>";
+    $q =
+            $db->query(
+                    "SELECT `academyid`, `academyname`
+    				 FROM `academy`
+    				 ORDER BY `academyid` ASC");
+	if ($selected < 1)
+    {
+        $ret .= "<option value='0' selected='selected'>-- None --</option>";
+    }
+    else
+    {
+        $ret .= "<option value='0'>-- None --</option>";
+    }
+    while ($r = $db->fetch_row($q))
+    {
+        $ret .= "\n<option value='{$r['academyid']}'";
+        if ($selected == $r['academyid'])
+        {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['academyname']} [{$r['academyid']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
+
+/**
  * Constructs a drop-down listbox of all the locations in the game to let the user select one.
  * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
  * @param int $selected [optional] The <i>ID number</i> of the location which should be selected by default.<br />
