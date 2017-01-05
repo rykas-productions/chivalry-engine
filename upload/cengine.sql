@@ -619,7 +619,9 @@ CREATE TABLE `users` (
   `location` tinyint(11) UNSIGNED NOT NULL DEFAULT '1',
   `timezone` enum('Pacific/Wake','Pacific/Apia','America/Adak','America/Anchorage','America/Los_Angeles','America/Denver','America/Chicago','America/New_York','America/Halifax','America/Godthab','America/Noronha','Atlantic/Cape_Verde','Europe/London','Europe/Berlin','Europe/Bucharest','Europe/Moscow','Asia/Tehran','Asia/Muscat','Asia/Kabul','Asia/Karachi','Asia/Calcutta','Asia/Katmandu','Asia/Novosibirsks','America/Godthab','Asia/Rangoon','Asia/Bangkok','Australia/Perth','Asia/Tokyo','Australia/Darwin','Australia/Sydney','Asia/Magadan','Pacific/Auckland','Pacific/Tongatapu') NOT NULL DEFAULT 'Europe/London',
   `description` text NOT NULL,
-  `theme` tinyint(3) UNSIGNED NOT NULL DEFAULT '1'
+  `theme` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  `course` int(11) UNSIGNED NOT NULL,
+  `days_left` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -646,6 +648,29 @@ CREATE TABLE `userstats` (
 CREATE TABLE `uservotes` (
   `userid` int(11) UNSIGNED NOT NULL,
   `voted` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `academy`
+--
+
+CREATE TABLE `academy` (
+  `academyid` int(11) UNSIGNED NOT NULL,
+  `academyname` text NOT NULL,
+  `academydesc` text NOT NULL,
+  `academycost` int(11) UNSIGNED NOT NULL,
+  `academylevel` int(11) UNSIGNED NOT NULL,
+  `academydays` int(11) UNSIGNED NOT NULL,
+  `effect1_on` enum('false','true') NOT NULL,
+  `effect1` text NOT NULL,
+  `effect2_on` enum('false','true') NOT NULL,
+  `effect2` text NOT NULL,
+  `effect3_on` enum('false','true') NOT NULL,
+  `effect3` text NOT NULL,
+  `effect4_on` enum('false','true') NOT NULL,
+  `effect4` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -867,6 +892,12 @@ ALTER TABLE `uservotes`
   ADD PRIMARY KEY (`userid`);
 
 --
+-- Indexes for table `academy`
+--
+ALTER TABLE `academy`
+  ADD PRIMARY KEY (`academyid`);
+  
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1016,7 +1047,15 @@ ALTER TABLE `userdata`
 ALTER TABLE `users`
   MODIFY `userid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
   
- CREATE TABLE `shops` (
+--
+-- AUTO_INCREMENT for table `academy`
+--
+
+ALTER TABLE `academy`
+  MODIFY `academyid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+
+CREATE TABLE `shops` (
   `shopID` int(11) NOT NULL auto_increment,
   `shopLOCATION` int(11) NOT NULL default '0',
   `shopNAME` varchar(255) NOT NULL default '',
