@@ -155,7 +155,8 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 			<div id='ACADEMY' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
-						N/A
+						<a href='staff_academy.php?action=addacademy'>Add Academy Course</a><br />
+						<a href='staff_academy.php?action=delacademy'>Delete Academy Course</a><br />
 					</div>
 				</div>
 			</div>

@@ -123,7 +123,7 @@ function addacademy()
 			csrf_error('create');
 		}
 		$academyname = (isset($_POST['academyname']) && is_string($_POST['academyname'])) ? stripslashes($_POST['academyname']) : '';
-		$academydesc = (isset($_POST['academydesc'];) && is_string($_POST['academydesc'];)) ? stripslashes($_POST['academydesc'];) : '';
+		$academydesc = (isset($_POST['academydesc']) && is_string($_POST['academydesc'])) ? stripslashes($_POST['academydesc']) : '';
 		$academycost = (isset($_POST['academycost']) && is_numeric($_POST['academycost'])) ? abs(intval($_POST['academycost'])) : '';
 		$academylvl = (isset($_POST['academylvl']) && is_numeric($_POST['academylvl'])) ? abs(intval($_POST['academylvl'])) : '';
 		$academydays = (isset($_POST['academyday']) && is_numeric($_POST['academyday'])) ? abs(intval($_POST['academyday'])) : '';
@@ -254,3 +254,4 @@ function delacademy()
 		die($h->endpage());
 	}
 }
+$h->endpage();
