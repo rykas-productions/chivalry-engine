@@ -31,7 +31,7 @@ function addacademy()
 		<table class='table table-bordered'>
 		<tr>
 			<th width='33%'>
-					{$lang[STAFF_ACADEMY_NAME]}
+					{$lang['STAFF_ACADEMY_NAME']}
 				</th>
 				<td>
 					<input type='text' required='1' name='academyname' class='form-control'>
@@ -39,7 +39,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang[STAFF_ACADEMY_DESC]}
+					{$lang['STAFF_ACADEMY_DESC']}
 				</th>
 				<td>
 					<input type='text' required='1' name='academydesc' class='form-control'>
@@ -47,7 +47,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang[STAFF_ACADEMY_COST]}
+					{$lang['STAFF_ACADEMY_COST']}
 				</th>
 				<td>
 					<input type='number' required='1' name='academycost' class='form-control'>
@@ -55,7 +55,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang[STAFF_ACADEMY_LVL]}
+					{$lang['STAFF_ACADEMY_LVL']}
 				</th>
 				<td>
 					<input type='number' required='1' name='academylvl' class='form-control'>
@@ -63,7 +63,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang[STAFF_ACADEMY_DAYS]}
+					{$lang['STAFF_ACADEMY_DAYS']}
 				</th>
 				<td>
 					<input type='number' required='1' name='academyday' class='form-control'>
@@ -84,7 +84,7 @@ function addacademy()
 					<td>
 					<b>{$lang['STAFF_ACADEMY_TOGGLE_DISP']}?</b>
 						<input type='radio' class='form-control' name='effect{$i}on' value='true' /> {$lang['STAFF_ACADEMY_TOGGLE_ON']}
-						<input type='radio' class='form-control' name='effect{$i}on' value='false' checked='checked' /> {$STAFF_lang['ACADEMY_TOGGLE_OFF']}
+						<input type='radio' class='form-control' name='effect{$i}on' value='false' checked='checked' /> {$lang['STAFF_ACADEMY_TOGGLE_OFF']}
 					<br />
 					<b>{$lang['STAFF_ACADEMY_STAT']}:</b> <select name='effect{$i}stat' type='dropdown' class='form-control'>
 						<option value='strength'>{$lang['STAFF_ACADEMY_OPTION_1']}</option>
