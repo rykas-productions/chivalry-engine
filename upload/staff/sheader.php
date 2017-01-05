@@ -29,13 +29,25 @@ class headers
     <!-- CSS -->
     <?php
 	if ($ir['theme'] == 1)
-	{
-		?>  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <?php
-	}
-	else
-	{
-		?> <link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css"> <?php
-	}
+			{
+				?>  
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+					<meta name="theme-color" content="#e7e7e7">
+				<?php
+			}
+			elseif ($ir['theme'] == 2)
+			{
+				?> 
+					<link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css"> 
+					<meta name="theme-color" content="#375a7f">
+				<?php
+			}
+			elseif ($ir['theme'] == 3)
+			{
+				?> 
+					<link rel="stylesheet" href="../css/bootstrap-purple.css"> 
+				<?php
+			}
 	?>
 	<link href="../css/bs2.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">

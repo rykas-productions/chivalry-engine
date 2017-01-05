@@ -27,11 +27,17 @@ class headers
 					<meta name="theme-color" content="#e7e7e7">
 				<?php
 			}
-			else
+			elseif ($ir['theme'] == 2)
 			{
 				?> 
 					<link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css"> 
 					<meta name="theme-color" content="#375a7f">
+				<?php
+			}
+			elseif ($ir['theme'] == 3)
+			{
+				?> 
+					<link rel="stylesheet" href="css/bootstrap-purple.css"> 
 				<?php
 			}
 			?>

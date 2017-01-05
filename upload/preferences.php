@@ -334,7 +334,7 @@ function themechange()
 	if (isset($_POST['theme']))
 	{
 		$_POST['theme'] =  (isset($_POST['theme']) && is_numeric($_POST['theme']))  ? abs(intval($_POST['theme'])) : 1;
-		if ($_POST['theme'] < 1 || $_POST['theme'] > 2)
+		if ($_POST['theme'] < 1 || $_POST['theme'] > 3)
 		{
 			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['PREF_CTHM_SUB_ERROR']}");
 			die($h->endpage());
@@ -364,6 +364,7 @@ function themechange()
 						<select name='theme' class='form-control' type='dropdown'>
 							<option value='1'>{$lang["PREF_CTHM_FORMDD1"]}</option>
 							<option value='2'>{$lang["PREF_CTHM_FORMDD2"]}</option>
+							<option value='3'>{$lang["PREF_CTHM_FORMDD3"]}</option>
 						</select>
 					</td>
 				</tr>
