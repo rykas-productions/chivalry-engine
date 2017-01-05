@@ -656,22 +656,22 @@ CREATE TABLE `uservotes` (
 -- Table structure for table `academy`
 --
 
-CREATE TABLE `academy` (
-  `academyid` int(11) UNSIGNED NOT NULL,
-  `academyname` text NOT NULL,
-  `academydesc` text NOT NULL,
-  `academycost` int(11) UNSIGNED NOT NULL,
-  `academylevel` int(11) UNSIGNED NOT NULL,
-  `academydays` int(11) UNSIGNED NOT NULL,
-  `effect1_on` enum('false','true') NOT NULL,
-  `effect1` text NOT NULL,
-  `effect2_on` enum('false','true') NOT NULL,
-  `effect2` text NOT NULL,
-  `effect3_on` enum('false','true') NOT NULL,
-  `effect3` text NOT NULL,
-  `effect4_on` enum('false','true') NOT NULL,
-  `effect4` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `academy` ( 
+	`academyid` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`academyname` TEXT NOT NULL , 
+	`academydesc` TEXT NOT NULL , 
+	`academycost` INT(11) UNSIGNED NOT NULL , 
+	`academylevel` INT(11) UNSIGNED NOT NULL , 
+	`academydays` INT(11) UNSIGNED NOT NULL , 
+	`effect1_on` BOOLEAN NOT NULL , 
+	`effect1` TEXT NOT NULL , 
+	`effect2_on` BOOLEAN NOT NULL , 
+	`effect2` TEXT NOT NULL , 
+	`effect3_on` BOOLEAN NOT NULL , 
+	`effect3` TEXT NOT NULL , 
+	`effect4_on` BOOLEAN NOT NULL , 
+	`effect4` TEXT NOT NULL , 
+	UNIQUE (`academyid`)) ENGINE = MyISAM;
 
 --
 -- Indexes for dumped tables
@@ -894,8 +894,8 @@ ALTER TABLE `uservotes`
 --
 -- Indexes for table `academy`
 --
-ALTER TABLE `academy`
-  ADD PRIMARY KEY (`academyid`);
+ALTER TABLE `academy` 
+	ADD PRIMARY KEY (`academyid`)
   
 --
 -- AUTO_INCREMENT for dumped tables
