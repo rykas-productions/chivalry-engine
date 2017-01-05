@@ -97,7 +97,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 					<a href='infirmary.php'>{$lang['EXPLORE_INFIRM']}</a><br />
 					<a href='gym.php'>{$lang['EXPLORE_GYM']}</a><br />
 					<a href='#'>{$lang['EXPLORE_JOB']}</a><br />
-					<a href='#'>{$lang['EXPLORE_ACADEMY']}</a><br />
+					<a href='academy.php'>{$lang['EXPLORE_ACADEMY']}</a><br />
 					<a href='criminal.php'>{$lang['EXPLORE_CRIMES']}</a><br />
 				</div>
 			</div>
