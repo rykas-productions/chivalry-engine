@@ -39,11 +39,21 @@ function TimeUntil_Parse($time_stamp)
         $time_difference = $time_difference / $lengths[$i];
     }
     $time_difference = round($time_difference);
-    $date =
-            $time_difference . ' ' . $unit[$i]
-                    . (($time_difference > 1 OR $time_difference < 1) ? 's'
-                            : '') . '';
+    $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
     return $date;
+}
+function ParseTimestamp($time)
+{
+	$time_difference = $time;
+	$unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
+	$lengths = array(60, 60, 24, 7, 4.35, 12);
+	for ($i = 0; $time_difference >= $lengths[$i]; $i++)
+    {
+        $time_difference = $time_difference / $lengths[$i];
+    }
+    $time_difference = round($time_difference);
+	$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
+	return $date;
 }
 /*
 	The function for testing a link is a valid image
@@ -1658,4 +1668,12 @@ function Random($min,$max)
 	{
 		return mt_rand($min,$max);
 	}
+}
+/*
+	Paginiation Function. Easily create page listings in list.
+*/
+function paginate($item_per_page, $current_page, $total_records, $total_pages, $page_url)
+{
+    $pagination="";
+	
 }
