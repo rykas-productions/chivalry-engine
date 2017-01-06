@@ -1102,6 +1102,20 @@ CREATE TABLE `promo_codes` (
   `promo_use` int(11) UNSIGNED NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+CREATE TABLE `botlist` ( 
+	`botid` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`botuser` INT(11) UNSIGNED NOT NULL , 
+	`botitem` INT(11) UNSIGNED NOT NULL , 
+	`botcooldown` INT(11) UNSIGNED NOT NULL , 
+	UNIQUE (`botid`)
+) ENGINE = MyISAM;
+	
+CREATE TABLE `botlist_hits` ( 
+	`userid` INT(11) UNSIGNED NOT NULL , 
+	`botid` INT(11) UNSIGNED NOT NULL , 
+	`lasthit` INT(11) UNSIGNED NOT NULL 
+) ENGINE = MyISAM;
+
 --
 -- Indexes for dumped tables
 --

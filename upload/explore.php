@@ -53,6 +53,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 					<a href='#'>{$lang['EXPLORE_MINE']}</a><br />
 					<a href='#'>{$lang['EXPLORE_WC']}</a><br />
 					<a href='#'>{$lang['EXPLORE_FARM']}</a><br />
+					<a href='bottent.php'>{$lang['EXPLORE_BOTS']}</a><br />
 				</div>
 			</div>
 		</div>

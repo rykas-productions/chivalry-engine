@@ -22,6 +22,20 @@ echo "<table class='table table-bordered'>
 </tr>";
 while ($result = $db->fetch_row($query))
 {
+	$timequery=$db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
+	$r2=$db->fetch_single($timequery);
+	if (($r2 <= time() + $result['botcooldown']) && $r2 > 0)
+	{
+		$cooldown=$r2 + $result['botcooldown'] - time();
+		$attack="{$lang['BOTTENT_WAIT']} " . ParseTimestamp($cooldown);
+	}
+	else
+	{
+		$attack="<form action='attack.php'>
+					<input type='hidden' name='user' value='{$result['botuser']}'>
+					<input type='submit' class='btn btn-danger' value='Attack " . $api->SystemUserIDtoName($result['botuser']) . "'>
+					</form>";
+	}
 	echo "
 	<tr>
 		<td>
@@ -34,8 +48,10 @@ while ($result = $db->fetch_row($query))
 			" . ParseTimestamp($result['botcooldown']) . "
 		</td>
 		<td>
+			" . $api->SystemItemIDtoName($result['botitem']) . "
 		</td>
 		<td>
+			{$attack}
 		</td>
 	</tr>";
 }

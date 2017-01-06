@@ -228,6 +228,7 @@ $lang['EXPLORE_GUILDLIST']="Guild List";
 $lang['EXPLORE_YOURGUILD']="Your Guild";
 $lang['EXPLORE_TOPTEN']="Top 10 Players";
 $lang['EXPLORE_SLOTS']="Slot Machines";
+$lang['EXPLORE_BOTS']="Bot List";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
@@ -1080,10 +1081,11 @@ $lang['SLOTS_NOREFRESH']="Please do not refresh the page while gambling at the s
 
 //Bot tent
 $lang['BOTTENT_TITLE']="Bot Tent";
-$lang['BOTTENT_DESC']="Welcome to the Bot Tent. Here you may challenge NPCs to battle. If you win, you'll receive an item. These items may or may not be useful in your adventures. To deter players getting massive amounts of items, you can only attack these NPCs every so often. Their cooldown is listed here as well.";
+$lang['BOTTENT_DESC']="Welcome to the Bot Tent. Here you may challenge NPCs to battle. If you win, you'll receive an item. These items may or may not be useful in your adventures. To deter players getting massive amounts of items, you can only attack these NPCs every so often. Their cooldown is listed here as well. To receive the item, you must mug the bot.";
 $lang['BOTTENT_TH']="Bot Name";
 $lang['BOTTENT_TH1']="Bot Level";
 $lang['BOTTENT_TH2']="Bot Cooldown";
 $lang['BOTTENT_TH3']="Bot Item Drop";
 $lang['BOTTENT_TH4']="Attack";
+$lang['BOTTENT_WAIT']="Cooldown Remaining: ";
 ?>
