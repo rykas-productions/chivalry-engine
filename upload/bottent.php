@@ -20,7 +20,6 @@ echo "<table class='table table-bordered'>
 		{$lang['BOTTENT_TH4']}
 	</th>
 </tr>";
-	echo time();
 while ($result = $db->fetch_row($query))
 {
 	$timequery=$db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
