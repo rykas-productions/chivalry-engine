@@ -20,13 +20,14 @@ echo "<table class='table table-bordered'>
 		{$lang['BOTTENT_TH4']}
 	</th>
 </tr>";
+	echo time();
 while ($result = $db->fetch_row($query))
 {
 	$timequery=$db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
 	$r2=$db->fetch_single($timequery);
-	if (($r2 <= time() + $result['botcooldown']) && $r2 > 0)
+	if ((time() <= ($r2 + $result['botcooldown'])) && ($r2 > 0))
 	{
-		$cooldown=$r2 + $result['botcooldown'] - time();
+		$cooldown=($r2 + $result['botcooldown']) - time();
 		$attack="{$lang['BOTTENT_WAIT']} " . ParseTimestamp($cooldown);
 	}
 	else
