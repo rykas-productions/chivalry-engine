@@ -14,7 +14,7 @@ function DateTime_Parse($time_stamp, $ago = true)
     {
         $time_difference = $time_difference / $lengths[$i];
     }
-    $time_difference = round($time_difference);
+    $time_difference = round($time_difference, 2);
 	if ($ago == true)
 	{
 		$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . ' ago';
@@ -38,10 +38,13 @@ function TimeUntil_Parse($time_stamp)
     {
         $time_difference = $time_difference / $lengths[$i];
     }
-    $time_difference = round($time_difference);
+    $time_difference = round($time_difference, 2);
     $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
     return $date;
 }
+/*
+	Parses the timestamp into a human friendly number.
+*/
 function ParseTimestamp($time)
 {
 	$time_difference = $time;
@@ -51,7 +54,7 @@ function ParseTimestamp($time)
     {
         $time_difference = $time_difference / $lengths[$i];
     }
-    $time_difference = round($time_difference);
+    $time_difference = round($time_difference, 2);
 	$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
 	return $date;
 }
