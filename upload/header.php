@@ -190,7 +190,7 @@ class headers
 					$DungeonRemain=TimeUntil_Parse($DungeonOut);
 					alert('info',"{$lang["GEN_DUNG"]}","{$lang['MENU_DUNGEON1']} {$DungeonRemain}.");
 				}
-			if ($ir['course'] != 0)
+			/*if ($ir['course'] > 0)
 			{
 				if ($ir['days_left'] == 0)
 				{
@@ -216,9 +216,10 @@ class headers
 							$rewardid[$enum]="{$dir}{$erewards['inc_amount']}{$value} in {$erewards['stat']}<br>";
 					}
 					$db->query("update `users` SET `course`='0' WHERE `userid` = '{$ir['userid']}'");
-					event_add($ir['userid'], "You have successfully completed the course {$coursename} and been given all the effects");
+					notification_add($ir['userid'], "You have successfully completed the course {$coursename} and been given all the effects");
 				}
 			}
+			*/
 				$time=time();
 				if (($ir['last_verified'] < ($time-900)) || ($ir['need_verify'] == 1))
 				{

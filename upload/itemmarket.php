@@ -231,7 +231,7 @@ function buy()
 			}
 			$db->query("UPDATE `users` SET `$curr` = `$curr` - {$final_price} WHERE `userid` = $userid");
 			$db->query("UPDATE `users` SET `$curr` = `$curr` + {$final_price} WHERE `userid` = {$r['imADDER']}");
-			event_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
+			notification_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
 			$imb_log = $db->escape("Bought {$r['itmname']} x{$_POST['QTY']} from the item market for " . number_format($final_price) . " {$curre} from user ID {$r['imADDER']}");
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['IMARKET_BUY_SUB_SUCCESS']}");
 			$api->SystemLogsAdd($userid,'imarket',$imb_log);
@@ -323,8 +323,8 @@ function gift()
 		}
 		$db->query("UPDATE `users` SET `{$curr}` = `{$curr}` - {$final_price} WHERE `userid`= {$userid}");
 		$db->query("UPDATE `users` SET `{$curr}` = `{$curr}` + {$final_price} WHERE `userid` = {$r['imADDER']}");
-		event_add($_POST['user'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought you {$_POST['QTY']} {$r['itmname']}(s) from the market.");
-		event_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
+		notification_add($_POST['user'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought you {$_POST['QTY']} {$r['itmname']}(s) from the market.");
+		notification_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
 		$imb_log = $db->escape("Bought {$r['itmname']} x{$_POST['QTY']} from the item market for " . number_format($final_price) . " {$curre} from User ID {$r['imADDER']} and gifted to User ID {$_POST['user']}");
 		$api->SystemLogsAdd($userid,'imarket',$imb_log);
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['IMARKET_GIFT_SUB_SUCCESS']}");

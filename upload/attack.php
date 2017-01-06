@@ -494,7 +494,7 @@ function beat()
 		$hospreason = $db->escape("Beat up by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 		$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$r['userid']}");
 		put_infirmary($r['userid'],$hosptime,$hospreason);
-		event_add($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> brutally attacked you and caused {$hosptime} minutes worth of damage.");
+		notification_add($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> brutally attacked you and caused {$hosptime} minutes worth of damage.");
 		$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and brutally injured them, causing {$hosptime} minutes of damage.");
 		$_SESSION['attackwon'] = false;
 		if ($r['user_level'] == 'NPC')
@@ -544,7 +544,7 @@ function lost()
 	$r['xp_needed'] = round($r['level']+($r['level'] * 115)+($r['level'] * 115));
 	$qe2 = $ir['level'] * $ir['level'] * $ir['level'];
 	$expperc2 = round($expgainp / $r['xp_needed'] * 100);
-	event_add($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
+	notification_add($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
 	$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$_GET['ID']}] and lost, gaining {$hosptime} minutes in the infirmary.");
 	$db->query("UPDATE `users` SET `xp` = `xp` + {$expgainp} WHERE `userid` = {$_GET['ID']}");
 	$db->query("UPDATE `users` SET `xp` = 0 WHERE `xp` < 0");
@@ -604,7 +604,7 @@ function xp()
 			$hospreason = $db->escape("Used for experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 			$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$r['userid']}");
 			put_infirmary($r['userid'],$hosptime,$hospreason);
-			event_add($r['userid'],"<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you and left you for experience.");
+			notification_add($r['userid'],"<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you and left you for experience.");
 			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and gained {$expperc}% Experience.");			
 			$_SESSION['attackwon'] = false;
 			if ($r['user_level'] == 'NPC')
@@ -657,7 +657,7 @@ function mug()
 			$db->query("UPDATE `users` SET `hp` = 1, `primary_currency` = `primary_currency` - {$stole} WHERE `userid` = {$r['userid']}");
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$stole} WHERE `userid` = {$userid}");
 			$api->UserStatusSet($r['userid'],1,$hosptime,$hospreason);
-			event_add($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
+			notification_add($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
 			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");					
 			$_SESSION['attackwon'] = 0;
 			if ($r['user_level'] == 0)
@@ -689,7 +689,7 @@ function mug()
 				{
 					$db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
 				}
-				event_add($userid,"For successfully mugging " . $api->SystemUserIDtoName($r['userid']) . ", you received 1 " . $api->SystemItemIDtoName($results2['botitem']));
+				notification_add($userid,"For successfully mugging " . $api->SystemUserIDtoName($r['userid']) . ", you received 1 " . $api->SystemItemIDtoName($results2['botitem']));
 			}
 		}
 	}

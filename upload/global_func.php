@@ -1056,7 +1056,7 @@ function check_level()
 			$Stat='guard';
 		}
 		$db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
-		event_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
+		notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
 		SystemLogsAdd($userid,'level',"Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
     }
 }

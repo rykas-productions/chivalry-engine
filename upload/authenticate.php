@@ -77,7 +77,7 @@ else
 	if ($login_failed)
     {
 		$db->query("INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES ('{$IP}', '{$mem['userid']}', '{$CurrentTime}');");
-		event_add($mem['userid'],"Someone has just recently attempted to gain access to your account and failed. If this was you, you do not need to do anything. However, if this was not, you should change your password immediately!");
+		notification_add($mem['userid'],"Someone has just recently attempted to gain access to your account and failed. If this was you, you do not need to do anything. However, if this was not, you should change your password immediately!");
 		die(
                 "<h3>{$set['WebsiteName']} Error</h3>
 		Incorrect login information.<br />
