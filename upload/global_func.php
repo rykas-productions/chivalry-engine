@@ -940,6 +940,7 @@ function event_add($userid, $text)
 {
     global $db;
     $text = $db->escape($text);
+	trigger_error("event_add(); is depreciated. Please update to notification_add(); asap.");
     $db->query(
             "INSERT INTO `notifications`
              VALUES(NULL, $userid, " . time() . ", 'unread', '$text')");
