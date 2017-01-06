@@ -491,6 +491,45 @@ function user_dropdown($ddname = "user", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
+/**
+ * Constructs a drop-down listbox of all the users with user level NPC in the game to let the user select one.
+ * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
+ * @param int $selected [optional] The <i>ID number</i> of the user who should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
+function user2_dropdown($ddname = "user", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+            $db->query(
+                    "SELECT `userid`, `username`
+    				 FROM `users`
+					 WHERE `user_level` = 'NPC'
+    				 ORDER BY `userid` ASC");
+    if ($selected == -1)
+    {
+        $first = 0;
+    }
+    else
+    {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q))
+    {
+        $ret .= "\n<option value='{$r['userid']}'";
+        if ($selected == $r['userid'] || $first == 0)
+        {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
 
 /**
  * Constructs a drop-down listbox of all the challenge bot NPC users in the game to let the user select one.
@@ -499,16 +538,16 @@ function user_dropdown($ddname = "user", $selected = -1)
  * Not specifying this or setting it to -1 makes the first bot alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function challengebot_dropdown($ddname = "bot", $selected = -1)
+function npcbot_dropdown($ddname = "bot", $selected = -1)
 {
     global $db;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
             $db->query(
                     "SELECT `u`.`userid`, `u`.`username`
-                     FROM `challengebots` AS `cb`
+                     FROM `botlist` AS `cb`
                      INNER JOIN `users` AS `u`
-                     ON `cb`.`cb_npcid` = `u`.`userid`
+                     ON `cb`.`cb_botuser` = `u`.`userid`
                      ORDER BY `u`.`userid` ASC");
     if ($selected == -1)
     {
@@ -526,7 +565,7 @@ function challengebot_dropdown($ddname = "bot", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['username']}</option>";
+        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -948,8 +987,8 @@ function event_add($userid, $text)
 }
 /**
  * Sends a user a notification, given their ID and the text.
- * @param int $userid The user ID to be sent the event
- * @param string $text The event's text. This should be fully sanitized for HTML, but not pre-escaped for database insertion.
+ * @param int $userid The user ID to be sent the notification
+ * @param string $text The notification's text. This should be fully sanitized for HTML, but not pre-escaped for database insertion.
  * @return int 1
  */
 function notification_add($userid, $text)
