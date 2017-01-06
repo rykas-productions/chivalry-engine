@@ -72,5 +72,5 @@ if (!is_ajax())
 	$time=time();
 	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$cash} WHERE `userid` = {$userid}");
 	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$cash} WHERE `userid` = {$receive}");
-	event_add($to,"{$ir['username']} has sent you {$cash} Primary Currency.");
+	notification_add($to,"{$ir['username']} has sent you {$cash} Primary Currency.");
 	alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['SCF_SUCCESS']}");
