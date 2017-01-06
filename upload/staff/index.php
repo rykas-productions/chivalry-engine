@@ -84,6 +84,9 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 				<a data-toggle='tab' href='#ACADEMY'>Academy</a>
 			</li>
 			<li>
+				<a data-toggle='tab' href='#BOTS'>NPCs</a>
+			</li>
+			<li>
 				<a data-toggle='tab' href='#JOBS'>Jobs</a>
 			</li>
 			<li>
@@ -157,6 +160,14 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					<div class='panel-body'>
 						<a href='staff_academy.php?action=addacademy'>Add Academy Course</a><br />
 						<a href='staff_academy.php?action=delacademy'>Delete Academy Course</a><br />
+					</div>
+				</div>
+			</div>
+			<div id='BOTS' class='tab-pane fade in'>
+				<div class='panel panel-default'>
+					<div class='panel-body'>
+						<a href='staff_bots.php?action=addbot'>{$lang['STAFF_BOTS_ADD']}</a><br />
+						<a href='staff_bots.php?action=delbot'>{$lang['STAFF_BOTS_DEL']}</a><br />
 					</div>
 				</div>
 			</div>

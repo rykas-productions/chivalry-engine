@@ -1088,4 +1088,19 @@ $lang['BOTTENT_TH2']="Bot Cooldown";
 $lang['BOTTENT_TH3']="Bot Item Drop";
 $lang['BOTTENT_TH4']="Attack";
 $lang['BOTTENT_WAIT']="Cooldown Remaining: ";
+
+//Staff bots
+$lang['STAFF_BOTS_TITLE']="Staff Bots";
+$lang['STAFF_BOTS_ADD']="Add Bot";
+$lang['STAFF_BOTS_DEL']="Delete Bot";
+$lang['STAFF_BOTS_ADD_FRM1']="Use this form to add bots to the game that drop items when mugged.";
+$lang['STAFF_BOTS_ADD_FRM2']="Bot User";
+$lang['STAFF_BOTS_ADD_FRM3']="Item Dropped";
+$lang['STAFF_BOTS_ADD_FRM4']="Cooldown Time (Seconds)";
+$lang['STAFF_BOTS_ADD_BTN']="Add Bot";
+$lang['STAFF_BOTS_ADD_ERROR']="You're missing one of the required inputs. Go back and try again.";
+$lang['STAFF_BOTS_ADD_ERROR1']="You're trying to add a bot that already exists in the bot listing. Go back and try again.";
+$lang['STAFF_BOTS_ADD_ERROR2']="You can only add NPCs to the bot listing. Go back and try again.";
+$lang['STAFF_BOTS_ADD_ERROR3']="You cannot have a bot drop a non-existent item. Go back and try again.";
+$lang['STAFF_BOTS_ADD_SUCCESS']="You've successfully added an NPC to the bot list.";
 ?>
