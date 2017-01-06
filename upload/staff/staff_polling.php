@@ -64,7 +64,7 @@ function add()
 		$q=$db->query("SELECT `userid`, `username` FROM `users`");
 		while ($r = $db->fetch_row($q))
 		{
-			event_add($r['userid'],"The game administration has added a poll for you to vote in. Please do so by visiting <a href='polling.php'>here</a>.");
+			notification_add($r['userid'],"The game administration has added a poll for you to vote in. Please do so by visiting <a href='polling.php'>here</a>.");
 		}
 		die($h->endpage());
 	}
@@ -234,7 +234,7 @@ function close()
 		$q=$db->query("SELECT `userid`, `username` FROM `users`");
 		while ($r = $db->fetch_row($q))
 		{
-			event_add($r['userid'],"The game administration has closed a recent poll. View the results <a href='polling.php?action=viewpolls'>here</a>.");
+			notification_add($r['userid'],"The game administration has closed a recent poll. View the results <a href='polling.php?action=viewpolls'>here</a>.");
 		}
         die($h->endpage());
     }
