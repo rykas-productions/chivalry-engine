@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.1.2.1";
+		return "17.1.6.1";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -433,7 +433,7 @@ class api
 	*/
 	function GameAddNotification($user,$text)
 	{
-		event_add($user,$text);
+		notification_add($user,$text);
 		return true;
 	}
 	/*
