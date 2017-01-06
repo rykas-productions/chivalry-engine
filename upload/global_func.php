@@ -935,7 +935,23 @@ function crimegroup_dropdown($ddname = "crimegroup", $selected = -1)
  * @param string $text The event's text. This should be fully sanitized for HTML, but not pre-escaped for database insertion.
  * @return int 1
  */
+ //Depreciated. Used notification_add(); instead.
 function event_add($userid, $text)
+{
+    global $db;
+    $text = $db->escape($text);
+    $db->query(
+            "INSERT INTO `notifications`
+             VALUES(NULL, $userid, " . time() . ", 'unread', '$text')");
+    return true;
+}
+/**
+ * Sends a user a notification, given their ID and the text.
+ * @param int $userid The user ID to be sent the event
+ * @param string $text The event's text. This should be fully sanitized for HTML, but not pre-escaped for database insertion.
+ * @return int 1
+ */
+function notification_add($userid, $text)
 {
     global $db;
     $text = $db->escape($text);
