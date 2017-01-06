@@ -1077,4 +1077,13 @@ $lang['SLOTS_TABLE1']="Bet";
 $lang['SLOTS_BTN']="Spin baby, spin!";
 $lang['SLOTS_TITLE']="Slot Machine";
 $lang['SLOTS_NOREFRESH']="Please do not refresh the page while gambling at the slot machines. Thank you!";
+
+//Bot tent
+$lang['BOTTENT_TITLE']="Bot Tent";
+$lang['BOTTENT_DESC']="Welcome to the Bot Tent. Here you may challenge NPCs to battle. If you win, you'll receive an item. These items may or may not be useful in your adventures. To deter players getting massive amounts of items, you can only attack these NPCs every so often. Their cooldown is listed here as well.";
+$lang['BOTTENT_TH']="Bot Name";
+$lang['BOTTENT_TH1']="Bot Level";
+$lang['BOTTENT_TH2']="Bot Cooldown";
+$lang['BOTTENT_TH3']="Bot Item Drop";
+$lang['BOTTENT_TH4']="Attack";
 ?>
