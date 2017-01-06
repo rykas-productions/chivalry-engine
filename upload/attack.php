@@ -666,6 +666,32 @@ function mug()
 				$db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
 			}
 		}
+		$npcquery=$db->query("SELECT * FROM `botlist` WHERE `botuser` = {$r['userid']}");
+		if ($db->num_rows($npcquery) > 0)
+		{
+			$results2=$db->fetch_row($npcquery);
+			$timequery=$db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$r['userid']}");
+			$r2=$db->fetch_single($timequery);
+			if ((time() <= ($r2 + $results2['botcooldown'])) && ($r2 > 0))
+			{
+				//Nope
+			}
+			else
+			{
+				item_add($userid,$results2['botitem'],1);
+				$time=time();
+				$exists=$db->query("SELECT `botid` FROM `botlist_hits` WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
+				if ($db->num_rows($exists) == 0)
+				{
+					$db->query("INSERT INTO `botlist_hits` (`userid`, `botid`, `lasthit`) VALUES ('{$userid}', '{$r['userid']}', '{$time}')");
+				}
+				else
+				{
+					$db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
+				}
+				event_add($userid,"For successfully mugging " . $api->SystemUserIDtoName($r['userid']) . ", you received 1 " . $api->SystemItemIDtoName($results2['botitem']));
+			}
+		}
 	}
 }
 $h->endpage();
