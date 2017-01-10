@@ -2,7 +2,8 @@
 require("globals.php");
 $AnnouncementCount = $ir['announcements'];
 $q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC");
-echo "<table class='table table-bordered table-hover table-responsive'>
+echo "<div class='table-resposive'>";
+echo "<table class='table table-bordered table-hover'>
 <thead>
 	<tr>
 		<td width='30%'>Time</td>
@@ -31,7 +32,7 @@ while ($r = $db->fetch_row($q))
 	</tr>";
 }
 $db->free_result($q);
-echo"</table>";
+echo"</table></div>";
 if ($ir['announcements'] > 0)
 {
     $db->query(
