@@ -95,14 +95,20 @@ else
 				?>
 			</div>
 			<div class="col-lg-10">
-				<ul class="nav nav-tabs nav-justified">
-				  <li class="active"><a data-toggle="tab" href="#info"><?php echo $lang['PROFILE_PI']; ?></a></li>
-				  <li><a data-toggle="tab" href="#actions"><?php echo $lang['PROFILE_ACTION']; ?></a></li>
-				  <li><a data-toggle="tab" href="#financial"><?php echo $lang['PROFILE_FINANCIAL']; ?></a></li>
-				  <?php
+				<ul class='nav nav-pills nav-tabs'>
+					<li class='nav-item'>
+						<a data-toggle="tab" class='nav-link' href="#info"><?php echo $lang['PROFILE_PI']; ?></a>
+					</li>
+					<li class='nav-item'>
+						<a data-toggle="tab" class='nav-link' href="#actions"><?php echo $lang['PROFILE_ACTION']; ?></a>
+					</li>
+					<li class='nav-item'>
+						<a data-toggle="tab" class='nav-link' href="#financial"><?php echo $lang['PROFILE_FINANCIAL']; ?></a>
+					</li>
+					<?php
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
-					  echo "<li><a data-toggle='tab' href='#staff'>{$lang['PROFILE_STAFF']}</a></li>";
+					  echo "<li class='nav-item'><a data-toggle='tab' class='nav-link' href='#staff'>{$lang['PROFILE_STAFF']}</a></li>";
 					}
 				  ?>
 				</ul>
@@ -113,7 +119,8 @@ else
 						<?php
 						echo
 						"
-						<table class='table table-bordered table-responsive'>
+						<div class='table-resposive'>
+						<table class='table table-bordered'>
 							<tr>
 								<th width='25%'>{$lang['REG_SEX']}</th>
 								<td>{$r['gender']}</td>
@@ -169,7 +176,7 @@ else
 							</span>";
 						}
 						
-						echo"</table>";
+						echo"</table></div>";
 						?>
 					</p>
 				  </div>
@@ -260,7 +267,7 @@ else
 					<?php
 						echo
 						"
-						<table class='table table-bordered table-responsive'>
+						<table class='table table-bordered'>
 							<tr>
 								<th width='25%'>{$lang['INDEX_PRIMCURR']}</th>
 								<td> " . number_format($r['primary_currency']) . "</td>
@@ -294,7 +301,9 @@ else
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
 						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",24),true);
-						echo "<table class='table table-bordered'>
+						echo "
+						<div class='table-resposive'>
+						<table class='table table-bordered'>
 							<tr>
 								<th width='33%'>Data</th>
 								<th>Output</th>
@@ -342,7 +351,8 @@ else
 						<br />
 						<input type='hidden' name='ID' value='{$_GET['user']}' />
 						<input type='submit' class='btn btn-default' value='Update Notes About {$r['username']}' />
-					</form>";
+					</form>
+					</div>";
 					}
 					?>
 				  
