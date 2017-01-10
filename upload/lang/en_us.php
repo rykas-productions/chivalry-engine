@@ -960,7 +960,12 @@ $lang['VIEWGUILD_KICK_ERR']="Sorry, but you cannot kick your guild's leader. If 
 $lang['VIEWGUILD_KICK_ERR1']="You cannot kick yourself from the guild. If you wish to leave, transfer your powers to someone else, then leave.";
 $lang['VIEWGUILD_KICK_ERR2']="You're trying to kick a user who isn't in your guild or doesn't exist.";
 $lang['VIEWGUILD_KICK_ERR3']="You do not have permission to kick users from this guild.";
-
+$lang['VIEWGUILD_LEAVE_ERR']="You cannot leave while you're the owner/co-owner of your guild. Transfer your rights to another member in the guild and try again.";
+$lang['VIEWGUILD_LEAVE_SUCC']="You have successfully left your guild.";
+$lang['VIEWGUILD_LEAVE_SUCC1']="You've decided to stay in your guild for now.";
+$lang['VIEWGUILD_LEAVE_INFO']="Are you 100% sure you wish to leave your guild? You will have to reapply if you leave and wish to come back.";
+$lang['VIEWGUILD_LEAVE_BTN']="Yes, leave!";
+$lang['VIEWGUILD_LEAVE_BTN1']="No, wait, stay!";
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";

@@ -35,6 +35,9 @@ else
 	case "kick":
         staff_kick();
         break;
+	case "leave":
+        leave();
+        break;
 	default:
 		home();
 		break;
@@ -346,7 +349,7 @@ function staff_kick()
         }
         else
         {
-            $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = $who AND `gang` = {$gangdata['gangID']}");
+            $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = $who AND `guild` = {$gd['guild_id']}");
             if ($db->num_rows($q) > 0)
             {
                 $kdata = $db->fetch_row($q);
@@ -355,9 +358,9 @@ function staff_kick()
                 $d_oname = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
                 alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_KICK_SUCCESSS']);
                 $their_event = "You were kicked out of the {$gd['guild_name']} guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
-                event_add($who, $their_event, $c);
+                notification_add($who, $their_event);
                 $gang_event =  $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
-                $db->query("INSERT INTO `guild_notifications` VALUES(NULL, {$gangdata['gangID']}, " . time() . ", '{$gang_event}');");
+                $db->query("INSERT INTO `guild_notifications` VALUES(NULL, {$gd['guild_id']}, " . time() . ", '{$gang_event}');");
             }
             else
             {
@@ -370,5 +373,44 @@ function staff_kick()
     {
         alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR3']);
     }
+}
+function leave()
+{
+	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
+    {
+        alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_LEAVE_ERR']);
+        die($h->endpage());
+    }
+	if (isset($_POST['submit']) && $_POST['submit'] == 'yes')
+    {
+		if (!isset($_POST['verf']) || !verify_csrf_code("guild_leave", stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+		$db->query("UPDATE `users` SET `guild` = 0  WHERE `userid` = {$userid}");
+		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has left the guild.");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_LEAVE_SUCC']);
+	}
+	elseif (isset($_POST['submit']) && $_POST['submit'] == 'no')
+	{
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_LEAVE_SUCC1']);
+	}
+	else
+	{
+		$csrf = request_csrf_html('guild_leave');
+        echo "{$lang['VIEWGUILD_LEAVE_INFO']}
+        <form action='?action=leave' method='post'>
+            {$csrf}
+			<input type='hidden' name='submit' value='yes'>
+        	<input type='submit' class='btn btn-default' value='{$lang['VIEWGUILD_LEAVE_BTN']}' />
+		</form><br />
+		<form action='?action=leave' method='post'>
+			{$csrf}
+			<input type='hidden' name='submit' value='no'>
+        	<input type='submit' class='btn btn-default' value='{$lang['VIEWGUILD_LEAVE_BTN1']}' />
+        </form>";
+	}
 }
 $h->endpage();
