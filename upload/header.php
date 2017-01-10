@@ -9,60 +9,23 @@ class headers
 		<!DOCTYPE html>
 		<html lang="en">
 		<head>
+			<?php echo "<title>{$set['WebsiteName']}</title>"; ?>
 			<center>
 			<meta charset="utf-8">
 			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-			<meta name="description" content="">
-			<meta name="author" content="TheMasterGeneral">
 
-			<?php echo "<title>{$set['WebsiteName']}</title>"; ?>
-
-			<!-- CSS -->
-			<?php
-			if ($ir['theme'] == 1)
-			{
-				?>  
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-					<meta name="theme-color" content="#e7e7e7">
-				<?php
-			}
-			elseif ($ir['theme'] == 2)
-			{
-				?> 
-					<link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css"> 
-					<meta name="theme-color" content="#375a7f">
-				<?php
-			}
-			elseif ($ir['theme'] == 3)
-			{
-				?> 
-					<link rel="stylesheet" href="css/bootstrap-purple.css"> 
-				<?php
-			}
-			?>
-			<link href="css/bs2.css" rel="stylesheet">
-			<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
+			<!-- Bootstrap CSS -->
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 			<!-- Custom CSS -->
 			<style>
-			body {
+			body 
+			{
 				padding-top: 70px;
 				/* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
 			}
-			a {
-				color: gray;
-			}
 			</style>
-
-			<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-			<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-			<!--[if lt IE 9]>
-				<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-				<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-			<![endif]-->
-
 		</head>
 		<?php
 		if (empty($menuhide))
@@ -70,91 +33,49 @@ class headers
 			?>
 		<body>
 
-			<!-- Navigation -->
-			<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-				<div class="container">
-					<!-- Brand and toggle get grouped for better mobile display -->
-					<div class="navbar-header">
-						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-							<span class="sr-only">Toggle navigation</span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-						<a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
-					</div>
-					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-						<ul class="nav navbar-nav">
-							<li>
-								<a href="explore.php"><?php echo $lang['MENU_EXPLORE']; ?></a>
-							</li>
-						</ul>
-							<ul class="nav navbar-nav navbar-right">
-							<ul class="nav navbar-nav">
-							<li>
-								<?php
+			<nav class="navbar navbar-toggleable-md navbar-light bg-faded fixed-top">
+				<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#gamedropdown" aria-controls="gamedropdown" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
+				<div class="collapse navbar-collapse" id="gamedropdown">
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<a class="nav-link" href="explore.php"><?php echo $lang['MENU_EXPLORE']; ?></a>
+						</li>
+						<li class="nav-item">
+							<?php
 								$ir['mail']=$db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
 								$ir['notifications']=$db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
-									echo "<a href='inbox.php'>{$lang['MENU_MAIL']} ({$ir['mail']})</a>";
 								?>
-							</li>
-							<li>
-								<?php
-									echo "<a href='notifications.php'>{$lang['MENU_EVENT']} ({$ir['notifications']})</a>";
-								?>
-							</li>
-							<li>
-								<a href="inventory.php"><?php echo $lang['MENU_INVENTORY']; ?></a>
-							</li>
-						</ul>
-							<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<?php
-						if (!$ir['display_pic'])
-						{
-							
-						}
-						else
-						{
-							echo"<img src='{$ir['display_pic']}' width='24' height='24'>";
-						}
-							 
-							echo" {$lang['GEN_GREETING']}, {$ir['username']}"; ?> <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i class="fa fa-fw fa-user"></i> <?php echo $lang['MENU_PROFILE']; ?></a>
-								</li>
-								<li>
-									<a href="preferences.php?action=menu"><i class="fa fa-fw fa-gear"></i> <?php echo $lang['MENU_SETTINGS']; ?></a>
-								</li>
+							<a class="nav-link" href="inbox.php"><?php echo $lang['MENU_MAIL']; ?> (<?php echo $ir['mail']; ?>)</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="notifications.php"><?php echo $lang['MENU_EVENT']; ?> (<?php echo $ir['notifications']; ?>)</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="inventory.php"><?php echo $lang['MENU_INVENTORY']; ?></a>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="userinfo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<?php echo" {$lang['GEN_GREETING']}, {$ir['username']}"; ?>
+							</a>
+							<div class="dropdown-menu" aria-labelledby="userinfo">
+								<a class="dropdown-item" href="profile.php?user=<?php echo $ir['userid']; ?>"><?php echo $lang['MENU_PROFILE']; ?></a>
+								<a class="dropdown-item" href="preferences.php?action=menu"><?php echo $lang['MENU_SETTINGS']; ?></a>
 								<?php
 									if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant')))
 									{
-										?><li class="divider"></li>
-										<li>
-											<a href="staff/"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a>
-										</li><?php
+										?><a class="dropdown-item" href="staff/"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a><?php
 									}
-								
-								
-								?>
-								<li class="divider"></li>
-								<li>
-									<a href="gamerules.php"><i class="fa fa-fw fa-server"></i> <?php echo $lang['MENU_RULES']; ?></a>
-								</li>
-								<li>
-									<a href="logout.php"><i class="fa fa-fw fa-power-off"></i> <?php echo $lang['MENU_LOGOUT']; ?></a>
-								</li>
-							</ul>
+									?>
+								<a class="dropdown-item" href="gamerules.php"><?php echo $lang['MENU_RULES']; ?></a>
+								<a class="dropdown-item" href="logout.php"><?php echo $lang['MENU_LOGOUT']; ?></a>
+							</div>
 						</li>
-						</ul>
-					<!-- Collect the nav links, forms, and other content for toggling -->
-					</div>
-					<!-- /.navbar-collapse -->
+					</ul>
 				</div>
-				<!-- /.container -->
 			</nav>
-
 			<!-- Page Content -->
 			<div class="container">
 
@@ -308,11 +229,10 @@ class headers
 			</div>
 			<!-- /.container -->
 
-			<!-- jQuery Version 1.12.1 -->
-			<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-
-			<!-- Bootstrap Core JavaScript -->
-			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+			<!-- jQuery first, then Tether, then Bootstrap JS. -->
+			<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 			
 			<!-- Other JavaScript -->
 			<script src="js/register.js"></script>
