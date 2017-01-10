@@ -1116,6 +1116,29 @@ CREATE TABLE `botlist_hits` (
 	`lasthit` INT(11) UNSIGNED NOT NULL 
 ) ENGINE = MyISAM;
 
+CREATE TABLE `vip_listing` ( 
+	`vip_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`vip_item` INT(11) UNSIGNED NOT NULL , 
+	`vip_cost` DECIMAL UNSIGNED NOT NULL , 
+	UNIQUE (`vip_id`)
+) ENGINE = MyISAM;
+
+CREATE TABLE `vips_accepted` ( 
+	`vipID` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`vipBUYER` INT(11) UNSIGNED NOT NULL DEFAULT '0' , 
+	`vipFOR` INT(11) UNSIGNED NOT NULL DEFAULT '0' , 
+	`vipPACKID` INT(11) UNSIGNED NOT NULL , 
+	`vipTIME` INT(11) UNSIGNED NOT NULL DEFAULT '0' , 
+	`vipTXN` TEXT NOT NULL , UNIQUE (`vipID`)
+) ENGINE = MyISAM;
+
+CREATE TABLE `guild_notifications` ( 
+	`gn_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`gn_guild` INT(11) UNSIGNED NOT NULL , 
+	`gn_time` INT(11) UNSIGNED NOT NULL , 
+	`gn_text` TEXT NOT NULL , UNIQUE (`gn_id`)
+) ENGINE = MyISAM;
+
 --
 -- Indexes for dumped tables
 --
@@ -1139,6 +1162,7 @@ ALTER TABLE `promo_codes`
   ALTER TABLE `estates` ADD `house_level` INT(11) UNSIGNED NULL DEFAULT '1' AFTER `house_will`;
   ALTER TABLE `users` ADD `last_verified` INT(11) UNSIGNED NOT NULL AFTER `theme`;
   ALTER TABLE `users` ADD `need_verify` TINYINT NOT NULL AFTER `last_verified`;
+  ALTER TABLE `vip_listing` CHANGE `vip_cost` `vip_cost` TEXT NOT NULL;
   INSERT INTO `estates` (`house_id`, `house_name`, `house_price`, `house_will`, `house_level`) VALUES (1, 'Default House', 100, 100, 1);
   INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'reCaptcha_public', 'PleaseUpdate'), (NULL, 'reCaptcha_private', 'PleaseUpdate');
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

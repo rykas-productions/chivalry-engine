@@ -322,7 +322,7 @@ function apply()
 		$application = (isset($_POST['application']) && is_string($_POST['application'])) ? $db->escape(htmlentities(stripslashes($_POST['application']), ENT_QUOTES, 'ISO-8859-1')) : '';
 		$db->query("INSERT INTO `guild_applications` VALUES (NULL, {$userid}, {$_GET['id']}, '{$application}')");
 		$gev = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> sent an application to join this guild.");
-		$db->query("INSERT INTO `guild_events` VALUES (NULL, {$_GET['id']}, " . time() . ", '{$gev}')");
+		$db->query("INSERT INTO `guild_notifications` VALUES (NULL, {$_GET['id']}, " . time() . ", '{$gev}')");
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['GUILD_APP_SUCC']}");
 	}
 	else
