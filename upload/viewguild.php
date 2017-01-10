@@ -29,6 +29,12 @@ else
 	case 'donate':
 		donate();
 		break;
+	case "members":
+        members();
+        break;
+	case "kick":
+        staff_kick();
+        break;
 	default:
 		home();
 		break;
@@ -225,7 +231,7 @@ function donate()
 			$event =$db->escape("<a href='profile.php?user={$userid}'>{$my_name}</a> donated 
 									" . number_format($_POST['primary']) . " Primary Currency
 								and " . number_format($_POST['secondary']) . " Secondary Currency to the guild.");
-			 $db->query("INSERT INTO `guild_events`
+			 $db->query("INSERT INTO `guild_notifications`
 						VALUES(NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
 		alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['VIEWGUILD_DONATE_SUCC']}");
 		}
@@ -261,5 +267,108 @@ function donate()
     	</table>
 		</form>";
 	}
+}
+function members()
+{
+	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	echo "
+    <table class='table table-bordered table-striped'>
+		<tr>
+    		<th>
+				{$lang['VIEWGUILD_MEMBERS_TH1']}
+			</th>
+    		<th>
+				{$lang['VIEWGUILD_MEMBERS_TH1']}
+			</th>
+    		<th>
+				&nbsp;
+			</th>
+    	</tr>";
+    $q = $db->query("SELECT `userid`, `username`, `level`, `display_pic` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` DESC");
+    $csrf = request_csrf_html('yourguild_kickuser');
+    while ($r = $db->fetch_row($q))
+    {
+        echo "
+		<tr>
+        	<td>
+				<img src='{$r['display_pic']}' width='64' height='64'><br />
+				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a>
+			</td>
+        	<td>
+				{$r['level']}
+			</td>
+        	<td>
+           ";
+				if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
+				{
+					echo "
+					<form action='?action=kick' method='post'>
+						<input type='hidden' name='ID' value='{$r['userid']}' />
+						{$csrf}
+						<input type='submit' class='btn btn-default' value='{$lang['VIEWGUILD_MEMBERS_BTN']} {$r['username']}' />
+					</form>";
+				}
+				else
+				{
+					echo "&nbsp;";
+				}
+        echo "
+			</td>
+		</tr>
+   		";
+    }
+    $db->free_result($q);
+    echo "
+	</table>
+	<br />
+	&gt; <a href='?action=home'>{$lang['VIEWGUILD_IDX']}</a>
+   	";
+}
+function staff_kick()
+{
+    global $db,$userid,$ir,$gd,$lang,$api,$h;
+    if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
+    {
+        if (!isset($_POST['verf']) || !verify_csrf_code("yourguild_kickuser", stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+        $_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs(intval($_POST['ID'])) : 0;
+        $who = $_POST['ID'];
+        if ($who == $gd['guild_owner'])
+        {
+            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR']);
+        }
+        else if ($who == $userid)
+        {
+            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR1']);
+        }
+        else
+        {
+            $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = $who AND `gang` = {$gangdata['gangID']}");
+            if ($db->num_rows($q) > 0)
+            {
+                $kdata = $db->fetch_row($q);
+                $db->query("UPDATE `users` SET `guild` = 0 WHERE `userid` = {$who}");
+                $d_username = htmlentities($kdata['username'], ENT_QUOTES, 'ISO-8859-1');
+                $d_oname = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
+                alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_KICK_SUCCESSS']);
+                $their_event = "You were kicked out of the {$gd['guild_name']} guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
+                event_add($who, $their_event, $c);
+                $gang_event =  $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
+                $db->query("INSERT INTO `guild_notifications` VALUES(NULL, {$gangdata['gangID']}, " . time() . ", '{$gang_event}');");
+            }
+            else
+            {
+                alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR2']);
+            }
+            $db->free_result($q);
+        }
+    }
+    else
+    {
+        alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR3']);
+    }
 }
 $h->endpage();
