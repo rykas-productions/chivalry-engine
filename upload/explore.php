@@ -12,23 +12,23 @@ if (user_dungeon($ir['userid']) == true)
 	die($h->endpage());
 }
 echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
-<div class='col-md-4'>
-	<ul class='nav nav-pills nav-stacked'>
-		<li><a data-toggle='tab' href='#SHOPS'>{$lang['EXPLORE_SHOP']}</a></li>
-		<li><a data-toggle='tab' href='#FD'>{$lang['EXPLORE_FD']}</a></li>
-		<li><a data-toggle='tab' href='#HL'>{$lang['EXPLORE_HL']}</a></li>
-		<li><a data-toggle='tab' href='#ADMIN'>{$lang['EXPLORE_ADMIN']}</a></li>
-		<li><a data-toggle='tab' href='#GAMES'>{$lang['EXPLORE_GAMES']}</a></li>
-		<li><a data-toggle='tab' href='#GUILDS'>{$lang['EXPLORE_GUILDS']}</a></li>
-		<li><a data-toggle='tab' href='#ACT'>{$lang['EXPLORE_ACT']}</a></li>
-		<li><a data-toggle='tab' href='#PINTER'>{$lang['EXPLORE_PINTER']}</a></li>
+<div class='col-md-8'>
+	<ul class='nav nav-pills nav-tabs'>
+		<li class='nav-item'><a data-toggle='tab' class='nav-link' href='#SHOPS'>{$lang['EXPLORE_SHOP']}</a></li>
+		<li class='nav-item'><a data-toggle='tab' class='nav-link' href='#FD'>{$lang['EXPLORE_FD']}</a></li>
+		<li class='nav-item'><a data-toggle='tab' class='nav-link' href='#HL'>{$lang['EXPLORE_HL']}</a></li>
+		<li class='nav-item'><a data-toggle='tab' class='nav-link' href='#ADMIN'>{$lang['EXPLORE_ADMIN']}</a></li>
+		<li class='nav-item'><a data-toggle='tab' class='nav-link' href='#GAMES'>{$lang['EXPLORE_GAMES']}</a></li>
+		<li class='nav-item'><a data-toggle='tab' class='nav-link' href='#GUILDS'>{$lang['EXPLORE_GUILDS']}</a></li>
+		<li class='nav-item'><a data-toggle='tab' class='nav-link' href='#ACT'>{$lang['EXPLORE_ACT']}</a></li>
+		<li class='nav-item'><a data-toggle='tab' class='nav-link' href='#PINTER'>{$lang['EXPLORE_PINTER']}</a></li>
 	</ul>
 </div>
-<div class='col-md-4'>
+<div class='col-md-8'>
 	<div class='tab-content'>
 		<div id='SHOPS' class='tab-pane fade in'>
-			<div class='panel panel-default'>
-				<div class='panel-body'>
+			<div class='card card-default'>
+				<div class='card-block'>
 					<a href='shops.php'>{$lang['EXPLORE_LSHOP']}</a><br />
 					<a href='#'>{$lang['EXPLORE_POSHOP']}</a><br />
 					<a href='itemmarket.php'>{$lang['EXPLORE_IMARKET']}</a><br />
@@ -39,8 +39,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			</div>
 		</div>
 		<div id='FD' class='tab-pane fade'>
-			<div class='panel panel-default'>
-				<div class='panel-body'>
+			<div class='card card-default'>
+				<div class='card-block'>
 					<a href='bank.php'>{$lang['EXPLORE_BANK']}</a><br />
 					<a href='estates.php'>{$lang['EXPLORE_ESTATES']}</a><br />
 					<a href='travel.php'>{$lang['EXPLORE_TRAVEL']}</a><br />
@@ -48,8 +48,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			</div>
 		</div>
 		<div id='HL' class='tab-pane fade'>
-			<div class='panel panel-default'>
-				<div class='panel-body'>
+			<div class='card card-default'>
+				<div class='card-block'>
 					<a href='#'>{$lang['EXPLORE_MINE']}</a><br />
 					<a href='#'>{$lang['EXPLORE_WC']}</a><br />
 					<a href='#'>{$lang['EXPLORE_FARM']}</a><br />
@@ -58,8 +58,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			</div>
 		</div>
 		<div id='ADMIN' class='tab-pane fade'>
-			<div class='panel panel-default'>
-				<div class='panel-body'>
+			<div class='card card-default'>
+				<div class='card-block'>
 					<a href='users.php'>{$lang['EXPLORE_USERLIST']}</a><br />
 					<a href='staff.php'>{$lang['EXPLORE_STAFFLIST']}</a><br />
 					<a href='fedjail.php'>{$lang['EXPLORE_FED']}</a><br />
@@ -70,8 +70,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			</div>
 		</div>
 		<div id='GAMES' class='tab-pane fade'>
-			<div class='panel panel-default'>
-				<div class='panel-body'>
+			<div class='card card-default'>
+				<div class='card-block'>
 					<a href='#'>{$lang['EXPLORE_RR']}</a><br />
 					<a href='hilow.php?tresde={$tresder}'>{$lang['EXPLORE_HILO']}</a><br />
 					<a href='roulette.php?tresde={$tresder}'>{$lang['EXPLORE_ROULETTE']}</a><br />
@@ -80,8 +80,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			</div>
 		</div>
 		<div id='GUILDS' class='tab-pane fade'>
-			<div class='panel panel-default'>
-				<div class='panel-body'>";
+			<div class='card card-default'>
+				<div class='card-block'>";
 					if ($ir['guild'] > 0)
 					{
 						echo "<a href='viewguild.php'>{$lang['EXPLORE_YOURGUILD']}</a><br />";
@@ -92,8 +92,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			</div>
 		</div>
 		<div id='ACT' class='tab-pane fade'>
-			<div class='panel panel-default'>
-				<div class='panel-body'>
+			<div class='card card-default'>
+				<div class='card-block'>
 					<a href='dungeon.php'>{$lang['EXPLORE_DUNG']}</a><br />
 					<a href='infirmary.php'>{$lang['EXPLORE_INFIRM']}</a><br />
 					<a href='gym.php'>{$lang['EXPLORE_GYM']}</a><br />
@@ -104,8 +104,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			</div>
 		</div>
 		<div id='PINTER' class='tab-pane fade'>
-			<div class='panel panel-default'>
-				<div class='panel-body'>
+			<div class='card card-default'>
+				<div class='card-block'>
 					<a href='forums.php'>{$lang['EXPLORE_FORUMS']}</a><br />
 					<a href='newspaper.php'>{$lang['EXPLORE_NEWSPAPER']}</a><br />
 					<a href='polling.php'>{$lang['POLL_TITLE']}</a><br />
@@ -114,12 +114,12 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 		</div>
 	</div>
 </div>
-<div class='col-sm-4'>
-	<div class='panel panel-default'>
-		<div class='panel-heading'>
+<div class='col-md-4'>
+	<div class='card card-default'>
+		<div class='card-header'>
 			Top 10 Players
 		</div>
-		<div class='panel-body'>";
+		<div class='card-block'>";
 			$Rank=0;
 			$RankPlayerQuery = 
 			$db->query("SELECT u.`userid`, `level`, `username`,
