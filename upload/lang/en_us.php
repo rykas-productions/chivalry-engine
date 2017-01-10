@@ -951,6 +951,16 @@ $lang['VIEWGUILD_DONATE_ERR1']="You must fill out the previous form to donate.";
 $lang['VIEWGUILD_DONATE_ERR2']="You cannot donate more primary currency than you currently have.";
 $lang['VIEWGUILD_DONATE_ERR3']="You cannot donate more secondary currency than you currently have.";
 $lang['VIEWGUILD_DONATE_SUCC']="You've successfully donated the specified amounts to your guild.";
+$lang['VIEWGUILD_MEMBERS_TH1']="User";
+$lang['VIEWGUILD_MEMBERS_TH2']="Level";
+$lang['VIEWGUILD_MEMBERS_BTN']="Kick";
+$lang['VIEWGUILD_IDX']="Guild Index";
+$lang['VIEWGUILD_KICK_SUCCESSS']="You've successfully kicked this user from the guild.";
+$lang['VIEWGUILD_KICK_ERR']="Sorry, but you cannot kick your guild's leader. If your leader is inactive, contact staff so that you may take their spot.";
+$lang['VIEWGUILD_KICK_ERR1']="You cannot kick yourself from the guild. If you wish to leave, transfer your powers to someone else, then leave.";
+$lang['VIEWGUILD_KICK_ERR2']="You're trying to kick a user who isn't in your guild or doesn't exist.";
+$lang['VIEWGUILD_KICK_ERR3']="You do not have permission to kick users from this guild.";
+
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";
@@ -1103,4 +1113,15 @@ $lang['STAFF_BOTS_ADD_ERROR1']="You're trying to add a bot that already exists i
 $lang['STAFF_BOTS_ADD_ERROR2']="You can only add NPCs to the bot listing. Go back and try again.";
 $lang['STAFF_BOTS_ADD_ERROR3']="You cannot have a bot drop a non-existent item. Go back and try again.";
 $lang['STAFF_BOTS_ADD_SUCCESS']="You've successfully added an NPC to the bot list.";
+
+//VIP Donation Listing
+$lang['VIP_LIST']="Buying a VIP Pack";
+$lang['VIP_INFO']="If you purchase a VIP package from below, you'll be gifted the following depending on the pack you buy. If you commit fraud, you'll be permenantly banned.";
+$lang['VIP_TABLE_TH1']="Pack Info";
+$lang['VIP_TABLE_TH2']="Pack Contents";
+$lang['VIP_TABLE_TH3']="Link";
+$lang['VIP_TABLE_VDINFO']="VIP Days disable ads around the game. You'll also receive 16% energy refill instead of 8%. You'll also receive a star by your name, and your name will change color. How awesome is that?";
+$lang['VIP_THANKS']="Thank you for donating to";
+$lang['VIP_CANCEL']="You have successfully cancelled your donation. Please donate later!";
+$lang['VIP_SUCCESS']="We appreciate it completely. You can view a receipt of this transaction at <a href='http://www.paypal.com'>Paypal</a>. Your items should be given to you automatically fairly soon. If not, please contact an admin for help!";
 ?>
