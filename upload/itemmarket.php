@@ -28,7 +28,8 @@ function index()
 	global $db,$lang,$h,$userid,$api;
 	echo "
 	<br />
-	<table class='table table-responsive table-bordered table-hover table-striped'>
+	<div class='table-resposive'>
+	<table class='table table-bordered table-hover table-striped'>
 		<tr>
 			<th>{$lang['IMARKET_LISTING_TH1']}</th>
 			<th>{$lang['IMARKET_LISTING_TH2']}</th>
@@ -108,7 +109,7 @@ function index()
 		</tr>";
 	}
     $db->free_result($q);
-	echo "</table>";
+	echo "</table></div>";
 }
 function remove()
 {
