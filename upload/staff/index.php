@@ -2,7 +2,7 @@
 /*
 	File: staff/index.php
 	Created: 6/1/2016 at 6:06PM Eastern Time
-	Info: Landing page for the staff panel. Will show all avaliable staff actions.
+	Info: Landing page for the staff card. Will show all avaliable staff actions.
 	Author: TheMasterGeneral
 	Website: http://mastergeneral156.pcriot.com/
 */
@@ -17,7 +17,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 	$PHPVersion=phpversion();
 	echo"<big>Game Info</big>
 	<table class='table table-bordered table-hover'>
-		<tbody>
+		<tblock>
 			<tr>
 				<th>
 					PHP Version Detected
@@ -60,49 +60,49 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					{$api->SystemReturnAPIVersion()}
 				</td>
 			</tr>
-		</tbody>
+		</tblock>
 	</table>
 	<hr />";
 		echo"Admin<br />
-		<ul class='nav nav-tabs nav-justified'>
-			<li>
-				<a data-toggle='tab' href='#ADMIN'>Admin</a>
+		<ul class='nav nav-pills nav-tabs'>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#ADMIN'>Admin</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#MODULES'>Modules</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#MODULES'>Modules</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#USERS'>Users</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#USERS'>Users</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#ITEMS'>Items</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#ITEMS'>Items</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#SHOPS'>Shops</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#SHOPS'>Shops</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#ACADEMY'>Academy</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#ACADEMY'>Academy</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#BOTS'>NPCs</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#BOTS'>NPCs</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#JOBS'>Jobs</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#JOBS'>Jobs</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#POLL'>Polling</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#POLL'>Polling</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#TOWN'>Towns</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#TOWN'>Towns</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#ESTATES'>Estates</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#ESTATES'>Estates</a>
 			</li>
 		</ul>
 		<div class='tab-content'>
 			<div id='ADMIN' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_settings.php?action=basicset'>Game Settings</a><br />
 						<a href='staff_settings.php?action=announce'>Create an Announcement</a><br />
 						<a href='staff_settings.php?action=diagnostics'>Game Diagnostics</a><br />
@@ -111,15 +111,15 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 				</div>
 			</div>
 			<div id='MODULES' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_criminal.php'>Crimes</a>
 					</div>
 				</div>
 			</div>
 			<div id='USERS' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_users.php?action=createuser'>Create User</a><br />
 						<a href='staff_users.php?action=edituser'>Edit User</a><br />
 						<a href='staff_users.php?action=deleteuser'>Delete User</a><br />
@@ -129,8 +129,8 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 				</div>
 			</div>
 			<div id='ITEMS' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_items.php?action=createitmgroup'>Create Item Group</a><br />
 						<a href='staff_items.php?action=create'>Create Item</a><br />
 						<a href='staff_items.php?action=delete'>Delete Item</a><br />
@@ -140,8 +140,8 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 				</div>
 			</div>
 			<div id='SHOPS' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_shops.php?action=newshop'>Create Shop</a><br />
 						<a href='staff_shops.php?action=delshop'>Delete Shop</a><br />
 						<a href='staff_shops.php?action=newitem'>Add Stock to Shop</a><br />
@@ -149,39 +149,39 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 				</div>
 			</div>
 			<div id='JOBS' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						N/A
 					</div>
 				</div>
 			</div>
 			<div id='ACADEMY' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_academy.php?action=addacademy'>Add Academy Course</a><br />
 						<a href='staff_academy.php?action=delacademy'>Delete Academy Course</a><br />
 					</div>
 				</div>
 			</div>
 			<div id='BOTS' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_bots.php?action=addbot'>{$lang['STAFF_BOTS_ADD']}</a><br />
 						<a href='staff_bots.php?action=delbot'>{$lang['STAFF_BOTS_DEL']}</a><br />
 					</div>
 				</div>
 			</div>
 			<div id='POLL' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_polling.php?action=addpoll'>{$lang['STAFF_POLL_TITLES']}</a><br />
 						<a href='staff_polling.php?action=closepoll'>{$lang['STAFF_POLL_TITLEE']}</a><br />
 					</div>
 				</div>
 			</div>
 			<div id='TOWN' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_towns.php?action=addtown'>{$lang['STAFF_TRAVEL_ADD']}</a><br />
 						<a href='staff_towns.php?action=edittown'>{$lang['STAFF_TRAVEL_EDIT']}</a><br />
 						<a href='staff_towns.php?action=deltown'>{$lang['STAFF_TRAVEL_DEL']}</a><br />
@@ -189,8 +189,8 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 				</div>
 			</div>
 			<div id='ESTATES' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_estates.php?action=addestate'>{$lang['STAFF_ESTATE_ADD']}</a><br />
 					</div>
 				</div>
@@ -201,18 +201,18 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 	if ($api->UserMemberLevelGet($userid,'assistant'))
 	{
 		echo "Assistant<br />
-		<ul class='nav nav-tabs nav-justified'>
-			<li>
-				<a data-toggle='tab' href='#LOGS'>Logs</a>
+		<ul class='nav nav-pills nav-tabs'>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#LOGS'>Logs</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#PERMISSION'>Permissions</a>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#PERMISSION'>Permissions</a>
 			</li>
 		</ul>
 		<div class='tab-content'>
 			<div id='LOGS' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_logs.php?action=alllogs'>Game Logs</a><br />
 						<a href='staff_logs.php?action=userlogs'>User Logs</a><br />
 						<a href='staff_logs.php?action=traininglogs'>Training Logs</a><br />
@@ -234,8 +234,8 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 				</div>
 			</div>
 			<div id='PERMISSION' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_perms.php?action=viewperm'>View User's Permissions</a><br />
 						<a href='staff_perms.php?action=resetperm'>Reset User's Permissions</a><br />
 						<a href='staff_perms.php?action=editperm'>Edit Permissions</a>
@@ -248,21 +248,25 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 	if ($api->UserMemberLevelGet($userid,'forum moderator'))
 	{
 		echo "Forum Moderator<br />
-		<ul class='nav nav-tabs nav-justified'>
-		<li><a data-toggle='tab' href='#PUNISH'>Punishments</a></li>
-		<li><a data-toggle='tab' href='#FORUMS'>Forums</a></li>
+		<ul class='nav nav-pills nav-tabs'>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#PUNISH'>Punishments</a>
+			</li>
+			<li class='nav-item'>
+				<a data-toggle='tab' class='nav-link' href='#FORUMS'>Forums</a>
+			</li>
 		</ul>
 		<div class='tab-content'>
 			<div id='PUNISH' class='tab-pane fade in'>
-					<div class='panel panel-default'>
-						<div class='panel-body'>
+					<div class='card card-default'>
+						<div class='card-block'>
 							N/A
 						</div>
 					</div>
 			</div>
 			<div id='FORUMS' class='tab-pane fade in'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_forums.php?action=addforum'>{$lang['STAFF_FORUM_ADD']}</a><br />
 						<a href='staff_forums.php?action=editforum'>{$lang['STAFF_FORUM_EDIT']}</a><br />
 						<a href='staff_forums.php?action=delforum'>{$lang['STAFF_FORUM_DEL']}</a>
@@ -285,7 +289,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<th>IP</th>
 					</tr>
 					</thead>
-					<tbody>";
+					<tblock>";
 			$q =
 					$db->query(
 							"SELECT `log_user`, `log_text`, `log_time`, `log_ip`, `username`
@@ -308,6 +312,6 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 				";
 			}
 			$db->free_result($q);
-			echo '</tbody></table><hr />';
+			echo '</tblock></table><hr />';
 	}
 $h->endpage();
