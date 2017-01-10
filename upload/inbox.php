@@ -3,28 +3,28 @@ require('globals.php');
 require('lib/bbcode_engine.php');
 echo "
 <div class='table-responsive'>
-<table class='table table-bordered table-responsive'>
-	<tr>
-		<td>
-			<a href='inbox.php'>Inbox</a>
-		</td>
-		<td>
-			<a href='?action=outbox'>Outbox</a>
-		</td>
-		<td>
-			<a href='?action=compose'>Compose</a>
-		</td>
-		<td>
-			<a href='?action=delall'>Delete All</a>
-		</td>
-		<td>
-			<a href='#'>Archive</a>
-		</td>
-		<td>
-			<a href='#'>Contacts</a>
-		</td>
-	</tr>
-</table>
+	<table class='table table-bordered'>
+		<tr>
+			<td>
+				<a href='inbox.php'>Inbox</a>
+			</td>
+			<td>
+				<a href='?action=outbox'>Outbox</a>
+			</td>
+			<td>
+				<a href='?action=compose'>Compose</a>
+			</td>
+			<td>
+				<a href='?action=delall'>Delete All</a>
+			</td>
+			<td>
+				<a href='#'>Archive</a>
+			</td>
+			<td>
+				<a href='#'>Contacts</a>
+			</td>
+		</tr>
+	</table>
 </div>";
 if (!isset($_GET['action']))
 {
