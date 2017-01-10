@@ -66,9 +66,11 @@ class headers
 								<?php
 									if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant')))
 									{
-										?><a class="dropdown-item" href="staff/"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a><?php
+										?><div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="staff/"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a><?php
 									}
 									?>
+								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="gamerules.php"><?php echo $lang['MENU_RULES']; ?></a>
 								<a class="dropdown-item" href="logout.php"><?php echo $lang['MENU_LOGOUT']; ?></a>
 							</div>
