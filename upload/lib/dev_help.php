@@ -8,10 +8,11 @@
 */
 
 //Set to true to enable developement help!
-define('DEV', false);
+define('DEV', true);
 if (DEV)
 {
 	echo "<div class='alert alert-warning' role='alert'><strong>Warning!</strong> You have development mode on. Please be sure to turn this off when you launch the game.</div>";
+	echo "<pre class='pre-scrollable'>";
 	echo "Dumping all variables stored in POST.<br />";
 	var_dump($_POST);
 	echo "<br />Dumping all variables stored in GET.<br />";
@@ -20,5 +21,5 @@ if (DEV)
 	var_dump($_COOKIE);
 	echo "<br />Dumping all variables stored in SESSION.<br />";
 	var_dump($_SESSION);
-	echo "";
+	echo "</pre>";
 }
