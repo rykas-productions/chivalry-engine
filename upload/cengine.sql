@@ -1139,6 +1139,14 @@ CREATE TABLE `guild_notifications` (
 	`gn_text` TEXT NOT NULL , UNIQUE (`gn_id`)
 ) ENGINE = MyISAM;
 
+CREATE TABLE `guild_applications` ( 
+	`ga_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`ga_user` INT(11) UNSIGNED NOT NULL , 
+	`ga_guild` INT(11) UNSIGNED NOT NULL , 
+	`ga_time` INT(11) UNSIGNED NOT NULL , 
+	`ga_text` TEXT NOT NULL , UNIQUE (`ga_id`)
+) ENGINE = MyISAM;
+
 --
 -- Indexes for dumped tables
 --

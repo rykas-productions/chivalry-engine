@@ -92,9 +92,9 @@ function home()
     {
         echo "
 		<tr>
-			<td>" . date('F j Y, g:i:s a', $r['ge_time'])
+			<td>" . date('F j Y, g:i:s a', $r['gn_time'])
                 . "</td>
-			<td>{$r['ge_text']}</td>
+			<td>{$r['gn_text']}</td>
 		</tr>
    		";
     }

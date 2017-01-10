@@ -313,14 +313,15 @@ function apply()
 			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
 			die($h->endpage());
 		}
-		$cnt=$db->query("SELECT * FROM `guild_applications` WHERE `app_user` = {$userid} && `app_guild` = {$_GET['id']}");
+		$cnt=$db->query("SELECT * FROM `guild_applications` WHERE `ga_user` = {$userid} && `ga_guild` = {$_GET['id']}");
 		if ($db->num_rows($cnt) > 0)
 		{
 			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_APP_ERROR1']}");
 		die($h->endpage());
 		}
+		$time=time();
 		$application = (isset($_POST['application']) && is_string($_POST['application'])) ? $db->escape(htmlentities(stripslashes($_POST['application']), ENT_QUOTES, 'ISO-8859-1')) : '';
-		$db->query("INSERT INTO `guild_applications` VALUES (NULL, {$userid}, {$_GET['id']}, '{$application}')");
+		$db->query("INSERT INTO `guild_applications` VALUES (NULL, {$userid}, {$_GET['id']}, {$time}, '{$application}')");
 		$gev = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> sent an application to join this guild.");
 		$db->query("INSERT INTO `guild_notifications` VALUES (NULL, {$_GET['id']}, " . time() . ", '{$gev}')");
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['GUILD_APP_SUCC']}");
