@@ -17,8 +17,8 @@ $db->free_result($q);
 echo"
 <div class='row'>
 	<div class='col-sm-4'>
-		<div class='panel panel-default'>
-			<div class='panel-heading'>
+		<div class='card card-default'>
+			<div class='card-header'>
 				Primary Weapon ";
 				if (isset($equip[$ir['equip_primary']]))
 				{
@@ -26,7 +26,7 @@ echo"
 				}
 				echo"
 			</div>
-			<div class='panel-body'>";
+			<div class='card-block'>";
 				if (isset($equip[$ir['equip_primary']]))
 				{
 					echo $equip[$ir['equip_primary']]['itmname'];
@@ -41,8 +41,8 @@ echo"
 	</div>";
 	echo"
 	<div class='col-sm-4'>
-		<div class='panel panel-default'>
-			<div class='panel-heading'>
+		<div class='card card-default'>
+			<div class='card-header'>
 				Secondary Weapon ";
 				if (isset($equip[$ir['equip_secondary']]))
 				{
@@ -50,7 +50,7 @@ echo"
 				}
 				echo"
 			</div>
-			<div class='panel-body'>";
+			<div class='card-block'>";
 				if (isset($equip[$ir['equip_secondary']]))
 				{
 					echo $equip[$ir['equip_secondary']]['itmname'];
@@ -65,8 +65,8 @@ echo"
 	</div>";
 	echo"
 	<div class='col-sm-4'>
-		<div class='panel panel-default'>
-			<div class='panel-heading'>
+		<div class='card card-default'>
+			<div class='card-header'>
 				Armor ";
 				if (isset($equip[$ir['equip_armor']]))
 				{
@@ -74,7 +74,7 @@ echo"
 				}
 				echo"
 			</div>
-			<div class='panel-body'>";
+			<div class='card-block'>";
 				if (isset($equip[$ir['equip_armor']]))
 				{
 					echo $equip[$ir['equip_armor']]['itmname'];
