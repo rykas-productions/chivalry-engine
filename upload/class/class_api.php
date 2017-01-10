@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.1.6.1";
+		return "17.1.10.1";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -951,5 +951,52 @@ class api
 			$guild=$db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$ir['location']}"));
 		}
 		$db->query("UPDATE `guild` SET `guild_{$cur}curr` = `guild_{$cur}curr` + {$number} WHERE `guild_id` = {$guild}");
+	}
+	function GuildFetchInfo($guild_id,$field=null)
+	{
+		global $db;
+		$guild_id = (isset($guild_id) && is_numeric($guild_id)) ? abs(intval($guild_id)) : 0;
+		if (isset($guild_id) && $guild_id > 0)
+		{
+			$cnt=$db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}");
+			if ($db->num_rows($cnt) == 0)
+			{
+				return false;
+			}
+			if (is_null($field))
+			{
+				return $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}"));
+			}
+			else
+			{
+				$field = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($field))));
+				return $db->fetch_single($db->query("SELECT `{$field}` FROM `guild` WHERE `guild_id` = {$guild_id}"));
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	function GuildAddNotification($guild_id,$notification)
+	{
+		global $db;
+		$notification=$db->escape($notification);
+		$time=time();
+		$guild_id = (isset($guild_id) && is_numeric($guild_id)) ? abs(intval($guild_id)) : 0;
+		if (isset($guild_id) && $guild_id > 0)
+		{
+			$cnt=$db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}");
+			if ($db->num_rows($cnt) == 0)
+			{
+				return false;
+			}
+			else
+			{
+				$db->query("INSERT INTO `guild_notifications` (`gn_id`, `gn_guild`, `gn_time`, `gn_text`) VALUES (NULL, '{$guild_id}', '{$time}', '{$notification}')");
+				return true;
+			}
+		}
+		return false;
 	}
 }
