@@ -31,7 +31,9 @@ if (!empty($_POST['pn_update']))
         ?> <div class="alert alert-success"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong><?php echo $lang['ERROR_SUCCESS']; ?></strong> <?php echo $lang['INDEX_PNSUCCESS']; ?> </div><br /> <?php
     }
 }
-echo "<table class='table table-hover table-bordered table-responsive'>
+echo "
+<div class='table-resposive'>
+<table class='table table-hover table-bordered'>
 <tbody>
 	<tr>
 		<td>
@@ -132,7 +134,7 @@ echo "<table class='table table-bordered'>
 	</td>
 </tr>
 
-</table>";
+</table></div>";
 ?>
 <form method="post">
 <div class="form-group">
