@@ -48,47 +48,48 @@ $no1 = $st + 1;
 $no2 = min($st + 100, $membs);
 echo "
 Showing users $no1 to $no2 by order of $by $ord.
-<table class='table table-responsive table-bordered table-hover'>
-		<thead>
-		<tr>
-			<th>User ID</th>
-			<th>Name</th>
-			<th>Money</th>
-			<th>Level</th>
-			<th>Gender</th>
-			<th>Online?</th>
-		</tr>
-		</thead>
-		<tbody>
-   ";
-while ($r = $db->fetch_row($q))
-{
-	$r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span> <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
-    echo "<tr>
-			<td>
-				{$r['userid']}
-			</td>
-			<td>
-				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a>
-			</td>
-			<td>
-				" . number_format($r['primary_currency']) . "
-			</td>
-			<td>
-				{$r['level']}
-			</td>
-			<td>
-				{$r['gender']}
-			</td>
-			<td>
-			" . (($r['laston'] >= $_SERVER['REQUEST_TIME'] - 15 * 60)
-                    ? '<span style="color: green; font-weight:bold;">Online</span>'
-                    : '<span style="color: red; font-weight:bold;">Offline</span>')
-            . "
-			</td>
+<div class='table-resposive'>
+	<table class='table table-bordered table-hover'>
+			<thead>
+			<tr>
+				<th>User ID</th>
+				<th>Name</th>
+				<th>Money</th>
+				<th>Level</th>
+				<th>Gender</th>
+				<th>Online?</th>
 			</tr>
-			</tbody>";
-}
-$db->free_result($q);
-echo '</table>';
+			</thead>
+			<tbody>
+	   ";
+	while ($r = $db->fetch_row($q))
+	{
+		$r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span> <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
+		echo "<tr>
+				<td>
+					{$r['userid']}
+				</td>
+				<td>
+					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a>
+				</td>
+				<td>
+					" . number_format($r['primary_currency']) . "
+				</td>
+				<td>
+					{$r['level']}
+				</td>
+				<td>
+					{$r['gender']}
+				</td>
+				<td>
+				" . (($r['laston'] >= $_SERVER['REQUEST_TIME'] - 15 * 60)
+						? '<span style="color: green; font-weight:bold;">Online</span>'
+						: '<span style="color: red; font-weight:bold;">Offline</span>')
+				. "
+				</td>
+				</tr>
+				</tbody>";
+	}
+	$db->free_result($q);
+	echo '</table></div>';
 $h->endpage();
