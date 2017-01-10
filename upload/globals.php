@@ -10,7 +10,6 @@ header('Content-Type: event-stream');
 if(isset($_POST['lang']))
 {
 	$lang = $_POST['lang'];
-	// register the session and set the cookie
 	$_SESSION['lang'] = $lang;
 	setcookie('lang', $lang, time() + (3600 * 24 * 30));
 }
@@ -81,20 +80,23 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0)
     header("Location: {$login_url}");
     exit;
 }
+if(isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > 900))
+{
+	header("Location: logout.php");
+	exit;
+}
+$_SESSION['last_active'] = time();
 $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
-	require "header.php";
-
+require "header.php";
 include "config.php";
 define("MONO_ON", 1);
 require "class/class_db_{$_CONFIG['driver']}.php";
 $db = new database;
-$db->configure($_CONFIG['hostname'], $_CONFIG['username'],
-        $_CONFIG['password'], $_CONFIG['database'], $_CONFIG['persistent']);
+$db->configure($_CONFIG['hostname'], $_CONFIG['username'], $_CONFIG['password'], $_CONFIG['database'], $_CONFIG['persistent']);
 $db->connect();
 $c = $db->connection_id;
 $set = array();
-$settq = $db->query("SELECT *
-					 FROM `settings`");
+$settq = $db->query("SELECT * FROM `settings`");
 while ($r = $db->fetch_row($settq))
 {
     $set[$r['setting_name']] = $r['setting_value'];

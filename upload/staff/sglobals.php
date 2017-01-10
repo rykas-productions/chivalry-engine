@@ -6,22 +6,6 @@
 	Author: TheMasterGeneral
 	Website: http://mastergeneral156.pcriot.com/
 */
-function staff_csrf_error($goBackTo)
-{
-    global $h,$lang;
-	alert("danger","{$lang['ERROR_SECURITY']}","The action you have done has been blocked for security reasons. Please <a href='{$goBackTo}'>Try again</a>.");
-    $h->endpage();
-    exit;
-}
-
-/**
- * Check the CSRF code we received against the one that was registered for the form - using default code properties ($_POST['verf']).
- * If verification fails, end execution immediately.
- * If not, continue.
- * @param string $formid A unique string used to identify this form to match up its submission with the right token.
- * @param string $code The code the user's form input returned.
- * @return boolean Whether the user provided a valid code or not
- */
 if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false)
 {
     exit;
@@ -30,28 +14,24 @@ session_name('CENGINE');
 session_start();
 header('Cache-control: private'); // IE 6 FIX
 
-if(isSet($_GET['lang']))
+if(isset($_GET['lang']))
 {
-$lang = $_GET['lang'];
- 
-// register the session and set the cookie
-$_SESSION['lang'] = $lang;
- 
-setcookie('lang', $lang, time() + (3600 * 24 * 30));
+	$lang = $_GET['lang'];
+	$_SESSION['lang'] = $lang;
+	setcookie('lang', $lang, time() + (3600 * 24 * 30));
 }
 else if(isSet($_SESSION['lang']))
 {
-$lang = $_SESSION['lang'];
+	$lang = $_SESSION['lang'];
 }
 else if(isSet($_COOKIE['lang']))
 {
-$lang = $_COOKIE['lang'];
+	$lang = $_COOKIE['lang'];
 }
 else
 {
-$lang = 'en';
+	$lang = 'en';
 }
- 
 switch ($lang) 
 {
 	case 'en':
@@ -76,12 +56,15 @@ if (!isset($_SESSION['started']))
     session_regenerate_id();
     $_SESSION['started'] = true;
 }
-if (!isset($_SESSION['started']))
-{
-    session_regenerate_id();
-    $_SESSION['started'] = true;
-}
 ob_start();
+if (function_exists("get_magic_quotes_gpc") == false)
+{
+
+    function get_magic_quotes_gpc()
+    {
+        return 0;
+    }
+}
 if (get_magic_quotes_gpc() == 0)
 {
     foreach ($_POST as $k => $v)
@@ -104,21 +87,24 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0)
     header("Location: {$login_url}");
     exit;
 }
+if(isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > 900))
+{
+	header("Location: logout.php");
+	exit;
+}
+$_SESSION['last_active'] = time();
 $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
 require "sheader.php";
-
 include "../config.php";
 global $_CONFIG;
 define("MONO_ON", 1);
 require "../class/class_db_{$_CONFIG['driver']}.php";
 $db = new database;
-$db->configure($_CONFIG['hostname'], $_CONFIG['username'],
-        $_CONFIG['password'], $_CONFIG['database'], $_CONFIG['persistent']);
+$db->configure($_CONFIG['hostname'], $_CONFIG['username'], $_CONFIG['password'], $_CONFIG['database'], $_CONFIG['persistent']);
 $db->connect();
 $c = $db->connection_id;
 $set = array();
-$settq = $db->query("SELECT *
-					 FROM `settings`");
+$settq = $db->query("SELECT * FROM `settings`");
 while ($r = $db->fetch_row($settq))
 {
     $set[$r['setting_name']] = $r['setting_value'];
@@ -126,9 +112,7 @@ while ($r = $db->fetch_row($settq))
 global $jobquery, $housequery;
 if (isset($jobquery) && $jobquery)
 {
-    $is =
-            $db->query(
-                    "SELECT `u`.*, `us`.*, `j`.*, `jr`.*
+    $is = $db->query("SELECT `u`.*, `us`.*, `j`.*, `jr`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -140,9 +124,7 @@ if (isset($jobquery) && $jobquery)
 }
 else if (isset($housequery) && $housequery)
 {
-    $is =
-            $db->query(
-                    "SELECT `u`.*, `us`.*, `h`.*
+    $is = $db->query("SELECT `u`.*, `us`.*, `h`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -152,9 +134,7 @@ else if (isset($housequery) && $housequery)
 }
 else
 {
-    $is =
-            $db->query(
-                    "SELECT `u`.*, `us`.*
+    $is = $db->query("SELECT `u`.*, `us`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -164,10 +144,7 @@ else
 $ir = $db->fetch_row($is);
 if ($ir['force_logout'] != 'false')
 {
-    $db->query(
-            "UPDATE `users`
-    		 SET `force_logout` = 'false'
-    		 WHERE `userid` = {$userid}");
+    $db->query("UPDATE `users` SET `force_logout` = 'false' WHERE `userid` = {$userid}");
     session_unset();
     session_destroy();
     $login_url = "../login.php";
