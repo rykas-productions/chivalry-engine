@@ -31,7 +31,8 @@ function home()
 	$db->free_result($q2);
 	$q = $db->query("SELECT `cgID`, `cgNAME` FROM `crimegroups` ORDER BY `cgORDER` ASC");
 	echo "
-	<table class='table table-bordered table-responsive'>
+	<div class='table-resposive'>
+	<table class='table table-bordered'>
 		<tr>
 			<th>
 				{$lang['CRIME_TABLE_CRIME']}
@@ -55,7 +56,7 @@ function home()
 		}
 	}
 	$db->free_result($q);
-	echo "</table>";
+	echo "</table></div>";
 	$h->endpage();
 }
 function crime()
