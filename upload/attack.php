@@ -171,7 +171,7 @@ function attacking()
 			alert("warning","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_STALEMATE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 			die($h->endpage());
 		}
-		if ($_SESSION['attacking'] == 'false' && $ir['attacking'] == 0)
+		if ($_SESSION['attacking'] == 0 && $ir['attacking'] == 0)
 		{
 			if ($youdata['energy'] >= $youdata['maxenergy'] / $set['AttackEnergyCost'])
 			{
@@ -353,7 +353,7 @@ function attacking()
 			if ($youdata['hp'] <= 0)
 			{
 				$youdata['hp'] = 0;
-				$_SESSION['attacklost'] = 1;
+				$_SESSION['attacklost'] = $_GET['user'];
 				$db->query("UPDATE `users` SET `hp` = '0' WHERE `userid` = $userid");
 				echo "<form action='?action=lost&ID={$_GET['user']}' method='post'><input type='submit' class='btn btn-default' value='{$lang['GEN_CONTINUE']}' />";
 			}
