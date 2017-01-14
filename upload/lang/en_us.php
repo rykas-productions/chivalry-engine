@@ -1142,4 +1142,12 @@ $lang['STAFF_PUNISHFED_ERR']="You cannot place a user that doesn't exist into th
 $lang['STAFF_PUNISHFED_ERR1']="You need to fill in all the inputs on the previous page for this to work correctly.";
 $lang['STAFF_PUNISHFED_ERR2']="You cannot place admins in the federal jail. Please destaff them first before trying again.";
 $lang['STAFF_PUNISHFED_SUCC']="The user has been placed into the federal jail successfully.";
+
+//Fedjail listing
+$lang['FJ_TITLE']="Federal Jail";
+$lang['FJ_INFO']="This is where bad folks go when they break the rules. Be a smart person and don't break the rules or you may never see the light of day again.";
+$lang['FJ_WHO']="Who";
+$lang['FJ_TIME']="Time Remaining";
+$lang['FJ_RS']="Reason";
+$lang['FJ_JAILER']="Jailer";
 ?>
