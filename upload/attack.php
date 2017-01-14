@@ -514,7 +514,15 @@ function lost()
 	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
-	$_SESSION['attacklost'] = 0;
+	$ir['attacking'] = 0;
+	if (!isset($_SESSION['attacklost']) || $_SESSION['attacklost'] != $_GET['ID'])
+	{
+		$abuse_sql ="UPDATE `users` SET `xp` = 0 WHERE `userid` = {$userid}";
+		$db->query($abuse_sql);
+		$api->UserStatusSet($userid,1,666,'Bug Abuse');
+		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
+		die($h->endpage());
+	}
 	if(!$_GET['ID']) 
 	{
 		alert('warning',"{$lang['CSRF_ERROR_TITLE']}","{$lang['ATT_NC']}");
@@ -528,7 +536,7 @@ function lost()
 	}
 	$r = $db->fetch_row($od);
 	$db->free_result($od);
-	$qe = $r['level'] * $r['level'] * $r['level'];
+	$qe = $ir['level'] * $ir['level'] * $ir['level'];
 	$expgain = Random($qe / 2, $qe);
 	if ($expgain < 0)
 	{
@@ -541,13 +549,17 @@ function lost()
 	$hospreason = 'Picked a fight and lost';
 	put_infirmary($userid,$hosptime,$hospreason);
 	//Give winner some XP
-	$r['xp_needed'] = round($r['level']+($r['level'] * 115)+($r['level'] * 115));
-	$qe2 = $ir['level'] * $ir['level'] * $ir['level'];
+	$r['xp_needed'] = round(($r['level'] + 2.25) * ($r['level'] + 2.25) * ($r['level'] + 2.25) * 2);
+	$qe2 = $r['level'] * $r['level'] * $r['level'];
+	$expgain2=Random($qe2 / 2, $qe2);
+	$expgainp2 = $expgain2 / $r['xp_needed'] * 100;
 	$expperc2 = round($expgainp / $r['xp_needed'] * 100);
+	
 	notification_add($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
 	$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$_GET['ID']}] and lost, gaining {$hosptime} minutes in the infirmary.");
-	$db->query("UPDATE `users` SET `xp` = `xp` + {$expgainp} WHERE `userid` = {$_GET['ID']}");
+	$db->query("UPDATE `users` SET `xp` = `xp` + {$expgainp2} WHERE `userid` = {$_GET['ID']}");
 	$db->query("UPDATE `users` SET `xp` = 0 WHERE `xp` < 0");
+	$_SESSION['attacklost'] = 0;
 }
 function xp()
 {
@@ -589,9 +601,9 @@ function xp()
 			$ir['total']=$ir['strength']+$ir['agility']+$ir['guard'];
 			$ot=$db->fetch_row($db->query("SELECT * FROM `userstats` WHERE `userid` = {$r['userid']}"));
 			$ototal=$ot['strength'] + $ot['agility'] + $ot['guard'];
-			if (($ir['total']*0.9) > $ototal)
+			if (($ir['total']*0.75) > $ototal)
 			{
-				$expgain=$expgain*0.33;
+				$expgain=$expgain*0.25;
 			}
 			if ($expgain < 0)
 			{
