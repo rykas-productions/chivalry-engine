@@ -9,8 +9,6 @@
  
 $lang = array();
 global $ir,$fee,$gain;
-//Static
-$lang["HEADER_TITLE"] = "Chivalry Engine Unreleased";
  
 // Menu
 $lang["MENU_EXPLORE"] = "Explore";
