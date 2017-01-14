@@ -1167,6 +1167,7 @@ ALTER TABLE `promo_codes`
 ALTER TABLE `promo_codes`
   MODIFY `promo_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
   
+  ALTER TABLE `fedjail` CHANGE `fed_days` `fed_out` INT(11) UNSIGNED NOT NULL;
   ALTER TABLE `estates` ADD `house_level` INT(11) UNSIGNED NULL DEFAULT '1' AFTER `house_will`;
   ALTER TABLE `users` ADD `last_verified` INT(11) UNSIGNED NOT NULL AFTER `theme`;
   ALTER TABLE `users` ADD `need_verify` TINYINT NOT NULL AFTER `last_verified`;

@@ -24,6 +24,9 @@ $lang['MENU_TIN']='Time is now';
 $lang['MENU_QE']='queries executed';
 $lang['MENU_UNREADMAIL1']='Unread Mail!';
 $lang['MENU_UNREADNOTIF']='Unread Notifications!';
+$lang['MENU_FEDJAIL']="Federal Jail!";
+$lang['MENU_FEDJAIL1']="You're in the federal jail for the next";
+$lang['MENU_FEDJAIL2']="for the crime of:";
 $lang['MENU_UNREADANNONCE']='Unread Announcments!';
 $lang['MENU_UNREADANNONCE1']='There are';
 $lang['MENU_UNREADANNONCE2']='announcements you have yet to read. Read them';
@@ -1127,4 +1130,16 @@ $lang['VIP_TABLE_VDINFO']="VIP Days disable ads around the game. You'll also rec
 $lang['VIP_THANKS']="Thank you for donating to";
 $lang['VIP_CANCEL']="You have successfully cancelled your donation. Please donate later!";
 $lang['VIP_SUCCESS']="We appreciate it completely. You can view a receipt of this transaction at <a href='http://www.paypal.com'>Paypal</a>. Your items should be given to you automatically fairly soon. If not, please contact an admin for help!";
+
+//Staff punishments
+$lang['STAFF_PUNISHFED_FORM']="Jailing User";
+$lang['STAFF_PUNISHFED_INFO']="Placing a user in federal jail will render their account virtually useless. They will not be able to do anything in-game.";
+$lang['STAFF_PUNISHFED_TH']="User:";
+$lang['STAFF_PUNISHFED_TH1']="Days:";
+$lang['STAFF_PUNISHFED_TH2']="Reason:";
+$lang['STAFF_PUNISHFED_BTN']="Place User in Federal Jail";
+$lang['STAFF_PUNISHFED_ERR']="You cannot place a user that doesn't exist into the federal jail.";
+$lang['STAFF_PUNISHFED_ERR1']="You need to fill in all the inputs on the previous page for this to work correctly.";
+$lang['STAFF_PUNISHFED_ERR2']="You cannot place admins in the federal jail. Please destaff them first before trying again.";
+$lang['STAFF_PUNISHFED_SUCC']="The user has been placed into the federal jail successfully.";
 ?>

@@ -4,7 +4,7 @@ class headers
 
     function startheaders()
     {
-		global $ir, $set, $lang, $db, $menuhide, $userid, $macropage;
+		global $ir, $set, $h, $lang, $db, $menuhide, $userid, $macropage;
 		?>
 		<!DOCTYPE html>
 		<html lang="en">
@@ -166,6 +166,18 @@ class headers
 				<div class="row">
 					<div class="col-lg-12 text-center">
 				<?php
+				$time=time();
+				$fed=$db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
+				if ($fed['fed_out'] < $time)
+				{
+					$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
+					$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
+				}
+				if ($ir['fedjail'] > 0)
+				{
+					alert('info',"{$lang['MENU_FEDJAIL']}","{$lang['MENU_FEDJAIL1']} " . TimeUntil_Parse($fed['fed_out']) . " {$lang['MENU_FEDJAIL2']} <b>{$fed['fed_reason']}</b>");
+					die($h->endpage());
+				}
 				if ($ir['mail'] > 0)
 				{
 					alert('info',"{$lang['MENU_UNREADMAIL1']}","{$lang['MENU_UNREADMAIL2']} {$ir['mail']} {$lang['MENU_UNREADMAIL3']} <a href='inbox.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}");

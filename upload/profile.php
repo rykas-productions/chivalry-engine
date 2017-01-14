@@ -17,7 +17,7 @@ else
 					`display_pic`, `hp`, `maxhp`, `guild`,
                     `fedjail`, `bank`, `lastip`, `lastip`,
                     `loginip`, `registerip`, `staff_notes`, `town_name`,
-                    `house_name`, `guild_name`, `fed_days`, `fed_reason`,
+                    `house_name`, `guild_name`, `fed_out`, `fed_reason`,
 					`infirmary_reason`, `infirmary_out`, `dungeon_reason`, `dungeon_out`,
 					`browser`, `os`, `screensize`
                     FROM `users` `u`
@@ -140,33 +140,32 @@ else
 							</tr>";
 						if (user_infirmary($r['userid']))
 						{
-							$InfirmaryRemain=round((($r['infirmary_out'] - $CurrentTime) / 60), 2);
 							echo "
 							<tr>
 								<th>{$lang['EXPLORE_INFIRM']}</th>
-								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_INFIRM']} {$lang['GEN_FOR']} {$InfirmaryRemain} {$lang["GEN_MINUTES"]}<br />
+								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_INFIRM']} {$lang['GEN_FOR']} " . TimeUntil_Parse($r['infirmary_out']) . "<br />
 								{$r['infirmary_reason']}
 								</td>
 							</tr>";
 						}
 						if (user_dungeon($r['userid']))
 						{
-							$DungeonRemain=round((($r['dungeon_out'] - $CurrentTime) / 60), 2);
 							echo "
 							<tr>
 								<th>{$lang['EXPLORE_DUNG']}</th>
-								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_DUNG']} {$lang['GEN_FOR']} {$DungeonRemain} {$lang["GEN_MINUTES"]}<br />
+								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_DUNG']} {$lang['GEN_FOR']} " . TimeUntil_Parse($r['dungeon_out']) . "<br />
 								{$r['dungeon_reason']}
 								</td>
 							</tr>";
 						}
 						if ($r['fedjail'])
 						{
-							echo "<br /><span style='font-weight: bold; color: red;'>
-							In federal jail for {$r['fed_days']} day(s).
-							<br />
-							{$r['fed_reason']}
-							</span>";
+							echo "
+							<tr>
+								<th>{$lang['EXPLORE_FED']}</th>
+								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_FED']} {$lang['GEN_FOR']} " . TimeUntil_Parse($r['fed_out']) . " {$lang['MENU_FEDJAIL2']}<br /> {$r['fed_reason']}
+								</td>
+							</tr>";
 						}
 						
 						echo"</table>";
