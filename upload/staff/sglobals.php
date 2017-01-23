@@ -89,7 +89,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0)
 }
 if(isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > 900))
 {
-	header("Location: logout.php");
+	header("Location: ../logout.php");
 	exit;
 }
 $_SESSION['last_active'] = time();
