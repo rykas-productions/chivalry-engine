@@ -208,6 +208,9 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 			<li>
 				<a data-toggle='tab' href='#PERMISSION'>Permissions</a>
 			</li>
+			<li>
+				<a data-toggle='tab' href='#MINES'>Mining</a>
+			</li>
 		</ul>
 		<div class='tab-content'>
 			<div id='LOGS' class='tab-pane fade in'>
@@ -239,6 +242,15 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_perms.php?action=viewperm'>View User's Permissions</a><br />
 						<a href='staff_perms.php?action=resetperm'>Reset User's Permissions</a><br />
 						<a href='staff_perms.php?action=editperm'>Edit Permissions</a>
+					</div>
+				</div>
+			</div>
+			<div id='MINES' class='tab-pane fade in'>
+				<div class='panel panel-default'>
+					<div class='panel-body'>
+						<a href='staff_mine.php?action=addmine'>Add a Mine</a><br />
+						<a href='staff_mine.php?action=editmine'>Edit a Mine</a><br />
+						<a href='staff_mine.php?action=delmine'>Delete a Mine</a>
 					</div>
 				</div>
 			</div>
