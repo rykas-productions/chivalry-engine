@@ -1262,6 +1262,7 @@ function alllogs()
         return;
     }
     $pages = ceil($attacks / $app);
+	echo paginate(100,"{$_GET['st']}",$attacks,$pages,'staff_logs.php?action=alllogs');
     echo '<ul class="pagination">Pages:&nbsp;<br />';
     for ($i = 1; $i <= $pages; $i++)
     {

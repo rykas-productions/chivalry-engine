@@ -1151,6 +1151,7 @@ $lang['FJ_TIME']="Time Remaining";
 $lang['FJ_RS']="Reason";
 $lang['FJ_JAILER']="Jailer";
 
+//Mining
 $lang['MINE_INFO']="Welcome to the dangerous mines, brainless fool. Riches are avaliable for you, if you have the skill. Each mine has its own requirements, and could even have a special pickaxe that you need to use.";
 $lang['MINE_DUNGEON']="Only honorable warriors can mine. Come back when you've served your debt to society.";
 $lang['MINE_INFIRM']="Only healthy warriors can mine. Come back when you've ripped that bandaid off your finger.";
@@ -1183,4 +1184,42 @@ $lang['MINE_DO_SUCC1']=" from this vein.";
 $lang['MINE_DO_SUCC2']="While mining away, you managed to expertly mine a piece of ";
 $lang['MINE_DO_BTN1']="Mine Again";
 $lang['MINE_DO_BTN']="Go Back";
+
+//Staff mining
+$lang['STAFF_MINE_TITLE']="Mining Panel";
+$lang['STAFF_MINE_ADD_ERROR']="None of the inputs on the previous form can remain empty. Go back and try again.";
+$lang['STAFF_MINE_ADD_ERROR1']="The minimum mining level for this mine must be at least 1.";
+$lang['STAFF_MINE_ADD_ERROR2']="The minimum output for the item outputs cannot be larger or equal to its maximum.";
+$lang['STAFF_MINE_ADD_ERROR3']="The city you chose for the mine to be located in does not exist. Check and try again.";
+$lang['STAFF_MINE_ADD_ERROR4']="The item you chose for the mine's pickaxe does not exist. Check your source and try again.";
+$lang['STAFF_MINE_ADD_ERROR5']="The item you chose for the mine's Output #1 does not exist. Check your source and try again.";
+$lang['STAFF_MINE_ADD_ERROR6']="The item you chose for the mine's Output #2 does not exist. Check your source and try again.";
+$lang['STAFF_MINE_ADD_ERROR7']="The item you chose for the mine's Output #3 does not exist. Check your source and try again.";
+$lang['STAFF_MINE_ADD_ERROR8']="The item you chose for the mine's gem does not exist. Check your source and try again.";
+$lang['STAFF_MINE_ADD_SUCCESS']="You've successfully created a mine.";
+$lang['STAFF_MINE_ADD_FRMINFO']="Use this form to add a mine to the game. The mine's name will be based loosely on the city its placed in.";
+$lang['STAFF_MINE_FORM_LOCATION']="Mine's Location";
+$lang['STAFF_MINE_FORM_LVL']="Minimum Mining Level";
+$lang['STAFF_MINE_FORM_IQ']="Minimum IQ Required";
+$lang['STAFF_MINE_FORM_PEPA']="Power Exhaust / Attempt";
+$lang['STAFF_MINE_FORM_PICK']="Required Pickaxe";
+$lang['STAFF_MINE_FORM_OP1']="Item #1";
+$lang['STAFF_MINE_FORM_OP2']="Item #2";
+$lang['STAFF_MINE_FORM_OP3']="Item #3";
+$lang['STAFF_MINE_FORM_GEM']="Gem Item";
+$lang['STAFF_MINE_FORM_OP1MIN']="Item #1 Minimum Output";
+$lang['STAFF_MINE_FORM_OP2MIN']="Item #2 Minimum Output";
+$lang['STAFF_MINE_FORM_OP3MIN']="Item #3 Minimum Output";
+$lang['STAFF_MINE_FORM_OP1MAX']="Item #1 Maximum Output";
+$lang['STAFF_MINE_FORM_OP2MAX']="Item #2 Maximum Output";
+$lang['STAFF_MINE_FORM_OP3MAX']="Item #3 Maximum Output";
+$lang['STAFF_MINE_EDIT1']="Select a mine to change.";
+$lang['STAFF_MINE_EDIT2']="Editing an existing mine...";
+$lang['STAFF_MINE_ADD_BTN']="Create Mine";
+$lang['STAFF_MINE_EDIT_BTN']="Alter Mine";
+$lang['STAFF_MINE_EDIT_SUCCESS']="The mine has been successfully edited.";
+$lang['STAFF_MINE_EDIT_ERR']="You've selected a non-existent mine. Check your source and try again.";
+$lang['STAFF_MINE_DEL_SUCCESS']="You've successfully deleted a mine";
+$lang['STAFF_MINE_DEL1']="Select a mine to delete.";
+$lang['STAFF_MINE_DEL_BTN']="Delete Mine! (No Prompt, Be Sure!)";
 ?>

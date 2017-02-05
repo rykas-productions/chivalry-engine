@@ -164,6 +164,14 @@ function basicsettings()
 					<input type='number' name='bankfeepercent' class='form-control' min='1' required='1' value='{$set['bank_feepercent']}'>
 				</td>
 			</tr>
+			<tr>
+				<th>
+					User Session Timeout (In Minutes)
+				</th>
+				<td>
+					<input type='number' name='sessiontimeout' placeholder='0 means no timeout.' class='form-control' min='0' required='1' value='{$set['max_sessiontime']}'>
+				</td>
+			</tr>
 		</table>";
 		
 		
@@ -193,6 +201,7 @@ function basicsettings()
 		$BankFeePerc = (isset($_POST['bankfeepercent']) && is_numeric($_POST['bankfeepercent'])) ? abs(intval($_POST['bankfeepercent'])) : 10;
 		$BankFeeMax = (isset($_POST['bankfee']) && is_numeric($_POST['bankfee'])) ? abs(intval($_POST['bankfee'])) : 5000;
 		$BankCost = (isset($_POST['bankbuy']) && is_numeric($_POST['bankbuy'])) ? abs(intval($_POST['bankbuy'])) : 5000;
+		$sessiontimeout = (isset($_POST['sessiontimeout']) && is_numeric($_POST['sessiontimeout'])) ? abs(intval($_POST['sessiontimeout'])) : 15;
 		if (empty($GameName))
 		{
 			alert('danger',"{$lang['ERROR_INVALID']}","Invalid game name specified!");
@@ -264,6 +273,7 @@ function basicsettings()
 			$db->query("UPDATE `settings` SET `setting_value` = '{$BankFeePerc}' WHERE `setting_name` = 'bank_feepercent'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$rcpb}' WHERE `setting_name` = 'reCaptcha_public'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$rcpr}' WHERE `setting_name` = 'reCaptcha_private'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$sessiontimeout}' WHERE `setting_name` = 'max_sessiontime'");
 			alert('success',"{$lang['ERROR_SUCCESS']}","Successfully updated the game settings.");
 			$api->SystemLogsAdd($userid,'staff',"Updated game settings.");
 		}
