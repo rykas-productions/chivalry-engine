@@ -50,7 +50,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 		<div id='HL' class='tab-pane fade'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
-					<a href='#'>{$lang['EXPLORE_MINE']}</a><br />
+					<a href='mine.php'>{$lang['EXPLORE_MINE']}</a><br />
 					<a href='#'>{$lang['EXPLORE_WC']}</a><br />
 					<a href='#'>{$lang['EXPLORE_FARM']}</a><br />
 					<a href='bottent.php'>{$lang['EXPLORE_BOTS']}</a><br />
