@@ -1360,7 +1360,7 @@ function verify_csrf_code($formid, $code)
 function verify_user_password($input, $pass)
 {
 	$pw=$input;
-    if (password_verify($pw, $pass)) 
+    if (password_verify(base64_encode(hash('sha256',$input, true)), $pass))
 	{
 		return true;
 	} 
@@ -1381,10 +1381,11 @@ function verify_user_password($input, $pass)
 function encode_password($password)
 {
     global $set;
-		$options = [
-		'cost' => $set['Password_Effort'],
+		$options = 
+		[
+			'cost' => $set['Password_Effort'],
 		];
-		return password_hash($password, PASSWORD_BCRYPT, $options);
+		return password_hash(base64_encode(hash('sha256',$password,true)),PASSWORD_BCRYPT,$options);
 }
 
 /**
