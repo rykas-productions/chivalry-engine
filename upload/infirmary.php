@@ -2,23 +2,23 @@
 require("globals.php");
 $CurrentTime=time();
 $PlayerCount=$db->fetch_single($db->query("SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` = {$CurrentTime}"));
-echo "<h3>The Infirmary</h3><hr />
-<small>There are currently " . number_format($PlayerCount) . " players in the infirmary.</small>
+echo "<h3>{$lang['DUNGINFIRM_TITLE1']}</h3><hr />
+<small>{$lang['DUNGINFIRM_INFO']} " . number_format($PlayerCount) . " {$lang['DUNGINFIRM_INFO2']}</small>
 <hr />
 <table class='table table-hover table-bordered'>
 	<thead>
 		<tr>
 			<th>
-				User [ID]
+				{$lang['DUNGINFIRM_TD1']}
 			</th>
 			<th>
-				Reason
+				{$lang['DUNGINFIRM_TD2']}
 			</th>
 			<th>
-				Check-in Time
+				{$lang['DUNGINFIRM_TD3']}
 			</th>
 			<th>
-				Check-out Time
+				{$lang['DUNGINFIRM_TD4']}
 			</th>
 		</tr>
 	</thead>
@@ -36,10 +36,10 @@ while ($Infirmary=$db->fetch_row($query))
 				{$Infirmary['infirmary_reason']}
 			</td>
 			<td>
-				" . date("F j, Y, g:i:s a", $Infirmary['infirmary_in']) . "
+				" . DateTime_Parse($Infirmary['infirmary_in']) . "
 			</td>
 			<td>
-				" . date("F j, Y, g:i:s a", $Infirmary['infirmary_out']) . "
+				" . DateTime_Parse($Infirmary['infirmary_out']) . "
 			</td>
 		</tr>";
 }

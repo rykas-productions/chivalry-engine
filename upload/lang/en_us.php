@@ -1252,4 +1252,15 @@ $lang['ANNOUNCEMENTS_TEXT']="Announcement Text";
 $lang['ANNOUNCEMENTS_READ']="Read";
 $lang['ANNOUNCEMENTS_UNREAD']="Unread";
 $lang['ANNOUNCEMENTS_POSTED']="Posted By:";
+
+//Dungeon and Infirmary
+$lang['DUNGINFIRM_TITLE']="Dungeon";
+$lang['DUNGINFIRM_TITLE1']="Infirmary";
+$lang['DUNGINFIRM_INFO']="There are currently";
+$lang['DUNGINFIRM_INFO1']="players in the dungeon.";
+$lang['DUNGINFIRM_INFO2']="players in the infirmary.";
+$lang['DUNGINFIRM_TD1']="User / User ID";
+$lang['DUNGINFIRM_TD2']="Reason";
+$lang['DUNGINFIRM_TD3']="Check-in Time";
+$lang['DUNGINFIRM_TD4']="Check-out Time";
 ?>
