@@ -202,36 +202,6 @@ class headers
 					$DungeonRemain=TimeUntil_Parse($DungeonOut);
 					alert('info',"{$lang["GEN_DUNG"]}","{$lang['MENU_DUNGEON1']} {$DungeonRemain}.");
 				}
-			/*if ($ir['course'] > 0)
-			{
-				if ($ir['days_left'] == 0)
-				{
-					$rewardid=array();
-					$rewardid[1]="";
-					$rewardid[2]="";
-					$rewardid[3]="";
-					$rewardid[4]="";
-					$re = $db->query( "SELECT * FROM `academy` WHERE `academyid` = '{$ir['course']}'");
-					$rewards = $db->fetch_row($re);
-					$coursename = $rewards['academyname'];
-					for ($enum = 1; $enum <= 4; $enum++)
-					{
-						if ($rewards["effect{$enum}_on"] == 'true')
-						{
-							$erewards = unserialize($rewards["effect{$enum}"]);
-							$erewards['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
-							$erewards['dir'] = ($einfo['dir'] == 'pos') ? '-' : '+';
-							$dir = $erewards['dir'];
-							$db->query("UPDATE `userstats` SET `{$erewards['stat']}`=`{$erewards['stat']}`{$dir}{$erewards['inc_amount']}{$erewards['inc_type']} WHERE `userid` = {$ir['userid']}");
-							$value = $erewards['inc_type'];
-						}
-							$rewardid[$enum]="{$dir}{$erewards['inc_amount']}{$value} in {$erewards['stat']}<br>";
-					}
-					$db->query("update `users` SET `course`='0' WHERE `userid` = '{$ir['userid']}'");
-					notification_add($ir['userid'], "You have successfully completed the course {$coursename} and been given all the effects");
-				}
-			}
-			*/
 				$time=time();
 				if (($ir['last_verified'] < ($time-900)) || ($ir['need_verify'] == 1))
 				{
