@@ -173,20 +173,20 @@ else
 					</p>
 				  </div>
 				  <div id="actions" class="tab-pane fade">
-				  <?php echo "<button type='button' class='btn btn-default' data-toggle='modal' data-target='#message' data-whatever='Admin'>Send {$r['username']} a Message</button>"; ?>
-				  <?php echo "<br /><br /><button type='button' class='btn btn-default' data-toggle='modal' data-target='#cash' data-whatever='Admin'>Send {$r['username']} {$lang['INDEX_PRIMCURR']}</button>
+				  <?php echo "<button type='button' class='btn btn-default' data-toggle='modal' data-target='#message'>{$lang['PROFILE_BTN_MSG']} {$r['username']} {$lang['PROFILE_BTN_MSG1']}</button>"; ?>
+				  <?php echo "<br /><br /><button type='button' class='btn btn-default' data-toggle='modal' data-target='#cash'>{$lang['PROFILE_BTN_SND']} {$r['username']} {$lang['INDEX_PRIMCURR']}</button>
 				  <br /><br /><form action='attack.php'>
 					<input type='hidden' name='user' value='{$r['userid']}'>
-					<input type='submit' class='btn btn-danger' value='Attack {$r['username']}'>
+					<input type='submit' class='btn btn-danger' value='{$lang['PROFILE_ATTACK']} {$r['username']}'>
 					</form><br />
 					<form action='hirespy.php'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
-						<input type='submit' class='btn btn-default' value='Spy on {$r['username']}'>
+						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_SPY']} {$r['username']}'>
 					</form>
 					<br />
 					<form action='poke.php'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
-						<input type='submit' class='btn btn-default' value='Poke {$r['username']}'>
+						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_POKE']} {$r['username']}'>
 					</form>
 				  "; ?>
 					<div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="Sending a Message">
@@ -195,17 +195,17 @@ else
 						  <div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							<div id="success"></div>
-							<h4 class="modal-title" id="ModalLabel"><?php echo "Sending {$r['username']} a Message"; ?></h4>
+							<h4 class="modal-title" id="ModalLabel"><?php echo "{$lang['PROFILE_MSG1']} {$r['username']} {$lang['PROFILE_MSG2']}"; ?></h4>
 						  </div>
 						  <div class="modal-body">
 							<form id="mailpopupForm" name="mailpopupForm" action="js/script/sendmail.php">
 							  <div class="form-group">
 								<div id="result"></div>
-								<label for="recipient-name" class="control-label">Recipient:</label>
+								<label for="recipient-name" class="control-label"><?php echo $lang['PROFILE_MSG3']; ?></label>
 								<input type="text" class="form-control" name="sendto" required="1" value="<?php echo $r['username']; ?>" id="recipient-name">
 							  </div>
 							  <div class="form-group">
-								<label for="message-text" class="control-label">Message:</label>
+								<label for="message-text" class="control-label"><?php echo $lang['PROFILE_MSG4']; ?></label>
 								<textarea class="form-control" name="msg" required="1" id="message-text"></textarea>
 							  </div>
 							
@@ -215,8 +215,8 @@ else
 						  echo"
 							<input type='hidden' name='verf' value='{$code}' />";
 							?>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<input type="submit" value="Send Message" id="sendmessage" class="btn btn-primary">
+							<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
+							<input type="submit" value="<?php echo $lang['PROFILE_MSG6']; ?>" id="sendmessage" class="btn btn-primary">
 							</form>
 						  </div>
 						</div>
@@ -228,7 +228,7 @@ else
 						  <div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							<div id="success2"></div>
-							<h4 class="modal-title" id="ModalLabel"><?php echo "Sending {$r['username']} {$lang['INDEX_PRIMCURR']}"; ?></h4>
+							<h4 class="modal-title" id="ModalLabel"><?php echo "{$lang['PROFILE_MSG1']} {$r['username']} {$lang['INDEX_PRIMCURR']}"; ?></h4>
 						  </div>
 						  <div class="modal-body">
 							<form id="cashpopupForm" name="cashpopupForm" action="js/script/sendcash.php">
@@ -237,7 +237,7 @@ else
 								<input type="hidden" name="sendto" required="1" value="<?php echo $r['userid']; ?>" id="recipient-name">
 							  </div>
 							  <div class="form-group">
-								<label for="message-text" class="control-label">Cash:</label>
+								<label for="message-text" class="control-label"><?php echo $lang['INDEX_PRIMCURR']; ?></label>
 								<input type='number' min='0' max="<?php echo $ir['primary_currency']; ?>" class="form-control" name="cash" required="1" id="message-text"></textarea>
 							  </div>
 							
@@ -247,8 +247,8 @@ else
 						  echo"
 							<input type='hidden' name='verf' value='{$code2}' />";
 							?>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<input type="submit" value="Send Cash" id="sendcash" class="btn btn-primary">
+							<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
+							<input type="submit" value="<?php echo $lang['PROFILE_CASH']; ?>" id="sendcash" class="btn btn-primary">
 							</form>
 						  </div>
 						</div>
@@ -299,33 +299,32 @@ else
 								<th>Output</th>
 							</tr>
 							<tr>
-								<td>Location</td>
+							<td>{$lang['PROFILE_STAFF_LOC']}</td>
 								<td>{$fg['city']}, {$fg['state']}, {$fg['country']}, ({$fg['isocode']})</td>
 							</tr>
 							<tr>
-								<td>Last Hit</td>
+								<td>{$lang['PROFILE_STAFF_LH']}</td>
 								<td>$r[lastip]</td>
 							</tr>
 							<tr>
-								<td>Last Login</td>
+								<td>{$lang['PROFILE_STAFF_LL']}</td>
 								<td>$r[loginip]</td>
 							</tr>
 							<tr>
-								<td>Signup</td>
+								<td>{$lang['PROFILE_STAFF_REGIP']}</td>
 								<td>$r[registerip]</td>
 							</tr>
 							<tr>
-								<td>Threat?</td>
+								<td>{$lang['PROFILE_STAFF_THRT']}</td>
 								<td>{$fg['threat']}</td>
 							</tr>
 							<tr>
-								<td>Risk Level<br />
-								<small>1 is low, 5 is high</small></td>
+								<td>{$lang['PROFILE_STAFF_RISK']}</td>
 								<td>{$fg['risk_level']}</td>
 							</tr>
 							<tr>
 								<td>
-									Broswer/OS
+									{$lang['PROFILE_STAFF_OS']}
 								</td>
 								<td>
 									{$r['browser']} on {$r['os']}
@@ -333,14 +332,14 @@ else
 							</tr>
 					</table>
 					<form action='staffnotes.php' method='post'>
-						Staff Notes:
+						{$lang['PROFILE_STAFF_NOTES']}
 						<br />
 						<textarea rows='7' class='form-control' name='staffnotes'>"
 							. htmlentities($r['staff_notes'], ENT_QUOTES, 'ISO-8859-1')
 							. "</textarea>
 						<br />
 						<input type='hidden' name='ID' value='{$_GET['user']}' />
-						<input type='submit' class='btn btn-default' value='Update Notes About {$r['username']}' />
+						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_STAFF_BTN']} {$r['username']}' />
 					</form>";
 					}
 					?>
