@@ -1245,4 +1245,11 @@ $lang['STAFF_MINE_EDIT_ERR']="You've selected a non-existent mine. Check your so
 $lang['STAFF_MINE_DEL_SUCCESS']="You've successfully deleted a mine";
 $lang['STAFF_MINE_DEL1']="Select a mine to delete.";
 $lang['STAFF_MINE_DEL_BTN']="Delete Mine! (No Prompt, Be Sure!)";
+
+//Announcements
+$lang['ANNOUNCEMENTS_TIME']="Time Posted";
+$lang['ANNOUNCEMENTS_TEXT']="Announcement Text";
+$lang['ANNOUNCEMENTS_READ']="Read";
+$lang['ANNOUNCEMENTS_UNREAD']="Unread";
+$lang['ANNOUNCEMENTS_POSTED']="Posted By:";
 ?>
