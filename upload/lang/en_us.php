@@ -147,6 +147,9 @@ $lang['ERROR_NONUSER'] = "Nonexistent User!";
 $lang['ERROR_NOPERM'] ="No Permission!";
 $lang['ERROR_UNKNOWN'] ="Unknown Error!";
 
+//Misc. Alerts Details
+$lang['ALERT_INSTALLER']="The installer file could not be deleted. Please be sure to delete installer.php from your website's root folder, or you will risk another user running the installer and ruining your game.";
+
 //Generic
 $lang["GEN_HERE"] = "here";
 $lang["GEN_back"] = "back";

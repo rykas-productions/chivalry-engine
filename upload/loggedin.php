@@ -1,20 +1,11 @@
 <?php
 $housequery = 1;
 require_once('globals.php');
-if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/installer.php')
-        && $ir['user_level'] == 2)
+if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/installer.php') && $ir['user_level'] == 'Admin')
 {
-    echo '
-	<span style="font-weight: bold; font-size: 42px; color: red;">
-	WARNING: you have not deleted installer.php from the server.
-	<br />
-	We suggest you do this immediately.
-	</span>
-   	';
+    alert('danger',$lang['ERROR_SECURITY'],$lang['ALERT_INSTALLER']);
 }
-$_POST['pn_update'] =
-        (isset($_POST['pn_update']))
-                ? strip_tags(stripslashes($_POST['pn_update'])) : '';
+$_POST['pn_update'] = (isset($_POST['pn_update'])) ? strip_tags(stripslashes($_POST['pn_update'])) : '';
 if (!empty($_POST['pn_update']))
 {
     if (strlen($_POST['pn_update']) > 65655)
