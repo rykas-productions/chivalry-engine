@@ -7,23 +7,18 @@
 	Website: http://mastergeneral156.pcriot.com/
 */
 // Change to true to show the user more information (for development)
-define('DEBUG', false);
+define('DEBUG', true);
 
 function error_critical($human_error, $debug_error, $action, $context = array())
 {
 	global $userid;
-    // Clear anything that was going to be shown
     ob_get_clean();
-    // Setup a new error
     header('HTTP/1.1 500 Internal Server Error');
-    // If we can, gracefully show them an error message
-    // including the game's name. If not, just say
-    // "Internal Server Error"
     global $set;
 	?>
 	<!DOCTYPE html>
-<html lang="en">
-<head>
+	<html lang="en">
+	<head>
 	<center>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,9 +26,6 @@ function error_critical($human_error, $debug_error, $action, $context = array())
     <meta name="description" content="">
     <meta name="author" content="">
 	<meta name="theme-color" content="#000000">
-	<noscript>
-		<meta http-equiv="refresh" content="0;url=no-script.php">
-	</noscript>
 
     <?php echo "<title>{$set['WebsiteName']} - Critical Error</title>"; ?>
 
@@ -64,7 +56,7 @@ function error_critical($human_error, $debug_error, $action, $context = array())
 </head>
 	
 	<?php
-    if (isset($set) && is_array($set) && array_key_exists('game_name', $set))
+    if (isset($set) && is_array($set) && array_key_exists('WebsiteName', $set))
     {
         echo "<h1>{$set['WebsiteName']} - Critical Error</h1>";
     }
@@ -97,14 +89,12 @@ function error_critical($human_error, $debug_error, $action, $context = array())
             echo '<br />' . $human_error;
         }
     }
+	file_put_contents('error_log.txt', print_r(($debug_error . "\r"), true), FILE_APPEND);
     exit;
 }
 
-function error_php($errno, $errstr, $errfile = '', $errline = 0,
-        $errcontext = array())
+function error_php($errno, $errstr, $errfile = '', $errline = 0, $errcontext = array())
 {
-    // What's happened?
-    // If it's a PHP warning or user error/warning, don't go further - indicates bad code, unsafe
     if ($errno == E_WARNING)
     {
         error_critical('',
@@ -135,10 +125,8 @@ function error_php($errno, $errstr, $errfile = '', $errline = 0,
     }
     else
     {
-        // Only do anything if DEBUG is on, now
         if (DEBUG)
         {
-            // Determine the name to display from the error type
             $errname = 'Unknown Error';
             switch ($errno)
             {
@@ -150,10 +138,10 @@ function error_php($errno, $errstr, $errfile = '', $errline = 0,
                 break;
             case 8192:
                 $errname = 'PHP Deprecation Notice';
-                break; // E_DEPRECATED [since 5.3]
+                break;
             case 16384:
                 $errname = 'User Deprecation Notice';
-                break; // E_USER_DEPRECATED [since 5.3]
+                break;
             }
             echo '<pre>A non-critical error has occurred. Page execution will continue. '
                     . 'Below are the details:<br /><strong>' . $errname
