@@ -87,7 +87,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0)
     header("Location: {$login_url}");
     exit;
 }
-if(isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > 900))
+if(isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > 1800))
 {
 	header("Location: ../logout.php");
 	exit;
