@@ -20,7 +20,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 		<tbody>
 			<tr>
 				<th>
-					PHP Version Detected
+					{$lang['STAFF_IDX_PHP']}
 				</th>
 				<td>
 					{$PHPVersion}
@@ -28,7 +28,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 			</tr>
 			<tr>
 				<th>
-					Database Version
+					{$lang['STAFF_IDX_DB']}
 				</th>
 				<td>
 					{$MySQLIVersion}
@@ -36,25 +36,25 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 			</tr>
 			<tr>
 				<th>
-					Chivalry Engine Version Number
+					{$lang['STAFF_IDX_CENGINE']}
 				</th>
 				<td>
-					{$set['Version_Number']} (Build Number: {$set['BuildNumber']})
+					{$set['Version_Number']}
 				</td>
 			</tr>
 			<tr>
 				<th>
-					Chivalry Engine Update?
+					{$lang['STAFF_IDX_CE_UP']}
 				</th>
 				<td>
 					<iframe width='100%' height='35' style='border:none' src='http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}'>
-						Your browser does not support iframes...
+						{$lang['STAFF_IDX_IFRAME']}
 					</iframe>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					API Version
+					{$lang['STAFF_IDX_API']}
 				</th>
 				<td>
 					{$api->SystemReturnAPIVersion()}
@@ -63,88 +63,85 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 		</tbody>
 	</table>
 	<hr />";
-		echo"Admin<br />
+		echo"{$lang['STAFF_IDX_ADMIN_TITLE']}<br />
 		<ul class='nav nav-tabs nav-justified'>
 			<li>
-				<a data-toggle='tab' href='#ADMIN'>Admin</a>
+				<a data-toggle='tab' href='#ADMIN'>{$lang['STAFF_IDX_ADMIN_LI']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#MODULES'>Modules</a>
+				<a data-toggle='tab' href='#MODULES'>{$lang['STAFF_IDX_ADMIN_LI1']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#USERS'>Users</a>
+				<a data-toggle='tab' href='#USERS'>{$lang['STAFF_IDX_ADMIN_LI2']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#ITEMS'>Items</a>
+				<a data-toggle='tab' href='#ITEMS'>{$lang['STAFF_IDX_ADMIN_LI3']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#SHOPS'>Shops</a>
+				<a data-toggle='tab' href='#SHOPS'>{$lang['STAFF_IDX_ADMIN_LI4']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#ACADEMY'>Academy</a>
+				<a data-toggle='tab' href='#BOTS'>{$lang['STAFF_IDX_ADMIN_LI6']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#BOTS'>NPCs</a>
+				<a data-toggle='tab' href='#JOBS'>{$lang['STAFF_IDX_ADMIN_LI7']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#JOBS'>Jobs</a>
+				<a data-toggle='tab' href='#POLL'>{$lang['STAFF_IDX_ADMIN_LI8']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#POLL'>Polling</a>
+				<a data-toggle='tab' href='#TOWN'>{$lang['STAFF_IDX_ADMIN_LI9']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#TOWN'>Towns</a>
-			</li>
-			<li>
-				<a data-toggle='tab' href='#ESTATES'>Estates</a>
+				<a data-toggle='tab' href='#ESTATES'>{$lang['STAFF_IDX_ADMIN_LI10']}</a>
 			</li>
 		</ul>
 		<div class='tab-content'>
 			<div id='ADMIN' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
-						<a href='staff_settings.php?action=basicset'>Game Settings</a><br />
-						<a href='staff_settings.php?action=announce'>Create an Announcement</a><br />
-						<a href='staff_settings.php?action=diagnostics'>Game Diagnostics</a><br />
-						<a href='staff_settings.php?action=restore'>Restore Users</a><br />
+						<a href='staff_settings.php?action=basicset'>{$lang['STAFF_IDX_ADMIN_TAB1']}</a><br />
+						<a href='staff_settings.php?action=announce'>{$lang['STAFF_IDX_ADMIN_TAB2']}</a><br />
+						<a href='staff_settings.php?action=diagnostics'>{$lang['STAFF_IDX_ADMIN_TAB3']}</a><br />
+						<a href='staff_settings.php?action=restore'>{$lang['STAFF_IDX_ADMIN_TAB4']}</a><br />
 					</div>
 				</div>
 			</div>
 			<div id='MODULES' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
-						<a href='staff_criminal.php'>Crimes</a>
+						<a href='staff_criminal.php'>{$lang['STAFF_IDX_MODULES_TAB1']}</a>
 					</div>
 				</div>
 			</div>
 			<div id='USERS' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
-						<a href='staff_users.php?action=createuser'>Create User</a><br />
-						<a href='staff_users.php?action=edituser'>Edit User</a><br />
-						<a href='staff_users.php?action=deleteuser'>Delete User</a><br />
-						<a href='staff_users.php?action=logout'>Force Logout</a><br />
-						<a href='staff_users.php?action=changepw'>Change User's Password</a><br />
+						<a href='staff_users.php?action=createuser'>{$lang['STAFF_IDX_USERS_TAB1']}</a><br />
+						<a href='staff_users.php?action=edituser'>{$lang['STAFF_IDX_USERS_TAB2']}</a><br />
+						<a href='staff_users.php?action=deleteuser'>{$lang['STAFF_IDX_USERS_TAB3']}</a><br />
+						<a href='staff_users.php?action=logout'>{$lang['STAFF_IDX_USERS_TAB4']}</a><br />
+						<a href='staff_users.php?action=changepw'>{$lang['STAFF_IDX_USERS_TAB5']}</a><br />
 					</div>
 				</div>
 			</div>
 			<div id='ITEMS' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
-						<a href='staff_items.php?action=createitmgroup'>Create Item Group</a><br />
-						<a href='staff_items.php?action=create'>Create Item</a><br />
-						<a href='staff_items.php?action=delete'>Delete Item</a><br />
-						<a href='staff_items.php?action=edit'>Edit Item</a><br />
-						<a href='staff_items.php?action=giveitem'>Give Item</a><br />
+						<a href='staff_items.php?action=createitmgroup'>{$lang['STAFF_IDX_ITEMS_TAB1']}</a><br />
+						<a href='staff_items.php?action=create'>{$lang['STAFF_IDX_ITEMS_TAB2']}</a><br />
+						<a href='staff_items.php?action=delete'>{$lang['STAFF_IDX_ITEMS_TAB3']}</a><br />
+						<a href='staff_items.php?action=edit'>{$lang['STAFF_IDX_ITEMS_TAB4']}</a><br />
+						<a href='staff_items.php?action=giveitem'>{$lang['STAFF_IDX_ITEMS_TAB5']}</a><br />
 					</div>
 				</div>
 			</div>
 			<div id='SHOPS' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
-						<a href='staff_shops.php?action=newshop'>Create Shop</a><br />
-						<a href='staff_shops.php?action=delshop'>Delete Shop</a><br />
-						<a href='staff_shops.php?action=newitem'>Add Stock to Shop</a><br />
+						<a href='staff_shops.php?action=newshop'>{$lang['STAFF_IDX_SHOPS_TAB1']}</a><br />
+						<a href='staff_shops.php?action=delshop'>{$lang['STAFF_IDX_SHOPS_TAB2']}</a><br />
+						<a href='staff_shops.php?action=newitem'>{$lang['STAFF_IDX_SHOPS_TAB3']}</a><br />
 					</div>
 				</div>
 			</div>
@@ -158,8 +155,8 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 			<div id='ACADEMY' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
-						<a href='staff_academy.php?action=addacademy'>Add Academy Course</a><br />
-						<a href='staff_academy.php?action=delacademy'>Delete Academy Course</a><br />
+						<a href='staff_academy.php?action=addacademy'>{$lang['STAFF_IDX_NPC_TAB1']}</a><br />
+						<a href='staff_academy.php?action=delacademy'>{$lang['STAFF_IDX_NPC_TAB2']}</a><br />
 					</div>
 				</div>
 			</div>
@@ -200,57 +197,57 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 	}
 	if ($api->UserMemberLevelGet($userid,'assistant'))
 	{
-		echo "Assistant<br />
+		echo "{$lang['STAFF_IDX_ASSIST_TITLE']}<br />
 		<ul class='nav nav-tabs nav-justified'>
 			<li>
-				<a data-toggle='tab' href='#LOGS'>Logs</a>
+				<a data-toggle='tab' href='#LOGS'>{$lang['STAFF_IDX_ASSIST_LI']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#PERMISSION'>Permissions</a>
+				<a data-toggle='tab' href='#PERMISSION'>{$lang['STAFF_IDX_ASSIST_LI1']}</a>
 			</li>
 			<li>
-				<a data-toggle='tab' href='#MINES'>Mining</a>
+				<a data-toggle='tab' href='#MINES'>{$lang['STAFF_IDX_ASSIST_LI2']}</a>
 			</li>
 		</ul>
 		<div class='tab-content'>
 			<div id='LOGS' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
-						<a href='staff_logs.php?action=alllogs'>Game Logs</a><br />
-						<a href='staff_logs.php?action=userlogs'>User Logs</a><br />
-						<a href='staff_logs.php?action=traininglogs'>Training Logs</a><br />
-						<a href='staff_logs.php?action=attacklogs'>Attack Logs</a><br />
-						<a href='staff_logs.php?action=loginlogs'>Login Logs</a><br />
-						<a href='staff_logs.php?action=itemselllogs'>Item Sell Logs</a><br />
-						<a href='staff_logs.php?action=equiplogs'>Equip Logs</a><br />
-						<a href='staff_logs.php?action=banklogs'>Banking Logs</a><br />
-						<a href='staff_logs.php?action=crimelogs'>Criminal Logs</a><br />
-						<a href='staff_logs.php?action=itemuselogs'>Item Use Logs</a><br />
-						<a href='staff_logs.php?action=itembuylogs'>Item Buy Logs</a><br />
-						<a href='staff_logs.php?action=itemmarketlogs'>Item Market Logs</a><br />
-						<a href='staff_logs.php?action=stafflogs'>Staff Logs</a><br />
-						<a href='staff_logs.php?action=spylogs'>Travel Logs</a><br />
-						<a href='staff_logs.php?action=verifylogs'>Verification Logs</a><br />
-						<a href='staff_logs.php?action=spylogs'>Spy Attempt Logs</a><br />
-						<a href='staff_logs.php?action=gamblinglogs'>Gambling Logs</a><br />
+						<a href='staff_logs.php?action=alllogs'>{$lang['STAFF_IDX_LOGS_TAB1']}</a><br />
+						<a href='staff_logs.php?action=userlogs'>{$lang['STAFF_IDX_LOGS_TAB2']}</a><br />
+						<a href='staff_logs.php?action=traininglogs'>{$lang['STAFF_IDX_LOGS_TAB3']}</a><br />
+						<a href='staff_logs.php?action=attacklogs'>{$lang['STAFF_IDX_LOGS_TAB4']}</a><br />
+						<a href='staff_logs.php?action=loginlogs'>{$lang['STAFF_IDX_LOGS_TAB5']}</a><br />
+						<a href='staff_logs.php?action=equiplogs'>{$lang['STAFF_IDX_LOGS_TAB6']}</a><br />
+						<a href='staff_logs.php?action=banklogs'>{$lang['STAFF_IDX_LOGS_TAB7']}</a><br />
+						<a href='staff_logs.php?action=crimelogs'>{$lang['STAFF_IDX_LOGS_TAB8']}</a><br />
+						<a href='staff_logs.php?action=itemuselogs'>{$lang['STAFF_IDX_LOGS_TAB9']}</a><br />
+						<a href='staff_logs.php?action=itembuylogs'>{$lang['STAFF_IDX_LOGS_TAB10']}</a><br />
+						<a href='staff_logs.php?action=itemselllogs'>{$lang['STAFF_IDX_LOGS_TAB17']}</a><br />
+						<a href='staff_logs.php?action=itemmarketlogs'>{$lang['STAFF_IDX_LOGS_TAB11']}</a><br />
+						<a href='staff_logs.php?action=stafflogs'>{$lang['STAFF_IDX_LOGS_TAB12']}</a><br />
+						<a href='staff_logs.php?action=spylogs'>{$lang['STAFF_IDX_LOGS_TAB13']}</a><br />
+						<a href='staff_logs.php?action=verifylogs'>{$lang['STAFF_IDX_LOGS_TAB14']}</a><br />
+						<a href='staff_logs.php?action=spylogs'>{$lang['STAFF_IDX_LOGS_TAB15']}</a><br />
+						<a href='staff_logs.php?action=gamblinglogs'>{$lang['STAFF_IDX_LOGS_TAB16']}</a><br />
 					</div>
 				</div>
 			</div>
 			<div id='PERMISSION' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
-						<a href='staff_perms.php?action=viewperm'>View User's Permissions</a><br />
-						<a href='staff_perms.php?action=resetperm'>Reset User's Permissions</a><br />
-						<a href='staff_perms.php?action=editperm'>Edit Permissions</a>
+						<a href='staff_perms.php?action=viewperm'>{$lang['STAFF_IDX_PERM_TAB1']}</a><br />
+						<a href='staff_perms.php?action=resetperm'>{$lang['STAFF_IDX_PERM_TAB2']}</a><br />
+						<a href='staff_perms.php?action=editperm'>{$lang['STAFF_IDX_PERM_TAB3']}</a>
 					</div>
 				</div>
 			</div>
 			<div id='MINES' class='tab-pane fade in'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
-						<a href='staff_mine.php?action=addmine'>Add a Mine</a><br />
-						<a href='staff_mine.php?action=editmine'>Edit a Mine</a><br />
-						<a href='staff_mine.php?action=delmine'>Delete a Mine</a>
+						<a href='staff_mine.php?action=addmine'>{$lang['STAFF_IDX_MINE_TAB1']}</a><br />
+						<a href='staff_mine.php?action=editmine'>{$lang['STAFF_IDX_MINE_TAB2']}</a><br />
+						<a href='staff_mine.php?action=delmine'>{$lang['STAFF_IDX_MINE_TAB3']}</a>
 					</div>
 				</div>
 			</div>
@@ -259,10 +256,10 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 	}
 	if ($api->UserMemberLevelGet($userid,'forum moderator'))
 	{
-		echo "Forum Moderator<br />
+		echo "{$lang['STAFF_IDX_FM_TITLE']}<br />
 		<ul class='nav nav-tabs nav-justified'>
-		<li><a data-toggle='tab' href='#PUNISH'>Punishments</a></li>
-		<li><a data-toggle='tab' href='#FORUMS'>Forums</a></li>
+		<li><a data-toggle='tab' href='#PUNISH'>{$lang['STAFF_IDX_FM_LI']}</a></li>
+		<li><a data-toggle='tab' href='#FORUMS'>{$lang['STAFF_IDX_FM_LI1']}</a></li>
 		</ul>
 		<div class='tab-content'>
 			<div id='PUNISH' class='tab-pane fade in'>
@@ -287,14 +284,22 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 	{
 		echo"
 				<hr />
-			<h3>Last 20 Staff Actions</h3><hr />
+			<h3>{$lang['STAFF_IDX_ACTIONS']}</h3><hr />
 			<table class='table table-bordered table-hover'>
 					<thead>
 					<tr>
-						<th>Staff</th>
-						<th>Action</th>
-						<th>Time</th>
-						<th>IP</th>
+						<th>
+							{$lang['STAFF_IDX_ACTIONS_TH']}
+						</th>
+						<th>
+							{$lang['STAFF_IDX_ACTIONS_TH1']}
+						</th>
+						<th>
+							{$lang['STAFF_IDX_ACTIONS_TH2']}
+						</th>
+						<th>
+							{$lang['STAFF_IDX_ACTIONS_TH3']}
+						</th>
 					</tr>
 					</thead>
 					<tbody>";
@@ -306,16 +311,23 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 							 ON `s`.`log_user` = `u`.`userid`
 							 WHERE `log_type` = 'staff'
 							 ORDER BY `s`.`log_time` DESC
-							 LIMIT 20");
+							 LIMIT 15");
 			while ($r = $db->fetch_row($q))
 			{
 				echo "
 				<tr>
-					<td><a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]</td>
-					<td>{$r['log_text']}</td>
-					<td>" . date('F j Y g:i:s a', $r['log_time'])
-						. "</td>
-					<td>{$r['log_ip']}</td>
+					<td>
+						" . DateTime_Parse($r['log_time']) . "
+					</td>
+					<td>
+						<a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]
+					</td>
+					<td>
+						{$r['log_text']}
+					</td>
+					<td>
+						{$r['log_ip']}
+					</td>
 				</tr>
 				";
 			}
