@@ -5,17 +5,18 @@ if (strpos($_SERVER['PHP_SELF'], "globals_nonauth.php") !== false)
 }
 session_name('CENGINE');
 @session_start();
-if(isSet($_POST['lang']))
+header('X-Frame-Options: SAMEORIGIN');
+if(isset($_POST['lang']))
 {
 	$lang = $_POST['lang'];
 	$_SESSION['lang'] = $lang;
 	setcookie('lang', $lang, time() + (3600 * 24 * 30));
 }
-else if(isSet($_SESSION['lang']))
+else if(isset($_SESSION['lang']))
 {
 	$lang = $_SESSION['lang'];
 }
-else if(isSet($_COOKIE['lang']))
+else if(isset($_COOKIE['lang']))
 {
 	$lang = $_COOKIE['lang'];
 }

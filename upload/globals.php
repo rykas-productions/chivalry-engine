@@ -5,7 +5,7 @@ if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false)
 }
 session_name('CENGINE');
 session_start();
-header('Content-Type: event-stream');
+header('X-Frame-Options: SAMEORIGIN');
 
 if(isset($_POST['lang']))
 {
