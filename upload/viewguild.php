@@ -41,6 +41,9 @@ else
 	case "atklogs":
         atklogs();
         break;
+	case "staff":
+        staff();
+        break;
 	default:
 		home();
 		break;
@@ -291,7 +294,7 @@ function members()
 			</th>
     	</tr>";
     $q = $db->query("SELECT `userid`, `username`, `level`, `display_pic` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` DESC");
-    $csrf = request_csrf_html('yourguild_kickuser');
+    $csrf = request_csrf_html('guild_kickuser');
     while ($r = $db->fetch_row($q))
     {
         echo "
@@ -335,7 +338,7 @@ function staff_kick()
     global $db,$userid,$ir,$gd,$lang,$api,$h;
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
     {
-        if (!isset($_POST['verf']) || !verify_csrf_code("yourguild_kickuser", stripslashes($_POST['verf'])))
+        if (!isset($_POST['verf']) || !verify_csrf_code("guild_kickuser", stripslashes($_POST['verf'])))
 		{
 			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
 			die($h->endpage());
@@ -427,11 +430,11 @@ function atklogs()
 			WHERE (`u`.`guild` = {$ir['guild']}) AND log_type = 'attacking'
 			ORDER BY `log_time` DESC
 			LIMIT 50");
-    echo "<b>{$lang['GUILD_ATKLOGS_INFO']}</b><br />
+    echo "<b>{$lang['VIEWGUILD_ATKLOGS_INFO']}</b><br />
 	<table class='table table-bordered'>
 		<tr>
-			<th>{$lang['GUILD_ATKLOGS_TD1']}</th>
-			<th>{$lang['GUILD_ATKLOGS_TD2']}</th>
+			<th>{$lang['VIEWGUILD_ATKLOGS_TD1']}</th>
+			<th>{$lang['VIEWGUILD_ATKLOGS_TD2']}</th>
 		</tr>";
     while ($r = $db->fetch_row($atks))
     {
@@ -445,5 +448,182 @@ function atklogs()
     }
     $db->free_result($atks);
     echo "</table>";
+}
+function staff()
+{
+	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
+    {
+        if (!isset($_GET['act2']))
+        {
+            $_GET['act2'] = 'idx';
+        }
+        switch ($_GET['act2'])
+        {
+			case "idx":
+				staff_idx();
+				break;
+			case "apps":
+				staff_apps();
+				break;
+			default:
+				staff_idx();
+				break;
+        }
+    }
+    else
+    {
+        alert('danger',$lang['ERROR_NOPERM'],$lang['VIEWGUILD_STAFF_ERROR']);
+        die($h->endpage());
+    }
+}
+function staff_idx()
+{
+	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	echo "<table class='table table-bordered'>
+	<tr>
+		<td>
+			<b>{$lang['VIEWGUILD_SUMMARY_COOWNER']}</b><br />
+			<a href='?action=staff&act2=apps'>{$lang['VIEWGUILD_STAFF_IDX_APP']}</a>
+		</td>";
+	if ($gd['guild_owner'] == $userid)
+	{
+		echo "
+		<td>
+			<b>{$lang['VIEWGUILD_SUMMARY_OWNER']}</b>
+		</td>";
+	}
+	echo "</tr></table>";
+}
+function staff_apps()
+{
+	global $db,$userid,$ir,$gd,$lang,$api,$h;
+    $_POST['app'] = (isset($_POST['app']) && is_numeric($_POST['app'])) ? abs(intval($_POST['app'])) : '';
+    $what = (isset($_POST['what']) && in_array($_POST['what'], array('accept', 'decline'), true)) ? $_POST['what'] : '';
+    if (!empty($_POST['app']) && !empty($what))
+    {
+        /*if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_apps", stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}*/
+        $aq =
+                $db->query(
+                        "SELECT `ga_user`
+                         FROM `guild_applications`
+                         WHERE `ga_id` = {$_POST['app']}
+                         AND `ga_guild` = {$gd['guild_id']}");
+        if ($db->num_rows($aq) > 0)
+        {
+            $appdata = $db->fetch_row($aq);
+            if ($what == 'decline')
+            {
+                $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
+                notification_add($appdata['ga_user'],"We regret to inform you that your application to join the {$gd['guild_name']} guild was declined.");
+				$event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
+									has declined <a href='profile.php?user={$appdata['ga_user']}'>
+									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
+									application to join the guild.");
+                $db->query(
+                        "INSERT INTO `guild_notifications`
+                         VALUES (NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
+                alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_APP_DENY_TEXT']);
+            }
+            else
+            {
+                $cnt = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
+                if ($gd['guild_capacity'] <= $db->fetch_single($cnt))
+                {
+                    $db->free_result($cnt);
+                    alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_APP_ACC_ERR']);
+                    die($h->endpage());
+                }
+                else if ($appdata['guild'] != 0)
+                {
+                    $db->free_result($cnt);
+                    alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_APP_ACC_ERR1']);
+                    die($h->endpage());
+                }
+                $db->free_result($cnt);
+                $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
+                notification_add($appdata['ga_user'], "Your application to join the {$gd['guild_name']} guild was accepted.");
+                $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
+									has accepted <a href='profile.php?user={$appdata['ga_user']}'>
+									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
+									application to join the guild.");
+                $db->query("INSERT INTO `guild_notifications` 
+							VALUES (NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
+                $db->query(
+                        "UPDATE `users`
+                         SET `guild` = {$gd['guild_id']}
+                         WHERE `userid` = {$appdata['ga_user']}");
+                alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_APP_ACC_SUCC']);
+            }
+        }
+        else
+        {
+            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_APP_WOT']);
+        }
+        $db->free_result($aq);
+    }
+    else
+    {
+        echo "
+        <b>{$lang['VIEWGUILD_STAFF_IDX_APP']}</b>
+        <br />
+        <table class='table table-bordered table-striped'>
+        		<tr>
+        			<th>{$lang['VIEWGUILD_STAFF_APP_TH0']}</th>
+        			<th>{$lang['VIEWGUILD_STAFF_APP_TH1']}</th>
+					<th>{$lang['VIEWGUILD_STAFF_APP_TH2']}</th>
+        			<th>{$lang['VIEWGUILD_STAFF_APP_TH3']}</th>
+        			<th>{$lang['VIEWGUILD_STAFF_APP_TH4']}</th>
+        		</tr>
+   		";
+        $q =
+                $db->query(
+                        "SELECT *
+                         FROM `guild_applications`
+                         WHERE `ga_guild` = {$gd['guild_id']}
+						 ORDER BY `ga_time` DESC");
+        $csrf = request_csrf_html('guild_staff_apps');
+        while ($r = $db->fetch_row($q))
+        {
+            $r['ga_text'] = htmlentities($r['ga_text'], ENT_QUOTES, 'ISO-8859-1', false);
+            echo "
+            <tr>
+            	<td>
+					" . DateTime_Parse($r['ga_time']) . "
+            	</td>
+            	<td>
+					<a href='profile.php?user={$r['ga_user']}'>" . $api->SystemUserIDtoName($r['ga_user']) . "</a>
+            		[{$r['ga_user']}]
+				</td>
+            	<td>
+					" . $api->UserInfoGet($r['ga_user'], 'level') . "
+				</td>
+				<td>
+					{$r['ga_text']}
+				</td>
+            	<td>
+            		<form action='?action=staff&act2=apps' method='post'>
+            			<input type='hidden' name='app' value='{$r['ga_id']}' />
+            			<input type='hidden' name='what' value='accept' />
+            			{$csrf}
+            			<input class='btn btn-success' type='submit' value='{$lang['VIEWGUILD_STAFF_APP_BTN']}' />
+            		</form>
+					<br />
+            		<form action='?action=staff&act2=apps' method='post'>
+            			<input type='hidden' name='app' value='{$r['ga_id']}' />
+            			<input type='hidden' name='what' value='decline' />
+            			{$csrf}
+            			<input class='btn btn-danger' type='submit' value='{$lang['VIEWGUILD_STAFF_APP_BTN1']}' />
+            		</form>
+            	</td>
+            </tr>
+               ";
+        }
+        echo "</table>";
+    }
 }
 $h->endpage();

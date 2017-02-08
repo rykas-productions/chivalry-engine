@@ -938,9 +938,6 @@ $lang['GUILD_APP_BTN']="Submit Application";
 $lang['GUILD_APP_ERROR1']="You have already sent an application to join this guild. Please wait until you get a response before sending in another.";
 $lang['GUILD_APP_SUCC']="You have successfully sent in your application to join this guild!";
 $lang['GUILD_VIEW_DESC']="Guild's Description";
-$lang['GUILD_ATKLOGS_INFO']="This table lists the last 50 outgoing attacks from your guild.";
-$lang['GUILD_ATKLOGS_TD1']="Time";
-$lang['GUILD_ATKLOGS_TD2']="Attack Info";
 
 //Staff rules
 $lang['STAFF_RULES_ADD_FORM']="Use this form to add rules into the game. Be clear and concise. The more difficult language and terminology you use, the less people may understand.";
@@ -969,8 +966,8 @@ $lang['VIEWGUILD_HOME_EVENT']="Last 10 Guild Events";
 $lang['VIEWGUILD_HOME_EVENTTEXT']="Event Text";
 $lang['VIEWGUILD_HOME_EVENTTIME']="Event Time";
 $lang['VIEWGUILD_SUMMARY_TITLE']="Guild Summary";
-$lang['VIEWGUILD_SUMMARY_OWNER']="Guild Owner";
-$lang['VIEWGUILD_SUMMARY_COOWNER']="Guild Co-Owner";
+$lang['VIEWGUILD_SUMMARY_OWNER']="Guild Leader";
+$lang['VIEWGUILD_SUMMARY_COOWNER']="Guild Co-Leader";
 $lang['VIEWGUILD_SUMMARY_MEM']="Members / Max Capacity";
 $lang['VIEWGUILD_SUMMARY_LVL']="Guild Level";
 $lang['VIEWGUILD_NA']="N/A";
@@ -995,6 +992,23 @@ $lang['VIEWGUILD_LEAVE_SUCC1']="You've decided to stay in your guild for now.";
 $lang['VIEWGUILD_LEAVE_INFO']="Are you 100% sure you wish to leave your guild? You will have to reapply if you leave and wish to come back.";
 $lang['VIEWGUILD_LEAVE_BTN']="Yes, leave!";
 $lang['VIEWGUILD_LEAVE_BTN1']="No, wait, stay!";
+$lang['VIEWGUILD_ATKLOGS_INFO']="This table lists the last 50 outgoing attacks from your guild.";
+$lang['VIEWGUILD_ATKLOGS_TD1']="Time";
+$lang['VIEWGUILD_ATKLOGS_TD2']="Attack Info";
+$lang['VIEWGUILD_STAFF_ERROR']="Only the leader and co-leader of your guild can view this area.";
+$lang['VIEWGUILD_STAFF_IDX_APP']="Application Management";
+$lang['VIEWGUILD_STAFF_APP_TH0']="Filing Time";
+$lang['VIEWGUILD_STAFF_APP_TH1']="Applicant";
+$lang['VIEWGUILD_STAFF_APP_TH2']="Level";
+$lang['VIEWGUILD_STAFF_APP_TH3']="Application Text";
+$lang['VIEWGUILD_STAFF_APP_TH4']="Actions";
+$lang['VIEWGUILD_STAFF_APP_BTN']="Accept";
+$lang['VIEWGUILD_STAFF_APP_BTN1']="Decline";
+$lang['VIEWGUILD_STAFF_APP_DENY_TEXT']="You have successfully declined this application.";
+$lang['VIEWGUILD_STAFF_APP_ACC_ERR']="Your guild does not have the capacity to accept this member. Level your guild up to get more capacity.";
+$lang['VIEWGUILD_STAFF_APP_ACC_ERR1']="This player is already in a guild.";
+$lang['VIEWGUILD_STAFF_APP_ACC_SUCC']="You have successfully accepted this user's application!";
+$lang['VIEWGUILD_STAFF_APP_WOT']="We don't know how you got here... but yeah... you're kinda not supposed to be here.";
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";
