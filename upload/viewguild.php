@@ -38,6 +38,9 @@ else
 	case "leave":
         leave();
         break;
+	case "atklogs":
+        atklogs();
+        break;
 	default:
 		home();
 		break;
@@ -412,5 +415,35 @@ function leave()
         	<input type='submit' class='btn btn-default' value='{$lang['VIEWGUILD_LEAVE_BTN1']}' />
         </form>";
 	}
+}
+function atklogs()
+{
+	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	$atks =
+            $db->query("SELECT `l`.*, `u`.`guild`, `u`.`userid` 
+			FROM `logs` as `l`
+			INNER JOIN `users` as `u`
+			ON `l`.`log_user` = `u`.`userid`
+			WHERE (`u`.`guild` = {$ir['guild']}) AND log_type = 'attacking'
+			ORDER BY `log_time` DESC
+			LIMIT 50");
+    echo "<b>{$lang['GUILD_ATKLOGS_INFO']}</b><br />
+	<table class='table table-bordered'>
+		<tr>
+			<th>{$lang['GUILD_ATKLOGS_TD1']}</th>
+			<th>{$lang['GUILD_ATKLOGS_TD2']}</th>
+		</tr>";
+    while ($r = $db->fetch_row($atks))
+    {
+        $d = DateTime_Parse($r['log_time']);
+        echo "<tr>
+        		<td>$d</td>
+        		<td>
+					" . $api->SystemUserIDtoName($r['log_user']) . " {$r['log_text']}
+        		</td>
+        	  </tr>";
+    }
+    $db->free_result($atks);
+    echo "</table>";
 }
 $h->endpage();
