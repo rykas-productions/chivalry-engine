@@ -7,7 +7,7 @@
 	Website: http://mastergeneral156.pcriot.com/
 */
 require('sglobals.php');
-echo"<h2>Staff Area</h2>
+echo"<h2>{$lang['STAFF_IDX_TITLE']}</h2>
 	<hr />";
 if ($api->UserMemberLevelGet($userid,'admin'))
 {
@@ -15,7 +15,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
     $MySQLIVersion = $db->fetch_single($versq);
     $db->free_result($versq);
 	$PHPVersion=phpversion();
-	echo"<big>Game Info</big>
+	echo"
 	<table class='table table-bordered table-hover'>
 		<tbody>
 			<tr>

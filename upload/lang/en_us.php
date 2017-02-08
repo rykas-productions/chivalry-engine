@@ -1284,6 +1284,7 @@ $lang['DUNGINFIRM_TD3']="Check-in Time";
 $lang['DUNGINFIRM_TD4']="Check-out Time";
 
 //Staff Index
+$lang['STAFF_IDX_TITLE']="Staff Panel";
 $lang['STAFF_IDX_PHP']="PHP Version";
 $lang['STAFF_IDX_DB']="Database Version";
 $lang['STAFF_IDX_CENGINE']="Chivalry Engine Version";
