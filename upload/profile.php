@@ -74,7 +74,7 @@ else
         $enemy = $db->fetch_single($enemy_q);
         $db->free_result($enemy_q);
 		$CurrentTime=time();
-		$r['daysold']=DateTime_Parse($r['registertime'], false);
+		$r['daysold']=DateTime_Parse($r['registertime'], false, true);
 		
 		$rhpperc = round($r['hp'] / $r['maxhp'] * 100);
 		echo "<h3>{$lang['PROFILE_PROFOR']} {$r['username']}</h3>";

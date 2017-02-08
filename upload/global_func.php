@@ -4,10 +4,10 @@
 	@param int $time_stamp for time since.
 	@param boolean $ago to display the "ago" after the string. (Default = true)
 */
-function DateTime_Parse($time_stamp, $ago = true)
+function DateTime_Parse($time_stamp, $ago = true, $override = false)
 {
     $time_difference = (time() - $time_stamp);
-	if ($time_difference < 86400)
+	if ($time_difference < 86400 || $override == true)
 	{
 		$unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
 		$lengths = array(60, 60, 24, 7, 4.35, 12);
