@@ -7,21 +7,27 @@
 function DateTime_Parse($time_stamp, $ago = true)
 {
     $time_difference = (time() - $time_stamp);
-    $unit =
-            array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
-    $lengths = array(60, 60, 24, 7, 4.35, 12);
-    for ($i = 0; $time_difference >= $lengths[$i]; $i++)
-    {
-        $time_difference = $time_difference / $lengths[$i];
-    }
-    $time_difference = round($time_difference, 2);
-	if ($ago == true)
+	if ($time_difference < 86400)
 	{
-		$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . ' ago';
+		$unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
+		$lengths = array(60, 60, 24, 7, 4.35, 12);
+		for ($i = 0; $time_difference >= $lengths[$i]; $i++)
+		{
+			$time_difference = $time_difference / $lengths[$i];
+		}
+		$time_difference = round($time_difference, 2);
+		if ($ago == true)
+		{
+			$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . ' ago';
+		}
+		else
+		{
+			$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
+		}
 	}
 	else
 	{
-		$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
+		$date=date('F j, Y, g:i:s a', $time_stamp);
 	}
     return $date;
 }
