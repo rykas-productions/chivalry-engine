@@ -506,7 +506,7 @@ EOF;
             "INSERT INTO `settings`
              VALUES(NULL, 'Password_Effort', '{$pweffort}')");
     $ins_username = $db->escape(htmlentities($adm_username, ENT_QUOTES, 'ISO-8859-1'));
-    $encpsw = password_hash($adm_pswd, PASSWORD_BCRYPT);
+    $encpsw = password_hash(base64_encode(hash('sha256',$adm_pswd,true)), PASSWORD_DEFAULT);
     $e_encpsw = $db->escape($encpsw);
     $ins_email = $db->escape($adm_email);
 	$profilepic="https://www.gravatar.com/avatar/" . md5(strtolower(trim($ins_email))) . "?s=250.jpg";
