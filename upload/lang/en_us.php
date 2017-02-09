@@ -1358,4 +1358,17 @@ $lang['STAFF_IDX_ACTIONS_TH']="Time";
 $lang['STAFF_IDX_ACTIONS_TH1']="Staff Member";
 $lang['STAFF_IDX_ACTIONS_TH2']="Log Text";
 $lang['STAFF_IDX_ACTIONS_TH3']="IP";
+
+//User List
+$lang['USERLIST_TITLE']="Userlist";
+$lang['USERLIST_PAGE']="Pages";
+$lang['USERLIST_ORDERBY']="Order By";
+$lang['USERLIST_ORDER1']="User ID";
+$lang['USERLIST_ORDER2']="Name";
+$lang['USERLIST_ORDER3']="Level";
+$lang['USERLIST_ORDER4']="Primary Currency";
+$lang['USERLIST_ORDER5']="Ascending";
+$lang['USERLIST_ORDER6']="Descending";
+$lang['USERLIST_TH1']="Gender";
+$lang['USERLIST_TH2']="Active?";
 ?>
