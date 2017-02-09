@@ -7,17 +7,17 @@ if(isset($_POST['g-recaptcha-response']))
 	$page = stripslashes(strip_tags($_POST['page']));
 	if(!$captcha)
 	{
-		echo '<h2>Please check the the captcha form.</h2>';
-		header("Location: {$page}");
+		echo "<h2>{$lang['RECAPTCHA_EMPTY']}</h2>";
 		$api->SystemLogsAdd($userid,'verify',"Verified unsuccessfully.");
+		header("Location: {$page}");
 		exit;
 	}
 	$response=json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$set['reCaptcha_private']}&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']), true); 
 	if($response['success'] == false) 
 	{
-		echo '<h2>You failed the captcha!</h2>';
-		header("Location: {$page}");
+		echo "<h2>{$lang['RECAPTCHA_FAIL']}</h2>";
 		$api->SystemLogsAdd($userid,'verify',"Verified unsuccessfully.");
+		header("Location: {$page}");
 		exit;
 	} 
 	else 

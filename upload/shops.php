@@ -59,7 +59,7 @@ function shop()
         $shopdata = $db->fetch_row($sd);
         if ($shopdata['shopLOCATION'] == $ir['location'])
         {
-            echo "Browsing items at <b>{$shopdata['shopNAME']}...</b><br />
+            echo "{$lang['SHOPS_SHOP_INFO']} <b>{$shopdata['shopNAME']}...</b><br />
 			<table class='table table-bordered'>
 				<tr>
 					<th>{$lang['SHOPS_SHOP_TH_1']}</th>

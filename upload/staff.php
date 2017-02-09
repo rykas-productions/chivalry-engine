@@ -1,9 +1,7 @@
 <?php
 require("globals.php");
 $staff = array();
-$q =
-        $db->query(
-                "SELECT `userid`, `laston`, `username`, `user_level`
+$q = $db->query("SELECT `userid`, `laston`, `username`, `user_level`
  				 FROM `users`
  				 WHERE `user_level` IN('Admin', 'Forum Moderator', 'Assistant')
  				 ORDER BY `userid` ASC");
@@ -12,104 +10,95 @@ while ($r = $db->fetch_row($q))
     $staff[$r['userid']] = $r;
 }
 $db->free_result($q);
-echo "<h3>Admins</h3>
-<br />
+echo "<h3>{$lang['STAFFLIST_ADMIN']}</h3>
 <table class='table table-bordered table-hober'>
-<thead>
-	<th>Username [ID]</th>
-	<th>Last Seen</th>
-	<th>Online?</th>
-	<th>Contact</th>
-</thead>
+	<thead>
+		<th>
+			{$lang['USERLIST_ORDER2']} [{$lang['USERLIST_ORDER1']}]
+		</th>
+		<th>
+			{$lang['STAFFLIST_LS']}
+		</th>
+		<th>
+			{$lang['STAFFLIST_CONTACT']}
+		</th>
+	</thead>
 <tbody>";
 foreach ($staff as $r)
 {
     if ($r['user_level'] == 'Admin')
     {
-        $on =
-                ($r['laston'] >= ($_SERVER['REQUEST_TIME'] - 900))
-                        ? '<span style="color: green; font-weight:bold;">Online</span>'
-                        : '<span style="color: green; font-weight:bold;">Offline</span>';
 		echo "<tr>
 				<td>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 				</td>
 				<td>
-					" . date("F j, Y, g:i:s a", $r['laston']) . "
+					" . DateTime_Parse($r['laston']) . "
 				</td>
 				<td>
-					{$on}
-				</td>
-				<td>
-					<a href='inbox.php?action=compose&user={$r['userid']}'>Send {$r['username']} a Message</a>
+					<a href='inbox.php?action=compose&user={$r['userid']}'>{$lang['MAIL_SENDMSG']} {$lang['MAIL_SENDTO']} {$r['username']}</a>
 				</td>";
     }
 }
 echo '</table>';
-echo "<h3>Assistants</h3>
-<br />
+echo "<h3>{$lang['STAFFLIST_ASSIST']}</h3>
 <table class='table table-bordered table-hober'>
-<thead>
-	<th>Username [ID]</th>
-	<th>Last Seen</th>
-	<th>Online?</th>
-	<th>Contact</th>
-</thead>
+	<thead>
+		<th>
+			{$lang['USERLIST_ORDER2']} [{$lang['USERLIST_ORDER1']}]
+		</th>
+		<th>
+			{$lang['STAFFLIST_LS']}
+		</th>
+		<th>
+			{$lang['STAFFLIST_CONTACT']}
+		</th>
+	</thead>
 <tbody>";
 foreach ($staff as $r)
 {
     if ($r['user_level'] == 'Assistant')
     {
-        $on =
-                ($r['laston'] >= ($_SERVER['REQUEST_TIME'] - 900))
-                        ? '<span style="color: green; font-weight:bold;">Online</span>'
-                        : '<span style="color: green; font-weight:bold;">Offline</span>';
-		echo "<tr>
+        echo "<tr>
 				<td>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 				</td>
 				<td>
-					" . date("F j, Y, g:i:s a", $r['laston']) . "
+					" . DateTime_Parse($r['laston']) . "
 				</td>
 				<td>
-					{$on}
-				</td>
-				<td>
-					<a href='inbox.php?action=compose&user={$r['userid']}'>Send {$r['username']} a Message</a>
+					<a href='inbox.php?action=compose&user={$r['userid']}'>{$lang['MAIL_SENDMSG']} {$lang['MAIL_SENDTO']} {$r['username']}</a>
 				</td>";
     }
 }
 echo '</table>';
-echo "<h3>Forum Moderators</h3>
-<br />
+echo "<h3>{$lang['STAFFLIST_MOD']}</h3>
 <table class='table table-bordered table-hober'>
-<thead>
-	<th>Username [ID]</th>
-	<th>Last Seen</th>
-	<th>Online?</th>
-	<th>Contact</th>
-</thead>
+	<thead>
+		<th>
+			{$lang['USERLIST_ORDER2']} [{$lang['USERLIST_ORDER1']}]
+		</th>
+		<th>
+			{$lang['STAFFLIST_LS']}
+		</th>
+		<th>
+			{$lang['STAFFLIST_CONTACT']}
+		</th>
+	</thead>
 <tbody>";
 foreach ($staff as $r)
 {
     if ($r['user_level'] == 'Forum Moderator')
     {
-        $on =
-                ($r['laston'] >= ($_SERVER['REQUEST_TIME'] - 900))
-                        ? '<span style="color: green; font-weight:bold;">Online</span>'
-                        : '<span style="color: green; font-weight:bold;">Offline</span>';
-		echo "<tr>
+        echo "<tr>
 				<td>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 				</td>
 				<td>
-					" . date("F j, Y, g:i:s a", $r['laston']) . "
+					" . DateTime_Parse($r['laston']) . "
 				</td>
 				<td>
-					{$on}
-				</td>
-				<td>
-					<a href='inbox.php?action=compose&user={$r['userid']}'>Send {$r['username']} a Message</a>
+					<a href='inbox.php?action=compose&user={$r['userid']}'>{$lang['MAIL_SENDMSG']} {$lang['MAIL_SENDTO']} {$r['username']}</a>
 				</td>";
     }
 }

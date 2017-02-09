@@ -102,15 +102,13 @@ function name_change()
 }
 function time_change()
 {
-	global $db,$userid,$h,$ir;
-	$DefaultTimeZone=('(GMT) Greenwich Mean Time'); //Set to whatever timezone is default.
-	echo "<h3>Timezone Change</h3>";
+	global $db,$userid,$h,$ir,$lang;
+	echo "<h3>{$lang['TZ_TITLE']}</h3>";
 	// Much thanks to Tamas Pap from Stack Overflow for the list <3
 	// https://stackoverflow.com/questions/4755704/php-timezone-list
 	if (!isset($_POST['timezone']))
 	{
-		echo"Here, you may change your timezone. This will change all dates on the game for you. This won't speed up any processes. 
-		The default timezone is <u>{$DefaultTimeZone}</u>. All game-wide announcements and features will be based on this timezone.
+		echo"{$lang['TZ_INFO']}
 		<br />
 		<form method='post'>
 		<select name='timezone' class='form form-control' type='dropdown'>
@@ -149,7 +147,7 @@ function time_change()
 			<option value='Pacific/Wake'>(GMT-12:00) International Date Line West</option>
 		</select>
 		<br />
-		<input type='submit' class='btn btn-default' value='Change Timezone'>";
+		<input type='submit' class='btn btn-default' value='{$lang['TZ_BTN']}'>";
 	}
 	else
 	{
@@ -163,11 +161,11 @@ function time_change()
 		];
 		if (!in_array($_POST['timezone'],$TimeZoneArray))
 		{
-			echo "You specified an invalid timezone. Go back and try again.";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['TZ_FAIL']);
 		}
 		else
 		{
-			echo "You have successfully updated your timezome from {$ir['timezone']} to {$_POST['timezone']}.";
+			alert('success',$lang['ERROR_SUCCESS'],$lang['TZ_SUCC']);
 			$db->query("UPDATE `users` SET `timezone` = '{$_POST['timezone']}' WHERE `userid` = {$userid}");
 		}
 	}
@@ -193,11 +191,11 @@ function lang_change()
 		$LangArray=["en","es","ger","fr"];
 		if (!in_array($_POST['lang'],$LangArray))
 		{
-			echo "You specified an invalid Language. Go back and try again.";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['LANG_UPDATE']);
 		}
 		else
 		{
-			echo "You have successfully updated your language to {$_POST['lang']}.";
+			alert('success',$lang['ERROR_SUCCESS'],$lang['LANG_UPDATE2']);
 		}
 	}
 }
@@ -283,15 +281,13 @@ function pic_change()
 		echo "
 		<h3>{$lang['PIC_TITLE']}</h3>
 		<hr />
-		{$lang['PIC_NOTE']}
-		<br />
-		{$lang['PIC_NOTE2']}<br />
+		{$lang['PIC_NOTE']} {$lang['PIC_NOTE2']}<br />
 		{$lang['PIC_NEWPIC']}<br />
 		<form method='post'>
 			<input type='url' required='1' name='newpic' class='form-control' value='{$ir['display_pic']}' />
 				{$csrf}
 			<br />
-			<input type='submit' class='btn btn-default' value='Change Picture' />
+			<input type='submit' class='btn btn-default' value='{$lang['PIC_BTN']}' />
 		</form>
 		";
 	}
@@ -321,11 +317,7 @@ function pic_change()
 		$img=htmlentities($_POST['newpic'], ENT_QUOTES, 'ISO-8859-1');
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['PIC_SUCCESS']}");
 		echo "<img src='{$img}' width='250' height='250' class='img-thumbnail img-responsive'>";
-		$db->query(
-            'UPDATE `users`
-             SET `display_pic` = "' . $db->escape($npic)
-                    . '"
-             WHERE `userid` = ' . $userid);
+		$db->query("UPDATE `users` SET `display_pic` = " . $db->escape($npic) . " WHERE `userid` = ' . $userid");
 	}
 }
 function themechange()
