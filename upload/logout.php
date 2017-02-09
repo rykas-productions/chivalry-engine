@@ -14,12 +14,14 @@ if (isset($_SESSION['userid']))
     {
         require_once('globals_nonauth.php');
         alert("warning","{$lang['ERROR_GENERIC']}","{$lang['MENU_XPLOST']}");
-		$db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");
+		$db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = {$sessid}");
 		$_SESSION['attacking'] = 0;
         session_regenerate_id(true);
         session_unset();
         session_destroy();
-        die("<a href='login.php'>Continue to login...</a>");
+		$api->SystemLogsAdd($sessid,'login',"Successfully logged out and lost experience.");
+		header("Refresh:3; url=login.php");
+		exit;
     }
 }
 $api->SystemLogsAdd($sessid,'login',"Successfully logged out.");
