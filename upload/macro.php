@@ -9,6 +9,7 @@ if(isset($_POST['g-recaptcha-response']))
 	{
 		echo '<h2>Please check the the captcha form.</h2>';
 		header("Location: {$page}");
+		$api->SystemLogsAdd($userid,'verify',"Verified unsuccessfully.");
 		exit;
 	}
 	$response=json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$set['reCaptcha_private']}&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']), true); 
