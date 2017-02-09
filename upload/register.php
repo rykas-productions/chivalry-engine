@@ -335,15 +335,6 @@ $cpage = strip_tags(stripslashes($currentpage));
 						</tbody>
 				
 			<?php
-    if ($set['RegistrationCaptcha'] == 'ON')
-    {
-        echo "<tr>
-				<td colspan='3'>
-					<img src='captcha_verify.php?bgcolor=C3C3C3' /><br />
-					<input type='text' name='captcha' />
-				</td>
-			  </tr>";
-    }
     echo "<tr>
 				<td colspan='3' align='center'>
 					<input type='submit' class='btn btn-default' value='{$lang["LOGIN_REGISTER"]}' />
