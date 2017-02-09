@@ -108,12 +108,12 @@ $cpage = strip_tags(stripslashes($currentpage));
     <div class="container">
 	<?php
 	$IP = $db->escape($_SERVER['REMOTE_ADDR']);
-	/*if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
+	if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
 	{
 		alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['REG_MULTIALERT']}");
 		require('footer.php');
 		exit;
-	}*/
+	}
 	if (!isset($_GET['REF']))
     {
         $_GET['REF'] = 0;
