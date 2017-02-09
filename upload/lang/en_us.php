@@ -82,10 +82,11 @@ $lang['PW_DONE'] = "Your password has been updated successfully.";
 
 //Pic change
 $lang['PIC_TITLE']="Display Picture Change";
-$lang['PIC_NOTE']="Please note that this must be externally hosted, <a href='http://www.photobucket.com'>Photobucket</a> is our recommendation.";
+$lang['PIC_NOTE']="Please note that this must be externally hosted, <a href='https://imgur.com/'>Imgur</a> is our recommendation.";
 $lang['PIC_NOTE2']="Any images that are not 250x250 will be automatically resized.";
 $lang['PIC_NEWPIC']="Link to new picture:";
 $lang['PIC_TOOBIG']="Picture Too Large!";
+$lang['PIC_BTN']="Change Picture";
 $lang['PIC_TOOBIG2']="Your image's filesize is too large. The maximum size an image can be is 1MB. Go back and try again, please.";
 $lang['PIC_NOIMAGE']="You specified a URL that is not even an image. Go back and try again, please.";
 $lang['PIC_SUCCESS']="You have successfully updated your display picture! It is shown below.";
@@ -146,6 +147,7 @@ $lang['ERROR_SECURITY'] = "Security Error!";
 $lang['ERROR_NONUSER'] = "Nonexistent User!";
 $lang['ERROR_NOPERM'] ="No Permission!";
 $lang['ERROR_UNKNOWN'] ="Unknown Error!";
+$lang['ERROR_INFO']="Information!";
 
 //Misc. Alerts Details
 $lang['ALERT_INSTALLER']="The installer file could not be deleted. Please be sure to delete installer.php from your website's root folder, or you will risk another user running the installer and ruining your game.";
@@ -319,7 +321,7 @@ $lang['MAIL_SENDMSG']='Send Message';
 //Language menu
 $lang['LANG_INTRO']='Here you may change your language. This is not saved to your account. This is saved via a cookie. If you change devices or wipe your cookies, you will need to reset your language again. Translations may not be 100% accurate.';
 $lang['LANG_BUTTON']='Change Language';
-$lang['LANG_UPDATE']='Language Updated!';
+$lang['LANG_UPDATE']='You specified a language that is not valid.';
 $lang['LANG_UPDATE2']='You have successfully updated your language!';
 
 //Notifications page
@@ -797,6 +799,7 @@ $lang['SHOPS_SHOP_TH_1']="Item Name";
 $lang['SHOPS_SHOP_TH_2']="Price";
 $lang['SHOPS_SHOP_TH_3']="Buy";
 $lang['SHOPS_SHOP_TD_1']="Qty:";
+$lang['SHOPS_SHOP_INFO']="You begin browsing the items at";
 $lang['SHOPS_BUY_ERROR1']="You are attempting to use this file incorrectly. Be sure you have specified both an item to buy, along with a quantity.";
 $lang['SHOPS_BUY_ERROR2']="YThe item you are trying to buy doesn't exist, isn't sold in this shop or just doesn't exist!";
 $lang['SHOPS_SHOP_ERROR1']="You are trying to access a shop in a different town than you are currently in!";
@@ -1097,6 +1100,8 @@ $lang['HILOW_UNDEFINEDNUMBER']="The number from the last page wasn't defined... 
 $lang['RECAPTCHA_TITLE']="reCaptcha";
 $lang['RECAPTCHA_INFO']="This is a needed evil. Just verify that you're not a bot.";
 $lang['RECAPTCHA_BTN']="Verify";
+$lang['RECAPTCHA_EMPTY']="You cannot leave the reCaptcha form empty!";
+$lang['RECAPTCHA_FAIL']="You failed the reCaptcha. Go back and try again.";
 
 //Poke
 $lang['POKE_TITLE']="Are you sure you wanna poke";
@@ -1371,4 +1376,56 @@ $lang['USERLIST_ORDER5']="Ascending";
 $lang['USERLIST_ORDER6']="Descending";
 $lang['USERLIST_TH1']="Gender";
 $lang['USERLIST_TH2']="Active?";
+
+//Stats Page
+$lang['STATS_TITLE']="Statistics Center";
+$lang['STATS_CHART']="User Operating Systems";
+$lang['STATS_CHART1']="Gender Ratio";
+$lang['STATS_CHART2']="Class Ratio";
+$lang['STATS_CHART3']="User Browser Choice";
+$lang['STATS_TH']="Statistic";
+$lang['STATS_TH1']="Statistic Value";
+$lang['STATS_TD']="Register Players";
+$lang['STATS_TD1']="Primary Currency Withdrawn";
+$lang['STATS_TD2']="Primary Currency in Banks";
+$lang['STATS_TD3']="Total Primary Currency";
+$lang['STATS_TD4']="Secondary Currency in Circulation";
+$lang['STATS_TD5']="Primary Currency / Player (Average)";
+$lang['STATS_TD6']="Secondary Currency / Player (Average)";
+$lang['STATS_TD7']="Bank Balance / Player (Average)";
+$lang['STATS_TD8']="Registered Guilds";
+
+//Staff List
+$lang['STAFFLIST_ADMIN']="Admins";
+$lang['STAFFLIST_LS']="Last Seen";
+$lang['STAFFLIST_CONTACT']="Contact";
+$lang['STAFFLIST_ASSIST']="Assistants";
+$lang['STAFFLIST_MOD']="Forum Moderators";
+
+//Timezone Change
+$lang['TZ_TITLE']="Changing Timezone";
+$lang['TZ_BTN']="Change Timezone";
+$lang['TZ_SUCC']="You have successfully updated your timezone settings.";
+$lang['TZ_FAIL']="You have specified an invalid timezone setting.";
+$lang['TZ_INFO']="Here, you may change your timezone. This will change all dates on the game for you. This won't speed up any processes. The default timezone is <u>(GMT) Greenwich Mean Time</u>. All game-wide announcements and features will be based on this timezone.";
+
+//Newspaper
+$lang['NP_TITLE']="Newspaper";
+$lang['NP_AD']="Buy an ad";
+$lang['NP_ERROR']="There doesn't appear to be any newspaper ads. Perhaps you should <a href='?action=buyad'>buy</a> and list one?";
+$lang['NP_ADINFO']="Ad Info";
+$lang['NP_ADTEXT']="Ad Text";
+$lang['NP_ADINFO1']="Posted by";
+$lang['NP_ADSTRT']="Start Date";
+$lang['NP_ADEND']="End Date";
+$lang['NP_BUY']="Buying an Ad";
+$lang['NP_BUY_REMINDER']="Remember, buying an add is subject to the game rules. If you post something here that will break a game rule, you will be warned and your ad will be removed. If you find someone abusing the news paper, please let an admin know immediately!";
+$lang['NP_BUY_TD1']="Initial Ad Cost";
+$lang['NP_BUY_TD2']="Ad Runtime";
+$lang['NP_BUY_TD3']="Ad Text";
+$lang['NP_BUY_TD4']="Total Ad Cost";
+$lang['NP_BUY_TD5']="A higher number will rank you higher on the ad list.";
+$lang['NP_BUY_TD6']="Each day will add 1,250 Primary Currency to your cost.";
+$lang['NP_BUY_TD7']="Each character is worth 5 Primary Currency.";
+$lang['NP_BUY_BTN']="Place Ad";
 ?>
