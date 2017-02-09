@@ -1428,4 +1428,28 @@ $lang['NP_BUY_TD5']="A higher number will rank you higher on the ad list.";
 $lang['NP_BUY_TD6']="Each day will add 1,250 Primary Currency to your cost.";
 $lang['NP_BUY_TD7']="Each character is worth 5 Primary Currency.";
 $lang['NP_BUY_BTN']="Place Ad";
+
+//Smelting
+$lang['SMELT_HOME']="Blacksmith";
+$lang['SMELT_TH']="Output Item";
+$lang['SMELT_TH1']="Required Items x Quantity";
+$lang['SMELT_TH2']="Action";
+
+//Staff Smelting
+$lang['STAFF_SMELT_HOME']="Staff Blacksmith";
+$lang['STAFF_SMELT_ADD_TH']="Value";
+$lang['STAFF_SMELT_ADD_TH1']="Input";
+$lang['STAFF_SMELT_ADD_TH2']="Smelted Item";
+$lang['STAFF_SMELT_ADD_TH3']="Time to Complete";
+$lang['STAFF_SMELT_ADD_TH4']="Item Required";
+$lang['STAFF_SMELT_ADD_TH5']="Smelted Item Quantity";
+$lang['STAFF_SMELT_ADD_TH6']="Item Required Quantity";
+$lang['STAFF_SMELT_ADD_SELECT1']="Instantly";
+$lang['STAFF_SMELT_ADD_SELECT2']="Seconds";
+$lang['STAFF_SMELT_ADD_SELECT3']="Minutes";
+$lang['STAFF_SMELT_ADD_SELECT4']="Hours";
+$lang['STAFF_SMELT_ADD_SELECT5']="Days";
+$lang['STAFF_SMELT_ADD_BTN']="Add Required Item";
+$lang['STAFF_SMELT_ADD_BTN2']="Remove Required Item";
+$lang['STAFF_SMELT_ADD_BTN3']="Add Smelted Item";
 ?>
