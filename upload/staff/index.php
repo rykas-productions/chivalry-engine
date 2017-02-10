@@ -47,9 +47,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					{$lang['STAFF_IDX_CE_UP']}
 				</th>
 				<td>
-					<iframe width='100%' height='35' style='border:none' src='http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}'>
-						{$lang['STAFF_IDX_IFRAME']}
-					</iframe>
+					" . file_get_contents("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}") ."
 				</td>
 			</tr>
 			<tr>
