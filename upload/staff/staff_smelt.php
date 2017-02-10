@@ -78,7 +78,7 @@ function add()
 							{$lang['STAFF_SMELT_ADD_TH6']}
 						</th>
 						<td>
-							<input type='number' class='form-control' required='1' name='required_item_qty' value='1' min='1'>
+							<div id='otherinput1' class='inputCloned'><input type='number' class='form-control' required='1' name='required_item_qty' value='1' min='1'><br /></div>
 						</td>
 					</tr>
 				</tr>
@@ -99,37 +99,4 @@ function add()
 		</form>";
 	}
 }
-?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#btnAdd').click(function() {
-            var num     = $('.clonedInput').length;
-            var newNum  = new Number(num + 1);
-        
-            var newElem = $('#input' + num).clone().attr('id', 'input' + newNum);
-
-            newElem.children(':first').attr('id', 'required_item' + newNum).attr('name', 'required_item' + newNum);
-            
-
-            $('#input' + num).after(newElem);
-            $('#btnDel').attr('disabled','');
-
-            if (newNum == 5)
-                $('#btnAdd').attr('disabled','disabled');
-        });
-        $('#btnDel').click(function()
-		{
-            var num = $('.clonedInput').length;
-
-            $('#input' + num).remove();
-            $('#btnAdd').attr('disabled','');
-
-            if (num-1 == 1)
-                $('#btnDel').attr('disabled','disabled');
-        });
-        $('#btnDel').attr('disabled','disabled');
-    });
-</script>
-<?php
 $h->endpage();
