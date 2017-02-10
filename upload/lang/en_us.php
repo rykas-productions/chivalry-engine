@@ -1453,4 +1453,5 @@ $lang['STAFF_SMELT_ADD_BTN']="Add Required Item";
 $lang['STAFF_SMELT_ADD_BTN2']="Remove Required Item";
 $lang['STAFF_SMELT_ADD_BTN3']="Add Smelted Item";
 $lang['STAFF_SMELT_ADD_SUCC']="Smelting recipe has been added successfully.";
+$lang['STAFF_SMELT_ADD_FAIL']="Missing a required input. Go back and try again.";
 ?>

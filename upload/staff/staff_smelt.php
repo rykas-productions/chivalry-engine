@@ -21,6 +21,11 @@ function add()
 		$_POST['timetocomplete'] = (isset($_POST['timetocomplete']) && is_numeric($_POST['timetocomplete']))  ? abs(intval($_POST['timetocomplete'])) : 0;
 		$_POST['required_item'] = (isset($_POST['required_item']) && is_numeric($_POST['required_item']))  ? abs(intval($_POST['required_item'])) : 0;
 		$_POST['required_item_qty'] = (isset($_POST['required_item_qty']) && is_numeric($_POST['required_item_qty']))  ? abs(intval($_POST['required_item_qty'])) : 0;
+		if ($_POST['required_item'] == 0 || $_POST['smelted_item'] == 0 || $_POST['smelted_item_qty'] == 0 || $_POST['required_item_qty'] == 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SMELT_ADD_FAIL']);
+			die($h->endpage());
+		}
 		$items = $_POST['required_item'];
 		$qty = $_POST['required_item_qty'];
 		for($i = 1; $i <= 5; $i++) 
@@ -29,6 +34,11 @@ function add()
 			$_POST['required_item_qty'.$i] = (isset($_POST['required_item_qty'.$i]) && is_numeric($_POST['required_item_qty'.$i]))  ? abs(intval($_POST['required_item_qty'.$i])) : 0;
 			if($_POST['required_item'.$i] > 0) 
 			{
+				if ($_POST['required_item_qty'.$i] == 0)
+				{
+					alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SMELT_ADD_FAIL']);
+					die($h->endpage());
+				}
 				$items .= ",". $_POST['required_item'.$i];
 				$qty .= ",". $_POST['required_item_qty'.$i];
 			}
@@ -65,7 +75,7 @@ function add()
 						{$lang['STAFF_SMELT_ADD_TH5']}
 					</th>
 					<td>
-						<input type='number' class='form-control' required='1' name='smelt_item_qty' value='1' min='1'>
+						<input type='number' class='form-control' required='1' name='smelted_item_qty' value='1' min='1'>
 					</td>
 				</tr>
 				<tr>
