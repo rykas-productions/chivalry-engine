@@ -1741,5 +1741,39 @@ function Random($min,$max)
 function paginate($item_per_page, $current_page, $total_records, $total_pages, $page_url)
 {
     $pagination="";
-	
+}
+/*
+	Creates a dropdown for smelting recipes.
+*/
+function smelt_dropdown($ddname = 'smelt', $selected = -1)
+{
+	global $db,$api;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+            $db->query(
+                    "SELECT `smelt_id`, `smelt_output`, `smelt_qty_output`
+                     FROM `smelt_recipes`
+                     ORDER BY `smelt_id` ASC");
+    if ($selected == -1)
+    {
+        $first = 0;
+    }
+    else
+    {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q))
+    {
+		$itemname=$api->SystemItemIDtoName($r['smelt_output']);
+        $ret .= "\n<option value='{$r['smelt_id']}'";
+        if ($selected == $r['smelt_id'] || $first == 0)
+        {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['smelt_qty_output']} x {$itemname}</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
 }

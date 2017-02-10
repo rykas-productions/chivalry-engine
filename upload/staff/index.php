@@ -47,7 +47,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					{$lang['STAFF_IDX_CE_UP']}
 				</th>
 				<td>
-					" . file_get_contents("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}") ."
+					" . file_get_contents("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}") . "
 				</td>
 			</tr>
 			<tr>
@@ -206,6 +206,9 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 			<li>
 				<a data-toggle='tab' href='#MINES'>{$lang['STAFF_IDX_ASSIST_LI2']}</a>
 			</li>
+			<li>
+				<a data-toggle='tab' href='#SMELT'>{$lang['STAFF_IDX_SMELT_LIST']}</a>
+			</li>
 		</ul>
 		<div class='tab-content'>
 			<div id='LOGS' class='tab-pane fade in'>
@@ -246,6 +249,14 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_mine.php?action=addmine'>{$lang['STAFF_IDX_MINE_TAB1']}</a><br />
 						<a href='staff_mine.php?action=editmine'>{$lang['STAFF_IDX_MINE_TAB2']}</a><br />
 						<a href='staff_mine.php?action=delmine'>{$lang['STAFF_IDX_MINE_TAB3']}</a>
+					</div>
+				</div>
+			</div>
+			<div id='SMELT' class='tab-pane fade in'>
+				<div class='panel panel-default'>
+					<div class='panel-body'>
+						<a href='staff_smelt.php?action=add'>{$lang['STAFF_IDX_SMELT_TAB1']}</a><br />
+						<a href='staff_smelt.php?action=del'>{$lang['STAFF_IDX_SMELT_TAB2']}</a>
 					</div>
 				</div>
 			</div>

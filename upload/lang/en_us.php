@@ -1363,6 +1363,9 @@ $lang['STAFF_IDX_ACTIONS_TH']="Time";
 $lang['STAFF_IDX_ACTIONS_TH1']="Staff Member";
 $lang['STAFF_IDX_ACTIONS_TH2']="Log Text";
 $lang['STAFF_IDX_ACTIONS_TH3']="IP";
+$lang['STAFF_IDX_SMELT_TAB1']="Add Smelting Recipe";
+$lang['STAFF_IDX_SMELT_TAB2']="Delete Smelting Recipe";
+$lang['STAFF_IDX_SMELT_LIST']="Smelting";
 
 //User List
 $lang['USERLIST_TITLE']="Userlist";
@@ -1454,4 +1457,8 @@ $lang['STAFF_SMELT_ADD_BTN2']="Remove Required Item";
 $lang['STAFF_SMELT_ADD_BTN3']="Add Smelted Item";
 $lang['STAFF_SMELT_ADD_SUCC']="Smelting recipe has been added successfully.";
 $lang['STAFF_SMELT_ADD_FAIL']="Missing a required input. Go back and try again.";
+$lang['STAFF_SMELT_DEL_FORM']="Use this form to delete a smelting recipe.";
+$lang['STAFF_SMELT_DEL_TH']="Smelting Recipe";
+$lang['STAFF_SMELT_DEL_BTN']="Delete Recipe";
+$lang['STAFF_SMELT_DEL_SUCC']="Smelting recipe has been successfully removed from the game.";
 ?>

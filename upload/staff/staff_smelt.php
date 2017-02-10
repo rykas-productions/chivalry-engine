@@ -7,9 +7,12 @@ if (!isset($_GET['action']))
 }
 switch ($_GET['action'])
 {
-case 'add':
-    add();
-    break;
+	case 'add':
+		add();
+		break;
+	case 'del':
+		del();
+		break;
 }
 function add()
 {
@@ -129,6 +132,49 @@ function add()
 				</tr>
 			</table>
 		</form>";
+	}
+}
+function del()
+{
+	global $db,$userid,$api,$lang,$h;
+	if (isset($_POST['smelt']))
+	{
+		$_POST['smelt'] = (isset($_POST['smelt']) && is_numeric($_POST['smelt']))  ? abs(intval($_POST['smelt'])) : 0;
+		if ($_POST['smelt'] == 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SMELT_ADD_FAIL']);
+			die($h->endpage());
+		}
+		$db->query("DELETE FROM `smelt_recipes` WHERE `smelt_id` = {$_POST['smelt']}");
+		$db->query("DELETE FROM `smelt_inprogress` WHERE `sip_recipe` = {$_POST['smelt']}");
+		$api->SystemLogsAdd($userid,'staff',"Deleted a smelting recipe.");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SMELT_DEL_SUCC']);
+	}
+	else
+	{
+		echo "<form action='?action=del' method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_SMELT_DEL_FORM']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_SMELT_DEL_TH']}
+				</th>
+				<td>
+					" . smelt_dropdown() . "
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' class='btn btn-default' value='{$lang['STAFF_SMELT_DEL_BTN']}' />
+				</td>
+			</tr>
+		</table>
+		</form>
+		";
 	}
 }
 $h->endpage();
