@@ -144,7 +144,7 @@ function diagnostics()
     		<tr>
     			<td>Is Chivalry Engine up to date?</td>
     			<td>
-        			<iframe width='100%' height='35' style='border:none' src='http://mastergeneral156.pcriot.com/update-checker.php?version={$Build}'>Your browser does not support iframes...</iframe>
+        			" . file_get_contents("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}") . "
         		</td>
         	</tr>
     </table>
