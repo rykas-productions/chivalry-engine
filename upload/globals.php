@@ -197,4 +197,14 @@ if (isset($nohdr) == false || !$nohdr)
 foreach (glob("crons/*.php") as $filename) 
 { 
     include $filename; 
-} 
+}
+$time = time();
+$get = $db->query("SELECT `sip_recipe` FROM `smelt_inprogress` WHERE `sip_user` = {$userid} AND `sip_time` < {$time}");
+if($db->num_rows($get)) 
+{
+    $r = $db->fetch_single($get);
+	$r2 = $db->fetch_row($db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r}"));
+    $api->UserGiveItem($userid,$r2['smelt_output'],$r2['smelt_qty_output']);
+    notification_add($userid, "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
+    $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$userid} AND `sip_time` < {$time}");
+}

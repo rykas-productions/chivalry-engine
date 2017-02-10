@@ -205,6 +205,7 @@ $lang['EXPLORE_BANK']="Bank";
 $lang['EXPLORE_ESTATES']="Estates";
 $lang['EXPLORE_HL']="Labor";
 $lang['EXPLORE_MINE']="Mining";
+$lang['EXPLORE_SMELT']="Smeltery";
 $lang['EXPLORE_WC']="Woodcutting";
 $lang['EXPLORE_FARM']="Farming";
 $lang['EXPLORE_ADMIN']="Administration";
@@ -1433,13 +1434,19 @@ $lang['NP_BUY_TD7']="Each character is worth 5 Primary Currency.";
 $lang['NP_BUY_BTN']="Place Ad";
 
 //Smelting
-$lang['SMELT_HOME']="Blacksmith";
+$lang['SMELT_HOME']="Smeltery";
 $lang['SMELT_TH']="Output Item";
 $lang['SMELT_TH1']="Required Items x Quantity";
 $lang['SMELT_TH2']="Action";
+$lang['SMELT_DO']="Smelt Item";
+$lang['SMELT_DONT']="Cannot craft";
+$lang['SMELT_ERR']="You are trying to create an item with a non-existent smelting recipe.";
+$lang['SMELT_ERR1']="You're missing one or more items required for this smelting recipe.";
+$lang['SMELT_SUCC']="You've began creating your item. It'll be given to you shortly.";
+$lang['SMELT_SUCC1']="You have successfully smelted this item.";
 
 //Staff Smelting
-$lang['STAFF_SMELT_HOME']="Staff Blacksmith";
+$lang['STAFF_SMELT_HOME']="Staff Smeltery";
 $lang['STAFF_SMELT_ADD_TH']="Value";
 $lang['STAFF_SMELT_ADD_TH1']="Input";
 $lang['STAFF_SMELT_ADD_TH2']="Smelted Item";

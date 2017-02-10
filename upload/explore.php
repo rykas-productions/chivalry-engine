@@ -51,6 +51,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='mine.php'>{$lang['EXPLORE_MINE']}</a><br />
+					<a href='smelt.php'>{$lang['EXPLORE_SMELT']}</a><br />
 					<a href='#'>{$lang['EXPLORE_WC']}</a><br />
 					<a href='#'>{$lang['EXPLORE_FARM']}</a><br />
 					<a href='bottent.php'>{$lang['EXPLORE_BOTS']}</a><br />
