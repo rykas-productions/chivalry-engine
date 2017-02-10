@@ -16,7 +16,29 @@ function add()
 	global $db,$api,$lang,$h,$userid;
 	if (isset($_POST['smelted_item']))
 	{
-		
+		$_POST['smelted_item'] = (isset($_POST['smelted_item']) && is_numeric($_POST['smelted_item']))  ? abs(intval($_POST['smelted_item'])) : 0;
+		$_POST['smelted_item_qty'] = (isset($_POST['smelted_item_qty']) && is_numeric($_POST['smelted_item_qty']))  ? abs(intval($_POST['smelted_item_qty'])) : 0;
+		$_POST['timetocomplete'] = (isset($_POST['timetocomplete']) && is_numeric($_POST['timetocomplete']))  ? abs(intval($_POST['timetocomplete'])) : 0;
+		$_POST['required_item'] = (isset($_POST['required_item']) && is_numeric($_POST['required_item']))  ? abs(intval($_POST['required_item'])) : 0;
+		$_POST['required_item_qty'] = (isset($_POST['required_item_qty']) && is_numeric($_POST['required_item_qty']))  ? abs(intval($_POST['required_item_qty'])) : 0;
+		$items = $_POST['required_item'];
+		$qty = $_POST['required_item_qty'];
+		for($i = 1; $i <= 5; $i++) 
+		{
+			$_POST['required_item'.$i] = (isset($_POST['required_item'.$i]) && is_numeric($_POST['required_item'.$i]))  ? abs(intval($_POST['required_item'.$i])) : 0;
+			$_POST['required_item_qty'.$i] = (isset($_POST['required_item_qty'.$i]) && is_numeric($_POST['required_item_qty'.$i]))  ? abs(intval($_POST['required_item_qty'.$i])) : 0;
+			if($_POST['required_item'.$i] > 0) 
+			{
+				$items .= ",". $_POST['required_item'.$i];
+				$qty .= ",". $_POST['required_item_qty'.$i];
+			}
+		}
+		$db->query("INSERT INTO `smelt_recipes` 
+		(`smelt_time`, `smelt_items`, `smelt_quantity`, `smelt_output`, `smelt_qty_output`) 
+		VALUES 
+		('{$_POST['timetocomplete']}', '{$items}', '{$qty}', '{$_POST['smelted_item']}', '{$_POST['smelted_item_qty']}')");
+		$api->SystemLogsAdd($userid,'staff',"Created smelting recipe for ".$api->SystemItemIDtoName($_POST['smelted_item']));
+		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_SMELT_ADD_SUCC']}");
 	}
 	else
 	{
