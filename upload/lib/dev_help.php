@@ -8,7 +8,7 @@
 */
 
 //Set to true to enable developement help!
-define('DEV', true);
+define('DEV', false);
 if (DEV)
 {
 	echo "<div class='alert alert-warning' role='alert'><strong>Warning!</strong> You have development mode on. Please be sure to turn this off when you launch the game.</div>";
