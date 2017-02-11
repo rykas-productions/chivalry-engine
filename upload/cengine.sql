@@ -1332,7 +1332,34 @@ ALTER TABLE `vips_accepted`
 -- AUTO_INCREMENT for table `vip_listing`
 --
 ALTER TABLE `vip_listing`
-  MODIFY `vip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `vip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  
+  CREATE TABLE `smelt_inprogress` (
+  `sip_id` int(11) UNSIGNED NOT NULL,
+  `sip_user` int(11) UNSIGNED NOT NULL,
+  `sip_recipe` int(11) UNSIGNED NOT NULL,
+  `sip_time` int(11) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `smelt_inprogress`
+--
+ALTER TABLE `smelt_inprogress`
+  ADD UNIQUE KEY `sip_id` (`sip_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `smelt_inprogress`
+--
+ALTER TABLE `smelt_inprogress`
+  MODIFY `sip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
