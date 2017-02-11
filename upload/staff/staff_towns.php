@@ -78,7 +78,7 @@ function addtown()
 					{$lang['STAFF_TRAVEL_ADDTOWN_TH2']}
 				</th>
 				<td>
-					<input type='number' name='level' min='0' required='1' class='form-control'>
+					<input type='number' name='minlevel' min='0' required='1' class='form-control'>
 				</td>
 			</tr>
 			<tr>

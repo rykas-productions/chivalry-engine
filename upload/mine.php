@@ -128,7 +128,7 @@ function buypower()
 }
 function mine()
 {
-    global $db,$MUS,$ir,$userid,$lang,$api;
+    global $db,$MUS,$ir,$userid,$lang,$api,$h;
     if (!isset($_GET['spot']) || empty($_GET['spot']))
     {
         alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR']);
@@ -150,7 +150,7 @@ function mine()
 			$i=$db->fetch_row($query);
             if ($MUS['mining_level'] < $MSI['mine_level'])
             {
-				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR2'] . "{$MSI['mine_level']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR2'] . " {$MSI['mine_level']}");
 				die($h->endpage());
             }
             elseif ($ir['location'] != $MSI['mine_location'])
@@ -160,17 +160,17 @@ function mine()
             }
             elseif ($ir['iq'] < $MSI['mine_iq'])
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR4'] . "{$MSI['mine_iq']}");
+                alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR4'] . " {$MSI['mine_iq']}");
 				die($h->endpage());
             }
             elseif ($MUS['miningpower'] < $MSI['mine_power_use'])
             {
-				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR5'] . "{$MSI['mine_power_use']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR5'] . " {$MSI['mine_power_use']}");
 				die($h->endpage());
             }
 			elseif(!$i['inv_itemid'] == $MSI['mine_pickaxe'])
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR6'] . $api->SystemItemIDtoName($MSI['mine_pickaxe']));
+				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR6'] . " " . $api->SystemItemIDtoName($MSI['mine_pickaxe']));
 				die($h->endpage());
 			}
             else
