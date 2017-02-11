@@ -144,7 +144,7 @@ function diagnostics()
     		<tr>
     			<td>Is Chivalry Engine up to date?</td>
     			<td>
-        			" . file_get_contents("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}") . "
+        			" . file_get_contents("http://mastergeneral156.pcriot.com/update-checker.php?version={$Build}") . "
         		</td>
         	</tr>
     </table>
