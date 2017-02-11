@@ -30,7 +30,7 @@ if (empty($_GET['to']))
     {
 		if ($r['town_guild_owner'] > 0)
 		{
-			$name=$db->fetch_single($db->query("SELECT `guild_name` FROM `guilds` WHERE `guild_id` = {$r['town_guild_owner']}"));
+			$name=$db->fetch_single($db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r['town_guild_owner']}"));
 		}
 		else
 		{
