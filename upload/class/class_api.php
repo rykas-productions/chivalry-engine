@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.1.10.1";
+		return "17.2.1";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
