@@ -89,7 +89,7 @@ function shop()
                     		</tr>";
                 }
                 echo "<tr>
-                			<td><a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' title='{$r['itmdesc']}'>{$r['itmname']}</a></td>
+                			<td><a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip'"; ?> title="<?php echo $r['itmdesc']; ?>" <?php echo ">{$r['itmname']}</a></td>
                 			<td>" . number_format($api->SystemReturnTax($r['itmbuyprice'])) . "</td>
                             <td>
                             	<form action='?action=buy&ID={$r['sitemID']}' method='post'>

@@ -138,7 +138,7 @@ else
                     "<span style='color: green;'>*</span>" . $i['itmname'];
         }
         echo "<tr>
-        		<td><a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' title='{$i['itmdesc']}'>{$i['itmname']}</a>";
+        		<td><a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip'"; ?> title="<?php echo $r['itmdesc']; ?>" <?php echo ">{$i['itmname']}</a>";
         if ($i['inv_qty'] > 1)
         {
             echo " (x{$i['inv_qty']})";
