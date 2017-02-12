@@ -97,7 +97,7 @@ $lang["LOGIN_RULES"] = "Spilleregler";
 $lang["LOGIN_LOGIN"] = "Log ind";
 $lang["LOGIN_AHA"] = "Allerede har en konto?";
 $lang["LOGIN_EMAIL"] = "E-mail-adresse";
-$lang["login_password"] = "Password";
+$lang["LOGIN_PASSWORD"] = "Password";
 $lang["LOGIN_LWE"] = "Login med e-mail";
 $lang["LOGIN_SIGNIN"] = "Log ind";
 $lang["LOGIN_NH"] = "Ny Her <a href='register.php'> Join Us </a>!";
