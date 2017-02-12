@@ -1736,13 +1736,6 @@ function Random($min,$max)
 	}
 }
 /*
-	Paginiation Function. Easily create page listings in list.
-*/
-function paginate($item_per_page, $current_page, $total_records, $total_pages, $page_url)
-{
-    $pagination="";
-}
-/*
 	Creates a dropdown for smelting recipes.
 */
 function smelt_dropdown($ddname = 'smelt', $selected = -1)
