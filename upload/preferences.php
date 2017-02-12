@@ -183,12 +183,13 @@ function lang_change()
 			<option value='es'>Español</option>
 			<option value='ger'>Deutsche</option>
 			<option value='fr'>Français</option>
+			<option value='danish'>Dansk</option>
 		<input type='submit' class='btn btn-default' value='{$lang['LANG_BUTTON']}'>
 		</form>";
 	}
 	else
 	{
-		$LangArray=["en","es","ger","fr"];
+		$LangArray=["en","es","ger","fr","danish"];
 		if (!in_array($_POST['lang'],$LangArray))
 		{
 			alert('danger',$lang['ERROR_GENERIC'],$lang['LANG_UPDATE']);
