@@ -11,10 +11,9 @@ define('DEBUG', true);
 
 function error_critical($human_error, $debug_error, $action, $context = array())
 {
-	global $userid;
+	global $userid,$domain,$set;
     ob_get_clean();
     header('HTTP/1.1 500 Internal Server Error');
-    global $set;
 	?>
 	<!DOCTYPE html>
 	<html lang="en">
@@ -89,7 +88,9 @@ function error_critical($human_error, $debug_error, $action, $context = array())
             echo '<br />' . $human_error;
         }
     }
-	file_put_contents('error_log.txt', print_r(($debug_error . "\r"), true), FILE_APPEND);
+	$log="" . date('F j, Y') . " " . date('g:i:s a') . " || User ID {$userid} || {$debug_error}";
+	$dir= substr(__DIR__, 0, strpos(__DIR__, "\lib"));
+	file_put_contents($dir . '\cache\error_log.txt', print_r(($log . "\r"), true), FILE_APPEND);
     exit;
 }
 
