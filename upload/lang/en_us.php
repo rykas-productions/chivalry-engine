@@ -1313,6 +1313,7 @@ $lang['STAFF_IDX_ADMIN_TAB1']="Game Settings";
 $lang['STAFF_IDX_ADMIN_TAB2']="Create an Announcement";
 $lang['STAFF_IDX_ADMIN_TAB3']="Game Diagnostics";
 $lang['STAFF_IDX_ADMIN_TAB4']="Refresh Users";
+$lang['STAFF_IDX_ADMIN_TAB5']="View Error Log";
 $lang['STAFF_IDX_MODULES_TAB1']="Crimes";
 $lang['STAFF_IDX_USERS_TAB1']="Create User";
 $lang['STAFF_IDX_USERS_TAB2']="Edit User";

@@ -47,7 +47,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					{$lang['STAFF_IDX_CE_UP']}
 				</th>
 				<td>
-					" . get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}",'./cache/update_check.txt') . "
+					" . /*get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}",'./cache/update_check.txt') .*/ "
 				</td>
 			</tr>
 			<tr>
@@ -101,6 +101,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_settings.php?action=basicset'>{$lang['STAFF_IDX_ADMIN_TAB1']}</a><br />
 						<a href='staff_settings.php?action=announce'>{$lang['STAFF_IDX_ADMIN_TAB2']}</a><br />
 						<a href='staff_settings.php?action=diagnostics'>{$lang['STAFF_IDX_ADMIN_TAB3']}</a><br />
+						<a href='staff_settings.php?action=errlog'>{$lang['STAFF_IDX_ADMIN_TAB5']}</a><br />
 						<a href='staff_settings.php?action=restore'>{$lang['STAFF_IDX_ADMIN_TAB4']}</a><br />
 					</div>
 				</div>

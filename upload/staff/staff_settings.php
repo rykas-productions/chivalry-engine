@@ -26,6 +26,9 @@ case "diagnostics":
 case "restore":
     restore();
     break;
+case "errlog":
+    errlog();
+    break;
 default:
     die();
     break;
@@ -426,3 +429,12 @@ function restore()
 		$h->endpage();
 	}
 }
+function errlog()
+{
+	global $db,$lang,$api,$userid;
+	$dir= substr(__DIR__, 0, strpos(__DIR__, "\staff"));
+	$api->SystemLogsAdd($userid,'staff',"Viewed the error log.");
+	echo "
+	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents($dir . '.\cache\error_log.txt') . "</textarea>";
+}
+$h->endpage();
