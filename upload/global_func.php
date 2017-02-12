@@ -1771,7 +1771,7 @@ function smelt_dropdown($ddname = 'smelt', $selected = -1)
     return $ret;
 }
 /* gets the contents of a file if it exists, otherwise grabs and caches */
-function get_cached_file($url,$file,$hour=1) 
+function get_cached_file($url,$file,$hours=1) 
 {
 	$current_time = time(); 
 	$expire_time = $hours * 60 * 60;

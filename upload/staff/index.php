@@ -9,6 +9,7 @@
 require('sglobals.php');
 echo"<h2>{$lang['STAFF_IDX_TITLE']}</h2>
 	<hr />";
+$dir= substr(__DIR__, 0, strpos(__DIR__, "\staff"));
 if ($api->UserMemberLevelGet($userid,'admin'))
 {
 	$versq = $db->query("SELECT VERSION()");
@@ -47,7 +48,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					{$lang['STAFF_IDX_CE_UP']}
 				</th>
 				<td>
-					" . /*get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}",'./cache/update_check.txt') .*/ "
+					" . get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}",$dir . '\cache\update_check.txt') . "
 				</td>
 			</tr>
 			<tr>
