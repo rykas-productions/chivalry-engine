@@ -47,7 +47,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					{$lang['STAFF_IDX_CE_UP']}
 				</th>
 				<td>
-					" . file_get_contents("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}") . "
+					" . get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}",'./cache/update_check.txt') . "
 				</td>
 			</tr>
 			<tr>

@@ -1770,3 +1770,44 @@ function smelt_dropdown($ddname = 'smelt', $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
+/* gets the contents of a file if it exists, otherwise grabs and caches */
+function get_cached_file($url,$file,$hour=1) 
+{
+	$current_time = time(); 
+	$expire_time = $hours * 60 * 60;
+	if(file_exists($file))
+	{
+		$file_time = filemtime($file);
+		if ($current_time - $expire_time < $file_time)
+		{
+			return file_get_contents($file);
+		}
+		else
+		{
+			$content = update_file($url,$file);
+			file_put_contents($file,$content);
+			return $content;
+		}
+	}
+	else 
+	{
+		$content = update_file($url,$file);
+		file_put_contents($file,$content);
+		return $content;
+	}
+}
+
+/* gets content from a URL via curl */
+function update_file($url,$filename) 
+{
+	global $db,$set;
+	$content = "404";
+	$curl = curl_init();
+	curl_setopt_array($curl, array(
+		CURLOPT_URL => "{$url}",
+		CURLOPT_SSL_VERIFYPEER => false,
+		CURLOPT_RETURNTRANSFER => true));
+	$content = curl_exec($curl);
+	curl_close($curl);
+	return $content;
+}
