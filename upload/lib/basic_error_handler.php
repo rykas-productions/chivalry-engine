@@ -88,7 +88,7 @@ function error_critical($human_error, $debug_error, $action, $context = array())
             echo '<br />' . $human_error;
         }
     }
-	$log="" . date('F j, Y') . " " . date('g:i:s a') . " || User ID {$userid} || " . strip_tags(stripslashes($debug_error));
+	$log="" . date('F j, Y') . " " . date('g:i:s a') . " || User ID {$userid} || " . strip_tags($debug_error);
 	$dir= substr(__DIR__, 0, strpos(__DIR__, "\lib"));
 	file_put_contents($dir . '\cache\error_log.txt', print_r(($log . "\r"), true), FILE_APPEND);
     exit;
