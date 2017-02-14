@@ -791,9 +791,9 @@ function house_dropdown($ddname = "house", $selected = -1)
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
             $db->query(
-                    "SELECT `hID`, `hNAME`
+                    "SELECT `house_id`, `house_name`, `house_will`
     				 FROM houses
-    				 ORDER BY `hNAME` ASC");
+    				 ORDER BY `house_will` ASC");
     if ($selected == -1)
     {
         $first = 0;
@@ -804,13 +804,13 @@ function house_dropdown($ddname = "house", $selected = -1)
     }
     while ($r = $db->fetch_row($q))
     {
-        $ret .= "\n<option value='{$r['hID']}'";
-        if ($selected == $r['hID'] || $first == 0)
+        $ret .= "\n<option value='{$r['house_id']}'";
+        if ($selected == $r['house_id'] || $first == 0)
         {
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['hNAME']}</option>";
+        $ret .= ">{$r['house_name']}</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -851,45 +851,6 @@ function house2_dropdown($ddname = "house", $selected = -1)
             $first = 1;
         }
         $ret .= ">{$r['house_name']} (Will: {$r['house_will']})</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the courses in the game to let the user select one.
- * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
- * @param int $selected [optional] The <i>ID number</i> of the course which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first course alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function course_dropdown($ddname = "course", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-            $db->query(
-                    "SELECT `crID`, `crNAME`
-    				 FROM `courses`
-    				 ORDER BY `crNAME` ASC");
-    if ($selected == -1)
-    {
-        $first = 0;
-    }
-    else
-    {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q))
-    {
-        $ret .= "\n<option value='{$r['crID']}'";
-        if ($selected == $r['crID'] || $first == 0)
-        {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['crNAME']}</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -1251,7 +1212,7 @@ function forum2_dropdown($ddname = "forum", $selected = -1)
             $db->query(
                     "SELECT `ff_id`, `ff_name`
                      FROM `forum_forums`
-                     WHERE `ff_auth` != 'gang'
+                     WHERE `ff_auth` != 'guild'
                      ORDER BY `ff_name` ASC");
     if ($selected == -1)
     {
@@ -1283,12 +1244,9 @@ function forum2_dropdown($ddname = "forum", $selected = -1)
  */
 function request_csrf_code($formid)
 {
-    // Generate the token
 	$time=time();
 	$token=hash('sha512',(randomizer()));
-    // Insert/Update it
-    $_SESSION["csrf_{$formid}"] =
-            array('token' => $token, 'issued' => $time);
+    $_SESSION["csrf_{$formid}"] = array('token' => $token, 'issued' => $time);
     return $token;
 }
 /**
@@ -1314,8 +1272,7 @@ function randomizer()
  */
 function request_csrf_html($formid)
 {
-    return "<input type='hidden' name='verf' value='"
-            . request_csrf_code($formid) . "' />";
+    return "<input type='hidden' name='verf' value='" . request_csrf_code($formid) . "' />";
 }
 
 /**
@@ -1328,8 +1285,7 @@ function verify_csrf_code($formid, $code)
 {
     // Lookup the token entry
     // Is there a token in existence?
-    if (!isset($_SESSION["csrf_{$formid}"])
-            || !is_array($_SESSION["csrf_{$formid}"]))
+    if (!isset($_SESSION["csrf_{$formid}"]) || !is_array($_SESSION["csrf_{$formid}"]))
     {
         // Obviously verification fails
         return false;
@@ -1446,10 +1402,7 @@ function determine_game_urlbase()
 
 function is_ajax()
 {
-    return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
-            && is_string($_SERVER['HTTP_X_REQUESTED_WITH'])
-            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'])
-                    === 'xmlhttprequest';
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && is_string($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 }
 
 /**
