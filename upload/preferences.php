@@ -64,7 +64,7 @@ function name_change()
 		{$lang['UNC_INTRO']}<br />
 		<div class='form-group'>
 		<form method='post'>
-			<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' name='newname' />
+			<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' value='{$ir['username']} name='newname' />
 			<br />
 			{$csrf}
 			<input type='submit' class='btn btn-default' value='{$lang['UNC_BUTTON']}' />
