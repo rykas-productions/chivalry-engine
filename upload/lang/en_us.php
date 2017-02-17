@@ -417,6 +417,12 @@ $lang['FORUM_EDIT_FORM_SUBMIT']="Edit Post";
 $lang['FORUM_EDIT_SUCCESS']="You have successfully edited a post!";
 $lang['FORUM_MOVE_TOPIC_DFDNE']="You are trying to move a topic to a forum that does not exist. Go back and try again, please.";
 $lang['FORUM_MOVE_TOPIC_DONE']="You have successfully moved the topic.";
+$lang['FORUM_UNLOCK_DONE']="The topic has been successfully unlocked.";
+$lang['FORUM_LOCK_DONE']="The topic has been successfully locked.";
+$lang['FORUM_UNPIN_DONE']="The topic has been successfully unpinned.";
+$lang['FORUM_PIN_DONE']="The topic has been successfully pinned.";
+$lang['FORUM_DELETE_DONE']="Post deleted successfully.";
+$lang['FORUM_DELETE_TOPIC_DONE']="Topic has been deleted successfully.";
 
 //Send Cash Form
 $lang['SCF_POSCASH']="You need to send at least 1 {$lang['INDEX_PRIMCURR']} to use this form.";

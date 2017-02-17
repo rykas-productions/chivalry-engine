@@ -6,6 +6,10 @@
 */
 function DateTime_Parse($time_stamp, $ago = true, $override = false)
 {
+	if ($time_stamp == 0)
+	{
+		return "N/A";
+	}
     $time_difference = (time() - $time_stamp);
 	if ($time_difference < 86400 || $override == true)
 	{
@@ -1190,7 +1194,7 @@ function forum_dropdown($ddname = "forum", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['ff_name']}1</option>";
+        $ret .= ">{$r['ff_name']} [{$r['ff_id']}]</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
