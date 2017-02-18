@@ -18,12 +18,12 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.2.1";
+		return "17.2.2";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
 		@param int user = User ID to test for.
-		@param int type = Currency type. 1 for Primary, 2 for secondary
+		@param int type = Currency type. [Ex. primary or secondary]
 		@param int money = Minimum money requied.
 		Returns true if user has more cash than required.
 		Returns false if user does not exist or does not have the minimum cash requred.
@@ -33,11 +33,11 @@ class api
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
-		$type = (isset($type) && is_numeric($type)) ? abs(intval($type)) : 0;
+		$type = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($type)))));
 		$userexist=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
 		if ($userexist)
 		{
-			if ($type == 1)
+			if ($type == 'primary')
 			{
 				$UserMoney=$db->fetch_single($db->query("SELECT `primary_currency` FROM `users` WHERE `userid` = {$user}"));
 				if ($UserMoney < $minimum)
@@ -49,7 +49,7 @@ class api
 					return true;
 				}
 			}
-			elseif ($type == 2)
+			elseif ($type == 'secondary')
 			{
 				$UserMoney=$db->fetch_single($db->query("SELECT `secondary_currency` FROM `users` WHERE `userid` = {$user}"));
 				if ($UserMoney < $minimum)
@@ -120,7 +120,7 @@ class api
 	/*
 		Gives user specified amount of currency type.
 		@param int user = User ID to give currency to.
-		@param int type = Currency type. 1 for Primary, 2 for secondary
+		@param int type = Currency type. [Ex. primary and secondary]
 		@param int money = Currency given.
 		Returns true if user has received currency.
 		Returns false if user does not receive currency.
@@ -129,17 +129,17 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$type = (isset($type) && is_numeric($type)) ? abs(intval($type)) : 0;
+		$type = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($type)))));
 		$quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
 		$userexist=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
 		if ($userexist)
 		{
-			if ($type == 1)
+			if ($type == 'primary')
 			{
 				$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$quantity} WHERE `userid` = {$user}");
 				return true;
 			}
-			elseif ($type == 2)
+			elseif ($type == 'secondary')
 			{
 				$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$quantity} WHERE `userid` = {$user}");
 				return true;
@@ -158,7 +158,7 @@ class api
 	/*
 		Takes qunatity of currency type from the user specified.
 		@param int user = User ID to give currency to.
-		@param int type = Currency type. 1 for Primary, 2 for secondary
+		@param int type = Currency type. [Ex. primary and secondary]
 		@param int money = Currency given.
 		Returns true if user has lost currency.
 		Returns false if user does not lose any currency.
@@ -167,18 +167,18 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$type = (isset($type) && is_numeric($type)) ? abs(intval($type)) : 0;
+		$type = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($type)))));
 		$quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
 		$userexist=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
 		if ($userexist)
 		{
-			if ($type == 1)
+			if ($type == 'primary')
 			{
 				$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$quantity} WHERE `userid` = {$user}");
 				$db->query("UPDATE `users` SET `primary_currency` = 0 WHERE `primary_currency` < 0");
 				return true;
 			}
-			elseif ($type == 2)
+			elseif ($type == 'secondary')
 			{
 				$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` - {$quantity} WHERE `userid` = {$user}");
 				$db->query("UPDATE `users` SET `secondary_currency` = 0 WHERE `secondary_currency` < 0");
@@ -198,7 +198,7 @@ class api
 	/*
 		Tests to see what the user has equipped.
 		@param int user = User ID to test against.
-		@param int slot = Equipment slot to test. 1 = Primary, 2 = Secondary, 3 = Armor
+		@param int slot = Equipment slot to test. [Ex. Primary, Secondary, Armor]
 		@param int itemid = Item to test for. -1 = Any Item, 0 = No Item Equipped, >0 = Specific item
 		Returns true if user has item equipped
 		Returns false if user does not have item equipped.
@@ -207,7 +207,7 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		if ($slot == 1)
+		if ($slot == 'primary')
 		{
 			//Any item equipped
 			if ($itemid == -1)
@@ -254,7 +254,7 @@ class api
 				return false;
 			}
 		}
-		elseif ($slot == 2)
+		elseif ($slot == 'secondary')
 		{
 			//Any item equipped
 			if ($itemid == -1)
@@ -301,7 +301,7 @@ class api
 				return false;
 			}
 		}
-		elseif ($slot == 3)
+		elseif ($slot == 'armor')
 		{
 			//Any item equipped
 			if ($itemid == -1)
@@ -379,7 +379,7 @@ class api
 	/*
 		Places or removes dungeon/infirmary time on the specified user.
 		@param int user = User ID to test against.
-		@param int place = Place to test. 1 = Infirmary, 2 = Dungeon
+		@param int place = Place to test. [Ex. Dungeon and Infirmary]
 		@param int time = Minutes user is in infirmary/dungeon.
 		@param text reason = Reason why user is in the infirmary/dungeon.
 		Returns true if user is placed in the infirmary/dungeon, or is removed from it.
@@ -389,8 +389,9 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$reason=$db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($reason))));
-		if ($place == 1)
+		$reason = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($reason))));
+		$place = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($place)))));
+		if ($place == 'infirmary')
 		{
 			if ($time >= 0)
 			{
@@ -405,7 +406,7 @@ class api
 				return true;
 			}
 		}
-		elseif ($place == 2)
+		elseif ($place == 'dungeon')
 		{
 			if ($time >= 0)
 			{
