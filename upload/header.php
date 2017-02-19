@@ -15,9 +15,7 @@ class headers
 			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 			<meta name="description" content="">
 			<meta name="author" content="TheMasterGeneral">
-
 			<?php echo "<title>{$set['WebsiteName']}</title>"; ?>
-
 			<!-- CSS -->
 			<?php
 			if ($ir['theme'] == 1)
@@ -44,7 +42,6 @@ class headers
 			<link href="css/bs2.css" rel="stylesheet">
 			<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
 			<!-- Custom CSS -->
 			<style>
 			body {
@@ -241,12 +238,9 @@ class headers
 }
 	function userdata($ir, $lv, $fm, $cm, $dosessh = 1)
     {
-		global $db, $c, $userid, $set,$lang;
+		global $db, $c, $userid, $set, $lang, $api;
 		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
-		$db->query(
-                "UPDATE `users`
-                 SET `laston` = {$_SERVER['REQUEST_TIME']}, `lastip` = '$IP'
-                 WHERE `userid` = $userid");
+		$db->query("UPDATE `users` SET `laston` = {$_SERVER['REQUEST_TIME']}, `lastip` = '{$IP}'  WHERE `userid` = {$userid}");
 		if (!$ir['email'])
         {
             global $domain;
@@ -262,6 +256,29 @@ class headers
             $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");
             $_SESSION['attacking'] = 0;
         }
+		$townguild = $db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$ir['location']}"));
+		if (($townguild == $ir['guild']) && ($townguild > 0) && ($ir['guild'] > 0))
+		{
+			$encounterchance=Random(1,1000);
+			if ($encounterchance == 1)
+			{
+				$result=Random(1,2);
+				if ($result == 1)
+				{
+					$infirmtime=Random(20,60);
+					$api->UserStatusSet($userid,"infirmary",$infirmtime,"Attacked by Bandits");
+					$api->GameAddNotification($userid,"While randomly walking about in this town, you were attacked by a group of bandits as a message to your guild leader.");
+				}
+				if ($result == 2)
+				{
+					$api->GameAddNotification($userid,"While randomly walking about in this town, you successfully fended off a group of bandits.");
+				}
+				if ($result == 3)
+				{
+					//Get saved... API call not done yet so meh.
+				}
+			}
+		}
         $d = "";
         $u = $ir['username'];
         if ($ir['vip_days'])
@@ -317,7 +334,6 @@ class headers
 				</p>
 			</footer>
 		</html>
-			   <?php
-			}
-	
+		<?php
+	}
 }
