@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.2.2";
+		return "17.2.3";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -953,6 +953,12 @@ class api
 		}
 		$db->query("UPDATE `guild` SET `guild_{$cur}curr` = `guild_{$cur}curr` + {$number} WHERE `guild_id` = {$guild}");
 	}
+	/*
+		Function to fetch all or a specific field of information from the specified guild.
+		@param int guild_id = Guild ID to fetch info from.
+		@param text field = Data field to return. Optional. If left null/empty, will return all fields.
+		Returns all fields if field is empty, otherwise it'll return a single field.
+	*/
 	function GuildFetchInfo($guild_id,$field=null)
 	{
 		global $db;
@@ -979,6 +985,12 @@ class api
 			return false;
 		}
 	}
+	/*
+		Function to add a guild notification to a guild.
+		@param int guild_id = ID of the guild you wish to add a notification to.
+		@param text notification = Notification text.
+		Returns true if the notification was added successfully, false otherwise.
+	*/
 	function GuildAddNotification($guild_id,$notification)
 	{
 		global $db;
@@ -999,5 +1011,37 @@ class api
 			}
 		}
 		return false;
+	}
+	/*
+		Function to randomly fetch an existing user from the database.
+		@param bool all_users = All users can be a potential selection. Optional. Set to false to only select users with user level Member.
+		Returns the randomly selected user id.
+	*/
+	function SystemFetchUserRandomly($all_users = true)
+	{
+		global $db;
+		$selected_user = 0;
+		while ($selected_user == 0)
+		{
+			$maxusers=$db->fetch_single($db->query("SELECT `userid` FROM `users` ORDER BY `userid` DESC LIMIT 1"));
+			$random=Random(1,$maxusers);
+			if ($all_users == true)
+			{
+				$q=$db->query("SELECT `userid` FROM `users` WHERE `userid` = {$random}");
+				if ($db->num_rows > 0)
+				{
+					$selected_user == $random;
+				}
+			}
+			else
+			{
+				$q=$db->query("SELECT `userid` FROM `users` WHERE `userid` = {$random} AND `user_level` = 'Member'");
+				if ($db->num_rows > 0)
+				{
+					$selected_user == $random;
+				}
+			}
+		}
+		return $selected_user;
 	}
 }
