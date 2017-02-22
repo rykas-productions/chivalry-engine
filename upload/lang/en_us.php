@@ -1475,4 +1475,22 @@ $lang['STAFF_SMELT_DEL_FORM']="Use this form to delete a smelting recipe.";
 $lang['STAFF_SMELT_DEL_TH']="Smelting Recipe";
 $lang['STAFF_SMELT_DEL_BTN']="Delete Recipe";
 $lang['STAFF_SMELT_DEL_SUCC']="Smelting recipe has been successfully removed from the game.";
+
+//Inventory
+$lang['INVENT_EQUIPPED']="Your Equipment";
+$lang['INVENT_ITEMS']="Your Items";
+$lang['INVENT_ITEMS_INFO']="Your inventory is listed below.";
+$lang['INVENT_UNEQUIP']="Unequip";
+$lang['INVENT_NOPRIM']="You do not have a primary weapon equipped at this time.";
+$lang['INVENT_NOSECC']="You do not have a secondary weapon equipped at this time.";
+$lang['INVENT_NOARMOR']="You do not have an armor equipped at this time.";
+$lang['INVENT_ITMNQTY']="Item Name (xQty)";
+$lang['INVENT_ITMNCOST']="Item Cost (Total)";
+$lang['INVENT_ITMNUSE']="Item Actions";
+$lang['INVENT_ITMNUSE1']="Send";
+$lang['INVENT_ITMNUSE2']="Sell";
+$lang['INVENT_ITMNUSE3']="Add to Market";
+$lang['INVENT_ITMNUSE4']="Use";
+$lang['INVENT_ITMNUSE5']="Equip Weapon";
+$lang['INVENT_ITMNUSE6']="Equip Armor";
 ?>
