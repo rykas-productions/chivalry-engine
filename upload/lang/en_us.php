@@ -347,6 +347,23 @@ $lang['MAIL_TH1_ARC']="Select which archive you wish to download.";
 $lang['MAIL_TH1_ARC1']="Inbox";
 $lang['MAIL_TH1_ARC2']="Outbox";
 
+//Contacts Page
+$lang['CONTACT_ADD']="Add a Contact";
+$lang['CONTACT_HOME']="These are the players you have added to your contact list.";
+$lang['CONTACT_HOME1']="Username [ID]";
+$lang['CONTACT_HOME2']="Message";
+$lang['CONTACT_HOME3']="Remove";
+$lang['CONTACT_ADD']="Adding a contact to your contacts list.";
+$lang['CONTACT_ADD1']="Enter a User ID to add to your contacts list.";
+$lang['CONTACT_ADD_BTN']="Add Contact";
+$lang['CONTACT_ADD_ERR']="You cannot add the same person twice to your contact list.";
+$lang['CONTACT_ADD_ERR1']="You cannot add yourself to your own contact list.";
+$lang['CONTACT_ADD_ERR2']="You cannot add a non-existent user to your contact list.";
+$lang['CONTACT_ADD_SUCC']="You have successfully added a user to your contact list.";
+$lang['CONTACT_REMOVE_ERR']="You didn't specify a contact to delete.";
+$lang['CONTACT_REMOVE_ERR1']="You cannot delete a contact who isn't on your list.";
+$lang['CONTACT_REMOVE_SUCC']="You have successfully removed a contact from your contacts list.";
+
 //Language menu
 $lang['LANG_INTRO']='Here you may change your language. This is not saved to your account. This is saved via a cookie. If you change devices or wipe your cookies, you will need to reset your language again. Translations may not be 100% accurate.';
 $lang['LANG_BUTTON']='Change Language';
