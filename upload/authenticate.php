@@ -14,24 +14,23 @@ $FTMQuery=$db->query("SELECT `timestamp` FROM `login_attempts` WHERE `ip` = '{$I
 if ($db->num_rows($DQuery) >= 9)
 	{
 		die("<h3>{$set['WebsiteName']} Error</h3>
-		You have used the maximum attempts to login within the past day. Try again later.");
+			{$lang['AUTH_ERROR1']}");
 	}
 if ($db->num_rows($HQuery) >= 6)
 	{
 		die("<h3>{$set['WebsiteName']} Error</h3>
-		You have used the maximum attempts to login within the past hour. Try again later.");
+			{$lang['AUTH_ERROR2']}");
 	}
 if ($db->num_rows($FTMQuery) >= 3)
 	{
-		die("<h3>{$set['WebsiteName']} Error</h3>You have used the maximum attempts to login within the past 15 minutes. Try again later.");
+		die("<h3>{$set['WebsiteName']} Error</h3>
+			{$lang['AUTH_ERROR3']}");
 	}
 if (empty($email) || empty($password))
 {
     $db->query("INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES ('{$IP}', '0', '{$CurrentTime}');");
-	die(
-            "<h3>{$set['WebsiteName']} Error</h3>
-	You did not fill in the login form!<br />
-	<a href='login.php'>&gt; Back</a>");
+	die("<h3>{$set['WebsiteName']} Error</h3>
+		{$lang['AUTH_ERROR4']}<br /> <a href='login.php'>Back</a>");
 	
 }
 $form_email = $db->escape(stripslashes($email));
@@ -47,17 +46,17 @@ $QHQuery=$db->query("SELECT `timestamp` FROM `login_attempts` WHERE `userid` = '
 if ($db->num_rows($DUNQuery) >= 9)
 {
 	die("<h3>{$set['WebsiteName']} Error</h3>
-	Your account has been locked from being logged in. Try again in about 24 hours.");
+		{$lang['AUTH_ERROR5']}");
 }
 if ($db->num_rows($HUNQuery) >= 6)
 {
 	die("<h3>{$set['WebsiteName']} Error</h3>
-	Your account has been locked from being logged in. Try again in about an hour.");
+		{$lang['AUTH_ERROR6']}");
 }
 if ($db->num_rows($QHQuery) >= 3)
 {
 	die("<h3>{$set['WebsiteName']} Error</h3>
-	Your account has been locked from being logged in. Try again in about fifteen minutes.");
+		{$lang['AUTH_ERROR7']}");
 }
 if ($db->num_rows($UQ) == 0)
 {
@@ -65,8 +64,7 @@ if ($db->num_rows($UQ) == 0)
 	$db->query("INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES ('{$IP}', '0', '{$CurrentTime}');");
     die(
             "<h3>{$set['WebsiteName']} Error</h3>
-	Incorrect login information.a<br />
-	<a href='login.php'>&gt; Back</a>");
+				{$lang['AUTH_ERROR8']}<br /> <a href='login.php'>Back</a>");
 }
 else
 {
@@ -80,8 +78,7 @@ else
 		notification_add($mem['userid'],"Someone has just recently attempted to gain access to your account and failed. If this was you, you do not need to do anything. However, if this was not, you should change your password immediately!");
 		die(
                 "<h3>{$set['WebsiteName']} Error</h3>
-		Incorrect login information.<br />
-		<a href='login.php'>&gt; Back</a>");
+		{$lang['AUTH_ERROR8']}<br /> <a href='login.php'>Back</a>");
 		
     } 
 	session_regenerate_id();

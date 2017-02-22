@@ -157,7 +157,7 @@ class headers
 
 				<noscript>
 					<?php
-						alert('danger','Javascript Disabled!','You need to enable Javascript to use this website. Loads of features will not work without Javascript.');
+						alert('info',$lang['ERROR_INFO'],$lang['HDR_JS']);
 					?>
 				</noscript>
 				<div class="row">
@@ -244,7 +244,7 @@ class headers
 		if (!$ir['email'])
         {
             global $domain;
-            die("<body>Your account may be broken. Please mail help@{$domain} stating your username and player ID.");
+            die("<body>{$lang['HDR_REKT']}{$domain} {$lang['HDR_REKT1']}");
         }
         if (!isset($_SESSION['attacking']))
         {
@@ -285,9 +285,7 @@ class headers
         {
             $u = "<span style='color: red;'>{$ir['username']}</span>";
             $d =
-                    "<img src='donator.gif'
-                     alt='VIP: {$ir['vip_days']} Days Left'
-                     title='VIP: {$ir['vip_days']} Days Left' />";
+                    "<img src='donator.gif' alt='VIP: {$ir['vip_days']} Days Left' title='VIP: {$ir['vip_days']} Days Left' />";
         }
         global $staffpage;
 	}

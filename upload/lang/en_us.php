@@ -181,6 +181,8 @@ $lang['GEN_IUOF']="Invalid use of file!";
 $lang['GEN_THEM']="Them";
 $lang['GEN_CONTINUE']="Continue";
 $lang['GEN_FOR_S']="for";
+$lang['GEN_HAVE']="Have";
+$lang['GEN_AND']="and";
 $lang['GEN_NOPERM']="You do not have the proper user level to view this page. If this is wrong, please contact an admin immediately!";
 
 //Gym
@@ -189,6 +191,23 @@ $lang['GYM_DUNG'] = "The guards would normally let you work out, but, what you d
 $lang['GYM_NEG'] = "Not Enough Energy!";
 $lang['GYM_INVALIDSTAT'] = "You cannot train that stat!";
 $lang['GYM_NEG_DETAIL'] = "You do not have enough energy to train that many times. Either wait for your energy to recover, or refill it manually!";
+$lang['GYM_INFO']="Training";
+$lang['GYM_FRM1']="Choose the stat you wish to train, and how many times you wish to train it. You can train up to";
+$lang['GYM_FRM2']="times.";
+$lang['GYM_TH']="Stat to Train";
+$lang['GYM_TH1']="Training Duration";
+$lang['GYM_BTN']="Train!";
+$lang['GYM_STR']="You begin to start lifting heavy rocks. You've successfully gained";
+$lang['GYM_STR1']="by doing";
+$lang['GYM_STR2']="minutes of heavy rock lifting. You now have";
+$lang['GYM_STR3']="energy remaining.";
+$lang['GYM_AGL']="You begin running laps. You've successfully gained";
+$lang['GYM_AGL1']="laps around town.";
+$lang['GYM_GRD']="You jump into the river and begin swimming. You have successfully gained";
+$lang['GYM_GRD1']="minutes of swimming.";
+$lang['GYM_YNH']="You now have";
+$lang['GYM_LAB']="You begin helping around your town. You have successfully gained";
+$lang['GYM_LAB1']="minutes of helping around your town.";
 
 //Explore
 $lang['EXPLORE_INTRO']='You begin exploring the town and find a few cool things to keep you occupied...';
@@ -241,7 +260,7 @@ $lang['EXPLORE_BOTS']="Bot List";
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
 $lang['ERRDE_EXPLORE2']="Since you are in the dungeon, you cannot visit the town!";
 $lang['ERRDE_PN']="Your personal notepad could not be updated due to the 65,655 character limit.";
-$lang['ERROR_MAIL_UNOWNED']='You cannot read this message as it was not sent to you!';
+$lang['ERROR_MAIL_UNOWNED']='This message does not exist or was not sent to you.';
 $lang['ERROR_FORUM_VF']="Go back and try again for us, please. We done broke.";
 
 //Index
@@ -318,6 +337,15 @@ $lang['MAIL_DELETEDONE']='Your entire inbox has been successfully cleared.';
 $lang['MAIL_QUICKREPLY']='Sending a quick reply...';
 $lang['MAIL_MARKREAD']='Mark All as Read';
 $lang['MAIL_SENDMSG']='Send Message';
+$lang['MAIL_TH1_IN']="Inbox";
+$lang['MAIL_TH1_OUT']="Outbox";
+$lang['MAIL_TH1_COMP']="Compose";
+$lang['MAIL_TH1_DEL']="Delete All";
+$lang['MAIL_TH1_ARCH']="Archive";
+$lang['MAIL_TH1_CONTACTS']="Contacts";
+$lang['MAIL_TH1_ARC']="Select which archive you wish to download.";
+$lang['MAIL_TH1_ARC1']="Inbox";
+$lang['MAIL_TH1_ARC2']="Outbox";
 
 //Language menu
 $lang['LANG_INTRO']='Here you may change your language. This is not saved to your account. This is saved via a cookie. If you change devices or wipe your cookies, you will need to reset your language again. Translations may not be 100% accurate.';
@@ -1493,4 +1521,19 @@ $lang['INVENT_ITMNUSE3']="Add to Market";
 $lang['INVENT_ITMNUSE4']="Use";
 $lang['INVENT_ITMNUSE5']="Equip Weapon";
 $lang['INVENT_ITMNUSE6']="Equip Armor";
+
+//Authenticate
+$lang['AUTH_ERROR1']="You have exceeded the maximum of times you can fail to login within the past day. Please try again in 24 hours.";
+$lang['AUTH_ERROR2']="You have exceeded the maximum of times you can fail to login within the past hour. Please try again in an hour.";
+$lang['AUTH_ERROR3']="You have exceeded the maximum of times you can fail to login within the past 15 minutes. Please try again in 15 minuntes.";
+$lang['AUTH_ERROR4']="You left the login form empty. Go back and try again.";
+$lang['AUTH_ERROR5']="Your account has been temporarily locked. Please try again in 24 hours.";
+$lang['AUTH_ERROR6']="Your account has been temporarily locked. Please try again in an hour.";
+$lang['AUTH_ERROR7']="Your account has been temporarily locked. Please try again in 15 minutes.";
+$lang['AUTH_ERROR8']="Incorrect email and password combination.";
+
+//Header
+$lang['HDR_JS']="You need to enable Javascript for this game to work efficiently.";
+$lang['HDR_REKT']="Your account may be broken. Please email help@";
+$lang['HDR_REKT1']="stating your username and User ID.";
 ?>
