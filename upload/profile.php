@@ -188,6 +188,11 @@ else
 						<input type='hidden' name='user' value='{$r['userid']}'>
 						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_POKE']} {$r['username']}'>
 					</form>
+					<br />
+					<form action='contacts.php?action=add'>
+						<input type='hidden' name='user' value='{$r['userid']}'>
+						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_CONTACT']} {$r['username']} {$lang['PROFILE_CONTACT1']}'>
+					</form>
 				  "; ?>
 					<div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="Sending a Message">
 					  <div class="modal-dialog" role="document">
