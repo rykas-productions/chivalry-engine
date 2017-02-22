@@ -6,22 +6,22 @@ echo "
 <table class='table table-bordered table-responsive'>
 	<tr>
 		<td>
-			<a href='inbox.php'>Inbox</a>
+			<a href='inbox.php'>{$lang['MAIL_TH1_IN']}</a>
 		</td>
 		<td>
-			<a href='?action=outbox'>Outbox</a>
+			<a href='?action=outbox'>{$lang['MAIL_TH1_OUT']}</a>
 		</td>
 		<td>
-			<a href='?action=compose'>Compose</a>
+			<a href='?action=compose'>{$lang['MAIL_TH1_COMP']}</a>
 		</td>
 		<td>
-			<a href='?action=delall'>Delete All</a>
+			<a href='?action=delall'>{$lang['MAIL_TH1_DEL']}</a>
 		</td>
 		<td>
-			<a href='#'>Archive</a>
+			<a href='?action=archive'>{$lang['MAIL_TH1_ARCH']}</a>
 		</td>
 		<td>
-			<a href='#'>Contacts</a>
+			<a href='contacts.php'>{$lang['MAIL_TH1_CONTACTS']}</a>
 		</td>
 	</tr>
 </table>
@@ -57,6 +57,9 @@ case 'delall':
     break;
 case 'outbox':
     outbox();
+    break;
+case 'archive':
+    archive();
     break;
 default:
     home();
@@ -122,7 +125,7 @@ function read()
 	$_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs(intval($_GET['msg'])) : 0;
 	if ($_GET['msg'] == 0)
 	{
-		alert('danger','Oops.','Message does not exist.');
+		alert('danger',$lang['ERROR_SECURITY'],$lang['ERROR_MAIL_UNOWNED']);
 		die($h->endpage());
 	}
 	if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0)
@@ -356,5 +359,30 @@ function compose()
 		<input type='hidden' name='verf' value='{$code}' />
 		</form>";
 	}
+}
+function archive()
+{
+	global $lang;
+	echo "<table class='table table-bordered'>
+	<tr>
+		<th colspan='2'>
+			{$lang['MAIL_TH1_ARC']}
+		</th>
+	</tr>
+	<tr>
+		<td>
+			<form method='post' action='dlarchive.php'>
+				<input type='hidden' name='archive' value='inbox' />
+				<input type='submit' value='{$lang['MAIL_TH1_ARC1']}' class='btn btn-default'>
+			</form>
+		</td>
+		<td>
+			<form method='post' action='dlarchive.php'>
+				<input type='hidden' name='archive' value='outbox' />
+				<input type='submit' value='{$lang['MAIL_TH1_ARC2']}' class='btn btn-default'>
+			</form>
+		</td>
+	</tr>
+	</table>";
 }
 $h->endpage();
