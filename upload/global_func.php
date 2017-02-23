@@ -557,7 +557,7 @@ function npcbot_dropdown($ddname = "bot", $selected = -1)
                     "SELECT `u`.`userid`, `u`.`username`
                      FROM `botlist` AS `cb`
                      INNER JOIN `users` AS `u`
-                     ON `cb`.`cb_botuser` = `u`.`userid`
+                     ON `cb`.`botuser` = `u`.`userid`
                      ORDER BY `u`.`userid` ASC");
     if ($selected == -1)
     {
