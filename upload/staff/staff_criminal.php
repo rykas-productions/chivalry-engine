@@ -40,6 +40,8 @@ function home()
 	<a href='?action=newcrime'>{$lang['STAFF_CRIME_MENU_CREATE']}</a><br />
 	<a href='?action=editcrime'>{$lang['STAFF_CRIME_MENU_EDIT']}</a><br />
 	<a href='?action=delcrime'>{$lang['STAFF_CRIME_MENU_DEL']}</a><br />
+	<a href='?action=editcrimegroup'>{$lang['STAFF_CRIME_MENU_EDITCG']}</a><br />
+	<a href='?action=delcrimegroup'>{$lang['STAFF_CRIME_MENU_DELCG']}</a><br />
 	";
 }
 function new_crime()
@@ -625,6 +627,180 @@ function new_crimegroup()
 			</table>
 		</form>
 		";
+	}
+}
+function edit_crimegroup()
+{
+	global $db,$lang,$h,$userid,$api;
+	if (!isset($_POST['step']))
+	{
+		$_POST['step'] = 0;
+	}
+	if ($_POST['step'] == 0)
+	{
+		$csrf = request_csrf_html('staff_editcrimegroup1');
+		echo "<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_CRIMEG_EDIT_START']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_CRIMEG_EDIT_START1']}
+				</th>
+				<td>
+					" . crimegroup_dropdown('crimegroup') . "
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' class='btn btn-default' value='{$lang['STAFF_CRIMEG_EDIT_START_BTN']}'>
+				</td>
+			</tr>
+		</table>
+		{$csrf}
+		<input type='hidden' value='1' name='step'>
+		</form>";
+	}
+	if ($_POST['step'] == 1)
+	{
+		$_POST['crimegroup'] = (isset($_POST['crimegroup']) && is_numeric($_POST['crimegroup'])) ? abs(intval($_POST['crimegroup'])) : '';
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup1', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+		if (empty($_POST['crimegroup']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_EDIT_FRM_ERR']);
+			die($h->endpage());
+		}
+		$d = $db->query("SELECT `cgORDER`, `cgNAME` FROM `crimegroups` WHERE `cgID` = {$_POST['crimegroup']}");
+		if ($db->num_rows($d) == 0)
+		{
+			$db->free_result($d);
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_EDIT_FRM_ERR1']);
+			die($h->endpage());
+		}
+		$itemi = $db->fetch_row($d);
+		$db->free_result($d);
+		$csrf = request_csrf_html('staff_editcrimegroup2');
+		echo "<form method='post'>
+			<table class='table table-bordered table-responsive'>
+				<tr>
+					<th>
+						{$lang['STAFF_CRIMEG_NEW_NAME']}
+					</th>
+					<td>
+						<input type='text' name='cgNAME' class='form-control' required='1' value='{$itemi['cgNAME']}'>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_CRIMEG_NEW_ORDER']}
+					</th>
+					<td>
+						<input type='number' name='cgORDER' min='0' class='form-control' required='1' value='{$itemi['cgORDER']}'>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' value='{$lang['STAFF_CRIMEG_NEW_BTN']}' class='btn btn-default'>
+					</td>
+				</tr>
+				{$csrf}
+				<input type='hidden' name='step' value='2'>
+				<input type='hidden' name='cgID' value='{$_POST['crimegroup']}' />
+			</table>
+		</form>
+		";
+	}
+	if ($_POST['step'] == 2)
+	{
+		$_POST['cgNAME'] = (isset($_POST['cgNAME']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['cgNAME'])) ? $db->escape(strip_tags(stripslashes($_POST['cgNAME']))) : '';
+		$_POST['cgORDER'] = (isset($_POST['cgORDER']) && is_numeric($_POST['cgORDER'])) ? abs(intval($_POST['cgORDER'])) : '';
+		$_POST['cgID'] = (isset($_POST['cgID']) && is_numeric($_POST['cgID'])) ? abs(intval($_POST['cgID'])) : '';
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup2', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+		if (empty($_POST['cgNAME']) || empty($_POST['cgORDER']) || empty($_POST['cgID']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_EDIT_SUB_ERR']);
+			die($h->endpage());
+		}
+		else
+		{
+			$d = $db->query("SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']} AND `cgID` != {$_POST['cgID']}");
+			if ($db->fetch_single($d) > 0)
+			{
+				$db->free_result($d);
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_NEW_FAIL2']);
+				die($h->endpage());
+			}
+			$db->free_result($d);
+			$db->query("UPDATE `crimegroups` SET `cgNAME` = '{$_POST['cgNAME']}', `cgORDER` = '{$_POST['cgORDER']}' WHERE `cgID` = '{$_POST['cgID']}'");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIMEG_EDIT_SUB_SUCC']);
+			$api->SystemLogsAdd($userid,'staff',"Edited Crime Group {$_POST['cgNAME']}");
+		}
+	}
+}
+function delcrimegroup()
+{
+	global $lang,$db,$userid,$api,$h;
+	if (isset($_POST['crimeGROUP']))
+	{
+		$_POST['crimeGROUP'] = (isset($_POST['crimeGROUP']) && is_numeric($_POST['crimeGROUP'])) ? abs(intval($_POST['crimeGROUP'])) : '';
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrimegroup', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+		if (empty($_POST['crimeGROUP']))
+		{
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIMEG_DEL_ERR']);
+			die($h->endpage());
+		}
+		$d = $db->query("SELECT * FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
+		if ($db->num_rows($d) == 0)
+		{
+			$db->free_result($d);
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_CRIMEG_DEL_ERR1']}");
+			die($h->endpage());
+		}
+		$db->query("DELETE FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
+		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_CRIMEG_DEL_SUCCESS']}");
+		$api->SystemLogsAdd($userid,'staff',"Deleted Crime Group ID {$_POST['crimeGROUP']}.");
+	}
+	else
+	{
+		$csrf = request_csrf_html('staff_delcrimegroup');
+		echo "<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_CRIMEG_DEL_FRM']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_CRIME_NEW_GROUP']}
+				</th>
+				<td>
+					" . crimegroup_dropdown('crimeGROUP') . "
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' value='{$lang['STAFF_CRIMEG_DEL_BTN']}' class='btn btn-default'>
+				</td>
+			</tr>
+			{$csrf}
+		</table>
+		</form>";
 	}
 }
 $h->endpage();

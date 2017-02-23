@@ -633,6 +633,8 @@ $lang['STAFF_CRIME_MENU_CREATE']="Create Crime";
 $lang['STAFF_CRIME_MENU_EDIT']="Edit Crime";
 $lang['STAFF_CRIME_MENU_DEL']="Delete Crime";
 $lang['STAFF_CRIME_MENU_CREATECG']="Create Crime Group";
+$lang['STAFF_CRIME_MENU_EDITCG']="Edit Crime Group";
+$lang['STAFF_CRIME_MENU_DELCG']="Delete Crime Group";
 $lang['STAFF_CRIME_NEW_TITLE']="Adding a new crime.";
 $lang['STAFF_CRIME_NEW_NAME']="Crime Name";
 $lang['STAFF_CRIME_NEW_BRAVECOST']="Bravery Cost";
@@ -676,6 +678,18 @@ $lang['STAFF_CRIME_DEL_BTN']="Delete Crime";
 $lang['STAFF_CRIME_DEL_ERR']="You need to select a crime you wish to delete.";
 $lang['STAFF_CRIME_DEL_ERR1']="The crime you wish to delete doesn't exist. Success?";
 $lang['STAFF_CRIME_DEL_SUCCESS']="You have successfully deleted this crime.";
+$lang['STAFF_CRIMEG_EDIT_START']="Select a crime group to edit from the dropdown.";
+$lang['STAFF_CRIMEG_EDIT_START1']="Crime Group";
+$lang['STAFF_CRIMEG_EDIT_START_BTN']="Edit Crime Group";
+$lang['STAFF_CRIMEG_EDIT_FRM_ERR']="You need to specify a crime group to edit.";
+$lang['STAFF_CRIMEG_EDIT_FRM_ERR1']="The crime group you're trying to edit doesn't exist.";
+$lang['STAFF_CRIMEG_EDIT_SUB_ERR']="One or more required inputs are empty.";
+$lang['STAFF_CRIMEG_EDIT_SUB_SUCC']="Crime group has been edited successfully.";
+$lang['STAFF_CRIMEG_DEL_FRM']="Select a crime group from the dropdown to delete.";
+$lang['STAFF_CRIMEG_DEL_BTN']="Delete Crime Group";
+$lang['STAFF_CRIMEG_DEL_ERR']="You need to select a crime group to delete.";
+$lang['STAFF_CRIMEG_DEL_ERR1']="The crime group you wish to delete doesn't exist. Success?";
+$lang['STAFF_CRIMEG_DEL_SUCCESS']="You have successfully deleted this crime group.";
 
 //Staff Users
 $lang['STAFF_USERS_EDIT_START']="When you submit this form, you will be able to edit any aspect of the player you select.";
