@@ -107,4 +107,63 @@ function addbot()
 		</form>";
 	}
 }
+function delbot()
+{
+	global $db,$userid,$api,$lang;
+	if (isset($_POST['bot']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_bot_del', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+		else
+		{
+			$bot=(isset($_POST['bot']) && is_numeric($_POST['bot'])) ? abs(intval($_POST['bot'])) : 0;
+			if (empty($bot))
+			{
+				alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['STAFF_BOTS_DEL_ERROR']}");
+				die($h->endpage());
+			}
+			$q=$db->query("SELECT `botid` FROM `botlist` WHERE `botuser` = {$bot}");
+			if ($db->num_rows($q) == 0)
+			{
+				$db->free_result($q);
+				alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['STAFF_BOTS_ADD_ERROR1']}");
+				die($h->endpage());
+			}
+			$db->query("DELETE FROM `botlist` WHERE `botuser` = {$bot}");
+			alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['STAFF_BOTS_DEL_SUCCESS']}");
+			$api->SystemLogsAdd($userid,'staff',"Deleted User ID {$bot} frpm the bot list.");
+		}
+	}
+	else
+	{
+		$csrf=request_csrf_html('staff_bot_del');
+		echo "
+		<form action='?action=delbot' method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_BOTS_DEL_INFO']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_BOTS_DEL_TH']}
+				</th>
+				<td>
+					" . npcbot_dropdown() . "
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' class='btn btn-default' value='{$lang['STAFF_BOTS_DEL_BTN']}'>
+				</td>
+			</tr>
+		</table>
+		{$csrf}
+		</form>";
+	}
+}
 $h->endpage();

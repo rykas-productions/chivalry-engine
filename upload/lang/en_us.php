@@ -1224,6 +1224,12 @@ $lang['STAFF_BOTS_ADD_ERROR1']="You're trying to add a bot that already exists i
 $lang['STAFF_BOTS_ADD_ERROR2']="You can only add NPCs to the bot listing. Go back and try again.";
 $lang['STAFF_BOTS_ADD_ERROR3']="You cannot have a bot drop a non-existent item. Go back and try again.";
 $lang['STAFF_BOTS_ADD_SUCCESS']="You've successfully added an NPC to the bot list.";
+$lang['STAFF_BOTS_DEL_INFO']="Select a bot from the dropdown so it can be deleted.";
+$lang['STAFF_BOTS_DEL_TH']="Bot to Delete";
+$lang['STAFF_BOTS_DEL_BTN']="Delete Bot";
+$lang['STAFF_BOTS_DEL_ERROR']="You didn't select a bot to delete.";
+$lang['STAFF_BOTS_DEL_ERROR1']="This user isn't even on the bot list.";
+$lang['STAFF_BOTS_DEL_SUCCESS']="You've successfully removed this NPC from the bot list.";
 
 //VIP Donation Listing
 $lang['VIP_LIST']="Buying a VIP Pack";
