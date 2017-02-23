@@ -102,7 +102,7 @@ $lang["LOGIN_LWE"] = "Login with Email";
 $lang["LOGIN_SIGNIN"] = "Sign In";
 $lang["LOGIN_NH"] = "New Here? <a href='register.php'>Join Us</a>!";
 $lang['LOGIN_LA'] = "Latest Announcement";
-$lang['LOGIN_TH'] = "Top 10 Guilds";
+$lang['LOGIN_TG'] = "Top 10 Guilds";
 $lang['LOGIN_TP'] = "Top 10 Players";
 
 //Register
