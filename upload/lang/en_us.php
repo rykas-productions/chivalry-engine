@@ -101,6 +101,9 @@ $lang["LOGIN_PASSWORD"] = "Password";
 $lang["LOGIN_LWE"] = "Login with Email";
 $lang["LOGIN_SIGNIN"] = "Sign In";
 $lang["LOGIN_NH"] = "New Here? <a href='register.php'>Join Us</a>!";
+$lang['LOGIN_LA'] = "Latest Announcement";
+$lang['LOGIN_TH'] = "Top 10 Guilds";
+$lang['LOGIN_TP'] = "Top 10 Players";
 
 //Register
 $lang["REG_FORM"] = "Registration";
@@ -495,6 +498,8 @@ $lang['PROFILE_ENE']="Enemies";
 $lang['PROFILE_ATTACK']="Attack";
 $lang['PROFILE_SPY']="Spy On";
 $lang['PROFILE_POKE']="Poke";
+$lang['PROFILE_CONTACT']="Add";
+$lang['PROFILE_CONTACT1']="To Contacts List";
 $lang['PROFILE_MSG1']="Sending";
 $lang['PROFILE_MSG2']="a message";
 $lang['PROFILE_MSG3']="Recipient:";

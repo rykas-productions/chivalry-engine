@@ -118,7 +118,7 @@ if ($set['HTTPS_Support'] == 'true')
     <div class="container">
 		<noscript>
 			<?php
-				alert('danger','Javascript Disabled!','You need to enable Javascript to use this website. Loads of features will not work without Javascript.');
+				alert('info',$lang['ERROR_INFO'],$lang['HDR_JS']);
 			?>
 		</noscript>
 
@@ -139,17 +139,17 @@ if ($set['HTTPS_Support'] == 'true')
 				<div class='col-sm-4'>
 					<div class='panel panel-default'>
 						<div class='panel-heading'>
-							Latest Announcement (" . date("F j, Y, g:i a",$ANN['ann_time']) . ")
+							{$lang['LOGIN_LA']} (" . date("F j, Y, g:i a",$ANN['ann_time']) . ")
 						</div>
 						<div class='panel-body'>
-						{$ANN['ann_text']}
+							{$ANN['ann_text']}
 						</div>
 					</div>
 				</div>
 				<div class='col-sm-4'>
 					<div class='panel panel-default'>
 						<div class='panel-heading'>
-							Top 10 Players
+							{$lang['LOGIN_TP']}
 						</div>
 						<div class='panel-body'>";
 							$Rank=0;
@@ -166,7 +166,7 @@ if ($set['HTTPS_Support'] == 'true')
 							while ($pdata=$db->fetch_row($RankPlayerQuery))
 							{
 								$Rank=$Rank+1;
-								echo "{$Rank}) {$pdata['username']} [{$pdata['userid']}] (Level {$pdata['level']})<br />";
+								echo "{$Rank}) {$pdata['username']} [{$pdata['userid']}] ({$lang['INDEX_LEVEL']} {$pdata['level']})<br />";
 							}
 						echo "</div>
 					</div>
@@ -174,7 +174,7 @@ if ($set['HTTPS_Support'] == 'true')
 				<div class='col-sm-4'>
 					<div class='panel panel-default'>
 						<div class='panel-heading'>
-							Top 10 Guilds
+							{$lang['LOGIN_TG']}
 						</div>";
 							$GRank=0;
 							$RankGuildQuery=$db->query("SELECT `guild_name`,`guild_level` FROM `guild` ORDER BY `guild_level` desc LIMIT 10");
@@ -183,11 +183,10 @@ if ($set['HTTPS_Support'] == 'true')
 							while ($gdata=$db->fetch_row($RankGuildQuery))
 							{
 								$GRank=$GRank+1;
-								echo "{$GRank}) {$gdata['guild_name']} (Level {$gdata['guild_level']})<br />";
+								echo "{$GRank}) {$gdata['guild_name']} ({$lang['INDEX_LEVEL']} {$gdata['guild_level']})<br />";
 							}
 						echo"</div>
 					</div>
 				</div>
 			</div>";
-			
-			require("footer.php");
+		require("footer.php");
