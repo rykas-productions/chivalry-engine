@@ -175,6 +175,20 @@ function basicsettings()
 					<input type='number' name='sessiontimeout' placeholder='0 means no timeout.' class='form-control' min='0' required='1' value='{$set['max_sessiontime']}'>
 				</td>
 			</tr>
+			<tr>
+				<th>
+					Revalidate Captcha
+				</th>
+				<td>
+					<select name='recaptchatime' class='form-control' type='dropdown'>
+						<option value='300'>5 Minutes</option>
+						<option value='900'>15 Minutes</option>
+						<option value='3600'>Hourly</option>
+						<option value='86400'>Daily</option>
+						<option value='99999999999'>Never</option>
+					</select>
+				</td>
+			</tr>
 		</table>";
 		
 		
@@ -204,6 +218,7 @@ function basicsettings()
 		$BankFeePerc = (isset($_POST['bankfeepercent']) && is_numeric($_POST['bankfeepercent'])) ? abs(intval($_POST['bankfeepercent'])) : 10;
 		$BankFeeMax = (isset($_POST['bankfee']) && is_numeric($_POST['bankfee'])) ? abs(intval($_POST['bankfee'])) : 5000;
 		$BankCost = (isset($_POST['bankbuy']) && is_numeric($_POST['bankbuy'])) ? abs(intval($_POST['bankbuy'])) : 5000;
+		$recaptchatime = (isset($_POST['recaptchatime']) && is_numeric($_POST['recaptchatime'])) ? abs(intval($_POST['recaptchatime'])) : 3600;
 		$sessiontimeout = (isset($_POST['sessiontimeout']) && is_numeric($_POST['sessiontimeout'])) ? abs(intval($_POST['sessiontimeout'])) : 15;
 		if (empty($GameName))
 		{
@@ -260,6 +275,11 @@ function basicsettings()
 			alert('danger',"{$lang['ERROR_INVALID']}","Empty or Invalid Password Hashing effort. Minimum of 5, maximum of 10.");
 			die($h->endpage());
 		}
+		elseif ($recaptchatime <= 0)
+		{
+			alert('danger',"{$lang['ERROR_INVALID']}","Specify a longer revalidate period, please.");
+			die($h->endpage());
+		}
 		else
 		{
 			$db->query("UPDATE `settings` SET `setting_value` = {$RefAward} WHERE `setting_name` = 'ReferalKickback'");
@@ -277,6 +297,7 @@ function basicsettings()
 			$db->query("UPDATE `settings` SET `setting_value` = '{$rcpb}' WHERE `setting_name` = 'reCaptcha_public'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$rcpr}' WHERE `setting_name` = 'reCaptcha_private'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$sessiontimeout}' WHERE `setting_name` = 'max_sessiontime'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$recaptchatime}' WHERE `setting_name` = 'Revalidate_Time'");
 			alert('success',"{$lang['ERROR_SUCCESS']}","Successfully updated the game settings.");
 			$api->SystemLogsAdd($userid,'staff',"Updated game settings.");
 		}
@@ -435,6 +456,6 @@ function errlog()
 	$dir= substr(__DIR__, 0, strpos(__DIR__, "\staff"));
 	$api->SystemLogsAdd($userid,'staff',"Viewed the error log.");
 	echo "
-	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents($dir . '.\cache\error_log.txt') . "</textarea>";
+	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents($dir . '\cache\error_log.txt') . "</textarea>";
 }
 $h->endpage();

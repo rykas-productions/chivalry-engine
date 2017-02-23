@@ -200,7 +200,7 @@ class headers
 					alert('info',"{$lang["GEN_DUNG"]}","{$lang['MENU_DUNGEON1']} {$DungeonRemain}.");
 				}
 				$time=time();
-				if (($ir['last_verified'] < ($time-900)) || ($ir['need_verify'] == 1))
+				if (($ir['last_verified'] < ($time-$set['Revalidate_Time'])) || ($ir['need_verify'] == 1))
 				{
 					if (isset($macropage))
 					{

@@ -651,7 +651,8 @@ INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES
 (11, 'reCaptcha_public', ''),
 (12, 'reCaptcha_private', ''),
 (13, 'Password_Effort', '10'),
-(14, 'max_sessiontime', '44');
+(14, 'max_sessiontime', '44'),
+(15, 'Revalidate_Time', '9999999999999999');
 
 -- --------------------------------------------------------
 
@@ -1300,7 +1301,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` tinyint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `setting_id` tinyint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `shopitems`
 --
