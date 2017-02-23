@@ -5,7 +5,7 @@ $code2 = request_csrf_code('cash_send');
 $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : '';
 if (!$_GET['user'])
 {
-   alert("danger","Invalid Use","You must enter a User's ID to view their profile.");
+   alert("danger","{$lang['ERROR_NONUSER']}","{$lang['PROFILE_UNF']}");
 }
 else
 {
