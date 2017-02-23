@@ -26,15 +26,15 @@ if (!isset($_GET['action']))
 }
 switch ($_GET['action'])
 {
-case 'mine':
-    mine();
-    break;
-case 'buypower':
-    buypower();
-    break;
-default:
-    home();
-    break;
+	case 'mine':
+		mine();
+		break;
+	case 'buypower':
+		buypower();
+		break;
+	default:
+		home();
+		break;
 }
 function home()
 {
