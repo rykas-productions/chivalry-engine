@@ -630,6 +630,7 @@ $lang['STAFF_ITEM_GIVE_SUB_SUCCESS']="Item(s) have been gifted successfully.";
 //Staff Crimes
 $lang['STAFF_CRIME_TITLE']="Crimes";
 $lang['STAFF_CRIME_MENU_CREATE']="Create Crime";
+$lang['STAFF_CRIME_MENU_EDIT']="Edit Crime";
 $lang['STAFF_CRIME_MENU_CREATECG']="Create Crime Group";
 $lang['STAFF_CRIME_NEW_TITLE']="Adding a new crime.";
 $lang['STAFF_CRIME_NEW_NAME']="Crime Name";
@@ -662,6 +663,12 @@ $lang['STAFF_CRIMEG_NEW_BTN']="Create Crime Group";
 $lang['STAFF_CRIMEG_NEW_FAIL1']="At least one of the two inputs on the previous form are empty. Go back and correct that, please.";
 $lang['STAFF_CRIMEG_NEW_FAIL2']="You cannot have crime groups share order values.";
 $lang['STAFF_CRIMEG_NEW_SUCCESS']="You have successfully created a crime group.";
+$lang['STAFF_CRIME_EDIT_START']="Select a crime from the dropdown to edit.";
+$lang['STAFF_CRIME_EDIT_START1']="Crime";
+$lang['STAFF_CRIME_EDIT_START_BTN']="Edit Crime";
+$lang['STAFF_CRIME_EDIT_FRM_ERR']="You must specify a crime to edit.";
+$lang['STAFF_CRIME_EDIT_FRM_ERR1']="The crime you've selected doesn't appear to exist.";
+$lang['STAFF_CRIME_EDIT_SUCCESS']="You have successfully edited this crime.";
 
 //Staff Users
 $lang['STAFF_USERS_EDIT_START']="When you submit this form, you will be able to edit any aspect of the player you select.";
