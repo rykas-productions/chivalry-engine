@@ -6,27 +6,27 @@ if (!isset($_GET['action']))
 }
 switch ($_GET['action'])
 {
-case 'namechange':
-    name_change();
-    break;
-case 'timechange':
-    time_change();
-    break;
-case 'langchange':
-    lang_change();
-    break;
-case 'pwchange':
-    pw_change();
-    break;
-case 'picchange':
-    pic_change();
-    break;
-case 'themechange':
-    themechange();
-    break;
-default:
-    prefs_home();
-    break;
+	case 'namechange':
+		name_change();
+		break;
+	case 'timechange':
+		time_change();
+		break;
+	case 'langchange':
+		lang_change();
+		break;
+	case 'pwchange':
+		pw_change();
+		break;
+	case 'picchange':
+		pic_change();
+		break;
+	case 'themechange':
+		themechange();
+		break;
+	default:
+		prefs_home();
+		break;
 }
 function prefs_home()
 {
