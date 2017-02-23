@@ -134,7 +134,7 @@ function delbot()
 			}
 			$db->query("DELETE FROM `botlist` WHERE `botuser` = {$bot}");
 			alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['STAFF_BOTS_DEL_SUCCESS']}");
-			$api->SystemLogsAdd($userid,'staff',"Deleted User ID {$bot} frpm the bot list.");
+			$api->SystemLogsAdd($userid,'staff',"Deleted User ID {$bot} from the bot list.");
 		}
 	}
 	else
