@@ -145,7 +145,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 		}
 		if (empty($username))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Check your username and try again.");
+			alert('danger',$lang['ERROR_INVALID'],$lang['REG_USEREMPTY']);
 			require("footer.php");
 			exit;
 		}
@@ -255,9 +255,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 			if ($_POST['ref'])
 			{
 				$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']} WHERE `userid` = {$_POST['ref']}");
-				notification_add($_POST['ref'],
-						"For refering $username to the game, you have earned {$set['ReferalKickback']} valuable Secondary Currency(s)!",
-						$c);
+				notification_add($_POST['ref'], "For refering $username to the game, you have earned {$set['ReferalKickback']} valuable Secondary Currency(s)!");
 				$e_rip = $db->escape($rem_IP);
 				$db->query("INSERT INTO `referals`
 				VALUES
@@ -273,10 +271,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 		$_SESSION['loggedin'] = 1;
 		$_SESSION['userid'] = $i;
 		$api->SystemLogsAdd($_SESSION['userid'],'login',"Successfully logged in.");
-		$db->query(
-            "UPDATE `users`
-             SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}'
-             WHERE `userid` = {$i}");
+		$db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['REG_SUCCESS']}<br />
 			<a href='loggedin.php'>{$lang['LOGIN_SIGNIN']}</a>");
 		}

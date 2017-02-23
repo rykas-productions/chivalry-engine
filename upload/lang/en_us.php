@@ -134,6 +134,7 @@ $lang['REG_GENDERERROR']="You specified an invalid gender. Please go back and tr
 $lang['REG_CLASSERROR']="You specified an invalid fighting class. Please go back and try again.";
 $lang['REG_EMAILERROR']="You did not enter a valid email, or failed to enter the email field. Please go back and try again.";
 $lang['REG_MULTIALERT']="Hold on there. We've detected that someone with your IP address has already registered. We're going to stop you here for now. If this is a false positive, please email the game owners.";
+$lang['REG_USEREMPTY']="You didn't input a username. Go back and try again, please.";
 
 //CSRF Error
 $lang["CSRF_ERROR_TITLE"] = "Action Blocked!";
