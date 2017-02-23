@@ -39,6 +39,7 @@ function home()
 	<a href='?action=newcrimegroup'>{$lang['STAFF_CRIME_MENU_CREATECG']}</a><br />
 	<a href='?action=newcrime'>{$lang['STAFF_CRIME_MENU_CREATE']}</a><br />
 	<a href='?action=editcrime'>{$lang['STAFF_CRIME_MENU_EDIT']}</a><br />
+	<a href='?action=delcrime'>{$lang['STAFF_CRIME_MENU_DEL']}</a><br />
 	";
 }
 function new_crime()
@@ -505,6 +506,62 @@ function edit_crime()
              WHERE `crimeID` = {$_POST['crimeID']}");
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_CRIME_EDIT_SUCCESS']}");
 		$api->SystemLogsAdd($userid,'staff',"Edited crime {$_POST['name']}");
+	}
+}
+function delcrime()
+{
+	global $db,$userid,$lang,$api,$h;
+	if (isset($_POST['crime']))
+	{
+		$_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrime', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+		if (empty($_POST['crime']))
+		{
+			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_CRIME_DEL_ERR']}");
+			die($h->endpage());
+		}
+		$d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
+		if ($db->num_rows($d) == 0)
+		{
+			$db->free_result($d);
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_CRIME_DEL_ERR1']}");
+			die($h->endpage());
+		}
+		$db->query("DELETE FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
+		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_CRIME_DEL_SUCCESS']}");
+		$api->SystemLogsAdd($userid,'staff',"Deleted Crime ID {$_POST['crime']}.");
+		
+	}
+	else
+	{
+		$csrf = request_csrf_html('staff_delcrime');
+		echo "<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_CRIME_DEL_FRM']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_CRIME_DEL_FRM1']}
+				</th>
+				<td>
+					" . crime_dropdown('crime') . "
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' value='{$lang['STAFF_CRIME_DEL_BTN']}' class='btn btn-default'>
+				</td>
+			</tr>
+			{$csrf}
+		</table>
+		</form>";
 	}
 }
 function new_crimegroup()
