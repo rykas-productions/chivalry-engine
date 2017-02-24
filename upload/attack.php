@@ -89,14 +89,14 @@ function attacking()
 	{
 		$_SESSION['attacklost'] = 0;
 		alert("danger","{$lang['ERROR_UNKNOWN']}","{$lang['ATTACK_START_UNKNOWNERROR']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
-		$api->UserInfoSet($userid,'attacking',0);
+		$api->UserInfoSetStatic($userid,"attacking",0);
 		die($h->endpage());
 	}
 	if ($odata['hp'] == 1)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$api->UserInfoSet($userid,'attacking',0);
+		$api->UserInfoSetStatic($userid,"attacking",0);
 		alert("danger","{$lang['ERROR_GENERIC']}","{$odata['username']} {$lang['ATTACK_START_OPPNOHP']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -104,7 +104,7 @@ function attacking()
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$api->UserInfoSet($userid,'attacking',0);
+		$api->UserInfoSetStatic($userid,"attacking",0);
 		alert("danger","{$lang['GEN_INFIRM']}","{$odata['username']} {$lang['ATTACK_START_OPPINFIRM']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -112,7 +112,7 @@ function attacking()
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$api->UserInfoSet($userid,'attacking',0);
+		$api->UserInfoSetStatic($userid,"attacking",0);
 		alert("danger","{$lang['GEN_INFIRM']}","{$lang['ATTACK_START_YOUINFIRM']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -120,7 +120,7 @@ function attacking()
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$api->UserInfoSet($userid,'attacking',0);
+		$api->UserInfoSetStatic($userid,"attacking",0);
 		alert("danger","{$lang['GEN_DUNG']}","{$odata['username']} {$lang['ATTACK_START_OPPDUNG']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -128,7 +128,7 @@ function attacking()
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$api->UserInfoSet($userid,'attacking',0);
+		$api->UserInfoSetStatic($userid,"attacking",0);
 		alert("danger","{$lang['GEN_DUNG']}","{$lang['ATTACK_START_YOUDUNG']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -136,7 +136,7 @@ function attacking()
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$api->UserInfoSet($userid,'attacking',0);
+		$api->UserInfoSetStatic($userid,"attacking",0);
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_OPPUNATTACK']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -144,7 +144,7 @@ function attacking()
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$api->UserInfoSet($userid,'attacking',0);
+		$api->UserInfoSetStatic($userid,"attacking",0);
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_YOUUNATTACK']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -152,7 +152,7 @@ function attacking()
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$api->UserInfoSet($userid,'attacking',0);
+		$api->UserInfoSetStatic($userid,"attacking",0);
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_THEYLOWLEVEL']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -167,7 +167,7 @@ function attacking()
 		{
 			$_SESSION['attacking'] = 0;
 			$ir['attacking'] = 0;
-			$api->UserInfoSet($userid,'attacking',0);
+			$api->UserInfoSetStatic($userid,"attacking",0);
 			alert("warning","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_STALEMATE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 			die($h->endpage());
 		}
@@ -190,7 +190,8 @@ function attacking()
 		}
 		$_SESSION['attacking'] = 1;
 		$ir['attacking'] = $odata['userid'];
-		$api->UserInfoSet($userid,'attacking',$ir['attacking']);
+		//$api->UserInfoSetStatic($userid,"attacking",$ir['attacking']);
+		$api->UserINfoSetStatic($userid,"attacking",$ir['attacking']);
 		$_GET['nextstep'] = (isset($_GET['nextstep']) && is_numeric($_GET['nextstep'])) ? abs(intval($_GET['nextstep'])) : '';
 		if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary'])
 		{
@@ -460,7 +461,7 @@ function beat()
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
-	$api->UserInfoSet($userid,"attacking",0);
+	$api->UserInfoSetStatic($userid,"attacking",0);
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
@@ -540,7 +541,7 @@ function lost()
 	$expgainp = $expgain / $ir['xp_needed'] * 100;
 	alert('danger',"{$lang['ATTACK_FIGHT_END5']} {$r['username']}!","{$lang['ATTACK_FIGHT_END6']} (" . number_format($expgainp, 2) . "%)!");
 	$api->UserInfoSet($userid,"xp","-{$expgain}");
-	$api->UserInfoSet($userid,"attacking",0);
+	$api->UserInfoSetStatic($userid,"attacking",0);
 	$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 	$hospreason = 'Picked a fight and lost';
 	$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
@@ -561,7 +562,7 @@ function xp()
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
-	$api->UserInfoSet($userid,"attacking",0);
+	$api->UserInfoSetStatic($userid,"attacking",0);
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
@@ -604,7 +605,7 @@ function xp()
 			$expperc = round($expgain / $ir['xp_needed'] * 100);
 			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END7']} ({$expperc}%, {$expgain})");
 			$hosptime = Random(5, 30) + floor($ir['level'] / 10);
-			$api->UserInfoSet($userid,"xp",$expgain);
+			$api->UserInfoSetStatic($userid,"xp",$ir['xp']+$expgain);
 			$hospreason = $db->escape("Used for experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 			$api->UserInfoSet($r['userid'],"hp",1);
 			$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
@@ -625,7 +626,7 @@ function mug()
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
-	$api->UserInfoSet($userid,"attacking",0);
+	$api->UserInfoSetStatic($userid,"attacking",0);
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{

@@ -1,7 +1,7 @@
 <?php
 require('globals.php');
 echo "<h3>{$lang['CRIME_TITLE']}</h3>";
-if ($api->UserStatus($ir['userid'],'infirmary') == true || $api->UserStatus($ir['userid'],'dungeon'))
+if ($api->UserStatus($ir['userid'],'infirmary') == true || $api->UserStatus($ir['userid'],'dungeon') == true)
 {
 	alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['CRIME_ERROR_JI']}");
 	die($h->endpage());
@@ -110,7 +110,7 @@ function crime()
 				$text = str_replace("{money}", $prim_currency, $r['crimeSTEXT']);
 				$title=$lang['ERROR_SUCCESS'];
 				$type='success';
-				$api->UserInfoSet($userid,"xp",$r['crimeXP']);
+				$api->UserInfoSetStatic($userid,"xp",$ir['xp']+$r['crimeXP']);
 				$api->SystemLogsAdd($userid,'crime',"Successfully commited the {$r['crimeNAME']} crime.");
 			}
 			else
@@ -118,7 +118,8 @@ function crime()
 					$text=$r['crimeFTEXT'];
 					$title=$lang['ERROR_GENERIC'];;
 					$type='danger';
-					$dtime=Random($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
+					//$dtime=Random($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
+					$dtime=Random(1,100);
 					$api->UserStatusSet($userid,'dungeon',$dtime,$r['crimeDUNGREAS']);
 					$api->SystemLogsAdd($userid,'crime',"Failed to commit the {$r['crimeNAME']} crime.");
 			}

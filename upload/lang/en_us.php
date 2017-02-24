@@ -1286,6 +1286,7 @@ $lang['VIP_CANCEL']="You have successfully cancelled your donation. Please donat
 $lang['VIP_SUCCESS']="We appreciate it completely. You can view a receipt of this transaction at <a href='http://www.paypal.com'>Paypal</a>. Your items should be given to you automatically fairly soon. If not, please contact an admin for help!";
 
 //Staff punishments
+$lang['STAFF_PUNISHED_FED']="Fedjail User";
 $lang['STAFF_PUNISHFED_FORM']="Jailing User";
 $lang['STAFF_PUNISHFED_INFO']="Placing a user in federal jail will render their account virtually useless. They will not be able to do anything in-game.";
 $lang['STAFF_PUNISHFED_TH']="User:";
@@ -1457,6 +1458,7 @@ $lang['STAFF_IDX_LOGS_TAB14']="Verification Logs";
 $lang['STAFF_IDX_LOGS_TAB15']="Spy Attempt Logs";
 $lang['STAFF_IDX_LOGS_TAB16']="Gambling Logs";
 $lang['STAFF_IDX_LOGS_TAB17']="Item Selling Logs";
+$lang['STAFF_IDX_LOGS_TAB18']="Fedjail Logs";
 $lang['STAFF_IDX_PERM_TAB1']="View Permissions";
 $lang['STAFF_IDX_PERM_TAB2']="Reset Permissions";
 $lang['STAFF_IDX_PERM_TAB3']="Edit Permissions";

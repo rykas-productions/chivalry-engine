@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.2.5";
+		return "17.2.6";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -246,15 +246,16 @@ class api
 	*/
 	function UserStatus($user,$status)
 	{
+		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$status = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($status)))));
 		if ($status == 'infirmary')
 		{
-			user_infirmary($user);
+			return user_infirmary($user);
 		}
 		elseif ($status == 'dungeon')
 		{
-			user_dungeon($user);
+			return user_dungeon($user);
 		}
 		else
 		{
@@ -924,7 +925,7 @@ class api
 			{
 				if (!($api->SystemUserIDtoName($user) == false))
 				{
-					$db->query("UPDATE `users` SET `{$stat}` = {$state} WHERE `userid` = {$userid}");
+					$db->query("UPDATE `users` SET `{$stat}` = '{$state}' WHERE `userid` = '{$user}'");
 					return true;
 				}
 				else

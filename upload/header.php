@@ -4,7 +4,7 @@ class headers
 
     function startheaders()
     {
-		global $ir, $set, $h, $lang, $db, $menuhide, $userid, $macropage;
+		global $ir,$set,$h,$lang,$db,$menuhide,$userid,$macropage,$api;
 		?>
 		<!DOCTYPE html>
 		<html lang="en">

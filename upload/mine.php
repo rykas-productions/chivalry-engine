@@ -194,16 +194,16 @@ function mine()
                 if ($Rolls <= 3)
                 {
                     $NegRolls=Random(1,3);
-                    $NegTime=Random(50,100)*($MUS['mining_level']*.5);
+                    $NegTime=Random(25,75)*($MUS['mining_level']*.25);
                     if ($NegRolls == 1)
                     {
                         alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL']);
-						$api->UserStatusSet($userid,1,$NegTime,"Mining Explosion");
+						$api->UserStatusSet($userid,'infirmary',$NegTime,"Mining Explosion");
                     }
                     elseif ($NegRolls == 2)
                     {
                         alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL1']);
-						$api->UserStatusSet($userid,2,$NegTime,"Mining Selfishness");
+						$api->UserStatusSet($userid,'dungeon',$NegTime,"Mining Selfishness");
                     }
                     else
                     {
