@@ -107,7 +107,7 @@ function addforum()
 function editforum()
 {
 	global $db, $h, $lang, $userid, $api;
-				echo "<h3>Editing a Forum</h3><hr />";
+				echo "<h3>{$lang['STAFF_FORUM_EDIT_BTN']}</h3><hr />";
     if (!isset($_POST['step']))
     {
         $_POST['step'] = '0';
