@@ -76,7 +76,7 @@ function create()
 	 echo "<h3>{$lang['GUILD_CREATE']}</h3><hr />";
 	$cg_price = $set['GUILD_PRICE'];
 	$cg_level = $set['GUILD_LEVEL'];
-	if (!($api->UserHasCurrency($userid,1,$cg_price)))
+	if (!($api->UserHasCurrency($userid,'primary',$cg_price)))
 	{
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['GUILD_CREATE_ERROR']} " . number_format($cg_price) . ".");
 		die($h->endpage());
