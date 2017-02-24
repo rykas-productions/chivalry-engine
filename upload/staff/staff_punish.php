@@ -7,12 +7,12 @@ if (!isset($_GET['action']))
 switch ($_GET['action'])
 {
 	case 'fedjail':
-		fedjail();
-		break;
+    fedjail();
+    break;
 	default:
-		echo 'Error: This script requires an action.';
-		$h->endpage();
-		break;
+    echo 'Error: This script requires an action.';
+	$h->endpage();
+    break;
 }
 function fedjail()
 {
@@ -47,13 +47,14 @@ function fedjail()
 			die($h->endpage());
 		}
 		$re = $db->query("UPDATE `users` SET `fedjail` = 1  WHERE `userid` = {$_POST['user']}");
+		$days=$_POST['days'];
 		$_POST['days']=time()+($_POST['days']*86400);
 		if ($db->affected_rows() > 0)
 		{
 			$db->query("INSERT INTO `fedjail` VALUES(NULL, {$_POST['user']}, {$_POST['days']}, {$userid}, '{$_POST['reason']}')");
 		}
-		$api->SystemLogsAdd($userid,'staff',"Placed User ID {$_POST['user']} into the federal jail for {$_POST['days']} for {$_POST['reason']}.");
-		$api->SystemLogsAdd($userid,'fedjail',"Placed User ID {$_POST['user']} into the federal jail for {$_POST['days']} for {$_POST['reason']}.");
+		$api->SystemLogsAdd($userid,'staff',"Placed User ID {$_POST['user']} into the federal jail for {$days} days for {$_POST['reason']}.");
+		$api->SystemLogsAdd($userid,'fedjail',"Placed User ID {$_POST['user']} into the federal jail for {$days} days for {$_POST['reason']}.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_PUNISHFED_SUCC']);
 		die($h->endpage());
 	}

@@ -278,7 +278,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 			<div id='PUNISH' class='tab-pane fade in'>
 					<div class='panel panel-default'>
 						<div class='panel-body'>
-							N/A
+							<a href='staff_punish.php?action=fedjail'>{$lang['STAFF_PUNISHED_FED']}</a><br />
 						</div>
 					</div>
 			</div>
