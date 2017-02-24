@@ -187,13 +187,13 @@ class headers
 				{
 					alert('info',"{$lang['MENU_UNREADANNONCE']}","{$lang['MENU_UNREADANNONCE1']} {$ir['announcements']} {$lang['MENU_UNREADANNONCE2']} <a href='announcements.php'>{$lang["GEN_HERE"]}</a>.");
 				}
-				if (user_infirmary($ir['userid']) == true)
+				if ($api->UserStatus($ir['userid'],'infirmary') == true)
 				{
 					$InfirmaryOut=$db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
 					$InfirmaryRemain=TimeUntil_Parse($InfirmaryOut);
 					alert('info',"{$lang['GEN_INFIRM']}","{$lang['MENU_INFIRMARY1']} {$InfirmaryRemain}.");
 				}
-				if (user_dungeon($ir['userid']) == true)
+				if ($api->UserStatus($ir['userid'],'dungeon') == true)
 				{
 					$DungeonOut=$db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
 					$DungeonRemain=TimeUntil_Parse($DungeonOut);

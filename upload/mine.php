@@ -10,12 +10,12 @@ if (!($db->num_rows($UIDB)))
 $MUS=($db->fetch_row($db->query("SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 mining_levelup();
 echo "<h2>{$lang['EXPLORE_MINE']}</h2><hr />";
-if (user_infirmary($ir['userid']) == true)
+if ($api->UserStatus($userid,'infirmary') == true)
 {
 	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['MINE_INFIRM']}");
 	die($h->endpage());
 }
-if (user_dungeon($ir['userid']) == true)
+if ($api->UserStatus($userid,'dungeon') == true)
 {
 	alert('danger',"{$lang["GEN_DUNG"]}","{$lang['MINE_DUNGEON']}");
 	die($h->endpage());

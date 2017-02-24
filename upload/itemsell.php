@@ -35,11 +35,8 @@ if (permission('CanSellToGame',$userid) == true)
 			else
 			{
 				$price = $r['itmsellprice'] * $_POST['qty'];
-				item_remove($userid, $r['itmid'], $_POST['qty']);
-				$db->query(
-						"UPDATE `users`
-						 SET `primary_currency` = `primary_currency` + {$price}
-						 WHERE `userid` = $userid");
+				$api->UserTakeItem($userid, $r['itmid'], $_POST['qty']);
+				$api->UserGiveCurrency($userid,'primary',$price);
 				$priceh = number_format($price);
 				alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['ITEM_SELL_SUCCESS1']} {$_POST['qty']} {$r['itmname']}{$lang['ITEM_SELL_SUCCESS2']} {$priceh} {$lang['INDEX_PRIMCURR']}.");
 				$is_log =  $db->escape("{$ir['username']} sold {$_POST['qty']} {$r['itmname']}(s) for {$priceh}");

@@ -1,7 +1,7 @@
 <?php
 require('globals.php');
 echo "<h3>{$lang['CRIME_TITLE']}</h3>";
-if (user_infirmary($ir['userid']) == true || user_dungeon($ir['userid']))
+if ($api->UserStatus($ir['userid'],'infirmary') == true || $api->UserStatus($ir['userid'],'dungeon'))
 {
 	alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['CRIME_ERROR_JI']}");
 	die($h->endpage());
@@ -90,27 +90,27 @@ function crime()
 			$ec = "\$sucrate=" . str_replace(array("LEVEL", "EXP", "WILL", "IQ"), array($ir['level'], $ir['xp'], $ir['will'], $ir['iq']), $r['crimePERCFORM']) . ";";
 			eval($ec);
 			$ir['brave'] -= $r['crimeBRAVE'];
-			$db->query("UPDATE `users` SET `brave` = {$ir['brave']}  WHERE `userid` = $userid");
+			$api->UserInfoSet($userid,"brave","-{$r['crimeBRAVE']}");
 			if (Random(1, 100) <= $sucrate)
 			{
 				if (!empty($r['crimePRICURMIN']))
 				{
 					$prim_currency=Random($r['crimePRICURMIN'],$r['crimePRICURMAX']);
-					$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$prim_currency} WHERE `userid` = {$userid}");
+					$api->UserGiveCurrency($userid,'primary',$prim_currency);
 				}
 				if (!empty($r['crimeSECURMIN']))
 				{
 					$sec_currency=Random($r['crimeSECURMIN'],$r['crimeSECCURMAX']);
-					$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$sec_currency} WHERE `userid` = {$userid}");
+					$api->UserGiveCurrency($userid,'secondary',$sec_currency);
 				}
 				if (!empty($r['crimeSUCCESSITEM']))
 				{
-					item_add($userid, $r['crimeSUCCESSITEM'], 1);
+					$api->UserGiveItem($userid, $r['crimeSUCCESSITEM'], 1);
 				}
 				$text = str_replace("{money}", $prim_currency, $r['crimeSTEXT']);
 				$title=$lang['ERROR_SUCCESS'];
 				$type='success';
-				$db->query("UPDATE `users` SET `xp` = `xp` + {$r['crimeXP']} WHERE `userid` = $userid");
+				$api->UserInfoSet($userid,"xp",$r['crimeXP']);
 				$api->SystemLogsAdd($userid,'crime',"Successfully commited the {$r['crimeNAME']} crime.");
 			}
 			else
@@ -119,7 +119,7 @@ function crime()
 					$title=$lang['ERROR_GENERIC'];;
 					$type='danger';
 					$dtime=Random($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
-					put_dungeon($userid,$dtime,$r['crimeDUNGREAS']);
+					$api->UserStatusSet($userid,'dungeon',$dtime,$r['crimeDUNGREAS']);
 					$api->SystemLogsAdd($userid,'crime',"Failed to commit the {$r['crimeNAME']} crime.");
 			}
 			alert("{$type}","{$title}","{$r['crimeITEXT']} {$text}");

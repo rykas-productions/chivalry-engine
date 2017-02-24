@@ -1,12 +1,12 @@
 <?php
 require('globals.php');
 $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : '';
-if (user_infirmary($ir['userid']) == true)
+if ($api->UserStatus($userid,'infirmary') == true)
 {
 	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['SPY_ERROR6']}");
 	die($h->endpage());
 }
-if (user_dungeon($ir['userid']) == true)
+if ($api->UserStatus($userid,'dungeon') == true)
 {
 	alert('danger',"{$lang["GEN_DUNG"]}","{$lang['SPY_ERROR5']}");
 	die($h->endpage());
@@ -36,20 +36,20 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 		alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_ERROR4']);
 		die($h->endpage());
 	}
-	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - " . $r['level']*500 . " WHERE `userid` = {$userid}");
+	$api->UserTakeCurrency($userid,'primary',$r['level']*500);
 	if ($rand == 1 || $rand == 2)
 	{
 		$rand2=Random(1,3);
 		if ($rand2 <= 2)
 		{
-			notification_add($_GET['user'],"An unknown user has attempted to spy on you and failed.");
+			$api->GameAddNotification($_GET['user'],"An unknown user has attempted to spy on you and failed.");
 			alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_FAIL1']);
 			$api->SystemLogsAdd($userid,'spy',"Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) .  " and failed.");
 			die($h->endpage());
 		}
 		else
 		{
-			notification_add($_GET['user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has attempted to spy on you and failed.");
+			$api->GameAddNotification($_GET['user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has attempted to spy on you and failed.");
 			alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_FAIL2']);
 			$api->SystemLogsAdd($userid,'spy',"Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) .  " and failed.");
 			die($h->endpage());
@@ -59,7 +59,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 	{
 		alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_FAIL3']);
 		$dungtime=Random($ir['level'],$ir['level']*3);
-		$api->UserStatusSet($userid,2,$dungtime,"Stalkerish Tendencies");
+		$api->UserStatusSet($userid,'dungeon',$dungtime,"Stalkerish Tendencies");
 		$api->SystemLogsAdd($userid,'spy',"Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) .  " and was sent to the dungeon.");
 		die($h->endpage());
 	}

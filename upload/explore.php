@@ -1,12 +1,12 @@
 <?php
 require("globals.php");
 $tresder = (Random(100, 999));
-if (user_infirmary($ir['userid']) == true)
+if ($api->UserStatus($ir['userid'],'infirmary') == true)
 {
 	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['ERRDE_EXPLORE']}");
 	die($h->endpage());
 }
-if (user_dungeon($ir['userid']) == true)
+if ($api->UserStatus($ir['userid'],'dungeon') == true)
 {
 	alert('danger',"{$lang["GEN_DUNG"]}","{$lang['ERRDE_EXPLORE2']}");
 	die($h->endpage());

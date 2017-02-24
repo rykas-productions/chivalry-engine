@@ -89,46 +89,46 @@ function attacking()
 	{
 		$_SESSION['attacklost'] = 0;
 		alert("danger","{$lang['ERROR_UNKNOWN']}","{$lang['ATTACK_START_UNKNOWNERROR']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
-		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
+		$api->UserInfoSet($userid,'attacking',0);
 		die($h->endpage());
 	}
 	if ($odata['hp'] == 1)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
+		$api->UserInfoSet($userid,'attacking',0);
 		alert("danger","{$lang['ERROR_GENERIC']}","{$odata['username']} {$lang['ATTACK_START_OPPNOHP']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
-	else if (user_infirmary($_GET['user']) == true)
+	else if ($api->UserStatus($_GET['user'],'infirmary') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
+		$api->UserInfoSet($userid,'attacking',0);
 		alert("danger","{$lang['GEN_INFIRM']}","{$odata['username']} {$lang['ATTACK_START_OPPINFIRM']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
-	else if (user_infirmary($ir['userid']) == true)
+	else if ($api->UserStatus($ir['userid'],'infirmary') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
-	   alert("danger","{$lang['GEN_INFIRM']}","{$lang['ATTACK_START_YOUINFIRM']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
+		$api->UserInfoSet($userid,'attacking',0);
+		alert("danger","{$lang['GEN_INFIRM']}","{$lang['ATTACK_START_YOUINFIRM']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
-	else if (user_dungeon($_GET['user']) == true)
+	else if ($api->UserStatus($_GET['user'],'dungeon') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
+		$api->UserInfoSet($userid,'attacking',0);
 		alert("danger","{$lang['GEN_DUNG']}","{$odata['username']} {$lang['ATTACK_START_OPPDUNG']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
-	else if (user_dungeon($userid) == true)
+	else if ($api->UserStatus($userid,'dungeon') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
+		$api->UserInfoSet($userid,'attacking',0);
 		alert("danger","{$lang['GEN_DUNG']}","{$lang['ATTACK_START_YOUDUNG']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -136,7 +136,7 @@ function attacking()
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
+		$api->UserInfoSet($userid,'attacking',0);
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_OPPUNATTACK']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -144,7 +144,7 @@ function attacking()
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
+		$api->UserInfoSet($userid,'attacking',0);
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_YOUUNATTACK']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -152,7 +152,7 @@ function attacking()
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
-		$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
+		$api->UserInfoSet($userid,'attacking',0);
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_THEYLOWLEVEL']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -167,7 +167,7 @@ function attacking()
 		{
 			$_SESSION['attacking'] = 0;
 			$ir['attacking'] = 0;
-			$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = {$userid}");
+			$api->UserInfoSet($userid,'attacking',0);
 			alert("warning","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_STALEMATE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 			die($h->endpage());
 		}
@@ -177,7 +177,7 @@ function attacking()
 			{
 				$youdata['energy'] -= floor($youdata['maxenergy'] / $set['AttackEnergyCost']);
 				$cost = floor($youdata['maxenergy'] / $set['AttackEnergyCost']);
-				$db->query("UPDATE `users` SET `energy` = `energy` - {$cost} WHERE `userid` = {$userid}");
+				$api->UserInfoSet($userid,'energy',"-{$cost}");
 				$_SESSION['attackdmg'] = 0;
 			}
 			else
@@ -190,14 +190,12 @@ function attacking()
 		}
 		$_SESSION['attacking'] = 1;
 		$ir['attacking'] = $odata['userid'];
-		$attackstatus_sql ="UPDATE `users` SET `attacking` = {$ir['attacking']} WHERE `userid` = {$userid}";
-		$db->query($attackstatus_sql);
+		$api->UserInfoSet($userid,'attacking',$ir['attacking']);
 		$_GET['nextstep'] = (isset($_GET['nextstep']) && is_numeric($_GET['nextstep'])) ? abs(intval($_GET['nextstep'])) : '';
 		if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary'])
 		{
-			$abuse_sql ="UPDATE `users` SET `xp` = 0 WHERE `userid` = {$userid}";
-			$db->query($abuse_sql);
-			$api->UserStatusSet($userid,1,666,'Bug Abuse');
+			$api->UserInfoSet($userid,'xp',0);
+			$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 			alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 			die($h->endpage());
 		}
@@ -268,7 +266,7 @@ function attacking()
 		{
 			$odata['hp'] = 0;
 			$_SESSION['attackwon'] = $_GET['user'];
-			$db->query("UPDATE `users` SET `hp` = '0' WHERE `userid` = {$_GET['user']}");
+			$api->UserInfoSet($_GET['user'],'hp',0);
 			echo "<br />
 			<b>{$lang['ATTACK_FIGHT_ATTACKY_WIN1']} {$odata['username']} {$lang['ATTACK_FIGHT_ATTACKY_WIN2']}</b><br />
 			<form action='?action=mug&ID={$_GET['user']}' method='post'><input class='btn btn-default' type='submit' value='{$lang['ATTACK_FIGHT_OUTCOME1']} {$lang['GEN_THEM']}' /></form>
@@ -341,7 +339,7 @@ function attacking()
 				{
 					$ir['hp'] = 0;
 				}
-				$api->UserInfoSet($userid,"hp","-{$dam}",false);
+				$api->UserInfoSet($userid,"hp",0);
 				$ns = $_GET['nextstep'] + 1;
 				echo "{$ns}) {$lang['ATTACK_FIGHT_ATTACKO_HIT1']} {$wep}, {$odata['username']} {$lang['ATTACK_FIGHT_ATTACKO_HIT2']} {$dam} {$lang['ATTACK_FIGHT_ATTACKY_HIT4']} ({$youdata['hp']} {$lang['ATTACK_FIGHT_ATTACK_HPREMAIN']})<br />";
 			}
@@ -354,7 +352,7 @@ function attacking()
 			{
 				$youdata['hp'] = 0;
 				$_SESSION['attacklost'] = $_GET['user'];
-				$db->query("UPDATE `users` SET `hp` = '0' WHERE `userid` = $userid");
+				$api->UserInfoSet($userid,"hp",0);
 				echo "<form action='?action=lost&ID={$_GET['user']}' method='post'><input type='submit' class='btn btn-default' value='{$lang['GEN_CONTINUE']}' />";
 			}
 		}
@@ -462,21 +460,19 @@ function beat()
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
-	$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = $userid");
+	$api->UserInfoSet($userid,"attacking",0);
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
-		$abuse_sql ="UPDATE `users` SET `xp` = 0 WHERE `userid` = {$userid}";
-		$db->query($abuse_sql);
-		$api->UserStatusSet($userid,1,666,'Bug Abuse');
+		$api->UserInfoSet($userid,"xp",0);
+		$api->UserStatusSet($userid,'infirmay',666,'Bug Abuse');
 		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	if(!$db->num_rows($od)) 
 	{
-		$abuse_sql ="UPDATE `users` SET `xp` = 0 WHERE `userid` = {$userid}";
-		$db->query($abuse_sql);
-		$api->UserStatusSet($userid,1,666,'Bug Abuse');
+		$api->UserInfoSet($userid,"xp",0);
+		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 		alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['ATTACK_START_NONUSER']}");
 		die($h->endpage());
 	}
@@ -492,9 +488,9 @@ function beat()
 		$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 		alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!!","{$lang['ATTACK_FIGHT_END2']} {$lang['ATTACK_FIGHT_END3']} {$hosptime} {$lang["GEN_MINUTES"]} {$lang['ATTACK_FIGHT_END4']}");
 		$hospreason = $db->escape("Beat up by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
-		$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$r['userid']}");
-		put_infirmary($r['userid'],$hosptime,$hospreason);
-		notification_add($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> brutally attacked you and caused {$hosptime} minutes worth of damage.");
+		$api->UserInfoSet($r['userid'],"hp",1);
+		$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
+		$api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> brutally attacked you and caused {$hosptime} minutes worth of damage.");
 		$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and brutally injured them, causing {$hosptime} minutes of damage.");
 		$_SESSION['attackwon'] = false;
 		if ($r['user_level'] == 'NPC')
@@ -517,9 +513,8 @@ function lost()
 	$ir['attacking'] = 0;
 	if (!isset($_SESSION['attacklost']) || $_SESSION['attacklost'] != $_GET['ID'])
 	{
-		$abuse_sql ="UPDATE `users` SET `xp` = 0 WHERE `userid` = {$userid}";
-		$db->query($abuse_sql);
-		$api->UserStatusSet($userid,1,666,'Bug Abuse');
+		$api->UserInfoSet($userid,"xp",0);
+		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -544,21 +539,20 @@ function lost()
 	}
 	$expgainp = $expgain / $ir['xp_needed'] * 100;
 	alert('danger',"{$lang['ATTACK_FIGHT_END5']} {$r['username']}!","{$lang['ATTACK_FIGHT_END6']} (" . number_format($expgainp, 2) . "%)!");
-	$db->query("UPDATE `users` SET `xp` = `xp` - {$expgain}, `attacking` = 0 WHERE `userid` = {$userid}");
+	$api->UserInfoSet($userid,"xp","-{$expgain}");
+	$api->UserInfoSet($userid,"attacking",0);
 	$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 	$hospreason = 'Picked a fight and lost';
-	put_infirmary($userid,$hosptime,$hospreason);
+	$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
 	//Give winner some XP
 	$r['xp_needed'] = round(($r['level'] + 2.25) * ($r['level'] + 2.25) * ($r['level'] + 2.25) * 2);
 	$qe2 = $r['level'] * $r['level'] * $r['level'];
 	$expgain2=Random($qe2 / 2, $qe2);
 	$expgainp2 = $expgain2 / $r['xp_needed'] * 100;
 	$expperc2 = round($expgainp / $r['xp_needed'] * 100);
-	
-	notification_add($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
+	$api->GameAddNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
 	$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$_GET['ID']}] and lost, gaining {$hosptime} minutes in the infirmary.");
-	$db->query("UPDATE `users` SET `xp` = `xp` + {$expgainp2} WHERE `userid` = {$_GET['ID']}");
-	$db->query("UPDATE `users` SET `xp` = 0 WHERE `xp` < 0");
+	$api->UserInfoSet($_GET['ID'],"xp",$expgainp2);
 	$_SESSION['attacklost'] = 0;
 }
 function xp()
@@ -567,13 +561,12 @@ function xp()
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
-	$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = $userid");
+	$api->UserInfoSet($userid,"attacking",0);
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
-		$abuse_sql ="UPDATE `users` SET `xp` = 0 WHERE `userid` = {$userid}";
-		$db->query($abuse_sql);
-		$api->UserStatusSet($userid,1,666,'Bug Abuse');
+		$api->UserInfoSet($userid,"xp",0);
+		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -588,9 +581,8 @@ function xp()
 		$db->free_result($od);
 		if ($r['hp'] == 1)
 		{
-			$abuse_sql ="UPDATE `users` SET `xp` = 0 WHERE `userid` = {$userid}";
-			$db->query($abuse_sql);
-			$api->UserStatusSet($userid,1,666,'Bug Abuse');
+			$api->UserInfoSet($userid,"xp",0);
+			$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_BUGABUSE']}");
 			exit($h->endpage());
 		}
@@ -612,11 +604,11 @@ function xp()
 			$expperc = round($expgain / $ir['xp_needed'] * 100);
 			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END7']} ({$expperc}%, {$expgain})");
 			$hosptime = Random(5, 30) + floor($ir['level'] / 10);
-			$db->query("UPDATE `users` SET `xp` = `xp` + $expgain WHERE `userid` = $userid");
+			$api->UserInfoSet($userid,"xp",$expgain);
 			$hospreason = $db->escape("Used for experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
-			$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$r['userid']}");
-			put_infirmary($r['userid'],$hosptime,$hospreason);
-			notification_add($r['userid'],"<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you and left you for experience.");
+			$api->UserInfoSet($r['userid'],"hp",1);
+			$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
+			$api->GameAddNotification($r['userid'],"<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you and left you for experience.");
 			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and gained {$expperc}% Experience.");			
 			$_SESSION['attackwon'] = false;
 			if ($r['user_level'] == 'NPC')
@@ -633,13 +625,12 @@ function mug()
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
-	$db->query("UPDATE `users` SET `attacking` = 0 WHERE `userid` = $userid");
+	$api->UserInfoSet($userid,"attacking",0);
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
-		$abuse_sql ="UPDATE `users` SET `xp` = 0 WHERE `userid` = {$userid}";
-		$db->query($abuse_sql);
-		$api->UserStatusSet($userid,1,666,'Bug Abuse');
+		$api->UserInfoSet($userid,"xp",0);
+		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
@@ -654,9 +645,8 @@ function mug()
 		$db->free_result($od);
 		if ($r['hp'] == 1)
 		{
-			$abuse_sql ="UPDATE `users` SET `xp` = 0 WHERE `userid` = {$userid}";
-			$db->query($abuse_sql);
-			$api->UserStatusSet($userid,1,666,'Bug Abuse');
+			$api->UserInfoSet($userid,"xp",0);
+			$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_BUGABUSE']}");
 			exit($h->endpage());
 		}
@@ -666,10 +656,11 @@ function mug()
 			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END8']} (" . number_format($stole) . ")");
 			$hosptime = rand(20, 40) + floor($ir['level'] / 8);
 			$hospreason = $db->escape("Mugged by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
-			$db->query("UPDATE `users` SET `hp` = 1, `primary_currency` = `primary_currency` - {$stole} WHERE `userid` = {$r['userid']}");
-			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$stole} WHERE `userid` = {$userid}");
-			$api->UserStatusSet($r['userid'],1,$hosptime,$hospreason);
-			notification_add($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
+			$api->UserInfoSet($r['userid'],"hp",1);
+			$api->UserTakeCurrency($r['userid'],'primary',$stole);
+			$api->UserGiveCurrency($userid,'primary',$stole);
+			$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
+			$api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
 			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");					
 			$_SESSION['attackwon'] = 0;
 			if ($r['user_level'] == 0)
@@ -690,7 +681,7 @@ function mug()
 			}
 			else
 			{
-				item_add($userid,$results2['botitem'],1);
+				$api->UserGiveItem($userid,$results2['botitem'],1);
 				$time=time();
 				$exists=$db->query("SELECT `botid` FROM `botlist_hits` WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
 				if ($db->num_rows($exists) == 0)
@@ -701,7 +692,7 @@ function mug()
 				{
 					$db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
 				}
-				notification_add($userid,"For successfully mugging " . $api->SystemUserIDtoName($r['userid']) . ", you received 1 " . $api->SystemItemIDtoName($results2['botitem']));
+				$api->GameAddNotification($userid,"For successfully mugging " . $api->SystemUserIDtoName($r['userid']) . ", you received 1 " . $api->SystemItemIDtoName($results2['botitem']));
 			}
 		}
 	}

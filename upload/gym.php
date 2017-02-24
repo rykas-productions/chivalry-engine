@@ -1,12 +1,12 @@
 <?php
 $macropage = "gym.php";
 require("globals.php");
-if (user_infirmary($ir['userid']) == true)
+if ($api->UserStatus($ir['userid'],'infirmary') == true)
 {
 	alert("danger","{$lang["GEN_INFIRM"]}","{$lang['GYM_INFIRM']}");
 	die($h->endpage());
 }
-if (user_dungeon($ir['userid']) == true)
+if ($api->UserStatus($ir['userid'],'dungeon') == true)
 {
 	alert("danger","{$lang["GEN_DUNG"]}","{$lang['GYM_DUNG']}");
 	die($h->endpage());

@@ -600,7 +600,7 @@ class api
 		}
 		else
 		{
-			if ($change > 0)
+			if ($change >= 1)
 			{
 				$change = (isset($change) && is_numeric($change)) ? abs(intval($change)) : 0;
 				if ($percent == true)
@@ -614,6 +614,10 @@ class api
 					$db->query("UPDATE users SET `{$stat}` = `{$stat}` + {$change} WHERE `userid` = {$user}");
 					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
 				}
+			}
+			elseif ($change == 0)
+			{
+				$db->query("UPDATE users SET `{$stat}` = 0 WHERE `userid` = {$user}");
 			}
 			else
 			{

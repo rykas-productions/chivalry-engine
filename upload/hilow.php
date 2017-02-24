@@ -34,7 +34,7 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher','lower'
 	{
 		$guessed = (isset($_SESSION['number']) && is_numeric($_SESSION['number'])) ? abs(intval($_SESSION['number'])) : Random(1,100);
 		$numb=Random(1,100);
-		$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$maxbet} WHERE `userid` = {$userid}");
+		$api->UserTakeCurrency($userid,'primary',$maxbet);
 		if ($guessed > $numb && $_POST['change'] == 'higher')
 		{
 			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['HIGHLOW_HIGH']} {$guessed}. {$lang['HIGHLOW_REVEAL']} {$numb}. {$lang['HIGHLOW_LOSE']}");
@@ -65,7 +65,7 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher','lower'
 			$gain=$maxbet;
 			$api->SystemLogsAdd($userid,'gambling',"Number tied in high/low.");
 		}
-		$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
+		$api->UserGiveCurrency($userid,'primary',$gain);
 		$_SESSION['number']=0;
 	}
 }
