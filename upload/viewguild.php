@@ -228,10 +228,8 @@ function donate()
 		}
 		else
 		{
-			$db->query("UPDATE `users`
-                 SET `primary_currency` = `primary_currency` - {$_POST['primary']},
-                 `secondary_currency` = `secondary_currency` - {$_POST['secondary']}
-                 WHERE `userid` = {$userid}");
+			$api->UserTakeCurrency($userid,'primary',$_POST['primary']);
+			$api->UserTakeCurrency($userid,'secondary',$_POST['secondary']);
 			$db->query("UPDATE `guild` 
 					SET `guild_primcurr` = `guild_primcurr` + {$_POST['primary']},
 					`guild_seccurr` = `guild_seccurr` + {$_POST['secondary']}
@@ -242,7 +240,7 @@ function donate()
 								and " . number_format($_POST['secondary']) . " Secondary Currency to the guild.");
 			 $db->query("INSERT INTO `guild_notifications`
 						VALUES(NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
-		alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['VIEWGUILD_DONATE_SUCC']}");
+			alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['VIEWGUILD_DONATE_SUCC']}");
 		}
 	}
 	else
