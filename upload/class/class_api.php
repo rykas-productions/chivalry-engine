@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.2.4";
+		return "17.2.5";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -900,5 +900,42 @@ class api
 			}
 		}
 		return false;
+	}
+	/*
+		Function to set a user's info a static value.
+		@param int user = User ID you wish to set a specific stat to.
+		@param text stat = Stat to alter.
+		@param int state = Value to set the stat to.
+		Returns true if the stat was updated, false otherwise.
+	*/
+	function UserInfoSetStatic($user,$stat,$state)
+	{
+		global $db,$api;
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$state = (isset($state) && is_numeric($state)) ? abs(intval($state)) : 0;
+		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
+		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
+		{
+			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.");
+		}
+		else
+		{
+			if ($user > 0)
+			{
+				if (!($api->SystemUserIDtoName($user) == false))
+				{
+					$db->query("UPDATE `users` SET `{$stat}` = {$state} WHERE `userid` = {$userid}");
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 }
