@@ -789,14 +789,14 @@ function jobrank_dropdown($ddname = "jobrank", $selected = -1)
  * Not specifying this or setting it to -1 makes the first house alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function house_dropdown($ddname = "house", $selected = -1)
+function estate_dropdown($ddname = "estate", $selected = -1)
 {
     global $db;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
             $db->query(
                     "SELECT `house_id`, `house_name`, `house_will`
-    				 FROM houses
+    				 FROM `estates`
     				 ORDER BY `house_will` ASC");
     if ($selected == -1)
     {
