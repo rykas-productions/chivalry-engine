@@ -7,12 +7,12 @@ if (!isset($_GET['action']))
 switch ($_GET['action'])
 {
 	case 'fedjail':
-    fedjail();
-    break;
+		fedjail();
+		break;
 	default:
-    echo 'Error: This script requires an action.';
-	$h->endpage();
-    break;
+		echo 'Error: This script requires an action.';
+		$h->endpage();
+		break;
 }
 function fedjail()
 {

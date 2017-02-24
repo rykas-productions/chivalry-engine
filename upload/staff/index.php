@@ -189,6 +189,8 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 				<div class='panel panel-default'>
 					<div class='panel-body'>
 						<a href='staff_estates.php?action=addestate'>{$lang['STAFF_ESTATE_ADD']}</a><br />
+						<a href='staff_estates.php?action=editestate'>{$lang['STAFF_ESTATE_EDIT']}</a><br />
+						<a href='staff_estates.php?action=delestate'>{$lang['STAFF_ESTATE_DEL']}</a><br />
 					</div>
 				</div>
 			</div>
