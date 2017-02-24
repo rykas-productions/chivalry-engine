@@ -114,7 +114,7 @@ function create()
 						VALUES ('{$ir['location']}', '{$userid}', '{$userid}', '0', '0', 'false', '5', 
 						'{$name}', '{$desc}', '1', '0')");
 			$i = $db->insert_id();
-			$api->UserTakeCurrency($userid,1,$cg_price);
+			$api->UserTakeCurrency($userid,'primary',$cg_price);
 			$db->query("UPDATE `users` SET `guild` = {$i} WHERE `userid` = {$userid}");
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['GUILD_CREATE_SUCCESS']}");
 			$api->SystemLogsAdd($userid,'guilds',"Purchased a guild.");
