@@ -1,0 +1,33 @@
+-=-=-=-=-=-=-=-=-=-
+Chivalry Engine Install Guide
+Last Updated: 24/02/2016
+-=-=-=-=-=-=-=-=-=-
+1) Download your favorite flavor of Chivalry Engine.
+	There's two flavors, stable release (which you will find under "Releases", and dev version (which is the master branch)
+
+2) Upload the contents of the "upload" folder to your website's public_html folder.
+
+3) Setup a database and user in CPanel. Its ideal to have the database unused.
+
+4) Once complete, navigate to http://<yourwebsite.com>/installer.php/ to begin the installer.
+
+
+
+-=-=-=-=-=-=-=-=-=-
+Common Errors
+-=-=-=-=-=-=-=-=-=-
+
+ISSUE: I failed the initial tests. What should I do?
+RESOLUTION: Check that your PHP version is greater than 5.5 and you have access to the PHP password API. You need to have MySQLi or PDO enabled on your server. MySQL is not supported.
+
+ISSUE: The installation progress fails during the SQL insertion. What should I do?
+RESOLUTION: Set your PHP execution timeout higher, if possible. Otherwise, manually enter the remaining SQL to your database using PHPMyAdmin.
+
+ISSUE: I want to change the database wrapper after installation. How could I do this?
+RESOLUTION: Simply open config.php and edit it as you see fit. This also holds database login info.
+
+ISSUE: Why aren't the crons running?
+RESOLUTION: The crons don't start running until the next midnight. This is to keep things in sync.
+
+ISSUE: My crons are running non-stop! Is this a bug?
+RESOLUTION: Hopefully not. Your crons will run per page load if no one was on your game during which time the crons would have triggered. Load pages and it'll catch up eventually.
