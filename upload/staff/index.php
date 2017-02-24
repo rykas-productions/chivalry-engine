@@ -235,6 +235,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_logs.php?action=verifylogs'>{$lang['STAFF_IDX_LOGS_TAB14']}</a><br />
 						<a href='staff_logs.php?action=spylogs'>{$lang['STAFF_IDX_LOGS_TAB15']}</a><br />
 						<a href='staff_logs.php?action=gamblinglogs'>{$lang['STAFF_IDX_LOGS_TAB16']}</a><br />
+						<a href='staff_logs.php?action=fedjaillogs'>{$lang['STAFF_IDX_LOGS_TAB18']}</a><br />
 					</div>
 				</div>
 			</div>
