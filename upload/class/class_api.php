@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.2.6";
+		return "17.2.7";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -913,7 +913,6 @@ class api
 	{
 		global $db,$api;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$state = (isset($state) && is_numeric($state)) ? abs(intval($state)) : 0;
 		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
@@ -921,6 +920,14 @@ class api
 		}
 		else
 		{
+			if (is_int($state))
+			{
+				$state = (isset($state) && is_numeric($state)) ? abs(intval($state)) : 0;
+			}
+			else
+			{
+				$state = $db->escape(strip_tags(stripslashes($state)));
+			}
 			if ($user > 0)
 			{
 				if (!($api->SystemUserIDtoName($user) == false))
