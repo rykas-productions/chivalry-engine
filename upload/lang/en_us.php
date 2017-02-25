@@ -56,6 +56,7 @@ $lang["PREF_CTHM_FORMDD3"]="Dark [Purple navbar]";
 $lang['PREF_CTHM_FORMBTN']="Update Theme";
 $lang['PREF_CTHM_SUB_ERROR']="You are trying to use an non-existent theme.";
 $lang['PREF_CTHM_SUB_SUCCESS']="Your theme has been updated successfully. Effects will be noticeable on the next page load.";
+$lang["PREF_CSIG"] = "Change Forum Signature";
 
 //Username Change
 $lang["UNC_TITLE"] = "Changing your username...";
@@ -90,6 +91,13 @@ $lang['PIC_BTN']="Change Picture";
 $lang['PIC_TOOBIG2']="Your image's filesize is too large. The maximum size an image can be is 1MB. Go back and try again, please.";
 $lang['PIC_NOIMAGE']="You specified a URL that is not even an image. Go back and try again, please.";
 $lang['PIC_SUCCESS']="You have successfully updated your display picture! It is shown below.";
+
+//Signature Change
+$lang['SIG_TITLE']="Changing Forum Signature. You may use BBCode.";
+$lang['SIG_YSIG']="Your Signature";
+$lang['SIG_BTN']="Change Signature";
+$lang['SIG_ERR']="Your signature must be less than 1025 characters in length. This includes BBCode.";
+$lang['SIG_SUCC']="You have successfully updated your forum signature.";
 
 //Login Page
 $lang["LOGIN_REGISTER"] = "Register";

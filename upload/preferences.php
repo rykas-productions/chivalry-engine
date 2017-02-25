@@ -24,6 +24,9 @@ switch ($_GET['action'])
 	case 'themechange':
 		themechange();
 		break;
+	case 'sigchange':
+		sigchange();
+		break;
 	default:
 		prefs_home();
 		break;
@@ -39,16 +42,33 @@ echo "{$lang['PREF_WELCOME_1']} {$ir['username']}{$lang['PREF_WELCOME_2']}<br />
 <table class='table table-bordered'>
 	<tbody>
 		<tr>
-			<td><a href='?action=namechange'>{$lang['PREF_CNAME']}</a></td>
-			<td><a href='?action=pwchange'>{$lang['PREF_CPASSWORD']}</a></td>
+			<td>
+				<a href='?action=namechange'>{$lang['PREF_CNAME']}</a>
+			</td>
+			<td>
+				<a href='?action=pwchange'>{$lang['PREF_CPASSWORD']}</a>
+			</td>
 		</tr>
 		<tr>
-			<td><a href='?action=timechange'>{$lang['PREF_CTIME']}</a></td>
-			<td><a href='?action=langchange'>{$lang['PREF_CLANG']}</a></td>
+			<td>
+				<a href='?action=timechange'>{$lang['PREF_CTIME']}</a>
+			</td>
+			<td>
+				<a href='?action=langchange'>{$lang['PREF_CLANG']}</a>
+			</td>
 		</tr>
 		<tr>
-			<td><a href='?action=picchange'>{$lang['PREF_CPIC']}</a></td>
-			<td><a href='?action=themechange'>{$lang['PREF_CTHM']}</a></td>
+			<td>
+				<a href='?action=picchange'>{$lang['PREF_CPIC']}</a>
+			</td>
+			<td>
+				<a href='?action=themechange'>{$lang['PREF_CTHM']}</a>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<a href='?action=sigchange'>{$lang['PREF_CSIG']}</a>
+			</td>
 		</tr>
 	</tbody>
 </table>";
@@ -367,6 +387,53 @@ function themechange()
 					</td>
 				</tr>
 			</table>
+		</form>";
+	}
+}
+function sigchange()
+{
+	global $db,$ir,$userid,$api,$lang,$h;
+	if (isset($_POST['sig']))
+	{
+		$_POST['sig'] = $db->escape(strip_tags(stripslashes($_POST['sig'])));
+		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesig', stripslashes($_POST['verf'])))
+		{
+			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			die($h->endpage());
+		}
+		if (strlen($_POST['sig']) > 1024)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SIG_ERR']);
+			die($h->endpage());
+		}
+		$api->UserInfoSetStatic($userid,'signature',$_POST['sig']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['SIG_SUCC']);
+	}
+	else
+	{
+		$csrf = request_csrf_html('prefs_changesig');
+		echo "<form method='post'>
+		<table class='table-bordered table'>
+			<tr>
+				<th colspan='2'>
+					{$lang['SIG_TITLE']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SIG_YSIG']}
+				</th>
+				<td>
+					<textarea class='form-control' rows='4' name='sig'>{$ir['signature']}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' value='{$lang['SIG_BTN']}' class='btn btn-default'>
+				</td>
+			</tr>
+			{$csrf}
+		</table>
 		</form>";
 	}
 }
