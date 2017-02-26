@@ -12,25 +12,21 @@ $DQuery=$db->query("SELECT `timestamp` FROM `login_attempts` WHERE `ip` = '{$IP}
 $HQuery=$db->query("SELECT `timestamp` FROM `login_attempts` WHERE `ip` = '{$IP}' AND `timestamp` > {$Hour}");
 $FTMQuery=$db->query("SELECT `timestamp` FROM `login_attempts` WHERE `ip` = '{$IP}' AND `timestamp` > {$QuarterHour}");
 if ($db->num_rows($DQuery) >= 9)
-	{
-		die("<h3>{$set['WebsiteName']} Error</h3>
-			{$lang['AUTH_ERROR1']}");
-	}
+{
+	die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR1']}");
+}
 if ($db->num_rows($HQuery) >= 6)
-	{
-		die("<h3>{$set['WebsiteName']} Error</h3>
-			{$lang['AUTH_ERROR2']}");
-	}
+{
+	die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR2']}");
+}
 if ($db->num_rows($FTMQuery) >= 3)
-	{
-		die("<h3>{$set['WebsiteName']} Error</h3>
-			{$lang['AUTH_ERROR3']}");
-	}
+{
+	die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR3']}");
+}
 if (empty($email) || empty($password))
 {
     $db->query("INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES ('{$IP}', '0', '{$CurrentTime}');");
-	die("<h3>{$set['WebsiteName']} Error</h3>
-		{$lang['AUTH_ERROR4']}<br /> <a href='login.php'>Back</a>");
+	die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR4']}<br /> <a href='login.php'>Back</a>");
 	
 }
 $form_email = $db->escape(stripslashes($email));
@@ -45,26 +41,21 @@ $HUNQuery=$db->query("SELECT `timestamp` FROM `login_attempts` WHERE `userid` = 
 $QHQuery=$db->query("SELECT `timestamp` FROM `login_attempts` WHERE `userid` = '{$userid['userid']}' AND `timestamp` > {$QuarterHour}");
 if ($db->num_rows($DUNQuery) >= 9)
 {
-	die("<h3>{$set['WebsiteName']} Error</h3>
-		{$lang['AUTH_ERROR5']}");
+	die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR5']}");
 }
 if ($db->num_rows($HUNQuery) >= 6)
 {
-	die("<h3>{$set['WebsiteName']} Error</h3>
-		{$lang['AUTH_ERROR6']}");
+	die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR6']}");
 }
 if ($db->num_rows($QHQuery) >= 3)
 {
-	die("<h3>{$set['WebsiteName']} Error</h3>
-		{$lang['AUTH_ERROR7']}");
+	die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR7']}");
 }
 if ($db->num_rows($UQ) == 0)
 {
     $db->free_result($uq);
 	$db->query("INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES ('{$IP}', '0', '{$CurrentTime}');");
-    die(
-            "<h3>{$set['WebsiteName']} Error</h3>
-				{$lang['AUTH_ERROR8']}<br /> <a href='login.php'>Back</a>");
+    die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR8']}<br /> <a href='login.php'>Back</a>");
 }
 else
 {
@@ -76,17 +67,13 @@ else
     {
 		$db->query("INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES ('{$IP}', '{$mem['userid']}', '{$CurrentTime}');");
 		notification_add($mem['userid'],"Someone has just recently attempted to gain access to your account and failed. If this was you, you do not need to do anything. However, if this was not, you should change your password immediately!");
-		die(
-                "<h3>{$set['WebsiteName']} Error</h3>
-		{$lang['AUTH_ERROR8']}<br /> <a href='login.php'>Back</a>");
+		die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR8']}<br /> <a href='login.php'>Back</a>");
 		
     } 
 	session_regenerate_id();
     $_SESSION['loggedin'] = 1;
     $_SESSION['userid'] = $mem['userid'];
-	$db->query(
-            "UPDATE `users`
-             SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}'
+	$db->query("UPDATE `users` SET `loginip` = '{$IP}', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}'
              WHERE `userid` = {$mem['userid']}");
 	$encpsw = encode_password($raw_password);
 	$e_encpsw = $db->escape($encpsw);
