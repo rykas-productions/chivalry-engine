@@ -207,6 +207,11 @@ function buy()
 				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_SUB_ERROR1']}");
 				die($h->endpage());
 			}
+			if ($api->SystemCheckUsersIPs($userid,$r['imADDER']))
+			{
+				alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_SUB_ERROR4']);
+				die($h->endpage());
+			}
 			$curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
 			$curre = ($r['imCURRENCY'] == 'primary') ? 'Primary Currency' : 'Secondary Currency';
 			$final_price = $api->SystemReturnTax($r['imPRICE']*$_POST['QTY']);
@@ -291,6 +296,16 @@ function gift()
 		{
 			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_SUB_ERROR1']}");
 			die($h->endpage());
+		}
+		if ($api->SystemCheckUsersIPs($userid,$r['imADDER']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_SUB_ERROR4']);
+			die($h->endpage());
+		}
+		if ($api->SystemCheckUsersIPs($userid,$_POST['user']))
+		{
+				alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_GIFT_SUB_ERROR3']);
+				die($h->endpage());
 		}
 		$curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
 		$curre = ($r['imCURRENCY'] == 'primary') ? 'Primary Currency' : 'Secondary Currency';

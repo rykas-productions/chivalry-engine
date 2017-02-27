@@ -39,6 +39,11 @@ if (!empty($_POST['qty']) && !empty($_POST['user']))
 			alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR3']);
 			die($h->endpage());
 		}
+		else if ($api->SystemCheckUsersIPs($userid,$_POST['user']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR4']);
+			die($h->endpage());
+		}
 		else
 		{
 			$rm = $db->fetch_row($m);
