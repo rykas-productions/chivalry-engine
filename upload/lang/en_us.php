@@ -1108,6 +1108,7 @@ $lang['VIEWGUILD_STAFF_APP_ACC_ERR']="Your guild does not have the capacity to a
 $lang['VIEWGUILD_STAFF_APP_ACC_ERR1']="This player is already in a guild.";
 $lang['VIEWGUILD_STAFF_APP_ACC_SUCC']="You have successfully accepted this user's application!";
 $lang['VIEWGUILD_STAFF_APP_WOT']="We don't know how you got here... but yeah... you're kinda not supposed to be here.";
+$lang['VIEWGUILD_GYM_ERR']="Your guild's personal gym will be open for use at guild level 3.";
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";
