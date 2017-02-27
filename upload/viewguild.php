@@ -71,11 +71,11 @@ function home()
     		</tr>
     		<tr>
     			<td><a href='?action=armory'>{$lang['VIEWGUILD_HOME_ARMORY']}</a></td>
-    			<td>
+    			<td><a href='?action=gym'>{$lang['VIEWGUILD_GYM_LINK']}</a>
        ";
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
     {
-        echo "<a href='?action=staff&act2=idx'>{$lang['VIEWGUILD_HOME_STAFF']}</a>";
+        echo "</tr><tr><td><a href='?action=staff&act2=idx'>{$lang['VIEWGUILD_HOME_STAFF']}</a>";
     }
     else
     {
@@ -630,7 +630,7 @@ function staff_apps()
 function gym()
 {
 	global $db,$lang,$api,$h,$userid,$ir,$gd;
-	if ($gd['guild_level'] < 1)
+	if ($gd['guild_level'] < 3)
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_GYM_ERR']);
 		die($h->endpage());
@@ -676,7 +676,7 @@ function gym()
 				$extraecho='';
 				for ($i = 0; $i < $_POST['amnt']; $i++)
 				{
-					$gain += ((($gd['guild_level']*0.02)+0.94)*(Random(1, 4) / Random(600, 1000) * Random(500, 1000) * (($ir['will'] + 25) / 175)));
+					$gain += (Random(1, 4) / Random(600, 1000) * Random(500, 1000) * (($ir['will'] + 25) / 175));
 					$ir['will'] -= Random(1, 3);
 					if ($ir['will'] < 0)
 					{
@@ -716,6 +716,7 @@ function gym()
 						$gain /= 2;
 					}
 				}
+				$gain=($gain*(($gd['guild_level']*0.02)+0.94));
 				$gain=floor($gain);
 				$db->query(
 						"UPDATE `userstats`
