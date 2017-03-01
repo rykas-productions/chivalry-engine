@@ -1344,7 +1344,23 @@ You can input whatever for the text
 
 function alert($type,$title,$text)
 {
-	echo "<div class='alert alert-{$type}'> <strong>{$title}</strong> {$text} </div>";
+	if ($type == 'danger')
+	{
+		$icon = "alert";
+	}
+	elseif ($type == 'success')
+	{
+		$icon = "ok-sign";
+	}
+	elseif ($type == 'info')
+	{
+		$icon = 'info-sign';
+	}
+	else
+	{
+		$icon = 'exclamation-sign';
+	}
+	echo "<div class='alert alert-{$type}'> <span class='glyphicon glyphicon-{$icon}'></span> <strong>{$title}</strong> {$text} </div>";
 }
 
 /**
