@@ -189,7 +189,7 @@ function summary()
 			{$lang['INDEX_PRIMCURR']}
 		</th>
 		<td>
-			" . number_format($gd['guild_primcurr']) . "
+			" . number_format($gd['guild_primcurr']) . " / " . number_format($gd['guild_level'] * 1500000) . "
 		</td>
 	</tr>
 	<tr>
@@ -227,6 +227,11 @@ function donate()
 		else if ($_POST['secondary'] > $ir['secondary_currency'])
 		{
 			alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['VIEWGUILD_DONATE_ERR3']}");
+			die($h->endpage());
+		}
+		else if ($_POST['primary']+$gd['guild_primcurr'] > $gd['guild_level']*1500000)
+		{
+			alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['VIEWGUILD_DONATE_ERR4']}" . $gd['guild_level']*1500000);
 			die($h->endpage());
 		}
 		else

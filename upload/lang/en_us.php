@@ -1075,6 +1075,7 @@ $lang['VIEWGUILD_DONATE_BTN']="Donate to Guild";
 $lang['VIEWGUILD_DONATE_ERR1']="You must fill out the previous form to donate.";
 $lang['VIEWGUILD_DONATE_ERR2']="You cannot donate more primary currency than you currently have.";
 $lang['VIEWGUILD_DONATE_ERR3']="You cannot donate more secondary currency than you currently have.";
+$lang['VIEWGUILD_DONATE_ERR4']="You are trying to donate more than your guild's vault can hold. Your guild's vault can only hold ";
 $lang['VIEWGUILD_DONATE_SUCC']="You've successfully donated the specified amounts to your guild.";
 $lang['VIEWGUILD_MEMBERS_TH1']="User";
 $lang['VIEWGUILD_MEMBERS_TH2']="Level";
