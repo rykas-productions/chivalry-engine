@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.2.7";
+		return "17.3.1";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -950,7 +950,7 @@ class api
 		Function to test if the inputted users share IPs at all.
 		@param int user1 = User ID of the first player.
 		@param int user2 = User ID of the second player.
-		Returns true if the users share an IP, false if not.
+		Returns true if the users share an IP, false if not. Will also return false if both variables are equal.
 	*/
 	function SystemCheckUsersIPs($user1,$user2)
 	{
@@ -958,6 +958,10 @@ class api
 		$user1 = (isset($user1) && is_numeric($user1)) ? abs(intval($user1)) : 0;
 		$user2 = (isset($user2) && is_numeric($user2)) ? abs(intval($user2)) : 0;
 		if (empty($user1) || empty($user2))
+		{
+			return false;
+		}
+		elseif ($user1 == $user2)
 		{
 			return false;
 		}
