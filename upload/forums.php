@@ -88,7 +88,7 @@ default:
 }		
 function idx()
 {
-    global $ir, $c, $userid, $lang, $db;
+    global $ir, $c, $userid, $lang, $db, $api;
     $q =
             $db->query(
                     "SELECT `ff_lp_time`, `ff_id`, `ff_name`, `ff_desc`,
@@ -218,7 +218,7 @@ function idx()
 }		
 function viewforum()
 {
-    global $ir, $userid, $lang, $db, $h;
+    global $ir, $userid, $lang, $db, $h, $api;
     $_GET['viewforum'] = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs($_GET['viewforum']) : '';
     if (empty($_GET['viewforum']))
     {
@@ -335,7 +335,7 @@ function viewforum()
 
 function viewtopic()
 {
-    global $ir, $userid, $parser, $lang, $db,$h;
+    global $ir, $userid, $parser, $lang, $db, $h, $api;
 	$code = request_csrf_code('forum_reply');
     $precache = array();
     $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
@@ -639,7 +639,7 @@ function viewtopic()
 }
 function reply()
 {
-    global $ir, $userid, $lang, $db;
+    global $ir, $userid, $lang, $db, $api;
     $_GET['reply'] = (isset($_GET['reply']) && is_numeric($_GET['reply'])) ? abs($_GET['reply']) : '';
 	if (!isset($_POST['verf']) || !verify_csrf_code('forum_reply', stripslashes($_POST['verf'])))
 	{
@@ -726,7 +726,7 @@ function reply()
 }
 function newtopicform()
 {
-    global $ir, $userid, $lang, $h, $db;
+    global $ir, $userid, $lang, $h, $db, $api;
     $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
     if (empty($_GET['forum']))
     {
@@ -799,7 +799,7 @@ EOF;
 
 function newtopic()
 {
-    global $ir, $userid, $h, $lang, $db;
+    global $ir, $userid, $h, $lang, $db, $api;
     $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
 	if (!isset($_POST['verf']) || !verify_csrf_code("forums_newtopic_{$_GET['forum']}", stripslashes($_POST['verf'])))
 	{
@@ -887,7 +887,7 @@ function newtopic()
 }
 function emptyallforums()
 {
-    global $ir, $c, $userid, $h, $bbc, $db;
+    global $ir, $c, $userid, $h, $bbc, $db, $api;
     $db->query("UPDATE `forum_forums` SET `ff_lp_time` = 0, `ff_lp_poster_id` = 0,
              `ff_lp_poster_name` = 'N/A', `ff_lp_t_id` = 0, `ff_lp_t_name` = 'N/A'");
     $db->query('TRUNCATE `forum_topics`');
@@ -895,7 +895,7 @@ function emptyallforums()
 }
 function quote()
 {
-    global $ir, $lang, $userid, $h, $db;
+    global $ir, $lang, $userid, $h, $db, $api;
 	$code = request_csrf_code('forum_reply');
     $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
 	$_GET['fpid'] = (isset($_GET['fpid']) && is_numeric($_GET['fpid'])) ? abs($_GET['fpid']) : '';
@@ -984,7 +984,7 @@ function quote()
 }
 function edit()
 {
-    global $ir, $c, $userid, $h, $lang, $db;
+    global $ir, $c, $userid, $h, $lang, $db, $api;
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic']))
     {
@@ -1083,7 +1083,7 @@ EOF;
 
 function editsub()
 {
-    global $ir, $c, $userid, $h, $lang, $db;
+    global $ir, $c, $userid, $h, $lang, $db, $api;
     $_GET['post'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? abs($_GET['post']) : '';
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if ((empty($_GET['post']) || empty($_GET['topic'])))
