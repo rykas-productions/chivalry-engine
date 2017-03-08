@@ -1097,6 +1097,7 @@ $lang['VIEWGUILD_ATKLOGS_TD1']="Time";
 $lang['VIEWGUILD_ATKLOGS_TD2']="Attack Info";
 $lang['VIEWGUILD_STAFF_ERROR']="Only the leader and co-leader of your guild can view this area.";
 $lang['VIEWGUILD_STAFF_IDX_APP']="Application Management";
+$lang['VIEWGUILD_STAFF_IDX_VAULT']="Vault Management";
 $lang['VIEWGUILD_STAFF_APP_TH0']="Filing Time";
 $lang['VIEWGUILD_STAFF_APP_TH1']="Applicant";
 $lang['VIEWGUILD_STAFF_APP_TH2']="Level";
@@ -1111,6 +1112,15 @@ $lang['VIEWGUILD_STAFF_APP_ACC_SUCC']="You have successfully accepted this user'
 $lang['VIEWGUILD_STAFF_APP_WOT']="We don't know how you got here... but yeah... you're kinda not supposed to be here.";
 $lang['VIEWGUILD_GYM_ERR']="Your guild's personal gym will be open for use at guild level 3.";
 $lang['VIEWGUILD_GYM_LINK']="Guild Gym";
+$lang['VIEWGUILD_STAFF_VAULT']="Your guild's vault currently has";
+$lang['VIEWGUILD_STAFF_VAULT1']="Select User";
+$lang['VIEWGUILD_STAFF_VAULT_BTN']="Give From Vault";
+$lang['VIEWGUILD_STAFF_VAULT_ERR']="Your vault does not have that much {$lang['INDEX_PRIMCURR']} to give out.";
+$lang['VIEWGUILD_STAFF_VAULT_ERR1']="Your vault does not have that much {$lang['INDEX_SECCURR']} to give out.";
+$lang['VIEWGUILD_STAFF_VAULT_ERR2']="You have to give out at least one piece of currency to use this form.";
+$lang['VIEWGUILD_STAFF_VAULT_ERR3']="The user you're trying to give to doesn't exist, or isn't in your guild. Check your source and try again.";
+$lang['VIEWGUILD_STAFF_VAULT_ERR4']="You cannot gift currency from the vault to players who share your IP address.";
+$lang['VIEWGUILD_STAFF_VAULT_SUCC']="The user has been given the specified currency from the vault.";
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";

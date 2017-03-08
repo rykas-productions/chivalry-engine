@@ -472,6 +472,9 @@ function staff()
 			case "apps":
 				staff_apps();
 				break;
+            case "vault":
+                staff_vault();
+                break;
 			default:
 				staff_idx();
 				break;
@@ -490,7 +493,8 @@ function staff_idx()
 	<tr>
 		<td>
 			<b>{$lang['VIEWGUILD_SUMMARY_COOWNER']}</b><br />
-			<a href='?action=staff&act2=apps'>{$lang['VIEWGUILD_STAFF_IDX_APP']}</a>
+			<a href='?action=staff&act2=apps'>{$lang['VIEWGUILD_STAFF_IDX_APP']}</a><br />
+			<a href='?action=staff&act2=vault'>{$lang['VIEWGUILD_STAFF_IDX_VAULT']}</a><br />
 		</td>";
 	if ($gd['guild_owner'] == $userid)
 	{
@@ -805,4 +809,100 @@ function gym()
 		</table>";
 	}
 }
+function staff_vault()
+{
+    global $db,$userid,$gd,$lang,$api,$h;
+    if (isset($_POST['primary']) || isset($_POST['secondary']))
+    {
+        if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_vault", stripslashes($_POST['verf'])))
+        {
+            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            die($h->endpage());
+        }
+        $_POST['primary'] = (isset($_POST['primary']) && is_numeric($_POST['primary'])) ? abs($_POST['primary']) : 0;
+        $_POST['secondary'] = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs($_POST['secondary']) : 0;
+        $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+        if ($_POST['primary'] > $gd['guild_primcurr'])
+        {
+            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_VAULT_ERR']);
+            die($h->endpage());
+        }
+        if ($_POST['secondary'] > $gd['guild_seccurr'])
+        {
+            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_VAULT_ERR1']);
+            die($h->endpage());
+        }
+        if ($_POST['primary'] == 0 && $_POST['secondary'] == 0)
+        {
+            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_VAULT_ERR2']);
+            die($h->endpage());
+        }
+        if ($api->SystemCheckUsersIPs($userid,$_POST['user']))
+        {
+            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_VAULT_ERR4']);
+            die($h->endpage());
+        }
+        $q=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
+        if ($db->num_rows($q) == 0)
+        {
+            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_VAULT_ERR3']);
+            die($h->endpage());
+        }
+        $name = htmlentities($db->fetch_single($q), ENT_QUOTES, 'ISO-8859-1');
+        $db->free_result($q);
+        $api->UserGiveCurrency($_POST['user'],'primary',$_POST['primary']);
+        $api->UserGiveCurrency($_POST['user'],'secondary',$_POST['secondary']);
+        $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$_POST['primary']},
+                      `guild_seccurr` = `guild_seccurr` - {$_POST['secondary']} WHERE `guild_id` = {$gd['guild_id']}");
+        $api->GameAddNotification($_POST['user'],"You were given " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from your guild's vault.");
+        $api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has given <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from the guild's vault.");
+        alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_VAULT_SUCC']);
+        $api->SystemLogsAdd($userid,"guild_vault","Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
+    }
+    else
+    {
+        $csrf = request_csrf_html('guild_staff_vault');
+        echo "<form method='post'>
+        <table class='table table-bordered'>
+            <tr>
+                <th colspan='2'>
+                    {$lang['VIEWGUILD_STAFF_VAULT']} " . number_format($gd['guild_primcurr']) . " {$lang['INDEX_PRIMCURR']} {$lang['GEN_AND']} " . number_format($gd['guild_seccurr']) . " {$lang['INDEX_SECCURR']}.
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    {$lang['VIEWGUILD_STAFF_VAULT1']}
+                </th>
+                <td>
+                    " . user3_dropdown() . "
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {$lang['INDEX_PRIMCURR']}
+                </th>
+                <td>
+                    <input type='number' class='form-control' min='0' max='{$gd['guild_primcurr']}' name='primary'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {$lang['INDEX_SECCURR']}
+                </th>
+                <td>
+                    <input type='number' class='form-control' min='0' max='{$gd['guild_seccurr']}' name='secondary'>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <input type='submit' class='btn btn-default' value='{$lang['VIEWGUILD_STAFF_VAULT_BTN']}'>
+                </td>
+            </tr>
+            {$csrf}
+        </table>
+        </form>";
+    }
+
+}
+
 $h->endpage();
