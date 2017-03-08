@@ -183,16 +183,17 @@ function idx()
 	<?php
         while ($r = $db->fetch_row($q))
         {
-            $t = DateTime_Parse($r['ff_lp_time']);
-		$pnq=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
-		$pn=$db->fetch_single($pnq);
-		
-		$topicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
+            $t = DateTime_Parse($r['ff_lp_time'], false, true);
+			$pnq=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
+			$pn=$db->fetch_single($pnq);
 			
-		$postsq=$db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `ff_id`={$r['ff_id']}");
-		$posts=$db->fetch_single($postsq);
-		$topics=$db->fetch_single($topicsq);
-        $topicname=$db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_id` = {$r['ff_id']}"));
+			$topicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
+				
+			$postsq=$db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `ff_id`={$r['ff_id']}");
+			$posts=$db->fetch_single($postsq);
+			$topics=$db->fetch_single($topicsq);
+			
+			$topicname=$db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
         echo "<tr>
         		<td>
         			<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
@@ -372,7 +373,7 @@ function viewtopic()
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff')
     {
-		if (!($ir['user_level'] == 'Member') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer'))
+		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
 			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 			die($h->endpage());
@@ -677,7 +678,7 @@ function reply()
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff')
     {
-		if (!($ir['user_level'] == 'Member') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer'))
+		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
 			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 			die($h->endpage());
@@ -747,7 +748,7 @@ function newtopicform()
     $db->free_result($q);
     if ($r['ff_auth'] == 'staff')
     {
-		if (!($ir['user_level'] == 'Member') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer'))
+		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
 			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 			die($h->endpage());
@@ -824,7 +825,7 @@ function newtopic()
     $db->free_result($q);
     if ($r['ff_auth'] == 'staff')
     {
-		if (!($ir['user_level'] == 'Member') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer'))
+		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
 			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 			die($h->endpage());
@@ -934,7 +935,7 @@ function quote()
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff')
     {
-		if (!($ir['user_level'] == 'Member') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer'))
+		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
 			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 			die($h->endpage());
@@ -1122,7 +1123,7 @@ function editsub()
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff')
     {
-		if (!($ir['user_level'] == 'Member') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer'))
+		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
 			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 			die($h->endpage());
