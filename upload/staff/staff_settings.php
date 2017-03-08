@@ -345,6 +345,7 @@ function announce()
 function diagnostics()
 {
 	global $db,$h,$set,$userid,$api;
+	$dir= substr(__DIR__, 0, strpos(__DIR__, "\staff"));
 	if (version_compare(phpversion(), '5.5.0') < 0)
     {
         $pv = '<span style="color: red">Failed</span>';
@@ -421,7 +422,7 @@ function diagnostics()
     		<tr>
     			<td>Is Chivalry Engine up to date?</td>
     			<td>
-        			<iframe width='100%' height='35' style='border:none' src='http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}'>Your browser does not support iframes...</iframe>
+        			" . get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}",$dir . '\cache\update_check.txt') . "
         		</td>
         	</tr>
     </table>
