@@ -346,7 +346,7 @@ function themechange()
 	global $db,$userid,$h,$lang;
 	if (isset($_POST['theme']))
 	{
-		$_POST['theme'] =  (isset($_POST['theme']) && is_numeric($_POST['theme']))  ? abs(intval($_POST['theme'])) : 1;
+		$_POST['theme'] =  (isset($_POST['theme']) && is_numeric($_POST['theme']))  ? abs($_POST['theme']) : 1;
 		if ($_POST['theme'] < 1 || $_POST['theme'] > 3)
 		{
 			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['PREF_CTHM_SUB_ERROR']}");

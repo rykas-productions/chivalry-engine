@@ -218,7 +218,7 @@ function idx()
 function viewforum()
 {
     global $ir, $userid, $lang, $db, $h;
-    $_GET['viewforum'] = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs(intval($_GET['viewforum'])) : '';
+    $_GET['viewforum'] = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs($_GET['viewforum']) : '';
     if (empty($_GET['viewforum']))
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
@@ -337,7 +337,7 @@ function viewtopic()
     global $ir, $userid, $parser, $lang, $db,$h;
 	$code = request_csrf_code('forum_reply');
     $precache = array();
-    $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs(intval($_GET['viewtopic'])) : '';
+    $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
     if (empty($_GET['viewtopic']))
     {
        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
@@ -387,7 +387,7 @@ function viewtopic()
     $posts_per_page = 20;
     $posts_topic = $topic['ft_posts'];
     $pages = ceil($posts_topic / $posts_per_page);
-    $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs((int) $_GET['st']) : 0;
+    $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
     if (isset($_GET['lastpost']))
     {
         if ($pages == 0)
@@ -639,9 +639,7 @@ function viewtopic()
 function reply()
 {
     global $ir, $userid, $lang, $db;
-    $_GET['reply'] =
-            (isset($_GET['reply']) && is_numeric($_GET['reply']))
-                    ? abs(intval($_GET['reply'])) : '';
+    $_GET['reply'] = (isset($_GET['reply']) && is_numeric($_GET['reply'])) ? abs($_GET['reply']) : '';
 	if (!isset($_POST['verf']) || !verify_csrf_code('forum_reply', stripslashes($_POST['verf'])))
 	{
 		csrf_error("?viewtopic={$_GET['reply']}");
@@ -728,7 +726,7 @@ function reply()
 function newtopicform()
 {
     global $ir, $userid, $lang, $h, $db;
-    $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs(intval($_GET['forum'])) : '';
+    $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
     if (empty($_GET['forum']))
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","");
@@ -801,7 +799,7 @@ EOF;
 function newtopic()
 {
     global $ir, $userid, $h, $lang, $db;
-    $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs(intval($_GET['forum'])) : '';
+    $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
 	if (!isset($_POST['verf']) || !verify_csrf_code("forums_newtopic_{$_GET['forum']}", stripslashes($_POST['verf'])))
 	{
 		csrf_error("?act=newtopicform&forum={$_GET['forum']}");
@@ -898,9 +896,9 @@ function quote()
 {
     global $ir, $lang, $userid, $h, $db;
 	$code = request_csrf_code('forum_reply');
-    $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs(intval($_GET['viewtopic'])) : '';
-	$_GET['fpid'] = (isset($_GET['fpid']) && is_numeric($_GET['fpid'])) ? abs(intval($_GET['fpid'])) : '';
-	$_GET['quotename'] = (isset($_GET['quotename']) && is_numeric($_GET['quotename'])) ? abs(intval($_GET['quotename'])) : '';
+    $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
+	$_GET['fpid'] = (isset($_GET['fpid']) && is_numeric($_GET['fpid'])) ? abs($_GET['fpid']) : '';
+	$_GET['quotename'] = (isset($_GET['quotename']) && is_numeric($_GET['quotename'])) ? abs($_GET['quotename']) : '';
     if (empty($_GET['viewtopic']))
     {
         alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
@@ -986,7 +984,7 @@ function quote()
 function edit()
 {
     global $ir, $c, $userid, $h, $lang, $db;
-    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs(intval($_GET['topic'])) : '';
+    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic']))
     {
         alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
@@ -1026,9 +1024,7 @@ function edit()
 			die($h->endpage());
 		}
     }
-    $_GET['post'] =
-            (isset($_GET['post']) && is_numeric($_GET['post']))
-                    ? abs(intval($_GET['post'])) : '';
+    $_GET['post'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? abs($_GET['post']) : '';
     if (empty($_GET['post']))
     {
         alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
@@ -1061,6 +1057,7 @@ function edit()
     ";
     $edit_csrf = request_csrf_code("forums_editpost_{$_GET['post']}");
     $fp_text = htmlentities($post['fp_text'], ENT_QUOTES, 'ISO-8859-1');
+	$fp_text = $db->escape(str_replace("<br />", "\r",strip_tags(stripslashes($fp_text))));
     echo <<<EOF
 <form action='?act=editsub&topic={$topic['ft_id']}&post={$_GET['post']}' method='post'>
 <input type='hidden' name='verf' value='{$edit_csrf}' />
@@ -1086,8 +1083,8 @@ EOF;
 function editsub()
 {
     global $ir, $c, $userid, $h, $lang, $db;
-    $_GET['post'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? abs(intval($_GET['post'])) : '';
-    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs(intval($_GET['topic'])) : '';
+    $_GET['post'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? abs($_GET['post']) : '';
+    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if ((empty($_GET['post']) || empty($_GET['topic'])))
     {
         alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
@@ -1149,6 +1146,7 @@ function editsub()
         alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 		die($h->endpage());
     }
+	$_POST['fp_text'] = $db->escape(str_replace("<br />", "\n",strip_tags(stripslashes($_POST['fp_text']))));
     $_POST['fp_text'] = $db->escape(stripslashes($_POST['fp_text']));
     if ((strlen($_POST['fp_text']) > 65535))
     {
@@ -1180,8 +1178,8 @@ function move()
         alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 		die($h->endpage());
     }
-    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs(intval($_GET['topic'])) : '';
-    $_POST['forum'] = (isset($_POST['forum']) && is_numeric($_POST['forum'])) ? abs(intval($_POST['forum'])) : '';
+    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
+    $_POST['forum'] = (isset($_POST['forum']) && is_numeric($_POST['forum'])) ? abs($_POST['forum']) : '';
     if (empty($_GET['topic']) || empty($_POST['forum']))
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
@@ -1227,7 +1225,7 @@ function lock()
         alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 		die($h->endpage());
     }
-    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs(intval($_GET['topic'])) : '';
+    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic']))
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
@@ -1274,7 +1272,7 @@ function pin()
         alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 		die($h->endpage());
     }
-    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs(intval($_GET['topic'])) : '';
+    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic']))
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
@@ -1321,7 +1319,7 @@ function delepost()
         alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 		die($h->endpage());
     }
-    $_GET['post'] = isset($_GET['post']) && is_numeric($_GET['post']) ? abs(intval($_GET['post'])) : '';
+    $_GET['post'] = isset($_GET['post']) && is_numeric($_GET['post']) ? abs($_GET['post']) : '';
     if (empty($_GET['post']))
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
@@ -1368,7 +1366,7 @@ function delepost()
 function deletopic()
 {
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
-    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs(intval($_GET['topic'])) : '';
+    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')))
     {
         alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");

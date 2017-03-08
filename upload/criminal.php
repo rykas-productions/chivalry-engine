@@ -65,7 +65,7 @@ function crime()
 	{
 		$_GET['c'] = 0;
 	}
-	$_GET['c'] = abs((int) $_GET['c']);
+	$_GET['c'] = abs($_GET['c']);
 	if ($_GET['c'] <= 0)
 	{
 		alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}");

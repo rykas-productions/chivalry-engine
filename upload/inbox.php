@@ -122,7 +122,7 @@ function read()
 {
 	global $db,$ir,$userid,$lang,$h,$parser;
 	$code = request_csrf_code('inbox_send');
-	$_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs(intval($_GET['msg'])) : 0;
+	$_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs($_GET['msg']) : 0;
 	if ($_GET['msg'] == 0)
 	{
 		alert('danger',$lang['ERROR_SECURITY'],$lang['ERROR_MAIL_UNOWNED']);
@@ -311,7 +311,7 @@ function outbox()
 function compose()
 {
 	global $db,$userid,$lang,$h;
-	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
+	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
 	if (isset($_GET['user']) && ($_GET['user'] > 0))	
 	{
 		$username=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}"));

@@ -161,7 +161,7 @@ function create()
 function view()
 {
 	global $db,$lang,$h,$userid,$api;
-	$_GET['id'] = abs((int) $_GET['id']);
+	$_GET['id'] = abs($_GET['id']);
 	if (empty($_GET['id']))
 	{
 		header("Location: guilds.php");
@@ -244,7 +244,7 @@ function view()
 function memberlist()
 {
 	global $db,$userid,$ir,$api,$h,$lang;
-	$_GET['id'] = abs((int) $_GET['id']);
+	$_GET['id'] = abs($_GET['id']);
 	if (empty($_GET['id']))
 	{
 		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
@@ -287,7 +287,7 @@ function memberlist()
 function apply()
 {
 	global $db,$userid,$ir,$api,$h,$lang;
-	$_GET['id'] = abs((int) $_GET['id']);
+	$_GET['id'] = abs($_GET['id']);
 	if (empty($_GET['id']))
 	{
 		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");

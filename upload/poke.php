@@ -1,6 +1,6 @@
 <?php
 require("globals.php");
-$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : '';
+$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
 if (empty($_GET['user']))
 {
 	alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['POKE_ERROR1']}");

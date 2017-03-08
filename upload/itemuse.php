@@ -1,7 +1,7 @@
 <?php
 require('globals.php');
 $Time=time();
-$_GET['item'] = (isset($_GET['item']) && is_numeric($_GET['item'])) ? abs(intval($_GET['item'])) : '';
+$_GET['item'] = (isset($_GET['item']) && is_numeric($_GET['item'])) ? abs($_GET['item']) : '';
 if (empty($_GET['item']))
 {
     alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IU_UI']}");

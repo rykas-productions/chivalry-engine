@@ -78,7 +78,7 @@ function index()
 function deposit()
 {
     global $db,$ir,$userid,$lang,$bank_maxfee,$bank_feepercent,$api;
-    $_POST['deposit'] = abs((int) $_POST['deposit']);
+    $_POST['deposit'] = abs($_POST['deposit']);
     if ($_POST['deposit'] > $ir['primary_currency'])
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_D_ERROR']}");
@@ -101,7 +101,7 @@ function deposit()
 function withdraw()
 {
 	global $db, $ir, $lang, $userid, $h, $api;
-	$_POST['withdraw'] = abs((int) $_POST['withdraw']);
+	$_POST['withdraw'] = abs($_POST['withdraw']);
 	if ($_POST['withdraw'] > $ir['bank'])
     {
 		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_W_FAIL']}");

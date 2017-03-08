@@ -2,7 +2,7 @@
 require('globals.php');
 $cost_of_travel = 250*$ir['level'];
 echo "<h3>{$lang['TRAVEL_TITLE']}</h3><hr />";
-$_GET['to'] = (isset($_GET['to']) && is_numeric($_GET['to'])) ? abs(intval($_GET['to'])) : '';
+$_GET['to'] = (isset($_GET['to']) && is_numeric($_GET['to'])) ? abs($_GET['to']) : '';
 if (empty($_GET['to']))
 {
 	echo "{$lang['TRAVEL_TABLE']} " . number_format($cost_of_travel) . " {$lang['TRAVEL_TABLE2']}

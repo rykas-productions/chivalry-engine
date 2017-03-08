@@ -1,6 +1,6 @@
 <?php
 require('globals.php');
-$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
+$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
 $itmid = $_GET['ID'];
 if (!$itmid)
 {

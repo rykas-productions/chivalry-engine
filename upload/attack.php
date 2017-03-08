@@ -29,14 +29,14 @@ function attacking()
 	$menuhide = 1;
 	$atkpage = 1;
 	$tresder = Random(100, 999);
-	$_GET['user'] =  (isset($_GET['user']) && is_numeric($_GET['user']))  ? abs(intval($_GET['user'])) : '';
+	$_GET['user'] =  (isset($_GET['user']) && is_numeric($_GET['user']))  ? abs($_GET['user']) : '';
 	if (empty($_GET['nextstep']))
 	{
 		$_GET['nextstep']=0;
 	}
 	if ($_GET['nextstep'] > 0)
 	{
-		$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs(intval($_GET['tresde'])) : 0;
+		$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 		if (!isset($_SESSION['tresde']))
 		{
 			$_SESSION['tresde'] = 0;
@@ -156,7 +156,7 @@ function attacking()
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_THEYLOWLEVEL']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
-	$_GET['weapon'] = (isset($_GET['weapon']) && is_numeric($_GET['weapon'])) ? abs(intval($_GET['weapon'])) : '';
+	$_GET['weapon'] = (isset($_GET['weapon']) && is_numeric($_GET['weapon'])) ? abs($_GET['weapon']) : '';
 	if ($_GET['weapon'])
 	{
 		if (!$_GET['nextstep'])
@@ -192,7 +192,7 @@ function attacking()
 		$ir['attacking'] = $odata['userid'];
 		//$api->UserInfoSetStatic($userid,"attacking",$ir['attacking']);
 		$api->UserINfoSetStatic($userid,"attacking",$ir['attacking']);
-		$_GET['nextstep'] = (isset($_GET['nextstep']) && is_numeric($_GET['nextstep'])) ? abs(intval($_GET['nextstep'])) : '';
+		$_GET['nextstep'] = (isset($_GET['nextstep']) && is_numeric($_GET['nextstep'])) ? abs($_GET['nextstep']) : '';
 		if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary'])
 		{
 			$api->UserInfoSet($userid,'xp',0);

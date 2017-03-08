@@ -2,7 +2,7 @@
 require("globals.php");
 $tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 500;
-$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs(intval($_GET['tresde'])) : 0;
+$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde']))
 {
     $_SESSION['tresde'] = 0;
@@ -32,7 +32,7 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher','lower'
 	}
 	else
 	{
-		$guessed = (isset($_SESSION['number']) && is_numeric($_SESSION['number'])) ? abs(intval($_SESSION['number'])) : Random(1,100);
+		$guessed = (isset($_SESSION['number']) && is_numeric($_SESSION['number'])) ? abs($_SESSION['number']) : Random(1,100);
 		$numb=Random(1,100);
 		$api->UserTakeCurrency($userid,'primary',$maxbet);
 		if ($guessed > $numb && $_POST['change'] == 'higher')

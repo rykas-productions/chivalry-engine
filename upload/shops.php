@@ -52,7 +52,7 @@ function home()
 function shop()
 {
 	global $db,$ir,$lang,$h,$api;
-	$_GET['shop'] = abs((int) $_GET['shop']);
+	$_GET['shop'] = abs($_GET['shop']);
 	$sd = $db->query("SELECT `shopLOCATION`, `shopNAME` FROM `shops` WHERE `shopID` = {$_GET['shop']}");
     if ($db->num_rows($sd) > 0)
     {
@@ -116,8 +116,8 @@ function shop()
 function buy()
 {
 	global $db,$lang,$userid,$ir,$api,$h;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
-	$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(intval($_POST['qty'])) : '';
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(($_GET['ID'])) : '';
+	$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(($_POST['qty'])) : '';
 	if (permission('CanBuyFromGame',$userid) == true)
 	{
 		if (empty($_GET['ID']) OR empty($_POST['qty']))

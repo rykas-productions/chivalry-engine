@@ -2,7 +2,7 @@
 require("globals.php");
 $code = request_csrf_code('inbox_send');
 $code2 = request_csrf_code('cash_send');
-$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : '';
+$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
 if (!$_GET['user'])
 {
    alert("danger","{$lang['ERROR_NONUSER']}","{$lang['PROFILE_UNF']}");

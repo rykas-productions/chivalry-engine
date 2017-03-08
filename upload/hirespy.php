@@ -1,6 +1,6 @@
 <?php
 require('globals.php');
-$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : '';
+$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
 if ($api->UserStatus($userid,'infirmary') == true)
 {
 	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['SPY_ERROR6']}");

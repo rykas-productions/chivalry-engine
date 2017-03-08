@@ -21,8 +21,8 @@ function home()
 	$voterquery=1;
 	echo "{$lang['POLL_CYV']}<br />";
 	
-	$_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs(intval($_POST['poll'])) : '';
-	$_POST['choice'] = (isset($_POST['choice']) && is_numeric($_POST['choice'])) ? abs(intval($_POST['choice'])) : '';
+	$_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs($_POST['poll']) : '';
+	$_POST['choice'] = (isset($_POST['choice']) && is_numeric($_POST['choice'])) ? abs($_POST['choice']) : '';
 	$ir['voted'] = unserialize($ir['voted']);
 	if (!$_POST['choice'] || !$_POST['poll'])
 	{

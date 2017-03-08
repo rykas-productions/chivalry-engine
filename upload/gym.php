@@ -1,5 +1,5 @@
 <?php
-$macropage = "gym.php";
+//$macropage = "gym.php";
 require("globals.php");
 if ($api->UserStatus($ir['userid'],'infirmary') == true)
 {
@@ -16,7 +16,7 @@ if (!isset($_POST["amnt"]))
 {
     $_POST["amnt"] = 0;
 }
-$_POST["amnt"] = abs((int) $_POST["amnt"]);
+$_POST["amnt"] = abs($_POST["amnt"]);
 echo "<h3>{$lang['GYM_INFO']}</h3>";
 if (isset($_POST["stat"]) && $_POST["amnt"])
 {

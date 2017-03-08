@@ -93,7 +93,7 @@ function buypower()
     $CostForPower = $MUS['mining_level']*75+10+$MUS['mining_level']; //Cost formula, in IQ.
     if (isset($_POST['sets']) && ($_POST['sets'] > 0))
     {
-        $sets=abs((int) $_POST['sets']);
+        $sets=abs($_POST['sets']);
         $totalcost=$sets*$CostForPower;
         if ($sets > $MUS['buyable_power'])
         {
@@ -136,7 +136,7 @@ function mine()
     }
     else
     {
-        $spot=abs((int) $_GET['spot']);
+        $spot=abs($_GET['spot']);
         $mineinfo=$db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$spot}");
         if (!($db->num_rows($mineinfo)))
         {
@@ -253,7 +253,7 @@ function mine()
 function mining_levelup()
 {
     global $db,$userid,$MUS;
-    $MUS['xp_needed'] = (int) (($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * 4.4);
+    $MUS['xp_needed'] = round(($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * 4.4);
     if ($MUS['miningxp'] >= $MUS['xp_needed'])
     {
         $expu = $MUS['miningxp'] - $MUS['xp_needed'];
@@ -261,7 +261,7 @@ function mining_levelup()
         $MUS['miningxp'] = $expu;
         $MUS['buyable_power'] += 1;
         $MUS['xp_needed'] =
-                (int) (($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * 4.4);
+                round(($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * 4.4);
         $db->query("UPDATE `mining` SET `mining_level` = `mining_level` + 1, `miningxp` = {$expu},
                  `buyable_power` = `buyable_power` + 1 WHERE `userid` = {$userid}");
     }

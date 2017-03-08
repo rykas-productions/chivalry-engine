@@ -5,7 +5,7 @@ $mp = $db->fetch_row($mpq);
 $db->free_result($mpq);
 if (isset($_GET['property']) && is_numeric($_GET['property']))
 {
-    $_GET['property'] = abs((int) $_GET['property']);
+    $_GET['property'] = abs($_GET['property']);
     $npq = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$_GET['property']}");
     if ($db->num_rows($npq) == 0)
     {

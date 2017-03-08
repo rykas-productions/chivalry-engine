@@ -9,7 +9,7 @@ if (!isset($_SESSION['started']))
 require_once('globals_nonauth.php');
 if (isset($_SESSION['userid']))
 {
-    $sessid = (int) $_SESSION['userid'];
+    $sessid = abs($_SESSION['userid']);
     if (isset($_SESSION['attacking']) && $_SESSION['attacking'] > 0)
     {
         require_once('globals_nonauth.php');

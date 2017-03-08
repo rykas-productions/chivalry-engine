@@ -2,7 +2,7 @@
 require_once('globals.php');
 $tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 250;
-$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs(intval($_GET['tresde'])) : 0;
+$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde']))
 {
     $_SESSION['tresde'] = 0;
@@ -16,12 +16,12 @@ $_SESSION['tresde'] = $_GET['tresde'];
 echo "<h3>{$lang['ROULETTE_TITLE']}</h3><hr />";
 if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 {
-	$_POST['bet'] = abs((int) $_POST['bet']);
+	$_POST['bet'] = abs($_POST['bet']);
     if (!isset($_POST['number']))
     {
         $_POST['number'] = 0;
     }
-    $_POST['number'] = abs((int) $_POST['number']);
+    $_POST['number'] = abs($_POST['number']);
     if ($_POST['bet'] > $ir['primary_currency'])
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ROULETTE_ERROR1']}");

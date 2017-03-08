@@ -1,6 +1,6 @@
 <?php
 require("globals.php");
-$st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs(intval($_GET['st'])) : 0;
+$st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
 $allowed_by = array('userid', 'username', 'level', 'primary_currency');
 $by = (isset($_GET['by']) && in_array($_GET['by'], $allowed_by, true)) ? $_GET['by'] : 'userid';
 $allowed_ord = array('asc', 'desc', 'ASC', 'DESC');
@@ -10,7 +10,7 @@ $cnt = $db->query("SELECT COUNT(`userid`)
 				   FROM `users`");
 $membs = $db->fetch_single($cnt);
 $db->free_result($cnt);
-$pages = (int) ($membs / 100) + 1;
+$pages = round($membs / 100) + 1;
 if ($membs % 100 == 0)
 {
     $pages--;

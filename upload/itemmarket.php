@@ -113,7 +113,7 @@ function index()
 function remove()
 {
 	global $db,$ir,$userid,$h,$lang,$api;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
 	if (empty($_GET['ID']))
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_REMOVE_ERROR1']}");
@@ -138,8 +138,8 @@ function remove()
 function buy()
 {
 	global $db,$ir,$userid,$h,$lang,$api;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
-    $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs(intval($_POST['QTY'])) : '';
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
+    $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
 	if ($_GET['ID'] && !$_POST['QTY'])
     {
         $q = $db->query("SELECT `imADDER`, `imCURRENCY`, `imPRICE`, `imQTY`,
@@ -253,10 +253,10 @@ function buy()
 function gift()
 {
 	global $db,$ir,$userid,$h,$lang,$api;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
-	$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : '';
-	$_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs(intval($_POST['QTY'])) : '';
-	$_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs(intval($_POST['ID'])) : '';
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
+	$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
+	$_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
+	$_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs($_POST['ID']) : '';
 	if (!$_GET['ID'])
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_REMOVE_ERROR1']}");
@@ -405,9 +405,9 @@ function gift()
 function add()
 {
 	global $lang,$h,$userid,$db,$h,$api;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
-	$_POST['price'] = (isset($_POST['price']) && is_numeric($_POST['price'])) ? abs(intval($_POST['price'])) : '';
-	$_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs(intval($_POST['QTY'])) : '';
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
+	$_POST['price'] = (isset($_POST['price']) && is_numeric($_POST['price'])) ? abs($_POST['price']) : '';
+	$_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
 	$_POST['currency'] = (isset($_POST['currency']) && in_array($_POST['currency'], array('primary', 'secondary'))) ? $_POST['currency'] : 'primary';
 	if (empty($_GET['ID']))
 	{

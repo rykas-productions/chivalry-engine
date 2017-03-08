@@ -4,7 +4,7 @@ if (!isset($_GET['delete']))
 {
     $_GET['delete'] = 0;
 }
-$_GET['delete'] = abs((int) $_GET['delete']);
+$_GET['delete'] = abs($_GET['delete']);
 if ($_GET['delete'] > 0)
 {
     $d_c =

@@ -118,7 +118,7 @@ $cpage = strip_tags(stripslashes($currentpage));
     {
         $_GET['REF'] = 0;
     }
-    $_GET['REF'] = abs((int) $_GET['REF']);
+    $_GET['REF'] = abs($_GET['REF']);
     if ($_GET['REF'])
     {
         $_GET['REF']=$_GET['REF'];
@@ -203,7 +203,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 		}
 		else
 		{
-			$_POST['ref'] = (isset($_POST['ref']) && is_numeric($_POST['ref'])) ? abs(intval($_POST['ref'])) : '';
+			$_POST['ref'] = (isset($_POST['ref']) && is_numeric($_POST['ref'])) ? abs($_POST['ref']) : '';
 			$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 			if ($_POST['ref'])
 			{

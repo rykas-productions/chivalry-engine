@@ -87,7 +87,7 @@ function add()
 	global $db,$userid,$lang;
 	if (isset($_POST['user']))
 	{
-		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : '';
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
 		$qc = $db->query("SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ADDED` = {$_POST['user']}");
 		$dupe_count = $db->fetch_single($qc);
         $db->free_result($qc);
@@ -120,7 +120,7 @@ function add()
 		}
 		else
 		{
-			$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : '';
+			$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
 		}
 		echo "<table class='table table-bordered'>
 		<form action='?action=add' method='post'>
@@ -149,7 +149,7 @@ function add()
 function remove()
 {
 	global $db,$userid,$lang,$h;
-	$_GET['contact'] = (isset($_GET['contact']) && is_numeric($_GET['contact'])) ? abs(intval($_GET['contact'])) : '';
+	$_GET['contact'] = (isset($_GET['contact']) && is_numeric($_GET['contact'])) ? abs($_GET['contact']) : '';
 	if (empty($_GET['contact']))
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR']);

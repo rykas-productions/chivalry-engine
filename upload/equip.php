@@ -19,7 +19,7 @@ default:
 function weapon()
 {
 	global $db,$lang,$h,$userid,$ir,$api;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs((int) $_GET['ID']) : 0;
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : 0;
 	$id = $db->query("SELECT `weapon`, `itmid`, `itmname`
 					FROM `inventory` AS `iv`
 					LEFT JOIN `items` AS `it`
@@ -91,7 +91,7 @@ function weapon()
 function armor()
 {
 	global $db,$lang,$h,$userid,$ir,$api;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs((int) $_GET['ID']) : 0;
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : 0;
 	$id =
 			$db->query(
 					"SELECT `armor`, `itmid`, `itmname`

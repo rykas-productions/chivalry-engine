@@ -61,7 +61,7 @@ else
 {
 	$CategoryArray=["bugabuse","harassment","scamming","spamming","erb","security","other"];
 	$_POST['reason'] =  (isset($_POST['reason']) && is_string($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : '';
-	$_POST['userid'] =  (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
+	$_POST['userid'] =  (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs($_POST['userid']) : '';
 	if (!isset($_POST['verf']) || !verify_csrf_code('report_form', stripslashes($_POST['verf'])))
 	{
 		csrf_error('');

@@ -80,7 +80,7 @@ function home()
 function smelt()
 {
 	global $db,$userid,$api,$lang,$h;
-	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id']))  ? abs(intval($_GET['id'])) : 0;
+	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id']))  ? abs($_GET['id']) : 0;
 	$q=$db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$_GET['id']}");
 	if($db->num_rows($q) == 0) 
 	{
