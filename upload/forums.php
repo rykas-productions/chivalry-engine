@@ -943,6 +943,7 @@ function quote()
     }
 	$q3 = $db->query("SELECT `fp_text` FROM `forum_posts` WHERE `fp_id` = {$_GET['fpid']}");
 	$text = $db->fetch_single($q3);
+	$text = strip_tags(stripslashes($text));
 	$q4 = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['quotename']}");
 	$Who = $db->fetch_single($q4);
     echo "<big>
@@ -1057,8 +1058,7 @@ function edit()
     	  </big><br /><br />
     ";
     $edit_csrf = request_csrf_code("forums_editpost_{$_GET['post']}");
-    $fp_text = htmlentities($post['fp_text'], ENT_QUOTES, 'ISO-8859-1');
-	$fp_text = $db->escape(str_replace("<br />", "\r",strip_tags(stripslashes($fp_text))));
+	$fp_text = strip_tags(stripslashes($post['fp_text']));
     echo <<<EOF
 <form action='?act=editsub&topic={$topic['ft_id']}&post={$_GET['post']}' method='post'>
 <input type='hidden' name='verf' value='{$edit_csrf}' />
@@ -1147,8 +1147,7 @@ function editsub()
         alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
 		die($h->endpage());
     }
-	$_POST['fp_text'] = $db->escape(str_replace("<br />", "\n",strip_tags(stripslashes($_POST['fp_text']))));
-    $_POST['fp_text'] = $db->escape(stripslashes($_POST['fp_text']));
+	$_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
     if ((strlen($_POST['fp_text']) > 65535))
     {
         alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['FORUM_MAX_CHAR_REPLY']}");
