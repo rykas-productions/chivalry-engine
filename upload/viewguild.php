@@ -370,7 +370,7 @@ function staff_kick()
                 $d_oname = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
                 alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_KICK_SUCCESSS']);
                 $their_event = "You were kicked out of the {$gd['guild_name']} guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
-                notification_add($who, $their_event);
+                $api->GameAddNotification($who, $their_event);
                 $gang_event =  $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
                 $db->query("INSERT INTO `guild_notifications` VALUES(NULL, {$gd['guild_id']}, " . time() . ", '{$gang_event}');");
             }
@@ -475,6 +475,24 @@ function staff()
             case "vault":
                 staff_vault();
                 break;
+			case "coowner":
+                staff_coowner();
+                break;
+			case "ament":
+                staff_announcement();
+                break;
+			case "massmail":
+                staff_massmail();
+                break;
+			case "masspay":
+                staff_masspayment();
+                break;
+			case "desc":
+                staff_desc();
+                break;
+			case "leader":
+                staff_leader();
+                break;
 			default:
 				staff_idx();
 				break;
@@ -495,12 +513,18 @@ function staff_idx()
 			<b>{$lang['VIEWGUILD_SUMMARY_COOWNER']}</b><br />
 			<a href='?action=staff&act2=apps'>{$lang['VIEWGUILD_STAFF_IDX_APP']}</a><br />
 			<a href='?action=staff&act2=vault'>{$lang['VIEWGUILD_STAFF_IDX_VAULT']}</a><br />
+			<a href='?action=staff&act2=coowner'>{$lang['VIEWGUILD_STAFF_IDX_COOWNER']}</a><br />
+			<a href='?action=staff&act2=ament'>{$lang['VIEWGUILD_STAFF_IDX_AMENT']}</a><br />
+			<a href='?action=staff&act2=massmail'>{$lang['VIEWGUILD_STAFF_IDX_MM']}</a><br />
+			<a href='?action=staff&act2=masspay'>{$lang['VIEWGUILD_STAFF_IDX_MP']}</a><br />
 		</td>";
 	if ($gd['guild_owner'] == $userid)
 	{
 		echo "
 		<td>
-			<b>{$lang['VIEWGUILD_SUMMARY_OWNER']}</b>
+			<b>{$lang['VIEWGUILD_SUMMARY_OWNER']}</b><br />
+			<a href='?action=staff&act2=leader'>{$lang['VIEWGUILD_STAFF_IDX_LEADER']}</a><br />
+			<a href='?action=staff&act2=desc'>{$lang['VIEWGUILD_STAFF_IDX_DESC']}</a><br />
 		</td>";
 	}
 	echo "</tr></table>";
@@ -529,7 +553,7 @@ function staff_apps()
             if ($what == 'decline')
             {
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
-                notification_add($appdata['ga_user'],"We regret to inform you that your application to join the {$gd['guild_name']} guild was declined.");
+                $api->GameAddNotification($appdata['ga_user'],"We regret to inform you that your application to join the {$gd['guild_name']} guild was declined.");
 				$event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
 									has declined <a href='profile.php?user={$appdata['ga_user']}'>
 									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
@@ -556,7 +580,7 @@ function staff_apps()
                 }
                 $db->free_result($cnt);
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
-                notification_add($appdata['ga_user'], "Your application to join the {$gd['guild_name']} guild was accepted.");
+                $api->GameAddNotification($appdata['ga_user'], "Your application to join the {$gd['guild_name']} guild was accepted.");
                 $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
 									has accepted <a href='profile.php?user={$appdata['ga_user']}'>
 									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
@@ -904,5 +928,323 @@ function staff_vault()
     }
 
 }
-
+function staff_coowner()
+{
+	global $db,$userid,$api,$h,$lang,$gd;
+	if (isset($_POST['user']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_coleader", stripslashes($_POST['verf'])))
+        {
+            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            die($h->endpage());
+        }
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+		$q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
+		if ($db->num_rows($q) == 0)
+		{
+			$db->free_result($q);
+			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_COLEADER_ERR']);
+			die($h->endpage());
+		}
+		$db->free_result($q);
+		$db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
+		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you co-leader privledges for the {$gd['guild_name']}.");
+		$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred co-leader privledges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_COLEADER_SUCC']);
+	}
+	else
+	{
+		$csrf = request_csrf_html('guild_staff_coleader');
+		echo "<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['VIEWGUILD_STAFF_COLEADER_INFO']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['ITEM_SEND_TH']}
+				</th>
+				<td>
+					" . user3_dropdown('user',$gd['guild_coowner']) . "
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' class='btn btn-default' value='{$lang['VIEWGUILD_STAFF_IDX_COOWNER']}'>
+				</td>
+			</tr>
+			{$csrf}
+		</table>
+		</form>";
+	}
+}
+function staff_announcement()
+{
+	global $gd,$db,$userid,$api,$lang,$h;
+	if (isset($_POST['ament']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_ament", stripslashes($_POST['verf'])))
+        {
+            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            die($h->endpage());
+        }
+		$ament = $db->escape(nl2br(htmlentities(stripslashes($_POST['ament']), ENT_QUOTES, 'ISO-8859-1')));
+		$db->query("UPDATE `guild` SET `guild_announcement` = '{$ament}' WHERE `guild_id` = {$gd['guild_id']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_AMENT_SUCC']);
+	}
+	else
+	{
+		$am_for_area = strip_tags($gd['guild_announcement']);
+		$csrf = request_csrf_html('guild_staff_ament');
+		echo "<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['VIEWGUILD_STAFF_AMENT_INFO']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['VIEWGUILD_HOME_ANNOUNCE']}
+				</th>
+				<td>
+					<textarea class='form-control' name='ament' rows='7'>{$am_for_area}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' value='{$lang['VIEWGUILD_STAFF_AMENT_BTN']}' class='btn btn-default'>
+				</td>
+			</tr>
+			{$csrf}
+		</table>
+		</form>";
+	}
+}
+function staff_massmail()
+{
+	global $db,$lang,$api,$userid,$h,$gd;
+	if (isset($_POST['text']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_massmail", stripslashes($_POST['verf'])))
+        {
+            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            die($h->endpage());
+        }
+		$_POST['text'] = (isset($_POST['text'])) ? $db->escape(htmlentities(stripslashes($_POST['text']), ENT_QUOTES, 'ISO-8859-1')) : '';
+		$subj = 'Guild Mass Mail';
+		$q = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$gd['guild_id']}");
+		while ($r = $db->fetch_row($q))
+        {
+            $api->GameAddMail($r['userid'],$subj,$_POST['text'],$userid);
+        }
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_MM_SUCC']);
+	}
+	else
+	{
+		$csrf = request_csrf_html('guild_staff_massmail');
+		echo "<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['VIEWGUILD_STAFF_MM_INFO']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['PROFILE_MSG4']}
+				</th>
+				<td>
+					<textarea class='form-control' name='text' rows='7'></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' value='{$lang['PROFILE_MSG6']}' class='btn btn-default'>
+				</td>
+			</tr>
+			{$csrf}
+		</table>
+		</form>";
+	}
+}
+function staff_masspayment()
+{
+	global $db,$lang,$api,$userid,$gd,$h;
+	if (isset($_POST['payment']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_masspay", stripslashes($_POST['verf'])))
+        {
+            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            die($h->endpage());
+        }
+		$_POST['payment'] = (isset($_POST['payment']) && is_numeric($_POST['payment'])) ? abs($_POST['payment']) : 0;
+		$cnt=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}"));
+		if (($_POST['payment'] * $cnt) > $gd['guild_primcurr'])
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_MP_ERR']);
+			die($h->endpage());
+		}
+		else
+		{
+			$q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `guild` = {$gd['guild_id']}");
+			while ($r = $db->fetch_row($q))
+			{
+				if ($api->SystemCheckUsersIPs($userid,$r['userid']) == true)
+				{
+					alert('danger',$lang['ERROR_GENERIC'],"{$r['username']} " . $lang['VIEWGUILD_STAFF_MM_ERR2']);
+				}
+				else
+				{
+					$gd['guild_primcurr'] -= $_POST['payment'];
+					$api->GameAddNotification($r['userid'],"You were given a mass-payment of {$_POST['payment']} Primary Currency from your guild.");
+					$api->UserGiveCurrency($r['userid'],'primary',$_POST['payment']);
+					alert('success',$lang['ERROR_SUCCESS'],"{$r['username']} " . $lang['VIEWGUILD_STAFF_MP_SUCC2']);
+				}
+			}
+			$db->query("UPDATE `guild` SET `guild_primcurr` = {$gd['guild_primcurr']} WHERE `guild_id` = {$gd['guild_id']}");
+			$notif=$db->escape("A mass payment of " . number_format($_POST['payment']) . " Primary Currency was sent out to the members of the guild.");
+			$api->GuildAddNotification($gd['guild_id'],$notif);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_MP_SUCC']);
+		}
+	}
+	else
+	{
+		$csrf = request_csrf_html('guild_staff_masspay');
+		echo "<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['VIEWGUILD_STAFF_MP_INFO']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['VIEWGUILD_STAFF_MP_TH']}
+				</th>
+				<td>
+					<input type='number' min='1' class='form-control' name='payment'>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' value='{$lang['VIEWGUILD_STAFF_MP_BTN']}' class='btn btn-default'>
+				</td>
+			</tr>
+			{$csrf}
+		</table>
+		</form>";
+	}
+}
+function staff_desc()
+{
+	global $gd,$db,$userid,$api,$lang,$h;
+	if ($userid == $gd['guild_owner'])
+	{
+		if (isset($_POST['desc']))
+		{
+			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_desc", stripslashes($_POST['verf'])))
+			{
+				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				die($h->endpage());
+			}
+			$desc = $db->escape(nl2br(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1')));
+			$db->query("UPDATE `guild` SET `guild_desc` = '{$desc}' WHERE `guild_id` = {$gd['guild_id']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_DESC_SUCC']);
+		}
+		else
+		{
+			$am_for_area = strip_tags($gd['guild_desc']);
+			$csrf = request_csrf_html('guild_staff_desc');
+			echo "<form method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['VIEWGUILD_STAFF_DESC_INFO']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['GUILD_VIEW_DESC']}
+					</th>
+					<td>
+						<textarea class='form-control' name='desc' rows='7'>{$am_for_area}</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' value='{$lang['VIEWGUILD_STAFF_DESC_BTN']}' class='btn btn-default'>
+					</td>
+				</tr>
+				{$csrf}
+			</table>
+			</form>";
+		}
+	}
+	else
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY']);
+	}
+}
+function staff_leader()
+{
+	global $gd,$db,$userid,$api,$lang,$h;
+	if ($userid == $gd['guild_owner'])
+	{
+		if (isset($_POST['user']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_leader", stripslashes($_POST['verf'])))
+        {
+            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            die($h->endpage());
+        }
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+		$q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
+		if ($db->num_rows($q) == 0)
+		{
+			$db->free_result($q);
+			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADER_ERR']);
+			die($h->endpage());
+		}
+		$db->free_result($q);
+		$db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
+		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you leader privledges for the {$gd['guild_name']}.");
+		$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred leader privledges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_LEADER_SUCC']);
+	}
+	else
+	{
+		$csrf = request_csrf_html('guild_staff_leader');
+		echo "<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['VIEWGUILD_STAFF_LEADER_INFO']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['ITEM_SEND_TH']}
+				</th>
+				<td>
+					" . user3_dropdown('user',$gd['guild_owner']) . "
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' class='btn btn-default' value='{$lang['VIEWGUILD_STAFF_IDX_LEADER']}'>
+				</td>
+			</tr>
+			{$csrf}
+		</table>
+		</form>";
+	}
+	}
+	else
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY']);
+	}
+}
 $h->endpage();
