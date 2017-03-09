@@ -493,6 +493,9 @@ function staff()
 			case "leader":
                 staff_leader();
                 break;
+			case "name":
+                staff_name();
+                break;
 			default:
 				staff_idx();
 				break;
@@ -524,6 +527,7 @@ function staff_idx()
 		<td>
 			<b>{$lang['VIEWGUILD_SUMMARY_OWNER']}</b><br />
 			<a href='?action=staff&act2=leader'>{$lang['VIEWGUILD_STAFF_IDX_LEADER']}</a><br />
+			<a href='?action=staff&act2=name'>{$lang['VIEWGUILD_STAFF_IDX_NAME']}</a><br />
 			<a href='?action=staff&act2=desc'>{$lang['VIEWGUILD_STAFF_IDX_DESC']}</a><br />
 		</td>";
 	}
@@ -1241,6 +1245,62 @@ function staff_leader()
 		</table>
 		</form>";
 	}
+	}
+	else
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY']);
+	}
+}
+function staff_name()
+{
+	global $gd,$db,$userid,$api,$lang,$h;
+	if ($userid == $gd['guild_owner'])
+	{
+		if (isset($_POST['name']))
+		{
+			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_name", stripslashes($_POST['verf'])))
+			{
+				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				die($h->endpage());
+			}
+			$name = $db->escape(nl2br(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1')));
+			$cnt=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}' AND `guild_id` != {$gd['guild_id']}");
+			if ($db->num_rows($cnt) > 0)
+			{
+				alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_NAME_ERR']);
+				die($h->endpage());
+			}
+			$db->query("UPDATE `guild` SET `guild_name` = '{$name}' WHERE `guild_id` = {$gd['guild_id']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_NAME_SUCC']);
+		}
+		else
+		{
+			$am_for_area = strip_tags($gd['guild_name']);
+			$csrf = request_csrf_html('guild_staff_name');
+			echo "<form method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['VIEWGUILD_STAFF_NAME_INFO']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['VIEWGUILD_STAFF_NAME_TH']}
+					</th>
+					<td>
+						<input type='text' required='1' value='{$am_for_area}' class='form-control' name='name'>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' value='{$lang['VIEWGUILD_STAFF_NAME_BTN']}' class='btn btn-default'>
+					</td>
+				</tr>
+				{$csrf}
+			</table>
+			</form>";
+		}
 	}
 	else
 	{
