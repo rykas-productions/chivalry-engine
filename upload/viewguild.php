@@ -948,7 +948,7 @@ function staff_coowner()
 		}
 		$db->free_result($q);
 		$db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
-		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you co-leader privledges for the {$gd['guild_name']}.");
+		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you co-leader privledges for the {$gd['guild_name']} guild.");
 		$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred co-leader privledges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_COLEADER_SUCC']);
 	}
@@ -1210,7 +1210,7 @@ function staff_leader()
 		}
 		$db->free_result($q);
 		$db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
-		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you leader privledges for the {$gd['guild_name']}.");
+		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you leader privledges for the {$gd['guild_name']} guild.");
 		$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred leader privledges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_LEADER_SUCC']);
 	}
