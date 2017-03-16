@@ -144,7 +144,7 @@ function diagnostics()
     		<tr>
     			<td>Is Chivalry Engine up to date?</td>
     			<td>
-        			" . get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}",'\cache\update_check.txt') . "
+        			" . get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$Build}",'cache\update_check.txt') . "
         		</td>
         	</tr>
     </table>
@@ -607,4 +607,43 @@ EOF;
 if ($_GET['code'] != 'install')
 {
 	require_once('installer_foot.php');
+}
+/* gets the contents of a file if it exists, otherwise grabs and caches */
+function get_cached_file($url,$file,$hours=1) 
+{
+	$current_time = time(); 
+	$expire_time = $hours * 60 * 60;
+	if(file_exists($file))
+	{
+		$file_time = filemtime($file);
+		if ($current_time - $expire_time < $file_time)
+		{
+			return file_get_contents($file);
+		}
+		else
+		{
+			$content = update_file($url,$file);
+			file_put_contents($file,$content);
+			return $content;
+		}
+	}
+	else 
+	{
+		$content = update_file($url,$file);
+		file_put_contents($file,$content);
+		return $content;
+	}
+}
+function update_file($url,$filename) 
+{
+	global $db,$set;
+	$content = "404";
+	$curl = curl_init();
+	curl_setopt_array($curl, array(
+		CURLOPT_URL => "{$url}",
+		CURLOPT_SSL_VERIFYPEER => false,
+		CURLOPT_RETURNTRANSFER => true));
+	$content = curl_exec($curl);
+	curl_close($curl);
+	return $content;
 }

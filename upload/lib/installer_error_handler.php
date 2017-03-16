@@ -6,6 +6,8 @@
 	Author: TheMasterGeneral
 	Website: http://mastergeneral156.pcriot.com/
 */
+// Change to true to show the user more information (for development)
+define('DEBUG', true);
 
 function error_critical($human_error, $debug_error, $action,
         $context = array())
