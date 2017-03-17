@@ -1,6 +1,6 @@
 <?php
 require('globals_nonauth.php');
-$from = 'themastergeneral156156@gmail.com';
+$from = 'fillinplease';
 ?>
 <!DOCTYPE html>
 		<html lang="en">
