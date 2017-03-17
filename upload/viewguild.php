@@ -496,6 +496,9 @@ function staff()
 			case "name":
                 staff_name();
                 break;
+			case "town":
+                staff_town();
+                break;
 			default:
 				staff_idx();
 				break;
@@ -529,6 +532,7 @@ function staff_idx()
 			<a href='?action=staff&act2=leader'>{$lang['VIEWGUILD_STAFF_IDX_LEADER']}</a><br />
 			<a href='?action=staff&act2=name'>{$lang['VIEWGUILD_STAFF_IDX_NAME']}</a><br />
 			<a href='?action=staff&act2=desc'>{$lang['VIEWGUILD_STAFF_IDX_DESC']}</a><br />
+			<a href='?action=staff&act2=town'>{$lang['VIEWGUILD_STAFF_IDX_TOWN']}</a><br />
 		</td>";
 	}
 	echo "</tr></table>";
@@ -576,12 +580,18 @@ function staff_apps()
                     alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_APP_ACC_ERR']);
                     die($h->endpage());
                 }
-                else if ($appdata['guild'] != 0)
+                else if ($api->UserInfoGet($appdata['ga_user'],'guild') != 0)
                 {
                     $db->free_result($cnt);
                     alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_APP_ACC_ERR1']);
                     die($h->endpage());
                 }
+				$townlevel=$db->fetch_single($db->query("SELECT `town_min_level` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
+				if ($townlevel > $api->UserInfoGet($appdata['ga_user'],'level') && $townlevel > 0)
+				{
+					alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_APP_ACC_ERR2']);
+					die($h->endpage());
+				}
                 $db->free_result($cnt);
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
                 $api->GameAddNotification($appdata['ga_user'], "Your application to join the {$gd['guild_name']} guild was accepted.");
@@ -1299,6 +1309,80 @@ function staff_name()
 				</tr>
 				{$csrf}
 			</table>
+			</form>";
+		}
+	}
+	else
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY']);
+	}
+}
+function staff_town()
+{
+	global $db,$ir,$gd,$api,$lang,$h,$userid;
+	if ($userid == $gd['guild_owner'])
+	{
+		if (isset($_POST['town']))
+		{
+			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_town", stripslashes($_POST['verf'])))
+			{
+				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				die($h->endpage());
+			}
+			$town = (isset($_POST['town']) && is_numeric($_POST['town'])) ? abs($_POST['town']) : 0;
+			$cnt=$db->fetch_single($db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
+			if ($cnt > 0)
+			{
+				alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_TOWN_ERR']);
+				die($h->endpage());
+			}
+			if ($db->num_rows($db->query("SELECT `town_id` FROM `town` WHERE `town_id` = {$town}")) == 0)
+			{
+				alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_TOWN_ERR1']);
+				die($h->endpage());
+			}
+			if ($db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$town}")) > 0)
+			{
+				alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_TOWN_ERR2']);
+				die($h->endpage());
+			}
+			$lowestlevel=$db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` ASC LIMIT 1"));
+			$townlevel=$db->fetch_single($db->query("SELECT `town_min_level` FROM `town` WHERE `town_id` = {$town}"));
+			if ($townlevel > $lowestlevel)
+			{
+				alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_TOWN_ERR3']);
+				die($h->endpage());
+			}
+			$db->query("UPDATE `town` SET `town_guild_owner` = {$gd['guild_id']} WHERE `town_id` = {$town}");
+			$api->GuildAddNotification($gd['guild_id'],"Your guild has successfully claimed {$api->SystemTownIDtoName($town)}.");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_TOWN_SUCC']);
+		}
+		else
+		{
+			$csrf = request_csrf_html('guild_staff_town');
+			echo "
+			<form method='post'>
+				<table class='table table-bordered'>
+					<tr>
+						<th colspan='2'>
+							{$lang['VIEWGUILD_STAFF_TOWN_INFO']}
+						</th>
+					</tr>
+					<tr>
+						<th>
+							{$lang['VIEWGUILD_STAFF_TOWN_TH']}
+						</th>
+						<td>
+							" . location_dropdown('town') . "
+						</td>
+					</tr>
+					<tr>
+						<td colspan='2'>
+							<input type='submit' value='{$lang['VIEWGUILD_STAFF_TOWN_BTN']}' class='btn btn-default'>
+						</td>
+					</tr>
+					{$csrf}
+				</table>
 			</form>";
 		}
 	}
