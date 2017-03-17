@@ -1246,8 +1246,9 @@ function stafflogs()
 function alllogs()
 {
 	global $db,$ir,$h,$lang,$userid,$api;
+	$logname='all';
     echo "
-	<h3>Game Logs</h3>
+	<h3>General Logs</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -1265,7 +1266,6 @@ function alllogs()
         return;
     }
     $pages = ceil($attacks / $app);
-	echo paginate(100,"{$_GET['st']}",$attacks,$pages,'staff_logs.php?action=alllogs');
     echo '<ul class="pagination">Pages:&nbsp;<br />';
     for ($i = 1; $i <= $pages; $i++)
     {
@@ -1279,7 +1279,7 @@ function alllogs()
 		{
 			echo "<li>";
 		}
-        echo "<a href='?action=alllogs&st={$s}'>{$i}";
+        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
     echo "
@@ -1328,7 +1328,7 @@ function alllogs()
 		{
 			echo "<li>";
 		}
-        echo "<a href='?action=alllogs&st={$s}'>{$i}";
+        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
     $mypage = floor($_GET['st'] / 100) + 1;
