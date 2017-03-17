@@ -189,7 +189,8 @@ else
 						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_POKE']} {$r['username']}'>
 					</form>
 					<br />
-					<form action='contacts.php?action=add'>
+					<form action='contacts.php'>
+						<input type='hidden' name='action' value='add'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
 						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_CONTACT']} {$r['username']} {$lang['PROFILE_CONTACT1']}'>
 					</form>
