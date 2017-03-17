@@ -106,7 +106,7 @@ $lang["LOGIN_LOGIN"] = "Login";
 $lang["LOGIN_AHA"] = "Already have an account?";
 $lang["LOGIN_EMAIL"] = "Email address";
 $lang["LOGIN_PASSWORD"] = "Password";
-$lang["LOGIN_LWE"] = "Login with Email";
+$lang["LOGIN_LWE"] = "Email Login! <a href='pwreset.php'>Forgot password?</a>";
 $lang["LOGIN_SIGNIN"] = "Sign In";
 $lang["LOGIN_NH"] = "New Here? <a href='register.php'>Join Us</a>!";
 $lang['LOGIN_LA'] = "Latest Announcement";
@@ -1678,4 +1678,10 @@ $lang['AUTH_ERROR8']="Incorrect email and password combination.";
 $lang['HDR_JS']="You need to enable Javascript for this game to work efficiently.";
 $lang['HDR_REKT']="Your account may be broken. Please email help@";
 $lang['HDR_REKT1']="stating your username and User ID.";
+
+//Password Reset Form
+$lang['PWR_INFO']="Please enter the email adress tied to your account so we can send information on how to reset your password. Please be sure to check your junk folder.";
+$lang['PWR_SUCC']="Thank you for submitting the form. If there's an account for the specified email address, it'll be email with a link to start the password reset process. This link will expire in 30 minutes.";
+$lang['PWR_ERR']="Invalid or non-existent recovery token specified.";
+$lang['PWR_SUCC1']="We've email your new password to you. Check your email and/or junk folder for it.";
 ?>

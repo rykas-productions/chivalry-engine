@@ -172,13 +172,6 @@ CREATE TABLE `guild` (
   `guild_announcement` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
--- --------------------------------------------------------
-
---
--- Table structure for table `guild_applications`
---
-
 CREATE TABLE `guild_applications` (
   `ga_id` int(11) UNSIGNED NOT NULL,
   `ga_user` int(11) UNSIGNED NOT NULL,
@@ -372,6 +365,13 @@ CREATE TABLE `promo_codes` (
   `promo_code` text NOT NULL,
   `promo_item` int(11) UNSIGNED NOT NULL,
   `promo_use` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `pw_recovery` (
+  `pwr_id` int(11) UNSIGNED NOT NULL,
+  `pwr_ip` text NOT NULL,
+  `pwr_email` text NOT NULL,
+  `pwr_code` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `referals` (
@@ -648,6 +648,9 @@ ALTER TABLE `polls`
 ALTER TABLE `promo_codes`
   ADD UNIQUE KEY `promo_id` (`promo_id`);
 
+ALTER TABLE `pw_recovery`
+  ADD PRIMARY KEY (`pwr_id`);
+  
 ALTER TABLE `referals`
   ADD PRIMARY KEY (`referalid`);
 
@@ -783,6 +786,12 @@ ALTER TABLE `polls`
 ALTER TABLE `promo_codes`
   MODIFY `promo_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `pw_recovery`
+  MODIFY `pwr_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  
+ALTER TABLE `pw_recovery` 
+	ADD `pwr_expire` INT(11) UNSIGNED NOT NULL AFTER `pwr_code`;
+  
 ALTER TABLE `referals`
   MODIFY `referalid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
