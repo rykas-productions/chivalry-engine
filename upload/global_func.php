@@ -1362,6 +1362,7 @@ function alert($type,$title,$text,$redirect='index.php')
 	{
 		$icon = 'exclamation-sign';
 	}
+	$redirect = ($redirect == 'back') ? $SERVER['REQUEST_URI'] : $redirect;
 	echo "<div class='alert alert-{$type}'> 
 			<span class='glyphicon glyphicon-{$icon}'></span> 
 				<strong>{$title}</strong> 
