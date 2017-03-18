@@ -1337,13 +1337,15 @@ function encode_password($password)
 }
 
 /**
-Easily outputs an alert to the client.
-Acceptable "type" is success, info, warning, danger.
-You can input whatever for the text
+	Easily outputs an alert to the client.
+	Acceptable "type" is success, info, warning, danger.
+	You can input whatever for the text
+	Redirect is the page you wish to redirect the user to after the alert is displayed. Default = index.php
 */
 
-function alert($type,$title,$text)
+function alert($type,$title,$text,$redirect='index.php')
 {
+	global $lang;
 	if ($type == 'danger')
 	{
 		$icon = "alert";
@@ -1360,7 +1362,11 @@ function alert($type,$title,$text)
 	{
 		$icon = 'exclamation-sign';
 	}
-	echo "<div class='alert alert-{$type}'> <span class='glyphicon glyphicon-{$icon}'></span> <strong>{$title}</strong> {$text} </div>";
+	echo "<div class='alert alert-{$type}'> 
+			<span class='glyphicon glyphicon-{$icon}'></span> 
+				<strong>{$title}</strong> 
+					{$text} > <a href='{$redirect}'>{$lang['GEN_BACK']}</a>
+			</div>";
 }
 
 /**

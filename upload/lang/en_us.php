@@ -198,6 +198,7 @@ $lang['GEN_AND']="and";
 $lang['GEN_NOPERM']="You do not have the proper user level to view this page. If this is wrong, please contact an admin immediately!";
 $lang["GEN_STATS"] = "Stats";
 $lang["GEN_RANKED"] = "Ranked";
+$lang["GEN_BACK"] = "Go Back";
 
 //Gym
 $lang['GYM_INFIRM'] = "While you are unconscious, you cannot train! Come back after you are feeling healthy!";
