@@ -78,17 +78,17 @@ function create()
 	$cg_level = $set['GUILD_LEVEL'];
 	if (!($api->UserHasCurrency($userid,'primary',$cg_price)))
 	{
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['GUILD_CREATE_ERROR']} " . number_format($cg_price) . ".");
+		alert("danger",$lang['ERROR_GENERIC'],"{$lang['GUILD_CREATE_ERROR']} " . number_format($cg_price) . ".",true,'index.php');
 		die($h->endpage());
 	}
 	elseif (($api->UserInfoGet($userid,'level',false)) < $cg_level)
 	{
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['GUILD_CREATE_ERROR1']} " . number_format($cg_level) . ".");
+		alert("danger",$lang['ERROR_GENERIC'],"{$lang['GUILD_CREATE_ERROR1']} " . number_format($cg_level) . ".",true,'index.php');
 		die($h->endpage());
 	}
 	elseif ($ir['guild'])
 	{
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['GUILD_CREATE_ERROR2']}");
+		alert("danger",$lang['ERROR_GENERIC'],$lang['GUILD_CREATE_ERROR2'],true,'back');
 		die($h->endpage());
 	}
 	else
@@ -104,7 +104,7 @@ function create()
 			$desc = $db->escape(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1'));
 			if ($db->num_rows($db->query("SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}'")) > 0)
 			{
-				alert("danger","{$lang['ERROR_GENERIC']}","{$lang['GUILD_CREATE_ERROR3']}");
+				alert("danger",$lang['ERROR_GENERIC'],$lang['GUILD_CREATE_ERROR3'],true,'back');
 				die($h->endpage());
 			}
 			$db->query("INSERT INTO `guild` 
@@ -116,7 +116,7 @@ function create()
 			$i = $db->insert_id();
 			$api->UserTakeCurrency($userid,'primary',$cg_price);
 			$db->query("UPDATE `users` SET `guild` = {$i} WHERE `userid` = {$userid}");
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['GUILD_CREATE_SUCCESS']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['GUILD_CREATE_SUCCESS'],true,"viewguild.php");
 			$api->SystemLogsAdd($userid,'guilds',"Purchased a guild.");
 			$api->SystemLogsAdd($userid,'guilds',"Joined Guild ID {$i}");
 		}
@@ -171,7 +171,7 @@ function view()
 		$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
 		if ($db->num_rows($gq) == 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 			die($h->endpage());
 		}
 		$gd = $db->fetch_row($gq);
@@ -247,13 +247,13 @@ function memberlist()
 	$_GET['id'] = abs($_GET['id']);
 	if (empty($_GET['id']))
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
 	if ($db->num_rows($gq) == 0)
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gd = $db->fetch_row($gq);
@@ -290,19 +290,19 @@ function apply()
 	$_GET['id'] = abs($_GET['id']);
 	if (empty($_GET['id']))
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
 	if ($db->num_rows($gq) == 0)
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gd = $db->fetch_row($gq);
 	if ($ir['guild'] > 0)
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_APP_ERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_APP_ERROR'],true,"guilds.php?action=view&id={$_GET['id']}");
 		die($h->endpage());
 	}
 	echo "<h3>{$lang['GUILD_APP_TITLE']} {$gd['guild_name']} {$lang['GUILD_VIEW_LIST2']}</h3><hr />";
@@ -310,13 +310,13 @@ function apply()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('guild_apply', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"],true,'back');
 			die($h->endpage());
 		}
 		$cnt=$db->query("SELECT * FROM `guild_applications` WHERE `ga_user` = {$userid} && `ga_guild` = {$_GET['id']}");
 		if ($db->num_rows($cnt) > 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_APP_ERROR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_APP_ERROR1'],true,'back');
 		die($h->endpage());
 		}
 		$time=time();
@@ -324,7 +324,7 @@ function apply()
 		$db->query("INSERT INTO `guild_applications` VALUES (NULL, {$userid}, {$_GET['id']}, {$time}, '{$application}')");
 		$gev = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> sent an application to join this guild.");
 		$db->query("INSERT INTO `guild_notifications` VALUES (NULL, {$_GET['id']}, " . time() . ", '{$gev}')");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['GUILD_APP_SUCC']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['GUILD_APP_SUCC'],true,"guilds.php?action=view&id={$_GET['id']}");
 	}
 	else
 	{

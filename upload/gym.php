@@ -3,12 +3,12 @@
 require("globals.php");
 if ($api->UserStatus($ir['userid'],'infirmary') == true)
 {
-	alert("danger","{$lang["GEN_INFIRM"]}","{$lang['GYM_INFIRM']}");
+	alert("danger",$lang["GEN_INFIRM"],$lang['GYM_INFIRM'],true,'index.php');
 	die($h->endpage());
 }
 if ($api->UserStatus($ir['userid'],'dungeon') == true)
 {
-	alert("danger","{$lang["GEN_DUNG"]}","{$lang['GYM_DUNG']}");
+	alert("danger",$lang["GEN_DUNG"],$lang['GYM_DUNG']);
 	die($h->endpage());
 }
 $statnames =  array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor");
@@ -22,18 +22,18 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
 {
 	if (!isset($statnames[$_POST['stat']]))
     {
-		alert("danger","{$lang['ERROR_INVALID']}","{$lang['GYM_INVALIDSTAT']}");
+		alert("danger",$lang['ERROR_INVALID'],$lang['GYM_INVALIDSTAT'],true,'back');
 		die($h->endpage());
 	}
 	if (!isset($_POST['verf']) || !verify_csrf_code('gym_train', stripslashes($_POST['verf'])))
 	{
-		alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+		alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"],true,'index.php');
 		die($h->endpage());
 	}
 	$stat = $statnames[$_POST['stat']];
     if ($_POST['amnt'] > $ir['energy'])
     {
-        alert("danger","{$lang['GYM_NEG']}","{$lang['GYM_NEG_DETAIL']}");
+        alert("danger",$lang['GYM_NEG'],$lang['GYM_NEG_DETAIL'],false);
     }
 	else
 	{
@@ -96,22 +96,22 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
         $EnergyLeft = $ir['energy'] - $_POST['amnt'];
 		if ($stat == "strength")
         {
-			alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_STR']} {$gain} {$lang['GEN_STR']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_STR2']} {$NewStatAmount} {$lang['GEN_STR']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}");
+			alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_STR']} {$gain} {$lang['GEN_STR']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_STR2']} {$NewStatAmount} {$lang['GEN_STR']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}", false);
 			$str_select="selected";
         }
         elseif ($stat == "agility")
         {
-			alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_AGL']} {$gain} {$lang['GEN_AGL']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_AGL1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_AGL']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}");
+			alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_AGL']} {$gain} {$lang['GEN_AGL']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_AGL1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_AGL']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}", false);
 			$agl_select="selected";
         }
         elseif ($stat == "guard")
         {
-			alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_GRD']} {$gain} {$lang['GEN_GRD']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_GRD1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_GRD']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}");
+			alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_GRD']} {$gain} {$lang['GEN_GRD']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_GRD1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_GRD']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}", false);
 			$grd_select="selected";
         }
         elseif ($stat == "labor")
         {
-            alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_LAB']} {$gain} {$lang['GEN_LAB']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_LAB1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_LAB']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}");
+            alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_LAB']} {$gain} {$lang['GEN_LAB']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_LAB1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_LAB']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}", false);
 			$lab_select="selected";
         }
 		$api->SystemLogsAdd($userid,'training',"Trained their {$stat} and gained {$gain}.");

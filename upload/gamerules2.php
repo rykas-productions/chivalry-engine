@@ -109,7 +109,7 @@ $domain=determine_game_urlbase();
     <div class="container">
 		<noscript>
 			<?php
-				alert('danger','Javascript Disabled!','You need to enable Javascript to use this website. Loads of features will not work without Javascript.');
+				alert('danger','Javascript Disabled!','You need to enable Javascript to use this website. Loads of features will not work without Javascript.',false);
 			?>
 		</noscript>
 
