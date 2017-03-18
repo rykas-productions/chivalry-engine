@@ -3,7 +3,7 @@ require("globals.php");
 $tresder = (Random(100, 999));
 if ($api->UserStatus($ir['userid'],'infirmary') == true)
 {
-	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['ERRDE_EXPLORE']}");
+	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['ERRDE_EXPLORE']}",false);
 	die($h->endpage());
 }
 if ($api->UserStatus($ir['userid'],'dungeon') == true)

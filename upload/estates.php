@@ -10,35 +10,35 @@ if (isset($_GET['property']) && is_numeric($_GET['property']))
     if ($db->num_rows($npq) == 0)
     {
         $db->free_result($npq);
-		alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR1']}");
+		alert('danger',$lang["ERROR_GENERIC"],$lang['ESTATES_ERROR1'],true,'estates.php');
 		die($h->endpage());
     }
     $np = $db->fetch_row($npq);
     $db->free_result($npq);
     if ($np['house_will'] < $mp['house_will'])
     {
-        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR2']}");
+        alert('danger',$lang["ERROR_GENERIC"],$lang['ESTATES_ERROR2'],true,'estates.php');
 		die($h->endpage());
     }
 	else if ($np['house_will'] == $mp['house_will'])
     {
-        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR4']}");
+        alert('danger',$lang["ERROR_GENERIC"],$lang['ESTATES_ERROR4'],true,'estates.php');
 		die($h->endpage());
     }
     else if ($np['house_price'] > $ir['primary_currency'])
     {
-        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR3']}");
+        alert('danger',$lang["ERROR_GENERIC"],$lang['ESTATES_ERROR3'],true,'estates.php');
 		die($h->endpage());
     }
 	else if ($np['house_level'] > $ir['level'])
 	{
-		alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR6']}");
+		alert('danger',$lang["ERROR_GENERIC"],$lang['ESTATES_ERROR6'],true,'estates.php');
 		die($h->endpage());
 	}
     else
     {
         $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$np['house_price']} , `will` = 0, `maxwill` = {$np['house_will']} WHERE `userid` = $userid");
-        alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['ESTATES_SUCCESS1']} {$np['house_name']} {$lang['GEN_FOR_S']} {$np['house_price']} {$lang['INDEX_PRIMCURR']}");
+        alert('success',$lang["ERROR_SUCCESS"],"{$lang['ESTATES_SUCCESS1']} {$np['house_name']} {$lang['GEN_FOR_S']} {$np['house_price']} {$lang['INDEX_PRIMCURR']}",true,'estates.php');
 		die($h->endpage());
     }
 }
@@ -52,7 +52,7 @@ else if (isset($_GET['sellhouse']))
     {
 		$price=round($mp['house_price']*0.75);
         $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$price}, `will` = 0, `maxwill` = 100 WHERE `userid` = $userid");
-		alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['ESTATES_SUCCESS2']}");
+		alert('success',$lang["ERROR_SUCCESS"],"{$lang['ESTATES_SUCCESS2']}",true,'estates.php');
     }
 }
 else

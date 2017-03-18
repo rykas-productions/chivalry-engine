@@ -109,7 +109,7 @@ function add()
 		{
 			$db->query("INSERT INTO `contact_list` VALUES (NULL, {$_POST['user']}, {$userid})");
 			$db->free_result($q);
-			alert('success',$lang['ERROR_SUCCESS'],$lang['CONTACT_ADD_SUCC']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['CONTACT_ADD_SUCC'],true,'contacts.php');
 		}
 	}
 	else
@@ -152,7 +152,7 @@ function remove()
 	$_GET['contact'] = (isset($_GET['contact']) && is_numeric($_GET['contact'])) ? abs($_GET['contact']) : '';
 	if (empty($_GET['contact']))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR']);
+		alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR'],true,'contacts.php');
 		die($h->endpage());
 	}
 	$qc = $db->query("SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ID` = {$_GET['contact']}");
@@ -160,10 +160,10 @@ function remove()
     $db->free_result($qc);
 	if ($exist_count == 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR1']);
+        alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR1'],true,'contacts.php');
         die($h->endpage());
     }
 	$db->query("DELETE FROM `contact_list` WHERE `c_ID` = {$_GET['contact']} AND `c_ADDER` = {$userid}");
-	alert('success',$lang['ERROR_SUCCESS'],$lang['CONTACT_REMOVE_SUCC']);
+	alert('success',$lang['ERROR_SUCCESS'],$lang['CONTACT_REMOVE_SUCC'],true,'contacts.php');
 }
 $h->endpage();
