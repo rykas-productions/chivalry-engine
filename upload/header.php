@@ -130,7 +130,7 @@ class headers
 									{
 										?><li class="divider"></li>
 										<li>
-											<a href="staff/"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a>
+											<a href="staff/index.php"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a>
 										</li><?php
 									}
 								

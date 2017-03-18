@@ -1344,8 +1344,7 @@ function encode_password($password)
 */
 
 function alert($type,$title,$text,$redirect='index.php')
-{       
-        $go_back = $_SERVER['REQUEST_URI'];
+{
 	global $lang;
 	if ($type == 'danger')
 	{
@@ -1364,12 +1363,10 @@ function alert($type,$title,$text,$redirect='index.php')
 		$icon = 'exclamation-sign';
 	}
 	echo "<div class='alert alert-{$type}'> 
-			<span class='glyphicon glyphicon-{$icon}'></span>
+			<span class='glyphicon glyphicon-{$icon}'></span> 
 				<strong>{$title}</strong> 
-					{$text} > <a href='{$go_back}'>{$lang['GEN_BACK']}</a><br>
-
+					{$text} > <a href='{$redirect}'>{$lang['GEN_BACK']}</a>
 			</div>";
-
 }
 
 /**

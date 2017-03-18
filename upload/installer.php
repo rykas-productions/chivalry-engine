@@ -374,14 +374,14 @@ function install()
     {
         $errors[] = 'No Database database specified';
     }
-	if ($db_driver = 'MySQLi')
+	if ($db_driver = 'mysqli')
 	{
 		if (!function_exists($db_driver . '_connect'))
 		{
 			$errors[] = 'Invalid database driver specified';
 		}
 	}
-	elseif ($db_driver = 'PDO')
+	elseif ($db_driver = 'pdo')
 	{
 		if (!extension_loaded('pdo_mysql'))
 		{
