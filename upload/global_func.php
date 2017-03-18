@@ -1343,7 +1343,7 @@ function encode_password($password)
 	Redirect is the page you wish to redirect the user to after the alert is displayed. Default = index.php
 */
 
-function alert($type,$title,$text,$redirect='goback',$redirectword='')
+function alert($type,$title,$text,$redirect='index.php')
 {
 	global $lang;
 	if ($type == 'danger')
@@ -1362,22 +1362,10 @@ function alert($type,$title,$text,$redirect='goback',$redirectword='')
 	{
 		$icon = 'exclamation-sign';
 	}
-	if ($redirect == 'goback')
-	{
-		$redirect=$_SERVER['REQUEST_URI'];
-	}
-	if (empty($redirectword))
-	{
-		$word = ('index.php' == $redirect) ? $lang['GEN_GOHOME'] : $lang['GEN_BACK']; 
-	}
-	else
-	{
-		$word = $redirectword;
-	}
 	echo "<div class='alert alert-{$type}'> 
 			<span class='glyphicon glyphicon-{$icon}'></span> 
 				<strong>{$title}</strong> 
-					{$text} > <a href='{$redirect}'>{$word}</a>
+					{$text} > <a href='{$redirect}'>{$lang['GEN_BACK']}</a>
 			</div>";
 }
 

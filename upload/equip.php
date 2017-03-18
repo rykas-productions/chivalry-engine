@@ -30,7 +30,7 @@ function weapon()
 	if ($db->num_rows($id) == 0)
 	{
 		$db->free_result($id);
-		alert('danger',"{$lang['EQUIP_NOITEM_TITLE']}","{$lang['EQUIP_NOITEM']}",'inventory.php');
+		alert('danger',"{$lang['EQUIP_NOITEM_TITLE']}","{$lang['EQUIP_NOITEM']}");
 		die($h->endpage());
 	}
 	else
@@ -40,14 +40,14 @@ function weapon()
 	}
 	if (!$r['weapon'])
 	{
-		alert('danger',"{$lang['EQUIP_NOTWEAPON_TITLE']}","{$lang['EQUIP_NOTWEAPON']}",'inventory.php');
+		alert('danger',"{$lang['EQUIP_NOTWEAPON_TITLE']}","{$lang['EQUIP_NOTWEAPON']}");
 		die($h->endpage());
 	}
 	if (isset($_POST['type']))
 	{
 		if (!in_array($_POST['type'], array("equip_primary", "equip_secondary"), true))
 		{
-			alert('danger',"{$lang['EQUIP_NOSLOT_TITLE']}","{$lang['EQUIP_NOSLOT']}",'inventory.php');
+			alert('danger',"{$lang['EQUIP_NOSLOT_TITLE']}","{$lang['EQUIP_NOSLOT']}");
 			die($h->endpage());
 		}
 		if ($ir[$_POST['type']] > 0)
@@ -70,7 +70,7 @@ function weapon()
 		$api->UserTakeItem($userid, $r['itmid'], 1);
 		$db->query("UPDATE `users` SET `{$_POST['type']}` = {$r['itmid']} WHERE `userid` = {$userid}");
 		$api->SystemLogsAdd($userid,'equip',"Equipped {$r['itmname']} as their {$slot}.");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['EQUIP_WEAPON_SUCCESS1']} {$r['itmname']} {$lang['EQUIP_WEAPON_SUCCESS2']} {$slot_name}.",'inventory.php');
+		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['EQUIP_WEAPON_SUCCESS1']} {$r['itmname']} {$lang['EQUIP_WEAPON_SUCCESS2']} {$slot_name}.");
 	}
 	else
 	{
@@ -104,7 +104,7 @@ function armor()
 	if ($db->num_rows($id) == 0)
 	{
 		$db->free_result($id);
-		alert('danger',"{$lang['EQUIP_NOITEM_TITLE']}","{$lang['EQUIP_NOITEM']}",'inventory.php');
+		alert('danger',"{$lang['EQUIP_NOITEM_TITLE']}","{$lang['EQUIP_NOITEM']}");
 		die($h->endpage());
 	}
 	else
@@ -114,14 +114,14 @@ function armor()
 	}
 	if (!$r['armor'])
 	{
-		alert('danger',"{$lang['EQUIP_NOTARMOR_TITLE']}","{$lang['EQUIP_NOTARMOR']}",'inventory.php');
+		alert('danger',"{$lang['EQUIP_NOTARMOR_TITLE']}","{$lang['EQUIP_NOTARMOR']}");
 		die($h->endpage());
 	}
 	if (isset($_POST['type']))
 	{
 		if ($_POST['type'] !== 'equip_armor')
 		{
-			alert('danger',"{$lang['EQUIP_NOSLOT_TITLE']}","{$lang['EQUIP_NOSLOT']}",'inventory.php');
+			alert('danger',"{$lang['EQUIP_NOSLOT_TITLE']}","{$lang['EQUIP_NOSLOT']}");
 			die($h->endpage());
 		}
 		if ($ir['equip_armor'] > 0)
@@ -136,7 +136,7 @@ function armor()
 				 SET `equip_armor` = {$r['itmid']}
 				 WHERE `userid` = {$userid}");
 		$api->SystemLogsAdd($userid,'equip',"Equipped {$r['itmname']} as their armor.");
-		alert('success',"","{$lang['EQUIP_WEAPON_SUCCESS1']} {$r['itmname']}.",'inventory.php');
+		alert('success',"","{$lang['EQUIP_WEAPON_SUCCESS1']} {$r['itmname']}.");
 	}
 	else
 	{

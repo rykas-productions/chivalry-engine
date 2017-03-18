@@ -43,30 +43,30 @@ function attacking()
 		}
 		if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
 		{
-			alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_NOREFRESH']}");
+			alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_NOREFRESH']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 			die($h->endpage());
 		}
 		$_SESSION['tresde'] = $_GET['tresde'];
 	}
 	if (!$_GET['user'])
 	{
-		alert("danger","{$lang['ERROR_NONUSER']}","{$lang['ATTACK_START_NOUSER']}");
+		alert("danger","{$lang['ERROR_NONUSER']}","{$lang['ATTACK_START_NOUSER']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($_GET['user'] == $userid)
 	{
-		alert("danger","{$lang['ERROR_NONUSER']}","{$lang['ATTACK_START_NOTYOU']}");
+		alert("danger","{$lang['ERROR_NONUSER']}","{$lang['ATTACK_START_NOTYOU']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($ir['hp'] <= 1)
 	{
-		alert("danger","{$lang["GEN_INFIRM"]}","{$lang['ATTACK_START_YOUNOHP']}");
+		alert("danger","{$lang["GEN_INFIRM"]}","{$lang['ATTACK_START_YOUNOHP']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] == 1)
 	{
 		$_SESSION['attacklost'] = 0;
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_YOUCHICKEN']}");
+		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_YOUCHICKEN']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	$youdata = $ir;
@@ -80,7 +80,7 @@ function attacking()
 			LIMIT 1");
 	if ($db->num_rows($q) == 0)
 	{
-		alert("danger","{$lang['ERROR_NONUSER']}","{$lang['ATTACK_START_NONUSER']}");
+		alert("danger","{$lang['ERROR_NONUSER']}","{$lang['ATTACK_START_NONUSER']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	$odata = $db->fetch_row($q);
@@ -88,7 +88,7 @@ function attacking()
 	if ($ir['attacking'] && $ir['attacking'] != $_GET['user'])
 	{
 		$_SESSION['attacklost'] = 0;
-		alert("danger","{$lang['ERROR_UNKNOWN']}","{$lang['ATTACK_START_UNKNOWNERROR']}");
+		alert("danger","{$lang['ERROR_UNKNOWN']}","{$lang['ATTACK_START_UNKNOWNERROR']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		$api->UserInfoSetStatic($userid,"attacking",0);
 		die($h->endpage());
 	}
@@ -97,7 +97,7 @@ function attacking()
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
 		$api->UserInfoSetStatic($userid,"attacking",0);
-		alert("danger","{$lang['ERROR_GENERIC']}","{$odata['username']} {$lang['ATTACK_START_OPPNOHP']}");
+		alert("danger","{$lang['ERROR_GENERIC']}","{$odata['username']} {$lang['ATTACK_START_OPPNOHP']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($api->UserStatus($_GET['user'],'infirmary') == true)
@@ -105,7 +105,7 @@ function attacking()
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
 		$api->UserInfoSetStatic($userid,"attacking",0);
-		alert("danger","{$lang['GEN_INFIRM']}","{$odata['username']} {$lang['ATTACK_START_OPPINFIRM']}");
+		alert("danger","{$lang['GEN_INFIRM']}","{$odata['username']} {$lang['ATTACK_START_OPPINFIRM']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($api->UserStatus($ir['userid'],'infirmary') == true)
@@ -113,7 +113,7 @@ function attacking()
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
 		$api->UserInfoSetStatic($userid,"attacking",0);
-		alert("danger","{$lang['GEN_INFIRM']}","{$lang['ATTACK_START_YOUINFIRM']}");
+		alert("danger","{$lang['GEN_INFIRM']}","{$lang['ATTACK_START_YOUINFIRM']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($api->UserStatus($_GET['user'],'dungeon') == true)
@@ -121,7 +121,7 @@ function attacking()
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
 		$api->UserInfoSetStatic($userid,"attacking",0);
-		alert("danger","{$lang['GEN_DUNG']}","{$odata['username']} {$lang['ATTACK_START_OPPDUNG']}");
+		alert("danger","{$lang['GEN_DUNG']}","{$odata['username']} {$lang['ATTACK_START_OPPDUNG']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($api->UserStatus($userid,'dungeon') == true)
@@ -129,7 +129,7 @@ function attacking()
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
 		$api->UserInfoSetStatic($userid,"attacking",0);
-		alert("danger","{$lang['GEN_DUNG']}","{$lang['ATTACK_START_YOUDUNG']}");
+		alert("danger","{$lang['GEN_DUNG']}","{$lang['ATTACK_START_YOUDUNG']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if (permission('CanBeAttack',$_GET['user']) == false)
@@ -137,7 +137,7 @@ function attacking()
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
 		$api->UserInfoSetStatic($userid,"attacking",0);
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_OPPUNATTACK']}");
+		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_OPPUNATTACK']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if (permission('CanAttack',$userid) == false)
@@ -145,7 +145,7 @@ function attacking()
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
 		$api->UserInfoSetStatic($userid,"attacking",0);
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_YOUUNATTACK']}");
+		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_YOUUNATTACK']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($odata['level'] < 3 && $odata['laston'] > $laston)
@@ -153,7 +153,7 @@ function attacking()
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
 		$api->UserInfoSetStatic($userid,"attacking",0);
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_THEYLOWLEVEL']}");
+		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_START_THEYLOWLEVEL']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	$_GET['weapon'] = (isset($_GET['weapon']) && is_numeric($_GET['weapon'])) ? abs($_GET['weapon']) : '';
@@ -168,7 +168,7 @@ function attacking()
 			$_SESSION['attacking'] = 0;
 			$ir['attacking'] = 0;
 			$api->UserInfoSetStatic($userid,"attacking",0);
-			alert("warning","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_STALEMATE']}");
+			alert("warning","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_STALEMATE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 			die($h->endpage());
 		}
 		if ($_SESSION['attacking'] == 0 && $ir['attacking'] == 0)
@@ -184,7 +184,7 @@ function attacking()
 			{
 				$EnergyPercent=floor(100/$set['AttackEnergyCost']);
 				$UserCurrentEnergy=floor($ir['maxenergy']/$ir['energy']);
-				alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_LOWENG1']} {$EnergyPercent}{$lang['ATTACK_FIGHT_LOWENG2']} {$UserCurrentEnergy}%");
+				alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_LOWENG1']} {$EnergyPercent}{$lang['ATTACK_FIGHT_LOWENG2']} {$UserCurrentEnergy}% <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 				die($h->endpage());
 			}
 		}
@@ -197,14 +197,14 @@ function attacking()
 		{
 			$api->UserInfoSet($userid,'xp',0);
 			$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
-			alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']}");
+			alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 			die($h->endpage());
 		}
 		$winfo_sql ="SELECT `itmname`, `weapon` FROM `items` WHERE `itmid` = {$_GET['weapon']} LIMIT 1";
 		$qo = $db->query($winfo_sql);
 		if ($db->num_rows($qo) == 0)
 		{
-			alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_BADWEAP']}");
+			alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_BADWEAP']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 			die($h->endpage());
 		}
 		$r1 = $db->fetch_row($qo);
@@ -360,24 +360,24 @@ function attacking()
 	}
 	else if ($odata['hp'] < 5)
 	{
-		alert("danger","{$lang['ERROR_GENERIC']}","{$odata['username']} {$lang['ATTACK_START_OPPNOHP']}");
+		alert("danger","{$lang['ERROR_GENERIC']}","{$odata['username']} {$lang['ATTACK_START_OPPNOHP']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($ir['guild'] == $odata['guild'] && $ir['guild'] > 0)
 	{
-		alert("danger","{$lang['ERROR_GENERIC']}","{$odata['username']} {$lang['ATTACK_FIGHT_FINAL_GUILD']}");
+		alert("danger","{$lang['ERROR_GENERIC']}","{$odata['username']} {$lang['ATTACK_FIGHT_FINAL_GUILD']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($youdata['energy'] < $youdata['maxenergy'] / $set['AttackEnergyCost'])
 	{
 		$EnergyPercent=floor(100/$set['AttackEnergyCost']);
 		$UserCurrentEnergy=floor($ir['energy']/$ir['maxenergy']);
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_LOWENG1']} {$EnergyPercent}{$lang['ATTACK_FIGHT_LOWENG2']} {$UserCurrentEnergy}%");
+		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_LOWENG1']} {$EnergyPercent}{$lang['ATTACK_FIGHT_LOWENG2']} {$UserCurrentEnergy}% <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	else if ($youdata['location'] != $odata['location'])
 	{
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_FINAL_CITY']}");
+		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_FINAL_CITY']}<a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	if ($youdata['hp'] <= 0 OR $odata['hp'] <= 0)
@@ -467,7 +467,7 @@ function beat()
 	{
 		$api->UserInfoSet($userid,"xp",0);
 		$api->UserStatusSet($userid,'infirmay',666,'Bug Abuse');
-		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']}");
+		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	if(!$db->num_rows($od)) 
@@ -516,7 +516,7 @@ function lost()
 	{
 		$api->UserInfoSet($userid,"xp",0);
 		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
-		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']}");
+		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	if(!$_GET['ID']) 
@@ -568,7 +568,7 @@ function xp()
 	{
 		$api->UserInfoSet($userid,"xp",0);
 		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
-		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']}");
+		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	if(!$db->num_rows($od)) 
@@ -632,7 +632,7 @@ function mug()
 	{
 		$api->UserInfoSet($userid,"xp",0);
 		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
-		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']}");
+		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ATTACK_FIGHT_BUGABUSE']} <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
 	if(!$db->num_rows($od)) 

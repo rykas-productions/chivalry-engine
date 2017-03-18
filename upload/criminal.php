@@ -68,21 +68,21 @@ function crime()
 	$_GET['c'] = abs($_GET['c']);
 	if ($_GET['c'] <= 0)
 	{
-		alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}",'criminal.php');
+		alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}");
 	}
 	else
 	{
 		$q =  $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_GET['c']} LIMIT 1");
 		if ($db->num_rows($q) == 0)
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}",'criminal.php');
+			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}");
 			die($h->endpage());
 		}
 		$r = $db->fetch_row($q);
 		$db->free_result($q);
 		if ($ir['brave'] < $r['crimeBRAVE'])
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['CRIME_COMMIT_BRAVEBAD']}",'criminal.php');
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['CRIME_COMMIT_BRAVEBAD']}");
 			die($h->endpage());
 		}
 		else
@@ -118,11 +118,12 @@ function crime()
 					$text=$r['crimeFTEXT'];
 					$title=$lang['ERROR_GENERIC'];;
 					$type='danger';
-					$dtime=Random($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
+					//$dtime=Random($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
+					$dtime=Random(1,100);
 					$api->UserStatusSet($userid,'dungeon',$dtime,$r['crimeDUNGREAS']);
 					$api->SystemLogsAdd($userid,'crime',"Failed to commit the {$r['crimeNAME']} crime.");
 			}
-			alert("{$type}","{$title}","{$r['crimeITEXT']} {$text}","criminal.php?action=crime&c={$_GET['c']}",$lang['CRIME_COMMIT_RETRY']);
+			alert("{$type}","{$title}","{$r['crimeITEXT']} {$text}");
 			die($h->endpage());
 		}
 	}

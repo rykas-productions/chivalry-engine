@@ -85,12 +85,12 @@ function start()
 			}
 			else
 			{
-				alert("danger", "{$lang['ACADEMY_LOW_LEVEL_1']}<br />", "{$lang['ACADEMY_LOW_LEVEL_2']}","academy.php");
+				alert("danger", "{$lang['ACADEMY_LOW_LEVEL_1']}<br />", "{$lang['ACADEMY_LOW_LEVEL_2']}");
 			}
 		}
 		else
 		{
-			alert("danger", "{$lang['ACADEMY_INSUFFICIENT_CURRENCY_1']}<br />", "{$lang['ACADEMY_INSUFFICIENT_CURRENCY_2']}","academy.php");
+			alert("danger", "{$lang['ACADEMY_INSUFFICIENT_CURRENCY_1']}<br />", "{$lang['ACADEMY_INSUFFICIENT_CURRENCY_2']}");
 		}
 	}
 	else
