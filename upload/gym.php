@@ -27,7 +27,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
 	}
 	if (!isset($_POST['verf']) || !verify_csrf_code('gym_train', stripslashes($_POST['verf'])))
 	{
-		alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+		alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}",'gym.php');
 		die($h->endpage());
 	}
 	$stat = $statnames[$_POST['stat']];

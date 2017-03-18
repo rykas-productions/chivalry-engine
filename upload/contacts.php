@@ -94,22 +94,22 @@ function add()
 		$q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
 		if ($dupe_count > 0)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_ADD_ERR']);
+            alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_ADD_ERR'],'contacts.php');
         }
         else if ($userid ==$_POST['user'])
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_ADD_ERR1']);
+            alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_ADD_ERR1'],'contacts.php');
         }
         else if ($db->num_rows($q) == 0)
         {
             $db->free_result($q);
-            alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_ADD_ERR2']);
+            alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_ADD_ERR2'],'contacts.php');
         }
 		else
 		{
 			$db->query("INSERT INTO `contact_list` VALUES (NULL, {$_POST['user']}, {$userid})");
 			$db->free_result($q);
-			alert('success',$lang['ERROR_SUCCESS'],$lang['CONTACT_ADD_SUCC']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['CONTACT_ADD_SUCC'],'contacts.php');
 		}
 	}
 	else
@@ -152,7 +152,7 @@ function remove()
 	$_GET['contact'] = (isset($_GET['contact']) && is_numeric($_GET['contact'])) ? abs($_GET['contact']) : '';
 	if (empty($_GET['contact']))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR']);
+		alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR'],'contacts.php');
 		die($h->endpage());
 	}
 	$qc = $db->query("SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ID` = {$_GET['contact']}");
@@ -160,10 +160,10 @@ function remove()
     $db->free_result($qc);
 	if ($exist_count == 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR1']);
+        alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR1'],'contacts.php');
         die($h->endpage());
     }
 	$db->query("DELETE FROM `contact_list` WHERE `c_ID` = {$_GET['contact']} AND `c_ADDER` = {$userid}");
-	alert('success',$lang['ERROR_SUCCESS'],$lang['CONTACT_REMOVE_SUCC']);
+	alert('success',$lang['ERROR_SUCCESS'],$lang['CONTACT_REMOVE_SUCC'],'contacts.php');
 }
 $h->endpage();

@@ -30,8 +30,7 @@ else
         if ($ir['primary_currency'] >= $bank_cost)
         {
             
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_SUCCESS']} " . number_format($bank_cost) . "<br />
-			<a href='bank.php'>{$lang['BANK_SUCCESS1']}</a>");
+			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_SUCCESS']} " . number_format($bank_cost),'bank.php',$lang['BANK_SUCCESS1']);
 			$api->UserTakeCurrency($userid,'primary',$bank_cost);
 			$api->UserInfoSet($userid,"bank",0);
         }
@@ -81,7 +80,7 @@ function deposit()
     $_POST['deposit'] = abs($_POST['deposit']);
     if ($_POST['deposit'] > $ir['primary_currency'])
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_D_ERROR']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['BANK_D_ERROR'],'bank.php');
     }
     else
     {
@@ -94,7 +93,7 @@ function deposit()
         $ir['bank'] += $gain;
 		$api->UserTakeCurrency($userid,'primary',$_POST['deposit']);
 		$api->UserInfoSetStatic($userid,"bank",$ir['bank']);
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_D_SUCCESS']} " . number_format($_POST['deposit']) . "{$lang['BANK_D_SUCCESS1']}" . number_format($fee) . "{$lang['BANK_D_SUCCESS2']} " . number_format($gain) . "{$lang['BANK_D_SUCCESS3']} " . number_format($ir['bank']) . "{$lang['BANK_D_SUCCESS4']}");
+		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_D_SUCCESS']} " . number_format($_POST['deposit']) . "{$lang['BANK_D_SUCCESS1']}" . number_format($fee) . "{$lang['BANK_D_SUCCESS2']} " . number_format($gain) . "{$lang['BANK_D_SUCCESS3']} " . number_format($ir['bank']) . "{$lang['BANK_D_SUCCESS4']}",'bank.php');
 		$api->SystemLogsAdd($userid,'bank',"Deposited " . number_format($_POST['deposit']) . " Primary Currency.");
 	}
 }
@@ -104,7 +103,7 @@ function withdraw()
 	$_POST['withdraw'] = abs($_POST['withdraw']);
 	if ($_POST['withdraw'] > $ir['bank'])
     {
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_W_FAIL']}");
+		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_W_FAIL']}",'bank.php');
     }
 	else
 	{
@@ -112,7 +111,7 @@ function withdraw()
 		$ir['bank'] -= $gain;
 		$api->UserGiveCurrency($userid,'primary',$_POST['withdraw']);
 		$api->UserInfoSetStatic($userid,"bank",$ir['bank']);
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_W_SUCCESS']} " . number_format($_POST['withdraw']) . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS1']} " . $ir['bank'] . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS2']}");
+		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_W_SUCCESS']} " . number_format($_POST['withdraw']) . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS1']} " . $ir['bank'] . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS2']}",'bank.php');
 		$api->SystemLogsAdd($userid,'bank',"Withdrew " . number_format($_POST['withdraw']) . " Primary Currency.");
 	}
 }

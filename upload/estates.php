@@ -10,29 +10,29 @@ if (isset($_GET['property']) && is_numeric($_GET['property']))
     if ($db->num_rows($npq) == 0)
     {
         $db->free_result($npq);
-		alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR1']}");
+		alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR1']}",'estates.php');
 		die($h->endpage());
     }
     $np = $db->fetch_row($npq);
     $db->free_result($npq);
     if ($np['house_will'] < $mp['house_will'])
     {
-        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR2']}");
+        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR2']}",'estates.php');
 		die($h->endpage());
     }
 	else if ($np['house_will'] == $mp['house_will'])
     {
-        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR4']}");
+        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR4']}",'estates.php');
 		die($h->endpage());
     }
     else if ($np['house_price'] > $ir['primary_currency'])
     {
-        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR3']}");
+        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR3']}",'estates.php');
 		die($h->endpage());
     }
 	else if ($np['house_level'] > $ir['level'])
 	{
-		alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR6']}");
+		alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR6']}",'estates.php');
 		die($h->endpage());
 	}
     else
@@ -46,13 +46,13 @@ else if (isset($_GET['sellhouse']))
 {
     if ($ir['maxwill'] == 100)
     {
-        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR5']}");
+        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR5']}",'estates.php');
     }
     else
     {
 		$price=round($mp['house_price']*0.75);
         $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$price}, `will` = 0, `maxwill` = 100 WHERE `userid` = $userid");
-		alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['ESTATES_SUCCESS2']}");
+		alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['ESTATES_SUCCESS2']}",'estates.php');
     }
 }
 else
