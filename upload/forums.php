@@ -222,7 +222,7 @@ function viewforum()
     $_GET['viewforum'] = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs($_GET['viewforum']) : '';
     if (empty($_GET['viewforum']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
        die($h->endpage());
     }
     $q =
@@ -233,7 +233,7 @@ function viewforum()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_FORUM_DNE_TITLE']}","{$lang['FORUM_FORUM_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php");
 		die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -242,7 +242,7 @@ function viewforum()
     {
 		if (!in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer')))
 		{ 
-			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 			die($h->endpage());
 		}
     }
@@ -341,7 +341,7 @@ function viewtopic()
     $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
     if (empty($_GET['viewtopic']))
     {
-       alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+       alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
        die($h->endpage());
     }
     $q =
@@ -353,7 +353,7 @@ function viewtopic()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -366,7 +366,7 @@ function viewtopic()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',"{$lang['FORUM_FORUM_DNE_TITLE']}","{$lang['FORUM_FORUM_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php?viewforum={$topic['ft_forum_id']}");
 		die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -375,7 +375,7 @@ function viewtopic()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 			die($h->endpage());
 		}
     }
@@ -647,7 +647,7 @@ function reply()
 	}
 	if (empty($_GET['reply']))
     {
-        alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['FORUM_EMPTY_REPLY']}");
+        alert('danger',$lang['ERROR_EMPTY'],$lang['FORUM_EMPTY_REPLY'],true,"forums.php");
         die($h->endpage());
     }
     $q =
@@ -658,7 +658,7 @@ function reply()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
         die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -671,7 +671,7 @@ function reply()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',"{$lang['FORUM_FORUM_DNE_TITLE']}","{$lang['FORUM_FORUM_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php");
         die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -680,7 +680,7 @@ function reply()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 			die($h->endpage());
 		}
     }
@@ -689,7 +689,7 @@ function reply()
 		$_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
         if ((strlen($_POST['fp_text']) > 65535))
         {
-			alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['FORUM_MAX_CHAR_REPLY']}");
+			alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_MAX_CHAR_REPLY'],true,"forums.php?viewtopic={$_GET['reply']}");
             die($h->endpage());
         }
 		
@@ -713,7 +713,7 @@ function reply()
                  `ff_lp_poster_id` = $userid,
                  `ff_lp_t_id` = {$_GET['reply']}
                  WHERE `ff_id` = {$forum['ff_id']}");
-        alert('success',"","{$lang['FORUM_REPLY_SUCCESS']}");
+        alert('success',"","{$lang['FORUM_REPLY_SUCCESS']}",false);
 		echo "<br />";
         $_GET['lastpost'] = 1;
         $_GET['viewtopic'] = $_GET['reply'];
@@ -730,7 +730,7 @@ function newtopicform()
     $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
     if (empty($_GET['forum']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","");
+        alert('danger',"{$lang['ERROR_GENERIC']}","",true,"forums.php");
         die($h->endpage());
     }
     $q =
@@ -741,7 +741,7 @@ function newtopicform()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php?viewforum={$_GET['forum']}");
 		die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -750,7 +750,7 @@ function newtopicform()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 			die($h->endpage());
 		}
     }
@@ -807,7 +807,7 @@ function newtopic()
 	}
     if (empty($_GET['forum']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","");
+        alert('danger',"{$lang['ERROR_GENERIC']}","",true,"forum.php");
         die($h->endpage());
     }
     $q =
@@ -818,7 +818,7 @@ function newtopic()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
 		die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -827,7 +827,7 @@ function newtopic()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 			die($h->endpage());
 		}
     }
@@ -837,20 +837,20 @@ function newtopic()
             $db->escape(strip_tags(stripslashes($_POST['ft_name'])));
     if ((strlen($_POST['ft_name']) > 255))
     {
-        alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['FORUM_TOPIC_FORM_TITLE_LENGTH']}");
+        alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_TOPIC_FORM_TITLE_LENGTH'],true,"back");
 		die($h->endpage());
     }
     $_POST['ft_desc'] =
             $db->escape(strip_tags(stripslashes($_POST['ft_desc'])));
     if ((strlen($_POST['ft_desc']) > 255))
     {
-        alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['FORUM_TOPIC_FORM_TITLE_LENGTH']}");
+        alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_TOPIC_FORM_TITLE_LENGTH'],true,"back");
 		die($h->endpage());
     }
     $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
     if ((strlen($_POST['fp_text']) > 65535))
     {
-        alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['FORUM_MAX_CHAR_REPLY']}");
+        alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_MAX_CHAR_REPLY'],true,"back");
         die($h->endpage());
     }
     $post_time = time();
@@ -881,17 +881,17 @@ function newtopic()
 			 `ff_lp_poster_id` = $userid, `ff_lp_t_id` = {$i}
              WHERE `ff_id` = {$r['ff_id']}");
     
-	alert("success","{$lang['ERROR_SUCCESS']}","{$lang['FORUM_TOPIC_FORM_SUCCESS']}");
+	alert("success",$lang['ERROR_SUCCESS'],$lang['FORUM_TOPIC_FORM_SUCCESS']);
     $_GET['viewtopic'] = $i;
     viewtopic();
 }
 function emptyallforums()
 {
     global $ir, $c, $userid, $h, $bbc, $db, $api;
-    $db->query("UPDATE `forum_forums` SET `ff_lp_time` = 0, `ff_lp_poster_id` = 0,
-             `ff_lp_poster_name` = 'N/A', `ff_lp_t_id` = 0, `ff_lp_t_name` = 'N/A'");
+	//Haven't secured this yet... anyone could do this lol.
+    /*$db->query("UPDATE `forum_forums` SET `ff_lp_time` = 0, `ff_lp_poster_id` = 0, `ff_lp_poster_name` = 'N/A', `ff_lp_t_id` = 0, `ff_lp_t_name` = 'N/A'");
     $db->query('TRUNCATE `forum_topics`');
-    $db->query('TRUNCATE `forum_posts`');
+    $db->query('TRUNCATE `forum_posts`');*/
 }
 function quote()
 {
@@ -902,12 +902,12 @@ function quote()
 	$_GET['quotename'] = (isset($_GET['quotename']) && is_numeric($_GET['quotename'])) ? abs($_GET['quotename']) : '';
     if (empty($_GET['viewtopic']))
     {
-        alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     if (!isset($_GET['quotename']) || !isset($_GET['fpid']))
     {
-        alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php?viewtopic={$_GET['viewtopic']}");
         die($h->endpage());
     }
     $q =
@@ -915,7 +915,7 @@ function quote()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -928,7 +928,7 @@ function quote()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',"{$lang['FORUM_FORUM_DNE_TITLE']}","{$lang['FORUM_FORUM_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['viewtopic']}");
 		die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -937,7 +937,7 @@ function quote()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 			die($h->endpage());
 		}
     }
@@ -989,7 +989,7 @@ function edit()
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic']))
     {
-        alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q =
@@ -1000,7 +1000,7 @@ function edit()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -1013,7 +1013,7 @@ function edit()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',"{$lang['FORUM_FORUM_DNE_TITLE']}","{$lang['FORUM_FORUM_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -1022,14 +1022,14 @@ function edit()
     {
 		if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')) || (!($ir['userid'] == $post['fp_poster_id'])))
 		{ 
-			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
 			die($h->endpage());
 		}
     }
     $_GET['post'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? abs($_GET['post']) : '';
     if (empty($_GET['post']))
     {
-        alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
     $q3 =
@@ -1040,14 +1040,14 @@ function edit()
     if ($db->num_rows($q3) == 0)
     {
         $db->free_result($q3);
-        alert("danger","{$lang['FORUM_POST_DNE_TITLE']}","{$lang['FORUM_POST_DNE_TEXT']}");
+        alert("danger",$lang['FORUM_POST_DNE_TITLE'],$lang['FORUM_POST_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
     $post = $db->fetch_row($q3);
     $db->free_result($q3);
     if (!($ir['user_level'] > 1 || $ir['userid'] == $post['fp_poster_id']))
     {
-        alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_EDIT_NOPERMISSION']}");
+        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_EDIT_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
     echo "<big>
@@ -1088,7 +1088,7 @@ function editsub()
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if ((empty($_GET['post']) || empty($_GET['topic'])))
     {
-        alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
 	if (!isset($_POST['verf']) || !verify_csrf_code("forums_editpost_{$_GET['post']}", stripslashes($_POST['verf'])))
@@ -1103,7 +1103,7 @@ function editsub()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -1116,7 +1116,7 @@ function editsub()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',"{$lang['FORUM_FORUM_DNE_TITLE']}","{$lang['FORUM_FORUM_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -1125,7 +1125,7 @@ function editsub()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
 			die($h->endpage());
 		}
     }
@@ -1137,20 +1137,20 @@ function editsub()
     if ($db->num_rows($q3) == 0)
     {
         $db->free_result($q3);
-        alert("danger","{$lang['FORUM_POST_DNE_TITLE']}","{$lang['FORUM_POST_DNE_TEXT']}");
+        alert("danger",$lang['FORUM_POST_DNE_TITLE'],$lang['FORUM_POST_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
     $post = $db->fetch_row($q3);
     $db->free_result($q3);
     if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')) || (!($ir['userid'] == $post['fp_poster_id'])))
     {
-        alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
 	$_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
     if ((strlen($_POST['fp_text']) > 65535))
     {
-        alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['FORUM_MAX_CHAR_REPLY']}");
+        alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_MAX_CHAR_REPLY'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
     $db->query(
@@ -1163,7 +1163,7 @@ function editsub()
              `fp_edit_count` = `fp_edit_count` + 1
              WHERE `fp_id` = {$_GET['post']}");
 
-	alert('success',"","{$lang['FORUM_EDIT_SUCCESS']}");		 
+	alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_EDIT_SUCCESS'],false);		 
 	echo"<br />
    ";
     $_GET['viewtopic'] = $_GET['topic'];
@@ -1175,21 +1175,21 @@ function move()
     global $ir, $c, $userid, $h, $lang, $db, $api;
     if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')))
     {
-        alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 		die($h->endpage());
     }
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     $_POST['forum'] = (isset($_POST['forum']) && is_numeric($_POST['forum'])) ? abs($_POST['forum']) : '';
     if (empty($_GET['topic']) || empty($_POST['forum']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q = $db->query("SELECT `ft_name`, `ft_forum_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -1202,7 +1202,7 @@ function move()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',"{$lang['ERROR_INVALID']}","{$lang['FORUM_MOVE_TOPIC_DFDNE']}");
+        alert('danger',$lang['ERROR_INVALID'],$lang['FORUM_MOVE_TOPIC_DFDNE'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -1211,7 +1211,7 @@ function move()
             "UPDATE `forum_topics`
              SET `ft_forum_id` = {$_POST['forum']}
              WHERE `ft_id` = {$_GET['topic']}");
-    alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['FORUM_MOVE_TOPIC_DONE']}");
+    alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_MOVE_TOPIC_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
 	$api->SystemLogsAdd($userid,'staff',"Moved Topic {$topic['ft_name']} to {$forum['ff_name']}");
     recache_forum($topic['ft_forum_id']);
     recache_forum($_POST['forum']);
@@ -1222,24 +1222,24 @@ function lock()
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
     if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')))
     {
-        alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 		die($h->endpage());
     }
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q =
             $db->query(
-                    "SELECT `ft_name`,`ft_locked`,`ft_forum_id`
+                    "SELECT `ft_name`,`ft_locked`,`ft_forum_id`, `ft_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -1250,7 +1250,7 @@ function lock()
                 "UPDATE `forum_topics`
                  SET `ft_locked` = 0
                  WHERE `ft_id` = {$_GET['topic']}");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['FORUM_UNLOCK_DONE']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_UNLOCK_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
 		$api->SystemLogsAdd($userid,'staff',"Unlocked Topic {$r['ft_name']}");
     }
     else
@@ -1259,7 +1259,7 @@ function lock()
                 "UPDATE `forum_topics`
                  SET `ft_locked` = 1
                  WHERE `ft_id` = {$_GET['topic']}");
-        alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['FORUM_LOCK_DONE']}");
+        alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_LOCK_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
 		$api->SystemLogsAdd($userid,'staff',"Locked Topic {$r['ft_name']}");
     }
 }
@@ -1269,24 +1269,24 @@ function pin()
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
     if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')))
     {
-        alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 		die($h->endpage());
     }
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q =
             $db->query(
-                    "SELECT `ft_name`, `ft_pinned`, `ft_forum_id`
+                    "SELECT `ft_name`, `ft_pinned`, `ft_forum_id`, `ft_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -1297,7 +1297,7 @@ function pin()
                 "UPDATE `forum_topics`
                  SET `ft_pinned` = 0
                  WHERE `ft_id` = {$_GET['topic']}");
-        alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['FORUM_UNPIN_DONE']}");
+        alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_UNPIN_DONE'],true,"forums.php?viewtopic={$r['ft_id']}");
 		$api->SystemLogsAdd($userid,'staff',"Unpinned Topic {$r['ft_name']}");
     }
     else
@@ -1306,7 +1306,7 @@ function pin()
                 "UPDATE `forum_topics`
                  SET `ft_pinned` = 1
                  WHERE `ft_id` = {$_GET['topic']}");
-        alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['FORUM_PIN_DONE']}");
+        alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_PIN_DONE'],true,"forums.php?viewtopic={$r['ft_id']}");
         $api->SystemLogsAdd($userid,'staff',"Pinned Topic {$r['ft_name']}");
     }
 }
@@ -1316,25 +1316,24 @@ function delepost()
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
     if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')))
     {
-        alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 		die($h->endpage());
     }
     $_GET['post'] = isset($_GET['post']) && is_numeric($_GET['post']) ? abs($_GET['post']) : '';
     if (empty($_GET['post']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q3 =
             $db->query(
-                    "SELECT `fp_topic_id`, `fp_poster_name`, `fp_id`,
-                     `fp_forum_id`, `fp_subject`
+                    "SELECT *
                      FROM `forum_posts`
                      WHERE `fp_id` = {$_GET['post']}");
-    if ($db->num_rows($q) == 0)
+    if ($db->num_rows($q3) == 0)
     {
-        $db->free_result($q);
-        alert('danger',"{$lang['FORUM_POST_DNE_TITLE']}","{$lang['FORUM_POST_DNE_TEXT']}");
+        $db->free_result($q3);
+        alert('danger',$lang['FORUM_POST_DNE_TITLE'],$lang['FORUM_POST_DNE_TEXT'],true,"forums.php");
 		die($h->endpage());
     }
     $post = $db->fetch_row($q3);
@@ -1347,18 +1346,17 @@ function delepost()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php?viewtopic={$post['fp_topic_id']}");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
     $db->free_result($q);
-    $u = $db->escape($post['fp_poster_name']);
     $db->query(
             "DELETE FROM `forum_posts`
     		    WHERE `fp_id` = {$post['fp_id']}");
-    alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['FORUM_DELETE_DONE']}");
+    alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_DELETE_DONE'],true,"forums.php?viewtopic={$post['fp_topic_id']}");
     recache_topic($post['fp_topic_id']);
-    recache_forum($post['fp_forum_id']);
+    recache_forum($post['ff_id']);
 	$api->SystemLogsAdd($userid,'staff',"Deleted post ({$post['fp_id']}) in {$topic['ft_name']}");
 
 }
@@ -1369,30 +1367,26 @@ function deletopic()
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')))
     {
-        alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['FORUM_NOPERMISSION']}");
+        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
 	if (empty($_GET['topic']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ERROR_FORUM_VF']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,'forums.php');
         die($h->endpage());
     }
     $q = $db->query("SELECT `ft_forum_id`, `ft_name` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',"{$lang['FORUM_TOPIC_DNE_TITLE']}","{$lang['FORUM_TOPIC_DNE_TEXT']}");
+        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
     $db->free_result($q);
-    $db->query(
-            "DELETE FROM `forum_topics`
-    		    WHERE `ft_id` = {$_GET['topic']}");
-    $db->query(
-            "DELETE FROM `forum_posts`
-             WHERE `fp_topic_id` = {$_GET['topic']}");
-    alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['FORUM_DELETE_TOPIC_DONE']}");
+    $db->query("DELETE FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
+    $db->query("DELETE FROM `forum_posts` WHERE `fp_topic_id` = {$_GET['topic']}");
+    alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_DELETE_TOPIC_DONE'],true,'forums.php');
     recache_forum($topic['ft_forum_id']);
 	$api->SystemLogsAdd($userid,'staff',"Deleted topic {$topic['ft_name']}");
 }
