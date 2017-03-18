@@ -81,7 +81,7 @@ else
 	$db->query("DELETE FROM `login_attempts` WHERE `userid` = {$_SESSION['userid']}");
 	$loggedin_url = 'loggedin.php';
 	$api->SystemLogsAdd($_SESSION['userid'],'login',"Successfully logged in.");
-	$db->query("DELETE FROM `pw_recovery` WHERE `pwr_email` = {$form_email}");
+	$db->query("DELETE FROM `pw_recovery` WHERE `pwr_email` = '{$form_email}'");
     header("Location: {$loggedin_url}");
     exit;
 }
