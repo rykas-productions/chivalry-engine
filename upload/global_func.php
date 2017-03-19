@@ -69,21 +69,6 @@ function ParseTimestamp($time)
 	return $date;
 }
 /*
-	The function for testing a link is a valid image
-	@param text $url The link to test for.
-*/
-function isImage($url = null) 
-{
-    if(@is_array(getimagesize($url)))
-	{
-		return true;
-	} 
-	else 
-	{
-		return false;
-	}
-}
-/*
 	The function for testing if a player is in the hospital.
 	@param int $user The user who to test for.
 */

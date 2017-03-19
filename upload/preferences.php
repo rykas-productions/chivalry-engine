@@ -322,17 +322,18 @@ function pic_change()
 		$npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
 		if (!empty($npic))
 		{
-			if (isImage($npic) == false)
-			{
-				alert('danger',$lang['ERROR_INVALID'],$lang['PIC_NOIMAGE']);
-				die($h->endpage());
-			}
 			$sz = get_filesize_remote($npic);
 			if ($sz <= 0 || $sz >= 1048576)
 			{
 				alert('danger',$lang['PIC_TOOBIG'],$lang['PIC_TOOBIG2']);
 				$h->endpage();
 				exit;
+			}
+			$image = (@getimagesize($npic));
+			if (!is_array($image))
+			{
+				alert('danger',$lang['ERROR_INVALID'],$lang['PIC_NOIMAGE']);
+				die($h->endpage());
 			}
 		}
 		$img=htmlentities($_POST['newpic'], ENT_QUOTES, 'ISO-8859-1');
