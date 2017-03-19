@@ -11,7 +11,7 @@ class headers
 
     function startheaders()
     {
-		global $ir, $set, $lang, $db;
+		global $ir, $set, $lang, $db, $userid;
 		?>
 <!DOCTYPE html>
 <html lang="en">
