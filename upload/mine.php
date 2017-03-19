@@ -112,7 +112,7 @@ function buypower()
             $db->query("UPDATE `mining` SET `buyable_power` = `buyable_power` - '$sets', 
 						`max_miningpower` = `max_miningpower` + ($sets*10) 
 						WHERE `userid` = {$userid}");
-			alert('success',$lang['ERROR_SUCCESS'],"{$lang['MINE_BUY_SUCCESS']}" . number_format($totalcost) . " {$lang['GEN_IQ']} {$lang['GEN_FOR']} {$sets} {$lang['MINE_BUY_SUCCESS1']}");
+			alert('success',$lang['ERROR_SUCCESS'],"{$lang['MINE_BUY_SUCCESS']}" . number_format($totalcost) . " {$lang['GEN_IQ']} {$lang['GEN_FOR']} {$sets} {$lang['MINE_BUY_SUCCESS1']}",true,'mine.php');
         }
     }
     else
@@ -131,7 +131,7 @@ function mine()
     global $db,$MUS,$ir,$userid,$lang,$api,$h;
     if (!isset($_GET['spot']) || empty($_GET['spot']))
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR']);
+        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR'],true,'mine.php');
 		die($h->endpage());
     }
     else
@@ -140,7 +140,7 @@ function mine()
         $mineinfo=$db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$spot}");
         if (!($db->num_rows($mineinfo)))
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR1']);
+            alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR1'],true,'mine.php');
 			die($h->endpage());
         }
         else
@@ -150,27 +150,27 @@ function mine()
 			$i=$db->fetch_row($query);
             if ($MUS['mining_level'] < $MSI['mine_level'])
             {
-				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR2'] . " {$MSI['mine_level']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR2'] . " {$MSI['mine_level']}",true,'mine.php');
 				die($h->endpage());
             }
             elseif ($ir['location'] != $MSI['mine_location'])
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR3']);
+                alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR3'],true,'mine.php');
 				die($h->endpage());
             }
             elseif ($ir['iq'] < $MSI['mine_iq'])
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR4'] . " {$MSI['mine_iq']}");
+                alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR4'] . " {$MSI['mine_iq']}",true,'mine.php');
 				die($h->endpage());
             }
             elseif ($MUS['miningpower'] < $MSI['mine_power_use'])
             {
-				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR5'] . " {$MSI['mine_power_use']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR5'] . " {$MSI['mine_power_use']}",true,'mine.php');
 				die($h->endpage());
             }
 			elseif(!$i['inv_itemid'] == $MSI['mine_pickaxe'])
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR6'] . " " . $api->SystemItemIDtoName($MSI['mine_pickaxe']));
+				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR6'] . " " . $api->SystemItemIDtoName($MSI['mine_pickaxe']),true,"mine.php");
 				die($h->endpage());
 			}
             else
@@ -197,17 +197,17 @@ function mine()
                     $NegTime=Random(25,75)*($MUS['mining_level']*.25);
                     if ($NegRolls == 1)
                     {
-                        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL']);
+                        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL'],false);
 						$api->UserStatusSet($userid,'infirmary',$NegTime,"Mining Explosion");
                     }
                     elseif ($NegRolls == 2)
                     {
-                        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL1']);
+                        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL1'],false);
 						$api->UserStatusSet($userid,'dungeon',$NegTime,"Mining Selfishness");
                     }
                     else
                     {
-                        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL2']);
+                        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL2'],false);
                     }
                 }
                 elseif ($Rolls >= 3 && $Rolls <= 14)
@@ -216,7 +216,7 @@ function mine()
                     if ($PosRolls == 1)
                     {
                         $flakes=Random($MSI['mine_copper_min'],$MSI['mine_copper_max']);
-						alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']) . $lang['MINE_DO_SUCC1']);
+						alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']) . $lang['MINE_DO_SUCC1'],false);
                         $api->UserGiveItem($userid,$MSI['mine_copper_item'],$flakes);
                         $xpgain=$flakes*0.1;
                         
@@ -224,21 +224,21 @@ function mine()
                     elseif ($PosRolls == 2)
                     {
                         $flakes=Random($MSI['mine_silver_min'],$MSI['mine_silver_max']);
-                        alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']) . $lang['MINE_DO_SUCC1']);
+                        alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']) . $lang['MINE_DO_SUCC1'],false);
                         $api->UserGiveItem($userid,$MSI['mine_silver_item'],$flakes);
                         $xpgain=$flakes*0.2;
                     }
                     else
                     {
                         $flakes=Random($MSI['mine_gold_min'],$MSI['mine_gold_max']);
-                        alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']) . $lang['MINE_DO_SUCC1']);
+                        alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']) . $lang['MINE_DO_SUCC1'],false);
                         $api->UserGiveItem($userid,$MSI['mine_gold_item'],$flakes);
                         $xpgain=$flakes*0.3;
                     }
                 }
                 else
                 {
-					alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC2'] . $api->SystemItemIDtoName($MSI['mine_gem_item']));
+					alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC2'] . $api->SystemItemIDtoName($MSI['mine_gem_item']),false);
                     $api->UserGiveItem($userid,$MSI['mine_gem_item'],1);
                     $xpgain=1;
                 }

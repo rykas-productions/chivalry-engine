@@ -5,7 +5,7 @@ $code2 = request_csrf_code('cash_send');
 $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
 if (!$_GET['user'])
 {
-   alert("danger","{$lang['ERROR_NONUSER']}","{$lang['PROFILE_UNF']}");
+   alert("danger",$lang['ERROR_NONUSER'],$lang['PROFILE_UNF'],true,'index.php');
 }
 else
 {
@@ -40,7 +40,7 @@ else
 	if ($db->num_rows($q) == 0)
 	{
 		$db->free_result($q);
-		alert("danger","{$lang['ERROR_NONUSER']}","{$lang['PROFILE_UNF']}");
+		alert("danger",$lang['ERROR_NONUSER'],$lang['PROFILE_UNF'],true,'index.php');
 	}
 	else
     {

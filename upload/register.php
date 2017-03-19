@@ -111,7 +111,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 	$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 	if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
 	{
-		alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['REG_MULTIALERT']}");
+		alert('danger',$lang['ERROR_SECURITY'],$lang['REG_MULTIALERT']);
 		require('footer.php');
 		exit;
 	}
@@ -132,7 +132,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 			if (!$_SESSION['captcha'] || !isset($_POST['captcha']) || $_SESSION['captcha'] != $_POST['captcha'])
 			{
 				unset($_SESSION['captcha']);
-				alert('danger',"{$lang['ERROR_INVALID']}","{$lang['REG_CAPTCHAERROR']}");
+				alert('danger',$lang['ERROR_INVALID'],$lang['REG_CAPTCHAERROR']);
 				require("footer.php");
 				exit;
 			}
@@ -140,7 +140,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 		}
 		if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email'])))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['REG_EMAILERROR']}");
+			alert('danger',$lang['ERROR_INVALID'],$lang['REG_EMAILERROR']);
 			require("footer.php");
 			exit;
 		}
@@ -159,13 +159,13 @@ $cpage = strip_tags(stripslashes($currentpage));
 		// Check Gender
 		if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female'))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['REG_GENDERERROR']}");
+			alert('danger',$lang['ERROR_INVALID'],$lang['REG_GENDERERROR']);
 			require("footer.php");
 			exit;
 		}
 		if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender'))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['REG_CLASSERROR']}");
+			alert('danger',$lang['ERROR_INVALID'],$lang['REG_CLASSERROR']);
 			require("footer.php");
 			exit;
 		}
@@ -188,19 +188,19 @@ $cpage = strip_tags(stripslashes($currentpage));
 		$check_pw = (isset($_POST['cpassword']) && is_string($_POST['cpassword'])) ? stripslashes($_POST['cpassword']) : '';
 		if ($u_check > 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['REG_UNIUERROR']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['REG_UNIUERROR']);
 		}
 		else if ($e_check > 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['REG_EIUERROR']}");		
+			alert('danger',$lang['ERROR_GENERIC'],$lang['REG_EIUERROR']);		
 		}
 		else if (empty($base_pw) || empty($check_pw))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['REG_PWERROR']}");	
+			alert('danger',$lang['ERROR_EMPTY'],$lang['REG_PWERROR']);	
 		}
 		else if ($base_pw != $check_pw)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['REG_VPWERROR']}");	
+			alert('danger',$lang['ERROR_GENERIC'],$lang['REG_VPWERROR']);	
 		}
 		else
 		{
@@ -212,7 +212,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 				if ($db->num_rows($q) == 0)
 				{
 					$db->free_result($q);
-					alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['REG_REFERROR']}");
+					alert('danger',$lang['ERROR_NONUSER'],$lang['REG_REFERROR']);
 					require("footer.php");
 					exit;
 				}
@@ -220,7 +220,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 				$db->free_result($q);
 				if ($rem_IP == $_SERVER['REMOTE_ADDR'])
 				{
-					alert('danger',"{$lang['ERROR_SECURITY']}","{$lang['REG_REFMERROR']}");
+					alert('danger',$lang['ERROR_SECURITY'],$lang['REG_REFMERROR']);
 					require("footer.php");
 					exit;
 				}
@@ -273,8 +273,7 @@ $cpage = strip_tags(stripslashes($currentpage));
 		$_SESSION['userid'] = $i;
 		$api->SystemLogsAdd($_SESSION['userid'],'login',"Successfully logged in.");
 		$db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['REG_SUCCESS']}<br />
-			<a href='loggedin.php'>{$lang['LOGIN_SIGNIN']}</a>");
+			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['REG_SUCCESS']} <a href='loggedin.php'>{$lang['LOGIN_SIGNIN']}</a>",false);
 		}
 		require('footer.php');
 	}

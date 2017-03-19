@@ -28,7 +28,7 @@ function news_home()
 	$AdsQuery=$db->query("SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
 	if ($db->num_rows($AdsQuery) == 0)
 	{
-		alert("danger",$lang['ERROR_GENERIC'],$lang['NP_ERROR']);
+		alert("danger",$lang['ERROR_GENERIC'],$lang['NP_ERROR'],false);
 		die($h->endpage());
 	}
 	echo "<h3>{$lang['NP_TITLE']}</h3>
@@ -67,7 +67,7 @@ function news_buy()
 {
 	global $db,$userid,$ir,$h,$lang;
 	echo "<h3>{$lang['NP_BUY']}</h3>
-	" . alert("info",$lang['ERROR_INFO'],$lang['NP_BUY_REMINDER']) . "<hr />";
+	" . alert("info",$lang['ERROR_INFO'],$lang['NP_BUY_REMINDER'],false) . "<hr />";
 	echo "
 		<form method='post'>
 		<table class='table table-bordered'>

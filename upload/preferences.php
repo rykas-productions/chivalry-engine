@@ -36,42 +36,42 @@ function prefs_home()
 	global $ir,$h,$lang;
 	if (!empty($_GET['lang']))
 	{
-		alert('success',"{$lang['LANG_UPDATE']}","{$lang['LANG_UPDATE2']}");
+		alert('success',$lang['LANG_UPDATE'],$lang['LANG_UPDATE2'],false);
 	}
-echo "{$lang['PREF_WELCOME_1']} {$ir['username']}{$lang['PREF_WELCOME_2']}<br />
-<table class='table table-bordered'>
-	<tbody>
-		<tr>
-			<td>
-				<a href='?action=namechange'>{$lang['PREF_CNAME']}</a>
-			</td>
-			<td>
-				<a href='?action=pwchange'>{$lang['PREF_CPASSWORD']}</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=timechange'>{$lang['PREF_CTIME']}</a>
-			</td>
-			<td>
-				<a href='?action=langchange'>{$lang['PREF_CLANG']}</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a href='?action=picchange'>{$lang['PREF_CPIC']}</a>
-			</td>
-			<td>
-				<a href='?action=themechange'>{$lang['PREF_CTHM']}</a>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='2'>
-				<a href='?action=sigchange'>{$lang['PREF_CSIG']}</a>
-			</td>
-		</tr>
-	</tbody>
-</table>";
+	echo "{$lang['PREF_WELCOME_1']} {$ir['username']}{$lang['PREF_WELCOME_2']}<br />
+	<table class='table table-bordered'>
+		<tbody>
+			<tr>
+				<td>
+					<a href='?action=namechange'>{$lang['PREF_CNAME']}</a>
+				</td>
+				<td>
+					<a href='?action=pwchange'>{$lang['PREF_CPASSWORD']}</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href='?action=timechange'>{$lang['PREF_CTIME']}</a>
+				</td>
+				<td>
+					<a href='?action=langchange'>{$lang['PREF_CLANG']}</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href='?action=picchange'>{$lang['PREF_CPIC']}</a>
+				</td>
+				<td>
+					<a href='?action=themechange'>{$lang['PREF_CTHM']}</a>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<a href='?action=sigchange'>{$lang['PREF_CSIG']}</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>";
 }
 function name_change()
 {
@@ -95,7 +95,7 @@ function name_change()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_namechange', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$_POST['newname'] = (isset($_POST['newname']) && is_string($_POST['newname'])) ? stripslashes($_POST['newname']) : '';
@@ -117,7 +117,7 @@ function name_change()
 		}
 		$_POST['newname'] = $db->escape(htmlentities($_POST['newname'], ENT_QUOTES, 'ISO-8859-1'));
 		$db->query("UPDATE `users` SET `username` = '{$_POST['newname']}'  WHERE `userid` = $userid");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['UNC_GOOD']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['UNC_GOOD'],true,'preferences.php');
 	}
 }
 function time_change()
@@ -185,7 +185,7 @@ function time_change()
 		}
 		else
 		{
-			alert('success',$lang['ERROR_SUCCESS'],$lang['TZ_SUCC']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['TZ_SUCC'],true,'preferences.php');
 			$db->query("UPDATE `users` SET `timezone` = '{$_POST['timezone']}' WHERE `userid` = {$userid}");
 		}
 	}
@@ -216,7 +216,7 @@ function lang_change()
 		}
 		else
 		{
-			alert('success',$lang['ERROR_SUCCESS'],$lang['LANG_UPDATE2']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['LANG_UPDATE2'],true,'preferences.php');
 		}
 	}
 }
@@ -270,7 +270,7 @@ function pw_change()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepw', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$oldpw = stripslashes($_POST['oldpw']);
@@ -289,7 +289,7 @@ function pw_change()
 			// Re-encode password
 			$new_psw = $db->escape(encode_password($newpw));
 			$db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$ir['userid']}");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['PW_DONE']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['PW_DONE'],true,'preferences.php');
 		}
 	}
 }
@@ -316,7 +316,7 @@ function pic_change()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepic', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
@@ -324,19 +324,19 @@ function pic_change()
 		{
 			if (isImage($npic) == false)
 			{
-				alert('danger',"{$lang['ERROR_INVALID']}","{$lang['PIC_NOIMAGE']}");
+				alert('danger',$lang['ERROR_INVALID'],$lang['PIC_NOIMAGE']);
 				die($h->endpage());
 			}
 			$sz = get_filesize_remote($npic);
 			if ($sz <= 0 || $sz >= 1048576)
 			{
-				alert('danger',"{$lang['PIC_TOOBIG']}","{$lang['PIC_TOOBIG2']}");
+				alert('danger',$lang['PIC_TOOBIG'],$lang['PIC_TOOBIG2']);
 				$h->endpage();
 				exit;
 			}
 		}
 		$img=htmlentities($_POST['newpic'], ENT_QUOTES, 'ISO-8859-1');
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['PIC_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['PIC_SUCCESS'],true,'preferences.php');
 		echo "<img src='{$img}' width='250' height='250' class='img-thumbnail img-responsive'>";
 		$db->query("UPDATE `users` SET `display_pic` = " . $db->escape($npic) . " WHERE `userid` = ' . $userid");
 	}
@@ -349,12 +349,12 @@ function themechange()
 		$_POST['theme'] =  (isset($_POST['theme']) && is_numeric($_POST['theme']))  ? abs($_POST['theme']) : 1;
 		if ($_POST['theme'] < 1 || $_POST['theme'] > 3)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['PREF_CTHM_SUB_ERROR']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['PREF_CTHM_SUB_ERROR']);
 			die($h->endpage());
 		}
 		else
 		{
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['PREF_CTHM_SUB_SUCCESS']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['PREF_CTHM_SUB_SUCCESS'],true,'preferences.php');
 			$db->query("UPDATE `users` SET `theme` = {$_POST['theme']} WHERE `userid` = {$userid}");
 			die($h->endpage());
 		}
@@ -398,7 +398,7 @@ function sigchange()
 		$_POST['sig'] = $db->escape(strip_tags(stripslashes($_POST['sig'])));
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesig', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (strlen($_POST['sig']) > 1024)
@@ -407,7 +407,7 @@ function sigchange()
 			die($h->endpage());
 		}
 		$api->UserInfoSetStatic($userid,'signature',$_POST['sig']);
-		alert('success',$lang['ERROR_SUCCESS'],$lang['SIG_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['SIG_SUCC'],true,'preferences.php');
 	}
 	else
 	{

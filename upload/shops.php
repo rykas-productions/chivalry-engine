@@ -104,12 +104,12 @@ function shop()
         }
         else
         {
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_SHOP_ERROR1']}");
+            alert('danger',$lang['ERROR_GENERIC'],$lang['SHOPS_SHOP_ERROR1'],true,"shops.php");
         }
     }
     else
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_SHOP_ERROR2']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['SHOPS_SHOP_ERROR2'],true,"shops.php");
     }
     $db->free_result($sd);
 }
@@ -122,7 +122,7 @@ function buy()
 	{
 		if (empty($_GET['ID']) OR empty($_POST['qty']))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SHOPS_BUY_ERROR1'],true,"shops.php");
 		}
 		else
 		{
@@ -135,24 +135,24 @@ function buy()
 							WHERE `sitemID` = {$_GET['ID']}");
 			if ($db->num_rows($q) == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR2']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['SHOPS_BUY_ERROR2']},true,"shops.php");
 			}
 			else
 			{
 				$itemd = $db->fetch_row($q);
 				if ($ir['primary_currency'] < ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty']))
 				{
-					alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR3']} {$_POST['qty']} {$itemd['itmname']}(s).");
+					alert('danger',$lang['ERROR_GENERIC'],"{$lang['SHOPS_BUY_ERROR3']} {$_POST['qty']} {$itemd['itmname']}(s).",true,"shops.php");
 					die($h->endpage());
 				}
 				if ($itemd['itmbuyable'] == 'false')
 				{
-					alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR4']}");
+					alert('danger',$lang['ERROR_GENERIC'],$lang['SHOPS_BUY_ERROR4'],true,"shops.php");
 					die($h->endpage());
 				}
 				if ($itemd['shopLOCATION'] != $ir['location'])
 				{
-					alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SHOPS_BUY_ERROR5']}");
+					alert('danger',$lang['ERROR_GENERIC'],$lang['SHOPS_BUY_ERROR5'],true,"shops.php");
 					die($h->endpage());
 				}
 
@@ -163,7 +163,7 @@ function buy()
 						 SET `primary_currency` = `primary_currency` - $price
 						 WHERE `userid` = $userid");
 				$ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
-				alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['SHOPS_BUY_SUCCESS']} {$_POST['qty']} {$itemd['itmname']}(s) {$lang['GEN_FOR']} {$price}.");
+				alert('success',$lang['ERROR_SUCCESS'],"{$lang['SHOPS_BUY_SUCCESS']} {$_POST['qty']} {$itemd['itmname']}(s) {$lang['GEN_FOR']} {$price}.",true,"shops.php");
 				$api->SystemLogsAdd($userid,'itembuy',$ib_log);
 				$api->SystemCreditTax($api->SystemReturnTaxOnly($itemd['itmbuyprice']),1,-1);
 			}

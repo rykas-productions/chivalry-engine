@@ -2,7 +2,7 @@
 require('globals.php');
 if (!$ir['guild'])
 {
-    alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['VIEWGUILD_ERROR1']}");
+    alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_ERROR1'],true,'index.php');
 }
 else
 {
@@ -211,27 +211,27 @@ function donate()
 		$_POST['secondary'] = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs(intval($_POST['secondary'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('guild_donate', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (empty($_POST['primary']) && empty($_POST['secondary']))
 		{
-			alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['VIEWGUILD_DONATE_ERR1']}");
+			alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_DONATE_ERR1']);
 			die($h->endpage());
 		}
 		if ($_POST['primary'] > $ir['primary_currency'])
 		{
-			alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['VIEWGUILD_DONATE_ERR2']}");
+			alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_DONATE_ERR2']);
 			die($h->endpage());
 		}
 		else if ($_POST['secondary'] > $ir['secondary_currency'])
 		{
-			alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['VIEWGUILD_DONATE_ERR3']}");
+			alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_DONATE_ERR3']);
 			die($h->endpage());
 		}
 		else if ($_POST['primary']+$gd['guild_primcurr'] > $gd['guild_level']*1500000)
 		{
-			alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['VIEWGUILD_DONATE_ERR4']}" . $gd['guild_level']*1500000);
+			alert('danger',$lang["ERROR_GENERIC"],"{$lang['VIEWGUILD_DONATE_ERR4']}" . $gd['guild_level']*1500000);
 			die($h->endpage());
 		}
 		else
@@ -248,7 +248,7 @@ function donate()
 								and " . number_format($_POST['secondary']) . " Secondary Currency to the guild.");
 			 $db->query("INSERT INTO `guild_notifications`
 						VALUES(NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
-			alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['VIEWGUILD_DONATE_SUCC']}");
+			alert('success',$lang["ERROR_SUCCESS"],$lang['VIEWGUILD_DONATE_SUCC'],true,'viewguild.php');
 		}
 	}
 	else
@@ -346,18 +346,18 @@ function staff_kick()
     {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_kickuser", stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"],true,'viewguild.php?action=members');
 			die($h->endpage());
 		}
         $_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs(intval($_POST['ID'])) : 0;
         $who = $_POST['ID'];
         if ($who == $gd['guild_owner'])
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR']);
+            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR'],true,'viewguild.php?action=members');
         }
         else if ($who == $userid)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR1']);
+            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR1'],true,'viewguild.php?action=members');
         }
         else
         {
@@ -368,7 +368,7 @@ function staff_kick()
                 $db->query("UPDATE `users` SET `guild` = 0 WHERE `userid` = {$who}");
                 $d_username = htmlentities($kdata['username'], ENT_QUOTES, 'ISO-8859-1');
                 $d_oname = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
-                alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_KICK_SUCCESSS']);
+                alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_KICK_SUCCESSS'],true,'viewguild.php?action=members');
                 $their_event = "You were kicked out of the {$gd['guild_name']} guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
                 $api->GameAddNotification($who, $their_event);
                 $gang_event =  $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
@@ -376,14 +376,14 @@ function staff_kick()
             }
             else
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR2']);
+                alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR2'],true,'viewguild.php?action=members');
             }
             $db->free_result($q);
         }
     }
     else
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR3']);
+        alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR3'],true,'viewguild.php');
     }
 }
 function leave()
@@ -391,23 +391,23 @@ function leave()
 	global $db,$userid,$ir,$gd,$lang,$api,$h;
 	if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_LEAVE_ERR']);
+        alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_LEAVE_ERR'],true,'viewguild.php');
         die($h->endpage());
     }
 	if (isset($_POST['submit']) && $_POST['submit'] == 'yes')
     {
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_leave", stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$db->query("UPDATE `users` SET `guild` = 0  WHERE `userid` = {$userid}");
 		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has left the guild.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_LEAVE_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_LEAVE_SUCC'],true,'index.php');
 	}
 	elseif (isset($_POST['submit']) && $_POST['submit'] == 'no')
 	{
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_LEAVE_SUCC1']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_LEAVE_SUCC1'],true,'viewguild.php');
 	}
 	else
 	{
@@ -506,7 +506,7 @@ function staff()
     }
     else
     {
-        alert('danger',$lang['ERROR_NOPERM'],$lang['VIEWGUILD_STAFF_ERROR']);
+        alert('danger',$lang['ERROR_NOPERM'],$lang['VIEWGUILD_STAFF_ERROR'],true,'viewguild.php');
         die($h->endpage());
     }
 }
@@ -546,7 +546,7 @@ function staff_apps()
     {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_apps", stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
         $aq =
@@ -679,19 +679,19 @@ function gym()
 	global $db,$lang,$api,$h,$userid,$ir,$gd;
 	if ($gd['guild_level'] < 3)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_GYM_ERR']);
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_GYM_ERR'],true,'viewguild.php');
 		die($h->endpage());
 	}
 	else
 	{
 		if ($api->UserStatus($ir['userid'],'infirmary') == true)
 		{
-			alert("danger","{$lang["GEN_INFIRM"]}","{$lang['GYM_INFIRM']}");
+			alert("danger",$lang["GEN_INFIRM"],$lang['GYM_INFIRM'],true,'index.php');
 			die($h->endpage());
 		}
 		if ($api->UserStatus($ir['userid'],'dungeon') == true)
 		{
-			alert("danger","{$lang["GEN_DUNG"]}","{$lang['GYM_DUNG']}");
+			alert("danger",$lang["GEN_DUNG"],$lang['GYM_DUNG'],true,'index.php');
 			die($h->endpage());
 		}
 		$statnames =  array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor");
@@ -704,18 +704,18 @@ function gym()
 		{
 			if (!isset($statnames[$_POST['stat']]))
 			{
-				alert("danger","{$lang['ERROR_INVALID']}","{$lang['GYM_INVALIDSTAT']}");
+				alert("danger",$lang['ERROR_INVALID'],$lang['GYM_INVALIDSTAT'],true,'viewguild.php?action=gym');
 				die($h->endpage());
 			}
 			if (!isset($_POST['verf']) || !verify_csrf_code('guildgym_train', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"],true,'viewguild.php?action=gym');
 				die($h->endpage());
 			}
 			$stat = $statnames[$_POST['stat']];
 			if ($_POST['amnt'] > $ir['energy'])
 			{
-				alert("danger","{$lang['GYM_NEG']}","{$lang['GYM_NEG_DETAIL']}");
+				alert("danger",$lang['GYM_NEG'],$lang['GYM_NEG_DETAIL'],false);
 			}
 			else
 			{
@@ -778,22 +778,22 @@ function gym()
 				$EnergyLeft = $ir['energy'] - $_POST['amnt'];
 				if ($stat == "strength")
 				{
-					alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_STR']} {$gain} {$lang['GEN_STR']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_STR2']} {$NewStatAmount} {$lang['GEN_STR']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}");
+					alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_STR']} {$gain} {$lang['GEN_STR']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_STR2']} {$NewStatAmount} {$lang['GEN_STR']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}",false);
 					$str_select="selected";
 				}
 				elseif ($stat == "agility")
 				{
-					alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_AGL']} {$gain} {$lang['GEN_AGL']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_AGL1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_AGL']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}");
+					alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_AGL']} {$gain} {$lang['GEN_AGL']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_AGL1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_AGL']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}",false);
 					$agl_select="selected";
 				}
 				elseif ($stat == "guard")
 				{
-					alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_GRD']} {$gain} {$lang['GEN_GRD']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_GRD1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_GRD']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}");
+					alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_GRD']} {$gain} {$lang['GEN_GRD']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_GRD1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_GRD']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}",false);
 					$grd_select="selected";
 				}
 				elseif ($stat == "labor")
 				{
-					alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_LAB']} {$gain} {$lang['GEN_LAB']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_LAB1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_LAB']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}");
+					alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_LAB']} {$gain} {$lang['GEN_LAB']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_LAB1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_LAB']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}",false);
 					$lab_select="selected";
 				}
 				$api->SystemLogsAdd($userid,'training',"Trained their {$stat} in their guild and gained {$gain}.");
@@ -854,7 +854,7 @@ function staff_vault()
     {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_vault", stripslashes($_POST['verf'])))
         {
-            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
             die($h->endpage());
         }
         $_POST['primary'] = (isset($_POST['primary']) && is_numeric($_POST['primary'])) ? abs($_POST['primary']) : 0;
@@ -894,7 +894,7 @@ function staff_vault()
                       `guild_seccurr` = `guild_seccurr` - {$_POST['secondary']} WHERE `guild_id` = {$gd['guild_id']}");
         $api->GameAddNotification($_POST['user'],"You were given " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from your guild's vault.");
         $api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has given <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from the guild's vault.");
-        alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_VAULT_SUCC']);
+        alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_VAULT_SUCC'],true,'viewguild.php?action=staff&act2=idx');
         $api->SystemLogsAdd($userid,"guild_vault","Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
     }
     else
@@ -949,7 +949,7 @@ function staff_coowner()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_coleader", stripslashes($_POST['verf'])))
         {
-            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
             die($h->endpage());
         }
 		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
@@ -964,7 +964,7 @@ function staff_coowner()
 		$db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
 		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you co-leader privledges for the {$gd['guild_name']} guild.");
 		$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred co-leader privledges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_COLEADER_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_COLEADER_SUCC'],true,'viewguild.php?action=staff&act2=idx');
 	}
 	else
 	{
@@ -1001,12 +1001,12 @@ function staff_announcement()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_ament", stripslashes($_POST['verf'])))
         {
-            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
             die($h->endpage());
         }
 		$ament = $db->escape(nl2br(htmlentities(stripslashes($_POST['ament']), ENT_QUOTES, 'ISO-8859-1')));
 		$db->query("UPDATE `guild` SET `guild_announcement` = '{$ament}' WHERE `guild_id` = {$gd['guild_id']}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_AMENT_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_AMENT_SUCC'],true,'viewguild.php?action=staff&act2=idx');
 	}
 	else
 	{
@@ -1044,7 +1044,7 @@ function staff_massmail()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_massmail", stripslashes($_POST['verf'])))
         {
-            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
             die($h->endpage());
         }
 		$_POST['text'] = (isset($_POST['text'])) ? $db->escape(htmlentities(stripslashes($_POST['text']), ENT_QUOTES, 'ISO-8859-1')) : '';
@@ -1054,7 +1054,7 @@ function staff_massmail()
         {
             $api->GameAddMail($r['userid'],$subj,$_POST['text'],$userid);
         }
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_MM_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_MM_SUCC'],true,'viewguild.php?action=staff&act2=idx');
 	}
 	else
 	{
@@ -1091,7 +1091,7 @@ function staff_masspayment()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_masspay", stripslashes($_POST['verf'])))
         {
-            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
             die($h->endpage());
         }
 		$_POST['payment'] = (isset($_POST['payment']) && is_numeric($_POST['payment'])) ? abs($_POST['payment']) : 0;
@@ -1121,7 +1121,7 @@ function staff_masspayment()
 			$db->query("UPDATE `guild` SET `guild_primcurr` = {$gd['guild_primcurr']} WHERE `guild_id` = {$gd['guild_id']}");
 			$notif=$db->escape("A mass payment of " . number_format($_POST['payment']) . " Primary Currency was sent out to the members of the guild.");
 			$api->GuildAddNotification($gd['guild_id'],$notif);
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_MP_SUCC']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_MP_SUCC'],true,'viewguild.php?action=staff&act2=idx');
 		}
 	}
 	else
@@ -1166,7 +1166,7 @@ function staff_desc()
 			}
 			$desc = $db->escape(nl2br(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1')));
 			$db->query("UPDATE `guild` SET `guild_desc` = '{$desc}' WHERE `guild_id` = {$gd['guild_id']}");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_DESC_SUCC']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_DESC_SUCC'],true,'viewguild.php?action=staff&act2=idx');
 		}
 		else
 		{
@@ -1226,7 +1226,7 @@ function staff_leader()
 		$db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
 		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you leader privledges for the {$gd['guild_name']} guild.");
 		$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred leader privledges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_LEADER_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_LEADER_SUCC'],true,'viewguild.php?action=staff&act2=idx');
 	}
 	else
 	{
@@ -1258,7 +1258,7 @@ function staff_leader()
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY']);
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
 	}
 }
 function staff_name()
@@ -1281,7 +1281,7 @@ function staff_name()
 				die($h->endpage());
 			}
 			$db->query("UPDATE `guild` SET `guild_name` = '{$name}' WHERE `guild_id` = {$gd['guild_id']}");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_NAME_SUCC']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_NAME_SUCC'],true,'viewguild.php?action=staff&act2=idx');
 		}
 		else
 		{
@@ -1314,7 +1314,7 @@ function staff_name()
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY']);
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
 	}
 }
 function staff_town()
@@ -1326,7 +1326,7 @@ function staff_town()
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_town", stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			$town = (isset($_POST['town']) && is_numeric($_POST['town'])) ? abs($_POST['town']) : 0;
@@ -1355,7 +1355,7 @@ function staff_town()
 			}
 			$db->query("UPDATE `town` SET `town_guild_owner` = {$gd['guild_id']} WHERE `town_id` = {$town}");
 			$api->GuildAddNotification($gd['guild_id'],"Your guild has successfully claimed {$api->SystemTownIDtoName($town)}.");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_TOWN_SUCC']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_TOWN_SUCC'],true,'viewguild.php?action=staff&act2=idx');
 		}
 		else
 		{
@@ -1388,7 +1388,7 @@ function staff_town()
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY']);
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
 	}
 }
 $h->endpage();

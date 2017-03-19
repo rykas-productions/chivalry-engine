@@ -68,25 +68,25 @@ else
 	}
 	if (!in_array($_POST['category'],$CategoryArray))
 	{
-		alert('danger',"{$lang['ERROR_INVALID']}","{$lang['PR_CATBAD']}");
+		alert('danger',$lang['ERROR_INVALID'],$lang['PR_CATBAD']);
 	}
 	else
 	{
 		if (strlen($_POST['reason']) > 1250)
 		{
-			alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['PR_MAXCHAR']}");
+			alert('danger',$lang['ERROR_LENGTH'],$lang['PR_MAXCHAR']);
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
 		if ($db->fetch_single($q) == 0)
 		{
 			$db->free_result($q);
-			alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['PR_INVALID_USER']}");
+			alert('danger',$lang['ERROR_NONUSER'],$lang['PR_INVALID_USER']);
 			die($h->endpage());
 		}
 		$db->free_result($q);
 		$db->query("INSERT INTO `reports` VALUES(NULL, $userid, {$_POST['userid']}, '{$_POST['reason']}')");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['PR_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['PR_SUCCESS'],true,'index.php');
 		
 	}
 }

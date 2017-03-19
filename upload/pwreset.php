@@ -35,7 +35,7 @@ function one()
 	{
 		if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email'])))
 		{
-			alert('danger',$lang['ERROR_INVALID'],$lang['REG_EMAILERROR']);
+			alert('danger',$lang['ERROR_INVALID'],$lang['REG_EMAILERROR'],false);
 			require("footer.php");
 			exit;
 		}
@@ -60,11 +60,11 @@ function one()
 			$db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$e_email}'");
 			$db->query("INSERT INTO `pw_recovery` (`pwr_ip`, `pwr_email`, `pwr_code`, `pwr_expire`) VALUES ('{$IP}', '{$e_email}', '{$token}', '{$expire}')");
 		}
-		alert('success',$lang['ERROR_SUCCESS'],$lang['PWR_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['PWR_SUCC'],false);
 	}
 	else
 	{
-		alert('info',$lang['ERROR_INFO'],$lang['PWR_INFO']);
+		alert('info',$lang['ERROR_INFO'],$lang['PWR_INFO'],false);
 		echo "
 		<form method='post'>
 			<input type='email' name='email' required='1' class='form-control'>
@@ -81,11 +81,11 @@ function two()
 		$token = $db->escape(stripslashes($_GET['code']));
 		if ($db->num_rows($db->query("SELECT `pwr_id` FROM `pw_recovery` WHERE `pwr_code` = '{$token}'")) == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['PWR_ERR']);
+			alert('danger',$lang['ERROR_GENERIC'],$lang['PWR_ERR'],false);
 		}
 		else if ($db->fetch_single($db->query("SELECT `pwr_expire` FROM `pw_recovery` WHERE `pwr_code` = '{$token}'")) < time())
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['PWR_ERR']);
+			alert('danger',$lang['ERROR_GENERIC'],$lang['PWR_ERR'],false);
 		}
 		else
 		{
@@ -104,12 +104,12 @@ function two()
 			$e_pw=encode_password($pw);
 			$db->query("UPDATE `users` SET `password` = '{$e_pw}' WHERE `email` = '{$pwr['pwr_email']}'");
 			$db->query("DELETE FROM `pw_recovery` WHERE `pwr_code` = '{$token}'");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['PWR_SUCC1']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['PWR_SUCC1'],false);
 		}
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['PWR_ERR']);
+		alert('danger',$lang['ERROR_GENERIC'],$lang['PWR_ERR'],false);
 	}
 }
 require("footer.php");

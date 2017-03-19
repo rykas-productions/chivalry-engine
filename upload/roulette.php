@@ -9,7 +9,7 @@ if (!isset($_SESSION['tresde']))
 }
 if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
 {
-    alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ROULETTE_NOREFRESH']} <a href='roulette.php?tresde={$tresder}'>Back</a>");
+    alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_NOREFRESH'],true,"roulette.php?tresde={$tresder}");
 	die($h->endpage());
 }
 $_SESSION['tresde'] = $_GET['tresde'];
@@ -24,22 +24,22 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
     $_POST['number'] = abs($_POST['number']);
     if ($_POST['bet'] > $ir['primary_currency'])
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ROULETTE_ERROR1']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR1'],true,"roulette.php?tresde={$tresder}");
 		die($h->endpage());
     }
 	else if ($_POST['bet'] > $maxbet)
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ROULETTE_ERROR2']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR2'],true,"roulette.php?tresde={$tresder}");
 		die($h->endpage());
     }
     else if ($_POST['number'] > 36 || $_POST['number'] < 0)
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ROULETTE_ERROR3']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR3'],true,"roulette.php?tresde={$tresder}");
 		die($h->endpage());
     }
 	else if ($_POST['bet'] < 0)
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ROULETTE_ERROR4']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR4'],true,"roulette.php?tresde={$tresder}");
 		die($h->endpage());
     }
 	$slot = array();
@@ -63,7 +63,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 		$phrase="{$lang['ROULETTE_LOST']}";
 		$api->SystemLogsAdd($userid,'gambling',"Lost {$_POST['bet']} in roulette.");
 	}
-	alert($alerttype,$title,"{$lang['ROULETTE_START']} {$slot[1]}{$phrase}");
+	alert($alerttype,$title,"{$lang['ROULETTE_START']} {$slot[1]}{$phrase}",true,"roulette.php?tresde={$tresder}");
 	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
 	$tresder = Random(100, 999);
 	echo "<br />

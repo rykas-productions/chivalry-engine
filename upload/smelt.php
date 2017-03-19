@@ -84,7 +84,7 @@ function smelt()
 	$q=$db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$_GET['id']}");
 	if($db->num_rows($q) == 0) 
 	{
-        alert('danger',$lang['ERROR_GENERIC'],$lang['SMELT_ERR']);
+        alert('danger',$lang['ERROR_GENERIC'],$lang['SMELT_ERR'],true,"smelt.php");
         die($h->endpage());
     }
 	$r = $db->fetch_row($q);
@@ -109,7 +109,7 @@ function smelt()
 	}
 	if(isset($item_needed)) 
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMELT_ERR1']);
+		alert('danger',$lang['ERROR_GENERIC'],$lang['SMELT_ERR1'],true,"smelt.php");
 		die($h->endpage());
 	}
 	unset($n);
@@ -121,11 +121,11 @@ function smelt()
 			$db->query("INSERT INTO `smelt_inprogress` (
 				`sip_user`, `sip_recipe`, `sip_time`) 
 				VALUES ('{$userid}', '{$_GET['id']}', '{$rcomplete}');");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['SMELT_SUCC']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['SMELT_SUCC'],true,"smelt.php");
 		}
 		else
 		{
-			alert('success',$lang['ERROR_SUCCESS'],$lang['SMELT_SUCC1']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['SMELT_SUCC1'],true,"smelt.php");
 			$api->UserGiveItem($userid,$r['smelt_output'],$r['smelt_qty_output']);
 		}
 		$ex = explode(",", $r['smelt_items']);
@@ -143,7 +143,7 @@ function smelt()
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMELT_ERR1']);
+		alert('danger',$lang['ERROR_GENERIC'],$lang['SMELT_ERR1'],true,"smelt.php");
 		die($h->endpage());
 	}
 }

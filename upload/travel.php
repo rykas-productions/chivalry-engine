@@ -52,12 +52,12 @@ else
 {
 	if ($ir['primary_currency'] < $cost_of_travel)
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['TRAVEL_ERROR_CASHLOW']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['TRAVEL_ERROR_CASHLOW'],true,"travel.php");
 		die($h->endpage());
     }
     elseif ($ir['location'] == $_GET['to'])
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['TRAVEL_ERROR_ALREADYTHERE']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['TRAVEL_ERROR_ALREADYTHERE'],true,"travel.php");
 		die($h->endpage());
     }
 	else
@@ -66,7 +66,7 @@ else
                          AND `town_min_level` <= {$ir['level']}");
 		if (!$db->num_rows($q))
         {
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['TRAVEL_ERROR_ERRORGEN']}");
+            alert('danger',$lang['ERROR_GENERIC'],$lang['TRAVEL_ERROR_ERRORGEN'],true,"travel.php");
 			die($h->endpage());
         }
 		else
@@ -74,7 +74,7 @@ else
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$cost_of_travel},
                      `location` = {$_GET['to']} WHERE `userid` = {$userid}");
 			$cityName = $db->fetch_single($q);
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['TRAVEL_SUCCESS']} " . $cityName . " {$lang['GEN_FOR']} " . number_format($cost_of_travel));
+			alert('success',$lang['ERROR_SUCCESS'],"{$lang['TRAVEL_SUCCESS']} " . $cityName . " {$lang['GEN_FOR']} " . number_format($cost_of_travel),true,"index.php");
 			$api->SystemLogsAdd($userid,'travel',"Traveled to {$cityName}.");
 			die($h->endpage());
 		}
