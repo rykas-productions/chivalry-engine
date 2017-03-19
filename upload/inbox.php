@@ -125,12 +125,12 @@ function read()
 	$_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs($_GET['msg']) : 0;
 	if ($_GET['msg'] == 0)
 	{
-		alert('danger',$lang['ERROR_SECURITY'],$lang['ERROR_MAIL_UNOWNED']);
+		alert('danger',$lang['ERROR_SECURITY'],$lang['ERROR_MAIL_UNOWNED'],true,'inbox.php');
 		die($h->endpage());
 	}
 	if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0)
 	{
-		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ERROR_MAIL_UNOWNED']}");
+		alert("danger",$lang['ERROR_SECURITY'],$lang['ERROR_MAIL_UNOWNED'],true,'inbox.php');
 		die($h->endpage());
 	}
 	$msg=$db->fetch_row($db->query("SELECT * FROM `mail` WHERE `mail_id` = {$_GET['msg']}"));
@@ -210,24 +210,24 @@ function send()
 	}
 	if (empty($msg))
     {
-		alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['MAIL_EMPTYINPUT']}");
+		alert('danger',$lang['ERROR_EMPTY'],$lang['MAIL_EMPTYINPUT'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
 	elseif ((strlen($msg) > 65655) || (strlen($subj) > 50))
     {
-        alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['MAIL_INPUTLNEGTH']}");
+        alert('danger',$lang['ERROR_LENGTH'],$lang['MAIL_INPUTLNEGTH'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
 	 if (empty($_POST['sendto']))
     {
-		alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['MAIL_NOUSER']}");
+		alert('danger',$lang['ERROR_EMPTY'],$lang['MAIL_NOUSER'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
 	$q = $db->query("SELECT `userid` FROM `users` WHERE `username` = '{$sendto}'");
 	if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-		alert('danger',"{$lang['MAIL_UDNE']}","{$lang['MAIL_UDNE_TEXT']}");
+		alert('danger',$lang['MAIL_UDNE'],$lang['MAIL_UDNE_TEXT'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
 	$to = $db->fetch_single($q);
@@ -236,13 +236,13 @@ function send()
 	$db->query("INSERT INTO `mail` 
 	(`mail_id`, `mail_to`, `mail_from`, `mail_status`, `mail_subject`, `mail_text`, `mail_time`) 
 	VALUES (NULL, '{$to}', '{$userid}', 'unread', '{$subj}', '{$msg}', '{$time}');");
-	alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['MAIL_SUCCESS']}");
+	alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_SUCCESS'],true,'inbox.php');
 }
 function markasread()
 {
 	global $db,$h,$userid,$h,$lang;
 	$db->query("UPDATE `mail` SET `mail_status` = 'read' WHERE `mail_to` = {$userid}");
-	alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['MAIL_READALL']}");
+	alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_READALL'],false);
 	home();
 }
 function delall()
@@ -262,7 +262,7 @@ function delall()
 	else
 	{
 		$db->query("DELETE FROM `mail` WHERE `mail_to` = {$userid}");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['MAIL_DELETEDONE']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_DELETEDONE'],true,'inbox.php');
 	}
 }
 function outbox()

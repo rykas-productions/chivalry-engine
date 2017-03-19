@@ -1252,7 +1252,7 @@ $lang['ROULETTE_BTN4']="I quit. I don't want to go broke.";
 $lang['ROULETTE_START']="You put in your bet and pull the handle down. Around and around the wheel spins. It stops and lands on";
 
 //High Low
-$lang['HILOW_NOREFRESH']="Please do nto refresh while playing High/Low. Use the links we provide, thank you!";
+$lang['HILOW_NOREFRESH']="Please do not refresh while playing High/Low. Use the links we provide, thank you!";
 $lang['HILOW_INFO']="Welcome to High/Low. Here you will bet on whether or not the deal will draw a number lower or higher than the number shown. The number range is 1 through 100.";
 $lang['HILOW_SHOWN']="The game operator shows the number";
 $lang['HILOW_WATDO']="Select the button on how you feel the next number will be compared to this number.";

@@ -13,7 +13,7 @@ if (isset($_SESSION['userid']))
     if (isset($_SESSION['attacking']) && $_SESSION['attacking'] > 0)
     {
         require_once('globals_nonauth.php');
-        alert("warning","{$lang['ERROR_GENERIC']}","{$lang['MENU_XPLOST']}");
+        alert("warning",$lang['ERROR_GENERIC'],$lang['MENU_XPLOST'],false);
 		$db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = {$sessid}");
 		$_SESSION['attacking'] = 0;
         session_regenerate_id(true);

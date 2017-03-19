@@ -119,7 +119,7 @@ if ($set['HTTPS_Support'] == 'true')
     <div class="container">
 		<noscript>
 			<?php
-				alert('info',$lang['ERROR_INFO'],$lang['HDR_JS']);
+				alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false);
 			?>
 		</noscript>
 
