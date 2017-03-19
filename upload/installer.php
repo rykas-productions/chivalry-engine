@@ -3,8 +3,8 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('0.0.40');
-$Build=('0040');
+$Version=('0.0.41');
+$Build=('0041');
 define('MONO_ON', 1);
 session_name('CENGINE');
 session_start();
