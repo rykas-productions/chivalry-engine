@@ -19,17 +19,17 @@ require_once('../../globals_nonauth.php');
 $class=$_POST['team'];
 if ($class == 'Warrior')
 {
-	alert('info',"{$lang['REG_WARRIORCLASS']}","{$lang['REG_WARRIORCLASS_INFO']}");
+	alert('info',$lang['REG_WARRIORCLASS'],$lang['REG_WARRIORCLASS_INFO'],false);
 }
 elseif ($class == 'Rogue')
 {
-	alert('info',"{$lang['REG_ROGUECLASS']}","{$lang['REG_ROGUECLASS_INFO']}");
+	alert('info',$lang['REG_ROGUECLASS'],$lang['REG_ROGUECLASS_INFO'],false);
 }
 elseif ($class == 'Defender')
 {
-	alert('info',"{$lang['REG_DEFENDERCLASS']}","{$lang['REG_DEFENDERCLASS_INFO']}");
+	alert('info',$lang['REG_DEFENDERCLASS'],$lang['REG_DEFENDERCLASS_INFO'],false);
 }
 else
 {
-	alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['REG_NOCLASS']}");
+	alert('danger',$lang['ERROR_GENERIC'],$lang['REG_NOCLASS'],false);
 }
