@@ -338,7 +338,7 @@ function pic_change()
 		$img=htmlentities($_POST['newpic'], ENT_QUOTES, 'ISO-8859-1');
 		alert('success',$lang['ERROR_SUCCESS'],$lang['PIC_SUCCESS'],true,'preferences.php');
 		echo "<img src='{$img}' width='250' height='250' class='img-thumbnail img-responsive'>";
-		$db->query("UPDATE `users` SET `display_pic` = " . $db->escape($npic) . " WHERE `userid` = ' . $userid");
+		$db->query("UPDATE `users` SET `display_pic` = '" . $db->escape($npic) . "' WHERE `userid` = {$userid}");
 	}
 }
 function themechange()
