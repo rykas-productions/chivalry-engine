@@ -562,7 +562,7 @@ class api
 		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
-			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.");
+			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.",false);
 		}
 		else
 		{
@@ -597,7 +597,7 @@ class api
 		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
-			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.");
+			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.",false);
 		}
 		else
 		{
@@ -916,7 +916,7 @@ class api
 		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
-			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.");
+			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.",false);
 		}
 		else
 		{
