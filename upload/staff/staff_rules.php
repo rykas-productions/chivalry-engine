@@ -36,14 +36,14 @@ function addrule()
 	{
 		if (empty($_POST['rule']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_RULES_ADD_SUBFAIL']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_RULES_ADD_SUBFAIL']);
 			die($h->endpage());
 		}
 		else
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_addrule', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			$time=time();

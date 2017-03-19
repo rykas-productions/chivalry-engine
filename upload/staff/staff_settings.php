@@ -6,6 +6,8 @@
 	Author: TheMasterGeneral
 	Website: http://mastergeneral156.pcriot.com/
 */
+
+//Still not localized
 require('sglobals.php');
 echo "<h3>Admin</h3><hr />";
 if (!isset($_GET['action']))
@@ -201,7 +203,7 @@ function basicsettings()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_sett_1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$GameName = (isset($_POST['gamename'])  && preg_match("/^[a-z0-9_.]+([\\s]{1}[a-z0-9_.]|[a-z0-9_.])+$/i", $_POST['gamename'])) ? $db->escape(strip_tags(stripslashes($_POST['gamename']))) : '';
@@ -222,62 +224,62 @@ function basicsettings()
 		$sessiontimeout = (isset($_POST['sessiontimeout']) && is_numeric($_POST['sessiontimeout'])) ? abs(intval($_POST['sessiontimeout'])) : 15;
 		if (empty($GameName))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid game name specified!");
+			alert('danger',$lang['ERROR_INVALID'],"Invalid game name specified!");
 			die($h->endpage());
 		}
 		elseif (empty($Paypal))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid paypal address specified!");
+			alert('danger',$lang['ERROR_INVALID'],"Invalid paypal address specified!");
 			die($h->endpage());
 		}
 		elseif (empty($GameOwner))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Game Owner Name specified.");
+			alert('danger',$lang['ERROR_INVALID'],"Invalid Game Owner Name specified.");
 			die($h->endpage());
 		}
 		elseif (empty($RefAward))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Refferal Kickback award specified.");
+			alert('danger',$lang['ERROR_INVALID'],"Invalid Refferal Kickback award specified.");
 			die($h->endpage());
 		}
 		elseif (empty($GameDesc))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Game Description specified.");
+			alert('danger',$lang['ERROR_INVALID'],"Invalid Game Description specified.");
 			die($h->endpage());
 		}
 		elseif (empty($AttackEnergy))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Attack Energy Cost.");
+			alert('danger',$lang['ERROR_INVALID'],"Invalid Attack Energy Cost.");
 			die($h->endpage());
 		}
 		elseif (empty($FGPW))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Fraud Guard IO Password.");
+			alert('danger',$lang['ERROR_INVALID'],"Invalid Fraud Guard IO Password.");
 			die($h->endpage());
 		}
 		elseif (empty($FGUN))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Fraud Guard IO Username.");
+			alert('danger',$lang['ERROR_INVALID'],"Invalid Fraud Guard IO Username.");
 			die($h->endpage());
 		}
 		elseif (empty($rcpb))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Google reCaptcha public key.");
+			alert('danger',$lang['ERROR_INVALID'],"Invalid Google reCaptcha public key.");
 			die($h->endpage());
 		}
 		elseif (empty($rcpr))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Google reCaptcha private key.");
+			alert('danger',$lang['ERROR_INVALID'],"Invalid Google reCaptcha private key.");
 			die($h->endpage());
 		}
 		elseif (empty($PasswordEffort) || $PasswordEffort < 5 || $PasswordEffort > 20)
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Empty or Invalid Password Hashing effort. Minimum of 5, maximum of 10.");
+			alert('danger',$lang['ERROR_INVALID'],"Empty or Invalid Password Hashing effort. Minimum of 5, maximum of 10.");
 			die($h->endpage());
 		}
 		elseif ($recaptchatime <= 0)
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Specify a longer revalidate period, please.");
+			alert('danger',$lang['ERROR_INVALID'],"Specify a longer revalidate period, please.");
 			die($h->endpage());
 		}
 		else
@@ -298,7 +300,7 @@ function basicsettings()
 			$db->query("UPDATE `settings` SET `setting_value` = '{$rcpr}' WHERE `setting_name` = 'reCaptcha_private'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$sessiontimeout}' WHERE `setting_name` = 'max_sessiontime'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$recaptchatime}' WHERE `setting_name` = 'Revalidate_Time'");
-			alert('success',"{$lang['ERROR_SUCCESS']}","Successfully updated the game settings.");
+			alert('success',"{$lang['ERROR_SUCCESS']}","Successfully updated the game settings.",true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Updated game settings.");
 		}
 		$h->endpage();
@@ -336,7 +338,7 @@ function announce()
 			$db->query("INSERT INTO `announcements` (`ann_id`, `ann_text`, `ann_time`, `ann_poster`) 
 			VALUES (NULL, '{$_POST['announcement']}', '{$time}', '{$userid}');");
 			$db->query("UPDATE `users` SET `announcements` = `announcements` + 1");
-			alert('success','Success!','You have successfully created an announcement.');
+			alert('success','Success!','You have successfully created an announcement.',true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Posted an announcement.");
 		}
 	}
@@ -447,7 +449,7 @@ function restore()
 		$db->query("UPDATE `dungeon` SET `dungeon_out` = 0");
 		$db->query("UPDATE `infirmary` SET `infirmary_out` = 0");
 		$api->SystemLogsAdd($userid,'staff',"Restored all users to their full HP/Brave/Energy.");
-		alert('success',"Success!","You have successfully restored all your users to their full health, brave and energy!");
+		alert('success',"Success!","You have successfully restored all your users to their full health, brave and energy!",true,'index.php');
 		$h->endpage();
 	}
 }

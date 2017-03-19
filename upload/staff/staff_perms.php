@@ -6,6 +6,8 @@
 	Author: TheMasterGeneral
 	Website: http://mastergeneral156.pcriot.com/
 */
+
+//Still not localized
 require('sglobals.php');
 echo "<h3>Permissions</h3><hr />";
 if (!isset($_GET['action']))
@@ -48,7 +50,7 @@ function viewperm()
 		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
 		if (empty($_POST['userid']))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","You specified an invalid input. Try again!");
+			alert('danger',$lang['ERROR_INVALID'],"You specified an invalid input. Try again!");
 			die($h->endpage());
 		}
 		else
@@ -57,7 +59,7 @@ function viewperm()
 			$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_1', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			if ($db->num_rows($UserPermissionSelectQuery) == 0)
@@ -237,7 +239,7 @@ function resetperm()
 		{
 			$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
 			$db->query("DELETE FROM `permissions` WHERE `perm_user` = {$_POST['userid']}");
-			alert('success',"User's Permissions Reset!","You have successfully reset {$UserName}'s permissions.");
+			alert('success',"User's Permissions Reset!","You have successfully reset {$UserName}'s permissions.",true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Reset <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s permissions.");
 			die($h->endpage());
 		}

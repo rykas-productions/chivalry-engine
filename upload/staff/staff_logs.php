@@ -279,7 +279,7 @@ function userlogs()
 		$db->free_result($q);
 		if ($logs == 0)
 		{
-			alert("info","Nothing!","This user hasn't done anything yet.");
+			alert("info","Nothing!","This user hasn't done anything yet.",true,'index.php');
 			return;
 		}
 		$pages = ceil($logs / $app);

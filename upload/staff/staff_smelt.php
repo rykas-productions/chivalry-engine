@@ -51,7 +51,7 @@ function add()
 		VALUES 
 		('{$_POST['timetocomplete']}', '{$items}', '{$qty}', '{$_POST['smelted_item']}', '{$_POST['smelted_item_qty']}')");
 		$api->SystemLogsAdd($userid,'staff',"Created smelting recipe for ".$api->SystemItemIDtoName($_POST['smelted_item']));
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_SMELT_ADD_SUCC']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SMELT_ADD_SUCC'],true,'index.php');
 	}
 	else
 	{
@@ -148,7 +148,7 @@ function del()
 		$db->query("DELETE FROM `smelt_recipes` WHERE `smelt_id` = {$_POST['smelt']}");
 		$db->query("DELETE FROM `smelt_inprogress` WHERE `sip_recipe` = {$_POST['smelt']}");
 		$api->SystemLogsAdd($userid,'staff',"Deleted a smelting recipe.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SMELT_DEL_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SMELT_DEL_SUCC'],true,'index.php');
 	}
 	else
 	{

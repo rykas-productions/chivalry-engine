@@ -6,6 +6,9 @@
 	Author: TheMasterGeneral
 	Website: http://mastergeneral156.pcriot.com/
 */
+
+//Still not localized
+//Wtf still using pre-alert?!
 require('sglobals.php');
 echo"<h3>Users</h3>";
 if (!isset($_GET['action']))
@@ -407,13 +410,13 @@ function edituser()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
 		if (empty($_POST['user']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_USERS_EDIT_EMPTY']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_USERS_EDIT_EMPTY']);
 			die($h->endpage());
 		}
 		$d =  $db->query("SELECT `i`.*, `d`.*, `username`, 
@@ -431,7 +434,7 @@ function edituser()
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['STAFF_USERS_EDIT_DND']}");
+			alert('danger',$lang['ERROR_NONUSER'],$lang['STAFF_USERS_EDIT_DND']);
 			die($h->endpage());
 		}
 		$itemi = $db->fetch_row($d);
@@ -635,7 +638,7 @@ function edituser()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username']) && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
@@ -662,35 +665,35 @@ function edituser()
 		
 		if (empty($username) || empty($email))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_MISSINGSTUFF']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_MISSINGSTUFF']);
 			die($h->endpage());
 		}
 		$u_exists = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$user}");
 		if ($db->num_rows($u_exists) == 0)
 		{
 			$db->free_result($u_exists);
-			alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['STAFF_USERS_EDIT_DND']}");
+			alert('danger',$lang['ERROR_NONUSER'],$lang['STAFF_USERS_EDIT_DND']);
 			die($h->endpage());
 		}
 		$h_exists = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$maxwill}");
 		if ($db->fetch_single($h_exists) == 0)
 		{
 			$db->free_result($h_exists);
-			alert("danger","{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_HBAD']}");
+			alert("danger",$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_HBAD']);
 			die($h->endpage());
 		}
 		$u = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$username}' AND `userid` != {$user}");
 		if ($db->fetch_single($u) != 0)
 		{
 			$db->free_result($u);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_UNIU']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_UNIU']);
 			die($h->endpage());
 		}
 		$e = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$email}' AND `userid` != {$user}");
 		if ($db->fetch_single($e) != 0)
 		{
 			$db->free_result($e);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_EIU']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_EIU']);
 			die($h->endpage());
 		}
 		if ($equip_prim > 0)
@@ -698,7 +701,7 @@ function edituser()
 			$pwq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
 			if ($db->fetch_single($pwq) == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_WDNE']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_WDNE']);
 				die($h->endpage());
 			}
 		}
@@ -707,7 +710,7 @@ function edituser()
 			$swq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
 			if ($db->fetch_single($swq) == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_WDNE']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_WDNE']);
 				die($h->endpage());
 			}
 		}
@@ -716,14 +719,14 @@ function edituser()
 			$aq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
 			if ($db->fetch_single($aq) == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_ADNE']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_ADNE']);
 				die($h->endpage());
 			}
 		}
 		$CityQuery=$db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
 		if ($db->fetch_single($CityQuery) == 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_TDNE']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_TDNE']);
 			die($h->endpage());
 		}
 		$db->free_result($u);
@@ -748,7 +751,7 @@ function edituser()
 		{
 			$api->UserStatusSet($user,2,$_POST['dungeon'],$dungeonr);
 		}
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_EDIT_SUB_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_EDIT_SUB_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
 	}
 	else
@@ -865,19 +868,19 @@ function deleteuser()
 			$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser1', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			if (empty($_POST['user']) || $_POST['user'] == 1 || $_POST['user'] == $ir['userid'])
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
 				die($h->endpage());
 			}
 			$d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
 			if ($db->num_rows($d) == 0)
 			{
 				$db->free_result($d);
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
 				die($h->endpage());
 			}
 			$username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
@@ -907,25 +910,25 @@ function deleteuser()
 		case 3:
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser2', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
 			$_POST['yesorno'] = (isset($_POST['yesorno']) && in_array($_POST['yesorno'], array('Yes', 'No'))) ? $_POST['yesorno'] : '';
 			if ((empty($_POST['userid']) || empty($_POST['yesorno'])) || $_POST['userid'] == 1 || $_POST['userid'] == $ir['userid'])
 			{
-				alert('danger',"{$lang['ERROR_INVALID']}","{$lang['STAFF_USERS_DEL_SUB_INVALID']}");
+				alert('danger',$lang['ERROR_INVALID'],$lang['STAFF_USERS_DEL_SUB_INVALID']);
 				die($h->endpage());
 			}
 			if ($_POST['yesorno'] == 'No')
 			{
-				alert('warning',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_DEL_SUB_FAIL']}");
+				alert('warning',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_DEL_SUB_FAIL']);
 				die($h->endpage());
 			}
 			$d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}");
 			if ($db->num_rows($d) == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
 				die($h->endpage());
 			}
 			$username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
@@ -934,7 +937,7 @@ function deleteuser()
 			$db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$_POST['userid']}");
 			$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['userid']}");
 			$api->SystemLogsAdd($userid,'staff',"Deleted user {$username} [{$_POST['userid']}].");
-			alert("success","{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_DEL_SUB_SUCC']}");
+			alert("success",$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_DEL_SUB_SUCC'],true,'index.php');
 			die($h->endpage());
 			break;
 	}
@@ -947,20 +950,20 @@ function logout()
     {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_forcelogout', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
         $d = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
         if ($db->fetch_single($d) == 0)
         {
             $db->free_result($d);
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
             die($h->endpage());
         }
         $db->free_result($d);
         $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `userid` = {$_POST['userid']}");
         $api->SystemLogsAdd($userid,'staff',"Forced User ID {$_POST['userid']} to logout.");
-		alert("success","{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_FL_SUB_SUCC']}");
+		alert("success",$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_FL_SUB_SUCC'],true,'index.php');
     }
     else
     {
@@ -1000,23 +1003,23 @@ function changepw()
 		$user = (isset($_POST['user']) && is_numeric($_POST['user']))  ? abs(intval($_POST['user'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_changepw', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (($user == 1) && ($userid > 1))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_CP_ERROR']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_CP_ERROR']);
             die($h->endpage());
 		}
 		$ul=$db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
 		if (($ul == 'Admin') && ($userid > 1))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_CP_ERROR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_CP_ERROR1']);
             die($h->endpage());
 		}
 		$new_psw = $db->escape(encode_password($pw));
 		$db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$user}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_CP_SUCCESS']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_CP_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Changed User ID {$user}'s password.");
 	}
 	else

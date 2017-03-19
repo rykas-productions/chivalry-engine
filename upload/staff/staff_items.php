@@ -6,6 +6,8 @@
 	Author: TheMasterGeneral
 	Website: http://mastergeneral156.pcriot.com/
 */
+
+//Still not localized.
 require('sglobals.php');
 echo "<h3>Items</h3><hr />";
 if (!isset($_GET['action']))
@@ -257,7 +259,7 @@ function create()
                      '{$_POST['effect3on']}', '{$effects[3]}', 
 					 {$weapon}, {$armor})");
 		$api->SystemLogsAdd($userid,'staff',"Created item {$itmname}.");
-		alert('success',"Success!","You have successfully created an item called {$itmname}.");
+		alert('success',"Success!","You have successfully created an item called {$itmname}.",true,'index.php');
 	}
 	$h->endpage();
 }
@@ -314,7 +316,7 @@ function createitmgroup()
 			die($h->endpage());
 		}
 		$api->SystemLogsAdd($userid,'staff',"Added item type {$name}.");
-		alert('success',"Success!","You have successfully created an item group called {$name}.");
+		alert('success',"Success!","You have successfully created an item group called {$name}.",true,'index.php');
 		$db->query("INSERT INTO `itemtypes` VALUES(NULL, '{$name}')");
 		
 	}
@@ -381,7 +383,7 @@ function deleteitem()
 		$db->query("DELETE FROM `items` WHERE `itmid` = {$_POST['item']}");
 		$db->query("DELETE FROM `inventory` WHERE `inv_itemid` = {$_POST['item']}");
 		$api->SystemLogsAdd($userid,'staff',"Deleted item {$itemname}.");
-		alert("success","Success!","The Item ({$itemname}) has been deleted from the game successfully.");
+		alert("success","Success!","The Item ({$itemname}) has been deleted from the game successfully.",true,'index.php');
 		die($h->endpage());
 	}
 }
@@ -433,7 +435,7 @@ function giveitem()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_giveitem', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : '';
@@ -441,17 +443,17 @@ function giveitem()
 		$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(intval($_POST['qty'])) : '';
 		if (empty($_POST['item']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_ITEM_GIVE_SUB_NOITEM']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_ITEM_GIVE_SUB_NOITEM']);
 			die($h->endpage());
 		}
 		elseif (empty($_POST['user']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_ITEM_GIVE_SUB_NOUSER']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_ITEM_GIVE_SUB_NOUSER']);
 			die($h->endpage());
 		}
 		elseif (empty($_POST['qty']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_ITEM_GIVE_SUB_NOQTY']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_ITEM_GIVE_SUB_NOQTY']);
 			die($h->endpage());
 		}
 		else
@@ -460,12 +462,12 @@ function giveitem()
 			 $q2 = $db->query("SELECT `userid`,`username` FROM `users` WHERE `userid` = {$_POST['user']}");
 			 if ($db->num_rows($q) == 0)
 			 {
-				alert('danger',"{$lang['ERROR_GEN']}","{$lang['STAFF_ITEM_GIVE_SUB_ITEMDNE']}");
+				alert('danger',$lang['ERROR_GEN'],$lang['STAFF_ITEM_GIVE_SUB_ITEMDNE']);
 				die($h->endpage());
 			 }
 			 elseif ($db->num_rows($q2) == 0)
 			 {
-				alert('danger',"{$lang['ERROR_GEN']}","{$lang['STAFF_ITEM_GIVE_SUB_USERDNE']}");
+				alert('danger',$lang['ERROR_GEN'],$lang['STAFF_ITEM_GIVE_SUB_USERDNE']);
 				die($h->endpage());
 			 }
 			 else
@@ -477,7 +479,7 @@ function giveitem()
 				item_add($_POST['user'], $_POST['item'], $_POST['qty']);
 				notification_add($_POST['user'], "The administration has gifted you {$_POST['qty']}x {$item['itmname']}(s) to your inventory.");
 				$api->SystemLogsAdd($userid,'staff',"Gave {$_POST['qty']}x <a href='../iteminfo.php'>{$item['itmname']}</a> to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
-				alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_ITEM_GIVE_SUB_SUCCESS']}");
+				alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ITEM_GIVE_SUB_SUCCESS'],true,'index.php');
 				die($h->endpage());
 			 }
 		}

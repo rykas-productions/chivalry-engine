@@ -360,7 +360,7 @@ function editmine()
                 `mine_pickaxe` = '{$pick}', `mine_iq` = '{$iq}', `mine_gem_item` = '{$gem}', `mine_power_use` = '{$power}' 
                 WHERE `mine_id` = {$mine}");
                 $api->SystemLogsAdd($userid,"staff","Edited Mine ID #{$mine}");
-				alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_MINE_EDIT_SUCCESS']);
+				alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_MINE_EDIT_SUCCESS'],true,'index.php');
 				die($h->endpage());
             }
             
@@ -536,7 +536,7 @@ function delmine()
         {
             $db->query("DELETE FROM `mining_data` WHERE `mine_id` = {$mine}");
             $api->SystemLogsAdd($userid,"staff","Deleted a mine.");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_MINE_DEL_SUCCESS']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_MINE_DEL_SUCCESS'],true,'index.php');
 			die($h->endpage());
         }
     }

@@ -73,17 +73,17 @@ function addforum()
 		$auth = (isset($_POST['auth']) && in_array($_POST['auth'], array('staff', 'public'), true)) ? $_POST['auth'] : 'public';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_addforum', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (empty($name))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['STAFF_FORUM_ADD_ERRNAME']}");
+			alert('danger',$lang['ERROR_INVALID'],$lang['STAFF_FORUM_ADD_ERRNAME']);
 			die($h->endpage());
 		}
 		elseif (empty($name))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['STAFF_FORUM_ADD_ERRDESC']}");
+			alert('danger',$lang['ERROR_INVALID'],$lang['STAFF_FORUM_ADD_ERRDESC']);
 			die($h->endpage());
 		}
 		else
@@ -98,7 +98,7 @@ function addforum()
 			$db->free_result($q);
 			$db->query("INSERT INTO `forum_forums` (`ff_name`, `ff_desc`, `ff_lp_t_id`, `ff_lp_poster_id`, `ff_auth`, `ff_lp_time`) 
 			VALUES ('{$name}', '{$desc}', '0', '0', '{$auth}', '0');");
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_FORUM_ADD_SUCCESS']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FORUM_ADD_SUCCESS'],true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Created a {$auth} Forum called {$name}.");
 			$h->endpage();
 		}
@@ -121,19 +121,19 @@ function editforum()
 			$_POST['id'] = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : '';
 			if (empty($_POST['id']) || empty($name) || empty($desc))
 			{
-				alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_FORUM_EDIT_ERREMPTY']}");
+				alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_FORUM_EDIT_ERREMPTY']);
 				die($h->endpage());
 			}
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_editforum2', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			$q = $db->query("SELECT COUNT(`ff_id`) FROM `forum_forums` WHERE `ff_name` = '{$name}' AND `ff_id` != {$_POST['id']}");
 			if ($db->fetch_single($q) > 0)
 			{
 				$db->free_result($q);
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_FORUM_ADD_ERRNIU']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FORUM_ADD_ERRNIU']);
 				die($h->endpage());
 			}
 			$db->free_result($q);
@@ -141,31 +141,31 @@ function editforum()
 			if ($db->fetch_single($q) == 0)
 			{
 				$db->free_result($q);
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_FORUM_EDIT_ERRINV']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FORUM_EDIT_ERRINV']);
 				die($h->endpage());
 			}
 			$db->free_result($q);
 			$db->query("UPDATE `forum_forums` SET `ff_desc` = '$desc', `ff_name` = '$name', `ff_auth` = '$auth' WHERE `ff_id` = {$_POST['id']}");
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_FORUM_EDIT_SUCCESS']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FORUM_EDIT_SUCCESS'],true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Edited forum {$name}");
 			break;
 		case "1":
 			$_POST['id'] = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : '';
 			if (empty($_POST['id']))
 			{
-				alert('danger',"{$lang['ERROR_INVALID']}","{$lang['STAFF_FORUM_EDIT_ERRINV']}");
+				alert('danger',$lang['ERROR_INVALID'],$lang['STAFF_FORUM_EDIT_ERRINV']);
 				die($h->endpage());
 			}
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_editforum1', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			$q = $db->query("SELECT `ff_auth`, `ff_name`, `ff_desc`  FROM `forum_forums` WHERE `ff_id` = {$_POST['id']}");
 			if ($db->num_rows($q) == 0)
 			{
 				$db->free_result($q);
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_FORUM_ADD_ERRNIU']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FORUM_ADD_ERRNIU']);
 				die($h->endpage());
 			}
 			$old = $db->fetch_row($q);
@@ -249,14 +249,14 @@ function delforum()
 		$_POST['forum'] = (isset($_POST['forum']) && is_numeric($_POST['forum'])) ? abs(intval($_POST['forum'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delforum', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT COUNT(`ff_id`) FROM `forum_forums` WHERE `ff_id` = {$_POST['forum']}");
 		if ($db->fetch_single($q) == 0)
         {
             $db->free_result($q);
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_FORUM_EDIT_ERRFDNE']}");
+            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FORUM_EDIT_ERRFDNE']);
             die($h->endpage());
         }
 		$db->free_result($q);
@@ -266,7 +266,7 @@ function delforum()
 		$q = $db->query("SELECT `ff_name` FROM `forum_forums`  WHERE `ff_id` = {$_POST['forum']}");
         $old = $db->fetch_single($q);
         $db->free_result($q);
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_FORUM_DEL_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FORUM_DEL_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted forum {$old}, along with posts and topics posted inside.");
 	}
 	$h->endpage();

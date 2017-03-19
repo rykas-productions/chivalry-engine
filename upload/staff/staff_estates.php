@@ -31,35 +31,35 @@ function addestate()
 		$cost = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_addestate', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_name` = '{$name}'");
 		if ($db->fetch_single($q) > 0)
         {
             $db->free_result($q);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_ESTATE_ADD_ERROR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_ADD_ERROR1']);
             die($h->endpage());
         }
 		$db->free_result($q);
 		$q = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$will}");
 		if ($db->fetch_single($q) > 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_ESTATE_ADD_ERROR2']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_ADD_ERROR2']);
             die($h->endpage());
 		}
 		if ($lvl < 1)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_ESTATE_ADD_ERROR3']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_ADD_ERROR3']);
             die($h->endpage());
 		}
 		if ($will <= 99)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_ESTATE_ADD_ERROR4']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_ADD_ERROR4']);
             die($h->endpage());
 		}
 		$api->SystemLogsAdd($userid,'staff',"Created an estate named {$name}.");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_ESTATE_ADD_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ESTATE_ADD_SUCCESS'],true,'index.php');
 		$db->query("INSERT INTO `estates` (`house_name`, `house_price`, `house_will`, `house_level`) VALUES ('{$name}', '{$cost}', '{$will}', '{$lvl}')");
 	}
 	else
@@ -122,7 +122,7 @@ function delestate()
 		$_POST['estate'] = (isset($_POST['estate']) && is_numeric($_POST['estate'])) ? abs(intval($_POST['estate'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delestate', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$_POST['estate']}");
@@ -142,7 +142,7 @@ function delestate()
 		$db->query("UPDATE `users`  SET `primary_currency` = `primary_currency` + {$old['house_price']},
                  `maxwill` = 100, `will` = LEAST(100, `will`) WHERE `maxwill` = {$old['house_will']}");
 		$db->query("DELETE FROM `estates` WHERE `house_id` = {$old['house_id']}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ESTATE_DEL_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ESTATE_DEL_SUCC'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted the {$old['house_name']} estate.");
 	}
 	else
@@ -189,13 +189,13 @@ function editestate()
         $_POST['id'] = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editestate2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (empty($_POST['id']) || empty($_POST['lvl']) || empty($_POST['name'])
 			|| empty($_POST['will']) || empty($_POST['cost']))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_ESTATE_EDIT_ERR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_EDIT_ERR1']);
             die($h->endpage());
 		}
 		$q = $db->query("SELECT `house_id` FROM `estates` WHERE `house_will` = {$will} AND `house_id` != {$_POST['id']}");
@@ -221,7 +221,7 @@ function editestate()
 					`house_name` = '{$name}', `house_level` = {$lvl} WHERE `house_id` = {$_POST['id']}");
 		$db->query("UPDATE `users` SET `maxwill` = {$will}, `will` = LEAST(`will`, {$will})
 					WHERE `maxwill` = {$oldwill}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ESTATE_EDIT_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ESTATE_EDIT_SUCC'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Edited the {$name} estate.");
 		die($h->endpage());
 	}
@@ -230,7 +230,7 @@ function editestate()
 		$_POST['estate'] = (isset($_POST['estate']) && is_numeric($_POST['estate'])) ? abs(intval($_POST['estate'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editestate1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$_POST['estate']}");

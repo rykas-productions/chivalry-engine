@@ -211,12 +211,12 @@ function new_crime()
 			|| empty($_POST['jtext']) || empty($_POST['jtimemin']) || empty($_POST['jtimemax']) 
 			|| empty($_POST['jreason']) || empty($_POST['xp']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_CRIME_NEW_FAIL1']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIME_NEW_FAIL1']);
 			die($h->endpage());
 		}
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrime', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (!empty($_POST['item']))
@@ -226,7 +226,7 @@ function new_crime()
 			$db->free_result($qi);
 			if ($exist_check == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_CRIME_NEW_FAIL2']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIME_NEW_FAIL2']);
 				die($h->endpage());
 			}
 		}
@@ -239,7 +239,7 @@ function new_crime()
 		'{$_POST['SECURMAX']}', '{$_POST['item']}', '{$_POST['group']}', '{$_POST['itext']}', 
 		'{$_POST['stext']}', '{$_POST['jtext']}', '{$_POST['jtimemin']}', 
 		'{$_POST['jtimemax']}', '{$_POST['jreason']}', '{$_POST['xp']}');");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_CRIME_NEW_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIME_NEW_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Created crime {$_POST['name']}");
 	}
 }
@@ -276,32 +276,32 @@ function edit_crime()
 			</tr>
 		</table>
 		<input type='hidden' name='step' value='1'>";
-		echo "{$csrf}</form>";
+		echo $csrf . "</form>";
 	}
 	if ($_POST['step'] == 1)
 	{
 		$_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (empty($_POST['crime']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_CRIME_EDIT_FRM_ERR']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIME_EDIT_FRM_ERR']);
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_CRIME_EDIT_FRM_ERR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIME_EDIT_FRM_ERR1']);
 			die($h->endpage());
 		}
 		$itemi = $db->fetch_row($d);
 		$db->free_result($d);
 		$csrf = request_csrf_html('staff_editcrime2');
-		echo "{$lang['STAFF_CRIME_NEW_TITLE']}<br />
+		echo $lang['STAFF_CRIME_NEW_TITLE'] . "<br />
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
 				<tr>
@@ -463,17 +463,17 @@ function edit_crime()
 		if (empty($_POST['name']) || empty($_POST['brave']) || empty($_POST['percform'])  ||  empty($_POST['group']) || empty($_POST['itext']) || empty($_POST['stext']) 
 			|| empty($_POST['jtext']) || empty($_POST['jtimemin']) || empty($_POST['jtimemax'])  || empty($_POST['jreason']) || empty($_POST['xp']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_CRIME_NEW_FAIL1']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIME_NEW_FAIL1']);
 			die($h->endpage());
 		}
 		if (empty($_POST['crimeID']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_CRIME_EDIT_FRM_ERR']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIME_EDIT_FRM_ERR']);
 			die($h->endpage());
 		}
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (!empty($_POST['item']))
@@ -483,7 +483,7 @@ function edit_crime()
 			$db->free_result($qi);
 			if ($exist_check == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_CRIME_NEW_FAIL2']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIME_NEW_FAIL2']);
 				die($h->endpage());
 			}
 		}
@@ -506,7 +506,7 @@ function edit_crime()
 			 `crimeDUNGMAX` = {$_POST['jtimemax']},
              `crimeXP` = {$_POST['xp']}
              WHERE `crimeID` = {$_POST['crimeID']}");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_CRIME_EDIT_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIME_EDIT_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Edited crime {$_POST['name']}");
 	}
 }
@@ -518,23 +518,23 @@ function delcrime()
 		$_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrime', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (empty($_POST['crime']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_CRIME_DEL_ERR']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIME_DEL_ERR']);
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_CRIME_DEL_ERR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIME_DEL_ERR1']);
 			die($h->endpage());
 		}
 		$db->query("DELETE FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_CRIME_DEL_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIME_DEL_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted Crime ID {$_POST['crime']}.");
 		
 	}
@@ -575,31 +575,31 @@ function new_crimegroup()
 		$_POST['cgORDER'] = (isset($_POST['cgORDER']) && is_numeric($_POST['cgORDER'])) ? abs(intval($_POST['cgORDER'])) : '';
 		if (empty($_POST['cgNAME']) || empty($_POST['cgORDER']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_CRIMEG_NEW_FAIL1']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIMEG_NEW_FAIL1']);
 			die($h->endpage());
 		}
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrimegroup', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']}");
 		if ($db->fetch_single($d) > 0)
 		{
 			$db->free_result($d);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_CRIMEG_NEW_FAIL2']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_NEW_FAIL2']);
 			die($h->endpage());
 		}
 		$db->free_result($d);
 		$db->query("INSERT INTO `crimegroups` (`cgNAME`, `cgORDER`) VALUES('{$_POST['cgNAME']}', '{$_POST['cgORDER']}')");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_CRIMEG_NEW_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIMEG_NEW_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Created Crime Group {$_POST['cgNAME']}");
 		
 	}
 	else
 	{
 		$csrf = request_csrf_html('staff_newcrimegroup');
-		echo "{$lang['STAFF_CRIMEG_NEW_TITLE']}<br />
+		echo $lang['STAFF_CRIMEG_NEW_TITLE'] . "<br />
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
 				<tr>
@@ -669,7 +669,7 @@ function edit_crimegroup()
 		$_POST['crimegroup'] = (isset($_POST['crimegroup']) && is_numeric($_POST['crimegroup'])) ? abs(intval($_POST['crimegroup'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (empty($_POST['crimegroup']))
@@ -724,7 +724,7 @@ function edit_crimegroup()
 		$_POST['cgID'] = (isset($_POST['cgID']) && is_numeric($_POST['cgID'])) ? abs(intval($_POST['cgID'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (empty($_POST['cgNAME']) || empty($_POST['cgORDER']) || empty($_POST['cgID']))
@@ -743,7 +743,7 @@ function edit_crimegroup()
 			}
 			$db->free_result($d);
 			$db->query("UPDATE `crimegroups` SET `cgNAME` = '{$_POST['cgNAME']}', `cgORDER` = '{$_POST['cgORDER']}' WHERE `cgID` = '{$_POST['cgID']}'");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIMEG_EDIT_SUB_SUCC']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIMEG_EDIT_SUB_SUCC'],true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Edited Crime Group {$_POST['cgNAME']}");
 		}
 	}
@@ -756,7 +756,7 @@ function delcrimegroup()
 		$_POST['crimeGROUP'] = (isset($_POST['crimeGROUP']) && is_numeric($_POST['crimeGROUP'])) ? abs(intval($_POST['crimeGROUP'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrimegroup', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (empty($_POST['crimeGROUP']))
@@ -768,11 +768,11 @@ function delcrimegroup()
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_CRIMEG_DEL_ERR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_DEL_ERR1']);
 			die($h->endpage());
 		}
 		$db->query("DELETE FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_CRIMEG_DEL_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIMEG_DEL_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted Crime Group ID {$_POST['crimeGROUP']}.");
 	}
 	else

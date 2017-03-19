@@ -27,7 +27,7 @@ function newshop()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newshop', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$_POST['sl'] = (isset($_POST['sl']) && is_numeric($_POST['sl'])) ? abs(intval($_POST['sl'])) : 0;
@@ -35,7 +35,7 @@ function newshop()
 		$_POST['sd'] = (isset($_POST['sd'])) ? $db->escape(strip_tags(stripslashes($_POST['sd']))) : '';
 		if (empty($_POST['sn']) || empty($_POST['sd']))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_SHOP_SUB_ERROR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_SUB_ERROR1']);
 		}
 		else
 		{
@@ -43,7 +43,7 @@ function newshop()
 			if ($db->fetch_single($q) == 0)
 			{
 				$db->free_result($q);
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_SHOP_SUB_ERROR2']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_SUB_ERROR2']);
 				die($h->endpage());
 			}
 			$db->free_result($q);
@@ -51,13 +51,13 @@ function newshop()
 			if ($db->fetch_single($q) > 0)
 			{
 				$db->free_result($q);
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_SHOP_SUB_ERROR3']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_SUB_ERROR3']);
 				die($h->endpage());
 			}
 			$db->free_result($q);
 			$db->query("INSERT INTO `shops` VALUES(NULL, {$_POST['sl']}, '{$_POST['sn']}', '{$_POST['sd']}')");
 			$api->SystemLogsAdd($userid,'staff',"Created shop {$_POST['sn']}.");
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_SHOP_SUB_SUCCESS']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SHOP_SUB_SUCCESS'],true,'index.php');
 			die($h->endpage());
 		}
 	}
@@ -114,14 +114,14 @@ function delshop()
     {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_delshop', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
         $shpq = $db->query("SELECT `shopNAME` FROM `shops` WHERE `shopID` = {$_POST['shop']}");
         if ($db->num_rows($shpq) == 0)
         {
             $db->free_result($shpq);
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_SHOP_DELFORM_SUB_ERROR1']}");
+            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_DELFORM_SUB_ERROR1']);
             die($h->endpage());
         }
         $sn = $db->fetch_single($shpq);
@@ -129,7 +129,7 @@ function delshop()
         $db->query("DELETE FROM `shops` WHERE `shopID` = {$_POST['shop']}");
         $db->query("DELETE FROM `shopitems` WHERE `sitemSHOP` = {$_POST['shop']}");
         $api->SystemLogsAdd($userid,'staff',"Deleted shop {$sn}.");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_SHOP_DELFORM_SUB_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SHOP_DELFORM_SUB_SUCCESS'],true,'index.php');
         die($h->endpage());
     }
     else
@@ -167,14 +167,14 @@ function newitem()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newstock', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$_POST['shop'] = (isset($_POST['shop']) && is_numeric($_POST['shop'])) ? abs(intval($_POST['shop'])) : '';
 		$_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : '';
 		if (empty($_POST['shop']) || empty($_POST['item']))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_SHOP_IADDSUB_ERROR']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_IADDSUB_ERROR']);
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT COUNT(`shopID`) FROM `shops` WHERE `shopID` = {$_POST['shop']}");
@@ -184,13 +184,13 @@ function newitem()
 		{
 			$db->free_result($q);
 			$db->free_result($q2);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_SHOP_IADDSUB_ERROR2']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_IADDSUB_ERROR2']);
 			die($h->endpage());
 		}
 		if ($db->fetch_single($q3) > 0)
 		{
 			$db->free_result($q3);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_SHOP_IADDSUB_ERROR3']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_IADDSUB_ERROR3']);
 			die($h->endpage());
 		}
 		$db->free_result($q);
@@ -198,7 +198,7 @@ function newitem()
 		$db->free_result($q3);
 		$db->query("INSERT INTO `shopitems` VALUES(NULL, {$_POST['shop']}, {$_POST['item']})");
 		$api->SystemLogsAdd($userid,'staff',"Added Item ID {$_POST['item']} to Shop ID {$_POST['shop']}.");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_SHOP_IADDSUB_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SHOP_IADDSUB_SUCCESS'],true,'index.php');
 		die($h->endpage());
 	}
 	else

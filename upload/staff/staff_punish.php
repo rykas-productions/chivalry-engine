@@ -24,7 +24,7 @@ function fedjail()
 		$_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs(intval($_POST['days'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_feduser', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (empty($_POST['user']) || empty($_POST['reason']) || empty($_POST['days']))
@@ -55,7 +55,7 @@ function fedjail()
 		}
 		$api->SystemLogsAdd($userid,'staff',"Placed User ID {$_POST['user']} into the federal jail for {$days} days for {$_POST['reason']}.");
 		$api->SystemLogsAdd($userid,'fedjail',"Placed User ID {$_POST['user']} into the federal jail for {$days} days for {$_POST['reason']}.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_PUNISHFED_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_PUNISHFED_SUCC'],true,'index.php');
 		die($h->endpage());
 	}
 	else

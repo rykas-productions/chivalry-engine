@@ -24,7 +24,7 @@ function addbot()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_bot_add', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		else
@@ -34,30 +34,30 @@ function addbot()
 			$cooldown=(isset($_POST['cooldown']) && is_numeric($_POST['cooldown'])) ? abs(intval($_POST['cooldown'])) : 1;
 			if (empty($item) || empty($user) || empty($cooldown))
 			{
-				alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['STAFF_BOTS_ADD_ERROR']}");
+				alert('danger',$lang["ERROR_GENERIC"],$lang['STAFF_BOTS_ADD_ERROR']);
 				die($h->endpage());
 			}
 			$q=$db->query("SELECT `botid` FROM `botlist` WHERE `botuser` = {$user}");
 			if ($db->num_rows($q) > 0)
 			{
 				$db->free_result($q);
-				alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['STAFF_BOTS_ADD_ERROR1']}");
+				alert('danger',$lang["ERROR_GENERIC"],$lang['STAFF_BOTS_ADD_ERROR1']);
 				die($h->endpage());
 			}
 			$db->free_result($q);
 			$q=$db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
 			if (!($q == 'NPC'))
 			{
-				alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['STAFF_BOTS_ADD_ERROR2']}");
+				alert('danger',$lang["ERROR_GENERIC"],$lang['STAFF_BOTS_ADD_ERROR2']);
 				die($h->endpage());
 			}
 			if ($api->SystemItemIDtoName($item) == false)
 			{
-				alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['STAFF_BOTS_ADD_ERROR3']}");
+				alert('danger',$lang["ERROR_GENERIC"],$lang['STAFF_BOTS_ADD_ERROR3']);
 				die($h->endpage());
 			}
 			$db->query("INSERT INTO `botlist` (`botuser`, `botitem`, `botcooldown`) VALUES ('{$user}', '{$item}', '{$cooldown}')");
-			alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['STAFF_BOTS_ADD_SUCCESS']}");
+			alert('success',$lang["ERROR_SUCCESS"],$lang['STAFF_BOTS_ADD_SUCCESS'],true,'staff.php');
 			$api->SystemLogsAdd($userid,'staff',"Added User ID {$user} to the bot list.");
 			die($h->endpage());
 		}
@@ -114,7 +114,7 @@ function delbot()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_bot_del', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		else
@@ -122,18 +122,18 @@ function delbot()
 			$bot=(isset($_POST['bot']) && is_numeric($_POST['bot'])) ? abs(intval($_POST['bot'])) : 0;
 			if (empty($bot))
 			{
-				alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['STAFF_BOTS_DEL_ERROR']}");
+				alert('danger',$lang["ERROR_GENERIC"],$lang['STAFF_BOTS_DEL_ERROR']);
 				die($h->endpage());
 			}
 			$q=$db->query("SELECT `botid` FROM `botlist` WHERE `botuser` = {$bot}");
 			if ($db->num_rows($q) == 0)
 			{
 				$db->free_result($q);
-				alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['STAFF_BOTS_ADD_ERROR1']}");
+				alert('danger',$lang["ERROR_GENERIC"],$lang['STAFF_BOTS_ADD_ERROR1']);
 				die($h->endpage());
 			}
 			$db->query("DELETE FROM `botlist` WHERE `botuser` = {$bot}");
-			alert('success',"{$lang["ERROR_SUCCESS"]}","{$lang['STAFF_BOTS_DEL_SUCCESS']}");
+			alert('success',$lang["ERROR_SUCCESS"],$lang['STAFF_BOTS_DEL_SUCCESS'],true,'staff.php');
 			$api->SystemLogsAdd($userid,'staff',"Deleted User ID {$bot} from the bot list.");
 		}
 	}

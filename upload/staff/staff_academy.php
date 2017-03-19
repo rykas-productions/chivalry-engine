@@ -1,5 +1,6 @@
 <?php
 require('sglobals.php');
+//Not bothering with the academy until I can redo it. Sorry Izzy!
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
