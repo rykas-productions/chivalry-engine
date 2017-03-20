@@ -80,8 +80,8 @@ function start()
 				$db->query("update `users` SET `primary_currency`='{$new_currency}' WHERE `userid` = '{$userid}'");
 				alert("success","{$lang['ACADEMY_STARTED_COURSE']}","<br />you have started the course {$course['academyname']}.<br />It will finish in {$course['academydays']} day(s)");
 				echo "<br /><br /><a href='index.php'>{$lang['ACADEMY_RETURN_HOME']}</a>";
-				$db->query("update `users` SET `course`='{$academyid}' WHERE `userid` = '{$userid}'");
-				$db->query("update `users` SET `days_left`='{$course['academydays']}' WHERE `userid` = '{$userid}'");
+				//$db->query("update `users` SET `course`='{$academyid}' WHERE `userid` = '{$userid}'");
+				//$db->query("update `users` SET `days_left`='{$course['academydays']}' WHERE `userid` = '{$userid}'");
 			}
 			else
 			{
