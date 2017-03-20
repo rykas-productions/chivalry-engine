@@ -1697,4 +1697,7 @@ $lang['SCRIPT_ERR3']="You need to enter an username.";
 $lang['SCRIPT_ERR4']="The username you entered is too short.";
 $lang['SCRIPT_ERR5']="The username you entered is too long.";
 $lang['SCRIPT_ERR6']="The username you entered is already in use.";
+
+//API
+$lang['API_ERROR']="You are trying to view and/or alter a sensitive field, and we've blocked you from doing this.";
 ?>
