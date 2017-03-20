@@ -54,6 +54,19 @@ $parser->addCodeDefinition($builder->build());
 $builder = new JBBCode\CodeDefinitionBuilder('s', '<s>{param}</s>');
 $parser->addCodeDefinition($builder->build());
 
+//Right align
+$builder = new JBBCode\CodeDefinitionBuilder('right', '<div align="right">{param}</div>');
+$parser->addCodeDefinition($builder->build());
+
+//Left align
+$builder = new JBBCode\CodeDefinitionBuilder('left', '<div align="left">{param}</div>');
+$parser->addCodeDefinition($builder->build());
+
+//Size
+$builder = new JBBCode\CodeDefinitionBuilder('size', '<font size="{option}">{param}</font>');
+$builder->setUseOption(true);
+$parser->addCodeDefinition($builder->build());
+
 //YouTube Video
 $builder = new JBBCode\CodeDefinitionBuilder('youtube', '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" id="ytplayer" type="text/html" src="https://www.youtube.com/embed/{param}/ frameborder="0"></iframe></div>');
 $parser->addCodeDefinition($builder->build());
