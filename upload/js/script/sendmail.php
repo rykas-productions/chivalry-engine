@@ -71,4 +71,4 @@ if (!is_ajax())
 	$db->query("INSERT INTO `mail` 
 	(`mail_id`, `mail_to`, `mail_from`, `mail_status`, `mail_text`, `mail_time`) 
 	VALUES (NULL, '{$to}', '{$userid}', 'unread', '{$msg}', '{$time}');");
-	alert('success',$lang['ERROR_SUCCESS']{$lang['MAIL_SUCCESS'],false);
+	alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_SUCCESS'],false);

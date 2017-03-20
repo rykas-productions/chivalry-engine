@@ -53,7 +53,8 @@ if (!is_ajax())
 	}
 	elseif ($userid == $receive)
 	{
-		alert('danger',"No!","Why would you want to send yourself currency anyway?");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['SCF_ERR'],false);
+		exit;
 	}
 	if (empty($receive))
     {

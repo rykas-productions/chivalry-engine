@@ -489,6 +489,7 @@ $lang['SCF_POSCASH']="You need to send at least 1 {$lang['INDEX_PRIMCURR']} to u
 $lang['SCF_UNE']="You cannot send {$lang['INDEX_PRIMCURR']} to a non-existent user!";
 $lang['SCF_NEC']="You are trying to send more {$lang['INDEX_PRIMCURR']} than you currently have!";
 $lang['SCF_SUCCESS']="{$lang['INDEX_PRIMCURR']} sent succuessfully.";
+$lang['SCF_ERR']="You cannot send money to yourself, sorry.";
 
 //Profile
 $lang['PROFILE_UNF']="We could not find a user with the User ID you entered. You could be receiving this message because the player you are trying to view got deleted. Check your source again!";
@@ -1687,4 +1688,13 @@ $lang['PWR_INFO']="Please enter the email adress tied to your account so we can 
 $lang['PWR_SUCC']="Thank you for submitting the form. If there's an account for the specified email address, it'll be email with a link to start the password reset process. This link will expire in 30 minutes.";
 $lang['PWR_ERR']="Invalid or non-existent recovery token specified.";
 $lang['PWR_SUCC1']="We've email your new password to you. Check your email and/or junk folder for it.";
+
+//Script Errors
+$lang['SCRIPT_ERR']="The email you specified is already taken.";
+$lang['SCRIPT_ERR1']="The email you specified is in an incorrect format. Valid email addresses are written using @domain.com";
+$lang['SCRIPT_ERR2']="You must enter an email address!";
+$lang['SCRIPT_ERR3']="You need to enter an username.";
+$lang['SCRIPT_ERR4']="The username you entered is too short.";
+$lang['SCRIPT_ERR5']="The username you entered is too long.";
+$lang['SCRIPT_ERR6']="The username you entered is already in use.";
 ?>
