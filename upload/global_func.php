@@ -1766,3 +1766,15 @@ function update_file($url,$filename)
 	curl_close($curl);
 	return $content;
 }
+//Templating system.
+function run_template($template_array, $template)
+{
+    $tmp = 'genesis';
+
+    $text = file_get_contents( 'template/' . $tmp .'/' . $template . '.tpl' );
+    foreach( $template_array as $key => $value )
+    {
+        $text = str_replace( '{' . $key . '}', $value, $text );
+    }
+     echo $text;
+}
