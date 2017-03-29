@@ -1701,7 +1701,7 @@ $lang['SCRIPT_ERR6']="The username you entered is already in use.";
 //API
 $lang['API_ERROR']="You are trying to view and/or alter a sensitive field, and we've blocked you from doing this.";
 
-//Staff Create user
+//Staff User
 $lang['SCU_UL']="User Level";
 $lang['SCU_UL1']="NPC";
 $lang['SCU_UL2']="Member";
@@ -1732,4 +1732,6 @@ $lang['SCU_ERR9']="The email address you input is already in use.";
 $lang['SCU_ERR10']="You either didn't enter a password, or didn't confirm it.";
 $lang['SCU_ERR11']="The passwords you inputted do not match.";
 $lang['SCU_SUC']="You have successfully created a user!";
+$lang['SCU_OTHER']="Other";
+$lang['SEU_BTN']="Edit User";
 ?>

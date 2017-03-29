@@ -218,7 +218,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Primary Weapon
+							{$lang['EQUIP_WEAPON_SLOT1']}
 						</th>
 						<td>
 							" . weapon_dropdown("primary_weapon",0) . "
@@ -226,7 +226,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Secondary Weapon
+							{$lang['EQUIP_WEAPON_SLOT2']}
 						</th>
 						<td>
 							" . weapon_dropdown("secondary_weapon",0) . "
@@ -234,7 +234,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Armor
+							{$lang['EQUIP_WEAPON_SLOT3']}
 						</th>
 						<td>
 							" . armor_dropdown("armor",0) . "
@@ -585,12 +585,12 @@ function edituser()
 			</tr>
 			<tr>
 				<th colspan='2'>
-					Other
+					{$lang['SCU_OTHER']}
 				</th>
 			</tr>
 			<tr>
 				<th>
-					City
+					{$lang['STAFF_TRAVEL_DELTOWN_TH1']}
 				</th>
 				<td>
 					" . location_dropdown("city", $itemi['location']) . "
@@ -598,7 +598,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Primary Weapon
+					{$lang['EQUIP_WEAPON_SLOT1']}
 				</th>
 				<td>
 					" . weapon_dropdown("primary_weapon",$itemi['equip_primary']) . "
@@ -606,7 +606,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Secondary Weapon
+					{$lang['EQUIP_WEAPON_SLOT2']}
 				</th>
 				<td>
 					" . weapon_dropdown("secondary_weapon",$itemi['equip_secondary']) . "
@@ -614,7 +614,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Armor
+					{$lang['EQUIP_WEAPON_SLOT3']}
 				</th>
 				<td>
 					" . armor_dropdown("armor",$itemi['equip_armor']) . "
@@ -622,7 +622,7 @@ function edituser()
 			</tr>
 		</table>
     	{$csrf}
-    	<input class='btn btn-default' type='submit' value='Edit User' />
+    	<input class='btn btn-default' type='submit' value='{$lang['SEU_BTN']}' />
     </form>
        ";
 	}
@@ -890,10 +890,10 @@ function deleteuser()
 				</tr>
 				<tr>
 					<td>
-						<input type='submit' class='btn btn-default' name='yesorno' value='Yes' />
+						<input type='submit' class='btn btn-default' name='yesorno' value='{$lang['GEN_YES']}' />
 					</td>
 					<td>
-						<input type='submit' class='btn btn-default' name='yesorno' value='No' onclick=\"window.location='staff_users.php?action=deluser';\" />
+						<input type='submit' class='btn btn-default' name='yesorno' value='{$lang['GEN_NO']}' onclick=\"window.location='staff_users.php?action=deluser';\" />
 					</td>
 				</tr>
 			</table>
