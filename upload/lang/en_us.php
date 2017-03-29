@@ -1700,4 +1700,36 @@ $lang['SCRIPT_ERR6']="The username you entered is already in use.";
 
 //API
 $lang['API_ERROR']="You are trying to view and/or alter a sensitive field, and we've blocked you from doing this.";
+
+//Staff Create user
+$lang['SCU_UL']="User Level";
+$lang['SCU_UL1']="NPC";
+$lang['SCU_UL2']="Member";
+$lang['SCU_UL3']="Admin";
+$lang['SCU_UL4']="Forum Moderator";
+$lang['SCU_UL5']="Assistant";
+$lang['SCU_UL6']="Web Developer";
+$lang['SCU_BI']="Basic Information";
+$lang['SCU_CU']="Creating A User";
+$lang['SCU_INFO']="Fill out this form to create a user in-game.";
+$lang['SCU_SEX']="Male";
+$lang['SCU_SEX1']="Female";
+$lang['SCU_CLASS']="Warrior";
+$lang['SCU_CLASS1']="Rogue";
+$lang['SCU_CLASS2']="Defender";
+$lang['SCU_STAT']="Stats";
+$lang['SCU_BTN']="Create User";
+$lang['SCU_ERR']="The email you specified is invalid or does not exist.";
+$lang['SCU_ERR1']="The gender specified is invalid or does not exist.";
+$lang['SCU_ERR2']="The class specified is invalid or does not exist.";
+$lang['SCU_ERR3']="The user level specified is invalid or does not exist.";
+$lang['SCU_ERR4']="The user name you chose must be at least 3 characters long, and at most, 20.";
+$lang['SCU_ERR5']="The weapon(s) you chose cannot be equipped, or does not exist.";
+$lang['SCU_ERR6']="The armor you chose cannot be equipped, or does not exist.";
+$lang['SCU_ERR7']="The town you chose cannot be visited, or does not exist.";
+$lang['SCU_ERR8']="The username you input is already in use.";
+$lang['SCU_ERR9']="The email address you input is already in use.";
+$lang['SCU_ERR10']="You either didn't enter a password, or didn't confirm it.";
+$lang['SCU_ERR11']="The passwords you inputted do not match.";
+$lang['SCU_SUC']="You have successfully created a user!";
 ?>
