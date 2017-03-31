@@ -1739,7 +1739,7 @@ $lang['SCU_SUC']="You have successfully created a user!";
 $lang['SCU_OTHER']="Other";
 $lang['SEU_BTN']="Edit User";
 
-//Dungeon Bust/Bail
+//Dungeon Bust/Bail and Infirmary Heal
 $lang['DUNG_BAILERR']='Invalid user specified.';
 $lang['DUNG_BAILERR1']='Player cannot be bailed from the dungeon as they are not in the dungeon.';
 $lang['DUNG_BAILERR2']="You do not have enough {$lang['INDEX_PRIMCURR']} to bail out this user. You need at least";
@@ -1750,4 +1750,7 @@ $lang['DUNG_BUSTERR2']="You need at least 10% {$lang['INDEX_BRAVE']} to bust som
 $lang['DUNG_BUSTERR3']="You need at least 25% {$lang['INDEX_WILL']} to bust someone out of the dungeon.";
 $lang['DUNG_BUSTERR4']="While trying to bust out your friend, the dungeon master saw you and threw you into a cell.";
 $lang['DUNG_BUSTSUCC']="You ahve successfully busted your friend out of jail, and got a little {$lang['INDEX_EXP']} for it too!";
+$lang['DUNG_HEALERR1']='Player cannot be healed from the infirmary as they are currently not checked in.';
+$lang['DUNG_HEALERR2']="You do not have enough {$lang['INDEX_SECCURR']} to heal out this user. You need at least";
+$lang['DUNG_HEALSUCC']="You have successfully healed this player out of the infirmary.";
 ?>
