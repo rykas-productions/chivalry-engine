@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.3.1";
+		return "17.3.2";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -606,7 +606,10 @@ class api
 				$change = (isset($change) && is_numeric($change)) ? abs(intval($change)) : 0;
 				if ($percent == true)
 				{
-					$db->query("UPDATE users SET `{$stat}` = `{$stat}` +((`max{$stat}`*0.{$change})+0.5) WHERE `{$stat}` < `max{$stat}` AND `userid` = {$user}");
+					//$db->query("UPDATE users SET `{$stat}` = `{$stat}` +((`max{$stat}`*0.{$change})+0.5) WHERE `{$stat}` < `max{$stat}` AND `userid` = {$user}");
+					$r=$db->fetch_row($db->query("SELECT `{$stat}`, `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
+					$n1 = $change / 100;
+					$n2 = 
 					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
 					return true;
 				}

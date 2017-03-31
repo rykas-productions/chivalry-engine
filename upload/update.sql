@@ -1,0 +1,1 @@
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'energy_refill_cost', '10');
