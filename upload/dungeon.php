@@ -58,7 +58,7 @@ function home()
 					" . DateTime_Parse($Infirmary['dungeon_in']) . "
 				</td>
 				<td>
-					" . DateTime_Parse($Infirmary['dungeon_out']) . "
+					" . TimeUntil_Parse($Infirmary['dungeon_out']) . "
 				</td>
 			</tr>";
 	}

@@ -39,7 +39,7 @@ while ($Infirmary=$db->fetch_row($query))
 				" . DateTime_Parse($Infirmary['infirmary_in']) . "
 			</td>
 			<td>
-				" . DateTime_Parse($Infirmary['infirmary_out']) . "
+				" . TimeUntil_Parse($Infirmary['infirmary_out']) . "
 			</td>
 		</tr>";
 }
