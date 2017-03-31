@@ -20,7 +20,7 @@ function home()
 {
 	global $db,$lang,$h;
 	$CurrentTime=time();
-	$PlayerCount=$db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` = {$CurrentTime}"));
+	$PlayerCount=$db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime}"));
 	echo "<h3>{$lang['DUNGINFIRM_TITLE']}</h3><hr />
 	<small>{$lang['DUNGINFIRM_INFO']} " . number_format($PlayerCount) . " {$lang['DUNGINFIRM_INFO1']}</small>
 	<hr />
