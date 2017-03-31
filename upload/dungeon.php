@@ -89,7 +89,7 @@ function bail()
 			die($h->endpage());
 		}
 		$cost=250*$api->UserInfoGet($_GET['user'],'level',false);
-		if ($api->UserHasCurrency($_GET['user'],'primary', $cost) == false)
+		if ($api->UserHasCurrency($userid,'primary', $cost) == false)
 		{
 			alert('danger',$lang['ERROR_GENERIC'],"{$lang['DUNG_BAILERR2']} " . number_format($cost) . ".",true,'dungeon.php');
 			die($h->endpage());
