@@ -1734,4 +1734,10 @@ $lang['SCU_ERR11']="The passwords you inputted do not match.";
 $lang['SCU_SUC']="You have successfully created a user!";
 $lang['SCU_OTHER']="Other";
 $lang['SEU_BTN']="Edit User";
+
+//Dungeon Bust/Bail
+$lang['DUNG_BAILERR']='Invalid user specified.';
+$lang['DUNG_BAILERR1']='Player cannot be bailed from the dungeon as they are not in the dungeon.';
+$lang['DUNG_BAILERR2']="You do not have enough {$lang['INDEX_PRIMCURR']} to bail out this user. You need at least";
+$lang['DUNG_BAILSUCC']="Player has been successfully bailed out.";
 ?>
