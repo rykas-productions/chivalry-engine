@@ -1467,6 +1467,10 @@ $lang['DUNGINFIRM_TD1']="User / User ID";
 $lang['DUNGINFIRM_TD2']="Reason";
 $lang['DUNGINFIRM_TD3']="Check-in Time";
 $lang['DUNGINFIRM_TD4']="Check-out Time";
+$lang['DUNGINFIRM_TD5']="Actions";
+$lang['DUNGINFIRM_ACC']="Bail";
+$lang['DUNGINFIRM_ACC1']="Bust";
+$lang['DUNGINFIRM_ACC2']="Heal";
 
 //Staff Index
 $lang['STAFF_IDX_TITLE']="Staff Panel";
@@ -1740,4 +1744,10 @@ $lang['DUNG_BAILERR']='Invalid user specified.';
 $lang['DUNG_BAILERR1']='Player cannot be bailed from the dungeon as they are not in the dungeon.';
 $lang['DUNG_BAILERR2']="You do not have enough {$lang['INDEX_PRIMCURR']} to bail out this user. You need at least";
 $lang['DUNG_BAILSUCC']="Player has been successfully bailed out.";
+$lang['DUNG_BUSTERR']='Player cannot be broken out of the dungeon as they are not in the dungeon.';
+$lang['DUNG_BUSTERR1']="You cannot bust others out of the dungeon when you're in the dungeon yourself.";
+$lang['DUNG_BUSTERR2']="You need at least 10% {$lang['INDEX_BRAVE']} to bust someone out of the dungeon.";
+$lang['DUNG_BUSTERR3']="You need at least 25% {$lang['INDEX_WILL']} to bust someone out of the dungeon.";
+$lang['DUNG_BUSTERR4']="While trying to bust out your friend, the dungeon master saw you and threw you into a cell.";
+$lang['DUNG_BUSTSUCC']="You ahve successfully busted your friend out of jail, and got a little {$lang['INDEX_EXP']} for it too!";
 ?>

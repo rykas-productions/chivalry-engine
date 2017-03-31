@@ -1,10 +1,10 @@
 <?php
 require("globals.php");
-if (!isset($_GET['slot']))
+if (!isset($_GET['action']))
 {
-    $_GET['slot'] = '';
+    $_GET['action'] = '';
 }
-switch ($_GET['slot'])
+switch ($_GET['action'])
 {
 case 'bust':
     bust();
@@ -39,6 +39,9 @@ function home()
 				<th>
 					{$lang['DUNGINFIRM_TD4']}
 				</th>
+				<th>
+					{$lang['DUNGINFIRM_TD5']}
+				</th>
 			</tr>
 		</thead>
 		<tbody>";
@@ -60,6 +63,10 @@ function home()
 				<td>
 					" . TimeUntil_Parse($Infirmary['dungeon_out']) . "
 				</td>
+				<td>
+					[<a href='?action=bail&user={$Infirmary['dungeon_user']}'>{$lang['DUNGINFIRM_ACC']}</a>] 
+					[<a href='?action=bust&user={$Infirmary['dungeon_user']}'>{$lang['DUNGINFIRM_ACC1']}</a>]
+				</td>
 			</tr>";
 	}
 	echo "</tbody></table>";
@@ -71,7 +78,7 @@ function bail()
 	if (isset($_GET['user']))
 	{
 		$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
-		if (empty($_GET['user']) || $_GET['empty'] == 0)
+		if (empty($_GET['user']) || $_GET['user'] == 0)
 		{
 			alert('danger',$lang['ERROR_GENERIC'],$lang['DUNG_BAILERR'],true,'dungeon.php');
 			die($h->endpage());
@@ -87,11 +94,68 @@ function bail()
 			alert('danger',$lang['ERROR_GENERIC'],"{$lang['DUNG_BAILERR2']} " . number_format($cost) . ".",true,'dungeon.php');
 			die($h->endpage());
 		}
-		$un=$api->SystemUserIDtoName($_GET['user']);
 		$api->UserTakeCurrency($userid,'primary',$cost);
 		$api->GameAddNotification($_GET['user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has successfully bailed you out of the dungeon.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['DUNG_BAILSUCC'],true,'dungeon.php');
+		$db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$_GET['user']}");
 		die($h->endpage());
+	}
+	else
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['DUNG_BAILERR'],true,'dungeon.php');
+	}
+}
+function bust()
+{
+	global $lang,$db,$userid,$ir,$h,$api;
+	if (isset($_GET['user']))
+	{
+		$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
+		if (empty($_GET['user']) || $_GET['user'] == 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['DUNG_BAILERR'],true,'dungeon.php');
+			die($h->endpage());
+		}
+		if ($api->UserStatus($_GET['user'],'dungeon') == false)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['DUNG_BUSTERR'],true,'dungeon.php');
+			die($h->endpage());
+		}
+		if ($api->UserStatus($userid,'dungeon'))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['DUNG_BUSTERR1'],true,'dungeon.php');
+			die($h->endpage());
+		}
+		if ($api->UserInfoGet($userid,'brave',true) < 10)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['DUNG_BUSTERR2'],true,'dungeon.php');
+			die($h->endpage());
+		}
+		if ($api->UserInfoGet($userid,'will',true) < 25)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['DUNG_BUSTERR2'],true,'dungeon.php');
+			die($h->endpage());
+		}
+		$api->UserInfoSet($userid,'will',-25,true);
+		$api->UserInfoSet($userid,'brave',-10,true);
+		$mult = $api->UserInfoGet($_GET['user'],'level') * $api->UserInfoGet($_GET['user'],'level');
+		$chance = min(($ir['level'] / $mult) * 50 + 1, 95);
+		if (mt_rand(1, 100) < $chance)
+		{
+			$api->GameAddNotification($_GET['user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has successfully busted you out of the dungeon.");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['DUNG_BUSTSUCC'],true,'dungeon.php');
+			$db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$_GET['user']}");
+			die($h->endpage());
+		}
+		else
+		{
+			$time = min($mult, 100);
+			$reason = $db->escape("Caught trying to bust out {$api->SystemUserIDtoName($_GET['user'])}");
+			$api->GameAddNotification($_GET['user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has failed to bust you out of the dungeon.");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['DUNG_BUSTERR4'],true,'dungeon.php');
+			$api->UserStatusSet($userid,'dungeon',$time,$reason);
+			die($h->endpage());
+		}
 	}
 	else
 	{
