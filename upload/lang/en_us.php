@@ -1753,4 +1753,24 @@ $lang['DUNG_BUSTSUCC']="You ahve successfully busted your friend out of jail, an
 $lang['DUNG_HEALERR1']='Player cannot be healed from the infirmary as they are currently not checked in.';
 $lang['DUNG_HEALERR2']="You do not have enough {$lang['INDEX_SECCURR']} to heal out this user. You need at least";
 $lang['DUNG_HEALSUCC']="You have successfully healed this player out of the infirmary.";
+
+//Temple
+$lang['TEMPLE_TITLE']="Temple of Fortune";
+$lang['TEMPLE_INTRO']="Welcome to the Temple of Fortune. Here you may spend your Secondary Currency as you see fit!";
+$lang['TEMPLE_ENERGY']="Refill Energy - ";
+$lang['TEMPLE_BRAVE']="Refill Energy - ";
+$lang['TEMPLE_WILL']="Refill Energy - ";
+$lang['TEMPLE_CASH']="Convert to {$lang['INDEX_PRIMCURR']}";
+$lang['TEMPLE_ENERGY_ERR']="You do not have enough {$lang['INDEX_SECCURR']} to refill your energy.";
+$lang['TEMPLE_ENERGY_ERR1']="You already have 100% energy.";
+$lang['TEMPLE_ENERGY_SUCC']="You have successfully refilled your energy.";
+
+//Users Online List
+$lang['UOL_TITLE']="Users Online";
+$lang['UOL_TH']="Username / User ID";
+$lang['UOL_TH1']="Last On";
+$lang['UOL_ACT']="5 Minutes";
+$lang['UOL_ACT1']="15 Minutes";
+$lang['UOL_ACT2']="1 Hour";
+$lang['UOL_ACT3']="1 Day";
 ?>

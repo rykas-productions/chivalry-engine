@@ -62,6 +62,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='users.php'>{$lang['EXPLORE_USERLIST']}</a><br />
+					<a href='usersonline.php'>{$lang['UOL_TITLE']}</a><br />
 					<a href='staff.php'>{$lang['EXPLORE_STAFFLIST']}</a><br />
 					<a href='fedjail.php'>{$lang['EXPLORE_FED']}</a><br />
 					<a href='stats.php'>{$lang['EXPLORE_STATS']}</a><br />
