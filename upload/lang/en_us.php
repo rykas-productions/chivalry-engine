@@ -1768,6 +1768,9 @@ $lang['TEMPLE_ENERGY_SUCC']="You have successfully refilled your energy.";
 $lang['TEMPLE_BRAVE_ERR']="You do not have enough {$lang['INDEX_SECCURR']} to refill your brave.";
 $lang['TEMPLE_BRAVE_ERR1']="You already have 100% brave.";
 $lang['TEMPLE_BRAVE_SUCC']="You have successfully refilled your brave by 5%.";
+$lang['TEMPLE_WILL_ERR']="You do not have enough {$lang['INDEX_SECCURR']} to refill your will.";
+$lang['TEMPLE_WILL_ERR1']="You already have 100% will.";
+$lang['TEMPLE_WILL_SUCC']="You have successfully refilled your will by 5%.";
 
 //Users Online List
 $lang['UOL_TITLE']="Users Online";
