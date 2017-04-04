@@ -155,14 +155,11 @@ class headers
 
 			<!-- Page Content -->
 			<div class="container">
-
-				<noscript>
-					<?php
-						alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false);
-					?>
-				</noscript>
 				<div class="row">
 					<div class="col-lg-12 text-center">
+				<noscript>
+					<?php alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false); ?>
+				</noscript>
 				<?php
 				$time=time();
 				$fed=$db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));

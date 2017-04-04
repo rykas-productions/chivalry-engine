@@ -100,8 +100,7 @@ class headers
 						<?php
 						$ir['mail']=$db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
 						$ir['notifications']=$db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
-						
-	echo "<a href='../inbox.php'>{$lang['MENU_MAIL']} ({$ir['mail']})</a>";
+						echo "<a href='../inbox.php'>{$lang['MENU_MAIL']} ({$ir['mail']})</a>";
 						?>
                     </li>
                     <li>
@@ -163,10 +162,13 @@ class headers
 
     <!-- Page Content -->
     <div class="container">
-
+		
         <div class="row">
             <div class="col-lg-12 text-center">
-		<?php
+				<noscript>
+					<?php alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false); ?>
+				</noscript>
+				<?php
 		$time=time();
 		$fed=$db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
 		if ($fed['fed_out'] < $time)
@@ -216,8 +218,7 @@ class headers
 		if (!$ir['email'])
         {
             global $domain;
-            die(
-                    "<body>Your account may be broken. Please mail help@{$domain} stating your username and player ID.");
+            die("<body>{$lang['HDR_REKT']}{$domain} {$lang['HDR_REKT1']}");
         }
         if (!isset($_SESSION['attacking']))
         {
