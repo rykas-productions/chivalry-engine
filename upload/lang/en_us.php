@@ -9,7 +9,24 @@
  
 $lang = array();
 global $ir,$fee,$gain;
- 
+
+//Index
+$lang['INDEX_TITLE']="General Info";
+$lang['INDEX_WELCOME']="Welcome back,";
+$lang['INDEX_YLVW']="Your last visit was on";
+$lang['INDEX_LEVEL']="Level";
+$lang['INDEX_CLASS']="Class";
+$lang['INDEX_VIP']="VIP Days";
+$lang['INDEX_PRIMCURR']="Primary Currency";
+$lang['INDEX_SECCURR']="Secondary Currency";
+$lang['INDEX_ENERGY']="Energy";
+$lang['INDEX_BRAVE']="Brave";
+$lang['INDEX_WILL']="Will";
+$lang['INDEX_PN']="Personal Notepad";
+$lang['INDEX_PNSUCCESS']="Your personal notepad has been updated successfully.";
+$lang['INDEX_EXP']='XP';
+$lang['INDEX_HP']='HP';
+
 // Menu
 $lang["MENU_EXPLORE"] = "Explore";
 $lang["MENU_MAIL"] = "Mail";
@@ -226,14 +243,14 @@ $lang['GYM_LAB1']="minutes of helping around your town.";
 
 //Explore
 $lang['EXPLORE_INTRO']='You begin exploring the town and find a few cool things to keep you occupied...';
-$lang['EXPLORE_REF']="That is your referral link. Give it to friends, enemies or just spam it around. You'll receive 25 Secondary Currency upon them joining!";
+$lang['EXPLORE_REF']="That is your referral link. Give it to friends, enemies or just spam it around. You'll receive 25 {$lang['INDEX_SECCURR']} upon them joining!";
 $lang['EXPLORE_SHOP']="Shops";
 $lang['EXPLORE_LSHOP']="Local Shops";
 $lang['EXPLORE_POSHOP']="Player-Owned Shops";
 $lang['EXPLORE_IMARKET']="Item Market";
 $lang['EXPLORE_IAUCTION']="Item Auction";
 $lang['EXPLORE_TRADE']="Trading";
-$lang['EXPLORE_SCMARKET']="Secondary Currency Market";
+$lang['EXPLORE_SCMARKET']="{$lang['INDEX_SECCURR']} Market";
 $lang['EXPLORE_FD']="Financial";
 $lang['EXPLORE_BANK']="Bank";
 $lang['EXPLORE_ESTATES']="Estates";
@@ -270,6 +287,7 @@ $lang['EXPLORE_YOURGUILD']="Your Guild";
 $lang['EXPLORE_TOPTEN']="Top 10 Players";
 $lang['EXPLORE_SLOTS']="Slot Machines";
 $lang['EXPLORE_BOTS']="Bot List";
+$lang['EXPLORE_TEMPLE']="{$lang['INDEX_SECCURR']} Temple";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
@@ -277,23 +295,6 @@ $lang['ERRDE_EXPLORE2']="Since you are in the dungeon, you cannot visit the town
 $lang['ERRDE_PN']="Your personal notepad could not be updated due to the 65,655 character limit.";
 $lang['ERROR_MAIL_UNOWNED']='This message does not exist or was not sent to you.';
 $lang['ERROR_FORUM_VF']="Go back and try again for us, please. We done broke.";
-
-//Index
-$lang['INDEX_TITLE']="General Info";
-$lang['INDEX_WELCOME']="Welcome back,";
-$lang['INDEX_YLVW']="Your last visit was on";
-$lang['INDEX_LEVEL']="Level";
-$lang['INDEX_CLASS']="Class";
-$lang['INDEX_VIP']="VIP Days";
-$lang['INDEX_PRIMCURR']="Primary Currency";
-$lang['INDEX_SECCURR']="Secondary Currency";
-$lang['INDEX_ENERGY']="Energy";
-$lang['INDEX_BRAVE']="Brave";
-$lang['INDEX_WILL']="Will";
-$lang['INDEX_PN']="Personal Notepad";
-$lang['INDEX_PNSUCCESS']="Your personal notepad has been updated successfully.";
-$lang['INDEX_EXP']='XP';
-$lang['INDEX_HP']='HP';
 
 //Form Buttons
 $lang['FB_PN']="Update Notes";
@@ -784,7 +785,7 @@ $lang['ACADEMY_LOW_LEVEL_1']="Low Level!";
 $lang['ACADEMY_INSUFFICIENT_CURRENCY_1']="Short on Currency!";
 $lang['ACADEMY_IN_COURSE_1']="In Course";
 $lang['ACADEMY_LOW_LEVEL_2']="Try gaining more levels before attempting this course";
-$lang['ACADEMY_INSUFFICIENT_CURRENCY_2']="Try gaining some more primary currency before joining this course";
+$lang['ACADEMY_INSUFFICIENT_CURRENCY_2']="Try gaining some more {$lang['INDEX_PRIMCURR']} before joining this course";
 $lang['ACADEMY_IN_COURSE_2']="You are already in a course! Please wait for it to finish and try again<br>It will finish in:";
 $lang['ACADEMY_IN_COURSE_3']="days";
 
@@ -846,7 +847,7 @@ $lang['ATTACK_FIGHT_END4']="of infirmary time.";
 $lang['ATTACK_FIGHT_END5']="You fell to";
 $lang['ATTACK_FIGHT_END6']="You lost this fight and lost some of your experience as a warrior!";
 $lang['ATTACK_FIGHT_END7']="Since you are an honorable warrior, you take them to the infirmary entrance. You leave their body there. This increases your experience.";
-$lang['ATTACK_FIGHT_END8']="Being a greedy warrior, you take a look at their pockets and grab some of their Primary Currency.";
+$lang['ATTACK_FIGHT_END8']="Being a greedy warrior, you take a look at their pockets and grab some of their {$lang['INDEX_PRIMCURR']}.";
 
 //Item Info Page
 $lang['ITEM_INFO_LUIF']="Displaying item information for";
@@ -902,7 +903,7 @@ $lang['SHOPS_BUY_ERROR1']="You are attempting to use this file incorrectly. Be s
 $lang['SHOPS_BUY_ERROR2']="YThe item you are trying to buy doesn't exist, isn't sold in this shop or just doesn't exist!";
 $lang['SHOPS_SHOP_ERROR1']="You are trying to access a shop in a different town than you are currently in!";
 $lang['SHOPS_SHOP_ERROR2']="You are trying to access a shop that is invalid or doesn't exist. Check your source and try again!";
-$lang['SHOPS_BUY_ERROR3']="You do not have enough Primary Currency to buy";
+$lang['SHOPS_BUY_ERROR3']="You do not have enough {$lang['INDEX_PRIMCURR']} to buy";
 $lang['SHOPS_BUY_ERROR4']="The item you are trying to buy isn't purchaseable via normal means.";
 $lang['SHOPS_BUY_SUCCESS']="You have successfully purchased";
 $lang['SHOPS_BUY_ERROR5']="You cannot buy items from shops outside of the city you are currently in. Check your source and try again.";
@@ -1011,7 +1012,7 @@ $lang['GUILD_LIST_TABLE4']="Hometown";
 
 //Guild create
 $lang['GUILD_CREATE']="Create a Guild";
-$lang['GUILD_CREATE_ERROR']="You do not have enough Primary Currency to buy purchase a guild. You need, at minimum, ";
+$lang['GUILD_CREATE_ERROR']="You do not have enough {$lang['INDEX_PRIMCURR']} to buy purchase a guild. You need, at minimum, ";
 $lang['GUILD_CREATE_ERROR1']="You are not a high enough level to purchase a guild. You need to be, at minimum, ";
 $lang['GUILD_CREATE_ERROR2']="You cannot create a guild while you're currently a member of one.";
 $lang['GUILD_CREATE_ERROR3']="You cannot create a guild named after an already existing guild.";
@@ -1077,8 +1078,8 @@ $lang['VIEWGUILD_NA']="N/A";
 $lang['VIEWGUILD_DONATE_TITLE']="Enter the amount of currency you wish to donate to your guild. You currently have ";
 $lang['VIEWGUILD_DONATE_BTN']="Donate to Guild";
 $lang['VIEWGUILD_DONATE_ERR1']="You must fill out the previous form to donate.";
-$lang['VIEWGUILD_DONATE_ERR2']="You cannot donate more primary currency than you currently have.";
-$lang['VIEWGUILD_DONATE_ERR3']="You cannot donate more secondary currency than you currently have.";
+$lang['VIEWGUILD_DONATE_ERR2']="You cannot donate more {$lang['INDEX_PRIMCURR']} than you currently have.";
+$lang['VIEWGUILD_DONATE_ERR3']="You cannot donate more {$lang['INDEX_SECCURR']} than you currently have.";
 $lang['VIEWGUILD_DONATE_ERR4']="You are trying to donate more than your guild's vault can hold. Your guild's vault can only hold ";
 $lang['VIEWGUILD_DONATE_SUCC']="You've successfully donated the specified amounts to your guild.";
 $lang['VIEWGUILD_MEMBERS_TH1']="User";
@@ -1560,7 +1561,7 @@ $lang['USERLIST_ORDERBY']="Order By";
 $lang['USERLIST_ORDER1']="User ID";
 $lang['USERLIST_ORDER2']="Name";
 $lang['USERLIST_ORDER3']="Level";
-$lang['USERLIST_ORDER4']="Primary Currency";
+$lang['USERLIST_ORDER4']="{$lang['INDEX_PRIMCURR']}";
 $lang['USERLIST_ORDER5']="Ascending";
 $lang['USERLIST_ORDER6']="Descending";
 $lang['USERLIST_TH1']="Gender";
@@ -1575,12 +1576,12 @@ $lang['STATS_CHART3']="User Browser Choice";
 $lang['STATS_TH']="Statistic";
 $lang['STATS_TH1']="Statistic Value";
 $lang['STATS_TD']="Register Players";
-$lang['STATS_TD1']="Primary Currency Withdrawn";
-$lang['STATS_TD2']="Primary Currency in Banks";
-$lang['STATS_TD3']="Total Primary Currency";
-$lang['STATS_TD4']="Secondary Currency in Circulation";
-$lang['STATS_TD5']="Primary Currency / Player (Average)";
-$lang['STATS_TD6']="Secondary Currency / Player (Average)";
+$lang['STATS_TD1']="{$lang['INDEX_PRIMCURR']} Withdrawn";
+$lang['STATS_TD2']="{$lang['INDEX_PRIMCURR']} in Banks";
+$lang['STATS_TD3']="Total {$lang['INDEX_PRIMCURR']}";
+$lang['STATS_TD4']="{$lang['INDEX_SECCURR']} in Circulation";
+$lang['STATS_TD5']="{$lang['INDEX_PRIMCURR']} / Player (Average)";
+$lang['STATS_TD6']="{$lang['INDEX_SECCURR']} / Player (Average)";
 $lang['STATS_TD7']="Bank Balance / Player (Average)";
 $lang['STATS_TD8']="Registered Guilds";
 
@@ -1614,8 +1615,8 @@ $lang['NP_BUY_TD2']="Ad Runtime";
 $lang['NP_BUY_TD3']="Ad Text";
 $lang['NP_BUY_TD4']="Total Ad Cost";
 $lang['NP_BUY_TD5']="A higher number will rank you higher on the ad list.";
-$lang['NP_BUY_TD6']="Each day will add 1,250 Primary Currency to your cost.";
-$lang['NP_BUY_TD7']="Each character is worth 5 Primary Currency.";
+$lang['NP_BUY_TD6']="Each day will add 1,250 {$lang['INDEX_PRIMCURR']} to your cost.";
+$lang['NP_BUY_TD7']="Each character is worth 5 {$lang['INDEX_PRIMCURR']}.";
 $lang['NP_BUY_BTN']="Place Ad";
 
 //Smelting
@@ -1756,14 +1757,17 @@ $lang['DUNG_HEALSUCC']="You have successfully healed this player out of the infi
 
 //Temple
 $lang['TEMPLE_TITLE']="Temple of Fortune";
-$lang['TEMPLE_INTRO']="Welcome to the Temple of Fortune. Here you may spend your Secondary Currency as you see fit!";
+$lang['TEMPLE_INTRO']="Welcome to the Temple of Fortune. Here you may spend your {$lang['INDEX_SECCURR']} as you see fit!";
 $lang['TEMPLE_ENERGY']="Refill Energy - ";
-$lang['TEMPLE_BRAVE']="Refill Energy - ";
-$lang['TEMPLE_WILL']="Refill Energy - ";
+$lang['TEMPLE_BRAVE']="Refill Brave - ";
+$lang['TEMPLE_WILL']="Refill Will - ";
 $lang['TEMPLE_CASH']="Convert to {$lang['INDEX_PRIMCURR']}";
 $lang['TEMPLE_ENERGY_ERR']="You do not have enough {$lang['INDEX_SECCURR']} to refill your energy.";
 $lang['TEMPLE_ENERGY_ERR1']="You already have 100% energy.";
 $lang['TEMPLE_ENERGY_SUCC']="You have successfully refilled your energy.";
+$lang['TEMPLE_BRAVE_ERR']="You do not have enough {$lang['INDEX_SECCURR']} to refill your brave.";
+$lang['TEMPLE_BRAVE_ERR1']="You already have 100% brave.";
+$lang['TEMPLE_BRAVE_SUCC']="You have successfully refilled your brave by 5%.";
 
 //Users Online List
 $lang['UOL_TITLE']="Users Online";
