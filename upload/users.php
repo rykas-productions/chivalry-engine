@@ -45,7 +45,7 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 <table class='table table-responsive table-bordered table-hover'>
 		<thead>
 			<tr>
-				<th width='10%'>
+				<th width='10%' class='hidden-xs'>
 					{$lang['USERLIST_ORDER1']}
 				</th>
 				<th>
@@ -57,7 +57,7 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 				<th width='10%'>
 					{$lang['USERLIST_ORDER3']}
 				</th>
-				<th width='10%'>
+				<th width='10%' class='hidden-xs'>
 					{$lang['USERLIST_TH1']}
 				</th>
 				<th width='10%'>
@@ -71,7 +71,7 @@ while ($r = $db->fetch_row($q))
 {
 	$r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span> <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
     echo "	<tr>
-				<td>
+				<td class='hidden-xs'>
 					{$r['userid']}
 				</td>
 				<td>
@@ -83,7 +83,7 @@ while ($r = $db->fetch_row($q))
 				<td>
 					{$r['level']}
 				</td>
-				<td>
+				<td class='hidden-xs'>
 					{$r['gender']}
 				</td>
 				<td>

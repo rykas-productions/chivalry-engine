@@ -104,10 +104,10 @@ function idx()
             <th>
                 <?php echo $lang['FORUM_F_FN']; ?>
             </th>
-            <th>
+            <th class='hidden-xs'>
                 <?php echo $lang['FORUM_F_PC']; ?>
             </th>
-            <th>
+            <th class='hidden-xs'>
                 <?php echo $lang['FORUM_F_TC']; ?>
             </th>
             <th>
@@ -135,10 +135,10 @@ function idx()
 						<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
 						<br /><small>{$r['ff_desc']}</small>
 					</td>
-					<td>
+					<td class='hidden-xs'>
 						{$posts}
 					</td>
-					<td>
+					<td class='hidden-xs'>
 						{$topics}
 					</td>
 					<td>
@@ -168,10 +168,10 @@ function idx()
             <th>
                 <?php echo $lang['FORUM_F_FN']; ?>
             </th>
-            <th>
+            <th class='hidden-xs'>
                 <?php echo $lang['FORUM_F_PC']; ?>
             </th>
-            <th>
+            <th class='hidden-xs'>
                 <?php echo $lang['FORUM_F_TC']; ?>
             </th>
             <th>
@@ -199,10 +199,10 @@ function idx()
         			<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
         			<br /><small>{$r['ff_desc']}</small>
         		</td>
-        		<td>
+        		<td class='hidden-xs'>
 					{$posts}
 				</td>
-        		<td>
+        		<td class='hidden-xs'>
 					{$topics}
 				</td>
         		<td>
@@ -258,10 +258,10 @@ function viewforum()
             <th>
                 <?php echo $lang['FORUM_TOPICNAME']; ?>
             </th>
-            <th>
+            <th class='hidden-xs'>
                 <?php echo $lang['FORUM_F_PC']; ?>
             </th>
-            <th>
+            <th class='hidden-xs'>
                 <?php echo $lang['FORUM_TOPICOPEN']; ?>
             </th>
             <th>
@@ -318,8 +318,8 @@ function viewforum()
 					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
 					<small>{$r2['ft_desc']}</small>
 				</td>
-				<td>{$pc}</td>
-				<td>
+				<td class='hidden-xs'>{$pc}</td>
+				<td class='hidden-xs'> 
 					{$t1}<br />
 					{$lang['FORUM_BY']} <a href='profile.php?user={$r2['ft_owner_id']}'>{$pn1}</a>
                 </td>
