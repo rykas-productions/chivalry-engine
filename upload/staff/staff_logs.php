@@ -67,6 +67,18 @@ case "gamblinglogs":
 case "fedjaillogs":
     logs('fedjail');
     break;
+case "pokes":
+    logs('pokes');
+    break;
+case "guilds":
+    logs('guilds');
+    break;
+case "level":
+    logs('level');
+    break;
+case "guildvault":
+    logs('guild_vault');
+    break;
 default:
     die();
     break;

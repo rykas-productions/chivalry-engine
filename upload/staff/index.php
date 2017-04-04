@@ -236,6 +236,10 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_logs.php?action=spylogs'>{$lang['STAFF_IDX_LOGS_TAB15']}</a><br />
 						<a href='staff_logs.php?action=gamblinglogs'>{$lang['STAFF_IDX_LOGS_TAB16']}</a><br />
 						<a href='staff_logs.php?action=fedjaillogs'>{$lang['STAFF_IDX_LOGS_TAB18']}</a><br />
+						<a href='staff_logs.php?action=pokes'>{$lang['STAFF_IDX_LOGS_TAB19']}</a><br />
+						<a href='staff_logs.php?action=guilds'>{$lang['STAFF_IDX_LOGS_TAB20']}</a><br />
+						<a href='staff_logs.php?action=guildvault'>{$lang['STAFF_IDX_LOGS_TAB21']}</a><br />
+						<a href='staff_logs.php?action=level'>{$lang['STAFF_IDX_LOGS_TAB22']}</a><br />
 					</div>
 				</div>
 			</div>
