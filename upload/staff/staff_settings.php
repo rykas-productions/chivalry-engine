@@ -6,8 +6,6 @@
 	Author: TheMasterGeneral
 	Website: http://mastergeneral156.pcriot.com/
 */
-
-//Still not localized
 require('sglobals.php');
 echo "<h3>Admin</h3><hr />";
 if (!isset($_GET['action']))
