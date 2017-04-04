@@ -30,7 +30,8 @@ function home()
 	echo "<br />
 	<a href='?action=energy'>{$lang['TEMPLE_ENERGY']}" . number_format($set['energy_refill_cost']) . " {$lang['INDEX_SECCURR']}</a><br />
 	<a href='?action=brave'>{$lang['TEMPLE_BRAVE']}" . number_format($set['brave_refill_cost']) . " {$lang['INDEX_SECCURR']}</a><br />
-	<a href='?action=will'>{$lang['TEMPLE_WILL']}" . number_format($set['will_refill_cost']) . " {$lang['INDEX_SECCURR']}</a><br />";
+	<a href='?action=will'>{$lang['TEMPLE_WILL']}" . number_format($set['will_refill_cost']) . " {$lang['INDEX_SECCURR']}</a><br />
+	<a href='?action=will'>{$lang['TEMPLE_IQ']}" . number_format($set['will_refill_cost']) . " {$lang['INDEX_SECCURR']}</a><br />";
 }
 function energy()
 {
