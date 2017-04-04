@@ -8,7 +8,7 @@
 */
  
 $lang = array();
-global $ir,$fee,$gain;
+global $ir,$fee,$gain,$set;
 
 //Index
 $lang['INDEX_TITLE']="General Info";
@@ -1771,6 +1771,12 @@ $lang['TEMPLE_BRAVE_SUCC']="You have successfully refilled your brave by 5%.";
 $lang['TEMPLE_WILL_ERR']="You do not have enough {$lang['INDEX_SECCURR']} to refill your will.";
 $lang['TEMPLE_WILL_ERR1']="You already have 100% will.";
 $lang['TEMPLE_WILL_SUCC']="You have successfully refilled your will by 5%.";
+$lang['TEMPLE_IQ_INFO']="You can trade your {$lang['INDEX_SECCURR']} for IQ here at a ratio of {$set['iq_per_sec']} IQ per {$lang['INDEX_SECCURR']}. You currently have ";
+$lang['TEMPLE_IQ_TH']="{$lang['INDEX_SECCURR']} To Trade";
+$lang['TEMPLE_IQ_BTN']="Trade For IQ";
+$lang['TEMPLE_IQ_ERR']="Fill out the previous form.";
+$lang['TEMPLE_IQ_ERR1']="You do not have enough {$lang['INDEX_SECCURR']}.";
+$lang['TEMPLE_IQ_SUCC']="You have successfully traded in ";
 
 //Users Online List
 $lang['UOL_TITLE']="Users Online";

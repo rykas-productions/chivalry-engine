@@ -16,6 +16,9 @@ switch ($_GET['action'])
 	case 'will':
 		will();
 		break;
+	case 'iq':
+		iq();
+		break;
 	default:
 		home();
 		break;
@@ -90,6 +93,49 @@ function will()
 	else
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['TEMPLE_WILL_ERR'],true,'temple.php');
+	}
+}
+function iq()
+{
+	global $db,$api,$lang,$userid,$ir,$h,$set;
+	if (isset($_POST['iq']))
+	{
+		$_POST['iq'] = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs($_POST['iq']) : '';
+		if (empty($_POST['iq']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['TEMPLE_IQ_ERR']);
+			die($h->endpage());
+		}
+		$totalcost = $_POST['iq'] * $set['iq_per_sec'];
+		if ($api->UserHasCurrency($userid,'secondary',$_POST['iq']) == false)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['TEMPLE_IQ_ERR1']);
+			die($h->endpage());
+		}
+		$api->UserTakeCurrency($userid,'secondary',$_POST['iq']);
+		$db->query("UPDATE `userstats` SET `iq` = `iq` + {$totalcost} WHERE `userid` = {$userid}");
+		alert('success',$lang['ERROR_SUCCESS'],"{$lang['TEMPLE_IQ_SUCC']} " . number_format($_POST['iq']) . " {$lang['INDEX_SECCURR']} {$lang['GEN_FOR_S']} " . number_format($totalcost) . " {$lang['GEN_IQ']}.",true,'temple.php');
+	}
+	else
+	{
+		alert('info',$lang['ERROR_INFO'],"{$lang['TEMPLE_IQ_INFO']}" . number_format($ir['secondary_currency']) . " " . $lang['INDEX_SECCURR'], false);
+		echo "<table class='table table-bordered'>
+			<form method='post'>
+			<tr>
+				<th>
+					{$lang['TEMPLE_IQ_TH']}
+				</th>
+				<td>
+					<input type='number' class='form-control' name='iq' min='1' max='{$ir['secondary_currency']}' required='1'>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' class='btn btn-default' value='{$lang['TEMPLE_IQ_BTN']}'>
+				</td>
+			</tr>
+			</form>
+		</table>";
 	}
 }
 $h->endpage();
