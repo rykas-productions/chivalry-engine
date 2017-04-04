@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.3.2";
+		return "17.4.1";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -606,10 +606,9 @@ class api
 				$change = (isset($change) && is_numeric($change)) ? abs(intval($change)) : 0;
 				if ($percent == true)
 				{
-					//$db->query("UPDATE users SET `{$stat}` = `{$stat}` +((`max{$stat}`*0.{$change})+0.5) WHERE `{$stat}` < `max{$stat}` AND `userid` = {$user}");
-					$r=$db->fetch_row($db->query("SELECT `{$stat}`, `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
-					$n1 = $change / 100;
-					$n2 = 
+					$maxstat = $db->fetch_single($db->query("SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
+					$number = ($change / 100) * $maxstat;
+					$db->query("UPDATE users SET `{$stat}`=`{$stat}`+{$number} WHERE `{$stat}` < `max{$stat}`");
 					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
 					return true;
 				}
@@ -617,11 +616,13 @@ class api
 				{
 					$db->query("UPDATE users SET `{$stat}` = `{$stat}` + {$change} WHERE `userid` = {$user}");
 					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
+					return true;
 				}
 			}
 			elseif ($change == 0)
 			{
 				$db->query("UPDATE users SET `{$stat}` = 0 WHERE `userid` = {$user}");
+				return true;
 			}
 			else
 			{
@@ -636,6 +637,7 @@ class api
 				{
 					$db->query("UPDATE users SET `{$stat}` = `{$stat}` - {$change} WHERE `userid` = {$user}");
 					$db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
+					return true;
 				}
 			}
 		}
