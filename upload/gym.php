@@ -1,5 +1,5 @@
 <?php
-//$macropage = "gym.php";
+$macropage=('gym.php');
 require("globals.php");
 if ($api->UserStatus($ir['userid'],'infirmary') == true)
 {

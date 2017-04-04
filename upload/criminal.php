@@ -1,4 +1,5 @@
 <?php
+$macropage=('criminal.php');
 require('globals.php');
 echo "<h3>{$lang['CRIME_TITLE']}</h3>";
 if ($api->UserStatus($ir['userid'],'infirmary') == true || $api->UserStatus($ir['userid'],'dungeon') == true)
