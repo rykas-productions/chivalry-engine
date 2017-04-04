@@ -4,7 +4,7 @@
 	Created: 6/1/2016 at 6:06PM Eastern Time
 	Info: Allows admins to view and change the game settings at will.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
 echo "<h3>Admin</h3><hr />";

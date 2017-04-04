@@ -4,7 +4,7 @@
 	Created: 3/15/2016 at 10:45AM Eastern Time
 	Info: Ajax for sending mail via profile
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
 error_reporting(E_ALL);

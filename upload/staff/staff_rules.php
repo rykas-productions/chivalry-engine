@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_rules.php
+	Created: 4/4/2017 at 7:04PM Eastern Time
+	Info: Staff panel for creating/editing/deleting in-game rules.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require('sglobals.php');
 if (!isset($_GET['action']))
 {

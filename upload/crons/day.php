@@ -5,7 +5,7 @@
 	Info: Runs the queries below when the server hits midnight.
 	Add queries of your own to have queries executed at midnight
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 
 $file = 'crons/day.php';

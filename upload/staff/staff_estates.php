@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_estates.php
+	Created: 4/4/2017 at 7:02PM Eastern Time
+	Info: Staff panel for handling/editing/creating estates for players to buy.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require('sglobals.php');
 if (!isset($_GET['action']))
 {

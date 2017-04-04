@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_bots.php
+	Created: 4/4/2017 at 7:01PM Eastern Time
+	Info: Staff panel for handling the NPC Battle Tent.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require('sglobals.php');
 echo"<h3>{$lang['STAFF_BOTS_TITLE']}</h3>";
 if (!isset($_GET['action']))

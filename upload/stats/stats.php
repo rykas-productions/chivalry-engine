@@ -4,7 +4,7 @@
 	Created: 6/1/2016 at 6:06PM Eastern Time
 	Info: Fetches information from the database and displays it on the statistics page
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 
 //Select count of players with and without a bank account

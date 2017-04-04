@@ -4,7 +4,7 @@
 	Created: 6/21/2016 at 4:54PM Eastern Time
 	Info: Allows developer to add bbcode functions, along with view what has been setup.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 require('JBBCode/Parser.php');
 require_once("JBBCode/visitors/SmileyVisitor.php");

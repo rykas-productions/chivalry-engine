@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_smelt.php
+	Created: 4/4/2017 at 7:04PM Eastern Time
+	Info: Staff panel for creating/editing/deleting recipes in the smeltery.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require('sglobals.php');
 echo "<h3>{$lang['STAFF_SMELT_HOME']}</h3><hr />";
 if (!isset($_GET['action']))

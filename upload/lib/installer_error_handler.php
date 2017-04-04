@@ -4,7 +4,7 @@
 	Created: 6/1/2016 at 6:06PM Eastern Time
 	Info: An error handler that will show human readable error messages during installation
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 // Change to true to show the user more information (for development)
 define('DEBUG', true);

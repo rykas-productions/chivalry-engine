@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_punish.php
+	Created: 4/4/2017 at 7:03PM Eastern Time
+	Info: Staff panel for punishiments on users.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require_once('sglobals.php');
 if (!isset($_GET['action']))
 {

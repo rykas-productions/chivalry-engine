@@ -1,11 +1,11 @@
 <?php
 /*
-Aufrechtzuerhalten.
-Datei: lang / en_us.php
-Erstellt: 06.06.2016 um 06:06 Uhr Eastern Time
-Info: Die englische Sprachdatei.
-Verfasser / in: TheMasterGeneral
-Webseite: http://mastergeneral156.pcriot.com/
+	Aufrechtzuerhalten.
+	Datei: lang / en_us.php
+	Erstellt: 06.06.2016 um 06:06 Uhr Eastern Time
+	Info: Die englische Sprachdatei.
+	Verfasser / in: TheMasterGeneral
+	Webseite: https://github.com/MasterGeneral156/chivalry-engine
 */
  
 $lang = array();

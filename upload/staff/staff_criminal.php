@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_criminal.php
+	Created: 4/4/2017 at 7:01PM Eastern Time
+	Info: Staff panel for handling the criminal actions in-game.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require_once('sglobals.php');
 echo "<h3>{$lang['STAFF_CRIME_TITLE']}</h3><hr />";
 if (!isset($_GET['action']))

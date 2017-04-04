@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_mine.php
+	Created: 4/4/2017 at 7:03PM Eastern Time
+	Info: Staff panel for handling/editing/creating the in-game mines.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require('sglobals.php');
 echo "<h2>{$lang['STAFF_MINE_TITLE']}</h2><hr />";
 if (!isset($_GET['action']))

@@ -5,7 +5,7 @@
 	Info: Creates a class file to connect, alter or otherwise interact
 	with a database using PDO!
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 if (!defined('MONO_ON'))
 {

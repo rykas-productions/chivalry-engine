@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_towns.php
+	Created: 4/4/2017 at 7:05PM Eastern Time
+	Info: Staff panel for creating/editing/deleting in-game towns.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require('sglobals.php');
 if (!isset($_GET['action']))
 {

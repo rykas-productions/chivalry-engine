@@ -5,7 +5,7 @@
 	Info: Runs the queries below every five minutes.
 	Add queries of your own to have queries executed every five minutes
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 $file = 'crons/fivemins.php';
 

@@ -1,4 +1,12 @@
 <?php
+/*
+	File: js//script/outputteam.php
+	Created: 4/4/2017 at 7:10PM Eastern Time
+	Info: PHP file for outputting info about the selected team
+	when registering
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine
+*/
 if (isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD']))
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST')

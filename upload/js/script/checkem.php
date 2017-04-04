@@ -1,4 +1,11 @@
 <?php
+/*
+	File: js//script/checkem.php
+	Created: 4/4/2017 at 7:09PM Eastern Time
+	Info: PHP file for checking a user's inputted email
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine
+*/
 if (isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD']))
 {
     if (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST')

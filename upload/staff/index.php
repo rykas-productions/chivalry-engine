@@ -4,7 +4,7 @@
 	Created: 6/1/2016 at 6:06PM Eastern Time
 	Info: Landing page for the staff panel. Will show all avaliable staff actions.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
 echo"<h2>{$lang['STAFF_IDX_TITLE']}</h2>

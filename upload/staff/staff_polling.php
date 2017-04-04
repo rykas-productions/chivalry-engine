@@ -4,7 +4,7 @@
 	Created: 9/27/2016 at 8:41PM Eastern Time
 	Info: Allows staff to create in-game polls.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 require('sglobals.php');
 echo "<h3>{$lang['STAFF_POLL_TITLE']}</h3><hr />";

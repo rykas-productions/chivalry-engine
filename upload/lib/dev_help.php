@@ -4,7 +4,7 @@
 	Created: 6/1/2016 at 6:06PM Eastern Time
 	Info: A small script that outputs all stored POST, GET, COOKIE and SESSION variables.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 
 //Set to true to enable developement help!

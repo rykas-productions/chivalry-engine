@@ -3,7 +3,7 @@
 	Created: 3/15/2016 at 10:45AM Eastern Time
 	Info: Javascript functions for registering
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 function CheckPasswords(password)
 {

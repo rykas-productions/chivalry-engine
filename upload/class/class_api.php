@@ -5,7 +5,7 @@
 	Info: Creates a class file to use as an API for modders
 	who don't wish to use the main game code!
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 if (!defined('MONO_ON'))
 {

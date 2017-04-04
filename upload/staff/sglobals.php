@@ -4,7 +4,7 @@
 	Created: 6/21/2016 at 2:02PM Eastern Time
 	Info: Functions for staff-only actions.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false)
 {

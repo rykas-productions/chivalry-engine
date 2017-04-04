@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_shops.php
+	Created: 4/4/2017 at 7:04PM Eastern Time
+	Info: Staff panel for altering the shops in-game.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require('sglobals.php');
 echo "<h3>Shops</h3><hr />";
 if (!isset($_GET['action']))

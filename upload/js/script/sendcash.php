@@ -4,7 +4,7 @@
 	Created: 8/19/2016 at 12:45PM Eastern Time
 	Info: Ajax for sending cash via profile
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
 error_reporting(E_ALL);
