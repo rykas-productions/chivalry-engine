@@ -1,4 +1,13 @@
 <?php
+/*
+	File:		itemmarket.php
+	Created: 	4/5/2016 at 12:15AM Eastern Time
+	Info: 		Lists items placed on the market by other players,
+				allows players to buy/gift those items, and sell
+				their own items.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 echo "<h3>{$lang['IMARKET_TITLE']}</h3>";
 if (!isset($_GET['action']))

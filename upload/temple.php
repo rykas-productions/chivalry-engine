@@ -1,4 +1,14 @@
 <?php
+/*
+	File:		temple.php
+	Created: 	4/5/2016 at 12:28AM Eastern Time
+	Info: 		Allows players to spend their secondary currency on
+				refilling their energy, will, and brave; along with
+				spending it on IQ. Values are configurable. Check
+				the staff panel.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 echo "<h3>{$lang['TEMPLE_TITLE']}</h3><hr />";
 if (!isset($_GET['action']))

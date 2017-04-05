@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		gamerules2.php
+	Created: 	4/5/2016 at 12:03AM Eastern Time
+	Info: 		Shows the game rules to users not logged in.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals_nonauth.php');
 $currentpage = $_SERVER['REQUEST_URI'];
 $cpage = strip_tags(stripslashes($currentpage));

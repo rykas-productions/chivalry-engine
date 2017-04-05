@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		login.php
+	Created: 	4/5/2016 at 12:17AM Eastern Time
+	Info: 		The main page when not logged in.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 if ((!file_exists('./installer.lock')) && (file_exists('installer.php')))
 {
 	header("Location: installer.php");

@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		hirespy.php
+	Created: 	4/5/2016 at 12:10AM Eastern Time
+	Info: 		Allows players to hire spies on other players at a cost.
+				Spy will fetch stats and equipment.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
 if ($api->UserStatus($userid,'infirmary') == true)

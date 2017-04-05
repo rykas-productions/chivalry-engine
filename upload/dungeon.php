@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		dungeon.php
+	Created: 	4/4/2016 at 11:58PM Eastern Time
+	Info: 		Lists players currently in the dungeon, and allows players
+				to bust or bail them out.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 if (!isset($_GET['action']))
 {

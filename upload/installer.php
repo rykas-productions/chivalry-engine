@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		installer.php
+	Created: 	4/5/2016 at 12:12AM Eastern Time
+	Info: 		The game installer. Run this to install the game. Will
+				delete itself after the installation has completed.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 if (file_exists('./installer.lock'))
 {
     exit;

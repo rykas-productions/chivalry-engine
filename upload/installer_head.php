@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		installer_head.php
+	Created: 	4/5/2016 at 12:13AM Eastern Time
+	Info: 		The header for the installer. Gets deleted after 
+				completing the install.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 if (!defined('MONO_ON'))
 {
     exit;

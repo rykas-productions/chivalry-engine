@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		shops.php
+	Created: 	4/5/2016 at 12:25AM Eastern Time
+	Info: 		Allows players to visit shops, and buy items from the
+				shop's inventory.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 if (!isset($_GET['action']))
 {

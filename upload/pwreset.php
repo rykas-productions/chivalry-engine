@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		pwreset.php
+	Created: 	4/5/2016 at 12:23AM Eastern Time
+	Info: 		Allows players to reset their password if they have
+				forgotten it. Please fill in the $from field below.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals_nonauth.php');
 $from = 'fillinplease';
 ?>

@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		academy.php
+	Created: 	4/4/2016 at 11:49PM Eastern Time
+	Info: 		The academy, which players can use to take courses and
+				increase their stats for currency and waiting.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require ("globals.php");
 
 if (!isset($_GET['action']))

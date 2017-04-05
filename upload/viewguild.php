@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		viewguild.php
+	Created: 	4/5/2016 at 12:32AM Eastern Time
+	Info: 		Allows users to view their guild and do various actions.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 if (!$ir['guild'])
 {

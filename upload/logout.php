@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		logout.php
+	Created: 	4/5/2016 at 12:18AM Eastern Time
+	Info: 		Terminates the player's session and redirects them
+				to the login.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 session_name('CENGINE');
 session_start();
 if (!isset($_SESSION['started']))

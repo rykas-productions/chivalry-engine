@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		guilds.php
+	Created: 	4/5/2016 at 12:06AM Eastern Time
+	Info: 		Lists all the in-game guilds, and allows a user to
+				apply to a guild, or create their own.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 if (!isset($_GET['action']))
 {

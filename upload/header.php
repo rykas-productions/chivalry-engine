@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		header.php
+	Created: 	4/5/2016 at 12:05AM Eastern Time
+	Info: 		Class file to load the template in-game.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 class headers
 {
 

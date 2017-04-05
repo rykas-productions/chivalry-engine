@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		attack.php
+	Created: 	4/4/2016 at 11:51PM Eastern Time
+	Info: 		File that contains all PVP Logic.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 $atkpage = 1;
 require("globals.php");
 if (!isset($_GET['action']))

@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		itemsend.php
+	Created: 	4/5/2016 at 12:16AM Eastern Time
+	Info: 		Allows players to send another player an item.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
 $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';

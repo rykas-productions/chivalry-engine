@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		donatordone.php
+	Created: 	4/4/2016 at 11:58PM Eastern Time
+	Info: 		End page player is greeted with after accepting/declining Paypal charge.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require_once('globals.php');
 if (!isset($_GET['action']))
 {

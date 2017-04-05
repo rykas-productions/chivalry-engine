@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		newspaper.php
+	Created: 	4/5/2016 at 12:18AM Eastern Time
+	Info: 		Allows players to place ads in a newspaper, and view
+				currently running ads.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $CurrentTime=time();
 if (!isset($_GET['action']))

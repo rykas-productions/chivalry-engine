@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		globals_nonauth.php
+	Created: 	4/5/2016 at 12:05AM Eastern Time
+	Info: 		Calls all internal files/settings for when a user
+				is not logged in.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 if (strpos($_SERVER['PHP_SELF'], "globals_nonauth.php") !== false)
 {
     exit;

@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		mine.php
+	Created: 	4/5/2016 at 12:18AM Eastern Time
+	Info: 		Allows players to mine for items, and progress
+				linearly.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 $macropage=('mine.php');
 require('globals.php');
 $UIDB=$db->query("SELECT * FROM `mining` WHERE `userid` = {$userid}");

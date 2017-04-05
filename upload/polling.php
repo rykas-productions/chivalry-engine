@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		polls.php
+	Created: 	4/5/2016 at 12:22AM Eastern Time
+	Info: 		Allows players to vote in game polls, and view closed
+				polls.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 $voterquery=1;
 require_once('globals.php');
 echo "<h3>{$lang['POLL_TITLE']}</h3><hr />";

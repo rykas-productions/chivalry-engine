@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		donator.php
+	Created: 	4/4/2016 at 11:57PM Eastern Time
+	Info: 		Lists the currently setup donator packages for players to
+				purchase using Paypal.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require_once('globals.php');
 echo "<h3>{$lang['VIP_LIST']}</h3><hr />{$lang['VIP_INFO']}";
 echo "

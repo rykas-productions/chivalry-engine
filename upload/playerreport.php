@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		playerreport.php
+	Created: 	4/5/2016 at 12:21AM Eastern Time
+	Info: 		Allows players to report other players secretly.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 function csrf_error($goBackTo)
 {

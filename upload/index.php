@@ -1,4 +1,13 @@
 <?php
+/*
+	File:		index.php
+	Created: 	4/5/2016 at 12:10AM Eastern Time
+	Info: 		Main directory file. Will redirect players to login
+				if they're not logged in, otherwise will show players
+				their stats and other useful information.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require_once('globals.php');
 		$enperc = round($ir['energy'] / $ir['maxenergy'] * 100);
         $wiperc = round($ir['will'] / $ir['maxwill'] * 100);

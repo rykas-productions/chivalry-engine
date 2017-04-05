@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		loggedin.php
+	Created: 	4/5/2016 at 12:17AM Eastern Time
+	Info: 		The landing page after a user logs in successfully.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 $housequery = 1;
 require_once('globals.php');
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/installer.php') && $ir['user_level'] == 'Admin')

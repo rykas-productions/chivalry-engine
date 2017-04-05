@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		dlarchive.php
+	Created: 	4/4/2016 at 11:56PM Eastern Time
+	Info: 		Allows players to download their inbox/outbox as an HTML file.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 $nohdr = true;
 require('globals.php');
 if (!isset($_POST['archive']))

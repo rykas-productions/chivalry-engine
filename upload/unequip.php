@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		unequip.php
+	Created: 	4/5/2016 at 12:30AM Eastern Time
+	Info: 		Allows players to unequip armor and weapons.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 if (!isset($_GET['type']) || !in_array($_GET['type'], array("equip_primary", "equip_secondary", "equip_armor"), true))
 {

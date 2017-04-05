@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		itemuse.php
+	Created: 	4/5/2016 at 12:10AM Eastern Time
+	Info: 		Allows players to use an item.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 $Time=time();
 $_GET['item'] = (isset($_GET['item']) && is_numeric($_GET['item'])) ? abs($_GET['item']) : '';

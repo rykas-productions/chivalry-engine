@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		slots.php
+	Created: 	4/5/2016 at 12:26AM Eastern Time
+	Info: 		Allows players to play slots for a chance at getting
+				more primary currency.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require_once('globals.php');
 $tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 500;

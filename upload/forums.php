@@ -1,4 +1,13 @@
 <?php
+/*
+	File:		forums.php
+	Created: 	4/5/2016 at 12:03AM Eastern Time
+	Info: 		In-game forums. Players can view and create topics,
+				reply to other users, and create discussion. BBCode
+				is useable!
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 require('lib/bbcode_engine.php');
 function csrf_error($goBackTo)

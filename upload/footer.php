@@ -1,3 +1,12 @@
+<?php
+/*
+	File:		fppter.php
+	Created: 	4/5/2016 at 12:02AM Eastern Time
+	Info: 		Game footer. Loads javascript files. Required.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
+?>
 </div>
         </div>
         <!-- /.row -->

@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		donator_ipn.php
+	Created: 	4/4/2016 at 11:57PM Eastern Time
+	Info: 		Paypal Instant Payment Notification system. Allows for
+				automated crediting of purchased donator items.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require_once('globals_nonauth.php');
 
 // read the post from PayPal system and add 'cmd'

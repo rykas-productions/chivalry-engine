@@ -1,4 +1,13 @@
 <?php
+/*
+	File:		fedjail.php
+	Created: 	4/5/2016 at 12:01AM Eastern Time
+	Info: 		Lists those placed into the federal jail. Players in
+				federal jail cannot interact with the game at all.
+				Consider it like an in-game ban.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 echo "<h3>{$lang['FJ_TITLE']}</h3>
 	{$lang['FJ_INFO']}";

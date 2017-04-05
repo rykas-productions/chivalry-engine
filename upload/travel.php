@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		travel.php
+	Created: 	4/5/2016 at 12:29AM Eastern Time
+	Info: 		Allows players to travel to new locations, dependent
+				on their level.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 $cost_of_travel = 250*$ir['level'];
 echo "<h3>{$lang['TRAVEL_TITLE']}</h3><hr />";

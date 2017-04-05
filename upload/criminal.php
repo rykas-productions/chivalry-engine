@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		criminal.php
+	Created: 	4/4/2016 at 11:55PM Eastern Time
+	Info: 		Lists created crimes for players to commit.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 $macropage=('criminal.php');
 require('globals.php');
 echo "<h3>{$lang['CRIME_TITLE']}</h3>";

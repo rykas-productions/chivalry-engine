@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		poke.php
+	Created: 	4/5/2016 at 12:21AM Eastern Time
+	Info: 		Allows players to poke other players for fun.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
 if (empty($_GET['user']))

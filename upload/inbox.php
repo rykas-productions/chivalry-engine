@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		inbox.php
+	Created: 	4/5/2016 at 12:10AM Eastern Time
+	Info: 		Allows players to view their inbox, write messages
+				to other players.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 require('lib/bbcode_engine.php');
 echo "

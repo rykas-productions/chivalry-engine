@@ -1,5 +1,12 @@
 <?php
 /*
+	File:		global_func.php
+	Created: 	4/5/2016 at 12:04AM Eastern Time
+	Info: 		Functions used all over the game.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
+/*
 	Parses the time since the timestamp given.
 	@param int $time_stamp for time since.
 	@param boolean $ago to display the "ago" after the string. (Default = true)

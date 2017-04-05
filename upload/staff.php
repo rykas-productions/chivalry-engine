@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		staff.php
+	Created: 	4/5/2016 at 12:27AM Eastern Time
+	Info: 		Lists the game staff, and give a friendly link to message
+				them.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $staff = array();
 $q = $db->query("SELECT `userid`, `laston`, `username`, `user_level`

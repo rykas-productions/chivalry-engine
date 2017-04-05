@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		bank.php
+	Created: 	4/4/2016 at 11:53PM Eastern Time
+	Info: 		The game bank players can store their currency in for safety.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $bank_cost = $set['bank_cost'];
 $bank_maxfee = $set['bank_maxfee'];

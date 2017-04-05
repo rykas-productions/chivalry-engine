@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		notifications.php
+	Created: 	4/5/2016 at 12:20AM Eastern Time
+	Info: 		Allows players to view their notifications.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 if (!isset($_GET['delete']))
 {

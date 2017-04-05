@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		infirmary.php
+	Created: 	4/5/2016 at 12:11AM Eastern Time
+	Info: 		Lists the players currently in the infirmary, and allows
+				them to heal those players out using secondary currency.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 if (!isset($_GET['action']))
 {

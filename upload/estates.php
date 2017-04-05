@@ -1,4 +1,14 @@
 <?php
+/*
+	File:		estates.php
+	Created: 	4/5/2016 at 12:00AM Eastern Time
+	Info: 		Lists the game estates and allows players to buy them
+				for an increased will level. At a later date, players
+				can sell them back to the game for 75% of its original
+				cost.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 $mpq = $db->query("SELECT * FROM `estates` WHERE `house_will` = {$ir['maxwill']} LIMIT 1");
 $mp = $db->fetch_row($mpq);

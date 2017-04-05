@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		announcements.php
+	Created: 	4/4/2016 at 11:51PM Eastern Time
+	Info: 		Lists the game announcements for players to read.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $AnnouncementCount = $ir['announcements'];
 $q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC");

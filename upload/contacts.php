@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		contacts.php
+	Created: 	4/4/2016 at 11:55PM Eastern Time
+	Info: 		Allows players to add and delete users from their contact list.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 echo "
 <div class='table-responsive'>

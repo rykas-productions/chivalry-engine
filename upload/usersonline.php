@@ -1,4 +1,13 @@
 <?php
+/*
+	File:		usersonline.php
+	Created: 	4/5/2016 at 12:31AM Eastern Time
+	Info: 		Lists players on within the time period set. The GET
+				can be set to any integer value, and it'll check that
+				number minutes ago.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 echo "<h3>{$lang['UOL_TITLE']}</h3><hr />
 [<a href='?act=5'>{$lang['UOL_ACT']}</a>] 

@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		register.php
+	Created: 	4/5/2016 at 12:24AM Eastern Time
+	Info: 		The registration form.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals_nonauth.php");
 $currentpage = $_SERVER['REQUEST_URI'];
 $cpage = strip_tags(stripslashes($currentpage));

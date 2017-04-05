@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		inventory.php
+	Created: 	4/5/2016 at 12:14AM Eastern Time
+	Info: 		Displays the player's items and equipment, along with
+				actions that you can do with the items.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $q = $db->query("SELECT `itmid`, `itmname` FROM `items`
                  WHERE `itmid` IN({$ir['equip_primary']}, {$ir['equip_secondary']}, {$ir['equip_armor']})");

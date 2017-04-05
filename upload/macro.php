@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		macro.php
+	Created: 	4/5/2016 at 12:18AM Eastern Time
+	Info: 		Verifies if the player is botting or not. Setup
+				reCaptcha in the staff panel!
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 $nohdr = 1;
 require_once('globals.php');
 if(isset($_POST['g-recaptcha-response']))

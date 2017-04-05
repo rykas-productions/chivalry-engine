@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		itemsell.php
+	Created: 	4/5/2016 at 12:15AM Eastern Time
+	Info: 		Allows players to instantly sell their item back
+				to the game for a reduced price.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
 $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(intval($_POST['qty'])) : '';

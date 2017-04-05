@@ -1,4 +1,14 @@
 <?php
+/*
+	File:		gym.php
+	Created: 	4/5/2016 at 12:07AM Eastern Time
+	Info: 		Allows players to train their stats at the cost of
+				will and energy. Players can replenish their energy
+				at the Secondary Curreny Temple, and will can be
+				increased by buying new estates.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 $macropage=('gym.php');
 require("globals.php");
 if ($api->UserStatus($ir['userid'],'infirmary') == true)

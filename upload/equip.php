@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		equip.php
+	Created: 	4/4/2016 at 11:59PM Eastern Time
+	Info: 		Allows players to equip weapons and armor.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 if (!isset($_GET['slot']))
 {

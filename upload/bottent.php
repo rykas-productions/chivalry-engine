@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		bottent.php
+	Created: 	4/4/2016 at 11:54PM Eastern Time
+	Info: 		A list of the setup bots in game. Players can attack them
+				for an item drop once every pre-defined period.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 echo "<h3>{$lang['BOTTENT_TITLE']}</h3><hr />{$lang['BOTTENT_DESC']}<hr />";
 $query=$db->query("SELECT * FROM `botlist`");

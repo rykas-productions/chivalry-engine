@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		preferences.php
+	Created: 	4/5/2016 at 12:22AM Eastern Time
+	Info: 		Allows players to change settings about their account.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 if (!isset($_GET['action']))
 {

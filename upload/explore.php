@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		explore.php
+	Created: 	4/5/2016 at 12:00AM Eastern Time
+	Info: 		Gateway to many things around the game.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $tresder = (Random(100, 999));
 if ($api->UserStatus($ir['userid'],'infirmary') == true)

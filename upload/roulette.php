@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		roulette.php
+	Created: 	4/5/2016 at 12:24AM Eastern Time
+	Info: 		Allows players to play a game of roulette for cash.
+				If they win, their winnings are double their bet.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require_once('globals.php');
 $tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 250;

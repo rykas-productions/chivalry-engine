@@ -1,5 +1,12 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <?php
+/*
+	File:		stats.php
+	Created: 	4/5/2016 at 12:27AM Eastern Time
+	Info: 		Allows players to view statistics about the game.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 require("stats/stats.php");
 echo "<h3>{$lang['STATS_TITLE']}</h3><hr />

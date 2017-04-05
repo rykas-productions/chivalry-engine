@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		authenticate.php
+	Created: 	4/4/2016 at 11:53PM Eastern Time
+	Info: 		Contains the authentication and login logic.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require_once('globals_nonauth.php');
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 $CurrentTime=time();

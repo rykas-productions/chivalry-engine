@@ -1,4 +1,13 @@
 <?php
+/*
+	File:		hilow.php
+	Created: 	4/5/2016 at 12:08AM Eastern Time
+	Info: 		A game players can play, by guessing if the next drawn
+				number will be greater than, or less than, the currently
+				shown number.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 500;

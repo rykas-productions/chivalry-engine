@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		users.php
+	Created: 	4/5/2016 at 12:30AM Eastern Time
+	Info: 		Lists the players registered, and allows users to 
+				organize them by ID, Name, Level and Currency.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
 $allowed_by = array('userid', 'username', 'level', 'primary_currency');

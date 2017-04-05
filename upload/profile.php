@@ -1,4 +1,13 @@
 <?php
+/*
+	File:		profile.php
+	Created: 	4/5/2016 at 12:23AM Eastern Time
+	Info: 		Allows players to view a player's profile page. This
+				displays information about their level, location,
+				gender, cash, estate, etc.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $code = request_csrf_code('inbox_send');
 $code2 = request_csrf_code('cash_send');
