@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_academy.php
+	Created: 6/1/2016 at 6:06PM Eastern Time
+	Info: Allows admins to add/edit/delete academy courses.
+	Author: ImJustIsabella
+	Website: https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('sglobals.php');
 //Not bothering with the academy until I can redo it. Sorry Izzy!
 if (!isset($_GET['action']))
