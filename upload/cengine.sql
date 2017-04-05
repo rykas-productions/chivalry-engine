@@ -397,6 +397,14 @@ CREATE TABLE `reports` (
   `report_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `sec_market` ( 
+	`sec_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`sec_user` INT(11) UNSIGNED NOT NULL , 
+	`sec_cost` INT(11) UNSIGNED NOT NULL , 
+	`sec_total` INT(11) UNSIGNED NOT NULL , 
+	UNIQUE (`sec_id`)
+) ENGINE = MyISAM;
+
 CREATE TABLE `settings` (
   `setting_id` tinyint(11) UNSIGNED NOT NULL,
   `setting_name` text NOT NULL,
@@ -828,6 +836,11 @@ ALTER TABLE `vips_accepted`
 
 ALTER TABLE `vip_listing`
   MODIFY `vip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'energy_refill_cost', '10');
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'will_refill_cost', '5');
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'brave_refill_cost', '10');
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'iq_per_sec', '5');
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

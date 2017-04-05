@@ -1,10 +1,10 @@
 <?php
 /*
-	File: lang/en_us.php
-	Created: 6/1/2016 at 6:06PM Eastern Time
-	Info: The English language file.
-	Author: TheMasterGeneral
-	Website: https://github.com/MasterGeneral156/chivalry-engine
+	File: 		lang/en_us.php
+	Created: 	6/1/2016 at 6:06PM Eastern Time
+	Info: 		The English language file.
+	Author: 	TheMasterGeneral
+	Website:	 https://github.com/MasterGeneral156/chivalry-engine
 */
  
 $lang = array();
@@ -1840,4 +1840,18 @@ $lang['SS_UPDATE']="Update Checker";
 $lang['SS_RESTORE']="Press this button to restore your users stats to 100%, and remove them from the infirmary and dungeon.";
 $lang['SS_RESTORE_BTN']="Restore Users";
 $lang['SS_RESTORE_SUCC']="You've successfully restored your users.";
+
+//Secondary Market
+$lang['SMARKET_ADD']="Add Listing";
+$lang['SMARKET_TH']="Lister";
+$lang['SMARKET_TH1']="Cost";
+$lang['SMARKET_TH2']="Actions";
+$lang['SMARKET_TD']="Remove";
+$lang['SMARKET_TD1']="Buy";
+$lang['SMARKET_ERR']="You must specify a listing you wish to buy.";
+$lang['SMARKET_ERR1']="You cannot purchase your own offer.";
+$lang['SMARKET_ERR2']="You need to specify how much {$lang['INDEX_SECCURR']} you wish to buy!";
+$lang['SMARKET_INFO']="You are attempting to buy the ";
+$lang['SMARKET_INFO1']="each. How many from this offer do you wish to buy?";
+$lang['SMARKET_BTN']="Purchase {$lang['INDEX_SECCURR']}";
 ?>
