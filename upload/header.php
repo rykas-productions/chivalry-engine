@@ -237,6 +237,7 @@ class headers
 							  </div>
 							</div>
 						<?php
+						die($h->endpage());
 					}
 				}
 		date_default_timezone_set($ir['timezone']);  
