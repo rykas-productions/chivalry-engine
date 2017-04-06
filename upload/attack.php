@@ -33,9 +33,11 @@ default:
 function attacking()
 {
 	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
-	$menuhide = 1;
+	$menuhide = 1;					//Hide the menu so players cannot load other pages,
+									//and lessens the chance of a misclick and losing XP.
 	$atkpage = 1;
-	$tresder = Random(100, 999);
+	$tresder = Random(100, 999);	//RNG to prevent refreshing while attacking, thus
+									//breaking progression of the attack system.
 	$_GET['user'] =  (isset($_GET['user']) && is_numeric($_GET['user']))  ? abs($_GET['user']) : '';
 	if (empty($_GET['nextstep']))
 	{
@@ -44,33 +46,40 @@ function attacking()
 	if ($_GET['nextstep'] > 0)
 	{
 		$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
+		//If RNG is not set, set it to 0.
 		if (!isset($_SESSION['tresde']))
 		{
 			$_SESSION['tresde'] = 0;
 		}
+		//If RNG is not the same number stored in session
 		if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
 		{
 			alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_START_NOREFRESH'],true,'index.php');
 			die($h->endpage());
 		}
+		//Set RNG
 		$_SESSION['tresde'] = $_GET['tresde'];
 	}
+	//If user is not specified.
 	if (!$_GET['user'])
 	{
 		alert("danger",$lang['ERROR_NONUSER'],$lang['ATTACK_START_NOUSER'],true,'index.php');
 		die($h->endpage());
 	}
-	else if ($_GET['user'] == $userid)
+	//Test for if the specified opponent is the current user.
+	if ($_GET['user'] == $userid)
 	{
 		alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_START_NOTYOU'],true,'index.php');
 		die($h->endpage());
 	}
-	else if ($ir['hp'] <= 1)
+	//Test for if the current user has more than 1 health points.
+	if ($ir['hp'] <= 1)
 	{
 		alert("danger",$lang["GEN_INFIRM"],$lang['ATTACK_START_YOUNOHP'],true,'index.php');
 		die($h->endpage());
 	}
-	else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] == 1)
+	//Test for if the player has already lost a fight.
+	if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] == 1)
 	{
 		$_SESSION['attacklost'] = 0;
 		alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_START_YOUCHICKEN'],true,'index.php');
@@ -85,6 +94,7 @@ function attacking()
 			INNER JOIN `userstats` AS `us` ON `u`.`userid` = `us`.`userid`
 			WHERE `u`.`userid` = {$_GET['user']}
 			LIMIT 1");
+	//Test for if the specified user is a valid and registered user.
 	if ($db->num_rows($q) == 0)
 	{
 		alert("danger",$lang['ERROR_NONUSER'],$lang['ATTACK_START_NONUSER'],true,'index.php');
@@ -92,6 +102,7 @@ function attacking()
 	}
 	$odata = $db->fetch_row($q);
 	$db->free_result($q);
+	//Check current user's last attacked user, and see that its the specified user.
 	if ($ir['attacking'] && $ir['attacking'] != $_GET['user'])
 	{
 		$_SESSION['attacklost'] = 0;
@@ -99,6 +110,7 @@ function attacking()
 		$api->UserInfoSetStatic($userid,"attacking",0);
 		die($h->endpage());
 	}
+	//Check that the opponent has 1 health point.
 	if ($odata['hp'] == 1)
 	{
 		$_SESSION['attacking'] = 0;
@@ -107,7 +119,8 @@ function attacking()
 		alert("danger",$lang['ERROR_GENERIC'],"{$odata['username']} {$lang['ATTACK_START_OPPNOHP']}",true,'index.php');
 		die($h->endpage());
 	}
-	else if ($api->UserStatus($_GET['user'],'infirmary') == true)
+	//Check if the opponent is currently in the infirmary.
+	if ($api->UserStatus($_GET['user'],'infirmary') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -115,7 +128,8 @@ function attacking()
 		alert("danger",$lang['GEN_INFIRM'],"{$odata['username']} {$lang['ATTACK_START_OPPINFIRM']}",true,'index.php');
 		die($h->endpage());
 	}
-	else if ($api->UserStatus($ir['userid'],'infirmary') == true)
+	//Check if the current user is in the infirmary.
+	if ($api->UserStatus($ir['userid'],'infirmary') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -123,7 +137,8 @@ function attacking()
 		alert("danger",$lang['GEN_INFIRM'],$lang['ATTACK_START_YOUINFIRM'],true,'index.php');
 		die($h->endpage());
 	}
-	else if ($api->UserStatus($_GET['user'],'dungeon') == true)
+	//Check if the opponent is in the dungeon.
+	if ($api->UserStatus($userid,'dungeon') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -131,7 +146,8 @@ function attacking()
 		alert("danger",$lang['GEN_DUNG'],"{$odata['username']} {$lang['ATTACK_START_OPPDUNG']}",true,'index.php');
 		die($h->endpage());
 	}
-	else if ($api->UserStatus($userid,'dungeon') == true)
+	//Check if the current user is in the dungeon.
+	if ($api->UserStatus($userid,'dungeon') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -139,7 +155,8 @@ function attacking()
 		alert("danger",$lang['GEN_DUNG'],$lang['ATTACK_START_YOUDUNG'],true,'index.php');
 		die($h->endpage());
 	}
-	else if (permission('CanBeAttack',$_GET['user']) == false)
+	//Check if opponent has permission to be attacked.
+	if (permission('CanBeAttack',$_GET['user']) == false)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -147,7 +164,8 @@ function attacking()
 		alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_START_OPPUNATTACK'],true,'index.php');
 		die($h->endpage());
 	}
-	else if (permission('CanAttack',$userid) == false)
+	//Check if the current player has permission to attack.
+	if (permission('CanAttack',$userid) == false)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -155,7 +173,8 @@ function attacking()
 		alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_START_YOUUNATTACK'],true,'index.php');
 		die($h->endpage());
 	}
-	else if ($odata['level'] < 3 && $odata['laston'] > $laston)
+	//Check if the opponent is level 2 or lower, and has been on in the last 15 minutes.
+	if ($odata['level'] < 3 && $odata['laston'] > $laston)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -170,6 +189,7 @@ function attacking()
 		{
 			$_GET['nextstep'] = 1;
 		}
+		//Check for if current step is greater than the maximum attacks per session.
 		if ($_GET['nextstep'] >= $set['MaxAttacksPerSession'])
 		{
 			$_SESSION['attacking'] = 0;
@@ -178,8 +198,10 @@ function attacking()
 			alert("warning",$lang['ERROR_GENERIC'],$lang['ATTACK_FIGHT_STALEMATE'],true,'index.php');
 			die($h->endpage());
 		}
+		//Check if the attack is currently stored in session.
 		if ($_SESSION['attacking'] == 0 && $ir['attacking'] == 0)
 		{
+			//Check if the current user has enough energy for this attack.
 			if ($youdata['energy'] >= $youdata['maxenergy'] / $set['AttackEnergyCost'])
 			{
 				$youdata['energy'] -= floor($youdata['maxenergy'] / $set['AttackEnergyCost']);
@@ -197,8 +219,9 @@ function attacking()
 		}
 		$_SESSION['attacking'] = 1;
 		$ir['attacking'] = $odata['userid'];
-		$api->UserINfoSetStatic($userid,"attacking",$ir['attacking']);
+		$api->UserInfoSetStatic($userid,"attacking",$ir['attacking']);
 		$_GET['nextstep'] = (isset($_GET['nextstep']) && is_numeric($_GET['nextstep'])) ? abs($_GET['nextstep']) : '';
+		//Check if the current user is attacking with a weapon that they have equipped.
 		if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary'])
 		{
 			$api->UserInfoSet($userid,'xp',0);
@@ -217,6 +240,7 @@ function attacking()
 		$db->free_result($qo);
 		$mydamage = round(($r1['weapon'] * $youdata['strength'] / ($odata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 		$hitratio = max(10, min(60 * $ir['agility'] / $odata['agility'], 95));
+		//If the attack attempt was connected.
 		if (Random(1, 100) <= $hitratio)
 		{
 			if ($odata['equip_armor'] > 0)
