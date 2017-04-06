@@ -503,7 +503,7 @@ function diagnostics()
 }
 function restore()
 {
-	global $db,$ir,$h,$api,$userid;
+	global $db,$ir,$h,$api,$userid,$lang;
 	if (!isset($_POST['restore']))
 	{
 		echo "{$lang['SS_RESTORE']}<br />
