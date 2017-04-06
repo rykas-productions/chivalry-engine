@@ -39,19 +39,13 @@ echo "<br />
 <a href='?st={$st}&by={$by}&ord=asc'>{$lang['USERLIST_ORDER5']}</a> | 
 <a href='?st={$st}&by={$by}&ord=desc'>{$lang['USERLIST_ORDER6']}</a>
 <br /><br />";
-$q =
-        $db->query(
-                "SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`,
-                `gender`, `laston`
-                FROM `users`
-                ORDER BY `$by` $ord
-                LIMIT $st, 100");
+$q = $db->query("SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `gender`, `laston`
+                FROM `users` ORDER BY `{$by}` {$ord}  LIMIT {$st}, 100");
 $no1 = $st + 1;
 $no2 = min($st + 100, $membs);
 echo "
 Showing users {$no1} to {$no2} by order of {$by} {$ord}.
-<table class='table table-responsive table-bordered table-hover'>
-		<thead>
+<table class='table table-bordered table-hover table-striped'>
 			<tr>
 				<th width='10%' class='hidden-xs'>
 					{$lang['USERLIST_ORDER1']}
@@ -72,8 +66,6 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 					{$lang['USERLIST_TH2']}
 				</th>
 			</tr>
-		</thead>
-		<tbody>
    ";
 while ($r = $db->fetch_row($q))
 {
@@ -97,8 +89,7 @@ while ($r = $db->fetch_row($q))
 				<td>
 				" . (($r['laston'] >= $_SERVER['REQUEST_TIME'] - 15 * 60) ? $lang['GEN_ONLINE'] : $lang['GEN_OFFLINE']) . "
 				</td>
-			</tr>
-	</tbody>";
+			</tr>";
 }
 $db->free_result($q);
 echo '</table>';

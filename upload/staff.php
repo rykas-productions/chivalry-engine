@@ -19,8 +19,8 @@ while ($r = $db->fetch_row($q))
 }
 $db->free_result($q);
 echo "<h3>{$lang['STAFFLIST_ADMIN']}</h3>
-<table class='table table-bordered table-hober'>
-	<thead>
+<table class='table table-bordered table-hover table-striped'>
+	<tr>
 		<th>
 			{$lang['USERLIST_ORDER2']} [{$lang['USERLIST_ORDER1']}]
 		</th>
@@ -30,8 +30,7 @@ echo "<h3>{$lang['STAFFLIST_ADMIN']}</h3>
 		<th>
 			{$lang['STAFFLIST_CONTACT']}
 		</th>
-	</thead>
-<tbody>";
+	</tr>";
 foreach ($staff as $r)
 {
     if ($r['user_level'] == 'Admin')
@@ -45,13 +44,14 @@ foreach ($staff as $r)
 				</td>
 				<td>
 					<a href='inbox.php?action=compose&user={$r['userid']}'>{$lang['MAIL_SENDMSG']} {$lang['MAIL_SENDTO']} {$r['username']}</a>
-				</td>";
+				</td>
+				</tr>";
     }
 }
 echo '</table>';
 echo "<h3>{$lang['STAFFLIST_ASSIST']}</h3>
-<table class='table table-bordered table-hober'>
-	<thead>
+<table class='table table-bordered table-hover table-striped'>
+	<tr>
 		<th>
 			{$lang['USERLIST_ORDER2']} [{$lang['USERLIST_ORDER1']}]
 		</th>
@@ -61,8 +61,7 @@ echo "<h3>{$lang['STAFFLIST_ASSIST']}</h3>
 		<th>
 			{$lang['STAFFLIST_CONTACT']}
 		</th>
-	</thead>
-<tbody>";
+	</tr>";
 foreach ($staff as $r)
 {
     if ($r['user_level'] == 'Assistant')
@@ -76,13 +75,14 @@ foreach ($staff as $r)
 				</td>
 				<td>
 					<a href='inbox.php?action=compose&user={$r['userid']}'>{$lang['MAIL_SENDMSG']} {$lang['MAIL_SENDTO']} {$r['username']}</a>
-				</td>";
+				</td>
+				</tr>";
     }
 }
 echo '</table>';
 echo "<h3>{$lang['STAFFLIST_MOD']}</h3>
-<table class='table table-bordered table-hober'>
-	<thead>
+<table class='table table-bordered table-hover table-striped'>
+	<tr>
 		<th>
 			{$lang['USERLIST_ORDER2']} [{$lang['USERLIST_ORDER1']}]
 		</th>
@@ -92,8 +92,7 @@ echo "<h3>{$lang['STAFFLIST_MOD']}</h3>
 		<th>
 			{$lang['STAFFLIST_CONTACT']}
 		</th>
-	</thead>
-<tbody>";
+	</tr>";
 foreach ($staff as $r)
 {
     if ($r['user_level'] == 'Forum Moderator')
@@ -107,7 +106,8 @@ foreach ($staff as $r)
 				</td>
 				<td>
 					<a href='inbox.php?action=compose&user={$r['userid']}'>{$lang['MAIL_SENDMSG']} {$lang['MAIL_SENDTO']} {$r['username']}</a>
-				</td>";
+				</td>
+			</tr>";
     }
 }
 echo '</table>';
