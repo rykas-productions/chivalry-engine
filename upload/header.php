@@ -42,7 +42,8 @@ class headers
 			elseif ($ir['theme'] == 3)
 			{
 				?> 
-					<link rel="stylesheet" href="css/bootstrap-purple.css"> 
+					<link rel="stylesheet" href="css/bootstrap-purple.css">
+					<meta name="theme-color" content="#2d135d">
 				<?php
 			}
 			?>
