@@ -143,7 +143,7 @@ function buy()
 							WHERE `sitemID` = {$_GET['ID']}");
 			if ($db->num_rows($q) == 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['SHOPS_BUY_ERROR2']},true,"shops.php");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['SHOPS_BUY_ERROR2'],true,"shops.php");
 			}
 			else
 			{
