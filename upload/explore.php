@@ -10,12 +10,12 @@ require("globals.php");
 $tresder = (Random(100, 999));
 if ($api->UserStatus($ir['userid'],'infirmary') == true)
 {
-	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['ERRDE_EXPLORE']}",false);
+	alert('danger',$lang["GEN_INFIRM"],$lang['ERRDE_EXPLORE'],false);
 	die($h->endpage());
 }
 if ($api->UserStatus($ir['userid'],'dungeon') == true)
 {
-	alert('danger',"{$lang["GEN_DUNG"]}","{$lang['ERRDE_EXPLORE2']}");
+	alert('danger',$lang["GEN_DUNG"],$lang['ERRDE_EXPLORE2']);
 	die($h->endpage());
 }
 echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
@@ -127,7 +127,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 <div class='col-sm-4'>
 	<div class='panel panel-default'>
 		<div class='panel-heading'>
-			Top 10 Players
+			{$lang['EXPLORE_TOPTEN']}
 		</div>
 		<div class='panel-body'>";
 			$Rank=0;
@@ -143,7 +143,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			while ($pdata=$db->fetch_row($RankPlayerQuery))
 			{
 				$Rank=$Rank+1;
-				echo "{$Rank}) <a href='profile.php?user={$pdata['userid']}'>{$pdata['username']}</a> [{$pdata['userid']}] (Level {$pdata['level']})<br />";
+				echo "{$Rank}) <a href='profile.php?user={$pdata['userid']}'>{$pdata['username']}</a> [{$pdata['userid']}] ({$lang['INDEX_LEVEL']} {$pdata['level']})<br />";
 			}
 			echo 
 		"</div>
