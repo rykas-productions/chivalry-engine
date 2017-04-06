@@ -315,7 +315,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<th>
 							{$lang['STAFF_IDX_ACTIONS_TH2']}
 						</th>
-						<th>
+						<th class='hidden-xs'>
 							{$lang['STAFF_IDX_ACTIONS_TH3']}
 						</th>
 					</tr>
@@ -343,7 +343,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					<td>
 						{$r['log_text']}
 					</td>
-					<td>
+					<td class='hidden-xs'>
 						{$r['log_ip']}
 					</td>
 				</tr>
