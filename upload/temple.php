@@ -41,7 +41,7 @@ function home()
 	<a href='?action=energy'>{$lang['TEMPLE_ENERGY']}" . number_format($set['energy_refill_cost']) . " {$lang['INDEX_SECCURR']}</a><br />
 	<a href='?action=brave'>{$lang['TEMPLE_BRAVE']}" . number_format($set['brave_refill_cost']) . " {$lang['INDEX_SECCURR']}</a><br />
 	<a href='?action=will'>{$lang['TEMPLE_WILL']}" . number_format($set['will_refill_cost']) . " {$lang['INDEX_SECCURR']}</a><br />
-	<a href='?action=will'>{$lang['TEMPLE_IQ']}" . number_format($set['will_refill_cost']) . " {$lang['INDEX_SECCURR']}</a><br />";
+	<a href='?action=iq'>{$lang['TEMPLE_IQ']}" . number_format($set['will_refill_cost']) . " {$lang['INDEX_SECCURR']}</a><br />";
 }
 function energy()
 {
@@ -129,7 +129,7 @@ function iq()
 	}
 	else
 	{
-		alert('info',$lang['ERROR_INFO'],"{$lang['TEMPLE_IQ_INFO']}" . number_format($ir['secondary_currency']) . " " . $lang['INDEX_SECCURR'], false);
+		alert('info',$lang['ERROR_INFO'],"{$lang['TEMPLE_IQ_INFO']} {$set['iq_per_sec']} {$lang['TEMPLE_IQ_INFO2']}" . number_format($ir['secondary_currency']) . " " . $lang['INDEX_SECCURR'], false);
 		echo "<table class='table table-bordered'>
 			<form method='post'>
 			<tr>
