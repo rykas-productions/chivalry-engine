@@ -40,13 +40,14 @@ function basicsettings()
 	{
 		$csrf=request_csrf_html('staff_sett_1');
 		echo "
+		<div class='table-responsive'>
 		<form method='post'>
 		<table class='table table-bordered table-hover'>
 			<tr>
 				<th>
 					{$lang['SS_GAME']}
 				</th>
-				<td>
+				<td width='75%'>
 					<input type='text' name='gamename' class='form-control' required='1' value='{$set['WebsiteName']}'>
 				</td>
 			</tr>
@@ -120,7 +121,7 @@ function basicsettings()
 			<tr>
 				<th>
 					{$lang['SS_FGU']}<br />
-					<small>(<a href='https://fraudguard.io/'>https://fraudguard.io/</a>)</small>
+					<small>(<a href='https://fraudguard.io/'>http://bit.ly/2apOVX0</a>)</small>
 				</th>
 				<td>
 					<input type='text' class='form-control' name='fgun' value='{$set['FGUsername']}'>
@@ -137,7 +138,7 @@ function basicsettings()
 			<tr>
 				<th>
 					{$lang['SS_GRPUB']}<br />
-					<small>(<a href='https://www.google.com/recaptcha/admin'>https://www.google.com/recaptcha/admin</a>)</small>
+					<small>(<a href='https://www.google.com/recaptcha/admin'>http://bit.ly/2oJ0Bus</a>)</small>
 				</th>
 				<td>
 					<input type='text' class='form-control' name='rcpublic' value='{$set['reCaptcha_public']}'>
@@ -245,7 +246,8 @@ function basicsettings()
 					</select>
 				</td>
 			</tr>
-		</table>";
+		</table>
+		</div>";
 		
 		
         	echo "{$csrf}
