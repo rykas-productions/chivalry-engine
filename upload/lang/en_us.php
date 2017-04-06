@@ -1540,6 +1540,7 @@ $lang['STAFF_IDX_LOGS_TAB19']="Poke Logs";
 $lang['STAFF_IDX_LOGS_TAB20']="Guild Logs";
 $lang['STAFF_IDX_LOGS_TAB21']="Guild Vault Logs";
 $lang['STAFF_IDX_LOGS_TAB22']="Leveling Logs";
+$lang['STAFF_IDX_LOGS_TAB23']="Temple Logs";
 $lang['STAFF_IDX_PERM_TAB1']="View Permissions";
 $lang['STAFF_IDX_PERM_TAB2']="Reset Permissions";
 $lang['STAFF_IDX_PERM_TAB3']="Edit Permissions";

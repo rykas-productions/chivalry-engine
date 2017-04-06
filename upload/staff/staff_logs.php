@@ -79,6 +79,9 @@ case "level":
 case "guildvault":
     logs('guild_vault');
     break;
+case "temple":
+    logs('temple');
+    break;
 default:
     die();
     break;

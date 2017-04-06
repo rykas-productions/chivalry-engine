@@ -57,6 +57,7 @@ function energy()
 			$api->UserInfoSet($userid,'energy',100,true);
 			$api->UserTakeCurrency($userid,'secondary',$set['energy_refill_cost']);
 			alert('success',$lang['ERROR_SUCCESS'],$lang['TEMPLE_ENERGY_SUCC'],true,'temple.php');
+			$api->SystemLogsAdd($userid,'temple',"Traded {$set['energy_refill_cost']} Secondary Currency to refill their Energy.");
 		}
 	}
 	else
@@ -78,6 +79,7 @@ function brave()
 			$api->UserInfoSet($userid,'brave',5,true);
 			$api->UserTakeCurrency($userid,'secondary',$set['brave_refill_cost']);
 			alert('success',$lang['ERROR_SUCCESS'],$lang['TEMPLE_BRAVE_SUCC'],true,'temple.php');
+			$api->SystemLogsAdd($userid,'temple',"Traded {$set['brave_refill_cost']} Secondary Currency to regenerate 5% Brave.");
 		}
 	}
 	else
@@ -99,6 +101,7 @@ function will()
 			$api->UserInfoSet($userid,'will',5,true);
 			$api->UserTakeCurrency($userid,'secondary',$set['will_refill_cost']);
 			alert('success',$lang['ERROR_SUCCESS'],$lang['TEMPLE_WILL_SUCC'],true,'temple.php');
+			$api->SystemLogsAdd($userid,'temple',"Traded {$set['will_refill_cost']} Secondary Currency to regenerate 5% Will.");
 		}
 	}
 	else
@@ -126,6 +129,7 @@ function iq()
 		$api->UserTakeCurrency($userid,'secondary',$_POST['iq']);
 		$db->query("UPDATE `userstats` SET `iq` = `iq` + {$totalcost} WHERE `userid` = {$userid}");
 		alert('success',$lang['ERROR_SUCCESS'],"{$lang['TEMPLE_IQ_SUCC']} " . number_format($_POST['iq']) . " {$lang['INDEX_SECCURR']} {$lang['GEN_FOR_S']} " . number_format($totalcost) . " {$lang['GEN_IQ']}.",true,'temple.php');
+		$api->SystemLogsAdd($userid,'temple',"Traded {$_POST['iq']} Secondary Currency for {$totalcost} IQ.");
 	}
 	else
 	{

@@ -240,6 +240,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_logs.php?action=guilds'>{$lang['STAFF_IDX_LOGS_TAB20']}</a><br />
 						<a href='staff_logs.php?action=guildvault'>{$lang['STAFF_IDX_LOGS_TAB21']}</a><br />
 						<a href='staff_logs.php?action=level'>{$lang['STAFF_IDX_LOGS_TAB22']}</a><br />
+						<a href='staff_logs.php?action=temple'>{$lang['STAFF_IDX_LOGS_TAB23']}</a><br />
 					</div>
 				</div>
 			</div>
