@@ -149,6 +149,18 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 		"</div>
 	</div>
 </div>";
-echo "<div class='row'><div class='col-sm-12'><br /><code>http://{$domain}/register.php?REF={$userid}</code><br />
-	{$lang['EXPLORE_REF']}</div></div>";
+echo "	<div class='row'>
+			<div class='col-sm-12'>
+				{$lang['EXPLORE_REF']}
+				<div class='table-responsive'>
+					<table class='table'>
+						<tr>
+							<td>
+								<code>http://{$domain}/register.php?REF={$userid}</code>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>";
 $h->endpage();

@@ -243,7 +243,7 @@ $lang['GYM_LAB1']="minutes of helping around your town.";
 
 //Explore
 $lang['EXPLORE_INTRO']='You begin exploring the town and find a few cool things to keep you occupied...';
-$lang['EXPLORE_REF']="That is your referral link. Give it to friends, enemies or just spam it around. You'll receive 25 {$lang['INDEX_SECCURR']} upon them joining!";
+$lang['EXPLORE_REF']="This is your referral link. Give it to friends, associates, and enemies. You'll receive 25 {$lang['INDEX_SECCURR']} upon them joining!";
 $lang['EXPLORE_SHOP']="Shops";
 $lang['EXPLORE_LSHOP']="Local Shops";
 $lang['EXPLORE_POSHOP']="Player-Owned Shops";
