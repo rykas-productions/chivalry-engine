@@ -22,8 +22,6 @@ class headers
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-	<meta name="theme-color" content="#000000">
-
      <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
 
     <!-- CSS -->
@@ -46,6 +44,7 @@ class headers
 			{
 				?> 
 					<link rel="stylesheet" href="../css/bootstrap-purple.css"> 
+					<meta name="theme-color" content="#2d135d">
 				<?php
 			}
 	?>
