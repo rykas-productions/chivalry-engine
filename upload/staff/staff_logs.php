@@ -82,6 +82,9 @@ case "guildvault":
 case "temple":
     logs('temple');
     break;
+case "secmarket":
+    logs('secmarket');
+    break;
 default:
     die();
     break;

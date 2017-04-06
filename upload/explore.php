@@ -41,7 +41,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 					<a href='itemmarket.php'>{$lang['EXPLORE_IMARKET']}</a><br />
 					<a href='#'>{$lang['EXPLORE_IAUCTION']}</a><br />
 					<a href='#'>{$lang['EXPLORE_TRADE']}</a><br />
-					<a href='#'>{$lang['EXPLORE_SCMARKET']}</a><br />	
+					<a href='secmarket.php'>{$lang['EXPLORE_SCMARKET']}</a><br />	
 				</div>
 			</div>
 		</div>
