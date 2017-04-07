@@ -138,7 +138,7 @@ $inv =
         	  	[<a href='itemsend.php?ID={$i['inv_id']}'>{$lang['INVENT_ITMNUSE1']}</a>]
         	  	[<a href='itemsell.php?ID={$i['inv_id']}'>{$lang['INVENT_ITMNUSE2']}</a>]
         	  	[<a href='itemmarket.php?action=add&ID={$i['inv_id']}'>{$lang['INVENT_ITMNUSE3']}</a>]";
-        if ($i['effect1_on'] || $i['effect2_on'] || $i['effect3_on'])
+        if ($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' || $i['effect3_on'] == 'true')
         {
             echo " [<a href='itemuse.php?item={$i['inv_id']}'>{$lang['INVENT_ITMNUSE4']}</a>]";
         }
