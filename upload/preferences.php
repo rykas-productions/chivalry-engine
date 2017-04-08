@@ -403,7 +403,7 @@ function sigchange()
 	global $db,$ir,$userid,$api,$lang,$h;
 	if (isset($_POST['sig']))
 	{
-		$_POST['sig'] = $db->escape(strip_tags(stripslashes($_POST['sig'])));
+		$_POST['sig'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['sig']))));
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesig', stripslashes($_POST['verf'])))
 		{
 			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
@@ -414,11 +414,12 @@ function sigchange()
 			alert('danger',$lang['ERROR_GENERIC'],$lang['SIG_ERR']);
 			die($h->endpage());
 		}
-		$api->UserInfoSetStatic($userid,'signature',$_POST['sig']);
+		$db->query("UPDATE `users` SET `signature` = '{$_POST['sig']}' WHERE `userid` = {$userid}");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['SIG_SUCC'],true,'preferences.php');
 	}
 	else
 	{
+		$ir['signature'] =  strip_tags(stripslashes($ir['signature']));
 		$csrf = request_csrf_html('prefs_changesig');
 		echo "<form method='post'>
 		<table class='table-bordered table'>
