@@ -534,6 +534,46 @@ function user2_dropdown($ddname = "user", $selected = -1)
 }
 
 /**
+ * Constructs a drop-down listbox of all the users in the specified guild to let the user select one.
+ * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
+ * @param int $guild_id [optional] The <i>ID number</i> of the guild who should be selected from.
+ * @param int $selected [optional] The <i>ID number</i> of the bot who should be selected by default.
+ * Not specifying this or setting it to -1 makes the first bot alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
+function guild_user_dropdown($ddname = "user", $guild_id, $selected = -1)
+{
+    global $db;
+    $ret = "<select name='{$ddname}' class='form-control' type='dropdown'>";
+    $q =
+            $db->query(
+                    "SELECT `userid`, `username`
+    				 FROM `users`
+					 WHERE `guild` = {$guild_id}
+    				 ORDER BY `userid` ASC");
+    if ($selected == -1)
+    {
+        $first = 0;
+    }
+    else
+    {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q))
+    {
+        $ret .= "\n<option value='{$r['userid']}'";
+        if ($selected == $r['userid'] || $first == 0)
+        {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
+/**
  * Constructs a drop-down listbox of all the challenge bot NPC users in the game to let the user select one.
  * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
  * @param int $selected [optional] The <i>ID number</i> of the bot who should be selected by default.<br />

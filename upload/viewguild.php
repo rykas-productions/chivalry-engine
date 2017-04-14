@@ -919,7 +919,7 @@ function staff_vault()
                     {$lang['VIEWGUILD_STAFF_VAULT1']}
                 </th>
                 <td>
-                    " . user3_dropdown() . "
+                    " . guild_user_dropdown() . "
                 </td>
             </tr>
             <tr>
@@ -988,7 +988,7 @@ function staff_coowner()
 					{$lang['ITEM_SEND_TH']}
 				</th>
 				<td>
-					" . user3_dropdown('user',$gd['guild_coowner']) . "
+					" . guild_user_dropdown('user',$gd['guild_coowner']) . "
 				</td>
 			</tr>
 			<tr>
@@ -1250,7 +1250,7 @@ function staff_leader()
 					{$lang['ITEM_SEND_TH']}
 				</th>
 				<td>
-					" . user3_dropdown('user',$gd['guild_owner']) . "
+					" . guild_user_dropdown('user',$gd['guild_owner']) . "
 				</td>
 			</tr>
 			<tr>
