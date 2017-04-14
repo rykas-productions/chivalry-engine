@@ -109,7 +109,6 @@ function logs($name)
     if ($attacks == 0)
     {
         echo "There haven't been any actions in the {$logname} logs.";
-		$h->endpage();
         return;
     }
     $pages = ceil($attacks / $app);
@@ -208,7 +207,6 @@ function userlogs()
 		if ($logs == 0)
 		{
 			alert("info","Nothing!","This user hasn't done anything yet.",true,'index.php');
-			$h->endpage();
 			return;
 		}
 		$pages = ceil($logs / $app);
@@ -359,7 +357,6 @@ function alllogs()
     if ($attacks == 0)
     {
         echo "There haven't been any game actions yet.";
-		$h->endpage();
         return;
     }
     $pages = ceil($attacks / $app);
@@ -431,3 +428,4 @@ function alllogs()
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the game logs.");
 }
+$h->endpage();
