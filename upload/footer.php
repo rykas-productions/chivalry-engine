@@ -21,8 +21,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 			
 	<!-- Other JavaScript -->
-	<script src="js/register.js"></script>
-	<script src="js/game.js"></script>
+	<script src="js/register-min.js"></script>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 </body>
