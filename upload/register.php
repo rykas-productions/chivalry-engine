@@ -300,21 +300,53 @@ $cpage = strip_tags(stripslashes($currentpage));
 					<form method='post'>
 						<tbody>
 							<tr>
-								<td><h4><?php echo"{$lang['REG_USERNAME']}"; ?></h4></td>
-								<td><input type="text" class="form-control" id="username" name="username" minlength="3" maxlength="20" placeholder="Enter a valid username here." onkeyup='CheckUsername(this.value);' required></td>
+								<td>
+									<h4>
+										<?php echo"{$lang['REG_USERNAME']}"; ?>
+									</h4>
+								</td>
+								<td>
+									<div id='unerror'>
+										<input type="text" class="form-control" id="username" name="username" minlength="3" maxlength="20" placeholder="Enter a valid username here." onkeyup='CheckUsername(this.value);' required>
+									</div>
+								</td>
 							</tr>
 							<tr>
-								<td><h4><?php echo"{$lang['REG_EMAIL']}"; ?></h4></td>
-								<td><input type="email" class="form-control" id="email" name="email" minlength="3" maxlength="256" placeholder="Enter your email! We promise not to spam you!" onkeyup='CheckEmail(this.value);' required></td>
+								<td>
+									<h4>
+										<?php echo"{$lang['REG_EMAIL']}"; ?>
+									</h4>
+								</td>
+								<td>
+									<div id='emerror'>
+										<input type="email" class="form-control" id="email" name="email" minlength="3" maxlength="256" placeholder="Enter your email! We promise not to spam you!" onkeyup='CheckEmail(this.value);' required>
+									</div>
+								</td>
 							</tr>
 							<tr>
-								<td><h4><?php echo"{$lang['REG_PW']}"; ?></h4></td>
-								<td><input type="password" class="form-control" id="password" name="password" minlength="3" maxlength="256" placeholder="Enter your desired password!" onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
-								<div id='passwordresult'></div></td>
+								<td>
+									<h4>
+										<?php echo"{$lang['REG_PW']}"; ?>
+									</h4>
+								</td>
+								<td>
+									<div id='pwerror'>
+										<input type="password" class="form-control" id="password" name="password" minlength="3" maxlength="256" placeholder="Enter your desired password!" onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
+									</div>
+									<div id='passwordresult'></div>
+								</td>
 							</tr>
 							<tr>
-								<td><h4><?php echo"{$lang['REG_CPW']}"; ?></h4></td>
-								<td><input type="password" class="form-control" id="cpassword" name="cpassword" minlength="3" maxlength="256" placeholder="Confirm the password you just entered." onkeyup='PasswordMatch();' required></td>
+								<td>
+									<h4>
+										<?php echo"{$lang['REG_CPW']}"; ?>
+									</h4>
+								</td>
+								<td>
+									<div id='cpwerror'>
+										<input type="password" class="form-control" id="cpassword" name="cpassword" minlength="3" maxlength="256" placeholder="Confirm the password you just entered." onkeyup='PasswordMatch();' required>
+									</div>
+								</td>
 							</tr>
 							<tr>
 								<td><h4><?php echo"{$lang['REG_SEX']}"; ?></h4></td>

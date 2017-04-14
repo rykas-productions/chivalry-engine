@@ -26,23 +26,23 @@ require_once('../../globals_nonauth.php');
 $email = isset($_POST['email']) ? stripslashes($_POST['email']) : '';
 if (empty($email))
 {
-    echo "<script>document.getElementById('email').style.backgroundColor = '#f2dede';</script>";
+    echo "<script>document.getElementById('emerror').className = 'has-error';</script>";
 	die(alert('danger',$lang['ERROR_GENERIC'],$lang['SCRIPT_ERR2'],false));
 }
 if (!valid_email($email))
 {
-    echo "<script>document.getElementById('email').style.backgroundColor = '#f2dede';</script>";
+    echo "<script>document.getElementById('emerror').className = 'has-error';</script>";
 	die(alert('danger',$lang['ERROR_GENERIC'],$lang['SCRIPT_ERR1'],false));
 }
 $e_email = $db->escape($email);
 $q = $db->query("SELECT COUNT(`userid`) FROM users WHERE `email` = '{$e_email}'");
 if ($db->fetch_single($q) != 0)
 {
-    echo "<script>document.getElementById('email').style.backgroundColor = '#f2dede';</script>";
+    echo "<script>document.getElementById('emerror').className = 'has-error';</script>";
 	die(alert('danger',$lang['ERROR_GENERIC'],$lang['SCRIPT_ERR'],false));
 }
 else
 {
-    echo "<script>document.getElementById('email').style.backgroundColor = '#dff0d8';</script>";
+    echo "<script>document.getElementById('emerror').className = 'has-success';</script>";
 }
 $db->free_result($q);
