@@ -67,19 +67,19 @@ function attacking()
 		die($h->endpage());
 	}
 	//Test for if the specified opponent is the current user.
-	if ($_GET['user'] == $userid)
+	else if ($_GET['user'] == $userid)
 	{
 		alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_START_NOTYOU'],true,'index.php');
 		die($h->endpage());
 	}
 	//Test for if the current user has more than 1 health points.
-	if ($ir['hp'] <= 1)
+	else if ($ir['hp'] <= 1)
 	{
 		alert("danger",$lang["GEN_INFIRM"],$lang['ATTACK_START_YOUNOHP'],true,'index.php');
 		die($h->endpage());
 	}
 	//Test for if the player has already lost a fight.
-	if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] == 1)
+	else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] == 1)
 	{
 		$_SESSION['attacklost'] = 0;
 		alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_START_YOUCHICKEN'],true,'index.php');
@@ -120,7 +120,7 @@ function attacking()
 		die($h->endpage());
 	}
 	//Check if the opponent is currently in the infirmary.
-	if ($api->UserStatus($_GET['user'],'infirmary') == true)
+	else if ($api->UserStatus($_GET['user'],'infirmary') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -129,7 +129,7 @@ function attacking()
 		die($h->endpage());
 	}
 	//Check if the current user is in the infirmary.
-	if ($api->UserStatus($ir['userid'],'infirmary') == true)
+	else if ($api->UserStatus($ir['userid'],'infirmary') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -138,7 +138,7 @@ function attacking()
 		die($h->endpage());
 	}
 	//Check if the opponent is in the dungeon.
-	if ($api->UserStatus($userid,'dungeon') == true)
+	else if ($api->UserStatus($userid,'dungeon') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -147,7 +147,7 @@ function attacking()
 		die($h->endpage());
 	}
 	//Check if the current user is in the dungeon.
-	if ($api->UserStatus($userid,'dungeon') == true)
+	else if ($api->UserStatus($userid,'dungeon') == true)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -156,7 +156,7 @@ function attacking()
 		die($h->endpage());
 	}
 	//Check if opponent has permission to be attacked.
-	if (permission('CanBeAttack',$_GET['user']) == false)
+	else if (permission('CanBeAttack',$_GET['user']) == false)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -165,7 +165,7 @@ function attacking()
 		die($h->endpage());
 	}
 	//Check if the current player has permission to attack.
-	if (permission('CanAttack',$userid) == false)
+	else if (permission('CanAttack',$userid) == false)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
@@ -174,7 +174,7 @@ function attacking()
 		die($h->endpage());
 	}
 	//Check if the opponent is level 2 or lower, and has been on in the last 15 minutes.
-	if ($odata['level'] < 3 && $odata['laston'] > $laston)
+	else if ($odata['level'] < 3 && $odata['laston'] > $laston)
 	{
 		$_SESSION['attacking'] = 0;
 		$ir['attacking'] = 0;
