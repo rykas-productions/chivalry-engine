@@ -8,8 +8,7 @@
 */
 require("globals.php");
 $AnnouncementCount = $ir['announcements'];
-$q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC");	//Select all data from the
-																			//the announcements data table.
+$q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC");
 echo "<table class='table table-bordered table-hover table-responsive'>
 <thead>
 	<tr>
@@ -20,7 +19,6 @@ echo "<table class='table table-bordered table-hover table-responsive'>
 <tbody>";
 while ($r = $db->fetch_row($q))
 {
-	//Janky way to display/count-down "NEW" announcements
     if ($AnnouncementCount > 0)
     {
         $AnnouncementCount--;
@@ -30,25 +28,20 @@ while ($r = $db->fetch_row($q))
     {
         $new = "<br /><small><span class='label label-success'>{$lang['ANNOUNCEMENTS_READ']}</span></small>";
     }
+	$PosterQuery=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['ann_poster']}");
+	$Poster=$db->fetch_single($PosterQuery);
 	$AnnouncementTime=DateTime_Parse($r['ann_time']);
     $r['ann_text'] = nl2br($r['ann_text']);
 	echo "<tr>
-			<td>
-				{$AnnouncementTime}<br />
-				{$lang['ANNOUNCEMENTS_POSTED']} 
-				<a href='profile.php?user={$r['ann_poster']}'>{$api->SystemUserIDtoName($r['ann_poster'])}</a>
-				{$new}
-			</td>
-			<td>
-				{$r['ann_text']}
-			</td>
+		<td>{$AnnouncementTime}<br />{$lang['ANNOUNCEMENTS_POSTED']} <a href='profile.php?user={$r['ann_poster']}'>{$Poster}</a>{$new}</td>
+		<td>{$r['ann_text']}</td>
 	</tr>";
 }
 $db->free_result($q);
 echo"</table>";
 if ($ir['announcements'] > 0)
 {
-	//Set player's unread announcement count to zero.
-    $db->query("UPDATE `users` SET `announcements` = 0 WHERE `userid` = '{$userid}'");
+    $db->query(
+            "UPDATE `users` SET `announcements` = 0 WHERE `userid` = '{$userid}'");
 }
 $h->endpage();
