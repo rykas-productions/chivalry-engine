@@ -440,6 +440,7 @@ function viewtopic()
 	</form>
 	<br />
 	<center>
+	<div class='hidden-xs'>
 	<table>
 		<tr>
 			<td>
@@ -465,6 +466,24 @@ function viewtopic()
 			</td>
 		</tr>
 	</table>
+	</div>
+	<div class='visible-xs-block'>
+		<form>
+			<input type='hidden' value='pin' name='act'>
+			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+			<input type='submit' class='btn btn-default' value='{$lang['FORUM_TOPIC_PIN']}'>
+		</form>
+		<form>
+			<input type='hidden' value='lock' name='act'>
+			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+			<input type='submit' class='btn btn-default' value='{$lang['FORUM_TOPIC_LOCK']}'>
+		</form>
+		<form action='?act=deletopic'>
+			<input type='hidden' value='deletopic' name='act'>
+			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+			<input type='submit' class='btn btn-default' value='{$lang['FORUM_TOPIC_DELETE']}'>
+		</form>
+	</div>
 	</center><br />
             ";
     }
