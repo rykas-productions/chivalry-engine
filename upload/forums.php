@@ -142,7 +142,7 @@ function idx()
          echo "<tr>
 					<td>
 						<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
-						<div class='hidden-xs'><br /><small>{$r['ff_desc']}</small></div>
+						<small class='hidden-xs'><br />{$r['ff_desc']}</small>
 					</td>
 					<td class='hidden-xs'>
 						{$posts}
@@ -206,7 +206,7 @@ function idx()
         echo "<tr>
         		<td>
         			<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
-        			<div class='hidden-xs'><br /><small>{$r['ff_desc']}</small></div>
+        			<small class='hidden-xs'><br />{$r['ff_desc']}</small>
         		</td>
         		<td class='hidden-xs'>
 					{$posts}
@@ -325,7 +325,7 @@ function viewforum()
         echo "<tr>
         		<td>
 					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
-					<div class='hidden-xs'><small>{$r2['ft_desc']}</small></div>
+					<small class='hidden-xs'>{$r2['ft_desc']}</small>
 				</td>
 				<td class='hidden-xs'>{$pc}</td>
 				<td class='hidden-xs'> 
