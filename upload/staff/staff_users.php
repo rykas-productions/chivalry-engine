@@ -569,7 +569,7 @@ function edituser()
 					{$lang['GEN_LAB']}
 				</th>
 				<td>
-					<input type='number' min='1' class='form-control' required='1' name='labour' value='{$itemi['labor']}' />
+					<input type='number' min='1' class='form-control' required='1' name='labor' value='{$itemi['labor']}' />
 				</td>
 			</tr>
 			<tr>
