@@ -29,6 +29,9 @@ case "restore":
 case "errlog":
     errlog();
     break;
+case "staff":
+    staff();
+    break;
 default:
     die();
     break;
@@ -267,11 +270,11 @@ function basicsettings()
 		$AttackEnergy = (isset($_POST['attenc']) && is_numeric($_POST['attenc'])) ? abs(intval($_POST['attenc'])) : '';
 		$Paypal = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'ppemail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['ppemail'])) : '';
 		$GameOwner = (isset($_POST['ownername']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['ownername'])) ? $db->escape(strip_tags(stripslashes($_POST['ownername']))) : '';
-		$GameDesc =  (isset($_POST['gamedesc'])) ? $db->escape(strip_tags( stripslashes($_POST['gamedesc']))) : '';
-		$FGPW =  (isset($_POST['fgpw'])) ? $db->escape(strip_tags( stripslashes($_POST['fgpw']))) : '';
-		$FGUN =  (isset($_POST['fgun'])) ? $db->escape(strip_tags( stripslashes($_POST['fgun']))) : '';
-		$rcpb =  (isset($_POST['rcpublic'])) ? $db->escape(strip_tags( stripslashes($_POST['rcpublic']))) : '';
-		$rcpr =  (isset($_POST['rcprivate'])) ? $db->escape(strip_tags( stripslashes($_POST['rcprivate']))) : '';
+		$GameDesc =  (isset($_POST['gamedesc'])) ? $db->escape(strip_tags(stripslashes($_POST['gamedesc']))) : '';
+		$FGPW =  (isset($_POST['fgpw'])) ? $db->escape(strip_tags(stripslashes($_POST['fgpw']))) : '';
+		$FGUN =  (isset($_POST['fgun'])) ? $db->escape(strip_tags(stripslashes($_POST['fgun']))) : '';
+		$rcpb =  (isset($_POST['rcpublic'])) ? $db->escape(strip_tags(stripslashes($_POST['rcpublic']))) : '';
+		$rcpr =  (isset($_POST['rcprivate'])) ? $db->escape(strip_tags(stripslashes($_POST['rcprivate']))) : '';
 		$PasswordEffort = (isset($_POST['PWEffort']) && is_numeric($_POST['PWEffort'])) ? abs(intval($_POST['PWEffort'])) : 10;
 		$BankFeePerc = (isset($_POST['bankfeepercent']) && is_numeric($_POST['bankfeepercent'])) ? abs(intval($_POST['bankfeepercent'])) : 10;
 		$BankFeeMax = (isset($_POST['bankfee']) && is_numeric($_POST['bankfee'])) ? abs(intval($_POST['bankfee'])) : 5000;
@@ -532,4 +535,75 @@ function errlog()
 	echo "
 	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents($dir . '\cache\error_log.txt') . "</textarea>";
 	$h->endpage();
+}
+function staff()
+{
+	global $db,$userid,$api,$lang,$h;
+	if (isset($_POST['user']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_priv', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+		$_POST['priv'] =  (isset($_POST['priv'])) ? $db->escape(strip_tags(stripslashes($_POST['priv']))) : 'member';
+		$priv_array=array('Member','Admin','Web Developer','Forum Moderator','Assistant','NPC');
+		if (!in_array($_POST['priv'],$priv_array))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_PRIV_ERR']);
+			die($h->endpage());
+		}
+		if (!($api->SystemUserIDtoName($_POST['user'])))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_PRIV_ERR1']);
+			die($h->endpage());
+		}
+		$api->UserInfoSetStatic($_POST['user'],'user_level',$_POST['priv']);
+		alert('success',$lang['ERROR_SUCCESS'],"{$lang['STAFF_PRIV_SUCC']} {$_POST['priv']}.");
+		die($h->endpage());
+	}
+	else
+	{
+		$csrf = request_csrf_html('staff_priv');
+		echo "<form method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['STAFF_PRIV_INFO']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_PRIV_USER']}
+					</th>
+					<td>
+						" . user_dropdown('user') . "
+					</td>
+				</tr>
+				
+				<tr>
+					<th>
+						{$lang['STAFF_PRIV_PRIVLIST']}
+					</th>
+					<td>
+						<select name='priv' class='form-control'>
+							<option value='NPC'>{$lang['SCU_UL1']}</option>
+							<option value='Member'>{$lang['SCU_UL2']}</option>
+							<option value='Forum Moderator'>{$lang['SCU_UL4']}</option>
+							<option value='Assistant'>{$lang['SCU_UL5']}</option>
+							<option value='Web Developer'>{$lang['SCU_UL6']}</option>
+							<option value='Admin'>{$lang['SCU_UL3']}</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_PRIV_PRIVBTN']}'>
+					</td>
+				</tr>
+			</table>
+			{$csrf}
+		</form>";
+	}
 }

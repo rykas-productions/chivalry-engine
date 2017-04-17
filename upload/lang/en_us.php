@@ -1325,6 +1325,7 @@ $lang['BOTTENT_TH2']="Bot Cooldown";
 $lang['BOTTENT_TH3']="Bot Item Drop";
 $lang['BOTTENT_TH4']="Attack";
 $lang['BOTTENT_WAIT']="Cooldown Remaining: ";
+$lang['BOTTENT_CHANCE']="Success Chance:";
 
 //Staff bots
 $lang['STAFF_BOTS_TITLE']="Staff Bots";
@@ -1498,6 +1499,7 @@ $lang['STAFF_IDX_ADMIN_TAB2']="Create an Announcement";
 $lang['STAFF_IDX_ADMIN_TAB3']="Game Diagnostics";
 $lang['STAFF_IDX_ADMIN_TAB4']="Refresh Users";
 $lang['STAFF_IDX_ADMIN_TAB5']="View Error Log";
+$lang['STAFF_IDX_ADMIN_TAB6']="Set User Level";
 $lang['STAFF_IDX_MODULES_TAB1']="Crimes";
 $lang['STAFF_IDX_USERS_TAB1']="Create User";
 $lang['STAFF_IDX_USERS_TAB2']="Edit User";
@@ -1867,4 +1869,13 @@ $lang['SMARKET_TH']="{$lang['INDEX_PRIMCURR']} Each";
 $lang['SMARKET_BTN']="Create Offer";
 $lang['SMARKET_AERR']="You input some invalid values on the previous form.";
 $lang['SMARKET_AERR1']="You do not have that much {$lang['INDEX_SECCURR']} to add to the market.";
+
+//Staff Privledges
+$lang['STAFF_PRIV_INFO']="Select a user, then set their permission level.";
+$lang['STAFF_PRIV_USER']="User";
+$lang['STAFF_PRIV_PRIVLIST']="Privledge";
+$lang['STAFF_PRIV_PRIVBTN']="Give Privledge";
+$lang['STAFF_PRIV_ERR']="You're trying to give an invalid or unknown privledge. Check your source and try again.";
+$lang['STAFF_PRIV_ERR1']="The user you're trying to give privledges to is invalid or doesn't exist.";
+$lang['STAFF_PRIV_SUCC']="You have successfully updated this user's privledges to";
 ?>

@@ -104,6 +104,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_settings.php?action=diagnostics'>{$lang['STAFF_IDX_ADMIN_TAB3']}</a><br />
 						<a href='staff_settings.php?action=errlog'>{$lang['STAFF_IDX_ADMIN_TAB5']}</a><br />
 						<a href='staff_settings.php?action=restore'>{$lang['STAFF_IDX_ADMIN_TAB4']}</a><br />
+						<a href='staff_settings.php?action=staff'>{$lang['STAFF_IDX_ADMIN_TAB6']}</a><br />
 					</div>
 				</div>
 			</div>
