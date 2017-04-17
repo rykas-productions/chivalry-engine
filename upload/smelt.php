@@ -64,7 +64,7 @@ function home()
 						$t['itmname'] = "<span style='color:red;'>".$t['itmname']."</span>";
 						$can_craft = FALSE;
 					}
-					$items_needed .= $t['itmname'] ." x ". $qty[$n] ."<br />";
+					$items_needed .= $t['itmname'] ." x ". $qty[$n] ." ({$lang['GEN_HAVE']} " . number_format($api->UserCountItem($userid,$i)) . ")<br />";
 					$n++;
 				  }
 				unset($n);
