@@ -544,13 +544,13 @@ function viewtopic()
         {
 			if ($memb['display_pic'])
 			{
-				$av="<center><img src='{$memb['display_pic']}' class='img-responsive' width='150' title='This is the avatar of {$PN}'></center>";
+				$av="<center><img src='{$memb['display_pic']}' class='img-responsive' width='75' title='This is the avatar of {$PN}'></center>";
 			}
 			else
 			{
 				$av="";
 			}
-			$memb['signature'] = $parser->parse($memb['signature']) ? $parser->parse($memb['signature']) : "NA";
+			$memb['signature'] = !empty($memb['signature']) ? $parser->parse($memb['signature']) : "NA";
 			$memb['signature'] = $parser->getAsHtml($memb['signature']);
         }
 		$parser->parse($r['fp_text']);
@@ -571,9 +571,8 @@ function viewtopic()
 			$usertopicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_owner_id`={$r['fp_poster_id']}");
 			$usertopics=$db->fetch_single($usertopicsq);
             print
-                    "<a href='profile.php?user={$r['fp_poster_id']}'>{$PN}</a>
+                    "<div class='hidden-xs'>{$av}</div><a href='profile.php?user={$r['fp_poster_id']}'>{$PN}</a>
                     	[{$r['fp_poster_id']}]<br />
-					{$av}<br />
                      <b>{$lang['GEN_RANK']}:</b> {$memb['user_level']}<br />
 					 <b>{$lang['FORUM_F_PC']}:</b> {$userposts}<br />
 					 <b>{$lang['FORUM_F_TC']}:</b> {$usertopics}<br />";
