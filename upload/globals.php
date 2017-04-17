@@ -14,7 +14,6 @@ if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false)
 session_name('CENGINE');
 session_start();
 header('X-Frame-Options: SAMEORIGIN');
-
 if(isset($_POST['lang']))
 {
 	$lang = $_POST['lang'];
@@ -152,11 +151,16 @@ else
 $ir = $db->fetch_row($is);
 if ($ir['force_logout'] != 'false')
 {
-    $db->query(
-            "UPDATE `users`
-    			SET `force_logout` = 'false'
-    			WHERE `userid` = {$userid}");
+    $db->query("UPDATE `users` SET `force_logout` = 'false' WHERE `userid` = {$userid}");
     session_unset();
+    session_destroy();
+    $login_url = "login.php";
+    header("Location: {$login_url}");
+    exit;
+}
+if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SESSION['last_login']))
+{
+	session_unset();
     session_destroy();
     $login_url = "login.php";
     header("Location: {$login_url}");

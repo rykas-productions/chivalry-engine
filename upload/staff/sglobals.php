@@ -135,6 +135,14 @@ if ($ir['force_logout'] != 'false')
     header("Location: {$login_url}");
     exit;
 }
+if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SESSION['last_login']))
+{
+	session_unset();
+    session_destroy();
+    $login_url = "../login.php";
+    header("Location: {$login_url}");
+    exit;
+}
 include("../class/class_api.php");
 $api = new api;
 if (!$api->UserMemberLevelGet($userid,'forum moderator'))

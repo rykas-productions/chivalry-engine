@@ -80,6 +80,7 @@ else
 	session_regenerate_id();
     $_SESSION['loggedin'] = 1;
     $_SESSION['userid'] = $mem['userid'];
+	$_SESSION['last_login']=time();
 	$db->query("UPDATE `users` SET `loginip` = '{$IP}', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}'
              WHERE `userid` = {$mem['userid']}");
 	$encpsw = encode_password($raw_password);
