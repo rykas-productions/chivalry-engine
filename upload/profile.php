@@ -319,23 +319,15 @@ else
 							</tr>
 							<tr>
 								<td>{$lang['PROFILE_STAFF_LH']}</td>
-								<td>$r[lastip]</td>
+								<td>$r[lastip] (" . @gethostbyaddr($r['lastip']) . ")</td>
 							</tr>
 							<tr>
 								<td>{$lang['PROFILE_STAFF_LL']}</td>
-								<td>$r[loginip]</td>
+								<td>$r[loginip] (" . @gethostbyaddr($r['loginip']) . ")</td>
 							</tr>
 							<tr>
 								<td>{$lang['PROFILE_STAFF_REGIP']}</td>
-								<td>$r[registerip]</td>
-							</tr>
-							<tr>
-								<td>{$lang['PROFILE_STAFF_THRT']}</td>
-								<td>{$fg['threat']}</td>
-							</tr>
-							<tr>
-								<td>{$lang['PROFILE_STAFF_RISK']}</td>
-								<td>{$fg['risk_level']}</td>
+								<td>$r[registerip] (" . @gethostbyaddr($r['registerip']) . ")</td>
 							</tr>
 							<tr>
 								<td>
