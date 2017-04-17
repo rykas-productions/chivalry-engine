@@ -554,7 +554,7 @@ function lost()
 		alert('warning',$lang['CSRF_ERROR_TITLE'],$lang['ATT_NC'],true,'index.php');
 		die($h->endpage());
 	}
-	$od = $db->query("SELECT `username`, `level`, `user_level`, `guild` FROM `users` WHERE `userid` = {$_GET['ID']}");
+	$od = $db->query("SELECT `username`, `level`, `user_level`, `guild`, `xp` FROM `users` WHERE `userid` = {$_GET['ID']}");
 	if(!$db->num_rows($od)) 
 	{
 		echo "404";
@@ -574,7 +574,7 @@ function lost()
 	$api->UserInfoSetStatic($userid,"attacking",0);
 	$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 	$hospreason = 'Picked a fight and lost';
-	$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
+	$api->UserStatusSet($_GET['ID'],'infirmary',$hosptime,$hospreason);
 	//Give winner some XP
 	$r['xp_needed'] = round(($r['level'] + 2.25) * ($r['level'] + 2.25) * ($r['level'] + 2.25) * 2);
 	$qe2 = $r['level'] * $r['level'] * $r['level'];
@@ -583,7 +583,7 @@ function lost()
 	$expperc2 = round($expgainp / $r['xp_needed'] * 100);
 	$api->GameAddNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
 	$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$_GET['ID']}] and lost, gaining {$hosptime} minutes in the infirmary.");
-	$api->UserInfoSet($_GET['ID'],"xp",$expgainp2);
+	$api->UserInfoSetStatic($_GET['ID'],"xp",$r['xp']+$expgainp2);
 	$_SESSION['attacklost'] = 0;
 }
 function xp()
