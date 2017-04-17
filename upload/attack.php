@@ -574,7 +574,7 @@ function lost()
 	$api->UserInfoSetStatic($userid,"attacking",0);
 	$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 	$hospreason = 'Picked a fight and lost';
-	$api->UserStatusSet($_GET['ID'],'infirmary',$hosptime,$hospreason);
+	$api->UserStatusSet($userid,'infirmary',$hosptime,$hospreason);
 	//Give winner some XP
 	$r['xp_needed'] = round(($r['level'] + 2.25) * ($r['level'] + 2.25) * ($r['level'] + 2.25) * 2);
 	$qe2 = $r['level'] * $r['level'] * $r['level'];
