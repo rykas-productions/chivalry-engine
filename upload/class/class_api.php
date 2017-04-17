@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.4.1";
+		return "17.4.2";
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -978,6 +978,27 @@ class api
 			{
 				return true;
 			}
+		}
+	}
+	/*
+		Function to fetch item count from a user's inventory.
+		@param int userid = User ID of the player to test inventory.
+		@param int itemid = Item ID to count.
+		Returns the count of Item ID found on the user.
+	*/
+	function UserCountItem($userid,$itemid)
+	{
+		global $db;
+		$userid = (isset($userid) && is_numeric($userid)) ? abs(intval($userid)) : 0;
+		$itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
+		if (empty($userid) || empty($itemid))
+		{
+			return false;
+		}
+		else
+		{
+			$qty=$db->fetch_single($db->query("SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$itemid} AND `inv_userid` = {$userid}"));
+			return $qty;
 		}
 	}
 }
