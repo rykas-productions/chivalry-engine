@@ -66,19 +66,16 @@ function attacking()
 		alert("danger",$lang['ERROR_NONUSER'],$lang['ATTACK_START_NOUSER'],true,'index.php');
 		die($h->endpage());
 	}
-	//Test for if the specified opponent is the current user.
 	else if ($_GET['user'] == $userid)
 	{
 		alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_START_NOTYOU'],true,'index.php');
 		die($h->endpage());
 	}
-	//Test for if the current user has more than 1 health points.
-	else if ($ir['hp'] <= 1)
+	else if ($ir['hp'] <= 1 && $ir['attacking'] == 0)
 	{
 		alert("danger",$lang["GEN_INFIRM"],$lang['ATTACK_START_YOUNOHP'],true,'index.php');
 		die($h->endpage());
 	}
-	//Test for if the player has already lost a fight.
 	else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] == 1)
 	{
 		$_SESSION['attacklost'] = 0;
