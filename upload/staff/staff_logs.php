@@ -85,6 +85,9 @@ case "temple":
 case "secmarket":
     logs('secmarket');
     break;
+case "mining":
+    logs('mining');
+    break;
 default:
     die();
     break;
