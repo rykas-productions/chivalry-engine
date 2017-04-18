@@ -55,11 +55,9 @@ class headers
     <!-- Custom CSS -->
     <style>
     body {
-        padding-top: 70px;
-        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-    }
-	a {
-		color: gray;
+	padding-top: 70px;
+	font-size: 16px;
+	/* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
 	}
     </style>
 
