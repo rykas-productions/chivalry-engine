@@ -125,7 +125,7 @@ $inv =
             		</tr>";
         }
         echo "<tr>
-        		<td><a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip'"; ?> title="<?php echo $r['itmdesc']; ?>" <?php echo ">{$i['itmname']}</a>";
+        		<td><a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' title='{$r['itmdesc']}'>{$i['itmname']}</a>";
         if ($i['inv_qty'] > 1)
         {
             echo " (x{$i['inv_qty']})";
