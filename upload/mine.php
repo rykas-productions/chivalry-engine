@@ -20,12 +20,12 @@ mining_levelup();
 echo "<h2>{$lang['EXPLORE_MINE']}</h2><hr />";
 if ($api->UserStatus($userid,'infirmary') == true)
 {
-	alert('danger',"{$lang["GEN_INFIRM"]}","{$lang['MINE_INFIRM']}");
+	alert('danger',$lang["GEN_INFIRM"],$lang['MINE_INFIRM']);
 	die($h->endpage());
 }
 if ($api->UserStatus($userid,'dungeon') == true)
 {
-	alert('danger',"{$lang["GEN_DUNG"]}","{$lang['MINE_DUNGEON']}");
+	alert('danger',$lang["GEN_DUNG"],$lang['MINE_DUNGEON']);
 	die($h->endpage());
 }
 if (!isset($_GET['action']))
