@@ -34,7 +34,7 @@ if ($db->num_rows($ready_to_run))
 	$db->query("UPDATE mining SET miningpower=miningpower+(max_miningpower/(10)) WHERE miningpower<max_miningpower");
 	$db->query("UPDATE mining SET miningpower=max_miningpower WHERE miningpower>max_miningpower");
 	
-	$time = 1;
+	$time = 300;
 	$db->query("UPDATE `crons` SET `nextUpdate`=`nextUpdate`+{$time} WHERE `file`='{$file}'");
 }
 
