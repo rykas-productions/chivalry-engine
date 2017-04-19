@@ -510,7 +510,7 @@ function maillogs()
 				[{$r['mail_to']}]
 			</td>
 			<td>
-				" . $db->escape($r['mail_text']) . "
+				" . stripslashes(strip_tags($r['mail_text'])) . "
 			</td>
            ";
         echo '</tr>';
