@@ -220,6 +220,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 				<div class='panel panel-default'>
 					<div class='panel-body'>
 						<a href='staff_logs.php?action=alllogs'>{$lang['STAFF_IDX_LOGS_TAB1']}</a><br />
+						<a href='staff_logs.php?action=maillogs'>{$lang['STAFF_IDX_LOGS_TAB26']}</a><br />
 						<a href='staff_logs.php?action=userlogs'>{$lang['STAFF_IDX_LOGS_TAB2']}</a><br />
 						<a href='staff_logs.php?action=traininglogs'>{$lang['STAFF_IDX_LOGS_TAB3']}</a><br />
 						<a href='staff_logs.php?action=attacklogs'>{$lang['STAFF_IDX_LOGS_TAB4']}</a><br />
