@@ -88,6 +88,9 @@ case "secmarket":
 case "mining":
     logs('mining');
     break;
+case "mail":
+	maillogs();
+	break;
 default:
     die();
     break;
@@ -153,7 +156,7 @@ function logs($name)
 		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
 		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
+        	<td>" . DateTime_Parse($r['log_time'])
                 . "</td>
         	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
         	<td>{$r['log_text']}</td>
@@ -255,7 +258,7 @@ function userlogs()
 		   echo "
 				<tr>
 					<td>
-						" . date("F j, Y, g:i:s a", $r['log_time']) . "
+						" . DateTime_Parse($r['log_time']) . "
 					</td>
 					<td>
 						<a href='../profile.php?user={$user}'>{$r['username']}</a> [{$user}]
@@ -400,7 +403,7 @@ function alllogs()
 		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
 		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
+        	<td>" . DateTime_Parse($r['log_time'])
                 . "</td>
         	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
         	<td>{$r['log_text']}</td>
@@ -430,5 +433,110 @@ function alllogs()
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the game logs.");
+}
+function maillogs()
+{
+	global $db,$ir,$h,$lang,$userid,$api;
+	$logname='mail';
+    echo "
+	<h3>Mail Logs</h3>
+	<hr />
+ 	  ";
+    if (!isset($_GET['st']))
+    {
+        $_GET['st'] = 0;
+    }
+    $st = abs(intval($_GET['st']));
+    $app = 100;
+    $q = $db->query("SELECT COUNT(`mail_id`) FROM `mail`");
+    $attacks = $db->fetch_single($q);
+    $db->free_result($q);
+    if ($attacks == 0)
+    {
+        echo "There haven't been any messages sent yet.";
+        return;
+    }
+    $pages = ceil($attacks / $app);
+    echo '<ul class="pagination">Pages:&nbsp;<br />';
+    for ($i = 1; $i <= $pages; $i++)
+    {
+        $s = ($i - 1) * $app;
+		if ($s == $st)
+        {
+            echo "<li class='active'>";
+        }
+
+		else
+		{
+			echo "<li>";
+		}
+        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
+        echo "</li></a>&nbsp;";
+    }
+    echo "
+	</ul>
+    <br />
+    <table class='table table-bordered table-hover table-reponsive'>
+    		<tr>
+    			<th>Time</th>
+    			<th>Sender</th>
+				<th>Receiver</th>
+    			<th>Message</th>
+    		</tr>
+       ";
+    $q =
+            $db->query(
+                    "SELECT `mail_to`, `mail_from`, `mail_text`, `mail_time`
+                     FROM `mail`
+                     ORDER BY `mail_time` DESC
+                     LIMIT $st, $app");
+    while ($r = $db->fetch_row($q))
+    {
+        echo "
+		<tr>
+        	<td>
+				" . DateTime_Parse($r['mail_time']) . "
+			</td>
+        	<td>
+				<a href='../profile.php?user={$r['mail_from']}'>
+					{$api->SystemUserIDtoName($r['mail_from'])}
+				</a> 
+				[{$r['mail_from']}]
+			</td>
+        	<td>
+				<a href='../profile.php?user={$r['mail_to']}'>
+					{$api->SystemUserIDtoName($r['mail_to'])}
+				</a> 
+				[{$r['mail_to']}]
+			</td>
+			<td>
+				" . $db->escape($r['mail_text']) . "
+			</td>
+           ";
+        echo '</tr>';
+    }
+    $db->free_result($q);
+    echo "
+    </table>
+    <center>
+    <ul class='pagination'>Pages:<br />
+       ";
+    for ($i = 1; $i <= $pages; $i++)
+    {
+        $s = ($i - 1) * $app;
+		if ($s == $st)
+        {
+            echo "<li class='active'>";
+        }
+
+		else
+		{
+			echo "<li>";
+		}
+        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
+        echo "</li></a>&nbsp;";
+    }
+    $mypage = floor($_GET['st'] / 100) + 1;
+	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the mail logs.");
 }
 $h->endpage();
