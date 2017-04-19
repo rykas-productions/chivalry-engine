@@ -367,7 +367,7 @@ function attacking()
 				{
 					$ir['hp'] = 0;
 				}
-				$api->UserInfoSet($userid,"hp",0);
+				$api->UserInfoSet($userid,"hp",-$dam);
 				$ns = $_GET['nextstep'] + 1;
 				echo "{$ns}) {$lang['ATTACK_FIGHT_ATTACKO_HIT1']} {$wep}, {$odata['username']} {$lang['ATTACK_FIGHT_ATTACKO_HIT2']} {$dam} {$lang['ATTACK_FIGHT_ATTACKY_HIT4']} ({$youdata['hp']} {$lang['ATTACK_FIGHT_ATTACK_HPREMAIN']})<br />";
 			}
