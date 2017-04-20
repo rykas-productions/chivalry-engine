@@ -1738,6 +1738,7 @@ $lang['AUTH_ERROR8']="Incorrect email and password combination.";
 $lang['HDR_JS']="You need to enable Javascript for this game to work efficiently.";
 $lang['HDR_REKT']="Your account may be broken. Please email help@";
 $lang['HDR_REKT1']="stating your username and User ID.";
+$lang['HDR_B2G']="Back to Game";
 
 //Password Reset Form
 $lang['PWR_INFO']="Please enter the email adress tied to your account so we can send information on how to reset your password. Please be sure to check your junk folder.";

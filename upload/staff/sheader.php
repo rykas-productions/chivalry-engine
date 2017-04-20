@@ -13,64 +13,62 @@ class headers
     {
 		global $ir, $set, $lang, $db, $userid;
 		?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<center>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-     <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
+		<!DOCTYPE html>
+		<html lang="en">
+		<head>
+		<center>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
 
-    <!-- CSS -->
-    <?php
-	if ($ir['theme'] == 1)
-			{
-				?>  
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-					<meta name="theme-color" content="#e7e7e7">
-				<?php
-			}
-			elseif ($ir['theme'] == 2)
-			{
-				?> 
-					<link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css"> 
-					<meta name="theme-color" content="#375a7f">
-				<?php
-			}
-			elseif ($ir['theme'] == 3)
-			{
-				?> 
-					<link rel="stylesheet" href="../css/bootstrap-purple.css"> 
-					<meta name="theme-color" content="#2d135d">
-				<?php
-			}
-	?>
-	<link href="../css/bs2.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		<!-- CSS -->
+		<?php
+		if ($ir['theme'] == 1)
+				{
+					?>  
+						<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+						<meta name="theme-color" content="#e7e7e7">
+					<?php
+				}
+				elseif ($ir['theme'] == 2)
+				{
+					?> 
+						<link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css"> 
+						<meta name="theme-color" content="#375a7f">
+					<?php
+				}
+				elseif ($ir['theme'] == 3)
+				{
+					?> 
+						<link rel="stylesheet" href="../css/bootstrap-purple.css"> 
+						<meta name="theme-color" content="#2d135d">
+					<?php
+				}
+		?>
+		<link href="../css/bs2.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
-    <!-- Custom CSS -->
-    <style>
-    body {
-	padding-top: 70px;
-	font-size: 16px;
-	/* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-	}
-    </style>
+		<!-- Custom CSS -->
+		<style>
+		body {
+		padding-top: 70px;
+		font-size: 16px;
+		/* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+		}
+		</style>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-</head>
-
-<body>
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		</head>
+		<body>
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -88,7 +86,7 @@ class headers
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="../explore.php">Explore</a>
+                        <a href="../index.php"><?php echo $lang['HDR_B2G']; ?></a>
                     </li>
                 </ul>
 					<ul class="nav navbar-nav navbar-right">
@@ -235,7 +233,7 @@ class headers
 				<?php
 				die($h->endpage());
 			}
-				}
+		}
 		date_default_timezone_set($ir['timezone']); 
 	}
 	function userdata($ir, $lv, $fm, $cm, $dosessh = 1)
