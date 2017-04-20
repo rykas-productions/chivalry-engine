@@ -596,9 +596,9 @@ function edititem()
 					$efx = array("inc_amount" => 0);
 				}
 				$switch1 =
-						($itemi['effect' . $i . '_on'] > 0) ? " checked='checked'" : "";
+						($itemi['effect' . $i . '_on'] == 'true') ? " checked='checked'" : "";
 				$switch2 =
-						($itemi['effect' . $i . '_on'] > 0) ? "" : " checked='checked'";
+						($itemi['effect' . $i . '_on'] == 'true') ? "" : " checked='checked'";
 				echo "
 				<tr>
 					<th>
