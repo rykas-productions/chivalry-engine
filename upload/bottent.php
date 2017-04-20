@@ -15,10 +15,10 @@ echo "<table class='table table-bordered'>
 	<th>
 		{$lang['BOTTENT_TH']}
 	</th>
-	<th>
+	<th class='hidden-xs'>
 		{$lang['BOTTENT_TH1']}
 	</th>
-	<th>
+	<th class='hidden-xs'>
 		{$lang['BOTTENT_TH2']}
 	</th>
 	<th>
@@ -54,10 +54,10 @@ while ($result = $db->fetch_row($query))
 		<td>
 			" . $api->SystemUserIDtoName($result['botuser']) . " [{$result['botuser']}]
 		</td>
-		<td>
+		<td class='hidden-xs'>
 			" . $api->UserInfoGet($result['botuser'],'level') . "
 		</td>
-		<td>
+		<td class='hidden-xs'>
 			" . ParseTimestamp($result['botcooldown']) . "
 		</td>
 		<td>
