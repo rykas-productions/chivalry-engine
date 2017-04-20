@@ -62,7 +62,7 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 				<th width='10%' class='hidden-xs'>
 					{$lang['USERLIST_TH1']}
 				</th>
-				<th width='10%'>
+				<th width='10%' class='hidden-xs'>
 					{$lang['USERLIST_TH2']}
 				</th>
 			</tr>
@@ -86,7 +86,7 @@ while ($r = $db->fetch_row($q))
 				<td class='hidden-xs'>
 					{$r['gender']}
 				</td>
-				<td>
+				<td class='hidden-xs'>
 				" . (($r['laston'] >= $_SERVER['REQUEST_TIME'] - 15 * 60) ? $lang['GEN_ONLINE'] : $lang['GEN_OFFLINE']) . "
 				</td>
 			</tr>";
