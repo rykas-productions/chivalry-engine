@@ -207,6 +207,16 @@ CREATE TABLE `inventory` (
   `inv_qty` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `itemauction` (
+  `ia_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `ia_adder` INT(11) UNSIGNED NOT NULL ,
+  `ia_item` INT(11) UNSIGNED NOT NULL ,
+  `ia_qty` INT(11) UNSIGNED NOT NULL ,
+  `ia_end` INT(11) UNSIGNED NOT NULL ,
+  `ia_bidder` INT(11) UNSIGNED NOT NULL ,
+  `ia_bid` BIGINT(11) UNSIGNED NOT NULL ,
+  UNIQUE (`ia_id`)) ENGINE = MyISAM;
+
 CREATE TABLE `itemmarket` (
   `imID` int(11) NOT NULL,
   `imITEM` int(11) NOT NULL DEFAULT '0',
