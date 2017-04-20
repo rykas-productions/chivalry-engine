@@ -569,7 +569,7 @@ function viewtopic()
 			{
 				$av="";
 			}
-			$memb['signature'] = !empty($memb['signature']) ? $parser->parse($memb['signature']) : "NA";
+			$memb['signature'] = $parser->parse($memb['signature']);
 			$memb['signature'] = $parser->getAsHtml($memb['signature']);
         }
 		$parser->parse($r['fp_text']);
