@@ -38,7 +38,7 @@ function home()
 				<th>
 					{$lang['DUNGINFIRM_TD2']}
 				</th>
-				<th>
+				<th class='hidden-xs'>
 					{$lang['DUNGINFIRM_TD3']}
 				</th>
 				<th>
@@ -62,7 +62,7 @@ function home()
 				<td>
 					{$Infirmary['infirmary_reason']}
 				</td>
-				<td>
+				<td class='hidden-xs'>
 					" . DateTime_Parse($Infirmary['infirmary_in']) . "
 				</td>
 				<td>
