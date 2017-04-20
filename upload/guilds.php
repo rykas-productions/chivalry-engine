@@ -295,7 +295,7 @@ function memberlist()
 function apply()
 {
 	global $db,$userid,$ir,$api,$h,$lang;
-	$_GET['id'] = abs($_GET['id']);
+	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
 	if (empty($_GET['id']))
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
@@ -325,7 +325,16 @@ function apply()
 		if ($db->num_rows($cnt) > 0)
 		{
 			alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_APP_ERROR1'],true,'back');
-		die($h->endpage());
+			die($h->endpage());
+		}
+		if ($gd['guild_owner'] == $gd['guild_coowner'])
+		{
+			$api->GameAddNotification($gd['guild_owner'],"{$ir['username']} has filled and submitted an application to join your guild.");
+		}
+		else
+		{
+			$api->GameAddNotification($gd['guild_owner'],"{$ir['username']} has filled and submitted an application to join your guild.");
+			$api->GameAddNotification($gd['guild_coowner'],"{$ir['username']} has filled and submitted an application to join your guild.");
 		}
 		$time=time();
 		$application = (isset($_POST['application']) && is_string($_POST['application'])) ? $db->escape(htmlentities(stripslashes($_POST['application']), ENT_QUOTES, 'ISO-8859-1')) : '';

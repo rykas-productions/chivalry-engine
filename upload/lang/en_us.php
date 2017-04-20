@@ -287,7 +287,7 @@ $lang['EXPLORE_YOURGUILD']="Your Guild";
 $lang['EXPLORE_TOPTEN']="Top 10 Players";
 $lang['EXPLORE_SLOTS']="Slot Machines";
 $lang['EXPLORE_BOTS']="Bot List";
-$lang['EXPLORE_TEMPLE']="{$lang['INDEX_SECCURR']} Temple";
+$lang['EXPLORE_TEMPLE']="Temple of Fortune";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
@@ -639,6 +639,36 @@ $lang['STAFF_ITEM_GIVE_SUB_NOUSER']="You didn't specify the user you wish to giv
 $lang['STAFF_ITEM_GIVE_SUB_ITEMDNE']="The item you are trying to give away does not exist.";
 $lang['STAFF_ITEM_GIVE_SUB_USERDNE']="The user you are trying to give an item to does not exist.";
 $lang['STAFF_ITEM_GIVE_SUB_SUCCESS']="Item(s) have been gifted successfully.";
+
+//Staff Create Items
+$lang['STAFF_CITEM_TH1']="Item Name";
+$lang['STAFF_CITEM_TH2']="Item Info";
+$lang['STAFF_CITEM_TH3']="Item Type";
+$lang['STAFF_CITEM_TH4']="Item Purchaseable?";
+$lang['STAFF_CITEM_TH5']="Item Buy Price";
+$lang['STAFF_CITEM_TH6']="Item Sell Price";
+$lang['STAFF_CITEM_TH7']="Item Usage";
+$lang['STAFF_CITEM_TH8']="Item Effect #";
+$lang['STAFF_CITEM_TH9']="Enable Usage";
+$lang['STAFF_CITEM_TH10']="True";
+$lang['STAFF_CITEM_TH11']="False";
+$lang['STAFF_CITEM_TH12']="Stat";
+$lang['STAFF_CITEM_TH13']="Direction";
+$lang['STAFF_CITEM_TH14']="Amount";
+$lang['STAFF_CITEM_TH13_1']="Increase/Add";
+$lang['STAFF_CITEM_TH13_2']="Decrease/Remove";
+$lang['STAFF_CITEM_TH14_1']="Value";
+$lang['STAFF_CITEM_TH14_2']="Percent";
+$lang['STAFF_CITEM_TH15']="Combat Stats";
+$lang['STAFF_CITEM_TH16']="Weapon Strength";
+$lang['STAFF_CITEM_TH17']="Armor Defense";
+$lang['STAFF_CITEM_BTN']="Create Item";
+$lang['STAFF_CITEM_ERR']="You do not have permission to create an item. You need to be an admin.";
+$lang['STAFF_CITEM_ERR1']="You are missing one, or more, required fields. Go back and correct this.";
+$lang['STAFF_CITEM_ERR2']="You cannot create an item named after an existing item.";
+$lang['STAFF_CITEM_ERR3']="The item group you specified is invalid or does not exist.";
+$lang['STAFF_CITEM_ERR4']="You do not have permission to create an item. You need to be an admin.";
+$lang['STAFF_CITEM_SUCC']="You have successfully created an item called ";
 
 //Staff Crimes
 $lang['STAFF_CRIME_TITLE']="Crimes";
