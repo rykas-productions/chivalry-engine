@@ -1921,4 +1921,15 @@ $lang['STAFF_PRIV_PRIVBTN']="Give Privilege";
 $lang['STAFF_PRIV_ERR']="You're trying to give an invalid or unknown privledge. Check your source and try again.";
 $lang['STAFF_PRIV_ERR1']="The user you're trying to give privileges to is invalid or doesn't exist.";
 $lang['STAFF_PRIV_SUCC']="You have successfully updated this user's privileges to";
+
+//Auction
+$lang['AUCTION_TITLE']="Item Auction";
+$lang['AUCTION_TH']="Lister";
+$lang['AUCTION_TH1']="Item x Qty";
+$lang['AUCTION_TH2']="Current Bid";
+$lang['AUCTION_TH3']="Current Bidder";
+$lang['AUCTION_TH4']="Actions";
+$lang['AUCTION_TH5']="Time Remaining";
+$lang['AUCTION_ACT']="Remove";
+$lang['AUCTION_ACT1']="Bid";
 ?>

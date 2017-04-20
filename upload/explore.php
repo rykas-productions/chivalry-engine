@@ -37,9 +37,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='shops.php'>{$lang['EXPLORE_LSHOP']}</a><br />
-					<a href='#'>{$lang['EXPLORE_POSHOP']}</a><br />
 					<a href='itemmarket.php'>{$lang['EXPLORE_IMARKET']}</a><br />
-					<a href='#'>{$lang['EXPLORE_IAUCTION']}</a><br />
+					<a href='itemauction.php'>{$lang['EXPLORE_IAUCTION']}</a><br />
 					<a href='#'>{$lang['EXPLORE_TRADE']}</a><br />
 					<a href='secmarket.php'>{$lang['EXPLORE_SCMARKET']}</a><br />	
 				</div>
