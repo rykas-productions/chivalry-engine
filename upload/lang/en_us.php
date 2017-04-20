@@ -653,6 +653,8 @@ $lang['STAFF_CITEM_TH9']="Enable Usage";
 $lang['STAFF_CITEM_TH10']="True";
 $lang['STAFF_CITEM_TH11']="False";
 $lang['STAFF_CITEM_TH12']="Stat";
+$lang['STAFF_CITEM_TH12_1']="Infirmary Time";
+$lang['STAFF_CITEM_TH12_2']="Dungeon Time";
 $lang['STAFF_CITEM_TH13']="Direction";
 $lang['STAFF_CITEM_TH14']="Amount";
 $lang['STAFF_CITEM_TH13_1']="Increase/Add";
@@ -669,6 +671,15 @@ $lang['STAFF_CITEM_ERR2']="You cannot create an item named after an existing ite
 $lang['STAFF_CITEM_ERR3']="The item group you specified is invalid or does not exist.";
 $lang['STAFF_CITEM_ERR4']="You do not have permission to create an item. You need to be an admin.";
 $lang['STAFF_CITEM_SUCC']="You have successfully created an item called ";
+
+//Staff Edit Items
+$lang['STAFF_EITEM_P1_START']="Select the item you wish to edit, then click the button.";
+$lang['STAFF_EITEM_P1_SELECT']="Item";
+$lang['STAFF_EITEM_P1_BTN']="Edit Item";
+$lang['STAFF_EITEM_P2_EMPTY']="Please select an item to edit from the previous form before continuing.";
+$lang['STAFF_EITEM_P2_NO']="The item you chose does not exist. Check your source and try again.";
+$lang['STAFF_EITEM_BTN']="Edit Item";
+$lang['STAFF_EITEM_SUC']="You ahve successfully edited this item.";
 
 //Staff Crimes
 $lang['STAFF_CRIME_TITLE']="Crimes";
