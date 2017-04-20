@@ -680,7 +680,7 @@ function mug()
 		}
 		else
 		{
-			$stole = round($r['primary_currency'] / (Random(50, 1000) / 5));
+			$stole = round($r['primary_currency'] / (Random(200, 1000) / 5));
 			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END8']} (" . number_format($stole) . ")",true,'index.php');
 			$hosptime = rand(20, 40) + floor($ir['level'] / 8);
 			$hospreason = $db->escape("Mugged by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
