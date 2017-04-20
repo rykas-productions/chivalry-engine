@@ -32,6 +32,10 @@ while ($result = $db->fetch_row($query))
 {
 	$timequery=$db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
 	$r2=$db->fetch_single($timequery);
+	$r3 = $db->fetch_row($db->query("SELECT `strength`,`agility`,`guard` FROM `userstats` WHERE `userid` = {$result['botuser']}"));
+	$ustats=$ir['strength']+$ir['agility']+$ir['guard'];
+	$themstats=$r3['strength']+$r3['agility']+$r3['guard'];
+	$chance = round(($ustats / $themstats) * 100,2);
 	if ((time() <= ($r2 + $result['botcooldown'])) && ($r2 > 0))
 	{
 		$cooldown=($r2 + $result['botcooldown']) - time();
@@ -42,7 +46,8 @@ while ($result = $db->fetch_row($query))
 		$attack="<form action='attack.php'>
 					<input type='hidden' name='user' value='{$result['botuser']}'>
 					<input type='submit' class='btn btn-danger' value='Attack " . $api->SystemUserIDtoName($result['botuser']) . "'>
-					</form>";
+					</form>
+					({$lang['BOTTENT_CHANCE']} {$chance}%)";
 	}
 	echo "
 	<tr>
