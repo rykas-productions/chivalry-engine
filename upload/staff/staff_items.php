@@ -582,8 +582,8 @@ function edititem()
                     "agility" => "{$lang['GEN_AGL']}", "guard" => "{$lang['GEN_GRD']}",
                     "labour" => "{$lang['GEN_LAB']}", "IQ" => "{$lang['GEN_IQ']}",
                     "infirmary" => "{$lang['STAFF_CITEM_TH12_1']}", "dungeon" => "{$lang['STAFF_CITEM_TH12_2']}",
-                    "primary_currency" => "{{$lang['INDEX_PRIMCURR']}}", "secondary_currency" 
-					=> "{{$lang['INDEX_SECCURR']}}", "crimexp" => "{{$lang['INDEX_EXP']}}", "vip_days" => 
+                    "primary_currency" => "{$lang['INDEX_PRIMCURR']}", "secondary_currency" 
+					=> "{$lang['INDEX_SECCURR']}", "crimexp" => "{{$lang['INDEX_EXP']}}", "vip_days" => 
 					"{$lang['INDEX_VIP']}}");
 			for ($i = 1; $i <= 3; $i++)
 			{
@@ -606,8 +606,8 @@ function edititem()
 					</th>
 					<td>
 						<b>{$lang['STAFF_CITEM_TH9']}</b>
-						<input type='radio' class='form-control' name='effect{$i}on' value='1'$switch1 /> {$lang['STAFF_CITEM_TH10']}
-						<input type='radio' class='form-control' name='effect{$i}on' value='0'$switch2 /> {$lang['STAFF_CITEM_TH11']}
+						<input type='radio' class='form-control' name='effect{$i}on' value='true'$switch1 /> {$lang['STAFF_CITEM_TH10']}
+						<input type='radio' class='form-control' name='effect{$i}on' value='false'$switch2 /> {$lang['STAFF_CITEM_TH11']}
 						<br /><b>Stat</b> <select class='form-control' name='effect{$i}stat' type='dropdown'>";
 				foreach ($stats as $k => $v)
 				{
