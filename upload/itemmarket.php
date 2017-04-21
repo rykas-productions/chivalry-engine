@@ -423,6 +423,10 @@ function add()
 		alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_ADD_ERROR1'],true,'inventory.php');
 		die($h->endpage());
 	}
+	$q = $db->query("SELECT `inv_qty`, `inv_itemid`, `inv_id`, `itmname`, `itmbuyprice`
+						FROM `inventory` AS `iv` INNER JOIN `items` AS `i`
+						ON `iv`.`inv_itemid` = `i`.`itmid` WHERE `inv_id` = {$_GET['ID']}
+						AND `inv_userid` = $userid");
 	if ($_POST['price'] && $_POST['QTY'] && $_GET['ID'])
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code("imadd_{$_GET['ID']}", stripslashes($_POST['verf'])))
@@ -430,10 +434,6 @@ function add()
 			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
-		$q = $db->query("SELECT `inv_qty`, `inv_itemid`, `inv_id`, `itmname`
-						FROM `inventory` AS `iv` INNER JOIN `items` AS `i`
-						ON `iv`.`inv_itemid` = `i`.`itmid` WHERE `inv_id` = {$_GET['ID']}
-						AND `inv_userid` = $userid");
 		if ($db->num_rows($q) == 0)
 		{
 			$db->free_result($q);
@@ -472,12 +472,14 @@ function add()
 	}
 	else
 	{
+		$r = $db->fetch_row($q);
+		$db->free_result($q);
 		$csrf=request_csrf_html("imadd_{$_GET['ID']}");
 		echo "<form method='post' action='?action=add&ID={$_GET['ID']}'>
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['IMARKET_ADD_TITLE']}
+					{$lang['IMARKET_ADD_TITLE']} {$api->SystemItemIDtoName($r['inv_itemid'])} {$lang['IMARKET_ADD_TITLE1']}
 				</th>
 			</tr>
 			<tr>
@@ -485,7 +487,7 @@ function add()
 					{$lang['SHOPS_SHOP_TD_1']}
 				</th>
 				<td>
-					<input type='number' min='1' required='1' class='form-control' name='QTY' value=''>
+					<input type='number' min='1' required='1' class='form-control' name='QTY' value='{$r['inv_qty']}'>
 				</th>
 			</tr>
 			<tr>
@@ -493,7 +495,7 @@ function add()
 					{$lang['IMARKET_ADD_TH2']}
 				</th>
 				<td>
-					<input  type='number' min='1' required='1' class='form-control' name='price' value='0' />
+					<input  type='number' min='1' required='1' class='form-control' name='price' value='{$r['itmbuyprice']}' />
 				</td>
 			</tr>
 			<tr>
