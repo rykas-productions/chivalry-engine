@@ -1400,7 +1400,7 @@ function alert($type,$title,$text,$doredirect=true,$redirect='back')
 		echo "<div class='alert alert-{$type}'> 
 				<span class='glyphicon glyphicon-{$icon}'></span> 
 					<strong>{$title}</strong> 
-						{$text} > <a href='{$redirect}'>{$lang['GEN_BACK']}</a>
+						{$text} > <a href='{$redirect}' class='alert-link'>{$lang['GEN_BACK']}</a>
 				</div>";
 	}
 	else
