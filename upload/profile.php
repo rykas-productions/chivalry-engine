@@ -307,7 +307,7 @@ else
 				  echo '<div id="staff" class="tab-pane fade in">';
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
-						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",24),true);
+						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",65655),true);
 						echo "<table class='table table-bordered'>
 							<tr>
 								<th width='33%'>Data</th>
