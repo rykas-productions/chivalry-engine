@@ -9,19 +9,16 @@
 ?>
 </div>
         </div>
-        <!-- /.row -->
-
     </div>
-    <!-- /.container -->
-
-    <!-- jQuery Version -->
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <!-- jQuery Version 3.1.1 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 			
 	<!-- Other JavaScript -->
 	<script src="js/register-min.js"></script>
+	<script src="js/game.js"></script>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 </body>

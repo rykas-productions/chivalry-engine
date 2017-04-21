@@ -48,7 +48,7 @@ class headers
 			}
 			?>
 			<link href="css/bs2.css" rel="stylesheet">
-			<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+			<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 			<!-- Custom CSS -->
 			<style>
@@ -161,7 +161,7 @@ class headers
 			<!-- Page Content -->
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-12 text-center">
+					<div class="col-sm-12 text-center">
 				<noscript>
 					<?php alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false); ?>
 				</noscript>
@@ -316,7 +316,7 @@ class headers
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 			
 			<!-- Other JavaScript -->
-			<script src="js/register.js"></script>
+			<script src="js/register-min.js"></script>
 			<script src="js/game.js"></script>
 			<script src='https://www.google.com/recaptcha/api.js'></script>
 			<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>

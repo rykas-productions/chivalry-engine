@@ -49,7 +49,7 @@ class headers
 				}
 		?>
 		<link href="../css/bs2.css" rel="stylesheet">
-		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 		<!-- Custom CSS -->
@@ -104,7 +104,7 @@ class headers
 						?>
                     </li>
                     <li>
-                        <a href="../inventory.php">Inventory</a>
+                        <a href="../inventory.php"><?php echo $lang['MENU_INVENTORY']; ?></a>
                     </li>
                 </ul>
 					<li class="dropdown">
@@ -306,8 +306,7 @@ class headers
 
 			<!-- Bootstrap Core JavaScript -->
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-			<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-			<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+			<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 			
 			<!-- Other JS -->
 			<script src='https://www.google.com/recaptcha/api.js'></script>
