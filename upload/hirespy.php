@@ -36,6 +36,11 @@ if ($db->num_rows($q) == 0)
 	die($h->endpage());
 }
 $r=$db->fetch_row($q);
+if (($r['guild'] == $ir['guild']) && ($ir['guild'] != 0))
+{
+	alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_ERROR7'],true,'index.php');
+	die($h->endpage());
+}
 if (isset($_POST['do']) && (isset($_GET['user'])))
 {
 	$rand=Random(1,4);

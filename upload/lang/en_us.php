@@ -1220,6 +1220,7 @@ $lang['SPY_ERROR3']="The user you are attempting to spy on does not exist.";
 $lang['SPY_ERROR4']="You do not have enough {$lang['INDEX_PRIMCURR']} to spy on this user!";
 $lang['SPY_ERROR5']="You cannot spy on other players when you are in the dungeon!";
 $lang['SPY_ERROR6']="You cannot spy on other players when you are in the infirmary, trying to feel better.";
+$lang['SPY_ERROR7']="Why would you want to spy on your fellow guild mates?";
 $lang['SPY_START']="You are attempting to send out a spy to gather information on";
 $lang['SPY_START1']=". This will cost you 500 {$lang['INDEX_PRIMCURR']} multiplied by their level. (";
 $lang['SPY_START2']="{$lang['INDEX_PRIMCURR']} in this case.) Please remember that success is not guaranteed. If you're wanting to assume the risk, press the button to send out a spy!";
