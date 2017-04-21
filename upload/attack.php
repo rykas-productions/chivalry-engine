@@ -306,7 +306,7 @@ function attacking()
 			$eq = $db->query("SELECT `itmname`,`weapon` FROM  `items` WHERE `itmid` IN({$odata['equip_primary']}, {$odata['equip_secondary']})");
 			if ($db->num_rows($eq) == 0)
 			{
-				$wep = "{$lang['ATTACK_FIGHT_ATTACK_FISTS']}";
+				$wep = $lang['ATTACK_FIGHT_ATTACK_FISTS'];
 				$dam = round(round((($odata['strength']/$ir['guard'] / 100))+ 1)*(Random(10000, 12000) / 10000));
 			}
 			else
