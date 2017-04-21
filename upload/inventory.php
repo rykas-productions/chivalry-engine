@@ -25,7 +25,7 @@ echo"
 				{$lang['EQUIP_WEAPON_SLOT1']} ";
 				if (isset($equip[$ir['equip_primary']]))
 				{
-					echo "(<a href='unequip.php?type=equip_primary'>{$lang['INVENT_UNEQUIP']} {$equip[$ir['equip_primary']]['itmname']}</a>)";
+					echo "(<a href='unequip.php?type=equip_primary'>{$lang['INVENT_UNEQUIP']}</a>)";
 				}
 				echo"
 			</div>
@@ -49,7 +49,7 @@ echo"
 				{$lang['EQUIP_WEAPON_SLOT2']} ";
 				if (isset($equip[$ir['equip_secondary']]))
 				{
-					echo "(<a href='unequip.php?type=equip_secondary'>{$lang['INVENT_UNEQUIP']} {$equip[$ir['equip_secondary']]['itmname']}</a>)";
+					echo "(<a href='unequip.php?type=equip_secondary'>{$lang['INVENT_UNEQUIP']}</a>)";
 				}
 				echo"
 			</div>
@@ -73,7 +73,7 @@ echo"
 				{$lang['EQUIP_WEAPON_SLOT3']} ";
 				if (isset($equip[$ir['equip_armor']]))
 				{
-					echo "(<a href='unequip.php?type=equip_armor'>{$lang['INVENT_UNEQUIP']} {$equip[$ir['equip_armor']]['itmname']}</a>)";
+					echo "(<a href='unequip.php?type=equip_armor'>{$lang['INVENT_UNEQUIP']}</a>)";
 				}
 				echo"
 			</div>
