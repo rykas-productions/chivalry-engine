@@ -803,7 +803,7 @@ function gym()
 					alert('success',$lang['ERROR_SUCCESS'],"{$lang['GYM_LAB']} {$gain} {$lang['GEN_LAB']} {$lang['GYM_STR1']} {$_POST['amnt']} {$lang['GYM_LAB1']} {$lang['GYM_YNH']} {$NewStatAmount} {$lang['GEN_LAB']} {$lang['GEN_AND']} {$EnergyLeft} {$lang['GYM_STR3']}",false);
 					$lab_select="selected";
 				}
-				$api->SystemLogsAdd($userid,'training',"Trained their {$stat} in their guild and gained {$gain}.");
+				$api->SystemLogsAdd($userid,'training',"Trained their {$stat} {$_POST['amnt']} times in their guild and gained {$gain}.");
 				echo "<hr />";
 				$ir['energy'] -= $_POST['amnt'];
 				$ir[$stat] += $gain;
