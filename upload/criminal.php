@@ -119,7 +119,17 @@ function crime()
 				{
 					$prim_currency=0;
 				}
+				if (empty($sec_currency))
+				{
+					$sec_currency=0;
+				}
+				if (empty($r['crimeSUCCESSITEM']))
+				{
+					$r['crimeSUCCESSITEM']=0;
+				}
 				$text = str_replace("{money}", $prim_currency, $r['crimeSTEXT']);
+				$text = str_replace("{secondary}", $sec_currency, $r['crimeSTEXT']);
+				$text = str_replace("{item}", $api->SystemItemIDtoName($r['crimeSUCCESSITEM']), $r['crimeSTEXT']);
 				$title=$lang['ERROR_SUCCESS'];
 				$type='success';
 				$api->UserInfoSetStatic($userid,"xp",$ir['xp']+$r['crimeXP']);
@@ -127,10 +137,10 @@ function crime()
 			}
 			else
 			{
-					$text=$r['crimeFTEXT'];
 					$title=$lang['ERROR_GENERIC'];
 					$type='danger';
 					$dtime=Random($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
+					$text = str_replace("{time}", $dtime, $r['crimeFTEXT']);
 					$api->UserStatusSet($userid,'dungeon',$dtime,$r['crimeDUNGREAS']);
 					$api->SystemLogsAdd($userid,'crime',"Failed to commit the {$r['crimeNAME']} crime.");
 			}
