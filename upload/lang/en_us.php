@@ -1404,6 +1404,7 @@ $lang['VIP_SUCCESS']="We appreciate it completely. You can view a receipt of thi
 
 //Staff punishments
 $lang['STAFF_PUNISHED_FED']="Fedjail User";
+$lang['STAFF_PUNISHED_UNFED']="Unfedjail User";
 $lang['STAFF_PUNISHFED_FORM']="Jailing User";
 $lang['STAFF_PUNISHFED_INFO']="Placing a user in federal jail will render their account virtually useless. They will not be able to do anything in-game.";
 $lang['STAFF_PUNISHFED_TH']="User:";
@@ -1935,4 +1936,11 @@ $lang['AUCTION_TH4']="Actions";
 $lang['AUCTION_TH5']="Time Remaining";
 $lang['AUCTION_ACT']="Remove";
 $lang['AUCTION_ACT1']="Bid";
+
+//Staff Unfedjail
+$lang['STAFF_UNFED_TITLE']="Remove from Federal Jail";
+$lang['STAFF_UNFED_INFO']="Select a user to remove them from the federal jail.";
+$lang['STAFF_UNFED_BTN']="Remove from Fedjail";
+$lang['STAFF_UNFED_ERR']="The user you're trying to remove from the federal jail isn't even sentenced.";
+$lang['STAFF_UNFED_SUCC']="You have removed this user from the federal jail.";
 ?>

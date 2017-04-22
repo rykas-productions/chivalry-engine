@@ -14,8 +14,11 @@ if (!isset($_GET['action']))
 switch ($_GET['action'])
 {
 	case 'fedjail':
-    fedjail();
-    break;
+		fedjail();
+		break;
+	case 'unfedjail':
+		unfedjail();
+		break;
 	default:
     echo 'Error: This script requires an action.';
 	$h->endpage();
@@ -26,9 +29,9 @@ function fedjail()
 	global $db,$userid,$lang,$h,$api;
 	if (isset($_POST['user']))
 	{
-		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : '';
-		$_POST['reason'] = (isset($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : '';
-		$_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs(intval($_POST['days'])) : '';
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+		$_POST['reason'] = (isset($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : 0;
+		$_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs(intval($_POST['days'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_feduser', stripslashes($_POST['verf'])))
 		{
 			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
@@ -113,5 +116,58 @@ function fedjail()
 			</form>
 		</table>";
 	}
-	$h->endpage();
 }
+function unfedjail()
+{
+	global $db,$userid,$api,$lang,$h;
+	echo "<h3>{$lang['STAFF_UNFED_TITLE']}</h3><hr />";
+	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
+	if (isset($_POST['user']))
+	{
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_unfeduser', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		$check = $db->query("SELECT `fed_id` FROM `fedjail` WHERE `fed_userid` = {$_POST['user']} LIMIT 1");
+		if ($db->num_rows($check) == 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_UNFED_ERR']);
+			die($h->endpage());
+		}
+		$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['user']}");
+		$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$_POST['user']}");
+		$api->SystemLogsAdd($userid,'staff',"Removed User ID {$_POST['user']} from the federal jail.");
+		$api->SystemLogsAdd($userid,'fedjail',"Removed User ID {$_POST['user']} from the federal jail.");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_UNFED_SUCC']);
+	}
+	else
+	{
+		$csrf=request_csrf_html('staff_unfeduser');
+		echo "<form method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['STAFF_UNFED_INFO']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_PRIV_USER']}
+					</th>
+					<td>
+						" . fed_user_dropdown('user',$_GET['user']) . "
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_UNFED_BTN']}'>
+					</td>
+				</tr>
+				{$csrf}
+			</table>
+		</form>";
+	}
+}
+$h->endpage();

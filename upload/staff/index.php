@@ -289,6 +289,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					<div class='panel panel-default'>
 						<div class='panel-body'>
 							<a href='staff_punish.php?action=fedjail'>{$lang['STAFF_PUNISHED_FED']}</a><br />
+							<a href='staff_punish.php?action=unfedjail'>{$lang['STAFF_PUNISHED_UNFED']}</a><br />
 						</div>
 					</div>
 			</div>
