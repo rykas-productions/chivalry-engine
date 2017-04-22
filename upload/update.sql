@@ -7,3 +7,11 @@ CREATE TABLE `itemauction` (
   `ia_bidder` INT(11) UNSIGNED NOT NULL ,
   `ia_bid` BIGINT(11) UNSIGNED NOT NULL ,
   UNIQUE (`ia_id`)) ENGINE = MyISAM;
+  
+CREATE TABLE `forum_bans` ( 
+	`fb_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`fb_user` INT(11) UNSIGNED NOT NULL , 
+	`fb_banner` INT(11) UNSIGNED NOT NULL , 
+	`fb_time` INT(11) UNSIGNED NOT NULL , 
+	`fb_reason` TEXT NOT NULL , 
+	UNIQUE (`fb_id`)) ENGINE = MyISAM;
