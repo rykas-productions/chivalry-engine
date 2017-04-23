@@ -189,7 +189,6 @@ function logs($name)
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
-	$h->endpage();
 }
 function userlogs()
 {
