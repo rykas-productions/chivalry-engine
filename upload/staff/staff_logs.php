@@ -88,6 +88,9 @@ case "secmarket":
 case "mining":
     logs('mining');
     break;
+case "forumwarn":
+    logs('forumwarn');
+    break;
 case "mail":
 	maillogs();
 	break;

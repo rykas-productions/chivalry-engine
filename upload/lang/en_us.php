@@ -1405,6 +1405,7 @@ $lang['VIP_SUCCESS']="We appreciate it completely. You can view a receipt of thi
 //Staff punishments
 $lang['STAFF_PUNISHED_FED']="Fedjail User";
 $lang['STAFF_PUNISHED_UNFED']="Unfedjail User";
+$lang['STAFF_PUNISHED_FWARN']="Forum Warn User";
 $lang['STAFF_PUNISHFED_FORM']="Jailing User";
 $lang['STAFF_PUNISHFED_INFO']="Placing a user in federal jail will render their account virtually useless. They will not be able to do anything in-game.";
 $lang['STAFF_PUNISHFED_TH']="User:";
@@ -1590,6 +1591,7 @@ $lang['STAFF_IDX_LOGS_TAB23']="Temple Logs";
 $lang['STAFF_IDX_LOGS_TAB24']="{$lang['INDEX_SECCURR']} Market Logs";
 $lang['STAFF_IDX_LOGS_TAB25']="Mining Logs";
 $lang['STAFF_IDX_LOGS_TAB26']="Mail Logs";
+$lang['STAFF_IDX_LOGS_TAB27']="Forum Warn Logs";
 $lang['STAFF_IDX_PERM_TAB1']="View Permissions";
 $lang['STAFF_IDX_PERM_TAB2']="Reset Permissions";
 $lang['STAFF_IDX_PERM_TAB3']="Edit Permissions";
@@ -1943,4 +1945,13 @@ $lang['STAFF_UNFED_INFO']="Select a user to remove them from the federal jail.";
 $lang['STAFF_UNFED_BTN']="Remove from Fedjail";
 $lang['STAFF_UNFED_ERR']="The user you're trying to remove from the federal jail isn't even sentenced.";
 $lang['STAFF_UNFED_SUCC']="You have removed this user from the federal jail.";
+
+//Staff forum warn
+$lang['STAFF_FWARN_TITLE']="Forum Warn";
+$lang['STAFF_FWARN_INFO']="Select a user to warn, and then give a reason.";
+$lang['STAFF_FWARN_BTN']="Forum Warn";
+$lang['STAFF_FWARN_REASON']="Forum Warn";
+$lang['STAFF_FWARN_ERR']="The user you are trying to warn does not exist.";
+$lang['STAFF_FWARN_ERR1']="You forgot to specify a user and/or a reason. Go back and try again.";
+$lang['STAFF_FWARN_SUCC']="You have successfully forum warned this user.";
 ?>

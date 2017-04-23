@@ -19,6 +19,9 @@ switch ($_GET['action'])
 	case 'unfedjail':
 		unfedjail();
 		break;
+	case 'forumwarn':
+		forumwarn();
+		break;
 	default:
     echo 'Error: This script requires an action.';
 	$h->endpage();
@@ -163,6 +166,72 @@ function unfedjail()
 				<tr>
 					<td colspan='2'>
 						<input type='submit' class='btn btn-default' value='{$lang['STAFF_UNFED_BTN']}'>
+					</td>
+				</tr>
+				{$csrf}
+			</table>
+		</form>";
+	}
+}
+function forumwarn()
+{
+	global $db,$userid,$api,$lang,$h;
+	echo "<h3>{$lang['STAFF_FWARN_TITLE']}</h3><hr />";
+	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
+	if (isset($_POST['user']))
+	{
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+		$_POST['reason'] = $db->escape(strip_tags(stripslashes($_POST['reason'])));
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_forumwarn', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		if (empty($_POST['reason'] || $_POST['user']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FWARN_ERR1']);
+			die($h->endpage());
+		}
+		$check = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']} LIMIT 1");
+		if ($db->num_rows($check) == 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FWARN_ERR']);
+			die($h->endpage());
+		}
+		$api->SystemLogsAdd($userid,'staff',"Forum Warned User ID {$_POST['user']} for '{$_POST['reason']}'.");
+		$api->SystemLogsAdd($userid,'forumwarn',"Forum Warned User ID {$_POST['user']} for '{$_POST['reason']}'.");
+		$api->GameAddNotification($userid,"You have been received a forum warning for the following reason: {$_POST['reason']}.");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FWARN_SUCC']);
+	}
+	else
+	{
+		$csrf=request_csrf_html('staff_forumwarn');
+		echo "<form method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['STAFF_FWARN_INFO']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_PRIV_USER']}
+					</th>
+					<td>
+						" . user_dropdown('user',$_GET['user']) . "
+					</td>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_FWARN_REASON']}
+					</th>
+					<td>
+						<input type='text' class='form-control' name='reason' required='1'>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_FWARN_BTN']}'>
 					</td>
 				</tr>
 				{$csrf}
