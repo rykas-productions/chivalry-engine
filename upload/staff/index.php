@@ -223,7 +223,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_logs.php?action=mail'>{$lang['STAFF_IDX_LOGS_TAB26']}</a><br />
 						<a href='staff_logs.php?action=userlogs'>{$lang['STAFF_IDX_LOGS_TAB2']}</a><br />
 						<a href='staff_logs.php?action=traininglogs'>{$lang['STAFF_IDX_LOGS_TAB3']}</a><br />
-						<a href='staff_logs.php?action=attacklogs'>{$lang['STAFF_IDX_LOGS_TAB4']}</a><br />
+						<a href='staff_logs.php?action=attackinglogs'>{$lang['STAFF_IDX_LOGS_TAB4']}</a><br />
 						<a href='staff_logs.php?action=loginlogs'>{$lang['STAFF_IDX_LOGS_TAB5']}</a><br />
 						<a href='staff_logs.php?action=equiplogs'>{$lang['STAFF_IDX_LOGS_TAB6']}</a><br />
 						<a href='staff_logs.php?action=banklogs'>{$lang['STAFF_IDX_LOGS_TAB7']}</a><br />
