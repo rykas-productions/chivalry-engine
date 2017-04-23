@@ -200,7 +200,7 @@ function forumwarn()
 		}
 		$api->SystemLogsAdd($userid,'staff',"Forum Warned User ID {$_POST['user']} for '{$_POST['reason']}'.");
 		$api->SystemLogsAdd($userid,'forumwarn',"Forum Warned User ID {$_POST['user']} for '{$_POST['reason']}'.");
-		$api->GameAddNotification($userid,"You have been received a forum warning for the following reason: {$_POST['reason']}.");
+		$api->GameAddNotification($_POST['user'],"You have been received a forum warning for the following reason: {$_POST['reason']}.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FWARN_SUCC']);
 	}
 	else
