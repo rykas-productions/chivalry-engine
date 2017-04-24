@@ -1100,7 +1100,7 @@ $lang['STAFF_RULES_ADD_SUBSUCC']="You have successfully created a new rule.";
 $lang['GAMERULES_TITLE']="Rules";
 $lang['GAMERULES_TEXT']="You are expected to follow these rules. You are also expected to check back on these fairly frequently as these rules may change without notice. Staff will not accept ignorance as an excuse if you break one of these rules.";
 
-//View GUILD_APP_BTN
+//View Guild
 $lang['VIEWGUILD_ERROR1']="You are not in a guild, so you cannot view your guild's information.";
 $lang['VIEWGUILD_ERROR2']="It looks like your guild's been deleted. Check with staff to update your account.";
 $lang['VIEWGUILD_TITLE']="Your Guild,";
@@ -1144,7 +1144,7 @@ $lang['VIEWGUILD_LEAVE_SUCC1']="You've decided to stay in your guild for now.";
 $lang['VIEWGUILD_LEAVE_INFO']="Are you 100% sure you wish to leave your guild? You will have to reapply if you leave and wish to come back.";
 $lang['VIEWGUILD_LEAVE_BTN']="Yes, leave!";
 $lang['VIEWGUILD_LEAVE_BTN1']="No, wait, stay!";
-$lang['VIEWGUILD_ATKLOGS_INFO']="This table lists the last 50 outgoing attacks from your guild.";
+$lang['VIEWGUILD_ATKLOGS_INFO']="This table lists the last 50 attacks anyone in your guild was involved with.";
 $lang['VIEWGUILD_ATKLOGS_TD1']="Time";
 $lang['VIEWGUILD_ATKLOGS_TD2']="Attack Info";
 $lang['VIEWGUILD_STAFF_ERROR']="Only the leader and co-leader of your guild can view this area.";
