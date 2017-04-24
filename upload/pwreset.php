@@ -72,7 +72,7 @@ function one()
 		$e_email = $db->escape(stripslashes($_POST['email']));
 		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 		$email=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'"));
-		$token = bin2hex(openssl_random_pseudo_bytes(16));
+		$token = bin2hex(randomizer());
 		if ($email > 0)
 		{
 			$to = $e_email;
