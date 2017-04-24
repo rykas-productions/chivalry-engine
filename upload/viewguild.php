@@ -1120,7 +1120,7 @@ function staff_masspayment()
 			{
 				if ($api->SystemCheckUsersIPs($userid,$r['userid']) == true)
 				{
-					alert('danger',$lang['ERROR_GENERIC'],"{$r['username']} " . $lang['VIEWGUILD_STAFF_MM_ERR2']);
+					alert('danger',$lang['ERROR_GENERIC'],"{$r['username']} " . $lang['VIEWGUILD_STAFF_MP_ERR2']);
 				}
 				else
 				{
