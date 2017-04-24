@@ -703,14 +703,13 @@ function mailb_user_dropdown($ddname = "user", $selected = -1)
  */
 function forumb_user_dropdown($ddname = "user", $selected = -1)
 {
-    global $db;
+    global $db,$api;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
             $db->query(
-                    "SELECT `userid`, `username`
-                     FROM `users`
-                     WHERE `forumban` > 0
-                     ORDER BY `userid` ASC");
+                    "SELECT `fb_user`,`fb_id`
+                     FROM `forum_bans`
+                     ORDER BY `fb_user` ASC");
     if ($selected == -1)
     {
         $first = 0;
@@ -721,13 +720,13 @@ function forumb_user_dropdown($ddname = "user", $selected = -1)
     }
     while ($r = $db->fetch_row($q))
     {
-        $ret .= "\n<option value='{$r['userid']}'";
-        if ($selected == $r['userid'] || $first == 0)
+        $ret .= "\n<option value='{$r['fb_user']}'";
+        if ($selected == $r['fb_user'] || $first == 0)
         {
             $ret .= " selected='selected'";
             $first = 1;
         }
-	$ret .= ">{$r['username']} [{$r['userid']}]</option>";
+	$ret .= ">{$api->SystemUserIDtoName($r['fb_user'])} [{$r['fb_user']}]</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
