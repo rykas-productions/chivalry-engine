@@ -484,6 +484,9 @@ $lang['FORUM_UNPIN_DONE']="The topic has been successfully unpinned.";
 $lang['FORUM_PIN_DONE']="The topic has been successfully pinned.";
 $lang['FORUM_DELETE_DONE']="Post deleted successfully.";
 $lang['FORUM_DELETE_TOPIC_DONE']="Topic has been deleted successfully.";
+$lang['FORUM_BAN_INFO']="You have been banned from viewing the forums for the next";
+$lang['FORUM_BAN_INFO1']="for the following reason:";
+$lang['FORUM_BAN_INFO2']="You may appeal your case by talking with a staff member.";
 
 //Send Cash Form
 $lang['SCF_POSCASH']="You need to send at least 1 {$lang['INDEX_PRIMCURR']} to use this form.";

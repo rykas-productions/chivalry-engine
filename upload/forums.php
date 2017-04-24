@@ -19,6 +19,12 @@ function csrf_error($goBackTo)
     exit;
 }
 echo "<h3>{$set['WebsiteName']} {$lang['FORUM_FORUMS']}</h3><hr />";
+$fb=$db->fetch_row($db->query("SELECT * FROM `forum_bans` WHERE `fb_user` = {$userid}"));
+if ($fb['fb_time'] > $time)
+{
+	 alert('danger',$lang['ERROR_GENERIC'],"{$lang['FORUM_BAN_INFO']} " . TimeUntil_Parse($fb['fb_time']) . " {$lang['FORUM_BAN_INFO1']} {$fb['fb_reason']}. {$lang['FORUM_BAN_INFO2']}",true,'index.php');
+	 die($h->endpage());
+}
 if (!isset($_GET['act']))
 {
     $_GET['act'] = '';
