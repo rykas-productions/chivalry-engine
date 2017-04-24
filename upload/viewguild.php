@@ -506,6 +506,9 @@ function staff()
 			case "town":
                 staff_town();
                 break;
+			case "untown":
+                staff_untown();
+                break;
 			default:
 				staff_idx();
 				break;
@@ -540,9 +543,11 @@ function staff_idx()
 			<a href='?action=staff&act2=name'>{$lang['VIEWGUILD_STAFF_IDX_NAME']}</a><br />
 			<a href='?action=staff&act2=desc'>{$lang['VIEWGUILD_STAFF_IDX_DESC']}</a><br />
 			<a href='?action=staff&act2=town'>{$lang['VIEWGUILD_STAFF_IDX_TOWN']}</a><br />
+			<a href='?action=staff&act2=untown'>{$lang['VIEWGUILD_STAFF_IDX_UNTOWN']}</a><br />
 		</td>";
 	}
-	echo "</tr></table>";
+	echo "</tr></table>
+	<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
 }
 function staff_apps()
 {
@@ -1390,6 +1395,39 @@ function staff_town()
 					</tr>
 					{$csrf}
 				</table>
+			</form>";
+		}
+	}
+	else
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
+	}
+}
+function staff_untown()
+{
+	global $db,$ir,$gd,$api,$lang,$h,$userid;
+	if ($userid == $gd['guild_owner'])
+	{
+		$townowned=$db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}");
+		if ($db->num_rows($townowned) == 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_UNTOWN_ERR'],true,'viewguild.php?action=staff&act2=idx');
+			die($h->endpage());
+		}
+		elseif (isset($_POST['confirm']))
+		{
+			$r=$db->fetch_single($townowned);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_UNTOWN_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			$db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_id` = {$r}");
+			$api->GuildAddNotification($gd['guild_id'],"Your guild was willingly given up their town.");
+			$api->SystemLogsAdd($userid,'guilds',"Willingly surrendered {$gd['guild_name']}'s town, {$api->SystemTownIDtoName($r)}.");
+		}
+		else
+		{
+			echo "{$lang['VIEWGUILD_STAFF_UNTOWN_CHECK']}<br />
+			<form method='post'>
+				<input type='hidden' name='confirm' value='yes'>
+				<input type='submit' class='btn btn-success' value='{$lang['GEN_YES']}'>
 			</form>";
 		}
 	}

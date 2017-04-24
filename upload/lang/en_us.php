@@ -1158,6 +1158,7 @@ $lang['VIEWGUILD_STAFF_IDX_DESC']="Change Guild Description";
 $lang['VIEWGUILD_STAFF_IDX_LEADER']="Transfer Leader";
 $lang['VIEWGUILD_STAFF_IDX_NAME']="Change Guild Name";
 $lang['VIEWGUILD_STAFF_IDX_TOWN']="Change Guild Town";
+$lang['VIEWGUILD_STAFF_IDX_UNTOWN']="Surrender Guild Town";
 $lang['VIEWGUILD_STAFF_APP_TH0']="Filing Time";
 $lang['VIEWGUILD_STAFF_APP_TH1']="Applicant";
 $lang['VIEWGUILD_STAFF_APP_TH2']="Level";
@@ -1217,6 +1218,9 @@ $lang['VIEWGUILD_STAFF_TOWN_ERR1']="You cannot own a town that doesn't exist.";
 $lang['VIEWGUILD_STAFF_TOWN_ERR2']="You cannot own a town that is owned by another guild. If you want this town, you will need to declare war on its owner.";
 $lang['VIEWGUILD_STAFF_TOWN_ERR3']="The town you've selected cannot be accessed by one or more of your guild members.";
 $lang['VIEWGUILD_STAFF_TOWN_SUCC']="You have successfully claimed this town in the name of your guild.";
+$lang['VIEWGUILD_STAFF_UNTOWN_ERR']="Your guild does not currently own a town. To claim a town, you need to either claim it, or beat the owner guild in war.";
+$lang['VIEWGUILD_STAFF_UNTOWN_SUCC']="You have successfully given up your guild's town willingly.";
+$lang['VIEWGUILD_STAFF_UNTOWN_CHECK']="Are you sure you wish to surrender your guild's town? Doing so may not guarantee you will get this city back.";
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";
