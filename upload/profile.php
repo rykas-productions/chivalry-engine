@@ -338,7 +338,7 @@ else
 								</td>
 							</tr>
 					</table>
-					<form action='staffnotes.php' method='post'>
+					<form action='staff/staff_punish.php?action=staffnotes' method='post'>
 						{$lang['PROFILE_STAFF_NOTES']}
 						<br />
 						<textarea rows='7' class='form-control' name='staffnotes'>"

@@ -34,6 +34,9 @@ switch ($_GET['action'])
 	case 'unforumban':
 		unforumban();
 		break;
+	case 'staffnotes':
+		staffnotes();
+		break;
 	default:
 		echo 'Error: This script requires an action.';
 		$h->endpage();
@@ -569,5 +572,26 @@ function unforumban()
 			</table>
 		</form>";
 	}
+}
+function staffnotes()
+{
+	global $db,$userid,$lang,$h,$api;
+	$_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs(intval($_POST['ID'])) : '';
+    $_POST['staffnotes'] = (isset($_POST['staffnotes']) && !is_array($_POST['staffnotes'])) ? $db->escape(strip_tags(stripslashes($_POST['staffnotes']))) : '';
+    if (empty($_POST['ID']) || empty($_POST['staffnotes']))
+    {
+        alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_NOTES_ERR'],true,'index.php');
+        die($h->endpage());
+    }
+	$q = $db->query("SELECT `staff_notes` FROM `users` WHERE `userid` = {$_POST['ID']}");
+	if ($db->num_rows($q) == 0)
+    {
+        $db->free_result($q);
+        alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_NOTES_ERR1'],true,'index.php');
+        die($h->endpage());
+    }
+	$db->query("UPDATE `users` SET `staff_notes` = '{$_POST['staffnotes']}' WHERE `userid` = '{$_POST['ID']}'");
+	$api->SystemLogsAdd($userid,'staff',"Updated User ID {$_POST['ID']}'s staff notes.");
+	alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_NOTES_SUCC'],true,'index.php');
 }
 $h->endpage();

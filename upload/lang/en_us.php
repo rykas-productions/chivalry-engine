@@ -2000,4 +2000,9 @@ $lang['STAFF_UFBAN_INFO']="Select a user to remove their forum ban.";
 $lang['STAFF_UFBAN_BTN']="Remove Forum Ban";
 $lang['STAFF_UFBAN_ERR']="The user you've selected is not currently forum banned. Check your source and try again.";
 $lang['STAFF_UFBAN_SUCC']="This user has been successfully had their forum ban removed.";
+
+//Staff notes
+$lang['STAFF_NOTES_ERR']="You need to specific both a user and the information you wish to add to the staff notes.";
+$lang['STAFF_NOTES_ERR1']="The user you specified does not exist. Go back and try again.";
+$lang['STAFF_NOTES_SUCC']="You have successfully updated this user's staff notes.";
 ?>
