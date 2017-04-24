@@ -989,7 +989,7 @@ Internal Function: Used to make sure users do not have more energy/brave/hp/etc.
 */
 function check_data()
 {
-	global $db,$ir,$userid;
+	global $db,$ir,$userid,$time;
 	if ($ir['energy'] > $ir['maxenergy'])
 	{
 		$db->query("UPDATE `users` SET `energy` = `maxenergy` WHERE `userid` = {$userid}");
@@ -1002,6 +1002,8 @@ function check_data()
 	{
 		$db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$userid}");
 	}
+	$db->query("DELETE FROM `forum_bans` WHERE `fb_time` < {$time}");
+	$db->query("DELETE FROM `fedjail` WHERE `fed_out` < {$time}");
 }
 /**
  * Internal function: used to see if a user is due to level up, and if so, perform that levelup.
