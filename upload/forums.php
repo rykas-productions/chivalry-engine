@@ -509,7 +509,7 @@ function viewtopic()
 		$PN=$db->fetch_single($PNQ);
 
 		$qlink = "[<a href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>{$lang['FORUM_POST_QUOTE']}</a>]";
-        if ($ir['user_level'] =! 'Member' || $ir['userid'] == $r['fp_poster_id'])
+        if ($api->UserMemberLevelGet($userid,'forum moderator') || $ir['userid'] == $r['fp_poster_id'])
         {
             $elink =
                     "[<a href='?act=edit&post={$r['fp_id']}&topic={$_GET['viewtopic']}'>{$lang['FORUM_POST_EDIT']}</a>]";
@@ -519,7 +519,7 @@ function viewtopic()
             $elink = "";
         }
         $no++;
-        if ($no > 1 and (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Secretary'))))
+        if ($no > 1 and ($api->UserMemberLevelGet($userid,'forum moderator')))
         {
             $dlink =
                     "[<a href='?act=delepost&post={$r['fp_id']}'>{$lang['FORUM_POST_DELETE']}</a>]";
@@ -528,6 +528,16 @@ function viewtopic()
         {
             $dlink = "";
         }
+		if ($api->UserMemberLevelGet($userid,'forum moderator'))
+		{
+			$wlink="[<a href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'>{$lang['FORUM_POST_WARN']}</a>]";
+			$blink="[<a href='staff/staff_punish.php?action=forumban&user={$r['fp_poster_id']}'>{$lang['FORUM_POST_BAN']}</a>]";
+		}
+		else
+		{
+			$wlink="";
+			$blink="";
+		}
         $t = DateTime_Parse($r['fp_time']);
 		$editornameq=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['fp_editor_id']} LIMIT 1");
 		$editorname=$db->fetch_single($editornameq);
@@ -569,7 +579,7 @@ function viewtopic()
         {
 			if ($memb['display_pic'])
 			{
-				$av="<center><img src='{$memb['display_pic']}' class='img-responsive' width='75' title='This is the avatar of {$PN}'></center>";
+				$av="<img src='{$memb['display_pic']}' class='img-responsive' width='75' title='This is the avatar of {$PN}'>";
 			}
 			else
 			{
@@ -583,7 +593,7 @@ function viewtopic()
         echo "<tr>
 				<th width='25%'>{$lang['FORUM_POST_POST']} #{$no}</th>
 				<th>
-				{$lang['FORUM_POST_POSTED']} {$t} {$qlink} {$elink} {$dlink}
+				{$lang['FORUM_POST_POSTED']} {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink}
 				</th>
 			 </tr>
 			 <tr>
