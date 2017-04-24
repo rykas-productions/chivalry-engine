@@ -144,7 +144,7 @@ class database
     }
     function affected_rows()
     {
-        return $this->connection_id->rowCount();
+        return $this->PDOS->rowCount();
     }
     function free_result($result)
     {
