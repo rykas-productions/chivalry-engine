@@ -1421,6 +1421,7 @@ $lang['STAFF_PUNISHFED_BTN']="Place User in Federal Jail";
 $lang['STAFF_PUNISHFED_ERR']="You cannot place a user that doesn't exist into the federal jail.";
 $lang['STAFF_PUNISHFED_ERR1']="You need to fill in all the inputs on the previous page for this to work correctly.";
 $lang['STAFF_PUNISHFED_ERR2']="You cannot place admins in the federal jail. Please remove their staff privileges them first before trying again.";
+$lang['STAFF_PUNISHFED_ERR3']="This user is already in the federal jail. Please edit their current sentence.";
 $lang['STAFF_PUNISHFED_SUCC']="The user has been placed into the federal jail successfully.";
 
 //Fedjail listing
