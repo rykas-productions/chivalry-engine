@@ -1412,6 +1412,7 @@ $lang['STAFF_PUNISHED_FED']="Fedjail User";
 $lang['STAFF_PUNISHED_UNFED']="Unfedjail User";
 $lang['STAFF_PUNISHED_FWARN']="Forum Warn User";
 $lang['STAFF_PUNISHED_IPSEARCH']="IP Search";
+$lang['STAFF_PUNISHED_FBAN']="Forum Ban User";
 $lang['STAFF_PUNISHFED_FORM']="Jailing User";
 $lang['STAFF_PUNISHFED_INFO']="Placing a user in federal jail will render their account virtually useless. They will not be able to do anything in-game.";
 $lang['STAFF_PUNISHFED_TH']="User:";
@@ -1599,6 +1600,7 @@ $lang['STAFF_IDX_LOGS_TAB24']="{$lang['INDEX_SECCURR']} Market Logs";
 $lang['STAFF_IDX_LOGS_TAB25']="Mining Logs";
 $lang['STAFF_IDX_LOGS_TAB26']="Mail Logs";
 $lang['STAFF_IDX_LOGS_TAB27']="Forum Warn Logs";
+$lang['STAFF_IDX_LOGS_TAB28']="Forum Ban Logs";
 $lang['STAFF_IDX_PERM_TAB1']="View Permissions";
 $lang['STAFF_IDX_PERM_TAB2']="Reset Permissions";
 $lang['STAFF_IDX_PERM_TAB3']="Edit Permissions";
@@ -1973,7 +1975,6 @@ $lang['STAFF_IP_OUTTH']="Username [ID]";
 $lang['STAFF_IP_OUTTH1']="Level";
 $lang['STAFF_IP_OUTTH2']="Registered";
 
-
 //Staff Mass Jail
 $lang['STAFF_IP_MJ']="Fill out the form to place these users in federal jail with one action.";
 $lang['STAFF_IP_MJ_BTN']="Mass Fedjail";
@@ -1982,4 +1983,13 @@ $lang['STAFF_MJ_INFO']="User ID";
 $lang['STAFF_MJ_INFO1']="has been placed into the federal jail.";
 $lang['STAFF_MJ_SUCC']="You have successfully mass jailed these users.";
 $lang['STAFF_MJ_SUCC1']="No users were mass jailed.";
+
+//Staff forum ban
+$lang['STAFF_FBAN_TITLE']="Forum Ban Form";
+$lang['STAFF_FBAN_INFO']="Forum banning a user will make the player unable to read or post in the in-game forums.";
+$lang['STAFF_FBAN_BTN']="Forum Ban User";
+$lang['STAFF_FBAN_ERR']="You cannot forum ban a non-existent user.";
+$lang['STAFF_FBAN_ERR1']="You cannot forum ban admins. Please remove their staff privileges them first before trying again.";
+$lang['STAFF_FBAN_ERR2']="You cannot forum ban a user while they're currently forum banned.";
+$lang['STAFF_FBAN_SUCC']="You have successfully forum banned this user.";
 ?>

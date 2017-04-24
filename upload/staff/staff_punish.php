@@ -28,6 +28,9 @@ switch ($_GET['action'])
 	case 'massjail':
 		massjail();
 		break;
+	case 'forumban':
+		forumban();
+		break;
 	default:
 		echo 'Error: This script requires an action.';
 		$h->endpage();
@@ -418,5 +421,97 @@ function massjail()
 function forumban()
 {
 	global $db,$userid,$api,$lang,$h;
+	if (isset($_POST['user']))
+	{
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+		$_POST['reason'] = (isset($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : 0;
+		$_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs($_POST['days']) : 0;
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_forumban', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		if (empty($_POST['user']) || empty($_POST['reason']) || empty($_POST['days']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_PUNISHFED_ERR1']);
+			die($h->endpage());
+		}
+		$q = $db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$_POST['user']}");
+		if ($db->num_rows($q) == 0)
+		{
+			$db->free_result($q);
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FBAN_ERR']);
+			die($h->endpage());
+		}
+		$f_userlevel = $db->fetch_single($q);
+		$db->free_result($q);
+		if ($f_userlevel == 'Admin')
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FBAN1_ERR1']);
+			die($h->endpage());
+		}
+		$already_fed=$db->query("SELECT `fb_id` FROM `forum_bans` WHERE `fb_user` = {$_POST['user']}");
+		if ($db->num_rows($already_fed) > 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FBAN_ERR2']);
+			die($h->endpage());
+		}
+		$days=$_POST['days'];
+		$_POST['days']=time()+($_POST['days']*86400);
+		$db->query("INSERT INTO `forum_bans` VALUES(NULL, {$_POST['user']}, {$userid}, {$_POST['days']}, '{$_POST['reason']}')");
+		$api->SystemLogsAdd($userid,'staff',"Forum banned User ID {$_POST['user']} for {$days} days for {$_POST['reason']}.");
+		$api->SystemLogsAdd($userid,'forumban',"Forum banned User ID {$_POST['user']} for {$days} days for {$_POST['reason']}.");
+		$api->GameAddNotification($_POST['user'],"The game adminstration has forum banned you for {$days} for the following reason: '{$_POST['reason']}'.");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FBAN_SUCC'],true,'index.php');
+		die($h->endpage());
+	}
+	else
+	{
+		$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
+		$csrf = request_csrf_html('staff_forumban');
+		echo "
+		<h3>
+			{$lang['STAFF_FBAN_TITLE']}
+		</h3>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_FBAN_INFO']}
+				</th>
+			</tr>
+			<tr>
+				<form method='post'>
+				<th>
+					User: 
+				</th>
+				<td>
+					" . user_dropdown('user', $_GET['user']) . "
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_PUNISHFED_TH1']}
+				</th>
+				<td>
+					<input type='number' class='form-control' min='1' required='1' name='days' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_PUNISHFED_TH2']}
+				</th>
+				<td>
+					<input type='text' required='1' class='form-control' name='reason' />
+				</td>
+			</tr>
+			<tr>
+			{$csrf}
+				<td colspan='2'>
+					<input type='submit' class='btn btn-default' value='{$lang['STAFF_FBAN_BTN']}' />
+				</td>
+			</tr>
+			</form>
+		</table>";
+	}
 }
 $h->endpage();

@@ -246,6 +246,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 						<a href='staff_logs.php?action=secmarket'>{$lang['STAFF_IDX_LOGS_TAB24']}</a><br />
 						<a href='staff_logs.php?action=mining'>{$lang['STAFF_IDX_LOGS_TAB25']}</a><br />
 						<a href='staff_logs.php?action=forumwarn'>{$lang['STAFF_IDX_LOGS_TAB27']}</a><br />
+						<a href='staff_logs.php?action=forumban'>{$lang['STAFF_IDX_LOGS_TAB28']}</a><br />
 					</div>
 				</div>
 			</div>
@@ -292,6 +293,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 							<a href='staff_punish.php?action=fedjail'>{$lang['STAFF_PUNISHED_FED']}</a><br />
 							<a href='staff_punish.php?action=unfedjail'>{$lang['STAFF_PUNISHED_UNFED']}</a><br />
 							<a href='staff_punish.php?action=forumwarn'>{$lang['STAFF_PUNISHED_FWARN']}</a><br />
+							<a href='staff_punish.php?action=forumban'>{$lang['STAFF_PUNISHED_FBAN']}</a><br />
 							<a href='staff_punish.php?action=ipsearch'>{$lang['STAFF_PUNISHED_IPSEARCH']}</a><br />
 						</div>
 					</div>
