@@ -19,7 +19,7 @@ if ($api->UserStatus($ir['userid'],'dungeon') == true)
 	die($h->endpage());
 }
 echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
-<div class='col-md-4'>
+<div class='col-lg-4'>
 	<ul class='nav nav-pills nav-stacked'>
 		<li><a data-toggle='tab' href='#SHOPS'>{$lang['EXPLORE_SHOP']}</a></li>
 		<li><a data-toggle='tab' href='#FD'>{$lang['EXPLORE_FD']}</a></li>
@@ -31,7 +31,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 		<li><a data-toggle='tab' href='#PINTER'>{$lang['EXPLORE_PINTER']}</a></li>
 	</ul>
 </div>
-<div class='col-md-4'>
+<div class='col-lg-4'>
 	<div class='tab-content'>
 		<div id='SHOPS' class='tab-pane fade in'>
 			<div class='panel panel-default'>
@@ -123,7 +123,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 		</div>
 	</div>
 </div>
-<div class='col-sm-4'>
+<div class='col-lg-4'>
 	<div class='panel panel-default'>
 		<div class='panel-heading'>
 			{$lang['EXPLORE_TOPTEN']}
@@ -149,7 +149,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 	</div>
 </div>";
 echo "	<div class='row'>
-			<div class='col-sm-12'>
+			<div class='col-lg-12'>
 				{$lang['EXPLORE_REF']}
 				<div class='table-responsive'>
 					<table class='table'>
