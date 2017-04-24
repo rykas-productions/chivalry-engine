@@ -1002,8 +1002,13 @@ function check_data()
 	{
 		$db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$userid}");
 	}
+	$q1=$db->query("SELECT `fed_userid` FROM `fedjail` WHERE `fed_out` < {$time}");
+	while ($r = $db->fetch_row($q1))
+	{
+		$db->query("DELETE FROM `fedjail` WHERE `fed_out` < {$time}");
+		$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$r}");
+	}
 	$db->query("DELETE FROM `forum_bans` WHERE `fb_time` < {$time}");
-	$db->query("DELETE FROM `fedjail` WHERE `fed_out` < {$time}");
 }
 /**
  * Internal function: used to see if a user is due to level up, and if so, perform that levelup.
