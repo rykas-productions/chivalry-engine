@@ -68,7 +68,7 @@ $lang["MENU_EXPLORE"] = "Explore";
 $lang["MENU_MAIL"] = "Mail";
 $lang["MENU_EVENT"] = "Notifications";
 $lang["MENU_INVENTORY"] = "Inventory";
-$lang["MENU_OUT"] = "Powered with codes by <a href='https://twitter.com/MasterGeneralYT'><font color=gray>TheMasterGeneral</font></a>. Code viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine'>GitHub</a>. Used with permission.";
+$lang["MENU_OUT"] = "Powered with codes by <a href='https://twitter.com/MasterGeneralYT'>TheMasterGeneral</a>. Code viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine'>GitHub</a>. Used with permission.";
 $lang['MENU_PROFILE']='Profile';
 $lang['MENU_SETTINGS']='Settings';
 $lang['MENU_STAFF']='Staff Panel';
