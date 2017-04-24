@@ -985,7 +985,7 @@ function notification_add($userid, $text)
     return true;
 }
 /*
-Internal Function: Used to make sure users do not have more energy/brave/hp/etc. than their level allows.
+	Internal Function: Used to update all sorts of things around the game
 */
 function check_data()
 {
@@ -1302,26 +1302,19 @@ function request_csrf_html($formid)
  */
 function verify_csrf_code($formid, $code)
 {
-    // Lookup the token entry
-    // Is there a token in existence?
     if (!isset($_SESSION["csrf_{$formid}"]) || !is_array($_SESSION["csrf_{$formid}"]))
     {
-        // Obviously verification fails
         return false;
     }
     else
     {
-        // From here on out we always want to remove the token when we're done - so don't return immediately
         $verified = false;
         $token = $_SESSION["csrf_{$formid}"];
-        // Expiry time on a form?
-        $expiry = 300; // hacky lol
+        $expiry = 300;
         if ($token['issued'] + $expiry > time())
         {
-            // It's ok, check the contents
             $verified = ($token['token'] === $code);
-        } // don't need an else case - verified = false
-        // Remove the token before finishing
+        }
         unset($_SESSION["csrf_{$formid}"]);
         return $verified;
     }
@@ -1371,7 +1364,7 @@ function encode_password($password)
 
 /**
 	Easily outputs an alert to the client.
-	Acceptable "type" is success, info, warning, danger.
+	Acceptable "type" is 'success', 'info', 'warning', 'danger'.
 	You can input whatever for the text
 	Redirect is the page you wish to redirect the user to after the alert is displayed. Default = index.php
 */
@@ -1545,17 +1538,9 @@ function get_filesize_remote($url)
     }
     return (int) $headers['content-length'];
 }
-function recache_forum($forum)
-{
-    global $ir, $c, $userid, $h, $bbc, $db;
-}
-
-function recache_topic($topic)
-{
-    global $ir, $c, $userid, $h, $bbc, $db;
-}
-
-/* gets the contents of a file if it exists, otherwise grabs and caches */
+/* 
+	Gets the contents of a file if it exists, otherwise grabs and caches 
+*/
 function get_fg_cache($file,$ip,$hours = 1) 
 {
 	$current_time = time(); 
@@ -1582,7 +1567,9 @@ function get_fg_cache($file,$ip,$hours = 1)
 	}
 }
 
-/* gets content from a URL via curl */
+/* 
+	Gets content from a URL via curl 
+*/
 function update_fg_info($ip) {
 	global $db,$set;
 	$curl = curl_init();
@@ -1602,8 +1589,8 @@ function update_fg_info($ip) {
  * @param string $perm		The permission to test for
  * @param int $user			The user to test on
  *
- * @return bool			Returns true if the user has this,
- *						false if not.
+ * @return bool				Returns true if the user has this,
+ *							false if not.
  */
  function permission($perm,$user)
  {
@@ -1633,7 +1620,7 @@ function update_fg_info($ip) {
  function getOS($uagent)
  {
 	 global $db,$userid;
-	 $uagent=$db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($uagent))));
+	 $uagent=$db->escape(strip_tags(stripslashes($uagent)));
 	$os_platform    =   "Unknown OS Platform";
     $os_array       =   array(
                             '/windows nt 10/i'     =>  'Windows 10',
@@ -1680,7 +1667,7 @@ function update_fg_info($ip) {
  function getBrowser($uagent) 
  {
 	global $db,$userid;
-	$user_agent=$db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($uagent))));
+	$user_agent=$db->escape(strip_tags(stripslashes($uagent)));
     $browser = "Unknown Browser";
     $browser_array  =   array(
                             '/msie/i'       =>  'Internet Explorer',
@@ -1712,7 +1699,7 @@ function update_fg_info($ip) {
 		$db->query("UPDATE `userdata` SET `useragent` = '{$user_agent}', `browser` = '{$browser}' WHERE `userid` = {$userid}");
 	}
 }
-//Grr...
+//Please use $api->SystemLogsAdd(); instead
 function SystemLogsAdd($user,$logtype,$input)
 {
 	global $db;
@@ -1773,7 +1760,9 @@ function smelt_dropdown($ddname = 'smelt', $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
-/* gets the contents of a file if it exists, otherwise grabs and caches */
+/* 
+	Gets the contents of a file if it exists, otherwise grabs and caches 
+*/
 function get_cached_file($url,$file,$hours=1) 
 {
 	$current_time = time(); 
@@ -1800,7 +1789,9 @@ function get_cached_file($url,$file,$hours=1)
 	}
 }
 
-/* gets content from a URL via curl */
+/* 
+	Gets content from a URL via curl 
+*/
 function update_file($url,$filename) 
 {
 	global $db,$set;
@@ -1818,11 +1809,10 @@ function update_file($url,$filename)
 function run_template($template_array, $template)
 {
     $tmp = 'genesis';
-
     $text = file_get_contents( 'template/' . $tmp .'/' . $template . '.tpl' );
     foreach( $template_array as $key => $value )
     {
         $text = str_replace( '{' . $key . '}', $value, $text );
     }
-     echo $text;
+	echo $text;
 }
