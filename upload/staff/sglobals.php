@@ -12,6 +12,7 @@ if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false)
 }
 session_name('CENGINE');
 session_start();
+$time = time();
 header('X-Frame-Options: SAMEORIGIN');
 
 if(isset($_GET['lang']))
