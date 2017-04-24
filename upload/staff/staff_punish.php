@@ -22,10 +22,16 @@ switch ($_GET['action'])
 	case 'forumwarn':
 		forumwarn();
 		break;
+	case 'ipsearch':
+		ipsearch();
+		break;
+	case 'massjail':
+		massjail();
+		break;
 	default:
-    echo 'Error: This script requires an action.';
-	$h->endpage();
-    break;
+		echo 'Error: This script requires an action.';
+		$h->endpage();
+		break;
 }
 function fedjail()
 {
@@ -238,5 +244,169 @@ function forumwarn()
 			</table>
 		</form>";
 	}
+}
+function ipsearch()
+{
+	global $db,$userid,$api,$h,$lang;
+	echo "<h3>{$lang['STAFF_IP_TITLE']}</h3><hr />";
+	if (isset($_POST['ip']))
+	{
+		$_POST['ip'] = (filter_input(INPUT_POST, 'ip', FILTER_VALIDATE_IP)) ? $_POST['ip'] : '';
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_ipsearch', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		if (empty($_POST['ip']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_IP_IP']);
+			die($h->endpage());
+		}
+		$echoip = htmlentities(stripslashes($_POST['ip']), ENT_QUOTES, 'ISO-8859-1');
+		$queryip=$db->escape(stripslashes($_POST['ip']));
+		alert('info',$lang['ERROR_INFO'],$lang['STAFF_IP_HUINFO'] . " <b>{$echoip}</b>",false);
+		echo "<table class='table-bordered table'>
+		<tr>
+			<th>
+				{$lang['STAFF_IP_OUTTH']}
+			</th>
+			<th>
+				{$lang['STAFF_IP_OUTTH1']}
+			</th>
+			<th>
+				{$lang['STAFF_IP_OUTTH2']}
+			</th>
+		</tr>";
+		$q=$db->query("SELECT `username`,`userid`,`registertime`,`level` 
+						FROM `users` WHERE `lastip` = '{$queryip}' 
+						OR `registerip` = '{$queryip}' 
+						OR `loginip` = '{$queryip}'
+						ORDER BY `userid` ASC");
+		$ids = array();
+		while ($r = $db->fetch_row($q))
+		{
+			$ids[] = $r['userid'];
+			echo"<tr>
+				<td>
+					<a href='../profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+				</td>
+				<td>
+					{$r['level']}
+				</td>
+				<td>
+					" . date('F j, Y g:i:s a', $r['registertime']) . "
+				</td>
+			</tr>";
+		}
+		$csrf = request_csrf_html('staff_massjail');
+		echo"</table>
+		<form action='?action=massjail' method='post'>
+		<input type='hidden' name='ids' value='" . implode(",", $ids) . "' />
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_IP_MJ']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_PUNISHFED_TH1']}
+				</th>
+				<td>
+					<input type='number' required='1' name='days' class='form-control' min='1'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_PUNISHFED_TH2']}
+				</th>
+				<td>
+					<input type='text' required='1' name='reason' class='form-control' value='Same IP Users'>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' class='btn btn-default' value='{$lang['STAFF_IP_MJ_BTN']}'>
+				</td>
+			</tr>
+		</table>
+		{$csrf}
+		</form>";
+	}
+	else
+	{
+		$csrf=request_csrf_html('staff_ipsearch');
+		echo "
+		<form method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['STAFF_IP_INFO']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_IP_TH']}
+					</th>
+					<td>
+						<input type='text' class='form-control' required='1' name='ip' value='127.0.0.1'>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_IP_BTN']}'>
+					</td>
+				</tr>
+			</table>
+			{$csrf}
+		</form>";
+	}
+}
+function massjail()
+{
+	global $lang,$db,$userid,$api,$h;
+	if (!isset($_POST['verf']) || !verify_csrf_code('staff_massjail', stripslashes($_POST['verf'])))
+	{
+		alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+		die($h->endpage());
+	}
+	if (!isset($_POST['ids']))
+    {
+        $_POST['ids'] = '';
+    }
+	$ids = explode(",", $_POST['ids']);
+    $ju = array();
+	$_POST['reason'] = (isset($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : '';
+    $_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs(intval($_POST['days'])) : '';
+	if ((count($ids) == 1 && empty($ids[0])) || empty($_POST['reason']) || empty($_POST['days']))
+    {
+        alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MJ_ERR'],true,'?action=ipsearch');
+        die($h->endpage());
+    }
+	foreach ($ids as $id)
+    {
+        if (is_numeric($id) && abs($id) > 0)
+        {
+            $safe_id = abs($id);
+			$days=($_POST['days']*86400)+time();
+            $db->query("INSERT INTO `fedjail` VALUES(NULL, {$safe_id}, {$days}, {$userid}, '{$_POST['reason']}')");
+			$api->SystemLogsAdd($userid,'fedjail',"Placed User ID {$safe_id} into the federal jail for {$days} days for {$_POST['reason']}.");
+			echo "{$lang['STAFF_MJ_INFO']} {$safe_id} {$lang['STAFF_MJ_INFO1']}<br />";
+            $ju[] = $id;
+        }
+    }
+	if (count($ju) > 0)
+    {
+        $juv = implode(',', $ju);
+        $re = $db->query("UPDATE `users` SET `fedjail` = 1 WHERE `userid` IN({$juv})");
+		$api->SystemLogsAdd($userid,'staff',"Mass jailed User IDs {$juv} for {$_POST['days']} days for {$_POST['reason']}.");
+        alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_MJ_SUCC'],true,'index.php');
+        die($h->endpage());
+    }
+    else
+    {
+        alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_MJ_SUCC1'],true,'index.php');
+        die($h->endpage());
+    }
 }
 $h->endpage();

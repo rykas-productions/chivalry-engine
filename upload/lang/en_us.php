@@ -1409,6 +1409,7 @@ $lang['VIP_SUCCESS']="We appreciate it completely. You can view a receipt of thi
 $lang['STAFF_PUNISHED_FED']="Fedjail User";
 $lang['STAFF_PUNISHED_UNFED']="Unfedjail User";
 $lang['STAFF_PUNISHED_FWARN']="Forum Warn User";
+$lang['STAFF_PUNISHED_IPSEARCH']="IP Search";
 $lang['STAFF_PUNISHFED_FORM']="Jailing User";
 $lang['STAFF_PUNISHFED_INFO']="Placing a user in federal jail will render their account virtually useless. They will not be able to do anything in-game.";
 $lang['STAFF_PUNISHFED_TH']="User:";
@@ -1957,4 +1958,25 @@ $lang['STAFF_FWARN_REASON']="Forum Warn";
 $lang['STAFF_FWARN_ERR']="The user you are trying to warn does not exist.";
 $lang['STAFF_FWARN_ERR1']="You forgot to specify a user and/or a reason. Go back and try again.";
 $lang['STAFF_FWARN_SUCC']="You have successfully forum warned this user.";
+
+//Staff IP Search
+$lang['STAFF_IP_TITLE']="IP Lookup";
+$lang['STAFF_IP_INFO']="Input an IP Address to look up. This will list all the players on that IP Address.";
+$lang['STAFF_IP_TH']="IP Address";
+$lang['STAFF_IP_BTN']="List Users";
+$lang['STAFF_IP_IP']="Invalid or non-existent IP Address specified. Go back and try again.";
+$lang['STAFF_IP_HUINFO']="Searching for players with the IP:";
+$lang['STAFF_IP_OUTTH']="Username [ID]";
+$lang['STAFF_IP_OUTTH1']="Level";
+$lang['STAFF_IP_OUTTH2']="Registered";
+
+
+//Staff Mass Jail
+$lang['STAFF_IP_MJ']="Fill out the form to place these users in federal jail with one action.";
+$lang['STAFF_IP_MJ_BTN']="Mass Fedjail";
+$lang['STAFF_MJ_ERR']="You're missing one or more inputs from the previous form.";
+$lang['STAFF_MJ_INFO']="User ID";
+$lang['STAFF_MJ_INFO1']="has been placed into the federal jail.";
+$lang['STAFF_MJ_SUCC']="You have successfully mass jailed these users.";
+$lang['STAFF_MJ_SUCC1']="No users were mass jailed.";
 ?>

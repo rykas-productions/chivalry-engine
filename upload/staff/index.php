@@ -292,6 +292,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 							<a href='staff_punish.php?action=fedjail'>{$lang['STAFF_PUNISHED_FED']}</a><br />
 							<a href='staff_punish.php?action=unfedjail'>{$lang['STAFF_PUNISHED_UNFED']}</a><br />
 							<a href='staff_punish.php?action=forumwarn'>{$lang['STAFF_PUNISHED_FWARN']}</a><br />
+							<a href='staff_punish.php?action=ipsearch'>{$lang['STAFF_PUNISHED_IPSEARCH']}</a><br />
 						</div>
 					</div>
 			</div>
