@@ -17,11 +17,33 @@ $from = 'fillinplease';
 			<meta charset="utf-8">
 			<meta http-equiv="X-UA-Compatible" content="IE=edge">
 			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-			<meta name="description" content="">
-			<meta name="author" content="TheMasterGeneral">
-			<?php echo "<title>{$set['WebsiteName']}</title>"; ?>
+			<meta name="description" content="<?php echo $set['Website_Description']; ?>">
+			<meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
+			<meta property="og:description" content="<?php echo $set['Website_Description']; ?>" />
+			<meta property="og:image" content="http://vignette1.wikia.nocookie.net/helmet-heroes/images/e/e0/Knight_Helmet.png/revision/latest?cb=20131008030002" />
+			<link rel="shortcut icon" href="http://vignette1.wikia.nocookie.net/helmet-heroes/images/e/e0/Knight_Helmet.png/revision/latest?cb=20131008030002" type="image/x-icon" />
+			<meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
+			 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
+			<!-- CSS -->
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 			<meta name="theme-color" content="#e7e7e7">
+			<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.csss">
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+			<!-- Custom CSS -->
+			<style>
+			body {
+				font-size: 16px;
+				/* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+			}
+			</style>
+
+			<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+			<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+			<!--[if lt IE 9]>
+				<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+				<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+			<![endif]-->
 <?php
 if (!isset($_GET['step']))
 {
