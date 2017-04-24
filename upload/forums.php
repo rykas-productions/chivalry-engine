@@ -579,7 +579,7 @@ function viewtopic()
         {
 			if ($memb['display_pic'])
 			{
-				$av="<img src='{$memb['display_pic']}' class='img-responsive' width='75' title='This is the avatar of {$PN}'>";
+				$av="<center><img src='{$memb['display_pic']}' class='img-responsive' width='75' title='This is the avatar of {$PN}'></center>";
 			}
 			else
 			{
