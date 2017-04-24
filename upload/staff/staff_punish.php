@@ -31,6 +31,9 @@ switch ($_GET['action'])
 	case 'forumban':
 		forumban();
 		break;
+	case 'unforumban':
+		unforumban();
+		break;
 	default:
 		echo 'Error: This script requires an action.';
 		$h->endpage();
@@ -158,7 +161,7 @@ function unfedjail()
 		$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$_POST['user']}");
 		$api->SystemLogsAdd($userid,'staff',"Removed User ID {$_POST['user']} from the federal jail.");
 		$api->SystemLogsAdd($userid,'fedjail',"Removed User ID {$_POST['user']} from the federal jail.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_UNFED_SUCC']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_UNFED_SUCC'],true,'index.php');
 	}
 	else
 	{
@@ -512,6 +515,59 @@ function forumban()
 			</tr>
 			</form>
 		</table>";
+	}
+}
+function unforumban()
+{
+	global $db,$userid,$api,$lang,$h;
+	echo "<h3>{$lang['STAFF_UFBAN_TITLE']}</h3><hr />";
+	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
+	if (isset($_POST['user']))
+	{
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_unforumban', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		$check = $db->query("SELECT `fb_id` FROM `forum_bans` WHERE `fb_user` = {$_POST['user']} LIMIT 1");
+		if ($db->num_rows($check) == 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_UFBAN_ERR']);
+			die($h->endpage());
+		}
+		$db->query("DELETE FROM `forum_bans` WHERE `fb_user` = {$_POST['user']}");
+		$api->SystemLogsAdd($userid,'staff',"Removed User ID {$_POST['user']}'s forum ban");
+		$api->SystemLogsAdd($userid,'forumban',"Removed User ID {$_POST['user']}'s forum ban.");
+		$api->GameAddNotification($_POST['user'],"The game administration has removed your forum ban. You may use the forum once again.");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_UFBAN_SUCC'],true,'index.php');
+	}
+	else
+	{
+		$csrf=request_csrf_html('staff_unforumban');
+		echo "<form method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['STAFF_UFBAN_INFO']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_PRIV_USER']}
+					</th>
+					<td>
+						" . forumb_user_dropdown('user',$_GET['user']) . "
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_UFBAN_BTN']}'>
+					</td>
+				</tr>
+				{$csrf}
+			</table>
+		</form>";
 	}
 }
 $h->endpage();

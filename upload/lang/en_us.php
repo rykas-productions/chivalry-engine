@@ -1413,6 +1413,7 @@ $lang['STAFF_PUNISHED_UNFED']="Unfedjail User";
 $lang['STAFF_PUNISHED_FWARN']="Forum Warn User";
 $lang['STAFF_PUNISHED_IPSEARCH']="IP Search";
 $lang['STAFF_PUNISHED_FBAN']="Forum Ban User";
+$lang['STAFF_PUNISHED_UFBAN']="Unforum Ban User";
 $lang['STAFF_PUNISHFED_FORM']="Jailing User";
 $lang['STAFF_PUNISHFED_INFO']="Placing a user in federal jail will render their account virtually useless. They will not be able to do anything in-game.";
 $lang['STAFF_PUNISHFED_TH']="User:";
@@ -1992,4 +1993,11 @@ $lang['STAFF_FBAN_ERR']="You cannot forum ban a non-existent user.";
 $lang['STAFF_FBAN_ERR1']="You cannot forum ban admins. Please remove their staff privileges them first before trying again.";
 $lang['STAFF_FBAN_ERR2']="You cannot forum ban a user while they're currently forum banned.";
 $lang['STAFF_FBAN_SUCC']="You have successfully forum banned this user.";
+
+//Staff unban forum.
+$lang['STAFF_UFBAN_TITLE']="Remove Forum Ban";
+$lang['STAFF_UFBAN_INFO']="Select a user to remove their forum ban.";
+$lang['STAFF_UFBAN_BTN']="Remove Forum Ban";
+$lang['STAFF_UFBAN_ERR']="The user you've selected is not currently forum banned. Check your source and try again.";
+$lang['STAFF_UFBAN_SUCC']="This user has been successfully had their forum ban removed.";
 ?>

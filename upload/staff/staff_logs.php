@@ -91,6 +91,9 @@ case "mining":
 case "forumwarn":
     logs('forumwarn');
     break;
+case "forumban":
+    logs('forumban');
+    break;
 case "mail":
 	maillogs();
 	break;
