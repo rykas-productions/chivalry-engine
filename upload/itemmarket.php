@@ -93,6 +93,7 @@ function index()
                     "[<a href='?action=buy&ID={$r['imID']}'>{$lang['IMARKET_LISTING_TD2']}</a>]
                     [<a href='?action=gift&ID={$r['imID']}'>{$lang['IMARKET_LISTING_TD3']}</a>]";
         }
+		$r['itmdesc']=htmlentities($r['itmdesc'],ENT_QUOTES);
 		echo "
 		<tr>
 			<td>
