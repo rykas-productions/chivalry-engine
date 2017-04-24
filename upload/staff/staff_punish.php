@@ -461,7 +461,7 @@ function forumban()
 		$db->query("INSERT INTO `forum_bans` VALUES(NULL, {$_POST['user']}, {$userid}, {$_POST['days']}, '{$_POST['reason']}')");
 		$api->SystemLogsAdd($userid,'staff',"Forum banned User ID {$_POST['user']} for {$days} days for {$_POST['reason']}.");
 		$api->SystemLogsAdd($userid,'forumban',"Forum banned User ID {$_POST['user']} for {$days} days for {$_POST['reason']}.");
-		$api->GameAddNotification($_POST['user'],"The game adminstration has forum banned you for {$days} for the following reason: '{$_POST['reason']}'.");
+		$api->GameAddNotification($_POST['user'],"The game adminstration has forum banned you for {$days} days for the following reason: '{$_POST['reason']}'.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FBAN_SUCC'],true,'index.php');
 		die($h->endpage());
 	}
