@@ -65,6 +65,12 @@ function fedjail()
 			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_PUNISHFED_ERR2']);
 			die($h->endpage());
 		}
+		$already_fed=$db->query("SELECT `fed_id` FROM `fedjail` WHERE `fed_userid` = {$_POST['user']}");
+		if ($db->num_rows($already_fed) > 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_PUNISHFED_ERR3']);
+			die($h->endpage());
+		}
 		$re = $db->query("UPDATE `users` SET `fedjail` = 1  WHERE `userid` = {$_POST['user']}");
 		$days=$_POST['days'];
 		$_POST['days']=time()+($_POST['days']*86400);
@@ -408,5 +414,9 @@ function massjail()
         alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_MJ_SUCC1'],true,'index.php');
         die($h->endpage());
     }
+}
+function forumban()
+{
+	global $db,$userid,$api,$lang,$h;
 }
 $h->endpage();
