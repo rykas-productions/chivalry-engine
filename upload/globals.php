@@ -13,6 +13,7 @@ if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false)
 }
 session_name('CENGINE');
 session_start();
+$time = time();
 header('X-Frame-Options: SAMEORIGIN');
 if(isset($_POST['lang']))
 {
@@ -194,7 +195,6 @@ foreach (glob("crons/*.php") as $filename)
 { 
     include $filename; 
 }
-$time = time();
 $get = $db->query("SELECT `sip_recipe` FROM `smelt_inprogress` WHERE `sip_user` = {$userid} AND `sip_time` < {$time}");
 if($db->num_rows($get)) 
 {
