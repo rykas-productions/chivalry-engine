@@ -519,7 +519,8 @@ function beat()
 		$api->UserInfoSet($r['userid'],"hp",1);
 		$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
 		$api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> brutally attacked you and caused {$hosptime} minutes worth of damage.");
-		$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and brutally injured them, causing {$hosptime} minutes of damage.");
+		$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and brutally injured them, causing {$hosptime} minutes of infirmary time.");
+		$api->SystemLogsAdd($r['userid'],'attacking',"Brutally injured by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}], causing {$hosptime} minutes of infirmary time.");
 		$_SESSION['attackwon'] = false;
 		if ($r['user_level'] == 'NPC')
 		{
@@ -580,6 +581,7 @@ function lost()
 	$expperc2 = round($expgainp / $r['xp_needed'] * 100);
 	$api->GameAddNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
 	$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$_GET['ID']}] and lost, gaining {$hosptime} minutes in the infirmary.");
+	$api->SystemLogsAdd($r['userid'],'attacking',"Challenged by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and won.");
 	$api->UserInfoSetStatic($_GET['ID'],"xp",$r['xp']+$expgainp2);
 	$_SESSION['attacklost'] = 0;
 }
@@ -637,7 +639,8 @@ function xp()
 			$api->UserInfoSet($r['userid'],"hp",1);
 			$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
 			$api->GameAddNotification($r['userid'],"<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you and left you for experience.");
-			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and gained {$expperc}% Experience.");			
+			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and gained {$expperc}% Experience.");
+			$api->SystemLogsAdd($r['userid'],'attacking',"Attacked by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and left for experience.");			
 			$_SESSION['attackwon'] = false;
 			if ($r['user_level'] == 'NPC')
 			{
@@ -689,7 +692,8 @@ function mug()
 			$api->UserGiveCurrency($userid,'primary',$stole);
 			$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
 			$api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
-			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");					
+			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");	
+			$api->SystemLogsAdd($r['userid'],'attacking',"Mugged by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}], losing {$stole} Primary Currency.");
 			$_SESSION['attackwon'] = 0;
 			if ($r['user_level'] == 'NPC')
 			{
