@@ -1063,7 +1063,7 @@ function edit()
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff')
     {
-		if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')) || (!($ir['userid'] == $post['fp_poster_id'])))
+		if (($api->UserMemberLevelGet($userid,'forum moderator')) || (!($ir['userid'] == $post['fp_poster_id'])))
 		{ 
 			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
 			die($h->endpage());
@@ -1088,7 +1088,7 @@ function edit()
     }
     $post = $db->fetch_row($q3);
     $db->free_result($q3);
-    if (!($ir['user_level'] > 1 || $ir['userid'] == $post['fp_poster_id']))
+    if (!($api->UserMemberLevelGet($userid,'forum moderator') || $ir['userid'] == $post['fp_poster_id']))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_EDIT_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
@@ -1216,7 +1216,7 @@ function editsub()
 function move()
 {
     global $ir, $c, $userid, $h, $lang, $db, $api;
-    if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')))
+    if ($api->UserMemberLevelGet($userid,'forum moderator'))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 		die($h->endpage());
@@ -1263,7 +1263,7 @@ function move()
 function lock()
 {
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
-    if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')))
+    if ($api->UserMemberLevelGet($userid,'forum moderator'))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 		die($h->endpage());
@@ -1310,7 +1310,7 @@ function lock()
 function pin()
 {
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
-    if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')))
+    if ($api->UserMemberLevelGet($userid,'forum moderator'))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 		die($h->endpage());
@@ -1408,7 +1408,7 @@ function deletopic()
 {
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
-    if ((!($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')))
+    if ($api->UserMemberLevelGet($userid,'forum moderator'))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
