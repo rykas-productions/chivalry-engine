@@ -196,6 +196,12 @@ $lang['REG_CLASSERROR']="You specified an invalid fighting class. Please go back
 $lang['REG_EMAILERROR']="You did not enter a valid email, or failed to enter the email field. Please go back and try again.";
 $lang['REG_MULTIALERT']="Hold on there. We've detected that someone with your IP address has already registered. We're going to stop you here for now. If this is a false positive, please email the game owners.";
 $lang['REG_USEREMPTY']="You didn't input a username. Go back and try again, please.";
+$lang['REG_UNPLACE']="This is your in-game name.";
+$lang['REG_EPLACE']="You will use this to log into the game.";
+$lang['REG_PWPLACE']="Unique passwords use letters, symbols, and numbers.";
+$lang['REG_PW1PLACE']="Now, confirm the previously entered password.";
+$lang['REG_REFPLACE']="Refered by a friend? Enter their User ID here! (Optional)";
+$lang['REG_PROMOPLACE']="Received a promo code? Enter it here. (Optional)";
 
 //CSRF Error
 $lang["CSRF_ERROR_TITLE"] = "Action Blocked!";
