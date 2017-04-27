@@ -84,8 +84,8 @@ function fedjail()
 		$days=$_POST['days'];
 		$_POST['days']=time()+($_POST['days']*86400);
 		$db->query("INSERT INTO `fedjail` VALUES(NULL, {$_POST['user']}, {$_POST['days']}, {$userid}, '{$_POST['reason']}')");
-		$api->SystemLogsAdd($userid,'staff',"Placed <a href='../profile.php?user={$_POST['user']}'>{$api->UserIDtoName($_POST['user'])}</a> [{$_POST['user']}] into the federal jail for {$days} days for {$_POST['reason']}.");
-		$api->SystemLogsAdd($userid,'fedjail',"Placed <a href='../profile.php?user={$_POST['user']}'>{$api->UserIDtoName($_POST['user'])}</a> [{$_POST['user']}] into the federal jail for {$days} days for {$_POST['reason']}.");
+		$api->SystemLogsAdd($userid,'staff',"Placed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] into the federal jail for {$days} days for {$_POST['reason']}.");
+		$api->SystemLogsAdd($userid,'fedjail',"Placed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] into the federal jail for {$days} days for {$_POST['reason']}.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_PUNISHFED_SUCC'],true,'index.php');
 		die($h->endpage());
 	}
@@ -159,8 +159,8 @@ function unfedjail()
 		}
 		$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['user']}");
 		$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$_POST['user']}");
-		$api->SystemLogsAdd($userid,'staff',"Removed <a href='../profile.php?user={$_POST['user']}'>{$api->UserIDtoName($_POST['user'])}</a> [{$_POST['user']}] from the federal jail.");
-		$api->SystemLogsAdd($userid,'fedjail',"Removed <a href='../profile.php?user={$_POST['user']}'>{$api->UserIDtoName($_POST['user'])}</a> [{$_POST['user']}] from the federal jail.");
+		$api->SystemLogsAdd($userid,'staff',"Removed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] from the federal jail.");
+		$api->SystemLogsAdd($userid,'fedjail',"Removed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] from the federal jail.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_UNFED_SUCC'],true,'index.php');
 	}
 	else
@@ -216,8 +216,8 @@ function forumwarn()
 			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FWARN_ERR']);
 			die($h->endpage());
 		}
-		$api->SystemLogsAdd($userid,'staff',"Forum Warned <a href='../profile.php?user={$_POST['user']}'>{$api->UserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for '{$_POST['reason']}'.");
-		$api->SystemLogsAdd($userid,'forumwarn',"Forum Warned <a href='../profile.php?user={$_POST['user']}'>{$api->UserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for '{$_POST['reason']}'.");
+		$api->SystemLogsAdd($userid,'staff',"Forum Warned <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for '{$_POST['reason']}'.");
+		$api->SystemLogsAdd($userid,'forumwarn',"Forum Warned <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for '{$_POST['reason']}'.");
 		$api->GameAddNotification($_POST['user'],"You have been received a forum warning for the following reason: {$_POST['reason']}.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FWARN_SUCC']);
 	}
@@ -402,7 +402,7 @@ function massjail()
             $safe_id = abs($id);
 			$days=($_POST['days']*86400)+time();
             $db->query("INSERT INTO `fedjail` VALUES(NULL, {$safe_id}, {$days}, {$userid}, '{$_POST['reason']}')");
-			$api->SystemLogsAdd($userid,'fedjail',"Placed <a href='../profile.php?user={$safe_id}'>{$api->UserIDtoName($safe_id)}</a> [{$safe_id}] into the federal jail for {$days} days for {$_POST['reason']}.");
+			$api->SystemLogsAdd($userid,'fedjail',"Placed <a href='../profile.php?user={$safe_id}'>{$api->SystemUserIDtoName($safe_id)}</a> [{$safe_id}] into the federal jail for {$days} days for {$_POST['reason']}.");
 			echo "{$lang['STAFF_MJ_INFO']} {$safe_id} {$lang['STAFF_MJ_INFO1']}<br />";
             $ju[] = $id;
         }
@@ -462,8 +462,8 @@ function forumban()
 		$days=$_POST['days'];
 		$_POST['days']=time()+($_POST['days']*86400);
 		$db->query("INSERT INTO `forum_bans` VALUES(NULL, {$_POST['user']}, {$userid}, {$_POST['days']}, '{$_POST['reason']}')");
-		$api->SystemLogsAdd($userid,'staff',"Forum banned <a href='../profile.php?user={$_POST['user']}'>{$api->UserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for {$days} days for {$_POST['reason']}.");
-		$api->SystemLogsAdd($userid,'forumban',"Forum banned <a href='../profile.php?user={$_POST['user']}'>{$api->UserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for {$days} days for {$_POST['reason']}.");
+		$api->SystemLogsAdd($userid,'staff',"Forum banned <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for {$days} days for {$_POST['reason']}.");
+		$api->SystemLogsAdd($userid,'forumban',"Forum banned <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for {$days} days for {$_POST['reason']}.");
 		$api->GameAddNotification($_POST['user'],"The game administration has forum banned you for {$days} days for the following reason: '{$_POST['reason']}'.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FBAN_SUCC'],true,'index.php');
 		die($h->endpage());
@@ -537,8 +537,8 @@ function unforumban()
 			die($h->endpage());
 		}
 		$db->query("DELETE FROM `forum_bans` WHERE `fb_user` = {$_POST['user']}");
-		$api->SystemLogsAdd($userid,'staff',"Removed <a href='../profile.php?user={$_POST['user']}'>{$api->UserIDtoName($_POST['user'])}</a> [{$_POST['user']}]'s forum ban");
-		$api->SystemLogsAdd($userid,'forumban',"Removed <a href='../profile.php?user={$_POST['user']}'>{$api->UserIDtoName($_POST['user'])}</a> [{$_POST['user']}]'s forum ban.");
+		$api->SystemLogsAdd($userid,'staff',"Removed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}]'s forum ban");
+		$api->SystemLogsAdd($userid,'forumban',"Removed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}]'s forum ban.");
 		$api->GameAddNotification($_POST['user'],"The game administration has removed your forum ban. You may use the forum once again.");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_UFBAN_SUCC'],true,'index.php');
 	}
@@ -588,7 +588,7 @@ function staffnotes()
         die($h->endpage());
     }
 	$db->query("UPDATE `users` SET `staff_notes` = '{$_POST['staffnotes']}' WHERE `userid` = '{$_POST['ID']}'");
-	$api->SystemLogsAdd($userid,'staff',"Updated <a href='../profile.php?user={$_POST['ID']}'>{$api->UserIDtoName($_POST['ID'])}</a> [{$_POST['ID']}]'s staff notes.");
+	$api->SystemLogsAdd($userid,'staff',"Updated <a href='../profile.php?user={$_POST['ID']}'>{$api->SystemUserIDtoName($_POST['ID'])}</a> [{$_POST['ID']}]'s staff notes.");
 	alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_NOTES_SUCC'],true,'index.php');
 }
 $h->endpage();
