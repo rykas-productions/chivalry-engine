@@ -129,7 +129,7 @@ $inv =
         		<td><a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' title='{$i['itmdesc']}'>{$i['itmname']}</a>";
         if ($i['inv_qty'] > 1)
         {
-            echo " (x{$i['inv_qty']})";
+            echo " ({$i['inv_qty']})";
         }
         echo "</td>
         	  <td class='hidden-xs'>" . number_format($i['itmsellprice']);  
