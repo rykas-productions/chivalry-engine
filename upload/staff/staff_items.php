@@ -478,8 +478,8 @@ function giveitem()
 				$db->free_result($q);
 				$db->free_result($q2);
 				$api->UserGiveItem($_POST['user'], $_POST['item'], $_POST['qty']);
-				$api->GameAddNotification($_POST['user'], "The administration has gifted you {$_POST['qty']}x {$item['itmname']}(s) to your inventory.");
-				$api->SystemLogsAdd($userid,'staff',"Gave {$_POST['qty']}x <a href='../iteminfo.php'>{$item['itmname']}</a> to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
+				$api->GameAddNotification($_POST['user'], "The administration has gifted you {$_POST['qty']} {$item['itmname']}(s) to your inventory.");
+				$api->SystemLogsAdd($userid,'staff',"Gave {$_POST['qty']} <a href='../iteminfo.php'>{$item['itmname']}</a>(s) to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
 				alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ITEM_GIVE_SUB_SUCCESS'],true,'index.php');
 				die($h->endpage());
 			 }
