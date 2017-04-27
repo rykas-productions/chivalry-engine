@@ -181,7 +181,7 @@ class headers
 		}
 		if ($ir['mail'] > 0)
 		{
-			alert('info',$lang['MENU_UNREADMAIL1'],"{$lang['MENU_UNREADMAIL2']} {$ir['mail']} {$lang['MENU_UNREADMAIL3']} <a href='inbox.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}",false);
+			alert('info',$lang['MENU_UNREADMAIL1'],"{$lang['MENU_UNREADMAIL2']} {$ir['mail']} {$lang['MENU_UNREADMAIL3']} <a href='../inbox.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}",false);
 		}
 		if ($ir['notifications'] > 0)
 		{
