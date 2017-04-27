@@ -26,7 +26,7 @@ if (!empty($_POST['pn_update']))
 {
     if (strlen($_POST['pn_update']) > 65655)
     {
-        ?> <div class="alert alert-danger"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong><?php echo $lang['ERROR_GENERIC']; ?></strong> <?php echo $lang['ERRDE_PN']; ?></div><br /> <?php
+		alert('danger',$lang['ERROR_GENERIC'],$lang['ERRDE_PN'],false);
     }
     else
     {
@@ -36,25 +36,20 @@ if (!empty($_POST['pn_update']))
         			SET `personal_notes` = '{$pn_update_db}'
         			WHERE `userid` = {$userid}");
         $ir['personal_notes'] = $_POST['pn_update'];
-        ?> <div class="alert alert-success"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong><?php echo $lang['ERROR_SUCCESS']; ?></strong> <?php echo $lang['INDEX_PNSUCCESS']; ?> </div><br /> <?php
+		alert('success',$lang['ERROR_SUCCESS'],$lang['INDEX_PNSUCCESS'],false);
     }
 }
 
 $StrengthRank=get_rank($ir['strength'],'strength');
 $StrengthFormat=number_format($ir['strength']);
-
 $AgilityRank=get_rank($ir['agility'],'agility');
 $AgilityFormat=number_format($ir['agility']);
-
 $GuardRank=get_rank($ir['guard'],'guard');
 $GuardFormat=number_format($ir['guard']);
-
 $IQRank=get_rank($ir['iq'],'iq');
 $IQFormat=number_format($ir['iq']);
-
 $LaborRank=get_rank($ir['labor'],'labor');
 $LaborFormat=number_format($ir['labor']);
-
 
 $template = array(
                 'L_INDEX_TITLE'         => $lang['INDEX_TITLE'],
@@ -108,8 +103,5 @@ $template = array(
                 'ir_personal_notes'     => $ir['personal_notes'],
                 'L_FB_PN'               => $lang['FB_PN']
 );
-
 run_template( $template, 'index' );
-
-
 $h->endpage();
