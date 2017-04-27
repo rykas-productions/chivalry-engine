@@ -1003,10 +1003,11 @@ function check_data()
 		$db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$userid}");
 	}
 	$q1=$db->query("SELECT `fed_userid` FROM `fedjail` WHERE `fed_out` < {$time}");
-	while ($r = $db->fetch_row($q1))
+	if ($db->num_rows($q1) > 0)
 	{
+		$q2=$db->fetch_single($q1);
 		$db->query("DELETE FROM `fedjail` WHERE `fed_out` < {$time}");
-		$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$r}");
+		$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$q2}");
 	}
 	$db->query("DELETE FROM `forum_bans` WHERE `fb_time` < {$time}");
 }
