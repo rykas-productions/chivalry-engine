@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.4.3";
+		return "17.4.3";	//Last Updated 4/24/2017
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
