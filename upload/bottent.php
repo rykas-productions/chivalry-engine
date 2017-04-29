@@ -35,7 +35,7 @@ while ($result = $db->fetch_row($query))
 	$r3 = $db->fetch_row($db->query("SELECT `strength`,`agility`,`guard` FROM `userstats` WHERE `userid` = {$result['botuser']}"));
 	$ustats=$ir['strength']+$ir['agility']+$ir['guard'];
 	$themstats=$r3['strength']+$r3['agility']+$r3['guard'];
-	$chance = round(($ustats / $themstats) * 100,2);
+	$chance = round((($ustats / $themstats) * 100)/2,1);
 	if ((time() <= ($r2 + $result['botcooldown'])) && ($r2 > 0))
 	{
 		$cooldown=($r2 + $result['botcooldown']) - time();
