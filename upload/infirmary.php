@@ -53,11 +53,12 @@ function home()
 	$query = $db->query("SELECT * FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime} ORDER BY `infirmary_out` DESC");
 	while ($Infirmary=$db->fetch_row($query))
 	{
-		$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$Infirmary['infirmary_user']}"));
 		echo "
 			<tr>
 				<td>
-					<a href='profile.php?user={$Infirmary['infirmary_user']}'>{$UserName}</a> [{$Infirmary['infirmary_user']}]
+					<a href='profile.php?user={$Infirmary['infirmary_user']}'>
+						{$api->SystemUserIDtoName($Infirmary['infirmary_user'])}
+					</a> [{$Infirmary['infirmary_user']}]
 				</td>
 				<td>
 					{$Infirmary['infirmary_reason']}
