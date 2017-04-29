@@ -11,7 +11,7 @@ class headers
 
     function startheaders()
     {
-		global $ir,$set,$h,$lang,$db,$menuhide,$userid,$macropage,$api;
+		global $ir,$set,$h,$lang,$db,$menuhide,$userid,$macropage,$api,$time;
 		?>
 		<!DOCTYPE html>
 		<html lang="en">
@@ -169,7 +169,6 @@ class headers
 					<?php alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false); ?>
 				</noscript>
 				<?php
-				$time=time();
 				$fed=$db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
 				if ($fed['fed_out'] < $time)
 				{
@@ -205,7 +204,6 @@ class headers
 					$DungeonRemain=TimeUntil_Parse($DungeonOut);
 					alert('info',$lang["GEN_DUNG"],"{$lang['MENU_DUNGEON1']} {$DungeonRemain}.",false);
 				}
-				$time=time();
 				if (($ir['last_verified'] < ($time-$set['Revalidate_Time'])) || ($ir['need_verify'] == 1))
 				{
 					if (isset($macropage))
