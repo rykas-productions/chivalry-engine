@@ -8,6 +8,16 @@
 */
 require("globals.php");
 $tresder = (Random(100, 999));
+$dung_count=$db->fetch_single($db->query("SELECT SUM(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$time}"));
+$infirm_count=$db->fetch_single($db->query("SELECT SUM(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$time}"));
+if (empty($dung_count))
+{
+	$dung_count=0;
+}
+if (empty($infirm_count))
+{
+	$infirm_count=0;
+}
 if ($api->UserStatus($ir['userid'],'infirmary') == true)
 {
 	alert('danger',$lang["GEN_INFIRM"],$lang['ERRDE_EXPLORE'],false);
@@ -19,7 +29,7 @@ if ($api->UserStatus($ir['userid'],'dungeon') == true)
 	die($h->endpage());
 }
 echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
-<div class='col-lg-4'>
+<div class='col-md-4'>
 	<ul class='nav nav-pills nav-stacked'>
 		<li><a data-toggle='tab' href='#SHOPS'>{$lang['EXPLORE_SHOP']}</a></li>
 		<li><a data-toggle='tab' href='#FD'>{$lang['EXPLORE_FD']}</a></li>
@@ -31,7 +41,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 		<li><a data-toggle='tab' href='#PINTER'>{$lang['EXPLORE_PINTER']}</a></li>
 	</ul>
 </div>
-<div class='col-lg-4'>
+<div class='col-md-4'>
 	<div class='tab-content'>
 		<div id='SHOPS' class='tab-pane fade in'>
 			<div class='panel panel-default'>
@@ -103,8 +113,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 		<div id='ACT' class='tab-pane fade'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
-					<a href='dungeon.php'>{$lang['EXPLORE_DUNG']}</a><br />
-					<a href='infirmary.php'>{$lang['EXPLORE_INFIRM']}</a><br />
+					<a href='dungeon.php'>{$lang['EXPLORE_DUNG']} ({$dung_count})</a><br />
+					<a href='infirmary.php'>{$lang['EXPLORE_INFIRM']} ({$infirm_count})</a><br />
 					<a href='gym.php'>{$lang['EXPLORE_GYM']}</a><br />
 					<a href='#'>{$lang['EXPLORE_JOB']}</a><br />
 					<a href='academy.php'>{$lang['EXPLORE_ACADEMY']}</a><br />
@@ -123,7 +133,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 		</div>
 	</div>
 </div>
-<div class='col-lg-4'>
+<div class='col-md-4'>
 	<div class='panel panel-default'>
 		<div class='panel-heading'>
 			{$lang['EXPLORE_TOPTEN']}
@@ -149,7 +159,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 	</div>
 </div>";
 echo "	<div class='row'>
-			<div class='col-lg-12'>
+			<div class='col-md-12'>
 				{$lang['EXPLORE_REF']}
 				<div class='table-responsive'>
 					<table class='table'>
