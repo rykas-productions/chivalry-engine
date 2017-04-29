@@ -126,7 +126,7 @@ $inv =
         }
 		$i['itmdesc']=htmlentities($i['itmdesc'],ENT_QUOTES);
         echo "<tr>
-        		<td><a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' title='{$i['itmdesc']}'>{$i['itmname']}</a>";
+        		<td><a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='right' title='{$i['itmdesc']}'>{$i['itmname']}</a>";
         if ($i['inv_qty'] > 1)
         {
             echo " ({$i['inv_qty']})";

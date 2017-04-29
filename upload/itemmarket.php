@@ -100,7 +100,7 @@ function index()
 				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 			</td>
 			<td>
-				<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' title='{$r['itmdesc']}'>{$r['itmname']}</a>";
+				<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>{$r['itmname']}</a>";
 				if ($r['imQTY'] > 1)
 				{
 					echo " x {$r['imQTY']}";
