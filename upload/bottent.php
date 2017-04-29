@@ -7,6 +7,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+$macropage=('bottent.php');
 require('globals.php');
 echo "<h3>{$lang['BOTTENT_TITLE']}</h3><hr />{$lang['BOTTENT_DESC']}<hr />";
 $query=$db->query("SELECT * FROM `botlist`");
