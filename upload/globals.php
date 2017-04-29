@@ -19,7 +19,7 @@ if(isset($_POST['lang']))
 {
 	$lang = $_POST['lang'];
 	$_SESSION['lang'] = $lang;
-	setcookie('lang', $lang, time() + (3600 * 24 * 30));
+	setcookie('lang', $lang, $time + (3600 * 24 * 30));
 }
 else if(isset($_SESSION['lang']))
 {
@@ -72,12 +72,12 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0)
     header("Location: {$login_url}");
     exit;
 }
-if(isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > 1800))
+if(isset($_SESSION['last_active']) && ($time - $_SESSION['last_active'] > 1800))
 {
 	header("Location: logout.php");
 	exit;
 }
-$_SESSION['last_active'] = time();
+$_SESSION['last_active'] = $time;
 $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
 require "header.php";
 include "config.php";
@@ -201,6 +201,6 @@ if($db->num_rows($get))
     $r = $db->fetch_single($get);
 	$r2 = $db->fetch_row($db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r}"));
     $api->UserGiveItem($userid,$r2['smelt_output'],$r2['smelt_qty_output']);
-    notification_add($userid, "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
+    $api->GameAddNotification($userid, "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
     $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$userid} AND `sip_time` < {$time}");
 }
