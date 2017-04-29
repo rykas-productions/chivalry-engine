@@ -568,7 +568,14 @@ function lost()
 	}
 	$expgainp = $expgain / $ir['xp_needed'] * 100;
 	alert('danger',"{$lang['ATTACK_FIGHT_END5']} {$r['username']}!","{$lang['ATTACK_FIGHT_END6']} (" . number_format($expgainp, 2) . "%)!",true,'index.php');
-	$api->UserInfoSet($userid,"xp","-{$expgain}");
+	if ($ir['xp'] - $expgain < 0)
+	{
+		$api->UserInfoSetStatic($userid,"xp",0);
+	}
+	else
+	{
+		$api->UserInfoSet($userid,"xp","-{$expgain}");
+	}
 	$api->UserInfoSetStatic($userid,"attacking",0);
 	$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 	$hospreason = 'Picked a fight and lost';
