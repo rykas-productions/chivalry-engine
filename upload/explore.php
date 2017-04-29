@@ -9,8 +9,8 @@
 require("globals.php");
 $tresder = (Random(100, 999));
 $time=time();
-$dung_count=$db->fetch_single($db->query("SELECT SUM(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$time}"));
-$infirm_count=$db->fetch_single($db->query("SELECT SUM(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$time}"));
+$dung_count=$db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$time}"));
+$infirm_count=$db->fetch_single($db->query("SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$time}"));
 if (empty($dung_count))
 {
 	$dung_count=0;
