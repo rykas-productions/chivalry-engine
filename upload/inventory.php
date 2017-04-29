@@ -8,16 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
-$q = $db->query("SELECT `itmid`, `itmname` FROM `items`
-                 WHERE `itmid` IN({$ir['equip_primary']}, {$ir['equip_secondary']}, {$ir['equip_armor']})");
-echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />";
-$equip = array();
-while ($r = $db->fetch_row($q))
-{
-    $equip[$r['itmid']] = $r;
-}
-$db->free_result($q);
-echo"
+echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 <div class='row'>
 	<div class='col-sm-4'>
 		<div class='panel panel-default'>
@@ -30,9 +21,9 @@ echo"
 				echo"
 			</div>
 			<div class='panel-body'>";
-				if (isset($equip[$ir['equip_primary']]))
+				if (!empty($ir['equip_primary']))
 				{
-					echo $equip[$ir['equip_primary']]['itmname'];
+					echo $api->SystemItemIDtoName($ir['equip_primary']);
 				}
 				else
 				{
@@ -47,16 +38,16 @@ echo"
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
 				{$lang['EQUIP_WEAPON_SLOT2']} ";
-				if (isset($equip[$ir['equip_secondary']]))
+				if (isset($ir['equip_secondary']))
 				{
 					echo "(<a href='unequip.php?type=equip_secondary'>{$lang['INVENT_UNEQUIP']}</a>)";
 				}
 				echo"
 			</div>
 			<div class='panel-body'>";
-				if (isset($equip[$ir['equip_secondary']]))
+				if (!empty($ir['equip_secondary']))
 				{
-					echo $equip[$ir['equip_secondary']]['itmname'];
+					echo $api->SystemItemIDtoName($ir['equip_secondary']);
 				}
 				else
 				{
@@ -71,7 +62,7 @@ echo"
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
 				{$lang['EQUIP_WEAPON_SLOT3']} ";
-				if (isset($equip[$ir['equip_armor']]))
+				if (!empty($ir['equip_armor']))
 				{
 					echo "(<a href='unequip.php?type=equip_armor'>{$lang['INVENT_UNEQUIP']}</a>)";
 				}
@@ -80,7 +71,7 @@ echo"
 			<div class='panel-body'>";
 				if (isset($equip[$ir['equip_armor']]))
 				{
-					echo $equip[$ir['equip_armor']]['itmname'];
+					echo $api->SystemItemIDtoName($ir['equip_armor']);
 				}
 				else
 				{
@@ -96,7 +87,7 @@ echo"<hr />
 $inv =
         $db->query(
                 "SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
-                 `effect1_on`, `effect2_on`, `effect3_on`, `itmname`,
+                 `effect1_on`, `effect2_on`, `effect3_on`,
                  `weapon`, `armor`, `itmtypename`, `itmdesc`
                  FROM `inventory` AS `iv`
                  INNER JOIN `items` AS `i`
@@ -126,7 +117,10 @@ $inv =
         }
 		$i['itmdesc']=htmlentities($i['itmdesc'],ENT_QUOTES);
         echo "<tr>
-        		<td><a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='right' title='{$i['itmdesc']}'>{$i['itmname']}</a>";
+        		<td>
+					<a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='right' title='{$i['itmdesc']}'>
+						{$api->SystemItemIDtoName($i['itmid'])}
+					</a>";
         if ($i['inv_qty'] > 1)
         {
             echo " ({$i['inv_qty']})";
