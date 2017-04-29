@@ -47,9 +47,6 @@ echo "
 Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 <table class='table table-bordered table-hover table-striped'>
 			<tr>
-				<th width='10%' class='hidden-xs'>
-					{$lang['USERLIST_ORDER1']}
-				</th>
 				<th>
 					{$lang['USERLIST_ORDER2']}
 				</th>
@@ -71,11 +68,8 @@ while ($r = $db->fetch_row($q))
 {
 	$r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span> <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
     echo "	<tr>
-				<td class='hidden-xs'>
-					{$r['userid']}
-				</td>
 				<td>
-					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a>
+					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 				</td>
 				<td>
 					" . number_format($r['primary_currency']) . "
