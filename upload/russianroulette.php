@@ -1,15 +1,20 @@
 <?php
-
+/*
+	File: 		russianroulette.php
+	Created: 	5/2/2017 at 12:38PM Eastern Time
+	Info: 		Allows players to play a round of russian roulette.
+	Author: 	ImJustIsabella
+	Website:	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
-
 if (isset($_GET['id']))
 {
+	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : 0;
 	if (isset($_GET['deny']))
 	{
 		$db->query("DELETE FROM `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee` = '{$userid}'");
 		echo "{$lang['RUSSIANROULETTE_DENIED']}";
-		require ("footer.php");
-		die();
+		die($h->endpage());
 	}
 	$q = $db->query("SELECT `challenger` FROM `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee` = '{$userid}'");
 	if ($db->num_rows($q) == 0)
@@ -19,12 +24,10 @@ if (isset($_GET['id']))
 		{
 			$r = $db->fetch_row($q);
 			echo "{$lang['RUSSIANROULETTE_NO_INVITE']} {$r['username']} ({$_GET['id']})";
-			require ("footer.php");
-			die();
+			die($h->endpage());
 		}
 		echo "{$lang['RUSSIANROULETTE_INVALID_ACCOUNT']}";
-		require ("footer.php");
-		die();
+		die($h->endpage());
 	}
 	else
 	{
@@ -33,19 +36,17 @@ if (isset($_GET['id']))
 		if ($ir['primary_currency'] < $r2['reward'])
 		{
 			echo "{$lang['RUSSIANROULETTE_INSUFFICIENT_CURRENCY']}";
-			require ("footer.php");
-			die();
+			die($h->endpage());
 		}
 		$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_GET['id']}'");
 		$r = $db->fetch_row($q);
 		if ($r['primary_currency'] < $r2['reward'])
 		{
 			echo "{$lang['RUSSIANROULETTE_SCAM']}";
-			require ("footer.php");
-			die();
+			die($h->endpage());
 		}
-		$rand = mt_rand(1, 8);
-		$player = mt_rand(1, 2);
+		$rand = Random(1, 8);
+		$player = Random(1, 2);
 		$shot = false;
 		if ($player == 1)
 		{
@@ -150,6 +151,7 @@ if (isset($_GET['id']))
 			notification_add($_GET['id'], "You won in the game of russian roulette against {$ir['username']} ({$userid})!");
 		}
 		$db->query("DELETE FROM `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee` = '{$userid}'");
+		die($h->endpage());
 	}
 }
 else
@@ -183,10 +185,13 @@ else
 				</tr>
 			</table>
 		</form>";
+		die($h->endpage());
 	}
 	else
 	{
-		if ($_POST['user_id'] == 0 || $_POST['user_id'] == "")
+		$_POST['user_id'] = (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) ? abs(intval($_POST['user_id'])) : 0;
+		$_POST['reward'] = (isset($_POST['reward']) && is_numeric($_POST['reward'])) ? abs(intval($_POST['reward'])) : 0;
+		if ($_POST['user_id'] == 0 || empty($_POST['user_id']))
 		{
 			echo "{$lang['RUSSIANROULETTE_FAILED_FORM']}";
 		}
@@ -210,6 +215,6 @@ else
 			}
 		}
 	}
+	die($h->endpage());
 }
-require ("footer.php")
-?>
+die($h->endpage());
