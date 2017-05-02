@@ -532,7 +532,44 @@ function user2_dropdown($ddname = "user", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
-
+/**
+ * Constructs a drop-down listbox of all the guilds in-game to let the user select one.
+ * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
+ * @param int $selected [optional] The <i>ID number</i> of the guild who should be selected by default.
+ * Not specifying this or setting it to -1 makes the first guild be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
+function guilds_dropdown($ddname = "guild", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='{$ddname}' class='form-control' type='dropdown'>";
+    $q =
+            $db->query(
+                    "SELECT `guild_id`, `guild_name`
+    				 FROM `guild`
+    				 ORDER BY `guild_id` ASC");
+    if ($selected == -1)
+    {
+        $first = 0;
+    }
+    else
+    {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q))
+    {
+        $ret .= "\n<option value='{$r['guild_id']}'";
+        if ($selected == $r['guild_id'] || $first == 0)
+        {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['guild_name']} [{$r['guild_id']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
 /**
  * Constructs a drop-down listbox of all the users in the specified guild to let the user select one.
  * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
@@ -732,87 +769,6 @@ function forumb_user_dropdown($ddname = "user", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
-
-/**
- * Constructs a drop-down listbox of all the jobs in the game to let the user select one.
- * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
- * @param int $selected [optional] The <i>ID number</i> of the job which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first job alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function job_dropdown($ddname = "job", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-            $db->query(
-                    "SELECT `jID`, `jNAME`
-    				 FROM `jobs`
-    				 ORDER BY `jNAME` ASC");
-    if ($selected == -1)
-    {
-        $first = 0;
-    }
-    else
-    {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q))
-    {
-        $ret .= "\n<option value='{$r['jID']}'";
-        if ($selected == $r['jID'] || $first == 0)
-        {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['jNAME']}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the job ranks in the game to let the user select one.
- * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
- * @param int $selected [optional] The <i>ID number</i> of the job rank which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first job's first job rank alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function jobrank_dropdown($ddname = "jobrank", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-            $db->query(
-                    "SELECT `jrID`, `jNAME`, `jrNAME`
-                     FROM `jobranks` AS `jr`
-                     INNER JOIN `jobs` AS `j`
-                     ON `jr`.`jrJOB` = `j`.`jID`
-                     ORDER BY `j`.`jNAME` ASC, `jr`.`jrNAME` ASC");
-    if ($selected == -1)
-    {
-        $first = 0;
-    }
-    else
-    {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q))
-    {
-        $ret .= "\n<option value='{$r['jrID']}'";
-        if ($selected == $r['jrID'] || $first == 0)
-        {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['jNAME']} - {$r['jrNAME']}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
 /**
  * Constructs a drop-down listbox of all the houses in the game to let the user select one.
  * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
@@ -860,7 +816,7 @@ function estate_dropdown($ddname = "estate", $selected = -1)
  * Not specifying this or setting it to -1 makes the first house alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function house2_dropdown($ddname = "house", $selected = -1)
+function estate2_dropdown($ddname = "house", $selected = -1)
 {
     global $db;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
@@ -1223,7 +1179,7 @@ function forum_dropdown($ddname = "forum", $selected = -1)
 }
 
 /**
- * Constructs a drop-down listbox of all the forums in the game, except gang forums, to let the user select one.<br />
+ * Constructs a drop-down listbox of all the forums in the game, except guild forums, to let the user select one.<br />
  * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
  * @param int $selected [optional] The <i>ID number</i> of the forum which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.

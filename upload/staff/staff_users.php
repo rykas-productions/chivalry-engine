@@ -532,7 +532,7 @@ function edituser()
 					{$lang['STAFF_USERS_EDIT_FORM_ESTATE']}
 				</th>
 				<td>
-					" . house2_dropdown("maxwill", $itemi['maxwill']) . "
+					" . estate2_dropdown("maxwill", $itemi['maxwill']) . "
 				</td>
 			</tr>
 			<tr>
