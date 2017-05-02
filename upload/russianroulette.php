@@ -4,7 +4,7 @@ require("globals.php");
 
 if (isset($_GET['id']))
 {
-	if (isset($_GET['deny'])
+	if (isset($_GET['deny']))
 	{
 		$db->query("DELETE `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee' = '{$userid}'");
 		echo "{$lang['RUSSIANROULETTE_DENIED']}";
@@ -30,7 +30,7 @@ if (isset($_GET['id']))
 	{
 		$q = $db->query("SELECT * FROM `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee' = '{$userid}'");
 		$r2 = $db->fetch_row($q);
-		if ($ir['primary_currency'] < $r2['reward']})
+		if ($ir['primary_currency'] < $r2['reward'])
 		{
 			echo "{$lang['RUSSIANROULETTE_INSUFFICIENT_CURRENCY']}";
 			require ("footer.php");
@@ -191,13 +191,13 @@ else
 			$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_POST['user_id']}'");
 			if ($db->num_rows($q) != 0)
 			{
-				echo "{$lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND]}";
+				echo "{$lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND']}";
 				notification_add($_POST['user_id'], "{$ir['username']} ({$userid}) has challenge you to a game of russian roulette with the prize of {$_POST['reward']} primary currency! Click one of these options <a href='russianroulette.php?id={$userid}'>Accept</a> | <a href='russianroulette.php?id={$userid}&deny=1'>Deny</a>");
 				$db->query("INSERT INTO `russian_roulette` VALUES('{$userid}', '{$_POST['user_id']}', '{$_POST['reward']}')");
 			}
 			else
 			{
-				echo "{$lang['RUSSIANROULETTE_INVALID_ACCOUNT_SEND]}";
+				echo "{$lang['RUSSIANROULETTE_INVALID_ACCOUNT_SEND']}";
 			}
 		}
 	}
