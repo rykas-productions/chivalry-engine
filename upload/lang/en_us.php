@@ -2015,4 +2015,21 @@ $lang['STAFF_UFBAN_SUCC']="This user has been successfully had their forum ban r
 $lang['STAFF_NOTES_ERR']="You need to specific both a user and the information you wish to add to the staff notes.";
 $lang['STAFF_NOTES_ERR1']="The user you specified does not exist. Go back and try again.";
 $lang['STAFF_NOTES_SUCC']="You have successfully updated this user's staff notes.";
+
+//Russian Roulette
+$lang['RUSSIANROULETTE_NO_INVITE'] = "Error: You have not been challenged to russian roulette by {$r['username']} ({$_GET['id']})";
+$lang['RUSSIANROULETTE_INVALID_ACCOUNT'] = "Error: While you have not been challenged by this user. This account does not seem to exist";
+$lang['RUSSIANROULETTE_INSUFFICIENT_CURRENCY'] = "Error: You have insufficient currency";
+$lang['RUSSIANROULETTE_FIRST'] = "You have entered russian roulette followed by {$r['username']}, You sit down and chose to be player one...";
+$lang['RUSSIANROULETTE_SECOND'] = "You have entered russian roulette followed by {$r['username']}, You sit down and chose to be player two...";
+$lang['RUSSIANROULETTE_WON'] = "Once {$r2['username']} pulled the trigger on the {$result} attempt the barrel lit off. You emerged with a sum of {$r['reward']} Prim. Currency";
+$lang['RUSSIANROULETTE_LOST'] = "You were left off with the {$result} attempt. Shaking, You pulled the trigger. the barrel lit off and you utterly bound by the cruel fate of the loser leaving you with {$hosptime} in the infirmary and losing {$r['reward']} Prim. Currency";
+$lang['RUSSIANROULETTE_USER_INSERT'] = "Which UserID do you want to challenge?";
+$lang['RUSSIANROULETTE_REWARD_INSERT'] = "How much are YOU willing to pay?";
+$lang['RUSSIANROULETTE_SEND'] = "Send Challenge";
+$lang['RUSSIANROULETTE_FAILED_FORM'] = "Please insert a UserID!";
+$lang['RUSSIANROULETTE_INVALID_ACCOUNT_SEND'] = "The account you are challenging does not exist";
+$lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND'] = "You have sent a request to {$r['username']} ({$r['userid']})!";
+$lang['RUSSIANROULETTE_DENIED'] = "You have successfully denied the current russian roulette challenge!";
+$lang['RUSSIANROULETTE_SCAM'] = "This player offered the amount and ran off with it! They have been notified so please wait in the meantime!";
 ?>
