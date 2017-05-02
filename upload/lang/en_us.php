@@ -1165,6 +1165,7 @@ $lang['VIEWGUILD_STAFF_IDX_LEADER']="Transfer Leader";
 $lang['VIEWGUILD_STAFF_IDX_NAME']="Change Guild Name";
 $lang['VIEWGUILD_STAFF_IDX_TOWN']="Change Guild Town";
 $lang['VIEWGUILD_STAFF_IDX_UNTOWN']="Surrender Guild Town";
+$lang['VIEWGUILD_STAFF_IDX_DECLAREWAR']="Declare War";
 $lang['VIEWGUILD_STAFF_APP_TH0']="Filing Time";
 $lang['VIEWGUILD_STAFF_APP_TH1']="Applicant";
 $lang['VIEWGUILD_STAFF_APP_TH2']="Level";
@@ -1227,6 +1228,14 @@ $lang['VIEWGUILD_STAFF_TOWN_SUCC']="You have successfully claimed this town in t
 $lang['VIEWGUILD_STAFF_UNTOWN_ERR']="Your guild does not currently own a town. To claim a town, you need to either claim it, or beat the owner guild in war.";
 $lang['VIEWGUILD_STAFF_UNTOWN_SUCC']="You have successfully given up your guild's town willingly.";
 $lang['VIEWGUILD_STAFF_UNTOWN_CHECK']="Are you sure you wish to surrender your guild's town? Doing so may not guarantee you will get this city back.";
+$lang['VIEWGUILD_STAFF_WAR_FORM']="Use this form to declare war on. Be ready to reap what you sow.";
+$lang['VIEWGUILD_STAFF_WAR_TH']="Guild";
+$lang['VIEWGUILD_STAFF_WAR_BTN']="Declare War";
+$lang['VIEWGUILD_STAFF_WAR_ERR']="You cannot declare war on your own guild. That'd be kinda weird.";
+$lang['VIEWGUILD_STAFF_WAR_ERR1']="The guild you're trying to declare war upon does not exist.";
+$lang['VIEWGUILD_STAFF_WAR_ERR2']="You are already at war with this guild. What would be the point of starting a second war?";
+$lang['VIEWGUILD_STAFF_WAR_ERR3']="You've already warred this guild too recently. Come back seven days after the conclusion of the previous war.";
+$lang['VIEWGUILD_STAFF_WAR_SUCC']="You have successfully declared war. Gather your guild to arms, and prepare for this bloodbath. The war will end in 72 hours. The guild with most points will win. Gain points by winning in combat.";
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";
@@ -2015,4 +2024,21 @@ $lang['STAFF_UFBAN_SUCC']="This user has been successfully had their forum ban r
 $lang['STAFF_NOTES_ERR']="You need to specific both a user and the information you wish to add to the staff notes.";
 $lang['STAFF_NOTES_ERR1']="The user you specified does not exist. Go back and try again.";
 $lang['STAFF_NOTES_SUCC']="You have successfully updated this user's staff notes.";
+
+//Russian Roulette
+$lang['RUSSIANROULETTE_NO_INVITE'] = "Error: You have not been challenged to russian roulette by {$r['username']} ({$_GET['id']})";
+$lang['RUSSIANROULETTE_INVALID_ACCOUNT'] = "Error: While you have not been challenged by this user. This account does not seem to exist";
+$lang['RUSSIANROULETTE_INSUFFICIENT_CURRENCY'] = "Error: You have insufficient currency";
+$lang['RUSSIANROULETTE_FIRST'] = "You have entered russian roulette followed by {$r['username']}, You sit down and chose to be player one...";
+$lang['RUSSIANROULETTE_SECOND'] = "You have entered russian roulette followed by {$r['username']}, You sit down and chose to be player two...";
+$lang['RUSSIANROULETTE_WON'] = "Once {$r2['username']} pulled the trigger on the {$result} attempt the barrel lit off. You emerged with a sum of {$r['reward']} Prim. Currency";
+$lang['RUSSIANROULETTE_LOST'] = "You were left off with the {$result} attempt. Shaking, You pulled the trigger. the barrel lit off and you utterly bound by the cruel fate of the loser leaving you with {$hosptime} in the infirmary and losing {$r['reward']} Prim. Currency";
+$lang['RUSSIANROULETTE_USER_INSERT'] = "Which UserID do you want to challenge?";
+$lang['RUSSIANROULETTE_REWARD_INSERT'] = "How much are YOU willing to pay?";
+$lang['RUSSIANROULETTE_SEND'] = "Send Challenge";
+$lang['RUSSIANROULETTE_FAILED_FORM'] = "Please insert a UserID!";
+$lang['RUSSIANROULETTE_INVALID_ACCOUNT_SEND'] = "The account you are challenging does not exist";
+$lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND'] = "You have sent a request to {$r['username']} ({$r['userid']})!";
+$lang['RUSSIANROULETTE_DENIED'] = "You have successfully denied the current russian roulette challenge!";
+$lang['RUSSIANROULETTE_SCAM'] = "This player offered the amount and ran off with it! They have been notified so please wait in the meantime!";
 ?>
