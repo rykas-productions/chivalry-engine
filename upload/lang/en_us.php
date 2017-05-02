@@ -2017,19 +2017,20 @@ $lang['STAFF_NOTES_ERR1']="The user you specified does not exist. Go back and tr
 $lang['STAFF_NOTES_SUCC']="You have successfully updated this user's staff notes.";
 
 //Russian Roulette
+$lang['RUSSIANROULETTE_TITLE'] = "Russian Roulette";
+$lang['RUSSIANROULETTE_SELF'] = "Even if you are lonely and want to play a game you CANNOT play by yourself!";
 $lang['RUSSIANROULETTE_NO_INVITE'] = "Error: You have not been challenged to russian roulette by";
 $lang['RUSSIANROULETTE_INVALID_ACCOUNT'] = "Error: While you have not been challenged by this user. This account does not seem to exist";
 $lang['RUSSIANROULETTE_INSUFFICIENT_CURRENCY'] = "Error: You have insufficient currency";
 $lang['RUSSIANROULETTE_CHOICE'] = "You have entered russian roulette followed by";
 $lang['RUSSIANROULETTE_FIRST'] = ", You sit down and chose to be player one...";
 $lang['RUSSIANROULETTE_SECOND'] = ", You sit down and chose to be player two...";
-$lang['RUSSIANROULETTE_WON'] = "Once"
-$lang['RUSSIANROULETTE_WON2'] = "pulled the trigger on the"
-$lang['RUSSIANROULETTE_WON3'] = "attempt the barrel lit off. You emerged with a sum oF";
+$lang['RUSSIANROULETTE_WON'] = "Once";
+$lang['RUSSIANROULETTE_WON2'] = "pulled the trigger on the";
+$lang['RUSSIANROULETTE_WON3'] = "attempt the barrel lit off. You emerged with a sum of";
 $lang['RUSSIANROULETTE_LOST'] = "You were left off with the"
 $lang['RUSSIANROULETTE_LOST2'] = "attempt. Shaking, You pulled the trigger. the barrel lit off and you utterly bound by the cruel fate of the loser leaving you with";
 $LANG['RUSSIANROULETTE_LOST3'] = "in the infirmary and losing";
-$lang['RUSSIANROULETTE_REWARD'] = "Prim. Currency";
 $lang['RUSSIANROULETTE_USER_INSERT'] = "Which UserID do you want to challenge?";
 $lang['RUSSIANROULETTE_REWARD_INSERT'] = "How much are YOU willing to pay?";
 $lang['RUSSIANROULETTE_SEND'] = "Send Challenge";
