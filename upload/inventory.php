@@ -14,7 +14,7 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
 				{$lang['EQUIP_WEAPON_SLOT1']} ";
-				if (isset($equip[$ir['equip_primary']]))
+				if (!empty($ir['equip_primary']))
 				{
 					echo "(<a href='unequip.php?type=equip_primary'>{$lang['INVENT_UNEQUIP']}</a>)";
 				}
@@ -38,7 +38,7 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 		<div class='panel panel-default'>
 			<div class='panel-heading'>
 				{$lang['EQUIP_WEAPON_SLOT2']} ";
-				if (isset($ir['equip_secondary']))
+				if (!empty($ir['equip_secondary']))
 				{
 					echo "(<a href='unequip.php?type=equip_secondary'>{$lang['INVENT_UNEQUIP']}</a>)";
 				}
@@ -69,7 +69,7 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 				echo"
 			</div>
 			<div class='panel-body'>";
-				if (isset($equip[$ir['equip_armor']]))
+				if (!empty($ir['equip_armor']))
 				{
 					echo $api->SystemItemIDtoName($ir['equip_armor']);
 				}
