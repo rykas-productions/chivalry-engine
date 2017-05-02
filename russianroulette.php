@@ -126,8 +126,8 @@ if (isset($_GET['id']))
 			$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_GET['id']}'");
 			$r2 = $db->fetch_row($q);
 			echo "<br><br>{$lang['RUSSIANROULETTE_WON']}";
-			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - '{$r['reward']}' WHERE `userid` = '{$_GET['id']}'");
-			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + '{$r['reward']}' WHERE `userid` = '{$userid}'");
+			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - '{$r['reward']}' WHERE `userid` = '{$_GET['id']}");
+			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + '{$r['reward']}' WHERE `userid` = '{$userid}");
 			$hosptime = Random(75, 175) + floor($r2['level'] / 2);
 			$hospreason = $db->escape("Played the wrong game with <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 			$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$_GET['id']}");
@@ -140,8 +140,8 @@ if (isset($_GET['id']))
 			$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_GET['id']}'");
 			$r2 = $db->fetch_row($q);
 		echo "<br><br>{$lang['RUSSIANROULETTE_LOST']}";
-			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + '{$r['reward']}' WHERE `userid` = '{$_GET['id']}'");
-			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - '{$r['reward']}' WHERE `userid` = '{$userid}'");
+			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + '{$r['reward']}' WHERE `userid` = '{$_GET['id']}");
+			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - '{$r['reward']}' WHERE `userid` = '{$userid}");
 			$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 			$hospreason = $db->escape("Played the wrong game with <a href='profile.php?user={$_GET['id']}'>{$r2['username']}</a>");
 			$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$_GET['id']}");
