@@ -509,6 +509,9 @@ function staff()
 			case "untown":
                 staff_untown();
                 break;
+			case "declarewar":
+                staff_declare();
+                break;
 			default:
 				staff_idx();
 				break;
@@ -544,6 +547,7 @@ function staff_idx()
 			<a href='?action=staff&act2=desc'>{$lang['VIEWGUILD_STAFF_IDX_DESC']}</a><br />
 			<a href='?action=staff&act2=town'>{$lang['VIEWGUILD_STAFF_IDX_TOWN']}</a><br />
 			<a href='?action=staff&act2=untown'>{$lang['VIEWGUILD_STAFF_IDX_UNTOWN']}</a><br />
+			<a href='?action=staff&act2=declarewar'>{$lang['VIEWGUILD_STAFF_IDX_DECLAREWAR']}</a><br />
 		</td>";
 	}
 	echo "</tr></table>
@@ -1429,6 +1433,110 @@ function staff_untown()
 				<input type='hidden' name='confirm' value='yes'>
 				<input type='submit' class='btn btn-success' value='{$lang['GEN_YES']}'>
 			</form>";
+		}
+	}
+	else
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
+	}
+}
+function staff_declare()
+{
+	global $db,$ir,$gd,$api,$lang,$h,$userid;
+	if ($userid == $gd['guild_owner'])
+	{
+		if (isset($_POST['guild']))
+		{
+			$_POST['guild'] = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs($_POST['guild']) : 0;
+			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_declarewar", stripslashes($_POST['verf'])))
+			{
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+				die($h->endpage());
+			}
+			if ($_POST['guild'] == $gd['guild_id'])
+			{
+				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR']);
+				die($h->endpage());
+			}
+			$data_q = $db->query("SELECT `guild_name`,`guild_owner` FROM `guild` WHERE `guild_id` = {$_POST['guild']}");
+			if ($db->num_rows($data_q) == 0)
+			{
+				$db->free_result($data_q);
+				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR1']);
+				die($h->endpage());
+			}
+			$time=time();
+			$iswarredon=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} AND `gw_end` > {$time}");
+			if ($db->num_rows($iswarredon) > 0)
+			{
+				$db->free_result($iswarredon);
+				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR2']);
+				die($h->endpage());
+			}
+			$iswarredon1=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} AND `gw_end` > {$time}");
+			if ($db->num_rows($iswarredon1) > 0)
+			{
+				$db->free_result($iswarredon1);
+				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR2']);
+				die($h->endpage());
+			}
+			$lastweek=time() - 604800;
+			$istoosoon=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} AND `gw_end` < {$lastweek}");
+			if ($db->num_rows($iswarredon) > 0)
+			{
+				$db->free_result($iswarredon);
+				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR3']);
+				die($h->endpage());
+			}
+			$istoosoon1=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} AND `gw_end` < {$lastweek}");
+			if ($db->num_rows($iswarredon1) > 0)
+			{
+				$db->free_result($iswarredon1);
+				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR3']);
+				die($h->endpage());
+			}
+			$r = $db->fetch_row($data_q);
+			$db->free_result($data_q);
+			$db->free_result($iswarredon);
+			$db->free_result($iswarredon1);
+			$db->free_result($istoosoon);
+			$db->free_result($istoosoon1);
+			$endtime=time()+259200;
+			$db->query("INSERT INTO `guild_wars`
+			VALUES (NULL, {$gd['guild_id']}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
+			$api->GameAddNotification($r['guild_owner'],"{$gd['guild_name']} has declared war on your guild.");
+			$api->GuildAddNotification($_POST['guild'],"{$gd['guild_name']} has declared war on your guild.");
+			$api->GuildAddNotification($gd['guild_id'],"Your guild has declared war on {$r['guild_name']}");
+			$api->SystemLogsAdd($userid,'guildwar',"Declared war on {$r['guild_name']} [{$_POST['guild']}]");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_WAR_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+		}
+		else
+		{
+			$csrf=request_csrf_html('guild_staff_declarewar');
+			echo "
+			<table class='table table-bordered'>
+			<form method='post'>
+				<tr>
+					<th colspan='2'>
+						{$lang['VIEWGUILD_STAFF_WAR_FORM']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['VIEWGUILD_STAFF_WAR_TH']}
+					</th>
+					<td>
+						" . guilds_dropdown() . "
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['VIEWGUILD_STAFF_WAR_BTN']}'>
+					</td>
+				</tr>
+			{$csrf}
+			</form>
+			</table>";
 		}
 	}
 	else
