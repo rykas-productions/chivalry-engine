@@ -1,17 +1,9 @@
-CREATE TABLE `itemauction` (
-  `ia_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
-  `ia_adder` INT(11) UNSIGNED NOT NULL ,
-  `ia_item` INT(11) UNSIGNED NOT NULL ,
-  `ia_qty` INT(11) UNSIGNED NOT NULL ,
-  `ia_end` INT(11) UNSIGNED NOT NULL ,
-  `ia_bidder` INT(11) UNSIGNED NOT NULL ,
-  `ia_bid` BIGINT(11) UNSIGNED NOT NULL ,
-  UNIQUE (`ia_id`)) ENGINE = MyISAM;
-  
-CREATE TABLE `forum_bans` ( 
-	`fb_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
-	`fb_user` INT(11) UNSIGNED NOT NULL , 
-	`fb_banner` INT(11) UNSIGNED NOT NULL , 
-	`fb_time` INT(11) UNSIGNED NOT NULL , 
-	`fb_reason` TEXT NOT NULL , 
-	UNIQUE (`fb_id`)) ENGINE = MyISAM;
+CREATE TABLE `guild_wars` ( 
+	`gw_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`gw_declarer` INT(11) UNSIGNED NOT NULL , 
+	`gw_declaree` INT(11) UNSIGNED NOT NULL , 
+	`gw_drpoints` INT(11) UNSIGNED NOT NULL , 
+	`gw_depoints` INT(11) UNSIGNED NOT NULL , 
+	`gw_end` INT(11) UNSIGNED NOT NULL , 
+	`gw_winner` INT(11) UNSIGNED NOT NULL , 
+	UNIQUE (`gw_id`)) ENGINE = MyISAM;
