@@ -425,6 +425,12 @@ CREATE TABLE `reports` (
   `report_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `russian_roulette` (
+  `challengee` int(11) UNSIGNED NOT NULL,
+  `challengee` int(11) UNSIGNED NOT NULL,
+  `reward` int(11) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 CREATE TABLE `sec_market` ( 
 	`sec_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
 	`sec_user` INT(11) UNSIGNED NOT NULL , 
