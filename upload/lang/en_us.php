@@ -1165,6 +1165,7 @@ $lang['VIEWGUILD_STAFF_IDX_LEADER']="Transfer Leader";
 $lang['VIEWGUILD_STAFF_IDX_NAME']="Change Guild Name";
 $lang['VIEWGUILD_STAFF_IDX_TOWN']="Change Guild Town";
 $lang['VIEWGUILD_STAFF_IDX_UNTOWN']="Surrender Guild Town";
+$lang['VIEWGUILD_STAFF_IDX_DECLAREWAR']="Declare War";
 $lang['VIEWGUILD_STAFF_APP_TH0']="Filing Time";
 $lang['VIEWGUILD_STAFF_APP_TH1']="Applicant";
 $lang['VIEWGUILD_STAFF_APP_TH2']="Level";
@@ -1227,6 +1228,14 @@ $lang['VIEWGUILD_STAFF_TOWN_SUCC']="You have successfully claimed this town in t
 $lang['VIEWGUILD_STAFF_UNTOWN_ERR']="Your guild does not currently own a town. To claim a town, you need to either claim it, or beat the owner guild in war.";
 $lang['VIEWGUILD_STAFF_UNTOWN_SUCC']="You have successfully given up your guild's town willingly.";
 $lang['VIEWGUILD_STAFF_UNTOWN_CHECK']="Are you sure you wish to surrender your guild's town? Doing so may not guarantee you will get this city back.";
+$lang['VIEWGUILD_STAFF_WAR_FORM']="Use this form to declare war on. Be ready to reap what you sow.";
+$lang['VIEWGUILD_STAFF_WAR_TH']="Guild";
+$lang['VIEWGUILD_STAFF_WAR_BTN']="Declare War";
+$lang['VIEWGUILD_STAFF_WAR_ERR']="You cannot declare war on your own guild. That'd be kinda weird.";
+$lang['VIEWGUILD_STAFF_WAR_ERR1']="The guild you're trying to declare war upon does not exist.";
+$lang['VIEWGUILD_STAFF_WAR_ERR2']="You are already at war with this guild. What would be the point of starting a second war?";
+$lang['VIEWGUILD_STAFF_WAR_ERR3']="You've already warred this guild too recently. Come back seven days after the conclusion of the previous war.";
+$lang['VIEWGUILD_STAFF_WAR_SUCC']="You have successfully declared war. Gather your guild to arms, and prepare for this bloodbath. The war will end in 72 hours. The guild with most points will win. Gain points by winning in combat.";
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";
