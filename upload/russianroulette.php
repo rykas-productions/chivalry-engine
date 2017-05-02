@@ -6,7 +6,7 @@ if (isset($_GET['id']))
 {
 	if (isset($_GET['deny']))
 	{
-		$db->query("DELETE `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee` = '{$userid}'");
+		$db->query("DELETE FROM `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee` = '{$userid}'");
 		echo "{$lang['RUSSIANROULETTE_DENIED']}";
 		require ("footer.php");
 		die();
@@ -18,7 +18,7 @@ if (isset($_GET['id']))
 		if ($db->num_rows($q) != 0)
 		{
 			$r = $db->fetch_row($q);
-			echo "{$lang['RUSSIANROULETTE_NO_INVITE']}";
+			echo "{$lang['RUSSIANROULETTE_NO_INVITE']} {$r['username']} ({$_GET['id']})";
 			require ("footer.php");
 			die();
 		}
@@ -65,7 +65,7 @@ if (isset($_GET['id']))
 			{
 				$shot = true;
 			}
-			echo "{$lang['RUSSIANROULETTE_FIRST']}";
+			echo "{$lang['RUSSIANROULETTE_CHOICE']} {$r['username']} {$lang['RUSSIANROULETTE_FIRST']}";
 		}
 		else if ($player == 2)
 		{
@@ -85,7 +85,7 @@ if (isset($_GET['id']))
 			{
 				$shot = true;
 			}
-			echo "{$lang['RUSSIANROULETTE_SECOND']}";
+			echo "{$lang['RUSSIANROULETTE_CHOICE']} {$r['username']} {$lang['RUSSIANROULETTE_SECOND']}";
 		}
 		if ($rand == 1)
 		{
@@ -125,7 +125,7 @@ if (isset($_GET['id']))
 			$r = $db->fetch_row($q);
 			$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_GET['id']}'");
 			$r2 = $db->fetch_row($q);
-			echo "<br><br>{$lang['RUSSIANROULETTE_WON']}";
+			echo "<br><br>{$lang['RUSSIANROULETTE_WON']} {$r2['username']} {$lang['RUSSIANROULETTE_WON2']} {$result} {$lang['RUSSIANROULETTE_WON3']} {$r['reward']} {$lang['RUSSIANROULETTE_REWARD']}";
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - '{$r['reward']}' WHERE `userid` = '{$_GET['id']}'");
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + '{$r['reward']}' WHERE `userid` = '{$userid}'");
 			$hosptime = Random(75, 175) + floor($r2['level'] / 2);
@@ -139,7 +139,7 @@ if (isset($_GET['id']))
 			$r = $db->fetch_row($q);
 			$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_GET['id']}'");
 			$r2 = $db->fetch_row($q);
-		echo "<br><br>{$lang['RUSSIANROULETTE_LOST']}";
+			echo "<br><br>{$lang['RUSSIANROULETTE_LOST']} {$result} {$lang['RUSSIANROULETTE_LOST2']} {$hosptime} {$lang['RUSSIANROULETTE_LOST3']} {$r['reward']} {$lang['RUSSIANROULETTE_REWARD']}";
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + '{$r['reward']}' WHERE `userid` = '{$_GET['id']}'");
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - '{$r['reward']}' WHERE `userid` = '{$userid}'");
 			$hosptime = Random(75, 175) + floor($ir['level'] / 2);
@@ -147,6 +147,7 @@ if (isset($_GET['id']))
 			$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$_GET['id']}");
 			put_infirmary($userid,$hosptime,$hospreason);
 		}
+		$db->query("DELETE FROM `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee` = '{$userid}'");
 	}
 }
 else
@@ -191,7 +192,7 @@ else
 			$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_POST['user_id']}'");
 			if ($db->num_rows($q) != 0)
 			{
-				echo "{$lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND']}";
+				echo "{$lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND']} {$r['username']} ({$r['userid']})!";
 				notification_add($_POST['user_id'], "{$ir['username']} ({$userid}) has challenge you to a game of russian roulette with the prize of {$_POST['reward']} primary currency! Click one of these options <a href='russianroulette.php?id={$userid}'>Accept</a> | <a href='russianroulette.php?id={$userid}&deny=1'>Deny</a>");
 				$db->query("INSERT INTO `russian_roulette` VALUES('{$userid}', '{$_POST['user_id']}', '{$_POST['reward']}')");
 			}
