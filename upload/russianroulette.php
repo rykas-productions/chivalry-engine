@@ -125,13 +125,14 @@ if (isset($_GET['id']))
 			$r = $db->fetch_row($q);
 			$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_GET['id']}'");
 			$r2 = $db->fetch_row($q);
-			echo "<br><br>{$lang['RUSSIANROULETTE_WON']} {$r2['username']} {$lang['RUSSIANROULETTE_WON2']} {$result} {$lang['RUSSIANROULETTE_WON3']} {$r['reward']} {$lang['RUSSIANROULETTE_REWARD']}";
+		echo "<br><br>{$lang['RUSSIANROULETTE_WON']} {$r2['username']} {$lang['RUSSIANROULETTE_WON2']} {$result} {$lang['RUSSIANROULETTE_WON3']} {$r['reward']} {$lang['INDEX_PRIMCURR']}";
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - '{$r['reward']}' WHERE `userid` = '{$_GET['id']}'");
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + '{$r['reward']}' WHERE `userid` = '{$userid}'");
 			$hosptime = Random(75, 175) + floor($r2['level'] / 2);
 			$hospreason = $db->escape("Played the wrong game with <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 			$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$_GET['id']}");
 			put_infirmary($_GET['id'],$hosptime,$hospreason);
+			notification_add($_GET['id'], "You lost at the game of russian roulette against {$ir['username']} ({$userid})!");
 		}
 		if ($shot == true)
 		{
@@ -139,13 +140,14 @@ if (isset($_GET['id']))
 			$r = $db->fetch_row($q);
 			$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_GET['id']}'");
 			$r2 = $db->fetch_row($q);
-			echo "<br><br>{$lang['RUSSIANROULETTE_LOST']} {$result} {$lang['RUSSIANROULETTE_LOST2']} {$hosptime} {$lang['RUSSIANROULETTE_LOST3']} {$r['reward']} {$lang['RUSSIANROULETTE_REWARD']}";
+			echo "<br><br>{$lang['RUSSIANROULETTE_LOST']} {$result} {$lang['RUSSIANROULETTE_LOST2']} {$hosptime} {$lang['RUSSIANROULETTE_LOST3']} {$r['reward']} {$lang['INDEX_PRIMCURR']}";
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + '{$r['reward']}' WHERE `userid` = '{$_GET['id']}'");
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - '{$r['reward']}' WHERE `userid` = '{$userid}'");
 			$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 			$hospreason = $db->escape("Played the wrong game with <a href='profile.php?user={$_GET['id']}'>{$r2['username']}</a>");
 			$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$_GET['id']}");
 			put_infirmary($userid,$hosptime,$hospreason);
+			notification_add($_GET['id'], "You won in the game of russian roulette against {$ir['username']} ({$userid})!");
 		}
 		$db->query("DELETE FROM `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee` = '{$userid}'");
 	}
@@ -154,7 +156,8 @@ else
 {
 	if (!isset($_POST['user_id']))
 	{
-		echo "
+		echo "<h2>{$lang['RUSSIANROULETTE_TITLE']}</h2>
+		<hr>
 		<form method='post' class='form' role='form'>
 			<table class='table table-bordered'>
 				<tr>
@@ -187,11 +190,16 @@ else
 		{
 			echo "{$lang['RUSSIANROULETTE_FAILED_FORM']}";
 		}
+		if ($_POST['user_id'] == $userid)
+		{
+			echo "{$lang['RUSSIANROULETTE_SELF']}";
+		}
 		else
 		{
 			$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_POST['user_id']}'");
 			if ($db->num_rows($q) != 0)
 			{
+				$r = $db->fetch_row($q);
 				echo "{$lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND']} {$r['username']} ({$r['userid']})!";
 				notification_add($_POST['user_id'], "{$ir['username']} ({$userid}) has challenge you to a game of russian roulette with the prize of {$_POST['reward']} primary currency! Click one of these options <a href='russianroulette.php?id={$userid}'>Accept</a> | <a href='russianroulette.php?id={$userid}&deny=1'>Deny</a>");
 				$db->query("INSERT INTO `russian_roulette` VALUES('{$userid}', '{$_POST['user_id']}', '{$_POST['reward']}')");
