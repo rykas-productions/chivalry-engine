@@ -7,3 +7,9 @@ CREATE TABLE `guild_wars` (
 	`gw_end` INT(11) UNSIGNED NOT NULL , 
 	`gw_winner` INT(11) UNSIGNED NOT NULL , 
 	UNIQUE (`gw_id`)) ENGINE = MyISAM;
+	
+CREATE TABLE `russian_roulette` (
+	`challenger` int(11) UNSIGNED NOT NULL, 
+	`challengee` int(11) UNSIGNED NOT NULL, 
+	`reward` int(11) UNSIGNED NOT NULL
+	) ENGINE=MyISAM DEFAULT CHARSET=latin1;
