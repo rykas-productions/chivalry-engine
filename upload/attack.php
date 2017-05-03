@@ -514,7 +514,6 @@ function beat()
 			die($h->endpage());
 		}
 		$hosptime = Random(75, 175) + floor($ir['level'] / 2);
-		alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!!","{$lang['ATTACK_FIGHT_END2']} {$lang['ATTACK_FIGHT_END3']} {$hosptime} {$lang["GEN_MINUTES"]} {$lang['ATTACK_FIGHT_END4']}",true,'index.php');
 		$hospreason = $db->escape("Beat up by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 		$api->UserInfoSet($r['userid'],"hp",1);
 		$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
@@ -522,6 +521,33 @@ function beat()
 		$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and brutally injured them, causing {$hosptime} minutes of infirmary time.");
 		$api->SystemLogsAdd($_GET['ID'],'attacking',"Brutally injured by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}], causing {$hosptime} minutes of infirmary time.");
 		$_SESSION['attackwon'] = false;
+		$additionaltext = "";
+		if ($ir['guild'] > 0 && $r['guild'] > 0)
+		{
+			$oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+			if ($db->num_rows($oppguild) > 0)
+            {
+				$warq = $db->query("SELECT `gw_id` FROM `guild_wars`
+				WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
+				OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+				if ($db->fetch_single($warq) > 0)
+                {
+					$wr=$db->fetch_single($warq);
+					$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
+					if ($whoswho['gw_declarer'] == $ir['guild'])
+					{
+						$db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
+					}
+					else
+					{
+						$db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
+					}
+				}
+				$additionaltext=$lang['ATTACK_FIGHT_POINT'];
+			}
+			
+		}
+		alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!!","{$lang['ATTACK_FIGHT_END2']} {$lang['ATTACK_FIGHT_END3']} {$hosptime} {$lang["GEN_MINUTES"]} {$lang['ATTACK_FIGHT_END4']} {$additionaltext}",true,'index.php');
 		if ($r['user_level'] == 'NPC')
 		{
 			$db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$r['userid']}");
@@ -567,7 +593,6 @@ function lost()
 		$expgain=$expgain*-1;
 	}
 	$expgainp = $expgain / $ir['xp_needed'] * 100;
-	alert('danger',"{$lang['ATTACK_FIGHT_END5']} {$r['username']}!","{$lang['ATTACK_FIGHT_END6']} (" . number_format($expgainp, 2) . "%)!",true,'index.php');
 	if ($ir['xp'] - $expgain < 0)
 	{
 		$api->UserInfoSetStatic($userid,"xp",0);
@@ -591,6 +616,32 @@ function lost()
 	$api->SystemLogsAdd($_GET['ID'],'attacking',"Challenged by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and won.");
 	$api->UserInfoSetStatic($_GET['ID'],"xp",$r['xp']+$expgainp2);
 	$_SESSION['attacklost'] = 0;
+	$additionaltext = "";
+	if ($ir['guild'] > 0 && $r['guild'] > 0)
+	{
+		$oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+		if ($db->num_rows($oppguild) > 0)
+		{
+			$warq = $db->query("SELECT `gw_id` FROM `guild_wars`
+			WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
+			OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+			if ($db->fetch_single($warq) > 0)
+			{
+				$wr=$db->fetch_single($warq);
+				$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
+				if ($whoswho['gw_declarer'] == $ir['guild'])
+				{
+					$db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
+				}
+				else
+				{
+					$db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
+				}
+			}
+			$additionaltext=$lang['ATTACK_FIGHT_POINTL'];
+		}
+	}
+	alert('danger',"{$lang['ATTACK_FIGHT_END5']} {$r['username']}!","{$lang['ATTACK_FIGHT_END6']} (" . number_format($expgainp, 2) . "%)! {$additionaltext}",true,'index.php');
 }
 function xp()
 {
@@ -639,7 +690,6 @@ function xp()
 				$expgain=$expgain*-1;
 			}
 			$expperc = round($expgain / $ir['xp_needed'] * 100);
-			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END7']} ({$expperc}%, {$expgain})",true,'index.php');
 			$hosptime = Random(5, 30) + floor($ir['level'] / 10);
 			$api->UserInfoSetStatic($userid,"xp",$ir['xp']+$expgain);
 			$hospreason = $db->escape("Used for experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
@@ -649,6 +699,33 @@ function xp()
 			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and gained {$expperc}% Experience.");
 			$api->SystemLogsAdd($_GET['ID'],'attacking',"Attacked by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and left for experience.");			
 			$_SESSION['attackwon'] = false;
+			$additionaltext = "";
+			if ($ir['guild'] > 0 && $r['guild'] > 0)
+			{
+				$oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+				if ($db->num_rows($oppguild) > 0)
+				{
+					$warq = $db->query("SELECT `gw_id` FROM `guild_wars`
+					WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
+					OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+					if ($db->fetch_single($warq) > 0)
+					{
+						$wr=$db->fetch_single($warq);
+						$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
+						if ($whoswho['gw_declarer'] == $ir['guild'])
+						{
+							$db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
+						}
+						else
+						{
+							$db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
+						}
+					}
+					$additionaltext=$lang['ATTACK_FIGHT_POINT'];
+				}
+				
+			}
+			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END7']} ({$expperc}%, {$expgain}) {$additionaltext}",true,'index.php');
 			if ($r['user_level'] == 'NPC')
 			{
 				$db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
@@ -691,7 +768,6 @@ function mug()
 		else
 		{
 			$stole = round($r['primary_currency'] / (Random(200, 1000) / 5));
-			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END8']} (" . number_format($stole) . ")",true,'index.php');
 			$hosptime = rand(20, 40) + floor($ir['level'] / 8);
 			$hospreason = $db->escape("Mugged by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 			$api->UserInfoSet($r['userid'],"hp",1);
@@ -702,6 +778,33 @@ function mug()
 			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");	
 			$api->SystemLogsAdd($_GET['ID'],'attacking',"Mugged by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}], losing {$stole} Primary Currency.");
 			$_SESSION['attackwon'] = 0;
+			$additionaltext = "";
+			if ($ir['guild'] > 0 && $r['guild'] > 0)
+			{
+				$oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+				if ($db->num_rows($oppguild) > 0)
+				{
+					$warq = $db->query("SELECT `gw_id` FROM `guild_wars`
+					WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
+					OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+					if ($db->fetch_single($warq) > 0)
+					{
+						$wr=$db->fetch_single($warq);
+						$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
+						if ($whoswho['gw_declarer'] == $ir['guild'])
+						{
+							$db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
+						}
+						else
+						{
+							$db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
+						}
+					}
+					$additionaltext=$lang['ATTACK_FIGHT_POINT'];
+				}
+				
+			}
+			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END8']} (" . number_format($stole) . "). {$additionaltext}",true,'index.php');
 			if ($r['user_level'] == 'NPC')
 			{
 				$db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");

@@ -900,6 +900,8 @@ $lang['ATTACK_FIGHT_END5']="You fell to";
 $lang['ATTACK_FIGHT_END6']="You lost this fight and lost some of your experience as a warrior!";
 $lang['ATTACK_FIGHT_END7']="Since you are an honorable warrior, you take them to the infirmary entrance. You leave their body there. This increases your experience.";
 $lang['ATTACK_FIGHT_END8']="Being a greedy warrior, you take a look at their pockets and grab some of their {$lang['INDEX_PRIMCURR']}.";
+$lang['ATTACK_FIGHT_POINT']="You have earned your guild one point.";
+$lang['ATTACK_FIGHT_POINTL']="You have earned a point for the enemy guild.";
 
 //Item Info Page
 $lang['ITEM_INFO_LUIF']="Displaying item information for";
