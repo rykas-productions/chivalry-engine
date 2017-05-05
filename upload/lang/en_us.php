@@ -1137,6 +1137,7 @@ $lang['VIEWGUILD_SUMMARY_OWNER']="Guild Leader";
 $lang['VIEWGUILD_SUMMARY_COOWNER']="Guild Co-Leader";
 $lang['VIEWGUILD_SUMMARY_MEM']="Members / Max Capacity";
 $lang['VIEWGUILD_SUMMARY_LVL']="Guild Level";
+$lang['VIEWGUILD_SUMMARY_XP']="Guild XP";
 $lang['VIEWGUILD_NA']="N/A";
 $lang['VIEWGUILD_DONATE_TITLE']="Enter the amount of currency you wish to donate to your guild. You currently have ";
 $lang['VIEWGUILD_DONATE_BTN']="Donate to Guild";
@@ -1176,6 +1177,7 @@ $lang['VIEWGUILD_STAFF_IDX_NAME']="Change Guild Name";
 $lang['VIEWGUILD_STAFF_IDX_TOWN']="Change Guild Town";
 $lang['VIEWGUILD_STAFF_IDX_UNTOWN']="Surrender Guild Town";
 $lang['VIEWGUILD_STAFF_IDX_DECLAREWAR']="Declare War";
+$lang['VIEWGUILD_STAFF_IDX_LVLUP']="Level Up Guild";
 $lang['VIEWGUILD_STAFF_APP_TH0']="Filing Time";
 $lang['VIEWGUILD_STAFF_APP_TH1']="Applicant";
 $lang['VIEWGUILD_STAFF_APP_TH2']="Level";
@@ -1246,6 +1248,11 @@ $lang['VIEWGUILD_STAFF_WAR_ERR1']="The guild you're trying to declare war upon d
 $lang['VIEWGUILD_STAFF_WAR_ERR2']="You are already at war with this guild. What would be the point of starting a second war?";
 $lang['VIEWGUILD_STAFF_WAR_ERR3']="You've already warred this guild too recently. Come back seven days after the conclusion of the previous war.";
 $lang['VIEWGUILD_STAFF_WAR_SUCC']="You have successfully declared war. Gather your guild to arms, and prepare for this bloodbath. The war will end in 72 hours. The guild with most points will win. Gain points by winning in combat.";
+$lang['VIEWGUILD_STAFF_LVLUP']="Here you may level up your guild. Your guild will need the minimum required XP to do this. You may gain guild XP by going to war with another guild and gaining points in war. At your guild's level, your guild will need";
+$lang['VIEWGUILD_STAFF_LVLUP1']="Guild XP to level up to the next level. Do you wish to attempt a level up?";
+$lang['VIEWGUILD_STAFF_LVLUP_BTN']="Level Up";
+$lang['VIEWGUILD_STAFF_LVLUP_ERR']="Your guild does not have enough experience to level up at this time.";
+$lang['VIEWGUILD_STAFF_LVLUP_SUCC']="You have successfully leveled up your guild.";
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";

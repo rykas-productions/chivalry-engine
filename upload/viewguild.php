@@ -524,6 +524,9 @@ function staff()
 			case "declarewar":
                 staff_declare();
                 break;
+			case "levelup":
+                staff_levelup();
+                break;
 			default:
 				staff_idx();
 				break;
@@ -548,6 +551,7 @@ function staff_idx()
 			<a href='?action=staff&act2=ament'>{$lang['VIEWGUILD_STAFF_IDX_AMENT']}</a><br />
 			<a href='?action=staff&act2=massmail'>{$lang['VIEWGUILD_STAFF_IDX_MM']}</a><br />
 			<a href='?action=staff&act2=masspay'>{$lang['VIEWGUILD_STAFF_IDX_MP']}</a><br />
+			<a href='?action=staff&act2=levelup'>{$lang['VIEWGUILD_STAFF_IDX_LVLUP']}</a><br />
 		</td>";
 	if ($gd['guild_owner'] == $userid)
 	{
@@ -967,7 +971,8 @@ function staff_vault()
             </tr>
             {$csrf}
         </table>
-        </form>";
+        </form>
+		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
     }
 
 }
@@ -1020,7 +1025,8 @@ function staff_coowner()
 			</tr>
 			{$csrf}
 		</table>
-		</form>";
+		</form>
+		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 	}
 }
 function staff_announcement()
@@ -1063,7 +1069,8 @@ function staff_announcement()
 			</tr>
 			{$csrf}
 		</table>
-		</form>";
+		</form>
+		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 	}
 }
 function staff_massmail()
@@ -1110,7 +1117,8 @@ function staff_massmail()
 			</tr>
 			{$csrf}
 		</table>
-		</form>";
+		</form>
+		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 	}
 }
 function staff_masspayment()
@@ -1178,7 +1186,8 @@ function staff_masspayment()
 			</tr>
 			{$csrf}
 		</table>
-		</form>";
+		</form>
+		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 	}
 }
 function staff_desc()
@@ -1223,7 +1232,8 @@ function staff_desc()
 				</tr>
 				{$csrf}
 			</table>
-			</form>";
+			</form>
+			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 		}
 	}
 	else
@@ -1282,7 +1292,8 @@ function staff_leader()
 			</tr>
 			{$csrf}
 		</table>
-		</form>";
+		</form>
+		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 	}
 	}
 	else
@@ -1338,7 +1349,8 @@ function staff_name()
 				</tr>
 				{$csrf}
 			</table>
-			</form>";
+			</form>
+			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 		}
 	}
 	else
@@ -1412,7 +1424,8 @@ function staff_town()
 					</tr>
 					{$csrf}
 				</table>
-			</form>";
+			</form>
+			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 		}
 	}
 	else
@@ -1445,7 +1458,8 @@ function staff_untown()
 			<form method='post'>
 				<input type='hidden' name='confirm' value='yes'>
 				<input type='submit' class='btn btn-success' value='{$lang['GEN_YES']}'>
-			</form>";
+			</form>
+			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 		}
 	}
 	else
@@ -1549,12 +1563,42 @@ function staff_declare()
 				</tr>
 			{$csrf}
 			</form>
-			</table>";
+			</table>
+			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 		}
 	}
 	else
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
+	}
+}
+function staff_levelup()
+{
+	global $db,$ir,$gd,$api,$lang,$h,$userid; 
+	$xprequired=$gd['guild_level'] * 86.75;
+	if (isset($_POST['do']))
+	{
+		if ($gd['guild_xp'] < $xprequired)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LVLUP_ERR']);
+		}
+		else
+		{
+			$db->query("UPDATE `guild` SET `guild_level` = `guild_level` + 1, 
+			`guild_xp` = `guild_xp` - {$xprequired} WHERE `guild_id` = {$gd['guild_id']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_LVLUP_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			$api->SystemLogsAdd($userid,'guild_level',"Leveled up the {$gd['guild_name']} guild.");
+			$api->GuildAddNotification($gd['guild_id'],"Your guild has leveled up!");
+		}
+	}
+	else
+	{
+		echo "{$lang['VIEWGUILD_STAFF_LVLUP']} " . number_format($xprequired) . " {$lang['VIEWGUILD_STAFF_LVLUP1']}<br />
+		<form method='post'>
+			<input type='hidden' name='do' value='yes'>
+			<input type='submit' value='{$lang['VIEWGUILD_STAFF_LVLUP_BTN']}' class='btn btn-success'>
+		</form>
+		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
 	}
 }
 $h->endpage();
