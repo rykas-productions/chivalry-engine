@@ -180,7 +180,7 @@ function summary()
 			{$lang['VIEWGUILD_SUMMARY_MEM']}
 		</th>
 		<td>
-			" . $db->fetch_single($cnt) . "/ {$gd['guild_capacity']}
+			" . $db->fetch_single($cnt) . " / " . $gd['guild_level']*5 . "
 		</td>
 	</tr>
 	<tr>
@@ -189,6 +189,14 @@ function summary()
 		</th>
 		<td>
 			{$gd['guild_level']}
+		</td>
+	</tr>
+	<tr>
+		<th>
+			{$lang['VIEWGUILD_SUMMARY_XP']}
+		</th>
+		<td>
+			{$gd['guild_xp']}
 		</td>
 	</tr>
 	<tr>
@@ -207,7 +215,8 @@ function summary()
 			" . number_format($gd['guild_seccurr']) . "
 		</td>
 	</tr>
-      </table>";
+      </table>
+	  <a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
 }
 function donate()
 {
@@ -287,7 +296,8 @@ function donate()
     			</td>
     		</tr>
     	</table>
-		</form>";
+		</form>
+		<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
 	}
 }
 function members()
@@ -343,7 +353,7 @@ function members()
     echo "
 	</table>
 	<br />
-	&gt; <a href='?action=home'>{$lang['VIEWGUILD_IDX']}</a>
+	<a href='viewguild.php'>{$lang['GEN_BACK']}</a>
    	";
 }
 function staff_kick()
@@ -429,7 +439,8 @@ function leave()
 			{$csrf}
 			<input type='hidden' name='submit' value='no'>
         	<input type='submit' class='btn btn-default' value='{$lang['VIEWGUILD_LEAVE_BTN1']}' />
-        </form>";
+        </form>
+		<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
 	}
 }
 function atklogs()
@@ -460,7 +471,8 @@ function atklogs()
         	  </tr>";
     }
     $db->free_result($atks);
-    echo "</table>";
+    echo "</table>
+	<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
 }
 function staff()
 {
@@ -860,7 +872,8 @@ function gym()
 			</tr>
 			{$code}
 			</form>
-		</table>";
+		</table>
+		<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
 	}
 }
 function staff_vault()
