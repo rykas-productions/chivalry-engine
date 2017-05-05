@@ -532,6 +532,7 @@ function beat()
 				OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
 				if ($db->fetch_single($warq) > 0)
                 {
+					var_dump($db->fetch_single($warq));
 					$wr=$db->fetch_single($warq);
 					$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
 					if ($whoswho['gw_declarer'] == $ir['guild'])
@@ -542,8 +543,8 @@ function beat()
 					{
 						$db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
 					}
+					$additionaltext=$lang['ATTACK_FIGHT_POINT'];
 				}
-				$additionaltext=$lang['ATTACK_FIGHT_POINT'];
 			}
 			
 		}
@@ -637,8 +638,8 @@ function lost()
 				{
 					$db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
 				}
+				$additionaltext=$lang['ATTACK_FIGHT_POINTL'];
 			}
-			$additionaltext=$lang['ATTACK_FIGHT_POINTL'];
 		}
 	}
 	alert('danger',"{$lang['ATTACK_FIGHT_END5']} {$r['username']}!","{$lang['ATTACK_FIGHT_END6']} (" . number_format($expgainp, 2) . "%)! {$additionaltext}",true,'index.php');
@@ -720,8 +721,8 @@ function xp()
 						{
 							$db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
 						}
+						$additionaltext=$lang['ATTACK_FIGHT_POINT'];
 					}
-					$additionaltext=$lang['ATTACK_FIGHT_POINT'];
 				}
 				
 			}
@@ -799,8 +800,8 @@ function mug()
 						{
 							$db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
 						}
+						$additionaltext=$lang['ATTACK_FIGHT_POINT'];
 					}
-					$additionaltext=$lang['ATTACK_FIGHT_POINT'];
 				}
 				
 			}
