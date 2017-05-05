@@ -371,14 +371,14 @@ function wars()
 		{
 			echo "<tr>
 				<td>
-					{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}<br />
+					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
 						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_drpoints']) . "{$lang['GUILD_WAR_TD1']}
 				</td>
 				<td>
 					{$lang['GUILD_WAR_TD2']}
 				</td>
 				<td>
-					{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}<br />
+					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}</a><br />
 						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_depoints']) . "{$lang['GUILD_WAR_TD1']}
 				</td>
 			</tr>";
