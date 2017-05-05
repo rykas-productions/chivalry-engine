@@ -26,6 +26,9 @@ case 'apply':
 case 'memberlist':
     memberlist();
     break;
+case 'wars':
+    wars();
+    break;
 default:
     menu();
     break;
@@ -353,6 +356,38 @@ function apply()
 			{$csrf}
 			<input type='submit' class='btn btn-default' value='{$lang['GUILD_APP_BTN']}' />
 		</form>";
+	}
+}
+function wars()
+{
+	global $db,$userid,$ir,$api,$h,$lang;
+	$time = time();
+	echo "<h3>{$lang['GUILD_WAR_TITLE']}</h3><hr />";
+	$q=$db->query("SELECT * FROM `guild_wars` WHERE `gw_winner` = 0 AND `gw_end` > {$time} ORDER BY `gw_id` DESC");
+	if ($db->num_rows($q) > 0)
+	{
+		echo "<table class='table table-bordered'>";
+		while ($r = $db->fetch_row($q))
+		{
+			echo "<tr>
+				<td>
+					{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}<br />
+						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_drpoints']) . "{$lang['GUILD_WAR_TD1']}
+				</td>
+				<td>
+					{$lang['GUILD_WAR_TD2']}
+				</td>
+				<td>
+					{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}<br />
+						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_depoints']) . "{$lang['GUILD_WAR_TD1']}
+				</td>
+			</tr>";
+		}
+		echo "</table>";
+	}
+	else
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_WAR_ERR'],false);
 	}
 }
 $h->endpage();

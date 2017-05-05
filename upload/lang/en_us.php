@@ -294,6 +294,7 @@ $lang['EXPLORE_TOPTEN']="Top 10 Players";
 $lang['EXPLORE_SLOTS']="Slot Machines";
 $lang['EXPLORE_BOTS']="Bot List";
 $lang['EXPLORE_TEMPLE']="Temple of Fortune";
+$lang['EXPLORE_WARS']="Guild Wars";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
@@ -1097,6 +1098,13 @@ $lang['GUILD_APP_BTN']="Submit Application";
 $lang['GUILD_APP_ERROR1']="You have already sent an application to join this guild. Please wait until you get a response before sending in another.";
 $lang['GUILD_APP_SUCC']="You have successfully sent in your application to join this guild!";
 $lang['GUILD_VIEW_DESC']="Guild's Description";
+
+//Guild Warring List
+$lang['GUILD_WAR_TITLE']="Guild Wars";
+$lang['GUILD_WAR_ERR']="There are currently no active guild wars.";
+$lang['GUILD_WAR_TD']="(Points: ";
+$lang['GUILD_WAR_TD1']=")";
+$lang['GUILD_WAR_TD2']="VS";
 
 //Staff rules
 $lang['STAFF_RULES_ADD_FORM']="Use this form to add rules into the game. Be clear and concise. The more difficult language and terminology you use, the less people may understand.";

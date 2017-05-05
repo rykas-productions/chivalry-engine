@@ -92,7 +92,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 		<div id='GAMES' class='tab-pane fade'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
-					<a href='russianroulette.php'>{$lang['EXPLORE_RR']}</a><br />
+					<a href='#'>{$lang['EXPLORE_RR']}</a><br />
 					<a href='hilow.php?tresde={$tresder}'>{$lang['EXPLORE_HILO']}</a><br />
 					<a href='roulette.php?tresde={$tresder}'>{$lang['EXPLORE_ROULETTE']}</a><br />
 					<a href='slots.php?tresde={$tresder}'>{$lang['EXPLORE_SLOTS']}</a><br />
@@ -108,6 +108,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 					}
 					echo "
 					<a href='guilds.php'>{$lang['EXPLORE_GUILDLIST']}</a><br />
+					<a href='guilds.php?action=wars'>{$lang['EXPLORE_WARS']}</a><br />
 				</div>
 			</div>
 		</div>
