@@ -977,12 +977,39 @@ function check_data()
 			$db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
 			guildnotificationadd($r3['gw_declarer'],"Your guild has defeated the {$guild_declared} guild in battle.");
 			guildnotificationadd($r3['gw_declaree'],"Your guild was defeated in battle by the {$guild_declare} guild.");
+			$town=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
+			$town2=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
+			if ($town2 > 0)
+			{
+				if ($town == 0)
+				{
+					$db->query("UPDATE `town` SET `town_guild_owner` = {$r3['gw_declarer']} WHERE `town_guild_owner` = {$r3['gw_declaree']}");
+				}
+				else
+				{
+					$db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$r3['gw_declaree']}");
+				}
+			}
+			
 		}
 		elseif ($r3['gw_drpoints'] < $r3['gw_depoints'])
 		{
 			$db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
 			guildnotificationadd($r3['gw_declaree'],"Your guild has defeated the {$guild_declare} guild in battle.");
 			guildnotificationadd($r3['gw_declarer'],"Your guild was defeated in battle by the {$guild_declared} guild.");
+			$town=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
+			$town2=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
+			if ($town > 0)
+			{
+				if ($town2 == 0)
+				{
+					$db->query("UPDATE `town` SET `town_guild_owner` = {$r3['gw_declaree']} WHERE `town_guild_owner` = {$r3['gw_declarer']}");
+				}
+				else
+				{
+					$db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$r3['gw_declarer']}");
+				}
+			}
 		}
 		else
 		{
