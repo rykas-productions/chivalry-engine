@@ -532,7 +532,6 @@ function beat()
 				OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
 				if ($db->fetch_single($warq) > 0)
                 {
-					var_dump($db->fetch_single($warq));
 					$wr=$db->fetch_single($warq);
 					$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
 					if ($whoswho['gw_declarer'] == $ir['guild'])
