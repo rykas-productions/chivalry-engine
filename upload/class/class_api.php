@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.4.3";	//Last Updated 4/24/2017
+		return "17.5.1";	//Last Updated 5/5/2017
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -33,7 +33,7 @@ class api
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
-		$type = $db->escape(strip_tags(stripslashes(strtolower($type))));
+		$type = $db->escape(stripslashes(strtolower($type)));
 		$userexist=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
 		if ($userexist)
 		{
@@ -117,7 +117,7 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$type = $db->escape(strip_tags(stripslashes(strtolower($type))));
+		$type = $db->escape(stripslashes(strtolower($type)));
 		$quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
 		$userexist=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
 		if ($userexist)
@@ -150,7 +150,7 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$type = $db->escape(strip_tags(stripslashes(strtolower($type))));
+		$type = $db->escape(stripslashes(strtolower($type)));
 		$quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
 		$userexist=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
 		if ($userexist)
@@ -184,7 +184,7 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$slot = $db->escape(strip_tags(stripslashes(strtolower($slot))));
+		$slot = $db->escape(stripslashes(strtolower($slot)));
 		if ($slot == 'primary' || $slot == 'secondary' || $slot == 'armor')
 		{
 			//Any item equipped
@@ -248,7 +248,7 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$status = $db->escape(strip_tags(stripslashes(strtolower($status))));
+		$status = $db->escape(stripslashes(strtolower($status)));
 		if ($status == 'infirmary')
 		{
 			return user_infirmary($user);
@@ -275,8 +275,8 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$reason = $db->escape(strip_tags(stripslashes($reason)));
-		$place = $db->escape(strip_tags(stripslashes(strtolower($place))));
+		$reason = $db->escape(stripslashes($reason));
+		$place = $db->escape(stripslashes(strtolower($place)));
 		if ($place == 'infirmary')
 		{
 			if ($time >= 0)
@@ -336,8 +336,8 @@ class api
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$from = (isset($from) && is_numeric($from)) ? abs(intval($from)) : 0;
-		$subj = $db->escape(strip_tags(stripslashes($subj)));
-		$msg = $db->escape(strip_tags(stripslashes($msg)));
+		$subj = $db->escape(stripslashes($subj));
+		$msg = $db->escape(stripslashes($msg));
 		$time = time();
 		$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$user}");
 		if ($db->num_rows($userexist) == 0)
@@ -373,7 +373,7 @@ class api
 	function GameAddAnnouncement($text,$poster = 1)
 	{
 		global $db;
-		$text = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($text))));
+		$text = $db->escape(str_replace("\n", "<br />",stripslashes($text)));
 		$poster = (isset($poster) && is_numeric($poster)) ? abs(intval($poster)) : 1;
 		$time = time();
 		$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$poster}");
@@ -402,7 +402,7 @@ class api
 	function UserMemberLevelGet($user,$level,$exact=false)
 	{
 		global $db;
-		$level = $db->escape(strip_tags(stripslashes(strtolower($level))));
+		$level = $db->escape(stripslashes(strtolower($level)));
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		if ($user == 0)
 		{
@@ -559,7 +559,7 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$stat = $db->escape(strip_tags(stripslashes(strtolower($stat))));
+		$stat = $db->escape(stripslashes(strtolower($stat)));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
 			alert('danger',$lang['ERROR_SECURITY'],$lang['API_ERROR'],false);
@@ -594,7 +594,7 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$stat = $db->escape(strip_tags(stripslashes(strtolower($stat))));
+		$stat = $db->escape(stripslashes(strtolower($stat)));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
 			alert('danger',$lang['ERROR_SECURITY'],$lang['API_ERROR'],false);
@@ -654,8 +654,8 @@ class api
 		$time = time();
 		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$input = $db->escape(strip_tags(stripslashes($input)));
-		$logtype = $db->escape(strip_tags(stripslashes(strtolower($logtype))));
+		$input = $db->escape(stripslashes($input));
+		$logtype = $db->escape(stripslashes(strtolower($logtype)));
 		$db->query("INSERT INTO `logs` (`log_id`, `log_type`, `log_user`, `log_time`, `log_text`, `log_ip`) VALUES (NULL, '{$logtype}', '{$user}', '{$time}', '{$input}', '{$IP}');");
 	}
 	/*
@@ -686,7 +686,7 @@ class api
 	function SystemUsernametoID($name)
 	{
 		global $db;
-		$name = $db->escape(strip_tags(stripslashes($name)));
+		$name = $db->escape(stripslashes($name));
 		$id=$db->query("SELECT `userid` FROM `users` WHERE `username` = '{$name}'");
 		if ($db->num_rows($id) == 0)
 		{
@@ -726,7 +726,7 @@ class api
 	function SystemItemNametoID($name)
 	{
 		global $db;
-		$name = $db->escape(strip_tags(stripslashes($name)));
+		$name = $db->escape(stripslashes($name));
 		$id=$db->query("SELECT `itmid` FROM `items` WHERE `itmname` = '{$name}'");
 		if ($db->num_rows($id) == 0)
 		{
@@ -871,7 +871,7 @@ class api
 			}
 			else
 			{
-				$field = $db->escape(strip_tags(stripslashes($field)));
+				$field = $db->escape(stripslashes($field));
 				return $db->fetch_single($db->query("SELECT `{$field}` FROM `guild` WHERE `guild_id` = {$guild_id}"));
 			}
 		}
@@ -889,7 +889,7 @@ class api
 	function GuildAddNotification($guild_id,$notification)
 	{
 		global $db;
-		$notification=$db->escape(strip_tags(stripslashes($notification)));
+		$notification=$db->escape(stripslashes($notification));
 		$time=time();
 		$guild_id = (isset($guild_id) && is_numeric($guild_id)) ? abs(intval($guild_id)) : 0;
 		if (isset($guild_id) && $guild_id > 0)
@@ -918,7 +918,7 @@ class api
 	{
 		global $db,$api;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$stat = $db->escape(strip_tags(stripslashes(strtolower($stat))));
+		$stat = $db->escape(stripslashes(strtolower($stat)));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
 			alert('danger',$lang['ERROR_SECURITY'],$lang['API_ERROR'],false);
@@ -931,7 +931,7 @@ class api
 			}
 			else
 			{
-				$state = $db->escape(strip_tags(stripslashes($state)));
+				$state = $db->escape(stripslashes($state));
 			}
 			if ($user > 0)
 			{
