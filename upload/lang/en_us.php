@@ -1178,6 +1178,7 @@ $lang['VIEWGUILD_STAFF_IDX_TOWN']="Change Guild Town";
 $lang['VIEWGUILD_STAFF_IDX_UNTOWN']="Surrender Guild Town";
 $lang['VIEWGUILD_STAFF_IDX_DECLAREWAR']="Declare War";
 $lang['VIEWGUILD_STAFF_IDX_LVLUP']="Level Up Guild";
+$lang['VIEWGUILD_STAFF_IDX_TAX']="Change Tax Level";
 $lang['VIEWGUILD_STAFF_APP_TH0']="Filing Time";
 $lang['VIEWGUILD_STAFF_APP_TH1']="Applicant";
 $lang['VIEWGUILD_STAFF_APP_TH2']="Level";
@@ -1253,6 +1254,12 @@ $lang['VIEWGUILD_STAFF_LVLUP1']="Guild XP to level up to the next level. Do you 
 $lang['VIEWGUILD_STAFF_LVLUP_BTN']="Level Up";
 $lang['VIEWGUILD_STAFF_LVLUP_ERR']="Your guild does not have enough experience to level up at this time.";
 $lang['VIEWGUILD_STAFF_LVLUP_SUCC']="You have successfully leveled up your guild.";
+$lang['VIEWGUILD_STAFF_TAX_ERR']="Your guild does not own a town to even put a tax level upon.";
+$lang['VIEWGUILD_STAFF_TAX_FORM']="Use this form to set a tax level on the town your guild owns.";
+$lang['VIEWGUILD_STAFF_TAX_TH']="Percentage";
+$lang['VIEWGUILD_STAFF_TAX_BTN']="Set Tax Rate";
+$lang['VIEWGUILD_STAFF_TAX_ERR2']="You can only have a tax rate between 0% and 20%";
+$lang['VIEWGUILD_STAFF_TAX_SUCC']="Congratulations, you've set this town's tax rate. If its too high, you may risk getting warred upon by another guild.";
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";

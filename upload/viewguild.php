@@ -527,6 +527,9 @@ function staff()
 			case "levelup":
                 staff_levelup();
                 break;
+			case "tax":
+                staff_tax();
+                break;
 			default:
 				staff_idx();
 				break;
@@ -561,9 +564,13 @@ function staff_idx()
 			<a href='?action=staff&act2=leader'>{$lang['VIEWGUILD_STAFF_IDX_LEADER']}</a><br />
 			<a href='?action=staff&act2=name'>{$lang['VIEWGUILD_STAFF_IDX_NAME']}</a><br />
 			<a href='?action=staff&act2=desc'>{$lang['VIEWGUILD_STAFF_IDX_DESC']}</a><br />
-			<a href='?action=staff&act2=town'>{$lang['VIEWGUILD_STAFF_IDX_TOWN']}</a><br />
-			<a href='?action=staff&act2=untown'>{$lang['VIEWGUILD_STAFF_IDX_UNTOWN']}</a><br />
-			<a href='?action=staff&act2=declarewar'>{$lang['VIEWGUILD_STAFF_IDX_DECLAREWAR']}</a><br />
+			<a href='?action=staff&act2=town'>{$lang['VIEWGUILD_STAFF_IDX_TOWN']}</a><br />";
+			if ($db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0)
+			{
+				echo "<a href='?action=staff&act2=untown'>{$lang['VIEWGUILD_STAFF_IDX_UNTOWN']}</a><br />
+				<a href='?action=staff&act2=tax'>{$lang['VIEWGUILD_STAFF_IDX_TAX']}</a><br />";
+			}
+			echo "<a href='?action=staff&act2=declarewar'>{$lang['VIEWGUILD_STAFF_IDX_DECLAREWAR']}</a><br />
 		</td>";
 	}
 	echo "</tr></table>
@@ -1599,6 +1606,72 @@ function staff_levelup()
 			<input type='submit' value='{$lang['VIEWGUILD_STAFF_LVLUP_BTN']}' class='btn btn-success'>
 		</form>
 		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+	}
+}
+function staff_tax()
+{
+	global $db,$ir,$gd,$api,$lang,$h,$userid;
+	if ($userid == $gd['guild_owner'])
+	{
+		if (!$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_TAX_ERR'],true,'viewguild.php?action=staff&act2=idx');
+			die($h->endpage());
+		}
+		if (isset($_POST['tax']))
+		{
+			$_POST['tax'] = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs($_POST['tax']) : 0;
+			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_tax", stripslashes($_POST['verf'])))
+			{
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+				die($h->endpage());
+			}
+			if ($_POST['tax'] < 0 || $_POST['tax'] > 20)
+			{
+				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_TAX_ERR2']);
+				die($h->endpage());
+			}
+			$town_id=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
+			$db->query("UPDATE `town` SET `town_tax` = {$_POST['tax']} WHERE `town_guild_owner` = {$gd['guild_owner']}");
+			$api->SystemLogsAdd($userid,'tax',"Set tax rate to {$_POST['tax']}% in {$api->SystemTownIDtoName($town_id)}.");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_TAX_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			
+		}
+		else
+		{
+			$csrf=request_csrf_html('guild_staff_tax');
+			$current_tax=$db->fetch_single($db->query("SELECT `town_tax` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
+			echo "
+			<table class='table table-bordered'>
+			<form method='post'>
+				<tr>
+					<th colspan='2'>
+						{$lang['VIEWGUILD_STAFF_TAX_FORM']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['VIEWGUILD_STAFF_TAX_TH']}
+					</th>
+					<td>
+						<input type='number' name='tax' class='form-control' value='{$current_tax}' min='0' max='20' required='1'>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['VIEWGUILD_STAFF_TAX_BTN']}'>
+					</td>
+				</tr>
+			{$csrf}
+			</form>
+			</table>
+			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+		}
+		
+	}
+	else
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
 	}
 }
 $h->endpage();
