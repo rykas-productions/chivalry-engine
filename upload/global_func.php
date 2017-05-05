@@ -966,6 +966,33 @@ function check_data()
 		$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$q2}");
 	}
 	$db->query("DELETE FROM `forum_bans` WHERE `fb_time` < {$time}");
+	$q3 = $db->query("SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} and `gw_winner` = 0");
+	if ($db->num_rows($q3) > 0)
+	{
+		$r3=$db->fetch_row($q3);
+		$guild_declare=$db->fetch_single($db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declarer']}"));
+		$guild_declared=$db->fetch_single($db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declaree']}"));
+		if ($r3['gw_drpoints'] > $r3['gw_depoints'])
+		{
+			$db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
+			guildnotificationadd($r3['gw_declarer'],"Your guild has defeated the {$guild_declared} guild in battle.");
+			guildnotificationadd($r3['gw_declaree'],"Your guild was defeated in battle by the {$guild_declare} guild.");
+		}
+		elseif ($r3['gw_drpoints'] < $r3['gw_depoints'])
+		{
+			$db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
+			guildnotificationadd($r3['gw_declaree'],"Your guild has defeated the {$guild_declare} guild in battle.");
+			guildnotificationadd($r3['gw_declarer'],"Your guild was defeated in battle by the {$guild_declared} guild.");
+		}
+		else
+		{
+			$db->query("DELETE FROM `guild_wars` WHERE `gw_id` = {$r3['gw_id']}");
+			guildnotificationadd($r3['gw_declaree'],"Your guild has tied the {$guild_declare} guild in battle.");
+			guildnotificationadd($r3['gw_declarer'],"Your guild has tied the {$guild_declared} guild in battle.");
+		}
+		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} WHERE `guild_id` = {$r3['gw_declarer']}");
+		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} WHERE `guild_id` = {$r3['gw_declaree']}");
+	}
 }
 /**
  * Internal function: used to see if a user is due to level up, and if so, perform that levelup.
@@ -1007,6 +1034,16 @@ function check_level()
 		notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
 		SystemLogsAdd($userid,'level',"Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
     }
+}
+
+function guildnotificationadd($guild_id,$text)
+{
+	global $db;
+	$text = $db->escape($text);
+    $db->query(
+            "INSERT INTO `guild_notifications`
+             VALUES(NULL, {$guild_id}, " . time() . ", '{$text}')");
+    return true;
 }
 
 /**
