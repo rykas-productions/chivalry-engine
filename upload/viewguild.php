@@ -21,6 +21,11 @@ else
     }
     $gd = $db->fetch_row($gq);
     $db->free_result($gq);
+	$wq=$db->query("SELECT COUNT(`gw_id`) FROM `guild_wars` WHERE (`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) AND `gw_winner` = 0");
+	if ($db->fetch_single($wq) > 0)
+	{
+		alert('warning',$lang['VIEWGUILD_WAR_ALERT'],"{$lang['VIEWGUILD_WAR_INFO']} {$db->fetch_single($wq)} {$lang['VIEWGUILD_WAR_INFO1']} <a href='?action=warview'>{$lang["GEN_HERE"]}</a>.",false);
+	}
     echo "
 	<h3><u>{$lang['VIEWGUILD_TITLE']} {$gd['guild_name']}.</u></h3>
    	";
@@ -53,6 +58,9 @@ else
         break;
 	case "staff":
         staff();
+        break;
+	case "warview":
+        warview();
         break;
 	default:
 		home();
@@ -473,6 +481,43 @@ function atklogs()
     $db->free_result($atks);
     echo "</table>
 	<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
+}
+function warview()
+{
+	global $db,$ir,$userid,$lang,$api,$h;
+	$wq=$db->query("SELECT * FROM `guild_wars` WHERE 
+					(`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) 
+					AND `gw_winner` = 0");
+	echo "<b>{$lang['VIEWGUILD_WARVIEW_INFO']}</b><hr />
+	<table class='table table-bordered'>
+		<tr>
+			<th>
+				{$lang['VIEWGUILD_WARVIEW_TD1']}
+			</th>
+			<th>
+				{$lang['VIEWGUILD_WARVIEW_TD2']}
+			</th>
+			<th>
+				{$lang['VIEWGUILD_WARVIEW_TD3']}
+			</th>
+		</tr>";
+	while ($r=$db->fetch_row($wq))
+	{
+		echo "<tr>
+				<td>
+					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
+						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_drpoints']) . "{$lang['GUILD_WAR_TD1']}
+				</td>
+				<td>
+					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}</a><br />
+						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_depoints']) . "{$lang['GUILD_WAR_TD1']}
+				</td>
+				<td>
+					" . TimeUntil_Parse($r['gw_end']) . "
+				</td>
+			</tr>";
+	}
+	echo "</table>";
 }
 function staff()
 {

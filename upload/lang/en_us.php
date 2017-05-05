@@ -1260,6 +1260,13 @@ $lang['VIEWGUILD_STAFF_TAX_TH']="Percentage";
 $lang['VIEWGUILD_STAFF_TAX_BTN']="Set Tax Rate";
 $lang['VIEWGUILD_STAFF_TAX_ERR2']="You can only have a tax rate between 0% and 20%";
 $lang['VIEWGUILD_STAFF_TAX_SUCC']="Congratulations, you've set this town's tax rate. If its too high, you may risk getting warred upon by another guild.";
+$lang['VIEWGUILD_WAR_ALERT']="Guild Wars in Progress!";
+$lang['VIEWGUILD_WAR_INFO']="Your guild is currently fighting ";
+$lang['VIEWGUILD_WAR_INFO1']="different guild wars. Find more information";
+$lang['VIEWGUILD_WARVIEW_INFO']="These are the current wars your guild is participating in.";
+$lang['VIEWGUILD_WARVIEW_TD1']="Declarer";
+$lang['VIEWGUILD_WARVIEW_TD2']="Declared Upon";
+$lang['VIEWGUILD_WARVIEW_TD3']="War Concludes";
 
 //Hire Spy
 $lang['SPY_ERROR1']="You must specify a user you wish to spy on!";
