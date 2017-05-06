@@ -1560,14 +1560,14 @@ function staff_declare()
 				die($h->endpage());
 			}
 			$lastweek=time() - 604800;
-			$istoosoon=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} AND `gw_end` < {$lastweek}");
+			$istoosoon=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} AND `gw_end` > {$lastweek}");
 			if ($db->num_rows($iswarredon) > 0)
 			{
 				$db->free_result($iswarredon);
 				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR3']);
 				die($h->endpage());
 			}
-			$istoosoon1=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} AND `gw_end` < {$lastweek}");
+			$istoosoon1=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} AND `gw_end` > {$lastweek}");
 			if ($db->num_rows($iswarredon1) > 0)
 			{
 				$db->free_result($iswarredon1);
