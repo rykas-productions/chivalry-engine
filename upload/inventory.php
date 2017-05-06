@@ -11,8 +11,8 @@ require("globals.php");
 echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 <div class='row'>
 	<div class='col-sm-4'>
-		<div class='panel panel-default'>
-			<div class='panel-heading'>
+		<div class='card card-default'>
+			<div class='card-header'>
 				{$lang['EQUIP_WEAPON_SLOT1']} ";
 				if (!empty($ir['equip_primary']))
 				{
@@ -20,7 +20,7 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 				}
 				echo"
 			</div>
-			<div class='panel-body'>";
+			<div class='card-body'>";
 				if (!empty($ir['equip_primary']))
 				{
 					echo $api->SystemItemIDtoName($ir['equip_primary']);
@@ -35,8 +35,8 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 	</div>";
 	echo"
 	<div class='col-sm-4'>
-		<div class='panel panel-default'>
-			<div class='panel-heading'>
+		<div class='card card-default'>
+			<div class='card-header'>
 				{$lang['EQUIP_WEAPON_SLOT2']} ";
 				if (!empty($ir['equip_secondary']))
 				{
@@ -44,7 +44,7 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 				}
 				echo"
 			</div>
-			<div class='panel-body'>";
+			<div class='card-body'>";
 				if (!empty($ir['equip_secondary']))
 				{
 					echo $api->SystemItemIDtoName($ir['equip_secondary']);
@@ -59,8 +59,8 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 	</div>";
 	echo"
 	<div class='col-sm-4'>
-		<div class='panel panel-default'>
-			<div class='panel-heading'>
+		<div class='card card-default'>
+			<div class='card-header'>
 				{$lang['EQUIP_WEAPON_SLOT3']} ";
 				if (!empty($ir['equip_armor']))
 				{
@@ -68,7 +68,7 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 				}
 				echo"
 			</div>
-			<div class='panel-body'>";
+			<div class='card-body'>";
 				if (!empty($ir['equip_armor']))
 				{
 					echo $api->SystemItemIDtoName($ir['equip_armor']);
