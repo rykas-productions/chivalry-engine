@@ -32,7 +32,7 @@ if (empty($_GET['to']))
 			>>>
 		</th>
 	</tr>";
-	$q = $db->query("SELECT * FROM `town` WHERE `town_id` != {$ir['location']}");
+	$q = $db->query("SELECT * FROM `town` WHERE `town_id` != {$ir['location']} ORDER BY `town_min_level` ASC");
 	while ($r = $db->fetch_row($q))
     {
 		if ($r['town_guild_owner'] > 0)
