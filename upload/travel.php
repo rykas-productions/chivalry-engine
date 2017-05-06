@@ -32,8 +32,7 @@ if (empty($_GET['to']))
 			>>>
 		</th>
 	</tr>";
-	$q = $db->query("SELECT * FROM `town` WHERE `town_id` != {$ir['location']}
-                     AND `town_min_level` <= {$ir['level']}");
+	$q = $db->query("SELECT * FROM `town` WHERE `town_id` != {$ir['location']}");
 	while ($r = $db->fetch_row($q))
     {
 		if ($r['town_guild_owner'] > 0)
