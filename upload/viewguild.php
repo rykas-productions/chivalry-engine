@@ -1548,38 +1548,29 @@ function staff_declare()
 			$iswarredon=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} AND `gw_end` > {$time}");
 			if ($db->num_rows($iswarredon) > 0)
 			{
-				$db->free_result($iswarredon);
 				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR2']);
 				die($h->endpage());
 			}
 			$iswarredon1=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} AND `gw_end` > {$time}");
 			if ($db->num_rows($iswarredon1) > 0)
 			{
-				$db->free_result($iswarredon1);
 				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR2']);
 				die($h->endpage());
 			}
-			$lastweek=time() - 604800;
-			$istoosoon=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} AND `gw_end` > {$lastweek}");
-			if ($db->num_rows($iswarredon) > 0)
+			$lastweek=$time-604800;
+			$istoosoon=$db->fetch_single($db->query("SELECT `gw_end` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} ORDER BY `gw_id` DESC LIMIT 1"));
+			if ($istoosoon > $lastweek)
 			{
-				$db->free_result($iswarredon);
 				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR3']);
 				die($h->endpage());
 			}
-			$istoosoon1=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} AND `gw_end` > {$lastweek}");
-			if ($db->num_rows($iswarredon1) > 0)
+			$istoosoon1=$db->fetch_single($db->query("SELECT `gw_end` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} ORDER BY `gw_id` DESC LIMIT 1"));
+			if ($istoosoon1 > $lastweek)
 			{
-				$db->free_result($iswarredon1);
 				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR3']);
 				die($h->endpage());
 			}
 			$r = $db->fetch_row($data_q);
-			$db->free_result($data_q);
-			$db->free_result($iswarredon);
-			$db->free_result($iswarredon1);
-			$db->free_result($istoosoon);
-			$db->free_result($istoosoon1);
 			$endtime=time()+259200;
 			$db->query("INSERT INTO `guild_wars`
 			VALUES (NULL, {$gd['guild_id']}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
