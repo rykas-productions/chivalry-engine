@@ -4,7 +4,7 @@
 	Created: 8/19/2016 at 12:45PM Eastern Time
 	Info: Ajax for sending cash via profile
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
 error_reporting(E_ALL);
@@ -38,33 +38,34 @@ if (!is_ajax())
 	}
 	if (empty($cash))
     {
-		alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['SCF_POSCASH']}");
+		alert('danger',$lang['ERROR_EMPTY'],$lang['SCF_POSCASH'],false);
         exit;
     }
 	elseif ($cash <= 0)
     {
-        alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['SCF_POSCASH']}");
+        alert('danger',$lang['ERROR_LENGTH'],$lang['SCF_POSCASH'],false);
         exit;
     }
 	elseif ($cash > $ir['primary_currency'])
 	{
-		alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['SCF_NEC']}");
+		alert('danger',$lang['ERROR_LENGTH'],$lang['SCF_NEC'],false);
 		exit;
 	}
 	elseif ($userid == $receive)
 	{
-		alert('danger',"No!","Why would you want to send yourself currency anyway?");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['SCF_ERR'],false);
+		exit;
 	}
 	if (empty($receive))
     {
-		alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['SCF_UNE']}");
+		alert('danger',$lang['ERROR_NONUSER'],$lang['SCF_UNE'],false);
         exit;
     }
 	$q = $db->query("SELECT `userid` FROM `users` WHERE `userid` = '{$receive}'");
 	if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-		alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['SCF_UNE']}");
+		alert('danger',$lang['ERROR_NONUSER'],$lang['SCF_UNE'],false);
 		exit;
     }
 	$to = $db->fetch_single($q);
@@ -73,4 +74,4 @@ if (!is_ajax())
 	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$cash} WHERE `userid` = {$userid}");
 	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$cash} WHERE `userid` = {$receive}");
 	notification_add($to,"{$ir['username']} has sent you {$cash} Primary Currency.");
-	alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['SCF_SUCCESS']}");
+	alert('success',$lang['ERROR_SUCCESS'],$lang['SCF_SUCCESS'],false);

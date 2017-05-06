@@ -1,12 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 4.6.4
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Nov 28, 2016 at 12:46 AM
--- Server version: 5.7.14
--- PHP Version: 7.0.10
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -16,15 +7,22 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Database: `cengine`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `announcements`
---
+CREATE TABLE `academy` (
+  `academyid` int(11) UNSIGNED NOT NULL,
+  `academyname` text NOT NULL,
+  `academydesc` text NOT NULL,
+  `academycost` int(11) UNSIGNED NOT NULL,
+  `academylevel` int(11) UNSIGNED NOT NULL,
+  `academydays` int(11) UNSIGNED NOT NULL,
+  `effect1_on` tinyint(1) NOT NULL,
+  `effect1` text NOT NULL,
+  `effect2_on` tinyint(1) NOT NULL,
+  `effect2` text NOT NULL,
+  `effect3_on` tinyint(1) NOT NULL,
+  `effect3` text NOT NULL,
+  `effect4_on` tinyint(1) NOT NULL,
+  `effect4` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE `announcements` (
   `ann_id` int(11) UNSIGNED NOT NULL,
@@ -33,23 +31,30 @@ CREATE TABLE `announcements` (
   `ann_poster` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+CREATE TABLE `botlist` (
+  `botid` int(11) UNSIGNED NOT NULL,
+  `botuser` int(11) UNSIGNED NOT NULL,
+  `botitem` int(11) UNSIGNED NOT NULL,
+  `botcooldown` int(11) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Table structure for table `crimegroups`
---
+CREATE TABLE `botlist_hits` (
+  `userid` int(11) UNSIGNED NOT NULL,
+  `botid` int(11) UNSIGNED NOT NULL,
+  `lasthit` int(11) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE `contact_list` (
+  `c_ID` int(11) UNSIGNED NOT NULL,
+  `c_ADDED` int(11) UNSIGNED NOT NULL,
+  `c_ADDER` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `crimegroups` (
   `cgID` int(11) UNSIGNED NOT NULL,
   `cgNAME` text NOT NULL,
   `cgORDER` int(11) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `crimes`
---
 
 CREATE TABLE `crimes` (
   `crimeID` int(11) UNSIGNED NOT NULL,
@@ -71,22 +76,10 @@ CREATE TABLE `crimes` (
   `crimeXP` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `crons`
---
-
 CREATE TABLE `crons` (
   `file` varchar(30) COLLATE latin1_general_ci NOT NULL,
   `nextUpdate` int(11) UNSIGNED NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `dungeon`
---
 
 CREATE TABLE `dungeon` (
   `dungeon_user` int(11) UNSIGNED NOT NULL,
@@ -95,12 +88,6 @@ CREATE TABLE `dungeon` (
   `dungeon_out` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `enemy`
---
-
 CREATE TABLE `enemy` (
   `enemy_id` int(11) UNSIGNED NOT NULL,
   `enemy_user` int(11) UNSIGNED NOT NULL,
@@ -108,38 +95,32 @@ CREATE TABLE `enemy` (
   `comment` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `estates`
---
-
 CREATE TABLE `estates` (
   `house_id` int(11) UNSIGNED NOT NULL,
   `house_name` tinytext NOT NULL,
   `house_price` int(11) UNSIGNED NOT NULL,
-  `house_will` int(11) UNSIGNED NOT NULL
+  `house_will` int(11) UNSIGNED NOT NULL,
+  `house_level` int(11) UNSIGNED DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `fedjail`
---
+INSERT INTO `estates` (`house_id`, `house_name`, `house_price`, `house_will`, `house_level`) VALUES
+(1, 'Default House', 101, 100, 1);
 
 CREATE TABLE `fedjail` (
   `fed_id` int(11) UNSIGNED NOT NULL,
   `fed_userid` int(11) UNSIGNED NOT NULL,
-  `fed_days` int(11) UNSIGNED NOT NULL,
+  `fed_out` int(11) UNSIGNED NOT NULL,
   `fed_jailedby` int(11) UNSIGNED NOT NULL,
   `fed_reason` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `forum_forums`
---
+CREATE TABLE `forum_bans` ( 
+	`fb_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`fb_user` INT(11) UNSIGNED NOT NULL , 
+	`fb_banner` INT(11) UNSIGNED NOT NULL , 
+	`fb_time` INT(11) UNSIGNED NOT NULL , 
+	`fb_reason` TEXT NOT NULL , 
+	UNIQUE (`fb_id`)) ENGINE = MyISAM;
 
 CREATE TABLE `forum_forums` (
   `ff_id` int(10) UNSIGNED NOT NULL,
@@ -150,12 +131,6 @@ CREATE TABLE `forum_forums` (
   `ff_auth` enum('public','staff') NOT NULL,
   `ff_lp_time` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `forum_posts`
---
 
 CREATE TABLE `forum_posts` (
   `fp_id` int(10) NOT NULL,
@@ -168,12 +143,6 @@ CREATE TABLE `forum_posts` (
   `fp_editor_time` int(10) UNSIGNED NOT NULL,
   `fp_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `forum_topics`
---
 
 CREATE TABLE `forum_topics` (
   `ft_id` int(10) UNSIGNED NOT NULL,
@@ -189,12 +158,6 @@ CREATE TABLE `forum_topics` (
   `ft_locked` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `friends`
---
-
 CREATE TABLE `friends` (
   `friend_id` int(11) UNSIGNED NOT NULL,
   `friended` int(11) UNSIGNED NOT NULL,
@@ -202,11 +165,10 @@ CREATE TABLE `friends` (
   `comment` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `guild`
---
+CREATE TABLE `gamerules` (
+  `rule_id` int(11) UNSIGNED NOT NULL,
+  `rule_text` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE `guild` (
   `guild_id` int(11) UNSIGNED NOT NULL,
@@ -220,14 +182,24 @@ CREATE TABLE `guild` (
   `guild_name` text NOT NULL,
   `guild_desc` text NOT NULL,
   `guild_level` int(11) UNSIGNED NOT NULL,
-  `guild_xp` int(11) UNSIGNED NOT NULL
+  `guild_xp` int(11) UNSIGNED NOT NULL,
+  `guild_announcement` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+CREATE TABLE `guild_applications` (
+  `ga_id` int(11) UNSIGNED NOT NULL,
+  `ga_user` int(11) UNSIGNED NOT NULL,
+  `ga_guild` int(11) UNSIGNED NOT NULL,
+  `ga_time` int(11) UNSIGNED NOT NULL,
+  `ga_text` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Table structure for table `infirmary`
---
+CREATE TABLE `guild_notifications` (
+  `gn_id` int(11) UNSIGNED NOT NULL,
+  `gn_guild` int(11) UNSIGNED NOT NULL,
+  `gn_time` int(11) UNSIGNED NOT NULL,
+  `gn_text` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE `infirmary` (
   `infirmary_user` int(11) UNSIGNED NOT NULL,
@@ -236,12 +208,6 @@ CREATE TABLE `infirmary` (
   `infirmary_out` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `inventory`
---
-
 CREATE TABLE `inventory` (
   `inv_id` int(11) UNSIGNED NOT NULL,
   `inv_itemid` int(11) UNSIGNED NOT NULL,
@@ -249,11 +215,24 @@ CREATE TABLE `inventory` (
   `inv_qty` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+CREATE TABLE `itemauction` (
+  `ia_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `ia_adder` INT(11) UNSIGNED NOT NULL ,
+  `ia_item` INT(11) UNSIGNED NOT NULL ,
+  `ia_qty` INT(11) UNSIGNED NOT NULL ,
+  `ia_end` INT(11) UNSIGNED NOT NULL ,
+  `ia_bidder` INT(11) UNSIGNED NOT NULL ,
+  `ia_bid` BIGINT(11) UNSIGNED NOT NULL ,
+  UNIQUE (`ia_id`)) ENGINE = MyISAM;
 
---
--- Table structure for table `items`
---
+CREATE TABLE `itemmarket` (
+  `imID` int(11) NOT NULL,
+  `imITEM` int(11) NOT NULL DEFAULT '0',
+  `imADDER` int(11) NOT NULL DEFAULT '0',
+  `imPRICE` int(11) NOT NULL DEFAULT '0',
+  `imCURRENCY` enum('primary','secondary') NOT NULL DEFAULT 'primary',
+  `imQTY` int(11) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE `items` (
   `itmid` int(11) UNSIGNED NOT NULL,
@@ -273,12 +252,6 @@ CREATE TABLE `items` (
   `armor` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `itemselllogs`
---
-
 CREATE TABLE `itemselllogs` (
   `logid` int(11) UNSIGNED NOT NULL,
   `userid` int(11) UNSIGNED NOT NULL,
@@ -289,34 +262,16 @@ CREATE TABLE `itemselllogs` (
   `log` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `itemtypes`
---
-
 CREATE TABLE `itemtypes` (
   `itmtypeid` int(11) UNSIGNED NOT NULL,
   `itmtypename` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `login_attempts`
---
 
 CREATE TABLE `login_attempts` (
   `ip` tinytext NOT NULL,
   `userid` int(10) UNSIGNED NOT NULL,
   `timestamp` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `logs`
---
 
 CREATE TABLE `logs` (
   `log_id` int(11) UNSIGNED NOT NULL,
@@ -326,12 +281,6 @@ CREATE TABLE `logs` (
   `log_text` text NOT NULL,
   `log_ip` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mail`
---
 
 CREATE TABLE `mail` (
   `mail_id` int(11) UNSIGNED NOT NULL,
@@ -343,11 +292,33 @@ CREATE TABLE `mail` (
   `mail_time` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+CREATE TABLE `mining` (
+  `userid` int(11) UNSIGNED NOT NULL,
+  `max_miningpower` int(11) UNSIGNED NOT NULL,
+  `miningpower` int(11) UNSIGNED NOT NULL,
+  `miningxp` decimal(11,0) UNSIGNED NOT NULL,
+  `buyable_power` int(11) UNSIGNED NOT NULL,
+  `mining_level` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Table structure for table `modules`
---
+CREATE TABLE `mining_data` (
+  `mine_id` int(11) UNSIGNED NOT NULL,
+  `mine_location` int(11) UNSIGNED NOT NULL,
+  `mine_level` int(11) UNSIGNED NOT NULL,
+  `mine_copper_min` int(11) UNSIGNED NOT NULL,
+  `mine_copper_max` int(11) UNSIGNED NOT NULL,
+  `mine_silver_min` int(11) UNSIGNED NOT NULL,
+  `mine_silver_max` int(11) UNSIGNED NOT NULL,
+  `mine_gold_min` int(11) UNSIGNED NOT NULL,
+  `mine_gold_max` int(11) UNSIGNED NOT NULL,
+  `mine_pickaxe` int(11) UNSIGNED NOT NULL,
+  `mine_iq` int(11) UNSIGNED NOT NULL,
+  `mine_power_use` int(11) UNSIGNED NOT NULL,
+  `mine_copper_item` int(11) UNSIGNED NOT NULL,
+  `mine_silver_item` int(11) UNSIGNED NOT NULL,
+  `mine_gold_item` int(11) UNSIGNED NOT NULL,
+  `mine_gem_item` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `modules` (
   `module_id` int(11) UNSIGNED NOT NULL,
@@ -361,12 +332,6 @@ CREATE TABLE `modules` (
   `module_version` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `newspaper_ads`
---
-
 CREATE TABLE `newspaper_ads` (
   `news_id` int(11) UNSIGNED NOT NULL,
   `news_cost` int(11) UNSIGNED NOT NULL,
@@ -376,12 +341,6 @@ CREATE TABLE `newspaper_ads` (
   `news_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `notifications`
---
-
 CREATE TABLE `notifications` (
   `notif_id` int(11) UNSIGNED NOT NULL,
   `notif_user` int(11) UNSIGNED NOT NULL,
@@ -390,24 +349,12 @@ CREATE TABLE `notifications` (
   `notif_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `permissions`
---
-
 CREATE TABLE `permissions` (
   `perm_id` int(11) UNSIGNED NOT NULL,
   `perm_user` int(11) UNSIGNED NOT NULL,
   `perm_name` tinytext NOT NULL,
   `perm_disable` enum('true','false') NOT NULL DEFAULT 'true'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `polls`
---
 
 CREATE TABLE `polls` (
   `id` int(11) UNSIGNED NOT NULL,
@@ -437,11 +384,20 @@ CREATE TABLE `polls` (
   `hidden` tinyint(4) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+CREATE TABLE `promo_codes` (
+  `promo_id` int(11) UNSIGNED NOT NULL,
+  `promo_code` text NOT NULL,
+  `promo_item` int(11) UNSIGNED NOT NULL,
+  `promo_use` int(11) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Table structure for table `referals`
---
+CREATE TABLE `pw_recovery` (
+  `pwr_id` int(11) UNSIGNED NOT NULL,
+  `pwr_ip` text NOT NULL,
+  `pwr_email` text NOT NULL,
+  `pwr_code` text NOT NULL,
+  `pwr_expire` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `referals` (
   `referalid` int(11) UNSIGNED NOT NULL,
@@ -452,12 +408,6 @@ CREATE TABLE `referals` (
   `time` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `reports`
---
-
 CREATE TABLE `reports` (
   `report_id` int(11) UNSIGNED NOT NULL,
   `reporter_id` int(11) UNSIGNED NOT NULL,
@@ -465,11 +415,13 @@ CREATE TABLE `reports` (
   `report_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `settings`
---
+CREATE TABLE `sec_market` ( 
+	`sec_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
+	`sec_user` INT(11) UNSIGNED NOT NULL , 
+	`sec_cost` INT(11) UNSIGNED NOT NULL , 
+	`sec_total` INT(11) UNSIGNED NOT NULL , 
+	UNIQUE (`sec_id`)
+) ENGINE = MyISAM;
 
 CREATE TABLE `settings` (
   `setting_id` tinyint(11) UNSIGNED NOT NULL,
@@ -477,69 +429,48 @@ CREATE TABLE `settings` (
   `setting_value` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `settings`
---
-
 INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES
 (1, 'ReferalKickback', '25'),
 (2, 'RegistrationCaptcha', 'OFF'),
 (3, 'HTTPS_Support', 'false'),
 (4, 'AttackEnergyCost', '100'),
-(5, 'MaxAttacksPerSession', '100');
+(5, 'MaxAttacksPerSession', '100'),
+(6, 'GUILD_PRICE', '500000'),
+(7, 'GUILD_LEVEL', '25'),
+(8, 'bank_cost', '5000'),
+(9, 'bank_maxfee', '5000'),
+(10, 'bank_feepercent', '10'),
+(11, 'max_sessiontime', '44'),
+(12, 'Revalidate_Time', '300');
 
--- --------------------------------------------------------
+CREATE TABLE `shopitems` (
+  `sitemID` int(11) NOT NULL,
+  `sitemSHOP` int(11) NOT NULL DEFAULT '0',
+  `sitemITEMID` int(11) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Table structure for table `tmg_mines_data`
---
+CREATE TABLE `shops` (
+  `shopID` int(11) NOT NULL,
+  `shopLOCATION` int(11) NOT NULL DEFAULT '0',
+  `shopNAME` varchar(255) NOT NULL DEFAULT '',
+  `shopDESCRIPTION` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-CREATE TABLE `tmg_mines_data` (
-  `mine_id` int(11) UNSIGNED NOT NULL,
-  `mine_location` int(11) UNSIGNED NOT NULL,
-  `mine_level` int(11) UNSIGNED NOT NULL,
-  `mine_copper_min` int(11) UNSIGNED NOT NULL,
-  `mine_copper_max` int(11) UNSIGNED NOT NULL,
-  `mine_silver_min` int(11) UNSIGNED NOT NULL,
-  `mine_silver_max` int(11) UNSIGNED NOT NULL,
-  `mine_gold_min` int(11) UNSIGNED NOT NULL,
-  `mine_gold_max` int(11) UNSIGNED NOT NULL,
-  `mine_pickaxe` int(11) UNSIGNED NOT NULL,
-  `mine_iq` int(11) UNSIGNED NOT NULL,
-  `mine_power_use` int(11) UNSIGNED NOT NULL,
-  `mine_copper_item` int(11) UNSIGNED NOT NULL,
-  `mine_silver_item` int(11) UNSIGNED NOT NULL,
-  `mine_gold_item` int(11) UNSIGNED NOT NULL,
-  `mine_gem_item` int(11) UNSIGNED NOT NULL
+CREATE TABLE `smelt_inprogress` (
+  `sip_id` int(11) UNSIGNED NOT NULL,
+  `sip_user` int(11) UNSIGNED NOT NULL,
+  `sip_recipe` int(11) UNSIGNED NOT NULL,
+  `sip_time` int(11) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE `smelt_recipes` (
+  `smelt_id` int(11) UNSIGNED NOT NULL,
+  `smelt_time` int(11) UNSIGNED NOT NULL,
+  `smelt_items` text NOT NULL,
+  `smelt_quantity` text CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  `smelt_output` int(11) UNSIGNED NOT NULL,
+  `smelt_qty_output` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tmg_mining`
---
-
-CREATE TABLE `tmg_mining` (
-  `userid` int(11) UNSIGNED NOT NULL,
-  `max_miningpower` int(11) NOT NULL,
-  `miningpower` int(11) NOT NULL,
-  `miningxp` varchar(11) NOT NULL,
-  `buyable_power` smallint(11) NOT NULL,
-  `mining_level` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Mining Mod Update from TMG';
-
---
--- Dumping data for table `tmg_mining`
---
-
-INSERT INTO `tmg_mining` (`userid`, `max_miningpower`, `miningpower`, `miningxp`, `buyable_power`, `mining_level`) VALUES
-(1, 100, 100, '0', 1, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `town`
---
 
 CREATE TABLE `town` (
   `town_id` int(11) UNSIGNED NOT NULL,
@@ -549,18 +480,8 @@ CREATE TABLE `town` (
   `town_tax` tinyint(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `town`
---
-
 INSERT INTO `town` (`town_id`, `town_name`, `town_min_level`, `town_guild_owner`, `town_tax`) VALUES
-(1, 'Cornrye', 1, 0, 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `userdata`
---
+(1, 'Cornrye', 1, 0, 20);
 
 CREATE TABLE `userdata` (
   `userid` int(11) UNSIGNED NOT NULL,
@@ -569,12 +490,6 @@ CREATE TABLE `userdata` (
   `os` text NOT NULL,
   `browser` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
 
 CREATE TABLE `users` (
   `userid` int(11) UNSIGNED NOT NULL,
@@ -620,15 +535,9 @@ CREATE TABLE `users` (
   `timezone` enum('Pacific/Wake','Pacific/Apia','America/Adak','America/Anchorage','America/Los_Angeles','America/Denver','America/Chicago','America/New_York','America/Halifax','America/Godthab','America/Noronha','Atlantic/Cape_Verde','Europe/London','Europe/Berlin','Europe/Bucharest','Europe/Moscow','Asia/Tehran','Asia/Muscat','Asia/Kabul','Asia/Karachi','Asia/Calcutta','Asia/Katmandu','Asia/Novosibirsks','America/Godthab','Asia/Rangoon','Asia/Bangkok','Australia/Perth','Asia/Tokyo','Australia/Darwin','Australia/Sydney','Asia/Magadan','Pacific/Auckland','Pacific/Tongatapu') NOT NULL DEFAULT 'Europe/London',
   `description` text NOT NULL,
   `theme` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
-  `course` int(11) UNSIGNED NOT NULL,
-  `days_left` int(11) UNSIGNED NOT NULL
+  `last_verified` int(11) UNSIGNED NOT NULL,
+  `need_verify` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `userstats`
---
 
 CREATE TABLE `userstats` (
   `userid` int(11) UNSIGNED NOT NULL,
@@ -639,508 +548,317 @@ CREATE TABLE `userstats` (
   `labor` bigint(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `uservotes`
---
-
 CREATE TABLE `uservotes` (
   `userid` int(11) UNSIGNED NOT NULL,
   `voted` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+CREATE TABLE `vips_accepted` (
+  `vipID` int(11) UNSIGNED NOT NULL,
+  `vipBUYER` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `vipFOR` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `vipPACKID` int(11) UNSIGNED NOT NULL,
+  `vipTIME` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `vipTXN` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Table structure for table `academy`
---
+CREATE TABLE `vip_listing` (
+  `vip_id` int(11) UNSIGNED NOT NULL,
+  `vip_item` int(11) UNSIGNED NOT NULL,
+  `vip_cost` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-CREATE TABLE `academy` ( 
-	`academyid` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
-	`academyname` TEXT NOT NULL , 
-	`academydesc` TEXT NOT NULL , 
-	`academycost` INT(11) UNSIGNED NOT NULL , 
-	`academylevel` INT(11) UNSIGNED NOT NULL , 
-	`academydays` INT(11) UNSIGNED NOT NULL , 
-	`effect1_on` BOOLEAN NOT NULL , 
-	`effect1` TEXT NOT NULL , 
-	`effect2_on` BOOLEAN NOT NULL , 
-	`effect2` TEXT NOT NULL , 
-	`effect3_on` BOOLEAN NOT NULL , 
-	`effect3` TEXT NOT NULL , 
-	`effect4_on` BOOLEAN NOT NULL , 
-	`effect4` TEXT NOT NULL , 
-	UNIQUE (`academyid`)) ENGINE = MyISAM;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `announcements`
---
+ALTER TABLE `academy`
+  ADD PRIMARY KEY (`academyid`),
+  ADD UNIQUE KEY `academyid` (`academyid`);
+  
 ALTER TABLE `announcements`
   ADD PRIMARY KEY (`ann_id`);
 
---
--- Indexes for table `crimegroups`
---
+ALTER TABLE `botlist`
+  ADD UNIQUE KEY `botid` (`botid`);
+
+ALTER TABLE `contact_list`
+  ADD UNIQUE KEY `c_ID` (`c_ID`);
+
 ALTER TABLE `crimegroups`
   ADD PRIMARY KEY (`cgID`);
 
---
--- Indexes for table `crimes`
---
 ALTER TABLE `crimes`
   ADD PRIMARY KEY (`crimeID`);
 
---
--- Indexes for table `crons`
---
 ALTER TABLE `crons`
   ADD PRIMARY KEY (`file`),
   ADD UNIQUE KEY `file` (`file`);
-
---
--- Indexes for table `dungeon`
---
+  
 ALTER TABLE `dungeon`
   ADD PRIMARY KEY (`dungeon_user`);
 
---
--- Indexes for table `enemy`
---
 ALTER TABLE `enemy`
   ADD PRIMARY KEY (`enemy_id`);
 
---
--- Indexes for table `estates`
---
 ALTER TABLE `estates`
   ADD PRIMARY KEY (`house_id`);
 
---
--- Indexes for table `fedjail`
---
 ALTER TABLE `fedjail`
   ADD PRIMARY KEY (`fed_id`);
 
---
--- Indexes for table `forum_forums`
---
 ALTER TABLE `forum_forums`
   ADD UNIQUE KEY `ff_id` (`ff_id`);
 
---
--- Indexes for table `forum_posts`
---
 ALTER TABLE `forum_posts`
   ADD PRIMARY KEY (`fp_id`);
 
---
--- Indexes for table `forum_topics`
---
 ALTER TABLE `forum_topics`
   ADD PRIMARY KEY (`ft_id`),
   ADD UNIQUE KEY `ft_id` (`ft_id`);
 
---
--- Indexes for table `friends`
---
 ALTER TABLE `friends`
   ADD PRIMARY KEY (`friend_id`);
 
---
--- Indexes for table `guild`
---
+ALTER TABLE `gamerules`
+  ADD UNIQUE KEY `rule_id` (`rule_id`);
+
 ALTER TABLE `guild`
   ADD PRIMARY KEY (`guild_id`);
 
---
--- Indexes for table `infirmary`
---
+ALTER TABLE `guild_applications`
+  ADD UNIQUE KEY `ga_id` (`ga_id`);
+
+ALTER TABLE `guild_notifications`
+  ADD UNIQUE KEY `gn_id` (`gn_id`);
+
 ALTER TABLE `infirmary`
   ADD PRIMARY KEY (`infirmary_user`);
 
---
--- Indexes for table `inventory`
---
 ALTER TABLE `inventory`
   ADD PRIMARY KEY (`inv_id`);
 
---
--- Indexes for table `items`
---
+ALTER TABLE `itemmarket`
+  ADD PRIMARY KEY (`imID`);
+
 ALTER TABLE `items`
   ADD PRIMARY KEY (`itmid`);
 
---
--- Indexes for table `itemselllogs`
---
 ALTER TABLE `itemselllogs`
   ADD UNIQUE KEY `logid` (`logid`);
 
---
--- Indexes for table `itemtypes`
---
 ALTER TABLE `itemtypes`
   ADD PRIMARY KEY (`itmtypeid`);
 
---
--- Indexes for table `logs`
---
 ALTER TABLE `logs`
   ADD UNIQUE KEY `log_id` (`log_id`);
 
---
--- Indexes for table `mail`
---
 ALTER TABLE `mail`
   ADD PRIMARY KEY (`mail_id`);
 ALTER TABLE `mail` ADD FULLTEXT KEY `mail_subject` (`mail_subject`,`mail_text`);
 
---
--- Indexes for table `modules`
---
+ALTER TABLE `mining`
+  ADD UNIQUE KEY `userid` (`userid`);
+
+ALTER TABLE `mining_data`
+  ADD UNIQUE KEY `mine_id` (`mine_id`);
+
 ALTER TABLE `modules`
   ADD UNIQUE KEY `module_id` (`module_id`);
 
---
--- Indexes for table `newspaper_ads`
---
 ALTER TABLE `newspaper_ads`
   ADD PRIMARY KEY (`news_id`);
 
---
--- Indexes for table `notifications`
---
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`notif_id`);
 ALTER TABLE `notifications` ADD FULLTEXT KEY `notif_text` (`notif_text`);
 
---
--- Indexes for table `permissions`
---
 ALTER TABLE `permissions`
   ADD PRIMARY KEY (`perm_id`);
 
---
--- Indexes for table `polls`
---
 ALTER TABLE `polls`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `referals`
---
+ALTER TABLE `promo_codes`
+  ADD UNIQUE KEY `promo_id` (`promo_id`);
+
+ALTER TABLE `pw_recovery`
+  ADD PRIMARY KEY (`pwr_id`);
+
 ALTER TABLE `referals`
   ADD PRIMARY KEY (`referalid`);
 
---
--- Indexes for table `reports`
---
 ALTER TABLE `reports`
   ADD PRIMARY KEY (`report_id`);
 
---
--- Indexes for table `settings`
---
 ALTER TABLE `settings`
   ADD PRIMARY KEY (`setting_id`);
 
---
--- Indexes for table `tmg_mines_data`
---
-ALTER TABLE `tmg_mines_data`
-  ADD PRIMARY KEY (`mine_id`);
+ALTER TABLE `shopitems`
+  ADD PRIMARY KEY (`sitemID`);
 
---
--- Indexes for table `tmg_mining`
---
-ALTER TABLE `tmg_mining`
-  ADD PRIMARY KEY (`userid`);
+ALTER TABLE `shops`
+  ADD PRIMARY KEY (`shopID`);
 
---
--- Indexes for table `town`
---
+ALTER TABLE `smelt_inprogress`
+  ADD UNIQUE KEY `sip_id` (`sip_id`);
+
+ALTER TABLE `smelt_recipes`
+  ADD UNIQUE KEY `smelt_id` (`smelt_id`);
+
 ALTER TABLE `town`
   ADD PRIMARY KEY (`town_id`);
 
---
--- Indexes for table `userdata`
---
 ALTER TABLE `userdata`
   ADD UNIQUE KEY `unique` (`userid`);
 
---
--- Indexes for table `users`
---
 ALTER TABLE `users`
   ADD PRIMARY KEY (`userid`);
 
---
--- Indexes for table `userstats`
---
 ALTER TABLE `userstats`
   ADD PRIMARY KEY (`userid`);
 
---
--- Indexes for table `uservotes`
---
 ALTER TABLE `uservotes`
   ADD PRIMARY KEY (`userid`);
 
---
--- Indexes for table `academy`
---
-ALTER TABLE `academy` 
-	ADD PRIMARY KEY (`academyid`)
-  
---
--- AUTO_INCREMENT for dumped tables
---
+ALTER TABLE `vips_accepted`
+  ADD UNIQUE KEY `vipID` (`vipID`);
 
---
--- AUTO_INCREMENT for table `announcements`
---
-ALTER TABLE `announcements`
-  MODIFY `ann_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `crimegroups`
---
-ALTER TABLE `crimegroups`
-  MODIFY `cgID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `crimes`
---
-ALTER TABLE `crimes`
-  MODIFY `crimeID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `enemy`
---
-ALTER TABLE `enemy`
-  MODIFY `enemy_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `estates`
---
-ALTER TABLE `estates`
-  MODIFY `house_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `fedjail`
---
-ALTER TABLE `fedjail`
-  MODIFY `fed_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `forum_forums`
---
-ALTER TABLE `forum_forums`
-  MODIFY `ff_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `forum_posts`
---
-ALTER TABLE `forum_posts`
-  MODIFY `fp_id` int(10) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `forum_topics`
---
-ALTER TABLE `forum_topics`
-  MODIFY `ft_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `friends`
---
-ALTER TABLE `friends`
-  MODIFY `friend_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `guild`
---
-ALTER TABLE `guild`
-  MODIFY `guild_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `inventory`
---
-ALTER TABLE `inventory`
-  MODIFY `inv_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `items`
---
-ALTER TABLE `items`
-  MODIFY `itmid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `itemselllogs`
---
-ALTER TABLE `itemselllogs`
-  MODIFY `logid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `itemtypes`
---
-ALTER TABLE `itemtypes`
-  MODIFY `itmtypeid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `logs`
---
-ALTER TABLE `logs`
-  MODIFY `log_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `mail`
---
-ALTER TABLE `mail`
-  MODIFY `mail_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `modules`
---
-ALTER TABLE `modules`
-  MODIFY `module_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `newspaper_ads`
---
-ALTER TABLE `newspaper_ads`
-  MODIFY `news_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `notif_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `permissions`
---
-ALTER TABLE `permissions`
-  MODIFY `perm_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `polls`
---
-ALTER TABLE `polls`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `referals`
---
-ALTER TABLE `referals`
-  MODIFY `referalid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `reports`
---
-ALTER TABLE `reports`
-  MODIFY `report_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `settings`
---
-ALTER TABLE `settings`
-  MODIFY `setting_id` tinyint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
---
--- AUTO_INCREMENT for table `tmg_mines_data`
---
-ALTER TABLE `tmg_mines_data`
-  MODIFY `mine_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `town`
---
-ALTER TABLE `town`
-  MODIFY `town_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `userdata`
---
-ALTER TABLE `userdata`
-  MODIFY `userid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `userid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-  
---
--- AUTO_INCREMENT for table `academy`
---
+ALTER TABLE `vip_listing`
+  ADD UNIQUE KEY `vip_id` (`vip_id`);
 
 ALTER TABLE `academy`
   MODIFY `academyid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `announcements`
+  MODIFY `ann_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  
+ALTER TABLE `botlist`
+  MODIFY `botid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-CREATE TABLE `shops` (
-  `shopID` int(11) NOT NULL auto_increment,
-  `shopLOCATION` int(11) NOT NULL default '0',
-  `shopNAME` varchar(255) NOT NULL default '',
-  `shopDESCRIPTION` text NOT NULL,
-  PRIMARY KEY  (`shopID`)
-) ENGINE=MyISAM ;
+ALTER TABLE `contact_list`
+  MODIFY `c_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-CREATE TABLE `shopitems` (
-  `sitemID` int(11) NOT NULL auto_increment,
-  `sitemSHOP` int(11) NOT NULL default '0',
-  `sitemITEMID` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`sitemID`)
-) ENGINE=MyISAM ;
+ALTER TABLE `crimegroups`
+  MODIFY `cgID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-CREATE TABLE `itemmarket` (
-  `imID` int(11) NOT NULL auto_increment,
-  `imITEM` int(11) NOT NULL default '0',
-  `imADDER` int(11) NOT NULL default '0',
-  `imPRICE` int(11) NOT NULL default '0',
-  `imCURRENCY` enum('primary','secondary') NOT NULL default 'primary',
-  `imQTY` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`imID`)
-) ENGINE=MyISAM ;
+ALTER TABLE `crimes`
+  MODIFY `crimeID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-INSERT INTO `settings` 
-(`setting_id`, `setting_name`, `setting_value`) VALUES 
- (NULL, 'GUILD_PRICE', '500000'), 
- (NULL, 'GUILD_LEVEL', '25');
- 
- CREATE TABLE `gamerules` ( 
-	`rule_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
-	`rule_text` TEXT NOT NULL , 
-	UNIQUE (`rule_id`)
-) ENGINE = MyISAM;
+ALTER TABLE `enemy`
+  MODIFY `enemy_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES  (NULL, 'bank_cost', '5000');
-ALTER TABLE `guild` ADD `guild_announcement` TEXT NOT NULL AFTER `guild_xp`;
-INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'bank_maxfee', '5000'), (NULL, 'bank_feepercent', '10');
+ALTER TABLE `estates`
+  MODIFY `house_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
-CREATE TABLE `promo_codes` (
-  `promo_id` int(11) UNSIGNED NOT NULL,
-  `promo_code` text NOT NULL,
-  `promo_item` int(11) UNSIGNED NOT NULL,
-  `promo_use` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ALTER TABLE `fedjail`
+  MODIFY `fed_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-CREATE TABLE `botlist` ( 
-	`botid` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT , 
-	`botuser` INT(11) UNSIGNED NOT NULL , 
-	`botitem` INT(11) UNSIGNED NOT NULL , 
-	`botcooldown` INT(11) UNSIGNED NOT NULL , 
-	UNIQUE (`botid`)
-) ENGINE = MyISAM;
-	
-CREATE TABLE `botlist_hits` ( 
-	`userid` INT(11) UNSIGNED NOT NULL , 
-	`botid` INT(11) UNSIGNED NOT NULL , 
-	`lasthit` INT(11) UNSIGNED NOT NULL 
-) ENGINE = MyISAM;
+ALTER TABLE `forum_forums`
+  MODIFY `ff_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
---
--- Indexes for dumped tables
---
+ALTER TABLE `forum_posts`
+  MODIFY `fp_id` int(10) NOT NULL AUTO_INCREMENT;
 
---
--- Indexes for table `promo_codes`
---
-ALTER TABLE `promo_codes`
-  ADD UNIQUE KEY `promo_id` (`promo_id`);
+ALTER TABLE `forum_topics`
+  MODIFY `ft_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for dumped tables
---
+ALTER TABLE `friends`
+  MODIFY `friend_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `promo_codes`
---
+ALTER TABLE `gamerules`
+  MODIFY `rule_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `guild`
+  MODIFY `guild_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `guild_applications`
+  MODIFY `ga_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `guild_notifications`
+  MODIFY `gn_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `inventory`
+  MODIFY `inv_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `itemmarket`
+  MODIFY `imID` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `items`
+  MODIFY `itmid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `itemselllogs`
+  MODIFY `logid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `itemtypes`
+  MODIFY `itmtypeid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `logs`
+  MODIFY `log_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `mail`
+  MODIFY `mail_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `mining_data`
+  MODIFY `mine_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `modules`
+  MODIFY `module_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `newspaper_ads`
+  MODIFY `news_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `notifications`
+  MODIFY `notif_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `permissions`
+  MODIFY `perm_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `polls`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `promo_codes`
   MODIFY `promo_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `pw_recovery`
+  MODIFY `pwr_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `referals`
+  MODIFY `referalid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `reports`
+  MODIFY `report_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `settings`
+  MODIFY `setting_id` tinyint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+ALTER TABLE `shopitems`
+  MODIFY `sitemID` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `shops`
+  MODIFY `shopID` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `smelt_inprogress`
+  MODIFY `sip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `smelt_recipes`
+  MODIFY `smelt_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `town`
+  MODIFY `town_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+ALTER TABLE `userdata`
+  MODIFY `userid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `users`
+  MODIFY `userid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `vips_accepted`
+  MODIFY `vipID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `vip_listing`
+  MODIFY `vip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
   
-  ALTER TABLE `estates` ADD `house_level` INT(11) UNSIGNED NULL DEFAULT '1' AFTER `house_will`;
-  ALTER TABLE `users` ADD `last_verified` INT(11) UNSIGNED NOT NULL AFTER `theme`;
-  ALTER TABLE `users` ADD `need_verify` TINYINT NOT NULL AFTER `last_verified`;
-  INSERT INTO `estates` (`house_id`, `house_name`, `house_price`, `house_will`, `house_level`) VALUES (1, 'Default House', 100, 100, 1);
-  INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'reCaptcha_public', 'PleaseUpdate'), (NULL, 'reCaptcha_private', 'PleaseUpdate');
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'energy_refill_cost', '10');
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'will_refill_cost', '5');
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'brave_refill_cost', '10');
+INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'iq_per_sec', '5');
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

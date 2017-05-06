@@ -1,10 +1,17 @@
 <?php
+/*
+	File:		notifications.php
+	Created: 	4/5/2016 at 12:20AM Eastern Time
+	Info: 		Allows players to view their notifications.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 if (!isset($_GET['delete']))
 {
     $_GET['delete'] = 0;
 }
-$_GET['delete'] = abs((int) $_GET['delete']);
+$_GET['delete'] = abs($_GET['delete']);
 if ($_GET['delete'] > 0)
 {
     $d_c =
@@ -15,7 +22,7 @@ if ($_GET['delete'] > 0)
                      AND `notif_user` = {$userid}");
     if ($db->fetch_single($d_c) == 0)
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['NOTIF_DELETE_SINGLE_FAIL']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['NOTIF_DELETE_SINGLE_FAIL'],false);
 	}
     else
     {
@@ -23,7 +30,7 @@ if ($_GET['delete'] > 0)
                 "DELETE FROM `notifications`
                  WHERE `notif_id` = {$_GET['delete']}
                  AND `notif_user` = {$userid}");
-        alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['NOTIF_DELETE_SINGLE']}");
+        alert('success',$lang['ERROR_SUCCESS'],$lang['NOTIF_DELETE_SINGLE'],false);
     }
     $db->free_result($d_c);
 }

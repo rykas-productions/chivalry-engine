@@ -1,17 +1,25 @@
 <?php
+/*
+	File:		globals.php
+	Created: 	4/5/2016 at 12:05AM Eastern Time
+	Info: 		Calls all internal files/settings for when a user
+				is logged in.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false)
 {
     exit;
 }
 session_name('CENGINE');
 session_start();
-header('Content-Type: event-stream');
-
+$time = time();
+header('X-Frame-Options: SAMEORIGIN');
 if(isset($_POST['lang']))
 {
 	$lang = $_POST['lang'];
 	$_SESSION['lang'] = $lang;
-	setcookie('lang', $lang, time() + (3600 * 24 * 30));
+	setcookie('lang', $lang, $time + (3600 * 24 * 30));
 }
 else if(isset($_SESSION['lang']))
 {
@@ -39,6 +47,9 @@ switch ($lang)
 	case 'es':
 		$lang_file = 'es.php';
 		break;
+	case 'danish':
+		$lang_file = 'danish.php';
+		break;
 	default:
 		$lang_file = 'en_us.php';
  
@@ -50,25 +61,6 @@ if (!isset($_SESSION['started']))
     $_SESSION['started'] = true;
 }
 ob_start();
-if (function_exists("get_magic_quotes_gpc") == false)
-{
-
-    function get_magic_quotes_gpc()
-    {
-        return 0;
-    }
-}
-if (get_magic_quotes_gpc() == 0)
-{
-    foreach ($_POST as $k => $v)
-    {
-        $_POST[$k] = addslashes($v);
-    }
-    foreach ($_GET as $k => $v)
-    {
-        $_GET[$k] = addslashes($v);
-    }
-}
 require "lib/basic_error_handler.php";
 require "lib/dev_help.php";
 set_error_handler('error_php');
@@ -80,12 +72,12 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0)
     header("Location: {$login_url}");
     exit;
 }
-if(isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > 900))
+if(isset($_SESSION['last_active']) && ($time - $_SESSION['last_active'] > 1800))
 {
 	header("Location: logout.php");
 	exit;
 }
-$_SESSION['last_active'] = time();
+$_SESSION['last_active'] = $time;
 $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
 require "header.php";
 include "config.php";
@@ -160,11 +152,16 @@ else
 $ir = $db->fetch_row($is);
 if ($ir['force_logout'] != 'false')
 {
-    $db->query(
-            "UPDATE `users`
-    			SET `force_logout` = 'false'
-    			WHERE `userid` = {$userid}");
+    $db->query("UPDATE `users` SET `force_logout` = 'false' WHERE `userid` = {$userid}");
     session_unset();
+    session_destroy();
+    $login_url = "login.php";
+    header("Location: {$login_url}");
+    exit;
+}
+if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SESSION['last_login']))
+{
+	session_unset();
     session_destroy();
     $login_url = "login.php";
     header("Location: {$login_url}");
@@ -197,4 +194,13 @@ if (isset($nohdr) == false || !$nohdr)
 foreach (glob("crons/*.php") as $filename) 
 { 
     include $filename; 
-} 
+}
+$get = $db->query("SELECT `sip_recipe` FROM `smelt_inprogress` WHERE `sip_user` = {$userid} AND `sip_time` < {$time}");
+if($db->num_rows($get)) 
+{
+    $r = $db->fetch_single($get);
+	$r2 = $db->fetch_row($db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r}"));
+    $api->UserGiveItem($userid,$r2['smelt_output'],$r2['smelt_qty_output']);
+    $api->GameAddNotification($userid, "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
+    $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$userid} AND `sip_time` < {$time}");
+}

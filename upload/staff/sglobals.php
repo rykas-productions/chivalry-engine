@@ -4,7 +4,7 @@
 	Created: 6/21/2016 at 2:02PM Eastern Time
 	Info: Functions for staff-only actions.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false)
 {
@@ -12,7 +12,8 @@ if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false)
 }
 session_name('CENGINE');
 session_start();
-header('Cache-control: private'); // IE 6 FIX
+$time = time();
+header('X-Frame-Options: SAMEORIGIN');
 
 if(isset($_GET['lang']))
 {
@@ -46,6 +47,9 @@ switch ($lang)
 	case 'es':
 		$lang_file = 'es.php';
 		break;
+	case 'danish':
+		$lang_file = 'danish.php';
+		break;
 	default:
 		$lang_file = 'en_us.php';
  
@@ -57,25 +61,6 @@ if (!isset($_SESSION['started']))
     $_SESSION['started'] = true;
 }
 ob_start();
-if (function_exists("get_magic_quotes_gpc") == false)
-{
-
-    function get_magic_quotes_gpc()
-    {
-        return 0;
-    }
-}
-if (get_magic_quotes_gpc() == 0)
-{
-    foreach ($_POST as $k => $v)
-    {
-        $_POST[$k] = addslashes($v);
-    }
-    foreach ($_GET as $k => $v)
-    {
-        $_GET[$k] = addslashes($v);
-    }
-}
 require "../lib/basic_error_handler.php";
 require "../lib/dev_help.php";
 set_error_handler('error_php');
@@ -87,9 +72,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0)
     header("Location: {$login_url}");
     exit;
 }
-if(isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > 900))
+if(isset($_SESSION['last_active']) && (time() - $_SESSION['last_active'] > 1800))
 {
-	header("Location: logout.php");
+	header("Location: ../logout.php");
 	exit;
 }
 $_SESSION['last_active'] = time();
@@ -146,6 +131,14 @@ if ($ir['force_logout'] != 'false')
 {
     $db->query("UPDATE `users` SET `force_logout` = 'false' WHERE `userid` = {$userid}");
     session_unset();
+    session_destroy();
+    $login_url = "../login.php";
+    header("Location: {$login_url}");
+    exit;
+}
+if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SESSION['last_login']))
+{
+	session_unset();
     session_destroy();
     $login_url = "../login.php";
     header("Location: {$login_url}");

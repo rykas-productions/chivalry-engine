@@ -1,4 +1,13 @@
 <?php
+/*
+	File:		itemmarket.php
+	Created: 	4/5/2016 at 12:15AM Eastern Time
+	Info: 		Lists items placed on the market by other players,
+				allows players to buy/gift those items, and sell
+				their own items.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 echo "<h3>{$lang['IMARKET_TITLE']}</h3>";
 if (!isset($_GET['action']))
@@ -28,8 +37,7 @@ function index()
 	global $db,$lang,$h,$userid,$api;
 	echo "
 	<br />
-	<div class='table-resposive'>
-	<table class='table table-bordered table-hover table-striped'>
+	<table class='table table-responsive table-bordered table-hover table-striped'>
 		<tr>
 			<th>{$lang['IMARKET_LISTING_TH1']}</th>
 			<th>{$lang['IMARKET_LISTING_TH2']}</th>
@@ -85,13 +93,14 @@ function index()
                     "[<a href='?action=buy&ID={$r['imID']}'>{$lang['IMARKET_LISTING_TD2']}</a>]
                     [<a href='?action=gift&ID={$r['imID']}'>{$lang['IMARKET_LISTING_TD3']}</a>]";
         }
+		$r['itmdesc']=htmlentities($r['itmdesc'],ENT_QUOTES);
 		echo "
 		<tr>
 			<td>
 				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 			</td>
 			<td>
-				<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' title='{$r['itmdesc']}'>{$r['itmname']}</a>";
+				<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>{$r['itmname']}</a>";
 				if ($r['imQTY'] > 1)
 				{
 					echo " x {$r['imQTY']}";
@@ -109,15 +118,15 @@ function index()
 		</tr>";
 	}
     $db->free_result($q);
-	echo "</table></div>";
+	echo "</table>";
 }
 function remove()
 {
 	global $db,$ir,$userid,$h,$lang,$api;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
 	if (empty($_GET['ID']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_REMOVE_ERROR1']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_REMOVE_ERROR1'],true,'itemmarket.php');
         die($h->endpage());
     }
 	$q = $db->query("SELECT `imITEM`, `imQTY`, `imADDER`, `imID`, `itmname`
@@ -126,7 +135,7 @@ function remove()
                     AND `im`.`imADDER` = {$userid}");
 	if ($db->num_rows($q) == 0)
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_REMOVE_ERROR2']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_REMOVE_ERROR2'],true,'itemmarket.php');
         die($h->endpage());
     }
 	$r = $db->fetch_row($q);
@@ -134,13 +143,13 @@ function remove()
 	$db->query("DELETE FROM `itemmarket` WHERE `imID` = {$_GET['ID']}");
 	$imr_log = $db->escape("Removed {$r['itmname']} x {$r['imQTY']} from the item market.");
 	$api->SystemLogsAdd($userid,'imarket',$imr_log);
-	alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['IMARKET_REMOVE_SUCCESS']}");
+	alert('success',$lang['ERROR_SUCCESS'],$lang['IMARKET_REMOVE_SUCCESS'],true,'itemmarket.php');
 }
 function buy()
 {
 	global $db,$ir,$userid,$h,$lang,$api;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
-    $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs(intval($_POST['QTY'])) : '';
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
+    $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
 	if ($_GET['ID'] && !$_POST['QTY'])
     {
         $q = $db->query("SELECT `imADDER`, `imCURRENCY`, `imPRICE`, `imQTY`,
@@ -150,7 +159,7 @@ function buy()
         if ($db->num_rows($q) == 0)
         {
             $db->free_result($q);
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_ERROR1']}");
+            alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_ERROR1'],true,'itemmarket.php');
             die($h->endpage());
         }
         $r = $db->fetch_row($q);
@@ -182,7 +191,7 @@ function buy()
     }
 	elseif (!$_GET['ID'])
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_REMOVE_ERROR1']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_REMOVE_ERROR1'],true,'itemmarket.php');
     }
 	else
 	{
@@ -193,19 +202,24 @@ function buy()
 			if (!$db->num_rows($q))
 			{
 				$db->free_result($q);
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_ERROR1']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_ERROR1']);
 				die($h->endpage());
 			}
 			$r = $db->fetch_row($q);
 			$db->free_result($q);
 			if (!isset($_POST['verf']) || !verify_csrf_code("imbuy_{$_GET['ID']}", stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			if ($r['imADDER'] == $userid)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_SUB_ERROR1']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_SUB_ERROR1'],true,'itemmarket.php');
+				die($h->endpage());
+			}
+			if ($api->SystemCheckUsersIPs($userid,$r['imADDER']))
+			{
+				alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_SUB_ERROR4'],true,'itemmarket.php');
 				die($h->endpage());
 			}
 			$curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
@@ -213,12 +227,12 @@ function buy()
 			$final_price = $api->SystemReturnTax($r['imPRICE']*$_POST['QTY']);
 			if ($final_price > $ir[$curr])
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_SUB_ERROR2']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_SUB_ERROR2']);
 				die($h->endpage());
 			}
 			if ($_POST['QTY'] > $r['imQTY'])
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_SUB_ERROR3']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_SUB_ERROR3']);
 				die($h->endpage());
 			}
 			item_add($userid, $r['imITEM'], $_POST['QTY']);
@@ -234,7 +248,7 @@ function buy()
 			$db->query("UPDATE `users` SET `$curr` = `$curr` + {$final_price} WHERE `userid` = {$r['imADDER']}");
 			notification_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
 			$imb_log = $db->escape("Bought {$r['itmname']} x{$_POST['QTY']} from the item market for " . number_format($final_price) . " {$curre} from user ID {$r['imADDER']}");
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['IMARKET_BUY_SUB_SUCCESS']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['IMARKET_BUY_SUB_SUCCESS'],true,'itemmarket.php');
 			$api->SystemLogsAdd($userid,'imarket',$imb_log);
 			if ($r['imCURRENCY'] == 'primary')
 			{
@@ -249,31 +263,31 @@ function buy()
 function gift()
 {
 	global $db,$ir,$userid,$h,$lang,$api;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
-	$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : '';
-	$_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs(intval($_POST['QTY'])) : '';
-	$_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs(intval($_POST['ID'])) : '';
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
+	$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
+	$_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
+	$_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs($_POST['ID']) : '';
 	if (!$_GET['ID'])
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_REMOVE_ERROR1']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_REMOVE_ERROR1'],true,'itemmarket.php');
     }
 	elseif (!empty($_POST['user']))
 	{
 		if ((empty($_POST['ID']) || empty($_POST['QTY'])))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_REMOVE_ERROR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_REMOVE_ERROR1']);
 			die($h->endpage());
 		}
 		if (!isset($_POST['verf']) || !verify_csrf_code("imgift_{$_GET['ID']}", stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$query_user_exist = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['user']}");
 		if ($db->fetch_single($query_user_exist) == 0)
 		{
 			$db->free_result($query_user_exist);
-			alert('danger',"{$lang["ERROR_NONUSER"]}","{$lang['IMARKET_GIFT_SUB_ERROR1']}");
+			alert('danger',$lang["ERROR_NONUSER"],$lang['IMARKET_GIFT_SUB_ERROR1']);
 			die($h->endpage());
 		}
 		$db->free_result($query_user_exist);
@@ -283,32 +297,42 @@ function gift()
 						WHERE `im`.`imID` = {$_POST['ID']}");
 		if ($db->num_rows($q) == 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_REMOVE_ERROR2']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_REMOVE_ERROR2'],true,'itemmarket.php');
 			die($h->endpage());
 		}
 		$r = $db->fetch_row($q);
 		$db->free_result($q);
 		if ($r['imADDER'] == $userid)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_SUB_ERROR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_SUB_ERROR1'],true,'itemmarket.php');
 			die($h->endpage());
+		}
+		if ($api->SystemCheckUsersIPs($userid,$r['imADDER']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_SUB_ERROR4'],true,'itemmarket.php');
+			die($h->endpage());
+		}
+		if ($api->SystemCheckUsersIPs($userid,$_POST['user']))
+		{
+				alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_GIFT_SUB_ERROR3'],true,'itemmarket.php');
+				die($h->endpage());
 		}
 		$curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
 		$curre = ($r['imCURRENCY'] == 'primary') ? 'Primary Currency' : 'Secondary Currency';
 		$final_price = $api->SystemReturnTax($r['imPRICE']*$_POST['QTY']);
 		if ($final_price > $ir[$curr])
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_SUB_ERROR2']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_SUB_ERROR2']);
 			die($h->endpage());
 		}
 		if ($_POST['QTY'] > $r['imQTY'])
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_SUB_ERROR3']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_SUB_ERROR3']);
 			die($h->endpage());
 		}
 		if ($_POST['user'] == $r['imADDER'])
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_GIFT_SUB_ERROR2']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_GIFT_SUB_ERROR2']);
 			die($h->endpage());
 		}
 		item_add($_POST['user'], $r['imITEM'], $_POST['QTY']);
@@ -328,7 +352,7 @@ function gift()
 		notification_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
 		$imb_log = $db->escape("Bought {$r['itmname']} x{$_POST['QTY']} from the item market for " . number_format($final_price) . " {$curre} from User ID {$r['imADDER']} and gifted to User ID {$_POST['user']}");
 		$api->SystemLogsAdd($userid,'imarket',$imb_log);
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['IMARKET_GIFT_SUB_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['IMARKET_GIFT_SUB_SUCCESS'],true,'index.php');
 		if ($r['imCURRENCY'] == 'primary')
 		{
 			$api->SystemCreditTax($api->SystemReturnTaxOnly($final_price),1,-1);
@@ -348,7 +372,7 @@ function gift()
         if ($db->num_rows($q) == 0)
         {
             $db->free_result($q);
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_BUY_ERROR1']}");
+            alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_BUY_ERROR1'],true,'itemmarket.php');
             die($h->endpage());
         }
         $r = $db->fetch_row($q);
@@ -391,30 +415,30 @@ function gift()
 function add()
 {
 	global $lang,$h,$userid,$db,$h,$api;
-	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
-	$_POST['price'] = (isset($_POST['price']) && is_numeric($_POST['price'])) ? abs(intval($_POST['price'])) : '';
-	$_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs(intval($_POST['QTY'])) : '';
+	$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
+	$_POST['price'] = (isset($_POST['price']) && is_numeric($_POST['price'])) ? abs($_POST['price']) : '';
+	$_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
 	$_POST['currency'] = (isset($_POST['currency']) && in_array($_POST['currency'], array('primary', 'secondary'))) ? $_POST['currency'] : 'primary';
 	if (empty($_GET['ID']))
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_ADD_ERROR1']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_ADD_ERROR1'],true,'inventory.php');
 		die($h->endpage());
 	}
-	if ($_POST['price'] && $_POST['QTY'] && $_GET['ID'])
-	{
-		if (!isset($_POST['verf']) || !verify_csrf_code("imgift_{$_GET['ID']}", stripslashes($_POST['verf'])))
-		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
-			die($h->endpage());
-		}
-		$q = $db->query("SELECT `inv_qty`, `inv_itemid`, `inv_id`, `itmname`
+	$q = $db->query("SELECT `inv_qty`, `inv_itemid`, `inv_id`, `itmname`, `itmbuyprice`
 						FROM `inventory` AS `iv` INNER JOIN `items` AS `i`
 						ON `iv`.`inv_itemid` = `i`.`itmid` WHERE `inv_id` = {$_GET['ID']}
 						AND `inv_userid` = $userid");
+	if ($_POST['price'] && $_POST['QTY'] && $_GET['ID'])
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code("imadd_{$_GET['ID']}", stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
 		if ($db->num_rows($q) == 0)
 		{
 			$db->free_result($q);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_ADD_ERROR2']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_ADD_ERROR2'],true,'inventory.php');
 			die($h->endpage());
 		}
 		else
@@ -423,7 +447,7 @@ function add()
 			$db->free_result($q);
 			if ($r['inv_qty'] < $_POST['QTY'])
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IMARKET_ADD_ERROR3']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['IMARKET_ADD_ERROR3']);
 				die($h->endpage());
 			}
 			$checkq = $db->query("SELECT `imID` FROM `itemmarket` WHERE  `imITEM` = 
@@ -444,17 +468,19 @@ function add()
 			item_remove($userid, $r['inv_itemid'], $_POST['QTY']);
 			$imadd_log = $db->escape("Listed {$r['itmname']} x{$_POST['QTY']} on the item market for {$_POST['price']} {$_POST['currency']}");
 			$api->SystemLogsAdd($userid,'imarket',$imadd_log);
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['IMARKET_ADD_SUB_SUCCESS']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['IMARKET_ADD_SUB_SUCCESS'],true,'itemmarket.php');
 		}
 	}
 	else
 	{
-		$csrf=request_csrf_html("imgift_{$_GET['ID']}");
+		$r = $db->fetch_row($q);
+		$db->free_result($q);
+		$csrf=request_csrf_html("imadd_{$_GET['ID']}");
 		echo "<form method='post' action='?action=add&ID={$_GET['ID']}'>
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['IMARKET_ADD_TITLE']}
+					{$lang['IMARKET_ADD_TITLE']} {$api->SystemItemIDtoName($r['inv_itemid'])} {$lang['IMARKET_ADD_TITLE1']}
 				</th>
 			</tr>
 			<tr>
@@ -462,7 +488,7 @@ function add()
 					{$lang['SHOPS_SHOP_TD_1']}
 				</th>
 				<td>
-					<input type='number' min='1' required='1' class='form-control' name='QTY' value=''>
+					<input type='number' min='1' required='1' class='form-control' name='QTY' value='{$r['inv_qty']}'>
 				</th>
 			</tr>
 			<tr>
@@ -470,7 +496,7 @@ function add()
 					{$lang['IMARKET_ADD_TH2']}
 				</th>
 				<td>
-					<input  type='number' min='1' required='1' class='form-control' name='price' value='0' />
+					<input  type='number' min='1' required='1' class='form-control' name='price' value='{$r['itmbuyprice']}' />
 				</td>
 			</tr>
 			<tr>

@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_rules.php
+	Created: 4/4/2017 at 7:04PM Eastern Time
+	Info: Staff panel for creating/editing/deleting in-game rules.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require('sglobals.php');
 if (!isset($_GET['action']))
 {
@@ -36,14 +43,14 @@ function addrule()
 	{
 		if (empty($_POST['rule']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_RULES_ADD_SUBFAIL']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_RULES_ADD_SUBFAIL']);
 			die($h->endpage());
 		}
 		else
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_addrule', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			$time=time();

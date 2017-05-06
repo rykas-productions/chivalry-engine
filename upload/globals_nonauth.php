@@ -1,22 +1,30 @@
 <?php
+/*
+	File:		globals_nonauth.php
+	Created: 	4/5/2016 at 12:05AM Eastern Time
+	Info: 		Calls all internal files/settings for when a user
+				is not logged in.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 if (strpos($_SERVER['PHP_SELF'], "globals_nonauth.php") !== false)
 {
     exit;
 }
 session_name('CENGINE');
 @session_start();
-if(isSet($_POST['lang']))
+header('X-Frame-Options: SAMEORIGIN');
+if(isset($_POST['lang']))
 {
 	$lang = $_POST['lang'];
-	// register the session and set the cookie
 	$_SESSION['lang'] = $lang;
 	setcookie('lang', $lang, time() + (3600 * 24 * 30));
 }
-else if(isSet($_SESSION['lang']))
+else if(isset($_SESSION['lang']))
 {
 	$lang = $_SESSION['lang'];
 }
-else if(isSet($_COOKIE['lang']))
+else if(isset($_COOKIE['lang']))
 {
 	$lang = $_COOKIE['lang'];
 }
@@ -38,6 +46,9 @@ switch ($lang)
 	case 'es':
 		$lang_file = 'es.php';
 		break;
+	case 'danish':
+		$lang_file = 'danish.php';
+		break;
 	default:
 		$lang_file = 'en_us.php';
  
@@ -49,25 +60,6 @@ if (!isset($_SESSION['started']))
     $_SESSION['started'] = true;
 }
 ob_start();
-if (function_exists("get_magic_quotes_gpc") == false)
-{
-
-    function get_magic_quotes_gpc()
-    {
-        return 0;
-    }
-}
-if (get_magic_quotes_gpc() == 0)
-{
-    foreach ($_POST as $k => $v)
-    {
-        $_POST[$k] = addslashes($v);
-    }
-    foreach ($_GET as $k => $v)
-    {
-        $_GET[$k] = addslashes($v);
-    }
-}
 require "lib/basic_error_handler.php";
 set_error_handler('error_php');
 include "config.php";

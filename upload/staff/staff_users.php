@@ -4,7 +4,7 @@
 	Created: 6/1/2016 at 6:06PM Eastern Time
 	Info: Allows admins to interact with users of the game.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 require('sglobals.php');
 echo"<h3>Users</h3>";
@@ -39,14 +39,18 @@ function createuser()
 	if (!isset($_POST['username']))
 	{
 		$csrf=request_csrf_html('staff_user_1');
-		echo "<hr /><h4>Creating a User</h4><hr />";
-		echo "Fill out the form!";
+		echo "<hr /><h4>{$lang['SCU_CU']}</h4><hr />";
 		echo "
 			<table class='table table-bordered'>
 				<form method='post'>
 					<tr>
+						<th colspan='2'>
+							{$lang['SCU_INFO']}
+						</th>
+					</tr>
+					<tr>
 						<th>
-							Username
+							{$lang["REG_USERNAME"]}
 						</th>
 						<td>
 							<input type='text' id='username' required='1' class='form-control' minlength='3' name='username' maxlength='20'>
@@ -54,7 +58,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Password
+							{$lang["REG_PW"]}
 						</th>
 						<td>
 							<input type='password' id='pw1' required='1' class='form-control' name='password'>
@@ -62,7 +66,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Confirm Password
+							{$lang["REG_CPW"]}
 						</th>
 						<td>
 							<input type='password' id='pw2' required='1' class='form-control' name='cpw'>
@@ -70,7 +74,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Email
+							{$lang["REG_EMAIL"]}
 						</th>
 						<td>
 							<input type='email' id='email' required='1' class='form-control' name='email'>
@@ -78,27 +82,27 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							User Level
+							{$lang['SCU_UL']}
 						</th>
 						<td>
 							<select name='userlevel' class='form-control' required='1' type='dropdown'>
-								<option>NPC</option>
-								<option>Member</option>
-								<option>Admin</option>
-								<option>Forum Moderator</option>
-								<option>Assistant</option>
-								<option>Web Developer</option>
+								<option>{$lang['SCU_UL1']}</option>
+								<option>{$lang['SCU_UL2']}</option>
+								<option>{$lang['SCU_UL3']}</option>
+								<option>{$lang['SCU_UL4']}</option>
+								<option>{$lang['SCU_UL5']}</option>
+								<option>{$lang['SCU_UL6']}</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
-						<td colspan='2'>
-							<b>Basic Information</b>
-						</td>
+						<th colspan='2'>
+							<b>{$lang['SCU_BI']}</b>
+						</th>
 					</tr>
 					<tr>
 						<th>
-							Level
+							{$lang['USERLIST_ORDER3']}
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='1' name='level' value='1'>
@@ -106,30 +110,30 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Gender
+							{$lang['USERLIST_TH1']}
 						</th>
 						<td>
 							<select name='gender' class='form-control' required='1' type='dropdown'>
-								<option>Male</option>
-								<option>Female</option>
+								<option>{$lang['SCU_SEX']}</option>
+								<option>{$lang['SCU_SEX1']}</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							Class
+							{$lang['INDEX_CLASS']}
 						</th>
 						<td>
 							<select name='class' id='class' class='form-control' required='1' type='dropdown'>
-								<option value='Warrior'>Warrior</option>
-								<option value='Rogue'>Rogue</option>
-								<option value='Defender'>Defender</option>
+								<option value='Warrior'>{$lang['SCU_CLASS']}</option>
+								<option value='Rogue'>{$lang['SCU_CLASS1']}</option>
+								<option value='Defender'>{$lang['SCU_CLASS2']}</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							Primary Currency
+							{$lang['INDEX_PRIMCURR']}
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' name='prim_currency' value='100'>
@@ -137,7 +141,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Secondary Currency
+							{$lang['INDEX_SECCURR']}
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' value='0' name='sec_currency'>
@@ -145,7 +149,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							VIP Days
+							{$lang['INDEX_VIP']}
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' value='0' name='vip_days'>
@@ -153,12 +157,12 @@ function createuser()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<b>Stats</b>
+							<b>{$lang['SCU_STAT']}</b>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							Strength
+							{$lang['GEN_STR']}
 						</th>
 						<td>
 							<input type='number' required='1' id='strength' class='form-control' min='10' name='strength' value='1100'>
@@ -166,7 +170,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Agility
+							{$lang['GEN_AGL']}
 						</th>
 						<td>
 							<input type='number' required='1' id='agility' class='form-control' min='10' name='agility' value='1000'>
@@ -174,7 +178,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Guard
+							{$lang['GEN_GRD']}
 						</th>
 						<td>
 							<input type='number' required='1' id='guard' class='form-control' min='10' name='guard' value='900'>
@@ -182,7 +186,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Labor
+							{$lang['GEN_LAB']}
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='10' name='labor' value='1000'>
@@ -190,7 +194,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							IQ
+							{$lang['GEN_IQ']}
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='10' name='iq' value='1000'>
@@ -198,12 +202,12 @@ function createuser()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<b>Other</b>
+							<b>{$lang['PR_CAT_7']}</b>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							City
+							{$lang['STAFF_TRAVEL_DELTOWN_TH1']}
 						</th>
 						<td>
 							" . location_dropdown("city") . "
@@ -211,7 +215,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Primary Weapon
+							{$lang['EQUIP_WEAPON_SLOT1']}
 						</th>
 						<td>
 							" . weapon_dropdown("primary_weapon",0) . "
@@ -219,7 +223,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Secondary Weapon
+							{$lang['EQUIP_WEAPON_SLOT2']}
 						</th>
 						<td>
 							" . weapon_dropdown("secondary_weapon",0) . "
@@ -227,7 +231,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Armor
+							{$lang['EQUIP_WEAPON_SLOT3']}
 						</th>
 						<td>
 							" . armor_dropdown("armor",0) . "
@@ -235,7 +239,7 @@ function createuser()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-default' value='Create User!' />
+							<input type='submit' class='btn btn-default' value='{$lang['SCU_BTN']}' />
 						</td>
 					</tr>
         	{$csrf}
@@ -246,7 +250,7 @@ function createuser()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_user_1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$username = (isset($_POST['username']) && is_string($_POST['username'])) ? stripslashes($_POST['username']) : '';
@@ -270,31 +274,27 @@ function createuser()
 		
 		if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email'])))
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> The email you entered is invalid or does not exist.</div>";
-			$h->endpage();
-			exit;
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR']);
+			die($h->endpage());
 		}
 		if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female'))
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You specified an invalid gender. A user can only be male or female.</div>";
-			$h->endpage();
-			exit;
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR1']);
+			die($h->endpage());
 		}
 		if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender'))
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You specified an invalid class. A user can only be a warrior, rogue, or a defender.</div>";
-			$h->endpage();
-			exit;
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR2']);
+			die($h->endpage());
 		}
 		if (!isset($_POST['userlevel']) || ($_POST['userlevel'] != 'NPC' && $_POST['userlevel'] != 'Member' && $_POST['userlevel'] != 'Admin' && $_POST['userlevel'] != 'Forum Moderator' && $_POST['userlevel'] != 'Assistant' && $_POST['userlevel'] != 'Web Developer'))
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You specified an invalid user level. A user can only be an NPC, Admin, Member, Forum Moderator, Assistant, or Web Developer.</div>";
-			$h->endpage();
-			exit;
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR3']);
+			die($h->endpage());
 		}
 		if (((strlen($username) > 20) OR (strlen($username) < 3)))
 		{
-			alert('danger',$lang['ERROR_LENGTH'],"The name you chose is either too long or too short.");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR4']);
 			die($h->endpage());
 		}
 		if ($equip_prim > 0)
@@ -302,9 +302,8 @@ function createuser()
 			$pwq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
 			if ($db->fetch_single($pwq) == 0)
 			{
-				echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> The weapon you chose either does not exist, or cannot be equipped as a weapon.</div>";
-				$h->endpage();
-				exit;
+				alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR5']);
+				die($h->endpage());
 			}
 		}
 		if ($equip_sec > 0)
@@ -312,9 +311,8 @@ function createuser()
 			$swq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
 			if ($db->fetch_single($swq) == 0)
 			{
-				echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> The weapon you chose either does not exist, or cannot be equipped as a weapon.</div>";
-				$h->endpage();
-				exit;
+				alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR5']);
+				die($h->endpage());
 			}
 		}
 		if ($equip_armor > 0)
@@ -322,51 +320,45 @@ function createuser()
 			$aq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
 			if ($db->fetch_single($aq) == 0)
 			{
-				echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> The armor you chose either does not exist, or cannot be equipped as a armor.</div>";
-				$h->endpage();
-				exit;
+				alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR6']);
+				die($h->endpage());
 			}
 		}
 		$CityQuery=$db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
 		if ($db->fetch_single($CityQuery) == 0)
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> The town you chose does not exist.</div>";
-			$h->endpage();
-			exit;
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR7']);
+			die($h->endpage());
 		}
 		$e_gender = $db->escape(stripslashes($_POST['gender']));
 		$e_class = $db->escape(stripslashes($_POST['class']));
 		$e_username = $db->escape($username);
 		$e_email = $db->escape(stripslashes($_POST['email']));
-		$q =
-            $db->query(
-                    "SELECT COUNT(`userid`)
-                     FROM `users`
-                     WHERE `username` = '{$e_username}'");
-		$q2 =
-            $db->query(
-                    "SELECT COUNT(`userid`)
-    				 FROM `users`
-    				 WHERE `email` = '{$e_email}'");
+		$q = $db->query("SELECT COUNT(`userid`) FROM `users`  WHERE `username` = '{$e_username}'");
+		$q2 = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'");
 		$u_check = $db->fetch_single($q);
 		$e_check = $db->fetch_single($q2);
 		$db->free_result($q);
 		$db->free_result($q2);
 		if ($u_check > 0)
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> Username in use. Please go back and try again?</div>";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR8']);
+			die($h->endpage());
 		}
 		else if ($e_check > 0)
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> Email in use. Please go back and enter a new email address.</div>";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR9']);
+			die($h->endpage());
 		}
 		else if (empty($pw) || empty($pw2))
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> You must enter a password and confirm it.</div>";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR10']);
+			die($h->endpage());
 		}
 		else if ($pw != $pw2)
 		{
-			echo "<div class='alert alert-danger' role='alert'><strong>Error!</strong> Passwords did not match. Go back and try again.</div>";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR11']);
+			die($h->endpage());
 		}
 		else
 		{
@@ -391,7 +383,7 @@ function createuser()
 			 $db->query("INSERT INTO `userstats` VALUES($i, {$Strength}, {$Agility}, {$Guard}, {$IQ}, {$Labor})");
 			 $db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
 			$db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
-			echo "<div class='alert alert-success' role='alert'><strong>Success!</strong> You have successfully created a user!</div>";
+			alert('success',$lang['ERROR_SUCCESS'],$lang['SCU_SUC'],true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
 		}
 	}
@@ -407,13 +399,13 @@ function edituser()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
 		if (empty($_POST['user']))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_USERS_EDIT_EMPTY']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_USERS_EDIT_EMPTY']);
 			die($h->endpage());
 		}
 		$d =  $db->query("SELECT `i`.*, `d`.*, `username`, 
@@ -431,7 +423,7 @@ function edituser()
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['STAFF_USERS_EDIT_DND']}");
+			alert('danger',$lang['ERROR_NONUSER'],$lang['STAFF_USERS_EDIT_DND']);
 			die($h->endpage());
 		}
 		$itemi = $db->fetch_row($d);
@@ -540,7 +532,7 @@ function edituser()
 					{$lang['STAFF_USERS_EDIT_FORM_ESTATE']}
 				</th>
 				<td>
-					" . house2_dropdown("maxwill", $itemi['maxwill']) . "
+					" . estate2_dropdown("maxwill", $itemi['maxwill']) . "
 				</td>
 			</tr>
 			<tr>
@@ -577,7 +569,7 @@ function edituser()
 					{$lang['GEN_LAB']}
 				</th>
 				<td>
-					<input type='number' min='1' class='form-control' required='1' name='labour' value='{$itemi['labor']}' />
+					<input type='number' min='1' class='form-control' required='1' name='labor' value='{$itemi['labor']}' />
 				</td>
 			</tr>
 			<tr>
@@ -590,12 +582,12 @@ function edituser()
 			</tr>
 			<tr>
 				<th colspan='2'>
-					Other
+					{$lang['SCU_OTHER']}
 				</th>
 			</tr>
 			<tr>
 				<th>
-					City
+					{$lang['STAFF_TRAVEL_DELTOWN_TH1']}
 				</th>
 				<td>
 					" . location_dropdown("city", $itemi['location']) . "
@@ -603,7 +595,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Primary Weapon
+					{$lang['EQUIP_WEAPON_SLOT1']}
 				</th>
 				<td>
 					" . weapon_dropdown("primary_weapon",$itemi['equip_primary']) . "
@@ -611,7 +603,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Secondary Weapon
+					{$lang['EQUIP_WEAPON_SLOT2']}
 				</th>
 				<td>
 					" . weapon_dropdown("secondary_weapon",$itemi['equip_secondary']) . "
@@ -619,7 +611,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Armor
+					{$lang['EQUIP_WEAPON_SLOT3']}
 				</th>
 				<td>
 					" . armor_dropdown("armor",$itemi['equip_armor']) . "
@@ -627,7 +619,7 @@ function edituser()
 			</tr>
 		</table>
     	{$csrf}
-    	<input class='btn btn-default' type='submit' value='Edit User' />
+    	<input class='btn btn-default' type='submit' value='{$lang['SEU_BTN']}' />
     </form>
        ";
 	}
@@ -635,7 +627,7 @@ function edituser()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username']) && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
@@ -662,35 +654,35 @@ function edituser()
 		
 		if (empty($username) || empty($email))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_MISSINGSTUFF']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_MISSINGSTUFF']);
 			die($h->endpage());
 		}
 		$u_exists = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$user}");
 		if ($db->num_rows($u_exists) == 0)
 		{
 			$db->free_result($u_exists);
-			alert('danger',"{$lang['ERROR_NONUSER']}","{$lang['STAFF_USERS_EDIT_DND']}");
+			alert('danger',$lang['ERROR_NONUSER'],$lang['STAFF_USERS_EDIT_DND']);
 			die($h->endpage());
 		}
 		$h_exists = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$maxwill}");
 		if ($db->fetch_single($h_exists) == 0)
 		{
 			$db->free_result($h_exists);
-			alert("danger","{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_HBAD']}");
+			alert("danger",$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_HBAD']);
 			die($h->endpage());
 		}
 		$u = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$username}' AND `userid` != {$user}");
 		if ($db->fetch_single($u) != 0)
 		{
 			$db->free_result($u);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_UNIU']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_UNIU']);
 			die($h->endpage());
 		}
 		$e = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$email}' AND `userid` != {$user}");
 		if ($db->fetch_single($e) != 0)
 		{
 			$db->free_result($e);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_EIU']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_EIU']);
 			die($h->endpage());
 		}
 		if ($equip_prim > 0)
@@ -698,7 +690,7 @@ function edituser()
 			$pwq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
 			if ($db->fetch_single($pwq) == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_WDNE']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_WDNE']);
 				die($h->endpage());
 			}
 		}
@@ -707,7 +699,7 @@ function edituser()
 			$swq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
 			if ($db->fetch_single($swq) == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_WDNE']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_WDNE']);
 				die($h->endpage());
 			}
 		}
@@ -716,14 +708,14 @@ function edituser()
 			$aq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
 			if ($db->fetch_single($aq) == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_ADNE']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_ADNE']);
 				die($h->endpage());
 			}
 		}
 		$CityQuery=$db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
 		if ($db->fetch_single($CityQuery) == 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_EDIT_SUB_TDNE']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_TDNE']);
 			die($h->endpage());
 		}
 		$db->free_result($u);
@@ -748,7 +740,7 @@ function edituser()
 		{
 			$api->UserStatusSet($user,2,$_POST['dungeon'],$dungeonr);
 		}
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_EDIT_SUB_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_EDIT_SUB_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
 	}
 	else
@@ -865,19 +857,19 @@ function deleteuser()
 			$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser1', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			if (empty($_POST['user']) || $_POST['user'] == 1 || $_POST['user'] == $ir['userid'])
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
 				die($h->endpage());
 			}
 			$d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
 			if ($db->num_rows($d) == 0)
 			{
 				$db->free_result($d);
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
 				die($h->endpage());
 			}
 			$username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
@@ -895,10 +887,10 @@ function deleteuser()
 				</tr>
 				<tr>
 					<td>
-						<input type='submit' class='btn btn-default' name='yesorno' value='Yes' />
+						<input type='submit' class='btn btn-default' name='yesorno' value='{$lang['GEN_YES']}' />
 					</td>
 					<td>
-						<input type='submit' class='btn btn-default' name='yesorno' value='No' onclick=\"window.location='staff_users.php?action=deluser';\" />
+						<input type='submit' class='btn btn-default' name='yesorno' value='{$lang['GEN_NO']}' onclick=\"window.location='staff_users.php?action=deluser';\" />
 					</td>
 				</tr>
 			</table>
@@ -907,25 +899,25 @@ function deleteuser()
 		case 3:
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser2', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
 			$_POST['yesorno'] = (isset($_POST['yesorno']) && in_array($_POST['yesorno'], array('Yes', 'No'))) ? $_POST['yesorno'] : '';
 			if ((empty($_POST['userid']) || empty($_POST['yesorno'])) || $_POST['userid'] == 1 || $_POST['userid'] == $ir['userid'])
 			{
-				alert('danger',"{$lang['ERROR_INVALID']}","{$lang['STAFF_USERS_DEL_SUB_INVALID']}");
+				alert('danger',$lang['ERROR_INVALID'],$lang['STAFF_USERS_DEL_SUB_INVALID']);
 				die($h->endpage());
 			}
 			if ($_POST['yesorno'] == 'No')
 			{
-				alert('warning',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_DEL_SUB_FAIL']}");
+				alert('warning',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_DEL_SUB_FAIL']);
 				die($h->endpage());
 			}
 			$d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}");
 			if ($db->num_rows($d) == 0)
 			{
-				alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
 				die($h->endpage());
 			}
 			$username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
@@ -934,7 +926,7 @@ function deleteuser()
 			$db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$_POST['userid']}");
 			$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['userid']}");
 			$api->SystemLogsAdd($userid,'staff',"Deleted user {$username} [{$_POST['userid']}].");
-			alert("success","{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_DEL_SUB_SUCC']}");
+			alert("success",$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_DEL_SUB_SUCC'],true,'index.php');
 			die($h->endpage());
 			break;
 	}
@@ -947,20 +939,20 @@ function logout()
     {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_forcelogout', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
         $d = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
         if ($db->fetch_single($d) == 0)
         {
             $db->free_result($d);
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_DEL_SUB_SECERROR']}");
+            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
             die($h->endpage());
         }
         $db->free_result($d);
         $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `userid` = {$_POST['userid']}");
         $api->SystemLogsAdd($userid,'staff',"Forced User ID {$_POST['userid']} to logout.");
-		alert("success","{$lang['ERROR_SUCCESS']}","{$lang['STAFF_USERS_FL_SUB_SUCC']}");
+		alert("success",$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_FL_SUB_SUCC'],true,'index.php');
     }
     else
     {
@@ -1000,23 +992,23 @@ function changepw()
 		$user = (isset($_POST['user']) && is_numeric($_POST['user']))  ? abs(intval($_POST['user'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_changepw', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if (($user == 1) && ($userid > 1))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_CP_ERROR']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_CP_ERROR']);
             die($h->endpage());
 		}
 		$ul=$db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
 		if (($ul == 'Admin') && ($userid > 1))
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_USERS_CP_ERROR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_CP_ERROR1']);
             die($h->endpage());
 		}
 		$new_psw = $db->escape(encode_password($pw));
 		$db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$user}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_CP_SUCCESS']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_CP_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Changed User ID {$user}'s password.");
 	}
 	else

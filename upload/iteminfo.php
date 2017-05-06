@@ -1,6 +1,13 @@
 <?php
+/*
+	File:		iteminfo.php
+	Created: 	4/5/2016 at 12:14AM Eastern Time
+	Info: 		Displays detailed information about the item inputted.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
-$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
+$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
 $itmid = $_GET['ID'];
 if (!$itmid)
 {

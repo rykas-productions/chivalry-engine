@@ -4,7 +4,7 @@
 	Created: 6/21/2016 at 4:54PM Eastern Time
 	Info: Allows developer to add bbcode functions, along with view what has been setup.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 require('JBBCode/Parser.php');
 require_once("JBBCode/visitors/SmileyVisitor.php");
@@ -52,6 +52,19 @@ $parser->addCodeDefinition($builder->build());
 
 //Strikethrough
 $builder = new JBBCode\CodeDefinitionBuilder('s', '<s>{param}</s>');
+$parser->addCodeDefinition($builder->build());
+
+//Right align
+$builder = new JBBCode\CodeDefinitionBuilder('right', '<div align="right">{param}</div>');
+$parser->addCodeDefinition($builder->build());
+
+//Left align
+$builder = new JBBCode\CodeDefinitionBuilder('left', '<div align="left">{param}</div>');
+$parser->addCodeDefinition($builder->build());
+
+//Size
+$builder = new JBBCode\CodeDefinitionBuilder('size', '<font size="{option}">{param}</font>');
+$builder->setUseOption(true);
 $parser->addCodeDefinition($builder->build());
 
 //YouTube Video

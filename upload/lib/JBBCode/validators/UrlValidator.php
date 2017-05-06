@@ -20,8 +20,8 @@ class UrlValidator implements \JBBCode\InputValidator
      */
     public function validate($input)
     {
-        $valid = filter_var($input, FILTER_VALIDATE_URL);
-        return !!$valid;
+        $input = filter_var($input, FILTER_SANITIZE_URL);
+        return $input;
     }
 
 }

@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		guilds.php
+	Created: 	4/5/2016 at 12:06AM Eastern Time
+	Info: 		Lists all the in-game guilds, and allows a user to
+				apply to a guild, or create their own.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 if (!isset($_GET['action']))
 {
@@ -17,6 +25,9 @@ case 'apply':
     break;
 case 'memberlist':
     memberlist();
+    break;
+case 'wars':
+    wars();
     break;
 default:
     menu();
@@ -76,19 +87,19 @@ function create()
 	 echo "<h3>{$lang['GUILD_CREATE']}</h3><hr />";
 	$cg_price = $set['GUILD_PRICE'];
 	$cg_level = $set['GUILD_LEVEL'];
-	if (!($api->UserHasCurrency($userid,1,$cg_price)))
+	if (!($api->UserHasCurrency($userid,'primary',$cg_price)))
 	{
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['GUILD_CREATE_ERROR']} " . number_format($cg_price) . ".");
+		alert("danger",$lang['ERROR_GENERIC'],"{$lang['GUILD_CREATE_ERROR']} " . number_format($cg_price) . ".",true,'index.php');
 		die($h->endpage());
 	}
 	elseif (($api->UserInfoGet($userid,'level',false)) < $cg_level)
 	{
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['GUILD_CREATE_ERROR1']} " . number_format($cg_level) . ".");
+		alert("danger",$lang['ERROR_GENERIC'],"{$lang['GUILD_CREATE_ERROR1']} " . number_format($cg_level) . ".",true,'index.php');
 		die($h->endpage());
 	}
 	elseif ($ir['guild'])
 	{
-		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['GUILD_CREATE_ERROR2']}");
+		alert("danger",$lang['ERROR_GENERIC'],$lang['GUILD_CREATE_ERROR2'],true,'back');
 		die($h->endpage());
 	}
 	else
@@ -104,7 +115,7 @@ function create()
 			$desc = $db->escape(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1'));
 			if ($db->num_rows($db->query("SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}'")) > 0)
 			{
-				alert("danger","{$lang['ERROR_GENERIC']}","{$lang['GUILD_CREATE_ERROR3']}");
+				alert("danger",$lang['ERROR_GENERIC'],$lang['GUILD_CREATE_ERROR3'],true,'back');
 				die($h->endpage());
 			}
 			$db->query("INSERT INTO `guild` 
@@ -114,9 +125,9 @@ function create()
 						VALUES ('{$ir['location']}', '{$userid}', '{$userid}', '0', '0', 'false', '5', 
 						'{$name}', '{$desc}', '1', '0')");
 			$i = $db->insert_id();
-			$api->UserTakeCurrency($userid,1,$cg_price);
+			$api->UserTakeCurrency($userid,'primary',$cg_price);
 			$db->query("UPDATE `users` SET `guild` = {$i} WHERE `userid` = {$userid}");
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['GUILD_CREATE_SUCCESS']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['GUILD_CREATE_SUCCESS'],true,"viewguild.php");
 			$api->SystemLogsAdd($userid,'guilds',"Purchased a guild.");
 			$api->SystemLogsAdd($userid,'guilds',"Joined Guild ID {$i}");
 		}
@@ -161,7 +172,7 @@ function create()
 function view()
 {
 	global $db,$lang,$h,$userid,$api;
-	$_GET['id'] = abs((int) $_GET['id']);
+	$_GET['id'] = abs($_GET['id']);
 	if (empty($_GET['id']))
 	{
 		header("Location: guilds.php");
@@ -171,7 +182,7 @@ function view()
 		$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
 		if ($db->num_rows($gq) == 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 			die($h->endpage());
 		}
 		$gd = $db->fetch_row($gq);
@@ -244,16 +255,16 @@ function view()
 function memberlist()
 {
 	global $db,$userid,$ir,$api,$h,$lang;
-	$_GET['id'] = abs((int) $_GET['id']);
+	$_GET['id'] = abs($_GET['id']);
 	if (empty($_GET['id']))
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
 	if ($db->num_rows($gq) == 0)
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gd = $db->fetch_row($gq);
@@ -287,22 +298,22 @@ function memberlist()
 function apply()
 {
 	global $db,$userid,$ir,$api,$h,$lang;
-	$_GET['id'] = abs((int) $_GET['id']);
+	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
 	if (empty($_GET['id']))
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
 	if ($db->num_rows($gq) == 0)
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_VIEW_ERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gd = $db->fetch_row($gq);
 	if ($ir['guild'] > 0)
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_APP_ERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_APP_ERROR'],true,"guilds.php?action=view&id={$_GET['id']}");
 		die($h->endpage());
 	}
 	echo "<h3>{$lang['GUILD_APP_TITLE']} {$gd['guild_name']} {$lang['GUILD_VIEW_LIST2']}</h3><hr />";
@@ -310,20 +321,30 @@ function apply()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('guild_apply', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"],true,'back');
 			die($h->endpage());
 		}
-		$cnt=$db->query("SELECT * FROM `guild_applications` WHERE `app_user` = {$userid} && `app_guild` = {$_GET['id']}");
+		$cnt=$db->query("SELECT * FROM `guild_applications` WHERE `ga_user` = {$userid} && `ga_guild` = {$_GET['id']}");
 		if ($db->num_rows($cnt) > 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GUILD_APP_ERROR1']}");
-		die($h->endpage());
+			alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_APP_ERROR1'],true,'back');
+			die($h->endpage());
 		}
+		if ($gd['guild_owner'] == $gd['guild_coowner'])
+		{
+			$api->GameAddNotification($gd['guild_owner'],"{$ir['username']} has filled and submitted an application to join your guild.");
+		}
+		else
+		{
+			$api->GameAddNotification($gd['guild_owner'],"{$ir['username']} has filled and submitted an application to join your guild.");
+			$api->GameAddNotification($gd['guild_coowner'],"{$ir['username']} has filled and submitted an application to join your guild.");
+		}
+		$time=time();
 		$application = (isset($_POST['application']) && is_string($_POST['application'])) ? $db->escape(htmlentities(stripslashes($_POST['application']), ENT_QUOTES, 'ISO-8859-1')) : '';
-		$db->query("INSERT INTO `guild_applications` VALUES (NULL, {$userid}, {$_GET['id']}, '{$application}')");
+		$db->query("INSERT INTO `guild_applications` VALUES (NULL, {$userid}, {$_GET['id']}, {$time}, '{$application}')");
 		$gev = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> sent an application to join this guild.");
-		$db->query("INSERT INTO `guild_events` VALUES (NULL, {$_GET['id']}, " . time() . ", '{$gev}')");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['GUILD_APP_SUCC']}");
+		$db->query("INSERT INTO `guild_notifications` VALUES (NULL, {$_GET['id']}, " . time() . ", '{$gev}')");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['GUILD_APP_SUCC'],true,"guilds.php?action=view&id={$_GET['id']}");
 	}
 	else
 	{
@@ -335,6 +356,38 @@ function apply()
 			{$csrf}
 			<input type='submit' class='btn btn-default' value='{$lang['GUILD_APP_BTN']}' />
 		</form>";
+	}
+}
+function wars()
+{
+	global $db,$userid,$ir,$api,$h,$lang;
+	$time = time();
+	echo "<h3>{$lang['GUILD_WAR_TITLE']}</h3><hr />";
+	$q=$db->query("SELECT * FROM `guild_wars` WHERE `gw_winner` = 0 AND `gw_end` > {$time} ORDER BY `gw_id` DESC");
+	if ($db->num_rows($q) > 0)
+	{
+		echo "<table class='table table-bordered'>";
+		while ($r = $db->fetch_row($q))
+		{
+			echo "<tr>
+				<td>
+					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
+						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_drpoints']) . "{$lang['GUILD_WAR_TD1']}
+				</td>
+				<td>
+					{$lang['GUILD_WAR_TD2']}
+				</td>
+				<td>
+					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}</a><br />
+						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_depoints']) . "{$lang['GUILD_WAR_TD1']}
+				</td>
+			</tr>";
+		}
+		echo "</table>";
+	}
+	else
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_WAR_ERR'],false);
 	}
 }
 $h->endpage();

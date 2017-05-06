@@ -1,11 +1,20 @@
 <?php
+/*
+	File:		profile.php
+	Created: 	4/5/2016 at 12:23AM Eastern Time
+	Info: 		Allows players to view a player's profile page. This
+				displays information about their level, location,
+				gender, cash, estate, etc.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $code = request_csrf_code('inbox_send');
 $code2 = request_csrf_code('cash_send');
-$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : '';
+$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
 if (!$_GET['user'])
 {
-   alert("danger","Invalid Use","You must enter a User's ID to view their profile.");
+   alert("danger",$lang['ERROR_NONUSER'],$lang['PROFILE_UNF'],true,'index.php');
 }
 else
 {
@@ -17,7 +26,7 @@ else
 					`display_pic`, `hp`, `maxhp`, `guild`,
                     `fedjail`, `bank`, `lastip`, `lastip`,
                     `loginip`, `registerip`, `staff_notes`, `town_name`,
-                    `house_name`, `guild_name`, `fed_days`, `fed_reason`,
+                    `house_name`, `guild_name`, `fed_out`, `fed_reason`,
 					`infirmary_reason`, `infirmary_out`, `dungeon_reason`, `dungeon_out`,
 					`browser`, `os`, `screensize`
                     FROM `users` `u`
@@ -40,7 +49,7 @@ else
 	if ($db->num_rows($q) == 0)
 	{
 		$db->free_result($q);
-		alert("danger","{$lang['ERROR_NONUSER']}","{$lang['PROFILE_UNF']}");
+		alert("danger",$lang['ERROR_NONUSER'],$lang['PROFILE_UNF'],true,'index.php');
 	}
 	else
     {
@@ -74,7 +83,7 @@ else
         $enemy = $db->fetch_single($enemy_q);
         $db->free_result($enemy_q);
 		$CurrentTime=time();
-		$r['daysold']=DateTime_Parse($r['registertime'], false);
+		$r['daysold']=DateTime_Parse($r['registertime'], false, true);
 		
 		$rhpperc = round($r['hp'] / $r['maxhp'] * 100);
 		echo "<h3>{$lang['PROFILE_PROFOR']} {$r['username']}</h3>";
@@ -95,20 +104,14 @@ else
 				?>
 			</div>
 			<div class="col-lg-10">
-				<ul class='nav nav-pills nav-tabs'>
-					<li class='nav-item'>
-						<a data-toggle="tab" class='nav-link' href="#info"><?php echo $lang['PROFILE_PI']; ?></a>
-					</li>
-					<li class='nav-item'>
-						<a data-toggle="tab" class='nav-link' href="#actions"><?php echo $lang['PROFILE_ACTION']; ?></a>
-					</li>
-					<li class='nav-item'>
-						<a data-toggle="tab" class='nav-link' href="#financial"><?php echo $lang['PROFILE_FINANCIAL']; ?></a>
-					</li>
-					<?php
+				<ul class="nav nav-tabs nav-justified">
+				  <li class="active"><a data-toggle="tab" href="#info"><?php echo $lang['PROFILE_PI']; ?></a></li>
+				  <li><a data-toggle="tab" href="#actions"><?php echo $lang['PROFILE_ACTION']; ?></a></li>
+				  <li><a data-toggle="tab" href="#financial"><?php echo $lang['PROFILE_FINANCIAL']; ?></a></li>
+				  <?php
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
-					  echo "<li class='nav-item'><a data-toggle='tab' class='nav-link' href='#staff'>{$lang['PROFILE_STAFF']}</a></li>";
+					  echo "<li><a data-toggle='tab' href='#staff'>{$lang['PROFILE_STAFF']}</a></li>";
 					}
 				  ?>
 				</ul>
@@ -119,8 +122,7 @@ else
 						<?php
 						echo
 						"
-						<div class='table-resposive'>
-						<table class='table table-bordered'>
+						<table class='table table-bordered table-responsive'>
 							<tr>
 								<th width='25%'>{$lang['REG_SEX']}</th>
 								<td>{$r['gender']}</td>
@@ -147,54 +149,59 @@ else
 							</tr>";
 						if (user_infirmary($r['userid']))
 						{
-							$InfirmaryRemain=round((($r['infirmary_out'] - $CurrentTime) / 60), 2);
 							echo "
 							<tr>
 								<th>{$lang['EXPLORE_INFIRM']}</th>
-								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_INFIRM']} {$lang['GEN_FOR']} {$InfirmaryRemain} {$lang["GEN_MINUTES"]}<br />
+								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_INFIRM']} {$lang['GEN_FOR']} " . TimeUntil_Parse($r['infirmary_out']) . "<br />
 								{$r['infirmary_reason']}
 								</td>
 							</tr>";
 						}
 						if (user_dungeon($r['userid']))
 						{
-							$DungeonRemain=round((($r['dungeon_out'] - $CurrentTime) / 60), 2);
 							echo "
 							<tr>
 								<th>{$lang['EXPLORE_DUNG']}</th>
-								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_DUNG']} {$lang['GEN_FOR']} {$DungeonRemain} {$lang["GEN_MINUTES"]}<br />
+								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_DUNG']} {$lang['GEN_FOR']} " . TimeUntil_Parse($r['dungeon_out']) . "<br />
 								{$r['dungeon_reason']}
 								</td>
 							</tr>";
 						}
 						if ($r['fedjail'])
 						{
-							echo "<br /><span style='font-weight: bold; color: red;'>
-							In federal jail for {$r['fed_days']} day(s).
-							<br />
-							{$r['fed_reason']}
-							</span>";
+							echo "
+							<tr>
+								<th>{$lang['EXPLORE_FED']}</th>
+								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_FED']} {$lang['GEN_FOR']} " . TimeUntil_Parse($r['fed_out']) . " {$lang['MENU_FEDJAIL2']}<br /> {$r['fed_reason']}
+								</td>
+							</tr>";
 						}
 						
-						echo"</table></div>";
+						echo"</table>";
 						?>
 					</p>
 				  </div>
 				  <div id="actions" class="tab-pane fade">
-				  <?php echo "<button type='button' class='btn btn-default' data-toggle='modal' data-target='#message' data-whatever='Admin'>Send {$r['username']} a Message</button>"; ?>
-				  <?php echo "<br /><br /><button type='button' class='btn btn-default' data-toggle='modal' data-target='#cash' data-whatever='Admin'>Send {$r['username']} {$lang['INDEX_PRIMCURR']}</button>
+				  <?php echo "<button type='button' class='btn btn-default' data-toggle='modal' data-target='#message'>{$lang['PROFILE_BTN_MSG']} {$r['username']} {$lang['PROFILE_BTN_MSG1']}</button>"; ?>
+				  <?php echo "<br /><br /><button type='button' class='btn btn-default' data-toggle='modal' data-target='#cash'>{$lang['PROFILE_BTN_SND']} {$r['username']} {$lang['INDEX_PRIMCURR']}</button>
 				  <br /><br /><form action='attack.php'>
 					<input type='hidden' name='user' value='{$r['userid']}'>
-					<input type='submit' class='btn btn-danger' value='Attack {$r['username']}'>
+					<input type='submit' class='btn btn-danger' value='{$lang['PROFILE_ATTACK']} {$r['username']}'>
 					</form><br />
 					<form action='hirespy.php'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
-						<input type='submit' class='btn btn-default' value='Spy on {$r['username']}'>
+						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_SPY']} {$r['username']}'>
 					</form>
 					<br />
 					<form action='poke.php'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
-						<input type='submit' class='btn btn-default' value='Poke {$r['username']}'>
+						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_POKE']} {$r['username']}'>
+					</form>
+					<br />
+					<form action='contacts.php'>
+						<input type='hidden' name='action' value='add'>
+						<input type='hidden' name='user' value='{$r['userid']}'>
+						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_CONTACT']} {$r['username']} {$lang['PROFILE_CONTACT1']}'>
 					</form>
 				  "; ?>
 					<div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="Sending a Message">
@@ -203,17 +210,17 @@ else
 						  <div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							<div id="success"></div>
-							<h4 class="modal-title" id="ModalLabel"><?php echo "Sending {$r['username']} a Message"; ?></h4>
+							<h4 class="modal-title" id="ModalLabel"><?php echo "{$lang['PROFILE_MSG1']} {$r['username']} {$lang['PROFILE_MSG2']}"; ?></h4>
 						  </div>
 						  <div class="modal-body">
 							<form id="mailpopupForm" name="mailpopupForm" action="js/script/sendmail.php">
 							  <div class="form-group">
 								<div id="result"></div>
-								<label for="recipient-name" class="control-label">Recipient:</label>
+								<label for="recipient-name" class="control-label"><?php echo $lang['PROFILE_MSG3']; ?></label>
 								<input type="text" class="form-control" name="sendto" required="1" value="<?php echo $r['username']; ?>" id="recipient-name">
 							  </div>
 							  <div class="form-group">
-								<label for="message-text" class="control-label">Message:</label>
+								<label for="message-text" class="control-label"><?php echo $lang['PROFILE_MSG4']; ?></label>
 								<textarea class="form-control" name="msg" required="1" id="message-text"></textarea>
 							  </div>
 							
@@ -223,8 +230,8 @@ else
 						  echo"
 							<input type='hidden' name='verf' value='{$code}' />";
 							?>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<input type="submit" value="Send Message" id="sendmessage" class="btn btn-primary">
+							<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
+							<input type="submit" value="<?php echo $lang['PROFILE_MSG6']; ?>" id="sendmessage" class="btn btn-primary">
 							</form>
 						  </div>
 						</div>
@@ -236,7 +243,7 @@ else
 						  <div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							<div id="success2"></div>
-							<h4 class="modal-title" id="ModalLabel"><?php echo "Sending {$r['username']} {$lang['INDEX_PRIMCURR']}"; ?></h4>
+							<h4 class="modal-title" id="ModalLabel"><?php echo "{$lang['PROFILE_MSG1']} {$r['username']} {$lang['INDEX_PRIMCURR']}"; ?></h4>
 						  </div>
 						  <div class="modal-body">
 							<form id="cashpopupForm" name="cashpopupForm" action="js/script/sendcash.php">
@@ -245,7 +252,7 @@ else
 								<input type="hidden" name="sendto" required="1" value="<?php echo $r['userid']; ?>" id="recipient-name">
 							  </div>
 							  <div class="form-group">
-								<label for="message-text" class="control-label">Cash:</label>
+								<label for="message-text" class="control-label"><?php echo $lang['INDEX_PRIMCURR']; ?></label>
 								<input type='number' min='0' max="<?php echo $ir['primary_currency']; ?>" class="form-control" name="cash" required="1" id="message-text"></textarea>
 							  </div>
 							
@@ -255,8 +262,8 @@ else
 						  echo"
 							<input type='hidden' name='verf' value='{$code2}' />";
 							?>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<input type="submit" value="Send Cash" id="sendcash" class="btn btn-primary">
+							<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
+							<input type="submit" value="<?php echo $lang['PROFILE_CASH']; ?>" id="sendcash" class="btn btn-primary">
 							</form>
 						  </div>
 						</div>
@@ -267,7 +274,7 @@ else
 					<?php
 						echo
 						"
-						<table class='table table-bordered'>
+						<table class='table table-bordered table-responsive'>
 							<tr>
 								<th width='25%'>{$lang['INDEX_PRIMCURR']}</th>
 								<td> " . number_format($r['primary_currency']) . "</td>
@@ -300,59 +307,47 @@ else
 				  echo '<div id="staff" class="tab-pane fade in">';
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
-						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",24),true);
-						echo "
-						<div class='table-resposive'>
-						<table class='table table-bordered'>
+						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",65655),true);
+						echo "<table class='table table-bordered'>
 							<tr>
 								<th width='33%'>Data</th>
 								<th>Output</th>
 							</tr>
 							<tr>
-								<td>Location</td>
+							<td>{$lang['PROFILE_STAFF_LOC']}</td>
 								<td>{$fg['city']}, {$fg['state']}, {$fg['country']}, ({$fg['isocode']})</td>
 							</tr>
 							<tr>
-								<td>Last Hit</td>
-								<td>$r[lastip]</td>
+								<td>{$lang['PROFILE_STAFF_LH']}</td>
+								<td>$r[lastip] (" . @gethostbyaddr($r['lastip']) . ")</td>
 							</tr>
 							<tr>
-								<td>Last Login</td>
-								<td>$r[loginip]</td>
+								<td>{$lang['PROFILE_STAFF_LL']}</td>
+								<td>$r[loginip] (" . @gethostbyaddr($r['loginip']) . ")</td>
 							</tr>
 							<tr>
-								<td>Signup</td>
-								<td>$r[registerip]</td>
-							</tr>
-							<tr>
-								<td>Threat?</td>
-								<td>{$fg['threat']}</td>
-							</tr>
-							<tr>
-								<td>Risk Level<br />
-								<small>1 is low, 5 is high</small></td>
-								<td>{$fg['risk_level']}</td>
+								<td>{$lang['PROFILE_STAFF_REGIP']}</td>
+								<td>$r[registerip] (" . @gethostbyaddr($r['registerip']) . ")</td>
 							</tr>
 							<tr>
 								<td>
-									Broswer/OS
+									{$lang['PROFILE_STAFF_OS']}
 								</td>
 								<td>
 									{$r['browser']} on {$r['os']}
 								</td>
 							</tr>
 					</table>
-					<form action='staffnotes.php' method='post'>
-						Staff Notes:
+					<form action='staff/staff_punish.php?action=staffnotes' method='post'>
+						{$lang['PROFILE_STAFF_NOTES']}
 						<br />
 						<textarea rows='7' class='form-control' name='staffnotes'>"
 							. htmlentities($r['staff_notes'], ENT_QUOTES, 'ISO-8859-1')
 							. "</textarea>
 						<br />
 						<input type='hidden' name='ID' value='{$_GET['user']}' />
-						<input type='submit' class='btn btn-default' value='Update Notes About {$r['username']}' />
-					</form>
-					</div>";
+						<input type='submit' class='btn btn-default' value='{$lang['PROFILE_STAFF_BTN']} {$r['username']}' />
+					</form>";
 					}
 					?>
 				  

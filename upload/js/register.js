@@ -3,7 +3,7 @@
 	Created: 3/15/2016 at 10:45AM Eastern Time
 	Info: Javascript functions for registering
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 function CheckPasswords(password)
 {
@@ -63,12 +63,12 @@ function PasswordMatch()
     pwt2 = $("#cpassword").val();
     if (pwt1 == pwt2)
     {
-        document.getElementById('cpassword').style.backgroundColor = '#dff0d8';
-		document.getElementById('password').style.backgroundColor = '#dff0d8';
+        document.getElementById('pwerror').className = 'has-success';
+		document.getElementById('cpwerror').className = 'has-success';
     }
     else
     {
-        document.getElementById('cpassword').style.backgroundColor = '#f2dede';
-		document.getElementById('password').style.backgroundColor = '#f2dede';
+        document.getElementById('pwerror').className = 'has-error';
+		document.getElementById('cpwerror').className = 'has-error';
     }
 }

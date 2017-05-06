@@ -4,7 +4,7 @@
 	Created: 6/1/2016 at 6:06PM Eastern Time
 	Info: Allows admins to view and change the game settings at will.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
 echo "<h3>Admin</h3><hr />";
@@ -26,6 +26,12 @@ case "diagnostics":
 case "restore":
     restore();
     break;
+case "errlog":
+    errlog();
+    break;
+case "staff":
+    staff();
+    break;
 default:
     die();
     break;
@@ -37,19 +43,20 @@ function basicsettings()
 	{
 		$csrf=request_csrf_html('staff_sett_1');
 		echo "
+		<div class='table-responsive'>
 		<form method='post'>
 		<table class='table table-bordered table-hover'>
 			<tr>
 				<th>
-					Game Name
+					{$lang['SS_GAME']}
 				</th>
-				<td>
+				<td width='75%'>
 					<input type='text' name='gamename' class='form-control' required='1' value='{$set['WebsiteName']}'>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					Owner's Name
+					{$lang['SS_NAME']}
 				</th>
 				<td>
 					<input type='text' name='ownername' class='form-control' required='1' value='{$set['WebsiteOwner']}'>
@@ -57,7 +64,15 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Refferal Award
+					{$lang['SS_DESC']}
+				</th>
+				<td>
+					<textarea name='gamedesc' required='1' class='form-control' rows='5'>{$set['Website_Description']}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SS_REF']}
 				</th>
 				<td>
 					<input type='number' name='refkb' class='form-control' min='1' required='1' value='{$set['ReferalKickback']}'>
@@ -65,7 +80,7 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Energy Cost for Attacking <br />
+					{$lang['SS_ENERGY']}<br />
 					<small>(100 divided by this number)</small>
 				</th>
 				<td>
@@ -74,7 +89,15 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					HTTPS Redirection<br />
+					{$lang['SS_ATT']}
+				</th>
+				<td>
+					<input type='number' name='attpersess' class='form-control' min='1' required='1' value='{$set['MaxAttacksPerSession']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SS_HTTPS']}<br />
 					<small>(Does nothing yet)</small>
 				</th>
 				<td>
@@ -83,7 +106,7 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Password Effort<br />
+					{$lang['SS_PW']}<br />
 					<small>Lower is faster and less secure.</small>
 				</th>
 				<td>
@@ -92,7 +115,7 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Paypal Email
+					{$lang['SS_PP']}
 				</th>
 				<td>
 					<input type='email' class='form-control' name='ppemail' value='{$set['PaypalEmail']}'>
@@ -100,8 +123,8 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Fraud Guard I/O Username<br />
-					<small>(<a href='https://fraudguard.io/'>https://fraudguard.io/</a>)</small>
+					{$lang['SS_FGU']}<br />
+					<small>(<a href='https://fraudguard.io/'>http://bit.ly/2apOVX0</a>)</small>
 				</th>
 				<td>
 					<input type='text' class='form-control' name='fgun' value='{$set['FGUsername']}'>
@@ -109,7 +132,7 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Fraud Guard I/O Password
+					{$lang['SS_FGP']}
 				</th>
 				<td>
 					<input type='text' class='form-control' name='fgpw' value='{$set['FGPassword']}'>
@@ -117,8 +140,8 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Google's reCaptcha Public Key<br />
-					<small>(<a href='https://www.google.com/recaptcha/admin'>https://www.google.com/recaptcha/admin</a>)</small>
+					{$lang['SS_GRPUB']}<br />
+					<small>(<a href='https://www.google.com/recaptcha/admin'>http://bit.ly/2oJ0Bus</a>)</small>
 				</th>
 				<td>
 					<input type='text' class='form-control' name='rcpublic' value='{$set['reCaptcha_public']}'>
@@ -126,7 +149,7 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Google's reCaptcha Private Key
+					{$lang['SS_GRPRIV']}
 				</th>
 				<td>
 					<input type='text' class='form-control' name='rcprivate' value='{$set['reCaptcha_private']}'>
@@ -134,15 +157,7 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Game Description
-				</th>
-				<td>
-					<textarea name='gamedesc' required='1' class='form-control' rows='5'>{$set['Website_Description']}</textarea>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Bank Purchasing Fee
+					{$lang['SS_BANKFEE']}
 				</th>
 				<td>
 					<input type='number' name='bankbuy' class='form-control' min='1' required='1' value='{$set['bank_cost']}'>
@@ -150,7 +165,7 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Bank Max Withdraw Fee
+					{$lang['SS_BANKWFEE']}
 				</th>
 				<td>
 					<input type='number' name='bankfee' class='form-control' min='1' required='1' value='{$set['bank_maxfee']}'>
@@ -158,17 +173,88 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Bank Withdraw Fee Percent
+					{$lang['SS_BANKWPERC']}
 				</th>
 				<td>
 					<input type='number' name='bankfeepercent' class='form-control' min='1' required='1' value='{$set['bank_feepercent']}'>
 				</td>
 			</tr>
-		</table>";
+			<tr>
+				<th>
+					{$lang['SS_GUILDLVL']}
+				</th>
+				<td>
+					<input type='number' name='guildlvl' class='form-control' min='1' required='1' value='{$set['GUILD_LEVEL']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SS_GUILDCOST']}
+				</th>
+				<td>
+					<input type='number' name='guildcost' class='form-control' min='1' required='1' value='{$set['GUILD_PRICE']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SS_REFILLE']}
+				</th>
+				<td>
+					<input type='number' name='refillenergy' class='form-control' min='1' required='1' value='{$set['energy_refill_cost']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SS_REFILLW']}
+				</th>
+				<td>
+					<input type='number' name='refillwill' class='form-control' min='1' required='1' value='{$set['will_refill_cost']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SS_REFILLB']}
+				</th>
+				<td>
+					<input type='number' name='refillbrave' class='form-control' min='1' required='1' value='{$set['brave_refill_cost']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SS_IQ']}
+				</th>
+				<td>
+					<input type='number' name='iqpersec' class='form-control' min='1' required='1' value='{$set['iq_per_sec']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SS_TIMEOUT']}
+				</th>
+				<td>
+					<input type='number' name='sessiontimeout' placeholder='0 means no timeout.' class='form-control' min='0' required='1' value='{$set['max_sessiontime']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SS_REVALID']}
+				</th>
+				<td>
+					<select name='recaptchatime' class='form-control' type='dropdown'>
+						<option value='300'>{$lang['SS_REVALID1']}</option>
+						<option value='900'>{$lang['SS_REVALID2']}</option>
+						<option value='3600'>{$lang['SS_REVALID3']}</option>
+						<option value='86400'>{$lang['SS_REVALID4']}</option>
+						<option value='99999999999'>{$lang['SS_REVALID5']}</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		</div>";
 		
 		
         	echo "{$csrf}
-        	<input type='submit' class='btn btn-default' value='Update Settings' />
+        	<input type='submit' class='btn btn-default' value='{$lang['SS_BTN']}' />
         </form>";
 		$h->endpage();
 	}
@@ -176,7 +262,7 @@ function basicsettings()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_sett_1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$GameName = (isset($_POST['gamename'])  && preg_match("/^[a-z0-9_.]+([\\s]{1}[a-z0-9_.]|[a-z0-9_.])+$/i", $_POST['gamename'])) ? $db->escape(strip_tags(stripslashes($_POST['gamename']))) : '';
@@ -184,68 +270,82 @@ function basicsettings()
 		$AttackEnergy = (isset($_POST['attenc']) && is_numeric($_POST['attenc'])) ? abs(intval($_POST['attenc'])) : '';
 		$Paypal = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'ppemail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['ppemail'])) : '';
 		$GameOwner = (isset($_POST['ownername']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['ownername'])) ? $db->escape(strip_tags(stripslashes($_POST['ownername']))) : '';
-		$GameDesc =  (isset($_POST['gamedesc'])) ? $db->escape(strip_tags( stripslashes($_POST['gamedesc']))) : '';
-		$FGPW =  (isset($_POST['fgpw'])) ? $db->escape(strip_tags( stripslashes($_POST['fgpw']))) : '';
-		$FGUN =  (isset($_POST['fgun'])) ? $db->escape(strip_tags( stripslashes($_POST['fgun']))) : '';
-		$rcpb =  (isset($_POST['rcpublic'])) ? $db->escape(strip_tags( stripslashes($_POST['rcpublic']))) : '';
-		$rcpr =  (isset($_POST['rcprivate'])) ? $db->escape(strip_tags( stripslashes($_POST['rcprivate']))) : '';
+		$GameDesc =  (isset($_POST['gamedesc'])) ? $db->escape(strip_tags(stripslashes($_POST['gamedesc']))) : '';
+		$FGPW =  (isset($_POST['fgpw'])) ? $db->escape(strip_tags(stripslashes($_POST['fgpw']))) : '';
+		$FGUN =  (isset($_POST['fgun'])) ? $db->escape(strip_tags(stripslashes($_POST['fgun']))) : '';
+		$rcpb =  (isset($_POST['rcpublic'])) ? $db->escape(strip_tags(stripslashes($_POST['rcpublic']))) : '';
+		$rcpr =  (isset($_POST['rcprivate'])) ? $db->escape(strip_tags(stripslashes($_POST['rcprivate']))) : '';
 		$PasswordEffort = (isset($_POST['PWEffort']) && is_numeric($_POST['PWEffort'])) ? abs(intval($_POST['PWEffort'])) : 10;
 		$BankFeePerc = (isset($_POST['bankfeepercent']) && is_numeric($_POST['bankfeepercent'])) ? abs(intval($_POST['bankfeepercent'])) : 10;
 		$BankFeeMax = (isset($_POST['bankfee']) && is_numeric($_POST['bankfee'])) ? abs(intval($_POST['bankfee'])) : 5000;
 		$BankCost = (isset($_POST['bankbuy']) && is_numeric($_POST['bankbuy'])) ? abs(intval($_POST['bankbuy'])) : 5000;
+		$recaptchatime = (isset($_POST['recaptchatime']) && is_numeric($_POST['recaptchatime'])) ? abs(intval($_POST['recaptchatime'])) : 3600;
+		$sessiontimeout = (isset($_POST['sessiontimeout']) && is_numeric($_POST['sessiontimeout'])) ? abs(intval($_POST['sessiontimeout'])) : 15;
+		$attpersess = (isset($_POST['attpersess']) && is_numeric($_POST['attpersess'])) ? abs(intval($_POST['attpersess'])) : 50;
+		$guildcost = (isset($_POST['guildcost']) && is_numeric($_POST['guildcost'])) ? abs(intval($_POST['guildcost'])) : 500000;
+		$guildlvl = (isset($_POST['guildlvl']) && is_numeric($_POST['guildlvl'])) ? abs(intval($_POST['guildlvl'])) : 25;
+		$refillenergy = (isset($_POST['refillenergy']) && is_numeric($_POST['refillenergy'])) ? abs(intval($_POST['refillenergy'])) : 10;
+		$refillbrave = (isset($_POST['refillbrave']) && is_numeric($_POST['refillbrave'])) ? abs(intval($_POST['refillbrave'])) : 10;
+		$refillwill = (isset($_POST['refillwill']) && is_numeric($_POST['refillwill'])) ? abs(intval($_POST['refillwill'])) : 5;
+		$iqpersec = (isset($_POST['iqpersec']) && is_numeric($_POST['iqpersec'])) ? abs(intval($_POST['iqpersec'])) : 5;
 		if (empty($GameName))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid game name specified!");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		elseif (empty($Paypal))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid paypal address specified!");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		elseif (empty($GameOwner))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Game Owner Name specified.");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		elseif (empty($RefAward))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Refferal Kickback award specified.");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		elseif (empty($GameDesc))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Game Description specified.");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		elseif (empty($AttackEnergy))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Attack Energy Cost.");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		elseif (empty($FGPW))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Fraud Guard IO Password.");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		elseif (empty($FGUN))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Fraud Guard IO Username.");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		elseif (empty($rcpb))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Google reCaptcha public key.");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		elseif (empty($rcpr))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Invalid Google reCaptcha private key.");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		elseif (empty($PasswordEffort) || $PasswordEffort < 5 || $PasswordEffort > 20)
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","Empty or Invalid Password Hashing effort. Minimum of 5, maximum of 10.");
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
+			die($h->endpage());
+		}
+		elseif ($recaptchatime <= 0)
+		{
+			alert('danger',$lang['ERROR_INVALID'],$lang['SS_ERR1']);
 			die($h->endpage());
 		}
 		else
@@ -264,7 +364,17 @@ function basicsettings()
 			$db->query("UPDATE `settings` SET `setting_value` = '{$BankFeePerc}' WHERE `setting_name` = 'bank_feepercent'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$rcpb}' WHERE `setting_name` = 'reCaptcha_public'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$rcpr}' WHERE `setting_name` = 'reCaptcha_private'");
-			alert('success',"{$lang['ERROR_SUCCESS']}","Successfully updated the game settings.");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$sessiontimeout}' WHERE `setting_name` = 'max_sessiontime'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$recaptchatime}' WHERE `setting_name` = 'Revalidate_Time'");
+			
+			$db->query("UPDATE `settings` SET `setting_value` = '{$attpersess}' WHERE `setting_name` = 'MaxAttacksPerSession'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$guildcost}' WHERE `setting_name` = 'GUILD_PRICE'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$guildlvl}' WHERE `setting_name` = 'GUILD_LEVEL'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$refillenergy}' WHERE `setting_name` = 'energy_refill_cost'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$refillbrave}' WHERE `setting_name` = 'brave_refill_cost'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$refillwill}' WHERE `setting_name` = 'will_refill_cost'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$iqpersec}' WHERE `setting_name` = 'iq_per_sec'");
+			alert('success',$lang['ERROR_SUCCESS'],"Successfully updated the game settings.",true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Updated game settings.");
 		}
 		$h->endpage();
@@ -272,14 +382,14 @@ function basicsettings()
 }
 function announce()
 {
-	global $db,$ir,$userid,$h,$api;
+	global $db,$ir,$userid,$h,$api,$lang;
 	if (!isset($_POST['announcement']))
 	{
 		$csrf=request_csrf_html('staff_announce');
-		echo "Here you may create an announcement. Please make sure whatever you are announcing is clear and concise.<br />
+		echo "{$lang['SS_ANNOUNCE']}<br />
 		<form method='post'>
 			<textarea name='announcement' rows='5' class='form-control'></textarea>
-			<input type='submit' class='btn btn-default' value='Create Announcement'>
+			<input type='submit' class='btn btn-default' value='{$lang['SS_ANNOUNCE_BTN']}'>
 			{$csrf}
 		</form>";
 	}
@@ -287,14 +397,14 @@ function announce()
 	{
 		if (empty($_POST['announcement']))
 		{
-			alert('danger','Empty Input!','You cannot post an announcement without anything written in it...');
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SS_ANNOUNCE_ERR']);
 			die($h->endpage());
 		}
 		else
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_announce', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			$time=time();
@@ -302,7 +412,7 @@ function announce()
 			$db->query("INSERT INTO `announcements` (`ann_id`, `ann_text`, `ann_time`, `ann_poster`) 
 			VALUES (NULL, '{$_POST['announcement']}', '{$time}', '{$userid}');");
 			$db->query("UPDATE `users` SET `announcements` = `announcements` + 1");
-			alert('success','Success!','You have successfully created an announcement.');
+			alert('success',$lang['ERROR_SUCCESS'],$lang['SS_ANNOUNCE_SUCC'],true,'../announcements.php');
 			$api->SystemLogsAdd($userid,'staff',"Posted an announcement.");
 		}
 	}
@@ -310,84 +420,85 @@ function announce()
 }
 function diagnostics()
 {
-	global $db,$h,$set,$userid,$api;
+	global $db,$h,$set,$userid,$api,$lang;
+	$dir= substr(__DIR__, 0, strpos(__DIR__, "\staff"));
 	if (version_compare(phpversion(), '5.5.0') < 0)
     {
-        $pv = '<span style="color: red">Failed</span>';
+        $pv = "<span style='color: red'>{$lang['SS_DIAG']}</span>";
     }
     else
     {
-        $pv = "<span style='color: green'>Pass! PHP Version is " . phpversion();  "!</span>";
+        $pv = "<span style='color: green'>{$lang['SS_DIAG1']}</span>";
     }
     if (is_writable('./'))
     {
-        $wv = '<span style="color: green">Pass! Game folder is writable.</span>';
+        $wv = "<span style='color: green'>{$lang['SS_DIAG1']}</span>";
     }
     else
     {
-        $wv = '<span style="color: red">Fail!</span>';
+        $wv = "<span style='color: red'>{$lang['SS_DIAG']}</span>";
     }
     if (function_exists('mysqli_connect'))
     {
-        $dv = '<span style="color: green">Pass! MySQLi detected!</span>';
+        $dv = "<span style='color: green'>{$lang['SS_DIAG1']}</span>";
     }
     else
     {
-        $dv = '<span style="color: red">Failed</span>';
+        $dv = "<span style='color: red'>{$lang['SS_DIAG']}</span>";
     }
 	if (extension_loaded('pdo'))
     {
-        $pdv = '<span style="color: green">Pass! We suggest you use PDO!</span>';
+        $pdv = "<span style='color: green'>{$lang['SS_DIAG1']}</span>";
     }
 	else
     {
-        $pdv = '<span style="color: red">Failed... Use MySQLi instead!</span>';
+        $pdv = "<span style='color: red'>{$lang['SS_DIAG']}</span>";
     }
 	if (function_exists('openssl_random_pseudo_bytes'))
     {
-        $ov = '<span style="color: green">Pass! OpenSSL Random Pseudo Bytes detected!</span>';
+        $ov = "<span style='color: green'>{$lang['SS_DIAG1']}</span>";
     }
     else
     {
-        $ov = '<span style="color: red">Failed...</span>';
+        $ov = "<span style='color: red'>{$lang['SS_DIAG']}</span>";
     }
 	if (function_exists('password_hash'))
     {
-        $hv = '<span style="color: green">Pass! Using stronger password hash method.</span>';
+        $hv = "<span style='color: green'>{$lang['SS_DIAG1']}</span>";
     }
     else
     {
-        $hv = '<span style="color: red">Failed...</span>';
+        $hv = "<span style='color: red'>{$lang['SS_DIAG']}</span>";
     }
 	echo"<table class='table table-bordered table-hover'>
     		<tr>
-    			<td>Is the server's PHP Version greater than 5.5.0?</td>
+    			<td>{$lang['SS_TEST']}</td>
     			<td>{$pv}</td>
     		</tr>
     		<tr>
-    			<td>Is the game folder writable?</td>
+    			<td>{$lang['SS_WRITE']}</td>
     			<td>{$wv}</td>
     		</tr>
 			<tr>
-    			<td>Is PDO present?</td>
+    			<td>{$lang['SS_PDO']}</td>
     			<td>{$pdv}</td>
     		</tr>
     		<tr>
-    			<td>Is MySQLi present?</td>
+    			<td>{$lang['SS_MYSQLI']}</td>
     			<td>{$dv}</td>
     		</tr>
 			<tr>
-    			<td>Password_Hash avaliable?</td>
+    			<td>{$lang['SS_HASH']}</td>
     			<td>{$hv}</td>
     		</tr>
 			<tr>
-    			<td>OpenSSL Random Pseudo Bytes avaliable?</td>
+    			<td>{$lang['SS_OPENSSL']}</td>
     			<td>{$ov}</td>
     		</tr>
     		<tr>
-    			<td>Is Chivalry Engine up to date?</td>
+    			<td>{$lang['SS_UPDATE']}</td>
     			<td>
-        			<iframe width='100%' height='35' style='border:none' src='http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}'>Your browser does not support iframes...</iframe>
+        			" . get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}",$dir . '\cache\update_check.txt') . "
         		</td>
         	</tr>
     </table>
@@ -397,12 +508,12 @@ function diagnostics()
 }
 function restore()
 {
-	global $db,$ir,$h,$api,$userid;
+	global $db,$ir,$h,$api,$userid,$lang;
 	if (!isset($_POST['restore']))
 	{
-		echo "Here you can restore your userbase to 100% HP, Brave and energy. This may only be useful for testing, or if you wish to be nice to your player base.<br />
+		echo "{$lang['SS_RESTORE']}<br />
 		<form method='post'>
-			<input type='submit' name='restore' value='Restore ALL Users to Full!' class='btn btn-default'>
+			<input type='submit' name='restore' value='{$lang['SS_RESTORE_BTN']}' class='btn btn-default'>
 		</form>";
 		$h->endpage();
 	}
@@ -411,8 +522,88 @@ function restore()
 		$db->query("UPDATE `users` SET `hp`=`maxhp`,`energy`=`maxenergy`,`brave`=`maxbrave`,`will`=`maxwill`");
 		$db->query("UPDATE `dungeon` SET `dungeon_out` = 0");
 		$db->query("UPDATE `infirmary` SET `infirmary_out` = 0");
-		$api->SystemLogsAdd($userid,'staff',"Restored all users to their full HP/Brave/Energy.");
-		alert('success',"Success!","You have successfully restored all your users to their full health, brave and energy!");
+		$api->SystemLogsAdd($userid,'staff',"Restored all users.");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['SS_RESTORE_SUCC'],true,'index.php');
 		$h->endpage();
+	}
+}
+function errlog()
+{
+	global $db,$lang,$api,$userid,$h;
+	$dir= substr(__DIR__, 0, strpos(__DIR__, "\staff"));
+	$api->SystemLogsAdd($userid,'staff',"Viewed the error log.");
+	echo "
+	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents($dir . '\cache\error_log.txt') . "</textarea>";
+	$h->endpage();
+}
+function staff()
+{
+	global $db,$userid,$api,$lang,$h;
+	if (isset($_POST['user']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_priv', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+		$_POST['priv'] =  (isset($_POST['priv'])) ? $db->escape(strip_tags(stripslashes($_POST['priv']))) : 'member';
+		$priv_array=array('Member','Admin','Web Developer','Forum Moderator','Assistant','NPC');
+		if (!in_array($_POST['priv'],$priv_array))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_PRIV_ERR']);
+			die($h->endpage());
+		}
+		if (!($api->SystemUserIDtoName($_POST['user'])))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_PRIV_ERR1']);
+			die($h->endpage());
+		}
+		$api->UserInfoSetStatic($_POST['user'],'user_level',$_POST['priv']);
+		alert('success',$lang['ERROR_SUCCESS'],"{$lang['STAFF_PRIV_SUCC']} {$_POST['priv']}.");
+		die($h->endpage());
+	}
+	else
+	{
+		$csrf = request_csrf_html('staff_priv');
+		echo "<form method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						{$lang['STAFF_PRIV_INFO']}
+					</th>
+				</tr>
+				<tr>
+					<th>
+						{$lang['STAFF_PRIV_USER']}
+					</th>
+					<td>
+						" . user_dropdown('user') . "
+					</td>
+				</tr>
+				
+				<tr>
+					<th>
+						{$lang['STAFF_PRIV_PRIVLIST']}
+					</th>
+					<td>
+						<select name='priv' class='form-control'>
+							<option value='NPC'>{$lang['SCU_UL1']}</option>
+							<option value='Member'>{$lang['SCU_UL2']}</option>
+							<option value='Forum Moderator'>{$lang['SCU_UL4']}</option>
+							<option value='Assistant'>{$lang['SCU_UL5']}</option>
+							<option value='Web Developer'>{$lang['SCU_UL6']}</option>
+							<option value='Admin'>{$lang['SCU_UL3']}</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-default' value='{$lang['STAFF_PRIV_PRIVBTN']}'>
+					</td>
+				</tr>
+			</table>
+			{$csrf}
+		</form>";
 	}
 }

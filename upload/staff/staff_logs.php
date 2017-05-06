@@ -4,7 +4,7 @@
 	Created: 6/1/2016 at 6:06PM Eastern Time
 	Info: Allows staff to view the in-game logs
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
 if (!isset($_GET['action']))
@@ -14,66 +14,99 @@ if (!isset($_GET['action']))
 switch ($_GET['action'])
 {
 case "traininglogs":
-    trainlogs();
+    logs('training');
     break;
-case "attacklogs":
-    attacklogs();
+case "attackinglogs":
+    logs('attacking');
     break;
 case "userlogs":
     userlogs();
     break;
 case "loginlogs":
-    loginlogs();
+    logs('login');
     break;
 case "itemselllogs":
-    itemselllogs();
+    logs('itemsell');
     break;
 case "equiplogs":
-    equiplogs();
+    logs('equip');
     break;
 case "banklogs":
-    banklogs();
+    logs('bank');
     break;
 case "crimelogs":
-    crimelogs();
+    logs('crime');
     break;
 case "itemuselogs":
-    itemuselogs();
+    logs('itemuse');
     break;
 case "itembuylogs":
-    itembuylogs();
+    logs('itembuy');
     break;
 case "itemmarketlogs":
-    itemmarketlogs();
+    logs('imarket');
     break;
 case "stafflogs":
-    stafflogs();
+    logs('staff');
     break;
 case "alllogs":
     alllogs();
     break;
 case "verifylogs":
-    verifylogs();
+    logs('verify');
     break;
 case "travellogs":
-    travellogs();
+    logs('travel');
     break;
 case "spylogs":
-    spylogs();
+    logs('spy');
     break;
 case "gamblinglogs":
-    gamblinglogs();
+    logs('gambling');
     break;
+case "fedjaillogs":
+    logs('fedjail');
+    break;
+case "pokes":
+    logs('pokes');
+    break;
+case "guilds":
+    logs('guilds');
+    break;
+case "level":
+    logs('level');
+    break;
+case "guildvault":
+    logs('guild_vault');
+    break;
+case "temple":
+    logs('temple');
+    break;
+case "secmarket":
+    logs('secmarket');
+    break;
+case "mining":
+    logs('mining');
+    break;
+case "forumwarn":
+    logs('forumwarn');
+    break;
+case "forumban":
+    logs('forumban');
+    break;
+case "mail":
+	maillogs();
+	break;
 default:
     die();
     break;
 }
-function trainlogs()
+function logs($name)
 {
 	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='training';
+	$logname=$name;
     echo "
-	<h3>Training Logs</h3>
+	<h3>{$logname} Logs</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -87,7 +120,7 @@ function trainlogs()
     $db->free_result($q);
     if ($attacks == 0)
     {
-        echo "There haven't been any trainings yet.";
+        echo "There haven't been any actions in the {$logname} logs.";
         return;
     }
     $pages = ceil($attacks / $app);
@@ -129,7 +162,7 @@ function trainlogs()
 		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
 		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
+        	<td>" . DateTime_Parse($r['log_time'])
                 . "</td>
         	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
         	<td>{$r['log_text']}</td>
@@ -160,98 +193,6 @@ function trainlogs()
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
 }
-function attacklogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-    echo "
-	<h3>Attack Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = 'attacking'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo 'There have been no attacks yet.';
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action=attacklogs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = 'attacking'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action=attacklogs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the attack logs.");
-}
 function userlogs()
 {
 	global $h,$lang,$db,$ir,$api,$userid;
@@ -276,7 +217,7 @@ function userlogs()
 		$db->free_result($q);
 		if ($logs == 0)
 		{
-			alert("info","Nothing!","This user hasn't done anything yet.");
+			alert("info","Nothing!","This user hasn't done anything yet.",true,'index.php');
 			return;
 		}
 		$pages = ceil($logs / $app);
@@ -322,7 +263,7 @@ function userlogs()
 		   echo "
 				<tr>
 					<td>
-						" . date("F j, Y, g:i:s a", $r['log_time']) . "
+						" . DateTime_Parse($r['log_time']) . "
 					</td>
 					<td>
 						<a href='../profile.php?user={$user}'>{$r['username']}</a> [{$user}]
@@ -357,6 +298,7 @@ function userlogs()
 		}
 		$mypage = floor($_GET['st'] / 100) + 1;
 		$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of User ID {$user}'s user logs.");
+		$h->endpage();
 	}
 	else
 	{
@@ -406,845 +348,12 @@ function userlogs()
 	</table>";
 	}
 }
-function loginlogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-    echo "
-	<h3>Login Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = 'login'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo 'There have been no logins yet.';
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action=loginlogs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = 'login'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action=loginlogs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the login logs.");
-}
-function itemselllogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-    echo "
-	<h3>Item Selling Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = 'itemsell'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "There haven't been any items sold back to the game yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action=itemselllogs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = 'itemsell'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action=itemselllogs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the login logs.");
-}
-function equiplogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-    echo "
-	<h3>Equip Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = 'equip'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "There haven't been any items equipped yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action=equiplogs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = 'equip'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action=equiplogs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the equipping logs.");
-}
-function banklogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='bank';
-    echo "
-	<h3>Bank Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = '{$logname}'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "There haven't been any bank transactions yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = '{$logname}'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
-}
-function crimelogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='crime';
-    echo "
-	<h3>Crime Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = '{$logname}'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "There haven't been any crime attempts yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = '{$logname}'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
-}
-function itemuselogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='itemuse';
-    echo "
-	<h3>Item Use Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = '{$logname}'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "No items have been used yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = '{$logname}'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the item use logs.");
-}
-function itembuylogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='itembuy';
-    echo "
-	<h3>Item Buy Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = '{$logname}'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "No items have been bought from the game yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = '{$logname}'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the item buy logs.");
-}
-function itemmarketlogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='imarket';
-    echo "
-	<h3>Item Market Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = '{$logname}'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "No one has used the item market yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = '{$logname}'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the item market logs.");
-}
-function stafflogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='staff';
-    echo "
-	<h3>Staff Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = '{$logname}'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "There haven't been any staff actions yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = '{$logname}'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
-}
 function alllogs()
 {
 	global $db,$ir,$h,$lang,$userid,$api;
+	$logname='all';
     echo "
-	<h3>Game Logs</h3>
+	<h3>General Logs</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -1275,7 +384,7 @@ function alllogs()
 		{
 			echo "<li>";
 		}
-        echo "<a href='?action=alllogs&st={$s}'>{$i}";
+        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
     echo "
@@ -1299,7 +408,7 @@ function alllogs()
 		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
 		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
+        	<td>" . DateTime_Parse($r['log_time'])
                 . "</td>
         	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
         	<td>{$r['log_text']}</td>
@@ -1324,18 +433,18 @@ function alllogs()
 		{
 			echo "<li>";
 		}
-        echo "<a href='?action=alllogs&st={$s}'>{$i}";
+        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the game logs.");
 }
-function travellogs()
+function maillogs()
 {
 	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='travel';
+	$logname='mail';
     echo "
-	<h3>Travelling Logs</h3>
+	<h3>Mail Logs</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -1344,13 +453,12 @@ function travellogs()
     }
     $st = abs(intval($_GET['st']));
     $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = '{$logname}'");
+    $q = $db->query("SELECT COUNT(`mail_id`) FROM `mail`");
     $attacks = $db->fetch_single($q);
     $db->free_result($q);
     if ($attacks == 0)
     {
-        echo "There haven't been any location changes yet.";
+        echo "There haven't been any messages sent yet.";
         return;
     }
     $pages = ceil($attacks / $app);
@@ -1376,26 +484,39 @@ function travellogs()
     <table class='table table-bordered table-hover table-reponsive'>
     		<tr>
     			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
+    			<th>Sender</th>
+				<th>Receiver</th>
+    			<th>Message</th>
     		</tr>
        ";
     $q =
             $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = '{$logname}'
-                     ORDER BY `log_time` DESC
+                    "SELECT `mail_to`, `mail_from`, `mail_text`, `mail_time`
+                     FROM `mail`
+                     ORDER BY `mail_time` DESC
                      LIMIT $st, $app");
     while ($r = $db->fetch_row($q))
     {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
 		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
+        	<td>
+				" . DateTime_Parse($r['mail_time']) . "
+			</td>
+        	<td>
+				<a href='../profile.php?user={$r['mail_from']}'>
+					{$api->SystemUserIDtoName($r['mail_from'])}
+				</a> 
+				[{$r['mail_from']}]
+			</td>
+        	<td>
+				<a href='../profile.php?user={$r['mail_to']}'>
+					{$api->SystemUserIDtoName($r['mail_to'])}
+				</a> 
+				[{$r['mail_to']}]
+			</td>
+			<td>
+				" . stripslashes(strip_tags($r['mail_text'])) . "
+			</td>
            ";
         echo '</tr>';
     }
@@ -1421,285 +542,6 @@ function travellogs()
         echo "</li></a>&nbsp;";
     }
     $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
-}
-function spylogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='spy';
-    echo "
-	<h3>Spying Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = '{$logname}'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "There haven't been any spy attempts yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = '{$logname}'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
-}
-function verifylogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='verify';
-    echo "
-	<h3>Verification Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = '{$logname}'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "There haven't been any verifications yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = '{$logname}'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
-}
-function gamblinglogs()
-{
-	global $db,$ir,$h,$lang,$userid,$api;
-	$logname='gambling';
-    echo "
-	<h3>Gambling Logs</h3>
-	<hr />
- 	  ";
-    if (!isset($_GET['st']))
-    {
-        $_GET['st'] = 0;
-    }
-    $st = abs(intval($_GET['st']));
-    $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`)
-    				 FROM `logs` WHERE `log_type` = '{$logname}'");
-    $attacks = $db->fetch_single($q);
-    $db->free_result($q);
-    if ($attacks == 0)
-    {
-        echo "There haven't been any gambling yet.";
-        return;
-    }
-    $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-    <br />
-    <table class='table table-bordered table-hover table-reponsive'>
-    		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
-    		</tr>
-       ";
-    $q =
-            $db->query(
-                    "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
-                     FROM `logs`
-					 WHERE `log_type` = '{$logname}'
-                     ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
-    while ($r = $db->fetch_row($q))
-    {
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
-        echo "
-		<tr>
-        	<td>" . date('F j, Y, g:i:s a', $r['log_time'])
-                . "</td>
-        	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
-        	<td>{$r['log_text']}</td>
-           ";
-        echo '</tr>';
-    }
-    $db->free_result($q);
-    echo "
-    </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
-       ";
-    for ($i = 1; $i <= $pages; $i++)
-    {
-        $s = ($i - 1) * $app;
-		if ($s == $st)
-        {
-            echo "<li class='active'>";
-        }
-
-		else
-		{
-			echo "<li>";
-		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
+	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the mail logs.");
 }
 $h->endpage();

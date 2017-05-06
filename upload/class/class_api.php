@@ -5,7 +5,7 @@
 	Info: Creates a class file to use as an API for modders
 	who don't wish to use the main game code!
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 if (!defined('MONO_ON'))
 {
@@ -18,12 +18,12 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.1.6.1";
+		return "17.5.1";	//Last Updated 5/5/2017
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
 		@param int user = User ID to test for.
-		@param int type = Currency type. 1 for Primary, 2 for secondary
+		@param int type = Currency type. [Ex. primary or secondary]
 		@param int money = Minimum money requied.
 		Returns true if user has more cash than required.
 		Returns false if user does not exist or does not have the minimum cash requred.
@@ -33,25 +33,13 @@ class api
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
-		$type = (isset($type) && is_numeric($type)) ? abs(intval($type)) : 0;
+		$type = $db->escape(stripslashes(strtolower($type)));
 		$userexist=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
 		if ($userexist)
 		{
-			if ($type == 1)
+			if ($type == 'primary' || $type == 'secondary')
 			{
-				$UserMoney=$db->fetch_single($db->query("SELECT `primary_currency` FROM `users` WHERE `userid` = {$user}"));
-				if ($UserMoney < $minimum)
-				{
-					return false;
-				}
-				else
-				{
-					return true;
-				}
-			}
-			elseif ($type == 2)
-			{
-				$UserMoney=$db->fetch_single($db->query("SELECT `secondary_currency` FROM `users` WHERE `userid` = {$user}"));
+				$UserMoney=$db->fetch_single($db->query("SELECT `{$type}_currency` FROM `users` WHERE `userid` = {$user}"));
 				if ($UserMoney < $minimum)
 				{
 					return false;
@@ -120,7 +108,7 @@ class api
 	/*
 		Gives user specified amount of currency type.
 		@param int user = User ID to give currency to.
-		@param int type = Currency type. 1 for Primary, 2 for secondary
+		@param int type = Currency type. [Ex. primary and secondary]
 		@param int money = Currency given.
 		Returns true if user has received currency.
 		Returns false if user does not receive currency.
@@ -129,19 +117,14 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$type = (isset($type) && is_numeric($type)) ? abs(intval($type)) : 0;
+		$type = $db->escape(stripslashes(strtolower($type)));
 		$quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
 		$userexist=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
 		if ($userexist)
 		{
-			if ($type == 1)
+			if ($type == 'primary' || $type == 'secondary')
 			{
-				$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$quantity} WHERE `userid` = {$user}");
-				return true;
-			}
-			elseif ($type == 2)
-			{
-				$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$quantity} WHERE `userid` = {$user}");
+				$db->query("UPDATE `users` SET `{$type}_currency` = `{$type}_currency` + {$quantity} WHERE `userid` = {$user}");
 				return true;
 			}
 			else
@@ -158,7 +141,7 @@ class api
 	/*
 		Takes qunatity of currency type from the user specified.
 		@param int user = User ID to give currency to.
-		@param int type = Currency type. 1 for Primary, 2 for secondary
+		@param int type = Currency type. [Ex. primary and secondary]
 		@param int money = Currency given.
 		Returns true if user has lost currency.
 		Returns false if user does not lose any currency.
@@ -167,21 +150,15 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$type = (isset($type) && is_numeric($type)) ? abs(intval($type)) : 0;
+		$type = $db->escape(stripslashes(strtolower($type)));
 		$quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
 		$userexist=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
 		if ($userexist)
 		{
-			if ($type == 1)
+			if ($type == 'primary' || $type == 'secondary')
 			{
-				$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$quantity} WHERE `userid` = {$user}");
-				$db->query("UPDATE `users` SET `primary_currency` = 0 WHERE `primary_currency` < 0");
-				return true;
-			}
-			elseif ($type == 2)
-			{
-				$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` - {$quantity} WHERE `userid` = {$user}");
-				$db->query("UPDATE `users` SET `secondary_currency` = 0 WHERE `secondary_currency` < 0");
+				$db->query("UPDATE `users` SET `{$type}_currency` = `{$type}_currency` - {$quantity} WHERE `userid` = {$user}");
+				$db->query("UPDATE `users` SET `{$type}_currency` = 0 WHERE `{$type}_currency` < 0");
 				return true;
 			}
 			else
@@ -198,7 +175,7 @@ class api
 	/*
 		Tests to see what the user has equipped.
 		@param int user = User ID to test against.
-		@param int slot = Equipment slot to test. 1 = Primary, 2 = Secondary, 3 = Armor
+		@param int slot = Equipment slot to test. [Ex. Primary, Secondary, Armor]
 		@param int itemid = Item to test for. -1 = Any Item, 0 = No Item Equipped, >0 = Specific item
 		Returns true if user has item equipped
 		Returns false if user does not have item equipped.
@@ -207,12 +184,13 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		if ($slot == 1)
+		$slot = $db->escape(stripslashes(strtolower($slot)));
+		if ($slot == 'primary' || $slot == 'secondary' || $slot == 'armor')
 		{
 			//Any item equipped
 			if ($itemid == -1)
 			{
-				$equipped=$db->fetch_single($db->query("SELECT `equip_primary` FROM `users` WHERE `userid` = {$user}"));
+				$equipped=$db->fetch_single($db->query("SELECT `equip_{$slot}` FROM `users` WHERE `userid` = {$user}"));
 				if ($equipped > 0)
 				{
 					return true;
@@ -226,7 +204,7 @@ class api
 			elseif ($itemid > 0)
 			{
 				$itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
-				$equipped=$db->fetch_single($db->query("SELECT `equip_primary` FROM `users` WHERE `userid` = {$user}"));
+				$equipped=$db->fetch_single($db->query("SELECT `equip_{$slot}` FROM `users` WHERE `userid` = {$user}"));
 				if ($equipped == $itemid)
 				{
 					return true;
@@ -239,101 +217,7 @@ class api
 			//Nothing equipped
 			elseif ($itemid == 0)
 			{
-				$equipped=$db->fetch_single($db->query("SELECT `equip_primary` FROM `users` WHERE `userid` = {$user}"));
-				if ($equipped == 0)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return false;
-			}
-		}
-		elseif ($slot == 2)
-		{
-			//Any item equipped
-			if ($itemid == -1)
-			{
-				$equipped=$db->fetch_single($db->query("SELECT `equip_secondary` FROM `users` WHERE `userid` = {$user}"));
-				if ($equipped > 0)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			//Specific item equipped
-			elseif ($itemid > 0)
-			{
-				$itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
-				$equipped=$db->fetch_single($db->query("SELECT `equip_secondary` FROM `users` WHERE `userid` = {$user}"));
-				if ($equipped == $itemid)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			//Nothing equipped
-			elseif ($itemid == 0)
-			{
-				$equipped=$db->fetch_single($db->query("SELECT `equip_secondary` FROM `users` WHERE `userid` = {$user}"));
-				if ($equipped == 0)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return false;
-			}
-		}
-		elseif ($slot == 3)
-		{
-			//Any item equipped
-			if ($itemid == -1)
-			{
-				$equipped=$db->fetch_single($db->query("SELECT `equip_armor` FROM `users` WHERE `userid` = {$user}"));
-				if ($equipped > 0)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			//Specific item equipped
-			elseif ($itemid > 0)
-			{
-				$itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
-				$equipped=$db->fetch_single($db->query("SELECT `equip_armor` FROM `users` WHERE `userid` = {$user}"));
-				if ($equipped == $itemid)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			//Nothing equipped
-			elseif ($itemid == 0)
-			{
-				$equipped=$db->fetch_single($db->query("SELECT `equip_armor` FROM `users` WHERE `userid` = {$user}"));
+				$equipped=$db->fetch_single($db->query("SELECT `equip_{$slot}` FROM `users` WHERE `userid` = {$user}"));
 				if ($equipped == 0)
 				{
 					return true;
@@ -356,20 +240,22 @@ class api
 	/*
 		Tests the inputted user to see if they're in the dungeon or infirmary
 		@param int user = User ID to test against.
-		@param int status = Place to test. 1 = Infirmary, 2 = Dungeon
+		@param int status = Place to test. [Infirmary or dungeon]
 		Returns true if user is in the dungeon/infirmary
 		Returns false if user is not in the dungeon/infirmary
 	*/
 	function UserStatus($user,$status)
 	{
+		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		if ($status == 1)
+		$status = $db->escape(stripslashes(strtolower($status)));
+		if ($status == 'infirmary')
 		{
-			user_infirmary($user);
+			return user_infirmary($user);
 		}
-		elseif ($status == 2)
+		elseif ($status == 'dungeon')
 		{
-			user_dungeon($user);
+			return user_dungeon($user);
 		}
 		else
 		{
@@ -379,7 +265,7 @@ class api
 	/*
 		Places or removes dungeon/infirmary time on the specified user.
 		@param int user = User ID to test against.
-		@param int place = Place to test. 1 = Infirmary, 2 = Dungeon
+		@param int place = Place to test. [Ex. Dungeon and Infirmary]
 		@param int time = Minutes user is in infirmary/dungeon.
 		@param text reason = Reason why user is in the infirmary/dungeon.
 		Returns true if user is placed in the infirmary/dungeon, or is removed from it.
@@ -389,8 +275,9 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$reason=$db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($reason))));
-		if ($place == 1)
+		$reason = $db->escape(stripslashes($reason));
+		$place = $db->escape(stripslashes(strtolower($place)));
+		if ($place == 'infirmary')
 		{
 			if ($time >= 0)
 			{
@@ -405,7 +292,7 @@ class api
 				return true;
 			}
 		}
-		elseif ($place == 2)
+		elseif ($place == 'dungeon')
 		{
 			if ($time >= 0)
 			{
@@ -449,8 +336,8 @@ class api
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$from = (isset($from) && is_numeric($from)) ? abs(intval($from)) : 0;
-		$subj = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($subj))));
-		$msg = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($msg))));
+		$subj = $db->escape(stripslashes($subj));
+		$msg = $db->escape(stripslashes($msg));
 		$time = time();
 		$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$user}");
 		if ($db->num_rows($userexist) == 0)
@@ -486,7 +373,7 @@ class api
 	function GameAddAnnouncement($text,$poster = 1)
 	{
 		global $db;
-		$text = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($text))));
+		$text = $db->escape(str_replace("\n", "<br />",stripslashes($text)));
 		$poster = (isset($poster) && is_numeric($poster)) ? abs(intval($poster)) : 1;
 		$time = time();
 		$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$poster}");
@@ -515,7 +402,7 @@ class api
 	function UserMemberLevelGet($user,$level,$exact=false)
 	{
 		global $db;
-		$level = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($level)))));
+		$level = $db->escape(stripslashes(strtolower($level)));
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		if ($user == 0)
 		{
@@ -672,10 +559,10 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
+		$stat = $db->escape(stripslashes(strtolower($stat)));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
-			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.");
+			alert('danger',$lang['ERROR_SECURITY'],$lang['API_ERROR'],false);
 		}
 		else
 		{
@@ -707,19 +594,21 @@ class api
 	{
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$stat = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($stat)))));
+		$stat = $db->escape(stripslashes(strtolower($stat)));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
-			alert('danger',"Security Issue!","You are attempting to use this API call to get sensitive information from the user. We won't allow this.");
+			alert('danger',$lang['ERROR_SECURITY'],$lang['API_ERROR'],false);
 		}
 		else
 		{
-			if ($change > 0)
+			if ($change >= 1)
 			{
 				$change = (isset($change) && is_numeric($change)) ? abs(intval($change)) : 0;
 				if ($percent == true)
 				{
-					$db->query("UPDATE users SET `{$stat}` = `{$stat}` +((`max{$stat}`*0.{$change})+0.5) WHERE `{$stat}` < `max{$stat}` AND `userid` = {$user}");
+					$maxstat = $db->fetch_single($db->query("SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
+					$number = ($change / 100) * $maxstat;
+					$db->query("UPDATE users SET `{$stat}`=`{$stat}`+{$number} WHERE `{$stat}` < `max{$stat}`");
 					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
 					return true;
 				}
@@ -727,7 +616,13 @@ class api
 				{
 					$db->query("UPDATE users SET `{$stat}` = `{$stat}` + {$change} WHERE `userid` = {$user}");
 					$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
+					return true;
 				}
+			}
+			elseif ($change == 0)
+			{
+				$db->query("UPDATE users SET `{$stat}` = 0 WHERE `userid` = {$user}");
+				return true;
 			}
 			else
 			{
@@ -742,6 +637,7 @@ class api
 				{
 					$db->query("UPDATE users SET `{$stat}` = `{$stat}` - {$change} WHERE `userid` = {$user}");
 					$db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
+					return true;
 				}
 			}
 		}
@@ -758,8 +654,8 @@ class api
 		$time = time();
 		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		$input = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($input))));
-		$logtype = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes(strtolower($logtype)))));
+		$input = $db->escape(stripslashes($input));
+		$logtype = $db->escape(stripslashes(strtolower($logtype)));
 		$db->query("INSERT INTO `logs` (`log_id`, `log_type`, `log_user`, `log_time`, `log_text`, `log_ip`) VALUES (NULL, '{$logtype}', '{$user}', '{$time}', '{$input}', '{$IP}');");
 	}
 	/*
@@ -790,7 +686,7 @@ class api
 	function SystemUsernametoID($name)
 	{
 		global $db;
-		$name = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($name))));
+		$name = $db->escape(stripslashes($name));
 		$id=$db->query("SELECT `userid` FROM `users` WHERE `username` = '{$name}'");
 		if ($db->num_rows($id) == 0)
 		{
@@ -830,7 +726,7 @@ class api
 	function SystemItemNametoID($name)
 	{
 		global $db;
-		$name = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($name))));
+		$name = $db->escape(stripslashes($name));
 		$id=$db->query("SELECT `itmid` FROM `items` WHERE `itmname` = '{$name}'");
 		if ($db->num_rows($id) == 0)
 		{
@@ -951,5 +847,158 @@ class api
 			$guild=$db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$ir['location']}"));
 		}
 		$db->query("UPDATE `guild` SET `guild_{$cur}curr` = `guild_{$cur}curr` + {$number} WHERE `guild_id` = {$guild}");
+	}
+	/*
+		Function to fetch all or a specific field of information from the specified guild.
+		@param int guild_id = Guild ID to fetch info from.
+		@param text field = Data field to return. Optional. If left null/empty, will return all fields.
+		Returns all fields if field is empty, otherwise it'll return a single field.
+	*/
+	function GuildFetchInfo($guild_id,$field=null)
+	{
+		global $db;
+		$guild_id = (isset($guild_id) && is_numeric($guild_id)) ? abs(intval($guild_id)) : 0;
+		if (isset($guild_id) && $guild_id > 0)
+		{
+			$cnt=$db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}");
+			if ($db->num_rows($cnt) == 0)
+			{
+				return false;
+			}
+			if (is_null($field))
+			{
+				return $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}"));
+			}
+			else
+			{
+				$field = $db->escape(stripslashes($field));
+				return $db->fetch_single($db->query("SELECT `{$field}` FROM `guild` WHERE `guild_id` = {$guild_id}"));
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	/*
+		Function to add a guild notification to a guild.
+		@param int guild_id = ID of the guild you wish to add a notification to.
+		@param text notification = Notification text.
+		Returns true if the notification was added successfully, false otherwise.
+	*/
+	function GuildAddNotification($guild_id,$notification)
+	{
+		global $db;
+		$notification=$db->escape(stripslashes($notification));
+		$time=time();
+		$guild_id = (isset($guild_id) && is_numeric($guild_id)) ? abs(intval($guild_id)) : 0;
+		if (isset($guild_id) && $guild_id > 0)
+		{
+			$cnt=$db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}");
+			if ($db->num_rows($cnt) == 0)
+			{
+				return false;
+			}
+			else
+			{
+				$db->query("INSERT INTO `guild_notifications` (`gn_id`, `gn_guild`, `gn_time`, `gn_text`) VALUES (NULL, '{$guild_id}', '{$time}', '{$notification}')");
+				return true;
+			}
+		}
+		return false;
+	}
+	/*
+		Function to set a user's info a static value.
+		@param int user = User ID you wish to set a specific stat to.
+		@param text stat = Stat to alter.
+		@param int state = Value to set the stat to.
+		Returns true if the stat was updated, false otherwise.
+	*/
+	function UserInfoSetStatic($user,$stat,$state)
+	{
+		global $db,$api;
+		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+		$stat = $db->escape(stripslashes(strtolower($stat)));
+		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
+		{
+			alert('danger',$lang['ERROR_SECURITY'],$lang['API_ERROR'],false);
+		}
+		else
+		{
+			if (is_int($state))
+			{
+				$state = (isset($state) && is_numeric($state)) ? abs(intval($state)) : 0;
+			}
+			else
+			{
+				$state = $db->escape(stripslashes($state));
+			}
+			if ($user > 0)
+			{
+				if (!($api->SystemUserIDtoName($user) == false))
+				{
+					$db->query("UPDATE `users` SET `{$stat}` = '{$state}' WHERE `userid` = '{$user}'");
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+	/*
+		Function to test if the inputted users share IPs at all.
+		@param int user1 = User ID of the first player.
+		@param int user2 = User ID of the second player.
+		Returns true if the users share an IP, false if not. Will also return false if both variables are equal.
+	*/
+	function SystemCheckUsersIPs($user1,$user2)
+	{
+		global $db;
+		$user1 = (isset($user1) && is_numeric($user1)) ? abs(intval($user1)) : 0;
+		$user2 = (isset($user2) && is_numeric($user2)) ? abs(intval($user2)) : 0;
+		if (empty($user1) || empty($user2))
+		{
+			return false;
+		}
+		elseif ($user1 == $user2)
+		{
+			return false;
+		}
+		else
+		{
+			$s=$db->fetch_row($db->query("SELECT `lastip`,`loginip`,`registerip` FROM `users` WHERE `userid` = {$user1}"));
+			$r=$db->fetch_row($db->query("SELECT `lastip`,`loginip`,`registerip` FROM `users` WHERE `userid` = {$user2}"));
+			if ($s['lastip'] == $r['lastip'] || $s['loginip'] == $r['loginip'] || $s['registerip'] == $r['registerip'])
+			{
+				return true;
+			}
+		}
+	}
+	/*
+		Function to fetch item count from a user's inventory.
+		@param int userid = User ID of the player to test inventory.
+		@param int itemid = Item ID to count.
+		Returns the count of Item ID found on the user.
+	*/
+	function UserCountItem($userid,$itemid)
+	{
+		global $db;
+		$userid = (isset($userid) && is_numeric($userid)) ? abs(intval($userid)) : 0;
+		$itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
+		if (empty($userid) || empty($itemid))
+		{
+			return false;
+		}
+		else
+		{
+			$qty=$db->fetch_single($db->query("SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$itemid} AND `inv_userid` = {$userid}"));
+			return $qty;
+		}
 	}
 }

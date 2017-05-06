@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		academy.php
+	Created: 	4/4/2016 at 11:49PM Eastern Time
+	Info: 		The academy, which players can use to take courses and
+				increase their stats for currency and waiting.
+	Author:		ImJustIsabella
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require ("globals.php");
 
 if (!isset($_GET['action']))
@@ -80,8 +88,8 @@ function start()
 				$db->query("update `users` SET `primary_currency`='{$new_currency}' WHERE `userid` = '{$userid}'");
 				alert("success","{$lang['ACADEMY_STARTED_COURSE']}","<br />you have started the course {$course['academyname']}.<br />It will finish in {$course['academydays']} day(s)");
 				echo "<br /><br /><a href='index.php'>{$lang['ACADEMY_RETURN_HOME']}</a>";
-				$db->query("update `users` SET `course`='{$academyid}' WHERE `userid` = '{$userid}'");
-				$db->query("update `users` SET `days_left`='{$course['academydays']}' WHERE `userid` = '{$userid}'");
+				//$db->query("update `users` SET `course`='{$academyid}' WHERE `userid` = '{$userid}'");
+				//$db->query("update `users` SET `days_left`='{$course['academydays']}' WHERE `userid` = '{$userid}'");
 			}
 			else
 			{

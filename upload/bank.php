@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		bank.php
+	Created: 	4/4/2016 at 11:53PM Eastern Time
+	Info: 		The game bank players can store their currency in for safety.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $bank_cost = $set['bank_cost'];
 $bank_maxfee = $set['bank_maxfee'];
@@ -30,13 +37,13 @@ else
         if ($ir['primary_currency'] >= $bank_cost)
         {
             
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_SUCCESS']} " . number_format($bank_cost) . "<br />
-			<a href='bank.php'>{$lang['BANK_SUCCESS1']}</a>");
-            $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$bank_cost}, `bank` = 0 WHERE `userid` = {$userid}");
+			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_SUCCESS']} " . number_format($bank_cost),true,'bank.php');
+			$api->UserTakeCurrency($userid,'primary',$bank_cost);
+			$api->UserInfoSet($userid,"bank",0);
         }
         else
         {
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_FAIL']} " . number_format($bank_cost));
+            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_FAIL']} " . number_format($bank_cost),true,'bank.php');
         }
     }
     else
@@ -77,10 +84,10 @@ function index()
 function deposit()
 {
     global $db,$ir,$userid,$lang,$bank_maxfee,$bank_feepercent,$api;
-    $_POST['deposit'] = abs((int) $_POST['deposit']);
+    $_POST['deposit'] = abs($_POST['deposit']);
     if ($_POST['deposit'] > $ir['primary_currency'])
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_D_ERROR']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['BANK_D_ERROR'],true,'bank.php');
     }
     else
     {
@@ -91,25 +98,27 @@ function deposit()
         }
         $gain = $_POST['deposit'] - $fee;
         $ir['bank'] += $gain;
-        $db->query("UPDATE `users` SET `bank` = `bank` + {$gain}, `primary_currency` = `primary_currency` - {$_POST['deposit']} WHERE `userid` = {$userid}");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_D_SUCCESS']} " . number_format($_POST['deposit']) . "{$lang['BANK_D_SUCCESS1']}" . number_format($fee) . "{$lang['BANK_D_SUCCESS2']} " . number_format($gain) . "{$lang['BANK_D_SUCCESS3']} " . number_format($ir['bank']) . "{$lang['BANK_D_SUCCESS4']}");
+		$api->UserTakeCurrency($userid,'primary',$_POST['deposit']);
+		$api->UserInfoSetStatic($userid,"bank",$ir['bank']);
+		alert('success',$lang['ERROR_SUCCESS'],"{$lang['BANK_D_SUCCESS']} " . number_format($_POST['deposit']) . "{$lang['BANK_D_SUCCESS1']}" . number_format($fee) . "{$lang['BANK_D_SUCCESS2']} " . number_format($gain) . "{$lang['BANK_D_SUCCESS3']} " . number_format($ir['bank']) . "{$lang['BANK_D_SUCCESS4']}",true,'bank.php');
 		$api->SystemLogsAdd($userid,'bank',"Deposited " . number_format($_POST['deposit']) . " Primary Currency.");
 	}
 }
 function withdraw()
 {
 	global $db, $ir, $lang, $userid, $h, $api;
-	$_POST['withdraw'] = abs((int) $_POST['withdraw']);
+	$_POST['withdraw'] = abs($_POST['withdraw']);
 	if ($_POST['withdraw'] > $ir['bank'])
     {
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_W_FAIL']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['BANK_W_FAIL'],true,'bank.php');
     }
 	else
 	{
 		$gain = $_POST['withdraw'];
 		$ir['bank'] -= $gain;
-		$db->query("UPDATE `users` SET `bank` = `bank` - {$gain}, `primary_currency` = `primary_currency` + {$gain} WHERE `userid` = {$userid}");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_W_SUCCESS']} " . number_format($_POST['withdraw']) . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS1']} " . $ir['bank'] . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS2']}");
+		$api->UserGiveCurrency($userid,'primary',$_POST['withdraw']);
+		$api->UserInfoSetStatic($userid,"bank",$ir['bank']);
+		alert('success',$lang['ERROR_SUCCESS'],"{$lang['BANK_W_SUCCESS']} " . number_format($_POST['withdraw']) . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS1']} " . $ir['bank'] . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS2']}",true,'bank.php');
 		$api->SystemLogsAdd($userid,'bank',"Withdrew " . number_format($_POST['withdraw']) . " Primary Currency.");
 	}
 }

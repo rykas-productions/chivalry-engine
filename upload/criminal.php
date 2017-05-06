@@ -1,7 +1,15 @@
 <?php
+/*
+	File:		criminal.php
+	Created: 	4/4/2016 at 11:55PM Eastern Time
+	Info: 		Lists created crimes for players to commit.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
+$macropage=('criminal.php');
 require('globals.php');
 echo "<h3>{$lang['CRIME_TITLE']}</h3>";
-if (user_infirmary($ir['userid']) == true || user_dungeon($ir['userid']))
+if ($api->UserStatus($ir['userid'],'infirmary') == true || $api->UserStatus($ir['userid'],'dungeon') == true)
 {
 	alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['CRIME_ERROR_JI']}");
 	die($h->endpage());
@@ -31,8 +39,7 @@ function home()
 	$db->free_result($q2);
 	$q = $db->query("SELECT `cgID`, `cgNAME` FROM `crimegroups` ORDER BY `cgORDER` ASC");
 	echo "
-	<div class='table-resposive'>
-	<table class='table table-bordered'>
+	<table class='table table-bordered table-responsive'>
 		<tr>
 			<th>
 				{$lang['CRIME_TABLE_CRIME']}
@@ -56,7 +63,7 @@ function home()
 		}
 	}
 	$db->free_result($q);
-	echo "</table></div>";
+	echo "</table>";
 	$h->endpage();
 }
 function crime()
@@ -66,24 +73,24 @@ function crime()
 	{
 		$_GET['c'] = 0;
 	}
-	$_GET['c'] = abs((int) $_GET['c']);
+	$_GET['c'] = abs($_GET['c']);
 	if ($_GET['c'] <= 0)
 	{
-		alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}");
+		alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}",true,'criminal.php');
 	}
 	else
 	{
 		$q =  $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_GET['c']} LIMIT 1");
 		if ($db->num_rows($q) == 0)
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}");
+			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}",true,'criminal.php');
 			die($h->endpage());
 		}
 		$r = $db->fetch_row($q);
 		$db->free_result($q);
 		if ($ir['brave'] < $r['crimeBRAVE'])
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['CRIME_COMMIT_BRAVEBAD']}");
+			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['CRIME_COMMIT_BRAVEBAD']}",true,'criminal.php');
 			die($h->endpage());
 		}
 		else
@@ -91,39 +98,53 @@ function crime()
 			$ec = "\$sucrate=" . str_replace(array("LEVEL", "EXP", "WILL", "IQ"), array($ir['level'], $ir['xp'], $ir['will'], $ir['iq']), $r['crimePERCFORM']) . ";";
 			eval($ec);
 			$ir['brave'] -= $r['crimeBRAVE'];
-			$db->query("UPDATE `users` SET `brave` = {$ir['brave']}  WHERE `userid` = $userid");
+			$api->UserInfoSet($userid,"brave","-{$r['crimeBRAVE']}");
 			if (Random(1, 100) <= $sucrate)
 			{
 				if (!empty($r['crimePRICURMIN']))
 				{
 					$prim_currency=Random($r['crimePRICURMIN'],$r['crimePRICURMAX']);
-					$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$prim_currency} WHERE `userid` = {$userid}");
+					$api->UserGiveCurrency($userid,'primary',$prim_currency);
 				}
 				if (!empty($r['crimeSECURMIN']))
 				{
 					$sec_currency=Random($r['crimeSECURMIN'],$r['crimeSECCURMAX']);
-					$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$sec_currency} WHERE `userid` = {$userid}");
+					$api->UserGiveCurrency($userid,'secondary',$sec_currency);
 				}
 				if (!empty($r['crimeSUCCESSITEM']))
 				{
-					item_add($userid, $r['crimeSUCCESSITEM'], 1);
+					$api->UserGiveItem($userid, $r['crimeSUCCESSITEM'], 1);
+				}
+				if (empty($prim_currency))
+				{
+					$prim_currency=0;
+				}
+				if (empty($sec_currency))
+				{
+					$sec_currency=0;
+				}
+				if (empty($r['crimeSUCCESSITEM']))
+				{
+					$r['crimeSUCCESSITEM']=0;
 				}
 				$text = str_replace("{money}", $prim_currency, $r['crimeSTEXT']);
+				$text = str_replace("{secondary}", $sec_currency, $r['crimeSTEXT']);
+				$text = str_replace("{item}", $api->SystemItemIDtoName($r['crimeSUCCESSITEM']), $r['crimeSTEXT']);
 				$title=$lang['ERROR_SUCCESS'];
 				$type='success';
-				$db->query("UPDATE `users` SET `xp` = `xp` + {$r['crimeXP']} WHERE `userid` = $userid");
+				$api->UserInfoSetStatic($userid,"xp",$ir['xp']+$r['crimeXP']);
 				$api->SystemLogsAdd($userid,'crime',"Successfully commited the {$r['crimeNAME']} crime.");
 			}
 			else
 			{
-					$text=$r['crimeFTEXT'];
-					$title=$lang['ERROR_GENERIC'];;
+					$title=$lang['ERROR_GENERIC'];
 					$type='danger';
 					$dtime=Random($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
-					put_dungeon($userid,$dtime,$r['crimeDUNGREAS']);
+					$text = str_replace("{time}", $dtime, $r['crimeFTEXT']);
+					$api->UserStatusSet($userid,'dungeon',$dtime,$r['crimeDUNGREAS']);
 					$api->SystemLogsAdd($userid,'crime',"Failed to commit the {$r['crimeNAME']} crime.");
 			}
-			alert("{$type}","{$title}","{$r['crimeITEXT']} {$text}");
+			alert("{$type}","{$title}","{$r['crimeITEXT']} {$text}",true,'criminal.php');
 			die($h->endpage());
 		}
 	}

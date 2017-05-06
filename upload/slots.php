@@ -1,35 +1,43 @@
 <?php
+/*
+	File:		slots.php
+	Created: 	4/5/2016 at 12:26AM Eastern Time
+	Info: 		Allows players to play slots for a chance at getting
+				more primary currency.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require_once('globals.php');
 $tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 500;
-$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs(intval($_GET['tresde'])) : 0;
+$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde']))
 {
     $_SESSION['tresde'] = 0;
 }
 if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
 {
-    alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['SLOTS_NOREFRESH']} <a href='?tresde={$tresder}'>Back</a>");
+    alert('danger',$lang['ERROR_GENERIC'],$lang['SLOTS_NOREFRESH'],true,"?tresde={$tresder}");
 	die($h->endpage());
 }
 $_SESSION['tresde'] = $_GET['tresde'];
 echo "<h3>{$lang['SLOTS_TITLE']}</h3><hr />";
 if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 {
-	$_POST['bet'] = abs((int) $_POST['bet']);
+	$_POST['bet'] = abs($_POST['bet']);
     if ($_POST['bet'] > $ir['primary_currency'])
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ROULETTE_ERROR1']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR1'],true,"?tresde={$tresder}");
 		die($h->endpage());
     }
 	else if ($_POST['bet'] > $maxbet)
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ROULETTE_ERROR2']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR2'],true,"?tresde={$tresder}");
 		die($h->endpage());
     }
 	else if ($_POST['bet'] < 0)
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ROULETTE_ERROR4']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR4'],true,"?tresde={$tresder}");
 		die($h->endpage());
     }
 	$slot = array();
@@ -65,7 +73,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 		$phrase="{$lang['ROULETTE_LOST']}";
 		$api->SystemLogsAdd($userid,'gambling',"Lost {$_POST['bet']} in slots.");
 	}
-	alert($alerttype,$title,"{$lang['ROULETTE_START']} {$slot[1]}, {$slot[2]}, {$slot[3]}{$phrase}");
+	alert($alerttype,$title,"{$lang['ROULETTE_START']} {$slot[1]}, {$slot[2]}, {$slot[3]}{$phrase}",true,"?tresde={$tresder}");
 	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
 	$tresder = Random(100, 999);
 	echo "<br />

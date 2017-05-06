@@ -6,7 +6,7 @@
 	Place queries below that you wish to have rand
 	every minute.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 $file = 'crons/minute.php';
 

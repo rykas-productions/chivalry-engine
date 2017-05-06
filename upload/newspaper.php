@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		newspaper.php
+	Created: 	4/5/2016 at 12:18AM Eastern Time
+	Info: 		Allows players to place ads in a newspaper, and view
+				currently running ads.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 $CurrentTime=time();
 if (!isset($_GET['action']))
@@ -28,20 +36,20 @@ function news_home()
 	$AdsQuery=$db->query("SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
 	if ($db->num_rows($AdsQuery) == 0)
 	{
-		alert("danger","No Ads!","There are current no advertisments listed! Perhaps you should <a href='?action=buyad'>buy one</a>?");
+		alert("danger",$lang['ERROR_GENERIC'],$lang['NP_ERROR'],false);
 		die($h->endpage());
 	}
-	echo "<h3>Newspaper</h3>
-	<small>Buy an ad <a href='?action=buyad'>here</a>.<hr />";
+	echo "<h3>{$lang['NP_TITLE']}</h3>
+	<small>{$lang['NP_AD']} <a href='?action=buyad'>{$lang['GEN_HERE']}</a>.<hr />";
 	echo "
 		<table class='table table-bordered'>
 			<thead>
 				<tr>
 					<th width='33%'>
-						Ad Info
+						{$lang['NP_ADINFO']}
 					</th>
 					<th>
-						Ad Text
+						{$lang['NP_ADTEXT']}
 					</th>
 				</tr>
 			</thead>
@@ -52,9 +60,9 @@ function news_home()
 		$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$Ads['news_owner']}"));
 		echo "	<tr>
 					<td>
-						Posted by: <a href='profile.php?user={$Ads['news_owner']}'>{$UserName}</a> [{$Ads['news_owner']}]<br />
-						<small>Start Date: " . date('F j, Y g:i:s a', $Ads['news_start']) . "<br />
-						End Date: " . date('F j, Y g:i:s a', $Ads['news_end']) . "</small>
+						{$lang['NP_ADINFO1']} <a href='profile.php?user={$Ads['news_owner']}'>{$UserName}</a> [{$Ads['news_owner']}]<br />
+						<small>{$lang['NP_ADSTRT']}: " . DateTime_Parse($Ads['news_start']) . "<br />
+						{$lang['NP_ADEND']}: " . date('F j, Y g:i:s a', $Ads['news_end']) . "</small>
 					</td>
 					<td>
 						{$Ads['news_text']}
@@ -66,16 +74,15 @@ function news_home()
 function news_buy()
 {
 	global $db,$userid,$ir,$h,$lang;
-	echo "<h3>Buying an Ad</h3>
-	" . alert("info","Reminder!","Remember, buying an add is subject to the game rules. If you post something here that will break a game rule, you will be warned and 
-	your ad will be removed. If you find someone abusing the news paper, please let an admin know immediately!") . "<hr />";
+	echo "<h3>{$lang['NP_BUY']}</h3>
+	" . alert("info",$lang['ERROR_INFO'],$lang['NP_BUY_REMINDER'],false) . "<hr />";
 	echo "
 		<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
 				<td width='33%'>
-					Initial Cost<br />
-					<small>Base ad cost. Higher number means ranked higher on ad list</small>
+					{$lang['NP_BUY_TD1']}<br />
+					<small>{$lang['NP_BUY_TD5']}</small>
 				</td>
 				<td>
 					<input type='number' min='750' name='init_cost' required='1' id='init' onkeyup='total_cost();' class='form-control'>
@@ -83,8 +90,8 @@ function news_buy()
 			</tr>
 			<tr>
 				<td>
-					Ad Length (Days)<br />
-					<small>Each day adds 1,250 Primary Currency</small>
+					{$lang['NP_BUY_TD2']}<br />
+					<small>{$lang['NP_BUY_TD6']}</small>
 				</td>
 				<td>
 					<input type='number' min='1' name='ad_length' id='days' onkeyup='total_cost();' required='1' class='form-control'>
@@ -92,8 +99,8 @@ function news_buy()
 			</tr>
 			<tr>
 				<td>
-					Ad Text<br />
-					<small>Each character is worth 5 Primary Currency</small>
+					{$lang['NP_BUY_TD3']}<br />
+					<small>{$lang['NP_BUY_TD7']}</small>
 				</td>
 				<td>
 					<textarea class='form-control' name='ad_text' id='chars' onkeyup='total_cost();' rows='5' required='1'></textarea>
@@ -101,7 +108,7 @@ function news_buy()
 			</tr>
 			<tr>
 				<td>
-					Total Ad Cost
+					{$lang['NP_BUY_TD4']}
 				</td>
 				<td>
 					<input type='number' name='ad_cost' id='output' readonly='1' class='form-control'>
@@ -109,7 +116,7 @@ function news_buy()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-default' value='Submit Ad'>
+					<input type='submit' class='btn btn-default' value='{$lang['NP_BUY_BTN']}'>
 				</td>
 			</tr>
 		</table>

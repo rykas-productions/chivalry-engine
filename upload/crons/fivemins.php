@@ -5,7 +5,7 @@
 	Info: Runs the queries below every five minutes.
 	Add queries of your own to have queries executed every five minutes
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 $file = 'crons/fivemins.php';
 
@@ -29,6 +29,10 @@ if ($db->num_rows($ready_to_run))
 	//Will Update
 	$db->query("UPDATE users SET will=will+(maxwill/(10)) WHERE will<maxwill");
 	$db->query("UPDATE users SET will=maxwill WHERE will>maxwill");
+	
+	//Mining refill
+	$db->query("UPDATE mining SET miningpower=miningpower+(max_miningpower/(10)) WHERE miningpower<max_miningpower");
+	$db->query("UPDATE mining SET miningpower=max_miningpower WHERE miningpower>max_miningpower");
 	
 	$time = 300;
 	$db->query("UPDATE `crons` SET `nextUpdate`=`nextUpdate`+{$time} WHERE `file`='{$file}'");

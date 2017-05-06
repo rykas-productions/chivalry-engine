@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		itemsell.php
+	Created: 	4/5/2016 at 12:15AM Eastern Time
+	Info: 		Allows players to instantly sell their item back
+				to the game for a reduced price.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
 $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(intval($_POST['qty'])) : '';
@@ -18,30 +26,27 @@ if (permission('CanSellToGame',$userid) == true)
 						 LIMIT 1");
 		if ($db->num_rows($id) == 0)
 		{
-			alert('danger',"{$lang['ITEM_SELL_ERROR1_TITLE']}","{$lang['ITEM_SELL_ERROR1']}");
+			alert('danger',$lang['ITEM_SELL_ERROR1_TITLE'],$lang['ITEM_SELL_ERROR1'],true,'inventory.php');
 		}
 		else
 		{
 			$r = $db->fetch_row($id);
 			if (!isset($_POST['verf']) || !verify_csrf_code("sellitem_{$_GET['ID']}", stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 				die($h->endpage());
 			}
 			if ($_POST['qty'] > $r['inv_qty'])
 			{
-				alert('danger',"{$lang['ERROR_INVALID']}","{$lang['ITEM_SELL_BAD_QTY']}");
+				alert('danger',$lang['ERROR_INVALID'],$lang['ITEM_SELL_BAD_QTY']);
 			}
 			else
 			{
 				$price = $r['itmsellprice'] * $_POST['qty'];
-				item_remove($userid, $r['itmid'], $_POST['qty']);
-				$db->query(
-						"UPDATE `users`
-						 SET `primary_currency` = `primary_currency` + {$price}
-						 WHERE `userid` = $userid");
+				$api->UserTakeItem($userid, $r['itmid'], $_POST['qty']);
+				$api->UserGiveCurrency($userid,'primary',$price);
 				$priceh = number_format($price);
-				alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['ITEM_SELL_SUCCESS1']} {$_POST['qty']} {$r['itmname']}{$lang['ITEM_SELL_SUCCESS2']} {$priceh} {$lang['INDEX_PRIMCURR']}.");
+				alert('success',$lang['ERROR_SUCCESS'],"{$lang['ITEM_SELL_SUCCESS1']} {$_POST['qty']} {$r['itmname']}{$lang['ITEM_SELL_SUCCESS2']} {$priceh} {$lang['INDEX_PRIMCURR']}.",true,'inventory.php');
 				$is_log =  $db->escape("{$ir['username']} sold {$_POST['qty']} {$r['itmname']}(s) for {$priceh}");
 				$api->SystemLogsAdd($userid,'itemsell',$is_log);
 			}
@@ -61,7 +66,7 @@ if (permission('CanSellToGame',$userid) == true)
 						 LIMIT 1");
 		if ($db->num_rows($id) == 0)
 		{
-			alert('danger',"{$lang['ITEM_SELL_ERROR1_TITLE']}","{$lang['ITEM_SELL_ERROR1']}");
+			alert('danger',$lang['ITEM_SELL_ERROR1_TITLE'],$lang['ITEM_SELL_ERROR1'],true,'inventory.php');
 		}
 		else
 		{
@@ -94,7 +99,7 @@ if (permission('CanSellToGame',$userid) == true)
 	}
 	else
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['GEN_IUOF']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['GEN_IUOF'],true,'inventory.php');
 	}
 }
 $h->endpage();

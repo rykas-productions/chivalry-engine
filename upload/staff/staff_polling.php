@@ -4,7 +4,7 @@
 	Created: 9/27/2016 at 8:41PM Eastern Time
 	Info: Allows staff to create in-game polls.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 require('sglobals.php');
 echo "<h3>{$lang['STAFF_POLL_TITLE']}</h3><hr />";
@@ -31,7 +31,7 @@ function add()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_startpoll', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$question =  (isset($_POST['question'])) ? $db->escape(strip_tags(stripslashes($_POST['question']))) : '';
@@ -48,7 +48,7 @@ function add()
 		$hidden = (isset($_POST['hidden']) && is_numeric($_POST['hidden'])) ? abs(intval($_POST['hidden'])) : '';
 		if (empty($question) || empty($choice1) || empty($choice2))
 		{
-			alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['STAFF_POLL_START_ERROR']}");
+			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_POLL_START_ERROR']);
 			die($h->endpage());
 		}
 		$db->query("INSERT INTO `polls` (`active`, `question`, `choice1`, 
@@ -59,7 +59,7 @@ function add()
                      '$choice3', '$choice4', '$choice5', '$choice6',
                      '$choice7', '$choice8', '$choice9' ,'$choice10',
                      '{$_POST['hidden']}')");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_POLL_START_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_POLL_START_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Started a game poll.");
 		$q=$db->query("SELECT `userid`, `username` FROM `users`");
 		while ($r = $db->fetch_row($q))
@@ -217,19 +217,19 @@ function close()
     {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_endpoll', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
         $q = $db->query("SELECT COUNT(`id`) FROM `polls` WHERE `id` = {$_POST['poll']}");
         if ($db->fetch_single($q) == 0)
         {
             $db->free_result($q);
-            alert('danger',"{$lang['ERROR_GEN']}","{$lang['STAFF_POLL_END_ERR']}");
+            alert('danger',$lang['ERROR_GEN'],$lang['STAFF_POLL_END_ERR']);
             die($h->endpage());
         }
         $db->free_result($q);
         $db->query("UPDATE `polls` SET `active` = '0' WHERE `id` = {$_POST['poll']}");
-        alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_POLL_END_SUCCESS']}");
+        alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_POLL_END_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Closed a game poll.");
 		$q=$db->query("SELECT `userid`, `username` FROM `users`");
 		while ($r = $db->fetch_row($q))

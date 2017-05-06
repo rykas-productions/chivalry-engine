@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		preferences.php
+	Created: 	4/5/2016 at 12:22AM Eastern Time
+	Info: 		Allows players to change settings about their account.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require("globals.php");
 if (!isset($_GET['action']))
 {
@@ -6,52 +13,72 @@ if (!isset($_GET['action']))
 }
 switch ($_GET['action'])
 {
-case 'namechange':
-    name_change();
-    break;
-case 'timechange':
-    time_change();
-    break;
-case 'langchange':
-    lang_change();
-    break;
-case 'pwchange':
-    pw_change();
-    break;
-case 'picchange':
-    pic_change();
-    break;
-case 'themechange':
-    themechange();
-    break;
-default:
-    prefs_home();
-    break;
+	case 'namechange':
+		name_change();
+		break;
+	case 'timechange':
+		time_change();
+		break;
+	case 'langchange':
+		lang_change();
+		break;
+	case 'pwchange':
+		pw_change();
+		break;
+	case 'picchange':
+		pic_change();
+		break;
+	case 'themechange':
+		themechange();
+		break;
+	case 'sigchange':
+		sigchange();
+		break;
+	default:
+		prefs_home();
+		break;
 }
 function prefs_home()
 {
 	global $ir,$h,$lang;
 	if (!empty($_GET['lang']))
 	{
-		alert('success',"{$lang['LANG_UPDATE']}","{$lang['LANG_UPDATE2']}");
+		alert('success',$lang['LANG_UPDATE'],$lang['LANG_UPDATE2'],false);
 	}
-echo "{$lang['PREF_WELCOME_1']} {$ir['username']}{$lang['PREF_WELCOME_2']}<br />
-<table class='table table-bordered'>
-	<tbody>
-		<tr>
-			<td><a href='?action=namechange'>{$lang['PREF_CNAME']}</a></td>
-			<td><a href='?action=pwchange'>{$lang['PREF_CPASSWORD']}</a></td>
-		</tr>
-		<tr>
-			<td><a href='?action=timechange'>{$lang['PREF_CTIME']}</a></td>
-			<td><a href='?action=langchange'>{$lang['PREF_CLANG']}</a></td>
-		</tr>
-		<tr>
-			<td><a href='?action=picchange'>{$lang['PREF_CPIC']}</a></td>
-			<td><a href='?action=themechange'>{$lang['PREF_CTHM']}</a></td>
-		</tr>
-	</tbody>
-</table>";
+	echo "{$lang['PREF_WELCOME_1']} {$ir['username']}{$lang['PREF_WELCOME_2']}<br />
+	<table class='table table-bordered'>
+		<tbody>
+			<tr>
+				<td>
+					<a href='?action=namechange'>{$lang['PREF_CNAME']}</a>
+				</td>
+				<td>
+					<a href='?action=pwchange'>{$lang['PREF_CPASSWORD']}</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href='?action=timechange'>{$lang['PREF_CTIME']}</a>
+				</td>
+				<td>
+					<a href='?action=langchange'>{$lang['PREF_CLANG']}</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href='?action=picchange'>{$lang['PREF_CPIC']}</a>
+				</td>
+				<td>
+					<a href='?action=themechange'>{$lang['PREF_CTHM']}</a>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<a href='?action=sigchange'>{$lang['PREF_CSIG']}</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>";
 }
 function name_change()
 {
@@ -64,7 +91,7 @@ function name_change()
 		{$lang['UNC_INTRO']}<br />
 		<div class='form-group'>
 		<form method='post'>
-			<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' name='newname' />
+			<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' value='{$ir['username']}' name='newname' />
 			<br />
 			{$csrf}
 			<input type='submit' class='btn btn-default' value='{$lang['UNC_BUTTON']}' />
@@ -75,7 +102,7 @@ function name_change()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_namechange', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$_POST['newname'] = (isset($_POST['newname']) && is_string($_POST['newname'])) ? stripslashes($_POST['newname']) : '';
@@ -97,20 +124,18 @@ function name_change()
 		}
 		$_POST['newname'] = $db->escape(htmlentities($_POST['newname'], ENT_QUOTES, 'ISO-8859-1'));
 		$db->query("UPDATE `users` SET `username` = '{$_POST['newname']}'  WHERE `userid` = $userid");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['UNC_GOOD']);
+		alert('success',$lang['ERROR_SUCCESS'],$lang['UNC_GOOD'],true,'preferences.php');
 	}
 }
 function time_change()
 {
-	global $db,$userid,$h,$ir;
-	$DefaultTimeZone=('(GMT) Greenwich Mean Time'); //Set to whatever timezone is default.
-	echo "<h3>Timezone Change</h3>";
+	global $db,$userid,$h,$ir,$lang;
+	echo "<h3>{$lang['TZ_TITLE']}</h3>";
 	// Much thanks to Tamas Pap from Stack Overflow for the list <3
 	// https://stackoverflow.com/questions/4755704/php-timezone-list
 	if (!isset($_POST['timezone']))
 	{
-		echo"Here, you may change your timezone. This will change all dates on the game for you. This won't speed up any processes. 
-		The default timezone is <u>{$DefaultTimeZone}</u>. All game-wide announcements and features will be based on this timezone.
+		echo"{$lang['TZ_INFO']}
 		<br />
 		<form method='post'>
 		<select name='timezone' class='form form-control' type='dropdown'>
@@ -149,7 +174,7 @@ function time_change()
 			<option value='Pacific/Wake'>(GMT-12:00) International Date Line West</option>
 		</select>
 		<br />
-		<input type='submit' class='btn btn-default' value='Change Timezone'>";
+		<input type='submit' class='btn btn-default' value='{$lang['TZ_BTN']}'>";
 	}
 	else
 	{
@@ -163,11 +188,11 @@ function time_change()
 		];
 		if (!in_array($_POST['timezone'],$TimeZoneArray))
 		{
-			echo "You specified an invalid timezone. Go back and try again.";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['TZ_FAIL']);
 		}
 		else
 		{
-			echo "You have successfully updated your timezome from {$ir['timezone']} to {$_POST['timezone']}.";
+			alert('success',$lang['ERROR_SUCCESS'],$lang['TZ_SUCC'],true,'preferences.php');
 			$db->query("UPDATE `users` SET `timezone` = '{$_POST['timezone']}' WHERE `userid` = {$userid}");
 		}
 	}
@@ -185,19 +210,20 @@ function lang_change()
 			<option value='es'>Español</option>
 			<option value='ger'>Deutsche</option>
 			<option value='fr'>Français</option>
+			<option value='danish'>Dansk</option>
 		<input type='submit' class='btn btn-default' value='{$lang['LANG_BUTTON']}'>
 		</form>";
 	}
 	else
 	{
-		$LangArray=["en","es","ger","fr"];
+		$LangArray=["en","es","ger","fr","danish"];
 		if (!in_array($_POST['lang'],$LangArray))
 		{
-			echo "You specified an invalid Language. Go back and try again.";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['LANG_UPDATE']);
 		}
 		else
 		{
-			echo "You have successfully updated your language to {$_POST['lang']}.";
+			alert('success',$lang['ERROR_SUCCESS'],$lang['LANG_UPDATE2'],true,'preferences.php');
 		}
 	}
 }
@@ -251,7 +277,7 @@ function pw_change()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepw', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$oldpw = stripslashes($_POST['oldpw']);
@@ -270,7 +296,7 @@ function pw_change()
 			// Re-encode password
 			$new_psw = $db->escape(encode_password($newpw));
 			$db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$ir['userid']}");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['PW_DONE']);
+			alert('success',$lang['ERROR_SUCCESS'],$lang['PW_DONE'],true,'preferences.php');
 		}
 	}
 }
@@ -283,15 +309,13 @@ function pic_change()
 		echo "
 		<h3>{$lang['PIC_TITLE']}</h3>
 		<hr />
-		{$lang['PIC_NOTE']}
-		<br />
-		{$lang['PIC_NOTE2']}<br />
+		{$lang['PIC_NOTE']} {$lang['PIC_NOTE2']}<br />
 		{$lang['PIC_NEWPIC']}<br />
 		<form method='post'>
 			<input type='url' required='1' name='newpic' class='form-control' value='{$ir['display_pic']}' />
 				{$csrf}
 			<br />
-			<input type='submit' class='btn btn-default' value='Change Picture' />
+			<input type='submit' class='btn btn-default' value='{$lang['PIC_BTN']}' />
 		</form>
 		";
 	}
@@ -299,33 +323,30 @@ function pic_change()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepic', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
 		if (!empty($npic))
 		{
-			if (isImage($npic) == false)
-			{
-				alert('danger',"{$lang['ERROR_INVALID']}","{$lang['PIC_NOIMAGE']}");
-				die($h->endpage());
-			}
 			$sz = get_filesize_remote($npic);
 			if ($sz <= 0 || $sz >= 1048576)
 			{
-				alert('danger',"{$lang['PIC_TOOBIG']}","{$lang['PIC_TOOBIG2']}");
+				alert('danger',$lang['PIC_TOOBIG'],$lang['PIC_TOOBIG2']);
 				$h->endpage();
 				exit;
 			}
+			$image = (@getimagesize($npic));
+			if (!is_array($image))
+			{
+				alert('danger',$lang['ERROR_INVALID'],$lang['PIC_NOIMAGE']);
+				die($h->endpage());
+			}
 		}
 		$img=htmlentities($_POST['newpic'], ENT_QUOTES, 'ISO-8859-1');
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['PIC_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['PIC_SUCCESS'],true,'preferences.php');
 		echo "<img src='{$img}' width='250' height='250' class='img-thumbnail img-responsive'>";
-		$db->query(
-            'UPDATE `users`
-             SET `display_pic` = "' . $db->escape($npic)
-                    . '"
-             WHERE `userid` = ' . $userid);
+		$db->query("UPDATE `users` SET `display_pic` = '" . $db->escape($npic) . "' WHERE `userid` = {$userid}");
 	}
 }
 function themechange()
@@ -333,15 +354,15 @@ function themechange()
 	global $db,$userid,$h,$lang;
 	if (isset($_POST['theme']))
 	{
-		$_POST['theme'] =  (isset($_POST['theme']) && is_numeric($_POST['theme']))  ? abs(intval($_POST['theme'])) : 1;
+		$_POST['theme'] =  (isset($_POST['theme']) && is_numeric($_POST['theme']))  ? abs($_POST['theme']) : 1;
 		if ($_POST['theme'] < 1 || $_POST['theme'] > 3)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['PREF_CTHM_SUB_ERROR']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['PREF_CTHM_SUB_ERROR']);
 			die($h->endpage());
 		}
 		else
 		{
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['PREF_CTHM_SUB_SUCCESS']}");
+			alert('success',$lang['ERROR_SUCCESS'],$lang['PREF_CTHM_SUB_SUCCESS'],true,'preferences.php');
 			$db->query("UPDATE `users` SET `theme` = {$_POST['theme']} WHERE `userid` = {$userid}");
 			die($h->endpage());
 		}
@@ -374,6 +395,54 @@ function themechange()
 					</td>
 				</tr>
 			</table>
+		</form>";
+	}
+}
+function sigchange()
+{
+	global $db,$ir,$userid,$api,$lang,$h;
+	if (isset($_POST['sig']))
+	{
+		$_POST['sig'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['sig']))));
+		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesig', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		if (strlen($_POST['sig']) > 1024)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['SIG_ERR']);
+			die($h->endpage());
+		}
+		$db->query("UPDATE `users` SET `signature` = '{$_POST['sig']}' WHERE `userid` = {$userid}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['SIG_SUCC'],true,'preferences.php');
+	}
+	else
+	{
+		$ir['signature'] =  strip_tags(stripslashes($ir['signature']));
+		$csrf = request_csrf_html('prefs_changesig');
+		echo "<form method='post'>
+		<table class='table-bordered table'>
+			<tr>
+				<th colspan='2'>
+					{$lang['SIG_TITLE']}
+				</th>
+			</tr>
+			<tr>
+				<th>
+					{$lang['SIG_YSIG']}
+				</th>
+				<td>
+					<textarea class='form-control' rows='4' name='sig'>{$ir['signature']}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' value='{$lang['SIG_BTN']}' class='btn btn-default'>
+				</td>
+			</tr>
+			{$csrf}
+		</table>
 		</form>";
 	}
 }

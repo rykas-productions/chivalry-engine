@@ -1,27 +1,44 @@
 <?php
 /*
+	File:		global_func.php
+	Created: 	4/5/2016 at 12:04AM Eastern Time
+	Info: 		Functions used all over the game.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
+/*
 	Parses the time since the timestamp given.
 	@param int $time_stamp for time since.
 	@param boolean $ago to display the "ago" after the string. (Default = true)
 */
-function DateTime_Parse($time_stamp, $ago = true)
+function DateTime_Parse($time_stamp, $ago = true, $override = false)
 {
-    $time_difference = (time() - $time_stamp);
-    $unit =
-            array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
-    $lengths = array(60, 60, 24, 7, 4.35, 12);
-    for ($i = 0; $time_difference >= $lengths[$i]; $i++)
-    {
-        $time_difference = $time_difference / $lengths[$i];
-    }
-    $time_difference = round($time_difference, 2);
-	if ($ago == true)
+	if ($time_stamp == 0)
 	{
-		$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . ' ago';
+		return "N/A";
+	}
+    $time_difference = (time() - $time_stamp);
+	if ($time_difference < 86400 || $override == true)
+	{
+		$unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
+		$lengths = array(60, 60, 24, 7, 4.35, 12);
+		for ($i = 0; $time_difference >= $lengths[$i]; $i++)
+		{
+			$time_difference = $time_difference / $lengths[$i];
+		}
+		$time_difference = round($time_difference, 2);
+		if ($ago == true)
+		{
+			$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . ' ago';
+		}
+		else
+		{
+			$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
+		}
 	}
 	else
 	{
-		$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
+		$date=date('F j, Y, g:i:s a', $time_stamp);
 	}
     return $date;
 }
@@ -57,21 +74,6 @@ function ParseTimestamp($time)
     $time_difference = round($time_difference, 2);
 	$date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
 	return $date;
-}
-/*
-	The function for testing a link is a valid image
-	@param text $url The link to test for.
-*/
-function isImage($url = null) 
-{
-    if(@is_array(getimagesize($url)))
-	{
-		return true;
-	} 
-	else 
-	{
-		return false;
-	}
 }
 /*
 	The function for testing if a player is in the hospital.
@@ -530,7 +532,84 @@ function user2_dropdown($ddname = "user", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
-
+/**
+ * Constructs a drop-down listbox of all the guilds in-game to let the user select one.
+ * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
+ * @param int $selected [optional] The <i>ID number</i> of the guild who should be selected by default.
+ * Not specifying this or setting it to -1 makes the first guild be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
+function guilds_dropdown($ddname = "guild", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='{$ddname}' class='form-control' type='dropdown'>";
+    $q =
+            $db->query(
+                    "SELECT `guild_id`, `guild_name`
+    				 FROM `guild`
+    				 ORDER BY `guild_id` ASC");
+    if ($selected == -1)
+    {
+        $first = 0;
+    }
+    else
+    {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q))
+    {
+        $ret .= "\n<option value='{$r['guild_id']}'";
+        if ($selected == $r['guild_id'] || $first == 0)
+        {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['guild_name']} [{$r['guild_id']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
+/**
+ * Constructs a drop-down listbox of all the users in the specified guild to let the user select one.
+ * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
+ * @param int $guild_id [optional] The <i>ID number</i> of the guild who should be selected from.
+ * @param int $selected [optional] The <i>ID number</i> of the bot who should be selected by default.
+ * Not specifying this or setting it to -1 makes the first bot alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
+function guild_user_dropdown($ddname = "user", $guild_id, $selected = -1)
+{
+    global $db;
+    $ret = "<select name='{$ddname}' class='form-control' type='dropdown'>";
+    $q =
+            $db->query(
+                    "SELECT `userid`, `username`
+    				 FROM `users`
+					 WHERE `guild` = {$guild_id}
+    				 ORDER BY `userid` ASC");
+    if ($selected == -1)
+    {
+        $first = 0;
+    }
+    else
+    {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q))
+    {
+        $ret .= "\n<option value='{$r['userid']}'";
+        if ($selected == $r['userid'] || $first == 0)
+        {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
 /**
  * Constructs a drop-down listbox of all the challenge bot NPC users in the game to let the user select one.
  * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
@@ -547,7 +626,7 @@ function npcbot_dropdown($ddname = "bot", $selected = -1)
                     "SELECT `u`.`userid`, `u`.`username`
                      FROM `botlist` AS `cb`
                      INNER JOIN `users` AS `u`
-                     ON `cb`.`cb_botuser` = `u`.`userid`
+                     ON `cb`.`botuser` = `u`.`userid`
                      ORDER BY `u`.`userid` ASC");
     if ($selected == -1)
     {
@@ -661,14 +740,13 @@ function mailb_user_dropdown($ddname = "user", $selected = -1)
  */
 function forumb_user_dropdown($ddname = "user", $selected = -1)
 {
-    global $db;
+    global $db,$api;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
             $db->query(
-                    "SELECT `userid`, `username`
-                     FROM `users`
-                     WHERE `forumban` > 0
-                     ORDER BY `userid` ASC");
+                    "SELECT `fb_user`,`fb_id`
+                     FROM `forum_bans`
+                     ORDER BY `fb_user` ASC");
     if ($selected == -1)
     {
         $first = 0;
@@ -679,99 +757,18 @@ function forumb_user_dropdown($ddname = "user", $selected = -1)
     }
     while ($r = $db->fetch_row($q))
     {
-        $ret .= "\n<option value='{$r['userid']}'";
-        if ($selected == $r['userid'] || $first == 0)
+        $ret .= "\n<option value='{$r['fb_user']}'";
+        if ($selected == $r['fb_user'] || $first == 0)
         {
             $ret .= " selected='selected'";
             $first = 1;
         }
-	$ret .= ">{$r['username']} [{$r['userid']}]</option>";
+	$ret .= ">{$api->SystemUserIDtoName($r['fb_user'])} [{$r['fb_user']}]</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
     return $ret;
 }
-
-/**
- * Constructs a drop-down listbox of all the jobs in the game to let the user select one.
- * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
- * @param int $selected [optional] The <i>ID number</i> of the job which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first job alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function job_dropdown($ddname = "job", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-            $db->query(
-                    "SELECT `jID`, `jNAME`
-    				 FROM `jobs`
-    				 ORDER BY `jNAME` ASC");
-    if ($selected == -1)
-    {
-        $first = 0;
-    }
-    else
-    {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q))
-    {
-        $ret .= "\n<option value='{$r['jID']}'";
-        if ($selected == $r['jID'] || $first == 0)
-        {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['jNAME']}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the job ranks in the game to let the user select one.
- * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
- * @param int $selected [optional] The <i>ID number</i> of the job rank which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first job's first job rank alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function jobrank_dropdown($ddname = "jobrank", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-            $db->query(
-                    "SELECT `jrID`, `jNAME`, `jrNAME`
-                     FROM `jobranks` AS `jr`
-                     INNER JOIN `jobs` AS `j`
-                     ON `jr`.`jrJOB` = `j`.`jID`
-                     ORDER BY `j`.`jNAME` ASC, `jr`.`jrNAME` ASC");
-    if ($selected == -1)
-    {
-        $first = 0;
-    }
-    else
-    {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q))
-    {
-        $ret .= "\n<option value='{$r['jrID']}'";
-        if ($selected == $r['jrID'] || $first == 0)
-        {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['jNAME']} - {$r['jrNAME']}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
 /**
  * Constructs a drop-down listbox of all the houses in the game to let the user select one.
  * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
@@ -779,15 +776,15 @@ function jobrank_dropdown($ddname = "jobrank", $selected = -1)
  * Not specifying this or setting it to -1 makes the first house alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function house_dropdown($ddname = "house", $selected = -1)
+function estate_dropdown($ddname = "estate", $selected = -1)
 {
     global $db;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
             $db->query(
-                    "SELECT `hID`, `hNAME`
-    				 FROM houses
-    				 ORDER BY `hNAME` ASC");
+                    "SELECT `house_id`, `house_name`, `house_will`
+    				 FROM `estates`
+    				 ORDER BY `house_will` ASC");
     if ($selected == -1)
     {
         $first = 0;
@@ -798,13 +795,13 @@ function house_dropdown($ddname = "house", $selected = -1)
     }
     while ($r = $db->fetch_row($q))
     {
-        $ret .= "\n<option value='{$r['hID']}'";
-        if ($selected == $r['hID'] || $first == 0)
+        $ret .= "\n<option value='{$r['house_id']}'";
+        if ($selected == $r['house_id'] || $first == 0)
         {
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['hNAME']}</option>";
+        $ret .= ">{$r['house_name']}</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -819,7 +816,7 @@ function house_dropdown($ddname = "house", $selected = -1)
  * Not specifying this or setting it to -1 makes the first house alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function house2_dropdown($ddname = "house", $selected = -1)
+function estate2_dropdown($ddname = "house", $selected = -1)
 {
     global $db;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
@@ -845,45 +842,6 @@ function house2_dropdown($ddname = "house", $selected = -1)
             $first = 1;
         }
         $ret .= ">{$r['house_name']} (Will: {$r['house_will']})</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the courses in the game to let the user select one.
- * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
- * @param int $selected [optional] The <i>ID number</i> of the course which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first course alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function course_dropdown($ddname = "course", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-            $db->query(
-                    "SELECT `crID`, `crNAME`
-    				 FROM `courses`
-    				 ORDER BY `crNAME` ASC");
-    if ($selected == -1)
-    {
-        $first = 0;
-    }
-    else
-    {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q))
-    {
-        $ret .= "\n<option value='{$r['crID']}'";
-        if ($selected == $r['crID'] || $first == 0)
-        {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['crNAME']}</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -967,24 +925,6 @@ function crimegroup_dropdown($ddname = "crimegroup", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
-
-/**
- * Sends a user an event, given their ID and the text.
- * @param int $userid The user ID to be sent the event
- * @param string $text The event's text. This should be fully sanitized for HTML, but not pre-escaped for database insertion.
- * @return int 1
- */
- //Depreciated. Used notification_add(); instead.
-function event_add($userid, $text)
-{
-    global $db;
-    $text = $db->escape($text);
-	trigger_error("event_add(); is depreciated. Please update to notification_add(); asap.");
-    $db->query(
-            "INSERT INTO `notifications`
-             VALUES(NULL, $userid, " . time() . ", 'unread', '$text')");
-    return true;
-}
 /**
  * Sends a user a notification, given their ID and the text.
  * @param int $userid The user ID to be sent the notification
@@ -1001,11 +941,11 @@ function notification_add($userid, $text)
     return true;
 }
 /*
-Internal Function: Used to make sure users do not have more energy/brave/hp/etc. than their level allows.
+	Internal Function: Used to update all sorts of things around the game
 */
 function check_data()
 {
-	global $db,$ir,$userid;
+	global $db,$ir,$userid,$time;
 	if ($ir['energy'] > $ir['maxenergy'])
 	{
 		$db->query("UPDATE `users` SET `energy` = `maxenergy` WHERE `userid` = {$userid}");
@@ -1017,6 +957,68 @@ function check_data()
 	if ($ir['hp'] > $ir['maxhp'])
 	{
 		$db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$userid}");
+	}
+	$q1=$db->query("SELECT `fed_userid` FROM `fedjail` WHERE `fed_out` < {$time}");
+	if ($db->num_rows($q1) > 0)
+	{
+		$q2=$db->fetch_single($q1);
+		$db->query("DELETE FROM `fedjail` WHERE `fed_out` < {$time}");
+		$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$q2}");
+	}
+	$db->query("DELETE FROM `forum_bans` WHERE `fb_time` < {$time}");
+	$q3 = $db->query("SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} and `gw_winner` = 0");
+	if ($db->num_rows($q3) > 0)
+	{
+		$r3=$db->fetch_row($q3);
+		$guild_declare=$db->fetch_single($db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declarer']}"));
+		$guild_declared=$db->fetch_single($db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declaree']}"));
+		if ($r3['gw_drpoints'] > $r3['gw_depoints'])
+		{
+			$db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
+			guildnotificationadd($r3['gw_declarer'],"Your guild has defeated the {$guild_declared} guild in battle.");
+			guildnotificationadd($r3['gw_declaree'],"Your guild was defeated in battle by the {$guild_declare} guild.");
+			$town=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
+			$town2=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
+			if ($town2 > 0)
+			{
+				if ($town == 0)
+				{
+					$db->query("UPDATE `town` SET `town_guild_owner` = {$r3['gw_declarer']} WHERE `town_guild_owner` = {$r3['gw_declaree']}");
+				}
+				else
+				{
+					$db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$r3['gw_declaree']}");
+				}
+			}
+			
+		}
+		elseif ($r3['gw_drpoints'] < $r3['gw_depoints'])
+		{
+			$db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
+			guildnotificationadd($r3['gw_declaree'],"Your guild has defeated the {$guild_declare} guild in battle.");
+			guildnotificationadd($r3['gw_declarer'],"Your guild was defeated in battle by the {$guild_declared} guild.");
+			$town=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
+			$town2=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
+			if ($town > 0)
+			{
+				if ($town2 == 0)
+				{
+					$db->query("UPDATE `town` SET `town_guild_owner` = {$r3['gw_declaree']} WHERE `town_guild_owner` = {$r3['gw_declarer']}");
+				}
+				else
+				{
+					$db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$r3['gw_declarer']}");
+				}
+			}
+		}
+		else
+		{
+			$db->query("DELETE FROM `guild_wars` WHERE `gw_id` = {$r3['gw_id']}");
+			guildnotificationadd($r3['gw_declaree'],"Your guild has tied the {$guild_declare} guild in battle.");
+			guildnotificationadd($r3['gw_declarer'],"Your guild has tied the {$guild_declared} guild in battle.");
+		}
+		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} WHERE `guild_id` = {$r3['gw_declarer']}");
+		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} WHERE `guild_id` = {$r3['gw_declaree']}");
 	}
 }
 /**
@@ -1059,6 +1061,16 @@ function check_level()
 		notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
 		SystemLogsAdd($userid,'level',"Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
     }
+}
+
+function guildnotificationadd($guild_id,$text)
+{
+	global $db;
+	$text = $db->escape($text);
+    $db->query(
+            "INSERT INTO `guild_notifications`
+             VALUES(NULL, {$guild_id}, " . time() . ", '{$text}')");
+    return true;
 }
 
 /**
@@ -1223,7 +1235,7 @@ function forum_dropdown($ddname = "forum", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['ff_name']}1</option>";
+        $ret .= ">{$r['ff_name']} [{$r['ff_id']}]</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -1231,7 +1243,7 @@ function forum_dropdown($ddname = "forum", $selected = -1)
 }
 
 /**
- * Constructs a drop-down listbox of all the forums in the game, except gang forums, to let the user select one.<br />
+ * Constructs a drop-down listbox of all the forums in the game, except guild forums, to let the user select one.<br />
  * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
  * @param int $selected [optional] The <i>ID number</i> of the forum which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
@@ -1245,7 +1257,7 @@ function forum2_dropdown($ddname = "forum", $selected = -1)
             $db->query(
                     "SELECT `ff_id`, `ff_name`
                      FROM `forum_forums`
-                     WHERE `ff_auth` != 'gang'
+                     WHERE `ff_auth` != 'guild'
                      ORDER BY `ff_name` ASC");
     if ($selected == -1)
     {
@@ -1277,12 +1289,9 @@ function forum2_dropdown($ddname = "forum", $selected = -1)
  */
 function request_csrf_code($formid)
 {
-    // Generate the token
 	$time=time();
 	$token=hash('sha512',(randomizer()));
-    // Insert/Update it
-    $_SESSION["csrf_{$formid}"] =
-            array('token' => $token, 'issued' => $time);
+    $_SESSION["csrf_{$formid}"] = array('token' => $token, 'issued' => $time);
     return $token;
 }
 /**
@@ -1308,8 +1317,7 @@ function randomizer()
  */
 function request_csrf_html($formid)
 {
-    return "<input type='hidden' name='verf' value='"
-            . request_csrf_code($formid) . "' />";
+    return "<input type='hidden' name='verf' value='" . request_csrf_code($formid) . "' />";
 }
 
 /**
@@ -1320,27 +1328,19 @@ function request_csrf_html($formid)
  */
 function verify_csrf_code($formid, $code)
 {
-    // Lookup the token entry
-    // Is there a token in existence?
-    if (!isset($_SESSION["csrf_{$formid}"])
-            || !is_array($_SESSION["csrf_{$formid}"]))
+    if (!isset($_SESSION["csrf_{$formid}"]) || !is_array($_SESSION["csrf_{$formid}"]))
     {
-        // Obviously verification fails
         return false;
     }
     else
     {
-        // From here on out we always want to remove the token when we're done - so don't return immediately
         $verified = false;
         $token = $_SESSION["csrf_{$formid}"];
-        // Expiry time on a form?
-        $expiry = 300; // hacky lol
+        $expiry = 300;
         if ($token['issued'] + $expiry > time())
         {
-            // It's ok, check the contents
             $verified = ($token['token'] === $code);
-        } // don't need an else case - verified = false
-        // Remove the token before finishing
+        }
         unset($_SESSION["csrf_{$formid}"]);
         return $verified;
     }
@@ -1360,7 +1360,7 @@ function verify_csrf_code($formid, $code)
 function verify_user_password($input, $pass)
 {
 	$pw=$input;
-    if (password_verify($pw, $pass)) 
+    if (password_verify(base64_encode(hash('sha256',$input, true)), $pass))
 	{
 		return true;
 	} 
@@ -1381,21 +1381,53 @@ function verify_user_password($input, $pass)
 function encode_password($password)
 {
     global $set;
-		$options = [
-		'cost' => $set['Password_Effort'],
+		$options = 
+		[
+			'cost' => $set['Password_Effort'],
 		];
-		return password_hash($password, PASSWORD_BCRYPT, $options);
+		return password_hash(base64_encode(hash('sha256',$password,true)),PASSWORD_DEFAULT,$options);
 }
 
 /**
-Easily outputs an alert to the client.
-Acceptable "type" is success, info, warning, danger.
-You can input whatever for the text
+	Easily outputs an alert to the client.
+	Acceptable "type" is 'success', 'info', 'warning', 'danger'.
+	You can input whatever for the text
+	Redirect is the page you wish to redirect the user to after the alert is displayed. Default = index.php
 */
 
-function alert($type,$title,$text)
+function alert($type,$title,$text,$doredirect=true,$redirect='back')
 {
-	echo "<div class='alert alert-{$type}'> <strong>{$title}</strong> {$text} </div>";
+	global $lang;
+	if ($type == 'danger')
+	{
+		$icon = "alert";
+	}
+	elseif ($type == 'success')
+	{
+		$icon = "ok-sign";
+	}
+	elseif ($type == 'info')
+	{
+		$icon = 'info-sign';
+	}
+	else
+	{
+		$icon = 'exclamation-sign';
+	}
+	if ($doredirect == true)
+	{
+		$redirect = ($redirect == 'back') ? $_SERVER['REQUEST_URI'] : $redirect;
+		echo "<div class='alert alert-{$type}'> 
+				<span class='glyphicon glyphicon-{$icon}'></span> 
+					<strong>{$title}</strong> 
+						{$text} > <a href='{$redirect}' class='alert-link'>{$lang['GEN_BACK']}</a>
+				</div>";
+	}
+	else
+	{
+		echo "<div class='alert alert-{$type}'> <span class='glyphicon glyphicon-{$icon}'></span> 
+					<strong>{$title}</strong> {$text} </div>";
+	}
 }
 
 /**
@@ -1439,10 +1471,7 @@ function determine_game_urlbase()
 
 function is_ajax()
 {
-    return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
-            && is_string($_SERVER['HTTP_X_REQUESTED_WITH'])
-            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'])
-                    === 'xmlhttprequest';
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && is_string($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 }
 
 /**
@@ -1535,17 +1564,9 @@ function get_filesize_remote($url)
     }
     return (int) $headers['content-length'];
 }
-function recache_forum($forum)
-{
-    global $ir, $c, $userid, $h, $bbc, $db;
-}
-
-function recache_topic($topic)
-{
-    global $ir, $c, $userid, $h, $bbc, $db;
-}
-
-/* gets the contents of a file if it exists, otherwise grabs and caches */
+/* 
+	Gets the contents of a file if it exists, otherwise grabs and caches 
+*/
 function get_fg_cache($file,$ip,$hours = 1) 
 {
 	$current_time = time(); 
@@ -1572,7 +1593,9 @@ function get_fg_cache($file,$ip,$hours = 1)
 	}
 }
 
-/* gets content from a URL via curl */
+/* 
+	Gets content from a URL via curl 
+*/
 function update_fg_info($ip) {
 	global $db,$set;
 	$curl = curl_init();
@@ -1592,8 +1615,8 @@ function update_fg_info($ip) {
  * @param string $perm		The permission to test for
  * @param int $user			The user to test on
  *
- * @return bool			Returns true if the user has this,
- *						false if not.
+ * @return bool				Returns true if the user has this,
+ *							false if not.
  */
  function permission($perm,$user)
  {
@@ -1623,7 +1646,7 @@ function update_fg_info($ip) {
  function getOS($uagent)
  {
 	 global $db,$userid;
-	 $uagent=$db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($uagent))));
+	 $uagent=$db->escape(strip_tags(stripslashes($uagent)));
 	$os_platform    =   "Unknown OS Platform";
     $os_array       =   array(
                             '/windows nt 10/i'     =>  'Windows 10',
@@ -1670,7 +1693,7 @@ function update_fg_info($ip) {
  function getBrowser($uagent) 
  {
 	global $db,$userid;
-	$user_agent=$db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($uagent))));
+	$user_agent=$db->escape(strip_tags(stripslashes($uagent)));
     $browser = "Unknown Browser";
     $browser_array  =   array(
                             '/msie/i'       =>  'Internet Explorer',
@@ -1702,7 +1725,7 @@ function update_fg_info($ip) {
 		$db->query("UPDATE `userdata` SET `useragent` = '{$user_agent}', `browser` = '{$browser}' WHERE `userid` = {$userid}");
 	}
 }
-//Grr...
+//Please use $api->SystemLogsAdd(); instead
 function SystemLogsAdd($user,$logtype,$input)
 {
 	global $db;
@@ -1729,10 +1752,93 @@ function Random($min,$max)
 	}
 }
 /*
-	Paginiation Function. Easily create page listings in list.
+	Creates a dropdown for smelting recipes.
 */
-function paginate($item_per_page, $current_page, $total_records, $total_pages, $page_url)
+function smelt_dropdown($ddname = 'smelt', $selected = -1)
 {
-    $pagination="";
-	
+	global $db,$api;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+            $db->query(
+                    "SELECT `smelt_id`, `smelt_output`, `smelt_qty_output`
+                     FROM `smelt_recipes`
+                     ORDER BY `smelt_id` ASC");
+    if ($selected == -1)
+    {
+        $first = 0;
+    }
+    else
+    {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q))
+    {
+		$itemname=$api->SystemItemIDtoName($r['smelt_output']);
+        $ret .= "\n<option value='{$r['smelt_id']}'";
+        if ($selected == $r['smelt_id'] || $first == 0)
+        {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['smelt_qty_output']} x {$itemname}</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
+/* 
+	Gets the contents of a file if it exists, otherwise grabs and caches 
+*/
+function get_cached_file($url,$file,$hours=1) 
+{
+	$current_time = time(); 
+	$expire_time = $hours * 60 * 60;
+	if(file_exists($file))
+	{
+		$file_time = filemtime($file);
+		if ($current_time - $expire_time < $file_time)
+		{
+			return file_get_contents($file);
+		}
+		else
+		{
+			$content = update_file($url,$file);
+			file_put_contents($file,$content);
+			return $content;
+		}
+	}
+	else 
+	{
+		$content = update_file($url,$file);
+		file_put_contents($file,$content);
+		return $content;
+	}
+}
+
+/* 
+	Gets content from a URL via curl 
+*/
+function update_file($url,$filename) 
+{
+	global $db,$set;
+	$content = "404";
+	$curl = curl_init();
+	curl_setopt_array($curl, array(
+		CURLOPT_URL => "{$url}",
+		CURLOPT_SSL_VERIFYPEER => false,
+		CURLOPT_RETURNTRANSFER => true));
+	$content = curl_exec($curl);
+	curl_close($curl);
+	return $content;
+}
+//Templating system.
+function run_template($template_array, $template)
+{
+    $tmp = 'genesis';
+    $text = file_get_contents( 'template/' . $tmp .'/' . $template . '.tpl' );
+    foreach( $template_array as $key => $value )
+    {
+        $text = str_replace( '{' . $key . '}', $value, $text );
+    }
+	echo $text;
 }

@@ -5,7 +5,7 @@
 	Info: Runs the queries below hourly. Place your own queries
 	here that you wish to be executed hourly.
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 
 $file = 'crons/hour.php';

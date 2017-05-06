@@ -1,11 +1,12 @@
 <?php
-/**
- * Password Hash Cost Calculator
- *
- * Set the ideal time that you want a password_hash() call to take and this
- * script will keep testing until it finds the ideal cost value and let you
- * know what to set it to when it has finished
- */
+/*
+	File:		password_benchmark.php
+	Created: 	4/5/2016 at 12:20AM Eastern Time
+	Info: 		Test how fast your server is, and figure out what
+				password hash level is right for your server!
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 echo "<h3>Password Hash Cost Calculator</h3><hr />";
 if (isset($_POST['password']))
 {

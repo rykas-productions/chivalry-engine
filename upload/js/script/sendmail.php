@@ -4,7 +4,7 @@
 	Created: 3/15/2016 at 10:45AM Eastern Time
 	Info: Ajax for sending mail via profile
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
 error_reporting(E_ALL);
@@ -37,25 +37,25 @@ if (!is_ajax())
 	}
 	if (empty($msg))
     {
-		alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['MAIL_EMPTYINPUT']}");
+		alert('danger',$lang['ERROR_EMPTY'],$lang['MAIL_EMPTYINPUT'],false);
         exit;
     }
 	elseif (strlen($msg) > 65655)
     {
-        alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['MAIL_INPUTLNEGTH']}");
+        alert('danger',$lang['ERROR_LENGTH'],$lang['MAIL_INPUTLNEGTH'],false);
         exit;
     }
 	 $sendto = (isset($_POST['sendto']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['sendto']) && ((strlen($_POST['sendto']) < 32) && (strlen($_POST['sendto']) >= 3))) ? $_POST['sendto'] : '';
 	 if (empty($_POST['sendto']))
     {
-		alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['MAIL_NOUSER']}");
+		alert('danger',$lang['ERROR_EMPTY'],$lang['MAIL_NOUSER'],false);
         exit;
     }
 	$q = $db->query("SELECT `userid` FROM `users` WHERE `username` = '{$sendto}'");
 	if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-		alert('danger',"{$lang['MAIL_UDNE']}","{$lang['MAIL_UDNE_TEXT']}");
+		alert('danger',$lang['MAIL_UDNE'],$lang['MAIL_UDNE_TEXT'],false);
 		exit;
     }
 	$to = $db->fetch_single($q);
@@ -65,10 +65,10 @@ if (!is_ajax())
 	$TimeSinceLastMail=$time-$mailtime;
 	if (!($TimeSinceLastMail > 60))
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['MAIL_TIMEERROR']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['MAIL_TIMEERROR'],false);
 		exit;
 	}
 	$db->query("INSERT INTO `mail` 
 	(`mail_id`, `mail_to`, `mail_from`, `mail_status`, `mail_text`, `mail_time`) 
 	VALUES (NULL, '{$to}', '{$userid}', 'unread', '{$msg}', '{$time}');");
-	alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['MAIL_SUCCESS']}");
+	alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_SUCCESS'],false);

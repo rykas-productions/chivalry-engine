@@ -1,30 +1,38 @@
 <?php
+/*
+	File:		inbox.php
+	Created: 	4/5/2016 at 12:10AM Eastern Time
+	Info: 		Allows players to view their inbox, write messages
+				to other players.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 require('lib/bbcode_engine.php');
 echo "
 <div class='table-responsive'>
-	<table class='table table-bordered'>
-		<tr>
-			<td>
-				<a href='inbox.php'>Inbox</a>
-			</td>
-			<td>
-				<a href='?action=outbox'>Outbox</a>
-			</td>
-			<td>
-				<a href='?action=compose'>Compose</a>
-			</td>
-			<td>
-				<a href='?action=delall'>Delete All</a>
-			</td>
-			<td>
-				<a href='#'>Archive</a>
-			</td>
-			<td>
-				<a href='#'>Contacts</a>
-			</td>
-		</tr>
-	</table>
+<table class='table table-bordered table-responsive'>
+	<tr>
+		<td>
+			<a href='inbox.php'>{$lang['MAIL_TH1_IN']}</a>
+		</td>
+		<td>
+			<a href='?action=outbox'>{$lang['MAIL_TH1_OUT']}</a>
+		</td>
+		<td>
+			<a href='?action=compose'>{$lang['MAIL_TH1_COMP']}</a>
+		</td>
+		<td>
+			<a href='?action=delall'>{$lang['MAIL_TH1_DEL']}</a>
+		</td>
+		<td>
+			<a href='?action=archive'>{$lang['MAIL_TH1_ARCH']}</a>
+		</td>
+		<td>
+			<a href='contacts.php'>{$lang['MAIL_TH1_CONTACTS']}</a>
+		</td>
+	</tr>
+</table>
 </div>";
 if (!isset($_GET['action']))
 {
@@ -57,6 +65,9 @@ case 'delall':
     break;
 case 'outbox':
     outbox();
+    break;
+case 'archive':
+    archive();
     break;
 default:
     home();
@@ -119,15 +130,15 @@ function read()
 {
 	global $db,$ir,$userid,$lang,$h,$parser;
 	$code = request_csrf_code('inbox_send');
-	$_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs(intval($_GET['msg'])) : 0;
+	$_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs($_GET['msg']) : 0;
 	if ($_GET['msg'] == 0)
 	{
-		alert('danger','Oops.','Message does not exist.');
+		alert('danger',$lang['ERROR_SECURITY'],$lang['ERROR_MAIL_UNOWNED'],true,'inbox.php');
 		die($h->endpage());
 	}
 	if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0)
 	{
-		alert("danger","{$lang['ERROR_SECURITY']}","{$lang['ERROR_MAIL_UNOWNED']}");
+		alert("danger",$lang['ERROR_SECURITY'],$lang['ERROR_MAIL_UNOWNED'],true,'inbox.php');
 		die($h->endpage());
 	}
 	$msg=$db->fetch_row($db->query("SELECT * FROM `mail` WHERE `mail_id` = {$_GET['msg']}"));
@@ -207,24 +218,24 @@ function send()
 	}
 	if (empty($msg))
     {
-		alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['MAIL_EMPTYINPUT']}");
+		alert('danger',$lang['ERROR_EMPTY'],$lang['MAIL_EMPTYINPUT'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
 	elseif ((strlen($msg) > 65655) || (strlen($subj) > 50))
     {
-        alert('danger',"{$lang['ERROR_LENGTH']}","{$lang['MAIL_INPUTLNEGTH']}");
+        alert('danger',$lang['ERROR_LENGTH'],$lang['MAIL_INPUTLNEGTH'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
 	 if (empty($_POST['sendto']))
     {
-		alert('danger',"{$lang['ERROR_EMPTY']}","{$lang['MAIL_NOUSER']}");
+		alert('danger',$lang['ERROR_EMPTY'],$lang['MAIL_NOUSER'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
 	$q = $db->query("SELECT `userid` FROM `users` WHERE `username` = '{$sendto}'");
 	if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-		alert('danger',"{$lang['MAIL_UDNE']}","{$lang['MAIL_UDNE_TEXT']}");
+		alert('danger',$lang['MAIL_UDNE'],$lang['MAIL_UDNE_TEXT'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
 	$to = $db->fetch_single($q);
@@ -233,13 +244,13 @@ function send()
 	$db->query("INSERT INTO `mail` 
 	(`mail_id`, `mail_to`, `mail_from`, `mail_status`, `mail_subject`, `mail_text`, `mail_time`) 
 	VALUES (NULL, '{$to}', '{$userid}', 'unread', '{$subj}', '{$msg}', '{$time}');");
-	alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['MAIL_SUCCESS']}");
+	alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_SUCCESS'],true,'inbox.php');
 }
 function markasread()
 {
 	global $db,$h,$userid,$h,$lang;
 	$db->query("UPDATE `mail` SET `mail_status` = 'read' WHERE `mail_to` = {$userid}");
-	alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['MAIL_READALL']}");
+	alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_READALL'],false);
 	home();
 }
 function delall()
@@ -259,7 +270,7 @@ function delall()
 	else
 	{
 		$db->query("DELETE FROM `mail` WHERE `mail_to` = {$userid}");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['MAIL_DELETEDONE']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_DELETEDONE'],true,'inbox.php');
 	}
 }
 function outbox()
@@ -308,7 +319,7 @@ function outbox()
 function compose()
 {
 	global $db,$userid,$lang,$h;
-	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
+	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
 	if (isset($_GET['user']) && ($_GET['user'] > 0))	
 	{
 		$username=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}"));
@@ -356,5 +367,30 @@ function compose()
 		<input type='hidden' name='verf' value='{$code}' />
 		</form>";
 	}
+}
+function archive()
+{
+	global $lang;
+	echo "<table class='table table-bordered'>
+	<tr>
+		<th colspan='2'>
+			{$lang['MAIL_TH1_ARC']}
+		</th>
+	</tr>
+	<tr>
+		<td>
+			<form method='post' action='dlarchive.php'>
+				<input type='hidden' name='archive' value='inbox' />
+				<input type='submit' value='{$lang['MAIL_TH1_ARC1']}' class='btn btn-default'>
+			</form>
+		</td>
+		<td>
+			<form method='post' action='dlarchive.php'>
+				<input type='hidden' name='archive' value='outbox' />
+				<input type='submit' value='{$lang['MAIL_TH1_ARC2']}' class='btn btn-default'>
+			</form>
+		</td>
+	</tr>
+	</table>";
 }
 $h->endpage();

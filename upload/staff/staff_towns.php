@@ -1,4 +1,11 @@
 <?php
+/*
+	File: staff/staff_towns.php
+	Created: 4/4/2017 at 7:05PM Eastern Time
+	Info: Staff panel for creating/editing/deleting in-game towns.
+	Author: TheMasterGeneral
+	Website: https://github.com/MasterGeneral156/chivalry-engine/
+*/
 require('sglobals.php');
 if (!isset($_GET['action']))
 {
@@ -30,30 +37,30 @@ function addtown()
 		$tax = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs(intval($_POST['tax'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_addtown', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_name` = '{$name}'");
 		if ($db->fetch_single($q) > 0)
         {
             $db->free_result($q);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_TRAVEL_ADDTOWN_SUB_ERROR1']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_TRAVEL_ADDTOWN_SUB_ERROR1']);
             die($h->endpage());
         }
 		if ($tax < 0 || $tax > 20)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_TRAVEL_ADDTOWN_SUB_ERROR2']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_TRAVEL_ADDTOWN_SUB_ERROR2']);
             die($h->endpage());
 		}
 		if ($level < 0)
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_TRAVEL_ADDTOWN_SUB_ERROR3']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_TRAVEL_ADDTOWN_SUB_ERROR3']);
             die($h->endpage());
 		}
 		$db->free_result($q);
 		$db->query("INSERT INTO `town` (`town_name`, `town_min_level`, `town_guild_owner`, `town_tax`) VALUES ('{$name}', '{$level}', '0', '{$tax}');");
 		$api->SystemLogsAdd($userid,'staff',"Created a town named {$name}.");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_TRAVEL_ADDTOWN_SUB_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_TRAVEL_ADDTOWN_SUB_SUCCESS'],true,'index.php');
 	}
 	else
 	{
@@ -78,7 +85,7 @@ function addtown()
 					{$lang['STAFF_TRAVEL_ADDTOWN_TH2']}
 				</th>
 				<td>
-					<input type='number' name='level' min='0' required='1' class='form-control'>
+					<input type='number' name='minlevel' min='0' required='1' class='form-control'>
 				</td>
 			</tr>
 			<tr>
@@ -109,26 +116,26 @@ function deltown()
 		$q = $db->query("SELECT `town_id`, `town_name` FROM `town` WHERE `town_id` = {$town}");
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_deltown', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		if ($db->num_rows($q) == 0)
         {
             $db->free_result($q);
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_TRAVEL_DELTOWN_SUB_ERROR1']}");
+            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_TRAVEL_DELTOWN_SUB_ERROR1']);
             die($h->endpage());
         }
 		$old = $db->fetch_row($q);
         $db->free_result($q);
         if ($old['town_id'] == 1)
         {
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['STAFF_TRAVEL_DELTOWN_SUB_ERROR2']}");
+            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_TRAVEL_DELTOWN_SUB_ERROR2']);
             die($h->endpage());
         }
 		$db->query("UPDATE `users` SET `location` = 1 WHERE `location` = {$old['town_id']}");
         $db->query("UPDATE `shops` SET `shopLOCATION` = 1 WHERE `shopLOCATION` = {$old['town_id']}");
         $db->query("DELETE FROM `town` WHERE `town_id` = {$old['town_id']}");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['STAFF_TRAVEL_DELTOWN_SUB_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_TRAVEL_DELTOWN_SUB_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted the town called {$old['town_name']}.");
 	}
 	else

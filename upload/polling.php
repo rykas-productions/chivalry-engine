@@ -1,4 +1,12 @@
 <?php
+/*
+	File:		polls.php
+	Created: 	4/5/2016 at 12:22AM Eastern Time
+	Info: 		Allows players to vote in game polls, and view closed
+				polls.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 $voterquery=1;
 require_once('globals.php');
 echo "<h3>{$lang['POLL_TITLE']}</h3><hr />";
@@ -21,8 +29,8 @@ function home()
 	$voterquery=1;
 	echo "{$lang['POLL_CYV']}<br />";
 	
-	$_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs(intval($_POST['poll'])) : '';
-	$_POST['choice'] = (isset($_POST['choice']) && is_numeric($_POST['choice'])) ? abs(intval($_POST['choice'])) : '';
+	$_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs($_POST['poll']) : '';
+	$_POST['choice'] = (isset($_POST['choice']) && is_numeric($_POST['choice'])) ? abs($_POST['choice']) : '';
 	$ir['voted'] = unserialize($ir['voted']);
 	if (!$_POST['choice'] || !$_POST['poll'])
 	{
@@ -32,14 +40,14 @@ function home()
 	{
 		if ($ir['voted'][$_POST['poll']])
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['POLL_AVITP']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['POLL_AVITP']);
 			die($h->endpage());
 		}
 		$check_q = $db->query("SELECT COUNT(`id`) FROM `polls`  WHERE `active` = '1' AND `id` = {$_POST['poll']}");
 		if ($db->fetch_single($check_q) == 0)
 		{
 			$db->free_result($check_q);
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['POLL_PCNT']}");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['POLL_PCNT']);
 			die($h->endpage());
 		}
 		$db->free_result($check_q);
@@ -50,14 +58,14 @@ function home()
 				 SET `voted` = '$ser'
 				 WHERE `userid` = $userid");
 		$db->query("UPDATE `polls` SET `voted{$_POST['choice']}` = `voted{$_POST['choice']}` + 1 WHERE `active` = '1' AND `id` = {$_POST['poll']}");
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['POLL_VOTE_SUCCESS']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['POLL_VOTE_SUCCESS'],true,'polling.php');
 	}
 	else
 	{
 		$q = $db->query("SELECT * FROM `polls` WHERE `active` = '1'");
 		if (!$db->num_rows($q))
 		{
-			echo "{$lang['POLL_VOTE_NOPOLL']}";
+			echo $lang['POLL_VOTE_NOPOLL'];
 		}
 		else
 		{
@@ -171,7 +179,7 @@ function viewpolls()
 			$db->query("SELECT * FROM `polls` WHERE `active` = '0' ORDER BY `id` DESC");
 	if (!$db->num_rows($q))
 	{
-		alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['POLL_VOTE_NOCLOSED']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['POLL_VOTE_NOCLOSED'],true,'polling.php');
 	}
 	else
 	{

@@ -5,7 +5,7 @@
 	Info: Creates a class file to connect, alter or otherwise interact
 	with a database using PDO!
 	Author: TheMasterGeneral
-	Website: http://mastergeneral156.pcriot.com/
+	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 if (!defined('MONO_ON'))
 {
@@ -144,7 +144,7 @@ class database
     }
     function affected_rows()
     {
-        return $this->connection_id->rowCount();
+        return $this->PDOS->rowCount();
     }
     function free_result($result)
     {

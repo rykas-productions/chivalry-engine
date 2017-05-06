@@ -1,8 +1,15 @@
 <?php
+/*
+	File:		itemsend.php
+	Created: 	4/5/2016 at 12:16AM Eastern Time
+	Info: 		Allows players to send another player an item.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
-$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
-$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : '';
-$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(intval($_POST['qty'])) : '';
+$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
+$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
+$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : '';
 if (!empty($_POST['qty']) && !empty($_POST['user']))
 {
 	$id = $db->query("SELECT `inv_qty`, `inv_itemid`, `itmname`, `itmid`
@@ -12,7 +19,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user']))
                      LIMIT 1");
     if ($db->num_rows($id) == 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR']);
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR'],true,'inventory.php');
 		die($h->endpage());
     }
 	else
@@ -21,7 +28,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user']))
         $m = $db->query("SELECT `lastip`,`username` FROM `users` WHERE `userid` = {$_POST['user']} LIMIT 1");
 		if (!isset($_POST['verf']) || !verify_csrf_code("senditem_{$_GET['ID']}", stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
 		elseif ($_POST['qty'] > $r['inv_qty'])
@@ -36,7 +43,12 @@ if (!empty($_POST['qty']) && !empty($_POST['user']))
         }
 		else if ($userid == $_POST['user'])
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR3']);
+			alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR3'],true,'inventory.php');
+			die($h->endpage());
+		}
+		else if ($api->SystemCheckUsersIPs($userid,$_POST['user']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR4'],true,'inventory.php');
 			die($h->endpage());
 		}
 		else
@@ -44,7 +56,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user']))
 			$rm = $db->fetch_row($m);
             item_remove($userid, $r['inv_itemid'], $_POST['qty']);
             item_add($_POST['user'], $r['inv_itemid'], $_POST['qty']);
-			alert('success',$lang['ERROR_SUCCESS'],"{$lang['ITEM_SEND_SUCC']} {$_POST['qty']} {$r['itmname']}s {$lang['ITEM_SEND_SUCC1']} {$rm['username']}.");
+			alert('success',$lang['ERROR_SUCCESS'],"{$lang['ITEM_SEND_SUCC']} {$_POST['qty']} {$r['itmname']}s {$lang['ITEM_SEND_SUCC1']} {$rm['username']}.",true,'inventory.php');
 			notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s) from <a href='profile.php?user=$userid'>{$ir['username']}</a>.");
 			$log =  $db->escape("{$ir['username']} sent {$_POST['qty']} {$r['itmname']}(s) to {$rm['username']} [{$_POST['user']}].");
 			$api->SystemLogsAdd($userid,'itemsend',$log);
@@ -62,7 +74,7 @@ elseif (!empty($_GET['ID']))
                      LIMIT 1");
     if ($db->num_rows($id) == 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR']);
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR'],true,'inventory.php');
 		die($h->endpage());
     }
 	else
@@ -137,7 +149,7 @@ elseif (!empty($_GET['ID']))
 }
 else
 {
-    alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR']);
+    alert('danger',$lang['ERROR_GENERIC'],$lang['ITEM_SEND_ERROR'],true,'inventory.php');
 	die($h->endpage());
 }
 $h->endpage();

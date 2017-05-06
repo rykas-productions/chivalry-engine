@@ -1,10 +1,17 @@
 <?php
+/*
+	File:		itemuse.php
+	Created: 	4/5/2016 at 12:10AM Eastern Time
+	Info: 		Allows players to use an item.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 require('globals.php');
 $Time=time();
-$_GET['item'] = (isset($_GET['item']) && is_numeric($_GET['item'])) ? abs(intval($_GET['item'])) : '';
+$_GET['item'] = (isset($_GET['item']) && is_numeric($_GET['item'])) ? abs($_GET['item']) : '';
 if (empty($_GET['item']))
 {
-    alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IU_UI']}");
+    alert('danger',$lang['ERROR_GENERIC'],$lang['IU_UI'],true,'inventory.php');
 }
 else
 {
@@ -15,7 +22,7 @@ else
 	if ($db->num_rows($i) == 0)
     {
         $db->free_result($i);
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['IU_ITEM_NOEXIST']}");
+        alert('danger',$lang['ERROR_GENERIC'],$lang['IU_ITEM_NOEXIST'],true,'inventory.php');
     }
 	else
 	{
@@ -23,7 +30,7 @@ else
         $db->free_result($i);
 		if (!$r['effect1_on'] && !$r['effect2_on'] && !$r['effect3_on'])
         {
-            alert('danger',"","{$lang['IU_UNUSED_ITEM']}");
+            alert('danger',"",$lang['IU_UNUSED_ITEM'],true,'inventory.php');
             die($h->endpage());
         }
 		for ($enum = 1; $enum <= 3; $enum++)
@@ -105,8 +112,8 @@ else
 				}
 			}
 		}
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$r['itmname']} {$lang['IU_SUCCESS']}");
-		item_remove($userid, $r['inv_itemid'], 1);
+		alert('success',$lang['ERROR_SUCCESS'],"{$r['itmname']} {$lang['IU_SUCCESS']}",true,'inventory.php');
+		$api->UserTakeItem($userid, $r['inv_itemid'], 1);
 		$api->SystemLogsAdd($userid,'itemuse',"Used a/an {$r['itmname']} item.");
 	}
 }

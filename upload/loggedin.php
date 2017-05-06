@@ -1,25 +1,23 @@
 <?php
+/*
+	File:		loggedin.php
+	Created: 	4/5/2016 at 12:17AM Eastern Time
+	Info: 		The landing page after a user logs in successfully.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 $housequery = 1;
 require_once('globals.php');
-if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/installer.php')
-        && $ir['user_level'] == 2)
+if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/installer.php') && $ir['user_level'] == 'Admin')
 {
-    echo '
-	<span style="font-weight: bold; font-size: 42px; color: red;">
-	WARNING: you have not deleted installer.php from the server.
-	<br />
-	We suggest you do this immediately.
-	</span>
-   	';
+    alert('danger',$lang['ERROR_SECURITY'],$lang['ALERT_INSTALLER']);
 }
-$_POST['pn_update'] =
-        (isset($_POST['pn_update']))
-                ? strip_tags(stripslashes($_POST['pn_update'])) : '';
+$_POST['pn_update'] = (isset($_POST['pn_update'])) ? strip_tags(stripslashes($_POST['pn_update'])) : '';
 if (!empty($_POST['pn_update']))
 {
     if (strlen($_POST['pn_update']) > 65655)
     {
-        ?> <div class="alert alert-danger"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Uh oh!</strong> Your personal notepad could not be update due to the 65,655 character limit.</div><br /> <?php
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ERRDE_PN'],false);
     }
     else
     {
@@ -29,7 +27,7 @@ if (!empty($_POST['pn_update']))
         			SET `personal_notes` = '{$pn_update_db}'
         			WHERE `userid` = {$userid}");
         $ir['personal_notes'] = $_POST['pn_update'];
-        ?> <div class="alert alert-success"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>  <strong>Success!</strong> Your personal notepad has been updated successfully.</div><br /> <?php
+        alert('success',$lang['ERROR_SUCCESS'],$lang['INDEX_PNSUCCESS'],false);
     }
 }
 echo "Welcome back, {$ir['username']}!<br />";
