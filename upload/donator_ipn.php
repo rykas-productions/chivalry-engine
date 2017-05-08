@@ -19,14 +19,13 @@ if ($verified)
 {
 	// assign posted variables to local variables
 	$item_name = $_POST['item_name'];
-	$item_number = $db->escape(stripslashes($_POST['item_number']));
-	$payment_status = $db->escape(stripslashes($_POST['payment_status']));
-	$payment_amount = sprintf("%0.2f",$_POST['mc_gross']);
-	$payment_currency = $db->escape(stripslashes($_POST['mc_currency']));
-	$txn_id = $db->escape(stripslashes($_POST['txn_id']));
-	$receiver_email = $db->escape(stripslashes($_POST['receiver_email']));
-	$payer_email = $db->escape(stripslashes($_POST['payer_email']));
-	
+	$item_number = $_POST['item_number'];
+	$payment_status = $_POST['payment_status'];
+	$payment_amount = $_POST['mc_gross'];
+	$payment_currency = $_POST['mc_currency'];
+	$txn_id = $_POST['txn_id'];
+	$receiver_email = $_POST['receiver_email'];
+	$payer_email = $_POST['payer_email'];
 	//Parse the item name
 	$packr = explode('|', $item_name);
 	//Grab IDs
@@ -49,7 +48,7 @@ if ($verified)
 		exit;
 	}
 	//Check to see if the receiver of the cash is the email set in the settings.
-	if ($_POST['receiver_email'] != $set['PaypalEmail'])
+	if ($receiver_email != $set['PaypalEmail'])
 	{
 		$api->SystemLogsAdd($buyer,'donate',"{$payer_email} attempted to donate, but sent their cash to {$receiver_email}.");
 		exit;
@@ -82,8 +81,7 @@ if ($verified)
 	}
 	$fpi=$db->fetch_row($pi);
 	//Make sure the user paid the correct amount.
-	$packcost=sprintf("%0.2f",$fpi['vip_cost']);
-	if (bccomp($packcost,$payment_amount,2) != 0)
+	if ($fpi['vip_cost'] != $payment_amount)
 	{
 		$api->SystemLogsAdd($buyer,'donate',"{$payer_email} attempted to donate for VIP pack #{$packr[2]}, but only paid \${$payment_amount}. (Pack Costs \${$fpi['vip_cost']})");
 		exit;
@@ -91,9 +89,9 @@ if ($verified)
 	//Everything checks out... so lets credit the pack.
 	item_add($for,$fpi['vip_item'],1);
 	//Log everything
-	$db->query("INSERT INTO `vips_accepted` VALUES(NULL, {$buyer}, {$for}, {$packq}, " . time() . ", '$txn_db')");
+	$db->query("INSERT INTO `vips_accepted` VALUES(NULL, {$buyer}, {$for}, {$pack}, " . time() . ", '{$txn_id}')");
 	$api->SystemLogsAdd($buyer,'donate',"{$payer_email} donated {$payment_amount} for VIP Pack # {$packr[2]}.");
-	$api->GameAddNotification($for,"Your \${$payment_amount} donation for an " . $api->SystemItemIDtoName($fpi['vip_item']) . " has been successfully credited to you.");
+	$api->GameAddNotification($for,"Your \${$payment_amount} donation for your " . $api->SystemItemIDtoName($fpi['vip_item']) . " item has been successfully credited to you.");
 }
 // Reply with an empty 200 response to indicate to paypal the IPN was received correctly.
 header("HTTP/1.1 200 OK");

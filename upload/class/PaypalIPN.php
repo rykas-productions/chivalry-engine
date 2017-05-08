@@ -57,9 +57,7 @@ class PaypalIPN
     public function verifyIPN()
     {
         if ( ! count($_POST)) {
-			$log="" . date('F j, Y') . " " . date('g:i:s a') . " || User ID 0 || " . strip_tags("Missing POST Data");
-			$dir= substr(__DIR__, 0, strpos(__DIR__, "\lib"));
-			file_put_contents($dir . '\cache\error_log.txt', print_r(($log . "\r"), true), FILE_APPEND);
+			error_log("Missing POST Data");
             throw new Exception("Missing POST Data");
         }
         $raw_post_data = file_get_contents('php://input');
@@ -112,17 +110,13 @@ class PaypalIPN
             $errno = curl_errno($ch);
             $errstr = curl_error($ch);
             curl_close($ch);
-			$log="" . date('F j, Y') . " " . date('g:i:s a') . " || User ID 0 || " . strip_tags("cURL error: [$errno] $errstr");
-			$dir= substr(__DIR__, 0, strpos(__DIR__, "\lib"));
-			file_put_contents($dir . '\cache\error_log.txt', print_r(($log . "\r"), true), FILE_APPEND);
+			error_log("cURL error: [$errno] $errstr");
             throw new Exception("cURL error: [$errno] $errstr");
         }
         $info = curl_getinfo($ch);
         $http_code = $info['http_code'];
         if ($http_code != 200) {
-			$log="" . date('F j, Y') . " " . date('g:i:s a') . " || User ID 0 || " . strip_tags("PayPal responded with http code $http_code");
-			$dir= substr(__DIR__, 0, strpos(__DIR__, "\lib"));
-			file_put_contents($dir . '\cache\error_log.txt', print_r(($log . "\r"), true), FILE_APPEND);
+			error_log("PayPal responded with http code $http_code");
             throw new Exception("PayPal responded with http code $http_code");
         }
         curl_close($ch);

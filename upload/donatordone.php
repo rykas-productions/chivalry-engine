@@ -7,7 +7,6 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
-var_dump($_POST);
 if (!isset($_GET['action']))
 {
     ob_get_clean();
