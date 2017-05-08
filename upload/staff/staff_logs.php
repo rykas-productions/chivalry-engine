@@ -94,6 +94,9 @@ case "forumwarn":
 case "forumban":
     logs('forumban');
     break;
+case "donatelogs":
+    logs('donate');
+    break;
 case "mail":
 	maillogs();
 	break;

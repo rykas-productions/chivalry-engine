@@ -7,6 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
+var_dump($_POST);
 if (!isset($_GET['action']))
 {
     ob_get_clean();
@@ -19,7 +20,7 @@ if ($_GET['action'] == "cancel")
 }
 else if ($_GET['action'] == "done")
 {
-    if (!$_POST['tx'])
+    if (!$_POST['txn_id'])
     {
         die($h->endpage());
     }

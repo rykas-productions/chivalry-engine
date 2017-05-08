@@ -1,4 +1,4 @@
-<?php
+<?php namespace Listener;
 /*
 	File:		donator_ipn.php
 	Created: 	4/4/2016 at 11:57PM Eastern Time
@@ -8,116 +8,92 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals_nonauth.php');
+require('class/PaypalIPN.php');
 
-// read the post from PayPal system and add 'cmd'
-$req = 'cmd=_notify-validate';
-
-foreach ($_POST as $key => $value)
+use PaypalIPN;
+$ipn = new PaypalIPN();
+// Use the sandbox endpoint during testing.
+$ipn->useSandbox();
+$verified = $ipn->verifyIPN();
+if ($verified)
 {
-    $value = urlencode(stripslashes($value));
-    $req .= "&$key=$value";
+	// assign posted variables to local variables
+	$item_name = $_POST['item_name'];
+	$item_number = $db->escape(stripslashes($_POST['item_number']));
+	$payment_status = $db->escape(stripslashes($_POST['payment_status']));
+	$payment_amount = sprintf("%0.2f",$_POST['mc_gross']);
+	$payment_currency = $db->escape(stripslashes($_POST['mc_currency']));
+	$txn_id = $db->escape(stripslashes($_POST['txn_id']));
+	$receiver_email = $db->escape(stripslashes($_POST['receiver_email']));
+	$payer_email = $db->escape(stripslashes($_POST['payer_email']));
+	
+	//Parse the item name
+	$packr = explode('|', $item_name);
+	//Grab IDs
+	$buyer = abs((int) $packr[3]);
+	$for = $buyer;
+	
+	//Is payment completed?
+	if ($payment_status != "Completed")
+	{
+		$api->SystemLogsAdd($buyer,'donate',"{$payer_email} attempted to donate, but their payment status was not complete.");
+		exit;
+	}
+	
+	//Check to see if transaction has already been processed.
+	$dp_check = $db->query("SELECT COUNT(`vipID`) FROM `vips_accepted` WHERE `vipTXN` = '{$txn_id}'");
+	if ($db->fetch_single($dp_check) > 0)
+	{
+		$db->free_result($dp_check);
+		$api->SystemLogsAdd($buyer,'donate',"{$payer_email} attempted to donate, but their transaction ID, {$txn_id}, was already processed.");
+		exit;
+	}
+	//Check to see if the receiver of the cash is the email set in the settings.
+	if ($_POST['receiver_email'] != $set['PaypalEmail'])
+	{
+		$api->SystemLogsAdd($buyer,'donate',"{$payer_email} attempted to donate, but sent their cash to {$receiver_email}.");
+		exit;
+	}
+	if ($payment_currency != "USD")
+	{
+		$api->SystemLogsAdd($buyer,'donate',"{$payer_email} attempted to donate, but sent their cash in {$payment_currency}, not USD.");
+		exit;
+	}
+	//Check to see if the donation is for the right game.
+	if (str_replace("www.", "", $packr[0]) != str_replace("www.", "", $_SERVER['HTTP_HOST']))
+	{
+		$api->SystemLogsAdd($buyer,'donate',"{$payer_email} attempted to donate, but sent their donation was for {$packr[0]}.");
+		exit;
+	}
+	//Check to see if they're donating for a VIP package of sorts.
+	if ($packr[1] != "VIP")
+	{
+		$api->SystemLogsAdd($buyer,'donate',"{$payer_email} attempted to donate, but sent their donation was not for a VIP Pack.");
+		exit;
+	}
+	//Pack ID to fetch from DB
+	$pack = abs((int) $packr[2]);
+	$pi=$db->query("SELECT * FROM `vip_listing` WHERE `vip_id` = {$pack}");
+	//Check if pack is real.
+	if ($db->num_rows($pi) == 0)
+	{
+		$api->SystemLogsAdd($buyer,'donate',"{$payer_email} attempted to donate, but attempted to buy a non-existent pack, (Pack # {$packr[2]} .");
+		exit;
+	}
+	$fpi=$db->fetch_row($pi);
+	//Make sure the user paid the correct amount.
+	$packcost=sprintf("%0.2f",$fpi['vip_cost']);
+	if (bccomp($packcost,$payment_amount,2) != 0)
+	{
+		$api->SystemLogsAdd($buyer,'donate',"{$payer_email} attempted to donate for VIP pack #{$packr[2]}, but only paid \${$payment_amount}. (Pack Costs \${$fpi['vip_cost']})");
+		exit;
+	}
+	//Everything checks out... so lets credit the pack.
+	item_add($for,$fpi['vip_item'],1);
+	//Log everything
+	$db->query("INSERT INTO `vips_accepted` VALUES(NULL, {$buyer}, {$for}, {$packq}, " . time() . ", '$txn_db')");
+	$api->SystemLogsAdd($buyer,'donate',"{$payer_email} donated {$payment_amount} for VIP Pack # {$packr[2]}.");
+	$api->GameAddNotification($for,"Your \${$payment_amount} donation for an " . $api->SystemItemIDtoName($fpi['vip_item']) . " has been successfully credited to you.");
 }
-
-// post back to PayPal system to validate
-$header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
-$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-$header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
-$fp = fsockopen('www.paypal.com', 80, $errno, $errstr, 30);
-
-// assign posted variables to local variables
-$item_name = $_POST['item_name'];
-$item_number = $_POST['item_number'];
-$payment_status = $_POST['payment_status'];
-$payment_amount = sprintf("%0.2f",$_POST['mc_gross']);
-$payment_currency = $_POST['mc_currency'];
-$txn_id = $_POST['txn_id'];
-$receiver_email = $_POST['receiver_email'];
-$payer_email = $_POST['payer_email'];
-
-if (!$fp)
-{
-    // HTTP ERROR
-}
-else
-{
-    fputs($fp, $header . $req);
-    while (!feof($fp))
-    {
-        $res = fgets($fp, 1024);
-        if (strcmp($res, "VERIFIED") == 0)
-        {
-            $txn_db = $db->escape(stripslashes($txn_id));
-            // check the payment_status is Completed
-            if ($payment_status != "Completed")
-            {
-                fclose($fp);
-                die("");
-            }
-            $dp_check =
-                    $db->query(
-                            "SELECT COUNT(`vipID`)
-                             FROM `vips_accepted`
-                             WHERE `vipTXN` = '{$txn_db}'");
-            if ($db->fetch_single($dp_check) > 0)
-            {
-                $db->free_result($dp_check);
-                fclose($fp);
-                die("");
-            }
-            $db->free_result($dp_check);
-            // check that txn_id has not been previously processed
-            // check that receiver_email is your Primary PayPal email
-            if ($receiver_email != $set['paypal'])
-            {
-                fclose($fp);
-                die("");
-            }
-            // check that payment_amount/payment_currency are correct
-            if ($payment_currency != "USD")
-            {
-                fclose($fp);
-                die("");
-            }
-            // parse for pack
-            $packr = explode('|', $item_name);
-            if (str_replace("www.", "", $packr[0])
-                    != str_replace("www.", "", $_SERVER['HTTP_HOST']))
-            {
-                fclose($fp);
-                die("");
-            }
-            if ($packr[1] != "VIP")
-            {
-                fclose($fp);
-                die("");
-            }
-            $pack = $packr[2];
-			$packq=$db->escape($pack);
-			$pi=$db->query("SELECT * FROM `vip_listing` WHERE `vip_id` = {$packq}");
-			if ($db->num_rows($pi) == 0)
-            {
-                fclose($fp);
-                die("");
-            }
-			$fpi=$db->fetch_row($pi);
-            if ($fpi['vip_cost'] != $payment_amount)
-            {
-                fclose($fp);
-                die("");
-            }
-            // grab IDs
-            $buyer = abs((int) $packr[3]);
-            $for = $buyer;
-            // all seems to be in order, credit it.
-            item_add($for,$fpi['vip_item'],1);
-            // process payment
-            notification_add($for, "Your \${$payment_amount} donation for an " . $api->SystemItemIDtoName($fpi['vip_item']) . " has been successfully credited to you.");
-            $db->query("INSERT INTO `vips_accepted` VALUES(NULL, {$buyer}, {$for}, {$packq}, " . time() . ", '$txn_db')");
-        }
-        else if (strcmp($res, "INVALID") == 0)
-        {
-        }
-    }
-
-    fclose($fp);
-}
+// Reply with an empty 200 response to indicate to paypal the IPN was received correctly.
+header("HTTP/1.1 200 OK");
