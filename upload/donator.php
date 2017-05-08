@@ -50,7 +50,7 @@ while ($r=$db->fetch_row($q))
 		echo"
 		</td>
 		<td>
-			<form action='https://www.sandbox.paypal.com/cgi-bin/webscr' method='post'>
+			<form action='https://www.paypal.com/cgi-bin/webscr' method='post'>
 			<input type='hidden' name='cmd' value='_xclick' />
 			<input type='hidden' name='business' value='{$set['PaypalEmail']}' />
 			<input type='hidden' name='item_name' value='{$domain}|VIP|{$r['vip_id']}|{$userid}' />
