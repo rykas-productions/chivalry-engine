@@ -530,10 +530,9 @@ function restore()
 function errlog()
 {
 	global $db,$lang,$api,$userid,$h;
-	$dir= substr(__DIR__, 0, strpos(__DIR__, "\staff"));
 	$api->SystemLogsAdd($userid,'staff',"Viewed the error log.");
 	echo "
-	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents($dir . '\cache\error_log.txt') . "</textarea>";
+	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents("error_log") . "</textarea>";
 	$h->endpage();
 }
 function staff()
