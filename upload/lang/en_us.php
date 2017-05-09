@@ -1606,6 +1606,8 @@ $lang['STAFF_IDX_ADMIN_TAB3']="Game Diagnostics";
 $lang['STAFF_IDX_ADMIN_TAB4']="Refresh Users";
 $lang['STAFF_IDX_ADMIN_TAB5']="View Error Log";
 $lang['STAFF_IDX_ADMIN_TAB6']="Set User Level";
+$lang['STAFF_IDX_ADMIN_TAB7']="Add VIP Pack";
+$lang['STAFF_IDX_ADMIN_TAB8']="Delete VIP Pack";
 $lang['STAFF_IDX_MODULES_TAB1']="Crimes";
 $lang['STAFF_IDX_USERS_TAB1']="Create User";
 $lang['STAFF_IDX_USERS_TAB2']="Edit User";
@@ -2081,4 +2083,21 @@ $lang['RUSSIANROULETTE_INVALID_ACCOUNT_SEND'] = "The account you are challenging
 $lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND'] = "You have sent a request to";
 $lang['RUSSIANROULETTE_DENIED'] = "You have successfully denied the current russian roulette challenge!";
 $lang['RUSSIANROULETTE_SCAM'] = "This player offered the amount and ran off with it! They have been notified so please wait in the meantime!";
+
+//Staff donate
+$lang['STAFF_DONATE_TITLE']="Staff VIP Packs";
+$lang['STAFF_DONATE_ADD_INFO']="Use this form to add a VIP Pack to the game.";
+$lang['STAFF_DONATE_ADD_TH']="VIP Pack Item";
+$lang['STAFF_DONATE_ADD_TH1']="VIP Pack Cost";
+$lang['STAFF_DONATE_ADD_BTN']="Add Pack";
+$lang['STAFF_DONATE_ADD_ERR']="You must select an item you wish to be added to the VIP Pack store.";
+$lang['STAFF_DONATE_ADD_ERR2']="You must select a valid cost for this item.";
+$lang['STAFF_DONATE_ADD_ERR3']="The VIP Pack Item you chose is invalid or does not exist.";
+$lang['STAFF_DONATE_ADD_ERR4']="The VIP Pack Item you chose is already listed on the VIP Pack store.";
+$lang['STAFF_DONATE_ADD_SUCC']="Item has been successfully added to the VIP Pack store.";
+$lang['STAFF_DONATE_DEL_BTN']="Delete Pack";
+$lang['STAFF_DONATE_DEL_INFO']="Use this form to remove a VIP Pack from the game.";
+$lang['STAFF_DONATE_DEL_ERR']="You must input a VIP Pack you wish to delete.";
+$lang['STAFF_DONATE_DEL_ERR1']="The VIP Pack you chose to delete is invalid or does not exist.";
+$lang['STAFF_DONATE_DEL_SUCC']="You have successfully removed this VIP Pack from the VIP Pack Store.";
 ?>

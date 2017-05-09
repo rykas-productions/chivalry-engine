@@ -137,6 +137,8 @@ echo"
 								<a href='staff_settings.php?action=errlog'>{$lang['STAFF_IDX_ADMIN_TAB5']}</a><br />
 								<a href='staff_settings.php?action=restore'>{$lang['STAFF_IDX_ADMIN_TAB4']}</a><br />
 								<a href='staff_settings.php?action=staff'>{$lang['STAFF_IDX_ADMIN_TAB6']}</a><br />
+								<a href='staff_donate.php?action=addpack'>{$lang['STAFF_IDX_ADMIN_TAB7']}</a><br />
+								<a href='staff_donate.php?action=delpack'>{$lang['STAFF_IDX_ADMIN_TAB8']}</a><br />
 							</div>
 						</div>
 					</div>
