@@ -38,6 +38,7 @@ while ($r=$db->fetch_row($q))
 		</td>
 		<td>
 		";
+			$uhoh=0;
 			for ($enum = 1; $enum <= 3; $enum++)
 			{
 				if ($r["effect{$enum}_on"] == 'true')
@@ -57,6 +58,14 @@ while ($r=$db->fetch_row($q))
 								"{$lang['INDEX_VIP']}");
 					$statformatted=$stats["{$einfo['stat']}"];
 					echo "{$einfo['dir']} {$statformatted} {$lang['ITEM_INFO_BY']} {$einfo['inc_amount']}{$einfo['inc_type']}.<br />";
+				}
+				else
+				{
+					$uhoh++;
+				}
+				if ($uhoh == 3)
+				{
+					echo "{$r['itmdesc']}";
 				}
 			}
 		echo"
