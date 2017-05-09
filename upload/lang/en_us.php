@@ -91,6 +91,8 @@ $lang['MENU_INFIRMARY1']='You are in the infirmary for the next';
 $lang['MENU_DUNGEON1']='You are in the dungeon for the next';
 $lang['MENU_XPLOST']="By running from the fight, you have lost all your experience!";
 $lang['MENU_RULES']="Game Rules";
+$lang['MENU_DONATE']="Donate to ";
+$lang['MENU_DONATE2']=". You'll receive tons of benefits! Donate by clicking <a href='donator.php'>here</a>.";
 
 // Preferences
 $lang["PREF_CPASSWORD"] = "Change Password";

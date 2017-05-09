@@ -170,6 +170,7 @@ class headers
 				</noscript>
 				<?php
 				$fed=$db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
+				alert('info',$lang['ERROR_INFO'],"{$lang['MENU_DONATE']} {$set['WebsiteName']}{$lang['MENU_DONATE2']}",false);
 				if ($fed['fed_out'] < $time)
 				{
 					$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
