@@ -25,7 +25,8 @@ echo "
 $q=$db->query("SELECT `v`.*, `i`.* 
 				FROM `vip_listing` `v`
 				INNER JOIN `items` AS `i` 
-				ON `itmid` = `vip_item`");
+				ON `itmid` = `vip_item`
+				ORDER BY `vip_cost` ASC");
 while ($r=$db->fetch_row($q))
 {
 	$r['vip_cost']=sprintf("%0.2f",$r['vip_cost']);
