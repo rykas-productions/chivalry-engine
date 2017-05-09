@@ -48,30 +48,30 @@ function csrf_error($goBackTo)
 }
 switch ($_GET['action'])
 {
-case 'compose':
-    compose();
-    break;
-case 'read':
-    read();
-    break;
-case 'send':
-    send();
-    break;
-case 'markread':
-    markasread();
-    break;
-case 'delall':
-    delall();
-    break;
-case 'outbox':
-    outbox();
-    break;
-case 'archive':
-    archive();
-    break;
-default:
-    home();
-    break;
+	case 'compose':
+		compose();
+		break;
+	case 'read':
+		read();
+		break;
+	case 'send':
+		send();
+		break;
+	case 'markread':
+		markasread();
+		break;
+	case 'delall':
+		delall();
+		break;
+	case 'outbox':
+		outbox();
+		break;
+	case 'archive':
+		archive();
+		break;
+	default:
+		home();
+		break;
 }
 function home()
 {
@@ -90,37 +90,48 @@ function home()
 	</tr>";
 	$MailQuery=$db->query("SELECT * FROM `mail` WHERE `mail_to` = '{$userid}' ORDER BY `mail_time` desc LIMIT 15");
 	while ($r = $db->fetch_row($MailQuery))
+	{
+		$un1=$db->fetch_row($db->query("SELECT `username`,`display_pic` FROM `users` WHERE `userid` = {$r['mail_from']}"));
+		if (empty($un1['display_pic']))
 		{
-			$un1=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['mail_from']}"));
-			if ($r['mail_status'] == 'unread')
-			{
-				$status="<span class='label label-danger'>{$lang['MAIL_MSGUNREAD']}</span>";
-			}
-			else
-			{
-				$status="<span class='label label-primary'>{$lang['MAIL_MSGREAD']}</span>";
-			}
-			$msgtxt=substr($r['mail_text'], 0, 50);
-			$parser->parse($msgtxt);
-			echo"<tr>
-					<td>
-						<a href='profile.php?user={$r['mail_from']}'>{$un1}</a> [{$r['mail_from']}]<br />
-							{$lang['MAIL_SENTAT']}: " . date('F j, Y g:i:s a', $r['mail_time']) . "<br />
-						{$lang['MAIL_STATUS']}: {$status}
-					</td>
-					<td>
-						<b>{$r['mail_subject']}</b> ";
-						echo $parser->getAsHtml();
-						echo"...
-					</td>
-					<td>
-						<a href='?action=read&msg={$r['mail_id']}'>{$lang['MAIL_READ']}</a><br />
-						<a href='playerreport.php'>{$lang['MAIL_REPORT']}</a><br />
-						<a href='?action=delete&msg={$r['mail_id']}'>{$lang['MAIL_DELETE']}</a><br />
-					</td>
-				</tr>";
+			$pic='';
 		}
-	
+		else
+		{
+			$pic="<center><img src='{$un1['display_pic']}' class='img-responsive hidden-xs' width='75'></center>";
+		}
+		if ($r['mail_status'] == 'unread')
+		{
+			$status="<span class='label label-danger'>{$lang['MAIL_MSGUNREAD']}</span>";
+		}
+		else
+		{
+			$status="<span class='label label-primary'>{$lang['MAIL_MSGREAD']}</span>";
+		}
+		$msgtxt=substr($r['mail_text'], 0, 50);
+		$parser->parse($msgtxt);
+		echo"<tr>
+				<td>
+					{$pic}
+					<a href='profile.php?user={$r['mail_from']}'>
+						{$un1['username']}
+					</a> 
+					[{$r['mail_from']}]<br />
+						{$lang['MAIL_SENTAT']}: " . date('F j, Y g:i:s a', $r['mail_time']) . "<br />
+					{$lang['MAIL_STATUS']}: {$status}
+				</td>
+				<td>
+					<b>{$r['mail_subject']}</b> ";
+					echo $parser->getAsHtml();
+					echo"...
+				</td>
+				<td>
+					<a href='?action=read&msg={$r['mail_id']}'>{$lang['MAIL_READ']}</a><br />
+					<a href='playerreport.php'>{$lang['MAIL_REPORT']}</a><br />
+					<a href='?action=delete&msg={$r['mail_id']}'>{$lang['MAIL_DELETE']}</a><br />
+				</td>
+			</tr>";
+	}
 	echo"</table>
 	<form action='?action=markread' method='post'>
 	<input type='submit' class='btn btn-default' value='{$lang['MAIL_MARKREAD']}'>
@@ -131,7 +142,7 @@ function read()
 	global $db,$ir,$userid,$lang,$h,$parser;
 	$code = request_csrf_code('inbox_send');
 	$_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs($_GET['msg']) : 0;
-	if ($_GET['msg'] == 0)
+	if (empty($_GET['msg']))
 	{
 		alert('danger',$lang['ERROR_SECURITY'],$lang['ERROR_MAIL_UNOWNED'],true,'inbox.php');
 		die($h->endpage());
@@ -142,9 +153,17 @@ function read()
 		die($h->endpage());
 	}
 	$msg=$db->fetch_row($db->query("SELECT * FROM `mail` WHERE `mail_id` = {$_GET['msg']}"));
-	$username=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$msg['mail_from']}"));
+	$un1=$db->fetch_row($db->query("SELECT `username`,`display_pic` FROM `users` WHERE `userid` = {$msg['mail_from']}"));
 	$db->query("UPDATE `mail` SET `mail_status` = 'read' WHERE `mail_id` = {$_GET['msg']}");
 	$parser->parse($msg['mail_text']);
+	if (empty($un1['display_pic']))
+	{
+		$pic='';
+	}
+	else
+	{
+		$pic="<center><img src='{$un1['display_pic']}' class='img-responsive hidden-xs' width='75'></center>";
+	}
 	echo "<table class='table table-bordered'>
 	<tr>
 		<th width='33%'>
@@ -156,7 +175,8 @@ function read()
 	</tr>
 	<tr>
 		<td>
-			<b>{$lang['MAIL_FROM']}:</b> <a href='profile.php?user={$msg['mail_from']}'>{$username}</a><br />
+			{$pic}
+			<b>{$lang['MAIL_FROM']}:</b> <a href='profile.php?user={$msg['mail_from']}'>{$un1['username']}</a><br />
 			<b>{$lang['MAIL_SENTAT']}:</b> " . date('F j, Y g:i:s a', $msg['mail_time']) . "
 		</td>
 		<td>
@@ -177,7 +197,7 @@ function read()
 				{$lang['MAIL_SENDTO']}
 			</th>
 			<td>
-				<input type='text' class='form-control' readonly='1' name='sendto' required='1' value='{$username}'>
+				<input type='text' class='form-control' readonly='1' name='sendto' required='1' value='{$un1['username']}'>
 			</td>
 		</tr>
 		<tr>
@@ -198,7 +218,7 @@ function read()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' class='btn btn-default'  value='{$lang['MAIL_REPLYTO']} {$username}'>
+				<input type='submit' class='btn btn-default'  value='{$lang['MAIL_REPLYTO']} {$un1['username']}'>
 			</td>
 		</tr>
 		</table>
