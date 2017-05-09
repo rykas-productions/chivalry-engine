@@ -98,12 +98,12 @@ class headers
 						<?php
 						$ir['mail']=$db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
 						$ir['notifications']=$db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
-						echo "<a href='../inbox.php'>{$lang['MENU_MAIL']} ({$ir['mail']})</a>";
+						echo "<a href='../inbox.php'>{$lang['MENU_MAIL']} <span class='badge'>{$ir['mail']}</span></a>";
 						?>
                     </li>
                     <li>
                         <?php
-							echo "<a href='../notifications.php'>{$lang['MENU_EVENT']} ({$ir['notifications']})</a>";
+							echo "<a href='../notifications.php'>{$lang['MENU_EVENT']} <span class='badge'>{$ir['notifications']}</span></a>";
 						?>
                     </li>
                     <li>

@@ -96,23 +96,23 @@ class headers
 							</li>
 						</ul>
 							<ul class="nav navbar-nav navbar-right">
-							<ul class="nav navbar-nav">
-							<li>
-								<?php
-								$ir['mail']=$db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
-								$ir['notifications']=$db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
-									echo "<a href='inbox.php'>{$lang['MENU_MAIL']} ({$ir['mail']})</a>";
-								?>
-							</li>
-							<li>
-								<?php
-									echo "<a href='notifications.php'>{$lang['MENU_EVENT']} ({$ir['notifications']})</a>";
-								?>
-							</li>
-							<li>
-								<a href="inventory.php"><?php echo $lang['MENU_INVENTORY']; ?></a>
-							</li>
-						</ul>
+								<ul class="nav navbar-nav">
+									<li>
+										<?php
+										$ir['mail']=$db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
+										$ir['notifications']=$db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
+											echo "<a href='inbox.php'>{$lang['MENU_MAIL']} <span class='badge'>{$ir['mail']}</span></a>";
+										?>
+									</li>
+									<li>
+										<?php
+											echo "<a href='notifications.php'>{$lang['MENU_EVENT']} <span class='badge'>{$ir['notifications']}</span></a>";
+										?>
+									</li>
+									<li>
+										<a href="inventory.php"><?php echo $lang['MENU_INVENTORY']; ?></a>
+									</li>
+								</ul>
 							<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<?php
