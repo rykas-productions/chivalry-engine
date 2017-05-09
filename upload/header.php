@@ -333,8 +333,11 @@ class headers
 					{$lang['MENU_OUT']}";
 					?>
 					&copy; <?php echo date("Y");
-					echo"<br/>{$db->num_queries} {$lang['MENU_QE']}.{$query_extra}";
+					echo"<br/>{$db->num_queries} {$lang['MENU_QE']}.{$query_extra}<br />";
 					?>
+					<div class='row'>
+						<iframe class="col-lg-12 col-md-12 col-sm-12" src="ad.html">
+					</div>
 				</p>
 			</footer>
 		</html>
