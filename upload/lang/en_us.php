@@ -399,9 +399,9 @@ $lang['NOTIF_TABLE_HEADER2']='Notifications Text';
 $lang['NOTIF_DELETE_SINGLE']='You have successfully deleted a notification.';
 $lang['NOTIF_DELETE_SINGLE_FAIL']='You cannot delete this notification as it either does not exist or does not belong to you.';
 $lang['NOTIF_TITLE']='Last fifteen notifications belonging to you...';
-$lang['NOTIF_READ']='Notification Read';
-$lang['NOTIF_UNREAD']='Notification unread';
-$lang['NOTIF_DELETE']='Delete Notification';
+$lang['NOTIF_READ']='Read';
+$lang['NOTIF_UNREAD']='Unread';
+$lang['NOTIF_DELETE']='Delete';
 
 //Bank
 $lang['BANK_BUY1']='Open a bank account today, just ';
