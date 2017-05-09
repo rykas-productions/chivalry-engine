@@ -334,10 +334,15 @@ class headers
 					?>
 					&copy; <?php echo date("Y");
 					echo"<br/>{$db->num_queries} {$lang['MENU_QE']}.{$query_extra}<br />";
+					if ($ir['vip_days'] > 0)
+					{
+						?>
+						<div class='row'>
+							<iframe class="col-lg-12 col-md-12 col-sm-12" src="ad.html">
+						</div>
+						<?php
+					}
 					?>
-					<div class='row'>
-						<iframe class="col-lg-12 col-md-12 col-sm-12" src="ad.html">
-					</div>
 				</p>
 			</footer>
 		</html>
