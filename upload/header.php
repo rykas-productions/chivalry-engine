@@ -334,7 +334,7 @@ class headers
 					?>
 					&copy; <?php echo date("Y");
 					echo"<br/>{$db->num_queries} {$lang['MENU_QE']}.{$query_extra}<br />";
-					if ($ir['vip_days'] > 0)
+					if ($ir['vip_days'] == 0)
 					{
 						?>
 						<div class='row'>
