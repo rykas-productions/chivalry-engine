@@ -92,13 +92,24 @@ else
 				$einfo = unserialize($id["effect{$enum}"]);
 				$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
 				$einfo['dir'] = ($einfo['dir'] == 'pos') ? 'Increases' : 'Decreases';
+				$stats =
+					array("energy" => "{$lang['INDEX_ENERGY']}", "will" => "{$lang['INDEX_WILL']}", 
+							"brave" => "{$lang['INDEX_BRAVE']}",
+							"hp" => "{$lang['INDEX_HP']}", "strength" => "{$lang['GEN_STR']}",
+							"agility" => "{$lang['GEN_AGL']}", "guard" => "{$lang['GEN_GRD']}",
+							"labour" => "{$lang['GEN_LAB']}", "IQ" => "{$lang['GEN_IQ']}",
+							"infirmary" => "{$lang['STAFF_CITEM_TH12_1']}", "dungeon" => "{$lang['STAFF_CITEM_TH12_2']}",
+							"primary_currency" => "{$lang['INDEX_PRIMCURR']}", "secondary_currency" 
+							=> "{$lang['INDEX_SECCURR']}", "crimexp" => "{$lang['INDEX_EXP']}", "vip_days" => 
+							"{$lang['INDEX_VIP']}");
+				$statformatted=$stats["{$einfo['stat']}"];
 				echo "
 				<tr>
 					<th>
 						{$lang['ITEM_INFO_EFFECT']}{$enum}
 					</th>
 					<td>
-					{$einfo['dir']} {$einfo['stat']} {$lang['ITEM_INFO_BY']} {$einfo['inc_amount']}{$einfo['inc_type']}.
+					{$einfo['dir']} {$statformatted} {$lang['ITEM_INFO_BY']} {$einfo['inc_amount']}{$einfo['inc_type']}.
 					</td>
 				</tr>";
 			}
