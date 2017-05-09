@@ -13,7 +13,7 @@ if (isset($_GET['id']))
 	if (isset($_GET['deny']))
 	{
 		$db->query("DELETE FROM `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee` = '{$userid}'");
-		echo "{$lang['RUSSIANROULETTE_DENIED']}";
+		alert('success',$lang['ERROR_SUCCESS'],$lang['RUSSIANROULETTE_DENIED'],true,'index.php');
 		die($h->endpage());
 	}
 	$q = $db->query("SELECT `challenger` FROM `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee` = '{$userid}'");
@@ -26,7 +26,7 @@ if (isset($_GET['id']))
 			echo "{$lang['RUSSIANROULETTE_NO_INVITE']} {$r['username']} ({$_GET['id']})";
 			die($h->endpage());
 		}
-		echo "{$lang['RUSSIANROULETTE_INVALID_ACCOUNT']}";
+		alert('danger',$lang['ERROR_GENERIC'],$lang['RUSSIANROULETTE_INVALID_ACCOUNT'],true,'index.php');
 		die($h->endpage());
 	}
 	else
@@ -35,14 +35,14 @@ if (isset($_GET['id']))
 		$r2 = $db->fetch_row($q);
 		if ($ir['primary_currency'] < $r2['reward'])
 		{
-			echo "{$lang['RUSSIANROULETTE_INSUFFICIENT_CURRENCY']}";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['RUSSIANROULETTE_INSUFFICIENT_CURRENCY'],true,'index.php');
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT * FROM `users` WHERE `userid` = '{$_GET['id']}'");
 		$r = $db->fetch_row($q);
 		if ($r['primary_currency'] < $r2['reward'])
 		{
-			echo "{$lang['RUSSIANROULETTE_SCAM']}";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['RUSSIANROULETTE_SCAM'],true,'index.php');
 			die($h->endpage());
 		}
 		$rand = Random(1, 8);
@@ -133,7 +133,7 @@ if (isset($_GET['id']))
 			$hospreason = $db->escape("Played the wrong game with <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 			$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$_GET['id']}");
 			put_infirmary($_GET['id'],$hosptime,$hospreason);
-			notification_add($_GET['id'], "You lost at the game of russian roulette against {$ir['username']} ({$userid})!");
+			$api->GameAddNotification($_GET['id'], "You lost at the game of russian roulette against {$ir['username']}!");
 		}
 		if ($shot == true)
 		{
@@ -148,7 +148,7 @@ if (isset($_GET['id']))
 			$hospreason = $db->escape("Played the wrong game with <a href='profile.php?user={$_GET['id']}'>{$r2['username']}</a>");
 			$db->query("UPDATE `users` SET `hp` = 1 WHERE `userid` = {$_GET['id']}");
 			put_infirmary($userid,$hosptime,$hospreason);
-			notification_add($_GET['id'], "You won in the game of russian roulette against {$ir['username']} ({$userid})!");
+			$api->GameAddNotification($_GET['id'], "You won in the game of russian roulette against {$ir['username']}!");
 		}
 		$db->query("DELETE FROM `russian_roulette` WHERE `challenger` = '{$_GET['id']}' AND `challengee` = '{$userid}'");
 		die($h->endpage());
@@ -167,7 +167,7 @@ else
 						{$lang['RUSSIANROULETTE_USER_INSERT']}
 					</th>
 					<td>
-						<input type='number' required='1' name='user_id' class='form-control'>
+						" . user_dropdown('user_id') . "
 					</td>
 				</tr>
 				<tr>
@@ -175,7 +175,7 @@ else
 						{$lang['RUSSIANROULETTE_REWARD_INSERT']}
 					</th>
 					<td>
-						<input type='number' required='1' name='reward' min='0' max='{$ir['primary_currency']}' class='form-control'>
+						<input type='number' name='reward' min='0' max='{$ir['primary_currency']}' class='form-control'>
 					</td>
 				</tr>
 				<tr>
@@ -193,11 +193,13 @@ else
 		$_POST['reward'] = (isset($_POST['reward']) && is_numeric($_POST['reward'])) ? abs(intval($_POST['reward'])) : 0;
 		if ($_POST['user_id'] == 0 || empty($_POST['user_id']))
 		{
-			echo "{$lang['RUSSIANROULETTE_FAILED_FORM']}";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['RUSSIANROULETTE_FAILED_FORM'],true,'index.php');
+			die($h->endpage());
 		}
 		if ($_POST['user_id'] == $userid)
 		{
-			echo "{$lang['RUSSIANROULETTE_SELF']}";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['RUSSIANROULETTE_SELF'],true,'index.php');
+			die($h->endpage());
 		}
 		else
 		{
@@ -205,13 +207,14 @@ else
 			if ($db->num_rows($q) != 0)
 			{
 				$r = $db->fetch_row($q);
-				echo "{$lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND']} {$r['username']} ({$r['userid']})!";
+				alert('success',$lang['ERROR_SUCCESS'],"{$lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND']} {$r['username']}",true,'index.php');
 				notification_add($_POST['user_id'], "{$ir['username']} ({$userid}) has challenge you to a game of russian roulette with the prize of {$_POST['reward']} primary currency! Click one of these options <a href='russianroulette.php?id={$userid}'>Accept</a> | <a href='russianroulette.php?id={$userid}&deny=1'>Deny</a>");
 				$db->query("INSERT INTO `russian_roulette` VALUES('{$userid}', '{$_POST['user_id']}', '{$_POST['reward']}')");
 			}
 			else
 			{
-				echo "{$lang['RUSSIANROULETTE_INVALID_ACCOUNT_SEND']}";
+				alert('danger',$lang['ERROR_GENERIC'],$lang['RUSSIANROULETTE_INVALID_ACCOUNT_SEND'],true,'index.php');
+				die($h->endpage());
 			}
 		}
 	}
