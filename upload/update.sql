@@ -13,3 +13,6 @@ CREATE TABLE `russian_roulette` (
 	`challengee` int(11) UNSIGNED NOT NULL, 
 	`reward` int(11) UNSIGNED NOT NULL
 	) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+	
+
+ALTER TABLE `vip_listing` CHANGE `vip_cost` `vip_cost` DECIMAL(10,2) NOT NULL;
