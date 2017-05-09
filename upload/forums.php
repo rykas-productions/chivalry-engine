@@ -135,9 +135,9 @@ function idx()
     while ($r = $db->fetch_row($q))
     {
         $t = DateTime_Parse($r['ff_lp_time'], false, true);
-		$pnq=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
-		$pn=$db->fetch_single($pnq);
-		
+		$pnq=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
+		$pn=$db->fetch_row($pnq);
+		$username = ($pn['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$pn['username']} has {$pn['vip_days']} VIP Days remaining.'></span></span>" : $pn['username'];
 		$topicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
 			
 		$postsq=$db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `ff_id`={$r['ff_id']}");
@@ -159,7 +159,7 @@ function idx()
 					<td>
 						{$t}<br />
 						{$lang['FORUM_IN']} <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1' style='font-weight: 800;'>{$topicname}</a><br />
-						{$lang['FORUM_BY']} <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$pn}</a>
+						{$lang['FORUM_BY']} <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
 					</td>
               </tr>";
     }
@@ -199,8 +199,9 @@ function idx()
         while ($r = $db->fetch_row($q))
         {
             $t = DateTime_Parse($r['ff_lp_time'], false, true);
-			$pnq=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
-			$pn=$db->fetch_single($pnq);
+			$pnq=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
+			$pn=$db->fetch_row($pnq);
+			$username = ($pn['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$pn['username']} has {$pn['vip_days']} VIP Days remaining.'></span></span>" : $pn['username'];
 			
 			$topicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
 				
@@ -223,7 +224,7 @@ function idx()
         		<td>
 					{$lang['FORUM_ON']} {$t}<br />
 					{$lang['FORUM_IN']} <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1' style='font-weight: 800;'>{$topicname}</a><br />
-					{$lang['FORUM_BY']} <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$pn}</a>
+					{$lang['FORUM_BY']} <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
                 </td>
               </tr>";
         }
@@ -314,19 +315,21 @@ function viewforum()
         {
             $lt = "";
         }
-		$pnq1=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$r2['ft_owner_id']}");
-		$pn1=$db->fetch_single($pnq1);
-		$pnq2=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$r2['ft_last_id']}");
-		$pn2=$db->fetch_single($pnq2);
+		$pnq1=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r2['ft_owner_id']}");
+		$pn1=$db->fetch_row($pnq1);
+		$pn1['username'] = ($pn1['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn1['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$pn1['username']} has {$pn1['vip_days']} VIP Days remaining.'></span></span>" : $pn1['username'];
+		$pnq2=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r2['ft_last_id']}");
+		$pn2=$db->fetch_row($pnq2);
+		$pn2['username'] = ($pn2['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn2['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$pn2['username']} has {$pn2['vip_days']} VIP Days remaining.'></span></span>" : $pn2['username'];
 		$pcq=$db->query("SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_topic_id` = {$r2['ft_id']}");
 		$pc=$db->fetch_single($pcq);
 		if (!$pn2)
 		{
-			$pn2="{$lang['GEN_NEU']}";
+			$pn2['username']="{$lang['GEN_NEU']}";
 		}
 		if (!$pn1)
 		{
-			$pn1="{$lang['GEN_NEU']}";
+			$pn1['username']="{$lang['GEN_NEU']}";
 		}
         echo "<tr>
         		<td>
@@ -336,11 +339,11 @@ function viewforum()
 				<td class='hidden-xs'>{$pc}</td>
 				<td class='hidden-xs'> 
 					{$t1}<br />
-					{$lang['FORUM_BY']} <a href='profile.php?user={$r2['ft_owner_id']}'>{$pn1}</a>
+					{$lang['FORUM_BY']} <a href='profile.php?user={$r2['ft_owner_id']}'>{$pn1['username']}</a>
                 </td>
                 <td>
 					{$t2}<br />
-                    {$lang['FORUM_BY']} <a href='profile.php?user={$r2['ft_last_id']}'>{$pn2}</a>
+                    {$lang['FORUM_BY']} <a href='profile.php?user={$r2['ft_last_id']}'>{$pn2['username']}</a>
                 </td>
               </tr>\n";
     }
@@ -505,8 +508,9 @@ function viewtopic()
     $no = $st;
     while ($r = $db->fetch_row($q3))
     {
-		$PNQ=$db->query("SELECT `username` FROM `users` WHERE `userid`={$r['fp_poster_id']}");
-		$PN=$db->fetch_single($PNQ);
+		$PNQ=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid`={$r['fp_poster_id']}");
+		$PN=$db->fetch_row($PNQ);
+		$PN['username'] = ($PN['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$PN['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$PN['username']} has {$PN['vip_days']} VIP Days remaining.'></span></span>" : $PN['username'];
 
 		$qlink = "[<a href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>{$lang['FORUM_POST_QUOTE']}</a>]";
         if ($api->UserMemberLevelGet($userid,'forum moderator') || $userid == $r['fp_poster_id'])
@@ -579,7 +583,7 @@ function viewtopic()
         {
 			if ($memb['display_pic'])
 			{
-				$av="<center><img src='{$memb['display_pic']}' class='img-responsive' width='75' title='This is the avatar of {$PN}'></center>";
+				$av="<center><img src='{$memb['display_pic']}' class='img-responsive' width='75'></center>";
 			}
 			else
 			{
@@ -606,7 +610,7 @@ function viewtopic()
 			$usertopicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_owner_id`={$r['fp_poster_id']}");
 			$usertopics=$db->fetch_single($usertopicsq);
             print
-                    "<div class='hidden-xs'>{$av}</div><a href='profile.php?user={$r['fp_poster_id']}'>{$PN}</a>
+                    "<div class='hidden-xs'>{$av}</div><a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a>
                     	[{$r['fp_poster_id']}]<br />
                      <b>{$lang['GEN_RANK']}:</b> {$memb['user_level']}<br />
 					 <b>{$lang['FORUM_F_PC']}:</b> {$userposts}<br />
@@ -1433,4 +1437,4 @@ function deletopic()
     recache_forum($topic['ft_forum_id']);
 	$api->SystemLogsAdd($userid,'staff',"Deleted topic {$topic['ft_name']}");
 }
-require("footer.php");
+$h->endpage();

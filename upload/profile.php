@@ -60,7 +60,7 @@ else
         $ull = ($r['last_login'] == 0) ? 'Never'  : DateTime_Parse($r['last_login']);
         $sup = date('F j, Y g:i:s a', $r['registertime']);
 		$displaypic = ($r['display_pic']) ? "<img src='{$r['display_pic']}' class='img-thumbnail img-responsive' width='250' height='250'>" : '';
-		$user_name = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span> <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
+		$user_name = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span></span>" : $r['username'];
         $ref_q =
                 $db->query(
                         "SELECT COUNT(`referalid`)
@@ -86,14 +86,14 @@ else
 		$r['daysold']=DateTime_Parse($r['registertime'], false, true);
 		
 		$rhpperc = round($r['hp'] / $r['maxhp'] * 100);
-		echo "<h3>{$lang['PROFILE_PROFOR']} {$r['username']}</h3>";
+		echo "<h3>{$lang['PROFILE_PROFOR']} {$user_name}</h3>";
 		?>
 		
 		<div class="row">
 			<div class="col-lg-2">
 				<?php
 					echo "{$displaypic}<br />
-						<h3><b>{$r['username']} [{$r['userid']}]</b></h3>
+						<h3><b>{$user_name} [{$r['userid']}]</b></h3>
 							{$r['user_level']}<br />
 							
 						{$lang['PROFILE_LOCATION']} {$r['town_name']}<br />
