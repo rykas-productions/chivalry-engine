@@ -16,24 +16,24 @@ if (!isset($_GET['action']))
 }
 switch ($_GET['action'])
 {
-case "create":
-    create();
-    break;
-case "createitmgroup":
-    createitmgroup();
-    break;
-case "delete":
-    deleteitem();
-    break;
-case "edit":
-    edititem();
-    break;
-case "giveitem":
-    giveitem();
-    break;
-default:
-    die();
-    break;
+	case "create":
+		create();
+		break;
+	case "createitmgroup":
+		createitmgroup();
+		break;
+	case "delete":
+		deleteitem();
+		break;
+	case "edit":
+		edititem();
+		break;
+	case "giveitem":
+		giveitem();
+		break;
+	default:
+		die();
+		break;
 }
 function create()
 {
@@ -583,8 +583,8 @@ function edititem()
                     "labour" => "{$lang['GEN_LAB']}", "IQ" => "{$lang['GEN_IQ']}",
                     "infirmary" => "{$lang['STAFF_CITEM_TH12_1']}", "dungeon" => "{$lang['STAFF_CITEM_TH12_2']}",
                     "primary_currency" => "{$lang['INDEX_PRIMCURR']}", "secondary_currency" 
-					=> "{$lang['INDEX_SECCURR']}", "crimexp" => "{{$lang['INDEX_EXP']}}", "vip_days" => 
-					"{$lang['INDEX_VIP']}}");
+					=> "{$lang['INDEX_SECCURR']}", "crimexp" => "{$lang['INDEX_EXP']}", "vip_days" => 
+					"{$lang['INDEX_VIP']}");
 			for ($i = 1; $i <= 3; $i++)
 			{
 				if (!empty($itemi["effect" . $i]))
