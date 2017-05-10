@@ -51,7 +51,7 @@ while ($r=$db->fetch_row($q))
 								"brave" => "{$lang['INDEX_BRAVE']}",
 								"hp" => "{$lang['INDEX_HP']}", "strength" => "{$lang['GEN_STR']}",
 								"agility" => "{$lang['GEN_AGL']}", "guard" => "{$lang['GEN_GRD']}",
-								"labour" => "{$lang['GEN_LAB']}", "IQ" => "{$lang['GEN_IQ']}",
+								"labour" => "{$lang['GEN_LAB']}", "iq" => "{$lang['GEN_IQ']}",
 								"infirmary" => "{$lang['STAFF_CITEM_TH12_1']}", "dungeon" => "{$lang['STAFF_CITEM_TH12_2']}",
 								"primary_currency" => "{$lang['INDEX_PRIMCURR']}", "secondary_currency" 
 								=> "{$lang['INDEX_SECCURR']}", "crimexp" => "{$lang['INDEX_EXP']}", "vip_days" => 

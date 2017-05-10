@@ -122,7 +122,7 @@ function create()
 						<option value='agility'>{$lang['GEN_AGL']}</option>
 						<option value='guard'>{$lang['GEN_GRD']}</option>
 						<option value='labor'>{$lang['GEN_LAB']}</option>
-						<option value='IQ'>{$lang['GEN_IQ']}</option>
+						<option value='iq'>{$lang['GEN_IQ']}</option>
 						<option value='infirmary'>{$lang['STAFF_CITEM_TH12_1']}</option>
 						<option value='dungeon'>{$lang['STAFF_CITEM_TH12_1']}</option>
 						<option value='primary_currency'>{$lang['INDEX_PRIMCURR']}</option>
@@ -218,7 +218,7 @@ function create()
 							&& in_array($_POST[$efxkey . 'stat'],
 									array('energy', 'will', 'brave', 'hp',
 											'strength', 'agility', 'guard',
-											'labor', 'IQ', 'infirmary', 'dungeon',
+											'labor', 'iq', 'infirmary', 'dungeon',
 											'primary_currency', 'secondary_currency', 'xp', 'vip_days')))
 							? $_POST[$efxkey . 'stat'] : 'energy';
 			$_POST[$efxkey . 'dir'] =
@@ -580,7 +580,7 @@ function edititem()
 					"brave" => "{$lang['INDEX_BRAVE']}",
                     "hp" => "{$lang['INDEX_HP']}", "strength" => "{$lang['GEN_STR']}",
                     "agility" => "{$lang['GEN_AGL']}", "guard" => "{$lang['GEN_GRD']}",
-                    "labour" => "{$lang['GEN_LAB']}", "IQ" => "{$lang['GEN_IQ']}",
+                    "labour" => "{$lang['GEN_LAB']}", "iq" => "{$lang['GEN_IQ']}",
                     "infirmary" => "{$lang['STAFF_CITEM_TH12_1']}", "dungeon" => "{$lang['STAFF_CITEM_TH12_2']}",
                     "primary_currency" => "{$lang['INDEX_PRIMCURR']}", "secondary_currency" 
 					=> "{$lang['INDEX_SECCURR']}", "crimexp" => "{$lang['INDEX_EXP']}", "vip_days" => 
@@ -713,7 +713,7 @@ function edititem()
 							&& in_array($_POST[$efxkey . 'stat'],
 									array('energy', 'will', 'brave', 'hp',
 											'strength', 'agility', 'guard',
-											'labor', 'IQ', 'infirmary', 'dungeon',
+											'labor', 'iq', 'infirmary', 'dungeon',
 											'primary_currency', 'secondary_currency', 'xp', 'vip_days')))
 							? $_POST[$efxkey . 'stat'] : 'energy';
 			$_POST[$efxkey . 'dir'] =

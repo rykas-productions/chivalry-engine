@@ -102,7 +102,7 @@ else
 				{
 					$upd = $ir[$einfo['stat']];
 				}
-				if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labour', 'IQ')))
+				if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labour', 'iq')))
 				{
 					$db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
 				}
