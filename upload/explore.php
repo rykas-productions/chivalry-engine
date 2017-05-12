@@ -44,7 +44,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 </div>
 <div class='col-md-4'>
 	<div class='tab-content'>
-		<div id='SHOPS' class='tab-pane fade in'>
+		<div id='SHOPS' class='tab-pane'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='shops.php'>{$lang['EXPLORE_LSHOP']}</a><br />
@@ -55,7 +55,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 				</div>
 			</div>
 		</div>
-		<div id='FD' class='tab-pane fade'>
+		<div id='FD' class='tab-pane'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='bank.php'>{$lang['EXPLORE_BANK']}</a><br />
@@ -65,7 +65,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 				</div>
 			</div>
 		</div>
-		<div id='HL' class='tab-pane fade'>
+		<div id='HL' class='tab-pane'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='mine.php'>{$lang['EXPLORE_MINE']}</a><br />
@@ -76,7 +76,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 				</div>
 			</div>
 		</div>
-		<div id='ADMIN' class='tab-pane fade'>
+		<div id='ADMIN' class='tab-pane'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='users.php'>{$lang['EXPLORE_USERLIST']}</a><br />
@@ -89,7 +89,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 				</div>
 			</div>
 		</div>
-		<div id='GAMES' class='tab-pane fade'>
+		<div id='GAMES' class='tab-pane'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='russianroulette.php'>{$lang['EXPLORE_RR']}</a><br />
@@ -99,7 +99,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 				</div>
 			</div>
 		</div>
-		<div id='GUILDS' class='tab-pane fade'>
+		<div id='GUILDS' class='tab-pane'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>";
 					if ($ir['guild'] > 0)
@@ -112,7 +112,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 				</div>
 			</div>
 		</div>
-		<div id='ACT' class='tab-pane fade'>
+		<div id='ACT' class='tab-pane'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='dungeon.php'>{$lang['EXPLORE_DUNG']} <span class='badge'>{$dung_count}</span></a><br />
@@ -124,7 +124,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 				</div>
 			</div>
 		</div>
-		<div id='PINTER' class='tab-pane fade'>
+		<div id='PINTER' class='tab-pane'>
 			<div class='panel panel-default'>
 				<div class='panel-body'>
 					<a href='forums.php'>{$lang['EXPLORE_FORUMS']}</a><br />

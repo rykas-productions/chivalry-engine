@@ -128,7 +128,7 @@ echo"
 		<div class='tab-content'>";
 			if ($api->UserMemberLevelGet($userid,'admin'))
 			{
-				echo "<div id='ADMIN' class='tab-pane fade in'>
+				echo "<div id='ADMIN' class='tab-pane'>
 						<div class='panel panel-default'>
 							<div class='panel-body'>
 								<a href='staff_settings.php?action=basicset'>{$lang['STAFF_IDX_ADMIN_TAB1']}</a><br />
@@ -142,14 +142,14 @@ echo"
 							</div>
 						</div>
 					</div>
-					<div id='MODULES' class='tab-pane fade in'>
+					<div id='MODULES' class='tab-pane'>
 						<div class='panel panel-default'>
 							<div class='panel-body'>
 								<a href='staff_criminal.php'>{$lang['STAFF_IDX_MODULES_TAB1']}</a>
 							</div>
 						</div>
 					</div>
-					<div id='SHOPS' class='tab-pane fade in'>
+					<div id='SHOPS' class='tab-pane'>
 						<div class='panel panel-default'>
 							<div class='panel-body'>
 								<a href='staff_shops.php?action=newshop'>{$lang['STAFF_IDX_SHOPS_TAB1']}</a><br />
@@ -158,7 +158,7 @@ echo"
 							</div>
 						</div>
 					</div>
-					<div id='BOTS' class='tab-pane fade in'>
+					<div id='BOTS' class='tab-pane'>
 						<div class='panel panel-default'>
 							<div class='panel-body'>
 								<a href='staff_bots.php?action=addbot'>{$lang['STAFF_BOTS_ADD']}</a><br />
@@ -166,7 +166,7 @@ echo"
 							</div>
 						</div>
 					</div>
-					<div id='TOWN' class='tab-pane fade in'>
+					<div id='TOWN' class='tab-pane'>
 						<div class='panel panel-default'>
 							<div class='panel-body'>
 								<a href='staff_towns.php?action=addtown'>{$lang['STAFF_TRAVEL_ADD']}</a><br />
@@ -175,7 +175,7 @@ echo"
 							</div>
 						</div>
 					</div>
-					<div id='ACADEMY' class='tab-pane fade in'>
+					<div id='ACADEMY' class='tab-pane'>
 						<div class='panel panel-default'>
 							<div class='panel-body'>
 								<a href='staff_academy.php?action=addacademy'>{$lang['STAFF_IDX_NPC_TAB1']}</a><br />
@@ -183,7 +183,7 @@ echo"
 							</div>
 						</div>
 					</div>
-					<div id='ESTATES' class='tab-pane fade in'>
+					<div id='ESTATES' class='tab-pane'>
 						<div class='panel panel-default'>
 							<div class='panel-body'>
 								<a href='staff_estates.php?action=addestate'>{$lang['STAFF_ESTATE_ADD']}</a><br />
@@ -192,7 +192,7 @@ echo"
 							</div>
 						</div>
 					</div>
-					<div id='MINES' class='tab-pane fade in'>
+					<div id='MINES' class='tab-pane'>
 						<div class='panel panel-default'>
 							<div class='panel-body'>
 								<a href='staff_mine.php?action=addmine'>{$lang['STAFF_IDX_MINE_TAB1']}</a><br />
@@ -201,7 +201,7 @@ echo"
 							</div>
 						</div>
 					</div>
-					<div id='SMELT' class='tab-pane fade in'>
+					<div id='SMELT' class='tab-pane'>
 						<div class='panel panel-default'>
 							<div class='panel-body'>
 								<a href='staff_smelt.php?action=add'>{$lang['STAFF_IDX_SMELT_TAB1']}</a><br />
@@ -209,7 +209,7 @@ echo"
 							</div>
 						</div>
 					</div>
-					<div id='JOBS' class='tab-pane fade in'>
+					<div id='JOBS' class='tab-pane'>
 						<div class='panel panel-default'>
 							<div class='panel-body'>
 								N/A
@@ -219,7 +219,7 @@ echo"
 			}
 			if ($api->UserMemberLevelGet($userid,'assistant'))
 			{
-				echo "<div id='ITEMS' class='tab-pane fade in'>
+				echo "<div id='ITEMS' class='tab-pane'>
 					<div class='panel panel-default'>
 						<div class='panel-body'>";
 							if ($api->UserMemberLevelGet($userid,'admin'))
@@ -235,7 +235,7 @@ echo"
 						</div>
 					</div>
 				</div>
-				<div id='POLL' class='tab-pane fade in'>
+				<div id='POLL' class='tab-pane'>
 					<div class='panel panel-default'>
 						<div class='panel-body'>
 							<a href='staff_polling.php?action=addpoll'>{$lang['STAFF_POLL_TITLES']}</a><br />
@@ -243,7 +243,7 @@ echo"
 						</div>
 					</div>
 				</div>
-				<div id='USERS' class='tab-pane fade in'>
+				<div id='USERS' class='tab-pane'>
 					<div class='panel panel-default'>
 						<div class='panel-body'>";
 							if ($api->UserMemberLevelGet($userid,'admin'))
@@ -259,7 +259,7 @@ echo"
 						</div>
 					</div>
 				</div>
-				<div id='LOGS' class='tab-pane fade in'>
+				<div id='LOGS' class='tab-pane'>
 					<div class='panel panel-default'>
 						<div class='panel-body'>
 							<a href='staff_logs.php?action=alllogs'>{$lang['STAFF_IDX_LOGS_TAB1']}</a><br />
@@ -299,7 +299,7 @@ echo"
 						</div>
 					</div>
 				</div>
-				<div id='PERMISSION' class='tab-pane fade in'>
+				<div id='PERMISSION' class='tab-pane'>
 					<div class='panel panel-default'>
 						<div class='panel-body'>
 							<a href='staff_perms.php?action=viewperm'>{$lang['STAFF_IDX_PERM_TAB1']}</a><br />
@@ -310,7 +310,7 @@ echo"
 				</div>";
 			}
 			echo"
-			<div id='PUNISH' class='tab-pane fade in'>
+			<div id='PUNISH' class='tab-pane'>
 					<div class='panel panel-default'>
 						<div class='panel-body'>
 							<a href='staff_punish.php?action=fedjail'>{$lang['STAFF_PUNISHED_FED']}</a><br />
@@ -322,7 +322,7 @@ echo"
 						</div>
 					</div>
 			</div>
-			<div id='FORUMS' class='tab-pane fade in'>
+			<div id='FORUMS' class='tab-pane'>
 				<div class='panel panel-default'>
 					<div class='panel-body'>
 						<a href='staff_forums.php?action=addforum'>{$lang['STAFF_FORUM_ADD']}</a><br />
