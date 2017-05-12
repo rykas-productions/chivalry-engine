@@ -117,7 +117,7 @@ else
 				</ul>
 				<br />
 				<div class="tab-content">
-				  <div id="info" class="tab-pane fade in active">
+				  <div id="info" class="tab-pane active">
 					<p>
 						<?php
 						echo
@@ -181,7 +181,7 @@ else
 						?>
 					</p>
 				  </div>
-				  <div id="actions" class="tab-pane fade">
+				  <div id="actions" class="tab-pane">
 				  <?php echo "<button type='button' class='btn btn-default' data-toggle='modal' data-target='#message'>{$lang['PROFILE_BTN_MSG']} {$r['username']} {$lang['PROFILE_BTN_MSG1']}</button>"; ?>
 				  <?php echo "<br /><br /><button type='button' class='btn btn-default' data-toggle='modal' data-target='#cash'>{$lang['PROFILE_BTN_SND']} {$r['username']} {$lang['INDEX_PRIMCURR']}</button>
 				  <br /><br /><form action='attack.php'>
@@ -270,7 +270,7 @@ else
 					  </div>
 					</div>
 				  </div>
-				  <div id="financial" class="tab-pane fade">
+				  <div id="financial" class="tab-pane">
 					<?php
 						echo
 						"
@@ -304,7 +304,7 @@ else
 						?>
 				  </div>
 				  <?php
-				  echo '<div id="staff" class="tab-pane fade in">';
+				  echo '<div id="staff" class="tab-pane">';
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
 						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",65655),true);
