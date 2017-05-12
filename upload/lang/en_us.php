@@ -498,6 +498,9 @@ $lang['FORUM_DELETE_TOPIC_DONE']="Topic has been deleted successfully.";
 $lang['FORUM_BAN_INFO']="You have been banned from viewing the forums for the next";
 $lang['FORUM_BAN_INFO1']="for the following reason:";
 $lang['FORUM_BAN_INFO2']="You may appeal your case by talking with a staff member.";
+$lang['FORUM_RECACHE_TOPIC']="Reaching Forum Thread ID #";
+$lang['FORUM_RECACHE_FORUM']="Reaching Forum ID #";
+$lang['FORUM_RECACHE_DONE']="Recached successfully.";
 
 //Send Cash Form
 $lang['SCF_POSCASH']="You need to send at least 1 {$lang['INDEX_PRIMCURR']} to use this form.";

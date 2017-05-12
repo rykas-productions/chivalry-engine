@@ -1842,3 +1842,94 @@ function run_template($template_array, $template)
     }
 	echo $text;
 }
+/*
+	Function to recache the specified forum topic
+*/
+function recache_topic($topic)
+{
+    global $ir,$userid,$h,$db,$lang;
+    $topic = abs((int) $topic);
+    if ($topic <= 0)
+    {
+        return;
+    }
+    echo "{$lang['FORUM_RECACHE_TOPIC']}{$topic} ... ";
+    $q =
+            $db->query(
+                    "SELECT `fp_poster_id`, `fp_poster_id`, `fp_time`
+                     FROM `forum_posts`
+                     WHERE `fp_topic_id` = {$topic}
+                     ORDER BY `fp_time` DESC
+                     LIMIT 1");
+    if ($db->num_rows($q) == 0)
+    {
+        $db->free_result($q);
+        $db->query(
+                "UPDATE `forum_topics`
+                 SET `ft_last_id` = 0, `ft_last_time` = 0, `ft_posts` = 0
+                 WHERE `ft_id` = {$topic}");
+    }
+    else
+    {
+        $r = $db->fetch_row($q);
+        $db->free_result($q);
+        $posts_q =
+                $db->query(
+                        "SELECT COUNT(`fp_id`)
+        					   FROM `forum_posts`
+        					   WHERE `fp_topic_id` = {$topic}");
+        $posts = $db->fetch_single($posts_q);
+        $db->free_result($posts_q);
+        $db->query(
+                "UPDATE `forum_topics`
+                 SET `ft_last_id` = {$r['fp_poster_id']},
+                 `ft_last_time` = {$r['fp_time']}, `ft_last_id` = '{$r['fp_poster_id']}',
+                 `ft_posts` = {$posts}
+                 WHERE `ft_id` = {$topic}");
+    }
+	echo " ... {$lang['FORUM_RECACHE_DONE']}<br />";
+}
+/*
+	Function to recache the specified forum
+*/
+function recache_forum($forum)
+{
+    global $ir,$userid,$h,$db,$lang;
+    $forum = abs((int) $forum);
+    if ($forum <= 0)
+    {
+        return;
+    }
+    echo "{$lang['FORUM_RECACHE_FORUM']}{$forum} ... ";
+    $q =
+            $db->query(
+                    "SELECT `fp_time`, `fp_poster_id`,
+                     `ft_name`, `ft_id`
+                     FROM `forum_posts` AS `p`
+                     LEFT JOIN `forum_topics` AS `t`
+                     ON `p`.`fp_topic_id` = `t`.`ft_id`
+                     WHERE `p`.`ff_id` = {$forum}
+                     ORDER BY `p`.`fp_time` DESC
+                     LIMIT 1");
+    if ($db->num_rows($q) == 0)
+    {
+        $db->free_result($q);
+        $db->query(
+                "UPDATE `forum_forums`
+                 SET `ff_lp_time` = 0, `ff_lp_poster_id` = 0, `ff_lp_t_id` = 0,
+                 `ff_lp_t_id` = 0
+                  WHERE `ff_id` = {$forum}");
+    }
+    else
+    {
+        $r = $db->fetch_row($q);
+        $db->free_result($q);
+        $db->query(
+                "UPDATE `forum_forums`
+                 SET `ff_lp_time` = {$r['fp_time']},
+                 `ff_lp_poster_id` = {$r['fp_poster_id']},
+				 `ff_lp_t_id` = {$r['ft_id']}
+                 WHERE `ff_id` = {$forum}");
+    }
+	echo " ... {$lang['FORUM_RECACHE_DONE']}<br />";
+}
