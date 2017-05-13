@@ -20,16 +20,16 @@ if (!isset($_GET['action']))
 }
 switch ($_GET['action'])
 {
-case 'crime':
-    crime();
-    break;
-default:
-    home();
-    break;
+    case 'crime':
+        crime();
+        break;
+    default:
+        home();
+        break;
 }
 function home()
 {
-	global $db,$h,$userid,$ir,$lang;
+	global $db,$h,$lang;
 	$crimes = array();
 	$q2 = $db->query("SELECT `crimeGROUP`, `crimeNAME`, `crimeBRAVE`, `crimeID` FROM `crimes` ORDER BY `crimeBRAVE` ASC");
 	while ($r2 = $db->fetch_row($q2))

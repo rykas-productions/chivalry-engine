@@ -484,7 +484,7 @@ function attacking()
 }
 function beat()
 {
-	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
+	global $db,$userid,$ir,$h,$lang,$api;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
@@ -524,14 +524,14 @@ function beat()
 		$additionaltext = "";
 		if ($ir['guild'] > 0 && $r['guild'] > 0)
 		{
-			$oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
-			if ($db->num_rows($oppguild) > 0)
-            {
+                    $oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+                    if ($db->num_rows($oppguild) > 0)
+                    {
 				$warq = $db->query("SELECT `gw_id` FROM `guild_wars`
 				WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
 				OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
-				if ($db->fetch_single($warq) > 0)
-                {
+                    if ($db->fetch_single($warq) > 0)
+                    {
 					$wr=$db->fetch_single($warq);
 					$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
 					if ($whoswho['gw_declarer'] == $ir['guild'])
@@ -562,7 +562,7 @@ function beat()
 
 function lost()
 {
-	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
+	global $db,$userid,$ir,$h,$lang,$api;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
@@ -645,7 +645,7 @@ function lost()
 }
 function xp()
 {
-	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
+	global $db,$userid,$ir,$h,$lang,$api;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
@@ -736,7 +736,7 @@ function xp()
 }
 function mug()
 {
-	global $db,$userid,$ir,$h,$lang,$api,$set,$atkpage;
+	global $db,$userid,$ir,$h,$lang,$api;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
