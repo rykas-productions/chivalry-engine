@@ -5,7 +5,6 @@
 	Info: Staff panel for adding/editing/removing donation items.
 	Author: TheMasterGeneral
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
- *      Test lol
 */
 require('sglobals.php');
 echo "<h2>{$lang['STAFF_DONATE_TITLE']}</h2><hr />";
