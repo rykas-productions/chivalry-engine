@@ -10,7 +10,7 @@
 */
 require("globals.php");
 $tresder = (Random(100, 999));
-$maxbet = $ir['level'] * 500;
+$maxbet = (10000 < $ir['level'] *500) ? 10000 : $ir['level'] * 500; 
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde']))
 {
@@ -53,13 +53,13 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher','lower'
 		elseif ($guessed < $numb && $_POST['change'] == 'higher')
 		{
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['HIGHLOW_HIGH']} {$guessed}. {$lang['HIGHLOW_REVEAL']} {$numb}. {$lang['HIGHLOW_WIN']}",false);
-			$gain=$maxbet*5;
+			$gain=$maxbet*1.5;
 			$api->SystemLogsAdd($userid,'gambling',"Bet higher number in High/Low and won {$gain}");
 		}
 		elseif ($guessed > $numb && $_POST['change'] == 'lower')
 		{
 			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['HIGHLOW_LOWER']} {$guessed}. {$lang['HIGHLOW_REVEAL']} {$numb}. {$lang['HIGHLOW_WIN']}",false);
-			$gain=$maxbet*5;
+			$gain=$maxbet*1.5;
 			$api->SystemLogsAdd($userid,'gambling',"Bet lower number in High/Low and won {$gain}");
 		}
 		elseif ($guessed < $numb && $_POST['change'] == 'lower')
