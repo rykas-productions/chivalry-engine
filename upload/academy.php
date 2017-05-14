@@ -6,6 +6,7 @@
 				increase their stats for currency and waiting.
 	Author:		ImJustIsabella
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+	Testing...
 */
 require ("globals.php");
 
