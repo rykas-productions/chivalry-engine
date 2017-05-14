@@ -10,7 +10,7 @@
 */
 require("globals.php");
 $tresder = (Random(100, 999));
-$maxbet = (10000 < $ir['level'] *500) ? 10000 : $ir['level'] * 500; 
+$maxbet = (10000 < $ir['level'] * 500) ? 10000 : $ir['level'] * 500; 
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde']))
 {
