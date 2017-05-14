@@ -124,7 +124,7 @@ function create()
 						<option value='labor'>{$lang['GEN_LAB']}</option>
 						<option value='iq'>{$lang['GEN_IQ']}</option>
 						<option value='infirmary'>{$lang['STAFF_CITEM_TH12_1']}</option>
-						<option value='dungeon'>{$lang['STAFF_CITEM_TH12_1']}</option>
+						<option value='dungeon'>{$lang['STAFF_CITEM_TH12_2']}</option>
 						<option value='primary_currency'>{$lang['INDEX_PRIMCURR']}</option>
 						<option value='secondary_currency'>{$lang['INDEX_SECCURR']}</option>
 						<option value='xp'>{$lang['INDEX_EXP']}</option>

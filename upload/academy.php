@@ -31,7 +31,7 @@ default:
 
 function menu()
 {
-	global $db,$userid,$lang, $h;
+	global $db,$h;
 	echo "<table class='table table-bordered table-hover'>
 		<thead>
 			<tr>
@@ -109,7 +109,7 @@ function start()
 }
 function description()
 {
-	global $db,$userid,$lang, $h;
+	global $db,$lang, $h;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : '';
 	$academyid = $_GET['id'];
 	if (!$academyid)
