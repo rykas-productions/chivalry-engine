@@ -41,5 +41,11 @@ echo "<hr />
 	
 	<u>{$lang['TUT_FINANCIAL']}</u><br />
 	{$lang['TUT_FINANCIAL_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_HL']}</u><br />
+	{$lang['TUT_HL_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_ADMIN']}</u><br />
+	{$lang['TUT_ADMIN_DETAIL']}<br /><br />
 <hr />";
 $h->endpage();
