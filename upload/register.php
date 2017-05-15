@@ -284,10 +284,11 @@ $cpage = strip_tags(stripslashes($currentpage));
 			session_regenerate_id();
 			$_SESSION['loggedin'] = 1;
 			$_SESSION['userid'] = $i;
+			$_SESSION['last_login']=time();
 			$api->SystemLogsAdd($_SESSION['userid'],'login',"Successfully logged in.");
 			$db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
 			//User registered, lets log them in.
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['REG_SUCCESS']} <a href='loggedin.php'>{$lang['LOGIN_SIGNIN']}</a>",false);
+			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['REG_SUCCESS']} <a href='tutorial.php'>{$lang['LOGIN_SIGNIN']}</a>",false);
 		}
 		require('footer.php');
 	}
