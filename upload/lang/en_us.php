@@ -62,6 +62,7 @@ $lang['GEN_NOPERM']="You do not have the proper user level to view this page. If
 $lang["GEN_STATS"] = "Stats";
 $lang["GEN_RANKED"] = "Ranked";
 $lang["GEN_BACK"] = "Go Back";
+$lang["GEN_IN"] = "In";
 
 // Menu
 $lang["MENU_EXPLORE"] = "Explore";
@@ -2103,4 +2104,29 @@ $lang['STAFF_DONATE_DEL_INFO']="Use this form to remove a VIP Pack from the game
 $lang['STAFF_DONATE_DEL_ERR']="You must input a VIP Pack you wish to delete.";
 $lang['STAFF_DONATE_DEL_ERR1']="The VIP Pack you chose to delete is invalid or does not exist.";
 $lang['STAFF_DONATE_DEL_SUCC']="You have successfully removed this VIP Pack from the VIP Pack Store.";
+
+//Tutorial Information
+$lang['TUT_WELCOME']="Welcome to the ";
+$lang['TUT_WELCOME1']="Tutorial";
+$lang['TUT_WELCOME2']="Our hopes are that this tutorial will help you to better understand our wonderful game. If you are confused by any of the terminology here, please contact a staff member listed <a href='staff.php'>here</a>.";
+$lang['TUT_INFO']=", you are entirely free to play as you see fit, so long as you don't break the game rules. You're free to protect the weak, or exploit their shortcomings. Be charitible with your cash, or keep it all to yourself. Declare war on a person, or a whole guild. The choice is yours.";
+$lang['TUT_GLOSSARY']="Glossary";
+$lang['TUT_PT1']="Basics";
+$lang['TUT_PT2']="Navigation";
+$lang['TUT_PT3']="Explore";
+$lang['TUT_BASICS']="Our wonderous game is a Text Themed RPG, meaning everything you do is by clicking on links, or by writing out respones. For example, to view your inventory, you would click the Inventory link at the top of the page.";
+$lang['TUT_STATS']="Personal Stats";
+$lang['TUT_STATS_DETAIL']="There are currently five stats in-game: {$lang['GEN_STR']}, {$lang['GEN_AGL']}, {$lang['GEN_GRD']}, {$lang['GEN_IQ']} and {$lang['GEN_LAB']}. Increasing your {$lang['GEN_STR']} will increase how much damage you can dish out in combat. Increasing {$lang['GEN_AGL']} will increase your chance of one of your strikes connecting with your opponent. Increasing your {$lang['GEN_GRD']} will decrease the damage your opponents do to you. {$lang['GEN_IQ']} and {$lang['GEN_LAB']} are miscellaneous stats used around the game. Its good to have these at a fairly decent level.";
+$lang['TUT_PINFO']="Personal Info";
+$lang['TUT_PINFO_DETAIL']="If you click the game's name on the top left corner, it'll redirect you to the main index where you can view your personal information. This page shows your {$lang['GEN_STATS']}, {$lang['INDEX_LEVEL']}, {$lang['INDEX_PRIMCURR']}, {$lang['INDEX_SECCURR']}, {$lang['INDEX_VIP']}, {$lang['INDEX_HP']}, {$lang['INDEX_EXP']}, {$lang['INDEX_WILL']}, {$lang['INDEX_BRAVE']} and {$lang['INDEX_ENERGY']}. You can also update your {$lang['INDEX_PN']} here as well. {$lang['INDEX_ENERGY']} is used for training and attacking. {$lang['INDEX_WILL']} effects how much you gain while training, so in turn, a low will level means low gains in the gym. {{$lang['INDEX_BRAVE']} is used to commit crimes. The more difficult the crime is, the more brave it'll require. Do note that commiting crimes have other requirements to succeed. {$lang['INDEX_EXP']} is the experience you have, and how close you are to leveling up. {$lang['INDEX_HP']} shows how healthy your character is. You lose {$lang['INDEX_HP']} when you receive a hit in combat.";
+$lang['TUT_NAVBAR']="Navigation Bar";
+$lang['TUT_NAVBAR_DETAIL']="The navigation bar (or dropdown) is your gateway to the game. Clicking on the <b>game name in the top left corner</b> will take you to your Personal Info page. Clicking on <b>Explore</b> will allow you to explore many of the features of the game. (More information on this later!) Clicking <b>Mail</b> will take you to your personal mailbox where you can write and read letters to others. <b>Notifications</b> will take you to your notification box, where game events will be posted if they involve you. Clicking <b>Inventory</b> will allow you to view the items you have in your inventory, along with the gear you have equipped.";
+$lang['TUT_NAV']="Being able to view and navigate through our game is important! The top navigation bar (or dropdown, if you're on mobile) is where you will find access to the rest of the game.";
+$lang['TUT_NAVDROP']="Navigation Bar Dropdown";
+$lang['TUT_NAVDROP_DETAIL']="Clicking the <b>Hello, [Your Name] Dropdown</b> will display more information. Clicking on <b>Profile</b> will take you to your personal profile page. This is what others see when they click on your name in-game. Clicking on <b>Settings</b> will take you to your account settings. Here you can change your display picture, password, username, language, template colors, and forum signature! Clicking <b>Game Rules</b> will show you the rules of the game. Its recommended that you read these over so you know what you can and cannot do. Finally, clicking <b>Logout</b> will terminate your session.";
+$lang['TUT_EXPLORE']="Exploring is the best way around the game. The explore page is the highway to all other game features.";
+$lang['TUT_SHOPS']="{$lang['EXPLORE_SHOP']}";
+$lang['TUT_SHOPS_DETAIL']="Hovering over the <b>{$lang['EXPLORE_SHOP']}</b> category will display the numerous ways you can buy things in the game. <b>{$lang['EXPLORE_LSHOP']}</b> are the game-created shops in your town. You'll find a finite amount of items in these shops. However, if you're wanting something a little more flashy, the <b>{$lang['EXPLORE_IMARKET']}</b> is a market ran exclusively by other players. You'll find all sorts of items for sale here. Note, that players also set their own pricing. The <b>{$lang['EXPLORE_IAUCTION']}</b> is a great place to see if you can pick up some awesome prices on items by bidding on them, eBay style. <b>{$lang['EXPLORE_TRADE']}</b> will allow you to conduct business privately with another player. The <b>{$lang['EXPLORE_SCMARKET']}</b> is an easy way to convert your {$lang['INDEX_SECCURR']} into {$lang['INDEX_PRIMCURR']}, depending on the market demand.";
+$lang['TUT_FINANCIAL']="{$lang['EXPLORE_FD']}";
+$lang['TUT_FINANCIAL_DETAIL']="Hovering over <b>{$lang['EXPLORE_FD']}</b> will greet you with a category of ways to use your currency. The <b>{$lang['EXPLORE_BANK']}</b> will allow you safely store your {$lang['INDEX_PRIMCURR']}. Storing in the {$lang['EXPLORE_BANK']} will keep your money safe from being robbed from you, and even gain you interest at midnight each night. Clicking <b>{$lang['EXPLORE_ESTATES']}</b> will allow you to view the estates available to purchase. Buying an estate will increase your Maximum {$lang['INDEX_WILL']}, thus improving your gains while training. If you're starting to hate the town you're in, <b>{$lang['EXPLORE_TRAVEL']}</b> is your ticket to other towns. Mind you, towns may have {$lang['INDEX_LEVEL']} requirements, and varying tax levels."
 ?>
