@@ -298,6 +298,7 @@ $lang['EXPLORE_SLOTS']="Slot Machines";
 $lang['EXPLORE_BOTS']="Bot List";
 $lang['EXPLORE_TEMPLE']="Temple of Fortune";
 $lang['EXPLORE_WARS']="Guild Wars";
+$lang['EXPLORE_TUTORIAL']="Game Tutorial";
 
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";

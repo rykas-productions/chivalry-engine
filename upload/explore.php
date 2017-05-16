@@ -121,6 +121,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4>
 					<a href='#'>{$lang['EXPLORE_JOB']}</a><br />
 					<a href='academy.php'>{$lang['EXPLORE_ACADEMY']}</a><br />
 					<a href='criminal.php'>{$lang['EXPLORE_CRIMES']}</a><br />
+					<a href='tutorial.php'>{$lang['EXPLORE_TUTORIAL']}</a><br />
 				</div>
 			</div>
 		</div>
