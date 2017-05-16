@@ -14,6 +14,8 @@ echo "<hr />
 	<a href='#basics'>{$lang['TUT_PT1']}</a><br />
 	<a href='#navigation'>{$lang['TUT_PT2']}</a><br />
 	<a href='#explore'>{$lang['TUT_PT3']}</a><br />
+	<a href='#training'>{$lang['TUT_PT4']}</a><br />
+	<a href='#combat'>{$lang['TUT_PT5']}</a><br />
 <hr />
 <a name='basics'><h4>{$lang['TUT_PT1']}</h4></a>
 	{$lang['TUT_BASICS']}<br /><br />
@@ -65,5 +67,31 @@ echo "<hr />
 	
 	<u>{$lang['TUT_REFFERAL']}</u><br />
 	{$lang['TUT_REFFERAL_DETAIL']}<br /><br />
-<hr />";
+<hr />
+<a name='basics'><h4>{$lang['TUT_PT4']}</h4></a>
+	{$lang['TUT_TRAINING']}<br /><br />
+	
+	<u>{$lang['TUT_GYM']}</u><br />
+	{$lang['TUT_GYM_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_GGYM']}</u><br />
+	{$lang['TUT_GGYM_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_POWERTRAIN']}</u><br />
+	{$lang['TUT_POWERTRAIN_DETAIL']}<br /><br />
+	<hr />
+	<a name='combat'><h4>{$lang['TUT_PT5']}</h4></a>
+	{$lang['TUT_COMBAT']}<br /><br />
+	
+	<u>{$lang['TUT_ATTACK1']}</u><br />
+	{$lang['TUT_ATTACK1_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_ATTACK2']}</u><br />
+	{$lang['TUT_ATTACK2_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_ATTACK3']}</u><br />
+	{$lang['TUT_ATTACK3_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_ATTACK4']}</u><br />
+	{$lang['TUT_ATTACK4_DETAIL']}<br /><br />";
 $h->endpage();
