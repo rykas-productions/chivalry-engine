@@ -62,5 +62,8 @@ echo "<hr />
 	
 	<u>{$lang['TUT_TOPTEN']}</u><br />
 	{$lang['TUT_TOPTEN_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_REFFERAL']}</u><br />
+	{$lang['TUT_REFFERAL_DETAIL']}<br /><br />
 <hr />";
 $h->endpage();
