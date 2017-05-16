@@ -50,5 +50,17 @@ echo "<hr />
 	
 	<u>{$lang['TUT_GAMES']}</u><br />
 	{$lang['TUT_GAMES_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_GUILDS']}</u><br />
+	{$lang['TUT_GUILDS_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_ACT']}</u><br />
+	{$lang['TUT_ACT_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_PINTER']}</u><br />
+	{$lang['TUT_PINTER_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_TOPTEN']}</u><br />
+	{$lang['TUT_TOPTEN_DETAIL']}<br /><br />
 <hr />";
 $h->endpage();
