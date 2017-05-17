@@ -427,7 +427,7 @@ CREATE TABLE `reports` (
 
 CREATE TABLE `russian_roulette` (
   `challengee` int(11) UNSIGNED NOT NULL,
-  `challengee` int(11) UNSIGNED NOT NULL,
+  `challenger` int(11) UNSIGNED NOT NULL,
   `reward` int(11) UNSIGNED NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
