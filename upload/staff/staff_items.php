@@ -380,16 +380,15 @@ function deleteitem()
 		}
 		$itemname = $db->fetch_single($d);
 		$db->free_result($d);
+		$api->SystemLogsAdd($userid,'staff',"Deleted item {$itemname}.");
 		$db->query("DELETE FROM `items` WHERE `itmid` = {$_POST['item']}");
 		$db->query("DELETE FROM `inventory` WHERE `inv_itemid` = {$_POST['item']}");
-		$api->SystemLogsAdd($userid,'staff',"Deleted item {$itemname}.");
-		alert("success","Success!","The Item ({$itemname}) has been deleted from the game successfully.",true,'index.php');
+		alert("success","Success!","{$itemname} has been deleted from the game successfully.",true,'index.php');
 		die($h->endpage());
 	}
 }
 function giveitem()
 {
-
 	global $lang,$db,$userid,$h,$api;
 	if (!isset($_POST['user']) || !isset($_POST['item']))
 	{
@@ -479,7 +478,7 @@ function giveitem()
 				$db->free_result($q2);
 				$api->UserGiveItem($_POST['user'], $_POST['item'], $_POST['qty']);
 				$api->GameAddNotification($_POST['user'], "The administration has gifted you {$_POST['qty']} {$item['itmname']}(s) to your inventory.");
-				$api->SystemLogsAdd($userid,'staff',"Gave {$_POST['qty']} <a href='../iteminfo.php'>{$item['itmname']}</a>(s) to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
+				$api->SystemLogsAdd($userid,'staff',"Gave {$_POST['qty']} <a href='../iteminfo.php?ID={$_POST['item']}'>{$item['itmname']}</a>(s) to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
 				alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ITEM_GIVE_SUB_SUCCESS'],true,'index.php');
 				die($h->endpage());
 			 }
@@ -752,7 +751,7 @@ function edititem()
 						`effect3_on` = '{$_POST['effect3on']}', `effect3` = '{$effects[3]}',
 						`weapon` = {$weapon}, `armor` = {$armor} WHERE `itmid` = {$itemid }");
 			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_EITEM_SUC'],true,'index.php');
-			$api->SystemLogsAdd($userid,'staff',"Edited Item ID {$itemid }.");
+			$api->SystemLogsAdd($userid,'staff',"Edited Item {$api->SystemItemIDtoName($itemid)}.");
 	}
 	else
 	{
