@@ -2117,6 +2117,7 @@ $lang['TUT_PT2']="Navigation";
 $lang['TUT_PT3']="Explore";
 $lang['TUT_PT4']="Training";
 $lang['TUT_PT5']="Combat";
+$lang['TUT_PT6']=$lang['EXPLORE_GUILDS'];
 $lang['TUT_BASICS']="Our wonderous game is a Text Themed RPG, meaning everything you do is by clicking on links, or by writing out respones. For example, to view your inventory, you would click the Inventory link at the top of the page.";
 $lang['TUT_STATS']="Personal Stats";
 $lang['TUT_STATS_DETAIL']="There are currently five stats in-game: {$lang['GEN_STR']}, {$lang['GEN_AGL']}, {$lang['GEN_GRD']}, {$lang['GEN_IQ']} and {$lang['GEN_LAB']}. Increasing your {$lang['GEN_STR']} will increase how much damage you can dish out in combat. Increasing {$lang['GEN_AGL']} will increase your chance of one of your strikes connecting with your opponent. Increasing your {$lang['GEN_GRD']} will decrease the damage your opponents do to you. {$lang['GEN_IQ']} and {$lang['GEN_LAB']} are miscellaneous stats used around the game. Its good to have these at a fairly decent level.";
@@ -2166,4 +2167,5 @@ $lang['TUT_ATTACK4']="Losing Fight";
 $lang['TUT_ATTACK4_DETAIL']="Losing a fight happens to all of us. You will lose some {$lang['INDEX_EXP']}, and be placed into the {$lang['EXPLORE_INFIRM']}. Take time to train, the try attacking them again!";
 $lang['TUT_ATTACK5']="Guild Warring";
 $lang['TUT_ATTACK5_DETAIL']="If you are in a guild, you run the risk of having your guild being warred upon. Wars last 72 hours, and the guild with the most points win the war. To get points, you must be successful in combat against the enemy guild members. Every time you beat an enemy guild member, you gain a single point. If you lose in battle, your enemy wins a single point. After the conclusion of the war, you cannot redeclare on the enemy guild until 7 days later.";
+$lang['TUT_GUILD']="{$lang['EXPLORE_GUILDS']} are a greay way for players to coordinate together under one unit. {$lang['EXPLORE_GUILDS']} cost 500,000 {$lang['INDEX_PRIMCURR']} to create. By default, {$lang['EXPLORE_GUILDS']} will only be able top hold 5 members. You can increase this by increasing the guild's level.";
 ?>

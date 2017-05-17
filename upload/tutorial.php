@@ -16,6 +16,7 @@ echo "<hr />
 	<a href='#explore'>{$lang['TUT_PT3']}</a><br />
 	<a href='#training'>{$lang['TUT_PT4']}</a><br />
 	<a href='#combat'>{$lang['TUT_PT5']}</a><br />
+	<a href='#guilds>{$lang['TUT_PT6']}</a><br />
 <hr />
 <a name='basics'><h4>{$lang['TUT_PT1']}</h4></a>
 	{$lang['TUT_BASICS']}<br /><br />
@@ -96,5 +97,7 @@ echo "<hr />
 	{$lang['TUT_ATTACK4_DETAIL']}<br /><br />
 	
 	<u>{$lang['TUT_ATTACK5']}</u><br />
-	{$lang['TUT_ATTACK5_DETAIL']}<br /><br />";
+	{$lang['TUT_ATTACK5_DETAIL']}<br /><br />
+	<hr />
+	<a name='guilds'><h4>{$lang['TUT_PT6']}</h4></a>";
 $h->endpage();
