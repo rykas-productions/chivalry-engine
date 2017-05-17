@@ -293,6 +293,7 @@ echo"
 								<a href='staff_logs.php?action=fedjaillogs'>{$lang['STAFF_IDX_LOGS_TAB18']}</a><br />
 								<a href='staff_logs.php?action=forumwarn'>{$lang['STAFF_IDX_LOGS_TAB27']}</a><br />
 								<a href='staff_logs.php?action=forumban'>{$lang['STAFF_IDX_LOGS_TAB28']}</a><br />
+								<a href='staff_logs.php?action=donatelogs'>{$lang['STAFF_IDX_LOGS_TAB29']}</a><br />
 								";
 							}
 							echo"

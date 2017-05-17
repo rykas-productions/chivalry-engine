@@ -1661,6 +1661,7 @@ $lang['STAFF_IDX_LOGS_TAB25']="Mining Logs";
 $lang['STAFF_IDX_LOGS_TAB26']="Mail Logs";
 $lang['STAFF_IDX_LOGS_TAB27']="Forum Warn Logs";
 $lang['STAFF_IDX_LOGS_TAB28']="Forum Ban Logs";
+$lang['STAFF_IDX_LOGS_TAB29']="Donation Logs";
 $lang['STAFF_IDX_PERM_TAB1']="View Permissions";
 $lang['STAFF_IDX_PERM_TAB2']="Reset Permissions";
 $lang['STAFF_IDX_PERM_TAB3']="Edit Permissions";
