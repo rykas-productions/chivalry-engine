@@ -312,7 +312,7 @@ function createitmgroup()
 		if ($db->num_rows($q) > 0)
 		{
 			$db->free_result($q);
-			alert("danger",$lang'ERROR_GENERIC'],$lang['STAFF_CITG_ERR2']);
+			alert("danger",$lang['ERROR_GENERIC'],$lang['STAFF_CITG_ERR2']);
 			die($h->endpage());
 		}
 		$api->SystemLogsAdd($userid,'staff',"Created item type {$name}.");
