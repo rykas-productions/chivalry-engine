@@ -93,5 +93,8 @@ echo "<hr />
 	{$lang['TUT_ATTACK3_DETAIL']}<br /><br />
 	
 	<u>{$lang['TUT_ATTACK4']}</u><br />
-	{$lang['TUT_ATTACK4_DETAIL']}<br /><br />";
+	{$lang['TUT_ATTACK4_DETAIL']}<br /><br />
+	
+	<u>{$lang['TUT_ATTACK5']}</u><br />
+	{$lang['TUT_ATTACK5_DETAIL']}<br /><br />";
 $h->endpage();
