@@ -8,16 +8,16 @@
 */
 require('globals.php');
 echo "{$lang['TUT_WELCOME']} {$set['WebsiteName']} {$lang['TUT_WELCOME1']}, {$ir['username']}! {$lang['TUT_WELCOME2']}";
-echo "<hr />
-{$lang['GEN_IN']} {$set['WebsiteName']}{$lang['TUT_INFO']}<hr />
+echo "<hr>
+{$lang['GEN_IN']} {$set['WebsiteName']}{$lang['TUT_INFO']}<hr>
 <h3>{$lang['TUT_GLOSSARY']}</h3>
 	<a href='#basics'>{$lang['TUT_PT1']}</a><br />
 	<a href='#navigation'>{$lang['TUT_PT2']}</a><br />
 	<a href='#explore'>{$lang['TUT_PT3']}</a><br />
 	<a href='#training'>{$lang['TUT_PT4']}</a><br />
 	<a href='#combat'>{$lang['TUT_PT5']}</a><br />
-	<a href='#guilds>{$lang['TUT_PT6']}</a><br />
-<hr />
+	<a href='#guilds'>{$lang['TUT_PT6']}</a><br />
+<hr>
 <a name='basics'><h4>{$lang['TUT_PT1']}</h4></a>
 	{$lang['TUT_BASICS']}<br /><br />
 	
@@ -26,7 +26,7 @@ echo "<hr />
 	
 	<u>{$lang['TUT_STATS']}</u><br />
 	{$lang['TUT_STATS_DETAIL']}<br /><br />
-<hr />
+<hr>
 <a name='navigation'><h4>{$lang['TUT_PT2']}</h4></a>
 	{$lang['TUT_NAV']}<br /><br />
 	
@@ -35,7 +35,7 @@ echo "<hr />
 	
 	<u>{$lang['TUT_NAVDROP']}</u><br />
 	{$lang['TUT_NAVDROP_DETAIL']}<br /><br />
-<hr />
+<hr>
 <a name='explore'><h4>{$lang['TUT_PT3']}</h4></a>
 	{$lang['TUT_EXPLORE']}<br /><br />
 	
@@ -68,7 +68,7 @@ echo "<hr />
 	
 	<u>{$lang['TUT_REFFERAL']}</u><br />
 	{$lang['TUT_REFFERAL_DETAIL']}<br /><br />
-<hr />
+<hr>
 <a name='basics'><h4>{$lang['TUT_PT4']}</h4></a>
 	{$lang['TUT_TRAINING']}<br /><br />
 	
@@ -80,7 +80,7 @@ echo "<hr />
 	
 	<u>{$lang['TUT_POWERTRAIN']}</u><br />
 	{$lang['TUT_POWERTRAIN_DETAIL']}<br /><br />
-	<hr />
+	<hr>
 	<a name='combat'><h4>{$lang['TUT_PT5']}</h4></a>
 	{$lang['TUT_COMBAT']}<br /><br />
 	
@@ -98,6 +98,6 @@ echo "<hr />
 	
 	<u>{$lang['TUT_ATTACK5']}</u><br />
 	{$lang['TUT_ATTACK5_DETAIL']}<br /><br />
-	<hr />
+	<hr>
 	<a name='guilds'><h4>{$lang['TUT_PT6']}</h4></a>";
 $h->endpage();
