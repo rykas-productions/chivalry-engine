@@ -1471,6 +1471,7 @@ $lang['STAFF_PUNISHED_FWARN']="Forum Warn User";
 $lang['STAFF_PUNISHED_IPSEARCH']="IP Search";
 $lang['STAFF_PUNISHED_FBAN']="Forum Ban User";
 $lang['STAFF_PUNISHED_UFBAN']="Unforum Ban User";
+$lang['STAFF_PUNISHED_MASSMAIL']="Send Mass Mail";
 $lang['STAFF_PUNISHFED_FORM']="Jailing User";
 $lang['STAFF_PUNISHFED_INFO']="Placing a user in federal jail will render their account virtually useless. They will not be able to do anything in-game.";
 $lang['STAFF_PUNISHFED_TH']="User:";
@@ -2169,4 +2170,14 @@ $lang['TUT_ATTACK4_DETAIL']="Losing a fight happens to all of us. You will lose 
 $lang['TUT_ATTACK5']="Guild Warring";
 $lang['TUT_ATTACK5_DETAIL']="If you are in a guild, you run the risk of having your guild being warred upon. Wars last 72 hours, and the guild with the most points win the war. To get points, you must be successful in combat against the enemy guild members. Every time you beat an enemy guild member, you gain a single point. If you lose in battle, your enemy wins a single point. After the conclusion of the war, you cannot redeclare on the enemy guild until 7 days later.";
 $lang['TUT_GUILD']="{$lang['EXPLORE_GUILDS']} are a greay way for players to coordinate together under one unit. {$lang['EXPLORE_GUILDS']} cost 500,000 {$lang['INDEX_PRIMCURR']} to create. By default, {$lang['EXPLORE_GUILDS']} will only be able top hold 5 members. You can increase this by increasing the guild's level.";
+
+//Staff mass mail
+$lang['STAFF_MM_INFO']="Mass Mail";
+$lang['STAFF_MM_TABLE']="Use this form to send a mass mail to your game. Do not use this on larger games. Create an announcement instead.";
+$lang['STAFF_MM_TH']="Message";
+$lang['STAFF_MM_BTN']="Send Mass Mail";
+$lang['STAFF_MM_WORKING']="Sending message to";
+$lang['STAFF_MM_FAIL']="Message failed to send.";
+$lang['STAFF_MM_GOOD']="Message sent successfully.";
+$lang['STAFF_MM_END']="messages have been sent successfully.";
 ?>

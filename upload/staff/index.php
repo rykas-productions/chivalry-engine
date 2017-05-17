@@ -320,6 +320,7 @@ echo"
 							<a href='staff_punish.php?action=forumban'>{$lang['STAFF_PUNISHED_FBAN']}</a><br />
 							<a href='staff_punish.php?action=unforumban'>{$lang['STAFF_PUNISHED_UFBAN']}</a><br />
 							<a href='staff_punish.php?action=ipsearch'>{$lang['STAFF_PUNISHED_IPSEARCH']}</a><br />
+							<a href='staff_punish.php?action=massmail'>{$lang['STAFF_PUNISHED_MASSMAIL']}</a><br />
 						</div>
 					</div>
 			</div>

@@ -37,6 +37,9 @@ switch ($_GET['action'])
 	case 'staffnotes':
 		staffnotes();
 		break;
+	case 'massmail':
+		massmail();
+		break;
 	default:
 		echo 'Error: This script requires an action.';
 		$h->endpage();
@@ -590,5 +593,75 @@ function staffnotes()
 	$db->query("UPDATE `users` SET `staff_notes` = '{$_POST['staffnotes']}' WHERE `userid` = '{$_POST['ID']}'");
 	$api->SystemLogsAdd($userid,'staff',"Updated <a href='../profile.php?user={$_POST['ID']}'>{$api->SystemUserIDtoName($_POST['ID'])}</a> [{$_POST['ID']}]'s staff notes.");
 	alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_NOTES_SUCC'],true,'index.php');
+}
+function massmail()
+{
+	global $db,$userid,$lang,$h,$api,$set;
+	echo "<h3>{$lang['STAFF_MM_INFO']}</h3><hr>";
+	if (isset($_POST['msg']))
+	{
+		$msg = $_POST['msg'];
+		if (empty($msg))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['MAIL_EMPTYINPUT']);
+			die($h->endpage());
+		}
+		if (strlen($msg) > 65655)
+		{
+			alert('danger',$lang['ERROR_LENGTH'],$lang['MAIL_INPUTLNEGTH']);
+			die($h->endpage());
+		}
+		$q=$db->query("SELECT `userid`,`user_level` FROM `users`");
+		$sent=0;
+		while ($r = $db->fetch_row($q))
+		{
+			echo "{$lang['STAFF_MM_WORKING']} {$api->SystemUserIDtoName($r['userid'])} ...";
+			if ($r['user_level'] == 'NPC')
+			{
+				echo "... {$lang['STAFF_MM_FAIL']}";
+			}
+			else
+			{
+				if ($api->GameAddMail($r['userid'],"{$set['WebsiteName']} Mass Mail",$msg,$userid) == true)
+				{
+					echo "... {$lang['STAFF_MM_GOOD']}";
+					$sent=$sent+1;
+				}
+				else
+				{
+					echo "... {$lang['STAFF_MM_FAIL']}";
+				}
+			}
+			echo "<br />";
+		}
+		echo "{$sent} {$lang['STAFF_MM_END']}";
+	}
+	else
+	{
+		$csrf=request_csrf_html('staff_massmail');
+		echo "<table class='table table-bordered'>
+		<form method='post'>
+		<tr>
+			<th colspan='2'>
+				{$lang['STAFF_MM_TABLE']}
+			</th>
+		</tr>
+		<tr>
+			<th>
+				{$lang['STAFF_MM_TH']}
+			</th>
+			<td>
+				<textarea class='form-control' name='msg' required='1'></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<input type='submit' class='btn btn-default' value='{$lang['STAFF_MM_BTN']}'>
+			</td>
+		</tr>
+		{$csrf}
+		</form>
+		</table>";
+	}
 }
 $h->endpage();
