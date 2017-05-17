@@ -691,6 +691,15 @@ $lang['STAFF_CITEM_ERR3']="The item group you specified is invalid or does not e
 $lang['STAFF_CITEM_ERR4']="You do not have permission to create an item. You need to be an admin.";
 $lang['STAFF_CITEM_SUCC']="You have successfully created an item called ";
 
+//Staff Create Item Group
+$lang['STAFF_CITG_ERR']="You do not have permission to be here.";
+$lang['STAFF_CITG_FRM']="Adding an item group to the game.";
+$lang['STAFF_CITG_FRM1']="Item Group Name";
+$lang['STAFF_CITG_BTN']="Create Item Group";
+$lang['STAFF_CITG_ERR1']="The item group name you input is empty or invalid.";
+$lang['STAFF_CITG_ERR2']="The item group name you input already exists. You cannot have two item groups with the same name.";
+$lang['STAFF_CITG_SUCC']="You have successfully created an item group called";
+
 //Staff Edit Items
 $lang['STAFF_EITEM_P1_START']="Select the item you wish to edit, then click the button.";
 $lang['STAFF_EITEM_P1_SELECT']="Item";

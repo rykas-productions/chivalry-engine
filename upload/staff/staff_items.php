@@ -268,19 +268,19 @@ function createitmgroup()
 	global $db,$lang,$h,$ir,$api,$userid;
 	if ($ir['user_level'] != 'Admin')
     {
-        alert('danger','No Permission!','You have no permission to be here. If this is false, please contact an admin for help!');
+        alert('danger',$lang['ERROR_NOPERM'],$lang['STAFF_CITG_ERR'],true,'index.php');
         die($h->endpage());
     }
 	if (!isset($_POST['name']))
 	{
 		$csrf = request_csrf_html('staff_newitemtype');
 		echo "
-        <h4>Adding an item type...</h4>
+        <h4>{$lang['STAFF_CITG_FRM']}</h4>
 		<form method='post'>
 			<table class='table table-bordered'>
 			<tr>
 				<th width='33%'>
-					Item Group Name
+					{$lang['STAFF_CITG_FRM1']}
 				</th>
 				<td>
 					<input type='text' class='form-control' required='1' name='name' />
@@ -288,7 +288,7 @@ function createitmgroup()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-default' value='Add Item Group' />
+					<input type='submit' class='btn btn-default' value='{$lang['STAFF_CITG_BTN']}' />
 				</td>
 			</tr>
         	{$csrf}
@@ -306,17 +306,17 @@ function createitmgroup()
 		}
 		if (empty($name))
 		{
-			alert('danger',"Uh Oh!","Item group name is empty.");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CITG_ERR1']);
 		}
 		$q=$db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypename` = '{$name}'");
 		if ($db->num_rows($q) > 0)
 		{
 			$db->free_result($q);
-			alert("danger","Already Exists!","An item group with that name already exists. Please go back and enter a new name.");
+			alert("danger",$lang'ERROR_GENERIC'],$lang['STAFF_CITG_ERR2']);
 			die($h->endpage());
 		}
-		$api->SystemLogsAdd($userid,'staff',"Added item type {$name}.");
-		alert('success',"Success!","You have successfully created an item group called {$name}.",true,'index.php');
+		$api->SystemLogsAdd($userid,'staff',"Created item type {$name}.");
+		alert('success',$lang['ERROR_SUCCESS'],"{$lang['STAFF_CITG_SUCC']} {$name}.",true,'index.php');
 		$db->query("INSERT INTO `itemtypes` VALUES(NULL, '{$name}')");
 		
 	}
