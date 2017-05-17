@@ -592,7 +592,7 @@ function staffnotes()
     }
 	$db->query("UPDATE `users` SET `staff_notes` = '{$_POST['staffnotes']}' WHERE `userid` = '{$_POST['ID']}'");
 	$api->SystemLogsAdd($userid,'staff',"Updated <a href='../profile.php?user={$_POST['ID']}'>{$api->SystemUserIDtoName($_POST['ID'])}</a> [{$_POST['ID']}]'s staff notes.");
-	alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_NOTES_SUCC'],true,'index.php');
+	alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_NOTES_SUCC'],true,"../profile.php?user={$_POST['ID']}");
 }
 function massmail()
 {
