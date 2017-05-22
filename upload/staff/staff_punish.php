@@ -453,7 +453,7 @@ function forumban()
 		$db->free_result($q);
 		if ($f_userlevel == 'Admin')
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FBAN1_ERR1']);
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_FBAN_ERR1']);
 			die($h->endpage());
 		}
 		$already_fed=$db->query("SELECT `fb_id` FROM `forum_bans` WHERE `fb_user` = {$_POST['user']}");
@@ -592,7 +592,7 @@ function staffnotes()
     }
 	$db->query("UPDATE `users` SET `staff_notes` = '{$_POST['staffnotes']}' WHERE `userid` = '{$_POST['ID']}'");
 	$api->SystemLogsAdd($userid,'staff',"Updated <a href='../profile.php?user={$_POST['ID']}'>{$api->SystemUserIDtoName($_POST['ID'])}</a> [{$_POST['ID']}]'s staff notes.");
-	alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_NOTES_SUCC'],true,"../profile.php?user={$_POST['ID']}");
+	alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_NOTES_SUCC'],true,'index.php');
 }
 function massmail()
 {
