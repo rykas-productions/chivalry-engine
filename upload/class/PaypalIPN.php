@@ -4,7 +4,7 @@ class PaypalIPN
     /**
      * @var bool $use_sandbox     Indicates if the sandbox endpoint is used.
      */
-    private $use_sandbox = true;
+    private $use_sandbox = false;
     /**
      * @var bool $use_local_certs Indicates if the local certificates are used.
      */
