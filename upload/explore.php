@@ -115,8 +115,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 		<div id='ACT' class='tab-pane'>
 			<div class='card card-default'>
 				<div class='card-block'>
-					<a href='dungeon.php'>{$lang['EXPLORE_DUNG']} <span class='badge'>{$dung_count}</span></a><br />
-					<a href='infirmary.php'>{$lang['EXPLORE_INFIRM']} <span class='badge'>{$infirm_count}</span></a><br />
+					<a href='dungeon.php'>{$lang['EXPLORE_DUNG']} <span class='badge badge-pill badge-default'>{$dung_count}</span></a><br />
+					<a href='infirmary.php'>{$lang['EXPLORE_INFIRM']} <span class='badge badge-pill badge-default'>{$infirm_count}</span></a><br />
 					<a href='gym.php'>{$lang['EXPLORE_GYM']}</a><br />
 					<a href='#'>{$lang['EXPLORE_JOB']}</a><br />
 					<a href='academy.php'>{$lang['EXPLORE_ACADEMY']}</a><br />
