@@ -76,7 +76,7 @@ class headers
 			?>
 			<body>
 				<!-- Navigation -->
-				<nav class="navbar navbar-light bg-faded navbar-toggleable-md">
+				<nav class="navbar navbar-light bg-faded fixed-top navbar-toggleable-md">
 					<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#CENGINENav" aria-controls="CENGINENav" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
