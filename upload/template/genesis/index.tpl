@@ -1,6 +1,6 @@
 <h3>{L_INDEX_TITLE}</h3>
 
-<table class='table table-hover table-bordered table-responsive'>
+<table class='table table-hover table-bordered'>
 <tbody>
 	<tr>
 		<td>

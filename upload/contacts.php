@@ -8,8 +8,7 @@
 */
 require('globals.php');
 echo "
-<div class='table-responsive'>
-<table class='table table-bordered table-responsive'>
+<table class='table table-bordered'>
 	<tr>
 		<td>
 			<a href='inbox.php'>{$lang['MAIL_TH1_IN']}</a>
@@ -30,8 +29,7 @@ echo "
 			<a href='contacts.php'>{$lang['MAIL_TH1_CONTACTS']}</a>
 		</td>
 	</tr>
-</table>
-</div>";
+</table>";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';

@@ -2,7 +2,7 @@
 /*
 	File: staff/index.php
 	Created: 6/1/2016 at 6:06PM Eastern Time
-	Info: Landing page for the staff panel. Will show all avaliable staff actions.
+	Info: Landing page for the staff card. Will show all avaliable staff actions.
 	Author: TheMasterGeneral
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
@@ -64,63 +64,64 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 	<hr />";
 }
 echo"
+</div>
 	<div class='col-md-4'>
-		<ul class='nav nav-pills nav-stacked'>";
+		<ul class='nav nav-pills flex-column'>";
 		if ($api->UserMemberLevelGet($userid,'admin'))
 		{
 			echo"
-			<li>
-				<a data-toggle='tab' href='#ADMIN'>{$lang['STAFF_IDX_ADMIN_LI']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#ADMIN'>{$lang['STAFF_IDX_ADMIN_LI']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#MODULES'>{$lang['STAFF_IDX_ADMIN_LI1']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#MODULES'>{$lang['STAFF_IDX_ADMIN_LI1']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#SHOPS'>{$lang['STAFF_IDX_ADMIN_LI4']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#SHOPS'>{$lang['STAFF_IDX_ADMIN_LI4']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#BOTS'>{$lang['STAFF_IDX_ADMIN_LI6']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#BOTS'>{$lang['STAFF_IDX_ADMIN_LI6']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#JOBS'>{$lang['STAFF_IDX_ADMIN_LI7']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#JOBS'>{$lang['STAFF_IDX_ADMIN_LI7']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#TOWN'>{$lang['STAFF_IDX_ADMIN_LI9']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#TOWN'>{$lang['STAFF_IDX_ADMIN_LI9']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#ESTATES'>{$lang['STAFF_IDX_ADMIN_LI10']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#ESTATES'>{$lang['STAFF_IDX_ADMIN_LI10']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#MINES'>{$lang['STAFF_IDX_ASSIST_LI2']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#MINES'>{$lang['STAFF_IDX_ASSIST_LI2']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#SMELT'>{$lang['STAFF_IDX_SMELT_LIST']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#SMELT'>{$lang['STAFF_IDX_SMELT_LIST']}</a>
 			</li>";
 		}
 		if ($api->UserMemberLevelGet($userid,'assistant'))
 		{
-			echo "<li>
-				<a data-toggle='tab' href='#ITEMS'>{$lang['STAFF_IDX_ADMIN_LI3']}</a>
+			echo "<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#ITEMS'>{$lang['STAFF_IDX_ADMIN_LI3']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#USERS'>{$lang['STAFF_IDX_ADMIN_LI2']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#USERS'>{$lang['STAFF_IDX_ADMIN_LI2']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#LOGS'>{$lang['STAFF_IDX_ASSIST_LI']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#LOGS'>{$lang['STAFF_IDX_ASSIST_LI']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#POLL'>{$lang['STAFF_IDX_ADMIN_LI8']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#POLL'>{$lang['STAFF_IDX_ADMIN_LI8']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#PERMISSION'>{$lang['STAFF_IDX_ASSIST_LI1']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#PERMISSION'>{$lang['STAFF_IDX_ASSIST_LI1']}</a>
 			</li>";
 		}
 		echo"
-			<li>
-				<a data-toggle='tab' href='#PUNISH'>{$lang['STAFF_IDX_FM_LI']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#PUNISH'>{$lang['STAFF_IDX_FM_LI']}</a>
 			</li>
-			<li>
-				<a data-toggle='tab' href='#FORUMS'>{$lang['STAFF_IDX_FM_LI1']}</a>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#FORUMS'>{$lang['STAFF_IDX_FM_LI1']}</a>
 			</li>
 		</ul>
 	</div>
@@ -129,8 +130,8 @@ echo"
 			if ($api->UserMemberLevelGet($userid,'admin'))
 			{
 				echo "<div id='ADMIN' class='tab-pane'>
-						<div class='panel panel-default'>
-							<div class='panel-body'>
+						<div class='card card-default'>
+							<div class='card-block'>
 								<a href='staff_settings.php?action=basicset'>{$lang['STAFF_IDX_ADMIN_TAB1']}</a><br />
 								<a href='staff_settings.php?action=announce'>{$lang['STAFF_IDX_ADMIN_TAB2']}</a><br />
 								<a href='staff_settings.php?action=diagnostics'>{$lang['STAFF_IDX_ADMIN_TAB3']}</a><br />
@@ -143,15 +144,15 @@ echo"
 						</div>
 					</div>
 					<div id='MODULES' class='tab-pane'>
-						<div class='panel panel-default'>
-							<div class='panel-body'>
+						<div class='card card-default'>
+							<div class='card-block'>
 								<a href='staff_criminal.php'>{$lang['STAFF_IDX_MODULES_TAB1']}</a>
 							</div>
 						</div>
 					</div>
 					<div id='SHOPS' class='tab-pane'>
-						<div class='panel panel-default'>
-							<div class='panel-body'>
+						<div class='card card-default'>
+							<div class='card-block'>
 								<a href='staff_shops.php?action=newshop'>{$lang['STAFF_IDX_SHOPS_TAB1']}</a><br />
 								<a href='staff_shops.php?action=delshop'>{$lang['STAFF_IDX_SHOPS_TAB2']}</a><br />
 								<a href='staff_shops.php?action=newitem'>{$lang['STAFF_IDX_SHOPS_TAB3']}</a><br />
@@ -159,16 +160,16 @@ echo"
 						</div>
 					</div>
 					<div id='BOTS' class='tab-pane'>
-						<div class='panel panel-default'>
-							<div class='panel-body'>
+						<div class='card card-default'>
+							<div class='card-block'>
 								<a href='staff_bots.php?action=addbot'>{$lang['STAFF_BOTS_ADD']}</a><br />
 								<a href='staff_bots.php?action=delbot'>{$lang['STAFF_BOTS_DEL']}</a><br />
 							</div>
 						</div>
 					</div>
 					<div id='TOWN' class='tab-pane'>
-						<div class='panel panel-default'>
-							<div class='panel-body'>
+						<div class='card card-default'>
+							<div class='card-block'>
 								<a href='staff_towns.php?action=addtown'>{$lang['STAFF_TRAVEL_ADD']}</a><br />
 								<a href='staff_towns.php?action=edittown'>{$lang['STAFF_TRAVEL_EDIT']}</a><br />
 								<a href='staff_towns.php?action=deltown'>{$lang['STAFF_TRAVEL_DEL']}</a><br />
@@ -176,16 +177,16 @@ echo"
 						</div>
 					</div>
 					<div id='ACADEMY' class='tab-pane'>
-						<div class='panel panel-default'>
-							<div class='panel-body'>
+						<div class='card card-default'>
+							<div class='card-block'>
 								<a href='staff_academy.php?action=addacademy'>{$lang['STAFF_IDX_NPC_TAB1']}</a><br />
 								<a href='staff_academy.php?action=delacademy'>{$lang['STAFF_IDX_NPC_TAB2']}</a><br />
 							</div>
 						</div>
 					</div>
 					<div id='ESTATES' class='tab-pane'>
-						<div class='panel panel-default'>
-							<div class='panel-body'>
+						<div class='card card-default'>
+							<div class='card-block'>
 								<a href='staff_estates.php?action=addestate'>{$lang['STAFF_ESTATE_ADD']}</a><br />
 								<a href='staff_estates.php?action=editestate'>{$lang['STAFF_ESTATE_EDIT']}</a><br />
 								<a href='staff_estates.php?action=delestate'>{$lang['STAFF_ESTATE_DEL']}</a><br />
@@ -193,8 +194,8 @@ echo"
 						</div>
 					</div>
 					<div id='MINES' class='tab-pane'>
-						<div class='panel panel-default'>
-							<div class='panel-body'>
+						<div class='card card-default'>
+							<div class='card-block'>
 								<a href='staff_mine.php?action=addmine'>{$lang['STAFF_IDX_MINE_TAB1']}</a><br />
 								<a href='staff_mine.php?action=editmine'>{$lang['STAFF_IDX_MINE_TAB2']}</a><br />
 								<a href='staff_mine.php?action=delmine'>{$lang['STAFF_IDX_MINE_TAB3']}</a>
@@ -202,16 +203,16 @@ echo"
 						</div>
 					</div>
 					<div id='SMELT' class='tab-pane'>
-						<div class='panel panel-default'>
-							<div class='panel-body'>
+						<div class='card card-default'>
+							<div class='card-block'>
 								<a href='staff_smelt.php?action=add'>{$lang['STAFF_IDX_SMELT_TAB1']}</a><br />
 								<a href='staff_smelt.php?action=del'>{$lang['STAFF_IDX_SMELT_TAB2']}</a>
 							</div>
 						</div>
 					</div>
 					<div id='JOBS' class='tab-pane'>
-						<div class='panel panel-default'>
-							<div class='panel-body'>
+						<div class='card card-default'>
+							<div class='card-block'>
 								N/A
 							</div>
 						</div>
@@ -220,8 +221,8 @@ echo"
 			if ($api->UserMemberLevelGet($userid,'assistant'))
 			{
 				echo "<div id='ITEMS' class='tab-pane'>
-					<div class='panel panel-default'>
-						<div class='panel-body'>";
+					<div class='card card-default'>
+						<div class='card-block'>";
 							if ($api->UserMemberLevelGet($userid,'admin'))
 							{
 								echo"
@@ -236,16 +237,16 @@ echo"
 					</div>
 				</div>
 				<div id='POLL' class='tab-pane'>
-					<div class='panel panel-default'>
-						<div class='panel-body'>
+					<div class='card card-default'>
+						<div class='card-block'>
 							<a href='staff_polling.php?action=addpoll'>{$lang['STAFF_POLL_TITLES']}</a><br />
 							<a href='staff_polling.php?action=closepoll'>{$lang['STAFF_POLL_TITLEE']}</a><br />
 						</div>
 					</div>
 				</div>
 				<div id='USERS' class='tab-pane'>
-					<div class='panel panel-default'>
-						<div class='panel-body'>";
+					<div class='card card-default'>
+						<div class='card-block'>";
 							if ($api->UserMemberLevelGet($userid,'admin'))
 							{
 								echo"
@@ -260,8 +261,8 @@ echo"
 					</div>
 				</div>
 				<div id='LOGS' class='tab-pane'>
-					<div class='panel panel-default'>
-						<div class='panel-body'>
+					<div class='card card-default'>
+						<div class='card-block'>
 							<a href='staff_logs.php?action=alllogs'>{$lang['STAFF_IDX_LOGS_TAB1']}</a><br />
 							<a href='staff_logs.php?action=mail'>{$lang['STAFF_IDX_LOGS_TAB26']}</a><br />
 							<a href='staff_logs.php?action=userlogs'>{$lang['STAFF_IDX_LOGS_TAB2']}</a><br />
@@ -301,8 +302,8 @@ echo"
 					</div>
 				</div>
 				<div id='PERMISSION' class='tab-pane'>
-					<div class='panel panel-default'>
-						<div class='panel-body'>
+					<div class='card card-default'>
+						<div class='card-block'>
 							<a href='staff_perms.php?action=viewperm'>{$lang['STAFF_IDX_PERM_TAB1']}</a><br />
 							<a href='staff_perms.php?action=resetperm'>{$lang['STAFF_IDX_PERM_TAB2']}</a><br />
 							<a href='staff_perms.php?action=editperm'>{$lang['STAFF_IDX_PERM_TAB3']}</a>
@@ -312,8 +313,8 @@ echo"
 			}
 			echo"
 			<div id='PUNISH' class='tab-pane'>
-					<div class='panel panel-default'>
-						<div class='panel-body'>
+					<div class='card card-default'>
+						<div class='card-block'>
 							<a href='staff_punish.php?action=fedjail'>{$lang['STAFF_PUNISHED_FED']}</a><br />
 							<a href='staff_punish.php?action=unfedjail'>{$lang['STAFF_PUNISHED_UNFED']}</a><br />
 							<a href='staff_punish.php?action=forumwarn'>{$lang['STAFF_PUNISHED_FWARN']}</a><br />
@@ -325,8 +326,8 @@ echo"
 					</div>
 			</div>
 			<div id='FORUMS' class='tab-pane'>
-				<div class='panel panel-default'>
-					<div class='panel-body'>
+				<div class='card card-default'>
+					<div class='card-block'>
 						<a href='staff_forums.php?action=addforum'>{$lang['STAFF_FORUM_ADD']}</a><br />
 						<a href='staff_forums.php?action=editforum'>{$lang['STAFF_FORUM_EDIT']}</a><br />
 						<a href='staff_forums.php?action=delforum'>{$lang['STAFF_FORUM_DEL']}</a>

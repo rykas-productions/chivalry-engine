@@ -88,7 +88,6 @@ else
 		$rhpperc = round($r['hp'] / $r['maxhp'] * 100);
 		echo "<h3>{$lang['PROFILE_PROFOR']} {$user_name}</h3>";
 		?>
-		
 		<div class="row">
 			<div class="col-lg-2">
 				<?php
@@ -105,13 +104,13 @@ else
 			</div>
 			<div class="col-lg-10">
 				<ul class="nav nav-tabs nav-justified">
-				  <li class="active"><a data-toggle="tab" href="#info"><?php echo $lang['PROFILE_PI']; ?></a></li>
-				  <li><a data-toggle="tab" href="#actions"><?php echo $lang['PROFILE_ACTION']; ?></a></li>
-				  <li><a data-toggle="tab" href="#financial"><?php echo $lang['PROFILE_FINANCIAL']; ?></a></li>
+				  <li class="active nav-item"><a class='nav-link' data-toggle="tab" href="#info"><?php echo $lang['PROFILE_PI']; ?></a></li>
+				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#actions"><?php echo $lang['PROFILE_ACTION']; ?></a></li>
+				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#financial"><?php echo $lang['PROFILE_FINANCIAL']; ?></a></li>
 				  <?php
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
-					  echo "<li><a data-toggle='tab' href='#staff'>{$lang['PROFILE_STAFF']}</a></li>";
+					  echo "<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#staff'>{$lang['PROFILE_STAFF']}</a></li>";
 					}
 				  ?>
 				</ul>
@@ -122,7 +121,7 @@ else
 						<?php
 						echo
 						"
-						<table class='table table-bordered table-responsive'>
+						<table class='table table-bordered'>
 							<tr>
 								<th width='25%'>{$lang['REG_SEX']}</th>
 								<td>{$r['gender']}</td>

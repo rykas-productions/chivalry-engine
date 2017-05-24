@@ -11,7 +11,7 @@ require('globals.php');
 require('lib/bbcode_engine.php');
 echo "
 <div class='table-responsive'>
-<table class='table table-bordered table-responsive'>
+<table class='table table-bordered'>
 	<tr>
 		<td>
 			<a href='inbox.php'>{$lang['MAIL_TH1_IN']}</a>
