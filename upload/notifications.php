@@ -58,11 +58,11 @@ while ($notif = $db->fetch_row($query))
 	$NotificationTime=date('F j Y, g:i:s a', $notif['notif_time']);
 	if ($notif['notif_status'] == 'unread')
 	{
-		$Status="<span class='label label-danger'>{$lang['NOTIF_UNREAD']}</span>";
+		$Status="<span class='badge badge-pill badge-danger'>{$lang['NOTIF_UNREAD']}</span>";
 	}
 	else
 	{
-		$Status="<span class='label label-primary'>{$lang['NOTIF_READ']}</span>";
+		$Status="<span class='badge badge-pill badge-success'>{$lang['NOTIF_READ']}</span>";
 	}
 	echo "
 	<tr>

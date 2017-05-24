@@ -22,11 +22,11 @@ while ($r = $db->fetch_row($q))
     if ($AnnouncementCount > 0)
     {
         $AnnouncementCount--;
-        $new = "<br /><small><span class='label label-danger'>{$lang['ANNOUNCEMENTS_UNREAD']}</span></small>";
+        $new = "<br /><small><span class='badge badge-pill badge-danger'>{$lang['ANNOUNCEMENTS_UNREAD']}</span></small>";
     }
     else
     {
-        $new = "<br /><small><span class='label label-success'>{$lang['ANNOUNCEMENTS_READ']}</span></small>";
+        $new = "<br /><small><span class='badge badge-pill badge-success'>{$lang['ANNOUNCEMENTS_READ']}</span></small>";
     }
 	$PosterQuery=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['ann_poster']}");
 	$Poster=$db->fetch_single($PosterQuery);
