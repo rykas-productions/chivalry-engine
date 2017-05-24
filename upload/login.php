@@ -31,21 +31,21 @@ if ($set['HTTPS_Support'] == 'true')
 				echo"
 			<div class='row'>
 				<div class='col-sm-4'>
-					<div class='panel panel-default'>
-						<div class='panel-heading'>
+					<div class='card card-default'>
+						<div class='card-header'>
 							{$lang['LOGIN_LA']} (" . date("F j, Y, g:i a",$ANN['ann_time']) . ")
 						</div>
-						<div class='panel-body'>
+						<div class='card-block'>
 							{$ANN['ann_text']}
 						</div>
 					</div>
 				</div>
 				<div class='col-sm-4'>
-					<div class='panel panel-default'>
-						<div class='panel-heading'>
+					<div class='card card-default'>
+						<div class='card-header'>
 							{$lang['LOGIN_TP']}
 						</div>
-						<div class='panel-body'>";
+						<div class='card-block'>";
 							$Rank=0;
 							$RankPlayerQuery = 
 							$db->query("SELECT u.`userid`, `level`, `username`,
@@ -66,14 +66,14 @@ if ($set['HTTPS_Support'] == 'true')
 					</div>
 				</div>
 				<div class='col-sm-4'>
-					<div class='panel panel-default'>
-						<div class='panel-heading'>
+					<div class='card card-default'>
+						<div class='card-header'>
 							{$lang['LOGIN_TG']}
 						</div>";
 							$GRank=0;
 							$RankGuildQuery=$db->query("SELECT `guild_name`,`guild_level` FROM `guild` ORDER BY `guild_level` desc LIMIT 10");
 						echo"
-						<div class='panel-body'>";
+						<div class='card-block'>";
 							while ($gdata=$db->fetch_row($RankGuildQuery))
 							{
 								$GRank=$GRank+1;
