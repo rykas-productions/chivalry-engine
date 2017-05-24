@@ -1400,32 +1400,32 @@ function alert($type,$title,$text,$doredirect=true,$redirect='back')
 	global $lang;
 	if ($type == 'danger')
 	{
-		$icon = "alert";
+		$icon = "exclamation-triangle";
 	}
 	elseif ($type == 'success')
 	{
-		$icon = "ok-sign";
+		$icon = "check-circle";
 	}
 	elseif ($type == 'info')
 	{
-		$icon = 'info-sign';
+		$icon = 'info-circle';
 	}
 	else
 	{
-		$icon = 'exclamation-sign';
+		$icon = 'exclamation-circle';
 	}
 	if ($doredirect == true)
 	{
 		$redirect = ($redirect == 'back') ? $_SERVER['REQUEST_URI'] : $redirect;
 		echo "<div class='alert alert-{$type}'> 
-				<span class='glyphicon glyphicon-{$icon}'></span> 
+				<i class='fa fa-{$icon}' aria-hidden='true'></i>
 					<strong>{$title}</strong> 
 						{$text} > <a href='{$redirect}' class='alert-link'>{$lang['GEN_BACK']}</a>
 				</div>";
 	}
 	else
 	{
-		echo "<div class='alert alert-{$type}'> <span class='glyphicon glyphicon-{$icon}'></span> 
+		echo "<div class='alert alert-{$type}'> <i class='fa fa-{$icon}' aria-hidden='true'></i> 
 					<strong>{$title}</strong> {$text} </div>";
 	}
 }
