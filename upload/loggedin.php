@@ -32,7 +32,7 @@ if (!empty($_POST['pn_update']))
 }
 echo "Welcome back, {$ir['username']}!<br />";
 echo "Your last visit was on {$lv}.";
-echo "<table class='table table-hover table-bordered table-responsive'>
+echo "<table class='table table-hover table-bordered'>
 <tbody>
 	<tr>
 		<td>
