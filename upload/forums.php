@@ -265,7 +265,7 @@ function viewforum()
     $ntl = "&nbsp;[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
     echo "<big>
     	   <a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
-    	   <span class='glyphicon glyphicon-chevron-right'></span> <a href='?viewforum={$_GET['viewforum']}'>{$r['ff_name']}</a>$ntl
+    	   <i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$_GET['viewforum']}'>{$r['ff_name']}</a>$ntl
     	  </big><br /><br />";
 		  ?>
 	<table class='table table-bordered table-hover'>
@@ -399,8 +399,8 @@ function viewtopic()
     }
     echo "<big>
     		<a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
-    		<span class='glyphicon glyphicon-chevron-right'></span> <a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a>
-    		<span class='glyphicon glyphicon-chevron-right'></span> <a href='?viewtopic={$_GET['viewtopic']}'>{$topic['ft_name']}</a>
+    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a>
+    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewtopic={$_GET['viewtopic']}'>{$topic['ft_name']}</a>
     	  </big>
     	  <br /><br />";
     $posts_per_page = 20;
@@ -476,7 +476,7 @@ function viewtopic()
 		</tr>
 	</table>
 	</div>
-	<div class='visible-xs-block'>
+	<div class='hidden-md-up'>
 		<form>
 			<input type='hidden' value='pin' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
