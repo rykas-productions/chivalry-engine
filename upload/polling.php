@@ -75,7 +75,7 @@ function home()
 				if (isset($ir['voted'][$r['id']]))
 				{
 					echo "<br />
-					<table class='table table-bordered table-responsive'>
+					<table class='table table-bordered'>
 						<tr>
 							<th>{$lang['POLL_VOTE_CHOICE']}</th>
 							<th>{$lang['POLL_VOTE_VOTES']}</th>
@@ -134,7 +134,7 @@ function home()
 					echo "<br />
 				<form method='post'>
 					<input type='hidden' name='poll' value='{$r['id']}' />
-					<table class='table table-bordered table-responsive'>
+					<table class='table table-bordered'>
 						<tr>
 							<th>{$lang['POLL_VOTE_CHOICE']}</th>
 							<th>{$lang['POLL_VOTE_VOTEC']}</th>
@@ -186,7 +186,7 @@ function viewpolls()
 		while ($r = $db->fetch_row($q))
 		{
 			$r['votes']=$r['voted1']+$r['voted2']+$r['voted3']+$r['voted4']+$r['voted5']+$r['voted6']+$r['voted7']+$r['voted8']+$r['voted9']+$r['voted10'];
-			echo "<table class='table table-bordered table-responsive'>
+			echo "<table class='table table-bordered'>
 					<tr>
 						<th>{$lang['POLL_VOTE_CHOICE']}</th>
 						<th>{$lang['POLL_VOTE_VOTES']}</th>
