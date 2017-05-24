@@ -93,7 +93,7 @@ class headers
 								<a class="nav-link" href="inbox.php"><?php echo "{$lang['MENU_MAIL']} <span class='badge badge-pill badge-default'>{$ir['mail']}</span>"; ?></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="notifications.php"><?php echo "{$lang['MENU_EVENT']} <span class='badge badge-pill badge-default'>{$ir['mail']}</span>"; ?></a>
+								<a class="nav-link" href="notifications.php"><?php echo "{$lang['MENU_EVENT']} <span class='badge badge-pill badge-default'>{$ir['notifications']}</span>"; ?></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="inventory.php"><?php echo $lang['MENU_INVENTORY']; ?></a>
