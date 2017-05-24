@@ -52,6 +52,7 @@ class headers
 			?>
 			<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+			<link rel="stylesheet" href="css/bs2.css">
 			<!-- Custom CSS -->
 			<style>
 			body {

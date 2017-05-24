@@ -72,3 +72,7 @@ div.quotetop
 	color: gray;
 	background-color: D8D8D8;
 }
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
