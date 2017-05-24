@@ -47,7 +47,6 @@ $(document).ready(function()
         $('#btnDel').attr('disabled','disabled');
 
 });
-$(document).ready(function()
-{
-    $('[data-toggle="tooltip"]').tooltip(); 
-});
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
