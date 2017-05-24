@@ -108,20 +108,20 @@ class headers
 									echo" {$lang['GEN_GREETING']}, {$ir['username']}";			
 									?></a>
 									<div class="dropdown-menu dropdown-menu-right">
-										<a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><?php echo $lang['MENU_PROFILE']; ?></a>
-										<a class="dropdown-item" href="preferences.php?action=menu"><?php echo $lang['MENU_SETTINGS']; ?></a>
+										<a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i class="fa fa-fw fa-user"></i> <?php echo $lang['MENU_PROFILE']; ?></a>
+										<a class="dropdown-item" href="preferences.php?action=menu"><i class="fa fa-fw fa-gear"></i><?php echo $lang['MENU_SETTINGS']; ?></a>
 										<?php
 											if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant')))
 											{
 												?>
 												<div class="dropdown-divider"></div>
-													<a class="dropdown-item" href="staff/index.php"> <?php echo $lang['MENU_STAFF']; ?></a>
+													<a class="dropdown-item" href="staff/index.php"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a>
 												<?php
 											}
 										?>
 										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="gamerules.php"><?php echo $lang['MENU_RULES']; ?></a>
-										<a class="dropdown-item" href="logout.php"><?php echo $lang['MENU_LOGOUT']; ?></a>
+										<a class="dropdown-item" href="gamerules.php"><i class="fa fa-fw fa-server"></i> <?php echo $lang['MENU_RULES']; ?></a>
+										<a class="dropdown-item" href="logout.php"><i class="fa fa-fw fa-power-off"></i> <?php echo $lang['MENU_LOGOUT']; ?></a>
 									</div>
 								</li>
 							</ul>

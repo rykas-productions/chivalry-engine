@@ -36,16 +36,16 @@ class headers
 				<div class="collapse navbar-collapse" id="CENGINENav">
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="register.php"><?php echo $lang['LOGIN_REGISTER']; ?></a>
+							<a class="nav-link" href="register.php"><i class="fa fa-fw fa-user"></i> <?php echo $lang['LOGIN_REGISTER']; ?></a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="gamerules2.php"><?php echo $lang['LOGIN_RULES']; ?></a>
+							<a class="nav-link" href="gamerules2.php"><i class="fa fa-fw fa-server"></i> <?php echo $lang['LOGIN_RULES']; ?></a>
 						</li>
 					</ul>
 					<div class="my-2 my-lg-0">
 						<ul class="navbar-nav mr-auto">
 							<li class="navbar-text">
-								<?php echo"{$lang['LOGIN_AHA']}"; ?>
+								<i class="fa fa-sign-in" aria-hidden="true"></i> <?php echo"{$lang['LOGIN_AHA']}"; ?>
 							</li>
 							<li class="nav-item dropdown">
 									<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
