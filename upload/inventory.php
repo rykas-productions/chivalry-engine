@@ -110,9 +110,9 @@ $inv =
         {
             $lt = $i['itmtypename'];
             echo "\n<tr>
-            			<th colspan='4'>
+            			<td colspan='4'>
             				<b>{$lt}</b>
-            			</th>
+            			</td>
             		</tr>";
         }
 		$i['itmdesc']=htmlentities($i['itmdesc'],ENT_QUOTES);

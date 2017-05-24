@@ -68,7 +68,7 @@ function index()
         {
             $lt = $r['itmtypename'];
             echo "<tr>
-					<th colspan='5' align='center'>{$lt}</th>
+					<td colspan='5' align='center'><b>{$lt}</b></td>
 				</tr>";
         }
         $ctprice = ($r['imPRICE'] * $r['imQTY']);

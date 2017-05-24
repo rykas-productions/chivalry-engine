@@ -93,7 +93,7 @@ function shop()
                 {
                     $lt = $r['itmtypename'];
                     echo "<tr>
-                    			<th colspan='5'>{$lt}</th>
+                    			<td colspan='5'><b>{$lt}</b></td>
                     		</tr>";
                 }
                 echo "<tr>
