@@ -137,7 +137,7 @@ function idx()
         $t = DateTime_Parse($r['ff_lp_time'], false, true);
 		$pnq=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
 		$pn=$db->fetch_row($pnq);
-		$username = ($pn['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$pn['username']} has {$pn['vip_days']} VIP Days remaining.'></span></span>" : $pn['username'];
+		$username = ($pn['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$pn['username']} has {$pn['vip_days']} VIP Days remaining.'></i></span>" : $pn['username'];
 		$topicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
 			
 		$postsq=$db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `ff_id`={$r['ff_id']}");
