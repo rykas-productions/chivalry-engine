@@ -314,11 +314,11 @@ function outbox()
 					$parser->parse($msg['mail_text']);
 					if ($msg['mail_status'] == 'unread')
 					{
-						$status="<span class='label label-danger'>{$lang['MAIL_MSGUNREAD']}</span>";
+						$status="<span class='badge badge-pill badge-danger'>{$lang['MAIL_MSGUNREAD']}</span>";
 					}
 					else
 					{
-						$status="<span class='label label-primary'>{$lang['MAIL_MSGREAD']}</span>";
+						$status="<span class='badge badge-pill badge-success'>{$lang['MAIL_MSGREAD']}</span>";
 					}
 					echo "<tr>
 							<td>
