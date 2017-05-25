@@ -3,7 +3,7 @@ class headers
 {
     function startheaders()
     {
-		global $ir,$set,$h,$lang,$db,$menuhide,$userid,$macropage,$api,$time;
+		global $set,$h,$lang,$db,$menuhide,$api,$time;
 		?>
 		<!DOCTYPE html>
 		<html lang="en">
@@ -27,6 +27,10 @@ class headers
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		</head>
 		<body>
+			<?php
+			if (!isset($menuhide))
+			{
+				?>
 			<!-- Navigation -->
 			<nav class="navbar navbar-light bg-faded fixed-top navbar-toggleable-md">
 				<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#CENGINENav" aria-controls="CENGINENav" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,6 +85,7 @@ class headers
 					</div>
 				</div>
 			</nav>
+			<?php } ?>
 			<!-- Page Content -->
 			<div class="container">
 				<div class="row">
