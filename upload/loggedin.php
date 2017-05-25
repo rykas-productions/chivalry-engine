@@ -140,7 +140,7 @@ echo "<table class='table table-bordered'>
   <label for="pn_update">Personal Notepad:</label>
   <textarea class="form-control" rows="5" name="pn_update" id="pn_update"><?php echo"{$ir['personal_notes']}";?></textarea>
 </div>
-<button type="submit" class="btn btn-default">Update Notes</button>
+<button type="submit" class="btn btn-primary">Update Notes</button>
 </form>
 <?php
 

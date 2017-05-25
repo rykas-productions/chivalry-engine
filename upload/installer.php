@@ -328,7 +328,7 @@ function config()
     		</tr>
     		<tr>
     			<td colspan='2' align='center'>
-    				<input type='submit' value='Install' class='btn btn-default' />
+    				<input type='submit' value='Install' class='btn btn-primary' />
     			</td>
     		</tr>
     </table>

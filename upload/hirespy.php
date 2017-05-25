@@ -156,7 +156,7 @@ else
 	{$lang['SPY_START2']}<br />
 	<form action='?user={$_GET['user']}' method='post'>
 		<input type='hidden' name='do' value='yes'>
-		<input type='submit' class='btn btn-default' value='{$lang['SPY_BTN']}'>
+		<input type='submit' class='btn btn-primary' value='{$lang['SPY_BTN']}'>
 	</form>";
 }
 $h->endpage();

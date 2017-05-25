@@ -93,13 +93,13 @@ else
 			<td>
 				<form action='?tresde={$tresder}' method='post'>
 					<input type='hidden' name='change' value='lower'>
-					<input type='submit' value='{$lang['HILOW_LOWER']}' class='btn btn-default'>
+					<input type='submit' value='{$lang['HILOW_LOWER']}' class='btn btn-primary'>
 				</form>
 			</td>
 			<td>
 				<form action='?tresde={$tresder}' method='post'>
 					<input type='hidden' name='change' value='higher'>
-					<input type='submit' value='{$lang['HILOW_HIGHER']}' class='btn btn-default'>
+					<input type='submit' value='{$lang['HILOW_HIGHER']}' class='btn btn-primary'>
 				</form>
 			</td>
 		</tr>

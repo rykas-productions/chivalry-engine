@@ -41,7 +41,7 @@ else
 	$csrf=request_csrf_html('poke');
 	?>
 	<form method='post'>
-		<input type='submit' value='<?php echo $lang['POKE_BTN']; ?>' class='btn btn-default'>
+		<input type='submit' value='<?php echo $lang['POKE_BTN']; ?>' class='btn btn-primary'>
 		<input type='hidden' name='do' value='yes'>
 		<?php echo $csrf; ?>
 	</form>

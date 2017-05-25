@@ -144,7 +144,7 @@ function add()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['CONTACT_ADD_BTN']}' class='btn btn-default'>
+					<input type='submit' value='{$lang['CONTACT_ADD_BTN']}' class='btn btn-primary'>
 				</td>
 			</tr>
 		</form>

@@ -78,7 +78,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 	<form action='roulette.php?tresde={$tresder}' method='post'>
     	<input type='hidden' name='bet' value='{$_POST['bet']}' />
     	<input type='hidden' name='number' value='{$_POST['number']}' />
-    	<input type='submit' class='btn btn-default' value='{$lang['ROULETTE_BTN2']}' />
+    	<input type='submit' class='btn btn-primary' value='{$lang['ROULETTE_BTN2']}' />
     </form>
 	<a href='roulette.php?tresde={$tresder}'>{$lang['ROULETTE_BTN3']}</a><br />
 	<a href='explore.php'>{$lang['ROULETTE_BTN4']}</a>";
@@ -111,7 +111,7 @@ else
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input class='btn btn-default' type='submit' value='{$lang['ROULETTE_BTN1']}' />
+				<input class='btn btn-primary' type='submit' value='{$lang['ROULETTE_BTN1']}' />
 			</td>
 		</tr>
 	</table>

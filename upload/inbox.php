@@ -134,7 +134,7 @@ function home()
 	}
 	echo"</table>
 	<form action='?action=markread' method='post'>
-	<input type='submit' class='btn btn-default' value='{$lang['MAIL_MARKREAD']}'>
+	<input type='submit' class='btn btn-primary' value='{$lang['MAIL_MARKREAD']}'>
 	</form>";
 }
 function read()
@@ -218,7 +218,7 @@ function read()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' class='btn btn-default'  value='{$lang['MAIL_REPLYTO']} {$un1['username']}'>
+				<input type='submit' class='btn btn-primary'  value='{$lang['MAIL_REPLYTO']} {$un1['username']}'>
 			</td>
 		</tr>
 		</table>
@@ -281,7 +281,7 @@ function delall()
 		echo $lang['MAIL_DELETECONFIRM'];
 		echo "<br />
 		<form method='post'>
-			<input type='submit' name='delete' class='btn btn-default' value='{$lang['MAIL_DELETEYES']}'>
+			<input type='submit' name='delete' class='btn btn-primary' value='{$lang['MAIL_DELETEYES']}'>
 		</form>
 		<form method='post' action='inbox.php'>
 			<input type='submit' class='btn btn-danger' value='{$lang['MAIL_DELETENO']}'>
@@ -380,7 +380,7 @@ function compose()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' class='btn btn-default'  value='{$lang['MAIL_SENDMSG']}'>
+				<input type='submit' class='btn btn-primary'  value='{$lang['MAIL_SENDMSG']}'>
 			</td>
 		</tr>
 		</table>
@@ -401,13 +401,13 @@ function archive()
 		<td>
 			<form method='post' action='dlarchive.php'>
 				<input type='hidden' name='archive' value='inbox' />
-				<input type='submit' value='{$lang['MAIL_TH1_ARC1']}' class='btn btn-default'>
+				<input type='submit' value='{$lang['MAIL_TH1_ARC1']}' class='btn btn-primary'>
 			</form>
 		</td>
 		<td>
 			<form method='post' action='dlarchive.php'>
 				<input type='hidden' name='archive' value='outbox' />
-				<input type='submit' value='{$lang['MAIL_TH1_ARC2']}' class='btn btn-default'>
+				<input type='submit' value='{$lang['MAIL_TH1_ARC2']}' class='btn btn-primary'>
 			</form>
 		</td>
 	</tr>

@@ -57,7 +57,7 @@ if (empty($_POST['userid']))
 		<tr>
 			
 			<td colspan='2'>
-				<input type='submit' value='{$lang['FB_PR']}' class='btn btn-default'>
+				<input type='submit' value='{$lang['FB_PR']}' class='btn btn-primary'>
 			</td>
 		</tr>
 	</table>

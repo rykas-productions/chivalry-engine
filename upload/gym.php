@@ -168,7 +168,7 @@ echo "{$lang['GYM_FRM1']} {$ir['energy']} {$lang['GYM_FRM2']}<hr />
 		<td><input type='number' class='form-control' min='1' max='{$ir['energy']}' name='amnt' value='{$ir['energy']}' /></td>
 	</tr>
 	<tr>
-		<td colspan='2'><input type='submit' class='btn btn-default' value='{$lang['GYM_BTN']}' /></td>
+		<td colspan='2'><input type='submit' class='btn btn-primary' value='{$lang['GYM_BTN']}' /></td>
 	</tr>
 	{$code}
 	</form>

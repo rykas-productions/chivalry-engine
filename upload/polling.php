@@ -162,7 +162,7 @@ function home()
 						}
 					}
 					echo "<tr>
-						<td colspan='2'><input type='submit' class='btn btn-default' value='{$lang['POLL_VOTE_CAST']}' /></td>
+						<td colspan='2'><input type='submit' class='btn btn-primary' value='{$lang['POLL_VOTE_CAST']}' /></td>
 					  </tr>
 				</table></form>";
 				}
