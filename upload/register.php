@@ -12,7 +12,7 @@ $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
 {
 	alert('danger',$lang['ERROR_SECURITY'],$lang['REG_MULTIALERT']);
-	require('footer.php');
+	$h->endpage();
 	exit;
 }
 if (!isset($_GET['REF']))
@@ -193,7 +193,7 @@ if (!empty($username))
 		//User registered, lets log them in.
 		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['REG_SUCCESS']} <a href='tutorial.php'>{$lang['LOGIN_SIGNIN']}</a>",false);
 	}
-	require('footer.php');
+	$h->endpage();
 }
 else
 {
@@ -297,4 +297,4 @@ echo "
 		</table>
 	&gt; <a href='login.php'>{$lang["LOGIN_LOGIN"]}</a>";
 }
-$h->endpage();
+$h->endpage();;

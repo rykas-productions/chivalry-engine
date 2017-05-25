@@ -106,5 +106,4 @@ function two()
 		alert('danger',$lang['ERROR_GENERIC'],$lang['PWR_ERR'],false);
 	}
 }
-require("footer.php");
-exit;
+$h->endpage();
