@@ -35,17 +35,10 @@ class headers
 					<meta name="theme-color" content="#e7e7e7">
 				<?php
 			}
-			elseif ($ir['theme'] == 2)
+			else
 			{
 				?> 
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-					<meta name="theme-color" content="#375a7f">
-				<?php
-			}
-			elseif ($ir['theme'] == 3)
-			{
-				?> 
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+					<link rel="stylesheet" href="../css/bootstrap-purple-min.css">
 					<meta name="theme-color" content="#2d135d">
 				<?php
 			}
