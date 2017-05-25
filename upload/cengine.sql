@@ -7,23 +7,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE TABLE `academy` (
-  `academyid` int(11) UNSIGNED NOT NULL,
-  `academyname` text NOT NULL,
-  `academydesc` text NOT NULL,
-  `academycost` int(11) UNSIGNED NOT NULL,
-  `academylevel` int(11) UNSIGNED NOT NULL,
-  `academydays` int(11) UNSIGNED NOT NULL,
-  `effect1_on` tinyint(1) NOT NULL,
-  `effect1` text NOT NULL,
-  `effect2_on` tinyint(1) NOT NULL,
-  `effect2` text NOT NULL,
-  `effect3_on` tinyint(1) NOT NULL,
-  `effect3` text NOT NULL,
-  `effect4_on` tinyint(1) NOT NULL,
-  `effect4` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
 CREATE TABLE `announcements` (
   `ann_id` int(11) UNSIGNED NOT NULL,
   `ann_text` text NOT NULL,
@@ -583,10 +566,6 @@ CREATE TABLE `vip_listing` (
   `vip_item` int(11) UNSIGNED NOT NULL,
   `vip_cost` decimal(10,2) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-ALTER TABLE `academy`
-  ADD PRIMARY KEY (`academyid`),
-  ADD UNIQUE KEY `academyid` (`academyid`);
   
 ALTER TABLE `announcements`
   ADD PRIMARY KEY (`ann_id`);
@@ -738,9 +717,6 @@ ALTER TABLE `vips_accepted`
 
 ALTER TABLE `vip_listing`
   ADD UNIQUE KEY `vip_id` (`vip_id`);
-
-ALTER TABLE `academy`
-  MODIFY `academyid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `announcements`
   MODIFY `ann_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;

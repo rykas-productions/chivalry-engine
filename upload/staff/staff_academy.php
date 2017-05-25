@@ -21,7 +21,8 @@ case "delacademy":
     delacademy();
     break;
 default:
-    die();
+    echo "404";
+	die($h->endpage());
     break;
 }
 function addacademy()
@@ -32,90 +33,97 @@ function addacademy()
 		alert('danger','No Permission!','You have no permission to be here. If this is false, please contact an admin for help!');
 		die($h->endpage());
     }
-	if (!isset($_POST['academyname']))
+	if (!isset($_POST['name']))
 	{
-	$csrf = request_csrf_html('staff_newitem');
+		$csrf = request_csrf_html('staff_newacademy');
 		echo "<form method='post'>
 		<table class='table table-bordered'>
 		<tr>
-			<th width='33%'>
+			<tr>
+				<th colspan='2'>
+					{$lang['STAFF_ACADEMY_ADD_TH']}
+				</th>
+			</tr>
+			<th>
 					{$lang['STAFF_ACADEMY_NAME']}
 				</th>
 				<td>
-					<input type='text' required='1' name='academyname' class='form-control'>
+					<input type='text' required='1' name='name' class='form-control'>
 				</td>
 			</tr>
 			<tr>
-				<th width='33%'>
+				<th>
 					{$lang['STAFF_ACADEMY_DESC']}
 				</th>
 				<td>
-					<input type='text' required='1' name='academydesc' class='form-control'>
+					<input type='text' required='1' name='desc' class='form-control'>
 				</td>
 			</tr>
 			<tr>
-				<th width='33%'>
+				<th>
 					{$lang['STAFF_ACADEMY_COST']}
 				</th>
 				<td>
-					<input type='number' required='1' name='academycost' class='form-control'>
+					<input type='number' required='1' min='1' name='cost' class='form-control'>
 				</td>
 			</tr>
 			<tr>
-				<th width='33%'>
+				<th>
 					{$lang['STAFF_ACADEMY_LVL']}
 				</th>
 				<td>
-					<input type='number' required='1' name='academylvl' class='form-control'>
+					<input type='number' required='1' min='0' value='0' name='lvl' class='form-control'>
 				</td>
 			</tr>
 			<tr>
-				<th width='33%'>
+				<th>
 					{$lang['STAFF_ACADEMY_DAYS']}
 				</th>
 				<td>
-					<input type='number' required='1' name='academyday' class='form-control'>
+					<input type='number' required='1' name='day' min='1' class='form-control'>
 				</td>
 			</tr>
 			<tr>
-				<td colspan='2'>
-					<h4>{$lang['STAFF_ACADEMY_PERKS']}</h4>
+				<th>
+					{$lang['STAFF_ACADEMY_OPTION_1']}
+				</th>
+				<td>
+					<input type='number' required='1' name='str' min='0' value='0' class='form-control'>
 				</td>
-			</tr>";
-			for ($i = 1; $i <= 4; $i++)
-			{
-				echo "
-				<tr>
-					<th>
-						<b><u>{$lang['STAFF_ACADEMY_PERK']}: {$i}</u></b>
-					</th>
-					<td>
-					<b>{$lang['STAFF_ACADEMY_TOGGLE_DISP']}?</b>
-						<input type='radio' class='form-control' name='effect{$i}on' value='true' /> {$lang['STAFF_ACADEMY_TOGGLE_ON']}
-						<input type='radio' class='form-control' name='effect{$i}on' value='false' checked='checked' /> {$lang['STAFF_ACADEMY_TOGGLE_OFF']}
-					<br />
-					<b>{$lang['STAFF_ACADEMY_STAT']}:</b> <select name='effect{$i}stat' type='dropdown' class='form-control'>
-						<option value='strength'>{$lang['STAFF_ACADEMY_OPTION_1']}</option>
-						<option value='agility'>{$lang['STAFF_ACADEMY_OPTION_2']}</option>
-						<option value='guard'>{$lang['STAFF_ACADEMY_OPTION_3']}</option>
-						<option value='labor'>{$lang['STAFF_ACADEMY_OPTION_4']}</option>
-						<option value='IQ'>{$lang['STAFF_ACADEMY_OPTION_5']}</option>
-					</select>
-					<br />
-					<b>{$lang['STAFF_ACADEMY_DIRECTION']}:</b> <select name='effect{$i}dir' class='form-control' type='dropdown'>
-						<option value='pos'>{$lang['STAFF_ACADEMY_INCREASE']}</option>
-						<option value='neg'>{$lang['STAFF_ACADEMY_DECREASE']}</option>
-					</select>
-					<br />
-					<b>{$lang['STAFF_ACADEMY_AMOUNT']}:</b> <input type='number' min='0' class='form-control' name='effect{$i}amount' value='0' />
-					<select name='effect{$i}type' class='form-control' type='dropdown'>
-						<option value='figure'>{$lang['STAFF_ACADEMY_VALUE']}</option>
-						<option value='percent'>{$lang['STAFF_ACADEMY_PERCENT']}</option>
-					</select>
-					</td>
-				</tr>";
-			}
-			echo "<tr>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_ACADEMY_OPTION_2']}
+				</th>
+				<td>
+					<input type='number' required='1' name='agl' min='0' value='0' class='form-control'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_ACADEMY_OPTION_3']}
+				</th>
+				<td>
+					<input type='number' required='1' name='grd' min='0' value='0' class='form-control'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_ACADEMY_OPTION_4']}
+				</th>
+				<td>
+					<input type='number' required='1' name='lab' min='0' value='0' class='form-control'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					{$lang['STAFF_ACADEMY_OPTION_5']}
+				</th>
+				<td>
+					<input type='number' required='1' name='iq' min='0' value='0' class='form-control'>
+				</td>
+			</tr>
+			<tr>
 				<td colspan='2'>
 					<input type='submit' value='{$lang['STAFF_ACADEMY_CREATE']}' class='btn btn-primary'>
 				</td>
@@ -126,77 +134,42 @@ function addacademy()
 	}
 	else
 	{
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newitem', stripslashes($_POST['verf'])))
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newacademy', stripslashes($_POST['verf'])))
 		{
-			csrf_error('create');
-		}
-		$academyname = (isset($_POST['academyname']) && is_string($_POST['academyname'])) ? stripslashes($_POST['academyname']) : '';
-		$academydesc = (isset($_POST['academydesc']) && is_string($_POST['academydesc'])) ? stripslashes($_POST['academydesc']) : '';
-		$academycost = (isset($_POST['academycost']) && is_numeric($_POST['academycost'])) ? abs(intval($_POST['academycost'])) : '';
-		$academylvl = (isset($_POST['academylvl']) && is_numeric($_POST['academylvl'])) ? abs(intval($_POST['academylvl'])) : '';
-		$academydays = (isset($_POST['academyday']) && is_numeric($_POST['academyday'])) ? abs(intval($_POST['academyday'])) : '';
-		if (empty($academyname) || empty($academydesc) || empty($academycost) || empty($academylevel) || empty($academydays))
-		{
-			alert('danger',"Missing Inputs!","You are missing one of the required fields. Please go back and try again.");
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
 			die($h->endpage());
 		}
-		$inq=$db->query("SELECT `academyid` FROM `academy` WHERE `academyname` = '{$academyname}'");
+		$name = (isset($_POST['name']) && is_string($_POST['name'])) ? stripslashes($_POST['name']) : '';
+		$desc = (isset($_POST['desc']) && is_string($_POST['desc'])) ? stripslashes($_POST['desc']) : '';
+		$cost = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs(intval($_POST['cost'])) : '';
+		$lvl = (isset($_POST['lvl']) && is_numeric($_POST['lvl'])) ? abs(intval($_POST['lvl'])) : 0;
+		$days = (isset($_POST['day']) && is_numeric($_POST['day'])) ? abs(intval($_POST['day'])) : '';
+		$str = (isset($_POST['str']) && is_numeric($_POST['str'])) ? abs(intval($_POST['str'])) : 0;
+		$agl = (isset($_POST['agl']) && is_numeric($_POST['agl'])) ? abs(intval($_POST['agl'])) : 0;
+		$grd = (isset($_POST['grd']) && is_numeric($_POST['grd'])) ? abs(intval($_POST['grd'])) : 0;
+		$lab = (isset($_POST['lab']) && is_numeric($_POST['lab'])) ? abs(intval($_POST['lab'])) : 0;
+		$iq = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs(intval($_POST['iq'])) : 0;
+		if (empty($name) || empty($desc) || empty($cost) || !isset($lvl) || empty($days))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ACADEMY_ADD_ERR']);
+			die($h->endpage());
+		}
+		if (empty($str) && empty($agl) && empty($grd) && empty($lab) && empty($iq))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ACADEMY_ADD_ERR1']);
+			die($h->endpage());
+		}
+		$inq=$db->query("SELECT `ac_id` FROM `academy` WHERE `ac_name` = '{$name}'");
 		if ($db->num_rows($inq) > 0)
 		{
 			$db->free_result($inq);
-			alert("danger","Course Already Exists!","An academic course with that name already exists. Go back and choose a different name.");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ACADEMY_ADD_ERR2']);
 			die($h->endpage());
 		}
-		for ($i = 1; $i <= 4; $i++)
-		{
-			$efxkey = "effect{$i}";
-			$_POST[$efxkey . 'stat'] =
-					(isset($_POST[$efxkey . 'stat'])
-							&& in_array($_POST[$efxkey . 'stat'],
-									array('strength', 'agility', 'guard',
-											'labor', 'IQ')))
-							? $_POST[$efxkey . 'stat'] : 'strength';
-			$_POST[$efxkey . 'dir'] =
-					(isset($_POST[$efxkey . 'dir'])
-							&& in_array($_POST[$efxkey . 'dir'],
-									array('pos', 'neg'))) ? $_POST[$efxkey . 'dir']
-							: 'pos';
-			$_POST[$efxkey . 'type'] =
-					(isset($_POST[$efxkey . 'type'])
-							&& in_array($_POST[$efxkey . 'type'],
-									array('figure', 'percent')))
-							? $_POST[$efxkey . 'type'] : 'figure';
-			$_POST[$efxkey . 'amount'] =
-					(isset($_POST[$efxkey . 'amount'])
-							&& is_numeric($_POST[$efxkey . 'amount']))
-							? abs(intval($_POST[$efxkey . 'amount'])) : 0;
-			$_POST[$efxkey . 'on'] =
-					(isset($_POST[$efxkey . 'on'])
-							&& in_array($_POST[$efxkey . 'on'], array('true', 'false')))
-							? $_POST[$efxkey . 'on'] : 0;
-			$effects[$i] =
-					$db->escape(
-							serialize(
-									array("stat" => $_POST[$efxkey . 'stat'],
-											"dir" => $_POST[$efxkey . 'dir'],
-											"inc_type" => $_POST[$efxkey . 'type'],
-											"inc_amount" => abs(
-													(int) $_POST[$efxkey
-															. 'amount']))));
-		}
-		$m =
-            $db->query(
-                    "INSERT INTO `academy`
-						VALUES(NULL, '{$academyname}', '{$academydesc}',
-                     {$academycost}, {$academylevel}, '{$academydays}', 
-					 '{$_POST['effect1on']}', '{$effects[1]}',
-                     '{$_POST['effect2on']}', '{$effects[2]}',
-                     '{$_POST['effect3on']}', '{$effects[3]}', 
-					 '{$_POST['effect4on']}', '{$effects[4]}')");
-		$api->SystemLogsAdd($userid,'staff',"Created academy {$academyname}.");
-		alert('success',"Success!","You have successfully created an academic course called {$academyname}.");
+		$db->query("INSERT INTO `academy` VALUES (NULL, '{$name}', '{$desc}', '{$cost}', '{$lvl}', '{$days}', '{$str}', '{$agl}', '{$grd}', '{$lab}', '{$iq}')");
+		$api->SystemLogsAdd($userid,'staff',"Created academy course {$name}.");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ACADEMY_ADD_SUCC'],true,'index.php');
 	}
-	$h->endpage();
 }
 function delacademy()
 {

@@ -945,7 +945,7 @@ function notification_add($userid, $text)
 */
 function check_data()
 {
-	global $db,$ir,$userid,$time;
+	global $db,$ir,$userid,$time,$api;
 	if ($ir['energy'] > $ir['maxenergy'])
 	{
 		$db->query("UPDATE `users` SET `energy` = `maxenergy` WHERE `userid` = {$userid}");
@@ -1019,6 +1019,61 @@ function check_data()
 		}
 		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} WHERE `guild_id` = {$r3['gw_declarer']}");
 		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} WHERE `guild_id` = {$r3['gw_declaree']}");
+	}
+	$time=time();
+	$coursedone=$db->query("SELECT `userid`,`course` FROM `users` WHERE `course` > 0 AND `course_complete` < {$time}");
+	$course_cache = array();
+	while ($r = $db->fetch_row($coursedone))
+	{
+		if (!array_key_exists($r['course'], $course_cache))
+		{
+			$cd =
+					$db->query(
+							"SELECT `ac_str`, `ac_agl`, `ac_grd`, `ac_lab`, `ac_iq`, `ac_name`
+							 FROM `academy`
+							 WHERE `ac_id` = {$r['course']}");
+			$coud = $db->fetch_row($cd);
+			$db->free_result($cd);
+			$course_cache[$r['course']] = $coud;
+		}
+		else
+		{
+			$coud = $course_cache[$r['course']];
+		}
+		$db->query("INSERT INTO `academy_done` VALUES({$r['userid']}, {$r['course']})");
+		$upd = "";
+		$ev = "";
+		if ($coud['ac_str'] > 0)
+		{
+			$upd .= ", us.strength = us.strength + {$coud['ac_str']}";
+			$ev .= ", {$coud['ac_str']} Strength";
+		}
+		if ($coud['ac_grd'] > 0)
+		{
+			$upd .= ", us.guard = us.guard + {$coud['ac_grd']}";
+			$ev .= ", {$coud['ac_grd']} Guard";
+		}
+		if ($coud['ac_lab'] > 0)
+		{
+			$upd .= ", us.labour = us.labour + {$coud['ac_lab']}";
+			$ev .= ", {$coud['ac_lab']} Labor";
+		}
+		if ($coud['ac_agl'] > 0)
+		{
+			$upd .= ", us.agility = us.agility + {$coud['ac_agl']}";
+			$ev .= ", {$coud['ac_agl']} Agility";
+		}
+		if ($coud['ac_iq'] > 0)
+		{
+			$upd .= ", us.IQ = us.IQ + {$coud['ac_iq']}";
+			$ev .= ", {$coud['ac_iq']} IQ";
+		}
+		$ev = substr($ev, 1);
+		$db->query("UPDATE `users` AS `u` 
+		INNER JOIN `userstats` AS `us` ON `u`.`userid` = `us`.`userid`
+		SET `u`.`course` = 0, `course_complete` = 0{$upd}
+		WHERE `u`.`userid` = {$r['userid']}");
+		notification_add($r['userid'],"Congratulations, you completed the {$coud['ac_name']} course and gained {$ev}!");
 	}
 }
 /**
