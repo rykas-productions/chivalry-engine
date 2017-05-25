@@ -202,77 +202,80 @@ else
 						<input type='submit' class='btn btn-primary' value='{$lang['PROFILE_CONTACT']} {$r['username']} {$lang['PROFILE_CONTACT1']}'>
 					</form>
 				  "; ?>
-					<div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="Sending a Message">
-					  <div class="modal-dialog" role="document">
-						<div class="modal-content">
-						  <div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<div id="success"></div>
-							<h4 class="modal-title" id="ModalLabel"><?php echo "{$lang['PROFILE_MSG1']} {$r['username']} {$lang['PROFILE_MSG2']}"; ?></h4>
-						  </div>
-						  <div class="modal-body">
-							<form id="mailpopupForm" name="mailpopupForm" action="js/script/sendmail.php">
-							  <div class="form-group">
-								<div id="result"></div>
-								<label for="recipient-name" class="control-label"><?php echo $lang['PROFILE_MSG3']; ?></label>
-								<input type="text" class="form-control" name="sendto" required="1" value="<?php echo $r['username']; ?>" id="recipient-name">
-							  </div>
-							  <div class="form-group">
-								<label for="message-text" class="control-label"><?php echo $lang['PROFILE_MSG4']; ?></label>
-								<textarea class="form-control" name="msg" required="1" id="message-text"></textarea>
-							  </div>
-							
-						  </div>
-						  <div class="modal-footer">
-						  <?php
-						  echo"
-							<input type='hidden' name='verf' value='{$code}' />";
-							?>
-							<button type="button" class="btn btn-primary" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
-							<input type="submit" value="<?php echo $lang['PROFILE_MSG6']; ?>" id="sendmessage" class="btn btn-primary">
-							</form>
-						  </div>
+					<div class="modal fade" id="message">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title"><?php echo "{$lang['PROFILE_MSG1']} {$r['username']} {$lang['PROFILE_MSG2']}"; ?></h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<div id="success"></div>
+									<div id="result"></div>
+									<form id="mailpopupForm" name="mailpopupForm" action="js/script/sendmail.php">
+										<div class="form-group">
+											<div id="result"></div>
+											<label for="recipient-name" class="control-label"><?php echo $lang['PROFILE_MSG3']; ?></label>
+											<input type="text" class="form-control" name="sendto" required="1" value="<?php echo $r['username']; ?>" id="recipient-name">
+										</div>
+										<div class="form-group">
+											<label for="message-text" class="control-label"><?php echo $lang['PROFILE_MSG4']; ?></label>
+											<textarea class="form-control" name="msg" required="1" id="message-text"></textarea>
+										</div>
+								</div>
+								<div class="modal-footer">
+									<?php
+										echo"<input type='hidden' name='verf' value='{$code}' />";
+									?>
+									<button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
+									<input type="submit" value="<?php echo $lang['PROFILE_MSG6']; ?>" id="sendmessage" class="btn btn-primary">
+									</form>
+								</div>
+							</div>
 						</div>
-					  </div>
 					</div>
-					<div class="modal fade" id="cash" tabindex="-1" role="dialog" aria-labelledby="Sending Cash">
-					  <div class="modal-dialog" role="document">
-						<div class="modal-content">
-						  <div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<div id="success2"></div>
-							<h4 class="modal-title" id="ModalLabel"><?php echo "{$lang['PROFILE_MSG1']} {$r['username']} {$lang['INDEX_PRIMCURR']}"; ?></h4>
-						  </div>
-						  <div class="modal-body">
-							<form id="cashpopupForm" name="cashpopupForm" action="js/script/sendcash.php">
-							  <div class="form-group">
-								<div id="result2"></div>
-								<input type="hidden" name="sendto" required="1" value="<?php echo $r['userid']; ?>" id="recipient-name">
-							  </div>
-							  <div class="form-group">
-								<label for="message-text" class="control-label"><?php echo $lang['INDEX_PRIMCURR']; ?></label>
-								<input type='number' min='0' max="<?php echo $ir['primary_currency']; ?>" class="form-control" name="cash" required="1" id="message-text"></textarea>
-							  </div>
-							
-						  </div>
-						  <div class="modal-footer">
-						  <?php
-						  echo"
-							<input type='hidden' name='verf' value='{$code2}' />";
-							?>
-							<button type="button" class="btn btn-primary" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
-							<input type="submit" value="<?php echo $lang['PROFILE_CASH']; ?>" id="sendcash" class="btn btn-primary">
-							</form>
-						  </div>
+				  <div class="modal fade" id="cash">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title"><?php echo "{$lang['PROFILE_MSG1']} {$r['username']} {$lang['INDEX_PRIMCURR']}"; ?></h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									  <span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<div id="success2"></div>
+									<div id="result2"></div>
+									<form id="cashpopupForm" name="cashpopupForm" action="js/script/sendmail.php">
+										<div class="form-group">
+											<div id="result"></div>
+											<label for="recipient-name" class="control-label"><?php echo $lang['PROFILE_MSG3']; ?></label>
+											<input type="text" class="form-control" name="sendto" required="1" value="<?php echo $r['username']; ?>" id="recipient-name">
+										</div>
+										<div class="form-group">
+											<label for="message-text" class="control-label"><?php echo $lang['INDEX_PRIMCURR']; ?></label>
+											<input type='number' min='0' max="<?php echo $ir['primary_currency']; ?>" class="form-control" name="cash" required="1" id="message-text">
+										</div>
+								</div>
+								<div class="modal-footer">
+									<?php
+										echo"<input type='hidden' name='verf' value='{$code}' />";
+									?>
+									<button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
+									<input type="submit" value="<?php echo $lang['PROFILE_CASH']; ?>" id="sendcash" class="btn btn-primary">
+									</form>
+								</div>
+							</div>
 						</div>
-					  </div>
 					</div>
 				  </div>
 				  <div id="financial" class="tab-pane">
 					<?php
 						echo
 						"
-						<table class='table table-bordered table-responsive'>
+						<table class='table table-bordered'>
 							<tr>
 								<th width='25%'>{$lang['INDEX_PRIMCURR']}</th>
 								<td> " . number_format($r['primary_currency']) . "</td>
