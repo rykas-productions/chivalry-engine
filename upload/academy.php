@@ -8,7 +8,19 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require ("globals.php");
-
+echo "<h4>{$lang['ACA_NAME']}</h4><hr>";
+if ($ir['course'] > 0)
+{
+    $cd =
+            $db->query(
+                    "SELECT `ac_name`
+    				 FROM `academy`
+    				 WHERE `ac_id` = {$ir['course']}");
+    $coud = $db->fetch_row($cd);
+    $db->free_result($cd);
+    echo "{$lang['ACA_ALRDYDO']} {$coud['ac_name']} {$lang['ACA_ALRDYDO1']} " . TimeUntil_Parse($ir['course_complete']) .".";
+	die($h->endpage());
+}
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -21,9 +33,6 @@ case "menu":
 case "start":
     start();
     break;
-case "description":
-    description();
-    break;
 default:
     header ("Location: academy.php?action=menu");
     break;
@@ -31,162 +40,101 @@ default:
 
 function menu()
 {
-	global $db,$h;
+	global $db,$h,$lang,$api,$userid;
 	echo "<table class='table table-bordered table-hover'>
 		<thead>
 			<tr>
 				<th>
-					Academy
+					{$lang['ACA_ACA']}
 				</th>
 				<th>
-					Cost
+					{$lang['ACA_DESC']}
 				</th>
 				<th>
-					Min Level
+					{$lang['ACA_COST']}
 				</th>
 				<th>
-					Start Course
+					{$lang['ACA_LINK']}
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 	   ";
-	$acadq = $db->query("SELECT * FROM `academy`");
+	$acadq = $db->query("SELECT * FROM `academy` ORDER BY `ac_level` ASC, `ac_id` ASC");
 	while ($academy = $db->fetch_row($acadq))
 	{
+		$cdo = $db->query("SELECT COUNT(`userid`)
+                             FROM `academy_done`
+                             WHERE `userid` = {$userid}
+                             AND `course` = {$academy['ac_id']}");
+            if ($db->fetch_single($cdo) > 0)
+            {
+                $do = "<i>{$lang['ACA_DONE']}</i>";
+            }
+            else
+            {
+                $do = "<a href='?action=start&id={$academy['ac_id']}'>{$lang['ACA_ATTEND']}</a>";
+            }
 		echo "<tr>
 		<td>
-			<a href='academy.php?action=description&id={$academy['academyid']}'>{$academy['academyname']}</a>
+			{$academy['ac_name']}<br />";
+			if (!empty($academy['ac_level']))
+			{
+				echo "{$lang['ACA_LVL']}{$academy['ac_level']}";
+			}
+			echo"
 		</td>
 		<td>
-			{$academy['academycost']}
+			{$academy['ac_desc']}
 		</td>
 		<td>
-			{$academy['academylevel']}
+			{$academy['ac_cost']} {$lang['INDEX_PRIMCURR']}
 		</td>
 		<td>
-			<a href='academy.php?action=start&id={$academy['academyid']}'>Start Academic Course</a>
+			{$do}
 		</td>";
 	}
 	echo"</tbody></table>";
-	$h->endpage();
 }
 
 function start()
 {
-	global $db,$userid,$lang, $ir, $h;
-	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : '';
-	$academyid = $_GET['id'];
-	$courq = $db->query( "SELECT `a`.* FROM `academy` AS `a` WHERE `a`.`academyid` = {$academyid} LIMIT 1");
+	global $db,$userid,$lang,$ir,$h,$api;
+	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : 0;
+	if (empty($_GET['id']))
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['ACA_ERR'],true,'academy.php');
+		die($h->endpage());
+	}
+	$courq = $db->query("SELECT * FROM `academy` WHERE `ac_id` = {$_GET['id']} LIMIT 1");
+	if ($db->num_rows($courq) == 0)
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['ACA_ERR1'],true,'academy.php');
+		die($h->endpage());
+	}
 	$course = $db->fetch_row($courq);
-	if ($ir['course'] == 0) {
-		if ($ir['primary_currency'] >= $course['academycost'])
-		{
-			if ($ir['level'] >= $course['academylevel'])
-			{
-				$new_currency = $ir['primary_currency'] - $course['academycost'];
-				$db->query("update `users` SET `primary_currency`='{$new_currency}' WHERE `userid` = '{$userid}'");
-				alert("success","{$lang['ACADEMY_STARTED_COURSE']}","<br />you have started the course {$course['academyname']}.<br />It will finish in {$course['academydays']} day(s)");
-				echo "<br /><br /><a href='index.php'>{$lang['ACADEMY_RETURN_HOME']}</a>";
-				//$db->query("update `users` SET `course`='{$academyid}' WHERE `userid` = '{$userid}'");
-				//$db->query("update `users` SET `days_left`='{$course['academydays']}' WHERE `userid` = '{$userid}'");
-			}
-			else
-			{
-				alert("danger", "{$lang['ACADEMY_LOW_LEVEL_1']}<br />", "{$lang['ACADEMY_LOW_LEVEL_2']}");
-			}
-		}
-		else
-		{
-			alert("danger", "{$lang['ACADEMY_INSUFFICIENT_CURRENCY_1']}<br />", "{$lang['ACADEMY_INSUFFICIENT_CURRENCY_2']}");
-		}
-	}
-	else
+	if ($course['ac_level'] > $ir['level'])
 	{
-		alert("danger", "{$lang['ACADEMY_IN_COURSE_1']}", "{$lang['ACADEMY_IN_COURSE_2']} {$ir['days_left']} {$lang['ACADEMY_IN_COURSE_3']}");
+		alert('danger',$lang['ERROR_GENERIC'],$lang['ACA_ERR2'],true,'academy.php');
+		die($h->endpage());
 	}
-	$h->endpage();
+	if ($course['ac_cost'] > $ir['primary_currency'])
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['ACA_ERR3'],true,'academy.php');
+		die($h->endpage());
+	}
+	$cdo = $db->query("SELECT COUNT(`userid`)
+                             FROM `academy_done`
+                             WHERE `userid` = {$userid}
+                             AND `course` = {$_GET['id']}");
+	if ($db->fetch_single($cdo) > 0)
+	{
+		alert('danger',$lang['ERROR_GENERIC'],$lang['ACA_ERR4'],true,'academy.php');
+		die($h->endpage());
+	}
+	$completed=time() + ($course['ac_days']*86400);
+	$db->query("UPDATE `users` SET `course` = {$_GET['id']}, `course_complete` = {$completed} WHERE `userid` = {$userid}");
+	$api->UserTakeCurrency($userid,'primary',$course['ac_cost']);
+	alert('success',$lang['ERROR_SUCCESS'],"{$lang['ACA_SUCC']} {$course['ac_name']} {$lang['ACA_SUCC1']} {$course['ac_days']} {$lang['ACA_SUCC2']}",true,'index.php');
 }
-function description()
-{
-	global $db,$lang, $h;
-	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : '';
-	$academyid = $_GET['id'];
-	if (!$academyid)
-	{
-		echo 'Invalid ID';
-	}
-	else
-	{
-		$q = $db->query("SELECT * FROM `academy` WHERE `academyid` = {$academyid}");
-		if ($db->num_rows($q) == 0)
-		{
-			echo 'Invalid ID';
-		}
-		else
-		{
-			$academy_info = $db->fetch_row($q);
-			echo "
-			<table class='table table-bordered'>
-				<tr>
-					<th colspan='2'>
-						{$lang['ACADEMY_INFO_NAME']} {$academy_info['academyname']}
-					</th>
-				</tr>
-				<tr>
-					<th width='33%'>
-						{$lang['ACADEMY_INFO_DESC']}
-					</th>
-					<td>
-						{$academy_info['academydesc']}
-					</td>
-				</tr>
-				<tr>
-					<th width='33%'>
-						{$lang['ACADEMY_INFO_COST']}
-					</th>
-					<td>
-						{$academy_info['academycost']}
-					</td>
-				</tr>
-				<tr>
-					<th width='33%'>
-						{$lang['ACADEMY_INFO_LEVEL']}
-					</th>
-					<td>
-						{$academy_info['academylevel']}
-					</td>
-				</tr>
-				<tr>
-					<th width='33%'>
-						{$lang['ACADEMY_INFO_DAYS']}
-					</th>
-					<td>
-						{$academy_info['academydays']}
-					</td>
-				</tr>";
-			for ($enum = 1; $enum <= 4; $enum++)
-			{
-				if ($academy_info["effect{$enum}_on"] == 'true')
-				{
-					$einfo = unserialize($academy_info["effect{$enum}"]);
-					$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
-					$einfo['dir'] = ($einfo['dir'] == 'pos') ? 'Increases' : 'Decreases';
-					echo "
-					<tr>
-						<th>
-							{$lang['ACADEMY_INFO_EFFECT']}{$enum}
-						</th>
-						<td>
-							{$lang['ACADEMY_DESCRIPTION_EFFECT_1']}{$einfo['dir']} {$lang['ACADEMY_DESCRIPTION_EFFECT_2']} {$einfo['stat']} {$lang['ACADEMY_DESCRIPTION_EFFECT_3']} {$einfo['inc_amount']}{$einfo['inc_type']}
-						</td>
-					</tr>";
-				}
-			}
-			echo"
-			</table>";
-		$db->free_result($q);
-		}
-	}
-	$h->endpage();
-}
+$h->endpage();
