@@ -40,6 +40,9 @@ switch ($_GET['action'])
 	case 'massmail':
 		massmail();
 		break;
+	case 'massemail':
+		massemail();
+		break;
 	default:
 		echo 'Error: This script requires an action.';
 		$h->endpage();
@@ -657,6 +660,86 @@ function massmail()
 		<tr>
 			<td colspan='2'>
 				<input type='submit' class='btn btn-default' value='{$lang['STAFF_MM_BTN']}'>
+			</td>
+		</tr>
+		{$csrf}
+		</form>
+		</table>";
+	}
+}
+function massemail()
+{
+	global $db,$userid,$lang,$h,$api,$set;
+	$from='editthis';
+	echo "<h3>{$lang['STAFF_MM_INFO']}</h3><hr>";
+	if (isset($_POST['msg']))
+	{
+		$msg = $_POST['msg'];
+		if (empty($msg))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['MAIL_EMPTYINPUT']);
+			die($h->endpage());
+		}
+		if (strlen($msg) > 65655)
+		{
+			alert('danger',$lang['ERROR_LENGTH'],$lang['MAIL_INPUTLNEGTH']);
+			die($h->endpage());
+		}
+		$q=$db->query("SELECT `userid`,`user_level`,`email` FROM `users`");
+		$sent=0;
+		$headers[] = 'MIME-Version: 1.0';
+		$headers[] = 'Content-type: text/html; charset=iso-8859-1';
+		$headers[] = "From: {$from}";
+		if (mail('ryan.roach.1997@hotmail.com',$set['WebsiteName'],$msg,implode("\r\n", $headers)) == true)
+		{
+			echo "... {$lang['STAFF_MEM_GOOD']}";
+			$sent=$sent+1;
+		}
+		/*while ($r = $db->fetch_row($q))
+		{
+			echo "{$lang['STAFF_MEM_WORKING']} {$api->SystemUserIDtoName($r['userid'])} ...";
+			if ($r['user_level'] == 'NPC')
+			{
+				echo "... {$lang['STAFF_MEM_FAIL']}";
+			}
+			else
+			{
+				if (mail($r['email'],$set['WebsiteName'],$msg,implode("\r\n", $headers)) == true)
+				{
+					echo "... {$lang['STAFF_MEM_GOOD']}";
+					$sent=$sent+1;
+				}
+				else
+				{
+					echo "... {$lang['STAFF_MEM_FAIL']}";
+				}
+			}
+			echo "<br />";
+		}
+		*/
+		echo "{$sent} {$lang['STAFF_MEM_END']}";
+	}
+	else
+	{
+		$csrf=request_csrf_html('staff_massemail');
+		echo "<table class='table table-bordered'>
+		<form method='post'>
+		<tr>
+			<th colspan='2'>
+				{$lang['STAFF_MEM_TABLE']}
+			</th>
+		</tr>
+		<tr>
+			<th>
+				{$lang['STAFF_MM_TH']}
+			</th>
+			<td>
+				<textarea class='form-control' name='msg' required='1'></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<input type='submit' class='btn btn-default' value='{$lang['STAFF_MEM_BTN']}'>
 			</td>
 		</tr>
 		{$csrf}

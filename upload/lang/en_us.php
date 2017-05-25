@@ -1480,6 +1480,7 @@ $lang['STAFF_PUNISHED_IPSEARCH']="IP Search";
 $lang['STAFF_PUNISHED_FBAN']="Forum Ban User";
 $lang['STAFF_PUNISHED_UFBAN']="Unforum Ban User";
 $lang['STAFF_PUNISHED_MASSMAIL']="Send Mass Mail";
+$lang['STAFF_PUNISHED_MASSEMAIL']="Send Mass Email";
 $lang['STAFF_PUNISHFED_FORM']="Jailing User";
 $lang['STAFF_PUNISHFED_INFO']="Placing a user in federal jail will render their account virtually useless. They will not be able to do anything in-game.";
 $lang['STAFF_PUNISHFED_TH']="User:";
@@ -2188,4 +2189,13 @@ $lang['STAFF_MM_WORKING']="Sending message to";
 $lang['STAFF_MM_FAIL']="Message failed to send.";
 $lang['STAFF_MM_GOOD']="Message sent successfully.";
 $lang['STAFF_MM_END']="messages have been sent successfully.";
+
+//Staff Mass Email
+$lang['STAFF_MEM_INFO']="Mass Email";
+$lang['STAFF_MEM_TABLE']="Use this form to send a mass email to your players. Do not abuse this, or you'll find your domain blocked on email providers. You can use HTML.";
+$lang['STAFF_MEM_BTN']="Send Mass Email";
+$lang['STAFF_MEM_WORKING']="Sending Email to";
+$lang['STAFF_MEM_FAIL']="Email failed to send.";
+$lang['STAFF_MEM_GOOD']="Email sent successfully.";
+$lang['STAFF_MEM_END']="Emails have been sent successfully.";
 ?>
