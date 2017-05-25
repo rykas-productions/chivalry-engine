@@ -532,7 +532,7 @@ function errlog()
 	global $db,$lang,$api,$userid,$h;
 	$api->SystemLogsAdd($userid,'staff',"Viewed the error log.");
 	echo "
-	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents("error_log") . "</textarea>";
+	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents("../error_log") . "</textarea>";
 	$h->endpage();
 }
 function staff()
