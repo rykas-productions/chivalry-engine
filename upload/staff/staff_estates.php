@@ -113,7 +113,7 @@ function addestate()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-default' value='{$lang['STAFF_ESTATE_ADD_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_ESTATE_ADD_BTN']}'>
 				</td>
 			</tr>
 			{$csrf}
@@ -172,7 +172,7 @@ function delestate()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-default' value='{$lang['STAFF_ESTATE_DEL_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_ESTATE_DEL_BTN']}'>
 					</td>
 				</tr>
 			</table>
@@ -291,7 +291,7 @@ function editestate()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-default' value='{$lang['STAFF_ESTATE_EDIT_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_ESTATE_EDIT_BTN']}'>
 				</td>
 			</tr>
 			{$csrf}
@@ -321,7 +321,7 @@ function editestate()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-default' value='{$lang['STAFF_ESTATE_EDIT_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_ESTATE_EDIT_BTN']}'>
 					</td>
 				</tr>
 			</table>

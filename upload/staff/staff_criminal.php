@@ -189,7 +189,7 @@ function new_crime()
 					</td>
 				</tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_CRIME_NEW_BTN']}' class='btn btn-default'>
+					<input type='submit' value='{$lang['STAFF_CRIME_NEW_BTN']}' class='btn btn-primary'>
 				</td>
 				{$csrf}
 			</table>
@@ -278,7 +278,7 @@ function edit_crime()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-default' value='{$lang['STAFF_CRIME_EDIT_START_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_CRIME_EDIT_START_BTN']}'>
 				</td>
 			</tr>
 		</table>
@@ -440,7 +440,7 @@ function edit_crime()
 					</td>
 				</tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_CRIME_EDIT_START_BTN']}' class='btn btn-default'>
+					<input type='submit' value='{$lang['STAFF_CRIME_EDIT_START_BTN']}' class='btn btn-primary'>
 				</td>
 				{$csrf}
 			</table>
@@ -565,7 +565,7 @@ function delcrime()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_CRIME_DEL_BTN']}' class='btn btn-default'>
+					<input type='submit' value='{$lang['STAFF_CRIME_DEL_BTN']}' class='btn btn-primary'>
 				</td>
 			</tr>
 			{$csrf}
@@ -627,7 +627,7 @@ function new_crimegroup()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['STAFF_CRIMEG_NEW_BTN']}' class='btn btn-default'>
+						<input type='submit' value='{$lang['STAFF_CRIMEG_NEW_BTN']}' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}
@@ -663,7 +663,7 @@ function edit_crimegroup()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-default' value='{$lang['STAFF_CRIMEG_EDIT_START_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_CRIMEG_EDIT_START_BTN']}'>
 				</td>
 			</tr>
 		</table>
@@ -714,7 +714,7 @@ function edit_crimegroup()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['STAFF_CRIMEG_NEW_BTN']}' class='btn btn-default'>
+						<input type='submit' value='{$lang['STAFF_CRIMEG_NEW_BTN']}' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}
@@ -802,7 +802,7 @@ function delcrimegroup()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_CRIMEG_DEL_BTN']}' class='btn btn-default'>
+					<input type='submit' value='{$lang['STAFF_CRIMEG_DEL_BTN']}' class='btn btn-primary'>
 				</td>
 			</tr>
 			{$csrf}

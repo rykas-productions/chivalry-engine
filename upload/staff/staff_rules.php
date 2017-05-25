@@ -35,7 +35,7 @@ function addrule()
 		echo "{$lang['STAFF_RULES_ADD_FORM']}<br />
 		<form method='post'>
 			<textarea name='rule' rows='5' class='form-control'></textarea>
-			<input type='submit' class='btn btn-default' value='{$lang['STAFF_RULES_ADD_BTN']}'>
+			<input type='submit' class='btn btn-primary' value='{$lang['STAFF_RULES_ADD_BTN']}'>
 			{$csrf}
 		</form>";
 	}

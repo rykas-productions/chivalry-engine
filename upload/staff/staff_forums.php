@@ -66,7 +66,7 @@ function addforum()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['STAFF_FORUM_ADD_BTN']}' class='btn btn-default'>
+						<input type='submit' value='{$lang['STAFF_FORUM_ADD_BTN']}' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}
@@ -214,7 +214,7 @@ function editforum()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-default' value='{$lang['STAFF_FORUM_EDIT_BTN']}'>
+							<input type='submit' class='btn btn-primary' value='{$lang['STAFF_FORUM_EDIT_BTN']}'>
 						</td>
 					</tr>
 				{$csrf}
@@ -228,7 +228,7 @@ function editforum()
 				<input type='hidden' name='step' value='1' />
 				<b>{$lang['STAFF_FORUM_ADD_NAME']}</b> " . forum2_dropdown("id") . "<br />
 				{$csrf}
-				<input type='submit' class='btn btn-default' value='Edit Forum' />
+				<input type='submit' class='btn btn-primary' value='Edit Forum' />
 			</form>
 			   ";
 			break;
@@ -248,7 +248,7 @@ function delforum()
         	<b>{$lang['STAFF_FORUM_ADD_NAME']}</b> " . forum2_dropdown("forum") . "
         <br />
         	{$csrf}
-        	<input type='submit' class='btn btn-default' value='{$lang['STAFF_FORUM_DEL_BTN']}' />
+        	<input type='submit' class='btn btn-primary' value='{$lang['STAFF_FORUM_DEL_BTN']}' />
         </form>";
 	}
 	else

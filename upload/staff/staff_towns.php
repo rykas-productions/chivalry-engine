@@ -98,7 +98,7 @@ function addtown()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-default' value='{$lang['STAFF_TRAVEL_ADDTOWN_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_TRAVEL_ADDTOWN_BTN']}'>
 				</td>
 			</tr>
 			{$csrf}
@@ -159,7 +159,7 @@ function deltown()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-default' value='{$lang['STAFF_TRAVEL_DELTOWN_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_TRAVEL_DELTOWN_BTN']}'>
 					</td>
 				</tr>
 				{$csrf}
