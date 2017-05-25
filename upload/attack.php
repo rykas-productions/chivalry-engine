@@ -461,7 +461,7 @@ function attacking()
 				</th>
 				<td>
 					<div class='progress'>
-						<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='{$vars['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars['hpperc']}%'>
+						<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$vars['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars['hpperc']}%'>
 							{$vars['hpperc']}% ({$youdata['hp']} / {$youdata['maxhp']})
 						</div>
 					</div>
@@ -473,7 +473,7 @@ function attacking()
 				</th>
 				<td>
 					<div class='progress'>
-						<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='{$vars2['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars2['hpperc']}%'>
+						<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$vars2['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars2['hpperc']}%'>
 							{$vars2['hpperc']}% ({$odata['hp']} / {$odata['maxhp']})
 						</div>
 					</div>

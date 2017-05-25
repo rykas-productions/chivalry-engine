@@ -65,7 +65,7 @@ function home()
 			</th>
 			<td>
 				<div class='progress'>
-					<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='{$MUS['miningpower']}' aria-valuemin='0' aria-valuemax='100' style='width:{$mineen}%'>
+					<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$MUS['miningpower']}' aria-valuemin='0' aria-valuemax='100' style='width:{$mineen}%'>
 						{$mineen}% ({$MUS['miningpower']} / {$MUS['max_miningpower']})
 					</div>
 				</div>
@@ -77,7 +77,7 @@ function home()
 			</th>
 			<td>
 				<div class='progress'>
-					<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='{$MUS['miningxp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$minexp}%'>
+					<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$MUS['miningxp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$minexp}%'>
 						{$minexp}% ({$MUS['miningxp']} / {$MUS['xp_needed']})
 					</div>
 				</div>
