@@ -11,6 +11,11 @@ if (strpos($_SERVER['PHP_SELF'], "globals_nonauth.php") !== false)
 {
     exit;
 }
+if (!isset($_COOKIE['theme']))
+{
+	setcookie('theme',1,time()+86400);
+	$_COOKIE['theme']=1;
+}
 session_name('CENGINE');
 @session_start();
 header('X-Frame-Options: SAMEORIGIN');

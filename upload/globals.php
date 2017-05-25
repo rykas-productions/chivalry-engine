@@ -60,6 +60,10 @@ if (!isset($_SESSION['started']))
     session_regenerate_id();
     $_SESSION['started'] = true;
 }
+if (!isset($_COOKIE['theme']))
+{
+	setcookie('theme','1',time()+86400);
+}
 ob_start();
 require "lib/basic_error_handler.php";
 require "lib/dev_help.php";
@@ -150,6 +154,10 @@ else
                      LIMIT 1");
 }
 $ir = $db->fetch_row($is);
+if (!isset($_COOKIE['theme']))
+{
+	setcookie('theme',$ir['theme'],time()+86400);
+}
 if ($ir['force_logout'] != 'false')
 {
     $db->query("UPDATE `users` SET `force_logout` = 'false' WHERE `userid` = {$userid}");

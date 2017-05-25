@@ -362,6 +362,7 @@ function themechange()
 		}
 		else
 		{
+			setcookie('theme',$_POST['theme']);
 			alert('success',$lang['ERROR_SUCCESS'],$lang['PREF_CTHM_SUB_SUCCESS'],true,'preferences.php');
 			$db->query("UPDATE `users` SET `theme` = {$_POST['theme']} WHERE `userid` = {$userid}");
 			die($h->endpage());
