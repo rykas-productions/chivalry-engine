@@ -201,7 +201,7 @@ function idx()
             $t = DateTime_Parse($r['ff_lp_time'], false, true);
 			$pnq=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
 			$pn=$db->fetch_row($pnq);
-			$username = ($pn['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$pn['username']} has {$pn['vip_days']} VIP Days remaining.'></span></span>" : $pn['username'];
+			$username = ($pn['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$pn['username']} has {$pn['vip_days']} VIP Days remaining.'></i></span>" : $pn['username'];
 			
 			$topicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
 				
@@ -301,7 +301,7 @@ function viewforum()
         $t2 = DateTime_Parse($r2['ft_last_time']);
         if ($r2['ft_pinned'])
         {
-            $pt = "<span class='glyphicon glyphicon-pushpin'></span> ";
+            $pt = "<i class='fa fa-thumb-tack' aria-hidden='true'></i> ";
         }
         else
         {
@@ -309,7 +309,7 @@ function viewforum()
         }
         if ($r2['ft_locked'])
         {
-            $lt = "<span class='glyphicon glyphicon-lock'></span> ";
+            $lt = " <i class='fa fa-lock' aria-hidden='true'></i>";
         }
         else
         {
@@ -317,10 +317,10 @@ function viewforum()
         }
 		$pnq1=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r2['ft_owner_id']}");
 		$pn1=$db->fetch_row($pnq1);
-		$pn1['username'] = ($pn1['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn1['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$pn1['username']} has {$pn1['vip_days']} VIP Days remaining.'></span></span>" : $pn1['username'];
+		$pn1['username'] = ($pn1['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn1['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$pn1['username']} has {$pn1['vip_days']} VIP Days remaining.'></i></span>" : $pn1['username'];
 		$pnq2=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r2['ft_last_id']}");
 		$pn2=$db->fetch_row($pnq2);
-		$pn2['username'] = ($pn2['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn2['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$pn2['username']} has {$pn2['vip_days']} VIP Days remaining.'></span></span>" : $pn2['username'];
+		$pn2['username'] = ($pn2['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn2['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$pn2['username']} has {$pn2['vip_days']} VIP Days remaining.'></i></span>" : $pn2['username'];
 		$pcq=$db->query("SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_topic_id` = {$r2['ft_id']}");
 		$pc=$db->fetch_single($pcq);
 		if (!$pn2)
@@ -510,7 +510,7 @@ function viewtopic()
     {
 		$PNQ=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid`={$r['fp_poster_id']}");
 		$PN=$db->fetch_row($PNQ);
-		$PN['username'] = ($PN['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$PN['username']} <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$PN['username']} has {$PN['vip_days']} VIP Days remaining.'></span></span>" : $PN['username'];
+		$PN['username'] = ($PN['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$PN['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$PN['username']} has {$PN['vip_days']} VIP Days remaining.'></i></span>" : $PN['username'];
 
 		$qlink = "[<a href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>{$lang['FORUM_POST_QUOTE']}</a>]";
         if ($api->UserMemberLevelGet($userid,'forum moderator') || $userid == $r['fp_poster_id'])
@@ -805,8 +805,8 @@ function newtopicform()
     echo <<<EOF
 	<big>
     		<a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
-    		<span class='glyphicon glyphicon-chevron-right'></span> <a href='?viewforum={$_GET['forum']}'>{$r['ff_name']}</a>
-    		<span class='glyphicon glyphicon-chevron-right'></span> {$lang['FORUM_TOPIC_FORM_PAGE']}
+    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$_GET['forum']}'>{$r['ff_name']}</a>
+    		<i class='fa fa-chevron-right' aria-hidden='true'></i> {$lang['FORUM_TOPIC_FORM_PAGE']}
     	  </big>
 <form method='post' action='?act=newtopic&forum={$_GET['forum']}'>
 	<table class='table'>
@@ -995,9 +995,9 @@ function quote()
 	$Who = $db->fetch_single($q4);
     echo "<big>
     		<a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
-    		<span class='glyphicon glyphicon-chevron-right'></span> <a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a>
-    		<span class='glyphicon glyphicon-chevron-right'></span> <a href='?viewtopic={$_GET['viewtopic']}'>{$topic['ft_name']}</a>
-    		<span class='glyphicon glyphicon-chevron-right'></span> {$lang['FORUM_QUOTE_FORM_PAGENAME']}
+    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a>
+    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewtopic={$_GET['viewtopic']}'>{$topic['ft_name']}</a>
+    		<i class='fa fa-chevron-right' aria-hidden='true'></i> {$lang['FORUM_QUOTE_FORM_PAGENAME']}
     	  </big>
 		  <br />
 		  <br />
@@ -1099,9 +1099,9 @@ function edit()
     }
     echo "<big>
     		<a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
-    		<span class='glyphicon glyphicon-chevron-right'></span> <a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a>
-    		<span class='glyphicon glyphicon-chevron-right'></span> <a href='?viewtopic={$_GET['topic']}'>{$topic['ft_name']}</a>
-    		<span class='glyphicon glyphicon-chevron-right'></span> {$lang['FORUM_EDIT_FORM_PAGENAME']}
+    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a>
+    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewtopic={$_GET['topic']}'>{$topic['ft_name']}</a>
+    		<i class='fa fa-chevron-right' aria-hidden='true'></i> {$lang['FORUM_EDIT_FORM_PAGENAME']}
     	  </big><br /><br />
     ";
     $edit_csrf = request_csrf_code("forums_editpost_{$_GET['post']}");
