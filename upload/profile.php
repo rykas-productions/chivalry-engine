@@ -92,7 +92,6 @@ else
 			<div class="col-lg-2">
 				<?php
 					echo "{$displaypic}<br />
-						<h3><b>{$user_name} [{$r['userid']}]</b></h3>
 							{$r['user_level']}<br />
 							
 						{$lang['PROFILE_LOCATION']} {$r['town_name']}<br />
