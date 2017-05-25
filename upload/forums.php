@@ -658,7 +658,7 @@ function viewtopic()
 		echo"<br />
 		<br />
 		<form action='?reply={$topic['ft_id']}' method='post'>
-			<table class='table table-responsive'>
+			<table class='table'>
 				<tr>
 					<th>
 						{$lang['FORUM_POST_REPLY']}
@@ -823,7 +823,7 @@ function newtopicform()
 				<label for='ft_desc'>{$lang['FORUM_TOPIC_FORM_DESC']}</label>
 			</th>
 			<td>
-				<input type='text' class='form-control' id='ft_desc' name='ft_desc' required>
+				<input type='text' class='form-control' id='ft_desc' name='ft_desc'>
 			</td>
 		</tr>
 		<tr>
