@@ -160,10 +160,11 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 			echo 
 		"</div>
 	</div>
+</div>
 </div>";
 echo "	<div class='row'>
 			<div class='col-md-12'>
-				{$lang['EXPLORE_REF']}
+				{$lang['EXPLORE_REF']}<br />
 				<code>http://{$domain}/register.php?REF={$userid}</code>
 			</div>
 		</div>";
