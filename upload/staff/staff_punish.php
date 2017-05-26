@@ -43,6 +43,12 @@ switch ($_GET['action'])
 	case 'massemail':
 		massemail();
 		break;
+	case 'banip':
+		banip();
+		break;
+	case 'unbanip':
+		unbanip();
+		break;
 	default:
 		echo 'Error: This script requires an action.';
 		$h->endpage();
@@ -137,7 +143,7 @@ function fedjail()
 			<tr>
 			{$csrf}
 				<td colspan='2'>
-					<input type='submit' class='btn btn-default' value='{$lang['STAFF_PUNISHFED_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_PUNISHFED_BTN']}' />
 				</td>
 			</tr>
 			</form>
@@ -189,7 +195,7 @@ function unfedjail()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-default' value='{$lang['STAFF_UNFED_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_UNFED_BTN']}'>
 					</td>
 				</tr>
 				{$csrf}
@@ -255,7 +261,7 @@ function forumwarn()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-default' value='{$lang['STAFF_FWARN_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_FWARN_BTN']}'>
 					</td>
 				</tr>
 				{$csrf}
@@ -344,7 +350,7 @@ function ipsearch()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-default' value='{$lang['STAFF_IP_MJ_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_IP_MJ_BTN']}'>
 				</td>
 			</tr>
 		</table>
@@ -372,7 +378,7 @@ function ipsearch()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-default' value='{$lang['STAFF_IP_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_IP_BTN']}'>
 					</td>
 				</tr>
 			</table>
@@ -516,7 +522,7 @@ function forumban()
 			<tr>
 			{$csrf}
 				<td colspan='2'>
-					<input type='submit' class='btn btn-default' value='{$lang['STAFF_FBAN_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_FBAN_BTN']}' />
 				</td>
 			</tr>
 			</form>
@@ -568,7 +574,7 @@ function unforumban()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-default' value='{$lang['STAFF_UFBAN_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_UFBAN_BTN']}'>
 					</td>
 				</tr>
 				{$csrf}
@@ -595,7 +601,7 @@ function staffnotes()
     }
 	$db->query("UPDATE `users` SET `staff_notes` = '{$_POST['staffnotes']}' WHERE `userid` = '{$_POST['ID']}'");
 	$api->SystemLogsAdd($userid,'staff',"Updated <a href='../profile.php?user={$_POST['ID']}'>{$api->SystemUserIDtoName($_POST['ID'])}</a> [{$_POST['ID']}]'s staff notes.");
-	alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_NOTES_SUCC'],true,'index.php');
+	alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_NOTES_SUCC'],true,"../profile.php?user={$_POST['ID']}");
 }
 function massmail()
 {
@@ -604,6 +610,11 @@ function massmail()
 	if (isset($_POST['msg']))
 	{
 		$msg = $_POST['msg'];
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_massmail', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
 		if (empty($msg))
 		{
 			alert('danger',$lang['ERROR_GENERIC'],$lang['MAIL_EMPTYINPUT']);
@@ -638,6 +649,7 @@ function massmail()
 			echo "<br />";
 		}
 		echo "{$sent} {$lang['STAFF_MM_END']}";
+		$api->SystemLogsAdd($userid,'staff',"Sent a mass mail.");
 	}
 	else
 	{
@@ -659,7 +671,7 @@ function massmail()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' class='btn btn-default' value='{$lang['STAFF_MM_BTN']}'>
+				<input type='submit' class='btn btn-primary' value='{$lang['STAFF_MM_BTN']}'>
 			</td>
 		</tr>
 		{$csrf}
@@ -675,6 +687,11 @@ function massemail()
 	if (isset($_POST['msg']))
 	{
 		$msg = $_POST['msg'];
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_massemail', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
 		if (empty($msg))
 		{
 			alert('danger',$lang['ERROR_GENERIC'],$lang['MAIL_EMPTYINPUT']);
@@ -690,12 +707,7 @@ function massemail()
 		$headers[] = 'MIME-Version: 1.0';
 		$headers[] = 'Content-type: text/html; charset=iso-8859-1';
 		$headers[] = "From: {$from}";
-		if (mail('ryan.roach.1997@hotmail.com',$set['WebsiteName'],$msg,implode("\r\n", $headers)) == true)
-		{
-			echo "... {$lang['STAFF_MEM_GOOD']}";
-			$sent=$sent+1;
-		}
-		/*while ($r = $db->fetch_row($q))
+		while ($r = $db->fetch_row($q))
 		{
 			echo "{$lang['STAFF_MEM_WORKING']} {$api->SystemUserIDtoName($r['userid'])} ...";
 			if ($r['user_level'] == 'NPC')
@@ -716,8 +728,8 @@ function massemail()
 			}
 			echo "<br />";
 		}
-		*/
 		echo "{$sent} {$lang['STAFF_MEM_END']}";
+		$api->SystemLogsAdd($userid,'staff',"Sent a mass email.");
 	}
 	else
 	{
@@ -739,12 +751,127 @@ function massemail()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' class='btn btn-default' value='{$lang['STAFF_MEM_BTN']}'>
+				<input type='submit' class='btn btn-primary' value='{$lang['STAFF_MEM_BTN']}'>
 			</td>
 		</tr>
 		{$csrf}
 		</form>
 		</table>";
+	}
+}
+function banip()
+{
+	global $db,$lang,$api,$h,$userid;
+	echo "<h3>{$lang['STAFF_BANIP_TITLE']}</h3><hr />";
+	if (isset($_POST['ip']))
+	{
+		$IP = $db->escape($_POST['ip']);
+		if (!isset($_POST['verf']) || !verify_csrf_code('staff_banip', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		if (!filter_var($IP, FILTER_VALIDATE_IP))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_BANIP_ERR']);
+			die($h->endpage());
+		}
+		$q=$db->query("SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
+		if ($db->num_rows($q) > 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_BANIP_ERR1']);
+			die($h->endpage());
+		}
+		$db->query("INSERT INTO `ipban` VALUES (NULL, '{$IP}');");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_BANIP_SUCC'],true,'index.php');
+		$api->SystemLogsAdd($userid,'staff',"IP Banned {$IP}.");
+	}
+	else
+	{
+		$csrf=request_csrf_html('staff_banip');
+		echo "<form method='post'>
+		<table class='table table-bordered'>
+		<tr>
+			<th colspan='2'>
+				{$lang['STAFF_BANIP_INFO']}
+			</th>
+		</tr>
+		<tr>
+			<th>
+				{$lang['STAFF_BANIP_IP']}
+			</th>
+			<td>
+				<input type='text' name='ip' value='...' class='form-control' required='1'>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<input type='submit' value='{$lang['STAFF_BANIP_TITLE']}' class='btn btn-primary'>
+			</td>
+		</tr>
+		{$csrf}
+		</table>
+		</form>";
+	}
+}
+function unbanip()
+{
+	global $db,$userid,$lang,$api,$h;
+	echo "<h3>{$lang['STAFF_UNBANIP_TITLE']}</h3><hr />";
+	if (isset($_GET['id']))
+	{
+		$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : '';
+		if (!isset($_GET['verf']) || !verify_csrf_code('staff_unbanip', stripslashes($_GET['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		if (empty($_GET['id']))
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_UNBANIP_ERR'],true,'?action=unbanip');
+			die($h->endpage());
+		}
+		$q=$db->query("SELECT * FROM `ipban` WHERE `ip_id` = {$_GET['id']}");
+		if ($db->num_rows($q) == 0)
+		{
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_UNBANIP_ERR1'],true,'?action=unbanip');
+			die($h->endpage());
+		}
+		$IP=$db->fetch_row($q);
+		$api->SystemLogsAdd($userid,'staff',"Unbanned IP {$IP['ip_id']}");
+		$db->query("DELETE FROM `ipban` WHERE `ip_id` = {$_GET['id']}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_UNBANIP_SUCC'],true,'index.php');
+	}
+	else
+	{
+		echo "<table class='table table-bordered'>
+		<tr>
+			<th>
+				{$lang['STAFF_BANIP_IP']}
+			</th>
+			<th>
+				{$lang['STAFF_UNBANIP_TH']}
+			</th>
+		</tr>";
+		$q=$db->query("SELECT * FROM `ipban`");
+		$csrf=request_csrf_html('staff_unbanip');
+		while ($r = $db->fetch_row($q))
+		{
+			echo "<tr>
+				<td>
+					{$r['ip_ip']}
+				</td>
+				<td>
+					<form method='get'>
+						<input type='hidden' value='unbanip' name='action'>
+						<input type='hidden' value='{$r['ip_id']}' name='id'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_UNBANIP_TITLE']}'>
+						{$csrf}
+					</form>
+				</td>
+			</tr>";
+		}
+		echo "</table>";
 	}
 }
 $h->endpage();

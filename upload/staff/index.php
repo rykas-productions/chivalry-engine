@@ -324,7 +324,9 @@ echo"
 							<a href='staff_punish.php?action=massmail'>{$lang['STAFF_PUNISHED_MASSMAIL']}</a><br />";
 								if ($api->UserMemberLevelGet($userid,'admin'))
 								{
-									echo "<a href='staff_punish.php?action=massemail'>{$lang['STAFF_PUNISHED_MASSEMAIL']}</a>";	
+									echo "<a href='staff_punish.php?action=massemail'>{$lang['STAFF_PUNISHED_MASSEMAIL']}</a><br />
+									<a href='staff_punish.php?action=banip'>{$lang['STAFF_BANIP_TITLE']}</a><br />
+									<a href='staff_punish.php?action=unbanip'>{$lang['STAFF_UNBANIP_TITLE']}</a><br />";	
 								}
 								echo"
 						</div>

@@ -108,6 +108,13 @@ class headers
 					<?php alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false); ?>
 				</noscript>
 				<?php
+				$IP=$db->escape($_SERVER['REMOTE_ADDR']);
+				$ipq=$db->query("SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
+				if ($db->num_rows($ipq) > 0)
+				{
+					alert('danger',$lang['ERROR_GENERIC'],$lang['HDR_IPREKT'],false);
+					die($h->endpage());
+				}
 	}
 	function endpage()
     {
