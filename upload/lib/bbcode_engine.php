@@ -21,16 +21,16 @@ $builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{param}">{param}</
 $parser->addCodeDefinition($builder->build());
 
 //Quote with option 
-$builder = new JBBCode\CodeDefinitionBuilder('quote', '<blockquote>{param} <footer>{option}</footer></blockquote>');
+$builder = new JBBCode\CodeDefinitionBuilder('quote', '<blockquote class="blockquote"><p class="mb-0">{param}</p><footer class="blockquote-footer"><cite>{option}</cite></footer></blockquote>');
 $builder->setUseOption(true);
 $parser->addCodeDefinition($builder->build());
 
 //Quote w/o option
-$builder = new JBBCode\CodeDefinitionBuilder('quote', '<blockquote>{param}</blockquote>');
+$builder = new JBBCode\CodeDefinitionBuilder('quote', '<blockquote class="blockquote"><p class="mb-0">{param}</p></blockquote>');
 $parser->addCodeDefinition($builder->build());
 
 //Keyboard
-$builder = new JBBCode\CodeDefinitionBuilder('keyboard', '<kbd>{param}</kbd>');
+$builder = new JBBCode\CodeDefinitionBuilder('kbd', '<kbd>{param}</kbd>');
 $parser->addCodeDefinition($builder->build());
 
 //Code
@@ -47,7 +47,7 @@ $builder->setUseOption(true);
 $parser->addCodeDefinition($builder->build());
 
 //Highlight
-$builder = new JBBCode\CodeDefinitionBuilder('highlight', '<mark>{param}</mark>');
+$builder = new JBBCode\CodeDefinitionBuilder('mark', '<mark>{param}</mark>');
 $parser->addCodeDefinition($builder->build());
 
 //Strikethrough
