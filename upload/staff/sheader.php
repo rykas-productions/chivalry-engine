@@ -215,8 +215,8 @@ class headers
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 			
 			<!-- Other JavaScript -->
-			<script src="js/register-min.js"></script>
-			<script src="js/game.js"></script>
+			<script src="../js/register-min.js"></script>
+			<script src="../js/game.js"></script>
 			<script src='https://www.google.com/recaptcha/api.js'></script>
 			<script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js"></script>
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
