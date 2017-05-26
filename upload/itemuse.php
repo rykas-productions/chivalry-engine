@@ -70,7 +70,7 @@ else
 					}
 					elseif ($einfo['stat'] == 'dungeon')
 					{
-						put_dungeon($user,$inc,'Item Misuse');
+						put_dungeon($userid,$inc,'Item Misuse');
 					}
 					else
 					{
