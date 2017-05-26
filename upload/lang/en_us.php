@@ -1231,7 +1231,7 @@ $lang['VIEWGUILD_STAFF_DESC_INFO']="Use this form to update your guild's descrip
 $lang['VIEWGUILD_STAFF_DESC_BTN']="Change Description";
 $lang['VIEWGUILD_STAFF_DESC_SUCC']="You have successfully updated your guild's description.";
 $lang['VIEWGUILD_STAFF_LEADERONLY']="We're sorry, this area is for only the leader of the guild.";
-$lang['VIEWGUILD_STAFF_LEADER_INFO']="Select a user from the dropdown to give them leadership privledges.";
+$lang['VIEWGUILD_STAFF_LEADER_INFO']="Select a user from the dropdown to give them leadership privileges.";
 $lang['VIEWGUILD_STAFF_LEADER_ERR']="You cannot give leadership of your guild to a user who doesn't exist, or isn't in your guild to begin with.";
 $lang['VIEWGUILD_STAFF_LEADER_SUCC']="Leadership privileges for the guild has been transferred successfully.";
 $lang['VIEWGUILD_STAFF_NAME_INFO']="Use this form to change your guild's name.";
@@ -1993,12 +1993,12 @@ $lang['SMARKET_BTN']="Create Offer";
 $lang['SMARKET_AERR']="You input some invalid values on the previous form.";
 $lang['SMARKET_AERR1']="You do not have that much {$lang['INDEX_SECCURR']} to add to the market.";
 
-//Staff Privledges
+//Staff privileges
 $lang['STAFF_PRIV_INFO']="Select a user, then set their permission level.";
 $lang['STAFF_PRIV_USER']="User";
-$lang['STAFF_PRIV_PRIVLIST']="Privilege";
-$lang['STAFF_PRIV_PRIVBTN']="Give Privilege";
-$lang['STAFF_PRIV_ERR']="You're trying to give an invalid or unknown privledge. Check your source and try again.";
+$lang['STAFF_PRIV_PRIVLIST']="privilege";
+$lang['STAFF_PRIV_PRIVBTN']="Give privilege";
+$lang['STAFF_PRIV_ERR']="You're trying to give an invalid or unknown privilege. Check your source and try again.";
 $lang['STAFF_PRIV_ERR1']="The user you're trying to give privileges to is invalid or doesn't exist.";
 $lang['STAFF_PRIV_SUCC']="You have successfully updated this user's privileges to";
 
