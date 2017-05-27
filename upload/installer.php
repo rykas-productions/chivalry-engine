@@ -189,7 +189,7 @@ function config()
     			<th colspan='2'>Database Config</th>
     		</tr>
     		<tr>
-    			<td align='center'>Database Driver</td>
+    			<th>Database Driver</td>
     			<td>
     				<select name='driver' class='form-control' type='dropdown'>
        ";
@@ -211,104 +211,118 @@ function config()
 	}
     echo "
     				</select>
-    			</td>
+    			</th>
     		</tr>
     		<tr>
-    			<td align='center'>
+    			<th>
     				Hostname<br />
     				<small>This is usually localhost</small>
-    			</td>
+    			</th>
     			<td><input type='text' name='hostname' class='form-control' value='localhost' required='1' /></td>
     		</tr>
     		<tr>
-    			<td align='center'>
+    			<th>
     				Username<br />
     				<small>The user must be able to use the database</small>
-    			</td>
+    			</th>
     			<td><input type='text' name='username' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
-    			<td align='center'>Password</td>
+    			<th>Password</th>
     			<td><input type='password' name='password' class='form-control' required='1' value='' /></td>
     		</tr>
     		<tr>
-    			<td align='center'>
+    			<th>
     				Database Name<br />
     				<small>The database should not have any other software using it.</small>
-    			</td>
+    			</th>
     			<td><input type='text' name='database' class='form-control' required='1' value='' /></td>
     		</tr>
     		<tr>
     			<th colspan='2'>Game Config</th>
     		</tr>
     		<tr>
-    			<td align='center'>Game Name</td>
+    			<th>Game Name</th>
     			<td><input type='text' name='game_name' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
-    			<td align='center'>
+    			<th>
     				Game Owner<br />
     				<small>This can be your nick, real name, or a company</small>
-    			</td>
+    			</th>
     			<td><input type='text' name='game_owner' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
-    			<td align='center'>
+    			<th>
     				Game Description<br />
     				<small>This is shown on the login page.</small>
-    			</td>
+    			</th>
     			<td><textarea rows='6' cols='40' name='game_description' class='form-control' required='1'></textarea></td>
     		</tr>
     		<tr>
-    			<td align='center'>
+    			<th>
     				PayPal Address<br />
     				<small>This is where the payments for game DPs go.  Must be at least Premier.</small>
-    			</td>
+    			</th>
     			<td><input type='email' name='paypal' class='form-control' required='1' /></td>
     		</tr>
 			<tr>
-    			<td align='center'>
+    			<th>
     				Password Cost<br />
     				<small>How much resources should you allocate towards generating a user's password?<br /> 
 					Benchmark your server <a href='password_benchmark.php'>here</a>.</small>
-    			</td>
+    			</th>
     			<td><input type='number' class='form-control' value='10' required='1' min='5' max='15' name='password_effort'></td>
     		</tr>
 			<tr>
-    			<td align='center'>
+    			<th>
     				Fraudguard IO Username<br />
     				<small><a href='https://fraudguard.io/'>https://fraudguard.io/</a></small>
-    			</td>
+    			</th>
     			<td><input type='text' name='fgun' class='form-control' required='1' /></td>
     		</tr>
 			<tr>
-    			<td align='center'>
+    			<th>
     				Fraudguard IO Password<br />
     				<small><a href='https://fraudguard.io/'>https://fraudguard.io/</a></small>
-    			</td>
+    			</th>
     			<td><input type='password' name='fgpw' class='form-control' required='1' /></td>
+    		</tr>
+			<tr>
+    			<th>
+    				ReCaptcha Public Key<br />
+    				<small><a href='https://www.google.com/recaptcha/admin'>https://www.google.com/recaptcha/admin</a></small>
+    			</th>
+    			<td><input type='text' name='recappub' class='form-control' required='1' /></td>
+    		</tr>
+			<tr>
+    			<th>
+    				ReCaptcha Private Key<br />
+    				<small><a href='https://www.google.com/recaptcha/admin'>https://www.google.com/recaptcha/admin</a></small>
+    			</th>
+    			<td><input type='password' name='recappriv' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
     			<th colspan='2'>Admin User</th>
     		</tr>
     		<tr>
-    			<td align='center'>Username</td>
+    			<th>Username</th>
     			<td><input type='text' name='a_username' minlength='3' maxlength='20' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
-    			<td align='center'>Password</td>
+    			<th>Password</th>
     			<td><input type='password' name='a_password' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
-    			<td align='center'>Confirm Password</td>
+    			<th>Confirm Password</th>
     			<td><input type='password' name='a_cpassword' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
-    			<td align='center'>E-Mail</td>
+    			<th>Email Address</th>
     			<td><input type='email' name='a_email' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
-    			<td align='center'>Gender</td>
+    			<th>Gender</th>
     			<td>
     				<select name='gender' class='form-control' required='1' type='dropdown'>
     					<option value='Male'>Male</option>
@@ -317,7 +331,7 @@ function config()
     			</td>
     		</tr>
 			<tr>
-    			<td align='center'>Class</td>
+    			<th>Class</th>
     			<td>
     				<select name='class' class='form-control' required='1' type='dropdown'>
     					<option value='Warrior'>Warrior</option>
@@ -335,14 +349,6 @@ function config()
     </form>
        ";
 }
-if (!function_exists('get_magic_quotes_gpc'))
-{
-
-    function get_magic_quotes_gpc()
-    {
-        return 0;
-    }
-}
 function gpc_cleanup($text)
 {
 	return strip_tags(stripslashes($text));
@@ -353,6 +359,8 @@ function install()
    menuprint('sql');
 	$fgun = (isset($_POST['fgun'])) ? gpc_cleanup($_POST['fgun']) : '';
 	$fgpw = (isset($_POST['fgpw'])) ? gpc_cleanup($_POST['fgpw']) : '';
+	$recappriv = (isset($_POST['recappriv'])) ? gpc_cleanup($_POST['recappriv']) : '';
+	$recappub = (isset($_POST['recappub'])) ? gpc_cleanup($_POST['recappub']) : '';
     $paypal = (isset($_POST['paypal']) && filter_input(INPUT_POST, 'paypal', FILTER_VALIDATE_EMAIL)) ? gpc_cleanup($_POST['paypal']) : '';
     $adm_email = (isset($_POST['a_email']) && filter_input(INPUT_POST, 'a_email', FILTER_VALIDATE_EMAIL)) ? gpc_cleanup($_POST['a_email']) : '';
     $adm_username = (isset($_POST['a_username']) && strlen($_POST['a_username']) > 3) ? gpc_cleanup($_POST['a_username']) : '';
@@ -435,6 +443,14 @@ function install()
 	if ((empty($pweffort)) || ($pweffort < 5) || ($pweffort > 20))
 	{
 		$errors[] = 'Password Effort either blank, lower than five or higher than twenty!';
+	}
+	if (empty($fgpw) || (empty($fgun)))
+	{
+		$errors[] = 'Fraudguard I/O information empty.';
+	}
+	if (empty($recappub) || (empty($recappriv)))
+	{
+		$errors[] = 'ReCaptcha information empty.';
 	}
     if (count($errors) > 0)
     {
@@ -559,6 +575,8 @@ EOF;
     $db->query("INSERT INTO `settings` VALUES(NULL, 'Website_Description', '{$ins_game_desc}')");
 	$db->query("INSERT INTO `settings` VALUES(NULL, 'Version_Number', '{$Version}')");
 	$db->query("INSERT INTO `settings` VALUES(NULL, 'BuildNumber', '{$Build}')");
+	$db->query("INSERT INTO `settings` VALUES(NULL, 'reCaptcha_public', '{$recappub}')");
+	$db->query("INSERT INTO `settings` VALUES(NULL, 'reCaptcha_private', '{$recappriv}')");
 	$db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
 	$db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
     echo '... Done.<br />';

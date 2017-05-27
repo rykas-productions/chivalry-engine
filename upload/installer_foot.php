@@ -12,30 +12,22 @@ if (!defined('MONO_ON'))
     exit;
 }
 ?>
+		</div>
+	</div>
 </div>
-			</div>
-        <!-- /.row -->
-
-			</div>
-			<!-- /.container -->
-
-			<!-- jQuery Version 1.11.1 -->
-			<script src="js/jquery-1.12.0.min.js"></script>
-
-			<!-- Bootstrap Core JavaScript -->
-			<script src="js/bootstrap.min.js"></script>
-			<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-			<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-			<!-- Other JavaScript -->
-			<script src="js/register.js"></script>
-			<script src="js/game.js"></script>
-		</body>
-			<footer>
-				<p>
-					<?php echo "<hr /><i><small>Powered with codes by <a href='https://twitter.com/MasterGeneralYT'><font color=gray>TheMasterGeneral</font></a>. Used with permission.</small></i>";
-					?>
-					&copy; <?php echo date("Y");
-					?>
-				</p>
-			</footer>
-		</html>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script src="js/register-min.js"></script>
+<script src="js/game.js"></script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</body>
+<footer>
+	<p>
+		<hr />Powered with codes by <a href='https://twitter.com/MasterGeneralYT'>TheMasterGeneral</a>. Code viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine'>GitHub</a>. Used with permission.
+		&copy; <?php echo date("Y"); ?>
+	</p>
+</footer>
+</html>
