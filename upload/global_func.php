@@ -1055,7 +1055,7 @@ function check_data()
 		}
 		if ($coud['ac_lab'] > 0)
 		{
-			$upd .= ", us.labour = us.labour + {$coud['ac_lab']}";
+			$upd .= ", us.labor = us.labor + {$coud['ac_lab']}";
 			$ev .= ", {$coud['ac_lab']} Labor";
 		}
 		if ($coud['ac_agl'] > 0)
