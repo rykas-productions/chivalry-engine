@@ -34,6 +34,9 @@ switch ($_GET['action'])
 	case 'sigchange':
 		sigchange();
 		break;
+	case 'sexchange':
+		sexchange();
+		break;
 	default:
 		prefs_home();
 		break;
@@ -73,8 +76,11 @@ function prefs_home()
 				</td>
 			</tr>
 			<tr>
-				<td colspan='2'>
+				<td>
 					<a href='?action=sigchange'>{$lang['PREF_CSIG']}</a>
+				</td>
+				<td>
+					<a href='?action=sexchange'>{$lang['PREF_CSEX']}</a>
 				</td>
 			</tr>
 		</tbody>
@@ -444,6 +450,65 @@ function sigchange()
 			{$csrf}
 		</table>
 		</form>";
+	}
+}
+function sexchange()
+{
+	global $db,$userid,$ir,$lang,$api,$h;
+	if (isset($_POST['gender']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesex', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female'))
+		{
+			alert('danger',$lang['ERROR_INVALID'],$lang['SEX_ERR']);
+			die($h->endpage());
+		}
+		if ($ir['gender'] == $_POST['gender'])
+		{
+			alert('danger',$lang['ERROR_INVALID'],$lang['SEX_ERR1']);
+			die($h->endpage());
+		}
+		$e_gender = $db->escape(stripslashes($_POST['gender']));
+		$db->query("UPDATE `users` SET `gender` = '{$e_gender}' WHERE `userid` = {$userid}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang['SEX_SUCC'],true,'preferences.php');
+	}
+	else
+	{
+		$g = ($ir['gender'] == "Male") ? 
+			$g="	<option value='Male'>{$lang['SCU_SEX']}</option>
+					<option value='Female'>{$lang['SCU_SEX1']}</option>" : 
+			$g= "	<option value='Female'>{$lang['SCU_SEX1']}</option>
+					<option value='Male'>{$lang['SCU_SEX']}</option>";
+		$csrf=request_csrf_html('prefs_changesex');
+		echo "<table class='table table-bordered'>
+		<form method='post'>
+		<tr>
+			<th colspan='2'>
+				{$lang['SEX_INFO']}
+			</th>
+		</tr>
+		<tr>
+			<th>
+				{$lang['REG_SEX']}
+			</th>
+			<td>
+				<select name='gender' class='form-control' type='dropdown'>
+					{$g}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<input type='submit' value='{$lang['SEX_BTN']}' class='btn btn-primary'>
+			</td>
+		</tr>
+		{$csrf}
+		</form>
+		</table>";
 	}
 }
 $h->endpage();

@@ -112,6 +112,7 @@ $lang['PREF_CTHM_FORMBTN']="Update Theme";
 $lang['PREF_CTHM_SUB_ERROR']="You are trying to use an non-existent theme.";
 $lang['PREF_CTHM_SUB_SUCCESS']="Your theme has been updated successfully. Effects will be noticeable on the next page load.";
 $lang["PREF_CSIG"] = "Change Forum Signature";
+$lang["PREF_CSEX"] = "Change Gender";
 
 //Username Change
 $lang["UNC_TITLE"] = "Changing your username...";
@@ -153,6 +154,13 @@ $lang['SIG_YSIG']="Your Signature";
 $lang['SIG_BTN']="Change Signature";
 $lang['SIG_ERR']="Your signature must be less than 1025 characters in length. This includes BBCode.";
 $lang['SIG_SUCC']="You have successfully updated your forum signature.";
+
+//Sex change
+$lang['SEX_INFO']="Use this form to change your gender. Unlike the real world, changes here are free.";
+$lang['SEX_BTN']="Change Gender";
+$lang['SEX_ERR']="You specified an invalid or non-existent gender.";
+$lang['SEX_ERR1']="You are already this gender!";
+$lang['SEX_SUCC']="You have successfully changed your gender.";
 
 //Login Page
 $lang["LOGIN_REGISTER"] = "Register";
