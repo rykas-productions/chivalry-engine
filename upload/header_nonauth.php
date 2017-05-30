@@ -4,7 +4,6 @@ class headers
     function startheaders()
     {
 		global $set,$h,$lang,$db,$menuhide,$api,$time;
-		$csrf=request_csrf_html('login');
 		?>
 		<!DOCTYPE html>
 		<html lang="en">
@@ -45,9 +44,10 @@ class headers
 			<?php
 			if (!isset($menuhide))
 			{
+				$csrf=request_csrf_html('login');
 				?>
-			<!-- Navigation -->
-			<nav class="navbar navbar-light bg-faded fixed-top navbar-toggleable-md">
+				<!-- Navigation -->
+				<nav class="navbar navbar-light bg-faded fixed-top navbar-toggleable-md">
 				<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#CENGINENav" aria-controls="CENGINENav" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
@@ -76,6 +76,7 @@ class headers
 												<div class="col-md-12">
 													<p class="dropdown"><?php echo $lang['LOGIN_LWE']; ?></p>
 													<form role="form" method="post" action="authenticate.php" accept-charset="UTF-8" id="login-nav">
+													<?php echo $csrf; ?>
 													<div class="form-group">
 														 <label class="sr-only" for="exampleInputEmail2"><?php echo"{$lang['LOGIN_EMAIL']}"; ?></label>
 														 <input type="email" class="form-control" id="exampleInputEmail2" placeholder="<?php echo"{$lang['LOGIN_EMAIL']}"; ?>" name="email" required>
@@ -87,7 +88,6 @@ class headers
 													<div class="form-group">
 														 <button type="submit" class="btn btn-primary btn-block"><?php echo"{$lang['LOGIN_SIGNIN']}"; ?></button>
 													</div>
-													<?php echo $csrf; ?>
 											 </form>
 												</div>
 											</div>
