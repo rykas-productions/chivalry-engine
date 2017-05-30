@@ -161,13 +161,18 @@ class headers
 				}
 				if (($ir['last_verified'] < ($time-$set['Revalidate_Time'])) || ($ir['need_verify'] == 1))
 				{
+					if (empty($set['reCaptcha_public']) || empty($set['reCaptcha_private']))
+					{
+						?> <script>alert('Please add the reCaptcha private and public keys.');</script> <?php
+						die($h->endpage());
+					}
 					if (isset($macropage))
 					{
 						$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
 						echo "{$lang['RECAPTCHA_INFO']}"; ?>
 						<form action='macro.php' method='post'>
 							<center>
-								<div class='g-recaptcha' data-theme='dark' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
+								<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
 							</center>
 							<input type='hidden' value='<?php echo $macropage; ?>' name='page'>
 							<input type='submit' value="<?php echo $lang['RECAPTCHA_BTN']; ?>" class="btn btn-primary" data-dismiss="modal">
