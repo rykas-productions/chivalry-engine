@@ -12,7 +12,10 @@ $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 $CurrentTime=time();
 $email = (array_key_exists('email', $_POST) && is_string($_POST['email'])) ? $_POST['email'] : '';
 $password = (array_key_exists('password', $_POST) && is_string($_POST['password'])) ? $_POST['password'] : '';
-
+if (!isset($_POST['verf']) || !verify_csrf_code('staff_bot_add', stripslashes($_POST['verf'])))
+{
+	die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR9']}");
+}
 $QuarterHour=($CurrentTime-900);
 $Hour=($CurrentTime-3600);
 $Day=($CurrentTime-86400);

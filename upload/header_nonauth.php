@@ -4,6 +4,7 @@ class headers
     function startheaders()
     {
 		global $set,$h,$lang,$db,$menuhide,$api,$time;
+		$csrf=request_csrf_html('login');
 		?>
 		<!DOCTYPE html>
 		<html lang="en">
@@ -86,6 +87,7 @@ class headers
 													<div class="form-group">
 														 <button type="submit" class="btn btn-primary btn-block"><?php echo"{$lang['LOGIN_SIGNIN']}"; ?></button>
 													</div>
+													<?php echo $csrf; ?>
 											 </form>
 												</div>
 											</div>

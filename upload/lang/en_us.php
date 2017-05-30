@@ -1812,6 +1812,7 @@ $lang['AUTH_ERROR5']="Your account has been temporarily locked. Please try again
 $lang['AUTH_ERROR6']="Your account has been temporarily locked. Please try again in an hour.";
 $lang['AUTH_ERROR7']="Your account has been temporarily locked. Please try again in 15 minutes.";
 $lang['AUTH_ERROR8']="Incorrect email and password combination.";
+$lang['AUTH_ERROR9']="CSRF verifcation failed. Please login quickly.";
 
 //Header
 $lang['HDR_JS']="You need to enable Javascript for this game to work efficiently.";
