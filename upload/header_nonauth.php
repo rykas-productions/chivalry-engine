@@ -15,8 +15,8 @@ class headers
 			<meta name="description" content="<?php echo $set['Website_Description']; ?>">
 			<meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
 			<meta property="og:description" content="<?php echo $set['Website_Description']; ?>" />
-			<meta property="og:image" content="http://vignette1.wikia.nocookie.net/helmet-heroes/images/e/e0/Knight_Helmet.png/revision/latest?cb=20131008030002" />
-			<link rel="shortcut icon" href="http://vignette1.wikia.nocookie.net/helmet-heroes/images/e/e0/Knight_Helmet.png/revision/latest?cb=20131008030002" type="image/x-icon" />
+			<meta property="og:image" content="" />
+			<link rel="shortcut icon" href="" type="image/x-icon" />
 			<meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
 			<?php echo "<title>{$set['WebsiteName']}</title>"; ?>
 			<!-- CSS -->
