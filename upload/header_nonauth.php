@@ -1,4 +1,11 @@
 <?php
+/*
+	File:		header_nonauth.php
+	Created: 	4/5/2016 at 12:05AM Eastern Time
+	Info: 		Class file to load the template when outside of the game.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+*/
 class headers
 {
     function startheaders()
@@ -15,30 +22,11 @@ class headers
 			<meta name="description" content="<?php echo $set['Website_Description']; ?>">
 			<meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
 			<meta property="og:description" content="<?php echo $set['Website_Description']; ?>" />
+			<meta http-equiv="Cache-control" content="public">
 			<meta property="og:image" content="" />
 			<link rel="shortcut icon" href="" type="image/x-icon" />
 			<meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
 			<?php echo "<title>{$set['WebsiteName']}</title>"; ?>
-			<!-- CSS -->
-			<?php
-			if ($_COOKIE['theme'] == 2)
-			{
-				?>  
-					<link rel="stylesheet" href="css/bootstrap-purple-min.css">
-					<meta name="theme-color" content="#2d135d">
-				<?php
-			}
-			else
-			{
-				?> 
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-					<meta name="theme-color" content="#e7e7e7">
-				<?php
-			}
-			?>
-			<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
-			<link rel="stylesheet" href="css/bs2.css">
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		</head>
 		<body>
 			<?php
@@ -133,17 +121,36 @@ class headers
 
 			</div>
 			<!-- /.container -->
-
+			<?php
+			if ($_COOKIE['theme'] == 2)
+			{
+				?>  
+					<link rel="stylesheet" href="css/bootstrap-purple-min.css">
+					<meta name="theme-color" content="#2d135d">
+				<?php
+			}
+			else
+			{
+				?> 
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+					<meta name="theme-color" content="#e7e7e7">
+				<?php
+			}
+			?>
+			<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
+			<link rel="stylesheet" href="css/bs2.css">
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 			<!-- jQuery Version 3.1.1 -->
-			<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+			<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous" async defer></script>
 
 			<!-- Bootstrap Core JavaScript -->
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous" async defer></script>
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous" async defer></script>
 			
 			<!-- Other JavaScript -->
-			<script src="js/register-min.js"></script>
-			<script src='https://www.google.com/recaptcha/api.js'></script>
+			<script src="js/register-min.js" async defer></script>
+			<script src='https://www.google.com/recaptcha/api.js' async defer></script>
+			<?php include ('analyticstracking.php'); ?>
 		</body>
 			<footer>
 				<p>
