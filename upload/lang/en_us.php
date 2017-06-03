@@ -555,6 +555,7 @@ $lang['PROFILE_STAFF_REGIP']="Sign Up";
 $lang['PROFILE_STAFF_THRT']="Threat?";
 $lang['PROFILE_STAFF_RISK']="Risk Level<br /><small>1 is low, 5 is high</small>";
 $lang['PROFILE_STAFF_OS']="Browser/OS";
+$lang['PROFILE_STAFF_LA']="Last Action";
 $lang['PROFILE_STAFF_NOTES']="Staff Notes:";
 $lang['PROFILE_STAFF_BTN']="Update Notes About";
 $lang['PROFILE_BTN_MSG']="Send";

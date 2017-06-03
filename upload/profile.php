@@ -309,6 +309,7 @@ else
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
 						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",65655),true);
+						$log=$db->fetch_single($db->query("SELECT `log_text` FROM `logs` WHERE `log_user` = {$r['userid']} ORDER BY `log_id` DESC"));
 						echo "<table class='table table-bordered'>
 							<tr>
 								<th width='33%'>Data</th>
@@ -320,22 +321,30 @@ else
 							</tr>
 							<tr>
 								<td>{$lang['PROFILE_STAFF_LH']}</td>
-								<td>$r[lastip] (" . @gethostbyaddr($r['lastip']) . ")</td>
+								<td>{$r['lastip']} (" . @gethostbyaddr($r['lastip']) . ")</td>
 							</tr>
 							<tr>
 								<td>{$lang['PROFILE_STAFF_LL']}</td>
-								<td>$r[loginip] (" . @gethostbyaddr($r['loginip']) . ")</td>
+								<td>{$r['loginip']} (" . @gethostbyaddr($r['loginip']) . ")</td>
 							</tr>
 							<tr>
 								<td>{$lang['PROFILE_STAFF_REGIP']}</td>
-								<td>$r[registerip] (" . @gethostbyaddr($r['registerip']) . ")</td>
+								<td>{$r['registerip']} (" . @gethostbyaddr($r['registerip']) . ")</td>
+							</tr>
+							<tr>
+								<td>
+									{$lang['PROFILE_STAFF_LA']}
+								</td>
+								<td>
+									{$log}
+								</td>
 							</tr>
 							<tr>
 								<td>
 									{$lang['PROFILE_STAFF_OS']}
 								</td>
 								<td>
-									{$r['browser']} on {$r['os']}
+									{$r['browser']}/{$r['os']}
 								</td>
 							</tr>
 					</table>
