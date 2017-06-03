@@ -108,8 +108,9 @@ function logs($name)
 {
 	global $db,$ir,$h,$lang,$userid,$api;
 	$logname=$name;
+	$ParsedName=$lang["STAFF_LOGS_{$logname}"];
     echo "
-	<h3>{$logname} Logs</h3>
+	<h3>{$ParsedName} {$lang['STAFF_LOGS_LOGS']}</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -123,34 +124,36 @@ function logs($name)
     $db->free_result($q);
     if ($attacks == 0)
     {
-        echo "There haven't been any actions in the {$logname} logs.";
+		alert('danger',$lang['ERROR_GENERIC'],"{$lang['STAFF_LOGS_INFO']} {$ParsedName} {$lang['STAFF_LOGS_LOGSLL']}",true,'index.php');
         return;
     }
     $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
+	echo "<nav>";
+    echo "{$lang['FORUM_PAGES']} <br /><ul class='pagination'>";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
 		if ($s == $st)
         {
-            echo "<li class='active'>";
+            echo "<li class='page-item active'>";
         }
 
 		else
 		{
-			echo "<li>";
+			echo "<li class='page-item'>";
 		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
+        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
     echo "
 	</ul>
+	</nav>
     <br />
-    <table class='table table-bordered table-hover table-reponsive'>
+    <table class='table table-bordered table-hover table-striped'>
     		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
+    			<th>{$lang['STAFF_LOGS_TIME']}</th>
+    			<th>{$lang['STAFF_LOGS_PERSON']}</th>
+    			<th>{$lang['STAFF_LOGS_INFOTH']}</th>
     		</tr>
        ";
     $q =
@@ -176,30 +179,32 @@ function logs($name)
     echo "
     </table>
     <center>
-    <ul class='pagination'>Pages:<br />
+	<nav>
+   {$lang['FORUM_PAGES']}<br /><ul class='pagination'>
        ";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
 		if ($s == $st)
         {
-            echo "<li class='active'>";
+            echo "<li class='page-item active'>";
         }
 
 		else
 		{
-			echo "<li>";
+			echo "<li class='page-item'>";
 		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
+        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
+	echo"</ul></nav>";
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
 }
 function userlogs()
 {
 	global $h,$lang,$db,$ir,$api,$userid;
-	echo "<h3>User Logs</h3><hr />";
+	echo "<h3>{$lang['STAFF_LOGS_USER']}</h3><hr />";
 	if (isset($_GET['user']))
 	{
 		$user = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
@@ -209,46 +214,47 @@ function userlogs()
 		}
 		if ($user == 0)
 		{
-			echo "User does not exist.";
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_LOGS_USER_ERR'],true,'index.php');
 			die($h->endpage());
 		}
 		$st = abs(intval($_GET['st']));
 		$app = 100;
 		$q = $db->query("SELECT COUNT(`log_id`)
-						 FROM `logs` WHERE `log_type` = 'training' AND `log_user` = {$_GET['user']}");
+						 FROM `logs` WHERE `log_user` = {$_GET['user']}");
 		$logs = $db->fetch_single($q);
 		$db->free_result($q);
 		if ($logs == 0)
 		{
-			alert("info","Nothing!","This user hasn't done anything yet.",true,'index.php');
+			alert("danger",$lang['ERROR_GENERIC'],$lang['STAFF_LOGS_USER_ERR1'],true,'index.php');
 			return;
 		}
 		$pages = ceil($logs / $app);
-		echo '<ul class="pagination">Pages:&nbsp;<br />';
+		echo "{$lang['FORUM_PAGES']}<br /><nav><ul class='pagination'>";
 		for ($i = 1; $i <= $pages; $i++)
 		{
 			$s = ($i - 1) * $app;
 			if ($s == $st)
 			{
-				echo "<li class='active'>";
+				echo "<li class='page-item active'>";
 			}
 
 			else
 			{
-				echo "<li>";
+				echo "<li class='page-item'>";
 			}
-			echo "<a href='?action=userlogs&user={$user}&st={$s}'>{$i}";
+			echo "<a class='page-link' href='?action=userlogs&user={$user}&st={$s}'>{$i}";
 			echo "</li></a>&nbsp;";
 		}
 		echo "
 		</ul>
+		</nav>
 		<br />
 		<table class='table table-bordered table-hover'>
 				<thead>
 				<tr>
-					<th>Time</th>
-					<th>User</th>
-					<th>Stat Trained</th>
+					<th>{$lang['STAFF_LOGS_TIME']}</th>
+					<th>{$lang['STAFF_LOGS_PERSON']}</th>
+					<th>{$lang['STAFF_LOGS_INFOTH']}</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -282,23 +288,24 @@ function userlogs()
 		</table>
 		<br />
 		<center>
-		<ul class='pagination'>Pages:<br />
+		{$lang['FORUM_PAGES']}<nav><ul class='pagination'><br />
 		   ";
 		for ($i = 1; $i <= $pages; $i++)
 		{
 			$s = ($i - 1) * $app;
 			if ($s == $st)
 			{
-				echo "<li class='active'>";
+				echo "<li class='page-item active'>";
 			}
 
 			else
 			{
-				echo "<li>";
+				echo "<li class='page-item'>";
 			}
-			echo "<a href='?action=userlogs&user={$user}&st={$s}'>{$i}";
+			echo "<a class='page-link' href='?action=userlogs&user={$user}&st={$s}'>{$i}";
 			echo "</li></a>&nbsp;";
 		}
+		echo "</ul></nav>";
 		$mypage = floor($_GET['st'] / 100) + 1;
 		$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of User ID {$user}'s user logs.");
 		$h->endpage();
@@ -356,7 +363,7 @@ function alllogs()
 	global $db,$ir,$h,$lang,$userid,$api;
 	$logname='all';
     echo "
-	<h3>General Logs</h3>
+	<h3>{$lang['STAFF_LOGS_ALL']}</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -370,34 +377,35 @@ function alllogs()
     $db->free_result($q);
     if ($attacks == 0)
     {
-        echo "There haven't been any game actions yet.";
+        alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_LOGS_ALL_NONE'],true,'index.php');
         return;
     }
     $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
+    echo "<nav>{$lang['FORUM_PAGES']}<ul class='pagination'><br />";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
 		if ($s == $st)
         {
-            echo "<li class='active'>";
+            echo "<li class='page-item active'>";
         }
 
 		else
 		{
-			echo "<li>";
+			echo "<li class='page-item'>";
 		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
+        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
     echo "
 	</ul>
+	</nav>
     <br />
-    <table class='table table-bordered table-hover table-reponsive'>
+    <table class='table table-bordered table-hover table-striped'>
     		<tr>
-    			<th>Time</th>
-    			<th>User</th>
-    			<th>What Happened?</th>
+    			<th>{$lang['STAFF_LOGS_TIME']}</th>
+    			<th>{$lang['STAFF_LOGS_PERSON']}</th>
+    			<th>{$lang['STAFF_LOGS_INFOTH']}</th>
     		</tr>
        ";
     $q =
@@ -421,24 +429,26 @@ function alllogs()
     $db->free_result($q);
     echo "
     </table>
-    <center>
-    <ul class='pagination'>Pages:<br />
+    <center>{$lang['FORUM_PAGES']}<br />
+	<nav>
+    <ul class='pagination'>
        ";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
 		if ($s == $st)
         {
-            echo "<li class='active'>";
+            echo "<li class='page-item active'>";
         }
 
 		else
 		{
-			echo "<li>";
+			echo "<li class='page-item'>";
 		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
+        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
+	echo"</nav>";
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the game logs.");
 }
@@ -447,7 +457,7 @@ function maillogs()
 	global $db,$ir,$h,$lang,$userid,$api;
 	$logname='mail';
     echo "
-	<h3>Mail Logs</h3>
+	<h3>{$lang['STAFF_LOGS_MAIL']}</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -461,35 +471,36 @@ function maillogs()
     $db->free_result($q);
     if ($attacks == 0)
     {
-        echo "There haven't been any messages sent yet.";
+        alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_LOGS_MAIL_NONE'],true,'index.php');
         return;
     }
     $pages = ceil($attacks / $app);
-    echo '<ul class="pagination">Pages:&nbsp;<br />';
+    echo "{$lang['FORUM_PAGES']}<nav><ul class='pagination'><br />";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
 		if ($s == $st)
         {
-            echo "<li class='active'>";
+            echo "<li class='page-item active'>";
         }
 
 		else
 		{
-			echo "<li>";
+			echo "<li class='page-item'>";
 		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
+        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
     echo "
 	</ul>
+	</nav>
     <br />
-    <table class='table table-bordered table-hover table-reponsive'>
+    <table class='table table-bordered table-hover table-striped'>
     		<tr>
-    			<th>Time</th>
-    			<th>Sender</th>
-				<th>Receiver</th>
-    			<th>Message</th>
+    			<th width='25%'>{$lang['STAFF_LOGS_TIME']}</th>
+				<th>{$lang['STAFF_LOGS_MAIL_SEND']}</th>
+				<th>{$lang['STAFF_LOGS_MAIL_RECEIVE']}</th>
+    			<th>{$lang['STAFF_LOGS_MAIL_MSG']}</th>
     		</tr>
        ";
     $q =
@@ -527,23 +538,26 @@ function maillogs()
     echo "
     </table>
     <center>
-    <ul class='pagination'>Pages:<br />
+	{$lang['FORUM_PAGES']}<br />
+	<nav>
+    <ul class='pagination'>
        ";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
 		if ($s == $st)
         {
-            echo "<li class='active'>";
+            echo "<li class='page-item active'>";
         }
 
 		else
 		{
-			echo "<li>";
+			echo "<li class='page-item'>";
 		}
-        echo "<a href='?action={$logname}logs&st={$s}'>{$i}";
+        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
+	echo"</ul></nav>";
     $mypage = floor($_GET['st'] / 100) + 1;
 	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the mail logs.");
 }
