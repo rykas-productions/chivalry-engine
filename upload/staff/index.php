@@ -263,41 +263,127 @@ echo"
 				<div id='LOGS' class='tab-pane'>
 					<div class='card card-default'>
 						<div class='card-block'>
-							<a href='staff_logs.php?action=alllogs'>{$lang['STAFF_IDX_LOGS_TAB1']}</a><br />
-							<a href='staff_logs.php?action=mail'>{$lang['STAFF_IDX_LOGS_TAB26']}</a><br />
-							<a href='staff_logs.php?action=userlogs'>{$lang['STAFF_IDX_LOGS_TAB2']}</a><br />
-							<a href='staff_logs.php?action=traininglogs'>{$lang['STAFF_IDX_LOGS_TAB3']}</a><br />
-							<a href='staff_logs.php?action=attackinglogs'>{$lang['STAFF_IDX_LOGS_TAB4']}</a><br />
-							<a href='staff_logs.php?action=loginlogs'>{$lang['STAFF_IDX_LOGS_TAB5']}</a><br />
-							<a href='staff_logs.php?action=equiplogs'>{$lang['STAFF_IDX_LOGS_TAB6']}</a><br />
-							<a href='staff_logs.php?action=banklogs'>{$lang['STAFF_IDX_LOGS_TAB7']}</a><br />
-							<a href='staff_logs.php?action=crimelogs'>{$lang['STAFF_IDX_LOGS_TAB8']}</a><br />
-							<a href='staff_logs.php?action=itemuselogs'>{$lang['STAFF_IDX_LOGS_TAB9']}</a><br />
-							<a href='staff_logs.php?action=itembuylogs'>{$lang['STAFF_IDX_LOGS_TAB10']}</a><br />
-							<a href='staff_logs.php?action=itemselllogs'>{$lang['STAFF_IDX_LOGS_TAB17']}</a><br />
-							<a href='staff_logs.php?action=itemmarketlogs'>{$lang['STAFF_IDX_LOGS_TAB11']}</a><br />
-							<a href='staff_logs.php?action=travellogs'>{$lang['STAFF_IDX_LOGS_TAB13']}</a><br />
-							<a href='staff_logs.php?action=verifylogs'>{$lang['STAFF_IDX_LOGS_TAB14']}</a><br />
-							<a href='staff_logs.php?action=spylogs'>{$lang['STAFF_IDX_LOGS_TAB15']}</a><br />
-							<a href='staff_logs.php?action=gamblinglogs'>{$lang['STAFF_IDX_LOGS_TAB16']}</a><br />
-							<a href='staff_logs.php?action=pokes'>{$lang['STAFF_IDX_LOGS_TAB19']}</a><br />
-							<a href='staff_logs.php?action=guilds'>{$lang['STAFF_IDX_LOGS_TAB20']}</a><br />
-							<a href='staff_logs.php?action=guildvault'>{$lang['STAFF_IDX_LOGS_TAB21']}</a><br />
-							<a href='staff_logs.php?action=level'>{$lang['STAFF_IDX_LOGS_TAB22']}</a><br />
-							<a href='staff_logs.php?action=temple'>{$lang['STAFF_IDX_LOGS_TAB23']}</a><br />
-							<a href='staff_logs.php?action=secmarket'>{$lang['STAFF_IDX_LOGS_TAB24']}</a><br />
-							<a href='staff_logs.php?action=mining'>{$lang['STAFF_IDX_LOGS_TAB25']}</a><br />";
+							<table class='table table-bordered'>
+							<tr>
+								<td>
+									<a href='staff_logs.php?action=alllogs'>{$lang['STAFF_IDX_LOGS_TAB1']}</a> 
+								</td>
+								<td>
+									<a href='staff_logs.php?action=mail'>{$lang['STAFF_IDX_LOGS_TAB26']}</a>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<a href='staff_logs.php?action=userlogs'>{$lang['STAFF_IDX_LOGS_TAB2']}</a> 
+								</td>
+								<td>
+									<a href='staff_logs.php?action=traininglogs'>{$lang['STAFF_IDX_LOGS_TAB3']}</a>
+								</td>
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=attackinglogs'>{$lang['STAFF_IDX_LOGS_TAB4']}</a>
+								</td>
+								<td>
+									<a href='staff_logs.php?action=loginlogs'>{$lang['STAFF_IDX_LOGS_TAB5']}</a>
+								</td>
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=equiplogs'>{$lang['STAFF_IDX_LOGS_TAB6']}</a>
+								</td>
+								<td>
+									<a href='staff_logs.php?action=banklogs'>{$lang['STAFF_IDX_LOGS_TAB7']}</a>
+								</td>
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=crimelogs'>{$lang['STAFF_IDX_LOGS_TAB8']}</a> 
+								</td>
+								<td>
+									<a href='staff_logs.php?action=itemuselogs'>{$lang['STAFF_IDX_LOGS_TAB9']}</a>
+								</td>
+							</tr> 
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=itembuylogs'>{$lang['STAFF_IDX_LOGS_TAB10']}</a>
+								</td>
+								<td>
+									<a href='staff_logs.php?action=itemselllogs'>{$lang['STAFF_IDX_LOGS_TAB17']}</a>
+								</td>
+							</tr> 
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=itemmarketlogs'>{$lang['STAFF_IDX_LOGS_TAB11']}</a>
+								</td>
+								<td>
+									<a href='staff_logs.php?action=travellogs'>{$lang['STAFF_IDX_LOGS_TAB13']}</a>
+								</td>
+							</tr> 
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=verifylogs'>{$lang['STAFF_IDX_LOGS_TAB14']}</a>
+								</td>
+								<td>
+									<a href='staff_logs.php?action=spylogs'>{$lang['STAFF_IDX_LOGS_TAB15']}</a>
+								</td>
+							</tr> 
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=gamblinglogs'>{$lang['STAFF_IDX_LOGS_TAB16']}</a>
+								</td>
+								<td>
+									<a href='staff_logs.php?action=pokes'>{$lang['STAFF_IDX_LOGS_TAB19']}</a>
+								</td>
+							</tr>
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=guilds'>{$lang['STAFF_IDX_LOGS_TAB20']}</a>
+								</td>
+								<td>
+									<a href='staff_logs.php?action=guildvault'>{$lang['STAFF_IDX_LOGS_TAB21']}</a>
+								</td>
+							</tr>
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=level'>{$lang['STAFF_IDX_LOGS_TAB22']}</a>
+								</td>
+								<td>
+									<a href='staff_logs.php?action=temple'>{$lang['STAFF_IDX_LOGS_TAB23']}</a>
+								</td>
+							</tr>
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=secmarket'>{$lang['STAFF_IDX_LOGS_TAB24']}</a>
+								</td>
+								<td>
+									<a href='staff_logs.php?action=mining'>{$lang['STAFF_IDX_LOGS_TAB25']}</a>
+								</td>
+							</tr>";
 							if ($api->UserMemberLevelGet($userid,'admin'))
 							{
 								echo"
-								<a href='staff_logs.php?action=stafflogs'>{$lang['STAFF_IDX_LOGS_TAB12']}</a><br />
-								<a href='staff_logs.php?action=fedjaillogs'>{$lang['STAFF_IDX_LOGS_TAB18']}</a><br />
-								<a href='staff_logs.php?action=forumwarn'>{$lang['STAFF_IDX_LOGS_TAB27']}</a><br />
-								<a href='staff_logs.php?action=forumban'>{$lang['STAFF_IDX_LOGS_TAB28']}</a><br />
-								<a href='staff_logs.php?action=donatelogs'>{$lang['STAFF_IDX_LOGS_TAB29']}</a><br />
+								<tr>
+									<td>
+										<a href='staff_logs.php?action=stafflogs'>{$lang['STAFF_IDX_LOGS_TAB12']}</a>
+									</td>
+									<td>
+										<a href='staff_logs.php?action=fedjaillogs'>{$lang['STAFF_IDX_LOGS_TAB18']}</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<a href='staff_logs.php?action=forumwarn'>{$lang['STAFF_IDX_LOGS_TAB27']}</a>
+									</td>
+									<td>
+										<a href='staff_logs.php?action=forumban'>{$lang['STAFF_IDX_LOGS_TAB28']}</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<a href='staff_logs.php?action=donatelogs'>{$lang['STAFF_IDX_LOGS_TAB29']}</a>
+									</td>
+								</tr>
 								";
 							}
-							echo"
+							echo"</table>
 						</div>
 					</div>
 				</div>
