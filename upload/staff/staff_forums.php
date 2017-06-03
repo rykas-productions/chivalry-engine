@@ -36,7 +36,7 @@ function addforum()
         <h3>{$lang['STAFF_FORUM_ADD']}</h3>
         <hr />
 		<form method='post'>
-			<table class='table table-bordered table-responsive'>
+			<table class='table table-bordered '>
 				<tr>
 					<th width='33%'>
 						{$lang['STAFF_FORUM_ADD_NAME']}
@@ -107,7 +107,6 @@ function addforum()
 			VALUES ('{$name}', '{$desc}', '0', '0', '{$auth}', '0');");
 			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FORUM_ADD_SUCCESS'],true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Created a {$auth} Forum called {$name}.");
-			$h->endpage();
 		}
 	}
 }
@@ -184,7 +183,7 @@ function editforum()
 			<form method='post'>
 							<input type='hidden' name='step' value='2'>
 							<input type='hidden' name='id' value='{$_POST['id']}'>
-				<table class='table table-bordered table-responsive'>
+				<table class='table table-bordered '>
 					<tr>
 						<th width='33%'>
 							{$lang['STAFF_FORUM_ADD_NAME']}
@@ -233,7 +232,6 @@ function editforum()
 			   ";
 			break;
     }
-	$h->endpage();
 }
 function delforum()
 {
@@ -276,5 +274,5 @@ function delforum()
 		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_FORUM_DEL_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted forum {$old}, along with posts and topics posted inside.");
 	}
-	$h->endpage();
 }
+$h->endpage();
