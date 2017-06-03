@@ -66,16 +66,19 @@ function attacking()
 		alert("danger",$lang['ERROR_NONUSER'],$lang['ATTACK_START_NOUSER'],true,'index.php');
 		die($h->endpage());
 	}
+    //If the user is trying to attack himself.
 	else if ($_GET['user'] == $userid)
 	{
 		alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_START_NOTYOU'],true,'index.php');
 		die($h->endpage());
 	}
+    //If the user has no HP, and is not already attacking.
 	else if ($ir['hp'] <= 1 && $ir['attacking'] == 0)
 	{
 		alert("danger",$lang["GEN_INFIRM"],$lang['ATTACK_START_YOUNOHP'],true,'index.php');
 		die($h->endpage());
 	}
+    //If the user has left a previous  after losing.
 	else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] == 1)
 	{
 		$_SESSION['attacklost'] = 0;
@@ -180,6 +183,7 @@ function attacking()
 		die($h->endpage());
 	}
 	$_GET['weapon'] = (isset($_GET['weapon']) && is_numeric($_GET['weapon'])) ? abs($_GET['weapon']) : '';
+    //If weapon is specified via $_GET, attack!!
 	if ($_GET['weapon'])
 	{
 		if (!$_GET['nextstep'])
@@ -206,6 +210,7 @@ function attacking()
 				$api->UserInfoSet($userid,'energy',"-{$cost}");
 				$_SESSION['attackdmg'] = 0;
 			}
+            //If not enough energy, stop the fight.
 			else
 			{
 				$EnergyPercent=floor(100/$set['AttackEnergyCost']);
@@ -228,6 +233,7 @@ function attacking()
 		}
 		$winfo_sql ="SELECT `itmname`, `weapon` FROM `items` WHERE `itmid` = {$_GET['weapon']} LIMIT 1";
 		$qo = $db->query($winfo_sql);
+        //If the weapon chosen is not a valid weapon.
 		if ($db->num_rows($qo) == 0)
 		{
 			alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_FIGHT_BADWEAP'],true,'index.php');
@@ -240,16 +246,19 @@ function attacking()
 		//If the attack attempt was connected.
 		if (Random(1, 100) <= $hitratio)
 		{
+            //If the opponent has armor equipped.
 			if ($odata['equip_armor'] > 0)
 			{
 				$armorinfo_sql ="SELECT `armor` FROM `items` WHERE `itmid` = {$odata['equip_armor']} LIMIT 1";
 				$q3 = $db->query($armorinfo_sql);
+                //Check that the armor is valid.
 				if ($db->num_rows($q3) > 0)
 				{
 					$mydamage -= $db->fetch_single($q3);
 				}
 				$db->free_result($q3);
 			}
+            //Fix damage...
 			if ($mydamage < -100000)
 			{
 				$mydamage = abs($mydamage);
@@ -259,10 +268,12 @@ function attacking()
 				$mydamage = 1;
 			}
 			$crit = Random(1, 40);
+            //If user makes a critical hit, multiply damage.
 			if ($crit == 17)
 			{
 				$mydamage *= Random(20, 40) / 10;
 			}
+            //If unlucky crit... reduce damage.
 			else if ($crit == 25 OR $crit == 8)
 			{
 				$mydamage /= (Random(20, 40) / 10);
@@ -274,14 +285,17 @@ function attacking()
 				$odata['hp'] = 0;
 				$mydamage += 1;
 			}
+            //Fixes query error if the opponent HP is lower than 0.
 			if (($odata['hp'] - $mydamage) < 0)
 			{
 				$mydamage=$mydamage+$odata['hp'];
 			}
+            //If opponent HP lower than 0, set to 0.
 			if ($odata['hp'] < 0)
 			{
 				$odata['hp'] = 0;
 			}
+            //Reduce health.
 			$api->UserInfoSet($_GET['user'],"hp","-{$mydamage}",false);
 			echo "{$_GET['nextstep']}) {$lang['ATTACK_FIGHT_ATTACKY_HIT1']} {$r1['itmname']} {$lang['ATTACK_FIGHT_ATTACKY_HIT2']} {$odata['username']} {$lang['ATTACK_FIGHT_ATTACKY_HIT3']} {$mydamage} {$lang['ATTACK_FIGHT_ATTACKY_HIT4']} ({$odata['hp']} {$lang['ATTACK_FIGHT_ATTACK_HPREMAIN']})<br />";
 			$_SESSION['attackdmg'] += $mydamage;
@@ -290,6 +304,7 @@ function attacking()
 		{
 			echo "{$_GET['nextstep']}) {$lang['ATTACK_FIGHT_ATTACKY_MISS1']} {$odata['username']} {$lang['ATTACK_FIGHT_ATTACKY_MISS2']} ({$odata['hp']} {$lang['ATTACK_FIGHT_ATTACK_HPREMAIN']})<br />";
 		}
+        //Win fight because opponent's health is 0 or lower.
 		if ($odata['hp'] <= 0)
 		{
 			$odata['hp'] = 0;
@@ -301,10 +316,12 @@ function attacking()
 			<form action='?action=beat&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='{$lang['ATTACK_FIGHT_OUTCOME2']} {$lang['GEN_THEM']}' /></form>
 			<form action='?action=xp&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='{$lang['ATTACK_FIGHT_OUTCOME3']} {$lang['GEN_THEM']}' /></form>";
 		}
+        //The opponent is not down... he gets to attack.
 		else
 		{
 			$eq = $db->query("SELECT `itmname`,`weapon` FROM  `items` WHERE `itmid` IN({$odata['equip_primary']}, {$odata['equip_secondary']})");
-			if ($db->num_rows($eq) == 0)
+			//If opponent does not have a valid weapon equipped, make them punch with fists.
+            if ($db->num_rows($eq) == 0)
 			{
 				$wep = $lang['ATTACK_FIGHT_ATTACK_FISTS'];
 				$dam = round(round((($odata['strength']/$ir['guard'] / 100))+ 1)*(Random(10000, 12000) / 10000));
@@ -318,41 +335,49 @@ function attacking()
 					$cnt++;
 				}
 				$db->free_result($eq);
-				$weptouse = Random(0, $cnt - 1);
+				$weptouse = Random(0, $cnt - 1);    //Select opponent weapon to use.
 				$wep = $enweps[$weptouse]['itmname'];
 				$dam = round(($enweps[$weptouse]['weapon'] * $odata['strength'] / ($youdata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 			}
 			$hitratio = max(10, min(60 * $odata['agility'] / $ir['agility'], 95));
+            //If hit connects with user.
 			if (Random(1, 100) <= $hitratio)
 			{
+                //If user has armor equipped.
 				if ($ir['equip_armor'] > 0)
 				{
 					$q3 = $db->query("SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']} LIMIT 1");
+                    //If user has valid armor equipped.
 					if ($db->num_rows($q3) > 0)
 					{
 						$dam -= $db->fetch_single($q3);
 					}
 					$db->free_result($q3);
 				}
+                //If the user doesn't have armor equipped.
 				if ($dam < -100000)
 				{
 					$dam = abs($dam);
 				}
+                //If damage is lower than 1, set to 1.
 				else if ($dam < 1)
 				{
 					$dam = 1;
 				}
 				$crit = Random(1, 40);
+                //RNG for critical damage, multiply damage!
 				if ($crit == 17)
 				{
 					$dam *= Random(20, 40) / 10;
 				}
+                //Unlucky... crit is weak.
 				else if ($crit == 25 OR $crit == 8)
 				{
 					$dam /= (Random(20, 40) / 10);
 				}
 				$dam = round($dam);
 				$youdata['hp'] -= $dam;
+                //If user has 1 hp.
 				if ($youdata['hp'] == 1)
 				{
 					$dam += 1;
@@ -363,6 +388,7 @@ function attacking()
 					$dam=$ir['hp'];
 					$youdata['hp']=0;
 				}
+                //If user HP less than 0, set to 0.
 				if ($ir['hp'] < 0)
 				{
 					$ir['hp'] = 0;
@@ -371,11 +397,13 @@ function attacking()
 				$ns = $_GET['nextstep'] + 1;
 				echo "{$ns}) {$lang['ATTACK_FIGHT_ATTACKO_HIT1']} {$wep}, {$odata['username']} {$lang['ATTACK_FIGHT_ATTACKO_HIT2']} {$dam} {$lang['ATTACK_FIGHT_ATTACKY_HIT4']} ({$youdata['hp']} {$lang['ATTACK_FIGHT_ATTACK_HPREMAIN']})<br />";
 			}
+            //Opponent misses their hit.
 			else
 			{
 				$ns = $_GET['nextstep'] + 1;
 				echo "{$ns}) {$odata['username']} {$lang['ATTACK_FIGHT_ATTACKO_MISS']} ({$youdata['hp']} {$lang['ATTACK_FIGHT_ATTACK_HPREMAIN']})<br />";
 			}
+            //User has no HP left, redirect to loss.
 			if ($youdata['hp'] <= 0)
 			{
 				$youdata['hp'] = 0;
@@ -385,16 +413,19 @@ function attacking()
 			}
 		}
 	}
+    //Opponent has less than 5 HP, fight cannot start.
 	else if ($odata['hp'] < 5)
 	{
 		alert("danger",$lang['ERROR_GENERIC'],"{$odata['username']} {$lang['ATTACK_START_OPPNOHP']}",true,'index.php');
 		die($h->endpage());
 	}
+    //Stop combat if user and opponent are in same guild.
 	else if ($ir['guild'] == $odata['guild'] && $ir['guild'] > 0)
 	{
 		alert("danger",$lang['ERROR_GENERIC'],"{$odata['username']} {$lang['ATTACK_FIGHT_FINAL_GUILD']}",true,'index.php');
 		die($h->endpage());
 	}
+    //If user does not have enough energy.
 	else if ($youdata['energy'] < $youdata['maxenergy'] / $set['AttackEnergyCost'])
 	{
 		$EnergyPercent=floor(100/$set['AttackEnergyCost']);
@@ -402,11 +433,13 @@ function attacking()
 		alert("danger","{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_LOWENG1']} {$EnergyPercent}{$lang['ATTACK_FIGHT_LOWENG2']} {$UserCurrentEnergy}% <a href='index.php'>{$lang['GEN_GOHOME']}</a>.");
 		die($h->endpage());
 	}
+    //If user and opponent are in different towns.
 	else if ($youdata['location'] != $odata['location'])
 	{
 		alert("danger",$lang['ERROR_GENERIC'],$lang['ATTACK_FIGHT_FINAL_CITY'],true,'index.php');
 		die($h->endpage());
 	}
+    //If opponent or user have no HP.
 	if ($youdata['hp'] <= 0 OR $odata['hp'] <= 0)
 	{
 		//lol no
@@ -424,6 +457,7 @@ function attacking()
 				{$lang['ATTACK_FIGHT_START1']}
 			</th>
 		</tr>";
+        //If user has weapons equipped, allow him to select one.
 		if ($db->num_rows($mw) > 0)
 		{
 			while ($r = $db->fetch_row($mw))
@@ -447,6 +481,7 @@ function attacking()
 				echo "<td><a href='attack.php?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}'>{$r['itmname']}</a></td></tr>";
 			}
 		}
+        //If no weapons equipped, tell him to get back!
 		else
 		{
 			alert("warning",$lang['ERROR_GENERIC'],$lang['ATTACK_FIGHT_START2'],true,'index.php');
@@ -490,6 +525,7 @@ function beat()
 	$ir['attacking'] = 0;
 	$api->UserInfoSetStatic($userid,"attacking",0);
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
+    //If user attempts to win a fight they didn't win.
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
 		$api->UserInfoSet($userid,"xp",0);
