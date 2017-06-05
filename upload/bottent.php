@@ -29,19 +29,25 @@ echo "<table class='table table-bordered'>
 		{$lang['BOTTENT_TH4']}
 	</th>
 </tr>";
+//List all the bots.
 while ($result = $db->fetch_row($query))
 {
+    //Grab the last time the user attacked this bot.
 	$timequery=$db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
 	$r2=$db->fetch_single($timequery);
+    //Grab bot's stats.
 	$r3 = $db->fetch_row($db->query("SELECT `strength`,`agility`,`guard` FROM `userstats` WHERE `userid` = {$result['botuser']}"));
 	$ustats=$ir['strength']+$ir['agility']+$ir['guard'];
 	$themstats=$r3['strength']+$r3['agility']+$r3['guard'];
+    //Chance the user can beat the bot.
 	$chance = round((($ustats / $themstats) * 100)/2,1);
+    //Player cannot attack the bot.
 	if ((time() <= ($r2 + $result['botcooldown'])) && ($r2 > 0))
 	{
 		$cooldown=($r2 + $result['botcooldown']) - time();
 		$attack="{$lang['BOTTENT_WAIT']} " . ParseTimestamp($cooldown);
 	}
+    //Player CAN attack the bot.
 	else
 	{
 		$attack="<form action='attack.php'>
@@ -50,6 +56,7 @@ while ($result = $db->fetch_row($query))
 					</form>
 					({$lang['BOTTENT_CHANCE']} {$chance}%)";
 	}
+    //Table row formatting.
 	echo "
 	<tr>
 		<td>

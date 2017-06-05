@@ -27,6 +27,7 @@ echo "<table class='table table-bordered'>
 			{$lang['FJ_JAILER']}
 		</th>
 	</tr>";
+//List all the players in the federal jail.
 while ($r = $db->fetch_row($q))
 {
     echo "

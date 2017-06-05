@@ -34,6 +34,7 @@ function weapon()
 					WHERE `iv`.`inv_id` = {$_GET['ID']}
 					AND `iv`.`inv_userid` = {$userid}
 					LIMIT 1");
+    //Item does not exist.
 	if ($db->num_rows($id) == 0)
 	{
 		$db->free_result($id);
@@ -45,6 +46,7 @@ function weapon()
 		$r = $db->fetch_row($id);
 		$db->free_result($id);
 	}
+    //Item cannot be equipped as a weapon.
 	if (!$r['weapon'])
 	{
 		alert('danger',$lang['EQUIP_NOTWEAPON_TITLE'],$lang['EQUIP_NOTWEAPON'],true,'inventory.php');
@@ -52,17 +54,20 @@ function weapon()
 	}
 	if (isset($_POST['type']))
 	{
+        //Attempting to equip to invalid slot.
 		if (!in_array($_POST['type'], array("equip_primary", "equip_secondary"), true))
 		{
 			alert('danger',$lang['EQUIP_NOSLOT_TITLE'],$lang['EQUIP_NOSLOT'],true,'inventory.php');
 			die($h->endpage());
 		}
+        //If weapon already equipped in slot, remove it and put in
+        //user's inventory.
 		if ($ir[$_POST['type']] > 0)
 		{
 			$api->UserGiveItem($userid, $ir[$_POST['type']], 1);
 			$slot = ($_POST['type'] == 'equip_primary') ? 'Primary Weapon' : 'Secondary Weapon';
 			$weapname=$db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_POST['type']]}"));
-			$api->SystemLogsAdd($userid,'equip',"Unequipped {$weapname} as their {$slot}");
+			$api->SystemLogsAdd($userid,'equip',"Unequipped {$weapname} from their {$slot}");
 		}
 		if ($_POST['type'] == "equip_primary")
 		{
@@ -74,6 +79,7 @@ function weapon()
 			$slot_name=$lang['EQUIP_WEAPON_SLOT2'];
 			$slot='Secondary Weapon';
 		}
+        //Equip the weapon.
 		$api->UserTakeItem($userid, $r['itmid'], 1);
 		$db->query("UPDATE `users` SET `{$_POST['type']}` = {$r['itmid']} WHERE `userid` = {$userid}");
 		$api->SystemLogsAdd($userid,'equip',"Equipped {$r['itmname']} as their {$slot}.");
@@ -81,6 +87,7 @@ function weapon()
 	}
 	else
 	{
+        //Allow user to selecct slot.
 		echo "<h3>{$lang['EQUIP_WEAPON_TITLE']}</h3>
 		<hr />
 		{$lang['EQUIP_WEAPON_TEXT_FORM_1']} {$r['itmname']} {$lang['EQUIP_WEAPON_TEXT_FORM_2']}<br />
@@ -108,6 +115,7 @@ function armor()
 					WHERE `iv`.`inv_id` = {$_GET['ID']}
 					AND `iv`.`inv_userid` = $userid
 					LIMIT 1");
+    //Item does not exist.
 	if ($db->num_rows($id) == 0)
 	{
 		$db->free_result($id);
@@ -119,6 +127,7 @@ function armor()
 		$r = $db->fetch_row($id);
 		$db->free_result($id);
 	}
+    //Item cannot be equipped as an armor.
 	if (!$r['armor'])
 	{
 		alert('danger',$lang['EQUIP_NOTARMOR_TITLE'],$lang['EQUIP_NOTARMOR'],true,'inventory.php');
@@ -126,17 +135,21 @@ function armor()
 	}
 	if (isset($_POST['type']))
 	{
+        //If the armor is trying to be equipped to an invalid slot.
 		if ($_POST['type'] !== 'equip_armor')
 		{
 			alert('danger',$lang['EQUIP_NOSLOT_TITLE'],$lang['EQUIP_NOSLOT'],true,'inventory.php');
 			die($h->endpage());
 		}
+        //If user already has armor equipped, remove it from armor slot,
+        //and give to user's inventory.
 		if ($ir['equip_armor'] > 0)
 		{
 			$api->UserGiveItem($userid, $ir['equip_armor'], 1);
 			$armorname=$db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
 			$api->SystemLogsAdd($userid,'equip',"Unequipped {$armorname} as their armor.");
 		}
+        //Equip armor to slot, and log the action.
 		$api->UserTakeItem($userid, $r['itmid'], 1);
 		$db->query(
 				"UPDATE `users`
@@ -148,11 +161,11 @@ function armor()
 	else
 	{
 		echo "<h3>{$lang['EQUIP_ARMOR_TITLE']}</h3><hr />
-	<form action='?slot=armor&ID={$_GET['ID']}' method='post'>
-	{$lang['EQUIP_ARMOR_TEXT_FORM_1']} {$r['itmname']} {$lang['EQUIP_ARMOR_TEXT_FORM_2']}<br />
-	<input type='hidden' name='type' value='equip_armor'  />
-	<input type='submit' class='btn btn-primary' value='Equip Armor' />
-	</form>";
+            <form action='?slot=armor&ID={$_GET['ID']}' method='post'>
+                {$lang['EQUIP_ARMOR_TEXT_FORM_1']} {$r['itmname']} {$lang['EQUIP_ARMOR_TEXT_FORM_2']}<br />
+                <input type='hidden' name='type' value='equip_armor'  />
+                <input type='submit' class='btn btn-primary' value='Equip Armor' />
+            </form>";
 	}
 	$h->endpage();
 }

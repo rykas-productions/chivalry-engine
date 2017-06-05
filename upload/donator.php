@@ -27,8 +27,10 @@ $q=$db->query("SELECT `v`.*, `i`.*
 				INNER JOIN `items` AS `i` 
 				ON `itmid` = `vip_item`
 				ORDER BY `vip_cost` ASC");
+//List the donator packages.
 while ($r=$db->fetch_row($q))
 {
+    //Put the VIP Cost in a currency number. (Ex. $1.54)
 	$r['vip_cost']=sprintf("%0.2f",$r['vip_cost']);
 	echo "
 	<tr>
@@ -39,6 +41,7 @@ while ($r=$db->fetch_row($q))
 		<td>
 		";
 			$uhoh=0;
+            //List the item's effects.
 			for ($enum = 1; $enum <= 3; $enum++)
 			{
 				if ($r["effect{$enum}_on"] == 'true')
@@ -59,6 +62,7 @@ while ($r=$db->fetch_row($q))
 					$statformatted=$stats["{$einfo['stat']}"];
 					echo "{$einfo['dir']} {$statformatted} {$lang['ITEM_INFO_BY']} {$einfo['inc_amount']}{$einfo['inc_type']}.<br />";
 				}
+                //If item has no effects, lets list the description instead.
 				else
 				{
 					$uhoh++;
@@ -68,6 +72,9 @@ while ($r=$db->fetch_row($q))
 					echo "{$r['itmdesc']}";
 				}
 			}
+        //The form handles a lot of the internals for the pack info.
+        //You should only need to change the currency_code.
+        //Procede at your own caution.
 		echo"
 		</td>
 		<td>

@@ -525,7 +525,7 @@ function beat()
 	$ir['attacking'] = 0;
 	$api->UserInfoSetStatic($userid,"attacking",0);
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
-    //If user attempts to win a fight they didn't win.
+    //User attempts to win a fight they didn't win.
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
 		$api->UserInfoSet($userid,"xp",0);
@@ -533,6 +533,7 @@ function beat()
 		alert("danger",$lang['ERROR_SECURITY'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 		die($h->endpage());
 	}
+    //The opponent does not exist.
 	if(!$db->num_rows($od)) 
 	{
 		$api->UserInfoSet($userid,"xp",0);
@@ -544,6 +545,7 @@ function beat()
 	{
 		$r = $db->fetch_row($od);
 		$db->free_result($od);
+        //Opponent's HP is 1, meaning the user has already claimed victory.
 		if ($r['hp'] == 1) 
 		{
 			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['ATTACK_FIGHT_BUGABUSE']}");
@@ -551,26 +553,34 @@ function beat()
 		}
 		$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 		$hospreason = $db->escape("Beat up by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
-		$api->UserInfoSet($r['userid'],"hp",1);
+		//Set opponent's HP to 1. Means fight is over.
+        $api->UserInfoSet($r['userid'],"hp",1);
+        //Place opponent in infirmary.
 		$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
+        //Give opponent notification that they were attacked.
 		$api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> brutally attacked you and caused {$hosptime} minutes worth of damage.");
-		$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and brutally injured them, causing {$hosptime} minutes of infirmary time.");
-		$api->SystemLogsAdd($_GET['ID'],'attacking',"Brutally injured by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}], causing {$hosptime} minutes of infirmary time.");
+		//Log that the user won the fight.
+        $api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and brutally injured them, causing {$hosptime} minutes of infirmary time.");
+		//Log that the opponent lost the fight.
+        $api->SystemLogsAdd($_GET['ID'],'attacking',"Brutally injured by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}], causing {$hosptime} minutes of infirmary time.");
 		$_SESSION['attackwon'] = false;
 		$additionaltext = "";
+        //Both players are in a guild.
 		if ($ir['guild'] > 0 && $r['guild'] > 0)
 		{
-                    $oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
-                    if ($db->num_rows($oppguild) > 0)
-                    {
+            $oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+            if ($db->num_rows($oppguild) > 0)
+            {
 				$warq = $db->query("SELECT `gw_id` FROM `guild_wars`
 				WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
 				OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
-                    if ($db->fetch_single($warq) > 0)
-                    {
+                //Both players' guilds are at war with each other.
+                if ($db->fetch_single($warq) > 0)
+                {
 					$wr=$db->fetch_single($warq);
 					$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
-					if ($whoswho['gw_declarer'] == $ir['guild'])
+					//Give points to user's guild.
+                    if ($whoswho['gw_declarer'] == $ir['guild'])
 					{
 						$db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
 					}
@@ -583,8 +593,10 @@ function beat()
 			}
 			
 		}
+        //Tell player they won and ended the fight, and if they gained a guild war point.
 		alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!!","{$lang['ATTACK_FIGHT_END2']} {$lang['ATTACK_FIGHT_END3']} {$hosptime} {$lang["GEN_MINUTES"]} {$lang['ATTACK_FIGHT_END4']} {$additionaltext}",true,'index.php');
-		if ($r['user_level'] == 'NPC')
+		//Opponent an NPC? Set their HP to 100%, and remove infirmary time.
+        if ($r['user_level'] == 'NPC')
 		{
 			$db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$r['userid']}");
 			$db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
@@ -602,6 +614,7 @@ function lost()
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;
+    //User did not lose fight, or lost fight to someone else.
 	if (!isset($_SESSION['attacklost']) || $_SESSION['attacklost'] != $_GET['ID'])
 	{
 		$api->UserInfoSet($userid,"xp",0);
@@ -609,13 +622,15 @@ function lost()
 		alert("danger",$lang['ERROR_SECURITY'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 		die($h->endpage());
 	}
+    //If the opponent is not specified
 	if(!$_GET['ID']) 
 	{
 		alert('warning',$lang['CSRF_ERROR_TITLE'],$lang['ATT_NC'],true,'index.php');
 		die($h->endpage());
 	}
 	$od = $db->query("SELECT `username`, `level`, `user_level`, `guild`, `xp` FROM `users` WHERE `userid` = {$_GET['ID']}");
-	if(!$db->num_rows($od)) 
+	//The opponent does not exist.
+    if(!$db->num_rows($od)) 
 	{
 		echo "404";
 		die($h->endpage());
@@ -624,6 +639,7 @@ function lost()
 	$db->free_result($od);
 	$qe = $ir['level'] * $ir['level'] * $ir['level'];
 	$expgain = Random($qe / 2, $qe);
+    //User loses XP for losing the fight.
 	if ($expgain < 0)
 	{
 		$expgain=$expgain*-1;
@@ -640,6 +656,7 @@ function lost()
 	$api->UserInfoSetStatic($userid,"attacking",0);
 	$hosptime = Random(75, 175) + floor($ir['level'] / 2);
 	$hospreason = 'Picked a fight and lost';
+    //Place user in infirmary.
 	$api->UserStatusSet($userid,'infirmary',$hosptime,$hospreason);
 	//Give winner some XP
 	$r['xp_needed'] = round(($r['level'] + 2.25) * ($r['level'] + 2.25) * ($r['level'] + 2.25) * 2);
@@ -647,12 +664,17 @@ function lost()
 	$expgain2=Random($qe2 / 2, $qe2);
 	$expgainp2 = $expgain2 / $r['xp_needed'] * 100;
 	$expperc2 = round($expgainp / $r['xp_needed'] * 100);
+    //Tell opponent that they were attacked by user, and emerged victorious.
 	$api->GameAddNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you and lost, which gave you {$expperc2}% Experience.");
-	$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$_GET['ID']}] and lost, gaining {$hosptime} minutes in the infirmary.");
-	$api->SystemLogsAdd($_GET['ID'],'attacking',"Challenged by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and won.");
-	$api->UserInfoSetStatic($_GET['ID'],"xp",$r['xp']+$expgainp2);
+	//Log that the user lost.
+    $api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$_GET['ID']}] and lost, gaining {$hosptime} minutes in the infirmary.");
+	//Log that the opponent won.
+    $api->SystemLogsAdd($_GET['ID'],'attacking',"Challenged by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and won.");
+	//Increase opponent's XP for winning.
+    $api->UserInfoSetStatic($_GET['ID'],"xp",$r['xp']+$expgainp2);
 	$_SESSION['attacklost'] = 0;
 	$additionaltext = "";
+    //Both players in a guild.
 	if ($ir['guild'] > 0 && $r['guild'] > 0)
 	{
 		$oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
@@ -661,11 +683,13 @@ function lost()
 			$warq = $db->query("SELECT `gw_id` FROM `guild_wars`
 			WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
 			OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+            //Both players' guilds are at war.
 			if ($db->fetch_single($warq) > 0)
 			{
 				$wr=$db->fetch_single($warq);
 				$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
-				if ($whoswho['gw_declarer'] == $ir['guild'])
+				//Give opponent's guild a point.
+                if ($whoswho['gw_declarer'] == $ir['guild'])
 				{
 					$db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
 				}
@@ -677,6 +701,7 @@ function lost()
 			}
 		}
 	}
+    //Tell user they lost, and if they gave the other guild a point.
 	alert('danger',"{$lang['ATTACK_FIGHT_END5']} {$r['username']}!","{$lang['ATTACK_FIGHT_END6']} (" . number_format($expgainp, 2) . "%)! {$additionaltext}",true,'index.php');
 }
 function xp()
@@ -687,6 +712,7 @@ function xp()
 	$ir['attacking'] = 0;
 	$api->UserInfoSetStatic($userid,"attacking",0);
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
+    //User did not win the attack, or the attack they won is not against the current opponent.
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
 		$api->UserInfoSet($userid,"xp",0);
@@ -694,6 +720,7 @@ function xp()
 		alert("danger",$lang['ERROR_SECURITY'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 		die($h->endpage());
 	}
+    //Opponent does not exist.
 	if(!$db->num_rows($od)) 
 	{
 		alert('danger',$lang['ERROR_NONUSER'],$lang['ATTACK_START_NONUSER'],true,'index.php');
@@ -703,6 +730,7 @@ function xp()
 	{
 		$r = $db->fetch_row($od);
 		$db->free_result($od);
+        //Opponent was already beat.
 		if ($r['hp'] == 1)
 		{
 			$api->UserInfoSet($userid,"xp",0);
@@ -717,6 +745,8 @@ function xp()
 			$ir['total']=$ir['strength']+$ir['agility']+$ir['guard'];
 			$ot=$db->fetch_row($db->query("SELECT * FROM `userstats` WHERE `userid` = {$r['userid']}"));
 			$ototal=$ot['strength'] + $ot['agility'] + $ot['guard'];
+            //Opponent is not within 75% of user's stats, so user only 
+            //gains 25% of the XP they would normally get.
 			if (($ir['total']*0.75) > $ototal)
 			{
 				$expgain=$expgain*0.25;
@@ -727,15 +757,22 @@ function xp()
 			}
 			$expperc = round($expgain / $ir['xp_needed'] * 100);
 			$hosptime = Random(5, 30) + floor($ir['level'] / 10);
+            //Give user XP.
 			$api->UserInfoSetStatic($userid,"xp",$ir['xp']+$expgain);
 			$hospreason = $db->escape("Used for experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
-			$api->UserInfoSet($r['userid'],"hp",1);
+			//Set opponent's HP to 1.
+            $api->UserInfoSet($r['userid'],"hp",1);
+            //Place opponent in infirmary.
 			$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
+            //Tell opponent they were attacked by the user and lost.
 			$api->GameAddNotification($r['userid'],"<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you and left you for experience.");
-			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and gained {$expperc}% Experience.");
-			$api->SystemLogsAdd($_GET['ID'],'attacking',"Attacked by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and left for experience.");			
-			$_SESSION['attackwon'] = false;
+			//Log that the user won.
+            $api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and gained {$expperc}% Experience.");
+			//Log that the opponent lost.
+            $api->SystemLogsAdd($_GET['ID'],'attacking',"Attacked by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and left for experience.");			
+			$_SESSION['attackwon'] = 0;
 			$additionaltext = "";
+            //Both players are in a guild.
 			if ($ir['guild'] > 0 && $r['guild'] > 0)
 			{
 				$oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
@@ -744,11 +781,13 @@ function xp()
 					$warq = $db->query("SELECT `gw_id` FROM `guild_wars`
 					WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
 					OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+                    //Both players' guilds are at war with each other.
 					if ($db->fetch_single($warq) > 0)
 					{
 						$wr=$db->fetch_single($warq);
 						$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
-						if ($whoswho['gw_declarer'] == $ir['guild'])
+						//Give user's guild a point.
+                        if ($whoswho['gw_declarer'] == $ir['guild'])
 						{
 							$db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
 						}
@@ -761,8 +800,10 @@ function xp()
 				}
 				
 			}
+            //Tell user they won, and if they received a point or not.
 			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END7']} ({$expperc}%, {$expgain}) {$additionaltext}",true,'index.php');
-			if ($r['user_level'] == 'NPC')
+			//Opponent is NPC, so lets refill their HP, and remove infirmary time.
+            if ($r['user_level'] == 'NPC')
 			{
 				$db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
 				$db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
@@ -778,6 +819,7 @@ function mug()
 	$ir['attacking'] = 0;
 	$api->UserInfoSetStatic($userid,"attacking",0);
 	$od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
+    //User did not win fight, or won fight against someone else.
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
 		$api->UserInfoSet($userid,"xp",0);
@@ -785,6 +827,7 @@ function mug()
 		alert("danger",$lang['ERROR_SECURITY'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 		die($h->endpage());
 	}
+    //Opponent does not exist.
 	if(!$db->num_rows($od)) 
 	{
 		alert('danger',$lang['ERROR_NONUSER'],$lang['ATTACK_START_NONUSER'],true,'index.php');
@@ -794,6 +837,7 @@ function mug()
 	{
 		$r = $db->fetch_row($od);
 		$db->free_result($od);
+        //Opponent's HP is 1, meaning fight has already concluded.
 		if ($r['hp'] == 1)
 		{
 			$api->UserInfoSet($userid,"xp",0);
@@ -806,15 +850,22 @@ function mug()
 			$stole = round($r['primary_currency'] / (Random(200, 1000) / 5));
 			$hosptime = rand(20, 40) + floor($ir['level'] / 8);
 			$hospreason = $db->escape("Mugged by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
+            //Set opponent HP to 1.
 			$api->UserInfoSet($r['userid'],"hp",1);
+            //Take opponent's primary currency and give it to user.
 			$api->UserTakeCurrency($r['userid'],'primary',$stole);
 			$api->UserGiveCurrency($userid,'primary',$stole);
+            //Place opponent in infirmary.
 			$api->UserStatusSet($r['userid'],'infirmary',$hosptime,$hospreason);
+            //Tell opponent they were mugged, and for how much, by user.
 			$api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
-			$api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");	
+			//Log that the user won and stole some primary currency, and that
+            //the opponent lost and lost primary currency.
+            $api->SystemLogsAdd($userid,'attacking',"Attacked {$r['username']} [{$r['userid']}] and stole {$stole} Primary Currency.");	
 			$api->SystemLogsAdd($_GET['ID'],'attacking',"Mugged by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}], losing {$stole} Primary Currency.");
 			$_SESSION['attackwon'] = 0;
 			$additionaltext = "";
+            //Both players are in a guild.
 			if ($ir['guild'] > 0 && $r['guild'] > 0)
 			{
 				$oppguild=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
@@ -823,11 +874,13 @@ function mug()
 					$warq = $db->query("SELECT `gw_id` FROM `guild_wars`
 					WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
 					OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+                    //Both players' guilds are at war with each other.
 					if ($db->fetch_single($warq) > 0)
 					{
 						$wr=$db->fetch_single($warq);
 						$whoswho=$db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
-						if ($whoswho['gw_declarer'] == $ir['guild'])
+						//Give user's guild a point.
+                        if ($whoswho['gw_declarer'] == $ir['guild'])
 						{
 							$db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
 						}
@@ -840,29 +893,36 @@ function mug()
 				}
 				
 			}
+            //Tell user they won the fight, and how much currency they took.
 			alert('success',"{$lang['ATTACK_FIGHT_END']} {$r['username']}!","{$lang['ATTACK_FIGHT_END1']} {$lang['ATTACK_FIGHT_END8']} (" . number_format($stole) . "). {$additionaltext}",true,'index.php');
-			if ($r['user_level'] == 'NPC')
+			//Opponent is NPC, so remove infirmary time and refill HP.
+            if ($r['user_level'] == 'NPC')
 			{
 				$db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
 				$db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
 			}
 		}
 		$npcquery=$db->query("SELECT * FROM `botlist` WHERE `botuser` = {$r['userid']}");
+        //Opponent is registered on bot list.
 		if ($db->num_rows($npcquery) > 0)
 		{
 			$results2=$db->fetch_row($npcquery);
 			$timequery=$db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$r['userid']}");
 			$r2=$db->fetch_single($timequery);
+            //Opponent's drop has already been collected and the time hasn't reset.
 			if ((time() <= ($r2 + $results2['botcooldown'])) && ($r2 > 0))
 			{
 				//Nope
 			}
+            //Bot's item can be collected.
 			else
 			{
+                //Give user the bot's item.
 				$api->UserGiveItem($userid,$results2['botitem'],1);
 				$time=time();
 				$exists=$db->query("SELECT `botid` FROM `botlist_hits` WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
-				if ($db->num_rows($exists) == 0)
+				//Place user's hittime into database.
+                if ($db->num_rows($exists) == 0)
 				{
 					$db->query("INSERT INTO `botlist_hits` (`userid`, `botid`, `lasthit`) VALUES ('{$userid}', '{$r['userid']}', '{$time}')");
 				}
@@ -870,6 +930,7 @@ function mug()
 				{
 					$db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
 				}
+                //Tell user they took an item.
 				$api->GameAddNotification($userid,"For successfully mugging " . $api->SystemUserIDtoName($r['userid']) . ", you received 1 " . $api->SystemItemIDtoName($results2['botitem']));
 			}
 		}
