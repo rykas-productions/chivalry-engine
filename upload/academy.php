@@ -34,7 +34,7 @@ case "start":
     start();
     break;
 default:
-    header ("Location: academy.php?action=menu");
+    header ("Location: ?action=menu");
     break;
 }
 
@@ -88,7 +88,7 @@ function menu()
 			{$academy['ac_desc']}
 		</td>
 		<td>
-			{$academy['ac_cost']} {$lang['INDEX_PRIMCURR']}
+			" . number_format($academy['ac_cost']) . " {$lang['INDEX_PRIMCURR']}
 		</td>
 		<td>
 			{$do}
