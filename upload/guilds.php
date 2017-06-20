@@ -160,7 +160,7 @@ function create()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['GUILD_CREATE_BTN']}" . number_format($cg_price) . " {$lang['INDEX_PRIMCURR']}' class='btn btn-primary'>
+						<input type='submit' value='{$lang['GUILD_CREATE_BTN']}" . number_format($cg_price) . " {$lang['INDEX_PRIMCURR']}' class='btn btn-secondary'>
 					</td>
 				</tr>
 				{$csrf}
@@ -354,7 +354,7 @@ function apply()
 			{$lang['GUILD_APP_INFO']}<br />
 			<textarea name='application' class='form-control' required='1' rows='7' cols='40'></textarea><br />
 			{$csrf}
-			<input type='submit' class='btn btn-primary' value='{$lang['GUILD_APP_BTN']}' />
+			<input type='submit' class='btn btn-secondary' value='{$lang['GUILD_APP_BTN']}' />
 		</form>";
 	}
 }

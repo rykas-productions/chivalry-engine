@@ -87,7 +87,7 @@ if (permission('CanSellToGame',$userid) == true)
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-primary' value='{$lang['ITEM_SELL_BTN']}' />
+							<input type='submit' class='btn btn-secondary' value='{$lang['ITEM_SELL_BTN']}' />
 						</td>
 					</tr>
 					<input type='hidden' name='verf' value='{$code}' />

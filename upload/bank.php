@@ -67,7 +67,7 @@ function index()
 							<form action='bank.php?action=deposit' method='post'>
 								<b>{$lang['BANK_AMOUNT']}</b><br />
 								<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' required='1' name='deposit' value='{$ir['primary_currency']}'>
-								<input type='submit' value='{$lang['BANK_DEPOSIT']}' class='btn btn-primary'>
+								<input type='submit' value='{$lang['BANK_DEPOSIT']}' class='btn btn-secondary'>
 							</form>
 						</td>
 						<td>
@@ -75,7 +75,7 @@ function index()
 							<form action='bank.php?action=withdraw' method='post'>
 								<b>{$lang['BANK_AMOUNT']}</b><br />
 								<input type='number' min='1' max='{$ir['bank']}' class='form-control' required='1' name='withdraw' value='{$ir['bank']}'>
-								<input type='submit' value='{$lang['BANK_WITHDRAW']}' class='btn btn-primary'>
+								<input type='submit' value='{$lang['BANK_WITHDRAW']}' class='btn btn-secondary'>
 							</form>
 						</td>
 					</tr>

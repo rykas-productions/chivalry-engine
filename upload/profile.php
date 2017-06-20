@@ -180,26 +180,26 @@ else
 					</p>
 				  </div>
 				  <div id="actions" class="tab-pane">
-				  <?php echo "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#message'>{$lang['PROFILE_BTN_MSG']} {$r['username']} {$lang['PROFILE_BTN_MSG1']}</button>"; ?>
-				  <?php echo "<br /><br /><button type='button' class='btn btn-primary' data-toggle='modal' data-target='#cash'>{$lang['PROFILE_BTN_SND']} {$r['username']} {$lang['INDEX_PRIMCURR']}</button>
+				  <?php echo "<button type='button' class='btn btn-secondary' data-toggle='modal' data-target='#message'>{$lang['PROFILE_BTN_MSG']} {$r['username']} {$lang['PROFILE_BTN_MSG1']}</button>"; ?>
+				  <?php echo "<br /><br /><button type='button' class='btn btn-secondary' data-toggle='modal' data-target='#cash'>{$lang['PROFILE_BTN_SND']} {$r['username']} {$lang['INDEX_PRIMCURR']}</button>
 				  <br /><br /><form action='attack.php'>
 					<input type='hidden' name='user' value='{$r['userid']}'>
 					<input type='submit' class='btn btn-danger' value='{$lang['PROFILE_ATTACK']} {$r['username']}'>
 					</form><br />
 					<form action='hirespy.php'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
-						<input type='submit' class='btn btn-primary' value='{$lang['PROFILE_SPY']} {$r['username']}'>
+						<input type='submit' class='btn btn-secondary' value='{$lang['PROFILE_SPY']} {$r['username']}'>
 					</form>
 					<br />
 					<form action='poke.php'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
-						<input type='submit' class='btn btn-primary' value='{$lang['PROFILE_POKE']} {$r['username']}'>
+						<input type='submit' class='btn btn-secondary' value='{$lang['PROFILE_POKE']} {$r['username']}'>
 					</form>
 					<br />
 					<form action='contacts.php'>
 						<input type='hidden' name='action' value='add'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
-						<input type='submit' class='btn btn-primary' value='{$lang['PROFILE_CONTACT']} {$r['username']} {$lang['PROFILE_CONTACT1']}'>
+						<input type='submit' class='btn btn-secondary' value='{$lang['PROFILE_CONTACT']} {$r['username']} {$lang['PROFILE_CONTACT1']}'>
 					</form>
 				  "; ?>
 					<div class="modal fade" id="message">
@@ -230,7 +230,7 @@ else
 										echo"<input type='hidden' name='verf' value='{$code}' />";
 									?>
 									<button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
-									<input type="submit" value="<?php echo $lang['PROFILE_MSG6']; ?>" id="sendmessage" class="btn btn-primary">
+									<input type="submit" value="<?php echo $lang['PROFILE_MSG6']; ?>" id="sendmessage" class="btn btn-secondary">
 									</form>
 								</div>
 							</div>
@@ -264,7 +264,7 @@ else
 										echo"<input type='hidden' name='verf' value='{$code}' />";
 									?>
 									<button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
-									<input type="submit" value="<?php echo $lang['PROFILE_CASH']; ?>" id="sendcash" class="btn btn-primary">
+									<input type="submit" value="<?php echo $lang['PROFILE_CASH']; ?>" id="sendcash" class="btn btn-secondary">
 									</form>
 								</div>
 							</div>
@@ -356,7 +356,7 @@ else
 							. "</textarea>
 						<br />
 						<input type='hidden' name='ID' value='{$_GET['user']}' />
-						<input type='submit' class='btn btn-primary' value='{$lang['PROFILE_STAFF_BTN']} {$r['username']}' />
+						<input type='submit' class='btn btn-secondary' value='{$lang['PROFILE_STAFF_BTN']} {$r['username']}' />
 					</form>";
 					}
 					?>

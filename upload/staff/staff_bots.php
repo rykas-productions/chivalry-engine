@@ -106,7 +106,7 @@ function addbot()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['STAFF_BOTS_ADD_BTN']}' class='btn btn-primary'>
+						<input type='submit' value='{$lang['STAFF_BOTS_ADD_BTN']}' class='btn btn-secondary'>
 					</td>
 				</tr>
 			</table>
@@ -165,7 +165,7 @@ function delbot()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_BOTS_DEL_BTN']}'>
+					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_BOTS_DEL_BTN']}'>
 				</td>
 			</tr>
 		</table>

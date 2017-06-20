@@ -300,7 +300,7 @@ function donate()
     		<tr>
     			<td colspan='2' align='center'>
     			    {$csrf}
-    				<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_DONATE_BTN']}' />
+    				<input type='submit' class='btn btn-secondary' value='{$lang['VIEWGUILD_DONATE_BTN']}' />
     			</td>
     		</tr>
     	</table>
@@ -345,7 +345,7 @@ function members()
 					<form action='?action=kick' method='post'>
 						<input type='hidden' name='ID' value='{$r['userid']}' />
 						{$csrf}
-						<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_MEMBERS_BTN']} {$r['username']}' />
+						<input type='submit' class='btn btn-secondary' value='{$lang['VIEWGUILD_MEMBERS_BTN']} {$r['username']}' />
 					</form>";
 				}
 				else
@@ -441,12 +441,12 @@ function leave()
         <form action='?action=leave' method='post'>
             {$csrf}
 			<input type='hidden' name='submit' value='yes'>
-        	<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_LEAVE_BTN']}' />
+        	<input type='submit' class='btn btn-secondary' value='{$lang['VIEWGUILD_LEAVE_BTN']}' />
 		</form><br />
 		<form action='?action=leave' method='post'>
 			{$csrf}
 			<input type='hidden' name='submit' value='no'>
-        	<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_LEAVE_BTN1']}' />
+        	<input type='submit' class='btn btn-secondary' value='{$lang['VIEWGUILD_LEAVE_BTN1']}' />
         </form>
 		<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
 	}
@@ -924,7 +924,7 @@ function gym()
 				<td><input type='number' class='form-control' min='1' max='{$ir['energy']}' name='amnt' value='{$ir['energy']}' /></td>
 			</tr>
 			<tr>
-				<td colspan='2'><input type='submit' class='btn btn-primary' value='{$lang['GYM_BTN']}' /></td>
+				<td colspan='2'><input type='submit' class='btn btn-secondary' value='{$lang['GYM_BTN']}' /></td>
 			</tr>
 			{$code}
 			</form>
@@ -1018,7 +1018,7 @@ function staff_vault()
             </tr>
             <tr>
                 <td colspan='2'>
-                    <input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_STAFF_VAULT_BTN']}'>
+                    <input type='submit' class='btn btn-secondary' value='{$lang['VIEWGUILD_STAFF_VAULT_BTN']}'>
                 </td>
             </tr>
             {$csrf}
@@ -1072,7 +1072,7 @@ function staff_coowner()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_STAFF_IDX_COOWNER']}'>
+					<input type='submit' class='btn btn-secondary' value='{$lang['VIEWGUILD_STAFF_IDX_COOWNER']}'>
 				</td>
 			</tr>
 			{$csrf}
@@ -1116,7 +1116,7 @@ function staff_announcement()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['VIEWGUILD_STAFF_AMENT_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='{$lang['VIEWGUILD_STAFF_AMENT_BTN']}' class='btn btn-secondary'>
 				</td>
 			</tr>
 			{$csrf}
@@ -1164,7 +1164,7 @@ function staff_massmail()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['PROFILE_MSG6']}' class='btn btn-primary'>
+					<input type='submit' value='{$lang['PROFILE_MSG6']}' class='btn btn-secondary'>
 				</td>
 			</tr>
 			{$csrf}
@@ -1233,7 +1233,7 @@ function staff_masspayment()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['VIEWGUILD_STAFF_MP_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='{$lang['VIEWGUILD_STAFF_MP_BTN']}' class='btn btn-secondary'>
 				</td>
 			</tr>
 			{$csrf}
@@ -1279,7 +1279,7 @@ function staff_desc()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['VIEWGUILD_STAFF_DESC_BTN']}' class='btn btn-primary'>
+						<input type='submit' value='{$lang['VIEWGUILD_STAFF_DESC_BTN']}' class='btn btn-secondary'>
 					</td>
 				</tr>
 				{$csrf}
@@ -1339,7 +1339,7 @@ function staff_leader()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_STAFF_IDX_LEADER']}'>
+					<input type='submit' class='btn btn-secondary' value='{$lang['VIEWGUILD_STAFF_IDX_LEADER']}'>
 				</td>
 			</tr>
 			{$csrf}
@@ -1396,7 +1396,7 @@ function staff_name()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['VIEWGUILD_STAFF_NAME_BTN']}' class='btn btn-primary'>
+						<input type='submit' value='{$lang['VIEWGUILD_STAFF_NAME_BTN']}' class='btn btn-secondary'>
 					</td>
 				</tr>
 				{$csrf}
@@ -1471,7 +1471,7 @@ function staff_town()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' value='{$lang['VIEWGUILD_STAFF_TOWN_BTN']}' class='btn btn-primary'>
+							<input type='submit' value='{$lang['VIEWGUILD_STAFF_TOWN_BTN']}' class='btn btn-secondary'>
 						</td>
 					</tr>
 					{$csrf}
@@ -1601,7 +1601,7 @@ function staff_declare()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_STAFF_WAR_BTN']}'>
+						<input type='submit' class='btn btn-secondary' value='{$lang['VIEWGUILD_STAFF_WAR_BTN']}'>
 					</td>
 				</tr>
 			{$csrf}
@@ -1695,7 +1695,7 @@ function staff_tax()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_STAFF_TAX_BTN']}'>
+						<input type='submit' class='btn btn-secondary' value='{$lang['VIEWGUILD_STAFF_TAX_BTN']}'>
 					</td>
 				</tr>
 			{$csrf}

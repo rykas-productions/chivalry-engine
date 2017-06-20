@@ -7,10 +7,6 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals_nonauth.php');
-?>
-	<div class="row">
-		<div class="col-lg-12 text-center">
-			<?php
 			echo "<h3>{$set['WebsiteName']} {$lang['GAMERULES_TITLE']}</h3>
 			<hr />
 			{$lang['GAMERULES_TEXT']}<hr />";
@@ -21,8 +17,4 @@ require('globals_nonauth.php');
 				echo "<li>{$r['rule_text']}</li><hr />";
 			}
 			echo"</ol>";
-			echo"</div>
-				</div>
-			</div>
-		</div>";
 $h->endpage();

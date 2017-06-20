@@ -180,7 +180,7 @@ else
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['RUSSIANROULETTE_SEND']}' class='btn btn-primary'>
+						<input type='submit' value='{$lang['RUSSIANROULETTE_SEND']}' class='btn btn-secondary'>
 					</td>
 				</tr>
 			</table>

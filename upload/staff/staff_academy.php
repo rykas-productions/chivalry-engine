@@ -125,7 +125,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_ACADEMY_CREATE']}' class='btn btn-primary'>
+					<input type='submit' value='{$lang['STAFF_ACADEMY_CREATE']}' class='btn btn-secondary'>
 				</td>
 			</tr>
 			</table>
@@ -196,7 +196,7 @@ function delacademy()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-primary' value='{$lang['STAFF_ACADEMY_DELETE_BUTTON']}'>
+							<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_ACADEMY_DELETE_BUTTON']}'>
 						</td>
 					</tr>
 				</table>

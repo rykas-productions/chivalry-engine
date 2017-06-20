@@ -297,9 +297,9 @@ function attacking()
 			$api->UserInfoSet($_GET['user'],'hp',0);
 			echo "<br />
 			<b>{$lang['ATTACK_FIGHT_ATTACKY_WIN1']} {$odata['username']} {$lang['ATTACK_FIGHT_ATTACKY_WIN2']}</b><br />
-			<form action='?action=mug&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='{$lang['ATTACK_FIGHT_OUTCOME1']} {$lang['GEN_THEM']}' /></form>
-			<form action='?action=beat&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='{$lang['ATTACK_FIGHT_OUTCOME2']} {$lang['GEN_THEM']}' /></form>
-			<form action='?action=xp&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='{$lang['ATTACK_FIGHT_OUTCOME3']} {$lang['GEN_THEM']}' /></form>";
+			<form action='?action=mug&ID={$_GET['user']}' method='post'><input class='btn btn-secondary' type='submit' value='{$lang['ATTACK_FIGHT_OUTCOME1']} {$lang['GEN_THEM']}' /></form>
+			<form action='?action=beat&ID={$_GET['user']}' method='post'><input class='btn btn-secondary' type='submit' value='{$lang['ATTACK_FIGHT_OUTCOME2']} {$lang['GEN_THEM']}' /></form>
+			<form action='?action=xp&ID={$_GET['user']}' method='post'><input class='btn btn-secondary' type='submit' value='{$lang['ATTACK_FIGHT_OUTCOME3']} {$lang['GEN_THEM']}' /></form>";
 		}
 		else
 		{
@@ -381,7 +381,7 @@ function attacking()
 				$youdata['hp'] = 0;
 				$_SESSION['attacklost'] = $_GET['user'];
 				$api->UserInfoSet($userid,"hp",0);
-				echo "<form action='?action=lost&ID={$_GET['user']}' method='post'><input type='submit' class='btn btn-primary' value='{$lang['GEN_CONTINUE']}' />";
+				echo "<form action='?action=lost&ID={$_GET['user']}' method='post'><input type='submit' class='btn btn-secondary' value='{$lang['GEN_CONTINUE']}' />";
 			}
 		}
 	}

@@ -26,7 +26,7 @@ default:
 }
 function home()
 {
-	global $db,$lang,$h,$api,$userid;
+	global $db,$lang,$h;
 	$CurrentTime=time();
 	$PlayerCount=$db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime}"));
 	echo "<h3>{$lang['DUNGINFIRM_TITLE']}</h3><hr />

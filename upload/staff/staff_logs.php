@@ -330,7 +330,7 @@ function userlogs()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_LOGS_USERS_FORM_BTN']}' />
+					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_LOGS_USERS_FORM_BTN']}' />
 				</th>
 			</tr>
 		</form>
@@ -351,7 +351,7 @@ function userlogs()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_LOGS_USERS_FORM_BTN']}' />
+					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_LOGS_USERS_FORM_BTN']}' />
 				</th>
 			</tr>
 		</form>

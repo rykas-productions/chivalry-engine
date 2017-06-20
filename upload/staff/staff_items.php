@@ -169,7 +169,7 @@ function create()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_CITEM_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='{$lang['STAFF_CITEM_BTN']}' class='btn btn-secondary'>
 				</td>
 			</tr>
 		</table>
@@ -288,7 +288,7 @@ function createitmgroup()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_CITG_BTN']}' />
+					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_CITG_BTN']}' />
 				</td>
 			</tr>
         	{$csrf}
@@ -347,7 +347,7 @@ function deleteitem()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='Delete Item'>
+						<input type='submit' class='btn btn-secondary' value='Delete Item'>
 					</td>
 				</tr>
 			</table>
@@ -423,7 +423,7 @@ function giveitem()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_ITEM_GIVE_FORM_BTN']}' />
+						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_ITEM_GIVE_FORM_BTN']}' />
 					</td>
 				</tr>
 				{$csrf}
@@ -662,7 +662,7 @@ function edititem()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_EITEM_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='{$lang['STAFF_EITEM_BTN']}' class='btn btn-secondary'>
 				</td>
 			</tr>
 		</table>
@@ -776,7 +776,7 @@ function edititem()
 				<td colspan='2'>
 					{$csrf}
 					<input type='hidden' name='step' value='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_EITEM_P1_BTN']}' />
+					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_EITEM_P1_BTN']}' />
 				</th>
 			</tr>
 		</form>

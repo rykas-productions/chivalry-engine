@@ -189,7 +189,7 @@ function add()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['SMARKET_BTN']}'>
+						<input type='submit' class='btn btn-secondary' value='{$lang['SMARKET_BTN']}'>
 					</td>
 				</tr>
 			</table>

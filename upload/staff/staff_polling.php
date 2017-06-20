@@ -176,7 +176,7 @@ function add()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_POLL_START_BUTTON']}'>
+					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_POLL_START_BUTTON']}'>
 				</td>
 			</tr>
 		</table>
@@ -208,7 +208,7 @@ function close()
         }
         $db->free_result($q);
         echo "</select>" . $csrf . "
-			<br /><input type='submit' class='btn btn-primary' value='{$lang['STAFF_POLL_END_BTN']}' />
+			<br /><input type='submit' class='btn btn-secondary' value='{$lang['STAFF_POLL_END_BTN']}' />
 		</form>
    		";
 		$h->endpage();

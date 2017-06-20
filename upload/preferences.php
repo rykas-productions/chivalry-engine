@@ -100,7 +100,7 @@ function name_change()
 			<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' value='{$ir['username']}' name='newname' />
 			<br />
 			{$csrf}
-			<input type='submit' class='btn btn-primary' value='{$lang['UNC_BUTTON']}' />
+			<input type='submit' class='btn btn-secondary' value='{$lang['UNC_BUTTON']}' />
 			</div>
 		</form>";
 	}
@@ -180,7 +180,7 @@ function time_change()
 			<option value='Pacific/Wake'>(GMT-12:00) International Date Line West</option>
 		</select>
 		<br />
-		<input type='submit' class='btn btn-primary' value='{$lang['TZ_BTN']}'>";
+		<input type='submit' class='btn btn-secondary' value='{$lang['TZ_BTN']}'>";
 	}
 	else
 	{
@@ -217,7 +217,7 @@ function lang_change()
 			<option value='ger'>Deutsche</option>
 			<option value='fr'>Français</option>
 			<option value='danish'>Dansk</option>
-		<input type='submit' class='btn btn-primary' value='{$lang['LANG_BUTTON']}'>
+		<input type='submit' class='btn btn-secondary' value='{$lang['LANG_BUTTON']}'>
 		</form>";
 	}
 	else
@@ -270,7 +270,7 @@ function pw_change()
 	</tr>
 	<tr>
 		<td colspan='2'>
-			<input type='submit' class='btn btn-primary' value='{$lang['PW_BUTTON']}' />
+			<input type='submit' class='btn btn-secondary' value='{$lang['PW_BUTTON']}' />
 		</td>
 	</tr>
     	{$csrf}
@@ -321,7 +321,7 @@ function pic_change()
 			<input type='url' required='1' name='newpic' class='form-control' value='{$ir['display_pic']}' />
 				{$csrf}
 			<br />
-			<input type='submit' class='btn btn-primary' value='{$lang['PIC_BTN']}' />
+			<input type='submit' class='btn btn-secondary' value='{$lang['PIC_BTN']}' />
 		</form>
 		";
 	}
@@ -397,7 +397,7 @@ function themechange()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['PREF_CTHM_FORMBTN']}'>
+						<input type='submit' class='btn btn-secondary' value='{$lang['PREF_CTHM_FORMBTN']}'>
 					</td>
 				</tr>
 			</table>
@@ -444,7 +444,7 @@ function sigchange()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['SIG_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='{$lang['SIG_BTN']}' class='btn btn-secondary'>
 				</td>
 			</tr>
 			{$csrf}
@@ -503,7 +503,7 @@ function sexchange()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' value='{$lang['SEX_BTN']}' class='btn btn-primary'>
+				<input type='submit' value='{$lang['SEX_BTN']}' class='btn btn-secondary'>
 			</td>
 		</tr>
 		{$csrf}
