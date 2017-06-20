@@ -7,20 +7,25 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+//If file is loaded directly.
 if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false)
 {
     exit;
 }
+//Set session name, then start session.
 session_name('CENGINE');
 session_start();
 $time = time();
 header('X-Frame-Options: SAMEORIGIN');
+//User's language is set.
 if(isset($_POST['lang']))
 {
 	$lang = $_POST['lang'];
 	$_SESSION['lang'] = $lang;
+    //Language stored in cookie for 30 days.
 	setcookie('lang', $lang, $time + (3600 * 24 * 30));
 }
+//Grab user's set language.
 else if(isset($_SESSION['lang']))
 {
 	$lang = $_SESSION['lang'];
@@ -29,10 +34,12 @@ else if(isset($_COOKIE['lang']))
 {
 	$lang = $_COOKIE['lang'];
 }
+//If user's language is undefined, set to english.
 else
 {
 	$lang = 'en';
 }
+//Select user's language files.
 switch ($lang) 
 {
 	case 'en':
@@ -54,38 +61,47 @@ switch ($lang)
 		$lang_file = 'en_us.php';
  
 }
+//Include user's language files.
 include_once 'lang/'.$lang_file;
+//If session has not started, regenerate session ID, then start it.
 if (!isset($_SESSION['started']))
 {
     session_regenerate_id();
     $_SESSION['started'] = true;
 }
+//Set user's theme to cookies for 30 days.
 if (!isset($_COOKIE['theme']))
 {
 	setcookie('theme','1',time()+86400);
 }
 ob_start();
+//Require the error handler and developer helper files.
 require "lib/basic_error_handler.php";
 require "lib/dev_help.php";
 set_error_handler('error_php');
+//Require main functions file.
 require "global_func.php";
 $domain = determine_game_urlbase();
+//If user is not logged in, redirect to login page.
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0)
 {
     $login_url = "login.php";
     header("Location: {$login_url}");
     exit;
 }
+//If user was last active over 15 minutes ago, redirect to login to keep account safe.
 if(isset($_SESSION['last_active']) && ($time - $_SESSION['last_active'] > 1800))
 {
 	header("Location: logout.php");
 	exit;
 }
+//Update last active time.
 $_SESSION['last_active'] = $time;
 $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
 require "header.php";
 include "config.php";
 define("MONO_ON", 1);
+//Require the database wrapper and connect to database.
 require "class/class_db_{$_CONFIG['driver']}.php";
 $db = new database;
 $db->configure($_CONFIG['hostname'], $_CONFIG['username'], $_CONFIG['password'], $_CONFIG['database'], $_CONFIG['persistent']);
@@ -93,6 +109,7 @@ $db->connect();
 $c = $db->connection_id;
 $set = array();
 $settq = $db->query("SELECT * FROM `settings`");
+//Settings get resolved to be used easily elsewhere.
 while ($r = $db->fetch_row($settq))
 {
     $set[$r['setting_name']] = $r['setting_value'];
@@ -153,11 +170,14 @@ else
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
 }
+//Put user's data into friendly variable.
 $ir = $db->fetch_row($is);
+//Put user's current theme to cookie.
 if (!isset($_COOKIE['theme']))
 {
 	setcookie('theme',$ir['theme'],time()+86400);
 }
+//If user's account is forced to log out, close session.
 if ($ir['force_logout'] != 'false')
 {
     $db->query("UPDATE `users` SET `force_logout` = 'false' WHERE `userid` = {$userid}");
@@ -167,6 +187,7 @@ if ($ir['force_logout'] != 'false')
     header("Location: {$login_url}");
     exit;
 }
+//If the user's account has been logged in elsewhere, terminate current session.
 if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SESSION['last_login']))
 {
 	session_unset();
@@ -175,13 +196,16 @@ if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SE
     header("Location: {$login_url}");
     exit;
 }
+//Basic chceks around the game.
 check_level();
 check_data();
 getOS($_SERVER['HTTP_USER_AGENT']);
 getBrowser($_SERVER['HTTP_USER_AGENT']);
 $h = new headers;
+//Include API file.
 include("class/class_api.php");
 $api = new api;
+//If requested file doesn't want the header hidden.
 if (isset($nohdr) == false || !$nohdr)
 {
     $h->startheaders();
@@ -199,11 +223,13 @@ if (isset($nohdr) == false || !$nohdr)
     }
     global $menuhide;
 }
+//Run the crons if possible.
 foreach (glob("crons/*.php") as $filename) 
 { 
     include $filename; 
 }
 $get = $db->query("SELECT `sip_recipe` FROM `smelt_inprogress` WHERE `sip_user` = {$userid} AND `sip_time` < {$time}");
+//Select completed smelting recipes and give to the user.
 if($db->num_rows($get)) 
 {
     $r = $db->fetch_single($get);

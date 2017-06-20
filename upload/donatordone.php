@@ -7,16 +7,19 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
+//Action isn't specified.
 if (!isset($_GET['action']))
 {
     ob_get_clean();
     header('HTTP/1.1 400 Bad Request');
     exit;
 }
+//User cancels the donation.
 if ($_GET['action'] == "cancel")
 {
     alert("success",$lang['ERROR_SUCCESS'],$lang['VIP_CANCEL']);
 }
+//User's donation is complete. Waiting on the IPN to kick in.
 else if ($_GET['action'] == "done")
 {
     if (!$_POST['txn_id'])

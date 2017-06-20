@@ -11,6 +11,7 @@ $bank_cost = $set['bank_cost'];
 $bank_maxfee = $set['bank_maxfee'];
 $bank_feepercent = $set['bank_feepercent'];
 echo "<h3>Bank</h3>";
+//User has purchased a bank account.
 if ($ir['bank'] > -1)
 {
     if (!isset($_GET['action']))
@@ -30,10 +31,12 @@ if ($ir['bank'] > -1)
         break;
     }
 }
+//User needs to purchase bank account.
 else
 {
     if (isset($_GET['buy']))
     {
+        //Player has the primary currency required to buy an account.
         if ($ir['primary_currency'] >= $bank_cost)
         {
             
@@ -41,6 +44,7 @@ else
 			$api->UserTakeCurrency($userid,'primary',$bank_cost);
 			$api->UserInfoSet($userid,"bank",0);
         }
+        //Player is too poor to afford account.
         else
         {
             alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_FAIL']} " . number_format($bank_cost),true,'bank.php');
@@ -85,6 +89,7 @@ function deposit()
 {
     global $db,$ir,$userid,$lang,$bank_maxfee,$bank_feepercent,$api;
     $_POST['deposit'] = abs($_POST['deposit']);
+    //User is trying to deposit more than they have.
     if ($_POST['deposit'] > $ir['primary_currency'])
     {
         alert('danger',$lang['ERROR_GENERIC'],$lang['BANK_D_ERROR'],true,'bank.php');
@@ -96,18 +101,22 @@ function deposit()
         {
             $fee = $bank_maxfee;
         }
+        //$gain is amount put into account after the fee is taken.
         $gain = $_POST['deposit'] - $fee;
         $ir['bank'] += $gain;
+        //Update user's bank and primary currency info.
 		$api->UserTakeCurrency($userid,'primary',$_POST['deposit']);
 		$api->UserInfoSetStatic($userid,"bank",$ir['bank']);
 		alert('success',$lang['ERROR_SUCCESS'],"{$lang['BANK_D_SUCCESS']} " . number_format($_POST['deposit']) . "{$lang['BANK_D_SUCCESS1']}" . number_format($fee) . "{$lang['BANK_D_SUCCESS2']} " . number_format($gain) . "{$lang['BANK_D_SUCCESS3']} " . number_format($ir['bank']) . "{$lang['BANK_D_SUCCESS4']}",true,'bank.php');
-		$api->SystemLogsAdd($userid,'bank',"Deposited " . number_format($_POST['deposit']) . " Primary Currency.");
+		//Log bank transaction.
+        $api->SystemLogsAdd($userid,'bank',"Deposited " . number_format($_POST['deposit']) . " Primary Currency.");
 	}
 }
 function withdraw()
 {
 	global $db, $ir, $lang, $userid, $h, $api;
 	$_POST['withdraw'] = abs($_POST['withdraw']);
+    //User is trying to withdraw more than they have stored.
 	if ($_POST['withdraw'] > $ir['bank'])
     {
 		alert('danger',$lang['ERROR_GENERIC'],$lang['BANK_W_FAIL'],true,'bank.php');
@@ -116,10 +125,12 @@ function withdraw()
 	{
 		$gain = $_POST['withdraw'];
 		$ir['bank'] -= $gain;
+        //Update user's info.
 		$api->UserGiveCurrency($userid,'primary',$_POST['withdraw']);
 		$api->UserInfoSetStatic($userid,"bank",$ir['bank']);
 		alert('success',$lang['ERROR_SUCCESS'],"{$lang['BANK_W_SUCCESS']} " . number_format($_POST['withdraw']) . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS1']} " . $ir['bank'] . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS2']}",true,'bank.php');
-		$api->SystemLogsAdd($userid,'bank',"Withdrew " . number_format($_POST['withdraw']) . " Primary Currency.");
+		//Log transaction.
+        $api->SystemLogsAdd($userid,'bank',"Withdrew " . number_format($_POST['withdraw']) . " Primary Currency.");
 	}
 }
 $h->endpage();

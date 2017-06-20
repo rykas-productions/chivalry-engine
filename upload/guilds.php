@@ -52,6 +52,7 @@ function menu()
 			FROM `guild` AS `g`
 			LEFT JOIN `users` AS `u` ON `g`.`guild_owner` = `u`.`userid`
 			ORDER BY `g`.`guild_id` ASC");
+    //List all the in-game guilds.
 	while ($gd = $db->fetch_row($gq))
 	{
 		echo "
@@ -87,16 +88,19 @@ function create()
 	 echo "<h3>{$lang['GUILD_CREATE']}</h3><hr />";
 	$cg_price = $set['GUILD_PRICE'];
 	$cg_level = $set['GUILD_LEVEL'];
+    //User does not have the minimum required primary currency.
 	if (!($api->UserHasCurrency($userid,'primary',$cg_price)))
 	{
 		alert("danger",$lang['ERROR_GENERIC'],"{$lang['GUILD_CREATE_ERROR']} " . number_format($cg_price) . ".",true,'index.php');
 		die($h->endpage());
 	}
+    //User level is too low to create a guild.
 	elseif (($api->UserInfoGet($userid,'level',false)) < $cg_level)
 	{
 		alert("danger",$lang['ERROR_GENERIC'],"{$lang['GUILD_CREATE_ERROR1']} " . number_format($cg_level) . ".",true,'index.php');
 		die($h->endpage());
 	}
+    //User is already in a guild.
 	elseif ($ir['guild'])
 	{
 		alert("danger",$lang['ERROR_GENERIC'],$lang['GUILD_CREATE_ERROR2'],true,'back');
@@ -106,6 +110,7 @@ function create()
 	{
 		if (isset($_POST['name']))
 		{
+            //User fails the CSRF verification.
 			if (!isset($_POST['verf']) || !verify_csrf_code('createguild', stripslashes($_POST['verf'])))
 			{
 				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
@@ -113,6 +118,7 @@ function create()
 			}
 			$name = $db->escape(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1'));
 			$desc = $db->escape(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1'));
+            //Guild name is already in use.
 			if ($db->num_rows($db->query("SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}'")) > 0)
 			{
 				alert("danger",$lang['ERROR_GENERIC'],$lang['GUILD_CREATE_ERROR3'],true,'back');
@@ -125,14 +131,18 @@ function create()
 						VALUES ('{$ir['location']}', '{$userid}', '{$userid}', '0', '0', 'false', '5', 
 						'{$name}', '{$desc}', '1', '0')");
 			$i = $db->insert_id();
+            //Take user's primary currency, and have player join the guild.
 			$api->UserTakeCurrency($userid,'primary',$cg_price);
 			$db->query("UPDATE `users` SET `guild` = {$i} WHERE `userid` = {$userid}");
+            //Tell user they've created a guild.
 			alert('success',$lang['ERROR_SUCCESS'],$lang['GUILD_CREATE_SUCCESS'],true,"viewguild.php");
+            //Log the purchase, and that they've joined a guild.
 			$api->SystemLogsAdd($userid,'guilds',"Purchased a guild.");
 			$api->SystemLogsAdd($userid,'guilds',"Joined Guild ID {$i}");
 		}
 		else
 		{
+            //Request the CSRF form.
 			$csrf=request_csrf_html('createguild');
 			echo"<form action='?action=create' method='post'>";
 			echo "
@@ -173,6 +183,7 @@ function view()
 {
 	global $db,$lang,$h,$userid,$api;
 	$_GET['id'] = abs($_GET['id']);
+    //Guild ID has not been entered, so redirect them to main guild listing.
 	if (empty($_GET['id']))
 	{
 		header("Location: guilds.php");
@@ -180,11 +191,13 @@ function view()
 	else
 	{
 		$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+        //Guild does not exist.
 		if ($db->num_rows($gq) == 0)
 		{
 			alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 			die($h->endpage());
 		}
+        //List all the guild's information.
 		$gd = $db->fetch_row($gq);
 		echo "<h3>{$gd['guild_name']} {$lang['GUILD_VIEW_GUILD']}</h3>";
 		echo "
@@ -226,6 +239,7 @@ function view()
 					{$lang['GUILD_VIEW_MEMBERS']}
 				</th>
 				<td>";
+                //Count players in this guild.
 					$cnt = number_format($db->fetch_single
 										($db->query("SELECT COUNT(`userid`) 
 										FROM `users` 
@@ -256,12 +270,14 @@ function memberlist()
 {
 	global $db,$userid,$ir,$api,$h,$lang;
 	$_GET['id'] = abs($_GET['id']);
+    //Guild is not specified.
 	if (empty($_GET['id']))
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+    //Guild does not exist.
 	if ($db->num_rows($gq) == 0)
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
@@ -282,6 +298,7 @@ function memberlist()
                      FROM `users`
                      WHERE `guild` = {$gd['guild_id']}
                      ORDER BY `level` DESC");
+    //List players in the guild.
 	while ($r = $db->fetch_row($q))
     {
         echo "<tr>
@@ -299,18 +316,21 @@ function apply()
 {
 	global $db,$userid,$ir,$api,$h,$lang;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
+    //Guild is not specified.
 	if (empty($_GET['id']))
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+    //Guild does not exist.
 	if ($db->num_rows($gq) == 0)
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gd = $db->fetch_row($gq);
+    //User is already in a guild, and cannot join another.
 	if ($ir['guild'] > 0)
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_APP_ERROR'],true,"guilds.php?action=view&id={$_GET['id']}");
@@ -319,17 +339,20 @@ function apply()
 	echo "<h3>{$lang['GUILD_APP_TITLE']} {$gd['guild_name']} {$lang['GUILD_VIEW_LIST2']}</h3><hr />";
 	if (isset($_POST['application']))
 	{
+        //User fails CSRF verification
 		if (!isset($_POST['verf']) || !verify_csrf_code('guild_apply', stripslashes($_POST['verf'])))
 		{
 			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"],true,'back');
 			die($h->endpage());
 		}
 		$cnt=$db->query("SELECT * FROM `guild_applications` WHERE `ga_user` = {$userid} && `ga_guild` = {$_GET['id']}");
-		if ($db->num_rows($cnt) > 0)
+		//User has already submitted an application to this guild.
+        if ($db->num_rows($cnt) > 0)
 		{
 			alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_APP_ERROR1'],true,'back');
 			die($h->endpage());
 		}
+        //Tell the guild's owner and co-owner that the user has sent an application.
 		if ($gd['guild_owner'] == $gd['guild_coowner'])
 		{
 			$api->GameAddNotification($gd['guild_owner'],"{$ir['username']} has filled and submitted an application to join your guild.");
@@ -341,13 +364,18 @@ function apply()
 		}
 		$time=time();
 		$application = (isset($_POST['application']) && is_string($_POST['application'])) ? $db->escape(htmlentities(stripslashes($_POST['application']), ENT_QUOTES, 'ISO-8859-1')) : '';
-		$db->query("INSERT INTO `guild_applications` VALUES (NULL, {$userid}, {$_GET['id']}, {$time}, '{$application}')");
-		$gev = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> sent an application to join this guild.");
+		//Insert the application, notify the guild and tell the user they were successful.
+        $db->query("INSERT INTO `guild_applications` VALUES 
+                    (NULL, {$userid}, {$_GET['id']}, 
+                    {$time}, '{$application}')");
+		$gev = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
+                                sent an application to join this guild.");
 		$db->query("INSERT INTO `guild_notifications` VALUES (NULL, {$_GET['id']}, " . time() . ", '{$gev}')");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['GUILD_APP_SUCC'],true,"guilds.php?action=view&id={$_GET['id']}");
 	}
 	else
 	{
+        //Request CSRF form.
 		$csrf = request_csrf_html('guild_apply');
 		echo "
 		<form action='?action=apply&id={$_GET['id']}' method='post'>
@@ -363,10 +391,15 @@ function wars()
 	global $db,$userid,$ir,$api,$h,$lang;
 	$time = time();
 	echo "<h3>{$lang['GUILD_WAR_TITLE']}</h3><hr />";
-	$q=$db->query("SELECT * FROM `guild_wars` WHERE `gw_winner` = 0 AND `gw_end` > {$time} ORDER BY `gw_id` DESC");
+	$q=$db->query("SELECT * FROM `guild_wars` 
+                    WHERE `gw_winner` = 0 AND 
+                    `gw_end` > {$time} 
+                    ORDER BY `gw_id` DESC");
+    //There is at least one active guild war.
 	if ($db->num_rows($q) > 0)
 	{
 		echo "<table class='table table-bordered'>";
+        //List the active guild wars.
 		while ($r = $db->fetch_row($q))
 		{
 			echo "<tr>
@@ -385,6 +418,7 @@ function wars()
 		}
 		echo "</table>";
 	}
+    //No guild wars.
 	else
 	{
 		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_WAR_ERR'],false);

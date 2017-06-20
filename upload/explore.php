@@ -7,8 +7,10 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+//Anti-refresh RNG.
 $tresder = (Random(100, 999));
 $time=time();
+//Select users in infirmary and dungeon to list later on the page.
 $dung_count=$db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$time}"));
 $infirm_count=$db->fetch_single($db->query("SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$time}"));
 if (empty($dung_count))
@@ -19,11 +21,13 @@ if (empty($infirm_count))
 {
 	$infirm_count=0;
 }
+//Block access if user is in the infirmary.
 if ($api->UserStatus($ir['userid'],'infirmary') == true)
 {
 	alert('danger',$lang["GEN_INFIRM"],$lang['ERRDE_EXPLORE'],false);
 	die($h->endpage());
 }
+//Block access if user is in the dungeon.
 if ($api->UserStatus($ir['userid'],'dungeon') == true)
 {
 	alert('danger',$lang["GEN_DUNG"],$lang['ERRDE_EXPLORE2']);
@@ -102,6 +106,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 		<div id='GUILDS' class='tab-pane'>
 			<div class='card card-default'>
 				<div class='card-block'>";
+                    //User is in a guild.
 					if ($ir['guild'] > 0)
 					{
 						echo "<a href='viewguild.php'>{$lang['EXPLORE_YOURGUILD']}</a><br />";
@@ -152,6 +157,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 			WHERE `u`.`user_level` != 'Admin' AND `u`.`user_level` != 'NPC'
 			ORDER BY (`strength` + `agility` + `guard` + `labor` + `IQ`) 
 			DESC, `u`.`userid` ASC LIMIT 10");
+            //Shop the top 10 strongest players in the game.
 			while ($pdata=$db->fetch_row($RankPlayerQuery))
 			{
 				$Rank=$Rank+1;
@@ -162,6 +168,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 	</div>
 </div>
 </div>";
+//referral link.
 echo "	<div class='row'>
 			<div class='col-md-12'>
 				{$lang['EXPLORE_REF']}<br />

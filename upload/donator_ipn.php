@@ -53,6 +53,7 @@ if ($verified)
 		$api->SystemLogsAdd($buyer,'donate',"Attempted to donate, but sent their cash to {$receiver_email}.");
 		exit;
 	}
+    //If you are using a different currency, update it here!
 	if ($payment_currency != "USD")
 	{
 		$api->SystemLogsAdd($buyer,'donate',"Attempted to donate, but sent their cash in {$payment_currency}, not USD.");

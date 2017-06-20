@@ -12,6 +12,7 @@ echo "<h3>{$set['WebsiteName']} {$lang['GAMERULES_TITLE']}</h3>
 {$lang['GAMERULES_TEXT']}<hr />";
 $q=$db->query("SELECT * FROM `gamerules` ORDER BY `rule_id` ASC");
 echo "<ol>";
+//List game rules.
 while ($r = $db->fetch_row($q))
 {
 	echo "<li>{$r['rule_text']}</li><hr />";

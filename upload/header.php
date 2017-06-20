@@ -11,6 +11,7 @@ class headers
     function startheaders()
     {
 		global $ir,$set,$h,$lang,$db,$menuhide,$userid,$macropage,$api,$time;
+        //Load the meta headers.
 		?>
 		<!DOCTYPE html>
 		<html lang="en">
@@ -28,10 +29,13 @@ class headers
 			<?php echo "<title>{$set['WebsiteName']}</title>"; ?>
 		</head>
 		<?php
+        //If the called script wants the menu hidden.
 		if (empty($menuhide))
 		{
+            //Select count of user's unread messages.
 			$ir['mail']=$db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
-			$ir['notifications']=$db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
+			//Select count of user's unread notifications.
+            $ir['notifications']=$db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
 			?>
 			<body>
 				<!-- Navigation -->
@@ -60,6 +64,7 @@ class headers
 								<li class="nav-item dropdown">
 									<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<?php
+                                    //User has a display picture, lets show it!
 									if ($ir['display_pic'])
 									{
 										echo"<img src='{$ir['display_pic']}' width='24' height='24'>";
@@ -70,6 +75,7 @@ class headers
 										<a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i class="fa fa-fw fa-user"></i> <?php echo $lang['MENU_PROFILE']; ?></a>
 										<a class="dropdown-item" href="preferences.php?action=menu"><i class="fa fa-fw fa-gear"></i><?php echo $lang['MENU_SETTINGS']; ?></a>
 										<?php
+                                            //User is a staff member, so lets show the panel's link.
 											if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant')))
 											{
 												?>
@@ -93,11 +99,15 @@ class headers
 				<div class="row">
 					<div class="col-sm-12 text-center">
 				<noscript>
-					<?php alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false); ?>
+					<?php 
+                        //User doesn't have javascript turned on, so lets tell them.
+                        alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false);
+                    ?>
 				</noscript>
 				<?php
 				$IP=$db->escape($_SERVER['REMOTE_ADDR']);
 				$ipq=$db->query("SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
+                //User's IP is banned, so lets stop access.
 				if ($db->num_rows($ipq) > 0)
 				{
 					alert('danger',$lang['ERROR_GENERIC'],$lang['HDR_IPREKT'],false);
@@ -105,49 +115,62 @@ class headers
 				}
 				$fed=$db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
 				alert('info',$lang['ERROR_INFO'],"{$lang['MENU_DONATE']} {$set['WebsiteName']}{$lang['MENU_DONATE2']}",false);
-				if ($fed['fed_out'] < $time)
+				//User's federal jail sentence is completed. Let them play again.
+                if ($fed['fed_out'] < $time)
 				{
 					$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
 					$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
 				}
+                //User is in federal jail. Stop their access.
 				if ($ir['fedjail'] > 0)
 				{
 					alert('info',$lang['MENU_FEDJAIL'],"{$lang['MENU_FEDJAIL1']} " . TimeUntil_Parse($fed['fed_out']) . " {$lang['MENU_FEDJAIL2']} <b>{$fed['fed_reason']}</b>",false);
 					die($h->endpage());
 				}
+                //Tell user when they have unread messages, when they do.
 				if ($ir['mail'] > 0)
 				{
 					alert('info',$lang['MENU_UNREADMAIL1'],"{$lang['MENU_UNREADMAIL2']} {$ir['mail']} {$lang['MENU_UNREADMAIL3']} <a href='inbox.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}",false);
 				}
+                //Tell user they have unread notifcations when they do.
 				if ($ir['notifications'] > 0)
 				{
 					alert('info',$lang['MENU_UNREADNOTIF'],"{$lang['MENU_UNREADMAIL2']} {$ir['notifications']} {$lang['MENU_UNREADNOTIF1']} <a href='notifications.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}",false);
 				}
+                //Tell user they have unread game announcements when they do.
 				if ($ir['announcements'] > 0)
 				{
 					alert('info',$lang['MENU_UNREADANNONCE'],"{$lang['MENU_UNREADANNONCE1']} {$ir['announcements']} {$lang['MENU_UNREADANNONCE2']} <a href='announcements.php'>{$lang["GEN_HERE"]}</a>.",false);
 				}
-				if ($api->UserStatus($ir['userid'],'infirmary') == true)
+                //User is in the infirmary, tell them for how long.
+				if ($api->UserStatus($ir['userid'],'infirmary'))
 				{
 					$InfirmaryOut=$db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
 					$InfirmaryRemain=TimeUntil_Parse($InfirmaryOut);
 					alert('info',$lang['GEN_INFIRM'],"{$lang['MENU_INFIRMARY1']} {$InfirmaryRemain}.",false);
 				}
-				if ($api->UserStatus($ir['userid'],'dungeon') == true)
+                //User is in the dungeon, tell them how long.
+				if ($api->UserStatus($ir['userid'],'dungeon'))
 				{
 					$DungeonOut=$db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
 					$DungeonRemain=TimeUntil_Parse($DungeonOut);
 					alert('info',$lang["GEN_DUNG"],"{$lang['MENU_DUNGEON1']} {$DungeonRemain}.",false);
 				}
+                //User needs to reverify with reCaptcha
 				if (($ir['last_verified'] < ($time-$set['Revalidate_Time'])) || ($ir['need_verify'] == 1))
 				{
+                    //ReCaptcha public or private key(s) are unspecifed in the game settings.
 					if (empty($set['reCaptcha_public']) || empty($set['reCaptcha_private']))
 					{
-						?> <script>alert('Please add the reCaptcha private and public keys.');</script> <?php
+						?> 
+                        <script>alert('Please add the reCaptcha private and public keys.');</script> 
+                     <?php
 						die($h->endpage());
 					}
+                    //Script calls for reCaptcha to be loaded.
 					if (isset($macropage))
 					{
+                        //Set User to need verified.
 						$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
 						echo "{$lang['RECAPTCHA_INFO']}"; ?>
 						<form action='macro.php' method='post'>
@@ -161,6 +184,7 @@ class headers
 						die($h->endpage());
 					}
 				}
+        //Set user's timezone.
 		date_default_timezone_set($ir['timezone']);  
 	}
 }
@@ -168,16 +192,23 @@ class headers
     {
 		global $db, $c, $userid, $set, $lang, $api;
 		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
-		$db->query("UPDATE `users` SET `laston` = {$_SERVER['REQUEST_TIME']}, `lastip` = '{$IP}'  WHERE `userid` = {$userid}");
-		if (!$ir['email'])
+        //Update the user as they browse the game.
+		$db->query("UPDATE `users` 
+                    SET `laston` = {$_SERVER['REQUEST_TIME']}, 
+                    `lastip` = '{$IP}' 
+                    WHERE `userid` = {$userid}");
+		//User's account does not have an email address.
+        if (!$ir['email'])
         {
             global $domain;
             die("<body>{$lang['HDR_REKT']}{$domain} {$lang['HDR_REKT1']}");
         }
+        //If the user's attacking is not stored in session.
         if (!isset($_SESSION['attacking']))
         {
             $_SESSION['attacking'] = 0;
         }
+        //If user does not end a fight correctly, take their XP and warn them.
         if ($dosessh && ($_SESSION['attacking'] || $ir['attacking']))
         {
            alert("warning",$lang['ERROR_GENERIC'],$lang['MENU_XPLOST'],false);
@@ -185,9 +216,11 @@ class headers
             $_SESSION['attacking'] = 0;
         }
 		$townguild = $db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$ir['location']}"));
-		if (($townguild == $ir['guild']) && ($townguild > 0) && ($ir['guild'] > 0))
+		//User is in a guild, and the guild has control of the current town.
+        if (($townguild == $ir['guild']) && ($townguild > 0) && ($ir['guild'] > 0))
 		{
 			$encounterchance=Random(1,1000);
+            //User gets robbed!
 			if ($encounterchance == 1)
 			{
 				$result=Random(1,2);
@@ -212,8 +245,7 @@ class headers
         if ($ir['vip_days'])
         {
             $u = "<span style='color: red;'>{$ir['username']}</span>";
-            $d =
-                    "<img src='donator.gif' alt='VIP: {$ir['vip_days']} Days Left' title='VIP: {$ir['vip_days']} Days Left' />";
+            $d = "<img src='donator.gif' alt='VIP: {$ir['vip_days']} Days Left' title='VIP: {$ir['vip_days']} Days Left' />";
         }
         global $staffpage;
 	}
@@ -221,9 +253,16 @@ class headers
     {
         global $db, $ir, $lang;
         $query_extra = '';
+        //Set mysqldebug in the URL to get query debugging as an admin.
         if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
         {
-			?> <pre class='pre-scrollable'> <?php var_dump($db->queries) ?> </pre> <?php
+            ?>
+              <pre class='pre-scrollable'>
+                  <?php 
+                        var_dump($db->queries) 
+                    ?> 
+              </pre> 
+           <?php
         }
 		?>
 		</div>
@@ -234,6 +273,7 @@ class headers
 			<!-- /.container -->
 			<!-- CSS -->
 			<?php
+            //User has chosen the day theme.
 			if ($ir['theme'] == 1)
 			{
 				?>  
@@ -241,6 +281,7 @@ class headers
 					<meta name="theme-color" content="#e7e7e7">
 				<?php
 			}
+            //User has chosen the night theme.
 			else
 			{
 				?> 
@@ -268,6 +309,7 @@ class headers
 				<p>
 					<br />
 					<?php 
+                    //Print copyright info, Chivalry Engine info, and current time.
 					echo "<hr />
 					{$lang['MENU_TIN']}  
 						" . date('F j, Y') . " " . date('g:i:s a') . "<br />
