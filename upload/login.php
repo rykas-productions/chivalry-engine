@@ -23,7 +23,7 @@ if ($set['HTTPS_Support'] == 'true')
 				  <div class='container'>
 					<h1>{$set['WebsiteName']}</h1>
 					<p>{$set['Website_Description']}</p>
-					<p><a class='btn btn-secondary btn-lg' href='register.php' role='button'>{$lang['LOGIN_REGISTER']} &raquo;</a></p>
+					<p><a class='btn btn-primary btn-lg' href='register.php' role='button'>{$lang['LOGIN_REGISTER']} &raquo;</a></p>
 				  </div>
 				</div>";
 				$AnnouncementQuery=$db->query("SELECT `ann_text`,`ann_time` FROM `announcements` ORDER BY `ann_time` desc LIMIT 1");
