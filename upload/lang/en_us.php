@@ -2261,4 +2261,10 @@ $lang['STAFF_LOGS_MAIL_MSG']="Message Contents";
 $lang['STAFF_LOGS_USER']="User Specific Logs";
 $lang['STAFF_LOGS_USER_ERR']="The user you chose is invalid or non-existent.";
 $lang['STAFF_LOGS_USER_ERR1']="This user does not exist, or has yet to do any in-game actions.";
+
+//Hall of Fame
+$lang['HOF_TITLE']="Hall of Fame";
+$lang['HOF_RANK']="Rank";
+$lang['HOF_USER']="User";
+$lang['HOF_VALUE']="Value";
 ?>
