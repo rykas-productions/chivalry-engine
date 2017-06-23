@@ -1389,8 +1389,9 @@ $lang['HILOW_UNDEFINEDNUMBER']="The number from the last page wasn't defined... 
 $lang['RECAPTCHA_TITLE']="reCaptcha";
 $lang['RECAPTCHA_INFO']="This is a needed evil. Just verify that you're not a bot.";
 $lang['RECAPTCHA_BTN']="Verify";
-$lang['RECAPTCHA_EMPTY']="You cannot leave the reCaptcha form empty!";
-$lang['RECAPTCHA_FAIL']="You failed the reCaptcha. Go back and try again.";
+$lang['RECAPTCHA_EMPTY']="You cannot leave the reCaptcha form empty! Re-directing you back in about 5 seconds.";
+$lang['RECAPTCHA_FAIL']="You failed the reCaptcha. Re-directing you back in about 5 seconds.";
+$lang['RECAPTCHA_NOTSET']="ReCaptcha did not return a response. You may not have an internet connection, or the administration hasn't setup ReCaptcha correctly. Re-directing you back in about 5 seconds.";
 
 //Poke
 $lang['POKE_TITLE']="Are you sure you wanna poke";
