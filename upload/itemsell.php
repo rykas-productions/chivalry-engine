@@ -73,7 +73,7 @@ if (permission('CanSellToGame',$userid) == true)
 			$r = $db->fetch_row($id);
 			$code = request_csrf_code("sellitem_{$_GET['ID']}");
 			echo "
-			<b>{$lang['ITEM_SELL_FORM1']} {$r['itmname']}(s) {$lang['ITEM_SELL_FORM2']} {$r['inv_qty']} {$lang['ITEM_SELL_FORM3']}</b>
+			<b>{$lang['ITEM_SELL_FORM1']} {$r['itmname']}(s) {$lang['ITEM_SELL_FORM2']} " . number_format($r['inv_qty']) . " {$lang['ITEM_SELL_FORM3']}</b>
 			<br />
 			<form action='?ID={$_GET['ID']}' method='post'>
 				<table class='table table-bordered'>

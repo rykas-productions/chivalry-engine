@@ -86,7 +86,7 @@ elseif (!empty($_GET['ID']))
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						{$lang['ITEM_SEND_FORMTITLE']} {$r['itmname']} {$lang['ITEM_SEND_FORMTITLE1']} {$r['inv_qty']}.
+						{$lang['ITEM_SEND_FORMTITLE']} {$r['itmname']} {$lang['ITEM_SEND_FORMTITLE1']} " . number_format($r['inv_qty']) . ".
 					</th>
 				</tr>
 				<tr>
