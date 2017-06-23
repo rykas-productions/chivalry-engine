@@ -32,7 +32,7 @@ if(isset($_POST['g-recaptcha-response']))
 		$time=time();
 		$db->query("UPDATE users SET `last_verified`={$time}, `need_verify` = 0 WHERE userid={$userid}");
 		$api->SystemLogsAdd($userid,'verify',"Verified successfully.");
-		header("refresh:0;url={$page}");
+		header("Location: {$page}");
         die($h->endpage());
 	}
 }
