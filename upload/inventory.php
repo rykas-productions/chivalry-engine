@@ -123,7 +123,7 @@ $inv =
 					</a>";
         if ($i['inv_qty'] > 1)
         {
-            echo " ({$i['inv_qty']})";
+            echo " (" . number_format($i['inv_qty']) . ")";
         }
         echo "</td>
         	  <td class='hidden-xs'>" . number_format($i['itmsellprice']);  
