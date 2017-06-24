@@ -84,7 +84,11 @@ function user_infirmary($user)
 {
 	global $db;
 	$CurrentTime=time();
-	$query=$db->query("SELECT `infirmary_user` FROM `infirmary` WHERE `infirmary_user` = {$user} AND `infirmary_out` > {$CurrentTime}");
+	$query=$db->query("SELECT `infirmary_user` 
+						FROM `infirmary` 
+						WHERE `infirmary_user` = {$user} 
+						AND 
+						`infirmary_out` > {$CurrentTime}");
 	if ($db->num_rows($query) == 0)
 	{
 		return false;
@@ -102,7 +106,11 @@ function user_dungeon($user)
 {
 	global $db;
 	$CurrentTime=time();
-	$query=$db->query("SELECT `dungeon_user` FROM `dungeon` WHERE `dungeon_user` = {$user} AND `dungeon_out` > {$CurrentTime}");
+	$query=$db->query("SELECT `dungeon_user` 
+						FROM `dungeon` 
+						WHERE `dungeon_user` = {$user} 
+						AND 
+						`dungeon_out` > {$CurrentTime}");
 	if ($db->num_rows($query) == 0)
 	{
 		return false;
@@ -122,15 +130,24 @@ function put_infirmary($user,$time,$reason)
 {
 	global $db;
 	$CurrentTime=time();
-	$Infirmary=$db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$user}"));
+	$Infirmary=$db->fetch_single($db->query("SELECT `infirmary_out` 
+												FROM `infirmary` 
+												WHERE `infirmary_user` = {$user}"));
 	$TimeMath=$time*60;
 	if ($Infirmary <= $CurrentTime)
 	{
-		$db->query("UPDATE `infirmary` SET `infirmary_out` = {$CurrentTime} + {$TimeMath}, `infirmary_in` = {$CurrentTime}, `infirmary_reason` = '{$reason}'  WHERE `infirmary_user` = {$user}");
+		$db->query("UPDATE `infirmary` 
+					SET `infirmary_out` = {$CurrentTime} + {$TimeMath}, 
+					`infirmary_in` = {$CurrentTime}, 
+					`infirmary_reason` = '{$reason}'  
+					WHERE `infirmary_user` = {$user}");
 	}
 	else
 	{
-		$db->query("UPDATE `infirmary` SET `infirmary_out` = `infirmary_out` + {$TimeMath}, `infirmary_reason` = '{$reason}' WHERE `infirmary_user` = {$user}");
+		$db->query("UPDATE `infirmary` 
+					SET `infirmary_out` = `infirmary_out` + {$TimeMath}, 
+					`infirmary_reason` = '{$reason}' 
+					WHERE `infirmary_user` = {$user}");
 	}
 }
 /*
@@ -142,7 +159,9 @@ function remove_infirmary($user,$time)
 {
 	global $db;
 	$TimeMath=$time*60;
-	$db->query("UPDATE `infirmary` SET `infirmary_out` = `infirmary_out` - '{$TimeMath}' WHERE `infirmary_user` = {$user}");
+	$db->query("UPDATE `infirmary` 
+				SET `infirmary_out` = `infirmary_out` - '{$TimeMath}' 
+				WHERE `infirmary_user` = {$user}");
 }
 /*
 	The function for putting/adding onto someone's dungeon time.
@@ -154,15 +173,24 @@ function put_dungeon($user,$time,$reason)
 {
 	global $db;
 	$CurrentTime=time();
-	$Dungeon=$db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$user}"));
+	$Dungeon=$db->fetch_single($db->query("SELECT `dungeon_out` 
+											FROM `dungeon` 
+											WHERE `dungeon_user` = {$user}"));
 	$TimeMath=$time*60;
 	if ($Dungeon <= $CurrentTime)
 	{
-		$db->query("UPDATE `dungeon` SET `dungeon_out` = {$CurrentTime} + {$TimeMath}, `dungeon_in` = {$CurrentTime}, `dungeon_reason` = '{$reason}' WHERE `dungeon_user` = {$user}");
+		$db->query("UPDATE `dungeon` 
+					SET `dungeon_out` = {$CurrentTime} + {$TimeMath}, 
+					`dungeon_in` = {$CurrentTime}, 
+					`dungeon_reason` = '{$reason}' 
+					WHERE `dungeon_user` = {$user}");
 	}
 	else
 	{
-		$db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` + {$TimeMath}, `dungeon_reason` = '{$reason}' WHERE `dungeon_user` = {$user}");
+		$db->query("UPDATE `dungeon` 
+					SET `dungeon_out` = `dungeon_out` + {$TimeMath}, 
+					`dungeon_reason` = '{$reason}' 
+					WHERE `dungeon_user` = {$user}");
 	}
 }
 /*
@@ -174,7 +202,9 @@ function remove_dungeon($user,$time)
 {
 	global $db;
 	$TimeMath=$time*60;
-	$db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` - '{$TimeMath}' WHERE `dungeon_user` = {$user}");
+	$db->query("UPDATE `dungeon` 
+				SET `dungeon_out` = `dungeon_out` - '{$TimeMath}' 
+				WHERE `dungeon_user` = {$user}");
 }
 /*
 	The function for testing for a valid email.
@@ -946,68 +976,85 @@ function notification_add($userid, $text)
 function check_data()
 {
 	global $db,$ir,$userid,$time,$api;
-	if ($ir['energy'] > $ir['maxenergy'])
-	{
-		$db->query("UPDATE `users` SET `energy` = `maxenergy` WHERE `userid` = {$userid}");
-	}
-	if ($ir['hp'] > $ir['maxhp'])
-	{
-		$db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$userid}");
-	}
-	if ($ir['hp'] > $ir['maxhp'])
-	{
-		$db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$userid}");
-	}
-	$q1=$db->query("SELECT `fed_userid` FROM `fedjail` WHERE `fed_out` < {$time}");
+	$q1=$db->query("SELECT `fed_userid`
+					FROM `fedjail` 
+					WHERE `fed_out` < {$time}");
 	if ($db->num_rows($q1) > 0)
 	{
 		$q2=$db->fetch_single($q1);
 		$db->query("DELETE FROM `fedjail` WHERE `fed_out` < {$time}");
-		$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$q2}");
+		$db->query("UPDATE `users` 
+					SET `fedjail` = 0 
+					WHERE `userid` = {$q2}");
 	}
 	$db->query("DELETE FROM `forum_bans` WHERE `fb_time` < {$time}");
-	$q3 = $db->query("SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} and `gw_winner` = 0");
+	$q3 = $db->query("SELECT * 
+						FROM `guild_wars` 
+						WHERE `gw_end` < {$time}
+						AND `gw_winner` = 0");
 	if ($db->num_rows($q3) > 0)
 	{
 		$r3=$db->fetch_row($q3);
-		$guild_declare=$db->fetch_single($db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declarer']}"));
-		$guild_declared=$db->fetch_single($db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declaree']}"));
+		$guild_declare=$db->fetch_single($db->query("SELECT `guild_name` 
+														FROM `guild` 
+														WHERE `guild_id` = {$r3['gw_declarer']}"));
+		$guild_declared=$db->fetch_single($db->query("SELECT `guild_name` 
+														FROM `guild` 
+														WHERE `guild_id` = {$r3['gw_declaree']}"));
 		if ($r3['gw_drpoints'] > $r3['gw_depoints'])
 		{
 			$db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
 			guildnotificationadd($r3['gw_declarer'],"Your guild has defeated the {$guild_declared} guild in battle.");
 			guildnotificationadd($r3['gw_declaree'],"Your guild was defeated in battle by the {$guild_declare} guild.");
-			$town=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
-			$town2=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
+			$town=$db->fetch_single($db->query("SELECT `town_id` 
+												FROM `town` 
+												WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
+			$town2=$db->fetch_single($db->query("SELECT `town_id` 
+												FROM `town` 
+												WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
 			if ($town2 > 0)
 			{
 				if ($town == 0)
 				{
-					$db->query("UPDATE `town` SET `town_guild_owner` = {$r3['gw_declarer']} WHERE `town_guild_owner` = {$r3['gw_declaree']}");
+					$db->query("UPDATE `town` 
+								SET `town_guild_owner` = {$r3['gw_declarer']} 
+								WHERE `town_guild_owner` = {$r3['gw_declaree']}");
 				}
 				else
 				{
-					$db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$r3['gw_declaree']}");
+					$db->query("UPDATE `town` 
+								SET `town_guild_owner` = 0 
+								WHERE `town_guild_owner` = {$r3['gw_declaree']}");
 				}
 			}
 			
 		}
 		elseif ($r3['gw_drpoints'] < $r3['gw_depoints'])
 		{
-			$db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
+			$db->query("UPDATE `guild_wars` 
+						SET `gw_winner` = {$r3['gw_declarer']} 
+						WHERE `gw_id` = {$r3['gw_id']}");
 			guildnotificationadd($r3['gw_declaree'],"Your guild has defeated the {$guild_declare} guild in battle.");
 			guildnotificationadd($r3['gw_declarer'],"Your guild was defeated in battle by the {$guild_declared} guild.");
-			$town=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
-			$town2=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
+			$town=$db->fetch_single($db->query("SELECT `town_id` 
+												FROM `town` 
+												WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
+			$town2=$db->fetch_single($db->query("SELECT `town_id` 
+												FROM `town` 
+												WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
 			if ($town > 0)
 			{
 				if ($town2 == 0)
 				{
-					$db->query("UPDATE `town` SET `town_guild_owner` = {$r3['gw_declaree']} WHERE `town_guild_owner` = {$r3['gw_declarer']}");
+					$db->query("UPDATE `town` 
+								SET `town_guild_owner` = {$r3['gw_declaree']} 
+								WHERE `town_guild_owner` = {$r3['gw_declarer']}");
 				}
 				else
 				{
-					$db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$r3['gw_declarer']}");
+					$db->query("UPDATE `town` 
+								SET `town_guild_owner` = 0 
+								WHERE `town_guild_owner` = {$r3['gw_declarer']}");
 				}
 			}
 		}
@@ -1017,11 +1064,19 @@ function check_data()
 			guildnotificationadd($r3['gw_declaree'],"Your guild has tied the {$guild_declare} guild in battle.");
 			guildnotificationadd($r3['gw_declarer'],"Your guild has tied the {$guild_declared} guild in battle.");
 		}
-		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} WHERE `guild_id` = {$r3['gw_declarer']}");
-		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} WHERE `guild_id` = {$r3['gw_declaree']}");
+		$db->query("UPDATE `guild` 
+					SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} 
+					WHERE `guild_id` = {$r3['gw_declarer']}");
+		$db->query("UPDATE `guild` 
+					SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} 
+					WHERE `guild_id` = {$r3['gw_declaree']}");
 	}
 	$time=time();
-	$coursedone=$db->query("SELECT `userid`,`course` FROM `users` WHERE `course` > 0 AND `course_complete` < {$time}");
+	$coursedone=$db->query("SELECT `userid`,`course` 
+							FROM `users` 
+							WHERE `course` > 0 
+							AND 
+							`course_complete` < {$time}");
 	$course_cache = array();
 	while ($r = $db->fetch_row($coursedone))
 	{
@@ -1040,7 +1095,8 @@ function check_data()
 		{
 			$coud = $course_cache[$r['course']];
 		}
-		$db->query("INSERT INTO `academy_done` VALUES({$r['userid']}, {$r['course']})");
+		$db->query("INSERT INTO `academy_done`
+					VALUES({$r['userid']}, {$r['course']})");
 		$upd = "";
 		$ev = "";
 		if ($coud['ac_str'] > 0)
@@ -1070,7 +1126,8 @@ function check_data()
 		}
 		$ev = substr($ev, 1);
 		$db->query("UPDATE `users` AS `u` 
-		INNER JOIN `userstats` AS `us` ON `u`.`userid` = `us`.`userid`
+		INNER JOIN `userstats` AS `us` 
+		ON `u`.`userid` = `us`.`userid`
 		SET `u`.`course` = 0, `course_complete` = 0{$upd}
 		WHERE `u`.`userid` = {$r['userid']}");
 		notification_add($r['userid'],"Congratulations, you completed the {$coud['ac_name']} course and gained {$ev}!");
@@ -1095,9 +1152,16 @@ function check_level()
         $ir['hp'] += 50;
         $ir['maxhp'] += 50;
         $ir['xp_needed'] = round(($ir['level'] + 2.25) * ($ir['level'] + 2.25) * ($ir['level'] + 2.25) * 2);
-        $db->query("UPDATE `users`  SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2, `brave` = `brave` + 2,
-                 `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2, `hp` = `hp` + 50, `maxhp` = `maxhp` + 50
-                 WHERE `userid` = {$userid}");
+        $db->query("UPDATE `users`  
+					SET `level` = `level` + 1, 
+					`xp` = '{$expu}', 
+					`energy` = `energy` + 2, 
+					`brave` = `brave` + 2,
+					`maxenergy` = `maxenergy` + 2, 
+					`maxbrave` = `maxbrave` + 2, 
+					`hp` = `hp` + 50, 
+					`maxhp` = `maxhp` + 50
+					WHERE `userid` = {$userid}");
 		$StatGain=round(($ir['level']*100)/Random(2,6));
 		$StatGainFormat=number_format($StatGain);
 		if ($ir['class'] == 'Warrior')
@@ -1112,7 +1176,9 @@ function check_level()
 		{
 			$Stat='guard';
 		}
-		$db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
+		$db->query("UPDATE `userstats` 
+					SET `{$Stat}` = `{$Stat}` + {$StatGain} 
+					WHERE `userid` = {$userid}");
 		notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
 		SystemLogsAdd($userid,'level',"Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
     }
@@ -1163,11 +1229,7 @@ function item_add($user, $itemid, $qty, $notid = 0)
 {
     global $db;
 	$ie=$db->fetch_single($db->query("SELECT COUNT(`itmname`) FROM `items` WHERE `itmid` = {$itemid}"));
-	if ($ie == 0)
-	{
-		return false;
-	}
-    else
+	if ($ie > 0)
 	{
 		if ($notid > 0)
 		{
@@ -1222,11 +1284,7 @@ function item_remove($user, $itemid, $qty)
 {
     global $db;
 	$ie=$db->fetch_single($db->query("SELECT COUNT(`itmname`) FROM `items` WHERE `itmid` = {$itemid}"));
-	if ($ie == 0)
-	{
-		return false;
-	}
-    else
+	if ($ie > 0)
 	{
 		$q =
 				$db->query(
@@ -1379,9 +1437,10 @@ function request_csrf_html($formid)
  * Check the CSRF code we received against the one that was registered for the form - return false if the request shouldn't be processed...
  * @param string $formid A unique string used to identify this form to match up its submission with the right token.
  * @param string $code The code the user's form input returned.
+ * @param int #expiry The amount of time the CSRF is valid for. Default 60 seconds.
  * @return boolean Whether the user provided a valid code or not
  */
-function verify_csrf_code($formid, $code)
+function verify_csrf_code($formid, $code, $expiry = 60)
 {
     if (!isset($_SESSION["csrf_{$formid}"]) || !is_array($_SESSION["csrf_{$formid}"]))
     {
@@ -1391,7 +1450,6 @@ function verify_csrf_code($formid, $code)
     {
         $verified = false;
         $token = $_SESSION["csrf_{$formid}"];
-        $expiry = 300;
         if ($token['issued'] + $expiry > time())
         {
             $verified = ($token['token'] === $code);
@@ -1682,17 +1740,11 @@ function update_fg_info($ip) {
 		 return true;
 	 }
 	 $q=$db->fetch_single($Query);
-	 if ($q == 'true')
-	 {
-		 //User does not have this permission
-		 return false;
-	 }
-	 else
+	 if ($q == 'false')
 	 {
 		 //User does have this permission
 		 return true;
 	 }
-	 
  }
  /*
 	Gets the user's operating system and inserts it into the database.
@@ -1728,13 +1780,13 @@ function update_fg_info($ip) {
 	{ 
         if (preg_match($regex, $uagent)) 
 		{
-            $os_platform    =   $value;
+            $os_platform = $value;
         }
     }
 	$count=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
 	if ($count == 0)
 	{
-			$db->query("INSERT INTO `userdata` (`userid`, `useragent`, `screensize`, `os`, `browser`) VALUES ({$userid}, '{$uagent}', '', '{$os_platform}', '')");
+		$db->query("INSERT INTO `userdata` (`userid`, `useragent`, `screensize`, `os`, `browser`) VALUES ({$userid}, '{$uagent}', '', '{$os_platform}', '')");
 	}
 	else
 	{
@@ -1767,13 +1819,13 @@ function update_fg_info($ip) {
 	{ 
         if (preg_match($regex, $user_agent)) 
 		{
-            $browser    =   $value;
+            $browser = $value;
         }
     }
 	$count=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
 	if ($count == 0)
 	{
-			$db->query("INSERT INTO `userdata` (`userid`, `useragent`, `browser`) VALUES ({$userid}, '{$uagent}', '{$broswer}')");
+		$db->query("INSERT INTO `userdata` (`userid`, `useragent`, `browser`) VALUES ({$userid}, '{$uagent}', '{$broswer}')");
 	}
 	else
 	{
