@@ -7,6 +7,3 @@ If you run into issues, or wish to add your own modules, fork the repository and
 
 # Requirements
 A web-server with PHP 5.5+ and MySQLi support. Users need to have Javascript enabled or a lot of the core features won't work.
-
-# Contact?
-Reach MasterGeneral156 on Twitter! https://twitter.com/MasterGeneralYT
