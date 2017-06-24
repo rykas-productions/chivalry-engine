@@ -7,7 +7,7 @@
 	Website:	 https://github.com/MasterGeneral156/chivalry-engine
 */
  
-$lang = array();
+static $lang = array();
 global $ir,$fee,$gain,$set;
 
 //Index
@@ -94,6 +94,8 @@ $lang['MENU_XPLOST']="By running from the fight, you have lost all your experien
 $lang['MENU_RULES']="Game Rules";
 $lang['MENU_DONATE']="Donate to ";
 $lang['MENU_DONATE2']=". You'll receive tons of benefits! Donate by clicking <a href='donator.php'>here</a>.";
+$lang['MENU_SCRIPTTIME']="Page loaded in";
+$lang['MENU_SCRIPTTIME1']="ms.";
 
 // Preferences
 $lang["PREF_CPASSWORD"] = "Change Password";

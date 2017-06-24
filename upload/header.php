@@ -251,7 +251,7 @@ class headers
 	}
 	function endpage()
     {
-        global $db, $ir, $lang;
+        global $db, $ir, $lang, $StartTime;
         $query_extra = '';
         //Set mysqldebug in the URL to get query debugging as an admin.
         if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
@@ -317,6 +317,12 @@ class headers
 					?>
 					&copy; <?php echo date("Y");
 					echo"<br/>{$db->num_queries} {$lang['MENU_QE']}.{$query_extra}<br />";
+					//Profile page loading putting profile in the URL GET.
+					if (isset($_GET['profile']))
+					{
+						$ms=microtime()-$StartTime;
+						echo "{$lang['MENU_SCRIPTTIME']} {$ms} {$lang['MENU_SCRIPTTIME1']}";
+					}
 					?>
 				</p>
 			</footer>

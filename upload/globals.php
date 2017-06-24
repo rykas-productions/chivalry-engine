@@ -7,6 +7,8 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+//Profiler start time
+$StartTime=microtime();
 //If file is loaded directly.
 if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false)
 {
