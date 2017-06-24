@@ -24,7 +24,13 @@ if (!in_array($_GET['stat'],$StatArray))
 $_GET['stat']=$db->escape(strip_tags(stripslashes($_GET['stat'])));
 if ($_GET['stat'] == 'total')
 {
-    
+    $q=$db->query("SELECT `u`.*, `us`.* 
+                    FROM `users` `u` 
+                    INNER JOIN `userstats` AS `us`
+                    ON `u`.`userid` = `us`.`userid`
+                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC'
+                    ORDER BY (`strength` + `agility` + `guard` + `labor` + `iq`) DESC
+                    LIMIT 20");
 }
 elseif ($_GET['stat'] == 'mining_level')
 {
@@ -32,7 +38,7 @@ elseif ($_GET['stat'] == 'mining_level')
                     FROM `users` `u` 
                     INNER JOIN `mining` AS `m`
                     ON `u`.`userid` = `m`.`userid`
-                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC'
+					WHERE `user_level` != 'Admin' AND `user_level` != 'NPC'
                     ORDER BY `mining_level` DESC
                     LIMIT 20");
 }
@@ -49,7 +55,14 @@ else
 echo "<a href='?stat=level'>{$lang['INDEX_LEVEL']}</a> 
         || <a href='?stat=primary_currency'>{$lang['INDEX_PRIMCURR']}</a>
         || <a href='?stat=secondary_currency'>{$lang['INDEX_SECCURR']}</a> 
-        || <a href='?stat=strength'>{$lang['GEN_STR']}</a>";
+		|| <a href='?stat=mining_level'>{$lang['HOF_MINE']}</a>";
+echo "<br />";
+echo "<a href='?stat=strength'>{$lang['GEN_STR']}</a> 
+		|| <a href='?stat=agility'>{$lang['GEN_AGL']}</a> 
+        || <a href='?stat=guard'>{$lang['GEN_GRD']}</a>
+        || <a href='?stat=labor'>{$lang['GEN_LAB']}</a> 
+		|| <a href='?stat=iq'>{$lang['GEN_IQ']}</a> 
+        || <a href='?stat=total'>{$lang['HOF_TOTAL']}</a>";		
 echo "<br />Listing the 20 players with the highest {$_GET['stat']}.";
 echo "<table class='table table-bordered'>
 <tr>
@@ -60,7 +73,7 @@ echo "<table class='table table-bordered'>
         {$lang['HOF_USER']}
     </th>";
     if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
-            || $_GET['stat'] == 'mining')
+            || $_GET['stat'] == 'mining_level')
     {
         echo "<th width='45%'>
                 {$lang['HOF_VALUE']}
@@ -80,7 +93,7 @@ while ($r=$db->fetch_row($q))
             <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
         </td>";
         if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
-            || $_GET['stat'] == 'mining')
+            || $_GET['stat'] == 'mining_level')
         {
             echo "<td>
                     " . number_format($r[$_GET['stat']]) . "

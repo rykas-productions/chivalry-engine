@@ -2269,4 +2269,6 @@ $lang['HOF_TITLE']="Hall of Fame";
 $lang['HOF_RANK']="Rank";
 $lang['HOF_USER']="User";
 $lang['HOF_VALUE']="Value";
+$lang['HOF_MINE']="Mining Level";
+$lang['HOF_TOTAL']="Total Stats";
 ?>

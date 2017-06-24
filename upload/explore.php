@@ -136,6 +136,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 					<a href='forums.php'>{$lang['EXPLORE_FORUMS']}</a><br />
 					<a href='newspaper.php'>{$lang['EXPLORE_NEWSPAPER']}</a><br />
 					<a href='polling.php'>{$lang['POLL_TITLE']}</a><br />
+					<a href='halloffame.php'>{$lang['HOF_TITLE']}</a><br />
 				</div>
 			</div>
 		</div>
