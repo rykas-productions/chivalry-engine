@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.5.1";	//Last Updated 5/5/2017
+		return "17.6.1";	//Last Updated 6/24/2017
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -40,23 +40,11 @@ class api
 			if ($type == 'primary' || $type == 'secondary')
 			{
 				$UserMoney=$db->fetch_single($db->query("SELECT `{$type}_currency` FROM `users` WHERE `userid` = {$user}"));
-				if ($UserMoney < $minimum)
-				{
-					return false;
-				}
-				else
+				if ($UserMoney > $minimum)
 				{
 					return true;
 				}
 			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
 		}
 	}
 	/*
@@ -77,10 +65,6 @@ class api
 		{
 			return true;
 		}
-		else
-		{
-			return false;
-		}
 	}
 	/*
 		Removes an item from the user specified
@@ -99,10 +83,6 @@ class api
 		if (item_remove($user,$item,$quantity))
 		{
 			return true;
-		}
-		else
-		{
-			return false;
 		}
 	}
 	/*
@@ -127,16 +107,7 @@ class api
 				$db->query("UPDATE `users` SET `{$type}_currency` = `{$type}_currency` + {$quantity} WHERE `userid` = {$user}");
 				return true;
 			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
-		
+		}		
 	}
 	/*
 		Takes qunatity of currency type from the user specified.
@@ -161,16 +132,7 @@ class api
 				$db->query("UPDATE `users` SET `{$type}_currency` = 0 WHERE `{$type}_currency` < 0");
 				return true;
 			}
-			else
-			{
-				return false;
-			}
 		}
-		else
-		{
-			return false;
-		}
-		
 	}
 	/*
 		Tests to see what the user has equipped.
@@ -195,10 +157,6 @@ class api
 				{
 					return true;
 				}
-				else
-				{
-					return false;
-				}
 			}
 			//Specific item equipped
 			elseif ($itemid > 0)
@@ -209,10 +167,6 @@ class api
 				{
 					return true;
 				}
-				else
-				{
-					return false;
-				}
 			}
 			//Nothing equipped
 			elseif ($itemid == 0)
@@ -222,19 +176,7 @@ class api
 				{
 					return true;
 				}
-				else
-				{
-					return false;
-				}
 			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
 		}
 	}
 	/*
@@ -256,10 +198,6 @@ class api
 		elseif ($status == 'dungeon')
 		{
 			return user_dungeon($user);
-		}
-		else
-		{
-			return false;
 		}
 	}
 	/*
@@ -307,10 +245,6 @@ class api
 				return true;
 			}
 		}
-		else
-		{
-			return false;
-		}
 	}
 	/*
 		Adds a notification for the specified user.
@@ -340,21 +274,11 @@ class api
 		$msg = $db->escape(stripslashes($msg));
 		$time = time();
 		$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$user}");
-		if ($db->num_rows($userexist) == 0)
-		{
-			$db->free_result($userexist);
-			return false;
-		}
-		else
+		if ($db->num_rows($userexist) > 0)
 		{
 			$db->free_result($userexist);
 			$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$from}");
-			if ($db->num_rows($userexist) == 0)
-			{
-				$db->free_result($userexist);
-				return false;
-			}
-			else
+			if ($db->num_rows($userexist) > 0)
 			{
 				$db->query("INSERT INTO `mail` 
 				(`mail_to`, `mail_from`, `mail_status`, `mail_subject`, `mail_text`, `mail_time`) 
@@ -377,12 +301,7 @@ class api
 		$poster = (isset($poster) && is_numeric($poster)) ? abs(intval($poster)) : 1;
 		$time = time();
 		$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$poster}");
-		if ($db->num_rows($userexist) == 0)
-		{
-			$db->free_result($userexist);
-			return false;
-		}
-		else
+		if ($db->num_rows($userexist) > 0)
 		{
 			$db->query("INSERT INTO `announcements` 
 			(`ann_text`, `ann_time`, `ann_poster`) 
@@ -404,19 +323,10 @@ class api
 		global $db;
 		$level = $db->escape(stripslashes(strtolower($level)));
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-		if ($user == 0)
-		{
-			return false;
-		}
-		else
+		if ($user > 0)
 		{
 			$userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$user}");
-			if ($db->num_rows($userexist) == 0)
-			{
-				$db->free_result($userexist);
-				return false;
-			}
-			else
+			if ($db->num_rows($userexist) > 0)
 			{
 				$ulevel=$db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
 				if ($exact == true)
@@ -490,11 +400,7 @@ class api
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$item = (isset($item ) && is_numeric($item)) ? abs(intval($item)) : 0;
 		$qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
-		if ($user == 0 || $item == 0 || $qty == 0)
-		{
-			return false;
-		}
-		else
+		if ($user > 0 || $item > 0 || $qty > 0)
 		{
 			$i=$db->fetch_single($db->query("SELECT `inv_qty` FROM `inventory` WHERE `inv_userid` = {$user} && `inv_itemid` = {$item}"));
 			if ($qty == 1)
@@ -668,11 +574,7 @@ class api
 		global $db;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$name=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}");
-		if ($db->num_rows($name) == 0)
-		{
-			return false;
-		}
-		else
+		if ($db->num_rows($name) > 0)
 		{
 			$username=$db->fetch_single($name);
 			return $username;
@@ -688,11 +590,7 @@ class api
 		global $db;
 		$name = $db->escape(stripslashes($name));
 		$id=$db->query("SELECT `userid` FROM `users` WHERE `username` = '{$name}'");
-		if ($db->num_rows($id) == 0)
-		{
-			return false;
-		}
-		else
+		if ($db->num_rows($id) > 0)
 		{
 			$usrid=$db->fetch_single($id);
 			return $usrid;
@@ -708,11 +606,7 @@ class api
 		global $db;
 		$itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
 		$name=$db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$itemid}");
-		if ($db->num_rows($name) == 0)
-		{
-			return false;
-		}
-		else
+		if ($db->num_rows($name) > 0)
 		{
 			$username=$db->fetch_single($name);
 			return $username;
@@ -728,11 +622,7 @@ class api
 		global $db;
 		$name = $db->escape(stripslashes($name));
 		$id=$db->query("SELECT `itmid` FROM `items` WHERE `itmname` = '{$name}'");
-		if ($db->num_rows($id) == 0)
-		{
-			return false;
-		}
-		else
+		if ($db->num_rows($id) > 0)
 		{
 			$itemid=$db->fetch_single($id);
 			return $itemid;
@@ -748,11 +638,7 @@ class api
 		global $db;
 		$id = (isset($id) && is_numeric($id)) ? abs(intval($id)) : 0;
 		$name=$db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$id}");
-		if ($db->num_rows($name) == 0)
-		{
-			return false;
-		}
-		else
+		if ($db->num_rows($name) > 0)
 		{
 			$name=$db->fetch_single($name);
 			return $name;
@@ -776,19 +662,14 @@ class api
 		$item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
 		($currency == 1) ? $curr='primary' : $curr='secondary';
 		$user_currency=$db->fetch_single($db->query("SELECT `{$curr}_currency` FROM `users` WHERE `userid` = {$user}"));
-		if ($user_currency < $cost*$qty)
+		if ($user_currency > $cost*$qty)
 		{
-			return false;
-		}
-		else if ($api->SystemItemIDtoName($item) == false)
-		{
-			return false;
-		}
-		else
-		{
-			$api->UserGiveItem($user,$item,$qty);
-			$db->query("UPDATE `users` SET `{$curr}_currency` = `{$curr}_currency` - {$cost} WHERE `userid` = {$user}");
-			return true;
+			if ($api->SystemItemIDtoName($item))
+			{
+				$api->UserGiveItem($user,$item,$qty);
+				$db->query("UPDATE `users` SET `{$curr}_currency` = `{$curr}_currency` - {$cost} WHERE `userid` = {$user}");
+				return true;
+			}
 		}
 	}
 	/*
@@ -861,23 +742,18 @@ class api
 		if (isset($guild_id) && $guild_id > 0)
 		{
 			$cnt=$db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}");
-			if ($db->num_rows($cnt) == 0)
+			if ($db->num_rows($cnt) > 0)
 			{
-				return false;
+				if (is_null($field))
+				{
+					return $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}"));
+				}
+				else
+				{
+					$field = $db->escape(stripslashes($field));
+					return $db->fetch_single($db->query("SELECT `{$field}` FROM `guild` WHERE `guild_id` = {$guild_id}"));
+				}
 			}
-			if (is_null($field))
-			{
-				return $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}"));
-			}
-			else
-			{
-				$field = $db->escape(stripslashes($field));
-				return $db->fetch_single($db->query("SELECT `{$field}` FROM `guild` WHERE `guild_id` = {$guild_id}"));
-			}
-		}
-		else
-		{
-			return false;
 		}
 	}
 	/*
@@ -895,17 +771,12 @@ class api
 		if (isset($guild_id) && $guild_id > 0)
 		{
 			$cnt=$db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}");
-			if ($db->num_rows($cnt) == 0)
-			{
-				return false;
-			}
-			else
+			if ($db->num_rows($cnt) > 0)
 			{
 				$db->query("INSERT INTO `guild_notifications` (`gn_id`, `gn_guild`, `gn_time`, `gn_text`) VALUES (NULL, '{$guild_id}', '{$time}', '{$notification}')");
 				return true;
 			}
 		}
-		return false;
 	}
 	/*
 		Function to set a user's info a static value.
@@ -919,7 +790,8 @@ class api
 		global $db,$api;
 		$user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
 		$stat = $db->escape(stripslashes(strtolower($stat)));
-		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
+		if (in_array($stat, array('password', 'email', 'lastip','loginip',
+									'registerip','personal_notes','staff_notes')))
 		{
 			alert('danger',$lang['ERROR_SECURITY'],$lang['API_ERROR'],false);
 		}
@@ -940,14 +812,6 @@ class api
 					$db->query("UPDATE `users` SET `{$stat}` = '{$state}' WHERE `userid` = '{$user}'");
 					return true;
 				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return false;
 			}
 		}
 	}
@@ -962,21 +826,16 @@ class api
 		global $db;
 		$user1 = (isset($user1) && is_numeric($user1)) ? abs(intval($user1)) : 0;
 		$user2 = (isset($user2) && is_numeric($user2)) ? abs(intval($user2)) : 0;
-		if (empty($user1) || empty($user2))
+		if (!empty($user1) || !empty($user2))
 		{
-			return false;
-		}
-		elseif ($user1 == $user2)
-		{
-			return false;
-		}
-		else
-		{
-			$s=$db->fetch_row($db->query("SELECT `lastip`,`loginip`,`registerip` FROM `users` WHERE `userid` = {$user1}"));
-			$r=$db->fetch_row($db->query("SELECT `lastip`,`loginip`,`registerip` FROM `users` WHERE `userid` = {$user2}"));
-			if ($s['lastip'] == $r['lastip'] || $s['loginip'] == $r['loginip'] || $s['registerip'] == $r['registerip'])
+			if ($user1 != $user2)
 			{
-				return true;
+				$s=$db->fetch_row($db->query("SELECT `lastip`,`loginip`,`registerip` FROM `users` WHERE `userid` = {$user1}"));
+				$r=$db->fetch_row($db->query("SELECT `lastip`,`loginip`,`registerip` FROM `users` WHERE `userid` = {$user2}"));
+				if ($s['lastip'] == $r['lastip'] || $s['loginip'] == $r['loginip'] || $s['registerip'] == $r['registerip'])
+				{
+					return true;
+				}
 			}
 		}
 	}
@@ -991,11 +850,7 @@ class api
 		global $db;
 		$userid = (isset($userid) && is_numeric($userid)) ? abs(intval($userid)) : 0;
 		$itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
-		if (empty($userid) || empty($itemid))
-		{
-			return false;
-		}
-		else
+		if (!empty($userid) || !empty($itemid))
 		{
 			$qty=$db->fetch_single($db->query("SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$itemid} AND `inv_userid` = {$userid}"));
 			return $qty;
