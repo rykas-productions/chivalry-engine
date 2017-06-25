@@ -96,6 +96,9 @@ echo"
 			</li>
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#SMELT'>{$lang['STAFF_IDX_SMELT_LIST']}</a>
+			</li>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#ACADEMY'>{$lang['STAFF_IDX_ADMIN_LI11']}</a>
 			</li>";
 		}
 		if ($api->UserMemberLevelGet($userid,'assistant'))
@@ -179,8 +182,8 @@ echo"
 					<div id='ACADEMY' class='tab-pane'>
 						<div class='card card-default'>
 							<div class='card-block'>
-								<a href='staff_academy.php?action=addacademy'>{$lang['STAFF_IDX_NPC_TAB1']}</a><br />
-								<a href='staff_academy.php?action=delacademy'>{$lang['STAFF_IDX_NPC_TAB2']}</a><br />
+								<a href='staff_academy.php?action=add'>{$lang['STAFF_IDX_ACADEMY_ADD']}</a><br />
+								<a href='staff_academy.php?action=del'>{$lang['STAFF_IDX_ACADEMY_DEL']}</a><br />
 							</div>
 						</div>
 					</div>
@@ -216,7 +219,8 @@ echo"
 								N/A
 							</div>
 						</div>
-					</div>";
+					</div>
+					";
 			}
 			if ($api->UserMemberLevelGet($userid,'assistant'))
 			{

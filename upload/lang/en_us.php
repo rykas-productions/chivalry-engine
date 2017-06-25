@@ -1621,6 +1621,7 @@ $lang['STAFF_IDX_ADMIN_LI7']="Jobs";
 $lang['STAFF_IDX_ADMIN_LI8']="Polls";
 $lang['STAFF_IDX_ADMIN_LI9']="Towns";
 $lang['STAFF_IDX_ADMIN_LI10']="Estates";
+$lang['STAFF_IDX_ADMIN_LI11']="Academy";
 $lang['STAFF_IDX_ADMIN_TAB1']="Game Settings";
 $lang['STAFF_IDX_ADMIN_TAB2']="Create an Announcement";
 $lang['STAFF_IDX_ADMIN_TAB3']="Game Diagnostics";
@@ -1695,6 +1696,8 @@ $lang['STAFF_IDX_ACTIONS_TH3']="IP";
 $lang['STAFF_IDX_SMELT_TAB1']="Add Smelting Recipe";
 $lang['STAFF_IDX_SMELT_TAB2']="Delete Smelting Recipe";
 $lang['STAFF_IDX_SMELT_LIST']="Smelting";
+$lang['STAFF_IDX_ACADEMY_ADD']="Create Academy";
+$lang['STAFF_IDX_ACADEMY_DEL']="Delete Academy";
 
 //User List
 $lang['USERLIST_TITLE']="Userlist";
