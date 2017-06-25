@@ -841,6 +841,11 @@ $lang['STAFF_ACADEMY_ADD_ERR']="You are missing one or more required inputs.";
 $lang['STAFF_ACADEMY_ADD_ERR1']="You must specify a stat that gets increased by completing this course.";
 $lang['STAFF_ACADEMY_ADD_ERR2']="The course name is already in use.";
 $lang['STAFF_ACADEMY_ADD_SUCC']="You have successfully created an academy course.";
+$lang['STAFF_NOPERM']="You do not have permission to use this page. If this is false, please contact an admin.";
+$lang['STAFF_ACADEMY_DEL_ERR']="You did not specify an academy course to delete.";
+$lang['STAFF_ACADEMY_DEL_ERR1']="That course does not exist, or was already deleted.";
+$lang['STAFF_ACADEMY_DEL_SUCC']="Successfully deleted the";
+$lang['STAFF_ACADEMY_DEL_SUCC1']="course from the game.";
 
 //Academy
 $lang['ACA_LVL']="Required Level: ";

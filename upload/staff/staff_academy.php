@@ -14,10 +14,10 @@ if (!isset($_GET['action']))
 }
 switch ($_GET['action'])
 {
-case "addacademy":
+case "add":
     addacademy();
     break;
-case "delacademy":
+case "del":
     delacademy();
     break;
 default:
@@ -30,7 +30,7 @@ function addacademy()
 	global $lang,$h,$db,$userid,$api, $ir;
 	if ($ir['user_level'] != "Admin")
     {
-		alert('danger','No Permission!','You have no permission to be here. If this is false, please contact an admin for help!');
+		alert('danger',$lang['ERROR_NOPERM'],$lang['STAFF_NOPERM'],true,'index.php');
 		die($h->endpage());
     }
 	if (!isset($_POST['name']))
@@ -176,7 +176,7 @@ function delacademy()
 	global $db,$ir,$h,$lang,$userid,$api;
 	if ($ir['user_level'] != 'Admin')
     {
-        alert('danger','No Permission!','You have no permission to be here. If this is false, please contact an admin for help!');
+        alert('danger',$lang['ERROR_NOPERM'],$lang['STAFF_NOPERM'],true,'index.php');
         die($h->endpage());
     }
 	if (!isset($_POST['academy']))
@@ -213,25 +213,25 @@ function delacademy()
 		$_POST['academy'] =(isset($_POST['academy']) && is_numeric($_POST['academy'])) ? abs(intval($_POST['academy'])) : '';
 		if (empty($_POST['academy']))
 		{
-			alert('warning','Empty Input!','You did not specify a course to delete. Go back and try again.');
+			alert('warning',$lang['ERROR_GENERIC'],$lang['STAFF_ACADEMY_DEL_ERR']);
 			die($h->endpage());
 		}
 		$d =
 			$db->query(
-					"SELECT `academyname`
+					"SELECT `ac_name`
 					 FROM `academy`
-					 WHERE `academyid` = {$_POST['academy']}");
+					 WHERE `ac_id` = {$_POST['academy']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',"Uh oh!","The course you chose to delete does not exist!");
+			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ACADEMY_DEL_ERR1']);
 			die($h->endpage());
 		}
 		$academyname = $db->fetch_single($d);
 		$db->free_result($d);
-		$db->query("DELETE FROM `academy` WHERE `academyid` = {$_POST['academy']}");
+		$db->query("DELETE FROM `academy` WHERE `ac_id` = {$_POST['academy']}");
 		$api->SystemLogsAdd($userid,'staff',"Deleted academy {$academyname}.");
-		alert("success","Success!","The Course ({$academyname}) has been deleted from the game successfully.");
+		alert("success",$lang['ERROR_SUCCESS'],"{$lang['STAFF_ACADEMY_DEL_SUCC']} {$academyname} {$lang['STAFF_ACADEMY_DEL_SUCC1']}",true,'index.php');
 		die($h->endpage());
 	}
 }
