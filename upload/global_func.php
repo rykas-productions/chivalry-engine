@@ -381,9 +381,9 @@ function academy_dropdown ($acadname = "academy", $selected = -1)
     $ret = "<select name='$acadname' class='form-control' type='dropdown'>";
     $q =
             $db->query(
-                    "SELECT `academyid`, `academyname`
+                    "SELECT `ac_id`, `ac_name`
     				 FROM `academy`
-    				 ORDER BY `academyid` ASC");
+    				 ORDER BY `ac_id` ASC");
 	if ($selected < 1)
     {
         $ret .= "<option value='0' selected='selected'>-- None --</option>";
@@ -394,13 +394,13 @@ function academy_dropdown ($acadname = "academy", $selected = -1)
     }
     while ($r = $db->fetch_row($q))
     {
-        $ret .= "\n<option value='{$r['academyid']}'";
-        if ($selected == $r['academyid'])
+        $ret .= "\n<option value='{$r['ac_id']}'";
+        if ($selected == $r['ac_id'])
         {
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['academyname']} [{$r['academyid']}]</option>";
+        $ret .= ">{$r['ac_name']} [{$r['ac_id']}]</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
