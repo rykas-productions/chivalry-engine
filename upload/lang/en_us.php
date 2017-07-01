@@ -874,6 +874,7 @@ $lang['CRIME_TABLE_CRIME']="Crime";
 $lang['CRIME_TABLE_CRIMES']="Crimes";
 $lang['CRIME_TABLE_COST']="Cost";
 $lang['CRIME_TABLE_COMMIT']="Commit";
+$lang['CRIME_NOREFRESH']="Please do not refresh while commiting crimes.";
 $lang['CRIME_COMMIT_INVALID']="You are trying to commit either a non-existent crime, or an unfinished one. Try again, and if the issue persists, please contact an admin.";
 $lang['CRIME_COMMIT_BRAVEBAD']="You aren't brave enough to commit this crime at this time. Come back later.";
 
