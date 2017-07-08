@@ -702,7 +702,7 @@ function massemail()
 			alert('danger',$lang['ERROR_LENGTH'],$lang['MAIL_INPUTLNEGTH']);
 			die($h->endpage());
 		}
-		$q=$db->query("SELECT `userid`,`user_level`,`email` FROM `users`");
+		$q=$db->query("SELECT `userid`,`user_level`,`email` FROM `users` WHERE `email_optin` = 1");
 		$sent=0;
 		$headers[] = 'MIME-Version: 1.0';
 		$headers[] = 'Content-type: text/html; charset=iso-8859-1';
