@@ -9,12 +9,12 @@
 require("globals_nonauth.php");
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 //Check if someone is already registered on this IP.
-/*if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
+if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
 {
 	alert('danger',$lang['ERROR_SECURITY'],$lang['REG_MULTIALERT']);
 	$h->endpage();
 	exit;
-}*/
+}
 if (!isset($_GET['REF']))
 {
 	$_GET['REF'] = 0;
