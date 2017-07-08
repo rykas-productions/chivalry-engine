@@ -24,8 +24,5 @@ CREATE TABLE `academy_done` (
 	`course` INT(11) UNSIGNED NOT NULL 
 ) ENGINE = MyISAM;
 
-CREATE TABLE `ipban` ( 
-	`ip_id` INT(11) UNSIGNED NULL AUTO_INCREMENT , 
-	`ip_ip` TEXT NOT NULL , 
-	UNIQUE (`ip_id`)
-) ENGINE = MyISAM;
+ALTER TABLE `users` 
+	ADD `email_optin` BOOLEAN NOT NULL DEFAULT TRUE AFTER `course_complete`;
