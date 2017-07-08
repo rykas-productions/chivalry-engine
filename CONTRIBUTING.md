@@ -1,1 +1,1 @@
-Please do not send in useless pull requests. Verify bugs you find before submitting. Document your code, and the PR itself.
+Please do not send in useless pull requests. Verify bugs you find before submitting. Document your code, and the PR itself. If you are sending in a suggestion, please be as clear and consise as possible. Other users may ask questions about your suggestion, and might even help find bugs/logic holes in it. Do not take it personally.
