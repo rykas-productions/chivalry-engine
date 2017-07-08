@@ -214,6 +214,7 @@ $lang['REG_PWPLACE']="Unique passwords use letters, symbols, and numbers.";
 $lang['REG_PW1PLACE']="Now, confirm the previously entered password.";
 $lang['REG_REFPLACE']="Refered by a friend? Enter their User ID here! (Optional)";
 $lang['REG_PROMOPLACE']="Received a promo code? Enter it here. (Optional)";
+$lang['REG_OPTIN']="By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a> and our <a href='privacy.php'>Privacy Policy</a>. You also agree that you wish to opt-in to our game newsletter. You may opt-out at anytime by checking your in-game settings.";
 
 //CSRF Error
 $lang["CSRF_ERROR_TITLE"] = "Action Blocked!";
