@@ -871,16 +871,19 @@ INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (N
 INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'will_refill_cost', '5');
 INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'brave_refill_cost', '10');
 INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'iq_per_sec', '5');
+CREATE TABLE `ipban` (
+  `ip_id` int(11) UNSIGNED NOT NULL,
+  `ip_ip` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ALTER TABLE `ipban`
+  ADD UNIQUE KEY `ip_id` (`ip_id`);
+ALTER TABLE `users` 
+	ADD `email_optin` BOOLEAN NOT NULL DEFAULT TRUE AFTER `course_complete`;
+ALTER TABLE `ipban`
+  MODIFY `ip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `users` 
 	ADD `course` INT(11) UNSIGNED NOT NULL AFTER `need_verify`, 
 	ADD `course_complete` INT(11) UNSIGNED NOT NULL AFTER `course`;
-	
-CREATE TABLE `ipban` ( 
-	`ip_id` INT(11) UNSIGNED NULL AUTO_INCREMENT , 
-	`ip_ip` TEXT NOT NULL , 
-	UNIQUE (`ip_id`)
-) ENGINE = MyISAM;
-
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

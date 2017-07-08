@@ -26,3 +26,14 @@ CREATE TABLE `academy_done` (
 
 ALTER TABLE `users` 
 	ADD `email_optin` BOOLEAN NOT NULL DEFAULT TRUE AFTER `course_complete`;
+	
+CREATE TABLE `ipban` (
+  `ip_id` int(11) UNSIGNED NOT NULL,
+  `ip_ip` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ALTER TABLE `ipban`
+  ADD UNIQUE KEY `ip_id` (`ip_id`);
+ALTER TABLE `users` 
+	ADD `email_optin` BOOLEAN NOT NULL DEFAULT TRUE AFTER `course_complete`;
+ALTER TABLE `ipban`
+  MODIFY `ip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
