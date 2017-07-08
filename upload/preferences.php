@@ -37,6 +37,9 @@ switch ($_GET['action'])
 	case 'sexchange':
 		sexchange();
 		break;
+	case 'emailchange':
+		emailchange();
+		break;
 	default:
 		prefs_home();
 		break;
@@ -81,6 +84,11 @@ function prefs_home()
 				</td>
 				<td>
 					<a href='?action=sexchange'>{$lang['PREF_CSEX']}</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href='?action=emailchange'>{$lang['PREF_EMAIL_BTN']}</a>
 				</td>
 			</tr>
 		</tbody>
@@ -504,6 +512,60 @@ function sexchange()
 		<tr>
 			<td colspan='2'>
 				<input type='submit' value='{$lang['SEX_BTN']}' class='btn btn-secondary'>
+			</td>
+		</tr>
+		{$csrf}
+		</form>
+		</table>";
+	}
+}
+function emailchange()
+{
+	global $db,$userid,$lang,$ir,$api,$h;
+	if (isset($_POST['opt']))
+	{
+		$_POST['opt'] = (isset($_POST['opt']) && is_numeric($_POST['opt']))  ? abs($_POST['opt']) : 0;
+		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changeopt', stripslashes($_POST['verf'])))
+		{
+			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			die($h->endpage());
+		}
+		if (!isset($_POST['opt']) || ($_POST['opt'] != 1 && $_POST['opt'] != 0))
+		{
+			alert('danger',$lang['ERROR_INVALID'],$lang['PREF_EMAIL_ERR']);
+			die($h->endpage());
+		}
+		$db->query("UPDATE `users` SET `email_optin` = {$_POST['opt']} WHERE `userid` = {$userid}");
+		alert('success',$lang['ERROR_SUCCESS'],$lang["PREF_EMAIL_SUCC_{$_POST['opt']}"],true,'preferences.php');
+	}
+	else
+	{
+		$g = ($ir['email_optin'] == 0) ? 
+			$g="	<option value='1'>{$lang['PREF_EMAIL_OPTIN']}</option>
+					<option value='0'>{$lang['PREF_EMAIL_OPTOUT']}</option>" : 
+			$g= "	<option value='0'>{$lang['PREF_EMAIL_OPTOUT']}</option>
+					<option value='1'>{$lang['PREF_EMAIL_OPTIN']}</option>";
+		$csrf=request_csrf_html('prefs_changeopt');
+		echo "<table class='table table-bordered'>
+		<form method='post'>
+		<tr>
+			<th colspan='2'>
+				{$lang['PREF_EMAIL_INFO']}
+			</th>
+		</tr>
+		<tr>
+			<th>
+				{$lang['PREF_EMAIL']}
+			</th>
+			<td>
+				<select name='opt' class='form-control' type='dropdown'>
+					{$g}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<input type='submit' value='{$lang['PREF_EMAIL_BTN']}' class='btn btn-secondary'>
 			</td>
 		</tr>
 		{$csrf}

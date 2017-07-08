@@ -2343,4 +2343,14 @@ $lang['PP_SEC72_2']="will immediately delete personal data, that is data which i
 $lang['PP_SEC8']="8. Questions on Data Protection and Contact / Information, Correction, Deletion and Blocking";
 $lang['PP_SEC8_2']="You are always entitled to request information about any of your data that";
 $lang['PP_SEC8_3']="has stored, as well as their origin and recipient and the purpose it was stored for. If you have any questions about data protection or if you wish to correct, block or delete your profile or any of your personal data, or if you would like to revoke a granted authorization regarding the use of your customer data or e-mail address, please send an in-game message to any in-game staff member (which can be found by visiting the <a href='staff.php'>staff page</a>) and also provide your username and your e-mail address.";
+
+//Email Opt
+$lang['PREF_EMAIL_OPTIN']="Opt-In";
+$lang['PREF_EMAIL_OPTOUT']="Opt-Out";
+$lang['PREF_EMAIL_INFO']="Use this form to either opt-in or opt-out of emails from the game.";
+$lang['PREF_EMAIL']="Opt-Setting";
+$lang['PREF_EMAIL_BTN']="Change Email Opt-Setting";
+$lang['PREF_EMAIL_ERR']="Email opt setting is invalid. You may only opt-in or opt-out.";
+$lang['PREF_EMAIL_SUCC_1']="You have successfully chosen to opt-in to emails sent from the administration about the game.";
+$lang['PREF_EMAIL_SUCC_0']="You have successfully chosen to opt-out of emails sent from the administration about the game.";
 ?>
