@@ -20,7 +20,6 @@ function csrf_error($goBackTo)
 }
 echo "<h3>{$set['WebsiteName']} {$lang['FORUM_FORUMS']}</h3><hr />";
 $fb=$db->fetch_row($db->query("SELECT * FROM `forum_bans` WHERE `fb_user` = {$userid}"));
-//User is currently forum banned, tell them why, and block access.
 if ($fb['fb_time'] > $time)
 {
 	 alert('danger',$lang['ERROR_GENERIC'],"{$lang['FORUM_BAN_INFO']} " . TimeUntil_Parse($fb['fb_time']) . " {$lang['FORUM_BAN_INFO1']} {$fb['fb_reason']}. {$lang['FORUM_BAN_INFO2']}",true,'index.php');
@@ -133,7 +132,6 @@ function idx()
     </thead>
     <tbody>
 	<?php
-    //List available public forum categories.
     while ($r = $db->fetch_row($q))
     {
         $t = DateTime_Parse($r['ff_lp_time'], false, true);
@@ -167,7 +165,6 @@ function idx()
     }
     echo "</table>";
     $db->free_result($q);
-    //Staff forums.
     if (($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer'))
     {
         echo "<hr /><h3>{$lang['FORUM_STAFFONLY']} {$lang['FORUM_FORUMS']}</h3><hr />";
@@ -199,7 +196,6 @@ function idx()
     </thead>
     <tbody>
 	<?php
-        //List available staff forum categories.
         while ($r = $db->fetch_row($q))
         {
             $t = DateTime_Parse($r['ff_lp_time'], false, true);
@@ -240,7 +236,6 @@ function viewforum()
 {
     global $ir, $userid, $lang, $db, $h, $api;
     $_GET['viewforum'] = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs($_GET['viewforum']) : '';
-    //User gets linked here with a category ID.
     if (empty($_GET['viewforum']))
     {
         alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
@@ -251,7 +246,6 @@ function viewforum()
                     "SELECT `ff_auth`, `ff_name`
                      FROM `forum_forums`
                      WHERE `ff_id` = '{$_GET['viewforum']}'");
-    //Specified category does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -260,7 +254,6 @@ function viewforum()
     }
     $r = $db->fetch_row($q);
     $db->free_result($q);
-    //Forum category authorization is staff only, and user is not staff.
     if ($r['ff_auth'] == 'staff')
     {
 		if (!in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer')))
@@ -274,6 +267,45 @@ function viewforum()
     	   <a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
     	   <i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$_GET['viewforum']}'>{$r['ff_name']}</a>$ntl
     	  </big><br /><br />";
+	$posts_per_page = 20;
+    $posts_topic = $db->fetch_single($db->query("SELECT COUNT(`ft_id`) 
+													FROM `forum_topics` 
+													WHERE 
+													`ft_forum_id` = {$_GET['viewforum']}"));
+    $pages = ceil($posts_topic / $posts_per_page);
+    $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
+    if (isset($_GET['page']))
+    {
+        if ($pages == 0)
+		{
+			$st=($pages)*20;
+		}
+		else
+		{
+			$st = ($pages - 1) * 20;
+		}
+    }
+    $pst = -20;
+	echo "<center><ul class='pagination'>{$lang['FORUM_PAGES']}<br /> ";
+    for ($i = 1; $i <= $pages; $i++)
+    {
+        $pst += 20;
+        if ($pst == $st)
+        {
+            echo "<li class='active'><a href='?viewforum={$_GET['viewforum']}&amp;st=$pst'>";
+        }
+		else
+		{
+			echo "<li><a href='?viewforum={$_GET['viewforum']}&amp;st=$pst'>";
+		}
+        echo $i;
+        echo "</li></a>&nbsp;";
+        if ($i % 25 == 0)
+        {
+            echo "</ul><br />";
+        }
+    }
+    echo "</center>";
 		  ?>
 	<table class='table table-bordered table-hover'>
     <thead>
@@ -301,15 +333,14 @@ function viewforum()
                      `ft_owner_id`, `ft_last_id`
                      FROM `forum_topics`
                      WHERE `ft_forum_id` = {$_GET['viewforum']}
-                     ORDER BY `ft_pinned` DESC, `ft_last_time` DESC");
-    //List available threads in this category, ordered by last post's time.
+                     ORDER BY `ft_pinned` DESC, `ft_last_time` DESC
+					 LIMIT {$st}, 20");
     while ($r2 = $db->fetch_row($q))
     {
         $t1 = DateTime_Parse($r2['ft_start_time']);
         $t2 = DateTime_Parse($r2['ft_last_time']);
         if ($r2['ft_pinned'])
         {
-            //Thread is pinned.
             $pt = "<i class='fa fa-thumb-tack' aria-hidden='true'></i> ";
         }
         else
@@ -318,7 +349,6 @@ function viewforum()
         }
         if ($r2['ft_locked'])
         {
-            //Thread is locked.
             $lt = " <i class='fa fa-lock' aria-hidden='true'></i>";
         }
         else
@@ -358,6 +388,27 @@ function viewforum()
               </tr>\n";
     }
     echo "</tbody></table>";
+	$pst = -20;
+    echo "<center><ul class='pagination'>{$lang['FORUM_PAGES']}<br /> ";
+    for ($i = 1; $i <= $pages; $i++)
+    {
+        $pst += 20;
+        if ($pst == $st)
+        {
+            echo "<li class='active'><a href='?viewforum={$_GET['viewforum']}&st=$pst'>";
+        }
+		else
+		{
+			echo "<li><a href='?viewforum={$_GET['viewforum']}&st=$pst'>";
+		}
+        echo $i;
+        echo "</li></a>&nbsp;";
+        if ($i % 25 == 0)
+        {
+            echo "<br /></center>";
+        }
+    }
+	echo"</ul>";
     $db->free_result($q);
 }
 
@@ -367,7 +418,6 @@ function viewtopic()
 	$code = request_csrf_code('forum_reply');
     $precache = array();
     $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
-    //User is linked here with a topic ID.
     if (empty($_GET['viewtopic']))
     {
        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
@@ -379,7 +429,6 @@ function viewtopic()
                     `ft_locked`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['viewtopic']}");
-    //Topic does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -393,7 +442,6 @@ function viewtopic()
                     "SELECT `ff_auth`, `ff_id`, `ff_name`
                     FROM `forum_forums`
                     WHERE `ff_id` = {$topic['ft_forum_id']}");
-    //Forum category does not exist.
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
@@ -402,7 +450,6 @@ function viewtopic()
     }
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
-    //Forum category is staff only, and user is not a staff member.
     if ($forum['ff_auth'] == 'staff')
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
@@ -453,8 +500,6 @@ function viewtopic()
         }
     }
     echo "</center>";
-    //User is a staff member, show them staff tools.
-    //Lock/Unlock, Pin/Unpin, Delete and Move Thread.
     if (!($ir['user_level'] == 'Member'))
     {
         echo "
@@ -522,7 +567,6 @@ function viewtopic()
                      ORDER BY `fp_time` ASC
                      LIMIT {$st}, 20");
     $no = $st;
-    //List posts in the specifed topic.
     while ($r = $db->fetch_row($q3))
     {
 		$PNQ=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid`={$r['fp_poster_id']}");
@@ -530,8 +574,6 @@ function viewtopic()
 		$PN['username'] = ($PN['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$PN['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$PN['username']} has {$PN['vip_days']} VIP Days remaining.'></i></span>" : $PN['username'];
 
 		$qlink = "[<a href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>{$lang['FORUM_POST_QUOTE']}</a>]";
-        //Show edit link if post's owner is the current user, 
-        //or a staff member that has forum moderator abilities.
         if ($api->UserMemberLevelGet($userid,'forum moderator') || $userid == $r['fp_poster_id'])
         {
             $elink =
@@ -542,8 +584,6 @@ function viewtopic()
             $elink = "";
         }
         $no++;
-        //Show delete post button if the post is not the opening 
-        //post, and user has forum moderator abilites.
         if ($no > 1 and ($api->UserMemberLevelGet($userid,'forum moderator')))
         {
             $dlink =
@@ -553,7 +593,6 @@ function viewtopic()
         {
             $dlink = "";
         }
-        //Show forum warn and ban buttons if user is a forum moderator.
 		if ($api->UserMemberLevelGet($userid,'forum moderator'))
 		{
 			$wlink="[<a href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'>{$lang['FORUM_POST_WARN']}</a>]";
@@ -567,7 +606,6 @@ function viewtopic()
         $t = DateTime_Parse($r['fp_time']);
 		$editornameq=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['fp_editor_id']} LIMIT 1");
 		$editorname=$db->fetch_single($editornameq);
-        //Show that post was edited, and by who and when.
         if ($r['fp_edit_count'] > 0)
         {
             $edittext =
@@ -579,7 +617,6 @@ function viewtopic()
         {
             $edittext = "";
         }
-        //If poster's data is not cached, lets cache it.
         if (!isset($precache[$r['fp_poster_id']]))
         {
             $membq =
@@ -588,7 +625,6 @@ function viewtopic()
                             `user_level`,`username`,`display_pic`, `signature`
                              FROM `users`
                              WHERE `userid` = {$r['fp_poster_id']}");
-            //If poster has been deleted, set their info here.
             if ($db->num_rows($membq) == 0)
             {
                 $memb = array('userid' => 0, 'signature' => '');
@@ -600,15 +636,12 @@ function viewtopic()
             $db->free_result($membq);
             $precache[$memb['userid']] = $memb;
         }
-        //Select cache info.
         else
         {
             $memb = $precache[$r['fp_poster_id']];
         }
-        //Display this info if user exists.
         if ($memb['userid'] > 0)
         {
-            //Show user's display picture if specified.
 			if ($memb['display_pic'])
 			{
 				$av="<center><img src='{$memb['display_pic']}' class='img-responsive' width='75'></center>";
@@ -617,7 +650,6 @@ function viewtopic()
 			{
 				$av="";
 			}
-            //Parse their signature correctly if its setup.
 			$memb['signature'] = $parser->parse($memb['signature']);
 			$memb['signature'] = $parser->getAsHtml($memb['signature']);
         }
@@ -631,14 +663,11 @@ function viewtopic()
 			 </tr>
 			 <tr>
 				<td valign='top'>";
-        //Post is a valid user.
         if ($memb['userid'] > 0)
         {
-            //Select count of posts created by this user.
 			$userpostsq=$db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$r['fp_poster_id']}");
 			$userposts=$db->fetch_single($userpostsq);
 			
-            //Select count of topics created by this user.
 			$usertopicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_owner_id`={$r['fp_poster_id']}");
 			$usertopics=$db->fetch_single($usertopicsq);
             print
@@ -648,12 +677,10 @@ function viewtopic()
 					 <b>{$lang['FORUM_F_PC']}:</b> {$userposts}<br />
 					 <b>{$lang['FORUM_F_TC']}:</b> {$usertopics}<br />";
         }
-        //User does not exist anymore, show this as their info.
         else
         {
             print "<b>{$lang['GEN_NEU']}</b>";
         }
-        //Show their post, last edited, and their signature.
         print
                 "</td>
 			   	 <td>
@@ -687,7 +714,6 @@ function viewtopic()
         }
     }
 	echo"</ul>";
-    //Allow replies if topic is unlocked.
 	if ($topic['ft_locked'] == 0)
 	{
 		echo"<br />
@@ -712,7 +738,6 @@ function viewtopic()
 		</form>
 		";
 	}
-    //Topic is locked, no replies here.
 	else
 	{
 		echo "<br />
@@ -724,12 +749,10 @@ function reply()
 {
     global $ir, $userid, $lang, $db, $api;
     $_GET['reply'] = (isset($_GET['reply']) && is_numeric($_GET['reply'])) ? abs($_GET['reply']) : '';
-    //User fails CSRF check.
 	if (!isset($_POST['verf']) || !verify_csrf_code('forum_reply', stripslashes($_POST['verf'])))
 	{
 		csrf_error("?viewtopic={$_GET['reply']}");
 	}
-    //Topic ID is not specified.
 	if (empty($_GET['reply']))
     {
         alert('danger',$lang['ERROR_EMPTY'],$lang['FORUM_EMPTY_REPLY'],true,"forums.php");
@@ -740,7 +763,6 @@ function reply()
                     "SELECT `ft_forum_id`, `ft_locked`, `ft_name`, `ft_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['reply']}");
-    //Topic does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -754,7 +776,6 @@ function reply()
                     "SELECT `ff_auth`, `ff_id`
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
-    //Forum Category does not exist.
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
@@ -763,7 +784,6 @@ function reply()
     }
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
-    //Forum category requires staff permission, but user is not staff.
     if ($forum['ff_auth'] == 'staff')
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
@@ -772,18 +792,15 @@ function reply()
 			die($h->endpage());
 		}
     }
-    //Topic is unlocked.
     if ($topic['ft_locked'] == 0)
     {
-        //Make the post database friendly.
 		$_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
-        //Post is longer than 65,535 characters, so lets stop them.
         if ((strlen($_POST['fp_text']) > 65535))
         {
 			alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_MAX_CHAR_REPLY'],true,"forums.php?viewtopic={$_GET['reply']}");
             die($h->endpage());
         }
-		//Insert post into topic, and update category to show latest post.
+		
 		$last_name = $db->escape($topic['ft_name']);
         $post_time = time();
         $db->query("
@@ -804,7 +821,6 @@ function reply()
                  `ff_lp_poster_id` = $userid,
                  `ff_lp_t_id` = {$_GET['reply']}
                  WHERE `ff_id` = {$forum['ff_id']}");
-        //Tell player their post was successfully posted, then redirect back to topic.
         alert('success',"","{$lang['FORUM_REPLY_SUCCESS']}",false);
 		echo "<br />";
         $_GET['lastpost'] = 1;
@@ -820,7 +836,6 @@ function newtopicform()
 {
     global $ir, $userid, $lang, $h, $db, $api;
     $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
-    //Forum category not set.
     if (empty($_GET['forum']))
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","",true,"forums.php");
@@ -831,7 +846,6 @@ function newtopicform()
                     "SELECT `ff_auth`, `ff_name`
                      FROM `forum_forums`
                      WHERE `ff_id` = '{$_GET['forum']}'");
-    //Forum category does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -840,7 +854,6 @@ function newtopicform()
     }
     $r = $db->fetch_row($q);
     $db->free_result($q);
-    //Forum category is staff only, and user is not a staff member.
     if ($r['ff_auth'] == 'staff')
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
@@ -849,7 +862,6 @@ function newtopicform()
 			die($h->endpage());
 		}
     }
-    //Show new topic form.
     $code = request_csrf_code("forums_newtopic_{$_GET['forum']}");
     echo <<<EOF
 	<big>
@@ -897,12 +909,10 @@ function newtopic()
 {
     global $ir, $userid, $h, $lang, $db, $api;
     $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
-    //User failed CSRF check.
 	if (!isset($_POST['verf']) || !verify_csrf_code("forums_newtopic_{$_GET['forum']}", stripslashes($_POST['verf'])))
 	{
 		csrf_error("?act=newtopicform&forum={$_GET['forum']}");
 	}
-    //Forum category not set.
     if (empty($_GET['forum']))
     {
         alert('danger',"{$lang['ERROR_GENERIC']}","",true,"forum.php");
@@ -913,7 +923,6 @@ function newtopic()
                     "SELECT `ff_auth`, `ff_id`
                      FROM `forum_forums`
                      WHERE `ff_id` = {$_GET['forum']}");
-    //Forum category does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -922,7 +931,6 @@ function newtopic()
     }
     $r = $db->fetch_row($q);
     $db->free_result($q);
-    //Forum category is staff-only, user is not staff.
     if ($r['ff_auth'] == 'staff')
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
@@ -935,7 +943,6 @@ function newtopic()
     $u = $db->escape($u);
     $_POST['ft_name'] =
             $db->escape(strip_tags(stripslashes($_POST['ft_name'])));
-    //Topic name is longer than 255 characters, so stop topic creation.
     if ((strlen($_POST['ft_name']) > 255))
     {
         alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_TOPIC_FORM_TITLE_LENGTH'],true,"back");
@@ -943,20 +950,17 @@ function newtopic()
     }
     $_POST['ft_desc'] =
             $db->escape(strip_tags(stripslashes($_POST['ft_desc'])));
-    //Topic description is longer than 255 characters, so stop topic creation.
     if ((strlen($_POST['ft_desc']) > 255))
     {
         alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_TOPIC_FORM_TITLE_LENGTH'],true,"back");
 		die($h->endpage());
     }
     $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
-    //Topic post is longer than 65535 characters, so stop topic creation.
     if ((strlen($_POST['fp_text']) > 65535))
     {
         alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_MAX_CHAR_REPLY'],true,"back");
         die($h->endpage());
     }
-    //Create topic!
     $post_time = time();
     $db->query("INSERT INTO `forum_topics` 
 		(`ft_id`, `ft_forum_id`, `ft_name`, `ft_desc`, 
@@ -984,7 +988,7 @@ function newtopic()
              SET `ff_lp_time` = {$post_time},
 			 `ff_lp_poster_id` = $userid, `ff_lp_t_id` = {$i}
              WHERE `ff_id` = {$r['ff_id']}");
-    //Tell user topic was created successfully, redirect to topic itself.
+    
 	alert("success",$lang['ERROR_SUCCESS'],$lang['FORUM_TOPIC_FORM_SUCCESS']);
     $_GET['viewtopic'] = $i;
     viewtopic();
@@ -1004,13 +1008,11 @@ function quote()
     $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
 	$_GET['fpid'] = (isset($_GET['fpid']) && is_numeric($_GET['fpid'])) ? abs($_GET['fpid']) : '';
 	$_GET['quotename'] = (isset($_GET['quotename']) && is_numeric($_GET['quotename'])) ? abs($_GET['quotename']) : '';
-    //Topic is not specified.
     if (empty($_GET['viewtopic']))
     {
         alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
-    //Forum Post or Quoted Post is not specifed.
     if (!isset($_GET['quotename']) || !isset($_GET['fpid']))
     {
         alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php?viewtopic={$_GET['viewtopic']}");
@@ -1018,7 +1020,6 @@ function quote()
     }
     $q =
             $db->query("SELECT `ft_forum_id`, `ft_name`, `ft_locked`, `ft_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['viewtopic']}");
-    //Topic does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -1032,7 +1033,6 @@ function quote()
                     "SELECT `ff_auth`,`ff_id`, `ff_name`
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
-    //Forum category does not exist.
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
@@ -1041,7 +1041,6 @@ function quote()
     }
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
-    //Forum category requires staff permission, but user is not a staff member.
     if ($forum['ff_auth'] == 'staff')
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
@@ -1050,7 +1049,6 @@ function quote()
 			die($h->endpage());
 		}
     }
-    //Select quoted post's text.
 	$q3 = $db->query("SELECT `fp_text` FROM `forum_posts` WHERE `fp_id` = {$_GET['fpid']}");
 	$text = $db->fetch_single($q3);
 	$text = strip_tags(stripslashes($text));
@@ -1065,7 +1063,6 @@ function quote()
 		  <br />
 		  <br />
     ";
-    //Thread is unlocked, so show the post form.
     if ($topic['ft_locked'] == 0)
     {
         echo"
@@ -1089,7 +1086,6 @@ function quote()
 		<input type='hidden' name='verf' value='{$code}' />
 		</form>";
     }
-    //Topic is locked.. no quoting please.
     else
     {
         echo "{$lang['FORUM_POST_TIL']}";
@@ -1099,7 +1095,6 @@ function edit()
 {
     global $ir, $c, $userid, $h, $lang, $db, $api;
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
-    //Topic is not specifed.
     if (empty($_GET['topic']))
     {
         alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
@@ -1110,7 +1105,6 @@ function edit()
                     "SELECT `ft_forum_id`, `ft_name`, `ft_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['topic']}");
-    //Topic does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -1124,7 +1118,6 @@ function edit()
                     "SELECT `ff_auth`, `ff_id`, `ff_name`
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
-    //Forum category does not exist.
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
@@ -1133,7 +1126,6 @@ function edit()
     }
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
-    //Category requires staff permission, user is not staff.
     if ($forum['ff_auth'] == 'staff')
     {
 		if (($api->UserMemberLevelGet($userid,'forum moderator')) || (!($userid == $post['fp_poster_id'])))
@@ -1143,7 +1135,6 @@ function edit()
 		}
     }
     $_GET['post'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? abs($_GET['post']) : '';
-    //Post to edit is not specified.
     if (empty($_GET['post']))
     {
         alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php?viewtopic={$_GET['topic']}");
@@ -1154,7 +1145,6 @@ function edit()
                     "SELECT `fp_poster_id`, `fp_text`
                      FROM `forum_posts`
                      WHERE `fp_id` = {$_GET['post']}");
-    //Post to edit does not exist.
     if ($db->num_rows($q3) == 0)
     {
         $db->free_result($q3);
@@ -1163,7 +1153,6 @@ function edit()
     }
     $post = $db->fetch_row($q3);
     $db->free_result($q3);
-    //If user is not the post's owner, or a forum moderator.
     if (!($api->UserMemberLevelGet($userid,'forum moderator') || $userid == $post['fp_poster_id']))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_EDIT_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
@@ -1176,7 +1165,6 @@ function edit()
     		<i class='fa fa-chevron-right' aria-hidden='true'></i> {$lang['FORUM_EDIT_FORM_PAGENAME']}
     	  </big><br /><br />
     ";
-    //Display the form!
     $edit_csrf = request_csrf_code("forums_editpost_{$_GET['post']}");
 	$fp_text = strip_tags(stripslashes($post['fp_text']));
     echo <<<EOF
@@ -1206,13 +1194,11 @@ function editsub()
     global $ir, $c, $userid, $h, $lang, $db, $api;
     $_GET['post'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? abs($_GET['post']) : '';
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
-    //Both the post and topic are not specified.
     if ((empty($_GET['post']) || empty($_GET['topic'])))
     {
         alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
-    //User failed the CSRF check.
 	if (!isset($_POST['verf']) || !verify_csrf_code("forums_editpost_{$_GET['post']}", stripslashes($_POST['verf'])))
 	{
 		csrf_error("?act=edit&topic={$_GET['topic']}&post={$_GET['post']}");
@@ -1222,7 +1208,6 @@ function editsub()
                     "SELECT `ft_forum_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['topic']}");
-    //Topic does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -1236,7 +1221,6 @@ function editsub()
                     "SELECT `ff_auth`
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
-    //Forum category does not exist.
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
@@ -1245,7 +1229,6 @@ function editsub()
     }
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
-    //Category requires staff permission, user is not staff member.
     if ($forum['ff_auth'] == 'staff')
     {
 		if (!($api->UserMemberLevelGet($userid,'forum moderator')))
@@ -1259,7 +1242,6 @@ function editsub()
                     "SELECT `fp_poster_id`
                      FROM `forum_posts`
                      WHERE `fp_id` = {$_GET['post']}");
-    //Post does not exist.
     if ($db->num_rows($q3) == 0)
     {
         $db->free_result($q3);
@@ -1268,20 +1250,17 @@ function editsub()
     }
     $post = $db->fetch_row($q3);
     $db->free_result($q3);
-    //User is not the post's owner, or a forum moderator.
     if (!(($api->UserMemberLevelGet($userid,'forum moderator')) || $ir['userid'] == $post['fp_poster_id']))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
 	$_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
-    //Edited post is over 65,535 charcters in length, stop the edit.
     if ((strlen($_POST['fp_text']) > 65535))
     {
         alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_MAX_CHAR_REPLY'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
-    //Edit the post.
     $db->query(
             "UPDATE `forum_posts`
              SET 
@@ -1291,7 +1270,7 @@ function editsub()
                     . ",
              `fp_edit_count` = `fp_edit_count` + 1
              WHERE `fp_id` = {$_GET['post']}");
-    //Tell user success, redirect to thread.
+
 	alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_EDIT_SUCCESS'],false);		 
 	echo"<br />
    ";
@@ -1302,7 +1281,6 @@ function editsub()
 function move()
 {
     global $ir, $c, $userid, $h, $lang, $db, $api;
-    //User is not a forum moderator.
     if (!($api->UserMemberLevelGet($userid,'forum moderator')))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
@@ -1310,14 +1288,12 @@ function move()
     }
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     $_POST['forum'] = (isset($_POST['forum']) && is_numeric($_POST['forum'])) ? abs($_POST['forum']) : '';
-    //Both topic and category are not specifed.
     if (empty($_GET['topic']) || empty($_POST['forum']))
     {
         alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q = $db->query("SELECT `ft_name`, `ft_forum_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
-    //Topic does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -1331,21 +1307,18 @@ function move()
                     "SELECT `ff_name`
                      FROM `forum_forums`
                      WHERE `ff_id` = {$_POST['forum']}");
-    //Category does not exist.
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
         alert('danger',$lang['ERROR_INVALID'],$lang['FORUM_MOVE_TOPIC_DFDNE'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
-    //Move the topic.
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
     $db->query(
             "UPDATE `forum_topics`
              SET `ft_forum_id` = {$_POST['forum']}
              WHERE `ft_id` = {$_GET['topic']}");
-    //Tell user success. Log the action and recache the forums.
     alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_MOVE_TOPIC_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
 	$api->SystemLogsAdd($userid,'staff',"Moved Topic {$topic['ft_name']} to {$forum['ff_name']}");
     recache_forum($topic['ft_forum_id']);
@@ -1355,14 +1328,12 @@ function move()
 function lock()
 {
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
-    //User is not a forum moderator.
     if (!($api->UserMemberLevelGet($userid,'forum moderator')))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 		die($h->endpage());
     }
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
-    //Topic is not set.
     if (empty($_GET['topic']))
     {
         alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
@@ -1373,7 +1344,6 @@ function lock()
                     "SELECT `ft_name`,`ft_locked`,`ft_forum_id`, `ft_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['topic']}");
-    //Topic does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -1382,7 +1352,6 @@ function lock()
     }
     $r = $db->fetch_row($q);
     $db->free_result($q);
-    //Topic is locked, so unlock it.
     if ($r['ft_locked'] == 1)
     {
         $db->query(
@@ -1392,7 +1361,6 @@ function lock()
 		alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_UNLOCK_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
 		$api->SystemLogsAdd($userid,'staff',"Unlocked Topic {$r['ft_name']}");
     }
-    //Topic is locked, so lock it.
     else
     {
         $db->query(
@@ -1407,14 +1375,12 @@ function lock()
 function pin()
 {
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
-    //User is not a forum moderator.
     if (!($api->UserMemberLevelGet($userid,'forum moderator')))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 		die($h->endpage());
     }
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
-    //Topic is not specified.
     if (empty($_GET['topic']))
     {
         alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
@@ -1425,7 +1391,6 @@ function pin()
                     "SELECT `ft_name`, `ft_pinned`, `ft_forum_id`, `ft_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['topic']}");
-    //Topic does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -1434,7 +1399,6 @@ function pin()
     }
     $r = $db->fetch_row($q);
     $db->free_result($q);
-    //Topic is pinned, so unpin it.
     if ($r['ft_pinned'] == 1)
     {
         $db->query(
@@ -1444,7 +1408,6 @@ function pin()
         alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_UNPIN_DONE'],true,"forums.php?viewtopic={$r['ft_id']}");
 		$api->SystemLogsAdd($userid,'staff',"Unpinned Topic {$r['ft_name']}");
     }
-    //Topic is unpinned, so pin it.
     else
     {
         $db->query(
@@ -1459,14 +1422,12 @@ function pin()
 function delepost()
 {
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
-    //User is not a forum moderator.
     if (!($api->UserMemberLevelGet($userid,'forum moderator')))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
 		die($h->endpage());
     }
     $_GET['post'] = isset($_GET['post']) && is_numeric($_GET['post']) ? abs($_GET['post']) : '';
-    //Post to delete is not specified.
     if (empty($_GET['post']))
     {
         alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
@@ -1477,7 +1438,6 @@ function delepost()
                     "SELECT *
                      FROM `forum_posts`
                      WHERE `fp_id` = {$_GET['post']}");
-    //Post to delete does not exist.
     if ($db->num_rows($q3) == 0)
     {
         $db->free_result($q3);
@@ -1491,7 +1451,6 @@ function delepost()
                     "SELECT `ft_name`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$post['fp_topic_id']}");
-    //Topic does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -1500,11 +1459,9 @@ function delepost()
     }
     $topic = $db->fetch_row($q);
     $db->free_result($q);
-    //Delete the post.
     $db->query(
             "DELETE FROM `forum_posts`
     		    WHERE `fp_id` = {$post['fp_id']}");
-    //Tell user success, recache forums.
     alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_DELETE_DONE'],true,"forums.php?viewtopic={$post['fp_topic_id']}");
     recache_topic($post['fp_topic_id']);
     recache_forum($post['ff_id']);
@@ -1516,20 +1473,17 @@ function deletopic()
 {
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
-    //User is not a forum moderator.
     if (!($api->UserMemberLevelGet($userid,'forum moderator')))
     {
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
-    //Topic is not specified.
 	if (empty($_GET['topic']))
     {
         alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,'forums.php');
         die($h->endpage());
     }
     $q = $db->query("SELECT `ft_forum_id`, `ft_name` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
-    //Topic does not exist.
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
@@ -1538,10 +1492,8 @@ function deletopic()
     }
     $topic = $db->fetch_row($q);
     $db->free_result($q);
-    //Delete topic and posts in topic.
     $db->query("DELETE FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
     $db->query("DELETE FROM `forum_posts` WHERE `fp_topic_id` = {$_GET['topic']}");
-    //Tell user success, recache forums.
     alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_DELETE_TOPIC_DONE'],true,'forums.php');
     recache_forum($topic['ft_forum_id']);
 	$api->SystemLogsAdd($userid,'staff',"Deleted topic {$topic['ft_name']}");
