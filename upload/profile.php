@@ -316,8 +316,12 @@ else
 								<th>Output</th>
 							</tr>
 							<tr>
-							<td>{$lang['PROFILE_STAFF_LOC']}</td>
+								<td>{$lang['PROFILE_STAFF_LOC']}</td>
 								<td>{$fg['city']}, {$fg['state']}, {$fg['country']}, ({$fg['isocode']})</td>
+							</tr>
+							<tr>
+								<td>{$lang['PROFILE_STAFF_RISK']}</td>
+								<td>" . parse_risk($fg['risk_level']) . "</td>
 							</tr>
 							<tr>
 								<td>{$lang['PROFILE_STAFF_LH']}</td>
@@ -368,12 +372,21 @@ else
 		<?php
 		}
 }
-function checkblank($in)
+function parse_risk($risk_level)
 {
-    if (!$in)
-    {
-        return "N/A";
-    }
-    return $in;
+	global $lang;
+	switch ($risk_level)
+	{
+		case 2:
+			return $lang['PROFILE_RISK_2'];
+		case 3:
+			return $lang['PROFILE_RISK_3'];
+		case 4:
+			return $lang['PROFILE_RISK_4'];
+		case 5:
+			return $lang['PROFILE_RISK_5'];
+		default:
+			return $lang['PROFILE_RISK_1'];
+	}
 }
 $h->endpage();

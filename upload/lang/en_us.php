@@ -556,7 +556,7 @@ $lang['PROFILE_STAFF_LH']="Last Hit";
 $lang['PROFILE_STAFF_LL']="Last Login";
 $lang['PROFILE_STAFF_REGIP']="Sign Up";
 $lang['PROFILE_STAFF_THRT']="Threat?";
-$lang['PROFILE_STAFF_RISK']="Risk Level<br /><small>1 is low, 5 is high</small>";
+$lang['PROFILE_STAFF_RISK']="Risk Level";
 $lang['PROFILE_STAFF_OS']="Browser/OS";
 $lang['PROFILE_STAFF_LA']="Last Action";
 $lang['PROFILE_STAFF_NOTES']="Staff Notes:";
@@ -564,6 +564,11 @@ $lang['PROFILE_STAFF_BTN']="Update Notes About";
 $lang['PROFILE_BTN_MSG']="Send";
 $lang['PROFILE_BTN_MSG1']="A Message";
 $lang['PROFILE_BTN_SND']="Send";
+$lang['PROFILE_RISK_1']="No Risk";
+$lang['PROFILE_RISK_2']="Spam";
+$lang['PROFILE_RISK_3']="Open Public Proxy";
+$lang['PROFILE_RISK_4']="Tor Node";
+$lang['PROFILE_RISK_5']="Honeypot / Botnet / DDOS Attack";
 
 //Equip Items
 $lang['EQUIP_NOITEM']="Item cannot be found, and as a result, you cannot equip it.";
