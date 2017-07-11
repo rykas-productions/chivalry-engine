@@ -229,14 +229,6 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					{$lang['SS_TIMEOUT']}
-				</th>
-				<td>
-					<input type='number' name='sessiontimeout' placeholder='0 means no timeout.' class='form-control' min='0' required='1' value='{$set['max_sessiontime']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
 					{$lang['SS_REVALID']}
 				</th>
 				<td>
@@ -464,12 +456,30 @@ function diagnostics()
     }
 	if (function_exists('password_hash'))
     {
-        $hv = "<span style='color: green'>{$lang['SS_DIAG1']}</span>";
+        $hv = '<span style="color: green">Pass! Using stronger password hash method.</span>';
+        $hvf = 1;
     }
     else
     {
-        $hv = "<span style='color: red'>{$lang['SS_DIAG']}</span>";
+        $hv = '<span style="color: red">Failed...</span>';
+        $hvf = 0;
     }
+	if (function_exists('curl_init'))
+    {
+        $cuv = "<span style='color: green'>{$lang['SS_DIAG1']}</span>";
+    }
+    else
+    {
+        $cuv = "<span style='color: red'>{$lang['SS_DIAG']}</span>";
+    }
+	if (function_exists('fopen'))
+    {
+        $fov = "<span style='color: green'>{$lang['SS_DIAG1']}</span>";
+    }
+    else
+    {
+        $fov = "<span style='color: red'>{$lang['SS_DIAG']}</span>";
+    }	
 	echo"<table class='table table-bordered table-hover'>
     		<tr>
     			<td>{$lang['SS_TEST']}</td>
@@ -494,6 +504,14 @@ function diagnostics()
 			<tr>
     			<td>{$lang['SS_OPENSSL']}</td>
     			<td>{$ov}</td>
+    		</tr>
+			<tr>
+    			<td>{$lang['SS_CURL']}</td>
+    			<td>{$cuv}</td>
+    		</tr>
+			<tr>
+    			<td>{$lang['SS_FOPEN']}</td>
+    			<td>{$fov}</td>
     		</tr>
     		<tr>
     			<td>{$lang['SS_UPDATE']}</td>
