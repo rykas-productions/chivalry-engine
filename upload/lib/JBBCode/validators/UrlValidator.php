@@ -20,8 +20,11 @@ class UrlValidator implements \JBBCode\InputValidator
      */
     public function validate($input)
     {
-        $input = filter_var($input, FILTER_SANITIZE_URL);
-        return $input;
+        $valid = filter_var($input, FILTER_VALIDATE_URL);
+		// Simple workaround for protocol relative urls.
+		// If sticking a protocol on the front makes it valid, assume it's valid
+		if(!$valid)
+			$valid = filter_var('http://test.com/'.$input, FILTER_VALIDATE_URL);
+		return !!$valid;
     }
-
 }
