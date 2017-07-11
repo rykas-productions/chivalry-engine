@@ -350,8 +350,8 @@ function pic_change()
 				$h->endpage();
 				exit;
 			}
-			$image = (@getimagesize($npic));
-			if (!is_array($image))
+			$image = (@isImage($npic));
+			if (!$image)
 			{
 				alert('danger',$lang['ERROR_INVALID'],$lang['PIC_NOIMAGE']);
 				die($h->endpage());
