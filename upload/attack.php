@@ -258,6 +258,7 @@ function attacking()
 				}
 				$db->free_result($q3);
 			}
+			$theirbeforehp=$odata['hp'];
             //Fix damage...
 			if ($mydamage < -100000)
 			{
@@ -277,6 +278,10 @@ function attacking()
 			else if ($crit == 25 OR $crit == 8)
 			{
 				$mydamage /= (Random(20, 40) / 10);
+			}
+			if ($mydamage > $theirbeforehp)
+			{
+				$mydamage=$odata['hp'];
 			}
 			$mydamage = round($mydamage);
 			$odata['hp'] -= $mydamage;
@@ -354,6 +359,7 @@ function attacking()
 					}
 					$db->free_result($q3);
 				}
+				$yourbeforehp=$ir['hp'];
                 //If the user doesn't have armor equipped.
 				if ($dam < -100000)
 				{
@@ -392,6 +398,10 @@ function attacking()
 				if ($ir['hp'] < 0)
 				{
 					$ir['hp'] = 0;
+				}
+				if ($dam > $yourbeforehp)
+				{
+					$dam=$ir['hp'];
 				}
 				$api->UserInfoSet($userid,"hp",-$dam);
 				$ns = $_GET['nextstep'] + 1;
