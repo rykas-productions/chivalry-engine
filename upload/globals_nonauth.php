@@ -18,6 +18,7 @@ if (!isset($_COOKIE['theme']))
 	setcookie('theme',1,time()+86400);
 	$_COOKIE['theme']=1;
 }
+$time=time();
 //Set session name and start it.
 session_name('CENGINE');
 @session_start();
@@ -89,6 +90,8 @@ $db->configure($_CONFIG['hostname'], $_CONFIG['username'],
         $_CONFIG['password'], $_CONFIG['database'], $_CONFIG['persistent']);
 $db->connect();
 $c = $db->connection_id;
+//Update data in-game externally.
+check_data();
 //Include API file.
 include("class/class_api.php");
 $api = new api;

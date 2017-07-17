@@ -975,7 +975,7 @@ function notification_add($userid, $text)
 */
 function check_data()
 {
-	global $db,$ir,$userid,$time,$api;
+	global $db,$ir,$time,$api;
 	$q1=$db->query("SELECT `fed_userid`
 					FROM `fedjail` 
 					WHERE `fed_out` < {$time}");
