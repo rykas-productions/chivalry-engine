@@ -103,3 +103,8 @@ while ($r = $db->fetch_row($settq))
 //Parse the headers.
 $h = new headers;
 $h->startheaders();
+//Run the crons if possible.
+foreach (glob("crons/*.php") as $filename) 
+{ 
+    include $filename; 
+}
