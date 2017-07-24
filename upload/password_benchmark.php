@@ -10,8 +10,9 @@
 echo "<h3>Password Hash Cost Calculator</h3><hr />";
 if (isset($_POST['password']))
 {
-	$mSec = $_POST['ms'];
-	$password = $_POST['password'];
+	$mSec = (isset($_POST['ms']) && is_numeric($_POST['ms']))  ? abs($_POST['ms']) : 100;
+	$password = $_POST['password'] = (isset($_POST['password']) && is_string($_POST['password'])) ? stripslashes($_POST['password']) : 'Bx^PzAeCp8w?+]Y';
+	$password = htmlentities($password, ENT_QUOTES, 'ISO-8859-1');
 	echo "Testing BCRYPT hashing the password '{$password}'. We're going to run until the time to generate the hash takes longer than {$mSec}ms<br />";
 	$cost = 3;
 	do
