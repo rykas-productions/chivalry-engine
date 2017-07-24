@@ -64,7 +64,7 @@ function addbot()
 				die($h->endpage());
 			}
 			$db->query("INSERT INTO `botlist` (`botuser`, `botitem`, `botcooldown`) VALUES ('{$user}', '{$item}', '{$cooldown}')");
-			alert('success',$lang["ERROR_SUCCESS"],$lang['STAFF_BOTS_ADD_SUCCESS'],true,'staff.php');
+			alert('success',$lang["ERROR_SUCCESS"],$lang['STAFF_BOTS_ADD_SUCCESS'],true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Added User ID {$user} to the bot list.");
 			die($h->endpage());
 		}
@@ -140,7 +140,7 @@ function delbot()
 				die($h->endpage());
 			}
 			$db->query("DELETE FROM `botlist` WHERE `botuser` = {$bot}");
-			alert('success',$lang["ERROR_SUCCESS"],$lang['STAFF_BOTS_DEL_SUCCESS'],true,'staff.php');
+			alert('success',$lang["ERROR_SUCCESS"],$lang['STAFF_BOTS_DEL_SUCCESS'],true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Deleted User ID {$bot} from the bot list.");
 		}
 	}
