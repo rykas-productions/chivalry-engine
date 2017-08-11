@@ -6,6 +6,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+//I wish to rewrite this mess eventually.
 $menuhide=true;
 require_once('globals_nonauth.php');
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);

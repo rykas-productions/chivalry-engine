@@ -150,15 +150,14 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 		<div class='card-block'>";
 			$Rank=0;
 			$RankPlayerQuery = 
-			$db->query("SELECT u.`userid`, `level`, `username`,
-			`strength`, `agility`, `guard`, `labor`, `IQ`
+			$db->query("SELECT u.`userid`, `level`, `username`, `strength`, `agility`, `guard`, `labor`, `IQ`
 			FROM `users` AS `u`
 			INNER JOIN `userstats` AS `us`
 			ON `u`.`userid` = `us`.`userid`
 			WHERE `u`.`user_level` != 'Admin' AND `u`.`user_level` != 'NPC'
 			ORDER BY (`strength` + `agility` + `guard` + `labor` + `IQ`) 
 			DESC, `u`.`userid` ASC LIMIT 10");
-            //Shop the top 10 strongest players in the game.
+            //Show the top 10 strongest players in the game.
 			while ($pdata=$db->fetch_row($RankPlayerQuery))
 			{
 				$Rank=$Rank+1;

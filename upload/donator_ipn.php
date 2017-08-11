@@ -9,6 +9,7 @@
 */
 require_once('globals_nonauth.php');
 require('class/PaypalIPN.php');
+$wantedcurrency="USD";
 
 use PaypalIPN;
 $ipn = new PaypalIPN();
@@ -53,10 +54,10 @@ if ($verified)
 		$api->SystemLogsAdd($buyer,'donate',"Attempted to donate, but sent their cash to {$receiver_email}.");
 		exit;
 	}
-    //If you are using a different currency, update it here!
-	if ($payment_currency != "USD")
+    //Check if the donator gave you the right currency.
+	if ($payment_currency != $wantedcurrency)
 	{
-		$api->SystemLogsAdd($buyer,'donate',"Attempted to donate, but sent their cash in {$payment_currency}, not USD.");
+		$api->SystemLogsAdd($buyer,'donate',"Attempted to donate, but sent their cash in {$payment_currency}, not {$wantedcurrency}.");
 		exit;
 	}
 	//Check to see if the donation is for the right game.
@@ -94,5 +95,5 @@ if ($verified)
 	$api->SystemLogsAdd($buyer,'donate',"{$payer_email} donated \${$payment_amount} for VIP Pack #{$packr[2]}.");
 	$api->GameAddNotification($for,"Your \${$payment_amount} donation for your " . $api->SystemItemIDtoName($fpi['vip_item']) . " item has been successfully credited to you.");
 }
-// Reply with an empty 200 response to indicate to paypal the IPN was received correctly.
+// Reply with an empty 200 response to indicate to PayPal the IPN was received correctly.
 header("HTTP/1.1 200 OK");

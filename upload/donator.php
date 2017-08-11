@@ -46,9 +46,10 @@ while ($r=$db->fetch_row($q))
 			{
 				if ($r["effect{$enum}_on"] == 'true')
 				{
+                    //Lets make the item's effects more user friendly to read, eh.
 					$einfo = unserialize($r["effect{$enum}"]);
 					$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
-					$einfo['dir'] = ($einfo['dir'] == 'pos') ? 'Increases' : 'Decreases';
+					$einfo['dir'] = ($einfo['dir'] == 'pos') ? $lang['GEN_INCREASE'] : $lang['GEN_DECREASE'];
 					$stats =
 						array("energy" => "{$lang['INDEX_ENERGY']}", "will" => "{$lang['INDEX_WILL']}", 
 								"brave" => "{$lang['INDEX_BRAVE']}",
@@ -74,7 +75,7 @@ while ($r=$db->fetch_row($q))
 			}
         //The form handles a lot of the internals for the pack info.
         //You should only need to change the currency_code.
-        //Procede at your own caution.
+        //Proceed at your own caution.
 		echo"
 		</td>
 		<td>

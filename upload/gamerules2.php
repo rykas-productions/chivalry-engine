@@ -7,6 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals_nonauth.php');
+//List all the game rules.
 			echo "<h3>{$set['WebsiteName']} {$lang['GAMERULES_TITLE']}</h3>
 			<hr />
 			{$lang['GAMERULES_TEXT']}<hr />";
