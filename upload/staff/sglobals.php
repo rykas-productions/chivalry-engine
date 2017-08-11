@@ -14,47 +14,7 @@ session_name('CENGINE');
 session_start();
 $time = time();
 header('X-Frame-Options: SAMEORIGIN');
-
-if(isset($_GET['lang']))
-{
-	$lang = $_GET['lang'];
-	$_SESSION['lang'] = $lang;
-	setcookie('lang', $lang, time() + (3600 * 24 * 30));
-}
-else if(isSet($_SESSION['lang']))
-{
-	$lang = $_SESSION['lang'];
-}
-else if(isSet($_COOKIE['lang']))
-{
-	$lang = $_COOKIE['lang'];
-}
-else
-{
-	$lang = 'en';
-}
-switch ($lang) 
-{
-	case 'en':
-		$lang_file = 'en_us.php';
-		break;
-	case 'fr':
-		$lang_file = 'fr_fr.php';
-		break;
-	case 'ger':
-		$lang_file = 'ger.php';
-		break;
-	case 'es':
-		$lang_file = 'es.php';
-		break;
-	case 'danish':
-		$lang_file = 'danish.php';
-		break;
-	default:
-		$lang_file = 'en_us.php';
- 
-}
-include_once '../lang/'.$lang_file;
+include_once '../lang/en_us.php';
 if (!isset($_SESSION['started']))
 {
     session_regenerate_id();

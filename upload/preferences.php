@@ -19,9 +19,6 @@ switch ($_GET['action'])
 	case 'timechange':
 		time_change();
 		break;
-	case 'langchange':
-		lang_change();
-		break;
 	case 'pwchange':
 		pw_change();
 		break;
@@ -67,7 +64,7 @@ function prefs_home()
 					<a href='?action=timechange'>{$lang['PREF_CTIME']}</a>
 				</td>
 				<td>
-					<a href='?action=langchange'>{$lang['PREF_CLANG']}</a>
+					<a href='?action=emailchange'>{$lang['PREF_EMAIL_BTN']}</a>
 				</td>
 			</tr>
 			<tr>
@@ -84,11 +81,6 @@ function prefs_home()
 				</td>
 				<td>
 					<a href='?action=sexchange'>{$lang['PREF_CSEX']}</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a href='?action=emailchange'>{$lang['PREF_EMAIL_BTN']}</a>
 				</td>
 			</tr>
 		</tbody>
@@ -211,39 +203,9 @@ function time_change()
 		}
 	}
 }
-function lang_change()
-{
-	global $db,$h,$lang;
-	echo "<h2>Language Change</h2>";
-	if (empty($_POST['lang']))
-	{
-		echo "{$lang['LANG_INTRO']}<br />
-		<form method='post' action='?action=langchange'>
-		<select name='lang' class='form form-control' type='dropdown'>
-			<option value='en'>English</option>
-			<option value='es'>Español</option>
-			<option value='ger'>Deutsche</option>
-			<option value='fr'>Français</option>
-			<option value='danish'>Dansk</option>
-		<input type='submit' class='btn btn-secondary' value='{$lang['LANG_BUTTON']}'>
-		</form>";
-	}
-	else
-	{
-		$LangArray=["en","es","ger","fr","danish"];
-		if (!in_array($_POST['lang'],$LangArray))
-		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['LANG_UPDATE']);
-		}
-		else
-		{
-			alert('success',$lang['ERROR_SUCCESS'],$lang['LANG_UPDATE2'],true,'preferences.php');
-		}
-	}
-}
 function pw_change()
 {
-	global $db,$ir,$lang;
+	global $db,$ir,$lang,$h;
 	if (empty($_POST['oldpw']))
 	{
 		$csrf = request_csrf_html('prefs_changepw');

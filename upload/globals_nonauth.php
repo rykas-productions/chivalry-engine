@@ -23,51 +23,8 @@ $time=time();
 session_name('CENGINE');
 @session_start();
 header('X-Frame-Options: SAMEORIGIN');
-//If user's language is selected, set it to cookie for 30 days.
-if(isset($_POST['lang']))
-{
-	$lang = $_POST['lang'];
-	$_SESSION['lang'] = $lang;
-	setcookie('lang', $lang, time() + (3600 * 24 * 30));
-}
-//Set language variable.
-else if(isset($_SESSION['lang']))
-{
-	$lang = $_SESSION['lang'];
-}
-else if(isset($_COOKIE['lang']))
-{
-	$lang = $_COOKIE['lang'];
-}
-//If language is not set, set to english.
-else
-{
-	$lang = 'en';
-}
-//Select language files now.
-switch ($lang) 
-{
-	case 'en':
-		$lang_file = 'en_us.php';
-		break;
-	case 'fr':
-		$lang_file = 'fr_fr.php';
-		break;
-	case 'ger':
-		$lang_file = 'ger.php';
-		break;
-	case 'es':
-		$lang_file = 'es.php';
-		break;
-	case 'danish':
-		$lang_file = 'danish.php';
-		break;
-	default:
-		$lang_file = 'en_us.php';
- 
-}
 //Load language files.
-include_once 'lang/'.$lang_file;
+include_once 'lang/en_us.php';
 //If session is not started, regenerate ID and load it.
 if (!isset($_SESSION['started']))
 {
