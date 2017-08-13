@@ -65,6 +65,9 @@ $lang["GEN_BACK"] = "Go Back";
 $lang["GEN_IN"] = "In";
 $lang['GEN_INCREASE']="Increases";
 $lang['GEN_DECREASE']="Decreases";
+$lang['GEN_UPTODATE']="Chivalry Engine is up to date.";
+$lang['GEN_OUTTADATE']="Chivalry Engine is out of date. Get the latest build ";
+$lang['GEN_FAILEDTOCHECK']="Could not contact update checker.";
 
 // Menu
 $lang["MENU_EXPLORE"] = "Explore";
