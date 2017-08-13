@@ -2,7 +2,7 @@
 /*
 	File: staff/index.php
 	Created: 6/1/2016 at 6:06PM Eastern Time
-	Info: Landing page for the staff card. Will show all avaliable staff actions.
+	Info: Landing page for the staff card. Will show all available staff actions.
 	Author: TheMasterGeneral
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
@@ -15,7 +15,6 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 	$versq = $db->query("SELECT VERSION()");
     $MySQLIVersion = $db->fetch_single($versq);
     $db->free_result($versq);
-	$PHPVersion=phpversion();
 	echo"
 	<table class='table table-bordered table-hover'>
 		<tbody>
@@ -24,7 +23,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					{$lang['STAFF_IDX_PHP']}
 				</th>
 				<td>
-					{$PHPVersion}
+					" . phpversion() . "
 				</td>
 			</tr>
 			<tr>
@@ -48,7 +47,7 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 					{$lang['STAFF_IDX_CE_UP']}
 				</th>
 				<td>
-					" . get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$set['BuildNumber']}",$dir . '\cache\update_check.txt') . "
+					" . version_json() . "
 				</td>
 			</tr>
 			<tr>

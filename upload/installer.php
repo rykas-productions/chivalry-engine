@@ -24,6 +24,7 @@ if (!isset($_SESSION['started']))
 require_once('installer_head.php');
 require_once('lib/installer_error_handler.php');
 set_error_handler('error_php');
+include_once 'lang/en_us.php';
 if (!isset($_GET['code']))
 {
     $_GET['code'] = '';
@@ -152,7 +153,7 @@ function diagnostics()
     		<tr>
     			<td>Is Chivalry Engine up to date?</td>
     			<td>
-        			" . get_cached_file("http://mastergeneral156.pcriot.com/update-checker.php?version={$Build}",'cache\update_check.txt') . "
+        			" . version_json() . "
         		</td>
         	</tr>
     </table>
@@ -660,7 +661,7 @@ function get_cached_file($url,$file,$hours=1)
 		return $content;
 	}
 }
-function update_file($url,$filename) 
+function update_file($url)
 {
 	global $db,$set;
 	$content = "404";
@@ -672,4 +673,25 @@ function update_file($url,$filename)
 	$content = curl_exec($curl);
 	curl_close($curl);
 	return $content;
+}
+/*
+ * Function to fetch current version of Chivalry Engine
+ */
+function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
+{
+    global $lang,$Version;
+    $engine_version=$Version;
+    $json=json_decode(update_file($url),true);
+    if (is_null($json))
+    {
+        return $lang['GEN_FAILEDTOCHECK'];
+    }
+    if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
+    {
+        return $lang['GEN_UPTODATE'];
+    }
+    else
+    {
+        return $lang['GEN_OUTTADATE'] . "<a href='{$json['download-latest']}'>{$lang["GEN_HERE"]}</a>.";
+    }
 }

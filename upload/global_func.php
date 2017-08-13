@@ -1915,10 +1915,8 @@ function get_cached_file($url,$file,$hours=1)
 /* 
 	Gets content from a URL via curl 
 */
-function update_file($url,$filename) 
+function update_file($url)
 {
-	global $db,$set;
-	$content = "404";
 	$curl = curl_init();
 	curl_setopt_array($curl, array(
 		CURLOPT_URL => "{$url}",
@@ -2061,3 +2059,24 @@ function isImage($url)
     fclose($fp);
     return false;
  }
+/*
+ * Function to fetch current version of Chivalry Engine
+ */
+function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
+{
+    global $lang,$set;
+    $engine_version=$set['Version_Number'];
+    $json=json_decode(update_file($url),true);
+    if (is_null($json))
+    {
+        return $lang['GEN_FAILEDTOCHECK'];
+    }
+    if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
+    {
+        return $lang['GEN_UPTODATE'];
+    }
+    else
+    {
+        return $lang['GEN_OUTTADATE'] . "<a href='{$json['download-latest']}'>{$lang["GEN_HERE"]}</a>.";
+    }
+}
