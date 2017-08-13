@@ -7,6 +7,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+include_once 'lang/en_us.php';
 if (!defined('MONO_ON'))
 {
     exit;
@@ -25,9 +26,16 @@ if (!defined('MONO_ON'))
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </body>
 <footer>
-	<p>
-		<hr />Powered with codes by <a href='https://twitter.com/MasterGeneralYT'>TheMasterGeneral</a>. Code viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine'>GitHub</a>. Used with permission.
-		&copy; <?php echo date("Y"); ?>
-	</p>
+    <p>
+        <br />
+        <?php
+        echo "<hr />
+					{$lang['MENU_TIN']}
+						" . date('F j, Y') . " " . date('g:i:s a') . "<br />
+					{$lang['MENU_OUT']}";
+        ?>
+        &copy; <?php echo date("Y");
+        ?>
+    </p>
 </footer>
 </html>
