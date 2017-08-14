@@ -161,6 +161,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
         $ir[$stat] += $gain;
 	}
 }
+//Small logic to keep the last trained stat selected.
 if (!isset($str_select))
 {
 	$str_select='';
@@ -182,6 +183,7 @@ $ir['strank'] = get_rank($ir['strength'], 'strength');
 $ir['agirank'] = get_rank($ir['agility'], 'agility');
 $ir['guarank'] = get_rank($ir['guard'], 'guard');
 $ir['labrank'] = get_rank($ir['labor'], 'labor');
+//Request CSRF code.
 $code = request_csrf_html('gym_train');
 echo "{$lang['GYM_FRM1']} {$ir['energy']} {$lang['GYM_FRM2']}<hr />
 <table class='table table-bordered'>

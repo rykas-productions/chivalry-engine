@@ -71,7 +71,9 @@ function home()
     while ($r = $db->fetch_row($q))
     {
         $d = '';
-        $r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span> <span class='glyphicon glyphicon-star' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
+        $r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span>
+                        <span class='glyphicon glyphicon-star' data-toggle='tooltip'
+                        title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
         echo "
 		<tr>
 			<td>

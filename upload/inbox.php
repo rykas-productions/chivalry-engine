@@ -8,6 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
+//Include BBCode Engine. Allow players to make pretty!
 require('lib/bbcode_engine.php');
 echo "
 <div class='table-responsive'>
@@ -34,18 +35,12 @@ echo "
 	</tr>
 </table>
 </div>";
+//GET is empty. Bind it to view the main inbox.
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
 }
-function csrf_error($goBackTo)
-{
-    global $h,$lang;
-	echo "<div class='alert alert-danger'> <strong>{$lang['CSRF_ERROR_TITLE']}</strong> 
-	{$lang['CSRF_ERROR_TEXT']} {$lang['CSRF_PREF_MENU']} <a href='inbox.php?action={$goBackTo}'>{$lang['GEN_HERE']}.</div>";
-    $h->endpage();
-    exit;
-}
+//Switch to list all possible actions.
 switch ($_GET['action'])
 {
 	case 'compose':
@@ -73,6 +68,7 @@ switch ($_GET['action'])
 		home();
 		break;
 }
+//Main inbox.
 function home()
 {
 	global $db,$userid,$ir,$lang,$parser;
@@ -88,27 +84,22 @@ function home()
 			{$lang['MAIL_ACTION']}
 		</th>
 	</tr>";
+    //Select last 15 messages that were sent to the current player and display to the player.
 	$MailQuery=$db->query("SELECT * FROM `mail` WHERE `mail_to` = '{$userid}' ORDER BY `mail_time` desc LIMIT 15");
 	while ($r = $db->fetch_row($MailQuery))
 	{
+        //Select sender's username and display picture.
 		$un1=$db->fetch_row($db->query("SELECT `username`,`display_pic` FROM `users` WHERE `userid` = {$r['mail_from']}"));
-		if (empty($un1['display_pic']))
-		{
-			$pic='';
-		}
-		else
-		{
-			$pic="<center><img src='{$un1['display_pic']}' class='img-fluid hidden-xs' width='75'></center>";
-		}
-		if ($r['mail_status'] == 'unread')
-		{
-			$status="<span class='badge badge-pill badge-danger'>{$lang['MAIL_MSGUNREAD']}</span>";
-		}
-		else
-		{
-			$status="<span class='badge badge-pill badge-success'>{$lang['MAIL_MSGREAD']}</span>";
-		}
+        //Bind their picture to a variable... if they have one.
+        $pic = (empty($un1['display_pic'])) ? "" :
+            "<center><img src='{$un1['display_pic']}' class='img-fluid hidden-xs' width='75'></center>";
+        //Bind if the message has been previously read or not.
+        $status = ($r['mail_status'] == 'unread') ?
+            "<span class='badge badge-pill badge-danger'>{$lang['MAIL_MSGUNREAD']}</span>" :
+            "<span class='badge badge-pill badge-success'>{$lang['MAIL_MSGREAD']}</span>";
+        //Grab the first 50 characters of the message for the message preview.
 		$msgtxt=substr($r['mail_text'], 0, 50);
+        //BBCode parse the preview.
 		$parser->parse($msgtxt);
 		echo"<tr>
 				<td>
@@ -139,31 +130,34 @@ function home()
 }
 function read()
 {
-	global $db,$ir,$userid,$lang,$h,$parser;
+	global $db,$userid,$lang,$h,$parser;
+    //Request CSRF code for if the user wishes to send a reply.
 	$code = request_csrf_code('inbox_send');
+    //Grab the message ID from GET.
 	$_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs($_GET['msg']) : 0;
+    //Message ID is empty.
 	if (empty($_GET['msg']))
 	{
 		alert('danger',$lang['ERROR_SECURITY'],$lang['ERROR_MAIL_UNOWNED'],true,'inbox.php');
 		die($h->endpage());
 	}
+    //Message does not exist, or does not belong to the current player.
 	if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0)
 	{
 		alert("danger",$lang['ERROR_SECURITY'],$lang['ERROR_MAIL_UNOWNED'],true,'inbox.php');
 		die($h->endpage());
 	}
+    //Grab all message data from the database for this message
 	$msg=$db->fetch_row($db->query("SELECT * FROM `mail` WHERE `mail_id` = {$_GET['msg']}"));
+    //Grab sending player's username and display picture.
 	$un1=$db->fetch_row($db->query("SELECT `username`,`display_pic` FROM `users` WHERE `userid` = {$msg['mail_from']}"));
+    //Update message to reflect that it has been read.
 	$db->query("UPDATE `mail` SET `mail_status` = 'read' WHERE `mail_id` = {$_GET['msg']}");
+    //BBCode parse the message.
 	$parser->parse($msg['mail_text']);
-	if (empty($un1['display_pic']))
-	{
-		$pic='';
-	}
-	else
-	{
-		$pic="<center><img src='{$un1['display_pic']}' class='img-responsive hidden-xs' width='75'></center>";
-	}
+    //Show sender's picture... if they have one.
+    $pic = (empty($un1['display_pic'])) ? "" :
+        "<center><img src='{$un1['display_pic']}' class='img-fluid hidden-xs' width='75'></center>";
 	echo "<table class='table table-bordered'>
 	<tr>
 		<th width='33%'>
@@ -187,7 +181,8 @@ function read()
 	</tr>
 	</table>
 	<hr />";
-	if (permission('CanReplyMail',$userid) == true)
+    //Permission check to see if the current player can reply to messages. If they can, show the reply form.
+	if (permission('CanReplyMail',$userid))
 	{
 		echo "{$lang['MAIL_QUICKREPLY']}<br />
 		<form method='post' action='?action=send'>
@@ -228,39 +223,51 @@ function read()
 }
 function send()
 {
-	global $db,$lang,$ir,$userid,$h;
+	global $db,$lang,$userid,$h;
+    //Clean and sanitize the POST.
 	$subj = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['subject']))));
 	$msg = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['msg']))));
-	$sendto = (isset($_POST['sendto']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['sendto']) && ((strlen($_POST['sendto']) < 32) && (strlen($_POST['sendto']) >= 3))) ? $_POST['sendto'] : '';
+	$sendto = (isset($_POST['sendto']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
+            $_POST['sendto']) && ((strlen($_POST['sendto']) < 32) && (strlen($_POST['sendto']) >= 3))) ?
+        $_POST['sendto'] : '';
+    //Player failed the CSRF check... warn them to be quicker next time... or to change their password.
 	if (!isset($_POST['verf']) || !verify_csrf_code('inbox_send', stripslashes($_POST['verf'])))
 	{
-		csrf_error('');
+        alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+        die($h->endpage());
 	}
+    //Message is empty... do not send message.
 	if (empty($msg))
     {
 		alert('danger',$lang['ERROR_EMPTY'],$lang['MAIL_EMPTYINPUT'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
+    //Message too long. Don't send the message.
 	elseif ((strlen($msg) > 65655) || (strlen($subj) > 50))
     {
         alert('danger',$lang['ERROR_LENGTH'],$lang['MAIL_INPUTLNEGTH'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
-	 if (empty($_POST['sendto']))
+    //Player didn't specify another player to send this message to
+	if (empty($_POST['sendto']))
     {
 		alert('danger',$lang['ERROR_EMPTY'],$lang['MAIL_NOUSER'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
-	$q = $db->query("SELECT `userid` FROM `users` WHERE `username` = '{$sendto}'");
+    //Grab the receiving player's information.
+    $q = $db->query("SELECT `userid` FROM `users` WHERE `username` = '{$sendto}'");
+    //Receiving player does not exist.
 	if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
 		alert('danger',$lang['MAIL_UDNE'],$lang['MAIL_UDNE_TEXT'],true,'inbox.php?action=compose');
         die($h->endpage());
     }
+    //Bind the receiving user's ID to a variable.
 	$to = $db->fetch_single($q);
     $db->free_result($q);
 	$time=time();
+    //Insert message into database so receiving player can view it later.
 	$db->query("INSERT INTO `mail` 
 	(`mail_id`, `mail_to`, `mail_from`, `mail_status`, `mail_subject`, `mail_text`, `mail_time`) 
 	VALUES (NULL, '{$to}', '{$userid}', 'unread', '{$subj}', '{$msg}', '{$time}');");
@@ -268,88 +275,90 @@ function send()
 }
 function markasread()
 {
-	global $db,$h,$userid,$h,$lang;
+	global $db,$userid,$lang;
+    //Set the current user's messages as all read.
 	$db->query("UPDATE `mail` SET `mail_status` = 'read' WHERE `mail_to` = {$userid}");
 	alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_READALL'],false);
 	home();
 }
 function delall()
 {
-	global $db,$lang,$h,$userid;
+	global $db,$lang,$userid;
+    //Display the form to delete everything.
 	if (empty($_POST['delete']))
-	{
-		echo $lang['MAIL_DELETECONFIRM'];
-		echo "<br />
+    {
+        echo $lang['MAIL_DELETECONFIRM'];
+        echo "<br />
 		<form method='post'>
 			<input type='submit' name='delete' class='btn btn-secondary' value='{$lang['MAIL_DELETEYES']}'>
 		</form>
 		<form method='post' action='inbox.php'>
 			<input type='submit' class='btn btn-danger' value='{$lang['MAIL_DELETENO']}'>
 		</form>";
-	}
+    }
 	else
 	{
+        //Delete all messages that were sent to the current player.
 		$db->query("DELETE FROM `mail` WHERE `mail_to` = {$userid}");
 		alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_DELETEDONE'],true,'inbox.php');
 	}
 }
 function outbox()
 {
-	global $db,$lang,$userid,$lang,$h,$parser;
-	echo "	<table class='table table-bordered table-hover table-striped'>
-				<thead>
-					<th width='33%'>
-						{$lang['MAIL_USERDATE']}
-					</th>
-					<th>
-						{$lang['MAIL_MSGSUB']}
-					</th>
-				</thead>
-				<tbody>";
-				$query=$db->query("SELECT * FROM `mail` WHERE `mail_from` = {$userid} ORDER BY `mail_time` desc LIMIT 15");
-				while ($msg = $db->fetch_row($query))
-				{
-					$sent=date('F j, Y g:i:s a', $msg['mail_time']);
-					$sentto=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$msg['mail_to']}"));
-					$parser->parse($msg['mail_text']);
-					if ($msg['mail_status'] == 'unread')
-					{
-						$status="<span class='badge badge-pill badge-danger'>{$lang['MAIL_MSGUNREAD']}</span>";
-					}
-					else
-					{
-						$status="<span class='badge badge-pill badge-success'>{$lang['MAIL_MSGREAD']}</span>";
-					}
-					echo "<tr>
-							<td>
-								<b>{$lang['MAIL_SENDTO']}:</b> <a href='profile.php?user={$msg['mail_to']}'>{$sentto}</a><br />
-								<b>{$lang['MAIL_SENTAT']}: </b>{$sent}<br />
-								<b>{$lang['MAIL_STATUS']}:</b> {$status}<br />
-							</td>
-							<td>
-								<b>{$msg['mail_subject']}</b> ";
-								echo $parser->getAsHtml();
-								echo"
-							</td>
-					
-					</tr>";
-				}
-			echo "</tbody></table>'";
+	global $db,$userid,$lang,$parser;
+	echo "
+    <table class='table table-bordered table-hover table-striped'>
+        <thead>
+            <th width='33%'>
+                {$lang['MAIL_USERDATE']}
+            </th>
+            <th>
+                {$lang['MAIL_MSGSUB']}
+            </th>
+        </thead>
+        <tbody>";
+    //Grab all the messages the current player has writen and display them to the user.
+    $query=$db->query("SELECT * FROM `mail` WHERE `mail_from` = {$userid} ORDER BY `mail_time` desc LIMIT 15");
+    while ($msg = $db->fetch_row($query))
+    {
+        $sent=date('F j, Y g:i:s a', $msg['mail_time']);
+        //Grab recipient's user name.
+        $sentto=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$msg['mail_to']}"));
+        //Parse message with BBCode.
+        $parser->parse($msg['mail_text']);
+        $status = ($msg['mail_status'] == 'unread') ?
+            "<span class='badge badge-pill badge-danger'>{$lang['MAIL_MSGUNREAD']}</span>" :
+            "<span class='badge badge-pill badge-success'>{$lang['MAIL_MSGREAD']}</span>";
+        echo "
+        <tr>
+            <td>
+                <b>{$lang['MAIL_SENDTO']}:</b> <a href='profile.php?user={$msg['mail_to']}'>{$sentto}</a><br />
+                <b>{$lang['MAIL_SENTAT']}: </b>{$sent}<br />
+                <b>{$lang['MAIL_STATUS']}:</b> {$status}<br />
+            </td>
+            <td>
+                <b>{$msg['mail_subject']}</b> ";
+                //Parse message BBCode
+                echo $parser->getAsHtml();
+        echo"
+            </td>
+        </tr>";
+    }
+    echo "</tbody></table>'";
 }
 function compose()
 {
-	global $db,$userid,$lang,$h;
+	global $db,$userid,$lang;
+    //Sanitize GET
 	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
-	if (isset($_GET['user']) && ($_GET['user'] > 0))	
+    //GET is set and greater than 0, so let's fetch the username associated that's on the GET.
+    $username = (isset($_GET['user']) && ($_GET['user'] > 0)) ?
+        $username=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}"))  :
+        '';
+    //Permission check to see if player can send mail.
+	if (permission('CanReplyMail',$userid))
 	{
-		$username=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}"));
-	}
-	else
-	{
-		$username='';
-	}
-	if (permission('CanReplyMail',$userid) == true)
-	{
+        //Request CSRF Code and display the message composer form.
 		$code = request_csrf_code('inbox_send');
 		echo "
 		<form method='post' action='?action=send'>

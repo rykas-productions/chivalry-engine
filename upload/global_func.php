@@ -1700,7 +1700,7 @@ function get_fg_cache($file,$ip,$hours = 1)
 	Gets content from a URL via curl 
 */
 function update_fg_info($ip) {
-	global $db,$set;
+	global $set;
 	$curl = curl_init();
 	curl_setopt_array($curl, array(
 		CURLOPT_URL => "https://api.fraudguard.io/ip/$ip",
@@ -1942,7 +1942,7 @@ function run_template($template_array, $template)
 */
 function recache_topic($topic)
 {
-    global $ir,$userid,$h,$db,$lang;
+    global $db,$lang;
     $topic = abs((int) $topic);
     if ($topic <= 0)
     {

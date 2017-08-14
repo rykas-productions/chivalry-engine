@@ -9,9 +9,11 @@
 */
 require_once('globals.php');
 $page = stripslashes(strip_tags($_POST['page']));
+//Check if the reCaptcha response has been received from the player.
 if(isset($_POST['g-recaptcha-response']))
 {
 	$captcha=$_POST['g-recaptcha-response'];
+    //Did not get a reCaptcha response from the user.
 	if(!$captcha)
 	{
         alert('danger',$lang['ERROR_GENERIC'],$lang['RECAPTCHA_EMPTY'],true,$page);
@@ -19,14 +21,17 @@ if(isset($_POST['g-recaptcha-response']))
 		header("refresh:5;url={$page}");
 		die($h->endpage());
 	}
-	$response=json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$set['reCaptcha_private']}&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']), true); 
+    //Response gets decoded since its in json.
+	$response=json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$set['reCaptcha_private']}&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']), true);
+    //User did not successfully verify themselves with reCaptcha.
 	if($response['success'] == false) 
 	{
         alert('danger',$lang['ERROR_GENERIC'],$lang['RECAPTCHA_FAIL'],true,$page);
 		$api->SystemLogsAdd($userid,'verify',"Verified unsuccessfully.");
 		header("refresh:5;url={$page}");
 		die($h->endpage());
-	} 
+	}
+    //Use has been verified! :D
 	else 
 	{
 		$time=time();
@@ -36,6 +41,7 @@ if(isset($_POST['g-recaptcha-response']))
         die($h->endpage());
 	}
 }
+//reCaptcha response has not been received from the player.
 else
 {
     $api->SystemLogsAdd($userid,'verify',"Did not receive ReCaptcha response.");

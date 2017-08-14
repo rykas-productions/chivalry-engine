@@ -21,7 +21,9 @@ if (!in_array($_GET['stat'],$StatArray))
 {
     $_GET['stat']='level';
 }
+//Sanitize and escape the GET.
 $_GET['stat']=$db->escape(strip_tags(stripslashes($_GET['stat'])));
+//The GET wants user's total stats ranked.
 if ($_GET['stat'] == 'total')
 {
     $q=$db->query("SELECT `u`.*, `us`.* 
@@ -32,6 +34,7 @@ if ($_GET['stat'] == 'total')
                     ORDER BY (`strength` + `agility` + `guard` + `labor` + `iq`) DESC
                     LIMIT 20");
 }
+//The GET wants mining levels ranked.
 elseif ($_GET['stat'] == 'mining_level')
 {
     $q=$db->query("SELECT `u`.*, `m`.* 
@@ -42,6 +45,7 @@ elseif ($_GET['stat'] == 'mining_level')
                     ORDER BY `mining_level` DESC
                     LIMIT 20");
 }
+//GET wants anything else ranked.
 else
 {
     $q=$db->query("SELECT `u`.*, `us`.* 
@@ -82,6 +86,7 @@ echo "<table class='table table-bordered'>
     echo "
 </tr>";
 $rank=1;
+//Loop through the top 20 users.
 while ($r=$db->fetch_row($q))
 {
     echo "
