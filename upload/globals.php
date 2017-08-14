@@ -186,13 +186,13 @@ foreach (glob("crons/*.php") as $filename)
 { 
     include $filename; 
 }
-$get = $db->query("SELECT `sip_recipe` FROM `smelt_inprogress` WHERE `sip_user` = {$userid} AND `sip_time` < {$time}");
+$get = $db->query("SELECT `sip_recipe`,`sip_user` FROM `smelt_inprogress` WHERE `sip_time` < {$time}");
 //Select completed smelting recipes and give to the user.
 if($db->num_rows($get)) 
 {
-    $r = $db->fetch_single($get);
+    $r = $db->fetch_row($get);
 	$r2 = $db->fetch_row($db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r}"));
-    $api->UserGiveItem($userid,$r2['smelt_output'],$r2['smelt_qty_output']);
-    $api->GameAddNotification($userid, "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
-    $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$userid} AND `sip_time` < {$time}");
+    $api->UserGiveItem($r['user'],$r2['smelt_output'],$r2['smelt_qty_output']);
+    $api->GameAddNotification($r['user'], "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
+    $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$r['user']} AND `sip_time` < {$time}");
 }
