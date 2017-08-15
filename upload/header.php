@@ -39,60 +39,61 @@ class headers
 			?>
 			<body>
 				<!-- Navigation -->
-				<nav class="navbar navbar-light bg-faded fixed-top navbar-toggleable-md">
-					<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#CENGINENav" aria-controls="CENGINENav" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
-					<div class="collapse navbar-collapse" id="CENGINENav">
-						<ul class="navbar-nav mr-auto">
-							<li class="nav-item">
-								<a class="nav-link" href="explore.php"><?php echo $lang['MENU_EXPLORE']; ?></a>
-							</li>
-						</ul>
-						<div class="my-2 my-lg-0">
-							<ul class="navbar-nav mr-auto">
-							<li class="nav-item">
-								<a class="nav-link" href="inbox.php"><?php echo "{$lang['MENU_MAIL']} <span class='badge badge-pill badge-default'>{$ir['mail']}</span>"; ?></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="notifications.php"><?php echo "{$lang['MENU_EVENT']} <span class='badge badge-pill badge-default'>{$ir['notifications']}</span>"; ?></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="inventory.php"><?php echo $lang['MENU_INVENTORY']; ?></a>
-							</li>
-								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<?php
-                                    //User has a display picture, lets show it!
-									if ($ir['display_pic'])
-									{
-										echo"<img src='{$ir['display_pic']}' width='24' height='24'>";
-									}
-									echo" {$lang['GEN_GREETING']}, {$ir['username']}";			
-									?></a>
-									<div class="dropdown-menu dropdown-menu-right">
-										<a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i class="fa fa-fw fa-user"></i> <?php echo $lang['MENU_PROFILE']; ?></a>
-										<a class="dropdown-item" href="preferences.php?action=menu"><i class="fa fa-fw fa-gear"></i><?php echo $lang['MENU_SETTINGS']; ?></a>
-										<?php
-                                            //User is a staff member, so lets show the panel's link.
-											if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant')))
-											{
-												?>
-												<div class="dropdown-divider"></div>
-													<a class="dropdown-item" href="staff/index.php"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a>
-												<?php
-											}
-										?>
-										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="gamerules.php"><i class="fa fa-fw fa-server"></i> <?php echo $lang['MENU_RULES']; ?></a>
-										<a class="dropdown-item" href="logout.php"><i class="fa fa-fw fa-power-off"></i> <?php echo $lang['MENU_LOGOUT']; ?></a>
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</nav>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="CENGINENav">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="explore.php"><?php echo $lang['MENU_EXPLORE']; ?></a>
+                            </li>
+                        </ul>
+                        <div class="my-2 my-lg-0">
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="inbox.php"><?php echo "{$lang['MENU_MAIL']} <span class='badge badge-pill badge-default'>{$ir['mail']}</span>"; ?></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="notifications.php"><?php echo "{$lang['MENU_EVENT']} <span class='badge badge-pill badge-default'>{$ir['notifications']}</span>"; ?></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="inventory.php"><?php echo $lang['MENU_INVENTORY']; ?></a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <?php
+                                        //User has a display picture, lets show it!
+                                        if ($ir['display_pic'])
+                                        {
+                                            echo"<img src='{$ir['display_pic']}' width='24' height='24'>";
+                                        }
+                                        echo" {$lang['GEN_GREETING']}, {$ir['username']}";
+                                        ?>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                                        <a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i class="fa fa-fw fa-user"></i> <?php echo $lang['MENU_PROFILE']; ?></a>
+                                        <a class="dropdown-item" href="preferences.php?action=menu"><i class="fa fa-fw fa-gear"></i><?php echo $lang['MENU_SETTINGS']; ?></a>
+                                        <?php
+                                        //User is a staff member, so lets show the panel's link.
+                                        if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant')))
+                                        {
+                                            ?>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="staff/index.php"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a>
+                                        <?php
+                                        }
+                                        ?>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="gamerules.php"><i class="fa fa-fw fa-server"></i> <?php echo $lang['MENU_RULES']; ?></a>
+                                        <a class="dropdown-item" href="logout.php"><i class="fa fa-fw fa-power-off"></i> <?php echo $lang['MENU_LOGOUT']; ?></a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
 
 			<!-- Page Content -->
 			<div class="container">
@@ -276,9 +277,9 @@ class headers
             //User has chosen the day theme.
 			if ($ir['theme'] == 1)
 			{
-				?>  
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-					<meta name="theme-color" content="#e7e7e7">
+				?>
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+                    <meta name="theme-color" content="#e7e7e7">
 				<?php
 			}
             //User has chosen the night theme.
@@ -290,15 +291,15 @@ class headers
 				<?php
 			}
 			?>
-			<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-			<link rel="stylesheet" href="css/bs2.css">
-			<!-- jQuery Version 3.1.1 -->
-			<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
+            <link rel="stylesheet" href="css/bs2.css">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+            <!-- jQuery Version 3.2.1 -->
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
-			<!-- Bootstrap Core JavaScript -->
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous" async defer></script>
-			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous" async defer></script>
+            <!-- Bootstrap Core JavaScript -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 			
 			<!-- Other JavaScript -->
 			<script src="js/game.js" async defer></script>
