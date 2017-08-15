@@ -35,15 +35,15 @@ if ($api->UserStatus($ir['userid'],'dungeon') == true)
 }
 echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 <div class='col-md-4'>
-	<ul class='nav nav-pills flex-column'>
-		<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#SHOPS'>{$lang['EXPLORE_SHOP']}</a></li>
-		<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#FD'>{$lang['EXPLORE_FD']}</a></li>
-		<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#HL'>{$lang['EXPLORE_HL']}</a></li>
-		<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#ADMIN'>{$lang['EXPLORE_ADMIN']}</a></li>
-		<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#GAMES'>{$lang['EXPLORE_GAMES']}</a></li>
-		<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#GUILDS'>{$lang['EXPLORE_GUILDS']}</a></li>
-		<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#ACT'>{$lang['EXPLORE_ACT']}</a></li>
-		<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#PINTER'>{$lang['EXPLORE_PINTER']}</a></li>
+	<ul class='nav flex-column nav-pills'>
+		<a class='nav-link' data-toggle='tab' href='#SHOPS'>{$lang['EXPLORE_SHOP']}</a>
+		<a class='nav-link' data-toggle='tab' href='#FD'>{$lang['EXPLORE_FD']}</a>
+		<a class='nav-link' data-toggle='tab' href='#HL'>{$lang['EXPLORE_HL']}</a>
+		<a class='nav-link' data-toggle='tab' href='#ADMIN'>{$lang['EXPLORE_ADMIN']}</a>
+		<a class='nav-link' data-toggle='tab' href='#GAMES'>{$lang['EXPLORE_GAMES']}</a>
+		<a class='nav-link' data-toggle='tab' href='#GUILDS'>{$lang['EXPLORE_GUILDS']}</a>
+		<a class='nav-link' data-toggle='tab' href='#ACT'>{$lang['EXPLORE_ACT']}</a>
+		<a class='nav-link' data-toggle='tab' href='#PINTER'>{$lang['EXPLORE_PINTER']}</a>
 	</ul>
 </div>
 <div class='col-md-4'>
@@ -120,8 +120,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 		<div id='ACT' class='tab-pane'>
 			<div class='card card-default'>
 				<div class='card-block'>
-					<a href='dungeon.php'>{$lang['EXPLORE_DUNG']} <span class='badge badge-pill badge-default'>{$dung_count}</span></a><br />
-					<a href='infirmary.php'>{$lang['EXPLORE_INFIRM']} <span class='badge badge-pill badge-default'>{$infirm_count}</span></a><br />
+					<a href='dungeon.php'>{$lang['EXPLORE_DUNG']} <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
+					<a href='infirmary.php'>{$lang['EXPLORE_INFIRM']} <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
 					<a href='gym.php'>{$lang['EXPLORE_GYM']}</a><br />
 					<a href='#'>{$lang['EXPLORE_JOB']}</a><br />
 					<a href='academy.php'>{$lang['EXPLORE_ACADEMY']}</a><br />
