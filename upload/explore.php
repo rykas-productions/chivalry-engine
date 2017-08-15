@@ -49,8 +49,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 <div class='col-md-4'>
 	<div class='tab-content'>
 		<div id='SHOPS' class='tab-pane'>
-			<div class='card card-default'>
-				<div class='card-block'>
+			<div class='card'>
+				<div class='card-body'>
 					<a href='shops.php'>{$lang['EXPLORE_LSHOP']}</a><br />
 					<a href='itemmarket.php'>{$lang['EXPLORE_IMARKET']}</a><br />
 					<a href='itemauction.php'>{$lang['EXPLORE_IAUCTION']}</a><br />
@@ -60,8 +60,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 			</div>
 		</div>
 		<div id='FD' class='tab-pane'>
-			<div class='card card-default'>
-				<div class='card-block'>
+			<div class='card'>
+				<div class='card-body'>
 					<a href='bank.php'>{$lang['EXPLORE_BANK']}</a><br />
 					<a href='estates.php'>{$lang['EXPLORE_ESTATES']}</a><br />
 					<a href='travel.php'>{$lang['EXPLORE_TRAVEL']}</a><br />
@@ -70,8 +70,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 			</div>
 		</div>
 		<div id='HL' class='tab-pane'>
-			<div class='card card-default'>
-				<div class='card-block'>
+			<div class='card'>
+				<div class='card-body'>
 					<a href='mine.php'>{$lang['EXPLORE_MINE']}</a><br />
 					<a href='smelt.php'>{$lang['EXPLORE_SMELT']}</a><br />
 					<a href='#'>{$lang['EXPLORE_WC']}</a><br />
@@ -81,8 +81,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 			</div>
 		</div>
 		<div id='ADMIN' class='tab-pane'>
-			<div class='card card-default'>
-				<div class='card-block'>
+			<div class='card'>
+				<div class='card-body'>
 					<a href='users.php'>{$lang['EXPLORE_USERLIST']}</a><br />
 					<a href='usersonline.php'>{$lang['UOL_TITLE']}</a><br />
 					<a href='staff.php'>{$lang['EXPLORE_STAFFLIST']}</a><br />
@@ -94,8 +94,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 			</div>
 		</div>
 		<div id='GAMES' class='tab-pane'>
-			<div class='card card-default'>
-				<div class='card-block'>
+			<div class='card'>
+				<div class='card-body'>
 					<a href='russianroulette.php'>{$lang['EXPLORE_RR']}</a><br />
 					<a href='hilow.php?tresde={$tresder}'>{$lang['EXPLORE_HILO']}</a><br />
 					<a href='roulette.php?tresde={$tresder}'>{$lang['EXPLORE_ROULETTE']}</a><br />
@@ -104,8 +104,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 			</div>
 		</div>
 		<div id='GUILDS' class='tab-pane'>
-			<div class='card card-default'>
-				<div class='card-block'>";
+			<div class='card'>
+				<div class='card-body'>";
                     //User is in a guild.
 					if ($ir['guild'] > 0)
 					{
@@ -118,8 +118,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 			</div>
 		</div>
 		<div id='ACT' class='tab-pane'>
-			<div class='card card-default'>
-				<div class='card-block'>
+			<div class='card'>
+				<div class='card-body'>
 					<a href='dungeon.php'>{$lang['EXPLORE_DUNG']} <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
 					<a href='infirmary.php'>{$lang['EXPLORE_INFIRM']} <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
 					<a href='gym.php'>{$lang['EXPLORE_GYM']}</a><br />
@@ -131,8 +131,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 			</div>
 		</div>
 		<div id='PINTER' class='tab-pane'>
-			<div class='card card-default'>
-				<div class='card-block'>
+			<div class='card'>
+				<div class='card-body'>
 					<a href='forums.php'>{$lang['EXPLORE_FORUMS']}</a><br />
 					<a href='newspaper.php'>{$lang['EXPLORE_NEWSPAPER']}</a><br />
 					<a href='polling.php'>{$lang['POLL_TITLE']}</a><br />
@@ -143,11 +143,11 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 	</div>
 </div>
 <div class='col-md-4'>
-	<div class='card card-default'>
+	<div class='card'>
 		<div class='card-header'>
 			{$lang['EXPLORE_TOPTEN']}
 		</div>
-		<div class='card-block'>";
+		<div class='card-body'>";
 			$Rank=0;
 			$RankPlayerQuery = 
 			$db->query("SELECT u.`userid`, `level`, `username`, `strength`, `agility`, `guard`, `labor`, `IQ`
@@ -163,8 +163,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 				$Rank=$Rank+1;
 				echo "{$Rank}) <a href='profile.php?user={$pdata['userid']}'>{$pdata['username']}</a> ({$lang['INDEX_LEVEL']} {$pdata['level']})<br />";
 			}
-			echo 
-		"</div>
+			echo"
+		</div>
 	</div>
 </div>
 </div>";
