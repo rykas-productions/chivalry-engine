@@ -506,7 +506,7 @@ function viewtopic()
 	<form action='?act=move&topic={$_GET['viewtopic']}' method='post'>
     <b>{$lang['FORUM_TOPIC_MTT']}</b> " . forum_dropdown('forum')
                 . "
-	<input type='submit' value='{$lang['FORUM_TOPIC_MOVE']}' class='btn btn-secondary' />
+	<input type='submit' value='{$lang['FORUM_TOPIC_MOVE']}' class='btn btn-primary' />
 	</form>
 	<br />
 	<center>
@@ -517,21 +517,21 @@ function viewtopic()
 				<form>
 					<input type='hidden' value='pin' name='act'>
 					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['FORUM_TOPIC_PIN']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_PIN']}'>
 				</form>
 			</td>
 			<td align='center'>
 				<form>
 					<input type='hidden' value='lock' name='act'>
 					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['FORUM_TOPIC_LOCK']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_LOCK']}'>
 				</form>
 			</td>
 			<td>
 				<form action='?act=deletopic'>
 					<input type='hidden' value='deletopic' name='act'>
 					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['FORUM_TOPIC_DELETE']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_DELETE']}'>
 				</form>
 			</td>
 		</tr>
@@ -541,17 +541,17 @@ function viewtopic()
 		<form>
 			<input type='hidden' value='pin' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-secondary' value='{$lang['FORUM_TOPIC_PIN']}'>
+			<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_PIN']}'>
 		</form>
 		<form>
 			<input type='hidden' value='lock' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-secondary' value='{$lang['FORUM_TOPIC_LOCK']}'>
+			<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_LOCK']}'>
 		</form>
 		<form action='?act=deletopic'>
 			<input type='hidden' value='deletopic' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-secondary' value='{$lang['FORUM_TOPIC_DELETE']}'>
+			<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_DELETE']}'>
 		</form>
 	</div>
 	</center><br />
@@ -730,7 +730,7 @@ function viewtopic()
 				</tr>
 				<tr>
 					<td colspan='2'> 
-						<center><input type='submit' value='{$lang['FORUM_POST_REPLY2']}' class='btn btn-secondary'></center>
+						<center><input type='submit' value='{$lang['FORUM_POST_REPLY2']}' class='btn btn-primary'></center>
 					</td>
 				</tr>
 			</table>
@@ -897,7 +897,7 @@ function newtopicform()
 		</tr>
 		<tr>
 			<td align='center' colspan='2'>
-				<input type='submit' class='btn btn-lg btn-secondary' value='{$lang['FORUM_TOPIC_FORM_BUTTON']}' />
+				<input type='submit' class='btn btn-lg btn-primary' value='{$lang['FORUM_TOPIC_FORM_BUTTON']}' />
 			</td>
 	</table>
 	<input type='hidden' name='verf' value='{$code}' />
@@ -1079,7 +1079,7 @@ function quote()
 			</tr>
 			<tr>
 				<td colspan='2' align='center'>
-					<input type='submit' class='btn btn-lg btn-secondary' value='{$lang['FORUM_POST_REPLY2']}' />
+					<input type='submit' class='btn btn-lg btn-primary' value='{$lang['FORUM_POST_REPLY2']}' />
 				</td>
 			</tr>
 		</table>
@@ -1181,7 +1181,7 @@ function edit()
         </tr>
         <tr>
         	<td align='center' colspan='2'>
-				<input type='submit' class='btn btn-secondary' value='{$lang['FORUM_EDIT_FORM_SUBMIT']}'>
+				<input type='submit' class='btn btn-primary' value='{$lang['FORUM_EDIT_FORM_SUBMIT']}'>
 			</th>
         </tr>
     </table>

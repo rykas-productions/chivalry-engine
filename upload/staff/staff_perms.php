@@ -41,7 +41,7 @@ function viewperm()
                 . "
         	<br />
         	{$csrf}
-        	<input type='submit' class='btn btn-secondary' value='Edit Permissions' />
+        	<input type='submit' class='btn btn-primary' value='Edit Permissions' />
         </form>";
 		$h->endpage();
 	}
@@ -139,7 +139,7 @@ function editperm()
 		</table>";
 		echo "
         	{$csrf}
-        	<input type='submit' class='btn btn-secondary' value='Edit Permissions' />
+        	<input type='submit' class='btn btn-primary' value='Edit Permissions' />
         </form>";
 		$h->endpage();
 	}
@@ -218,7 +218,7 @@ function resetperm()
 			<br />
 			<small>Please type <i>CONFIRM</i> to confirm the permission reset</small><br />
 			<input type='text' name='confirm' class='form-control'>
-        	<input type='submit' class='btn btn-secondary' value='Reset Permissions' />
+        	<input type='submit' class='btn btn-primary' value='Reset Permissions' />
         </form>";
 		$h->endpage();
 	}

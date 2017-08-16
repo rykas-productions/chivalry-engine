@@ -239,7 +239,7 @@ function createuser()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-secondary' value='{$lang['SCU_BTN']}' />
+							<input type='submit' class='btn btn-primary' value='{$lang['SCU_BTN']}' />
 						</td>
 					</tr>
         	{$csrf}
@@ -619,7 +619,7 @@ function edituser()
 			</tr>
 		</table>
     	{$csrf}
-    	<input class='btn btn-secondary' type='submit' value='{$lang['SEU_BTN']}' />
+    	<input class='btn btn-primary' type='submit' value='{$lang['SEU_BTN']}' />
     </form>
        ";
 	}
@@ -767,7 +767,7 @@ function edituser()
 				<td colspan='2'>
 					{$csrf}
 					<input type='hidden' name='step' value='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_USERS_EDIT_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_EDIT_BTN']}' />
 				</th>
 			</tr>
 		</form>
@@ -789,7 +789,7 @@ function edituser()
 				<td colspan='2'>
 					{$csrf}
 					<input type='hidden' name='step' value='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_USERS_EDIT_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_EDIT_BTN']}' />
 				</th>
 			</tr>
 		</form>
@@ -826,7 +826,7 @@ function deleteuser()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_USERS_DEL_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_DEL_BTN']}' />
 					</td>
 				</tr>
 				</form>
@@ -847,7 +847,7 @@ function deleteuser()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_USERS_DEL_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_DEL_BTN']}' />
 					</td>
 				</tr>
 				</form>
@@ -887,10 +887,10 @@ function deleteuser()
 				</tr>
 				<tr>
 					<td>
-						<input type='submit' class='btn btn-secondary' name='yesorno' value='{$lang['GEN_YES']}' />
+						<input type='submit' class='btn btn-primary' name='yesorno' value='{$lang['GEN_YES']}' />
 					</td>
 					<td>
-						<input type='submit' class='btn btn-secondary' name='yesorno' value='{$lang['GEN_NO']}' onclick=\"window.location='staff_users.php?action=deluser';\" />
+						<input type='submit' class='btn btn-primary' name='yesorno' value='{$lang['GEN_NO']}' onclick=\"window.location='staff_users.php?action=deluser';\" />
 					</td>
 				</tr>
 			</table>
@@ -975,7 +975,7 @@ function logout()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_USERS_FL_FORM_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_FL_FORM_BTN']}' />
 					</td>
 				</tr>
 			</table>
@@ -1040,7 +1040,7 @@ function changepw()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_USERS_CP_FORM_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_CP_FORM_BTN']}' />
 					</td>
 				</tr>
 			</table>

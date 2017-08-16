@@ -92,7 +92,7 @@ function addpack()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_DONATE_ADD_BTN']}'>
+							<input type='submit' class='btn btn-primary' value='{$lang['STAFF_DONATE_ADD_BTN']}'>
 						</td>
 					</tr>
 				</table>
@@ -148,7 +148,7 @@ function delpack()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_DONATE_DEL_BTN']}'>
+							<input type='submit' class='btn btn-primary' value='{$lang['STAFF_DONATE_DEL_BTN']}'>
 						</td>
 					</tr>
 				</table>

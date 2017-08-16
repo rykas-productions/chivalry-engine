@@ -102,7 +102,7 @@ function shop()
                             <td>
                             	<form action='?action=buy&ID={$r['sitemID']}' method='post'>
                             		{$lang['SHOPS_SHOP_TD_1']} <input class='form-control' type='number' min='1' name='qty' value='1' />
-                            		<input class='btn btn-secondary' type='submit' value='Buy' />
+                            		<input class='btn btn-primary' type='submit' value='Buy' />
                             	</form>
                             </td>
                         </tr>";

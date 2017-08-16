@@ -179,7 +179,7 @@ class headers
 								<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
 							</center>
 							<input type='hidden' value='<?php echo $macropage; ?>' name='page'>
-							<input type='submit' value="<?php echo $lang['RECAPTCHA_BTN']; ?>" class="btn btn-secondary" data-dismiss="modal">
+							<input type='submit' value="<?php echo $lang['RECAPTCHA_BTN']; ?>" class="btn btn-primary" data-dismiss="modal">
 						</form>
 						<?php
 						die($h->endpage());

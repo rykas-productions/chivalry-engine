@@ -116,7 +116,7 @@ function news_buy()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['NP_BUY_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['NP_BUY_BTN']}'>
 				</td>
 			</tr>
 		</table>

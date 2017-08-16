@@ -95,5 +95,5 @@
   <label for="pn_update">{L_INDEX_PN}:</label>
   <textarea class="form-control" rows="5" name="pn_update" id="pn_update">{ir_personal_notes}</textarea>
 </div>
-<button type="submit" class="btn btn-default">{L_FB_PN}</button>
+<button type="submit" class="btn btn-primary">{L_FB_PN}</button>
 </form>

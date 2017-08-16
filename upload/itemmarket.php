@@ -182,7 +182,7 @@ function buy()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['SHOPS_SHOP_TH_3']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['SHOPS_SHOP_TH_3']}'>
 				</td>
 			</tr>
 			{$csrf}
@@ -404,7 +404,7 @@ function gift()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['SHOPS_SHOP_TH_3']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['SHOPS_SHOP_TH_3']}'>
 				</td>
 			</tr>
 			{$csrf}
@@ -512,7 +512,7 @@ function add()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['IMARKET_ADD_BTN']}'
+					<input type='submit' class='btn btn-primary' value='{$lang['IMARKET_ADD_BTN']}'
 				</td>
 			</tr>
 			{$csrf}

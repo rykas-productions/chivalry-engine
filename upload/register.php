@@ -293,7 +293,7 @@ echo "
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang["LOGIN_REGISTER"]}' />
+						<input type='submit' class='btn btn-primary' value='{$lang["LOGIN_REGISTER"]}' />
 					</td>
 				</tr>
 			</form>

@@ -134,7 +134,7 @@ function add()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_SMELT_ADD_BTN3']}' />
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_SMELT_ADD_BTN3']}' />
 					</td>
 				</tr>
 			</table>
@@ -176,7 +176,7 @@ function del()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_SMELT_DEL_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_SMELT_DEL_BTN']}' />
 				</td>
 			</tr>
 		</table>

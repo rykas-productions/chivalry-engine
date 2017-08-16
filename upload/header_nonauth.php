@@ -74,7 +74,7 @@ class headers
                                                             <input type="password" class="form-control" id="exampleInputPassword2" name="password" placeholder="<?php echo"{$lang['LOGIN_PASSWORD']}"; ?>" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="submit" class="btn btn-secondary btn-block"><?php echo"{$lang['LOGIN_SIGNIN']}"; ?></button>
+                                                            <button type="submit" class="btn btn-primary btn-block"><?php echo"{$lang['LOGIN_SIGNIN']}"; ?></button>
                                                         </div>
                                                     </form>
                                                 </div>

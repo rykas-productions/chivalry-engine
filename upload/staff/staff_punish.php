@@ -143,7 +143,7 @@ function fedjail()
 			<tr>
 			{$csrf}
 				<td colspan='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_PUNISHFED_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_PUNISHFED_BTN']}' />
 				</td>
 			</tr>
 			</form>
@@ -195,7 +195,7 @@ function unfedjail()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_UNFED_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_UNFED_BTN']}'>
 					</td>
 				</tr>
 				{$csrf}
@@ -261,7 +261,7 @@ function forumwarn()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_FWARN_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_FWARN_BTN']}'>
 					</td>
 				</tr>
 				{$csrf}
@@ -350,7 +350,7 @@ function ipsearch()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_IP_MJ_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_IP_MJ_BTN']}'>
 				</td>
 			</tr>
 		</table>
@@ -378,7 +378,7 @@ function ipsearch()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_IP_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_IP_BTN']}'>
 					</td>
 				</tr>
 			</table>
@@ -522,7 +522,7 @@ function forumban()
 			<tr>
 			{$csrf}
 				<td colspan='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_FBAN_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_FBAN_BTN']}' />
 				</td>
 			</tr>
 			</form>
@@ -574,7 +574,7 @@ function unforumban()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_UFBAN_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_UFBAN_BTN']}'>
 					</td>
 				</tr>
 				{$csrf}
@@ -671,7 +671,7 @@ function massmail()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_MM_BTN']}'>
+				<input type='submit' class='btn btn-primary' value='{$lang['STAFF_MM_BTN']}'>
 			</td>
 		</tr>
 		{$csrf}
@@ -751,7 +751,7 @@ function massemail()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_MEM_BTN']}'>
+				<input type='submit' class='btn btn-primary' value='{$lang['STAFF_MEM_BTN']}'>
 			</td>
 		</tr>
 		{$csrf}
@@ -806,7 +806,7 @@ function banip()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' value='{$lang['STAFF_BANIP_TITLE']}' class='btn btn-secondary'>
+				<input type='submit' value='{$lang['STAFF_BANIP_TITLE']}' class='btn btn-primary'>
 			</td>
 		</tr>
 		{$csrf}
@@ -865,7 +865,7 @@ function unbanip()
 					<form method='get'>
 						<input type='hidden' value='unbanip' name='action'>
 						<input type='hidden' value='{$r['ip_id']}' name='id'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_UNBANIP_TITLE']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_UNBANIP_TITLE']}'>
 						{$csrf}
 					</form>
 				</td>

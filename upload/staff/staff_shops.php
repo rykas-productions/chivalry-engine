@@ -106,7 +106,7 @@ function newshop()
 		{$csrf}
 		<tr>
 			<td colspan='2'>
-				<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_SHOP_FORM_BTN']}' />
+				<input type='submit' class='btn btn-primary' value='{$lang['STAFF_SHOP_FORM_BTN']}' />
 			</td>
 		</tr>
 		</table>
@@ -159,7 +159,7 @@ function delshop()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_SHOP_DELFORM_FORM_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_SHOP_DELFORM_FORM_BTN']}' />
 				</th>
 			</tr>
 			{$csrf}
@@ -236,7 +236,7 @@ function newitem()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_SHOP_IADDFORM_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_SHOP_IADDFORM_BTN']}' />
 					</td>
 				</tr>
 				{$csrf}

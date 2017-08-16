@@ -63,7 +63,7 @@ function one()
 		<form method='post'>
 			<input type='email' name='email' required='1' class='form-control'>
 			<br />
-			<input type='submit' class='btn btn-secondary'>
+			<input type='submit' class='btn btn-primary'>
 		</form>";
 	}
 }

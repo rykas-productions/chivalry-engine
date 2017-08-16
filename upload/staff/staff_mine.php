@@ -265,7 +265,7 @@ function addmine()
                 </tr>
                 <tr>
                     <td colspan='2'>
-                        <input type='submit' class='btn btn-secondary' value='{$lang['STAFF_MINE_ADD_BTN']}'>
+                        <input type='submit' class='btn btn-primary' value='{$lang['STAFF_MINE_ADD_BTN']}'>
                     </td>
                 </tr>
             </form>
@@ -511,7 +511,7 @@ function editmine()
                     </tr>
                     <tr>
                         <td colspan='2'>
-                            <center><input type='submit' class='btn btn-secondary' value='{$lang['STAFF_MINE_EDIT_BTN']}'></center>
+                            <center><input type='submit' class='btn btn-primary' value='{$lang['STAFF_MINE_EDIT_BTN']}'></center>
                         </td>
                     </tr>
                 </form>
@@ -524,7 +524,7 @@ function editmine()
         <form method='post'>
         <input type='hidden' name='step' value='1'>
         " . mines_dropdown("mine") . "<br />
-        <input type='submit' class='btn btn-secondary' value='{$lang['STAFF_MINE_EDIT_BTN']}'>
+        <input type='submit' class='btn btn-primary' value='{$lang['STAFF_MINE_EDIT_BTN']}'>
         ";
     }
 }
@@ -552,7 +552,7 @@ function delmine()
         echo "{$lang['STAFF_MINE_DEL1']}<br />
         <form method='post'>
         " . mines_dropdown("mine") . "<br />
-        <input type='submit' class='btn btn-secondary' value='{$lang['STAFF_MINE_DEL_BTN']}'>
+        <input type='submit' class='btn btn-primary' value='{$lang['STAFF_MINE_DEL_BTN']}'>
         ";
     }
 }

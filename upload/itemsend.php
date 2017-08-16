@@ -107,7 +107,7 @@ elseif (!empty($_GET['ID']))
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['ITEM_SEND_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['ITEM_SEND_BTN']}'>
 					</td>
 				</tr>
 			</table>
@@ -138,7 +138,7 @@ elseif (!empty($_GET['ID']))
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['ITEM_SEND_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['ITEM_SEND_BTN']}'>
 					</td>
 				</tr>
 			</table>

@@ -102,7 +102,7 @@ function weapon()
 			name='type' value='equip_primary' 
 			checked='checked' />{$lang['EQUIP_WEAPON_EQUIPAS']} {$lang['EQUIP_WEAPON_SLOT1']}<br />
 		<input type='radio' class='form-control' name='type' value='equip_secondary' />{$lang['EQUIP_WEAPON_EQUIPAS']} {$lang['EQUIP_WEAPON_SLOT2']}<br />
-		<input type='submit' value='{$lang['EQUIP_WEAPON_TITLE']}' class='btn btn-secondary'>
+		<input type='submit' value='{$lang['EQUIP_WEAPON_TITLE']}' class='btn btn-primary'>
 		</form>
 		";
 	}
@@ -174,7 +174,7 @@ function armor()
 	<form action='?slot=armor&ID={$_GET['ID']}' method='post'>
 	{$lang['EQUIP_ARMOR_TEXT_FORM_1']} {$r['itmname']} {$lang['EQUIP_ARMOR_TEXT_FORM_2']}<br />
 	<input type='hidden' name='type' value='equip_armor'  />
-	<input type='submit' class='btn btn-secondary' value='Equip Armor' />
+	<input type='submit' class='btn btn-primary' value='Equip Armor' />
 	</form>";
 	}
 	$h->endpage();

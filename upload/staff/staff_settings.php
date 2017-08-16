@@ -246,7 +246,7 @@ function basicsettings()
 		
 		
         	echo "{$csrf}
-        	<input type='submit' class='btn btn-secondary' value='{$lang['SS_BTN']}' />
+        	<input type='submit' class='btn btn-primary' value='{$lang['SS_BTN']}' />
         </form>";
 		$h->endpage();
 	}
@@ -381,7 +381,7 @@ function announce()
 		echo "{$lang['SS_ANNOUNCE']}<br />
 		<form method='post'>
 			<textarea name='announcement' rows='5' class='form-control'></textarea>
-			<input type='submit' class='btn btn-secondary' value='{$lang['SS_ANNOUNCE_BTN']}'>
+			<input type='submit' class='btn btn-primary' value='{$lang['SS_ANNOUNCE_BTN']}'>
 			{$csrf}
 		</form>";
 	}
@@ -531,7 +531,7 @@ function restore()
 	{
 		echo "{$lang['SS_RESTORE']}<br />
 		<form method='post'>
-			<input type='submit' name='restore' value='{$lang['SS_RESTORE_BTN']}' class='btn btn-secondary'>
+			<input type='submit' name='restore' value='{$lang['SS_RESTORE_BTN']}' class='btn btn-primary'>
 		</form>";
 		$h->endpage();
 	}
@@ -616,7 +616,7 @@ function staff()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-secondary' value='{$lang['STAFF_PRIV_PRIVBTN']}'>
+						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_PRIV_PRIVBTN']}'>
 					</td>
 				</tr>
 			</table>

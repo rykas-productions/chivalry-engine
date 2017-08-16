@@ -131,7 +131,7 @@ function buypower()
         <form method='post'>
             <input type='number' class='form-control' value='{$MUS['buyable_power']}' min='1' max='{$MUS['buyable_power']}' name='sets' required='1'>
             <br />
-            <input type='submit' class='btn btn-secondary' value='{$lang['MINE_BUY_BTN']}'>
+            <input type='submit' class='btn btn-primary' value='{$lang['MINE_BUY_BTN']}'>
         </form>";
     }
 }
