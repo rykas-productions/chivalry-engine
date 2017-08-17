@@ -263,10 +263,10 @@ function viewforum()
 		}
     }
     $ntl = "&nbsp;[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
-    echo "<big>
-    	   <a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
-    	   <i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$_GET['viewforum']}'>{$r['ff_name']}</a>$ntl
-    	  </big><br /><br />";
+	echo "<ol class='breadcrumb'>
+		<li class='breadcrumb-item'><a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a></li>
+		<li class='breadcrumb-item active'>{$r['ff_name']} {$ntl}</li>	
+	</ol>";
 	$posts_per_page = 20;
     $posts_topic = $db->fetch_single($db->query("SELECT COUNT(`ft_id`) 
 													FROM `forum_topics` 
@@ -458,12 +458,11 @@ function viewtopic()
 			die($h->endpage());
 		}
     }
-    echo "<big>
-    		<a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
-    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a>
-    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewtopic={$_GET['viewtopic']}'>{$topic['ft_name']}</a>
-    	  </big>
-    	  <br /><br />";
+	echo "<ol class='breadcrumb'>
+		<li class='breadcrumb-item'><a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a></li>
+		<li class='breadcrumb-item'><a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a></li>
+		<li class='breadcrumb-item active'>{$topic['ft_name']}</li>	
+	</ol>";
     $posts_per_page = 20;
     $posts_topic = $topic['ft_posts'];
     $pages = ceil($posts_topic / $posts_per_page);
@@ -863,12 +862,12 @@ function newtopicform()
 		}
     }
     $code = request_csrf_code("forums_newtopic_{$_GET['forum']}");
+	echo "<ol class='breadcrumb'>
+		<li class='breadcrumb-item'><a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a></li>
+		<li class='breadcrumb-item'><a href='?viewforum={$_GET['forum']}'>{$r['ff_name']}</a></li>
+		<li class='breadcrumb-item active'>{$lang['FORUM_TOPIC_FORM_PAGE']}</li>	
+	</ol>";
     echo <<<EOF
-	<big>
-    		<a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
-    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$_GET['forum']}'>{$r['ff_name']}</a>
-    		<i class='fa fa-chevron-right' aria-hidden='true'></i> {$lang['FORUM_TOPIC_FORM_PAGE']}
-    	  </big>
 <form method='post' action='?act=newtopic&forum={$_GET['forum']}'>
 	<table class='table'>
 		<tr>
@@ -1054,15 +1053,12 @@ function quote()
 	$text = strip_tags(stripslashes($text));
 	$q4 = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['quotename']}");
 	$Who = $db->fetch_single($q4);
-    echo "<big>
-    		<a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
-    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a>
-    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewtopic={$_GET['viewtopic']}'>{$topic['ft_name']}</a>
-    		<i class='fa fa-chevron-right' aria-hidden='true'></i> {$lang['FORUM_QUOTE_FORM_PAGENAME']}
-    	  </big>
-		  <br />
-		  <br />
-    ";
+	echo "<ol class='breadcrumb'>
+		<li class='breadcrumb-item'><a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a></li>
+		<li class='breadcrumb-item'><a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a></li>
+		<li class='breadcrumb-item'><a href='?viewtopic={$_GET['viewtopic']}'>{$topic['ft_name']}</a></li>
+		<li class='breadcrumb-item active'>{$lang['FORUM_QUOTE_FORM_PAGENAME']}</li>	
+	</ol>";
     if ($topic['ft_locked'] == 0)
     {
         echo"
@@ -1158,13 +1154,12 @@ function edit()
         alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_EDIT_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
-    echo "<big>
-    		<a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a>
-    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a>
-    		<i class='fa fa-chevron-right' aria-hidden='true'></i> <a href='?viewtopic={$_GET['topic']}'>{$topic['ft_name']}</a>
-    		<i class='fa fa-chevron-right' aria-hidden='true'></i> {$lang['FORUM_EDIT_FORM_PAGENAME']}
-    	  </big><br /><br />
-    ";
+	echo "<ol class='breadcrumb'>
+		<li class='breadcrumb-item'><a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a></li>
+		<li class='breadcrumb-item'><a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a></li>
+		<li class='breadcrumb-item'><a href='?viewtopic={$_GET['topic']}'>{$topic['ft_name']}</a></li>
+		<li class='breadcrumb-item active'>{$lang['FORUM_EDIT_FORM_PAGENAME']}</li>	
+	</ol>";
     $edit_csrf = request_csrf_code("forums_editpost_{$_GET['post']}");
 	$fp_text = strip_tags(stripslashes($post['fp_text']));
     echo <<<EOF
