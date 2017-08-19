@@ -30,6 +30,22 @@ if (!empty($_POST['pn_update']))
         alert('success',$lang['ERROR_SUCCESS'],$lang['INDEX_PNSUCCESS'],false);
     }
 }
+if (!empty($_POST['pn_update']))
+{
+    if (strlen($_POST['pn_update']) > 65655)
+    {
+        alert('danger',$lang['ERROR_GENERIC'],$lang['ERRDE_PN'],false);
+    }
+    else
+    {
+        $pn_update_db = $db->escape($_POST['pn_update']);
+        $db->query("UPDATE `users`
+        			SET `personal_notes` = '{$pn_update_db}'
+        			WHERE `userid` = {$userid}");
+        $ir['personal_notes'] = $_POST['pn_update'];
+        alert('success',$lang['ERROR_SUCCESS'],$lang['INDEX_PNSUCCESS'],false);
+    }
+}
 echo "Welcome back, {$ir['username']}!<br />";
 echo "Your last visit was on {$lv}.";
 echo "<table class='table table-hover table-bordered'>
@@ -75,73 +91,77 @@ echo "<table class='table table-hover table-bordered'>
 		</td>
 	</tr>
 </tbody>";
+
 $StrengthRank=get_rank($ir['strength'],'strength');
 $StrengthFormat=number_format($ir['strength']);
-
 $AgilityRank=get_rank($ir['agility'],'agility');
 $AgilityFormat=number_format($ir['agility']);
-
 $GuardRank=get_rank($ir['guard'],'guard');
 $GuardFormat=number_format($ir['guard']);
-
 $IQRank=get_rank($ir['iq'],'iq');
 $IQFormat=number_format($ir['iq']);
-
 $LaborRank=get_rank($ir['labor'],'labor');
 $LaborFormat=number_format($ir['labor']);
+$AllFourFormat=number_format($ir['strength']+$ir['agility']+$ir['guard']+$ir['labor']+$ir['iq']);
+
 echo "</table>
 <h3>Stats</h3>";
-echo "<table class='table table-bordered'>
-<tr>
-	<th width='25%'>
-		Strength:
-	</th>
-	<td>
-		{$StrengthFormat} (Ranked: {$StrengthRank})
-	</td>
-</tr>
-<tr>
-	<th width='25%'>
-		Agility:
-	</th>
-	<td>
-		{$AgilityFormat} (Ranked: {$AgilityRank})
-	</td>
-</tr>
-<tr>
-	<th width='25%'>
-		Guard:
-	</th>
-	<td>
-		{$GuardFormat} (Ranked: {$GuardRank})
-	</td>
-</tr>
-<tr>
-	<th width='25%'>
-		Labor:
-	</th>
-	<td>
-		{$LaborFormat} (Ranked: {$LaborRank})
-	</td>
-</tr>
-<tr>
-	<th width='25%'>
-		IQ:
-	</th>
-	<td>
-		{$IQFormat} (Ranked: {$IQRank})
-	</td>
-</tr>
-
-</table>";
-?>
-<form method="post">
-<div class="form-group">
-  <label for="pn_update">Personal Notepad:</label>
-  <textarea class="form-control" rows="5" name="pn_update" id="pn_update"><?php echo"{$ir['personal_notes']}";?></textarea>
-</div>
-<button type="submit" class="btn btn-primary">Update Notes</button>
-</form>
-<?php
-
+echo "
+<table class='table table-bordered'>
+    <tr>
+        <th width='25%'>
+            {$lang['GEN_STR']}
+        </th>
+        <td>
+            {$StrengthFormat} ({$lang["GEN_RANKED"]} {$StrengthRank})
+        </td>
+    </tr>
+    <tr>
+        <th width='25%'>
+            {$lang['GEN_AGL']}
+        </th>
+        <td>
+            {$AgilityFormat} ({$lang["GEN_RANKED"]} {$AgilityRank})
+        </td>
+    </tr>
+    <tr>
+        <th width='25%'>
+            {$lang['GEN_GRD']}
+        </th>
+        <td>
+            {$GuardFormat} ({$lang["GEN_RANKED"]} {$GuardRank})
+        </td>
+    </tr>
+    <tr>
+        <th width='25%'>
+            {$lang['GEN_LAB']}
+        </th>
+        <td>
+            {$LaborFormat} ({$lang["GEN_RANKED"]} {$LaborRank})
+        </td>
+    </tr>
+    <tr>
+        <th width='25%'>
+            {$lang['GEN_IQ']}
+        </th>
+        <td>
+            {$IQFormat} ({$lang["GEN_RANKED"]} {$IQRank})
+        </td>
+    </tr>
+    <tr>
+        <th width='25%'>
+            {$lang['GEN_TOTAL']}
+        </th>
+        <td>
+            {$AllFourFormat} ({$lang["GEN_RANKED"]} {$IQRank})
+        </td>
+    </tr>
+</table>
+<form method='post'>
+    <div class='form-group'>
+        <label for='pn_update'>{$lang['INDEX_PN']}</label>
+        <textarea class='form-control' rows='5' name='pn_update' id='pn_update'>{$ir['personal_notes']}</textarea>
+    </div>
+    <button type='submit' class='btn btn-primary'>{$lang['INDEX_UPDATE']}</button>
+</form>";
 $h->endpage();
