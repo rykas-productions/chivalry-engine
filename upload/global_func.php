@@ -1207,9 +1207,18 @@ function get_rank($stat, $mykey)
 {
     global $db, $userid;
     //Select count of users who have higher $mykey based upon $stat. Excluding the current user, admins and NPCs
-    $q = $db->query("SELECT count(`u`.`userid`) FROM `userstats` AS `us` LEFT JOIN `users` AS `u`
+    if ($mykey != 'all')
+    {
+        $q = $db->query("SELECT count(`u`.`userid`) FROM `userstats` AS `us` LEFT JOIN `users` AS `u`
                     ON `us`.`userid` = `u`.`userid` WHERE {$mykey} > {$stat} AND `us`.`userid` != {$userid}
                     AND `u`.`user_level` != 'Admin' AND `u`.`user_level` != 'NPC'");
+    }
+    else
+    {
+        $q = $db->query("SELECT count(`u`.`userid`) FROM `userstats` AS `us` LEFT JOIN `users` AS `u`
+                    ON `us`.`userid` = `u`.`userid` WHERE `strength`+`agility`+`guard`+`labor` > {$stat} AND `us`.`userid` != {$userid}
+                    AND `u`.`user_level` != 'Admin' AND `u`.`user_level` != 'NPC'");
+    }
     $result = $db->fetch_single($q) + 1;
     $db->free_result($q);
     //Return the count from earlier.

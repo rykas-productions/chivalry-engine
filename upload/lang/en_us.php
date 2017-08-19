@@ -264,6 +264,12 @@ $lang['GYM_GRD1']="minutes of swimming.";
 $lang['GYM_YNH']="You now have";
 $lang['GYM_LAB']="You begin helping around your town. You have successfully gained";
 $lang['GYM_LAB1']="minutes of helping around your town.";
+$lang['GYM_ALL']="All Four";
+$lang['GYM_ALL_BEGIN']="You begin training all four of your stats at once. You have gained";
+$lang['GYM_ALL_BEGIN1']="in {$lang['GEN_STR']},";
+$lang['GYM_ALL_BEGIN2']="in {$lang['GEN_AGL']},";
+$lang['GYM_ALL_BEGIN3']="in {$lang['GEN_GRD']},";
+$lang['GYM_ALL_BEGIN4']="in {$lang['GEN_LAB']} and have";
 
 //Explore
 $lang['EXPLORE_INTRO']='You begin exploring the town and find a few cool things to keep you occupied...';
