@@ -90,6 +90,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 					<a href='stats.php'>{$lang['EXPLORE_STATS']}</a><br />
 					<a href='playerreport.php'>{$lang['EXPLORE_REPORT']}</a><br />
 					<a href='announcements.php'>{$lang['EXPLORE_ANNOUNCEMENTS']}</a><br />
+					<a href='itemappendix.php'>{$lang['ID_TITLE']}</a><br />
 				</div>
 			</div>
 		</div>

@@ -2384,4 +2384,10 @@ $lang['PREF_EMAIL_BTN']="Change Email Opt-Setting";
 $lang['PREF_EMAIL_ERR']="Email opt setting is invalid. You may only opt-in or opt-out.";
 $lang['PREF_EMAIL_SUCC_1']="You have successfully chosen to opt-in to emails sent from the administration about the game.";
 $lang['PREF_EMAIL_SUCC_0']="You have successfully chosen to opt-out of emails sent from the administration about the game.";
+
+//Item Dictionary
+$lang['ID_TITLE']="Item Appendix";
+$lang['ID_INFO']="This page lists all the items in the game, along with how many are in circulation. This may be useful for players who do item flipping, or those who are just plain old curious. Hovering over the item will give you its description. Tapping its name will take you to its info page.";
+$lang['ID_TH']="Item Name";
+$lang['ID_TH1']="Quantity in Circulation";
 ?>
