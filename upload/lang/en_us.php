@@ -1248,7 +1248,6 @@ $lang['VIEWGUILD_STAFF_APP_ACC_ERR2']="This player's level is too low to access 
 $lang['VIEWGUILD_STAFF_APP_ACC_SUCC']="You have successfully accepted this user's application!";
 $lang['VIEWGUILD_STAFF_APP_WOT']="We don't know how you got here... but yeah... you're kinda not supposed to be here.";
 $lang['VIEWGUILD_GYM_ERR']="Your guild's personal gym will be open for use at guild level 3.";
-$lang['VIEWGUILD_GYM_LINK']="Guild Gym";
 $lang['VIEWGUILD_STAFF_VAULT']="Your guild's vault currently has";
 $lang['VIEWGUILD_STAFF_VAULT1']="Select User";
 $lang['VIEWGUILD_STAFF_VAULT_BTN']="Give From Vault";
