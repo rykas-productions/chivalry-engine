@@ -1216,7 +1216,7 @@ function get_rank($stat, $mykey)
     else
     {
         $q = $db->query("SELECT count(`u`.`userid`) FROM `userstats` AS `us` LEFT JOIN `users` AS `u`
-                    ON `us`.`userid` = `u`.`userid` WHERE `strength`+`agility`+`guard`+`labor` > {$stat} AND `us`.`userid` != {$userid}
+                    ON `us`.`userid` = `u`.`userid` WHERE `strength`+`agility`+`guard`+`labor`+`iq` > {$stat} AND `us`.`userid` != {$userid}
                     AND `u`.`user_level` != 'Admin' AND `u`.`user_level` != 'NPC'");
     }
     $result = $db->fetch_single($q) + 1;
