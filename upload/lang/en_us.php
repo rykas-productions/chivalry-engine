@@ -26,6 +26,7 @@ $lang['INDEX_PN']="Personal Notepad";
 $lang['INDEX_PNSUCCESS']="Your personal notepad has been updated successfully.";
 $lang['INDEX_EXP']='XP';
 $lang['INDEX_HP']='HP';
+$lang['INDEX_UPDATE']="Update Notepad";
 
 //Generic
 $lang["GEN_HERE"] = "here";
@@ -51,6 +52,7 @@ $lang['GEN_AGL']="Agility";
 $lang['GEN_GRD']="Guard";
 $lang['GEN_IQ']="IQ";
 $lang['GEN_LAB']="Labor";
+$lang['GEN_TOTAL']="Total Stats";
 $lang['GEN_GOHOME']="Go Home";
 $lang['GEN_IUOF']="Invalid use of file!";
 $lang['GEN_THEM']="Them";
