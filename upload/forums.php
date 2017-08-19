@@ -119,10 +119,10 @@ function idx()
             <th>
                 <?php echo $lang['FORUM_F_FN']; ?>
             </th>
-            <th class='d-xs-none'>
+            <th class='hidden-xs-down'>
                 <?php echo $lang['FORUM_F_PC']; ?>
             </th>
-            <th class='d-xs-none'>
+            <th class='hidden-xs-down'>
                 <?php echo $lang['FORUM_F_TC']; ?>
             </th>
             <th>
@@ -148,12 +148,12 @@ function idx()
          echo "<tr>
 					<td>
 						<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
-						<small class='d-xs-none'><br />{$r['ff_desc']}</small>
+						<small class='hidden-xs-down'><br />{$r['ff_desc']}</small>
 					</td>
-					<td class='d-xs-none'>
+					<td class='hidden-xs-down'>
 						{$posts}
 					</td>
-					<td class='d-xs-none'>
+					<td class='hidden-xs-down'>
 						{$topics}
 					</td>
 					<td>
@@ -183,10 +183,10 @@ function idx()
             <th>
                 <?php echo $lang['FORUM_F_FN']; ?>
             </th>
-            <th class='d-xs-none'>
+            <th class='hidden-xs-down'>
                 <?php echo $lang['FORUM_F_PC']; ?>
             </th>
-            <th class='d-xs-none'>
+            <th class='hidden-xs-down'>
                 <?php echo $lang['FORUM_F_TC']; ?>
             </th>
             <th>
@@ -213,12 +213,12 @@ function idx()
         echo "<tr>
         		<td>
         			<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
-        			<small class='d-xs-none'><br />{$r['ff_desc']}</small>
+        			<small class='hidden-xs-down'><br />{$r['ff_desc']}</small>
         		</td>
-        		<td class='d-xs-none'>
+        		<td class='hidden-xs-down'>
 					{$posts}
 				</td>
-        		<td class='d-xs-none'>
+        		<td class='hidden-xs-down'>
 					{$topics}
 				</td>
         		<td>
@@ -313,10 +313,10 @@ function viewforum()
             <th>
                 <?php echo $lang['FORUM_TOPICNAME']; ?>
             </th>
-            <th class='d-xs-none'>
+            <th class='hidden-xs-down'>
                 <?php echo $lang['FORUM_F_PC']; ?>
             </th>
-            <th class='d-xs-none'>
+            <th class='hidden-xs-down'>
                 <?php echo $lang['FORUM_TOPICOPEN']; ?>
             </th>
             <th>
@@ -374,10 +374,10 @@ function viewforum()
         echo "<tr>
         		<td>
 					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
-					<small class='d-xs-none'>{$r2['ft_desc']}</small>
+					<small class='hidden-xs-down'>{$r2['ft_desc']}</small>
 				</td>
-				<td class='d-xs-none'>{$pc}</td>
-				<td class='d-xs-none'> 
+				<td class='hidden-xs-down'>{$pc}</td>
+				<td class='hidden-xs-down'> 
 					{$t1}<br />
 					{$lang['FORUM_BY']} <a href='profile.php?user={$r2['ft_owner_id']}'>{$pn1['username']}</a>
                 </td>
@@ -509,7 +509,7 @@ function viewtopic()
 	</form>
 	<br />
 	<center>
-	<div class='d-xs-none'>
+	<div class='hidden-xs-down'>
 	<table>
 		<tr>
 			<td>
@@ -670,7 +670,7 @@ function viewtopic()
 			$usertopicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_owner_id`={$r['fp_poster_id']}");
 			$usertopics=$db->fetch_single($usertopicsq);
             print
-                    "<div class='d-xs-none'>{$av}</div><a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a>
+                    "<div class='hidden-xs-down'>{$av}</div><a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a>
                     	[{$r['fp_poster_id']}]<br />
                      <b>{$lang['GEN_RANK']}:</b> {$memb['user_level']}<br />
 					 <b>{$lang['FORUM_F_PC']}:</b> {$userposts}<br />

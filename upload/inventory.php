@@ -100,7 +100,7 @@ $inv =
 	<table class='table table-bordered table-hover table-striped'>
 		<tr>
 			<th>{$lang['INVENT_ITMNQTY']}</th>
-			<th class='hidden-xs'>{$lang['INVENT_ITMNCOST']}</th>
+			<th class='hidden-xs-down'>{$lang['INVENT_ITMNCOST']}</th>
 			<th>{$lang['INVENT_ITMNUSE']}</th>
 		</tr>";
     $lt = "";
@@ -126,7 +126,7 @@ $inv =
             echo " (" . number_format($i['inv_qty']) . ")";
         }
         echo "</td>
-        	  <td class='hidden-xs'>" . number_format($i['itmsellprice']);  
+        	  <td class='hidden-xs-down'>" . number_format($i['itmsellprice']);  
 			  echo "  (" . number_format($i['itmsellprice'] * $i['inv_qty']) . ")";
 			  echo"</td>
         	  <td>
