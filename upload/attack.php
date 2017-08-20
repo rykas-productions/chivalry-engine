@@ -227,7 +227,6 @@ function attacking()
 		if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary'])
 		{
 			$api->UserInfoSet($userid,'xp',0);
-			$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 			alert("danger",$lang['ERROR_SECURITY'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 			die($h->endpage());
 		}
@@ -539,7 +538,6 @@ function beat()
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
 		$api->UserInfoSet($userid,"xp",0);
-		$api->UserStatusSet($userid,'infirmay',666,'Bug Abuse');
 		alert("danger",$lang['ERROR_SECURITY'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 		die($h->endpage());
 	}
@@ -547,7 +545,6 @@ function beat()
 	if(!$db->num_rows($od)) 
 	{
 		$api->UserInfoSet($userid,"xp",0);
-		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 		alert('danger',$lang['ERROR_NONUSER'],$lang['ATTACK_START_NONUSER'],true,'index.php');
 		die($h->endpage());
 	}
@@ -631,7 +628,6 @@ function lost()
 	if (!isset($_SESSION['attacklost']) || $_SESSION['attacklost'] != $_GET['ID'])
 	{
 		$api->UserInfoSet($userid,"xp",0);
-		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 		alert("danger",$lang['ERROR_SECURITY'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 		die($h->endpage());
 	}
@@ -731,7 +727,6 @@ function xp()
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
 		$api->UserInfoSet($userid,"xp",0);
-		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 		alert("danger",$lang['ERROR_SECURITY'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 		die($h->endpage());
 	}
@@ -749,7 +744,6 @@ function xp()
 		if ($r['hp'] == 1)
 		{
 			$api->UserInfoSet($userid,"xp",0);
-			$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 			alert('danger',$lang['ERROR_GENERIC'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 			exit($h->endpage());
 		}
@@ -838,7 +832,6 @@ function mug()
 	if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID'])
 	{
 		$api->UserInfoSet($userid,"xp",0);
-		$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 		alert("danger",$lang['ERROR_SECURITY'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 		die($h->endpage());
 	}
@@ -856,7 +849,6 @@ function mug()
 		if ($r['hp'] == 1)
 		{
 			$api->UserInfoSet($userid,"xp",0);
-			$api->UserStatusSet($userid,'infirmary',666,'Bug Abuse');
 			alert('danger',$lang['ERROR_GENERIC'],$lang['ATTACK_FIGHT_BUGABUSE'],true,'index.php');
 			exit($h->endpage());
 		}
