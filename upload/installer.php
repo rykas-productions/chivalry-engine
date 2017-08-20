@@ -11,8 +11,8 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('0.1.4');
-$Build=('0104');
+$Version=('0.2.1');
+$Build=('0201');
 define('MONO_ON', 1);
 session_name('CENGINE');
 session_start();
