@@ -231,7 +231,7 @@ function mine()
 						alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']) . $lang['MINE_DO_SUCC1'],false);
                         $api->UserGiveItem($userid,$MSI['mine_copper_item'],$flakes);
 						$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_copper_item'])}.");
-                        $xpgain=$flakes*0.1;
+                        $xpgain=$flakes*0.15;
                         
                     }
                     elseif ($PosRolls == 2)
@@ -240,7 +240,7 @@ function mine()
                         alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']) . $lang['MINE_DO_SUCC1'],false);
                         $api->UserGiveItem($userid,$MSI['mine_silver_item'],$flakes);
 						$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_silver_item'])}.");
-                        $xpgain=$flakes*0.2;
+                        $xpgain=$flakes*0.35;
                     }
                     else
                     {
@@ -248,7 +248,7 @@ function mine()
                         alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']) . $lang['MINE_DO_SUCC1'],false);
                         $api->UserGiveItem($userid,$MSI['mine_gold_item'],$flakes);
 						$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_gold_item'])}.");
-                        $xpgain=$flakes*0.3;
+                        $xpgain=$flakes*0.45;
                     }
                 }
                 else
@@ -256,7 +256,7 @@ function mine()
 					alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC2'] . $api->SystemItemIDtoName($MSI['mine_gem_item']),false);
                     $api->UserGiveItem($userid,$MSI['mine_gem_item'],1);
 					$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined 1x {$api->SystemItemIDtoName($MSI['mine_gem_item'])}.");
-                    $xpgain=1;
+                    $xpgain=3*$MUS['mining_level'];
                 }
                 echo"<hr />
                 [<a href='?action=mine&spot={$spot}'>{$lang['MINE_DO_BTN1']}</a>]<br />
