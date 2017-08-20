@@ -118,6 +118,7 @@ function create()
 						<option value='will'>{$lang['INDEX_WILL']}</option>
 						<option value='brave'>{$lang['INDEX_BRAVE']}</option>
 						<option value='hp'>{$lang['INDEX_HP']}</option>
+						<option value='level'>{$lang['INDEX_LEVEL']}</option>
 						<option value='strength'>{$lang['GEN_STR']}</option>
 						<option value='agility'>{$lang['GEN_AGL']}</option>
 						<option value='guard'>{$lang['GEN_GRD']}</option>
@@ -216,7 +217,7 @@ function create()
 			$_POST[$efxkey . 'stat'] =
 					(isset($_POST[$efxkey . 'stat'])
 							&& in_array($_POST[$efxkey . 'stat'],
-									array('energy', 'will', 'brave', 'hp',
+									array('energy', 'will', 'brave', 'hp', 'level',
 											'strength', 'agility', 'guard',
 											'labor', 'iq', 'infirmary', 'dungeon',
 											'primary_currency', 'secondary_currency', 'xp', 'vip_days')))
@@ -577,7 +578,7 @@ function edititem()
 			</tr>";
 			$stats =
             array("energy" => "{$lang['INDEX_ENERGY']}", "will" => "{$lang['INDEX_WILL']}", 
-					"brave" => "{$lang['INDEX_BRAVE']}",
+					"brave" => "{$lang['INDEX_BRAVE']}", "level" => $lang['INDEX_LEVEL'],
                     "hp" => "{$lang['INDEX_HP']}", "strength" => "{$lang['GEN_STR']}",
                     "agility" => "{$lang['GEN_AGL']}", "guard" => "{$lang['GEN_GRD']}",
                     "labor" => "{$lang['GEN_LAB']}", "iq" => "{$lang['GEN_IQ']}",

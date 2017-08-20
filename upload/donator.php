@@ -52,7 +52,7 @@ while ($r=$db->fetch_row($q))
 					$einfo['dir'] = ($einfo['dir'] == 'pos') ? $lang['GEN_INCREASE'] : $lang['GEN_DECREASE'];
 					$stats =
 						array("energy" => "{$lang['INDEX_ENERGY']}", "will" => "{$lang['INDEX_WILL']}", 
-								"brave" => "{$lang['INDEX_BRAVE']}",
+								"brave" => "{$lang['INDEX_BRAVE']}", "level" => $lang['INDEX_LEVEL'],
 								"hp" => "{$lang['INDEX_HP']}", "strength" => "{$lang['GEN_STR']}",
 								"agility" => "{$lang['GEN_AGL']}", "guard" => "{$lang['GEN_GRD']}",
 								"labor" => "{$lang['GEN_LAB']}", "iq" => "{$lang['GEN_IQ']}",
