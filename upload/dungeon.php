@@ -26,7 +26,7 @@ default:
 }
 function home()
 {
-	global $db,$lang,$h;
+	global $db,$lang,$h,$api;
 	$CurrentTime=time();
     //Count how many users are in the dungeon.
 	$PlayerCount=$db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime}"));
