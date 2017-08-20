@@ -203,7 +203,7 @@ function mine()
                 if ($Rolls <= 3)
                 {
                     $NegRolls=Random(1,3);
-                    $NegTime=Random(25,75)*($MUS['mining_level']*.25);
+                    $NegTime=Random(5,25)*($MUS['mining_level']*.25);
                     if ($NegRolls == 1)
                     {
                         alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL'],false);
