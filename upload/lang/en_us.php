@@ -540,32 +540,6 @@ $lang['PROFILE_RISK_3']="Open Public Proxy";
 $lang['PROFILE_RISK_4']="Tor Node";
 $lang['PROFILE_RISK_5']="Honeypot / Botnet / DDOS Attack";
 
-//Equip Items
-$lang['EQUIP_NOITEM']="Item cannot be found, and as a result, you cannot equip it.";
-$lang['EQUIP_NOITEM_TITLE']="Item does not exist!";
-$lang['EQUIP_NOTWEAPON']="The item you are trying to equip cannot be equipped as a weapon.";
-$lang['EQUIP_NOTWEAPON_TITLE']="Invalid Weapon!";
-$lang['EQUIP_NOSLOT']="You are trying to equip this item to an invalid or non-existent slot.";
-$lang['EQUIP_NOSLOT_TITLE']="Invalid Equipment Slot!";
-$lang['EQUIP_WEAPON_SUCCESS1']="You have successfully equipped";
-$lang['EQUIP_WEAPON_SUCCESS2']="as your";
-$lang['EQUIP_WEAPON_SLOT1']='Primary Weapon';
-$lang['EQUIP_WEAPON_SLOT2']='Secondary Weapon';
-$lang['EQUIP_WEAPON_SLOT3']='Armor';
-$lang['EQUIP_WEAPON_TITLE']="Equip a Weapon";
-$lang['EQUIP_WEAPON_TEXT_FORM_1']="Please select the spot you wish to equip your";
-$lang['EQUIP_WEAPON_TEXT_FORM_2']="to. If you're already holding a weapon in the slot you choose, it will be moved back to your inventory.";
-$lang['EQUIP_WEAPON_EQUIPAS']="Equip As";
-$lang['EQUIP_ARMOR_TITLE']="Equipping Armor";
-$lang['EQUIP_ARMOR_TEXT_FORM_1']="You're attempting to equip your ";
-$lang['EQUIP_ARMOR_TEXT_FORM_2']="to your armor slot. If you're already wearing armor, it will be moved back to your inventory.";
-$lang['EQUIP_NOTARMOR']="The item you are trying to equip cannot be equipped as armor.";
-$lang['EQUIP_NOTARMOR_TITLE']="Invalid Armor!";
-$lang['EQUIP_OFF_ERROR1']="You are trying to unequip an item from a nonexistent slot.";
-$lang['EQUIP_OFF_ERROR2']="You don't have an item in that slot.";
-$lang['EQUIP_OFF_SUCCESS']="You've successfully unequipped the item from your";
-$lang['EQUIP_OFF_SUCCESS1']="slot.";
-
 //Polling Staff
 $lang['STAFF_POLL_TITLE']="Polling Administration";
 $lang['STAFF_POLL_TITLES']="Start a Poll";
@@ -822,17 +796,6 @@ $lang['STAFF_ACADEMY_DEL_ERR']="You did not specify an academy course to delete.
 $lang['STAFF_ACADEMY_DEL_ERR1']="That course does not exist, or was already deleted.";
 $lang['STAFF_ACADEMY_DEL_SUCC']="Successfully deleted the";
 $lang['STAFF_ACADEMY_DEL_SUCC1']="course from the game.";
-
-//Criminal Center
-$lang['CRIME_TITLE']="Criminal Center";
-$lang['CRIME_ERROR_JI']="Only the healthy and free individuals can commit crimes.";
-$lang['CRIME_TABLE_CRIME']="Crime";
-$lang['CRIME_TABLE_CRIMES']="Crimes";
-$lang['CRIME_TABLE_COST']="Cost";
-$lang['CRIME_TABLE_COMMIT']="Commit";
-$lang['CRIME_NOREFRESH']="Please do not refresh while commiting crimes.";
-$lang['CRIME_COMMIT_INVALID']="You are trying to commit either a non-existent crime, or an unfinished one. Try again, and if the issue persists, please contact an admin.";
-$lang['CRIME_COMMIT_BRAVEBAD']="You aren't brave enough to commit this crime at this time. Come back later.";
 
 //Item Info Page
 $lang['ITEM_INFO_LUIF']="Displaying item information for";
@@ -1365,17 +1328,6 @@ $lang['STAFF_BOTS_DEL_ERROR']="You didn't select a bot to delete.";
 $lang['STAFF_BOTS_DEL_ERROR1']="This user isn't even on the bot list.";
 $lang['STAFF_BOTS_DEL_SUCCESS']="You've successfully removed this NPC from the bot list.";
 
-//VIP Donation Listing
-$lang['VIP_LIST']="Buying a VIP Pack";
-$lang['VIP_INFO']="If you purchase a VIP package from below, you'll be gifted the following depending on the pack you buy. If you commit fraud, you'll be permanently banned.";
-$lang['VIP_TABLE_TH1']="Pack Info";
-$lang['VIP_TABLE_TH2']="Pack Contents";
-$lang['VIP_TABLE_TH3']="Link";
-$lang['VIP_TABLE_VDINFO']="VIP Days disable ads around the game. You'll also receive 16% energy refill instead of 8%. You'll also receive a star by your name, and your name will change color. How awesome is that?";
-$lang['VIP_THANKS']="Thank you for donating to";
-$lang['VIP_CANCEL']="You have successfully cancelled your donation. Please donate later!";
-$lang['VIP_SUCCESS']="We appreciate it completely. You can view a receipt of this transaction at <a href='http://www.paypal.com'>Paypal</a>. Your items should be given to you automatically fairly soon. If not, please contact an admin for help!";
-
 //Staff punishments
 $lang['STAFF_PUNISHED_FED']="Fedjail User";
 $lang['STAFF_PUNISHED_UNFED']="Unfedjail User";
@@ -1476,21 +1428,6 @@ $lang['STAFF_MINE_EDIT_ERR']="You've selected a non-existent mine. Check your so
 $lang['STAFF_MINE_DEL_SUCCESS']="You've successfully deleted a mine";
 $lang['STAFF_MINE_DEL1']="Select a mine to delete.";
 $lang['STAFF_MINE_DEL_BTN']="Delete Mine! (No Prompt, Be Sure!)";
-
-//Dungeon and Infirmary
-$lang['DUNGINFIRM_TITLE']="Dungeon";
-$lang['DUNGINFIRM_TITLE1']="Infirmary";
-$lang['DUNGINFIRM_INFO']="There are currently";
-$lang['DUNGINFIRM_INFO1']="players in the dungeon.";
-$lang['DUNGINFIRM_INFO2']="players in the infirmary.";
-$lang['DUNGINFIRM_TD1']="User / User ID";
-$lang['DUNGINFIRM_TD2']="Reason";
-$lang['DUNGINFIRM_TD3']="Check-in Time";
-$lang['DUNGINFIRM_TD4']="Check-out Time";
-$lang['DUNGINFIRM_TD5']="Actions";
-$lang['DUNGINFIRM_ACC']="Bail";
-$lang['DUNGINFIRM_ACC1']="Bust";
-$lang['DUNGINFIRM_ACC2']="Heal";
 
 //Staff Index
 $lang['STAFF_IDX_TITLE']="Staff Panel";
@@ -1767,21 +1704,6 @@ $lang['SCU_ERR11']="The passwords you inputted do not match.";
 $lang['SCU_SUC']="You have successfully created a user!";
 $lang['SCU_OTHER']="Other";
 $lang['SEU_BTN']="Edit User";
-
-//Dungeon Bust/Bail and Infirmary Heal
-$lang['DUNG_BAILERR']='Invalid user specified.';
-$lang['DUNG_BAILERR1']='Player cannot be bailed from the dungeon as they are not in the dungeon.';
-$lang['DUNG_BAILERR2']="You do not have enough {$lang['INDEX_PRIMCURR']} to bail out this user. You need at least";
-$lang['DUNG_BAILSUCC']="Player has been successfully bailed out.";
-$lang['DUNG_BUSTERR']='Player cannot be broken out of the dungeon as they are not in the dungeon.';
-$lang['DUNG_BUSTERR1']="You cannot bust others out of the dungeon when you're in the dungeon yourself.";
-$lang['DUNG_BUSTERR2']="You need at least 10% {$lang['INDEX_BRAVE']} to bust someone out of the dungeon.";
-$lang['DUNG_BUSTERR3']="You need at least 25% {$lang['INDEX_WILL']} to bust someone out of the dungeon.";
-$lang['DUNG_BUSTERR4']="While trying to bust out your friend, the dungeon master saw you and threw you into a cell.";
-$lang['DUNG_BUSTSUCC']="You ahve successfully busted your friend out of jail, and got a little {$lang['INDEX_EXP']} for it too!";
-$lang['DUNG_HEALERR1']='Player cannot be healed from the infirmary as they are currently not checked in.';
-$lang['DUNG_HEALERR2']="You do not have enough {$lang['INDEX_SECCURR']} to heal out this user. You need at least";
-$lang['DUNG_HEALSUCC']="You have successfully healed this player out of the infirmary.";
 
 //Temple
 $lang['TEMPLE_TITLE']="Temple of Fortune";

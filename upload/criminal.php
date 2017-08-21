@@ -8,10 +8,10 @@
 */
 $macropage=('criminal.php');
 require('globals.php');
-echo "<h3>{$lang['CRIME_TITLE']}</h3>";
-if ($api->UserStatus($ir['userid'],'infirmary') == true || $api->UserStatus($ir['userid'],'dungeon') == true)
+echo "<h3>Criminal Center</h3>";
+if ($api->UserStatus($ir['userid'],'infirmary') || $api->UserStatus($ir['userid'],'dungeon'))
 {
-	alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['CRIME_ERROR_JI']}");
+	alert('danger',"Uh Oh!","You cannot commit crimes while in the infirmary or dungeon.");
 	die($h->endpage());
 }
 if (!isset($_GET['action']))
@@ -29,7 +29,7 @@ switch ($_GET['action'])
 }
 function home()
 {
-	global $db,$h,$lang;
+	global $db,$h;
 	$crimes = array();
 	$q2 = $db->query("SELECT `crimeGROUP`, `crimeNAME`, `crimeBRAVE`, `crimeID` FROM `crimes` ORDER BY `crimeBRAVE` ASC");
 	while ($r2 = $db->fetch_row($q2))
@@ -44,18 +44,18 @@ function home()
 	<table class='table table-bordered'>
 		<tr>
 			<th>
-				{$lang['CRIME_TABLE_CRIME']}
+				Crime
 			</th>
 			<th>
-				{$lang['CRIME_TABLE_COST']}
+				Bravery Cost
 			</th>
 			<th>
-				{$lang['CRIME_TABLE_COMMIT']}
+				Commit
 			</th>
 		</tr>";
 	while ($r = $db->fetch_row($q))
 	{
-		echo "<tr><td colspan='3' class='h'>{$r['cgNAME']} {$lang['CRIME_TABLE_CRIMES']}</td></tr>";
+		echo "<tr><td colspan='3' class='h'>{$r['cgNAME']} Crimes</td></tr>";
 		foreach ($crimes as $v)
 		{
 			if ($v['crimeGROUP'] == $r['cgID'])
@@ -65,11 +65,11 @@ function home()
 							{$v['crimeNAME']}
 						</td>
 						<td>
-							{$v['crimeBRAVE']} {$lang['INDEX_BRAVE']}
+							{$v['crimeBRAVE']}
 						</td>
 						<td>
 							<a href='?action=crime&c={$v['crimeID']}&tresde={$tresder}'>
-								{$lang['CRIME_TABLE_COMMIT']}
+								Commit Crime
 							</a>
 						</td>
 					</tr>";
@@ -82,7 +82,7 @@ function home()
 }
 function crime()
 {
-	global $db,$lang,$userid,$ir,$h,$api;
+	global $db,$userid,$ir,$h,$api;
 	$tresder = (Random(100, 999));
 	$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 	if (!isset($_GET['c']))
@@ -96,28 +96,28 @@ function crime()
 	}
 	if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['CRIME_NOREFRESH'],true,"?c={$_GET['c']}&tresde={$tresder}");
+		alert('danger',"Uh Oh!","Please do not refresh while committing crimes, thank you!",true,"?c={$_GET['c']}&tresde={$tresder}");
 		$_SESSION['number']=0;
 		die($h->endpage());
 	}
 	$_SESSION['tresde'] = $_GET['tresde'];
 	if ($_GET['c'] <= 0)
 	{
-		alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}",true,'criminal.php');
+		alert('danger',"Invalid Crime!","You have chosen to commit and invalid crime.",true,'criminal.php');
 	}
 	else
 	{
 		$q =  $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_GET['c']} LIMIT 1");
 		if ($db->num_rows($q) == 0)
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","{$lang['CRIME_COMMIT_INVALID']}",true,'criminal.php');
+			alert('danger',"Invalid Crime!","You are trying to commit a non-existent crime.",true,'criminal.php');
 			die($h->endpage());
 		}
 		$r = $db->fetch_row($q);
 		$db->free_result($q);
 		if ($ir['brave'] < $r['crimeBRAVE'])
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['CRIME_COMMIT_BRAVEBAD']}",true,'criminal.php');
+			alert('danger',"Uh Oh!","You do not have enough to commit this crime. You only have {$ir['brave']}",true,'criminal.php');
 			die($h->endpage());
 		}
 		else
@@ -157,14 +157,14 @@ function crime()
 				$text = str_replace("{money}", $prim_currency, $r['crimeSTEXT']);
 				$text = str_replace("{secondary}", $sec_currency, $r['crimeSTEXT']);
 				$text = str_replace("{item}", $api->SystemItemIDtoName($r['crimeSUCCESSITEM']), $r['crimeSTEXT']);
-				$title=$lang['ERROR_SUCCESS'];
+				$title="Success!";
 				$type='success';
 				$api->UserInfoSetStatic($userid,"xp",$ir['xp']+$r['crimeXP']);
-				$api->SystemLogsAdd($userid,'crime',"Successfully commited the {$r['crimeNAME']} crime.");
+				$api->SystemLogsAdd($userid,'crime',"Successfully committed the {$r['crimeNAME']} crime.");
 			}
 			else
 			{
-					$title=$lang['ERROR_GENERIC'];
+					$title="Uh Oh!";
 					$type='danger';
 					$dtime=Random($r['crimeDUNGMIN'],$r['crimeDUNGMAX']);
 					$text = str_replace("{time}", $dtime, $r['crimeFTEXT']);

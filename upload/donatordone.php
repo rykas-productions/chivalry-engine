@@ -17,7 +17,7 @@ if (!isset($_GET['action']))
 //User cancels the donation.
 if ($_GET['action'] == "cancel")
 {
-    alert("success",$lang['ERROR_SUCCESS'],$lang['VIP_CANCEL']);
+    alert("success","Success!","You have chosen to not donate to {$set['WebsiteName']}. Maybe next time? :)");
 }
 //User's donation is complete. Waiting on the IPN to kick in.
 else if ($_GET['action'] == "done")
@@ -26,6 +26,7 @@ else if ($_GET['action'] == "done")
     {
         die($h->endpage());
     }
-    alert("success","{$lang['VIP_THANKS']} {$set['WebsiteName']}",$lang['VIP_SUCCESS']);
+    alert("success","Thank you for Donating to {$set['WebsiteName']}","We greatly appreciate your donation. Your pack will
+        be credited to you in the next 24 hours. If not, please contact an admin so your order can be double checked.");
 }
 $h->endpage();
