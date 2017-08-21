@@ -866,26 +866,6 @@ $lang['STAFF_ACADEMY_DEL_ERR1']="That course does not exist, or was already dele
 $lang['STAFF_ACADEMY_DEL_SUCC']="Successfully deleted the";
 $lang['STAFF_ACADEMY_DEL_SUCC1']="course from the game.";
 
-//Academy
-$lang['ACA_LVL']="Required Level: ";
-$lang['ACA_NAME']="Academy";
-$lang['ACA_ALRDYDO']="You are currently studying the";
-$lang['ACA_ALRDYDO1']="lesson. You will be completed in";
-$lang['ACA_ACA']="Course";
-$lang['ACA_DESC']="Description";
-$lang['ACA_COST']="Cost";
-$lang['ACA_LINK']="Action";
-$lang['ACA_DONE']="Graduated";
-$lang['ACA_ATTEND']="Attend Course";
-$lang['ACA_ERR']="Please specify a course you wish to attend.";
-$lang['ACA_ERR1']="You are trying to attend a non-existent course.";
-$lang['ACA_ERR2']="Your level is too low to attend this course.";
-$lang['ACA_ERR3']="You do not have enough {$lang['INDEX_PRIMCURR']} to attend this course.";
-$lang['ACA_ERR4']="You cannot take the same course twice.";
-$lang['ACA_SUCC']="You have enrolled in the ";
-$lang['ACA_SUCC1']="course. You will graduate in";
-$lang['ACA_SUCC2']="days.";
-
 //Criminal Center
 $lang['CRIME_TITLE']="Criminal Center";
 $lang['CRIME_ERROR_JI']="Only the healthy and free individuals can commit crimes.";
@@ -896,70 +876,6 @@ $lang['CRIME_TABLE_COMMIT']="Commit";
 $lang['CRIME_NOREFRESH']="Please do not refresh while commiting crimes.";
 $lang['CRIME_COMMIT_INVALID']="You are trying to commit either a non-existent crime, or an unfinished one. Try again, and if the issue persists, please contact an admin.";
 $lang['CRIME_COMMIT_BRAVEBAD']="You aren't brave enough to commit this crime at this time. Come back later.";
-
-$lang['ATTACK_START_NOREFRESH']="Refreshing while attacking is a federal jail offense. You can lose all your {$lang['GEN_EXP']} for that.";
-$lang['ATTACK_START_NOUSER']="You can only attack players specified. Did you use the attack link on the user's profile?";
-$lang['ATTACK_START_NOTYOU']="Depressed or not, you cannot attack yourself!";
-$lang['ATTACK_START_THEYLOWLEVEL']="You cannot attack players under level 2, who are also online.";
-$lang['ATTACK_START_YOUNOHP']="You need HP to fight someone. Come back when you have more health!";
-$lang['ATTACK_START_YOUINFIRM']="How do you expect to fight someone when you're nursing an injury in the infirmary?";
-$lang['ATTACK_START_YOUDUNG']="How do you expect to fight someone when you're serving your debt to society in the dungeon?";
-$lang['ATTACK_START_YOUCHICKEN']="Chickening out from one fight, and running to start another is not an honorable way to play.";
-$lang['ATTACK_START_NONUSER']="The person you have a grudge with does not exist. Check your source and try again.";
-$lang['ATTACK_START_UNKNOWNERROR']="An unknown error has occurred. Go back and try again. If this error persists, contact an admin!";
-$lang['ATTACK_START_OPPNOHP']=" is low on HP. Come back when they have more health.";
-$lang['ATTACK_START_OPPINFIRM']=" is in the infirmary at the moment. Come back when they're out!";
-$lang['ATTACK_START_OPPDUNG']=" is in the dungeon at the moment. Come back when they're out!";
-$lang['ATTACK_START_OPPUNATTACK']="This user cannot be attacked by normal means.";
-$lang['ATTACK_START_YOUUNATTACK']="A magical force prevents you from attacking anyone.";
-$lang['ATTACK_FIGHT_STALEMATE']="Come back when you're stronger. This fight ends in stalemate.";
-$lang['ATTACK_FIGHT_LOWENG1']="You do not have enough energy for this fight. You need at least";
-$lang['ATTACK_FIGHT_LOWENG2']="%. You only have";
-$lang['ATTACK_FIGHT_BUGABUSE']="Abusing game bugs is against the game rules. You're losing your {$lang['GEN_EXP']} and going to the infirmary for this one.";
-$lang['ATTACK_FIGHT_BADWEAP']="The weapon you're trying to attack with doesn't exist or cannot be used as a weapon.";
-$lang['ATTACK_FIGHT_ATTACKY_HIT1']="Using your";
-$lang['ATTACK_FIGHT_ATTACKY_HIT2']="you hit";
-$lang['ATTACK_FIGHT_ATTACKY_HIT3']="doing";
-$lang['ATTACK_FIGHT_ATTACKY_HIT4']="damage.";
-$lang['ATTACK_FIGHT_ATTACKY_MISS1']="You tried to hit";
-$lang['ATTACK_FIGHT_ATTACKY_MISS2']="but missed.";
-$lang['ATTACK_FIGHT_ATTACKY_WIN1']="You have bested";
-$lang['ATTACK_FIGHT_ATTACKY_WIN2']="in battle. What do you wish to do with them now?";
-$lang['ATTACK_FIGHT_OUTCOME1']="Mug";
-$lang['ATTACK_FIGHT_OUTCOME2']="Beat";
-$lang['ATTACK_FIGHT_OUTCOME3']="Leave";
-$lang['ATTACK_FIGHT_ATTACK_HPREMAIN']="HP Remaining";
-$lang['ATTACK_FIGHT_ATTACK_FISTS']="Fists";
-$lang['ATTACK_FIGHT_ATTACKO_HIT1']="Using their";
-$lang['ATTACK_FIGHT_ATTACKO_HIT2']="hit you doing";
-$lang['ATTACK_FIGHT_ATTACKO_MISS']="tried to hit you, but, missed.";
-$lang['ATTACK_FIGHT_FINAL_GUILD']="is in the same guild as you! You cannot attack your fellow guild mates!";
-$lang['ATTACK_FIGHT_FINAL_CITY']="This player is not in the same town as you. You both need to be in the same town to fight each other.";
-$lang['ATTACK_FIGHT_START1']="Choose a weapon to attack with.";
-$lang['ATTACK_FIGHT_START2']="You do not have a weapon to attack with! You may want to go back.";
-$lang['ATTACK_FIGHT_END']="You have bested";
-$lang['ATTACK_FIGHT_END1']="You bested them in combat!";
-$lang['ATTACK_FIGHT_END2']="An evil thought comes into your mind as you stare at their unconscious body. You break their neck, and kick them until they start bleeding.";
-$lang['ATTACK_FIGHT_END3']="Your actions cause";
-$lang['ATTACK_FIGHT_END4']="of infirmary time.";
-$lang['ATTACK_FIGHT_END5']="You fell to";
-$lang['ATTACK_FIGHT_END6']="You lost this fight and lost some of your {$lang['GEN_EXP']} as a warrior!";
-$lang['ATTACK_FIGHT_END7']="Since you are an honorable warrior, you take them to the infirmary entrance. You leave their body there. This increases your {$lang['GEN_EXP']}.";
-$lang['ATTACK_FIGHT_END8']="Being a greedy warrior, you take a look at their pockets and grab some of their {$lang['INDEX_PRIMCURR']}.";
-$lang['ATTACK_FIGHT_POINT']="You have earned your guild one point.";
-$lang['ATTACK_FIGHT_POINTL']="You have earned a point for the enemy guild.";
-$lang['ATTACK_BEAT_TEXT']="Beat up by";
-$lang['ATTACK_BEAT_NOTIF']="You were beat up by";
-$lang['ATTACK_BEAT_NOTIF1']="and put into the {$lang['EXPLORE_INFIRM']} for";
-$lang['ATTACK_BEAT_NOTIF3']="minutes.";
-$lang['ATTACK_LOST_TEXT']="Picked a fight and lost";
-$lang['ATTACK_LOST_NOTIF']="attacked you and lost, gaining you";
-$lang['ATTACK_XP_TEXT']="Used for {$lang['GEN_EXP']} by";
-$lang['ATTACK_XP_NOTIF']="attacked you and used you for experience.";
-$lang['ATTACK_MUG_TEXT']="Robbed by";
-$lang['ATTACK_MUG_NOTIF']="robbed you and stole";
-$lang['ATTACK_MUG_ITEM']="For successfully robbing ";
-$lang['ATTACK_MUG_ITEM1']=", you received 1";
 
 //Item Info Page
 $lang['ITEM_INFO_LUIF']="Displaying item information for";
@@ -1614,13 +1530,6 @@ $lang['STAFF_MINE_EDIT_ERR']="You've selected a non-existent mine. Check your so
 $lang['STAFF_MINE_DEL_SUCCESS']="You've successfully deleted a mine";
 $lang['STAFF_MINE_DEL1']="Select a mine to delete.";
 $lang['STAFF_MINE_DEL_BTN']="Delete Mine! (No Prompt, Be Sure!)";
-
-//Announcements
-$lang['ANNOUNCEMENTS_TIME']="Time Posted";
-$lang['ANNOUNCEMENTS_TEXT']="Announcement Text";
-$lang['ANNOUNCEMENTS_READ']="Read";
-$lang['ANNOUNCEMENTS_UNREAD']="Unread";
-$lang['ANNOUNCEMENTS_POSTED']="Posted By:";
 
 //Dungeon and Infirmary
 $lang['DUNGINFIRM_TITLE']="Dungeon";
