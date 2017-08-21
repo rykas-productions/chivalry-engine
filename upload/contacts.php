@@ -49,19 +49,19 @@ default:
 function home()
 {
 	global $db,$ir,$userid,$lang;
-    echo "<a href='?action=add'>{$lang['CONTACT_ADD']}</a><br />
-	{$lang['CONTACT_HOME']}
+    echo "<a href='?action=add'>Add Contact</a><br />
+	These are the players you've added to your contact list.
 	<br />
 	<table class='table table-bordered table-striped'>
 		<tr>
 			<th>
-				{$lang['CONTACT_HOME1']}
+				User
 			</th>
 			<th>
-				{$lang['CONTACT_HOME2']}
+				Message
 			</th>
 			<th>
-				{$lang['CONTACT_HOME3']}
+				Remove
 			</th>
 		</tr>";
     $q = $db->query("SELECT `c`.`c_ID`, `u`.`vip_days`, `username`, `userid` FROM `contact_list` AS `c`
@@ -92,7 +92,7 @@ function home()
 }
 function add()
 {
-	global $db,$userid,$lang;
+	global $db,$userid,$api;
     //User has specifed someone to add to contact list.
 	if (isset($_POST['user']))
 	{
@@ -104,25 +104,26 @@ function add()
         //Person specifed already on contact list.
 		if ($dupe_count > 0)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_ADD_ERR']);
+            alert('danger',"Uh Oh!","You already have this user on your contact list.");
         }
         //Person specifed is the current user.
-        else if ($userid ==$_POST['user'])
+        else if ($userid == $_POST['user'])
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_ADD_ERR1']);
+            alert('danger',"Uh Oh!","You cannot add yourself to your contact list.");
         }
         //Person specifed does not exist.
         else if ($db->num_rows($q) == 0)
         {
             $db->free_result($q);
-            alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_ADD_ERR2']);
+            alert('danger',"Uh Oh!","User you wish to add does not exist.");
         }
         //Person is added to contacts list.
 		else
 		{
 			$db->query("INSERT INTO `contact_list` VALUES (NULL, {$_POST['user']}, {$userid})");
 			$db->free_result($q);
-			alert('success',$lang['ERROR_SUCCESS'],$lang['CONTACT_ADD_SUCC'],true,'contacts.php');
+			alert('success',"Success!","You have successfully added " . $api->SystemUserIDtoName($_POST['user']) . "
+			    to your contact list.", true,'contacts.php');
 		}
 	}
 	else
@@ -139,12 +140,12 @@ function add()
 		<form action='?action=add' method='post'>
 			<tr>
 				<th colspan='2'>
-				{$lang['CONTACT_ADD']}
+				Add Contact Form
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['CONTACT_ADD1']}
+					Enter a User ID
 				</th>
 				<td>
 					<input type='number' class='form-control' required='1' min='1' name='user' value='{$_GET['user']}'>
@@ -152,7 +153,7 @@ function add()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['CONTACT_ADD_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='Add Contact' class='btn btn-primary'>
 				</td>
 			</tr>
 		</form>
@@ -161,12 +162,12 @@ function add()
 }
 function remove()
 {
-	global $db,$userid,$lang,$h;
+	global $db,$userid,$h,$api;
 	$_GET['contact'] = (isset($_GET['contact']) && is_numeric($_GET['contact'])) ? abs($_GET['contact']) : '';
     //User is trying to remove someone from contact list, but didn't specify their ID.
 	if (empty($_GET['contact']))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR'],true,'contacts.php');
+		alert('danger',"Uh Oh!","You must specify a contact you wish to remove.",true,'contacts.php');
 		die($h->endpage());
 	}
 	$qc = $db->query("SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ID` = {$_GET['contact']}");
@@ -175,11 +176,11 @@ function remove()
     //Specified person is not on list.
 	if ($exist_count == 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['CONTACT_REMOVE_ERR1'],true,'contacts.php');
+        alert('danger',"Uh Oh!","This contact is not on your list.",true,'contacts.php');
         die($h->endpage());
     }
     //Remove from list.
 	$db->query("DELETE FROM `contact_list` WHERE `c_ID` = {$_GET['contact']} AND `c_ADDER` = {$userid}");
-	alert('success',$lang['ERROR_SUCCESS'],$lang['CONTACT_REMOVE_SUCC'],true,'contacts.php');
+	alert('success',"Success!","You have successfully removed " . $api->UserIDtoName($_GET['contact']) . " from your contact list.",true,'contacts.php');
 }
 $h->endpage();

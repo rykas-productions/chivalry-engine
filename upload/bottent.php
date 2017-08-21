@@ -9,24 +9,27 @@
 */
 $macropage=('bottent.php');
 require('globals.php');
-echo "<h3>{$lang['BOTTENT_TITLE']}</h3><hr />{$lang['BOTTENT_DESC']}<hr />";
+echo "<h3>Bot Tent</h3><hr />Welcome to the Bot Tent. Here you may challenge NPCs to battle. If you win, you'll receive
+    an item. These items may or may not be useful in your adventures. To deter players getting massive amounts of items,
+    you can only attack these NPCs every so often. Their cooldown is listed here as well. To receive the item, you must
+    mug the bot.<hr />";
 $query=$db->query("SELECT * FROM `botlist`");
 echo "<table class='table table-bordered'>
 <tr>
 	<th>
-		{$lang['BOTTENT_TH']}
+		Bot Name
 	</th>
 	<th class='hidden-xs'>
-		{$lang['BOTTENT_TH1']}
+		Bot Level
 	</th>
 	<th class='hidden-xs'>
-		{$lang['BOTTENT_TH2']}
+		Bot Cooldown
 	</th>
 	<th>
-		{$lang['BOTTENT_TH3']}
+		Bot Item Drop
 	</th>
 	<th>
-		{$lang['BOTTENT_TH4']}
+		Attack
 	</th>
 </tr>";
 //List all the bots.
@@ -45,7 +48,7 @@ while ($result = $db->fetch_row($query))
 	if ((time() <= ($r2 + $result['botcooldown'])) && ($r2 > 0))
 	{
 		$cooldown=($r2 + $result['botcooldown']) - time();
-		$attack="{$lang['BOTTENT_WAIT']} " . ParseTimestamp($cooldown);
+		$attack="Cooldown Remaining: " . ParseTimestamp($cooldown);
 	}
     //Player CAN attack the bot.
 	else

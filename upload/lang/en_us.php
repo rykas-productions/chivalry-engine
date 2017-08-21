@@ -397,23 +397,6 @@ $lang['MAIL_TH1_ARC']="Select which archive you wish to download.";
 $lang['MAIL_TH1_ARC1']="Inbox";
 $lang['MAIL_TH1_ARC2']="Outbox";
 
-//Contacts Page
-$lang['CONTACT_ADD']="Add a Contact";
-$lang['CONTACT_HOME']="These are the players you have added to your contact list.";
-$lang['CONTACT_HOME1']="Username [ID]";
-$lang['CONTACT_HOME2']="Message";
-$lang['CONTACT_HOME3']="Remove";
-$lang['CONTACT_ADD']="Adding a contact to your contacts list.";
-$lang['CONTACT_ADD1']="Enter a User ID to add to your contacts list.";
-$lang['CONTACT_ADD_BTN']="Add Contact";
-$lang['CONTACT_ADD_ERR']="You cannot add the same person twice to your contact list.";
-$lang['CONTACT_ADD_ERR1']="You cannot add yourself to your own contact list.";
-$lang['CONTACT_ADD_ERR2']="You cannot add a non-existent user to your contact list.";
-$lang['CONTACT_ADD_SUCC']="You have successfully added a user to your contact list.";
-$lang['CONTACT_REMOVE_ERR']="You didn't specify a contact to delete.";
-$lang['CONTACT_REMOVE_ERR1']="You cannot delete a contact who isn't on your list.";
-$lang['CONTACT_REMOVE_SUCC']="You have successfully removed a contact from your contacts list.";
-
 //Language menu
 $lang['LANG_INTRO']='Here you may change your language. This is not saved to your account. This is saved via a cookie. If you change devices or wipe your cookies, you will need to reset your language again. Translations may not be 100% accurate.';
 $lang['LANG_BUTTON']='Change Language';
@@ -429,32 +412,6 @@ $lang['NOTIF_TITLE']='Last fifteen notifications belonging to you...';
 $lang['NOTIF_READ']='Read';
 $lang['NOTIF_UNREAD']='Unread';
 $lang['NOTIF_DELETE']='Delete';
-
-//Bank
-$lang['BANK_BUY1']='Open a bank account today, just ';
-$lang['BANK_BUYYES']='Sign Me Up!';
-$lang['BANK_SUCCESS']="Congratulations, you bought a bank account for";
-$lang['BANK_SUCCESS1']='Start Using My Account!';
-$lang['BANK_FAIL']="You do not have enough {$lang['INDEX_PRIMCURR']} to buy a bank account. Come back later when you have enough. You need ";
-$lang['BANK_HOME']="You currently have ";
-$lang['BANK_HOME1']=" in the bank.";
-$lang['BANK_HOME2']="At the end of each day, your bank balance will increase by 2%.<br />You must be active within the past 24 hours to receive interest.";
-$lang['BANK_DEPOSIT_WARNING']="It will cost you";
-$lang['BANK_DEPOSITE_WARNING1']=" of the money you deposit, rounded up. The maximum fee is ";
-$lang['BANK_AMOUNT']="Amount:";
-$lang['BANK_DEPOSIT']="Deposit";
-$lang['BANK_WITHDRAW_WARNING']="Luckily for you, there's no fee on withdrawals.";
-$lang['BANK_WITHDRAW']="Withdraw";
-$lang['BANK_D_ERROR']="You are trying to deposit money you do not even have!";
-$lang['BANK_D_SUCCESS']="You hand over ";
-$lang['BANK_D_SUCCESS1']=" to be deposited. After the fee (";
-$lang['BANK_D_SUCCESS2']=") is taken, ";
-$lang['BANK_D_SUCCESS3']=" is added to your bank account. <b>You now have ";
-$lang['BANK_D_SUCCESS4']=" in your account.</b>";
-$lang['BANK_W_FAIL']="You are trying to withdraw more {$lang['INDEX_PRIMCURR']} than you currently have in the bank.";
-$lang['BANK_W_SUCCESS']="You successfully withdrew";
-$lang['BANK_W_SUCCESS1']="from your bank account. You have";
-$lang['BANK_W_SUCCESS2']="left in your bank account.";
 
 //Forums
 $lang['FORUM_EMPTY_REPLY']="You are trying to submit an empty reply, which you cannot do! Please make sure you filled in the reply form!";
@@ -1387,17 +1344,6 @@ $lang['SLOTS_BTN']="Spin baby, spin!";
 $lang['SLOTS_TITLE']="Slot Machine";
 $lang['SLOTS_NOREFRESH']="Please do not refresh the page while gambling at the slot machines. Thank you!";
 
-//Bot tent
-$lang['BOTTENT_TITLE']="Bot Tent";
-$lang['BOTTENT_DESC']="Welcome to the Bot Tent. Here you may challenge NPCs to battle. If you win, you'll receive an item. These items may or may not be useful in your adventures. To deter players getting massive amounts of items, you can only attack these NPCs every so often. Their cooldown is listed here as well. To receive the item, you must mug the bot.";
-$lang['BOTTENT_TH']="Bot Name";
-$lang['BOTTENT_TH1']="Bot Level";
-$lang['BOTTENT_TH2']="Bot Cooldown";
-$lang['BOTTENT_TH3']="Bot Item Drop";
-$lang['BOTTENT_TH4']="Attack";
-$lang['BOTTENT_WAIT']="Cooldown Remaining: ";
-$lang['BOTTENT_CHANCE']="Success Chance:";
-
 //Staff bots
 $lang['STAFF_BOTS_TITLE']="Staff Bots";
 $lang['STAFF_BOTS_ADD']="Add Bot";
@@ -1762,17 +1708,6 @@ $lang['INVENT_ITMNUSE3']="Add to Market";
 $lang['INVENT_ITMNUSE4']="Use";
 $lang['INVENT_ITMNUSE5']="Equip Weapon";
 $lang['INVENT_ITMNUSE6']="Equip Armor";
-
-//Authenticate
-$lang['AUTH_ERROR1']="You have exceeded the maximum of times you can fail to login within the past day. Please try again in 24 hours.";
-$lang['AUTH_ERROR2']="You have exceeded the maximum of times you can fail to login within the past hour. Please try again in an hour.";
-$lang['AUTH_ERROR3']="You have exceeded the maximum of times you can fail to login within the past 15 minutes. Please try again in 15 minuntes.";
-$lang['AUTH_ERROR4']="You left the login form empty. Go back and try again.";
-$lang['AUTH_ERROR5']="Your account has been temporarily locked. Please try again in 24 hours.";
-$lang['AUTH_ERROR6']="Your account has been temporarily locked. Please try again in an hour.";
-$lang['AUTH_ERROR7']="Your account has been temporarily locked. Please try again in 15 minutes.";
-$lang['AUTH_ERROR8']="Incorrect email and password combination.";
-$lang['AUTH_ERROR9']="CSRF verifcation failed. Please login quickly.";
 
 //Header
 $lang['HDR_JS']="You need to enable Javascript for this game to work efficiently.";
