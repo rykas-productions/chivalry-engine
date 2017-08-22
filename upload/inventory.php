@@ -8,15 +8,15 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
-echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
+echo "<h3>Your Equipment</h3><hr />
 <div class='row'>
 	<div class='col-sm-4'>
 		<div class='card'>
 			<div class='card-header'>
-				{$lang['EQUIP_WEAPON_SLOT1']} ";
+				Primary Weapon ";
 				if (!empty($ir['equip_primary']))
 				{
-					echo "(<a href='unequip.php?type=equip_primary'>{$lang['INVENT_UNEQUIP']}</a>)";
+					echo "(<a href='unequip.php?type=equip_primary'>Unequip</a>)";
 				}
 				echo"
 			</div>
@@ -27,7 +27,7 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 				}
 				else
 				{
-					echo "{$lang['INVENT_NOPRIM']}";
+					echo "N/A";
 				}
 				echo"
 			</div>
@@ -37,10 +37,10 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 	<div class='col-sm-4'>
 		<div class='card'>
 			<div class='card-header'>
-				{$lang['EQUIP_WEAPON_SLOT2']} ";
+				Secondary Weapon ";
 				if (!empty($ir['equip_secondary']))
 				{
-					echo "(<a href='unequip.php?type=equip_secondary'>{$lang['INVENT_UNEQUIP']}</a>)";
+					echo "(<a href='unequip.php?type=equip_secondary'>Unequip</a>)";
 				}
 				echo"
 			</div>
@@ -51,7 +51,7 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 				}
 				else
 				{
-					echo "{$lang['INVENT_NOSECC']}";
+					echo "N/A";
 				}
 				echo"
 			</div>
@@ -61,10 +61,10 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 	<div class='col-sm-4'>
 		<div class='card'>
 			<div class='card-header'>
-				{$lang['EQUIP_WEAPON_SLOT3']} ";
+				Armor ";
 				if (!empty($ir['equip_armor']))
 				{
-					echo "(<a href='unequip.php?type=equip_armor'>{$lang['INVENT_UNEQUIP']}</a>)";
+					echo "(<a href='unequip.php?type=equip_armor'>Unequip</a>)";
 				}
 				echo"
 			</div>
@@ -75,7 +75,7 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 				}
 				else
 				{
-					echo "{$lang['INVENT_NOARMOR']}";
+					echo "N/A";
 				}
 				echo"
 			</div>
@@ -83,7 +83,7 @@ echo "<h3>{$lang['INVENT_EQUIPPED']}</h3><hr />
 	</div>
 </div>";
 echo"<hr />
-<h3>{$lang['INVENT_ITEMS']}</h3><hr />";
+<h3>Your Inventory</h3><hr />";
 $inv =
         $db->query(
                 "SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
@@ -96,12 +96,12 @@ $inv =
                  ON `i`.`itmtype` = `it`.`itmtypeid`
                  WHERE `iv`.`inv_userid` = {$userid}
                  ORDER BY `i`.`itmtype` ASC, `i`.`itmname` ASC");
-    echo "<b>{$lang['INVENT_ITEMS_INFO']}</b><br />
+    echo "<b>Your items are listed below.</b><br />
 	<table class='table table-bordered table-hover table-striped'>
 		<tr>
-			<th>{$lang['INVENT_ITMNQTY']}</th>
-			<th class='hidden-xs-down'>{$lang['INVENT_ITMNCOST']}</th>
-			<th>{$lang['INVENT_ITMNUSE']}</th>
+			<th>Item (Qty)</th>
+			<th class='hidden-xs-down'>Item Cost (Total)</th>
+			<th>Links</th>
 		</tr>";
     $lt = "";
     while ($i = $db->fetch_row($inv))
@@ -130,20 +130,20 @@ $inv =
 			  echo "  (" . number_format($i['itmsellprice'] * $i['inv_qty']) . ")";
 			  echo"</td>
         	  <td>
-        	  	[<a href='itemsend.php?ID={$i['inv_id']}'>{$lang['INVENT_ITMNUSE1']}</a>]
-        	  	[<a href='itemsell.php?ID={$i['inv_id']}'>{$lang['INVENT_ITMNUSE2']}</a>]
-        	  	[<a href='itemmarket.php?action=add&ID={$i['inv_id']}'>{$lang['INVENT_ITMNUSE3']}</a>]";
+        	  	[<a href='itemsend.php?ID={$i['inv_id']}'>Send</a>]
+        	  	[<a href='itemsell.php?ID={$i['inv_id']}'>Sell</a>]
+        	  	[<a href='itemmarket.php?action=add&ID={$i['inv_id']}'>Add to Market</a>]";
         if ($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' || $i['effect3_on'] == 'true')
         {
-            echo " [<a href='itemuse.php?item={$i['inv_id']}'>{$lang['INVENT_ITMNUSE4']}</a>]";
+            echo " [<a href='itemuse.php?item={$i['inv_id']}'>Use</a>]";
         }
         if ($i['weapon'] > 0)
         {
-            echo " [<a href='equip.php?slot=weapon&ID={$i['inv_id']}'>{$lang['INVENT_ITMNUSE5']}</a>]";
+            echo " [<a href='equip.php?slot=weapon&ID={$i['inv_id']}'>Equip Weapon</a>]";
         }
         if ($i['armor'] > 0)
         {
-            echo " [<a href='equip.php?slot=armor&ID={$i['inv_id']}'>{$lang['INVENT_ITMNUSE6']}</a>]";
+            echo " [<a href='equip.php?slot=armor&ID={$i['inv_id']}'>Equip Armor</a>]";
         }
         echo "</td>
         </tr>";

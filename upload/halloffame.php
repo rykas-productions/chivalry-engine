@@ -7,7 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-echo "<h3>{$lang['HOF_TITLE']}</h3><hr />";
+echo "<h3>Hall of Fame</h3><hr />";
 //Add stats to this array.
 $StatArray=array('total','level','strength','agility','guard','labor','iq',
                     'primary_currency','mining_level', 'secondary_currency');
@@ -56,31 +56,31 @@ else
                     ORDER BY `{$_GET['stat']}` DESC
                     LIMIT 20");
 }
-echo "<a href='?stat=level'>{$lang['INDEX_LEVEL']}</a> 
-        || <a href='?stat=primary_currency'>{$lang['INDEX_PRIMCURR']}</a>
-        || <a href='?stat=secondary_currency'>{$lang['INDEX_SECCURR']}</a> 
-		|| <a href='?stat=mining_level'>{$lang['HOF_MINE']}</a>";
+echo "<a href='?stat=level'>Level</a>
+        || <a href='?stat=primary_currency'>Primary Currency</a>
+        || <a href='?stat=secondary_currency'>Secondary Currency</a>
+		|| <a href='?stat=mining_level'>Mining Level</a>";
 echo "<br />";
-echo "<a href='?stat=strength'>{$lang['GEN_STR']}</a> 
-		|| <a href='?stat=agility'>{$lang['GEN_AGL']}</a> 
-        || <a href='?stat=guard'>{$lang['GEN_GRD']}</a>
-        || <a href='?stat=labor'>{$lang['GEN_LAB']}</a> 
-		|| <a href='?stat=iq'>{$lang['GEN_IQ']}</a> 
-        || <a href='?stat=total'>{$lang['HOF_TOTAL']}</a>";		
+echo "<a href='?stat=strength'>Strength</a>
+		|| <a href='?stat=agility'>Agility</a>
+        || <a href='?stat=guard'>Guard</a>
+        || <a href='?stat=labor'>Labor</a>
+		|| <a href='?stat=iq'>IQ</a>
+        || <a href='?stat=total'>Total Stats</a>";
 echo "<br />Listing the 20 players with the highest {$_GET['stat']}.";
 echo "<table class='table table-bordered'>
 <tr>
     <th width='10%'>
-        {$lang['HOF_RANK']}
+        Rank
     </th>
     <th width='45%'>
-        {$lang['HOF_USER']}
+        User
     </th>";
     if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
             || $_GET['stat'] == 'mining_level')
     {
         echo "<th width='45%'>
-                {$lang['HOF_VALUE']}
+                Value
                </th>";
     }
     echo "
@@ -92,7 +92,7 @@ while ($r=$db->fetch_row($q))
     echo "
     <tr>
         <td>
-            {$rank})
+            {$rank}
         </td>
         <td>
             <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]

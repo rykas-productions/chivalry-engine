@@ -193,17 +193,17 @@ function view()
         //Guild does not exist.
 		if ($db->num_rows($gq) == 0)
 		{
-			alert('danger',"Uh Oh!",$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
+			alert('danger',"Uh Oh!","The guild you are trying to view does not exist.",true,"guilds.php");
 			die($h->endpage());
 		}
         //List all the guild's information.
 		$gd = $db->fetch_row($gq);
-		echo "<h3>{$gd['guild_name']} {$lang['GUILD_VIEW_GUILD']}</h3>";
+		echo "<h3>{$gd['guild_name']} Guild</h3>";
 		echo "
 		<table class='table table-bordered'>
 			<tr>
 				<th>
-					{$lang['GUILD_VIEW_LEADER']}
+					Guild Leader
 				</th>
 				<td>
 					<a href='profile.php?user={$gd['guild_owner']}'> " . $api->SystemUserIDtoName($gd['guild_owner']) . "</a>
@@ -211,7 +211,7 @@ function view()
 			</tr>
 			<tr>
 				<th>
-					{$lang['GUILD_VIEW_COLEADER']}
+					Guild Co-Leader
 				</th>
 				<td>
 					<a href='profile.php?user={$gd['guild_coowner']}'> " . $api->SystemUserIDtoName($gd['guild_coowner']) . "</a>
@@ -219,7 +219,7 @@ function view()
 			</tr>
 			<tr>
 				<th>
-					{$lang['GUILD_VIEW_LEVEL']}
+					Guild Level
 				</th>
 				<td>
 					" . number_format($gd['guild_level']) . "
@@ -227,7 +227,7 @@ function view()
 			</tr>
 			<tr>
 				<th>
-					{$gd['guild_name']} {$lang['GUILD_VIEW_DESC']}
+					{$gd['guild_name']} Description
 				</th>
 				<td>
 					{$gd['guild_desc']}
@@ -235,7 +235,7 @@ function view()
 			</tr>
 			<tr>
 				<th>
-					{$lang['GUILD_VIEW_MEMBERS']}
+					Members
 				</th>
 				<td>";
                 //Count players in this guild.
@@ -248,7 +248,7 @@ function view()
 			</tr>
 			<tr>
 				<th>
-					{$lang['GUILD_VIEW_LOCATION']}
+					Guild Location
 				</th>
 				<td>";
 				echo $api->SystemTownIDtoName($gd['guild_town_id']) . "
@@ -256,10 +256,10 @@ function view()
 			</tr>
 			<tr>
 				<th>
-					<a href='?action=memberlist&id={$_GET['id']}'>{$lang['GUILD_VIEW_USERS']}</a>
+					<a href='?action=memberlist&id={$_GET['id']}'>View Members</a>
 				</th>
 				<td>
-					<a href='?action=apply&id={$_GET['id']}'>{$lang['GUILD_VIEW_APPLY']}</a>
+					<a href='?action=apply&id={$_GET['id']}'>Apply</a>
 				</td>
 			</tr>
 		</table>";
@@ -267,30 +267,30 @@ function view()
 }
 function memberlist()
 {
-	global $db,$userid,$ir,$api,$h,$lang;
+	global $db,$h;
 	$_GET['id'] = abs($_GET['id']);
     //Guild is not specified.
 	if (empty($_GET['id']))
 	{
-		alert('danger',"Uh Oh!",$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
+		alert('danger',"Uh Oh!","Please specify the guild you wish to view.",true,"guilds.php");
 		die($h->endpage());
 	}
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
     //Guild does not exist.
 	if ($db->num_rows($gq) == 0)
 	{
-		alert('danger',"Uh Oh!",$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
+		alert('danger',"Uh Oh!","You are trying to view a non-existent guild.",true,"guilds.php");
 		die($h->endpage());
 	}
 	$gd = $db->fetch_row($gq);
-	echo "<h3>{$lang['GUILD_VIEW_LIST']} {$gd['guild_name']} {$lang['GUILD_VIEW_LIST2']}</h3>
+	echo "<h3>Members Enlisted in the {$gd['guild_name']} guild</h3>
 	<table class='table table-bordered'>
 		  	<tr>
 		  		<th>
-					{$lang['STAFF_ITEM_GIVE_FORM_USER']}
+					User
 				</th>
 		  		<th>
-					{$lang['INDEX_LEVEL']}
+					Level
 				</th>
 		  	</tr>";
 	$q =  $db->query("SELECT `userid`, `username`, `level`
@@ -313,42 +313,45 @@ function memberlist()
 }
 function apply()
 {
-	global $db,$userid,$ir,$api,$h,$lang;
+	global $db,$userid,$ir,$api,$h;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
     //Guild is not specified.
 	if (empty($_GET['id']))
 	{
-		alert('danger',"Uh Oh!",$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
+		alert('danger',"Uh Oh!","Please specify the guild you wish to view.",true,"guilds.php");
 		die($h->endpage());
 	}
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
     //Guild does not exist.
 	if ($db->num_rows($gq) == 0)
 	{
-		alert('danger',"Uh Oh!",$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
+		alert('danger',"Uh Oh!","You are trying to apply to a non-existent guild.",true,"guilds.php");
 		die($h->endpage());
 	}
 	$gd = $db->fetch_row($gq);
     //User is already in a guild, and cannot join another.
 	if ($ir['guild'] > 0)
 	{
-		alert('danger',"Uh Oh!",$lang['GUILD_APP_ERROR'],true,"guilds.php?action=view&id={$_GET['id']}");
+		alert('danger',"Uh Oh!","You cannot write applications if you're already in a guild.",true,"guilds.php?action=view&id={$_GET['id']}");
 		die($h->endpage());
 	}
-	echo "<h3>{$lang['GUILD_APP_TITLE']} {$gd['guild_name']} {$lang['GUILD_VIEW_LIST2']}</h3><hr />";
+	echo "<h3>Submitting an Application to join the {$gd['guild_name']} guild.</h3><hr />";
 	if (isset($_POST['application']))
 	{
         //User fails CSRF verification
 		if (!isset($_POST['verf']) || !verify_csrf_code('guild_apply', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"],true,'back');
+			alert('danger',"Action Blocked!","The action you were trying to do was blocked. It was blocked because you loaded
+                another page on the game. If you have not loaded a different page during this time, change your password
+                immediately, as another person may have access to your account!",true,'back');
 			die($h->endpage());
 		}
 		$cnt=$db->query("SELECT * FROM `guild_applications` WHERE `ga_user` = {$userid} && `ga_guild` = {$_GET['id']}");
 		//User has already submitted an application to this guild.
         if ($db->num_rows($cnt) > 0)
 		{
-			alert('danger',"Uh Oh!",$lang['GUILD_APP_ERROR1'],true,'back');
+			alert('danger',"Uh Oh!","You have already filled out an application to join this guild. Please wait until a
+			    response is given.",true,'back');
 			die($h->endpage());
 		}
         //Tell the guild's owner and co-owner that the user has sent an application.
@@ -370,7 +373,7 @@ function apply()
 		$gev = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
                                 sent an application to join this guild.");
 		$db->query("INSERT INTO `guild_notifications` VALUES (NULL, {$_GET['id']}, " . time() . ", '{$gev}')");
-		alert('success',"Success!",$lang['GUILD_APP_SUCC'],true,"guilds.php?action=view&id={$_GET['id']}");
+		alert('success',"Success!","You application has been submitted successfully.",true,"guilds.php?action=view&id={$_GET['id']}");
 	}
 	else
 	{
@@ -378,18 +381,19 @@ function apply()
 		$csrf = request_csrf_html('guild_apply');
 		echo "
 		<form action='?action=apply&id={$_GET['id']}' method='post'>
-			{$lang['GUILD_APP_INFO']}<br />
+			Write your application to join this guild here. The more information you can provide, the higher chance you
+			are to be accepted.<br />
 			<textarea name='application' class='form-control' required='1' rows='7' cols='40'></textarea><br />
 			{$csrf}
-			<input type='submit' class='btn btn-primary' value='{$lang['GUILD_APP_BTN']}' />
+			<input type='submit' class='btn btn-primary' value='Submit Application' />
 		</form>";
 	}
 }
 function wars()
 {
-	global $db,$userid,$ir,$api,$h,$lang;
+	global $db,$api;
 	$time = time();
-	echo "<h3>{$lang['GUILD_WAR_TITLE']}</h3><hr />";
+	echo "<h3>Known Guild Wars</h3><hr />";
 	$q=$db->query("SELECT * FROM `guild_wars` 
                     WHERE `gw_winner` = 0 AND 
                     `gw_end` > {$time} 
@@ -404,14 +408,14 @@ function wars()
 			echo "<tr>
 				<td>
 					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
-						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_drpoints']) . "{$lang['GUILD_WAR_TD1']}
+						(Points: " . number_format($r['gw_drpoints']) . ")
 				</td>
 				<td>
-					{$lang['GUILD_WAR_TD2']}
+					VS
 				</td>
 				<td>
 					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}</a><br />
-						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_depoints']) . "{$lang['GUILD_WAR_TD1']}
+						(Points: " . number_format($r['gw_depoints']) . ")
 				</td>
 			</tr>";
 		}
@@ -420,7 +424,7 @@ function wars()
     //No guild wars.
 	else
 	{
-		alert('danger',"Uh Oh!",$lang['GUILD_WAR_ERR'],false);
+		alert('danger',"Uh Oh!","There are currently no guilds warring at this time.",false);
 	}
 }
 $h->endpage();

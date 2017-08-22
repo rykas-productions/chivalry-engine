@@ -10,24 +10,6 @@
 static $lang = array();
 global $ir,$fee,$gain,$set;
 
-//Index
-$lang['INDEX_TITLE']="General Info";
-$lang['INDEX_WELCOME']="Welcome back,";
-$lang['INDEX_YLVW']="Your last visit was on";
-$lang['INDEX_LEVEL']="Level";
-$lang['INDEX_CLASS']="Class";
-$lang['INDEX_VIP']="VIP Days";
-$lang['INDEX_PRIMCURR']="Primary Currency";
-$lang['INDEX_SECCURR']="Secondary Currency";
-$lang['INDEX_ENERGY']="Energy";
-$lang['INDEX_BRAVE']="Brave";
-$lang['INDEX_WILL']="Will";
-$lang['INDEX_PN']="Personal Notepad";
-$lang['INDEX_PNSUCCESS']="Your personal notepad has been updated successfully.";
-$lang['INDEX_EXP']='XP';
-$lang['INDEX_HP']='HP';
-$lang['INDEX_UPDATE']="Update Notepad";
-
 //Generic
 $lang["GEN_HERE"] = "here";
 $lang["GEN_back"] = "back";
@@ -70,39 +52,6 @@ $lang['GEN_DECREASE']="Decreases";
 $lang['GEN_UPTODATE']="Chivalry Engine is up to date.";
 $lang['GEN_OUTTADATE']="Chivalry Engine is out of date. Get the latest build ";
 $lang['GEN_FAILEDTOCHECK']="Could not contact update checker.";
-
-// Menu
-$lang["MENU_EXPLORE"] = "Explore";
-$lang["MENU_MAIL"] = "Mail";
-$lang["MENU_EVENT"] = "Notifications";
-$lang["MENU_INVENTORY"] = "Inventory";
-$lang["MENU_OUT"] = "Powered with codes by TheMasterGeneral. View source on <a href='https://github.com/MasterGeneral156/chivalry-engine'>GitHub</a>. Used with permission.";
-$lang['MENU_PROFILE']='Profile';
-$lang['MENU_SETTINGS']='Settings';
-$lang['MENU_STAFF']='Staff Panel';
-$lang['MENU_LOGOUT']='Log Out';
-$lang['MENU_TIN']='Time is now';
-$lang['MENU_QE']='queries executed';
-$lang['MENU_UNREADMAIL1']='Unread Mail!';
-$lang['MENU_UNREADNOTIF']='Unread Notifications!';
-$lang['MENU_FEDJAIL']="Federal Jail!";
-$lang['MENU_FEDJAIL1']="You're in the federal jail for the next";
-$lang['MENU_FEDJAIL2']="for the crime of:";
-$lang['MENU_UNREADANNONCE']='Unread Announcements!';
-$lang['MENU_UNREADANNONCE1']='There are';
-$lang['MENU_UNREADANNONCE2']='announcements you have yet to read. Read them';
-$lang['MENU_UNREADMAIL2']='You have';
-$lang['MENU_UNREADMAIL3']='unread messages. Click';
-$lang['MENU_UNREADMAIL4']='to read them.';
-$lang['MENU_UNREADNOTIF1']='unread notifications. Click';
-$lang['MENU_INFIRMARY1']='You are in the infirmary for the next';
-$lang['MENU_DUNGEON1']='You are in the dungeon for the next';
-$lang['MENU_XPLOST']="By running from the fight, you have lost all your {$lang['GEN_EXP']}!";
-$lang['MENU_RULES']="Game Rules";
-$lang['MENU_DONATE']="Donate to ";
-$lang['MENU_DONATE2']=". You'll receive tons of benefits! Donate by clicking <a href='donator.php'>here</a>.";
-$lang['MENU_SCRIPTTIME']="Page loaded in";
-$lang['MENU_SCRIPTTIME1']="ms.";
 
 // Preferences
 $lang["PREF_CPASSWORD"] = "Change Password";
@@ -243,36 +192,6 @@ $lang['ERROR_INFO']="Information!";
 //Misc. Alerts Details
 $lang['ALERT_INSTALLER']="The installer file could not be deleted. Please be sure to delete installer.php from your website's root folder, or you will risk another user running the installer and ruining your game.";
 
-//Gym
-$lang['GYM_INFIRM'] = "While you are unconscious, you cannot train! Come back after you are feeling healthy!";
-$lang['GYM_DUNG'] = "The guards would normally let you work out, but, what you did was deemed too high of a crime. You cannot train right now...";
-$lang['GYM_NEG'] = "Not Enough Energy!";
-$lang['GYM_INVALIDSTAT'] = "You cannot train that stat!";
-$lang['GYM_NEG_DETAIL'] = "You do not have enough energy to train that many times. Either wait for your energy to recover, or refill it manually!";
-$lang['GYM_INFO']="Training";
-$lang['GYM_FRM1']="Choose the stat you wish to train, and how many times you wish to train it. You can train up to";
-$lang['GYM_FRM2']="times.";
-$lang['GYM_TH']="Stat to Train";
-$lang['GYM_TH1']="Training Duration";
-$lang['GYM_BTN']="Train!";
-$lang['GYM_STR']="You begin to start lifting heavy rocks. You've successfully gained";
-$lang['GYM_STR1']="by doing";
-$lang['GYM_STR2']="minutes of heavy rock lifting. You now have";
-$lang['GYM_STR3']="energy remaining.";
-$lang['GYM_AGL']="You begin running laps. You've successfully gained";
-$lang['GYM_AGL1']="laps around town.";
-$lang['GYM_GRD']="You jump into the river and begin swimming. You have successfully gained";
-$lang['GYM_GRD1']="minutes of swimming.";
-$lang['GYM_YNH']="You now have";
-$lang['GYM_LAB']="You begin helping around your town. You have successfully gained";
-$lang['GYM_LAB1']="minutes of helping around your town.";
-$lang['GYM_ALL']="All Four";
-$lang['GYM_ALL_BEGIN']="You begin training all four of your stats at once. You have gained";
-$lang['GYM_ALL_BEGIN1']="in {$lang['GEN_STR']},";
-$lang['GYM_ALL_BEGIN2']="in {$lang['GEN_AGL']},";
-$lang['GYM_ALL_BEGIN3']="in {$lang['GEN_GRD']},";
-$lang['GYM_ALL_BEGIN4']="in {$lang['GEN_LAB']} and have";
-
 //Error Details
 $lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
 $lang['ERRDE_EXPLORE2']="Since you are in the dungeon, you cannot visit the town!";
@@ -303,49 +222,6 @@ $lang['PR_CATBAD']='You specified an invalid category. Go back and try again, pl
 $lang['PR_MAXCHAR']='You are attempting to enter too long of a reason. This form will only allow you to enter, at maximum, 1250 total characters. Go back and try again, please.';
 $lang['PR_INVALID_USER']='You are trying to report a player who just does not exist. Check the user ID you entered and try again.';
 $lang['PR_SUCCESS']='You have successfully reported the user. Staff may send you a message asking questions about the report you just sent. Please answer them to the best of your ability.';
-
-//Mail
-$lang['MAIL_READ']='Read';
-$lang['MAIL_DELETE']='Delete';
-$lang['MAIL_REPORT']='Report';
-$lang['MAIL_MSGREAD']='Read';
-$lang['MAIL_MSGUNREAD']='Unread';
-$lang['MAIL_USERDATE']='User/Info';
-$lang['MAIL_PREVIEW']='Message Preview';
-$lang['MAIL_ACTION']='Actions';
-$lang['MAIL_USERINFO']='Sender Info';
-$lang['MAIL_MSGSUB']='Subject/Message';
-$lang['MAIL_STATUS']='Status';
-$lang['MAIL_SENTAT']='Sent at';
-$lang['MAIL_SENDTO']='To';
-$lang['MAIL_FROM']='From';
-$lang['MAIL_SUBJECT']='Subject';
-$lang['MAIL_MESSAGE']='Message';
-$lang['MAIL_REPLYTO']='Reply To';
-$lang['MAIL_EMPTYINPUT']='It appears you did not enter a message to be sent. Please go back and enter a message!';
-$lang['MAIL_INPUTLNEGTH']='It would appear that you are attempting to send a lengthy message. Remember that messages can only be 65,655 characters long, and subjects can only be 50 characters long.';
-$lang['MAIL_NOUSER']='You must enter a recipient for this message! Go back and try again!';
-$lang['MAIL_UDNE']='User Does Not Exist!';
-$lang['MAIL_UDNE_TEXT']='You are attempting to send a message to a user who does not exist. Check your source and try again.';
-$lang['MAIL_SUCCESS']='You have successfully sent a message!';
-$lang['MAIL_TIMEERROR']='You must wait 60 seconds before you can send a message to this user using this form specifically. If you need to quickly reply to someone, you can still use the normal mail system.';
-$lang['MAIL_READALL']='All your unread messages has been marked as read!';
-$lang['MAIL_DELETECONFIRM']='Are you 100% sure you want to empty your inbox? This cannot be undone.';
-$lang['MAIL_DELETEYES']='Yes, I am 100% sure';
-$lang['MAIL_DELETENO']='Hold on, on second thought';
-$lang['MAIL_DELETEDONE']='Your entire inbox has been successfully cleared.';
-$lang['MAIL_QUICKREPLY']='Sending a quick reply...';
-$lang['MAIL_MARKREAD']='Mark All as Read';
-$lang['MAIL_SENDMSG']='Send Message';
-$lang['MAIL_TH1_IN']="Inbox";
-$lang['MAIL_TH1_OUT']="Outbox";
-$lang['MAIL_TH1_COMP']="Compose";
-$lang['MAIL_TH1_DEL']="Delete All";
-$lang['MAIL_TH1_ARCH']="Archive";
-$lang['MAIL_TH1_CONTACTS']="Contacts";
-$lang['MAIL_TH1_ARC']="Select which archive you wish to download.";
-$lang['MAIL_TH1_ARC1']="Inbox";
-$lang['MAIL_TH1_ARC2']="Outbox";
 
 //Language menu
 $lang['LANG_INTRO']='Here you may change your language. This is not saved to your account. This is saved via a cookie. If you change devices or wipe your cookies, you will need to reset your language again. Translations may not be 100% accurate.';
@@ -676,20 +552,6 @@ $lang['STAFF_ACADEMY_DEL_ERR1']="That course does not exist, or was already dele
 $lang['STAFF_ACADEMY_DEL_SUCC']="Successfully deleted the";
 $lang['STAFF_ACADEMY_DEL_SUCC1']="course from the game.";
 
-//Item Info Page
-$lang['ITEM_INFO_LUIF']="Displaying item information for";
-$lang['ITEM_INFO_TYPE']="Type";
-$lang['ITEM_INFO_SPRICE']="Sell Price";
-$lang['ITEM_INFO_BPRICE_NO']="Item cannot be purchased in-game.";
-$lang['ITEM_INFO_SPRICE_NO']="Item cannot be sold in-game.";
-$lang['ITEM_INFO_BPRICE']="Buy Price";
-$lang['ITEM_INFO_WEAPON_HURT']="Weapon Rating";
-$lang['ITEM_INFO_ARMOR_HURT']="Armor Rating";
-$lang['ITEM_INFO_INFO']="Info";
-$lang['ITEM_INFO_ITEM']="Item";
-$lang['ITEM_INFO_EFFECT']="Effect #";
-$lang['ITEM_INFO_BY']="by";
-
 //Item sell
 $lang['ITEM_SELL_INFO']="Item Selling";
 $lang['ITEM_SELL_FORM1']="You are attempting to sell";
@@ -757,44 +619,6 @@ $lang['STAFF_SHOP_IADDSUB_ERROR']="You're attempting to add an item to an invali
 $lang['STAFF_SHOP_IADDSUB_ERROR2']="Item or shop is invalid or doesn't exist.";
 $lang['STAFF_SHOP_IADDSUB_ERROR3']="The item you are trying to add to this shop is already listed in this shop. It makes no sense to list the same item twice.";
 $lang['STAFF_SHOP_IADDSUB_SUCCESS']="Item has been successfully added to the stock of this shop.";
-
-//Item Market
-$lang['IMARKET_TITLE']="Item Market";
-$lang['IMARKET_LISTING_TH1']="Listing Owner";
-$lang['IMARKET_LISTING_TH2']="Item x Quantity";
-$lang['IMARKET_LISTING_TH3']="Price/Item";
-$lang['IMARKET_LISTING_TH4']="Total Price";
-$lang['IMARKET_LISTING_TH5']="Links";
-$lang['IMARKET_LISTING_TD1']="Remove Listing";
-$lang['IMARKET_LISTING_TD2']="Buy Listing";
-$lang['IMARKET_LISTING_TD3']="Gift Listing";
-$lang['IMARKET_REMOVE_ERROR1']="You need to specify an item market listing you wish to effect.";
-$lang['IMARKET_REMOVE_ERROR2']="The item market listing you wish to remove does not exist, or you are not its owner.";
-$lang['IMARKET_REMOVE_SUCCESS']="The item market listing has been removed successfully.";
-$lang['IMARKET_BUY_ERROR1']="The item market listing you wish to buy does not exist, or has been bought already.";
-$lang['IMARKET_BUY_START']="Enter how many";
-$lang['IMARKET_BUY_START1']="(s) you wish to purchase. There's currently";
-$lang['IMARKET_BUY_START2']="available for purchase.";
-$lang['IMARKET_BUY_SUB_ERROR1']="You cannot purchase your own items from the item market.";
-$lang['IMARKET_BUY_SUB_ERROR2']="You do not have enough funds to buy this listing.";
-$lang['IMARKET_BUY_SUB_ERROR3']="You cannot buy more than the quantity that was listed.";
-$lang['IMARKET_BUY_SUB_ERROR4']="You cannot buy items from players who are on the same IP address as you.";
-$lang['IMARKET_BUY_SUB_SUCCESS']="Item(s) have been bought! Check your inventory!";
-$lang['IMARKET_GIFT_START1']="(s) you wish to purchase and send as a gift. There's currently";
-$lang['IMARKET_GIFT_FORM_TH1']="Send Gift To:";
-$lang['IMARKET_GIFT_SUB_ERROR1']="You are trying to send a gift to a user that does not exist!";
-$lang['IMARKET_GIFT_SUB_ERROR2']="You cannot buy an item from the market and gift it back to the person who listed it.";
-$lang['IMARKET_GIFT_SUB_ERROR3']="You cannot gift items from the item market to send to another user that shares the same IP address as you.";
-$lang['IMARKET_GIFT_SUB_SUCCESS']="You have successfully bought the item and sent it out as a gift!";
-$lang['IMARKET_ADD_TITLE']="Fill this form out to add your";
-$lang['IMARKET_ADD_TITLE1']="to the item market.";
-$lang['IMARKET_ADD_TH1']="Currency Type";
-$lang['IMARKET_ADD_TH2']="Price per Item";
-$lang['IMARKET_ADD_BTN']="Add to Market";
-$lang['IMARKET_ADD_ERROR1']="You cannot add no items to the item market.";
-$lang['IMARKET_ADD_ERROR2']="You are trying to add an item you do not own.";
-$lang['IMARKET_ADD_ERROR3']="You do have not have enough of that item to add the quantity you wanted to onto the market.";
-$lang['IMARKET_ADD_SUB_SUCCESS']="You have successfully listed this item on the item market.";
 
 //Travel
 $lang['TRAVEL_TITLE']="Horse Travel";
@@ -870,13 +694,6 @@ $lang['GUILD_APP_BTN']="Submit Application";
 $lang['GUILD_APP_ERROR1']="You have already sent an application to join this guild. Please wait until you get a response before sending in another.";
 $lang['GUILD_APP_SUCC']="You have successfully sent in your application to join this guild!";
 $lang['GUILD_VIEW_DESC']="Guild's Description";
-
-//Guild Warring List
-$lang['GUILD_WAR_TITLE']="Guild Wars";
-$lang['GUILD_WAR_ERR']="There are currently no active guild wars.";
-$lang['GUILD_WAR_TD']="(Points: ";
-$lang['GUILD_WAR_TD1']=")";
-$lang['GUILD_WAR_TD2']="VS";
 
 //Staff rules
 $lang['STAFF_RULES_ADD_FORM']="Use this form to add rules into the game. Be clear and concise. The more difficult language and terminology you use, the less people may understand.";
@@ -1039,25 +856,6 @@ $lang['VIEWGUILD_WARVIEW_TD1']="Declarer";
 $lang['VIEWGUILD_WARVIEW_TD2']="Declared Upon";
 $lang['VIEWGUILD_WARVIEW_TD3']="War Concludes";
 
-//Hire Spy
-$lang['SPY_ERROR1']="You must specify a user you wish to spy on!";
-$lang['SPY_ERROR2']="There is no reason to spy on yourself.";
-$lang['SPY_ERROR3']="The user you are attempting to spy on does not exist.";
-$lang['SPY_ERROR4']="You do not have enough {$lang['INDEX_PRIMCURR']} to spy on this user!";
-$lang['SPY_ERROR5']="You cannot spy on other players when you are in the dungeon!";
-$lang['SPY_ERROR6']="You cannot spy on other players when you are in the infirmary, trying to feel better.";
-$lang['SPY_ERROR7']="Why would you want to spy on your fellow guild mates?";
-$lang['SPY_START']="You are attempting to send out a spy to gather information on";
-$lang['SPY_START1']=". This will cost you 500 {$lang['INDEX_PRIMCURR']} multiplied by their level. (";
-$lang['SPY_START2']="{$lang['INDEX_PRIMCURR']} in this case.) Please remember that success is not guaranteed. If you're wanting to assume the risk, press the button to send out a spy!";
-$lang['SPY_BTN']="Send Spy";
-$lang['SPY_FAIL1']="You attempt to get information on your target. Oh shoot! They spot you! Run, run, run! As fast as you can. I don't think they saw you. You got lucky this time, bud.";
-$lang['SPY_FAIL2']="You attempt to get information on your target. Oh shoot! They spot you! Run! They can positively ID you, so they now know who tried to spy on them.";
-$lang['SPY_FAIL3']="You attempt to get information on your target. You follow them closely, almost like you're a professional stalker. A guard notices this and punches you in the face. You wake up in a dungeon cell.";
-$lang['SPY_SUCCESS']="At about";
-$lang['SPY_SUCCESS1']="{$lang['INDEX_PRIMCURR']} per attempt, you have successfully found information on";
-$lang['SPY_SUCCESS2']="! Here is that information.";
-
 //Staff estates
 $lang['STAFF_ESTATE_ADD']="Add Estate";
 $lang['STAFF_ESTATE_EDIT']="Edit Estate";
@@ -1104,22 +902,6 @@ $lang['ROULETTE_BTN2']="Again. Same bet, please.";
 $lang['ROULETTE_BTN3']="Again, but with a different bet.";
 $lang['ROULETTE_BTN4']="I quit. I don't want to go broke.";
 $lang['ROULETTE_START']="You put in your bet and pull the handle down. Around and around the wheel spins. It stops and lands on";
-
-//High Low
-$lang['HILOW_NOREFRESH']="Please do not refresh while playing High/Low. Use the links we provide, thank you!";
-$lang['HILOW_INFO']="Welcome to High/Low. Here you will bet on whether or not the deal will draw a number lower or higher than the number shown. The number range is 1 through 100.";
-$lang['HILOW_SHOWN']="The game operator shows the number";
-$lang['HILOW_WATDO']="Select the button on how you feel the next number will be compared to this number.";
-$lang['HILOW_NOBET']="You do not have enough {$lang['INDEX_PRIMCURR']} to play High/Low. You need at least";
-$lang['HILOW_LOWER']="Lower";
-$lang['HILOW_HIGHER']="Higher";
-$lang['HIGHLOW_HIGH']="You've guessed the game operator would show a number higher than ";
-$lang['HIGHLOW_REVEAL']="The game operator reveals the number";
-$lang['HIGHLOW_LOSE']="You have lost this time, sorry bud.";
-$lang['HIGHLOW_WIN']="You have won this time, congratulations.";
-$lang['HIGHLOW_LOWER']="You've guessed the game operator would show a number lower than ";
-$lang['HIGHLOW_TIE']="The game operator shows the exact number as last time. You lose nothing.";
-$lang['HILOW_UNDEFINEDNUMBER']="The number from the last page wasn't defined... Weird. Stop tampering with shit, man.";
 
 //ReCaptcha
 $lang['RECAPTCHA_TITLE']="reCaptcha";
@@ -1482,31 +1264,6 @@ $lang['STAFF_SMELT_DEL_TH']="Smelting Recipe";
 $lang['STAFF_SMELT_DEL_BTN']="Delete Recipe";
 $lang['STAFF_SMELT_DEL_SUCC']="Smelting recipe has been successfully removed from the game.";
 
-//Inventory
-$lang['INVENT_EQUIPPED']="Your Equipment";
-$lang['INVENT_ITEMS']="Your Items";
-$lang['INVENT_ITEMS_INFO']="Your inventory is listed below.";
-$lang['INVENT_UNEQUIP']="Unequip";
-$lang['INVENT_NOPRIM']="You do not have a primary weapon equipped at this time.";
-$lang['INVENT_NOSECC']="You do not have a secondary weapon equipped at this time.";
-$lang['INVENT_NOARMOR']="You do not have an armor equipped at this time.";
-$lang['INVENT_ITMNQTY']="Item Name (Qty)";
-$lang['INVENT_ITMNCOST']="Item Cost (Total)";
-$lang['INVENT_ITMNUSE']="Item Actions";
-$lang['INVENT_ITMNUSE1']="Send";
-$lang['INVENT_ITMNUSE2']="Sell";
-$lang['INVENT_ITMNUSE3']="Add to Market";
-$lang['INVENT_ITMNUSE4']="Use";
-$lang['INVENT_ITMNUSE5']="Equip Weapon";
-$lang['INVENT_ITMNUSE6']="Equip Armor";
-
-//Header
-$lang['HDR_JS']="You need to enable Javascript for this game to work efficiently.";
-$lang['HDR_REKT']="Your account may be broken. Please email help@";
-$lang['HDR_REKT1']="stating your username and User ID.";
-$lang['HDR_B2G']="Back to Game";
-$lang['HDR_IPREKT']="We apologize, but your IP Address has been banned.";
-
 //Password Reset Form
 $lang['PWR_INFO']="Please enter the email adress tied to your account so we can send information on how to reset your password. Please be sure to check your junk folder.";
 $lang['PWR_SUCC']="Thank you for submitting the form. If there's an account for the specified email address, it'll be email with a link to start the password reset process. This link will expire in 30 minutes.";
@@ -1676,17 +1433,6 @@ $lang['STAFF_PRIV_PRIVBTN']="Give Privilege";
 $lang['STAFF_PRIV_ERR']="You're trying to give an invalid or unknown privledge. Check your source and try again.";
 $lang['STAFF_PRIV_ERR1']="The user you're trying to give privileges to is invalid or doesn't exist.";
 $lang['STAFF_PRIV_SUCC']="You have successfully updated this user's privileges to";
-
-//Auction
-$lang['AUCTION_TITLE']="Item Auction";
-$lang['AUCTION_TH']="Lister";
-$lang['AUCTION_TH1']="Item x Qty";
-$lang['AUCTION_TH2']="Current Bid";
-$lang['AUCTION_TH3']="Current Bidder";
-$lang['AUCTION_TH4']="Actions";
-$lang['AUCTION_TH5']="Time Remaining";
-$lang['AUCTION_ACT']="Remove";
-$lang['AUCTION_ACT1']="Bid";
 
 //Staff Unfedjail
 $lang['STAFF_UNFED_TITLE']="Remove from Federal Jail";
@@ -1925,14 +1671,6 @@ $lang['STAFF_LOGS_USER']="User Specific Logs";
 $lang['STAFF_LOGS_USER_ERR']="The user you chose is invalid or non-existent.";
 $lang['STAFF_LOGS_USER_ERR1']="This user does not exist, or has yet to do any in-game actions.";
 
-//Hall of Fame
-$lang['HOF_TITLE']="Hall of Fame";
-$lang['HOF_RANK']="Rank";
-$lang['HOF_USER']="User";
-$lang['HOF_VALUE']="Value";
-$lang['HOF_MINE']="Mining Level";
-$lang['HOF_TOTAL']="Total Stats";
-
 //Privacy Policy
 $lang['PP_TITLE']="Privacy Policy";
 $lang['PP_INTRO']="is seriously commited towards protecting the privacy of its users when processing personal data and considers this for all business practices.";
@@ -2004,10 +1742,4 @@ $lang['PREF_EMAIL_BTN']="Change Email Opt-Setting";
 $lang['PREF_EMAIL_ERR']="Email opt setting is invalid. You may only opt-in or opt-out.";
 $lang['PREF_EMAIL_SUCC_1']="You have successfully chosen to opt-in to emails sent from the administration about the game.";
 $lang['PREF_EMAIL_SUCC_0']="You have successfully chosen to opt-out of emails sent from the administration about the game.";
-
-//Item Dictionary
-$lang['ID_TITLE']="Item Appendix";
-$lang['ID_INFO']="This page lists all the items in the game, along with how many are in circulation. This may be useful for players who do item flipping, or those who are just plain old curious. Hovering over the item will give you its description. Tapping its name will take you to its info page.";
-$lang['ID_TH']="Item Name";
-$lang['ID_TH1']="Quantity in Circulation";
 ?>

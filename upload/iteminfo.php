@@ -11,7 +11,7 @@ $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID'])
 $itmid = $_GET['ID'];
 if (!$itmid)
 {
-    echo 'Invalid item ID';
+    alert('danger','Uh Oh!','Invalid or non-existent Item ID.',true,'inventory.php');
 }
 else
 {
@@ -25,7 +25,7 @@ else
                      LIMIT 1");
     if ($db->num_rows($q) == 0)
     {
-        echo 'Invalid item ID';
+        alert('danger','Uh Oh!','Invalid or non-existent Item ID.',true,'inventory.php');
     }
     else
     {
@@ -34,12 +34,12 @@ else
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['ITEM_INFO_LUIF']} {$id['itmname']}
+					Looking up the item information for {$id['itmname']}.
 				</th>
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['ITEM_INFO_ITEM']} {$lang['ITEM_INFO_TYPE']}
+					Item Type
 				</th>
 				<td>
 					{$id['itmtypename']}
@@ -47,7 +47,7 @@ else
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['ITEM_INFO_ITEM']} {$lang['ITEM_INFO_INFO']}
+					Item Information
 				</th>
 				<td>
 					{$id['itmdesc']}
@@ -55,7 +55,7 @@ else
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['ITEM_INFO_ITEM']} {$lang['ITEM_INFO_BPRICE']}
+					Item Buying Price
 				</th>
 				<td>";
 					if ($id['itmbuyprice'] > 0)
@@ -64,14 +64,14 @@ else
 					}
 					else
 					{
-						echo "{$lang['ITEM_INFO_BPRICE_NO']}";
+						echo "Unpurchaseable";
 					}
         echo"
 				</td>
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['ITEM_INFO_ITEM']} {$lang['ITEM_INFO_INFO']}
+					Item Selling Price
 				</th>
 				<td>";
 					if ($id['itmsellprice'])
@@ -80,7 +80,7 @@ else
 					}
 					else
 					{
-						echo "{$lang['ITEM_INFO_SPRICE_NO']}";
+						echo "Unsellable.";
 					}
 					echo"
 				</td>
@@ -93,20 +93,20 @@ else
 				$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
 				$einfo['dir'] = ($einfo['dir'] == 'pos') ? 'Increases' : 'Decreases';
 				$stats =
-					array("energy" => "{$lang['INDEX_ENERGY']}", "will" => "{$lang['INDEX_WILL']}", 
-							"brave" => "{$lang['INDEX_BRAVE']}", "level" => $lang['INDEX_LEVEL'],
-							"hp" => "{$lang['INDEX_HP']}", "strength" => "{$lang['GEN_STR']}",
-							"agility" => "{$lang['GEN_AGL']}", "guard" => "{$lang['GEN_GRD']}",
-							"labor" => "{$lang['GEN_LAB']}", "iq" => "{$lang['GEN_IQ']}",
-							"infirmary" => "{$lang['STAFF_CITEM_TH12_1']}", "dungeon" => "{$lang['STAFF_CITEM_TH12_2']}",
-							"primary_currency" => "{$lang['INDEX_PRIMCURR']}", "secondary_currency" 
-							=> "{$lang['INDEX_SECCURR']}", "crimexp" => "{$lang['INDEX_EXP']}", "vip_days" => 
-							"{$lang['INDEX_VIP']}");
+					array("energy" => "Energy", "will" => "Will",
+							"brave" => "Bravery", "level" => "Level",
+							"hp" => "Health", "strength" => "Strength",
+							"agility" => "Agility", "guard" => "Guard",
+							"labor" => "Labor", "iq" => "IQ",
+							"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+							"primary_currency" => "Primary Currency", "secondary_currency"
+							=> "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
+							"VIP Days");
 				$statformatted=$stats["{$einfo['stat']}"];
 				echo "
 				<tr>
 					<th>
-						{$lang['ITEM_INFO_EFFECT']}{$enum}
+						Item Effect #{$enum}
 					</th>
 					<td>
 					{$einfo['dir']} {$statformatted} {$lang['ITEM_INFO_BY']} {$einfo['inc_amount']}{$einfo['inc_type']}.
@@ -118,7 +118,7 @@ else
 		{
 			echo "<tr>
 				<th width='33%'>
-					{$lang['ITEM_INFO_ITEM']} {$lang['ITEM_INFO_WEAPON_HURT']}
+					Item Weapon Rating
 				</th>
 				<td>
 					" . number_format($id['weapon']) . "
@@ -129,7 +129,7 @@ else
 		{
 			echo "<tr>
 				<th width='33%'>
-					{$lang['ITEM_INFO_ITEM']} {$lang['ITEM_INFO_ARMOR_HURT']}
+					Item Armor Rating
 				</th>
 				<td>
 					" . number_format($id['armor']) . "

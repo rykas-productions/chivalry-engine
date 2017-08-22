@@ -22,26 +22,26 @@ if (!isset($_SESSION['tresde']))
 //User has less primary currency than their maximum bet.
 if ($ir['primary_currency'] < $maxbet)
 {
-	alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['HILOW_NOBET']} " . number_format($maxbet),true,'explore.php');
+	alert('danger',"Uh Oh!","You do not have enough Primary Currency to place your bet. You need " . number_format($maxbet),true,'explore.php');
 	$_SESSION['number']=0;
 	die($h->endpage());
 }
 //The RNG received from GET does not equal RNG in SESSION, or is less than 100
 if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
 {
-    alert('danger',$lang['ERROR_GENERIC'],$lang['HILOW_NOREFRESH'],true,"hilow.php?tresde={$tresder}");
+    alert('danger',"Uh Oh!","Do not refresh while playing High/Low.",true,"hilow.php?tresde={$tresder}");
 	$_SESSION['number']=0;
 	die($h->endpage());
 }
 //Bind RNG from GET to SESSION
 $_SESSION['tresde'] = $_GET['tresde'];
-echo "<h3>{$lang['EXPLORE_HILO']}</h3><hr />";
+echo "<h3>High/Low</h3><hr />";
 if (isset($_POST['change']) && in_array($_POST['change'], array('higher','lower')))
 {
     //Player did not select a number.
 	if (!isset($_SESSION['number']))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['HILOW_UNDEFINEDNUMBER'],true,"hilow.php?tresde={$tresder}");
+		alert('danger',"Uh Oh!","Your last number wasn't saved in session... weird.",true,"hilow.php?tresde={$tresder}");
 		die($h->endpage());
 	}
 	else
@@ -54,35 +54,39 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher','lower'
         //Change is suspected to be higher, but new number is lower than original number.
 		if ($guessed > $numb && $_POST['change'] == 'higher')
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['HIGHLOW_HIGH']} {$guessed}. {$lang['HIGHLOW_REVEAL']} {$numb}. {$lang['HIGHLOW_LOSE']}",false);
+			alert('danger',"Uh Oh!","You guessed the game operator would show a number higher than {$guessed}.
+			    The number revealed is {$numb}. You have lost this bet.",false);
 			$gain=0;
 			$api->SystemLogsAdd($userid,'gambling',"Bet higher number in High/Low and lost {$maxbet}");
 		}
         //Change is suspected to be higher, and user is correct.
 		elseif ($guessed < $numb && $_POST['change'] == 'higher')
 		{
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['HIGHLOW_HIGH']} {$guessed}. {$lang['HIGHLOW_REVEAL']} {$numb}. {$lang['HIGHLOW_WIN']}",false);
+			alert('success',"Success!","You guessed the game operator would show a number higher than {$guessed}.
+			    The number revealed is {$numb}. You won this bet!",false);
 			$gain=$maxbet*1.5;
 			$api->SystemLogsAdd($userid,'gambling',"Bet higher number in High/Low and won {$gain}");
 		}
         //Change is suspected to be lower, and user is correct.
 		elseif ($guessed > $numb && $_POST['change'] == 'lower')
 		{
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['HIGHLOW_LOWER']} {$guessed}. {$lang['HIGHLOW_REVEAL']} {$numb}. {$lang['HIGHLOW_WIN']}",false);
+			alert('success',"Success!","You guessed the game operator would show a number lower than {$guessed}.
+			    The number revealed is {$numb}. You have won this bet!",false);
 			$gain=$maxbet*1.5;
 			$api->SystemLogsAdd($userid,'gambling',"Bet lower number in High/Low and won {$gain}");
 		}
         //Change is suspected to be lower, but the new number is higher than the original.
 		elseif ($guessed < $numb && $_POST['change'] == 'lower')
 		{
-			alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['HIGHLOW_LOWER']} {$guessed}. {$lang['HIGHLOW_REVEAL']} {$numb}. {$lang['HIGHLOW_LOSE']}",false);
+			alert('danger',"Uh Oh!","You guessed the game operator would show a number less than {$guessed}. The number
+			    revealed is {$numb}. You lose this round.",false);
 			$gain=0;
 			$api->SystemLogsAdd($userid,'gambling',"Bet lower number in High/Low and lost {$maxbet}");
 		}
         //The new number is the same as the old number.
 		else
 		{
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['HIGHLOW_TIE']}",false);
+			alert('success',"Success!","The number drawn is the same nubmer as last time. You've lost nothing.",false);
 			$gain=$maxbet;
 			$api->SystemLogsAdd($userid,'gambling',"Number tied in high/low.");
 		}
@@ -97,24 +101,25 @@ else
     //Generate starting number and bind it to SESSION.
 	$numb=Random(1,100);
 	$_SESSION['number']=$numb;
-	echo "{$lang['HILOW_INFO']}<br />
+	echo "Welcome to High/Low. Here you will place a bet whether or not the next drawn number will be higher or lower
+        than the currently drawn number. The number range is 1 through 100.<br />
 	<table class='table table-bordered'>
 		<tr>
 			<th colspan='2'>
-				{$lang['HILOW_SHOWN']} {$numb}. {$lang['HILOW_WATDO']}
+				The operator draws {$numb}. What do you think the next number will be?
 			</th>
 		</tr>
 		<tr>
 			<td>
 				<form action='?tresde={$tresder}' method='post'>
 					<input type='hidden' name='change' value='lower'>
-					<input type='submit' value='{$lang['HILOW_LOWER']}' class='btn btn-primary'>
+					<input type='submit' value='Lower' class='btn btn-primary'>
 				</form>
 			</td>
 			<td>
 				<form action='?tresde={$tresder}' method='post'>
 					<input type='hidden' name='change' value='higher'>
-					<input type='submit' value='{$lang['HILOW_HIGHER']}' class='btn btn-primary'>
+					<input type='submit' value='Higher' class='btn btn-primary'>
 				</form>
 			</td>
 		</tr>
