@@ -7,9 +7,10 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-echo "<h3>{$set['WebsiteName']} {$lang['GAMERULES_TITLE']}</h3>
+echo "<h3>{$set['WebsiteName']} Game Rules</h3>
 <hr />
-{$lang['GAMERULES_TEXT']}<hr />";
+You are expected to follow this rules. You are also expected to check back on these fairly frequently as these rules
+may change without notice. Staff will not accept ignorance as an excuse if you break one of these rules.<hr />";
 $q=$db->query("SELECT * FROM `gamerules` ORDER BY `rule_id` ASC");
 echo "<ol>";
 //List game rules.

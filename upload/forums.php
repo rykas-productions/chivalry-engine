@@ -13,16 +13,18 @@ require('lib/bbcode_engine.php');
 function csrf_error($goBackTo)
 {
     global $h,$lang;
-	echo "<div class='alert alert-danger'> <strong>{$lang['CSRF_ERROR_TITLE']}</strong> 
-	{$lang['CSRF_ERROR_TEXT']} {$lang['CSRF_PREF_MENU']} <a href='{$goBackTo}'>{$lang['GEN_HERE']}</a>.</div>";
-    $h->endpage();
-    exit;
+    alert('danger',"Action Blocked!","The action you were trying to do was blocked. It was blocked because you loaded
+        another page on the game. If you have not loaded a different page during this time, change your password
+        immediately, as another person may have access to your account!");
+    die($h->endpage());
 }
-echo "<h3>{$set['WebsiteName']} {$lang['FORUM_FORUMS']}</h3><hr />";
+echo "<h3>{$set['WebsiteName']} Forums</h3><hr />";
 $fb=$db->fetch_row($db->query("SELECT * FROM `forum_bans` WHERE `fb_user` = {$userid}"));
 if ($fb['fb_time'] > $time)
 {
-	 alert('danger',$lang['ERROR_GENERIC'],"{$lang['FORUM_BAN_INFO']} " . TimeUntil_Parse($fb['fb_time']) . " {$lang['FORUM_BAN_INFO1']} {$fb['fb_reason']}. {$lang['FORUM_BAN_INFO2']}",true,'index.php');
+	 alert('danger',"Uh Oh!","You are currently forum banned for the next " . TimeUntil_Parse($fb['fb_time']) . ". You
+	    were banned for {$fb['fb_reason']}. If you feel the ban was unjustified, please contact an admin
+	    immediately.",true,'index.php');
 	 die($h->endpage());
 }
 if (!isset($_GET['act']))
@@ -103,7 +105,7 @@ default:
 }		
 function idx()
 {
-    global $ir, $c, $userid, $lang, $db, $api;
+    global $ir, $db;
     $q =
             $db->query(
                     "SELECT `ff_lp_time`, `ff_id`, `ff_name`, `ff_desc`,
@@ -117,16 +119,16 @@ function idx()
     <thead>
         <tr>
             <th>
-                <?php echo $lang['FORUM_F_FN']; ?>
+                <?php echo "Forum Category"; ?>
             </th>
             <th class='hidden-xs-down'>
-                <?php echo $lang['FORUM_F_PC']; ?>
+                <?php echo "Post Count"; ?>
             </th>
             <th class='hidden-xs-down'>
-                <?php echo $lang['FORUM_F_TC']; ?>
+                <?php echo "Topic Count"; ?>
             </th>
             <th>
-                <?php echo $lang['FORUM_F_LP']; ?>
+                <?php echo "Latest Post"; ?>
             </th>
         </tr>
     </thead>
@@ -134,10 +136,13 @@ function idx()
 	<?php
     while ($r = $db->fetch_row($q))
     {
-        $t = DateTime_Parse($r['ff_lp_time'], false, true);
+        $t = DateTime_Parse($r['ff_lp_time'], true, true);
 		$pnq=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
 		$pn=$db->fetch_row($pnq);
-		$username = ($pn['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$pn['username']} has {$pn['vip_days']} VIP Days remaining.'></i></span>" : $pn['username'];
+		$username = ($pn['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn['username']}
+            <i class='fa fa-shield' data-toggle='tooltip' title='{$pn['username']} has {$pn['vip_days']}
+            VIP Days remaining.'></i></span>" : $pn['username'];
+
 		$topicsq=$db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
 			
 		$postsq=$db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `ff_id`={$r['ff_id']}");
@@ -158,8 +163,8 @@ function idx()
 					</td>
 					<td>
 						{$t}<br />
-						{$lang['FORUM_IN']} <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1' style='font-weight: 800;'>{$topicname}</a><br />
-						{$lang['FORUM_BY']} <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
+						In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1' style='font-weight: 800;'>{$topicname}</a><br />
+						By <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
 					</td>
               </tr>";
     }
@@ -167,7 +172,7 @@ function idx()
     $db->free_result($q);
     if (($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer'))
     {
-        echo "<hr /><h3>{$lang['FORUM_STAFFONLY']} {$lang['FORUM_FORUMS']}</h3><hr />";
+        echo "<hr /><h3>Staff Only Forums</h3><hr />";
         $q =
             $db->query(
                     "SELECT `ff_lp_time`, `ff_id`, `ff_name`, `ff_desc`,
@@ -181,16 +186,16 @@ function idx()
     <thead>
         <tr>
             <th>
-                <?php echo $lang['FORUM_F_FN']; ?>
+                <?php echo "Forum Category"; ?>
             </th>
             <th class='hidden-xs-down'>
-                <?php echo $lang['FORUM_F_PC']; ?>
+                <?php echo "Post Count"; ?>
             </th>
             <th class='hidden-xs-down'>
-                <?php echo $lang['FORUM_F_TC']; ?>
+                <?php echo "Topic Count"; ?>
             </th>
             <th>
-                <?php echo $lang['FORUM_F_LP']; ?>
+                <?php echo "Latest Post"; ?>
             </th>
         </tr>
     </thead>
@@ -198,7 +203,7 @@ function idx()
 	<?php
         while ($r = $db->fetch_row($q))
         {
-            $t = DateTime_Parse($r['ff_lp_time'], false, true);
+            $t = DateTime_Parse($r['ff_lp_time'], true, true);
 			$pnq=$db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
 			$pn=$db->fetch_row($pnq);
 			$username = ($pn['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$pn['username']} has {$pn['vip_days']} VIP Days remaining.'></i></span>" : $pn['username'];
@@ -222,9 +227,9 @@ function idx()
 					{$topics}
 				</td>
         		<td>
-					{$lang['FORUM_ON']} {$t}<br />
-					{$lang['FORUM_IN']} <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1' style='font-weight: 800;'>{$topicname}</a><br />
-					{$lang['FORUM_BY']} <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
+					{$t}<br />
+					In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1' style='font-weight: 800;'>{$topicname}</a><br />
+					By <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
                 </td>
               </tr>";
         }
@@ -234,11 +239,11 @@ function idx()
 }		
 function viewforum()
 {
-    global $ir, $userid, $lang, $db, $h, $api;
+    global $ir, $db, $h;
     $_GET['viewforum'] = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs($_GET['viewforum']) : '';
     if (empty($_GET['viewforum']))
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
+        alert('danger',"Uh Oh!","You must enter a forum category you wish to view.",true,"forums.php");
        die($h->endpage());
     }
     $q =
@@ -249,7 +254,7 @@ function viewforum()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php");
+        alert('danger',"Non-existent Forum Category!","You are attempting to view a non-existent forum category. Check your source and try again.",true,"forums.php");
 		die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -258,13 +263,13 @@ function viewforum()
     {
 		if (!in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer')))
 		{ 
-			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
+			alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php");
 			die($h->endpage());
 		}
     }
     $ntl = "&nbsp;[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
 	echo "<ol class='breadcrumb'>
-		<li class='breadcrumb-item'><a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a></li>
+		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item active'>{$r['ff_name']} {$ntl}</li>	
 	</ol>";
 	$posts_per_page = 20;
@@ -286,7 +291,7 @@ function viewforum()
 		}
     }
     $pst = -20;
-	echo "<center><ul class='pagination'>{$lang['FORUM_PAGES']}<br /> ";
+	echo "<center><ul class='pagination'>Page<br /> ";
     for ($i = 1; $i <= $pages; $i++)
     {
         $pst += 20;
@@ -311,16 +316,16 @@ function viewforum()
     <thead>
         <tr>
             <th>
-                <?php echo $lang['FORUM_TOPICNAME']; ?>
+                <?php echo "Topic"; ?>
             </th>
             <th class='hidden-xs-down'>
-                <?php echo $lang['FORUM_F_PC']; ?>
+                <?php echo "Post Count"; ?>
             </th>
             <th class='hidden-xs-down'>
-                <?php echo $lang['FORUM_TOPICOPEN']; ?>
+                <?php echo "Created"; ?>
             </th>
             <th>
-                <?php echo $lang['FORUM_F_LP']; ?>
+                <?php echo "Latest Post"; ?>
             </th>
         </tr>
     </thead>
@@ -337,8 +342,8 @@ function viewforum()
 					 LIMIT {$st}, 20");
     while ($r2 = $db->fetch_row($q))
     {
-        $t1 = DateTime_Parse($r2['ft_start_time']);
-        $t2 = DateTime_Parse($r2['ft_last_time']);
+        $t1 = DateTime_Parse($r2['ft_start_time'],true,true);
+        $t2 = DateTime_Parse($r2['ft_last_time'],true,true);
         if ($r2['ft_pinned'])
         {
             $pt = "<i class='fa fa-thumb-tack' aria-hidden='true'></i> ";
@@ -365,11 +370,11 @@ function viewforum()
 		$pc=$db->fetch_single($pcq);
 		if (!$pn2)
 		{
-			$pn2['username']="{$lang['GEN_NEU']}";
+			$pn2['username']="Non-existent User";
 		}
 		if (!$pn1)
 		{
-			$pn1['username']="{$lang['GEN_NEU']}";
+			$pn1['username']="Non-existent User";
 		}
         echo "<tr>
         		<td>
@@ -379,17 +384,17 @@ function viewforum()
 				<td class='hidden-xs-down'>{$pc}</td>
 				<td class='hidden-xs-down'> 
 					{$t1}<br />
-					{$lang['FORUM_BY']} <a href='profile.php?user={$r2['ft_owner_id']}'>{$pn1['username']}</a>
+					By <a href='profile.php?user={$r2['ft_owner_id']}'>{$pn1['username']}</a>
                 </td>
                 <td>
 					{$t2}<br />
-                    {$lang['FORUM_BY']} <a href='profile.php?user={$r2['ft_last_id']}'>{$pn2['username']}</a>
+                    By <a href='profile.php?user={$r2['ft_last_id']}'>{$pn2['username']}</a>
                 </td>
               </tr>\n";
     }
     echo "</tbody></table>";
 	$pst = -20;
-    echo "<center><ul class='pagination'>{$lang['FORUM_PAGES']}<br /> ";
+    echo "<center><ul class='pagination'>Page<br /> ";
     for ($i = 1; $i <= $pages; $i++)
     {
         $pst += 20;
@@ -414,13 +419,13 @@ function viewforum()
 
 function viewtopic()
 {
-    global $ir, $userid, $parser, $lang, $db, $h, $api;
+    global $ir, $userid, $parser, $db, $h, $api;
 	$code = request_csrf_code('forum_reply');
     $precache = array();
     $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
     if (empty($_GET['viewtopic']))
     {
-       alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
+       alert('danger',"Uh Oh!","You must enter a topic you wish to view.",true,"forums.php");
        die($h->endpage());
     }
     $q =
@@ -432,7 +437,7 @@ function viewtopic()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -445,7 +450,7 @@ function viewtopic()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php?viewforum={$topic['ft_forum_id']}");
+        alert('danger',"Non-existent Forum Category","You are attempting to view a non-existent forum category. Check your source and try again.",true,"forums.php?viewforum={$topic['ft_forum_id']}");
 		die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -454,12 +459,12 @@ function viewtopic()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
+			alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php");
 			die($h->endpage());
 		}
     }
 	echo "<ol class='breadcrumb'>
-		<li class='breadcrumb-item'><a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a></li>
+		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item'><a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a></li>
 		<li class='breadcrumb-item active'>{$topic['ft_name']}</li>	
 	</ol>";
@@ -479,7 +484,7 @@ function viewtopic()
 		}
     }
     $pst = -20;
-	echo "<center><ul class='pagination'>{$lang['FORUM_PAGES']}<br /> ";
+	echo "<center><ul class='pagination'>Page<br /> ";
     for ($i = 1; $i <= $pages; $i++)
     {
         $pst += 20;
@@ -503,9 +508,9 @@ function viewtopic()
     {
         echo "
 	<form action='?act=move&topic={$_GET['viewtopic']}' method='post'>
-    <b>{$lang['FORUM_TOPIC_MTT']}</b> " . forum_dropdown('forum')
+    <b>Move Topic To</b> " . forum_dropdown('forum')
                 . "
-	<input type='submit' value='{$lang['FORUM_TOPIC_MOVE']}' class='btn btn-primary' />
+	<input type='submit' value='Move Topic' class='btn btn-primary' />
 	</form>
 	<br />
 	<center>
@@ -516,21 +521,21 @@ function viewtopic()
 				<form>
 					<input type='hidden' value='pin' name='act'>
 					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_PIN']}'>
+					<input type='submit' class='btn btn-primary' value='Pin/Unpin'>
 				</form>
 			</td>
 			<td align='center'>
 				<form>
 					<input type='hidden' value='lock' name='act'>
 					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_LOCK']}'>
+					<input type='submit' class='btn btn-primary' value='Lock/Unlock'>
 				</form>
 			</td>
 			<td>
 				<form action='?act=deletopic'>
 					<input type='hidden' value='deletopic' name='act'>
 					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_DELETE']}'>
+					<input type='submit' class='btn btn-primary' value='Delete'>
 				</form>
 			</td>
 		</tr>
@@ -540,17 +545,17 @@ function viewtopic()
 		<form>
 			<input type='hidden' value='pin' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_PIN']}'>
+			<input type='submit' class='btn btn-primary' value='Pin/Unpin'>
 		</form>
 		<form>
 			<input type='hidden' value='lock' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_LOCK']}'>
+			<input type='submit' class='btn btn-primary' value='Lock/Unlock'>
 		</form>
 		<form action='?act=deletopic'>
 			<input type='hidden' value='deletopic' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-primary' value='{$lang['FORUM_TOPIC_DELETE']}'>
+			<input type='submit' class='btn btn-primary' value='Delete'>
 		</form>
 	</div>
 	</center><br />
@@ -572,11 +577,11 @@ function viewtopic()
 		$PN=$db->fetch_row($PNQ);
 		$PN['username'] = ($PN['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$PN['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$PN['username']} has {$PN['vip_days']} VIP Days remaining.'></i></span>" : $PN['username'];
 
-		$qlink = "[<a href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>{$lang['FORUM_POST_QUOTE']}</a>]";
+		$qlink = "[<a href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>Quote</a>]";
         if ($api->UserMemberLevelGet($userid,'forum moderator') || $userid == $r['fp_poster_id'])
         {
             $elink =
-                    "[<a href='?act=edit&post={$r['fp_id']}&topic={$_GET['viewtopic']}'>{$lang['FORUM_POST_EDIT']}</a>]";
+                    "[<a href='?act=edit&post={$r['fp_id']}&topic={$_GET['viewtopic']}'>Edit</a>]";
         }
         else
         {
@@ -586,7 +591,7 @@ function viewtopic()
         if ($no > 1 and ($api->UserMemberLevelGet($userid,'forum moderator')))
         {
             $dlink =
-                    "[<a href='?act=delepost&post={$r['fp_id']}'>{$lang['FORUM_POST_DELETE']}</a>]";
+                    "[<a href='?act=delepost&post={$r['fp_id']}'>Delete</a>]";
         }
         else
         {
@@ -594,8 +599,8 @@ function viewtopic()
         }
 		if ($api->UserMemberLevelGet($userid,'forum moderator'))
 		{
-			$wlink="[<a href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'>{$lang['FORUM_POST_WARN']}</a>]";
-			$blink="[<a href='staff/staff_punish.php?action=forumban&user={$r['fp_poster_id']}'>{$lang['FORUM_POST_BAN']}</a>]";
+			$wlink="[<a href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'>Warn</a>]";
+			$blink="[<a href='staff/staff_punish.php?action=forumban&user={$r['fp_poster_id']}'>Forum Ban</a>]";
 		}
 		else
 		{
@@ -608,9 +613,9 @@ function viewtopic()
         if ($r['fp_edit_count'] > 0)
         {
             $edittext =
-                    "\n<br /><small><i>{$lang['FORUM_POST_EDIT_1']} <a href='viewuser.php?u={$r['fp_editor_id']}'>{$editorname}</a> {$lang['GEN_AT']} "
+                    "\n<br /><small><i>Last edited by <a href='viewuser.php?u={$r['fp_editor_id']}'>{$editorname}</a> at "
                             . DateTime_Parse($r['fp_editor_time'])
-                            . ", {$lang['GEN_EDITED']} <b>{$r['fp_edit_count']}</b> {$lang['GEN_TIMES']}</i></small>";
+                            . ", edited <b>{$r['fp_edit_count']}</b> times total.</i></small>";
         }
         else
         {
@@ -654,10 +659,10 @@ function viewtopic()
         }
 		$parser->parse($r['fp_text']);
         $r['fp_text']=$parser->getAsHtml();
-        echo "<tr>
-				<th width='25%'>{$lang['FORUM_POST_POST']} #{$no}</th>
+        echo "<tr class='table-secondary'>
+				<th width='25%'>Post #{$no}</th>
 				<th>
-				{$lang['FORUM_POST_POSTED']} {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink}
+				Posted {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink}
 				</th>
 			 </tr>
 			 <tr>
@@ -672,13 +677,13 @@ function viewtopic()
             print
                     "<div class='hidden-xs-down'>{$av}</div><a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a>
                     	[{$r['fp_poster_id']}]<br />
-                     <b>{$lang['GEN_RANK']}:</b> {$memb['user_level']}<br />
-					 <b>{$lang['FORUM_F_PC']}:</b> {$userposts}<br />
-					 <b>{$lang['FORUM_F_TC']}:</b> {$usertopics}<br />";
+                     <b>Rank:</b> {$memb['user_level']}<br />
+					 <b>Post Count:</b> {$userposts}<br />
+					 <b>Topic Count:</b> {$usertopics}<br />";
         }
         else
         {
-            print "<b>{$lang['GEN_NEU']}</b>";
+            print "<b>Non-existent User</b>";
         }
         print
                 "</td>
@@ -693,7 +698,7 @@ function viewtopic()
     $db->free_result($q3);
     echo "</table>";
     $pst = -20;
-    echo "<center><ul class='pagination'>{$lang['FORUM_PAGES']}<br /> ";
+    echo "<center><ul class='pagination'>Page<br /> ";
     for ($i = 1; $i <= $pages; $i++)
     {
         $pst += 20;
@@ -721,15 +726,15 @@ function viewtopic()
 			<table class='table'>
 				<tr>
 					<th>
-						{$lang['FORUM_POST_REPLY']}
+						Post Response
 						</th>
 					<td>
-						<textarea class='form-control' rows='5' cols='40' id='post' placeholder='{$lang['FORUM_POST_REPLY_INFO']}' name='fp_text' required></textarea>
+						<textarea class='form-control' rows='5' cols='40' id='post' placeholder='You can use BBCode.' name='fp_text' required></textarea>
 					</td>
 				</tr>
 				<tr>
 					<td colspan='2'> 
-						<center><input type='submit' value='{$lang['FORUM_POST_REPLY2']}' class='btn btn-primary'></center>
+						<input type='submit' value='Submit Reply' class='btn btn-primary'>
 					</td>
 				</tr>
 			</table>
@@ -741,12 +746,12 @@ function viewtopic()
 	{
 		echo "<br />
 		<br />
-		<i>{$lang['FORUM_POST_TIL']}</i>";
+		<i>This topic is locked, and as a result, you cannot reply to it!</i>";
 	}
 }
 function reply()
 {
-    global $ir, $userid, $lang, $db, $api;
+    global $h, $userid, $db, $api;
     $_GET['reply'] = (isset($_GET['reply']) && is_numeric($_GET['reply'])) ? abs($_GET['reply']) : '';
 	if (!isset($_POST['verf']) || !verify_csrf_code('forum_reply', stripslashes($_POST['verf'])))
 	{
@@ -754,7 +759,7 @@ function reply()
 	}
 	if (empty($_GET['reply']))
     {
-        alert('danger',$lang['ERROR_EMPTY'],$lang['FORUM_EMPTY_REPLY'],true,"forums.php");
+        alert('danger',"Uh Oh!","You need to enter a reponse.",true,"forums.php");
         die($h->endpage());
     }
     $q =
@@ -765,7 +770,7 @@ function reply()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php");
         die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -778,7 +783,7 @@ function reply()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php");
+        alert('danger',"Non-existent Forum Category","You are attempting to view a non-existent forum category. Check your source and try again.",true,"forums.php");
         die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -787,7 +792,7 @@ function reply()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
+			alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php");
 			die($h->endpage());
 		}
     }
@@ -796,11 +801,10 @@ function reply()
 		$_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
         if ((strlen($_POST['fp_text']) > 65535))
         {
-			alert('danger',$lang['ERROR_LENGTH'],$lang['FORUM_MAX_CHAR_REPLY'],true,"forums.php?viewtopic={$_GET['reply']}");
+			alert('danger',"Uh Oh!","Forum replies can only be, at maximum, 65,535 characters in length.",true,"forums.php?viewtopic={$_GET['reply']}");
             die($h->endpage());
         }
-		
-		$last_name = $db->escape($topic['ft_name']);
+
         $post_time = time();
         $db->query("
             INSERT INTO `forum_posts` 
@@ -820,7 +824,7 @@ function reply()
                  `ff_lp_poster_id` = $userid,
                  `ff_lp_t_id` = {$_GET['reply']}
                  WHERE `ff_id` = {$forum['ff_id']}");
-        alert('success',"","{$lang['FORUM_REPLY_SUCCESS']}",false);
+        alert('success',"Success!","Your reply has posted successfully.",false);
 		echo "<br />";
         $_GET['lastpost'] = 1;
         $_GET['viewtopic'] = $_GET['reply'];
@@ -828,16 +832,16 @@ function reply()
     }
     else
     {
-        echo $lang['FORUM_POST_TIL'];
+        echo "This topic is locked. You cannot reply to it.";
     }
 }
 function newtopicform()
 {
-    global $ir, $userid, $lang, $h, $db, $api;
+    global $userid, $lang, $h, $db, $api;
     $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
     if (empty($_GET['forum']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","",true,"forums.php");
+        alert('danger',"Uh Oh!","",true,"forums.php");
         die($h->endpage());
     }
     $q =
@@ -848,7 +852,7 @@ function newtopicform()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php?viewforum={$_GET['forum']}");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php?viewforum={$_GET['forum']}");
 		die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -857,13 +861,13 @@ function newtopicform()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
+			alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php");
 			die($h->endpage());
 		}
     }
     $code = request_csrf_code("forums_newtopic_{$_GET['forum']}");
 	echo "<ol class='breadcrumb'>
-		<li class='breadcrumb-item'><a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a></li>
+		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item'><a href='?viewforum={$_GET['forum']}'>{$r['ff_name']}</a></li>
 		<li class='breadcrumb-item active'>{$lang['FORUM_TOPIC_FORM_PAGE']}</li>	
 	</ol>";
@@ -914,7 +918,7 @@ function newtopic()
 	}
     if (empty($_GET['forum']))
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","",true,"forum.php");
+        alert('danger',"Uh Oh!","",true,"forum.php");
         die($h->endpage());
     }
     $q =
@@ -925,7 +929,7 @@ function newtopic()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php");
 		die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -934,7 +938,7 @@ function newtopic()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
+			alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php");
 			die($h->endpage());
 		}
     }
@@ -988,7 +992,7 @@ function newtopic()
 			 `ff_lp_poster_id` = $userid, `ff_lp_t_id` = {$i}
              WHERE `ff_id` = {$r['ff_id']}");
     
-	alert("success",$lang['ERROR_SUCCESS'],$lang['FORUM_TOPIC_FORM_SUCCESS']);
+	alert("success","Success!",$lang['FORUM_TOPIC_FORM_SUCCESS']);
     $_GET['viewtopic'] = $i;
     viewtopic();
 }
@@ -1009,12 +1013,12 @@ function quote()
 	$_GET['quotename'] = (isset($_GET['quotename']) && is_numeric($_GET['quotename'])) ? abs($_GET['quotename']) : '';
     if (empty($_GET['viewtopic']))
     {
-        alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
+        alert("danger","Uh Oh!",$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     if (!isset($_GET['quotename']) || !isset($_GET['fpid']))
     {
-        alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php?viewtopic={$_GET['viewtopic']}");
+        alert("danger","Uh Oh!",$lang['ERROR_FORUM_VF'],true,"forums.php?viewtopic={$_GET['viewtopic']}");
         die($h->endpage());
     }
     $q =
@@ -1022,7 +1026,7 @@ function quote()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -1035,7 +1039,7 @@ function quote()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['viewtopic']}");
+        alert('danger',"Non-existent Forum Category","You are attempting to view a non-existent forum category. Check your source and try again.",true,"forums.php?viewtopic={$_GET['viewtopic']}");
 		die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -1044,7 +1048,7 @@ function quote()
     {
 		if ($api->UserMemberLevelGet($userid,'forum moderator') == false)
 		{  
-			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
+			alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php");
 			die($h->endpage());
 		}
     }
@@ -1054,7 +1058,7 @@ function quote()
 	$q4 = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['quotename']}");
 	$Who = $db->fetch_single($q4);
 	echo "<ol class='breadcrumb'>
-		<li class='breadcrumb-item'><a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a></li>
+		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item'><a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a></li>
 		<li class='breadcrumb-item'><a href='?viewtopic={$_GET['viewtopic']}'>{$topic['ft_name']}</a></li>
 		<li class='breadcrumb-item active'>{$lang['FORUM_QUOTE_FORM_PAGENAME']}</li>	
@@ -1093,7 +1097,7 @@ function edit()
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic']))
     {
-        alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
+        alert("danger","Uh Oh!",$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q =
@@ -1104,7 +1108,7 @@ function edit()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -1117,7 +1121,7 @@ function edit()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
+        alert('danger',"Non-existent Forum Category","You are attempting to view a non-existent forum category. Check your source and try again.",true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -1126,14 +1130,14 @@ function edit()
     {
 		if (($api->UserMemberLevelGet($userid,'forum moderator')) || (!($userid == $post['fp_poster_id'])))
 		{ 
-			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
+			alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php?viewtopic={$_GET['topic']}");
 			die($h->endpage());
 		}
     }
     $_GET['post'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? abs($_GET['post']) : '';
     if (empty($_GET['post']))
     {
-        alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php?viewtopic={$_GET['topic']}");
+        alert("danger","Uh Oh!",$lang['ERROR_FORUM_VF'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
     $q3 =
@@ -1151,11 +1155,11 @@ function edit()
     $db->free_result($q3);
     if (!($api->UserMemberLevelGet($userid,'forum moderator') || $userid == $post['fp_poster_id']))
     {
-        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_EDIT_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
+        alert('danger',"Security Issue!",$lang['FORUM_EDIT_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
 	echo "<ol class='breadcrumb'>
-		<li class='breadcrumb-item'><a href='forums.php'>{$lang['FORUM_FORUMSHOME']}</a></li>
+		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item'><a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a></li>
 		<li class='breadcrumb-item'><a href='?viewtopic={$_GET['topic']}'>{$topic['ft_name']}</a></li>
 		<li class='breadcrumb-item active'>{$lang['FORUM_EDIT_FORM_PAGENAME']}</li>	
@@ -1191,7 +1195,7 @@ function editsub()
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if ((empty($_GET['post']) || empty($_GET['topic'])))
     {
-        alert("danger",$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
+        alert("danger","Uh Oh!",$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
 	if (!isset($_POST['verf']) || !verify_csrf_code("forums_editpost_{$_GET['post']}", stripslashes($_POST['verf'])))
@@ -1206,7 +1210,7 @@ function editsub()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -1219,7 +1223,7 @@ function editsub()
     if ($db->num_rows($q2) == 0)
     {
         $db->free_result($q2);
-        alert('danger',$lang['FORUM_FORUM_DNE_TITLE'],$lang['FORUM_FORUM_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
+        alert('danger',"Non-existent Forum Category","You are attempting to view a non-existent forum category. Check your source and try again.",true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
     $forum = $db->fetch_row($q2);
@@ -1228,7 +1232,7 @@ function editsub()
     {
 		if (!($api->UserMemberLevelGet($userid,'forum moderator')))
 		{
-			alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
+			alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php?viewtopic={$_GET['topic']}");
 			die($h->endpage());
 		}
     }
@@ -1247,7 +1251,7 @@ function editsub()
     $db->free_result($q3);
     if (!(($api->UserMemberLevelGet($userid,'forum moderator')) || $ir['userid'] == $post['fp_poster_id']))
     {
-        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
+        alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
 	$_POST['fp_text'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['fp_text']))));
@@ -1266,7 +1270,7 @@ function editsub()
              `fp_edit_count` = `fp_edit_count` + 1
              WHERE `fp_id` = {$_GET['post']}");
 
-	alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_EDIT_SUCCESS'],false);		 
+	alert('success',"Success!",$lang['FORUM_EDIT_SUCCESS'],false);		 
 	echo"<br />
    ";
     $_GET['viewtopic'] = $_GET['topic'];
@@ -1278,21 +1282,21 @@ function move()
     global $ir, $c, $userid, $h, $lang, $db, $api;
     if (!($api->UserMemberLevelGet($userid,'forum moderator')))
     {
-        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
+        alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php");
 		die($h->endpage());
     }
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     $_POST['forum'] = (isset($_POST['forum']) && is_numeric($_POST['forum'])) ? abs($_POST['forum']) : '';
     if (empty($_GET['topic']) || empty($_POST['forum']))
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
+        alert('danger',"Uh Oh!",$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q = $db->query("SELECT `ft_name`, `ft_forum_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -1314,7 +1318,7 @@ function move()
             "UPDATE `forum_topics`
              SET `ft_forum_id` = {$_POST['forum']}
              WHERE `ft_id` = {$_GET['topic']}");
-    alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_MOVE_TOPIC_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
+    alert('success',"Success!",$lang['FORUM_MOVE_TOPIC_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
 	$api->SystemLogsAdd($userid,'staff',"Moved Topic {$topic['ft_name']} to {$forum['ff_name']}");
     recache_forum($topic['ft_forum_id']);
     recache_forum($_POST['forum']);
@@ -1325,13 +1329,13 @@ function lock()
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
     if (!($api->UserMemberLevelGet($userid,'forum moderator')))
     {
-        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
+        alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php");
 		die($h->endpage());
     }
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic']))
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
+        alert('danger',"Uh Oh!",$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q =
@@ -1342,7 +1346,7 @@ function lock()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -1353,7 +1357,7 @@ function lock()
                 "UPDATE `forum_topics`
                  SET `ft_locked` = 0
                  WHERE `ft_id` = {$_GET['topic']}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_UNLOCK_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
+		alert('success',"Success!",$lang['FORUM_UNLOCK_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
 		$api->SystemLogsAdd($userid,'staff',"Unlocked Topic {$r['ft_name']}");
     }
     else
@@ -1362,7 +1366,7 @@ function lock()
                 "UPDATE `forum_topics`
                  SET `ft_locked` = 1
                  WHERE `ft_id` = {$_GET['topic']}");
-        alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_LOCK_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
+        alert('success',"Success!",$lang['FORUM_LOCK_DONE'],true,"forums.php?viewtopic={$_GET['topic']}");
 		$api->SystemLogsAdd($userid,'staff',"Locked Topic {$r['ft_name']}");
     }
 }
@@ -1372,13 +1376,13 @@ function pin()
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
     if (!($api->UserMemberLevelGet($userid,'forum moderator')))
     {
-        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
+        alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php");
 		die($h->endpage());
     }
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic']))
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
+        alert('danger',"Uh Oh!",$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q =
@@ -1389,7 +1393,7 @@ function pin()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -1400,7 +1404,7 @@ function pin()
                 "UPDATE `forum_topics`
                  SET `ft_pinned` = 0
                  WHERE `ft_id` = {$_GET['topic']}");
-        alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_UNPIN_DONE'],true,"forums.php?viewtopic={$r['ft_id']}");
+        alert('success',"Success!",$lang['FORUM_UNPIN_DONE'],true,"forums.php?viewtopic={$r['ft_id']}");
 		$api->SystemLogsAdd($userid,'staff',"Unpinned Topic {$r['ft_name']}");
     }
     else
@@ -1409,7 +1413,7 @@ function pin()
                 "UPDATE `forum_topics`
                  SET `ft_pinned` = 1
                  WHERE `ft_id` = {$_GET['topic']}");
-        alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_PIN_DONE'],true,"forums.php?viewtopic={$r['ft_id']}");
+        alert('success',"Success!",$lang['FORUM_PIN_DONE'],true,"forums.php?viewtopic={$r['ft_id']}");
         $api->SystemLogsAdd($userid,'staff',"Pinned Topic {$r['ft_name']}");
     }
 }
@@ -1419,13 +1423,13 @@ function delepost()
     global $ir, $c, $userid, $h, $bbc, $db, $api, $lang;
     if (!($api->UserMemberLevelGet($userid,'forum moderator')))
     {
-        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php");
+        alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php");
 		die($h->endpage());
     }
     $_GET['post'] = isset($_GET['post']) && is_numeric($_GET['post']) ? abs($_GET['post']) : '';
     if (empty($_GET['post']))
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,"forums.php");
+        alert('danger',"Uh Oh!",$lang['ERROR_FORUM_VF'],true,"forums.php");
         die($h->endpage());
     }
     $q3 =
@@ -1449,7 +1453,7 @@ function delepost()
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php?viewtopic={$post['fp_topic_id']}");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php?viewtopic={$post['fp_topic_id']}");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
@@ -1457,7 +1461,7 @@ function delepost()
     $db->query(
             "DELETE FROM `forum_posts`
     		    WHERE `fp_id` = {$post['fp_id']}");
-    alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_DELETE_DONE'],true,"forums.php?viewtopic={$post['fp_topic_id']}");
+    alert('success',"Success!",$lang['FORUM_DELETE_DONE'],true,"forums.php?viewtopic={$post['fp_topic_id']}");
     recache_topic($post['fp_topic_id']);
     recache_forum($post['ff_id']);
 	$api->SystemLogsAdd($userid,'staff',"Deleted post ({$post['fp_id']}) in {$topic['ft_name']}");
@@ -1470,26 +1474,26 @@ function deletopic()
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (!($api->UserMemberLevelGet($userid,'forum moderator')))
     {
-        alert('danger',$lang['ERROR_SECURITY'],$lang['FORUM_NOPERMISSION'],true,"forums.php?viewtopic={$_GET['topic']}");
+        alert('danger',"Security Issue!","You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.",true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
 	if (empty($_GET['topic']))
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ERROR_FORUM_VF'],true,'forums.php');
+        alert('danger',"Uh Oh!",$lang['ERROR_FORUM_VF'],true,'forums.php');
         die($h->endpage());
     }
     $q = $db->query("SELECT `ft_forum_id`, `ft_name` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-        alert('danger',$lang['FORUM_TOPIC_DNE_TITLE'],$lang['FORUM_TOPIC_DNE_TEXT'],true,"forums.php?viewtopic={$_GET['topic']}");
+        alert('danger',"Forum topic does not exist!","You are attempting to interact with a topic that does not exist. Check your source and try again.",true,"forums.php?viewtopic={$_GET['topic']}");
 		die($h->endpage());
     }
     $topic = $db->fetch_row($q);
     $db->free_result($q);
     $db->query("DELETE FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
     $db->query("DELETE FROM `forum_posts` WHERE `fp_topic_id` = {$_GET['topic']}");
-    alert('success',$lang['ERROR_SUCCESS'],$lang['FORUM_DELETE_TOPIC_DONE'],true,'forums.php');
+    alert('success',"Success!",$lang['FORUM_DELETE_TOPIC_DONE'],true,'forums.php');
     recache_forum($topic['ft_forum_id']);
 	$api->SystemLogsAdd($userid,'staff',"Deleted topic {$topic['ft_name']}");
 }

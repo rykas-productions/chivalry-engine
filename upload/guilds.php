@@ -35,16 +35,15 @@ default:
 }
 function menu()
 {
-	global $db,$userid,$api,$lang,$h;
-	echo "<h3>{$lang['GUILD_LIST']}</h3>
-	<a href='?action=create'>{$lang['GUILD_CREATE']}</a><hr />";
+	global $db;
+	echo "<h3>Guild Listing</h3>
+	<a href='?action=create'>Create a Guild</a><hr />";
 	echo "<table class='table table-bordered table-hover'>
 	<tr>
-		<th>{$lang['GUILD_LIST_TABLE1']}</th>
-		<th>{$lang['GUILD_LIST_TABLE2']}</th>
-		<th>{$lang['GUILD_LIST_TABLE3']}</th>
-		<th>{$lang['GUILD_LIST_TABLE5']}</th>
-		<th>{$lang['GUILD_LIST_TABLE4']}</th>
+		<th>Guild Name</th>
+		<th>Level</th>
+		<th>Members</th>
+		<th>Leader</th>
 	</tr>";
 	$gq = $db->query(
 			"SELECT `guild_id`, `guild_town_id`, `guild_owner`, `guild_name`, 
@@ -73,10 +72,6 @@ function menu()
 			<td>
 				<a href='profile.php?user={$gd['userid']}'>{$gd['username']}</a>
 			</td>
-			<td>";
-			echo 
-				$api->SystemTownIDtoName($gd['guild_town_id']);
-			echo"</td>
 		</tr>";
 	}
 	echo"</table>";
@@ -84,26 +79,28 @@ function menu()
 }
 function create()
 {
-	global $db,$userid,$lang,$api,$ir,$set,$h;
-	 echo "<h3>{$lang['GUILD_CREATE']}</h3><hr />";
+	global $db,$userid,$api,$ir,$set,$h;
+	 echo "<h3>Create a Guild</h3><hr />";
 	$cg_price = $set['GUILD_PRICE'];
 	$cg_level = $set['GUILD_LEVEL'];
     //User does not have the minimum required primary currency.
 	if (!($api->UserHasCurrency($userid,'primary',$cg_price)))
 	{
-		alert("danger",$lang['ERROR_GENERIC'],"{$lang['GUILD_CREATE_ERROR']} " . number_format($cg_price) . ".",true,'index.php');
+		alert("danger","Uh Oh!","You do not have enough cash to create a guild! You need
+		    " . number_format($cg_price) . ".",true,'index.php');
 		die($h->endpage());
 	}
     //User level is too low to create a guild.
 	elseif (($api->UserInfoGet($userid,'level',false)) < $cg_level)
 	{
-		alert("danger",$lang['ERROR_GENERIC'],"{$lang['GUILD_CREATE_ERROR1']} " . number_format($cg_level) . ".",true,'index.php');
+		alert("danger","Uh Oh!","You are too low of a level to create a guild. Please level up to Level
+		    " . number_format($cg_level) . " and try again..",true,'index.php');
 		die($h->endpage());
 	}
     //User is already in a guild.
 	elseif ($ir['guild'])
 	{
-		alert("danger",$lang['ERROR_GENERIC'],$lang['GUILD_CREATE_ERROR2'],true,'back');
+		alert("danger","Uh Oh!","You are already in a guild. You cannot create a guild while you are in one.",true,'back');
 		die($h->endpage());
 	}
 	else
@@ -113,7 +110,9 @@ function create()
             //User fails the CSRF verification.
 			if (!isset($_POST['verf']) || !verify_csrf_code('createguild', stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',"CSRF Error!","The action you were trying to do was blocked. It was blocked because you
+				    loaded another page on the game. If you have not loaded a different page during this time, change
+				    your password immediately, as another person may have access to your account!");
 				die($h->endpage());
 			}
 			$name = $db->escape(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1'));
@@ -121,7 +120,7 @@ function create()
             //Guild name is already in use.
 			if ($db->num_rows($db->query("SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}'")) > 0)
 			{
-				alert("danger",$lang['ERROR_GENERIC'],$lang['GUILD_CREATE_ERROR3'],true,'back');
+				alert("danger","Uh Oh!","A guild with the name you've chosen already exists!",true,'back');
 				die($h->endpage());
 			}
 			$db->query("INSERT INTO `guild` 
@@ -135,7 +134,7 @@ function create()
 			$api->UserTakeCurrency($userid,'primary',$cg_price);
 			$db->query("UPDATE `users` SET `guild` = {$i} WHERE `userid` = {$userid}");
             //Tell user they've created a guild.
-			alert('success',$lang['ERROR_SUCCESS'],$lang['GUILD_CREATE_SUCCESS'],true,"viewguild.php");
+			alert('success',"Success!","You have successfully created a guild.",true,"viewguild.php");
             //Log the purchase, and that they've joined a guild.
 			$api->SystemLogsAdd($userid,'guilds',"Purchased a guild.");
 			$api->SystemLogsAdd($userid,'guilds',"Joined Guild ID {$i}");
@@ -149,12 +148,12 @@ function create()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						{$lang['GUILD_CREATE_FORM']}
+						Creating a Guild Form
 					</th>
 				</tr>
 				<tr>
 					<th>
-						{$lang['GUILD_CREATE_FORM1']}
+						Guild Name
 					</th>
 					<td>
 						<input type='text' required='1' class='form-control' name='name' />
@@ -162,7 +161,7 @@ function create()
 				</tr>
 				<tr>
 					<th>
-						{$lang['GUILD_CREATE_FORM2']}
+						Guild Description
 					</th>
 					<td>
 						<textarea name='desc' required='1' class='form-control' cols='40' rows='7'></textarea>
@@ -170,7 +169,7 @@ function create()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['GUILD_CREATE_BTN']}" . number_format($cg_price) . " {$lang['INDEX_PRIMCURR']}' class='btn btn-primary'>
+						<input type='submit' value='Create Guild for" . number_format($cg_price) . "!' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}
@@ -181,7 +180,7 @@ function create()
 }
 function view()
 {
-	global $db,$lang,$h,$userid,$api;
+	global $db,$h,$api;
 	$_GET['id'] = abs($_GET['id']);
     //Guild ID has not been entered, so redirect them to main guild listing.
 	if (empty($_GET['id']))
@@ -194,7 +193,7 @@ function view()
         //Guild does not exist.
 		if ($db->num_rows($gq) == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
+			alert('danger',"Uh Oh!",$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 			die($h->endpage());
 		}
         //List all the guild's information.
@@ -273,14 +272,14 @@ function memberlist()
     //Guild is not specified.
 	if (empty($_GET['id']))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
+		alert('danger',"Uh Oh!",$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
     //Guild does not exist.
 	if ($db->num_rows($gq) == 0)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
+		alert('danger',"Uh Oh!",$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gd = $db->fetch_row($gq);
@@ -319,21 +318,21 @@ function apply()
     //Guild is not specified.
 	if (empty($_GET['id']))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
+		alert('danger',"Uh Oh!",$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
     //Guild does not exist.
 	if ($db->num_rows($gq) == 0)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
+		alert('danger',"Uh Oh!",$lang['GUILD_VIEW_ERROR'],true,"guilds.php");
 		die($h->endpage());
 	}
 	$gd = $db->fetch_row($gq);
     //User is already in a guild, and cannot join another.
 	if ($ir['guild'] > 0)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_APP_ERROR'],true,"guilds.php?action=view&id={$_GET['id']}");
+		alert('danger',"Uh Oh!",$lang['GUILD_APP_ERROR'],true,"guilds.php?action=view&id={$_GET['id']}");
 		die($h->endpage());
 	}
 	echo "<h3>{$lang['GUILD_APP_TITLE']} {$gd['guild_name']} {$lang['GUILD_VIEW_LIST2']}</h3><hr />";
@@ -349,7 +348,7 @@ function apply()
 		//User has already submitted an application to this guild.
         if ($db->num_rows($cnt) > 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_APP_ERROR1'],true,'back');
+			alert('danger',"Uh Oh!",$lang['GUILD_APP_ERROR1'],true,'back');
 			die($h->endpage());
 		}
         //Tell the guild's owner and co-owner that the user has sent an application.
@@ -371,7 +370,7 @@ function apply()
 		$gev = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
                                 sent an application to join this guild.");
 		$db->query("INSERT INTO `guild_notifications` VALUES (NULL, {$_GET['id']}, " . time() . ", '{$gev}')");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['GUILD_APP_SUCC'],true,"guilds.php?action=view&id={$_GET['id']}");
+		alert('success',"Success!",$lang['GUILD_APP_SUCC'],true,"guilds.php?action=view&id={$_GET['id']}");
 	}
 	else
 	{
@@ -421,7 +420,7 @@ function wars()
     //No guild wars.
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['GUILD_WAR_ERR'],false);
+		alert('danger',"Uh Oh!",$lang['GUILD_WAR_ERR'],false);
 	}
 }
 $h->endpage();

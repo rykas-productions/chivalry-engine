@@ -19,8 +19,6 @@ session_name('CENGINE');
 session_start();
 $time = time();
 header('X-Frame-Options: SAMEORIGIN');
-//Include user's language files.
-include_once 'lang/en_us.php';
 //If session has not started, regenerate session ID, then start it.
 if (!isset($_SESSION['started']))
 {
