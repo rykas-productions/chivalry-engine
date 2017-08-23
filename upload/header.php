@@ -154,15 +154,15 @@ class headers
 					$InfirmaryOut=$db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
 					$InfirmaryRemain=TimeUntil_Parse($InfirmaryOut);
 					alert('info',"Unconscious!","You are in the Infirmary for the next {$InfirmaryRemain}. Check your
-                        <a href='inventory.php>Inventory</a> for items to heal you out!",false);
+                        <a href='inventory.php'>Inventory</a> for items to heal you out!",false);
 				}
                 //User is in the dungeon, tell them how long.
 				if ($api->UserStatus($ir['userid'],'dungeon'))
 				{
 					$DungeonOut=$db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
 					$DungeonRemain=TimeUntil_Parse($DungeonOut);
-					alert('info',"Locked Up!","You are in the infirmary for the next {$DungeonRemain}. Check your
-                        <a href='inventory.php>Inventory</a> for items to help you out!",false);
+					alert('info',"Locked Up!","You are in the dungeon for the next {$DungeonRemain}. Check your
+                        <a href='inventory.php'>Inventory</a> for items to help you out!",false);
 				}
                 //User needs to reverify with reCaptcha
 				if (($ir['last_verified'] < ($time-$set['Revalidate_Time'])) || ($ir['need_verify'] == 1))

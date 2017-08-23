@@ -22,7 +22,7 @@ if ($_GET['delete'] > 0)
                      AND `notif_user` = {$userid}");
     if ($db->fetch_single($d_c) == 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['NOTIF_DELETE_SINGLE_FAIL'],false);
+        alert('danger',"Uh Oh!","You cannot delete notifications if you don't have any. :^)",false);
 	}
     else
     {
@@ -30,20 +30,20 @@ if ($_GET['delete'] > 0)
                 "DELETE FROM `notifications`
                  WHERE `notif_id` = {$_GET['delete']}
                  AND `notif_user` = {$userid}");
-        alert('success',$lang['ERROR_SUCCESS'],$lang['NOTIF_DELETE_SINGLE'],false);
+        alert('success',"Success!","All your notifications have been cleared out successfully.",false);
     }
     $db->free_result($d_c);
 }
 echo "
-<b>{$lang['NOTIF_TITLE']}</b>
+<b>Last fifteen notifications</b>
 <table class='table table-bordered table-hover table-striped'>
 <thead>
 	<tr>
 		<th width='33%'>
-			{$lang['NOTIF_TABLE_HEADER1']}
+			Notification Info
 		</th>
 		<th>
-			{$lang['NOTIF_TABLE_HEADER2']}
+			Notification Content
 		</th>
 	<tr>
 </thead>
@@ -58,18 +58,18 @@ while ($notif = $db->fetch_row($query))
 	$NotificationTime=date('F j Y, g:i:s a', $notif['notif_time']);
 	if ($notif['notif_status'] == 'unread')
 	{
-		$Status="<span class='badge badge-pill badge-danger'>{$lang['NOTIF_UNREAD']}</span>";
+		$Status="<span class='badge badge-pill badge-danger'>Unread</span>";
 	}
 	else
 	{
-		$Status="<span class='badge badge-pill badge-success'>{$lang['NOTIF_READ']}</span>";
+		$Status="<span class='badge badge-pill badge-success'>Read</span>";
 	}
 	echo "
 	<tr>
 		<td>
 			{$NotificationTime}<br />
 				{$Status}<br />
-				[<a href='notifications.php?delete={$notif['notif_id']}'>{$lang['NOTIF_DELETE']}</a>]
+				[<a href='notifications.php?delete={$notif['notif_id']}'>Delete</a>]
 		</td>
 		<td>
 			{$notif['notif_text']}

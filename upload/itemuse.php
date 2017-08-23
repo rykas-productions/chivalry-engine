@@ -11,7 +11,7 @@ $Time=time();
 $_GET['item'] = (isset($_GET['item']) && is_numeric($_GET['item'])) ? abs($_GET['item']) : '';
 if (empty($_GET['item']))
 {
-    alert('danger',$lang['ERROR_GENERIC'],$lang['IU_UI'],true,'inventory.php');
+    alert('danger',"Uh Oh!","Please specify an item to use.",true,'inventory.php');
 }
 else
 {
@@ -22,7 +22,7 @@ else
 	if ($db->num_rows($i) == 0)
     {
         $db->free_result($i);
-        alert('danger',$lang['ERROR_GENERIC'],$lang['IU_ITEM_NOEXIST'],true,'inventory.php');
+        alert('danger',"Uh Oh!","You are trying to use an item that doesn't exist.",true,'inventory.php');
     }
 	else
 	{
@@ -30,7 +30,7 @@ else
         $db->free_result($i);
 		if (!$r['effect1_on'] && !$r['effect2_on'] && !$r['effect3_on'])
         {
-            alert('danger',"",$lang['IU_UNUSED_ITEM'],true,'inventory.php');
+            alert('danger',"Uh Oh!","This item cannot be used as it has no effects.",true,'inventory.php');
             die($h->endpage());
         }
 		for ($enum = 1; $enum <= 3; $enum++)
@@ -112,7 +112,7 @@ else
 				}
 			}
 		}
-		alert('success',$lang['ERROR_SUCCESS'],"{$r['itmname']} {$lang['IU_SUCCESS']}",true,'inventory.php');
+		alert('success',"Success!","You have successfully used your{$r['itmname']}!",true,'inventory.php');
 		$api->UserTakeItem($userid, $r['inv_itemid'], 1);
 		$api->SystemLogsAdd($userid,'itemuse',"Used a/an {$r['itmname']} item.");
 	}

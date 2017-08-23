@@ -53,87 +53,6 @@ $lang['GEN_UPTODATE']="Chivalry Engine is up to date.";
 $lang['GEN_OUTTADATE']="Chivalry Engine is out of date. Get the latest build ";
 $lang['GEN_FAILEDTOCHECK']="Could not contact update checker.";
 
-// Preferences
-$lang["PREF_CPASSWORD"] = "Change Password";
-$lang["PREF_WELCOME_1"] = "Greetings there,";
-$lang["PREF_WELCOME_2"] = ", and welcome to the Preferences Center. You may view and change information about your account!";
-$lang["PREF_CNAME"] = "Change Username";
-$lang["PREF_CTIME"] = "Change Timezone";
-$lang["PREF_CLANG"] = "Change Language";
-$lang["PREF_CPIC"] = "Change Display Picture";
-$lang["PREF_CTHM"] = "Change Theme";
-$lang["PREF_CTHM_FORM"] = "Select the theme you wish to change to. This action can be reverted at any time you want.";
-$lang["PREF_CTHM_FORM1"]="Select your theme";
-$lang["PREF_CTHM_FORMDD1"]="Day Mode";
-$lang["PREF_CTHM_FORMDD2"]="Night Mode";
-$lang['PREF_CTHM_FORMBTN']="Update Theme";
-$lang['PREF_CTHM_SUB_ERROR']="You are trying to use an non-existent theme.";
-$lang['PREF_CTHM_SUB_SUCCESS']="Your theme has been updated successfully. Effects will be noticeable on the next page load.";
-$lang["PREF_CSIG"] = "Change Forum Signature";
-$lang["PREF_CSEX"] = "Change Gender";
-
-//Username Change
-$lang["UNC_TITLE"] = "Changing your username...";
-$lang["UNC_INTRO"] = "Here you can change your name that is shown throughout the game. Do not use an inappropriate name or you may find your privilege to change your name removed.";
-$lang["PREF_CNAME"] = "Change Username";
-$lang["UNC_ERROR_1"] = "You did not even enter a new username! Click ";
-$lang["UNC_ERROR_2"] = " to try again";
-$lang['UNC_LENGTH_ERROR'] = "A valid username must be, at minimum, three characters in length and, at maximum, twenty characters.";
-$lang['UNC_INVALIDCHARCTERS'] = "A valid username only consists of numbers, letters, underscores and spaces!";
-$lang['UNC_INUSE'] = "The username you have chosen is in use. Please select another username.";
-$lang['UNC_GOOD'] = "You have successfully updated your username!";
-$lang['UNC_NUN'] = "New Username:";
-$lang['UNC_BUTTON'] = "Change Username";
-
-//Password Change
-$lang["PW_TITLE"] = "Changing your password...";
-$lang['PW_CP'] = "Current Password";
-$lang['PW_CNP'] = "Confirm New Password";
-$lang['PW_NP'] = "New Password";
-$lang['PW_BUTTON'] = "Update Password";
-$lang['PW_INCORRECT'] = "What you entered as your old password is incorrect. Try again.";
-$lang['PW_NOMATCH'] = "The new passwords you entered do not match. Go back and try again, please.";
-$lang['PW_DONE'] = "Your password has been updated successfully.";
-
-//Pic change
-$lang['PIC_TITLE']="Display Picture Change";
-$lang['PIC_NOTE']="Please note that this must be externally hosted, <a href='https://imgur.com/'>Imgur</a> is our recommendation.";
-$lang['PIC_NOTE2']="Any images that are not 250x250 will be automatically scaled to 250x250.";
-$lang['PIC_NEWPIC']="Link to new picture:";
-$lang['PIC_TOOBIG']="Picture Too Large!";
-$lang['PIC_BTN']="Change Picture";
-$lang['PIC_TOOBIG2']="Your image's file size is too large. The maximum size an image can be is 1MB. Go back and try again, please.";
-$lang['PIC_NOIMAGE']="You specified a URL that is not even an image. Go back and try again, please.";
-$lang['PIC_SUCCESS']="You have successfully updated your display picture! It is shown below.";
-
-//Signature Change
-$lang['SIG_TITLE']="Changing Forum Signature. You may use BBCode.";
-$lang['SIG_YSIG']="Your Signature";
-$lang['SIG_BTN']="Change Signature";
-$lang['SIG_ERR']="Your signature must be less than 1025 characters in length. This includes BBCode.";
-$lang['SIG_SUCC']="You have successfully updated your forum signature.";
-
-//Sex change
-$lang['SEX_INFO']="Use this form to change your gender. Unlike the real world, changes here are free.";
-$lang['SEX_BTN']="Change Gender";
-$lang['SEX_ERR']="You specified an invalid or non-existent gender.";
-$lang['SEX_ERR1']="You are already this gender!";
-$lang['SEX_SUCC']="You have successfully changed your gender.";
-
-//Login Page
-$lang["LOGIN_REGISTER"] = "Register";
-$lang["LOGIN_RULES"] = "Game Rules";
-$lang["LOGIN_LOGIN"] = "Login";
-$lang["LOGIN_AHA"] = "Already have an account?";
-$lang["LOGIN_EMAIL"] = "Email address";
-$lang["LOGIN_PASSWORD"] = "Password";
-$lang["LOGIN_LWE"] = "Email Login! <a href='pwreset.php'>Forgot password?</a>";
-$lang["LOGIN_SIGNIN"] = "Sign In";
-$lang["LOGIN_NH"] = "New Here? <a href='register.php'>Join Us</a>!";
-$lang['LOGIN_LA'] = "Latest Announcement";
-$lang['LOGIN_TG'] = "Top 10 Guilds";
-$lang['LOGIN_TP'] = "Top 10 Players";
-
 //Register
 $lang["REG_FORM"] = "Registration";
 $lang["REG_USERNAME"] = "Username";
@@ -188,56 +107,6 @@ $lang['ERROR_NONUSER'] = "Nonexistent User!";
 $lang['ERROR_NOPERM'] ="No Permission!";
 $lang['ERROR_UNKNOWN'] ="Unknown Error!";
 $lang['ERROR_INFO']="Information!";
-
-//Misc. Alerts Details
-$lang['ALERT_INSTALLER']="The installer file could not be deleted. Please be sure to delete installer.php from your website's root folder, or you will risk another user running the installer and ruining your game.";
-
-//Error Details
-$lang['ERRDE_EXPLORE']="Since you are in the infirmary, you cannot visit the town!";
-$lang['ERRDE_EXPLORE2']="Since you are in the dungeon, you cannot visit the town!";
-$lang['ERRDE_PN']="Your personal notepad could not be updated due to the 65,655 character limit.";
-$lang['ERROR_MAIL_UNOWNED']='This message does not exist or was not sent to you.';
-$lang['ERROR_FORUM_VF']="Go back and try again for us, please. We done broke.";
-
-//Form Buttons
-$lang['FB_PN']="Update Notes";
-$lang['FB_PR']="Submit Player Report";
-
-//Player Report
-$lang['PR_TITLE']="Player Report";
-$lang['PR_INTRO']="Know someone who broke the rules, or is just being dishonorable? This is the place to report them. Report the user just once. Reporting the same user multiple times will slow down the process. If you are found to be abusing the player report system, you will be placed away in federal jail. Information you enter here will remain confidential and will only be read by senior staff members. If you wish to confess to a crime, this is also a great place too.";
-$lang['PR_USER']="User?";
-$lang['PR_CATEGORY']="Category?";
-$lang['PR_REASON']="What have they done?";
-$lang['PR_USER_PH']="User ID of the player being bad.";
-$lang['PR_REASON_PH']="Please include as much information as possible.";
-$lang['PR_CAT_1']='Bug Abuse';
-$lang['PR_CAT_2']='Player Harassment';
-$lang['PR_CAT_3']='Scamming';
-$lang['PR_CAT_4']='Spamming';
-$lang['PR_CAT_5']='Encouraging Rule Breaking';
-$lang['PR_CAT_6']='Security Issue';
-$lang['PR_CAT_7']='Other';
-$lang['PR_CATBAD']='You specified an invalid category. Go back and try again, please.';
-$lang['PR_MAXCHAR']='You are attempting to enter too long of a reason. This form will only allow you to enter, at maximum, 1250 total characters. Go back and try again, please.';
-$lang['PR_INVALID_USER']='You are trying to report a player who just does not exist. Check the user ID you entered and try again.';
-$lang['PR_SUCCESS']='You have successfully reported the user. Staff may send you a message asking questions about the report you just sent. Please answer them to the best of your ability.';
-
-//Language menu
-$lang['LANG_INTRO']='Here you may change your language. This is not saved to your account. This is saved via a cookie. If you change devices or wipe your cookies, you will need to reset your language again. Translations may not be 100% accurate.';
-$lang['LANG_BUTTON']='Change Language';
-$lang['LANG_UPDATE']='You specified a language that is not valid.';
-$lang['LANG_UPDATE2']='You have successfully updated your language!';
-
-//Notifications page
-$lang['NOTIF_TABLE_HEADER1']='Notifications Info';
-$lang['NOTIF_TABLE_HEADER2']='Notifications Text';
-$lang['NOTIF_DELETE_SINGLE']='You have successfully deleted a notification.';
-$lang['NOTIF_DELETE_SINGLE_FAIL']='You cannot delete this notification as it either does not exist or does not belong to you.';
-$lang['NOTIF_TITLE']='Last fifteen notifications belonging to you...';
-$lang['NOTIF_READ']='Read';
-$lang['NOTIF_UNREAD']='Unread';
-$lang['NOTIF_DELETE']='Delete';
 
 //Send Cash Form
 $lang['SCF_POSCASH']="You need to send at least 1 {$lang['INDEX_PRIMCURR']} to use this form.";
@@ -311,27 +180,6 @@ $lang['STAFF_POLL_END_FORM']="Please select the poll you wish to close.";
 $lang['STAFF_POLL_END_BTN']="Close Selected Poll";
 $lang['STAFF_POLL_END_ERR']="You're attempting to close a non-existent poll.";
 
-//Polling
-$lang['POLL_TITLE']="Polling Booth";
-$lang['POLL_CYV']="Cast your vote today!";
-$lang['POLL_VOP']="View Previously Opened Polls";
-$lang['POLL_AVITP']="You can only vote once per poll.";
-$lang['POLL_PCNT']="You can't vote in a poll that does not exist, or has been previously closed.";
-$lang['POLL_VOTE_SUCCESS']="You have successfully casted your vote in this poll.";
-$lang['POLL_VOTE_NOPOLL']="There's no polls opened at this time. Come back later.";
-$lang['POLL_VOTE_CHOICE']="Choice";
-$lang['POLL_VOTE_VOTES']="Votes";
-$lang['POLL_VOTE_PERCENT_VOTES']="Percentage";
-$lang['POLL_VOTE_AV']="(Already Voted!)";
-$lang['POLL_VOTE_NV']="(Not Voted!)";
-$lang['POLL_VOTE_HIDDEN']="The results of this poll are hidden until its end.";
-$lang['POLL_VOTE_QUESTION']="Question:";
-$lang['POLL_VOTE_YVOTE']="Your Vote:";
-$lang['POLL_VOTE_TVOTE']="Total Votes:";
-$lang['POLL_VOTE_VOTEC']="Choose";
-$lang['POLL_VOTE_CAST']="Cast Vote";
-$lang['POLL_VOTE_NOCLOSED']="There are no closed polls at this moment. Come back later when the staff close a poll.";
-
 //Forum Staff
 $lang['STAFF_FORUM_ADD']="Add Forum Category";
 $lang['STAFF_FORUM_EDIT']="Edit Forum Category";
@@ -354,12 +202,6 @@ $lang['STAFF_FORUM_DEL_BTN']="Delete Forum";
 $lang['STAFF_FORUM_DEL_INFO']="Deleting forums are permanent. This will also remove the posts inside them as well.";
 $lang['STAFF_FORUM_EDIT_ERRFDNE']="The forum you chose to delete does not exist. Go back and verify and try again.";
 $lang['STAFF_FORUM_DEL_SUCCESS']="Successfully deleted the forum, along with whatever topics and posts were in them previously.";
-
-//Item Use
-$lang['IU_UI']="You are trying to use an unspecified item. Check your link and try again!";
-$lang['IU_UNUSED_ITEM']="This item isn't configured to be used. You cannot use items with a configured use.";
-$lang['IU_ITEM_NOEXIST']="The item you are trying to use does not exist. Check your sources and try again.";
-$lang['IU_SUCCESS']="has been used successfully. Refresh for the changes to take effect.";
 
 //Staff items
 $lang['STAFF_ITEM_GIVE_TITLE']="Giving Item to User";
@@ -551,18 +393,6 @@ $lang['STAFF_ACADEMY_DEL_ERR']="You did not specify an academy course to delete.
 $lang['STAFF_ACADEMY_DEL_ERR1']="That course does not exist, or was already deleted.";
 $lang['STAFF_ACADEMY_DEL_SUCC']="Successfully deleted the";
 $lang['STAFF_ACADEMY_DEL_SUCC1']="course from the game.";
-
-//Item sell
-$lang['ITEM_SELL_INFO']="Item Selling";
-$lang['ITEM_SELL_FORM1']="You are attempting to sell";
-$lang['ITEM_SELL_FORM2']="back to the game. Enter how many you wish to sell back. You have";
-$lang['ITEM_SELL_FORM3']="to sell.";
-$lang['ITEM_SELL_SUCCESS1']="You have successfully sold";
-$lang['ITEM_SELL_SUCCESS2']="(s) for";
-$lang['ITEM_SELL_BTN']="Sell Items";
-$lang['ITEM_SELL_ERROR1_TITLE']="Missing Items!";
-$lang['ITEM_SELL_BAD_QTY']="You are attempting to sell more items than you currently have in stock. Check your input and try again!";
-$lang['ITEM_SELL_ERROR1']="You are attempting to sell an item that you don't have, or just doesn't exist. Check your source and try again.";
 
 //Staff jobs
 $lang['STAFF_JOB_CREATE_TITLE']="Create a Job";
@@ -903,23 +733,6 @@ $lang['ROULETTE_BTN3']="Again, but with a different bet.";
 $lang['ROULETTE_BTN4']="I quit. I don't want to go broke.";
 $lang['ROULETTE_START']="You put in your bet and pull the handle down. Around and around the wheel spins. It stops and lands on";
 
-//ReCaptcha
-$lang['RECAPTCHA_TITLE']="reCaptcha";
-$lang['RECAPTCHA_INFO']="This is a needed evil. Just verify that you're not a bot.";
-$lang['RECAPTCHA_BTN']="Verify";
-$lang['RECAPTCHA_EMPTY']="You cannot leave the reCaptcha form empty! Re-directing you back in about 5 seconds.";
-$lang['RECAPTCHA_FAIL']="You failed the reCaptcha. Re-directing you back in about 5 seconds.";
-$lang['RECAPTCHA_NOTSET']="ReCaptcha did not return a response. You may not have an internet connection, or the administration hasn't setup ReCaptcha correctly. Re-directing you back in about 5 seconds.";
-
-//Poke
-$lang['POKE_TITLE']="Are you sure you wanna poke";
-$lang['POKE_TITLE1']="? Please do not harass users using this. Staff will find out, and they can remove your privilege to poke others.";
-$lang['POKE_ERROR1']="You need to specify a person you wish to poke.";
-$lang['POKE_ERROR2']="No, you cannot poke yourself!";
-$lang['POKE_ERROR3']="You cannot poke non-existent users!";
-$lang['POKE_BTN']="POKE!";
-$lang['POKE_SUCC']="You have successfully poked this user.";
-
 //Staff Change PW
 $lang['STAFF_USERS_CP_FORM_INFO']="Use this form to change a user's password.";
 $lang['STAFF_USERS_CP_USER']="User";
@@ -928,21 +741,6 @@ $lang['STAFF_USERS_CP_PW']="New Password";
 $lang['STAFF_USERS_CP_ERROR']="You cannot change the password for the admin account this way.";
 $lang['STAFF_USERS_CP_ERROR1']="You cannot change the password for other admin accounts this way.";
 $lang['STAFF_USERS_CP_SUCCESS']="User's password has been changed successfully.";
-
-//Item Send
-$lang['ITEM_SEND_ERROR']="You are attempting to send a non-existent item, or you just do not have this item in your inventory.";
-$lang['ITEM_SEND_ERROR1']="You are trying to send more of this item than you currently have.";
-$lang['ITEM_SEND_ERROR2']="You are trying to send this item to a user that does not exist.";
-$lang['ITEM_SEND_ERROR3']="It makes no sense to send yourself an item.";
-$lang['ITEM_SEND_ERROR4']="Hold up. You cannot send items to players who share the same IP address as you.";
-$lang['ITEM_SEND_SUCC']="You have successfully sent";
-$lang['ITEM_SEND_SUCC1']="to";
-$lang['ITEM_SEND_FORMTITLE']="Enter who you wish to send";
-$lang['ITEM_SEND_FORMTITLE1']="along with the quantity you wish to send. You have";
-$lang['ITEM_SEND_FORMTITLE2']="Alternatively, you can enter a user's id number.";
-$lang['ITEM_SEND_TH']="User";
-$lang['ITEM_SEND_TH1']="Quantity to Send";
-$lang['ITEM_SEND_BTN']="Send Item(s)";
 
 //Slots
 $lang['SLOTS_INFO']="Welcome to the slots machine. Bet some of your hard earned cash for a slim chance to win big! At your level, we've imposed a betting restriction of ";
@@ -992,40 +790,6 @@ $lang['STAFF_PUNISHFED_ERR1']="You need to fill in all the inputs on the previou
 $lang['STAFF_PUNISHFED_ERR2']="You cannot place admins in the federal jail. Please remove their staff privileges them first before trying again.";
 $lang['STAFF_PUNISHFED_ERR3']="This user is already in the federal jail. Please edit their current sentence.";
 $lang['STAFF_PUNISHFED_SUCC']="The user has been placed into the federal jail successfully.";
-
-//Mining
-$lang['MINE_INFO']="Welcome to the dangerous mines, brainless fool. Riches are avaliable for you, if you have the skill. Each mine has its own requirements, and could even have a special pickaxe that you need to use.";
-$lang['MINE_DUNGEON']="Only honorable warriors can mine. Come back when you've served your debt to society.";
-$lang['MINE_INFIRM']="Only healthy warriors can mine. Come back when you've ripped that bandaid off your finger.";
-$lang['MINE_LEVEL']="You currently have a mining level of";
-$lang['MINE_POWER']="Mining Power";
-$lang['MINE_XP']="Mining {$lang['GEN_EXP']}";
-$lang['MINE_SPOTS']="Open Mines";
-$lang['MINE_SETS']="Purchase Power Sets";
-$lang['MINE_BUY_ERROR']="You are attempting to buy more power sets than you currently have available to you. Remember, you get a power set every time you level up your mining level.";
-$lang['MINE_BUY_ERROR_IQ']="You do not have enough IQ to buy that many sets of power. You need ";
-$lang['MINE_BUY_ERROR_IQ1']="yet, you only have ";
-$lang['MINE_BUY_SUCCESS']="Congratulations! You've successfully traded ";
-$lang['MINE_BUY_SUCCESS1']="sets of mining power.";
-$lang['MINE_BUY_INFO']="As of this moment, you can buy";
-$lang['MINE_BUY_INFO1']="sets of mining power. Remember, one set of mining power is equal to 10 mining power. You unlock additional sets by leveling up your mining level. As of now, each set will cost you";
-$lang['MINE_BUY_INFO2']="IQ each. So, how many sets do you wish to purchase?";
-$lang['MINE_BUY_BTN']="Purchase Power Sets";
-$lang['MINE_DO_ERROR']="Invalid mining spot.";
-$lang['MINE_DO_ERROR1']="You are trying to mine at a spot that does not exist.";
-$lang['MINE_DO_ERROR2']="Your mining level is too low to mine here. You need to be, at minimum, mining level";
-$lang['MINE_DO_ERROR3']="You can only mine at a mining spot if you're in the same location.";
-$lang['MINE_DO_ERROR4']="Your IQ level is too low to mine here. You need to have, at minimum, ";
-$lang['MINE_DO_ERROR5']="You do not have enough mining power to mine here. You need to have at least";
-$lang['MINE_DO_ERROR6']="You do not have the required pickaxe to mine here. Come back when you have at least one";
-$lang['MINE_DO_FAIL']="While mining away, you strike a gas pocket and ignite the whole mine. You're found later, barely breathing.";
-$lang['MINE_DO_FAIL1']="You and another miner get into an argument over who saw this piece of ore first. Talking becomes yelling, and yelling becomes pushing, push goes to shove, and the next thing you know, you and him are both fighting on the ground. The guards nearby see this and arrest you both.";
-$lang['MINE_DO_FAIL2']="How unlucky. Your mining attempts proved unsuccessful.";
-$lang['MINE_DO_SUCC']="You struck a piece of rock to reveal a large vein of ore. After a few minutes of carefully excavating, you managed to obtain ";
-$lang['MINE_DO_SUCC1']=" from this vein.";
-$lang['MINE_DO_SUCC2']="While mining away, you managed to expertly mine a piece of ";
-$lang['MINE_DO_BTN1']="Mine Again";
-$lang['MINE_DO_BTN']="Go Back";
 
 //Staff mining
 $lang['STAFF_MINE_TITLE']="Mining Panel";
@@ -1208,26 +972,6 @@ $lang['TZ_SUCC']="You have successfully updated your timezone settings.";
 $lang['TZ_FAIL']="You have specified an invalid timezone setting.";
 $lang['TZ_INFO']="Here, you may change your timezone. This will change all dates on the game for you. This won't speed up any processes. The default timezone is <u>(GMT) Greenwich Mean Time</u>. All game-wide announcements and features will be based on this timezone.";
 
-//Newspaper
-$lang['NP_TITLE']="Newspaper";
-$lang['NP_AD']="Buy an ad";
-$lang['NP_ERROR']="There doesn't appear to be any newspaper ads. Perhaps you should <a href='?action=buyad'>buy</a> and list one?";
-$lang['NP_ADINFO']="Ad Info";
-$lang['NP_ADTEXT']="Ad Text";
-$lang['NP_ADINFO1']="Posted by";
-$lang['NP_ADSTRT']="Start Date";
-$lang['NP_ADEND']="End Date";
-$lang['NP_BUY']="Buying an Ad";
-$lang['NP_BUY_REMINDER']="Remember, buying an add is subject to the game rules. If you post something here that will break a game rule, you will be warned and your ad will be removed. If you find someone abusing the news paper, please let an admin know immediately!";
-$lang['NP_BUY_TD1']="Initial Ad Cost";
-$lang['NP_BUY_TD2']="Ad Runtime";
-$lang['NP_BUY_TD3']="Ad Text";
-$lang['NP_BUY_TD4']="Total Ad Cost";
-$lang['NP_BUY_TD5']="A higher number will rank you higher on the ad list.";
-$lang['NP_BUY_TD6']="Each day will add 1,250 {$lang['INDEX_PRIMCURR']} to your cost.";
-$lang['NP_BUY_TD7']="Each character is worth 5 {$lang['INDEX_PRIMCURR']}.";
-$lang['NP_BUY_BTN']="Place Ad";
-
 //Smelting
 $lang['SMELT_HOME']="Smeltery";
 $lang['SMELT_TH']="Output Item";
@@ -1269,15 +1013,6 @@ $lang['PWR_INFO']="Please enter the email adress tied to your account so we can 
 $lang['PWR_SUCC']="Thank you for submitting the form. If there's an account for the specified email address, it'll be email with a link to start the password reset process. This link will expire in 30 minutes.";
 $lang['PWR_ERR']="Invalid or non-existent recovery token specified.";
 $lang['PWR_SUCC1']="We've email your new password to you. Check your email and/or junk folder for it.";
-
-//Script Errors
-$lang['SCRIPT_ERR']="The email you specified is already taken.";
-$lang['SCRIPT_ERR1']="The email you specified is in an incorrect format. Valid email addresses are written using @domain.com";
-$lang['SCRIPT_ERR2']="You must enter an email address!";
-$lang['SCRIPT_ERR3']="You need to enter an username.";
-$lang['SCRIPT_ERR4']="The username you entered is too short.";
-$lang['SCRIPT_ERR5']="The username you entered is too long.";
-$lang['SCRIPT_ERR6']="The username you entered is already in use.";
 
 //API
 $lang['API_ERROR']="You are trying to view and/or alter a sensitive field, and we've blocked you from doing this.";
@@ -1732,14 +1467,4 @@ $lang['PP_SEC72_2']="will immediately delete personal data, that is data which i
 $lang['PP_SEC8']="8. Questions on Data Protection and Contact / Information, Correction, Deletion and Blocking";
 $lang['PP_SEC8_2']="You are always entitled to request information about any of your data that";
 $lang['PP_SEC8_3']="has stored, as well as their origin and recipient and the purpose it was stored for. If you have any questions about data protection or if you wish to correct, block or delete your profile or any of your personal data, or if you would like to revoke a granted authorization regarding the use of your customer data or e-mail address, please send an in-game message to any in-game staff member (which can be found by visiting the <a href='staff.php'>staff page</a>) and also provide your username and your e-mail address.";
-
-//Email Opt
-$lang['PREF_EMAIL_OPTIN']="Opt-In";
-$lang['PREF_EMAIL_OPTOUT']="Opt-Out";
-$lang['PREF_EMAIL_INFO']="Use this form to either opt-in or opt-out of emails from the game.";
-$lang['PREF_EMAIL']="Opt-Setting";
-$lang['PREF_EMAIL_BTN']="Change Email Opt-Setting";
-$lang['PREF_EMAIL_ERR']="Email opt setting is invalid. You may only opt-in or opt-out.";
-$lang['PREF_EMAIL_SUCC_1']="You have successfully chosen to opt-in to emails sent from the administration about the game.";
-$lang['PREF_EMAIL_SUCC_0']="You have successfully chosen to opt-out of emails sent from the administration about the game.";
 ?>

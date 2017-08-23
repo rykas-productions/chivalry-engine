@@ -18,14 +18,14 @@ if (!($db->num_rows($UIDB)))
 $MUS=($db->fetch_row($db->query("SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 mining_levelup();
 echo "<h2>{$lang['EXPLORE_MINE']}</h2><hr />";
-if ($api->UserStatus($userid,'infirmary') == true)
+if ($api->UserStatus($userid,'infirmary'))
 {
-	alert('danger',$lang["GEN_INFIRM"],$lang['MINE_INFIRM']);
+	alert('danger',"Unconscious!","You cannot go mining if you're in the infirmary.");
 	die($h->endpage());
 }
-if ($api->UserStatus($userid,'dungeon') == true)
+if ($api->UserStatus($userid,'dungeon'))
 {
-	alert('danger',$lang["GEN_DUNG"],$lang['MINE_DUNGEON']);
+	alert('danger',"Locked Up!","You cannot go mining if you're in the dungeon.");
 	die($h->endpage());
 }
 if (!isset($_GET['action']))
@@ -46,22 +46,23 @@ switch ($_GET['action'])
 }
 function home()
 {
-    global $MUS,$db,$h,$lang,$api;
+    global $MUS,$db,$api;
     $mineen = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
     $minexp = min(round($MUS['miningxp'] / $MUS['xp_needed'] * 100), 100);
     $mineenp = 100 - $mineen;
     $minexpp = 100 - $minexp;
-    echo "{$lang['MINE_INFO']}
+    echo "Welcome to the dangerous mines, brainless moron! If you're lucky, you'll strike riches. If not... the mine
+        will eat you alive.
     <br />
 	<table class='table table-bordered'>
 		<tr>
 			<th colspan='2'>
-				{$lang['MINE_LEVEL']} {$MUS['mining_level']}.
+				You are mining level {$MUS['mining_level']}.
 			</th>
 		</tr>
 		<tr>
 			<th>
-				{$lang['MINE_POWER']}
+				Mining Power
 			</th>
 			<td>
 				<div class='progress'>
@@ -73,7 +74,7 @@ function home()
 		</tr>
 		<tr>
 			<th>
-				{$lang['MINE_XP']}
+				Mining Experience
 			</th>
 			<td>
 				<div class='progress'>
@@ -84,7 +85,7 @@ function home()
 			</td>
 		</tr>
 	</table>
-    <u>{$lang['MINE_SPOTS']}</u><br />";
+    <u>Open Mines</u><br />";
     $minesql=$db->query("SELECT * FROM `mining_data` ORDER BY `mine_level` ASC");
     while ($mines = $db->fetch_row($minesql))
     {
@@ -92,12 +93,12 @@ function home()
     }
     
     echo "<br /><br />
-    [<a href='?action=buypower'>{$lang['MINE_SETS']}</a>]";
+    [<a href='?action=buypower'>Buy Power Sets</a>]";
 
 }
 function buypower()
 {
-    global $userid,$db,$ir,$MUS,$h,$lang,$api;
+    global $userid,$db,$ir,$MUS,$h,$api;
     $CostForPower = $MUS['mining_level']*75+10+$MUS['mining_level']; //Cost formula, in IQ.
     if (isset($_POST['sets']) && ($_POST['sets'] > 0))
     {
@@ -105,12 +106,12 @@ function buypower()
         $totalcost=$sets*$CostForPower;
         if ($sets > $MUS['buyable_power'])
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_BUY_ERROR']);
+            alert('danger',"Uh Oh!","You are trying to buy more sets of power than you currently have available to you.");
             die($h->endpage());
         }
         elseif (($ir['iq'] < $totalcost))
         {
-			alert('danger',$lang['ERROR_GENERIC'],"{$lang['MINE_BUY_ERROR_IQ']}" . number_format($totalcost) . " {$lang['MINE_BUY_ERROR_IQ1']}" . number_format($ir['iq']));
+			alert('danger',"Uh Oh!","You need " . number_format($totalcost) . " to buy the amount of sets you want to. You only have " . number_format($ir['iq']));
 			die($h->endpage());
         
         }
@@ -121,26 +122,28 @@ function buypower()
 						`max_miningpower` = `max_miningpower` + ($sets*10) 
 						WHERE `userid` = {$userid}");
 			$api->SystemLogsAdd($userid,'mining',"Exchanged {$totalcost} IQ for {$sets} sets of mining power.");
-			alert('success',$lang['ERROR_SUCCESS'],"{$lang['MINE_BUY_SUCCESS']}" . number_format($totalcost) . " {$lang['GEN_IQ']} {$lang['GEN_FOR']} {$sets} {$lang['MINE_BUY_SUCCESS1']}",true,'mine.php');
+			alert('success',"Success!","You have traded " . number_format($totalcost) . " IQ for {$sets} of mining power.",true,'mine.php');
         }
     }
     else
     {
-        echo "{$lang['MINE_BUY_INFO']} {$MUS['buyable_power']} {$lang['MINE_BUY_INFO1']} " . number_format($CostForPower) . " {$lang['MINE_BUY_INFO2']}";
+        echo "You can buy {$MUS['buyable_power']} sets of mining power. One set is equal to 10 mining power. You unlock
+            more sets by leveling your mining level. Each set will cost you " . number_format($CostForPower) . " IQ.
+            How many do you wish to buy?";
         echo "<br />
         <form method='post'>
             <input type='number' class='form-control' value='{$MUS['buyable_power']}' min='1' max='{$MUS['buyable_power']}' name='sets' required='1'>
             <br />
-            <input type='submit' class='btn btn-primary' value='{$lang['MINE_BUY_BTN']}'>
+            <input type='submit' class='btn btn-primary' value='Buy Power'>
         </form>";
     }
 }
 function mine()
 {
-    global $db,$MUS,$ir,$userid,$lang,$api,$h;
+    global $db,$MUS,$ir,$userid,$api,$h;
     if (!isset($_GET['spot']) || empty($_GET['spot']))
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR'],true,'mine.php');
+        alert('danger',"Uh Oh!","Please select the mine you wish to mine at.",true,'mine.php');
 		die($h->endpage());
     }
     else
@@ -149,7 +152,7 @@ function mine()
         $mineinfo=$db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$spot}");
         if (!($db->num_rows($mineinfo)))
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR1'],true,'mine.php');
+            alert('danger',"Uh Oh!","The mine you are trying to mine at does not exist.",true,'mine.php');
 			die($h->endpage());
         }
         else
@@ -159,27 +162,27 @@ function mine()
 			$i=$db->fetch_row($query);
             if ($MUS['mining_level'] < $MSI['mine_level'])
             {
-				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR2'] . " {$MSI['mine_level']}",true,'mine.php');
+				alert('danger',"Uh Oh!","You are too low level to mine here. You need mining level {$MSI['mine_level']} to mine here.",true,'mine.php');
 				die($h->endpage());
             }
             elseif ($ir['location'] != $MSI['mine_location'])
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR3'],true,'mine.php');
+                alert('danger',"Uh Oh!","To mine at a mine, you need to be in the same town its located.",true,'mine.php');
 				die($h->endpage());
             }
             elseif ($ir['iq'] < $MSI['mine_iq'])
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR4'] . " {$MSI['mine_iq']}",true,'mine.php');
+                alert('danger',"Uh Oh!","Your IQ is too low to mine here. You need {$MSI['mine_iq']} IQ.",true,'mine.php');
 				die($h->endpage());
             }
             elseif ($MUS['miningpower'] < $MSI['mine_power_use'])
             {
-				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR5'] . " {$MSI['mine_power_use']}",true,'mine.php');
+				alert('danger',"Uh Oh!","You do not have enough mining power to mine here. You need {$MSI['mine_power_use']}.",true,'mine.php');
 				die($h->endpage());
             }
 			elseif(!$i['inv_itemid'] == $MSI['mine_pickaxe'])
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_ERROR6'] . " " . $api->SystemItemIDtoName($MSI['mine_pickaxe']),true,"mine.php");
+				alert('danger',"Uh Oh!","You do not have the required pickaxe to mine here. You need a " . $api->SystemItemIDtoName($MSI['mine_pickaxe']),true,"mine.php");
 				die($h->endpage());
 			}
             else
@@ -206,19 +209,19 @@ function mine()
                     $NegTime=Random(5,25)*($MUS['mining_level']*.25);
                     if ($NegRolls == 1)
                     {
-                        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL'],false);
+                        alert('danger',"Uh Oh!","You begin to mine and touch off a natural gas leak. Kaboom.",false);
 						$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and was put into the infirmary for {$NegTime} minutes.");
 						$api->UserStatusSet($userid,'infirmary',$NegTime,"Mining Explosion");
                     }
                     elseif ($NegRolls == 2)
                     {
-                        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL1'],false);
+                        alert('danger',"Uh Oh!","You hit a vein of gems, except a miner nearby gets jealous and tries to take your gems! You knock them out cold, and a guard arrests you. Wtf.",false);
 						$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and was put into the dungeon for {$NegTime} minutes.");
 						$api->UserStatusSet($userid,'dungeon',$NegTime,"Mining Selfishness");
                     }
                     else
                     {
-                        alert('danger',$lang['ERROR_GENERIC'],$lang['MINE_DO_FAIL2'],false);
+                        alert('danger',"Uh Oh!","You failed to mine anything of use.",false);
 						$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and was unsuccessful.");
                     }
                 }
@@ -228,7 +231,7 @@ function mine()
                     if ($PosRolls == 1)
                     {
                         $flakes=Random($MSI['mine_copper_min'],$MSI['mine_copper_max']);
-						alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']) . $lang['MINE_DO_SUCC1'],false);
+						alert('success',"Success!","You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']),false);
                         $api->UserGiveItem($userid,$MSI['mine_copper_item'],$flakes);
 						$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_copper_item'])}.");
                         $xpgain=$flakes*0.15;
@@ -237,7 +240,7 @@ function mine()
                     elseif ($PosRolls == 2)
                     {
                         $flakes=Random($MSI['mine_silver_min'],$MSI['mine_silver_max']);
-                        alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']) . $lang['MINE_DO_SUCC1'],false);
+                        alert('success',"Success!","You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']),false);
                         $api->UserGiveItem($userid,$MSI['mine_silver_item'],$flakes);
 						$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_silver_item'])}.");
                         $xpgain=$flakes*0.35;
@@ -245,7 +248,7 @@ function mine()
                     else
                     {
                         $flakes=Random($MSI['mine_gold_min'],$MSI['mine_gold_max']);
-                        alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC'] . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']) . $lang['MINE_DO_SUCC1'],false);
+                        alert('success',"Success!","You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']),false);
                         $api->UserGiveItem($userid,$MSI['mine_gold_item'],$flakes);
 						$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_gold_item'])}.");
                         $xpgain=$flakes*0.45;
@@ -253,14 +256,14 @@ function mine()
                 }
                 else
                 {
-					alert('success',$lang['ERROR_SUCCESS'],$lang['MINE_DO_SUCC2'] . $api->SystemItemIDtoName($MSI['mine_gem_item']),false);
+					alert('success',"Success!","You have carefully excavated out a single" . $api->SystemItemIDtoName($MSI['mine_gem_item']),false);
                     $api->UserGiveItem($userid,$MSI['mine_gem_item'],1);
 					$api->SystemLogsAdd($userid,'mining',"Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined 1x {$api->SystemItemIDtoName($MSI['mine_gem_item'])}.");
                     $xpgain=3*$MUS['mining_level'];
                 }
                 echo"<hr />
-                [<a href='?action=mine&spot={$spot}'>{$lang['MINE_DO_BTN1']}</a>]<br />
-                [<a href='mine.php'>{$lang['MINE_DO_BTN']}</a>]";
+                [<a href='?action=mine&spot={$spot}'>Mine Again</a>]<br />
+                [<a href='mine.php'>Pack it Up</a>]";
                 $db->query("UPDATE `mining` SET `miningxp`=`miningxp`+ {$xpgain}, `miningpower`=`miningpower`-'{$MSI['mine_power_use']}' WHERE `userid` = {$userid}");
             }
         }

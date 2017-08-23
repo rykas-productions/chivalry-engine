@@ -10,31 +10,14 @@ $housequery = 1;
 require_once('globals.php');
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/installer.php') && $ir['user_level'] == 'Admin')
 {
-    alert('danger',$lang['ERROR_SECURITY'],$lang['ALERT_INSTALLER']);
+    alert('danger',"Security Error!","Installer file detected and not locked. Please delete the installer immediately!");
 }
 $_POST['pn_update'] = (isset($_POST['pn_update'])) ? strip_tags(stripslashes($_POST['pn_update'])) : '';
 if (!empty($_POST['pn_update']))
 {
     if (strlen($_POST['pn_update']) > 65655)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ERRDE_PN'],false);
-    }
-    else
-    {
-        $pn_update_db = $db->escape($_POST['pn_update']);
-        $db->query(
-                "UPDATE `users`
-        			SET `personal_notes` = '{$pn_update_db}'
-        			WHERE `userid` = {$userid}");
-        $ir['personal_notes'] = $_POST['pn_update'];
-        alert('success',$lang['ERROR_SUCCESS'],$lang['INDEX_PNSUCCESS'],false);
-    }
-}
-if (!empty($_POST['pn_update']))
-{
-    if (strlen($_POST['pn_update']) > 65655)
-    {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ERRDE_PN'],false);
+        alert('danger',"Uh Oh!","You can only store 65,655 characters in your personal notepad.",false);
     }
     else
     {
@@ -43,7 +26,7 @@ if (!empty($_POST['pn_update']))
         			SET `personal_notes` = '{$pn_update_db}'
         			WHERE `userid` = {$userid}");
         $ir['personal_notes'] = $_POST['pn_update'];
-        alert('success',$lang['ERROR_SUCCESS'],$lang['INDEX_PNSUCCESS'],false);
+        alert('success',"Success!","You have successfully updated your personal notepad.",false);
     }
 }
 echo "Welcome back, {$ir['username']}!<br />";
@@ -52,42 +35,42 @@ echo "<table class='table table-hover table-bordered'>
 <tbody>
 	<tr>
 		<td>
-		{$lang['INDEX_LEVEL']}: " . number_format($ir['level']) . "
+		Level: " . number_format($ir['level']) . "
 		</td>
 		<td>
-		XP: " . number_format($ir['xp']) . " / " . number_format($ir['xp_needed']) . "
-		</td>
-	</tr>
-	<tr>
-		<td>
-		{$lang['INDEX_CLASS']}: {$ir['class']}
-		</td>
-		<td>
-		{$lang['INDEX_VIP']}: " . number_format($ir['vip_days']) . "
+		Experience: " . number_format($ir['xp']) . " / " . number_format($ir['xp_needed']) . "
 		</td>
 	</tr>
 	<tr>
 		<td>
-		{$lang['INDEX_PRIMCURR']}: " . number_format($ir['primary_currency']) . "
+		Class: {$ir['class']}
 		</td>
 		<td>
-		{$lang['INDEX_SECCURR']}: " . number_format($ir['secondary_currency']) . "
-		</td>
-	</tr>
-	<tr>
-		<td>
-		HP: " . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . "
-		</td>
-		<td>
-		{$lang['INDEX_ENERGY']}: " . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) . "
+		VIP Days: " . number_format($ir['vip_days']) . "
 		</td>
 	</tr>
 	<tr>
 		<td>
-		{$lang['INDEX_WILL']}: " . number_format($ir['will']) . " / " . number_format($ir['maxwill']) . "
+		Primary Currency: " . number_format($ir['primary_currency']) . "
 		</td>
 		<td>
-		{$lang['INDEX_BRAVE']}: " . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . "
+		Secondary Currency: " . number_format($ir['secondary_currency']) . "
+		</td>
+	</tr>
+	<tr>
+		<td>
+		Health: " . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . "
+		</td>
+		<td>
+		Energy: " . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) . "
+		</td>
+	</tr>
+	<tr>
+		<td>
+		Will: " . number_format($ir['will']) . " / " . number_format($ir['maxwill']) . "
+		</td>
+		<td>
+		Bravery: " . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . "
 		</td>
 	</tr>
 </tbody>";
@@ -110,58 +93,58 @@ echo "
 <table class='table table-bordered'>
     <tr>
         <th width='25%'>
-            {$lang['GEN_STR']}
+            Strength
         </th>
         <td>
-            {$StrengthFormat} ({$lang["GEN_RANKED"]} {$StrengthRank})
+            {$StrengthFormat} (Ranked: {$StrengthRank})
         </td>
     </tr>
     <tr>
         <th width='25%'>
-            {$lang['GEN_AGL']}
+            Agility
         </th>
         <td>
-            {$AgilityFormat} ({$lang["GEN_RANKED"]} {$AgilityRank})
+            {$AgilityFormat} (Ranked: {$AgilityRank})
         </td>
     </tr>
     <tr>
         <th width='25%'>
-            {$lang['GEN_GRD']}
+            Guard
         </th>
         <td>
-            {$GuardFormat} ({$lang["GEN_RANKED"]} {$GuardRank})
+            {$GuardFormat} (Ranked: {$GuardRank})
         </td>
     </tr>
     <tr>
         <th width='25%'>
-            {$lang['GEN_LAB']}
+            Labor
         </th>
         <td>
-            {$LaborFormat} ({$lang["GEN_RANKED"]} {$LaborRank})
+            {$LaborFormat} (Ranked: {$LaborRank})
         </td>
     </tr>
     <tr>
         <th width='25%'>
-            {$lang['GEN_IQ']}
+            IQ
         </th>
         <td>
-            {$IQFormat} ({$lang["GEN_RANKED"]} {$IQRank})
+            {$IQFormat} (Ranked: {$IQRank})
         </td>
     </tr>
     <tr>
         <th width='25%'>
-            {$lang['GEN_TOTAL']}
+            Total Stats
         </th>
         <td>
-            {$AllFourFormat} ({$lang["GEN_RANKED"]} {$IQRank})
+            {$AllFourFormat} (Ranked: {$IQRank})
         </td>
     </tr>
 </table>
 <form method='post'>
     <div class='form-group'>
-        <label for='pn_update'>{$lang['INDEX_PN']}</label>
+        <label for='pn_update'>Your Personal Notepad</label>
         <textarea class='form-control' rows='5' name='pn_update' id='pn_update'>{$ir['personal_notes']}</textarea>
     </div>
-    <button type='submit' class='btn btn-primary'>{$lang['INDEX_UPDATE']}</button>
+    <button type='submit' class='btn btn-primary'>Update Notepad</button>
 </form>";
 $h->endpage();

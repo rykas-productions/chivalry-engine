@@ -21,7 +21,7 @@ if (isset($_SESSION['userid']))
     if (isset($_SESSION['attacking']) && $_SESSION['attacking'] > 0)
     {
         require_once('globals_nonauth.php');
-        alert("warning",$lang['ERROR_GENERIC'],$lang['MENU_XPLOST'],false);
+        alert("warning","Uh Oh!","You have logged and and lost all your experience.",false);
 		$db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = {$sessid}");
 		$_SESSION['attacking'] = 0;
         session_regenerate_id(true);
