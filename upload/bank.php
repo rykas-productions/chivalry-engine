@@ -40,46 +40,46 @@ else
         if ($ir['primary_currency'] >= $bank_cost)
         {
             
-			alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['BANK_SUCCESS']} " . number_format($bank_cost),true,'bank.php');
+			alert('success',"Success!","You have successfully bought a bank account for " . number_format($bank_cost),true,'bank.php');
 			$api->UserTakeCurrency($userid,'primary',$bank_cost);
 			$api->UserInfoSet($userid,"bank",0);
         }
         //Player is too poor to afford account.
         else
         {
-            alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['BANK_FAIL']} " . number_format($bank_cost),true,'bank.php');
+            alert('danger',"Uh oh!","You do not have enough cash to buy a bank account. You need at least
+                " . number_format($bank_cost),true,'bank.php');
         }
     }
     else
     {
-        echo "{$lang['BANK_BUY1']}" . number_format($bank_cost) . " {$lang['INDEX_PRIMCURR']}!<br /> <a href='bank.php?buy'>{$lang['BANK_BUYYES']}</a>";
+        echo "Do you wish to buy a bank account? It'll cost you " . number_format($bank_cost) . "!<br />
+            <a href='bank.php?buy'>Yes, please!</a>";
 		$api->SystemLogsAdd($userid,'bank','Purchased bank account');
 	}
 }
 function index()
 {
-    global $lang,$ir,$bank_maxfee,$bank_feepercent,$api;
-    echo "<b>{$lang['BANK_HOME']}" . number_format($ir['bank'])
-            . " {$lang['BANK_HOME1']}</b><br />
-				{$lang['BANK_HOME2']}<br />
+    global $ir,$bank_maxfee,$bank_feepercent;
+    echo "<b>You current have " . number_format($ir['bank']) . " in your bank account.</b><br />
+				At the end of each and everyday, your bank balance will increase by 2%. You must be active within the
+				past 24 hours for this to effect you.<br />
 				<table class='table table-bordered'>
 					<tr>
 						<td width='50%'>
-							{$lang['BANK_DEPOSIT_WARNING']} 
-							{$bank_feepercent}% 
-							{$lang['BANK_DEPOSITE_WARNING1']} " . number_format($bank_maxfee) . ".
+							It'll cost you {$bank_feepercent}% of the money you deposit, rounded up. (Max " . number_format($bank_maxfee) . ".)
 							<form action='bank.php?action=deposit' method='post'>
-								<b>{$lang['BANK_AMOUNT']}</b><br />
+								<b>Your Cash</b><br />
 								<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' required='1' name='deposit' value='{$ir['primary_currency']}'>
-								<input type='submit' value='{$lang['BANK_DEPOSIT']}' class='btn btn-primary'>
+								<input type='submit' value='Deposit' class='btn btn-primary'>
 							</form>
 						</td>
 						<td>
-							{$lang['BANK_WITHDRAW_WARNING']}
+							It doesn't cost you anything to withdraw from your account.
 							<form action='bank.php?action=withdraw' method='post'>
-								<b>{$lang['BANK_AMOUNT']}</b><br />
+								<b>Your Bank Balance</b><br />
 								<input type='number' min='1' max='{$ir['bank']}' class='form-control' required='1' name='withdraw' value='{$ir['bank']}'>
-								<input type='submit' value='{$lang['BANK_WITHDRAW']}' class='btn btn-primary'>
+								<input type='submit' value='Withdraw' class='btn btn-primary'>
 							</form>
 						</td>
 					</tr>
@@ -87,12 +87,12 @@ function index()
 }
 function deposit()
 {
-    global $db,$ir,$userid,$lang,$bank_maxfee,$bank_feepercent,$api;
+    global $ir,$userid,$bank_maxfee,$bank_feepercent,$api;
     $_POST['deposit'] = abs($_POST['deposit']);
     //User is trying to deposit more than they have.
     if ($_POST['deposit'] > $ir['primary_currency'])
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['BANK_D_ERROR'],true,'bank.php');
+        alert('danger',"Uh Oh!","You are trying to deposit more cash than you current have!",true,'bank.php');
     }
     else
     {
@@ -107,19 +107,21 @@ function deposit()
         //Update user's bank and primary currency info.
 		$api->UserTakeCurrency($userid,'primary',$_POST['deposit']);
 		$api->UserInfoSetStatic($userid,"bank",$ir['bank']);
-		alert('success',$lang['ERROR_SUCCESS'],"{$lang['BANK_D_SUCCESS']} " . number_format($_POST['deposit']) . "{$lang['BANK_D_SUCCESS1']}" . number_format($fee) . "{$lang['BANK_D_SUCCESS2']} " . number_format($gain) . "{$lang['BANK_D_SUCCESS3']} " . number_format($ir['bank']) . "{$lang['BANK_D_SUCCESS4']}",true,'bank.php');
+		alert('success',"Success!","You hand over " . number_format($_POST['deposit']) . " to be deposited. After the
+		    fee (" . number_format($fee) . ") is taken from your deposit, " . number_format($gain) . " is added to your
+		    bank account. You now have " . number_format($ir['bank']) . " in your account.", true, 'bank.php');
 		//Log bank transaction.
-        $api->SystemLogsAdd($userid,'bank',"Deposited " . number_format($_POST['deposit']) . " Primary Currency.");
+        $api->SystemLogsAdd($userid,'bank',"Deposited " . number_format($_POST['deposit']) . ".");
 	}
 }
 function withdraw()
 {
-	global $db, $ir, $lang, $userid, $h, $api;
+	global $ir,$userid, $api;
 	$_POST['withdraw'] = abs($_POST['withdraw']);
     //User is trying to withdraw more than they have stored.
 	if ($_POST['withdraw'] > $ir['bank'])
     {
-		alert('danger',$lang['ERROR_GENERIC'],$lang['BANK_W_FAIL'],true,'bank.php');
+		alert('danger',"Uh Oh!","You are trying to withdraw more cash than you currently have available in your account.",true,'bank.php');
     }
 	else
 	{
@@ -128,9 +130,10 @@ function withdraw()
         //Update user's info.
 		$api->UserGiveCurrency($userid,'primary',$_POST['withdraw']);
 		$api->UserInfoSetStatic($userid,"bank",$ir['bank']);
-		alert('success',$lang['ERROR_SUCCESS'],"{$lang['BANK_W_SUCCESS']} " . number_format($_POST['withdraw']) . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS1']} " . $ir['bank'] . " {$lang['INDEX_PRIMCURR']} {$lang['BANK_W_SUCCESS2']}",true,'bank.php');
+		alert('success',"Success!","You have successfully withdrew " . number_format($_POST['withdraw']) . " from your
+		    bank account. You have now have " . number_format($ir['bank']) . " left in your account.",true,'bank.php');
 		//Log transaction.
-        $api->SystemLogsAdd($userid,'bank',"Withdrew " . number_format($_POST['withdraw']) . " Primary Currency.");
+        $api->SystemLogsAdd($userid,'bank',"Withdrew " . number_format($_POST['withdraw']) . ".");
 	}
 }
 $h->endpage();

@@ -22,7 +22,7 @@ if (isset($_GET['property']) && is_numeric($_GET['property']))
     if ($db->num_rows($npq) == 0)
     {
         $db->free_result($npq);
-		alert('danger',$lang["ERROR_GENERIC"],$lang['ESTATES_ERROR1'],true,'estates.php');
+		alert('danger',"Uh Oh!","The estate you are trying to purchase does not exist.",true,'estates.php');
 		die($h->endpage());
     }
     $np = $db->fetch_row($npq);
@@ -30,33 +30,37 @@ if (isset($_GET['property']) && is_numeric($_GET['property']))
     //Estate's will is lower than user's current estate.
     if ($np['house_will'] < $mp['house_will'])
     {
-        alert('danger',$lang["ERROR_GENERIC"],$lang['ESTATES_ERROR2'],true,'estates.php');
+        alert('danger',"Uh Oh!","The house you are trying to buy is worse than what you currently have.",true,'estates.php');
 		die($h->endpage());
     }
     //User is trying to buy the same estate.
 	else if ($np['house_will'] == $mp['house_will'])
     {
-        alert('danger',$lang["ERROR_GENERIC"],$lang['ESTATES_ERROR4'],true,'estates.php');
+        alert('danger',"Uh Oh!","You cannot buy the same house twice.",true,'estates.php');
 		die($h->endpage());
     }
     //User does not have enoguh primary currency for the new estatte.
     else if ($np['house_price'] > $ir['primary_currency'])
     {
-        alert('danger',$lang["ERROR_GENERIC"],$lang['ESTATES_ERROR3'],true,'estates.php');
+        alert('danger',"Uh Oh!","You do not have enough cash to buy this house.",true,'estates.php');
 		die($h->endpage());
     }
     //User is too low leveled for the estate.
 	else if ($np['house_level'] > $ir['level'])
 	{
-		alert('danger',$lang["ERROR_GENERIC"],$lang['ESTATES_ERROR6'],true,'estates.php');
+		alert('danger',"Uh Oh!","You are not a high level enough to buy this estate.",true,'estates.php');
 		die($h->endpage());
 	}
     //User passes all checks.
     else
     {
         //Update user's max will, remove currency, and set will to 0.
-        $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$np['house_price']} , `will` = 0, `maxwill` = {$np['house_will']} WHERE `userid` = $userid");
-        alert('success',$lang["ERROR_SUCCESS"],"{$lang['ESTATES_SUCCESS1']} {$np['house_name']} {$lang['GEN_FOR_S']} {$np['house_price']} {$lang['INDEX_PRIMCURR']}",true,'estates.php');
+        $db->query("UPDATE `users`
+                    SET `primary_currency` = `primary_currency` - {$np['house_price']} ,
+                    `will` = 0, `maxwill` = {$np['house_will']}
+                    WHERE `userid` = $userid");
+        alert('success',"Success!","You have successfully bought the {$np['house_name']} estate for
+            " . number_format($np['house_price']) . "!",true,'estates.php');
 		die($h->endpage());
     }
 }
@@ -66,7 +70,7 @@ else if (isset($_GET['sellhouse']))
     //User does not own an estate.
     if ($ir['maxwill'] == 100)
     {
-        alert('danger',"{$lang["ERROR_GENERIC"]}","{$lang['ESTATES_ERROR5']}");
+        alert('danger',"Uh Oh!","You cannot sell your estate if you don't have one!");
     }
     //User sells estate.
     else
@@ -74,33 +78,34 @@ else if (isset($_GET['sellhouse']))
         //Give user 75% of the estate's cost, set max will to 100, will to 0.
 		$price=round($mp['house_price']*0.75);
         $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$price}, `will` = 0, `maxwill` = 100 WHERE `userid` = $userid");
-		alert('success',$lang["ERROR_SUCCESS"],"{$lang['ESTATES_SUCCESS2']}",true,'estates.php');
+		alert('success',"Success!","You have successfully sold your estate for " . number_format($price) . "!",true,'estates.php');
     }
 }
 else
 {
-    echo "{$lang['ESTATES_START']} <b>{$mp['house_name']}</b><br />
-		{$lang['ESTATES_INFO']}<br />";
+    echo "Your current estate is the <b>{$mp['house_name']}</b>.<br />
+		The houses you can buy are listed below. Click a house to buy it. Your Will helps determine how much you
+		gain while training, and it helps with committing crimes.<br />";
     //User own an estate.
     if ($ir['maxwill'] > 100)
     {
-        echo "<a href='?sellhouse'>{$lang['ESTATES_SELL']}</a><br />";
+        echo "<a href='?sellhouse'>Sell Your Estate</a><br />";
     }
     $hq = $db->query("SELECT * FROM `estates` WHERE `house_will` > {$ir['maxwill']} ORDER BY `house_will` ASC");
 	echo "
 	<table class='table table-bordered'>
 	<tr>
 		<th>
-			{$lang['ESTATES_TABLE1']}
+			Estate Name
 		</th>
 		<th>
-			{$lang['ESTATES_TABLE2']}
+			Level Requirement
 		</th>
 		<th>
-			{$lang['ESTATES_TABLE3']}
+			Cost
 		</th>
 		<th>
-			{$lang['ESTATES_TABLE4']}
+			Will Level
 		</th>
 	</tr>";
     //List all game's estates.

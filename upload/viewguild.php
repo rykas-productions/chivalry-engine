@@ -9,14 +9,14 @@
 require('globals.php');
 if (!$ir['guild'])
 {
-    alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_ERROR1'],true,'index.php');
+    alert('danger',"Uh Oh!","You are not in a guild.",true,'index.php');
 }
 else
 {
 	$gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}");
     if ($db->num_rows($gq) == 0)
     {
-        alert('danger',"{$lang['ERROR_GENERIC']}","{$lang['VIEWGUILD_ERROR2']}");
+        alert('danger',"Uh Oh!","Your guild's data could not be selected. Please contact an admin immediately.");
         die($h->endpage());
     }
     $gd = $db->fetch_row($gq);
@@ -24,10 +24,10 @@ else
 	$wq=$db->query("SELECT COUNT(`gw_id`) FROM `guild_wars` WHERE (`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) AND `gw_winner` = 0");
 	if ($db->fetch_single($wq) > 0)
 	{
-		alert('warning',$lang['VIEWGUILD_WAR_ALERT'],"{$lang['VIEWGUILD_WAR_INFO']} {$db->fetch_single($wq)} {$lang['VIEWGUILD_WAR_INFO1']} <a href='?action=warview'>{$lang["GEN_HERE"]}</a>.",false);
+		alert('warning',"Guild Wars in Progress","Your guild is in {$db->fetch_single($wq)} wars. View active wars <a href='?action=warview'>here</a>.",false);
 	}
     echo "
-	<h3><u>{$lang['VIEWGUILD_TITLE']} {$gd['guild_name']}.</u></h3>
+	<h3><u>Your Guild, {$gd['guild_name']}</u></h3>
    	";
 	if (!isset($_GET['action']))
 	{
@@ -66,28 +66,28 @@ else
 }
 function home()
 {
-	global $db,$userid,$ir,$gd,$lang,$api;
+	global $db,$userid,$ir,$gd;
 	echo "
     <table class='table table-bordered'>
     		<tr>
-    			<td><a href='?action=summary'>{$lang['VIEWGUILD_HOME_SUMMARY']}</a></td>
-    			<td><a href='?action=donate'>{$lang['VIEWGUILD_HOME_DONATE']}</a></td>
+    			<td><a href='?action=summary'>Summary</a></td>
+    			<td><a href='?action=donate'>Donate</a></td>
     		</tr>
     		<tr>
-    			<td><a href='?action=members'>{$lang['VIEWGUILD_HOME_USERS']}</a></td>
-    			<td><a href='?action=crimes'>{$lang['VIEWGUILD_HOME_CRIME']}</a></td>
+    			<td><a href='?action=members'>Members</a></td>
+    			<td><a href='?action=crimes'>Crimes</a></td>
     		</tr>
     		<tr>
-    			<td><a href='?action=leave'>{$lang['VIEWGUILD_HOME_LEAVE']}</a></td>
-				<td><a href='?action=atklogs'>{$lang['VIEWGUILD_HOME_ATKLOG']}</a></td>
+    			<td><a href='?action=leave'>Leave Guild</a></td>
+				<td><a href='?action=atklogs'>Attack Logs</a></td>
     		</tr>
     		<tr>
-    			<td><a href='?action=armory'>{$lang['VIEWGUILD_HOME_ARMORY']}</a></td>
+    			<td><a href='?action=armory'>Armory</a></td>
     			<td></td>
        ";
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
     {
-        echo "</tr><tr><td><a href='?action=staff&act2=idx'>{$lang['VIEWGUILD_HOME_STAFF']}</a>";
+        echo "</tr><tr><td><a href='?action=staff&act2=idx'>Staff Room</a>";
     }
     else
     {
@@ -100,22 +100,22 @@ function home()
 	<br />
 	<table class='table table-bordered'>
 		<tr>
-			<td>{$lang['VIEWGUILD_HOME_ANNOUNCE']}</td>
+			<td>Guild Announcement</td>
 		</tr>
 		<tr>
 			<td>{$gd['guild_announcement']}</td>
 		</tr>
 	</table>
 	<br />
-	<b>{$lang['VIEWGUILD_HOME_EVENT']}</b>
+	<b>Last 10 Guild Notifications</b>
 	<br />
    	";
     $q = $db->query("SELECT * FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']} ORDER BY `gn_time` DESC  LIMIT 10");
     echo "
 	<table class='table table-bordered'>
 		<tr>
-			<th>{$lang['VIEWGUILD_HOME_EVENTTIME']}</th>
-			<th>{$lang['VIEWGUILD_HOME_EVENTTEXT']}</th>
+			<th>Notification Info</th>
+			<th>Notification Content</th>
 		</tr>
    	";
     while ($r = $db->fetch_row($q))
@@ -133,17 +133,17 @@ function home()
 }
 function summary()
 {
-	global $db,$userid,$ir,$gd,$lang,$api;
+	global $db,$gd;
 	echo "
 	<table class='table table-bordered'>
 	<tr>
 		<th colspan='2'>
-			{$lang['VIEWGUILD_SUMMARY_TITLE']}
+			Guild Information
 		</th>
 	</tr>
 	<tr>
 		<th>
-			{$lang['VIEWGUILD_SUMMARY_OWNER']}
+			Leader
 		</th>
 		<td>
        ";
@@ -155,13 +155,13 @@ function summary()
     }
     else
     {
-        echo "{$lang['VIEWGUILD_NA']}";
+        echo "N/A";
     }
 	echo"</td>
 	</tr>
 	<tr>
 		<th>
-			{$lang['VIEWGUILD_SUMMARY_COOWNER']}
+			Co-Leader
 		</th>
 		<td>";
     $db->free_result($pq);
@@ -173,7 +173,7 @@ function summary()
     }
     else
     {
-        echo "{$lang['VIEWGUILD_NA']}";
+        echo "N/A";
     }
 	echo"</td>
 	</tr>";
@@ -182,7 +182,7 @@ function summary()
     echo "
 	<tr>
 		<th>
-			{$lang['VIEWGUILD_SUMMARY_MEM']}
+			Members
 		</th>
 		<td>
 			" . $db->fetch_single($cnt) . " / " . $gd['guild_level']*5 . "
@@ -190,7 +190,7 @@ function summary()
 	</tr>
 	<tr>
 		<th>
-			{$lang['VIEWGUILD_SUMMARY_LVL']}
+			Level
 		</th>
 		<td>
 			{$gd['guild_level']}
@@ -198,7 +198,7 @@ function summary()
 	</tr>
 	<tr>
 		<th>
-			{$lang['VIEWGUILD_SUMMARY_XP']}
+			Experience
 		</th>
 		<td>
 			{$gd['guild_xp']}
@@ -206,7 +206,7 @@ function summary()
 	</tr>
 	<tr>
 		<th>
-			{$lang['INDEX_PRIMCURR']}
+			Primary Currency
 		</th>
 		<td>
 			" . number_format($gd['guild_primcurr']) . " / " . number_format($gd['guild_level'] * 1500000) . "
@@ -214,45 +214,45 @@ function summary()
 	</tr>
 	<tr>
 		<th>
-			{$lang['INDEX_SECCURR']}
+			Secondary Currency
 		</th>
 		<td>
 			" . number_format($gd['guild_seccurr']) . "
 		</td>
 	</tr>
       </table>
-	  <a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
+	  <a href='viewguild.php'>Go Back</a>";
 }
 function donate()
 {
-	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	global $db,$userid,$ir,$gd,$api,$h;
 	if (isset($_POST['primary']))
 	{
 		$_POST['primary'] = (isset($_POST['primary']) && is_numeric($_POST['primary'])) ? abs(intval($_POST['primary'])) : 0;
 		$_POST['secondary'] = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs(intval($_POST['secondary'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('guild_donate', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
 			die($h->endpage());
 		}
 		if (empty($_POST['primary']) && empty($_POST['secondary']))
 		{
-			alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_DONATE_ERR1']);
+			alert('danger',"Uh Oh!","Please fill out the previous form before submitting.");
 			die($h->endpage());
 		}
 		if ($_POST['primary'] > $ir['primary_currency'])
 		{
-			alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_DONATE_ERR2']);
+			alert('danger',"Uh Oh!","You are trying to donate more Primary Currency than you currently have.");
 			die($h->endpage());
 		}
 		else if ($_POST['secondary'] > $ir['secondary_currency'])
 		{
-			alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_DONATE_ERR3']);
+			alert('danger',"Uh Oh!","You are trying to donate more Secondary Currency than you currently have.");
 			die($h->endpage());
 		}
 		else if ($_POST['primary']+$gd['guild_primcurr'] > $gd['guild_level']*1500000)
 		{
-			alert('danger',$lang["ERROR_GENERIC"],"{$lang['VIEWGUILD_DONATE_ERR4']}" . $gd['guild_level']*1500000);
+			alert('danger',"Uh Oh!","Your guild's vault can only hold " . $gd['guild_level']*1500000 . "Primary Currency.");
 			die($h->endpage());
 		}
 		else
@@ -269,7 +269,8 @@ function donate()
 								and " . number_format($_POST['secondary']) . " Secondary Currency to the guild.");
 			 $db->query("INSERT INTO `guild_notifications`
 						VALUES(NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
-			alert('success',$lang["ERROR_SUCCESS"],$lang['VIEWGUILD_DONATE_SUCC'],true,'viewguild.php');
+			alert('success',"Success!","You have successfully donated " . number_format($_POST['primary']) . " Primary
+			Currency and " . number_format($_POST['secondary']) . " Secondary Currency to your guild.",true,'viewguild.php');
 		}
 	}
 	else
@@ -280,42 +281,42 @@ function donate()
 			<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['VIEWGUILD_DONATE_TITLE']} " . number_format($ir['primary_currency']) . "
-					{$lang['INDEX_PRIMCURR']} and " . number_format($ir['secondary_currency']) . " {$lang['INDEX_SECCURR']}
+					Enter the amount of currency you wish to donate to your guild " . number_format($ir['primary_currency']) . "
+					Primary Currency and " . number_format($ir['secondary_currency']) . " Secondary Currency
 				</th>
 			</tr>
     		<tr>
     			<td>
-    				<b>{$lang['INDEX_PRIMCURR']}</b><br />
-    				<input type='number' name='primary' value='0' required='1' class='form-control' min='0' />
+    				<b>Primary Currency</b><br />
+    				<input type='number' name='primary' value='0' required='1' max='{$ir['primary_currency']}' class='form-control' min='0' />
     			</td>
     			<td>
-    				<b>{$lang['INDEX_SECCURR']}</b><br />
-    				<input type='number' name='secondary' required='1' class='form-control' value='0' min='0' />
+    				<b>Secondary Currency</b><br />
+    				<input type='number' name='secondary' required='1' max='{$ir['secondary_currency']}' class='form-control' value='0' min='0' />
     			</td>
     		</tr>
     		<tr>
     			<td colspan='2' align='center'>
     			    {$csrf}
-    				<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_DONATE_BTN']}' />
+    				<input type='submit' class='btn btn-primary' value='Donate' />
     			</td>
     		</tr>
     	</table>
 		</form>
-		<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
+		<a href='viewguild.php'>Go Back</a>";
 	}
 }
 function members()
 {
-	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	global $db,$userid,$gd;
 	echo "
     <table class='table table-bordered table-striped'>
 		<tr>
     		<th>
-				{$lang['VIEWGUILD_MEMBERS_TH1']}
+				User
 			</th>
     		<th>
-				{$lang['VIEWGUILD_MEMBERS_TH1']}
+				Level
 			</th>
     		<th>
 				&nbsp;
@@ -342,7 +343,7 @@ function members()
 					<form action='?action=kick' method='post'>
 						<input type='hidden' name='ID' value='{$r['userid']}' />
 						{$csrf}
-						<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_MEMBERS_BTN']} {$r['username']}' />
+						<input type='submit' class='btn btn-primary' value='Kick {$r['username']}' />
 					</form>";
 				}
 				else
@@ -358,28 +359,32 @@ function members()
     echo "
 	</table>
 	<br />
-	<a href='viewguild.php'>{$lang['GEN_BACK']}</a>
+	<a href='viewguild.php'>Go Back</a>
    	";
 }
 function staff_kick()
 {
-    global $db,$userid,$ir,$gd,$lang,$api,$h;
+    global $db,$userid,$ir,$gd,$api,$h;
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
     {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_kickuser", stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"],true,'viewguild.php?action=members');
+			alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.",true,'viewguild.php?action=members');
 			die($h->endpage());
 		}
         $_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs(intval($_POST['ID'])) : 0;
         $who = $_POST['ID'];
         if ($who == $gd['guild_owner'])
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR'],true,'viewguild.php?action=members');
+            alert('danger',"Uh Oh!","You cannot kick the guild leader.",true,'viewguild.php?action=members');
+        }
+        else if ($who == $gd['guild_coowner'])
+        {
+            alert('danger',"Uh Oh!","You cannot kick the guild co-leader.",true,'viewguild.php?action=members');
         }
         else if ($who == $userid)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR1'],true,'viewguild.php?action=members');
+            alert('danger',"Uh Oh!","You cannot kick yourself from the guild.",true,'viewguild.php?action=members');
         }
         else
         {
@@ -390,7 +395,7 @@ function staff_kick()
                 $db->query("UPDATE `users` SET `guild` = 0 WHERE `userid` = {$who}");
                 $d_username = htmlentities($kdata['username'], ENT_QUOTES, 'ISO-8859-1');
                 $d_oname = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
-                alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_KICK_SUCCESSS'],true,'viewguild.php?action=members');
+                alert('success',"Success!","You have kicked {$kdata['username']} from the guild.",true,'viewguild.php?action=members');
                 $their_event = "You were kicked out of the {$gd['guild_name']} guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
                 $api->GameAddNotification($who, $their_event);
                 $gang_event =  $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
@@ -398,59 +403,59 @@ function staff_kick()
             }
             else
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR2'],true,'viewguild.php?action=members');
+                alert('danger',"Uh Oh!","User does not exist, or is not in the guild.",true,'viewguild.php?action=members');
             }
             $db->free_result($q);
         }
     }
     else
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_KICK_ERR3'],true,'viewguild.php');
+        alert('danger',"Uh Oh!","You do not have permission to kick people from the guild.",true,'viewguild.php');
     }
 }
 function leave()
 {
-	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	global $db,$userid,$ir,$gd,$api,$h;
 	if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_LEAVE_ERR'],true,'viewguild.php');
+        alert('danger',"Uh Oh!","You cannot leave the guild as the leader or co-leader.",true,'viewguild.php');
         die($h->endpage());
     }
 	if (isset($_POST['submit']) && $_POST['submit'] == 'yes')
     {
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_leave", stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
 			die($h->endpage());
 		}
 		$db->query("UPDATE `users` SET `guild` = 0  WHERE `userid` = {$userid}");
 		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has left the guild.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_LEAVE_SUCC'],true,'index.php');
+		alert('success',"Success!","You have successfully left your guild.",true,'index.php');
 	}
 	elseif (isset($_POST['submit']) && $_POST['submit'] == 'no')
 	{
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_LEAVE_SUCC1'],true,'viewguild.php');
+		alert('success',"Success!","You have chosen to stay in your guild.",true,'viewguild.php');
 	}
 	else
 	{
 		$csrf = request_csrf_html('guild_leave');
-        echo "{$lang['VIEWGUILD_LEAVE_INFO']}
+        echo "Do you really want to leave your guild?
         <form action='?action=leave' method='post'>
             {$csrf}
 			<input type='hidden' name='submit' value='yes'>
-        	<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_LEAVE_BTN']}' />
+        	<input type='submit' class='btn btn-primary' value='Yes, leave.' />
 		</form><br />
 		<form action='?action=leave' method='post'>
 			{$csrf}
 			<input type='hidden' name='submit' value='no'>
-        	<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_LEAVE_BTN1']}' />
+        	<input type='submit' class='btn btn-primary' value='No, stay.' />
         </form>
-		<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
+		<a href='viewguild.php'>Go Back</a>";
 	}
 }
 function atklogs()
 {
-	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	global $db,$ir,$api;
 	$atks =
             $db->query("SELECT `l`.*, `u`.`guild`, `u`.`userid` 
 			FROM `logs` as `l`
@@ -459,11 +464,11 @@ function atklogs()
 			WHERE (`u`.`guild` = {$ir['guild']}) AND log_type = 'attacking'
 			ORDER BY `log_time` DESC
 			LIMIT 50");
-    echo "<b>{$lang['VIEWGUILD_ATKLOGS_INFO']}</b><br />
+    echo "<b>Last 50 attacks involving anyone in your guild</b><br />
 	<table class='table table-bordered'>
 		<tr>
-			<th>{$lang['VIEWGUILD_ATKLOGS_TD1']}</th>
-			<th>{$lang['VIEWGUILD_ATKLOGS_TD2']}</th>
+			<th>Time</th>
+			<th>Attack Info</th>
 		</tr>";
     while ($r = $db->fetch_row($atks))
     {
@@ -477,25 +482,25 @@ function atklogs()
     }
     $db->free_result($atks);
     echo "</table>
-	<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
+	<a href='viewguild.php'>Go Back</a>";
 }
 function warview()
 {
-	global $db,$ir,$userid,$lang,$api,$h;
+	global $db,$ir,$api;
 	$wq=$db->query("SELECT * FROM `guild_wars` WHERE 
 					(`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) 
 					AND `gw_winner` = 0");
-	echo "<b>{$lang['VIEWGUILD_WARVIEW_INFO']}</b><hr />
+	echo "<b>These are the current wars your guild is participating in.</b><hr />
 	<table class='table table-bordered'>
 		<tr>
 			<th>
-				{$lang['VIEWGUILD_WARVIEW_TD1']}
+				Declarer
 			</th>
 			<th>
-				{$lang['VIEWGUILD_WARVIEW_TD2']}
+				Declared Upon
 			</th>
 			<th>
-				{$lang['VIEWGUILD_WARVIEW_TD3']}
+				War Concludes
 			</th>
 		</tr>";
 	while ($r=$db->fetch_row($wq))
@@ -503,11 +508,11 @@ function warview()
 		echo "<tr>
 				<td>
 					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
-						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_drpoints']) . "{$lang['GUILD_WAR_TD1']}
+						(Points: " . number_format($r['gw_drpoints']) . ")
 				</td>
 				<td>
 					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}</a><br />
-						{$lang['GUILD_WAR_TD']}" . number_format($r['gw_depoints']) . "{$lang['GUILD_WAR_TD1']}
+						(Points: " . number_format($r['gw_depoints']) . ")
 				</td>
 				<td>
 					" . TimeUntil_Parse($r['gw_end']) . "
@@ -518,7 +523,7 @@ function warview()
 }
 function staff()
 {
-	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	global $db,$userid,$ir,$gd,$api,$h;
 	if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
     {
         if (!isset($_GET['act2']))
@@ -579,55 +584,55 @@ function staff()
     }
     else
     {
-        alert('danger',$lang['ERROR_NOPERM'],$lang['VIEWGUILD_STAFF_ERROR'],true,'viewguild.php');
+        alert('danger',"Uh Oh!","You have no permission to be here.",true,'viewguild.php');
         die($h->endpage());
     }
 }
 function staff_idx()
 {
-	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	global $db,$userid,$gd;
 	echo "<table class='table table-bordered'>
 	<tr>
 		<td>
-			<b>{$lang['VIEWGUILD_SUMMARY_COOWNER']}</b><br />
-			<a href='?action=staff&act2=apps'>{$lang['VIEWGUILD_STAFF_IDX_APP']}</a><br />
-			<a href='?action=staff&act2=vault'>{$lang['VIEWGUILD_STAFF_IDX_VAULT']}</a><br />
-			<a href='?action=staff&act2=coowner'>{$lang['VIEWGUILD_STAFF_IDX_COOWNER']}</a><br />
-			<a href='?action=staff&act2=ament'>{$lang['VIEWGUILD_STAFF_IDX_AMENT']}</a><br />
-			<a href='?action=staff&act2=massmail'>{$lang['VIEWGUILD_STAFF_IDX_MM']}</a><br />
-			<a href='?action=staff&act2=masspay'>{$lang['VIEWGUILD_STAFF_IDX_MP']}</a><br />
-			<a href='?action=staff&act2=levelup'>{$lang['VIEWGUILD_STAFF_IDX_LVLUP']}</a><br />
+			<b>Guild Co-Leader</b><br />
+			<a href='?action=staff&act2=apps'>Application Management</a><br />
+			<a href='?action=staff&act2=vault'>Vault Management</a><br />
+			<a href='?action=staff&act2=coowner'>Transfer Co-Leader</a><br />
+			<a href='?action=staff&act2=ament'>Change Guild Announcement</a><br />
+			<a href='?action=staff&act2=massmail'>Mass Mail Guild</a><br />
+			<a href='?action=staff&act2=masspay'>Mass Pay Guild</a><br />
+			<a href='?action=staff&act2=levelup'>Level Up Guild</a><br />
 		</td>";
 	if ($gd['guild_owner'] == $userid)
 	{
 		echo "
 		<td>
-			<b>{$lang['VIEWGUILD_SUMMARY_OWNER']}</b><br />
-			<a href='?action=staff&act2=leader'>{$lang['VIEWGUILD_STAFF_IDX_LEADER']}</a><br />
-			<a href='?action=staff&act2=name'>{$lang['VIEWGUILD_STAFF_IDX_NAME']}</a><br />
-			<a href='?action=staff&act2=desc'>{$lang['VIEWGUILD_STAFF_IDX_DESC']}</a><br />
-			<a href='?action=staff&act2=town'>{$lang['VIEWGUILD_STAFF_IDX_TOWN']}</a><br />";
+			<b>Guild Leader</b><br />
+			<a href='?action=staff&act2=leader'>Transfer Leader</a><br />
+			<a href='?action=staff&act2=name'>Change Guild Name</a><br />
+			<a href='?action=staff&act2=desc'>Change Guild Description</a><br />
+			<a href='?action=staff&act2=town'>Change Guild Town</a><br />";
 			if ($db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0)
 			{
-				echo "<a href='?action=staff&act2=untown'>{$lang['VIEWGUILD_STAFF_IDX_UNTOWN']}</a><br />
-				<a href='?action=staff&act2=tax'>{$lang['VIEWGUILD_STAFF_IDX_TAX']}</a><br />";
+				echo "<a href='?action=staff&act2=untown'>Surrender Guild Town</a><br />
+				<a href='?action=staff&act2=tax'>Change Town Tax</a><br />";
 			}
-			echo "<a href='?action=staff&act2=declarewar'>{$lang['VIEWGUILD_STAFF_IDX_DECLAREWAR']}</a><br />
+			echo "<a href='?action=staff&act2=declarewar'>Declare War</a><br />
 		</td>";
 	}
 	echo "</tr></table>
-	<a href='viewguild.php'>{$lang['GEN_BACK']}</a>";
+	<a href='viewguild.php'>Go Back</a>";
 }
 function staff_apps()
 {
-	global $db,$userid,$ir,$gd,$lang,$api,$h;
+	global $db,$userid,$ir,$gd,$api,$h;
     $_POST['app'] = (isset($_POST['app']) && is_numeric($_POST['app'])) ? abs(intval($_POST['app'])) : '';
     $what = (isset($_POST['what']) && in_array($_POST['what'], array('accept', 'decline'), true)) ? $_POST['what'] : '';
     if (!empty($_POST['app']) && !empty($what))
     {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_apps", stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
 			die($h->endpage());
 		}
         $aq =
@@ -650,7 +655,7 @@ function staff_apps()
                 $db->query(
                         "INSERT INTO `guild_notifications`
                          VALUES (NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
-                alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_APP_DENY_TEXT']);
+                alert('success',"Success!","You have denied " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s application to join the guild.'");
             }
             else
             {
@@ -658,19 +663,19 @@ function staff_apps()
                 if ($gd['guild_capacity'] <= $db->fetch_single($cnt))
                 {
                     $db->free_result($cnt);
-                    alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_APP_ACC_ERR']);
+                    alert('danger',"Uh Oh!","Your guild does not have the capacity for another member. Please level up your guild.");
                     die($h->endpage());
                 }
                 else if ($api->UserInfoGet($appdata['ga_user'],'guild') != 0)
                 {
                     $db->free_result($cnt);
-                    alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_APP_ACC_ERR1']);
+                    alert('danger',"Uh Oh!","The applicant has already joined another guild.");
                     die($h->endpage());
                 }
 				$townlevel=$db->fetch_single($db->query("SELECT `town_min_level` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
 				if ($townlevel > $api->UserInfoGet($appdata['ga_user'],'level') && $townlevel > 0)
 				{
-					alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_APP_ACC_ERR2']);
+					alert('danger',"Uh Oh!","The applicant cannot reach your guild's town because their level is too low.");
 					die($h->endpage());
 				}
                 $db->free_result($cnt);
@@ -686,27 +691,27 @@ function staff_apps()
                         "UPDATE `users`
                          SET `guild` = {$gd['guild_id']}
                          WHERE `userid` = {$appdata['ga_user']}");
-                alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_APP_ACC_SUCC']);
+                alert('success',"Success!","You have accepted " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s applicantion to join the guild.");
             }
         }
         else
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_APP_WOT']);
+            alert('danger',"Uh Oh!","You are trying to accept a non-existent application.");
         }
         $db->free_result($aq);
     }
     else
     {
         echo "
-        <b>{$lang['VIEWGUILD_STAFF_IDX_APP']}</b>
+        <b>Application Management</b>
         <br />
         <table class='table table-bordered table-striped'>
         		<tr>
-        			<th>{$lang['VIEWGUILD_STAFF_APP_TH0']}</th>
-        			<th>{$lang['VIEWGUILD_STAFF_APP_TH1']}</th>
-					<th>{$lang['VIEWGUILD_STAFF_APP_TH2']}</th>
-        			<th>{$lang['VIEWGUILD_STAFF_APP_TH3']}</th>
-        			<th>{$lang['VIEWGUILD_STAFF_APP_TH4']}</th>
+        			<th>Filing Time</th>
+        			<th>Applicant</th>
+					<th>Level</th>
+        			<th>Application</th>
+        			<th>Actions</th>
         		</tr>
    		";
         $q =
@@ -739,14 +744,14 @@ function staff_apps()
             			<input type='hidden' name='app' value='{$r['ga_id']}' />
             			<input type='hidden' name='what' value='accept' />
             			{$csrf}
-            			<input class='btn btn-success' type='submit' value='{$lang['VIEWGUILD_STAFF_APP_BTN']}' />
+            			<input class='btn btn-success' type='submit' value='Accept' />
             		</form>
 					<br />
             		<form action='?action=staff&act2=apps' method='post'>
             			<input type='hidden' name='app' value='{$r['ga_id']}' />
             			<input type='hidden' name='what' value='decline' />
             			{$csrf}
-            			<input class='btn btn-danger' type='submit' value='{$lang['VIEWGUILD_STAFF_APP_BTN1']}' />
+            			<input class='btn btn-danger' type='submit' value='Decline' />
             		</form>
             	</td>
             </tr>
@@ -757,12 +762,12 @@ function staff_apps()
 }
 function staff_vault()
 {
-    global $db,$userid,$gd,$lang,$api,$h;
+    global $db,$userid,$gd,$api,$h;
     if (isset($_POST['primary']) || isset($_POST['secondary']))
     {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_vault", stripslashes($_POST['verf'])))
         {
-            alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+            alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
         $_POST['primary'] = (isset($_POST['primary']) && is_numeric($_POST['primary'])) ? abs($_POST['primary']) : 0;
@@ -770,28 +775,28 @@ function staff_vault()
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
         if ($_POST['primary'] > $gd['guild_primcurr'])
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_VAULT_ERR']);
+            alert('danger',"Uh Oh!","You are trying to give out more Primary Currency than your guild has in its vault.");
             die($h->endpage());
         }
         if ($_POST['secondary'] > $gd['guild_seccurr'])
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_VAULT_ERR1']);
+            alert('danger',"Uh Oh!","You are trying to give out more Secondary Currency than your guild has in its vault.");
             die($h->endpage());
         }
         if ($_POST['primary'] == 0 && $_POST['secondary'] == 0)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_VAULT_ERR2']);
+            alert('danger',"Uh Oh!","Please fill out the form completely before submitting.");
             die($h->endpage());
         }
         if ($api->SystemCheckUsersIPs($userid,$_POST['user']))
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_VAULT_ERR4']);
+            alert('danger',"Uh Oh!","You cannot give from the guild's vault if you share the same IP address as the recipient.");
             die($h->endpage());
         }
         $q=$db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
         if ($db->num_rows($q) == 0)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_VAULT_ERR3']);
+            alert('danger',"Uh Oh!","You are trying to give to a user that does not exist, or is not in the guild.");
             die($h->endpage());
         }
         $name = htmlentities($db->fetch_single($q), ENT_QUOTES, 'ISO-8859-1');
@@ -800,9 +805,14 @@ function staff_vault()
         $api->UserGiveCurrency($_POST['user'],'secondary',$_POST['secondary']);
         $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$_POST['primary']},
                       `guild_seccurr` = `guild_seccurr` - {$_POST['secondary']} WHERE `guild_id` = {$gd['guild_id']}");
-        $api->GameAddNotification($_POST['user'],"You were given " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from your guild's vault.");
-        $api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has given <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from the guild's vault.");
-        alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_VAULT_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+        $api->GameAddNotification($_POST['user'],"You were given " . number_format($_POST['primary']) . " Primary
+            Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from your guild's vault.");
+        $api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>
+            {$api->SystemUserIDtoName($userid)}</a> has given <a href='profile.php?user={$_POST['user']}'>
+            {$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . "
+            Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from the guild's
+            vault.");
+        alert('success',"Success!","You have given {$api->SystemUserIDtoName($_POST['user'])} ",true,'viewguild.php?action=staff&act2=idx');
         $api->SystemLogsAdd($userid,"guild_vault","Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
     }
     else
@@ -812,12 +822,13 @@ function staff_vault()
         <table class='table table-bordered'>
             <tr>
                 <th colspan='2'>
-                    {$lang['VIEWGUILD_STAFF_VAULT']} " . number_format($gd['guild_primcurr']) . " {$lang['INDEX_PRIMCURR']} {$lang['GEN_AND']} " . number_format($gd['guild_seccurr']) . " {$lang['INDEX_SECCURR']}.
+                    You may give out currency from your guild's vault. Your vault currently has " . number_format($gd['guild_primcurr']) . " Primary Currency and
+                    " . number_format($gd['guild_seccurr']) . " Secondary Currency.
                 </th>
             </tr>
             <tr>
                 <th>
-                    {$lang['VIEWGUILD_STAFF_VAULT1']}
+                    User
                 </th>
                 <td>
                     " . guild_user_dropdown('user',$gd['guild_id']) . "
@@ -825,7 +836,7 @@ function staff_vault()
             </tr>
             <tr>
                 <th>
-                    {$lang['INDEX_PRIMCURR']}
+                    Primary Currency
                 </th>
                 <td>
                     <input type='number' class='form-control' min='0' max='{$gd['guild_primcurr']}' name='primary'>
@@ -833,7 +844,7 @@ function staff_vault()
             </tr>
             <tr>
                 <th>
-                    {$lang['INDEX_SECCURR']}
+                    Secondary Currency
                 </th>
                 <td>
                     <input type='number' class='form-control' min='0' max='{$gd['guild_seccurr']}' name='secondary'>
@@ -841,24 +852,24 @@ function staff_vault()
             </tr>
             <tr>
                 <td colspan='2'>
-                    <input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_STAFF_VAULT_BTN']}'>
+                    <input type='submit' class='btn btn-primary' value='Give'>
                 </td>
             </tr>
             {$csrf}
         </table>
         </form>
-		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
     }
 
 }
 function staff_coowner()
 {
-	global $db,$userid,$api,$h,$lang,$gd;
+	global $db,$userid,$api,$h,$gd;
 	if (isset($_POST['user']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_coleader", stripslashes($_POST['verf'])))
         {
-            alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+            alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
 		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
@@ -866,14 +877,15 @@ function staff_coowner()
 		if ($db->num_rows($q) == 0)
 		{
 			$db->free_result($q);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_COLEADER_ERR']);
+			alert('danger',"Uh Oh!","You cannot give co-leadership abilities to someone that does not exist, or is not
+			    in the guild.");
 			die($h->endpage());
 		}
 		$db->free_result($q);
 		$db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
-		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you co-leader privledges for the {$gd['guild_name']} guild.");
-		$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred co-leader privledges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_COLEADER_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you co-leader privileges for the {$gd['guild_name']} guild.");
+		$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred co-leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
+		alert('success',"Success!","You have successfully transferred co-leadership privileges to {$api->SystemUserIDtoName($_POST['user'])}.",true,'viewguild.php?action=staff&act2=idx');
 	}
 	else
 	{
@@ -882,12 +894,12 @@ function staff_coowner()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['VIEWGUILD_STAFF_COLEADER_INFO']}
+					Select the user you wish to give your co-leadership privileges to.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['ITEM_SEND_TH']}
+					User
 				</th>
 				<td>
 					" . guild_user_dropdown('user',$gd['guild_id'],$gd['guild_coowner']) . "
@@ -895,28 +907,28 @@ function staff_coowner()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_STAFF_IDX_COOWNER']}'>
+					<input type='submit' class='btn btn-primary' value='Transfer Co-Leader'>
 				</td>
 			</tr>
 			{$csrf}
 		</table>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 	}
 }
 function staff_announcement()
 {
-	global $gd,$db,$userid,$api,$lang,$h;
+	global $gd,$db,$h;
 	if (isset($_POST['ament']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_ament", stripslashes($_POST['verf'])))
         {
-            alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+            alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
 		$ament = $db->escape(nl2br(htmlentities(stripslashes($_POST['ament']), ENT_QUOTES, 'ISO-8859-1')));
 		$db->query("UPDATE `guild` SET `guild_announcement` = '{$ament}' WHERE `guild_id` = {$gd['guild_id']}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_AMENT_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+		alert('success',"Success!","You ahve updated your guild's announcement.",true,'viewguild.php?action=staff&act2=idx');
 	}
 	else
 	{
@@ -926,12 +938,12 @@ function staff_announcement()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['VIEWGUILD_STAFF_AMENT_INFO']}
+					You may change your guild's announcement here.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['VIEWGUILD_HOME_ANNOUNCE']}
+					Announcement
 				</th>
 				<td>
 					<textarea class='form-control' name='ament' rows='7'>{$am_for_area}</textarea>
@@ -939,23 +951,23 @@ function staff_announcement()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['VIEWGUILD_STAFF_AMENT_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='Change Announcement' class='btn btn-primary'>
 				</td>
 			</tr>
 			{$csrf}
 		</table>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 	}
 }
 function staff_massmail()
 {
-	global $db,$lang,$api,$userid,$h,$gd;
+	global $db,$api,$userid,$h,$gd;
 	if (isset($_POST['text']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_massmail", stripslashes($_POST['verf'])))
         {
-            alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+            alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
 		$_POST['text'] = (isset($_POST['text'])) ? $db->escape(htmlentities(stripslashes($_POST['text']), ENT_QUOTES, 'ISO-8859-1')) : '';
@@ -965,7 +977,7 @@ function staff_massmail()
         {
             $api->GameAddMail($r['userid'],$subj,$_POST['text'],$userid);
         }
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_MM_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+		alert('success',"Success!","Mass mail has been sent successfully.",true,'viewguild.php?action=staff&act2=idx');
 	}
 	else
 	{
@@ -974,12 +986,12 @@ function staff_massmail()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['VIEWGUILD_STAFF_MM_INFO']}
+					Use this form to send a mass mail to each member of your guild.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['PROFILE_MSG4']}
+					Message
 				</th>
 				<td>
 					<textarea class='form-control' name='text' rows='7'></textarea>
@@ -987,30 +999,30 @@ function staff_massmail()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['PROFILE_MSG6']}' class='btn btn-primary'>
+					<input type='submit' value='Mass Mail' class='btn btn-primary'>
 				</td>
 			</tr>
 			{$csrf}
 		</table>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 	}
 }
 function staff_masspayment()
 {
-	global $db,$lang,$api,$userid,$gd,$h;
+	global $db,$api,$userid,$gd,$h;
 	if (isset($_POST['payment']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_masspay", stripslashes($_POST['verf'])))
         {
-            alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+            alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
 		$_POST['payment'] = (isset($_POST['payment']) && is_numeric($_POST['payment'])) ? abs($_POST['payment']) : 0;
 		$cnt=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}"));
 		if (($_POST['payment'] * $cnt) > $gd['guild_primcurr'])
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_MP_ERR']);
+			alert('danger',"Uh Oh!","You do not have enough currency in your vault to give out that much to each member.");
 			die($h->endpage());
 		}
 		else
@@ -1020,20 +1032,20 @@ function staff_masspayment()
 			{
 				if ($api->SystemCheckUsersIPs($userid,$r['userid']) == true)
 				{
-					alert('danger',$lang['ERROR_GENERIC'],"{$r['username']} " . $lang['VIEWGUILD_STAFF_MP_ERR2']);
+					alert('danger',"Uh Oh!","{$r['username']} could not receive their Mass Payment because they share an IP Address with you.");
 				}
 				else
 				{
 					$gd['guild_primcurr'] -= $_POST['payment'];
 					$api->GameAddNotification($r['userid'],"You were given a mass-payment of {$_POST['payment']} Primary Currency from your guild.");
 					$api->UserGiveCurrency($r['userid'],'primary',$_POST['payment']);
-					alert('success',$lang['ERROR_SUCCESS'],"{$r['username']} " . $lang['VIEWGUILD_STAFF_MP_SUCC2']);
+					alert('success',"Success!","{$r['username']} was paid {$_POST['payment']} Primary Currency.");
 				}
 			}
 			$db->query("UPDATE `guild` SET `guild_primcurr` = {$gd['guild_primcurr']} WHERE `guild_id` = {$gd['guild_id']}");
 			$notif=$db->escape("A mass payment of " . number_format($_POST['payment']) . " Primary Currency was sent out to the members of the guild.");
 			$api->GuildAddNotification($gd['guild_id'],$notif);
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_MP_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			alert('success',"Success!","Mass payment complete.",true,'viewguild.php?action=staff&act2=idx');
 		}
 	}
 	else
@@ -1043,43 +1055,43 @@ function staff_masspayment()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['VIEWGUILD_STAFF_MP_INFO']}
+					You can pay each and every member of your guild using this form
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['VIEWGUILD_STAFF_MP_TH']}
+					Payment
 				</th>
 				<td>
-					<input type='number' min='1' class='form-control' name='payment'>
+					<input type='number' min='1' max='{$gd['guild_primcurr']}' class='form-control' name='payment'>
 				</td>
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['VIEWGUILD_STAFF_MP_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='Mass Pay' class='btn btn-primary'>
 				</td>
 			</tr>
 			{$csrf}
 		</table>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 	}
 }
 function staff_desc()
 {
-	global $gd,$db,$userid,$api,$lang,$h;
+	global $gd,$db,$userid,$h;
 	if ($userid == $gd['guild_owner'])
 	{
 		if (isset($_POST['desc']))
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_desc", stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
 				die($h->endpage());
 			}
 			$desc = $db->escape(nl2br(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1')));
 			$db->query("UPDATE `guild` SET `guild_desc` = '{$desc}' WHERE `guild_id` = {$gd['guild_id']}");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_DESC_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			alert('success',"Success!","You have updated your guild's description",true,'viewguild.php?action=staff&act2=idx');
 		}
 		else
 		{
@@ -1089,12 +1101,12 @@ function staff_desc()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						{$lang['VIEWGUILD_STAFF_DESC_INFO']}
+						You can use this form to change your guild's description.
 					</th>
 				</tr>
 				<tr>
 					<th>
-						{$lang['GUILD_VIEW_DESC']}
+						Description
 					</th>
 					<td>
 						<textarea class='form-control' name='desc' rows='7'>{$am_for_area}</textarea>
@@ -1102,30 +1114,30 @@ function staff_desc()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['VIEWGUILD_STAFF_DESC_BTN']}' class='btn btn-primary'>
+						<input type='submit' value='Update Description' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}
 			</table>
 			</form>
-			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 		}
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY']);
+		alert('danger',"Uh Oh!","You can only be here if you're the guild's leader.");
 	}
 }
 function staff_leader()
 {
-	global $gd,$db,$userid,$api,$lang,$h;
+	global $gd,$db,$userid,$api,$h;
 	if ($userid == $gd['guild_owner'])
 	{
 		if (isset($_POST['user']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_leader", stripslashes($_POST['verf'])))
         {
-            alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+            alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
 		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
@@ -1133,14 +1145,14 @@ function staff_leader()
 		if ($db->num_rows($q) == 0)
 		{
 			$db->free_result($q);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADER_ERR']);
+			alert('danger',"Uh Oh!","You cannot give leadership privileges to a user not in your guild, or that doesn't exist.");
 			die($h->endpage());
 		}
 		$db->free_result($q);
 		$db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
-		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you leader privledges for the {$gd['guild_name']} guild.");
-		$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred leader privledges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_LEADER_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+		$api->GameAddNotification($_POST['user'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you leader privileges for the {$gd['guild_name']} guild.");
+		$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
+		alert('success',"Success!","You have transferred your leadership privileges over to {$api->SystemUserIDtoName($_POST['user'])}.",true,'viewguild.php?action=staff&act2=idx');
 	}
 	else
 	{
@@ -1149,12 +1161,12 @@ function staff_leader()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['VIEWGUILD_STAFF_LEADER_INFO']}
+					Select a user to give them your leadership privileges.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['ITEM_SEND_TH']}
+					User
 				</th>
 				<td>
 					" . guild_user_dropdown('user',$gd['guild_id'],$gd['guild_owner']) . "
@@ -1162,41 +1174,41 @@ function staff_leader()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_STAFF_IDX_LEADER']}'>
+					<input type='submit' class='btn btn-primary' value='Transfer Leader'>
 				</td>
 			</tr>
 			{$csrf}
 		</table>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 	}
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
+		alert('danger',"Uh Oh!","You can only be here if you're the guild's leader.",true,'viewguild.php?action=staff&act2=idx');
 	}
 }
 function staff_name()
 {
-	global $gd,$db,$userid,$api,$lang,$h;
+	global $gd,$db,$userid,$h;
 	if ($userid == $gd['guild_owner'])
 	{
 		if (isset($_POST['name']))
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_name", stripslashes($_POST['verf'])))
 			{
-				alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+				alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
 				die($h->endpage());
 			}
 			$name = $db->escape(nl2br(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1')));
 			$cnt=$db->query("SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}' AND `guild_id` != {$gd['guild_id']}");
 			if ($db->num_rows($cnt) > 0)
 			{
-				alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_NAME_ERR']);
+				alert('danger',"Uh Oh!","The name you have chosen is already in use by another guild.");
 				die($h->endpage());
 			}
 			$db->query("UPDATE `guild` SET `guild_name` = '{$name}' WHERE `guild_id` = {$gd['guild_id']}");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_NAME_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			alert('success',"Success!","You have changed your guild's name to {$name}.",true,'viewguild.php?action=staff&act2=idx');
 		}
 		else
 		{
@@ -1206,12 +1218,12 @@ function staff_name()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						{$lang['VIEWGUILD_STAFF_NAME_INFO']}
+						You can change your guild's name here.
 					</th>
 				</tr>
 				<tr>
 					<th>
-						{$lang['VIEWGUILD_STAFF_NAME_TH']}
+						Name
 					</th>
 					<td>
 						<input type='text' required='1' value='{$am_for_area}' class='form-control' name='name'>
@@ -1219,59 +1231,59 @@ function staff_name()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['VIEWGUILD_STAFF_NAME_BTN']}' class='btn btn-primary'>
+						<input type='submit' value='Change Guild Name' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}
 			</table>
 			</form>
-			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 		}
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
+		alert('danger',"Uh Oh!","You can only be here if you're the guild's leader.",true,'viewguild.php?action=staff&act2=idx');
 	}
 }
 function staff_town()
 {
-	global $db,$ir,$gd,$api,$lang,$h,$userid;
+	global $db,$gd,$api,$h,$userid;
 	if ($userid == $gd['guild_owner'])
 	{
 		if (isset($_POST['town']))
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_town", stripslashes($_POST['verf'])))
 			{
-				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+				alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
 				die($h->endpage());
 			}
 			$town = (isset($_POST['town']) && is_numeric($_POST['town'])) ? abs($_POST['town']) : 0;
 			$cnt=$db->fetch_single($db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
 			if ($cnt > 0)
 			{
-				alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_TOWN_ERR']);
+				alert('danger',"Uh Oh!","Your guild already owns a town. Surrender your current town to own a new one.");
 				die($h->endpage());
 			}
 			if ($db->num_rows($db->query("SELECT `town_id` FROM `town` WHERE `town_id` = {$town}")) == 0)
 			{
-				alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_TOWN_ERR1']);
+				alert('danger',"Uh Oh!","The town you wish to own does not exist.");
 				die($h->endpage());
 			}
 			if ($db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$town}")) > 0)
 			{
-				alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_TOWN_ERR2']);
+				alert('danger',"Uh Oh!","The town you wish to own is already owned by another guild. If you want this town, declare war on them!");
 				die($h->endpage());
 			}
 			$lowestlevel=$db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` ASC LIMIT 1"));
 			$townlevel=$db->fetch_single($db->query("SELECT `town_min_level` FROM `town` WHERE `town_id` = {$town}"));
 			if ($townlevel > $lowestlevel)
 			{
-				alert('danger',$lang["ERROR_GENERIC"],$lang['VIEWGUILD_STAFF_TOWN_ERR3']);
+				alert('danger',"Uh Oh!","You cannot own this town as there are members in your guild who cannot access it.");
 				die($h->endpage());
 			}
 			$db->query("UPDATE `town` SET `town_guild_owner` = {$gd['guild_id']} WHERE `town_id` = {$town}");
 			$api->GuildAddNotification($gd['guild_id'],"Your guild has successfully claimed {$api->SystemTownIDtoName($town)}.");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_TOWN_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			alert('success',"Success!","You have successfully claimed {$api->SystemTownIDtoName($town)} for your guild.",true,'viewguild.php?action=staff&act2=idx');
 		}
 		else
 		{
@@ -1281,12 +1293,14 @@ function staff_town()
 				<table class='table table-bordered'>
 					<tr>
 						<th colspan='2'>
-							{$lang['VIEWGUILD_STAFF_TOWN_INFO']}
+							You can claim a town for your guild here. This town must be unowned, and must be accessible
+							to all your guild members. If it is currently owned, you must declare war on the owning
+							guild to get a chance to claim the town as yours.
 						</th>
 					</tr>
 					<tr>
 						<th>
-							{$lang['VIEWGUILD_STAFF_TOWN_TH']}
+							Town
 						</th>
 						<td>
 							" . location_dropdown('town') . "
@@ -1294,57 +1308,57 @@ function staff_town()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' value='{$lang['VIEWGUILD_STAFF_TOWN_BTN']}' class='btn btn-primary'>
+							<input type='submit' value='Claim Town' class='btn btn-primary'>
 						</td>
 					</tr>
 					{$csrf}
 				</table>
 			</form>
-			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 		}
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
+		alert('danger',"Uh Oh!","You can only be here if you're the guild's leader.",true,'viewguild.php?action=staff&act2=idx');
 	}
 }
 function staff_untown()
 {
-	global $db,$ir,$gd,$api,$lang,$h,$userid;
+	global $db,$gd,$api,$h,$userid;
 	if ($userid == $gd['guild_owner'])
 	{
 		$townowned=$db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}");
 		if ($db->num_rows($townowned) == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_UNTOWN_ERR'],true,'viewguild.php?action=staff&act2=idx');
+			alert('danger',"Uh Oh!","Your guild doesn't have a town to surrender.",true,'viewguild.php?action=staff&act2=idx');
 			die($h->endpage());
 		}
 		elseif (isset($_POST['confirm']))
 		{
 			$r=$db->fetch_single($townowned);
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_UNTOWN_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			alert('success',"Success!","You have surrendered your guild's town.",true,'viewguild.php?action=staff&act2=idx');
 			$db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_id` = {$r}");
 			$api->GuildAddNotification($gd['guild_id'],"Your guild was willingly given up their town.");
 			$api->SystemLogsAdd($userid,'guilds',"Willingly surrendered {$gd['guild_name']}'s town, {$api->SystemTownIDtoName($r)}.");
 		}
 		else
 		{
-			echo "{$lang['VIEWGUILD_STAFF_UNTOWN_CHECK']}<br />
+			echo "Are you sure you wish to surrender your guild's town? This is not reversible.<br />
 			<form method='post'>
 				<input type='hidden' name='confirm' value='yes'>
-				<input type='submit' class='btn btn-success' value='{$lang['GEN_YES']}'>
+				<input type='submit' class='btn btn-success' value='Yes'>
 			</form>
-			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 		}
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
+		alert('danger',"Uh Oh!","You can only be here if you're the guild's leader.",true,'viewguild.php?action=staff&act2=idx');
 	}
 }
 function staff_declare()
 {
-	global $db,$ir,$gd,$api,$lang,$h,$userid;
+	global $db,$gd,$api,$h,$userid;
 	if ($userid == $gd['guild_owner'])
 	{
 		if (isset($_POST['guild']))
@@ -1352,45 +1366,45 @@ function staff_declare()
 			$_POST['guild'] = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs($_POST['guild']) : 0;
 			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_declarewar", stripslashes($_POST['verf'])))
 			{
-				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+				alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
 				die($h->endpage());
 			}
 			if ($_POST['guild'] == $gd['guild_id'])
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR']);
+				alert('danger',"Uh Oh!","You cannot declare war on your own guild.");
 				die($h->endpage());
 			}
 			$data_q = $db->query("SELECT `guild_name`,`guild_owner` FROM `guild` WHERE `guild_id` = {$_POST['guild']}");
 			if ($db->num_rows($data_q) == 0)
 			{
 				$db->free_result($data_q);
-				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR1']);
+				alert('danger',"Uh Oh!","You cannot declare war on a non-existent guild.");
 				die($h->endpage());
 			}
 			$time=time();
 			$iswarredon=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} AND `gw_end` > {$time}");
 			if ($db->num_rows($iswarredon) > 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR2']);
+				alert('danger',"Uh Oh!","You cannot declare war on this guild as you are already at war!");
 				die($h->endpage());
 			}
 			$iswarredon1=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} AND `gw_end` > {$time}");
 			if ($db->num_rows($iswarredon1) > 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR2']);
+				alert('danger',"Uh Oh!","You cannot declare war on this guild as you are already at war!");
 				die($h->endpage());
 			}
 			$lastweek=$time-604800;
 			$istoosoon=$db->fetch_single($db->query("SELECT `gw_end` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} ORDER BY `gw_id` DESC LIMIT 1"));
 			if ($istoosoon > $lastweek)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR3']);
+				alert('danger',"Uh Oh!","You cannot declare war on this guild as its been less than a week since the last war concluded.");
 				die($h->endpage());
 			}
 			$istoosoon1=$db->fetch_single($db->query("SELECT `gw_end` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} ORDER BY `gw_id` DESC LIMIT 1"));
 			if ($istoosoon1 > $lastweek)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_WAR_ERR3']);
+				alert('danger',"Uh Oh!","You cannot declare war on this guild as its been less than a week since the last war concluded.");
 				die($h->endpage());
 			}
 			$r = $db->fetch_row($data_q);
@@ -1401,7 +1415,7 @@ function staff_declare()
 			$api->GuildAddNotification($_POST['guild'],"{$gd['guild_name']} has declared war on your guild.");
 			$api->GuildAddNotification($gd['guild_id'],"Your guild has declared war on {$r['guild_name']}");
 			$api->SystemLogsAdd($userid,'guildwar',"Declared war on {$r['guild_name']} [{$_POST['guild']}]");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_WAR_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			alert('success',"Success!","You have declared war on {$r['guild_name']}",true,'viewguild.php?action=staff&act2=idx');
 		}
 		else
 		{
@@ -1411,12 +1425,12 @@ function staff_declare()
 			<form method='post'>
 				<tr>
 					<th colspan='2'>
-						{$lang['VIEWGUILD_STAFF_WAR_FORM']}
+						You can declare war on another guild. Be ready to reap what you sow.
 					</th>
 				</tr>
 				<tr>
 					<th>
-						{$lang['VIEWGUILD_STAFF_WAR_TH']}
+						Guild
 					</th>
 					<td>
 						" . guilds_dropdown() . "
@@ -1424,57 +1438,60 @@ function staff_declare()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_STAFF_WAR_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='Declare War'>
 					</td>
 				</tr>
 			{$csrf}
 			</form>
 			</table>
-			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 		}
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
+		alert('danger',"Uh Oh!","You can only be here if you're the guild's leader.",true,'viewguild.php?action=staff&act2=idx');
 	}
 }
 function staff_levelup()
 {
-	global $db,$ir,$gd,$api,$lang,$h,$userid; 
-	$xprequired=$gd['guild_level'] * 86.75;
+	global $db,$gd,$api,$userid;
+	$xprequired=$gd['guild_level'] * 50.25;
 	if (isset($_POST['do']))
 	{
 		if ($gd['guild_xp'] < $xprequired)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LVLUP_ERR']);
+			alert('danger',"Uh Oh!","Your guild does not have enough experience to level up. You can get more experience by going to war.");
 		}
 		else
 		{
 			$db->query("UPDATE `guild` SET `guild_level` = `guild_level` + 1, 
 			`guild_xp` = `guild_xp` - {$xprequired} WHERE `guild_id` = {$gd['guild_id']}");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_LVLUP_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			alert('success',"Success!","You have successfully leveled up your guild.",true,'viewguild.php?action=staff&act2=idx');
 			$api->SystemLogsAdd($userid,'guild_level',"Leveled up the {$gd['guild_name']} guild.");
 			$api->GuildAddNotification($gd['guild_id'],"Your guild has leveled up!");
 		}
 	}
 	else
 	{
-		echo "{$lang['VIEWGUILD_STAFF_LVLUP']} " . number_format($xprequired) . " {$lang['VIEWGUILD_STAFF_LVLUP1']}<br />
+		echo "You may level up your guild. Your guild will need the minimum required Experience to do this. You may gain
+        guild Experience by going to war with another guild and gaining points in war. At your guild's level, your
+        guild will need " . number_format($xprequired) . " Guild Experience to level up. Do you wish to attempt to
+        level up?<br />
 		<form method='post'>
 			<input type='hidden' name='do' value='yes'>
-			<input type='submit' value='{$lang['VIEWGUILD_STAFF_LVLUP_BTN']}' class='btn btn-success'>
+			<input type='submit' value='Level Up' class='btn btn-success'>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 	}
 }
 function staff_tax()
 {
-	global $db,$ir,$gd,$api,$lang,$h,$userid;
+	global $db,$gd,$api,$h,$userid;
 	if ($userid == $gd['guild_owner'])
 	{
 		if (!$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_TAX_ERR'],true,'viewguild.php?action=staff&act2=idx');
+			alert('danger',"Uh Oh!","Your guild does not own a town to set a tax rate on.",true,'viewguild.php?action=staff&act2=idx');
 			die($h->endpage());
 		}
 		if (isset($_POST['tax']))
@@ -1482,18 +1499,18 @@ function staff_tax()
 			$_POST['tax'] = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs($_POST['tax']) : 0;
 			if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_tax", stripslashes($_POST['verf'])))
 			{
-				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+				alert('danger',"Action Blocked!","Forms expire fairly quickly. Be quicker next time.");
 				die($h->endpage());
 			}
 			if ($_POST['tax'] < 0 || $_POST['tax'] > 20)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_TAX_ERR2']);
+				alert('danger',"Uh Oh!","You can only set a tax rate between 0% and 20%");
 				die($h->endpage());
 			}
 			$town_id=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
 			$db->query("UPDATE `town` SET `town_tax` = {$_POST['tax']} WHERE `town_guild_owner` = {$gd['guild_owner']}");
 			$api->SystemLogsAdd($userid,'tax',"Set tax rate to {$_POST['tax']}% in {$api->SystemTownIDtoName($town_id)}.");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['VIEWGUILD_STAFF_TAX_SUCC'],true,'viewguild.php?action=staff&act2=idx');
+			alert('success',"Success!","You have set the tax rate of {$api->SystemTownIDtoName($town_id)} to {$_POST['tax']}%.",true,'viewguild.php?action=staff&act2=idx');
 			
 		}
 		else
@@ -1505,12 +1522,12 @@ function staff_tax()
 			<form method='post'>
 				<tr>
 					<th colspan='2'>
-						{$lang['VIEWGUILD_STAFF_TAX_FORM']}
+						You may change the tax rate for the town your guild owns here.
 					</th>
 				</tr>
 				<tr>
 					<th>
-						{$lang['VIEWGUILD_STAFF_TAX_TH']}
+						Tax Rate (Percent)
 					</th>
 					<td>
 						<input type='number' name='tax' class='form-control' value='{$current_tax}' min='0' max='20' required='1'>
@@ -1518,19 +1535,19 @@ function staff_tax()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['VIEWGUILD_STAFF_TAX_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='Change Tax'>
 					</td>
 				</tr>
 			{$csrf}
 			</form>
 			</table>
-			<a href='viewguild.php?action=staff&act2=idx'>{$lang['GEN_BACK']}</a>";
+			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
 		}
 		
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['VIEWGUILD_STAFF_LEADERONLY'],true,'viewguild.php?action=staff&act2=idx');
+		alert('danger',"Uh Oh!","You can only be here if you're the guild's leader.",true,'viewguild.php?action=staff&act2=idx');
 	}
 }
 $h->endpage();

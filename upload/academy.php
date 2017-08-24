@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require ("globals.php");
-echo "<h4>{$lang['ACA_NAME']}</h4><hr>";
+echo "<h4>Local Academy</h4><hr>";
 if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and stop them
                         //And stop them from taking another.
 {
@@ -19,7 +19,7 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
     				 WHERE `ac_id` = {$ir['course']}");
     $coud = $db->fetch_row($cd);
     $db->free_result($cd);
-    echo "{$lang['ACA_ALRDYDO']} {$coud['ac_name']} {$lang['ACA_ALRDYDO1']} " . TimeUntil_Parse($ir['course_complete']) .".";
+    echo "You are currently enrolled in the {$coud['ac_name']} course. You will be finished in " . TimeUntil_Parse($ir['course_complete']) ." days.";
 	die($h->endpage());
 }
 if (!isset($_GET['action']))
@@ -46,16 +46,16 @@ function menu()
 		<thead>
 			<tr>
 				<th>
-					{$lang['ACA_ACA']}
+					Course
 				</th>
 				<th>
-					{$lang['ACA_DESC']}
+					Description
 				</th>
 				<th>
-					{$lang['ACA_COST']}
+					Cost
 				</th>
 				<th>
-					{$lang['ACA_LINK']}
+                    Action
 				</th>
 			</tr>
 		</thead>
@@ -72,11 +72,11 @@ function menu()
             //If user has already completed the course.
             if ($db->fetch_single($cdo) > 0)
             {
-                $do = "<i>{$lang['ACA_DONE']}</i>";
+                $do = "<i>Graduated</i>";
             }
             else
             {
-                $do = "<a href='?action=start&id={$academy['ac_id']}'>{$lang['ACA_ATTEND']}</a>";
+                $do = "<a href='?action=start&id={$academy['ac_id']}'>Attend</a>";
             }
 		echo "<tr>
 		<td>
@@ -84,7 +84,7 @@ function menu()
             //Hide academy level requirement if there is no requirement.
 			if (!empty($academy['ac_level']))
 			{
-				echo "{$lang['ACA_LVL']}{$academy['ac_level']}";
+				echo "Level: {$academy['ac_level']}";
 			}
 			echo"
 		</td>
@@ -108,27 +108,29 @@ function start()
     //If the user doesn't specific a course to take.
 	if (empty($_GET['id']))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['ACA_ERR'],true,'academy.php');
+		alert('danger',"Uh Oh!","You didn't select a valid course to take.",true,'academy.php');
 		die($h->endpage());
 	}
 	$courq = $db->query("SELECT * FROM `academy` WHERE `ac_id` = {$_GET['id']} LIMIT 1");
     //If the course specified does not exist.
 	if ($db->num_rows($courq) == 0)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['ACA_ERR1'],true,'academy.php');
+		alert('danger',"Uh Oh!","The course you chose does not exist. Check your source and try again.",true,'academy.php');
 		die($h->endpage());
 	}
 	$course = $db->fetch_row($courq);
     //If the user's level is lower than the course requirement.
 	if ($course['ac_level'] > $ir['level'])
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['ACA_ERR2'],true,'academy.php');
+		alert('danger',"Uh Oh!","Your level is too low to take this course. Come back when you are level
+		                        {$course['ac_level']} or above.",true,'academy.php');
 		die($h->endpage());
 	}
     //If the user doesn't have enough primary currency for this course.
 	if ($course['ac_cost'] > $ir['primary_currency'])
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['ACA_ERR3'],true,'academy.php');
+		alert('danger',"Uh Oh!","You do not have enough cash to take this course. You need {$course['ac_cost']},
+                                yet you only have {$ir['primary_currency']}",true,'academy.php');
 		die($h->endpage());
 	}
 	$cdo = $db->query("SELECT COUNT(`userid`)
@@ -138,7 +140,7 @@ function start()
     //If the user has already taken this course.
 	if ($db->fetch_single($cdo) > 0)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['ACA_ERR4'],true,'academy.php');
+		alert('danger',"Uh Oh!","You have already graduated from this course. No need to enroll again.",true,'academy.php');
 		die($h->endpage());
 	}
 	$completed=time() + ($course['ac_days']*86400); //Current Time + (Academy days * seconds in a day)
@@ -147,6 +149,7 @@ function start()
                 WHERE `userid` = {$userid}");
     //Update user's course, and course completion time.
 	$api->UserTakeCurrency($userid,'primary',$course['ac_cost']); //Take user's money.
-	alert('success',$lang['ERROR_SUCCESS'],"{$lang['ACA_SUCC']} {$course['ac_name']} {$lang['ACA_SUCC1']} {$course['ac_days']} {$lang['ACA_SUCC2']}",true,'index.php');
+	alert('success',"Success!","You have successfully enrolled yourself in the {$course['ac_name']} course. It will
+	                            completed in {$course['ac_days']} days.",true,'index.php');
 }
 $h->endpage();

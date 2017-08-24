@@ -9,22 +9,22 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-echo "<h3>{$lang['FJ_TITLE']}</h3>
-	{$lang['FJ_INFO']}";
+echo "<h3>Federal Dungeon</h3>
+	This is where you go if you break the game rules. Be smart, follow the rules!";
 $q = $db->query("SELECT * FROM `fedjail` ORDER BY `fed_out` ASC");
 echo "<table class='table table-bordered'>
 	<tr>
 		<th>
-			{$lang['FJ_WHO']}
+			Player
 		</th>
 		<th>
-			{$lang['FJ_TIME']}
+			Remaining Time
 		</th>
 		<th>
-			{$lang['FJ_RS']}
+			Reason
 		</th>
 		<th>
-			{$lang['FJ_JAILER']}
+			Jailer
 		</th>
 	</tr>";
 //List all the players in the federal jail.

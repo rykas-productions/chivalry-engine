@@ -9,7 +9,7 @@
 */
 require("globals.php");
 require("stats/stats.php");
-echo "<h3>{$lang['STATS_TITLE']}</h3><hr />
+echo "<h3>Statistics Center</h3><hr />
 <script>
 google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
@@ -65,20 +65,20 @@ google.charts.load('current', {'packages':['corechart']});
           ['Firefox',     {$FF}]
         ]);
 		var options2 = {
-          title: '{$lang['STATS_CHART1']}'
+          title: 'Gender Ratio'
         };
 		
 		var options3 = {
-          title: '{$lang['STATS_CHART2']}',
+          title: 'Class Ratio',
 		  colors: ['#FF0000', '#0000FF', '#00FF00']
         };
 		
 		var options4 = {
-          title: '{$lang['STATS_CHART']}'
+          title: 'User Operating Systems'
         };
 		
 		var options5 = {
-          title: '{$lang['STATS_CHART3']}'
+          title: 'User Browser Choice'
         };
 
 		var chart2 = new google.visualization.PieChart(document.getElementById('gender'));
@@ -114,17 +114,17 @@ google.charts.load('current', {'packages':['corechart']});
 		<thead>
 			<tr>
 				<th>
-					{$lang['STATS_TH']}
+					Statistic
 				</th>
 				<th width='33%'>
-					{$lang['STATS_TH1']}
+					Value
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td>
-					{$lang['STATS_TD']}
+					Registered Players
 				</td>
 				<td>
 					" . number_format($TotalUserCount) . "
@@ -132,7 +132,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					{$lang['STATS_TD1']}
+					Primary Currency Withdrawn
 				</td>
 				<td>
 					" . number_format($TotalPrimaryCurrency) . "
@@ -140,7 +140,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					{$lang['STATS_TD2']}
+					Primary Currency Banked
 				</td>
 				<td>
 					" . number_format($TotalBank) . "
@@ -148,7 +148,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					{$lang['STATS_TD3']}
+					Total Primary Currency
 				</td>
 				<td>
 					" . number_format($TotalBankandPC) . "
@@ -156,7 +156,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					{$lang['STATS_TD4']}
+					Secondary Currency in Circulation
 				</td>
 				<td>
 					" . number_format($TotalSecondaryCurrency) . "
@@ -164,7 +164,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					{$lang['STATS_TD5']}
+					Average Primary Currency per Player
 				</td>
 				<td>
 					" . number_format($AveragePrimaryCurrencyPerPlayer) . "
@@ -172,7 +172,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					{$lang['STATS_TD6']}
+					Average Secondary Currency per Player
 				</td>
 				<td>
 					" . number_format($AverageSecondaryCurrencyPerPlayer) . "
@@ -180,7 +180,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					{$lang['STATS_TD7']}
+					Average Bank Balance per Players
 				</td>
 				<td>
 					" . number_format($AverageBank) . "
@@ -188,7 +188,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					{$lang['STATS_TD8']}
+					Registered Guilds
 				</td>
 				<td>
 					" . number_format($TotalGuildCount) . "

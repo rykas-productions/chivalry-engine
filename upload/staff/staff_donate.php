@@ -7,7 +7,7 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
-echo "<h2>{$lang['STAFF_DONATE_TITLE']}</h2><hr />";
+echo "<h2>Staff VIP Pack</h2><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -26,12 +26,12 @@ switch ($_GET['action'])
 }
 function addpack()
 {
-	global $db,$userid,$lang,$api,$h;
+	global $db,$userid,$api,$h;
 	if (isset($_POST['pack']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_vip_add', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your action has been blocked for your security. Please submit forms quickly!");
 			die($h->endpage());
 		}
 		$_POST['pack'] = (isset($_POST['pack']) && is_numeric($_POST['pack'])) ? abs($_POST['pack']) : '';
@@ -39,30 +39,30 @@ function addpack()
 		$cost = (isset($cost) && is_numeric($cost)) ? abs($cost) : '';
 		if (empty($_POST['pack']))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_DONATE_ADD_ERR']);
+			alert('danger',"Uh Oh!","Please select an item to add to the VIP Pack listing.");
 			die($h->endpage());
 		}
 		if (empty($cost))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_DONATE_ADD_ERR2']);
+			alert('danger',"Uh Oh!","Please select a cost for the VIP Pack you wish to list.");
 			die($h->endpage());
 		}
 		$db_cost=$cost/100;
 		$q=$db->query("SELECT `itmid` FROM `items` WHERE `itmid` = {$_POST['pack']}");
 		if ($db->num_rows($q) == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_DONATE_ADD_ERR3']);
+			alert('danger',"Uh Oh!","The item you wish to list as a pack does not exist.");
 			die($h->endpage());
 		}
 		$q2=$db->query("SELECT `vip_item` FROM `vip_listing` WHERE `vip_item` = {$_POST['pack']}");
 		if ($db->num_rows($q2) > 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_DONATE_ADD_ERR4']);
+			alert('danger',"Uh Oh!","You already have this item listed on the VIP Pack Listing.");
 			die($h->endpage());
 		}
 		$db->query("INSERT INTO `vip_listing` (`vip_item`, `vip_cost`) VALUES ('{$_POST['pack']}', '{$db_cost}')");
 		$api->SystemLogsAdd($userid,'staff',"Added {$api->SystemItemIDtoName($_POST['pack'])} to the VIP Store for \${$db_cost}.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_DONATE_ADD_SUCC'],true,'index.php');
+		alert('success',"Success!","You have successfully added the {$api->SystemItemIDtoName($_POST['pack'])} to the VIP Store for \${$db_cost}.",true,'index.php');
 	}
 	else
 	{
@@ -71,12 +71,12 @@ function addpack()
 				<table class='table table-bordered'>
 					<tr>
 						<th colspan='2'>
-							{$lang['STAFF_DONATE_ADD_INFO']}
+							You can add items to the VIP Store here.
 						</th>
 					</tr>
 					<tr>
 						<th>
-							{$lang['STAFF_DONATE_ADD_TH']}
+							VIP Pack Item
 						</th>
 						<td>
 							" . item_dropdown('pack') . "
@@ -84,7 +84,7 @@ function addpack()
 					</tr>
 					<tr>
 						<th>
-							{$lang['STAFF_DONATE_ADD_TH1']}
+							VIP Pack Cost
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' name='cost' value='0.00' min='0.00' step='0.01'>
@@ -92,7 +92,7 @@ function addpack()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-primary' value='{$lang['STAFF_DONATE_ADD_BTN']}'>
+							<input type='submit' class='btn btn-primary' value='Add Pack'>
 						</td>
 					</tr>
 				</table>
@@ -103,30 +103,30 @@ function addpack()
 }
 function delpack()
 {
-	global $db,$userid,$lang,$api,$h;
+	global $db,$userid,$api,$h;
 	if (isset($_POST['pack']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_vip_del', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your action has been blocked for your security. Please submit forms quickly!");
 			die($h->endpage());
 		}
 		$_POST['pack'] = (isset($_POST['pack']) && is_numeric($_POST['pack'])) ? abs($_POST['pack']) : '';
 		if (empty($_POST['pack']))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_DONATE_DEL_ERR']);
+			alert('danger',"Uh Oh!","Please select a VIP Pack you wish to remove.");
 			die($h->endpage());
 		}
 		$q=$db->query("SELECT `vip_item` FROM `vip_listing` WHERE `vip_id` = {$_POST['pack']}");
 		if ($db->num_rows($q) == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_DONATE_DEL_ERR1']);
+			alert('danger',"Uh Oh!","The VIP Pack you wish to remove has already been removed.");
 			die($h->endpage());
 		}
 		$r=$db->fetch_single($q);
 		$db->query("DELETE FROM `vip_listing` WHERE `vip_id` = {$_POST['pack']}");
 		$api->SystemLogsAdd($userid,'staff',"Removed an item from the VIP Store.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_DONATE_DEL_SUCC'],true,'index.php');
+		alert('success',"Success!","You have successfully removed this pack from the VIP Store.",true,'index.php');
 	}
 	else
 	{
@@ -135,12 +135,12 @@ function delpack()
 				<table class='table table-bordered'>
 					<tr>
 						<th colspan='2'>
-							{$lang['STAFF_DONATE_DEL_INFO']}
+							You can remove VIP Packs from the VIP Store here.
 						</th>
 					</tr>
 					<tr>
 						<th>
-							{$lang['STAFF_DONATE_ADD_TH']}
+							VIP Pack
 						</th>
 						<td>
 							" . vipitem_dropdown() . "
@@ -148,7 +148,7 @@ function delpack()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-primary' value='{$lang['STAFF_DONATE_DEL_BTN']}'>
+							<input type='submit' class='btn btn-primary' value='Delete Pack'>
 						</td>
 					</tr>
 				</table>

@@ -11,7 +11,7 @@ $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 //Check if someone is already registered on this IP.
 if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1)
 {
-	alert('danger',$lang['ERROR_SECURITY'],$lang['REG_MULTIALERT']);
+	alert('danger',"Uh Oh!","You can only have one account per IP Address. We're going to stop you from registering for now.");
 	$h->endpage();
 	exit;
 }
@@ -34,7 +34,7 @@ if (!empty($username))
 		if (!$_SESSION['captcha'] || !isset($_POST['captcha']) || $_SESSION['captcha'] != $_POST['captcha'])
 		{
 			unset($_SESSION['captcha']);
-			alert('danger',$lang['ERROR_INVALID'],$lang['REG_CAPTCHAERROR']);
+			alert('danger',"Uh Oh!","You have failed the captcha.");
 			require("footer.php");
 			exit;
 		}
@@ -43,35 +43,35 @@ if (!empty($username))
 	//If the email is inputted, and valid.
 	if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email'])))
 	{
-		alert('danger',$lang['ERROR_INVALID'],$lang['REG_EMAILERROR']);
+		alert('danger',"Uh Oh!","You input an invalid email address.");
 		require("footer.php");
 		exit;
 	}
 	//If the username is empty
 	if (empty($username))
 	{
-		alert('danger',$lang['ERROR_INVALID'],$lang['REG_USEREMPTY']);
+		alert('danger',"Uh Oh!","You input an invalid or empty username.");
 		require("footer.php");
 		exit;
 	}
 	//If the username is less than 3 characters and more than 20.
 	if (((strlen($username) > 20) OR (strlen($username) < 3)))
 	{
-		alert('danger',$lang['ERROR_LENGTH'],$lang['UNC_LENGTH_ERROR']);
+		alert('danger',"Uh Oh!","Your username can only be 3 through 20 characters in length.");
 		require("footer.php");
 		exit;
 	}
 	//Check Gender
 	if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female'))
 	{
-		alert('danger',$lang['ERROR_INVALID'],$lang['REG_GENDERERROR']);
+		alert('danger',"Uh Oh!","You are trying to register as an invalid sex.");
 		require("footer.php");
 		exit;
 	}
 	//Check class
 	if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender'))
 	{
-		alert('danger',$lang['ERROR_INVALID'],$lang['REG_CLASSERROR']);
+		alert('danger',"Uh Oh!","You are trying to register as an invalid class.");
 		require("footer.php");
 		exit;
 	}
@@ -95,22 +95,22 @@ if (!empty($username))
 	//Username is in use.
 	if ($u_check > 0)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['REG_UNIUERROR']);
+		alert('danger',"Uh Oh!","The username you've chosen is already in use.");
 	}
 	//Email is in use
 	else if ($e_check > 0)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['REG_EIUERROR']);		
+		alert('danger',"Uh Oh!","The email you've chosen is already in use.");
 	}
 	//Both passwords aren't entered
 	else if (empty($base_pw) || empty($check_pw))
 	{
-		alert('danger',$lang['ERROR_EMPTY'],$lang['REG_PWERROR']);	
+		alert('danger',"Uh Oh!","You must specify a password and confirm it.");
 	}
 	//The entered passwords match.
 	else if ($base_pw != $check_pw)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['REG_VPWERROR']);	
+		alert('danger',"Uh Oh!","Your entered passwords did not match.");
 	}
 	else
 	{
@@ -124,18 +124,16 @@ if (!empty($username))
 			if ($db->num_rows($q) == 0)
 			{
 				$db->free_result($q);
-				alert('danger',$lang['ERROR_NONUSER'],$lang['REG_REFERROR']);
-				require("footer.php");
-				exit;
+				alert('danger',"Uh Oh!","The user who referred you does not exist.");
+				die($h->endpage());
 			}
 			$rem_IP = $db->fetch_single($q);
 			$db->free_result($q);
 			//If referring user has the same IP as the registering one.
 			if ($rem_IP == $_SERVER['REMOTE_ADDR'])
 			{
-				alert('danger',$lang['ERROR_SECURITY'],$lang['REG_REFMERROR']);
-				require("footer.php");
-				exit;
+				alert('danger',"Uh Oh!","You cannot use a referral ID from someone on your IP.");
+                die($h->endpage());
 			}
 		}
 		$encpsw = encode_password($base_pw);	//Encode the password.
@@ -173,7 +171,7 @@ if (!empty($username))
 		if ($_POST['ref'])
 		{
 			$db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']} WHERE `userid` = {$_POST['ref']}");
-			notification_add($_POST['ref'], "For refering $username to the game, you have earned {$set['ReferalKickback']} valuable Secondary Currency(s)!");
+			notification_add($_POST['ref'], "For referring $username to the game, you have earned {$set['ReferalKickback']} valuable Secondary Currency(s)!");
 			$e_rip = $db->escape($rem_IP);
 			$db->query("INSERT INTO `referals`
 			VALUES (NULL, {$_POST['ref']}, '{$e_rip}', {$i}, '{$IP}',{$CurrentTime})");
@@ -191,14 +189,14 @@ if (!empty($username))
 		$api->SystemLogsAdd($_SESSION['userid'],'login',"Successfully logged in.");
 		$db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
 		//User registered, lets log them in.
-		alert('success',"{$lang['ERROR_SUCCESS']}","{$lang['REG_SUCCESS']} <a href='tutorial.php'>{$lang['LOGIN_SIGNIN']}</a>",false);
+		alert('success',"Success!","You have successfully signed up. Click here to <a href='tutorial.php'>Sign In</a>",false);
 	}
 	$h->endpage();
 }
 else
 {
 echo "
-	<h3>{$set['WebsiteName']} {$lang['REG_FORM']}</h3>
+	<h3>{$set['WebsiteName']} Registration Form</h3>
 	<div id='usernameresult'></div>
 	<div id='cpasswordresult'></div>
 	<div id='emailresult'></div>
@@ -207,97 +205,99 @@ echo "
 		<form method='post'>
 			<tr>
 				<th>
-					{$lang['REG_USERNAME']}
+					Username
 				</th>
 				<td>
 					<div id='unerror'>
-						<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='{$lang['REG_UNPLACE']}' onkeyup='CheckUsername(this.value);' required>
+						<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='3-20 characters in length' onkeyup='CheckUsername(this.value);' required>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					{$lang['REG_EMAIL']}
+					Email
 				</th>
 				<td>
 					<div id='emerror'>
-						<input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='{$lang['REG_EPLACE']}' onkeyup='CheckEmail(this.value);' required>
+						<input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					{$lang['REG_PW']}
+					Password
 				</th>
 				<td>
 					<div id='pwerror'>
-						<input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='{$lang['REG_PWPLACE']}' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
+						<input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='Unique passwords recommended' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
 					</div>
 					<div id='passwordresult'></div>
 				</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['REG_CPW']}
+						Confirm Password
 					</th>
 					<td>
 						<div id='cpwerror'>
-							<input type='password' class='form-control' id='cpassword' name='cpassword' minlength='3' maxlength='256' placeholder='{$lang['REG_PW1PLACE']}' onkeyup='PasswordMatch();' required>
+							<input type='password' class='form-control' id='cpassword' name='cpassword' minlength='3' maxlength='256' placeholder='Confirm password entered previously' onkeyup='PasswordMatch();' required>
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['REG_SEX']}
+						Sex
 					</th>
 					<td>
 						<select name='gender' class='form-control' type='dropdown'>
-							<option value='Male'>{$lang['SCU_SEX']}</option>
-							<option value='Female'>{$lang['SCU_SEX1']}</option>
+							<option value='Male'>Male</option>
+							<option value='Female'>Female</option>
 						</select>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['REG_CLASS']}
+						Class
 					</th>
 					<td>
 						<select name='class' id='class' class='form-control' onchange='OutputTeam(this)' type='dropdown'>
 							<option></option>
-							<option value='Warrior'>{$lang['SCU_CLASS']}</option>
-							<option value='Rogue'>{$lang['SCU_CLASS1']}</option>
-							<option value='Defender'>{$lang['SCU_CLASS2']}</option>
+							<option value='Warrior'>Warrior</option>
+							<option value='Rogue'>Rogue</option>
+							<option value='Defender'>Defender</option>
 						</select>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['REG_REFID']}
+						Referral's ID
 					</th>
 					<td>
-						<input type='number' value='{$_GET['REF']}' class='form-control' id='ref' name='ref' min='0' placeholder='{$lang['REG_REFPLACE']}'>
+						<input type='number' value='{$_GET['REF']}' class='form-control' id='ref' name='ref' min='0' placeholder='Can be empty. This is a User ID.'>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['REG_PROMO']}
+						Promo Code
 					</th>
 					<td>
-						<input type='text' class='form-control' id='promo' name='promo' placeholder='{$lang['REG_PROMOPLACE']}'>
+						<input type='text' class='form-control' id='promo' name='promo' placeholder='Can be empty'>
 					</td>
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<i>{$lang['REG_OPTIN']}</i>
+						<i>By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a>
+						and our <a href='privacy.php'>Privacy Policy</a>. You also agree that you wish to opt-in to our
+						game newsletter. You may opt-out at anytime by checking your in-game settings.</i>
 					</td>
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang["LOGIN_REGISTER"]}' />
+						<input type='submit' class='btn btn-primary' value='Register' />
 					</td>
 				</tr>
 			</form>
 		</table>
-	&gt; <a href='login.php'>{$lang["LOGIN_LOGIN"]}</a>";
+	&gt; <a href='login.php'>Login Page</a>";
 }
 $h->endpage();;

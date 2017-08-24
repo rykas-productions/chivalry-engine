@@ -9,7 +9,7 @@
 */
 $voterquery=1;
 require_once('globals.php');
-echo "<h3>{$lang['POLL_TITLE']}</h3><hr />";
+echo "<h3>Polling Booth</h3><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -25,29 +25,28 @@ default:
 }
 function home()
 {
-	global $db,$userid,$lang,$ir,$h;
-	$voterquery=1;
-	echo "{$lang['POLL_CYV']}<br />";
+	global $db,$userid,$ir,$h;
+	echo "Cast your vote today!<br />";
 	
 	$_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs($_POST['poll']) : '';
 	$_POST['choice'] = (isset($_POST['choice']) && is_numeric($_POST['choice'])) ? abs($_POST['choice']) : '';
 	$ir['voted'] = unserialize($ir['voted']);
 	if (!$_POST['choice'] || !$_POST['poll'])
 	{
-		echo "<a href='?action=viewpolls'>{$lang['POLL_VOP']}</a>";
+		echo "<a href='?action=viewpolls'>View Closed Polls</a>";
 	}
 	if ($_POST['choice'] && $_POST['poll'])
 	{
 		if ($ir['voted'][$_POST['poll']])
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['POLL_AVITP']);
+			alert('danger',"Uh Oh!","You have already voted in this poll.");
 			die($h->endpage());
 		}
 		$check_q = $db->query("SELECT COUNT(`id`) FROM `polls`  WHERE `active` = '1' AND `id` = {$_POST['poll']}");
 		if ($db->fetch_single($check_q) == 0)
 		{
 			$db->free_result($check_q);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['POLL_PCNT']);
+			alert('danger',"Uh Oh!","Poll does not exist, or is no longer active.");
 			die($h->endpage());
 		}
 		$db->free_result($check_q);
@@ -58,14 +57,14 @@ function home()
 				 SET `voted` = '$ser'
 				 WHERE `userid` = $userid");
 		$db->query("UPDATE `polls` SET `voted{$_POST['choice']}` = `voted{$_POST['choice']}` + 1 WHERE `active` = '1' AND `id` = {$_POST['poll']}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['POLL_VOTE_SUCCESS'],true,'polling.php');
+		alert('success',"Success!","You have successfully submitted your vote.",true,'polling.php');
 	}
 	else
 	{
 		$q = $db->query("SELECT * FROM `polls` WHERE `active` = '1'");
 		if (!$db->num_rows($q))
 		{
-			echo $lang['POLL_VOTE_NOPOLL'];
+			echo"<br />There's no polls open at this time.";
 		}
 		else
 		{
@@ -77,12 +76,12 @@ function home()
 					echo "<br />
 					<table class='table table-bordered'>
 						<tr>
-							<th>{$lang['POLL_VOTE_CHOICE']}</th>
-							<th>{$lang['POLL_VOTE_VOTES']}</th>
-							<th>{$lang['POLL_VOTE_PERCENT_VOTES']}</th>
+							<th>Polling Options</th>
+							<th>Votes</th>
+							<th>Percentage</th>
 						</tr>
 						<tr>
-							<th colspan='3'>{$r['question']} {$lang['POLL_VOTE_AV']}</th>
+							<th colspan='3'>Polling Question: {$r['question']} (Already Voted!)</th>
 						</tr>";
 					if (!$r['hidden'])
 					{
@@ -118,14 +117,14 @@ function home()
 					{
 						echo "<tr>
 							<td colspan='4' align='center'>
-								{$lang['POLL_VOTE_HIDDEN']}
+								Results are hidden until the poll ends.
 							</td>
 						  </tr>";
 					}
 					$myvote = $r['choice' . $ir['voted'][$r['id']]];
 					echo "<tr>
-						<th colspan='2'>{$lang['POLL_VOTE_YVOTE']} {$myvote}</th>
-						<th colspan='2'>{$lang['POLL_VOTE_TVOTE']} " . number_format($r['votes']) . "</th>
+						<th colspan='2'>You Voted: {$myvote}</th>
+						<th colspan='2'>Total Votes " . number_format($r['votes']) . "</th>
 					  </tr>
 				</table>";
 				}
@@ -136,11 +135,11 @@ function home()
 					<input type='hidden' name='poll' value='{$r['id']}' />
 					<table class='table table-bordered'>
 						<tr>
-							<th>{$lang['POLL_VOTE_CHOICE']}</th>
-							<th>{$lang['POLL_VOTE_VOTEC']}</th>
+							<th>Polling Options</th>
+							<th>Select</th>
 						</tr>
 						<tr>
-							<th colspan='2'>{$lang['POLL_VOTE_QUESTION']} {$r['question']} {$lang['POLL_VOTE_NV']}</th>
+							<th colspan='2'>Polling Question: {$r['question']} (Not Voted)</th>
 						</tr>";
 					for ($i = 1; $i <= 10; $i++)
 					{
@@ -162,7 +161,7 @@ function home()
 						}
 					}
 					echo "<tr>
-						<td colspan='2'><input type='submit' class='btn btn-primary' value='{$lang['POLL_VOTE_CAST']}' /></td>
+						<td colspan='2'><input type='submit' class='btn btn-primary' value='Cast Vote' /></td>
 					  </tr>
 				</table></form>";
 				}
@@ -173,13 +172,13 @@ function home()
 }
 function viewpolls()
 {
-	global $db,$userid,$lang,$ir,$h;
-	echo "<a href='polling.php'>{$lang['POLL_CYV']}</a><br />";
+	global $db;
+	echo "<a href='polling.php'>Cast Your Vote!</a><br />";
 		$q =
 			$db->query("SELECT * FROM `polls` WHERE `active` = '0' ORDER BY `id` DESC");
 	if (!$db->num_rows($q))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['POLL_VOTE_NOCLOSED'],true,'polling.php');
+		alert('danger',"Uh Oh!","There are no closed polls.",true,'polling.php');
 	}
 	else
 	{
@@ -188,12 +187,12 @@ function viewpolls()
 			$r['votes']=$r['voted1']+$r['voted2']+$r['voted3']+$r['voted4']+$r['voted5']+$r['voted6']+$r['voted7']+$r['voted8']+$r['voted9']+$r['voted10'];
 			echo "<table class='table table-bordered'>
 					<tr>
-						<th>{$lang['POLL_VOTE_CHOICE']}</th>
-						<th>{$lang['POLL_VOTE_VOTES']}</th>
-						<th>{$lang['POLL_VOTE_PERCENT_VOTES']}</th>
+						<th>Polling Options</th>
+						<th>Votes</th>
+						<th>Percentage</th>
 					</tr>
 					<tr>
-						<th colspan='4'>{$lang['POLL_VOTE_QUESTION']} {$r['question']}</th>
+						<th colspan='4'>Polling Question: {$r['question']}</th>
 					</tr>";
 			for ($i = 1; $i <= 10; $i++)
 			{
@@ -223,7 +222,7 @@ function viewpolls()
 				}
 			}
 			echo "<tr>
-					<th colspan='4'>{$lang['POLL_VOTE_TVOTE']} {$r['votes']}</th>
+					<th colspan='4'>Total Votes: {$r['votes']}</th>
 				  </tr>
 			</table><br />";
 		}

@@ -7,7 +7,7 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 require('sglobals.php');
-echo "<h3>{$lang['STAFF_POLL_TITLE']}</h3><hr />";
+echo "<h3>Staff Polling</h3><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -26,12 +26,12 @@ default:
 }
 function add()
 {
-	global $db,$lang,$h,$userid,$api;
+	global $db,$h,$userid,$api;
 	if (isset($_POST['question']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_startpoll', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Please fill out the form quickly next time.");
 			die($h->endpage());
 		}
 		$question =  (isset($_POST['question'])) ? $db->escape(strip_tags(stripslashes($_POST['question']))) : '';
@@ -48,7 +48,7 @@ function add()
 		$hidden = (isset($_POST['hidden']) && is_numeric($_POST['hidden'])) ? abs(intval($_POST['hidden'])) : '';
 		if (empty($question) || empty($choice1) || empty($choice2))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_POLL_START_ERROR']);
+			alert('danger',"Uh Oh!","Please be sure to fill out the question, and two polling options. Thank you.");
 			die($h->endpage());
 		}
 		$db->query("INSERT INTO `polls` (`active`, `question`, `choice1`, 
@@ -59,7 +59,7 @@ function add()
                      '$choice3', '$choice4', '$choice5', '$choice6',
                      '$choice7', '$choice8', '$choice9' ,'$choice10',
                      '{$_POST['hidden']}')");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_POLL_START_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully created a poll.",true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Started a game poll.");
 		$q=$db->query("SELECT `userid`, `username` FROM `users`");
 		while ($r = $db->fetch_row($q))
@@ -70,14 +70,14 @@ function add()
 	}
 	else
 	{
-		echo $lang['STAFF_POLL_START_INFO'];
+		echo "Start a Poll";
 		$csrf = request_csrf_html('staff_startpoll');
 		echo "<hr />
 		<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_POLL_START_QUESTION']}
+					Question
 				</th>
 				<td>
 					<input type='text' required='1' class='form-control' name='question' />
@@ -85,7 +85,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_CHOICE']}1
+					Choice 1
 				</th>
 				<td>
 					<input type='text' required='1' class='form-control' name='choice1' />
@@ -93,7 +93,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_CHOICE']}2
+					Choice 2
 				</th>
 				<td>
 					<input type='text' required='1' class='form-control' name='choice2' />
@@ -101,7 +101,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_CHOICE']}3
+					Choice 3
 				</th>
 				<td>
 					<input type='text' class='form-control' name='choice3' />
@@ -109,7 +109,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_CHOICE']}4
+					Choice 4
 				</th>
 				<td>
 					<input type='text' class='form-control' name='choice4' />
@@ -117,7 +117,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_CHOICE']}5
+					Choice 5
 				</th>
 				<td>
 					<input type='text' class='form-control' name='choice5' />
@@ -125,7 +125,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_CHOICE']}6
+					Choice 6
 				</th>
 				<td>
 					<input type='text' class='form-control' name='choice6' />
@@ -133,7 +133,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_CHOICE']}7
+					Choice 7
 				</th>
 				<td>
 					<input type='text' class='form-control' name='choice7' />
@@ -141,7 +141,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_CHOICE']}8
+					Choice 8
 				</th>
 				<td>
 					<input type='text' class='form-control' name='choice8' />
@@ -149,7 +149,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_CHOICE']}9
+					Choice 9
 				</th>
 				<td>
 					<input type='text' class='form-control' name='choice9' />
@@ -157,7 +157,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_CHOICE']}10
+					Choice 10
 				</th>
 				<td>
 					<input type='text' class='form-control' name='choice10' />
@@ -165,18 +165,18 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_POLL_START_HIDE']}
+					Hide results until poll is closed?
 				</th>
 				<td>
 					<select name='hidden' class='form-control' type='dropdown'>
-						<option value='0'>{$lang['GEN_NO']}</option>
-						<option value='1'>{$lang['GEN_YES']}</option>
+						<option value='0'>No</option>
+						<option value='1'>Yes</option>
 					</select>
 				</td>
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_POLL_START_BUTTON']}'>
+					<input type='submit' class='btn btn-primary' value='Create Poll'>
 				</td>
 			</tr>
 		</table>
@@ -186,13 +186,13 @@ function add()
 }
 function close()
 {
-	global $db,$lang,$h,$api,$userid;
+	global $db,$h,$api,$userid;
 	$_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs(intval($_POST['poll'])) : '';
     if (empty($_POST['poll']))
     {
         $csrf = request_csrf_html('staff_endpoll');
         echo "
-        {$lang['STAFF_POLL_END_FORM']}
+        Select the poll you wish to end.
         <br />
         <form method='post'>
            ";
@@ -208,7 +208,7 @@ function close()
         }
         $db->free_result($q);
         echo "</select>" . $csrf . "
-			<br /><input type='submit' class='btn btn-primary' value='{$lang['STAFF_POLL_END_BTN']}' />
+			<br /><input type='submit' class='btn btn-primary' value='End Poll' />
 		</form>
    		";
 		$h->endpage();
@@ -217,19 +217,19 @@ function close()
     {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_endpoll', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Please fill out the form quickly next time.");
 			die($h->endpage());
 		}
         $q = $db->query("SELECT COUNT(`id`) FROM `polls` WHERE `id` = {$_POST['poll']}");
         if ($db->fetch_single($q) == 0)
         {
             $db->free_result($q);
-            alert('danger',$lang['ERROR_GEN'],$lang['STAFF_POLL_END_ERR']);
+            alert('danger',"Uh Oh!","This poll does not exist, and thus, cannot be ended.");
             die($h->endpage());
         }
         $db->free_result($q);
         $db->query("UPDATE `polls` SET `active` = '0' WHERE `id` = {$_POST['poll']}");
-        alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_POLL_END_SUCCESS'],true,'index.php');
+        alert('success',"Success!","You have closed this poll to respones.",true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Closed a game poll.");
 		$q=$db->query("SELECT `userid`, `username` FROM `users`");
 		while ($r = $db->fetch_row($q))

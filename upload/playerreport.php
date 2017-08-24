@@ -7,57 +7,61 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
-function csrf_error($goBackTo)
+function csrf_error()
 {
-    global $h,$lang;
-	echo "<div class='alert alert-danger'> <strong>{$lang['CSRF_ERROR_TITLE']}</strong> 
-	{$lang['CSRF_ERROR_TEXT']} {$lang['CSRF_PREF_MENU']} <a href='playerreport.php'>{$lang['GEN_HERE']}.</div>";
-    $h->endpage();
-    exit;
+    global $h;
+    alert('danger',"Action Blocked!","The action you were trying to do was blocked. It was blocked because you loaded
+        another page on the game. If you have not loaded a different page during this time, change your password
+        immediately, as another person may have access to your account!");
+    die($h->endpage());
 }
-echo "<h3>{$lang['PR_TITLE']}</h3><hr />";
+echo "<h3>Player Report</h3><hr />";
 if (empty($_POST['userid']))
 {
 	$code = request_csrf_code('report_form');
-	echo "{$lang['PR_INTRO']}<br />
+	echo "Know someone who broke the rules, or is just being dishonorable? This is the place to report them. Report the
+        user just once. Reporting the same user multiple times will slow down the process. If you are found to be
+        abusing the player report system, you will be placed away in federal jail. Information you enter here will
+        remain confidential and will only be read by senior staff members. If you wish to confess to a crime, this is
+        also a great place to do so.<br />
 	 <form method='post'>
 	 <table class='table table-bordered'>
 		<tr>
 			<th>
-				{$lang['PR_USER']}
+				User
 			</th>
 			<td>
-				<input type='number' min='1' required='1' name='userid' placeholder='{$lang['PR_USER_PH']}' class='form-control'>
+				<input type='number' min='1' required='1' name='userid' class='form-control'>
 			</td>
 		</tr>
 		<tr>
 			<th>
-				{$lang['PR_CATEGORY']}
+				Report Category
 			</th>
 			<td>
 				<select name='category' class='form-control'>
-					<option value='bugabuse'>{$lang['PR_CAT_1']}</option>
-					<option value='harassment'>{$lang['PR_CAT_2']}</option>
-					<option value='scamming'>{$lang['PR_CAT_3']}</option>
-					<option value='spamming'>{$lang['PR_CAT_4']}</option>
-					<option value='erb'>{$lang['PR_CAT_5']}</option>
-					<option value='security'>{$lang['PR_CAT_6']}</option>
-					<option value='other'>{$lang['PR_CAT_7']}</option>
+					<option value='bugabuse'>Bug Abuse</option>
+					<option value='harassment'>Harassment</option>
+					<option value='scamming'>Scamming</option>
+					<option value='spamming'>Spamming</option>
+					<option value='erb'>Encouraging Rule Breakage</option>
+					<option value='security'>Security Issue</option>
+					<option value='other'>Other (Explain below)</option>
 				</input>
 			</td>
 		</tr>
 		<tr>
 			<th>
-				{$lang['PR_REASON']}
+			    Report Text
 			</th>
 			<td>
-				<textarea class='form-control' required='1' maxlength='1250' name='reason' rows='5' placeholder='{$lang['PR_REASON_PH']}'></textarea>
+				<textarea class='form-control' required='1' maxlength='1250' name='reason' rows='5'></textarea>
 			</td>
 		</tr>
 		<tr>
 			
 			<td colspan='2'>
-				<input type='submit' value='{$lang['FB_PR']}' class='btn btn-primary'>
+				<input type='submit' value='Submit Report' class='btn btn-primary'>
 			</td>
 		</tr>
 	</table>
@@ -71,29 +75,30 @@ else
 	$_POST['userid'] =  (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs($_POST['userid']) : '';
 	if (!isset($_POST['verf']) || !verify_csrf_code('report_form', stripslashes($_POST['verf'])))
 	{
-		csrf_error('');
+		csrf_error();
 	}
 	if (!in_array($_POST['category'],$CategoryArray))
 	{
-		alert('danger',$lang['ERROR_INVALID'],$lang['PR_CATBAD']);
+		alert('danger',"Uh Oh!","You specified an invalid report category.");
 	}
 	else
 	{
 		if (strlen($_POST['reason']) > 1250)
 		{
-			alert('danger',$lang['ERROR_LENGTH'],$lang['PR_MAXCHAR']);
+			alert('danger',"Uh Oh!","Player reports can only be, at maximum, 1,250 characters in length.");
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
 		if ($db->fetch_single($q) == 0)
 		{
 			$db->free_result($q);
-			alert('danger',$lang['ERROR_NONUSER'],$lang['PR_INVALID_USER']);
+			alert('danger',"Uh Oh!","You are trying to report a non-existent user.");
 			die($h->endpage());
 		}
 		$db->free_result($q);
 		$db->query("INSERT INTO `reports` VALUES(NULL, $userid, {$_POST['userid']}, '{$_POST['reason']}')");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['PR_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully reported the user. Staff may send you a message asking
+		    questions about the report you just sent. Please answer them to the best of your ability.",true,'index.php');
 		
 	}
 }

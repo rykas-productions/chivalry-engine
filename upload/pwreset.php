@@ -24,12 +24,12 @@ switch ($_GET['step'])
 }
 function one()
 {
-	global $db,$lang,$from,$set;
+	global $db,$from,$set;
 	if (isset($_POST['email']))
 	{
 		if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email'])))
 		{
-			alert('danger',$lang['ERROR_INVALID'],$lang['REG_EMAILERROR'],false);
+			alert('danger',"Uh Oh!","You input an invalid email address.",false);
 			require("footer.php");
 			exit;
 		}
@@ -54,11 +54,12 @@ function one()
 			$db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$e_email}'");
 			$db->query("INSERT INTO `pw_recovery` (`pwr_ip`, `pwr_email`, `pwr_code`, `pwr_expire`) VALUES ('{$IP}', '{$e_email}', '{$token}', '{$expire}')");
 		}
-		alert('success',$lang['ERROR_SUCCESS'],$lang['PWR_SUCC'],false);
+		alert('success',"Success!","If there is an account associated to the email address you input, you will be
+		    emailed with steps on how to start the password reset process.",false);
 	}
 	else
 	{
-		alert('info',$lang['ERROR_INFO'],$lang['PWR_INFO'],false);
+		alert('info',"Information!","Please enter the email adress tied to your account so we can send information on how to reset your password. Please be sure to check your junk folder.",false);
 		echo "
 		<form method='post'>
 			<input type='email' name='email' required='1' class='form-control'>
@@ -69,17 +70,17 @@ function one()
 }
 function two()
 {
-	global $db,$lang,$from,$set;
+	global $db,$from,$set;
 	if (isset($_GET['code']))
 	{
 		$token = $db->escape(stripslashes($_GET['code']));
 		if ($db->num_rows($db->query("SELECT `pwr_id` FROM `pw_recovery` WHERE `pwr_code` = '{$token}'")) == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['PWR_ERR'],false);
+			alert('danger',"Uh Oh!","Your account does not have a password recovery token linked.",false);
 		}
 		else if ($db->fetch_single($db->query("SELECT `pwr_expire` FROM `pw_recovery` WHERE `pwr_code` = '{$token}'")) < time())
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['PWR_ERR'],false);
+			alert('danger',"Uh Oh!","Your password recovery token has expired.",false);
 		}
 		else
 		{
@@ -93,17 +94,17 @@ function two()
 			$headers[] = 'Content-type: text/html; charset=iso-8859-1';
 			$headers[] = "From: {$from}";
 			mail($to, $subject, $body, implode("\r\n", $headers));
-			$expire=time() + 1800;
 			$db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$pwr['pwr_email']}'");
 			$e_pw=encode_password($pw);
 			$db->query("UPDATE `users` SET `password` = '{$e_pw}' WHERE `email` = '{$pwr['pwr_email']}'");
 			$db->query("DELETE FROM `pw_recovery` WHERE `pwr_code` = '{$token}'");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['PWR_SUCC1'],false);
+			alert('success',"Success!","Your new password has been emailed to you. If you were previously logged in,
+			    your session has been terminated.",false);
 		}
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['PWR_ERR'],false);
+		alert('danger',"Uh Oh!","Please specify a recovery token.",false);
 	}
 }
 $h->endpage();

@@ -14,7 +14,7 @@ $code2 = request_csrf_code('cash_send');
 $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
 if (!$_GET['user'])
 {
-   alert("danger",$lang['ERROR_NONUSER'],$lang['PROFILE_UNF'],true,'index.php');
+   alert("danger","Uh Oh!","Please specify a user you wish to view.",true,'index.php');
 }
 else
 {
@@ -49,7 +49,7 @@ else
 	if ($db->num_rows($q) == 0)
 	{
 		$db->free_result($q);
-		alert("danger",$lang['ERROR_NONUSER'],$lang['PROFILE_UNF'],true,'index.php');
+		alert("danger","Uh Oh!","The user you are trying to view does not exist, or has an account issue.",true,'index.php');
 	}
 	else
     {
@@ -86,30 +86,29 @@ else
 		$r['daysold']=DateTime_Parse($r['registertime'], false, true);
 		
 		$rhpperc = round($r['hp'] / $r['maxhp'] * 100);
-		echo "<h3>{$lang['PROFILE_PROFOR']} {$user_name}</h3>";
+		echo "<h3>{$user_name}'s Profile</h3>";
 		?>
 		<div class="row">
 			<div class="col-lg-2">
 				<?php
 					echo "{$displaypic}<br />
-							{$r['user_level']}<br />
-							
-						{$lang['PROFILE_LOCATION']} {$r['town_name']}<br />
-							{$lang['INDEX_LEVEL']}: {$r['level']}<br />";
-						echo ($r['guild']) ? "{$lang['PROFILE_GUILD']}: <a href='guilds.php?action=view&id={$r['guild']}'>{$r['guild_name']}</a><br />" : '';
-						echo "{$lang['INDEX_HP']}: {$r['hp']}/{$r['maxhp']}<br />";
+                        {$r['user_level']}<br />
+						Location {$r['town_name']}<br />
+                        Level: {$r['level']}<br />";
+						echo ($r['guild']) ? "Guild: <a href='guilds.php?action=view&id={$r['guild']}'>{$r['guild_name']}</a><br />" : '';
+						echo "Health: {$r['hp']}/{$r['maxhp']}<br />";
 				
 				?>
 			</div>
 			<div class="col-lg-10">
 				<ul class="nav nav-tabs nav-justified">
-				  <li class="active nav-item"><a class='nav-link' data-toggle="tab" href="#info"><?php echo $lang['PROFILE_PI']; ?></a></li>
-				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#actions"><?php echo $lang['PROFILE_ACTION']; ?></a></li>
-				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#financial"><?php echo $lang['PROFILE_FINANCIAL']; ?></a></li>
+				  <li class="active nav-item"><a class='nav-link' data-toggle="tab" href="#info"><?php echo "Physical Info"; ?></a></li>
+				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#actions"><?php echo "Actions"; ?></a></li>
+				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#financial"><?php echo "Financial Info"; ?></a></li>
 				  <?php
 					if (!in_array($ir['user_level'], array('Member', 'NPC')))
 					{
-					  echo "<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#staff'>{$lang['PROFILE_STAFF']}</a></li>";
+					  echo "<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#staff'>Staff</a></li>";
 					}
 				  ?>
 				</ul>
@@ -122,35 +121,35 @@ else
 						"
 						<table class='table table-bordered'>
 							<tr>
-								<th width='25%'>{$lang['REG_SEX']}</th>
+								<th width='25%'>Sex</th>
 								<td>{$r['gender']}</td>
 							</tr>
 							<tr>
-								<th>{$lang['INDEX_CLASS']}</th>
+								<th>Class</th>
 								<td>{$r['class']}</td>
 							</tr>
 							<tr>
-								<th>{$lang['PROFILE_REGISTERED']}</th>
+								<th>Registered</th>
 								<td>{$sup}</td>
 							</tr>
 							<tr>
-								<th>{$lang['PROFILE_ACTIVE']}</th>
+								<th>Last Active</th>
 								<td>{$ula}</td>
 							</tr>
 							<tr>
-								<th>{$lang['PROFILE_LOGIN']}</th>
+								<th>Last Login</th>
 								<td>{$ull}</td>
 							</tr>
 							<tr>
-								<th>{$lang['PROFILE_AGE']}</th>
-								<td>{$r['daysold']} {$lang['PROFILE_DAYS_OLD']}</td>
+								<th>Age</th>
+								<td>{$r['daysold']}</td>
 							</tr>";
 						if (user_infirmary($r['userid']))
 						{
 							echo "
 							<tr>
-								<th>{$lang['EXPLORE_INFIRM']}</th>
-								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_INFIRM']} {$lang['GEN_FOR']} " . TimeUntil_Parse($r['infirmary_out']) . "<br />
+								<th>Infirmary</th>
+								<td>In the infirmary for " . TimeUntil_Parse($r['infirmary_out']) . "<br />
 								{$r['infirmary_reason']}
 								</td>
 							</tr>";
@@ -159,8 +158,8 @@ else
 						{
 							echo "
 							<tr>
-								<th>{$lang['EXPLORE_DUNG']}</th>
-								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_DUNG']} {$lang['GEN_FOR']} " . TimeUntil_Parse($r['dungeon_out']) . "<br />
+								<th>Dungeon</th>
+								<td>In the dungeon for " . TimeUntil_Parse($r['dungeon_out']) . "<br />
 								{$r['dungeon_reason']}
 								</td>
 							</tr>";
@@ -169,8 +168,9 @@ else
 						{
 							echo "
 							<tr>
-								<th>{$lang['EXPLORE_FED']}</th>
-								<td>{$lang['GEN_INDAH']} {$lang['EXPLORE_FED']} {$lang['GEN_FOR']} " . TimeUntil_Parse($r['fed_out']) . " {$lang['MENU_FEDJAIL2']}<br /> {$r['fed_reason']}
+								<th>Federal Dungeon</th>
+								<td>In the federal dungeon for " . TimeUntil_Parse($r['fed_out']) . " {$lang['MENU_FEDJAIL2']}<br />
+								{$r['fed_reason']}
 								</td>
 							</tr>";
 						}
@@ -180,33 +180,33 @@ else
 					</p>
 				  </div>
 				  <div id="actions" class="tab-pane">
-				  <?php echo "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#message'>{$lang['PROFILE_BTN_MSG']} {$r['username']} {$lang['PROFILE_BTN_MSG1']}</button>"; ?>
-				  <?php echo "<br /><br /><button type='button' class='btn btn-primary' data-toggle='modal' data-target='#cash'>{$lang['PROFILE_BTN_SND']} {$r['username']} {$lang['INDEX_PRIMCURR']}</button>
+				  <?php echo "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#message'>Send Message to {$r['username']}</button>"; ?>
+				  <?php echo "<br /><br /><button type='button' class='btn btn-primary' data-toggle='modal' data-target='#cash'>Send Cash to {$r['username']}</button>
 				  <br /><br /><form action='attack.php'>
 					<input type='hidden' name='user' value='{$r['userid']}'>
-					<input type='submit' class='btn btn-danger' value='{$lang['PROFILE_ATTACK']} {$r['username']}'>
+					<input type='submit' class='btn btn-danger' value='Attack {$r['username']}'>
 					</form><br />
 					<form action='hirespy.php'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
-						<input type='submit' class='btn btn-primary' value='{$lang['PROFILE_SPY']} {$r['username']}'>
+						<input type='submit' class='btn btn-primary' value='Hire Spy on {$r['username']}'>
 					</form>
 					<br />
 					<form action='poke.php'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
-						<input type='submit' class='btn btn-primary' value='{$lang['PROFILE_POKE']} {$r['username']}'>
+						<input type='submit' class='btn btn-primary' value='Poke {$r['username']}'>
 					</form>
 					<br />
 					<form action='contacts.php'>
 						<input type='hidden' name='action' value='add'>
 						<input type='hidden' name='user' value='{$r['userid']}'>
-						<input type='submit' class='btn btn-primary' value='{$lang['PROFILE_CONTACT']} {$r['username']} {$lang['PROFILE_CONTACT1']}'>
+						<input type='submit' class='btn btn-primary' value='Add {$r['username']} to Contact List'>
 					</form>
 				  "; ?>
 					<div class="modal fade" id="message">
 						<div class="modal-dialog" role="document">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h5 class="modal-title"><?php echo "{$lang['PROFILE_MSG1']} {$r['username']} {$lang['PROFILE_MSG2']}"; ?></h5>
+									<h5 class="modal-title"><?php echo "Sending {$r['username']} a Message"; ?></h5>
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									  <span aria-hidden="true">&times;</span>
 									</button>
@@ -217,11 +217,11 @@ else
 									<form id="mailpopupForm" name="mailpopupForm" action="js/script/sendmail.php">
 										<div class="form-group">
 											<div id="result"></div>
-											<label for="recipient-name" class="control-label"><?php echo $lang['PROFILE_MSG3']; ?></label>
+											<label for="recipient-name" class="control-label"><?php echo "Recipient"; ?></label>
 											<input type="text" class="form-control" name="sendto" required="1" value="<?php echo $r['username']; ?>" id="recipient-name">
 										</div>
 										<div class="form-group">
-											<label for="message-text" class="control-label"><?php echo $lang['PROFILE_MSG4']; ?></label>
+											<label for="message-text" class="control-label"><?php echo "Message"; ?></label>
 											<textarea class="form-control" name="msg" required="1" id="message-text"></textarea>
 										</div>
 								</div>
@@ -229,8 +229,8 @@ else
 									<?php
 										echo"<input type='hidden' name='verf' value='{$code}' />";
 									?>
-									<button type="button" class="btn btn-primary" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
-									<input type="submit" value="<?php echo $lang['PROFILE_MSG6']; ?>" id="sendmessage" class="btn btn-primary">
+									<button type="button" class="btn btn-primary" data-dismiss="modal"><?php echo "Close Window"; ?></button>
+									<input type="submit" value="<?php echo "Send Message"; ?>" id="sendmessage" class="btn btn-primary">
 									</form>
 								</div>
 							</div>
@@ -240,7 +240,7 @@ else
 						<div class="modal-dialog" role="document">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h5 class="modal-title"><?php echo "{$lang['PROFILE_MSG1']} {$r['username']} {$lang['INDEX_PRIMCURR']}"; ?></h5>
+									<h5 class="modal-title"><?php echo "Sending Cash to {$r['username']}"; ?></h5>
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									  <span aria-hidden="true">&times;</span>
 									</button>
@@ -251,11 +251,11 @@ else
 									<form id="cashpopupForm" name="cashpopupForm" action="js/script/sendmail.php">
 										<div class="form-group">
 											<div id="result"></div>
-											<label for="recipient-name" class="control-label"><?php echo $lang['PROFILE_MSG3']; ?></label>
+											<label for="recipient-name" class="control-label"><?php echo "Recipient"; ?></label>
 											<input type="text" class="form-control" name="sendto" required="1" value="<?php echo $r['username']; ?>" id="recipient-name">
 										</div>
 										<div class="form-group">
-											<label for="message-text" class="control-label"><?php echo $lang['INDEX_PRIMCURR']; ?></label>
+											<label for="message-text" class="control-label"><?php echo "Amount"; ?></label>
 											<input type='number' min='0' max="<?php echo $ir['primary_currency']; ?>" class="form-control" name="cash" required="1" id="message-text">
 										</div>
 								</div>
@@ -263,8 +263,8 @@ else
 									<?php
 										echo"<input type='hidden' name='verf' value='{$code}' />";
 									?>
-									<button type="button" class="btn btn-primary" data-dismiss="modal"><?php echo $lang['PROFILE_MSG5']; ?></button>
-									<input type="submit" value="<?php echo $lang['PROFILE_CASH']; ?>" id="sendcash" class="btn btn-primary">
+									<button type="button" class="btn btn-primary" data-dismiss="modal"><?php echo "Close Window"; ?></button>
+									<input type="submit" value="<?php echo "Send Cash"; ?>" id="sendcash" class="btn btn-primary">
 									</form>
 								</div>
 							</div>
@@ -277,27 +277,27 @@ else
 						"
 						<table class='table table-bordered'>
 							<tr>
-								<th width='25%'>{$lang['INDEX_PRIMCURR']}</th>
+								<th width='25%'>Primary Currency</th>
 								<td> " . number_format($r['primary_currency']) . "</td>
 							</tr>
 							<tr>
-								<th>{$lang['INDEX_SECCURR']}</th>
+								<th>Secondary Currency</th>
 								<td>" . number_format($r['secondary_currency']) . "</td>
 							</tr>
 							<tr>
-								<th>{$lang['STAFF_USERS_EDIT_FORM_ESTATE']}</th>
+								<th>Estate</th>
 								<td>{$r['house_name']}</td>
 							</tr>
 							<tr>
-								<th>{$lang['PROFILE_REF']}</th>
+								<th>Referrals</th>
 								<td>" . number_format($ref) . "</td>
 							</tr>
 							<tr>
-								<th>{$lang['PROFILE_FRI']}</th>
+								<th>Friends</th>
 								<td>" . number_format($friend) . "</td>
 							</tr>
 							<tr>
-								<th>{$lang['PROFILE_ENE']}</th>
+								<th>Enemies</th>
 								<td>" . number_format($enemy) . "</td>
 							</tr>
 						</table>";
@@ -316,28 +316,28 @@ else
 								<th>Output</th>
 							</tr>
 							<tr>
-								<td>{$lang['PROFILE_STAFF_LOC']}</td>
+								<td>Location</td>
 								<td>{$fg['city']}, {$fg['state']}, {$fg['country']}, ({$fg['isocode']})</td>
 							</tr>
 							<tr>
-								<td>{$lang['PROFILE_STAFF_RISK']}</td>
+								<td>Risk Level</td>
 								<td>" . parse_risk($fg['risk_level']) . "</td>
 							</tr>
 							<tr>
-								<td>{$lang['PROFILE_STAFF_LH']}</td>
+								<td>Last Hit</td>
 								<td>{$r['lastip']} (" . @gethostbyaddr($r['lastip']) . ")</td>
 							</tr>
 							<tr>
-								<td>{$lang['PROFILE_STAFF_LL']}</td>
+								<td>Last Login</td>
 								<td>{$r['loginip']} (" . @gethostbyaddr($r['loginip']) . ")</td>
 							</tr>
 							<tr>
-								<td>{$lang['PROFILE_STAFF_REGIP']}</td>
+								<td>Sign Up</td>
 								<td>{$r['registerip']} (" . @gethostbyaddr($r['registerip']) . ")</td>
 							</tr>
 							<tr>
 								<td>
-									{$lang['PROFILE_STAFF_LA']}
+									Last Action
 								</td>
 								<td>
 									{$log}
@@ -345,7 +345,7 @@ else
 							</tr>
 							<tr>
 								<td>
-									{$lang['PROFILE_STAFF_OS']}
+									Browser/OS
 								</td>
 								<td>
 									{$r['browser']}/{$r['os']}
@@ -353,14 +353,14 @@ else
 							</tr>
 					</table>
 					<form action='staff/staff_punish.php?action=staffnotes' method='post'>
-						{$lang['PROFILE_STAFF_NOTES']}
+						Staff Notes
 						<br />
 						<textarea rows='7' class='form-control' name='staffnotes'>"
 							. htmlentities($r['staff_notes'], ENT_QUOTES, 'ISO-8859-1')
 							. "</textarea>
 						<br />
 						<input type='hidden' name='ID' value='{$_GET['user']}' />
-						<input type='submit' class='btn btn-primary' value='{$lang['PROFILE_STAFF_BTN']} {$r['username']}' />
+						<input type='submit' class='btn btn-primary' value='Update Notes' />
 					</form>";
 					}
 					?>
@@ -374,19 +374,18 @@ else
 }
 function parse_risk($risk_level)
 {
-	global $lang;
 	switch ($risk_level)
 	{
 		case 2:
-			return $lang['PROFILE_RISK_2'];
+			return "Spam";
 		case 3:
-			return $lang['PROFILE_RISK_3'];
+			return "Open Public Proxy";
 		case 4:
-			return $lang['PROFILE_RISK_4'];
+			return "Tor Node";
 		case 5:
-			return $lang['PROFILE_RISK_5'];
+			return "Honeypot / Botnet / DDOS Attack";
 		default:
-			return $lang['PROFILE_RISK_1'];
+			return "No Risk";
 	}
 }
 $h->endpage();

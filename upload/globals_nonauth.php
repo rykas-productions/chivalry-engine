@@ -23,8 +23,6 @@ $time=time();
 session_name('CENGINE');
 @session_start();
 header('X-Frame-Options: SAMEORIGIN');
-//Load language files.
-include_once 'lang/en_us.php';
 //If session is not started, regenerate ID and load it.
 if (!isset($_SESSION['started']))
 {

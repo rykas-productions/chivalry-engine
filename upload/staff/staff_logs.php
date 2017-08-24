@@ -106,11 +106,11 @@ default:
 }
 function logs($name)
 {
-	global $db,$ir,$h,$lang,$userid,$api;
+	global $db,$userid,$api;
 	$logname=$name;
-	$ParsedName=$lang["STAFF_LOGS_{$logname}"];
+	$ParsedName=ucwords($name);
     echo "
-	<h3>{$ParsedName} {$lang['STAFF_LOGS_LOGS']}</h3>
+	<h3>{$ParsedName} Logs</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -124,12 +124,12 @@ function logs($name)
     $db->free_result($q);
     if ($attacks == 0)
     {
-		alert('danger',$lang['ERROR_GENERIC'],"{$lang['STAFF_LOGS_INFO']} {$ParsedName} {$lang['STAFF_LOGS_LOGSLL']}",true,'index.php');
+		alert('danger',"Uh Oh!","There doesn't appear to be anything in the {$ParsedName} logs.",true,'index.php');
         return;
     }
     $pages = ceil($attacks / $app);
 	echo "<nav>";
-    echo "{$lang['FORUM_PAGES']} <br /><ul class='pagination'>";
+    echo "Page <br /><ul class='pagination'>";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
@@ -151,9 +151,9 @@ function logs($name)
     <br />
     <table class='table table-bordered table-hover table-striped'>
     		<tr>
-    			<th>{$lang['STAFF_LOGS_TIME']}</th>
-    			<th>{$lang['STAFF_LOGS_PERSON']}</th>
-    			<th>{$lang['STAFF_LOGS_INFOTH']}</th>
+    			<th>Log Time</th>
+    			<th>User</th>
+    			<th>Log Content</th>
     		</tr>
        ";
     $q =
@@ -180,7 +180,7 @@ function logs($name)
     </table>
     <center>
 	<nav>
-   {$lang['FORUM_PAGES']}<br /><ul class='pagination'>
+   Page <br /><ul class='pagination'>
        ";
     for ($i = 1; $i <= $pages; $i++)
     {
@@ -203,8 +203,8 @@ function logs($name)
 }
 function userlogs()
 {
-	global $h,$lang,$db,$ir,$api,$userid;
-	echo "<h3>{$lang['STAFF_LOGS_USER']}</h3><hr />";
+	global $h,$db,$api,$userid;
+	echo "<h3>User Logs</h3><hr />";
 	if (isset($_GET['user']))
 	{
 		$user = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
@@ -214,7 +214,7 @@ function userlogs()
 		}
 		if ($user == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_LOGS_USER_ERR'],true,'index.php');
+			alert('danger',"Uh Oh!","Please specify a user you wish to view their logs.",true,'index.php');
 			die($h->endpage());
 		}
 		$st = abs(intval($_GET['st']));
@@ -225,11 +225,11 @@ function userlogs()
 		$db->free_result($q);
 		if ($logs == 0)
 		{
-			alert("danger",$lang['ERROR_GENERIC'],$lang['STAFF_LOGS_USER_ERR1'],true,'index.php');
+			alert("danger","Uh Oh!","This user does not have anything logged.",true,'index.php');
 			return;
 		}
 		$pages = ceil($logs / $app);
-		echo "{$lang['FORUM_PAGES']}<br /><nav><ul class='pagination'>";
+		echo "Pages <br /><nav><ul class='pagination'>";
 		for ($i = 1; $i <= $pages; $i++)
 		{
 			$s = ($i - 1) * $app;
@@ -252,9 +252,9 @@ function userlogs()
 		<table class='table table-bordered table-hover'>
 				<thead>
 				<tr>
-					<th>{$lang['STAFF_LOGS_TIME']}</th>
-					<th>{$lang['STAFF_LOGS_PERSON']}</th>
-					<th>{$lang['STAFF_LOGS_INFOTH']}</th>
+					<th>Log Time</th>
+					<th>User</th>
+					<th>Log Content</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -288,7 +288,7 @@ function userlogs()
 		</table>
 		<br />
 		<center>
-		{$lang['FORUM_PAGES']}<nav><ul class='pagination'><br />
+		Pages <nav><ul class='pagination'><br />
 		   ";
 		for ($i = 1; $i <= $pages; $i++)
 		{
@@ -317,12 +317,12 @@ function userlogs()
 			<input type='hidden' name='action' value='userlogs'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_LOGS_USERS_FORM']}
+					Select a user to view their logs.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_USERS_EDIT_USER']}
+					User
 				</th>
 				<td>
 					" . user_dropdown('user') . "
@@ -330,7 +330,7 @@ function userlogs()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_LOGS_USERS_FORM_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='View Logs' />
 				</th>
 			</tr>
 		</form>
@@ -338,12 +338,12 @@ function userlogs()
 			<input type='hidden' name='action' value='userlogs'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_USERS_EDIT_ELSE']}
+					Alternatively, you may enter a User ID
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_USERS_EDIT_USER']}
+					User
 				</th>
 				<td>
 					<input class='form-control' type='number' min='1' name='user' />
@@ -351,7 +351,7 @@ function userlogs()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_LOGS_USERS_FORM_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='View Logs' />
 				</th>
 			</tr>
 		</form>
@@ -360,10 +360,10 @@ function userlogs()
 }
 function alllogs()
 {
-	global $db,$ir,$h,$lang,$userid,$api;
+	global $db,$userid,$api;
 	$logname='all';
     echo "
-	<h3>{$lang['STAFF_LOGS_ALL']}</h3>
+	<h3>All Game Logs</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -377,11 +377,11 @@ function alllogs()
     $db->free_result($q);
     if ($attacks == 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_LOGS_ALL_NONE'],true,'index.php');
+        alert('danger',"Uh Oh!","There haven't been any game actions yet.",true,'index.php');
         return;
     }
     $pages = ceil($attacks / $app);
-    echo "<nav>{$lang['FORUM_PAGES']}<ul class='pagination'><br />";
+    echo "<nav>Pages <ul class='pagination'><br />";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
@@ -403,9 +403,9 @@ function alllogs()
     <br />
     <table class='table table-bordered table-hover table-striped'>
     		<tr>
-    			<th>{$lang['STAFF_LOGS_TIME']}</th>
-    			<th>{$lang['STAFF_LOGS_PERSON']}</th>
-    			<th>{$lang['STAFF_LOGS_INFOTH']}</th>
+    			<th>Log Time</th>
+    			<th>User</th>
+    			<th>Log Content</th>
     		</tr>
        ";
     $q =
@@ -429,7 +429,7 @@ function alllogs()
     $db->free_result($q);
     echo "
     </table>
-    <center>{$lang['FORUM_PAGES']}<br />
+    <center>Pages <br />
 	<nav>
     <ul class='pagination'>
        ";
@@ -454,10 +454,10 @@ function alllogs()
 }
 function maillogs()
 {
-	global $db,$ir,$h,$lang,$userid,$api;
+	global $db,$userid,$api;
 	$logname='mail';
     echo "
-	<h3>{$lang['STAFF_LOGS_MAIL']}</h3>
+	<h3>Mail Logs</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -471,11 +471,11 @@ function maillogs()
     $db->free_result($q);
     if ($attacks == 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_LOGS_MAIL_NONE'],true,'index.php');
+        alert('danger',"Uh Oh!","There haven't been any mails sent yet.",true,'index.php');
         return;
     }
     $pages = ceil($attacks / $app);
-    echo "{$lang['FORUM_PAGES']}<nav><ul class='pagination'><br />";
+    echo "Pages <nav><ul class='pagination'><br />";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
@@ -497,10 +497,10 @@ function maillogs()
     <br />
     <table class='table table-bordered table-hover table-striped'>
     		<tr>
-    			<th width='25%'>{$lang['STAFF_LOGS_TIME']}</th>
-				<th>{$lang['STAFF_LOGS_MAIL_SEND']}</th>
-				<th>{$lang['STAFF_LOGS_MAIL_RECEIVE']}</th>
-    			<th>{$lang['STAFF_LOGS_MAIL_MSG']}</th>
+    			<th width='25%'>Log Time</th>
+				<th>Sender</th>
+				<th>Recipient</th>
+    			<th>Content</th>
     		</tr>
        ";
     $q =
@@ -538,7 +538,7 @@ function maillogs()
     echo "
     </table>
     <center>
-	{$lang['FORUM_PAGES']}<br />
+	Pages <br />
 	<nav>
     <ul class='pagination'>
        ";

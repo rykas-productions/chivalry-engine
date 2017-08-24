@@ -8,17 +8,19 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
-echo "<h3>{$lang['ID_TITLE']}</h3><hr />{$lang['ID_INFO']}<hr />";
+echo "<h3>Item Appendix</h3><hr />This page lists all the items in the game, along with how many are in circulation.
+    This may be useful for players who do item flipping, or those who are just plain old curious. Hovering over the
+    item will give you its description. Tapping its name will take you to its info page<hr />";
 //Select all the game items.
 $q=$db->query("SELECT * FROM `items` ORDER BY `itmname` ASC");
 echo "
 <table class='table table-bordered'>
     <tr>
         <th>
-            {$lang['ID_TH']}
+            Item Name
         </th>
         <th>
-            {$lang['ID_TH1']}
+            Quantity in Circulation
         </th>
     </tr>";
 while ($r = $db->fetch_row($q))

@@ -24,17 +24,17 @@ case "delshop":
     delshop();
     break;
 default:
-    die();
+    die($h->endpage());
     break;
 }
 function newshop()
 {
-	global $lang,$h,$userid,$api,$db;
+	global $h,$userid,$api,$db;
 	if (isset($_POST['sn']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newshop', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","This action has been blocked for your security. Please fill in the form quickly next time.");
 			die($h->endpage());
 		}
 		$_POST['sl'] = (isset($_POST['sl']) && is_numeric($_POST['sl'])) ? abs(intval($_POST['sl'])) : 0;
@@ -42,7 +42,7 @@ function newshop()
 		$_POST['sd'] = (isset($_POST['sd'])) ? $db->escape(strip_tags(stripslashes($_POST['sd']))) : '';
 		if (empty($_POST['sn']) || empty($_POST['sd']))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_SUB_ERROR1']);
+			alert('danger',"Uh Oh!","Please fill in the form completely before submitting.");
 		}
 		else
 		{
@@ -50,7 +50,7 @@ function newshop()
 			if ($db->fetch_single($q) == 0)
 			{
 				$db->free_result($q);
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_SUB_ERROR2']);
+				alert('danger',"Uh Oh!","The town you have chosen to place the town in does not exist.");
 				die($h->endpage());
 			}
 			$db->free_result($q);
@@ -58,13 +58,13 @@ function newshop()
 			if ($db->fetch_single($q) > 0)
 			{
 				$db->free_result($q);
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_SUB_ERROR3']);
+				alert('danger',"Uh Oh!","You cannot have more than one town with the same name.");
 				die($h->endpage());
 			}
 			$db->free_result($q);
 			$db->query("INSERT INTO `shops` VALUES(NULL, {$_POST['sl']}, '{$_POST['sn']}', '{$_POST['sd']}')");
 			$api->SystemLogsAdd($userid,'staff',"Created shop {$_POST['sn']}.");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SHOP_SUB_SUCCESS'],true,'index.php');
+			alert('success',"Success!","You have successfully created the {$_POST['sn']} shop.",true,'index.php');
 			die($h->endpage());
 		}
 	}
@@ -76,12 +76,12 @@ function newshop()
 		<table class='table table-bordered'>
 		<tr>
 			<th colspan='2'>
-				{$lang['STAFF_SHOP_FORM_TITLE']}
+				You are adding a new shop to the game.
 			</th>
 		</tr>
 		<tr>
 			<th>
-				{$lang['STAFF_SHOP_FORM_OPTION1']}
+				Shop Name
 			</th>
 			<td>
 				<input type='text' required='1' name='sn' class='form-control' />
@@ -89,7 +89,7 @@ function newshop()
 		</tr>
 		<tr>
 			<th>
-				{$lang['STAFF_SHOP_FORM_OPTION2']}
+				Shop Description
 			</th>
 			<td>
 				<input type='text' required='1' name='sd' class='form-control' />
@@ -97,7 +97,7 @@ function newshop()
 		</tr>
 		<tr>
 			<th>
-				{$lang['STAFF_SHOP_FORM_OPTION3']}
+				Shop Location
 			</th>
 			<td>
 				" . location_dropdown("sl") . "
@@ -106,7 +106,7 @@ function newshop()
 		{$csrf}
 		<tr>
 			<td colspan='2'>
-				<input type='submit' class='btn btn-primary' value='{$lang['STAFF_SHOP_FORM_BTN']}' />
+				<input type='submit' class='btn btn-primary' value='Create Shop' />
 			</td>
 		</tr>
 		</table>
@@ -115,20 +115,20 @@ function newshop()
 }
 function delshop()
 {
-	global $lang,$db,$api,$h,$userid;
+	global $db,$api,$h,$userid;
 	$_POST['shop'] = (isset($_POST['shop']) && is_numeric($_POST['shop'])) ? abs(intval($_POST['shop'])) : '';
     if (!empty($_POST['shop']))
     {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_delshop', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","This action has been blocked for your security. Please fill in the form quickly next time.");
 			die($h->endpage());
 		}
         $shpq = $db->query("SELECT `shopNAME` FROM `shops` WHERE `shopID` = {$_POST['shop']}");
         if ($db->num_rows($shpq) == 0)
         {
             $db->free_result($shpq);
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_DELFORM_SUB_ERROR1']);
+            alert('danger',"Uh Oh!","The shop you have chosen to delete does not exist.");
             die($h->endpage());
         }
         $sn = $db->fetch_single($shpq);
@@ -136,7 +136,7 @@ function delshop()
         $db->query("DELETE FROM `shops` WHERE `shopID` = {$_POST['shop']}");
         $db->query("DELETE FROM `shopitems` WHERE `sitemSHOP` = {$_POST['shop']}");
         $api->SystemLogsAdd($userid,'staff',"Deleted shop {$sn}.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SHOP_DELFORM_SUB_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully deleted the {$sn} shop.",true,'index.php');
         die($h->endpage());
     }
     else
@@ -146,12 +146,12 @@ function delshop()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_SHOP_DELFORM_TITLE']}
+					Select the shop you wish to remove from the game.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_SHOP_DELFORM_FORM']}
+					Shop
 				</th>
 				<td>
 					" . shop_dropdown("shop") . "
@@ -159,7 +159,7 @@ function delshop()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_SHOP_DELFORM_FORM_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='Delete Shop' />
 				</th>
 			</tr>
 			{$csrf}
@@ -169,19 +169,19 @@ function delshop()
 }
 function newitem()
 {
-	global $db,$lang,$h,$userid,$api;
+	global $db,$h,$userid,$api;
 	if (isset($_POST['item']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newstock', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","This action has been blocked for your security. Please fill in the form quickly next time.");
 			die($h->endpage());
 		}
 		$_POST['shop'] = (isset($_POST['shop']) && is_numeric($_POST['shop'])) ? abs(intval($_POST['shop'])) : '';
 		$_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : '';
 		if (empty($_POST['shop']) || empty($_POST['item']))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_IADDSUB_ERROR']);
+			alert('danger',"Uh Oh!","Please fill out the form completely before submitting.");
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT COUNT(`shopID`) FROM `shops` WHERE `shopID` = {$_POST['shop']}");
@@ -191,21 +191,21 @@ function newitem()
 		{
 			$db->free_result($q);
 			$db->free_result($q2);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_IADDSUB_ERROR2']);
+			alert('danger',"Uh Oh!","Either the shop, or item you wish to stock, do not exist.");
 			die($h->endpage());
 		}
 		if ($db->fetch_single($q3) > 0)
 		{
 			$db->free_result($q3);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SHOP_IADDSUB_ERROR3']);
+			alert('danger',"Uh Oh!","You already have this item stocked in this shop.");
 			die($h->endpage());
 		}
 		$db->free_result($q);
 		$db->free_result($q2);
 		$db->free_result($q3);
 		$db->query("INSERT INTO `shopitems` VALUES(NULL, {$_POST['shop']}, {$_POST['item']})");
-		$api->SystemLogsAdd($userid,'staff',"Added Item ID {$_POST['item']} to Shop ID {$_POST['shop']}.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SHOP_IADDSUB_SUCCESS'],true,'index.php');
+		$api->SystemLogsAdd($userid,'staff',"Added Item ID {$api->SystemItemIDtoName($_POST['item'])} to Shop ID {$_POST['shop']}.");
+		alert('success',"Success!","You have successfully added {$api->SystemItemIDtoName($_POST['item'])} to Shop ID {$_POST['shop']}.",true,'index.php');
 		die($h->endpage());
 	}
 	else
@@ -215,12 +215,12 @@ function newitem()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						{$lang['STAFF_SHOP_IADDFORM_TITLE']}
+						Select an item you wish to add to a shop.
 					</th>
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_SHOP_DELFORM_FORM']}
+						Shop
 					</th>
 					<td>
 						" . shop_dropdown("shop") . "
@@ -228,7 +228,7 @@ function newitem()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_SHOP_IADDFORM_TD1']}
+						Item to Stock
 					</th>
 					<td>
 						" . item_dropdown("item") . "
@@ -236,7 +236,7 @@ function newitem()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_SHOP_IADDFORM_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='Add to Stock' />
 					</td>
 				</tr>
 				{$csrf}

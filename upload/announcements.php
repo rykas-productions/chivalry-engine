@@ -14,8 +14,8 @@ $q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC");
 echo "<table class='table table-bordered table-hover'>
 <thead>
 	<tr>
-		<td width='30%'>{$lang['ANNOUNCEMENTS_TIME']}</td>
-		<td>{$lang['ANNOUNCEMENTS_TEXT']}</td>
+		<td width='30%'>Announcement Post Time</td>
+		<td>Announcement Text</td>
 	</tr>
 </thead>
 <tbody>";
@@ -25,12 +25,12 @@ while ($r = $db->fetch_row($q))
     if ($AnnouncementCount > 0)
     {
         $AnnouncementCount--;
-        $new = "<br /><small><span class='badge badge-pill badge-danger'>{$lang['ANNOUNCEMENTS_UNREAD']}</span></small>";
+        $new = "<br /><small><span class='badge badge-pill badge-danger'>Unread</span></small>";
     }
     //Else... show the read badge.
     else
     {
-        $new = "<br /><small><span class='badge badge-pill badge-success'>{$lang['ANNOUNCEMENTS_READ']}</span></small>";
+        $new = "<br /><small><span class='badge badge-pill badge-success'>Read</span></small>";
     }
     //Select announcement poster's name.
 	$PosterQuery=$db->query("SELECT `username` 
@@ -42,8 +42,13 @@ while ($r = $db->fetch_row($q))
     //Make the announcement text safe for the users to read, in case of staff panel compromise.
     $r['ann_text'] = nl2br($r['ann_text']);
 	echo "<tr>
-		<td>{$AnnouncementTime}<br />{$lang['ANNOUNCEMENTS_POSTED']} <a href='profile.php?user={$r['ann_poster']}'>{$Poster}</a>{$new}</td>
-		<td>{$r['ann_text']}</td>
+		<td>
+		    {$AnnouncementTime}<br />
+		    Posted By <a href='profile.php?user={$r['ann_poster']}'>{$Poster}</a>{$new}
+		    </td>
+		<td>
+		    {$r['ann_text']}
+        </td>
 	</tr>";
 }
 $db->free_result($q);
@@ -51,7 +56,6 @@ echo"</table>";
 //If the user's unread announcements are greater than 0, set back to 0.
 if ($ir['announcements'] > 0)
 {
-    $db->query(
-            "UPDATE `users` SET `announcements` = 0 WHERE `userid` = '{$userid}'");
+    $db->query("UPDATE `users` SET `announcements` = 0 WHERE `userid` = '{$userid}'");
 }
 $h->endpage();

@@ -22,28 +22,28 @@ if (empty($infirm_count))
 	$infirm_count=0;
 }
 //Block access if user is in the infirmary.
-if ($api->UserStatus($ir['userid'],'infirmary') == true)
+if ($api->UserStatus($ir['userid'],'infirmary'))
 {
-	alert('danger',$lang["GEN_INFIRM"],$lang['ERRDE_EXPLORE'],false);
+	alert('danger',"Unconscious!","You cannot visit the town while you're in the infirmary.",false);
 	die($h->endpage());
 }
 //Block access if user is in the dungeon.
-if ($api->UserStatus($ir['userid'],'dungeon') == true)
+if ($api->UserStatus($ir['userid'],'dungeon'))
 {
-	alert('danger',$lang["GEN_DUNG"],$lang['ERRDE_EXPLORE2']);
+	alert('danger',"Locked Up!","You cannot visit the town while you're in the dungeon.");
 	die($h->endpage());
 }
-echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
+echo"<h4>You begin exploring the town. You find a few things that could keep you occupied.</h4></div>
 <div class='col-md-4'>
 	<ul class='nav flex-column nav-pills'>
-		<a class='nav-link' data-toggle='tab' href='#SHOPS'>{$lang['EXPLORE_SHOP']}</a>
-		<a class='nav-link' data-toggle='tab' href='#FD'>{$lang['EXPLORE_FD']}</a>
-		<a class='nav-link' data-toggle='tab' href='#HL'>{$lang['EXPLORE_HL']}</a>
-		<a class='nav-link' data-toggle='tab' href='#ADMIN'>{$lang['EXPLORE_ADMIN']}</a>
-		<a class='nav-link' data-toggle='tab' href='#GAMES'>{$lang['EXPLORE_GAMES']}</a>
-		<a class='nav-link' data-toggle='tab' href='#GUILDS'>{$lang['EXPLORE_GUILDS']}</a>
-		<a class='nav-link' data-toggle='tab' href='#ACT'>{$lang['EXPLORE_ACT']}</a>
-		<a class='nav-link' data-toggle='tab' href='#PINTER'>{$lang['EXPLORE_PINTER']}</a>
+		<a class='nav-link' data-toggle='tab' href='#SHOPS'>Shopping District</a>
+		<a class='nav-link' data-toggle='tab' href='#FD'>Financial District</a>
+		<a class='nav-link' data-toggle='tab' href='#HL'>Working District</a>
+		<a class='nav-link' data-toggle='tab' href='#ADMIN'>Administration District</a>
+		<a class='nav-link' data-toggle='tab' href='#GAMES'>Gambling District</a>
+		<a class='nav-link' data-toggle='tab' href='#GUILDS'>Guild District</a>
+		<a class='nav-link' data-toggle='tab' href='#ACT'>Activities District</a>
+		<a class='nav-link' data-toggle='tab' href='#PINTER'>Social District</a>
 	</ul>
 </div>
 <div class='col-md-4'>
@@ -51,56 +51,56 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 		<div id='SHOPS' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>
-					<a href='shops.php'>{$lang['EXPLORE_LSHOP']}</a><br />
-					<a href='itemmarket.php'>{$lang['EXPLORE_IMARKET']}</a><br />
-					<a href='itemauction.php'>{$lang['EXPLORE_IAUCTION']}</a><br />
-					<a href='#'>{$lang['EXPLORE_TRADE']}</a><br />
-					<a href='secmarket.php'>{$lang['EXPLORE_SCMARKET']}</a><br />	
+					<a href='shops.php'>Local Shops</a><br />
+					<a href='itemmarket.php'>Item Market</a><br />
+					<a href='itemauction.php'>Item Auction</a><br />
+					<a href='#'>Trading Center</a><br />
+					<a href='secmarket.php'>Secondary Currency Market</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='FD' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>
-					<a href='bank.php'>{$lang['EXPLORE_BANK']}</a><br />
-					<a href='estates.php'>{$lang['EXPLORE_ESTATES']}</a><br />
-					<a href='travel.php'>{$lang['EXPLORE_TRAVEL']}</a><br />
-					<a href='temple.php'>{$lang['EXPLORE_TEMPLE']}</a><br />
+					<a href='bank.php'>City Bank</a><br />
+					<a href='estates.php'>Estate Agent</a><br />
+					<a href='travel.php'>Travel Agent</a><br />
+					<a href='temple.php'>Temple of Fortune</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='HL' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>
-					<a href='mine.php'>{$lang['EXPLORE_MINE']}</a><br />
-					<a href='smelt.php'>{$lang['EXPLORE_SMELT']}</a><br />
-					<a href='#'>{$lang['EXPLORE_WC']}</a><br />
-					<a href='#'>{$lang['EXPLORE_FARM']}</a><br />
-					<a href='bottent.php'>{$lang['EXPLORE_BOTS']}</a><br />
+					<a href='mine.php'>Dangerous Mines</a><br />
+					<a href='smelt.php'>Blacksmith's Smeltery</a><br />
+					<a href='#'>Dark Forest</a><br />
+					<a href='#'>Agriculture</a><br />
+					<a href='bottent.php'>NPC Battle List</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='ADMIN' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>
-					<a href='users.php'>{$lang['EXPLORE_USERLIST']}</a><br />
-					<a href='usersonline.php'>{$lang['UOL_TITLE']}</a><br />
-					<a href='staff.php'>{$lang['EXPLORE_STAFFLIST']}</a><br />
-					<a href='fedjail.php'>{$lang['EXPLORE_FED']}</a><br />
-					<a href='stats.php'>{$lang['EXPLORE_STATS']}</a><br />
-					<a href='playerreport.php'>{$lang['EXPLORE_REPORT']}</a><br />
-					<a href='announcements.php'>{$lang['EXPLORE_ANNOUNCEMENTS']}</a><br />
-					<a href='itemappendix.php'>{$lang['ID_TITLE']}</a><br />
+					<a href='users.php'>User List</a><br />
+					<a href='usersonline.php'>Users Online List</a><br />
+					<a href='staff.php'>{$set['WebsiteName']} Staff</a><br />
+					<a href='fedjail.php'>Federal Dungeon</a><br />
+					<a href='stats.php'>Game Statistics</a><br />
+					<a href='playerreport.php'>Player Report</a><br />
+					<a href='announcements.php'>Announcements <span class='badge badge-pill badge-primary'>{$ir['announcements']}</span></a><br />
+					<a href='itemappendix.php'>Item Appendix</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='GAMES' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>
-					<a href='russianroulette.php'>{$lang['EXPLORE_RR']}</a><br />
-					<a href='hilow.php?tresde={$tresder}'>{$lang['EXPLORE_HILO']}</a><br />
-					<a href='roulette.php?tresde={$tresder}'>{$lang['EXPLORE_ROULETTE']}</a><br />
-					<a href='slots.php?tresde={$tresder}'>{$lang['EXPLORE_SLOTS']}</a><br />
+					<a href='russianroulette.php'>Russian Roulette</a><br />
+					<a href='hilow.php?tresde={$tresder}'>High/Low</a><br />
+					<a href='roulette.php?tresde={$tresder}'>Roulette Table</a><br />
+					<a href='slots.php?tresde={$tresder}'>Slot Machines</a><br />
 				</div>
 			</div>
 		</div>
@@ -110,34 +110,34 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
                     //User is in a guild.
 					if ($ir['guild'] > 0)
 					{
-						echo "<a href='viewguild.php'>{$lang['EXPLORE_YOURGUILD']}</a><br />";
+						echo "<a href='viewguild.php'>Visit Your Guild</a><br />";
 					}
 					echo "
-					<a href='guilds.php'>{$lang['EXPLORE_GUILDLIST']}</a><br />
-					<a href='guilds.php?action=wars'>{$lang['EXPLORE_WARS']}</a><br />
+					<a href='guilds.php'>Guild Listing</a><br />
+					<a href='guilds.php?action=wars'>Guild Wars</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='ACT' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>
-					<a href='dungeon.php'>{$lang['EXPLORE_DUNG']} <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
-					<a href='infirmary.php'>{$lang['EXPLORE_INFIRM']} <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
-					<a href='gym.php'>{$lang['EXPLORE_GYM']}</a><br />
-					<a href='#'>{$lang['EXPLORE_JOB']}</a><br />
-					<a href='academy.php'>{$lang['EXPLORE_ACADEMY']}</a><br />
-					<a href='criminal.php'>{$lang['EXPLORE_CRIMES']}</a><br />
-					<a href='tutorial.php'>{$lang['EXPLORE_TUTORIAL']}</a><br />
+					<a href='dungeon.php'>Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
+					<a href='infirmary.php'>Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
+					<a href='gym.php'>Gym</a><br />
+					<a href='#'>Your Job</a><br />
+					<a href='academy.php'>Learning Academy</a><br />
+					<a href='criminal.php'>Criminal Center</a><br />
+					<a href='tutorial.php'>{$set['WebsiteName']} Tutorial</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='PINTER' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>
-					<a href='forums.php'>{$lang['EXPLORE_FORUMS']}</a><br />
-					<a href='newspaper.php'>{$lang['EXPLORE_NEWSPAPER']}</a><br />
-					<a href='polling.php'>{$lang['POLL_TITLE']}</a><br />
-					<a href='halloffame.php'>{$lang['HOF_TITLE']}</a><br />
+					<a href='forums.php'>{$set['WebsiteName']} Forums</a><br />
+					<a href='newspaper.php'>{$set['WebsiteName']} Newspaper</a><br />
+					<a href='polling.php'>Polling Center</a><br />
+					<a href='halloffame.php'>Hall of Fame</a><br />
 				</div>
 			</div>
 		</div>
@@ -146,7 +146,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 <div class='col-md-4'>
 	<div class='card'>
 		<div class='card-header'>
-			{$lang['EXPLORE_TOPTEN']}
+			Top 10 Players
 		</div>
 		<div class='card-body'>";
 			$Rank=0;
@@ -162,7 +162,7 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 			while ($pdata=$db->fetch_row($RankPlayerQuery))
 			{
 				$Rank=$Rank+1;
-				echo "{$Rank}) <a href='profile.php?user={$pdata['userid']}'>{$pdata['username']}</a> ({$lang['INDEX_LEVEL']} {$pdata['level']})<br />";
+				echo "{$Rank}) <a href='profile.php?user={$pdata['userid']}'>{$pdata['username']}</a> (Level {$pdata['level']})<br />";
 			}
 			echo"
 		</div>
@@ -172,8 +172,8 @@ echo"<h4>{$lang['EXPLORE_INTRO']}</h4></div>
 //referral link.
 echo "	<div class='row'>
 			<div class='col-md-12'>
-				{$lang['EXPLORE_REF']}<br />
-				<code>http://{$domain}/register.php?REF={$userid}</code>
+				Share your referral link to gain 25 Secondary Currency every time a friend joins!<br />
+				<code>{$domain}/register.php?REF={$userid}</code>
 			</div>
 		</div>";
 $h->endpage();

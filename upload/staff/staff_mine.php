@@ -7,7 +7,7 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
-echo "<h2>{$lang['STAFF_MINE_TITLE']}</h2><hr />";
+echo "<h2>Staff Mines</h2><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -29,7 +29,7 @@ default:
 }
 function addmine()
 {
-    global $db,$ir,$userid, $lang, $api, $h;
+    global $db,$userid,$api,$h;
     if (isset($_POST['level']) && (!empty($_POST['level'])))
     {
         $level=(isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : '';
@@ -51,23 +51,23 @@ function addmine()
             || empty($cflakesmin) || empty($cflakesmax) || empty($gflakes) || empty($gflakesmin) 
         || empty($gflakesmax) || empty($sflakesmin) || empty($sflakesmax) || empty($sflakes) || empty($gem) || empty($power))
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR']);
+            alert('danger',"Uh Oh!","Please fill out the form completely before submitting it.");
             die($h->endpage());
         }
         elseif ($level < 1)
         {
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR1']);
+			alert('danger',"Uh Oh!","The minimum mining level cannot be lower than 1.");
             die($h->endpage());
         }
         elseif ($cflakesmin == 0 || $cflakesmax == 0 || $gflakesmin == 0 || 
         $gflakesmax == 0 || $sflakesmin == 0 || $sflakesmax == 0)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR1']);
+            alert('danger',"Uh Oh!","Please specify item output numbers.");
             die($h->endpage());
         }
         elseif ($cflakesmin >= $cflakesmax || $sflakesmin >= $sflakesmax || $gflakesmin >= $gflakesmax)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR2']);
+            alert('danger',"Uh Oh!","Your output minimums cannot be higher than their maximums.");
             die($h->endpage());
         }
         else
@@ -81,32 +81,32 @@ function addmine()
             
             if ($db->num_rows($CitySQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR3']);
+                alert('danger',"Uh Oh!","The town you've chosen does not exist.");
 				die($h->endpage());
             }
             elseif ($db->num_rows($PickSQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR4']);
+                alert('danger',"Uh Oh!","The pickaxe item you have chosen does not exist.");
 				die($h->endpage());
             }
             elseif ($db->num_rows($CFSQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR5']);
+                alert('danger',"Uh Oh!","The first item you've chosen does not exist.");
 				die($h->endpage());
             }
             elseif ($db->num_rows($SFSQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR6']);
+                alert('danger',"Uh Oh!","The second item you've chosen does not exist.");
 				die($h->endpage());
             }
             elseif ($db->num_rows($GFSQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR7']);
+                alert('danger',"Uh Oh!","The third item you've chosen does not exist.");
 				die($h->endpage());
             }
             elseif ($db->num_rows($GemSQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR8']);
+                alert('danger',"Uh Oh!","The gem item you've chosen does not exist.");
 				die($h->endpage());
             }
             else
@@ -127,7 +127,7 @@ function addmine()
                 '{$power}', '{$cflakes}', '{$sflakes}', '{$gflakes}', 
                 '{$gem}');");
 				$api->SystemLogsAdd($userid,"staff","Added a mine in " . $api->SystemTownIDtoName($city));
-				alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_MINE_ADD_SUCCESS']);
+				alert('success',"Success!","You have successfully created a mine in " . $api->SystemTownIDtoName($city));
 				die($h->endpage());
             }
             
@@ -140,12 +140,12 @@ function addmine()
             <form method='post'>
 				<tr>
 					<th colspan='2'>
-						{$lang['STAFF_MINE_ADD_FRMINFO']}
+						Create a mine using this form. The name of the mine will be based on its location and level.
 					</th>
 				</tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_LOCATION']}
+						Location
                     </th>
                     <td>
                         " . location_dropdown("city") . "
@@ -153,7 +153,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_LVL']}
+						Mining Level Requirement
                     </th>
                     <td>
                         <input type='number' class='form-control' name='level' min='1' required='1'> 
@@ -161,7 +161,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_IQ']}
+						IQ Requirement
                     </th>
                     <td>
                         <input type='number' class='form-control' name='IQ' min='1' required='1'> 
@@ -169,7 +169,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_PEPA']}
+						Power Exhaust per Attempt
                     </th>
                     <td>
                         <input type='number' class='form-control' name='power' min='1' required='1'> 
@@ -177,7 +177,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_PICK']}
+						Required Pickaxe
                     </th>
                     <td>
                         " . item_dropdown("pick") . "
@@ -185,7 +185,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_OP1']}
+						Item #1
                     </th>
                     <td>
                         " . item_dropdown("cflakes") . "
@@ -193,7 +193,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_OP2']}
+						Item #2
                     </th>
                     <td>
                         " . item_dropdown("sflakes") . "
@@ -201,7 +201,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_OP3']}
+						Item #3
                     </th>
                     <td>
                         " . item_dropdown("gflakes") . "
@@ -209,7 +209,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_GEM']}
+						Gem Item
                     </th>
                     <td>
                         " . item_dropdown("gem") . "
@@ -217,7 +217,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_OP1MIN']}
+						Item #1 Minimum Output
                     </th>
                     <td>
                         <input type='number' class='form-control' name='cflakemin' min='1' required='1'>
@@ -225,7 +225,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						{$lang['STAFF_MINE_FORM_OP1MAX']}
+						Item #1 Maximum Output
                     </th>
                     <td>
                         <input type='number' class='form-control' name='cflakemax' min='2' required='1'>
@@ -233,7 +233,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-                        {$lang['STAFF_MINE_FORM_OP2MIN']}
+                        Item #2 Minimum Output
                     </th>
                     <td>
                         <input type='number' class='form-control' name='sflakemin' min='1' required='1'>
@@ -241,7 +241,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-                        {$lang['STAFF_MINE_FORM_OP2MAX']}
+                        Item #2 Maximum Output
                     </th>
                     <td>
                         <input type='number' class='form-control' name='sflakemax' min='2' required='1'>
@@ -249,7 +249,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-                        {$lang['STAFF_MINE_FORM_OP3MIN']}
+                        Item #3 Minimum Output
                     </th>
                     <td>
                         <input type='number' class='form-control' name='gflakemin' min='1' required='1'>
@@ -257,7 +257,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-                        {$lang['STAFF_MINE_FORM_OP3MAX']}
+                        Item #3 Maximum Output
                     </th>
                     <td>
                         <input type='number' class='form-control' name='gflakemax' min='2' required='1'>
@@ -265,7 +265,7 @@ function addmine()
                 </tr>
                 <tr>
                     <td colspan='2'>
-                        <input type='submit' class='btn btn-primary' value='{$lang['STAFF_MINE_ADD_BTN']}'>
+                        <input type='submit' class='btn btn-primary' value='Create Mine'>
                     </td>
                 </tr>
             </form>
@@ -278,7 +278,7 @@ function editmine()
     {
         $_POST['step'] = 0;
     }
-    global $db,$ir,$userid,$h,$api,$lang;
+    global $db,$userid,$h,$api;
     if (isset($_POST['level']) && (!empty($_POST['level'])) && $_POST['step'] == 2)
     {
         $mine=(isset($_POST['mineid']) && is_numeric($_POST['mineid'])) ? abs(intval($_POST['mineid'])) : '';
@@ -301,23 +301,23 @@ function editmine()
             || empty($cflakesmin) || empty($cflakesmax) || empty($gflakes) || empty($gflakesmin) 
         || empty($gflakesmax) || empty($sflakesmin) || empty($sflakesmax) || empty($sflakes) || empty($gem) || empty($power))
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR']);
+            alert('danger',"Uh Oh!","Please fill out the previous form as completely as possible.");
             die($h->endpage());
         }
         elseif ($level < 1)
         {
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR1']);
+			alert('danger',"Uh Oh!","The minimum mining level cannot be lower than 1.");
             die($h->endpage());
         }
         elseif ($cflakesmin == 0 || $cflakesmax == 0 || $gflakesmin == 0 || 
         $gflakesmax == 0 || $sflakesmin == 0 || $sflakesmax == 0)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR1']);
+            alert('danger',"Uh Oh!","Please specify the item outputs.");
             die($h->endpage());
         }
         elseif ($cflakesmin >= $cflakesmax || $sflakesmin >= $sflakesmax || $gflakesmin >= $gflakesmax)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR2']);
+            alert('danger',"Uh Oh!","The item minimum outputs cannot be higher than their maximums.");
             die($h->endpage());
         }
         else
@@ -330,32 +330,32 @@ function editmine()
             $GemSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gem}"));
             if ($db->num_rows($CitySQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR3']);
+                alert('danger',"Uh Oh!","The town you have chosen does not exist.");
 				die($h->endpage());
             }
             elseif ($db->num_rows($PickSQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR4']);
+                alert('danger',"Uh Oh!","The pickaxe item you have chosen does not exist.");
 				die($h->endpage());
             }
             elseif ($db->num_rows($CFSQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR5']);
+                alert('danger',"Uh Oh!","The item #1 you have chosen does not exist.");
 				die($h->endpage());
             }
             elseif ($db->num_rows($SFSQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR6']);
+                alert('danger',"Uh Oh!","The item #2 you have chosen does not exist.");
 				die($h->endpage());
             }
             elseif ($db->num_rows($GFSQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR7']);
+                alert('danger',"Uh Oh!","The item #3 you have chosen does not exist.");
 				die($h->endpage());
             }
             elseif ($db->num_rows($GemSQL) == 0)
             {
-                alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_ADD_ERROR8']);
+                alert('danger',"Uh Oh!","The gem item you have chosen does not exist.");
 				die($h->endpage());
             }
             else
@@ -367,7 +367,7 @@ function editmine()
                 `mine_pickaxe` = '{$pick}', `mine_iq` = '{$iq}', `mine_gem_item` = '{$gem}', `mine_power_use` = '{$power}' 
                 WHERE `mine_id` = {$mine}");
                 $api->SystemLogsAdd($userid,"staff","Edited Mine ID #{$mine}");
-				alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_MINE_EDIT_SUCCESS'],true,'index.php');
+				alert('success',"Success!","You have successfully edited Mine ID #{$mine}.",true,'index.php');
 				die($h->endpage());
             }
             
@@ -378,20 +378,20 @@ function editmine()
         $mine=(isset($_POST['mine']) && is_numeric($_POST['mine'])) ? abs(intval($_POST['mine'])) : '';
         if ($db->num_rows($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}")) == 0)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_EDIT_ERR']);
+            alert('danger',"Uh Oh!","You are trying to edit a non-existent mine.");
 			die($h->endpage());
         }
         else
         {
             $mi=$db->fetch_row($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}"));
-            echo "{$lang['STAFF_MINE_EDIT2']}<br />
+            echo "Edit a mine with this form. The name of the mine will be based on its location and level.<br />
             <table class='table table-bordered'>
                 <form method='post'>
                 <input type='hidden' value='2' name='step'>
                 <input type='hidden' value='{$mine}' name='mineid'>
                     <tr>
                         <th>
-							{$lang['STAFF_MINE_FORM_LOCATION']}
+							Location
                         </th>
                         <td>
                             " . location_dropdown("city", $mi['mine_location']) . "
@@ -399,7 +399,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_LVL']}
+                            Mining Level Requirement
                         </th>
                         <td>
                             <input type='number' class='form-control' name='level' min='1' value='{$mi['mine_level']}' required='1'> 
@@ -407,7 +407,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_IQ']}
+                            IQ Requirement
                         </th>
                         <td>
                             <input type='number' class='form-control' name='iq' min='1' value='{$mi['mine_iq']}' required='1'> 
@@ -415,7 +415,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_PEPA']}
+                            Power Exhaust per Attempt
                         </th>
                         <td>
                             <input type='number' class='form-control' name='power' min='1' value='{$mi['mine_power_use']}' required='1'> 
@@ -423,7 +423,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_PICK']}
+                            Pickaxe Item
                         </th>
                         <td>
                             " . item_dropdown("pick", $mi['mine_pickaxe']) . "
@@ -431,7 +431,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_OP1']}
+                            Item #1
                         </th>
                         <td>
                             " . item_dropdown("cflakes", $mi['mine_copper_item']) . "
@@ -439,7 +439,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_OP2']}
+                            Item #2
                         </th>
                         <td>
                             " . item_dropdown("sflakes", $mi['mine_silver_item']) . "
@@ -447,7 +447,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_OP3']}
+                            Item #3
                         </th>
                         <td>
                             " . item_dropdown("gflakes", $mi['mine_gold_item']) . "
@@ -455,7 +455,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_GEM']}
+                            Gem Item
                         </th>
                         <td>
                             " . item_dropdown("gem", $mi['mine_gem_item']) . "
@@ -463,7 +463,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_OP1MIN']}
+                            Item #1 Minimum Output
                         </th>
                         <td>
                             <input type='number' class='form-control' name='cflakemin' value='{$mi['mine_copper_min']}' min='1' required='1'>
@@ -471,7 +471,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_OP1MAX']}
+                            Item #1 Maximum Output
                         </th>
                         <td>
                             <input type='number' class='form-control' name='cflakemax' value='{$mi['mine_copper_max']}' min='2' required='1'>
@@ -479,7 +479,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_OP2MIN']}
+                            Item #2 Minimum Output
                         </th>
                         <td>
                             <input type='number' class='form-control' name='sflakemin' value='{$mi['mine_silver_min']}' min='1' required='1'>
@@ -487,7 +487,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_OP2MAX']}
+                            Item #2 Maximum Output
                         </th>
                         <td>
                             <input type='number' class='form-control' name='sflakemax' value='{$mi['mine_silver_max']}' min='2' required='1'>
@@ -495,7 +495,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_OP3MIN']}
+                            Item #3 Minimum Output
                         </th>
                         <td>
                             <input type='number' class='form-control' name='gflakemin' value='{$mi['mine_gold_min']}' min='1' required='1'>
@@ -503,7 +503,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            {$lang['STAFF_MINE_FORM_OP3MAX']}
+                            Item #3 Maximum Output
                         </th>
                         <td>
                             <input type='number' class='form-control' name='gflakemax' value='{$mi['mine_gold_max']}' min='2' required='1'>
@@ -511,7 +511,7 @@ function editmine()
                     </tr>
                     <tr>
                         <td colspan='2'>
-                            <center><input type='submit' class='btn btn-primary' value='{$lang['STAFF_MINE_EDIT_BTN']}'></center>
+                            <input type='submit' class='btn btn-primary' value='Edit Mine'>
                         </td>
                     </tr>
                 </form>
@@ -520,39 +520,39 @@ function editmine()
     }
     else
     {
-        echo "{$lang['STAFF_MINE_EDIT1']}<br />
+        echo "Select the mine you wish to edit.<br />
         <form method='post'>
         <input type='hidden' name='step' value='1'>
         " . mines_dropdown("mine") . "<br />
-        <input type='submit' class='btn btn-primary' value='{$lang['STAFF_MINE_EDIT_BTN']}'>
+        <input type='submit' class='btn btn-primary' value='Edit Mine'>
         ";
     }
 }
 function delmine()
 {
-    global $db,$lang,$userid,$lang,$api,$h;
+    global $db,$userid,$api,$h;
     if (isset($_POST['mine']))
     {
         $mine=(isset($_POST['mine']) && is_numeric($_POST['mine'])) ? abs(intval($_POST['mine'])) : '';
         if ($db->num_rows($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}")) == 0)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_MINE_EDIT_ERR']);
+            alert('danger',"Uh Oh!","You are trying to delete a non-existent mine.");
 			die($h->endpage());
         }
         else
         {
             $db->query("DELETE FROM `mining_data` WHERE `mine_id` = {$mine}");
             $api->SystemLogsAdd($userid,"staff","Deleted a mine.");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_MINE_DEL_SUCCESS'],true,'index.php');
+			alert('success',"Success!","You have successfully deleted this mine.",true,'index.php');
 			die($h->endpage());
         }
     }
     else
     {
-        echo "{$lang['STAFF_MINE_DEL1']}<br />
+        echo "Select the mine you wish to delete. This cannot be undone.<br />
         <form method='post'>
         " . mines_dropdown("mine") . "<br />
-        <input type='submit' class='btn btn-primary' value='{$lang['STAFF_MINE_DEL_BTN']}'>
+        <input type='submit' class='btn btn-primary' value='Delete Mine'>
         ";
     }
 }

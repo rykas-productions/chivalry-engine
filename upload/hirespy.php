@@ -13,25 +13,25 @@ $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET[
 //Current user is in the infirmary, don't let them buy a spy.
 if ($api->UserStatus($userid,'infirmary'))
 {
-	alert('danger',$lang["GEN_INFIRM"],$lang['SPY_ERROR6'],true,'back');
+	alert('danger',"Unconscious!","You cannot hire a spy on someone if you're in the infirmary.",true,'back');
 	die($h->endpage());
 }
 //Current user is in the dungeon, don't let them buy a spy.
 if ($api->UserStatus($userid,'dungeon'))
 {
-	alert('danger',$lang["GEN_DUNG"],$lang['SPY_ERROR5'],true,'back');
+	alert('danger',"Locked Up!","You cannot hire a spy on someone if you're in the dungeon.",true,'back');
 	die($h->endpage());
 }
 //GET is empty/truncated after sanitation,  don't let player buy a spy.
 if (empty($_GET['user']))
 {
-	alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_ERROR1'],true,'index.php');
+	alert("danger","Uh Oh!","Please specify a user you wish to hire a spy upon.",true,'index.php');
 	die($h->endpage());
 }
 //GET is the same player as the current user, do not allow to buy spy.
 if ($_GET['user'] == $userid)
 {
-	alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_ERROR2'],true,'index.php');
+	alert("danger","Uh Oh!","Why would you want to hire a spy upon yourself?",true,'index.php');
 	die($h->endpage());
 }
 //Grab GET user's information.
@@ -39,14 +39,14 @@ $q=$db->query("SELECT `u`.*, `us`.* FROM `users` `u` INNER JOIN `userstats` AS `
 //User does not exist, so do not allow spy to be bought.
 if ($db->num_rows($q) == 0)
 {
-	alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_ERROR3'],true,'index.php');
+	alert("danger","Uh Oh!","The player you're trying to hire a spy upon does not exist.",true,'index.php');
 	die($h->endpage());
 }
 $r=$db->fetch_row($q);
 //GET User is in the same guild as the current player, do not allow spy to be bought.
 if (($r['guild'] == $ir['guild']) && ($ir['guild'] != 0))
 {
-	alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_ERROR7'],true,'index.php');
+	alert("danger","Uh Oh!","You cannot hire a spy on someone in your guild.",true,'index.php');
 	die($h->endpage());
 }
 //Spy has been bought, and all other tests have passed!
@@ -57,7 +57,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
     //Current user does not have the required Primary Currency to buy a spy.
 	if ($ir['primary_currency'] < $r['level']*500)
 	{
-		alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_ERROR4'],true,'back');
+		alert("danger","Uh Oh!","You do not have enough Primary Currency to hire a spy to spy on this user.",true,'back');
 		die($h->endpage());
 	}
     //Take the spy cost from the player.
@@ -71,7 +71,8 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 		if ($rand2 <= 2)
 		{
 			$api->GameAddNotification($_GET['user'],"An unknown user has attempted to spy on you and failed.");
-			alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_FAIL1'],true,'index.php');
+			alert("danger","Uh Oh!","Your spy attempts to get information on your target. Your spy is noticed. Your
+			    target doesn't get wind of who you are.",true,'index.php');
 			$api->SystemLogsAdd($userid,'spy',"Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) .  " and failed.");
 			die($h->endpage());
 		}
@@ -79,7 +80,8 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 		else
 		{
 			$api->GameAddNotification($_GET['user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has attempted to spy on you and failed.");
-			alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_FAIL2'],true,'index.php');
+			alert("danger","Uh Oh!","Your spy attempts to get information on your target. Your spy is noticed and
+			    attacked! To save his own life, he name drops you. Your target now knows who sent the agent.",true,'index.php');
 			$api->SystemLogsAdd($userid,'spy',"Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) .  " and failed.");
 			die($h->endpage());
 		}
@@ -87,7 +89,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
     //RNG equals 3, send current player to the dungeon.
 	elseif ($rand == 3)
 	{
-		alert("danger",$lang['ERROR_GENERIC'],$lang['SPY_FAIL3'],true,'index.php');
+		alert("danger","Uh Oh!","Your hired spy actually turned out to be a dungeon guard. He arrests you.",true,'index.php');
 		$dungtime=Random($ir['level'],$ir['level']*3);
 		$api->UserStatusSet($userid,'dungeon',$dungtime,"Stalkerish Tendencies");
 		$api->SystemLogsAdd($userid,'spy',"Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) .  " and was sent to the dungeon.");
@@ -96,12 +98,13 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
     //RNG equals 4, show the current player the person's stats and weapons.
 	else
 	{
-		alert("success",$lang['ERROR_SUCCESS'],"{$lang['SPY_SUCCESS']} " . number_format(500*$r['level']) ." {$lang['SPY_SUCCESS1']} {$r['username']}{$lang['SPY_SUCCESS2']}",false);
+		alert("success","Success!","You have paid " . number_format(500*$r['level']) ." to hire a spy upon
+		    {$r['username']}. Here is that information.",false);
 		echo"<br />
 		<table class='table table-bordered'>
 			<tr>
 				<th>
-					{$lang['EQUIP_WEAPON_SLOT1']}
+					Primary Weapon
 				</th>
 				<td>
 					" . $api->SystemItemIDtoName($r['equip_primary']) ."
@@ -109,7 +112,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 			</tr>
 			<tr>
 				<th>
-					{$lang['EQUIP_WEAPON_SLOT2']}
+					Secondary Weapon
 				</th>
 				<td>
 					" . $api->SystemItemIDtoName($r['equip_secondary']) ."
@@ -117,7 +120,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 			</tr>
 			<tr>
 				<th>
-					{$lang['EQUIP_WEAPON_SLOT3']}
+					Armor
 				</th>
 				<td>
 					" . $api->SystemItemIDtoName($r['equip_armor']) ."
@@ -125,7 +128,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 			</tr>
 			<tr>
 				<th>
-					{$lang['GEN_STR']}
+					Strength
 				</th>
 				<td>
 					" . number_format($r['strength']) . "
@@ -133,7 +136,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 			</tr>
 			<tr>
 				<th>
-					{$lang['GEN_AGL']}
+					Agility
 				</th>
 				<td>
 					" . number_format($r['agility']) . "
@@ -141,7 +144,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 			</tr>
 			<tr>
 				<th>
-					{$lang['GEN_GRD']}
+					Guard
 				</th>
 				<td>
 					" . number_format($r['guard']) . "
@@ -149,7 +152,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 			</tr>
 			<tr>
 				<th>
-					{$lang['GEN_IQ']}
+					IQ
 				</th>
 				<td>
 					" . number_format($r['iq']) . "
@@ -157,7 +160,7 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 			</tr>
 			<tr>
 				<th>
-					{$lang['GEN_LAB']}
+					Labor
 				</th>
 				<td>
 					" . number_format($r['labor']) . "
@@ -171,12 +174,12 @@ if (isset($_POST['do']) && (isset($_GET['user'])))
 //Starting form.
 else
 {
-	echo "{$lang['SPY_START']} " . $api->SystemUserIDtoName($_GET['user']) . 
-	"{$lang['SPY_START1']}" . number_format(500*$r['level']) . " 
-	{$lang['SPY_START2']}<br />
+	echo "You are attempting to hire a spy on " . $api->SystemUserIDtoName($_GET['user']) .
+	". Spies cost 500 Primary currency multiplied by their level. (" . number_format(500*$r['level']) . "
+	in this case.) Success is not guaranteed.<br />
 	<form action='?user={$_GET['user']}' method='post'>
 		<input type='hidden' name='do' value='yes'>
-		<input type='submit' class='btn btn-primary' value='{$lang['SPY_BTN']}'>
+		<input type='submit' class='btn btn-primary' value='Hire Spy'>
 	</form>";
 }
 $h->endpage();

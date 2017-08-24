@@ -27,19 +27,19 @@ $email = isset($_POST['email']) ? stripslashes($_POST['email']) : '';
 if (empty($email))
 {
     echo "<script>document.getElementById('emerror').className = 'has-error';</script>";
-	die(alert('danger',$lang['ERROR_GENERIC'],$lang['SCRIPT_ERR2'],false));
+	die(alert('danger',"Uh Oh!","Please enter an email address.",false));
 }
 if (!valid_email($email))
 {
     echo "<script>document.getElementById('emerror').className = 'has-error';</script>";
-	die(alert('danger',$lang['ERROR_GENERIC'],$lang['SCRIPT_ERR1'],false));
+	die(alert('danger',"Uh Oh!","Please enter a valid email address.",false));
 }
 $e_email = $db->escape($email);
 $q = $db->query("SELECT COUNT(`userid`) FROM users WHERE `email` = '{$e_email}'");
 if ($db->fetch_single($q) != 0)
 {
     echo "<script>document.getElementById('emerror').className = 'has-error';</script>";
-	die(alert('danger',$lang['ERROR_GENERIC'],$lang['SCRIPT_ERR'],false));
+	die(alert('danger',"Uh Oh!","The email address you've entered is already in use.",false));
 }
 else
 {

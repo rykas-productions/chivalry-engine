@@ -27,10 +27,10 @@ default:
 }
 function addacademy()
 {
-	global $lang,$h,$db,$userid,$api, $ir;
+	global $h, $db, $userid, $api, $ir;
 	if ($ir['user_level'] != "Admin")
     {
-		alert('danger',$lang['ERROR_NOPERM'],$lang['STAFF_NOPERM'],true,'index.php');
+		alert('danger',"Uh Oh!","You do not have permission to be here.",true,'index.php');
 		die($h->endpage());
     }
 	if (!isset($_POST['name']))
@@ -41,11 +41,11 @@ function addacademy()
 		<tr>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_ACADEMY_ADD_TH']}
+					Fill out this form to add an academy course to the game.
 				</th>
 			</tr>
 			<th>
-					{$lang['STAFF_ACADEMY_NAME']}
+					Course Name
 				</th>
 				<td>
 					<input type='text' required='1' name='name' class='form-control'>
@@ -53,7 +53,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ACADEMY_DESC']}
+					Course Description
 				</th>
 				<td>
 					<input type='text' required='1' name='desc' class='form-control'>
@@ -61,7 +61,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ACADEMY_COST']}
+					Enrollment Cost
 				</th>
 				<td>
 					<input type='number' required='1' min='1' name='cost' class='form-control'>
@@ -69,7 +69,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ACADEMY_LVL']}
+					Minimal Level (Optional)
 				</th>
 				<td>
 					<input type='number' required='1' min='0' value='0' name='lvl' class='form-control'>
@@ -77,7 +77,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ACADEMY_DAYS']}
+					Course Length (In Days)
 				</th>
 				<td>
 					<input type='number' required='1' name='day' min='1' class='form-control'>
@@ -85,7 +85,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ACADEMY_OPTION_1']}
+					Course Strength
 				</th>
 				<td>
 					<input type='number' required='1' name='str' min='0' value='0' class='form-control'>
@@ -93,7 +93,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ACADEMY_OPTION_2']}
+					Course Agility
 				</th>
 				<td>
 					<input type='number' required='1' name='agl' min='0' value='0' class='form-control'>
@@ -101,7 +101,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ACADEMY_OPTION_3']}
+					Course Guard
 				</th>
 				<td>
 					<input type='number' required='1' name='grd' min='0' value='0' class='form-control'>
@@ -109,7 +109,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ACADEMY_OPTION_4']}
+					Course Labor
 				</th>
 				<td>
 					<input type='number' required='1' name='lab' min='0' value='0' class='form-control'>
@@ -117,7 +117,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ACADEMY_OPTION_5']}
+					Course IQ
 				</th>
 				<td>
 					<input type='number' required='1' name='iq' min='0' value='0' class='form-control'>
@@ -125,7 +125,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_ACADEMY_CREATE']}' class='btn btn-primary'>
+					<input type='submit' value='Create Course' class='btn btn-primary'>
 				</td>
 			</tr>
 			</table>
@@ -136,7 +136,7 @@ function addacademy()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newacademy', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Forms expirely fairly quickly. Go back and submit it quicker!");
 			die($h->endpage());
 		}
 		$name = (isset($_POST['name']) && is_string($_POST['name'])) ? stripslashes($_POST['name']) : '';
@@ -151,44 +151,44 @@ function addacademy()
 		$iq = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs(intval($_POST['iq'])) : 0;
 		if (empty($name) || empty($desc) || empty($cost) || !isset($lvl) || empty($days))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ACADEMY_ADD_ERR']);
+			alert('danger',"Uh Oh!","Please be sure to fill in the form completely.");
 			die($h->endpage());
 		}
 		if (empty($str) && empty($agl) && empty($grd) && empty($lab) && empty($iq))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ACADEMY_ADD_ERR1']);
+			alert('danger',"Uh Oh!","Please be sure to input some stats to be gained by completing the course.");
 			die($h->endpage());
 		}
 		$inq=$db->query("SELECT `ac_id` FROM `academy` WHERE `ac_name` = '{$name}'");
 		if ($db->num_rows($inq) > 0)
 		{
 			$db->free_result($inq);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ACADEMY_ADD_ERR2']);
+			alert('danger',"Uh Oh!","You cannot have more than one course with the same name.");
 			die($h->endpage());
 		}
 		$db->query("INSERT INTO `academy` VALUES (NULL, '{$name}', '{$desc}', '{$cost}', '{$lvl}', '{$days}', '{$str}', '{$agl}', '{$grd}', '{$lab}', '{$iq}')");
 		$api->SystemLogsAdd($userid,'staff',"Created academy course {$name}.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ACADEMY_ADD_SUCC'],true,'index.php');
+		alert('success',"Success!","You have successfully added the {$name} course.",true,'index.php');
 	}
 }
 function delacademy()
 {
-	global $db,$ir,$h,$lang,$userid,$api;
+	global $db,$ir,$h,$userid,$api;
 	if ($ir['user_level'] != 'Admin')
     {
-        alert('danger',$lang['ERROR_NOPERM'],$lang['STAFF_NOPERM'],true,'index.php');
+        alert('danger',"Uh Oh!","You do not have permission to be here.",true,'index.php');
         die($h->endpage());
     }
 	if (!isset($_POST['academy']))
 	{
 		$csrf = request_csrf_html('staff_delacademy');
-		echo "<h4>{$lang['STAFF_ACADEMY_DELETE_HEADER']}</h4>
-			{$lang['STAFF_ACADEMY_DELETE_NOTICE']}
+		echo "<h4>Deleting an Academic Course</h4>
+			The academy you select will be deleted permanently. There isn't a confirmation prompt, so be 100% sure.
 			<form method='post'>
 				<table class='table table-bordered'>
 					<tr>
 						<th width='33%'>
-							{$lang['STAFF_ACADEMY_DELETE_TITLE']}
+							Course
 						</th>
 						<td>
 							" . academy_dropdown('academy') . "
@@ -196,7 +196,7 @@ function delacademy()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-primary' value='{$lang['STAFF_ACADEMY_DELETE_BUTTON']}'>
+							<input type='submit' class='btn btn-primary' value='Delete Course'>
 						</td>
 					</tr>
 				</table>
@@ -207,13 +207,13 @@ function delacademy()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delacademy', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',"Action Blocked!","Forms expirely fairly quickly. Go back and submit it quicker!");
 			die($h->endpage());
 		}
 		$_POST['academy'] =(isset($_POST['academy']) && is_numeric($_POST['academy'])) ? abs(intval($_POST['academy'])) : '';
 		if (empty($_POST['academy']))
 		{
-			alert('warning',$lang['ERROR_GENERIC'],$lang['STAFF_ACADEMY_DEL_ERR']);
+			alert('warning',"Uh Oh!","Please select an academic course to have deleted.");
 			die($h->endpage());
 		}
 		$d =
@@ -224,14 +224,14 @@ function delacademy()
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ACADEMY_DEL_ERR1']);
+			alert('danger',"Uh Oh!","The academic course you're trying to delete does not exist.");
 			die($h->endpage());
 		}
 		$academyname = $db->fetch_single($d);
 		$db->free_result($d);
 		$db->query("DELETE FROM `academy` WHERE `ac_id` = {$_POST['academy']}");
 		$api->SystemLogsAdd($userid,'staff',"Deleted academy {$academyname}.");
-		alert("success",$lang['ERROR_SUCCESS'],"{$lang['STAFF_ACADEMY_DEL_SUCC']} {$academyname} {$lang['STAFF_ACADEMY_DEL_SUCC1']}",true,'index.php');
+		alert("success","Success!","You have successfully deleted the {$academyname} academic course.",true,'index.php');
 		die($h->endpage());
 	}
 }

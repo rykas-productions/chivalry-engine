@@ -10,7 +10,7 @@ class headers
 {
     function startheaders()
     {
-		global $ir,$set,$h,$lang,$db,$menuhide,$userid,$macropage,$api,$time;
+		global $ir,$set,$h,$db,$menuhide,$userid,$macropage,$api,$time;
         //Load the meta headers.
 		?>
 		<!DOCTYPE html>
@@ -47,19 +47,19 @@ class headers
                     <div class="collapse navbar-collapse" id="CENGINENav">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item active">
-                                <a class="nav-link" href="explore.php"><?php echo $lang['MENU_EXPLORE']; ?></a>
+                                <a class="nav-link" href="explore.php"><?php echo "Explore"; ?></a>
                             </li>
                         </ul>
                         <div class="my-2 my-lg-0">
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="inbox.php"><?php echo "{$lang['MENU_MAIL']} <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
+                                    <a class="nav-link" href="inbox.php"><?php echo "Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="notifications.php"><?php echo "{$lang['MENU_EVENT']} <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
+                                    <a class="nav-link" href="notifications.php"><?php echo "Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="inventory.php"><?php echo $lang['MENU_INVENTORY']; ?></a>
+                                    <a class="nav-link" href="inventory.php"><?php echo "Inventory"; ?></a>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -69,25 +69,25 @@ class headers
                                         {
                                             echo"<img src='{$ir['display_pic']}' width='24' height='24'>";
                                         }
-                                        echo" {$lang['GEN_GREETING']}, {$ir['username']}";
+                                        echo" Hello, {$ir['username']}!";
                                         ?>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                        <a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i class="fa fa-fw fa-user"></i> <?php echo $lang['MENU_PROFILE']; ?></a>
-                                        <a class="dropdown-item" href="preferences.php?action=menu"><i class="fa fa-fw fa-gear"></i><?php echo $lang['MENU_SETTINGS']; ?></a>
+                                        <a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i class="fa fa-fw fa-user"></i> <?php echo "Profile"; ?></a>
+                                        <a class="dropdown-item" href="preferences.php?action=menu"><i class="fa fa-fw fa-gear"></i><?php echo "Preferences"; ?></a>
                                         <?php
                                         //User is a staff member, so lets show the panel's link.
                                         if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant')))
                                         {
                                             ?>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="staff/index.php"><i class="fa fa-fw fa fa-terminal"></i> <?php echo $lang['MENU_STAFF']; ?></a>
+                                            <a class="dropdown-item" href="staff/index.php"><i class="fa fa-fw fa fa-terminal"></i> <?php echo "Staff Panel"; ?></a>
                                         <?php
                                         }
                                         ?>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="gamerules.php"><i class="fa fa-fw fa-server"></i> <?php echo $lang['MENU_RULES']; ?></a>
-                                        <a class="dropdown-item" href="logout.php"><i class="fa fa-fw fa-power-off"></i> <?php echo $lang['MENU_LOGOUT']; ?></a>
+                                        <a class="dropdown-item" href="gamerules.php"><i class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
+                                        <a class="dropdown-item" href="logout.php"><i class="fa fa-fw fa-power-off"></i> <?php echo "Logout"; ?></a>
                                     </div>
                                 </li>
                             </ul>
@@ -102,7 +102,7 @@ class headers
 				<noscript>
 					<?php 
                         //User doesn't have javascript turned on, so lets tell them.
-                        alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false);
+                        alert('info',"Uh Oh!","Please enable Javascript. Many features of the game will not work without it.",false);
                     ?>
 				</noscript>
 				<?php
@@ -111,11 +111,12 @@ class headers
                 //User's IP is banned, so lets stop access.
 				if ($db->num_rows($ipq) > 0)
 				{
-					alert('danger',$lang['ERROR_GENERIC'],$lang['HDR_IPREKT'],false);
+					alert('danger',"Uh Oh!","You have been IP banned.",false);
 					die($h->endpage());
 				}
 				$fed=$db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
-				alert('info',$lang['ERROR_INFO'],"{$lang['MENU_DONATE']} {$set['WebsiteName']}{$lang['MENU_DONATE2']}",false);
+				alert('info',"Information!","Donate to {$set['WebsiteName']} and you'll receive many cool perks! Check
+                    out your options <a href='donator.php'>here</a>.",false);
 				//User's federal jail sentence is completed. Let them play again.
                 if ($fed['fed_out'] < $time)
 				{
@@ -125,37 +126,43 @@ class headers
                 //User is in federal jail. Stop their access.
 				if ($ir['fedjail'] > 0)
 				{
-					alert('info',$lang['MENU_FEDJAIL'],"{$lang['MENU_FEDJAIL1']} " . TimeUntil_Parse($fed['fed_out']) . " {$lang['MENU_FEDJAIL2']} <b>{$fed['fed_reason']}</b>",false);
+					alert('info',"Federal Dungeon!","You are locked away in Federal Dungeon for the next
+					    " . TimeUntil_Parse($fed['fed_out']) . ". You were placed in here for <b>{$fed['fed_reason']}</b>",false);
 					die($h->endpage());
 				}
                 //Tell user when they have unread messages, when they do.
 				if ($ir['mail'] > 0)
 				{
-					alert('info',$lang['MENU_UNREADMAIL1'],"{$lang['MENU_UNREADMAIL2']} {$ir['mail']} {$lang['MENU_UNREADMAIL3']} <a href='inbox.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}",false);
+					alert('info',"New Mail!","You have {$ir['mail']} unread messages. Click
+                        <a href='inbox.php'>here</a> to read them.",false);
 				}
                 //Tell user they have unread notifcations when they do.
 				if ($ir['notifications'] > 0)
 				{
-					alert('info',$lang['MENU_UNREADNOTIF'],"{$lang['MENU_UNREADMAIL2']} {$ir['notifications']} {$lang['MENU_UNREADNOTIF1']} <a href='notifications.php'>{$lang["GEN_HERE"]}</a> {$lang['MENU_UNREADMAIL4']}",false);
+					alert('info',"New Notifications!","You have {$ir['notifications']} unread notifications.
+                        Click <a href='notifications.php'>here</a> to view them.",false);
 				}
                 //Tell user they have unread game announcements when they do.
 				if ($ir['announcements'] > 0)
 				{
-					alert('info',$lang['MENU_UNREADANNONCE'],"{$lang['MENU_UNREADANNONCE1']} {$ir['announcements']} {$lang['MENU_UNREADANNONCE2']} <a href='announcements.php'>{$lang["GEN_HERE"]}</a>.",false);
+					alert('info',"New Announcements!","You have {$ir['announcements']} unread announcements. Click
+                        <a href='announcements.php'>here</a> to view them.",false);
 				}
                 //User is in the infirmary, tell them for how long.
 				if ($api->UserStatus($ir['userid'],'infirmary'))
 				{
 					$InfirmaryOut=$db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
 					$InfirmaryRemain=TimeUntil_Parse($InfirmaryOut);
-					alert('info',$lang['GEN_INFIRM'],"{$lang['MENU_INFIRMARY1']} {$InfirmaryRemain}.",false);
+					alert('info',"Unconscious!","You are in the Infirmary for the next {$InfirmaryRemain}. Check your
+                        <a href='inventory.php'>Inventory</a> for items to heal you out!",false);
 				}
                 //User is in the dungeon, tell them how long.
 				if ($api->UserStatus($ir['userid'],'dungeon'))
 				{
 					$DungeonOut=$db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
 					$DungeonRemain=TimeUntil_Parse($DungeonOut);
-					alert('info',$lang["GEN_DUNG"],"{$lang['MENU_DUNGEON1']} {$DungeonRemain}.",false);
+					alert('info',"Locked Up!","You are in the dungeon for the next {$DungeonRemain}. Check your
+                        <a href='inventory.php'>Inventory</a> for items to help you out!",false);
 				}
                 //User needs to reverify with reCaptcha
 				if (($ir['last_verified'] < ($time-$set['Revalidate_Time'])) || ($ir['need_verify'] == 1))
@@ -165,7 +172,7 @@ class headers
 					{
 						?> 
                         <script>alert('Please add the reCaptcha private and public keys.');</script> 
-                     <?php
+                        <?php
 						die($h->endpage());
 					}
                     //Script calls for reCaptcha to be loaded.
@@ -173,13 +180,13 @@ class headers
 					{
                         //Set User to need verified.
 						$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
-						echo "{$lang['RECAPTCHA_INFO']}"; ?>
+						echo "This is a needed evil. Please confirm you are not a bot."; ?>
 						<form action='macro.php' method='post'>
 							<center>
 								<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
 							</center>
 							<input type='hidden' value='<?php echo $macropage; ?>' name='page'>
-							<input type='submit' value="<?php echo $lang['RECAPTCHA_BTN']; ?>" class="btn btn-primary" data-dismiss="modal">
+							<input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" data-dismiss="modal">
 						</form>
 						<?php
 						die($h->endpage());
@@ -189,9 +196,9 @@ class headers
 		date_default_timezone_set($ir['timezone']);  
 	}
 }
-	function userdata($ir, $lv, $fm, $cm, $dosessh = 1)
+	function userdata($ir, $dosessh = 1)
     {
-		global $db, $c, $userid, $set, $lang, $api;
+		global $db, $userid, $api;
 		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
         //Update the user as they browse the game.
 		$db->query("UPDATE `users` 
@@ -202,7 +209,7 @@ class headers
         if (!$ir['email'])
         {
             global $domain;
-            die("<body>{$lang['HDR_REKT']}{$domain} {$lang['HDR_REKT1']}");
+            die("<body>Your account is broken. Please contact admin@{$domain} for assistance.");
         }
         //If the user's attacking is not stored in session.
         if (!isset($_SESSION['attacking']))
@@ -212,7 +219,7 @@ class headers
         //If user does not end a fight correctly, take their XP and warn them.
         if ($dosessh && ($_SESSION['attacking'] || $ir['attacking']))
         {
-           alert("warning",$lang['ERROR_GENERIC'],$lang['MENU_XPLOST'],false);
+           alert("warning","Uh Oh!","You have lost all your experience for leaving your last fight.",false);
             $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");
             $_SESSION['attacking'] = 0;
         }
@@ -229,30 +236,25 @@ class headers
 				{
 					$infirmtime=Random(20,60);
 					$api->UserStatusSet($userid,"infirmary",$infirmtime,"Attacked by Bandits");
-					$api->GameAddNotification($userid,"While randomly walking about in this town, you were attacked by a group of bandits as a message to your guild leader.");
+					$api->GameAddNotification($userid,"While randomly walking about in this town, you were attacked by
+					    a group of bandits as a message to your guild leader.");
 				}
 				if ($result == 2)
 				{
-					$api->GameAddNotification($userid,"While randomly walking about in this town, you successfully fended off a group of bandits.");
+					$api->GameAddNotification($userid,"While randomly walking about in this town, you successfully
+					    fended off a group of bandits.");
 				}
 				if ($result == 3)
 				{
-					//Get saved... API call not done yet so meh.
+					$api->GameAddNotification($userid,"While randomly walking about in this town, you were attacked by
+					    a group of bandits. Luckily, a player nearby was able to fight them off for you.");
 				}
 			}
 		}
-        $d = "";
-        $u = $ir['username'];
-        if ($ir['vip_days'])
-        {
-            $u = "<span style='color: red;'>{$ir['username']}</span>";
-            $d = "<img src='donator.gif' alt='VIP: {$ir['vip_days']} Days Left' title='VIP: {$ir['vip_days']} Days Left' />";
-        }
-        global $staffpage;
 	}
 	function endpage()
     {
-        global $db, $ir, $lang, $StartTime;
+        global $db, $ir, $StartTime;
         $query_extra = '';
         //Set mysqldebug in the URL to get query debugging as an admin.
         if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
@@ -312,17 +314,16 @@ class headers
 					<?php 
                     //Print copyright info, Chivalry Engine info, and current time.
 					echo "<hr />
-					{$lang['MENU_TIN']}  
-						" . date('F j, Y') . " " . date('g:i:s a') . "<br />
-					{$lang['MENU_OUT']}";
+					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
+					Powered with codes by TheMasterGeneral. View source on <a href='https://github.com/MasterGeneral156/chivalry-engine'>Github</a>.";
 					?>
 					&copy; <?php echo date("Y");
-					echo"<br/>{$db->num_queries} {$lang['MENU_QE']}.{$query_extra}<br />";
+					echo"<br/>{$db->num_queries} Queries Executed.{$query_extra}<br />";
 					//Profile page loading putting profile in the URL GET.
 					if (isset($_GET['profile']))
 					{
 						$ms=microtime()-$StartTime;
-						echo "{$lang['MENU_SCRIPTTIME']} {$ms} {$lang['MENU_SCRIPTTIME1']}";
+						echo "Page loaded in {$ms} miliseconds.";
 					}
 					?>
 				</p>

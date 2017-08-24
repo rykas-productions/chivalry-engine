@@ -10,7 +10,7 @@ class headers
 {
     function startheaders()
     {
-		global $set,$h,$lang,$db,$menuhide,$api,$time;
+		global $set,$h,$db,$menuhide;
 		?>
 		<!DOCTYPE html>
 		<html lang="en">
@@ -43,45 +43,45 @@ class headers
                     <div class="collapse navbar-collapse" id="CENGINENav">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="register.php"><i class="fa fa-fw fa-user"></i> <?php echo $lang['LOGIN_REGISTER']; ?></a>
+                                <a class="nav-link" href="register.php"><i class="fa fa-fw fa-user"></i> <?php echo "Register"; ?></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="gamerules2.php"><i class="fa fa-fw fa-server"></i> <?php echo $lang['LOGIN_RULES']; ?></a>
+                                <a class="nav-link" href="gamerules2.php"><i class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
                             </li>
                         </ul>
                         <div class="my-2 my-lg-0">
                             <ul class="navbar-nav mr-auto">
                                 <li class="navbar-text">
-                                    <i class="fa fa-sign-in" aria-hidden="true"></i> <?php echo"{$lang['LOGIN_AHA']}"; ?>
+                                    <i class="fa fa-sign-in" aria-hidden="true"></i> <?php echo"Already have account?"; ?>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <?php echo $lang['LOGIN_LOGIN']; ?>
+                                        <?php echo "Log in"; ?>
                                     </a>
                                     <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
                                         <li>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <p class="dropdown"><?php echo $lang['LOGIN_LWE']; ?></p>
+                                                    <p class="dropdown"><?php echo "Sign In With Email"; ?></p>
                                                     <form role="form" method="post" action="authenticate.php" accept-charset="UTF-8" id="login-nav">
                                                         <?php echo $csrf; ?>
                                                         <div class="form-group">
-                                                            <label class="sr-only" for="exampleInputEmail2"><?php echo"{$lang['LOGIN_EMAIL']}"; ?></label>
-                                                            <input type="email" class="form-control" id="exampleInputEmail2" placeholder="<?php echo"{$lang['LOGIN_EMAIL']}"; ?>" name="email" required>
+                                                            <label class="sr-only" for="exampleInputEmail2"><?php echo"Email Address"; ?></label>
+                                                            <input type="email" class="form-control" id="exampleInputEmail2" placeholder="<?php echo"Your Email Address"; ?>" name="email" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="sr-only" for="exampleInputPassword2"><?php echo"{$lang['LOGIN_PASSWORD']}"; ?></label>
-                                                            <input type="password" class="form-control" id="exampleInputPassword2" name="password" placeholder="<?php echo"{$lang['LOGIN_PASSWORD']}"; ?>" required>
+                                                            <label class="sr-only" for="exampleInputPassword2"><?php echo"Password"; ?></label>
+                                                            <input type="password" class="form-control" id="exampleInputPassword2" name="password" placeholder="<?php echo"Your Password"; ?>" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="submit" class="btn btn-primary btn-block"><?php echo"{$lang['LOGIN_SIGNIN']}"; ?></button>
+                                                            <button type="submit" class="btn btn-primary btn-block"><?php echo"Sign In"; ?></button>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
                                         </li>
                                         <div class="bottom text-center">
-                                            <?php echo"{$lang['LOGIN_NH']}"; ?>
+                                            <?php echo "New here? <a href='register.php'>Sign up</a> for an account!"; ?>
                                         </div>
                                     </ul>
                                 </li>
@@ -95,20 +95,20 @@ class headers
 				<div class="row">
 					<div class="col-sm-12 text-center">
 				<noscript>
-					<?php alert('info',$lang['ERROR_INFO'],$lang['HDR_JS'],false); ?>
+					<?php alert('info',"Information!","Please enable Javascript.",false); ?>
 				</noscript>
 				<?php
 				$IP=$db->escape($_SERVER['REMOTE_ADDR']);
 				$ipq=$db->query("SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
 				if ($db->num_rows($ipq) > 0)
 				{
-					alert('danger',$lang['ERROR_GENERIC'],$lang['HDR_IPREKT'],false);
+					alert('danger',"Uh Oh!","You are currently IP Banned. Sorry about that.",false);
 					die($h->endpage());
 				}
 	}
 	function endpage()
     {
-        global $db, $ir, $lang;
+        global $db, $ir;
         $query_extra = '';
         if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
         {
@@ -156,12 +156,11 @@ class headers
 					<br />
 					<?php 
 					echo "<hr />
-					{$lang['MENU_TIN']}  
-						" . date('F j, Y') . " " . date('g:i:s a') . "<br />
-					{$lang['MENU_OUT']}";
+					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
+					Powered with codes by TheMasterGeneral. View source on <a href='https://github.com/MasterGeneral156/chivalry-engine'>Github</a>.";
 					?>
 					&copy; <?php echo date("Y");
-					echo"<br/>{$db->num_queries} {$lang['MENU_QE']}.{$query_extra}<br />";
+					echo"<br/>{$db->num_queries} Queries Executed.{$query_extra}<br />";
 					?>
 				</p>
 			</footer>

@@ -16,8 +16,8 @@ if(isset($_POST['g-recaptcha-response']))
     //Did not get a reCaptcha response from the user.
 	if(!$captcha)
 	{
-        alert('danger',$lang['ERROR_GENERIC'],$lang['RECAPTCHA_EMPTY'],true,$page);
-		$api->SystemLogsAdd($userid,'verify',"Verified unsuccessfully.");
+        alert('danger',"Uh Oh!","ReCaptcha response returned empty. Go back and try again.",true,$page);
+		$api->SystemLogsAdd($userid,'verify',"ReCaptcha returned empty.");
 		header("refresh:5;url={$page}");
 		die($h->endpage());
 	}
@@ -26,7 +26,7 @@ if(isset($_POST['g-recaptcha-response']))
     //User did not successfully verify themselves with reCaptcha.
 	if($response['success'] == false) 
 	{
-        alert('danger',$lang['ERROR_GENERIC'],$lang['RECAPTCHA_FAIL'],true,$page);
+        alert('danger',"Uh Oh!","You have failed to pass the ReCaptcha check. Go back and try again.",true,$page);
 		$api->SystemLogsAdd($userid,'verify',"Verified unsuccessfully.");
 		header("refresh:5;url={$page}");
 		die($h->endpage());
@@ -45,7 +45,7 @@ if(isset($_POST['g-recaptcha-response']))
 else
 {
     $api->SystemLogsAdd($userid,'verify',"Did not receive ReCaptcha response.");
-    alert('danger',$lang['ERROR_GENERIC'],$lang['RECAPTCHA_NOTSET'],true,$page);
+    alert('danger',"Uh Oh!","Go back, please.",true,$page);
     header("refresh:5;url={$page}");
     die($h->endpage());
 }

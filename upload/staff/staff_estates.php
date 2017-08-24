@@ -28,8 +28,8 @@ default:
 }
 function addestate()
 {
-	global $db,$userid,$h,$lang,$ir,$api;
-	echo "<h3>{$lang['STAFF_ESTATE_ADD']}</h3><hr />";
+	global $db,$userid,$h,$api;
+	echo "<h3>Add an Estate</h3><hr />";
 	if (isset($_POST['name']))
 	{
 		$lvl = (isset($_POST['lvl']) && is_numeric($_POST['lvl'])) ? abs(intval($_POST['lvl'])) : 1;
@@ -38,35 +38,35 @@ function addestate()
 		$cost = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_addestate', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your previous action was blocked for your security. Please submit forms quickly after opening them.");
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_name` = '{$name}'");
 		if ($db->fetch_single($q) > 0)
         {
             $db->free_result($q);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_ADD_ERROR1']);
+			alert('danger',"Uh Oh!","The estate name you've chosen is already in use.");
             die($h->endpage());
         }
 		$db->free_result($q);
 		$q = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$will}");
 		if ($db->fetch_single($q) > 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_ADD_ERROR2']);
+			alert('danger',"Uh Oh!","You cannot have more than one estate with the same Will level.");
             die($h->endpage());
 		}
 		if ($lvl < 1)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_ADD_ERROR3']);
+			alert('danger',"Uh Oh!","You cannot have an estate with a level requirement under 1.");
             die($h->endpage());
 		}
 		if ($will <= 99)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_ADD_ERROR4']);
+			alert('danger',"Uh Oh!","You cannot have an estate with less than 100 will.");
             die($h->endpage());
 		}
 		$api->SystemLogsAdd($userid,'staff',"Created an estate named {$name}.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ESTATE_ADD_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully created the {$name} Estate.",true,'index.php');
 		$db->query("INSERT INTO `estates` (`house_name`, `house_price`, `house_will`, `house_level`) VALUES ('{$name}', '{$cost}', '{$will}', '{$lvl}')");
 	}
 	else
@@ -76,12 +76,12 @@ function addestate()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_ESTATE_ADD_TABLE']}
+					Add an estate to the game using this form.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ESTATE_ADD_TH1']}
+					Estate Name
 				</th>
 				<td>
 					<input type='text' name='name' required='1' class='form-control'>
@@ -89,7 +89,7 @@ function addestate()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ESTATE_ADD_TH2']}
+					Estate Cost
 				</th>
 				<td>
 					<input type='number' name='cost' min='0' required='1' class='form-control'>
@@ -97,7 +97,7 @@ function addestate()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ESTATE_ADD_TH3']}
+					Estate Level Requirement
 				</th>
 				<td>
 					<input type='number' name='lvl' min='0' required='1' class='form-control'>
@@ -105,7 +105,7 @@ function addestate()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_ESTATE_ADD_TH4']}
+					Estate Will
 				</th>
 				<td>
 					<input type='number' name='will' min='101' required='1' class='form-control'>
@@ -113,7 +113,7 @@ function addestate()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_ESTATE_ADD_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='Create Estate'>
 				</td>
 			</tr>
 			{$csrf}
@@ -129,27 +129,27 @@ function delestate()
 		$_POST['estate'] = (isset($_POST['estate']) && is_numeric($_POST['estate'])) ? abs(intval($_POST['estate'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delestate', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your previous action was blocked for your security. Please submit forms quickly after opening them.");
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$_POST['estate']}");
 		if ($db->num_rows($q) == 0)
 		{
 			$db->free_result($q);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_DEL_ERR']);
+			alert('danger',"Uh Oh!",$lang['STAFF_ESTATE_DEL_ERR']);
 			die($h->endpage());
 		}
 		$old = $db->fetch_row($q);
         $db->free_result($q);
 		if ($old['house_will'] == 100)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_DEL_ERR1']);
+            alert('danger',"Uh Oh!",$lang['STAFF_ESTATE_DEL_ERR1']);
             die($h->endpage());
         }
 		$db->query("UPDATE `users`  SET `primary_currency` = `primary_currency` + {$old['house_price']},
                  `maxwill` = 100, `will` = LEAST(100, `will`) WHERE `maxwill` = {$old['house_will']}");
 		$db->query("DELETE FROM `estates` WHERE `house_id` = {$old['house_id']}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ESTATE_DEL_SUCC'],true,'index.php');
+		alert('success',"Success!",$lang['STAFF_ESTATE_DEL_SUCC'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted the {$old['house_name']} estate.");
 	}
 	else
@@ -196,39 +196,39 @@ function editestate()
         $_POST['id'] = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editestate2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your previous action was blocked for your security. Please submit forms quickly after opening them.");
 			die($h->endpage());
 		}
 		if (empty($_POST['id']) || empty($_POST['lvl']) || empty($_POST['name'])
 			|| empty($_POST['will']) || empty($_POST['cost']))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_EDIT_ERR1']);
+			alert('danger',"Uh Oh!",$lang['STAFF_ESTATE_EDIT_ERR1']);
             die($h->endpage());
 		}
 		$q = $db->query("SELECT `house_id` FROM `estates` WHERE `house_will` = {$will} AND `house_id` != {$_POST['id']}");
         if ($db->num_rows($q))
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_ADD_ERROR2']);
+            alert('danger',"Uh Oh!",$lang['STAFF_ESTATE_ADD_ERROR2']);
             die($h->endpage());
         }
 		$q = $db->query("SELECT `house_will` FROM `estates` WHERE `house_id` = {$_POST['id']}");
         if ($db->num_rows($q) == 0)
         {
             $db->free_result($q);
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_EDIT_ERR']);
+            alert('danger',"Uh Oh!",$lang['STAFF_ESTATE_EDIT_ERR']);
             die($h->endpage());
         }
 		$oldwill = $db->fetch_single($q);
 		if ($oldwill == 100 && $will > 100)
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_EDIT_ERR3']);
+            alert('danger',"Uh Oh!",$lang['STAFF_ESTATE_EDIT_ERR3']);
             die($h->endpage());
         }
 		$db->query("UPDATE `estates` SET `house_will` = {$will}, `house_price` = {$cost}, 
 					`house_name` = '{$name}', `house_level` = {$lvl} WHERE `house_id` = {$_POST['id']}");
 		$db->query("UPDATE `users` SET `maxwill` = {$will}, `will` = LEAST(`will`, {$will})
 					WHERE `maxwill` = {$oldwill}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ESTATE_EDIT_SUCC'],true,'index.php');
+		alert('success',"Success!",$lang['STAFF_ESTATE_EDIT_SUCC'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Edited the {$name} estate.");
 		die($h->endpage());
 	}
@@ -237,14 +237,14 @@ function editestate()
 		$_POST['estate'] = (isset($_POST['estate']) && is_numeric($_POST['estate'])) ? abs(intval($_POST['estate'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editestate1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your previous action was blocked for your security. Please submit forms quickly after opening them.");
 			die($h->endpage());
 		}
 		$q = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$_POST['estate']}");
         if ($db->num_rows($q) == 0)
         {
             $db->free_result($q);
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_ESTATE_EDIT_ERR']);
+            alert('danger',"Uh Oh!",$lang['STAFF_ESTATE_EDIT_ERR']);
             die($h->endpage());
         }
 		$old = $db->fetch_row($q);

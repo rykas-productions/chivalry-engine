@@ -43,44 +43,40 @@ switch ($_GET['action'])
 }
 function prefs_home()
 {
-	global $ir,$h,$lang;
-	if (!empty($_GET['lang']))
-	{
-		alert('success',$lang['LANG_UPDATE'],$lang['LANG_UPDATE2'],false);
-	}
-	echo "{$lang['PREF_WELCOME_1']} {$ir['username']}{$lang['PREF_WELCOME_2']}<br />
+	global $ir;
+	echo "Welcome to your account settings, {$ir['username']}. Here you can change many options concerning your account.<br />
 	<table class='table table-bordered'>
 		<tbody>
 			<tr>
 				<td>
-					<a href='?action=namechange'>{$lang['PREF_CNAME']}</a>
+					<a href='?action=namechange'>Change Name</a>
 				</td>
 				<td>
-					<a href='?action=pwchange'>{$lang['PREF_CPASSWORD']}</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a href='?action=timechange'>{$lang['PREF_CTIME']}</a>
-				</td>
-				<td>
-					<a href='?action=emailchange'>{$lang['PREF_EMAIL_BTN']}</a>
+					<a href='?action=pwchange'>Change Password</a>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<a href='?action=picchange'>{$lang['PREF_CPIC']}</a>
+					<a href='?action=timechange'>Change Timezone</a>
 				</td>
 				<td>
-					<a href='?action=themechange'>{$lang['PREF_CTHM']}</a>
+					<a href='?action=emailchange'>Change Email Opt-Setting</a>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<a href='?action=sigchange'>{$lang['PREF_CSIG']}</a>
+					<a href='?action=picchange'>Change Display Picture</a>
 				</td>
 				<td>
-					<a href='?action=sexchange'>{$lang['PREF_CSEX']}</a>
+					<a href='?action=themechange'>Change Theme</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href='?action=sigchange'>Change Forum Signature</a>
+				</td>
+				<td>
+					<a href='?action=sexchange'>Change Sex</a>
 				</td>
 			</tr>
 		</tbody>
@@ -88,19 +84,19 @@ function prefs_home()
 }
 function name_change()
 {
-	global $db,$ir,$userid,$h,$lang;
+	global $db,$ir,$userid,$h;
 	if (empty($_POST['newname']))
     {
 		$csrf = request_csrf_html('prefs_namechange');
 		echo "<br />
-		<h3>{$lang['UNC_TITLE']}</h3>
-		{$lang['UNC_INTRO']}<br />
+		<h3>Username Change</h3>
+		Here you can change your name that is shown throughout the game.<br />
 		<div class='form-group'>
 		<form method='post'>
 			<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' value='{$ir['username']}' name='newname' />
 			<br />
 			{$csrf}
-			<input type='submit' class='btn btn-primary' value='{$lang['UNC_BUTTON']}' />
+			<input type='submit' class='btn btn-primary' value='Change Username' />
 			</div>
 		</form>";
 	}
@@ -108,40 +104,40 @@ function name_change()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_namechange', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your action was blocked for security reasons. Fill out the form quicker next time.");
 			die($h->endpage());
 		}
 		$_POST['newname'] = (isset($_POST['newname']) && is_string($_POST['newname'])) ? stripslashes($_POST['newname']) : '';
 		if (empty($_POST['newname']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],"{$lang['UNC_ERROR_1']}{$lang['GEN_HERE']}{$lang['UNC_ERROR_2']}");
+			alert('danger',"Uh Oh!","Please fill out the form and try again.");
 			die($h->endpage());
 		}
 		elseif (((strlen($_POST['newname']) > 20) OR (strlen($_POST['newname']) < 3)))
 		{
-			alert('danger',$lang['ERROR_LENGTH'],$lang['UNC_LENGTH_ERROR']);
+			alert('danger',"Uh Oh!","Usernames must be at least 3 characters in length, and a maximum of 20.");
 			die($h->endpage());
 		}
 		$check_ex = $db->query('SELECT `userid` FROM `users` WHERE `username` = "' . $db->escape($_POST['newname']) . '"');
 		if ($db->num_rows($check_ex) > 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['UNC_INUSE']);
+			alert('danger',"Uh Oh!","The username you chose is already in use.");
 			die($h->endpage());
 		}
 		$_POST['newname'] = $db->escape(htmlentities($_POST['newname'], ENT_QUOTES, 'ISO-8859-1'));
 		$db->query("UPDATE `users` SET `username` = '{$_POST['newname']}'  WHERE `userid` = $userid");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['UNC_GOOD'],true,'preferences.php');
+		alert('success',"Success!","You have changed your username to {$_POST['newname']}.",true,'preferences.php');
 	}
 }
 function time_change()
 {
-	global $db,$userid,$h,$ir,$lang;
-	echo "<h3>{$lang['TZ_TITLE']}</h3>";
+	global $db,$userid;
+	echo "<h3>Change Timezone</h3>";
 	// Much thanks to Tamas Pap from Stack Overflow for the list <3
 	// https://stackoverflow.com/questions/4755704/php-timezone-list
 	if (!isset($_POST['timezone']))
 	{
-		echo"{$lang['TZ_INFO']}
+		echo"Please select your timezone. Please note the server runs on Unix Time, which is Greenwich Mean Time.
 		<br />
 		<form method='post'>
 		<select name='timezone' class='form form-control' type='dropdown'>
@@ -180,7 +176,7 @@ function time_change()
 			<option value='Pacific/Wake'>(GMT-12:00) International Date Line West</option>
 		</select>
 		<br />
-		<input type='submit' class='btn btn-primary' value='{$lang['TZ_BTN']}'>";
+		<input type='submit' class='btn btn-primary' value='Change Timezone'>";
 	}
 	else
 	{
@@ -194,29 +190,29 @@ function time_change()
 		];
 		if (!in_array($_POST['timezone'],$TimeZoneArray))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['TZ_FAIL']);
+			alert('danger',"Uh Oh!","The timezone you've selected is not valid.");
 		}
 		else
 		{
-			alert('success',$lang['ERROR_SUCCESS'],$lang['TZ_SUCC'],true,'preferences.php');
+			alert('success',"Success!","You have changed your timezone successfully",true,'preferences.php');
 			$db->query("UPDATE `users` SET `timezone` = '{$_POST['timezone']}' WHERE `userid` = {$userid}");
 		}
 	}
 }
 function pw_change()
 {
-	global $db,$ir,$lang,$h;
+	global $db,$ir,$h;
 	if (empty($_POST['oldpw']))
 	{
 		$csrf = request_csrf_html('prefs_changepw');
 		echo "
-	<h3>{$lang['PW_TITLE']}</h3>
+	<h3>Password Change</h3>
 	<hr />
 	<form method='post'>
 	<table class='table table-bordered'>
 	<tr>
 		<th>
-			{$lang['PW_CP']}
+			Current Password
 		</th>
 		<td>
 			<input type='password' required='1' class='form-control' name='oldpw' />
@@ -224,7 +220,7 @@ function pw_change()
 	</tr>
 	<tr>
 		<th>
-			{$lang['PW_NP']}
+			New Password
 		</th>
 		<td>
 			<input type='password' required='1' class='form-control' name='newpw' />
@@ -232,7 +228,7 @@ function pw_change()
 	</tr>
 	<tr>
 		<th>
-			{$lang['PW_CNP']}
+			Confirm Password
 		</th>
 		<td>
 			<input type='password' required='1' class='form-control' name='newpw2' />
@@ -240,7 +236,7 @@ function pw_change()
 	</tr>
 	<tr>
 		<td colspan='2'>
-			<input type='submit' class='btn btn-primary' value='{$lang['PW_BUTTON']}' />
+			<input type='submit' class='btn btn-primary' value='Update Password' />
 		</td>
 	</tr>
     	{$csrf}
@@ -253,7 +249,7 @@ function pw_change()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepw', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your action was blocked for security reasons. Fill out the form quicker next time.");
 			die($h->endpage());
 		}
 		$oldpw = stripslashes($_POST['oldpw']);
@@ -261,37 +257,37 @@ function pw_change()
 		$newpw2 = stripslashes($_POST['newpw2']);
 		if (!verify_user_password($oldpw, $ir['password']))
 		{
-			alert('danger',$lang['ERROR_INVALID'],$lang['PW_INCORRECT']);
+			alert('danger',"Uh Oh!","Invalid old password.");
 		}
 		else if ($newpw !== $newpw2)
 		{
-			alert('danger',$lang['ERROR_INVALID'],$lang['PW_NOMATCH']);
+			alert('danger',"Uh Oh!","New password and confirmation did not match.");
 		}
 		else
 		{
 			// Re-encode password
 			$new_psw = $db->escape(encode_password($newpw));
 			$db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$ir['userid']}");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['PW_DONE'],true,'preferences.php');
+			alert('success',"Success!","You password was updated successfully.",true,'preferences.php');
 		}
 	}
 }
 function pic_change()
 {
-	global $db,$h,$lang,$userid,$ir;
+	global $db,$h,$userid,$ir;
 	if (!isset($_POST['newpic']))
 	{
 		$csrf = request_csrf_html('prefs_changepic');
 		echo "
-		<h3>{$lang['PIC_TITLE']}</h3>
+		<h3>Change Display Picture</h3>
 		<hr />
-		{$lang['PIC_NOTE']} {$lang['PIC_NOTE2']}<br />
-		{$lang['PIC_NEWPIC']}<br />
+		Your images must be externally hosted. Any images that are not 250x250 will be scaled accordingly.<br />
+		New Picture Link<br />
 		<form method='post'>
 			<input type='url' required='1' name='newpic' class='form-control' value='{$ir['display_pic']}' />
 				{$csrf}
 			<br />
-			<input type='submit' class='btn btn-primary' value='{$lang['PIC_BTN']}' />
+			<input type='submit' class='btn btn-primary' value='Change Display Picture' />
 		</form>
 		";
 	}
@@ -299,7 +295,7 @@ function pic_change()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepic', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your action was blocked for security reasons. Fill out the form quicker next time.");
 			die($h->endpage());
 		}
 		$npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
@@ -308,38 +304,38 @@ function pic_change()
 			$sz = get_filesize_remote($npic);
 			if ($sz <= 0 || $sz >= 1048576)
 			{
-				alert('danger',$lang['PIC_TOOBIG'],$lang['PIC_TOOBIG2']);
+				alert('danger',"Uh Oh!","You picture's file size is too big. At maximum, picture file size can be 1MB.");
 				$h->endpage();
 				exit;
 			}
 			$image = (@isImage($npic));
 			if (!$image)
 			{
-				alert('danger',$lang['ERROR_INVALID'],$lang['PIC_NOIMAGE']);
+				alert('danger',"Uh Oh!","The link you've input is not an image.");
 				die($h->endpage());
 			}
 		}
 		$img=htmlentities($_POST['newpic'], ENT_QUOTES, 'ISO-8859-1');
-		alert('success',$lang['ERROR_SUCCESS'],$lang['PIC_SUCCESS'],true,'preferences.php');
+		alert('success',"Success!","You have successfully updated your display picture to what's shown below.",true,'preferences.php');
 		echo "<img src='{$img}' width='250' height='250' class='img-thumbnail img-responsive'>";
 		$db->query("UPDATE `users` SET `display_pic` = '" . $db->escape($npic) . "' WHERE `userid` = {$userid}");
 	}
 }
 function themechange()
 {
-	global $db,$userid,$h,$lang;
+	global $db,$userid,$h;
 	if (isset($_POST['theme']))
 	{
 		$_POST['theme'] =  (isset($_POST['theme']) && is_numeric($_POST['theme']))  ? abs($_POST['theme']) : 1;
 		if ($_POST['theme'] < 1 || $_POST['theme'] > 2)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['PREF_CTHM_SUB_ERROR']);
+			alert('danger',"Uh Oh!","The theme you wish to load is not valid.");
 			die($h->endpage());
 		}
 		else
 		{
 			setcookie('theme',$_POST['theme']);
-			alert('success',$lang['ERROR_SUCCESS'],$lang['PREF_CTHM_SUB_SUCCESS'],true,'preferences.php');
+			alert('success',"Success!","You have successfully changed your theme.",true,'preferences.php');
 			$db->query("UPDATE `users` SET `theme` = {$_POST['theme']} WHERE `userid` = {$userid}");
 			die($h->endpage());
 		}
@@ -351,23 +347,23 @@ function themechange()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						{$lang['PREF_CTHM_FORM']}
+						Select the theme you wish to be seen as you play.
 					</th>
 				</tr>
 				<tr>
 					<th>
-						{$lang['PREF_CTHM_FORM1']}
+						Theme
 					</th>
 					<td>
 						<select name='theme' class='form-control' type='dropdown'>
-							<option value='1'>{$lang["PREF_CTHM_FORMDD1"]}</option>
-							<option value='2'>{$lang["PREF_CTHM_FORMDD2"]}</option>
+							<option value='1'>Day Theme</option>
+							<option value='2'>Night Theme</option>
 						</select>
 					</td>
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['PREF_CTHM_FORMBTN']}'>
+						<input type='submit' class='btn btn-primary' value='Change Theme'>
 					</td>
 				</tr>
 			</table>
@@ -376,22 +372,22 @@ function themechange()
 }
 function sigchange()
 {
-	global $db,$ir,$userid,$api,$lang,$h;
+	global $db,$ir,$userid,$h;
 	if (isset($_POST['sig']))
 	{
 		$_POST['sig'] = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['sig']))));
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesig', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your action was blocked for security reasons. Fill out the form quicker next time.");
 			die($h->endpage());
 		}
 		if (strlen($_POST['sig']) > 1024)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SIG_ERR']);
+			alert('danger',"Uh Oh!","Your signature can only be, at maximum, 1,024 characters.");
 			die($h->endpage());
 		}
 		$db->query("UPDATE `users` SET `signature` = '{$_POST['sig']}' WHERE `userid` = {$userid}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['SIG_SUCC'],true,'preferences.php');
+		alert('success',"Success!","Your signature has been updated successfully.",true,'preferences.php');
 	}
 	else
 	{
@@ -401,12 +397,12 @@ function sigchange()
 		<table class='table-bordered table'>
 			<tr>
 				<th colspan='2'>
-					{$lang['SIG_TITLE']}
+					You can change your forum signature here. BBCode is allowable.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['SIG_YSIG']}
+					Your Signature
 				</th>
 				<td>
 					<textarea class='form-control' rows='4' name='sig'>{$ir['signature']}</textarea>
@@ -414,7 +410,7 @@ function sigchange()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['SIG_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='Change Signature' class='btn btn-primary'>
 				</td>
 			</tr>
 			{$csrf}
@@ -424,46 +420,46 @@ function sigchange()
 }
 function sexchange()
 {
-	global $db,$userid,$ir,$lang,$api,$h;
+	global $db,$userid,$ir,$h;
 	if (isset($_POST['gender']))
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesex', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your action was blocked for security reasons. Fill out the form quicker next time.");
 			die($h->endpage());
 		}
 		if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female'))
 		{
-			alert('danger',$lang['ERROR_INVALID'],$lang['SEX_ERR']);
+			alert('danger',"Uh Oh!","You cannot change into an invalid sex.");
 			die($h->endpage());
 		}
 		if ($ir['gender'] == $_POST['gender'])
 		{
-			alert('danger',$lang['ERROR_INVALID'],$lang['SEX_ERR1']);
+			alert('danger',"Uh Oh!","You cannot turn yourself  back into your current sex.");
 			die($h->endpage());
 		}
 		$e_gender = $db->escape(stripslashes($_POST['gender']));
 		$db->query("UPDATE `users` SET `gender` = '{$e_gender}' WHERE `userid` = {$userid}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['SEX_SUCC'],true,'preferences.php');
+		alert('success',"Success!","You have successfully changed your sex into {$_POST['gender']}.",true,'preferences.php');
 	}
 	else
 	{
 		$g = ($ir['gender'] == "Male") ? 
-			$g="	<option value='Male'>{$lang['SCU_SEX']}</option>
-					<option value='Female'>{$lang['SCU_SEX1']}</option>" : 
-			$g= "	<option value='Female'>{$lang['SCU_SEX1']}</option>
-					<option value='Male'>{$lang['SCU_SEX']}</option>";
+			$g="	<option value='Male'>Male</option>
+					<option value='Female'>Female</option>" :
+			$g= "	<option value='Female'>Male</option>
+					<option value='Male'>Female</option>";
 		$csrf=request_csrf_html('prefs_changesex');
 		echo "<table class='table table-bordered'>
 		<form method='post'>
 		<tr>
 			<th colspan='2'>
-				{$lang['SEX_INFO']}
+				Use this form to change your sex.
 			</th>
 		</tr>
 		<tr>
 			<th>
-				{$lang['REG_SEX']}
+				Sex
 			</th>
 			<td>
 				<select name='gender' class='form-control' type='dropdown'>
@@ -473,7 +469,7 @@ function sexchange()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' value='{$lang['SEX_BTN']}' class='btn btn-primary'>
+				<input type='submit' value='Change Sex' class='btn btn-primary'>
 			</td>
 		</tr>
 		{$csrf}
@@ -483,41 +479,41 @@ function sexchange()
 }
 function emailchange()
 {
-	global $db,$userid,$lang,$ir,$api,$h;
+	global $db,$userid,$ir,$h;
 	if (isset($_POST['opt']))
 	{
 		$_POST['opt'] = (isset($_POST['opt']) && is_numeric($_POST['opt']))  ? abs($_POST['opt']) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changeopt', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Your action was blocked for security reasons. Fill out the form quicker next time.");
 			die($h->endpage());
 		}
 		if (!isset($_POST['opt']) || ($_POST['opt'] != 1 && $_POST['opt'] != 0))
 		{
-			alert('danger',$lang['ERROR_INVALID'],$lang['PREF_EMAIL_ERR']);
+			alert('danger',"Uh Oh!","Invalid opt setting specified.");
 			die($h->endpage());
 		}
 		$db->query("UPDATE `users` SET `email_optin` = {$_POST['opt']} WHERE `userid` = {$userid}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang["PREF_EMAIL_SUCC_{$_POST['opt']}"],true,'preferences.php');
+		alert('success',"Success!","You have changed your email opt setting.",true,'preferences.php');
 	}
 	else
 	{
 		$g = ($ir['email_optin'] == 0) ? 
-			$g="	<option value='1'>{$lang['PREF_EMAIL_OPTIN']}</option>
-					<option value='0'>{$lang['PREF_EMAIL_OPTOUT']}</option>" : 
-			$g= "	<option value='0'>{$lang['PREF_EMAIL_OPTOUT']}</option>
-					<option value='1'>{$lang['PREF_EMAIL_OPTIN']}</option>";
+			$g="	<option value='1'>Opt-In</option>
+					<option value='0'>Opt-Out</option>" :
+			$g= "	<option value='0'>Opt-Out</option>
+					<option value='1'>Opt-In</option>";
 		$csrf=request_csrf_html('prefs_changeopt');
 		echo "<table class='table table-bordered'>
 		<form method='post'>
 		<tr>
 			<th colspan='2'>
-				{$lang['PREF_EMAIL_INFO']}
+				Use this form to opt-in or out of emails from the game.
 			</th>
 		</tr>
 		<tr>
 			<th>
-				{$lang['PREF_EMAIL']}
+				Opt-Setting
 			</th>
 			<td>
 				<select name='opt' class='form-control' type='dropdown'>
@@ -527,7 +523,7 @@ function emailchange()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' value='{$lang['PREF_EMAIL_BTN']}' class='btn btn-primary'>
+				<input type='submit' value='Change Opt-Setting' class='btn btn-primary'>
 			</td>
 		</tr>
 		{$csrf}

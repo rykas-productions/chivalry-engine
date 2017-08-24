@@ -8,18 +8,19 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
-echo "<h3>{$lang['VIP_LIST']}</h3><hr />{$lang['VIP_INFO']}";
+echo "<h3>VIP Packs</h3><hr />If you purchase a VIP Package from below, you will be gifted the following depending on
+    the package your purchase. All purchases are final. If you commit fraud, you will be removed from the game permanently.";
 echo "
 <table class='table table-bordered'>
 	<tr>
 		<th>
-			{$lang['VIP_TABLE_TH1']}
+			Pack Offer
 		</th>
 		<th>
-			{$lang['VIP_TABLE_TH2']}
+			Pack Contents
 		</th>
 		<th width='25%'>
-			{$lang['VIP_TABLE_TH3']}
+			PayPal Link
 		</th>
 	</tr>";
 $q=$db->query("SELECT `v`.*, `i`.* 
@@ -49,17 +50,17 @@ while ($r=$db->fetch_row($q))
                     //Lets make the item's effects more user friendly to read, eh.
 					$einfo = unserialize($r["effect{$enum}"]);
 					$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
-					$einfo['dir'] = ($einfo['dir'] == 'pos') ? $lang['GEN_INCREASE'] : $lang['GEN_DECREASE'];
+					$einfo['dir'] = ($einfo['dir'] == 'pos') ? "Increases" : "Decreases";
 					$stats =
-						array("energy" => "{$lang['INDEX_ENERGY']}", "will" => "{$lang['INDEX_WILL']}", 
-								"brave" => "{$lang['INDEX_BRAVE']}", "level" => $lang['INDEX_LEVEL'],
-								"hp" => "{$lang['INDEX_HP']}", "strength" => "{$lang['GEN_STR']}",
-								"agility" => "{$lang['GEN_AGL']}", "guard" => "{$lang['GEN_GRD']}",
-								"labor" => "{$lang['GEN_LAB']}", "iq" => "{$lang['GEN_IQ']}",
-								"infirmary" => "{$lang['STAFF_CITEM_TH12_1']}", "dungeon" => "{$lang['STAFF_CITEM_TH12_2']}",
-								"primary_currency" => "{$lang['INDEX_PRIMCURR']}", "secondary_currency" 
-								=> "{$lang['INDEX_SECCURR']}", "crimexp" => "{$lang['INDEX_EXP']}", "vip_days" => 
-								"{$lang['INDEX_VIP']}");
+						array("energy" => "Energy", "will" => "Will",
+								"brave" => "Bravery", "level" => "Level",
+								"hp" => "Health", "strength" => "Strength",
+								"agility" => "Agility", "guard" => "Guard",
+								"labor" => "Labor", "iq" => "IQ",
+								"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+								"primary_currency" => "Primary Currency", "secondary_currency"
+								=> "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
+								"VIP Days");
 					$statformatted=$stats["{$einfo['stat']}"];
 					echo "{$einfo['dir']} {$statformatted} {$lang['ITEM_INFO_BY']} {$einfo['inc_amount']}{$einfo['inc_type']}.<br />";
 				}
@@ -98,5 +99,6 @@ while ($r=$db->fetch_row($q))
 	</tr>";
 }
 echo "</table><br />
-{$lang['VIP_TABLE_VDINFO']}";
+VIP Days disable ads around the game. You'll also receive 16% energy refill instead of 8%. You'll also receive a star by
+ your name, and your name will change color.";
 $h->endpage();

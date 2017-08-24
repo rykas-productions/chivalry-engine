@@ -13,13 +13,13 @@ if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
 }
-function csrf_error($goBackTo)
+function csrf_error()
 {
-    global $h,$lang;
-	echo "<div class='alert alert-danger'> <strong>{$lang['CSRF_ERROR_TITLE']}</strong> 
-	{$lang['CSRF_ERROR_TEXT']} {$lang['CSRF_PREF_MENU']} <a href='preferences.php?action={$goBackTo}'>{$lang['GEN_HERE']}.</div>";
-    $h->endpage();
-    exit;
+    global $h;
+    alert('danger',"Action Blocked!","The action you were trying to do was blocked. It was blocked because you loaded
+        another page on the game. If you have not loaded a different page during this time, change your password
+        immediately, as another person may have access to your account!");
+    die($h->endpage());
 }
 switch ($_GET['action'])
 {
@@ -32,24 +32,24 @@ default:
 }
 function news_home()
 {
-	global $db,$h,$lang,$CurrentTime;
+	global $db,$h,$CurrentTime;
 	$AdsQuery=$db->query("SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
 	if ($db->num_rows($AdsQuery) == 0)
 	{
-		alert("danger",$lang['ERROR_GENERIC'],$lang['NP_ERROR'],false);
+		alert("danger","Uh Oh!","There aren't any newspaper ads at this time. Maybe you should <a href='?action=buyad'>list</a> one?",false);
 		die($h->endpage());
 	}
-	echo "<h3>{$lang['NP_TITLE']}</h3>
-	<small>{$lang['NP_AD']} <a href='?action=buyad'>{$lang['GEN_HERE']}</a>.<hr />";
+	echo "<h3>The Newspaper</h3>
+	<small>List an ad <a href='?action=buyad'>here</a>.<hr />";
 	echo "
 		<table class='table table-bordered'>
 			<thead>
 				<tr>
 					<th width='33%'>
-						{$lang['NP_ADINFO']}
+						Ad Info
 					</th>
 					<th>
-						{$lang['NP_ADTEXT']}
+						Ad Content
 					</th>
 				</tr>
 			</thead>
@@ -60,9 +60,9 @@ function news_home()
 		$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$Ads['news_owner']}"));
 		echo "	<tr>
 					<td>
-						{$lang['NP_ADINFO1']} <a href='profile.php?user={$Ads['news_owner']}'>{$UserName}</a> [{$Ads['news_owner']}]<br />
-						<small>{$lang['NP_ADSTRT']}: " . DateTime_Parse($Ads['news_start']) . "<br />
-						{$lang['NP_ADEND']}: " . date('F j, Y g:i:s a', $Ads['news_end']) . "</small>
+						Posted By <a href='profile.php?user={$Ads['news_owner']}'>{$UserName}</a> [{$Ads['news_owner']}]<br />
+						<small>Posted At: " . DateTime_Parse($Ads['news_start']) . "<br />
+						Ad Ends: " . date('F j, Y g:i:s a', $Ads['news_end']) . "</small>
 					</td>
 					<td>
 						{$Ads['news_text']}
@@ -73,16 +73,17 @@ function news_home()
 }
 function news_buy()
 {
-	global $db,$userid,$ir,$h,$lang;
-	echo "<h3>{$lang['NP_BUY']}</h3>
-	" . alert("info",$lang['ERROR_INFO'],$lang['NP_BUY_REMINDER'],false) . "<hr />";
+	echo "<h3>Buying an Ad</h3>
+	" . alert("info","Information!","Remember, buying an ad is subject to the game rules. If you post something
+	    here that will break a game rule, you will be warned and your ad will be removed. If you find someone abusing
+	    the newspaper, please let an admin know immediately!",false) . "<hr />";
 	echo "
 		<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
 				<td width='33%'>
-					{$lang['NP_BUY_TD1']}<br />
-					<small>{$lang['NP_BUY_TD5']}</small>
+					Initial Ad Cost<br />
+					<small>A higher number will rank you higher on the ad list.</small>
 				</td>
 				<td>
 					<input type='number' min='750' name='init_cost' required='1' id='init' onkeyup='total_cost();' class='form-control'>
@@ -90,8 +91,8 @@ function news_buy()
 			</tr>
 			<tr>
 				<td>
-					{$lang['NP_BUY_TD2']}<br />
-					<small>{$lang['NP_BUY_TD6']}</small>
+					Ad Runtime<br />
+					<small>Each day will add 1,250 Primary Currency to your cost.</small>
 				</td>
 				<td>
 					<input type='number' min='1' name='ad_length' id='days' onkeyup='total_cost();' required='1' class='form-control'>
@@ -99,8 +100,8 @@ function news_buy()
 			</tr>
 			<tr>
 				<td>
-					{$lang['NP_BUY_TD3']}<br />
-					<small>{$lang['NP_BUY_TD7']}</small>
+					Ad Text<br />
+					<small>Each character is worth 5 Primary Currency.</small>
 				</td>
 				<td>
 					<textarea class='form-control' name='ad_text' id='chars' onkeyup='total_cost();' rows='5' required='1'></textarea>
@@ -108,7 +109,7 @@ function news_buy()
 			</tr>
 			<tr>
 				<td>
-					{$lang['NP_BUY_TD4']}
+					Total Ad Cost
 				</td>
 				<td>
 					<input type='number' name='ad_cost' id='output' readonly='1' class='form-control'>
@@ -116,7 +117,7 @@ function news_buy()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['NP_BUY_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='List Ad'>
 				</td>
 			</tr>
 		</table>

@@ -1509,7 +1509,6 @@ function encode_password($password)
 function alert($type,$title,$text,$doredirect=true,$redirect='back')
 {
     //This function is a horrible mess dude..
-	global $lang;
 	if ($type == 'danger')
 	{
 		$icon = "exclamation-triangle";
@@ -1532,7 +1531,7 @@ function alert($type,$title,$text,$doredirect=true,$redirect='back')
 		echo "<div class='alert alert-{$type}'> 
 				<i class='fa fa-{$icon}' aria-hidden='true'></i>
 					<strong>{$title}</strong> 
-						{$text} > <a href='{$redirect}' class='alert-link'>{$lang['GEN_BACK']}</a>
+						{$text} > <a href='{$redirect}' class='alert-link'>Back</a>
 				</div>";
 	}
 	else
@@ -1940,13 +1939,13 @@ function update_file($url)
 */
 function recache_topic($topic)
 {
-    global $db,$lang;
+    global $db;
     $topic = abs((int) $topic);
     if ($topic <= 0)
     {
         return;
     }
-    echo "{$lang['FORUM_RECACHE_TOPIC']}{$topic} ... ";
+    echo "Recaching Topic ID #{$topic} ... ";
     $q =
             $db->query(
                     "SELECT `fp_poster_id`, `fp_poster_id`, `fp_time`
@@ -1980,20 +1979,20 @@ function recache_topic($topic)
                  `ft_posts` = {$posts}
                  WHERE `ft_id` = {$topic}");
     }
-	echo " ... {$lang['FORUM_RECACHE_DONE']}<br />";
+	echo " ... Recaching completed.<br />";
 }
 /*
 	Function to recache the specified forum
 */
 function recache_forum($forum)
 {
-    global $ir,$userid,$h,$db,$lang;
+    global $db;
     $forum = abs((int) $forum);
     if ($forum <= 0)
     {
         return;
     }
-    echo "{$lang['FORUM_RECACHE_FORUM']}{$forum} ... ";
+    echo "Recaching Forum ID #{$forum} ... ";
     $q =
             $db->query(
                     "SELECT `fp_time`, `fp_poster_id`,
@@ -2024,7 +2023,7 @@ function recache_forum($forum)
 				 `ff_lp_t_id` = {$r['ft_id']}
                  WHERE `ff_id` = {$forum}");
     }
-	echo " ... {$lang['FORUM_RECACHE_DONE']}<br />";
+	echo " ... Recaching completed.<br />";
 }
 function isImage($url)
 {
@@ -2062,19 +2061,19 @@ function isImage($url)
  */
 function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
-    global $lang,$set;
+    global $set;
     $engine_version=$set['Version_Number'];
     $json=json_decode(update_file($url),true);
     if (is_null($json))
     {
-        return $lang['GEN_FAILEDTOCHECK'];
+        return "Update checker failed.";
     }
     if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
     {
-        return $lang['GEN_UPTODATE'];
+        return "Chivalry Engine is up to date.";
     }
     else
     {
-        return $lang['GEN_OUTTADATE'] . "<a href='{$json['download-latest']}'>{$lang["GEN_HERE"]}</a>.";
+        return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
     }
 }
