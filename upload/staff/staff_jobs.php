@@ -9,7 +9,7 @@
 require('sglobals.php');
 if ($api->UserMemberLevelGet($userid,'Admin') == false)
 {
-	alert('danger',"{$lang['ERROR_NOPERM']}","{$lang['GEN_NOPERM']}");
+	alert('danger',"Uh Oh!","You do not have permission to be here.");
 	die($h->endpage());
 }
 if (!isset($_GET['action']))
@@ -42,15 +42,15 @@ default:
 }
 function newjob()
 {
-	global $db,$userid,$h,$lang;
-	echo "<h3>{$lang['STAFF_JOB_CREATE_TITLE']}</h3><hr />";
+	global $db,$userid,$h;
+	echo "<h3>Create Job</h3><hr />";
 	if (!isset($_POST['jNAME']))
 	{
 		$csrf = request_csrf_html('staff_newjob');
 		echo "<table class='table table-bordered'>
 			<tr>
 				<th>
-					{$lang['STAFF_JOB_CREATE_FORM_NAME']}
+					Job Name
 				</th>
 				<td>
 					<input type='text' name='jNAME' required='1' class='form-control'>
@@ -58,7 +58,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_JOB_CREATE_FORM_DESC']}
+					Description
 				</th>
 				<td>
 					<input type='text' name='jDESC' required='1' class='form-control'>
@@ -66,7 +66,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_JOB_CREATE_FORM_BOSS']}
+					Employer's Name
 				</th>
 				<td>
 					<input type='text' name='jBOSS' required='1' class='form-control'>
@@ -74,12 +74,12 @@ function newjob()
 			</tr>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_JOB_CREATE_FORM_FIRST']}
+					First Job Rank
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_JOB_CREATE_FORM_RNAME']}
+					Rank Name
 				</th>
 				<td>
 					<input type='text' name='jRNAME' required='1' class='form-control'>
@@ -87,7 +87,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_JOB_CREATE_FORM_ACT']}
+					Required Activity
 				</th>
 				<td>
 					<input type='number' min='1' name='jACT' required='1' class='form-control'>
@@ -95,12 +95,12 @@ function newjob()
 			</tr>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_JOB_CREATE_FORM_PAYS']}
+					Daily Payment
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['INDEX_PRIMCURR']}
+					Primary Currency
 				</th>
 				<td>
 					<input type='number' min='0' name='jPRIMPAY' required='1' class='form-control'>
@@ -108,7 +108,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					{$lang['INDEX_SECCURR']}
+					Secondary Currency
 				</th>
 				<td>
 					<input type='number' min='0' name='jSECONDARY' required='1' class='form-control'>

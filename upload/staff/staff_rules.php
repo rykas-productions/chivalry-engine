@@ -28,14 +28,14 @@ default:
 }
 function addrule()
 {
-	global $db,$userid,$lang,$api,$h;
+	global $db,$userid,$api,$h;
 	if (!isset($_POST['rule']))
 	{
 		$csrf=request_csrf_html('staff_addrule');
-		echo "{$lang['STAFF_RULES_ADD_FORM']}<br />
+		echo "Use this form to add rules into the game. Be clear and concise. The more difficult language and terminology you use, the less people may understand.<br />
 		<form method='post'>
 			<textarea name='rule' rows='5' class='form-control'></textarea>
-			<input type='submit' class='btn btn-primary' value='{$lang['STAFF_RULES_ADD_BTN']}'>
+			<input type='submit' class='btn btn-primary' value='Add Rule'>
 			{$csrf}
 		</form>";
 	}
@@ -43,20 +43,20 @@ function addrule()
 	{
 		if (empty($_POST['rule']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_RULES_ADD_SUBFAIL']);
+			alert('danger',"Uh Oh!","Please specify the rule's text.");
 			die($h->endpage());
 		}
 		else
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_addrule', stripslashes($_POST['verf'])))
 			{
-				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+				alert('danger',"Action Blocked!","This action was blocked for your security. Please fill out the form quicker next time.");
 				die($h->endpage());
 			}
 			$time=time();
 			$rule = $db->escape(str_replace("\n", "<br />",strip_tags(stripslashes($_POST['rule']))));
 			$db->query("INSERT INTO `gamerules` (`rule_id`, `rule_text`) VALUES (NULL, '{$rule}');");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_RULES_ADD_SUBSUCC']);
+			alert('success',"Success!","You have successfully added a new game rule.");
 			$api->SystemLogsAdd($userid,'staff',"Created a new rule.");
 		}
 	}

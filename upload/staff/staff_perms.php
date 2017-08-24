@@ -31,7 +31,7 @@ default:
 }
 function viewperm()
 {
-	global $h,$ir,$db,$lang,$userid,$api;
+	global $h,$db,$userid,$api;
 	if (!isset($_POST['userid']))
 	{
 		$csrf=request_csrf_html('staff_perm_1');
@@ -50,16 +50,22 @@ function viewperm()
 		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
 		if (empty($_POST['userid']))
 		{
-			alert('danger',$lang['ERROR_INVALID'],"You specified an invalid input. Try again!");
+			alert('danger',"Uh Oh!","You specified an invalid input. Try again!");
 			die($h->endpage());
 		}
 		else
 		{
-			$UserPermissionSelectQuery=$db->query("SELECT `p`.*,`u`.`username`,`u`.`userid` FROM `permissions` AS `p` INNER JOIN `users` AS `u` ON `u`.`userid` = `p`.`perm_user` WHERE `perm_user` = {$_POST['userid']}");
+			$UserPermissionSelectQuery=
+                $db->query("
+                          SELECT `p`.*,`u`.`username`,`u`.`userid`
+                          FROM `permissions` AS `p`
+                          INNER JOIN `users` AS `u`
+                          ON `u`.`userid` = `p`.`perm_user`
+                          WHERE `perm_user` = {$_POST['userid']}");
 			$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_1', stripslashes($_POST['verf'])))
 			{
-				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+				alert('danger',"Action Blocked!","We have blocked this action for your security. Please submit forms quickly.");
 				die($h->endpage());
 			}
 			if ($db->num_rows($UserPermissionSelectQuery) == 0)
@@ -101,7 +107,7 @@ function viewperm()
 }
 function editperm()
 {
-	global $h,$lang,$db,$ir,$userid,$api;
+	global $h,$db,$userid,$api;
 	if (!isset($_POST['userid']))
 	{
 		$csrf=request_csrf_html('staff_perm_2');
@@ -148,22 +154,22 @@ function editperm()
 		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Please submit forms quickly.");
 			die($h->endpage());
 		}
 		if (empty($_POST['userid']))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","You specified an invalid input. Try again!");
+			alert('danger',"Uh Oh!","You specified an invalid input. Try again!");
 			die($h->endpage());
 		}
 		elseif (!in_array($_POST['enable'], array('disable', 'enable')))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","You specified an invalid input. Try again!");
+			alert('danger',"Uh Oh!","You specified an invalid input. Try again!");
 			die($h->endpage());
 		}
 		elseif (!in_array($_POST['permission'], array('CanAttack', 'CanBeAttack', 'CanReplyMail', 'CanReplyForum', 'CanCreateThread', 'CanComment', 'CanSellToGame', 'CanBuyFromGame')))
 		{
-			alert('danger',"{$lang['ERROR_INVALID']}","You specified an invalid input. Try again!");
+			alert('danger',"Uh Oh!","You specified an invalid input. Try again!");
 			die($h->endpage());
 		}
 		else
@@ -206,7 +212,7 @@ function editperm()
 }
 function resetperm()
 {
-	global $db,$lang,$h,$userid,$api;
+	global $db,$h,$userid,$api;
 	if (!isset($_POST['userid']))
 	{
 		$csrf=request_csrf_html('staff_perm_3');
@@ -227,7 +233,7 @@ function resetperm()
 		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_3', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Please submit forms quickly.");
 			die($h->endpage());
 		}
 		if ($_POST['confirm'] != 'CONFIRM')

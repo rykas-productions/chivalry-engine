@@ -251,7 +251,7 @@ function new_crime()
 }
 function edit_crime()
 {
-	global $db,$userid,$lang,$h,$api;
+	global $db,$userid,$h,$api;
 	if (!isset($_POST['step']))
 	{
 		$_POST['step'] = 0;
@@ -264,12 +264,12 @@ function edit_crime()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_CRIME_EDIT_START']}
+					Select a crime you wish to edit.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_CRIME_EDIT_START1']}
+					Crime
 				</th>
 				<td>
 					" . crime_dropdown('crime') . "
@@ -277,7 +277,7 @@ function edit_crime()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_CRIME_EDIT_START_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='Edit Crime'>
 				</td>
 			</tr>
 		</table>
@@ -294,25 +294,25 @@ function edit_crime()
 		}
 		if (empty($_POST['crime']))
 		{
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_EDIT_FRM_ERR']);
+			alert('danger',"Uh Oh!","Please specify a crime you wish to edit.");
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_EDIT_FRM_ERR1']);
+			alert('danger',"Uh Oh!","The crime you're trying to edit does not exist.");
 			die($h->endpage());
 		}
 		$itemi = $db->fetch_row($d);
 		$db->free_result($d);
 		$csrf = request_csrf_html('staff_editcrime2');
-		echo $lang['STAFF_CRIME_NEW_TITLE'] . "<br />
+		echo "Edit Crime Form<br />
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
 				<tr>
 					<th width='33%'>
-						{$lang['STAFF_CRIME_NEW_NAME']}
+						Crime Name
 					</th>
 					<td>
 						<input type='text' class='form-control' required='1' name='name' value='{$itemi['crimeNAME']}' />
@@ -320,7 +320,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_BRAVECOST']}
+						Bravery Cost
 					</th>
 					<td>
 						<input type='number' min='1' class='form-control' required='1' name='brave' value='{$itemi['crimeBRAVE']}' />
@@ -328,7 +328,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCFOR']}
+						Success Formula
 					</th>
 					<td>
 						<input type='text' class='form-control' required='1' value='{$itemi['crimePERCFORM']}' name='percform' />
@@ -336,7 +336,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCPRIMIN']}
+						Success Minimum Primary Currency
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMIN' value='{$itemi['crimePRICURMIN']}' />
@@ -344,7 +344,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCPRIMAX']}
+						Success Maximum Primary Currency
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMAX' value='{$itemi['crimePRICURMAX']}' />
@@ -352,7 +352,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCSECMIN']}
+						Sucess Minimum Secondary Currency
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMIN' value='{$itemi['crimeSECCURMIN']}' />
@@ -360,7 +360,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCSECMAX']}
+						Success Maximum Secondary Currency
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMAX' value='{$itemi['crimeSECURMAX']}' />
@@ -368,7 +368,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCITEM']}
+						Success Item
 					</th>
 					<td>
 						" . item_dropdown('item',$itemi['crimeITEMSUC'])  . "
@@ -376,7 +376,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_GROUP']}
+						Crime Group
 					</th>
 					<td>
 						" . crimegroup_dropdown('group',$itemi['crimeGROUP'])  . "
@@ -384,31 +384,31 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_ITEXT']}
+						Initial Text
 					</th>
 					<td>
-						<textarea class='form-control' name='itext' placeholder='{$lang['STAFF_CRIME_NEW_ITEXT_PH']}' required='1'>{$itemi['crimeITEXT']}</textarea>
+						<textarea class='form-control' name='itext' placeholder='Shown when you start the crime.' required='1'>{$itemi['crimeITEXT']}</textarea>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_STEXT']}
+						Success Text
 					</th>
 					<td>
-						<textarea class='form-control' name='stext' placeholder='{$lang['STAFF_CRIME_NEW_STEXT_PH']}' required='1'>{$itemi['crimeSTEXT']}</textarea>
+						<textarea class='form-control' name='stext' placeholder='Shown when you succeed the crime.' required='1'>{$itemi['crimeSTEXT']}</textarea>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_JTEXT']}
+						Failure Text
 					</th>
 					<td>
-						<textarea class='form-control' name='jtext' placeholder='{$lang['STAFF_CRIME_NEW_JTEXT_PH']}' required='1'>{$itemi['crimeFTEXT']}</textarea>
+						<textarea class='form-control' name='jtext' placeholder='Shown when you fail the crime.' required='1'>{$itemi['crimeFTEXT']}</textarea>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_JTIMEMIN']}
+						Minimum Dungeon Time
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='jtimemin' value='{$itemi['crimeDUNGMIN']}' />
@@ -416,7 +416,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_JTIMEMAX']}
+						Maximum Dungeon Time
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='jtimemax' value='{$itemi['crimeDUNGMAX']}' />
@@ -424,7 +424,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_JREASON']}
+						Dungeon Reason
 					</th>
 					<td>
 						<input type='text' class='form-control' required='1' name='jreason' value='{$itemi['crimeDUNGREAS']}' />
@@ -432,14 +432,14 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_XP']}
+						Success Experience
 					</th>
 					<td>
 						<input type='number' min='1' class='form-control' required='1' name='xp' value='{$itemi['crimeXP']}' />
 					</td>
 				</tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_CRIME_EDIT_START_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='Edit Crime' class='btn btn-primary'>
 				</td>
 				{$csrf}
 			</table>
@@ -469,12 +469,12 @@ function edit_crime()
 		if (empty($_POST['name']) || empty($_POST['brave']) || empty($_POST['percform'])  ||  empty($_POST['group']) || empty($_POST['itext']) || empty($_POST['stext']) 
 			|| empty($_POST['jtext']) || empty($_POST['jtimemin']) || empty($_POST['jtimemax'])  || empty($_POST['jreason']) || empty($_POST['xp']))
 		{
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_NEW_FAIL1']);
+			alert('danger',"Uh Oh!","You are missing one or more of the required inputs on the previous form.");
 			die($h->endpage());
 		}
 		if (empty($_POST['crimeID']))
 		{
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_EDIT_FRM_ERR']);
+			alert('danger',"Uh Oh!","Please specify the crime you wish to edit.");
 			die($h->endpage());
 		}
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime2', stripslashes($_POST['verf'])))
@@ -489,36 +489,28 @@ function edit_crime()
 			$db->free_result($qi);
 			if ($exist_check == 0)
 			{
-				alert('danger',"Uh Oh!",$lang['STAFF_CRIME_NEW_FAIL2']);
+				alert('danger',"Uh Oh!","The crime you are trying to edit does not exist.");
 				die($h->endpage());
 			}
 		}
 		$db->query(
             "UPDATE `crimes`
-             SET `crimeNAME` = '{$_POST['name']}',
-             `crimeBRAVE` = '{$_POST['brave']}',
-             `crimePERCFORM` = '{$_POST['percform']}',
-             `crimePRICURMIN` = '{$_POST['PRICURMIN']}',
-			 `crimePRICURMAX` = '{$_POST['PRICURMAX']}',
-			 `crimeSECCURMIN` = '{$_POST['SECURMIN']}',
-			 `crimeSECURMAX` = '{$_POST['SECURMAX']}',
-			 `crimeITEMSUC` = {$_POST['item']},
-             `crimeGROUP` = '{$_POST['group']}',
-             `crimeITEXT` = '{$_POST['itext']}',
-             `crimeSTEXT` = '{$_POST['stext']}',
-             `crimeFTEXT` = '{$_POST['jtext']}',
-             `crimeDUNGREAS` = '{$_POST['jreason']}',
-			 `crimeDUNGMIN` = {$_POST['jtimemin']},
-			 `crimeDUNGMAX` = {$_POST['jtimemax']},
-             `crimeXP` = {$_POST['xp']}
+             SET `crimeNAME` = '{$_POST['name']}', `crimeBRAVE` = '{$_POST['brave']}',
+             `crimePERCFORM` = '{$_POST['percform']}', `crimePRICURMIN` = '{$_POST['PRICURMIN']}',
+			 `crimePRICURMAX` = '{$_POST['PRICURMAX']}', `crimeSECCURMIN` = '{$_POST['SECURMIN']}',
+			 `crimeSECURMAX` = '{$_POST['SECURMAX']}', `crimeITEMSUC` = {$_POST['item']},
+             `crimeGROUP` = '{$_POST['group']}', `crimeITEXT` = '{$_POST['itext']}',
+             `crimeSTEXT` = '{$_POST['stext']}', `crimeFTEXT` = '{$_POST['jtext']}',
+             `crimeDUNGREAS` = '{$_POST['jreason']}', `crimeDUNGMIN` = {$_POST['jtimemin']},
+			 `crimeDUNGMAX` = {$_POST['jtimemax']}, `crimeXP` = {$_POST['xp']}
              WHERE `crimeID` = {$_POST['crimeID']}");
-		alert('success',"Success!",$lang['STAFF_CRIME_EDIT_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully edited the {$_POST['name']} crime.",true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Edited crime {$_POST['name']}");
 	}
 }
 function delcrime()
 {
-	global $db,$userid,$lang,$api,$h;
+	global $db,$userid,$api,$h;
 	if (isset($_POST['crime']))
 	{
 		$_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
@@ -529,18 +521,18 @@ function delcrime()
 		}
 		if (empty($_POST['crime']))
 		{
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_DEL_ERR']);
+			alert('danger',"Uh Oh!","Please specify a crime you wish to delete.");
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_DEL_ERR1']);
+			alert('danger',"Uh Oh!","You are trying to delete a non-existent crime.");
 			die($h->endpage());
 		}
 		$db->query("DELETE FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
-		alert('success',"Success!",$lang['STAFF_CRIME_DEL_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully deleted Crime ID #{$_POST['crime']}.",true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted Crime ID {$_POST['crime']}.");
 		
 	}
@@ -551,12 +543,12 @@ function delcrime()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_CRIME_DEL_FRM']}
+					Select the crime you wish to delete from the game.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_CRIME_DEL_FRM1']}
+					Crime
 				</th>
 				<td>
 					" . crime_dropdown('crime') . "
@@ -564,7 +556,7 @@ function delcrime()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_CRIME_DEL_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='Delete Crime' class='btn btn-primary'>
 				</td>
 			</tr>
 			{$csrf}
@@ -574,14 +566,14 @@ function delcrime()
 }
 function new_crimegroup()
 {
-	global $db,$lang,$h,$api,$userid;
+	global $db,$h,$api,$userid;
 	if (isset($_POST['cgNAME']))
 	{
 		$_POST['cgNAME'] = (isset($_POST['cgNAME']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['cgNAME'])) ? $db->escape(strip_tags(stripslashes($_POST['cgNAME']))) : '';
 		$_POST['cgORDER'] = (isset($_POST['cgORDER']) && is_numeric($_POST['cgORDER'])) ? abs(intval($_POST['cgORDER'])) : '';
 		if (empty($_POST['cgNAME']) || empty($_POST['cgORDER']))
 		{
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_NEW_FAIL1']);
+			alert('danger',"Uh Oh!","Please fill out the form before submitting it.");
 			die($h->endpage());
 		}
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrimegroup', stripslashes($_POST['verf'])))
@@ -593,24 +585,24 @@ function new_crimegroup()
 		if ($db->fetch_single($d) > 0)
 		{
 			$db->free_result($d);
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_NEW_FAIL2']);
+			alert('danger',"Uh Oh!","You cannot have more than one crime group with the same order number.");
 			die($h->endpage());
 		}
 		$db->free_result($d);
 		$db->query("INSERT INTO `crimegroups` (`cgNAME`, `cgORDER`) VALUES('{$_POST['cgNAME']}', '{$_POST['cgORDER']}')");
-		alert('success',"Success!",$lang['STAFF_CRIMEG_NEW_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully created the {$_POST['cgNAME']} Crime Group.",true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Created Crime Group {$_POST['cgNAME']}");
 		
 	}
 	else
 	{
 		$csrf = request_csrf_html('staff_newcrimegroup');
-		echo $lang['STAFF_CRIMEG_NEW_TITLE'] . "<br />
+		echo "Adding a new crime group<br />
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIMEG_NEW_NAME']}
+						Crime Group Name
 					</th>
 					<td>
 						<input type='text' name='cgNAME' class='form-control' required='1'>
@@ -618,7 +610,7 @@ function new_crimegroup()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIMEG_NEW_ORDER']}
+						Crime Group Order
 					</th>
 					<td>
 						<input type='number' name='cgORDER' min='0' class='form-control' required='1'>
@@ -626,7 +618,7 @@ function new_crimegroup()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['STAFF_CRIMEG_NEW_BTN']}' class='btn btn-primary'>
+						<input type='submit' value='Create Crime Group' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}
@@ -637,7 +629,7 @@ function new_crimegroup()
 }
 function edit_crimegroup()
 {
-	global $db,$lang,$h,$userid,$api;
+	global $db,$h,$userid,$api;
 	if (!isset($_POST['step']))
 	{
 		$_POST['step'] = 0;
@@ -649,12 +641,12 @@ function edit_crimegroup()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_CRIMEG_EDIT_START']}
+					Select a Crime Group you wish to edit.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_CRIMEG_EDIT_START1']}
+					Crime Group
 				</th>
 				<td>
 					" . crimegroup_dropdown('crimegroup') . "
@@ -662,7 +654,7 @@ function edit_crimegroup()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_CRIMEG_EDIT_START_BTN']}'>
+					<input type='submit' class='btn btn-primary' value='Edit Crime Group'>
 				</td>
 			</tr>
 		</table>
@@ -680,14 +672,14 @@ function edit_crimegroup()
 		}
 		if (empty($_POST['crimegroup']))
 		{
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_EDIT_FRM_ERR']);
+			alert('danger',"Uh Oh!","Please specify the crime group you wish to edit.");
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT `cgORDER`, `cgNAME` FROM `crimegroups` WHERE `cgID` = {$_POST['crimegroup']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_EDIT_FRM_ERR1']);
+			alert('danger',"Uh Oh!","The Crime Group you've selected does not exist.");
 			die($h->endpage());
 		}
 		$itemi = $db->fetch_row($d);
@@ -697,7 +689,7 @@ function edit_crimegroup()
 			<table class='table table-bordered table-responsive'>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIMEG_NEW_NAME']}
+						Crime Group Name
 					</th>
 					<td>
 						<input type='text' name='cgNAME' class='form-control' required='1' value='{$itemi['cgNAME']}'>
@@ -705,7 +697,7 @@ function edit_crimegroup()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIMEG_NEW_ORDER']}
+						Crime Group Order
 					</th>
 					<td>
 						<input type='number' name='cgORDER' min='0' class='form-control' required='1' value='{$itemi['cgORDER']}'>
@@ -713,7 +705,7 @@ function edit_crimegroup()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='{$lang['STAFF_CRIMEG_NEW_BTN']}' class='btn btn-primary'>
+						<input type='submit' value='Edit Crime Group' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}
@@ -735,7 +727,7 @@ function edit_crimegroup()
 		}
 		if (empty($_POST['cgNAME']) || empty($_POST['cgORDER']) || empty($_POST['cgID']))
 		{
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_EDIT_SUB_ERR']);
+			alert('danger',"Uh Oh!","Please fill out the form entirely before submitting.");
 			die($h->endpage());
 		}
 		else
@@ -744,19 +736,19 @@ function edit_crimegroup()
 			if ($db->fetch_single($d) > 0)
 			{
 				$db->free_result($d);
-				alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_NEW_FAIL2']);
+				alert('danger',"Uh Oh!","You cannot have more than one crime group with the same order number.");
 				die($h->endpage());
 			}
 			$db->free_result($d);
 			$db->query("UPDATE `crimegroups` SET `cgNAME` = '{$_POST['cgNAME']}', `cgORDER` = '{$_POST['cgORDER']}' WHERE `cgID` = '{$_POST['cgID']}'");
-			alert('success',"Success!",$lang['STAFF_CRIMEG_EDIT_SUB_SUCC'],true,'index.php');
+			alert('success',"Success!","You have successfully edited the {$_POST['cgNAME']} Crime Group.",true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Edited Crime Group {$_POST['cgNAME']}");
 		}
 	}
 }
 function delcrimegroup()
 {
-	global $lang,$db,$userid,$api,$h;
+	global $db,$userid,$api,$h;
 	if (isset($_POST['crimeGROUP']))
 	{
 		$_POST['crimeGROUP'] = (isset($_POST['crimeGROUP']) && is_numeric($_POST['crimeGROUP'])) ? abs(intval($_POST['crimeGROUP'])) : '';
@@ -767,18 +759,18 @@ function delcrimegroup()
 		}
 		if (empty($_POST['crimeGROUP']))
 		{
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_DEL_ERR']);
+			alert('danger',"Uh Oh!","Please specify the crime group you wish to delete.");
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT * FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_DEL_ERR1']);
+			alert('danger',"Uh Oh!","The Crime Group you wish to delete does not exist.");
 			die($h->endpage());
 		}
 		$db->query("DELETE FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
-		alert('success',"Success!",$lang['STAFF_CRIMEG_DEL_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully deleted Crime Group ID #{$_POST['crimeGROUP']}.",true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted Crime Group ID {$_POST['crimeGROUP']}.");
 	}
 	else
@@ -788,12 +780,12 @@ function delcrimegroup()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_CRIMEG_DEL_FRM']}
+					Select the Crime Group you wish to delete.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_CRIME_NEW_GROUP']}
+					Crime Group
 				</th>
 				<td>
 					" . crimegroup_dropdown('crimeGROUP') . "
@@ -801,7 +793,7 @@ function delcrimegroup()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_CRIMEG_DEL_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='Delete Crime Group' class='btn btn-primary'>
 				</td>
 			</tr>
 			{$csrf}

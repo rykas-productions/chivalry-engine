@@ -35,22 +35,22 @@ switch ($_GET['action'])
 }
 function createuser()
 {
-	global $db,$h,$lang,$api,$userid;
+	global $db,$h,$api,$userid;
 	if (!isset($_POST['username']))
 	{
 		$csrf=request_csrf_html('staff_user_1');
-		echo "<hr /><h4>{$lang['SCU_CU']}</h4><hr />";
+		echo "<hr /><h4>Create a User</h4><hr />";
 		echo "
 			<table class='table table-bordered'>
 				<form method='post'>
 					<tr>
 						<th colspan='2'>
-							{$lang['SCU_INFO']}
+							Create a user by filling out this form.
 						</th>
 					</tr>
 					<tr>
 						<th>
-							{$lang["REG_USERNAME"]}
+							Username
 						</th>
 						<td>
 							<input type='text' id='username' required='1' class='form-control' minlength='3' name='username' maxlength='20'>
@@ -58,7 +58,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang["REG_PW"]}
+							Password
 						</th>
 						<td>
 							<input type='password' id='pw1' required='1' class='form-control' name='password'>
@@ -66,7 +66,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang["REG_CPW"]}
+							Confirm Password
 						</th>
 						<td>
 							<input type='password' id='pw2' required='1' class='form-control' name='cpw'>
@@ -74,7 +74,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang["REG_EMAIL"]}
+							Email Address
 						</th>
 						<td>
 							<input type='email' id='email' required='1' class='form-control' name='email'>
@@ -82,27 +82,27 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['SCU_UL']}
+							User Level
 						</th>
 						<td>
 							<select name='userlevel' class='form-control' required='1' type='dropdown'>
-								<option>{$lang['SCU_UL1']}</option>
-								<option>{$lang['SCU_UL2']}</option>
-								<option>{$lang['SCU_UL3']}</option>
-								<option>{$lang['SCU_UL4']}</option>
-								<option>{$lang['SCU_UL5']}</option>
-								<option>{$lang['SCU_UL6']}</option>
+								<option>NPC</option>
+								<option>Member</option>
+								<option>Admin</option>
+								<option>Forum Moderator</option>
+								<option>Assistant</option>
+								<option>Web Developer</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<th colspan='2'>
-							<b>{$lang['SCU_BI']}</b>
+							<b>Basic Info</b>
 						</th>
 					</tr>
 					<tr>
 						<th>
-							{$lang['USERLIST_ORDER3']}
+							Level
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='1' name='level' value='1'>
@@ -110,30 +110,30 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['USERLIST_TH1']}
+							Sex
 						</th>
 						<td>
 							<select name='gender' class='form-control' required='1' type='dropdown'>
-								<option>{$lang['SCU_SEX']}</option>
-								<option>{$lang['SCU_SEX1']}</option>
+								<option>Male</option>
+								<option>Female</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							{$lang['INDEX_CLASS']}
+							Class
 						</th>
 						<td>
 							<select name='class' id='class' class='form-control' required='1' type='dropdown'>
-								<option value='Warrior'>{$lang['SCU_CLASS']}</option>
-								<option value='Rogue'>{$lang['SCU_CLASS1']}</option>
-								<option value='Defender'>{$lang['SCU_CLASS2']}</option>
+								<option value='Warrior'>Warrior</option>
+								<option value='Rogue'>Rogue</option>
+								<option value='Defender'>Defender</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							{$lang['INDEX_PRIMCURR']}
+							Primary Currency
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' name='prim_currency' value='100'>
@@ -141,7 +141,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['INDEX_SECCURR']}
+							Secondary Currency
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' value='0' name='sec_currency'>
@@ -149,20 +149,20 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['INDEX_VIP']}
+							VIP Days
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' value='0' name='vip_days'>
 						</td>
 					</tr>
 					<tr>
-						<td colspan='2'>
-							<b>{$lang['SCU_STAT']}</b>
-						</td>
+						<th colspan='2'>
+							<b>Stats</b>
+						</th>
 					</tr>
 					<tr>
 						<th>
-							{$lang['GEN_STR']}
+							Strength
 						</th>
 						<td>
 							<input type='number' required='1' id='strength' class='form-control' min='10' name='strength' value='1100'>
@@ -170,7 +170,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['GEN_AGL']}
+							Agility
 						</th>
 						<td>
 							<input type='number' required='1' id='agility' class='form-control' min='10' name='agility' value='1000'>
@@ -178,7 +178,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['GEN_GRD']}
+							Guard
 						</th>
 						<td>
 							<input type='number' required='1' id='guard' class='form-control' min='10' name='guard' value='900'>
@@ -186,7 +186,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['GEN_LAB']}
+							Labor
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='10' name='labor' value='1000'>
@@ -194,7 +194,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['GEN_IQ']}
+							IQ
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='10' name='iq' value='1000'>
@@ -202,12 +202,12 @@ function createuser()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<b>{$lang['PR_CAT_7']}</b>
+							<b>Phyiscal Information</b>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							{$lang['STAFF_TRAVEL_DELTOWN_TH1']}
+							Town
 						</th>
 						<td>
 							" . location_dropdown("city") . "
@@ -215,7 +215,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['EQUIP_WEAPON_SLOT1']}
+							Primary Weapon
 						</th>
 						<td>
 							" . weapon_dropdown("primary_weapon",0) . "
@@ -223,7 +223,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['EQUIP_WEAPON_SLOT2']}
+							Secondary Weapon
 						</th>
 						<td>
 							" . weapon_dropdown("secondary_weapon",0) . "
@@ -231,7 +231,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$lang['EQUIP_WEAPON_SLOT3']}
+							Armor
 						</th>
 						<td>
 							" . armor_dropdown("armor",0) . "
@@ -239,7 +239,7 @@ function createuser()
 					</tr>
 					<tr>
 						<td colspan='2'>
-							<input type='submit' class='btn btn-primary' value='{$lang['SCU_BTN']}' />
+							<input type='submit' class='btn btn-primary' value='Create User' />
 						</td>
 					</tr>
         	{$csrf}
@@ -250,7 +250,7 @@ function createuser()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_user_1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
 			die($h->endpage());
 		}
 		$username = (isset($_POST['username']) && is_string($_POST['username'])) ? stripslashes($_POST['username']) : '';
@@ -274,27 +274,29 @@ function createuser()
 		
 		if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email'])))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR']);
+			alert('danger',"Uh Oh!","You input an invalid email address.");
 			die($h->endpage());
 		}
 		if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female'))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR1']);
+			alert('danger',"Uh Oh!","You input an invalid sex.");
 			die($h->endpage());
 		}
 		if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender'))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR2']);
+			alert('danger',"Uh Oh!","You input an invalid class.");
 			die($h->endpage());
 		}
-		if (!isset($_POST['userlevel']) || ($_POST['userlevel'] != 'NPC' && $_POST['userlevel'] != 'Member' && $_POST['userlevel'] != 'Admin' && $_POST['userlevel'] != 'Forum Moderator' && $_POST['userlevel'] != 'Assistant' && $_POST['userlevel'] != 'Web Developer'))
+		if (!isset($_POST['userlevel']) || ($_POST['userlevel'] != 'NPC' && $_POST['userlevel'] != 'Member' &&
+                $_POST['userlevel'] != 'Admin' && $_POST['userlevel'] != 'Forum Moderator' &&
+                $_POST['userlevel'] != 'Assistant' && $_POST['userlevel'] != 'Web Developer'))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR3']);
+			alert('danger',"Uh Oh!","You input an invalid User Level.");
 			die($h->endpage());
 		}
 		if (((strlen($username) > 20) OR (strlen($username) < 3)))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR4']);
+			alert('danger',"Uh Oh!","Usernames can only be 3-20 characters in length.");
 			die($h->endpage());
 		}
 		if ($equip_prim > 0)
@@ -302,7 +304,7 @@ function createuser()
 			$pwq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
 			if ($db->fetch_single($pwq) == 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR5']);
+				alert('danger',"Uh Oh!","You are trying to equip an invalid weapon.");
 				die($h->endpage());
 			}
 		}
@@ -311,7 +313,7 @@ function createuser()
 			$swq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
 			if ($db->fetch_single($swq) == 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR5']);
+				alert('danger',"Uh Oh!","You are trying to equip an invalid weapon.");
 				die($h->endpage());
 			}
 		}
@@ -320,14 +322,14 @@ function createuser()
 			$aq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
 			if ($db->fetch_single($aq) == 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR6']);
+				alert('danger',"Uh Oh!","You are trying to equip an invalid armor.");
 				die($h->endpage());
 			}
 		}
 		$CityQuery=$db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
 		if ($db->fetch_single($CityQuery) == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR7']);
+			alert('danger',"Uh Oh!","You are trying to place the user in an invalid town.");
 			die($h->endpage());
 		}
 		$e_gender = $db->escape(stripslashes($_POST['gender']));
@@ -342,22 +344,22 @@ function createuser()
 		$db->free_result($q2);
 		if ($u_check > 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR8']);
+			alert('danger',"Uh Oh!","The username you've chosen is already in use.");
 			die($h->endpage());
 		}
 		else if ($e_check > 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR9']);
+			alert('danger',"Uh Oh!","The email you've chosen is already in use.");
 			die($h->endpage());
 		}
 		else if (empty($pw) || empty($pw2))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR10']);
+			alert('danger',"Uh Oh!","Please enter a valid password.");
 			die($h->endpage());
 		}
 		else if ($pw != $pw2)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SCU_ERR11']);
+			alert('danger',"Uh Oh!","Password confirmation failed.");
 			die($h->endpage());
 		}
 		else
@@ -383,14 +385,14 @@ function createuser()
 			 $db->query("INSERT INTO `userstats` VALUES($i, {$Strength}, {$Agility}, {$Guard}, {$IQ}, {$Labor})");
 			 $db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
 			$db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['SCU_SUC'],true,'index.php');
+			alert('success',"Success!","You have successfully created the user named {$e_username}.",true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
 		}
 	}
 }
 function edituser()
 {
-	global $db,$lang,$h,$userid,$api;
+	global $db,$h,$userid,$api;
 	if (!isset($_POST['step']))
 	{
 		$_POST['step'] = 0;
@@ -399,13 +401,13 @@ function edituser()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
 			die($h->endpage());
 		}
 		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
 		if (empty($_POST['user']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_USERS_EDIT_EMPTY']);
+			alert('danger',"Uh Oh!","Please select the user you wish to edit.");
 			die($h->endpage());
 		}
 		$d =  $db->query("SELECT `i`.*, `d`.*, `username`, 
@@ -423,7 +425,7 @@ function edituser()
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',$lang['ERROR_NONUSER'],$lang['STAFF_USERS_EDIT_DND']);
+			alert('danger',"Uh Oh!","The user you're trying to edit does not exist.");
 			die($h->endpage());
 		}
 		$itemi = $db->fetch_row($d);
@@ -442,14 +444,14 @@ function edituser()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_USERS_EDIT_FORMTITLE']}
+					Editing a User
 					<input type='hidden' name='userid' value='{$_POST['user']}' />
 					<input type='hidden' name='step' value='3' />
 				</th>
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang["REG_USERNAME"]}
+					Username
 				</th>
 				<td>
 					<input type='text' class='form-control' required='1' name='username' value='{$itemi['username']}' />
@@ -457,7 +459,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang["REG_EMAIL"]}
+					Email Address
 				</th>
 				<td>
 					<input type='text' class='form-control' required='1' name='email' value='{$itemi['email']}' />
@@ -465,7 +467,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['INDEX_LEVEL']}
+					Level
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='level' value='{$itemi['level']}' />
@@ -473,7 +475,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['INDEX_PRIMCURR']}
+					Primary Currency
 				</th>
 				<td>
 					<input type='number' min='0' class='form-control' required='1' name='prim_currency' value='{$itemi['primary_currency']}' />
@@ -481,7 +483,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['EXPLORE_BANK']}
+					Bank Money
 				</th>
 				<td>
 					<input type='number' min='-1' class='form-control' required='1' name='bank' value='{$itemi['bank']}' />
@@ -489,7 +491,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['INDEX_SECCURR']}
+					Secondary Currency
 				</th>
 				<td>
 					<input type='number' min='0' class='form-control' required='1' name='sec_currency' value='{$itemi['secondary_currency']}' />
@@ -497,7 +499,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_USERS_EDIT_FORM_INFIRM']}
+					Infirmary Time
 				</th>
 				<td>
 					<input type='number' min='0' class='form-control' required='1' name='infirmary' value='{$itemi['infirmary']}' />
@@ -505,7 +507,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_USERS_EDIT_FORM_INFIRM_REAS']}
+					Infirmary Reason
 				</th>
 				<td>
 					<input type='text' class='form-control' name='infirmary_reason' value='{$itemi['infirmary_reason']}' />
@@ -513,7 +515,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_USERS_EDIT_FORM_DUNG']}
+					Dungeon Time
 				</th>
 				<td>
 					<input type='number' min='0' class='form-control' required='1' name='dungeon' value='{$itemi['dungeon']}' />
@@ -521,7 +523,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_USERS_EDIT_FORM_DUNG_REAS']}
+					Dungoen Reason
 				</th>
 				<td>
 					<input type='text' class='form-control' name='dungeonreason' value='{$itemi['dungeon_reason']}' />
@@ -529,7 +531,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_USERS_EDIT_FORM_ESTATE']}
+					Estate
 				</th>
 				<td>
 					" . estate2_dropdown("maxwill", $itemi['maxwill']) . "
@@ -537,12 +539,12 @@ function edituser()
 			</tr>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_USERS_EDIT_FORM_STATS']}
+					Stats
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['GEN_STR']}
+					Strength
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='strength' value='{$itemi['strength']}' />
@@ -550,7 +552,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['GEN_AGL']}
+					Agility
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='agility' value='{$itemi['agility']}' />
@@ -558,7 +560,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['GEN_GRD']}
+					Guard
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='guard' value='{$itemi['guard']}' />
@@ -566,7 +568,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['GEN_LAB']}
+					Labor
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='labor' value='{$itemi['labor']}' />
@@ -574,7 +576,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['GEN_IQ']}
+					IQ
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='IQ' value='{$itemi['IQ']}' />
@@ -582,12 +584,12 @@ function edituser()
 			</tr>
 			<tr>
 				<th colspan='2'>
-					{$lang['SCU_OTHER']}
+					Physical Info
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_TRAVEL_DELTOWN_TH1']}
+					Town
 				</th>
 				<td>
 					" . location_dropdown("city", $itemi['location']) . "
@@ -595,7 +597,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['EQUIP_WEAPON_SLOT1']}
+					Primary Weapon
 				</th>
 				<td>
 					" . weapon_dropdown("primary_weapon",$itemi['equip_primary']) . "
@@ -603,7 +605,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['EQUIP_WEAPON_SLOT2']}
+					Secondary Weapon
 				</th>
 				<td>
 					" . weapon_dropdown("secondary_weapon",$itemi['equip_secondary']) . "
@@ -611,7 +613,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$lang['EQUIP_WEAPON_SLOT3']}
+					Armor
 				</th>
 				<td>
 					" . armor_dropdown("armor",$itemi['equip_armor']) . "
@@ -619,7 +621,7 @@ function edituser()
 			</tr>
 		</table>
     	{$csrf}
-    	<input class='btn btn-primary' type='submit' value='{$lang['SEU_BTN']}' />
+    	<input class='btn btn-primary' type='submit' value='Edit User' />
     </form>
        ";
 	}
@@ -627,7 +629,7 @@ function edituser()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
 			die($h->endpage());
 		}
 		$username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username']) && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
@@ -654,35 +656,35 @@ function edituser()
 		
 		if (empty($username) || empty($email))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_MISSINGSTUFF']);
+			alert('danger',"Uh Oh!","Please specify an email and username.");
 			die($h->endpage());
 		}
 		$u_exists = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$user}");
 		if ($db->num_rows($u_exists) == 0)
 		{
 			$db->free_result($u_exists);
-			alert('danger',$lang['ERROR_NONUSER'],$lang['STAFF_USERS_EDIT_DND']);
+			alert('danger',"Uh Oh!","The user you are trying to edit does not exist.");
 			die($h->endpage());
 		}
 		$h_exists = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$maxwill}");
 		if ($db->fetch_single($h_exists) == 0)
 		{
 			$db->free_result($h_exists);
-			alert("danger",$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_HBAD']);
+			alert("danger","Uh Oh!","The house you're trying to have this user live in does not exist.");
 			die($h->endpage());
 		}
 		$u = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$username}' AND `userid` != {$user}");
 		if ($db->fetch_single($u) != 0)
 		{
 			$db->free_result($u);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_UNIU']);
+			alert('danger',"Uh Oh!","The username for this user is already in use.");
 			die($h->endpage());
 		}
 		$e = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$email}' AND `userid` != {$user}");
 		if ($db->fetch_single($e) != 0)
 		{
 			$db->free_result($e);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_EIU']);
+			alert('danger',"Uh Oh!","The email address input is already in use.");
 			die($h->endpage());
 		}
 		if ($equip_prim > 0)
@@ -690,7 +692,7 @@ function edituser()
 			$pwq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
 			if ($db->fetch_single($pwq) == 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_WDNE']);
+				alert('danger',"Uh Oh!","The primary weapon selected does not exist.");
 				die($h->endpage());
 			}
 		}
@@ -699,7 +701,7 @@ function edituser()
 			$swq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
 			if ($db->fetch_single($swq) == 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_WDNE']);
+				alert('danger',"Uh Oh!","The secondary weapon selected does not exist.");
 				die($h->endpage());
 			}
 		}
@@ -708,14 +710,14 @@ function edituser()
 			$aq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
 			if ($db->fetch_single($aq) == 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_ADNE']);
+				alert('danger',"Uh Oh!","The armor selected does not exist.");
 				die($h->endpage());
 			}
 		}
 		$CityQuery=$db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
 		if ($db->fetch_single($CityQuery) == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_EDIT_SUB_TDNE']);
+			alert('danger',"Uh Oh!","The town you wish the user to be in does not exist.");
 			die($h->endpage());
 		}
 		$db->free_result($u);
@@ -734,30 +736,30 @@ function edituser()
 		$db->query("UPDATE `userstats` SET `strength` = {$strength}, `agility` = {$agility}, `guard` = {$guard}, `iq` = {$iq}, `labor` = {$labor} WHERE `userid` = {$user}");
 		if ($_POST['infirmary'] > 0)
 		{
-			$api->UserStatusSet($user,1,$_POST['infirmary'],$infirmaryr);
+			$api->UserStatusSet($user,'infirmary',$_POST['infirmary'],$infirmaryr);
 		}
 		if ($_POST['dungeon'] > 0)
 		{
-			$api->UserStatusSet($user,2,$_POST['dungeon'],$dungeonr);
+			$api->UserStatusSet($user,'dungeon',$_POST['dungeon'],$dungeonr);
 		}
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_EDIT_SUB_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully edited {$username}'s account.",true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
 	}
 	else
 	{
 		$csrf = request_csrf_html('staff_edituser1');
-		echo "{$lang['STAFF_USERS_EDIT_START']}
+		echo "Editing an User
     <br />
 	<table class='table table-bordered'>
 		<form method='post'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_USERS_EDIT_START']}
+					Select the user who you wish to edit.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_USERS_EDIT_USER']}
+					User
 				</th>
 				<td>
 					" . user_dropdown('user') . "
@@ -767,19 +769,19 @@ function edituser()
 				<td colspan='2'>
 					{$csrf}
 					<input type='hidden' name='step' value='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_EDIT_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='Edit User' />
 				</th>
 			</tr>
 		</form>
 		<form method='post'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_USERS_EDIT_ELSE']}
+					Alternatively, you can enter their User ID instead.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_USERS_EDIT_USER']}
+					User
 				</th>
 				<td>
 					<input class='form-control' type='number' min='1' name='user' />
@@ -789,7 +791,7 @@ function edituser()
 				<td colspan='2'>
 					{$csrf}
 					<input type='hidden' name='step' value='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_EDIT_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='Edit User' />
 				</th>
 			</tr>
 		</form>
@@ -799,7 +801,7 @@ function edituser()
 }
 function deleteuser()
 {
-	global $db,$userid,$lang,$h,$api,$ir;
+	global $db,$userid,$h,$api,$ir;
 	if (!isset($_GET['step']))
     {
         $_GET['step'] = '0';
@@ -811,14 +813,14 @@ function deleteuser()
 			echo "<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						{$lang['STAFF_USERS_DEL_FORM_1']}
+						Select the user you wish to delete.
 					</th>
 				</tr>
 				<form action='?action=deleteuser&step=2' method='post'>
 				{$csrf}
 				<tr>
 					<th>
-						{$lang['STAFF_USERS_EDIT_USER']}
+						User
 					</th>
 					<td>
 						" . user_dropdown('user') . "
@@ -826,20 +828,20 @@ function deleteuser()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_DEL_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='Delete User' />
 					</td>
 				</tr>
 				</form>
 				<tr>
 					<th colspan='2'>
-						{$lang['STAFF_USERS_EDIT_ELSE']}
+						Alternatively, you can enter a User's ID
 					</th>
 				</tr>
 				<form action='?action=deleteuser&step=2' method='post'>
 				{$csrf}
 				<tr>
 					<th>
-						{$lang['STAFF_USERS_EDIT_USER']}
+						User
 					</th>
 					<td>
 						<input type='number' class='form-control' required='1' name='user' value='0' />
@@ -847,7 +849,7 @@ function deleteuser()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_DEL_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='Delete User' />
 					</td>
 				</tr>
 				</form>
@@ -857,19 +859,19 @@ function deleteuser()
 			$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser1', stripslashes($_POST['verf'])))
 			{
-				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+				alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
 				die($h->endpage());
 			}
 			if (empty($_POST['user']) || $_POST['user'] == 1 || $_POST['user'] == $ir['userid'])
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
+				alert('danger',"Uh Oh!","You cannot delete your account, or the game owner's account.");
 				die($h->endpage());
 			}
 			$d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
 			if ($db->num_rows($d) == 0)
 			{
 				$db->free_result($d);
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
+				alert('danger',"Uh Oh!","You cannot delete a non-existent account.");
 				die($h->endpage());
 			}
 			$username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
@@ -882,15 +884,15 @@ function deleteuser()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-					 {$lang['STAFF_USERS_DEL_SUBFORM_CONFIRM']} {$username}{$lang['STAFF_USERS_DEL_SUBFORM_CONFIRM1']}
+					 Are you sure you want to delete {$username}'s account? Everything associated with the account will be deleted.
 					</th>
 				</tr>
 				<tr>
 					<td>
-						<input type='submit' class='btn btn-primary' name='yesorno' value='{$lang['GEN_YES']}' />
+						<input type='submit' class='btn btn-primary' name='yesorno' value='Yes' />
 					</td>
 					<td>
-						<input type='submit' class='btn btn-primary' name='yesorno' value='{$lang['GEN_NO']}' onclick=\"window.location='staff_users.php?action=deluser';\" />
+						<input type='submit' class='btn btn-primary' name='yesorno' value='No' onclick=\"window.location='staff_users.php?action=deluser';\" />
 					</td>
 				</tr>
 			</table>
@@ -899,25 +901,25 @@ function deleteuser()
 		case 3:
 			if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser2', stripslashes($_POST['verf'])))
 			{
-				alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+				alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
 				die($h->endpage());
 			}
 			$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
 			$_POST['yesorno'] = (isset($_POST['yesorno']) && in_array($_POST['yesorno'], array('Yes', 'No'))) ? $_POST['yesorno'] : '';
 			if ((empty($_POST['userid']) || empty($_POST['yesorno'])) || $_POST['userid'] == 1 || $_POST['userid'] == $ir['userid'])
 			{
-				alert('danger',$lang['ERROR_INVALID'],$lang['STAFF_USERS_DEL_SUB_INVALID']);
+				alert('danger',"Uh Oh!","You cannot delete your account, the game owner's account, or an unspecified account.");
 				die($h->endpage());
 			}
 			if ($_POST['yesorno'] == 'No')
 			{
-				alert('warning',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_DEL_SUB_FAIL']);
+				alert('warning',"Success!","You have not deleted this account.");
 				die($h->endpage());
 			}
 			$d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}");
 			if ($db->num_rows($d) == 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
+				alert('danger',"Uh Oh!","The account you are trying to delete does not exist.");
 				die($h->endpage());
 			}
 			$username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
@@ -926,33 +928,33 @@ function deleteuser()
 			$db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$_POST['userid']}");
 			$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['userid']}");
 			$api->SystemLogsAdd($userid,'staff',"Deleted user {$username} [{$_POST['userid']}].");
-			alert("success",$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_DEL_SUB_SUCC'],true,'index.php');
+			alert("success","Success!","You have deleted {$username}'s account.",true,'index.php');
 			die($h->endpage());
 			break;
 	}
 }
 function logout()
 {
-    global $db,$h,$userid,$lang,$api;
+    global $db,$h,$userid,$api;
     $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid']))  ? abs(intval($_POST['userid'])) : 0;
     if (!empty($_POST['userid']))
     {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_forcelogout', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
 			die($h->endpage());
 		}
         $d = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
         if ($db->fetch_single($d) == 0)
         {
             $db->free_result($d);
-            alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_DEL_SUB_SECERROR']);
+            alert('danger',"Uh Oh!","You are trying to force a non-existent account to log out.");
             die($h->endpage());
         }
         $db->free_result($d);
         $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `userid` = {$_POST['userid']}");
-        $api->SystemLogsAdd($userid,'staff',"Forced User ID {$_POST['userid']} to logout.");
-		alert("success",$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_FL_SUB_SUCC'],true,'index.php');
+        $api->SystemLogsAdd($userid,'staff',"Forced User ID {$_POST['userid']} to log out.");
+		alert("success","Success!","You have successfully forced User ID {$_POST['userid']} to log out.",true,'index.php');
     }
     else
     {
@@ -962,12 +964,12 @@ function logout()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						{$lang['STAFF_USERS_FL_FORM_INFO']}
+						Select the user you wish to force log out.
 					</th>
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_USERS_EDIT_USER']}
+						User
 					</th>
 					<td>
 						" . user_dropdown('userid') . "
@@ -975,7 +977,7 @@ function logout()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_FL_FORM_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='Force Log Out' />
 					</td>
 				</tr>
 			</table>
@@ -985,30 +987,30 @@ function logout()
 }
 function changepw()
 {
-	global $db,$h,$userid,$lang,$api;
+	global $db,$h,$userid,$api;
 	if ((isset($_POST['user'])) && (isset($_POST['pw'])))
 	{
 		$pw = stripslashes($_POST['pw']);
 		$user = (isset($_POST['user']) && is_numeric($_POST['user']))  ? abs(intval($_POST['user'])) : 0;
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_changepw', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
 			die($h->endpage());
 		}
 		if (($user == 1) && ($userid > 1))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_CP_ERROR']);
+			alert('danger',"Uh Oh!","You cannot change the game owner's password.");
             die($h->endpage());
 		}
 		$ul=$db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
 		if (($ul == 'Admin') && ($userid > 1))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_USERS_CP_ERROR1']);
+			alert('danger',"Uh Oh!","You cannot change an Administrator's password.");
             die($h->endpage());
 		}
 		$new_psw = $db->escape(encode_password($pw));
 		$db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$user}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_USERS_CP_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully changed User ID {$user}'s password.",true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Changed User ID {$user}'s password.");
 	}
 	else
@@ -1019,12 +1021,12 @@ function changepw()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						{$lang['STAFF_USERS_CP_FORM_INFO']}
+						Use this form to change a user's password.
 					</th>
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_USERS_CP_USER']}
+						User
 					</th>
 					<td>
 						" . user_dropdown('user') . "
@@ -1032,7 +1034,7 @@ function changepw()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_USERS_CP_PW']}
+						New Password
 					</th>
 					<td>
 						<input type='password' class='form-control' name='pw'>
@@ -1040,7 +1042,7 @@ function changepw()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_USERS_CP_FORM_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='Change Password' />
 					</td>
 				</tr>
 			</table>

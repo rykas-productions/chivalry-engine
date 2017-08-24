@@ -6,10 +6,8 @@
 	Author: TheMasterGeneral
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
-
-//Still not localized.
 require('sglobals.php');
-echo "<h3>Items</h3><hr />";
+echo "<h3>Staff Items</h3><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -37,10 +35,10 @@ switch ($_GET['action'])
 }
 function create()
 {
-	global $db,$ir,$h,$lang,$userid,$api;
+	global $db,$ir,$h,$userid,$api;
 	if ($ir['user_level'] != 'Admin')
     {
-        alert('danger',$lang['ERROR_NOPERM'],$lang['STAFF_CITEM_ERR'],true,'index.php');
+        alert('danger',"Uh Oh!","You do not have permission to be here.",true,'index.php');
         die($h->endpage());
     }
 	if (!isset($_POST['itemname']))
@@ -50,7 +48,7 @@ function create()
 		<table class='table table-bordered'>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH1']}
+					Item Name
 				</th>
 				<td>
 					<input type='text' required='1' name='itemname' class='form-control'>
@@ -58,7 +56,7 @@ function create()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH2']}
+					Description
 				</th>
 				<td>
 					<input type='text' required='1' name='itemdesc' class='form-control'>
@@ -66,7 +64,7 @@ function create()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH3']}
+					Item Type
 				</th>
 				<td>
 					" . itemtype_dropdown('itmtype') . "
@@ -74,7 +72,7 @@ function create()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH4']}
+					Purchasable?
 				</th>
 				<td>
 					<input type='checkbox' class='form-control' checked='checked' name='itembuyable'>
@@ -82,7 +80,7 @@ function create()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH5']}
+					Buying Price
 				</th>
 				<td>
 					<input type='number' required='1' name='itembuy' min='0' class='form-control'>
@@ -90,7 +88,7 @@ function create()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH6']}
+					Selling Price
 				</th>
 				<td>
 					<input type='number' required='1' name='itemsell' min='0' class='form-control'>
@@ -98,7 +96,7 @@ function create()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<h4>{$lang['STAFF_CITEM_TH7']}</h4>
+					<h4>Item Usage</h4>
 				</td>
 			</tr>";
 			for ($i = 1; $i <= 3; $i++)
@@ -106,41 +104,40 @@ function create()
 				echo "
 				<tr>
 					<th>
-						<b><u>{$lang['STAFF_CITEM_TH8']}{$i}</u></b>
+						<b><u>Effect #{$i}</u></b>
 					</th>
 					<td>
-					<b>{$lang['STAFF_CITEM_TH9']}</b>
-						<input type='radio' class='form-control' name='effect{$i}on' value='true' /> {$lang['STAFF_CITEM_TH10']}
-						<input type='radio' class='form-control' name='effect{$i}on' value='false' checked='checked' /> {$lang['STAFF_CITEM_TH11']}
+						<input type='radio' class='form-control' name='effect{$i}on' value='true' /> Enable Effect
+						<input type='radio' class='form-control' name='effect{$i}on' value='false' checked='checked' /> Disable Effect
 					<br />
-					<b>{$lang['STAFF_CITEM_TH12']}</b> <select name='effect{$i}stat' type='dropdown' class='form-control'>
-						<option value='energy'>{$lang['INDEX_ENERGY']}</option>
-						<option value='will'>{$lang['INDEX_WILL']}</option>
-						<option value='brave'>{$lang['INDEX_BRAVE']}</option>
-						<option value='hp'>{$lang['INDEX_HP']}</option>
-						<option value='level'>{$lang['INDEX_LEVEL']}</option>
-						<option value='strength'>{$lang['GEN_STR']}</option>
-						<option value='agility'>{$lang['GEN_AGL']}</option>
-						<option value='guard'>{$lang['GEN_GRD']}</option>
-						<option value='labor'>{$lang['GEN_LAB']}</option>
-						<option value='iq'>{$lang['GEN_IQ']}</option>
-						<option value='infirmary'>{$lang['STAFF_CITEM_TH12_1']}</option>
-						<option value='dungeon'>{$lang['STAFF_CITEM_TH12_2']}</option>
-						<option value='primary_currency'>{$lang['INDEX_PRIMCURR']}</option>
-						<option value='secondary_currency'>{$lang['INDEX_SECCURR']}</option>
-						<option value='xp'>{$lang['INDEX_EXP']}</option>
-						<option value='vip_days'>{$lang['INDEX_VIP']}</option>
+					<b>Stat</b> <select name='effect{$i}stat' type='dropdown' class='form-control'>
+						<option value='energy'>Energy</option>
+						<option value='will'>Will</option>
+						<option value='brave'>Bravery</option>
+						<option value='hp'>Health</option>
+						<option value='level'>Level</option>
+						<option value='strength'>Strength</option>
+						<option value='agility'>Agility</option>
+						<option value='guard'>Guard</option>
+						<option value='labor'>Labor</option>
+						<option value='iq'>IQ</option>
+						<option value='infirmary'>Infirmary Time</option>
+						<option value='dungeon'>Dungeon Time</option>
+						<option value='primary_currency'>Primary Currency</option>
+						<option value='secondary_currency'>Secondary Currency</option>
+						<option value='xp'>Experience</option>
+						<option value='vip_days'>VIP Days</option>
 					</select>
 					<br />
-					<b>{$lang['STAFF_CITEM_TH13']}</b> <select name='effect{$i}dir' class='form-control' type='dropdown'>
-						<option value='pos'>{$lang['STAFF_CITEM_TH13_1']}</option>
-						<option value='neg'>{$lang['STAFF_CITEM_TH13_2']}</option>
+					<b>Direction</b> <select name='effect{$i}dir' class='form-control' type='dropdown'>
+						<option value='pos'>Increase/Add</option>
+						<option value='neg'>Decrease/Remove</option>
 					</select>
 					<br />
-					<b>{$lang['STAFF_CITEM_TH14']}</b> <input type='number' min='0' class='form-control' name='effect{$i}amount' value='0' />
+					<b>Amount</b> <input type='number' min='0' class='form-control' name='effect{$i}amount' value='0' />
 					<select name='effect{$i}type' class='form-control' type='dropdown'>
-						<option value='figure'>{$lang['STAFF_CITEM_TH14_1']}</option>
-						<option value='percent'>{$lang['STAFF_CITEM_TH14_2']}</option>
+						<option value='figure'>Value</option>
+						<option value='percent'>Percentage</option>
 					</select>
 					</td>
 				</tr>";
@@ -149,12 +146,12 @@ function create()
 			echo"
 			<tr>
 				<td colspan='2'>
-					<h4>{$lang['STAFF_CITEM_TH15']}</h4>
+					<h4>Equipment Stats</h4>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_CITEM_TH16']}
+					Weapon Strength
 				</th>
 				<td>
 					<input type='number' class='form-control' name='weapon' min='0' value='0' />
@@ -162,7 +159,7 @@ function create()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_CITEM_TH17']}
+					Armor Defense
 				</th>
 				<td>
 					<input type='number' class='form-control' name='armor' min='0' value='0' />
@@ -170,7 +167,7 @@ function create()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_CITEM_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='Create Item' class='btn btn-primary'>
 				</td>
 			</tr>
 		</table>
@@ -181,7 +178,7 @@ function create()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newitem', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
 			die($h->endpage());
 		}
 		$itmname = (isset($_POST['itemname']) && is_string($_POST['itemname'])) ? $db->escape(strip_tags(stripslashes($_POST['itemname']))) : '';
@@ -193,21 +190,21 @@ function create()
 		$itmsellprice = (isset($_POST['itemsell']) && is_numeric($_POST['itemsell'])) ? abs(intval($_POST['itemsell'])) : 0;
 		if (empty($itmname) || empty($itmdesc) || empty($itmtype) || empty($itmbuyprice) || empty($itmsellprice))
 		{
-			alert('danger',$lang['ERROR_GEN'],$lang['STAFF_CITEM_ERR1']);
+			alert('danger',"Uh Oh!","You are missing one or more of the required inputs on the previous form.");
 			die($h->endpage());
 		}
 		$inq=$db->query("SELECT `itmid` FROM `items` WHERE `itmname` = '{$itmname}'");
 		if ($db->num_rows($inq) > 0)
 		{
 			$db->free_result($inq);
-			alert('danger',$lang['ERROR_GEN'],$lang['STAFF_CITEM_ERR2']);
+			alert('danger',"Uh Oh!","An item with the same name already exists.");
 			die($h->endpage());
 		}
 		$q=$db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypeid` = '{$itmtype}'");
 		if ($db->num_rows($q) == 0)
 		{
 			$db->free_result($q);
-			alert('danger',$lang['ERROR_GEN'],$lang['STAFF_CITEM_ERR3']);
+			alert('danger',"Uh Oh!","The item type you've chosen does not exist.");
 			die($h->endpage());
 		}
 		$itmbuy = ($_POST['itembuyable'] == 'on') ? 'true' : 'false';
@@ -260,28 +257,28 @@ function create()
                      '{$_POST['effect3on']}', '{$effects[3]}', 
 					 {$weapon}, {$armor})");
 		$api->SystemLogsAdd($userid,'staff',"Created item {$itmname}.");
-		alert('success',$lang['ERROR_SUCCESS'],"{$lang['STAFF_CITEM_SUCC']} {$itmname}.",true,'index.php');
+		alert('success',"Success!","You have successfully created the {$itmname} item.",true,'index.php');
 	}
 	$h->endpage();
 }
 function createitmgroup()
 {
-	global $db,$lang,$h,$ir,$api,$userid;
+	global $db,$h,$ir,$api,$userid;
 	if ($ir['user_level'] != 'Admin')
     {
-        alert('danger',$lang['ERROR_NOPERM'],$lang['STAFF_CITG_ERR'],true,'index.php');
+        alert('danger',"Uh Oh!","You do not have permission to be here.",true,'index.php');
         die($h->endpage());
     }
 	if (!isset($_POST['name']))
 	{
 		$csrf = request_csrf_html('staff_newitemtype');
 		echo "
-        <h4>{$lang['STAFF_CITG_FRM']}</h4>
+        <h4>Create Item Group</h4>
 		<form method='post'>
 			<table class='table table-bordered'>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITG_FRM1']}
+					Item Group Name
 				</th>
 				<td>
 					<input type='text' class='form-control' required='1' name='name' />
@@ -289,7 +286,7 @@ function createitmgroup()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_CITG_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='Create Item Group' />
 				</td>
 			</tr>
         	{$csrf}
@@ -302,23 +299,23 @@ function createitmgroup()
 		$name = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newitemtype', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',"Action Blocked!","Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
 			die($h->endpage());
 		}
 		if (empty($name))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CITG_ERR1']);
+			alert('danger',"Uh Oh!","Please fill out the previous form completely before submitting it.");
 			die($h->endpage());
 		}
 		$q=$db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypename` = '{$name}'");
 		if ($db->num_rows($q) > 0)
 		{
 			$db->free_result($q);
-			alert("danger",$lang['ERROR_GENERIC'],$lang['STAFF_CITG_ERR2']);
+			alert("danger","Uh Oh!","The item group name you've chosen is already in use.");
 			die($h->endpage());
 		}
 		$api->SystemLogsAdd($userid,'staff',"Created item type {$name}.");
-		alert('success',$lang['ERROR_SUCCESS'],"{$lang['STAFF_CITG_SUCC']} {$name}.",true,'index.php');
+		alert('success',"Success!","You have successfully created the {$name} item group.",true,'index.php');
 		$db->query("INSERT INTO `itemtypes` VALUES(NULL, '{$name}')");
 		
 	}
@@ -326,7 +323,7 @@ function createitmgroup()
 }
 function deleteitem()
 {
-	global $db,$ir,$h,$lang,$userid,$api;
+	global $db,$ir,$h,$userid,$api;
 	if ($ir['user_level'] != 'Admin')
     {
         alert('danger','No Permission!','You have no permission to be here. If this is false, please contact an admin for help!');
@@ -360,13 +357,13 @@ function deleteitem()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_killitem', stripslashes($_POST['verf'])))
 		{
-			alert('danger',"{$lang["CSRF_ERROR_TITLE"]}","{$lang["CSRF_ERROR_TEXT"]}");
+			alert('danger',"Action Blocked!","Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
 			die($h->endpage());
 		}
 		$_POST['item'] =(isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : '';
 		if (empty($_POST['item']))
 		{
-			alert('warning','Empty Input!','You did not specify an item to delete. Go back and try again.');
+			alert('warning',"Uh Oh!",'You did not specify an item to delete. Go back and try again.');
 			die($h->endpage());
 		}
 		$d =
@@ -385,23 +382,23 @@ function deleteitem()
 		$api->SystemLogsAdd($userid,'staff',"Deleted item {$itemname}.");
 		$db->query("DELETE FROM `items` WHERE `itmid` = {$_POST['item']}");
 		$db->query("DELETE FROM `inventory` WHERE `inv_itemid` = {$_POST['item']}");
-		alert("success","Success!","{$itemname} has been deleted from the game successfully.",true,'index.php');
+		alert("success","Success!","You have successfully deleted the {$itemname} item from the game.",true,'index.php');
 		die($h->endpage());
 	}
 }
 function giveitem()
 {
-	global $lang,$db,$userid,$h,$api;
+	global $db,$userid,$h,$api;
 	if (!isset($_POST['user']) || !isset($_POST['item']))
 	{
-		echo "<h3>{$lang['STAFF_ITEM_GIVE_TITLE']}</h3>";
+		echo "<h3>Gift Item Form</h3>";
 		$csrf = request_csrf_html('staff_giveitem');
 		echo "
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
 				<tr>
 					<th>
-						{$lang['STAFF_ITEM_GIVE_FORM_USER']}
+						User
 					</th>
 					<td>
 						" . user_dropdown('user') . "
@@ -409,7 +406,7 @@ function giveitem()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_ITEM_GIVE_FORM_ITEM']}
+						Item
 					</th>
 					<td>
 						" . item_dropdown('item') . "
@@ -417,7 +414,7 @@ function giveitem()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_ITEM_GIVE_FORM_QTY']}
+						Quantity
 					</th>
 					<td>
 						<input type='number' required='1' class='form-control' name='qty' value='1' min='1' />
@@ -425,7 +422,7 @@ function giveitem()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_ITEM_GIVE_FORM_BTN']}' />
+						<input type='submit' class='btn btn-primary' value='Gift Item' />
 					</td>
 				</tr>
 				{$csrf}
@@ -437,7 +434,7 @@ function giveitem()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_giveitem', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
 			die($h->endpage());
 		}
 		$_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : '';
@@ -445,17 +442,17 @@ function giveitem()
 		$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(intval($_POST['qty'])) : '';
 		if (empty($_POST['item']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_ITEM_GIVE_SUB_NOITEM']);
+			alert('danger',"Uh Oh!","Please specify the item you wish to give.");
 			die($h->endpage());
 		}
 		elseif (empty($_POST['user']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_ITEM_GIVE_SUB_NOUSER']);
+			alert('danger',"Uh Oh!","Please specify the user you wish to give an item to.");
 			die($h->endpage());
 		}
 		elseif (empty($_POST['qty']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_ITEM_GIVE_SUB_NOQTY']);
+			alert('danger',"Uh Oh!","Please specify the qunatity of item you wish to give.");
 			die($h->endpage());
 		}
 		else
@@ -464,12 +461,12 @@ function giveitem()
 			 $q2 = $db->query("SELECT `userid`,`username` FROM `users` WHERE `userid` = {$_POST['user']}");
 			 if ($db->num_rows($q) == 0)
 			 {
-				alert('danger',$lang['ERROR_GEN'],$lang['STAFF_ITEM_GIVE_SUB_ITEMDNE']);
+				alert('danger',"Uh Oh!","The item you wish to give does not exist.");
 				die($h->endpage());
 			 }
 			 elseif ($db->num_rows($q2) == 0)
 			 {
-				alert('danger',$lang['ERROR_GEN'],$lang['STAFF_ITEM_GIVE_SUB_USERDNE']);
+				alert('danger',"Uh Oh!","The user you wish to give to does not exist.");
 				die($h->endpage());
 			 }
 			 else
@@ -481,7 +478,7 @@ function giveitem()
 				$api->UserGiveItem($_POST['user'], $_POST['item'], $_POST['qty']);
 				$api->GameAddNotification($_POST['user'], "The administration has gifted you {$_POST['qty']} {$item['itmname']}(s) to your inventory.");
 				$api->SystemLogsAdd($userid,'staff',"Gave {$_POST['qty']} <a href='../iteminfo.php?ID={$_POST['item']}'>{$item['itmname']}</a>(s) to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
-				alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_ITEM_GIVE_SUB_SUCCESS'],true,'index.php');
+				alert('success',"Success!","You have successfully given {$_POST['qty']} {$item['itmname']}(s) to {$user['username']}.",true,'index.php');
 				die($h->endpage());
 			 }
 		}
@@ -489,7 +486,7 @@ function giveitem()
 }
 function edititem()
 {
-	global $db,$ir,$api,$userid,$lang,$h;
+	global $db,$api,$userid,$h;
 	if (!isset($_POST['step']))
 	{
 		$_POST['step'] = 0;
@@ -498,20 +495,20 @@ function edititem()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edititem1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
 			die($h->endpage());
 		}
 		$_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : 0;
 		if (empty($_POST['item']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_EITEM_P2_EMPTY']);
+			alert('danger',"Uh Oh!","Please fill out the form completely before submitting it.");
 			die($h->endpage());
 		}
 		$d =  $db->query("SELECT * FROM `items` WHERE `itmid` = {$_POST['item']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',$lang['ERROR_GEN'],$lang['STAFF_EITEM_P2_NO']);
+			alert('danger',"Uh Oh!","You are trying to edit an item that does not exist.");
 			die($h->endpage());
 		}
 		$itemi = $db->fetch_row($d);
@@ -525,7 +522,7 @@ function edititem()
 		<table class='table table-bordered'>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH1']}
+					Item Name
 				</th>
 				<td>
 					<input type='text' required='1' name='itemname' value='{$itmname}' class='form-control'>
@@ -533,7 +530,7 @@ function edititem()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH2']}
+					Description
 				</th>
 				<td>
 					<input type='text' required='1' name='itemdesc' value='{$itmdesc}' class='form-control'>
@@ -541,7 +538,7 @@ function edititem()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH3']}
+					Item Type
 				</th>
 				<td>
 					" . itemtype_dropdown('itmtype', $itemi['itmtype']) . "
@@ -549,7 +546,7 @@ function edititem()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH4']}
+					Purchasable?
 				</th>
 				<td>
 					<input type='checkbox' class='form-control' checked='checked' name='itembuyable'>
@@ -557,7 +554,7 @@ function edititem()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH5']}
+					Buying Price
 				</th>
 				<td>
 					<input type='number' required='1' name='itembuy' min='0' value='{$itemi['itmbuyprice']}' class='form-control'>
@@ -565,7 +562,7 @@ function edititem()
 			</tr>
 			<tr>
 				<th width='33%'>
-					{$lang['STAFF_CITEM_TH6']}
+					Selling Price
 				</th>
 				<td>
 					<input type='number' required='1' name='itemsell' min='0' value='{$itemi['itmsellprice']}' class='form-control'>
@@ -573,19 +570,19 @@ function edititem()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<h4>{$lang['STAFF_CITEM_TH7']}</h4>
+					<h4>Item Usage</h4>
 				</td>
 			</tr>";
 			$stats =
-            array("energy" => "{$lang['INDEX_ENERGY']}", "will" => "{$lang['INDEX_WILL']}", 
-					"brave" => "{$lang['INDEX_BRAVE']}", "level" => $lang['INDEX_LEVEL'],
-                    "hp" => "{$lang['INDEX_HP']}", "strength" => "{$lang['GEN_STR']}",
-                    "agility" => "{$lang['GEN_AGL']}", "guard" => "{$lang['GEN_GRD']}",
-                    "labor" => "{$lang['GEN_LAB']}", "iq" => "{$lang['GEN_IQ']}",
-                    "infirmary" => "{$lang['STAFF_CITEM_TH12_1']}", "dungeon" => "{$lang['STAFF_CITEM_TH12_2']}",
-                    "primary_currency" => "{$lang['INDEX_PRIMCURR']}", "secondary_currency" 
-					=> "{$lang['INDEX_SECCURR']}", "crimexp" => "{$lang['INDEX_EXP']}", "vip_days" => 
-					"{$lang['INDEX_VIP']}");
+            array("energy" => "Energy", "will" => "Will", 
+					"brave" => "Bravery", "level" => "Level",
+                    "hp" => "Health", "strength" => "Strength",
+                    "agility" => "Agility", "guard" => "Guard",
+                    "labor" => "Labor", "iq" => "IQ",
+                    "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+                    "primary_currency" => "Primary Currency", "secondary_currency" 
+					=> "Secondary Currency", "crimexp" => "Experience", "vip_days" => 
+					"VIP Days");
 			for ($i = 1; $i <= 3; $i++)
 			{
 				if (!empty($itemi["effect" . $i]))
@@ -603,12 +600,11 @@ function edititem()
 				echo "
 				<tr>
 					<th>
-						<b><u>{$lang['STAFF_CITEM_TH8']}{$i}</u></b>
+						<b><u>Effect #{$i}</u></b>
 					</th>
 					<td>
-						<b>{$lang['STAFF_CITEM_TH9']}</b>
-						<input type='radio' class='form-control' name='effect{$i}on' value='true'$switch1 /> {$lang['STAFF_CITEM_TH10']}
-						<input type='radio' class='form-control' name='effect{$i}on' value='false'$switch2 /> {$lang['STAFF_CITEM_TH11']}
+						<input type='radio' class='form-control' name='effect{$i}on' value='true'$switch1 /> Enable Effect
+						<input type='radio' class='form-control' name='effect{$i}on' value='false'$switch2 /> Disable Effect
 						<br /><b>Stat</b> <select class='form-control' name='effect{$i}stat' type='dropdown'>";
 				foreach ($stats as $k => $v)
 				{
@@ -619,23 +615,23 @@ function edititem()
 				}
 				$str =
 						($efx['dir'] == "neg")
-								? "<option value='pos'>{$lang['STAFF_CITEM_TH13_1']}</option>
-									<option value='neg' selected='selected'>{$lang['STAFF_CITEM_TH13_2']}</option>"
-								: "<option value='pos' selected='selected'>{$lang['STAFF_CITEM_TH13_1']}</option>
-									<option value='neg'>{$lang['STAFF_CITEM_TH13_2']}</option>";
+								? "<option value='pos'>Increase/Add</option>
+									<option value='neg' selected='selected'>Decrease/Remove</option>"
+								: "<option value='pos' selected='selected'>Increase/Add</option>
+									<option value='neg'>Decrease/Remove</option>";
 				$str2 =
 						($efx['inc_type'] == "percent")
-								? "<option value='figure'>{$lang['STAFF_CITEM_TH14_1']}</option>
-									<option value='percent' selected='selected'>{$lang['STAFF_CITEM_TH14_2']}</option>"
-								: "<option value='figure' selected='selected'>{$lang['STAFF_CITEM_TH14_1']}</option>
-									<option value='percent'>{$lang['STAFF_CITEM_TH14_2']}</option>";
+								? "<option value='figure'>Value</option>
+									<option value='percent' selected='selected'>Percentage</option>"
+								: "<option value='figure' selected='selected'>Value</option>
+									<option value='percent'>Percentage</option>";
 
 				echo "
 				</select>
 				<br />
-					<b>{$lang['STAFF_CITEM_TH13']}</b> <select class='form-control' name='effect{$i}dir' type='dropdown'> {$str} </select>
+					<b>Direction</b> <select class='form-control' name='effect{$i}dir' type='dropdown'> {$str} </select>
 				<br />
-					<b>{$lang['STAFF_CITEM_TH14']}</b> <input type='text' class='form-control' name='effect{$i}amount' value='{$efx['inc_amount']}' />
+					<b>Amount</b> <input type='text' class='form-control' name='effect{$i}amount' value='{$efx['inc_amount']}' />
 						<select name='effect{$i}type' class='form-control' type='dropdown'>{$str2}</select>
 				</td></tr>
 				   ";
@@ -643,12 +639,12 @@ function edititem()
 			echo"
 			<tr>
 				<td colspan='2'>
-					<h4>{$lang['STAFF_CITEM_TH15']}</h4>
+					<h4>Equipment Stats</h4>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_CITEM_TH16']}
+					Weapon Strength
 				</th>
 				<td>
 					<input type='number' class='form-control' value='{$itemi['weapon']}' name='weapon' min='0' value='0' />
@@ -656,7 +652,7 @@ function edititem()
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_CITEM_TH17']}
+					Armor Defense
 				</th>
 				<td>
 					<input type='number' class='form-control' value='{$itemi['armor']}' name='armor' min='0' value='0' />
@@ -664,7 +660,7 @@ function edititem()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_EITEM_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='Edit Item' class='btn btn-primary'>
 				</td>
 			</tr>
 		</table>
@@ -675,7 +671,7 @@ function edititem()
 	{
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edititem2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
 			die($h->endpage());
 		}
 		$itemid = (isset($_POST['itemid']) && is_numeric($_POST['itemid'])) ? abs(intval($_POST['itemid'])) : 0;
@@ -688,21 +684,21 @@ function edititem()
 		$itmsellprice = (isset($_POST['itemsell']) && is_numeric($_POST['itemsell'])) ? abs(intval($_POST['itemsell'])) : 0;
 		if (empty($itmname) || empty($itemid) || empty($itmdesc) || empty($itmtype) || empty($itmbuyprice) || empty($itmsellprice))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CITEM_ERR1']);
+			alert('danger',"Uh Oh!","You are missing one or more required inputs from the previous form.");
 			die($h->endpage());
 		}
 		$inq=$db->query("SELECT `itmid` FROM `items` WHERE `itmname` = '{$itmname}' AND `itmid` != {$itemid}");
 		if ($db->num_rows($inq) > 0)
 		{
 			$db->free_result($inq);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CITEM_ERR2']);
+			alert('danger',"Uh Oh!","You cannot have more than one item with the same name.");
 			die($h->endpage());
 		}
 		$q=$db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypeid` = '{$itmtype}'");
 		if ($db->num_rows($q) == 0)
 		{
 			$db->free_result($q);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CITEM_ERR3']);
+			alert('danger',"Uh Oh!","The item group you've chosen does not exist.");
 			die($h->endpage());
 		}
 		$itmbuy = ($_POST['itembuyable'] == 'on') ? 'true' : 'false';
@@ -752,7 +748,7 @@ function edititem()
 						`effect2_on` = '{$_POST['effect2on']}', `effect2` = '{$effects[2]}',
 						`effect3_on` = '{$_POST['effect3on']}', `effect3` = '{$effects[3]}',
 						`weapon` = {$weapon}, `armor` = {$armor} WHERE `itmid` = {$itemid }");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_EITEM_SUC'],true,'index.php');
+			alert('success',"Success!","You successfully have edited the {$api->SystemItemIDtoName($itemid)} item.",true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Edited Item {$api->SystemItemIDtoName($itemid)}.");
 	}
 	else
@@ -763,12 +759,12 @@ function edititem()
 		<form method='post'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_EITEM_P1_START']}
+					Select the item you wish to edit.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_EITEM_P1_SELECT']}
+					Item
 				</th>
 				<td>
 					" . item_dropdown('item') . "
@@ -778,7 +774,7 @@ function edititem()
 				<td colspan='2'>
 					{$csrf}
 					<input type='hidden' name='step' value='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_EITEM_P1_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='Edit Item' />
 				</th>
 			</tr>
 		</form>

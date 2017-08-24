@@ -268,7 +268,7 @@ echo"
 							<table class='table table-bordered'>
 							<tr>
 								<td>
-									<a href='staff_logs.php?action=alllogs'>General Logs/a>
+									<a href='staff_logs.php?action=alllogs'>General Logs</a>
 								</td>
 								<td>
 									<a href='staff_logs.php?action=mail'>Mail Logs</a>

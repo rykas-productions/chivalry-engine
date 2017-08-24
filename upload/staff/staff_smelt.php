@@ -7,7 +7,7 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
-echo "<h3>{$lang['STAFF_SMELT_HOME']}</h3><hr />";
+echo "<h3>Staff Smeltery</h3><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = 'add';
@@ -23,7 +23,7 @@ switch ($_GET['action'])
 }
 function add()
 {
-	global $db,$api,$lang,$h,$userid;
+	global $db,$api,$h,$userid;
 	if (isset($_POST['smelted_item']))
 	{
 		$_POST['smelted_item'] = (isset($_POST['smelted_item']) && is_numeric($_POST['smelted_item']))  ? abs(intval($_POST['smelted_item'])) : 0;
@@ -33,7 +33,7 @@ function add()
 		$_POST['required_item_qty'] = (isset($_POST['required_item_qty']) && is_numeric($_POST['required_item_qty']))  ? abs(intval($_POST['required_item_qty'])) : 0;
 		if ($_POST['required_item'] == 0 || $_POST['smelted_item'] == 0 || $_POST['smelted_item_qty'] == 0 || $_POST['required_item_qty'] == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SMELT_ADD_FAIL']);
+			alert('danger',"Uh Oh!","Please fill out the previous form completely before submitting.");
 			die($h->endpage());
 		}
 		$items = $_POST['required_item'];
@@ -46,7 +46,7 @@ function add()
 			{
 				if ($_POST['required_item_qty'.$i] == 0)
 				{
-					alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SMELT_ADD_FAIL']);
+					alert('danger',"Uh Oh!","Please specify the required item.");
 					die($h->endpage());
 				}
 				$items .= ",". $_POST['required_item'.$i];
@@ -58,23 +58,20 @@ function add()
 		VALUES 
 		('{$_POST['timetocomplete']}', '{$items}', '{$qty}', '{$_POST['smelted_item']}', '{$_POST['smelted_item_qty']}')");
 		$api->SystemLogsAdd($userid,'staff',"Created smelting recipe for ".$api->SystemItemIDtoName($_POST['smelted_item']));
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SMELT_ADD_SUCC'],true,'index.php');
+		alert('success',"Success!","You have successfully created a blacksmith recipe for " .$api->SystemItemIDtoName($_POST['smelted_item']),true,'index.php');
 	}
 	else
 	{
 		echo "<form id='craft' method='post'>
 			<table class='table table-bordered'>
 				<tr>
-					<th>
-						{$lang['STAFF_SMELT_ADD_TH']}
-					</th>
-					<th>
-						{$lang['STAFF_SMELT_ADD_TH1']}
+					<th colspan='2'>
+						Use this form to add a blacksmith recipe.
 					</th>
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_SMELT_ADD_TH2']}
+						Received Item
 					</th>
 					<td>
 						" . item_dropdown("smelted_item") . "
@@ -82,7 +79,7 @@ function add()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_SMELT_ADD_TH5']}
+						Received Qunatity
 					</th>
 					<td>
 						<input type='number' class='form-control' required='1' name='smelted_item_qty' value='1' min='1'>
@@ -90,24 +87,24 @@ function add()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_SMELT_ADD_TH3']}
+						Completion Time
 					</th>
 					<td>
 						<select class='form-control' name='timetocomplete'>
-							<option value='0'>{$lang['STAFF_SMELT_ADD_SELECT1']}</option>
-							<option value='5'>5 {$lang['STAFF_SMELT_ADD_SELECT2']}</option>
-							<option value='30'>30 {$lang['STAFF_SMELT_ADD_SELECT2']}</option>
-							<option value='60'>1 {$lang['STAFF_SMELT_ADD_SELECT3']}</option>
-							<option value='300'>5 {$lang['STAFF_SMELT_ADD_SELECT3']}</option>
-							<option value='600'>10 {$lang['STAFF_SMELT_ADD_SELECT3']}</option>
-							<option value='3600'>1 {$lang['STAFF_SMELT_ADD_SELECT4']}</option>
-							<option value='86400'>1 {$lang['STAFF_SMELT_ADD_SELECT5']}</option>
+							<option value='0'>Instantly</option>
+							<option value='5'>5 Seconds</option>
+							<option value='30'>30 Seconds</option>
+							<option value='60'>1 Minute</option>
+							<option value='300'>5 Minutes</option>
+							<option value='600'>10 Minutes</option>
+							<option value='3600'>1 Hour</option>
+							<option value='86400'>1 Day</option>
 						</select>
 					</td>
 				</tr>
 					<tr>
 						<th>
-							{$lang['STAFF_SMELT_ADD_TH4']}
+							Required Item
 						</th>
 						<td>
 							<div id='input1' class='clonedInput'>" . item_dropdown("required_item") . "<br /></div>
@@ -117,7 +114,7 @@ function add()
 				</div>
 					<tr>
 						<th>
-							{$lang['STAFF_SMELT_ADD_TH6']}
+							Required Quantity
 						</th>
 						<td>
 							<div id='otherinput1' class='inputCloned'><input type='number' class='form-control' required='1' name='required_item_qty' value='1' min='1'><br /></div>
@@ -126,15 +123,15 @@ function add()
 				</tr>
 				<tr>
 					<td>
-						<input type='button' class='btn btn-success' id='btnAdd' value='{$lang['STAFF_SMELT_ADD_BTN']}' />
+						<input type='button' class='btn btn-success' id='btnAdd' value='Add Required Item' />
 					</td>
 					<td>
-						<input type='button' class='btn btn-danger' id='btnDel' value='{$lang['STAFF_SMELT_ADD_BTN2']}' />
+						<input type='button' class='btn btn-danger' id='btnDel' value='Remove Required Item' />
 					</td>
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['STAFF_SMELT_ADD_BTN3']}' />
+						<input type='submit' class='btn btn-primary' value='Add Blacksmith Recipe' />
 					</td>
 				</tr>
 			</table>
@@ -143,19 +140,19 @@ function add()
 }
 function del()
 {
-	global $db,$userid,$api,$lang,$h;
+	global $db,$userid,$api,$h;
 	if (isset($_POST['smelt']))
 	{
 		$_POST['smelt'] = (isset($_POST['smelt']) && is_numeric($_POST['smelt']))  ? abs(intval($_POST['smelt'])) : 0;
 		if ($_POST['smelt'] == 0)
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_SMELT_ADD_FAIL']);
+			alert('danger',"Uh Oh!","Please specify the blacksmith recipe you wish to remove.");
 			die($h->endpage());
 		}
 		$db->query("DELETE FROM `smelt_recipes` WHERE `smelt_id` = {$_POST['smelt']}");
 		$db->query("DELETE FROM `smelt_inprogress` WHERE `sip_recipe` = {$_POST['smelt']}");
-		$api->SystemLogsAdd($userid,'staff',"Deleted a smelting recipe.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_SMELT_DEL_SUCC'],true,'index.php');
+		$api->SystemLogsAdd($userid,'staff',"Removed Blacksmith Recipe ID #{$_POST['smelt']}");
+		alert('success',"Success!","You have successfully removed Blacksmith Recipe ID #{$_POST['smelt']}",true,'index.php');
 	}
 	else
 	{
@@ -163,12 +160,12 @@ function del()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					{$lang['STAFF_SMELT_DEL_FORM']}
+					Select the Blacksmith Recipe you wish to remove.
 				</th>
 			</tr>
 			<tr>
 				<th>
-					{$lang['STAFF_SMELT_DEL_TH']}
+					Recipe
 				</th>
 				<td>
 					" . smelt_dropdown() . "
@@ -176,7 +173,7 @@ function del()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='{$lang['STAFF_SMELT_DEL_BTN']}' />
+					<input type='submit' class='btn btn-primary' value='Remove Recipe' />
 				</td>
 			</tr>
 		</table>
