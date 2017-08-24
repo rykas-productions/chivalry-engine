@@ -251,14 +251,6 @@ class headers
 				}
 			}
 		}
-        $d = "";
-        $u = $ir['username'];
-        if ($ir['vip_days'])
-        {
-            $u = "<span style='color: red;'>{$ir['username']}</span>";
-            $d = "<img src='donator.gif' alt='VIP: {$ir['vip_days']} Days Left' title='VIP: {$ir['vip_days']} Days Left' />";
-        }
-        global $staffpage;
 	}
 	function endpage()
     {

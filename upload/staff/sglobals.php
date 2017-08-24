@@ -14,7 +14,6 @@ session_name('CENGINE');
 session_start();
 $time = time();
 header('X-Frame-Options: SAMEORIGIN');
-include_once '../lang/en_us.php';
 if (!isset($_SESSION['started']))
 {
     session_regenerate_id();

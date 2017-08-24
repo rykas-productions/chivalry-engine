@@ -374,7 +374,6 @@ else
 }
 function parse_risk($risk_level)
 {
-	global $lang;
 	switch ($risk_level)
 	{
 		case 2:

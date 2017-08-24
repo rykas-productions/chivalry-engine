@@ -7,62 +7,61 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require_once('sglobals.php');
-echo "<h3>{$lang['STAFF_CRIME_TITLE']}</h3><hr />";
+echo "<h3>Staff Criminal Center</h3><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
 }
 switch ($_GET['action'])
 {
-case 'newcrime':
-    new_crime();
-    break;
-case 'editcrime':
-    edit_crime();
-    break;
-case 'delcrime':
-    delcrime();
-    break;
-case 'newcrimegroup':
-    new_crimegroup();
-    break;
-case 'editcrimegroup':
-    edit_crimegroup();
-    break;
-case 'delcrimegroup':
-    delcrimegroup();
-    break;
-case 'reorder':
-    reorder_crimegroups();
-    break;
-default:
-    home();
-    break;
+    case 'newcrime':
+        new_crime();
+        break;
+    case 'editcrime':
+        edit_crime();
+        break;
+    case 'delcrime':
+        delcrime();
+        break;
+    case 'newcrimegroup':
+        new_crimegroup();
+        break;
+    case 'editcrimegroup':
+        edit_crimegroup();
+        break;
+    case 'delcrimegroup':
+        delcrimegroup();
+        break;
+    case 'reorder':
+        reorder_crimegroups();
+        break;
+    default:
+        home();
+        break;
 }
 function home()
 {
-	global $lang;
 	echo "
-	<a href='?action=newcrimegroup'>{$lang['STAFF_CRIME_MENU_CREATECG']}</a><br />
-	<a href='?action=newcrime'>{$lang['STAFF_CRIME_MENU_CREATE']}</a><br />
-	<a href='?action=editcrime'>{$lang['STAFF_CRIME_MENU_EDIT']}</a><br />
-	<a href='?action=delcrime'>{$lang['STAFF_CRIME_MENU_DEL']}</a><br />
-	<a href='?action=editcrimegroup'>{$lang['STAFF_CRIME_MENU_EDITCG']}</a><br />
-	<a href='?action=delcrimegroup'>{$lang['STAFF_CRIME_MENU_DELCG']}</a><br />
+	<a href='?action=newcrimegroup'>Create Crime Group</a><br />
+	<a href='?action=newcrime'>Create Crime</a><br />
+	<a href='?action=editcrime'>Edit Crime</a><br />
+	<a href='?action=delcrime'>Delete Crime</a><br />
+	<a href='?action=editcrimegroup'>Edit Crime Group</a><br />
+	<a href='?action=delcrimegroup'>Delete Crime Group</a><br />
 	";
 }
 function new_crime()
 {
-	global $lang,$db,$userid,$api;
+	global $db,$userid,$api,$h;
 	if (!isset($_POST['name']))
 	{
 		$csrf = request_csrf_html('staff_newcrime');
-		echo "{$lang['STAFF_CRIME_NEW_TITLE']}<br />
+		echo "Adding a new Crime<br />
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
 				<tr>
 					<th width='33%'>
-						{$lang['STAFF_CRIME_NEW_NAME']}
+						Crime Name
 					</th>
 					<td>
 						<input type='text' class='form-control' required='1' name='name' />
@@ -70,7 +69,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_BRAVECOST']}
+						Bravery Cost
 					</th>
 					<td>
 						<input type='number' min='1' class='form-control' required='1' name='brave' />
@@ -78,7 +77,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCFOR']}
+						Success Formula
 					</th>
 					<td>
 						<input type='text' class='form-control' required='1' placeholder='((WILL*0.8)/2.5)+(LEVEL/4)' value='((WILL*0.8)/2.5)+(LEVEL/4)' name='percform' />
@@ -86,7 +85,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCPRIMIN']}
+						Success Minimum Primary Currency
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMIN' />
@@ -94,7 +93,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCPRIMAX']}
+						Success Maximum Primary Currency
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMAX' />
@@ -102,7 +101,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCSECMIN']}
+						Success Minimum Secondary Currency
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMIN' />
@@ -110,7 +109,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCSECMAX']}
+						Success Maximum Seconary Currency
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMAX' />
@@ -118,7 +117,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_SUCITEM']}
+						Success Item
 					</th>
 					<td>
 						" . item_dropdown('item')  . "
@@ -126,7 +125,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_GROUP']}
+						Crime Group
 					</th>
 					<td>
 						" . crimegroup_dropdown('group')  . "
@@ -134,31 +133,31 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_ITEXT']}
+						Initial Text
 					</th>
 					<td>
-						<textarea class='form-control' name='itext' placeholder='{$lang['STAFF_CRIME_NEW_ITEXT_PH']}' required='1'></textarea>
+						<textarea class='form-control' name='itext' placeholder='Shown when you start the crime.' required='1'></textarea>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_STEXT']}
+						Success Text
 					</th>
 					<td>
-						<textarea class='form-control' name='stext' placeholder='{$lang['STAFF_CRIME_NEW_STEXT_PH']}' required='1'></textarea>
+						<textarea class='form-control' name='stext' placeholder='Shown when you succeed.' required='1'></textarea>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_JTEXT']}
+						Failure Text
 					</th>
 					<td>
-						<textarea class='form-control' name='jtext' placeholder='{$lang['STAFF_CRIME_NEW_JTEXT_PH']}' required='1'></textarea>
+						<textarea class='form-control' name='jtext' placeholder='Shown when you fail.' required='1'></textarea>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_JTIMEMIN']}
+						Minimum Dungeon Time
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='jtimemin' />
@@ -166,7 +165,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_JTIMEMAX']}
+						Maximum Dungeon Time
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='jtimemax' />
@@ -174,7 +173,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_JREASON']}
+						Dungeon Reason
 					</th>
 					<td>
 						<input type='text' class='form-control' required='1' name='jreason' />
@@ -182,14 +181,14 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						{$lang['STAFF_CRIME_NEW_XP']}
+						Success Experience Points
 					</th>
 					<td>
 						<input type='number' min='1' class='form-control' required='1' name='xp' />
 					</td>
 				</tr>
 				<td colspan='2'>
-					<input type='submit' value='{$lang['STAFF_CRIME_NEW_BTN']}' class='btn btn-primary'>
+					<input type='submit' value='Create Crime' class='btn btn-primary'>
 				</td>
 				{$csrf}
 			</table>
@@ -218,12 +217,12 @@ function new_crime()
 			|| empty($_POST['jtext']) || empty($_POST['jtimemin']) || empty($_POST['jtimemax']) 
 			|| empty($_POST['jreason']) || empty($_POST['xp']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIME_NEW_FAIL1']);
+			alert('danger',"Uh Oh!","You are missing one or more required inputs on the previous form.");
 			die($h->endpage());
 		}
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrime', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
 			die($h->endpage());
 		}
 		if (!empty($_POST['item']))
@@ -233,7 +232,7 @@ function new_crime()
 			$db->free_result($qi);
 			if ($exist_check == 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIME_NEW_FAIL2']);
+				alert('danger',"Uh Oh!","The success item you've chosen does not exist.");
 				die($h->endpage());
 			}
 		}
@@ -246,7 +245,7 @@ function new_crime()
 		'{$_POST['SECURMAX']}', '{$_POST['item']}', '{$_POST['group']}', '{$_POST['itext']}', 
 		'{$_POST['stext']}', '{$_POST['jtext']}', '{$_POST['jtimemin']}', 
 		'{$_POST['jtimemax']}', '{$_POST['jreason']}', '{$_POST['xp']}');");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIME_NEW_SUCCESS'],true,'index.php');
+		alert('success',"Success!","You have successfully created the {$_POST['name']} crime.",true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Created crime {$_POST['name']}");
 	}
 }
@@ -290,19 +289,19 @@ function edit_crime()
 		$_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
 			die($h->endpage());
 		}
 		if (empty($_POST['crime']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIME_EDIT_FRM_ERR']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_EDIT_FRM_ERR']);
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIME_EDIT_FRM_ERR1']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_EDIT_FRM_ERR1']);
 			die($h->endpage());
 		}
 		$itemi = $db->fetch_row($d);
@@ -470,17 +469,17 @@ function edit_crime()
 		if (empty($_POST['name']) || empty($_POST['brave']) || empty($_POST['percform'])  ||  empty($_POST['group']) || empty($_POST['itext']) || empty($_POST['stext']) 
 			|| empty($_POST['jtext']) || empty($_POST['jtimemin']) || empty($_POST['jtimemax'])  || empty($_POST['jreason']) || empty($_POST['xp']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIME_NEW_FAIL1']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_NEW_FAIL1']);
 			die($h->endpage());
 		}
 		if (empty($_POST['crimeID']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIME_EDIT_FRM_ERR']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_EDIT_FRM_ERR']);
 			die($h->endpage());
 		}
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
 			die($h->endpage());
 		}
 		if (!empty($_POST['item']))
@@ -490,7 +489,7 @@ function edit_crime()
 			$db->free_result($qi);
 			if ($exist_check == 0)
 			{
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIME_NEW_FAIL2']);
+				alert('danger',"Uh Oh!",$lang['STAFF_CRIME_NEW_FAIL2']);
 				die($h->endpage());
 			}
 		}
@@ -513,7 +512,7 @@ function edit_crime()
 			 `crimeDUNGMAX` = {$_POST['jtimemax']},
              `crimeXP` = {$_POST['xp']}
              WHERE `crimeID` = {$_POST['crimeID']}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIME_EDIT_SUCCESS'],true,'index.php');
+		alert('success',"Success!",$lang['STAFF_CRIME_EDIT_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Edited crime {$_POST['name']}");
 	}
 }
@@ -525,23 +524,23 @@ function delcrime()
 		$_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrime', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
 			die($h->endpage());
 		}
 		if (empty($_POST['crime']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIME_DEL_ERR']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_DEL_ERR']);
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIME_DEL_ERR1']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIME_DEL_ERR1']);
 			die($h->endpage());
 		}
 		$db->query("DELETE FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIME_DEL_SUCCESS'],true,'index.php');
+		alert('success',"Success!",$lang['STAFF_CRIME_DEL_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted Crime ID {$_POST['crime']}.");
 		
 	}
@@ -582,24 +581,24 @@ function new_crimegroup()
 		$_POST['cgORDER'] = (isset($_POST['cgORDER']) && is_numeric($_POST['cgORDER'])) ? abs(intval($_POST['cgORDER'])) : '';
 		if (empty($_POST['cgNAME']) || empty($_POST['cgORDER']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIMEG_NEW_FAIL1']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_NEW_FAIL1']);
 			die($h->endpage());
 		}
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrimegroup', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']}");
 		if ($db->fetch_single($d) > 0)
 		{
 			$db->free_result($d);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_NEW_FAIL2']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_NEW_FAIL2']);
 			die($h->endpage());
 		}
 		$db->free_result($d);
 		$db->query("INSERT INTO `crimegroups` (`cgNAME`, `cgORDER`) VALUES('{$_POST['cgNAME']}', '{$_POST['cgORDER']}')");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIMEG_NEW_SUCCESS'],true,'index.php');
+		alert('success',"Success!",$lang['STAFF_CRIMEG_NEW_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Created Crime Group {$_POST['cgNAME']}");
 		
 	}
@@ -676,19 +675,19 @@ function edit_crimegroup()
 		$_POST['crimegroup'] = (isset($_POST['crimegroup']) && is_numeric($_POST['crimegroup'])) ? abs(intval($_POST['crimegroup'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup1', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
 			die($h->endpage());
 		}
 		if (empty($_POST['crimegroup']))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_EDIT_FRM_ERR']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_EDIT_FRM_ERR']);
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT `cgORDER`, `cgNAME` FROM `crimegroups` WHERE `cgID` = {$_POST['crimegroup']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_EDIT_FRM_ERR1']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_EDIT_FRM_ERR1']);
 			die($h->endpage());
 		}
 		$itemi = $db->fetch_row($d);
@@ -731,12 +730,12 @@ function edit_crimegroup()
 		$_POST['cgID'] = (isset($_POST['cgID']) && is_numeric($_POST['cgID'])) ? abs(intval($_POST['cgID'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup2', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
 			die($h->endpage());
 		}
 		if (empty($_POST['cgNAME']) || empty($_POST['cgORDER']) || empty($_POST['cgID']))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_EDIT_SUB_ERR']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_EDIT_SUB_ERR']);
 			die($h->endpage());
 		}
 		else
@@ -745,12 +744,12 @@ function edit_crimegroup()
 			if ($db->fetch_single($d) > 0)
 			{
 				$db->free_result($d);
-				alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_NEW_FAIL2']);
+				alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_NEW_FAIL2']);
 				die($h->endpage());
 			}
 			$db->free_result($d);
 			$db->query("UPDATE `crimegroups` SET `cgNAME` = '{$_POST['cgNAME']}', `cgORDER` = '{$_POST['cgORDER']}' WHERE `cgID` = '{$_POST['cgID']}'");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIMEG_EDIT_SUB_SUCC'],true,'index.php');
+			alert('success',"Success!",$lang['STAFF_CRIMEG_EDIT_SUB_SUCC'],true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Edited Crime Group {$_POST['cgNAME']}");
 		}
 	}
@@ -763,23 +762,23 @@ function delcrimegroup()
 		$_POST['crimeGROUP'] = (isset($_POST['crimeGROUP']) && is_numeric($_POST['crimeGROUP'])) ? abs(intval($_POST['crimeGROUP'])) : '';
 		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrimegroup', stripslashes($_POST['verf'])))
 		{
-			alert('danger',$lang["CSRF_ERROR_TITLE"],$lang["CSRF_ERROR_TEXT"]);
+			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
 			die($h->endpage());
 		}
 		if (empty($_POST['crimeGROUP']))
 		{
-			alert('danger',$lang['ERROR_EMPTY'],$lang['STAFF_CRIMEG_DEL_ERR']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_DEL_ERR']);
 			die($h->endpage());
 		}
 		$d = $db->query("SELECT * FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
 		if ($db->num_rows($d) == 0)
 		{
 			$db->free_result($d);
-			alert('danger',$lang['ERROR_GENERIC'],$lang['STAFF_CRIMEG_DEL_ERR1']);
+			alert('danger',"Uh Oh!",$lang['STAFF_CRIMEG_DEL_ERR1']);
 			die($h->endpage());
 		}
 		$db->query("DELETE FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['STAFF_CRIMEG_DEL_SUCCESS'],true,'index.php');
+		alert('success',"Success!",$lang['STAFF_CRIMEG_DEL_SUCCESS'],true,'index.php');
 		$api->SystemLogsAdd($userid,'staff',"Deleted Crime Group ID {$_POST['crimeGROUP']}.");
 	}
 	else

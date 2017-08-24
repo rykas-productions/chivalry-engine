@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.8.1";	//Last Updated 8/19/2017
+		return "17.8.2";	//Last Updated 8/23/2017
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -468,7 +468,7 @@ class api
 		$stat = $db->escape(stripslashes(strtolower($stat)));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
-			alert('danger',$lang['ERROR_SECURITY'],$lang['API_ERROR'],false);
+			alert('danger',"Uh Oh!","You do not have permission to view sensitive account information.",false);
 		}
 		else
 		{
@@ -503,7 +503,7 @@ class api
 		$stat = $db->escape(stripslashes(strtolower($stat)));
 		if (in_array($stat, array('password', 'email', 'lastip','loginip','registerip','personal_notes','staff_notes')))
 		{
-			alert('danger',$lang['ERROR_SECURITY'],$lang['API_ERROR'],false);
+			alert('danger',"Uh Oh!","You do not have permission to view sensitive account information.",false);
 		}
 		else
 		{
@@ -793,7 +793,7 @@ class api
 		if (in_array($stat, array('password', 'email', 'lastip','loginip',
 									'registerip','personal_notes','staff_notes')))
 		{
-			alert('danger',$lang['ERROR_SECURITY'],$lang['API_ERROR'],false);
+			alert('danger',"Uh Oh!","You do not have permission to view sensitive account information.",false);
 		}
 		else
 		{

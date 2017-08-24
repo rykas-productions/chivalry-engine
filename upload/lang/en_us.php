@@ -348,27 +348,6 @@ $lang['STAFF_USERS_CP_ERROR']="You cannot change the password for the admin acco
 $lang['STAFF_USERS_CP_ERROR1']="You cannot change the password for other admin accounts this way.";
 $lang['STAFF_USERS_CP_SUCCESS']="User's password has been changed successfully.";
 
-//Staff bots
-$lang['STAFF_BOTS_TITLE']="Staff Bots";
-$lang['STAFF_BOTS_ADD']="Add Bot";
-$lang['STAFF_BOTS_DEL']="Delete Bot";
-$lang['STAFF_BOTS_ADD_FRM1']="Use this form to add bots to the game that drop items when mugged.";
-$lang['STAFF_BOTS_ADD_FRM2']="Bot User";
-$lang['STAFF_BOTS_ADD_FRM3']="Item Dropped";
-$lang['STAFF_BOTS_ADD_FRM4']="Cooldown Time (Seconds)";
-$lang['STAFF_BOTS_ADD_BTN']="Add Bot";
-$lang['STAFF_BOTS_ADD_ERROR']="You're missing one of the required inputs. Go back and try again.";
-$lang['STAFF_BOTS_ADD_ERROR1']="You're trying to add a bot that already exists in the bot listing. Go back and try again.";
-$lang['STAFF_BOTS_ADD_ERROR2']="You can only add NPCs to the bot listing. Go back and try again.";
-$lang['STAFF_BOTS_ADD_ERROR3']="You cannot have a bot drop a non-existent item. Go back and try again.";
-$lang['STAFF_BOTS_ADD_SUCCESS']="You've successfully added an NPC to the bot list.";
-$lang['STAFF_BOTS_DEL_INFO']="Select a bot from the dropdown so it can be deleted.";
-$lang['STAFF_BOTS_DEL_TH']="Bot to Delete";
-$lang['STAFF_BOTS_DEL_BTN']="Delete Bot";
-$lang['STAFF_BOTS_DEL_ERROR']="You didn't select a bot to delete.";
-$lang['STAFF_BOTS_DEL_ERROR1']="This user isn't even on the bot list.";
-$lang['STAFF_BOTS_DEL_SUCCESS']="You've successfully removed this NPC from the bot list.";
-
 //Staff punishments
 $lang['STAFF_PUNISHED_FED']="Fedjail User";
 $lang['STAFF_PUNISHED_UNFED']="Unfedjail User";
@@ -428,104 +407,6 @@ $lang['STAFF_MINE_DEL_SUCCESS']="You've successfully deleted a mine";
 $lang['STAFF_MINE_DEL1']="Select a mine to delete.";
 $lang['STAFF_MINE_DEL_BTN']="Delete Mine! (No Prompt, Be Sure!)";
 
-//Staff Index
-$lang['STAFF_IDX_TITLE']="Staff Panel";
-$lang['STAFF_IDX_PHP']="PHP Version";
-$lang['STAFF_IDX_DB']="Database Version";
-$lang['STAFF_IDX_CENGINE']="Chivalry Engine Version";
-$lang['STAFF_IDX_CE_UP']="Chivalry Engine Update Checker";
-$lang['STAFF_IDX_API']="API Version";
-$lang['STAFF_IDX_IFRAME']="My apologies, but your browser does not support iframes that are needed to use this update checker.";
-$lang['STAFF_IDX_ADMIN_TITLE']="Admin Actions";
-$lang['STAFF_IDX_ADMIN_LI']="Admin";
-$lang['STAFF_IDX_ADMIN_LI1']="Modules";
-$lang['STAFF_IDX_ADMIN_LI2']="Users";
-$lang['STAFF_IDX_ADMIN_LI3']="Items";
-$lang['STAFF_IDX_ADMIN_LI4']="Shops";
-$lang['STAFF_IDX_ADMIN_LI5']="Academy";
-$lang['STAFF_IDX_ADMIN_LI6']="NPCs";
-$lang['STAFF_IDX_ADMIN_LI7']="Jobs";
-$lang['STAFF_IDX_ADMIN_LI8']="Polls";
-$lang['STAFF_IDX_ADMIN_LI9']="Towns";
-$lang['STAFF_IDX_ADMIN_LI10']="Estates";
-$lang['STAFF_IDX_ADMIN_LI11']="Academy";
-$lang['STAFF_IDX_ADMIN_TAB1']="Game Settings";
-$lang['STAFF_IDX_ADMIN_TAB2']="Create an Announcement";
-$lang['STAFF_IDX_ADMIN_TAB3']="Game Diagnostics";
-$lang['STAFF_IDX_ADMIN_TAB4']="Refresh Users";
-$lang['STAFF_IDX_ADMIN_TAB5']="View Error Log";
-$lang['STAFF_IDX_ADMIN_TAB6']="Set User Level";
-$lang['STAFF_IDX_ADMIN_TAB7']="Add VIP Pack";
-$lang['STAFF_IDX_ADMIN_TAB8']="Delete VIP Pack";
-$lang['STAFF_IDX_MODULES_TAB1']="Crimes";
-$lang['STAFF_IDX_USERS_TAB1']="Create User";
-$lang['STAFF_IDX_USERS_TAB2']="Edit User";
-$lang['STAFF_IDX_USERS_TAB3']="Delete User";
-$lang['STAFF_IDX_USERS_TAB4']="Force Logout User";
-$lang['STAFF_IDX_USERS_TAB5']="Change User Password";
-$lang['STAFF_IDX_ITEMS_TAB1']="Create Item Group";
-$lang['STAFF_IDX_ITEMS_TAB2']="Create Item";
-$lang['STAFF_IDX_ITEMS_TAB3']="Delete Item";
-$lang['STAFF_IDX_ITEMS_TAB4']="Edit Item";
-$lang['STAFF_IDX_ITEMS_TAB5']="Give Item to User";
-$lang['STAFF_IDX_SHOPS_TAB1']="Create Shop";
-$lang['STAFF_IDX_SHOPS_TAB2']="Delete Shop";
-$lang['STAFF_IDX_SHOPS_TAB3']="Add Stock to Shop";
-$lang['STAFF_IDX_NPC_TAB1']="Add NPC Bot";
-$lang['STAFF_IDX_NPC_TAB2']="Delete NPC Bot";
-$lang['STAFF_IDX_ASSIST_TITLE']="Assistant Actions";
-$lang['STAFF_IDX_ASSIST_LI']="Game Logs";
-$lang['STAFF_IDX_ASSIST_LI1']="Permissions";
-$lang['STAFF_IDX_ASSIST_LI2']="Mining";
-$lang['STAFF_IDX_LOGS_TAB1']="General Logs";
-$lang['STAFF_IDX_LOGS_TAB2']="User Logs";
-$lang['STAFF_IDX_LOGS_TAB3']="Training Logs";
-$lang['STAFF_IDX_LOGS_TAB4']="Attack Logs";
-$lang['STAFF_IDX_LOGS_TAB5']="Login Logs";
-$lang['STAFF_IDX_LOGS_TAB6']="Equipment Logs";
-$lang['STAFF_IDX_LOGS_TAB7']="Banking Logs";
-$lang['STAFF_IDX_LOGS_TAB8']="Criminal Logs";
-$lang['STAFF_IDX_LOGS_TAB9']="Item Using Log";
-$lang['STAFF_IDX_LOGS_TAB10']="Item Buying Logs";
-$lang['STAFF_IDX_LOGS_TAB11']="Item Market Logs";
-$lang['STAFF_IDX_LOGS_TAB12']="Staff Logs";
-$lang['STAFF_IDX_LOGS_TAB13']="Travel Logs";
-$lang['STAFF_IDX_LOGS_TAB14']="Verification Logs";
-$lang['STAFF_IDX_LOGS_TAB15']="Spy Attempt Logs";
-$lang['STAFF_IDX_LOGS_TAB16']="Gambling Logs";
-$lang['STAFF_IDX_LOGS_TAB17']="Item Selling Logs";
-$lang['STAFF_IDX_LOGS_TAB18']="Fedjail Logs";
-$lang['STAFF_IDX_LOGS_TAB19']="Poke Logs";
-$lang['STAFF_IDX_LOGS_TAB20']="Guild Logs";
-$lang['STAFF_IDX_LOGS_TAB21']="Guild Vault Logs";
-$lang['STAFF_IDX_LOGS_TAB22']="Leveling Logs";
-$lang['STAFF_IDX_LOGS_TAB23']="Temple Logs";
-$lang['STAFF_IDX_LOGS_TAB24']="{$lang['INDEX_SECCURR']} Market Logs";
-$lang['STAFF_IDX_LOGS_TAB25']="Mining Logs";
-$lang['STAFF_IDX_LOGS_TAB26']="Mail Logs";
-$lang['STAFF_IDX_LOGS_TAB27']="Forum Warn Logs";
-$lang['STAFF_IDX_LOGS_TAB28']="Forum Ban Logs";
-$lang['STAFF_IDX_LOGS_TAB29']="Donation Logs";
-$lang['STAFF_IDX_PERM_TAB1']="View Permissions";
-$lang['STAFF_IDX_PERM_TAB2']="Reset Permissions";
-$lang['STAFF_IDX_PERM_TAB3']="Edit Permissions";
-$lang['STAFF_IDX_MINE_TAB1']="Add Mine";
-$lang['STAFF_IDX_MINE_TAB2']="Edit Mine";
-$lang['STAFF_IDX_MINE_TAB3']="Delete Mine";
-$lang['STAFF_IDX_FM_TITLE']="Forum Moderator Actions";
-$lang['STAFF_IDX_FM_LI']="Punishments";
-$lang['STAFF_IDX_FM_LI1']="Forums";
-$lang['STAFF_IDX_ACTIONS']="Last 15 Staff Actions";
-$lang['STAFF_IDX_ACTIONS_TH']="Time";
-$lang['STAFF_IDX_ACTIONS_TH1']="Staff Member";
-$lang['STAFF_IDX_ACTIONS_TH2']="Log Text";
-$lang['STAFF_IDX_ACTIONS_TH3']="IP";
-$lang['STAFF_IDX_SMELT_TAB1']="Add Smelting Recipe";
-$lang['STAFF_IDX_SMELT_TAB2']="Delete Smelting Recipe";
-$lang['STAFF_IDX_SMELT_LIST']="Smelting";
-$lang['STAFF_IDX_ACADEMY_ADD']="Create Academy";
-$lang['STAFF_IDX_ACADEMY_DEL']="Delete Academy";
-
 //Staff Smelting
 $lang['STAFF_SMELT_HOME']="Staff Smeltery";
 $lang['STAFF_SMELT_ADD_TH']="Value";
@@ -550,8 +431,6 @@ $lang['STAFF_SMELT_DEL_TH']="Smelting Recipe";
 $lang['STAFF_SMELT_DEL_BTN']="Delete Recipe";
 $lang['STAFF_SMELT_DEL_SUCC']="Smelting recipe has been successfully removed from the game.";
 
-//API
-$lang['API_ERROR']="You are trying to view and/or alter a sensitive field, and we've blocked you from doing this.";
 
 //Staff User
 $lang['SCU_UL']="User Level";
@@ -704,23 +583,6 @@ $lang['STAFF_UFBAN_SUCC']="This user has been successfully had their forum ban r
 $lang['STAFF_NOTES_ERR']="You need to specific both a user and the information you wish to add to the staff notes.";
 $lang['STAFF_NOTES_ERR1']="The user you specified does not exist. Go back and try again.";
 $lang['STAFF_NOTES_SUCC']="You have successfully updated this user's staff notes.";
-
-//Staff donate
-$lang['STAFF_DONATE_TITLE']="Staff VIP Packs";
-$lang['STAFF_DONATE_ADD_INFO']="Use this form to add a VIP Pack to the game.";
-$lang['STAFF_DONATE_ADD_TH']="VIP Pack Item";
-$lang['STAFF_DONATE_ADD_TH1']="VIP Pack Cost";
-$lang['STAFF_DONATE_ADD_BTN']="Add Pack";
-$lang['STAFF_DONATE_ADD_ERR']="You must select an item you wish to be added to the VIP Pack store.";
-$lang['STAFF_DONATE_ADD_ERR2']="You must select a valid cost for this item.";
-$lang['STAFF_DONATE_ADD_ERR3']="The VIP Pack Item you chose is invalid or does not exist.";
-$lang['STAFF_DONATE_ADD_ERR4']="The VIP Pack Item you chose is already listed on the VIP Pack store.";
-$lang['STAFF_DONATE_ADD_SUCC']="Item has been successfully added to the VIP Pack store.";
-$lang['STAFF_DONATE_DEL_BTN']="Delete Pack";
-$lang['STAFF_DONATE_DEL_INFO']="Use this form to remove a VIP Pack from the game.";
-$lang['STAFF_DONATE_DEL_ERR']="You must input a VIP Pack you wish to delete.";
-$lang['STAFF_DONATE_DEL_ERR1']="The VIP Pack you chose to delete is invalid or does not exist.";
-$lang['STAFF_DONATE_DEL_SUCC']="You have successfully removed this VIP Pack from the VIP Pack Store.";
 
 //Staff mass mail
 $lang['STAFF_MM_INFO']="Mass Mail";
