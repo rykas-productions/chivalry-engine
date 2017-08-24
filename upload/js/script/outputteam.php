@@ -27,17 +27,20 @@ require_once('../../globals_nonauth.php');
 $class=$_POST['team'];
 if ($class == 'Warrior')
 {
-	alert('info',$lang['REG_WARRIORCLASS'],$lang['REG_WARRIORCLASS_INFO'],false);
+	alert('info',"Warrior Class!","A warrior starts with more strength and less guard. Throughout their adventures,
+	they'll gain strength way quicker than any other stat, and guard much slower than the others.",false);
 }
 elseif ($class == 'Rogue')
 {
-	alert('info',$lang['REG_ROGUECLASS'],$lang['REG_ROGUECLASS_INFO'],false);
+	alert('info',"Rogue Class!","A rogue starts with more agility and less strength. Throughout their adventures,
+	they'll gain agility much quicker than any other stat, and strength much slower than the others.",false);
 }
 elseif ($class == 'Defender')
 {
-	alert('info',$lang['REG_DEFENDERCLASS'],$lang['REG_DEFENDERCLASS_INFO'],false);
+	alert('info',"Defender Class!","A defender starts with more guard and less agility. Throughout their adventures,
+	they'll gain guard much quicker than any other stat, and agility much slower than the others.",false);
 }
 else
 {
-	alert('danger',$lang['ERROR_GENERIC'],$lang['REG_NOCLASS'],false);
+	alert('danger',"Uh Oh!","Please select a class.",false);
 }

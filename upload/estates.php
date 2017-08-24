@@ -89,7 +89,7 @@ else
     //User own an estate.
     if ($ir['maxwill'] > 100)
     {
-        echo "<a href='?sellhouse'>{$lang['ESTATES_SELL']}</a><br />";
+        echo "<a href='?sellhouse'>Sell Your Estate</a><br />";
     }
     $hq = $db->query("SELECT * FROM `estates` WHERE `house_will` > {$ir['maxwill']} ORDER BY `house_will` ASC");
 	echo "

@@ -82,7 +82,7 @@ function home()
 				<td><a href='?action=atklogs'>Attack Logs</a></td>
     		</tr>
     		<tr>
-    			<td><a href='?action=armory'>Armor</a></td>
+    			<td><a href='?action=armory'>Armory</a></td>
     			<td></td>
        ";
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)

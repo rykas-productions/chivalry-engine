@@ -17,7 +17,7 @@ if (!($db->num_rows($UIDB)))
 }
 $MUS=($db->fetch_row($db->query("SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 mining_levelup();
-echo "<h2>{$lang['EXPLORE_MINE']}</h2><hr />";
+echo "<h2>Dangerous Mines</h2><hr />";
 if ($api->UserStatus($userid,'infirmary'))
 {
 	alert('danger',"Unconscious!","You cannot go mining if you're in the infirmary.");

@@ -151,7 +151,7 @@ echo "
 </table>
 <form method='post'>
     <div class='form-group'>
-        <label for='pn_update'>{$lang['INDEX_PN']}</label>
+        <label for='pn_update'>Personal Notepad</label>
         <textarea class='form-control' rows='5' name='pn_update' id='pn_update'>{$ir['personal_notes']}</textarea>
     </div>
     <button type='submit' class='btn btn-primary'>Update Notepad</button>

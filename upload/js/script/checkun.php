@@ -26,25 +26,25 @@ $username = isset($_POST['username']) ? stripslashes($_POST['username']) : '';
 if (!$username)
 {
     echo "<script>document.getElementById('unerror').className = 'has-error';</script>";
-	die(alert('danger',$lang['ERROR_GENERIC'],$lang['SCRIPT_ERR3'],false));
+	die(alert('danger',"Uh Oh!","Please enter a username.",false));
 	 
 }
 if ((strlen($username) < 3))
 {
     echo "<script>document.getElementById('unerror').className = 'has-error';</script>";
-	die(alert('danger',$lang['ERROR_GENERIC'],$lang['SCRIPT_ERR4'],false));
+	die(alert('danger',"Uh Oh!","Usernames must be, at minimum, 3 characters in length.",false));
 }
 if ((strlen($username) > 21))
 {
     echo "<script>document.getElementById('unerror').className = 'has-error';</script>";
-	die(alert('danger',$lang['ERROR_GENERIC'],$lang['SCRIPT_ERR5'],false));
+	die(alert('danger',"Uh Oh!","Usernames must be, at maximum, 20 characters in length.",false));
 }
 $e_username = $db->escape($username);
 $q = $db->query("SELECT COUNT(`userid`) FROM users WHERE username = '{$e_username}'");
 if ($db->fetch_single($q))
 {
 	 echo "<script>document.getElementById('unerror').className = 'has-error';</script>";
-	 die(alert('danger',$lang['ERROR_GENERIC'],$lang['SCRIPT_ERR6'],false));
+	 die(alert('danger',"Uh Oh!","The username you've chosen is already in use. Please user another one.",false));
 }
 else
 {

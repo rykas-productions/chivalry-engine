@@ -162,7 +162,7 @@ echo"<h4>You begin exploring the town. You find a few things that could keep you
 			while ($pdata=$db->fetch_row($RankPlayerQuery))
 			{
 				$Rank=$Rank+1;
-				echo "{$Rank}) <a href='profile.php?user={$pdata['userid']}'>{$pdata['username']}</a> ({$lang['INDEX_LEVEL']} {$pdata['level']})<br />";
+				echo "{$Rank}) <a href='profile.php?user={$pdata['userid']}'>{$pdata['username']}</a> (Level {$pdata['level']})<br />";
 			}
 			echo"
 		</div>

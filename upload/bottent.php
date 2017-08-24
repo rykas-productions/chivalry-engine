@@ -57,7 +57,7 @@ while ($result = $db->fetch_row($query))
 					<input type='hidden' name='user' value='{$result['botuser']}'>
 					<input type='submit' class='btn btn-danger' value='Attack " . $api->SystemUserIDtoName($result['botuser']) . "'>
 					</form>
-					({$lang['BOTTENT_CHANCE']} {$chance}%)";
+					(Odds of Victory {$chance}%)";
 	}
     //Table row formatting.
 	echo "
