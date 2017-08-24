@@ -17,27 +17,27 @@ if (!isset($_SESSION['tresde']))
 }
 if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
 {
-    alert('danger',$lang['ERROR_GENERIC'],$lang['SLOTS_NOREFRESH'],true,"?tresde={$tresder}");
+    alert('danger',"Uh Oh!","Please do not refresh while playing slots.",true,"?tresde={$tresder}");
 	die($h->endpage());
 }
 $_SESSION['tresde'] = $_GET['tresde'];
-echo "<h3>{$lang['SLOTS_TITLE']}</h3><hr />";
+echo "<h3>Slots Machine</h3><hr />";
 if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 {
 	$_POST['bet'] = abs($_POST['bet']);
     if ($_POST['bet'] > $ir['primary_currency'])
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR1'],true,"?tresde={$tresder}");
+        alert('danger',"Uh Oh!","You cannot bet more than you currently have.",true,"?tresde={$tresder}");
 		die($h->endpage());
     }
 	else if ($_POST['bet'] > $maxbet)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR2'],true,"?tresde={$tresder}");
+        alert('danger',"Uh Oh!","You cannot bet more than your max bet of {$maxbet}.",true,"?tresde={$tresder}");
 		die($h->endpage());
     }
 	else if ($_POST['bet'] < 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR4'],true,"?tresde={$tresder}");
+        alert('danger',"Uh Oh!","You must specify a bet.",true,"?tresde={$tresder}");
 		die($h->endpage());
     }
 	$slot = array();
@@ -47,42 +47,42 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 	if ($slot[1] == $slot[2] && $slot[2] == $slot[3])
 	{
         $gain = $_POST['bet'] * 79;
-		$title="{$lang['ERROR_SUCCESS']}";
+		$title="Success!";
 		$alerttype='success';
 		$win=1;
-		$phrase="{$lang['ROULETTE_WIN']} " . number_format($gain);
+		$phrase="All three line up. Jack pot! You win an extra " . number_format($gain);
 		$api->SystemLogsAdd($userid,'gambling',"Bet {$_POST['bet']} and won {$gain} in slots.");
 	}
 	else if ($slot[1] == $slot[2] || $slot[2] == $slot[3]
             || $slot[1] == $slot[3])
     {
         $gain = $_POST['bet'] * 50;
-		$title="{$lang['ERROR_SUCCESS']}";
+		$title="Success!";
 		$alerttype='success';
 		$win=1;
-		$phrase="{$lang['ROULETTE_WIN']} " . number_format($gain);
+		$phrase="Two slots line up. Awesome! You win an extra " . number_format($gain);
 		$api->SystemLogsAdd($userid,'gambling',"Bet {$_POST['bet']} and won {$gain} in slots.");
     }
 	else
 	{
 
-		$title="{$lang['ERROR_GENERIC']}";
+		$title="Uh Oh!";
 		$alerttype='danger';
 		$win=0;
         $gain = -$_POST['bet'];
-		$phrase="{$lang['ROULETTE_LOST']}";
+		$phrase="Round and round the slots go. Unlucky! None of them line up!";
 		$api->SystemLogsAdd($userid,'gambling',"Lost {$_POST['bet']} in slots.");
 	}
-	alert($alerttype,$title,"{$lang['ROULETTE_START']} {$slot[1]}, {$slot[2]}, {$slot[3]}{$phrase}",true,"?tresde={$tresder}");
+	alert($alerttype,$title,"You pull down the handle and slots begin to spin. They show {$slot[1]}, {$slot[2]}, {$slot[3]}. {$phrase}",true,"?tresde={$tresder}");
 	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
 	$tresder = Random(100, 999);
 	echo "<br />
 	<form action='?tresde={$tresder}' method='post'>
     	<input type='hidden' name='bet' value='{$_POST['bet']}' />
-    	<input type='submit' class='btn btn-primary' value='{$lang['ROULETTE_BTN2']}' />
+    	<input type='submit' class='btn btn-primary' value='Again, Same Bet!' />
     </form>
-	<a href='?tresde={$tresder}'>{$lang['ROULETTE_BTN3']}</a><br />
-	<a href='explore.php'>{$lang['ROULETTE_BTN4']}</a>";
+	<a href='?tresde={$tresder}'>Again, Different Bet!</a><br />
+	<a href='explore.php'>Go Home</a>";
 }
 else
 {
@@ -91,20 +91,21 @@ else
 	<table class='table table-bordered'>
 		<tr>
 			<th colspan='2'>
-				{$lang['SLOTS_INFO']} " . number_format($maxbet) . " {$lang['INDEX_PRIMCURR']}.
+				Welcome to the slots machine. Bet some of your hard earned cash for a slim chance to win big! At your
+				level, we've imposed a betting restriction of " . number_format($maxbet) . " Primary Currency.
 			</th>
 		</tr>
 		<tr>
 			<th>
-				{$lang['SLOTS_TABLE1']}
+				Bet
 			</th>
 			<td>
-				<input type='number' class='form-control' name='bet' min='0' max='{$maxbet}' value='5' />
+				<input type='number' class='form-control' name='bet' min='1' max='{$maxbet}' value='5' />
 			</td>
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input class='btn btn-primary' type='submit' value='{$lang['SLOTS_BTN']}' />
+				<input class='btn btn-primary' type='submit' value='Spin Baby, Spin!' />
 			</td>
 		</tr>
 	</table>

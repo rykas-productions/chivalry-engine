@@ -10,159 +10,12 @@
 static $lang = array();
 global $ir,$fee,$gain,$set;
 
-//Generic
-$lang["GEN_HERE"] = "here";
-$lang["GEN_back"] = "back";
-$lang["GEN_INFIRM"] = "Unconscious!";
-$lang["GEN_DUNG"] = "Locked Up!";
-$lang["GEN_GREETING"] = "Hello";
-$lang["GEN_MINUTES"] = "minutes.";
-$lang['GEN_EXP']="Experience";
-$lang['GEN_NEU']="Deleted Account";
-$lang['GEN_AT']="at";
-$lang['GEN_EDITED']="edited";
-$lang['GEN_TIMES']="times.";
-$lang['GEN_RANK']='Rank';
-$lang['GEN_ONLINE']='Online';
-$lang['GEN_OFFLINE']='Offline';
-$lang['GEN_FOR']="for";
-$lang['GEN_INDAH']="In the";
-$lang['GEN_YES']="Yes";
-$lang['GEN_NO']="No";
-$lang['GEN_STR']="Strength";
-$lang['GEN_AGL']="Agility";
-$lang['GEN_GRD']="Guard";
-$lang['GEN_IQ']="IQ";
-$lang['GEN_LAB']="Labor";
-$lang['GEN_TOTAL']="Total Stats";
-$lang['GEN_GOHOME']="Go Home";
-$lang['GEN_IUOF']="Invalid use of file!";
-$lang['GEN_THEM']="Them";
-$lang['GEN_CONTINUE']="Continue";
-$lang['GEN_FOR_S']="for";
-$lang['GEN_HAVE']="Have";
-$lang['GEN_AND']="and";
-$lang['GEN_NOPERM']="You do not have the proper user level to view this page. If this is wrong, please contact an admin immediately!";
-$lang["GEN_STATS"] = "Stats";
-$lang["GEN_RANKED"] = "Ranked";
-$lang["GEN_BACK"] = "Go Back";
-$lang["GEN_IN"] = "In";
-$lang['GEN_INCREASE']="Increases";
-$lang['GEN_DECREASE']="Decreases";
-$lang['GEN_UPTODATE']="Chivalry Engine is up to date.";
-$lang['GEN_OUTTADATE']="Chivalry Engine is out of date. Get the latest build ";
-$lang['GEN_FAILEDTOCHECK']="Could not contact update checker.";
-
-//Register
-$lang["REG_FORM"] = "Registration";
-$lang["REG_USERNAME"] = "Username";
-$lang["REG_EMAIL"] = "Email";
-$lang["REG_PW"] = "Password";
-$lang["REG_CPW"] = "Confirm Password";
-$lang["REG_SEX"] = "Gender";
-$lang["REG_CLASS"] = "Class";
-$lang["REG_REFID"] = "Referral ID";
-$lang["REG_PROMO"] = "Promo Code";
-$lang['REG_WARRIORCLASS']="Warrior Class!";
-$lang['REG_ROGUECLASS']="Rogue Class!";
-$lang['REG_DEFENDERCLASS']="Defender Class!";
-$lang['REG_NOCLASS']="We need you to select a class, please.";
-$lang['REG_ROGUECLASS_INFO']="A rogue fighter starts with more agility and less strength. Throughout their adventures, they'll gain agility much quicker than any other stat, and strength much slower than the others.";
-$lang['REG_DEFENDERCLASS_INFO']="A defender starts with more guard and less agility. Throughout their adventures, they'll gain guard much quicker than any other stat, and agility much slower than the others.";
-$lang['REG_WARRIORCLASS_INFO']="A warrior tarts with more strength and less guard. Throughout their adventures, they'll gain strength way quicker than any other stat, and guard much slower than the others.";
-$lang['REG_UNIUERROR']="The username you chose is already in use. Go back and try again.";
-$lang['REG_SUCCESS']="You have successfully joined the game. Enjoy your stay and please be sure to read the game rules.";
-$lang['REG_EIUERROR']="The email you chose is already in use. Go back and try again.";
-$lang['REG_PWERROR']="You must enter a password and confirm it. Go back and try again.";
-$lang['REG_REFERROR']="The referral you specified does not exist in-game. Go back and verify again.";
-$lang['REG_REFMERROR']="The referral you specified shares the same IP as you. No creating multiple accounts. The admins have been alerted.";
-$lang['REG_VPWERROR']="The passwords you entered do not match. Go back and try again.";
-$lang['REG_CAPTCHAERROR']="You failed the captcha, or just didn't enter it. Go back and try again.";
-$lang['REG_GENDERERROR']="You specified an invalid gender. Please go back and try again.";
-$lang['REG_CLASSERROR']="You specified an invalid fighting class. Please go back and try again.";
-$lang['REG_EMAILERROR']="You did not enter a valid email, or failed to enter the email field. Please go back and try again.";
-$lang['REG_MULTIALERT']="Hold on there. We've detected that someone with your IP address has already registered. We're going to stop you here for now. If this is a false positive, please email the game owners.";
-$lang['REG_USEREMPTY']="You didn't input a username. Go back and try again, please.";
-$lang['REG_UNPLACE']="This is your in-game name.";
-$lang['REG_EPLACE']="You will use this to log into the game.";
-$lang['REG_PWPLACE']="Unique passwords use letters, symbols, and numbers.";
-$lang['REG_PW1PLACE']="Now, confirm the previously entered password.";
-$lang['REG_REFPLACE']="Refered by a friend? Enter their User ID here! (Optional)";
-$lang['REG_PROMOPLACE']="Received a promo code? Enter it here. (Optional)";
-$lang['REG_OPTIN']="By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a> and our <a href='privacy.php'>Privacy Policy</a>. You also agree that you wish to opt-in to our game newsletter. You may opt-out at anytime by checking your in-game settings.";
-
-//CSRF Error
-$lang["CSRF_ERROR_TITLE"] = "Action Blocked!";
-$lang["CSRF_PREF_MENU"] = "You can try the action again by going";
-$lang["CSRF_ERROR_TEXT"] = "The action you were trying to do was blocked. It was blocked because you loaded another page on the game. If you have not loaded a different page during this time, change your password immediately, as another person may have access to your account!";
-
-//Alert Titles
-$lang['ERROR_EMPTY'] = "Empty Input!";
-$lang['ERROR_LENGTH'] = "Check Input Length!";
-$lang['ERROR_GENERIC'] = "Uh Oh!";
-$lang['ERROR_SUCCESS'] = "Success!";
-$lang['ERROR_INVALID'] = "Invalid Input!";
-$lang['ERROR_SECURITY'] = "Security Error!";
-$lang['ERROR_NONUSER'] = "Nonexistent User!";
-$lang['ERROR_NOPERM'] ="No Permission!";
-$lang['ERROR_UNKNOWN'] ="Unknown Error!";
-$lang['ERROR_INFO']="Information!";
-
 //Send Cash Form
 $lang['SCF_POSCASH']="You need to send at least 1 {$lang['INDEX_PRIMCURR']} to use this form.";
 $lang['SCF_UNE']="You cannot send {$lang['INDEX_PRIMCURR']} to a non-existent user!";
 $lang['SCF_NEC']="You are trying to send more {$lang['INDEX_PRIMCURR']} than you currently have!";
 $lang['SCF_SUCCESS']="{$lang['INDEX_PRIMCURR']} sent successfully.";
 $lang['SCF_ERR']="You cannot send money to yourself, sorry.";
-
-//Profile
-$lang['PROFILE_UNF']="We could not find a user with the User ID you entered. You could be receiving this message because the player you are trying to view got deleted. Check your source again!";
-$lang['PROFILE_PROFOR']="Profile For";
-$lang['PROFILE_LOCATION']="Location:";
-$lang['PROFILE_GUILD']="Guild";
-$lang['PROFILE_PI']="Physical Information";
-$lang['PROFILE_ACTION']="Actions";
-$lang['PROFILE_FINANCIAL']="Financial Information";
-$lang['PROFILE_STAFF']="Staff Area";
-$lang['PROFILE_REGISTERED']="Registered";
-$lang['PROFILE_ACTIVE']="Last Active";
-$lang['PROFILE_LOGIN']="Last Login";
-$lang['PROFILE_AGE']="Age";
-$lang['PROFILE_DAYS_OLD']="old.";
-$lang['PROFILE_REF']="Referrals";
-$lang['PROFILE_FRI']="Friends";
-$lang['PROFILE_ENE']="Enemies";
-$lang['PROFILE_ATTACK']="Attack";
-$lang['PROFILE_SPY']="Spy On";
-$lang['PROFILE_POKE']="Poke";
-$lang['PROFILE_CONTACT']="Add";
-$lang['PROFILE_CONTACT1']="To Contacts List";
-$lang['PROFILE_MSG1']="Sending";
-$lang['PROFILE_MSG2']="a message";
-$lang['PROFILE_MSG3']="Recipient:";
-$lang['PROFILE_MSG4']="Message:";
-$lang['PROFILE_MSG5']="Close Window";
-$lang['PROFILE_MSG6']="Send Message";
-$lang['PROFILE_CASH']="Send Cash";
-$lang['PROFILE_STAFF_DATA']="Data";
-$lang['PROFILE_STAFF_LOC']="Location";
-$lang['PROFILE_STAFF_LH']="Last Hit";
-$lang['PROFILE_STAFF_LL']="Last Login";
-$lang['PROFILE_STAFF_REGIP']="Sign Up";
-$lang['PROFILE_STAFF_THRT']="Threat?";
-$lang['PROFILE_STAFF_RISK']="Risk Level";
-$lang['PROFILE_STAFF_OS']="Browser/OS";
-$lang['PROFILE_STAFF_LA']="Last Action";
-$lang['PROFILE_STAFF_NOTES']="Staff Notes:";
-$lang['PROFILE_STAFF_BTN']="Update Notes About";
-$lang['PROFILE_BTN_MSG']="Send";
-$lang['PROFILE_BTN_MSG1']="A Message";
-$lang['PROFILE_BTN_SND']="Send";
-$lang['PROFILE_RISK_1']="No Risk";
-$lang['PROFILE_RISK_2']="Spam";
-$lang['PROFILE_RISK_3']="Open Public Proxy";
-$lang['PROFILE_RISK_4']="Tor Node";
-$lang['PROFILE_RISK_5']="Honeypot / Botnet / DDOS Attack";
 
 //Polling Staff
 $lang['STAFF_POLL_TITLE']="Polling Administration";
@@ -408,25 +261,6 @@ $lang['STAFF_JOB_CREATE_FORM_ACT']="Required Activity";
 $lang['STAFF_LOGS_USERS_FORM']="Select the user whose logs you wish to view.";
 $lang['STAFF_LOGS_USERS_FORM_BTN']="View Logs";
 
-//Shops
-$lang['SHOPS_HOME_INTRO']="You being looking though the town and you see a few shops.";
-$lang['SHOPS_HOME_OH']="This city sure isn't developed far enough to have shops, eh?";
-$lang['SHOPS_HOME_TH_1']="Shop's Name";
-$lang['SHOPS_HOME_TH_2']="Shop's Description";
-$lang['SHOPS_SHOP_TH_1']="Item Name";
-$lang['SHOPS_SHOP_TH_2']="Price";
-$lang['SHOPS_SHOP_TH_3']="Buy";
-$lang['SHOPS_SHOP_TD_1']="Qty:";
-$lang['SHOPS_SHOP_INFO']="You begin browsing the items at";
-$lang['SHOPS_BUY_ERROR1']="You are attempting to use this file incorrectly. Be sure you have specified both an item to buy, along with a quantity.";
-$lang['SHOPS_BUY_ERROR2']="YThe item you are trying to buy doesn't exist, isn't sold in this shop or just doesn't exist!";
-$lang['SHOPS_SHOP_ERROR1']="You are trying to access a shop in a different town than you are currently in!";
-$lang['SHOPS_SHOP_ERROR2']="You are trying to access a shop that is invalid or doesn't exist. Check your source and try again!";
-$lang['SHOPS_BUY_ERROR3']="You do not have enough {$lang['INDEX_PRIMCURR']} to buy";
-$lang['SHOPS_BUY_ERROR4']="The item you are trying to buy isn't purchasable via normal means.";
-$lang['SHOPS_BUY_SUCCESS']="You have successfully purchased";
-$lang['SHOPS_BUY_ERROR5']="You cannot buy items from shops outside of the city you are currently in. Check your source and try again.";
-
 //Staff shops
 $lang['STAFF_SHOP_FORM_TITLE']="Use this form to create a new shop.";
 $lang['STAFF_SHOP_FORM_OPTION1']="Shop's Name";
@@ -450,20 +284,6 @@ $lang['STAFF_SHOP_IADDSUB_ERROR2']="Item or shop is invalid or doesn't exist.";
 $lang['STAFF_SHOP_IADDSUB_ERROR3']="The item you are trying to add to this shop is already listed in this shop. It makes no sense to list the same item twice.";
 $lang['STAFF_SHOP_IADDSUB_SUCCESS']="Item has been successfully added to the stock of this shop.";
 
-//Travel
-$lang['TRAVEL_TITLE']="Horse Travel";
-$lang['TRAVEL_TABLE']="Welcome to the horse stable. You can travel to other cities here, but at a cost. Where would you like to travel today? Note that as you progress further in the game, more locations will be made available to you. It will cost you ";
-$lang['TRAVEL_TABLE2']="{$lang['INDEX_PRIMCURR']} to travel today.";
-$lang['TRAVEL_TABLE_HEADER']="Town Name";
-$lang['TRAVEL_TABLE_LEVEL']="Minimum Level";
-$lang['TRAVEL_TABLE_GUILD']="Guild";
-$lang['TRAVEL_TABLE_TAX']="Income Tax";
-$lang['TRAVEL_TABLE_TRAVEL']="Travel";
-$lang['TRAVEL_ERROR_CASHLOW']="You do not have enough {$lang['INDEX_PRIMCURR']} to travel to this location. Go back and try again.";
-$lang['TRAVEL_ERROR_ALREADYTHERE']="You are already in this town! Why would you want to waste your money and travel to here again?";
-$lang['TRAVEL_ERROR_ERRORGEN']="This town does not exist, or your level isn't high enough to visit this town. Go back and try again.";
-$lang['TRAVEL_SUCCESS']="You have purchased a horse and traveled to";
-
 //Staff towns
 $lang['STAFF_TRAVEL_ADD']="Add a Town";
 $lang['STAFF_TRAVEL_EDIT']="Edit a Town";
@@ -484,207 +304,11 @@ $lang['STAFF_TRAVEL_DELTOWN_SUB_ERROR1']="You cannot delete a non-existent town.
 $lang['STAFF_TRAVEL_DELTOWN_SUB_ERROR2']="You cannot delete the first town.";
 $lang['STAFF_TRAVEL_DELTOWN_SUB_SUCCESS']="Town has been deleted successfully. Users and shops in this town have been moved to the starter town.";
 
-//Guild Listing
-$lang['GUILD_LIST']="Guild listing";
-$lang['GUILD_LIST_TABLE1']="Guild Name";
-$lang['GUILD_LIST_TABLE2']="Guild Level";
-$lang['GUILD_LIST_TABLE3']="Member Count";
-$lang['GUILD_LIST_TABLE5']="Guild Leader";
-$lang['GUILD_LIST_TABLE4']="Hometown";
-
-//Guild create
-$lang['GUILD_CREATE']="Create a Guild";
-$lang['GUILD_CREATE_ERROR']="You do not have enough {$lang['INDEX_PRIMCURR']} to buy purchase a guild. You need, at minimum, ";
-$lang['GUILD_CREATE_ERROR1']="You are not a high enough level to purchase a guild. You need to be, at minimum, ";
-$lang['GUILD_CREATE_ERROR2']="You cannot create a guild while you're currently a member of one.";
-$lang['GUILD_CREATE_ERROR3']="You cannot create a guild named after an already existing guild.";
-$lang['GUILD_CREATE_FORM']="Fill this form out to create your guild. Your guild's hometown will be set to the town you are currently located in.";
-$lang['GUILD_CREATE_FORM1']="Guild Name";
-$lang['GUILD_CREATE_FORM2']="Guild Description";
-$lang['GUILD_CREATE_BTN']="Create Guild for ";
-$lang['GUILD_CREATE_SUCCESS']="You have successfully created a guild!";
-
-//Guild Viewing
-$lang['GUILD_VIEW_GUILD']="Guild";
-$lang['GUILD_VIEW_ERROR']="You are trying to view a non-existent guild. Check your source and try again.";
-$lang['GUILD_VIEW_LEADER']="Guild Leader";
-$lang['GUILD_VIEW_COLEADER']="Guild Co-Leader";
-$lang['GUILD_VIEW_LEVEL']="Guild Level";
-$lang['GUILD_VIEW_MEMBERS']="Guild Members";
-$lang['GUILD_VIEW_LOCATION']="Guild Location";
-$lang['GUILD_VIEW_USERS']="Guild Member List";
-$lang['GUILD_VIEW_APPLY']="Apply to Guild";
-$lang['GUILD_VIEW_LIST']="Members List for the";
-$lang['GUILD_VIEW_LIST2']="guild";
-$lang['GUILD_VIEW_ERROR']="You need to specify a guild you wish to view. Check your source and try again.";
-$lang['GUILD_APP_TITLE']="Filling out Application to join";
-$lang['GUILD_APP_INFO']="Type in a reason you should be in this guild. Be polite, honest and accurate with your information.";
-$lang['GUILD_APP_ERROR']="You cannot send an application to a guild whilst you're currently in one. Leave your current guild and try again.";
-$lang['GUILD_APP_BTN']="Submit Application";
-$lang['GUILD_APP_ERROR1']="You have already sent an application to join this guild. Please wait until you get a response before sending in another.";
-$lang['GUILD_APP_SUCC']="You have successfully sent in your application to join this guild!";
-$lang['GUILD_VIEW_DESC']="Guild's Description";
-
 //Staff rules
 $lang['STAFF_RULES_ADD_FORM']="Use this form to add rules into the game. Be clear and concise. The more difficult language and terminology you use, the less people may understand.";
 $lang['STAFF_RULES_ADD_BTN']="Add Rule";
 $lang['STAFF_RULES_ADD_SUBFAIL']="You cannot add a rule an empty rule.";
 $lang['STAFF_RULES_ADD_SUBSUCC']="You have successfully created a new rule.";
-
-//Game rules
-$lang['GAMERULES_TITLE']="Rules";
-$lang['GAMERULES_TEXT']="You are expected to follow these rules. You are also expected to check back on these fairly frequently as these rules may change without notice. Staff will not accept ignorance as an excuse if you break one of these rules.";
-
-//View Guild
-$lang['VIEWGUILD_ERROR1']="You are not in a guild, so you cannot view your guild's information.";
-$lang['VIEWGUILD_ERROR2']="It looks like your guild's been deleted. Check with staff to update your account.";
-$lang['VIEWGUILD_TITLE']="Your Guild,";
-$lang['VIEWGUILD_HOME_SUMMARY']="Guild Summary";
-$lang['VIEWGUILD_HOME_DONATE']="Donate to Guild";
-$lang['VIEWGUILD_HOME_CRIME']="Guild Crimes";
-$lang['VIEWGUILD_HOME_USERS']="Guild Members List";
-$lang['VIEWGUILD_HOME_LEAVE']="Leave Guild";
-$lang['VIEWGUILD_HOME_ATKLOG']="Guild Attack Logs";
-$lang['VIEWGUILD_HOME_ARMORY']="Guild Armory";
-$lang['VIEWGUILD_HOME_STAFF']="Guild Staff Room";
-$lang['VIEWGUILD_HOME_ANNOUNCE']="Guild Announcement";
-$lang['VIEWGUILD_HOME_EVENT']="Last 10 Guild Events";
-$lang['VIEWGUILD_HOME_EVENTTEXT']="Event Text";
-$lang['VIEWGUILD_HOME_EVENTTIME']="Event Time";
-$lang['VIEWGUILD_SUMMARY_TITLE']="Guild Summary";
-$lang['VIEWGUILD_SUMMARY_OWNER']="Guild Leader";
-$lang['VIEWGUILD_SUMMARY_COOWNER']="Guild Co-Leader";
-$lang['VIEWGUILD_SUMMARY_MEM']="Members / Max Capacity";
-$lang['VIEWGUILD_SUMMARY_LVL']="Guild Level";
-$lang['VIEWGUILD_SUMMARY_XP']="Guild XP";
-$lang['VIEWGUILD_NA']="N/A";
-$lang['VIEWGUILD_DONATE_TITLE']="Enter the amount of currency you wish to donate to your guild. You currently have ";
-$lang['VIEWGUILD_DONATE_BTN']="Donate to Guild";
-$lang['VIEWGUILD_DONATE_ERR1']="You must fill out the previous form to donate.";
-$lang['VIEWGUILD_DONATE_ERR2']="You cannot donate more {$lang['INDEX_PRIMCURR']} than you currently have.";
-$lang['VIEWGUILD_DONATE_ERR3']="You cannot donate more {$lang['INDEX_SECCURR']} than you currently have.";
-$lang['VIEWGUILD_DONATE_ERR4']="You are trying to donate more than your guild's vault can hold. Your guild's vault can only hold ";
-$lang['VIEWGUILD_DONATE_SUCC']="You've successfully donated the specified amounts to your guild.";
-$lang['VIEWGUILD_MEMBERS_TH1']="User";
-$lang['VIEWGUILD_MEMBERS_TH2']="Level";
-$lang['VIEWGUILD_MEMBERS_BTN']="Kick";
-$lang['VIEWGUILD_IDX']="Guild Index";
-$lang['VIEWGUILD_KICK_SUCCESSS']="You've successfully kicked this user from the guild.";
-$lang['VIEWGUILD_KICK_ERR']="Sorry, but you cannot kick your guild's leader. If your leader is inactive, contact staff so that you may take their spot.";
-$lang['VIEWGUILD_KICK_ERR1']="You cannot kick yourself from the guild. If you wish to leave, transfer your powers to someone else, then leave.";
-$lang['VIEWGUILD_KICK_ERR2']="You're trying to kick a user who isn't in your guild or doesn't exist.";
-$lang['VIEWGUILD_KICK_ERR3']="You do not have permission to kick users from this guild.";
-$lang['VIEWGUILD_LEAVE_ERR']="You cannot leave while you're the owner/co-owner of your guild. Transfer your rights to another member in the guild and try again.";
-$lang['VIEWGUILD_LEAVE_SUCC']="You have successfully left your guild.";
-$lang['VIEWGUILD_LEAVE_SUCC1']="You've decided to stay in your guild for now.";
-$lang['VIEWGUILD_LEAVE_INFO']="Are you 100% sure you wish to leave your guild? You will have to reapply if you leave and wish to come back.";
-$lang['VIEWGUILD_LEAVE_BTN']="Yes, leave!";
-$lang['VIEWGUILD_LEAVE_BTN1']="No, wait, stay!";
-$lang['VIEWGUILD_ATKLOGS_INFO']="This table lists the last 50 attacks anyone in your guild was involved with.";
-$lang['VIEWGUILD_ATKLOGS_TD1']="Time";
-$lang['VIEWGUILD_ATKLOGS_TD2']="Attack Info";
-$lang['VIEWGUILD_STAFF_ERROR']="Only the leader and co-leader of your guild can view this area.";
-$lang['VIEWGUILD_STAFF_IDX_APP']="Application Management";
-$lang['VIEWGUILD_STAFF_IDX_VAULT']="Vault Management";
-$lang['VIEWGUILD_STAFF_IDX_COOWNER']="Transfer Co-Leader";
-$lang['VIEWGUILD_STAFF_IDX_AMENT']="Change Guild Announcement";
-$lang['VIEWGUILD_STAFF_IDX_MM']="Mass Mail Guild";
-$lang['VIEWGUILD_STAFF_IDX_MP']="Mass Pay Guild";
-$lang['VIEWGUILD_STAFF_IDX_DESC']="Change Guild Description";
-$lang['VIEWGUILD_STAFF_IDX_LEADER']="Transfer Leader";
-$lang['VIEWGUILD_STAFF_IDX_NAME']="Change Guild Name";
-$lang['VIEWGUILD_STAFF_IDX_TOWN']="Change Guild Town";
-$lang['VIEWGUILD_STAFF_IDX_UNTOWN']="Surrender Guild Town";
-$lang['VIEWGUILD_STAFF_IDX_DECLAREWAR']="Declare War";
-$lang['VIEWGUILD_STAFF_IDX_LVLUP']="Level Up Guild";
-$lang['VIEWGUILD_STAFF_IDX_TAX']="Change Tax Level";
-$lang['VIEWGUILD_STAFF_APP_TH0']="Filing Time";
-$lang['VIEWGUILD_STAFF_APP_TH1']="Applicant";
-$lang['VIEWGUILD_STAFF_APP_TH2']="Level";
-$lang['VIEWGUILD_STAFF_APP_TH3']="Application Text";
-$lang['VIEWGUILD_STAFF_APP_TH4']="Actions";
-$lang['VIEWGUILD_STAFF_APP_BTN']="Accept";
-$lang['VIEWGUILD_STAFF_APP_BTN1']="Decline";
-$lang['VIEWGUILD_STAFF_APP_DENY_TEXT']="You have successfully declined this application.";
-$lang['VIEWGUILD_STAFF_APP_ACC_ERR']="Your guild does not have the capacity to accept this member. Level your guild up to get more capacity.";
-$lang['VIEWGUILD_STAFF_APP_ACC_ERR1']="This player is already in a guild.";
-$lang['VIEWGUILD_STAFF_APP_ACC_ERR2']="This player's level is too low to access the town you own.";
-$lang['VIEWGUILD_STAFF_APP_ACC_SUCC']="You have successfully accepted this user's application!";
-$lang['VIEWGUILD_STAFF_APP_WOT']="We don't know how you got here... but yeah... you're kinda not supposed to be here.";
-$lang['VIEWGUILD_GYM_ERR']="Your guild's personal gym will be open for use at guild level 3.";
-$lang['VIEWGUILD_STAFF_VAULT']="Your guild's vault currently has";
-$lang['VIEWGUILD_STAFF_VAULT1']="Select User";
-$lang['VIEWGUILD_STAFF_VAULT_BTN']="Give From Vault";
-$lang['VIEWGUILD_STAFF_VAULT_ERR']="Your vault does not have that much {$lang['INDEX_PRIMCURR']} to give out.";
-$lang['VIEWGUILD_STAFF_VAULT_ERR1']="Your vault does not have that much {$lang['INDEX_SECCURR']} to give out.";
-$lang['VIEWGUILD_STAFF_VAULT_ERR2']="You have to give out at least one piece of currency to use this form.";
-$lang['VIEWGUILD_STAFF_VAULT_ERR3']="The user you're trying to give to doesn't exist, or isn't in your guild. Check your source and try again.";
-$lang['VIEWGUILD_STAFF_VAULT_ERR4']="You cannot gift currency from the vault to players who share your IP address.";
-$lang['VIEWGUILD_STAFF_VAULT_SUCC']="The user has been given the specified currency from the vault.";
-$lang['VIEWGUILD_STAFF_COLEADER_INFO']="Select a user from the dropdown to give them co-leadership privileges.";
-$lang['VIEWGUILD_STAFF_COLEADER_ERR']="You cannot give co-leadership of your guild to a user who doesn't exist, or isn't in your guild to begin with.";
-$lang['VIEWGUILD_STAFF_COLEADER_SUCC']="Co-leadership privileges for the guild has been transferred successfully.";
-$lang['VIEWGUILD_STAFF_AMENT_INFO']="Use this form to update your guild's announcement.";
-$lang['VIEWGUILD_STAFF_AMENT_BTN']="Update Announcement";
-$lang['VIEWGUILD_STAFF_AMENT_SUCC']="You have successfully updated your guild's announcement.";
-$lang['VIEWGUILD_STAFF_MM_INFO']="Use this form to send a mass mail to each member of your guild.";
-$lang['VIEWGUILD_STAFF_MM_SUCC']="The mass mail has been successfully sent to your guild.";
-$lang['VIEWGUILD_STAFF_MP_INFO']="Use this form to pay your guild all at once.";
-$lang['VIEWGUILD_STAFF_MP_TH']="Payment";
-$lang['VIEWGUILD_STAFF_MP_BTN']="Mass Pay";
-$lang['VIEWGUILD_STAFF_MP_SUCC']="Mass payment has been given out to your guild.";
-$lang['VIEWGUILD_STAFF_MP_ERR']="Your guild's vault does not have enough {$lang['INDEX_PRIMCURR']} to give out to everyone in the guild.";
-$lang['VIEWGUILD_STAFF_MP_ERR2']="could not be given a mass payment as you both share IP Addresses.";
-$lang['VIEWGUILD_STAFF_MP_SUCC2']="was paid successfully.";
-$lang['VIEWGUILD_STAFF_DESC_INFO']="Use this form to update your guild's description.";
-$lang['VIEWGUILD_STAFF_DESC_BTN']="Change Description";
-$lang['VIEWGUILD_STAFF_DESC_SUCC']="You have successfully updated your guild's description.";
-$lang['VIEWGUILD_STAFF_LEADERONLY']="We're sorry, this area is for only the leader of the guild.";
-$lang['VIEWGUILD_STAFF_LEADER_INFO']="Select a user from the dropdown to give them leadership privledges.";
-$lang['VIEWGUILD_STAFF_LEADER_ERR']="You cannot give leadership of your guild to a user who doesn't exist, or isn't in your guild to begin with.";
-$lang['VIEWGUILD_STAFF_LEADER_SUCC']="Leadership privileges for the guild has been transferred successfully.";
-$lang['VIEWGUILD_STAFF_NAME_INFO']="Use this form to change your guild's name.";
-$lang['VIEWGUILD_STAFF_NAME_BTN']="Change Name";
-$lang['VIEWGUILD_STAFF_NAME_TH']="Guild Name";
-$lang['VIEWGUILD_STAFF_NAME_ERR']="You cannot rename your guild after a guild that already exists.";
-$lang['VIEWGUILD_STAFF_NAME_SUCC']="You have successfully changed your guild's name.";
-$lang['VIEWGUILD_STAFF_TOWN_INFO']="Use this form to claim a town in the name of your guild. This town must be unowned, and must be accessible to all your guild members. If it is currently owned, you must declare war on the owning guild to get a chance to claim the town as yours.";
-$lang['VIEWGUILD_STAFF_TOWN_TH']="Guild Town";
-$lang['VIEWGUILD_STAFF_TOWN_BTN']="Claim Town";
-$lang['VIEWGUILD_STAFF_TOWN_ERR']="You cannot own more than one town.";
-$lang['VIEWGUILD_STAFF_TOWN_ERR1']="You cannot own a town that doesn't exist.";
-$lang['VIEWGUILD_STAFF_TOWN_ERR2']="You cannot own a town that is owned by another guild. If you want this town, you will need to declare war on its owner.";
-$lang['VIEWGUILD_STAFF_TOWN_ERR3']="The town you've selected cannot be accessed by one or more of your guild members.";
-$lang['VIEWGUILD_STAFF_TOWN_SUCC']="You have successfully claimed this town in the name of your guild.";
-$lang['VIEWGUILD_STAFF_UNTOWN_ERR']="Your guild does not currently own a town. To claim a town, you need to either claim it, or beat the owner guild in war.";
-$lang['VIEWGUILD_STAFF_UNTOWN_SUCC']="You have successfully given up your guild's town willingly.";
-$lang['VIEWGUILD_STAFF_UNTOWN_CHECK']="Are you sure you wish to surrender your guild's town? Doing so may not guarantee you will get this city back.";
-$lang['VIEWGUILD_STAFF_WAR_FORM']="Use this form to declare war on. Be ready to reap what you sow.";
-$lang['VIEWGUILD_STAFF_WAR_TH']="Guild";
-$lang['VIEWGUILD_STAFF_WAR_BTN']="Declare War";
-$lang['VIEWGUILD_STAFF_WAR_ERR']="You cannot declare war on your own guild. That'd be kinda weird.";
-$lang['VIEWGUILD_STAFF_WAR_ERR1']="The guild you're trying to declare war upon does not exist.";
-$lang['VIEWGUILD_STAFF_WAR_ERR2']="You are already at war with this guild. What would be the point of starting a second war?";
-$lang['VIEWGUILD_STAFF_WAR_ERR3']="You've already warred this guild too recently. Come back seven days after the conclusion of the previous war.";
-$lang['VIEWGUILD_STAFF_WAR_SUCC']="You have successfully declared war. Gather your guild to arms, and prepare for this bloodbath. The war will end in 72 hours. The guild with most points will win. Gain points by winning in combat.";
-$lang['VIEWGUILD_STAFF_LVLUP']="Here you may level up your guild. Your guild will need the minimum required XP to do this. You may gain guild XP by going to war with another guild and gaining points in war. At your guild's level, your guild will need";
-$lang['VIEWGUILD_STAFF_LVLUP1']="Guild XP to level up to the next level. Do you wish to attempt a level up?";
-$lang['VIEWGUILD_STAFF_LVLUP_BTN']="Level Up";
-$lang['VIEWGUILD_STAFF_LVLUP_ERR']="Your guild does not have enough {$lang['GEN_EXP']} to level up at this time.";
-$lang['VIEWGUILD_STAFF_LVLUP_SUCC']="You have successfully leveled up your guild.";
-$lang['VIEWGUILD_STAFF_TAX_ERR']="Your guild does not own a town to even put a tax level upon.";
-$lang['VIEWGUILD_STAFF_TAX_FORM']="Use this form to set a tax level on the town your guild owns.";
-$lang['VIEWGUILD_STAFF_TAX_TH']="Percentage";
-$lang['VIEWGUILD_STAFF_TAX_BTN']="Set Tax Rate";
-$lang['VIEWGUILD_STAFF_TAX_ERR2']="You can only have a tax rate between 0% and 20%";
-$lang['VIEWGUILD_STAFF_TAX_SUCC']="Congratulations, you've set this town's tax rate. If its too high, you may risk getting warred upon by another guild.";
-$lang['VIEWGUILD_WAR_ALERT']="Guild Wars in Progress!";
-$lang['VIEWGUILD_WAR_INFO']="Your guild is currently fighting ";
-$lang['VIEWGUILD_WAR_INFO1']="different guild wars. Find more information";
-$lang['VIEWGUILD_WARVIEW_INFO']="These are the current wars your guild is participating in.";
-$lang['VIEWGUILD_WARVIEW_TD1']="Declarer";
-$lang['VIEWGUILD_WARVIEW_TD2']="Declared Upon";
-$lang['VIEWGUILD_WARVIEW_TD3']="War Concludes";
 
 //Staff estates
 $lang['STAFF_ESTATE_ADD']="Add Estate";
@@ -715,24 +339,6 @@ $lang['STAFF_ESTATE_EDIT_ERR3']="This estate must remain at 100 will. We're sorr
 $lang['STAFF_ESTATE_EDIT_TABLE']="Use this form to edit an estate.";
 $lang['STAFF_ESTATE_EDIT_SUCC']="You have successfully edited this estate!";
 
-//Roulette
-$lang['ROULETTE_TITLE']="Roulette";
-$lang['ROULETTE_INFO']="Ready to test your luck? Awesome! Here at the roulette table, the house always wins. To combat players losing all their wealth in one go, we've put in a bet restriction. At your level, you can only bet";
-$lang['ROULETTE_NOREFRESH']="Please do not refresh while playing roulette. Please use the links provided, thank you!";
-$lang['ROULETTE_TABLE1']="Bet";
-$lang['ROULETTE_TABLE2']="Pick #";
-$lang['ROULETTE_ERROR1']="You cannot bet more {$lang['INDEX_PRIMCURR']} than you currently have.";
-$lang['ROULETTE_ERROR2']="You are trying to place a bet higher than your currently allowed max bet.";
-$lang['ROULETTE_ERROR3']="You can only bet on the numbers between 0 and 36.";
-$lang['ROULETTE_ERROR4']="You must specify a bet larger than 0 {$lang['INDEX_PRIMCURR']}.";
-$lang['ROULETTE_LOST']=". You lose your bet. Sorry man.";
-$lang['ROULETTE_WIN']=" and won! You keep your bet, and pocket an extra";
-$lang['ROULETTE_BTN1']="Place Bet!";
-$lang['ROULETTE_BTN2']="Again. Same bet, please.";
-$lang['ROULETTE_BTN3']="Again, but with a different bet.";
-$lang['ROULETTE_BTN4']="I quit. I don't want to go broke.";
-$lang['ROULETTE_START']="You put in your bet and pull the handle down. Around and around the wheel spins. It stops and lands on";
-
 //Staff Change PW
 $lang['STAFF_USERS_CP_FORM_INFO']="Use this form to change a user's password.";
 $lang['STAFF_USERS_CP_USER']="User";
@@ -741,13 +347,6 @@ $lang['STAFF_USERS_CP_PW']="New Password";
 $lang['STAFF_USERS_CP_ERROR']="You cannot change the password for the admin account this way.";
 $lang['STAFF_USERS_CP_ERROR1']="You cannot change the password for other admin accounts this way.";
 $lang['STAFF_USERS_CP_SUCCESS']="User's password has been changed successfully.";
-
-//Slots
-$lang['SLOTS_INFO']="Welcome to the slots machine. Bet some of your hard earned cash for a slim chance to win big! At your level, we've imposed a betting restriction of ";
-$lang['SLOTS_TABLE1']="Bet";
-$lang['SLOTS_BTN']="Spin baby, spin!";
-$lang['SLOTS_TITLE']="Slot Machine";
-$lang['SLOTS_NOREFRESH']="Please do not refresh the page while gambling at the slot machines. Thank you!";
 
 //Staff bots
 $lang['STAFF_BOTS_TITLE']="Staff Bots";
@@ -927,63 +526,6 @@ $lang['STAFF_IDX_SMELT_LIST']="Smelting";
 $lang['STAFF_IDX_ACADEMY_ADD']="Create Academy";
 $lang['STAFF_IDX_ACADEMY_DEL']="Delete Academy";
 
-//User List
-$lang['USERLIST_TITLE']="Userlist";
-$lang['USERLIST_PAGE']="Pages";
-$lang['USERLIST_ORDERBY']="Order By";
-$lang['USERLIST_ORDER1']="User ID";
-$lang['USERLIST_ORDER2']="Name";
-$lang['USERLIST_ORDER3']="Level";
-$lang['USERLIST_ORDER4']="{$lang['INDEX_PRIMCURR']}";
-$lang['USERLIST_ORDER5']="Ascending";
-$lang['USERLIST_ORDER6']="Descending";
-$lang['USERLIST_TH1']="Gender";
-$lang['USERLIST_TH2']="Active?";
-
-//Stats Page
-$lang['STATS_TITLE']="Statistics Center";
-$lang['STATS_CHART']="User Operating Systems";
-$lang['STATS_CHART1']="Gender Ratio";
-$lang['STATS_CHART2']="Class Ratio";
-$lang['STATS_CHART3']="User Browser Choice";
-$lang['STATS_TH']="Statistic";
-$lang['STATS_TH1']="Statistic Value";
-$lang['STATS_TD']="Register Players";
-$lang['STATS_TD1']="{$lang['INDEX_PRIMCURR']} Withdrawn";
-$lang['STATS_TD2']="{$lang['INDEX_PRIMCURR']} in Banks";
-$lang['STATS_TD3']="Total {$lang['INDEX_PRIMCURR']}";
-$lang['STATS_TD4']="{$lang['INDEX_SECCURR']} in Circulation";
-$lang['STATS_TD5']="{$lang['INDEX_PRIMCURR']} / Player (Average)";
-$lang['STATS_TD6']="{$lang['INDEX_SECCURR']} / Player (Average)";
-$lang['STATS_TD7']="Bank Balance / Player (Average)";
-$lang['STATS_TD8']="Registered Guilds";
-
-//Staff List
-$lang['STAFFLIST_ADMIN']="Admins";
-$lang['STAFFLIST_LS']="Last Seen";
-$lang['STAFFLIST_CONTACT']="Contact";
-$lang['STAFFLIST_ASSIST']="Assistants";
-$lang['STAFFLIST_MOD']="Forum Moderators";
-
-//Timezone Change
-$lang['TZ_TITLE']="Changing Timezone";
-$lang['TZ_BTN']="Change Timezone";
-$lang['TZ_SUCC']="You have successfully updated your timezone settings.";
-$lang['TZ_FAIL']="You have specified an invalid timezone setting.";
-$lang['TZ_INFO']="Here, you may change your timezone. This will change all dates on the game for you. This won't speed up any processes. The default timezone is <u>(GMT) Greenwich Mean Time</u>. All game-wide announcements and features will be based on this timezone.";
-
-//Smelting
-$lang['SMELT_HOME']="Smeltery";
-$lang['SMELT_TH']="Output Item";
-$lang['SMELT_TH1']="Required Items x Quantity";
-$lang['SMELT_TH2']="Action";
-$lang['SMELT_DO']="Smelt Item";
-$lang['SMELT_DONT']="Cannot craft";
-$lang['SMELT_ERR']="You are trying to create an item with a non-existent smelting recipe.";
-$lang['SMELT_ERR1']="You're missing one or more items required for this smelting recipe.";
-$lang['SMELT_SUCC']="You've began creating your item. It'll be given to you shortly.";
-$lang['SMELT_SUCC1']="You have successfully smelted this item.";
-
 //Staff Smelting
 $lang['STAFF_SMELT_HOME']="Staff Smeltery";
 $lang['STAFF_SMELT_ADD_TH']="Value";
@@ -1007,12 +549,6 @@ $lang['STAFF_SMELT_DEL_FORM']="Use this form to delete a smelting recipe.";
 $lang['STAFF_SMELT_DEL_TH']="Smelting Recipe";
 $lang['STAFF_SMELT_DEL_BTN']="Delete Recipe";
 $lang['STAFF_SMELT_DEL_SUCC']="Smelting recipe has been successfully removed from the game.";
-
-//Password Reset Form
-$lang['PWR_INFO']="Please enter the email adress tied to your account so we can send information on how to reset your password. Please be sure to check your junk folder.";
-$lang['PWR_SUCC']="Thank you for submitting the form. If there's an account for the specified email address, it'll be email with a link to start the password reset process. This link will expire in 30 minutes.";
-$lang['PWR_ERR']="Invalid or non-existent recovery token specified.";
-$lang['PWR_SUCC1']="We've email your new password to you. Check your email and/or junk folder for it.";
 
 //API
 $lang['API_ERROR']="You are trying to view and/or alter a sensitive field, and we've blocked you from doing this.";
@@ -1050,40 +586,6 @@ $lang['SCU_ERR11']="The passwords you inputted do not match.";
 $lang['SCU_SUC']="You have successfully created a user!";
 $lang['SCU_OTHER']="Other";
 $lang['SEU_BTN']="Edit User";
-
-//Temple
-$lang['TEMPLE_TITLE']="Temple of Fortune";
-$lang['TEMPLE_INTRO']="Welcome to the Temple of Fortune. Here you may spend your {$lang['INDEX_SECCURR']} as you see fit!";
-$lang['TEMPLE_ENERGY']="Refill {$lang['INDEX_ENERGY']} - ";
-$lang['TEMPLE_BRAVE']="Refill {$lang['INDEX_BRAVE']} - ";
-$lang['TEMPLE_WILL']="Refill {$lang['INDEX_WILL']} - ";
-$lang['TEMPLE_IQ']="Convert to {$lang['GEN_IQ']} - ";
-$lang['TEMPLE_CASH']="Convert to {$lang['INDEX_PRIMCURR']}";
-$lang['TEMPLE_ENERGY_ERR']="You do not have enough {$lang['INDEX_SECCURR']} to refill your {$lang['INDEX_ENERGY']}.";
-$lang['TEMPLE_ENERGY_ERR1']="You already have 100% {$lang['INDEX_ENERGY']}.";
-$lang['TEMPLE_ENERGY_SUCC']="You have successfully refilled your {$lang['INDEX_ENERGY']}.";
-$lang['TEMPLE_BRAVE_ERR']="You do not have enough {$lang['INDEX_SECCURR']} to refill your {$lang['INDEX_BRAVE']}.";
-$lang['TEMPLE_BRAVE_ERR1']="You already have 100% {$lang['INDEX_BRAVE']}.";
-$lang['TEMPLE_BRAVE_SUCC']="You have successfully refilled your {$lang['INDEX_BRAVE']} by 5%.";
-$lang['TEMPLE_WILL_ERR']="You do not have enough {$lang['INDEX_SECCURR']} to refill your {$lang['INDEX_WILL']}.";
-$lang['TEMPLE_WILL_ERR1']="You already have 100% {$lang['INDEX_WILL']}.";
-$lang['TEMPLE_WILL_SUCC']="You have successfully refilled your {$lang['INDEX_WILL']} by 5%.";
-$lang['TEMPLE_IQ_INFO']="You can trade your {$lang['INDEX_SECCURR']} for {$lang['GEN_IQ']} here at a ratio of";
-$lang['TEMPLE_IQ_INFO2']="{$lang['GEN_IQ']} per {$lang['INDEX_SECCURR']}. You currently have ";
-$lang['TEMPLE_IQ_TH']="{$lang['INDEX_SECCURR']} To Trade";
-$lang['TEMPLE_IQ_BTN']="Trade For {$lang['GEN_IQ']}";
-$lang['TEMPLE_IQ_ERR']="Fill out the previous form.";
-$lang['TEMPLE_IQ_ERR1']="You do not have enough {$lang['INDEX_SECCURR']}.";
-$lang['TEMPLE_IQ_SUCC']="You have successfully traded in ";
-
-//Users Online List
-$lang['UOL_TITLE']="Users Online";
-$lang['UOL_TH']="Username / User ID";
-$lang['UOL_TH1']="Last On";
-$lang['UOL_ACT']="5 Minutes";
-$lang['UOL_ACT1']="15 Minutes";
-$lang['UOL_ACT2']="1 Hour";
-$lang['UOL_ACT3']="1 Day";
 
 //Staff Settings
 $lang['SS_GAME']="Game Name";
@@ -1136,29 +638,6 @@ $lang['SS_UPDATE']="Update Checker";
 $lang['SS_RESTORE']="Press this button to restore your users stats to 100%, and remove them from the infirmary and dungeon.";
 $lang['SS_RESTORE_BTN']="Restore Users";
 $lang['SS_RESTORE_SUCC']="You've successfully restored your users.";
-
-//Secondary Market
-$lang['SMARKET_ADD']="Add Listing";
-$lang['SMARKET_TH']="Lister";
-$lang['SMARKET_TH1']="Cost";
-$lang['SMARKET_TH2']="Actions";
-$lang['SMARKET_TD']="Remove";
-$lang['SMARKET_TD1']="Buy";
-$lang['SMARKET_ERR']="You must specify a listing you wish to buy.";
-$lang['SMARKET_ERR1']="You cannot purchase your own offer.";
-$lang['SMARKET_ERR2']="The offer you are trying to buy does not exist!";
-$lang['SMARKET_BERR']="You must specify an offer you wish to cancel.";
-$lang['SMARKET_BERR1']="You are not the owner fo this offer, so you cannot cancel it.";
-$lang['SMARKET_BERR2']="The offer you are trying to remove does not exist!";
-$lang['SMARKET_ERR3']="You do not have enough {$lang['INDEX_PRIMCURR']} to buy this offer.";
-$lang['SMARKET_SUCC']="You have successfully bought this offer!";
-$lang['SMARKET_SUCC1']="You have successfully removed your {$lang['INDEX_SECCURR']} offer from the market.";
-$lang['SMARKET_SUCC2']="You have successfully added an offer to the {$lang['INDEX_SECCURR']} Market.";
-$lang['SMARKET_INFO']="use this form to add {$lang['INDEX_SECCURR']} to the market.";
-$lang['SMARKET_TH']="{$lang['INDEX_PRIMCURR']} Each";
-$lang['SMARKET_BTN']="Create Offer";
-$lang['SMARKET_AERR']="You input some invalid values on the previous form.";
-$lang['SMARKET_AERR1']="You do not have that much {$lang['INDEX_SECCURR']} to add to the market.";
 
 //Staff Privledges
 $lang['STAFF_PRIV_INFO']="Select a user, then set their permission level.";
@@ -1226,30 +705,6 @@ $lang['STAFF_NOTES_ERR']="You need to specific both a user and the information y
 $lang['STAFF_NOTES_ERR1']="The user you specified does not exist. Go back and try again.";
 $lang['STAFF_NOTES_SUCC']="You have successfully updated this user's staff notes.";
 
-//Russian Roulette
-$lang['RUSSIANROULETTE_TITLE'] = "Russian Roulette";
-$lang['RUSSIANROULETTE_SELF'] = "Even if you are lonely and want to play a game you CANNOT play by yourself!";
-$lang['RUSSIANROULETTE_NO_INVITE'] = "Error: You have not been challenged to russian roulette by";
-$lang['RUSSIANROULETTE_INVALID_ACCOUNT'] = "Error: While you have not been challenged by this user. This account does not seem to exist";
-$lang['RUSSIANROULETTE_INSUFFICIENT_CURRENCY'] = "Error: You have insufficient currency";
-$lang['RUSSIANROULETTE_CHOICE'] = "You have entered russian roulette followed by";
-$lang['RUSSIANROULETTE_FIRST'] = ", You sit down and chose to be player one...";
-$lang['RUSSIANROULETTE_SECOND'] = ", You sit down and chose to be player two...";
-$lang['RUSSIANROULETTE_WON'] = "Once";
-$lang['RUSSIANROULETTE_WON2'] = "pulled the trigger on the";
-$lang['RUSSIANROULETTE_WON3'] = "attempt the barrel lit off. You emerged with a sum of";
-$lang['RUSSIANROULETTE_LOST'] = "You were left off with the";
-$lang['RUSSIANROULETTE_LOST2'] = "attempt. Shaking, You pulled the trigger. the barrel lit off and you utterly bound by the cruel fate of the loser leaving you with";
-$LANG['RUSSIANROULETTE_LOST3'] = "in the infirmary and losing";
-$lang['RUSSIANROULETTE_USER_INSERT'] = "Which UserID do you want to challenge?";
-$lang['RUSSIANROULETTE_REWARD_INSERT'] = "How much are YOU willing to pay?";
-$lang['RUSSIANROULETTE_SEND'] = "Send Challenge";
-$lang['RUSSIANROULETTE_FAILED_FORM'] = "Please insert a UserID!";
-$lang['RUSSIANROULETTE_INVALID_ACCOUNT_SEND'] = "The account you are challenging does not exist";
-$lang['RUSSIANROULETTE_VALID_ACCOUNT_SEND'] = "You have sent a request to";
-$lang['RUSSIANROULETTE_DENIED'] = "You have successfully denied the current russian roulette challenge!";
-$lang['RUSSIANROULETTE_SCAM'] = "This player offered the amount and ran off with it! They have been notified so please wait in the meantime!";
-
 //Staff donate
 $lang['STAFF_DONATE_TITLE']="Staff VIP Packs";
 $lang['STAFF_DONATE_ADD_INFO']="Use this form to add a VIP Pack to the game.";
@@ -1266,69 +721,6 @@ $lang['STAFF_DONATE_DEL_INFO']="Use this form to remove a VIP Pack from the game
 $lang['STAFF_DONATE_DEL_ERR']="You must input a VIP Pack you wish to delete.";
 $lang['STAFF_DONATE_DEL_ERR1']="The VIP Pack you chose to delete is invalid or does not exist.";
 $lang['STAFF_DONATE_DEL_SUCC']="You have successfully removed this VIP Pack from the VIP Pack Store.";
-
-//Tutorial Information
-$lang['TUT_WELCOME']="Welcome to the ";
-$lang['TUT_WELCOME1']="Tutorial";
-$lang['TUT_WELCOME2']="Our hopes are that this tutorial will help you to better understand our wonderful game. If you are confused by any of the terminology here, please contact a staff member listed <a href='staff.php'>here</a>.";
-$lang['TUT_INFO']=", you are entirely free to play as you see fit, so long as you don't break the game rules. You're free to protect the weak, or exploit their shortcomings. Be charitable with your cash, or keep it all to yourself. Declare war on a person, or a whole guild. The choice is yours.";
-$lang['TUT_GLOSSARY']="Glossary";
-$lang['TUT_PT1']="Basics";
-$lang['TUT_PT2']="Navigation";
-$lang['TUT_PT3']="Explore";
-$lang['TUT_PT4']="Training";
-$lang['TUT_PT5']="Combat";
-$lang['TUT_PT6']=$lang['EXPLORE_GUILDS'];
-$lang['TUT_BASICS']="Our wonderous game is a Text Themed RPG, meaning everything you do is by clicking on links, or by writing out respones. For example, to view your inventory, you would click the Inventory link at the top of the page.";
-$lang['TUT_STATS']="Personal Stats";
-$lang['TUT_STATS_DETAIL']="There are currently five stats in-game: {$lang['GEN_STR']}, {$lang['GEN_AGL']}, {$lang['GEN_GRD']}, {$lang['GEN_IQ']} and {$lang['GEN_LAB']}. Increasing your {$lang['GEN_STR']} will increase how much damage you can dish out in combat. Increasing {$lang['GEN_AGL']} will increase your chance of one of your strikes connecting with your opponent. Increasing your {$lang['GEN_GRD']} will decrease the damage your opponents do to you. {$lang['GEN_IQ']} and {$lang['GEN_LAB']} are miscellaneous stats used around the game. It's good to have these at a fairly decent level.";
-$lang['TUT_PINFO']="Personal Info";
-$lang['TUT_PINFO_DETAIL']="If you click the game's name on the top left corner, it'll redirect you to the main index where you can view your personal information. This page shows your {$lang['GEN_STATS']}, {$lang['INDEX_LEVEL']}, {$lang['INDEX_PRIMCURR']}, {$lang['INDEX_SECCURR']}, {$lang['INDEX_VIP']}, {$lang['INDEX_HP']}, {$lang['INDEX_EXP']}, {$lang['INDEX_WILL']}, {$lang['INDEX_BRAVE']} and {$lang['INDEX_ENERGY']}. You can also update your {$lang['INDEX_PN']} here as well. {$lang['INDEX_ENERGY']} is used for training and attacking. {$lang['INDEX_WILL']} effects how much you gain while training, so in turn, a low will level means low gains in the gym. {$lang['INDEX_BRAVE']} is used to commit crimes. The more difficult the crime is, the more brave it'll require. Do note that committing crimes have other requirements to succeed. {$lang['INDEX_EXP']} is the {$lang['GEN_EXP']} you have, and how close you are to leveling up. {$lang['INDEX_HP']} shows how healthy your character is. You lose {$lang['INDEX_HP']} when you receive a hit in combat.";
-$lang['TUT_NAVBAR']="Navigation Bar";
-$lang['TUT_NAVBAR_DETAIL']="The navigation bar (or dropdown) is your gateway to the game. Clicking on the <b>game name in the top left corner</b> will take you to your Personal Info page. Clicking on <b>Explore</b> will allow you to explore many of the features of the game. (More information on this later!) Clicking <b>Mail</b> will take you to your personal mailbox where you can write and read letters to others. <b>Notifications</b> will take you to your notification box, where game events will be posted if they involve you. Clicking <b>Inventory</b> will allow you to view the items you have in your inventory, along with the gear you have equipped.";
-$lang['TUT_NAV']="Being able to view and navigate through our game is important! The top navigation bar (or dropdown, if you're on mobile) is where you will find access to the rest of the game.";
-$lang['TUT_NAVDROP']="Navigation Bar Dropdown";
-$lang['TUT_NAVDROP_DETAIL']="Clicking the <b>Hello, [Your Name] Dropdown</b> will display more information. Clicking on <b>Profile</b> will take you to your personal profile page. This is what others see when they click on your name in-game. Clicking on <b>Settings</b> will take you to your account settings. Here you can change your display picture, password, username, language, template colors, and forum signature! Clicking <b>Game Rules</b> will show you the rules of the game. It's recommended that you read these over so you know what you can and cannot do. Finally, clicking <b>Logout</b> will terminate your session.";
-$lang['TUT_EXPLORE']="Exploring is the best way around the game. The explore page is the highway to all other game features.";
-$lang['TUT_SHOPS']="{$lang['EXPLORE_SHOP']}";
-$lang['TUT_SHOPS_DETAIL']="Hovering over the <b>{$lang['EXPLORE_SHOP']}</b> category will display the numerous ways you can buy things in the game. <b>{$lang['EXPLORE_LSHOP']}</b> are the game-created shops in your town. You'll find a finite amount of items in these shops. However, if you're wanting something a little more flashy, the <b>{$lang['EXPLORE_IMARKET']}</b> is a market ran exclusively by other players. You'll find all sorts of items for sale here. Note, that players also set their own pricing. The <b>{$lang['EXPLORE_IAUCTION']}</b> is a great place to see if you can pick up some awesome prices on items by bidding on them, eBay style. <b>{$lang['EXPLORE_TRADE']}</b> will allow you to conduct business privately with another player. The <b>{$lang['EXPLORE_SCMARKET']}</b> is an easy way to convert your {$lang['INDEX_SECCURR']} into {$lang['INDEX_PRIMCURR']}, depending on the market demand.";
-$lang['TUT_FINANCIAL']="{$lang['EXPLORE_FD']}";
-$lang['TUT_FINANCIAL_DETAIL']="Hovering over <b>{$lang['EXPLORE_FD']}</b> will greet you with a category of ways to use your currency. The <b>{$lang['EXPLORE_BANK']}</b> will allow you safely store your {$lang['INDEX_PRIMCURR']}. Storing in the {$lang['EXPLORE_BANK']} will keep your money safe from being robbed from you, and even gain you interest at midnight each night. Clicking <b>{$lang['EXPLORE_ESTATES']}</b> will allow you to view the estates available to purchase. Buying an estate will increase your Maximum {$lang['INDEX_WILL']}, thus improving your gains while training. If you're starting to hate the town you're in, <b>{$lang['EXPLORE_TRAVEL']}</b> is your ticket to other towns. Mind you, towns may have {$lang['INDEX_LEVEL']} requirements, and varying tax levels. The <b>{$lang['EXPLORE_TEMPLE']}</b> is where you can spend your {$lang['INDEX_SECCURR']}. You can refill your {$lang['INDEX_ENERGY']}, {$lang['INDEX_WILL']}, and {$lang['INDEX_BRAVE']} here. You may also purchase {$lang['GEN_IQ']}.";
-$lang['TUT_HL']=$lang['EXPLORE_HL'];
-$lang['TUT_HL_DETAIL']="You will find that the labor category is where you will spend a lot of your time at. <b>{$lang['EXPLORE_MINE']}</b> is a great place to find riches. Be careful though, as nearby warriors may get jealous of your haul. If you're too careless, you could also ignite a gas pocket, placing yourself into the <b>{$lang['EXPLORE_INFIRM']}</b>. The <b>{$lang['EXPLORE_SMELT']}</b> can be used to smelt your items gained while mining, into better items. Obviously, you will need the required items for this to work. <b>{$lang['EXPLORE_WC']}</b> will allow you to chop trees to sell for cold, hard currency. <b>{$lang['EXPLORE_FARM']}</b> will allow you to channel your inner farmer. You can use the harvested crops to create better foods, or sell for a profit. Finally, the <b>{$lang['EXPLORE_BOTS']}</b> will allow you to quickly attack NPCs. If you mug the NPCs listed, you will be able to get a special item drop. Note that this can only happen once per each bot's cooldown time.";
-$lang['TUT_ADMIN']=$lang['EXPLORE_ADMIN'];
-$lang['TUT_ADMIN_DETAIL']="This category has no general theme, to be honest. Checking out <b>{$lang['EXPLORE_USERLIST']}</b> will list all the registered users in-game, and allow you to organize them by {$lang['INDEX_LEVEL']}, ID, {$lang['INDEX_PRIMCURR']} or name. Clicking <b>{$lang['UOL_TITLE']}</b> will list the players online in the last 15 minutes. You can customize this to any duration you wish. <b>{$lang['EXPLORE_STAFFLIST']}</b> will list all in-game staff. These players uphold the law and order of the game. If you have any issue, you should contact them! The <b>{$lang['EXPLORE_FED']}</b> is where bad folks go. If you follow the rules, you won't ever have to get locked up. If you get locked up, you will lose access to almost all game features. <b>{$lang['EXPLORE_STATS']}</b> will list your game statistics. There's a lot shown here, so check it out to get an idea! If you suspect a player breaking a rule, use the <b>{$lang['EXPLORE_REPORT']}</b> link to report them. Reports here are anonymous, and won't be used in investigations against players. If you abuse this form, however, you will be dealt with harshly. Finally, <b>{$lang['EXPLORE_ANNOUNCEMENTS']}</b> will show you announcements posted by staff members. A lot of important information or changes will be listed here.";
-$lang['TUT_GAMES']=$lang['EXPLORE_GAMES'];
-$lang['TUT_GAMES_DETAIL']="We have several games for you to play to keep your mind off the stress of the game. Games inside of a game. Isn't this how you destroy the world? In either case, <b>{$lang['EXPLORE_RR']}</b> is a deadly game that you can challenge your friends to. You point a gun to each other's heads until someone is shot. If you're shot, game over. If that's too high risk for you, how about trying out <b>{$lang['EXPLORE_HILO']}</b>? Simply decide if the next drawn number will be higher or lower than the current number. If you're right, you pocket some extra {$lang['INDEX_PRIMCURR']}. If you want a little more thrill, check out <b>{$lang['EXPLORE_ROULETTE']}</b>! Pick a number, bet on it, and hope you win! Finally, if you want to play a game of chance, how about betting at the <b>{$lang['EXPLORE_SLOTS']}</b>?";
-$lang['TUT_GUILDS']=$lang['EXPLORE_GUILDS'];
-$lang['TUT_GUILDS_DETAIL']="Hovering over the <b>{$lang['EXPLORE_GUILDS']}</b> section will display links pertaining to guilds. Firstly, if you have joined a guild, <b>{$lang['EXPLORE_YOURGUILD']}</b> will take you to view your guild. However, this is useless if you aren't in a guild. To join a guild, or view possible enemies of your own guild, clicking on <b>{$lang['EXPLORE_GUILDLIST']}</b> will list all the guilds in the game. Clicking on a guild's name will allow you to view detailed information about the guild. If you're curious about guild feuds, however, clicking on <b>{$lang['EXPLORE_WARS']}</b> will list all active guild wars. You will find more about the usefulness of guilds later in the tutorial.";
-$lang['TUT_ACT']=$lang['EXPLORE_ACT'];
-$lang['TUT_ACT_DETAIL']="Opening the activities section will allow you to view numerous things to do around the game. <br />Firstly, the <b>{$lang['EXPLORE_DUNG']}</b> will list the players in the dungeon. You will be placed here if you are caught committing crimes. <br />The <b>{$lang['EXPLORE_INFIRM']}</b> will show those who are receiving medical treatment. You will be placed here if you sustain excessive injuries.<br /> To get stronger in game, we suggest bulking up at the <b>{$lang['EXPLORE_GYM']}</b>. Here you may train your stats. The importance of these stats are explained in the <a href='#basics'>basics</a>. <br />You cannot get spending cash until you work, so we suggest finding work by clicking on <b>{$lang['EXPLORE_JOB']}</b>. Here you will be paid, based on your rank in the company you wish to work for. Different companies pay different rates, and have different requirements. More information about this later. <br />Visiting the <b>{$lang['EXPLORE_ACADEMY']}</b> will allow you to enroll in a course. Courses cost money, and after the course finishes, you will be awarded will a substantial amount of stats. Courses may have other requirements. <br />If you're wanting to make some quick, but risky money, try chekcing out the <b>{$lang['EXPLORE_CRIMES']}</b>. Here you can commit crimes, which cost {$lang['INDEX_BRAVE']}. There's the chance you will be caught. The success rate is determined by your {$lang['INDEX_LEVEL']}, {$lang['INDEX_WILL']}, and most definitely {$lang['GEN_IQ']}. <br />Finally, clicking <b>{$lang['EXPLORE_TUTORIAL']}</b> will load the game tutorial for you to read. If you are ever confused, view the tutorial. Oh wait... you already are.";
-$lang['TUT_PINTER']=$lang['EXPLORE_PINTER'];
-$lang['TUT_PINTER_DETAIL']="Opening the {$lang['EXPLORE_PINTER']} section will allow you to view ways you can interact with other players in a public setting. <b>{$lang['EXPLORE_FORUMS']}</b> will allow you to view the in-game forums. You can create your own threads, and reply to others. Remember, don't get upset if someone gives you a hard time, it's all in good fun. Viewing the game's <b>{$lang['EXPLORE_NEWSPAPER']}</b> will allow you to see ads posted by other players. You can, of course, post your own ads. You can write about anything here, awesome enough. Finally, the <b>{$lang['POLL_TITLE']}</b> will be home to the polls created by the staff members, of which, you are free vote in. You can also view the results of the previous polls here as well. Polls are used to get an idea of how other players feel about changes in-game.";
-$lang['TUT_TOPTEN']=$lang['EXPLORE_TOPTEN'];
-$lang['TUT_TOPTEN_DETAIL']="The {$lang['EXPLORE_TOPTEN']} listing will list the top ten strongest players in the game, in order of total stats. These are the players you want to beat. It's a high honor to be a part of this list. It takes lots of time and dedication to get here. Don't be upset if you can't get here.";
-$lang['TUT_REFFERAL']="Referral Link";
-$lang['TUT_REFFERAL_DETAIL']="Your referral link is your personal registration link. Giving this to your friends will allow you to receive rewards when your friends register. Post this link anywhere you see fit. Just don't be a dick and spam it on other games.";
-$lang['TUT_TRAINING']="Training is a great way to increase your stats. Remember, the higher your stats, the more people you will be able to beat in combat.";
-$lang['TUT_GYM']="Basic Training";
-$lang['TUT_GYM_DETAIL']="In a nutshell, training involves spending your {$lang['INDEX_WILL']} and {$lang['INDEX_ENERGY']} for stats. To increase your gains while training, you should increase your maximum will. You can do this by buying a new estate. We recommend buying the best estate for your level. If you begin to have very low gains for your level, wait a few minutes for your {$lang['INDEX_WILL']} to refill. If the wait is too much, you can refill your {$lang['INDEX_WILL']} at the <b>{$lang['EXPLORE_TEMPLE']}</b> found on {$lang['MENU_EXPLORE']}.";
-$lang['TUT_POWERTRAIN']="Power Training"; 
-$lang['TUT_POWERTRAIN_DETAIL']="Power training is the term used to describe when you spend excessive amounts of time, patience and skill training your stats to have a signifcant increase. Power training blows through your resources quickly, so it's a good idea to make sure you have enough {$lang['INDEX_SECCURR']} before you start power training. The idea is to have your {$lang['INDEX_WILL']} maxed out, and train using all your {$lang['INDEX_ENERGY']} in one session, then refilling both your {$lang['INDEX_ENERGY']} and {$lang['INDEX_WILL']} before training again. This is complex, so don't worry if you do not understand how this works. There's also many ways of doing this, so you may end up creating your own style of power training.";
-$lang['TUT_GGYM']="Guild Gym";
-$lang['TUT_GGYM_DETAIL']="The guild gym becomes available for use when your guild level's level is 3 or above. The guild gym has the advantage of having increased stat output compared to the normal gym. You will gain 2% more stats per guild level, up to a maximum of double your maximum gains.";
-$lang['TUT_COMBAT']="To get almost anywhere in our game, you need to fight others in combat. The weak will fall, and the strong will reign supreme. Increasing your {$lang['GEN_AGL']}, {$lang['GEN_STR']}, and {$lang['GEN_GRD']} will increase your chance of success in combat.";
-$lang['TUT_ATTACK1']="Robbing";
-$lang['TUT_ATTACK1_DETAIL']="After successfully besting your opponent in combat, you can choose to <b>{$lang['ATTACK_FIGHT_OUTCOME1']}</b> them. This will allow you to steal some of their {$lang['INDEX_PRIMCURR']}, and place them into the {$lang['EXPLORE_INFIRM']}. The amount you steal is based upon how much you are able to snatch from their person. Obviously, if they have nothing on their person, you won't get anything.";
-$lang['TUT_ATTACK2']="Brutality";
-$lang['TUT_ATTACK2_DETAIL']="If the person you've beat has pissed you off, you should <b>{$lang['ATTACK_FIGHT_OUTCOME2']}</b> them up. This will increase their {$lang['EXPLORE_INFIRM']} time. Be careful, though, as they may end up getting a friend involved to do the same back.";
-$lang['TUT_ATTACK3']="{$lang['GEN_EXP']}";
-$lang['TUT_ATTACK3_DETAIL']="If you are just wanting to level up, <b>{$lang['ATTACK_FIGHT_OUTCOME3']}</b> will allow you to end the fight honorably. You will gain {$lang['INDEX_EXP']}, and your opponent will spend the least amount of time in the {$lang['EXPLORE_INFIRM']} out of all the options. The {$lang['INDEX_EXP']} you gain is based on the {$lang['INDEX_LEVEL']} difference between you and them. Note that you will only receive 33% of the {$lang['INDEX_EXP']} you would have if their stats are not within 90% of your total stats.";
-$lang['TUT_ATTACK4']="Losing A Fight";
-$lang['TUT_ATTACK4_DETAIL']="Losing a fight happens to all of us. You will lose some {$lang['INDEX_EXP']}, and be placed into the {$lang['EXPLORE_INFIRM']}. Take time to train, then try attacking them again!";
-$lang['TUT_ATTACK5']="Guild Warring";
-$lang['TUT_ATTACK5_DETAIL']="If you are in a guild, you run the risk of having your guild being warred upon. Wars last 72 hours, and the guild with the most points win the war. To get points, you must be successful in combat against the enemy guild members. Every time you beat an enemy guild member, you gain a single point. If you lose in battle, your enemy wins a single point. After the conclusion of the war, you cannot redeclare on the enemy guild until 7 days later.";
-$lang['TUT_GUILD']="{$lang['EXPLORE_GUILDS']} are a greay way for players to coordinate together under one unit. {$lang['EXPLORE_GUILDS']} cost 500,000 {$lang['INDEX_PRIMCURR']} to create. By default, {$lang['EXPLORE_GUILDS']} will only be able top hold 5 members. You can increase this by increasing the guild's level.";
 
 //Staff mass mail
 $lang['STAFF_MM_INFO']="Mass Mail";
@@ -1405,66 +797,4 @@ $lang['STAFF_LOGS_MAIL_MSG']="Message Contents";
 $lang['STAFF_LOGS_USER']="User Specific Logs";
 $lang['STAFF_LOGS_USER_ERR']="The user you chose is invalid or non-existent.";
 $lang['STAFF_LOGS_USER_ERR1']="This user does not exist, or has yet to do any in-game actions.";
-
-//Privacy Policy
-$lang['PP_TITLE']="Privacy Policy";
-$lang['PP_INTRO']="is seriously commited towards protecting the privacy of its users when processing personal data and considers this for all business practices.";
-$lang['PP_INTRO2']="observes the pertinent data protection guidelines. These data protection provisions apply to all services offered on websites operated by"; 
-$lang['PP_INTRO3']="as well as to portals and to all online games offered by";
-$lang['PP_INTRO4']=" ('Website') but not to pages belonging to other providers to which the website may link. In this respect, the data provision conditions of the relevant provider shall apply.";
-$lang['PP_INTRO5']="Here we would like to inform you about the way we collect and use data. By accessing and using the Website, you expressly declare that you approve of the following data protection provisions. At any time, you have the right to revoke any potentially granted approvals to be effective in the future. (Refer to clause 7 'Revocation option').";
-$lang['PP_INTRO6']="If you have any questions as to how we use your personal data, please contact us. (refer to clause 8 'Questions on data protection and contact') .";
-$lang['PP_SEC1']="1. Capturing and Use of Your Personal Data by";
-$lang['PP_SEC11']="1.1 You are anonymous when visiting the website. Any access by a user of the website and any retrieval of a file always collects access data on this process in the protocol file on our server without personal relevance and is stored in our server as follows: Internet Protocol, address / IP address, page from which the file was requested, date, time, browser type and operating system, the page you visited, transferred data quantity, access status (file transferred, file not found, etc.). This data is used to generate statistics which help";
-$lang['PP_SEC11_2']="to adapt the services offered to your requirements.";
-$lang['PP_SEC12']="1.2 In principle,";
-$lang['PP_SEC12_2']="only gains knowledge of, captures and utilises such data which you provide when using the website within the scope of your initial registration and full user registration and, if applicable, when making use of services subject to a charge. Upon initial registration and full user registration, all you need is to give a user name and an email address.";
-$lang['PP_SEC13']="1.3 Within the scope of executing the concluded user agreement, in particular with regard to any services subject to a charge which you have selected, you may be required to provide further data, such as for example, full name, address, banking details, credit card numbers, etc. The processing of your requests or your support may also require us to ask for personal data, such as your name, address, email address and telephone number.";
-$lang['PP_SEC13_2']="will treat this data confidentially and according to the legal data protection provisions.";
-$lang['PP_SEC13_3']="will not pass such information to a third party without your authorization, other than to the extent required to execute the agreement, to process your requests or for your support. You will find more details regarding passing on data to third parties in clause 5 'Passing personal data to third parties'.";
-$lang['PP_SEC14']="1.4 Here,";
-$lang['PP_SEC14_2']="points out that inventory data, utilisation data and statement data according to Articles 14, 15 of the Telecommunications Act or Article 28 of the Federal Data Protection Act are collected, processed and used and this is done, as far as required, even beyond the fulfilment of an agreement.";
-$lang['PP_SEC14_3']="reserves the right to store IP addresses and log files for a reasonable period of time after making use of the website to monitor whether the user complies with the conditions and game rules, in particular to ensure proper processing of the payment that you have authorized. This process especially serves to prevent or clarify any cases of abuse and to allow these data to be appropriately passed on to the investigative authorities in specific instances. For the rest, as far as possible, any other evaluation of the data takes place in an anonymized form. Provided there is no pending concrete prosecution action and no preliminary proceedings have been initiated for abuse, the IP addresses and log files are deleted in full at the end of this deadline.";
-$lang['PP_SEC15']="1.5 At its own initiative or at your request,";
-$lang['PP_SEC15_2']="can complete, correct or delete incomplete, incorrect and/or outdated personal data which";
-$lang['PP_SEC15_3']="stores in connection with the operation of the website.";
-$lang['PP_SEC16']="1.6 Within the scope of legal provisions,";
-$lang['PP_SEC16_2']="immediately deletes personal data at the authorised person`s request, provided this does not contradict mandatory legal retention obligations.";
-$lang['PP_SEC2']="2. Receipt of Information About the Game / Newsletter";
-$lang['PP_SEC2_2']="With your registration, you confirm that you agree to receive regular email information about the game (e.g. information about updates, etc.) for which you have initially registered / fully registered. You can, at any time, send ";
-$lang['PP_SEC2_3']="a message that you no longer wish to receive such information. In addition, you always have the option to de-register via your account settings directly in the game to stop any further receipt.";
-$lang['PP_SEC2_4']="<u><b>You can revoke your approval to use your email address to receive information about the game and/or the newsletter at any time with effect for the future</b></u> (For contact information, refer to clause 7).";
-$lang['PP_SEC3']="3. The Use of Cookies and Web Beacons";
-$lang['PP_SEC31_INFO']="3.1 Own cookies and web beacons, advertising by third parties, links to other websites";
-$lang['PP_SEC31']="In order to design our Internet offer in the most user-friendly manner for you, we, as well as many other companies, also use so-called permanent or temporary cookies and web beacons. Cookies are small text files which are stored on the user's computer and allow for an analysis of how he or she uses the website. This storage, for example, serves to enable an auto-login so that you do not have to identify yourself each time you access the site. No personal identification of the user takes place based on the data stored in the cookie.";
-$lang['PP_SEC31_2']="If you do not want cookies to be stored on your computer or wish to be informed of their storage, you can prevent the installation of cookies by a corresponding adjustment to your browser software by selecting the option 'do not accept cookies' in your browser settings. Your browser manufacturer's instructions will give you more details on how this works. However, we would like to point out that by preventing cookies, you may find that you cannot use all of the website's functions to the full extent.";
-$lang['PP_SEC321']="3.2.1 Google Analytics";
-$lang['PP_SEC321_2']="Google Analytics, a web analysis service from the provider Google Incorporated ('Google'), collects and stores data on the company`s website, enabling the creation of user profiles under pseudonyms. These user profiles serve to analyse visitor behaviour and are evaluated in order to improve and design our offer so as to meet the demands. Cookies can be used for this purpose. You can prevent cookies being installed by making a corresponding adjustment to your browser software; however, we must point out that if you do so, you may not be able to use all the functions on this website to the full extent. The pseudonymous user profiles are not merged with personal data via the pseudonym carrier without an especially granted approval by the affected person. You can, at any time with effect for the future, object to the collection and storing of data for the purpose of web analysis by installing the browser add-on to deactivate Google Analytics. (<a href='http://tools.google.com/dlpage/gaoptout'>https://tools.google.com/dlpage/gaoptout</a>).";
-$lang['PP_SEC33']="3.3. Advertising by Third Parties, Links to Other Websites";
-$lang['PP_SEC331']="3.3.1 From time to time, the website may also contain advertising by a third party and interactive links to third party Internet appearances for which";
-$lang['PP_SEC331_2']="is not responsible. In particular,";
-$lang['PP_SEC331_3']="has no influence on the content and design of the linked external pages or the Internet appearances which you reach via these pages. The relevant providers are exclusively responsible for the content and design of these Internet appearances as well as their compliance with the provisions of the Data Protection Act.";
-$lang['PP_SEC4']="4. Data security";
-$lang['PP_SEC41']="4.1 At all times,";
-$lang['PP_SEC41_2']="strives to take precautions, to a reasonable extent, to prevent unauthorised access to your personal data as well as the unauthorised use or falsification of theses data and to minimise the corresponding risks. Nevertheless, the provision of personal data, wheter this is done personally, by telephone or over the Internet, is always associated with risks and no technological system is fully exempt from the possibility of manipulation or sabotage.";
-$lang['PP_SEC5']="5. Passing Personal Data to Third Parties";
-$lang['PP_SEC51']="5.1";
-$lang['PP_SEC51_2']="will in principle only pass your personal and/or billing-related data to third parties, that is to partner companies, other companies cooperating with";
-$lang['PP_SEC51_3']=", external service providers and investigative authorities as far as this is required to fulfil the agreement and for the aforementioned purposes, in particular for payment processing as well as to protect other users or as provided by law. Payment processing takes place via external service providers (e.g. credit card companies, banks, PaySafe, Wallie, Clickandbuy, Moneybookers, Paypal, Global Collect). Your protected interests are considered according to the legal provisions. External service providers are obliged to treat your data confidentially and securely and may only use your data as far as this is required to fulfil their duties. We point out that";
-$lang['PP_SEC51_4']="may be obliged to pass data on the basis of legal provisions (e.g. passing to investigative authorities). Data are only passed as far as this is required or prescribed by law.";
-$lang['PP_SEC5_2']="In the event of payment arrears,";
-$lang['PP_SEC5_3']="will, if necessary, instruct a collection company or a lawyer to collect the payable amount. The required data are passed for this purpose and utilised in compliance with all data protection guidelines.";
-$lang['PP_SEC52']="5.2 In other instances,";
-$lang['PP_SEC52_2']="will only pass your personal data which you provided to";
-$lang['PP_SEC52_3']="during the course of your registration and to process your order if you have previously given your express approval.";
-$lang['PP_SEC6']="6. Changes";
-$lang['PP_SEC6_2']="can change these data protection provisions or change the content of the page or change or block access to these pages at any time.";
-$lang['PP_SEC6_3']="will use suitable means to point out such changes.";
-$lang['PP_SEC7']="7. Option of Revocation and Data Deletion";
-$lang['PP_SEC71']="7.1 If you wish to revoke your approval to send information about the game or the newsletter, please send an in-game message to any in-game staff member (which can be found by visiting the <a href='staff.php'>staff page</a>) by stating your user name and the email address to which the information and/or the newsletter is being sent.";
-$lang['PP_SEC72']="7.2 At your request,";
-$lang['PP_SEC72_2']="will immediately delete personal data, that is data which include the user`s information about personal and factual circumstances, unless mandatory obligations to preserve records or other obligations contradict such a deletion.";
-$lang['PP_SEC8']="8. Questions on Data Protection and Contact / Information, Correction, Deletion and Blocking";
-$lang['PP_SEC8_2']="You are always entitled to request information about any of your data that";
-$lang['PP_SEC8_3']="has stored, as well as their origin and recipient and the purpose it was stored for. If you have any questions about data protection or if you wish to correct, block or delete your profile or any of your personal data, or if you would like to revoke a granted authorization regarding the use of your customer data or e-mail address, please send an in-game message to any in-game staff member (which can be found by visiting the <a href='staff.php'>staff page</a>) and also provide your username and your e-mail address.";
 ?>

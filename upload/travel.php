@@ -9,24 +9,26 @@
 */
 require('globals.php');
 $cost_of_travel = 250*$ir['level'];
-echo "<h3>{$lang['TRAVEL_TITLE']}</h3><hr />";
+echo "<h3>Travel Agent</h3><hr />";
 $_GET['to'] = (isset($_GET['to']) && is_numeric($_GET['to'])) ? abs($_GET['to']) : '';
 if (empty($_GET['to']))
 {
-	echo "{$lang['TRAVEL_TABLE']} " . number_format($cost_of_travel) . " {$lang['TRAVEL_TABLE2']}
+	echo "Welcome to the horse stable. You can travel to other cities here, but at a cost. Where would you like to
+	travel today? Note that as you progress further in the game, more locations will be made available to you.
+	It will cost you " . number_format($cost_of_travel) . " Primary Currency to travel today.
 	<table class='table table-bordered'>
 	<tr>
 		<th width='25%'>
-			{$lang['TRAVEL_TABLE_HEADER']}
+			Town
 		</th>
 		<th width='15%'>
-			{$lang['TRAVEL_TABLE_LEVEL']}
+			Level Required
 		</th>
 		<th>
-			{$lang['TRAVEL_TABLE_GUILD']}
+			Guild
 		</th>
 		<th width='15%'>
-			{$lang['TRAVEL_TABLE_TAX']}
+			Tax Level
 		</th>
 		<th width='10%'>
 			>>>
@@ -49,7 +51,7 @@ if (empty($_GET['to']))
 			<td>{$r['town_min_level']}</td>
 			<td>{$name}</td>
 			<td>{$r['town_tax']}%</td>
-			<td><a href='?to={$r['town_id']}'>{$lang['TRAVEL_TABLE_TRAVEL']}</a></td>
+			<td><a href='?to={$r['town_id']}'>Travel</a></td>
 		</tr>
    		";
     }
@@ -59,12 +61,12 @@ else
 {
 	if ($ir['primary_currency'] < $cost_of_travel)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['TRAVEL_ERROR_CASHLOW'],true,"travel.php");
+        alert('danger',"Uh Oh!","You do not have enough Primary Currency to travel today.",true,"travel.php");
 		die($h->endpage());
     }
     elseif ($ir['location'] == $_GET['to'])
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['TRAVEL_ERROR_ALREADYTHERE'],true,"travel.php");
+        alert('danger',"Uh Oh!","Why would you want to travel to the town you're already in.",true,"travel.php");
 		die($h->endpage());
     }
 	else
@@ -73,7 +75,7 @@ else
                          AND `town_min_level` <= {$ir['level']}");
 		if (!$db->num_rows($q))
         {
-            alert('danger',$lang['ERROR_GENERIC'],$lang['TRAVEL_ERROR_ERRORGEN'],true,"travel.php");
+            alert('danger',"Uh Oh!","The town you wanna travel to does not exist.",true,"travel.php");
 			die($h->endpage());
         }
 		else
@@ -81,8 +83,9 @@ else
 			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$cost_of_travel},
                      `location` = {$_GET['to']} WHERE `userid` = {$userid}");
 			$cityName = $db->fetch_single($q);
-			alert('success',$lang['ERROR_SUCCESS'],"{$lang['TRAVEL_SUCCESS']} " . $cityName . " {$lang['GEN_FOR']} " . number_format($cost_of_travel),true,"index.php");
-			$api->SystemLogsAdd($userid,'travel',"Traveled to {$cityName}.");
+			alert('success',"Success!","You have successfully paid " . number_format($cost_of_travel) . " Primary
+			 Currency to take a horse to {$cityName}.",true,"index.php");
+			$api->SystemLogsAdd($userid,'travel',"Traveled to {$cityName} for {$cost_of_travel}.");
 			die($h->endpage());
 		}
 		$db->free_result($q);

@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-echo "<h3>{$lang['SMELT_HOME']}</h3><hr />";
+echo "<h3>Blacksmith's Smeltery</h3><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -24,18 +24,18 @@ default:
 }
 function home()
 {
-	global $db,$userid,$api,$lang,$h;
+	global $db,$userid,$api;
 	$q=$db->query("SELECT * FROM `smelt_recipes` ORDER BY `smelt_id` ASC");
 	echo "<table class='table table-bordered table-striped'>
 	<tr>
 		<th>
-			{$lang['SMELT_TH']}
+			Item
 		</th>
 		<th>
-			{$lang['SMELT_TH1']}
+			Required Materials
 		</th>
 		<th>
-			{$lang['SMELT_TH2']}
+			Action
 		</th>
 	</tr>";
 	while ($r=$db->fetch_row($q))
@@ -64,7 +64,7 @@ function home()
 						$t['itmname'] = "<span style='color:red;'>".$t['itmname']."</span>";
 						$can_craft = FALSE;
 					}
-					$items_needed .= $t['itmname'] ." x ". $qty[$n] ." ({$lang['GEN_HAVE']} " . number_format($api->UserCountItem($userid,$i)) . ")<br />";
+					$items_needed .= $t['itmname'] ." x ". $qty[$n] ." (Have " . number_format($api->UserCountItem($userid,$i)) . ")<br />";
 					$n++;
 				  }
 				unset($n);
@@ -73,11 +73,11 @@ function home()
 			<td>";
 				if($can_craft == TRUE) 
 					{ 
-						echo "<a href='?action=smelt&id={$r['smelt_id']}'>{$lang['SMELT_DO']}</a>"; 
+						echo "<a href='?action=smelt&id={$r['smelt_id']}'>Smelt Item</a>";
 					}
 					else
 					{ 
-						echo "<span style='color:red;'>{$lang['SMELT_DONT']}</span>"; 
+						echo "<span style='color:red;'>Cannot Smelt</span>";
 					}
 				echo"
 			</td>
@@ -87,12 +87,12 @@ function home()
 }
 function smelt()
 {
-	global $db,$userid,$api,$lang,$h;
+	global $db,$userid,$api,$h;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id']))  ? abs($_GET['id']) : 0;
 	$q=$db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$_GET['id']}");
 	if($db->num_rows($q) == 0) 
 	{
-        alert('danger',$lang['ERROR_GENERIC'],$lang['SMELT_ERR'],true,"smelt.php");
+        alert('danger',"Uh Oh!","You are trying to smelt a non-existent recipe.",true,"smelt.php");
         die($h->endpage());
     }
 	$r = $db->fetch_row($q);
@@ -117,7 +117,7 @@ function smelt()
 	}
 	if(isset($item_needed)) 
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMELT_ERR1'],true,"smelt.php");
+		alert('danger',"Uh Oh!","You do not have the items required for this recipe. You need {$items_needed}.",true,"smelt.php");
 		die($h->endpage());
 	}
 	unset($n);
@@ -129,11 +129,12 @@ function smelt()
 			$db->query("INSERT INTO `smelt_inprogress` (
 				`sip_user`, `sip_recipe`, `sip_time`) 
 				VALUES ('{$userid}', '{$_GET['id']}', '{$rcomplete}');");
-			alert('success',$lang['ERROR_SUCCESS'],$lang['SMELT_SUCC'],true,"smelt.php");
+            $friendlytime=TimeUntil_Parse(time()+$r['smelttime']);
+			alert('success',"Success!","You have begun to smelt this item. It will be complete in {$friendlytime}.",true,"smelt.php");
 		}
 		else
 		{
-			alert('success',$lang['ERROR_SUCCESS'],$lang['SMELT_SUCC1'],true,"smelt.php");
+			alert('success',"Success!","You have successfully smelted this item. It is in your inventory.",true,"smelt.php");
 			$api->UserGiveItem($userid,$r['smelt_output'],$r['smelt_qty_output']);
 		}
 		$ex = explode(",", $r['smelt_items']);
@@ -151,7 +152,7 @@ function smelt()
 	}
 	else
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMELT_ERR1'],true,"smelt.php");
+		alert('danger',"Uh Oh!","You cannot craft this item at this time.",true,"smelt.php");
 		die($h->endpage());
 	}
 }

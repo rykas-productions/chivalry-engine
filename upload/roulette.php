@@ -17,11 +17,11 @@ if (!isset($_SESSION['tresde']))
 }
 if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
 {
-    alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_NOREFRESH'],true,"roulette.php?tresde={$tresder}");
+    alert('danger',"Uh Oh!","Do not refresh while playing Roulette",true,"roulette.php?tresde={$tresder}");
 	die($h->endpage());
 }
 $_SESSION['tresde'] = $_GET['tresde'];
-echo "<h3>{$lang['ROULETTE_TITLE']}</h3><hr />";
+echo "<h3>Roulette</h3><hr />";
 if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 {
 	$_POST['bet'] = abs($_POST['bet']);
@@ -32,22 +32,22 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
     $_POST['number'] = abs($_POST['number']);
     if ($_POST['bet'] > $ir['primary_currency'])
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR1'],true,"roulette.php?tresde={$tresder}");
+        alert('danger',"Uh Oh!","You are trying to bet more cash than you currently have.",true,"roulette.php?tresde={$tresder}");
 		die($h->endpage());
     }
 	else if ($_POST['bet'] > $maxbet)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR2'],true,"roulette.php?tresde={$tresder}");
+        alert('danger',"Uh Oh!","You are trying to bet more than you're allowed to at your level.",true,"roulette.php?tresde={$tresder}");
 		die($h->endpage());
     }
     else if ($_POST['number'] > 36 || $_POST['number'] < 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR3'],true,"roulette.php?tresde={$tresder}");
+        alert('danger',"Uh Oh!","You input an invalid guess.",true,"roulette.php?tresde={$tresder}");
 		die($h->endpage());
     }
 	else if ($_POST['bet'] < 0)
     {
-        alert('danger',$lang['ERROR_GENERIC'],$lang['ROULETTE_ERROR4'],true,"roulette.php?tresde={$tresder}");
+        alert('danger',"Uh Oh!","You cannot bet less than 0 cash.",true,"roulette.php?tresde={$tresder}");
 		die($h->endpage());
     }
 	$slot = array();
@@ -55,33 +55,34 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
 	if ($slot[1] == $_POST['number'])
 	{
         $gain = $_POST['bet'] * 50;
-		$title="{$lang['ERROR_SUCCESS']}";
+		$title="Success!";
 		$alerttype='success';
 		$win=1;
-		$phrase="{$lang['ROULETTE_WIN']} " . number_format($gain);
+		$phrase=" and won! You keep your bet, and pocket an extra " . number_format($gain);
 		$api->SystemLogsAdd($userid,'gambling',"Bet {$_POST['bet']} and won {$gain} in roulette.");
 	}
 	else
 	{
 
-		$title="{$lang['ERROR_GENERIC']}";
+		$title="Uh Oh!";
 		$alerttype='danger';
 		$win=0;
         $gain = -$_POST['bet'];
-		$phrase="{$lang['ROULETTE_LOST']}";
+		$phrase=". You lose your bet. Sorry man.";
 		$api->SystemLogsAdd($userid,'gambling',"Lost {$_POST['bet']} in roulette.");
 	}
-	alert($alerttype,$title,"{$lang['ROULETTE_START']} {$slot[1]}{$phrase}",true,"roulette.php?tresde={$tresder}");
+	alert($alerttype,$title,"You put in your bet and pull the handle down. Around and around the wheel spins. It stops
+	    and lands on {$slot[1]} {$phrase}",true,"roulette.php?tresde={$tresder}");
 	$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
 	$tresder = Random(100, 999);
 	echo "<br />
 	<form action='roulette.php?tresde={$tresder}' method='post'>
     	<input type='hidden' name='bet' value='{$_POST['bet']}' />
     	<input type='hidden' name='number' value='{$_POST['number']}' />
-    	<input type='submit' class='btn btn-primary' value='{$lang['ROULETTE_BTN2']}' />
+    	<input type='submit' class='btn btn-primary' value='Again, Same Bet' />
     </form>
-	<a href='roulette.php?tresde={$tresder}'>{$lang['ROULETTE_BTN3']}</a><br />
-	<a href='explore.php'>{$lang['ROULETTE_BTN4']}</a>";
+	<a href='roulette.php?tresde={$tresder}'>Again, Different Bet</a><br />
+	<a href='explore.php'>I'm Good</a>";
 }
 else
 {
@@ -90,12 +91,14 @@ else
 	<table class='table table-bordered'>
 		<tr>
 			<th colspan='2'>
-				{$lang['ROULETTE_INFO']} " . number_format($maxbet) . " {$lang['INDEX_PRIMCURR']}.
+				Ready to test your luck? Awesome! Here at the roulette table, the house always wins. To combat players
+				losing all their wealth in one go, we've put in a bet restriction. At your level, you can only bet
+				" . number_format($maxbet) . " Primary Currency.
 			</th>
 		</tr>
 		<tr>
 			<th>
-				{$lang['ROULETTE_TABLE1']}
+				Bet
 			</th>
 			<td>
 				<input type='number' class='form-control' name='bet' min='0' max='{$maxbet}' value='5' />
@@ -103,7 +106,7 @@ else
 		</tr>
 		<tr>
 			<th>
-				{$lang['ROULETTE_TABLE2']}
+				Pick #
 			</th>
 			<td>
 				<input type='number' class='form-control' name='number' min='1' max='36' value='18' />
@@ -111,7 +114,7 @@ else
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input class='btn btn-primary' type='submit' value='{$lang['ROULETTE_BTN1']}' />
+				<input class='btn btn-primary' type='submit' value='Place Bet' />
 			</td>
 		</tr>
 	</table>

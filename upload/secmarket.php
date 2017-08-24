@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-echo "<h3>{$lang['EXPLORE_SCMARKET']}</h3><hr />";
+echo "<h3>Secondary Currency Market</h3><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -30,21 +30,21 @@ switch ($_GET['action'])
 }
 function home()
 {
-	global $db,$lang,$api,$userid;
-	echo "<a href='?action=add'>{$lang['SMARKET_ADD']}</a><hr />
+	global $db,$api,$userid;
+	echo "<a href='?action=add'>Add Your Own Listing</a><hr />
 	<table class='table table-bordered table-striped'>
 		<tr>
 			<th>
-				{$lang['SMARKET_TH']}
+				Listing Owner
 			</th>
 			<th>
-				{$lang['INDEX_SECCURR']}
+				For Sale
 			</th>
 			<th>
-				{$lang['SMARKET_TH1']} ({$lang['INDEX_PRIMCURR']})
+				Cost (Total)
 			</th>
 			<th>
-				{$lang['SMARKET_TH2']}
+				Actions
 			</th>
 		</tr>";
 		$q=$db->query("SELECT * FROM `sec_market` ORDER BY `sec_cost` ASC");
@@ -53,11 +53,11 @@ function home()
 			$totalcost = $r['sec_total']*$r['sec_cost'];
 			if ($r['sec_user'] == $userid)
 			{
-				$a="[<a href='?action=remove&id={$r['sec_id']}'>{$lang['SMARKET_TD']}</a>]";
+				$a="[<a href='?action=remove&id={$r['sec_id']}'>Remove Listing</a>]";
 			}
 			else
 			{
-				$a="[<a href='?action=buy&id={$r['sec_id']}'>{$lang['SMARKET_TD1']}</a>]";
+				$a="[<a href='?action=buy&id={$r['sec_id']}'>Buy</a>]";
 			}
 			echo "<tr>
 				<td>
@@ -78,108 +78,110 @@ function home()
 }
 function buy()
 {
-	global $db,$h,$userid,$api,$lang,$ir;
+	global $db,$h,$userid,$api,$ir;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
 	if (empty($_GET['id']))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMARKET_ERR'],true,'secmarket.php');
+		alert('danger',"Uh Oh!","Please specify a listing you wish to buy.",true,'secmarket.php');
 		die($h->endpage());
 	}
 	$q=$db->query("SELECT * FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
 	if ($db->num_rows($q) == 0)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMARKET_ERR2'],true,'secmarket.php');
+		alert('danger',"Uh Oh!","Please specify an existent listing to buy.",true,'secmarket.php');
 		die($h->endpage());
 	}
 	$r=$db->fetch_row();
 	if ($r['sec_user'] == $userid)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMARKET_ERR1'],true,'secmarket.php');
+		alert('danger',"Uh Oh!","You cannot buy your own listing.",true,'secmarket.php');
 		die($h->endpage());
 	}
 	$totalcost = $r['sec_cost']*$r['sec_total'];
 	if ($api->UserHasCurrency($userid,'primary',$totalcost) == false)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMARKET_ERR3'],true,'secmarket.php');
+		alert('danger',"Uh Oh!","You do not have enough Primary Currency to buy this listing.",true,'secmarket.php');
 		die($h->endpage());
 	}
 	$api->SystemLogsAdd($userid,'secmarket',"Bought {$r['sec_total']} Secondary Currency from the market for {$totalcost} Primary Currency.");
 	$api->UserGiveCurrency($userid,'secondary',$r['sec_total']);
 	$api->UserTakeCurrency($userid,'primary',$totalcost);
 	$api->UserGiveCurrency($r['sec_user'],'primary',$totalcost);
-	$api->GameAddNotification($r['sec_user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has bought your {$r['sec_total']} Secondary Currency offer from the market for a total of {$totalcost}.");
+	$api->GameAddNotification($r['sec_user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has bought your
+        {$r['sec_total']} Secondary Currency offer from the market for a total of {$totalcost}.");
 	$db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
-	alert('success',$lang['ERROR_SUCCESS'],$lang['SMARKET_SUCC'],true,'secmarket.php');
+	alert('success',"Success!","You have bought {$r['sec_total']} Secondary Currency for {$totalcost} Primary Currency",true,'secmarket.php');
 	die($h->endpage());
 }
 function remove()
 {
-	global $db,$h,$userid,$api,$lang,$ir;
+	global $db,$h,$userid,$api;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
 	if (empty($_GET['id']))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMARKET_BERR'],true,'secmarket.php');
+		alert('danger',"Uh Oh!","Please specify a listing you wish to remove.",true,'secmarket.php');
 		die($h->endpage());
 	}
 	$q=$db->query("SELECT * FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
 	if ($db->num_rows($q) == 0)
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMARKET_BERR2'],true,'secmarket.php');
+		alert('danger',"Uh Oh!","You are trying to remove a non-existent listing.",true,'secmarket.php');
 		die($h->endpage());
 	}
 	$r=$db->fetch_row();
 	if (!($r['sec_user'] == $userid))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['SMARKET_BERR1'],true,'secmarket.php');
+		alert('danger',"Uh Oh!","You are trying to remove a lising you do not own.",true,'secmarket.php');
 		die($h->endpage());
 	}
 	$api->SystemLogsAdd($userid,'secmarket',"Removed {$r['sec_total']} Secondary Currency from the market.");
 	$api->UserGiveCurrency($userid,'secondary',$r['sec_total']);
 	$db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
-	alert('success',$lang['ERROR_SUCCESS'],$lang['SMARKET_SUCC1'],true,'secmarket.php');
+	alert('success',"Success!","You have removed your listing for {$r['sec_total']} Secondary Currency from the market.",true,'secmarket.php');
 	die($h->endpage());
 }
 function add()
 {
-	global $db,$h,$userid,$api,$lang,$ir;
+	global $db,$h,$userid,$api,$ir;
 	if (isset($_POST['qty']) && isset($_POST['cost']))
 	{
 		$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : '';
 		$_POST['cost'] = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : '';
 		if (empty($_POST['qty']) || empty($_POST['cost']))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SMARKET_AERR']);
+			alert('danger',"Uh Oh!","Please fill out the previous form completely before submitting it.");
 			die($h->endpage());
 		}
 		if (!($api->UserHasCurrency($userid,'secondary',$_POST['qty'])))
 		{
-			alert('danger',$lang['ERROR_GENERIC'],$lang['SMARKET_AERR1']);
+			alert('danger',"Uh Oh!","You are trying to add more Secondary Currency than you currently have.");
 			die($h->endpage());
 		}
 		$db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`) 
 					VALUES ('{$userid}', '{$_POST['cost']}', '{$_POST['qty']}');");
 		$api->UserTakeCurrency($userid,'secondary',$_POST['qty']);
 		$api->SystemLogsAdd($userid,'secmarket',"Added {$_POST['qty']} to the secondary market for {$_POST['cost']} Primary Currency each.");
-		alert('success',$lang['ERROR_SUCCESS'],$lang['SMARKET_SUCC2'],true,'secmarket.php');
+		alert('success',"Success!","You have added your {$_POST['qty']} Secondary Currency to the market for
+		    {$_POST['cost']} Primary Currency each.",true,'secmarket.php');
 	die($h->endpage());
 	}
 	else
 	{
-		alert('info',$lang['ERROR_INFO'],$lang['SMARKET_INFO'],false);
+		alert('info',"Information!","Fill out this form completely to add your Secondary Currency to the market.",false);
 		echo "
 		<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
 					<th>
-						{$lang['INDEX_SECCURR']}
+						Selling
 					</th>
 					<td>
-						<input type='number' name='qty' class='form-control' required='1' min='1' max='{$ir['secondary_currency']}'>
+						<input type='number' name='qty' class='form-control' required='1' min='1' value='{$ir['secondary_currency']}' max='{$ir['secondary_currency']}'>
 					</td>
 				</tr>
 				<tr>
 					<th>
-						{$lang['SMARKET_TH']}
+						Price (Each)
 					</th>
 					<td>
 						<input type='number' name='cost' class='form-control' required='1' min='1' value='200'>
@@ -189,7 +191,7 @@ function add()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='{$lang['SMARKET_BTN']}'>
+						<input type='submit' class='btn btn-primary' value='Add Listing'>
 					</td>
 				</tr>
 			</table>
