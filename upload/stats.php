@@ -62,6 +62,7 @@ google.charts.load('current', {'packages':['corechart']});
 		  ['Konqueror',     {$Konqueror}],
 		  ['Mobile Browser',     {$MobileBro}],
 		  ['Unknown',     {$UnknownBro}],
+		  ['Mobile App', {$App}],
           ['Firefox',     {$FF}]
         ]);
 		var options2 = {

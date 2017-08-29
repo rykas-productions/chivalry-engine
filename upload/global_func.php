@@ -1811,7 +1811,8 @@ function update_fg_info($ip) {
                             '/maxthon/i'    =>  'Maxthon',
                             '/konqueror/i'  =>  'Konqueror',
 							'/opr/i' 		=>  'Opera',
-                            '/mobile/i'     =>  'Handheld Browser'
+                            '/mobile/i'     =>  'Handheld Browser',
+                            '/cid-app/i'        =>  'App'
                         );
     foreach ($browser_array as $regex => $value) 
 	{ 

@@ -78,4 +78,5 @@ $NS=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `
 $Maxthon=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Maxthon'"));
 $Konqueror=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Konquerer'"));
 $MobileBro=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Handheld Browser'"));
+$App=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'App'"));
 $UnknownBro=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Unknown Browser'"));
