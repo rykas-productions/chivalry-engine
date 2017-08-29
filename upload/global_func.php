@@ -1435,10 +1435,10 @@ function request_csrf_html($formid)
  * Check the CSRF code we received against the one that was registered for the form - return false if the request shouldn't be processed...
  * @param string $formid A unique string used to identify this form to match up its submission with the right token.
  * @param string $code The code the user's form input returned.
- * @param int $expiry The amount of time the CSRF is valid for. Default 120 seconds.
+ * @param int $expiry The amount of time the CSRF is valid for. Default 300 seconds.
  * @return boolean Whether the user provided a valid code or not
  */
-function verify_csrf_code($formid, $code, $expiry = 120)
+function verify_csrf_code($formid, $code, $expiry = 300)
 {
     //User does not have a CSRF Session started for $formid, or its missing information.
     if (!isset($_SESSION["csrf_{$formid}"]) || !is_array($_SESSION["csrf_{$formid}"]))
