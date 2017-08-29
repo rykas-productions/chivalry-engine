@@ -30,9 +30,8 @@ if (!defined('MONO_ON'))
         <br />
         <?php
         echo "<hr />
-					{$lang['MENU_TIN']}
-						" . date('F j, Y') . " " . date('g:i:s a') . "<br />
-					{$lang['MENU_OUT']}";
+					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
+					Powered with codes by TheMasterGeneral. View source on <a href='https://github.com/MasterGeneral156/chivalry-engine'>Github</a>.";
         ?>
         &copy; <?php echo date("Y");
         ?>

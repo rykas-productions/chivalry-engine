@@ -149,7 +149,7 @@ else
 							echo "
 							<tr>
 								<th>Infirmary</th>
-								<td>In the infirmary for " . TimeUntil_Parse($r['infirmary_out']) . "<br />
+								<td>In the infirmary for " . TimeUntil_Parse($r['infirmary_out']) . ".<br />
 								{$r['infirmary_reason']}
 								</td>
 							</tr>";
@@ -159,7 +159,7 @@ else
 							echo "
 							<tr>
 								<th>Dungeon</th>
-								<td>In the dungeon for " . TimeUntil_Parse($r['dungeon_out']) . "<br />
+								<td>In the dungeon for " . TimeUntil_Parse($r['dungeon_out']) . ".<br />
 								{$r['dungeon_reason']}
 								</td>
 							</tr>";
@@ -169,7 +169,7 @@ else
 							echo "
 							<tr>
 								<th>Federal Dungeon</th>
-								<td>In the federal dungeon for " . TimeUntil_Parse($r['fed_out']) . " {$lang['MENU_FEDJAIL2']}<br />
+								<td>In the federal dungeon for " . TimeUntil_Parse($r['fed_out']) . " days.<br />
 								{$r['fed_reason']}
 								</td>
 							</tr>";

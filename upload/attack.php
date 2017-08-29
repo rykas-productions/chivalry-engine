@@ -832,7 +832,7 @@ function xp()
 }
 function mug()
 {
-	global $db,$userid,$ir,$h,$lang,$api;
+	global $db,$userid,$ir,$h,$api;
 	$_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$_SESSION['attacking'] = 0;
 	$ir['attacking'] = 0;

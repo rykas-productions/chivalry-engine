@@ -15,7 +15,7 @@ $email = (array_key_exists('email', $_POST) && is_string($_POST['email'])) ? $_P
 $password = (array_key_exists('password', $_POST) && is_string($_POST['password'])) ? $_POST['password'] : '';
 if (!isset($_POST['verf']) || !verify_csrf_code('login', stripslashes($_POST['verf'])))
 {
-	die("<h3>{$set['WebsiteName']} Error</h3> {$lang['AUTH_ERROR9']}");
+	die("<h3>{$set['WebsiteName']} Error</h3> CSRF Check failed. Please submit the form quicker next time.");
 }
 $QuarterHour=($CurrentTime-900);
 $Hour=($CurrentTime-3600);

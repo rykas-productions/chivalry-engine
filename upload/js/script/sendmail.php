@@ -11,10 +11,8 @@ error_reporting(E_ALL);
 require_once('../../globals.php');
 function csrf_error($goBackTo)
 {
-    global $h,$lang;
-	echo "<div class='alert alert-danger'> <strong>{$lang['CSRF_ERROR_TITLE']}</strong> 
-	{$lang['CSRF_ERROR_TEXT']} {$lang['CSRF_PREF_MENU']} <a href='inbox.php'>{$lang['GEN_HERE']}.</div>";
-    exit;
+	alert('danger',"Action Blocked!","Your action was blocked for security reasons. Fill out the form quicker next
+	time.",false);
 }
 if (isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD']))
 {
@@ -37,25 +35,25 @@ if (!is_ajax())
 	}
 	if (empty($msg))
     {
-		alert('danger',$lang['ERROR_EMPTY'],$lang['MAIL_EMPTYINPUT'],false);
+		alert('danger',"Uh Oh!","Please input the message you wish to send.",false);
         exit;
     }
 	elseif (strlen($msg) > 65655)
     {
-        alert('danger',$lang['ERROR_LENGTH'],$lang['MAIL_INPUTLNEGTH'],false);
+        alert('danger',"Uh Oh!","You cannot send messages longer than 65,655 characters in length.",false);
         exit;
     }
 	 $sendto = (isset($_POST['sendto']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['sendto']) && ((strlen($_POST['sendto']) < 32) && (strlen($_POST['sendto']) >= 3))) ? $_POST['sendto'] : '';
 	 if (empty($_POST['sendto']))
     {
-		alert('danger',$lang['ERROR_EMPTY'],$lang['MAIL_NOUSER'],false);
+		alert('danger',"Uh Oh!","You are trying to message a non-existent user.",false);
         exit;
     }
 	$q = $db->query("SELECT `userid` FROM `users` WHERE `username` = '{$sendto}'");
 	if ($db->num_rows($q) == 0)
     {
         $db->free_result($q);
-		alert('danger',$lang['MAIL_UDNE'],$lang['MAIL_UDNE_TEXT'],false);
+		alert('danger',"Uh Oh!","You are trying to message a non-existent user.",false);
 		exit;
     }
 	$to = $db->fetch_single($q);
@@ -65,10 +63,10 @@ if (!is_ajax())
 	$TimeSinceLastMail=$time-$mailtime;
 	if (!($TimeSinceLastMail > 60))
 	{
-		alert('danger',$lang['ERROR_GENERIC'],$lang['MAIL_TIMEERROR'],false);
+		alert('danger',"Uh Oh!","You can only send messages with this form once every 60 seconds.",false);
 		exit;
 	}
 	$db->query("INSERT INTO `mail` 
 	(`mail_id`, `mail_to`, `mail_from`, `mail_status`, `mail_text`, `mail_time`) 
 	VALUES (NULL, '{$to}', '{$userid}', 'unread', '{$msg}', '{$time}');");
-	alert('success',$lang['ERROR_SUCCESS'],$lang['MAIL_SUCCESS'],false);
+	alert('success',"Success!","Message has been sent successfully.",false);
