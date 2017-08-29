@@ -37,7 +37,7 @@ while ($r=$db->fetch_row($q))
 	<tr>
 		<td>
 		{$r['itmname']}<br />
-			{$lang['CRIME_TABLE_COST']}: \${$r['vip_cost']} USD
+			Cost: \${$r['vip_cost']} USD
 		</td>
 		<td>
 		";
@@ -62,7 +62,7 @@ while ($r=$db->fetch_row($q))
 								=> "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
 								"VIP Days");
 					$statformatted=$stats["{$einfo['stat']}"];
-					echo "{$einfo['dir']} {$statformatted} {$lang['ITEM_INFO_BY']} {$einfo['inc_amount']}{$einfo['inc_type']}.<br />";
+					echo "{$einfo['dir']} {$statformatted} by {$einfo['inc_amount']}{$einfo['inc_type']}.<br />";
 				}
                 //If item has no effects, lets list the description instead.
 				else
