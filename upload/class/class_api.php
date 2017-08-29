@@ -18,7 +18,7 @@ class api
 	*/
 	function SystemReturnAPIVersion()
 	{
-		return "17.8.2";	//Last Updated 8/23/2017
+		return "17.8.3";	//Last Updated 8/29/2017
 	}
 	/*
 		Tests to see if specified user has at least the specified amount of money.
@@ -849,7 +849,7 @@ class api
 	{
 		global $db;
 		$userid = (isset($userid) && is_numeric($userid)) ? abs(intval($userid)) : 0;
-		$itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
+        $itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
 		if (!empty($userid) || !empty($itemid))
 		{
 			$qty=$db->fetch_single($db->query("SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$itemid} AND `inv_userid` = {$userid}"));
@@ -863,12 +863,13 @@ class api
      * @param int times = How much you wish the user to train.
      * Returns stats gained.
      */
-    function UserTrain($userid,$stat,$times)
+    function UserTrain($userid,$stat,$times,$multiplier=1)
     {
         global $db;
         $userid = (isset($userid) && is_numeric($userid)) ? abs(intval($userid)) : 0;
         $stat = $db->escape(stripslashes(strtolower($stat)));
         $times = (isset($times) && is_numeric($times)) ? abs(intval($times)) : 0;
+        $multiplier = (isset($multiplier) && is_numeric($multiplier)) ? abs(intval($multiplier)) : 1;
         //
         if (empty($userid) || (empty($stat)) || (empty($times)))
         {
@@ -939,6 +940,8 @@ class api
                 $gain /= 2;
             }
         }
+        //Add multiplier, if needed.
+        $gain *= $multiplier;
         //Round the gained stats.
         $gain=floor($gain);
         //Update the user's stats.
