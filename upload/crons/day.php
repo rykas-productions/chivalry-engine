@@ -15,6 +15,7 @@ $ready_to_run = $db->query("SELECT `nextUpdate` FROM `crons` WHERE `file`='{$fil
 if ($db->num_rows($ready_to_run))
 {
     //Delete things from more than 30 days ago
+	$last24=time()-86400;
     $ThirtyDaysAgo=time()-2592000;
     $db->query("DELETE FROM `logs` WHERE `log_time` < {$ThirtyDaysAgo}");
     $db->query("DELETE FROM `mail` WHERE `mail_time` < {$ThirtyDaysAgo}");
