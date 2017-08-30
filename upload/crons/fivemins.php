@@ -18,7 +18,7 @@ if ($db->num_rows($ready_to_run))
 	$db->query("UPDATE mining SET miningpower=max_miningpower WHERE miningpower>max_miningpower");
 	
 	$allusers_query ="UPDATE `users` SET `brave` = LEAST(`brave` + ((`maxbrave` / 10) + 0.5), `maxbrave`),
-        `hp` = LEAST(`hp` + (`maxhp` / 3), `maxhp`), `will` = LEAST(`will` + 10, `maxwill`),
+        `hp` = LEAST(`hp` + (`maxhp` / 3), `maxhp`), `will` = LEAST(`will` + (`maxwill` / 20), `maxwill`),
         `energy` = IF(`vip_days` > 0,
                    LEAST(`energy` + (`maxenergy` / 6), `maxenergy`),
                    LEAST(`energy` + (`maxenergy` / 12.5), `maxenergy`))";
