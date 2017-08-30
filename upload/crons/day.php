@@ -14,7 +14,13 @@ $ready_to_run = $db->query("SELECT `nextUpdate` FROM `crons` WHERE `file`='{$fil
 //Place your queries inside this conditional.
 if ($db->num_rows($ready_to_run))
 {
-	$last24=time()-86400;
+    //Delete things from more than 30 days ago
+    $ThirtyDaysAgo=time()-2592000;
+    $db->query("DELETE FROM `logs` WHERE `log_time` < {$ThirtyDaysAgo}");
+    $db->query("DELETE FROM `mail` WHERE `mail_time` < {$ThirtyDaysAgo}");
+    $db->query("DELETE FROM `notifications` WHERE `notif_time` < {$ThirtyDaysAgo}");
+    $db->query("DELETE FROM `guild_notifications` WHERE `gn_time` < {$ThirtyDaysAgo}");
+
 	$db->query("UPDATE users SET `vip_days`=`vip_days`-1 WHERE `vip_days` > 0");
 	$db->query("UPDATE users SET `bank`=`bank`+(`bank`/50) WHERE `bank`>0 AND `laston` > {$last24}");
 	
