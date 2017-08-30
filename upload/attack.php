@@ -107,7 +107,7 @@ function attacking()
 	if ($ir['attacking'] && $ir['attacking'] != $_GET['user'])
 	{
 		$_SESSION['attacklost'] = 0;
-		alert("danger","Uh Oh!","An unknown error has occured. Please try again, or contact the admin team.",true,'index.php');
+		alert("danger","Uh Oh!","An unknown error has occurred. Please try again, or contact the admin team.",true,'index.php');
 		$api->UserInfoSetStatic($userid,"attacking",0);
 		die($h->endpage());
 	}
@@ -221,7 +221,7 @@ function attacking()
 				die($h->endpage());
 			}
 		}
-		$_SESSION['attacking'] = 1;
+		$_SESSION['attacking'] = $odata['userid'];
 		$ir['attacking'] = $odata['userid'];
 		$api->UserInfoSetStatic($userid,"attacking",$ir['attacking']);
 		$_GET['nextstep'] = (isset($_GET['nextstep']) && is_numeric($_GET['nextstep'])) ? abs($_GET['nextstep']) : '';

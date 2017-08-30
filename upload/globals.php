@@ -171,11 +171,11 @@ if (isset($nohdr) == false || !$nohdr)
     global $atkpage;
     if ($atkpage)
     {
-        $h->userdata($ir, $lv, $fm, $cm, 0);
+        $h->userdata($ir, 0);
     }
     else
     {
-        $h->userdata($ir, $lv, $fm, $cm);
+        $h->userdata($ir);
     }
     global $menuhide;
 }
