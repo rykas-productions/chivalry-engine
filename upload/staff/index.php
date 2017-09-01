@@ -179,6 +179,7 @@ echo"
 						<div class='card'>
 							<div class='card-body'>
 								<a href='staff_academy.php?action=add'>Create Academy Course</a><br />
+								<a href='staff_academy.php?action=edit'>Edit Academy Course</a><br />
 								<a href='staff_academy.php?action=del'>Delete Academy Course</a><br />
 							</div>
 						</div>
