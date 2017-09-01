@@ -10,9 +10,25 @@
 require("globals.php");
 echo "<h3>Item Appendix</h3><hr />This page lists all the items in the game, along with how many are in circulation.
     This may be useful for players who do item flipping, or those who are just plain old curious. Hovering over the
-    item will give you its description. Tapping its name will take you to its info page<hr />";
-//Select all the game items.
-$q=$db->query("SELECT * FROM `items` ORDER BY `itmname` ASC");
+    item will give you its description. Tapping its name will take you to its info page<hr />
+    [<a href='?view=all'>All</a>][<a href='?view=weapon'>Weapons Only</a>][<a href='?view=armor'>Armors Only</a>]";
+if (!isset($_GET['view']))
+    $_GET['view']='';
+if ($_GET['view'] == 'weapon')
+{
+    //Select all the in-game weapons
+    $q=$db->query("SELECT * FROM `items` WHERE `weapon` != 0 ORDER BY `weapon` ASC");
+}
+elseif ($_GET['view'] == 'armor')
+{
+    //Select all the in-game armor
+    $q=$db->query("SELECT * FROM `items` WHERE `armor` != 0 ORDER BY `armor` ASC");
+}
+else
+{
+    //Select all the game items.
+    $q=$db->query("SELECT * FROM `items` ORDER BY `itmname` ASC");
+}
 echo "
 <table class='table table-bordered'>
     <tr>
