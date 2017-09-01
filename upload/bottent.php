@@ -44,6 +44,8 @@ while ($result = $db->fetch_row($query))
 	$themstats=$r3['strength']+$r3['agility']+$r3['guard'];
     //Chance the user can beat the bot.
 	$chance = round((($ustats / $themstats) * 100)/2,1);
+    //Assign bot name to variable to cut down on queries.
+    $botname=$api->SystemUserIDtoName($result['botuser']);
     //Player cannot attack the bot.
 	if ((time() <= ($r2 + $result['botcooldown'])) && ($r2 > 0))
 	{
@@ -55,7 +57,7 @@ while ($result = $db->fetch_row($query))
 	{
 		$attack="<form action='attack.php'>
 					<input type='hidden' name='user' value='{$result['botuser']}'>
-					<input type='submit' class='btn btn-danger' value='Attack " . $api->SystemUserIDtoName($result['botuser']) . "'>
+					<input type='submit' class='btn btn-danger' value='Attack {$botname}'>
 					</form>
 					(Odds of Victory {$chance}%)";
 	}
@@ -63,7 +65,7 @@ while ($result = $db->fetch_row($query))
 	echo "
 	<tr>
 		<td>
-			" . $api->SystemUserIDtoName($result['botuser']) . " [{$result['botuser']}]
+			{$botname} [{$result['botuser']}]
 		</td>
 		<td class='hidden-xs'>
 			" . $api->UserInfoGet($result['botuser'],'level') . "
