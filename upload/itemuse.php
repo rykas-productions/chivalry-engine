@@ -112,7 +112,7 @@ else
 				}
 			}
 		}
-		alert('success',"Success!","You have successfully used your{$r['itmname']}!",true,'inventory.php');
+		alert('success',"Success!","You have successfully used your {$r['itmname']}!",true,'inventory.php');
 		$api->UserTakeItem($userid, $r['inv_itemid'], 1);
 		$api->SystemLogsAdd($userid,'itemuse',"Used a/an {$r['itmname']} item.");
 	}
