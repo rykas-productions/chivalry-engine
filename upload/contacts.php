@@ -11,22 +11,22 @@ echo "
 <table class='table table-bordered'>
 	<tr>
 		<td>
-			<a href='inbox.php'>{$lang['MAIL_TH1_IN']}</a>
+			<a href='inbox.php'>Inbox</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=outbox'>{$lang['MAIL_TH1_OUT']}</a>
+			<a href='inbox.php?action=outbox'>Outbox</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=compose'>{$lang['MAIL_TH1_COMP']}</a>
+			<a href='inbox.php?action=compose'>Compose</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=delall'>{$lang['MAIL_TH1_DEL']}</a>
+			<a href='inbox.php?action=delall'>Delete All</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=archive'>{$lang['MAIL_TH1_ARCH']}</a>
+			<a href='inbox.php?action=archive'>Archive</a>
 		</td>
 		<td>
-			<a href='contacts.php'>{$lang['MAIL_TH1_CONTACTS']}</a>
+			<a href='contacts.php'>Contacts</a>
 		</td>
 	</tr>
 </table>";
@@ -48,7 +48,7 @@ default:
 }
 function home()
 {
-	global $db,$ir,$userid,$lang;
+	global $db,$userid;
     echo "<a href='?action=add'>Add Contact</a><br />
 	These are the players you've added to your contact list.
 	<br />
@@ -80,10 +80,10 @@ function home()
 				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 			</td>
 			<td>
-				<a href='inbox.php?action=compose&user={$r['userid']}'>{$lang['CONTACT_HOME2']}</a>
+				<a href='inbox.php?action=compose&user={$r['userid']}'>Message</a>
 			</td>
 			<td>
-				<a href='?action=remove&contact={$r['c_ID']}'>{$lang['CONTACT_HOME3']}</a>
+				<a href='?action=remove&contact={$r['c_ID']}'>Remove Contact</a>
 			</td>
 		</tr>";
     }
