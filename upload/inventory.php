@@ -27,7 +27,7 @@ echo "<h3>Your Equipment</h3><hr />
 				}
 				else
 				{
-					echo "N/A";
+					echo "No Weapon";
 				}
 				echo"
 			</div>
@@ -51,7 +51,7 @@ echo "<h3>Your Equipment</h3><hr />
 				}
 				else
 				{
-					echo "N/A";
+					echo "No Weapon";
 				}
 				echo"
 			</div>
@@ -75,7 +75,7 @@ echo "<h3>Your Equipment</h3><hr />
 				}
 				else
 				{
-					echo "N/A";
+					echo "No Armor";
 				}
 				echo"
 			</div>
@@ -97,23 +97,24 @@ $inv =
                  WHERE `iv`.`inv_userid` = {$userid}
                  ORDER BY `i`.`itmtype` ASC, `i`.`itmname` ASC");
     echo "<b>Your items are listed below.</b><br />
-	<table class='table table-bordered table-hover table-striped'>
+	<table class='table table-bordered table-striped'>
+	    <thead>
 		<tr>
 			<th>Item (Qty)</th>
 			<th class='hidden-xs-down'>Item Cost (Total)</th>
 			<th>Links</th>
-		</tr>";
+		</tr></thead>";
     $lt = "";
     while ($i = $db->fetch_row($inv))
     {
         if ($lt != $i['itmtypename'])
         {
             $lt = $i['itmtypename'];
-            echo "\n<tr>
+            echo "\n<thead><tr>
             			<th colspan='4'>
             				<b>{$lt}</b>
             			</th>
-            		</tr>";
+            		</tr></thead>";
         }
 		$i['itmdesc']=htmlentities($i['itmdesc'],ENT_QUOTES);
         echo "<tr>
