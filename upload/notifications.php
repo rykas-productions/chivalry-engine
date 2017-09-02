@@ -11,28 +11,35 @@ if (!isset($_GET['delete']))
 {
     $_GET['delete'] = 0;
 }
+if (!isset($_GET['deleteall']))
+{
+    $_GET['deleteall'] = 0;
+}
 $_GET['delete'] = abs($_GET['delete']);
 if ($_GET['delete'] > 0)
 {
-    $d_c =
-            $db->query(
-                    "SELECT COUNT(`notif_user`)
-                     FROM `notifications`
-                     WHERE `notif_id` = {$_GET['delete']}
-                     AND `notif_user` = {$userid}");
+    $d_c = $db->query("SELECT COUNT(`notif_user`)
+                      FROM `notifications`
+                      WHERE `notif_id` = {$_GET['delete']}
+                      AND `notif_user` = {$userid}");
     if ($db->fetch_single($d_c) == 0)
     {
-        alert('danger',"Uh Oh!","You cannot delete notifications if you don't have any. :^)",false);
+        alert('danger',"Uh Oh!","You cannot delete a notification that doesn't exist, or doesn't belong to you.",false);
 	}
     else
     {
-        $db->query(
-                "DELETE FROM `notifications`
+        $db->query("DELETE FROM `notifications`
                  WHERE `notif_id` = {$_GET['delete']}
                  AND `notif_user` = {$userid}");
-        alert('success',"Success!","All your notifications have been cleared out successfully.",false);
+        alert('success',"Success!","Notification has been deleted successfully.",false);
     }
     $db->free_result($d_c);
+}
+if ($_GET['deleteall'] > 0)
+{
+    $db->query("DELETE FROM `notifications`
+                 WHERE `notif_user` = {$userid}");
+    alert('success',"Success!","You have successfully deleted all your notifications.",false);
 }
 echo "
 <b>Last fifteen notifications</b>
@@ -80,5 +87,6 @@ $db->query(
             "UPDATE `notifications`
     		 SET `notif_status` = 'read'
     		 WHERE `notif_user` = {$userid}");
-echo"</tbody></table>";
+echo"</tbody></table>
+<a class='btn btn-primary' href='?deleteall=1'>Delete All Notifications</a>";
 $h->endpage();
