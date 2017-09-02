@@ -64,6 +64,9 @@ switch ($_GET['action'])
 	case 'archive':
 		archive();
 		break;
+    case 'delete':
+        delete();
+        break;
 	default:
 		home();
 		break;
@@ -78,7 +81,7 @@ function home()
 			Sender Info
 		</th>
 		<th width='50%'>
-			Message Preview (First 50 Characters)
+			Message Preview
 		</th>
 		<th width='10%'>
 			Actions
@@ -421,5 +424,27 @@ function archive()
 		</td>
 	</tr>
 	</table>";
+}
+function delete()
+{
+    global $db,$userid,$h;
+    $_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs($_GET['msg']) : 0;
+    if (empty($_GET['msg']))
+    {
+        alert('danger',"Uh Oh!","This message is non-existent, or does not belong to you.",false);
+        home();
+        die($h->endpage());
+    }
+    //Message does not exist, or does not belong to the current player.
+    if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0)
+    {
+        alert("danger","Uh Oh!","This message is non-existent, or does not belong to you.",false);
+        home();
+        die($h->endpage());
+    }
+    //Delete message.
+    $db->query("DELETE FROM `mail` WHERE `mail_id` = {$_GET['msg']}");
+    alert('success',"Success!","Message has been deleted successfully.",false);
+    home();
 }
 $h->endpage();
