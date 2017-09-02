@@ -454,10 +454,11 @@ function alllogs()
 }
 function maillogs()
 {
-	global $db,$userid,$api;
-	$logname='mail';
+    global $db,$userid,$api;
+    $logname='Mail';
+    $ParsedName=ucwords('Mail');
     echo "
-	<h3>Mail Logs</h3>
+	<h3>{$ParsedName} Logs</h3>
 	<hr />
  	  ";
     if (!isset($_GET['st']))
@@ -471,24 +472,25 @@ function maillogs()
     $db->free_result($q);
     if ($attacks == 0)
     {
-        alert('danger',"Uh Oh!","There haven't been any mails sent yet.",true,'index.php');
+        alert('danger',"Uh Oh!","There doesn't appear to be any sent messages yet.",true,'index.php');
         return;
     }
     $pages = ceil($attacks / $app);
-    echo "Pages <nav><ul class='pagination'><br />";
+    echo "<nav>";
+    echo "Page <br /><ul class='pagination'>";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
-		if ($s == $st)
+        if ($s == $st)
         {
             echo "<li class='page-item active'>";
         }
 
-		else
-		{
-			echo "<li class='page-item'>";
-		}
-        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
+        else
+        {
+            echo "<li class='page-item'>";
+        }
+        echo "<a class='page-link' href='?action=mail&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
     echo "
@@ -497,40 +499,28 @@ function maillogs()
     <br />
     <table class='table table-bordered table-hover table-striped'>
     		<tr>
-    			<th width='25%'>Log Time</th>
-				<th>Sender</th>
-				<th>Recipient</th>
-    			<th>Content</th>
+    			<th>Time</th>
+    			<th>Subject</th>
+    			<th>Sender</th>
+    			<th>Receiver</th>
+    			<th>Message</th>
     		</tr>
        ";
-    $q =
-            $db->query(
-                    "SELECT `mail_to`, `mail_from`, `mail_text`, `mail_time`
+    $q = $db->query("SELECT *
                      FROM `mail`
                      ORDER BY `mail_time` DESC
                      LIMIT $st, $app");
     while ($r = $db->fetch_row($q))
     {
+        $un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['mail_from']}"));
+        $un2=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['mail_to']}"));
         echo "
 		<tr>
-        	<td>
-				" . DateTime_Parse($r['mail_time']) . "
-			</td>
-        	<td>
-				<a href='../profile.php?user={$r['mail_from']}'>
-					{$api->SystemUserIDtoName($r['mail_from'])}
-				</a> 
-				[{$r['mail_from']}]
-			</td>
-        	<td>
-				<a href='../profile.php?user={$r['mail_to']}'>
-					{$api->SystemUserIDtoName($r['mail_to'])}
-				</a> 
-				[{$r['mail_to']}]
-			</td>
-			<td>
-				" . stripslashes(strip_tags($r['mail_text'])) . "
-			</td>
+        	<td>" . DateTime_Parse($r['mail_time']) . "</td>
+        	<td>{$r['mail_subject']}</td>
+        	<td><a href='../profile.php?user={$r['mail_from']}'>{$un}</a> [{$r['mail_from']}]</td>
+        	<td><a href='../profile.php?user={$r['mail_to']}'>{$un2}</a> [{$r['mail_to']}]</td>
+        	<td>{$r['mail_text']}</td>
            ";
         echo '</tr>';
     }
@@ -538,27 +528,26 @@ function maillogs()
     echo "
     </table>
     <center>
-	Pages <br />
 	<nav>
-    <ul class='pagination'>
+   Page <br /><ul class='pagination'>
        ";
     for ($i = 1; $i <= $pages; $i++)
     {
         $s = ($i - 1) * $app;
-		if ($s == $st)
+        if ($s == $st)
         {
             echo "<li class='page-item active'>";
         }
 
-		else
-		{
-			echo "<li class='page-item'>";
-		}
-        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
+        else
+        {
+            echo "<li class='page-item'>";
+        }
+        echo "<a class='page-link' href='?action=mail&st={$s}'>{$i}";
         echo "</li></a>&nbsp;";
     }
-	echo"</ul></nav>";
+    echo"</ul></nav>";
     $mypage = floor($_GET['st'] / 100) + 1;
-	$api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the mail logs.");
+    $api->SystemLogsAdd($userid,'staff',"Viewed Page #{$mypage} of the {$logname} logs.");
 }
 $h->endpage();
