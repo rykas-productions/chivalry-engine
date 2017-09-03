@@ -53,8 +53,6 @@ echo"<h4>You begin exploring the town. You find a few things that could keep you
 				<div class='card-body'>
 					<a href='shops.php'>Local Shops</a><br />
 					<a href='itemmarket.php'>Item Market</a><br />
-					<a href='itemauction.php'>Item Auction</a><br />
-					<a href='#'>Trading Center</a><br />
 					<a href='secmarket.php'>Secondary Currency Market</a><br />
 				</div>
 			</div>
@@ -74,7 +72,6 @@ echo"<h4>You begin exploring the town. You find a few things that could keep you
 				<div class='card-body'>
 					<a href='mine.php'>Dangerous Mines</a><br />
 					<a href='smelt.php'>Blacksmith's Smeltery</a><br />
-					<a href='#'>Dark Forest</a><br />
 					<a href='#'>Agriculture</a><br />
 					<a href='bottent.php'>NPC Battle List</a><br />
 				</div>

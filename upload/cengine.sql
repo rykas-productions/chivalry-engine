@@ -398,21 +398,6 @@ CREATE TABLE `ipban` (
   `ip_ip` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `itemauction`
---
-
-CREATE TABLE `itemauction` (
-  `ia_id` int(11) UNSIGNED NOT NULL,
-  `ia_adder` int(11) UNSIGNED NOT NULL,
-  `ia_item` int(11) UNSIGNED NOT NULL,
-  `ia_qty` int(11) UNSIGNED NOT NULL,
-  `ia_end` int(11) UNSIGNED NOT NULL,
-  `ia_bidder` int(11) UNSIGNED NOT NULL,
-  `ia_bid` bigint(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1111,11 +1096,6 @@ ALTER TABLE `inventory`
 ALTER TABLE `ipban`
   ADD UNIQUE KEY `ip_id` (`ip_id`);
 
---
--- Indexes for table `itemauction`
---
-ALTER TABLE `itemauction`
-  ADD UNIQUE KEY `ia_id` (`ia_id`);
 
 --
 -- Indexes for table `itemmarket`
@@ -1408,11 +1388,6 @@ ALTER TABLE `inventory`
 --
 ALTER TABLE `ipban`
   MODIFY `ip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `itemauction`
---
-ALTER TABLE `itemauction`
-  MODIFY `ia_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `itemmarket`
 --
