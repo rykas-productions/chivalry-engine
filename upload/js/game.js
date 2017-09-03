@@ -7,14 +7,6 @@
 */
 $(document).ready(function()
 {
-	$('#sendmessage').click(function()
-	{
-		$.post("js/script/sendmail.php", $("#mailpopupForm").serialize(),  function(response) 
-		{   
-			 $('#success').html(response);
-		});
-		return false;
-	});
 	$('#btnAdd').click(function() 
 		{
             var num     = $('.clonedInput').length;
