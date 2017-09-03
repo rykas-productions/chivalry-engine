@@ -219,7 +219,10 @@ class headers
         //If user does not end a fight correctly, take their XP and warn them.
         if ($dosessh && ($_SESSION['attacking'] || $ir['attacking']))
         {
-           alert("warning","Uh Oh!","You have lost all your experience for leaving your last fight.",false);
+            $hosptime=randomizer(10,50);
+            $api->UserStatusSet($userid,'infirmary',$hosptime,"Ran from a fight");
+            alert("warning","Uh Oh!","For leaving your previous fight, you were placed in the Infirmary for {$hosptime}
+            minutes, and lost all your experience.",false);
             $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");
             $_SESSION['attacking'] = 0;
         }
@@ -288,7 +291,7 @@ class headers
 			else
 			{
 				?> 
-					<link rel="stylesheet" href="css/bootstrap-purple-min.css">
+					<link rel="stylesheet" href="css/bootstrap-dark.css">
 					<meta name="theme-color" content="#2d135d">
 				<?php
 			}
@@ -304,7 +307,7 @@ class headers
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 			
 			<!-- Other JavaScript -->
-			<script src="js/game.js" async defer></script>
+			<script src="js/game.js"></script>
 			<script src='https://www.google.com/recaptcha/api.js' async defer></script>
 			<script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
 		</body>

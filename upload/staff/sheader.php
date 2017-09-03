@@ -162,7 +162,10 @@ class headers
         }
         if ($dosessh && ($_SESSION['attacking'] || $ir['attacking']))
         {
-           alert("warning","Uh Oh!","For leaving your previous fight, you have lost all your experience.",false);
+            $hosptime=randomizer(10,50);
+            $api->UserStatusSet($userid,'infirmary',$hosptime,"Ran from a fight");
+            alert("warning","Uh Oh!","For leaving your previous fight, you were placed in the Infirmary for {$hosptime}
+            minutes, and lost all your experience.",false);
             $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");
             $_SESSION['attacking'] = 0;
         }

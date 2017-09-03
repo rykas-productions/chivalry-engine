@@ -123,11 +123,11 @@ global $atkpage;
 $staffpage = 1;
 if ($atkpage)
 {
-    $h->userdata($ir, $lv, $fm, $cm, 0);
+    $h->userdata($ir, 0);
 }
 else
 {
-    $h->userdata($ir, $lv, $fm, $cm);
+    $h->userdata($ir);
 }
 foreach (glob("../crons/*.php") as $filename) 
 { 
