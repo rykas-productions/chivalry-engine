@@ -162,7 +162,7 @@ class headers
         }
         if ($dosessh && ($_SESSION['attacking'] || $ir['attacking']))
         {
-            $hosptime=randomizer(10,50);
+            $hosptime=Random(10,50);
             $api->UserStatusSet($userid,'infirmary',$hosptime,"Ran from a fight");
             alert("warning","Uh Oh!","For leaving your previous fight, you were placed in the Infirmary for {$hosptime}
             minutes, and lost all your experience.",false);
