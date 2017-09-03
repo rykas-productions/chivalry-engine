@@ -92,17 +92,43 @@ function heal()
 			alert('danger',"Uh Oh!","You are attempting to heal out a player who's not even in the infirmary.",true,'infirmary.php');
 			die($h->endpage());
 		}
-		$cost=round(7.5*$api->UserInfoGet($_GET['user'],'level',false));
-		if ($api->UserHasCurrency($userid,'secondary', $cost) == false)
-		{
-			alert('danger',"Uh Oh!","You do not have enough Secondary Currency to heal out this player. You need " . number_format($cost) . ".",true,'infirmary.php');
-			die($h->endpage());
-		}
-		$api->UserTakeCurrency($userid,'secondary',$cost);
-		$api->GameAddNotification($_GET['user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has successfully healed you from the infirmary");
-		alert('success',"Success!","You have healed out this player for {$cost} Secondary Currency.",true,'infirmary.php');
-		$db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` = {$_GET['user']}");
-		die($h->endpage());
+        if (isset($_GET['times']))
+        {
+            $_GET['times'] = (isset($_GET['times']) && is_numeric($_GET['times'])) ? abs($_GET['times']) : 0;
+            if (empty($_GET['times']))
+            {
+                alert('danger',"Uh Oh!","You are attempting to heal an invalid or non-existent user.",true,'infirmary.php');
+                die($h->endpage());
+            }
+            $cost=25*$_GET['times'];
+            $time=30*$_GET['times'];
+            if ($ir['secondary_currency'] < $cost)
+            {
+                alert('danger',"Uh Oh!","You do not have enough Secondary Currency to heal {$_GET['times']} sets.",true,'infirmary.php');
+                die($h->endpage());
+            }
+            else
+            {
+                $api->UserStatusSet($_GET['user'],'infirmary',$time*-1,'Not read');
+                $api->UserTakeCurrency($userid,'secondary',$cost);
+                $api->GameAddNotification($_GET['user'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has healed you {$_GET['times']} times.");
+                $api->SystemLogsAdd($userid,'heal',"Healed {$api->SystemUserIDtoName($_GET['user'])} {$_GET['times']} times.");
+                alert('success',"Success!","You have healed {$api->SystemUserIDtoName($_GET['user'])} {$_GET['times']}
+                times, costing you {$cost} Secondary Currency.",true,'index.php');
+            }
+        }
+        else
+        {
+            echo "How many times do you wish to heal {$api->SystemUserIDtoName($_GET['user'])}?<br />
+            1 Set = 30 minutes<br />
+            1 Set = 25 Secondary Currency<br />
+            <form>
+                <input type='hidden' name='user' value='{$_GET['user']}'>
+                <input type='hidden' name='action' value='heal'>
+                <input type='number' required='1' name='times' class='form-control'>
+                <input type='submit' class='btn btn-primary' value='Heal'>
+            </form>";
+        }
 	}
 	else
 	{
