@@ -753,7 +753,8 @@ INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES
 (12, 'energy_refill_cost', '10'),
 (13, 'iq_per_sec', '5'),
 (14, 'will_refill_cost', '5'),
-(15, 'bankfee_percent', '10');
+(15, 'bankfee_percent', '10'),
+(16, 'sending_email', 'admin@yourdomain.com');
 
 -- --------------------------------------------------------
 

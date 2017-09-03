@@ -683,7 +683,7 @@ function massmail()
 function massemail()
 {
 	global $db,$userid,$h,$api,$set;
-	$from='editthis';
+	$from=$set['sending_email'];
 	echo "<h3>Mass Emailer</h3><hr>";
 	if (isset($_POST['msg']))
 	{

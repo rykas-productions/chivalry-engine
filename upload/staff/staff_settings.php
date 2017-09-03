@@ -123,6 +123,15 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
+					Game Email Address<br />
+					<small>This is the email address used when emails are sent from the game.</small>
+				</th>
+				<td>
+					<input type='email' class='form-control' name='sendemail' value='{$set['sending_email']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
 					Fraudguard IO Username<br />
 					<small>(<a href='https://fraudguard.io/'>http://bit.ly/2apOVX0</a>)</small>
 				</th>
@@ -260,7 +269,8 @@ function basicsettings()
 		$GameName = (isset($_POST['gamename'])  && preg_match("/^[a-z0-9_.]+([\\s]{1}[a-z0-9_.]|[a-z0-9_.])+$/i", $_POST['gamename'])) ? $db->escape(strip_tags(stripslashes($_POST['gamename']))) : '';
 		$RefAward = (isset($_POST['refkb']) && is_numeric($_POST['refkb'])) ? abs(intval($_POST['refkb'])) : '';
 		$AttackEnergy = (isset($_POST['attenc']) && is_numeric($_POST['attenc'])) ? abs(intval($_POST['attenc'])) : '';
-		$Paypal = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'ppemail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['ppemail'])) : '';
+		$Paypal = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'sendemail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['sendemail'])) : '';
+        $sendemail = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'ppemail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['ppemail'])) : '';
 		$GameOwner = (isset($_POST['ownername']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['ownername'])) ? $db->escape(strip_tags(stripslashes($_POST['ownername']))) : '';
 		$GameDesc =  (isset($_POST['gamedesc'])) ? $db->escape(strip_tags(stripslashes($_POST['gamedesc']))) : '';
 		$FGPW =  (isset($_POST['fgpw'])) ? $db->escape(strip_tags(stripslashes($_POST['fgpw']))) : '';
@@ -365,7 +375,8 @@ function basicsettings()
 			$db->query("UPDATE `settings` SET `setting_value` = '{$refillbrave}' WHERE `setting_name` = 'brave_refill_cost'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$refillwill}' WHERE `setting_name` = 'will_refill_cost'");
 			$db->query("UPDATE `settings` SET `setting_value` = '{$iqpersec}' WHERE `setting_name` = 'iq_per_sec'");
-			alert('success',"Success!","Successfully updated the game settings.",true,'index.php');
+            $db->query("UPDATE `settings` SET `setting_value` = '{$sendemail}' WHERE `setting_name` = 'sending_email'");
+			alert('success',"Success!","You have successfully updated the game settings.",true,'index.php');
 			$api->SystemLogsAdd($userid,'staff',"Updated game settings.");
 		}
 		$h->endpage();

@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals_nonauth.php');
-$from = 'fillinplease';
+$from = $set['sending_email'];
 if (!isset($_GET['step']))
 {
     $_GET['step'] = '';
