@@ -290,8 +290,8 @@ class headers
             //User has chosen the night theme.
 			else
 			{
-				?> 
-					<link rel="stylesheet" href="css/bootstrap-dark.css">
+				?>
+                    <link rel="stylesheet" href="css/bootstrap-purple-min.css">
 					<meta name="theme-color" content="#2d135d">
 				<?php
 			}
