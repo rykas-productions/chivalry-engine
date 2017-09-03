@@ -703,7 +703,7 @@ function massemail()
 			alert('danger',"Uh Oh!","At maximum, messages can only be 65,655 characters in length.");
 			die($h->endpage());
 		}
-		$q=$db->query("SELECT `userid`,`user_level`,`email` FROM `users` WHERE `email_optin` = 1");
+		$q=$db->query("SELECT `userid`,`user_level`,`email` FROM `users` WHERE `email_optin` = 1 AND `user_level` != 'NPC'");
 		$sent=0;
 		$headers[] = 'MIME-Version: 1.0';
 		$headers[] = 'Content-type: text/html; charset=iso-8859-1';
@@ -711,22 +711,15 @@ function massemail()
 		while ($r = $db->fetch_row($q))
 		{
 			echo "Sending Email to {$api->SystemUserIDtoName($r['userid'])} ...";
-			if ($r['user_level'] == 'NPC')
-			{
-				echo "... Failed.";
-			}
-			else
-			{
-				if (mail($r['email'],$set['WebsiteName'],$msg,implode("\r\n", $headers)) == true)
-				{
-					echo "... Success.";
-					$sent=$sent+1;
-				}
-				else
-				{
-					echo "... Failed.";
-				}
-			}
+			if (mail($r['email'],$set['WebsiteName'],$msg,implode("\r\n", $headers)) == true)
+            {
+                echo "... Success.";
+                $sent=$sent+1;
+            }
+            else
+            {
+                echo "... Failed.";
+            }
 			echo "<br />";
 		}
         alert('success',"Success!","You successfully sent a mass email to {$sent} players",true,'index.php');
