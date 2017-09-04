@@ -36,22 +36,6 @@ if (empty($_POST['userid'])) {
 		</tr>
 		<tr>
 			<th>
-				Report Category
-			</th>
-			<td>
-				<select name='category' class='form-control'>
-					<option value='bugabuse'>Bug Abuse</option>
-					<option value='harassment'>Harassment</option>
-					<option value='scamming'>Scamming</option>
-					<option value='spamming'>Spamming</option>
-					<option value='erb'>Encouraging Rule Breakage</option>
-					<option value='security'>Security Issue</option>
-					<option value='other'>Other (Explain below)</option>
-				</input>
-			</td>
-		</tr>
-		<tr>
-			<th>
 			    Report Text
 			</th>
 			<td>
@@ -68,30 +52,25 @@ if (empty($_POST['userid'])) {
 	<input type='hidden' name='verf' value='{$code}' />
 	</form>";
 } else {
-    $CategoryArray = ["bugabuse", "harassment", "scamming", "spamming", "erb", "security", "other"];
     $_POST['reason'] = (isset($_POST['reason']) && is_string($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : '';
     $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs($_POST['userid']) : '';
     if (!isset($_POST['verf']) || !verify_csrf_code('report_form', stripslashes($_POST['verf']))) {
         csrf_error();
     }
-    if (!in_array($_POST['category'], $CategoryArray)) {
-        alert('danger', "Uh Oh!", "You specified an invalid report category.");
-    } else {
-        if (strlen($_POST['reason']) > 1250) {
-            alert('danger', "Uh Oh!", "Player reports can only be, at maximum, 1,250 characters in length.");
-            die($h->endpage());
-        }
-        $q = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
-        if ($db->fetch_single($q) == 0) {
-            $db->free_result($q);
-            alert('danger', "Uh Oh!", "You are trying to report a non-existent user.");
-            die($h->endpage());
-        }
+    if (strlen($_POST['reason']) > 1250) {
+        alert('danger', "Uh Oh!", "Player reports can only be, at maximum, 1,250 characters in length.");
+        die($h->endpage());
+    }
+    $q = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
+    if ($db->fetch_single($q) == 0) {
         $db->free_result($q);
-        $db->query("INSERT INTO `reports` VALUES(NULL, $userid, {$_POST['userid']}, '{$_POST['reason']}')");
-        alert('success', "Success!", "You have successfully reported the user. Staff may send you a message asking
+        alert('danger', "Uh Oh!", "You are trying to report a non-existent user.");
+        die($h->endpage());
+    }
+    $db->free_result($q);
+    $db->query("INSERT INTO `reports` VALUES(NULL, $userid, {$_POST['userid']}, '{$_POST['reason']}')");
+    alert('success', "Success!", "You have successfully reported the user. Staff may send you a message asking
 		    questions about the report you just sent. Please answer them to the best of your ability.", true, 'index.php');
 
-    }
 }
 $h->endpage();
