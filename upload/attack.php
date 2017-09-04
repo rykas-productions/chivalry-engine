@@ -473,7 +473,7 @@ function beat()
         $api->GameAddNotification($r['userid'], "You were hospitalized by <a href='profile.php?user=$userid'>{$ir['username']}</a>
                                                     for {$hosptime} minutes.");
         //Log that the user won the fight.
-        $api->SystemLogsAdd($userid, 'attacking', "Hospitalized <a href='profile.php?user=$userid'>{$ir['username']}</a>
+        $api->SystemLogsAdd($userid, 'attacking', "Hospitalized <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$_GET['ID']}]
                                                 for {$hosptime} minutes.");
         //Log that the opponent lost the fight.
         $api->SystemLogsAdd($_GET['ID'], 'attacking', "Hospitalized by <a href='profile.php?user={$userid}'>{$ir['username']}</a>
@@ -568,9 +568,9 @@ function lost()
     $api->GameAddNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a>
                                             picked a fight against you and lost. You've gained {$expperc2}% experience.");
     //Log that the user lost.
-    $api->SystemLogsAdd($userid, 'attacking', "Attacked {$r['username']} [{$_GET['ID']}] and lost, gaining {$hosptime} minutes in the infirmary.");
+    $api->SystemLogsAdd($userid, 'attacking', "Attacked <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$_GET['ID']}] and lost.");
     //Log that the opponent won.
-    $api->SystemLogsAdd($_GET['ID'], 'attacking', "Beat <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] in combat.");
+    $api->SystemLogsAdd($_GET['ID'], 'attacking', "Attacked by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and won.");
     //Increase opponent's XP for winning.
     $api->UserInfoSetStatic($_GET['ID'], "xp", $r['xp'] + $expgainp2);
     $_SESSION['attacklost'] = 0;
@@ -656,9 +656,9 @@ function xp()
             $api->GameAddNotification($r['userid'], "<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you
                 and used you for experience.");
             //Log that the user won.
-            $api->SystemLogsAdd($userid, 'attacking', "Attacked {$r['username']} [{$r['userid']}] and gained {$expperc}% Experience.");
+            $api->SystemLogsAdd($userid, 'attacking', "Attacked <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and gained {$expperc}% Experience.");
             //Log that the opponent lost.
-            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Attacked by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and left for experience.");
+            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Attacked by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and left for experience.");
             $_SESSION['attackwon'] = 0;
             $additionaltext = "";
             //Both players are in a guild.
@@ -735,11 +735,11 @@ function mug()
             //Place opponent in infirmary.
             $api->UserStatusSet($r['userid'], 'infirmary', $hosptime, $hospreason);
             //Tell opponent they were mugged, and for how much, by user.
-            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . ".");
+            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
             //Log that the user won and stole some primary currency, and that
             //the opponent lost and lost primary currency.
-            $api->SystemLogsAdd($userid, 'attacking', "Attacked {$r['username']} [{$r['userid']}] and stole {$stole}.");
-            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Mugged by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}], losing {$stole}.");
+            $api->SystemLogsAdd($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole {$stole} Primary Currency.");
+            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost {$stole} Primary Currency.");
             $_SESSION['attackwon'] = 0;
             $additionaltext = "";
             //Both players are in a guild.
