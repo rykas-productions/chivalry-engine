@@ -241,15 +241,15 @@ if (!$_GET['user']) {
 							</tr>
 							<tr>
 								<td>Last Hit</td>
-								<td>{$r['lastip']} (" . @gethostbyaddr($r['lastip']) . ")</td>
+								<td>{$r['lastip']}</td>
 							</tr>
 							<tr>
 								<td>Last Login</td>
-								<td>{$r['loginip']} (" . @gethostbyaddr($r['loginip']) . ")</td>
+								<td>{$r['loginip']}</td>
 							</tr>
 							<tr>
 								<td>Sign Up</td>
-								<td>{$r['registerip']} (" . @gethostbyaddr($r['registerip']) . ")</td>
+								<td>{$r['registerip']}</td>
 							</tr>
 							<tr>
 								<td>
