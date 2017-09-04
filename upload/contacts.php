@@ -162,7 +162,7 @@ function add()
 }
 function remove()
 {
-	global $db,$userid,$h,$api;
+	global $db,$userid,$h;
 	$_GET['contact'] = (isset($_GET['contact']) && is_numeric($_GET['contact'])) ? abs($_GET['contact']) : '';
     //User is trying to remove someone from contact list, but didn't specify their ID.
 	if (empty($_GET['contact']))
@@ -181,6 +181,6 @@ function remove()
     }
     //Remove from list.
 	$db->query("DELETE FROM `contact_list` WHERE `c_ID` = {$_GET['contact']} AND `c_ADDER` = {$userid}");
-	alert('success',"Success!","You have successfully removed " . $api->UserIDtoName($_GET['contact']) . " from your contact list.",true,'contacts.php');
+	alert('success',"Success!","You have successfully removed this user from your contact list.",true,'contacts.php');
 }
 $h->endpage();
