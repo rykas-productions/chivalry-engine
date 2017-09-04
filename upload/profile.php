@@ -159,7 +159,7 @@ if (!$_GET['user']) {
             echo "
 							<tr>
 								<th>Federal Dungeon</th>
-								<td>In the federal dungeon for " . TimeUntil_Parse($r['fed_out']) . " days.<br />
+								<td>In the federal dungeon for " . TimeUntil_Parse($r['fed_out']) . ".<br />
 								{$r['fed_reason']}
 								</td>
 							</tr>";
