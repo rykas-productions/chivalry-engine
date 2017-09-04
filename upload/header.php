@@ -125,7 +125,7 @@ class headers
     }
     $fed = $db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
     alert('info', "Information!", "Donate to {$set['WebsiteName']} and you'll receive many cool perks! Check
-                    out your options <a href='donator.php'>here</a>.", false);
+                    out the available packs <a href='donator.php'>here</a>.", false);
     //User's federal jail sentence is completed. Let them play again.
     if ($fed['fed_out'] < $time) {
         $db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
