@@ -260,7 +260,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 				<div id='LOGS' class='tab-pane'>
 					<div class='card'>
 						<div class='card-body'>
-							<table class='table table-bordered'>
+							<table class='table table-sm'>
 							<tr>
 								<td>
 									<a href='staff_logs.php?action=alllogs'>General Logs</a>
