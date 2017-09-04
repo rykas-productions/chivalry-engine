@@ -10,73 +10,61 @@
 //Still not localized
 require('sglobals.php');
 echo "<h3>Permissions</h3><hr />";
-if (!isset($_GET['action']))
-{
+if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
-switch ($_GET['action'])
-{
-case "viewperm":
-    viewperm();
-    break;
-case "editperm":
-    editperm();
-    break;
-case "resetperm":
-    resetperm();
-    break;
-default:
-    die();
-    break;
+switch ($_GET['action']) {
+    case "viewperm":
+        viewperm();
+        break;
+    case "editperm":
+        editperm();
+        break;
+    case "resetperm":
+        resetperm();
+        break;
+    default:
+        die();
+        break;
 }
 function viewperm()
 {
-	global $h,$db,$userid,$api;
-	if (!isset($_POST['userid']))
-	{
-		$csrf=request_csrf_html('staff_perm_1');
-		echo "Firstly, select a user from the dropdown to view their permissions.";
-		echo "<form method='post'>
+    global $h, $db, $userid, $api;
+    if (!isset($_POST['userid'])) {
+        $csrf = request_csrf_html('staff_perm_1');
+        echo "Firstly, select a user from the dropdown to view their permissions.";
+        echo "<form method='post'>
         	" . user_dropdown('userid')
-                . "
+            . "
         	<br />
         	{$csrf}
         	<input type='submit' class='btn btn-primary' value='Edit Permissions' />
         </form>";
-		$h->endpage();
-	}
-	else
-	{
-		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
-		if (empty($_POST['userid']))
-		{
-			alert('danger',"Uh Oh!","You specified an invalid input. Try again!");
-			die($h->endpage());
-		}
-		else
-		{
-			$UserPermissionSelectQuery=
+        $h->endpage();
+    } else {
+        $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
+        if (empty($_POST['userid'])) {
+            alert('danger', "Uh Oh!", "You specified an invalid input. Try again!");
+            die($h->endpage());
+        } else {
+            $UserPermissionSelectQuery =
                 $db->query("
                           SELECT `p`.*,`u`.`username`,`u`.`userid`
                           FROM `permissions` AS `p`
                           INNER JOIN `users` AS `u`
                           ON `u`.`userid` = `p`.`perm_user`
                           WHERE `perm_user` = {$_POST['userid']}");
-			$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
-			if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_1', stripslashes($_POST['verf'])))
-			{
-				alert('danger',"Action Blocked!","We have blocked this action for your security. Please submit forms quickly.");
-				die($h->endpage());
-			}
-			if ($db->num_rows($UserPermissionSelectQuery) == 0)
-			{
-				alert('danger',"All Permissions!","This user has all permissions allowed to them! We cannot display users who have all the permissions, only the users who has had their permissions tweaked.");
-				die($h->endpage());
-			}
-			else
-			{
-				echo
-				"Displaying {$UserName}'s Permissions.<br />
+            $UserName = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
+            if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_1', stripslashes($_POST['verf']))) {
+                alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
+                die($h->endpage());
+            }
+            if ($db->num_rows($UserPermissionSelectQuery) == 0) {
+                alert('danger', "All Permissions!", "This user has all permissions allowed to them! We cannot display users who have all the permissions, only the users who has had their permissions tweaked.");
+                die($h->endpage());
+            } else {
+                echo
+                "Displaying {$UserName}'s Permissions.<br />
 				<small>Remember, this will only show permissions if the user's permissions have been tweaked.</small>
 				<table class='table table-bordered table-hover'>
 					<thead>
@@ -86,9 +74,8 @@ function viewperm()
 						</tr>
 					</thead>
 					<tbody>";
-				while ($UserPerm = $db->fetch_row($UserPermissionSelectQuery))
-				{
-					echo"<tr>
+                while ($UserPerm = $db->fetch_row($UserPermissionSelectQuery)) {
+                    echo "<tr>
 							<td>
 								{$UserPerm['perm_name']}
 							</td>
@@ -97,22 +84,22 @@ function viewperm()
 							</td>
 						</tr>
 							";
-				}
-				echo "</tbody></table>";
-				$api->SystemLogsAdd($userid,'staff',"Viewed <a href='profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s Permissions.");
-			}
-		}
-		$h->endpage();
-	}
+                }
+                echo "</tbody></table>";
+                $api->SystemLogsAdd($userid, 'staff', "Viewed <a href='profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s Permissions.");
+            }
+        }
+        $h->endpage();
+    }
 }
+
 function editperm()
 {
-	global $h,$db,$userid,$api;
-	if (!isset($_POST['userid']))
-	{
-		$csrf=request_csrf_html('staff_perm_2');
-		echo "Please fill out the form.";
-		echo "<form method='post'>
+    global $h, $db, $userid, $api;
+    if (!isset($_POST['userid'])) {
+        $csrf = request_csrf_html('staff_perm_2');
+        echo "Please fill out the form.";
+        echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tbody>
 				<tr>
@@ -143,81 +130,62 @@ function editperm()
 				</tr>
 			</tbody>
 		</table>";
-		echo "
+        echo "
         	{$csrf}
         	<input type='submit' class='btn btn-primary' value='Edit Permissions' />
         </form>";
-		$h->endpage();
-	}
-	else
-	{
-		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_2', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","We have blocked this action for your security. Please submit forms quickly.");
-			die($h->endpage());
-		}
-		if (empty($_POST['userid']))
-		{
-			alert('danger',"Uh Oh!","You specified an invalid input. Try again!");
-			die($h->endpage());
-		}
-		elseif (!in_array($_POST['enable'], array('disable', 'enable')))
-		{
-			alert('danger',"Uh Oh!","You specified an invalid input. Try again!");
-			die($h->endpage());
-		}
-		elseif (!in_array($_POST['permission'], array('CanAttack', 'CanBeAttack', 'CanReplyMail', 'CanReplyForum', 'CanCreateThread', 'CanComment', 'CanSellToGame', 'CanBuyFromGame')))
-		{
-			alert('danger',"Uh Oh!","You specified an invalid input. Try again!");
-			die($h->endpage());
-		}
-		else
-		{
-			$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
-			if ($_POST['enable'] == 'disable')
-			{
-				$BanQuery=$db->fetch_row($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}"));
-				if ($db->num_rows($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}")) > 0)
-				{
-					alert('danger',"Permission Already Given!","This user already has this permission specified. Try again, please!");
-					die($h->endpage());
-				}
-				else
-				{
-					$db->query("INSERT INTO `permissions` (`perm_id`, `perm_user`, `perm_name`, `perm_disable`) VALUES (NULL, '{$_POST['userid']}', '{$_POST['permission']}', 'true');");
-					$api->SystemLogsAdd($userid,'staff',"Disabled <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s {$_POST['permission']} permission.");
-					alert('success',"Permission Updated!","You have successfully updated that {$UserName}'s {$_POST['permission']} permission to disabled/banned.");
-					die($h->endpage());
-				}
-			}
-			else
-			{
-				$BanQuery=$db->fetch_row($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}"));
-				if ($db->num_rows($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}")) == 0)
-				{
-					alert('danger',"Permission Not Existent!","This user already has full access to this permission. Enabling it again would do nothing...");
-					die($h->endpage());
-				}
-				else
-				{
-					$db->query("DELETE FROM `permissions` WHERE `perm_user` = {$_POST['userid']} AND `perm_name` = '{$_POST['permission']}'");
-					alert('success',"Permission Updated!","You have successfully updated that {$UserName}'s {$_POST['permission']} permission to enabled/unbanned.");
-					$api->SystemLogsAdd($userid,'staff',"Enabled <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s {$_POST['permission']} permission.");
-					die($h->endpage());
-				}
-			}
-		}
-	}
+        $h->endpage();
+    } else {
+        $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_2', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
+            die($h->endpage());
+        }
+        if (empty($_POST['userid'])) {
+            alert('danger', "Uh Oh!", "You specified an invalid input. Try again!");
+            die($h->endpage());
+        } elseif (!in_array($_POST['enable'], array('disable', 'enable'))) {
+            alert('danger', "Uh Oh!", "You specified an invalid input. Try again!");
+            die($h->endpage());
+        } elseif (!in_array($_POST['permission'], array('CanAttack', 'CanBeAttack', 'CanReplyMail', 'CanReplyForum', 'CanCreateThread', 'CanComment', 'CanSellToGame', 'CanBuyFromGame'))) {
+            alert('danger', "Uh Oh!", "You specified an invalid input. Try again!");
+            die($h->endpage());
+        } else {
+            $UserName = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
+            if ($_POST['enable'] == 'disable') {
+                $BanQuery = $db->fetch_row($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}"));
+                if ($db->num_rows($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}")) > 0) {
+                    alert('danger', "Permission Already Given!", "This user already has this permission specified. Try again, please!");
+                    die($h->endpage());
+                } else {
+                    $db->query("INSERT INTO `permissions` (`perm_id`, `perm_user`, `perm_name`, `perm_disable`) VALUES (NULL, '{$_POST['userid']}', '{$_POST['permission']}', 'true');");
+                    $api->SystemLogsAdd($userid, 'staff', "Disabled <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s {$_POST['permission']} permission.");
+                    alert('success', "Permission Updated!", "You have successfully updated that {$UserName}'s {$_POST['permission']} permission to disabled/banned.");
+                    die($h->endpage());
+                }
+            } else {
+                $BanQuery = $db->fetch_row($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}"));
+                if ($db->num_rows($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}")) == 0) {
+                    alert('danger', "Permission Not Existent!", "This user already has full access to this permission. Enabling it again would do nothing...");
+                    die($h->endpage());
+                } else {
+                    $db->query("DELETE FROM `permissions` WHERE `perm_user` = {$_POST['userid']} AND `perm_name` = '{$_POST['permission']}'");
+                    alert('success', "Permission Updated!", "You have successfully updated that {$UserName}'s {$_POST['permission']} permission to enabled/unbanned.");
+                    $api->SystemLogsAdd($userid, 'staff', "Enabled <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s {$_POST['permission']} permission.");
+                    die($h->endpage());
+                }
+            }
+        }
+    }
 }
+
 function resetperm()
 {
-	global $db,$h,$userid,$api;
-	if (!isset($_POST['userid']))
-	{
-		$csrf=request_csrf_html('staff_perm_3');
-		echo "Select a user to reset their permissions.";
-		echo "
+    global $db, $h, $userid, $api;
+    if (!isset($_POST['userid'])) {
+        $csrf = request_csrf_html('staff_perm_3');
+        echo "Select a user to reset their permissions.";
+        echo "
         	<form method='post'>
 			" . user_dropdown('userid') . "
 			{$csrf}
@@ -226,28 +194,22 @@ function resetperm()
 			<input type='text' name='confirm' class='form-control'>
         	<input type='submit' class='btn btn-primary' value='Reset Permissions' />
         </form>";
-		$h->endpage();
-	}
-	else
-	{
-		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_3', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","We have blocked this action for your security. Please submit forms quickly.");
-			die($h->endpage());
-		}
-		if ($_POST['confirm'] != 'CONFIRM')
-		{
-			alert('danger','Confirm Action!','Go back and make sure you type CONFIRM in the box.');
-			die($h->endpage());
-		}
-		else
-		{
-			$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
-			$db->query("DELETE FROM `permissions` WHERE `perm_user` = {$_POST['userid']}");
-			alert('success',"User's Permissions Reset!","You have successfully reset {$UserName}'s permissions.",true,'index.php');
-			$api->SystemLogsAdd($userid,'staff',"Reset <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s permissions.");
-			die($h->endpage());
-		}
-	}
+        $h->endpage();
+    } else {
+        $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_3', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
+            die($h->endpage());
+        }
+        if ($_POST['confirm'] != 'CONFIRM') {
+            alert('danger', 'Confirm Action!', 'Go back and make sure you type CONFIRM in the box.');
+            die($h->endpage());
+        } else {
+            $UserName = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
+            $db->query("DELETE FROM `permissions` WHERE `perm_user` = {$_POST['userid']}");
+            alert('success', "User's Permissions Reset!", "You have successfully reset {$UserName}'s permissions.", true, 'index.php');
+            $api->SystemLogsAdd($userid, 'staff', "Reset <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s permissions.");
+            die($h->endpage());
+        }
+    }
 }

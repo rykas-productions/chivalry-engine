@@ -8,61 +8,52 @@
 */
 require('sglobals.php');
 echo "<h3>Staff Smeltery</h3><hr />";
-if (!isset($_GET['action']))
-{
+if (!isset($_GET['action'])) {
     $_GET['action'] = 'add';
 }
-switch ($_GET['action'])
-{
-	case 'add':
-		add();
-		break;
-	case 'del':
-		del();
-		break;
+switch ($_GET['action']) {
+    case 'add':
+        add();
+        break;
+    case 'del':
+        del();
+        break;
 }
 function add()
 {
-	global $db,$api,$h,$userid;
-	if (isset($_POST['smelted_item']))
-	{
-		$_POST['smelted_item'] = (isset($_POST['smelted_item']) && is_numeric($_POST['smelted_item']))  ? abs(intval($_POST['smelted_item'])) : 0;
-		$_POST['smelted_item_qty'] = (isset($_POST['smelted_item_qty']) && is_numeric($_POST['smelted_item_qty']))  ? abs(intval($_POST['smelted_item_qty'])) : 0;
-		$_POST['timetocomplete'] = (isset($_POST['timetocomplete']) && is_numeric($_POST['timetocomplete']))  ? abs(intval($_POST['timetocomplete'])) : 0;
-		$_POST['required_item'] = (isset($_POST['required_item']) && is_numeric($_POST['required_item']))  ? abs(intval($_POST['required_item'])) : 0;
-		$_POST['required_item_qty'] = (isset($_POST['required_item_qty']) && is_numeric($_POST['required_item_qty']))  ? abs(intval($_POST['required_item_qty'])) : 0;
-		if ($_POST['required_item'] == 0 || $_POST['smelted_item'] == 0 || $_POST['smelted_item_qty'] == 0 || $_POST['required_item_qty'] == 0)
-		{
-			alert('danger',"Uh Oh!","Please fill out the previous form completely before submitting.");
-			die($h->endpage());
-		}
-		$items = $_POST['required_item'];
-		$qty = $_POST['required_item_qty'];
-		for($i = 1; $i <= 5; $i++) 
-		{
-			$_POST['required_item'.$i] = (isset($_POST['required_item'.$i]) && is_numeric($_POST['required_item'.$i]))  ? abs(intval($_POST['required_item'.$i])) : 0;
-			$_POST['required_item_qty'.$i] = (isset($_POST['required_item_qty'.$i]) && is_numeric($_POST['required_item_qty'.$i]))  ? abs(intval($_POST['required_item_qty'.$i])) : 0;
-			if($_POST['required_item'.$i] > 0) 
-			{
-				if ($_POST['required_item_qty'.$i] == 0)
-				{
-					alert('danger',"Uh Oh!","Please specify the required item.");
-					die($h->endpage());
-				}
-				$items .= ",". $_POST['required_item'.$i];
-				$qty .= ",". $_POST['required_item_qty'.$i];
-			}
-		}
-		$db->query("INSERT INTO `smelt_recipes` 
+    global $db, $api, $h, $userid;
+    if (isset($_POST['smelted_item'])) {
+        $_POST['smelted_item'] = (isset($_POST['smelted_item']) && is_numeric($_POST['smelted_item'])) ? abs(intval($_POST['smelted_item'])) : 0;
+        $_POST['smelted_item_qty'] = (isset($_POST['smelted_item_qty']) && is_numeric($_POST['smelted_item_qty'])) ? abs(intval($_POST['smelted_item_qty'])) : 0;
+        $_POST['timetocomplete'] = (isset($_POST['timetocomplete']) && is_numeric($_POST['timetocomplete'])) ? abs(intval($_POST['timetocomplete'])) : 0;
+        $_POST['required_item'] = (isset($_POST['required_item']) && is_numeric($_POST['required_item'])) ? abs(intval($_POST['required_item'])) : 0;
+        $_POST['required_item_qty'] = (isset($_POST['required_item_qty']) && is_numeric($_POST['required_item_qty'])) ? abs(intval($_POST['required_item_qty'])) : 0;
+        if ($_POST['required_item'] == 0 || $_POST['smelted_item'] == 0 || $_POST['smelted_item_qty'] == 0 || $_POST['required_item_qty'] == 0) {
+            alert('danger', "Uh Oh!", "Please fill out the previous form completely before submitting.");
+            die($h->endpage());
+        }
+        $items = $_POST['required_item'];
+        $qty = $_POST['required_item_qty'];
+        for ($i = 1; $i <= 5; $i++) {
+            $_POST['required_item' . $i] = (isset($_POST['required_item' . $i]) && is_numeric($_POST['required_item' . $i])) ? abs(intval($_POST['required_item' . $i])) : 0;
+            $_POST['required_item_qty' . $i] = (isset($_POST['required_item_qty' . $i]) && is_numeric($_POST['required_item_qty' . $i])) ? abs(intval($_POST['required_item_qty' . $i])) : 0;
+            if ($_POST['required_item' . $i] > 0) {
+                if ($_POST['required_item_qty' . $i] == 0) {
+                    alert('danger', "Uh Oh!", "Please specify the required item.");
+                    die($h->endpage());
+                }
+                $items .= "," . $_POST['required_item' . $i];
+                $qty .= "," . $_POST['required_item_qty' . $i];
+            }
+        }
+        $db->query("INSERT INTO `smelt_recipes`
 		(`smelt_time`, `smelt_items`, `smelt_quantity`, `smelt_output`, `smelt_qty_output`) 
 		VALUES 
 		('{$_POST['timetocomplete']}', '{$items}', '{$qty}', '{$_POST['smelted_item']}', '{$_POST['smelted_item_qty']}')");
-		$api->SystemLogsAdd($userid,'staff',"Created smelting recipe for ".$api->SystemItemIDtoName($_POST['smelted_item']));
-		alert('success',"Success!","You have successfully created a blacksmith recipe for " .$api->SystemItemIDtoName($_POST['smelted_item']),true,'index.php');
-	}
-	else
-	{
-		echo "<form id='craft' method='post'>
+        $api->SystemLogsAdd($userid, 'staff', "Created smelting recipe for " . $api->SystemItemIDtoName($_POST['smelted_item']));
+        alert('success', "Success!", "You have successfully created a blacksmith recipe for " . $api->SystemItemIDtoName($_POST['smelted_item']), true, 'index.php');
+    } else {
+        echo "<form id='craft' method='post'>
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
@@ -136,27 +127,24 @@ function add()
 				</tr>
 			</table>
 		</form>";
-	}
+    }
 }
+
 function del()
 {
-	global $db,$userid,$api,$h;
-	if (isset($_POST['smelt']))
-	{
-		$_POST['smelt'] = (isset($_POST['smelt']) && is_numeric($_POST['smelt']))  ? abs(intval($_POST['smelt'])) : 0;
-		if ($_POST['smelt'] == 0)
-		{
-			alert('danger',"Uh Oh!","Please specify the blacksmith recipe you wish to remove.");
-			die($h->endpage());
-		}
-		$db->query("DELETE FROM `smelt_recipes` WHERE `smelt_id` = {$_POST['smelt']}");
-		$db->query("DELETE FROM `smelt_inprogress` WHERE `sip_recipe` = {$_POST['smelt']}");
-		$api->SystemLogsAdd($userid,'staff',"Removed Blacksmith Recipe ID #{$_POST['smelt']}");
-		alert('success',"Success!","You have successfully removed Blacksmith Recipe ID #{$_POST['smelt']}",true,'index.php');
-	}
-	else
-	{
-		echo "<form action='?action=del' method='post'>
+    global $db, $userid, $api, $h;
+    if (isset($_POST['smelt'])) {
+        $_POST['smelt'] = (isset($_POST['smelt']) && is_numeric($_POST['smelt'])) ? abs(intval($_POST['smelt'])) : 0;
+        if ($_POST['smelt'] == 0) {
+            alert('danger', "Uh Oh!", "Please specify the blacksmith recipe you wish to remove.");
+            die($h->endpage());
+        }
+        $db->query("DELETE FROM `smelt_recipes` WHERE `smelt_id` = {$_POST['smelt']}");
+        $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_recipe` = {$_POST['smelt']}");
+        $api->SystemLogsAdd($userid, 'staff', "Removed Blacksmith Recipe ID #{$_POST['smelt']}");
+        alert('success', "Success!", "You have successfully removed Blacksmith Recipe ID #{$_POST['smelt']}", true, 'index.php');
+    } else {
+        echo "<form action='?action=del' method='post'>
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
@@ -179,6 +167,7 @@ function del()
 		</table>
 		</form>
 		";
-	}
+    }
 }
+
 $h->endpage();

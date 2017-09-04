@@ -1,8 +1,9 @@
 <?php
+
 class PaypalIPN
 {
     /**
-     * @var bool $use_sandbox     Indicates if the sandbox endpoint is used.
+     * @var bool $use_sandbox Indicates if the sandbox endpoint is used.
      */
     private $use_sandbox = false;
     /**
@@ -17,6 +18,7 @@ class PaypalIPN
     const VALID = 'VERIFIED';
     /** Response from PayPal indicating validation failed */
     const INVALID = 'INVALID';
+
     /**
      * Sets the IPN verification to sandbox mode (for use when testing,
      * should not be enabled in production).
@@ -26,6 +28,7 @@ class PaypalIPN
     {
         $this->use_sandbox = true;
     }
+
     /**
      * Sets curl to use php curl's built in certs (may be required in some
      * environments).
@@ -35,6 +38,7 @@ class PaypalIPN
     {
         $this->use_local_certs = false;
     }
+
     /**
      * Determine endpoint to post the verification data to.
      * @return string
@@ -47,6 +51,7 @@ class PaypalIPN
             return self::VERIFY_URI;
         }
     }
+
     /**
      * Verification Function
      * Sends the incoming post data back to PayPal using the cURL library.
@@ -56,8 +61,8 @@ class PaypalIPN
      */
     public function verifyIPN()
     {
-        if ( ! count($_POST)) {
-			error_log("Missing POST Data");
+        if (!count($_POST)) {
+            error_log("Missing POST Data");
             throw new Exception("Missing POST Data");
         }
         $raw_post_data = file_get_contents('php://input');
@@ -106,17 +111,17 @@ class PaypalIPN
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
         $res = curl_exec($ch);
-        if ( ! ($res)) {
+        if (!($res)) {
             $errno = curl_errno($ch);
             $errstr = curl_error($ch);
             curl_close($ch);
-			error_log("cURL error: [$errno] $errstr");
+            error_log("cURL error: [$errno] $errstr");
             throw new Exception("cURL error: [$errno] $errstr");
         }
         $info = curl_getinfo($ch);
         $http_code = $info['http_code'];
         if ($http_code != 200) {
-			error_log("PayPal responded with http code $http_code");
+            error_log("PayPal responded with http code $http_code");
             throw new Exception("PayPal responded with http code $http_code");
         }
         curl_close($ch);

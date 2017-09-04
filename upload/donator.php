@@ -23,17 +23,16 @@ echo "
 			PayPal Link
 		</th>
 	</tr>";
-$q=$db->query("SELECT `v`.*, `i`.* 
+$q = $db->query("SELECT `v`.*, `i`.*
 				FROM `vip_listing` `v`
 				INNER JOIN `items` AS `i` 
 				ON `itmid` = `vip_item`
 				ORDER BY `vip_cost` ASC");
 //List the donator packages.
-while ($r=$db->fetch_row($q))
-{
+while ($r = $db->fetch_row($q)) {
     //Put the VIP Cost in a currency number. (Ex. $1.54)
-	$r['vip_cost']=sprintf("%0.2f",$r['vip_cost']);
-	echo "
+    $r['vip_cost'] = sprintf("%0.2f", $r['vip_cost']);
+    echo "
 	<tr>
 		<td>
 		{$r['itmname']}<br />
@@ -41,43 +40,38 @@ while ($r=$db->fetch_row($q))
 		</td>
 		<td>
 		";
-			$uhoh=0;
-            //List the item's effects.
-			for ($enum = 1; $enum <= 3; $enum++)
-			{
-				if ($r["effect{$enum}_on"] == 'true')
-				{
-                    //Lets make the item's effects more user friendly to read, eh.
-					$einfo = unserialize($r["effect{$enum}"]);
-					$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
-					$einfo['dir'] = ($einfo['dir'] == 'pos') ? "Increases" : "Decreases";
-					$stats =
-						array("energy" => "Energy", "will" => "Will",
-								"brave" => "Bravery", "level" => "Level",
-								"hp" => "Health", "strength" => "Strength",
-								"agility" => "Agility", "guard" => "Guard",
-								"labor" => "Labor", "iq" => "IQ",
-								"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-								"primary_currency" => "Primary Currency", "secondary_currency"
-								=> "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
-								"VIP Days");
-					$statformatted=$stats["{$einfo['stat']}"];
-					echo "{$einfo['dir']} {$statformatted} by {$einfo['inc_amount']}{$einfo['inc_type']}.<br />";
-				}
-                //If item has no effects, lets list the description instead.
-				else
-				{
-					$uhoh++;
-				}
-				if ($uhoh == 3)
-				{
-					echo "{$r['itmdesc']}";
-				}
-			}
-        //The form handles a lot of the internals for the pack info.
-        //You should only need to change the currency_code.
-        //Proceed at your own caution.
-		echo"
+    $uhoh = 0;
+    //List the item's effects.
+    for ($enum = 1; $enum <= 3; $enum++) {
+        if ($r["effect{$enum}_on"] == 'true') {
+            //Lets make the item's effects more user friendly to read, eh.
+            $einfo = unserialize($r["effect{$enum}"]);
+            $einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
+            $einfo['dir'] = ($einfo['dir'] == 'pos') ? "Increases" : "Decreases";
+            $stats =
+                array("energy" => "Energy", "will" => "Will",
+                    "brave" => "Bravery", "level" => "Level",
+                    "hp" => "Health", "strength" => "Strength",
+                    "agility" => "Agility", "guard" => "Guard",
+                    "labor" => "Labor", "iq" => "IQ",
+                    "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+                    "primary_currency" => "Primary Currency", "secondary_currency"
+                => "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
+                    "VIP Days");
+            $statformatted = $stats["{$einfo['stat']}"];
+            echo "{$einfo['dir']} {$statformatted} by {$einfo['inc_amount']}{$einfo['inc_type']}.<br />";
+        } //If item has no effects, lets list the description instead.
+        else {
+            $uhoh++;
+        }
+        if ($uhoh == 3) {
+            echo "{$r['itmdesc']}";
+        }
+    }
+    //The form handles a lot of the internals for the pack info.
+    //You should only need to change the currency_code.
+    //Proceed at your own caution.
+    echo "
 		</td>
 		<td>
 			<form action='https://www.paypal.com/cgi-bin/webscr' method='post'>

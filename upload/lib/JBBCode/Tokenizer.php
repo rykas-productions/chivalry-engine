@@ -34,7 +34,7 @@ class Tokenizer
 
                 /* Add the [ or ] to the tokens array. */
                 array_push($this->tokens, $str[$index]);
-                $strStart = $index+1;
+                $strStart = $index + 1;
             }
         }
 

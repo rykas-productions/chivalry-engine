@@ -12,9 +12,8 @@ $file = 'crons/hour.php';
 
 $ready_to_run = $db->query("SELECT `nextUpdate` FROM `crons` WHERE `file`='{$file}' AND `nextUpdate` <= unix_timestamp()");
 //Place your queries inside the conditional
-if ($db->num_rows($ready_to_run)) 
-{	
-	$time = 3600;
-	$db->query("UPDATE `crons` SET `nextUpdate`=`nextUpdate`+{$time} WHERE `file`='{$file}'");
+if ($db->num_rows($ready_to_run)) {
+    $time = 3600;
+    $db->query("UPDATE `crons` SET `nextUpdate`=`nextUpdate`+{$time} WHERE `file`='{$file}'");
 }
 ?>

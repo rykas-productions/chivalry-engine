@@ -28,8 +28,7 @@ echo "<table class='table table-bordered'>
 		</th>
 	</tr>";
 //List all the players in the federal jail.
-while ($r = $db->fetch_row($q))
-{
+while ($r = $db->fetch_row($q)) {
     echo "
 	<tr>
     	<td>

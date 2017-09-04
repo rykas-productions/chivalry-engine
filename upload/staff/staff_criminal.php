@@ -8,12 +8,10 @@
 */
 require_once('sglobals.php');
 echo "<h3>Staff Criminal Center</h3><hr />";
-if (!isset($_GET['action']))
-{
+if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
-switch ($_GET['action'])
-{
+switch ($_GET['action']) {
     case 'newcrime':
         new_crime();
         break;
@@ -41,7 +39,7 @@ switch ($_GET['action'])
 }
 function home()
 {
-	echo "
+    echo "
 	<a href='?action=newcrimegroup'>Create Crime Group</a><br />
 	<a href='?action=newcrime'>Create Crime</a><br />
 	<a href='?action=editcrime'>Edit Crime</a><br />
@@ -50,13 +48,13 @@ function home()
 	<a href='?action=delcrimegroup'>Delete Crime Group</a><br />
 	";
 }
+
 function new_crime()
 {
-	global $db,$userid,$api,$h;
-	if (!isset($_POST['name']))
-	{
-		$csrf = request_csrf_html('staff_newcrime');
-		echo "Adding a new Crime<br />
+    global $db, $userid, $api, $h;
+    if (!isset($_POST['name'])) {
+        $csrf = request_csrf_html('staff_newcrime');
+        echo "Adding a new Crime<br />
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
 				<tr>
@@ -120,7 +118,7 @@ function new_crime()
 						Success Item
 					</th>
 					<td>
-						" . item_dropdown('item')  . "
+						" . item_dropdown('item') . "
 					</td>
 				</tr>
 				<tr>
@@ -128,7 +126,7 @@ function new_crime()
 						Crime Group
 					</th>
 					<td>
-						" . crimegroup_dropdown('group')  . "
+						" . crimegroup_dropdown('group') . "
 					</td>
 				</tr>
 				<tr>
@@ -193,50 +191,45 @@ function new_crime()
 				{$csrf}
 			</table>
 		</form>";
-	}
-	else
-	{
-		$_POST['name'] =  (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
-		$_POST['brave'] = (isset($_POST['brave']) && is_numeric($_POST['brave'])) ? abs(intval($_POST['brave'])) : '';
-		$_POST['percform'] = (isset($_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
-		$_POST['PRICURMAX'] = (isset($_POST['PRICURMAX']) && is_numeric($_POST['PRICURMAX'])) ? abs(intval($_POST['PRICURMAX'])) : 0;
-		$_POST['PRICURMIN'] = (isset($_POST['PRICURMIN']) && is_numeric($_POST['PRICURMIN'])) ? abs(intval($_POST['PRICURMIN'])) : 0;
-		$_POST['SECURMAX'] = (isset($_POST['SECURMAX']) && is_numeric($_POST['SECURMAX'])) ? abs(intval($_POST['SECURMAX'])) : 0;
-		$_POST['SECURMIN'] = (isset($_POST['SECURMIN']) && is_numeric($_POST['SECURMIN'])) ? abs(intval($_POST['SECURMIN'])) : 0;
-		$_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : 0;
-		$_POST['group'] = (isset($_POST['group']) && is_numeric($_POST['group'])) ? abs(intval($_POST['group'])) : '';
-		$_POST['itext'] = (isset($_POST['itext'])) ? $db->escape(strip_tags(stripslashes($_POST['itext']))) : '';
-		$_POST['stext'] = (isset($_POST['stext'])) ? $db->escape(strip_tags(stripslashes($_POST['stext']))) : '';
-		$_POST['jtext'] = (isset($_POST['jtext'])) ? $db->escape(strip_tags(stripslashes($_POST['jtext']))) : '';
-		$_POST['jtimemin'] = (isset($_POST['jtimemin']) && is_numeric($_POST['jtimemin'])) ? abs(intval($_POST['jtimemin'])) : '';
-		$_POST['jtimemax'] = (isset($_POST['jtimemax']) && is_numeric($_POST['jtimemax'])) ? abs(intval($_POST['jtimemax'])) : '';
-		$_POST['jreason'] = (isset($_POST['jreason']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['jreason'])) ? $db->escape(strip_tags(stripslashes($_POST['jreason']))) : '';
-		$_POST['xp'] = (isset($_POST['xp']) && is_numeric($_POST['xp'])) ? abs(intval($_POST['xp'])) : '';
-		if (empty($_POST['name']) || empty($_POST['brave']) || empty($_POST['percform']) 
-			||  empty($_POST['group']) || empty($_POST['itext']) || empty($_POST['stext']) 
-			|| empty($_POST['jtext']) || empty($_POST['jtimemin']) || empty($_POST['jtimemax']) 
-			|| empty($_POST['jreason']) || empty($_POST['xp']))
-		{
-			alert('danger',"Uh Oh!","You are missing one or more required inputs on the previous form.");
-			die($h->endpage());
-		}
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrime', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
-			die($h->endpage());
-		}
-		if (!empty($_POST['item']))
-		{
-			$qi = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = {$_POST['item']}");
-			$exist_check = $db->fetch_single($qi);
-			$db->free_result($qi);
-			if ($exist_check == 0)
-			{
-				alert('danger',"Uh Oh!","The success item you've chosen does not exist.");
-				die($h->endpage());
-			}
-		}
-		$db->query("INSERT INTO `crimes` (`crimeNAME`, `crimeBRAVE`, 
+    } else {
+        $_POST['name'] = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
+        $_POST['brave'] = (isset($_POST['brave']) && is_numeric($_POST['brave'])) ? abs(intval($_POST['brave'])) : '';
+        $_POST['percform'] = (isset($_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
+        $_POST['PRICURMAX'] = (isset($_POST['PRICURMAX']) && is_numeric($_POST['PRICURMAX'])) ? abs(intval($_POST['PRICURMAX'])) : 0;
+        $_POST['PRICURMIN'] = (isset($_POST['PRICURMIN']) && is_numeric($_POST['PRICURMIN'])) ? abs(intval($_POST['PRICURMIN'])) : 0;
+        $_POST['SECURMAX'] = (isset($_POST['SECURMAX']) && is_numeric($_POST['SECURMAX'])) ? abs(intval($_POST['SECURMAX'])) : 0;
+        $_POST['SECURMIN'] = (isset($_POST['SECURMIN']) && is_numeric($_POST['SECURMIN'])) ? abs(intval($_POST['SECURMIN'])) : 0;
+        $_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : 0;
+        $_POST['group'] = (isset($_POST['group']) && is_numeric($_POST['group'])) ? abs(intval($_POST['group'])) : '';
+        $_POST['itext'] = (isset($_POST['itext'])) ? $db->escape(strip_tags(stripslashes($_POST['itext']))) : '';
+        $_POST['stext'] = (isset($_POST['stext'])) ? $db->escape(strip_tags(stripslashes($_POST['stext']))) : '';
+        $_POST['jtext'] = (isset($_POST['jtext'])) ? $db->escape(strip_tags(stripslashes($_POST['jtext']))) : '';
+        $_POST['jtimemin'] = (isset($_POST['jtimemin']) && is_numeric($_POST['jtimemin'])) ? abs(intval($_POST['jtimemin'])) : '';
+        $_POST['jtimemax'] = (isset($_POST['jtimemax']) && is_numeric($_POST['jtimemax'])) ? abs(intval($_POST['jtimemax'])) : '';
+        $_POST['jreason'] = (isset($_POST['jreason']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['jreason'])) ? $db->escape(strip_tags(stripslashes($_POST['jreason']))) : '';
+        $_POST['xp'] = (isset($_POST['xp']) && is_numeric($_POST['xp'])) ? abs(intval($_POST['xp'])) : '';
+        if (empty($_POST['name']) || empty($_POST['brave']) || empty($_POST['percform'])
+            || empty($_POST['group']) || empty($_POST['itext']) || empty($_POST['stext'])
+            || empty($_POST['jtext']) || empty($_POST['jtimemin']) || empty($_POST['jtimemax'])
+            || empty($_POST['jreason']) || empty($_POST['xp'])
+        ) {
+            alert('danger', "Uh Oh!", "You are missing one or more required inputs on the previous form.");
+            die($h->endpage());
+        }
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrime', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
+            die($h->endpage());
+        }
+        if (!empty($_POST['item'])) {
+            $qi = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = {$_POST['item']}");
+            $exist_check = $db->fetch_single($qi);
+            $db->free_result($qi);
+            if ($exist_check == 0) {
+                alert('danger', "Uh Oh!", "The success item you've chosen does not exist.");
+                die($h->endpage());
+            }
+        }
+        $db->query("INSERT INTO `crimes` (`crimeNAME`, `crimeBRAVE`,
 		`crimePERCFORM`, `crimePRICURMIN`, `crimePRICURMAX`, `crimeSECCURMIN`, 
 		`crimeSECURMAX`, `crimeITEMSUC`, `crimeGROUP`, `crimeITEXT`, `crimeSTEXT`, 
 		`crimeFTEXT`, `crimeDUNGMIN`, `crimeDUNGMAX`, `crimeDUNGREAS`, `crimeXP`) 
@@ -245,22 +238,21 @@ function new_crime()
 		'{$_POST['SECURMAX']}', '{$_POST['item']}', '{$_POST['group']}', '{$_POST['itext']}', 
 		'{$_POST['stext']}', '{$_POST['jtext']}', '{$_POST['jtimemin']}', 
 		'{$_POST['jtimemax']}', '{$_POST['jreason']}', '{$_POST['xp']}');");
-		alert('success',"Success!","You have successfully created the {$_POST['name']} crime.",true,'index.php');
-		$api->SystemLogsAdd($userid,'staff',"Created crime {$_POST['name']}");
-	}
+        alert('success', "Success!", "You have successfully created the {$_POST['name']} crime.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Created crime {$_POST['name']}");
+    }
 }
+
 function edit_crime()
 {
-	global $db,$userid,$h,$api;
-	if (!isset($_POST['step']))
-	{
-		$_POST['step'] = 0;
-	}
-	if ($_POST['step'] == 0)
-	{
-		$csrf = request_csrf_html('staff_editcrime1');
-		echo "<form action='?action=editcrime' method='post'>";
-		echo "
+    global $db, $userid, $h, $api;
+    if (!isset($_POST['step'])) {
+        $_POST['step'] = 0;
+    }
+    if ($_POST['step'] == 0) {
+        $csrf = request_csrf_html('staff_editcrime1');
+        echo "<form action='?action=editcrime' method='post'>";
+        echo "
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
@@ -282,32 +274,28 @@ function edit_crime()
 			</tr>
 		</table>
 		<input type='hidden' name='step' value='1'>";
-		echo $csrf . "</form>";
-	}
-	if ($_POST['step'] == 1)
-	{
-		$_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime1', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
-			die($h->endpage());
-		}
-		if (empty($_POST['crime']))
-		{
-			alert('danger',"Uh Oh!","Please specify a crime you wish to edit.");
-			die($h->endpage());
-		}
-		$d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
-		if ($db->num_rows($d) == 0)
-		{
-			$db->free_result($d);
-			alert('danger',"Uh Oh!","The crime you're trying to edit does not exist.");
-			die($h->endpage());
-		}
-		$itemi = $db->fetch_row($d);
-		$db->free_result($d);
-		$csrf = request_csrf_html('staff_editcrime2');
-		echo "Edit Crime Form<br />
+        echo $csrf . "</form>";
+    }
+    if ($_POST['step'] == 1) {
+        $_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime1', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
+            die($h->endpage());
+        }
+        if (empty($_POST['crime'])) {
+            alert('danger', "Uh Oh!", "Please specify a crime you wish to edit.");
+            die($h->endpage());
+        }
+        $d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
+        if ($db->num_rows($d) == 0) {
+            $db->free_result($d);
+            alert('danger', "Uh Oh!", "The crime you're trying to edit does not exist.");
+            die($h->endpage());
+        }
+        $itemi = $db->fetch_row($d);
+        $db->free_result($d);
+        $csrf = request_csrf_html('staff_editcrime2');
+        echo "Edit Crime Form<br />
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
 				<tr>
@@ -371,7 +359,7 @@ function edit_crime()
 						Success Item
 					</th>
 					<td>
-						" . item_dropdown('item',$itemi['crimeITEMSUC'])  . "
+						" . item_dropdown('item', $itemi['crimeITEMSUC']) . "
 					</td>
 				</tr>
 				<tr>
@@ -379,7 +367,7 @@ function edit_crime()
 						Crime Group
 					</th>
 					<td>
-						" . crimegroup_dropdown('group',$itemi['crimeGROUP'])  . "
+						" . crimegroup_dropdown('group', $itemi['crimeGROUP']) . "
 					</td>
 				</tr>
 				<tr>
@@ -446,54 +434,49 @@ function edit_crime()
 			<input type='hidden' name='crimeID' value='{$_POST['crime']}' />
 			<input type='hidden' name='step' value='2' />
 		</form>";
-	}
-	if ($_POST['step'] == 2)
-	{
-		$_POST['name'] =  (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
-		$_POST['brave'] = (isset($_POST['brave']) && is_numeric($_POST['brave'])) ? abs(intval($_POST['brave'])) : '';
-		$_POST['crimeID'] = (isset($_POST['crimeID']) && is_numeric($_POST['crimeID'])) ? abs(intval($_POST['crimeID'])) : '';
-		$_POST['percform'] = (isset($_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
-		$_POST['PRICURMAX'] = (isset($_POST['PRICURMAX']) && is_numeric($_POST['PRICURMAX'])) ? abs(intval($_POST['PRICURMAX'])) : 0;
-		$_POST['PRICURMIN'] = (isset($_POST['PRICURMIN']) && is_numeric($_POST['PRICURMIN'])) ? abs(intval($_POST['PRICURMIN'])) : 0;
-		$_POST['SECURMAX'] = (isset($_POST['SECURMAX']) && is_numeric($_POST['SECURMAX'])) ? abs(intval($_POST['SECURMAX'])) : 0;
-		$_POST['SECURMIN'] = (isset($_POST['SECURMIN']) && is_numeric($_POST['SECURMIN'])) ? abs(intval($_POST['SECURMIN'])) : 0;
-		$_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : 0;
-		$_POST['group'] = (isset($_POST['group']) && is_numeric($_POST['group'])) ? abs(intval($_POST['group'])) : '';
-		$_POST['itext'] = (isset($_POST['itext'])) ? $db->escape(strip_tags(stripslashes($_POST['itext']))) : '';
-		$_POST['stext'] = (isset($_POST['stext'])) ? $db->escape(strip_tags(stripslashes($_POST['stext']))) : '';
-		$_POST['jtext'] = (isset($_POST['jtext'])) ? $db->escape(strip_tags(stripslashes($_POST['jtext']))) : '';
-		$_POST['jtimemin'] = (isset($_POST['jtimemin']) && is_numeric($_POST['jtimemin'])) ? abs(intval($_POST['jtimemin'])) : '';
-		$_POST['jtimemax'] = (isset($_POST['jtimemax']) && is_numeric($_POST['jtimemax'])) ? abs(intval($_POST['jtimemax'])) : '';
-		$_POST['jreason'] = (isset($_POST['jreason']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['jreason'])) ? $db->escape(strip_tags(stripslashes($_POST['jreason']))) : '';
-		$_POST['xp'] = (isset($_POST['xp']) && is_numeric($_POST['xp'])) ? abs(intval($_POST['xp'])) : '';
-		if (empty($_POST['name']) || empty($_POST['brave']) || empty($_POST['percform'])  ||  empty($_POST['group']) || empty($_POST['itext']) || empty($_POST['stext']) 
-			|| empty($_POST['jtext']) || empty($_POST['jtimemin']) || empty($_POST['jtimemax'])  || empty($_POST['jreason']) || empty($_POST['xp']))
-		{
-			alert('danger',"Uh Oh!","You are missing one or more of the required inputs on the previous form.");
-			die($h->endpage());
-		}
-		if (empty($_POST['crimeID']))
-		{
-			alert('danger',"Uh Oh!","Please specify the crime you wish to edit.");
-			die($h->endpage());
-		}
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime2', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
-			die($h->endpage());
-		}
-		if (!empty($_POST['item']))
-		{
-			$qi = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = {$_POST['item']}");
-			$exist_check = $db->fetch_single($qi);
-			$db->free_result($qi);
-			if ($exist_check == 0)
-			{
-				alert('danger',"Uh Oh!","The crime you are trying to edit does not exist.");
-				die($h->endpage());
-			}
-		}
-		$db->query(
+    }
+    if ($_POST['step'] == 2) {
+        $_POST['name'] = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
+        $_POST['brave'] = (isset($_POST['brave']) && is_numeric($_POST['brave'])) ? abs(intval($_POST['brave'])) : '';
+        $_POST['crimeID'] = (isset($_POST['crimeID']) && is_numeric($_POST['crimeID'])) ? abs(intval($_POST['crimeID'])) : '';
+        $_POST['percform'] = (isset($_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
+        $_POST['PRICURMAX'] = (isset($_POST['PRICURMAX']) && is_numeric($_POST['PRICURMAX'])) ? abs(intval($_POST['PRICURMAX'])) : 0;
+        $_POST['PRICURMIN'] = (isset($_POST['PRICURMIN']) && is_numeric($_POST['PRICURMIN'])) ? abs(intval($_POST['PRICURMIN'])) : 0;
+        $_POST['SECURMAX'] = (isset($_POST['SECURMAX']) && is_numeric($_POST['SECURMAX'])) ? abs(intval($_POST['SECURMAX'])) : 0;
+        $_POST['SECURMIN'] = (isset($_POST['SECURMIN']) && is_numeric($_POST['SECURMIN'])) ? abs(intval($_POST['SECURMIN'])) : 0;
+        $_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : 0;
+        $_POST['group'] = (isset($_POST['group']) && is_numeric($_POST['group'])) ? abs(intval($_POST['group'])) : '';
+        $_POST['itext'] = (isset($_POST['itext'])) ? $db->escape(strip_tags(stripslashes($_POST['itext']))) : '';
+        $_POST['stext'] = (isset($_POST['stext'])) ? $db->escape(strip_tags(stripslashes($_POST['stext']))) : '';
+        $_POST['jtext'] = (isset($_POST['jtext'])) ? $db->escape(strip_tags(stripslashes($_POST['jtext']))) : '';
+        $_POST['jtimemin'] = (isset($_POST['jtimemin']) && is_numeric($_POST['jtimemin'])) ? abs(intval($_POST['jtimemin'])) : '';
+        $_POST['jtimemax'] = (isset($_POST['jtimemax']) && is_numeric($_POST['jtimemax'])) ? abs(intval($_POST['jtimemax'])) : '';
+        $_POST['jreason'] = (isset($_POST['jreason']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['jreason'])) ? $db->escape(strip_tags(stripslashes($_POST['jreason']))) : '';
+        $_POST['xp'] = (isset($_POST['xp']) && is_numeric($_POST['xp'])) ? abs(intval($_POST['xp'])) : '';
+        if (empty($_POST['name']) || empty($_POST['brave']) || empty($_POST['percform']) || empty($_POST['group']) || empty($_POST['itext']) || empty($_POST['stext'])
+            || empty($_POST['jtext']) || empty($_POST['jtimemin']) || empty($_POST['jtimemax']) || empty($_POST['jreason']) || empty($_POST['xp'])
+        ) {
+            alert('danger', "Uh Oh!", "You are missing one or more of the required inputs on the previous form.");
+            die($h->endpage());
+        }
+        if (empty($_POST['crimeID'])) {
+            alert('danger', "Uh Oh!", "Please specify the crime you wish to edit.");
+            die($h->endpage());
+        }
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime2', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
+            die($h->endpage());
+        }
+        if (!empty($_POST['item'])) {
+            $qi = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = {$_POST['item']}");
+            $exist_check = $db->fetch_single($qi);
+            $db->free_result($qi);
+            if ($exist_check == 0) {
+                alert('danger', "Uh Oh!", "The crime you are trying to edit does not exist.");
+                die($h->endpage());
+            }
+        }
+        $db->query(
             "UPDATE `crimes`
              SET `crimeNAME` = '{$_POST['name']}', `crimeBRAVE` = '{$_POST['brave']}',
              `crimePERCFORM` = '{$_POST['percform']}', `crimePRICURMIN` = '{$_POST['PRICURMIN']}',
@@ -504,42 +487,37 @@ function edit_crime()
              `crimeDUNGREAS` = '{$_POST['jreason']}', `crimeDUNGMIN` = {$_POST['jtimemin']},
 			 `crimeDUNGMAX` = {$_POST['jtimemax']}, `crimeXP` = {$_POST['xp']}
              WHERE `crimeID` = {$_POST['crimeID']}");
-		alert('success',"Success!","You have successfully edited the {$_POST['name']} crime.",true,'index.php');
-		$api->SystemLogsAdd($userid,'staff',"Edited crime {$_POST['name']}");
-	}
+        alert('success', "Success!", "You have successfully edited the {$_POST['name']} crime.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Edited crime {$_POST['name']}");
+    }
 }
+
 function delcrime()
 {
-	global $db,$userid,$api,$h;
-	if (isset($_POST['crime']))
-	{
-		$_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrime', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
-			die($h->endpage());
-		}
-		if (empty($_POST['crime']))
-		{
-			alert('danger',"Uh Oh!","Please specify a crime you wish to delete.");
-			die($h->endpage());
-		}
-		$d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
-		if ($db->num_rows($d) == 0)
-		{
-			$db->free_result($d);
-			alert('danger',"Uh Oh!","You are trying to delete a non-existent crime.");
-			die($h->endpage());
-		}
-		$db->query("DELETE FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
-		alert('success',"Success!","You have successfully deleted Crime ID #{$_POST['crime']}.",true,'index.php');
-		$api->SystemLogsAdd($userid,'staff',"Deleted Crime ID {$_POST['crime']}.");
-		
-	}
-	else
-	{
-		$csrf = request_csrf_html('staff_delcrime');
-		echo "<form method='post'>
+    global $db, $userid, $api, $h;
+    if (isset($_POST['crime'])) {
+        $_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrime', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
+            die($h->endpage());
+        }
+        if (empty($_POST['crime'])) {
+            alert('danger', "Uh Oh!", "Please specify a crime you wish to delete.");
+            die($h->endpage());
+        }
+        $d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
+        if ($db->num_rows($d) == 0) {
+            $db->free_result($d);
+            alert('danger', "Uh Oh!", "You are trying to delete a non-existent crime.");
+            die($h->endpage());
+        }
+        $db->query("DELETE FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
+        alert('success', "Success!", "You have successfully deleted Crime ID #{$_POST['crime']}.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Deleted Crime ID {$_POST['crime']}.");
+
+    } else {
+        $csrf = request_csrf_html('staff_delcrime');
+        echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
@@ -562,42 +540,37 @@ function delcrime()
 			{$csrf}
 		</table>
 		</form>";
-	}
+    }
 }
+
 function new_crimegroup()
 {
-	global $db,$h,$api,$userid;
-	if (isset($_POST['cgNAME']))
-	{
-		$_POST['cgNAME'] = (isset($_POST['cgNAME']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['cgNAME'])) ? $db->escape(strip_tags(stripslashes($_POST['cgNAME']))) : '';
-		$_POST['cgORDER'] = (isset($_POST['cgORDER']) && is_numeric($_POST['cgORDER'])) ? abs(intval($_POST['cgORDER'])) : '';
-		if (empty($_POST['cgNAME']) || empty($_POST['cgORDER']))
-		{
-			alert('danger',"Uh Oh!","Please fill out the form before submitting it.");
-			die($h->endpage());
-		}
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrimegroup', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
-			die($h->endpage());
-		}
-		$d = $db->query("SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']}");
-		if ($db->fetch_single($d) > 0)
-		{
-			$db->free_result($d);
-			alert('danger',"Uh Oh!","You cannot have more than one crime group with the same order number.");
-			die($h->endpage());
-		}
-		$db->free_result($d);
-		$db->query("INSERT INTO `crimegroups` (`cgNAME`, `cgORDER`) VALUES('{$_POST['cgNAME']}', '{$_POST['cgORDER']}')");
-		alert('success',"Success!","You have successfully created the {$_POST['cgNAME']} Crime Group.",true,'index.php');
-		$api->SystemLogsAdd($userid,'staff',"Created Crime Group {$_POST['cgNAME']}");
-		
-	}
-	else
-	{
-		$csrf = request_csrf_html('staff_newcrimegroup');
-		echo "Adding a new crime group<br />
+    global $db, $h, $api, $userid;
+    if (isset($_POST['cgNAME'])) {
+        $_POST['cgNAME'] = (isset($_POST['cgNAME']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['cgNAME'])) ? $db->escape(strip_tags(stripslashes($_POST['cgNAME']))) : '';
+        $_POST['cgORDER'] = (isset($_POST['cgORDER']) && is_numeric($_POST['cgORDER'])) ? abs(intval($_POST['cgORDER'])) : '';
+        if (empty($_POST['cgNAME']) || empty($_POST['cgORDER'])) {
+            alert('danger', "Uh Oh!", "Please fill out the form before submitting it.");
+            die($h->endpage());
+        }
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrimegroup', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
+            die($h->endpage());
+        }
+        $d = $db->query("SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']}");
+        if ($db->fetch_single($d) > 0) {
+            $db->free_result($d);
+            alert('danger', "Uh Oh!", "You cannot have more than one crime group with the same order number.");
+            die($h->endpage());
+        }
+        $db->free_result($d);
+        $db->query("INSERT INTO `crimegroups` (`cgNAME`, `cgORDER`) VALUES('{$_POST['cgNAME']}', '{$_POST['cgORDER']}')");
+        alert('success', "Success!", "You have successfully created the {$_POST['cgNAME']} Crime Group.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Created Crime Group {$_POST['cgNAME']}");
+
+    } else {
+        $csrf = request_csrf_html('staff_newcrimegroup');
+        echo "Adding a new crime group<br />
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
 				<tr>
@@ -625,19 +598,18 @@ function new_crimegroup()
 			</table>
 		</form>
 		";
-	}
+    }
 }
+
 function edit_crimegroup()
 {
-	global $db,$h,$userid,$api;
-	if (!isset($_POST['step']))
-	{
-		$_POST['step'] = 0;
-	}
-	if ($_POST['step'] == 0)
-	{
-		$csrf = request_csrf_html('staff_editcrimegroup1');
-		echo "<form method='post'>
+    global $db, $h, $userid, $api;
+    if (!isset($_POST['step'])) {
+        $_POST['step'] = 0;
+    }
+    if ($_POST['step'] == 0) {
+        $csrf = request_csrf_html('staff_editcrimegroup1');
+        echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
@@ -661,31 +633,27 @@ function edit_crimegroup()
 		{$csrf}
 		<input type='hidden' value='1' name='step'>
 		</form>";
-	}
-	if ($_POST['step'] == 1)
-	{
-		$_POST['crimegroup'] = (isset($_POST['crimegroup']) && is_numeric($_POST['crimegroup'])) ? abs(intval($_POST['crimegroup'])) : '';
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup1', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
-			die($h->endpage());
-		}
-		if (empty($_POST['crimegroup']))
-		{
-			alert('danger',"Uh Oh!","Please specify the crime group you wish to edit.");
-			die($h->endpage());
-		}
-		$d = $db->query("SELECT `cgORDER`, `cgNAME` FROM `crimegroups` WHERE `cgID` = {$_POST['crimegroup']}");
-		if ($db->num_rows($d) == 0)
-		{
-			$db->free_result($d);
-			alert('danger',"Uh Oh!","The Crime Group you've selected does not exist.");
-			die($h->endpage());
-		}
-		$itemi = $db->fetch_row($d);
-		$db->free_result($d);
-		$csrf = request_csrf_html('staff_editcrimegroup2');
-		echo "<form method='post'>
+    }
+    if ($_POST['step'] == 1) {
+        $_POST['crimegroup'] = (isset($_POST['crimegroup']) && is_numeric($_POST['crimegroup'])) ? abs(intval($_POST['crimegroup'])) : '';
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup1', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
+            die($h->endpage());
+        }
+        if (empty($_POST['crimegroup'])) {
+            alert('danger', "Uh Oh!", "Please specify the crime group you wish to edit.");
+            die($h->endpage());
+        }
+        $d = $db->query("SELECT `cgORDER`, `cgNAME` FROM `crimegroups` WHERE `cgID` = {$_POST['crimegroup']}");
+        if ($db->num_rows($d) == 0) {
+            $db->free_result($d);
+            alert('danger', "Uh Oh!", "The Crime Group you've selected does not exist.");
+            die($h->endpage());
+        }
+        $itemi = $db->fetch_row($d);
+        $db->free_result($d);
+        $csrf = request_csrf_html('staff_editcrimegroup2');
+        echo "<form method='post'>
 			<table class='table table-bordered table-responsive'>
 				<tr>
 					<th>
@@ -714,69 +682,58 @@ function edit_crimegroup()
 			</table>
 		</form>
 		";
-	}
-	if ($_POST['step'] == 2)
-	{
-		$_POST['cgNAME'] = (isset($_POST['cgNAME']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['cgNAME'])) ? $db->escape(strip_tags(stripslashes($_POST['cgNAME']))) : '';
-		$_POST['cgORDER'] = (isset($_POST['cgORDER']) && is_numeric($_POST['cgORDER'])) ? abs(intval($_POST['cgORDER'])) : '';
-		$_POST['cgID'] = (isset($_POST['cgID']) && is_numeric($_POST['cgID'])) ? abs(intval($_POST['cgID'])) : '';
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup2', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
-			die($h->endpage());
-		}
-		if (empty($_POST['cgNAME']) || empty($_POST['cgORDER']) || empty($_POST['cgID']))
-		{
-			alert('danger',"Uh Oh!","Please fill out the form entirely before submitting.");
-			die($h->endpage());
-		}
-		else
-		{
-			$d = $db->query("SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']} AND `cgID` != {$_POST['cgID']}");
-			if ($db->fetch_single($d) > 0)
-			{
-				$db->free_result($d);
-				alert('danger',"Uh Oh!","You cannot have more than one crime group with the same order number.");
-				die($h->endpage());
-			}
-			$db->free_result($d);
-			$db->query("UPDATE `crimegroups` SET `cgNAME` = '{$_POST['cgNAME']}', `cgORDER` = '{$_POST['cgORDER']}' WHERE `cgID` = '{$_POST['cgID']}'");
-			alert('success',"Success!","You have successfully edited the {$_POST['cgNAME']} Crime Group.",true,'index.php');
-			$api->SystemLogsAdd($userid,'staff',"Edited Crime Group {$_POST['cgNAME']}");
-		}
-	}
+    }
+    if ($_POST['step'] == 2) {
+        $_POST['cgNAME'] = (isset($_POST['cgNAME']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['cgNAME'])) ? $db->escape(strip_tags(stripslashes($_POST['cgNAME']))) : '';
+        $_POST['cgORDER'] = (isset($_POST['cgORDER']) && is_numeric($_POST['cgORDER'])) ? abs(intval($_POST['cgORDER'])) : '';
+        $_POST['cgID'] = (isset($_POST['cgID']) && is_numeric($_POST['cgID'])) ? abs(intval($_POST['cgID'])) : '';
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup2', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
+            die($h->endpage());
+        }
+        if (empty($_POST['cgNAME']) || empty($_POST['cgORDER']) || empty($_POST['cgID'])) {
+            alert('danger', "Uh Oh!", "Please fill out the form entirely before submitting.");
+            die($h->endpage());
+        } else {
+            $d = $db->query("SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']} AND `cgID` != {$_POST['cgID']}");
+            if ($db->fetch_single($d) > 0) {
+                $db->free_result($d);
+                alert('danger', "Uh Oh!", "You cannot have more than one crime group with the same order number.");
+                die($h->endpage());
+            }
+            $db->free_result($d);
+            $db->query("UPDATE `crimegroups` SET `cgNAME` = '{$_POST['cgNAME']}', `cgORDER` = '{$_POST['cgORDER']}' WHERE `cgID` = '{$_POST['cgID']}'");
+            alert('success', "Success!", "You have successfully edited the {$_POST['cgNAME']} Crime Group.", true, 'index.php');
+            $api->SystemLogsAdd($userid, 'staff', "Edited Crime Group {$_POST['cgNAME']}");
+        }
+    }
 }
+
 function delcrimegroup()
 {
-	global $db,$userid,$api,$h;
-	if (isset($_POST['crimeGROUP']))
-	{
-		$_POST['crimeGROUP'] = (isset($_POST['crimeGROUP']) && is_numeric($_POST['crimeGROUP'])) ? abs(intval($_POST['crimeGROUP'])) : '';
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrimegroup', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","We have blocked this action for your security. Forms expire quickly. Go back and try again!");
-			die($h->endpage());
-		}
-		if (empty($_POST['crimeGROUP']))
-		{
-			alert('danger',"Uh Oh!","Please specify the crime group you wish to delete.");
-			die($h->endpage());
-		}
-		$d = $db->query("SELECT * FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
-		if ($db->num_rows($d) == 0)
-		{
-			$db->free_result($d);
-			alert('danger',"Uh Oh!","The Crime Group you wish to delete does not exist.");
-			die($h->endpage());
-		}
-		$db->query("DELETE FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
-		alert('success',"Success!","You have successfully deleted Crime Group ID #{$_POST['crimeGROUP']}.",true,'index.php');
-		$api->SystemLogsAdd($userid,'staff',"Deleted Crime Group ID {$_POST['crimeGROUP']}.");
-	}
-	else
-	{
-		$csrf = request_csrf_html('staff_delcrimegroup');
-		echo "<form method='post'>
+    global $db, $userid, $api, $h;
+    if (isset($_POST['crimeGROUP'])) {
+        $_POST['crimeGROUP'] = (isset($_POST['crimeGROUP']) && is_numeric($_POST['crimeGROUP'])) ? abs(intval($_POST['crimeGROUP'])) : '';
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrimegroup', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
+            die($h->endpage());
+        }
+        if (empty($_POST['crimeGROUP'])) {
+            alert('danger', "Uh Oh!", "Please specify the crime group you wish to delete.");
+            die($h->endpage());
+        }
+        $d = $db->query("SELECT * FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
+        if ($db->num_rows($d) == 0) {
+            $db->free_result($d);
+            alert('danger', "Uh Oh!", "The Crime Group you wish to delete does not exist.");
+            die($h->endpage());
+        }
+        $db->query("DELETE FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
+        alert('success', "Success!", "You have successfully deleted Crime Group ID #{$_POST['crimeGROUP']}.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Deleted Crime Group ID {$_POST['crimeGROUP']}.");
+    } else {
+        $csrf = request_csrf_html('staff_delcrimegroup');
+        echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
@@ -799,6 +756,7 @@ function delcrimegroup()
 			{$csrf}
 		</table>
 		</form>";
-	}
+    }
 }
+
 $h->endpage();

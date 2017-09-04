@@ -14,7 +14,7 @@ class SmileyVisitor implements \JBBCode\NodeVisitor
 
     function visitDocumentElement(\JBBCode\DocumentElement $documentElement)
     {
-        foreach($documentElement->getChildren() as $child) {
+        foreach ($documentElement->getChildren() as $child) {
             $child->accept($this);
         }
     }
@@ -22,9 +22,9 @@ class SmileyVisitor implements \JBBCode\NodeVisitor
     function visitTextNode(\JBBCode\TextNode $textNode)
     {
         /* Convert :) into an image tag. */
-        $textNode->setValue(str_replace(':)', 
-                                        '<img src="/smiley.png" alt=":)" />', 
-                                        $textNode->getValue()));
+        $textNode->setValue(str_replace(':)',
+            '<img src="/smiley.png" alt=":)" />',
+            $textNode->getValue()));
     }
 
     function visitElementNode(\JBBCode\ElementNode $elementNode)

@@ -7,40 +7,37 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 require('sglobals.php');
-echo"<h3>Users</h3>";
-if (!isset($_GET['action']))
-{
+echo "<h3>Users</h3>";
+if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
-switch ($_GET['action'])
-{
-	case "createuser":
-		createuser();
-		break;
-	case "edituser":
-		edituser();
-		break;
-	case "deleteuser":
-		deleteuser();
-		break;
-	case "logout":
-		logout();
-		break;
-	case "changepw":
-		changepw();
-		break;
-	default:
-		die();
-		break;
+switch ($_GET['action']) {
+    case "createuser":
+        createuser();
+        break;
+    case "edituser":
+        edituser();
+        break;
+    case "deleteuser":
+        deleteuser();
+        break;
+    case "logout":
+        logout();
+        break;
+    case "changepw":
+        changepw();
+        break;
+    default:
+        die();
+        break;
 }
 function createuser()
 {
-	global $db,$h,$api,$userid;
-	if (!isset($_POST['username']))
-	{
-		$csrf=request_csrf_html('staff_user_1');
-		echo "<hr /><h4>Create a User</h4><hr />";
-		echo "
+    global $db, $h, $api, $userid;
+    if (!isset($_POST['username'])) {
+        $csrf = request_csrf_html('staff_user_1');
+        echo "<hr /><h4>Create a User</h4><hr />";
+        echo "
 			<table class='table table-bordered'>
 				<form method='post'>
 					<tr>
@@ -218,7 +215,7 @@ function createuser()
 							Primary Weapon
 						</th>
 						<td>
-							" . weapon_dropdown("primary_weapon",0) . "
+							" . weapon_dropdown("primary_weapon", 0) . "
 						</td>
 					</tr>
 					<tr>
@@ -226,7 +223,7 @@ function createuser()
 							Secondary Weapon
 						</th>
 						<td>
-							" . weapon_dropdown("secondary_weapon",0) . "
+							" . weapon_dropdown("secondary_weapon", 0) . "
 						</td>
 					</tr>
 					<tr>
@@ -234,7 +231,7 @@ function createuser()
 							Armor
 						</th>
 						<td>
-							" . armor_dropdown("armor",0) . "
+							" . armor_dropdown("armor", 0) . "
 						</td>
 					</tr>
 					<tr>
@@ -245,132 +242,109 @@ function createuser()
         	{$csrf}
 				</form>
 			</table>";
-	}
-	else
-	{
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_user_1', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
-			die($h->endpage());
-		}
-		$username = (isset($_POST['username']) && is_string($_POST['username'])) ? stripslashes($_POST['username']) : '';
-		$pw = (isset($_POST['password']) && is_string($_POST['password'])) ? stripslashes($_POST['password']) : '';
-		$pw2 = (isset($_POST['cpw']) && is_string($_POST['cpw'])) ? stripslashes($_POST['cpw']) : '';
-		
-		$_POST['level'] = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 1;
-		$Money = (isset($_POST['prim_currency']) && is_numeric($_POST['prim_currency'])) ? abs(intval($_POST['prim_currency'])) : 100;
-		$Money2 = (isset($_POST['sec_currency']) && is_numeric($_POST['sec_currency'])) ? abs(intval($_POST['sec_currency'])) : 0;
-		$VIP = (isset($_POST['vip_days']) && is_numeric($_POST['vip_days'])) ? abs(intval($_POST['vip_days'])) : 0;
-		$Strength = (isset($_POST['strength']) && is_numeric($_POST['strength'])) ? abs(intval($_POST['strength'])) : 1100;
-		$Agility = (isset($_POST['agility']) && is_numeric($_POST['agility'])) ? abs(intval($_POST['agility'])) : 1000;
-		$Guard = (isset($_POST['guard']) && is_numeric($_POST['guard'])) ? abs(intval($_POST['guard'])) : 900;
-		$Labor = (isset($_POST['labor']) && is_numeric($_POST['labor'])) ? abs(intval($_POST['labor'])) : 1000;
-		$IQ = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs(intval($_POST['iq'])) : 1000;
-		
-		$equip_prim=(isset($_POST['primary_weapon']) && is_numeric($_POST['primary_weapon'])) ? abs(intval($_POST['primary_weapon'])) : 0;
-		$equip_sec=(isset($_POST['secondary_weapon']) && is_numeric($_POST['secondary_weapon'])) ? abs(intval($_POST['secondary_weapon'])) : 0;
-		$equip_armor=(isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
-		$city=(isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : 1;
-		
-		if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email'])))
-		{
-			alert('danger',"Uh Oh!","You input an invalid email address.");
-			die($h->endpage());
-		}
-		if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female'))
-		{
-			alert('danger',"Uh Oh!","You input an invalid sex.");
-			die($h->endpage());
-		}
-		if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender'))
-		{
-			alert('danger',"Uh Oh!","You input an invalid class.");
-			die($h->endpage());
-		}
-		if (!isset($_POST['userlevel']) || ($_POST['userlevel'] != 'NPC' && $_POST['userlevel'] != 'Member' &&
+    } else {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_user_1', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
+            die($h->endpage());
+        }
+        $username = (isset($_POST['username']) && is_string($_POST['username'])) ? stripslashes($_POST['username']) : '';
+        $pw = (isset($_POST['password']) && is_string($_POST['password'])) ? stripslashes($_POST['password']) : '';
+        $pw2 = (isset($_POST['cpw']) && is_string($_POST['cpw'])) ? stripslashes($_POST['cpw']) : '';
+
+        $_POST['level'] = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 1;
+        $Money = (isset($_POST['prim_currency']) && is_numeric($_POST['prim_currency'])) ? abs(intval($_POST['prim_currency'])) : 100;
+        $Money2 = (isset($_POST['sec_currency']) && is_numeric($_POST['sec_currency'])) ? abs(intval($_POST['sec_currency'])) : 0;
+        $VIP = (isset($_POST['vip_days']) && is_numeric($_POST['vip_days'])) ? abs(intval($_POST['vip_days'])) : 0;
+        $Strength = (isset($_POST['strength']) && is_numeric($_POST['strength'])) ? abs(intval($_POST['strength'])) : 1100;
+        $Agility = (isset($_POST['agility']) && is_numeric($_POST['agility'])) ? abs(intval($_POST['agility'])) : 1000;
+        $Guard = (isset($_POST['guard']) && is_numeric($_POST['guard'])) ? abs(intval($_POST['guard'])) : 900;
+        $Labor = (isset($_POST['labor']) && is_numeric($_POST['labor'])) ? abs(intval($_POST['labor'])) : 1000;
+        $IQ = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs(intval($_POST['iq'])) : 1000;
+
+        $equip_prim = (isset($_POST['primary_weapon']) && is_numeric($_POST['primary_weapon'])) ? abs(intval($_POST['primary_weapon'])) : 0;
+        $equip_sec = (isset($_POST['secondary_weapon']) && is_numeric($_POST['secondary_weapon'])) ? abs(intval($_POST['secondary_weapon'])) : 0;
+        $equip_armor = (isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
+        $city = (isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : 1;
+
+        if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email']))) {
+            alert('danger', "Uh Oh!", "You input an invalid email address.");
+            die($h->endpage());
+        }
+        if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female')) {
+            alert('danger', "Uh Oh!", "You input an invalid sex.");
+            die($h->endpage());
+        }
+        if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender')) {
+            alert('danger', "Uh Oh!", "You input an invalid class.");
+            die($h->endpage());
+        }
+        if (!isset($_POST['userlevel']) || ($_POST['userlevel'] != 'NPC' && $_POST['userlevel'] != 'Member' &&
                 $_POST['userlevel'] != 'Admin' && $_POST['userlevel'] != 'Forum Moderator' &&
-                $_POST['userlevel'] != 'Assistant' && $_POST['userlevel'] != 'Web Developer'))
-		{
-			alert('danger',"Uh Oh!","You input an invalid User Level.");
-			die($h->endpage());
-		}
-		if (((strlen($username) > 20) OR (strlen($username) < 3)))
-		{
-			alert('danger',"Uh Oh!","Usernames can only be 3-20 characters in length.");
-			die($h->endpage());
-		}
-		if ($equip_prim > 0)
-		{
-			$pwq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
-			if ($db->fetch_single($pwq) == 0)
-			{
-				alert('danger',"Uh Oh!","You are trying to equip an invalid weapon.");
-				die($h->endpage());
-			}
-		}
-		if ($equip_sec > 0)
-		{
-			$swq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
-			if ($db->fetch_single($swq) == 0)
-			{
-				alert('danger',"Uh Oh!","You are trying to equip an invalid weapon.");
-				die($h->endpage());
-			}
-		}
-		if ($equip_armor > 0)
-		{
-			$aq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
-			if ($db->fetch_single($aq) == 0)
-			{
-				alert('danger',"Uh Oh!","You are trying to equip an invalid armor.");
-				die($h->endpage());
-			}
-		}
-		$CityQuery=$db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
-		if ($db->fetch_single($CityQuery) == 0)
-		{
-			alert('danger',"Uh Oh!","You are trying to place the user in an invalid town.");
-			die($h->endpage());
-		}
-		$e_gender = $db->escape(stripslashes($_POST['gender']));
-		$e_class = $db->escape(stripslashes($_POST['class']));
-		$e_username = $db->escape($username);
-		$e_email = $db->escape(stripslashes($_POST['email']));
-		$q = $db->query("SELECT COUNT(`userid`) FROM `users`  WHERE `username` = '{$e_username}'");
-		$q2 = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'");
-		$u_check = $db->fetch_single($q);
-		$e_check = $db->fetch_single($q2);
-		$db->free_result($q);
-		$db->free_result($q2);
-		if ($u_check > 0)
-		{
-			alert('danger',"Uh Oh!","The username you've chosen is already in use.");
-			die($h->endpage());
-		}
-		else if ($e_check > 0)
-		{
-			alert('danger',"Uh Oh!","The email you've chosen is already in use.");
-			die($h->endpage());
-		}
-		else if (empty($pw) || empty($pw2))
-		{
-			alert('danger',"Uh Oh!","Please enter a valid password.");
-			die($h->endpage());
-		}
-		else if ($pw != $pw2)
-		{
-			alert('danger',"Uh Oh!","Password confirmation failed.");
-			die($h->endpage());
-		}
-		else
-		{
-			$HP=(50)+$_POST['level']*50;
-			$Energy=(20)+$_POST['level']*4;
-			$Brave=(6)+$_POST['level']*4;
-			$time=time();
-			$encpsw = encode_password($pw);
-			$e_encpsw = $db->escape($encpsw);
-			$db->query("INSERT INTO `users` 
+                $_POST['userlevel'] != 'Assistant' && $_POST['userlevel'] != 'Web Developer')
+        ) {
+            alert('danger', "Uh Oh!", "You input an invalid User Level.");
+            die($h->endpage());
+        }
+        if (((strlen($username) > 20) OR (strlen($username) < 3))) {
+            alert('danger', "Uh Oh!", "Usernames can only be 3-20 characters in length.");
+            die($h->endpage());
+        }
+        if ($equip_prim > 0) {
+            $pwq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
+            if ($db->fetch_single($pwq) == 0) {
+                alert('danger', "Uh Oh!", "You are trying to equip an invalid weapon.");
+                die($h->endpage());
+            }
+        }
+        if ($equip_sec > 0) {
+            $swq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
+            if ($db->fetch_single($swq) == 0) {
+                alert('danger', "Uh Oh!", "You are trying to equip an invalid weapon.");
+                die($h->endpage());
+            }
+        }
+        if ($equip_armor > 0) {
+            $aq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
+            if ($db->fetch_single($aq) == 0) {
+                alert('danger', "Uh Oh!", "You are trying to equip an invalid armor.");
+                die($h->endpage());
+            }
+        }
+        $CityQuery = $db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
+        if ($db->fetch_single($CityQuery) == 0) {
+            alert('danger', "Uh Oh!", "You are trying to place the user in an invalid town.");
+            die($h->endpage());
+        }
+        $e_gender = $db->escape(stripslashes($_POST['gender']));
+        $e_class = $db->escape(stripslashes($_POST['class']));
+        $e_username = $db->escape($username);
+        $e_email = $db->escape(stripslashes($_POST['email']));
+        $q = $db->query("SELECT COUNT(`userid`) FROM `users`  WHERE `username` = '{$e_username}'");
+        $q2 = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'");
+        $u_check = $db->fetch_single($q);
+        $e_check = $db->fetch_single($q2);
+        $db->free_result($q);
+        $db->free_result($q2);
+        if ($u_check > 0) {
+            alert('danger', "Uh Oh!", "The username you've chosen is already in use.");
+            die($h->endpage());
+        } else if ($e_check > 0) {
+            alert('danger', "Uh Oh!", "The email you've chosen is already in use.");
+            die($h->endpage());
+        } else if (empty($pw) || empty($pw2)) {
+            alert('danger', "Uh Oh!", "Please enter a valid password.");
+            die($h->endpage());
+        } else if ($pw != $pw2) {
+            alert('danger', "Uh Oh!", "Password confirmation failed.");
+            die($h->endpage());
+        } else {
+            $HP = (50) + $_POST['level'] * 50;
+            $Energy = (20) + $_POST['level'] * 4;
+            $Brave = (6) + $_POST['level'] * 4;
+            $time = time();
+            $encpsw = encode_password($pw);
+            $e_encpsw = $db->escape($encpsw);
+            $db->query("INSERT INTO `users`
 			(`userid`, `username`, `user_level`, `email`, `password`, `level`, 
 			`xp`, `gender`, `class`, `lastip`, `loginip`, `registerip`, `laston`, `last_login`, 
 			`registertime`, `will`, `maxwill`, `hp`, `maxhp`, `energy`, `maxenergy`, `brave`, 
@@ -381,36 +355,33 @@ function createuser()
 			(NULL, '{$e_username}', '{$_POST['userlevel']}', '{$e_email}', '{$e_encpsw}', '{$_POST['level']}', '0', '{$_POST['gender']}', 
 			'{$_POST['class']}', '127.0.0.1', '', '127.0.0.1', '', '', '{$time}', '100', '100', '{$HP}', '{$HP}', '{$Energy}', '{$Energy}', '{$Brave}', '{$Brave}', 
 			 '{$Money}', '{$Money2}', '-1', '0', '{$VIP}', 'false', '', '', '', '{$equip_prim}', '{$equip_sec}', '{$equip_armor}', '0', '0', '', '{$city}', 'Europe/London');");
-			 $i = $db->insert_id();
-			 $db->query("INSERT INTO `userstats` VALUES($i, {$Strength}, {$Agility}, {$Guard}, {$IQ}, {$Labor})");
-			 $db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
-			$db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
-			alert('success',"Success!","You have successfully created the user named {$e_username}.",true,'index.php');
-			$api->SystemLogsAdd($userid,'staff',"Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
-		}
-	}
+            $i = $db->insert_id();
+            $db->query("INSERT INTO `userstats` VALUES($i, {$Strength}, {$Agility}, {$Guard}, {$IQ}, {$Labor})");
+            $db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
+            $db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
+            alert('success', "Success!", "You have successfully created the user named {$e_username}.", true, 'index.php');
+            $api->SystemLogsAdd($userid, 'staff', "Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
+        }
+    }
 }
+
 function edituser()
 {
-	global $db,$h,$userid,$api;
-	if (!isset($_POST['step']))
-	{
-		$_POST['step'] = 0;
-	}
-	if ($_POST['step'] == 2)
-	{
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser1', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
-			die($h->endpage());
-		}
-		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
-		if (empty($_POST['user']))
-		{
-			alert('danger',"Uh Oh!","Please select the user you wish to edit.");
-			die($h->endpage());
-		}
-		$d =  $db->query("SELECT `i`.*, `d`.*, `username`, 
+    global $db, $h, $userid, $api;
+    if (!isset($_POST['step'])) {
+        $_POST['step'] = 0;
+    }
+    if ($_POST['step'] == 2) {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser1', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
+            die($h->endpage());
+        }
+        $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+        if (empty($_POST['user'])) {
+            alert('danger', "Uh Oh!", "Please select the user you wish to edit.");
+            die($h->endpage());
+        }
+        $d = $db->query("SELECT `i`.*, `d`.*, `username`,
 		`level`, `primary_currency`,`secondary_currency`, `equip_primary`,
 		`maxwill`, `bank`, `strength`, `agility`, `guard`, `equip_secondary`,
 		`labor`, `IQ`, `location`, `equip_armor`, `email`
@@ -422,25 +393,28 @@ function edituser()
 		 INNER JOIN `infirmary` AS `i`
 		 ON `u`.`userid` = `i`.`infirmary_user`
 		 WHERE `u`.`userid` = {$_POST['user']}");
-		if ($db->num_rows($d) == 0)
-		{
-			$db->free_result($d);
-			alert('danger',"Uh Oh!","The user you're trying to edit does not exist.");
-			die($h->endpage());
-		}
-		$itemi = $db->fetch_row($d);
-		$db->free_result($d);
-		$CurrentTime=time();
-		$itemi['infirmary_reason'] = htmlentities($itemi['infirmary_reason'], ENT_QUOTES, 'ISO-8859-1');
-		$itemi['email'] = htmlentities($itemi['email'], ENT_QUOTES, 'ISO-8859-1');
-		$itemi['dungeon_reason'] = htmlentities($itemi['dungeon_reason'], ENT_QUOTES, 'ISO-8859-1');
-		$itemi['username'] = htmlentities($itemi['username'], ENT_QUOTES, 'ISO-8859-1');
-		$itemi['infirmary']= round(($itemi['infirmary_out'] - $CurrentTime) / 60);
-		$itemi['dungeon']= round(($itemi['dungeon_out'] - $CurrentTime) / 60);
-		if ($itemi['infirmary'] < 0) { $itemi['infirmary'] = 0; }
-		if ($itemi['dungeon'] < 0) { $itemi['dungeon'] = 0; }
-		$csrf = request_csrf_html('staff_edituser2');
-		echo "<form method='post'>
+        if ($db->num_rows($d) == 0) {
+            $db->free_result($d);
+            alert('danger', "Uh Oh!", "The user you're trying to edit does not exist.");
+            die($h->endpage());
+        }
+        $itemi = $db->fetch_row($d);
+        $db->free_result($d);
+        $CurrentTime = time();
+        $itemi['infirmary_reason'] = htmlentities($itemi['infirmary_reason'], ENT_QUOTES, 'ISO-8859-1');
+        $itemi['email'] = htmlentities($itemi['email'], ENT_QUOTES, 'ISO-8859-1');
+        $itemi['dungeon_reason'] = htmlentities($itemi['dungeon_reason'], ENT_QUOTES, 'ISO-8859-1');
+        $itemi['username'] = htmlentities($itemi['username'], ENT_QUOTES, 'ISO-8859-1');
+        $itemi['infirmary'] = round(($itemi['infirmary_out'] - $CurrentTime) / 60);
+        $itemi['dungeon'] = round(($itemi['dungeon_out'] - $CurrentTime) / 60);
+        if ($itemi['infirmary'] < 0) {
+            $itemi['infirmary'] = 0;
+        }
+        if ($itemi['dungeon'] < 0) {
+            $itemi['dungeon'] = 0;
+        }
+        $csrf = request_csrf_html('staff_edituser2');
+        echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
@@ -600,7 +574,7 @@ function edituser()
 					Primary Weapon
 				</th>
 				<td>
-					" . weapon_dropdown("primary_weapon",$itemi['equip_primary']) . "
+					" . weapon_dropdown("primary_weapon", $itemi['equip_primary']) . "
 				</td>
 			</tr>
 			<tr>
@@ -608,7 +582,7 @@ function edituser()
 					Secondary Weapon
 				</th>
 				<td>
-					" . weapon_dropdown("secondary_weapon",$itemi['equip_secondary']) . "
+					" . weapon_dropdown("secondary_weapon", $itemi['equip_secondary']) . "
 				</td>
 			</tr>
 			<tr>
@@ -616,7 +590,7 @@ function edituser()
 					Armor
 				</th>
 				<td>
-					" . armor_dropdown("armor",$itemi['equip_armor']) . "
+					" . armor_dropdown("armor", $itemi['equip_armor']) . "
 				</td>
 			</tr>
 		</table>
@@ -624,131 +598,112 @@ function edituser()
     	<input class='btn btn-primary' type='submit' value='Edit User' />
     </form>
        ";
-	}
-	elseif ($_POST['step'] == 3)
-	{
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser2', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
-			die($h->endpage());
-		}
-		$username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username']) && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
-		$email = (isset($_POST['email'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('email',$_POST['email'])))) : '';
-		$infirmaryr = (isset($_POST['infirmary_reason'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text',$_POST['infirmary_reason'])))) : 'Hurt';
-		$dungeonr = (isset($_POST['dungeonreason'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text',$_POST['dungeonreason'])))) : 'Locked Up';
-		
-		$user = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
-		$level = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 1;
-		$money2 = (isset($_POST['sec_currency']) && is_numeric($_POST['sec_currency'])) ? abs(intval($_POST['sec_currency'])) : 0;
-		$money = (isset($_POST['prim_currency']) && is_numeric($_POST['prim_currency'])) ? abs(intval($_POST['prim_currency'])) : 0;
-		$maxwill = (isset($_POST['maxwill']) && is_numeric($_POST['maxwill'])) ? abs(intval($_POST['maxwill'])) : 100;
-		$bank = (isset($_POST['bank'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('int',$_POST['bank'])))) : -1;
-		$iq=(isset($_POST['IQ']) && is_numeric($_POST['IQ'])) ? abs(intval($_POST['IQ'])) : 1000;
-		$strength=(isset($_POST['strength']) && is_numeric($_POST['strength'])) ? abs(intval($_POST['strength'])) : 1000;
-		$agility=(isset($_POST['agility']) && is_numeric($_POST['agility'])) ? abs(intval($_POST['agility'])) : 1000;
-		$guard=(isset($_POST['guard']) && is_numeric($_POST['guard'])) ? abs(intval($_POST['guard'])) : 1000;
-		$labor=(isset($_POST['labor']) && is_numeric($_POST['labor'])) ? abs(intval($_POST['labor'])) : 1000;
-		
-		$equip_prim=(isset($_POST['primary_weapon']) && is_numeric($_POST['primary_weapon'])) ? abs(intval($_POST['primary_weapon'])) : 0;
-		$equip_sec=(isset($_POST['secondary_weapon']) && is_numeric($_POST['secondary_weapon'])) ? abs(intval($_POST['secondary_weapon'])) : 0;
-		$equip_armor=(isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
-		$city=(isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : 1;
-		
-		if (empty($username) || empty($email))
-		{
-			alert('danger',"Uh Oh!","Please specify an email and username.");
-			die($h->endpage());
-		}
-		$u_exists = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$user}");
-		if ($db->num_rows($u_exists) == 0)
-		{
-			$db->free_result($u_exists);
-			alert('danger',"Uh Oh!","The user you are trying to edit does not exist.");
-			die($h->endpage());
-		}
-		$h_exists = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$maxwill}");
-		if ($db->fetch_single($h_exists) == 0)
-		{
-			$db->free_result($h_exists);
-			alert("danger","Uh Oh!","The house you're trying to have this user live in does not exist.");
-			die($h->endpage());
-		}
-		$u = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$username}' AND `userid` != {$user}");
-		if ($db->fetch_single($u) != 0)
-		{
-			$db->free_result($u);
-			alert('danger',"Uh Oh!","The username for this user is already in use.");
-			die($h->endpage());
-		}
-		$e = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$email}' AND `userid` != {$user}");
-		if ($db->fetch_single($e) != 0)
-		{
-			$db->free_result($e);
-			alert('danger',"Uh Oh!","The email address input is already in use.");
-			die($h->endpage());
-		}
-		if ($equip_prim > 0)
-		{
-			$pwq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
-			if ($db->fetch_single($pwq) == 0)
-			{
-				alert('danger',"Uh Oh!","The primary weapon selected does not exist.");
-				die($h->endpage());
-			}
-		}
-		if ($equip_sec > 0)
-		{
-			$swq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
-			if ($db->fetch_single($swq) == 0)
-			{
-				alert('danger',"Uh Oh!","The secondary weapon selected does not exist.");
-				die($h->endpage());
-			}
-		}
-		if ($equip_armor > 0)
-		{
-			$aq=$db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
-			if ($db->fetch_single($aq) == 0)
-			{
-				alert('danger',"Uh Oh!","The armor selected does not exist.");
-				die($h->endpage());
-			}
-		}
-		$CityQuery=$db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
-		if ($db->fetch_single($CityQuery) == 0)
-		{
-			alert('danger',"Uh Oh!","The town you wish the user to be in does not exist.");
-			die($h->endpage());
-		}
-		$db->free_result($u);
-		$db->free_result($e);
-		$db->free_result($h_exists);
-		$oldwill = $db->fetch_single($u_exists);
-		$db->free_result($u_exists);
-		$will = ($oldwill > $maxwill) ? $maxwill : $oldwill;
-		$energy = 20 + $_POST['level'] * 4;
-		$brave = 6 + $_POST['level'] * 4;
-		$hp = 50 + $_POST['level'] * 50;
-		$db->query("UPDATE `users` SET `username` = '{$username}', `level` = {$level}, `primary_currency` = {$money}, `secondary_currency` = {$money2},
+    } elseif ($_POST['step'] == 3) {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser2', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
+            die($h->endpage());
+        }
+        $username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username']) && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
+        $email = (isset($_POST['email'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('email', $_POST['email'])))) : '';
+        $infirmaryr = (isset($_POST['infirmary_reason'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text', $_POST['infirmary_reason'])))) : 'Hurt';
+        $dungeonr = (isset($_POST['dungeonreason'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text', $_POST['dungeonreason'])))) : 'Locked Up';
+
+        $user = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
+        $level = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 1;
+        $money2 = (isset($_POST['sec_currency']) && is_numeric($_POST['sec_currency'])) ? abs(intval($_POST['sec_currency'])) : 0;
+        $money = (isset($_POST['prim_currency']) && is_numeric($_POST['prim_currency'])) ? abs(intval($_POST['prim_currency'])) : 0;
+        $maxwill = (isset($_POST['maxwill']) && is_numeric($_POST['maxwill'])) ? abs(intval($_POST['maxwill'])) : 100;
+        $bank = (isset($_POST['bank'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('int', $_POST['bank'])))) : -1;
+        $iq = (isset($_POST['IQ']) && is_numeric($_POST['IQ'])) ? abs(intval($_POST['IQ'])) : 1000;
+        $strength = (isset($_POST['strength']) && is_numeric($_POST['strength'])) ? abs(intval($_POST['strength'])) : 1000;
+        $agility = (isset($_POST['agility']) && is_numeric($_POST['agility'])) ? abs(intval($_POST['agility'])) : 1000;
+        $guard = (isset($_POST['guard']) && is_numeric($_POST['guard'])) ? abs(intval($_POST['guard'])) : 1000;
+        $labor = (isset($_POST['labor']) && is_numeric($_POST['labor'])) ? abs(intval($_POST['labor'])) : 1000;
+
+        $equip_prim = (isset($_POST['primary_weapon']) && is_numeric($_POST['primary_weapon'])) ? abs(intval($_POST['primary_weapon'])) : 0;
+        $equip_sec = (isset($_POST['secondary_weapon']) && is_numeric($_POST['secondary_weapon'])) ? abs(intval($_POST['secondary_weapon'])) : 0;
+        $equip_armor = (isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
+        $city = (isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : 1;
+
+        if (empty($username) || empty($email)) {
+            alert('danger', "Uh Oh!", "Please specify an email and username.");
+            die($h->endpage());
+        }
+        $u_exists = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$user}");
+        if ($db->num_rows($u_exists) == 0) {
+            $db->free_result($u_exists);
+            alert('danger', "Uh Oh!", "The user you are trying to edit does not exist.");
+            die($h->endpage());
+        }
+        $h_exists = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$maxwill}");
+        if ($db->fetch_single($h_exists) == 0) {
+            $db->free_result($h_exists);
+            alert("danger", "Uh Oh!", "The house you're trying to have this user live in does not exist.");
+            die($h->endpage());
+        }
+        $u = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$username}' AND `userid` != {$user}");
+        if ($db->fetch_single($u) != 0) {
+            $db->free_result($u);
+            alert('danger', "Uh Oh!", "The username for this user is already in use.");
+            die($h->endpage());
+        }
+        $e = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$email}' AND `userid` != {$user}");
+        if ($db->fetch_single($e) != 0) {
+            $db->free_result($e);
+            alert('danger', "Uh Oh!", "The email address input is already in use.");
+            die($h->endpage());
+        }
+        if ($equip_prim > 0) {
+            $pwq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
+            if ($db->fetch_single($pwq) == 0) {
+                alert('danger', "Uh Oh!", "The primary weapon selected does not exist.");
+                die($h->endpage());
+            }
+        }
+        if ($equip_sec > 0) {
+            $swq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
+            if ($db->fetch_single($swq) == 0) {
+                alert('danger', "Uh Oh!", "The secondary weapon selected does not exist.");
+                die($h->endpage());
+            }
+        }
+        if ($equip_armor > 0) {
+            $aq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
+            if ($db->fetch_single($aq) == 0) {
+                alert('danger', "Uh Oh!", "The armor selected does not exist.");
+                die($h->endpage());
+            }
+        }
+        $CityQuery = $db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
+        if ($db->fetch_single($CityQuery) == 0) {
+            alert('danger', "Uh Oh!", "The town you wish the user to be in does not exist.");
+            die($h->endpage());
+        }
+        $db->free_result($u);
+        $db->free_result($e);
+        $db->free_result($h_exists);
+        $oldwill = $db->fetch_single($u_exists);
+        $db->free_result($u_exists);
+        $will = ($oldwill > $maxwill) ? $maxwill : $oldwill;
+        $energy = 20 + $_POST['level'] * 4;
+        $brave = 6 + $_POST['level'] * 4;
+        $hp = 50 + $_POST['level'] * 50;
+        $db->query("UPDATE `users` SET `username` = '{$username}', `level` = {$level}, `primary_currency` = {$money}, `secondary_currency` = {$money2},
 		`energy` = {$energy}, `maxenergy` = {$energy}, `brave` = {$brave}, `maxbrave` = {$brave}, `hp` = {$hp}, `maxhp` = {$hp}, `bank` = {$bank},
 		`equip_armor` = {$equip_armor}, `equip_primary` = {$equip_prim}, `equip_secondary` = {$equip_sec}, `location` = {$city}, `will`= {$will}, `maxwill` = {$maxwill},
 		`email` = '{$email}' WHERE `userid` = {$user}");
-		$db->query("UPDATE `userstats` SET `strength` = {$strength}, `agility` = {$agility}, `guard` = {$guard}, `iq` = {$iq}, `labor` = {$labor} WHERE `userid` = {$user}");
-		if ($_POST['infirmary'] > 0)
-		{
-			$api->UserStatusSet($user,'infirmary',$_POST['infirmary'],$infirmaryr);
-		}
-		if ($_POST['dungeon'] > 0)
-		{
-			$api->UserStatusSet($user,'dungeon',$_POST['dungeon'],$dungeonr);
-		}
-		alert('success',"Success!","You have successfully edited {$username}'s account.",true,'index.php');
-		$api->SystemLogsAdd($userid,'staff',"Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
-	}
-	else
-	{
-		$csrf = request_csrf_html('staff_edituser1');
-		echo "Editing an User
+        $db->query("UPDATE `userstats` SET `strength` = {$strength}, `agility` = {$agility}, `guard` = {$guard}, `iq` = {$iq}, `labor` = {$labor} WHERE `userid` = {$user}");
+        if ($_POST['infirmary'] > 0) {
+            $api->UserStatusSet($user, 'infirmary', $_POST['infirmary'], $infirmaryr);
+        }
+        if ($_POST['dungeon'] > 0) {
+            $api->UserStatusSet($user, 'dungeon', $_POST['dungeon'], $dungeonr);
+        }
+        alert('success', "Success!", "You have successfully edited {$username}'s account.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
+    } else {
+        $csrf = request_csrf_html('staff_edituser1');
+        echo "Editing an User
     <br />
 	<table class='table table-bordered'>
 		<form method='post'>
@@ -797,20 +752,19 @@ function edituser()
 		</form>
 	</table>
 	";
-	}
+    }
 }
+
 function deleteuser()
 {
-	global $db,$userid,$h,$api,$ir;
-	if (!isset($_GET['step']))
-    {
+    global $db, $userid, $h, $api, $ir;
+    if (!isset($_GET['step'])) {
         $_GET['step'] = '0';
     }
-    switch ($_GET['step'])
-    {
-		default:
-			$csrf = request_csrf_html('staff_deluser1');
-			echo "<table class='table table-bordered'>
+    switch ($_GET['step']) {
+        default:
+            $csrf = request_csrf_html('staff_deluser1');
+            echo "<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
 						Select the user you wish to delete.
@@ -854,30 +808,27 @@ function deleteuser()
 				</tr>
 				</form>
 			</table>";
-			break;
-		case 2:
-			$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
-			if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser1', stripslashes($_POST['verf'])))
-			{
-				alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
-				die($h->endpage());
-			}
-			if (empty($_POST['user']) || $_POST['user'] == 1 || $_POST['user'] == $ir['userid'])
-			{
-				alert('danger',"Uh Oh!","You cannot delete your account, or the game owner's account.");
-				die($h->endpage());
-			}
-			$d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
-			if ($db->num_rows($d) == 0)
-			{
-				$db->free_result($d);
-				alert('danger',"Uh Oh!","You cannot delete a non-existent account.");
-				die($h->endpage());
-			}
-			$username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
-			$db->free_result($d);
-			$csrf = request_csrf_html('staff_deluser2');
-			echo "
+            break;
+        case 2:
+            $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+            if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser1', stripslashes($_POST['verf']))) {
+                alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
+                die($h->endpage());
+            }
+            if (empty($_POST['user']) || $_POST['user'] == 1 || $_POST['user'] == $ir['userid']) {
+                alert('danger', "Uh Oh!", "You cannot delete your account, or the game owner's account.");
+                die($h->endpage());
+            }
+            $d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
+            if ($db->num_rows($d) == 0) {
+                $db->free_result($d);
+                alert('danger', "Uh Oh!", "You cannot delete a non-existent account.");
+                die($h->endpage());
+            }
+            $username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
+            $db->free_result($d);
+            $csrf = request_csrf_html('staff_deluser2');
+            echo "
 			<form action='?action=deleteuser&step=3' method='post'>
 			<input type='hidden' name='userid' value='{$_POST['user']}' />
 			{$csrf}
@@ -897,69 +848,61 @@ function deleteuser()
 				</tr>
 			</table>
 			</form>";
-			break;
-		case 3:
-			if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser2', stripslashes($_POST['verf'])))
-			{
-				alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
-				die($h->endpage());
-			}
-			$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
-			$_POST['yesorno'] = (isset($_POST['yesorno']) && in_array($_POST['yesorno'], array('Yes', 'No'))) ? $_POST['yesorno'] : '';
-			if ((empty($_POST['userid']) || empty($_POST['yesorno'])) || $_POST['userid'] == 1 || $_POST['userid'] == $ir['userid'])
-			{
-				alert('danger',"Uh Oh!","You cannot delete your account, the game owner's account, or an unspecified account.");
-				die($h->endpage());
-			}
-			if ($_POST['yesorno'] == 'No')
-			{
-				alert('warning',"Success!","You have not deleted this account.");
-				die($h->endpage());
-			}
-			$d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}");
-			if ($db->num_rows($d) == 0)
-			{
-				alert('danger',"Uh Oh!","The account you are trying to delete does not exist.");
-				die($h->endpage());
-			}
-			$username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
-			$db->query("DELETE FROM `users` WHERE `userid` = {$_POST['userid']}");
-			$db->query("DELETE FROM `userstats` WHERE `userid` = {$_POST['userid']}");
-			$db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$_POST['userid']}");
-			$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['userid']}");
-			$api->SystemLogsAdd($userid,'staff',"Deleted user {$username} [{$_POST['userid']}].");
-			alert("success","Success!","You have deleted {$username}'s account.",true,'index.php');
-			die($h->endpage());
-			break;
-	}
+            break;
+        case 3:
+            if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser2', stripslashes($_POST['verf']))) {
+                alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
+                die($h->endpage());
+            }
+            $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
+            $_POST['yesorno'] = (isset($_POST['yesorno']) && in_array($_POST['yesorno'], array('Yes', 'No'))) ? $_POST['yesorno'] : '';
+            if ((empty($_POST['userid']) || empty($_POST['yesorno'])) || $_POST['userid'] == 1 || $_POST['userid'] == $ir['userid']) {
+                alert('danger', "Uh Oh!", "You cannot delete your account, the game owner's account, or an unspecified account.");
+                die($h->endpage());
+            }
+            if ($_POST['yesorno'] == 'No') {
+                alert('warning', "Success!", "You have not deleted this account.");
+                die($h->endpage());
+            }
+            $d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}");
+            if ($db->num_rows($d) == 0) {
+                alert('danger', "Uh Oh!", "The account you are trying to delete does not exist.");
+                die($h->endpage());
+            }
+            $username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
+            $db->query("DELETE FROM `users` WHERE `userid` = {$_POST['userid']}");
+            $db->query("DELETE FROM `userstats` WHERE `userid` = {$_POST['userid']}");
+            $db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$_POST['userid']}");
+            $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['userid']}");
+            $api->SystemLogsAdd($userid, 'staff', "Deleted user {$username} [{$_POST['userid']}].");
+            alert("success", "Success!", "You have deleted {$username}'s account.", true, 'index.php');
+            die($h->endpage());
+            break;
+    }
 }
+
 function logout()
 {
-    global $db,$h,$userid,$api;
-    $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid']))  ? abs(intval($_POST['userid'])) : 0;
-    if (!empty($_POST['userid']))
-    {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_forcelogout', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
-			die($h->endpage());
-		}
+    global $db, $h, $userid, $api;
+    $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
+    if (!empty($_POST['userid'])) {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_forcelogout', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
+            die($h->endpage());
+        }
         $d = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
-        if ($db->fetch_single($d) == 0)
-        {
+        if ($db->fetch_single($d) == 0) {
             $db->free_result($d);
-            alert('danger',"Uh Oh!","You are trying to force a non-existent account to log out.");
+            alert('danger', "Uh Oh!", "You are trying to force a non-existent account to log out.");
             die($h->endpage());
         }
         $db->free_result($d);
         $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `userid` = {$_POST['userid']}");
-        $api->SystemLogsAdd($userid,'staff',"Forced User ID {$_POST['userid']} to log out.");
-		alert("success","Success!","You have successfully forced User ID {$_POST['userid']} to log out.",true,'index.php');
-    }
-    else
-    {
+        $api->SystemLogsAdd($userid, 'staff', "Forced User ID {$_POST['userid']} to log out.");
+        alert("success", "Success!", "You have successfully forced User ID {$_POST['userid']} to log out.", true, 'index.php');
+    } else {
         $csrf = request_csrf_html('staff_forcelogout');
-		echo "
+        echo "
 		<form action='?action=logout' method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -985,38 +928,33 @@ function logout()
 		</form>";
     }
 }
+
 function changepw()
 {
-	global $db,$h,$userid,$api;
-	if ((isset($_POST['user'])) && (isset($_POST['pw'])))
-	{
-		$pw = stripslashes($_POST['pw']);
-		$user = (isset($_POST['user']) && is_numeric($_POST['user']))  ? abs(intval($_POST['user'])) : 0;
-		if (!isset($_POST['verf']) || !verify_csrf_code('staff_changepw', stripslashes($_POST['verf'])))
-		{
-			alert('danger',"Action Blocked!","This action was blocked for your security. Please submit the form quickly after opening it.");
-			die($h->endpage());
-		}
-		if (($user == 1) && ($userid > 1))
-		{
-			alert('danger',"Uh Oh!","You cannot change the game owner's password.");
+    global $db, $h, $userid, $api;
+    if ((isset($_POST['user'])) && (isset($_POST['pw']))) {
+        $pw = stripslashes($_POST['pw']);
+        $user = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_changepw', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
-		}
-		$ul=$db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
-		if (($ul == 'Admin') && ($userid > 1))
-		{
-			alert('danger',"Uh Oh!","You cannot change an Administrator's password.");
+        }
+        if (($user == 1) && ($userid > 1)) {
+            alert('danger', "Uh Oh!", "You cannot change the game owner's password.");
             die($h->endpage());
-		}
-		$new_psw = $db->escape(encode_password($pw));
-		$db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$user}");
-		alert('success',"Success!","You have successfully changed User ID {$user}'s password.",true,'index.php');
-		$api->SystemLogsAdd($userid,'staff',"Changed User ID {$user}'s password.");
-	}
-	else
-	{
-		$csrf = request_csrf_html('staff_changepw');
-		echo "
+        }
+        $ul = $db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
+        if (($ul == 'Admin') && ($userid > 1)) {
+            alert('danger', "Uh Oh!", "You cannot change an Administrator's password.");
+            die($h->endpage());
+        }
+        $new_psw = $db->escape(encode_password($pw));
+        $db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$user}");
+        alert('success', "Success!", "You have successfully changed User ID {$user}'s password.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Changed User ID {$user}'s password.");
+    } else {
+        $csrf = request_csrf_html('staff_changepw');
+        echo "
 		<form action='?action=changepw' method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -1048,6 +986,7 @@ function changepw()
 			</table>
 			{$csrf}
 		</form>";
-	}
+    }
 }
+
 $h->endpage();

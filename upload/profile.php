@@ -12,15 +12,12 @@ require("globals.php");
 $code = request_csrf_code('inbox_send');
 $code2 = request_csrf_code('cash_send');
 $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
-if (!$_GET['user'])
-{
-   alert("danger","Uh Oh!","Please specify a user you wish to view.",true,'index.php');
-}
-else
-{
-	$q =
-            $db->query(
-                    "SELECT `u`.`userid`, `user_level`, `laston`, `last_login`,
+if (!$_GET['user']) {
+    alert("danger", "Uh Oh!", "Please specify a user you wish to view.", true, 'index.php');
+} else {
+    $q =
+        $db->query(
+            "SELECT `u`.`userid`, `user_level`, `laston`, `last_login`,
                     `registertime`, `vip_days`, `username`, `gender`,
 					`primary_currency`, `secondary_currency`, `level`, `class`,
 					`display_pic`, `hp`, `maxhp`, `guild`,
@@ -45,60 +42,57 @@ else
 					LEFT JOIN `userdata` AS `ud`
                     ON `ud`.`userid` = `u`.`userid`
                     WHERE `u`.`userid` = {$_GET['user']}");
-					
-	if ($db->num_rows($q) == 0)
-	{
-		$db->free_result($q);
-		alert("danger","Uh Oh!","The user you are trying to view does not exist, or has an account issue.",true,'index.php');
-	}
-	else
-    {
-		$r = $db->fetch_row($q);
+
+    if ($db->num_rows($q) == 0) {
         $db->free_result($q);
-		$lon = ($r['laston'] > 0) ? date('F j, Y g:i:s a', $r['laston']) : "Never";
+        alert("danger", "Uh Oh!", "The user you are trying to view does not exist, or has an account issue.", true, 'index.php');
+    } else {
+        $r = $db->fetch_row($q);
+        $db->free_result($q);
+        $lon = ($r['laston'] > 0) ? date('F j, Y g:i:s a', $r['laston']) : "Never";
         $ula = ($r['laston'] == 0) ? 'Never' : DateTime_Parse($r['laston']);
-        $ull = ($r['last_login'] == 0) ? 'Never'  : DateTime_Parse($r['last_login']);
+        $ull = ($r['last_login'] == 0) ? 'Never' : DateTime_Parse($r['last_login']);
         $sup = date('F j, Y g:i:s a', $r['registertime']);
-		$displaypic = ($r['display_pic']) ? "<img src='{$r['display_pic']}' class='img-thumbnail img-responsive' width='250' height='250'>" : '';
-		$user_name = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
+        $displaypic = ($r['display_pic']) ? "<img src='{$r['display_pic']}' class='img-thumbnail img-responsive' width='250' height='250'>" : '';
+        $user_name = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
         $ref_q =
-                $db->query(
-                        "SELECT COUNT(`referalid`)
+            $db->query(
+                "SELECT COUNT(`referalid`)
                          FROM `referals`
                          WHERE `referal_userid` = {$r['userid']}");
         $ref = $db->fetch_single($ref_q);
         $db->free_result($ref_q);
-		$friend_q =
-                $db->query(
-                        "SELECT COUNT(`friend_id`)
+        $friend_q =
+            $db->query(
+                "SELECT COUNT(`friend_id`)
                          FROM `friends`
                          WHERE `friended` = {$r['userid']}");
         $friend = $db->fetch_single($friend_q);
         $db->free_result($friend_q);
-		$enemy_q =
-                $db->query(
-                        "SELECT COUNT(`enemy_id`)
+        $enemy_q =
+            $db->query(
+                "SELECT COUNT(`enemy_id`)
                          FROM `enemy`
                          WHERE `enemy_user` = {$r['userid']}");
         $enemy = $db->fetch_single($enemy_q);
         $db->free_result($enemy_q);
-		$CurrentTime=time();
-		$r['daysold']=DateTime_Parse($r['registertime'], false, true);
-		
-		$rhpperc = round($r['hp'] / $r['maxhp'] * 100);
-		echo "<h3>{$user_name}'s Profile</h3>";
-		?>
+        $CurrentTime = time();
+        $r['daysold'] = DateTime_Parse($r['registertime'], false, true);
+
+        $rhpperc = round($r['hp'] / $r['maxhp'] * 100);
+        echo "<h3>{$user_name}'s Profile</h3>";
+        ?>
 		<div class="row">
 			<div class="col-lg-2">
 				<?php
-					echo "{$displaypic}<br />
+        echo "{$displaypic}<br />
                         {$r['user_level']}<br />
 						Location {$r['town_name']}<br />
                         Level: {$r['level']}<br />";
-						echo ($r['guild']) ? "Guild: <a href='guilds.php?action=view&id={$r['guild']}'>{$r['guild_name']}</a><br />" : '';
-						echo "Health: {$r['hp']}/{$r['maxhp']}<br />";
-				
-				?>
+        echo ($r['guild']) ? "Guild: <a href='guilds.php?action=view&id={$r['guild']}'>{$r['guild_name']}</a><br />" : '';
+        echo "Health: {$r['hp']}/{$r['maxhp']}<br />";
+
+        ?>
 			</div>
 			<div class="col-lg-10">
 				<ul class="nav nav-tabs nav-justified">
@@ -106,19 +100,18 @@ else
 				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#actions"><?php echo "Actions"; ?></a></li>
 				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#financial"><?php echo "Financial Info"; ?></a></li>
 				  <?php
-					if (!in_array($ir['user_level'], array('Member', 'NPC')))
-					{
-					  echo "<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#staff'>Staff</a></li>";
-					}
-				  ?>
+        if (!in_array($ir['user_level'], array('Member', 'NPC'))) {
+            echo "<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#staff'>Staff</a></li>";
+        }
+        ?>
 				</ul>
 				<br />
 				<div class="tab-content">
 				  <div id="info" class="tab-pane active">
 					<p>
 						<?php
-						echo
-						"
+        echo
+        "
 						<table class='table table-bordered'>
 							<tr>
 								<th width='25%'>Sex</th>
@@ -144,38 +137,35 @@ else
 								<th>Age</th>
 								<td>{$r['daysold']}</td>
 							</tr>";
-						if (user_infirmary($r['userid']))
-						{
-							echo "
+        if (user_infirmary($r['userid'])) {
+            echo "
 							<tr>
 								<th>Infirmary</th>
 								<td>In the infirmary for " . TimeUntil_Parse($r['infirmary_out']) . ".<br />
 								{$r['infirmary_reason']}
 								</td>
 							</tr>";
-						}
-						if (user_dungeon($r['userid']))
-						{
-							echo "
+        }
+        if (user_dungeon($r['userid'])) {
+            echo "
 							<tr>
 								<th>Dungeon</th>
 								<td>In the dungeon for " . TimeUntil_Parse($r['dungeon_out']) . ".<br />
 								{$r['dungeon_reason']}
 								</td>
 							</tr>";
-						}
-						if ($r['fedjail'])
-						{
-							echo "
+        }
+        if ($r['fedjail']) {
+            echo "
 							<tr>
 								<th>Federal Dungeon</th>
 								<td>In the federal dungeon for " . TimeUntil_Parse($r['fed_out']) . " days.<br />
 								{$r['fed_reason']}
 								</td>
 							</tr>";
-						}
-						
-						echo"</table>
+        }
+
+        echo "</table>
 					</p>
 				  </div>
 				  <div id='actions' class='tab-pane'>
@@ -196,12 +186,12 @@ else
 					<br />
 					<a href='contacts.php?action=add&user={$r['userid']}' class='btn btn-primary'>Add {$r['username']} to Contact List</a>
 				  ";
-                    ?>
+        ?>
 				  </div>
 				  <div id="financial" class="tab-pane">
 					<?php
-						echo
-						"
+        echo
+            "
 						<table class='table table-bordered'>
 							<tr>
 								<th width='25%'>Primary Currency</th>
@@ -228,16 +218,15 @@ else
 								<td>" . number_format($enemy) . "</td>
 							</tr>
 						</table>";
-						
-						?>
+
+        ?>
 				  </div>
 				  <?php
-				  echo '<div id="staff" class="tab-pane">';
-					if (!in_array($ir['user_level'], array('Member', 'NPC')))
-					{
-						$fg=json_decode(get_fg_cache("cache/{$r['lastip']}.json","{$r['lastip']}",65655),true);
-						$log=$db->fetch_single($db->query("SELECT `log_text` FROM `logs` WHERE `log_user` = {$r['userid']} ORDER BY `log_id` DESC"));
-						echo "<table class='table table-bordered'>
+        echo '<div id="staff" class="tab-pane">';
+        if (!in_array($ir['user_level'], array('Member', 'NPC'))) {
+            $fg = json_decode(get_fg_cache("cache/{$r['lastip']}.json", "{$r['lastip']}", 65655), true);
+            $log = $db->fetch_single($db->query("SELECT `log_text` FROM `logs` WHERE `log_user` = {$r['userid']} ORDER BY `log_id` DESC"));
+            echo "<table class='table table-bordered'>
 							<tr>
 								<th width='33%'>Data</th>
 								<th>Output</th>
@@ -283,36 +272,36 @@ else
 						Staff Notes
 						<br />
 						<textarea rows='7' class='form-control' name='staffnotes'>"
-							. htmlentities($r['staff_notes'], ENT_QUOTES, 'ISO-8859-1')
-							. "</textarea>
+                . htmlentities($r['staff_notes'], ENT_QUOTES, 'ISO-8859-1')
+                . "</textarea>
 						<br />
 						<input type='hidden' name='ID' value='{$_GET['user']}' />
 						<input type='submit' class='btn btn-primary' value='Update Notes' />
 					</form>";
-					}
-					?>
+        }
+        ?>
 				  
 				  </div>
 				</div>
 			</div>
 		</div>
 		<?php
-		}
+    }
 }
 function parse_risk($risk_level)
 {
-	switch ($risk_level)
-	{
-		case 2:
-			return "Spam";
-		case 3:
-			return "Open Public Proxy";
-		case 4:
-			return "Tor Node";
-		case 5:
-			return "Honeypot / Botnet / DDOS Attack";
-		default:
-			return "No Risk";
-	}
+    switch ($risk_level) {
+        case 2:
+            return "Spam";
+        case 3:
+            return "Open Public Proxy";
+        case 4:
+            return "Tor Node";
+        case 5:
+            return "Honeypot / Botnet / DDOS Attack";
+        default:
+            return "No Risk";
+    }
 }
+
 $h->endpage();

@@ -14,79 +14,67 @@ echo "<h3>Your Equipment</h3><hr />
 		<div class='card'>
 			<div class='card-header'>
 				Primary Weapon ";
-				if (!empty($ir['equip_primary']))
-				{
-					echo "(<a href='unequip.php?type=equip_primary'>Unequip</a>)";
-				}
-				echo"
+if (!empty($ir['equip_primary'])) {
+    echo "(<a href='unequip.php?type=equip_primary'>Unequip</a>)";
+}
+echo "
 			</div>
 			<div class='card-body'>";
-				if (!empty($ir['equip_primary']))
-				{
-					echo $api->SystemItemIDtoName($ir['equip_primary']);
-				}
-				else
-				{
-					echo "No Weapon";
-				}
-				echo"
+if (!empty($ir['equip_primary'])) {
+    echo $api->SystemItemIDtoName($ir['equip_primary']);
+} else {
+    echo "No Weapon";
+}
+echo "
 			</div>
 		</div>
 	</div>";
-	echo"
+echo "
 	<div class='col-sm-4'>
 		<div class='card'>
 			<div class='card-header'>
 				Secondary Weapon ";
-				if (!empty($ir['equip_secondary']))
-				{
-					echo "(<a href='unequip.php?type=equip_secondary'>Unequip</a>)";
-				}
-				echo"
+if (!empty($ir['equip_secondary'])) {
+    echo "(<a href='unequip.php?type=equip_secondary'>Unequip</a>)";
+}
+echo "
 			</div>
 			<div class='card-body'>";
-				if (!empty($ir['equip_secondary']))
-				{
-					echo $api->SystemItemIDtoName($ir['equip_secondary']);
-				}
-				else
-				{
-					echo "No Weapon";
-				}
-				echo"
+if (!empty($ir['equip_secondary'])) {
+    echo $api->SystemItemIDtoName($ir['equip_secondary']);
+} else {
+    echo "No Weapon";
+}
+echo "
 			</div>
 		</div>
 	</div>";
-	echo"
+echo "
 	<div class='col-sm-4'>
 		<div class='card'>
 			<div class='card-header'>
 				Armor ";
-				if (!empty($ir['equip_armor']))
-				{
-					echo "(<a href='unequip.php?type=equip_armor'>Unequip</a>)";
-				}
-				echo"
+if (!empty($ir['equip_armor'])) {
+    echo "(<a href='unequip.php?type=equip_armor'>Unequip</a>)";
+}
+echo "
 			</div>
 			<div class='card-body'>";
-				if (!empty($ir['equip_armor']))
-				{
-					echo $api->SystemItemIDtoName($ir['equip_armor']);
-				}
-				else
-				{
-					echo "No Armor";
-				}
-				echo"
+if (!empty($ir['equip_armor'])) {
+    echo $api->SystemItemIDtoName($ir['equip_armor']);
+} else {
+    echo "No Armor";
+}
+echo "
 			</div>
 		</div>
 	</div>
 </div>";
-echo"<hr />
+echo "<hr />
 <h3>Your Inventory</h3><hr />";
 $inv =
-        $db->query(
-                "SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
+    $db->query(
+        "SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
                  `effect1_on`, `effect2_on`, `effect3_on`,
                  `weapon`, `armor`, `itmtypename`, `itmdesc`
                  FROM `inventory` AS `iv`
@@ -96,7 +84,7 @@ $inv =
                  ON `i`.`itmtype` = `it`.`itmtypeid`
                  WHERE `iv`.`inv_userid` = {$userid}
                  ORDER BY `i`.`itmtype` ASC, `i`.`itmname` ASC");
-    echo "<b>Your items are listed below.</b><br />
+echo "<b>Your items are listed below.</b><br />
 	<table class='table table-bordered table-striped'>
 	    <thead>
 		<tr>
@@ -104,51 +92,45 @@ $inv =
 			<th class='hidden-xs-down'>Item Cost (Total)</th>
 			<th>Links</th>
 		</tr></thead>";
-    $lt = "";
-    while ($i = $db->fetch_row($inv))
-    {
-        if ($lt != $i['itmtypename'])
-        {
-            $lt = $i['itmtypename'];
-            echo "\n<thead><tr>
+$lt = "";
+while ($i = $db->fetch_row($inv)) {
+    if ($lt != $i['itmtypename']) {
+        $lt = $i['itmtypename'];
+        echo "\n<thead><tr>
             			<th colspan='4'>
             				<b>{$lt}</b>
             			</th>
             		</tr></thead>";
-        }
-		$i['itmdesc']=htmlentities($i['itmdesc'],ENT_QUOTES);
-        echo "<tr>
+    }
+    $i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
+    echo "<tr>
         		<td>
 					<a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='right' title='{$i['itmdesc']}'>
 						{$api->SystemItemIDtoName($i['itmid'])}
 					</a>";
-        if ($i['inv_qty'] > 1)
-        {
-            echo " (" . number_format($i['inv_qty']) . ")";
-        }
-        echo "</td>
-        	  <td class='hidden-xs-down'>" . number_format($i['itmsellprice']);  
-			  echo "  (" . number_format($i['itmsellprice'] * $i['inv_qty']) . ")";
-			  echo"</td>
+    if ($i['inv_qty'] > 1) {
+        echo " (" . number_format($i['inv_qty']) . ")";
+    }
+    echo "</td>
+        	  <td class='hidden-xs-down'>" . number_format($i['itmsellprice']);
+    echo "  (" . number_format($i['itmsellprice'] * $i['inv_qty']) . ")";
+    echo "</td>
         	  <td>
         	  	[<a href='itemsend.php?ID={$i['inv_id']}'>Send</a>]
         	  	[<a href='itemsell.php?ID={$i['inv_id']}'>Sell</a>]
         	  	[<a href='itemmarket.php?action=add&ID={$i['inv_id']}'>Add to Market</a>]";
-        if ($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' || $i['effect3_on'] == 'true')
-        {
-            echo " [<a href='itemuse.php?item={$i['inv_id']}'>Use</a>]";
-        }
-        if ($i['weapon'] > 0)
-        {
-            echo " [<a href='equip.php?slot=weapon&ID={$i['inv_id']}'>Equip Weapon</a>]";
-        }
-        if ($i['armor'] > 0)
-        {
-            echo " [<a href='equip.php?slot=armor&ID={$i['inv_id']}'>Equip Armor</a>]";
-        }
-        echo "</td>
-        </tr>";
+    if ($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' || $i['effect3_on'] == 'true') {
+        echo " [<a href='itemuse.php?item={$i['inv_id']}'>Use</a>]";
     }
-    echo "</table>";
-    $db->free_result($inv);
+    if ($i['weapon'] > 0) {
+        echo " [<a href='equip.php?slot=weapon&ID={$i['inv_id']}'>Equip Weapon</a>]";
+    }
+    if ($i['armor'] > 0) {
+        echo " [<a href='equip.php?slot=armor&ID={$i['inv_id']}'>Equip Armor</a>]";
+    }
+    echo "</td>
+        </tr>";
+}
+echo "</table>";
+$db->free_result($inv);
 $h->endpage();

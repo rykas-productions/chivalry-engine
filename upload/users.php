@@ -19,13 +19,11 @@ $cnt = $db->query("SELECT COUNT(`userid`)
 $membs = $db->fetch_single($cnt);
 $db->free_result($cnt);
 $pages = round($membs / 100) + 1;
-if ($membs % 100 == 0)
-{
+if ($membs % 100 == 0) {
     $pages--;
 }
 echo "Page ";
-for ($i = 1; $i <= $pages; $i++)
-{
+for ($i = 1; $i <= $pages; $i++) {
     $stl = ($i - 1) * 100;
     echo "<a href='?st={$stl}&by={$by}&ord={$ord}'>{$i}</a> ";
 }
@@ -64,9 +62,8 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 				</th>
 			</tr>
    ";
-while ($r = $db->fetch_row($q))
-{
-	$r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
+while ($r = $db->fetch_row($q)) {
+    $r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
     echo "	<tr>
 				<td>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]

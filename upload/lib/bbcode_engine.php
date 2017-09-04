@@ -21,7 +21,10 @@ $builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{param}">{param}</
 $parser->addCodeDefinition($builder->build());
 
 //Quote with option 
-$builder = new JBBCode\CodeDefinitionBuilder('quote', '<blockquote class="blockquote"><p class="mb-0">{param}</p><footer class="blockquote-footer"><cite>{option}</cite></footer></blockquote>');
+$builder = new JBBCode\CodeDefinitionBuilder('quote', '<blockquote class="blockquote">
+                                                            <p class="mb-0">{param}</p>
+                                                            <footer class="blockquote-footer">
+                                                            <cite>{option}</cite></footer></blockquote>');
 $builder->setUseOption(true);
 $parser->addCodeDefinition($builder->build());
 
@@ -68,5 +71,9 @@ $builder->setUseOption(true);
 $parser->addCodeDefinition($builder->build());
 
 //YouTube Video
-$builder = new JBBCode\CodeDefinitionBuilder('youtube', '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" id="ytplayer" type="text/html" src="https://www.youtube.com/embed/{param}/ frameborder="0"></iframe></div>');
+$builder = new JBBCode\CodeDefinitionBuilder('youtube', '<div class="embed-responsive embed-responsive-16by9">
+                                                            <iframe class="embed-responsive-item" id="ytplayer"
+                                                                type="text/html"
+                                                                src="https://www.youtube.com/embed/{param}/ frameborder="0">
+                                                            </iframe></div>');
 $parser->addCodeDefinition($builder->build());

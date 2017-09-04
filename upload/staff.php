@@ -13,8 +13,7 @@ $q = $db->query("SELECT `userid`, `laston`, `username`, `user_level`
  				 FROM `users`
  				 WHERE `user_level` IN('Admin', 'Forum Moderator', 'Assistant')
  				 ORDER BY `userid` ASC");
-while ($r = $db->fetch_row($q))
-{
+while ($r = $db->fetch_row($q)) {
     $staff[$r['userid']] = $r;
 }
 $db->free_result($q);
@@ -31,11 +30,9 @@ echo "<h3>Admins</h3>
 			Contact
 		</th>
 	</tr>";
-foreach ($staff as $r)
-{
-    if ($r['user_level'] == 'Admin')
-    {
-		echo "<tr>
+foreach ($staff as $r) {
+    if ($r['user_level'] == 'Admin') {
+        echo "<tr>
 				<td>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 				</td>
@@ -62,10 +59,8 @@ echo "<h3>Assistants</h3>
 			Contact
 		</th>
 	</tr>";
-foreach ($staff as $r)
-{
-    if ($r['user_level'] == 'Assistant')
-    {
+foreach ($staff as $r) {
+    if ($r['user_level'] == 'Assistant') {
         echo "<tr>
 				<td>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
@@ -93,10 +88,8 @@ echo "<h3>Forum Moderators</h3>
 			Contact
 		</th>
 	</tr>";
-foreach ($staff as $r)
-{
-    if ($r['user_level'] == 'Forum Moderator')
-    {
+foreach ($staff as $r) {
+    if ($r['user_level'] == 'Forum Moderator') {
         echo "<tr>
 				<td>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]

@@ -8,109 +8,87 @@
 */
 require('sglobals.php');
 echo "<h2>Staff Mines</h2><hr />";
-if (!isset($_GET['action']))
-{
+if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
-switch ($_GET['action'])
-{
-case 'addmine':
-    addmine();
-    break;
-case 'editmine':
-    editmine();
-    break;
-case 'delmine':
-    delmine();
-    break;
-default:
-    echo '404'; die($h->endpage());
-    break;
+switch ($_GET['action']) {
+    case 'addmine':
+        addmine();
+        break;
+    case 'editmine':
+        editmine();
+        break;
+    case 'delmine':
+        delmine();
+        break;
+    default:
+        echo '404';
+        die($h->endpage());
+        break;
 }
 function addmine()
 {
-    global $db,$userid,$api,$h;
-    if (isset($_POST['level']) && (!empty($_POST['level'])))
-    {
-        $level=(isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : '';
-        $power=(isset($_POST['power']) && is_numeric($_POST['power'])) ? abs(intval($_POST['power'])) : '';
-		$iq=(isset($_POST['IQ']) && is_numeric($_POST['IQ'])) ? abs(intval($_POST['IQ'])) : '';
-        $pick=(isset($_POST['pick']) && is_numeric($_POST['pick'])) ? abs(intval($_POST['pick'])) : '';
-        $city=(isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : '';
-        $cflakes=(isset($_POST['cflakes']) && is_numeric($_POST['cflakes'])) ? abs(intval($_POST['cflakes'])) : '';
-        $cflakesmin=(isset($_POST['cflakemin']) && is_numeric($_POST['cflakemin'])) ? abs(intval($_POST['cflakemin'])) : '';
-        $cflakesmax=(isset($_POST['cflakemax']) && is_numeric($_POST['cflakemax'])) ? abs(intval($_POST['cflakemax'])) : '';
-        $sflakes=(isset($_POST['sflakes']) && is_numeric($_POST['sflakes'])) ? abs(intval($_POST['sflakes'])) : '';
-        $sflakesmin=(isset($_POST['sflakemin']) && is_numeric($_POST['sflakemin'])) ? abs(intval($_POST['sflakemin'])) : '';
-        $sflakesmax=(isset($_POST['sflakemax']) && is_numeric($_POST['sflakemax'])) ? abs(intval($_POST['sflakemax'])) : '';
-        $gflakes=(isset($_POST['gflakes']) && is_numeric($_POST['gflakes'])) ? abs(intval($_POST['gflakes'])) : '';
-        $gflakesmin=(isset($_POST['gflakemin']) && is_numeric($_POST['gflakemin'])) ? abs(intval($_POST['gflakemin'])) : '';
-        $gflakesmax=(isset($_POST['gflakemax']) && is_numeric($_POST['gflakemax'])) ? abs(intval($_POST['gflakemax'])) : '';
-        $gem=(isset($_POST['gem']) && is_numeric($_POST['gem'])) ? abs(intval($_POST['gem'])) : '';
-        if (empty($level) || empty($iq) || empty($pick) || empty($city) || empty($cflakes) 
-            || empty($cflakesmin) || empty($cflakesmax) || empty($gflakes) || empty($gflakesmin) 
-        || empty($gflakesmax) || empty($sflakesmin) || empty($sflakesmax) || empty($sflakes) || empty($gem) || empty($power))
-        {
-            alert('danger',"Uh Oh!","Please fill out the form completely before submitting it.");
+    global $db, $userid, $api, $h;
+    if (isset($_POST['level']) && (!empty($_POST['level']))) {
+        $level = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : '';
+        $power = (isset($_POST['power']) && is_numeric($_POST['power'])) ? abs(intval($_POST['power'])) : '';
+        $iq = (isset($_POST['IQ']) && is_numeric($_POST['IQ'])) ? abs(intval($_POST['IQ'])) : '';
+        $pick = (isset($_POST['pick']) && is_numeric($_POST['pick'])) ? abs(intval($_POST['pick'])) : '';
+        $city = (isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : '';
+        $cflakes = (isset($_POST['cflakes']) && is_numeric($_POST['cflakes'])) ? abs(intval($_POST['cflakes'])) : '';
+        $cflakesmin = (isset($_POST['cflakemin']) && is_numeric($_POST['cflakemin'])) ? abs(intval($_POST['cflakemin'])) : '';
+        $cflakesmax = (isset($_POST['cflakemax']) && is_numeric($_POST['cflakemax'])) ? abs(intval($_POST['cflakemax'])) : '';
+        $sflakes = (isset($_POST['sflakes']) && is_numeric($_POST['sflakes'])) ? abs(intval($_POST['sflakes'])) : '';
+        $sflakesmin = (isset($_POST['sflakemin']) && is_numeric($_POST['sflakemin'])) ? abs(intval($_POST['sflakemin'])) : '';
+        $sflakesmax = (isset($_POST['sflakemax']) && is_numeric($_POST['sflakemax'])) ? abs(intval($_POST['sflakemax'])) : '';
+        $gflakes = (isset($_POST['gflakes']) && is_numeric($_POST['gflakes'])) ? abs(intval($_POST['gflakes'])) : '';
+        $gflakesmin = (isset($_POST['gflakemin']) && is_numeric($_POST['gflakemin'])) ? abs(intval($_POST['gflakemin'])) : '';
+        $gflakesmax = (isset($_POST['gflakemax']) && is_numeric($_POST['gflakemax'])) ? abs(intval($_POST['gflakemax'])) : '';
+        $gem = (isset($_POST['gem']) && is_numeric($_POST['gem'])) ? abs(intval($_POST['gem'])) : '';
+        if (empty($level) || empty($iq) || empty($pick) || empty($city) || empty($cflakes)
+            || empty($cflakesmin) || empty($cflakesmax) || empty($gflakes) || empty($gflakesmin)
+            || empty($gflakesmax) || empty($sflakesmin) || empty($sflakesmax) || empty($sflakes) || empty($gem) || empty($power)
+        ) {
+            alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.");
             die($h->endpage());
-        }
-        elseif ($level < 1)
-        {
-			alert('danger',"Uh Oh!","The minimum mining level cannot be lower than 1.");
+        } elseif ($level < 1) {
+            alert('danger', "Uh Oh!", "The minimum mining level cannot be lower than 1.");
             die($h->endpage());
-        }
-        elseif ($cflakesmin == 0 || $cflakesmax == 0 || $gflakesmin == 0 || 
-        $gflakesmax == 0 || $sflakesmin == 0 || $sflakesmax == 0)
-        {
-            alert('danger',"Uh Oh!","Please specify item output numbers.");
+        } elseif ($cflakesmin == 0 || $cflakesmax == 0 || $gflakesmin == 0 ||
+            $gflakesmax == 0 || $sflakesmin == 0 || $sflakesmax == 0
+        ) {
+            alert('danger', "Uh Oh!", "Please specify item output numbers.");
             die($h->endpage());
-        }
-        elseif ($cflakesmin >= $cflakesmax || $sflakesmin >= $sflakesmax || $gflakesmin >= $gflakesmax)
-        {
-            alert('danger',"Uh Oh!","Your output minimums cannot be higher than their maximums.");
+        } elseif ($cflakesmin >= $cflakesmax || $sflakesmin >= $sflakesmax || $gflakesmin >= $gflakesmax) {
+            alert('danger', "Uh Oh!", "Your output minimums cannot be higher than their maximums.");
             die($h->endpage());
-        }
-        else
-        {
-            $CitySQL=($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$city}"));
-            $PickSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$pick}"));
-            $CFSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$cflakes}"));
-            $SFSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$sflakes}"));
-            $GFSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gflakes}"));
-            $GemSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gem}"));
-            
-            if ($db->num_rows($CitySQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The town you've chosen does not exist.");
-				die($h->endpage());
-            }
-            elseif ($db->num_rows($PickSQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The pickaxe item you have chosen does not exist.");
-				die($h->endpage());
-            }
-            elseif ($db->num_rows($CFSQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The first item you've chosen does not exist.");
-				die($h->endpage());
-            }
-            elseif ($db->num_rows($SFSQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The second item you've chosen does not exist.");
-				die($h->endpage());
-            }
-            elseif ($db->num_rows($GFSQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The third item you've chosen does not exist.");
-				die($h->endpage());
-            }
-            elseif ($db->num_rows($GemSQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The gem item you've chosen does not exist.");
-				die($h->endpage());
-            }
-            else
-            {
+        } else {
+            $CitySQL = ($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$city}"));
+            $PickSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$pick}"));
+            $CFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$cflakes}"));
+            $SFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$sflakes}"));
+            $GFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gflakes}"));
+            $GemSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gem}"));
+
+            if ($db->num_rows($CitySQL) == 0) {
+                alert('danger', "Uh Oh!", "The town you've chosen does not exist.");
+                die($h->endpage());
+            } elseif ($db->num_rows($PickSQL) == 0) {
+                alert('danger', "Uh Oh!", "The pickaxe item you have chosen does not exist.");
+                die($h->endpage());
+            } elseif ($db->num_rows($CFSQL) == 0) {
+                alert('danger', "Uh Oh!", "The first item you've chosen does not exist.");
+                die($h->endpage());
+            } elseif ($db->num_rows($SFSQL) == 0) {
+                alert('danger', "Uh Oh!", "The second item you've chosen does not exist.");
+                die($h->endpage());
+            } elseif ($db->num_rows($GFSQL) == 0) {
+                alert('danger', "Uh Oh!", "The third item you've chosen does not exist.");
+                die($h->endpage());
+            } elseif ($db->num_rows($GemSQL) == 0) {
+                alert('danger', "Uh Oh!", "The gem item you've chosen does not exist.");
+                die($h->endpage());
+            } else {
                 $db->query("INSERT INTO `mining_data` 
                 (`mine_id`, `mine_location`, `mine_level`, 
                 `mine_copper_min`, `mine_copper_max`, 
@@ -126,15 +104,13 @@ function addmine()
                 '{$gflakesmin}', '{$gflakesmax}', '{$pick}', '{$iq}', 
                 '{$power}', '{$cflakes}', '{$sflakes}', '{$gflakes}', 
                 '{$gem}');");
-				$api->SystemLogsAdd($userid,"staff","Added a mine in " . $api->SystemTownIDtoName($city));
-				alert('success',"Success!","You have successfully created a mine in " . $api->SystemTownIDtoName($city));
-				die($h->endpage());
+                $api->SystemLogsAdd($userid, "staff", "Added a mine in " . $api->SystemTownIDtoName($city));
+                alert('success', "Success!", "You have successfully created a mine in " . $api->SystemTownIDtoName($city));
+                die($h->endpage());
             }
-            
+
         }
-    }
-    else
-    {
+    } else {
         echo "
         <table class='table table-bordered'>
             <form method='post'>
@@ -272,118 +248,92 @@ function addmine()
         </table>";
     }
 }
+
 function editmine()
 {
-    if (!isset($_POST['step']))
-    {
+    if (!isset($_POST['step'])) {
         $_POST['step'] = 0;
     }
-    global $db,$userid,$h,$api;
-    if (isset($_POST['level']) && (!empty($_POST['level'])) && $_POST['step'] == 2)
-    {
-        $mine=(isset($_POST['mineid']) && is_numeric($_POST['mineid'])) ? abs(intval($_POST['mineid'])) : '';
-        $level=(isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : '';
-        $power=(isset($_POST['power']) && is_numeric($_POST['power'])) ? abs(intval($_POST['power'])) : '';
-        $iq=(isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs(intval($_POST['iq'])) : '';
-        $pick=(isset($_POST['pick']) && is_numeric($_POST['pick'])) ? abs(intval($_POST['pick'])) : '';
-        $city=(isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : '';
-        $cflakes=(isset($_POST['cflakes']) && is_numeric($_POST['cflakes'])) ? abs(intval($_POST['cflakes'])) : '';
-        $cflakesmin=(isset($_POST['cflakemin']) && is_numeric($_POST['cflakemin'])) ? abs(intval($_POST['cflakemin'])) : '';
-        $cflakesmax=(isset($_POST['cflakemax']) && is_numeric($_POST['cflakemax'])) ? abs(intval($_POST['cflakemax'])) : '';
-        $sflakes=(isset($_POST['sflakes']) && is_numeric($_POST['sflakes'])) ? abs(intval($_POST['sflakes'])) : '';
-        $sflakesmin=(isset($_POST['sflakemin']) && is_numeric($_POST['sflakemin'])) ? abs(intval($_POST['sflakemin'])) : '';
-        $sflakesmax=(isset($_POST['sflakemax']) && is_numeric($_POST['sflakemax'])) ? abs(intval($_POST['sflakemax'])) : '';
-        $gflakes=(isset($_POST['gflakes']) && is_numeric($_POST['gflakes'])) ? abs(intval($_POST['gflakes'])) : '';
-        $gflakesmin=(isset($_POST['gflakemin']) && is_numeric($_POST['gflakemin'])) ? abs(intval($_POST['gflakemin'])) : '';
-        $gflakesmax=(isset($_POST['gflakemax']) && is_numeric($_POST['gflakemax'])) ? abs(intval($_POST['gflakemax'])) : '';
-        $gem=(isset($_POST['gem']) && is_numeric($_POST['gem'])) ? abs(intval($_POST['gem'])) : '';
-        if (empty($level) || empty($iq) || empty($pick) || empty($city) || empty($cflakes) 
-            || empty($cflakesmin) || empty($cflakesmax) || empty($gflakes) || empty($gflakesmin) 
-        || empty($gflakesmax) || empty($sflakesmin) || empty($sflakesmax) || empty($sflakes) || empty($gem) || empty($power))
-        {
-            alert('danger',"Uh Oh!","Please fill out the previous form as completely as possible.");
+    global $db, $userid, $h, $api;
+    if (isset($_POST['level']) && (!empty($_POST['level'])) && $_POST['step'] == 2) {
+        $mine = (isset($_POST['mineid']) && is_numeric($_POST['mineid'])) ? abs(intval($_POST['mineid'])) : '';
+        $level = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : '';
+        $power = (isset($_POST['power']) && is_numeric($_POST['power'])) ? abs(intval($_POST['power'])) : '';
+        $iq = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs(intval($_POST['iq'])) : '';
+        $pick = (isset($_POST['pick']) && is_numeric($_POST['pick'])) ? abs(intval($_POST['pick'])) : '';
+        $city = (isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : '';
+        $cflakes = (isset($_POST['cflakes']) && is_numeric($_POST['cflakes'])) ? abs(intval($_POST['cflakes'])) : '';
+        $cflakesmin = (isset($_POST['cflakemin']) && is_numeric($_POST['cflakemin'])) ? abs(intval($_POST['cflakemin'])) : '';
+        $cflakesmax = (isset($_POST['cflakemax']) && is_numeric($_POST['cflakemax'])) ? abs(intval($_POST['cflakemax'])) : '';
+        $sflakes = (isset($_POST['sflakes']) && is_numeric($_POST['sflakes'])) ? abs(intval($_POST['sflakes'])) : '';
+        $sflakesmin = (isset($_POST['sflakemin']) && is_numeric($_POST['sflakemin'])) ? abs(intval($_POST['sflakemin'])) : '';
+        $sflakesmax = (isset($_POST['sflakemax']) && is_numeric($_POST['sflakemax'])) ? abs(intval($_POST['sflakemax'])) : '';
+        $gflakes = (isset($_POST['gflakes']) && is_numeric($_POST['gflakes'])) ? abs(intval($_POST['gflakes'])) : '';
+        $gflakesmin = (isset($_POST['gflakemin']) && is_numeric($_POST['gflakemin'])) ? abs(intval($_POST['gflakemin'])) : '';
+        $gflakesmax = (isset($_POST['gflakemax']) && is_numeric($_POST['gflakemax'])) ? abs(intval($_POST['gflakemax'])) : '';
+        $gem = (isset($_POST['gem']) && is_numeric($_POST['gem'])) ? abs(intval($_POST['gem'])) : '';
+        if (empty($level) || empty($iq) || empty($pick) || empty($city) || empty($cflakes)
+            || empty($cflakesmin) || empty($cflakesmax) || empty($gflakes) || empty($gflakesmin)
+            || empty($gflakesmax) || empty($sflakesmin) || empty($sflakesmax) || empty($sflakes) || empty($gem) || empty($power)
+        ) {
+            alert('danger', "Uh Oh!", "Please fill out the previous form as completely as possible.");
             die($h->endpage());
-        }
-        elseif ($level < 1)
-        {
-			alert('danger',"Uh Oh!","The minimum mining level cannot be lower than 1.");
+        } elseif ($level < 1) {
+            alert('danger', "Uh Oh!", "The minimum mining level cannot be lower than 1.");
             die($h->endpage());
-        }
-        elseif ($cflakesmin == 0 || $cflakesmax == 0 || $gflakesmin == 0 || 
-        $gflakesmax == 0 || $sflakesmin == 0 || $sflakesmax == 0)
-        {
-            alert('danger',"Uh Oh!","Please specify the item outputs.");
+        } elseif ($cflakesmin == 0 || $cflakesmax == 0 || $gflakesmin == 0 ||
+            $gflakesmax == 0 || $sflakesmin == 0 || $sflakesmax == 0
+        ) {
+            alert('danger', "Uh Oh!", "Please specify the item outputs.");
             die($h->endpage());
-        }
-        elseif ($cflakesmin >= $cflakesmax || $sflakesmin >= $sflakesmax || $gflakesmin >= $gflakesmax)
-        {
-            alert('danger',"Uh Oh!","The item minimum outputs cannot be higher than their maximums.");
+        } elseif ($cflakesmin >= $cflakesmax || $sflakesmin >= $sflakesmax || $gflakesmin >= $gflakesmax) {
+            alert('danger', "Uh Oh!", "The item minimum outputs cannot be higher than their maximums.");
             die($h->endpage());
-        }
-        else
-        {
-            $CitySQL=($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$city}"));
-            $PickSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$pick}"));
-            $CFSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$cflakes}"));
-            $SFSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$sflakes}"));
-            $GFSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gflakes}"));
-            $GemSQL=($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gem}"));
-            if ($db->num_rows($CitySQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The town you have chosen does not exist.");
-				die($h->endpage());
-            }
-            elseif ($db->num_rows($PickSQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The pickaxe item you have chosen does not exist.");
-				die($h->endpage());
-            }
-            elseif ($db->num_rows($CFSQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The item #1 you have chosen does not exist.");
-				die($h->endpage());
-            }
-            elseif ($db->num_rows($SFSQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The item #2 you have chosen does not exist.");
-				die($h->endpage());
-            }
-            elseif ($db->num_rows($GFSQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The item #3 you have chosen does not exist.");
-				die($h->endpage());
-            }
-            elseif ($db->num_rows($GemSQL) == 0)
-            {
-                alert('danger',"Uh Oh!","The gem item you have chosen does not exist.");
-				die($h->endpage());
-            }
-            else
-            {
+        } else {
+            $CitySQL = ($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$city}"));
+            $PickSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$pick}"));
+            $CFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$cflakes}"));
+            $SFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$sflakes}"));
+            $GFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gflakes}"));
+            $GemSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gem}"));
+            if ($db->num_rows($CitySQL) == 0) {
+                alert('danger', "Uh Oh!", "The town you have chosen does not exist.");
+                die($h->endpage());
+            } elseif ($db->num_rows($PickSQL) == 0) {
+                alert('danger', "Uh Oh!", "The pickaxe item you have chosen does not exist.");
+                die($h->endpage());
+            } elseif ($db->num_rows($CFSQL) == 0) {
+                alert('danger', "Uh Oh!", "The item #1 you have chosen does not exist.");
+                die($h->endpage());
+            } elseif ($db->num_rows($SFSQL) == 0) {
+                alert('danger', "Uh Oh!", "The item #2 you have chosen does not exist.");
+                die($h->endpage());
+            } elseif ($db->num_rows($GFSQL) == 0) {
+                alert('danger', "Uh Oh!", "The item #3 you have chosen does not exist.");
+                die($h->endpage());
+            } elseif ($db->num_rows($GemSQL) == 0) {
+                alert('danger', "Uh Oh!", "The gem item you have chosen does not exist.");
+                die($h->endpage());
+            } else {
                 $db->query("UPDATE `mining_data` SET `mine_location` = '{$city}', `mine_level` = '{$level}',
                 `mine_copper_item` = '{$cflakes}', `mine_copper_max` = '{$cflakesmax}', `mine_copper_min` = '{$cflakesmin}', 
                 `mine_silver_item` = '{$sflakes}', `mine_silver_max` = '{$sflakesmax}', `mine_silver_min` = '{$sflakesmin}', 
                 `mine_gold_item` = '{$gflakes}', `mine_gold_max` = '{$gflakesmax}', `mine_gold_min` = '{$gflakesmin}', 
                 `mine_pickaxe` = '{$pick}', `mine_iq` = '{$iq}', `mine_gem_item` = '{$gem}', `mine_power_use` = '{$power}' 
                 WHERE `mine_id` = {$mine}");
-                $api->SystemLogsAdd($userid,"staff","Edited Mine ID #{$mine}");
-				alert('success',"Success!","You have successfully edited Mine ID #{$mine}.",true,'index.php');
-				die($h->endpage());
+                $api->SystemLogsAdd($userid, "staff", "Edited Mine ID #{$mine}");
+                alert('success', "Success!", "You have successfully edited Mine ID #{$mine}.", true, 'index.php');
+                die($h->endpage());
             }
-            
+
         }
-    }
-    elseif ($_POST['step'] == 1)
-    {
-        $mine=(isset($_POST['mine']) && is_numeric($_POST['mine'])) ? abs(intval($_POST['mine'])) : '';
-        if ($db->num_rows($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}")) == 0)
-        {
-            alert('danger',"Uh Oh!","You are trying to edit a non-existent mine.");
-			die($h->endpage());
-        }
-        else
-        {
-            $mi=$db->fetch_row($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}"));
+    } elseif ($_POST['step'] == 1) {
+        $mine = (isset($_POST['mine']) && is_numeric($_POST['mine'])) ? abs(intval($_POST['mine'])) : '';
+        if ($db->num_rows($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}")) == 0) {
+            alert('danger', "Uh Oh!", "You are trying to edit a non-existent mine.");
+            die($h->endpage());
+        } else {
+            $mi = $db->fetch_row($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}"));
             echo "Edit a mine with this form. The name of the mine will be based on its location and level.<br />
             <table class='table table-bordered'>
                 <form method='post'>
@@ -517,9 +467,7 @@ function editmine()
                 </form>
             </table>";
         }
-    }
-    else
-    {
+    } else {
         echo "Select the mine you wish to edit.<br />
         <form method='post'>
         <input type='hidden' name='step' value='1'>
@@ -528,27 +476,22 @@ function editmine()
         ";
     }
 }
+
 function delmine()
 {
-    global $db,$userid,$api,$h;
-    if (isset($_POST['mine']))
-    {
-        $mine=(isset($_POST['mine']) && is_numeric($_POST['mine'])) ? abs(intval($_POST['mine'])) : '';
-        if ($db->num_rows($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}")) == 0)
-        {
-            alert('danger',"Uh Oh!","You are trying to delete a non-existent mine.");
-			die($h->endpage());
-        }
-        else
-        {
+    global $db, $userid, $api, $h;
+    if (isset($_POST['mine'])) {
+        $mine = (isset($_POST['mine']) && is_numeric($_POST['mine'])) ? abs(intval($_POST['mine'])) : '';
+        if ($db->num_rows($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}")) == 0) {
+            alert('danger', "Uh Oh!", "You are trying to delete a non-existent mine.");
+            die($h->endpage());
+        } else {
             $db->query("DELETE FROM `mining_data` WHERE `mine_id` = {$mine}");
-            $api->SystemLogsAdd($userid,"staff","Deleted a mine.");
-			alert('success',"Success!","You have successfully deleted this mine.",true,'index.php');
-			die($h->endpage());
+            $api->SystemLogsAdd($userid, "staff", "Deleted a mine.");
+            alert('success', "Success!", "You have successfully deleted this mine.", true, 'index.php');
+            die($h->endpage());
         }
-    }
-    else
-    {
+    } else {
         echo "Select the mine you wish to delete. This cannot be undone.<br />
         <form method='post'>
         " . mines_dropdown("mine") . "<br />
@@ -556,29 +499,25 @@ function delmine()
         ";
     }
 }
+
 function mines_dropdown($ddname = "mine", $selected = -1)
 {
     global $db;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
-            $db->query(
-                    "SELECT `mine_id`, `mine_location`, `mine_level`
+        $db->query(
+            "SELECT `mine_id`, `mine_location`, `mine_level`
                      FROM `mining_data`
                      ORDER BY `mine_level` ASC");
-    if ($selected == -1)
-    {
+    if ($selected == -1) {
         $first = 0;
-    }
-    else
-    {
+    } else {
         $first = 1;
     }
-    while ($r = $db->fetch_row($q))
-    {
-        $CityName=$db->fetch_single($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$r['mine_location']}"));
+    while ($r = $db->fetch_row($q)) {
+        $CityName = $db->fetch_single($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$r['mine_location']}"));
         $ret .= "\n<option value='{$r['mine_id']}'";
-        if ($selected == $r['mine_id'] || $first == 0)
-        {
+        if ($selected == $r['mine_id'] || $first == 0) {
             $ret .= " selected='selected'";
             $first = 1;
         }
@@ -588,4 +527,5 @@ function mines_dropdown($ddname = "mine", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
+
 $h->endpage();

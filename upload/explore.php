@@ -9,31 +9,27 @@
 require("globals.php");
 //Anti-refresh RNG.
 $tresder = (Random(100, 999));
-$time=time();
+$time = time();
 //Select users in infirmary and dungeon to list later on the page.
-$dung_count=$db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$time}"));
-$infirm_count=$db->fetch_single($db->query("SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$time}"));
-if (empty($dung_count))
-{
-	$dung_count=0;
+$dung_count = $db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$time}"));
+$infirm_count = $db->fetch_single($db->query("SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$time}"));
+if (empty($dung_count)) {
+    $dung_count = 0;
 }
-if (empty($infirm_count))
-{
-	$infirm_count=0;
+if (empty($infirm_count)) {
+    $infirm_count = 0;
 }
 //Block access if user is in the infirmary.
-if ($api->UserStatus($ir['userid'],'infirmary'))
-{
-	alert('danger',"Unconscious!","You cannot visit the town while you're in the infirmary.",false);
-	die($h->endpage());
+if ($api->UserStatus($ir['userid'], 'infirmary')) {
+    alert('danger', "Unconscious!", "You cannot visit the town while you're in the infirmary.", false);
+    die($h->endpage());
 }
 //Block access if user is in the dungeon.
-if ($api->UserStatus($ir['userid'],'dungeon'))
-{
-	alert('danger',"Locked Up!","You cannot visit the town while you're in the dungeon.");
-	die($h->endpage());
+if ($api->UserStatus($ir['userid'], 'dungeon')) {
+    alert('danger', "Locked Up!", "You cannot visit the town while you're in the dungeon.");
+    die($h->endpage());
 }
-echo"<h4>You begin exploring the town. You find a few things that could keep you occupied.</h4></div>
+echo "<h4>You begin exploring the town. You find a few things that could keep you occupied.</h4></div>
 <div class='col-md-4'>
 	<ul class='nav flex-column nav-pills'>
 		<a class='nav-link' data-toggle='tab' href='#SHOPS'>Shopping District</a>
@@ -104,12 +100,11 @@ echo"<h4>You begin exploring the town. You find a few things that could keep you
 		<div id='GUILDS' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>";
-                    //User is in a guild.
-					if ($ir['guild'] > 0)
-					{
-						echo "<a href='viewguild.php'>Visit Your Guild</a><br />";
-					}
-					echo "
+//User is in a guild.
+if ($ir['guild'] > 0) {
+    echo "<a href='viewguild.php'>Visit Your Guild</a><br />";
+}
+echo "
 					<a href='guilds.php'>Guild Listing</a><br />
 					<a href='guilds.php?action=wars'>Guild Wars</a><br />
 				</div>
@@ -146,22 +141,21 @@ echo"<h4>You begin exploring the town. You find a few things that could keep you
 			Top 10 Players
 		</div>
 		<div class='card-body'>";
-			$Rank=0;
-			$RankPlayerQuery = 
-			$db->query("SELECT u.`userid`, `level`, `username`, `strength`, `agility`, `guard`, `labor`, `IQ`
+$Rank = 0;
+$RankPlayerQuery =
+    $db->query("SELECT u.`userid`, `level`, `username`, `strength`, `agility`, `guard`, `labor`, `IQ`
 			FROM `users` AS `u`
 			INNER JOIN `userstats` AS `us`
 			ON `u`.`userid` = `us`.`userid`
 			WHERE `u`.`user_level` != 'Admin' AND `u`.`user_level` != 'NPC'
 			ORDER BY (`strength` + `agility` + `guard` + `labor` + `IQ`) 
 			DESC, `u`.`userid` ASC LIMIT 10");
-            //Show the top 10 strongest players in the game.
-			while ($pdata=$db->fetch_row($RankPlayerQuery))
-			{
-				$Rank=$Rank+1;
-				echo "{$Rank}) <a href='profile.php?user={$pdata['userid']}'>{$pdata['username']}</a> (Level {$pdata['level']})<br />";
-			}
-			echo"
+//Show the top 10 strongest players in the game.
+while ($pdata = $db->fetch_row($RankPlayerQuery)) {
+    $Rank = $Rank + 1;
+    echo "{$Rank}) <a href='profile.php?user={$pdata['userid']}'>{$pdata['username']}</a> (Level {$pdata['level']})<br />";
+}
+echo "
 		</div>
 	</div>
 </div>

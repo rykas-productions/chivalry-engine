@@ -39,10 +39,10 @@ class CodeDefinition
      * Constructs a new CodeDefinition.
      */
     public static function construct($tagName, $replacementText, $useOption = false,
-            $parseContent = true, $nestLimit = -1, $optionValidator = array(),
-            $bodyValidator = null)
+                                     $parseContent = true, $nestLimit = -1, $optionValidator = array(),
+                                     $bodyValidator = null)
     {
-        $def = new CodeDefinition();                            
+        $def = new CodeDefinition();
         $def->elCounter = 0;
         $def->setTagName($tagName);
         $def->setReplacementText($replacementText);
@@ -52,10 +52,10 @@ class CodeDefinition
         $def->optionValidator = $optionValidator;
         $def->bodyValidator = $bodyValidator;
         return $def;
-     }
+    }
 
     /**
-     * Constructs a new CodeDefinition. 
+     * Constructs a new CodeDefinition.
      *
      * This constructor is deprecated. You should use the static construct() method or the
      * CodeDefinitionBuilder class to construct a new CodeDefiniton.
@@ -86,8 +86,8 @@ class CodeDefinition
         if ($this->usesOption() && $this->optionValidator) {
             $att = $el->getAttribute();
 
-            foreach($att as $name => $value){
-                if(isset($this->optionValidator[$name]) && !$this->optionValidator[$name]->validate($value)){
+            foreach ($att as $name => $value) {
+                if (isset($this->optionValidator[$name]) && !$this->optionValidator[$name]->validate($value)) {
                     return false;
                 }
             }
@@ -103,7 +103,7 @@ class CodeDefinition
                 /* The content of the element is not valid. */
                 return false;
             }
-        } 
+        }
 
         return true;
     }
@@ -127,12 +127,11 @@ class CodeDefinition
 
         if ($this->usesOption()) {
             $options = $el->getAttribute();
-            if(count($options)==1){
+            if (count($options) == 1) {
                 $vals = array_values($options);
                 $html = str_ireplace('{option}', reset($vals), $html);
-            }
-            else{
-                foreach($options as $key => $val){
+            } else {
+                foreach ($options as $key => $val) {
                     $html = str_ireplace('{' . $key . '}', $val, $html);
                 }
             }
@@ -145,7 +144,8 @@ class CodeDefinition
         return $html;
     }
 
-    protected function getContent(ElementNode $el){
+    protected function getContent(ElementNode $el)
+    {
         if ($this->parseContent()) {
             $content = "";
             foreach ($el->getChildren() as $child)

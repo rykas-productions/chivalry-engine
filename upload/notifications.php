@@ -7,39 +7,32 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
-if (!isset($_GET['delete']))
-{
+if (!isset($_GET['delete'])) {
     $_GET['delete'] = 0;
 }
-if (!isset($_GET['deleteall']))
-{
+if (!isset($_GET['deleteall'])) {
     $_GET['deleteall'] = 0;
 }
 $_GET['delete'] = abs($_GET['delete']);
-if ($_GET['delete'] > 0)
-{
+if ($_GET['delete'] > 0) {
     $d_c = $db->query("SELECT COUNT(`notif_user`)
                       FROM `notifications`
                       WHERE `notif_id` = {$_GET['delete']}
                       AND `notif_user` = {$userid}");
-    if ($db->fetch_single($d_c) == 0)
-    {
-        alert('danger',"Uh Oh!","You cannot delete a notification that doesn't exist, or doesn't belong to you.",false);
-	}
-    else
-    {
+    if ($db->fetch_single($d_c) == 0) {
+        alert('danger', "Uh Oh!", "You cannot delete a notification that doesn't exist, or doesn't belong to you.", false);
+    } else {
         $db->query("DELETE FROM `notifications`
                  WHERE `notif_id` = {$_GET['delete']}
                  AND `notif_user` = {$userid}");
-        alert('success',"Success!","Notification has been deleted successfully.",false);
+        alert('success', "Success!", "Notification has been deleted successfully.", false);
     }
     $db->free_result($d_c);
 }
-if ($_GET['deleteall'] > 0)
-{
+if ($_GET['deleteall'] > 0) {
     $db->query("DELETE FROM `notifications`
                  WHERE `notif_user` = {$userid}");
-    alert('success',"Success!","You have successfully deleted all your notifications.",false);
+    alert('success', "Success!", "You have successfully deleted all your notifications.", false);
 }
 echo "
 <b>Last fifteen notifications</b>
@@ -60,18 +53,14 @@ $query = $db->query("SELECT *
                 WHERE `notif_user` = $userid
         		ORDER BY `notif_time` DESC
         		LIMIT 15");
-while ($notif = $db->fetch_row($query))
-{
-	$NotificationTime=date('F j Y, g:i:s a', $notif['notif_time']);
-	if ($notif['notif_status'] == 'unread')
-	{
-		$Status="<span class='badge badge-pill badge-danger'>Unread</span>";
-	}
-	else
-	{
-		$Status="<span class='badge badge-pill badge-success'>Read</span>";
-	}
-	echo "
+while ($notif = $db->fetch_row($query)) {
+    $NotificationTime = date('F j Y, g:i:s a', $notif['notif_time']);
+    if ($notif['notif_status'] == 'unread') {
+        $Status = "<span class='badge badge-pill badge-danger'>Unread</span>";
+    } else {
+        $Status = "<span class='badge badge-pill badge-success'>Read</span>";
+    }
+    echo "
 	<tr>
 		<td>
 			{$NotificationTime}<br />
@@ -84,9 +73,9 @@ while ($notif = $db->fetch_row($query))
 	</tr>";
 }
 $db->query(
-            "UPDATE `notifications`
+    "UPDATE `notifications`
     		 SET `notif_status` = 'read'
     		 WHERE `notif_user` = {$userid}");
-echo"</tbody></table>
+echo "</tbody></table>
 <a class='btn btn-primary' href='?deleteall=1'>Delete All Notifications</a>";
 $h->endpage();

@@ -8,10 +8,9 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 //Profiler start time
-$StartTime=microtime();
+$StartTime = microtime();
 //If file is loaded directly.
-if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false)
-{
+if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false) {
     exit;
 }
 //Set session name, then start session.
@@ -20,15 +19,13 @@ session_start();
 $time = time();
 header('X-Frame-Options: SAMEORIGIN');
 //If session has not started, regenerate session ID, then start it.
-if (!isset($_SESSION['started']))
-{
+if (!isset($_SESSION['started'])) {
     session_regenerate_id();
     $_SESSION['started'] = true;
 }
 //Set user's theme to cookies for 30 days.
-if (!isset($_COOKIE['theme']))
-{
-	setcookie('theme','1',time()+86400);
+if (!isset($_COOKIE['theme'])) {
+    setcookie('theme', '1', time() + 86400);
 }
 ob_start();
 //Require the error handler and developer helper files.
@@ -39,17 +36,15 @@ set_error_handler('error_php');
 require "global_func.php";
 $domain = determine_game_urlbase();
 //If user is not logged in, redirect to login page.
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0)
-{
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) {
     $login_url = "login.php";
     header("Location: {$login_url}");
     exit;
 }
 //If user was last active over 15 minutes ago, redirect to login to keep account safe.
-if(isset($_SESSION['last_active']) && ($time - $_SESSION['last_active'] > 1800))
-{
-	header("Location: logout.php");
-	exit;
+if (isset($_SESSION['last_active']) && ($time - $_SESSION['last_active'] > 1800)) {
+    header("Location: logout.php");
+    exit;
 }
 //Update last active time.
 $_SESSION['last_active'] = $time;
@@ -66,16 +61,14 @@ $c = $db->connection_id;
 $set = array();
 $settq = $db->query("SELECT * FROM `settings`");
 //Settings get resolved to be used easily elsewhere.
-while ($r = $db->fetch_row($settq))
-{
+while ($r = $db->fetch_row($settq)) {
     $set[$r['setting_name']] = $r['setting_value'];
 }
 global $jobquery, $housequery, $voterquery;
-if (isset($jobquery) && $jobquery)
-{
+if (isset($jobquery) && $jobquery) {
     $is =
-            $db->query(
-                    "SELECT `u`.*, `us`.*, `j`.*, `jr`.*,
+        $db->query(
+            "SELECT `u`.*, `us`.*, `j`.*, `jr`.*,
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -84,29 +77,24 @@ if (isset($jobquery) && $jobquery)
                      ON `jr`.`jrID` = `u`.`jobrank`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
-}
-else if (isset($housequery) && $housequery)
-{
+} else if (isset($housequery) && $housequery) {
     $is =
-            $db->query(
-                    "SELECT `u`.*, `us`.*, `e`.*
+        $db->query(
+            "SELECT `u`.*, `us`.*, `e`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
                      LEFT JOIN `estates` AS `e` ON `e`.`house_will` = `u`.`maxwill`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
-}
-else if (isset($voterquery) && $voterquery)
-{
-	$UIDB=$db->query("SELECT * FROM `uservotes` WHERE `userid` = {$userid}");
-	if (!($db->num_rows($UIDB)))
-	{
-		$db->query("INSERT INTO `uservotes` (`userid`, `voted`) VALUES ('{$userid}', '');");
-	}
+} else if (isset($voterquery) && $voterquery) {
+    $UIDB = $db->query("SELECT * FROM `uservotes` WHERE `userid` = {$userid}");
+    if (!($db->num_rows($UIDB))) {
+        $db->query("INSERT INTO `uservotes` (`userid`, `voted`) VALUES ('{$userid}', '');");
+    }
     $is =
-            $db->query(
-                    "SELECT `u`.*, `us`.*, `uv`.*
+        $db->query(
+            "SELECT `u`.*, `us`.*, `uv`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -114,12 +102,10 @@ else if (isset($voterquery) && $voterquery)
                      ON `u`.`userid`=`uv`.`userid`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
-}
-else
-{
+} else {
     $is =
-            $db->query(
-                    "SELECT `u`.*, `us`.*
+        $db->query(
+            "SELECT `u`.*, `us`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -129,13 +115,11 @@ else
 //Put user's data into friendly variable.
 $ir = $db->fetch_row($is);
 //Put user's current theme to cookie.
-if (!isset($_COOKIE['theme']))
-{
-	setcookie('theme',$ir['theme'],time()+86400);
+if (!isset($_COOKIE['theme'])) {
+    setcookie('theme', $ir['theme'], time() + 86400);
 }
 //If user's account is forced to log out, close session.
-if ($ir['force_logout'] != 'false')
-{
+if ($ir['force_logout'] != 'false') {
     $db->query("UPDATE `users` SET `force_logout` = 'false' WHERE `userid` = {$userid}");
     session_unset();
     session_destroy();
@@ -144,9 +128,8 @@ if ($ir['force_logout'] != 'false')
     exit;
 }
 //If the user's account has been logged in elsewhere, terminate current session.
-if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SESSION['last_login']))
-{
-	session_unset();
+if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SESSION['last_login'])) {
+    session_unset();
     session_destroy();
     $login_url = "login.php";
     header("Location: {$login_url}");
@@ -162,35 +145,29 @@ $h = new headers;
 include("class/class_api.php");
 $api = new api;
 //If requested file doesn't want the header hidden.
-if (isset($nohdr) == false || !$nohdr)
-{
+if (isset($nohdr) == false || !$nohdr) {
     $h->startheaders();
     $fm = number_format($ir['primary_currency']);
-    $cm =number_format($ir['secondary_currency']);
+    $cm = number_format($ir['secondary_currency']);
     $lv = date('F j, Y, g:i a', $ir['laston']);
     global $atkpage;
-    if ($atkpage)
-    {
+    if ($atkpage) {
         $h->userdata($ir, 0);
-    }
-    else
-    {
+    } else {
         $h->userdata($ir);
     }
     global $menuhide;
 }
 //Run the crons if possible.
-foreach (glob("crons/*.php") as $filename) 
-{ 
-    include $filename; 
+foreach (glob("crons/*.php") as $filename) {
+    include $filename;
 }
 $get = $db->query("SELECT `sip_recipe`,`sip_user` FROM `smelt_inprogress` WHERE `sip_time` < {$time}");
 //Select completed smelting recipes and give to the user.
-if($db->num_rows($get)) 
-{
+if ($db->num_rows($get)) {
     $r = $db->fetch_row($get);
-	$r2 = $db->fetch_row($db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r}"));
-    $api->UserGiveItem($r['user'],$r2['smelt_output'],$r2['smelt_qty_output']);
+    $r2 = $db->fetch_row($db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r}"));
+    $api->UserGiveItem($r['user'], $r2['smelt_output'], $r2['smelt_qty_output']);
     $api->GameAddNotification($r['user'], "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
     $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$r['user']} AND `sip_time` < {$time}");
 }

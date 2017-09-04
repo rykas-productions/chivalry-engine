@@ -129,15 +129,14 @@ class ElementNode extends Node
      */
     public function getAsBBCode()
     {
-        $str = "[".$this->tagName;
+        $str = "[" . $this->tagName;
         if (!empty($this->attribute)) {
 
-            foreach($this->attribute as $key => $value){
-                if($key == $this->tagName){
-                    $str .= "=".$value;
-                }
-                else{
-                    $str .= " ".$key."=" . $value;
+            foreach ($this->attribute as $key => $value) {
+                if ($key == $this->tagName) {
+                    $str .= "=" . $value;
+                } else {
+                    $str .= " " . $key . "=" . $value;
                 }
             }
         }
@@ -145,7 +144,7 @@ class ElementNode extends Node
         foreach ($this->getChildren() as $child) {
             $str .= $child->getAsBBCode();
         }
-        $str .= "[/".$this->tagName."]";
+        $str .= "[/" . $this->tagName . "]";
 
         return $str;
     }
@@ -160,7 +159,7 @@ class ElementNode extends Node
      */
     public function getAsHTML()
     {
-        if($this->codeDefinition) {
+        if ($this->codeDefinition) {
             return $this->codeDefinition->asHtml($this);
         } else {
             return "";
@@ -168,8 +167,8 @@ class ElementNode extends Node
     }
 
     /**
-     * Adds a child to this node's content. A child may be a TextNode, or 
-     * another ElementNode... or anything else that may extend the 
+     * Adds a child to this node's content. A child may be a TextNode, or
+     * another ElementNode... or anything else that may extend the
      * abstract Node class.
      *
      * @param child the node to add as a child
@@ -214,7 +213,7 @@ class ElementNode extends Node
     }
 
     /**
-     * Traverses the parse tree upwards, going from parent to parent, until it finds a 
+     * Traverses the parse tree upwards, going from parent to parent, until it finds a
      * parent who has the given tag name. Returns the parent with the matching tag name
      * if it exists, otherwise returns null.
      *

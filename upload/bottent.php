@@ -7,13 +7,13 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
-$macropage=('bottent.php');
+$macropage = ('bottent.php');
 require('globals.php');
 echo "<h3>Bot Tent</h3><hr />Welcome to the Bot Tent. Here you may challenge NPCs to battle. If you win, you'll receive
     an item. These items may or may not be useful in your adventures. To deter players getting massive amounts of items,
     you can only attack these NPCs every so often. Their cooldown is listed here as well. To receive the item, you must
     mug the bot.<hr />";
-$query=$db->query("SELECT * FROM `botlist`");
+$query = $db->query("SELECT * FROM `botlist`");
 echo "<table class='table table-bordered'>
 <tr>
 	<th>
@@ -33,42 +33,38 @@ echo "<table class='table table-bordered'>
 	</th>
 </tr>";
 //List all the bots.
-while ($result = $db->fetch_row($query))
-{
+while ($result = $db->fetch_row($query)) {
     //Grab the last time the user attacked this bot.
-	$timequery=$db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
-	$r2=$db->fetch_single($timequery);
+    $timequery = $db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
+    $r2 = $db->fetch_single($timequery);
     //Grab bot's stats.
-	$r3 = $db->fetch_row($db->query("SELECT `strength`,`agility`,`guard` FROM `userstats` WHERE `userid` = {$result['botuser']}"));
-	$ustats=$ir['strength']+$ir['agility']+$ir['guard'];
-	$themstats=$r3['strength']+$r3['agility']+$r3['guard'];
+    $r3 = $db->fetch_row($db->query("SELECT `strength`,`agility`,`guard` FROM `userstats` WHERE `userid` = {$result['botuser']}"));
+    $ustats = $ir['strength'] + $ir['agility'] + $ir['guard'];
+    $themstats = $r3['strength'] + $r3['agility'] + $r3['guard'];
     //Chance the user can beat the bot.
-	$chance = round((($ustats / $themstats) * 100)/2,1);
+    $chance = round((($ustats / $themstats) * 100) / 2, 1);
     //Assign bot name to variable to cut down on queries.
-    $botname=$api->SystemUserIDtoName($result['botuser']);
+    $botname = $api->SystemUserIDtoName($result['botuser']);
     //Player cannot attack the bot.
-	if ((time() <= ($r2 + $result['botcooldown'])) && ($r2 > 0))
-	{
-		$cooldown=($r2 + $result['botcooldown']) - time();
-		$attack="Cooldown Remaining: " . ParseTimestamp($cooldown);
-	}
-    //Player CAN attack the bot.
-	else
-	{
-		$attack="<form action='attack.php'>
+    if ((time() <= ($r2 + $result['botcooldown'])) && ($r2 > 0)) {
+        $cooldown = ($r2 + $result['botcooldown']) - time();
+        $attack = "Cooldown Remaining: " . ParseTimestamp($cooldown);
+    } //Player CAN attack the bot.
+    else {
+        $attack = "<form action='attack.php'>
 					<input type='hidden' name='user' value='{$result['botuser']}'>
 					<input type='submit' class='btn btn-danger' value='Attack {$botname}'>
 					</form>
 					(Odds of Victory {$chance}%)";
-	}
+    }
     //Table row formatting.
-	echo "
+    echo "
 	<tr>
 		<td>
 			{$botname} [{$result['botuser']}]
 		</td>
 		<td class='hidden-xs'>
-			" . $api->UserInfoGet($result['botuser'],'level') . "
+			" . $api->UserInfoGet($result['botuser'], 'level') . "
 		</td>
 		<td class='hidden-xs'>
 			" . ParseTimestamp($result['botcooldown']) . "
@@ -81,5 +77,5 @@ while ($result = $db->fetch_row($query))
 		</td>
 	</tr>";
 }
-echo"</table>";
+echo "</table>";
 $h->endpage();

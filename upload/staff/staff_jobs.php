@@ -7,47 +7,43 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
-if ($api->UserMemberLevelGet($userid,'Admin') == false)
-{
-	alert('danger',"Uh Oh!","You do not have permission to be here.");
-	die($h->endpage());
+if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+    alert('danger', "Uh Oh!", "You do not have permission to be here.");
+    die($h->endpage());
 }
-if (!isset($_GET['action']))
-{
+if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
-switch ($_GET['action'])
-{
-case 'newjob':
-    newjob();
-    break;
-case 'jobedit':
-    jobedit();
-    break;
-case 'newjobrank':
-    newjobrank();
-    break;
-case 'jobrankedit':
-    jobrankedit();
-    break;
-case 'jobdele':
-    jobdele();
-    break;
-case 'jobrankdele':
-    jobrankdele();
-    break;
-default:
-    die($h->endpage());
-    break;
+switch ($_GET['action']) {
+    case 'newjob':
+        newjob();
+        break;
+    case 'jobedit':
+        jobedit();
+        break;
+    case 'newjobrank':
+        newjobrank();
+        break;
+    case 'jobrankedit':
+        jobrankedit();
+        break;
+    case 'jobdele':
+        jobdele();
+        break;
+    case 'jobrankdele':
+        jobrankdele();
+        break;
+    default:
+        die($h->endpage());
+        break;
 }
 function newjob()
 {
-	global $db,$userid,$h;
-	echo "<h3>Create Job</h3><hr />";
-	if (!isset($_POST['jNAME']))
-	{
-		$csrf = request_csrf_html('staff_newjob');
-		echo "<table class='table table-bordered'>
+    global $db, $userid, $h;
+    echo "<h3>Create Job</h3><hr />";
+    if (!isset($_POST['jNAME'])) {
+        $csrf = request_csrf_html('staff_newjob');
+        echo "<table class='table table-bordered'>
 			<tr>
 				<th>
 					Job Name
@@ -115,10 +111,9 @@ function newjob()
 				</td>
 			</tr>
 		</table>";
-	}
-	else
-	{
-		
-	}
+    } else {
+
+    }
 }
+
 $h->endpage();

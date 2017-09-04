@@ -9,46 +9,39 @@
 require('globals.php');
 echo "<h3>Hall of Fame</h3><hr />";
 //Add stats to this array.
-$StatArray=array('total','level','strength','agility','guard','labor','iq',
-                    'primary_currency','mining_level', 'secondary_currency');
+$StatArray = array('total', 'level', 'strength', 'agility', 'guard', 'labor', 'iq',
+    'primary_currency', 'mining_level', 'secondary_currency');
 //Stat is not chosen, set to level.
-if (!isset($_GET['stat']))
-{
-    $_GET['stat']='level';
+if (!isset($_GET['stat'])) {
+    $_GET['stat'] = 'level';
 }
 //Stat chosen is not a valid stat.
-if (!in_array($_GET['stat'],$StatArray))
-{
-    $_GET['stat']='level';
+if (!in_array($_GET['stat'], $StatArray)) {
+    $_GET['stat'] = 'level';
 }
 //Sanitize and escape the GET.
-$_GET['stat']=$db->escape(strip_tags(stripslashes($_GET['stat'])));
+$_GET['stat'] = $db->escape(strip_tags(stripslashes($_GET['stat'])));
 //The GET wants user's total stats ranked.
-if ($_GET['stat'] == 'total')
-{
-    $q=$db->query("SELECT `u`.*, `us`.* 
+if ($_GET['stat'] == 'total') {
+    $q = $db->query("SELECT `u`.*, `us`.*
                     FROM `users` `u` 
                     INNER JOIN `userstats` AS `us`
                     ON `u`.`userid` = `us`.`userid`
                     WHERE `user_level` != 'Admin' AND `user_level` != 'NPC'
                     ORDER BY (`strength` + `agility` + `guard` + `labor` + `iq`) DESC
                     LIMIT 20");
-}
-//The GET wants mining levels ranked.
-elseif ($_GET['stat'] == 'mining_level')
-{
-    $q=$db->query("SELECT `u`.*, `m`.* 
+} //The GET wants mining levels ranked.
+elseif ($_GET['stat'] == 'mining_level') {
+    $q = $db->query("SELECT `u`.*, `m`.*
                     FROM `users` `u` 
                     INNER JOIN `mining` AS `m`
                     ON `u`.`userid` = `m`.`userid`
 					WHERE `user_level` != 'Admin' AND `user_level` != 'NPC'
                     ORDER BY `mining_level` DESC
                     LIMIT 20");
-}
-//GET wants anything else ranked.
-else
-{
-    $q=$db->query("SELECT `u`.*, `us`.* 
+} //GET wants anything else ranked.
+else {
+    $q = $db->query("SELECT `u`.*, `us`.*
                     FROM `users` `u` 
                     INNER JOIN `userstats` AS `us`
                     ON `u`.`userid` = `us`.`userid`
@@ -76,19 +69,18 @@ echo "<table class='table table-bordered'>
     <th width='45%'>
         User
     </th>";
-    if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
-            || $_GET['stat'] == 'mining_level')
-    {
-        echo "<th width='45%'>
+if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
+    || $_GET['stat'] == 'mining_level'
+) {
+    echo "<th width='45%'>
                 Value
                </th>";
-    }
-    echo "
+}
+echo "
 </tr>";
-$rank=1;
+$rank = 1;
 //Loop through the top 20 users.
-while ($r=$db->fetch_row($q))
-{
+while ($r = $db->fetch_row($q)) {
     echo "
     <tr>
         <td>
@@ -97,16 +89,16 @@ while ($r=$db->fetch_row($q))
         <td>
             <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
         </td>";
-        if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
-            || $_GET['stat'] == 'mining_level')
-        {
-            echo "<td>
+    if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
+        || $_GET['stat'] == 'mining_level'
+    ) {
+        echo "<td>
                     " . number_format($r[$_GET['stat']]) . "
                    </td>";
-        }
-        echo"
+    }
+    echo "
     </tr>";
     $rank++;
 }
-echo"</table>";
+echo "</table>";
 $h->endpage();

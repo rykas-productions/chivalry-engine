@@ -8,25 +8,20 @@
 */
 $housequery = 1;
 require_once('globals.php');
-if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/installer.php') && $ir['user_level'] == 'Admin')
-{
-    alert('danger',"Security Error!","Installer file detected and not locked. Please delete the installer immediately!");
+if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/installer.php') && $ir['user_level'] == 'Admin') {
+    alert('danger', "Security Error!", "Installer file detected and not locked. Please delete the installer immediately!");
 }
 $_POST['pn_update'] = (isset($_POST['pn_update'])) ? strip_tags(stripslashes($_POST['pn_update'])) : '';
-if (!empty($_POST['pn_update']))
-{
-    if (strlen($_POST['pn_update']) > 65655)
-    {
-        alert('danger',"Uh Oh!","You can only store 65,655 characters in your personal notepad.",false);
-    }
-    else
-    {
+if (!empty($_POST['pn_update'])) {
+    if (strlen($_POST['pn_update']) > 65655) {
+        alert('danger', "Uh Oh!", "You can only store 65,655 characters in your personal notepad.", false);
+    } else {
         $pn_update_db = $db->escape($_POST['pn_update']);
         $db->query("UPDATE `users`
         			SET `personal_notes` = '{$pn_update_db}'
         			WHERE `userid` = {$userid}");
         $ir['personal_notes'] = $_POST['pn_update'];
-        alert('success',"Success!","You have successfully updated your personal notepad.",false);
+        alert('success', "Success!", "You have successfully updated your personal notepad.", false);
     }
 }
 echo "Welcome back, {$ir['username']}!<br />";
@@ -75,17 +70,17 @@ echo "<table class='table table-hover table-bordered'>
 	</tr>
 </tbody>";
 
-$StrengthRank=get_rank($ir['strength'],'strength');
-$StrengthFormat=number_format($ir['strength']);
-$AgilityRank=get_rank($ir['agility'],'agility');
-$AgilityFormat=number_format($ir['agility']);
-$GuardRank=get_rank($ir['guard'],'guard');
-$GuardFormat=number_format($ir['guard']);
-$IQRank=get_rank($ir['iq'],'iq');
-$IQFormat=number_format($ir['iq']);
-$LaborRank=get_rank($ir['labor'],'labor');
-$LaborFormat=number_format($ir['labor']);
-$AllFourFormat=number_format($ir['strength']+$ir['agility']+$ir['guard']+$ir['labor']+$ir['iq']);
+$StrengthRank = get_rank($ir['strength'], 'strength');
+$StrengthFormat = number_format($ir['strength']);
+$AgilityRank = get_rank($ir['agility'], 'agility');
+$AgilityFormat = number_format($ir['agility']);
+$GuardRank = get_rank($ir['guard'], 'guard');
+$GuardFormat = number_format($ir['guard']);
+$IQRank = get_rank($ir['iq'], 'iq');
+$IQFormat = number_format($ir['iq']);
+$LaborRank = get_rank($ir['labor'], 'labor');
+$LaborFormat = number_format($ir['labor']);
+$AllFourFormat = number_format($ir['strength'] + $ir['agility'] + $ir['guard'] + $ir['labor'] + $ir['iq']);
 
 echo "</table>
 <h3>Stats</h3>";

@@ -8,40 +8,38 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
-$CurrentTime=time();
-if (!isset($_GET['action']))
-{
+$CurrentTime = time();
+if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
 function csrf_error()
 {
     global $h;
-    alert('danger',"Action Blocked!","The action you were trying to do was blocked. It was blocked because you loaded
+    alert('danger', "Action Blocked!", "The action you were trying to do was blocked. It was blocked because you loaded
         another page on the game. If you have not loaded a different page during this time, change your password
         immediately, as another person may have access to your account!");
     die($h->endpage());
 }
-switch ($_GET['action'])
-{
-case 'buyad':
-    news_buy();
-    break;
-default:
-    news_home();
-    break;
+
+switch ($_GET['action']) {
+    case 'buyad':
+        news_buy();
+        break;
+    default:
+        news_home();
+        break;
 }
 function news_home()
 {
-	global $db,$h,$CurrentTime;
-	$AdsQuery=$db->query("SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
-	if ($db->num_rows($AdsQuery) == 0)
-	{
-		alert("danger","Uh Oh!","There aren't any newspaper ads at this time. Maybe you should <a href='?action=buyad'>list</a> one?",false);
-		die($h->endpage());
-	}
-	echo "<h3>The Newspaper</h3>
+    global $db, $h, $CurrentTime;
+    $AdsQuery = $db->query("SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
+    if ($db->num_rows($AdsQuery) == 0) {
+        alert("danger", "Uh Oh!", "There aren't any newspaper ads at this time. Maybe you should <a href='?action=buyad'>list</a> one?", false);
+        die($h->endpage());
+    }
+    echo "<h3>The Newspaper</h3>
 	<small>List an ad <a href='?action=buyad'>here</a>.<hr />";
-	echo "
+    echo "
 		<table class='table table-bordered'>
 			<thead>
 				<tr>
@@ -55,10 +53,9 @@ function news_home()
 			</thead>
 			<tbody>
 	";
-	while ($Ads=$db->fetch_row($AdsQuery))
-	{
-		$UserName=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$Ads['news_owner']}"));
-		echo "	<tr>
+    while ($Ads = $db->fetch_row($AdsQuery)) {
+        $UserName = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$Ads['news_owner']}"));
+        echo "	<tr>
 					<td>
 						Posted By <a href='profile.php?user={$Ads['news_owner']}'>{$UserName}</a> [{$Ads['news_owner']}]<br />
 						<small>Posted At: " . DateTime_Parse($Ads['news_start']) . "<br />
@@ -68,16 +65,17 @@ function news_home()
 						{$Ads['news_text']}
 					</td>
 				</tr>";
-	}
-	echo "</tbody></table>";
+    }
+    echo "</tbody></table>";
 }
+
 function news_buy()
 {
-	echo "<h3>Buying an Ad</h3>
-	" . alert("info","Information!","Remember, buying an ad is subject to the game rules. If you post something
+    echo "<h3>Buying an Ad</h3>
+	" . alert("info", "Information!", "Remember, buying an ad is subject to the game rules. If you post something
 	    here that will break a game rule, you will be warned and your ad will be removed. If you find someone abusing
-	    the newspaper, please let an admin know immediately!",false) . "<hr />";
-	echo "
+	    the newspaper, please let an admin know immediately!", false) . "<hr />";
+    echo "
 		<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -123,16 +121,16 @@ function news_buy()
 		</table>
 		</form>";
 }
+
 ?>
-	<script>
-	function total_cost()
-	{
-		var day = (document.getElementById("days").value) * (1250);
-		var init = (document.getElementById("init").value);
-		var charlength = (document.getElementById("chars").length) * 5;
-		var totalcost= (day + init + charlength);
-		document.getElementById("output").innerHTML = totalcost;
-	}
-	</script>
+    <script>
+        function total_cost() {
+            var day = (document.getElementById("days").value) * (1250);
+            var init = (document.getElementById("init").value);
+            var charlength = (document.getElementById("chars").length) * 5;
+            var totalcost = (day + init + charlength);
+            document.getElementById("output").innerHTML = totalcost;
+        }
+    </script>
 <?php
 $h->endpage();

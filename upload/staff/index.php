@@ -7,15 +7,14 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
-echo"<h2>Staff Panel Index</h2>
+echo "<h2>Staff Panel Index</h2>
 	<hr />";
-$dir= substr(__DIR__, 0, strpos(__DIR__, "\staff"));
-if ($api->UserMemberLevelGet($userid,'admin'))
-{
-	$versq = $db->query("SELECT VERSION()");
+$dir = substr(__DIR__, 0, strpos(__DIR__, "\staff"));
+if ($api->UserMemberLevelGet($userid, 'admin')) {
+    $versq = $db->query("SELECT VERSION()");
     $MySQLIVersion = $db->fetch_single($versq);
     $db->free_result($versq);
-	echo"
+    echo "
 	<table class='table table-bordered table-hover'>
 		<tbody>
 			<tr>
@@ -62,13 +61,12 @@ if ($api->UserMemberLevelGet($userid,'admin'))
 	</table>
 	<hr />";
 }
-echo"
+echo "
 </div>
 	<div class='col-md-4'>
 		<ul class='nav nav-pills flex-column'>";
-		if ($api->UserMemberLevelGet($userid,'admin'))
-		{
-			echo"
+if ($api->UserMemberLevelGet($userid, 'admin')) {
+    echo "
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#ADMIN'>Admin</a>
 			</li>
@@ -99,10 +97,9 @@ echo"
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#ACADEMY'>Academy</a>
 			</li>";
-		}
-		if ($api->UserMemberLevelGet($userid,'assistant'))
-		{
-			echo "<li class='nav-item'>
+}
+if ($api->UserMemberLevelGet($userid, 'assistant')) {
+    echo "<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#ITEMS'>Items</a>
 			</li>
 			<li class='nav-item'>
@@ -117,8 +114,8 @@ echo"
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#PERMISSION'>Permissions</a>
 			</li>";
-		}
-		echo"
+}
+echo "
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#PUNISH'>Punishments</a>
 			</li>
@@ -129,9 +126,8 @@ echo"
 	</div>
 	<div class='col-md-8'>
 		<div class='tab-content'>";
-			if ($api->UserMemberLevelGet($userid,'admin'))
-			{
-				echo "<div id='ADMIN' class='tab-pane'>
+if ($api->UserMemberLevelGet($userid, 'admin')) {
+    echo "<div id='ADMIN' class='tab-pane'>
 						<div class='card'>
 							<div class='card-body'>
 								<a href='staff_settings.php?action=basicset'>Game Settings</a><br />
@@ -218,21 +214,19 @@ echo"
 						</div>
 					</div>
 					";
-			}
-			if ($api->UserMemberLevelGet($userid,'assistant'))
-			{
-				echo "<div id='ITEMS' class='tab-pane'>
+}
+if ($api->UserMemberLevelGet($userid, 'assistant')) {
+    echo "<div id='ITEMS' class='tab-pane'>
 					<div class='card'>
 						<div class='card-body'>";
-							if ($api->UserMemberLevelGet($userid,'admin'))
-							{
-								echo"
+    if ($api->UserMemberLevelGet($userid, 'admin')) {
+        echo "
 								<a href='staff_items.php?action=createitmgroup'>Create Item Group</a><br />
 								<a href='staff_items.php?action=create'>Create Item</a><br />
 								<a href='staff_items.php?action=edit'>Edit Item</a><br />
 								<a href='staff_items.php?action=delete'>Delete Item</a><br />";
-							}
-							echo"
+    }
+    echo "
 							<a href='staff_items.php?action=giveitem'>Gift Item</a><br />
 						</div>
 					</div>
@@ -248,17 +242,16 @@ echo"
 				<div id='USERS' class='tab-pane'>
 					<div class='card'>
 						<div class='card-body'>";
-							if ($api->UserMemberLevelGet($userid,'admin'))
-							{
-								echo"
+    if ($api->UserMemberLevelGet($userid, 'admin')) {
+        echo "
 								<a href='staff_users.php?action=createuser'>Create User</a><br />
 								<a href='staff_users.php?action=edituser'>Edit User</a><br />
 								<a href='staff_users.php?action=deleteuser'>Delete User</a><br />
 								<a href='staff_users.php?action=changepw'>Change User's Password</a><br />
 								<a href='staff_settings.php?action=restore'>Restore Users</a><br />
 								<a href='staff_settings.php?action=staff'>Set User Level</a><br />";
-							}
-							echo"
+    }
+    echo "
 							<a href='staff_users.php?action=logout'>Force Logout User</a><br />
 						</div>
 					</div>
@@ -360,9 +353,8 @@ echo"
 									<a href='staff_logs.php?action=mining'>Mining Logs</a>
 								</td>
 							</tr>";
-							if ($api->UserMemberLevelGet($userid,'admin'))
-							{
-								echo"
+    if ($api->UserMemberLevelGet($userid, 'admin')) {
+        echo "
 								<tr>
 									<td>
 										<a href='staff_logs.php?action=stafflogs'>Staff Logs</a>
@@ -388,8 +380,8 @@ echo"
 									</td>
 								</tr>
 								";
-							}
-							echo"</table>
+    }
+    echo "</table>
 						</div>
 					</div>
 				</div>
@@ -402,8 +394,8 @@ echo"
 						</div>
 					</div>
 				</div>";
-			}
-			echo"
+}
+echo "
 			<div id='PUNISH' class='tab-pane'>
 					<div class='card'>
 						<div class='card-body'>
@@ -414,13 +406,12 @@ echo"
 							<a href='staff_punish.php?action=unforumban'>Un-Forum Ban User</a><br />
 							<a href='staff_punish.php?action=ipsearch'>IP Search</a><br />
 							<a href='staff_punish.php?action=massmail'>Send Mass Mail</a><br />";
-								if ($api->UserMemberLevelGet($userid,'admin'))
-								{
-									echo "<a href='staff_punish.php?action=massemail'>Send Mass Email</a><br />
+if ($api->UserMemberLevelGet($userid, 'admin')) {
+    echo "<a href='staff_punish.php?action=massemail'>Send Mass Email</a><br />
 									<a href='staff_punish.php?action=banip'>Ban IP Address</a><br />
 									<a href='staff_punish.php?action=unbanip'>Pardon IP Address</a><br />";
-								}
-								echo"
+}
+echo "
 						</div>
 					</div>
 			</div>
@@ -435,9 +426,8 @@ echo"
 			</div>
 		</div>
 	</div>";
-	if ($api->UserMemberLevelGet($userid,'admin'))
-	{
-		echo"
+if ($api->UserMemberLevelGet($userid, 'admin')) {
+    echo "
 				<div class='col-md-12'><hr />
 			<h3>Last 15 Staff Actions</h3><hr />
 			<table class='table table-bordered table-hover'>
@@ -458,18 +448,17 @@ echo"
 					</tr>
 					</thead>
 					<tbody>";
-			$q =
-					$db->query(
-							"SELECT `log_user`, `log_text`, `log_time`, `log_ip`, `username`
+    $q =
+        $db->query(
+            "SELECT `log_user`, `log_text`, `log_time`, `log_ip`, `username`
 							 FROM `logs` AS `s`
 							 INNER JOIN `users` AS `u`
 							 ON `s`.`log_user` = `u`.`userid`
 							 WHERE `log_type` = 'staff'
 							 ORDER BY `s`.`log_time` DESC
 							 LIMIT 15");
-			while ($r = $db->fetch_row($q))
-			{
-				echo "
+    while ($r = $db->fetch_row($q)) {
+        echo "
 				<tr>
 					<td>
 						" . DateTime_Parse($r['log_time']) . "
@@ -485,8 +474,8 @@ echo"
 					</td>
 				</tr>
 				";
-			}
-			$db->free_result($q);
-			echo '</tbody></table></div>';
-	}
+    }
+    $db->free_result($q);
+    echo '</tbody></table></div>';
+}
 $h->endpage();

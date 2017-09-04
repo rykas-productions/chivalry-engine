@@ -24,7 +24,7 @@ class NestLimitVisitor implements \JBBCode\NodeVisitor
 
     public function visitDocumentElement(\JBBCode\DocumentElement $documentElement)
     {
-        foreach($documentElement->getChildren() as $child) {
+        foreach ($documentElement->getChildren() as $child) {
             $child->accept($this);
         }
     }
@@ -37,7 +37,7 @@ class NestLimitVisitor implements \JBBCode\NodeVisitor
     public function visitElementNode(\JBBCode\ElementNode $elementNode)
     {
         $tagName = strtolower($elementNode->getTagName());
-        
+
         /* Update the current depth for this tag name. */
         if (isset($this->depth[$tagName])) {
             $this->depth[$tagName]++;
@@ -47,7 +47,8 @@ class NestLimitVisitor implements \JBBCode\NodeVisitor
 
         /* Check if $elementNode is nested too deeply. */
         if ($elementNode->getCodeDefinition()->getNestLimit() != -1 &&
-                $elementNode->getCodeDefinition()->getNestLimit() < $this->depth[$tagName]) {
+            $elementNode->getCodeDefinition()->getNestLimit() < $this->depth[$tagName]
+        ) {
             /* This element is nested too deeply. We need to remove it and not visit any
              * of its children. */
             $elementNode->getParent()->removeChild($elementNode);

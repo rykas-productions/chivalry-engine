@@ -9,33 +9,29 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
-		$enperc = round($ir['energy'] / $ir['maxenergy'] * 100);
-        $wiperc = round($ir['will'] / $ir['maxwill'] * 100);
-        $experc = round($ir['xp'] / $ir['xp_needed'] * 100);
-        $brperc = round($ir['brave'] / $ir['maxbrave'] * 100);
-        $hpperc = round($ir['hp'] / $ir['maxhp'] * 100);
-        $enopp = 100 - $enperc;
-        $wiopp = 100 - $wiperc;
-        $exopp = 100 - $experc;
-        $bropp = 100 - $brperc;
-        $hpopp = 100 - $hpperc;
+$enperc = round($ir['energy'] / $ir['maxenergy'] * 100);
+$wiperc = round($ir['will'] / $ir['maxwill'] * 100);
+$experc = round($ir['xp'] / $ir['xp_needed'] * 100);
+$brperc = round($ir['brave'] / $ir['maxbrave'] * 100);
+$hpperc = round($ir['hp'] / $ir['maxhp'] * 100);
+$enopp = 100 - $enperc;
+$wiopp = 100 - $wiperc;
+$exopp = 100 - $experc;
+$bropp = 100 - $brperc;
+$hpopp = 100 - $hpperc;
 $_POST['pn_update'] =
-        (isset($_POST['pn_update']))
-                ? strip_tags(stripslashes($_POST['pn_update'])) : '';
-if (!empty($_POST['pn_update']))
-{
-    if (strlen($_POST['pn_update']) > 65655)
-    {
-		alert('danger',"Uh Oh!","Your notepad is too big to update.",false);
-    }
-    else
-    {
+    (isset($_POST['pn_update']))
+        ? strip_tags(stripslashes($_POST['pn_update'])) : '';
+if (!empty($_POST['pn_update'])) {
+    if (strlen($_POST['pn_update']) > 65655) {
+        alert('danger', "Uh Oh!", "Your notepad is too big to update.", false);
+    } else {
         $pn_update_db = $db->escape($_POST['pn_update']);
         $db->query("UPDATE `users`
         			SET `personal_notes` = '{$pn_update_db}'
         			WHERE `userid` = {$userid}");
         $ir['personal_notes'] = $_POST['pn_update'];
-		alert('success',"Success!","Your notepad has been successfully updated.",false);
+        alert('success', "Success!", "Your notepad has been successfully updated.", false);
     }
 }
 echo "Welcome back, {$ir['username']}!<br />";
@@ -84,17 +80,17 @@ echo "<table class='table table-hover table-bordered'>
 	</tr>
 </tbody>";
 
-$StrengthRank=get_rank($ir['strength'],'strength');
-$StrengthFormat=number_format($ir['strength']);
-$AgilityRank=get_rank($ir['agility'],'agility');
-$AgilityFormat=number_format($ir['agility']);
-$GuardRank=get_rank($ir['guard'],'guard');
-$GuardFormat=number_format($ir['guard']);
-$IQRank=get_rank($ir['iq'],'iq');
-$IQFormat=number_format($ir['iq']);
-$LaborRank=get_rank($ir['labor'],'labor');
-$LaborFormat=number_format($ir['labor']);
-$AllFourFormat=number_format($ir['strength']+$ir['agility']+$ir['guard']+$ir['labor']+$ir['iq']);
+$StrengthRank = get_rank($ir['strength'], 'strength');
+$StrengthFormat = number_format($ir['strength']);
+$AgilityRank = get_rank($ir['agility'], 'agility');
+$AgilityFormat = number_format($ir['agility']);
+$GuardRank = get_rank($ir['guard'], 'guard');
+$GuardFormat = number_format($ir['guard']);
+$IQRank = get_rank($ir['iq'], 'iq');
+$IQFormat = number_format($ir['iq']);
+$LaborRank = get_rank($ir['labor'], 'labor');
+$LaborFormat = number_format($ir['labor']);
+$AllFourFormat = number_format($ir['strength'] + $ir['agility'] + $ir['guard'] + $ir['labor'] + $ir['iq']);
 
 echo "</table>
 <h3>Stats</h3>";
