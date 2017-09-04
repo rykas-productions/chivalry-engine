@@ -252,6 +252,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 								<a href='staff_settings.php?action=staff'>Set User Level</a><br />";
     }
     echo "
+                            <a href='staff_users.php?action=masspayment'>Send Mass Payment</a><br />
 							<a href='staff_users.php?action=logout'>Force Logout User</a><br />
 						</div>
 					</div>

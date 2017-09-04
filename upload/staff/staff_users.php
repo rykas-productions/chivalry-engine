@@ -27,6 +27,9 @@ switch ($_GET['action']) {
     case "changepw":
         changepw();
         break;
+    case "masspayment":
+        masspay();
+        break;
     default:
         die();
         break;
@@ -986,6 +989,60 @@ function changepw()
 			</table>
 			{$csrf}
 		</form>";
+    }
+}
+
+function masspay()
+{
+    global $db, $h, $userid, $api;
+    if (isset($_POST['pay'])) {
+        $primary = (isset($_POST['pay']) && is_numeric($_POST['pay'])) ? abs(intval($_POST['pay'])) : 0;
+        $secondary = (isset($_POST['pay1']) && is_numeric($_POST['pay1'])) ? abs(intval($_POST['pay1'])) : 0;
+        if (empty($primary) && empty($secondary)) {
+            alert('danger', "Uh Oh", "If you wish to give a mass payment, please give either Primary Currency or Secondary Currency.");
+            die($h->endpage());
+        }
+        $q = $db->query("SELECT `userid`,`username` FROM `users` WHERE `user_level` != 'NPC'");
+        while ($r = $db->fetch_row($q)) {
+            $api->UserGiveCurrency($r['userid'], 'primary', $primary);
+            $api->UserGiveCurrency($r['userid'], 'seconday', $secondary);
+            $api->GameAddNotification($r['userid'], "The administration has given a mass payment of {$primary} Primary Currency and/or {$secondary} Secondary Currency to the game.");
+            echo "Successfully paid {$r['username']}.<br />";
+        }
+        alert('success', 'Success!', "You have successfully mass paid the game.", true, 'index.php');
+    } else {
+        $csrf = request_csrf_html('staff_masspay');
+        echo "<table class='table table-bordered'>
+        <form method='post'>
+        {$csrf}
+            <tr>
+                <th colspan='2'>
+                    Fill out this form to give the game a mass payment.
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    Primary Currency
+                </th>
+                <td>
+                    <input type='number' required='1' value='0' name='pay' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Secondary Currency
+                </th>
+                <td>
+                    <input type='number' required='1' value='0' name='pay1' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <input type='submit' class='btn btn-primary' value='Mass Pay'
+                </td>
+            </tr>
+        </form>
+        </table>";
     }
 }
 
