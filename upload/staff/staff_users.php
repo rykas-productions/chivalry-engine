@@ -7,7 +7,6 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 require('sglobals.php');
-echo "<h3>Users</h3>";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -29,6 +28,9 @@ switch ($_GET['action']) {
         break;
     case "masspayment":
         masspay();
+        break;
+    case "reports":
+        preport();
         break;
     default:
         die();
@@ -1049,6 +1051,63 @@ function masspay()
         </form>
         </table>";
     }
+}
+
+function preport()
+{
+    global $db, $userid, $api, $h;
+    echo "<h3>Player Reports</h3><hr />";
+    if (isset($_GET['ID'])) {
+        $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : 0;
+        if (!isset($_GET['verf']) || !verify_csrf_code('staff_delreport', stripslashes($_GET['verf']))) {
+            alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.", false);
+            die($h->endpage());
+        } else {
+            $q = $db->query("SELECT `report_id` FROM `reports` WHERE `report_id` = {$_GET['ID']}");
+            if ($db->num_rows($q) == 0) {
+                alert('danger', "Uh Oh!", "This report does not exist!", false);
+            } else {
+                $db->query("DELETE FROM `reports` WHERE `report_id` = {$_GET['ID']}");
+                $api->SystemLogsAdd($userid, 'staff', "Cleared Player Report ID #{$_GET['ID']}.");
+                alert('success', "Success!", "You have successfully cleared Player Report ID #{$_GET['ID']}.", false);
+            }
+        }
+    }
+    $q = $db->query("SELECT * FROM `reports`");
+    $csrf = request_csrf_code('staff_delreport');
+    echo "<table class='table table-bordered'>
+    <tr>
+        <th>
+            Reporter
+        </th>
+        <th>
+            Offender
+        </th>
+        <th>
+            Report
+        </th>
+        <th>
+
+        </th>
+    </tr>";
+    while ($r = $db->fetch_row($q)) {
+        echo "
+        <tr>
+            <td>
+                <a href='../profile.php?user={$r['reporter_id']}'>{$api->SystemUserIDtoName($r['reporter_id'])}</a> [{$r['reporter_id']}]
+            </td>
+            <td>
+                <a href='../profile.php?user={$r['reportee_id']}'>{$api->SystemUserIDtoName($r['reportee_id'])}</a> [{$r['reportee_id']}]
+            </td>
+            <td>
+                {$r['report_text']}
+            </td>
+            <td>
+                <a href='?action=reports&ID={$r['report_id']}&verf={$csrf}' class='btn btn-primary'>Clear</a>
+            </td>
+        </tr>";
+    }
+    echo "</table>";
 }
 
 $h->endpage();

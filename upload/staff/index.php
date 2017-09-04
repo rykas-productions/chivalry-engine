@@ -253,6 +253,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
     }
     echo "
                             <a href='staff_users.php?action=masspayment'>Send Mass Payment</a><br />
+                            <a href='staff_users.php?action=reports'>View Player Reports</a><br />
 							<a href='staff_users.php?action=logout'>Force Logout User</a><br />
 						</div>
 					</div>
