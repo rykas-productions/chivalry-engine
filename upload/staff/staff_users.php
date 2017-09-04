@@ -1002,6 +1002,10 @@ function masspay()
             alert('danger', "Uh Oh", "If you wish to give a mass payment, please give either Primary Currency or Secondary Currency.");
             die($h->endpage());
         }
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_masspay', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
+            die($h->endpage());
+        }
         $q = $db->query("SELECT `userid`,`username` FROM `users` WHERE `user_level` != 'NPC'");
         while ($r = $db->fetch_row($q)) {
             $api->UserGiveCurrency($r['userid'], 'primary', $primary);
