@@ -475,7 +475,7 @@ function warview()
 
 function staff()
 {
-    global $db, $userid, $ir, $gd, $api, $h;
+    global $userid, $gd, $h;
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
         if (!isset($_GET['act2'])) {
             $_GET['act2'] = 'idx';
@@ -526,6 +526,9 @@ function staff()
             case "tax":
                 staff_tax();
                 break;
+            case "dissolve":
+                staff_dissolve();
+                break;
             default:
                 staff_idx();
                 break;
@@ -564,6 +567,7 @@ function staff_idx()
 				<a href='?action=staff&act2=tax'>Change Town Tax</a><br />";
         }
         echo "<a href='?action=staff&act2=declarewar'>Declare War</a><br />
+<a href='?action=staff&act2=dissolve'>Dissovle Guild</a><br />
 		</td>";
     }
     echo "</tr></table>
@@ -1390,6 +1394,47 @@ function staff_tax()
     } else {
         alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, 'viewguild.php?action=staff&act2=idx');
     }
+}
+
+function staff_dissolve()
+{
+    global $db, $gd, $api, $h, $userid, $ir, $wq;
+    if ($userid == $gd['guild_owner']) {
+        if (isset($_POST['do'])) {
+            if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_dissolve", stripslashes($_POST['verf']))) {
+                alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+                die($h->endpage());
+            }
+            if ($db->fetch_single($wq) > 0) {
+                alert('danger', "Uh Oh!", "You cannot dissolve your guild when you are at war.");
+                die($h->endpage());
+            }
+            $q = $db->query("SELECT `userid`,`username` FROM `users` WHERE `guild` = {$ir['guild']}");
+            while ($r = $db->fetch_row($q)) {
+                $api->GameAddNotification($r['userid'], "Your guild, {$gd['guild_name']}, has been dissolved by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}].");
+            }
+            $api->SystemLogsAdd($userid, 'guild', "Dissolved Guild ID {$ir['guild']}");
+            $db->query("DELETE FROM `guild_applications` WHERE `ga_guild` = {$ir['guild']}");
+            $db->query("DELETE FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']}");
+            $db->query("DELETE FROM `guild_wars` WHERE `gw_declarer` = {$ir['guild']}");
+            $db->query("DELETE FROM `guild_wars` WHERE `gw_declaree` = {$ir['guild']}");
+            $db->query("DELETE FROM `guild` WHERE `guild_id` = {$ir['guild']}");
+            $db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$ir['guild']}");
+            alert("success", "Success!", "You have successfully dissolved your guild.", true, 'index.php');
+        } else {
+            $csrf = request_csrf_html('guild_staff_dissolve');
+            echo "Are you sure you wish to dissolve your guild? This action cannot be undone. Everything in the guild's
+            armory and vault will be removed from the game entirely.<br />
+            <form method='post'>
+            {$csrf}
+            <input type='hidden' name='do' value='do'>
+            <input type='submit' class='btn btn-primary' value='Dissolve Guild'>
+            </form>";
+        }
+    } else {
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, 'viewguild.php?action=staff&act2=idx');
+    }
+
 }
 
 $h->endpage();
