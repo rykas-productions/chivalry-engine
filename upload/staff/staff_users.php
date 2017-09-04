@@ -1014,6 +1014,7 @@ function masspay()
             echo "Successfully paid {$r['username']}.<br />";
         }
         alert('success', 'Success!', "You have successfully mass paid the game.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} Secondary Currency.");
     } else {
         $csrf = request_csrf_html('staff_masspay');
         echo "<table class='table table-bordered'>
