@@ -74,9 +74,13 @@ if (empty($_GET['item'])) {
                 }
             }
         }
-        alert('success', "Success!", "You have successfully used your {$r['itmname']}!", true, 'inventory.php');
-        $api->UserTakeItem($userid, $r['inv_itemid'], 1);
-        $api->SystemLogsAdd($userid, 'itemuse', "Used a/an {$r['itmname']} item.");
+        alert('success', "Success!", "You have successfully used your {$r['itmname']}! Click To
+                                   [<a href='itemuse.php?item={$i['inv_id']}'>Use Again</a>], Or Go Back
+                                    [<a href='inventory.php'>Go Back To Inventory</a>])", true, 'inventory.php');
+      $api->UserTakeItem($userid, $r['inv_itemid'], 1);
+      $api->SystemLogsAdd($userid, 'itemuse', "Used a/an {$r['itmname']} item.");
     }
+    }
+  }
 }
 $h->endpage();
