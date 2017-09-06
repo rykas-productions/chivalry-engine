@@ -101,7 +101,7 @@ function attacking()
         $_SESSION['attacking'] = 0;
         $ir['attacking'] = 0;
         $api->UserInfoSetStatic($userid, "attacking", 0);
-        alert("danger", "Uh Oh!", "{$odata['username']} doesn't have even health to be attacked.", true, 'index.php');
+        alert("danger", "Uh Oh!", "{$odata['username']} doesn't have health to be attacked.", true, 'index.php');
         die($h->endpage());
     } //Check if the opponent is currently in the infirmary.
     else if ($api->UserStatus($_GET['user'], 'infirmary') == true) {
@@ -635,7 +635,7 @@ function xp()
             $ir['total'] = $ir['strength'] + $ir['agility'] + $ir['guard'];
             $ot = $db->fetch_row($db->query("SELECT * FROM `userstats` WHERE `userid` = {$r['userid']}"));
             $ototal = $ot['strength'] + $ot['agility'] + $ot['guard'];
-            //Opponent is not within 75% of user's stats, so user only 
+            //Opponent is not within 75% of user's stats, so user only
             //gains 25% of the XP they would normally get.
             if (($ir['total'] * 0.75) > $ototal) {
                 $expgain = $expgain * 0.25;
