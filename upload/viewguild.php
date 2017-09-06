@@ -440,7 +440,7 @@ function warview()
 {
     global $db, $ir, $api;
     $wq = $db->query("SELECT * FROM `guild_wars` WHERE
-					(`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) 
+					(`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']})
 					AND `gw_winner` = 0");
     echo "<b>These are the current wars your guild is participating in.</b><hr />
 	<table class='table table-bordered'>
@@ -567,7 +567,7 @@ function staff_idx()
 				<a href='?action=staff&act2=tax'>Change Town Tax</a><br />";
         }
         echo "<a href='?action=staff&act2=declarewar'>Declare War</a><br />
-<a href='?action=staff&act2=dissolve'>Dissovle Guild</a><br />
+<a href='?action=staff&act2=dissolve'>Dissolve Guild</a><br />
 		</td>";
     }
     echo "</tr></table>
@@ -597,7 +597,7 @@ function staff_apps()
                 $api->GameAddNotification($appdata['ga_user'], "We regret to inform you that your application to join the {$gd['guild_name']} guild was declined.");
                 $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a>
 									has declined <a href='profile.php?user={$appdata['ga_user']}'>
-									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
+									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s
 									application to join the guild.");
                 $db->query(
                     "INSERT INTO `guild_notifications`
@@ -622,11 +622,11 @@ function staff_apps()
                 $db->free_result($cnt);
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
                 $api->GameAddNotification($appdata['ga_user'], "Your application to join the {$gd['guild_name']} guild was accepted.");
-                $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
+                $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a>
 									has accepted <a href='profile.php?user={$appdata['ga_user']}'>
-									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
+									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s
 									application to join the guild.");
-                $db->query("INSERT INTO `guild_notifications` 
+                $db->query("INSERT INTO `guild_notifications`
 							VALUES (NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
                 $db->query(
                     "UPDATE `users`
@@ -851,7 +851,7 @@ function staff_announcement()
         }
         $ament = $db->escape(nl2br(htmlentities(stripslashes($_POST['ament']), ENT_QUOTES, 'ISO-8859-1')));
         $db->query("UPDATE `guild` SET `guild_announcement` = '{$ament}' WHERE `guild_id` = {$gd['guild_id']}");
-        alert('success', "Success!", "You ahve updated your guild's announcement.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('success', "Success!", "You have updated your guild's announcement.", true, 'viewguild.php?action=staff&act2=idx');
     } else {
         $am_for_area = strip_tags($gd['guild_announcement']);
         $csrf = request_csrf_html('guild_staff_ament');
