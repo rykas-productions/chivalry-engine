@@ -26,7 +26,7 @@ $TotalPrimaryCurrency = $db->fetch_single($db->query("SELECT SUM(`primary_curren
 //Select the total for primary currency in bank.
 $TotalBank = $db->fetch_single($db->query("SELECT SUM(`bank`) FROM `users` WHERE `user_level` != 'NPC' AND `bank` > -1"));
 
-//All the primar currency
+//All the primary currency
 $TotalBankandPC = $TotalBank + $TotalPrimaryCurrency;
 
 //Select the Total Secondary Currency in the game.
