@@ -27,6 +27,24 @@ class headers
                 <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
                 <meta property="og:image" content=""/>
                 <link rel="shortcut icon" href="" type="image/x-icon"/>
+				<?php
+				//User has chosen the day theme
+				if ($ir['theme'] == 1)
+				{
+					?>
+						<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+						<meta name="theme-color" content="#e7e7e7">
+					<?php
+				}
+				//User has chosen the night theme.
+				else
+				{
+					?>
+						<link rel="stylesheet" href="css/bootstrap-purple-min.css">
+						<meta name="theme-color" content="#2d135d">
+					<?php
+				}
+				?>
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
         </head>
@@ -274,25 +292,6 @@ class headers
 
         </div>
         <!-- /.container -->
-        <!-- CSS -->
-    <?php
-    //User has chosen the day theme.
-    if ($ir['theme'] == 1)
-    {
-    ?>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
-    <meta name="theme-color" content="#e7e7e7">
-    <?php
-    }
-    //User has chosen the night theme.
-    else
-    {
-        ?>
-    <link rel="stylesheet" href="css/bootstrap-purple-min.css">
-    <meta name="theme-color" content="#2d135d">
-    <?php
-    }
-    ?>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
         <link rel="stylesheet" href="css/bs2.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
