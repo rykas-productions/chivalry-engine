@@ -74,7 +74,7 @@ if (empty($_GET['item'])) {
                 }
             }
         }
-        alert('success', "Success!", "You have successfully used your {$r['itmname']}! Tap to <a href='itemuse.php?item={$_GET['item']}' class='alert-link'>reuse</a> your item.", true, 'inventory.php');
+        alert('success', "Success!", "You have successfully used your {$r['itmname']}!", true, "itemuse.php?item={$_GET['item']}", "Use Another");
       $api->UserTakeItem($userid, $r['inv_itemid'], 1);
       $api->SystemLogsAdd($userid, 'itemuse', "Used a/an {$r['itmname']} item.");
     }
