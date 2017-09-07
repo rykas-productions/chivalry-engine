@@ -40,7 +40,7 @@ class headers
 				else
 				{
 					?>
-						<link rel="stylesheet" href="css/bootstrap-purple-min.css">
+						<link rel="stylesheet" href="css/bootstrap-dark.css">
 						<meta name="theme-color" content="#2d135d">
 					<?php
 				}
