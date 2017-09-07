@@ -58,7 +58,7 @@
 @media (max-width: 768px) {
     #login-dp {
         background-color: inherit;
-        color: #fff;
+        color: rgba(0,0,0,.9);
     }
 
     #login-dp .bottom {
