@@ -142,8 +142,7 @@ class headers
         die($h->endpage());
     }
     $fed = $db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
-    alert('info', "Information!", "Donate to {$set['WebsiteName']} and you'll receive many cool perks! Check
-                    out the available packs <a href='donator.php'>here</a>.", false);
+    alert('info', "Information!", "Donate to {$set['WebsiteName']} and you'll receive many cool perks!", true, "donator.php", "View Offers");
     //User's federal jail sentence is completed. Let them play again.
     if ($fed['fed_out'] < $time) {
         $db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
@@ -157,32 +156,27 @@ class headers
     }
     //Tell user when they have unread messages, when they do.
     if ($ir['mail'] > 0) {
-        alert('info', "New Mail!", "You have {$ir['mail']} unread messages. Click
-                        <a href='inbox.php'>here</a> to read them.", false);
+        alert('info', "New Mail!", "You have {$ir['mail']} unread messages.", true, 'inbox.php',"View Inbox");
     }
     //Tell user they have unread notifcations when they do.
     if ($ir['notifications'] > 0) {
-        alert('info', "New Notifications!", "You have {$ir['notifications']} unread notifications.
-                        Click <a href='notifications.php'>here</a> to view them.", false);
+        alert('info', "New Notifications!", "You have {$ir['notifications']} unread notifications.", true, 'notifications.php', "View Notifications");
     }
     //Tell user they have unread game announcements when they do.
     if ($ir['announcements'] > 0) {
-        alert('info', "New Announcements!", "You have {$ir['announcements']} unread announcements. Click
-                        <a href='announcements.php'>here</a> to view them.", false);
+        alert('info', "New Announcements!", "You have {$ir['announcements']} unread announcements.", true, 'announcements.php', "View Announcements");
     }
     //User is in the infirmary, tell them for how long.
     if ($api->UserStatus($ir['userid'], 'infirmary')) {
         $InfirmaryOut = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
         $InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
-        alert('info', "Unconscious!", "You are in the Infirmary for the next {$InfirmaryRemain}. Check your
-                        <a href='inventory.php'>Inventory</a> for items to heal you out!", false);
+        alert('info', "Unconscious!", "You are in the Infirmary for the next {$InfirmaryRemain}.", true, "inventory.php", "View Inventory");
     }
     //User is in the dungeon, tell them how long.
     if ($api->UserStatus($ir['userid'], 'dungeon')) {
         $DungeonOut = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
         $DungeonRemain = TimeUntil_Parse($DungeonOut);
-        alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}. Check your
-                        <a href='inventory.php'>Inventory</a> for items to help you out!", false);
+        alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, "inventory.php", "View Inventory");
     }
     //User needs to reverify with reCaptcha
     if (($ir['last_verified'] < ($time - $set['Revalidate_Time'])) || ($ir['need_verify'] == 1))

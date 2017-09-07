@@ -138,29 +138,28 @@ class headers
                 $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
             }
             if ($ir['fedjail'] > 0) {
-                alert('info', "Federal Dungeon!", "You have been placed in the Federal Dungeon for " . TimeUntil_Parse($fed['fed_out']) . " You are in for the crime of <b>{$fed['fed_reason']}</b>", false);
+                alert('info', "Federal Dungeon!", "You have been placed in the Federal Dungeon for
+                        " . TimeUntil_Parse($fed['fed_out']) . " You are in for the crime of <b>{$fed['fed_reason']}</b>", false);
                 die($h->endpage());
             }
             if ($ir['mail'] > 0) {
-                alert('info', "New Mail!", "You have {$ir['mail']} unread messages. Click <a href='../inbox.php'>here</a> to read them.", false);
+                alert('info', "New Mail!", "You have {$ir['mail']} unread messages.", true, "../inbox.php", "View Inbox");
             }
             if ($ir['notifications'] > 0) {
-                alert('info', "New Notifications!", "You have {$ir['notifications']} unread notifications. Click <a href='../notifications.php'>here</a> to read them.", false);
+                alert('info', "New Notifications!", "You have {$ir['notifications']} unread notifications.", true, '../notifications', "View Notifications");
             }
             if ($ir['announcements'] > 0) {
-                alert('info', "New Announcements!", "You have {$ir['announcements']} unread announcements. Click <a href='../announcements.php'>here</a> to read them.", false);
+                alert('info', "New Announcements!", "You have {$ir['announcements']} unread announcements.", true, '../announcements.php', "View Announcements");
             }
             if ($api->UserStatus($ir['userid'], 'infirmary') == true) {
                 $InfirmaryOut = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
                 $InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
-                alert('info', "Unconscious!", "You are in the infirmary for the next {$InfirmaryRemain}. Check your
-                        <a href='../inventory.php'>Inventory</a> for items to heal you out!", false);
+                alert('info', "Unconscious!", "You are in the infirmary for the next {$InfirmaryRemain}.", true, '../inventory', 'View Inventory');
             }
             if ($api->UserStatus($ir['userid'], 'dungeon') == true) {
                 $DungeonOut = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
                 $DungeonRemain = TimeUntil_Parse($DungeonOut);
-                alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}. Check your
-                        <a href='../inventory.php'>Inventory</a> for items to help you out!", false);
+                alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, '../inventory', 'View Inventory');
             }
             date_default_timezone_set($ir['timezone']);
         }
