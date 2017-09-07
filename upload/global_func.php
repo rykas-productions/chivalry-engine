@@ -1348,33 +1348,38 @@ function encode_password($password)
 
 /**
  * Easily outputs an alert to the client.
- * Acceptable "type" is 'success', 'info', 'warning', 'danger'.
- * You can input whatever for the text
- * Redirect is the page you wish to redirect the user to after the alert is displayed. Default = index.php
+ * Text $type = Alert type. [Valid: danger, success, info, warning, primary, secondary, light, dark]
+ * Text $title = Alert Title.
+ * Text $text = Alert text.
+ * Boolean $doredirect = Whether or not to actually redirect. [Default = true]
+ * Text $redirect = File Name to redirect to. [Default = back] [back will reload current page]
+ * Text $redirecttext = Text to be shown on the redirect link. [Default = Back]
  */
 
-function alert($type, $title, $text, $doredirect = true, $redirect = 'back')
+function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $redirecttext = 'Back')
 {
     //This function is a horrible mess dude..
-    if ($type == 'danger') {
+    if ($type == 'danger')
         $icon = "exclamation-triangle";
-    } elseif ($type == 'success') {
+    elseif ($type == 'success')
         $icon = "check-circle";
-    } elseif ($type == 'info') {
+    elseif ($type == 'info')
         $icon = 'info-circle';
-    } else {
+    else
         $icon = 'exclamation-circle';
-    }
-    if ($doredirect == true) {
+    if ($doredirect) {
         $redirect = ($redirect == 'back') ? $_SERVER['REQUEST_URI'] : $redirect;
         echo "<div class='alert alert-{$type}'>
 				<i class='fa fa-{$icon}' aria-hidden='true'></i>
 					<strong>{$title}</strong> 
-						{$text} > <a href='{$redirect}' class='alert-link'>Back</a>
+						{$text} > <a href='{$redirect}' class='alert-link'>{$redirecttext}</a>
 				</div>";
     } else {
-        echo "<div class='alert alert-{$type}'> <i class='fa fa-{$icon}' aria-hidden='true'></i>
-					<strong>{$title}</strong> {$text} </div>";
+        echo "<div class='alert alert-{$type}'>
+                    <i class='fa fa-{$icon}' aria-hidden='true'></i>
+					    <strong>{$title}</strong>
+					        {$text}
+                </div>";
     }
 }
 
