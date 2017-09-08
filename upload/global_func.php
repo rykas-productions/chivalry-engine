@@ -1651,7 +1651,7 @@ function SystemLogsAdd($user, $logtype, $input)
 }
 
 //Fall back for PHP 7 functions on a PHP < 7 versions.
-function Random($min, $max)
+function Random($min=0, $max=PHP_INT_MAX)
 {
     if (function_exists('random_int')) {
         return random_int($min, $max);
