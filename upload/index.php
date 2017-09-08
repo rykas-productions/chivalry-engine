@@ -19,10 +19,8 @@ $wiopp = 100 - $wiperc;
 $exopp = 100 - $experc;
 $bropp = 100 - $brperc;
 $hpopp = 100 - $hpperc;
-$_POST['pn_update'] =
-    (isset($_POST['pn_update']))
-        ? strip_tags(stripslashes($_POST['pn_update'])) : '';
-if (!empty($_POST['pn_update'])) {
+if (isset($_POST['pn_update'])) {
+    $_POST['pn_update'] = (isset($_POST['pn_update'])) ? strip_tags(stripslashes($_POST['pn_update'])) : '';
     if (strlen($_POST['pn_update']) > 65655) {
         alert('danger', "Uh Oh!", "Your notepad is too big to update.", false);
     } else {

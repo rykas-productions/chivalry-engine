@@ -11,8 +11,8 @@ require_once('globals.php');
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/installer.php') && $ir['user_level'] == 'Admin') {
     alert('danger', "Security Error!", "Installer file detected and not locked. Please delete the installer immediately!");
 }
-$_POST['pn_update'] = (isset($_POST['pn_update'])) ? strip_tags(stripslashes($_POST['pn_update'])) : '';
-if (!empty($_POST['pn_update'])) {
+if (isset($_POST['pn_update'])) {
+    $_POST['pn_update'] = (isset($_POST['pn_update'])) ? strip_tags(stripslashes($_POST['pn_update'])) : '';
     if (strlen($_POST['pn_update']) > 65655) {
         alert('danger', "Uh Oh!", "You can only store 65,655 characters in your personal notepad.", false);
     } else {
