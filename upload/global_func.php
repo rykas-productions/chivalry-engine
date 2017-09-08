@@ -1265,10 +1265,10 @@ function randomizer()
 {
     //If the superior openssl_random_pseudo_bytes function exists, lets use it.
     if (function_exists('openssl_random_pseudo_bytes')) {
-        return openssl_random_pseudo_bytes(32);
+        return openssl_random_pseudo_bytes(128);
     } //If not... let's use our in-house RNG, and make it was secure as we can.
     else {
-        return sha1(decbin(Random(0, 1024)));
+        return sha1(decbin(Random(1, PHP_INT_MAX)));
     }
 }
 
