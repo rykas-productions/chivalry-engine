@@ -31,14 +31,16 @@ class headers
                 if ($_COOKIE['theme'] == 2)
                 {
                     ?>
-                    <link rel="stylesheet" href="css/bootstrap-purple-min.css">
-                    <meta name="theme-color" content="#2d135d">
+                    <link rel="stylesheet" href="css/bootstrap-dark.css">
+                    <link rel="stylesheet" href="css/dark_login.css">
+                    <meta name="theme-color" content="#375a7f">
                 <?php
                 }
                 else
                 {
                     ?>
                     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+                    <link rel="stylesheet" href="css/light_login.css">
                     <meta name="theme-color" content="#e7e7e7">
                 <?php
                 }

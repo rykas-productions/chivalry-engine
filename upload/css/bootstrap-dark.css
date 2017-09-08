@@ -1459,12 +1459,12 @@ pre code {
 }
 
 .table-bordered {
-    border: 1px solid #e9ecef;
+    border: 1px solid #444;
 }
 
 .table-bordered th,
 .table-bordered td {
-    border: 1px solid #e9ecef;
+    border: 1px solid #444;
 }
 
 .table-bordered thead th,
@@ -2704,10 +2704,10 @@ tbody.collapse.show {
     padding: 0.5rem 0;
     margin: 0.125rem 0 0;
     font-size: 1rem;
-    color: #212529;
+    color: #fff;
     text-align: left;
     list-style: none;
-    background-color: #fff;
+    background-color: #222;
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem;
@@ -2717,7 +2717,7 @@ tbody.collapse.show {
     height: 0;
     margin: 0.5rem 0;
     overflow: hidden;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid #444;
 }
 
 .dropdown-item {
@@ -2726,7 +2726,7 @@ tbody.collapse.show {
     padding: 0.25rem 1.5rem;
     clear: both;
     font-weight: normal;
-    color: #212529;
+    color: #fff;
     text-align: inherit;
     white-space: nowrap;
     background: none;
@@ -2734,7 +2734,7 @@ tbody.collapse.show {
 }
 
 .dropdown-item:focus, .dropdown-item:hover {
-    color: #16181b;
+    color: #fff;
     text-decoration: none;
     background-color: #375a7f;
 }
@@ -2746,7 +2746,7 @@ tbody.collapse.show {
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {
-    color: #868e96;
+    color: #444;
     background-color: transparent;
 }
 
@@ -3752,7 +3752,7 @@ tbody.collapse.show {
 }
 
 .navbar-light .navbar-text {
-    color: rgba(0, 0, 0, 0.5);
+    color: #fff;
 }
 
 .navbar-dark .navbar-brand {
@@ -3792,7 +3792,7 @@ tbody.collapse.show {
 }
 
 .navbar-dark .navbar-text {
-    color: rgba(255, 255, 255, 0.5);
+    color: #fff;
 }
 
 .card {
@@ -4239,7 +4239,7 @@ tbody.collapse.show {
 .jumbotron {
     padding: 2rem 1rem;
     margin-bottom: 2rem;
-    background-color: #e9ecef;
+    background-color: #303030;
     border-radius: 0.3rem;
 }
 
