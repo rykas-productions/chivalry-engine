@@ -1258,18 +1258,22 @@ function request_csrf_code($formid)
 }
 
 /**
- * Request a randomly generated phrase. Has a fallback in case the installation does not supported OpenSSL.
+ * Request a randomly generated phrase.
  * Returns the randomly generated phrase.
  */
 function randomizer()
 {
-    //If the superior openssl_random_pseudo_bytes function exists, lets use it.
-    if (function_exists('openssl_random_pseudo_bytes')) {
-        return openssl_random_pseudo_bytes(128);
-    } //If not... let's use our in-house RNG, and make it was secure as we can.
-    else {
+    //Set to true for stronger randomization on OpenSSL
+    $Safe=true;
+    //Use PHP V7's Random Bytes generator first!
+    if (function_exists('random_bytes'))
+        return bin2hex(random_bytes(128));
+    //If we can't... lets use OpenSSL's random bytes generator
+    elseif (function_exists('openssl_random_pseudo_bytes'))
+        return bin2hex(openssl_random_pseudo_bytes(128,$Safe));
+    //That fails... use our shitty one. ;/
+    else
         return sha1(decbin(Random(1, PHP_INT_MAX)));
-    }
 }
 
 /**
