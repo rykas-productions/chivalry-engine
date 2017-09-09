@@ -297,6 +297,8 @@ class api
         @param boolean exact = Return true if ranked ONLY specified level. [Default: false]
         Returns true if user is exactly or equal to/above specified member level. False if not.
     */
+
+    //This function needs refactored ASAP
     function UserMemberLevelGet($user, $level, $exact = false)
     {
         global $db;
