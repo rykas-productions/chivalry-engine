@@ -419,7 +419,9 @@ function archive()
 function delete()
 {
     global $db, $userid, $h;
+    //Sanitize the GET.
     $_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs($_GET['msg']) : 0;
+    //Message ID isn't set.
     if (empty($_GET['msg'])) {
         alert('danger', "Uh Oh!", "This message is non-existent, or does not belong to you.", false);
         home();

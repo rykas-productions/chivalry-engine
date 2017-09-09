@@ -9,6 +9,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
+//Put stats into a friendly percentage
 $enperc = round($ir['energy'] / $ir['maxenergy'] * 100);
 $wiperc = round($ir['will'] / $ir['maxwill'] * 100);
 $experc = round($ir['xp'] / $ir['xp_needed'] * 100);
@@ -19,11 +20,15 @@ $wiopp = 100 - $wiperc;
 $exopp = 100 - $experc;
 $bropp = 100 - $brperc;
 $hpopp = 100 - $hpperc;
+//Player is attempting to update their personal notepad.
 if (isset($_POST['pn_update'])) {
+    //Sanitize the notepad entry
     $_POST['pn_update'] = (isset($_POST['pn_update'])) ? strip_tags(stripslashes($_POST['pn_update'])) : '';
-    if (strlen($_POST['pn_update']) > 65655) {
+    //Notepad update is too large for the database storage
+    if (strlen($_POST['pn_update']) > 65535) {
         alert('danger', "Uh Oh!", "Your notepad is too big to update.", false);
     } else {
+        //Update the notepad after escaping the data entered.
         $pn_update_db = $db->escape($_POST['pn_update']);
         $db->query("UPDATE `users`
         			SET `personal_notes` = '{$pn_update_db}'
@@ -78,6 +83,7 @@ echo "<table class='table table-hover table-bordered'>
 	</tr>
 </tbody>";
 
+//Get the stat ranks. Players like this apparently.
 $StrengthRank = get_rank($ir['strength'], 'strength');
 $StrengthFormat = number_format($ir['strength']);
 $AgilityRank = get_rank($ir['agility'], 'agility');
