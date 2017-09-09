@@ -7,6 +7,7 @@
 	Author: TheMasterGeneral
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
+$menuhide=1;
 if (isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD'])) {
     if (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST') {
         // Ignore a GET request
