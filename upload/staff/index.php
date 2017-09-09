@@ -96,6 +96,9 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 			</li>
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#ACADEMY'>Academy</a>
+			</li>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#PROMO'>Promo Codes</a>
 			</li>";
 }
 if ($api->UserMemberLevelGet($userid, 'assistant')) {
@@ -142,6 +145,14 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 						<div class='card'>
 							<div class='card-body'>
 								<a href='staff_criminal.php'>Crimes</a>
+							</div>
+						</div>
+					</div>
+					<div id='PROMO' class='tab-pane'>
+						<div class='card'>
+							<div class='card-body'>
+								<a href='staff_promo.php?action=addpromo'>Create Promotion Code</a><br />
+								<a href='staff_promo.php?action=viewpromo'>View Promotion Codes</a><br />
 							</div>
 						</div>
 					</div>

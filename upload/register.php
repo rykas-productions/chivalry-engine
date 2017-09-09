@@ -11,8 +11,8 @@ $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 //Check if someone is already registered on this IP.
 if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1) {
     alert('danger', "Uh Oh!", "You can only have one account per IP Address. We're going to stop you from registering for now.");
-    $h->endpage();
-    exit;
+    die($h->endpage());
+
 }
 if (!isset($_GET['REF'])) {
     $_GET['REF'] = 0;
@@ -29,47 +29,43 @@ if (!empty($username)) {
         if (!$_SESSION['captcha'] || !isset($_POST['captcha']) || $_SESSION['captcha'] != $_POST['captcha']) {
             unset($_SESSION['captcha']);
             alert('danger', "Uh Oh!", "You have failed the captcha.");
-            require("footer.php");
-            exit;
+            die($h->endpage());
+
         }
         unset($_SESSION['captcha']);
     }
     //If the email is inputted, and valid.
     if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email']))) {
         alert('danger', "Uh Oh!", "You input an invalid email address.");
-        require("footer.php");
-        exit;
+        die($h->endpage());
+
     }
     //If the username is empty
     if (empty($username)) {
         alert('danger', "Uh Oh!", "You input an invalid or empty username.");
-        require("footer.php");
-        exit;
+        die($h->endpage());
+
     }
     //If the username is less than 3 characters and more than 20.
     if (((strlen($username) > 20) OR (strlen($username) < 3))) {
         alert('danger', "Uh Oh!", "Your username can only be 3 through 20 characters in length.");
-        require("footer.php");
-        exit;
+        die($h->endpage());
+
     }
     //Check Gender
     if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female')) {
         alert('danger', "Uh Oh!", "You are trying to register as an invalid sex.");
-        require("footer.php");
-        exit;
+        die($h->endpage());
+
     }
     //Check class
     if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender')) {
         alert('danger', "Uh Oh!", "You are trying to register as an invalid class.");
-        require("footer.php");
-        exit;
+        die($h->endpage());
+
     }
     $e_gender = $db->escape(stripslashes($_POST['gender']));
     $e_class = $db->escape(stripslashes($_POST['class']));
-    $sm = 100;
-    if (isset($_POST['promo'])) {
-        //$sm += 100;
-    }
     $e_username = $db->escape($username);
     $e_email = $db->escape(stripslashes($_POST['email']));
     $q = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$e_username}'");
@@ -158,10 +154,25 @@ if (!empty($username)) {
         $_SESSION['loggedin'] = 1;
         $_SESSION['userid'] = $i;
         $_SESSION['last_login'] = time();
+        //Promo code reward
+        if (isset($_POST['promo'])) {
+            $code = (isset($_POST['promo'])) ? $db->escape(strip_tags(stripslashes($_POST['promo']))) : '';
+            if (!empty($code)) {
+                $promocodereal = $db->query("SELECT * FROM `promo_codes` WHERE `promo_code` = '{$code}'");
+                if ($db->num_rows($promocodereal) > 0) {
+                    $pcrr = $db->fetch_row($promocodereal);
+                    item_add($i, $pcrr['promo_item'], 1);
+                    $api->GameAddNotification($i, "Your promotion code was valid! Check your inventory for your item!");
+                } else {
+                    $api->GameAddNotification($i, "Your promotion code was invalid.");
+                }
+            }
+        }
         $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
         $db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
         //User registered, lets log them in.
         alert('success', "Success!", "You have successfully signed up. Click here to <a href='tutorial.php'>Sign In</a>", false);
+        die($h->endpage());
     }
     $h->endpage();
 } else {
@@ -270,4 +281,4 @@ if (!empty($username)) {
 		</table>
 	&gt; <a href='login.php'>Login Page</a>";
 }
-$h->endpage();;
+$h->endpage();
