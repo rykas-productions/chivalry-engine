@@ -74,7 +74,7 @@ class headers
                     <div class="my-2 my-lg-0">
                         <ul class="navbar-nav mr-auto">
                             <li class="navbar-text">
-                                <i class="fa fa-sign-in" aria-hidden="true"></i> <?php echo "Already have account?"; ?>
+                                <i class="fa fa-sign-in" aria-hidden="true"></i> <?php echo "Already have an account?"; ?>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
@@ -85,7 +85,7 @@ class headers
                                     <li>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <p class="dropdown"><?php echo "Sign In With Email"; ?></p>
+                                                <p class="dropdown"><?php echo "Sign In! <a href='pwreset.php'>Forgot Password?</a>"; ?></p>
 
                                                 <form role="form" method="post" action="authenticate.php"
                                                       accept-charset="UTF-8" id="login-nav">
