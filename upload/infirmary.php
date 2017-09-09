@@ -8,6 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+//Bind the GET action if possible. If not set, set to nothing. Nothing will redirect to the main listing.
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -22,8 +23,11 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $api;
+    //Bind current unix timestamp to a variable.
     $CurrentTime = time();
+    //Select player count of those in the infirmary.
     $PlayerCount = $db->fetch_single($db->query("SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime}"));
+    //List them out now.
     echo "<h3>The Infirmary</h3><hr />
 	<small>There's currently " . number_format($PlayerCount) . " users in the infirmary.</small>
 	<hr />
@@ -35,9 +39,6 @@ function home()
 				</th>
 				<th>
 					Reason
-				</th>
-				<th class='hidden-xs'>
-					Check-In
 				</th>
 				<th>
 					Check-out
@@ -59,9 +60,6 @@ function home()
 				</td>
 				<td>
 					{$Infirmary['infirmary_reason']}
-				</td>
-				<td class='hidden-xs'>
-					" . DateTime_Parse($Infirmary['infirmary_in']) . "
 				</td>
 				<td>
 					" . TimeUntil_Parse($Infirmary['infirmary_out']) . "
