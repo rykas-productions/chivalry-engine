@@ -95,7 +95,7 @@ if (!$itmid) {
 						Item Effect #{$enum}
 					</th>
 					<td>
-					{$einfo['dir']} {$statformatted} by {$einfo['inc_amount']}{$einfo['inc_type']}.
+					{$einfo['dir']} {$statformatted} by " . number_format($einfo['inc_amount']) . "{$einfo['inc_type']}.
 					</td>
 				</tr>";
             }

@@ -59,7 +59,7 @@ while ($r = $db->fetch_row($q)) {
                 => "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
                     "VIP Days");
             $statformatted = $stats["{$einfo['stat']}"];
-            echo "{$einfo['dir']} {$statformatted} by {$einfo['inc_amount']}{$einfo['inc_type']}.<br />";
+            echo "{$einfo['dir']} {$statformatted} by " . number_format($einfo['inc_amount']) . "{$einfo['inc_type']}.<br />";
         } //If item has no effects, lets list the description instead.
         else {
             $uhoh++;
