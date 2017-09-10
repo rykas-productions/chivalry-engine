@@ -265,9 +265,9 @@ function attacking()
             $api->UserInfoSet($_GET['user'], 'hp', 0);
             echo "<br />
 			<b>You have struck down {$odata['username']}. What do you wish to do to them now?</b><br />
-			<form action='?action=mug&ID={$_GET['user']}' method='post'><input class='btn btn-secondary' type='submit' value='Rob Them' /></form>
-			<form action='?action=beat&ID={$_GET['user']}' method='post'><input class='btn btn-secondary' type='submit' value='Increase Infirmary Time' /></form>
-			<form action='?action=xp&ID={$_GET['user']}' method='post'><input class='btn btn-secondary' type='submit' value='Gain Experience' /></form>";
+			<form action='?action=mug&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Rob Them' /></form>
+			<form action='?action=beat&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Increase Infirmary Time' /></form>
+			<form action='?action=xp&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Gain Experience' /></form>";
         } //The opponent is not down... he gets to attack.
         else {
             $eq = $db->query("SELECT `itmname`,`weapon` FROM  `items` WHERE `itmid` IN({$odata['equip_primary']}, {$odata['equip_secondary']})");
@@ -345,7 +345,7 @@ function attacking()
                 $youdata['hp'] = 0;
                 $_SESSION['attacklost'] = $_GET['user'];
                 $api->UserInfoSet($userid, "hp", 0);
-                echo "<form action='?action=lost&ID={$_GET['user']}' method='post'><input type='submit' class='btn btn-secondary' value='Lose Fight' />";
+                echo "<form action='?action=lost&ID={$_GET['user']}' method='post'><input type='submit' class='btn btn-primary' value='Lose Fight' />";
             }
         }
     } //Opponent has less than 5 HP, fight cannot start.
