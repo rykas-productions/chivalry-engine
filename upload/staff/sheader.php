@@ -146,7 +146,7 @@ class headers
                 alert('info', "New Mail!", "You have {$ir['mail']} unread messages.", true, "../inbox.php", "View Inbox");
             }
             if ($ir['notifications'] > 0) {
-                alert('info', "New Notifications!", "You have {$ir['notifications']} unread notifications.", true, '../notifications', "View Notifications");
+                alert('info', "New Notifications!", "You have {$ir['notifications']} unread notifications.", true, '../notifications.php', "View Notifications");
             }
             if ($ir['announcements'] > 0) {
                 alert('info', "New Announcements!", "You have {$ir['announcements']} unread announcements.", true, '../announcements.php', "View Announcements");
