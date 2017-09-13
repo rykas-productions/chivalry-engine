@@ -35,7 +35,7 @@ echo "
     <div class='col-sm-4'>
         <div class='card'>
             <div class='card-header'>
-                Last Announcement (" . date("F j, Y, g:i a", $ANN['ann_time']) . ")
+                Latest Announcement
             </div>
             <div class='card-body'>
                 {$ANN['ann_text']}
