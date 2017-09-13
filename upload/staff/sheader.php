@@ -27,22 +27,8 @@ class headers
                 <meta property="og:image" content=""/>
                 <link rel="shortcut icon" href="" type="image/x-icon"/>
                 <!-- CSS -->
-                <?php
-                if ($ir['theme'] == 1)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
-                    <meta name="theme-color" content="#e7e7e7">
-                <?php
-                }
-                else
-                {
-                    ?>
-                    <link rel="stylesheet" href="../css/bootstrap-dark.css">
-                    <meta name="theme-color" content="#375a7f">
-                <?php
-                }
-                ?>
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+                <meta name="theme-color" content="#e7e7e7">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
         </head>
@@ -205,7 +191,7 @@ class headers
         <!-- /.container -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../css/bs2.css">
+        <link rel="stylesheet" href="../css/game.css">
 
         <!-- jQuery Version 3.2.1 -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

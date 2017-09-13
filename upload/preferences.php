@@ -23,9 +23,6 @@ switch ($_GET['action']) {
     case 'picchange':
         pic_change();
         break;
-    case 'themechange':
-        themechange();
-        break;
     case 'sigchange':
         sigchange();
         break;
@@ -66,7 +63,7 @@ function prefs_home()
 					<a href='?action=picchange'>Change Display Picture</a>
 				</td>
 				<td>
-					<a href='?action=themechange'>Change Theme</a>
+					<a href='?action=sexchange'>Change Sex</a>
 				</td>
 			</tr>
 			<tr>
@@ -74,7 +71,7 @@ function prefs_home()
 					<a href='?action=sigchange'>Change Forum Signature</a>
 				</td>
 				<td>
-					<a href='?action=sexchange'>Change Sex</a>
+
 				</td>
 			</tr>
 		</tbody>
@@ -291,50 +288,6 @@ function pic_change()
         alert('success', "Success!", "You have successfully updated your display picture to what's shown below.", true, 'preferences.php');
         echo "<img src='{$img}' width='250' height='250' class='img-thumbnail img-responsive'>";
         $db->query("UPDATE `users` SET `display_pic` = '" . $db->escape($npic) . "' WHERE `userid` = {$userid}");
-    }
-}
-
-function themechange()
-{
-    global $db, $userid, $h;
-    if (isset($_POST['theme'])) {
-        $_POST['theme'] = (isset($_POST['theme']) && is_numeric($_POST['theme'])) ? abs($_POST['theme']) : 1;
-        if ($_POST['theme'] < 1 || $_POST['theme'] > 2) {
-            alert('danger', "Uh Oh!", "The theme you wish to load is not valid.");
-            die($h->endpage());
-        } else {
-            setcookie('theme', $_POST['theme']);
-            alert('success', "Success!", "You have successfully changed your theme.", true, 'preferences.php');
-            $db->query("UPDATE `users` SET `theme` = {$_POST['theme']} WHERE `userid` = {$userid}");
-            die($h->endpage());
-        }
-    } else {
-        echo "
-		<form action='?action=themechange' method='post'>
-			<table class='table table-bordered'>
-				<tr>
-					<th colspan='2'>
-						Select the theme you wish to be seen as you play.
-					</th>
-				</tr>
-				<tr>
-					<th>
-						Theme
-					</th>
-					<td>
-						<select name='theme' class='form-control' type='dropdown'>
-							<option value='1'>Day Theme</option>
-							<option value='2'>Night Theme</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='Change Theme'>
-					</td>
-				</tr>
-			</table>
-		</form>";
     }
 }
 
