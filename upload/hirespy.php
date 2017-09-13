@@ -10,37 +10,37 @@
 require('globals.php');
 //Sanitize GET.
 $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
+//GET is empty/truncated after sanitation,  don't let player buy a spy.
+if (empty($_GET['user'])) {
+    alert("danger", "Uh Oh!", "Please specify a user you wish to hire a spy upon.", true, "index.php");
+    die($h->endpage());
+}
 //Current user is in the infirmary, don't let them buy a spy.
 if ($api->UserStatus($userid, 'infirmary')) {
-    alert('danger', "Unconscious!", "You cannot hire a spy on someone if you're in the infirmary.", true, 'back');
+    alert('danger', "Unconscious!", "You cannot hire a spy on someone if you're in the infirmary.", true, "profile.php?user={$_GET['user']}");
     die($h->endpage());
 }
 //Current user is in the dungeon, don't let them buy a spy.
 if ($api->UserStatus($userid, 'dungeon')) {
-    alert('danger', "Locked Up!", "You cannot hire a spy on someone if you're in the dungeon.", true, 'back');
-    die($h->endpage());
-}
-//GET is empty/truncated after sanitation,  don't let player buy a spy.
-if (empty($_GET['user'])) {
-    alert("danger", "Uh Oh!", "Please specify a user you wish to hire a spy upon.", true, 'index.php');
+    alert('danger', "Locked Up!", "You cannot hire a spy on someone if you're in the dungeon.", true, "profile.php?user={$_GET['user']}");
     die($h->endpage());
 }
 //GET is the same player as the current user, do not allow to buy spy.
 if ($_GET['user'] == $userid) {
-    alert("danger", "Uh Oh!", "Why would you want to hire a spy upon yourself?", true, 'index.php');
+    alert("danger", "Uh Oh!", "Why would you want to hire a spy upon yourself?", true, "profile.php?user={$_GET['user']}");
     die($h->endpage());
 }
 //Grab GET user's information.
 $q = $db->query("SELECT `u`.*, `us`.* FROM `users` `u` INNER JOIN `userstats` AS `us` ON `us`.`userid` = `u`.`userid` WHERE `u`.`userid` = {$_GET['user']}");
 //User does not exist, so do not allow spy to be bought.
 if ($db->num_rows($q) == 0) {
-    alert("danger", "Uh Oh!", "The player you're trying to hire a spy upon does not exist.", true, 'index.php');
+    alert("danger", "Uh Oh!", "The player you're trying to hire a spy upon does not exist.", true, "profile.php?user={$_GET['user']}");
     die($h->endpage());
 }
 $r = $db->fetch_row($q);
 //GET User is in the same guild as the current player, do not allow spy to be bought.
 if (($r['guild'] == $ir['guild']) && ($ir['guild'] != 0)) {
-    alert("danger", "Uh Oh!", "You cannot hire a spy on someone in your guild.", true, 'index.php');
+    alert("danger", "Uh Oh!", "You cannot hire a spy on someone in your guild.", true, "profile.php?user={$_GET['user']}");
     die($h->endpage());
 }
 //Spy has been bought, and all other tests have passed!
@@ -49,7 +49,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
     $rand = Random(1, 4);
     //Current user does not have the required Primary Currency to buy a spy.
     if ($ir['primary_currency'] < $r['level'] * 500) {
-        alert("danger", "Uh Oh!", "You do not have enough Primary Currency to hire a spy to spy on this user.", true, 'back');
+        alert("danger", "Uh Oh!", "You do not have enough Primary Currency to hire a spy to spy on this user.", true, "profile.php?user={$_GET['user']}");
         die($h->endpage());
     }
     //Take the spy cost from the player.
@@ -62,7 +62,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
         if ($rand2 <= 2) {
             $api->GameAddNotification($_GET['user'], "An unknown user has attempted to spy on you and failed.");
             alert("danger", "Uh Oh!", "Your spy attempts to get information on your target. Your spy is noticed. Your
-			    target doesn't get wind of who you are.", true, 'index.php');
+			    target doesn't get wind of who you are.", true, "profile.php?user={$_GET['user']}");
             $api->SystemLogsAdd($userid, 'spy', "Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) . " and failed.");
             die($h->endpage());
         } //Spy failed and hte person bein spied on now knows who's been attempting to spy.
@@ -75,7 +75,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
         }
     } //RNG equals 3, send current player to the dungeon.
     elseif ($rand == 3) {
-        alert("danger", "Uh Oh!", "Your hired spy actually turned out to be a dungeon guard. He arrests you.", true, 'index.php');
+        alert("danger", "Uh Oh!", "Your hired spy actually turned out to be a dungeon guard. He arrests you.", true, "profile.php?user={$_GET['user']}");
         $dungtime = Random($ir['level'], $ir['level'] * 3);
         $api->UserStatusSet($userid, 'dungeon', $dungtime, "Stalkerish Tendencies");
         $api->SystemLogsAdd($userid, 'spy', "Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) . " and was sent to the dungeon.");
