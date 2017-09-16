@@ -1624,7 +1624,7 @@ function getBrowser($uagent)
         '/konqueror/i' => 'Konqueror',
         '/opr/i' => 'Opera',
         '/mobile/i' => 'Handheld Browser',
-        '/app/i' => 'App'
+        '/CEngine-App/i' => 'App'
     );
     foreach ($browser_array as $regex => $value) {
         if (preg_match($regex, $user_agent)) {
