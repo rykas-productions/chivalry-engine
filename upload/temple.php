@@ -36,10 +36,10 @@ function home()
     global $set;
     echo "Welcome to the Temple of Fortune. Here you may spend your Secondary Currency as you see fit!";
     echo "<br />
-	<a href='?action=energy'>Refill Energy - " . number_format($set['energy_refill_cost']) . " Secondary Currency</a><br />
-	<a href='?action=brave'>Regenerate 5% Bravery - " . number_format($set['brave_refill_cost']) . " Secondary Currency</a><br />
-	<a href='?action=will'>Regenerate 5% Will - " . number_format($set['will_refill_cost']) . " Secondary Currency</a><br />
-	<a href='?action=iq'>Refill IQ - " . number_format($set['will_refill_cost']) . " Secondary Currency</a><br />";
+	<a class='btn btn-outline-primary' href='?action=energy'>Refill Energy - " . number_format($set['energy_refill_cost']) . " Secondary Currency</a><br /><br />
+	<a class='btn btn-outline-primary' href='?action=brave'>Regenerate 5% Bravery - " . number_format($set['brave_refill_cost']) . " Secondary Currency</a><br /><br />
+	<a class='btn btn-outline-primary' href='?action=will'>Regenerate 5% Will - " . number_format($set['will_refill_cost']) . " Secondary Currency</a><br /><br />
+	<a class='btn btn-outline-primary' href='?action=iq'>Refill IQ - " . number_format($set['will_refill_cost']) . " Secondary Currency</a><br /><br />";
 }
 
 function energy()
