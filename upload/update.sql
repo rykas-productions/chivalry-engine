@@ -1,0 +1,1 @@
+ALTER TABLE `vip_listing` ADD `vip_qty` INT(11) UNSIGNED NOT NULL AFTER `vip_cost`;

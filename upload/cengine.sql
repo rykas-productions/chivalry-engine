@@ -957,7 +957,8 @@ CREATE TABLE `vips_accepted` (
 CREATE TABLE `vip_listing` (
   `vip_id` int(11) UNSIGNED NOT NULL,
   `vip_item` int(11) UNSIGNED NOT NULL,
-  `vip_cost` decimal(10,2) NOT NULL
+  `vip_cost` decimal(10,2) NOT NULL,
+  `vip_qty` int(11) UNSIGNED NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
