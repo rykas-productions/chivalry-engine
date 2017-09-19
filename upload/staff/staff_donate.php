@@ -32,6 +32,7 @@ function addpack()
             die($h->endpage());
         }
         $_POST['pack'] = (isset($_POST['pack']) && is_numeric($_POST['pack'])) ? abs($_POST['pack']) : '';
+        $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : '';
         $cost = $_POST['cost'] * 100;
         $cost = (isset($cost) && is_numeric($cost)) ? abs($cost) : '';
         if (empty($_POST['pack'])) {
@@ -40,6 +41,16 @@ function addpack()
         }
         if (empty($cost)) {
             alert('danger', "Uh Oh!", "Please select a cost for the VIP Pack you wish to list.");
+            die($h->endpage());
+        }
+        if (empty($_POST['qty']))
+        {
+            alert('danger', "Uh Oh!", "Please select the quantity received for donating for this VIP Pack.");
+            die($h->endpage());
+        }
+        if ($_POST['qty'] < 1)
+        {
+            alert('danger', "Uh Oh!", "Quantity must be greater than zero.");
             die($h->endpage());
         }
         $db_cost = $cost / 100;
@@ -53,7 +64,7 @@ function addpack()
             alert('danger', "Uh Oh!", "You already have this item listed on the VIP Pack Listing.");
             die($h->endpage());
         }
-        $db->query("INSERT INTO `vip_listing` (`vip_item`, `vip_cost`) VALUES ('{$_POST['pack']}', '{$db_cost}')");
+        $db->query("INSERT INTO `vip_listing` (`vip_item`, `vip_cost`, `vip_qty`) VALUES ('{$_POST['pack']}', '{$db_cost}', '{$_POST['qty']}')");
         $api->SystemLogsAdd($userid, 'staff', "Added {$api->SystemItemIDtoName($_POST['pack'])} to the VIP Store for \${$db_cost}.");
         alert('success', "Success!", "You have successfully added the {$api->SystemItemIDtoName($_POST['pack'])} to the VIP Store for \${$db_cost}.", true, 'index.php');
     } else {
@@ -79,6 +90,14 @@ function addpack()
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' name='cost' value='0.00' min='0.00' step='0.01'>
+						</td>
+					</tr>
+					<tr>
+						<th>
+							VIP Pack Quantity
+						</th>
+						<td>
+							<input type='number' required='1' class='form-control' name='qty' value='1' min='1'>
 						</td>
 					</tr>
 					<tr>

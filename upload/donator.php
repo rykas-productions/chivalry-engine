@@ -32,10 +32,11 @@ $q = $db->query("SELECT `v`.*, `i`.*
 while ($r = $db->fetch_row($q)) {
     //Put the VIP Cost in a currency number. (Ex. $1.54)
     $r['vip_cost'] = sprintf("%0.2f", $r['vip_cost']);
+    $amount = ($r['vip_qty'] > 1) ? "{$r['vip_qty']} x " : '';
     echo "
 	<tr>
 		<td>
-		{$r['itmname']}<br />
+		{$amount} {$r['itmname']}<br />
 			Cost: \${$r['vip_cost']} USD
 		</td>
 		<td>

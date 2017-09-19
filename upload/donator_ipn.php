@@ -7,6 +7,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+$menuhide=1;
 require_once('globals_nonauth.php');
 require('class/PaypalIPN.php');
 $wantedcurrency = "USD";
@@ -58,7 +59,7 @@ if ($verified) {
     }
     //Check to see if the donation is for the right game.
     if (str_replace("www.", "", $packr[0]) != str_replace("www.", "", $_SERVER['HTTP_HOST'])) {
-        $api->SystemLogsAdd($buyer, 'donate', "Attempted to donate, but sent their donation was for {$packr[0]}.");
+        $api->SystemLogsAdd($buyer, 'donate', "Attempted to donate, but sent their donation to {$packr[0]}.");
         exit;
     }
     //Check to see if they're donating for a VIP package of sorts.
@@ -81,7 +82,7 @@ if ($verified) {
         exit;
     }
     //Everything checks out... so lets credit the pack.
-    item_add($for, $fpi['vip_item'], 1);
+    item_add($for, $fpi['vip_item'], $fpi['vip_qty']);
     //Log everything
     $db->query("INSERT INTO `vips_accepted` VALUES(NULL, {$buyer}, {$for}, {$pack}, " . time() . ", '{$txn_id}')");
     $api->SystemLogsAdd($buyer, 'donate', "{$payer_email} donated \${$payment_amount} for VIP Pack #{$packr[2]}.");
