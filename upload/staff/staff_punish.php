@@ -633,6 +633,7 @@ function massemail()
     echo "<h3>Mass Emailer</h3><hr>";
     if (isset($_POST['msg'])) {
         $msg = $_POST['msg'];
+        $subject = $_POST['subject'];
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_massemail', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
@@ -647,12 +648,9 @@ function massemail()
         }
         $q = $db->query("SELECT `userid`,`user_level`,`email` FROM `users` WHERE `email_optin` = 1 AND `user_level` != 'NPC'");
         $sent = 0;
-        $headers[] = 'MIME-Version: 1.0';
-        $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-        $headers[] = "From: {$from}";
         while ($r = $db->fetch_row($q)) {
             echo "Sending Email to {$api->SystemUserIDtoName($r['userid'])} ...";
-            if (mail($r['email'], $set['WebsiteName'], $msg, implode("\r\n", $headers)) == true) {
+            if ($api->SystemSendEmail($r['email'], $msg, $subject, $from)) {
                 echo "... Success.";
                 $sent = $sent + 1;
             } else {
@@ -671,6 +669,14 @@ function massemail()
 				Send an email to the players who are have chosen to opt-in. Do not spam, or you may find your domain
 				blocked on email providers. You can use HTML.
 			</th>
+		</tr>
+		<tr>
+			<th>
+				Subject
+			</th>
+			<td>
+				<input type='text' name='subject' class='form-control' placeholder='Can be blank'>
+			</td>
 		</tr>
 		<tr>
 			<th>
