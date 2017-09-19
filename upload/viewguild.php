@@ -1211,7 +1211,9 @@ function staff_untown()
         } elseif (isset($_POST['confirm'])) {
             $r = $db->fetch_single($townowned);
             alert('success', "Success!", "You have surrendered your guild's town.", true, 'viewguild.php?action=staff&act2=idx');
-            $db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_id` = {$r}");
+            $db->query("UPDATE `town`
+                        SET `town_guild_owner` = 0
+                        WHERE `town_id` = {$r}");
             $api->GuildAddNotification($gd['guild_id'], "Your guild was willingly given up their town.");
             $api->SystemLogsAdd($userid, 'guilds', "Willingly surrendered {$gd['guild_name']}'s town, {$api->SystemTownIDtoName($r)}.");
         } else {
@@ -1241,38 +1243,57 @@ function staff_declare()
                 alert('danger', "Uh Oh!", "You cannot declare war on your own guild.");
                 die($h->endpage());
             }
-            $data_q = $db->query("SELECT `guild_name`,`guild_owner` FROM `guild` WHERE `guild_id` = {$_POST['guild']}");
+            $data_q = $db->query("SELECT `guild_name`,`guild_owner`
+                                  FROM `guild`
+                                  WHERE `guild_id` = {$_POST['guild']}");
             if ($db->num_rows($data_q) == 0) {
                 $db->free_result($data_q);
                 alert('danger', "Uh Oh!", "You cannot declare war on a non-existent guild.");
                 die($h->endpage());
             }
             $time = time();
-            $iswarredon = $db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} AND `gw_end` > {$time}");
+            $iswarredon = $db->query("SELECT `gw_id`
+                                      FROM `guild_wars`
+                                      WHERE `gw_declarer` = {$gd['guild_id']}
+                                      AND `gw_declaree` = {$_POST['guild']}
+                                      AND `gw_end` > {$time}");
             if ($db->num_rows($iswarredon) > 0) {
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild as you are already at war!");
                 die($h->endpage());
             }
-            $iswarredon1 = $db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} AND `gw_end` > {$time}");
+            $iswarredon1 = $db->query("SELECT `gw_id`
+                                        FROM `guild_wars`
+                                        WHERE `gw_declaree` = {$gd['guild_id']}
+                                        AND `gw_declarer` = {$_POST['guild']}
+                                        AND `gw_end` > {$time}");
             if ($db->num_rows($iswarredon1) > 0) {
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild as you are already at war!");
                 die($h->endpage());
             }
             $lastweek = $time - 604800;
-            $istoosoon = $db->fetch_single($db->query("SELECT `gw_end` FROM `guild_wars` WHERE `gw_declarer` = {$gd['guild_id']} AND `gw_declaree` = {$_POST['guild']} ORDER BY `gw_id` DESC LIMIT 1"));
+            $istoosoon = $db->fetch_single($db->query("SELECT `gw_end`
+                                                        FROM `guild_wars`
+                                                        WHERE `gw_declarer` = {$gd['guild_id']}
+                                                        AND `gw_declaree` = {$_POST['guild']}
+                                                        ORDER BY `gw_id`DESC
+                                                        LIMIT 1"));
             if ($istoosoon > $lastweek) {
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild as its been less than a week since the last war concluded.");
                 die($h->endpage());
             }
-            $istoosoon1 = $db->fetch_single($db->query("SELECT `gw_end` FROM `guild_wars` WHERE `gw_declaree` = {$gd['guild_id']} AND `gw_declarer` = {$_POST['guild']} ORDER BY `gw_id` DESC LIMIT 1"));
+            $istoosoon1 = $db->fetch_single($db->query("SELECT `gw_end`
+                                                        FROM `guild_wars`
+                                                        WHERE `gw_declaree` = {$gd['guild_id']}
+                                                        AND `gw_declarer` = {$_POST['guild']}
+                                                        ORDER BY `gw_id` DESC
+                                                        LIMIT 1"));
             if ($istoosoon1 > $lastweek) {
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild as its been less than a week since the last war concluded.");
                 die($h->endpage());
             }
             $r = $db->fetch_row($data_q);
             $endtime = time() + 259200;
-            $db->query("INSERT INTO `guild_wars`
-			VALUES (NULL, {$gd['guild_id']}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
+            $db->query("INSERT INTO `guild_wars` VALUES (NULL, {$gd['guild_id']}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
             $api->GameAddNotification($r['guild_owner'], "The {$gd['guild_name']} guild has declared war on your guild.");
             $api->GuildAddNotification($_POST['guild'], "The {$gd['guild_name']} guild has declared war on your guild.");
             $api->GuildAddNotification($gd['guild_id'], "Your guild has declared war on {$r['guild_name']}");
