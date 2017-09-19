@@ -95,6 +95,9 @@ switch ($_GET['action']) {
     case "donatelogs":
         logs('donate');
         break;
+    case "rrlogs":
+        logs('rr');
+        break;
     case "mail":
         maillogs();
         break;
