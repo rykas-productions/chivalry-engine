@@ -18,7 +18,7 @@ class api
     */
     function SystemReturnAPIVersion()
     {
-        return "17.9.1";    //Last Updated 8/29/2017
+        return "17.9.2";    //Last Updated 9/19/2017
     }
 
     /*
@@ -861,5 +861,25 @@ class api
                     `energy` = `energy` - {$times}
                     WHERE `userid` = {$userid}");
         return $gain;
+    }
+    /*
+         * Function to send a game email
+         * @param email to = Email address so send email to.
+         * @param text body = Body of the email.
+         * @param text subject = Subject of the email. [Optional, Default = "Gamename Game Email"]
+         * @param email from = Email account sender [Optional, Default = "Game Sending Email"]
+         * Returns Email was sent successfully.
+    */
+    function GameSendEmail($to, $body, $subject = '', $from = '')
+    {
+        global $set;
+        if (empty($from))
+            $from = $set['sending_email'];
+        if (empty($subject))
+            $subject = "{$set['WebsiteName']} Game Email";
+        $headers[] = 'MIME-Version: 1.0';
+        $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+        $headers[] = "From: {$from}";
+        return mail($to, $subject, $body, implode("\r\n", $headers));
     }
 }
