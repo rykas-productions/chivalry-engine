@@ -56,10 +56,10 @@ function index()
 				<table class='table table-bordered'>
 					<tr>
 						<td width='50%'>
-							It'll cost you {$bank_feepercent}% of the money you deposit, rounded up. (Max " . number_format($bank_maxfee) . ".)
+							It'll cost you {$bank_feepercent}% of the money you deposit. (Max " . number_format($bank_maxfee) . ".)
 							<form action='bank.php?action=deposit' method='post'>
 								<b>Your Cash</b><br />
-								<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' required='1' name='deposit' value='{$ir['primary_currency']}'>
+								<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' required='1' name='deposit' value='{$ir['primary_currency']}'><br />
 								<input type='submit' value='Deposit' class='btn btn-primary'>
 							</form>
 						</td>
@@ -67,7 +67,7 @@ function index()
 							It doesn't cost you anything to withdraw from your account.
 							<form action='bank.php?action=withdraw' method='post'>
 								<b>Your Bank Balance</b><br />
-								<input type='number' min='1' max='{$ir['bank']}' class='form-control' required='1' name='withdraw' value='{$ir['bank']}'>
+								<input type='number' min='1' max='{$ir['bank']}' class='form-control' required='1' name='withdraw' value='{$ir['bank']}'><br />
 								<input type='submit' value='Withdraw' class='btn btn-primary'>
 							</form>
 						</td>
