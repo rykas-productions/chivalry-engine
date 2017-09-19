@@ -45,7 +45,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
 			    {$rm['username']}.", true, 'inventory.php');
             notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
                 from <a href='profile.php?user=$userid'>{$ir['username']}</a>.");
-            $log = $db->escape("{$ir['username']} sent {$_POST['qty']} {$r['itmname']}(s) to {$rm['username']} [{$_POST['user']}].");
+            $log = $db->escape("Sent {$_POST['qty']} {$r['itmname']}(s) to {$rm['username']} [{$_POST['user']}].");
             $api->SystemLogsAdd($userid, 'itemsend', $log);
         }
         $db->free_result($m);
