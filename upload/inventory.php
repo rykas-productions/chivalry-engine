@@ -117,8 +117,7 @@ while ($i = $db->fetch_row($inv)) {
     echo "</td>
         	  <td>
         	  	[<a href='itemsend.php?ID={$i['inv_id']}'>Send</a>]
-        	  	[<a href='itemsell.php?ID={$i['inv_id']}'>Sell</a>]
-        	  	[<a href='itemmarket.php?action=add&ID={$i['inv_id']}'>Add to Market</a>]";
+        	  	[<a href='itemsell.php?ID={$i['inv_id']}'>Sell</a>]";
     if ($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' || $i['effect3_on'] == 'true') {
         echo " [<a href='itemuse.php?item={$i['inv_id']}'>Use</a>]";
     }

@@ -1206,41 +1206,6 @@ function forum_dropdown($ddname = "forum", $selected = -1)
 }
 
 /**
- * Constructs a drop-down listbox of all the forums in the game, except guild forums, to let the user select one.<br />
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function forum2_dropdown($ddname = "forum", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `ff_id`, `ff_name`
-                     FROM `forum_forums`
-                     WHERE `ff_auth` != 'guild'
-                     ORDER BY `ff_name` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['ff_id']}'";
-        if ($selected == $r['ff_id'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['ff_name']}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
  * Request that an anti-CSRF verification code be issued for a particular form in the game.
  * @param string $formid A unique string used to identify this form to match up its submission with the right token.
  * @return string The code issued to be added to the form.
@@ -1550,14 +1515,12 @@ function permission($perm, $user)
 {
     global $db;
     $Query = $db->query("SELECT `perm_disable` FROM `permissions` WHERE `perm_name` = '{$perm}' AND `perm_user` = {$user}");
-    if ($db->num_rows($Query) == 0) {
+    if ($db->num_rows($Query) == 0)
         return true;
-    }
     $q = $db->fetch_single($Query);
-    if ($q == 'false') {
+    if ($q == 'false')
         //User does have this permission
         return true;
-    }
 }
 
 /*
@@ -1596,11 +1559,10 @@ function getOS($uagent)
         }
     }
     $count = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
-    if ($count == 0) {
+    if ($count == 0)
         $db->query("INSERT INTO `userdata` (`userid`, `useragent`, `screensize`, `os`, `browser`) VALUES ({$userid}, '{$uagent}', '', '{$os_platform}', '')");
-    } else {
+    else
         $db->query("UPDATE `userdata` SET `useragent` = '{$uagent}', `os` = '{$os_platform}' WHERE `userid` = {$userid}");
-    }
 }
 
 /*
@@ -1632,11 +1594,10 @@ function getBrowser($uagent)
         }
     }
     $count = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
-    if ($count == 0) {
+    if ($count == 0)
         $db->query("INSERT INTO `userdata` (`userid`, `useragent`, `browser`) VALUES ({$userid}, '{$uagent}', '{$broswer}')");
-    } else {
+    else
         $db->query("UPDATE `userdata` SET `useragent` = '{$user_agent}', `browser` = '{$browser}' WHERE `userid` = {$userid}");
-    }
 }
 
 //Please use $api->SystemLogsAdd(); instead
@@ -1657,11 +1618,10 @@ function SystemLogsAdd($user, $logtype, $input)
 //Fall back for PHP 7 functions on a PHP < 7 versions.
 function Random($min=0, $max=PHP_INT_MAX)
 {
-    if (function_exists('random_int')) {
+    if (function_exists('random_int'))
         return random_int($min, $max);
-    } else {
+    else
         return mt_rand($min, $max);
-    }
 }
 
 /*
@@ -1857,12 +1817,51 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
     global $set;
     $engine_version = $set['Version_Number'];
     $json = json_decode(update_file($url), true);
-    if (is_null($json)) {
+    if (is_null($json))
         return "Update checker failed.";
-    }
-    if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1) {
+    if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
         return "Chivalry Engine is up to date.";
-    } else {
+    else
         return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
+}
+/**
+ * Constructs a drop-down listbox of all the items in the user's inventory to let the user select one.
+ * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
+function inventory_dropdown($ddname = "item", $selected = -1)
+{
+    global $db,$userid;
+    $ret = "<select name='$ddname' type='dropdown' class='form-control'>";
+    $q =
+        $db->query(
+            "SELECT `i`.*, `it`.*
+    				 FROM `inventory` AS `i`
+    				 INNER JOIN `items` AS `it`
+    				 ON `i`.`inv_itemid` = `it`.`itmid`
+    				 WHERE `inv_userid` = {$userid}
+    				 ORDER BY `itmname` ASC");
+    if ($selected == -1)
+    {
+        $first = 0;
     }
+    else
+    {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q))
+    {
+        $ret .= "\n<option value='{$r['itmid']}'";
+        if ($selected == $r['itmid'] || $first == 0)
+        {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['itmname']} (You Have {$r['inv_qty']})</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
 }

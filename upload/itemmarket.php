@@ -9,7 +9,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-echo "<h3>Item Market</h3>";
+echo "<h3>Item Market</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -33,7 +33,7 @@ switch ($_GET['action']) {
 function index()
 {
     global $db, $userid, $api;
-    echo "
+    echo "[<a href='?action=add'>Add Your Own Listing</a>]
 	<br />
 	<table class='table table-responsive table-bordered table-hover table-striped'>
 		<tr>
@@ -377,61 +377,54 @@ function gift()
 function add()
 {
     global $userid, $db, $h, $api;
-    $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
+    $_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs($_POST['ID']) : '';
     $_POST['price'] = (isset($_POST['price']) && is_numeric($_POST['price'])) ? abs($_POST['price']) : '';
     $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
     $_POST['currency'] = (isset($_POST['currency']) && in_array($_POST['currency'], array('primary', 'secondary'))) ? $_POST['currency'] : 'primary';
-    if (empty($_GET['ID'])) {
-        alert('danger', "Uh Oh!", "Please specify the item ID you wish to add to the market.", true, 'inventory.php');
-        die($h->endpage());
-    }
-    $q = $db->query("SELECT `inv_qty`, `inv_itemid`, `inv_id`, `itmname`, `itmbuyprice`
-						FROM `inventory` AS `iv` INNER JOIN `items` AS `i`
-						ON `iv`.`inv_itemid` = `i`.`itmid` WHERE `inv_id` = {$_GET['ID']}
-						AND `inv_userid` = $userid");
-    if ($_POST['price'] && $_POST['QTY'] && $_GET['ID']) {
-        if (!isset($_POST['verf']) || !verify_csrf_code("imadd_{$_GET['ID']}", stripslashes($_POST['verf']))) {
+    if ($_POST['price'] && $_POST['QTY'] && $_POST['ID']) {
+        if (!isset($_POST['verf']) || !verify_csrf_code("imadd_form", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
             die($h->endpage());
         }
-        if ($db->num_rows($q) == 0) {
-            $db->free_result($q);
-            alert('danger', "Uh Oh!", "You do not have this ite to add to the market.", true, 'inventory.php');
+        $haveitem=$api->UserHasItem($userid,$_POST['ID'],$_POST['QTY']);
+        if (!$haveitem) {
+            alert('danger', "Uh Oh!", "You are trying to add an item you do not have, or trying to add more than you have.", true, 'inventory.php');
             die($h->endpage());
         } else {
-            $r = $db->fetch_row($q);
-            $db->free_result($q);
-            if ($r['inv_qty'] < $_POST['QTY']) {
-                alert('danger', "Uh Oh!", "You are trying to add more of this item to the market than you currently have in your inventory.");
-                die($h->endpage());
-            }
             $checkq = $db->query("SELECT `imID` FROM `itemmarket` WHERE  `imITEM` =
-								{$r['inv_itemid']} AND  `imPRICE` = {$_POST['price']} 
+								{$_POST['ID']} AND  `imPRICE` = {$_POST['price']}
 								AND  `imADDER` = {$userid} AND `imCURRENCY` = '{$_POST['currency']}'");
             if ($db->num_rows($checkq) > 0) {
                 $cqty = $db->fetch_row($checkq);
                 $db->query("UPDATE `itemmarket` SET `imQTY` = `imQTY` + {$_POST['QTY']} WHERE `imID` = {$cqty['imID']}");
             } else {
                 $db->query("INSERT INTO `itemmarket` VALUES  (NULL,
-							'{$r['inv_itemid']}', {$userid}, {$_POST['price']}, 
+							'{$_POST['ID']}', {$userid}, {$_POST['price']},
 							'{$_POST['currency']}', {$_POST['QTY']})");
             }
             $db->free_result($checkq);
-            item_remove($userid, $r['inv_itemid'], $_POST['QTY']);
-            $imadd_log = $db->escape("Listed {$r['itmname']} x{$_POST['QTY']} on the item market for {$_POST['price']} {$_POST['currency']}");
+            item_remove($userid, $_POST['ID'], $_POST['QTY']);
+            $itemname=$api->SystemItemIDtoName($_POST['ID']);
+            $imadd_log = $db->escape("Listed {$_POST['QTY']} {$itemname}(s) on the item market for {$_POST['price']} {$_POST['currency']}");
             $api->SystemLogsAdd($userid, 'imarket', $imadd_log);
-            alert('success', "Success!", "You have successfully listed {$_POST['QTY']} {$r['itmname']}(s) on the item
-			    market for {$_POST['price']} {$_POST['currency']}", true, 'itemmarket.php');
+            alert('success', "Success!", "You have successfully listed {$_POST['QTY']} {$itemname}(s) on the item
+			    market for {$_POST['price']} {$_POST['currency']}.", true, 'itemmarket.php');
         }
     } else {
-        $r = $db->fetch_row($q);
-        $db->free_result($q);
-        $csrf = request_csrf_html("imadd_{$_GET['ID']}");
-        echo "<form method='post' action='?action=add&ID={$_GET['ID']}'>
+        $csrf = request_csrf_html("imadd_form");
+        echo "<form method='post' action='?action=add'>
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					You are trying to add your {$api->SystemItemIDtoName($r['inv_itemid'])} to the Item Market.
+					Select the item you wish to add to the item market.
+				</th>
+			</tr>
+			<tr>
+				<th>
+					Item
+				</th>
+				<td>
+					" . inventory_dropdown('ID') . "
 				</th>
 			</tr>
 			<tr>
@@ -439,7 +432,7 @@ function add()
 					Quantity
 				</th>
 				<td>
-					<input type='number' min='1' required='1' class='form-control' name='QTY' value='{$r['inv_qty']}'>
+					<input type='number' min='1' required='1' class='form-control' name='QTY'>
 				</th>
 			</tr>
 			<tr>
@@ -447,7 +440,7 @@ function add()
 					Price per Item
 				</th>
 				<td>
-					<input  type='number' min='1' required='1' class='form-control' name='price' value='{$r['itmbuyprice']}' />
+					<input  type='number' min='1' required='1' class='form-control' name='price' />
 				</td>
 			</tr>
 			<tr>
