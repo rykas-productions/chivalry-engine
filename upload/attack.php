@@ -485,7 +485,7 @@ function beat()
             $oppguild = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
             if ($db->num_rows($oppguild) > 0) {
                 $warq = $db->query("SELECT `gw_id` FROM `guild_wars`
-				WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
+				WHERE `gw_winner` = 0 AND (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
 				OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
                 //Both players' guilds are at war with each other.
                 if ($db->fetch_single($warq) > 0) {
@@ -580,8 +580,8 @@ function lost()
         $oppguild = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
         if ($db->num_rows($oppguild) > 0) {
             $warq = $db->query("SELECT `gw_id` FROM `guild_wars`
-			WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
-			OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+				WHERE `gw_winner` = 0 AND (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
+				OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
             //Both players' guilds are at war.
             if ($db->fetch_single($warq) > 0) {
                 $wr = $db->fetch_single($warq);
@@ -665,9 +665,7 @@ function xp()
             if ($ir['guild'] > 0 && $r['guild'] > 0) {
                 $oppguild = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
                 if ($db->num_rows($oppguild) > 0) {
-                    $warq = $db->query("SELECT `gw_id` FROM `guild_wars`
-					WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
-					OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+
                     //Both players' guilds are at war with each other.
                     if ($db->fetch_single($warq) > 0) {
                         $wr = $db->fetch_single($warq);
@@ -747,8 +745,8 @@ function mug()
                 $oppguild = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
                 if ($db->num_rows($oppguild) > 0) {
                     $warq = $db->query("SELECT `gw_id` FROM `guild_wars`
-					WHERE (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
-					OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+				    WHERE `gw_winner` = 0 AND (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
+				    OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
                     //Both players' guilds are at war with each other.
                     if ($db->fetch_single($warq) > 0) {
                         $wr = $db->fetch_single($warq);
