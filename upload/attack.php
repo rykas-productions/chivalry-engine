@@ -265,8 +265,8 @@ function attacking()
             $api->UserInfoSet($_GET['user'], 'hp', 0);
             echo "<br />
 			<b>You have struck down {$odata['username']}. What do you wish to do to them now?</b><br />
-			<form action='?action=mug&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Rob Them' /></form>
-			<form action='?action=beat&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Increase Infirmary Time' /></form>
+			<form action='?action=mug&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Rob Them' /></form><br />
+			<form action='?action=beat&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Increase Infirmary Time' /></form><br />
 			<form action='?action=xp&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Gain Experience' /></form>";
         } //The opponent is not down... he gets to attack.
         else {
