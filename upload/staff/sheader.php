@@ -215,7 +215,8 @@ class headers
 					Powered with codes by TheMasterGeneral. View source on <a href='https://github.com/MasterGeneral156/chivalry-engine'>Github</a>.";
                 ?>
                 &copy; <?php echo date("Y");
-                echo "<br/>{$db->num_queries} Queries Executed.{$query_extra}<br />";
+                if ($ir['user_level'] == 'Admin' || $ir['user_level'] == 'Web Developer')
+                    echo "<br/>{$db->num_queries} Queries Executed.{$query_extra}<br />";
                 ?>
             </p>
         </footer>
