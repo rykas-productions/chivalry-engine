@@ -323,7 +323,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 									<a href='staff_logs.php?action=itemmarketlogs'>Item Market Logs</a>
 								</td>
 								<td>
-									<a href='staff_logs.php?action=travellogs'>Travel Logs</a>
+                                    <a href='staff_logs.php?action=itemsendlogs'>Item Send Logs</a>
 								</td>
 							</tr> 
 							</tr>
@@ -371,7 +371,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 									<a href='staff_logs.php?action=rrlogs'>Russian Roulette Logs</a>
 								</td>
 								<td>
-
+                                    <a href='staff_logs.php?action=travellogs'>Travel Logs</a>
 								</td>
 							</tr>";
     if ($api->UserMemberLevelGet($userid, 'admin')) {

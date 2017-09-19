@@ -26,6 +26,9 @@ switch ($_GET['action']) {
     case "itemselllogs":
         logs('itemsell');
         break;
+    case "itemsendlogs":
+        logs('itemsend');
+        break;
     case "equiplogs":
         logs('equip');
         break;
