@@ -18,7 +18,7 @@ class api
     */
     function SystemReturnAPIVersion()
     {
-        return "17.9.2";    //Last Updated 9/19/2017
+        return "17.9.3";    //Last Updated 9/19/2017
     }
 
     /*
@@ -870,7 +870,7 @@ class api
          * @param email from = Email account sender [Optional, Default = "Game Sending Email"]
          * Returns Email was sent successfully.
     */
-    function GameSendEmail($to, $body, $subject = '', $from = '')
+    function SystemSendEmail($to, $body, $subject = '', $from = '')
     {
         global $set;
         if (empty($from))
