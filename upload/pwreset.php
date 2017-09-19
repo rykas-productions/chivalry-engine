@@ -22,7 +22,7 @@ switch ($_GET['step']) {
 }
 function one()
 {
-    global $db, $from, $set;
+    global $db, $from, $set, $api;
     if (isset($_POST['email'])) {
         if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email']))) {
             alert('danger', "Uh Oh!", "You input an invalid email address.", false);
@@ -32,7 +32,7 @@ function one()
         $e_email = $db->escape(stripslashes($_POST['email']));
         $IP = $db->escape($_SERVER['REMOTE_ADDR']);
         $email = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'"));
-        $token = bin2hex(randomizer());
+        $token = randomizer();
         if ($email > 0) {
             $to = $e_email;
             $subject = "{$set['WebsiteName']} Password Recovery";
@@ -41,10 +41,7 @@ function one()
 			The link will expire approximately 30 minutes after the password reset process.<br />
 			<br />
 			If you cannot click the URL for whatever reason, please paste in http://" . determine_game_urlbase() . "/pwreset.php?step=two&code={$token} into your URL bar.";
-            $headers[] = 'MIME-Version: 1.0';
-            $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-            $headers[] = "From: {$from}";
-            mail($to, $subject, $body, implode("\r\n", $headers));
+            $api->SystemSendEmail($to, $body, $subject, $from);
             $expire = time() + 1800;
             $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$e_email}'");
             $db->query("INSERT INTO `pw_recovery` (`pwr_ip`, `pwr_email`, `pwr_code`, `pwr_expire`) VALUES ('{$IP}', '{$e_email}', '{$token}', '{$expire}')");
@@ -64,7 +61,7 @@ function one()
 
 function two()
 {
-    global $db, $from, $set;
+    global $db, $from, $set, $api;
     if (isset($_GET['code'])) {
         $token = $db->escape(stripslashes($_GET['code']));
         if ($db->num_rows($db->query("SELECT `pwr_id` FROM `pw_recovery` WHERE `pwr_code` = '{$token}'")) == 0) {
@@ -73,15 +70,12 @@ function two()
             alert('danger', "Uh Oh!", "Your password recovery token has expired.", false);
         } else {
             $pwr = $db->fetch_row($db->query("SELECT * FROM `pw_recovery` WHERE `pwr_code` = '{$token}'"));
-            $pw = base64_encode(openssl_random_pseudo_bytes(16));
+            $pw = substr(randomizer(), 0, 16);
             $to = $pwr['pwr_email'];
             $subject = "{$set['WebsiteName']} Password Recovery";
             $body = "Your password has been successfully updated to {$pw}
 			<br /> Please use this to log in from now on. We highly recommend changing your password as soon as you log in.";
-            $headers[] = 'MIME-Version: 1.0';
-            $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-            $headers[] = "From: {$from}";
-            mail($to, $subject, $body, implode("\r\n", $headers));
+            $api->SystemSendEmail($to, $body, $subject, $from);
             $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$pwr['pwr_email']}'");
             $e_pw = encode_password($pw);
             $db->query("UPDATE `users` SET `password` = '{$e_pw}' WHERE `email` = '{$pwr['pwr_email']}'");
