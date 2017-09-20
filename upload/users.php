@@ -37,7 +37,7 @@ Order By:
 <a href='?st={$st}&by={$by}&ord=asc'>Ascending</a> |
 <a href='?st={$st}&by={$by}&ord=desc'>Descending</a>
 <br /><br />";
-$q = $db->query("SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `gender`, `laston`
+$q = $db->query("SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`
                 FROM `users` ORDER BY `{$by}` {$ord}  LIMIT {$st}, 100");
 $no1 = $st + 1;
 $no2 = min($st + 100, $membs);
@@ -54,12 +54,6 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 				<th width='10%'>
 					Level
 				</th>
-				<th width='10%' class='hidden-xs'>
-					Sex
-				</th>
-				<th width='10%' class='hidden-xs'>
-					Active?
-				</th>
 			</tr>
    ";
 while ($r = $db->fetch_row($q)) {
@@ -73,12 +67,6 @@ while ($r = $db->fetch_row($q)) {
 				</td>
 				<td>
 					{$r['level']}
-				</td>
-				<td class='hidden-xs'>
-					{$r['gender']}
-				</td>
-				<td class='hidden-xs'>
-				" . (($r['laston'] >= $_SERVER['REQUEST_TIME'] - 15 * 60) ? "Online!" : "Offline") . "
 				</td>
 			</tr>";
 }
