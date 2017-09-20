@@ -48,10 +48,10 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 				<th>
 					User
 				</th>
-				<th width='20%'>
+				<th>
 					Primary Currency
 				</th>
-				<th width='10%'>
+				<th>
 					Level
 				</th>
 			</tr>
