@@ -20,9 +20,6 @@ echo "<table class='table table-bordered'>
 		Bot Name
 	</th>
 	<th class='hidden-xs'>
-		Bot Level
-	</th>
-	<th class='hidden-xs'>
 		Bot Cooldown
 	</th>
 	<th>
@@ -43,6 +40,7 @@ while ($result = $db->fetch_row($query)) {
     $themstats = $r3['strength'] + $r3['agility'] + $r3['guard'];
     //Chance the user can beat the bot.
     $chance = round((($ustats / $themstats) * 100) / 2, 1);
+    $chance = ($chance < 100) ? $chance : 100;
     //Assign bot name to variable to cut down on queries.
     $botname = $api->SystemUserIDtoName($result['botuser']);
     //Player cannot attack the bot.
@@ -61,10 +59,8 @@ while ($result = $db->fetch_row($query)) {
     echo "
 	<tr>
 		<td>
-			{$botname} [{$result['botuser']}]
-		</td>
-		<td class='hidden-xs'>
-			" . $api->UserInfoGet($result['botuser'], 'level') . "
+			{$botname} [{$result['botuser']}]<br />
+			Level " . $api->UserInfoGet($result['botuser'], 'level') . "
 		</td>
 		<td class='hidden-xs'>
 			" . ParseTimestamp($result['botcooldown']) . "
