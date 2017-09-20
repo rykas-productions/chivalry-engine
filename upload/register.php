@@ -162,6 +162,7 @@ if (!empty($username)) {
                 if ($db->num_rows($promocodereal) > 0) {
                     $pcrr = $db->fetch_row($promocodereal);
                     item_add($i, $pcrr['promo_item'], 1);
+                    $db->query("UPDATE `promo_codes` SET `promo_use` = `promo_use` + 1 WHERE `promo_code` = '{$code}'");
                     $api->GameAddNotification($i, "Your promotion code was valid! Check your inventory for your item!");
                 } else {
                     $api->GameAddNotification($i, "Your promotion code was invalid.");
