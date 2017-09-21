@@ -170,8 +170,7 @@ function editpack()
     if (!isset($_POST['step'])) {
         $_POST['step'] = 0;
     }
-    if ($_POST['step'] == 2)
-    {
+    if ($_POST['step'] == 2) {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_vip_edit2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action has been blocked for your security. Please submit forms quickly!");
             die($h->endpage());
@@ -215,9 +214,7 @@ function editpack()
         $db->query("UPDATE `vip_listing` SET `vip_item` = {$_POST['item']}, `vip_cost` = '{$db_cost}', `vip_qty` = {$_POST['qty']} WHERE `vip_id` = {$_POST['pack']}");
         $api->SystemLogsAdd($userid, 'staff', "Edited {$api->SystemItemIDtoName($_POST['item'])}'s VIP Pack.");
         alert('success', "Success!", "You have successfully edited the {$api->SystemItemIDtoName($_POST['item'])} VIP Pack.", true, 'index.php');
-    }
-    elseif ($_POST['step'] == 1)
-    {
+    } elseif ($_POST['step'] == 1) {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_vip_edit1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action has been blocked for your security. Please submit forms quickly!");
             die($h->endpage());
@@ -232,7 +229,7 @@ function editpack()
             alert('danger', "Uh Oh!", "The VIP Pack you wish to edit does not exist or is invalid.");
             die($h->endpage());
         }
-        $r=$db->fetch_row($q);
+        $r = $db->fetch_row($q);
         $csrf = request_csrf_html('staff_vip_edit2');
         echo "<form method='post'>
 				<table class='table table-bordered'>
@@ -248,7 +245,7 @@ function editpack()
 							VIP Pack Item
 						</th>
 						<td>
-							" . item_dropdown('item',$r['vip_item']) . "
+							" . item_dropdown('item', $r['vip_item']) . "
 						</td>
 					</tr>
 					<tr>
@@ -275,9 +272,7 @@ function editpack()
 				</table>
 				{$csrf}
 		</form>";
-    }
-    else
-    {
+    } else {
         $csrf = request_csrf_html('staff_vip_edit1');
         echo "<form method='post'>
 				<table class='table table-bordered'>
