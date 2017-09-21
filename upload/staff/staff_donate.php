@@ -18,6 +18,9 @@ switch ($_GET['action']) {
     case 'delpack':
         delpack();
         break;
+    case 'editpack':
+        editpack();
+        break;
     default:
         alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
         die($h->endpage());
@@ -155,6 +158,149 @@ function delpack()
 						</td>
 					</tr>
 				</table>
+				{$csrf}
+		</form>";
+    }
+    $h->endpage();
+}
+
+function editpack()
+{
+    global $db, $h, $userid, $api;
+    if (!isset($_POST['step'])) {
+        $_POST['step'] = 0;
+    }
+    if ($_POST['step'] == 2)
+    {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_vip_edit2', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Your action has been blocked for your security. Please submit forms quickly!");
+            die($h->endpage());
+        }
+        $_POST['pack'] = (isset($_POST['pack']) && is_numeric($_POST['pack'])) ? abs($_POST['pack']) : '';
+        $_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs($_POST['item']) : '';
+        $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : '';
+        $cost = $_POST['cost'] * 100;
+        $cost = (isset($cost) && is_numeric($cost)) ? abs($cost) : '';
+        if (empty($_POST['pack'])) {
+            alert('danger', "Uh Oh!", "Please select a pack you wish to edit.");
+            die($h->endpage());
+        }
+        if (empty($_POST['item'])) {
+            alert('danger', "Uh Oh!", "Please select an item to add to the VIP Pack listing.");
+            die($h->endpage());
+        }
+        if (empty($cost)) {
+            alert('danger', "Uh Oh!", "Please select a cost for the VIP Pack you wish to list.");
+            die($h->endpage());
+        }
+        if (empty($_POST['qty'])) {
+            alert('danger', "Uh Oh!", "Please select the quantity received for donating for this VIP Pack.");
+            die($h->endpage());
+        }
+        if ($_POST['qty'] < 1) {
+            alert('danger', "Uh Oh!", "Quantity must be greater than zero.");
+            die($h->endpage());
+        }
+        $db_cost = $cost / 100;
+        $q = $db->query("SELECT `itmid` FROM `items` WHERE `itmid` = {$_POST['item']}");
+        if ($db->num_rows($q) == 0) {
+            alert('danger', "Uh Oh!", "The item you wish to list as a pack does not exist.");
+            die($h->endpage());
+        }
+        $q2 = $db->query("SELECT `vip_item` FROM `vip_listing` WHERE `vip_item` = {$_POST['item']} AND `vip_id` != {$_POST['pack']}");
+        if ($db->num_rows($q2) > 0) {
+            alert('danger', "Uh Oh!", "You already have this item listed on the VIP Pack Listing.");
+            die($h->endpage());
+        }
+        $db->query("UPDATE `vip_listing` SET `vip_item` = {$_POST['item']}, `vip_cost` = '{$db_cost}', `vip_qty` = {$_POST['qty']} WHERE `vip_id` = {$_POST['pack']}");
+        $api->SystemLogsAdd($userid, 'staff', "Edited {$api->SystemItemIDtoName($_POST['item'])}'s VIP Pack.");
+        alert('success', "Success!", "You have successfully edited the {$api->SystemItemIDtoName($_POST['item'])} VIP Pack.", true, 'index.php');
+    }
+    elseif ($_POST['step'] == 1)
+    {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_vip_edit1', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Your action has been blocked for your security. Please submit forms quickly!");
+            die($h->endpage());
+        }
+        $_POST['pack'] = (isset($_POST['pack']) && is_numeric($_POST['pack'])) ? abs($_POST['pack']) : '';
+        if (empty($_POST['pack'])) {
+            alert('danger', "Uh Oh!", "Please select a VIP Pack you wish to edit.");
+            die($h->endpage());
+        }
+        $q = $db->query("SELECT * FROM `vip_listing` WHERE `vip_id` = {$_POST['pack']}");
+        if ($db->num_rows($q) == 0) {
+            alert('danger', "Uh Oh!", "The VIP Pack you wish to edit does not exist or is invalid.");
+            die($h->endpage());
+        }
+        $r=$db->fetch_row($q);
+        $csrf = request_csrf_html('staff_vip_edit2');
+        echo "<form method='post'>
+				<table class='table table-bordered'>
+				<input type='hidden' value='2' name='step'>
+				<input type='hidden' value='{$_POST['pack']}' name='pack'>
+					<tr>
+						<th colspan='2'>
+							Edit the pack and click submit.
+						</th>
+					</tr>
+					<tr>
+						<th>
+							VIP Pack Item
+						</th>
+						<td>
+							" . item_dropdown('item',$r['vip_item']) . "
+						</td>
+					</tr>
+					<tr>
+						<th>
+							VIP Pack Cost
+						</th>
+						<td>
+							<input type='number' required='1' class='form-control' name='cost' value='{$r['vip_cost']}' min='0.00' step='0.01'>
+						</td>
+					</tr>
+					<tr>
+						<th>
+							VIP Pack Quantity
+						</th>
+						<td>
+							<input type='number' required='1' class='form-control' name='qty' value='{$r['vip_qty']}' min='1'>
+						</td>
+					</tr>
+					<tr>
+						<td colspan='2'>
+							<input type='submit' class='btn btn-primary' value='Edit Pack'>
+						</td>
+					</tr>
+				</table>
+				{$csrf}
+		</form>";
+    }
+    else
+    {
+        $csrf = request_csrf_html('staff_vip_edit1');
+        echo "<form method='post'>
+				<table class='table table-bordered'>
+					<tr>
+						<th colspan='2'>
+							Select the VIP Pack you wish to edit, then submit the form.
+						</th>
+					</tr>
+					<tr>
+						<th>
+							VIP Pack
+						</th>
+						<td>
+							" . vipitem_dropdown() . "
+						</td>
+					</tr>
+					<tr>
+						<td colspan='2'>
+							<input type='submit' class='btn btn-primary' value='Edit Pack'>
+						</td>
+					</tr>
+				</table>
+				<input type='hidden' value='1' name='step'>
 				{$csrf}
 		</form>";
     }

@@ -137,6 +137,7 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 								<a href='staff_settings.php?action=announce'>Create Announcement</a><br />
 								<a href='staff_settings.php?action=diagnostics'>Game Diagnostics</a><br />
 								<a href='staff_donate.php?action=addpack'>Add VIP Pack</a><br />
+								<a href='staff_donate.php?action=editpack'>Edit VIP Pack</a><br />
 								<a href='staff_donate.php?action=delpack'>Delete VIP Pack</a><br />
 							</div>
 						</div>
