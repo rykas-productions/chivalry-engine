@@ -48,8 +48,8 @@ switch ($_GET['action']) {
         unbanip();
         break;
     default:
-        echo 'Error: This script requires an action.';
-        $h->endpage();
+        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
+        die($h->endpage());
         break;
 }
 function fedjail()

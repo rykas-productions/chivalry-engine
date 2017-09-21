@@ -22,7 +22,7 @@ switch ($_GET['action']) {
         delmine();
         break;
     default:
-        echo '404';
+        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
         die($h->endpage());
         break;
 }

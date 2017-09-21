@@ -19,7 +19,7 @@ switch ($_GET['action']) {
         delpack();
         break;
     default:
-        echo '404';
+        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
         die($h->endpage());
         break;
 }
@@ -43,13 +43,11 @@ function addpack()
             alert('danger', "Uh Oh!", "Please select a cost for the VIP Pack you wish to list.");
             die($h->endpage());
         }
-        if (empty($_POST['qty']))
-        {
+        if (empty($_POST['qty'])) {
             alert('danger', "Uh Oh!", "Please select the quantity received for donating for this VIP Pack.");
             die($h->endpage());
         }
-        if ($_POST['qty'] < 1)
-        {
+        if ($_POST['qty'] < 1) {
             alert('danger', "Uh Oh!", "Quantity must be greater than zero.");
             die($h->endpage());
         }

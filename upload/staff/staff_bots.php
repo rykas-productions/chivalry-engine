@@ -19,7 +19,8 @@ switch ($_GET['action']) {
         delbot();
         break;
     default:
-        die();
+        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
+        die($h->endpage());
         break;
 }
 function addbot()

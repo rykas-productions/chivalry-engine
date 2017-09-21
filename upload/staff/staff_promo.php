@@ -28,9 +28,9 @@ switch ($_GET['action']) {
         viewpromo();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please specify the action you wish to do.", true, 'index.php');
-        $h->endpage();
-        break;
+        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
+        die($h->endpage());
+        break;;
 }
 //Function for adding a promo code to the game.
 function add()

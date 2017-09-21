@@ -18,6 +18,10 @@ switch ($_GET['action']) {
     case 'del':
         del();
         break;
+    default:
+        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
+        die($h->endpage());
+        break;
 }
 function add()
 {
