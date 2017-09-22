@@ -214,8 +214,6 @@ class headers
                 echo "<hr />
 					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
 					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}.";
-                ?>
-                &copy; <?php echo date("Y");
                 if ($ir['user_level'] == 'Admin' || $ir['user_level'] == 'Web Developer')
                     echo "<br/>{$db->num_queries} Queries Executed.{$query_extra}<br />";
                 ?>
