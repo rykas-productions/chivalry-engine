@@ -27,7 +27,8 @@ class headers
                 <meta property="og:image" content=""/>
                 <link rel="shortcut icon" href="" type="image/x-icon"/>
                 <!-- CSS -->
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+                <link rel="stylesheet"
+                      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
                 <meta name="theme-color" content="#e7e7e7">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
@@ -175,7 +176,7 @@ class headers
 
     function endpage()
     {
-        global $db, $ir;
+        global $db, $ir, $set;
         $query_extra = '';
     if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
     {
@@ -212,7 +213,7 @@ class headers
                 <?php
                 echo "<hr />
 					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
-					Powered with codes by TheMasterGeneral. View source on <a href='https://github.com/MasterGeneral156/chivalry-engine'>Github</a>.";
+					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}.";
                 ?>
                 &copy; <?php echo date("Y");
                 if ($ir['user_level'] == 'Admin' || $ir['user_level'] == 'Web Developer')

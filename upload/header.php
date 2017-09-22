@@ -250,7 +250,7 @@ class headers
 
     function endpage()
     {
-        global $db, $ir, $StartTime;
+        global $db, $ir, $StartTime, $set;
         $query_extra = '';
         //Set mysqldebug in the URL to get query debugging as an admin.
     if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
@@ -292,9 +292,7 @@ class headers
                 //Print copyright info, Chivalry Engine info, and current time.
                 echo "<hr />
 					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
-					Powered with codes by TheMasterGeneral. View source on <a href='https://github.com/MasterGeneral156/chivalry-engine'>Github</a>.";
-                ?>
-                &copy; <?php echo date("Y");
+					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}.";
                 if ($ir['user_level'] == 'Admin' || $ir['user_level'] == 'Web Developer')
                     echo "<br/>{$db->num_queries} Queries Executed.{$query_extra}<br />";
                 //Profile page loading putting profile in the URL GET.
