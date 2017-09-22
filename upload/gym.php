@@ -39,8 +39,10 @@ if (isset($_POST["stat"]) && $_POST["amnt"]) {
     if (!isset($_POST['verf']) || !verify_csrf_code('gym_train', stripslashes($_POST['verf']))) {
         alert('danger', "Action Blocked!", "The action you were trying to do was blocked. It was blocked because you loaded
             another page on the game. If you have not loaded a different page during this time, change your password
-            immediately, as another person may have access to your account!", true, 'index.php');
-        die($h->endpage());
+            immediately, as another person may have access to your account!", false);
+        $_POST['stat']='';
+        $_POST['amnt']='';
+        goto trainingarea;
     }
     $stat = $statnames[$_POST['stat']];
     //User is trying to train using more energy than they have.
@@ -99,6 +101,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"]) {
             $ir[$stat] += $gain;
     }
 }
+trainingarea:
 //Small logic to keep the last trained stat selected.
 if (!isset($str_select)) {
     $str_select = '';
