@@ -164,6 +164,14 @@ echo "Choose the stat you wish to train, and enter how many times you wish to tr
 		    <input type='submit' class='btn btn-primary' value='Train' />
         </td>
 	</tr>
+	<tr>
+		<td>
+		    <a href='temple.php?action=energy' class='btn btn-primary'>Refill Energy</a>
+        </td>
+        <td>
+		    <a href='temple.php?action=will' class='btn btn-primary'>Regenerate 5% Will</a>
+        </td>
+	</tr>
 	    {$code}
 	    </form>
 </table>";
