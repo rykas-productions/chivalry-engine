@@ -221,7 +221,8 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 					<div id='JOBS' class='tab-pane'>
 						<div class='card'>
 							<div class='card-body'>
-								N/A
+								<a href='staff_jobs.php?action=newjob'>Create Job</a><br />
+								<a href='staff_jobs.php?action=jobedit'>Edit Job</a>
 							</div>
 						</div>
 					</div>
