@@ -1,35 +1,7 @@
-function CheckPasswords(a) {
-    $.ajax({
-        type: "POST", url: "js/script/check.php", data: "password=" + escape(a), success: function (a) {
-            $("#passwordresult").html(a)
-        }
-    })
-}
-function goBack() {
-    window.history.back()
-}
-function CheckUsername(a) {
-    $.ajax({
-        type: "POST", url: "js/script/checkun.php", data: "username=" + escape(a), success: function (a) {
-            $("#usernameresult").html(a)
-        }
-    })
-}
-function OutputTeam(a) {
-    var b = a.value;
-    $.ajax({
-        type: "POST", url: "js/script/outputteam.php", data: "team=" + escape(b), success: function (a) {
-            $("#teamresult").html(a)
-        }
-    })
-}
-function CheckEmail(a) {
-    $.ajax({
-        type: "POST", url: "js/script/checkem.php", data: "email=" + escape(a), success: function (a) {
-            $("#emailresult").html(a)
-        }
-    })
-}
-function PasswordMatch() {
-    pwt1 = $("#password").val(), pwt2 = $("#cpassword").val(), pwt1 == pwt2 ? (document.getElementById("pwerror").className = "has-success", document.getElementById("cpwerror").className = "has-success") : (document.getElementById("pwerror").className = "has-error", document.getElementById("cpwerror").className = "has-error")
-}
+function CheckPasswords(password){$.ajax({type:"POST",url:"js/script/check.php",data:"password="+escape(password),success:function(resps){$("#passwordresult").html(resps)}})}
+function goBack(){window.history.back()}
+function CheckUsername(name){$.ajax({type:"POST",url:"js/script/checkun.php",data:"username="+escape(name),success:function(resps){$("#usernameresult").html(resps)}})}
+function OutputTeam(team){var value=team.value;$.ajax({type:"POST",url:"js/script/outputteam.php",data:"team="+escape(value),success:function(resps){$("#teamresult").html(resps)}})}
+function CheckEmail(email){$.ajax({type:"POST",url:"js/script/checkem.php",data:"email="+escape(email),success:function(resps){$("#emailresult").html(resps)}})}
+function PasswordMatch(){pwt1=$("#password").val();pwt2=$("#cpassword").val();if(pwt1==pwt2){document.getElementById('password').className='form-control is-valid';document.getElementById('cpassword').className='form-control is-valid';document.getElementById("cpasswordresult").innerHTML=''}
+else{document.getElementById('password').className='form-control is-invalid';document.getElementById('cpassword').className='form-control is-invalid';document.getElementById("cpasswordresult").innerHTML='Passwords do not match.'}}

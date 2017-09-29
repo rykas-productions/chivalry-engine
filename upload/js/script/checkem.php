@@ -22,20 +22,31 @@ if (!is_ajax()) {
 
 require_once('../../globals_nonauth.php');
 $email = isset($_POST['email']) ? stripslashes($_POST['email']) : '';
-if (empty($email)) {
-    echo "<script>document.getElementById('emerror').className = 'has-error';</script>";
-    die(alert('danger', "Uh Oh!", "Please enter an email address.", false));
-}
-if (!valid_email($email)) {
-    echo "<script>document.getElementById('emerror').className = 'has-error';</script>";
-    die(alert('danger', "Uh Oh!", "Please enter a valid email address.", false));
-}
-$e_email = $db->escape($email);
-$q = $db->query("SELECT COUNT(`userid`) FROM users WHERE `email` = '{$e_email}'");
-if ($db->fetch_single($q) != 0) {
-    echo "<script>document.getElementById('emerror').className = 'has-error';</script>";
-    die(alert('danger', "Uh Oh!", "The email address you've entered is already in use.", false));
-} else {
-    echo "<script>document.getElementById('emerror').className = 'has-success';</script>";
+if (isset($email)) {
+    $e_email = $db->escape($email);
+    $q = $db->query("SELECT COUNT(`userid`) FROM users WHERE `email` = '{$e_email}'");
+    if (empty($email)) {
+        $newclass = 'form-control is-invalid';
+        $warning="Please specify a valid email.";
+    }
+    else if (!valid_email($email)) {
+        $newclass = 'form-control is-invalid';
+        $warning = "Please specify a valid email.";
+    }
+    else if ($db->fetch_single($q) != 0) {
+        $newclass = 'form-control is-invalid';
+        $warning = "The email address you've chosen is already in use.";
+    } else {
+        $newclass = 'form-control is-valid';
+        $warning='';
+    }
+    ?>
+    <script>
+        var d = document.getElementById("email");
+        var div = document.getElementById("emailresult");
+        d.className = " <?php echo $newclass; ?>";
+        div.innerHTML = " <?php echo $warning; ?>";
+    </script>
+<?php
 }
 $db->free_result($q);

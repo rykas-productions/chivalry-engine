@@ -55,11 +55,13 @@ function PasswordMatch() {
     pwt1 = $("#password").val();
     pwt2 = $("#cpassword").val();
     if (pwt1 == pwt2) {
-        document.getElementById('pwerror').className = 'has-success';
-        document.getElementById('cpwerror').className = 'has-success';
+        document.getElementById('password').className = 'form-control is-valid';
+        document.getElementById('cpassword').className = 'form-control is-valid';
+        document.getElementById("cpasswordresult").innerHTML = '';
     }
     else {
-        document.getElementById('pwerror').className = 'has-error';
-        document.getElementById('cpwerror').className = 'has-error';
+        document.getElementById('password').className = 'form-control is-invalid';
+        document.getElementById('cpassword').className = 'form-control is-invalid';
+        document.getElementById("cpasswordresult").innerHTML = 'Passwords do not match.';
     }
 }

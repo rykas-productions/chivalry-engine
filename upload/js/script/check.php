@@ -35,41 +35,36 @@ if (!isset($_POST['password'])) { // If they are trying to view this without ?pa
         $numbers = preg_match_all("/[0-9]/", $_POST['password']);
         $symbols = preg_match_all('/[-!@#$%^&*()_+|~=`{}\[\]:";<>?,.\/]/', $_POST['password']);
         $pwlength = strlen($_POST['password']);
-        if ($uppercase == 0) {
+        if ($uppercase == 0)
             $upscore = 0;
-        } elseif ($uppercase == 1) {
+        elseif ($uppercase == 1)
             $upscore = 1;
-        } elseif ($uppercase >= 2) {
+        elseif ($uppercase >= 2)
             $upscore = 2;
-        }
-        if ($lowercase == 0) {
+        if ($lowercase == 0)
             $lowscore = 0;
-        } elseif ($lowercase == 1) {
+        elseif ($lowercase == 1)
             $lowscore = 1;
-        } elseif ($lowercase >= 2) {
+        elseif ($lowercase >= 2)
             $lowscore = 2;
-        }
-        if ($numbers == 0) {
+        if ($numbers == 0)
             $numbscore = 0;
-        } elseif ($numbers == 1) {
+        elseif ($numbers == 1)
             $numbscore = 1;
-        } elseif ($numbers >= 2) {
+        elseif ($numbers >= 2)
             $numbscore = 2;
-        }
-        if ($symbols == 0) {
+        if ($symbols == 0)
             $symscore = 0;
-        } elseif ($symbols == 1) {
+        elseif ($symbols == 1)
             $symscore = 1;
-        } elseif ($symbols >= 2) {
+        elseif ($symbols >= 2)
             $symscore = 2;
-        }
-        if ($pwlength < 8) {
+        if ($pwlength < 8)
             $pwscore = 0;
-        } elseif ($pwlength >= 8 && $pwlength <= 15) {
+        elseif ($pwlength >= 8 && $pwlength <= 15)
             $pwscore = 1;
-        } elseif ($pwlength >= 16) {
+        elseif ($pwlength >= 16)
             $pwscore = 2;
-        }
         $score = $lowscore + $upscore + $numbscore + $symscore + $pwscore;
         echo "<br />";
         if ($score <= 3 || $score == 0) {
@@ -77,24 +72,33 @@ if (!isset($_POST['password'])) { // If they are trying to view this without ?pa
             $overall = "<div class='progress-bar progress-bar-danger' role='progressbar' aria-valuenow='{$score}'
 				aria-valuemin='0' aria-valuemax='10' style='width:{$score}0%'>
 				{$score}0% Strong</div>";
+            $newclass="is-valid";
         } elseif ($score <= 5) {
             // If there total points are equal or less than 5.
             $overall = "<div class='progress-bar progress-bar-warning' role='progressbar' aria-valuenow='{$score}'
 				aria-valuemin='0' aria-valuemax='10' style='width:{$score}0%'>
 				{$score}0% Strong</div>";
+            $newclass="is-valid";
         } elseif ($score <= 8) {
             // If there total points are equal or less than 8.
             $overall = "<div class='progress-bar progress-bar-info' role='progressbar' aria-valuenow='{$score}'
 				aria-valuemin='0' aria-valuemax='10' style='width:{$score}0%'>
 				{$score}0% Strong</div>";
+            $newclass="is-valid";
         } elseif ($score >= 8) {
             // If there total points are greator than 10.
             $overall = "<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='{$score}'
 				aria-valuemin='0' aria-valuemax='10' style='width:{$score}0%'>
 				{$score}0% Strong</div>";
+            $newclass="is-valid";
         } // End If.
 
-        echo "<div class='progress'>{$overall}</div>"; // Tells them their passwords strength.
+        echo "<div class='progress'>{$overall}</div>"; // Tells them their passwords strength. ?>
+        <script>
+            var d = document.getElementById("password");
+            d.className += " <?php echo $newclass; ?>";
+        </script>
+        <?php
 
     } elseif ($PASS == NULL) { // ElseIf their password is NULL (empty).
         echo ''; // Dont display anything.

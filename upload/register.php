@@ -182,10 +182,6 @@ if (!empty($username)) {
 } else {
     echo "
 	<h3>{$set['WebsiteName']} Registration Form</h3>
-	<div id='usernameresult'></div>
-	<div id='cpasswordresult'></div>
-	<div id='emailresult'></div>
-	<div id='teamresult'></div>
 	<table class='table table-bordered'>
 		<form method='post'>
 			<tr>
@@ -193,9 +189,8 @@ if (!empty($username)) {
 					Username
 				</th>
 				<td>
-					<div id='unerror'>
-						<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='3-20 characters in length' onkeyup='CheckUsername(this.value);' required>
-					</div>
+                    <input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='3-20 characters in length' onkeyup='CheckUsername(this.value);' required>
+                    <div id='usernameresult' class='invalid-feedback'></div>
 				</td>
 			</tr>
 			<tr>
@@ -203,9 +198,8 @@ if (!empty($username)) {
 					Email
 				</th>
 				<td>
-					<div id='emerror'>
-						<input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
-					</div>
+                    <input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
+                    <div id='emailresult' class='invalid-feedback'></div>
 				</td>
 			</tr>
 			<tr>
@@ -213,9 +207,7 @@ if (!empty($username)) {
 					Password
 				</th>
 				<td>
-					<div id='pwerror'>
-						<input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='Unique passwords recommended' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
-					</div>
+                    <input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='Unique passwords recommended' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
 					<div id='passwordresult'></div>
 				</td>
 				</tr>
@@ -224,9 +216,8 @@ if (!empty($username)) {
 						Confirm Password
 					</th>
 					<td>
-						<div id='cpwerror'>
-							<input type='password' class='form-control' id='cpassword' name='cpassword' minlength='3' maxlength='256' placeholder='Confirm password entered previously' onkeyup='PasswordMatch();' required>
-						</div>
+                        <input type='password' class='form-control' id='cpassword' name='cpassword' minlength='3' maxlength='256' placeholder='Confirm password entered previously' onkeyup='PasswordMatch();' required>
+					    <div id='cpasswordresult' class='invalid-feedback'></div>
 					</td>
 				</tr>
 				<tr>
@@ -251,6 +242,7 @@ if (!empty($username)) {
 							<option value='Rogue'>Rogue</option>
 							<option value='Defender'>Defender</option>
 						</select>
+						<div id='teamresult' class='invalid-feedback'></div>
 					</td>
 				</tr>
 				<tr>

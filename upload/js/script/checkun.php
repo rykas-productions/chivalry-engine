@@ -6,7 +6,7 @@
 	Author: TheMasterGeneral
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
-$menuhide=1;
+$menuhide = 1;
 if (isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD'])) {
     if (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST') {
         // Ignore a GET request
@@ -21,25 +21,31 @@ if (!is_ajax()) {
 }
 require_once('../../globals_nonauth.php');
 $username = isset($_POST['username']) ? stripslashes($_POST['username']) : '';
-if (!$username) {
-    echo "<script>document.getElementById('unerror').className = 'has-error';</script>";
-    die(alert('danger', "Uh Oh!", "Please enter a username.", false));
-
-}
-if ((strlen($username) < 3)) {
-    echo "<script>document.getElementById('unerror').className = 'has-error';</script>";
-    die(alert('danger', "Uh Oh!", "Usernames must be, at minimum, 3 characters in length.", false));
-}
-if ((strlen($username) > 21)) {
-    echo "<script>document.getElementById('unerror').className = 'has-error';</script>";
-    die(alert('danger', "Uh Oh!", "Usernames must be, at maximum, 20 characters in length.", false));
-}
 $e_username = $db->escape($username);
 $q = $db->query("SELECT COUNT(`userid`) FROM users WHERE username = '{$e_username}'");
-if ($db->fetch_single($q)) {
-    echo "<script>document.getElementById('unerror').className = 'has-error';</script>";
-    die(alert('danger', "Uh Oh!", "The username you've chosen is already in use. Please user another one.", false));
+if (empty($username)) {
+    $newclass = 'form-control is-invalid';
+    $warning = "Please enter a username.";
+
+} else if ((strlen($username) < 3)) {
+    $newclass = 'form-control is-invalid';
+    $warning = "Username must be, at least, 3 characters long.";
+} else if ((strlen($username) > 21)) {
+    $newclass = 'form-control is-invalid';
+    $warning = "Username must be, at most, 20 characters long.";
+} else if ($db->fetch_single($q)) {
+    $newclass = 'form-control is-invalid';
+    $warning = "Username already in use.";
 } else {
-    echo "<script>document.getElementById('unerror').className = 'has-success';</script>";
+    $newclass = 'form-control is-valid';
+    $warning = "";
 }
+?>
+    <script>
+        var d = document.getElementById("username");
+        var div = document.getElementById("usernameresult");
+        d.className = " <?php echo $newclass; ?>";
+        div.innerHTML = " <?php echo $warning; ?>";
+    </script>
+<?php
 $db->free_result($q);
