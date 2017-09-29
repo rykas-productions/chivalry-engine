@@ -68,12 +68,12 @@ global $jobquery, $housequery, $voterquery;
 if (isset($jobquery) && $jobquery) {
     $is =
         $db->query(
-            "SELECT `u`.*, `us`.*, `j`.*, `jr`.*,
+            "SELECT `u`.*, `us`.*, `j`.*, `jr`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
-                     LEFT JOIN `jobs` AS `j` ON `j`.`jID` = `u`.`job`
-                     LEFT JOIN `jobranks` AS `jr`
+                     LEFT JOIN `jobs` AS `j` ON `j`.`jRANK` = `u`.`job`
+                     LEFT JOIN `job_ranks` AS `jr`
                      ON `jr`.`jrID` = `u`.`jobrank`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
