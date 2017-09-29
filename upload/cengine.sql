@@ -480,6 +480,40 @@ CREATE TABLE `itemtypes` (
   `itmtypename` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+-- -------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `jRANK` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `jNAME` TEXT NOT NULL ,
+  `jSTART` INT(11) UNSIGNED NOT NULL ,
+  `jDESC` TEXT NOT NULL ,
+  `jBOSS` INT NOT NULL ,
+  UNIQUE (`jRANK`)
+) ENGINE = MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_ranks`
+--
+
+CREATE TABLE `job_ranks` (
+  `jrID` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `jrJOB` INT(11) UNSIGNED NOT NULL ,
+  `jrPRIMPAY` INT(11) UNSIGNED NOT NULL ,
+  `jrSECONDARY` INT(11) UNSIGNED NOT NULL ,
+  `jrACT` INT(11) UNSIGNED NOT NULL ,
+  `jrSTR` INT(11) UNSIGNED NOT NULL ,
+  `jrLAB` INT(11) UNSIGNED NOT NULL ,
+  `jrIQ` INT(11) UNSIGNED NOT NULL ,
+  UNIQUE (`jrID`)
+) ENGINE = MyISAM;
+
 -- --------------------------------------------------------
 
 --
@@ -957,8 +991,7 @@ CREATE TABLE `vips_accepted` (
 CREATE TABLE `vip_listing` (
   `vip_id` int(11) UNSIGNED NOT NULL,
   `vip_item` int(11) UNSIGNED NOT NULL,
-  `vip_cost` decimal(10,2) NOT NULL,
-  `vip_qty` int(11) UNSIGNED NOT NULL
+  `vip_cost` decimal(10,2) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -1548,6 +1581,9 @@ ALTER TABLE `vips_accepted`
 --
 ALTER TABLE `vip_listing`
   MODIFY `vip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+  ALTER TABLE `job_ranks` ADD `jrRANK` TEXT NOT NULL AFTER `jrID`;
+  ALTER TABLE `jobs` CHANGE `jBOSS` `jBOSS` TEXT NOT NULL;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
