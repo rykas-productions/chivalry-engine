@@ -21,3 +21,6 @@ CREATE TABLE `job_ranks` (
 
 ALTER TABLE `job_ranks` ADD `jrRANK` TEXT NOT NULL AFTER `jrID`;
 ALTER TABLE `jobs` CHANGE `jBOSS` `jBOSS` TEXT NOT NULL;
+
+ALTER TABLE `users` ADD `job` INT(11) UNSIGNED NOT NULL AFTER `secondary_currency`,
+  ADD `jobrank` INT(11) UNSIGNED NOT NULL AFTER `job`;
