@@ -189,9 +189,8 @@ function newjob()
             alert('danger', "Uh Oh!", "Job Rank activity requirement must be at least 1.");
             die($h->endpage());
         }
-        $q=$db->query("SELECT `jRANK` from `jobs` WHERE `jNAME` = '{$_POST['jNAME']}'");
-        if ($db->num_rows($q) > 0)
-        {
+        $q = $db->query("SELECT `jRANK` from `jobs` WHERE `jNAME` = '{$_POST['jNAME']}'");
+        if ($db->num_rows($q) > 0) {
             alert('danger', "Uh Oh!", "You may not have the same job name used more than once.");
             die($h->endpage());
         }
@@ -204,8 +203,162 @@ function newjob()
                     '{$_POST['jACT']}', '{$_POST['jSTR']}', '{$_POST['jLAB']}', '{$_POST['jIQ']}')");
         $j = $db->insert_id();
         $db->query("UPDATE `jobs` SET `jSTART` = {$j} WHERE `jRANK` = {$i}");
-        alert('success',"Success!","You have successfully created the {$_POST['jNAME']} job!",true,'index.php');
-        $api->SystemLogsAdd($userid,'staff',"Created the {$_POST['jNAME']} job.");
+        alert('success', "Success!", "You have successfully created the {$_POST['jNAME']} job!", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Created the {$_POST['jNAME']} job.");
+    }
+}
+
+function jobedit()
+{
+    global $db, $userid, $h, $api;
+    echo "<h3>Edit Job</h3><hr />";
+    if (!isset($_POST['step']))
+        $_POST['step'] = 0;
+    if ($_POST['step'] == 2) {
+        $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
+        $_POST['jNAME'] = (isset($_POST['jNAME']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
+                $_POST['jNAME'])) ? $db->escape(strip_tags(stripslashes($_POST['jNAME']))) : '';
+        $_POST['jDESC'] = (isset($_POST['jDESC'])) ? $db->escape(strip_tags(stripslashes($_POST['jDESC']))) : '';
+        $_POST['jBOSS'] = (isset($_POST['jBOSS']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
+                $_POST['jBOSS'])) ? $db->escape(strip_tags(stripslashes($_POST['jBOSS']))) : '';
+        $_POST['jobrank'] = (isset($_POST['jobrank']) && is_numeric($_POST['jobrank'])) ? abs(intval($_POST['jobrank'])) : 0;
+        if (empty($_POST['job'])) {
+            alert('danger', "Uh Oh!", "Please specify the job you wish to edit.");
+            die($h->endpage());
+        }
+        if (empty($_POST['jNAME']) || empty($_POST['jDESC']) || empty($_POST['jBOSS'])) {
+            alert('danger', "Uh Oh!", "Please fill out all the fields.");
+            die($h->endpage());
+        }
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editjob2', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
+            die($h->endpage());
+        }
+        $q = $db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        if ($db->num_rows($q) == 0) {
+            $db->free_result($q);
+            alert('danger', "Uh Oh!", "The job you've chosen to edit does not exist or is invalid.");
+            die($h->endpage());
+        }
+        $db->free_result($q);
+        $q = $db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        if ($db->num_rows($q) == 0) {
+            $db->free_result($q);
+            alert('danger', "Uh Oh!", "The job rank you've chosen for this job does not exist or is invalid.");
+            die($h->endpage());
+        }
+        $db->free_result($q);
+        $q = $db->query("SELECT `jRANK` from `jobs` WHERE `jNAME` = '{$_POST['jNAME']}' AND `jRANK` != {$_POST['job']}");
+        if ($db->num_rows($q) > 0) {
+            alert('danger', "Uh Oh!", "You may not have the same job name used more than once.");
+            die($h->endpage());
+        }
+        $db->free_result($q);
+        $db->query("UPDATE `jobs`
+                    SET `jNAME` = '{$_POST['jNAME']}',
+                    `jDESC` = '{$_POST['jDESC']}',
+                    `jBOSS` = '{$_POST['jBOSS']}',
+                    `jSTART` = {$_POST['jobrank']}
+                    WHERE `jRANK` = {$_POST['job']}");
+        alert('success',"Success!","You have successfully updated the {$_POST['jNAME']} job.",true,'index.php');
+        $api->SystemLogsAdd($userid,'staff',"Updated the {$_POST['jNAME']} [{$_POST['job']}] job");
+    } elseif ($_POST['step'] == 1) {
+        $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
+        if (empty($_POST['job'])) {
+            alert('danger', "Uh Oh!", "Please specify the job you wish to edit.");
+            die($h->endpage());
+        }
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editjob1', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
+            die($h->endpage());
+        }
+        $q = $db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        if ($db->num_rows($q) == 0) {
+            $db->free_result($q);
+            alert('danger', "Uh Oh!", "The job you've chosen to edit does not exist or is invalid.");
+            die($h->endpage());
+        }
+        $r = $db->fetch_row($q);
+        $db->free_result($q);
+        $csrf = request_csrf_html('staff_editjob2');
+        $jobname = addslashes($r['jNAME']);
+        $jobdesc = addslashes($r['jDESC']);
+        $jobowner = addslashes($r['jBOSS']);
+        echo "<form method='post'>";
+        echo "<table class='table table-bordered'>
+            <tr>
+				<th colspan='2'>
+					Fill out this form completely to edit the job.
+				</th>
+			</tr>
+			<tr>
+				<th>
+					Job Name
+				</th>
+				<td>
+					<input type='text' name='jNAME' required='1' value='{$jobname}' class='form-control'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Description
+				</th>
+				<td>
+					<input type='text' name='jDESC' required='1' value='{$jobdesc}' class='form-control'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Employer's Name
+				</th>
+				<td>
+					<input type='text' name='jBOSS' required='1' value='{$jobowner}' class='form-control'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					First Job Rank
+				</th>
+				<td>
+					" . jobrank_dropdown('jobrank', $r['jSTART']) . "
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' value='Edit Job' class='btn btn-primary'>
+				</td>
+			</tr>
+		</table>
+		{$csrf}
+		<input type='hidden' value='2' name='step'>
+        <input type='hidden' value='{$_POST['job']}' name='job'>
+		</form>";
+    } else {
+        $csrf = request_csrf_html('staff_editjob1');
+        echo "<form method='post'><table class='table table-bordered'>
+        <input type='hidden' value='1' name='step'>
+        <tr>
+            <th colspan='2'>
+                Please select the job you wish to edit.
+            </th>
+        </tr>
+        <tr>
+            <th>
+                Job
+            </th>
+            <td>
+
+                " . job_dropdown() . "
+            </td>
+        </tr>
+         <tr>
+            <td colspan='2'>
+                <input type='submit' value='Edit Job' class='btn btn-primary'>
+            </td>
+        </tr>
+        </table>
+        {$csrf}
+        </form>";
     }
 }
 
