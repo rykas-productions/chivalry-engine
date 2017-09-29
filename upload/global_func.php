@@ -1229,13 +1229,13 @@ function request_csrf_code($formid)
 function randomizer()
 {
     //Set to true for stronger randomization on OpenSSL
-    $Safe=true;
+    $Safe = true;
     //Use PHP V7's Random Bytes generator first!
     if (function_exists('random_bytes'))
         return bin2hex(random_bytes(128));
     //If we can't... lets use OpenSSL's random bytes generator
     elseif (function_exists('openssl_random_pseudo_bytes'))
-        return bin2hex(openssl_random_pseudo_bytes(128,$Safe));
+        return bin2hex(openssl_random_pseudo_bytes(128, $Safe));
     //That fails... use our shitty one. ;/
     else
         return sha1(decbin(Random(1, PHP_INT_MAX)));
@@ -1616,7 +1616,7 @@ function SystemLogsAdd($user, $logtype, $input)
 }
 
 //Fall back for PHP 7 functions on a PHP < 7 versions.
-function Random($min=0, $max=PHP_INT_MAX)
+function Random($min = 0, $max = PHP_INT_MAX)
 {
     if (function_exists('random_int'))
         return random_int($min, $max);
@@ -1824,6 +1824,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
     else
         return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
 }
+
 /**
  * Constructs a drop-down listbox of all the items in the user's inventory to let the user select one.
  * @param string $ddname The "name" attribute the <select> attribute should have
@@ -1833,7 +1834,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
  */
 function inventory_dropdown($ddname = "item", $selected = -1)
 {
-    global $db,$userid;
+    global $db, $userid;
     $ret = "<select name='$ddname' type='dropdown' class='form-control'>";
     $q =
         $db->query(
@@ -1843,6 +1844,76 @@ function inventory_dropdown($ddname = "item", $selected = -1)
     				 ON `i`.`inv_itemid` = `it`.`itmid`
     				 WHERE `inv_userid` = {$userid}
     				 ORDER BY `itmname` ASC");
+    if ($selected == -1) {
+        $first = 0;
+    } else {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['itmid']}'";
+        if ($selected == $r['itmid'] || $first == 0) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['itmname']} (You Have {$r['inv_qty']})</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
+
+/**
+ * Constructs a drop-down listbox of all the jobs in the game to let the user select one.
+ * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param int $selected [optional] The <i>ID number</i> of the job which should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first job alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
+function job_dropdown($ddname = "job", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+        $db->query(
+            "SELECT `jRANK`, `jNAME`
+    				 FROM `jobs`
+    				 ORDER BY `jRANK` ASC");
+    if ($selected == -1) {
+        $first = 0;
+    } else {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['jRANK']}'";
+        if ($selected == $r['jRANK'] || $first == 0) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['jNAME']} [ID: {$r['jRANK']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
+
+/**
+ * Constructs a drop-down listbox of all the job ranks in the game to let the user select one.
+ * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
+ * @param int $selected [optional] The <i>ID number</i> of the job rank which should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first job's first job rank alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
+function jobrank_dropdown($ddname = "jobrank", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+        $db->query(
+            "SELECT `jrID`, `jNAME`, `jrRANK`
+                     FROM `job_ranks` AS `jr`
+                     INNER JOIN `jobs` AS `j`
+                     ON `jr`.`jrID` = `j`.`jRANK`
+                     ORDER BY `j`.`jNAME` ASC, `jr`.`jrRANK` ASC");
     if ($selected == -1)
     {
         $first = 0;
@@ -1853,13 +1924,13 @@ function inventory_dropdown($ddname = "item", $selected = -1)
     }
     while ($r = $db->fetch_row($q))
     {
-        $ret .= "\n<option value='{$r['itmid']}'";
-        if ($selected == $r['itmid'] || $first == 0)
+        $ret .= "\n<option value='{$r['jrID']}'";
+        if ($selected == $r['jrID'] || $first == 0)
         {
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['itmname']} (You Have {$r['inv_qty']})</option>";
+        $ret .= ">{$r['jrRANK']} @ {$r['jNAME']}</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
