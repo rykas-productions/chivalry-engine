@@ -116,7 +116,7 @@ echo "
 					<a href='dungeon.php'>Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
 					<a href='infirmary.php'>Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
 					<a href='gym.php'>Gym</a><br />
-					<a href='#'>Your Job</a><br />
+					<a href='job.php'>Your Job</a><br />
 					<a href='academy.php'>Learning Academy</a><br />
 					<a href='criminal.php'>Criminal Center</a><br />
 					<a href='tutorial.php'>{$set['WebsiteName']} Tutorial</a><br />
