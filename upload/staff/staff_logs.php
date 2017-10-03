@@ -101,6 +101,9 @@ switch ($_GET['action']) {
     case "rrlogs":
         logs('rr');
         break;
+    case "primsend":
+        logs('sendcash');
+        break;
     case "mail":
         maillogs();
         break;

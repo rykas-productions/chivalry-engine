@@ -375,6 +375,14 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 								<td>
                                     <a href='staff_logs.php?action=travellogs'>Travel Logs</a>
 								</td>
+							</tr>
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=primsend'>Primary Currency Xfer Logs</a>
+								</td>
+								<td>
+
+								</td>
 							</tr>";
     if ($api->UserMemberLevelGet($userid, 'admin')) {
         echo "

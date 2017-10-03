@@ -172,7 +172,7 @@ if (!$_GET['user']) {
                     <a href='inbox.php?action=compose&user={$r['userid']}' class='btn btn-primary'>Message {$r['username']}</a>
                     <br />
 				    <br />
-				    <a href='#' class='btn btn-primary'>Send {$r['username']} Cash</a>
+				    <a href='sendcash.php?user={$r['userid']}' class='btn btn-primary'>Send {$r['username']} Cash</a>
 				    <br />
 				    <br />
 					<a href='attack.php?user={$r['userid']}' class='btn btn-danger'>Attack {$r['username']}</a>
