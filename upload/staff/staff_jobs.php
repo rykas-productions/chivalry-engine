@@ -260,8 +260,8 @@ function jobedit()
                     `jBOSS` = '{$_POST['jBOSS']}',
                     `jSTART` = {$_POST['jobrank']}
                     WHERE `jRANK` = {$_POST['job']}");
-        alert('success',"Success!","You have successfully updated the {$_POST['jNAME']} job.",true,'index.php');
-        $api->SystemLogsAdd($userid,'staff',"Updated the {$_POST['jNAME']} [{$_POST['job']}] job");
+        alert('success', "Success!", "You have successfully updated the {$_POST['jNAME']} job.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Updated the {$_POST['jNAME']} [{$_POST['job']}] job");
     } elseif ($_POST['step'] == 1) {
         $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
         if (empty($_POST['job'])) {
@@ -357,6 +357,47 @@ function jobedit()
             </td>
         </tr>
         </table>
+        {$csrf}
+        </form>";
+    }
+}
+
+function jobdele()
+{
+    global $db, $userid, $api, $h;
+    if (isset($_POST['job'])) {
+        $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
+        //Verify CSRF
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_deljob', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
+            die($h->endpage());
+        }
+        //Inputted job was cleared because of sanitation.
+        if (empty($_POST['job'])) {
+            alert('danger', "Uh Oh!", "The job you input is invalid and/or empty.");
+            die($h->endpage());
+        }
+        //Select the job to see if it exists.
+        $q = $db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        if ($db->num_rows($q) == 0) {
+            alert('danger', "Uh Oh!", "The job you're trying to delete either does not exist, or was previously deleted.");
+            die($h->endpage());
+        }
+        $db->free_result($q);
+        $db->query("DELETE FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        $db->query("DELETE FROM `job_ranks` WHERE `jrJOB` = {$_POST['job']}");
+        $ranksdel = $db->affected_rows();
+        $db->query("UPDATE `users` SET `job` = 0, `jobrank` = 0, `jobwork` = 0 WHERE `job` = {$_POST['job']}");
+        $unemployed = $db->affected_rows();
+        alert('success', "Success!", "You have successfully deleted this job. {$ranksdel} job rank(s) were removed.
+            {$unemployed} player(s) are now jobless due to this deletion.", true, 'index.php');
+    } else {
+        $csrf = request_csrf_html('staff_deljob');
+        echo "<form method='post'>
+        Please select the form you wish to delete. Users who are currently employed here will have their job data set
+        back to default<br />
+        " . job_dropdown() . "<br />
+        <input type='submit' value='Delete Job' class='btn btn-primary'>
         {$csrf}
         </form>";
     }
