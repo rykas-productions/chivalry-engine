@@ -391,6 +391,7 @@ function jobdele()
         $unemployed = $db->affected_rows();
         alert('success', "Success!", "You have successfully deleted this job. {$ranksdel} job rank(s) were removed.
             {$unemployed} player(s) are now jobless due to this deletion.", true, 'index.php');
+        $api->SystemLogsAdd($userid,'staff',"Deleted Job ID {$_POST['job']}.");
     } else {
         $csrf = request_csrf_html('staff_deljob');
         echo "<form method='post'>
@@ -401,6 +402,11 @@ function jobdele()
         {$csrf}
         </form>";
     }
+}
+
+function newjobrank()
+{
+    global $db,$userid,$api,$h;
 }
 
 $h->endpage();
