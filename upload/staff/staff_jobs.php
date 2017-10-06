@@ -181,7 +181,7 @@ function newjob()
             alert('danger', "Uh Oh!", "Please fill out all the fields concerning the job rank's requirements/information.");
             die($h->endpage());
         }
-        if (empty($_POST['jrPRIMPAY']) && ($_POST['jrSECONDARY'])) {
+        if (empty($_POST['jrPRIMPAY']) && (empty($_POST['jrSECONDARY']))) {
             alert('danger', "Uh Oh!", "Please specify the hourly wage for this job rank.");
             die($h->endpage());
         }
@@ -407,6 +407,132 @@ function jobdele()
 function newjobrank()
 {
     global $db,$userid,$api,$h;
+    if (isset($_POST['job']))
+    {
+        $_POST['rank'] = (isset($_POST['rank']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
+                $_POST['rank'])) ? $db->escape(strip_tags(stripslashes($_POST['rank']))) : '';
+        $_POST['str'] = (isset($_POST['str']) && is_numeric($_POST['str'])) ? abs(intval($_POST['str'])) : 0;
+        $_POST['lab'] = (isset($_POST['lab']) && is_numeric($_POST['lab'])) ? abs(intval($_POST['lab'])) : 0;
+        $_POST['iq'] = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs(intval($_POST['iq'])) : 0;
+        $_POST['workunit'] = (isset($_POST['workunit']) && is_numeric($_POST['workunit'])) ?
+            abs(intval($_POST['workunit'])) : 0;
+        $_POST['primpay'] = (isset($_POST['primpay']) && is_numeric($_POST['primpay'])) ? abs(intval($_POST['primpay'])) : 0;
+        $_POST['seccpay'] = (isset($_POST['seccpay']) && is_numeric($_POST['seccpay'])) ? abs(intval($_POST['seccpay'])) : 0;
+        $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
+        //Verify CSRF
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newjobrank', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
+            die($h->endpage());
+        }
+        //Verify we have the minimum required fields.
+        if (empty($_POST['rank']) || empty($_POST['str']) || empty($_POST['lab']) || empty($_POST['iq'])) {
+            alert('danger', "Uh Oh!", "Please fill out all the fields concerning the job rank's requirements/information.");
+            die($h->endpage());
+        }
+        //Verify we have the wages
+        if (empty($_POST['primpay']) && (empty($_POST['seccpay']))) {
+            alert('danger', "Uh Oh!", "Please specify the hourly wage for this job rank.");
+            die($h->endpage());
+        }
+        //Verify we have job activity requirements
+        if (empty($_POST['workunit'])) {
+            alert('danger', "Uh Oh!", "Job Rank activity requirement must be at least 1.");
+            die($h->endpage());
+        }
+        //Verify the job we want to add a rank to exists.
+        $q=$db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        if ($db->num_rows($q) == 0)
+        {
+            alert('danger', "Uh Oh!", "The job you are tryign to add a rank to does not exist.");
+            die($h->endpage());
+        }
+        $db->free_result($q);
+        $db->query("INSERT INTO `job_ranks`
+                    (`jrID`, `jrRANK`, `jrJOB`, `jrPRIMPAY`, `jrSECONDARY`, `jrACT`, `jrSTR`, `jrLAB`, `jrIQ`)
+                    VALUES (NULL, '{$_POST['rank']}', '{$_POST['job']}', '{$_POST['primpay']}', '{$_POST['seccpay']}',
+                    '{$_POST['workunit']}', '{$_POST['str']}', '{$_POST['lab']}', '{$_POST['iq']}')");
+        alert('success', "Success!", "You have successfully created the {$_POST['rank']} job rank!", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Created the {$_POST['rank']} job rank.");
+    }
+    else
+    {
+        $csrf = request_csrf_html('staff_newjobrank');
+        echo "Fill out this form to add more job ranks to a specific job.";
+        echo "<form method='post'>
+        <table class='table table-bordered'>
+            <tr>
+                <th>
+                    Rank Name
+                </th>
+                <td>
+                    <input type='text' required='1' name='rank' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Primary Currency Pay
+                </th>
+                <td>
+                    <input type='number' min='0' value='0' required='1' name='primpay' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Secondary Currency Pay
+                </th>
+                <td>
+                    <input type='number' min='0' value='0' required='1' name='seccpay' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Job
+                </th>
+                <td>
+                    " . job_dropdown() . "
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Strength Requirement
+                </th>
+                <td>
+                    <input type='number' min='0' value='0' required='1' name='str' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Labor Requirement
+                </th>
+                <td>
+                    <input type='number' min='0' value='0' required='1' name='lab' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    IQ Requirement
+                </th>
+                <td>
+                    <input type='number' min='0' value='0' required='1' name='iq' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Work Units Required
+                </th>
+                <td>
+                    <input type='number' min='0' value='0' required='1' name='workunit' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <input type='submit' value='Create Job Rank' class='btn btn-primary'>
+                </td>
+            </tr>
+        </table>
+        {$csrf}
+        </form>";
+    }
 }
 
 $h->endpage();

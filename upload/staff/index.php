@@ -223,7 +223,8 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 							<div class='card-body'>
 								<a href='staff_jobs.php?action=newjob'>Create Job</a><br />
 								<a href='staff_jobs.php?action=jobedit'>Edit Job</a><br />
-								<a href='staff_jobs.php?action=jobdele'>Delete Job</a>
+								<a href='staff_jobs.php?action=jobdele'>Delete Job</a><br />
+								<a href='staff_jobs.php?action=newjobrank'>Create Job Rank</a><br />
 							</div>
 						</div>
 					</div>
