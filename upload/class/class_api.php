@@ -18,7 +18,7 @@ class api
     */
     function SystemReturnAPIVersion()
     {
-        return "17.9.3";    //Last Updated 9/19/2017
+        return "17.10.1";    //Last Updated 10/6/2017
     }
 
     /*
@@ -470,7 +470,9 @@ class api
             } else {
                 $change = (isset($change) && is_numeric($change)) ? abs(intval($change)) : 0;
                 if ($percent == true) {
-                    $db->query("UPDATE users SET `{$stat}` = `{$stat}` -((`max{$stat}`*0.{$change})+0.5) WHERE `userid` = {$user}");
+                    $maxstat = $db->fetch_single($db->query("SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
+                    $number = ($change / 100) * $maxstat;
+                    $db->query("UPDATE users SET `{$stat}` = `{$stat}` - {$number} WHERE `userid` = {$user}");
                     $db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
                     return true;
                 } else {
@@ -862,6 +864,7 @@ class api
                     WHERE `userid` = {$userid}");
         return $gain;
     }
+
     /*
          * Function to send a game email
          * @param email to = Email address so send email to.
