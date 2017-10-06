@@ -217,7 +217,7 @@ function job_work()
             alert("danger", "Uh Oh!", "You need 10% Energy to work, you only have {$energy}%.", true, '?action=work');
             die($h->endpage());
         }
-        $WorkUnits = Random(0, 3);
+        $WorkUnits = Random(0, 2);
         if ($WorkUnits == 0) {
             alert("danger", "Uh Oh!", "You were unable to focus, and thus, you were not able to work as hard as you should have.", false);
         } else {
