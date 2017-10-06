@@ -353,7 +353,7 @@ function maillogs()
         alert('danger', "Uh Oh!", "There doesn't appear to be any sent messages yet.", true, 'index.php');
         return;
     }
-    echo pagination(100,$attacks,$_GET['st'],"?action=mail&st=");
+    echo pagination(100, $attacks, $_GET['st'], "?action=mail&st=");
     echo "<table class='table table-bordered table-hover table-striped'>
     		<tr>
     			<th>Time</th>
