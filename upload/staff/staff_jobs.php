@@ -365,6 +365,7 @@ function jobedit()
 function jobdele()
 {
     global $db, $userid, $api, $h;
+    echo "<h3>Delete Job</h3><hr />";
     if (isset($_POST['job'])) {
         $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
         //Verify CSRF
@@ -407,6 +408,7 @@ function jobdele()
 function newjobrank()
 {
     global $db, $userid, $api, $h;
+    echo "<h3>Create Job Rank</h3><hr />";
     if (isset($_POST['job'])) {
         $_POST['rank'] = (isset($_POST['rank']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
                 $_POST['rank'])) ? $db->escape(strip_tags(stripslashes($_POST['rank']))) : '';
@@ -534,12 +536,12 @@ function newjobrank()
 function jobrankedit()
 {
     global $db, $userid, $api, $h;
+    echo "<h3>Edit Job Rank</h3><hr />";
     //Set step to 0 if no step specified.
     if (!isset($_POST['step']))
         $_POST['step'] = 0;
     //Processing and enter into DB
-    if ($_POST['step'] == 2)
-    {
+    if ($_POST['step'] == 2) {
         $_POST['rank'] = (isset($_POST['rank']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
                 $_POST['rank'])) ? $db->escape(strip_tags(stripslashes($_POST['rank']))) : '';
         $_POST['str'] = (isset($_POST['str']) && is_numeric($_POST['str'])) ? abs(intval($_POST['str'])) : 0;
@@ -580,9 +582,8 @@ function jobrankedit()
         }
         $db->free_result($q);
         //Check that the job rank exists.
-        $q=$db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
-        if ($db->num_rows($q) == 0)
-        {
+        $q = $db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The job rank you've chosen to edit does not exist.");
             die($h->endpage());
@@ -599,11 +600,10 @@ function jobrankedit()
                     `jrIQ` = {$_POST['iq']}
                     WHERE `jrID` = {$_POST['jobrank']}");
         alert('success', "Success!", "You have successfully edited the {$_POST['rank']} job rank!", true, 'index.php');
-        $api->SystemLogsAdd($userid,'staff',"Edited the {$_POST['rank']} Job Rank.");
+        $api->SystemLogsAdd($userid, 'staff', "Edited the {$_POST['rank']} Job Rank.");
     }
     //Edit form
-    if ($_POST['step'] == 1)
-    {
+    if ($_POST['step'] == 1) {
         $_POST['jobrank'] = (isset($_POST['jobrank']) && is_numeric($_POST['jobrank'])) ? abs(intval($_POST['jobrank'])) : 0;
         //Verify CSRF
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_jobrankedit', stripslashes($_POST['verf']))) {
@@ -611,15 +611,13 @@ function jobrankedit()
             die($h->endpage());
         }
         //Check that the job rank is filled.
-        if (empty($_POST['jobrank']))
-        {
+        if (empty($_POST['jobrank'])) {
             alert('danger', "Uh Oh!", "The job rank you've chosen is invalid.");
             die($h->endpage());
         }
         //Check that the job rank exists.
-        $q=$db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
-        if ($db->num_rows($q) == 0)
-        {
+        $q = $db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The job rank you've chosen does not exist.");
             die($h->endpage());
         }
@@ -660,7 +658,7 @@ function jobrankedit()
                     Job
                 </th>
                 <td>
-                    " . job_dropdown('job',$r['jrJOB']) . "
+                    " . job_dropdown('job', $r['jrJOB']) . "
                 </td>
             </tr>
             <tr>
@@ -705,9 +703,8 @@ function jobrankedit()
         </form>";
     }
     //Select the job rank to edit
-    if ($_POST['step'] == 0)
-    {
-        $csrf=request_csrf_html('staff_jobrankedit');
+    if ($_POST['step'] == 0) {
+        $csrf = request_csrf_html('staff_jobrankedit');
         echo "Select the job rank you wish to edit.";
         echo "<form method='post'>
         " . jobrank_dropdown('jobrank') . "
@@ -716,6 +713,54 @@ function jobrankedit()
         {$csrf}
         <br />
         </form>";
+    }
+}
+
+function jobrankdele()
+{
+    global $db, $userid, $h, $api;
+    echo "<h3>Delete Job Rank</h3><hr />";
+    if (isset($_POST['jobrank'])) {
+        $_POST['jobrank'] = (isset($_POST['jobrank']) && is_numeric($_POST['jobrank'])) ? abs(intval($_POST['jobrank'])) : 0;
+        //Verify CSRF
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_deljobrank', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
+            die($h->endpage());
+        }
+        //Is job rank empty?
+        if (empty($_POST['jobrank'])) {
+            alert('danger', "Uh Oh!", "You have specified an invalid job rank to delete.");
+            die($h->endpage());
+        }
+        $q = $db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        if ($db->num_rows($q) == 0) {
+            $db->free_result($q);
+            alert('danger', "Uh Oh!", "You cannot delete a non-existent job rank.");
+            die($h->endpage());
+        }
+        $db->free_result($q);
+        $q = $db->query("SELECT * FROM `jobs` WHERE `jSTART` = {$_POST['jobrank']}");
+        if ($db->num_rows($q) > 0) {
+            $db->free_result($q);
+            alert('danger', "Uh Oh!", "You cannot delete a job rank which is the starter rank for a job. Please edit
+            that job before attempting to delete this rank again.");
+            die($h->endpage());
+        }
+        $db->free_result($q);
+        $db->query("DELETE FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        $db->query("UPDATE `users` SET `job` = 0, `jobrank` = 0, `jobwork` = 0 WHERE `job` = {$_POST['jobrank']}");
+        $unemployed = $db->affected_rows();
+        alert('success', "Success!", "You have successfully deleted Job Rank ID {$_POST['jobrank']}. {$unemployed} players
+         need to reapply to their job.", true, 'index.php');
+    } else {
+        $csrf = request_csrf_html('staff_deljobrank');
+        echo "Please select the job rank you wish to delete. You can only delete ranks that are not a job's first rank.<br />
+        <form method='post'>
+            " . jobrank_dropdown() . "<br />
+            <input type='submit' value='Delete Job Rank' class='btn btn-primary'>
+            {$csrf}
+        </form>
+        ";
     }
 }
 
