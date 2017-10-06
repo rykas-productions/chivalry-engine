@@ -14,8 +14,8 @@ $q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC");
 echo "<table class='table table-bordered table-hover'>
 <thead>
 	<tr>
-		<td width='30%'>Announcement Post Time</td>
-		<td>Announcement Text</td>
+		<th width='33%'>Info</th>
+		<th>Announcement Text</th>
 	</tr>
 </thead>
 <tbody>";
@@ -23,10 +23,10 @@ while ($r = $db->fetch_row($q)) {
     //If announcements unread is greater than 0, show unread badge.
     if ($AnnouncementCount > 0) {
         $AnnouncementCount--;
-        $new = "<br /><small><span class='badge badge-pill badge-danger'>Unread</span></small>";
+        $new = "<br /><span class='badge badge-pill badge-danger'>Unread</span>";
     } //Else... show the read badge.
     else {
-        $new = "<br /><small><span class='badge badge-pill badge-success'>Read</span></small>";
+        $new = "<br /><span class='badge badge-pill badge-success'>Read</span>";
     }
     //Select announcement poster's name.
     $PosterQuery = $db->query("SELECT `username`
