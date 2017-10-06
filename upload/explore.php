@@ -37,8 +37,7 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 		<a class='nav-link' data-toggle='tab' href='#HL'>Working District</a>
 		<a class='nav-link' data-toggle='tab' href='#ADMIN'>Administration District</a>
 		<a class='nav-link' data-toggle='tab' href='#GAMES'>Gambling District</a>
-		<a class='nav-link' data-toggle='tab' href='#GUILDS'>Guild District</a>
-		<a class='nav-link' data-toggle='tab' href='#ACT'>Activities District</a>
+		<a class='nav-link' data-toggle='tab' href='#GUILDS'>Guilds District</a>
 		<a class='nav-link' data-toggle='tab' href='#PINTER'>Social District</a>
 	</ul>
 </div>
@@ -68,8 +67,11 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 				<div class='card-body'>
 					<a href='mine.php'>Dangerous Mines</a><br />
 					<a href='smelt.php'>Blacksmith's Smeltery</a><br />
-					<a href='#'>Agriculture</a><br />
 					<a href='bottent.php'>NPC Battle List</a><br />
+					<a href='gym.php'>The Gym</a><br />
+					<a href='job.php'>Your Job</a><br />
+					<a href='criminal.php'>Criminal Center</a><br />
+					<a href='academy.php'>Learning Academy</a><br />
 				</div>
 			</div>
 		</div>
@@ -110,26 +112,16 @@ echo "
 				</div>
 			</div>
 		</div>
-		<div id='ACT' class='tab-pane'>
-			<div class='card'>
-				<div class='card-body'>
-					<a href='dungeon.php'>Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
-					<a href='infirmary.php'>Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
-					<a href='gym.php'>Gym</a><br />
-					<a href='job.php'>Your Job</a><br />
-					<a href='academy.php'>Learning Academy</a><br />
-					<a href='criminal.php'>Criminal Center</a><br />
-					<a href='tutorial.php'>{$set['WebsiteName']} Tutorial</a><br />
-				</div>
-			</div>
-		</div>
 		<div id='PINTER' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>
+				    <a href='dungeon.php'>Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
+					<a href='infirmary.php'>Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
 					<a href='forums.php'>{$set['WebsiteName']} Forums</a><br />
 					<a href='newspaper.php'>{$set['WebsiteName']} Newspaper</a><br />
 					<a href='polling.php'>Polling Center</a><br />
 					<a href='halloffame.php'>Hall of Fame</a><br />
+					<a href='tutorial.php'>{$set['WebsiteName']} Tutorial</a><br />
 				</div>
 			</div>
 		</div>
