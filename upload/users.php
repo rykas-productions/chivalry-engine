@@ -17,17 +17,8 @@ echo "<h3>Userlist</h3>";
 $cnt = $db->query("SELECT COUNT(`userid`)
 				   FROM `users`");
 $membs = $db->fetch_single($cnt);
-$db->free_result($cnt);
-$pages = round($membs / 100) + 1;
-if ($membs % 100 == 0) {
-    $pages--;
-}
-echo "Page ";
-for ($i = 1; $i <= $pages; $i++) {
-    $stl = ($i - 1) * 100;
-    echo "<a href='?st={$stl}&by={$by}&ord={$ord}'>{$i}</a> ";
-}
-echo "<br />
+echo pagination(100, $membs, $st, "?by={$by}&ord={$ord}&st=");
+echo "
 Order By:
 	<a href='?st={$st}&by=userid&ord={$ord}'>User ID</a>&nbsp;|
 	<a href='?st={$st}&by=username&ord={$ord}'>Username</a>&nbsp;|
@@ -57,7 +48,9 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 			</tr>
    ";
 while ($r = $db->fetch_row($q)) {
-    $r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
+    $r['username'] = ($r['vip_days']) ?
+        "<span style='color:red; font-weight:bold;'>{$r['username']} <i class='fa fa-shield' data-toggle='tooltip'
+            title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
     echo "	<tr>
 				<td>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
@@ -72,4 +65,5 @@ while ($r = $db->fetch_row($q)) {
 }
 $db->free_result($q);
 echo '</table>';
+echo pagination(100, $membs, $st, "?by={$by}&ord={$ord}&st=");
 $h->endpage();

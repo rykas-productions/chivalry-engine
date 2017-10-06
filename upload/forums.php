@@ -260,36 +260,12 @@ function viewforum()
 		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item active'>{$r['ff_name']} {$ntl}</li>	
 	</ol>";
-    $posts_per_page = 20;
     $posts_topic = $db->fetch_single($db->query("SELECT COUNT(`ft_id`) 
 													FROM `forum_topics` 
 													WHERE 
 													`ft_forum_id` = {$_GET['viewforum']}"));
-    $pages = ceil($posts_topic / $posts_per_page);
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
-    if (isset($_GET['page'])) {
-        if ($pages == 0) {
-            $st = ($pages) * 20;
-        } else {
-            $st = ($pages - 1) * 20;
-        }
-    }
-    $pst = -20;
-    echo "<center><ul class='pagination'>Page<br /> ";
-    for ($i = 1; $i <= $pages; $i++) {
-        $pst += 20;
-        if ($pst == $st) {
-            echo "<li class='active'><a href='?viewforum={$_GET['viewforum']}&amp;st=$pst'>";
-        } else {
-            echo "<li><a href='?viewforum={$_GET['viewforum']}&amp;st=$pst'>";
-        }
-        echo $i;
-        echo "</li></a>&nbsp;";
-        if ($i % 25 == 0) {
-            echo "</ul><br />";
-        }
-    }
-    echo "</center>";
+    echo pagination(20, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
     ?>
     <table class='table table-bordered table-hover'>
     <thead>
@@ -363,22 +339,7 @@ function viewforum()
               </tr>\n";
     }
     echo "</tbody></table>";
-    $pst = -20;
-    echo "<center><ul class='pagination'>Page<br /> ";
-    for ($i = 1; $i <= $pages; $i++) {
-        $pst += 20;
-        if ($pst == $st) {
-            echo "<li class='active'><a href='?viewforum={$_GET['viewforum']}&st=$pst'>";
-        } else {
-            echo "<li><a href='?viewforum={$_GET['viewforum']}&st=$pst'>";
-        }
-        echo $i;
-        echo "</li></a>&nbsp;";
-        if ($i % 25 == 0) {
-            echo "<br /></center>";
-        }
-    }
-    echo "</ul>";
+    echo pagination(20, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
     $db->free_result($q);
 }
 
@@ -428,33 +389,9 @@ function viewtopic()
 		<li class='breadcrumb-item'><a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a></li>
 		<li class='breadcrumb-item active'>{$topic['ft_name']}</li>	
 	</ol>";
-    $posts_per_page = 20;
     $posts_topic = $topic['ft_posts'];
-    $pages = ceil($posts_topic / $posts_per_page);
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
-    if (isset($_GET['lastpost'])) {
-        if ($pages == 0) {
-            $st = ($pages) * 20;
-        } else {
-            $st = ($pages - 1) * 20;
-        }
-    }
-    $pst = -20;
-    echo "<center><ul class='pagination'>Page<br /> ";
-    for ($i = 1; $i <= $pages; $i++) {
-        $pst += 20;
-        if ($pst == $st) {
-            echo "<li class='active'><a href='?viewtopic={$topic['ft_id']}&amp;st=$pst'>";
-        } else {
-            echo "<li><a href='?viewtopic={$topic['ft_id']}&amp;st=$pst'>";
-        }
-        echo $i;
-        echo "</li></a>&nbsp;";
-        if ($i % 25 == 0) {
-            echo "</ul><br />";
-        }
-    }
-    echo "</center>";
+    echo pagination(20, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
     if (!($ir['user_level'] == 'Member')) {
         echo "
 	<form action='?act=move&topic={$_GET['viewtopic']}' method='post'>
@@ -507,9 +444,7 @@ function viewtopic()
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
 			<input type='submit' class='btn btn-primary' value='Delete'>
 		</form>
-	</div>
-	</center><br />
-            ";
+	</div><br /> ";
     }
     echo "<table class='table table-bordered'>";
     $q3 =
@@ -621,22 +556,7 @@ function viewtopic()
     }
     $db->free_result($q3);
     echo "</table>";
-    $pst = -20;
-    echo "<center><ul class='pagination'>Page<br /> ";
-    for ($i = 1; $i <= $pages; $i++) {
-        $pst += 20;
-        if ($pst == $st) {
-            echo "<li class='active'><a href='?viewtopic={$topic['ft_id']}&st=$pst'>";
-        } else {
-            echo "<li><a href='?viewtopic={$topic['ft_id']}&st=$pst'>";
-        }
-        echo $i;
-        echo "</li></a>&nbsp;";
-        if ($i % 25 == 0) {
-            echo "<br /></center>";
-        }
-    }
-    echo "</ul>";
+    echo pagination(20, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
     if ($topic['ft_locked'] == 0) {
         echo "<br />
 		<br />

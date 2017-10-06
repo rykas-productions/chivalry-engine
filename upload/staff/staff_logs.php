@@ -125,7 +125,6 @@ function logs($name)
         $_GET['st'] = 0;
     }
     $st = abs(intval($_GET['st']));
-    $app = 100;
     $q = $db->query("SELECT COUNT(`log_id`) FROM `logs` WHERE `log_type` = '{$logname}'");
     $attacks = $db->fetch_single($q);
     $db->free_result($q);
@@ -133,24 +132,9 @@ function logs($name)
         alert('danger', "Uh Oh!", "There doesn't appear to be anything in the {$ParsedName} logs.", true, 'index.php');
         return;
     }
-    $pages = ceil($attacks / $app);
-    echo "<nav>";
-    echo "Page <br /><ul class='pagination'>";
-    for ($i = 1; $i <= $pages; $i++) {
-        $s = ($i - 1) * $app;
-        if ($s == $st) {
-            echo "<li class='page-item active'>";
-        } else {
-            echo "<li class='page-item'>";
-        }
-        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-	</nav>
-    <br />
-    <table class='table table-bordered table-hover table-striped'>
+    $mypage = floor($_GET['st'] / 100) + 1;
+    echo pagination(100,$attacks,$_GET['st'],"?action={$logname}logs&st=");
+    echo "<table class='table table-bordered table-hover table-striped'>
     		<tr>
     			<th>Log Time</th>
     			<th>User</th>
@@ -163,7 +147,7 @@ function logs($name)
                      FROM `logs`
 					 WHERE `log_type` = '{$logname}'
                      ORDER BY `log_time` DESC
-                     LIMIT $st, $app");
+                     LIMIT $st, 100");
     while ($r = $db->fetch_row($q)) {
         $un = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
@@ -177,23 +161,8 @@ function logs($name)
     }
     $db->free_result($q);
     echo "
-    </table>
-    <center>
-	<nav>
-   Page <br /><ul class='pagination'>
-       ";
-    for ($i = 1; $i <= $pages; $i++) {
-        $s = ($i - 1) * $app;
-        if ($s == $st) {
-            echo "<li class='page-item active'>";
-        } else {
-            echo "<li class='page-item'>";
-        }
-        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "</ul></nav>";
-    $mypage = floor($_GET['st'] / 100) + 1;
+    </table>";
+    echo pagination(100,$attacks,$_GET['st'],"?action={$logname}logs&st=");
     $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of the {$logname} logs.");
 }
 
@@ -220,22 +189,8 @@ function userlogs()
             alert("danger", "Uh Oh!", "This user does not have anything logged.", true, 'index.php');
             return;
         }
-        $pages = ceil($logs / $app);
-        echo "Pages <br /><nav><ul class='pagination'>";
-        for ($i = 1; $i <= $pages; $i++) {
-            $s = ($i - 1) * $app;
-            if ($s == $st) {
-                echo "<li class='page-item active'>";
-            } else {
-                echo "<li class='page-item'>";
-            }
-            echo "<a class='page-link' href='?action=userlogs&user={$user}&st={$s}'>{$i}";
-            echo "</li></a>&nbsp;";
-        }
-        echo "
-		</ul>
-		</nav>
-		<br />
+        echo pagination(100,$logs,$_GET['st'],"?action=userlogs&user={$user}&st=");
+		echo "
 		<table class='table table-bordered table-hover'>
 				<thead>
 				<tr>
@@ -272,21 +227,8 @@ function userlogs()
         echo "
 		</tbody>
 		</table>
-		<br />
-		<center>
-		Pages <nav><ul class='pagination'><br />
-		   ";
-        for ($i = 1; $i <= $pages; $i++) {
-            $s = ($i - 1) * $app;
-            if ($s == $st) {
-                echo "<li class='page-item active'>";
-            } else {
-                echo "<li class='page-item'>";
-            }
-            echo "<a class='page-link' href='?action=userlogs&user={$user}&st={$s}'>{$i}";
-            echo "</li></a>&nbsp;";
-        }
-        echo "</ul></nav>";
+		<br />";
+		echo pagination(100,$logs,$_GET['st'],"?action=userlogs&user={$user}&st=");
         $mypage = floor($_GET['st'] / 100) + 1;
         $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of User ID {$user}'s user logs.");
         $h->endpage();
@@ -358,23 +300,8 @@ function alllogs()
         alert('danger', "Uh Oh!", "There haven't been any game actions yet.", true, 'index.php');
         return;
     }
-    $pages = ceil($attacks / $app);
-    echo "<nav>Pages <ul class='pagination'><br />";
-    for ($i = 1; $i <= $pages; $i++) {
-        $s = ($i - 1) * $app;
-        if ($s == $st) {
-            echo "<li class='page-item active'>";
-        } else {
-            echo "<li class='page-item'>";
-        }
-        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-	</nav>
-    <br />
-    <table class='table table-bordered table-hover table-striped'>
+    echo pagination(100,$attacks,$_GET['st'],"?action={$logname}logs&st=");
+    echo "<table class='table table-bordered table-hover table-striped'>
     		<tr>
     			<th>Log Time</th>
     			<th>User</th>
@@ -399,23 +326,8 @@ function alllogs()
         echo '</tr>';
     }
     $db->free_result($q);
-    echo "
-    </table>
-    <center>Pages <br />
-	<nav>
-    <ul class='pagination'>
-       ";
-    for ($i = 1; $i <= $pages; $i++) {
-        $s = ($i - 1) * $app;
-        if ($s == $st) {
-            echo "<li class='page-item active'>";
-        } else {
-            echo "<li class='page-item'>";
-        }
-        echo "<a class='page-link' href='?action={$logname}logs&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "</nav>";
+    echo "</table>";
+    echo pagination(100,$attacks,$_GET['st'],"?action={$logname}logs&st=");
     $mypage = floor($_GET['st'] / 100) + 1;
     $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of the game logs.");
 }
@@ -441,24 +353,8 @@ function maillogs()
         alert('danger', "Uh Oh!", "There doesn't appear to be any sent messages yet.", true, 'index.php');
         return;
     }
-    $pages = ceil($attacks / $app);
-    echo "<nav>";
-    echo "Page <br /><ul class='pagination'>";
-    for ($i = 1; $i <= $pages; $i++) {
-        $s = ($i - 1) * $app;
-        if ($s == $st) {
-            echo "<li class='page-item active'>";
-        } else {
-            echo "<li class='page-item'>";
-        }
-        echo "<a class='page-link' href='?action=mail&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "
-	</ul>
-	</nav>
-    <br />
-    <table class='table table-bordered table-hover table-striped'>
+    echo pagination(100,$attacks,$_GET['st'],"?action=mail&st=");
+    echo "<table class='table table-bordered table-hover table-striped'>
     		<tr>
     			<th>Time</th>
     			<th>Subject</th>
@@ -485,23 +381,8 @@ function maillogs()
         echo '</tr>';
     }
     $db->free_result($q);
-    echo "
-    </table>
-    <center>
-	<nav>
-   Page <br /><ul class='pagination'>
-       ";
-    for ($i = 1; $i <= $pages; $i++) {
-        $s = ($i - 1) * $app;
-        if ($s == $st) {
-            echo "<li class='page-item active'>";
-        } else {
-            echo "<li class='page-item'>";
-        }
-        echo "<a class='page-link' href='?action=mail&st={$s}'>{$i}";
-        echo "</li></a>&nbsp;";
-    }
-    echo "</ul></nav>";
+    echo "</table>";
+    echo pagination(100,$attacks,$_GET['st'],"?action=mail&st=");
     $mypage = floor($_GET['st'] / 100) + 1;
     $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of the {$logname} logs.");
 }
