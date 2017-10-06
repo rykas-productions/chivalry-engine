@@ -55,6 +55,7 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 		<div id='FD' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>
+				    <a href='job.php'>Work Center</a><br />
 					<a href='bank.php'>City Bank</a><br />
 					<a href='estates.php'>Estate Agent</a><br />
 					<a href='travel.php'>Travel Agent</a><br />
@@ -69,7 +70,6 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 					<a href='smelt.php'>Blacksmith's Smeltery</a><br />
 					<a href='bottent.php'>NPC Battle List</a><br />
 					<a href='gym.php'>The Gym</a><br />
-					<a href='job.php'>Your Job</a><br />
 					<a href='criminal.php'>Criminal Center</a><br />
 					<a href='academy.php'>Learning Academy</a><br />
 				</div>
