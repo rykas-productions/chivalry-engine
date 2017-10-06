@@ -411,11 +411,12 @@ function emailchange()
             $g = "	<option value='0'>Opt-Out</option>
 					<option value='1'>Opt-In</option>";
         $csrf = request_csrf_html('prefs_changeopt');
+        $optsetting = ($ir['email_optin'] == 1) ? "Opt-in" : "Opt-out";
         echo "<table class='table table-bordered'>
 		<form method='post'>
 		<tr>
 			<th colspan='2'>
-				Use this form to opt-in or out of emails from the game.
+				Use this form to opt-in or out of emails from the game. You are currently {$optsetting} for game emails.
 			</th>
 		</tr>
 		<tr>
