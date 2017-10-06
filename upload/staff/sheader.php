@@ -48,7 +48,7 @@ class headers
                 </button>
                 <div class="collapse navbar-collapse" id="CENGINENav">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
+                        <li class="nav-item">
                             <a class="nav-link" href="../index.php"><?php echo "Back to Game"; ?></a>
                         </li>
                     </ul>
