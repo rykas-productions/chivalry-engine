@@ -219,9 +219,9 @@ function job_work()
         }
         $WorkUnits = Random(0, 2);
         if ($WorkUnits == 0) {
-            alert("danger", "Uh Oh!", "You were unable to focus, and thus, you were not able to work as hard as you should have.", false);
+            alert("danger", "Uh Oh!", "You were unable to focus, and thus, you were not able to work as hard as you should have. You have worked {$ir['jobwork']} times.", false);
         } else {
-            alert("success", "Success!", "You got to work and knocked out {$WorkUnits} pieces of work. How productive!", false);
+            alert("success", "Success!", "You got to work and knocked out {$WorkUnits} pieces of work. How productive! You have worked {$ir['jobwork']} times.", false);
         }
         $db->query("UPDATE `users` SET `jobwork` = `jobwork` + {$WorkUnits} WHERE `userid` = {$userid}");
         $api->UserInfoSet($userid, 'will', -7, true);
