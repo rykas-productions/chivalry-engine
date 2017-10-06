@@ -1912,8 +1912,8 @@ function jobrank_dropdown($ddname = "jobrank", $selected = -1)
             "SELECT `jrID`, `jNAME`, `jrRANK`
                      FROM `job_ranks` AS `jr`
                      INNER JOIN `jobs` AS `j`
-                     ON `jr`.`jrID` = `j`.`jRANK`
-                     ORDER BY `j`.`jNAME` ASC, `jr`.`jrRANK` ASC");
+                     ON `jr`.`jrJOB` = `j`.`jRANK`
+                     ORDER BY `jr`.`jrRANK` ASC");
     if ($selected == -1)
     {
         $first = 0;
@@ -1930,7 +1930,7 @@ function jobrank_dropdown($ddname = "jobrank", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['jrRANK']} @ {$r['jNAME']}</option>";
+        $ret .= ">{$r['jrRANK']} [{$r['jNAME']}]</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
