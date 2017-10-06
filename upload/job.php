@@ -182,7 +182,7 @@ function job_promote()
     } else {
         $r = $db->fetch_row($q);
         $db->query("UPDATE `users` SET `jobrank` = {$r['jrID']} WHERE `userid` = {$userid}");
-        alert("success", "Success!", "Congratulations! You have been promoted to {$r['jrNAME']}!", true, 'job.php');
+        alert("success", "Success!", "Congratulations! You have been promoted to {$r['jrRANK']}!", true, 'job.php');
     }
     $db->free_result($q);
     $h->endpage();
