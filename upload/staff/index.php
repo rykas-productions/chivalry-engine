@@ -225,6 +225,7 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 								<a href='staff_jobs.php?action=jobedit'>Edit Job</a><br />
 								<a href='staff_jobs.php?action=jobdele'>Delete Job</a><br />
 								<a href='staff_jobs.php?action=newjobrank'>Create Job Rank</a><br />
+								<a href='staff_jobs.php?action=jobrankedit'>Edit Job Rank</a><br />
 							</div>
 						</div>
 					</div>

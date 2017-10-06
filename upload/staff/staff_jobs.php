@@ -391,7 +391,7 @@ function jobdele()
         $unemployed = $db->affected_rows();
         alert('success', "Success!", "You have successfully deleted this job. {$ranksdel} job rank(s) were removed.
             {$unemployed} player(s) are now jobless due to this deletion.", true, 'index.php');
-        $api->SystemLogsAdd($userid,'staff',"Deleted Job ID {$_POST['job']}.");
+        $api->SystemLogsAdd($userid, 'staff', "Deleted Job ID {$_POST['job']}.");
     } else {
         $csrf = request_csrf_html('staff_deljob');
         echo "<form method='post'>
@@ -406,9 +406,8 @@ function jobdele()
 
 function newjobrank()
 {
-    global $db,$userid,$api,$h;
-    if (isset($_POST['job']))
-    {
+    global $db, $userid, $api, $h;
+    if (isset($_POST['job'])) {
         $_POST['rank'] = (isset($_POST['rank']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
                 $_POST['rank'])) ? $db->escape(strip_tags(stripslashes($_POST['rank']))) : '';
         $_POST['str'] = (isset($_POST['str']) && is_numeric($_POST['str'])) ? abs(intval($_POST['str'])) : 0;
@@ -440,10 +439,9 @@ function newjobrank()
             die($h->endpage());
         }
         //Verify the job we want to add a rank to exists.
-        $q=$db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
-        if ($db->num_rows($q) == 0)
-        {
-            alert('danger', "Uh Oh!", "The job you are tryign to add a rank to does not exist.");
+        $q = $db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        if ($db->num_rows($q) == 0) {
+            alert('danger', "Uh Oh!", "The job you are trying to add a rank to does not exist.");
             die($h->endpage());
         }
         $db->free_result($q);
@@ -453,9 +451,7 @@ function newjobrank()
                     '{$_POST['workunit']}', '{$_POST['str']}', '{$_POST['lab']}', '{$_POST['iq']}')");
         alert('success', "Success!", "You have successfully created the {$_POST['rank']} job rank!", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Created the {$_POST['rank']} job rank.");
-    }
-    else
-    {
+    } else {
         $csrf = request_csrf_html('staff_newjobrank');
         echo "Fill out this form to add more job ranks to a specific job.";
         echo "<form method='post'>
@@ -531,6 +527,194 @@ function newjobrank()
             </tr>
         </table>
         {$csrf}
+        </form>";
+    }
+}
+
+function jobrankedit()
+{
+    global $db, $userid, $api, $h;
+    //Set step to 0 if no step specified.
+    if (!isset($_POST['step']))
+        $_POST['step'] = 0;
+    //Processing and enter into DB
+    if ($_POST['step'] == 2)
+    {
+        $_POST['rank'] = (isset($_POST['rank']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
+                $_POST['rank'])) ? $db->escape(strip_tags(stripslashes($_POST['rank']))) : '';
+        $_POST['str'] = (isset($_POST['str']) && is_numeric($_POST['str'])) ? abs(intval($_POST['str'])) : 0;
+        $_POST['lab'] = (isset($_POST['lab']) && is_numeric($_POST['lab'])) ? abs(intval($_POST['lab'])) : 0;
+        $_POST['iq'] = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs(intval($_POST['iq'])) : 0;
+        $_POST['workunit'] = (isset($_POST['workunit']) && is_numeric($_POST['workunit'])) ?
+            abs(intval($_POST['workunit'])) : 0;
+        $_POST['primpay'] = (isset($_POST['primpay']) && is_numeric($_POST['primpay'])) ? abs(intval($_POST['primpay'])) : 0;
+        $_POST['seccpay'] = (isset($_POST['seccpay']) && is_numeric($_POST['seccpay'])) ? abs(intval($_POST['seccpay'])) : 0;
+        $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
+        $_POST['jobrank'] = (isset($_POST['jobrank']) && is_numeric($_POST['jobrank'])) ? abs(intval($_POST['jobrank'])) : 0;
+        //Verify CSRF
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editjobrank2', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
+            die($h->endpage());
+        }
+        //Verify we have the minimum required fields.
+        if (empty($_POST['rank']) || empty($_POST['str']) || empty($_POST['lab']) || empty($_POST['iq'])) {
+            alert('danger', "Uh Oh!", "Please fill out all the fields concerning the job rank's requirements/information.");
+            die($h->endpage());
+        }
+        //Verify we have the wages
+        if (empty($_POST['primpay']) && (empty($_POST['seccpay']))) {
+            alert('danger', "Uh Oh!", "Please specify the hourly wage for this job rank.");
+            die($h->endpage());
+        }
+        //Verify we have job activity requirements
+        if (empty($_POST['workunit'])) {
+            alert('danger', "Uh Oh!", "Job Rank activity requirement must be at least 1.");
+            die($h->endpage());
+        }
+        //Verify the job we want to add a rank to exists.
+        $q = $db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        if ($db->num_rows($q) == 0) {
+            $db->free_result($q);
+            alert('danger', "Uh Oh!", "The job you are trying to add a rank to does not exist.");
+            die($h->endpage());
+        }
+        $db->free_result($q);
+        //Check that the job rank exists.
+        $q=$db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        if ($db->num_rows($q) == 0)
+        {
+            $db->free_result($q);
+            alert('danger', "Uh Oh!", "The job rank you've chosen to edit does not exist.");
+            die($h->endpage());
+        }
+        $db->free_result($q);
+        $db->query("UPDATE `job_ranks` SET
+                    `jrRANK` = '{$_POST['rank']}',
+                    `jrJOB` = {$_POST['job']},
+                    `jrPRIMPAY` = {$_POST['primpay']},
+                    `jrSECONDARY` = {$_POST['seccpay']},
+                    `jrACT` = {$_POST['workunit']},
+                    `jrSTR` = {$_POST['str']},
+                    `jrLAB` = {$_POST['lab']},
+                    `jrIQ` = {$_POST['iq']}
+                    WHERE `jrID` = {$_POST['jobrank']}");
+        alert('success', "Success!", "You have successfully edited the {$_POST['rank']} job rank!", true, 'index.php');
+        $api->SystemLogsAdd($userid,'staff',"Edited the {$_POST['rank']} Job Rank.");
+    }
+    //Edit form
+    if ($_POST['step'] == 1)
+    {
+        $_POST['jobrank'] = (isset($_POST['jobrank']) && is_numeric($_POST['jobrank'])) ? abs(intval($_POST['jobrank'])) : 0;
+        //Verify CSRF
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_jobrankedit', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
+            die($h->endpage());
+        }
+        //Check that the job rank is filled.
+        if (empty($_POST['jobrank']))
+        {
+            alert('danger', "Uh Oh!", "The job rank you've chosen is invalid.");
+            die($h->endpage());
+        }
+        //Check that the job rank exists.
+        $q=$db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        if ($db->num_rows($q) == 0)
+        {
+            alert('danger', "Uh Oh!", "The job rank you've chosen does not exist.");
+            die($h->endpage());
+        }
+        //If it does, select its data.
+        $r = $db->fetch_row($q);
+        $csrf = request_csrf_html('staff_editjobrank2');
+        echo "Fill out this form to edit this jobrank.";
+        echo "<form method='post'>
+        <input type='hidden' value='2' name='step'>
+        <input type='hidden' value='{$_POST['jobrank']}' name='jobrank'>
+        <table class='table table-bordered'>
+            <tr>
+                <th>
+                    Rank Name
+                </th>
+                <td>
+                    <input type='text' required='1' name='rank' value='{$r['jrRANK']}' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Primary Currency Pay
+                </th>
+                <td>
+                    <input type='number' min='0' value='{$r['jrPRIMPAY']}' required='1' name='primpay' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Secondary Currency Pay
+                </th>
+                <td>
+                    <input type='number' min='0' value='{$r['jrSECONDARY']}' required='1' name='seccpay' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Job
+                </th>
+                <td>
+                    " . job_dropdown('job',$r['jrJOB']) . "
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Strength Requirement
+                </th>
+                <td>
+                    <input type='number' min='0' value='{$r['jrSTR']}' required='1' name='str' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Labor Requirement
+                </th>
+                <td>
+                    <input type='number' min='0' value='{$r['jrLAB']}' required='1' name='lab' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    IQ Requirement
+                </th>
+                <td>
+                    <input type='number' min='0' value='{$r['jrIQ']}' required='1' name='iq' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Work Units Required
+                </th>
+                <td>
+                    <input type='number' min='0' value='{$r['jrACT']}' required='1' name='workunit' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <input type='submit' value='Edit Job Rank' class='btn btn-primary'>
+                </td>
+            </tr>
+        </table>
+        {$csrf}
+        </form>";
+    }
+    //Select the job rank to edit
+    if ($_POST['step'] == 0)
+    {
+        $csrf=request_csrf_html('staff_jobrankedit');
+        echo "Select the job rank you wish to edit.";
+        echo "<form method='post'>
+        " . jobrank_dropdown('jobrank') . "
+        <input type='hidden' value='1' name='step'>
+        <input type='submit' value='Edit Jobrank' class='btn btn-primary'>
+        {$csrf}
+        <br />
         </form>";
     }
 }
