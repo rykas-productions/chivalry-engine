@@ -1378,8 +1378,8 @@ function staff_levelup()
     } else {
         echo "You may level up your guild. Your guild will need the minimum required Experience to do this. You may gain
         guild Experience by going to war with another guild and gaining points in war. At your guild's level, your
-        guild will need " . number_format($xprequired) . " Guild Experience to level up. Do you wish to attempt to
-        level up?<br />
+        guild will need " . number_format($xprequired) . " Guild Experience to level up. Your guild currently has
+        {$gd['guild_xp']} Experience. Do you wish to attempt to level up?<br />
 		<form method='post'>
 			<input type='hidden' name='do' value='yes'>
 			<input type='submit' value='Level Up' class='btn btn-success'>
