@@ -257,7 +257,6 @@ function attacking()
             {$odata['username']} dealing {$mydamage} damage. Your opponent has {$odata['hp']} HP remaining.", false);
             $_SESSION['attackdmg'] += $mydamage;
         } else {
-            echo "{$_GET['nextstep']}) You attempt to strike {$odata['username']} but missed. ({$odata['hp']} HP remaining)<br />";
             alert('warning', "Attempt {$_GET['nextstep']}!", "You attempt to strike {$odata['username']} but missed. Your
             opponent has {$odata['hp']} HP Remaining.", false);
         }
