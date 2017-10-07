@@ -9,7 +9,6 @@
 require('sglobals.php');
 echo "<h2>Staff Panel Index</h2>
 	<hr />";
-$dir = substr(__DIR__, 0, strpos(__DIR__, "\staff"));
 if ($api->UserMemberLevelGet($userid, 'admin')) {
     $versq = $db->query("SELECT VERSION()");
     $MySQLIVersion = $db->fetch_single($versq);
@@ -107,6 +106,9 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 			</li>
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#USERS'>Users</a>
+			</li>
+			<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#GUILDS'>Guilds</a>
 			</li>
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#LOGS'>Logs</a>
@@ -227,6 +229,16 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 								<a href='staff_jobs.php?action=newjobrank'>Create Job Rank</a><br />
 								<a href='staff_jobs.php?action=jobrankedit'>Edit Job Rank</a><br />
 								<a href='staff_jobs.php?action=jobrankdele'>Delete Job Rank</a><br />
+							</div>
+						</div>
+					</div>
+					";
+}
+if ($api->UserMemberLevelGet($userid, 'assistant')) {
+    echo "<div id='GUILDS' class='tab-pane'>
+						<div class='card'>
+							<div class='card-body'>
+								<a href='staff_guilds.php?action=viewguild'>View Guild</a><br />
 							</div>
 						</div>
 					</div>
