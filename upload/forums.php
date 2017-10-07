@@ -111,15 +111,15 @@ function idx()
     ?>
     <table class='table table-bordered table-hover'>
     <thead>
-    <tr>
+    <tr class='table-primary'>
         <th>
-            <?php echo "Forum Category"; ?>
+            <?php echo "Category"; ?>
         </th>
         <th class='hidden-xs-down'>
-            <?php echo "Post Count"; ?>
+            <?php echo "Posts"; ?>
         </th>
         <th class='hidden-xs-down'>
-            <?php echo "Topic Count"; ?>
+            <?php echo "Topics"; ?>
         </th>
         <th>
             <?php echo "Latest Post"; ?>
@@ -176,15 +176,15 @@ function idx()
         ?>
         <table class='table table-bordered table-hover'>
         <thead>
-        <tr>
+        <tr class='table-primary'>
             <th>
-                <?php echo "Forum Category"; ?>
+                <?php echo "Category"; ?>
             </th>
             <th class='hidden-xs-down'>
-                <?php echo "Post Count"; ?>
+                <?php echo "Posts"; ?>
             </th>
             <th class='hidden-xs-down'>
-                <?php echo "Topic Count"; ?>
+                <?php echo "Topics"; ?>
             </th>
             <th>
                 <?php echo "Latest Post"; ?>
@@ -231,7 +231,7 @@ function idx()
 
 function viewforum()
 {
-    global $ir, $db, $h;
+    global $ir, $db, $h, $userid;
     $_GET['viewforum'] = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs($_GET['viewforum']) : '';
     if (empty($_GET['viewforum'])) {
         alert('danger', "Uh Oh!", "You must enter a forum category you wish to view.", true, "forums.php");
@@ -269,7 +269,7 @@ function viewforum()
     ?>
     <table class='table table-bordered table-hover'>
     <thead>
-    <tr>
+    <tr class='table-primary'>
         <th>
             <?php echo "Topic"; ?>
         </th>
@@ -298,16 +298,8 @@ function viewforum()
     while ($r2 = $db->fetch_row($q)) {
         $t1 = DateTime_Parse($r2['ft_start_time'], true, true);
         $t2 = DateTime_Parse($r2['ft_last_time'], true, true);
-        if ($r2['ft_pinned']) {
-            $pt = "<i class='fa fa-thumb-tack' aria-hidden='true'></i> ";
-        } else {
-            $pt = "";
-        }
-        if ($r2['ft_locked']) {
-            $lt = " <i class='fa fa-lock' aria-hidden='true'></i>";
-        } else {
-            $lt = "";
-        }
+        $pt = ($r2['ft_pinned']) ? " <i class='fa fa-thumb-tack' aria-hidden='true'></i>" : "" ;
+        $lt = ($r2['ft_locked']) ? " <i class='fa fa-lock' aria-hidden='true'></i>" : "" ;
         $pnq1 = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r2['ft_owner_id']}");
         $pn1 = $db->fetch_row($pnq1);
         $pn1['username'] = ($pn1['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$pn1['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$pn1['username']} has {$pn1['vip_days']} VIP Days remaining.'></i></span>" : $pn1['username'];
@@ -322,7 +314,8 @@ function viewforum()
         if (!$pn1) {
             $pn1['username'] = "Non-existent User";
         }
-        echo "<tr>
+        $authored = ($r2['ft_owner_id'] == $userid) ? "table-warning" : "" ;
+        echo "<tr class='{$authored}'>
         		<td>
 					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
 					<small class='hidden-xs-down'>{$r2['ft_desc']}</small>
@@ -356,7 +349,7 @@ function viewtopic()
     $q =
         $db->query(
             "SELECT `ft_forum_id`, `ft_name`, `ft_posts`, `ft_id`,
-                    `ft_locked`
+                    `ft_locked`, `ft_pinned`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['viewtopic']}");
     if ($db->num_rows($q) == 0) {
@@ -393,6 +386,8 @@ function viewtopic()
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
     echo pagination(20, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
     if (!($ir['user_level'] == 'Member')) {
+        $lock = ($topic['ft_locked'] == 0) ? 'Lock Topic' : 'Unlock Topic' ;
+        $pin = ($topic['ft_pinned'] == 0) ? 'Pin Topic' : 'Unpin Topic' ;
         echo "
 	<form action='?act=move&topic={$_GET['viewtopic']}' method='post'>
     <b>Move Topic To</b> " . forum_dropdown('forum')
@@ -401,21 +396,21 @@ function viewtopic()
 	</form>
 	<br />
 	<center>
-	<div class='hidden-xs-down'>
+	<div class='hidden-sm-down'>
 	<table>
 		<tr>
 			<td>
 				<form>
 					<input type='hidden' value='pin' name='act'>
 					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-primary' value='Pin/Unpin'>
+					<input type='submit' class='btn btn-primary' value='{$pin}'>
 				</form>
 			</td>
 			<td align='center'>
 				<form>
 					<input type='hidden' value='lock' name='act'>
 					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-primary' value='Lock/Unlock'>
+					<input type='submit' class='btn btn-primary' value='{$lock}'>
 				</form>
 			</td>
 			<td>
@@ -432,12 +427,12 @@ function viewtopic()
 		<form>
 			<input type='hidden' value='pin' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-primary' value='Pin/Unpin'>
+			<input type='submit' class='btn btn-primary' value='{$pin}'>
 		</form>
 		<form>
 			<input type='hidden' value='lock' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-primary' value='Lock/Unlock'>
+			<input type='submit' class='btn btn-primary' value='{$lock}'>
 		</form>
 		<form action='?act=deletopic'>
 			<input type='hidden' value='deletopic' name='act'>
@@ -521,7 +516,7 @@ function viewtopic()
         }
         $parser->parse($r['fp_text']);
         $r['fp_text'] = $parser->getAsHtml();
-        echo "<tr class='table-secondary'>
+        echo "<tr class='table-primary'>
 				<th width='25%'>Post #{$no}</th>
 				<th>
 				Posted {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink}
