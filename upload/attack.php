@@ -253,10 +253,13 @@ function attacking()
             }
             //Reduce health.
             $api->UserInfoSet($_GET['user'], "hp", "-{$mydamage}", false);
-            echo "{$_GET['nextstep']}) Using your {$r1['itmname']} you manage to strike {$odata['username']} dealing {$mydamage} damage. ({$odata['hp']} HP Remaining)<br />";
+            alert('success', "Attempt {$_GET['nextstep']}!", "Using your {$r1['itmname']} you manage to strike
+            {$odata['username']} dealing {$mydamage} damage. Your opponent has {$odata['hp']} HP remaining.", false);
             $_SESSION['attackdmg'] += $mydamage;
         } else {
-            echo "{$_GET['nextstep']}) You attempt to strike {$odata['username']} but missed. ({$odata['hp']} HP Remaining)<br />";
+            echo "{$_GET['nextstep']}) You attempt to strike {$odata['username']} but missed. ({$odata['hp']} HP remaining)<br />";
+            alert('warning', "Attempt {$_GET['nextstep']}!", "You attempt to strike {$odata['username']} but missed. Your
+            opponent has {$odata['hp']} HP Remaining.", false);
         }
         //Win fight because opponent's health is 0 or lower.
         if ($odata['hp'] <= 0) {
@@ -334,11 +337,12 @@ function attacking()
                 }
                 $api->UserInfoSet($userid, "hp", -$dam);
                 $ns = $_GET['nextstep'] + 1;
-                echo "{$ns}) Using their {$wep}, {$odata['username']} managed to strike you dealing {$dam} damage. ({$youdata['hp']} HP Remaining)<br />";
+                alert('danger', "Attempt {$ns}!", "Using their {$wep}, {$odata['username']} managed to strike you dealing
+                 {$dam} damage. You have {$youdata['hp']} HP remaining.", false);
             } //Opponent misses their hit.
             else {
                 $ns = $_GET['nextstep'] + 1;
-                echo "{$ns}) {$odata['username']} attempted to strike you, but missed. ({$youdata['hp']} HP Remaining)<br />";
+                alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have {$youdata['hp']} HP remaining.", false);
             }
             //User has no HP left, redirect to loss.
             if ($youdata['hp'] <= 0) {
