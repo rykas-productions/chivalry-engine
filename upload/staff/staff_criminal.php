@@ -8,6 +8,10 @@
 */
 require_once('sglobals.php');
 echo "<h3>Staff Criminal Center</h3><hr />";
+if ($ir['user_level'] != "Admin") {
+    alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
+    die($h->endpage());
+}
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }

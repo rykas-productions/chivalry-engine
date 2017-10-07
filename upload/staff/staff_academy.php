@@ -7,7 +7,10 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 require('sglobals.php');
-//Not bothering with the academy until I can redo it. Sorry Izzy!
+if ($ir['user_level'] != "Admin") {
+    alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
+    die($h->endpage());
+}
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -29,10 +32,6 @@ switch ($_GET['action']) {
 function addacademy()
 {
     global $h, $db, $userid, $api, $ir;
-    if ($ir['user_level'] != "Admin") {
-        alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
-        die($h->endpage());
-    }
     if (!isset($_POST['name'])) {
         $csrf = request_csrf_html('staff_newacademy');
         echo "<form method='post'>
@@ -168,10 +167,6 @@ function addacademy()
 function delacademy()
 {
     global $db, $ir, $h, $userid, $api;
-    if ($ir['user_level'] != 'Admin') {
-        alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
-        die($h->endpage());
-    }
     if (!isset($_POST['academy'])) {
         $csrf = request_csrf_html('staff_delacademy');
         echo "<h4>Deleting an Academic Course</h4>

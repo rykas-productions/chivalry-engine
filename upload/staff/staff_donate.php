@@ -8,6 +8,10 @@
 */
 require('sglobals.php');
 echo "<h2>Staff VIP Pack</h2><hr />";
+if ($ir['user_level'] != "Admin") {
+    alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
+    die($h->endpage());
+}
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }

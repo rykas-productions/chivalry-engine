@@ -8,6 +8,10 @@
 */
 require('sglobals.php');
 echo "<h3>Shops</h3><hr />";
+if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+    alert('danger', "Uh Oh!", "You do not have permission to be here.");
+    die($h->endpage());
+}
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }

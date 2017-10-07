@@ -7,6 +7,10 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
+if ($api->UserMemberLevelGet($userid, 'Assistant') == false) {
+    alert('danger', "Uh Oh!", "You do not have permission to be here.");
+    die($h->endpage());
+}
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }

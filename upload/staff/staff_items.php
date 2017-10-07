@@ -365,6 +365,10 @@ function deleteitem()
 function giveitem()
 {
     global $db, $userid, $h, $api;
+    if ($api->UserMemberLevelGet($userid,'assistant')) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
+        die($h->endpage());
+    }
     if (!isset($_POST['user']) || !isset($_POST['item'])) {
         echo "<h3>Gift Item Form</h3>";
         $csrf = request_csrf_html('staff_giveitem');
@@ -447,6 +451,10 @@ function giveitem()
 function edititem()
 {
     global $db, $api, $userid, $h;
+    if ($api->UserMemberLevelGet($userid,'admin')) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
+        die($h->endpage());
+    }
     if (!isset($_POST['step'])) {
         $_POST['step'] = 0;
     }

@@ -6,10 +6,12 @@
 	Author: TheMasterGeneral
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
-
-//Still not localized
 require('sglobals.php');
 echo "<h3>Permissions</h3><hr />";
+if ($api->UserMemberLevelGet($userid, 'Assistant') == false) {
+    alert('danger', "Uh Oh!", "You do not have permission to be here.");
+    die($h->endpage());
+}
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }

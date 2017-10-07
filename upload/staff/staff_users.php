@@ -40,6 +40,10 @@ switch ($_GET['action']) {
 function createuser()
 {
     global $db, $h, $api, $userid;
+    if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
     if (!isset($_POST['username'])) {
         $csrf = request_csrf_html('staff_user_1');
         echo "<hr /><h4>Create a User</h4><hr />";
@@ -764,6 +768,10 @@ function edituser()
 function deleteuser()
 {
     global $db, $userid, $h, $api, $ir;
+    if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
     if (!isset($_GET['step'])) {
         $_GET['step'] = '0';
     }
@@ -890,6 +898,10 @@ function deleteuser()
 function logout()
 {
     global $db, $h, $userid, $api;
+    if ($api->UserMemberLevelGet($userid, 'Assistant') == false) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
     $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
     if (!empty($_POST['userid'])) {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_forcelogout', stripslashes($_POST['verf']))) {
@@ -938,6 +950,10 @@ function logout()
 function changepw()
 {
     global $db, $h, $userid, $api;
+    if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
     if ((isset($_POST['user'])) && (isset($_POST['pw']))) {
         $pw = stripslashes($_POST['pw']);
         $user = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
@@ -998,6 +1014,10 @@ function changepw()
 function masspay()
 {
     global $db, $h, $userid, $api;
+    if ($api->UserMemberLevelGet($userid, 'assistant') == false) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
     if (isset($_POST['pay'])) {
         $primary = (isset($_POST['pay']) && is_numeric($_POST['pay'])) ? abs(intval($_POST['pay'])) : 0;
         $secondary = (isset($_POST['pay1']) && is_numeric($_POST['pay1'])) ? abs(intval($_POST['pay1'])) : 0;
@@ -1057,6 +1077,10 @@ function masspay()
 function preport()
 {
     global $db, $userid, $api, $h;
+    if ($api->UserMemberLevelGet($userid, 'assistant') == false) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
     echo "<h3>Player Reports</h3><hr />";
     if (isset($_GET['ID'])) {
         $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : 0;
