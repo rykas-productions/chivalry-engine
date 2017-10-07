@@ -335,7 +335,7 @@ function members()
 
 function staff_kick()
 {
-    global $db, $userid, $ir, $gd, $api, $h;
+    global $db, $userid, $ir, $gd, $api, $h, $wq;
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_kickuser", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.", true, 'viewguild.php?action=members');
@@ -349,6 +349,8 @@ function staff_kick()
             alert('danger', "Uh Oh!", "You cannot kick the guild co-leader.", true, 'viewguild.php?action=members');
         } else if ($who == $userid) {
             alert('danger', "Uh Oh!", "You cannot kick yourself from the guild.", true, 'viewguild.php?action=members');
+        } else if ($db->fetch_single($wq) > 0) {
+            alert('danger', "Uh Oh!", "You cannot kick members from your guild while you are at war.", true, 'viewguild.php?action=members');
         } else {
             $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = $who AND `guild` = {$gd['guild_id']}");
             if ($db->num_rows($q) > 0) {
@@ -373,7 +375,7 @@ function staff_kick()
 
 function leave()
 {
-    global $db, $userid, $ir, $gd, $api, $h;
+    global $db, $userid, $ir, $gd, $api, $h, $wq;
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
         alert('danger', "Uh Oh!", "You cannot leave the guild as the leader or co-leader.", true, 'viewguild.php');
         die($h->endpage());
@@ -381,6 +383,10 @@ function leave()
     if (isset($_POST['submit']) && $_POST['submit'] == 'yes') {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_leave", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+            die($h->endpage());
+        }
+        if ($db->fetch_single($wq) > 0) {
+            alert('danger', "Uh Oh!", "You cannot leave your guild while at war.", true, 'viewguild.php');
             die($h->endpage());
         }
         $db->query("UPDATE `users` SET `guild` = 0  WHERE `userid` = {$userid}");
@@ -699,7 +705,7 @@ function staff_apps()
 
 function staff_vault()
 {
-    global $db, $userid, $gd, $api, $h;
+    global $db, $userid, $gd, $api, $h, $wq;
     if (isset($_POST['primary']) || isset($_POST['secondary'])) {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_vault", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
@@ -729,7 +735,10 @@ function staff_vault()
             alert('danger', "Uh Oh!", "You are trying to give to a user that does not exist, or is not in the guild.");
             die($h->endpage());
         }
-        $name = htmlentities($db->fetch_single($q), ENT_QUOTES, 'ISO-8859-1');
+        if ($db->fetch_single($wq) > 0) {
+            alert('danger', "Uh Oh!", "You cannot withdraw from your guild's vault while at war.");
+            die($h->endpage());
+        }
         $db->free_result($q);
         $api->UserGiveCurrency($_POST['user'], 'primary', $_POST['primary']);
         $api->UserGiveCurrency($_POST['user'], 'secondary', $_POST['secondary']);
@@ -928,7 +937,7 @@ function staff_massmail()
 
 function staff_masspayment()
 {
-    global $db, $api, $userid, $gd, $h;
+    global $db, $api, $userid, $gd, $h, $wq;
     if (isset($_POST['payment'])) {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_masspay", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
@@ -938,6 +947,9 @@ function staff_masspayment()
         $cnt = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}"));
         if (($_POST['payment'] * $cnt) > $gd['guild_primcurr']) {
             alert('danger', "Uh Oh!", "You do not have enough currency in your vault to give out that much to each member.");
+            die($h->endpage());
+        } else if ($db->fetch_single($wq) > 0) {
+            alert('danger', "Uh Oh!", "You cannot mass pay your guild while at war.");
             die($h->endpage());
         } else {
             $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `guild` = {$gd['guild_id']}");
@@ -1135,7 +1147,7 @@ function staff_name()
 
 function staff_town()
 {
-    global $db, $gd, $api, $h, $userid;
+    global $db, $gd, $api, $h, $userid, $wq;
     if ($userid == $gd['guild_owner']) {
         if (isset($_POST['town'])) {
             if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_town", stripslashes($_POST['verf']))) {
@@ -1154,6 +1166,10 @@ function staff_town()
             }
             if ($db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$town}")) > 0) {
                 alert('danger', "Uh Oh!", "The town you wish to own is already owned by another guild. If you want this town, declare war on them!");
+                die($h->endpage());
+            }
+            if ($db->fetch_single($wq) > 0) {
+                alert('danger', "Uh Oh!", "You may not change your guild's town while at war.");
                 die($h->endpage());
             }
             $lowestlevel = $db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` ASC LIMIT 1"));
@@ -1202,11 +1218,14 @@ function staff_town()
 
 function staff_untown()
 {
-    global $db, $gd, $api, $h, $userid;
+    global $db, $gd, $api, $h, $userid, $wq;
     if ($userid == $gd['guild_owner']) {
         $townowned = $db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}");
         if ($db->num_rows($townowned) == 0) {
             alert('danger', "Uh Oh!", "Your guild doesn't have a town to surrender.", true, 'viewguild.php?action=staff&act2=idx');
+            die($h->endpage());
+        } else if ($db->fetch_single($wq) > 0) {
+            alert('danger', "Uh Oh!", "You cannot surrender your town while at war.", true, 'viewguild.php?action=staff&act2=idx');
             die($h->endpage());
         } elseif (isset($_POST['confirm'])) {
             $r = $db->fetch_single($townowned);
@@ -1231,7 +1250,7 @@ function staff_untown()
 
 function staff_declare()
 {
-    global $db, $gd, $api, $h, $userid;
+    global $db, $gd, $api, $h, $userid, $ir;
     if ($userid == $gd['guild_owner']) {
         if (isset($_POST['guild'])) {
             $_POST['guild'] = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs($_POST['guild']) : 0;
@@ -1291,6 +1310,16 @@ function staff_declare()
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild as its been less than a week since the last war concluded.");
                 die($h->endpage());
             }
+            $yourcount = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$ir['guild']}");
+            $theircount = $db->query("SELECT `useris` FROM `users` WHERE `guild` = {$_POST['guild']}");
+            if ($db->num_rows($yourcount) < 5) {
+                alert('danger', "Uh Oh!", "You cannot declare war on another guild if you've got less than 5 members in your own guild.");
+                die($h->endpage());
+            }
+            if ($db->num_rows($theircount) < 5) {
+                alert('danger', "Uh Oh!", "You cannot declare war on this guild, as they do not have 5 members currently in their guild.");
+                die($h->endpage());
+            }
             $r = $db->fetch_row($data_q);
             $endtime = time() + 259200;
             $db->query("INSERT INTO `guild_wars` VALUES (NULL, {$gd['guild_id']}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
@@ -1335,7 +1364,7 @@ function staff_declare()
 function staff_levelup()
 {
     global $db, $gd, $api, $userid;
-    $xprequired = $gd['guild_level'] * 50.25;
+    $xprequired = $gd['guild_level'] * 30;
     if (isset($_POST['do'])) {
         if ($gd['guild_xp'] < $xprequired) {
             alert('danger', "Uh Oh!", "Your guild does not have enough experience to level up. You can get more experience by going to war.");
