@@ -54,7 +54,8 @@ if (!$_GET['user']) {
         $ull = ($r['last_login'] == 0) ? 'Never' : DateTime_Parse($r['last_login']);
         $sup = date('F j, Y g:i:s a', $r['registertime']);
         $displaypic = ($r['display_pic']) ? "<img src='{$r['display_pic']}' class='img-thumbnail img-responsive' width='250' height='250'>" : '';
-        $user_name = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']} <i class='fa fa-shield' data-toggle='tooltip' title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
+        $user_name = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fa fa-shield'
+            data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
         $ref_q =
             $db->query(
                 "SELECT COUNT(`referalid`)

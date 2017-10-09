@@ -48,9 +48,8 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 			</tr>
    ";
 while ($r = $db->fetch_row($q)) {
-    $r['username'] = ($r['vip_days']) ?
-        "<span style='color:red; font-weight:bold;'>{$r['username']} <i class='fa fa-shield' data-toggle='tooltip'
-            title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
+    $r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fa fa-shield'
+        data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
     echo "	<tr>
 				<td>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
