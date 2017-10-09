@@ -239,6 +239,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 						<div class='card'>
 							<div class='card-body'>
 								<a href='staff_guilds.php?action=viewguild'>View Guild</a><br />
+								<a href='staff_guilds.php?action=creditguild'>Credit Guild</a><br />
 							</div>
 						</div>
 					</div>
