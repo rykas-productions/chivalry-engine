@@ -18,7 +18,7 @@ class api
     */
     function SystemReturnAPIVersion()
     {
-        return "17.10.1";    //Last Updated 10/6/2017
+        return "17.10.2";    //Last Updated 10/9/2017
     }
 
     /*
@@ -419,7 +419,7 @@ class api
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $stat = $db->escape(stripslashes(strtolower($stat)));
         if (in_array($stat, array('password', 'email', 'lastip', 'loginip', 'registerip', 'personal_notes', 'staff_notes'))) {
-            alert('danger', "Uh Oh!", "You do not have permission to view sensitive account information.", false);
+            trigger_error("You do not have permission to get the {$stat} on this user.", E_ERROR);
         } else {
             if ($percent == true) {
                 $min = $db->fetch_single($db->query("SELECT `{$stat}` FROM `users` WHERE `userid` = {$user}"));
@@ -449,7 +449,7 @@ class api
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $stat = $db->escape(stripslashes(strtolower($stat)));
         if (in_array($stat, array('password', 'email', 'lastip', 'loginip', 'registerip', 'personal_notes', 'staff_notes'))) {
-            alert('danger', "Uh Oh!", "You do not have permission to view sensitive account information.", false);
+            trigger_error("You do not have permission to set the {$stat} on this user.", E_ERROR);
         } else {
             if ($change >= 1) {
                 $change = (isset($change) && is_numeric($change)) ? abs(intval($change)) : 0;
@@ -723,7 +723,7 @@ class api
         $stat = $db->escape(stripslashes(strtolower($stat)));
         if (in_array($stat, array('password', 'email', 'lastip', 'loginip',
             'registerip', 'personal_notes', 'staff_notes'))) {
-            alert('danger', "Uh Oh!", "You do not have permission to view sensitive account information.", false);
+            trigger_error("You do not have permission to set the {$stat} on this user.", E_ERROR);
         } else {
             if (is_int($state)) {
                 $state = (isset($state) && is_numeric($state)) ? abs(intval($state)) : 0;
