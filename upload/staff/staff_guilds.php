@@ -24,6 +24,9 @@ switch ($_GET['action']) {
     case "creditguild":
         creditguild();
         break;
+    case "viewwars":
+        viewwars();
+        break;
 }
 function viewguild()
 {
@@ -273,4 +276,50 @@ function creditguild()
         </form>";
         $h->endpage();
     }
+}
+
+function viewwars()
+{
+    global $db,$userid,$api,$h;
+    echo "<h3>Viewing Guild Wars</h3>
+    <table class='table table-bordered'>";
+    //Select wars from database that are active.
+    $q = $db->query("SELECT * FROM `guild_wars`
+                    WHERE `gw_winner` = 0 AND
+                    `gw_end` > " . time() . "
+                    ORDER BY `gw_id` DESC");
+    //If no active wars, tell the user.
+    if ($db->num_rows($q) == 0)
+    {
+        alert('danger',"Uh Oh!","There are not any active guild wars at this time.",true,'index.php');
+        die($h->endpage());
+    }
+    //Request CSRF token
+    $csrf = request_csrf_code('staff_guild_end_war');
+    //Display the wars to the user!
+    while ($r = $db->fetch_row($q))
+    {
+        echo "<tr>
+				<td>
+					<a href='../guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
+						(Points: " . number_format($r['gw_drpoints']) . ")
+				</td>
+				<td>
+					VS
+				</td>
+				<td>
+					<a href='../guilds.php?action=view&id={$r['gw_declaree']}'>{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}</a><br />
+						(Points: " . number_format($r['gw_depoints']) . ")
+				</td>
+				<td>
+			        <a href='?action=gwardelete&war={$r['gw_id']}&csrf={$csrf}' class='btn btn-primary'>End War</a>
+				</td>
+			</tr>";
+    }
+    //Forget the wars query.
+    $db->free_result($q);
+    //Log that the wars were viewed.
+    $api->SystemLogsAdd($userid,'staff',"Viewed active guild wars.");
+    echo"</table>";
+    $h->endpage();
 }
