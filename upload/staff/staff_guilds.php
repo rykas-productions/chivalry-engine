@@ -537,12 +537,12 @@ function editguild()
         $name = $db->escape(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1'));
         $desc = $db->escape(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1'));
         $announcement = $db->escape(htmlentities(stripslashes($_POST['announcement']), ENT_QUOTES, 'ISO-8859-1'));
-        $armory = $db->escape(htmlentities(stripslashes($_POST['armory']), ENT_QUOTES, 'ISO-8859-1'));
+        $armory = $_POST['armory'];
 
         //Validate CSRF check.
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_editguild_2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
-            //die($h->endpage());
+            die($h->endpage());
         }
 
         //Check the guild ID is still set... else we can't change this guild
@@ -583,7 +583,7 @@ function editguild()
                     SET `guild_name` = '{$name}', `guild_desc` = '{$desc}', `guild_announcement` = '{$announcement}',
                     `guild_owner` = {$owner}, `guild_coowner` = {$coowner}, `guild_primcurr` = {$primary},
                     `guild_seccurr` = {$secondary}, `guild_capacity` = {$capacity}, `guild_level` = {$lvl},
-                    `guild_xp` = {$xp}, `guild_hasarmory` = {$armory}
+                    `guild_xp` = {$xp}, `guild_hasarmory` = '{$armory}'
                     WHERE `guild_id` = {$guild}");
         alert('success', 'Success!', "You have successfully edited the {$name} guild!", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited the <a href='../guilds.php?action=view&id={$guild}'>{$name}</a> Guild.");
