@@ -52,6 +52,9 @@ if (!$ir['guild']) {
         case "warview":
             warview();
             break;
+        case "armory":
+            armory();
+            break;
         default:
             home();
             break;
@@ -91,8 +94,10 @@ function home()
     			    <a href='?action=armory'>Armory</a>
                 </td>
     			<td>";
-                    if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) { echo "<a href='?action=staff&act2=idx'>Staff Room</a>"; }
-                echo"</td></tr>
+    if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
+        echo "<a href='?action=staff&act2=idx'>Staff Room</a>";
+    }
+    echo "</td></tr>
 	</table>
 	<br />
 	<table class='table table-bordered'>
@@ -497,6 +502,17 @@ function warview()
     echo "</table>";
 }
 
+function armory()
+{
+    global $db, $gd, $h, $api;
+    if ($gd['guild_hasarmory'] == 'false') {
+        alert('danger', "Uh Oh!", "Your guild has yet to purchase an armory. Come back after your guild has purchased an armory.", true, 'viewguild.php');
+        die($h->endpage());
+    } else {
+
+    }
+}
+
 function staff()
 {
     global $userid, $gd, $h;
@@ -553,6 +569,9 @@ function staff()
             case "dissolve":
                 staff_dissolve();
                 break;
+            case "armory":
+                staff_armory();
+                break;
             default:
                 staff_idx();
                 break;
@@ -572,6 +591,7 @@ function staff_idx()
 			<b>Guild Co-Leader</b><br />
 			<a href='?action=staff&act2=apps'>Application Management</a><br />
 			<a href='?action=staff&act2=vault'>Vault Management</a><br />
+			<a href='?action=staff&act2=armory'>Armory Management</a><br />
 			<a href='?action=staff&act2=coowner'>Transfer Co-Leader</a><br />
 			<a href='?action=staff&act2=ament'>Change Guild Announcement</a><br />
 			<a href='?action=staff&act2=massmail'>Mass Mail Guild</a><br />
@@ -1503,6 +1523,34 @@ function staff_dissolve()
         alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
     }
 
+}
+
+function staff_armory()
+{
+    global $db, $gd, $api, $h, $set, $userid;
+    if ($gd['guild_hasarmory'] == 'false') {
+        $cost = $set['GUILD_PRICE'] * 10;
+        if (isset($_GET['buy'])) {
+            if ($gd['guild_primcurr'] < $cost) {
+                alert('danger', "Uh Oh!", "Your guild does not have enough Primary Currency to buy an armory.", true, '?action=staff&act2=idx');
+                die($h->endpage());
+            }
+            $db->query("UPDATE `guild`
+                        SET `guild_hasarmory` = 'true',
+                        `guild_primcurr` = `guild_primcurr` - {$cost}
+                        WHERE `guild_id` = {$gd['guild_id']}");
+
+            alert('success','Success!',"You have successfully purchased an armory for your guild.");
+            $api->SystemLogsAdd($userid,'guilds',"Purchased guild armory.");
+        } else {
+            echo "Your guild does not have an armory. It will cost your guild " . number_format($cost) . " Primary
+            Currency to purchase an armory. Do you wish to purchase an armory for your guild?<br />
+            <a href='?action=staff&act2=armory&buy=yes' class='btn btn-success'>Yes</a>
+            <a href='?action=staff&act2=idx' class='btn btn-danger'>No</a>";
+        }
+    } else {
+
+    }
 }
 
 $h->endpage();
