@@ -30,6 +30,9 @@ switch ($_GET['action']) {
     case "endwar":
         endwar();
         break;
+    case "editguild":
+        editguild();
+        break;
 }
 function viewguild()
 {
@@ -121,7 +124,7 @@ function viewguild()
             <td>
                 {$r['guild_hasarmory']}
             </td>
-        </tr>all
+        </tr>
         <tr>
             <th>
                 Guild Members / Max Capacity
@@ -362,4 +365,228 @@ function endwar()
     $api->SystemLogsAdd($userid, 'staff', $log);
     alert('success', "Success!", "You have ended the war between {$gang1} and {$gang2}!", false);
     viewwars();
+}
+
+function editguild()
+{
+    global $db, $userid, $api, $h;
+    //Set the first step so it goes to the correct page.
+    if (!isset($_POST['step'])) {
+        $_POST['step'] = 0;
+    }
+    //Selecting the guild to edit.
+    if ($_POST['step'] == 0) {
+        $csrf = request_csrf_html('staff_editguild_1');
+        echo "Please select the guild you wish to edit from the dropdown below.<br />
+        <form method='post'>
+            <input type='hidden' value='1' name='step'>
+            " . guilds_dropdown() . "<br />
+            {$csrf}
+            <input type='submit' value='Edit Guild' class='btn btn-primary'>
+        </form>";
+
+    } elseif ($_POST['step'] == 1) {
+        //Make sure input is safe.
+        $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
+
+        //Validate CSRF check.
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editguild_1', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
+            //die($h->endpage());
+        }
+
+        //Make sure guild is still valid input.
+        if (empty($guild)) {
+            alert('danger', "Uh Oh!", "You are trying to view an invalid or unspecified guild.");
+            die($h->endpage());
+        }
+
+        //Select the Guild from database to ensure it exists.
+        $q = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
+        if ($db->num_rows($q) == 0) {
+            alert('danger', "Uh Oh!", "The guild you are trying to view does not exist, or is invalid.");
+            die($h->endpage());
+        }
+
+        //Assign grabbed information to a variable
+        $r = $db->fetch_row($q);
+
+        //Show the information grabbed.
+
+        //Armory select thing.
+        $armory = ($r['guild_hasarmory'] == 'true') ?
+            "<option value='true'>true</option><option value='false'>false</option>" :
+            "<option value='false'>false</option><option value='true'>true</option>";
+        echo "<h3>Editing Guild ID {$guild}</h3>";
+
+        //CSRF request
+        $csrf = request_csrf_html('staff_editguild_2');
+
+        //Load the editing form
+        echo "<table class='table table-bordered'><form method='post'>
+        <input type='hidden' value='2' name='step'>
+        <input type='hidden' value='{$guild}' name='guild'>
+        <tr>
+            <th>
+                Guild Name
+            </th>
+            <td>
+                <input type='text' name='name' class='form-control' value='{$r['guild_name']}'>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Guild Description
+            </th>
+            <td>
+                <textarea name='desc' class='form-control'>{$r['guild_desc']}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Guild Announcement
+            </th>
+            <td>
+                <textarea name='announcement' class='form-control'>{$r['guild_announcement']}</textarea>
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                Guild Owner
+            </th>
+            <td>
+                " . guild_user_dropdown('owner', $guild, $r['guild_owner']) . "
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Guild Co-Owner
+            </th>
+            <td>
+                " . guild_user_dropdown('coowner', $guild, $r['guild_coowner']) . "
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Primary Currency
+            </th>
+            <td>
+                <input type='number' min='0' name='primary' class='form-control' value='{$r['guild_primcurr']}'>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Secondary Currency
+            </th>
+            <td>
+                <input type='number' min='0' name='secondary' class='form-control' value='{$r['guild_seccurr']}'>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Has Armory?
+            </th>
+            <td>
+                <select name='armory' class='form-control' type='dropdown'>
+                    {$armory}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Guild Capacity
+            </th>
+            <td>
+                <input type='number' min='0' name='capacity' class='form-control' value='{$r['guild_capacity']}'>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Guild Level
+            </th>
+            <td>
+                <input type='number' min='0' name='level' class='form-control' value='{$r['guild_level']}'>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Guild Experience
+            </th>
+            <td>
+                <input type='number' min='0' name='xp' class='form-control' value='{$r['guild_xp']}'>
+            </td>
+        </tr>
+        <tr>
+            {$csrf}
+            <td colspan='2'>
+                <input type='submit' value='Edit Guild' class='btn btn-primary'>
+            </td>
+        </tr>
+        </table>";
+    } elseif ($_POST['step'] == 2) {
+        //Make sure input is safe.
+        $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
+        $xp = (isset($_POST['xp']) && is_numeric($_POST['xp'])) ? abs(intval($_POST['xp'])) : 0;
+        $lvl = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 0;
+        $capacity = (isset($_POST['capacity']) && is_numeric($_POST['capacity'])) ? abs(intval($_POST['capacity'])) : 0;
+        $primary = (isset($_POST['primary']) && is_numeric($_POST['primary'])) ? abs(intval($_POST['primary'])) : 0;
+        $secondary = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs(intval($_POST['secondary'])) : 0;
+        $owner = (isset($_POST['owner']) && is_numeric($_POST['owner'])) ? abs(intval($_POST['owner'])) : 0;
+        $coowner = (isset($_POST['coowner']) && is_numeric($_POST['coowner'])) ? abs(intval($_POST['coowner'])) : 0;
+        $name = $db->escape(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1'));
+        $desc = $db->escape(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1'));
+        $announcement = $db->escape(htmlentities(stripslashes($_POST['announcement']), ENT_QUOTES, 'ISO-8859-1'));
+        $armory = $db->escape(htmlentities(stripslashes($_POST['armory']), ENT_QUOTES, 'ISO-8859-1'));
+
+        //Validate CSRF check.
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editguild_2', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
+            //die($h->endpage());
+        }
+
+        //Check the guild ID is still set... else we can't change this guild
+        if (empty($guild)) {
+            alert('danger', "Uh Oh!", "You are trying to view an invalid or unspecified guild.");
+            die($h->endpage());
+        }
+
+        //Select the Guild from database to ensure it exists.
+        $q = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
+        if ($db->num_rows($q) == 0) {
+            alert('danger', "Uh Oh!", "The guild you are trying to view does not exist, or is invalid.");
+            die($h->endpage());
+        }
+
+        //Check that the owner is in the guild
+        $oc = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$owner} AND `guild` = {$guild}");
+        if ($db->num_rows($oc) == 0) {
+            alert('danger', "Uh Oh!", "You are trying to set an invalid owner for this guild.");
+            die($h->endpage());
+        }
+
+        //Check that the co-owner is in the guild
+        $oc = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$coowner} AND `guild` = {$guild}");
+        if ($db->num_rows($oc) == 0) {
+            alert('danger', "Uh Oh!", "You are trying to set an invalid co-owner for this guild.");
+            die($h->endpage());
+        }
+
+        //Check for valid input on armory
+        if ($armory != 'false' && $armory != 'true') {
+            alert('danger', "Uh Oh!", "A guild can either have or not have an armory.");
+            die($h->endpage());
+        }
+
+        //Update the guild
+        $db->query("UPDATE `guild`
+                    SET `guild_name` = '{$name}', `guild_desc` = '{$desc}', `guild_announcement` = '{$announcement}',
+                    `guild_owner` = {$owner}, `guild_coowner` = {$coowner}, `guild_primcurr` = {$primary},
+                    `guild_seccurr` = {$secondary}, `guild_capacity` = {$capacity}, `guild_level` = {$lvl},
+                    `guild_xp` = {$xp}, `guild_hasarmory` = {$armory}
+                    WHERE `guild_id` = {$guild}");
+        alert('success', 'Success!', "You have successfully edited the {$name} guild!", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Edited the <a href='../guilds.php?action=view&id={$guild}'>{$name}</a> Guild.");
+    }
+    $h->endpage();
 }
