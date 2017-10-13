@@ -134,7 +134,7 @@ function create()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						Creating a Guild Form
+						Creating a guild. Guilds cost " . number_format($cg_price) . " Primary Currency
 					</th>
 				</tr>
 				<tr>
@@ -155,7 +155,7 @@ function create()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='Create Guild for" . number_format($cg_price) . "!' class='btn btn-primary'>
+						<input type='submit' value='Create Guild for " . number_format($cg_price) . "!' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}
