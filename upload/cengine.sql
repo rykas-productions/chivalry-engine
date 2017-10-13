@@ -335,6 +335,20 @@ CREATE TABLE `guild_applications` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `guild_armory`
+--
+
+CREATE TABLE `guild_armory` (
+  `gaID` INT(11) UNSIGNED NULL AUTO_INCREMENT ,
+  `gaGUILD` INT(11) UNSIGNED NOT NULL ,
+  `gaITEM` INT(11) UNSIGNED NOT NULL ,
+  `gaQTY` INT(11) UNSIGNED NOT NULL ,
+   UNIQUE (`gaID`)
+) ENGINE = MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `guild_notifications`
 --
 
