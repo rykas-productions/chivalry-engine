@@ -1311,7 +1311,7 @@ function staff_declare()
                 die($h->endpage());
             }
             $yourcount = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$ir['guild']}");
-            $theircount = $db->query("SELECT `useris` FROM `users` WHERE `guild` = {$_POST['guild']}");
+            $theircount = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$_POST['guild']}");
             if ($db->num_rows($yourcount) < 5) {
                 alert('danger', "Uh Oh!", "You cannot declare war on another guild if you've got less than 5 members in your own guild.");
                 die($h->endpage());
