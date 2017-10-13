@@ -18,7 +18,7 @@ class api
     */
     function SystemReturnAPIVersion()
     {
-        return "17.10.2";    //Last Updated 10/9/2017
+        return "17.10.3";    //Last Updated 10/13/2017
     }
 
     /*
@@ -47,7 +47,7 @@ class api
     }
 
     /*
-        Tests to see if specified user has at least the specified amount of money.
+        Gives the user the specified item and quantity
         @param int user = User ID to test for.
         @param int item = Item ID to give to the user.
         @param int quantity = Quantity of item to give to the user.
@@ -376,41 +376,12 @@ class api
     }
 
     /*
-        Filter the input. (Untested. May be unsafe!)
-        @param text type = Type of filter to apply. (int, float, text, url, email)
-        @param text input = Input to filter.
-        Returns the filtered input.
-    */
-    function SystemFilterInput($type, $input)
-    {
-        $type = strtolower($type);
-        if ($type == 'int') {
-            return filter_var($input, FILTER_SANITIZE_NUMBER_INT);
-        }
-        if ($type == 'float') {
-            return filter_var($input, FILTER_SANITIZE_NUMBER_FLOAT);
-        }
-        if ($type == 'text') {
-            $text = filter_var($input, FILTER_SANITIZE_STRING);
-            return htmlentities($text, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        }
-        if ($type == 'url') {
-            return htmlentities($input, FILTER_SANITIZE_URL);
-        }
-        if ($type == 'email') {
-            return htmlentities($input, FILTER_SANITIZE_EMAIL);
-        }
-    }
-
-    /*
         Returns the specified user's stat, optionally as a percent.
-        This function is quite powerful, as it gives the API user
-        full access to the user's table, as long as they don't use
-        the percent option on fields that don't have a max.
         @param int user = User to test on.
         @param text stat = User's table row to return.
         @param boolean percent = Return as a percent. [Default: false]
         Returns the value in the stat specified, optionally as a percent.
+    Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
 
     */
     function UserInfoGet($user, $stat, $percent = false)
@@ -433,14 +404,12 @@ class api
 
     /*
         Set the specified user's stat to a value, optionally as a percent.
-        This function is quite powerful, as it gives the API user
-        full access to the user's table, as long as they don't use
-        the percent option on fields that don't have a max.
         @param int user = User to test on.
         @param text stat = User's table row to return.
         @param int change = Direction of change
         @param boolean percent = Return as a percent. [Default: false]
         Returns the value in the stat specified, optionally as a percent.
+        Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
 
     */
     function UserInfoSet($user, $stat, $change, $percent = false)
@@ -715,6 +684,7 @@ class api
         @param text stat = Stat to alter.
         @param int state = Value to set the stat to.
         Returns true if the stat was updated, false otherwise.
+        Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
     */
     function UserInfoSetStatic($user, $stat, $state)
     {
@@ -792,7 +762,7 @@ class api
         $stat = $db->escape(stripslashes(strtolower($stat)));
         $times = (isset($times) && is_numeric($times)) ? abs(intval($times)) : 0;
         $multiplier = (isset($multiplier) && is_numeric($multiplier)) ? abs(intval($multiplier)) : 1;
-        //
+        //Return empty if the call isn't complete.
         if (empty($userid) || (empty($stat)) || (empty($times))) {
             return 0;
         }
@@ -801,7 +771,6 @@ class api
             return -1;
         }
         $udq = $db->query("SELECT * FROM `users` WHERE `userid` = {$userid}");
-        $usq = $db->query("SELECT * FROM `userstats` WHERE `userid` = {$userid}");
         $userdata = $db->fetch_row($udq);
         $gain = 0;
         //Do while value is less than the user's energy input, then add one to value.
@@ -866,12 +835,12 @@ class api
     }
 
     /*
-         * Function to send a game email
-         * @param email to = Email address so send email to.
-         * @param text body = Body of the email.
-         * @param text subject = Subject of the email. [Optional, Default = "Gamename Game Email"]
-         * @param email from = Email account sender [Optional, Default = "Game Sending Email"]
-         * Returns Email was sent successfully.
+     * Function to send a game email
+     * @param email to = Email address so send email to.
+     * @param text body = Body of the email.
+     * @param text subject = Subject of the email. [Optional, Default = "Gamename Game Email"]
+     * @param email from = Email account sender [Optional, Default = "Game Sending Email"]
+     * Returns Email was sent successfully.
     */
     function SystemSendEmail($to, $body, $subject = '', $from = '')
     {
@@ -884,5 +853,70 @@ class api
         $headers[] = 'Content-type: text/html; charset=iso-8859-1';
         $headers[] = "From: {$from}";
         return mail($to, $subject, $body, implode("\r\n", $headers));
+    }
+
+    /*
+     * API to give an item to a guild.
+     * @param int guild = Guild ID to give the item to.
+     * @param int item = Item ID to give to the guild.
+     * @param int qty = Quantity of item to give to the guild.
+     * Returns true if item successfully given to the guild.
+     * Returns false if item failed to be given to guild.
+     */
+    function GuildAddItem($guild, $item, $qty)
+    {
+        global $db;
+        //Select $item's item name.
+        $ie = $db->fetch_single($db->query("SELECT COUNT(`itmname`) FROM `items` WHERE `itmid` = {$item}"));
+        //If the name returns, continue
+        if ($ie > 0) {
+            $q = $db->query("SELECT `gaID` FROM `guild_armory` WHERE `gaGUILD` = {$guild} AND `gaITEM` = {$item}
+            LIMIT 1");
+            //If the armory stack exists, add $qty to it and return true to signify we succeeded at adding the item.
+            if ($db->num_rows($q) > 0) {
+                $r = $db->fetch_row($q);
+                $db->query("UPDATE `guild_armory` SET `gaQTY` = `gaQTY` + {$qty} WHERE `gaID` = {$r['gaID']}");
+                return true;
+            } //The armory item id does not exist, so lets create a new one and return true.
+            else {
+                $db->query("INSERT INTO `guild_armory` (`gaITEM`, `gaGUILD`, `gaQTY`) VALUES ({$item}, {$guild}, {$qty})");
+                return true;
+            }
+        }
+    }
+
+    /*
+     * API to remove an item from a guild.
+     * @param int guild = Guild ID to remove the item from.
+     * @param int item = Item ID to remove.
+     * @param int qty = Quantity of item to remove.
+     * Returns true if item successfully removed.
+     * Returns false if item failed to be taken away.
+     */
+    function GuildRemoveItem($guild, $item, $qty)
+    {
+        global $db;
+        //Select $item's item name.
+        $ie = $db->fetch_single($db->query("SELECT COUNT(`itmname`) FROM `items` WHERE `itmid` = {$item}"));
+        //If $itemid actually exists, it'll return a name, so lets continue if that's the case.
+        if ($ie > 0) {
+            //Select the Armory ID number where $item's is stored for $guild.
+            $q = $db->query("SELECT `gaID`, `gaQTY` FROM `guild_armory` WHERE `gaGUILD` = {$guild}
+						 AND `gaITEM` = {$item} LIMIT 1");
+            //Guild has an Armory ID for $item!
+            if ($db->num_rows($q) > 0) {
+                $r = $db->fetch_row($q);
+                //$guild's $item quantity is greater than $qty, so remove only $qty and return true.
+                if ($r['gaQTY'] > $qty) {
+                    $db->query("UPDATE `guild_armory` SET `gaQTY` = `gaQTY` - {$qty} WHERE `gaID` = {$r['gaID']}");
+                    return true;
+                } //$guild's $item quantity is lower than $qty, so delete the Armory ID entirely and return true.
+                else {
+                    $db->query("DELETE FROM `guild_armory` WHERE `gaID` = {$r['gaID']}");
+                    return true;
+                }
+            }
+        }
+        $db->free_result($q);
     }
 }
