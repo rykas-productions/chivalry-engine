@@ -27,6 +27,9 @@ switch ($_GET['action']) {
     case "viewwars":
         viewwars();
         break;
+    case "endwar":
+        endwar();
+        break;
 }
 function viewguild()
 {
@@ -280,7 +283,7 @@ function creditguild()
 
 function viewwars()
 {
-    global $db,$userid,$api,$h;
+    global $db, $userid, $api, $h;
     echo "<h3>Viewing Guild Wars</h3>
     <table class='table table-bordered'>";
     //Select wars from database that are active.
@@ -289,16 +292,14 @@ function viewwars()
                     `gw_end` > " . time() . "
                     ORDER BY `gw_id` DESC");
     //If no active wars, tell the user.
-    if ($db->num_rows($q) == 0)
-    {
-        alert('danger',"Uh Oh!","There are not any active guild wars at this time.",true,'index.php');
+    if ($db->num_rows($q) == 0) {
+        alert('danger', "Uh Oh!", "There are not any active guild wars at this time.", true, 'index.php');
         die($h->endpage());
     }
     //Request CSRF token
     $csrf = request_csrf_code('staff_guild_end_war');
     //Display the wars to the user!
-    while ($r = $db->fetch_row($q))
-    {
+    while ($r = $db->fetch_row($q)) {
         echo "<tr>
 				<td>
 					<a href='../guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
@@ -312,14 +313,53 @@ function viewwars()
 						(Points: " . number_format($r['gw_depoints']) . ")
 				</td>
 				<td>
-			        <a href='?action=gwardelete&war={$r['gw_id']}&csrf={$csrf}' class='btn btn-primary'>End War</a>
+			        <a href='?action=endwar&war={$r['gw_id']}&csrf={$csrf}' class='btn btn-primary'>End War</a>
 				</td>
 			</tr>";
     }
     //Forget the wars query.
     $db->free_result($q);
     //Log that the wars were viewed.
-    $api->SystemLogsAdd($userid,'staff',"Viewed active guild wars.");
-    echo"</table>";
+    $api->SystemLogsAdd($userid, 'staff', "Viewed active guild wars.");
+    echo "</table>";
     $h->endpage();
+}
+
+function endwar()
+{
+    global $db, $userid, $api, $h;
+    //Sanitize the war to be deleted.
+    $_GET['war'] = (isset($_GET['war']) && is_numeric($_GET['war'])) ? abs(intval($_GET['war'])) : 0;
+    //Verify the CSRF
+    if (!isset($_GET['csrf']) || !verify_csrf_code('staff_guild_end_war', stripslashes($_GET['csrf']))) {
+        alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
+        die($h->endpage());
+    }
+    //Select the war to be deleted from the database.
+    $q = $db->query("SELECT * FROM `guild_wars`
+                    WHERE `gw_winner` = 0 AND
+                    `gw_end` > " . time() . "
+                    AND `gw_id` = {$_GET['war']}
+                    ORDER BY `gw_id` DESC");
+
+    if ($db->num_rows($q) == 0) {
+        alert('danger', "Uh Oh!", "The war you are trying to delete does not exist.", false);
+        viewwars();
+        die();
+    }
+    //Associate query to a result
+    $r = $db->fetch_row($q);
+    $db->free_result($q);
+    //Delete war from database.
+    $db->query("DELETE FROM `guild_wars` WHERE `gw_id` = {$_GET['war']}");
+
+    //Associate the guild names to a variable for ease of use.
+    $gang1 = "<a href='../guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a>";
+    $gang2 = "<a href='../guilds.php?action=view&id={$r['gw_declaree']}'>{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}</a>";
+    $log = "Ended the war between {$gang1} and {$gang2}.";
+
+    //Log the war being deleted, then tell the user that it was successful.
+    $api->SystemLogsAdd($userid, 'staff', $log);
+    alert('success', "Success!", "You have ended the war between {$gang1} and {$gang2}!", false);
+    viewwars();
 }
