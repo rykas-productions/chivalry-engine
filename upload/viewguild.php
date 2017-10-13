@@ -63,37 +63,48 @@ function home()
     echo "
     <table class='table table-bordered'>
     		<tr>
-    			<td><a href='?action=summary'>Summary</a></td>
-    			<td><a href='?action=donate'>Donate</a></td>
+    			<td>
+    			    <a href='?action=summary'>Summary</a>
+                </td>
+    			<td>
+    			    <a href='?action=donate'>Donate</a>
+                </td>
     		</tr>
     		<tr>
-    			<td><a href='?action=members'>Members</a></td>
-    			<td><a href='?action=crimes'>Crimes</a></td>
+    			<td>
+    			    <a href='?action=members'>Members</a>
+                </td>
+    			<td>
+    			    <a href='?action=crimes'>Crimes</a>
+                </td>
     		</tr>
     		<tr>
-    			<td><a href='?action=leave'>Leave Guild</a></td>
-				<td><a href='?action=atklogs'>Attack Logs</a></td>
+    			<td>
+    			    <a href='?action=leave'>Leave Guild</a>
+                </td>
+				<td>
+				    <a href='?action=atklogs'>Attack Logs</a>
+                </td>
     		</tr>
     		<tr>
-    			<td><a href='?action=armory'>Armory</a></td>
-    			<td></td>
-       ";
-    if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
-        echo "</tr><tr><td><a href='?action=staff&act2=idx'>Staff Room</a>";
-    } else {
-        echo "&nbsp;";
-    }
-    echo "
-				</td>
-			</tr>
+    			<td>
+    			    <a href='?action=armory'>Armory</a>
+                </td>
+    			<td>";
+                    if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) { echo "<a href='?action=staff&act2=idx'>Staff Room</a>"; }
+                echo"</td></tr>
 	</table>
 	<br />
 	<table class='table table-bordered'>
-		<tr>
-			<td>Guild Announcement</td>
+		<tr class='table-secondary'>
+			<th>
+			    Guild Announcement
+			</th>
 		</tr>
 		<tr>
-			<td>{$gd['guild_announcement']}</td>
+			<td>
+			    {$gd['guild_announcement']}
+			</td>
 		</tr>
 	</table>
 	<br />
@@ -104,16 +115,23 @@ function home()
     echo "
 	<table class='table table-bordered'>
 		<tr>
-			<th>Notification Info</th>
-			<th>Notification Content</th>
+			<th>
+			    Notification Info
+            </th>
+			<th>
+			    Notification Content
+            </th>
 		</tr>
    	";
     while ($r = $db->fetch_row($q)) {
         echo "
 		<tr>
-			<td>" . date('F j Y, g:i:s a', $r['gn_time'])
-            . "</td>
-			<td>{$r['gn_text']}</td>
+			<td>
+			    " . date('F j Y, g:i:s a', $r['gn_time']) . "
+            </td>
+			<td>
+			    {$r['gn_text']}
+            </td>
 		</tr>
    		";
     }
@@ -338,19 +356,19 @@ function staff_kick()
     global $db, $userid, $ir, $gd, $api, $h, $wq;
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_kickuser", stripslashes($_POST['verf']))) {
-            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.", true, 'viewguild.php?action=members');
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.", true, '?action=members');
             die($h->endpage());
         }
         $_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs(intval($_POST['ID'])) : 0;
         $who = $_POST['ID'];
         if ($who == $gd['guild_owner']) {
-            alert('danger', "Uh Oh!", "You cannot kick the guild leader.", true, 'viewguild.php?action=members');
+            alert('danger', "Uh Oh!", "You cannot kick the guild leader.", true, '?action=members');
         } else if ($who == $gd['guild_coowner']) {
-            alert('danger', "Uh Oh!", "You cannot kick the guild co-leader.", true, 'viewguild.php?action=members');
+            alert('danger', "Uh Oh!", "You cannot kick the guild co-leader.", true, '?action=members');
         } else if ($who == $userid) {
-            alert('danger', "Uh Oh!", "You cannot kick yourself from the guild.", true, 'viewguild.php?action=members');
+            alert('danger', "Uh Oh!", "You cannot kick yourself from the guild.", true, '?action=members');
         } else if ($db->fetch_single($wq) > 0) {
-            alert('danger', "Uh Oh!", "You cannot kick members from your guild while you are at war.", true, 'viewguild.php?action=members');
+            alert('danger', "Uh Oh!", "You cannot kick members from your guild while you are at war.", true, '?action=members');
         } else {
             $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = $who AND `guild` = {$gd['guild_id']}");
             if ($db->num_rows($q) > 0) {
@@ -358,13 +376,13 @@ function staff_kick()
                 $db->query("UPDATE `users` SET `guild` = 0 WHERE `userid` = {$who}");
                 $d_username = htmlentities($kdata['username'], ENT_QUOTES, 'ISO-8859-1');
                 $d_oname = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
-                alert('success', "Success!", "You have kicked {$kdata['username']} from the guild.", true, 'viewguild.php?action=members');
+                alert('success', "Success!", "You have kicked {$kdata['username']} from the guild.", true, '?action=members');
                 $their_event = "You were kicked out of the {$gd['guild_name']} guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
                 $api->GameAddNotification($who, $their_event);
                 $gang_event = $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
                 $db->query("INSERT INTO `guild_notifications` VALUES(NULL, {$gd['guild_id']}, " . time() . ", '{$gang_event}');");
             } else {
-                alert('danger', "Uh Oh!", "User does not exist, or is not in the guild.", true, 'viewguild.php?action=members');
+                alert('danger', "Uh Oh!", "User does not exist, or is not in the guild.", true, '?action=members');
             }
             $db->free_result($q);
         }
@@ -751,7 +769,7 @@ function staff_vault()
             {$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . "
             Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from the guild's
             vault.");
-        alert('success', "Success!", "You have given {$api->SystemUserIDtoName($_POST['user'])} ", true, 'viewguild.php?action=staff&act2=idx');
+        alert('success', "Success!", "You have given {$api->SystemUserIDtoName($_POST['user'])} ", true, '?action=staff&act2=idx');
         $api->SystemLogsAdd($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
     } else {
         $csrf = request_csrf_html('guild_staff_vault');
@@ -795,7 +813,7 @@ function staff_vault()
             {$csrf}
         </table>
         </form>
-		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+		<a href='?action=staff&act2=idx'>Go Back</a>";
     }
 
 }
@@ -820,7 +838,7 @@ function staff_coowner()
         $db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
         $api->GameAddNotification($_POST['user'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you co-leader privileges for the {$gd['guild_name']} guild.");
         $api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred co-leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
-        alert('success', "Success!", "You have successfully transferred co-leadership privileges to {$api->SystemUserIDtoName($_POST['user'])}.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('success', "Success!", "You have successfully transferred co-leadership privileges to {$api->SystemUserIDtoName($_POST['user'])}.", true, '?action=staff&act2=idx');
     } else {
         $csrf = request_csrf_html('guild_staff_coleader');
         echo "<form method='post'>
@@ -846,7 +864,7 @@ function staff_coowner()
 			{$csrf}
 		</table>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+		<a href='?action=staff&act2=idx'>Go Back</a>";
     }
 }
 
@@ -860,7 +878,7 @@ function staff_announcement()
         }
         $ament = $db->escape(nl2br(htmlentities(stripslashes($_POST['ament']), ENT_QUOTES, 'ISO-8859-1')));
         $db->query("UPDATE `guild` SET `guild_announcement` = '{$ament}' WHERE `guild_id` = {$gd['guild_id']}");
-        alert('success', "Success!", "You ahve updated your guild's announcement.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('success', "Success!", "You have updated your guild's announcement.", true, '?action=staff&act2=idx');
     } else {
         $am_for_area = strip_tags($gd['guild_announcement']);
         $csrf = request_csrf_html('guild_staff_ament');
@@ -876,7 +894,7 @@ function staff_announcement()
 					Announcement
 				</th>
 				<td>
-					<textarea class='form-control' name='ament' rows='7'>{$am_for_area}</textarea>
+					<textarea class='form-control' name='ament'>{$am_for_area}</textarea>
 				</td>
 			</tr>
 			<tr>
@@ -887,7 +905,7 @@ function staff_announcement()
 			{$csrf}
 		</table>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+		<a href='?action=staff&act2=idx'>Go Back</a>";
     }
 }
 
@@ -905,7 +923,7 @@ function staff_massmail()
         while ($r = $db->fetch_row($q)) {
             $api->GameAddMail($r['userid'], $subj, $_POST['text'], $userid);
         }
-        alert('success', "Success!", "Mass mail has been sent successfully.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('success', "Success!", "Mass mail has been sent successfully.", true, '?action=staff&act2=idx');
     } else {
         $csrf = request_csrf_html('guild_staff_massmail');
         echo "<form method='post'>
@@ -931,7 +949,7 @@ function staff_massmail()
 			{$csrf}
 		</table>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+		<a href='?action=staff&act2=idx'>Go Back</a>";
     }
 }
 
@@ -966,7 +984,7 @@ function staff_masspayment()
             $db->query("UPDATE `guild` SET `guild_primcurr` = {$gd['guild_primcurr']} WHERE `guild_id` = {$gd['guild_id']}");
             $notif = $db->escape("A mass payment of " . number_format($_POST['payment']) . " Primary Currency was sent out to the members of the guild.");
             $api->GuildAddNotification($gd['guild_id'], $notif);
-            alert('success', "Success!", "Mass payment complete.", true, 'viewguild.php?action=staff&act2=idx');
+            alert('success', "Success!", "Mass payment complete.", true, '?action=staff&act2=idx');
         }
     } else {
         $csrf = request_csrf_html('guild_staff_masspay');
@@ -993,7 +1011,7 @@ function staff_masspayment()
 			{$csrf}
 		</table>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+		<a href='?action=staff&act2=idx'>Go Back</a>";
     }
 }
 
@@ -1008,7 +1026,7 @@ function staff_desc()
             }
             $desc = $db->escape(nl2br(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1')));
             $db->query("UPDATE `guild` SET `guild_desc` = '{$desc}' WHERE `guild_id` = {$gd['guild_id']}");
-            alert('success', "Success!", "You have updated your guild's description", true, 'viewguild.php?action=staff&act2=idx');
+            alert('success', "Success!", "You have updated your guild's description", true, '?action=staff&act2=idx');
         } else {
             $am_for_area = strip_tags($gd['guild_desc']);
             $csrf = request_csrf_html('guild_staff_desc');
@@ -1035,7 +1053,7 @@ function staff_desc()
 				{$csrf}
 			</table>
 			</form>
-			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+			<a href='?action=staff&act2=idx'>Go Back</a>";
         }
     } else {
         alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.");
@@ -1062,7 +1080,7 @@ function staff_leader()
             $db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
             $api->GameAddNotification($_POST['user'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you leader privileges for the {$gd['guild_name']} guild.");
             $api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
-            alert('success', "Success!", "You have transferred your leadership privileges over to {$api->SystemUserIDtoName($_POST['user'])}.", true, 'viewguild.php?action=staff&act2=idx');
+            alert('success', "Success!", "You have transferred your leadership privileges over to {$api->SystemUserIDtoName($_POST['user'])}.", true, '?action=staff&act2=idx');
         } else {
             $csrf = request_csrf_html('guild_staff_leader');
             echo "<form method='post'>
@@ -1088,10 +1106,10 @@ function staff_leader()
 			{$csrf}
 		</table>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+		<a href='?action=staff&act2=idx'>Go Back</a>";
         }
     } else {
-        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
     }
 }
 
@@ -1111,7 +1129,7 @@ function staff_name()
                 die($h->endpage());
             }
             $db->query("UPDATE `guild` SET `guild_name` = '{$name}' WHERE `guild_id` = {$gd['guild_id']}");
-            alert('success', "Success!", "You have changed your guild's name to {$name}.", true, 'viewguild.php?action=staff&act2=idx');
+            alert('success', "Success!", "You have changed your guild's name to {$name}.", true, '?action=staff&act2=idx');
         } else {
             $am_for_area = strip_tags($gd['guild_name']);
             $csrf = request_csrf_html('guild_staff_name');
@@ -1138,10 +1156,10 @@ function staff_name()
 				{$csrf}
 			</table>
 			</form>
-			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+			<a href='?action=staff&act2=idx'>Go Back</a>";
         }
     } else {
-        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
     }
 }
 
@@ -1180,7 +1198,7 @@ function staff_town()
             }
             $db->query("UPDATE `town` SET `town_guild_owner` = {$gd['guild_id']} WHERE `town_id` = {$town}");
             $api->GuildAddNotification($gd['guild_id'], "Your guild has successfully claimed {$api->SystemTownIDtoName($town)}.");
-            alert('success', "Success!", "You have successfully claimed {$api->SystemTownIDtoName($town)} for your guild.", true, 'viewguild.php?action=staff&act2=idx');
+            alert('success', "Success!", "You have successfully claimed {$api->SystemTownIDtoName($town)} for your guild.", true, '?action=staff&act2=idx');
         } else {
             $csrf = request_csrf_html('guild_staff_town');
             echo "
@@ -1209,10 +1227,10 @@ function staff_town()
 					{$csrf}
 				</table>
 			</form>
-			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+			<a href='?action=staff&act2=idx'>Go Back</a>";
         }
     } else {
-        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
     }
 }
 
@@ -1222,14 +1240,14 @@ function staff_untown()
     if ($userid == $gd['guild_owner']) {
         $townowned = $db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}");
         if ($db->num_rows($townowned) == 0) {
-            alert('danger', "Uh Oh!", "Your guild doesn't have a town to surrender.", true, 'viewguild.php?action=staff&act2=idx');
+            alert('danger', "Uh Oh!", "Your guild doesn't have a town to surrender.", true, '?action=staff&act2=idx');
             die($h->endpage());
         } else if ($db->fetch_single($wq) > 0) {
-            alert('danger', "Uh Oh!", "You cannot surrender your town while at war.", true, 'viewguild.php?action=staff&act2=idx');
+            alert('danger', "Uh Oh!", "You cannot surrender your town while at war.", true, '?action=staff&act2=idx');
             die($h->endpage());
         } elseif (isset($_POST['confirm'])) {
             $r = $db->fetch_single($townowned);
-            alert('success', "Success!", "You have surrendered your guild's town.", true, 'viewguild.php?action=staff&act2=idx');
+            alert('success', "Success!", "You have surrendered your guild's town.", true, '?action=staff&act2=idx');
             $db->query("UPDATE `town`
                         SET `town_guild_owner` = 0
                         WHERE `town_id` = {$r}");
@@ -1241,10 +1259,10 @@ function staff_untown()
 				<input type='hidden' name='confirm' value='yes'>
 				<input type='submit' class='btn btn-success' value='Yes'>
 			</form>
-			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+			<a href='?action=staff&act2=idx'>Go Back</a>";
         }
     } else {
-        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
     }
 }
 
@@ -1327,7 +1345,7 @@ function staff_declare()
             $api->GuildAddNotification($_POST['guild'], "The {$gd['guild_name']} guild has declared war on your guild.");
             $api->GuildAddNotification($gd['guild_id'], "Your guild has declared war on {$r['guild_name']}");
             $api->SystemLogsAdd($userid, 'guildwar', "Declared war on {$r['guild_name']} [{$_POST['guild']}]");
-            alert('success', "Success!", "You have declared war on {$r['guild_name']}", true, 'viewguild.php?action=staff&act2=idx');
+            alert('success', "Success!", "You have declared war on {$r['guild_name']}", true, '?action=staff&act2=idx');
         } else {
             $csrf = request_csrf_html('guild_staff_declarewar');
             echo "
@@ -1354,10 +1372,10 @@ function staff_declare()
 			{$csrf}
 			</form>
 			</table>
-			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+			<a href='?action=staff&act2=idx'>Go Back</a>";
         }
     } else {
-        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
     }
 }
 
@@ -1371,7 +1389,7 @@ function staff_levelup()
         } else {
             $db->query("UPDATE `guild` SET `guild_level` = `guild_level` + 1,
 			`guild_xp` = `guild_xp` - {$xprequired} WHERE `guild_id` = {$gd['guild_id']}");
-            alert('success', "Success!", "You have successfully leveled up your guild.", true, 'viewguild.php?action=staff&act2=idx');
+            alert('success', "Success!", "You have successfully leveled up your guild.", true, '?action=staff&act2=idx');
             $api->SystemLogsAdd($userid, 'guild_level', "Leveled up the {$gd['guild_name']} guild.");
             $api->GuildAddNotification($gd['guild_id'], "Your guild has leveled up!");
         }
@@ -1384,7 +1402,7 @@ function staff_levelup()
 			<input type='hidden' name='do' value='yes'>
 			<input type='submit' value='Level Up' class='btn btn-success'>
 		</form>
-		<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+		<a href='?action=staff&act2=idx'>Go Back</a>";
     }
 }
 
@@ -1393,7 +1411,7 @@ function staff_tax()
     global $db, $gd, $api, $h, $userid;
     if ($userid == $gd['guild_owner']) {
         if (!$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) {
-            alert('danger', "Uh Oh!", "Your guild does not own a town to set a tax rate on.", true, 'viewguild.php?action=staff&act2=idx');
+            alert('danger', "Uh Oh!", "Your guild does not own a town to set a tax rate on.", true, '?action=staff&act2=idx');
             die($h->endpage());
         }
         if (isset($_POST['tax'])) {
@@ -1409,7 +1427,7 @@ function staff_tax()
             $town_id = $db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
             $db->query("UPDATE `town` SET `town_tax` = {$_POST['tax']} WHERE `town_guild_owner` = {$gd['guild_owner']}");
             $api->SystemLogsAdd($userid, 'tax', "Set tax rate to {$_POST['tax']}% in {$api->SystemTownIDtoName($town_id)}.");
-            alert('success', "Success!", "You have set the tax rate of {$api->SystemTownIDtoName($town_id)} to {$_POST['tax']}%.", true, 'viewguild.php?action=staff&act2=idx');
+            alert('success', "Success!", "You have set the tax rate of {$api->SystemTownIDtoName($town_id)} to {$_POST['tax']}%.", true, '?action=staff&act2=idx');
 
         } else {
             $csrf = request_csrf_html('guild_staff_tax');
@@ -1438,11 +1456,11 @@ function staff_tax()
 			{$csrf}
 			</form>
 			</table>
-			<a href='viewguild.php?action=staff&act2=idx'>Go Back</a>";
+			<a href='?action=staff&act2=idx'>Go Back</a>";
         }
 
     } else {
-        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
     }
 }
 
@@ -1482,7 +1500,7 @@ function staff_dissolve()
             </form>";
         }
     } else {
-        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, 'viewguild.php?action=staff&act2=idx');
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
     }
 
 }
