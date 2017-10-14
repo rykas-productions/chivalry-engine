@@ -48,3 +48,5 @@ CREATE TABLE `guild_crimes` (
 ) ENGINE = MyISAM;
 
 ALTER TABLE `guild_crimes` CHANGE `gcNAME` `gcNAME` TEXT NOT NULL;
+
+ALTER TABLE `guild` ADD `guild_crime` INT(11) UNSIGNED NOT NULL AFTER `guild_announcement`, ADD `guild_crime_done` INT(11) UNSIGNED NOT NULL AFTER `guild_crime`;
