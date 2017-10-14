@@ -33,7 +33,7 @@ function home()
         echo "<a href='?action=viewpolls'>View Closed Polls</a>";
     }
     if ($_POST['choice'] && $_POST['poll']) {
-        if ($ir['voted'][$_POST['poll']]) {
+        if (isset($ir['voted'][$_POST['poll']])) {
             alert('danger', "Uh Oh!", "You have already voted in this poll.");
             die($h->endpage());
         }
