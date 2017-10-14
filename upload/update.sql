@@ -46,3 +46,5 @@ CREATE TABLE `guild_crimes` (
   `gcMAXCASH` INT(11) UNSIGNED NOT NULL ,
   PRIMARY KEY (`gcID`)
 ) ENGINE = MyISAM;
+
+ALTER TABLE `guild_crimes` CHANGE `gcNAME` `gcNAME` TEXT NOT NULL;
