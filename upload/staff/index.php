@@ -240,6 +240,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 							<div class='card-body'>
 								<a href='staff_guilds.php?action=viewguild'>View Guild</a><br />
 								<a href='staff_guilds.php?action=editguild'>Edit Guild</a><br />
+								<a href='staff_guilds.php?action=delguild'>Delete Guild</a><br />
 								<a href='staff_guilds.php?action=creditguild'>Credit Guild</a><br />
 								<a href='staff_guilds.php?action=viewwars'>View Guild Wars</a><br />
 							</div>

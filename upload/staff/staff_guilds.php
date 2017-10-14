@@ -33,6 +33,9 @@ switch ($_GET['action']) {
     case "editguild":
         editguild();
         break;
+    case "delguild":
+        delguild();
+        break;
 }
 function viewguild()
 {
@@ -589,4 +592,54 @@ function editguild()
         $api->SystemLogsAdd($userid, 'staff', "Edited the <a href='../guilds.php?action=view&id={$guild}'>{$name}</a> Guild.");
     }
     $h->endpage();
+}
+
+function delguild()
+{
+    global $db, $userid, $api, $h;
+    if (isset($_POST['guild'])) {
+        //Make sure input is safe.
+        $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
+
+        //Validate CSRF check.
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_delete_guild', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
+            die($h->endpage());
+        }
+
+        //Make sure guild is still valid input.
+        if (empty($guild)) {
+            alert('danger', "Uh Oh!", "You are trying to view an invalid or unspecified guild.");
+            die($h->endpage());
+        }
+
+        //Select the Guild from database to ensure it exists.
+        $q = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
+        if ($db->num_rows($q) == 0) {
+            alert('danger', "Uh Oh!", "The guild you are trying to view does not exist, or is invalid.");
+            die($h->endpage());
+        }
+
+        //Delete all the things.
+        $db->query("DELETE FROM `guild` WHERE `guild_id` = {$guild}");
+        $db->query("DELETE FROM `guild_applications` WHERE `ga_guild` = {$guild}");
+        $db->query("DELETE FROM `guild_armory` WHERE `gaGUILD` = {$guild}");
+        $db->query("DELETE FROM `guild_wars` WHERE `gw_declarer` = {$guild}");
+        $db->query("DELETE FROM `guild_wars` WHERE `gw_declaree` = {$guild}");
+        $db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$guild}");
+
+        //Alert user and log!
+        alert('success', "Success!", "You have successfully deleted Guild ID {$guild}.");
+        $api->SystemLogsAdd($userid, 'staff', "Deleted Guild ID {$guild}.");
+        $h->endpage();
+    } else {
+        $csrf = request_csrf_html('staff_delete_guild');
+        echo "<form method='post'>
+        Please select the guild you wish to delete. This will delete EVERYTHING and cannot be reversed.<br />
+        {$csrf}
+        " . guilds_dropdown() . "<br />
+        <input type='submit' value='Delete Guild' class='btn btn-primary'>
+        </form>";
+        $h->endpage();
+    }
 }
