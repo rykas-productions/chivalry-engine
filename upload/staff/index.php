@@ -243,6 +243,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 								<a href='staff_guilds.php?action=delguild'>Delete Guild</a><br />
 								<a href='staff_guilds.php?action=creditguild'>Credit Guild</a><br />
 								<a href='staff_guilds.php?action=viewwars'>View Guild Wars</a><br />
+								<a href='staff_guilds.php?action=addcrime'>Create Guild Crime</a><br />
 							</div>
 						</div>
 					</div>

@@ -36,6 +36,9 @@ switch ($_GET['action']) {
     case "delguild":
         delguild();
         break;
+    case "addcrime":
+        addcrime();
+        break;
     default:
         alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
         die($h->endpage());
@@ -641,13 +644,117 @@ function delguild()
 
 function addcrime()
 {
-    global $db,$userid,$api,$h;
-    if (isset($_POST['crime']))
-    {
+    global $db, $userid, $api, $h;
+    if (isset($_POST['name'])) {
+        //Make the POST variables safe to work with.
+        $name = $db->escape(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1'));
+        $memb = (isset($_POST['members']) && is_numeric($_POST['members'])) ? abs(intval($_POST['members'])) : 0;
+        $min = (isset($_POST['min']) && is_numeric($_POST['min'])) ? abs(intval($_POST['min'])) : 0;
+        $max = (isset($_POST['max']) && is_numeric($_POST['max'])) ? abs(intval($_POST['max'])) : 0;
+        $start = $db->escape(htmlentities(stripslashes($_POST['start']), ENT_QUOTES, 'ISO-8859-1'));
+        $success = $db->escape(htmlentities(stripslashes($_POST['success']), ENT_QUOTES, 'ISO-8859-1'));
+        $fail = $db->escape(htmlentities(stripslashes($_POST['fail']), ENT_QUOTES, 'ISO-8859-1'));
 
-    }
-    else
-    {
+        //Validate CSRF check.
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_create_guild_crime', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
+            die($h->endpage());
+        }
 
+        //Check to see if the crime's name is in use already.
+        $q = $db->query("SELECT `gcID` FROM `guild_crimes` WHERE `gcNAME` = '{$name}'");
+        if ($db->num_rows($q) > 0) {
+            alert('danger', "Uh Oh!", "You cannot have more than one crime with the same name.");
+            die($h->endpage());
+        }
+
+        //Make sure member activity count is at least one.
+        if ($memb == 0) {
+            alert('danger', "Uh Oh!", "All guild crimes must required, at minimum 1 member to be active.");
+            die($h->endpage());
+        }
+
+        //Check that the minimum number is less tha nthe maximum number.
+        if ($min >= $max) {
+            alert('danger', "Uh Oh!", "The minimum cash gained cannot be greater than, or equal to, the maximum cash gained.");
+            die($h->endpage());
+        }
+        //Completed checks. Lets add to the database.
+        $db->query("INSERT INTO `guild_crimes`
+                    (`gcNAME`, `gcUSERS`, `gcSTART`, `gcSUCC`, `gcFAIL`, `gcMINCASH`, `gcMAXCASH`)
+                    VALUES ('{$name}', '{$memb}', '{$start}', '{$success}', '{$fail}', '{$min}', '{$max}')");
+        $api->SystemLogsAdd($userid, 'staff', "Created the {$name} Guild Crime.");
+        alert('success', "Success!", "You have successfully created the {$name} Guild Crime.", true, 'index.php');
+        $h->endpage();
+    } else {
+        $csrf = request_csrf_html('staff_create_guild_crime');
+        echo "<form method='post'>
+        Fill out this form completely to add a new guild crime.
+        <table class='table table-bordered'>
+            <tr>
+                <th>
+                    Crime Name
+                </th>
+                <td>
+                    <input type='text' class='form-control' name='name' required='1'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Minimum Members
+                </th>
+                <td>
+                    <input type='number' class='form-control' name='members' min='1' required='1'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Minimum Cash
+                </th>
+                <td>
+                    <input type='number' class='form-control' name='min' min='0' required='1'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Maximum Cash
+                </th>
+                <td>
+                    <input type='number' class='form-control' name='max' min='0' required='1'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Crime Start Text
+                </th>
+                <td>
+                    <textarea class='form-control' name='start' required='1'></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Crime Success Text
+                </th>
+                <td>
+                    <textarea class='form-control' name='success' required='1'></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Crime Fail Text
+                </th>
+                <td>
+                    <textarea class='form-control' name='fail' required='1'></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <input type='submit' value='Create Guild Crime' class='btn btn-primary'>
+                </td>
+            </tr>
+        </table>
+        {$csrf}
+        </form>";
+        $h->endpage();
     }
 }
