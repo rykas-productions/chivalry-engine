@@ -367,6 +367,23 @@ CREATE TABLE `guild_crimes` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `guild_crime_log`
+--
+
+CREATE TABLE `guild_crime_log` (
+  `gclID` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `gclCID` INT(11) UNSIGNED NOT NULL ,
+  `gclGUILD` INT(11) UNSIGNED NOT NULL ,
+  `gclLOG` TEXT NOT NULL ,
+  `gclRESULT` TEXT NOT NULL ,
+  `gclWINNING` INT(11) UNSIGNED NOT NULL ,
+  `gclTIME` INT(11) UNSIGNED NOT NULL ,
+  PRIMARY KEY (`gclID`)
+) ENGINE = MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `guild_notifications`
 --
 

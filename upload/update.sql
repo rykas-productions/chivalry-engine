@@ -50,3 +50,14 @@ CREATE TABLE `guild_crimes` (
 ALTER TABLE `guild_crimes` CHANGE `gcNAME` `gcNAME` TEXT NOT NULL;
 
 ALTER TABLE `guild` ADD `guild_crime` INT(11) UNSIGNED NOT NULL AFTER `guild_announcement`, ADD `guild_crime_done` INT(11) UNSIGNED NOT NULL AFTER `guild_crime`;
+
+CREATE TABLE `guild_crime_log` (
+  `gclID` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `gclCID` INT(11) UNSIGNED NOT NULL ,
+  `gclGUILD` INT(11) UNSIGNED NOT NULL ,
+  `gclLOG` TEXT NOT NULL ,
+  `gclRESULT` TEXT NOT NULL ,
+  `gclWINNING` INT(11) UNSIGNED NOT NULL ,
+  `gclTIME` INT(11) UNSIGNED NOT NULL ,
+   PRIMARY KEY (`gclID`)
+) ENGINE = MyISAM;
