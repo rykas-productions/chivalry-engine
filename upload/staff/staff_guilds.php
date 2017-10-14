@@ -36,6 +36,10 @@ switch ($_GET['action']) {
     case "delguild":
         delguild();
         break;
+    default:
+        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
+        die($h->endpage());
+        break;
 }
 function viewguild()
 {
@@ -133,7 +137,7 @@ function viewguild()
                 Guild Members / Max Capacity
             </th>
             <td>
-                " . number_format($membcount) . " / " . number_format($r['guild_capacity']) . "
+                " . number_format($membcount) . " / " . number_format($r['guild_level'] * 5) . "
             </td>
         </tr>
         <tr>
@@ -498,14 +502,6 @@ function editguild()
         </tr>
         <tr>
             <th>
-                Guild Capacity
-            </th>
-            <td>
-                <input type='number' min='0' name='capacity' class='form-control' value='{$r['guild_capacity']}'>
-            </td>
-        </tr>
-        <tr>
-            <th>
                 Guild Level
             </th>
             <td>
@@ -532,7 +528,6 @@ function editguild()
         $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
         $xp = (isset($_POST['xp']) && is_numeric($_POST['xp'])) ? abs(intval($_POST['xp'])) : 0;
         $lvl = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 0;
-        $capacity = (isset($_POST['capacity']) && is_numeric($_POST['capacity'])) ? abs(intval($_POST['capacity'])) : 0;
         $primary = (isset($_POST['primary']) && is_numeric($_POST['primary'])) ? abs(intval($_POST['primary'])) : 0;
         $secondary = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs(intval($_POST['secondary'])) : 0;
         $owner = (isset($_POST['owner']) && is_numeric($_POST['owner'])) ? abs(intval($_POST['owner'])) : 0;
@@ -585,8 +580,8 @@ function editguild()
         $db->query("UPDATE `guild`
                     SET `guild_name` = '{$name}', `guild_desc` = '{$desc}', `guild_announcement` = '{$announcement}',
                     `guild_owner` = {$owner}, `guild_coowner` = {$coowner}, `guild_primcurr` = {$primary},
-                    `guild_seccurr` = {$secondary}, `guild_capacity` = {$capacity}, `guild_level` = {$lvl},
-                    `guild_xp` = {$xp}, `guild_hasarmory` = '{$armory}'
+                    `guild_seccurr` = {$secondary}, `guild_level` = {$lvl}, `guild_xp` = {$xp},
+                    `guild_hasarmory` = '{$armory}'
                     WHERE `guild_id` = {$guild}");
         alert('success', 'Success!', "You have successfully edited the {$name} guild!", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited the <a href='../guilds.php?action=view&id={$guild}'>{$name}</a> Guild.");
@@ -641,5 +636,18 @@ function delguild()
         <input type='submit' value='Delete Guild' class='btn btn-primary'>
         </form>";
         $h->endpage();
+    }
+}
+
+function addcrime()
+{
+    global $db,$userid,$api,$h;
+    if (isset($_POST['crime']))
+    {
+
+    }
+    else
+    {
+
     }
 }

@@ -149,7 +149,7 @@ function home()
 
 function summary()
 {
-    global $db, $gd;
+    global $db, $gd, $set;
     echo "
 	<table class='table table-bordered'>
 	<tr>
@@ -219,7 +219,7 @@ function summary()
 			Primary Currency
 		</th>
 		<td>
-			" . number_format($gd['guild_primcurr']) . " / " . number_format($gd['guild_level'] * 1500000) . "
+			" . number_format($gd['guild_primcurr']) . " / " . number_format($gd['guild_level'] * $set['GUILD_PRICE']) . "
 		</td>
 	</tr>
 	<tr>
@@ -236,7 +236,7 @@ function summary()
 
 function donate()
 {
-    global $db, $userid, $ir, $gd, $api, $h;
+    global $db, $userid, $ir, $gd, $api, $h, $set;
     if (isset($_POST['primary'])) {
         $_POST['primary'] = (isset($_POST['primary']) && is_numeric($_POST['primary'])) ? abs(intval($_POST['primary'])) : 0;
         $_POST['secondary'] = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs(intval($_POST['secondary'])) : 0;
@@ -254,8 +254,8 @@ function donate()
         } else if ($_POST['secondary'] > $ir['secondary_currency']) {
             alert('danger', "Uh Oh!", "You are trying to donate more Secondary Currency than you currently have.");
             die($h->endpage());
-        } else if ($_POST['primary'] + $gd['guild_primcurr'] > $gd['guild_level'] * 1500000) {
-            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . $gd['guild_level'] * 1500000 . "Primary Currency.");
+        } else if ($_POST['primary'] + $gd['guild_primcurr'] > $gd['guild_level'] * $set['GUILD_PRICE']) {
+            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . $gd['guild_level'] * $set['GUILD_PRICE'] . " Primary Currency.");
             die($h->endpage());
         } else {
             $api->UserTakeCurrency($userid, 'primary', $_POST['primary']);
@@ -1627,7 +1627,7 @@ function staff_armory()
 {
     global $db, $gd, $api, $h, $set, $userid, $ir;
     if ($gd['guild_hasarmory'] == 'false') {
-        $cost = $set['GUILD_PRICE'] * 10;
+        $cost = $set['GUILD_PRICE'] * 4;
         if (isset($_GET['buy'])) {
             if ($gd['guild_primcurr'] < $cost) {
                 alert('danger', "Uh Oh!", "Your guild does not have enough Primary Currency to buy an armory.", true, '?action=staff&act2=idx');
