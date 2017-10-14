@@ -55,6 +55,9 @@ if (!$ir['guild']) {
         case "armory":
             armory();
             break;
+        case "adonate":
+            adonate();
+            break;
         default:
             home();
             break;
@@ -504,12 +507,107 @@ function warview()
 
 function armory()
 {
-    global $db, $gd, $h, $api;
+    global $db, $gd, $h, $api, $ir;
     if ($gd['guild_hasarmory'] == 'false') {
         alert('danger', "Uh Oh!", "Your guild has yet to purchase an armory. Come back after your guild has purchased an armory.", true, 'viewguild.php');
         die($h->endpage());
     } else {
+        echo "Here are the items your guild currently has stockpiled in its armory. You may donate items <a href='?action=adonate'>here</a>.<br />";
+        $inv = $db->query("SELECT `gaQTY`, `itmsellprice`, `itmid`, `gaID`,
+                             `weapon`, `armor`, `itmtypename`, `itmdesc`
+                             FROM `guild_armory` AS `iv`
+                             INNER JOIN `items` AS `i`
+                             ON `iv`.`gaITEM` = `i`.`itmid`
+                             INNER JOIN `itemtypes` AS `it`
+                             ON `i`.`itmtype` = `it`.`itmtypeid`
+                             WHERE `iv`.`gaGUILD` = {$ir['guild']}
+                             ORDER BY `i`.`itmtype` ASC, `i`.`itmname` ASC");
+        echo "<table class='table table-bordered table-striped'>
+	    <thead>
+		<tr>
+			<th>
+			    Item (Qty)
+            </th>
+			<th class='hidden-xs-down'>
+			    Item Cost (Total)
+            </th>
+		</tr></thead>";
+        $lt = "";
+        while ($i = $db->fetch_row($inv)) {
+            if ($lt != $i['itmtypename']) {
+                $lt = $i['itmtypename'];
+                echo "\n<thead><tr>
+            			<th colspan='4'>
+            				<b>{$lt}</b>
+            			</th>
+            		</tr></thead>";
+            }
+            $i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
+            echo "
+            <tr>
+        		<td>
+					<a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='right' title='{$i['itmdesc']}'>
+						{$api->SystemItemIDtoName($i['itmid'])}
+					</a>";
+            if ($i['gaQTY'] > 1) {
+                echo " (" . number_format($i['gaQTY']) . ")";
+            }
+            echo "</td>
+        	  <td class='hidden-xs-down'>" . number_format($i['itmsellprice']);
+            echo "  (" . number_format($i['itmsellprice'] * $i['gaQTY']) . ")</td></tr>";
+        }
+        echo "</table>";
+    }
+}
 
+function adonate()
+{
+    global $api, $userid, $h, $ir, $gd;
+    if ($gd['guild_hasarmory'] == 'false') {
+        alert('danger', "Uh Oh!", "Your guild has yet to purchase an armory. Come back after your guild has purchased an armory.", true, 'viewguild.php');
+        die($h->endpage());
+    } else {
+        if (isset($_POST['item'])) {
+            //Secure the POST
+            $_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs($_POST['item']) : 0;
+            $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : 0;
+
+            //Verify CSRF Check has passed.
+            if (!isset($_POST['verf']) || !verify_csrf_code("guild_armory_donate", stripslashes($_POST['verf']))) {
+                alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+                die($h->endpage());
+            }
+
+            //Verify item exists
+            if (!$api->SystemItemIDtoName($_POST['item'])) {
+                alert('danger', "Uh Oh!", "You are trying to donate a non-existent item.");
+                die($h->endpage());
+            }
+
+            //Verify user has the item/quantity
+            if (!$api->UserHasItem($userid, $_POST['item'], $_POST['qty'])) {
+                alert('danger', "Uh Oh!", "You are trying to donate an item you don't have, or an amount you don't have.");
+                die($h->endpage());
+            }
+
+            //Donation successful!, log everything.
+            $item = $api->SystemItemIDtoName($_POST['item']);
+            $api->UserTakeItem($userid, $_POST['item'], $_POST['qty']);
+            $api->GuildAddItem($userid, $_POST['item'], $_POST['qty']);
+            $api->SystemLogsAdd($userid, 'guilds', "Donated {$_POST['qty']} {$item}(s) to their guild's armory.");
+            $api->GuildAddNotification($ir['guild'], "{$ir['username']} has donated {$_POST['qty']} {$item}(s) to the guild's armory.");
+            alert("success", "Success!", "You have successfully donated {$_POST['qty']} $item}(s) to your guild's armory.", true, "?action=armory");
+        } else {
+            $csrf = request_csrf_html('guild_armory_donate');
+            echo "<form method='post'>
+            Fill out the form completely to donate an item to your guild.<br />
+            " . inventory_dropdown() . "<br />
+            <input type='number' name='qty' placeholder='Quantity' class='form-control'>
+            <br />
+            {$csrf}
+            <input type='submit' value='Donate Item' class='btn btn-primary'>
+            </form>";
+        }
     }
 }
 
@@ -1527,7 +1625,7 @@ function staff_dissolve()
 
 function staff_armory()
 {
-    global $db, $gd, $api, $h, $set, $userid;
+    global $db, $gd, $api, $h, $set, $userid, $ir;
     if ($gd['guild_hasarmory'] == 'false') {
         $cost = $set['GUILD_PRICE'] * 10;
         if (isset($_GET['buy'])) {
@@ -1540,8 +1638,8 @@ function staff_armory()
                         `guild_primcurr` = `guild_primcurr` - {$cost}
                         WHERE `guild_id` = {$gd['guild_id']}");
 
-            alert('success','Success!',"You have successfully purchased an armory for your guild.");
-            $api->SystemLogsAdd($userid,'guilds',"Purchased guild armory.");
+            alert('success', 'Success!', "You have successfully purchased an armory for your guild.");
+            $api->SystemLogsAdd($userid, 'guilds', "Purchased guild armory.");
         } else {
             echo "Your guild does not have an armory. It will cost your guild " . number_format($cost) . " Primary
             Currency to purchase an armory. Do you wish to purchase an armory for your guild?<br />
@@ -1549,7 +1647,73 @@ function staff_armory()
             <a href='?action=staff&act2=idx' class='btn btn-danger'>No</a>";
         }
     } else {
+        if (isset($_POST['user'])) {
+            //Make sure every variable is safe to work with.
+            $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+            $_POST['item'] = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs($_POST['item']) : 0;
+            $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : 0;
 
+            //Verify CSRF check is successful.
+            if (!isset($_POST['verf']) || !verify_csrf_code("guild_give_item", stripslashes($_POST['verf']))) {
+                alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+                die($h->endpage());
+            }
+
+            //Verify user chosen is in the guild.
+            $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
+            if ($db->num_rows($q) == 0) {
+                $db->free_result($q);
+                alert('danger', "Uh Oh!", "You cannot give items to someone not in your guild.");
+                die($h->endpage());
+            }
+            $db->free_result($q);
+
+            //Verify the item chosen exists.
+            $q = $db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$_POST['item']}");
+            if ($db->num_rows($q) == 0) {
+                $db->free_result($q);
+                alert('danger', "Uh Oh!", "You cannot give out non-existent items.");
+                die($h->endpage());
+            }
+            $db->free_result($q);
+
+            //Verify the user is giving at least one item.
+            if ($_POST['qty'] <= 0) {
+                alert('danger', "Uh Oh!", "You must give out at least one item.");
+                die($h->endpage());
+            }
+
+            //Check users' IP Address. Returns false if not and/or same user
+            if ($api->SystemCheckUsersIPs($userid, $_POST['user'])) {
+                alert('danger', "Uh Oh!", "You cannot give items to players who share the same IP Address as you.");
+                die($h->endpage());
+            }
+
+            //Give items and whatnot.
+            $api->GuildRemoveItem($ir['guild'], $_POST['item'], $_POST['qty']);
+            $api->UserGiveItem($_POST['user'], $_POST['item'], $_POST['qty']);
+
+            //Resolve item to variable
+            $item = $api->SystemItemIDtoName($_POST['item']);
+            $user = $api->SystemUserIDtoName($_POST['user']);
+
+            //Notification
+            $api->GameAddNotification($_POST['user'], "You have been given {$_POST['qty']} {$item}(s) from your guild's armory.");
+            $api->GuildAddNotification($ir['guild'], "{$ir['username']} has given {$_POST['qty']} {$item}(s) from your guild's armory to {$user}.");
+            alert('success', "Success!", "You have successfully given {$_POST['qty']} {$item}(s) from your guild's armory to {$user}.", true, "?action=staff&act2=idx");
+            $api->SystemLogsAdd($userid, 'guilds', "Gave {$user} {$_POST['qty']} {$item}(s) from their armory.");
+        } else {
+            //Giving item form.
+            $csrf = request_csrf_html('guild_give_item');
+            echo "Fill out the form below completely to give out items from your armory.<br />
+            <form method='post'>
+            " . guild_user_dropdown('user', $ir['guild']) . "<br />
+            " . armory_dropdown() . "<br />
+            <input type='number' required='1' min='1' name='qty' placeholder='Quantity' class='form-control'><br />
+            <input type='submit' value='Give Item' class='btn btn-primary'>
+            {$csrf}
+            </form>";
+        }
     }
 }
 

@@ -1939,7 +1939,6 @@ function jobrank_dropdown($ddname = "jobrank", $selected = -1)
 
 function pagination($perpage,$total,$currentpage,$url)
 {
-    //URL needs to have the GET data added, minus the actual GET value.
     global $db;
     $pages=ceil($total / $perpage);
     $output = "<ul class='pagination justify-content-center'>";
@@ -1984,4 +1983,41 @@ function pagination($perpage,$total,$currentpage,$url)
     }
     $output .= "</ul></nav>";
     return $output;
+}
+
+/**
+ * Constructs a drop-down listbox of all the items in the user's guild's to let the user select one.
+ * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
+function armory_dropdown($ddname = "item", $selected = -1)
+{
+    global $db, $ir;
+    $ret = "<select name='$ddname' type='dropdown' class='form-control'>";
+    $q =
+        $db->query(
+            "SELECT `i`.*, `it`.*
+    				 FROM `guild_armory` AS `i`
+    				 INNER JOIN `items` AS `it`
+    				 ON `i`.`gaITEM` = `it`.`itmid`
+    				 WHERE `gaGUILD` = {$ir['guild']}
+    				 ORDER BY `itmname` ASC");
+    if ($selected == -1) {
+        $first = 0;
+    } else {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['itmid']}'";
+        if ($selected == $r['itmid'] || $first == 0) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['itmname']} (Armory: {$r['gaQTY']})</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
 }
