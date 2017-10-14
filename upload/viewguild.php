@@ -66,6 +66,7 @@ if (!$ir['guild']) {
 function home()
 {
     global $db, $userid, $ir, $gd;
+    //The main guild index.
     echo "
     <table class='table table-bordered'>
     		<tr>
@@ -150,6 +151,8 @@ function home()
 function summary()
 {
     global $db, $gd, $set;
+
+    //List all the guild's information
     echo "
 	<table class='table table-bordered'>
 	<tr>
@@ -238,40 +241,50 @@ function donate()
 {
     global $db, $userid, $ir, $gd, $api, $h, $set;
     if (isset($_POST['primary'])) {
+
+        //Make sure the POST is safe to work with.
         $_POST['primary'] = (isset($_POST['primary']) && is_numeric($_POST['primary'])) ? abs(intval($_POST['primary'])) : 0;
         $_POST['secondary'] = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs(intval($_POST['secondary'])) : 0;
+
+        //Verify we passed the CSRF check.
         if (!isset($_POST['verf']) || !verify_csrf_code('guild_donate', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
+
+        //Make sure the form is filled out.
         if (empty($_POST['primary']) && empty($_POST['secondary'])) {
             alert('danger', "Uh Oh!", "Please fill out the previous form before submitting.");
             die($h->endpage());
         }
+
+        //Trying to donate more primary than user has.
         if ($_POST['primary'] > $ir['primary_currency']) {
             alert('danger', "Uh Oh!", "You are trying to donate more Primary Currency than you currently have.");
             die($h->endpage());
+            //Trying to donate more secondary than user has.
         } else if ($_POST['secondary'] > $ir['secondary_currency']) {
             alert('danger', "Uh Oh!", "You are trying to donate more Secondary Currency than you currently have.");
             die($h->endpage());
+        //Donation amount would fill up the guild's vault.
         } else if ($_POST['primary'] + $gd['guild_primcurr'] > $gd['guild_level'] * $set['GUILD_PRICE']) {
             alert('danger', "Uh Oh!", "Your guild's vault can only hold " . $gd['guild_level'] * $set['GUILD_PRICE'] . " Primary Currency.");
             die($h->endpage());
         } else {
+            //Donate the currencies!
             $api->UserTakeCurrency($userid, 'primary', $_POST['primary']);
             $api->UserTakeCurrency($userid, 'secondary', $_POST['secondary']);
             $db->query("UPDATE `guild`
-					SET `guild_primcurr` = `guild_primcurr` + {$_POST['primary']},
-					`guild_seccurr` = `guild_seccurr` + {$_POST['secondary']}
-					WHERE `guild_id` = {$gd['guild_id']}");
+                        SET `guild_primcurr` = `guild_primcurr` + {$_POST['primary']},
+					    `guild_seccurr` = `guild_seccurr` + {$_POST['secondary']}
+					    WHERE `guild_id` = {$gd['guild_id']}");
             $my_name = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
             $event = $db->escape("<a href='profile.php?user={$userid}'>{$my_name}</a> donated
-									" . number_format($_POST['primary']) . " Primary Currency
-								and " . number_format($_POST['secondary']) . " Secondary Currency to the guild.");
-            $db->query("INSERT INTO `guild_notifications`
-						VALUES(NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
+									" . number_format($_POST['primary']) . " Primary Currency and/or
+									" . number_format($_POST['secondary']) . " Secondary Currency to the guild.");
+            $api->GuildAddNotification($gd['guild_id'],$event);
             alert('success', "Success!", "You have successfully donated " . number_format($_POST['primary']) . " Primary
-			Currency and " . number_format($_POST['secondary']) . " Secondary Currency to your guild.", true, 'viewguild.php');
+			Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency to your guild.", true, 'viewguild.php');
         }
     } else {
         $csrf = request_csrf_html('guild_donate');
@@ -309,6 +322,7 @@ function donate()
 function members()
 {
     global $db, $userid, $gd;
+    //List all the guild members. ^_^
     echo "
     <table class='table table-bordered table-striped'>
 		<tr>
@@ -362,24 +376,36 @@ function members()
 function staff_kick()
 {
     global $db, $userid, $ir, $gd, $api, $h, $wq;
+    //Current user is either owner or co-owner
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
+
+        //Verify CSRF check has passed.
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_kickuser", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.", true, '?action=members');
             die($h->endpage());
         }
+
+        //Make sure POST is safe to work with.
         $_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs(intval($_POST['ID'])) : 0;
         $who = $_POST['ID'];
+
+        //Trying to kick the owner.
         if ($who == $gd['guild_owner']) {
             alert('danger', "Uh Oh!", "You cannot kick the guild leader.", true, '?action=members');
+        //Trying to kick the co-owner
         } else if ($who == $gd['guild_coowner']) {
             alert('danger', "Uh Oh!", "You cannot kick the guild co-leader.", true, '?action=members');
+        //Trying to kick themselves.
         } else if ($who == $userid) {
             alert('danger', "Uh Oh!", "You cannot kick yourself from the guild.", true, '?action=members');
+        //Trying to kick while at war.
         } else if ($db->fetch_single($wq) > 0) {
             alert('danger', "Uh Oh!", "You cannot kick members from your guild while you are at war.", true, '?action=members');
         } else {
+            //User to be kicked exists and is in the guild.
             $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = $who AND `guild` = {$gd['guild_id']}");
             if ($db->num_rows($q) > 0) {
+                //Kick the user and add the notification.
                 $kdata = $db->fetch_row($q);
                 $db->query("UPDATE `users` SET `guild` = 0 WHERE `userid` = {$who}");
                 $d_username = htmlentities($kdata['username'], ENT_QUOTES, 'ISO-8859-1');
@@ -387,8 +413,8 @@ function staff_kick()
                 alert('success', "Success!", "You have kicked {$kdata['username']} from the guild.", true, '?action=members');
                 $their_event = "You were kicked out of the {$gd['guild_name']} guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
                 $api->GameAddNotification($who, $their_event);
-                $gang_event = $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
-                $db->query("INSERT INTO `guild_notifications` VALUES(NULL, {$gd['guild_id']}, " . time() . ", '{$gang_event}');");
+                $event = $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
+                $api->GuildAddNotification($gd['guild_id'],$event);
             } else {
                 alert('danger', "Uh Oh!", "User does not exist, or is not in the guild.", true, '?action=members');
             }
@@ -402,22 +428,32 @@ function staff_kick()
 function leave()
 {
     global $db, $userid, $ir, $gd, $api, $h, $wq;
+    //Make sure person leaving is not a guild owner/co-owner.
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
         alert('danger', "Uh Oh!", "You cannot leave the guild as the leader or co-leader.", true, 'viewguild.php');
         die($h->endpage());
     }
+    //Player *does* want to leave.
     if (isset($_POST['submit']) && $_POST['submit'] == 'yes') {
+
+        //Verify CSRF Check has passed.
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_leave", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
+
+        //Make sure no deserters during war times.
         if ($db->fetch_single($wq) > 0) {
             alert('danger', "Uh Oh!", "You cannot leave your guild while at war.", true, 'viewguild.php');
             die($h->endpage());
         }
+
+        //Allow player to leave.
         $db->query("UPDATE `users` SET `guild` = 0  WHERE `userid` = {$userid}");
         $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has left the guild.");
         alert('success', "Success!", "You have successfully left your guild.", true, 'index.php');
+
+    //Player *does not* want to leave
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'no') {
         alert('success', "Success!", "You have chosen to stay in your guild.", true, 'viewguild.php');
     } else {
@@ -440,14 +476,14 @@ function leave()
 function atklogs()
 {
     global $db, $ir, $api;
-    $atks =
-        $db->query("SELECT `l`.*, `u`.`guild`, `u`.`userid`
-			FROM `logs` as `l`
-			INNER JOIN `users` as `u`
-			ON `l`.`log_user` = `u`.`userid`
-			WHERE (`u`.`guild` = {$ir['guild']}) AND log_type = 'attacking'
-			ORDER BY `log_time` DESC
-			LIMIT 50");
+    //Select the last 50 attacks involving someone in the guild.
+    $atks = $db->query("SELECT `l`.*, `u`.`guild`, `u`.`userid`
+                        FROM `logs` as `l`
+                        INNER JOIN `users` as `u`
+                        ON `l`.`log_user` = `u`.`userid`
+                        WHERE (`u`.`guild` = {$ir['guild']}) AND log_type = 'attacking'
+                        ORDER BY `log_time` DESC
+                        LIMIT 50");
     echo "<b>Last 50 attacks involving anyone in your guild</b><br />
 	<table class='table table-bordered'>
 		<tr>
@@ -471,6 +507,7 @@ function atklogs()
 function warview()
 {
     global $db, $ir, $api;
+    //Select all active wars.
     $wq = $db->query("SELECT * FROM `guild_wars` WHERE
 					(`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) 
 					AND `gw_winner` = 0");
@@ -508,10 +545,12 @@ function warview()
 function armory()
 {
     global $db, $gd, $h, $api, $ir;
+    //Guild has not purchased the armory
     if ($gd['guild_hasarmory'] == 'false') {
         alert('danger', "Uh Oh!", "Your guild has yet to purchase an armory. Come back after your guild has purchased an armory.", true, 'viewguild.php');
         die($h->endpage());
     } else {
+        //List all the armory items.
         echo "Here are the items your guild currently has stockpiled in its armory. You may donate items <a href='?action=adonate'>here</a>.<br />";
         $inv = $db->query("SELECT `gaQTY`, `itmsellprice`, `itmid`, `gaID`,
                              `weapon`, `armor`, `itmtypename`, `itmdesc`
@@ -722,58 +761,72 @@ function staff_apps()
     $_POST['app'] = (isset($_POST['app']) && is_numeric($_POST['app'])) ? abs(intval($_POST['app'])) : '';
     $what = (isset($_POST['what']) && in_array($_POST['what'], array('accept', 'decline'), true)) ? $_POST['what'] : '';
     if (!empty($_POST['app']) && !empty($what)) {
+
+        //Verify that the CSRF check has passed.
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_apps", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
-        $aq =
-            $db->query(
-                "SELECT `ga_user`
+
+        //Verify the application exists and belongs to this guild.
+        $aq = $db->query("SELECT `ga_user`
                          FROM `guild_applications`
                          WHERE `ga_id` = {$_POST['app']}
                          AND `ga_guild` = {$gd['guild_id']}");
+
+        //Application does exist and belong to this guild.
         if ($db->num_rows($aq) > 0) {
             $appdata = $db->fetch_row($aq);
+
+            //User declines the application. Delete the application, and alert the applicant they were declined.
             if ($what == 'decline') {
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
                 $api->GameAddNotification($appdata['ga_user'], "We regret to inform you that your application to join the {$gd['guild_name']} guild was declined.");
-                $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a>
-									has declined <a href='profile.php?user={$appdata['ga_user']}'>
-									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
-									application to join the guild.");
-                $db->query(
-                    "INSERT INTO `guild_notifications`
-                         VALUES (NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
+                $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> has declined
+                                        <a href='profile.php?user={$appdata['ga_user']}'>
+                                        " . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s  application to join
+                                         the guild.");
+                //Add to guild notifications.
+                $api->GuildAddNotification($gd['guild_id'],$event);
                 alert('success', "Success!", "You have denied " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s application to join the guild.'");
             } else {
+                //User is accepted, yay!
+
+                //Make sure the guild has enough capacity to accept this member.
                 $cnt = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
+
+                //Guild does not have enough capacity to accept another member.s
                 if ($gd['guild_capacity'] <= $db->fetch_single($cnt)) {
                     $db->free_result($cnt);
                     alert('danger', "Uh Oh!", "Your guild does not have the capacity for another member. Please level up your guild.");
                     die($h->endpage());
+
+                //Applicant has joined another guild. =/
                 } else if ($api->UserInfoGet($appdata['ga_user'], 'guild') != 0) {
                     $db->free_result($cnt);
                     alert('danger', "Uh Oh!", "The applicant has already joined another guild.");
                     die($h->endpage());
                 }
+
+                //Select the town level if the guild's got one.
                 $townlevel = $db->fetch_single($db->query("SELECT `town_min_level` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
+
+                //Applicant cannot reach the town the guild owns.
                 if ($townlevel > $api->UserInfoGet($appdata['ga_user'], 'level') && $townlevel > 0) {
                     alert('danger', "Uh Oh!", "The applicant cannot reach your guild's town because their level is too low.");
                     die($h->endpage());
                 }
                 $db->free_result($cnt);
+
+                //Delete the application and put the applicant inside the guild! Woo!
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
                 $api->GameAddNotification($appdata['ga_user'], "Your application to join the {$gd['guild_name']} guild was accepted.");
                 $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
 									has accepted <a href='profile.php?user={$appdata['ga_user']}'>
 									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
 									application to join the guild.");
-                $db->query("INSERT INTO `guild_notifications` 
-							VALUES (NULL, {$gd['guild_id']}, " . time() . ", '{$event}')");
-                $db->query(
-                    "UPDATE `users`
-                         SET `guild` = {$gd['guild_id']}
-                         WHERE `userid` = {$appdata['ga_user']}");
+                $api->GuildAddNotification($gd['guild_id'],$event);
+                $db->query("UPDATE `users` SET `guild` = {$gd['guild_id']} WHERE `userid` = {$appdata['ga_user']}");
                 alert('success', "Success!", "You have accepted " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s applicantion to join the guild.");
             }
         } else {
@@ -843,39 +896,55 @@ function staff_vault()
 {
     global $db, $userid, $gd, $api, $h, $wq;
     if (isset($_POST['primary']) || isset($_POST['secondary'])) {
+
+        //Verify CSRF check has passed.
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_vault", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
+        //Make sure the POST is safe to work with.
         $_POST['primary'] = (isset($_POST['primary']) && is_numeric($_POST['primary'])) ? abs($_POST['primary']) : 0;
         $_POST['secondary'] = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs($_POST['secondary']) : 0;
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+
+        //Attempting to give more primary currency than the guild currently has.
         if ($_POST['primary'] > $gd['guild_primcurr']) {
             alert('danger', "Uh Oh!", "You are trying to give out more Primary Currency than your guild has in its vault.");
             die($h->endpage());
         }
+
+        //Attempting to give more secondary currency than the guild currently has.
         if ($_POST['secondary'] > $gd['guild_seccurr']) {
             alert('danger', "Uh Oh!", "You are trying to give out more Secondary Currency than your guild has in its vault.");
             die($h->endpage());
         }
+
+        //Didn't fill out how much currency they wanted to give out.
         if ($_POST['primary'] == 0 && $_POST['secondary'] == 0) {
             alert('danger', "Uh Oh!", "Please fill out the form completely before submitting.");
             die($h->endpage());
         }
+
+        //Recipient is on the same IP Address as the sender... stop.
         if ($api->SystemCheckUsersIPs($userid, $_POST['user'])) {
             alert('danger', "Uh Oh!", "You cannot give from the guild's vault if you share the same IP address as the recipient.");
             die($h->endpage());
         }
+
+        //Check that the user to receive the cash is in the guild and/or exists.
         $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "You are trying to give to a user that does not exist, or is not in the guild.");
             die($h->endpage());
         }
+
+        //Do not allow the transaction to continue if at war.
         if ($db->fetch_single($wq) > 0) {
             alert('danger', "Uh Oh!", "You cannot withdraw from your guild's vault while at war.");
             die($h->endpage());
         }
         $db->free_result($q);
+        //Give the currency and log everything.
         $api->UserGiveCurrency($_POST['user'], 'primary', $_POST['primary']);
         $api->UserGiveCurrency($_POST['user'], 'secondary', $_POST['secondary']);
         $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$_POST['primary']},
@@ -888,7 +957,7 @@ function staff_vault()
             Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from the guild's
             vault.");
         alert('success', "Success!", "You have given {$api->SystemUserIDtoName($_POST['user'])} ", true, '?action=staff&act2=idx');
-        $api->SystemLogsAdd($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
+        $api->SystemLogsAdd($userid, "guilds", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
     } else {
         $csrf = request_csrf_html('guild_staff_vault');
         echo "<form method='post'>
@@ -940,11 +1009,17 @@ function staff_coowner()
 {
     global $db, $userid, $api, $h, $gd;
     if (isset($_POST['user'])) {
+
+        //Verify CSRF check has passed.
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_coleader", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
+
+        //Make sure POST is safe to work with.
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+
+        //Verify the user chosen is existent and is in the guild.
         $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
@@ -953,6 +1028,8 @@ function staff_coowner()
             die($h->endpage());
         }
         $db->free_result($q);
+
+        //Update the guild's leader.
         $db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
         $api->GameAddNotification($_POST['user'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you co-leader privileges for the {$gd['guild_name']} guild.");
         $api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred co-leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
@@ -990,14 +1067,21 @@ function staff_announcement()
 {
     global $gd, $db, $h;
     if (isset($_POST['ament'])) {
+
+        //Verify CSRF check has passed.
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_ament", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
+
+        //Make sure the POST is safe to work with.
         $ament = $db->escape(nl2br(htmlentities(stripslashes($_POST['ament']), ENT_QUOTES, 'ISO-8859-1')));
+
+        //Update the guild's announcement.
         $db->query("UPDATE `guild` SET `guild_announcement` = '{$ament}' WHERE `guild_id` = {$gd['guild_id']}");
         alert('success', "Success!", "You have updated your guild's announcement.", true, '?action=staff&act2=idx');
     } else {
+        //Escape the announcement for safety reasons.
         $am_for_area = strip_tags($gd['guild_announcement']);
         $csrf = request_csrf_html('guild_staff_ament');
         echo "<form method='post'>
@@ -1031,13 +1115,18 @@ function staff_massmail()
 {
     global $db, $api, $userid, $h, $gd;
     if (isset($_POST['text'])) {
+
+        //Verify the CSRF check has passed.
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_massmail", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
+
+        //Escape the message.
         $_POST['text'] = (isset($_POST['text'])) ? $db->escape(htmlentities(stripslashes($_POST['text']), ENT_QUOTES, 'ISO-8859-1')) : '';
         $subj = 'Guild Mass Mail';
         $q = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$gd['guild_id']}");
+        //Send the mail out to everyone in the guild.
         while ($r = $db->fetch_row($q)) {
             $api->GameAddMail($r['userid'], $subj, $_POST['text'], $userid);
         }
@@ -1075,33 +1164,46 @@ function staff_masspayment()
 {
     global $db, $api, $userid, $gd, $h, $wq;
     if (isset($_POST['payment'])) {
+
+        //Verify the CSRF check has passed.
         if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_masspay", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
+
+        //Make sure the POST is safe to work with.
         $_POST['payment'] = (isset($_POST['payment']) && is_numeric($_POST['payment'])) ? abs($_POST['payment']) : 0;
         $cnt = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}"));
+
+        //Make sure there's enough primary currency to pay each member of the guild the amount specified.
         if (($_POST['payment'] * $cnt) > $gd['guild_primcurr']) {
             alert('danger', "Uh Oh!", "You do not have enough currency in your vault to give out that much to each member.");
             die($h->endpage());
+
+        //Check that the guild is not at war.
         } else if ($db->fetch_single($wq) > 0) {
             alert('danger', "Uh Oh!", "You cannot mass pay your guild while at war.");
             die($h->endpage());
         } else {
             $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `guild` = {$gd['guild_id']}");
+            //Pay each member.
             while ($r = $db->fetch_row($q)) {
-                if ($api->SystemCheckUsersIPs($userid, $r['userid']) == true) {
+                //User shares an IP with the user being paid... stop this.
+                if ($api->SystemCheckUsersIPs($userid, $r['userid'])) {
                     alert('danger', "Uh Oh!", "{$r['username']} could not receive their Mass Payment because they share an IP Address with you.");
                 } else {
+                    //Pay everyone.
                     $gd['guild_primcurr'] -= $_POST['payment'];
                     $api->GameAddNotification($r['userid'], "You were given a mass-payment of {$_POST['payment']} Primary Currency from your guild.");
                     $api->UserGiveCurrency($r['userid'], 'primary', $_POST['payment']);
                     alert('success', "Success!", "{$r['username']} was paid {$_POST['payment']} Primary Currency.");
                 }
             }
+            //Notify the user of the success and log everything.
             $db->query("UPDATE `guild` SET `guild_primcurr` = {$gd['guild_primcurr']} WHERE `guild_id` = {$gd['guild_id']}");
             $notif = $db->escape("A mass payment of " . number_format($_POST['payment']) . " Primary Currency was sent out to the members of the guild.");
             $api->GuildAddNotification($gd['guild_id'], $notif);
+            $api->SystemLogsAdd($userid,'guilds',"Sent a mass payment of " . number_format($_POST['payment']) . "to their guild.");
             alert('success', "Success!", "Mass payment complete.", true, '?action=staff&act2=idx');
         }
     } else {
@@ -1136,16 +1238,24 @@ function staff_masspayment()
 function staff_desc()
 {
     global $gd, $db, $userid, $h;
+    //Verify the current user is the guild owner.
     if ($userid == $gd['guild_owner']) {
         if (isset($_POST['desc'])) {
+
+            //Verify CSRF check has passed.
             if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_desc", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
+
+            //Make sure the POST is safe to work with.
             $desc = $db->escape(nl2br(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1')));
+
+            //Update guild's description.
             $db->query("UPDATE `guild` SET `guild_desc` = '{$desc}' WHERE `guild_id` = {$gd['guild_id']}");
             alert('success', "Success!", "You have updated your guild's description", true, '?action=staff&act2=idx');
         } else {
+            //Escape the description for safety reasons.
             $am_for_area = strip_tags($gd['guild_desc']);
             $csrf = request_csrf_html('guild_staff_desc');
             echo "<form method='post'>
@@ -1181,20 +1291,31 @@ function staff_desc()
 function staff_leader()
 {
     global $gd, $db, $userid, $api, $h;
+    //Verify the current user is the guild owner.
     if ($userid == $gd['guild_owner']) {
         if (isset($_POST['user'])) {
+
+            //Verify CSRF check has passed.
             if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_leader", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
+
+            //Make the POST safe to work with it.
             $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+
+            //Select the user from database.
             $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
+
+            //User does not exist, or is not in the guild.
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "You cannot give leadership privileges to a user not in your guild, or that doesn't exist.");
                 die($h->endpage());
             }
             $db->free_result($q);
+
+            //Update the guild's leader and log everything.
             $db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
             $api->GameAddNotification($_POST['user'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you leader privileges for the {$gd['guild_name']} guild.");
             $api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
@@ -1234,18 +1355,29 @@ function staff_leader()
 function staff_name()
 {
     global $gd, $db, $userid, $h;
+
+    //Verify the current user is the guild owner.
     if ($userid == $gd['guild_owner']) {
         if (isset($_POST['name'])) {
+
+            //Check that the CSRF check has passed.
             if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_name", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
+            //Make sure the POST is safe to work with.
             $name = $db->escape(nl2br(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1')));
+
+            //Select guilds with the same name.
             $cnt = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}' AND `guild_id` != {$gd['guild_id']}");
+
+            //If there's a guild with the same name, disallow the name change.
             if ($db->num_rows($cnt) > 0) {
                 alert('danger', "Uh Oh!", "The name you have chosen is already in use by another guild.");
                 die($h->endpage());
             }
+
+            //Update the guild's name.
             $db->query("UPDATE `guild` SET `guild_name` = '{$name}' WHERE `guild_id` = {$gd['guild_id']}");
             alert('success', "Success!", "You have changed your guild's name to {$name}.", true, '?action=staff&act2=idx');
         } else {
@@ -1284,36 +1416,53 @@ function staff_name()
 function staff_town()
 {
     global $db, $gd, $api, $h, $userid, $wq;
+
+    //Verify current user is the guild owner.
     if ($userid == $gd['guild_owner']) {
         if (isset($_POST['town'])) {
+
+            //Verify CSRF
             if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_town", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
+            //Make sure POST is safe to work with.
             $town = (isset($_POST['town']) && is_numeric($_POST['town'])) ? abs($_POST['town']) : 0;
+
+            //Make sure current guild doesn't already have a town.
             $cnt = $db->fetch_single($db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
             if ($cnt > 0) {
                 alert('danger', "Uh Oh!", "Your guild already owns a town. Surrender your current town to own a new one.");
                 die($h->endpage());
             }
+
+            //Make sure town claimed exists.
             if ($db->num_rows($db->query("SELECT `town_id` FROM `town` WHERE `town_id` = {$town}")) == 0) {
                 alert('danger', "Uh Oh!", "The town you wish to own does not exist.");
                 die($h->endpage());
             }
+
+            //Check to see if the town is unowned.
             if ($db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$town}")) > 0) {
                 alert('danger', "Uh Oh!", "The town you wish to own is already owned by another guild. If you want this town, declare war on them!");
                 die($h->endpage());
             }
+
+            //Check to see if current guild is at war, if so, stop them.
             if ($db->fetch_single($wq) > 0) {
                 alert('danger', "Uh Oh!", "You may not change your guild's town while at war.");
                 die($h->endpage());
             }
             $lowestlevel = $db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` ASC LIMIT 1"));
             $townlevel = $db->fetch_single($db->query("SELECT `town_min_level` FROM `town` WHERE `town_id` = {$town}"));
+
+            //Verify that everyone in the guild can reach the city.
             if ($townlevel > $lowestlevel) {
                 alert('danger', "Uh Oh!", "You cannot own this town as there are members in your guild who cannot access it.");
                 die($h->endpage());
             }
+
+            //Update everything. City is now the guild's.
             $db->query("UPDATE `town` SET `town_guild_owner` = {$gd['guild_id']} WHERE `town_id` = {$town}");
             $api->GuildAddNotification($gd['guild_id'], "Your guild has successfully claimed {$api->SystemTownIDtoName($town)}.");
             alert('success', "Success!", "You have successfully claimed {$api->SystemTownIDtoName($town)} for your guild.", true, '?action=staff&act2=idx');
@@ -1355,15 +1504,22 @@ function staff_town()
 function staff_untown()
 {
     global $db, $gd, $api, $h, $userid, $wq;
+    //Verify current user is the guild's owner.
     if ($userid == $gd['guild_owner']) {
+
+        //Check to be sure the guild has a town under their control
         $townowned = $db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}");
         if ($db->num_rows($townowned) == 0) {
             alert('danger', "Uh Oh!", "Your guild doesn't have a town to surrender.", true, '?action=staff&act2=idx');
             die($h->endpage());
+
+            //Check that the guild is not at war.
         } else if ($db->fetch_single($wq) > 0) {
             alert('danger', "Uh Oh!", "You cannot surrender your town while at war.", true, '?action=staff&act2=idx');
             die($h->endpage());
         } elseif (isset($_POST['confirm'])) {
+
+            //Surrender the town.
             $r = $db->fetch_single($townowned);
             alert('success', "Success!", "You have surrendered your guild's town.", true, '?action=staff&act2=idx');
             $db->query("UPDATE `town`
@@ -1387,17 +1543,26 @@ function staff_untown()
 function staff_declare()
 {
     global $db, $gd, $api, $h, $userid, $ir;
+    //Verify current user is the guild owner.
     if ($userid == $gd['guild_owner']) {
         if (isset($_POST['guild'])) {
+
+            //Verify POST is safe to work with.
             $_POST['guild'] = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs($_POST['guild']) : 0;
+
+            //Verify CSRF check has passed.
             if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_declarewar", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
+
+            //Check if the declared guild is the current guild, and stop them if that's the case.
             if ($_POST['guild'] == $gd['guild_id']) {
                 alert('danger', "Uh Oh!", "You cannot declare war on your own guild.");
                 die($h->endpage());
             }
+
+            //Verify that the declared guild exists.
             $data_q = $db->query("SELECT `guild_name`,`guild_owner`
                                   FROM `guild`
                                   WHERE `guild_id` = {$_POST['guild']}");
@@ -1406,6 +1571,8 @@ function staff_declare()
                 alert('danger', "Uh Oh!", "You cannot declare war on a non-existent guild.");
                 die($h->endpage());
             }
+
+            //Make sure the two guilds are not at war already.
             $time = time();
             $iswarredon = $db->query("SELECT `gw_id`
                                       FROM `guild_wars`
@@ -1416,6 +1583,8 @@ function staff_declare()
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild as you are already at war!");
                 die($h->endpage());
             }
+
+            //Make sure the two guilds are not at war already.
             $iswarredon1 = $db->query("SELECT `gw_id`
                                         FROM `guild_wars`
                                         WHERE `gw_declaree` = {$gd['guild_id']}
@@ -1425,6 +1594,8 @@ function staff_declare()
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild as you are already at war!");
                 die($h->endpage());
             }
+
+            //Check to see if its been a week since the last war.
             $lastweek = $time - 604800;
             $istoosoon = $db->fetch_single($db->query("SELECT `gw_end`
                                                         FROM `guild_wars`
@@ -1436,6 +1607,8 @@ function staff_declare()
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild as its been less than a week since the last war concluded.");
                 die($h->endpage());
             }
+
+            //Check to see if its been a week since the last war.
             $istoosoon1 = $db->fetch_single($db->query("SELECT `gw_end`
                                                         FROM `guild_wars`
                                                         WHERE `gw_declaree` = {$gd['guild_id']}
@@ -1448,21 +1621,27 @@ function staff_declare()
             }
             $yourcount = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$ir['guild']}");
             $theircount = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$_POST['guild']}");
+
+            //Current guild does not have 5 members.
             if ($db->num_rows($yourcount) < 5) {
                 alert('danger', "Uh Oh!", "You cannot declare war on another guild if you've got less than 5 members in your own guild.");
                 die($h->endpage());
             }
+
+            //Current guild does not have 5 members.
             if ($db->num_rows($theircount) < 5) {
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild, as they do not have 5 members currently in their guild.");
                 die($h->endpage());
             }
             $r = $db->fetch_row($data_q);
             $endtime = time() + 259200;
+
+            //Start the war, and notify all parties involved.
             $db->query("INSERT INTO `guild_wars` VALUES (NULL, {$gd['guild_id']}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
             $api->GameAddNotification($r['guild_owner'], "The {$gd['guild_name']} guild has declared war on your guild.");
             $api->GuildAddNotification($_POST['guild'], "The {$gd['guild_name']} guild has declared war on your guild.");
             $api->GuildAddNotification($gd['guild_id'], "Your guild has declared war on {$r['guild_name']}");
-            $api->SystemLogsAdd($userid, 'guildwar', "Declared war on {$r['guild_name']} [{$_POST['guild']}]");
+            $api->SystemLogsAdd($userid, 'guilds', "Declared war on {$r['guild_name']} [{$_POST['guild']}]");
             alert('success', "Success!", "You have declared war on {$r['guild_name']}", true, '?action=staff&act2=idx');
         } else {
             $csrf = request_csrf_html('guild_staff_declarewar');
@@ -1500,15 +1679,19 @@ function staff_declare()
 function staff_levelup()
 {
     global $db, $gd, $api, $userid;
-    $xprequired = $gd['guild_level'] * 30;
+    //Experience required set to variable
+    $xprequired = $gd['guild_level'] * 36;
     if (isset($_POST['do'])) {
+
+        //Guild does not have enough experience to level up.
         if ($gd['guild_xp'] < $xprequired) {
             alert('danger', "Uh Oh!", "Your guild does not have enough experience to level up. You can get more experience by going to war.");
         } else {
+            //Level the guild up.
             $db->query("UPDATE `guild` SET `guild_level` = `guild_level` + 1,
 			`guild_xp` = `guild_xp` - {$xprequired} WHERE `guild_id` = {$gd['guild_id']}");
             alert('success', "Success!", "You have successfully leveled up your guild.", true, '?action=staff&act2=idx');
-            $api->SystemLogsAdd($userid, 'guild_level', "Leveled up the {$gd['guild_name']} guild.");
+            $api->SystemLogsAdd($userid, 'guilds', "Leveled up the {$gd['guild_name']} guild.");
             $api->GuildAddNotification($gd['guild_id'], "Your guild has leveled up!");
         }
     } else {
@@ -1527,21 +1710,29 @@ function staff_levelup()
 function staff_tax()
 {
     global $db, $gd, $api, $h, $userid;
+    //Check if the user is the owner of the guild.
     if ($userid == $gd['guild_owner']) {
+        //Guild does not own a town, so tell them so.
         if (!$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) {
             alert('danger', "Uh Oh!", "Your guild does not own a town to set a tax rate on.", true, '?action=staff&act2=idx');
             die($h->endpage());
         }
         if (isset($_POST['tax'])) {
+            //Verify the variables are safe to work with.
             $_POST['tax'] = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs($_POST['tax']) : 0;
+
+            //Verify CSRF check has passed.
             if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_tax", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
-            if ($_POST['tax'] < 0 || $_POST['tax'] > 20) {
-                alert('danger', "Uh Oh!", "You can only set a tax rate between 0% and 20%");
+
+            //Make sure tax rate is between 0-10%
+            if ($_POST['tax'] < 0 || $_POST['tax'] > 10) {
+                alert('danger', "Uh Oh!", "You can only set a tax rate between 0% and 10%");
                 die($h->endpage());
             }
+            //Update town's tax rate.
             $town_id = $db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
             $db->query("UPDATE `town` SET `town_tax` = {$_POST['tax']} WHERE `town_guild_owner` = {$gd['guild_owner']}");
             $api->SystemLogsAdd($userid, 'tax', "Set tax rate to {$_POST['tax']}% in {$api->SystemTownIDtoName($town_id)}.");
@@ -1585,22 +1776,31 @@ function staff_tax()
 function staff_dissolve()
 {
     global $db, $gd, $api, $h, $userid, $ir, $wq;
+    //Check if user is the owner of the guild.
     if ($userid == $gd['guild_owner']) {
         if (isset($_POST['do'])) {
+            //Verify CSRF check has passed.
             if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_dissolve", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
+            //Make sure guild is not at war.
             if ($db->fetch_single($wq) > 0) {
                 alert('danger', "Uh Oh!", "You cannot dissolve your guild when you are at war.");
                 die($h->endpage());
             }
+
+            //Select all guild members, and tell them what happened to their guild via notification.
             $q = $db->query("SELECT `userid`,`username` FROM `users` WHERE `guild` = {$ir['guild']}");
             while ($r = $db->fetch_row($q)) {
                 $api->GameAddNotification($r['userid'], "Your guild, {$gd['guild_name']}, has been dissolved by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}].");
             }
-            $api->SystemLogsAdd($userid, 'guild', "Dissolved Guild ID {$ir['guild']}");
+            //Log the guild being deleted.
+            $api->SystemLogsAdd($userid, 'guilds', "Dissolved Guild ID {$ir['guild']}");
+
+            //Delete everything.
             $db->query("DELETE FROM `guild_applications` WHERE `ga_guild` = {$ir['guild']}");
+            $db->query("DELETE FROM `guild_armory` WHERE `gaGUILD` = {$ir['guild']}");
             $db->query("DELETE FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']}");
             $db->query("DELETE FROM `guild_wars` WHERE `gw_declarer` = {$ir['guild']}");
             $db->query("DELETE FROM `guild_wars` WHERE `gw_declaree` = {$ir['guild']}");
@@ -1626,18 +1826,24 @@ function staff_dissolve()
 function staff_armory()
 {
     global $db, $gd, $api, $h, $set, $userid, $ir;
+    //Check to see if the guild has bought the armory.
     if ($gd['guild_hasarmory'] == 'false') {
+
+        //Set the cost to varaible for ease of use.
         $cost = $set['GUILD_PRICE'] * 4;
         if (isset($_GET['buy'])) {
+
+            //Guild does not have enough Primary Currency to buy the armory.
             if ($gd['guild_primcurr'] < $cost) {
                 alert('danger', "Uh Oh!", "Your guild does not have enough Primary Currency to buy an armory.", true, '?action=staff&act2=idx');
                 die($h->endpage());
             }
+            //Buy the armory and remove the currency.
             $db->query("UPDATE `guild`
                         SET `guild_hasarmory` = 'true',
                         `guild_primcurr` = `guild_primcurr` - {$cost}
                         WHERE `guild_id` = {$gd['guild_id']}");
-
+            //Log
             alert('success', 'Success!', "You have successfully purchased an armory for your guild.");
             $api->SystemLogsAdd($userid, 'guilds', "Purchased guild armory.");
         } else {

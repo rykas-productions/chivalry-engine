@@ -8,7 +8,11 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+
+//Everything's in this file.
 require("stats/stats.php");
+
+//This is... messy.
 echo "<h3>Statistics Center</h3><hr />
 <script>
 google.charts.load('current', {'packages':['corechart']});
