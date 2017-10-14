@@ -349,6 +349,24 @@ CREATE TABLE `guild_armory` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `guild_crimes`
+--
+
+CREATE TABLE `guild_crimes` (
+  `gcID` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `gcNAME` INT(11) UNSIGNED NOT NULL ,
+  `gcUSERS` INT(11) UNSIGNED NOT NULL ,
+  `gcSTART` TEXT NOT NULL ,
+  `gcSUCC` TEXT NOT NULL ,
+  `gcFAIL` TEXT NOT NULL ,
+  `gcMINCASH` INT(11) UNSIGNED NOT NULL ,
+  `gcMAXCASH` INT(11) UNSIGNED NOT NULL ,
+  PRIMARY KEY (`gcID`)
+) ENGINE = MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `guild_notifications`
 --
 
