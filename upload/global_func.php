@@ -1015,22 +1015,18 @@ function check_data()
         notification_add($r['userid'], "Congratulations, you completed the {$coud['ac_name']} course and gained {$ev}!");
     }
     //Check guild crimes!
-    $guildcrime=$db->query("SELECT * FROM `guild` WHERE `guild_crime` > 0 AND `guild_crime_done` < {$time}");
-    while ($r = $db->fetch_row($guildcrime))
-    {
-        $r2=$db->fetch_row($db->query("SELECT * FROM `guild_crimes` WHERE `gcID` = {$r['guild_crime']}"));
-        $suc = Random(0,1);
-        if ($suc == 1)
-        {
+    $guildcrime = $db->query("SELECT * FROM `guild` WHERE `guild_crime` > 0 AND `guild_crime_done` < {$time}");
+    while ($r = $db->fetch_row($guildcrime)) {
+        $r2 = $db->fetch_row($db->query("SELECT * FROM `guild_crimes` WHERE `gcID` = {$r['guild_crime']}"));
+        $suc = Random(0, 1);
+        if ($suc == 1) {
             $log = $r2['gcSTART'] . $r2['gcSUCC'];
-            $winnings = Random($r2['gcMINCASH'],$r2['gcMAXCASH']);
-            $result='Success';
-        }
-        else
-        {
+            $winnings = Random($r2['gcMINCASH'], $r2['gcMAXCASH']);
+            $result = 'Success';
+        } else {
             $log = $r2['gcSTART'] . $r2['gcFAIL'];
             $winnings = 0;
-            $result='Failure';
+            $result = 'Failure';
         }
         $db->query("UPDATE `guild`
                     SET `guild_primcurr` = `guild_primcurr` + {$winnings},
@@ -1043,9 +1039,8 @@ function check_data()
                     ('{$r['guild_crime']}', '{$r['guild_id']}', '{$log}', '{$result}', '{$winnings}', '" . time() . "');");
         $i = $db->insert_id();
         $qm = $db->query("SELECT `userid` FROM `users` WHERE `gang` = {$r['guild_id']}");
-        while ($qr = $db->fetch_row($qm))
-        {
-            notification_add($qr['userid'],"Your guild's crime was a complete {$result}! Click <a href='gclog.php?ID=$i'>here</a> to view more information.");
+        while ($qr = $db->fetch_row($qm)) {
+            notification_add($qr['userid'], "Your guild's crime was a complete {$result}! Click <a href='gclog.php?ID=$i'>here</a> to view more information.");
         }
     }
 }
@@ -1850,7 +1845,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
 {
     global $set;
     $engine_version = $set['Version_Number'];
-    $json = json_decode(update_file($url), true);
+    $json = json_decode(get_cached_file($url, __DIR__ . "/cache/update_check.txt"), true);
     if (is_null($json))
         return "Update checker failed.";
     if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
@@ -1948,19 +1943,14 @@ function jobrank_dropdown($ddname = "jobrank", $selected = -1)
                      INNER JOIN `jobs` AS `j`
                      ON `jr`.`jrJOB` = `j`.`jRANK`
                      ORDER BY `jr`.`jrRANK` ASC");
-    if ($selected == -1)
-    {
+    if ($selected == -1) {
         $first = 0;
-    }
-    else
-    {
+    } else {
         $first = 1;
     }
-    while ($r = $db->fetch_row($q))
-    {
+    while ($r = $db->fetch_row($q)) {
         $ret .= "\n<option value='{$r['jrID']}'";
-        if ($selected == $r['jrID'] || $first == 0)
-        {
+        if ($selected == $r['jrID'] || $first == 0) {
             $ret .= " selected='selected'";
             $first = 1;
         }
@@ -1971,47 +1961,36 @@ function jobrank_dropdown($ddname = "jobrank", $selected = -1)
     return $ret;
 }
 
-function pagination($perpage,$total,$currentpage,$url)
+function pagination($perpage, $total, $currentpage, $url)
 {
     global $db;
-    $pages=ceil($total / $perpage);
+    $pages = ceil($total / $perpage);
     $output = "<ul class='pagination justify-content-center'>";
-    if ($currentpage <= 0)
-    {
+    if ($currentpage <= 0) {
         $output .= "<li class='page-item disabled'><a class='page-link'>&laquo;</a></li>";
         $output .= "<li class='page-item disabled'><a class='page-link'>Back</a></li>";
-    }
-    else
-    {
-        $link = $currentpage-$perpage;
+    } else {
+        $link = $currentpage - $perpage;
         $output .= "<li class='page-item'><a class='page-link' href='{$url}0'>&laquo;</a></li>";
         $output .= "<li class='page-item'><a class='page-link' href='{$url}{$link}'>Back</a></li>";
     }
-    for ($i = 1; $i <= $pages; $i++)
-    {
+    for ($i = 1; $i <= $pages; $i++) {
         $s = ($i - 1) * $perpage;
-        if (!((($currentpage - 3*$perpage) > $s) || (($currentpage + 3*$perpage) < $s)))
-		{
-            if ($s == $currentpage)
-            {
+        if (!((($currentpage - 3 * $perpage) > $s) || (($currentpage + 3 * $perpage) < $s))) {
+            if ($s == $currentpage) {
                 $output .= "<li class='page-item active'>";
-            }
-            else
-            {
+            } else {
                 $output .= "<li class='page-item'>";
             }
             $output .= "<a class='page-link' href='{$url}{$s}'>{$i}</li></a>";
         }
     }
-    $maxpage=($pages*$perpage)-$perpage;
-    if ($currentpage >= $maxpage)
-    {
+    $maxpage = ($pages * $perpage) - $perpage;
+    if ($currentpage >= $maxpage) {
         $output .= "<li class='page-item disabled'><a class='page-link'>Next</a></li>";
         $output .= "<li class='page-item disabled'><a class='page-link'>&raquo;</a></li>";
-    }
-    else
-    {
-        $link = $currentpage+$perpage;
+    } else {
+        $link = $currentpage + $perpage;
         $output .= "<li class='page-item'><a class='page-link' href='{$url}{$link}'>Next</a></li>";
         $output .= "<li class='page-item'><a class='page-link' href='{$url}{$maxpage}'>&raquo;</a></li>";
     }
