@@ -283,6 +283,8 @@ function donate()
 									" . number_format($_POST['primary']) . " Primary Currency and/or
 									" . number_format($_POST['secondary']) . " Secondary Currency to the guild.");
             $api->GuildAddNotification($gd['guild_id'],$event);
+            $api->SystemLogsAdd($userid,'guild_vault',"Donated " . number_format($_POST['primary']) . " Primary
+                Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency to their guild.");
             alert('success', "Success!", "You have successfully donated " . number_format($_POST['primary']) . " Primary
 			Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency to your guild.", true, 'viewguild.php');
         }
@@ -957,7 +959,7 @@ function staff_vault()
             Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from the guild's
             vault.");
         alert('success', "Success!", "You have given {$api->SystemUserIDtoName($_POST['user'])} ", true, '?action=staff&act2=idx');
-        $api->SystemLogsAdd($userid, "guilds", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
+        $api->SystemLogsAdd($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
     } else {
         $csrf = request_csrf_html('guild_staff_vault');
         echo "<form method='post'>
