@@ -58,6 +58,9 @@ if (!$ir['guild']) {
         case "adonate":
             adonate();
             break;
+        case "crimes":
+            crimes();
+            break;
         default:
             home();
             break;
@@ -266,7 +269,7 @@ function donate()
         } else if ($_POST['secondary'] > $ir['secondary_currency']) {
             alert('danger', "Uh Oh!", "You are trying to donate more Secondary Currency than you currently have.");
             die($h->endpage());
-        //Donation amount would fill up the guild's vault.
+            //Donation amount would fill up the guild's vault.
         } else if ($_POST['primary'] + $gd['guild_primcurr'] > $gd['guild_level'] * $set['GUILD_PRICE']) {
             alert('danger', "Uh Oh!", "Your guild's vault can only hold " . $gd['guild_level'] * $set['GUILD_PRICE'] . " Primary Currency.");
             die($h->endpage());
@@ -282,8 +285,8 @@ function donate()
             $event = $db->escape("<a href='profile.php?user={$userid}'>{$my_name}</a> donated
 									" . number_format($_POST['primary']) . " Primary Currency and/or
 									" . number_format($_POST['secondary']) . " Secondary Currency to the guild.");
-            $api->GuildAddNotification($gd['guild_id'],$event);
-            $api->SystemLogsAdd($userid,'guild_vault',"Donated " . number_format($_POST['primary']) . " Primary
+            $api->GuildAddNotification($gd['guild_id'], $event);
+            $api->SystemLogsAdd($userid, 'guild_vault', "Donated " . number_format($_POST['primary']) . " Primary
                 Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency to their guild.");
             alert('success', "Success!", "You have successfully donated " . number_format($_POST['primary']) . " Primary
 			Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency to your guild.", true, 'viewguild.php');
@@ -394,13 +397,13 @@ function staff_kick()
         //Trying to kick the owner.
         if ($who == $gd['guild_owner']) {
             alert('danger', "Uh Oh!", "You cannot kick the guild leader.", true, '?action=members');
-        //Trying to kick the co-owner
+            //Trying to kick the co-owner
         } else if ($who == $gd['guild_coowner']) {
             alert('danger', "Uh Oh!", "You cannot kick the guild co-leader.", true, '?action=members');
-        //Trying to kick themselves.
+            //Trying to kick themselves.
         } else if ($who == $userid) {
             alert('danger', "Uh Oh!", "You cannot kick yourself from the guild.", true, '?action=members');
-        //Trying to kick while at war.
+            //Trying to kick while at war.
         } else if ($db->fetch_single($wq) > 0) {
             alert('danger', "Uh Oh!", "You cannot kick members from your guild while you are at war.", true, '?action=members');
         } else {
@@ -416,7 +419,7 @@ function staff_kick()
                 $their_event = "You were kicked out of the {$gd['guild_name']} guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
                 $api->GameAddNotification($who, $their_event);
                 $event = $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
-                $api->GuildAddNotification($gd['guild_id'],$event);
+                $api->GuildAddNotification($gd['guild_id'], $event);
             } else {
                 alert('danger', "Uh Oh!", "User does not exist, or is not in the guild.", true, '?action=members');
             }
@@ -455,7 +458,7 @@ function leave()
         $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has left the guild.");
         alert('success', "Success!", "You have successfully left your guild.", true, 'index.php');
 
-    //Player *does not* want to leave
+        //Player *does not* want to leave
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'no') {
         alert('success', "Success!", "You have chosen to stay in your guild.", true, 'viewguild.php');
     } else {
@@ -652,6 +655,18 @@ function adonate()
     }
 }
 
+function crimes()
+{
+    global $gd, $db;
+    if ($gd['guild_crime'] > 0) {
+        $ttc = TimeUntil_Parse($gd['guild_crime_done']);
+        $gcname = $db->fetch_single($db->query("SELECT `gcNAME` from `guild_crimes` WHERE `gcID` = {$gd['guild_crime']}"));
+        echo "Your guild will be attempting to commit the {$gcname} crime. It will begin in {$ttc}.";
+    } else {
+        echo "Your guild is not currently planning on committing a crime. Contact your guild's leadership to stage one.";
+    }
+}
+
 function staff()
 {
     global $userid, $gd, $h;
@@ -711,6 +726,9 @@ function staff()
             case "armory":
                 staff_armory();
                 break;
+            case "crimes":
+                staff_crimes();
+                break;
             default:
                 staff_idx();
                 break;
@@ -736,6 +754,7 @@ function staff_idx()
 			<a href='?action=staff&act2=massmail'>Mass Mail Guild</a><br />
 			<a href='?action=staff&act2=masspay'>Mass Pay Guild</a><br />
 			<a href='?action=staff&act2=levelup'>Level Up Guild</a><br />
+			<a href='?action=staff&act2=crimes'>Guild Crimes</a><br />
 		</td>";
     if ($gd['guild_owner'] == $userid) {
         echo "
@@ -789,7 +808,7 @@ function staff_apps()
                                         " . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s  application to join
                                          the guild.");
                 //Add to guild notifications.
-                $api->GuildAddNotification($gd['guild_id'],$event);
+                $api->GuildAddNotification($gd['guild_id'], $event);
                 alert('success', "Success!", "You have denied " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s application to join the guild.'");
             } else {
                 //User is accepted, yay!
@@ -803,7 +822,7 @@ function staff_apps()
                     alert('danger', "Uh Oh!", "Your guild does not have the capacity for another member. Please level up your guild.");
                     die($h->endpage());
 
-                //Applicant has joined another guild. =/
+                    //Applicant has joined another guild. =/
                 } else if ($api->UserInfoGet($appdata['ga_user'], 'guild') != 0) {
                     $db->free_result($cnt);
                     alert('danger', "Uh Oh!", "The applicant has already joined another guild.");
@@ -827,7 +846,7 @@ function staff_apps()
 									has accepted <a href='profile.php?user={$appdata['ga_user']}'>
 									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
 									application to join the guild.");
-                $api->GuildAddNotification($gd['guild_id'],$event);
+                $api->GuildAddNotification($gd['guild_id'], $event);
                 $db->query("UPDATE `users` SET `guild` = {$gd['guild_id']} WHERE `userid` = {$appdata['ga_user']}");
                 alert('success', "Success!", "You have accepted " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s applicantion to join the guild.");
             }
@@ -1182,7 +1201,7 @@ function staff_masspayment()
             alert('danger', "Uh Oh!", "You do not have enough currency in your vault to give out that much to each member.");
             die($h->endpage());
 
-        //Check that the guild is not at war.
+            //Check that the guild is not at war.
         } else if ($db->fetch_single($wq) > 0) {
             alert('danger', "Uh Oh!", "You cannot mass pay your guild while at war.");
             die($h->endpage());
@@ -1205,7 +1224,7 @@ function staff_masspayment()
             $db->query("UPDATE `guild` SET `guild_primcurr` = {$gd['guild_primcurr']} WHERE `guild_id` = {$gd['guild_id']}");
             $notif = $db->escape("A mass payment of " . number_format($_POST['payment']) . " Primary Currency was sent out to the members of the guild.");
             $api->GuildAddNotification($gd['guild_id'], $notif);
-            $api->SystemLogsAdd($userid,'guilds',"Sent a mass payment of " . number_format($_POST['payment']) . "to their guild.");
+            $api->SystemLogsAdd($userid, 'guilds', "Sent a mass payment of " . number_format($_POST['payment']) . "to their guild.");
             alert('success', "Success!", "Mass payment complete.", true, '?action=staff&act2=idx');
         }
     } else {
@@ -1921,6 +1940,77 @@ function staff_armory()
             <input type='submit' value='Give Item' class='btn btn-primary'>
             {$csrf}
             </form>";
+        }
+    }
+}
+
+function staff_crimes()
+{
+    global $db, $userid, $api, $h, $ir, $gd;
+    //Select the guild's member count.
+    $cnt = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$ir['guild']}");
+    $membs = $db->fetch_single($cnt);
+    $db->free_result($cnt);
+    if (isset($_POST['crime'])) {
+        //Make the POST safe to work with.
+        $_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : 0;
+
+        //Verify CSRF check is successful.
+        if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_crimes", stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+            die($h->endpage());
+        }
+
+        //Check that the guild isn't already planning a crime.
+        if ($gd['guild_crime'] != 0) {
+            alert('danger', "Uh Oh!", "You guild is already planning a crime.");
+            die($h->endpage());
+        }
+        //Verify crime exists.
+        $cq = $db->query("SELECT `gcUSERS` from `guild_crimes` WHERE `gcID` = {$_POST['crime']}");
+        if ($db->num_rows($cq) == 0) {
+            alert('danger', "Uh Oh!", "You cannot commit a non-existent crime.");
+            die($h->endpage());
+        }
+        //Verify guild has enough members to commit this crime.
+        $cr = $db->fetch_single($cq);
+        if ($cr > $membs) {
+            alert('danger', "Uh Oh!", "You cannot commit this crime as you need {$cr} guild members. You only have {$membs}.");
+            die($h->endpage());
+        }
+        //Select time 24 hours from now.
+        $ttc = time() + 86400;
+
+        //Set guild's crime.
+        $db->query("UPDATE `guild`
+                    SET `guild_crime` = {$_POST['crime']},
+                    `guild_crime_done` = {$ttc}
+                    WHERE `guild_id` = {$ir['guild']}");
+        alert('success', "Success!", "You have started to plan this crime. It will take 24 hours to commit.", true, '?action=staff&act2=idx');
+    } else {
+        //Select the crimes from database, based on how many members the guild has.
+        $q = $db->query("SELECT *
+                         FROM `guild_crimes`
+                         WHERE `gcUSERS` <= $membs");
+
+        //If there's crimes the guild can commit.
+        if ($db->num_rows($q) > 0) {
+            $csrf = request_csrf_html('guild_staff_crimes');
+            echo "Select the crime you wish your guild to commit.<br />
+            <form method='post'>
+                <select name='crime' type='dropdown' class='form-control'>";
+            while ($r = $db->fetch_row($q)) {
+                echo "<option value='{$r['gcID']}'>{$r['gcNAME']}
+                		({$r['gcUSERS']} members needed)</option>\n";
+            }
+
+            echo "</select><br />
+                <input type='submit' value='Plan Crime' class='btn btn-primary'>
+                {$csrf}
+            </form>";
+        } //Guild has no crimes they can commit.
+        else {
+            alert('danger', "Uh Oh!", "You guild cannot commit any crimes at this time.", true, '?action=staff&act2=idx');
         }
     }
 }
