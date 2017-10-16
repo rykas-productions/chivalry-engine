@@ -669,23 +669,23 @@ function mailb_user_dropdown($ddname = "user", $selected = -1)
     global $db;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
-        $db->query(
-            "SELECT `userid`, `username`
-                     FROM `users`
-                     WHERE `mailban` > 0
-                     ORDER BY `userid` ASC");
+        $db->query("SELECT `mbUSER`, `mbID`, `username`
+                    FROM `mail_bans` `m`
+                    INNER JOIN `users` AS `u`
+                    ON `u`.`userid` = `m`.`mbUSER`
+                    ORDER BY `mbTIME` ASC");
     if ($selected == -1) {
         $first = 0;
     } else {
         $first = 1;
     }
     while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['userid']}'";
-        if ($selected == $r['userid'] || $first == 0) {
+        $ret .= "\n<option value='{$r['mbUSER']}'";
+        if ($selected == $r['mbUSER'] || $first == 0) {
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
+        $ret .= ">{$r['username']} [{$r['mbUSER']}]</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
