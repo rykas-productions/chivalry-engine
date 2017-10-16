@@ -39,6 +39,9 @@ switch ($_GET['action']) {
     case "addcrime":
         addcrime();
         break;
+    case "delcrime":
+        delcrime();
+        break;
     default:
         alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
         die($h->endpage());
@@ -624,6 +627,8 @@ function delguild()
         $db->query("DELETE FROM `guild_armory` WHERE `gaGUILD` = {$guild}");
         $db->query("DELETE FROM `guild_wars` WHERE `gw_declarer` = {$guild}");
         $db->query("DELETE FROM `guild_wars` WHERE `gw_declaree` = {$guild}");
+        $db->query("DELETE FROM `guild_notifications` WHERE `gn_id` = {$guild}");
+        $db->query("DELETE FROM `guild_crime_log` WHERE `gclGUILD` = {$guild}");
         $db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$guild}");
 
         //Alert user and log!
@@ -754,6 +759,57 @@ function addcrime()
             </tr>
         </table>
         {$csrf}
+        </form>";
+        $h->endpage();
+    }
+}
+
+function delcrime()
+{
+    global $db, $userid, $api, $h;
+    if (isset($_POST['crime'])) {
+        //Make the POST safe to work with.
+        $_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : 0;
+
+        //Verify CSRF check is successful.
+        if (!isset($_POST['verf']) || !verify_csrf_code("staff_delete_guild_crime", stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+            die($h->endpage());
+        }
+
+        //Verify crime exists.
+        $cq = $db->query("SELECT `gcUSERS` from `guild_crimes` WHERE `gcID` = {$_POST['crime']}");
+        if ($db->num_rows($cq) == 0) {
+            alert('danger', "Uh Oh!", "You cannot commit a non-existent crime.");
+            die($h->endpage());
+        }
+
+        //Update guilds to no crime/time if they're committing this crime.
+        $db->query("UPDATE `guild`
+                    SET `guild_crime` = 0,
+                    `guild_crime_done` = 0
+                    WHERE `guild_crime` = {$_POST['crime']}");
+
+        //Delete the crime now.
+        $db->query("DELETE FROM `guild_crimes` WHERE `gcID` = {$_POST['crime']}");
+        $api->SystemLogsAdd($userid, 'staff', "Delete Guild Crime ID {$_POST['crime']}.");
+        alert('success', 'Success!', "You have successfully deleted this guild crime.", true, 'index.php');
+        $h->endpage();
+    } else {
+        //Select the crimes from database, based on how many members the guild has.
+        $csrf = request_csrf_html('staff_delete_guild_crime');
+        $q = $db->query("SELECT * FROM `guild_crimes`");
+        echo "Select the guild crime you wish to delete. Guilds currently planning to commit this crime will have their crime
+        set back to nothing.<br />
+        <form method='post'>
+            <select name='crime' type='dropdown' class='form-control'>";
+        //Put the crimes in a dropdown list.
+        while ($r = $db->fetch_row($q)) {
+            echo "<option value='{$r['gcID']}'>{$r['gcNAME']}</option>\n";
+        }
+        echo "</select>
+            {$csrf}
+            <input type='submit' value='Delete Crime' class='btn btn-primary'>
         </form>";
         $h->endpage();
     }
