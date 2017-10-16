@@ -113,7 +113,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
     <br />
 	<u>Administration</u>
 	<br />
-	his category has no general theme, to be honest. Checking out User List will list all the registered users in-game,
+	This category has no general theme, to be honest. Checking out User List will list all the registered users in-game,
 	and allow you to organize them by Level, ID, Primary Currency or name. Clicking Users Online will list the players
 	online in the last 15 minutes. You can customize this to any duration you wish. Staff List will list all in-game
 	staff. These players uphold the law and order of the game. If you have any issue, you should contact them! The
