@@ -47,4 +47,80 @@ while ($r = $db->fetch_row($q)) {
 }
 echo "</table>";
 $db->free_result($q);
+echo "We have no real good reason to put mail banned players here... but we still did.";
+$q = $db->query("SELECT * FROM `mail_bans` ORDER BY `mbTIME` ASC");
+echo "<table class='table table-bordered'>
+	<tr>
+		<th>
+			Player
+		</th>
+		<th>
+			Remaining Time
+		</th>
+		<th>
+			Reason
+		</th>
+		<th>
+			Banner
+		</th>
+	</tr>";
+//List all the players who are mail banned
+while ($r = $db->fetch_row($q)) {
+    echo "
+	<tr>
+    	<td>
+    		<a href='profile.php?user={$r['mbUSER']}'>{$api->SystemUserIDtoName($r['mbUSER'])}</a>
+    	</td>
+    	<td>
+			" . TimeUntil_Parse($r['mbTIME']) . "
+		</td>
+    	<td>
+			{$r['mbREASON']}
+		</td>
+    	<td>
+    		<a href='profile.php?user={$r['mbBANNER']}'>{$api->SystemUserIDtoName($r['mbBANNER'])}</a>
+    	</td>
+    </tr>";
+}
+echo "</table>";
+$db->free_result($q);
+
+echo "The same holds true for forum bans.";
+$q = $db->query("SELECT * FROM `forum_bans` ORDER BY `fb_time` ASC");
+echo "<table class='table table-bordered'>
+	<tr>
+		<th>
+			Player
+		</th>
+		<th>
+			Remaining Time
+		</th>
+		<th>
+			Reason
+		</th>
+		<th>
+			Banner
+		</th>
+	</tr>";
+//List all the players who are mail banned
+while ($r = $db->fetch_row($q)) {
+    echo "
+	<tr>
+    	<td>
+    		<a href='profile.php?user={$r['fb_user']}'>{$api->SystemUserIDtoName($r['fb_user'])}</a>
+    	</td>
+    	<td>
+			" . TimeUntil_Parse($r['fb_time']) . "
+		</td>
+    	<td>
+			{$r['fb_reason']}
+		</td>
+    	<td>
+    		<a href='profile.php?user={$r['fb_banner']}'>{$api->SystemUserIDtoName($r['fb_banner'])}</a>
+    	</td>
+    </tr>";
+}
+echo "</table>";
+$db->free_result($q);
+
 $h->endpage();
