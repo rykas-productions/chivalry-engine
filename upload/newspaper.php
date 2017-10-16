@@ -1,3 +1,12 @@
+<script>
+    function total_cost() {
+        var day = parseInt((document.getElementById("days").value) * 1250);
+        var init = parseInt((document.getElementById("init").value));
+        var charlength = parseInt((document.getElementById("chars").value.length) * 5);
+        var totalcost = day + init + charlength;
+        var output = document.getElementById("output").value = totalcost;
+    }
+</script>
 <?php
 /*
 	File:		newspaper.php
@@ -33,6 +42,7 @@ function news_home()
 {
     global $db, $h, $CurrentTime;
     $AdsQuery = $db->query("SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
+    $db->query("DELETE FROM `newspaper_ads` WHERE `news_end` < {$CurrentTime}");
     if ($db->num_rows($AdsQuery) == 0) {
         alert("danger", "Uh Oh!", "There aren't any newspaper ads at this time. Maybe you should <a href='?action=buyad'>list</a> one?", false);
         die($h->endpage());
@@ -71,66 +81,95 @@ function news_home()
 
 function news_buy()
 {
-    echo "<h3>Buying an Ad</h3>
-	" . alert("info", "Information!", "Remember, buying an ad is subject to the game rules. If you post something
-	    here that will break a game rule, you will be warned and your ad will be removed. If you find someone abusing
-	    the newspaper, please let an admin know immediately!", false) . "<hr />";
-    echo "
-		<form method='post'>
-		<table class='table table-bordered'>
-			<tr>
-				<td width='33%'>
-					Initial Ad Cost<br />
-					<small>A higher number will rank you higher on the ad list.</small>
-				</td>
-				<td>
-					<input type='number' min='750' name='init_cost' required='1' id='init' onkeyup='total_cost();' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Ad Runtime<br />
-					<small>Each day will add 1,250 Primary Currency to your cost.</small>
-				</td>
-				<td>
-					<input type='number' min='1' name='ad_length' id='days' onkeyup='total_cost();' required='1' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Ad Text<br />
-					<small>Each character is worth 5 Primary Currency.</small>
-				</td>
-				<td>
-					<textarea class='form-control' name='ad_text' id='chars' onkeyup='total_cost();' rows='5' required='1'></textarea>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Total Ad Cost
-				</td>
-				<td>
-					<input type='number' name='ad_cost' id='output' readonly='1' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='List Ad'>
-				</td>
-			</tr>
-		</table>
-		</form>";
+    global $db, $api, $h, $userid, $CurrentTime;
+    if (isset($_POST['init_cost'])) {
+        //Make sure POST is safe to work with
+        $ad = $db->escape(nl2br(htmlentities(stripslashes($_POST['ad_text']), ENT_QUOTES, 'ISO-8859-1')));
+        $initcost = (isset($_POST['init_cost']) && is_numeric($_POST['init_cost'])) ? abs($_POST['init_cost']) : 0;
+        $days = (isset($_POST['ad_length']) && is_numeric($_POST['ad_length'])) ? abs($_POST['ad_length']) : 0;
+
+        //Verify CSRF check has passed.
+        if (!isset($_POST['verf']) || !verify_csrf_code("buy_ad", stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+            die($h->endpage());
+        }
+        //Make sure form is filled out completely.
+        if (empty($initcost) || empty($days) || empty($ad)) {
+            alert('danger', "Uh Oh!", "You need to fill out the form completely before submitting.");
+            die($h->endpage());
+        }
+        //Add up the costs
+        $charcost = ((strlen($ad)) * 5);
+        $daycost = $days * 1250;
+        $totalcost = $daycost + $charcost + $initcost;
+        //End Time
+        $endtime=time()+(86400*$days);
+
+        //Make sure user has the cash to buy this ad.
+        if (!$api->UserHasCurrency($userid, 'primary', $totalcost)) {
+            alert('danger', "Uh Oh!", "You do not have enough primary currency to place this ad.");
+            die($h->endpage());
+        }
+        $api->UserTakeCurrency($userid,'primary',$totalcost);
+        alert('success',"Success!","You have successfully purchased a newspaper ad.",true,'newspaper.php');
+        $db->query("INSERT INTO `newspaper_ads`
+                    (`news_cost`, `news_start`, `news_end`, `news_owner`, `news_text`)
+                    VALUES
+                    ('{$totalcost}', '{$CurrentTime}', '{$endtime}', '{$userid}', '{$ad}')");
+
+    } else {
+        $csrf = request_csrf_html('buy_ad');
+        echo "<h3>Buying an Ad</h3>
+        " . alert("info", "Information!", "Remember, buying an ad is subject to the game rules. If you post something
+            here that will break a game rule, you will be warned and your ad will be removed. If you find someone abusing
+            the newspaper, please let an admin know immediately!", false) . "<hr />";
+        echo "
+            <form method='post'>
+            <table class='table table-bordered'>
+                <tr>
+                    <td width='33%'>
+                        Initial Ad Cost<br />
+                        <small>A higher number will rank you higher on the ad list.</small>
+                    </td>
+                    <td>
+                        <input type='number' value='25000' min='25000' name='init_cost' required='1' id='init' onkeyup='total_cost();' class='form-control'>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Ad Runtime<br />
+                        <small>Each day will add 1,250 Primary Currency to your cost.</small>
+                    </td>
+                    <td>
+                        <input type='number' value='1' min='1' name='ad_length' id='days' onkeyup='total_cost();' required='1' class='form-control'>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Ad Text<br />
+                        <small>Each character is worth 5 Primary Currency.</small>
+                    </td>
+                    <td>
+                        <textarea class='form-control' name='ad_text' id='chars' onkeyup='total_cost();' required='1'></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Total Ad Cost
+                    </td>
+                    <td>
+                        <input type='number' name='ad_cost' id='output' readonly='1' class='form-control'>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan='2'>
+                        <input type='submit' class='btn btn-primary' value='List Ad'>
+                    </td>
+                </tr>
+            </table>
+            {$csrf}
+            </form>";
+    }
 }
 
-?>
-    <script>
-        function total_cost() {
-            var day = (document.getElementById("days").value) * (1250);
-            var init = (document.getElementById("init").value);
-            var charlength = (document.getElementById("chars").length) * 5;
-            var totalcost = (day + init + charlength);
-            document.getElementById("output").innerHTML = totalcost;
-        }
-    </script>
-<?php
 $h->endpage();
