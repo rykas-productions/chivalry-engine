@@ -895,6 +895,9 @@ function check_data()
     //Remove players forum bans if needed.
     $db->query("DELETE FROM `forum_bans` WHERE `fb_time` < {$time}");
 
+    //Remove players' mail bans if needed.
+    $db->query("DELETE FROM `mail_bans` WHERE `mbTIME` < {$time}");
+
     $q3 = $db->query("SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} AND `gw_winner` = 0");
     if ($db->num_rows($q3) > 0) {
         $r3 = $db->fetch_row($q3);
