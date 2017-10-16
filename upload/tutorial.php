@@ -22,6 +22,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<a href='#training'>Training</a><br />
 	<a href='#combat'>Combat</a><br />
 	<a href='#guilds'>Guilds</a><br />
+	<a href='#settings'>Account Settings</a><br />
 <hr>
 <a name='basics'><h4>Game Basics</h4></a>
 	{$set['WebsiteName']} is a Text Themed RPG, meaning everything you do is by clicking on links, or by writing out
@@ -67,9 +68,9 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
     Clicking the 'Hello, {$ir['username']}' Dropdown will display more information. Clicking on Profile will take you to
     your personal profile page. This is what others see when they click on your name in-game. Clicking on Settings will
-    take you to your account settings. Here you can change your display picture, password, username, language, template
-    colors, and forum signature! Clicking Game Rules will show you the rules of the game. It's recommended that you
-    read these over so you know what you can and cannot do. Finally, clicking Logout will terminate your session.
+    take you to your account settings. Here you can change your display picture, password, username, and forum signature!
+     Clicking Game Rules will show you the rules of the game. It's recommended that you read these over so you know what
+      you can and cannot do. Finally, clicking Logout will terminate your session.
     <br />
     <br />
 <hr>
@@ -250,5 +251,91 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<br />
 	<hr>
-	<a name='guilds'><h4>Guilds</h4></a>";
+	<a name='guilds'><h4>Guilds</h4></a>
+	Guilds are groups of highly skilled players that band together for a similar purpose. This may be robbing the weak,
+	or fighting the strong. Guild shave many nice features. Since guilds are 'learn as you go', we'll only graze on what
+	you can do with guilds.
+	<br />
+	<br />
+	<u>Creation</u>
+	<br />
+	You can create a guild once you reach level {$set['GUILD_LEVEL']} for " . number_format($set['GUILD_PRICE']) . "
+	Primary Currency. You are given an option to choose its name, and a friendly (or not so friendly) description. Once
+	you purchase a guild, you become its owner. You have full control of that guild!
+	<br />
+	<br />
+	<u>Increasing Membership</u>
+	<br />
+	To increase your guild's membership, you need to begin recruiting players. Its highly suggested that you get trustworthy
+	players. Normally, if you spam players with invites without getting to know them, they'll just simply ignore you, or
+	worse, attempt to attack you! You don't want that.
+	<br />
+	<br />
+	<u>Guild Vault</u>
+	<br />
+	Your guild's vault is where you and other guild members may donate your cash toward's the guild. This cash can be
+	used for many things. Most noteably, buying the armory. The cash here does not gain interest. Be alert though, as the
+	vault does hold a finite amount of cash. You can increase this limit by leveling up your guild. You can learn out
+	how later in this tutorial.
+	<br />
+	<br />
+	<u>Guild Armory</u>
+	<br />
+	You can purchase your guild an armory which can hold donated items! You can then give out the items as you see fit. You
+	do not need to worry about thieves, as only the owner and co-owner can give out items. If you wish to take an item, please
+	contact your guild owners.
+	<br />
+	<br />
+	<u>Guild Crimes</u>
+	<br />
+	Your guild can plan and commit crimes. Crimes are a great way to get cash for your guild's vault. Also note that successfully
+	committing crimes gains your guild a small amount of experience.
+	<br />
+	<br />
+	<hr>
+	<a name='settings'><h4>Account Settings</h4></a>
+	By going to your preferences page (from the dropdown), you'll be able to change key information about your account.
+	It is highly recommended you check out this page, as more options may end up becoming available.
+	<br />
+	<br />
+	<u>Name Change</u>
+	<br />
+	Here you may change your name, free of charge. Note that this only changes your name displayed around the game, not
+	your User ID. You will not be able to change your name to escape consequences.
+	<br />
+	<br />
+	<u>Password Change</u>
+	<br />
+	You may change your password at will. We highly recommend using a password you haven't used elsewhere, and cycling
+	your password out every 3 months or so. We take reasonable steps to ensure your password isn't stolen.
+	<br />
+	<br />
+	<u>Timezone Change</u>
+	<br />
+	You can change your timezone to be different than the server's time. Note that all internal server times are ran off of
+	Unix Time, or GMT-0.
+	<br />
+	<br />
+	<u>Email Opt Setting</u>
+	<br />
+	We respect your choice to opt in or out of our game emails. If you opt-in, you will receive our game emails. If you
+	opt-out, you won't. Its simple, right?
+	<br />
+	<br />
+	<u>Display Picture</u>
+	<br />
+	Your default display picture is the image linked to your Email Address when checking
+	<a href='https://www.gravatar.com'>Gravatar</a>. You can change your picture there, or by inputting your own custom
+	URL Picture. All pictures must be externally hosted. We recommend using Gravatar or Imgur. Note we do not have control
+	of either of these websites.
+	<br />
+	<br />
+	<u>Sex Change</u>
+	<br />
+	You can change your sex for free. Try getting that deal in the real world.
+	<br />
+	<br />
+	<u>Forum Signature</u>
+	<br />
+	You can change your forum signature. You may use BBCode. Please keep it PG-13";
 $h->endpage();
