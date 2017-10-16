@@ -66,7 +66,7 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Games Description'
+					Game's Description
 				</th>
 				<td>
 					<textarea name='gamedesc' required='1' class='form-control' rows='5'>{$set['Website_Description']}</textarea>
