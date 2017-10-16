@@ -1031,17 +1031,19 @@ function check_data()
             $winnings = 0;
             $result = 'Failure';
         }
+        $xp=Random(1,5);
         $db->query("UPDATE `guild`
                     SET `guild_primcurr` = `guild_primcurr` + {$winnings},
                     `guild_crime` = 0,
-                    `guild_crime_done` = 0
-                    WHERE `guild_id` = {$r['guild']}");
+                    `guild_crime_done` = 0,
+                    `guild_xp` = `guild_xp` + {$xp}
+                    WHERE `guild_id` = {$r['guild_id']}");
         $db->query("INSERT INTO `guild_crime_log`
                     (`gclCID`, `gclGUILD`, `gclLOG`, `gclRESULT`, `gclWINNING`, `gclTIME`)
                     VALUES
                     ('{$r['guild_crime']}', '{$r['guild_id']}', '{$log}', '{$result}', '{$winnings}', '" . time() . "');");
         $i = $db->insert_id();
-        $qm = $db->query("SELECT `userid` FROM `users` WHERE `gang` = {$r['guild_id']}");
+        $qm = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$r['guild_id']}");
         while ($qr = $db->fetch_row($qm)) {
             notification_add($qr['userid'], "Your guild's crime was a complete {$result}! Click <a href='gclog.php?ID=$i'>here</a> to view more information.");
         }
