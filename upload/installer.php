@@ -24,7 +24,6 @@ if (!isset($_SESSION['started']))
 require_once('installer_head.php');
 require_once('lib/installer_error_handler.php');
 set_error_handler('error_php');
-include_once 'lang/en_us.php';
 if (!isset($_GET['code']))
 {
     $_GET['code'] = '';
@@ -679,19 +678,13 @@ function update_file($url)
  */
 function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
-    global $lang,$Version;
-    $engine_version=$Version;
-    $json=json_decode(update_file($url),true);
+    global $set;
+    $engine_version = $set['Version_Number'];
+    $json = json_decode(get_cached_file($url, __DIR__ . "/cache/update_check.txt"), true);
     if (is_null($json))
-    {
-        return $lang['GEN_FAILEDTOCHECK'];
-    }
+        return "Update checker failed.";
     if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
-    {
-        return $lang['GEN_UPTODATE'];
-    }
+        return "Chivalry Engine is up to date.";
     else
-    {
-        return $lang['GEN_OUTTADATE'] . "<a href='{$json['download-latest']}'>{$lang["GEN_HERE"]}</a>.";
-    }
+        return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
 }
