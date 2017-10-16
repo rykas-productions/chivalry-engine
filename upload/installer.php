@@ -526,9 +526,7 @@ EOF;
     }
     echo '... done.<br />';
     echo 'Writing game configuration...';
-	 $db->query(
-            "INSERT INTO `settings`
-             VALUES(NULL, 'Password_Effort', '{$pweffort}')");
+	 $db->query("INSERT INTO `settings` VALUES(NULL, 'Password_Effort', '{$pweffort}')");
     $ins_username = $db->escape(htmlentities($adm_username, ENT_QUOTES, 'ISO-8859-1'));
     $encpsw = password_hash(base64_encode(hash('sha256',$adm_pswd,true)), PASSWORD_DEFAULT);
     $e_encpsw = $db->escape($encpsw);
