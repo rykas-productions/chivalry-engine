@@ -187,7 +187,7 @@ function basicsettings()
 					Bank Deposit Fee
 				</th>
 				<td>
-					<input type='number' name='bankfeepercent' class='form-control' min='1' required='1' value='{$set['bank_feepercent']}'>
+					<input type='number' name='bankfeepercent' class='form-control' min='1' required='1' value='{$set['bankfee_percent']}'>
 				</td>
 			</tr>
 			<tr>

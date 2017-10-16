@@ -1,3 +1,12 @@
+-- phpMyAdmin SQL Dump
+-- version 4.5.1
+-- http://www.phpmyadmin.net
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jul 24, 2017 at 06:12 PM
+-- Server version: 10.1.19-MariaDB
+-- PHP Version: 7.0.13
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -6,6 +15,12 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `chivalry_engine`
+--
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `academy`
@@ -175,13 +190,6 @@ CREATE TABLE `estates` (
   `house_level` int(11) UNSIGNED DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `estates`
---
-
-INSERT INTO `estates` (`house_id`, `house_name`, `house_price`, `house_will`, `house_level`) VALUES
-(1, 'Default House', 0, 100, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -307,9 +315,7 @@ CREATE TABLE `guild` (
   `guild_desc` text NOT NULL,
   `guild_level` int(11) UNSIGNED NOT NULL,
   `guild_xp` int(11) UNSIGNED NOT NULL,
-  `guild_announcement` text NOT NULL,
-  `guild_crime` int(11) UNSIGNED NOT NULL,
-  `guild_crime_done` int(11) UNSIGNED NOT NULL
+  `guild_announcement` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -333,11 +339,12 @@ CREATE TABLE `guild_applications` (
 --
 
 CREATE TABLE `guild_armory` (
-  `gaID` int(11) UNSIGNED NOT NULL,
-  `gaGUILD` int(11) UNSIGNED NOT NULL,
-  `gaITEM` int(11) UNSIGNED NOT NULL,
-  `gaQTY` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `gaID` INT(11) UNSIGNED NULL AUTO_INCREMENT ,
+  `gaGUILD` INT(11) UNSIGNED NOT NULL ,
+  `gaITEM` INT(11) UNSIGNED NOT NULL ,
+  `gaQTY` INT(11) UNSIGNED NOT NULL ,
+   UNIQUE (`gaID`)
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -346,15 +353,16 @@ CREATE TABLE `guild_armory` (
 --
 
 CREATE TABLE `guild_crimes` (
-  `gcID` int(11) UNSIGNED NOT NULL,
-  `gcNAME` text NOT NULL,
-  `gcUSERS` int(11) UNSIGNED NOT NULL,
-  `gcSTART` text NOT NULL,
-  `gcSUCC` text NOT NULL,
-  `gcFAIL` text NOT NULL,
-  `gcMINCASH` int(11) UNSIGNED NOT NULL,
-  `gcMAXCASH` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `gcID` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `gcNAME` INT(11) UNSIGNED NOT NULL ,
+  `gcUSERS` INT(11) UNSIGNED NOT NULL ,
+  `gcSTART` TEXT NOT NULL ,
+  `gcSUCC` TEXT NOT NULL ,
+  `gcFAIL` TEXT NOT NULL ,
+  `gcMINCASH` INT(11) UNSIGNED NOT NULL ,
+  `gcMAXCASH` INT(11) UNSIGNED NOT NULL ,
+  PRIMARY KEY (`gcID`)
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -363,14 +371,15 @@ CREATE TABLE `guild_crimes` (
 --
 
 CREATE TABLE `guild_crime_log` (
-  `gclID` int(11) UNSIGNED NOT NULL,
-  `gclCID` int(11) UNSIGNED NOT NULL,
-  `gclGUILD` int(11) UNSIGNED NOT NULL,
-  `gclLOG` text NOT NULL,
-  `gclRESULT` text NOT NULL,
-  `gclWINNING` int(11) UNSIGNED NOT NULL,
-  `gclTIME` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `gclID` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `gclCID` INT(11) UNSIGNED NOT NULL ,
+  `gclGUILD` INT(11) UNSIGNED NOT NULL ,
+  `gclLOG` TEXT NOT NULL ,
+  `gclRESULT` TEXT NOT NULL ,
+  `gclWINNING` INT(11) UNSIGNED NOT NULL ,
+  `gclTIME` INT(11) UNSIGNED NOT NULL ,
+  PRIMARY KEY (`gclID`)
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -520,19 +529,21 @@ CREATE TABLE `itemtypes` (
   `itmtypename` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+-- -------------------------------------------------------
 
 --
 -- Table structure for table `jobs`
 --
 
 CREATE TABLE `jobs` (
-  `jRANK` int(11) UNSIGNED NOT NULL,
-  `jNAME` text NOT NULL,
-  `jSTART` int(11) UNSIGNED NOT NULL,
-  `jDESC` text NOT NULL,
-  `jBOSS` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `jRANK` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `jNAME` TEXT NOT NULL ,
+  `jSTART` INT(11) UNSIGNED NOT NULL ,
+  `jDESC` TEXT NOT NULL ,
+  `jBOSS` INT NOT NULL ,
+  UNIQUE (`jRANK`)
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -541,16 +552,16 @@ CREATE TABLE `jobs` (
 --
 
 CREATE TABLE `job_ranks` (
-  `jrID` int(11) UNSIGNED NOT NULL,
-  `jrRANK` text NOT NULL,
-  `jrJOB` int(11) UNSIGNED NOT NULL,
-  `jrPRIMPAY` int(11) UNSIGNED NOT NULL,
-  `jrSECONDARY` int(11) UNSIGNED NOT NULL,
-  `jrACT` int(11) UNSIGNED NOT NULL,
-  `jrSTR` int(11) UNSIGNED NOT NULL,
-  `jrLAB` int(11) UNSIGNED NOT NULL,
-  `jrIQ` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `jrID` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `jrJOB` INT(11) UNSIGNED NOT NULL ,
+  `jrPRIMPAY` INT(11) UNSIGNED NOT NULL ,
+  `jrSECONDARY` INT(11) UNSIGNED NOT NULL ,
+  `jrACT` INT(11) UNSIGNED NOT NULL ,
+  `jrSTR` INT(11) UNSIGNED NOT NULL ,
+  `jrLAB` INT(11) UNSIGNED NOT NULL ,
+  `jrIQ` INT(11) UNSIGNED NOT NULL ,
+  UNIQUE (`jrID`)
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -600,14 +611,14 @@ CREATE TABLE `mail` (
 --
 -- Table structure for table `mail_bans`
 --
-
 CREATE TABLE `mail_bans` (
-  `mbID` int(11) UNSIGNED NOT NULL,
-  `mbUSER` int(11) UNSIGNED NOT NULL,
-  `mbREASON` text NOT NULL,
-  `mbBANNER` int(11) UNSIGNED NOT NULL,
-  `mbTIME` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `mbID` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `mbUSER` INT(11) UNSIGNED NOT NULL ,
+  `mbREASON` TEXT NOT NULL ,
+  `mbBANNER` INT(11) UNSIGNED NOT NULL ,
+  `mbTIME` INT(11) UNSIGNED NOT NULL ,
+  PRIMARY KEY (`mbID`)
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -854,7 +865,8 @@ INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES
 (12, 'energy_refill_cost', '10'),
 (13, 'iq_per_sec', '5'),
 (14, 'will_refill_cost', '5'),
-(15, 'bankfee_percent', '10');
+(15, 'bankfee_percent', '10'),
+(16, 'sending_email', 'account@example.com');
 
 -- --------------------------------------------------------
 
@@ -923,13 +935,6 @@ CREATE TABLE `town` (
   `town_tax` tinyint(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `town`
---
-
-INSERT INTO `town` (`town_id`, `town_name`, `town_min_level`, `town_guild_owner`, `town_tax`) VALUES
-(1, 'Default Town', 1, 0, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -976,9 +981,6 @@ CREATE TABLE `users` (
   `maxbrave` int(11) UNSIGNED NOT NULL DEFAULT '10',
   `primary_currency` int(11) UNSIGNED NOT NULL,
   `secondary_currency` int(11) UNSIGNED NOT NULL,
-  `job` int(11) UNSIGNED NOT NULL,
-  `jobrank` int(11) UNSIGNED NOT NULL,
-  `jobwork` int(11) UNSIGNED NOT NULL,
   `bank` bigint(11) NOT NULL DEFAULT '-1',
   `attacking` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `vip_days` int(11) UNSIGNED NOT NULL,
@@ -1177,24 +1179,6 @@ ALTER TABLE `guild_applications`
   ADD UNIQUE KEY `ga_id` (`ga_id`);
 
 --
--- Indexes for table `guild_armory`
---
-ALTER TABLE `guild_armory`
-  ADD UNIQUE KEY `gaID` (`gaID`);
-
---
--- Indexes for table `guild_crimes`
---
-ALTER TABLE `guild_crimes`
-  ADD PRIMARY KEY (`gcID`);
-
---
--- Indexes for table `guild_crime_log`
---
-ALTER TABLE `guild_crime_log`
-  ADD PRIMARY KEY (`gclID`);
-
---
 -- Indexes for table `guild_notifications`
 --
 ALTER TABLE `guild_notifications`
@@ -1255,18 +1239,6 @@ ALTER TABLE `itemtypes`
   ADD PRIMARY KEY (`itmtypeid`);
 
 --
--- Indexes for table `jobs`
---
-ALTER TABLE `jobs`
-  ADD UNIQUE KEY `jRANK` (`jRANK`);
-
---
--- Indexes for table `job_ranks`
---
-ALTER TABLE `job_ranks`
-  ADD UNIQUE KEY `jrID` (`jrID`);
-
---
 -- Indexes for table `logs`
 --
 ALTER TABLE `logs`
@@ -1278,12 +1250,6 @@ ALTER TABLE `logs`
 ALTER TABLE `mail`
   ADD PRIMARY KEY (`mail_id`);
 ALTER TABLE `mail` ADD FULLTEXT KEY `mail_subject` (`mail_subject`,`mail_text`);
-
---
--- Indexes for table `mail_bans`
---
-ALTER TABLE `mail_bans`
-  ADD PRIMARY KEY (`mbID`);
 
 --
 -- Indexes for table `mining`
@@ -1473,7 +1439,7 @@ ALTER TABLE `enemy`
 -- AUTO_INCREMENT for table `estates`
 --
 ALTER TABLE `estates`
-  MODIFY `house_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `house_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `fedjail`
 --
@@ -1520,21 +1486,6 @@ ALTER TABLE `guild`
 ALTER TABLE `guild_applications`
   MODIFY `ga_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `guild_armory`
---
-ALTER TABLE `guild_armory`
-  MODIFY `gaID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `guild_crimes`
---
-ALTER TABLE `guild_crimes`
-  MODIFY `gcID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `guild_crime_log`
---
-ALTER TABLE `guild_crime_log`
-  MODIFY `gclID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
 -- AUTO_INCREMENT for table `guild_notifications`
 --
 ALTER TABLE `guild_notifications`
@@ -1580,16 +1531,6 @@ ALTER TABLE `itemselllogs`
 ALTER TABLE `itemtypes`
   MODIFY `itmtypeid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `jobs`
---
-ALTER TABLE `jobs`
-  MODIFY `jRANK` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `job_ranks`
---
-ALTER TABLE `job_ranks`
-  MODIFY `jrID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
@@ -1599,11 +1540,6 @@ ALTER TABLE `logs`
 --
 ALTER TABLE `mail`
   MODIFY `mail_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `mail_bans`
---
-ALTER TABLE `mail_bans`
-  MODIFY `mbID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `mining_data`
 --
@@ -1663,7 +1599,7 @@ ALTER TABLE `sec_market`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` tinyint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `setting_id` tinyint(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `shopitems`
 --
@@ -1688,7 +1624,7 @@ ALTER TABLE `smelt_recipes`
 -- AUTO_INCREMENT for table `town`
 --
 ALTER TABLE `town`
-  MODIFY `town_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `town_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `userdata`
 --
@@ -1709,6 +1645,14 @@ ALTER TABLE `vips_accepted`
 --
 ALTER TABLE `vip_listing`
   MODIFY `vip_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+  ALTER TABLE `job_ranks` ADD `jrRANK` TEXT NOT NULL AFTER `jrID`;
+  ALTER TABLE `jobs` CHANGE `jBOSS` `jBOSS` TEXT NOT NULL;
+  ALTER TABLE `users` ADD `job` INT(11) UNSIGNED NOT NULL AFTER `secondary_currency`,
+  ADD `jobrank` INT(11) UNSIGNED NOT NULL AFTER `job`;
+  ALTER TABLE `users` ADD `jobwork` INT(11) UNSIGNED NOT NULL AFTER `jobrank`;
+  ALTER TABLE `guild_crimes` CHANGE `gcNAME` `gcNAME` TEXT NOT NULL;
+ALTER TABLE `guild` ADD `guild_crime` INT(11) UNSIGNED NOT NULL AFTER `guild_announcement`, ADD `guild_crime_done` INT(11) UNSIGNED NOT NULL AFTER `guild_crime`;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
