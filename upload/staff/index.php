@@ -454,6 +454,7 @@ echo "
 							<a href='staff_punish.php?action=fedjail'>Federal Dungeon</a><br />
 							<a href='staff_punish.php?action=editfedjail'>Edit Federal Dungeon</a><br />
 							<a href='staff_punish.php?action=unfedjail'>Remove Federal Dungeon</a><br />
+							<a href='staff_punish.php?action=mailban'>Mailban User</a><br />
 							<a href='staff_punish.php?action=forumwarn'>Forum Warn User</a><br />
 							<a href='staff_punish.php?action=forumban'>Forum Ban User</a><br />
 							<a href='staff_punish.php?action=unforumban'>Un-Forum Ban User</a><br />

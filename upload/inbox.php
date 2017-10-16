@@ -10,6 +10,17 @@
 require('globals.php');
 //Include BBCode Engine. Allow players to make pretty!
 require('lib/bbcode_engine.php');
+
+//See if user is mail-banned
+$q2 = $db->query("SELECT * FROM `mail_bans` WHERE `mbUSER` = {$userid}");
+if ($db->num_rows($q2) != 0) {
+    $r = $db->fetch_row($q2);
+    $r['days'] = TimeUntil_Parse($r['mbTIME']);
+    alert('danger', "Uh Oh!", "You've been mail-banned for {$r['days']}. Reason: {$r['mbREASON']}", true, 'index.php');
+    die($h->endpage());
+}
+
+
 echo "
 <div class='table-responsive'>
 <table class='table table-bordered'>

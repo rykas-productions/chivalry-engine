@@ -2,7 +2,7 @@
 /*
 	File: staff/staff_punish.php
 	Created: 4/4/2017 at 7:03PM Eastern Time
-	Info: Staff panel for punishiments on users.
+	Info: Staff panel for punishments on users.
 	Author: TheMasterGeneral
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
@@ -49,6 +49,9 @@ switch ($_GET['action']) {
         break;
     case 'unbanip':
         unbanip();
+        break;
+    case 'mailban':
+        mailban();
         break;
     default:
         alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
@@ -279,6 +282,105 @@ function unfedjail()
 				{$csrf}
 			</table>
 		</form>";
+    }
+}
+
+function mailban()
+{
+    global $db, $userid, $api, $h;
+    //Grab the GET, for ease of use.
+    $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
+    if (isset($_POST['user'])) {
+        //Secure the POST
+        $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+        $_POST['reason'] = (isset($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : 0;
+        $_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs($_POST['days']) : 0;
+
+        //Verify the CSRF check has passed.
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_mailban', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
+            die($h->endpage());
+        }
+
+        //Form is not completely filled out.
+        if (empty($_POST['user']) || empty($_POST['reason']) || empty($_POST['days'])) {
+            alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.");
+            die($h->endpage());
+        }
+
+        //Check that the user exists
+        $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
+        if ($db->num_rows($q) == 0) {
+            $db->free_result($q);
+            alert('danger', "Uh Oh!", "You cannot mail ban users that do not exist.");
+            die($h->endpage());
+        }
+
+        //Check that the user is not an admin.
+        if ($api->UserMemberLevelGet($_POST['user'], 'admin')) {
+            alert('danger', "Uh Oh!", "You cannot mail ban game admins.");
+            die($h->endpage());
+        }
+
+        //See if user is already mail-banned
+        $q2 = $db->query("SELECT * FROM `mail_bans` WHERE `mbUSER` = {$_POST['user']}");
+        if ($db->num_rows($q2) != 0) {
+            alert('danger', "Uh Oh!", "This user is already mail-banned.");
+            die($h->endpage());
+        }
+        //Days to a friendly Unix Timestamp
+        $time = time() + ($_POST['days'] * 86400);
+
+        //Insert everything and tell user they have succeeded.
+        $db->query("INSERT INTO `mail_bans`
+                    (`mbUSER`, `mbREASON`, `mbBANNER`, `mbTIME`) VALUES
+                    ('{$_POST['user']}', '{$_POST['reason']}', '{$userid}', '{$time}')");
+        $user = $api->SystemUserIDtoName($_POST['user']);
+        $api->SystemLogsAdd($userid, 'staff', "Mail banned {$user} [{$_POST['user']}] for {$_POST['days']} days for {$_POST['reason']}.");
+        $api->GameAddNotification($_POST['user'], "You have been mail-banned for {$_POST['days']} days for the reason: '{$_POST['reason']}'.");
+        alert('success', "Success!", "You have successfully mailed banned {$user} for {$_POST['days']} days for {$_POST['reason']}.");
+    } else {
+        $csrf = request_csrf_html('staff_mailban');
+        echo "
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					Use this form to mail ban a user. They will not be able to interact with the in-game messaging feature.
+				</th>
+			</tr>
+			<tr>
+				<form method='post'>
+				<th>
+					User
+				</th>
+				<td>
+					" . user_dropdown('user', $_GET['user']) . "
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Days
+				</th>
+				<td>
+					<input type='number' class='form-control' min='1' required='1' name='days' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Reason
+				</th>
+				<td>
+					<input type='text' required='1' class='form-control' name='reason' />
+				</td>
+			</tr>
+			<tr>
+			{$csrf}
+				<td colspan='2'>
+					<input type='submit' class='btn btn-primary' value='Mail Ban' />
+				</td>
+			</tr>
+			</form>
+		</table>";
     }
 }
 
