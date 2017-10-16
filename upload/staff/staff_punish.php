@@ -53,6 +53,9 @@ switch ($_GET['action']) {
     case 'mailban':
         mailban();
         break;
+    case 'unmailban':
+        unmailban();
+        break;
     default:
         alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
         die($h->endpage());
@@ -381,6 +384,65 @@ function mailban()
 			</tr>
 			</form>
 		</table>";
+    }
+}
+
+function unmailban()
+{
+    global $db, $userid, $api, $h;
+    //Grab the GET, just in case user wants to unmailban a specific user.
+    $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
+    if (isset($_POST['user'])) {
+        //Make the POST safe to work with
+        $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+
+        //Verify that the CSRF check has passed.
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_unmailban', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
+            die($h->endpage());
+        }
+
+        //Check that the user is mail banned or not.
+        $check = $db->query("SELECT `mbID` FROM `mail_bans` WHERE `mbUSER` = {$_POST['user']} LIMIT 1");
+        if ($db->num_rows($check) == 0) {
+            alert('danger', "Uh Oh!", "This user is not currently mail banned.");
+            die($h->endpage());
+        }
+
+        //Delete mail ban.
+        $db->query("DELETE FROM `mail_bans` WHERE `mbUSER` = {$_POST['user']}");
+
+        //Notify user they're unbanned
+        $api->GameAddNotification($_POST['user'], "The game administration has removed your mail ban. You can use the mailing system again.");
+        $un = $api->SystemUserIDtoName($_POST['user']);
+        //Log the unban.
+        $api->SystemLogsAdd($userid, 'staff', "Removed {$un} [{$_POST['user']}]'s mail ban.");
+        alert('success', "Success!", "You have successfully removed {$un} [{$_POST['user']}]'s mail ban.", true, 'index.php');
+    } else {
+        $csrf = request_csrf_html('staff_unmailban');
+        echo "<form method='post'>
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						Select a user to remove their mail ban from.
+					</th>
+				</tr>
+				<tr>
+					<th>
+						User
+					</th>
+					<td>
+						" . mailb_user_dropdown('user', $_GET['user']) . "
+					</td>
+				</tr>
+				<tr>
+					<td colspan='2'>
+						<input type='submit' class='btn btn-primary' value='Remove Mailban'>
+					</td>
+				</tr>
+				{$csrf}
+			</table>
+		</form>";
     }
 }
 
