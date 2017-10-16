@@ -14,6 +14,9 @@ switch ($_GET['action']) {
     case 'fedjail':
         fedjail();
         break;
+    case 'editfedjail':
+        editfedjail();
+        break;
     case 'unfedjail':
         unfedjail();
         break;
@@ -84,7 +87,7 @@ function fedjail()
             alert('danger', "Uh Oh!", "This user is already in the federal dungeon. Please edit their sentence.");
             die($h->endpage());
         }
-        $re = $db->query("UPDATE `users` SET `fedjail` = 1  WHERE `userid` = {$_POST['user']}");
+        $db->query("UPDATE `users` SET `fedjail` = 1  WHERE `userid` = {$_POST['user']}");
         $days = $_POST['days'];
         $_POST['days'] = time() + ($_POST['days'] * 86400);
         $db->query("INSERT INTO `fedjail` VALUES(NULL, {$_POST['user']}, {$_POST['days']}, {$userid}, '{$_POST['reason']}')");
@@ -139,6 +142,95 @@ function fedjail()
 			</form>
 		</table>";
     }
+}
+
+function editfedjail()
+{
+    global $db, $userid, $api, $h;
+    if (isset($_POST['user'])) {
+        //Make the POST safe to work with.
+        $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+        $_POST['reason'] = (isset($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : '';
+        $_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs(intval($_POST['days'])) : 0;
+
+        //Verify CSRF Check has passed
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editfedjail', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
+            die($h->endpage());
+        }
+
+        //Form not filled out completely.
+        if (empty($_POST['user']) || empty($_POST['reason']) || empty($_POST['days'])) {
+            alert('danger', "Uh Oh!", "You are missing one or more of the required fields on the previous form.");
+            die($h->endpage());
+        }
+        //Check that the user exists and is in federal dungeon.
+        $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `fedjail` > 0");
+        if ($db->num_rows($q) == 0) {
+            alert('danger', "Uh Oh!", "User does not exist, or is currently not in the federal dungeon.");
+            die($h->endpage());
+        }
+        //Check if user is an admin... you can't fed admins!
+        if ($api->UserMemberLevelGet($_POST['user'], 'admin')) {
+            alert('danger', "Uh Oh!", "You cannot place admins in the federal dungeon.");
+            die($h->endpage());
+        }
+        //Update the jail sentence
+        $jailout = time() + ($_POST['days'] * 86400);
+        $db->query("UPDATE `fedjail`
+                    SET `fed_out` = {$jailout},
+                    `fed_reason` = '{$_POST['reason']}'
+                    WHERE `fed_userid` = {$_POST['user']}");
+        $log = "Edited <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>
+                [{$_POST['user']}]'s federal dungeon sentence.";
+
+        //Log the action
+        $api->SystemLogsAdd($userid, 'staff', $log);
+        $api->SystemLogsAdd($userid, 'fedjail', $log);
+
+        //Send the alert!
+        alert('success', "Success!", "You have successfully edited {$api->SystemUserIDtoName($_POST['user'])}
+            [{$_POST['user']}]'s federal dungeon sentence.", true, 'index.php');
+    } else {
+        $csrf = request_csrf_html('staff_editfedjail');
+        echo "Fill out this form to edit a user's federal dungeon sentence. If the dropdown is empty, that means there is no users
+        in the federal dungeon.<br />
+        <form method='post'>
+            <table class='table table-bordered'>
+            <tr>
+                <th>
+                    User
+                </th>
+                <td>
+                    " . fed_user_dropdown() . "
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Reason
+                </th>
+                <td>
+                    <input type='text' required='1' name='reason' class='form-control'>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Days
+                </th>
+                <td>
+                    <input type='number' min='1' name='days' class='form-control' required='1'>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <input type='submit' class='btn btn-primary' value='Edit Sentence'>
+                </td>
+            </tr>
+            {$csrf}
+            </table>
+        </form>";
+    }
+
 }
 
 function unfedjail()
