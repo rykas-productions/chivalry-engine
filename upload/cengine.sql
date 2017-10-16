@@ -609,6 +609,20 @@ CREATE TABLE `mail` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mail_bans`
+--
+CREATE TABLE `mail_bans` (
+  `mbID` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT ,
+  `mbUSER` INT(11) UNSIGNED NOT NULL ,
+  `mbREASON` TEXT NOT NULL ,
+  `mbBANNER` INT(11) UNSIGNED NOT NULL ,
+  `mbTIME` INT(11) UNSIGNED NOT NULL ,
+  PRIMARY KEY (`mbID`)
+) ENGINE = MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mining`
 --
 
