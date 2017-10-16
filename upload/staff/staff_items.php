@@ -365,7 +365,7 @@ function deleteitem()
 function giveitem()
 {
     global $db, $userid, $h, $api;
-    if ($api->UserMemberLevelGet($userid,'assistant')) {
+    if (!$api->UserMemberLevelGet($userid,'assistant')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
         die($h->endpage());
     }
