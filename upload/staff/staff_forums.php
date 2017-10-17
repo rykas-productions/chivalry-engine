@@ -7,7 +7,7 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
-if ($api->UserMemberLevelGet($userid,'forum moderator')) {
+if (!$api->UserMemberLevelGet($userid,'forum moderator')) {
     alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
     die($h->endpage());
 }

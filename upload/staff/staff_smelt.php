@@ -78,7 +78,7 @@ function add()
 				</tr>
 				<tr>
 					<th>
-						Received Qunatity
+						Received Quantity
 					</th>
 					<td>
 						<input type='number' class='form-control' required='1' name='smelted_item_qty' value='1' min='1'>

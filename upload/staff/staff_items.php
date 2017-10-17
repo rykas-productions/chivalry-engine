@@ -451,7 +451,7 @@ function giveitem()
 function edititem()
 {
     global $db, $api, $userid, $h;
-    if ($api->UserMemberLevelGet($userid,'admin')) {
+    if (!$api->UserMemberLevelGet($userid,'admin')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
         die($h->endpage());
     }
