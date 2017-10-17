@@ -64,7 +64,7 @@ function addpack()
             alert('danger', "Uh Oh!", "The item you wish to list as a pack does not exist.");
             die($h->endpage());
         }
-        $q2 = $db->query("SELECT `vip_item` FROM `vip_listing` WHERE `vip_item` = {$_POST['pack']}");
+        $q2 = $db->query("SELECT `vip_item` FROM `vip_listing` WHERE `vip_item` = {$_POST['pack']} AND `vip_qty` = {$_POST['qty']} AND `vip_cost` = '{$db_cost}'");
         if ($db->num_rows($q2) > 0) {
             alert('danger', "Uh Oh!", "You already have this item listed on the VIP Pack Listing.");
             die($h->endpage());
