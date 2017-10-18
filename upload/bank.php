@@ -36,6 +36,7 @@ else {
             alert('success', "Success!", "You have successfully bought a bank account for " . number_format($bank_cost), true, 'bank.php');
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bank", 0);
+            $api->SystemLogsAdd($userid, 'bank', 'Purchased bank account');
         } //Player is too poor to afford account.
         else {
             alert('danger', "Uh oh!", "You do not have enough cash to buy a bank account. You need at least
@@ -44,7 +45,6 @@ else {
     } else {
         echo "Do you wish to buy a bank account? It'll cost you " . number_format($bank_cost) . "!<br />
             <a href='bank.php?buy'>Yes, please!</a>";
-        $api->SystemLogsAdd($userid, 'bank', 'Purchased bank account');
     }
 }
 function index()
