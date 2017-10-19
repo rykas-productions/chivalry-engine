@@ -842,10 +842,10 @@ function staff_apps()
                 //Delete the application and put the applicant inside the guild! Woo!
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
                 $api->GameAddNotification($appdata['ga_user'], "Your application to join the {$gd['guild_name']} guild was accepted.");
-                $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
+                $event = "<a href='profile.php?user={$userid}'>{$ir['username']}</a>
 									has accepted <a href='profile.php?user={$appdata['ga_user']}'>
 									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
-									application to join the guild.");
+									application to join the guild.";
                 $api->GuildAddNotification($gd['guild_id'], $event);
                 $db->query("UPDATE `users` SET `guild` = {$gd['guild_id']} WHERE `userid` = {$appdata['ga_user']}");
                 alert('success', "Success!", "You have accepted " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s applicantion to join the guild.");
