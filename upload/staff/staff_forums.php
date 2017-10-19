@@ -210,7 +210,7 @@ function editforum()
             echo "
 			<form method='post'>
 				<input type='hidden' name='step' value='1' />
-				<b>Editing a Category</b> " . forum2_dropdown("id") . "<br />
+				<b>Editing a Category</b> " . forum_dropdown("id") . "<br />
 				{$csrf}
 				<input type='submit' class='btn btn-primary' value='Edit Category' />
 			</form>
@@ -229,7 +229,7 @@ function delforum()
 		Deleting a category is permanent. The posts and threads inside will also be deleted. Select a category to delete
 		<br />
 		<form method='post'>
-        	<b>Category</b> " . forum2_dropdown("forum") . "
+        	<b>Category</b> " . forum_dropdown("forum") . "
         <br />
         	{$csrf}
         	<input type='submit' class='btn btn-primary' value='Delete Category' />
