@@ -63,7 +63,7 @@ echo "<h4>1. Capturing and Use of Your Personal Data by {$set['WebsiteName']}</h
     <br />
     <br />
     1.6 Within the scope of legal provisions, {$set['WebsiteName']} immediately deletes personal data at the
-    authorised person`s request, provided this does not contradict mandatory legal retention obligations.
+    authorised person's request, provided this does not contradict mandatory legal retention obligations.
     <hr />";
 //Section 2
 echo "<h4>2. Receipt of Information About the Game / Newsletter</h4>
@@ -96,7 +96,7 @@ echo "<h4>3. The Use of Cookies and Web Beacons</h4>
     <br />
     3.2.1 Google Analytics<br />
     Google Analytics, a web analysis service from the provider Google Incorporated ('Google'), collects and stores
-    data on the company`s website, enabling the creation of user profiles under pseudonyms. These user profiles
+    data on the company's website, enabling the creation of user profiles under pseudonyms. These user profiles
     serve to analyse visitor behaviour and are evaluated in order to improve and design our offer so as to meet the
     demands. Cookies can be used for this purpose. You can prevent cookies being installed by making a corresponding
     adjustment to your browser software; however, we must point out that if you do so, you may not be able to use
@@ -153,7 +153,7 @@ echo "<h4>7. Option of Revocation and Data Deletion</h4>
     <br />
     <br />
     7.2 At your request, {$set['WebsiteName']} will immediately delete personal data, that is data which include the
-    user`s information about personal and factual circumstances, unless mandatory obligations to preserve records
+    user's information about personal and factual circumstances, unless mandatory obligations to preserve records
     or other obligations contradict such a deletion.<hr />";
 //Section 8
 echo "<h4>8. Questions on Data Protection and Contact / Information, Correction, Deletion and Blocking</h4>
