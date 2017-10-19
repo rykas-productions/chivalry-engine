@@ -614,16 +614,16 @@ function edituser()
             die($h->endpage());
         }
         $username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['username']) && ((strlen($_POST['username']) < 20) && (strlen($_POST['username']) >= 3))) ? stripslashes($_POST['username']) : '';
-        $email = (isset($_POST['email'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('email', $_POST['email'])))) : '';
-        $infirmaryr = (isset($_POST['infirmary_reason'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text', $_POST['infirmary_reason'])))) : 'Hurt';
-        $dungeonr = (isset($_POST['dungeonreason'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('text', $_POST['dungeonreason'])))) : 'Locked Up';
+        $email = (isset($_POST['email'])) ? $db->escape(strip_tags(stripslashes($_POST['email']))) : '';
+        $infirmaryr = (isset($_POST['infirmary_reason'])) ? $db->escape(strip_tags(stripslashes($_POST['infirmary_reason']))) : 'Hurt';
+        $dungeonr = (isset($_POST['dungeonreason'])) ? $db->escape(strip_tags(stripslashes($_POST['dungeonreason']))) : 'Locked Up';
 
         $user = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
         $level = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 1;
         $money2 = (isset($_POST['sec_currency']) && is_numeric($_POST['sec_currency'])) ? abs(intval($_POST['sec_currency'])) : 0;
         $money = (isset($_POST['prim_currency']) && is_numeric($_POST['prim_currency'])) ? abs(intval($_POST['prim_currency'])) : 0;
         $maxwill = (isset($_POST['maxwill']) && is_numeric($_POST['maxwill'])) ? abs(intval($_POST['maxwill'])) : 100;
-        $bank = (isset($_POST['bank'])) ? $db->escape(strip_tags(stripslashes($api->SystemFilterInput('int', $_POST['bank'])))) : -1;
+        $bank = (isset($_POST['bank']) && is_numeric($_POST['bank'])) ? intval($_POST['bank']) : -1;
         $iq = (isset($_POST['IQ']) && is_numeric($_POST['IQ'])) ? abs(intval($_POST['IQ'])) : 1000;
         $strength = (isset($_POST['strength']) && is_numeric($_POST['strength'])) ? abs(intval($_POST['strength'])) : 1000;
         $agility = (isset($_POST['agility']) && is_numeric($_POST['agility'])) ? abs(intval($_POST['agility'])) : 1000;
