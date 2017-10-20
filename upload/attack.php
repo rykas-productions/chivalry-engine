@@ -178,7 +178,7 @@ function attacking()
             } //If not enough energy, stop the fight.
             else {
                 $EnergyPercent = floor(100 / $set['AttackEnergyCost']);
-                $UserCurrentEnergy = floor($ir['maxenergy'] / $ir['energy']);
+                $UserCurrentEnergy = $api->UserInfoGet($userid,'energy',true);
                 alert("danger", "Uh Oh!", "Attacking someone requires you to have {$EnergyPercent}% Energy. You currently
 				                        only have {$UserCurrentEnergy}%", true, 'index.php');
                 die($h->endpage());
@@ -362,7 +362,7 @@ function attacking()
     } //If user does not have enough energy.
     else if ($youdata['energy'] < $youdata['maxenergy'] / $set['AttackEnergyCost']) {
         $EnergyPercent = floor(100 / $set['AttackEnergyCost']);
-        $UserCurrentEnergy = floor($ir['energy'] / $ir['maxenergy']);
+        $UserCurrentEnergy = $api->UserInfoGet($userid,'energy',true);
         alert("danger", "Uh Oh!", "You need to have {$EnergyPercent}% Energy to attack someone. You only have
 		                        {$UserCurrentEnergy}%", true, 'index.php');
         die($h->endpage());
