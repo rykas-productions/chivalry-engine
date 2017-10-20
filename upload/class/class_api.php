@@ -18,7 +18,7 @@ class api
     */
     function SystemReturnAPIVersion()
     {
-        return "17.10.3";    //Last Updated 10/13/2017
+        return "17.10.4";    //Last Updated 10/13/2017
     }
 
     /*
@@ -39,7 +39,7 @@ class api
         if ($userexist) {
             if ($type == 'primary' || $type == 'secondary') {
                 $UserMoney = $db->fetch_single($db->query("SELECT `{$type}_currency` FROM `users` WHERE `userid` = {$user}"));
-                if ($UserMoney > $minimum) {
+                if ($UserMoney >= $minimum) {
                     return true;
                 }
             }
