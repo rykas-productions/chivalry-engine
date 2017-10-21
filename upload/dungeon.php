@@ -156,7 +156,7 @@ function bust()
             //Add notification, and tell the user.
             $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
                 successfully busted you out of the dungeon.");
-            alert('success', "Success!", "You have successfully busted them out of the duneon.", true, 'dungeon.php');
+            alert('success', "Success!", "You have successfully busted them out of the dungeon.", true, 'dungeon.php');
             $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$_GET['user']}");
             die($h->endpage());
         } //User failed. Tell person and throw user in dungeon.
