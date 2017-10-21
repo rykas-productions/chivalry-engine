@@ -42,7 +42,7 @@ function home()
 	<a class='btn btn-outline-primary' href='?action=energy'>Refill Energy - " . number_format($set['energy_refill_cost']) . " Secondary Currency</a><br /><br />
 	<a class='btn btn-outline-primary' href='?action=brave'>Regenerate 5% Bravery - " . number_format($set['brave_refill_cost']) . " Secondary Currency</a><br /><br />
 	<a class='btn btn-outline-primary' href='?action=will'>Regenerate 5% Will - " . number_format($set['will_refill_cost']) . " Secondary Currency</a><br /><br />
-	<a class='btn btn-outline-primary' href='?action=iq'>Refill IQ - " . number_format($set['will_refill_cost']) . " Secondary Currency</a><br /><br />";
+	<a class='btn btn-outline-primary' href='?action=iq'>Refill IQ - " . number_format($set['iq_per_sec']) . " Secondary Currency</a><br /><br />";
 }
 
 function energy()
