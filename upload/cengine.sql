@@ -1067,13 +1067,13 @@ CREATE TABLE `vip_listing` (
 -- Indexes for table `academy`
 --
 ALTER TABLE `academy`
-  ADD PRIMARY KEY (`ac_id`);
+  ADD UNIQUE KEY (`ac_id`);
 
 --
 -- Indexes for table `announcements`
 --
 ALTER TABLE `announcements`
-  ADD PRIMARY KEY (`ann_id`);
+  ADD UNIQUE KEY (`ann_id`);
 
 --
 -- Indexes for table `botlist`
@@ -1091,44 +1091,44 @@ ALTER TABLE `contact_list`
 -- Indexes for table `crimegroups`
 --
 ALTER TABLE `crimegroups`
-  ADD PRIMARY KEY (`cgID`);
+  ADD UNIQUE KEY (`cgID`);
 
 --
 -- Indexes for table `crimes`
 --
 ALTER TABLE `crimes`
-  ADD PRIMARY KEY (`crimeID`);
+  ADD UNIQUE KEY (`crimeID`);
 
 --
 -- Indexes for table `crons`
 --
 ALTER TABLE `crons`
-  ADD PRIMARY KEY (`file`),
+  ADD UNIQUE KEY (`file`),
   ADD UNIQUE KEY `file` (`file`);
 
 --
 -- Indexes for table `dungeon`
 --
 ALTER TABLE `dungeon`
-  ADD PRIMARY KEY (`dungeon_user`);
+  ADD UNIQUE KEY (`dungeon_user`);
 
 --
 -- Indexes for table `enemy`
 --
 ALTER TABLE `enemy`
-  ADD PRIMARY KEY (`enemy_id`);
+  ADD UNIQUE KEY (`enemy_id`);
 
 --
 -- Indexes for table `estates`
 --
 ALTER TABLE `estates`
-  ADD PRIMARY KEY (`house_id`);
+  ADD UNIQUE KEY (`house_id`);
 
 --
 -- Indexes for table `fedjail`
 --
 ALTER TABLE `fedjail`
-  ADD PRIMARY KEY (`fed_id`);
+  ADD UNIQUE KEY (`fed_id`);
 
 --
 -- Indexes for table `forum_bans`
@@ -1146,20 +1146,20 @@ ALTER TABLE `forum_forums`
 -- Indexes for table `forum_posts`
 --
 ALTER TABLE `forum_posts`
-  ADD PRIMARY KEY (`fp_id`);
+  ADD UNIQUE KEY (`fp_id`);
 
 --
 -- Indexes for table `forum_topics`
 --
 ALTER TABLE `forum_topics`
-  ADD PRIMARY KEY (`ft_id`),
+  ADD UNIQUE KEY (`ft_id`),
   ADD UNIQUE KEY `ft_id` (`ft_id`);
 
 --
 -- Indexes for table `friends`
 --
 ALTER TABLE `friends`
-  ADD PRIMARY KEY (`friend_id`);
+  ADD UNIQUE KEY (`friend_id`);
 
 --
 -- Indexes for table `gamerules`
@@ -1171,7 +1171,7 @@ ALTER TABLE `gamerules`
 -- Indexes for table `guild`
 --
 ALTER TABLE `guild`
-  ADD PRIMARY KEY (`guild_id`);
+  ADD UNIQUE KEY (`guild_id`);
 
 --
 -- Indexes for table `guild_applications`
@@ -1195,13 +1195,13 @@ ALTER TABLE `guild_wars`
 -- Indexes for table `infirmary`
 --
 ALTER TABLE `infirmary`
-  ADD PRIMARY KEY (`infirmary_user`);
+  ADD UNIQUE KEY (`infirmary_user`);
 
 --
 -- Indexes for table `inventory`
 --
 ALTER TABLE `inventory`
-  ADD PRIMARY KEY (`inv_id`);
+  ADD UNIQUE KEY (`inv_id`);
 
 --
 -- Indexes for table `ipban`
@@ -1219,13 +1219,13 @@ ALTER TABLE `itemauction`
 -- Indexes for table `itemmarket`
 --
 ALTER TABLE `itemmarket`
-  ADD PRIMARY KEY (`imID`);
+  ADD UNIQUE KEY (`imID`);
 
 --
 -- Indexes for table `items`
 --
 ALTER TABLE `items`
-  ADD PRIMARY KEY (`itmid`);
+  ADD UNIQUE KEY (`itmid`);
 
 --
 -- Indexes for table `itemselllogs`
@@ -1237,7 +1237,7 @@ ALTER TABLE `itemselllogs`
 -- Indexes for table `itemtypes`
 --
 ALTER TABLE `itemtypes`
-  ADD PRIMARY KEY (`itmtypeid`);
+  ADD UNIQUE KEY (`itmtypeid`);
 
 --
 -- Indexes for table `logs`
@@ -1249,7 +1249,7 @@ ALTER TABLE `logs`
 -- Indexes for table `mail`
 --
 ALTER TABLE `mail`
-  ADD PRIMARY KEY (`mail_id`);
+  ADD UNIQUE KEY (`mail_id`);
 ALTER TABLE `mail` ADD FULLTEXT KEY `mail_subject` (`mail_subject`,`mail_text`);
 
 --
@@ -1274,26 +1274,26 @@ ALTER TABLE `modules`
 -- Indexes for table `newspaper_ads`
 --
 ALTER TABLE `newspaper_ads`
-  ADD PRIMARY KEY (`news_id`);
+  ADD UNIQUE KEY (`news_id`);
 
 --
 -- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`notif_id`);
+  ADD UNIQUE KEY (`notif_id`);
 ALTER TABLE `notifications` ADD FULLTEXT KEY `notif_text` (`notif_text`);
 
 --
 -- Indexes for table `permissions`
 --
 ALTER TABLE `permissions`
-  ADD PRIMARY KEY (`perm_id`);
+  ADD UNIQUE KEY (`perm_id`);
 
 --
 -- Indexes for table `polls`
 --
 ALTER TABLE `polls`
-  ADD PRIMARY KEY (`id`);
+  ADD UNIQUE KEY (`id`);
 
 --
 -- Indexes for table `promo_codes`
@@ -1305,19 +1305,19 @@ ALTER TABLE `promo_codes`
 -- Indexes for table `pw_recovery`
 --
 ALTER TABLE `pw_recovery`
-  ADD PRIMARY KEY (`pwr_id`);
+  ADD UNIQUE KEY (`pwr_id`);
 
 --
 -- Indexes for table `referals`
 --
 ALTER TABLE `referals`
-  ADD PRIMARY KEY (`referalid`);
+  ADD UNIQUE KEY (`referalid`);
 
 --
 -- Indexes for table `reports`
 --
 ALTER TABLE `reports`
-  ADD PRIMARY KEY (`report_id`);
+  ADD UNIQUE KEY (`report_id`);
 
 --
 -- Indexes for table `sec_market`
@@ -1329,19 +1329,19 @@ ALTER TABLE `sec_market`
 -- Indexes for table `settings`
 --
 ALTER TABLE `settings`
-  ADD PRIMARY KEY (`setting_id`);
+  ADD UNIQUE KEY (`setting_id`);
 
 --
 -- Indexes for table `shopitems`
 --
 ALTER TABLE `shopitems`
-  ADD PRIMARY KEY (`sitemID`);
+  ADD UNIQUE KEY (`sitemID`);
 
 --
 -- Indexes for table `shops`
 --
 ALTER TABLE `shops`
-  ADD PRIMARY KEY (`shopID`);
+  ADD UNIQUE KEY (`shopID`);
 
 --
 -- Indexes for table `smelt_inprogress`
@@ -1359,7 +1359,7 @@ ALTER TABLE `smelt_recipes`
 -- Indexes for table `town`
 --
 ALTER TABLE `town`
-  ADD PRIMARY KEY (`town_id`);
+  ADD UNIQUE KEY (`town_id`);
 
 --
 -- Indexes for table `userdata`
@@ -1371,19 +1371,19 @@ ALTER TABLE `userdata`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`userid`);
+  ADD UNIQUE KEY (`userid`);
 
 --
 -- Indexes for table `userstats`
 --
 ALTER TABLE `userstats`
-  ADD PRIMARY KEY (`userid`);
+  ADD UNIQUE KEY (`userid`);
 
 --
 -- Indexes for table `uservotes`
 --
 ALTER TABLE `uservotes`
-  ADD PRIMARY KEY (`userid`);
+  ADD UNIQUE KEY (`userid`);
 
 --
 -- Indexes for table `vips_accepted`
