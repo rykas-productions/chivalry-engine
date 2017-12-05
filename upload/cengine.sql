@@ -1103,8 +1103,7 @@ ALTER TABLE `crimes`
 -- Indexes for table `crons`
 --
 ALTER TABLE `crons`
-  ADD UNIQUE KEY (`file`),
-  ADD UNIQUE KEY `file` (`file`);
+  ADD UNIQUE KEY (`file`);
 
 --
 -- Indexes for table `dungeon`
@@ -1152,8 +1151,7 @@ ALTER TABLE `forum_posts`
 -- Indexes for table `forum_topics`
 --
 ALTER TABLE `forum_topics`
-  ADD UNIQUE KEY (`ft_id`),
-  ADD UNIQUE KEY `ft_id` (`ft_id`);
+  ADD UNIQUE KEY (`ft_id`);
 
 --
 -- Indexes for table `friends`
@@ -1250,7 +1248,6 @@ ALTER TABLE `logs`
 --
 ALTER TABLE `mail`
   ADD UNIQUE KEY (`mail_id`);
-ALTER TABLE `mail` ADD FULLTEXT KEY `mail_subject` (`mail_subject`,`mail_text`);
 
 --
 -- Indexes for table `mining`
@@ -1281,7 +1278,6 @@ ALTER TABLE `newspaper_ads`
 --
 ALTER TABLE `notifications`
   ADD UNIQUE KEY (`notif_id`);
-ALTER TABLE `notifications` ADD FULLTEXT KEY `notif_text` (`notif_text`);
 
 --
 -- Indexes for table `permissions`
