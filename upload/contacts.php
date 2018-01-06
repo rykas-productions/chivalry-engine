@@ -20,6 +20,9 @@ echo "
 			<a href='inbox.php?action=compose'>Compose</a>
 		</td>
 		<td>
+			<a href='blocklist.php'>Blocklist</a>
+		</td>
+		<td>
 			<a href='inbox.php?action=delall'>Delete All</a>
 		</td>
 		<td>
@@ -67,10 +70,8 @@ function home()
                      ORDER BY `u`.`username` ASC");
     //List the user's contact list.
     while ($r = $db->fetch_row($q)) {
-        $d = '';
-        $r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span>
-                        <span class='glyphicon glyphicon-star' data-toggle='tooltip'
-                        title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
+        $r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fa fa-shield'
+        data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
         echo "
 		<tr>
 			<td>
@@ -130,10 +131,10 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					Enter a User ID
+					Select User
 				</th>
 				<td>
-					<input type='number' class='form-control' required='1' min='1' name='user' value='{$_GET['user']}'>
+					" . user_dropdown('user',$_GET['user']) . "
 				</td>
 			</tr>
 			<tr>

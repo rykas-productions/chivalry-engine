@@ -258,6 +258,7 @@ class api
             $db->free_result($userexist);
             $userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$from}");
             if ($db->num_rows($userexist) > 0) {
+                $msg=encrypt_message($msg,$from,$user);
                 $db->query("INSERT INTO `mail`
 				(`mail_to`, `mail_from`, `mail_status`, `mail_subject`, `mail_text`, `mail_time`) 
 				VALUES 
@@ -425,7 +426,7 @@ class api
                 if ($percent == true) {
                     $maxstat = $db->fetch_single($db->query("SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
                     $number = ($change / 100) * $maxstat;
-                    $db->query("UPDATE users SET `{$stat}`=`{$stat}`+{$number} WHERE `{$stat}` < `max{$stat}`");
+                    $db->query("UPDATE users SET `{$stat}`=`{$stat}`+{$number} WHERE `{$stat}` < `max{$stat}` AND `userid` = {$user}");
                     $db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
                     return true;
                 } else {
@@ -789,7 +790,7 @@ class api
         if ($userdata['class'] == 'Warrior') {
             //Trained stat is strength, double its output.
             if ($stat == 'strength') {
-                $gain *= 2;
+                $gain *= 1.5;
             }
             //Trained stat is guard, half its output.
             if ($stat == 'guard') {
@@ -800,7 +801,7 @@ class api
         if ($userdata['class'] == 'Rogue') {
             //Trained stat is agility, double its output.
             if ($stat == 'agility') {
-                $gain *= 2;
+                $gain *= 1.5;
             }
             //Trained stat is strength, half its output.
             if ($stat == 'strength') {
@@ -808,10 +809,10 @@ class api
             }
         }
         //User's class is Defender.
-        if ($userdata['class'] == 'Defender') {
+        if ($userdata['class'] == 'Guardian') {
             //Trained stat is guard, double its output.
             if ($stat == 'guard') {
-                $gain *= 2;
+                $gain *= 1.5;
             }
             //Trained stat is agility, half its output.
             if ($stat == 'agility') {
@@ -851,7 +852,7 @@ class api
             $subject = "{$set['WebsiteName']} Game Email";
         $headers[] = 'MIME-Version: 1.0';
         $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-        $headers[] = "From: {$from}";
+        $headers[] = "From: Chivalry is Dead <{$from}>";
         return mail($to, $subject, $body, implode("\r\n", $headers));
     }
 
@@ -919,4 +920,13 @@ class api
         }
         $db->free_result($q);
     }
+	function UserBlocked($blocked,$blocker)
+	{
+		global $db;
+		$blocked = (isset($blocked) && is_numeric($blocked)) ? abs(intval($blocked)) : 0;
+		$blocker = (isset($blocker) && is_numeric($blocker)) ? abs(intval($blocker)) : 0;
+		$q=$db->query("SELECT `block_id` FROM `blocklist` WHERE `blocked` = {$blocked} AND `blocker` = {$blocker}");
+		if ($db->num_rows($q) > 0)
+			return true;
+	}
 }

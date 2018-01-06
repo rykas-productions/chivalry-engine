@@ -33,7 +33,7 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
     else if ($np['house_will'] == $mp['house_will']) {
         alert('danger', "Uh Oh!", "You cannot buy the same house twice.", true, 'estates.php');
         die($h->endpage());
-    } //User does not have enoguh primary currency for the new estatte.
+    } //User does not have enoguh Copper Coins for the new estatte.
     else if ($np['house_price'] > $ir['primary_currency']) {
         alert('danger', "Uh Oh!", "You do not have enough cash to buy this house.", true, 'estates.php');
         die($h->endpage());
@@ -41,7 +41,13 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
     else if ($np['house_level'] > $ir['level']) {
         alert('danger', "Uh Oh!", "You are not a high level enough to buy this estate.", true, 'estates.php');
         die($h->endpage());
-    } //User passes all checks.
+    } 
+	else if ($api->UserEquippedItem($userid,'armor',86))
+	{
+		alert('danger', "Uh Oh!", "Please unequip your 2017 Turkey Armor before you purchase an estate.", true, 'estates.php');
+        die($h->endpage());
+	}
+	//User passes all checks.
     else {
         //Update user's max will, remove currency, and set will to 0.
         $db->query("UPDATE `users`
@@ -52,26 +58,10 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
             " . number_format($np['house_price']) . "!", true, 'estates.php');
         die($h->endpage());
     }
-} //User wishes to sell their estate.
-else if (isset($_GET['sellhouse'])) {
-    //User does not own an estate.
-    if ($ir['maxwill'] == 100) {
-        alert('danger', "Uh Oh!", "You cannot sell your estate if you don't have one!");
-    } //User sells estate.
-    else {
-        //Give user 75% of the estate's cost, set max will to 100, will to 0.
-        $price = round($mp['house_price'] * 0.75);
-        $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$price}, `will` = 0, `maxwill` = 100 WHERE `userid` = $userid");
-        alert('success', "Success!", "You have successfully sold your estate for " . number_format($price) . "!", true, 'estates.php');
-    }
 } else {
     echo "Your current estate is the <b>{$mp['house_name']}</b>.<br />
 		The houses you can buy are listed below. Click a house to buy it. Your Will helps determine how much you
 		gain while training, and it helps with committing crimes.<br />";
-    //User own an estate.
-    if ($ir['maxwill'] > 100) {
-        echo "<a href='?sellhouse'>Sell Your Estate</a><br />";
-    }
     $hq = $db->query("SELECT * FROM `estates` WHERE `house_will` > {$ir['maxwill']} ORDER BY `house_will` ASC");
     echo "
 	<table class='table table-bordered'>

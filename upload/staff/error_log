@@ -1,0 +1,6 @@
+[09-Nov-2017 19:37:55 UTC] <strong>PHP Warning:</strong> Division by zero (2)
+[24-Nov-2017 10:06:10 America/New_York] 1146: Table 'masterge_chivalry.contacts' doesn't exist
+[28-Nov-2017 16:16:28 America/New_York] 1052: Column 'userid' in field list is ambiguous
+[28-Dec-2017 18:57:51 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[05-Jan-2018 16:17:18 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'test'. -CID Admin [1]<br /><br /> ' WHERE `userid` = 1' at line 1
+[05-Jan-2018 16:18:15 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'test'. -CID Admin [1]<br /><br /> ' WHERE `userid` = 1' at line 1

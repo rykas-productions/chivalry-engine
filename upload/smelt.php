@@ -8,6 +8,11 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot use the smeltery while in the infirmary or dungeon.",true,'index.php');
+	die($h->endpage());
+}
 echo "<h3>Blacksmith's Smeltery</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
@@ -43,37 +48,47 @@ function home()
         $ex = explode(",", $r['smelt_items']);
         $qty = explode(",", $r['smelt_quantity']);
         $n = 0;
-        echo "
-		<tr>
-			<td>
-				{$output_item} x {$r['smelt_qty_output']}
-			</td>
-			<td>";
-        $n = 0;
-        foreach ($ex as $i) {
-            $get_items_needed = $db->query("SELECT `itmname` FROM `items` WHERE `itmid`={$i}");
-            $t = $db->fetch_row($get_items_needed);
+		$r['hasitem']=0;
+		foreach ($ex as $i) {
+			$do_they_have = $db->query("SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i}");
+            if ($db->num_rows($do_they_have) > 0) {
+				$r['hasitem']=$r['hasitem']+1;
+			}
+		}
+		if ($r['hasitem'] > 0)
+		{
+			echo "
+			<tr>
+				<td>
+					{$output_item} x {$r['smelt_qty_output']}
+				</td>
+				<td>";
+			$n = 0;
+			foreach ($ex as $i) {
+				$get_items_needed = $db->query("SELECT `itmname` FROM `items` WHERE `itmid`={$i}");
+				$t = $db->fetch_row($get_items_needed);
 
-            $do_they_have = $db->query("SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i} AND `inv_qty`>={$qty[$n]}");
-            if ($db->num_rows($do_they_have) == 0) {
-                $t['itmname'] = "<span style='color:red;'>" . $t['itmname'] . "</span>";
-                $can_craft = FALSE;
-            }
-            $items_needed .= $t['itmname'] . " x " . $qty[$n] . " (Have " . number_format($api->UserCountItem($userid, $i)) . ")<br />";
-            $n++;
-        }
-        unset($n);
-        echo "{$items_needed}
-			</td>
-			<td>";
-        if ($can_craft == TRUE) {
-            echo "<a href='?action=smelt&id={$r['smelt_id']}'>Smelt Item</a>";
-        } else {
-            echo "<span style='color:red;'>Cannot Smelt</span>";
-        }
-        echo "
-			</td>
-		</tr>";
+				$do_they_have = $db->query("SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i} AND `inv_qty`>={$qty[$n]}");
+				if ($db->num_rows($do_they_have) == 0) {
+					$t['itmname'] = "<span class='text-danger'>" . $t['itmname'] . "";
+					$can_craft = FALSE;
+				}
+				$items_needed .= $t['itmname'] . " x " . $qty[$n] . " (Have " . number_format($api->UserCountItem($userid, $i)) . ")</span><br />";
+				$n++;
+			}
+			unset($n);
+			echo "{$items_needed}
+				</td>
+				<td>";
+			if ($can_craft == TRUE) {
+				echo "<a href='?action=smelt&id={$r['smelt_id']}'>Smelt Item</a>";
+			} else {
+				echo "<span class='text-danger'>Cannot Smelt</span>";
+			}
+			echo "
+				</td>
+			</tr>";
+		}
     }
     echo "</table>";
 }
@@ -117,9 +132,9 @@ function smelt()
 				`sip_user`, `sip_recipe`, `sip_time`) 
 				VALUES ('{$userid}', '{$_GET['id']}', '{$rcomplete}');");
             $friendlytime = TimeUntil_Parse(time() + $r['smelttime']);
-            alert('success', "Success!", "You have begun to smelt this item. It will be complete in {$friendlytime}.", true, "smelt.php");
+            alert('success', "Success!", "You have begun to smelt {$api->SystemItemIDtoName($r['smelt_output'])}. It will be complete in {$friendlytime}.", true, "smelt.php");
         } else {
-            alert('success', "Success!", "You have successfully smelted this item. It is in your inventory.", true, "smelt.php");
+            alert('success', "Success!", "You have successfully smelted {$api->SystemItemIDtoName($r['smelt_output'])}. It is in your inventory.", true, "smelt.php");
             $api->UserGiveItem($userid, $r['smelt_output'], $r['smelt_qty_output']);
         }
         $ex = explode(",", $r['smelt_items']);

@@ -108,6 +108,24 @@ switch ($_GET['action']) {
     case "primsend":
         logs('sendcash');
         break;
+    case "bomb":
+        logs('bomb');
+        break;
+    case "tokenbank":
+        logs('tokenbank');
+        break;
+    case "theft":
+        logs('theft');
+        break;
+	case "cronlogs":
+        logs('crons');
+        break;
+	case "pages":
+        logs('page');
+        break;
+	case "votedlogs":
+        logs('voted');
+        break;
     case "mail":
         maillogs();
         break;
@@ -186,7 +204,7 @@ function userlogs()
         $st = abs(intval($_GET['st']));
         $app = 100;
         $q = $db->query("SELECT COUNT(`log_id`)
-						 FROM `logs` WHERE `log_user` = {$_GET['user']}");
+						 FROM `logs` WHERE `log_type` != 'staff' AND `log_user` = {$_GET['user']}");
         $logs = $db->fetch_single($q);
         $db->free_result($q);
         if ($logs == 0) {
@@ -209,7 +227,7 @@ function userlogs()
 								FROM `logs` AS `lt`
 								INNER JOIN `users` AS `u`
 								ON `lt`.`log_user` = `u`.`userid`
-								WHERE `log_user` = {$user}
+								WHERE `log_type` != 'staff' AND `log_user` = {$user}
 								ORDER BY `log_time` DESC
 								LIMIT $st, $app");
         while ($r = $db->fetch_row($LogsQuery)) {
@@ -297,7 +315,7 @@ function alllogs()
     }
     $st = abs(intval($_GET['st']));
     $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`) FROM `logs`");
+    $q = $db->query("SELECT COUNT(`log_id`) FROM `logs` WHERE `log_type` != 'staff'");
     $attacks = $db->fetch_single($q);
     $db->free_result($q);
     if ($attacks == 0) {
@@ -316,6 +334,7 @@ function alllogs()
         $db->query(
             "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
                      FROM `logs`
+					 WHERE `log_type` != 'staff'
                      ORDER BY `log_time` DESC
                      LIMIT $st, $app");
     while ($r = $db->fetch_row($q)) {
@@ -374,6 +393,7 @@ function maillogs()
     while ($r = $db->fetch_row($q)) {
         $un = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['mail_from']}"));
         $un2 = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['mail_to']}"));
+		$r['mail_text']=decrypt_message($r['mail_text'],$r['mail_from'],$r['mail_to']);
         echo "
 		<tr>
         	<td>" . DateTime_Parse($r['mail_time']) . "</td>

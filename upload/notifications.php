@@ -54,7 +54,7 @@ $query = $db->query("SELECT *
         		ORDER BY `notif_time` DESC
         		LIMIT 15");
 while ($notif = $db->fetch_row($query)) {
-    $NotificationTime = date('F j Y, g:i:s a', $notif['notif_time']);
+    $NotificationTime = DateTime_Parse($notif['notif_time']);
     if ($notif['notif_status'] == 'unread') {
         $Status = "<span class='badge badge-pill badge-danger'>Unread</span>";
     } else {

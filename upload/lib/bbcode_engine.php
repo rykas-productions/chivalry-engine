@@ -21,15 +21,12 @@ $builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{param}">{param}</
 $parser->addCodeDefinition($builder->build());
 
 //Quote with option 
-$builder = new JBBCode\CodeDefinitionBuilder('quote', '<blockquote class="blockquote">
-                                                            <p class="mb-0">{param}</p>
-                                                            <footer class="blockquote-footer">
-                                                            <cite>{option}</cite></footer></blockquote>');
+$builder = new JBBCode\CodeDefinitionBuilder('quote', '<table class="table table-bordered"><tr><th>{option} Wrote</th></tr><tr><td>{param}</tr></td></table>');
 $builder->setUseOption(true);
 $parser->addCodeDefinition($builder->build());
 
 //Quote w/o option
-$builder = new JBBCode\CodeDefinitionBuilder('quote', '<blockquote class="blockquote"><p class="mb-0">{param}</p></blockquote>');
+$builder = new JBBCode\CodeDefinitionBuilder('quote', '<table class="table table-bordered"><tr><th>Somebody Wrote</th></tr><tr><td>{param}</tr></td></table>');
 $parser->addCodeDefinition($builder->build());
 
 //Keyboard
@@ -76,4 +73,31 @@ $builder = new JBBCode\CodeDefinitionBuilder('youtube', '<div class="embed-respo
                                                                 type="text/html"
                                                                 src="https://www.youtube.com/embed/{param}/ frameborder="0">
                                                             </iframe></div>');
+$parser->addCodeDefinition($builder->build());
+
+//Danger
+$builder = new JBBCode\CodeDefinitionBuilder('danger', '<span class="text-danger">{param}</span>');
+$parser->addCodeDefinition($builder->build());
+
+//Info
+$builder = new JBBCode\CodeDefinitionBuilder('info', '<span class="text-info">{param}</span>');
+$parser->addCodeDefinition($builder->build());
+
+//Success
+$builder = new JBBCode\CodeDefinitionBuilder('success', '<span class="text-success">{param}</span>');
+$parser->addCodeDefinition($builder->build());
+
+//Muted
+$builder = new JBBCode\CodeDefinitionBuilder('mute', '<span class="text-muted">{param}</span>');
+$parser->addCodeDefinition($builder->build());
+
+//Primary
+$builder = new JBBCode\CodeDefinitionBuilder('primary', '<span class="text-primary">{param}</span>');
+$parser->addCodeDefinition($builder->build());
+
+//Warning
+$builder = new JBBCode\CodeDefinitionBuilder('warning', '<span class="text-warning">{param}</span>');
+$parser->addCodeDefinition($builder->build());
+
+$builder = new JBBCode\CodeDefinitionBuilder('hr', '<hr></hr>');
 $parser->addCodeDefinition($builder->build());

@@ -15,11 +15,6 @@ $wiperc = round($ir['will'] / $ir['maxwill'] * 100);
 $experc = round($ir['xp'] / $ir['xp_needed'] * 100);
 $brperc = round($ir['brave'] / $ir['maxbrave'] * 100);
 $hpperc = round($ir['hp'] / $ir['maxhp'] * 100);
-$enopp = 100 - $enperc;
-$wiopp = 100 - $wiperc;
-$exopp = 100 - $experc;
-$bropp = 100 - $brperc;
-$hpopp = 100 - $hpperc;
 //Player is attempting to update their personal notepad.
 if (isset($_POST['pn_update'])) {
     //Sanitize the notepad entry
@@ -46,7 +41,7 @@ echo "<table class='table table-hover table-bordered'>
 		    Level: " . number_format($ir['level']) . "
 		</td>
 		<td>
-		    Experience: " . number_format($ir['xp']) . " / " . number_format($ir['xp_needed']) . "
+		    Experience: " . number_format($ir['xp'], 2) . " / " . number_format($ir['xp_needed'], 2) . " ({$experc}%)
 		</td>
 	</tr>
 	<tr>
@@ -59,26 +54,34 @@ echo "<table class='table table-hover table-bordered'>
 	</tr>
 	<tr>
 		<td>
-            Primary Currency: " . number_format($ir['primary_currency']) . "
+            Copper Coins: " . number_format($ir['primary_currency']) . "
 		</td>
 		<td>
-            Secondary Currency: " . number_format($ir['secondary_currency']) . "
-		</td>
-	</tr>
-	<tr>
-		<td>
-		    Health: " . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . "
-		</td>
-		<td>
-            Energy: " . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) . "
+            Chivalry Tokens: " . number_format($ir['secondary_currency']) . "
 		</td>
 	</tr>
 	<tr>
 		<td>
-		    Will: " . number_format($ir['will']) . " / " . number_format($ir['maxwill']) . "
+		    Health: " . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . " ({$hpperc}%)
 		</td>
 		<td>
-		    Bravery: " . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . "
+            Energy: " . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) . " ({$enperc}%)
+		</td>
+	</tr>
+	<tr>
+		<td>
+		    Will: " . number_format($ir['will']) . " / " . number_format($ir['maxwill']) . " ({$wiperc}%)
+		</td>
+		<td>
+		    Bravery: " . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . " ({$brperc}%)
+		</td>
+	</tr>
+	<tr>
+		<td>
+		    Kills/Deaths: {$ir['kills']} / {$ir['deaths']}
+		</td>
+		<td>
+		    Busts: {$ir['busts']}
 		</td>
 	</tr>
 </tbody>";
@@ -94,6 +97,7 @@ $IQRank = get_rank($ir['iq'], 'iq');
 $IQFormat = number_format($ir['iq']);
 $LaborRank = get_rank($ir['labor'], 'labor');
 $LaborFormat = number_format($ir['labor']);
+$AllStatRank= get_rank($ir['strength'] + $ir['agility'] + $ir['guard'] + $ir['labor'] + $ir['iq'], 'all');
 $AllFourFormat = number_format($ir['strength'] + $ir['agility'] + $ir['guard'] + $ir['labor'] + $ir['iq']);
 
 echo "</table>
@@ -102,7 +106,7 @@ echo "
 <table class='table table-bordered'>
     <tr>
         <th width='25%'>
-            Strength
+            <i class='ra ra-muscle-up'></i> Strength
         </th>
         <td>
             {$StrengthFormat} (Ranked: {$StrengthRank})
@@ -110,7 +114,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            Agility
+            <i class='ra ra-player-dodge'></i> Agility
         </th>
         <td>
             {$AgilityFormat} (Ranked: {$AgilityRank})
@@ -118,7 +122,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            Guard
+            <i class='ra ra-player-pain'></i> Guard
         </th>
         <td>
             {$GuardFormat} (Ranked: {$GuardRank})
@@ -126,7 +130,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            Labor
+            <i class='ra ra-player-teleport'></i> Labor
         </th>
         <td>
             {$LaborFormat} (Ranked: {$LaborRank})
@@ -134,7 +138,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            IQ
+            <i class='ra ra-aware'></i> IQ
         </th>
         <td>
             {$IQFormat} (Ranked: {$IQRank})
@@ -142,10 +146,10 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            Total Stats
+            <i class='ra ra-player-king'></i> Total Stats
         </th>
         <td>
-            {$AllFourFormat} (Ranked: {$IQRank})
+            {$AllFourFormat} (Ranked: {$AllStatRank})
         </td>
     </tr>
 </table>

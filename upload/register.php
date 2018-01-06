@@ -59,7 +59,7 @@ if (!empty($username)) {
 
     }
     //Check class
-    if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender')) {
+    if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Guardian')) {
         alert('danger', "Uh Oh!", "You are trying to register as an invalid class.");
         die($h->endpage());
 
@@ -116,7 +116,7 @@ if (!empty($username)) {
 					(`username`,`email`,`password`,`level`,`gender`,`class`,
 					`lastip`,`registerip`,`registertime`,`loginip`,`display_pic`)
 					VALUES ('{$e_username}','{$e_email}','{$e_encpsw}','1','{$e_gender}',
-					'{$e_class}','{$IP}','{$IP}','{$CurrentTime}', '127.0.0.1', 
+					'{$e_class}','{$IP}','{$IP}','{$CurrentTime}', '{$IP}', 
 					'{$profilepic}')");
         $i = $db->insert_id();
         $db->query("UPDATE `users` SET `brave`='10',`maxbrave`='10',`hp`='100',
@@ -139,7 +139,7 @@ if (!empty($username)) {
         }
         if ($_POST['ref']) {
             $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']} WHERE `userid` = {$_POST['ref']}");
-            notification_add($_POST['ref'], "For referring $username to the game, you have earned {$set['ReferalKickback']} valuable Secondary Currency(s)!");
+            notification_add($_POST['ref'], "For referring {$e_username} to the game, you have earned {$set['ReferalKickback']} valuable Chivalry Tokens(s)!");
             $e_rip = $db->escape($rem_IP);
             $db->query("INSERT INTO `referals`
 			VALUES (NULL, {$_POST['ref']}, '{$e_rip}', {$i}, '{$IP}',{$CurrentTime})");
@@ -150,6 +150,11 @@ if (!empty($username)) {
         $db->query("INSERT INTO `dungeon`
 			(`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) 
 			VALUES ('{$i}', 'N/A', '0', '0');");
+        $api->UserGiveItem($i,5,50);
+        $api->UserGiveItem($i,29,50);
+        $mail="Welcome to Chivalry is Dead, {$e_username}. We hope you stay a while and hang out. To get started,
+        check out the Explore page and visit the Hexbags under the Gambling tab. Here you will gain many awesome starter items. Should
+        your fortune be unkind, your inventory has 50 lockpicks and 50 leeches to get you out of the Infirmary and Dungeon when needed.";
         session_regenerate_id();
         $_SESSION['loggedin'] = 1;
         $_SESSION['userid'] = $i;
@@ -169,6 +174,9 @@ if (!empty($username)) {
                 }
             }
         }
+		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$_SESSION['userid']}')");
+        $randophrase=randomizer();
+        $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}' WHERE `userid` = {$_SESSION['userid']}");
         $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
         $db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
         //User registered, lets log them in.
@@ -176,6 +184,7 @@ if (!empty($username)) {
         $url=determine_game_urlbase();
         $WelcomeMSGEmail="Welcome to the game, {$e_username}!<br />We hope you enjoy our lovely game and stick around for a while! If you have any questions or concerns, please contact a staff member in-game!<br />Thank you!<br /> -{$set['WebsiteName']}<br /><a href='http://{$url}'>http://{$url}</a>";
         $api->SystemSendEmail($e_email,$WelcomeMSGEmail,"{$set['WebsiteName']} Registration",$set['sending_email']);
+		$api->GameAddMail($i,"Welcome to Chivalry is Dead",$mail,1);
         die($h->endpage());
     }
     $h->endpage();
@@ -190,7 +199,7 @@ if (!empty($username)) {
 				</th>
 				<td>
                     <input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='3-20 characters in length' onkeyup='CheckUsername(this.value);' required>
-                    <div id='usernameresult' class='invalid-feedback'></div>
+					<div id='usernameresult' class='invalid-feedback'></div>
 				</td>
 			</tr>
 			<tr>
@@ -198,8 +207,11 @@ if (!empty($username)) {
 					Email
 				</th>
 				<td>
-                    <input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
-                    <div id='emailresult' class='invalid-feedback'></div>
+					<div class='input-group'>
+						<span class='input-group-addon'><i class='fa fa-envelope-o fa-fw'></i></span>
+						<input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
+                    </div>
+					<div id='emailresult' class='invalid-feedback'></div>
 				</td>
 			</tr>
 			<tr>
@@ -207,7 +219,10 @@ if (!empty($username)) {
 					Password
 				</th>
 				<td>
-                    <input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='Unique passwords recommended' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
+					<div class='input-group'>
+						<span class='input-group-addon'><i class='fa fa-key fa-fw'></i></span>
+						<input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='Unique passwords recommended' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
+					</div>
 					<div id='passwordresult'></div>
 				</td>
 				</tr>
@@ -240,7 +255,7 @@ if (!empty($username)) {
 							<option></option>
 							<option value='Warrior'>Warrior</option>
 							<option value='Rogue'>Rogue</option>
-							<option value='Defender'>Defender</option>
+							<option value='Guardian'>Guardian</option>
 						</select>
 						<div id='teamresult' class='invalid-feedback'></div>
 					</td>
@@ -258,7 +273,7 @@ if (!empty($username)) {
 						Promo Code
 					</th>
 					<td>
-						<input type='text' class='form-control' id='promo' name='promo' placeholder='Can be empty'>
+						<input type='text' class='form-control' id='promo' value='' name='promo' placeholder='Can be empty'>
 					</td>
 				</tr>
 				<tr>

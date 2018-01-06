@@ -58,7 +58,7 @@ $raw_password = stripslashes($password);
 $uq = $db->query("SELECT `userid`,`password`
                 FROM `users`
                 WHERE `email` = '$form_email' LIMIT 1");
-$UQ = $db->query("SELECT `userid`,`password`
+$UQ = $db->query("SELECT `userid`,`password`,`user_level`
                 FROM `users`
                 WHERE `email` = '$form_email' LIMIT 1");
 
@@ -112,15 +112,31 @@ else {
 
     }
     session_regenerate_id();
-    $_SESSION['loggedin'] = 1;
     $_SESSION['userid'] = $mem['userid'];
-    $_SESSION['last_login'] = time();
+	$uade=$db->query("SELECT * FROM `user_settings` WHERE `userid` = {$mem['userid']}");
+	if ($db->num_rows($uade) == 0)
+	{
+		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$mem['userid']}')");
+	}
+	$uadr=$db->fetch_row($uade);
+	if ($uadr['2fa_on'] == 1)
+	{
+		$encpsw = encode_password($raw_password,$mem['user_level']);
+		$e_encpsw = $db->escape($encpsw);
+		//Update user's password as an extra security mesaure.
+		$db->query("UPDATE `users` SET `password` = '{$e_encpsw}' WHERE `userid` = {$_SESSION['userid']}");
+		header("Location: authenication_2f.php");
+		exit;
+	}
+	$_SESSION['loggedin'] = 1;
+	$_SESSION['last_login'] = time();
+	setcookie('login_expire', time() + 604800, time() + 604800);
     $db->query("UPDATE `users`
               SET `loginip` = '{$IP}',
               `last_login` = '{$CurrentTime}',
               `laston` = '{$CurrentTime}'
                WHERE `userid` = {$mem['userid']}");
-    $encpsw = encode_password($raw_password);
+    $encpsw = encode_password($raw_password,$mem['user_level']);
     $e_encpsw = $db->escape($encpsw);
     //Update user's password as an extra security mesaure.
     $db->query("UPDATE `users` SET `password` = '{$e_encpsw}' WHERE `userid` = {$_SESSION['userid']}");

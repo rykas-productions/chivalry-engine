@@ -9,6 +9,11 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot visit the item market while in the infirmary or dungeon.",true,'index.php');
+	die($h->endpage());
+}
 echo "<h3>Item Market</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
@@ -35,7 +40,7 @@ function index()
     global $db, $userid, $api;
     echo "[<a href='?action=add'>Add Your Own Listing</a>]
 	<br />
-	<table class='table table-responsive table-bordered table-hover table-striped'>
+	<table class='table table-bordered table-hover table-striped'>
 		<tr>
 			<th>Listing Owner</th>
 			<th>Item x Quantity</th>
@@ -69,11 +74,11 @@ function index()
         }
         $ctprice = ($r['imPRICE'] * $r['imQTY']);
         if ($r['imCURRENCY'] == 'primary') {
-            $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " Primary Currency";
-            $tprice = number_format($api->SystemReturnTax($ctprice)) . " Primary Currency";
+            $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " Copper Coins";
+            $tprice = number_format($api->SystemReturnTax($ctprice)) . " Copper Coins";
         } else {
-            $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " Secondary Currency";
-            $tprice = number_format($api->SystemReturnTax($ctprice)) . " Secondary Currency";
+            $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " Chivalry Tokens";
+            $tprice = number_format($api->SystemReturnTax($ctprice)) . " Chivalry Tokens";
         }
         if ($r['imADDER'] == $userid) {
             $link =
@@ -84,13 +89,14 @@ function index()
                     [<a href='?action=gift&ID={$r['imID']}'>Gift</a>]";
         }
         $r['itmdesc'] = htmlentities($r['itmdesc'], ENT_QUOTES);
+		$icon = returnIcon($r['itmid']);
         echo "
 		<tr>
 			<td>
 				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 			</td>
 			<td>
-				<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>{$r['itmname']}</a>";
+				{$icon} <a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>{$r['itmname']}</a>";
         if ($r['imQTY'] > 1) {
             echo " x {$r['imQTY']}";
         }
@@ -204,7 +210,7 @@ function buy()
             die($h->endpage());
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
-        $curre = ($r['imCURRENCY'] == 'primary') ? 'Primary Currency' : 'Secondary Currency';
+        $curre = ($r['imCURRENCY'] == 'primary') ? 'Copper Coins' : 'Chivalry Tokens';
         $final_price = $api->SystemReturnTax($r['imPRICE'] * $_POST['QTY']);
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
@@ -285,7 +291,7 @@ function gift()
             die($h->endpage());
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
-        $curre = ($r['imCURRENCY'] == 'primary') ? 'Primary Currency' : 'Secondary Currency';
+        $curre = ($r['imCURRENCY'] == 'primary') ? 'Copper Coins' : 'Chivalry Tokens';
         $final_price = $api->SystemReturnTax($r['imPRICE'] * $_POST['QTY']);
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
@@ -405,10 +411,12 @@ function add()
             $db->free_result($checkq);
             item_remove($userid, $_POST['ID'], $_POST['QTY']);
             $itemname=$api->SystemItemIDtoName($_POST['ID']);
-            $imadd_log = $db->escape("Listed {$_POST['QTY']} {$itemname}(s) on the item market for {$_POST['price']} {$_POST['currency']}");
+			$currency = ($_POST['currency'] == 'primary') ? "Copper Coins" : "Chivalry Tokens";
+            $imadd_log = $db->escape("Listed {$_POST['QTY']} {$itemname}(s) on the item market for {$_POST['price']} {$currency}");
             $api->SystemLogsAdd($userid, 'imarket', $imadd_log);
+			$num_format=number_format($_POST['price']);
             alert('success', "Success!", "You have successfully listed {$_POST['QTY']} {$itemname}(s) on the item
-			    market for {$_POST['price']} {$_POST['currency']}.", true, 'itemmarket.php');
+			    market for {$num_format} {$currency}.", true, 'itemmarket.php');
         }
     } else {
         $csrf = request_csrf_html("imadd_form");
@@ -449,8 +457,8 @@ function add()
 				</th>
 				<td>
 					<select name='currency' type='dropdown' class='form-control'>
-						<option value='primary'>Primary Currency</option>
-						<option value='secondary'>Secondary Currency</option>
+						<option value='primary'>Copper Coins</option>
+						<option value='secondary'>Chivalry Tokens</option>
 					</select>
 				</td>
 			</tr>

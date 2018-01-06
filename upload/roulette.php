@@ -8,11 +8,26 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot use the roulette table while in the infirmary or dungeon.",true,'index.php');
+	die($h->endpage());
+}
 $tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 250;
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
+}
+if ($ir['winnings_this_hour'] >= (($maxbet*15)*20))
+{
+	alert('danger', "Uh Oh!", "The casino's run out of cash to give you. Come back in an hour.", true, "explore.php");
+    die($h->endpage());
+}
+if ($ir['winnings_this_hour'] <= ((($maxbet*15)*7.5)*-1))
+{
+	alert('danger', "Uh Oh!", "You are too deep in the hole. Come back next hour to try again.", true, "explore.php");
+    die($h->endpage());
 }
 if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
     alert('danger', "Uh Oh!", "Do not refresh while playing Roulette", true, "roulette.php?tresde={$tresder}");
@@ -42,12 +57,13 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
     $slot = array();
     $slot[1] = Random(0, 36);
     if ($slot[1] == $_POST['number']) {
-        $gain = $_POST['bet'] * 50;
+        $gain = $_POST['bet'] * 5;
         $title = "Success!";
         $alerttype = 'success';
         $win = 1;
         $phrase = " and won! You keep your bet, and pocket an extra " . number_format($gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in roulette.");
+		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
     } else {
 
         $title = "Uh Oh!";
@@ -55,6 +71,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $win = 0;
         $gain = -$_POST['bet'];
         $phrase = ". You lose your bet. Sorry man.";
+		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` - {$_POST['bet']} WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'gambling', "Lost {$_POST['bet']} in roulette.");
     }
     alert($alerttype, $title, "You put in your bet and pull the handle down. Around and around the wheel spins. It stops
@@ -77,7 +94,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 			<th colspan='2'>
 				Ready to test your luck? Awesome! Here at the roulette table, the house always wins. To combat players
 				losing all their wealth in one go, we've put in a bet restriction. At your level, you can only bet
-				" . number_format($maxbet) . " Primary Currency.
+				" . number_format($maxbet) . " Copper Coins.
 			</th>
 		</tr>
 		<tr>

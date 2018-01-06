@@ -140,7 +140,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Primary Currency
+							Copper Coins
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' name='prim_currency' value='100'>
@@ -148,7 +148,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Secondary Currency
+							Chivalry Tokens
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' value='0' name='sec_currency'>
@@ -459,7 +459,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Primary Currency
+					Copper Coins
 				</th>
 				<td>
 					<input type='number' min='0' class='form-control' required='1' name='prim_currency' value='{$itemi['primary_currency']}' />
@@ -475,7 +475,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Secondary Currency
+					Chivalry Tokens
 				</th>
 				<td>
 					<input type='number' min='0' class='form-control' required='1' name='sec_currency' value='{$itemi['secondary_currency']}' />
@@ -888,6 +888,48 @@ function deleteuser()
             $db->query("DELETE FROM `userstats` WHERE `userid` = {$_POST['userid']}");
             $db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$_POST['userid']}");
             $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `academy_done` WHERE `userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `achievements_done` WHERE `userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `botlist_hits` WHERE `userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `chat` WHERE `chat_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `comments` WHERE `cRECEIVE` = {$_POST['userid']}");
+			$db->query("DELETE FROM `comments` WHERE `cSEND` = {$_POST['userid']}");
+			$db->query("DELETE FROM `contacts` WHERE `c_ADDED` = {$_POST['userid']}");
+			$db->query("DELETE FROM `contacts` WHERE `c_ADDER` = {$_POST['userid']}");
+			$db->query("DELETE FROM `dungeon` WHERE `dungeon_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `enemy` WHERE `enemy_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `enemy` WHERE `enemy_adder` = {$_POST['userid']}");
+			$db->query("DELETE FROM `forum_bans` WHERE `fb_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `forum_posts` WHERE `fp_poster_id` = {$_POST['userid']}");
+			$db->query("DELETE FROM `forum_topics` WHERE `ft_owner_id` = {$_POST['userid']}");
+			$db->query("DELETE FROM `friends` WHERE `friended` = {$_POST['userid']}");
+			$db->query("DELETE FROM `enemy` WHERE `friender` = {$_POST['userid']}");
+			$db->query("DELETE FROM `guild_applications` WHERE `ga_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `infirmary` WHERE `infirmary_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `itemauction` WHERE `ia_adder` = {$_POST['userid']}");
+			$db->query("DELETE FROM `itemmarket` WHERE `imADDER` = {$_POST['userid']}");
+			$db->query("DELETE FROM `login_attempts` WHERE `userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `logs` WHERE `log_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `mail` WHERE `mail_to` = {$_POST['userid']}");
+			$db->query("DELETE FROM `mail` WHERE `mail_from` = {$_POST['userid']}");
+			$db->query("DELETE FROM `mail_bans` WHERE `mbUSER` = {$_POST['userid']}");
+			$db->query("DELETE FROM `mining` WHERE `userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `newspaper_ads` WHERE `news_owner` = {$_POST['userid']}");
+			$db->query("DELETE FROM `notifications` WHERE `notif_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `permissions` WHERE `perm_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `referals` WHERE `referal_userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `referals` WHERE `refered_id` = {$_POST['userid']}");
+			$db->query("DELETE FROM `reports` WHERE `reporter_id` = {$_POST['userid']}");
+			$db->query("DELETE FROM `reports` WHERE `reportee_id` = {$_POST['userid']}");
+			$db->query("DELETE FROM `russian_roulette` WHERE `challengee` = {$_POST['userid']}");
+			$db->query("DELETE FROM `russian_roulette` WHERE `challenger` = {$_POST['userid']}");
+			$db->query("DELETE FROM `sec_market` WHERE `sec_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `spy_advantage` WHERE `user` = {$_POST['userid']}");
+			$db->query("DELETE FROM `spy_advantage` WHERE `spied` = {$_POST['userid']}");
+			$db->query("DELETE FROM `userdata` WHERE `userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `uservotes` WHERE `userid` = {$_POST['userid']}");
+			$db->query("DELETE FROM `votes` WHERE `userid` = {$_POST['userid']}");
             $api->SystemLogsAdd($userid, 'staff', "Deleted user {$username} [{$_POST['userid']}].");
             alert("success", "Success!", "You have deleted {$username}'s account.", true, 'index.php');
             die($h->endpage());
@@ -1022,7 +1064,7 @@ function masspay()
         $primary = (isset($_POST['pay']) && is_numeric($_POST['pay'])) ? abs(intval($_POST['pay'])) : 0;
         $secondary = (isset($_POST['pay1']) && is_numeric($_POST['pay1'])) ? abs(intval($_POST['pay1'])) : 0;
         if (empty($primary) && empty($secondary)) {
-            alert('danger', "Uh Oh", "If you wish to give a mass payment, please give either Primary Currency or Secondary Currency.");
+            alert('danger', "Uh Oh", "If you wish to give a mass payment, please give either Copper Coins or Chivalry Tokens.");
             die($h->endpage());
         }
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_masspay', stripslashes($_POST['verf']))) {
@@ -1033,11 +1075,11 @@ function masspay()
         while ($r = $db->fetch_row($q)) {
             $api->UserGiveCurrency($r['userid'], 'primary', $primary);
             $api->UserGiveCurrency($r['userid'], 'seconday', $secondary);
-            $api->GameAddNotification($r['userid'], "The administration has given a mass payment of {$primary} Primary Currency and/or {$secondary} Secondary Currency to the game.");
+            $api->GameAddNotification($r['userid'], "The administration has given a mass payment of {$primary} Copper Coins and/or {$secondary} Chivalry Tokens to the game.");
             echo "Successfully paid {$r['username']}.<br />";
         }
         alert('success', 'Success!', "You have successfully mass paid the game.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} Secondary Currency.");
+        $api->SystemLogsAdd($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} Chivalry Tokens.");
     } else {
         $csrf = request_csrf_html('staff_masspay');
         echo "<table class='table table-bordered'>
@@ -1050,7 +1092,7 @@ function masspay()
             </tr>
             <tr>
                 <th>
-                    Primary Currency
+                    Copper Coins
                 </th>
                 <td>
                     <input type='number' required='1' value='0' name='pay' class='form-control'>
@@ -1058,7 +1100,7 @@ function masspay()
             </tr>
             <tr>
                 <th>
-                    Secondary Currency
+                    Chivalry Tokens
                 </th>
                 <td>
                     <input type='number' required='1' value='0' name='pay1' class='form-control'>

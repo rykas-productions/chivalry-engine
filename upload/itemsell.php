@@ -38,7 +38,7 @@ if (permission('CanSellToGame', $userid) == true) {
                 $api->UserGiveCurrency($userid, 'primary', $price);
                 $priceh = number_format($price);
                 alert('success', "Success!", "You have successfully sold {$_POST['qty']} {$r['itmname']}(s) back to the
-				    game for {$priceh} Primary Currency.", true, 'inventory.php');
+				    game for {$priceh} Copper Coins.", true, 'inventory.php');
                 $is_log = $db->escape("{$ir['username']} sold {$_POST['qty']} {$r['itmname']}(s) for {$priceh}");
                 $api->SystemLogsAdd($userid, 'itemsell', $is_log);
             }

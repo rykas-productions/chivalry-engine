@@ -19,6 +19,35 @@ if ($ir[$_GET['type']] == 0) {
 }
 //Give item to user and set their slot to 0
 item_add($userid, $ir[$_GET['type']], 1);
+$sbq=$db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_GET['type']}'");
+$statloss='';
+if ($db->num_rows($sbq) > 0)
+{
+	$statloss .= "You have lost ";
+	while ($sbr=$db->fetch_row($sbq))
+	{
+		if ($sbr['direction'] == 'pos')
+		{
+			if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+				$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
+			} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
+				$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
+			}
+		}
+		else
+		{
+			if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+				$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
+			} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
+				$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
+			}
+		}
+		$ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
+		$statloss .= "{$sbr['number']} {$sbr['stat']}, ";
+		$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$_GET['type']}'");
+	}
+	$statloss .= "when you unequipped this item.";
+}
 $db->query("UPDATE `users` SET `{$_GET['type']}` = 0 WHERE `userid` = {$ir['userid']}");
 $names = array('equip_primary' => "Primary Weapon",
     'equip_secondary' => "Secondary Weapon",
@@ -26,5 +55,5 @@ $names = array('equip_primary' => "Primary Weapon",
 //Tell user their slot is now empty
 $weapname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_GET['type']]}"));
 $api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} from their {$_GET['type']} slot.");
-alert('success', "Success!", "You have successfully unequipped the item in your {$names[$_GET['type']]} slot.", true, 'inventory.php');
+alert('success', "Success!", "You have successfully unequipped your {$weapname} from your {$names[$_GET['type']]} slot. {$statloss}", true, 'inventory.php');
 $h->endpage();

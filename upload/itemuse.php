@@ -13,7 +13,7 @@ if (empty($_GET['item'])) {
     alert('danger', "Uh Oh!", "Please specify an item to use.", true, 'inventory.php');
 } else {
     $i = $db->query("SELECT `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on`,
-                     `itmname`, `inv_itemid` FROM `inventory` AS `iv` INNER JOIN `items` AS `i`
+                     `itmname`, `inv_itemid`, `weapon`, `armor` FROM `inventory` AS `iv` INNER JOIN `items` AS `i`
                      ON `iv`.`inv_itemid` = `i`.`itmid` WHERE `iv`.`inv_id` = {$_GET['item']}
                      AND `iv`.`inv_userid` = $userid");
     if ($db->num_rows($i) == 0) {
@@ -26,6 +26,11 @@ if (empty($_GET['item'])) {
             alert('danger', "Uh Oh!", "This item cannot be used as it has no effects.", true, 'inventory.php');
             die($h->endpage());
         }
+		if (($r['armor'] > 0) || ($r['weapon'] > 0))
+		{
+			alert('danger', "Uh Oh!", "You cannot use weapons and armor in this way.", true, 'inventory.php');
+            die($h->endpage());
+		}
         for ($enum = 1; $enum <= 3; $enum++) {
             if ($r["effect{$enum}_on"] == 'true') {
                 $einfo = unserialize($r["effect{$enum}"]);

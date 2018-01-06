@@ -24,12 +24,78 @@ class headers
                 <meta name="description" content="<?php echo $set['Website_Description']; ?>">
                 <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
                 <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
-                <meta property="og:image" content=""/>
-                <link rel="shortcut icon" href="" type="image/x-icon"/>
+                <meta property="og:image" content="../assets/img/logo.png"/>
+                <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon"/>
+				<link rel="stylesheet" href="../css/game-v1.2.min.css">
+				<link rel="stylesheet" href="../css/rpg-awesome.min.css">
+				<link rel="stylesheet" href="../css/game-fonts-v1.3.css">
                 <!-- CSS -->
-                <link rel="stylesheet"
-                      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
-                <meta name="theme-color" content="#e7e7e7">
+                <?php
+                if ($ir['theme'] == 1)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
+                    <meta name="theme-color" content="#343a40">
+					<?php
+					$hdr='navbar-dark bg-dark';
+                }
+                if ($ir['theme'] == 2)
+                {
+                    ?>
+                    <link rel="stylesheet" href="../css/darkly.bs4.b2.min.css">
+                    <meta name="theme-color" content="#303030">
+					<?php
+					$hdr='navbar-light bg-light';
+                }
+				if ($ir['theme'] == 3)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+                    <meta name="theme-color" content="#4E5D6C">
+					<?php
+					$hdr='navbar-dark bg-dark';
+                }
+				if ($ir['theme'] == 4)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
+                    <meta name="theme-color" content="#272B30">
+					<?php
+					$hdr='navbar-dark bg-dark';
+                }
+				if ($ir['theme'] == 5)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
+                    <meta name="theme-color" content="#04519b">
+					<?php
+					$hdr='navbar-dark bg-dark';
+                }
+				if ($ir['theme'] == 6)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
+					<meta name="theme-color" content="#78C2AD">
+					<?php
+					$hdr='navbar-dark bg-primary';
+                }
+				if ($ir['theme'] == 7)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
+                    <meta name="theme-color" content="#772953">
+					<?php
+					$hdr='navbar-dark bg-dark';
+                }
+				if ($ir['theme'] == 8)
+				{
+					?>
+					<link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
+					<meta name="theme-color" content="#060606">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+                ?>
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
         </head>
@@ -40,8 +106,13 @@ class headers
             ?>
             <body>
             <!-- Navigation -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
+            <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
+                <a class="navbar-brand" href="index.php">
+					<?php 
+						echo "<img src='../assets/img/logo-optimized.png' width='30' height='30' alt=''>
+						{$set['WebsiteName']}"; 
+					?>
+				</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav"
                         aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -56,14 +127,17 @@ class headers
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
                                 <a class="nav-link"
-                                   href="../inbox.php"><?php echo "Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
+                                   href="../inbox.php"><?php echo "<i
+                                        class='fa fa-fw fa-inbox'></i> Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                   href="../notifications.php"><?php echo "Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
+                                   href="../notifications.php"><?php echo "<i
+                                        class='fa fa-fw fa-globe'></i> Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="../inventory.php"><?php echo "Inventory"; ?></a>
+                                <a class="nav-link" href="../inventory.php"><?php echo "<i
+                                        class='fa fa-fw fa-shopping-bag'></i> Inventory"; ?></a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
@@ -124,11 +198,53 @@ class headers
                 $db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
                 $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
             }
-            if ($ir['fedjail'] > 0) {
-                alert('info', "Federal Dungeon!", "You have been placed in the Federal Dungeon for
-                        " . TimeUntil_Parse($fed['fed_out']) . " You are in for the crime of <b>{$fed['fed_reason']}</b>", false);
-                die($h->endpage());
-            }
+            //User is in federal jail. Stop their access.
+    if ($ir['fedjail'] > 0) {
+		$lasthour=time()-3600;
+		$fq2=$db->query("SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} AND `fja_time` >= {$lasthour} LIMIT 1");
+		if (isset($_POST['fedappeal']))
+		{
+			$msg = $db->escape(stripslashes($_POST['fedappeal']));
+			$time=time();
+			if ($db->num_rows($fq2) != 0)
+			{
+				echo "<b>You can only submit an appeal once per hour...</b>";
+			}
+			else
+			{
+				echo "<b>Response posted. Come back later for a response.</b>";
+				$db->query("INSERT INTO `fedjail_appeals` (`fja_user`, `fja_responder`, `fja_text`, `fja_time`) VALUES ('{$userid}', '{$userid}', '{$msg}', '{$time}')");
+			}
+		}
+        alert('info', "Federal Dungeon!", "You are locked away in Federal Dungeon for the next
+					    " . TimeUntil_Parse($fed['fed_out']) . ". You were placed in here for <b>{$fed['fed_reason']}</b>.", false);
+		$fq=$db->query("SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} ORDER BY `fja_time` ASC");
+		echo "<table class='table table-bordered'>";
+		while ($fr = $db->fetch_row($fq))
+		{
+			echo "<tr>
+			<th width='33%'>
+				{$api->SystemUserIDtoName($fr['fja_responder'])} [{$fr['fja_responder']}]<br />
+				" . DateTime_Parse($fr['fja_time']) . "
+			</th>
+			<td>
+				{$fr['fja_text']}
+			</td>
+			</tr>";
+		}
+		echo "
+		<tr>
+			<td colspan='2'>
+				<form method='post'>
+					Submitting your appeal. You can only respond once an hour, so give as much information as you can. Honesty may be rewarded with a lesser sentence.
+					<textarea name='fedappeal' class='form-control'></textarea>
+					<input type='submit' value='Submit Appeal' class='btn btn-primary'>
+				</form>
+			</td>
+		</tr>
+		</table>";
+        die($h->endpage());
+    }
             if ($ir['mail'] > 0) {
                 alert('info', "New Mail!", "You have {$ir['mail']} unread messages.", true, "../inbox.php", "View Inbox");
             }
@@ -148,7 +264,7 @@ class headers
                 $DungeonRemain = TimeUntil_Parse($DungeonOut);
                 alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, '../inventory', 'View Inventory');
             }
-            date_default_timezone_set($ir['timezone']);
+            date_default_timezone_set("America/New_York");
         }
     }
 
@@ -156,7 +272,22 @@ class headers
     {
         global $db, $userid;;
         $IP = $db->escape($_SERVER['REMOTE_ADDR']);
-        $db->query("UPDATE `users` SET `laston` = {$_SERVER['REQUEST_TIME']}, `lastip` = '{$IP}'  WHERE `userid` = {$userid}");
+		$time=time();
+		if ($ir['invis'] < time())
+		{
+			//Update the user as they browse the game.
+			$db->query("UPDATE `users`
+                    SET `laston` = {$_SERVER['REQUEST_TIME']}, 
+                    `lastip` = '{$IP}' 
+                    WHERE `userid` = {$userid}");
+		}
+		else
+		{
+			//Update the user as they browse the game.
+			$db->query("UPDATE `users`
+                    SET `lastip` = '{$IP}' 
+                    WHERE `userid` = {$userid}");
+		}
         if (!$ir['email']) {
             global $domain;
             die("<body>Your account is likely broken. Please contact admin@{$domain} and include your User ID.");
@@ -192,33 +323,51 @@ class headers
         <!-- /.container -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="../css/game.css">
 
         <!-- jQuery Version 3.2.1 -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
         <script src="../js/game.js" async defer></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async
                 defer></script>
-        </body>
-        <footer>
-            <p>
-                <br/>
+		<script type="text/javascript" src="../js/clock.min.js"></script>
+		<script type="text/javascript"> 
+		  $(document).ready(function(){ 
+			customtimestamp = parseInt($("#jqclock").data("time"));
+			$("#jqclock").clock({"langSet":"en","timestamp":customtimestamp,"timeFormat":" g:i:s a"}); 
+		  }); 
+		</script> 
+        <footer class='footer'>
+            <div class='container'>
+				<span>
                 <?php
+				$timestamp=time()-18000;
+                //Print copyright info, Chivalry Engine info, and current time.
                 echo "<hr />
-					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
-					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}.";
+					Time is now <span id='jqclock' class='jqclock' data-time='{$timestamp}'>" . date('l, F j, Y g:i:s a') . "</span><br />
+					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}.<br />";
                 if ($ir['user_level'] == 'Admin' || $ir['user_level'] == 'Web Developer')
-                    echo "<br/>{$db->num_queries} Queries Executed.{$query_extra}<br />";
+                    echo "{$db->num_queries} Queries Executed.{$query_extra}<br />";
+                //Profile page loading putting profile in the URL GET.
+                if (isset($_GET['profile'])) {
+                    $ms = microtime() - $StartTime;
+                    echo "Page loaded in {$ms} miliseconds.";
+                }
+				if ($ir['vip_days'] == 0)
+				{
+					include('ads/ad_header.php');
+				}
                 ?>
-            </p>
+				</span>
+            </div>
         </footer>
+		</body>
         </html>
     <?php
     }

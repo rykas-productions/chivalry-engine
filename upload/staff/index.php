@@ -101,7 +101,10 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 			</li>";
 }
 if ($api->UserMemberLevelGet($userid, 'assistant')) {
-    echo "<li class='nav-item'>
+    echo "	<li class='nav-item'>
+				<a class='nav-link' data-toggle='tab' href='#FEDJAIL'>Federal Dungeon Appeals</a>
+			</li>
+			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#ITEMS'>Items</a>
 			</li>
 			<li class='nav-item'>
@@ -236,19 +239,25 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 }
 if ($api->UserMemberLevelGet($userid, 'assistant')) {
     echo "<div id='GUILDS' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_guilds.php?action=viewguild'>View Guild</a><br />
-								<a href='staff_guilds.php?action=editguild'>Edit Guild</a><br />
-								<a href='staff_guilds.php?action=delguild'>Delete Guild</a><br />
-								<a href='staff_guilds.php?action=creditguild'>Credit Guild</a><br />
-								<a href='staff_guilds.php?action=viewwars'>View Guild Wars</a><br />
-								<a href='staff_guilds.php?action=addcrime'>Create Guild Crime</a><br />
-								<a href='staff_guilds.php?action=delcrime'>Delete Guild Crime</a><br />
-							</div>
-						</div>
-					</div>
-					";
+			<div class='card'>
+				<div class='card-body'>
+					<a href='staff_guilds.php?action=viewguild'>View Guild</a><br />
+					<a href='staff_guilds.php?action=editguild'>Edit Guild</a><br />
+					<a href='staff_guilds.php?action=delguild'>Delete Guild</a><br />
+					<a href='staff_guilds.php?action=creditguild'>Credit Guild</a><br />
+					<a href='staff_guilds.php?action=viewwars'>View Guild Wars</a><br />
+					<a href='staff_guilds.php?action=addcrime'>Create Guild Crime</a><br />
+					<a href='staff_guilds.php?action=delcrime'>Delete Guild Crime</a><br />
+				</div>
+			</div>
+		</div>
+		<div id='FEDJAIL' class='tab-pane'>
+			<div class='card'>
+				<div class='card-body'>
+					<a href='staff_fedjail.php?action=viewappeal'>View Appeals</a><br />
+				</div>
+			</div>
+		</div>";
 }
 if ($api->UserMemberLevelGet($userid, 'assistant')) {
     echo "<div id='ITEMS' class='tab-pane'>
@@ -384,7 +393,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 							</tr>
 							</tr>
 								<td>
-									<a href='staff_logs.php?action=secmarket'>Secondary Currency Market Logs</a>
+									<a href='staff_logs.php?action=secmarket'>Chivalry Tokens Market Logs</a>
 								</td>
 								<td>
 									<a href='staff_logs.php?action=mining'>Mining Logs</a>
@@ -400,14 +409,22 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 							</tr>
 							</tr>
 								<td>
-									<a href='staff_logs.php?action=primsend'>Primary Currency Xfer Logs</a>
+									<a href='staff_logs.php?action=primsend'>Copper Coins Xfer Logs</a>
 								</td>
 								<td>
-
+                                    <a href='staff_logs.php?action=bomb'>Bomb Logs</a>
+								</td>
+							</tr>
+							</tr>
+								<td>
+									<a href='staff_logs.php?action=tokenbank'>Token Bank Logs</a>
+								</td>
+								<td>
+                                    <a href='staff_logs.php?action=theft'>Theft Logs</a>
 								</td>
 							</tr>";
-    if ($api->UserMemberLevelGet($userid, 'admin')) {
-        echo "
+                        if ($api->UserMemberLevelGet($userid, 'admin')) {
+                            echo "
 								<tr>
 									<td>
 										<a href='staff_logs.php?action=stafflogs'>Staff Logs</a>
@@ -432,9 +449,24 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 										<a href='staff_settings.php?action=errlog'>Game Error Logs</a>
 									</td>
 								</tr>
-								";
-    }
-    echo "</table>
+								<tr>
+									<td>
+										<a href='staff_logs.php?action=cronlogs'>Reset Logs</a>
+									</td>
+									<td>
+										<a href='staff_logs.php?action=pages'>Page Logs</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<a href='staff_logs.php?action=votedlogs'>Voting Logs</a>
+									</td>
+									<td>
+										
+									</td>
+								</tr>";
+                            }
+                echo "</table>
 						</div>
 					</div>
 				</div>
@@ -447,26 +479,30 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 						</div>
 					</div>
 				</div>";
-}
-echo "
+            }
+            echo "
 			<div id='PUNISH' class='tab-pane'>
 					<div class='card'>
-						<div class='card-body'>
+						<div class='card-body'>";
+							if ($api->UserMemberLevelGet($userid, 'assistant')) {
+								echo "<a href='staff_punish.php?action=editfedjail'>Edit Federal Dungeon</a><br />
+										<a href='staff_punish.php?action=unfedjail'>Remove Federal Dungeon</a><br />
+										<a href='staff_punish.php?action=mailban'>Mail Ban User</a><br />
+										<a href='staff_punish.php?action=unmailban'>Un-Mail Ban User</a><br />
+										<a href='staff_punish.php?action=ipsearch'>IP Search</a><br />";
+							}
+							echo"
 							<a href='staff_punish.php?action=fedjail'>Federal Dungeon</a><br />
-							<a href='staff_punish.php?action=editfedjail'>Edit Federal Dungeon</a><br />
-							<a href='staff_punish.php?action=unfedjail'>Remove Federal Dungeon</a><br />
-							<a href='staff_punish.php?action=mailban'>Mail Ban User</a><br />
-							<a href='staff_punish.php?action=unmailban'>Un-Mail Ban User</a><br />
 							<a href='staff_punish.php?action=forumwarn'>Forum Warn User</a><br />
 							<a href='staff_punish.php?action=forumban'>Forum Ban User</a><br />
 							<a href='staff_punish.php?action=unforumban'>Un-Forum Ban User</a><br />
-							<a href='staff_punish.php?action=ipsearch'>IP Search</a><br />
-							<a href='staff_punish.php?action=massmail'>Send Mass Mail</a><br />";
-if ($api->UserMemberLevelGet($userid, 'admin')) {
-    echo "<a href='staff_punish.php?action=massemail'>Send Mass Email</a><br />
-									<a href='staff_punish.php?action=banip'>Ban IP Address</a><br />
-									<a href='staff_punish.php?action=unbanip'>Pardon IP Address</a><br />";
-}
+							<a href='staff_punish.php?action=spamhammer'>Spam Hammer</a><br />";
+							if ($api->UserMemberLevelGet($userid, 'admin')) {
+								echo "<a href='staff_punish.php?action=massemail'>Send Mass Email</a><br />
+										<a href='staff_punish.php?action=massmail'>Send Mass Mail</a><br />
+										<a href='staff_punish.php?action=banip'>Ban IP Address</a><br />
+										<a href='staff_punish.php?action=unbanip'>Pardon IP Address</a><br />";
+							}
 echo "
 						</div>
 					</div>

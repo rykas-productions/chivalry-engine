@@ -54,6 +54,8 @@ if (isset($jobquery) && $jobquery) {
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
+					 INNER JOIN `user_settings` AS `uas`
+                     ON `u`.`userid`=`uas`.`userid`
                      LEFT JOIN `jobs` AS `j` ON `j`.`jRANK` = `u`.`job`
                      LEFT JOIN `job_ranks` AS `jr`
                      ON `jr`.`jrID` = `u`.`jobrank`
@@ -64,15 +66,20 @@ if (isset($jobquery) && $jobquery) {
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
+					 INNER JOIN `user_settings` AS `uas`
+                     ON `u`.`userid`=`uas`.`userid`
                      LEFT JOIN `houses` AS `h` ON `h`.`hWILL` = `u`.`maxwill`
                      WHERE `u`.`userid` = '{$userid}'
                      LIMIT 1");
 } else {
-    $is = $db->query("SELECT `u`.*, `us`.*
+    $is = $db->query(
+            "SELECT `u`.*, `us`.*, `uas`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
-                     WHERE `u`.`userid` = '{$userid}'
+					 INNER JOIN `user_settings` AS `uas`
+                     ON `u`.`userid`=`uas`.`userid`
+                     WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
 }
 $ir = $db->fetch_row($is);
@@ -113,6 +120,6 @@ if ($atkpage) {
 } else {
     $h->userdata($ir);
 }
-foreach (glob("../crons/*.php") as $filename) {
+/*foreach (glob("../crons/*.php") as $filename) {
     include $filename;
-} 
+} */

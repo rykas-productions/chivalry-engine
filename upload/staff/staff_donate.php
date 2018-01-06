@@ -210,11 +210,6 @@ function editpack()
             alert('danger', "Uh Oh!", "The item you wish to list as a pack does not exist.");
             die($h->endpage());
         }
-        $q2 = $db->query("SELECT `vip_item` FROM `vip_listing` WHERE `vip_item` = {$_POST['item']} AND `vip_id` != {$_POST['pack']}");
-        if ($db->num_rows($q2) > 0) {
-            alert('danger', "Uh Oh!", "You already have this item listed on the VIP Pack Listing.");
-            die($h->endpage());
-        }
         $db->query("UPDATE `vip_listing` SET `vip_item` = {$_POST['item']}, `vip_cost` = '{$db_cost}', `vip_qty` = {$_POST['qty']} WHERE `vip_id` = {$_POST['pack']}");
         $api->SystemLogsAdd($userid, 'staff', "Edited {$api->SystemItemIDtoName($_POST['item'])}'s VIP Pack.");
         alert('success', "Success!", "You have successfully edited the {$api->SystemItemIDtoName($_POST['item'])} VIP Pack.", true, 'index.php');

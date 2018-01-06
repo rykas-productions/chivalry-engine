@@ -41,7 +41,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
             $rm = $db->fetch_row($m);
             item_remove($userid, $r['inv_itemid'], $_POST['qty']);
             item_add($_POST['user'], $r['inv_itemid'], $_POST['qty']);
-            alert('success', "Success!", "You have successfully send {$_POST['qty']} {$r['itmname']}(s) to
+            alert('success', "Success!", "You have successfully sent {$_POST['qty']} {$r['itmname']}(s) to
 			    {$rm['username']}.", true, 'inventory.php');
             notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
                 from <a href='profile.php?user=$userid'>{$ir['username']}</a>.");
@@ -77,37 +77,6 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
 					</th>
 					<td>
 						" . user_dropdown('user') . "
-					</td>
-				</tr>
-				<tr>
-					<th>
-						Quantity
-					</th>
-					<td>
-						<input type='number' min='1' max='{$r['inv_qty']}' class='form-control' name='qty' value='{$r['inv_qty']}' />
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='Send Items'>
-					</td>
-				</tr>
-			</table>
-			<input type='hidden' name='verf' value='{$code}' />
-		</form>
-		<form action='?ID={$_GET['ID']}' method='post'>
-			<table class='table table-bordered'>
-				<tr>
-					<th colspan='2'>
-						Alternatively, you can enter a User ID number.
-					</th>
-				</tr>
-				<tr>
-					<th>
-						User ID
-					</th>
-					<td>
-						<input type='number' min='1' class='form-control' name='user' />
 					</td>
 				</tr>
 				<tr>

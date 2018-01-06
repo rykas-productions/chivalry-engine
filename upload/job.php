@@ -8,6 +8,11 @@
 */
 $jobquery = 1;
 require('globals.php');
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot visit your job while in the infirmary or dungeon.",true,'index.php');
+	die($h->endpage());
+}
 $_GET['interview'] = (isset($_GET['interview']) && is_numeric($_GET['interview'])) ? abs(intval($_GET['interview'])) : 0;
 if (empty($ir['job'])) {
     if (empty($_GET['interview'])) {
@@ -66,7 +71,7 @@ if (empty($ir['job'])) {
                         SET `job` = {$_GET['interview']},
                         `jobrank` = {$r['jrID']}
                         WHERE `userid` = {$userid}");
-            echo "<b>{$r['jBOSS']}:</b> It appears you fit our basic requirements. Is starting at {$r['jrPRIMPAY']} Primary Currency and/or {$r['jrSECONDARY']} Secondary Currency per hour fine with you?<br />
+            echo "<b>{$r['jBOSS']}:</b> It appears you fit our basic requirements. Is starting at {$r['jrPRIMPAY']} Copper Coins and/or {$r['jrSECONDARY']} Chivalry Tokens per hour fine with you?<br />
             <b>{$ir['username']}:</b> Yes it is!<br />
             <b>{$r['jBOSS']}:</b> Alright, well, get to work then! Welcome aboard!<br />
             <a href='job.php'>Get to Work</a>";
@@ -112,9 +117,13 @@ if (empty($ir['job'])) {
 function job_index()
 {
     global $db, $ir, $h;
+	$maxpayprim=$ir['jrPRIMPAY']+($ir['jrPRIMPAY']*0.5);
+	$maxpaysecc=$ir['jrSECONDARY']+($ir['jrSECONDARY']*0.5);
     echo "<h3>Your Job</h3>
-    You currently work in the {$ir['jNAME']}! You receive {$ir['jrPRIMPAY']} Primary Currency and/or
-    {$ir['jrSECONDARY']} Secondary Currency each hour you work as you're required. You've worked {$ir['jobwork']} /
+    You currently work in the {$ir['jNAME']}! You receive " . number_format($ir['jrPRIMPAY']) . " Copper Coins and/or
+    " . number_format($ir['jrSECONDARY']) . " Chivalry Tokens each hour as a minimum. If you work the full time you're required, 
+	you will take home " . number_format($maxpayprim) . " Copper Coins and/or " . number_format($maxpaysecc) . " Chivalry Tokens.
+	You've worked {$ir['jobwork']} /
     {$ir['jrACT']} times this hour.
     <table class='table table-bordered'>
     <tr>
@@ -135,15 +144,18 @@ function job_index()
             <td>
                 {$r['jrRANK']}
             </td>
-            <td>
-                {$r['jrPRIMPAY']} Primary<br />
-                {$r['jrSECONDARY']} Secondary
+            <td>";
+				if ($r['jrPRIMPAY'])
+					echo number_format($r['jrPRIMPAY']) . " Copper Coins<br />";
+				if ($r['jrSECONDARY'])
+					echo number_format($r['jrSECONDARY']) . " Chivalry Tokens<br />";
+                echo "
             </td>
             <td>
-                {$r['jrSTR']} Strength<br />
-                {$r['jrLAB']} Labor<br />
-                {$r['jrIQ']} IQ<br />
-                {$r['jrACT']} Work/Hour
+                " . number_format($r['jrSTR']) . " Strength<br />
+                " . number_format($r['jrLAB']) . " Labor<br />
+                " . number_format($r['jrIQ']) . " IQ<br />
+                " . number_format($r['jrACT']) . " Work/Hour
             </td>
         </tr>";
     }

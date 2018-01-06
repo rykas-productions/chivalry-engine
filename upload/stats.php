@@ -29,7 +29,7 @@ google.charts.load('current', {'packages':['corechart']});
           ['Users', 'Amount'],
           ['Warrior',     {$Warrior}],
           ['Rogue',      {$Rogue}],
-		  ['Defender',      {$Defender}]
+		  ['Guardian',      {$Defender}]
         ]);
 		
 		var data4 = google.visualization.arrayToDataTable([
@@ -51,6 +51,7 @@ google.charts.load('current', {'packages':['corechart']});
 		  ['Mac OS X',     {$OSX}],
 		  ['Windows 8.1',     {$Win81}],
 		  ['Windows 10',     {$Win10}],
+		  ['Chrome OS',     {$ChromeOS}],
           ['Windows 8',     {$Win8}]
         ]);
 		
@@ -137,7 +138,23 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Primary Currency Withdrawn
+					Total Notifications
+				</td>
+				<td>
+					" . number_format($TotalNotif) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Total Messages
+				</td>
+				<td>
+					" . number_format($TotalMail) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Copper Coins Withdrawn
 				</td>
 				<td>
 					" . number_format($TotalPrimaryCurrency) . "
@@ -145,7 +162,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Primary Currency Banked
+					Copper Coins Banked
 				</td>
 				<td>
 					" . number_format($TotalBank) . "
@@ -153,7 +170,15 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Total Primary Currency
+					Chivalry Tokens Banked
+				</td>
+				<td>
+					" . number_format($TotalBankToken) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Total Copper Coins
 				</td>
 				<td>
 					" . number_format($TotalBankandPC) . "
@@ -161,15 +186,15 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Secondary Currency in Circulation
+					Total Chivalry Tokens
 				</td>
 				<td>
-					" . number_format($TotalSecondaryCurrency) . "
+					" . number_format($TotalBankandSC) . "
 				</td>
 			</tr>
 			<tr>
 				<td>
-					Average Primary Currency per Player
+					Average Copper Coins per Player
 				</td>
 				<td>
 					" . number_format($AveragePrimaryCurrencyPerPlayer) . "
@@ -177,7 +202,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Average Secondary Currency per Player
+					Average Chivalry Tokens per Player
 				</td>
 				<td>
 					" . number_format($AverageSecondaryCurrencyPerPlayer) . "
@@ -185,10 +210,18 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Average Bank Balance per Players
+					Average Bank Balance per Player
 				</td>
 				<td>
 					" . number_format($AverageBank) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Average Chivalry Token Bank Account
+				</td>
+				<td>
+					" . number_format($AverageTokenBank) . "
 				</td>
 			</tr>
 			<tr>

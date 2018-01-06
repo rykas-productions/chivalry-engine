@@ -3,7 +3,7 @@
 	File:		infirmary.php
 	Created: 	4/5/2016 at 12:11AM Eastern Time
 	Info: 		Lists the players currently in the infirmary, and allows
-				them to heal those players out using secondary currency.
+				them to heal those players out using Chivalry Tokens.
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
@@ -102,26 +102,26 @@ function heal()
             //Times = 30 Minutes x Times to Heal
             $cost = 25 * $_GET['times'];
             $time = 30 * $_GET['times'];
-            //User does not have enough secondary currency to heal that many times.
+            //User does not have enough Chivalry Tokens to heal that many times.
             if ($ir['secondary_currency'] < $cost) {
-                alert('danger', "Uh Oh!", "You do not have enough Secondary Currency to heal {$_GET['times']} sets.", true, 'infirmary.php');
+                alert('danger', "Uh Oh!", "You do not have enough Chivalry Tokens to heal {$_GET['times']} sets.", true, 'infirmary.php');
                 die($h->endpage());
             } else {
                 //Healed successfully!
                 $api->UserStatusSet($_GET['user'], 'infirmary', $time * -1, 'Not read');
-                //Take current user's secondary currency
+                //Take current user's Chivalry Tokens
                 $api->UserTakeCurrency($userid, 'secondary', $cost);
                 //Add a friendly note.
                 $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has healed you {$_GET['times']} times.");
                 //Log it!
                 $api->SystemLogsAdd($userid, 'heal', "Healed {$api->SystemUserIDtoName($_GET['user'])} {$_GET['times']} times.");
                 alert('success', "Success!", "You have healed {$api->SystemUserIDtoName($_GET['user'])} {$_GET['times']}
-                times, costing you {$cost} Secondary Currency.", true, 'index.php');
+                times, costing you {$cost} Chivalry Tokens.", true, 'index.php');
             }
         } else {
             echo "How many times do you wish to heal {$api->SystemUserIDtoName($_GET['user'])}?<br />
             1 Set = 30 minutes<br />
-            1 Set = 25 Secondary Currency<br />
+            1 Set = 25 Chivalry Tokens<br />
             <form>
                 <input type='hidden' name='user' value='{$_GET['user']}'>
                 <input type='hidden' name='action' value='heal'>

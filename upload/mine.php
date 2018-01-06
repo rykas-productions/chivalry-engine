@@ -16,7 +16,7 @@ if (!($db->num_rows($UIDB))) {
 }
 $MUS = ($db->fetch_row($db->query("SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 mining_levelup();
-echo "<h2>Dangerous Mines</h2><hr />";
+echo "<h2><i class='ra ra-mining-diamonds'></i> Dangerous Mines</h2><hr />";
 if ($api->UserStatus($userid, 'infirmary')) {
     alert('danger', "Unconscious!", "You cannot go mining if you're in the infirmary.");
     die($h->endpage());
@@ -44,8 +44,6 @@ function home()
     global $MUS, $db, $api;
     $mineen = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
     $minexp = min(round($MUS['miningxp'] / $MUS['xp_needed'] * 100), 100);
-    $mineenp = 100 - $mineen;
-    $minexpp = 100 - $minexp;
     echo "Welcome to the dangerous mines, brainless moron! If you're lucky, you'll strike riches. If not... the mine
         will eat you alive.
     <br />
@@ -56,14 +54,13 @@ function home()
 			</th>
 		</tr>
 		<tr>
-			<th>
+			<th width='33%'>
 				Mining Power
 			</th>
 			<td>
-				<div class='progress'>
-					<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$MUS['miningpower']}' aria-valuemin='0' aria-valuemax='100' style='width:{$mineen}%'>
-						{$mineen}% ({$MUS['miningpower']} / {$MUS['max_miningpower']})
-					</div>
+				<div class='progress' style='height: 1rem;'>
+					<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$MUS['miningpower']}' aria-valuemin='0' aria-valuemax='100' style='width:{$mineen}%'></div>
+						<span>{$mineen}% ({$MUS['miningpower']} / {$MUS['max_miningpower']})</span>
 				</div>
 			</td>
 		</tr>
@@ -72,10 +69,9 @@ function home()
 				Mining Experience
 			</th>
 			<td>
-				<div class='progress'>
-					<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$MUS['miningxp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$minexp}%'>
-						{$minexp}% ({$MUS['miningxp']} / {$MUS['xp_needed']})
-					</div>
+				<div class='progress' style='height: 1rem;'>
+					<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$MUS['miningxp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$minexp}%'></div>
+						<span>{$minexp}% (" . round($MUS['miningxp'],2) . " / {$MUS['xp_needed']})</span>
 				</div>
 			</td>
 		</tr>
@@ -101,21 +97,21 @@ function buypower()
         if ($sets > $MUS['buyable_power']) {
             alert('danger', "Uh Oh!", "You are trying to buy more sets of power than you currently have available to you.");
             die($h->endpage());
-        } elseif (($ir['iq'] < $totalcost)) {
-            alert('danger', "Uh Oh!", "You need " . number_format($totalcost) . " to buy the amount of sets you want to. You only have " . number_format($ir['iq']));
+        } elseif (($ir['secondary_currency'] < $totalcost)) {
+            alert('danger', "Uh Oh!", "You need " . number_format($totalcost) . " Chivalry Tokens to buy the amount of sets you want to. You only have " . number_format($ir['secondary_currency']));
             die($h->endpage());
 
         } else {
-            $db->query("UPDATE `userstats` SET `iq` = `iq` - '{$totalcost}' WHERE `userid` = {$userid}");
+            $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` - '{$totalcost}' WHERE `userid` = {$userid}");
             $db->query("UPDATE `mining` SET `buyable_power` = `buyable_power` - '$sets', 
 						`max_miningpower` = `max_miningpower` + ($sets*10) 
 						WHERE `userid` = {$userid}");
-            $api->SystemLogsAdd($userid, 'mining', "Exchanged {$totalcost} IQ for {$sets} sets of mining power.");
-            alert('success', "Success!", "You have traded " . number_format($totalcost) . " IQ for {$sets} of mining power.", true, 'mine.php');
+            $api->SystemLogsAdd($userid, 'mining', "Exchanged {$totalcost} Chivalry Tokens for {$sets} sets of mining power.");
+            alert('success', "Success!", "You have traded " . number_format($totalcost) . " Chivalry Tokens for {$sets} of mining power.", true, 'mine.php');
         }
     } else {
         echo "You can buy {$MUS['buyable_power']} sets of mining power. One set is equal to 10 mining power. You unlock
-            more sets by leveling your mining level. Each set will cost you " . number_format($CostForPower) . " IQ.
+            more sets by leveling your mining level. Each set will cost you " . number_format($CostForPower) . " Chivalry Tokens.
             How many do you wish to buy?";
         echo "<br />
         <form method='post'>
@@ -142,6 +138,9 @@ function mine()
             $MSI = $db->fetch_row($mineinfo);
             $query = $db->query("SELECT `inv_itemid` FROM `inventory` where `inv_itemid` = {$MSI['mine_pickaxe']} && `inv_userid` = {$userid}");
             $i = $db->fetch_row($query);
+            if (!$api->UserEquippedItem($userid, 'primary', $MSI['mine_pickaxe'])) {
+
+            }
             if ($MUS['mining_level'] < $MSI['mine_level']) {
                 alert('danger', "Uh Oh!", "You are too low level to mine here. You need mining level {$MSI['mine_level']} to mine here.", true, 'mine.php');
                 die($h->endpage());
@@ -154,68 +153,78 @@ function mine()
             } elseif ($MUS['miningpower'] < $MSI['mine_power_use']) {
                 alert('danger', "Uh Oh!", "You do not have enough mining power to mine here. You need {$MSI['mine_power_use']}.", true, 'mine.php');
                 die($h->endpage());
-            } elseif (!$i['inv_itemid'] == $MSI['mine_pickaxe']) {
+            }
+            $unequipped=0;
+            if (!$api->UserHasItem($userid, $MSI['mine_pickaxe'], 1))
+                $unequipped++;
+            if (!$api->UserEquippedItem($userid, 'primary', $MSI['mine_pickaxe']))
+                $unequipped++;
+            if (!$api->UserEquippedItem($userid, 'secondary', $MSI['mine_pickaxe']))
+                $unequipped++;
+            if (!$api->UserEquippedItem($userid, 'armor', $MSI['mine_pickaxe']))
+                $unequipped++;
+            if ($unequipped == 4)
+            {
                 alert('danger', "Uh Oh!", "You do not have the required pickaxe to mine here. You need a " . $api->SystemItemIDtoName($MSI['mine_pickaxe']), true, "mine.php");
                 die($h->endpage());
-            } else {
-                if (!isset($xpgain)) {
-                    $xpgain = 0;
-                }
-                if ($ir['iq'] <= $MSI['mine_iq'] + ($MSI['mine_iq'] * .3)) {
-                    $Rolls = Random(1, 5);
-                } elseif ($ir['iq'] >= $MSI['mine_iq'] + ($MSI['mine_iq'] * .3) && ($ir['iq'] <= $MSI['mine_iq'] + ($MSI['mine_iq'] * .6))) {
-                    $Rolls = Random(1, 10);
-                } else {
-                    $Rolls = Random(1, 15);
-                }
-                if ($Rolls <= 3) {
-                    $NegRolls = Random(1, 3);
-                    $NegTime = Random(5, 25) * ($MUS['mining_level'] * .25);
-                    if ($NegRolls == 1) {
-                        alert('danger', "Uh Oh!", "You begin to mine and touch off a natural gas leak. Kaboom.", false);
-                        $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and was put into the infirmary for {$NegTime} minutes.");
-                        $api->UserStatusSet($userid, 'infirmary', $NegTime, "Mining Explosion");
-                    } elseif ($NegRolls == 2) {
-                        alert('danger', "Uh Oh!", "You hit a vein of gems, except a miner nearby gets jealous and tries to take your gems! You knock them out cold, and a guard arrests you. Wtf.", false);
-                        $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and was put into the dungeon for {$NegTime} minutes.");
-                        $api->UserStatusSet($userid, 'dungeon', $NegTime, "Mining Selfishness");
-                    } else {
-                        alert('danger', "Uh Oh!", "You failed to mine anything of use.", false);
-                        $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and was unsuccessful.");
-                    }
-                } elseif ($Rolls >= 3 && $Rolls <= 14) {
-                    $PosRolls = Random(1, 3);
-                    if ($PosRolls == 1) {
-                        $flakes = Random($MSI['mine_copper_min'], $MSI['mine_copper_max']);
-                        alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']), false);
-                        $api->UserGiveItem($userid, $MSI['mine_copper_item'], $flakes);
-                        $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_copper_item'])}.");
-                        $xpgain = $flakes * 0.15;
-
-                    } elseif ($PosRolls == 2) {
-                        $flakes = Random($MSI['mine_silver_min'], $MSI['mine_silver_max']);
-                        alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']), false);
-                        $api->UserGiveItem($userid, $MSI['mine_silver_item'], $flakes);
-                        $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_silver_item'])}.");
-                        $xpgain = $flakes * 0.35;
-                    } else {
-                        $flakes = Random($MSI['mine_gold_min'], $MSI['mine_gold_max']);
-                        alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']), false);
-                        $api->UserGiveItem($userid, $MSI['mine_gold_item'], $flakes);
-                        $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_gold_item'])}.");
-                        $xpgain = $flakes * 0.45;
-                    }
-                } else {
-                    alert('success', "Success!", "You have carefully excavated out a single" . $api->SystemItemIDtoName($MSI['mine_gem_item']), false);
-                    $api->UserGiveItem($userid, $MSI['mine_gem_item'], 1);
-                    $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined 1x {$api->SystemItemIDtoName($MSI['mine_gem_item'])}.");
-                    $xpgain = 3 * $MUS['mining_level'];
-                }
-                echo "<hr />
-                [<a href='?action=mine&spot={$spot}'>Mine Again</a>]<br />
-                [<a href='mine.php'>Pack it Up</a>]";
-                $db->query("UPDATE `mining` SET `miningxp`=`miningxp`+ {$xpgain}, `miningpower`=`miningpower`-'{$MSI['mine_power_use']}' WHERE `userid` = {$userid}");
             }
+            if (!isset($xpgain)) {
+                $xpgain = 0;
+            }
+            if ($ir['iq'] <= $MSI['mine_iq'] + ($MSI['mine_iq'] * .3)) {
+                $Rolls = Random(1, 5);
+            } elseif ($ir['iq'] >= $MSI['mine_iq'] + ($MSI['mine_iq'] * .3) && ($ir['iq'] <= $MSI['mine_iq'] + ($MSI['mine_iq'] * .6))) {
+                $Rolls = Random(2, 10);
+            } else {
+                $Rolls = Random(3, 15);
+            }
+            if ($Rolls <= 3) {
+                $NegRolls = Random(1, 3);
+                $NegTime = Random(5, 25) * ($MUS['mining_level'] * .25);
+                if ($NegRolls == 1) {
+                    alert('danger', "Uh Oh!", "You begin to mine and touch off a natural gas leak. Kaboom.", false);
+                    $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and was put into the infirmary for {$NegTime} minutes.");
+                    $api->UserStatusSet($userid, 'infirmary', $NegTime, "Mining Explosion");
+                } elseif ($NegRolls == 2) {
+                    alert('danger', "Uh Oh!", "You hit a vein of gems, except a miner nearby gets jealous and tries to take your gems! You knock them out cold, and a guard arrests you. Wtf.", false);
+                    $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and was put into the dungeon for {$NegTime} minutes.");
+                    $api->UserStatusSet($userid, 'dungeon', $NegTime, "Mining Selfishness");
+                } else {
+                    alert('danger', "Uh Oh!", "You failed to mine anything of use.", false);
+                    $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and was unsuccessful.");
+                }
+            } elseif ($Rolls >= 3 && $Rolls <= 14) {
+                $PosRolls = Random(1, 3);
+                if ($PosRolls == 1) {
+                    $flakes = Random($MSI['mine_copper_min'], $MSI['mine_copper_max']);
+                    alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']) . ".", false);
+                    $api->UserGiveItem($userid, $MSI['mine_copper_item'], $flakes);
+                    $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_copper_item'])}.");
+                    $xpgain = ($flakes * 0.35);
+
+                } elseif ($PosRolls == 2) {
+                    $flakes = Random($MSI['mine_silver_min'], $MSI['mine_silver_max']);
+                    alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']) . ".", false);
+                    $api->UserGiveItem($userid, $MSI['mine_silver_item'], $flakes);
+                    $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_silver_item'])}.");
+                    $xpgain = ($flakes * 0.55);
+                } else {
+                    $flakes = Random($MSI['mine_gold_min'], $MSI['mine_gold_max']);
+                    alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']) . ".", false);
+                    $api->UserGiveItem($userid, $MSI['mine_gold_item'], $flakes);
+                    $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_gold_item'])}.");
+                    $xpgain = ($flakes * 0.75);
+                }
+            } else {
+                alert('success', "Success!", "You have carefully excavated out a single " . $api->SystemItemIDtoName($MSI['mine_gem_item']) . ".", false);
+                $api->UserGiveItem($userid, $MSI['mine_gem_item'], 1);
+                $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined 1x {$api->SystemItemIDtoName($MSI['mine_gem_item'])}.");
+                $xpgain = 15 * $MUS['mining_level'];
+            }
+            echo "<hr />
+            [<a href='?action=mine&spot={$spot}'>Mine Again</a>]<br />
+            [<a href='mine.php'>Pack it Up</a>]";
+            $db->query("UPDATE `mining` SET `miningxp`=`miningxp`+ {$xpgain}, `miningpower`=`miningpower`-'{$MSI['mine_power_use']}' WHERE `userid` = {$userid}");
         }
     }
 }

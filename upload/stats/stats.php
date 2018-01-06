@@ -8,36 +8,42 @@
 */
 
 //Select count of players with and without a bank account
-$NotOwnedBank = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `bank` = '-1' AND `user_level` != 'NPC'"));
-$OwnedBank = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `bank` > '-1' AND `user_level` != 'NPC'"));
+$NotOwnedBank = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `bank` = '-1' AND `user_level` != 'NPC' AND `userid` != 1"));
+$OwnedBank = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `bank` > '-1' AND `user_level` != 'NPC'  AND `userid` != 1"));
 
 //Select count of players's gender
-$Male = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `gender` = 'Male' AND `user_level` != 'NPC'"));
-$Female = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `gender` = 'Female' AND `user_level` != 'NPC'"));
+$Male = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `gender` = 'Male' AND `user_level` != 'NPC'  AND `userid` != 1"));
+$Female = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `gender` = 'Female' AND `user_level` != 'NPC'  AND `userid` != 1"));
 
 //Select count of players's class
-$Warrior = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `class` = 'Warrior' AND `user_level` != 'NPC'"));
-$Rogue = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `class` = 'Rogue' AND `user_level` != 'NPC'"));
-$Defender = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `class` = 'Defender' AND `user_level` != 'NPC'"));
+$Warrior = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `class` = 'Warrior' AND `user_level` != 'NPC'  AND `userid` != 1"));
+$Rogue = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `class` = 'Rogue' AND `user_level` != 'NPC'  AND `userid` != 1"));
+$Defender = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `class` = 'Guardian' AND `user_level` != 'NPC'  AND `userid` != 1"));
 
 //Select the Total Primary Currency in the game.
-$TotalPrimaryCurrency = $db->fetch_single($db->query("SELECT SUM(`primary_currency`) FROM `users` WHERE `user_level` != 'NPC'"));
-
-//Select the total for primary currency in bank.
-$TotalBank = $db->fetch_single($db->query("SELECT SUM(`bank`) FROM `users` WHERE `user_level` != 'NPC' AND `bank` > -1"));
-
-//All the primary currency
-$TotalBankandPC = $TotalBank + $TotalPrimaryCurrency;
+$TotalPrimaryCurrency = $db->fetch_single($db->query("SELECT SUM(`primary_currency`) FROM `users` WHERE `user_level` != 'NPC'  AND `userid` != 1"));
+$TotalGuildPC = $db->fetch_single($db->query("SELECT SUM(`guild_primcurr`) FROM `guild` WHERE `guild_id` != 1"));
+$TotalGuildSC = $db->fetch_single($db->query("SELECT SUM(`guild_seccurr`) FROM `guild` WHERE `guild_id` != 1"));
+$TotalInvestmentPC = $db->fetch_single($db->query("SELECT SUM(`amount`) FROM `bank_investments` WHERE `userid` != 1"));
 
 //Select the Total Secondary Currency in the game.
-$TotalSecondaryCurrency = $db->fetch_single($db->query("SELECT SUM(`secondary_currency`) FROM `users` WHERE `user_level` != 'NPC'"));
+$TotalSecondaryCurrency = $db->fetch_single($db->query("SELECT SUM(`secondary_currency`) FROM `users` WHERE `user_level` != 'NPC'  AND `userid` != 1"));
+
+//Select the total for primary currency in bank.
+$TotalBank = $db->fetch_single($db->query("SELECT SUM(`bank`) FROM `users` WHERE `user_level` != 'NPC' AND `bank` > -1  AND `userid` != 1"));
+$TotalBankToken = $db->fetch_single($db->query("SELECT SUM(`tokenbank`) FROM `users` WHERE `user_level` != 'NPC' AND `tokenbank` > -1  AND `userid` != 1"));
+
+//All the primary currency
+$TotalBankandPC = $TotalBank + $TotalPrimaryCurrency + $TotalInvestmentPC + $TotalGuildPC;
+$TotalBankandSC = $TotalBankToken + $TotalSecondaryCurrency + $TotalGuildSC;
 
 //Select total count of register users.
-$TotalUserCount = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `user_level` != 'NPC'"));
+$TotalUserCount = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `user_level` != 'NPC'  AND `userid` != 1"));
 
 //Figure out average primary currency per player by dividing the total primary currency by the total amount of users
 //then round up.
 $AveragePrimaryCurrencyPerPlayer = round($TotalPrimaryCurrency / $TotalUserCount);
+$AverageTokenBank = round($TotalBankToken / $TotalUserCount);
 $AverageBank = round($TotalBank / $TotalUserCount);
 
 //Figure out average secondary currency per player by dividing the total secondary currency by the total amount of users
@@ -45,7 +51,10 @@ $AverageBank = round($TotalBank / $TotalUserCount);
 $AverageSecondaryCurrencyPerPlayer = round($TotalSecondaryCurrency / $TotalUserCount);
 
 //Select the total amount of guilds in the game.
-$TotalGuildCount = $db->fetch_single($db->query("SELECT COUNT(`guild_id`) FROM `guild`"));
+$TotalGuildCount = $db->fetch_single($db->query("SELECT COUNT(`guild_id`) FROM `guild` WHERE `guild_id` != 1"));
+
+$TotalNotif = $db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications`"));
+$TotalMail = $db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail`"));
 
 //Operating System
 $Win7 = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Windows 7'"));
@@ -66,6 +75,7 @@ $Blackberry = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdat
 $Mobile = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Mobile'"));
 $WinPho = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Windows Phone'"));
 $UnknownOS = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Unknown OS Platform'"));
+$ChromeOS = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Chrome OS'"));
 
 //Browser Choice
 $Chrome = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Chrome'"));

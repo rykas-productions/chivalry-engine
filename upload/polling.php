@@ -63,8 +63,8 @@ function home()
                     echo "<br />
 					<table class='table table-bordered'>
 						<tr>
-							<th>Polling Options</th>
-							<th>Votes</th>
+							<th width='40%'>Polling Options</th>
+							<th width='10%'>Votes</th>
 							<th>Percentage</th>
 						</tr>
 						<tr>
@@ -76,7 +76,7 @@ function home()
                                 $k = 'choice' . $i;
                                 $ke = 'voted' . $i;
                                 if ($r['votes'] != 0) {
-                                    $perc = round(($r[$ke] / $r['votes'] * 100), 2);
+                                    $perc = round(($r[$ke] / $r['votes'] * 100));
                                 } else {
                                     $perc = 0;
                                 }
@@ -156,8 +156,8 @@ function viewpolls()
             $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
             echo "<table class='table table-bordered'>
 					<tr>
-						<th>Polling Options</th>
-						<th>Votes</th>
+						<th width='40%'>Polling Options</th>
+						<th width='10%'>Votes</th>
 						<th>Percentage</th>
 					</tr>
 					<tr>
@@ -168,7 +168,7 @@ function viewpolls()
                     $k = 'choice' . $i;
                     $ke = 'voted' . $i;
                     if ($r['votes'] != 0) {
-                        $perc = $r[$ke] / $r['votes'] * 100;
+                        $perc = round($r[$ke] / $r['votes'] * 100);
                     } else {
                         $perc = 0;
                     }

@@ -103,7 +103,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					Primary Currency
+					Copper Coins
 				</th>
 				<td>
 					<input type='number' min='0' name='jrPRIMPAY' required='1' class='form-control'>
@@ -111,7 +111,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					Secondary Currency
+					Chivalry Tokens
 				</th>
 				<td>
 					<input type='number' min='0' name='jrSECONDARY' required='1' class='form-control'>
@@ -468,7 +468,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    Primary Currency Pay
+                    Copper Coins Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='primpay' class='form-control'>
@@ -476,7 +476,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    Secondary Currency Pay
+                    Chivalry Tokens Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='seccpay' class='form-control'>
@@ -639,7 +639,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    Primary Currency Pay
+                    Copper Coins Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrPRIMPAY']}' required='1' name='primpay' class='form-control'>
@@ -647,7 +647,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    Secondary Currency Pay
+                    Chivalry Tokens Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrSECONDARY']}' required='1' name='seccpay' class='form-control'>

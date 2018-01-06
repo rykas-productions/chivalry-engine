@@ -41,7 +41,7 @@ function viewperm()
             . "
         	<br />
         	{$csrf}
-        	<input type='submit' class='btn btn-primary' value='Edit Permissions' />
+        	<input type='submit' class='btn btn-primary' value='View Permissions' />
         </form>";
         $h->endpage();
     } else {

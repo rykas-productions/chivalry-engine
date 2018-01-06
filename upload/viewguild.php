@@ -61,6 +61,9 @@ if (!$ir['guild']) {
         case "crimes":
             crimes();
             break;
+		case "forums":
+            guild_forums();
+            break;
         default:
             home();
             break;
@@ -70,6 +73,17 @@ function home()
 {
     global $db, $userid, $ir, $gd;
     //The main guild index.
+	if (!empty($gd['guild_pic']))
+	{
+		echo 
+		"<div class='container'>
+			<div class='row'>
+				<div class='col-lg-6 mx-auto'>
+					<img src='{$gd['guild_pic']}' placeholder='The {$gd['guild_name']} guild picture.' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>
+				</div>
+			</div>
+		</div>";
+	}
     echo "
     <table class='table table-bordered'>
     		<tr>
@@ -100,11 +114,17 @@ function home()
     			<td>
     			    <a href='?action=armory'>Armory</a>
                 </td>
-    			<td>";
-    if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
-        echo "<a href='?action=staff&act2=idx'>Staff Room</a>";
-    }
-    echo "</td></tr>
+    			<td>
+					<a href='?action=forums'>Forums</a>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>";
+				if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
+					echo "<a href='?action=staff&act2=idx'>Staff Room</a>";
+				echo"
+				</td>
+			</tr>
 	</table>
 	<br />
 	<table class='table table-bordered'>
@@ -217,12 +237,12 @@ function summary()
 			Experience
 		</th>
 		<td>
-			{$gd['guild_xp']}
+			{$gd['guild_xp']} / " . $gd['guild_level'] * 36 . "
 		</td>
 	</tr>
 	<tr>
 		<th>
-			Primary Currency
+			Copper Coins
 		</th>
 		<td>
 			" . number_format($gd['guild_primcurr']) . " / " . number_format($gd['guild_level'] * $set['GUILD_PRICE']) . "
@@ -230,7 +250,7 @@ function summary()
 	</tr>
 	<tr>
 		<th>
-			Secondary Currency
+			Chivalry Tokens
 		</th>
 		<td>
 			" . number_format($gd['guild_seccurr']) . "
@@ -238,6 +258,40 @@ function summary()
 	</tr>
       </table>
 	  <a href='viewguild.php'>Go Back</a>";
+}
+
+function guild_forums()
+{
+	global $db, $ir, $userid, $gd;
+    $q = $db->query(
+                    "SELECT *
+                     FROM `forum_forums`
+                     WHERE `ff_auth` = 'guild'
+                     AND `ff_owner` = {$ir['guild']}");
+	if ($db->num_rows($q) == 0)
+    {
+        $gd['guild_name'] = $db->escape($gd['guild_name']);
+        $db->query("INSERT INTO `forum_forums` VALUES (NULL, '{$gd['guild_name']}', '', '0', '0', 'guild', '0', '{$ir['guild']}')");
+        $r = array();
+        $r['ff_id'] = $db->insert_id();
+    }
+    else
+    {
+        $r = $db->fetch_row($q);
+        if ($r['ff_name'] != $gd['guild_name'])
+        {
+            $gd['guild_name'] = $db->escape($gd['guild_name']);
+            $db->query(
+                    "UPDATE `forum_forums`
+                     SET `ff_name` = '{$gd['guild_name']}'
+                     WHERE `ff_id` = {$r['ff_id']}");
+        }
+    }
+    $db->free_result($q);
+	ob_get_clean();
+    $forum_url = "forums.php?viewforum={$r['ff_id']}";
+    header("Location: {$forum_url}");
+    exit;
 }
 
 function donate()
@@ -263,15 +317,15 @@ function donate()
 
         //Trying to donate more primary than user has.
         if ($_POST['primary'] > $ir['primary_currency']) {
-            alert('danger', "Uh Oh!", "You are trying to donate more Primary Currency than you currently have.");
+            alert('danger', "Uh Oh!", "You are trying to donate more Copper Coins than you currently have.");
             die($h->endpage());
             //Trying to donate more secondary than user has.
         } else if ($_POST['secondary'] > $ir['secondary_currency']) {
-            alert('danger', "Uh Oh!", "You are trying to donate more Secondary Currency than you currently have.");
+            alert('danger', "Uh Oh!", "You are trying to donate more Chivalry Tokens than you currently have.");
             die($h->endpage());
             //Donation amount would fill up the guild's vault.
         } else if ($_POST['primary'] + $gd['guild_primcurr'] > $gd['guild_level'] * $set['GUILD_PRICE']) {
-            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . $gd['guild_level'] * $set['GUILD_PRICE'] . " Primary Currency.");
+            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . $gd['guild_level'] * $set['GUILD_PRICE'] . " Copper Coins.");
             die($h->endpage());
         } else {
             //Donate the currencies!
@@ -282,14 +336,14 @@ function donate()
 					    `guild_seccurr` = `guild_seccurr` + {$_POST['secondary']}
 					    WHERE `guild_id` = {$gd['guild_id']}");
             $my_name = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
-            $event = $db->escape("<a href='profile.php?user={$userid}'>{$my_name}</a> donated
-									" . number_format($_POST['primary']) . " Primary Currency and/or
-									" . number_format($_POST['secondary']) . " Secondary Currency to the guild.");
+            $event = "<a href='profile.php?user={$userid}'>{$my_name}</a> donated
+									" . number_format($_POST['primary']) . " Copper Coins and/or
+									" . number_format($_POST['secondary']) . " Chivalry Tokens to the guild.";
             $api->GuildAddNotification($gd['guild_id'], $event);
             $api->SystemLogsAdd($userid, 'guild_vault', "Donated " . number_format($_POST['primary']) . " Primary
-                Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency to their guild.");
+                Currency and/or " . number_format($_POST['secondary']) . " Chivalry Tokens to their guild.");
             alert('success', "Success!", "You have successfully donated " . number_format($_POST['primary']) . " Primary
-			Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency to your guild.", true, 'viewguild.php');
+			Currency and/or " . number_format($_POST['secondary']) . " Chivalry Tokens to your guild.", true, 'viewguild.php');
         }
     } else {
         $csrf = request_csrf_html('guild_donate');
@@ -299,16 +353,16 @@ function donate()
 			<tr>
 				<th colspan='2'>
 					Enter the amount of currency you wish to donate to your guild " . number_format($ir['primary_currency']) . "
-					Primary Currency and " . number_format($ir['secondary_currency']) . " Secondary Currency
+					Copper Coins and " . number_format($ir['secondary_currency']) . " Chivalry Tokens
 				</th>
 			</tr>
     		<tr>
     			<td>
-    				<b>Primary Currency</b><br />
+    				<b>Copper Coins</b><br />
     				<input type='number' name='primary' value='0' required='1' max='{$ir['primary_currency']}' class='form-control' min='0' />
     			</td>
     			<td>
-    				<b>Secondary Currency</b><br />
+    				<b>Chivalry Tokens</b><br />
     				<input type='number' name='secondary' required='1' max='{$ir['secondary_currency']}' class='form-control' value='0' min='0' />
     			</td>
     		</tr>
@@ -326,7 +380,7 @@ function donate()
 
 function members()
 {
-    global $db, $userid, $gd;
+    global $db, $userid, $gd, $api;
     //List all the guild members. ^_^
     echo "
     <table class='table table-bordered table-striped'>
@@ -337,23 +391,42 @@ function members()
     		<th>
 				Level
 			</th>
+			<th>
+				Copper Coins
+			</th>
+			<th>
+				Status
+			</th>
     		<th>
 				&nbsp;
 			</th>
     	</tr>";
-    $q = $db->query("SELECT `userid`, `username`, `level`, `display_pic` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` DESC");
+    $q = $db->query("SELECT `userid`, `username`, `level`, `display_pic`, `primary_currency` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` DESC");
     $csrf = request_csrf_html('guild_kickuser');
     while ($r = $db->fetch_row($q)) {
+		$r['status'] = '';
+		if ($api->UserStatus($r['userid'], 'infirmary'))
+			$r['status'] .= "In Infirmary<br />";
+		if ($api->UserStatus($r['userid'], 'dungeon'))
+			$r['status'] .= "In Dungeon<br />";
+		if ((!$api->UserStatus($r['userid'], 'dungeon')) && (!$api->UserStatus($r['userid'], 'infirmary')))
+			$r['status'] .= "Perfectly Fine<br />";
         echo "
 		<tr>
-        	<td>
-				<img src='{$r['display_pic']}' width='64' height='64'><br />
+        	<td width='15%'>
+				<img src='{$r['display_pic']}' class='img-fluid'><br />
 				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a>
 			</td>
         	<td>
 				{$r['level']}
 			</td>
-        	<td>
+			<td>
+				" . number_format($r['primary_currency']) . "
+			</td>
+			<td>
+				{$r['status']}
+			</td>
+        	<td width='25%'>
            ";
         if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
             echo "
@@ -418,7 +491,7 @@ function staff_kick()
                 alert('success', "Success!", "You have kicked {$kdata['username']} from the guild.", true, '?action=members');
                 $their_event = "You were kicked out of the {$gd['guild_name']} guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
                 $api->GameAddNotification($who, $their_event);
-                $event = $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
+                $event = "<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
                 $api->GuildAddNotification($gd['guild_id'], $event);
             } else {
                 alert('danger', "Uh Oh!", "User does not exist, or is not in the guild.", true, '?action=members');
@@ -637,7 +710,7 @@ function adonate()
             //Donation successful!, log everything.
             $item = $api->SystemItemIDtoName($_POST['item']);
             $api->UserTakeItem($userid, $_POST['item'], $_POST['qty']);
-            $api->GuildAddItem($userid, $_POST['item'], $_POST['qty']);
+            $api->GuildAddItem($gd['guild_id'], $_POST['item'], $_POST['qty']);
             $api->SystemLogsAdd($userid, 'guilds', "Donated {$_POST['qty']} {$item}(s) to their guild's armory.");
             $api->GuildAddNotification($ir['guild'], "{$ir['username']} has donated {$_POST['qty']} {$item}(s) to the guild's armory.");
             alert("success", "Success!", "You have successfully donated {$_POST['qty']} $item}(s) to your guild's armory.", true, "?action=armory");
@@ -690,6 +763,9 @@ function staff()
             case "ament":
                 staff_announcement();
                 break;
+			case "pic":
+                staff_pic();
+                break;
             case "massmail":
                 staff_massmail();
                 break;
@@ -729,6 +805,12 @@ function staff()
             case "crimes":
                 staff_crimes();
                 break;
+			case "intromsg":
+                staff_intromsg();
+                break;
+			case "blockapps":
+                staff_blockapps();
+                break;
             default:
                 staff_idx();
                 break;
@@ -747,10 +829,13 @@ function staff_idx()
 		<td>
 			<b>Guild Co-Leader</b><br />
 			<a href='?action=staff&act2=apps'>Application Management</a><br />
+			<a href='?action=staff&act2=intromsg'>Introductory Message</a><br />
+			<a href='?action=staff&act2=blockapps'>Block Applications</a><br />
 			<a href='?action=staff&act2=vault'>Vault Management</a><br />
 			<a href='?action=staff&act2=armory'>Armory Management</a><br />
 			<a href='?action=staff&act2=coowner'>Transfer Co-Leader</a><br />
 			<a href='?action=staff&act2=ament'>Change Guild Announcement</a><br />
+			<a href='?action=staff&act2=pic'>Change Guild Picture</a><br />
 			<a href='?action=staff&act2=massmail'>Mass Mail Guild</a><br />
 			<a href='?action=staff&act2=masspay'>Mass Pay Guild</a><br />
 			<a href='?action=staff&act2=levelup'>Level Up Guild</a><br />
@@ -769,7 +854,7 @@ function staff_idx()
 				<a href='?action=staff&act2=tax'>Change Town Tax</a><br />";
         }
         echo "<a href='?action=staff&act2=declarewar'>Declare War</a><br />
-<a href='?action=staff&act2=dissolve'>Dissovle Guild</a><br />
+<a href='?action=staff&act2=dissolve'>Dissolve Guild</a><br />
 		</td>";
     }
     echo "</tr></table>
@@ -803,13 +888,10 @@ function staff_apps()
             if ($what == 'decline') {
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
                 $api->GameAddNotification($appdata['ga_user'], "We regret to inform you that your application to join the {$gd['guild_name']} guild was declined.");
-                $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> has declined
-                                        <a href='profile.php?user={$appdata['ga_user']}'>
-                                        " . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s  application to join
-                                         the guild.");
+                $event = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has declined <a href='profile.php?user={$appdata['ga_user']}'> " . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s  application to join the guild.";
                 //Add to guild notifications.
                 $api->GuildAddNotification($gd['guild_id'], $event);
-                alert('success', "Success!", "You have denied " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s application to join the guild.'");
+                alert('success', "Success!", "You have denied " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s application to join the guild.");
             } else {
                 //User is accepted, yay!
 
@@ -842,11 +924,15 @@ function staff_apps()
                 //Delete the application and put the applicant inside the guild! Woo!
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
                 $api->GameAddNotification($appdata['ga_user'], "Your application to join the {$gd['guild_name']} guild was accepted.");
-                $event = "<a href='profile.php?user={$userid}'>{$ir['username']}</a>
+                $event = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> 
 									has accepted <a href='profile.php?user={$appdata['ga_user']}'>
 									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
 									application to join the guild.";
                 $api->GuildAddNotification($gd['guild_id'], $event);
+				if (!empty($gd['guild_intromsg']))
+				{
+					$api->GameAddMail($appdata['ga_user'],"Your New Guild",$gd['guild_intromsg'],$userid);
+				}
                 $db->query("UPDATE `users` SET `guild` = {$gd['guild_id']} WHERE `userid` = {$appdata['ga_user']}");
                 alert('success', "Success!", "You have accepted " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s applicantion to join the guild.");
             }
@@ -928,15 +1014,15 @@ function staff_vault()
         $_POST['secondary'] = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs($_POST['secondary']) : 0;
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
 
-        //Attempting to give more primary currency than the guild currently has.
+        //Attempting to give more Copper Coins than the guild currently has.
         if ($_POST['primary'] > $gd['guild_primcurr']) {
-            alert('danger', "Uh Oh!", "You are trying to give out more Primary Currency than your guild has in its vault.");
+            alert('danger', "Uh Oh!", "You are trying to give out more Copper Coins than your guild has in its vault.");
             die($h->endpage());
         }
 
-        //Attempting to give more secondary currency than the guild currently has.
+        //Attempting to give more Chivalry Tokens than the guild currently has.
         if ($_POST['secondary'] > $gd['guild_seccurr']) {
-            alert('danger', "Uh Oh!", "You are trying to give out more Secondary Currency than your guild has in its vault.");
+            alert('danger', "Uh Oh!", "You are trying to give out more Chivalry Tokens than your guild has in its vault.");
             die($h->endpage());
         }
 
@@ -971,22 +1057,22 @@ function staff_vault()
         $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$_POST['primary']},
                       `guild_seccurr` = `guild_seccurr` - {$_POST['secondary']} WHERE `guild_id` = {$gd['guild_id']}");
         $api->GameAddNotification($_POST['user'], "You were given " . number_format($_POST['primary']) . " Primary
-            Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from your guild's vault.");
+            Currency and/or " . number_format($_POST['secondary']) . " Chivalry Tokens from your guild's vault.");
         $api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>
             {$api->SystemUserIDtoName($userid)}</a> has given <a href='profile.php?user={$_POST['user']}'>
             {$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . "
-            Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from the guild's
+            Copper Coins and/or " . number_format($_POST['secondary']) . " Chivalry Tokens from the guild's
             vault.");
         alert('success', "Success!", "You have given {$api->SystemUserIDtoName($_POST['user'])} ", true, '?action=staff&act2=idx');
-        $api->SystemLogsAdd($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Primary Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
+        $api->SystemLogsAdd($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Copper Coins and/or " . number_format($_POST['secondary']) . " Chivalry Tokens from their guild's vault.");
     } else {
         $csrf = request_csrf_html('guild_staff_vault');
         echo "<form method='post'>
         <table class='table table-bordered'>
             <tr>
                 <th colspan='2'>
-                    You may give out currency from your guild's vault. Your vault currently has " . number_format($gd['guild_primcurr']) . " Primary Currency and
-                    " . number_format($gd['guild_seccurr']) . " Secondary Currency.
+                    You may give out currency from your guild's vault. Your vault currently has " . number_format($gd['guild_primcurr']) . " Copper Coins and
+                    " . number_format($gd['guild_seccurr']) . " Chivalry Tokens.
                 </th>
             </tr>
             <tr>
@@ -999,7 +1085,7 @@ function staff_vault()
             </tr>
             <tr>
                 <th>
-                    Primary Currency
+                    Copper Coins
                 </th>
                 <td>
                     <input type='number' class='form-control' min='0' max='{$gd['guild_primcurr']}' name='primary'>
@@ -1007,7 +1093,7 @@ function staff_vault()
             </tr>
             <tr>
                 <th>
-                    Secondary Currency
+                    Chivalry Tokens
                 </th>
                 <td>
                     <input type='number' class='form-control' min='0' max='{$gd['guild_seccurr']}' name='secondary'>
@@ -1196,7 +1282,7 @@ function staff_masspayment()
         $_POST['payment'] = (isset($_POST['payment']) && is_numeric($_POST['payment'])) ? abs($_POST['payment']) : 0;
         $cnt = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}"));
 
-        //Make sure there's enough primary currency to pay each member of the guild the amount specified.
+        //Make sure there's enough Copper Coins to pay each member of the guild the amount specified.
         if (($_POST['payment'] * $cnt) > $gd['guild_primcurr']) {
             alert('danger', "Uh Oh!", "You do not have enough currency in your vault to give out that much to each member.");
             die($h->endpage());
@@ -1215,14 +1301,14 @@ function staff_masspayment()
                 } else {
                     //Pay everyone.
                     $gd['guild_primcurr'] -= $_POST['payment'];
-                    $api->GameAddNotification($r['userid'], "You were given a mass-payment of {$_POST['payment']} Primary Currency from your guild.");
+                    $api->GameAddNotification($r['userid'], "You were given a mass-payment of {$_POST['payment']} Copper Coins from your guild.");
                     $api->UserGiveCurrency($r['userid'], 'primary', $_POST['payment']);
-                    alert('success', "Success!", "{$r['username']} was paid {$_POST['payment']} Primary Currency.");
+                    alert('success', "Success!", "{$r['username']} was paid {$_POST['payment']} Copper Coins.");
                 }
             }
             //Notify the user of the success and log everything.
             $db->query("UPDATE `guild` SET `guild_primcurr` = {$gd['guild_primcurr']} WHERE `guild_id` = {$gd['guild_id']}");
-            $notif = $db->escape("A mass payment of " . number_format($_POST['payment']) . " Primary Currency was sent out to the members of the guild.");
+            $notif = $db->escape("A mass payment of " . number_format($_POST['payment']) . " Copper Coins was sent out to the members of the guild.");
             $api->GuildAddNotification($gd['guild_id'], $notif);
             $api->SystemLogsAdd($userid, 'guilds', "Sent a mass payment of " . number_format($_POST['payment']) . "to their guild.");
             alert('success', "Success!", "Mass payment complete.", true, '?action=staff&act2=idx');
@@ -1546,7 +1632,7 @@ function staff_untown()
             $db->query("UPDATE `town`
                         SET `town_guild_owner` = 0
                         WHERE `town_id` = {$r}");
-            $api->GuildAddNotification($gd['guild_id'], "Your guild was willingly given up their town.");
+            $api->GuildAddNotification($gd['guild_id'], "Your guild has willingly given up their town.");
             $api->SystemLogsAdd($userid, 'guilds', "Willingly surrendered {$gd['guild_name']}'s town, {$api->SystemTownIDtoName($r)}.");
         } else {
             echo "Are you sure you wish to surrender your guild's town? This is not reversible.<br />
@@ -1566,6 +1652,8 @@ function staff_declare()
     global $db, $gd, $api, $h, $userid, $ir;
     //Verify current user is the guild owner.
     if ($userid == $gd['guild_owner']) {
+        alert('danger', "Uh Oh!", "The warring aspect of guilds are still in the works.", true, '?action=staff&act2=idx');
+		die($h->endpage());
         if (isset($_POST['guild'])) {
 
             //Verify POST is safe to work with.
@@ -1582,6 +1670,11 @@ function staff_declare()
                 alert('danger', "Uh Oh!", "You cannot declare war on your own guild.");
                 die($h->endpage());
             }
+			
+			if ($_POST['guild'] == 1) {
+				alert('danger', "Uh Oh!", "You cannot declare war on the admin guild.");
+				die($h->endpage());
+			}
 
             //Verify that the declared guild exists.
             $data_q = $db->query("SELECT `guild_name`,`guild_owner`
@@ -1755,10 +1848,9 @@ function staff_tax()
             }
             //Update town's tax rate.
             $town_id = $db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
-            $db->query("UPDATE `town` SET `town_tax` = {$_POST['tax']} WHERE `town_guild_owner` = {$gd['guild_owner']}");
+            $db->query("UPDATE `town` SET `town_tax` = {$_POST['tax']} WHERE `town_guild_owner` = {$gd['guild_id']}");
             $api->SystemLogsAdd($userid, 'tax', "Set tax rate to {$_POST['tax']}% in {$api->SystemTownIDtoName($town_id)}.");
             alert('success', "Success!", "You have set the tax rate of {$api->SystemTownIDtoName($town_id)} to {$_POST['tax']}%.", true, '?action=staff&act2=idx');
-
         } else {
             $csrf = request_csrf_html('guild_staff_tax');
             $current_tax = $db->fetch_single($db->query("SELECT `town_tax` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
@@ -1767,7 +1859,7 @@ function staff_tax()
 			<form method='post'>
 				<tr>
 					<th colspan='2'>
-						You may change the tax rate for the town your guild owns here.
+						You may change the tax rate for the town your guild owns here. Please do not type the percent sign.
 					</th>
 				</tr>
 				<tr>
@@ -1854,9 +1946,9 @@ function staff_armory()
         $cost = $set['GUILD_PRICE'] * 4;
         if (isset($_GET['buy'])) {
 
-            //Guild does not have enough Primary Currency to buy the armory.
+            //Guild does not have enough Copper Coins to buy the armory.
             if ($gd['guild_primcurr'] < $cost) {
-                alert('danger', "Uh Oh!", "Your guild does not have enough Primary Currency to buy an armory.", true, '?action=staff&act2=idx');
+                alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to buy an armory.", true, '?action=staff&act2=idx');
                 die($h->endpage());
             }
             //Buy the armory and remove the currency.
@@ -2014,5 +2106,140 @@ function staff_crimes()
         }
     }
 }
+function staff_pic()
+{
+	global $db, $userid, $api, $h, $ir, $gd;
+	if (isset($_POST['newpic']))
+	{
+		if (!isset($_POST['verf']) || !verify_csrf_code('guild_changepic', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
+            die($h->endpage());
+        }
+        $npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
+        if (!empty($npic)) {
+            $sz = get_filesize_remote($npic);
+            if ($sz <= 0 || $sz >= 1048576) {
+                alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 1MB.");
+                $h->endpage();
+                exit;
+            }
+            $image = (@isImage($npic));
+            if (!$image) {
+                alert('danger', "Uh Oh!", "The link you've input is not an image.");
+                die($h->endpage());
+            }
+        }
+		$img = htmlentities($_POST['newpic'], ENT_QUOTES, 'ISO-8859-1');
+        alert('success', "Success!", "You have successfully updated your display picture to what's shown below.", true, '?action=staff&act2=idx');
+        echo "<img src='{$img}' width='250' height='250' class='img-fluid'>";
+        $db->query("UPDATE `guild` SET `guild_pic` = '" . $db->escape($npic) . "' WHERE `guild_id` = {$gd['guild_id']}");
+	}
+	else
+	{
+		$csrf = request_csrf_html('guild_changepic');
+        echo "
+		<h3>Change Guild Picture</h3>
+		<hr />
+		Your images must be externally hosted. Any images that are not 500x500 will be scaled accordingly.<br />
+		New Picture Link<br />
+		<form method='post'>
+			<input type='url' required='1' name='newpic' class='form-control' value='{$gd['guild_pic']}' />
+				{$csrf}
+			<br />
+			<input type='submit' class='btn btn-primary' value='Change Guild Pic' />
+		</form>
+		";
+	}
+}
 
+function staff_intromsg()
+{
+	global $gd, $db, $h;
+    if (isset($_POST['ament'])) {
+
+        //Verify CSRF check has passed.
+        if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_intromsg", stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+            die($h->endpage());
+        }
+
+        //Make sure the POST is safe to work with.
+        $ament = $db->escape(nl2br(htmlentities(stripslashes($_POST['ament']), ENT_QUOTES, 'ISO-8859-1')));
+
+        //Update the guild's announcement.
+        $db->query("UPDATE `guild` SET `guild_intromsg` = '{$ament}' WHERE `guild_id` = {$gd['guild_id']}");
+        alert('success', "Success!", "You have updated your guild's introduction message.", true, '?action=staff&act2=idx');
+    } else {
+        //Escape the announcement for safety reasons.
+        $am_for_area = strip_tags($gd['guild_intromsg']);
+        $csrf = request_csrf_html('guild_staff_intromsg');
+        echo "<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th colspan='2'>
+					This message will be sent to every applicant that gets accepted into the guild.
+				</th>
+			</tr>
+			<tr>
+				<th>
+					Introductory Message
+				</th>
+				<td>
+					<textarea class='form-control' name='ament'>{$am_for_area}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' value='Change Introductory Message' class='btn btn-primary'>
+				</td>
+			</tr>
+			{$csrf}
+		</table>
+		</form>
+		<a href='?action=staff&act2=idx'>Go Back</a>";
+    }
+}
+
+function staff_blockapps()
+{
+	global $db,$gd,$userid,$api,$ir,$h;
+	if (isset($_POST['action']))
+	{
+		if ($_POST['action'] == 'block')
+		{
+			if ($gd['guild_ba'] == 1)
+			{
+				alert('danger',"Uh Oh!","Your guild is already blocking applications.");
+				die($h->endpage());
+			}
+			$db->query("UPDATE `guild` SET `guild_ba` = 1 WHERE `guild_id` = {$gd['guild_id']}");
+			$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has set the guild to no longer accept applications.");
+			alert('success',"Success!","You have successfully set your guild to block all incoming applications.",true,'?action=staff&act2=idx');
+		}
+		else
+		{
+			if ($gd['guild_ba'] == 0)
+			{
+				alert('danger',"Uh Oh!","Your guild is already allowing applications.");
+				die($h->endpage());
+			}
+			$db->query("UPDATE `guild` SET `guild_ba` = 0 WHERE `guild_id` = {$gd['guild_id']}");
+			$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has set the guild to accept applications.");
+			alert('success',"Success!","You have successfully set your guild to allow applications once again.",true,'?action=staff&act2=idx');
+		}
+	}
+	else
+	{
+		echo "Here you may block guild applications. Players will not be able to send in a guild application unless disabled.
+		<form method='post'>
+			<input type='hidden' name='action' value='block'>
+			<input type='submit' class='btn-danger btn' value='Block Applications'>
+		</form>
+		<form method='post'>
+			<input type='hidden' name='action' value='allow'>
+			<input type='submit' class='btn-primary btn' value='Allow Applications'>
+		</form>
+		<a href='?action=staff&act2=idx'>Go Back</a>";
+	}
+}
 $h->endpage();

@@ -35,6 +35,9 @@ echo "
 			<a href='?action=compose'>Compose</a>
 		</td>
 		<td>
+			<a href='blocklist.php'>Blocklist</a>
+		</td>
+		<td>
 			<a href='?action=delall'>Delete All</a>
 		</td>
 		<td>
@@ -109,9 +112,11 @@ function home()
             "<span class='badge badge-pill badge-danger'>Unread</span>" :
             "<span class='badge badge-pill badge-success'>Read</span>";
         //Grab the first 50 characters of the message for the message preview.
-        $msgtxt = substr($r['mail_text'], 0, 50);
+        $msgtxt = decrypt_message($r['mail_text'],$r['mail_from'],$userid);
+        $msgtxt = substr($msgtxt, 0, 50);
         //BBCode parse the preview.
         $parser->parse($msgtxt);
+		$sub = ($r['mail_subject']) ? "<b>Subject: {$r['mail_subject']}</b><br />" : "";
         echo "<tr>
 				<td>
 					{$pic}
@@ -123,7 +128,7 @@ function home()
 					Status: {$status}
 				</td>
 				<td>
-					<b>{$r['mail_subject']}</b> ";
+					{$sub} ";
         echo $parser->getAsHtml();
         echo "...
 				</td>
@@ -164,7 +169,7 @@ function read()
     //Update message to reflect that it has been read.
     $db->query("UPDATE `mail` SET `mail_status` = 'read' WHERE `mail_id` = {$_GET['msg']}");
     //BBCode parse the message.
-    $parser->parse($msg['mail_text']);
+    $parser->parse(decrypt_message($msg['mail_text'],$msg['mail_from'],$userid));
     //Show sender's picture... if they have one.
     $pic = (empty($un1['display_pic'])) ? "" :
         "<center><img src='{$un1['display_pic']}' class='img-fluid hidden-xs' width='75'></center>";
@@ -232,13 +237,11 @@ function read()
 
 function send()
 {
-    global $db, $userid, $h;
+    global $db, $userid, $h, $api;
     //Clean and sanitize the POST.
     $subj = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['subject']))));
     $msg = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['msg']))));
-    $sendto = (isset($_POST['sendto']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
-            $_POST['sendto']) && ((strlen($_POST['sendto']) < 32) && (strlen($_POST['sendto']) >= 3))) ?
-        $_POST['sendto'] : '';
+	$sendto = (isset($_POST['sendto']) && is_string($_POST['sendto'])) ? stripslashes($_POST['sendto']) : '';
     //Player failed the CSRF check... warn them to be quicker next time... or to change their password.
     if (!isset($_POST['verf']) || !verify_csrf_code('inbox_send', stripslashes($_POST['verf']))) {
         alert('danger', "Action Blocked!", "Your action has been blocked for security reasons. Form requests expire fairly quickly. Be sure to be quicker next time.");
@@ -271,6 +274,12 @@ function send()
     $to = $db->fetch_single($q);
     $db->free_result($q);
     $time = time();
+	if ($api->UserBlocked($userid,$to))
+	{
+		alert('danger', "Uh Oh!", "This user has you blocked. You cannot send messages to players that have you blocked.", true, 'inbox.php?action=compose');
+        die($h->endpage());
+	}
+    $msg=encrypt_message($msg,$userid,$to);
     //Insert message into database so receiving player can view it later.
     $db->query("INSERT INTO `mail`
 	(`mail_id`, `mail_to`, `mail_from`, `mail_status`, `mail_subject`, `mail_text`, `mail_time`) 
@@ -328,7 +337,9 @@ function outbox()
         $sent = date('F j, Y g:i:s a', $msg['mail_time']);
         //Grab recipient's user name.
         $sentto = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$msg['mail_to']}"));
+		$sub = ($msg['mail_subject']) ? "<b>Subject: {$msg['mail_subject']}</b><br />" : "";
         //Parse message with BBCode.
+        $msg['mail_text']=decrypt_message($msg['mail_text'],$userid,$msg['mail_to']);
         $parser->parse($msg['mail_text']);
         $status = ($msg['mail_status'] == 'unread') ?
             "<span class='badge badge-pill badge-danger'>Unread</span>" :
@@ -341,7 +352,7 @@ function outbox()
                 <b>Status:</b> {$status}<br />
             </td>
             <td>
-                <b>{$msg['mail_subject']}</b> ";
+                <b>{$sub}</b> ";
         //Parse message BBCode
         echo $parser->getAsHtml();
         echo "
@@ -364,6 +375,8 @@ function compose()
     if (permission('CanReplyMail', $userid)) {
         //Request CSRF Code and display the message composer form.
         $code = request_csrf_code('inbox_send');
+		if ($_GET['user'] == 1)
+			alert('info',"NOTICE","Before mailing the game owner, have you tried visiting the tutorial, forums or asking someone else? The hours per day spent responding to these messages could be used to improve the game.",false);
         echo "
 		<form method='post' action='?action=send'>
 		<table class='table table-bordered'>

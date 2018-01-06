@@ -53,6 +53,9 @@ function menu()
 					Cost
 				</th>
 				<th>
+					Graduates
+				</th>
+				<th>
                     Action
 				</th>
 			</tr>
@@ -66,6 +69,9 @@ function menu()
                              FROM `academy_done`
                              WHERE `userid` = {$userid}
                              AND `course` = {$academy['ac_id']}");
+		$graduates = $db->fetch_single($db->query("SELECT COUNT(`userid`)
+                             FROM `academy_done`
+                             WHERE `course` = {$academy['ac_id']}"));
         //If user has already completed the course.
         if ($db->fetch_single($cdo) > 0) {
             $do = "<i>Graduated</i>";
@@ -85,7 +91,10 @@ function menu()
 			{$academy['ac_desc']}
 		</td>
 		<td>
-			" . number_format($academy['ac_cost']) . " Primary Currency
+			" . number_format($academy['ac_cost']) . " Copper Coins
+		</td>
+		<td>
+			" . number_format($graduates) . "
 		</td>
 		<td>
 			{$do}
@@ -116,7 +125,7 @@ function start()
 		                        {$course['ac_level']} or above.", true, 'academy.php');
         die($h->endpage());
     }
-    //If the user doesn't have enough primary currency for this course.
+    //If the user doesn't have enough Copper Coins for this course.
     if ($course['ac_cost'] > $ir['primary_currency']) {
         alert('danger', "Uh Oh!", "You do not have enough cash to take this course. You need {$course['ac_cost']},
                                 yet you only have {$ir['primary_currency']}", true, 'academy.php');
@@ -138,7 +147,7 @@ function start()
     //Update user's course, and course completion time.
     $api->UserTakeCurrency($userid, 'primary', $course['ac_cost']); //Take user's money.
     alert('success', "Success!", "You have successfully enrolled yourself in the {$course['ac_name']} course. It will
-	                            completed in {$course['ac_days']} days.", true, 'index.php');
+	                            complete in {$course['ac_days']} days.", true, 'index.php');
 }
 
 $h->endpage();

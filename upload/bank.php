@@ -7,6 +7,11 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot visit the bank while in the infirmary or dungeon.",true,'index.php');
+	die($h->endpage());
+}
 $bank_cost = $set['bank_cost'];
 $bank_maxfee = $set['bank_maxfee'];
 $bank_feepercent = $set['bankfee_percent'];
@@ -30,13 +35,12 @@ if ($ir['bank'] > -1) {
 } //User needs to purchase bank account.
 else {
     if (isset($_GET['buy'])) {
-        //Player has the primary currency required to buy an account.
+        //Player has the Copper Coins required to buy an account.
         if ($ir['primary_currency'] >= $bank_cost) {
 
             alert('success', "Success!", "You have successfully bought a bank account for " . number_format($bank_cost), true, 'bank.php');
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bank", 0);
-            $api->SystemLogsAdd($userid, 'bank', 'Purchased bank account');
         } //Player is too poor to afford account.
         else {
             alert('danger', "Uh oh!", "You do not have enough cash to buy a bank account. You need at least
@@ -49,10 +53,11 @@ else {
 }
 function index()
 {
-    global $ir, $bank_maxfee, $bank_feepercent;
-    echo "<b>You current have " . number_format($ir['bank']) . " in your bank account.</b><br />
-				At the end of each and everyday, your bank balance will increase by 2%. You must be active within the
-				past 24 hours for this to effect you.<br />
+    global $ir, $bank_maxfee, $bank_feepercent, $db, $userid;
+    echo "<b>You currently have " . number_format($ir['bank']) . " in your bank account.</b><br />
+				At the end of each and everyday, your bank balance will increase by 2%. You will not gain interest if 
+				your balance is over 10,000,000 Copper Coins. You must be active within the past 24 hours for this to 
+				effect you.<br />
 				<table class='table table-bordered'>
 					<tr>
 						<td width='50%'>
@@ -73,6 +78,31 @@ function index()
 						</td>
 					</tr>
 				</table>";
+	$q=$db->query("SELECT * FROM `bank_investments` WHERE `userid` = {$userid}");
+	if ($db->num_rows($q) == 0)
+	{
+		echo "[<a href='investment.php'>Start Investment</a>]";
+	}
+	else
+	{
+		$r=$db->fetch_row($q);
+		echo "<table class='table table-bordered'>
+				<tr>
+					<td>
+						" . number_format($r['amount']) . " Copper Coins
+					</td>
+					<td>
+						{$r['interest']}%
+					</td>
+					<td>
+						{$r['days_left']} Days Left
+					</td>
+					<td>
+						<a href='investment.php?terminate'>Terminate Investment</a>
+					</td>
+				</tr>
+			</table>";
+	}
 }
 
 function deposit()
@@ -90,7 +120,7 @@ function deposit()
         //$gain is amount put into account after the fee is taken.
         $gain = $_POST['deposit'] - $fee;
         $ir['bank'] += $gain;
-        //Update user's bank and primary currency info.
+        //Update user's bank and Copper Coins info.
         $api->UserTakeCurrency($userid, 'primary', $_POST['deposit']);
         $api->UserInfoSetStatic($userid, "bank", $ir['bank']);
         alert('success', "Success!", "You hand over " . number_format($_POST['deposit']) . " to be deposited. After the

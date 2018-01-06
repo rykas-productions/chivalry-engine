@@ -1,0 +1,199 @@
+[28-Nov-2017 20:17:07 UTC] 1051: Unknown table 'masterge_chivalry.ud'
+[28-Nov-2017 22:06:05 America/New_York] 1690: BIGINT UNSIGNED value is out of range in '(`masterge_chivalry`.`user_settings`.`winnings_this_hour` - 5250)'
+[28-Nov-2017 22:06:10 America/New_York] 1690: BIGINT UNSIGNED value is out of range in '(`masterge_chivalry`.`user_settings`.`winnings_this_hour` - 5250)'
+[28-Nov-2017 23:19:44 America/New_York] 1690: BIGINT UNSIGNED value is out of range in '(`masterge_chivalry`.`user_settings`.`winnings_this_hour` - 5250)'
+[29-Nov-2017 12:28:49 America/New_York] 1690: BIGINT UNSIGNED value is out of range in '(`masterge_chivalry`.`user_settings`.`winnings_this_hour` - 6750)'
+[02-Dec-2017 05:25:55 UTC] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/masterge/public_html/forums.php on line 569
+[02-Dec-2017 00:26:07 America/New_York] 1054: Unknown column 'CanReplyForum' in 'where clause'
+[02-Dec-2017 05:29:45 UTC] PHP Parse error:  syntax error, unexpected '$ntl' (T_VARIABLE) in /home/masterge/public_html/forums.php on line 265
+[02-Dec-2017 05:29:45 UTC] PHP Parse error:  syntax error, unexpected '$ntl' (T_VARIABLE) in /home/masterge/public_html/forums.php on line 265
+[02-Dec-2017 05:30:56 UTC] PHP Parse error:  syntax error, unexpected '}' in /home/masterge/public_html/forums.php on line 734
+[03-Dec-2017 23:43:24 UTC] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/masterge/public_html/xmastree.php on line 18
+[03-Dec-2017 19:01:02 America/New_York] 1103: Incorrect table name 'christmas_tree`
+                    WHERE '
+[03-Dec-2017 19:01:12 America/New_York] 1103: Incorrect table name 'christmas_tree`
+                    WHERE '
+[04-Dec-2017 00:03:41 UTC] PHP Parse error:  syntax error, unexpected '}' in /home/masterge/public_html/xmastree.php on line 75
+[04-Dec-2017 00:20:37 UTC] PHP Parse error:  syntax error, unexpected ')', expecting ']' in /home/masterge/public_html/xmastree.php on line 111
+[04-Dec-2017 00:20:39 UTC] PHP Parse error:  syntax error, unexpected ')', expecting ']' in /home/masterge/public_html/xmastree.php on line 111
+[04-Dec-2017 00:20:40 UTC] PHP Parse error:  syntax error, unexpected ')', expecting ']' in /home/masterge/public_html/xmastree.php on line 111
+[05-Dec-2017 13:18:02 America/New_York] PHP Fatal error:  Uncaught Error: Call to a member function UserMemberLevelGet() on null in /home/masterge/public_html/forums.php:255
+Stack trace:
+#0 /home/masterge/public_html/forums.php(50): viewforum()
+#1 {main}
+  thrown in /home/masterge/public_html/forums.php on line 255
+[05-Dec-2017 13:18:14 America/New_York] PHP Fatal error:  Uncaught Error: Call to a member function UserMemberLevelGet() on null in /home/masterge/public_html/forums.php:166
+Stack trace:
+#0 /home/masterge/public_html/forums.php(97): idx()
+#1 {main}
+  thrown in /home/masterge/public_html/forums.php on line 166
+[07-Dec-2017 11:55:51 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND `voted` = 'mgpoll'' at line 1
+[07-Dec-2017 11:56:57 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' 'mgp')' at line 1
+[07-Dec-2017 11:57:11 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' 1512665831, 'unread', 'Your vote at MGPoll has been verfied successfully. You h' at line 2
+[20-Dec-2017 20:15:23 UTC] PHP Parse error:  syntax error, unexpected 'while' (T_WHILE) in /home/masterge/public_html/test.php on line 6
+[20-Dec-2017 15:15:37 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'ea69a2cfcce90ee159a93e8add669964ac85f3c457ba3265be2547f1f7be1e45c8ab321f24d5708f' at line 1
+[20-Dec-2017 15:20:13 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function decrypt_message() in /home/masterge/public_html/test.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/masterge/public_html/test.php on line 8
+[20-Dec-2017 15:20:14 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function decrypt_message() in /home/masterge/public_html/test.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/masterge/public_html/test.php on line 8
+[24-Dec-2017 15:19:56 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:21:58 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:23:59 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:26:00 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:28:01 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:29:22 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:29:29 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:30:02 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:30:16 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:30:49 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:31:03 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:31:04 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:31:14 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:31:52 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:31:59 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:32:01 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:32:04 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:32:30 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:33:06 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:33:08 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:34:06 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 15:35:07 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 20:58:05 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 20:58:09 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 20:58:13 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 21:06:59 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 21:11:16 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 21:18:41 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 21:18:46 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[24-Dec-2017 21:19:11 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 03:08:55 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 03:32:09 America/New_York] <strong>PHP Warning:</strong> Division by zero (2)
+[25-Dec-2017 09:16:03 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 09:33:09 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:11:32 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:13:09 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:23:51 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:24:03 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:24:04 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:24:04 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:25:48 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:28:31 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:28:34 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:28:41 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:29:31 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:29:59 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:30:46 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:32:21 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 10:49:09 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 11:10:47 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 11:19:49 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 11:35:25 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 11:55:28 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 11:58:56 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 12:21:35 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 12:30:37 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 12:31:16 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 13:24:51 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 13:26:10 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 13:26:11 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 13:42:28 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 13:44:51 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 13:45:10 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 13:45:13 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 13:55:27 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 14:01:38 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 14:07:02 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 14:24:14 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 14:30:39 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 14:40:02 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 14:47:12 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:21:08 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:21:12 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:21:21 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:21:31 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:30:20 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:30:35 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:30:38 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:30:39 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:32:46 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:32:48 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:33:19 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:33:19 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:33:21 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:33:43 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:34:50 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:35:35 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:35:57 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:36:35 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:37:48 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:41:01 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:45:46 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:46:15 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:50:41 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 15:53:32 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:07:18 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:07:50 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:07:53 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:07:54 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:07:55 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:18:02 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:18:52 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:20:02 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:21:54 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:27:05 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:28:32 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:33:09 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 16:34:50 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 17:19:47 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 17:20:35 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 17:25:55 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 17:41:10 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 17:46:47 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 17:52:15 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 17:53:19 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:10 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:19 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:21 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:22 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:23 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:26 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:30 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:30 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:31 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:31 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:31 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[25-Dec-2017 21:01:31 UTC] <strong>PHP Warning:</strong> mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) (2)
+[28-Dec-2017 23:55:39 UTC] PHP Parse error:  syntax error, unexpected 'else' (T_ELSE) in /home/masterge/public_html/global_func.php on line 2256
+[28-Dec-2017 23:55:45 UTC] PHP Parse error:  syntax error, unexpected 'else' (T_ELSE) in /home/masterge/public_html/global_func.php on line 2256
+[31-Dec-2017 15:54:22 America/New_York] 1054: Unknown column 'invis' in 'field list'
+[31-Dec-2017 15:54:58 America/New_York] 1054: Unknown column 'invis' in 'field list'
+[05-Jan-2018 02:50:37 UTC] PHP Fatal error:  Uncaught Error: Call to a member function endpage() on null in /home/masterge/public_html/login2.php:5
+Stack trace:
+#0 {main}
+  thrown in /home/masterge/public_html/login2.php on line 5
+[05-Jan-2018 02:50:39 UTC] PHP Fatal error:  Uncaught Error: Call to a member function endpage() on null in /home/masterge/public_html/login2.php:5
+Stack trace:
+#0 {main}
+  thrown in /home/masterge/public_html/login2.php on line 5
+[05-Jan-2018 02:52:15 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/masterge/public_html/login2.php on line 18
+[05-Jan-2018 02:52:16 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/masterge/public_html/login2.php on line 18
+[05-Jan-2018 02:54:47 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/masterge/public_html/login2.php on line 18
+[05-Jan-2018 02:54:47 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/masterge/public_html/login2.php on line 18
+[05-Jan-2018 02:54:48 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/masterge/public_html/login2.php on line 18
+[05-Jan-2018 11:19:57 America/New_York] <strong>PHP Warning:</strong> hash_equals(): Expected user_string to be a string, integer given (2)
+[05-Jan-2018 16:33:55 UTC] PHP Fatal error:  Uncaught Error: Class 'PHPGangsta_GoogleAuthenticator' not found in /home/masterge/public_html/authenication_2f.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/masterge/public_html/authenication_2f.php on line 2
+[05-Jan-2018 16:33:56 UTC] PHP Fatal error:  Uncaught Error: Class 'PHPGangsta_GoogleAuthenticator' not found in /home/masterge/public_html/authenication_2f.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/masterge/public_html/authenication_2f.php on line 2
+[05-Jan-2018 11:39:59 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 5
+[05-Jan-2018 11:40:25 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[05-Jan-2018 18:14:06 UTC] PHP Parse error:  syntax error, unexpected ':' in /home/masterge/public_html/autohex.php on line 14
+[05-Jan-2018 17:00:06 America/New_York] 1054: Unknown column 'lastcrime' in 'field list'

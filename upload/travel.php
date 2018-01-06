@@ -16,7 +16,7 @@ $_GET['to'] = (isset($_GET['to']) && is_numeric($_GET['to'])) ? abs($_GET['to'])
 if (empty($_GET['to'])) {
     echo "Welcome to the horse stable. You can travel to other cities here, but at a cost. Where would you like to
 	travel today? Note that as you progress further in the game, more locations will be made available to you.
-	It will cost you " . number_format($cost_of_travel) . " Primary Currency to travel today.
+	It will cost you " . number_format($cost_of_travel) . " Copper Coins to travel today.
 	<table class='table table-bordered'>
 	<tr>
 		<th width='25%'>
@@ -36,7 +36,7 @@ if (empty($_GET['to'])) {
 		</th>
 	</tr>";
     //Select the towns that are not the current user's town, order them by level requirement
-    $q = $db->query("SELECT * FROM `town` WHERE `town_id` != {$ir['location']} ORDER BY `town_min_level` ASC");
+    $q = $db->query("SELECT * FROM `town` WHERE `town_id` != {$ir['location']} AND `town_min_level` <= {$ir['level']} ORDER BY `town_min_level` ASC");
 
     //Show this information!
     while ($r = $db->fetch_row($q)) {
@@ -56,11 +56,12 @@ if (empty($_GET['to'])) {
 		</tr>
    		";
     }
-    echo "</table>";
+    echo "</table>
+	<img src='assets/img/horse-stable-travel.jpg' class='img-thumbnail img-responsive'>";
 } else {
     //User does not have enough cash to travel to this city.
     if ($ir['primary_currency'] < $cost_of_travel) {
-        alert('danger', "Uh Oh!", "You do not have enough Primary Currency to travel today.", true, "travel.php");
+        alert('danger', "Uh Oh!", "You do not have enough Copper Coins to travel today.", true, "travel.php");
         die($h->endpage());
     //User is trying to travel to the town they're already in.
     } elseif ($ir['location'] == $_GET['to']) {
@@ -80,9 +81,8 @@ if (empty($_GET['to'])) {
             $db->query("UPDATE `users` SET `location` = {$_GET['to']} WHERE `userid` = {$userid}");
             $cityName = $db->fetch_single($q);
             //Tell user they have traveled successfully.
-            alert('success', "Success!", "You have successfully paid " . number_format($cost_of_travel) . " Primary
-			 Currency to take a horse to {$cityName}.", true, "index.php");
-            $api->SystemLogsAdd($userid, 'travel', "Traveled to {$cityName} for {$cost_of_travel}.");
+            alert('success', "Success!", "You have successfully paid " . number_format($cost_of_travel) . " Copper Coins to take a horse to {$cityName}.", true, "index.php");
+            $api->SystemLogsAdd($userid, 'travel', "Traveled to {$cityName} for {$cost_of_travel} Copper Coins.");
             die($h->endpage());
         }
         $db->free_result($q);

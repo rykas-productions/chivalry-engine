@@ -87,7 +87,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Minimum Primary Currency
+						Success Minimum Copper Coins
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMIN' />
@@ -95,7 +95,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Maximum Primary Currency
+						Success Maximum Copper Coins
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMAX' />
@@ -103,7 +103,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Minimum Secondary Currency
+						Success Minimum Chivalry Tokens
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMIN' />
@@ -328,7 +328,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Minimum Primary Currency
+						Success Minimum Copper Coins
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMIN' value='{$itemi['crimePRICURMIN']}' />
@@ -336,7 +336,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Maximum Primary Currency
+						Success Maximum Copper Coins
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMAX' value='{$itemi['crimePRICURMAX']}' />
@@ -344,7 +344,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						Sucess Minimum Secondary Currency
+						Sucess Minimum Chivalry Tokens
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMIN' value='{$itemi['crimeSECCURMIN']}' />
@@ -352,7 +352,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Maximum Secondary Currency
+						Success Maximum Chivalry Tokens
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMAX' value='{$itemi['crimeSECURMAX']}' />

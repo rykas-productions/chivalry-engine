@@ -47,9 +47,9 @@ if (($r['guild'] == $ir['guild']) && ($ir['guild'] != 0)) {
 if (isset($_POST['do']) && (isset($_GET['user']))) {
     //Random Number Generator to choose what happens.
     $rand = Random(1, 4);
-    //Current user does not have the required Primary Currency to buy a spy.
+    //Current user does not have the required Copper Coins to buy a spy.
     if ($ir['primary_currency'] < $r['level'] * 500) {
-        alert("danger", "Uh Oh!", "You do not have enough Primary Currency to hire a spy to spy on this user.", true, "profile.php?user={$_GET['user']}");
+        alert("danger", "Uh Oh!", "You do not have enough Copper Coins to hire a spy to spy on this user.", true, "profile.php?user={$_GET['user']}");
         die($h->endpage());
     }
     //Take the spy cost from the player.
@@ -151,13 +151,60 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 				</td>
 			</tr>
 		</table>";
+		echo "Here's their inventory as well.
+		<table class='table table-bordered table-striped'>
+	    <thead>
+		<tr>
+			<th>Item (Qty)</th>
+			<th class='hidden-xs-down'>Item Cost (Total)</th>
+		</tr></thead>";
+		$inv =
+		$inv=$db->query(
+			"SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
+                 `effect1_on`, `effect2_on`, `effect3_on`,
+                 `weapon`, `armor`, `itmtypename`, `itmdesc`
+                 FROM `inventory` AS `iv`
+                 INNER JOIN `items` AS `i`
+                 ON `iv`.`inv_itemid` = `i`.`itmid`
+                 INNER JOIN `itemtypes` AS `it`
+                 ON `i`.`itmtype` = `it`.`itmtypeid`
+                 WHERE `iv`.`inv_userid` = {$_GET['user']}
+                 ORDER BY `i`.`itmtype` ASC, `i`.`itmname` ASC");
+		$lt = "";
+		while ($i = $db->fetch_row($inv)) {
+			if ($lt != $i['itmtypename']) {
+				$lt = $i['itmtypename'];
+				echo "\n<thead><tr>
+								<th colspan='4'>
+									<b>{$lt}</b>
+								</th>
+							</tr></thead>";
+			}
+			$i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
+			$icon = returnIcon($i['itmid']);
+			echo "<tr>
+						<td>
+							{$icon} <a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='right' title='{$i['itmdesc']}'>
+								{$api->SystemItemIDtoName($i['itmid'])}
+							</a>";
+			if ($i['inv_qty'] > 1) {
+				echo " (" . number_format($i['inv_qty']) . ")";
+			}
+			echo "</td>
+					  <td class='hidden-xs-down'>" . number_format($i['itmsellprice']);
+			echo "  (" . number_format($i['itmsellprice'] * $i['inv_qty']) . ")";
+			echo "</td>
+				</tr>";
+		}
+		echo "</table>";
         //Save to the log.
         $api->SystemLogsAdd($userid, 'spy', "Successfully spied on " . $api->SystemUserIDtoName($_GET['user']));
+		$db->query("INSERT INTO `spy_advantage` (`user`, `spied`) VALUES ('{$userid}', '{$_GET['user']}')");
     }
 } //Starting form.
 else {
     echo "You are attempting to hire a spy on " . $api->SystemUserIDtoName($_GET['user']) .
-        ". Spies cost 500 Primary currency multiplied by their level. (" . number_format(500 * $r['level']) . "
+        ". Spies cost 500 Copper Coins multiplied by their level. (" . number_format(500 * $r['level']) . "
 	in this case.) Success is not guaranteed.<br />
 	<form action='?user={$_GET['user']}' method='post'>
 		<input type='hidden' name='do' value='yes'>

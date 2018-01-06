@@ -115,8 +115,8 @@ function crime()
                     $prim_currency = Random($r['crimePRICURMIN'], $r['crimePRICURMAX']);
                     $api->UserGiveCurrency($userid, 'primary', $prim_currency);
                 }
-                if (!empty($r['crimeSECURMIN'])) {
-                    $sec_currency = Random($r['crimeSECURMIN'], $r['crimeSECCURMAX']);
+                if (!empty($r['crimeSECCURMIN'])) {
+                    $sec_currency = Random($r['crimeSECCURMIN'], $r['crimeSECURMAX']);
                     $api->UserGiveCurrency($userid, 'secondary', $sec_currency);
                 }
                 if (!empty($r['crimeSUCCESSITEM'])) {
@@ -131,9 +131,9 @@ function crime()
                 if (empty($r['crimeSUCCESSITEM'])) {
                     $r['crimeSUCCESSITEM'] = 0;
                 }
-                $text = str_replace("{money}", $prim_currency, $r['crimeSTEXT']);
-                $text = str_replace("{secondary}", $sec_currency, $r['crimeSTEXT']);
-                $text = str_replace("{item}", $api->SystemItemIDtoName($r['crimeSUCCESSITEM']), $r['crimeSTEXT']);
+                $text = str_ireplace("{money}", $prim_currency, $r['crimeSTEXT']);
+                $text = str_ireplace("{secondary}", $sec_currency, $r['crimeSTEXT']);
+                $text = str_ireplace("{item}", $api->SystemItemIDtoName($r['crimeSUCCESSITEM']), $r['crimeSTEXT']);
                 $title = "Success!";
                 $type = 'success';
                 $api->UserInfoSetStatic($userid, "xp", $ir['xp'] + $r['crimeXP']);
@@ -146,7 +146,7 @@ function crime()
                 $api->UserStatusSet($userid, 'dungeon', $dtime, $r['crimeDUNGREAS']);
                 $api->SystemLogsAdd($userid, 'crime', "Failed to commit the {$r['crimeNAME']} crime.");
             }
-            alert("{$type}", "{$title}", "{$r['crimeITEXT']} {$text}", true, 'criminal.php');
+            alert("{$type}", "{$title}", "{$r['crimeITEXT']} {$text}", true, "?action=crime&c={$_GET['c']}&tresde={$tresder}", "Attempt Again");
             die($h->endpage());
         }
     }

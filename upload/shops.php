@@ -8,6 +8,11 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot visit the shops while in the infirmary or dungeon.",true,'index.php');
+	die($h->endpage());
+}
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -47,7 +52,8 @@ function home()
 						<td>{$r['shopDESCRIPTION']}</td>
 					  </tr>";
         }
-        echo "</table>";
+        echo "</table>
+		<img src='assets/img/shop.jpg' class='img-thumbnail img-responsive'>";
         $db->free_result($q);
     }
 }
@@ -87,8 +93,9 @@ function shop()
                     			<td colspan='3'><b>{$lt}</b></td>
                     		</tr>";
                 }
+				$icon = returnIcon($r['itmid'],1.75);
                 echo "<tr>
-                			<td><a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip'"; ?> title="<?php echo $r['itmdesc']; ?>" <?php echo ">{$r['itmname']}</a></td>
+                			<td>{$icon}<br /><a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip'"; ?> title="<?php echo $r['itmdesc']; ?>" <?php echo ">{$r['itmname']}</a></td>
                 			<td>" . number_format($api->SystemReturnTax($r['itmbuyprice'])) . "</td>
                             <td>
                             	<form action='?action=buy&ID={$r['sitemID']}' method='post'>
@@ -130,7 +137,7 @@ function buy()
             } else {
                 $itemd = $db->fetch_row($q);
                 if ($ir['primary_currency'] < ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty'])) {
-                    alert('danger', "Uh Oh!", "You do not have enough Primary Currency to buy {$_POST['qty']} {$itemd['itmname']}(s).", true, "shops.php");
+                    alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy {$_POST['qty']} {$itemd['itmname']}(s).", true, "shops.php");
                     die($h->endpage());
                 }
                 if ($itemd['itmbuyable'] == 'false') {
@@ -149,7 +156,7 @@ function buy()
 						 SET `primary_currency` = `primary_currency` - $price
 						 WHERE `userid` = $userid");
                 $ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
-                alert('success', "Success!", "You have bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price} Primary Currency.", true, "shops.php");
+                alert('success', "Success!", "You have bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price} Copper Coins.", true, "shops.php");
                 $api->SystemLogsAdd($userid, 'itembuy', $ib_log);
                 $api->SystemCreditTax($api->SystemReturnTaxOnly($itemd['itmbuyprice']), 1, -1);
             }

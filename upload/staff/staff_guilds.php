@@ -116,7 +116,7 @@ function viewguild()
         </tr>
         <tr>
             <th>
-                Primary Currency
+                Copper Coins
             </th>
             <td>
                 " . number_format($r['guild_primcurr']) . "
@@ -124,7 +124,7 @@ function viewguild()
         </tr>
         <tr>
             <th>
-                Secondary Currency
+                Chivalry Tokens
             </th>
             <td>
                 " . number_format($r['guild_seccurr']) . "
@@ -203,9 +203,9 @@ function creditguild()
             die($h->endpage());
         }
 
-        //Make sure the primary/secondary currency is input.
+        //Make sure the primary/Chivalry Tokens is input.
         if ((empty($prim)) && (empty($sec))) {
-            alert('danger', "Uh Oh!", "Please input how much Primary Currency and/or Secondary Currency you wish to
+            alert('danger', "Uh Oh!", "Please input how much Copper Coins and/or Chivalry Tokens you wish to
             credit to this guild.");
             die($h->endpage());
         }
@@ -234,16 +234,16 @@ function creditguild()
         $primf = number_format($prim);
 
         //Notify the guild they've received some cash!
-        $api->GuildAddNotification($guild, "The game administration has credited your guild {$primf} Primary Currency
-        and/or {$secf} Secondary Currency for reason: {$reason}.");
+        $api->GuildAddNotification($guild, "The game administration has credited your guild {$primf} Copper Coins
+        and/or {$secf} Chivalry Tokens for reason: {$reason}.");
 
         //Log the entry
-        $api->SystemLogsAdd($userid, 'staff', "Credited Guild ID {$guild} with {$primf} Primary Currency and/or {$secf}
-        Secondary Currency with reason '{$reason}'.");
+        $api->SystemLogsAdd($userid, 'staff', "Credited Guild ID {$guild} with {$primf} Copper Coins and/or {$secf}
+        Chivalry Tokens with reason '{$reason}'.");
 
         //Success to the end user.
-        alert('success', "Success!", "You have successfully credited Guild ID {$guild} with {$primf} Primary Currency
-        and/or {$secf} Secondary Currency with reason '{$reason}'.", true, 'index.php');
+        alert('success', "Success!", "You have successfully credited Guild ID {$guild} with {$primf} Copper Coins
+        and/or {$secf} Chivalry Tokens with reason '{$reason}'.", true, 'index.php');
         $h->endpage();
     } else {
         //Form to credit a guild.
@@ -262,7 +262,7 @@ function creditguild()
         </tr>
         <tr>
             <th>
-                Primary Currency
+                Copper Coins
             </th>
             <td>
                 <input type='number' name='primary' value='0' required='1' min='0' class='form-control'>
@@ -270,7 +270,7 @@ function creditguild()
         </tr>
         <tr>
             <th>
-                Secondary Currency
+                Chivalry Tokens
             </th>
             <td>
                 <input type='number' name='secondary' value='0' required='1' min='0' class='form-control'>
@@ -482,7 +482,7 @@ function editguild()
         </tr>
         <tr>
             <th>
-                Primary Currency
+                Copper Coins
             </th>
             <td>
                 <input type='number' min='0' name='primary' class='form-control' value='{$r['guild_primcurr']}'>
@@ -490,7 +490,7 @@ function editguild()
         </tr>
         <tr>
             <th>
-                Secondary Currency
+                Chivalry Tokens
             </th>
             <td>
                 <input type='number' min='0' name='secondary' class='form-control' value='{$r['guild_seccurr']}'>

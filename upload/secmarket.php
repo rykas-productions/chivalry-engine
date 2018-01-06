@@ -2,13 +2,18 @@
 /*
 	File:		secmarket.php
 	Created: 	4/5/2016 at 4:44PM Eastern Time
-	Info: 		Allows players to sell their secondary currency at
+	Info: 		Allows players to sell their Chivalry Tokens at
 				their own prices, and to buy offers on the market.
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-echo "<h3>Secondary Currency Market</h3><hr />";
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot visit the Chivalry Token Market while in the infirmary or dungeon.",true,'index.php');
+	die($h->endpage());
+}
+echo "<h3>Chivalry Tokens Market</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -91,17 +96,17 @@ function buy()
     }
     $totalcost = $r['sec_cost'] * $r['sec_total'];
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) {
-        alert('danger', "Uh Oh!", "You do not have enough Primary Currency to buy this listing.", true, 'secmarket.php');
+        alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'secmarket.php');
         die($h->endpage());
     }
-    $api->SystemLogsAdd($userid, 'secmarket', "Bought {$r['sec_total']} Secondary Currency from the market for {$totalcost} Primary Currency.");
+    $api->SystemLogsAdd($userid, 'secmarket', "Bought {$r['sec_total']} Chivalry Tokens from the market for {$totalcost} Copper Coins.");
     $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
     $api->UserTakeCurrency($userid, 'primary', $totalcost);
     $api->UserGiveCurrency($r['sec_user'], 'primary', $totalcost);
     $api->GameAddNotification($r['sec_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has bought your
-        {$r['sec_total']} Secondary Currency offer from the market for a total of {$totalcost}.");
+        {$r['sec_total']} Chivalry Tokens offer from the market for a total of {$totalcost}.");
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
-    alert('success', "Success!", "You have bought {$r['sec_total']} Secondary Currency for {$totalcost} Primary Currency", true, 'secmarket.php');
+    alert('success', "Success!", "You have bought {$r['sec_total']} Chivalry Tokens for {$totalcost} Copper Coins", true, 'secmarket.php');
     die($h->endpage());
 }
 
@@ -123,10 +128,10 @@ function remove()
         alert('danger', "Uh Oh!", "You are trying to remove a lising you do not own.", true, 'secmarket.php');
         die($h->endpage());
     }
-    $api->SystemLogsAdd($userid, 'secmarket', "Removed {$r['sec_total']} Secondary Currency from the market.");
+    $api->SystemLogsAdd($userid, 'secmarket', "Removed {$r['sec_total']} Chivalry Tokens from the market.");
     $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
-    alert('success', "Success!", "You have removed your listing for {$r['sec_total']} Secondary Currency from the market.", true, 'secmarket.php');
+    alert('success', "Success!", "You have removed your listing for {$r['sec_total']} Chivalry Tokens from the market.", true, 'secmarket.php');
     die($h->endpage());
 }
 
@@ -141,18 +146,18 @@ function add()
             die($h->endpage());
         }
         if (!($api->UserHasCurrency($userid, 'secondary', $_POST['qty']))) {
-            alert('danger', "Uh Oh!", "You are trying to add more Secondary Currency than you currently have.");
+            alert('danger', "Uh Oh!", "You are trying to add more Chivalry Tokens than you currently have.");
             die($h->endpage());
         }
         $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`)
 					VALUES ('{$userid}', '{$_POST['cost']}', '{$_POST['qty']}');");
         $api->UserTakeCurrency($userid, 'secondary', $_POST['qty']);
-        $api->SystemLogsAdd($userid, 'secmarket', "Added {$_POST['qty']} to the secondary market for {$_POST['cost']} Primary Currency each.");
-        alert('success', "Success!", "You have added your {$_POST['qty']} Secondary Currency to the market for
-		    {$_POST['cost']} Primary Currency each.", true, 'secmarket.php');
+        $api->SystemLogsAdd($userid, 'secmarket', "Added {$_POST['qty']} to the secondary market for {$_POST['cost']} Copper Coins each.");
+        alert('success', "Success!", "You have added your {$_POST['qty']} Chivalry Tokens to the market for
+		    {$_POST['cost']} Copper Coins each.", true, 'secmarket.php');
         die($h->endpage());
     } else {
-        alert('info', "Information!", "Fill out this form completely to add your Secondary Currency to the market.", false);
+        alert('info', "Information!", "Fill out this form completely to add your Chivalry Tokens to the market.", false);
         echo "
 		<form method='post'>
 			<table class='table table-bordered'>

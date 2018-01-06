@@ -61,6 +61,14 @@ function create()
 			</tr>
 			<tr>
 				<th width='33%'>
+					Icon
+				</th>
+				<td>
+					<input type='text' name='itemicon' class='form-control'>
+				</td>
+			</tr>
+			<tr>
+				<th width='33%'>
 					Item Type
 				</th>
 				<td>
@@ -119,8 +127,8 @@ function create()
 						<option value='iq'>IQ</option>
 						<option value='infirmary'>Infirmary Time</option>
 						<option value='dungeon'>Dungeon Time</option>
-						<option value='primary_currency'>Primary Currency</option>
-						<option value='secondary_currency'>Secondary Currency</option>
+						<option value='primary_currency'>Copper Coins</option>
+						<option value='secondary_currency'>Chivalry Tokens</option>
 						<option value='xp'>Experience</option>
 						<option value='vip_days'>VIP Days</option>
 					</select>
@@ -162,6 +170,14 @@ function create()
 				</td>
 			</tr>
 			<tr>
+				<th>
+					Required Ammo
+				</th>
+				<td>
+					" . item_dropdown('ammo') . "
+				</td>
+			</tr>
+			<tr>
 				<td colspan='2'>
 					<input type='submit' value='Create Item' class='btn btn-primary'>
 				</td>
@@ -176,11 +192,13 @@ function create()
         }
         $itmname = (isset($_POST['itemname']) && is_string($_POST['itemname'])) ? $db->escape(strip_tags(stripslashes($_POST['itemname']))) : '';
         $itmdesc = (isset($_POST['itemdesc'])) ? $db->escape(strip_tags(stripslashes($_POST['itemdesc']))) : '';
+		$icon = (isset($_POST['itemicon'])) ? $db->escape(strip_tags(stripslashes($_POST['itemicon']))) : '';
         $weapon = (isset($_POST['weapon']) && is_numeric($_POST['weapon'])) ? abs(intval($_POST['weapon'])) : 0;
         $armor = (isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
         $itmtype = (isset($_POST['itmtype']) && is_numeric($_POST['itmtype'])) ? abs(intval($_POST['itmtype'])) : '';
         $itmbuyprice = (isset($_POST['itembuy']) && is_numeric($_POST['itembuy'])) ? abs(intval($_POST['itembuy'])) : 0;
         $itmsellprice = (isset($_POST['itemsell']) && is_numeric($_POST['itemsell'])) ? abs(intval($_POST['itemsell'])) : 0;
+		$ammo = (isset($_POST['ammo']) && is_numeric($_POST['ammo'])) ? abs(intval($_POST['ammo'])) : 0;
         if (empty($itmname) || empty($itmdesc) || empty($itmtype) || empty($itmbuyprice) || empty($itmsellprice)) {
             alert('danger', "Uh Oh!", "You are missing one or more of the required inputs on the previous form.");
             die($h->endpage());
@@ -244,7 +262,7 @@ function create()
 					 '{$_POST['effect1on']}', '{$effects[1]}',
                      '{$_POST['effect2on']}', '{$effects[2]}',
                      '{$_POST['effect3on']}', '{$effects[3]}', 
-					 {$weapon}, {$armor})");
+					 {$weapon}, {$armor}, '{$icon}', {$ammo})");
         $api->SystemLogsAdd($userid, 'staff', "Created item {$itmname}.");
         alert('success', "Success!", "You have successfully created the {$itmname} item.", true, 'index.php');
     }
@@ -479,6 +497,7 @@ function edititem()
         $csrf = request_csrf_html('staff_edititem2');
         $itmname = addslashes($itemi['itmname']);
         $itmdesc = addslashes($itemi['itmdesc']);
+		$itmicon = addslashes($itemi['icon']);
         echo "<form method='post'>
 					<input type='hidden' name='itemid' value='{$_POST['item']}' />
 					<input type='hidden' name='step' value='3' />
@@ -497,6 +516,14 @@ function edititem()
 				</th>
 				<td>
 					<input type='text' required='1' name='itemdesc' value='{$itmdesc}' class='form-control'>
+				</td>
+			</tr>
+			<tr>
+				<th width='33%'>
+					Icon
+				</th>
+				<td>
+					<input type='text' name='itemicon' value='{$itmicon}' class='form-control'>
 				</td>
 			</tr>
 			<tr>
@@ -543,8 +570,8 @@ function edititem()
                 "agility" => "Agility", "guard" => "Guard",
                 "labor" => "Labor", "iq" => "IQ",
                 "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                "primary_currency" => "Primary Currency", "secondary_currency"
-            => "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
+                "primary_currency" => "Copper Coins", "secondary_currency"
+            => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
                 "VIP Days");
         for ($i = 1; $i <= 3; $i++) {
             if (!empty($itemi["effect" . $i])) {
@@ -632,6 +659,7 @@ function edititem()
         $itemid = (isset($_POST['itemid']) && is_numeric($_POST['itemid'])) ? abs(intval($_POST['itemid'])) : 0;
         $itmname = (isset($_POST['itemname']) && is_string($_POST['itemname'])) ? stripslashes($_POST['itemname']) : '';
         $itmdesc = (isset($_POST['itemdesc'])) ? $db->escape(strip_tags(stripslashes($_POST['itemdesc']))) : '';
+		$itmicon = (isset($_POST['itemicon'])) ? $db->escape(strip_tags(stripslashes($_POST['itemicon']))) : '';
         $weapon = (isset($_POST['weapon']) && is_numeric($_POST['weapon'])) ? abs(intval($_POST['weapon'])) : 0;
         $armor = (isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
         $itmtype = (isset($_POST['itmtype']) && is_numeric($_POST['itmtype'])) ? abs(intval($_POST['itmtype'])) : '';
@@ -698,7 +726,7 @@ function edititem()
 						`effect1_on` = '{$_POST['effect1on']}', `effect1` = '{$effects[1]}',
 						`effect2_on` = '{$_POST['effect2on']}', `effect2` = '{$effects[2]}',
 						`effect3_on` = '{$_POST['effect3on']}', `effect3` = '{$effects[3]}',
-						`weapon` = {$weapon}, `armor` = {$armor} WHERE `itmid` = {$itemid }");
+						`weapon` = {$weapon}, `armor` = {$armor}, `icon` = '{$itmicon}' WHERE `itmid` = {$itemid }");
         alert('success', "Success!", "You successfully have edited the {$api->SystemItemIDtoName($itemid)} item.", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited Item {$api->SystemItemIDtoName($itemid)}.");
     } else {

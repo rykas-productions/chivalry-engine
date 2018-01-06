@@ -107,7 +107,7 @@ function news_buy()
 
         //Make sure user has the cash to buy this ad.
         if (!$api->UserHasCurrency($userid, 'primary', $totalcost)) {
-            alert('danger', "Uh Oh!", "You do not have enough primary currency to place this ad.");
+            alert('danger', "Uh Oh!", "You do not have enough Copper Coins to place this ad.");
             die($h->endpage());
         }
         $api->UserTakeCurrency($userid,'primary',$totalcost);
@@ -138,7 +138,7 @@ function news_buy()
                 <tr>
                     <td>
                         Ad Runtime<br />
-                        <small>Each day will add 1,250 Primary Currency to your cost.</small>
+                        <small>Each day will add 1,250 Copper Coins to your cost.</small>
                     </td>
                     <td>
                         <input type='number' value='1' min='1' name='ad_length' id='days' onkeyup='total_cost();' required='1' class='form-control'>
@@ -147,7 +147,7 @@ function news_buy()
                 <tr>
                     <td>
                         Ad Text<br />
-                        <small>Each character is worth 5 Primary Currency.</small>
+                        <small>Each character is worth 5 Copper Coins.</small>
                     </td>
                     <td>
                         <textarea class='form-control' name='ad_text' id='chars' onkeyup='total_cost();' required='1'></textarea>

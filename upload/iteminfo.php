@@ -32,6 +32,11 @@ if (!$itmid) {
 				</th>
 			</tr>
 			<tr>
+				<td colspan='2'>
+					" . returnIcon($itmid,3) . "
+				</td>
+			</tr>
+			<tr>
 				<th width='33%'>
 					Item Type
 				</th>
@@ -45,6 +50,52 @@ if (!$itmid) {
 				</th>
 				<td>
 					{$id['itmdesc']}
+				</td>
+			</tr>
+			<tr>
+				<th width='33%'>
+					Available in Town(s)
+				</th>
+				<td>";
+					$towns='';
+					$sq=$db->query("SELECT `sitemSHOP` FROM `shopitems` WHERE `sitemITEMID` = {$_GET['ID']}");
+					if ($db->num_rows($sq) == 0)
+					{
+						echo "N/A";
+					}
+					else
+					{
+						while ($sr=$db->fetch_row($sq))
+						{
+							$shop=$db->fetch_single($db->query("SELECT `shopLOCATION` FROM `shops` WHERE `shopID` = {$sr['sitemSHOP']}"));
+							$towns.= "<a href='travel.php?to={$shop}'>{$api->SystemTownIDtoName($shop)}</a>, ";
+						}
+					}
+					echo $towns;
+				echo"
+				</td>
+			</tr>
+			<tr>
+				<th width='33%'>
+					Available in Mine(s)
+				</th>
+				<td>";
+					$towns2='';
+					$sq=$db->query("SELECT `mine_location` FROM `mining_data` WHERE `mine_copper_item` = {$_GET['ID']} OR `mine_silver_item` = {$_GET['ID']} OR `mine_gold_item` = {$_GET['ID']} OR `mine_gem_item` = {$_GET['ID']}");
+					if ($db->num_rows($sq) == 0)
+					{
+						echo "N/A";
+					}
+					else
+					{
+						while ($sr=$db->fetch_row($sq))
+						{
+							$shop2=$sr['mine_location'];
+							$towns2.= "<a href='travel.php?to={$shop2}'>{$api->SystemTownIDtoName($shop2)}</a>, ";
+						}
+					}
+					echo $towns2;
+				echo"
 				</td>
 			</tr>
 			<tr>
@@ -85,8 +136,8 @@ if (!$itmid) {
                         "agility" => "Agility", "guard" => "Guard",
                         "labor" => "Labor", "iq" => "IQ",
                         "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                        "primary_currency" => "Primary Currency", "secondary_currency"
-                    => "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
+                        "primary_currency" => "Copper Coins", "secondary_currency"
+                    => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
                         "VIP Days");
                 $statformatted = $stats["{$einfo['stat']}"];
                 echo "
@@ -99,6 +150,16 @@ if (!$itmid) {
 					</td>
 				</tr>";
             }
+        }
+		if ($id['ammo']) {
+            echo "<tr>
+				<th width='33%'>
+					Required Ammo
+				</th>
+				<td>
+					<a href='?ID={$id['ammo']}'>" . $api->SystemItemIDtoName($id['ammo']) . "</a>
+				</td>
+			</tr>";
         }
         if ($id['weapon']) {
             echo "<tr>

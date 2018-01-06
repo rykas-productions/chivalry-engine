@@ -37,25 +37,25 @@ if (isset($_GET['user'])) {
             die($h->endpage());
         }
         if ($_POST['send'] > $ir['primary_currency']) {
-            alert('danger', 'Uh Oh!', 'You cannot send more Primary Currency than you currently have.', true, 'index.php');
+            alert('danger', 'Uh Oh!', 'You cannot send more Copper Coins than you currently have.', true, 'index.php');
             die($h->endpage());
         }
         if ($api->SystemCheckUsersIPs($userid, $_POST['user'])) {
-            alert('danger', 'Uh Oh!', 'You cannot send Primary Currency to anyone who has the same IP Address as you.', true, 'index.php');
+            alert('danger', 'Uh Oh!', 'You cannot send Copper Coins to anyone who has the same IP Address as you.', true, 'index.php');
             die($h->endpage());
         }
         $userformat = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}]";
         $user2format = "<a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}]";
         $cashformat = number_format($_POST['send']);
-        $api->GameAddNotification($_POST['user'], "{$userformat} has sent you {$cashformat} Primary Currency.");
+        $api->GameAddNotification($_POST['user'], "{$userformat} has sent you {$cashformat} Copper Coins.");
         $api->UserGiveCurrency($_POST['user'], 'primary', $_POST['send']);
         $api->UserTakeCurrency($userid, 'primary', $_POST['send']);
-        $api->SystemLogsAdd($userid, 'sendcash', "Sent {$cashformat} Primary Currency to {$user2format}.");
-        alert("success", "Success!", "You have successfully sent {$user2format} {$cashformat} Primary Currency.", true, "profile.php?user={$_GET['user']}");
-
+        $api->SystemLogsAdd($userid, 'sendcash', "Sent {$cashformat} Copper Coins to {$user2format}.");
+        alert("success", "Success!", "You have successfully sent {$user2format} {$cashformat} Copper Coins.", true, "profile.php?user={$_GET['user']}");
+		$h->endpage();
     } else {
-        echo "You are attempting to send Primary Currency to {$api->SystemUserIDtoName($_GET['user'])}. You have
-        " . number_format($ir['primary_currency']) . " Primary Currency you can send. How much do you wish to send?";
+        echo "You are attempting to send Copper Coins to {$api->SystemUserIDtoName($_GET['user'])}. You have
+        " . number_format($ir['primary_currency']) . " Copper Coins you can send. How much do you wish to send?";
         $csrf = request_csrf_html("sendcash_{$_GET['user']}");
         echo "<form method='post' action='?user={$_GET['user']}'>
             <input type='hidden' value='{$_GET['user']}' name='user'>

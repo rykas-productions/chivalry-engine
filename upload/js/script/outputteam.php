@@ -24,13 +24,13 @@ if (!is_ajax()) {
 require_once('../../globals_nonauth.php');
 $class = $_POST['team'];
 if ($class == 'Warrior') {
-    $warning = "Warriors begin with more strength and less guard.";
+    $warning = "Warriors begin with more strength and less guard. They gain more strength, and less guard.";
     $newclass = 'form-control is-valid';
 } elseif ($class == 'Rogue') {
-    $warning = "Rogues start with more agility and less strength.";
+    $warning = "Rogues start with more agility and less strength. They gain more strength, and less guard.";
     $newclass = 'form-control is-valid';
-} elseif ($class == 'Defender') {
-    $warning = "Defenders begin with more guard and less agility.";
+} elseif ($class == 'Guardian') {
+    $warning = "Guardians begin with more guard and less agility. They gain more strength, and less guard.";
     $newclass = 'form-control is-valid';
 } else {
     $warning = "Please select a valid class.";
@@ -43,4 +43,3 @@ if ($class == 'Warrior') {
         d.className = " <?php echo $newclass; ?>";
         div.innerHTML = " <?php echo $warning; ?>";
     </script>
-<?php

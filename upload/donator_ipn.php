@@ -28,6 +28,7 @@ if ($verified) {
     $txn_id = $_POST['txn_id'];
     $receiver_email = $_POST['receiver_email'];
     $payer_email = $_POST['payer_email'];
+	$friendly_number = $_POST['mc_gross']-$_POST['mc_fee'];
     //Parse the item name
     $packr = explode('|', $item_name);
     //Grab IDs
@@ -83,10 +84,12 @@ if ($verified) {
     }
     //Everything checks out... so lets credit the pack.
     item_add($for, $fpi['vip_item'], $fpi['vip_qty']);
+	item_add($for, 89*floor($_POST['mc_gross']), 1);
     //Log everything
+	$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$friendly_number} WHERE `setting_name` = 'MonthlyDonationGoal'");
     $db->query("INSERT INTO `vips_accepted` VALUES(NULL, {$buyer}, {$for}, {$pack}, " . time() . ", '{$txn_id}')");
-    $api->SystemLogsAdd($buyer, 'donate', "{$payer_email} donated \${$payment_amount} for VIP Pack #{$packr[2]}.");
-    $api->GameAddNotification($for, "Your \${$payment_amount} donation for your " . $api->SystemItemIDtoName($fpi['vip_item']) . " item has been successfully credited to you.");
+    $api->SystemLogsAdd($buyer, 'donate', "{$payer_email} donated \${$payment_amount} for {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . ".");
+    $api->GameAddNotification($for, "Your \${$payment_amount} donation for your {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . " item has been successfully credited to you.");
 }
 // Reply with an empty 200 response to indicate to PayPal the IPN was received correctly.
 header("HTTP/1.1 200 OK");
