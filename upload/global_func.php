@@ -22,8 +22,8 @@ function DateTime_Parse($time_stamp, $ago = true, $override = false)
     //If the time difference is less than 1 day, OR if $override is set to true. This will display how long ago the
     //timestamp was in seconds/minutes/hours/days/etc.
     if ($time_difference < 86400 || $override == true) {
-        $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
-        $lengths = array(60, 60, 24, 7, 4.35, 12);
+        $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
+        $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
         //Go to the largest unit of time as possible.
         for ($i = 0; $time_difference >= $lengths[$i]; $i++) {
             $time_difference = $time_difference / $lengths[$i];
@@ -52,8 +52,8 @@ function TimeUntil_Parse($time_stamp)
 {
     //Time difference is Unix Timestamp subtracted from $time_stamp.
     $time_difference = $time_stamp - time();
-    $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
-    $lengths = array(60, 60, 24, 7, 4.35, 12);
+    $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
+    $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
     //Get to the biggest unit type as possible.
     for ($i = 0; $time_difference >= $lengths[$i]; $i++) {
         $time_difference = $time_difference / $lengths[$i];
@@ -71,8 +71,8 @@ function TimeUntil_Parse($time_stamp)
 */
 function ParseTimestamp($time)
 {
-    $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
-    $lengths = array(60, 60, 24, 7, 4.35, 12);
+    $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
+    $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
     //Cycle through unit types until we get to the biggest and cannot go any bigger.
     for ($i = 0; $time >= $lengths[$i]; $i++) {
         $time = $time / $lengths[$i];
@@ -456,28 +456,37 @@ function shop_dropdown($ddname = "shop", $selected = -1)
  */
 function user_dropdown($ddname = "user", $selected = -1)
 {
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `userid`, `username`
-    				 FROM `users`
-    				 ORDER BY `userid` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['userid']}'";
-        if ($selected == $r['userid'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
+    global $db, $ir;
+	if ($ir['dropdown'] == 0)
+	{
+		$ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+		$q =
+			$db->query(
+				"SELECT `userid`, `username`
+						 FROM `users`
+						 ORDER BY `userid` ASC");
+		if ($selected == -1) {
+			$first = 0;
+		} else {
+			$first = 1;
+		}
+		while ($r = $db->fetch_row($q)) {
+			$ret .= "\n<option value='{$r['userid']}'";
+			if ($selected == $r['userid'] || $first == 0) {
+				$ret .= " selected='selected'";
+				$first = 1;
+			}
+			$ret .= ">{$r['username']} [{$r['userid']}]</option>";
+		}
+		$db->free_result($q);
+		$ret .= "\n</select>";
+	}
+	else
+	{
+		if ($selected == -1)
+			$selected = 0;
+		$ret = "<input type='number' value='{$selected}' name='{$ddname}' class='form-control'>";
+	}
     return $ret;
 }
 
@@ -884,7 +893,15 @@ function notification_add($userid, $text)
 */
 function check_data()
 {
-    global $db, $time;
+    global $db, $time, $ir;
+	if ($ir['hp'] > $ir['maxhp'])
+		$db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$ir['userid']}");
+	if ($ir['energy'] > $ir['maxenergy'])
+		$db->query("UPDATE `users` SET `energy` = `maxenergy` WHERE `userid` = {$ir['userid']}");
+	if ($ir['brave'] > $ir['maxbrave'])
+		$db->query("UPDATE `users` SET `brave` = `maxbrave` WHERE `userid` = {$ir['userid']}");
+	if ($ir['will'] > $ir['maxwill'])
+		$db->query("UPDATE `users` SET `will` = `maxwill` WHERE `userid` = {$ir['userid']}");
     $q1 = $db->query("SELECT `fed_userid` FROM `fedjail` WHERE `fed_out` < {$time}");
     //Remove players from federal jail, if needed.
     if ($db->num_rows($q1) > 0) {
@@ -1025,19 +1042,24 @@ function check_data()
         if ($suc == 1) {
             $log = $r2['gcSTART'] . $r2['gcSUCC'];
             $winnings = Random($r2['gcMINCASH'], $r2['gcMAXCASH']);
-            $result = 'Success';
+            $result = 'success';
         } else {
             $log = $r2['gcSTART'] . $r2['gcFAIL'];
             $winnings = 0;
-            $result = 'Failure';
+            $result = 'failure';
         }
-        $xp=Random(1,5);
+        $xp=Random(1,5)*$r2['gcUSERS'];
         $db->query("UPDATE `guild`
                     SET `guild_primcurr` = `guild_primcurr` + {$winnings},
                     `guild_crime` = 0,
                     `guild_crime_done` = 0,
                     `guild_xp` = `guild_xp` + {$xp}
                     WHERE `guild_id` = {$r['guild_id']}");
+		$max=500000*$r['guild_level'];
+		$db->query("UPDATE `guild` 
+					SET `guild_primcurr` = {$max} 
+					WHERE `guild_primcurr` > {$max} 
+					AND `guild_id` = {$r['guild_id']}");
         $db->query("INSERT INTO `guild_crime_log`
                     (`gclCID`, `gclGUILD`, `gclLOG`, `gclRESULT`, `gclWINNING`, `gclTIME`)
                     VALUES
@@ -1056,7 +1078,7 @@ function check_data()
 function check_level()
 {
     global $ir, $userid, $db;
-    $ir['xp_needed'] = round(($ir['level'] + 2.25) * ($ir['level'] + 2.25) * ($ir['level'] + 2.25) * 2);
+    $ir['xp_needed'] = round(($ir['level'] + 1.5) * ($ir['level'] + 1.5) * ($ir['level'] + 1.5) * 1.5);
     if ($ir['xp'] >= $ir['xp_needed']) {
         $expu = $ir['xp'] - $ir['xp_needed'];
         $ir['level'] += 1;
@@ -1249,7 +1271,7 @@ function request_csrf_code($formid)
     //Assign Unix Timestamp to a variable.
     $time = time();
     //Generate the token from the randomizer function, and hash it with sha512.
-    $token = hash('sha512', (randomizer()));
+    $token = randomizer();
     //Store the CSRF Form into $_SESSION.
     $_SESSION["csrf_{$formid}"] = array('token' => $token, 'issued' => $time);
     //Return the token.
@@ -1340,11 +1362,14 @@ function verify_user_password($input, $pass)
  *
  * @return string    The resulting encoded password.
  */
-function encode_password($password)
+function encode_password($password,$lvl='Member')
 {
     global $set;
     //Set the password cost via settings.
-    $options = ['cost' => $set['Password_Effort'],];
+	if ($lvl == 'Member')
+		$options = ['cost' => $set['Password_Effort'],];
+	else
+		$options = ['cost' => $set['Password_Effort']+1,];
     //Return the generated password.
     return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_DEFAULT, $options);
 }
@@ -1359,17 +1384,24 @@ function encode_password($password)
  * Text $redirecttext = Text to be shown on the redirect link. [Default = Back]
  */
 
-function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $redirecttext = 'Back')
+function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $redirecttext = 'Back', $mute=false)
 {
     //This function is a horrible mess dude..
-    if ($type == 'danger')
+    if ($type == 'danger') {
         $icon = "exclamation-triangle";
-    elseif ($type == 'success')
+		$js='error';
+	}
+    elseif ($type == 'success') {
         $icon = "check-circle";
-    elseif ($type == 'info')
+		$js='log';
+	}
+    elseif ($type == 'info') {
         $icon = 'info-circle';
+		$js='info';
+	}
     else
         $icon = 'exclamation-circle';
+		$js='log';
     if ($doredirect) {
         $redirect = ($redirect == 'back') ? $_SERVER['REQUEST_URI'] : $redirect;
         echo "<div class='alert alert-{$type}'>
@@ -1384,6 +1416,7 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
 					        {$text}
                 </div>";
     }
+	cslog($js,$text);
 }
 
 /**
@@ -1503,6 +1536,8 @@ function get_fg_cache($file, $ip, $hours = 1)
 {
     $current_time = time();
     $expire_time = $hours * 60 * 60;
+    if (!(filter_var($ip, FILTER_VALIDATE_IP)))
+        $ip='127.0.0.1';
     if (file_exists($file)) {
         $file_time = filemtime($file);
         if ($current_time - $expire_time < $file_time) {
@@ -1525,6 +1560,8 @@ function get_fg_cache($file, $ip, $hours = 1)
 function update_fg_info($ip)
 {
     global $set;
+    if (!(filter_var($ip, FILTER_VALIDATE_IP)))
+        $ip='127.0.0.1';
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => "https://api.fraudguard.io/ip/$ip",
@@ -1584,6 +1621,8 @@ function getOS($uagent)
         '/ipad/i' => 'iPad',
         '/android/i' => 'Android',
         '/blackberry/i' => 'BlackBerry',
+		'/cros/i' => 'Chrome OS',
+		'/playstation 4/i' => 'Playstation 4',
         '/webos/i' => 'Mobile'
     );
 
@@ -1597,6 +1636,7 @@ function getOS($uagent)
         $db->query("INSERT INTO `userdata` (`userid`, `useragent`, `screensize`, `os`, `browser`) VALUES ({$userid}, '{$uagent}', '', '{$os_platform}', '')");
     else
         $db->query("UPDATE `userdata` SET `useragent` = '{$uagent}', `os` = '{$os_platform}' WHERE `userid` = {$userid}");
+	return $os_platform;
 }
 
 /*
@@ -1610,6 +1650,7 @@ function getBrowser($uagent)
     $browser = "Unknown Browser";
     $browser_array = array(
         '/msie/i' => 'Internet Explorer',
+		'/trident/i' => 'Internet Explorer',
         '/firefox/i' => 'Firefox',
         '/safari/i' => 'Safari',
         '/chrome/i' => 'Chrome',
@@ -1620,6 +1661,7 @@ function getBrowser($uagent)
         '/konqueror/i' => 'Konqueror',
         '/opr/i' => 'Opera',
         '/mobile/i' => 'Handheld Browser',
+		'/playstation 4/i' => 'Playstation 4 Browser',
         '/CEngine-App/i' => 'App'
     );
     foreach ($browser_array as $regex => $value) {
@@ -1632,6 +1674,7 @@ function getBrowser($uagent)
         $db->query("INSERT INTO `userdata` (`userid`, `useragent`, `browser`) VALUES ({$userid}, '{$uagent}', '{$broswer}')");
     else
         $db->query("UPDATE `userdata` SET `useragent` = '{$user_agent}', `browser` = '{$browser}' WHERE `userid` = {$userid}");
+	return $browser;
 }
 
 //Please use $api->SystemLogsAdd(); instead
@@ -1784,8 +1827,7 @@ function recache_forum($forum)
     echo "Recaching Forum ID #{$forum} ... ";
     $q =
         $db->query(
-            "SELECT `fp_time`, `fp_poster_id`,
-                     `ft_name`, `ft_id`
+					"SELECT `p`.*, `t`.*
                      FROM `forum_posts` AS `p`
                      LEFT JOIN `forum_topics` AS `t`
                      ON `p`.`fp_topic_id` = `t`.`ft_id`
@@ -2038,4 +2080,193 @@ function armory_dropdown($ddname = "item", $selected = -1)
     $db->free_result($q);
     $ret .= "\n</select>";
     return $ret;
+}
+
+function returnIcon($item,$size=1)
+{
+	global $db;
+	$q = $db->fetch_single($db->query("SELECT `icon` FROM `items` WHERE `itmid` = {$item}"));
+	if (empty($q))
+	{
+		return "";
+	}
+	else
+	{
+		$total=$size*4;
+		return "<font size='{$total}'><i class='{$q}'></i></font>";
+	}
+}
+
+function cslog($type='log',$txt)
+{
+	echo "<script>console.{$type}('{$txt}')</script>";
+}
+
+function loadassets()
+{
+	global $db,$userid,$ir;
+	strtolower($browser=$db->fetch_single($db->query("SELECT `browser` FROM `userdata` WHERE `userid` = {$userid}")));
+	if ($userid == 0)
+	{
+		?>
+		<link rel="stylesheet" href="file:///android_asset/css/game-v1.2.min.css">
+		<link rel="stylesheet" href="file:///android_asset/css/rpg-awesome.min.css">
+		<link rel="stylesheet" href="file:///android_asset/css/game-fonts-v1.0.4-min.css">
+		<?php
+		if ($ir['theme'] == 1)
+		{
+			?>
+			<link rel="stylesheet" href="file:///android_asset/css/bootstrap.min.css">
+			<meta name="theme-color" content="#343a40">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+		if ($ir['theme'] == 2)
+		{
+			?>
+			<link rel="stylesheet" href="file:///android_asset/css/darkly.bs4.b2.min.css">
+			<meta name="theme-color" content="#303030">
+			<?php
+			$hdr='navbar-light bg-light';
+		}
+		if ($ir['theme'] == 3)
+		{
+			?>
+			<link rel="stylesheet" href="file:///android_asset/css/superhero.min.css">
+			<meta name="theme-color" content="#4E5D6C">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+		if ($ir['theme'] == 4)
+		{
+			?>
+			<link rel="stylesheet" href="file:///android_asset/css/slate.min.css">
+			<meta name="theme-color" content="#272B30">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+		if ($ir['theme'] == 5)
+		{
+			?>
+			<link rel="stylesheet" href="file:///android_asset/css/cerulean.min.css">
+			<meta name="theme-color" content="#04519b">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+		if ($ir['theme'] == 6)
+		{
+			?>
+			<link rel="stylesheet" href="file:///android_asset/css/sketchy.min.css">
+			<meta name="theme-color" content="#333">
+			<?php
+			$hdr='navbar-dark bg-primary';
+		}
+		if ($ir['theme'] == 7)
+		{
+			?>
+			<link rel="stylesheet" href="file:///android_asset/css/united.min.css">
+			<meta name="theme-color" content="#772953">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+	}
+	else
+	{
+		?>
+		<link rel="stylesheet" href="css/game-v1.2.min.css">
+		<link rel="stylesheet" href="css/rpg-awesome.min.css">
+		<link rel="stylesheet" href="css/game-fonts-v1.0.4-min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<?php
+		if ($ir['theme'] == 1)
+		{
+			?>
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
+			<meta name="theme-color" content="#343a40">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+		if ($ir['theme'] == 2)
+		{
+			?>
+			<link rel="stylesheet" href="css/darkly.bs4.b2.min.css">
+			<meta name="theme-color" content="#303030">
+			<?php
+			$hdr='navbar-light bg-light';
+		}
+		if ($ir['theme'] == 3)
+		{
+			?>
+			<link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+			<meta name="theme-color" content="#4E5D6C">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+		if ($ir['theme'] == 4)
+		{
+			?>
+			<link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
+			<meta name="theme-color" content="#272B30">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+		if ($ir['theme'] == 5)
+		{
+			?>
+			<link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
+			<meta name="theme-color" content="#04519b">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+		if ($ir['theme'] == 6)
+		{
+			?>
+			<link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
+			<meta name="theme-color" content="#78C2AD">
+			<?php
+			$hdr='navbar-dark bg-primary';
+		}
+		if ($ir['theme'] == 7)
+		{
+			?>
+			<link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
+			<meta name="theme-color" content="#772953">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+		if ($ir['theme'] == 8)
+		{
+			?>
+			<link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
+			<meta name="theme-color" content="#060606">
+			<?php
+			$hdr='navbar-dark bg-dark';
+		}
+		setcookie('theme', $ir['theme']);
+	}
+	return $hdr;
+}
+
+function encrypt_message($msg,$sender,$receiver)
+{
+    global $db;
+    $senderkey=$db->fetch_single($db->query("SELECT `security_key` from `user_settings` WHERE `userid` = {$sender}"));
+    $receiverkey=$db->fetch_single($db->query("SELECT `security_key` from `user_settings` WHERE `userid` = {$receiver}"));
+    $key = hash("sha512","{$senderkey}.{$receiverkey}");
+	if (openssl_encrypt($msg,"AES-256-ECB",$key))
+		return openssl_encrypt($msg,"AES-256-ECB",$key);
+	else
+		return "<span class='text-danger'>Failed to encrypt message.</span>";
+}
+
+function decrypt_message($msg,$sender,$receiver)
+{
+    global $db;
+    $senderkey=$db->fetch_single($db->query("SELECT `security_key` from `user_settings` WHERE `userid` = {$sender}"));
+    $receiverkey=$db->fetch_single($db->query("SELECT `security_key` from `user_settings` WHERE `userid` = {$receiver}"));
+    $key = hash("sha512","{$senderkey}.{$receiverkey}");
+	if (openssl_decrypt($msg,"AES-256-ECB",$key))
+		return stripslashes(str_replace(array("\\n\\r", "\\n", "\\r"), "", openssl_decrypt($msg,"AES-256-ECB",$key)));
+	else
+		return "<span class='text-danger'>Failed to decrypt message. This is likely due to either the sender or recipient changing their password.</span>";
 }

@@ -10,7 +10,7 @@ require('globals.php');
 echo "<h3>Hall of Fame</h3><hr />";
 //Add stats to this array.
 $StatArray = array('total', 'level', 'strength', 'agility', 'guard', 'labor', 'iq',
-    'primary_currency', 'mining_level', 'secondary_currency');
+    'primary_currency', 'mining_level', 'secondary_currency', 'busts', 'kills', 'deaths', 'richest');
 //Stat is not chosen, set to level.
 if (!isset($_GET['stat'])) {
     $_GET['stat'] = 'level';
@@ -27,7 +27,7 @@ if ($_GET['stat'] == 'total') {
                     FROM `users` `u` 
                     INNER JOIN `userstats` AS `us`
                     ON `u`.`userid` = `us`.`userid`
-                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC'
+                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
                     ORDER BY (`strength` + `agility` + `guard` + `labor` + `iq`) DESC
                     LIMIT 20");
 } //The GET wants mining levels ranked.
@@ -36,23 +36,37 @@ elseif ($_GET['stat'] == 'mining_level') {
                     FROM `users` `u` 
                     INNER JOIN `mining` AS `m`
                     ON `u`.`userid` = `m`.`userid`
-					WHERE `user_level` != 'Admin' AND `user_level` != 'NPC'
+					WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
                     ORDER BY `mining_level` DESC
                     LIMIT 20");
-} //GET wants anything else ranked.
+}
+elseif ($_GET['stat'] == 'richest')
+{
+	$q = $db->query("SELECT `u`.*, `us`.*
+                    FROM `users` `u` 
+                    INNER JOIN `userstats` AS `us`
+                    ON `u`.`userid` = `us`.`userid`
+                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
+                    ORDER BY `bank` DESC, `primary_currency` DESC
+                    LIMIT 20");
+}
+ //GET wants anything else ranked.
 else {
     $q = $db->query("SELECT `u`.*, `us`.*
                     FROM `users` `u` 
                     INNER JOIN `userstats` AS `us`
                     ON `u`.`userid` = `us`.`userid`
-                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC'
+                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
                     ORDER BY `{$_GET['stat']}` DESC
                     LIMIT 20");
 }
 echo "<a href='?stat=level'>Level</a>
-        || <a href='?stat=primary_currency'>Primary Currency</a>
-        || <a href='?stat=secondary_currency'>Secondary Currency</a>
-		|| <a href='?stat=mining_level'>Mining Level</a>";
+        || <a href='?stat=primary_currency'>Copper Coins</a>
+        || <a href='?stat=secondary_currency'>Chivalry Tokens</a>
+		|| <a href='?stat=mining_level'>Mining Level</a>
+		|| <a href='?stat=busts'>Busts</a>
+		|| <a href='?stat=kills'>Kills</a>
+		|| <a href='?stat=deaths'>Deaths</a>";
 echo "<br />";
 echo "<a href='?stat=strength'>Strength</a>
 		|| <a href='?stat=agility'>Agility</a>
@@ -70,7 +84,8 @@ echo "<table class='table table-bordered'>
         User
     </th>";
 if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
-    || $_GET['stat'] == 'mining_level'
+    || $_GET['stat'] == 'mining_level' || $_GET['stat'] == 'busts' || $_GET['stat'] == 'kills'
+    || $_GET['stat'] == 'deaths'
 ) {
     echo "<th width='45%'>
                 Value
@@ -90,11 +105,12 @@ while ($r = $db->fetch_row($q)) {
             <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
         </td>";
     if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
-        || $_GET['stat'] == 'mining_level'
+        || $_GET['stat'] == 'mining_level' || $_GET['stat'] == 'busts' || $_GET['stat'] == 'kills'
+        || $_GET['stat'] == 'deaths'
     ) {
         echo "<td>
-                    " . number_format($r[$_GET['stat']]) . "
-                   </td>";
+                " . number_format($r[$_GET['stat']]) . "
+           </td>";
     }
     echo "
     </tr>";

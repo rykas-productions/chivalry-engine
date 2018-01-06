@@ -25,12 +25,76 @@ class headers
                 <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
                 <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
                 <meta http-equiv="Cache-control" content="public">
-                <meta property="og:image" content=""/>
-                <link rel="shortcut icon" href="" type="image/x-icon"/>
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
-                <meta name="theme-color" content="#e7e7e7">
+                <meta property="og:image" content="assets/img/logo.png"/>
+                <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon"/>
+                <?php
+                if ($_COOKIE['theme'] == 1)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
+                    <meta name="theme-color" content="#343a40">
+                    <?php
+					$hdr='navbar-dark bg-dark';
+                }
+                if ($_COOKIE['theme'] == 2)
+                {
+                    ?>
+                    <link rel="stylesheet" href="css/darkly.bs4.b2.min.css">
+                    <meta name="theme-color" content="#303030">
+					<?php
+					$hdr='navbar-light bg-light';
+                }
+				if ($_COOKIE['theme'] == 3)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+                    <meta name="theme-color" content="#4E5D6C">
+					<?php
+					$hdr='navbar-dark bg-dark';
+                }
+				if ($_COOKIE['theme'] == 4)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
+                    <meta name="theme-color" content="#272B30">
+					<?php
+					$hdr='navbar-dark bg-dark';
+                }
+				if ($_COOKIE['theme'] == 5)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
+                    <meta name="theme-color" content="#04519b">
+					<?php
+					$hdr='navbar-dark bg-dark';
+                }
+				if ($_COOKIE['theme'] == 6)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
+					<meta name="theme-color" content="#78C2AD">
+					<?php
+					$hdr='navbar-dark bg-primary';
+                }
+				if ($_COOKIE['theme'] == 7)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
+                    <meta name="theme-color" content="#772953">
+					<?php
+					$hdr='navbar-dark bg-dark';
+                }
+				if ($_COOKIE['theme'] == 8)
+                {
+                    ?>
+                    <link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
+                    <meta name="theme-color" content="#060606">
+					<?php
+					$hdr='navbar-dark bg-dark';
+                }
+                ?>
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
-                <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
+                <?php echo "<title>{$set['WebsiteName']} - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; ?>
         </head>
         <body>
         <?php
@@ -38,8 +102,13 @@ class headers
             $csrf = request_csrf_html('login');
             ?>
             <!-- Navigation -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
+            <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
+                <a class="navbar-brand" href="index.php">
+					<?php 
+						echo "<img src='assets/img/logo-optimized.png' width='30' height='30' alt=''>
+						{$set['WebsiteName']}"; 
+					?>
+				</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav"
                         aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -65,41 +134,22 @@ class headers
                                    aria-haspopup="true" aria-expanded="false">
                                     <?php echo "Log in"; ?>
                                 </a>
-                                <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
-                                    <li>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p class="dropdown"><?php echo "Sign In! <a href='pwreset.php'>Forgot Password?</a>"; ?></p>
-
-                                                <form role="form" method="post" action="authenticate.php"
-                                                      accept-charset="UTF-8" id="login-nav">
-                                                    <?php echo $csrf; ?>
-                                                    <div class="form-group">
-                                                        <label class="sr-only"
-                                                               for="exampleInputEmail2"><?php echo "Email Address"; ?></label>
-                                                        <input type="email" class="form-control" id="exampleInputEmail2"
-                                                               placeholder="<?php echo "Your Email Address"; ?>"
-                                                               name="email" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="sr-only"
-                                                               for="exampleInputPassword2"><?php echo "Password"; ?></label>
-                                                        <input type="password" class="form-control"
-                                                               id="exampleInputPassword2" name="password"
-                                                               placeholder="<?php echo "Your Password"; ?>" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button type="submit"
-                                                                class="btn btn-primary btn-block"><?php echo "Sign In"; ?></button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <div class="bottom text-center">
-                                        <?php echo "New here? <a href='register.php'>Sign up</a> for an account!"; ?>
-                                    </div>
-                                </ul>
+                                <div class="dropdown-menu dropdown-menu-right">
+									<form class="px-4 py-3" method="post" action="authenticate.php">
+										<p class="dropdown"><?php echo "Sign In!"; ?></p>
+										<div class="form-group">
+											<input type="email" class="form-control" id="email" placeholder="email@example.com" name="email" required>
+										</div>
+										<div class="form-group">
+											<input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+										</div>
+										<button type="submit" class="btn btn-primary btn-block">Sign in</button>
+										<?php echo $csrf; ?>
+									</form>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="register.php">New around here? Sign up</a>
+									<a class="dropdown-item" href="pwreset.php">Forgot password?</a>
+								</div>
                             </li>
                         </ul>
                     </div>
@@ -120,12 +170,14 @@ class headers
             alert('danger', "Uh Oh!", "You are currently IP Banned. Sorry about that.", false);
             die($h->endpage());
         }
+		date_default_timezone_set('America/New_York');
     }
 
     function endpage()
     {
         global $db, $ir, $set;
         $query_extra = '';
+		include('analytics.php');
     if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
     {
         ?>
@@ -139,29 +191,38 @@ class headers
         </div>
         <!-- /.container -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
-        <link rel="stylesheet" href="css/game.css">
+        <link rel="stylesheet" href="css/game-v1.2.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- jQuery Version 3.2.1 -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
         <script src="js/register-min.js" async defer></script>
-        <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-        </body>
-        <footer>
-            <p>
-                <br/>
+		<script type="text/javascript" src="js/clock.min.js"></script>
+		<script type="text/javascript"> 
+		  $(document).ready(function(){ 
+			customtimestamp = parseInt($("#jqclock").data("time"));
+			$("#jqclock").clock({"langSet":"en","timestamp":customtimestamp,"timeFormat":" g:i:s a"}); 
+		  }); 
+		</script> 
+        <footer class='footer'>
+            <div class='container'>
+				<span>
                 <?php
+				$timestamp=time()-18000;
+                //Print copyright info, Chivalry Engine info, and current time.
                 echo "<hr />
-					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
-					Powered by <a href='https://github.com/MasterGeneral156/chivalry-engine'>codes</a> by TheMasterGeneral.
-					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}.";?>
-            </p>
+					Time is now <span id='jqclock' class='jqclock' data-time='{$timestamp}'>" . date('l, F j, Y g:i:s a') . "</span><br />
+					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}.<br />";
+                ?>
+				</span>
+            </div>
         </footer>
+		</body>
         </html>
     <?php
     }

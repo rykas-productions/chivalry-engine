@@ -51,6 +51,7 @@ function menu()
 			ORDER BY `g`.`guild_id` ASC");
     //List all the in-game guilds.
     while ($gd = $db->fetch_row($gq)) {
+		$gd['guild_capacity']=$gd['guild_level']*5;
         echo "
 		<tr>
 			<td>
@@ -81,7 +82,7 @@ function create()
     echo "<h3>Create a Guild</h3><hr />";
     $cg_price = $set['GUILD_PRICE'];
     $cg_level = $set['GUILD_LEVEL'];
-    //User does not have the minimum required primary currency.
+    //User does not have the minimum required Copper Coins.
     if (!($api->UserHasCurrency($userid, 'primary', $cg_price))) {
         alert("danger", "Uh Oh!", "You do not have enough cash to create a guild! You need
 		    " . number_format($cg_price) . ".", true, 'index.php');
@@ -118,7 +119,7 @@ function create()
 						VALUES ('{$ir['location']}', '{$userid}', '{$userid}', '0', '0', 'false', '5', 
 						'{$name}', '{$desc}', '1', '0')");
             $i = $db->insert_id();
-            //Take user's primary currency, and have player join the guild.
+            //Take user's Copper Coins, and have player join the guild.
             $api->UserTakeCurrency($userid, 'primary', $cg_price);
             $db->query("UPDATE `users` SET `guild` = {$i} WHERE `userid` = {$userid}");
             //Tell user they've created a guild.
@@ -134,7 +135,7 @@ function create()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						Creating a guild. Guilds cost " . number_format($cg_price) . " Primary Currency
+						Creating a guild. Guilds cost " . number_format($cg_price) . " Copper Coins
 					</th>
 				</tr>
 				<tr>
@@ -182,6 +183,18 @@ function view()
         //List all the guild's information.
         $gd = $db->fetch_row($gq);
         echo "<h3>{$gd['guild_name']} Guild</h3>";
+		if (!empty($gd['guild_pic']))
+		{
+			echo 
+			"<div class='container'>
+				<div class='row'>
+					<div class='col-lg-6 mx-auto'>
+						<img src='{$gd['guild_pic']}' placeholder='The {$gd['guild_name']} guild picture.' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>
+					</div>
+				</div>
+			</div>";
+		}
+		$gd['guild_capacity']=$gd['guild_level']*5;
         echo "
 		<table class='table table-bordered'>
 			<tr>
@@ -314,6 +327,11 @@ function apply()
         alert('danger', "Uh Oh!", "You cannot write applications if you're already in a guild.", true, "guilds.php?action=view&id={$_GET['id']}");
         die($h->endpage());
     }
+	if ($gd['guild_ba'] == 1)
+	{
+		alert('danger', "Uh Oh!", "This guild is currently blocking all applications.", true, "guilds.php?action=view&id={$_GET['id']}");
+        die($h->endpage());
+	}
     echo "<h3>Submitting an Application to join the {$gd['guild_name']} guild.</h3><hr />";
     if (isset($_POST['application'])) {
         //User fails CSRF verification

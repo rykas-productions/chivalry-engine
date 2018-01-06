@@ -55,9 +55,12 @@ while ($r = $db->fetch_row($settq)) {
     $set[$r['setting_name']] = $r['setting_value'];
 }
 //Parse the headers.
-$h = new headers;
-$h->startheaders();
-//Run the crons if possible.
-foreach (glob("crons/*.php") as $filename) {
-    include $filename;
+if (!isset($hidehdr))
+{
+	$h = new headers;
+	$h->startheaders();
 }
+//Run the crons if possible.
+/*foreach (glob("crons/*.php") as $filename) {
+    include $filename;
+}*/

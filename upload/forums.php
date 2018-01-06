@@ -99,7 +99,7 @@ switch ($_GET['act']) {
 }
 function idx()
 {
-    global $ir, $db;
+    global $ir, $db, $api, $userid;
     $q =
         $db->query(
             "SELECT `ff_lp_time`, `ff_id`, `ff_name`, `ff_desc`,
@@ -111,7 +111,7 @@ function idx()
     ?>
     <table class='table table-bordered table-hover'>
     <thead>
-    <tr class='table-primary'>
+    <tr>
         <th>
             <?php echo "Category"; ?>
         </th>
@@ -163,7 +163,7 @@ function idx()
     }
     echo "</table>";
     $db->free_result($q);
-    if (($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')) {
+    if ($api->UserMemberLevelGet($userid, 'forum moderator')) {
         echo "<hr /><h3>Staff Only Forums</h3><hr />";
         $q =
             $db->query(
@@ -176,7 +176,7 @@ function idx()
         ?>
         <table class='table table-bordered table-hover'>
         <thead>
-        <tr class='table-primary'>
+        <tr>
             <th>
                 <?php echo "Category"; ?>
             </th>
@@ -233,7 +233,7 @@ function idx()
 
 function viewforum()
 {
-    global $ir, $db, $h, $userid;
+    global $ir, $db, $h, $userid, $api;
     $_GET['viewforum'] = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs($_GET['viewforum']) : '';
     if (empty($_GET['viewforum'])) {
         alert('danger', "Uh Oh!", "You must enter a forum category you wish to view.", true, "forums.php");
@@ -241,7 +241,7 @@ function viewforum()
     }
     $q =
         $db->query(
-            "SELECT `ff_auth`, `ff_name`
+            "SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = '{$_GET['viewforum']}'");
     if ($db->num_rows($q) == 0) {
@@ -252,12 +252,19 @@ function viewforum()
     $r = $db->fetch_row($q);
     $db->free_result($q);
     if ($r['ff_auth'] == 'staff') {
-        if (!in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer'))) {
+        if (!$api->UserMemberLevelGet($userid, 'forum moderator')) {
             alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
             die($h->endpage());
         }
     }
-    $ntl = "&nbsp;[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
+	if ($r['ff_auth'] == 'guild' && $ir['guild'] != $r['ff_owner']) {
+		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
+		die($h->endpage());
+	}
+	if (permission("CanCreateThread",$userid))
+		$ntl = "&nbsp;[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
+	else
+		$ntl = "";
     echo "<ol class='breadcrumb'>
 		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item active'>{$r['ff_name']} {$ntl}</li>	
@@ -271,7 +278,7 @@ function viewforum()
     ?>
     <table class='table table-bordered table-hover'>
     <thead>
-    <tr class='table-primary'>
+    <tr>
         <th>
             <?php echo "Topic"; ?>
         </th>
@@ -320,8 +327,7 @@ function viewforum()
         if (!$pn1) {
             $pn1['username'] = "Non-existent User";
         }
-        $authored = ($r2['ft_owner_id'] == $userid) ? "table-warning" : "" ;
-        echo "<tr class='{$authored}'>
+        echo "<tr>
         		<td>
 					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
 					<small class='hidden-xs-down'>{$r2['ft_desc']}</small>
@@ -354,8 +360,7 @@ function viewtopic()
     }
     $q =
         $db->query(
-            "SELECT `ft_forum_id`, `ft_name`, `ft_posts`, `ft_id`,
-                    `ft_locked`, `ft_pinned`
+            "SELECT *
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['viewtopic']}");
     if ($db->num_rows($q) == 0) {
@@ -367,8 +372,7 @@ function viewtopic()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT `ff_auth`, `ff_id`, `ff_name`
-                    FROM `forum_forums`
+            "SELECT * FROM `forum_forums`
                     WHERE `ff_id` = {$topic['ft_forum_id']}");
     if ($db->num_rows($q2) == 0) {
         $db->free_result($q2);
@@ -383,6 +387,10 @@ function viewtopic()
             die($h->endpage());
         }
     }
+	if ($forum['ff_auth'] == 'guild' && $ir['guild'] != $forum['ff_owner']) {
+		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
+		die($h->endpage());
+	}
     echo "<ol class='breadcrumb'>
 		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item'><a href='?viewforum={$forum['ff_id']}'>{$forum['ff_name']}</a></li>
@@ -490,7 +498,7 @@ function viewtopic()
         $editorname = $db->fetch_single($editornameq);
         if ($r['fp_edit_count'] > 0) {
             $edittext =
-                "\n<br /><small><i>Last edited by <a href='viewuser.php?u={$r['fp_editor_id']}'>{$editorname}</a> at "
+                "\n<br /><small><i>Last edited by <a href='profile.php?user={$r['fp_editor_id']}'>{$editorname}</a> at "
                 . DateTime_Parse($r['fp_editor_time'])
                 . ", edited <b>{$r['fp_edit_count']}</b> times total.</i></small>";
         } else {
@@ -515,7 +523,7 @@ function viewtopic()
         }
         if ($memb['userid'] > 0) {
             if ($memb['display_pic']) {
-                $av = "<img src='{$memb['display_pic']}' class='img-responsive' width='75'>";
+                $av = "<img src='{$memb['display_pic']}' class='img-fluid'>";
             } else {
                 $av = "";
             }
@@ -524,7 +532,7 @@ function viewtopic()
         }
         $parser->parse($r['fp_text']);
         $r['fp_text'] = $parser->getAsHtml();
-        echo "<tr class='table-primary'>
+        echo "<tr>
 				<th width='25%'>Post #{$no}</th>
 				<th>
 				Posted {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink}
@@ -561,27 +569,34 @@ function viewtopic()
     echo "</table>";
     echo pagination(20, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
     if ($topic['ft_locked'] == 0) {
-        echo "<br />
-		<br />
-		<form action='?reply={$topic['ft_id']}' method='post'>
-			<table class='table'>
-				<tr>
-					<th>
-						Post Response
-						</th>
-					<td>
-						<textarea class='form-control' rows='5' cols='40' id='post' placeholder='You can use BBCode.' name='fp_text' required></textarea>
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'> 
-						<input type='submit' value='Submit Reply' class='btn btn-primary'>
-					</td>
-				</tr>
-			</table>
-			<input type='hidden' name='verf' value='{$code}' />
-		</form>
-		";
+		if (permission("CanReplyForum",$userid))
+		{
+			echo "<br />
+			<br />
+			<form action='?reply={$topic['ft_id']}' method='post'>
+				<table class='table'>
+					<tr>
+						<th>
+							Post Response
+							</th>
+						<td>
+							<textarea class='form-control' rows='5' cols='40' id='post' placeholder='You can use BBCode.' name='fp_text' required></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td colspan='2'> 
+							<input type='submit' value='Submit Reply' class='btn btn-primary'>
+						</td>
+					</tr>
+				</table>
+				<input type='hidden' name='verf' value='{$code}' />
+			</form>
+			";
+		}
+		else
+		{
+			echo "<br /><br />You do not have permission to reply to forum topics.";
+		}
     } else {
         echo "<br />
 		<br />
@@ -591,7 +606,7 @@ function viewtopic()
 
 function reply()
 {
-    global $h, $userid, $db, $api;
+    global $h, $userid, $db, $api, $ir;
     $_GET['reply'] = (isset($_GET['reply']) && is_numeric($_GET['reply'])) ? abs($_GET['reply']) : '';
     if (!isset($_POST['verf']) || !verify_csrf_code('forum_reply', stripslashes($_POST['verf']))) {
         csrf_error("?viewtopic={$_GET['reply']}");
@@ -614,7 +629,7 @@ function reply()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT `ff_auth`, `ff_id`
+            "SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
     if ($db->num_rows($q2) == 0) {
@@ -630,6 +645,15 @@ function reply()
             die($h->endpage());
         }
     }
+	if ($forum['ff_auth'] == 'guild' && $ir['guild'] != $forum['ff_owner']) {
+		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
+		die($h->endpage());
+	}
+	if (!permission("CanReplyForum",$userid))
+	{
+		alert('danger', "Uh Oh!", "You do not have permission to reply to forum topics.", true, "forums.php");
+		die($h->endpage());
+	}
     if ($topic['ft_locked'] == 0) {
         $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['fp_text']))));
         if ((strlen($_POST['fp_text']) > 65535)) {
@@ -656,6 +680,13 @@ function reply()
                  `ff_lp_poster_id` = $userid,
                  `ff_lp_t_id` = {$_GET['reply']}
                  WHERE `ff_id` = {$forum['ff_id']}");
+		$toq1=$db->fetch_single($db->query("SELECT `ft_owner_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['reply']}"));
+		$topicname=$db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_id` = {$_GET['reply']}"));
+		$toq2=$db->fetch_single($db->query("SELECT `forum_alert` FROM `user_settings` WHERE `userid` = {$toq1}"));
+		if (($toq2 == 1) && ($userid != $toq1))
+		{
+			$api->GameAddNotification($toq1,"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has replied to your forum topic, {$topicname}. Click <a href='forums.php?viewtopic={$_GET['reply']}&lastpost=1'>here</a> to read it.");
+		}
         alert('success', "Success!", "Your reply has posted successfully.", false);
         echo "<br />";
         $_GET['lastpost'] = 1;
@@ -668,7 +699,7 @@ function reply()
 
 function newtopicform()
 {
-    global $userid, $h, $db, $api;
+    global $userid, $h, $db, $api, $ir;
     $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
     if (empty($_GET['forum'])) {
         alert('danger', "Uh Oh!", "You must specify a forum you wish to create this topic in.", true, "forums.php");
@@ -676,7 +707,7 @@ function newtopicform()
     }
     $q =
         $db->query(
-            "SELECT `ff_auth`, `ff_name`
+            "SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = '{$_GET['forum']}'");
     if ($db->num_rows($q) == 0) {
@@ -688,10 +719,19 @@ function newtopicform()
     $db->free_result($q);
     if ($r['ff_auth'] == 'staff') {
         if ($api->UserMemberLevelGet($userid, 'forum moderator') == false) {
-            alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
+            alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewforum={$_GET['forum']}");
             die($h->endpage());
         }
     }
+	if ($r['ff_auth'] == 'guild' && $ir['guild'] != $r['ff_owner']) {
+		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewforum={$_GET['forum']}");
+		die($h->endpage());
+	}
+	if (!permission("CanCreateThread",$userid))
+	{
+		alert('danger', "Security Issue!", "You do not have permission to create forum topics.", true, "forums.php?viewforum={$_GET['forum']}");
+		die($h->endpage());
+	}
     $code = request_csrf_code("forums_newtopic_{$_GET['forum']}");
     echo "<ol class='breadcrumb'>
 		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
@@ -748,7 +788,7 @@ function newtopic()
     }
     $q =
         $db->query(
-            "SELECT `ff_auth`, `ff_id`
+            "SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = {$_GET['forum']}");
     if ($db->num_rows($q) == 0) {
@@ -764,6 +804,15 @@ function newtopic()
             die($h->endpage());
         }
     }
+	if ($r['ff_auth'] == 'guild' && $ir['guild'] != $r['ff_owner']) {
+		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
+		die($h->endpage());
+	}
+	if (!permission("CanCreateThread",$userid))
+	{
+		alert('danger', "Security Issue!", "You do not have permission to create forum topics.", true, "forums.php?viewforum={$_GET['forum']}");
+		die($h->endpage());
+	}
     $u = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
     $u = $db->escape($u);
     $_POST['ft_name'] =
@@ -827,7 +876,7 @@ function emptyallforums()
 
 function quote()
 {
-    global $userid, $h, $db, $api;
+    global $userid, $h, $db, $api, $ir;
     $code = request_csrf_code('forum_reply');
     $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
     $_GET['fpid'] = (isset($_GET['fpid']) && is_numeric($_GET['fpid'])) ? abs($_GET['fpid']) : '';
@@ -851,7 +900,7 @@ function quote()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT `ff_auth`,`ff_id`, `ff_name`
+            "SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
     if ($db->num_rows($q2) == 0) {
@@ -863,10 +912,14 @@ function quote()
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff') {
         if ($api->UserMemberLevelGet($userid, 'forum moderator') == false) {
-            alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
+            alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['viewtopic']}");
             die($h->endpage());
         }
     }
+	if ($forum['ff_auth'] == 'guild' && $ir['guild'] != $forum['ff_owner']) {
+		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['viewtopic']}");
+		die($h->endpage());
+	}
     $q3 = $db->query("SELECT `fp_text` FROM `forum_posts` WHERE `fp_id` = {$_GET['fpid']}");
     $text = $db->fetch_single($q3);
     $text = strip_tags(stripslashes($text));
@@ -906,7 +959,7 @@ function quote()
 
 function edit()
 {
-    global $userid, $h, $db, $api;
+    global $userid, $h, $db, $api, $ir;
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
     if (empty($_GET['topic'])) {
         alert("danger", "Uh Oh!", "Please specify the topic you wish to view.", true, "forums.php");
@@ -926,7 +979,7 @@ function edit()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT `ff_auth`, `ff_id`, `ff_name`
+            "SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
     if ($db->num_rows($q2) == 0) {
@@ -942,6 +995,10 @@ function edit()
             die($h->endpage());
         }
     }
+	if ($forum['ff_auth'] == 'guild' && $ir['guild'] != $forum['ff_owner']) {
+		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['topic']}");
+		die($h->endpage());
+	}
     $_GET['post'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? abs($_GET['post']) : '';
     if (empty($_GET['post'])) {
         alert("danger", "Uh Oh!", "Please specify the post you wish to edit.", true, "forums.php?viewtopic={$_GET['topic']}");
@@ -1019,7 +1076,7 @@ function editsub()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT `ff_auth`
+            "SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
     if ($db->num_rows($q2) == 0) {
@@ -1035,6 +1092,10 @@ function editsub()
             die($h->endpage());
         }
     }
+	if ($forum['ff_auth'] == 'guild' && $ir['guild'] != $forum['ff_owner']) {
+		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['topic']}");
+		die($h->endpage());
+	}
     $q3 =
         $db->query(
             "SELECT `fp_poster_id`
@@ -1111,6 +1172,10 @@ function move()
         "UPDATE `forum_topics`
              SET `ft_forum_id` = {$_POST['forum']}
              WHERE `ft_id` = {$_GET['topic']}");
+	$db->query(
+            "UPDATE `forum_posts`
+             SET `ff_id` = {$_POST['forum']}
+             WHERE `fp_topic_id` = {$_GET['topic']}");
     alert('success', "Success!", "Topic was moved successfully.", true, "forums.php?viewtopic={$_GET['topic']}");
     $api->SystemLogsAdd($userid, 'staff', "Moved Topic {$topic['ft_name']} to {$forum['ff_name']}");
     recache_forum($topic['ft_forum_id']);

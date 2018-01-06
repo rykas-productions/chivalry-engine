@@ -30,6 +30,7 @@ echo "<div class='jumbotron'>
     </div>";
 $AnnouncementQuery = $db->query("SELECT `ann_text`,`ann_time` FROM `announcements` ORDER BY `ann_time` desc LIMIT 1");
 $ANN = $db->fetch_row($AnnouncementQuery);
+$ANN['ann_text']=substr($ANN['ann_text'], 0, 300);
 echo "
 <div class='row'>
     <div class='col-sm-4'>
@@ -38,7 +39,7 @@ echo "
                 Latest Announcement
             </div>
             <div class='card-body'>
-                {$ANN['ann_text']}
+                " . strip_tags($ANN['ann_text'], '<br />') . " ...
             </div>
         </div>
     </div>

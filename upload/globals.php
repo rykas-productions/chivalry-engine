@@ -23,6 +23,10 @@ if (!isset($_SESSION['started'])) {
     session_regenerate_id();
     $_SESSION['started'] = true;
 }
+if (!isset($_SESSION['disable_alerts']))
+{
+    $_SESSION['disable_alerts'] = true;
+}
 //Set user's theme to cookies for 30 days.
 if (!isset($_COOKIE['theme'])) {
     setcookie('theme', '1', time() + 86400);
@@ -37,7 +41,10 @@ require "global_func.php";
 $domain = determine_game_urlbase();
 //If user is not logged in, redirect to login page.
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) {
-    $login_url = "login.php";
+	if ($_COOKIE['login_expire'] > time())
+		$login_url = "login2.php";
+	else
+		$login_url = "login.php";
     header("Location: {$login_url}");
     exit;
 }
@@ -68,13 +75,15 @@ global $jobquery, $housequery, $voterquery;
 if (isset($jobquery) && $jobquery) {
     $is =
         $db->query(
-            "SELECT `u`.*, `us`.*, `j`.*, `jr`.*
+            "SELECT `u`.*, `us`.*, `j`.*, `jr`.*, `uas`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
                      LEFT JOIN `jobs` AS `j` ON `j`.`jRANK` = `u`.`job`
                      LEFT JOIN `job_ranks` AS `jr`
                      ON `jr`.`jrID` = `u`.`jobrank`
+					 INNER JOIN `user_settings` AS `uas`
+                     ON `u`.`userid`=`uas`.`userid`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
 } else if (isset($housequery) && $housequery) {
@@ -84,6 +93,8 @@ if (isset($jobquery) && $jobquery) {
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
+					 INNER JOIN `user_settings` AS `uas`
+                     ON `u`.`userid`=`uas`.`userid`
                      LEFT JOIN `estates` AS `e` ON `e`.`house_will` = `u`.`maxwill`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
@@ -94,21 +105,25 @@ if (isset($jobquery) && $jobquery) {
     }
     $is =
         $db->query(
-            "SELECT `u`.*, `us`.*, `uv`.*
+            "SELECT `u`.*, `us`.*, `uv`.*, `uas`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
 					 INNER JOIN `uservotes` AS `uv`
                      ON `u`.`userid`=`uv`.`userid`
+					 INNER JOIN `user_settings` AS `uas`
+                     ON `u`.`userid`=`uas`.`userid`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
 } else {
     $is =
         $db->query(
-            "SELECT `u`.*, `us`.*
+            "SELECT `u`.*, `us`.*, `uas`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
+					 INNER JOIN `user_settings` AS `uas`
+                     ON `u`.`userid`=`uas`.`userid`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
 }
@@ -138,8 +153,8 @@ if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SE
 //Basic chceks around the game.
 check_level();
 check_data();
-getOS($_SERVER['HTTP_USER_AGENT']);
-getBrowser($_SERVER['HTTP_USER_AGENT']);
+$os=getOS($_SERVER['HTTP_USER_AGENT']);
+$browser=getBrowser($_SERVER['HTTP_USER_AGENT']);
 $h = new headers;
 //Include API file.
 include("class/class_api.php");
@@ -158,10 +173,11 @@ if (isset($nohdr) == false || !$nohdr) {
     }
     global $menuhide;
 }
+cslog('log',"You are using {$browser} on {$os}.");
 //Run the crons if possible.
-foreach (glob("crons/*.php") as $filename) {
+/*foreach (glob("crons/*.php") as $filename) {
     include $filename;
-}
+}*/
 $get = $db->query("SELECT `sip_recipe`,`sip_user` FROM `smelt_inprogress` WHERE `sip_time` < {$time}");
 //Select completed smelting recipes and give to the user.
 if ($db->num_rows($get)) {
@@ -171,3 +187,4 @@ if ($db->num_rows($get)) {
     $api->GameAddNotification($r['user'], "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
     $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$r['user']} AND `sip_time` < {$time}");
 }
+include('dailyreward.php');
