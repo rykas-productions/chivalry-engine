@@ -8,7 +8,7 @@
 */
 $macropage = ('criminal.php');
 require('globals.php');
-echo "<h3>Criminal Center</h3>";
+echo "<h3><i class='game-icon game-icon-robber'></i> Criminal Center</h3>";
 if ($api->UserStatus($ir['userid'], 'infirmary') || $api->UserStatus($ir['userid'], 'dungeon')) {
     alert('danger', "Uh Oh!", "You cannot commit crimes while in the infirmary or dungeon.");
     die($h->endpage());

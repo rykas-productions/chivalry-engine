@@ -19,32 +19,30 @@ if ($db->num_rows($q2) != 0) {
     alert('danger', "Uh Oh!", "You've been mail-banned for {$r['days']}. Reason: {$r['mbREASON']}", true, 'index.php');
     die($h->endpage());
 }
-
-
 echo "
 <div class='table-responsive'>
 <table class='table table-bordered'>
 	<tr>
 		<td>
-			<a href='inbox.php'>Inbox</a>
+			<a href='inbox.php'><i class='fas fa-fw fa-inbox'></i> Inbox</a>
 		</td>
 		<td>
-			<a href='?action=outbox'>Outbox</a>
+			<a href='?action=outbox'><i class='fas fa-fw fa-envelope'></i> Outbox</a>
 		</td>
 		<td>
-			<a href='?action=compose'>Compose</a>
+			<a href='?action=compose'><i class='fas fa-fw fa-file'></i> Compose</a>
 		</td>
 		<td>
-			<a href='blocklist.php'>Blocklist</a>
+			<a href='blocklist.php'><i class='fas fa-fw fa-ban'></i> Blocklist</a>
 		</td>
 		<td>
-			<a href='?action=delall'>Delete All</a>
+			<a href='?action=delall'><i class='fas fa-fw fa-trash-alt'></i> Delete All</a>
 		</td>
 		<td>
-			<a href='?action=archive'>Archive</a>
+			<a href='?action=archive'><i class='fas fa-fw fa-save'></i> Archive</a>
 		</td>
 		<td>
-			<a href='contacts.php'>Contacts</a>
+			<a href='contacts.php'><i class='fas fa-fw fa-address-book'></i> Contacts</a>
 		</td>
 	</tr>
 </table>
@@ -279,12 +277,35 @@ function send()
 		alert('danger', "Uh Oh!", "This user has you blocked. You cannot send messages to players that have you blocked.", true, 'inbox.php?action=compose');
         die($h->endpage());
 	}
+	$input=$msg;
     $msg=encrypt_message($msg,$userid,$to);
     //Insert message into database so receiving player can view it later.
     $db->query("INSERT INTO `mail`
 	(`mail_id`, `mail_to`, `mail_from`, `mail_status`, `mail_subject`, `mail_text`, `mail_time`) 
 	VALUES (NULL, '{$to}', '{$userid}', 'unread', '{$subj}', '{$msg}', '{$time}');");
     alert('success', "Success!", "Message has been sent successfully", false);
+	//Mailban the user if needed?
+	$fiveminago=time()-300;
+	$lastthreemsg=$db->query("SELECT * 
+								FROM `mail` 
+								WHERE `mail_from` = {$userid} 
+								AND `mail_time` >= {$fiveminago}");
+	$same=0;
+	while ($ltr = $db->fetch_row($lastthreemsg))
+	{
+		$decrypt=decrypt_message($ltr['mail_text'],$userid,$ltr['mail_to']);
+		if ($decrypt == $input)
+			$same=$same+1;
+	}
+	if ($same >= 3)
+	{
+		$timed=time()+259200;
+		$db->query("INSERT INTO `mail_bans`
+                    (`mbUSER`, `mbREASON`, `mbBANNER`, `mbTIME`) VALUES
+                    ('{$userid}', 'Spamming', '1', '{$timed}')");
+		$api->GameAddNotification($userid, "You have been mail-banned for 3 days for the reason: 'Spamming'.");
+		staffnotes_entry($userid,"Mail banned for 3 for 'Spamming'.",0);
+	}
     home();
 }
 

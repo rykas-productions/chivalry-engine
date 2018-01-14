@@ -65,9 +65,9 @@ function two()
     if (isset($_GET['code'])) {
         $token = $db->escape(stripslashes($_GET['code']));
         if ($db->num_rows($db->query("SELECT `pwr_id` FROM `pw_recovery` WHERE `pwr_code` = '{$token}'")) == 0) {
-            alert('danger', "Uh Oh!", "Your account does not have a password recovery token linked.", false);
+            alert('danger', "Uh Oh!", "Invalid token.", false);
         } else if ($db->fetch_single($db->query("SELECT `pwr_expire` FROM `pw_recovery` WHERE `pwr_code` = '{$token}'")) < time()) {
-            alert('danger', "Uh Oh!", "Your password recovery token has expired.", false);
+            alert('danger', "Uh Oh!", "Token has expired.", false);
         } else {
             $pwr = $db->fetch_row($db->query("SELECT * FROM `pw_recovery` WHERE `pwr_code` = '{$token}'"));
             $pw = substr(randomizer(), 0, 16);
@@ -79,6 +79,9 @@ function two()
             $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$pwr['pwr_email']}'");
             $e_pw = encode_password($pw);
             $db->query("UPDATE `users` SET `password` = '{$e_pw}' WHERE `email` = '{$pwr['pwr_email']}'");
+			$newuserid=$db->fetch_single($db->query("SELECT `userid` FROM `users` WHERE `email` = '{$to}'"));
+			$randomizer=randomizer();
+            $db->query("UPDATE `user_settings` SET `security_key` = '{$randomizer}' WHERE `userid` = {$newuserid}");
             $db->query("DELETE FROM `pw_recovery` WHERE `pwr_code` = '{$token}'");
             alert('success', "Success!", "Your new password has been emailed to you. If you were previously logged in,
 			    your session has been terminated.", false);

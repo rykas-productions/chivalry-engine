@@ -11,7 +11,7 @@
 require('globals.php');
 
 //Different options for different time periods. The GET is in minutes.
-echo "<h3>Users Online List</h3><hr />
+echo "<h3><i class='fas fa-toggle-on'></i> Users Online</h3><hr />
 [<a href='?act=5'>5 Minutes</a>]
 [<a href='?act=15'>15 Minutes</a>]
 [<a href='?act=60'>1 Hour</a>]

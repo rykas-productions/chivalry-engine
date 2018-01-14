@@ -29,6 +29,7 @@ $db->query("UPDATE `users` SET `dayslogged` = 0 WHERE `laston` < {$last24}");
 $db->query("UPDATE `users` SET `dayslogged` = `dayslogged` + 1 WHERE `laston` > {$last24}");
 $db->query("UPDATE `users` SET `dayslogged` = 0 WHERE `dayslogged` > 7");
 $db->query("UPDATE `users` SET `rewarded` = 0");
+$db->query("UPDATE `userstats` SET `luck` = 100");
 
 $db->query("UPDATE `bank_investments` SET `days_left` = `days_left` - 1");
 $biq=$db->query("SELECT * FROM `bank_investments` WHERE `days_left` = 0");

@@ -11,6 +11,7 @@ if ((!file_exists('./installer.lock')) && (file_exists('installer.php'))) {
     die();
 }
 require("globals_nonauth.php");
+require('lib/bbcode_engine.php');
 $currentpage = $_SERVER['REQUEST_URI'];
 $cpage = strip_tags(stripslashes($currentpage));
 $domain = determine_game_urlbase();
@@ -31,24 +32,25 @@ echo "<div class='jumbotron'>
 $AnnouncementQuery = $db->query("SELECT `ann_text`,`ann_time` FROM `announcements` ORDER BY `ann_time` desc LIMIT 1");
 $ANN = $db->fetch_row($AnnouncementQuery);
 $ANN['ann_text']=substr($ANN['ann_text'], 0, 300);
+$parser->parse($ANN['ann_text']);
 echo "
 <div class='row'>
     <div class='col-sm-4'>
         <div class='card'>
             <div class='card-header'>
-                Latest Announcement
+                <i class='fas fa-bullhorn'></i> Latest Announcement
             </div>
-            <div class='card-body'>
-                " . strip_tags($ANN['ann_text'], '<br />') . " ...
+            <div class='card-body' align='left'>
+                " . $parser->getAsHtml() . "
             </div>
         </div>
     </div>
     <div class='col-sm-4'>
         <div class='card'>
             <div class='card-header'>
-                Top 10 Players
+                <i class='game-icon game-icon-podium'></i> Top 10 Players
             </div>
-            <div class='card-body'>";
+            <div class='card-body' align='left'>";
 $Rank = 0;
 $RankPlayerQuery =
     $db->query("SELECT u.`userid`, `level`, `username`,
@@ -70,12 +72,12 @@ echo "</div>
     <div class='col-sm-4'>
         <div class='card'>
             <div class='card-header'>
-                Top 10 Guilds
+                <i class='game-icon game-icon-minions'></i> Top 10 Guilds
             </div>";
 $GRank = 0;
 $RankGuildQuery = $db->query("SELECT `guild_name`,`guild_level` FROM `guild` ORDER BY `guild_level` desc LIMIT 10");
 echo "
-            <div class='card-body'>";
+            <div class='card-body' align='left'>";
 while ($gdata = $db->fetch_row($RankGuildQuery)) {
     $GRank = $GRank + 1;
     echo "{$GRank}) {$gdata['guild_name']} (Level {$gdata['guild_level']})<br />";

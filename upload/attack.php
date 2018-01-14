@@ -742,6 +742,10 @@ function xp()
             exit($h->endpage());
         } else {
             $qe = $r['level'] * $r['level'] * $r['level'];
+			if ($api->UserEquippedItem($userid,'primary',93))
+				$qe=$qe+($qe*0.03);
+			if ($api->UserEquippedItem($userid,'secondary',93))
+				$qe=$qe+($qe*0.03);
             $expgain = Random($qe / 2, $qe);
             $ir['total'] = $ir['strength'] + $ir['agility'] + $ir['guard'];
             $ot = $db->fetch_row($db->query("SELECT * FROM `userstats` WHERE `userid` = {$r['userid']}"));
@@ -765,7 +769,6 @@ function xp()
                 $expgain=$expgain*0.25;
                 $xplostequip="Your experience gains were decreased because your opponent had no equipment.";
             }
-			$expgain=$expgain;
             $expperc = round($expgain / $ir['xp_needed'] * 100);
             $hosptime = Random(5, 10) + floor($ir['level'] / 10);
             //Give user XP.

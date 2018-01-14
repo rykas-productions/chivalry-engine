@@ -213,6 +213,7 @@ function armor()
             $api->UserGiveItem($userid, $ir['equip_armor'], 1);
 			$sbq=$db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_POST['type']}'");
 			$statloss='';
+			$armorname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
 			if ($db->num_rows($sbq) > 0)
 			{
 				while ($sbr=$db->fetch_row($sbq))
@@ -239,7 +240,6 @@ function armor()
 				}
 				alert('info',"Information!","You have lost {$statloss} when you unequipped your {$armorname}.",false);
 			}
-            $armorname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
             $api->SystemLogsAdd($userid, 'equip', "Unequipped {$armorname} as their armor.");
         }
 		$txt='';

@@ -2102,151 +2102,6 @@ function cslog($type='log',$txt)
 	echo "<script>console.{$type}('{$txt}')</script>";
 }
 
-function loadassets()
-{
-	global $db,$userid,$ir;
-	strtolower($browser=$db->fetch_single($db->query("SELECT `browser` FROM `userdata` WHERE `userid` = {$userid}")));
-	if ($userid == 0)
-	{
-		?>
-		<link rel="stylesheet" href="file:///android_asset/css/game-v1.2.min.css">
-		<link rel="stylesheet" href="file:///android_asset/css/rpg-awesome.min.css">
-		<link rel="stylesheet" href="file:///android_asset/css/game-fonts-v1.0.4-min.css">
-		<?php
-		if ($ir['theme'] == 1)
-		{
-			?>
-			<link rel="stylesheet" href="file:///android_asset/css/bootstrap.min.css">
-			<meta name="theme-color" content="#343a40">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-		if ($ir['theme'] == 2)
-		{
-			?>
-			<link rel="stylesheet" href="file:///android_asset/css/darkly.bs4.b2.min.css">
-			<meta name="theme-color" content="#303030">
-			<?php
-			$hdr='navbar-light bg-light';
-		}
-		if ($ir['theme'] == 3)
-		{
-			?>
-			<link rel="stylesheet" href="file:///android_asset/css/superhero.min.css">
-			<meta name="theme-color" content="#4E5D6C">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-		if ($ir['theme'] == 4)
-		{
-			?>
-			<link rel="stylesheet" href="file:///android_asset/css/slate.min.css">
-			<meta name="theme-color" content="#272B30">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-		if ($ir['theme'] == 5)
-		{
-			?>
-			<link rel="stylesheet" href="file:///android_asset/css/cerulean.min.css">
-			<meta name="theme-color" content="#04519b">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-		if ($ir['theme'] == 6)
-		{
-			?>
-			<link rel="stylesheet" href="file:///android_asset/css/sketchy.min.css">
-			<meta name="theme-color" content="#333">
-			<?php
-			$hdr='navbar-dark bg-primary';
-		}
-		if ($ir['theme'] == 7)
-		{
-			?>
-			<link rel="stylesheet" href="file:///android_asset/css/united.min.css">
-			<meta name="theme-color" content="#772953">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-	}
-	else
-	{
-		?>
-		<link rel="stylesheet" href="css/game-v1.2.min.css">
-		<link rel="stylesheet" href="css/rpg-awesome.min.css">
-		<link rel="stylesheet" href="css/game-fonts-v1.0.4-min.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-		<?php
-		if ($ir['theme'] == 1)
-		{
-			?>
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
-			<meta name="theme-color" content="#343a40">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-		if ($ir['theme'] == 2)
-		{
-			?>
-			<link rel="stylesheet" href="css/darkly.bs4.b2.min.css">
-			<meta name="theme-color" content="#303030">
-			<?php
-			$hdr='navbar-light bg-light';
-		}
-		if ($ir['theme'] == 3)
-		{
-			?>
-			<link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
-			<meta name="theme-color" content="#4E5D6C">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-		if ($ir['theme'] == 4)
-		{
-			?>
-			<link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
-			<meta name="theme-color" content="#272B30">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-		if ($ir['theme'] == 5)
-		{
-			?>
-			<link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
-			<meta name="theme-color" content="#04519b">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-		if ($ir['theme'] == 6)
-		{
-			?>
-			<link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
-			<meta name="theme-color" content="#78C2AD">
-			<?php
-			$hdr='navbar-dark bg-primary';
-		}
-		if ($ir['theme'] == 7)
-		{
-			?>
-			<link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
-			<meta name="theme-color" content="#772953">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-		if ($ir['theme'] == 8)
-		{
-			?>
-			<link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
-			<meta name="theme-color" content="#060606">
-			<?php
-			$hdr='navbar-dark bg-dark';
-		}
-		setcookie('theme', $ir['theme']);
-	}
-	return $hdr;
-}
-
 function encrypt_message($msg,$sender,$receiver)
 {
     global $db;
@@ -2269,4 +2124,54 @@ function decrypt_message($msg,$sender,$receiver)
 		return stripslashes(str_replace(array("\\n\\r", "\\n", "\\r"), "", openssl_decrypt($msg,"AES-256-ECB",$key)));
 	else
 		return "<span class='text-danger'>Failed to decrypt message. This is likely due to either the sender or recipient changing their password.</span>";
+}
+
+function staffnotes_entry($user,$text,$whodo=-1)
+{
+	global $db,$api,$userid,$ir;
+	$user = (isset($user) && is_numeric($user)) ? abs($user) : 0;
+	$text = (isset($text) && !is_array($text)) ? $db->escape(strip_tags(stripslashes($text))) : '';
+    if (empty($user) || !isset($text)) {
+        return false;
+    }
+    $q = $db->query("SELECT `staff_notes` FROM `users` WHERE `userid` = {$user}");
+    if ($db->num_rows($q) == 0) {
+        return false;
+    }
+	if ($whodo == 0)
+	{
+		$r['username']="CID Admin";
+		$whodo=1;
+	}
+	elseif ($whodo == -1)
+	{
+		$r['username']=$ir['username'];
+		$whodo=$userid;
+	}
+	else 
+	{
+		$r['username']=$api->SystemUserIDtoName($whodo);
+	}
+	$notes=$db->escape($db->fetch_single($q));
+	$date=date('m/d/Y');
+	$date.=" at ";
+	$date.=date('g:iA');
+	$text = "{$date}: {$text} -{$r['username']} [{$whodo}]
+
+";
+	$sql="{$text}{$notes}";
+	$db->query("UPDATE `users` SET `staff_notes` = '{$sql}' WHERE `userid` = {$user}");
+}
+function calculateLuck($user)
+{
+	global $db;
+	$r=$db->fetch_single($db->query("SELECT `luck` FROM `userstats` WHERE `userid` = {$user}"));
+	$lucked=$r*-1;
+	$adjustedluck=100+(100+$lucked);
+	$luckrng=Random(0,$adjustedluck);
+	if ($luckrng == 1)
+	{
+		$db->query("UPDATE `userstats` SET `luck` = `luck` - 5 WHERE `userid` = {$user}");
+		return true;
+	}
 }

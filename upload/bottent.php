@@ -9,7 +9,7 @@
 */
 $macropage = ('bottent.php');
 require('globals.php');
-echo "<h3>Bot Tent</h3><hr />Welcome to the Bot Tent. Here you may challenge NPCs to battle. If you win, you'll receive
+echo "<h3><i class='game-icon game-icon-guards'></i> NPC Battle List</h3><hr />Welcome to the Bot Tent. Here you may challenge NPCs to battle. If you win, you'll receive
     an item. These items may or may not be useful in your adventures. To deter players getting massive amounts of items,
     you can only attack these NPCs every so often. Their cooldown is listed here as well. To receive the item, you must
     mug the bot.<hr />";

@@ -125,17 +125,17 @@ if (!empty($username)) {
         if ($e_class == 'Warrior') {
             $db->query(
                 "INSERT INTO `userstats`
-					 VALUES({$i}, 1100, 1000, 900, 1000, 1000)");
+					 VALUES({$i}, 1100, 1000, 900, 1000, 1000, 100)");
         }
         if ($e_class == 'Rogue') {
             $db->query(
                 "INSERT INTO `userstats`
-					 VALUES({$i}, 900, 1100, 1000, 1000, 1000)");
+					 VALUES({$i}, 900, 1100, 1000, 1000, 1000, 100)");
         }
         if ($e_class == 'Defender') {
             $db->query(
                 "INSERT INTO `userstats`
-					 VALUES({$i}, 1000, 900, 1100, 1000, 1000)");
+					 VALUES({$i}, 1000, 900, 1100, 1000, 1000, 100)");
         }
         if ($_POST['ref']) {
             $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']} WHERE `userid` = {$_POST['ref']}");
@@ -198,7 +198,10 @@ if (!empty($username)) {
 					Username
 				</th>
 				<td>
-                    <input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='3-20 characters in length' onkeyup='CheckUsername(this.value);' required>
+					<div class='input-group'>
+							<span class='input-group-text'><i class='fas fa-id-card fa-fw'></i></span>
+						<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='3-20 characters in length' onkeyup='CheckUsername(this.value);' required>
+					</div>
 					<div id='usernameresult' class='invalid-feedback'></div>
 				</td>
 			</tr>
@@ -208,7 +211,7 @@ if (!empty($username)) {
 				</th>
 				<td>
 					<div class='input-group'>
-						<span class='input-group-addon'><i class='fa fa-envelope-o fa-fw'></i></span>
+						<span class='input-group-text'><i class='game-icon game-icon-envelope'></i></span>
 						<input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
                     </div>
 					<div id='emailresult' class='invalid-feedback'></div>
@@ -220,7 +223,7 @@ if (!empty($username)) {
 				</th>
 				<td>
 					<div class='input-group'>
-						<span class='input-group-addon'><i class='fa fa-key fa-fw'></i></span>
+						<span class='input-group-text'><i class='fa fa-key fa-fw'></i></span>
 						<input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='Unique passwords recommended' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
 					</div>
 					<div id='passwordresult'></div>
@@ -231,8 +234,11 @@ if (!empty($username)) {
 						Confirm Password
 					</th>
 					<td>
-                        <input type='password' class='form-control' id='cpassword' name='cpassword' minlength='3' maxlength='256' placeholder='Confirm password entered previously' onkeyup='PasswordMatch();' required>
-					    <div id='cpasswordresult' class='invalid-feedback'></div>
+						<div class='input-group'>
+							<span class='input-group-text'><i class='fa fa-key fa-fw'></i></span>
+							<input type='password' class='form-control' id='cpassword' name='cpassword' minlength='3' maxlength='256' placeholder='Confirm password entered previously' onkeyup='PasswordMatch();' required>
+					    </div>
+						<div id='cpasswordresult' class='invalid-feedback'></div>
 					</td>
 				</tr>
 				<tr>
@@ -240,10 +246,13 @@ if (!empty($username)) {
 						Sex
 					</th>
 					<td>
-						<select name='gender' class='form-control' type='dropdown'>
-							<option value='Male'>Male</option>
-							<option value='Female'>Female</option>
-						</select>
+						<div class='input-group'>
+							<span class='input-group-text'><i class='fa fa-transgender fa-fw'></i></span>
+							<select name='gender' class='form-control' type='dropdown'>
+								<option value='Male'>Male</option>
+								<option value='Female'>Female</option>
+							</select>
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -251,12 +260,15 @@ if (!empty($username)) {
 						Class
 					</th>
 					<td>
-						<select name='class' id='class' class='form-control' onchange='OutputTeam(this)' type='dropdown'>
-							<option></option>
-							<option value='Warrior'>Warrior</option>
-							<option value='Rogue'>Rogue</option>
-							<option value='Guardian'>Guardian</option>
-						</select>
+						<div class='input-group'>
+							<span class='input-group-text'><i class='game-icon game-icon-elf-helmet'></i></span>
+							<select name='class' id='class' class='form-control' onchange='OutputTeam(this)' type='dropdown'>
+								<option></option>
+								<option value='Warrior'>Warrior</option>
+								<option value='Rogue'>Rogue</option>
+								<option value='Guardian'>Guardian</option>
+							</select>
+						</div>
 						<div id='teamresult' class='invalid-feedback'></div>
 					</td>
 				</tr>

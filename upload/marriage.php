@@ -13,7 +13,7 @@
 	License: http://www.dbad-license.org/
 */
 require('globals.php');
-echo "<h3>Marriage Center</h3><hr />";
+echo "<h3><i class='game-icon game-icon-lovers'></i> Marriage Center</h3><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';

@@ -34,7 +34,7 @@ if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
     die($h->endpage());
 }
 $_SESSION['tresde'] = $_GET['tresde'];
-echo "<h3>Roulette</h3><hr />";
+echo "<h3><i class='game-icon game-icon-table'></i> Roulette</h3><hr />";
 if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
     $_POST['bet'] = abs($_POST['bet']);
     if (!isset($_POST['number'])) {

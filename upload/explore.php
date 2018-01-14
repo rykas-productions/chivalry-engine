@@ -39,7 +39,7 @@ if ($api->UserStatus($ir['userid'], 'dungeon')) {
     die($h->endpage());
 }
 echo "<h4>You begin exploring the town. You find a few things that could keep you occupied.</h4></div>
-<div class='col-md-4'>
+<div class='col-md-4' align='left'>
 	<ul class='nav flex-column nav-pills'>
 		<li class='nav-item'>
 			<a class='nav-link' data-toggle='tab' href='#SHOPS'>
@@ -49,7 +49,7 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 		</li>
 		<li class='nav-item'>
 			<a class='nav-link' data-toggle='tab' href='#FD'>
-				<i class='fa fa-diamond'></i> 
+				<i class='far fa-gem'></i> 
 				Financial District
 			</a>
 		</li>
@@ -61,25 +61,25 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 		</li>
 		<li class='nav-item'>
 			<a class='nav-link' data-toggle='tab' href='#ADMIN'>
-				<i class='fa fa-legal'></i> 
+				<i class='fas fa-balance-scale'></i> 
 				Administration District
 			</a>
 		</li>
 		<li class='nav-item'>
 			<a class='nav-link' data-toggle='tab' href='#GAMES'>
-				<i class='fa fa-money'></i> 
+				<i class='fas fa-money-bill-alt'></i> 
 				Gambling District
 			</a>
 		</li>
 		<li class='nav-item'>
 			<a class='nav-link' data-toggle='tab' href='#GUILDS'>
-				<i class='fa fa-group'></i> 
+				<i class='fas fa-users'></i> 
 				Guilds District
 			</a>
 		</li>
 		<li class='nav-item'>
 			<a class='nav-link' data-toggle='tab' href='#PINTER'>
-				<i class='fa fa-comments-o'></i> 
+				<i class='fas fa-comments'></i> 
 				Social District
 			</a>
 		</li>
@@ -88,95 +88,95 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 <div class='col-md-4'>
 	<div class='tab-content'>
 		<div id='SHOPS' class='tab-pane'>
-			<div class='card'>
+			<div class='card' align='left'>
 				<div class='card-body'>
-					<a href='shops.php'>Local Shops</a><br />
-					<a href='itemmarket.php'>Item Market <span class='badge badge-pill badge-primary'>{$market}</span></a><br />
-					<a href='secmarket.php'>Chivalry Tokens Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />
+					<a href='shops.php'><i class='game-icon game-icon-shop'></i> Local Shops</a><br />
+					<a href='itemmarket.php'><i class='game-icon game-icon-trade'></i> Item Market <span class='badge badge-pill badge-primary'>{$market}</span></a><br />
+					<a href='secmarket.php'><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />
 				</div>
 			</div>
 		</div>
 		<div id='FD' class='tab-pane'>
-			<div class='card'>
+			<div class='card' align='left'>
 				<div class='card-body'>
-				    <a href='job.php'>Work Center</a><br />
-					<a href='bank.php'>City Bank</a><br />
-					<a href='tokenbank.php'>Chivalry Token Bank</a><br />
-					<a href='estates.php'>Estate Agent</a><br />
-					<a href='travel.php'><i class='ra ra-horseshoe'></i> Travel Agent</a><br />
-					<a href='temple.php'>Temple of Fortune</a><br />
+				    <a href='job.php'><i class='game-icon game-icon-push'></i> Work Center</a><br />
+					<a href='bank.php'><i class='game-icon game-icon-bank'></i> City Bank</a><br />
+					<a href='tokenbank.php'><i class='game-icon game-icon-chest'></i> Chivalry Token Bank</a><br />
+					<a href='estates.php'><i class='game-icon game-icon-house'></i> Estate Agent</a><br />
+					<a href='travel.php'><i class='game-icon game-icon-horseshoe'></i> Travel Agent</a><br />
+					<a href='temple.php'><i class='game-icon game-icon-mayan-pyramid'></i> Temple of Fortune</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='HL' class='tab-pane'>
-			<div class='card'>
+			<div class='card' align='left'>
 				<div class='card-body'>
-					<a href='mine.php'><i class='ra ra-mining-diamonds'></i> Dangerous Mines</a><br />
-					<a href='smelt.php'><i class='ra ra-forging'></i> Blacksmith's Smeltery</a><br />
-					<a href='bottent.php'>NPC Battle List</a><br />
-					<a href='gym.php'>The Gym</a><br />
-					<a href='chivalry_gym.php'>The Chivalry Gym</a><br />
-					<a href='criminal.php'>Criminal Center</a><br />
-					<a href='academy.php'>Learning Academy</a><br />
-					<a href='achievements.php'>Achievements</a><br />
+					<a href='mine.php'><i class='game-icon game-icon-mining'></i> Dangerous Mines</a><br />
+					<a href='smelt.php'><i class='game-icon game-icon-anvil'></i> Blacksmith's Smeltery</a><br />
+					<a href='bottent.php'><i class='game-icon game-icon-guards'></i> NPC Battle List</a><br />
+					<a href='gym.php'><i class='game-icon game-icon-weight-lifting-down'></i> The Gym</a><br />
+					<a href='chivalry_gym.php'><i class='game-icon game-icon-weight-lifting-up'></i> Chivalry Gym</a><br />
+					<a href='criminal.php'><i class='game-icon game-icon-robber'></i> Criminal Center</a><br />
+					<a href='academy.php'><i class='game-icon game-icon-diploma'></i> Local Academy</a><br />
+					<a href='achievements.php'><i class='game-icon game-icon-achievement'></i> Achievements</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='ADMIN' class='tab-pane'>
-			<div class='card'>
+			<div class='card' align='left'>
 				<div class='card-body'>
-					<a href='users.php'>Players List <span class='badge badge-pill badge-primary'>{$users}</span></a><br />
-					<a href='usersonline.php'>Players Online <span class='badge badge-pill badge-primary'>{$userson}</span></a><br />
-					<a href='userstown.php'>Players In Town <span class='badge badge-pill badge-primary'>{$userstown}</span></a><br />
-					<a href='staff.php'>CID Staff</a><br />
-					<a href='fedjail.php'>Federal Dungeon</a><br />
-					<a href='stats.php'>Game Statistics</a><br />
-					<a href='playerreport.php'>Player Report</a><br />
-					<a href='announcements.php'>Announcements <span class='badge badge-pill badge-primary'>{$ir['announcements']}</span></a><br />
-					<a href='itemappendix.php'>Item Appendix</a><br />
+					<a href='users.php'><i class='fas fa-users'></i>  Players List <span class='badge badge-pill badge-primary'>{$users}</span></a><br />
+					<a href='usersonline.php'><i class='fas fa-toggle-on'></i> Players Online <span class='badge badge-pill badge-primary'>{$userson}</span></a><br />
+					<a href='userstown.php'><i class='game-icon game-icon-village'></i> Players In Town <span class='badge badge-pill badge-primary'>{$userstown}</span></a><br />
+					<a href='staff.php'><i class='game-icon game-icon-embrassed-energy'></i> CID Staff</a><br />
+					<a href='fedjail.php'><i class='game-icon game-icon-closed-doors'></i> Federal Dungeon</a><br />
+					<a href='stats.php'><i class='fas fa-chart-bar'></i> Game Statistics</a><br />
+					<a href='playerreport.php'><i class='far fa-flag'></i> Player Report</a><br />
+					<a href='announcements.php'><i class='fas fa-bullhorn'></i> Announcements <span class='badge badge-pill badge-primary'>{$ir['announcements']}</span></a><br />
+					<a href='itemappendix.php'><i class='fas fa-list'></i> Item Appendix</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='GAMES' class='tab-pane'>
-			<div class='card'>
+			<div class='card' align='left'>
 				<div class='card-body'>
-					<a href='russianroulette.php'>Russian Roulette</a><br />
-					<a href='roulette.php?tresde={$tresder}'>Roulette Table</a><br />
-					<a href='slots.php?tresde={$tresder}'>Slot Machines</a><br />
-					<a href='hexbags.php?tresde={$tresder}'>Hexbags <span class='badge badge-pill badge-primary'>{$ir['hexbags']}</span></a><br />";
+					<a href='russianroulette.php'><i class='game-icon game-icon-revolver'></i> Russian Roulette</a><br />
+					<a href='roulette.php?tresde={$tresder}'><i class='game-icon game-icon-table'></i> Roulette Table</a><br />
+					<a href='slots.php?tresde={$tresder}'><i class='game-icon game-icon-pokecog'></i> Slot Machines</a><br />
+					<a href='hexbags.php?tresde={$tresder}'><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags <span class='badge badge-pill badge-primary'>{$ir['hexbags']}</span></a><br />";
 					if ($ir['autohex'] > 0)
-						echo "<a href='autohex.php'>Auto Hexbags <span class='badge badge-pill badge-primary'>{$ir['autohex']}</span></a><br />";
+						echo "<a href='autohex.php'><i class='game-icon game-icon-open-treasure-chest'></i> Auto Hexbags <span class='badge badge-pill badge-primary'>{$ir['autohex']}</span></a><br />";
 					echo"
-					<a href='raffle.php'>CID Raffle</a><br />
+					<a href='raffle.php'><i class='fas fa-ticket-alt'></i> CID Raffle</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='GUILDS' class='tab-pane'>
-			<div class='card'>
+			<div class='card' align='left'>
 				<div class='card-body'>";
-//User is in a guild.
-if ($ir['guild'] > 0) {
-    echo "<a href='viewguild.php'>Visit Your Guild</a><br />";
-}
-echo "
-					<a href='guilds.php'>Guild Listing</a><br />
-					<a href='guilds.php?action=wars'>Guild Wars</a> <span class='badge badge-pill badge-danger'>{$wars}</span><br />
+					//User is in a guild.
+					if ($ir['guild'] > 0) {
+						echo "<a href='viewguild.php'><i class='game-icon game-icon-minions'></i> Visit Your Guild</a><br />";
+					}
+					echo "
+					<a href='guilds.php'><i class='game-icon game-icon-dozen'></i> Guild Listing</a><br />
+					<a href='guilds.php?action=wars'><i class='game-icon game-icon-mounted-knight'></i> Guild Wars</a> <span class='badge badge-pill badge-danger'>{$wars}</span><br />
 				</div>
 			</div>
 		</div>
 		<div id='PINTER' class='tab-pane'>
-			<div class='card'>
+			<div class='card' align='left'>
 				<div class='card-body'>
-				    <a href='dungeon.php'>Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
-					<a href='infirmary.php'>Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
-					<a href='forums.php'>CID Forums <span class='badge badge-pill badge-primary'>{$forumposts}</span></a><br />
-					<a href='newspaper.php'><i class='ra ra-scroll-unfurled'></i> CID Newspaper</a><br />
-					<a href='polling.php'>Polling Center</a><br />
-					<a href='halloffame.php'>Hall of Fame</a><br />
-					<a href='marriage.php'>Marriage Center</a><br />
-					<a href='tutorial.php'>CID Tutorial</a><br />
-					<a href='chat.php?tresde={$tresder}' target='_blank'>CID Chat <span class='badge badge-pill badge-primary'>{$chat}</span></a><br />
-					<a href='referallist.php'>Your Referrals</a><br />
+				    <a href='dungeon.php'><i class='game-icon game-icon-cage'></i> Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
+					<a href='infirmary.php'><i class='game-icon game-icon-hospital-cross'></i> Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
+					<a href='forums.php'><i class='far fa-comment-alt'></i> CID Forums <span class='badge badge-pill badge-primary'>{$forumposts}</span></a><br />
+					<a href='newspaper.php'><i class='game-icon game-icon-scroll-unfurled'></i> CID Newspaper</a><br />
+					<a href='polling.php'><i class='game-icon game-icon-vote'></i> Polling Center</a><br />
+					<a href='halloffame.php'><i class='game-icon game-icon-crown'></i> Hall of Fame</a><br />
+					<a href='marriage.php'><i class='game-icon game-icon-lovers'></i> Marriage Center</a><br />
+					<a href='tutorial.php'><i class='far fa-question-circle'></i> CID Tutorial</a><br />
+					<a href='chat.php?tresde={$tresder}' target='_blank'><i class='far fa-comment'></i> CID Chat <span class='badge badge-pill badge-primary'>{$chat}</span></a><br />
+					<a href='referallist.php'><i class='game-icon game-icon-minions'></i> Your Referrals</a><br />
 				</div>
 			</div>
 		</div>
@@ -185,9 +185,9 @@ echo "
 <div class='col-md-4'>
 	<div class='card'>
 		<div class='card-header'>
-			Top 10 Players
+			<i class='game-icon game-icon-podium'></i> Top 10 Players
 		</div>
-		<div class='card-body'>";
+		<div class='card-body' align='left'>";
 $Rank = 0;
 $RankPlayerQuery =
     $db->query("SELECT u.`userid`, `level`, `username`, `strength`, `agility`, `guard`, `labor`, `IQ`

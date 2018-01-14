@@ -29,14 +29,112 @@ switch ($_GET['action']) {
 }
 function home()
 {
-    global $set, $h;
+    global $set, $h, $db, $userid;
     echo "Here you may vote for {$set['WebsiteName']} at various RPG toplists and be rewarded. Whether or not you voted is
-logged. If you scam this system, you will be dealt with severely. If you do not get rewarded, try voting again later.
-<br />
-<a href='?action=twg'>Vote at Top Web Games! (20,000 Copper Coins)</a><br />
-<a href='?action=top100'>Vote at Top 100 Arena (25 Hexbags)</a><br />
-<a href='?action=mgpoll'>Vote at MGPoll (10 Chivalry Tokens)</a><br />
-<a href='?action=apex'>Vote at Apex Web Gaming (25 Boxes of Random)</a><br />";
+	logged. If you scam this system, you will be dealt with severely. If you do not get rewarded, try voting again later.
+	<br />";
+	$q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'twg'");
+	$vote_count = $db->fetch_single($q);
+	$db->free_result($q);
+	if ($vote_count > 0)
+	{
+		$twgvote="<span class='text-danger'>Already voted.</span>";
+	}
+	else
+	{
+		$twgvote="<a href='?action=twg'>Vote</a>";
+	}
+	$q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'top100'");
+	$vote_count = $db->fetch_single($q);
+	$db->free_result($q);
+	if ($vote_count > 0)
+	{
+		$thavote="<span class='text-danger'>Already voted.</span>";
+	}
+	else
+	{
+		$thavote="<a href='?action=top100'>Vote</a>";
+	}
+	$q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'mgp'");
+	$vote_count = $db->fetch_single($q);
+	$db->free_result($q);
+	if ($vote_count > 0)
+	{
+		$mgpollvote="<span class='text-danger'>Already voted.</span>";
+	}
+	else
+	{
+		$mgpollvote="<a href='?action=mgpoll'>Vote</a>";
+	}
+	$q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'apex'");
+	$vote_count = $db->fetch_single($q);
+	$db->free_result($q);
+	if ($vote_count > 0)
+	{
+		$awgvote="<span class='text-danger'>Already voted.</span>";
+	}
+	else
+	{
+		$awgvote="<a href='?action=apex'>Vote</a>";
+	}
+	echo"
+	<table class='table table-bordered'>
+		<tr>
+			<th>
+				Voting Website
+			</th>
+			<th>
+				Reward
+			</th>
+			<th>
+				Link
+			</th>
+		</tr>
+		<tr>
+			<td>
+				Top Web Games
+			</td>
+			<td>
+				20,000 Copper Coins
+			</td>
+			<td>
+				{$twgvote}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Top 100 Arena
+			</td>
+			<td>
+				25 Hexbags
+			</td>
+			<td>
+				{$thavote}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				MGPoll
+			</td>
+			<td>
+				75 Chivalry Tokens
+			</td>
+			<td>
+				{$mgpollvote}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Apex Web Gaming
+			</td>
+			<td>
+				50 Boxes of Random
+			</td>
+			<td>
+				{$awgvote}
+			</td>
+		</tr>
+	</table>";
     $h->endpage();
 }
 function twg()

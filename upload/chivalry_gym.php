@@ -34,7 +34,7 @@ if (!isset($_GET["amnt"])) {
     $_GET["amnt"] = 0;
 }
 $_GET["amnt"] = abs($_GET["amnt"]);
-echo "<h3>The Chivalry Gym</h3>";
+echo "<h3><i class='game-icon game-icon-weight-lifting-up'></i> Chivalry Gym</h3>";
 if (isset($_GET["stat"]) && $_GET["amnt"]) {
     //User trained stat does not exist.
     if (!isset($statnames[$_GET['stat']])) {

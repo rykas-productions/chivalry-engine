@@ -8,7 +8,7 @@
 */
 require('globals.php');
 $tresder = Random(100, 999);
-echo "<h3>Hexbags</h3><hr />";
+echo "<h3><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags</h3><hr />";
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;

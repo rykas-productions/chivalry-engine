@@ -15,7 +15,7 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 $bank_cost = $set['bank_cost'];
 $bank_maxfee = $set['bank_maxfee'];
 $bank_feepercent = $set['bankfee_percent'];
-echo "<h3>Bank</h3>";
+echo "<h3><i class='game-icon game-icon-bank'></i> Bank</h3>";
 //User has purchased a bank account.
 if ($ir['bank'] > -1) {
     if (!isset($_GET['action'])) {

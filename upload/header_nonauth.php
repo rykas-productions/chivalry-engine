@@ -18,6 +18,7 @@ class headers
         <html lang="en">
         <head>
             <center>
+				<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,6 +28,7 @@ class headers
                 <meta http-equiv="Cache-control" content="public">
                 <meta property="og:image" content="assets/img/logo.png"/>
                 <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon"/>
+				<link rel="stylesheet" href="css/game-icons.css">
                 <?php
                 if ($_COOKIE['theme'] == 1)
                 {
@@ -127,7 +129,7 @@ class headers
                     <div class="my-2 my-lg-0">
                         <ul class="navbar-nav mr-auto">
                             <li class="navbar-text">
-                                <i class="fa fa-sign-in" aria-hidden="true"></i> <?php echo "Already have an account?"; ?>
+                                <i class="fa fa-sign-in-alt" aria-hidden="true"></i> <?php echo "Already have an account?"; ?>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
@@ -143,11 +145,11 @@ class headers
 										<div class="form-group">
 											<input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
 										</div>
-										<button type="submit" class="btn btn-primary btn-block">Sign in</button>
+										<button type="submit" class="btn btn-primary btn-block"><i class="fa fa-sign-in-alt" aria-hidden="true"></i> Sign in</button>
 										<?php echo $csrf; ?>
 									</form>
 									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="register.php">New around here? Sign up</a>
+									<a class="dropdown-item" href="register.php">New around here? Sign up!</a>
 									<a class="dropdown-item" href="pwreset.php">Forgot password?</a>
 								</div>
                             </li>
@@ -192,9 +194,9 @@ class headers
         <!-- /.container -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
         <link rel="stylesheet" href="css/game-v1.2.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		
         <!-- jQuery Version 3.2.1 -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

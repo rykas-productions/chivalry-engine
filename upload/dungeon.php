@@ -28,7 +28,7 @@ function home()
     $CurrentTime = time();
     //Count how many users are in the dungeon.
     $PlayerCount = $db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime}"));
-    echo "<h3>The Dungeon</h3><hr />
+    echo "<h3><i class='game-icon game-icon-cage'></i> The Dungeon</h3><hr />
 	<small>There's current " . number_format($PlayerCount) . " players in the dungeon.</small>
 	<hr />
 	<table class='table table-hover table-bordered'>
@@ -94,6 +94,11 @@ function bail()
         //Specified user is not in the dungeon.
         if ($api->UserStatus($_GET['user'], 'dungeon') == false) {
             alert('danger', "Uh Oh!", "The user you wish to bail out is not in the dungeon.", true, 'dungeon.php');
+            die($h->endpage());
+        }
+		//User is in the dungeon.
+        if ($api->UserStatus($userid, 'dungeon')) {
+            alert('danger', "Uh Oh!", "You are already in the dungeon, so you cannot bust others out.", true, 'dungeon.php');
             die($h->endpage());
         }
         $cost = 250 * $api->UserInfoGet($_GET['user'], 'level', false);

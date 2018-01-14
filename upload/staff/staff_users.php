@@ -894,8 +894,8 @@ function deleteuser()
 			$db->query("DELETE FROM `chat` WHERE `chat_user` = {$_POST['userid']}");
 			$db->query("DELETE FROM `comments` WHERE `cRECEIVE` = {$_POST['userid']}");
 			$db->query("DELETE FROM `comments` WHERE `cSEND` = {$_POST['userid']}");
-			$db->query("DELETE FROM `contacts` WHERE `c_ADDED` = {$_POST['userid']}");
-			$db->query("DELETE FROM `contacts` WHERE `c_ADDER` = {$_POST['userid']}");
+			$db->query("DELETE FROM `contact_list` WHERE `c_ADDED` = {$_POST['userid']}");
+			$db->query("DELETE FROM `contact_list` WHERE `c_ADDER` = {$_POST['userid']}");
 			$db->query("DELETE FROM `dungeon` WHERE `dungeon_user` = {$_POST['userid']}");
 			$db->query("DELETE FROM `enemy` WHERE `enemy_user` = {$_POST['userid']}");
 			$db->query("DELETE FROM `enemy` WHERE `enemy_adder` = {$_POST['userid']}");

@@ -9,7 +9,7 @@
 */
 $voterquery = 1;
 require_once('globals.php');
-echo "<h3>Polling Booth</h3><hr />";
+echo "<h3><i class='game-icon game-icon-vote'></i> Polling Booth</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }

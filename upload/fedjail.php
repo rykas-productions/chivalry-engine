@@ -9,7 +9,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-echo "<h3>Federal Dungeon</h3>
+echo "<h3><i class='game-icon game-icon-closed-doors'></i> Federal Dungeon</h3>
 	This is where you go if you break the game rules. Be smart, follow the rules!";
 $q = $db->query("SELECT * FROM `fedjail` ORDER BY `fed_out` ASC");
 echo "<table class='table table-bordered'>

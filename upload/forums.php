@@ -19,7 +19,7 @@ function csrf_error()
     die($h->endpage());
 }
 
-echo "<h3>{$set['WebsiteName']} Forums</h3><hr />";
+echo "<h3><i class='far fa-comment-alt'></i> {$set['WebsiteName']} Forums</h3><hr />";
 $fb = $db->fetch_row($db->query("SELECT * FROM `forum_bans` WHERE `fb_user` = {$userid}"));
 if ($fb['fb_time'] > $time) {
     alert('danger', "Uh Oh!", "You are currently forum banned for the next " . TimeUntil_Parse($fb['fb_time']) . ". You
@@ -133,7 +133,7 @@ function idx()
         $pnq = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
         $pn = $db->fetch_row($pnq);
         $username = ($pn['vip_days']) ? "<span class='text-danger'>{$pn['username']}
-            <i class='fa fa-shield' data-toggle='tooltip' title='{$pn['vip_days']} VIP Days remaining.'></i></span>" :
+            <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn['vip_days']} VIP Days remaining.'></i></span>" :
             $pn['username'];
 
         $topicsq = $db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
@@ -198,7 +198,7 @@ function idx()
             $pnq = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
             $pn = $db->fetch_row($pnq);
             $username = ($pn['vip_days']) ? "<span class='text-danger'>{$pn['username']}
-                <i class='fa fa-shield' data-toggle='tooltip' title='{$pn['vip_days']} VIP Days remaining.'></i></span>" :
+                <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn['vip_days']} VIP Days remaining.'></i></span>" :
                 $pn['username'];
 
             $topicsq = $db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
@@ -307,17 +307,17 @@ function viewforum()
     while ($r2 = $db->fetch_row($q)) {
         $t1 = DateTime_Parse($r2['ft_start_time'], true, true);
         $t2 = DateTime_Parse($r2['ft_last_time'], true, true);
-        $pt = ($r2['ft_pinned']) ? " <i class='fa fa-thumb-tack' aria-hidden='true'></i>" : "" ;
+        $pt = ($r2['ft_pinned']) ? " <i class='fa fa-thumbtack' aria-hidden='true'></i>" : "" ;
         $lt = ($r2['ft_locked']) ? " <i class='fa fa-lock' aria-hidden='true'></i>" : "" ;
         $pnq1 = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r2['ft_owner_id']}");
         $pn1 = $db->fetch_row($pnq1);
         $pn1['username'] = ($pn1['vip_days']) ? "<span class='text-danger'>{$pn1['username']}
-            <i class='fa fa-shield' data-toggle='tooltip' title='{$pn1['vip_days']} VIP Days remaining.'></i></span>" :
+            <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn1['vip_days']} VIP Days remaining.'></i></span>" :
             $pn1['username'];
         $pnq2 = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r2['ft_last_id']}");
         $pn2 = $db->fetch_row($pnq2);
         $pn2['username'] = ($pn2['vip_days']) ? "<span class='text-danger'>{$pn2['username']}
-            <i class='fa fa-shield' data-toggle='tooltip' title='{$pn2['vip_days']} VIP Days remaining.'></i></span>" :
+            <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn2['vip_days']} VIP Days remaining.'></i></span>" :
             $pn2['username'];
         $pcq = $db->query("SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_topic_id` = {$r2['ft_id']}");
         $pc = $db->fetch_single($pcq);
@@ -469,7 +469,7 @@ function viewtopic()
         $PNQ = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid`={$r['fp_poster_id']}");
         $PN = $db->fetch_row($PNQ);
         $PN['username'] = ($PN['vip_days']) ? "<span class='text-danger'>{$PN['username']}
-            <i class='fa fa-shield' data-toggle='tooltip' title='{$PN['vip_days']} VIP Days remaining.'></i></span>" :
+            <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$PN['vip_days']} VIP Days remaining.'></i></span>" :
             $PN['username'];
 
         $qlink = "[<a href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>Quote</a>]";
@@ -941,7 +941,7 @@ function quote()
 					<label for='fp_text'>Reply</label>
 				</th>
 				<td>
-					<textarea rows='8' class='form-control' cols='45' name='fp_text' id='fp_text' required>[quote={$Who}]{$text}[/quote]</textarea>
+					<textarea rows='8' class='form-control' cols='45' name='fp_text' id='fp_text' required>[quote=\"{$Who}\"]{$text}[/quote]</textarea>
 				</td>
 			</tr>
 			<tr>

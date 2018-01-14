@@ -62,7 +62,7 @@ These are the people on your enemy list.
                 ($r['laston'] >= $laston)
                         ? '<span class="text-success">Online</font>'
                         : '<span class="text-danger">Offline</font>';
-		$r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fa fa-shield'
+		$r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fas fa-shield-alt'
         data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
         if (!$r['comment'])
         {

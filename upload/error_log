@@ -197,3 +197,130 @@ Stack trace:
 [05-Jan-2018 11:40:25 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
 [05-Jan-2018 18:14:06 UTC] PHP Parse error:  syntax error, unexpected ':' in /home/masterge/public_html/autohex.php on line 14
 [05-Jan-2018 17:00:06 America/New_York] 1054: Unknown column 'lastcrime' in 'field list'
+[06-Jan-2018 20:59:58 UTC] PHP Fatal error:  Uncaught Error: Class 'headers' not found in /home/masterge/public_html/globals.php:158
+Stack trace:
+#0 /home/masterge/public_html/explore.php(9): require()
+#1 {main}
+  thrown in /home/masterge/public_html/globals.php on line 158
+[06-Jan-2018 18:21:58 America/New_York] <strong>PHP Warning:</strong> A non-numeric value encountered (2)
+[06-Jan-2018 23:25:08 UTC] PHP Parse error:  syntax error, unexpected '}' in /home/masterge/public_html/test.php on line 16
+[06-Jan-2018 23:25:10 UTC] PHP Parse error:  syntax error, unexpected '}' in /home/masterge/public_html/test.php on line 16
+[06-Jan-2018 23:25:12 UTC] PHP Parse error:  syntax error, unexpected '}' in /home/masterge/public_html/test.php on line 16
+[06-Jan-2018 23:27:28 UTC] PHP Parse error:  syntax error, unexpected ';', expecting ',' or ')' in /home/masterge/public_html/test.php on line 16
+[06-Jan-2018 23:27:31 UTC] PHP Parse error:  syntax error, unexpected ';', expecting ',' or ')' in /home/masterge/public_html/test.php on line 16
+[06-Jan-2018 23:27:42 UTC] PHP Parse error:  syntax error, unexpected '==' (T_IS_EQUAL) in /home/masterge/public_html/test.php on line 17
+[06-Jan-2018 23:27:44 UTC] PHP Parse error:  syntax error, unexpected '==' (T_IS_EQUAL) in /home/masterge/public_html/test.php on line 17
+[06-Jan-2018 23:27:45 UTC] PHP Parse error:  syntax error, unexpected '==' (T_IS_EQUAL) in /home/masterge/public_html/test.php on line 17
+[06-Jan-2018 18:39:19 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' 1515281959, 'unread', 'You have been mail-banned for 3 days for the reason: \'S' at line 2
+[07-Jan-2018 03:56:22 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[07-Jan-2018 17:15:27 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[07-Jan-2018 17:23:53 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[07-Jan-2018 13:30:22 America/New_York] PHP Fatal error:  Uncaught Error: Call to a member function parse() on null in /home/masterge/public_html/announcements.php:39
+Stack trace:
+#0 {main}
+  thrown in /home/masterge/public_html/announcements.php on line 39
+[07-Jan-2018 13:30:37 America/New_York] <strong>PHP Recoverable Error:</strong> Object of class JBBCode\Parser could not be converted to string (4096)
+[07-Jan-2018 13:30:39 America/New_York] <strong>PHP Recoverable Error:</strong> Object of class JBBCode\Parser could not be converted to string (4096)
+[07-Jan-2018 19:09:17 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[08-Jan-2018 15:41:22 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[08-Jan-2018 13:54:10 America/New_York] Missing POST Data
+[08-Jan-2018 13:54:10 America/New_York] PHP Fatal error:  Uncaught Exception: Missing POST Data in /home/masterge/public_html/class/PaypalIPN.php:66
+Stack trace:
+#0 /home/masterge/public_html/donator_ipn.php(20): PaypalIPN->verifyIPN()
+#1 {main}
+  thrown in /home/masterge/public_html/class/PaypalIPN.php on line 66
+[08-Jan-2018 21:10:01 UTC] PHP Parse error:  syntax error, unexpected ',' in /home/masterge/public_html/global_func.php on line 2316
+[08-Jan-2018 21:10:02 UTC] PHP Parse error:  syntax error, unexpected ',' in /home/masterge/public_html/global_func.php on line 2316
+[08-Jan-2018 21:10:03 UTC] PHP Parse error:  syntax error, unexpected ',' in /home/masterge/public_html/global_func.php on line 2316
+[08-Jan-2018 21:10:16 UTC] PHP Parse error:  syntax error, unexpected ',' in /home/masterge/public_html/global_func.php on line 2316
+[08-Jan-2018 21:10:17 UTC] PHP Parse error:  syntax error, unexpected ',' in /home/masterge/public_html/global_func.php on line 2316
+[08-Jan-2018 21:10:18 UTC] PHP Parse error:  syntax error, unexpected ',' in /home/masterge/public_html/global_func.php on line 2316
+[08-Jan-2018 18:38:55 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 00:25:54 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[09-Jan-2018 01:14:53 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[08-Jan-2018 20:59:45 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 05:19:22 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[09-Jan-2018 05:34:07 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 05:37:46 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 05:40:03 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 10:43:13 America/New_York] 1136: Column count doesn't match value count at row 1
+[09-Jan-2018 12:37:54 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 12:40:35 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 12:40:37 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 18:57:39 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[09-Jan-2018 22:47:47 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[09-Jan-2018 23:27:01 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[09-Jan-2018 23:48:05 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[09-Jan-2018 19:04:45 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 19:04:54 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 19:07:02 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[09-Jan-2018 19:07:12 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[10-Jan-2018 01:28:35 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[10-Jan-2018 02:04:34 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[10-Jan-2018 21:39:34 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[10-Jan-2018 21:51:37 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[10-Jan-2018 22:56:01 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[10-Jan-2018 20:03:43 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[10-Jan-2018 20:43:54 America/New_York] 1136: Column count doesn't match value count at row 1
+[10-Jan-2018 20:59:33 America/New_York] 1136: Column count doesn't match value count at row 1
+[11-Jan-2018 02:44:39 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[11-Jan-2018 02:45:04 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[11-Jan-2018 07:45:04 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[11-Jan-2018 15:23:55 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[11-Jan-2018 17:55:58 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[11-Jan-2018 13:34:14 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[11-Jan-2018 20:48:35 UTC] PHP Parse error:  syntax error, unexpected '&&' (T_BOOLEAN_AND) in /home/masterge/public_html/academy.php on line 36
+[11-Jan-2018 20:48:37 UTC] PHP Parse error:  syntax error, unexpected '&&' (T_BOOLEAN_AND) in /home/masterge/public_html/academy.php on line 36
+[11-Jan-2018 23:23:04 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[12-Jan-2018 03:21:10 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[12-Jan-2018 04:58:08 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[12-Jan-2018 05:16:34 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[12-Jan-2018 15:44:54 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[12-Jan-2018 15:45:28 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[12-Jan-2018 15:46:29 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[12-Jan-2018 15:46:57 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[12-Jan-2018 16:00:50 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[12-Jan-2018 21:20:01 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[12-Jan-2018 22:38:06 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[13-Jan-2018 00:32:35 UTC] PHP Parse error:  syntax error, unexpected 'if' (T_IF) in /home/masterge/public_html/mine.php on line 111
+[13-Jan-2018 00:32:36 UTC] PHP Parse error:  syntax error, unexpected 'if' (T_IF) in /home/masterge/public_html/mine.php on line 111
+[13-Jan-2018 01:13:31 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[13-Jan-2018 05:54:57 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[14-Jan-2018 00:15:49 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[14-Jan-2018 01:16:31 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[14-Jan-2018 04:32:31 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[14-Jan-2018 15:54:20 UTC] PHP Fatal error:  Uncaught Error: Class 'headers' not found in /home/masterge/public_html/globals.php:158
+Stack trace:
+#0 /home/masterge/public_html/profile.php(11): require()
+#1 {main}
+  thrown in /home/masterge/public_html/globals.php on line 158
+[14-Jan-2018 15:55:29 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[14-Jan-2018 11:38:00 America/New_York] Missing POST Data
+[14-Jan-2018 11:38:00 America/New_York] PHP Fatal error:  Uncaught Exception: Missing POST Data in /home/masterge/public_html/class/PaypalIPN.php:66
+Stack trace:
+#0 /home/masterge/public_html/donator_ipn.php(20): PaypalIPN->verifyIPN()
+#1 {main}
+  thrown in /home/masterge/public_html/class/PaypalIPN.php on line 66
+[14-Jan-2018 17:14:27 UTC] PHP Fatal error:  Uncaught Error: Class 'headers' not found in /home/masterge/public_html/globals.php:158
+Stack trace:
+#0 /home/masterge/public_html/inbox.php(10): require()
+#1 {main}
+  thrown in /home/masterge/public_html/globals.php on line 158
+[14-Jan-2018 18:06:09 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[14-Jan-2018 14:37:49 America/New_York] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/masterge/public_html/vote.php:36
+Stack trace:
+#0 /home/masterge/public_html/vote.php(27): home()
+#1 {main}
+  thrown in /home/masterge/public_html/vote.php on line 36
+[14-Jan-2018 14:37:50 America/New_York] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in /home/masterge/public_html/vote.php:36
+Stack trace:
+#0 /home/masterge/public_html/vote.php(27): home()
+#1 {main}
+  thrown in /home/masterge/public_html/vote.php on line 36
+[14-Jan-2018 14:37:59 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND `voted` = 'twg'' at line 1
+[14-Jan-2018 20:43:46 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[14-Jan-2018 22:11:29 UTC] PHP Warning:  session_name(): Cannot change session name when session is active in /home/masterge/public_html/globals_nonauth.php on line 21
+[14-Jan-2018 22:26:46 UTC] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[14-Jan-2018 22:27:11 UTC] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[14-Jan-2018 22:27:49 UTC] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+[14-Jan-2018 22:28:10 UTC] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1

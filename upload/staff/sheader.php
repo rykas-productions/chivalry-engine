@@ -18,6 +18,7 @@ class headers
         <html lang="en">
         <head>
             <center>
+				<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,8 +28,7 @@ class headers
                 <meta property="og:image" content="../assets/img/logo.png"/>
                 <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon"/>
 				<link rel="stylesheet" href="../css/game-v1.2.min.css">
-				<link rel="stylesheet" href="../css/rpg-awesome.min.css">
-				<link rel="stylesheet" href="../css/game-fonts-v1.3.css">
+				<link rel="stylesheet" href="../css/game-icons.css">
                 <!-- CSS -->
                 <?php
                 if ($ir['theme'] == 1)
@@ -137,7 +137,7 @@ class headers
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="../inventory.php"><?php echo "<i
-                                        class='fa fa-fw fa-shopping-bag'></i> Inventory"; ?></a>
+                                        class='game-icon game-icon-knapsack'></i> Inventory"; ?></a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
@@ -156,7 +156,7 @@ class headers
                                        href="../profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i
                                             class="fa fa-fw fa-user"></i> <?php echo "Profile"; ?></a>
                                     <a class="dropdown-item" href="../preferences.php?action=menu"><i
-                                            class="fa fa-fw fa-gear"></i><?php echo "Preferences"; ?></a>
+                                            class="fas fa-spin fa-fw fa-cog"></i><?php echo "Preferences"; ?></a>
                                     <?php
                                     //User is a staff member, so lets show the panel's link.
                                     if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant'))) {
@@ -309,11 +309,11 @@ class headers
     {
         global $db, $ir, $set;
         $query_extra = '';
-    if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
-    {
-        ?>
-        <pre class='pre-scrollable'> <?php var_dump($db->queries) ?> </pre> <?php
-    }
+		if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
+		{
+			?>
+			<pre class='pre-scrollable'> <?php var_dump($db->queries) ?> </pre> <?php
+		}
     ?>
         </div>
         </div>
@@ -322,10 +322,9 @@ class headers
         </div>
         <!-- /.container -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <!-- jQuery Version 3.2.1 -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

@@ -159,6 +159,9 @@ $h = new headers;
 //Include API file.
 include("class/class_api.php");
 $api = new api;
+//Include Forms file.
+include("class/class_form.php");
+$form = new form;
 //If requested file doesn't want the header hidden.
 if (isset($nohdr) == false || !$nohdr) {
     $h->startheaders();

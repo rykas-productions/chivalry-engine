@@ -19,6 +19,7 @@ class headers
         <html lang="en">
         <head>
             <center>
+				<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -30,9 +31,77 @@ class headers
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php 
 					echo "<title>{$set['WebsiteName']}</title>";
-					$hdr=loadassets();
 				?>
-        </head>
+				<link rel="stylesheet" href="css/game-v1.2.min.css">
+				<link rel="stylesheet" href="css/game-icons.css">
+				<?php
+				if ($ir['theme'] == 1)
+				{
+					?>
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
+					<meta name="theme-color" content="#343a40">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 2)
+				{
+					?>
+					<link rel="stylesheet" href="css/darkly.bs4.b2.min.css">
+					<meta name="theme-color" content="#303030">
+					<?php
+					$hdr='navbar-light bg-light';
+				}
+				if ($ir['theme'] == 3)
+				{
+					?>
+					<link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+					<meta name="theme-color" content="#4E5D6C">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 4)
+				{
+					?>
+					<link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
+					<meta name="theme-color" content="#272B30">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 5)
+				{
+					?>
+					<link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
+					<meta name="theme-color" content="#04519b">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 6)
+				{
+					?>
+					<link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
+					<meta name="theme-color" content="#78C2AD">
+					<?php
+					$hdr='navbar-dark bg-primary';
+				}
+				if ($ir['theme'] == 7)
+				{
+					?>
+					<link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
+					<meta name="theme-color" content="#772953">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 8)
+				{
+					?>
+					<link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
+					<meta name="theme-color" content="#060606">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				setcookie('theme', $ir['theme']);
+				?>
+				</head>
     <?php
     //If the called script wants the menu hidden.
     if (empty($menuhide))
@@ -66,7 +135,7 @@ class headers
                         else
                         {
                             ?><a class="nav-link" href="explore.php"><?php echo "<i
-                                        class='fa fa-fw fa-compass'></i> Explore"; ?></a><?php
+                                        class='fa fa-fw fa-compass fa-spin'></i> Explore"; ?></a><?php
                         }
                         ?>
                     </li>
@@ -76,16 +145,16 @@ class headers
                         <li class="nav-item">
                             <a class="nav-link"
                                href="inbox.php"><?php echo "<i
-                                        class='fa fa-fw fa-inbox'></i> Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
+                                        class='fas fa-fw fa-inbox'></i> Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link"
                                href="notifications.php"><?php echo "<i
-                                        class='fa fa-fw fa-globe'></i> Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
+                                        class='fas fa-fw fa-globe'></i> Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="inventory.php"><?php echo "<i
-                                        class='fa fa-fw fa-shopping-bag'></i> Inventory"; ?></a>
+                                        class='game-icon game-icon-knapsack'></i> Inventory"; ?></a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
@@ -101,16 +170,16 @@ class headers
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i
-                                        class="fa fa-fw fa-user"></i> <?php echo "Profile"; ?></a>
+                                        class="fas fa-fw fa-user"></i> <?php echo "Profile"; ?></a>
                                 <a class="dropdown-item" href="preferences.php?action=menu"><i
-                                        class="fa fa-fw fa-gear"></i><?php echo "Preferences"; ?></a>
+                                        class="fas fa-spin fa-fw fa-cog"></i><?php echo "Preferences"; ?></a>
                                 <?php
                                 //User is a staff member, so lets show the panel's link.
                                 if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant'))) {
                                     ?>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="staff/index.php"><i
-                                            class="fa fa-fw fa fa-terminal"></i> <?php echo "Staff Panel"; ?></a>
+                                            class="fas fa-fw fa fa-terminal"></i> <?php echo "Staff Panel"; ?></a>
                                 <?php
                                 }
 								if ($ir['vip_days'] > 0)
@@ -118,17 +187,17 @@ class headers
 									?>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item" href="friends.php"><i
-											class="fa fa-fw fa-smile-o"></i> <?php echo "Friends"; ?></a>
+											class="far fa-fw fa-smile"></i> <?php echo "Friends"; ?></a>
 										<a class="dropdown-item" href="enemy.php"><i
-											class="fa fa-fw fa-frown-o"></i> <?php echo "Enemies"; ?></a>
+											class="far fa-fw fa-frown"></i> <?php echo "Enemies"; ?></a>
 									<?php
 								}
                                 ?>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="gamerules.php"><i
-                                        class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
+                                        class="fas fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
                                 <a class="dropdown-item" href="logout.php"><i
-                                        class="fa fa-fw fa-power-off"></i> <?php echo "Logout"; ?></a>
+                                        class="fas fa-fw fa-power-off"></i> <?php echo "Logout"; ?></a>
                             </div>
                         </li>
                     </ul>
@@ -164,6 +233,7 @@ class headers
 	{
 		echo "<b><span class='text-info'>You have protection for the next " . TimeUntil_Parse($ir['protection']) . ".</span></b><br />";
 	}
+
 	
 	//User's federal jail sentence is completed. Let them play again.
     if ($fed['fed_out'] < $time) {
@@ -243,17 +313,38 @@ class headers
         $DungeonRemain = TimeUntil_Parse($DungeonOut);
         alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, "quickuse.php?dungeon", "Use Item");
     }
+	//RNG for experience token? O.o
+	$xprng=Random(1,100);
+	if ($xprng == 56 && $ir['artifacts'] != 4)
+	{
+		if (($ir['artifact_time']) < time() - Random(270,360))
+		{
+			alert("info","Artifact!","While wondering around, you find a small artifact laying on the ground. Maybe you should take it to the Blacksmith Smeltery to find out what you can do with it?",false);
+			$api->UserGiveItem($userid,94,1);
+			$db->query("UPDATE `user_settings` SET `artifacts` = `artifacts` + 1, `artifact_time` = " . time() . " WHERE `userid` = {$userid}");
+		}
+	}
+	$luckrng=Random(1,250);
+	if ($luckrng == 160)
+	{
+		if (($ir['luck'] > 50) && ($ir['luck'] < 150))
+		{
+			$thisrng=Random(-5,5);
+			$db->query("UPDATE `userstats` SET `luck` = `luck` + ({$thisrng}) WHERE `userid` = {$userid}");
+			$api->GameAddNotification($userid,"While walking around the kingdom, your luck has changed by {$thisrng}%.");
+		}
+	}
     //User needs to reverify with reCaptcha
     if (($ir['last_verified'] < ($time - $set['Revalidate_Time'])) || ($ir['need_verify'] == 1))
     {
-    //ReCaptcha public or private key(s) are unspecifed in the game settings.
-    if (empty($set['reCaptcha_public']) || empty($set['reCaptcha_private']))
-    {
-    ?>
-        <script>alert('Please add the reCaptcha private and public keys.');</script>
-    <?php
-    die($h->endpage());
-    }
+		//ReCaptcha public or private key(s) are unspecifed in the game settings.
+		if (empty($set['reCaptcha_public']) || empty($set['reCaptcha_private']))
+		{
+		?>
+			<script>alert('Please add the reCaptcha private and public keys.');</script>
+		<?php
+		die($h->endpage());
+		}
     //Script calls for reCaptcha to be loaded.
     if (isset($macropage))
     {
@@ -323,7 +414,8 @@ class headers
     {
         global $db, $ir, $StartTime, $set;
         $query_extra = '';
-		include('analytics.php');
+		if ($ir['analytics'] == 1)
+			include('analytics.php');
         //Set mysqldebug in the URL to get query debugging as an admin.
     if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
     {
@@ -345,7 +437,7 @@ class headers
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
         
         <!-- jQuery Version 3.2.1 -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

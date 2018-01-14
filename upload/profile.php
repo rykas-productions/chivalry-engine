@@ -23,7 +23,7 @@ if (!$_GET['user']) {
                     `loginip`, `registerip`, `staff_notes`, `town_name`,
                     `house_name`, `guild_name`, `fed_out`, `fed_reason`,
 					`infirmary_reason`, `infirmary_out`, `dungeon_reason`, `dungeon_out`,
-					`browser`, `os`, `screensize`, `description`
+					`browser`, `os`, `screensize`, `description`, `location`
                     FROM `users` `u`
                     INNER JOIN `town` AS `t`
                     ON `u`.`location` = `t`.`town_id`
@@ -74,7 +74,7 @@ if (!$_GET['user']) {
 			$married="<a href='profile.php?user={$event['userid']}'>{$event['username']}</a>";
 		}
         $displaypic = ($r['display_pic']) ? "<img src='{$r['display_pic']}' class='img-thumbnail img-fluid' width='250' height='250'>" : '';
-        $user_name = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fa fa-shield'
+        $user_name = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fas fa-shield-alt'
             data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
         $ref_q =
             $db->query(
@@ -99,6 +99,10 @@ if (!$_GET['user']) {
         $db->free_result($enemy_q);
         $CurrentTime = time();
         $r['daysold'] = DateTime_Parse($r['registertime'], false, true);
+		$mb = $db->query("SELECT * FROM `mail_bans` WHERE `mbUSER` = {$userid}");
+		$mbd=0;
+		if ($db->num_rows($mb) != 0)
+			$mbd=1;
 		
 		//Submit comment
 		if (isset($_POST['comment']))
@@ -128,12 +132,33 @@ if (!$_GET['user']) {
 			{
 				alert('danger', "Uh Oh!", "You do not have permission to comment on another player's profile.", false);
 			}
+			elseif ($mbd == 1)
+			{
+				alert('danger', "Uh Oh!", "You cannot send profile messages if you are mail-banned.", false);
+			}
 			else
 			{
 				$db->query("INSERT INTO `comments` (`cRECEIVE`, `cSEND`, `cTIME`, `cTEXT`) VALUES ('{$_GET['user']}', '{$userid}', '" . time() . "', '{$comment}')");
 				$api->GameAddNotification($_GET['user'],"{$ir['username']} has left a comment on your profile. Click <a href='profile.php?user={$_GET['user']}'>here</a> to view it.");
 				alert('success',"Success!","Comment was posted successfully.",false);
 				$justposted=1;
+			}
+			$fiveminago=time()-300;
+			$l3c=$db->query("SELECT * FROM `comments` WHERE `cSEND` = {$userid} AND `cTIME` >= {$fiveminago}");
+			$same=0;
+			while ($ltr = $db->fetch_row($l3c))
+			{
+				if ($ltr['cTEXT'] == $comment)
+					$same=$same+1;
+			}
+			if ($same >= 3)
+			{
+				$timed=time()+259200;
+				$db->query("INSERT INTO `mail_bans`
+							(`mbUSER`, `mbREASON`, `mbBANNER`, `mbTIME`) VALUES
+							('{$userid}', 'Spamming', '1', '{$timed}')");
+				$api->GameAddNotification($userid, "You have been mail-banned for 3 days for the reason: 'Spamming'.");
+				staffnotes_entry($userid,"Mail banned for 3 for 'Spamming'.",0);
 			}
 		}
 		
@@ -169,7 +194,7 @@ if (!$_GET['user']) {
         echo "{$displaypic}<br />
 			{$r['username']} [{$r['userid']}]<br />
 			Rank: {$r['user_level']}<br />
-			Location: {$r['town_name']}<br />
+			Location: <a href='travel.php?to={$r['location']}'>{$r['town_name']}</a><br />
 			Level: " . number_format($r['level']) . "<br />
 			Married: {$married}<br />";
         echo ($r['guild']) ? "Guild: <a href='guilds.php?action=view&id={$r['guild']}'>{$r['guild_name']}</a><br />" : '';
@@ -272,30 +297,30 @@ if (!$_GET['user']) {
 					</p>
 				  </div>
 				  <div id='actions' class='tab-pane'>
-                    <a href='inbox.php?action=compose&user={$r['userid']}' class='btn btn-primary'>Message {$r['username']}</a>
+                    <a href='inbox.php?action=compose&user={$r['userid']}' class='btn btn-primary'><i class='game-icon game-icon-envelope'></i> Message {$r['username']}</a>
                     <br />
 				    <br />
-				    <a href='sendcash.php?user={$r['userid']}' class='btn btn-primary'>Send {$r['username']} Cash</a>
+				    <a href='sendcash.php?user={$r['userid']}' class='btn btn-primary'><i class='game-icon game-icon-expense'></i> Send {$r['username']} Cash</a>
 				    <br />
 				    <br />
-					<a href='attack.php?user={$r['userid']}' class='btn btn-danger'><i class='ra ra-crossed-swords'></i> Attack {$r['username']}</a>
+					<a href='attack.php?user={$r['userid']}' class='btn btn-danger'><i class='game-icon game-icon-crossed-swords'></i> Attack {$r['username']}</a>
 					<br />
 					<br />
-					<a href='hirespy.php?user={$r['userid']}' class='btn btn-primary'>Spy On {$r['username']}</a>
+					<a href='hirespy.php?user={$r['userid']}' class='btn btn-primary'><i class='fas fa-user-secret'></i> Spy On {$r['username']}</a>
 					<br />
 					<br />
-					<a href='contacts.php?action=add&user={$r['userid']}' class='btn btn-primary'>Add {$r['username']} to Contact List</a>";
+					<a href='contacts.php?action=add&user={$r['userid']}' class='btn btn-primary'><i class='fas fa-address-card'></i> Add {$r['username']} to Contact List</a>";
 					?>
 				  </div>
 				  <div id="vip" class="tab-pane">
 					<?php
-						echo "<a href='theft.php?user={$r['userid']}' class='btn btn-primary'>Rob {$r['username']}</a>
+						echo "<a href='theft.php?user={$r['userid']}' class='btn btn-primary'><i class='game-icon game-icon-profit'></i> Rob {$r['username']}</a>
 						<br />
 						<br />
-						<a href='friends.php?action=add&ID={$r['userid']}' class='btn btn-primary'>Add {$r['username']} as Friend</a>
+						<a href='friends.php?action=add&ID={$r['userid']}' class='btn btn-primary'><i class='fas fa-fw fa-smile'></i> Add {$r['username']} as Friend</a>
 						<br />
 						<br />
-						<a href='enemy.php?action=add&ID={$r['userid']}' class='btn btn-primary'>Add {$r['username']} as Enemy</a>";
+						<a href='enemy.php?action=add&ID={$r['userid']}' class='btn btn-primary'><i class='fas fa-fw fa-frown'></i> Add {$r['username']} as Enemy</a>";
 					?>
 				  </div>
 				  <div id="financial" class="tab-pane">

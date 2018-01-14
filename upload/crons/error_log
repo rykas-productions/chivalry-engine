@@ -1,0 +1,4 @@
+[06-Jan-2018 23:31:02 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/masterge/public_html/global_func.php on line 859
+[06-Jan-2018 23:34:01 UTC] PHP Fatal error:  Constant expression contains invalid operations in /home/masterge/public_html/global_func.php on line 2274
+[08-Jan-2018 21:10:01 UTC] PHP Parse error:  syntax error, unexpected ',' in /home/masterge/public_html/global_func.php on line 2316
+[08-Jan-2018 21:10:02 UTC] PHP Parse error:  syntax error, unexpected ',' in /home/masterge/public_html/global_func.php on line 2316

@@ -16,7 +16,7 @@ function csrf_error()
     die($h->endpage());
 }
 
-echo "<h3>Player Report</h3><hr />";
+echo "<h3><i class='far fa-flag'></i> Player Report</h3><hr />";
 if (empty($_POST['userid'])) {
     $code = request_csrf_code('report_form');
     echo "Know someone who broke the rules, or is just being dishonorable? This is the place to report them. Report the

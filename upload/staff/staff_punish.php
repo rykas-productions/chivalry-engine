@@ -1152,27 +1152,4 @@ function spamhammer()
     }
 }
 
-function staffnotes_entry($user,$text)
-{
-	global $db,$userid,$ir;
-	$user = (isset($user) && is_numeric($user)) ? abs($user) : 0;
-	$text = (isset($text) && !is_array($text)) ? $db->escape(strip_tags(stripslashes($text))) : '';
-    if (empty($user) || !isset($text)) {
-        return false;
-    }
-    $q = $db->query("SELECT `staff_notes` FROM `users` WHERE `userid` = {$user}");
-    if ($db->num_rows($q) == 0) {
-        return false;
-    }
-	$notes=$db->escape($db->fetch_single($q));
-	$date=date('m/d/Y');
-	$date.=" at ";
-	$date.=date('g:iA');
-	$text = "{$date}: {$text} -{$ir['username']} [{$userid}]
-
-";
-	$sql="{$text}{$notes}";
-	$db->query("UPDATE `users` SET `staff_notes` = '{$sql}' WHERE `userid` = {$user}");
-}
-
 $h->endpage();

@@ -98,7 +98,7 @@ if (isset($_GET['user']))
 				<form action='https://www.paypal.com/cgi-bin/webscr' method='post'>
 				<input type='hidden' name='cmd' value='_xclick' />
 				<input type='hidden' name='business' value='{$set['PaypalEmail']}' />
-				<input type='hidden' name='item_name' value='{$domain}|VIP|{$r['vip_id']}|{$_GET['user']}' />
+				<input type='hidden' name='item_name' value='{$domain}|VIP|{$r['vip_id']}|{$_GET['user']}|{$userid}' />
 				<input type='hidden' name='amount' value='{$r['vip_cost']}' />
 				<input type='hidden' name='no_shipping' value='1' />
 				<input type='hidden' name='return' value='http://{$domain}/donatordone.php?action=done' />
@@ -108,6 +108,7 @@ if (isset($_GET['user']))
 				<input type='hidden' name='currency_code' value='USD' />
 				<input type='hidden' name='tax' value='0' />
 				<input type='hidden' name='rm' value='2'>
+				<input type='number' min='1' max='20' name='quantity' class='form-control' required='1' placeholder='Quantity'>
 				<input type='image' src='https://www.paypal.com/en_US/i/btn/x-click-but21.gif' border='0' name='submit' alt='Make payments with PayPal - it's fast, free and secure!' />
 				</form>
 			</td>

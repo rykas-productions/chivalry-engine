@@ -7,7 +7,7 @@
 	Website: 	http://chivalryisdead.x10.mx/
 */
 require("globals.php");
-echo "<h3>Token Bank</h3>";
+echo "<h3><i class='game-icon game-icon-chest'></i> Token Bank</h3>";
 //User has purchased a bank account.
 if ($ir['tokenbank'] > -1) {
     if (!isset($_GET['action'])) {

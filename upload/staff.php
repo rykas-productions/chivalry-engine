@@ -17,7 +17,7 @@ while ($r = $db->fetch_row($q)) {
     $staff[$r['userid']] = $r;
 }
 $db->free_result($q);
-echo "<h3>Admins</h3>
+echo "<h3><i class='game-icon game-icon-embrassed-energy'></i> Admins</h3>
 <table class='table table-bordered table-hover table-striped'>
 	<tr>
 		<th>
@@ -46,7 +46,7 @@ foreach ($staff as $r) {
     }
 }
 echo '</table>';
-echo "<h3>Assistants</h3>
+echo "<h3><i class='game-icon game-icon-embrassed-energy'></i> Assistants</h3>
 <table class='table table-bordered table-hover table-striped'>
 	<tr>
 		<th>
@@ -75,7 +75,7 @@ foreach ($staff as $r) {
     }
 }
 echo '</table>';
-echo "<h3>Forum Moderators</h3>
+echo "<h3><i class='game-icon game-icon-embrassed-energy'></i> Forum Moderators</h3>
 <table class='table table-bordered table-hover table-striped'>
 	<tr>
 		<th>

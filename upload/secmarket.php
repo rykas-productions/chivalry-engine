@@ -13,7 +13,7 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	alert('danger',"Uh Oh!","You cannot visit the Chivalry Token Market while in the infirmary or dungeon.",true,'index.php');
 	die($h->endpage());
 }
-echo "<h3>Chivalry Tokens Market</h3><hr />";
+echo "<h3><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }

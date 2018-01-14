@@ -8,18 +8,51 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
-echo "<h4>Local Academy</h4><hr>";
+echo "<h4><i class='game-icon game-icon-diploma'></i> Local Academy</h4><hr>";
 if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and stop them
     //And stop them from taking another.
 {
-    $cd =
+	$cd =
         $db->query(
-            "SELECT `ac_name`
+            "SELECT `ac_name`, `ac_days`, `ac_cost`
     				 FROM `academy`
     				 WHERE `ac_id` = {$ir['course']}");
     $coud = $db->fetch_row($cd);
     $db->free_result($cd);
-    echo "You are currently enrolled in the {$coud['ac_name']} course. You will be finished in " . TimeUntil_Parse($ir['course_complete']) . ".";
+	$daystoseconds=$coud['ac_days']*86400;
+	$starttime=time()-($ir['course_complete']-$daystoseconds);
+	$percentcomplete=round(($starttime/$daystoseconds)*100);
+	if (isset($_GET['dropout']))
+	{
+		if ($percentcomplete <= 5)
+		{
+			$db->query("UPDATE `users` 
+						SET `primary_currency` = `primary_currency` + {$coud['ac_cost']}, 
+						`course` = 0, 
+						`course_complete` = 0 
+						WHERE `userid` = {$userid}");
+			alert("success","Success!","You have successfully dropped out of your course. You have been refunded {$coud['ac_cost']} Copper Coins.",true,'academy.php');
+			die($h->endpage());
+		}
+		elseif (($percentcomplete > 5) && ($percentcomplete <= 60))
+		{
+			$db->query("UPDATE `users` 
+						SET `course` = 0, 
+						`course_complete` = 0 
+						WHERE `userid` = {$userid}");
+			alert("success","Success!","You have successfully dropped out of your course.",true,'academy.php');
+			die($h->endpage());
+		}
+		else
+		{
+			alert("danger","Uh Oh!","You are too far into your course to dropout now.",true,'academy.php');
+		}
+	}
+    echo "You are currently enrolled in the {$coud['ac_name']} course. You will be finished in " . TimeUntil_Parse($ir['course_complete']) . ".<br />
+	You may dropout of this course. Please note that you can only dropout if you've completed less than 60% of the course. If you dropout before 5% 
+	completion, you will be refunded all your cash. Otherwise, you will lose all the cash you used to enroll. <br /><b>You have currently completed {$percentcomplete}% of 
+	this course.</b><br />
+	Do you wish to <a href='?dropout=yes'>dropout</a>?";
     die($h->endpage());
 }
 if (!isset($_GET['action'])) {

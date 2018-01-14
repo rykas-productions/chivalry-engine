@@ -13,7 +13,7 @@ require("globals.php");
 require("stats/stats.php");
 
 //This is... messy.
-echo "<h3>Statistics Center</h3><hr />
+echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 <script>
 google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);

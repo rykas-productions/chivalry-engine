@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
-echo "<h3>Item Appendix</h3><hr />This page lists all the items in the game, along with how many are in circulation.
+echo "<h3><i class='fas fa-list'></i> Item Appendix</h3><hr />This page lists all the items in the game, along with how many are in circulation.
     This may be useful for players who do item flipping, or those who are just plain old curious. Hovering over the
     item will give you its description. Tapping its name will take you to its info page<hr />
     [<a href='?view=all'>All</a>][<a href='?view=weapon'>Weapons Only</a>][<a href='?view=armor'>Armors Only</a>]";

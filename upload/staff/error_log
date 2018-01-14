@@ -4,3 +4,13 @@
 [28-Dec-2017 18:57:51 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
 [05-Jan-2018 16:17:18 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'test'. -CID Admin [1]<br /><br /> ' WHERE `userid` = 1' at line 1
 [05-Jan-2018 16:18:15 America/New_York] 1064: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'test'. -CID Admin [1]<br /><br /> ' WHERE `userid` = 1' at line 1
+[06-Jan-2018 23:33:25 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function determine_game_urlbase() in /home/masterge/public_html/staff/sglobals.php:25
+Stack trace:
+#0 /home/masterge/public_html/staff/index.php(9): require()
+#1 {main}
+  thrown in /home/masterge/public_html/staff/sglobals.php on line 25
+[06-Jan-2018 23:33:32 UTC] PHP Fatal error:  Constant expression contains invalid operations in /home/masterge/public_html/global_func.php on line 2274
+[06-Jan-2018 23:33:34 UTC] PHP Fatal error:  Constant expression contains invalid operations in /home/masterge/public_html/global_func.php on line 2274
+[06-Jan-2018 23:33:37 UTC] PHP Fatal error:  Constant expression contains invalid operations in /home/masterge/public_html/global_func.php on line 2274
+[10-Jan-2018 21:01:42 America/New_York] 1146: Table 'masterge_chivalry.contacts' doesn't exist
+[10-Jan-2018 21:06:00 America/New_York] 1054: Unknown column 'friender' in 'where clause'

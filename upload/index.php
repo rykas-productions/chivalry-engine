@@ -84,6 +84,14 @@ echo "<table class='table table-hover table-bordered'>
 		    Busts: {$ir['busts']}
 		</td>
 	</tr>
+	<tr>
+		<td>
+		    Luck: {$ir['luck']}%
+		</td>
+		<td>
+		    
+		</td>
+	</tr>
 </tbody>";
 
 //Get the stat ranks. Players like this apparently.
@@ -106,7 +114,7 @@ echo "
 <table class='table table-bordered'>
     <tr>
         <th width='25%'>
-            <i class='ra ra-muscle-up'></i> Strength
+            <i class='game-icon game-icon-strong'></i> Strength
         </th>
         <td>
             {$StrengthFormat} (Ranked: {$StrengthRank})
@@ -114,7 +122,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            <i class='ra ra-player-dodge'></i> Agility
+            <i class='game-icon game-icon-body-balance'></i> Agility
         </th>
         <td>
             {$AgilityFormat} (Ranked: {$AgilityRank})
@@ -122,7 +130,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            <i class='ra ra-player-pain'></i> Guard
+            <i class='game-icon game-icon-back-pain'></i> Guard
         </th>
         <td>
             {$GuardFormat} (Ranked: {$GuardRank})
@@ -130,7 +138,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            <i class='ra ra-player-teleport'></i> Labor
+            <i class='game-icon game-icon-farmer'></i> Labor
         </th>
         <td>
             {$LaborFormat} (Ranked: {$LaborRank})
@@ -138,7 +146,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            <i class='ra ra-aware'></i> IQ
+            <i class='game-icon game-icon-light-bulb'></i> IQ
         </th>
         <td>
             {$IQFormat} (Ranked: {$IQRank})
@@ -146,7 +154,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            <i class='ra ra-player-king'></i> Total Stats
+            <i class='game-icon game-icon-crown'></i> Total Stats
         </th>
         <td>
             {$AllFourFormat} (Ranked: {$AllStatRank})

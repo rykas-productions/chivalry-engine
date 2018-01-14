@@ -28,7 +28,7 @@ function home()
     //Select player count of those in the infirmary.
     $PlayerCount = $db->fetch_single($db->query("SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime}"));
     //List them out now.
-    echo "<h3>The Infirmary</h3><hr />
+    echo "<h3><i class='game-icon game-icon-hospital-cross'></i> The Infirmary</h3><hr />
 	<small>There's currently " . number_format($PlayerCount) . " users in the infirmary.</small>
 	<hr />
 	<table class='table table-hover table-bordered'>

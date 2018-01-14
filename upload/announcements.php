@@ -7,6 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+require('lib/bbcode_engine.php');
 //How many announcements the user hasn't read.
 $AnnouncementCount = $ir['announcements'];
 //Select all data from the announcements data table.
@@ -36,14 +37,14 @@ while ($r = $db->fetch_row($q)) {
     //Parse the announcement time into a user friendly timestamp.
     $AnnouncementTime = DateTime_Parse($r['ann_time']);
     //Make the announcement text safe for the users to read, in case of staff panel compromise.
-    $r['ann_text'] = nl2br($r['ann_text']);
+    $parser->parse($r['ann_text']);
     echo "<tr>
 		<td>
 		    {$AnnouncementTime}<br />
 		    Posted By <a href='profile.php?user={$r['ann_poster']}'>{$Poster}</a>{$new}
 		    </td>
 		<td>
-		    {$r['ann_text']}
+		    " . $parser->getAsHtml() . "
         </td>
 	</tr>";
 }

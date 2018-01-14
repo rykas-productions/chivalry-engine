@@ -119,7 +119,7 @@ function job_index()
     global $db, $ir, $h;
 	$maxpayprim=$ir['jrPRIMPAY']+($ir['jrPRIMPAY']*0.5);
 	$maxpaysecc=$ir['jrSECONDARY']+($ir['jrSECONDARY']*0.5);
-    echo "<h3>Your Job</h3>
+    echo "<h3><i class='game-icon game-icon-push'></i> Your Job</h3>
     You currently work in the {$ir['jNAME']}! You receive " . number_format($ir['jrPRIMPAY']) . " Copper Coins and/or
     " . number_format($ir['jrSECONDARY']) . " Chivalry Tokens each hour as a minimum. If you work the full time you're required, 
 	you will take home " . number_format($maxpayprim) . " Copper Coins and/or " . number_format($maxpaysecc) . " Chivalry Tokens.

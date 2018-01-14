@@ -44,6 +44,9 @@ switch ($_GET['action']) {
 	case 'userdropdown':
         userdropdown();
         break;
+	case 'analytics':
+        analytics();
+        break;
 	case 'forumalert':
         forumalert();
         break;
@@ -113,7 +116,7 @@ function prefs_home()
 				    <a href='?action=2fa'>Two-factor Authentication</a>
 				</td>
 				<td>
-					
+					<a href='?action=analytics'>Analytics</a>
 				</td>
 			</tr>
 		</tbody>
@@ -746,6 +749,39 @@ function forumalert()
 		<form method='post'>
             <input type='hidden' value='enable' name='do'>
             <input type='submit' class='btn btn-primary' value='Enable Notifications'>
+        </form>";
+    }
+}
+
+function analytics()
+{
+	global $db,$userid,$api,$h;
+    if (isset($_POST['do']))
+    {
+		if ($_POST['do'] == 'disable')
+		{
+			$db->query("UPDATE `user_settings` SET `analytics` = 0 WHERE `userid` = {$userid}");
+			alert('success',"Success!","You have successfully disabled analytics.",true,'preferences.php');
+		}
+		else
+		{
+			$db->query("UPDATE `user_settings` SET `analytics` = 1 WHERE `userid` = {$userid}");
+			alert('success',"Success!","You have successfully enabled analytics.",true,'preferences.php');
+		}
+    }
+    else
+    {
+        echo "You can choose to enable or disable analytics. Analytics are used to understand how players use the game, 
+		improve performance, and are generally very nice to have. They're anonymous in nature and are harmless to have enabled. 
+		However, those who are strong privacy advocates usually tend to like this setting off. Its recommended that you keep them 
+		on to help the game. By default, they're enabled.
+        <form method='post'>
+            <input type='hidden' value='disable' name='do'>
+            <input type='submit' class='btn btn-primary' value='Disable Analytics'>
+        </form>
+		<form method='post'>
+            <input type='hidden' value='enable' name='do'>
+            <input type='submit' class='btn btn-primary' value='Enable Analytics'>
         </form>";
     }
 }

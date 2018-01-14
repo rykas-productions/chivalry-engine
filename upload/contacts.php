@@ -11,25 +11,25 @@ echo "
 <table class='table table-bordered'>
 	<tr>
 		<td>
-			<a href='inbox.php'>Inbox</a>
+			<a href='inbox.php'><i class='fas fa-fw fa-inbox'></i> Inbox</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=outbox'>Outbox</a>
+			<a href='inbox.php?action=outbox'><i class='fas fa-fw fa-envelope'></i> Outbox</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=compose'>Compose</a>
+			<a href='inbox.php?action=compose'><i class='fas fa-fw fa-file'></i> Compose</a>
 		</td>
 		<td>
-			<a href='blocklist.php'>Blocklist</a>
+			<a href='blocklist.php'><i class='fas fa-fw fa-ban'></i> Blocklist</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=delall'>Delete All</a>
+			<a href='inbox.php?action=delall'><i class='fas fa-fw fa-trash-alt'></i> Delete All</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=archive'>Archive</a>
+			<a href='inbox.php?action=archive'><i class='fas fa-fw fa-save'></i> Archive</a>
 		</td>
 		<td>
-			<a href='contacts.php'>Contacts</a>
+			<a href='contacts.php'><i class='fas fa-fw fa-address-book'></i> Contacts</a>
 		</td>
 	</tr>
 </table>";

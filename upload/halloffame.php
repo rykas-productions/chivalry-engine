@@ -7,7 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-echo "<h3>Hall of Fame</h3><hr />";
+echo "<h3><i class='game-icon game-icon-crown'></i> Hall of Fame</h3><hr />";
 //Add stats to this array.
 $StatArray = array('total', 'level', 'strength', 'agility', 'guard', 'labor', 'iq',
     'primary_currency', 'mining_level', 'secondary_currency', 'busts', 'kills', 'deaths', 'richest');

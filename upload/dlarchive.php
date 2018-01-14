@@ -38,7 +38,7 @@ if ($_POST['archive'] == 'inbox') {
 		</tr>
 		<tr>
 			<td>Sent at: $sent</td>
-			<td>{$r['mail_text']}</td>
+			<td>" . decrypt_message($r['mail_text'],$r['userid'],$userid) . "</td>
 		</tr>";
     }
     $db->free_result($q);
@@ -69,7 +69,7 @@ if ($_POST['archive'] == 'inbox') {
 			  </tr>
 			  <tr>
 				<td>Sent at: $sent</td>
-				<td>{$r['mail_text']}</td>
+				<td>" . decrypt_message($r['mail_text'],$userid,$r['userid']) . "</td>
 			  </tr>";
     }
     $db->free_result($q);

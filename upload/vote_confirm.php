@@ -33,8 +33,8 @@ function mgpoll()
         exit;
 	$api->SystemLogsAdd($_POST['id'],'voted',"Voted at MGPoll.");
 	$db->query("INSERT INTO `votes` VALUES ({$_POST['id']}, 'mgp')");
-	$api->UserGiveCurrency($_POST['id'],'secondary',10);
-	$api->GameAddNotification($_POST['id'],"Your vote at MGPoll has been verfied successfully. You have been credited 10 Chivalry Tokens.");
+	$api->UserGiveCurrency($_POST['id'],'secondary',75);
+	$api->GameAddNotification($_POST['id'],"Your vote at MGPoll has been verified successfully. You have been credited 10 Chivalry Tokens.");
 }
 function top100()
 {
@@ -48,7 +48,7 @@ function top100()
 	$api->SystemLogsAdd($_GET['id'],'voted',"Voted at Top 100 Arena.");
 	$db->query("INSERT INTO `votes` VALUES ({$_GET['id']}, 'top100')");
 	$db->query("UPDATE `users` SET `hexbags` = `hexbags` + 25 WHERE `userid` = {$_GET['id']}");
-	$api->GameAddNotification($_GET['id'],"Your vote at Top 100 Arena has been verfied successfully. You have been credited 25 additional Hexbags.");
+	$api->GameAddNotification($_GET['id'],"Your vote at Top 100 Arena has been verified successfully. You have been credited 25 additional Hexbags.");
 }
 function twg()
 {
@@ -62,7 +62,7 @@ function twg()
 	$api->SystemLogsAdd($_POST['uid'],'voted',"Voted at Top Web Games.");
 	$db->query("INSERT INTO `votes` VALUES ({$_POST['uid']}, 'twg')");
 	$api->UserGiveCurrency($_POST['uid'],'primary',20000);
-	$api->GameAddNotification($_POST['uid'],"Your vote at Top Web Games has been verfied successfully. You have been credited 20,000 Copper Coins.");
+	$api->GameAddNotification($_POST['uid'],"Your vote at Top Web Games has been verified successfully. You have been credited 20,000 Copper Coins.");
 }
 function apex()
 {
@@ -75,7 +75,7 @@ function apex()
         exit;
 	$api->SystemLogsAdd($_POST['i'],'voted',"Voted at Apex Web Gaming.");
 	$db->query("INSERT INTO `votes` VALUES ({$_POST['i']}, 'apex')");
-	$api->UserGiveItem($_POST['i'],33,25);
-	$api->GameAddNotification($_POST['i'],"Your vote at Apex Web Gaming has been verfied successfully. You have been credited 25 Boxes of Random.");
+	$api->UserGiveItem($_POST['i'],33,50);
+	$api->GameAddNotification($_POST['i'],"Your vote at Apex Web Gaming has been verified successfully. You have been credited 25 Boxes of Random.");
 	
 }

@@ -34,10 +34,11 @@ switch ($_GET['action']) {
 function menu()
 {
     global $db;
-    echo "<h3>Guild Listing</h3>
+    echo "<h3><i class='game-icon game-icon-dozen'></i> Guild Listing</h3>
 	<a href='?action=create'>Create a Guild</a><hr />";
     echo "<table class='table table-bordered table-hover'>
 	<tr>
+		<th>Guild Pic</th>
 		<th>Guild Name</th>
 		<th>Level</th>
 		<th>Members</th>
@@ -45,15 +46,19 @@ function menu()
 	</tr>";
     $gq = $db->query(
         "SELECT `guild_id`, `guild_town_id`, `guild_owner`, `guild_name`,
-			`userid`, `username`, `guild_level`, `guild_capacity`
+			`userid`, `username`, `guild_level`, `guild_capacity`, `guild_pic`
 			FROM `guild` AS `g`
 			LEFT JOIN `users` AS `u` ON `g`.`guild_owner` = `u`.`userid`
 			ORDER BY `g`.`guild_id` ASC");
     //List all the in-game guilds.
     while ($gd = $db->fetch_row($gq)) {
 		$gd['guild_capacity']=$gd['guild_level']*5;
+		$gd['guild_pic'] = ($gd['guild_pic']) ? "<img src='{$gd['guild_pic']}' class='img-fluid' width='75' height='75'>" : '';
         echo "
 		<tr>
+			<td>
+				{$gd['guild_pic']}
+			</td>
 			<td>
 				<a href='?action=view&id={$gd['guild_id']}'>{$gd['guild_name']}</a>
 			</td>
@@ -383,7 +388,7 @@ function wars()
 {
     global $db, $api;
     $time = time();
-    echo "<h3>Known Guild Wars</h3><hr />";
+    echo "<h3><i class='game-icon game-icon-mounted-knight'></i> Guild Wars</h3><hr />";
     $q = $db->query("SELECT * FROM `guild_wars`
                     WHERE `gw_winner` = 0 AND 
                     `gw_end` > {$time} 

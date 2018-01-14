@@ -34,7 +34,7 @@ if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
     die($h->endpage());
 }
 $_SESSION['tresde'] = $_GET['tresde'];
-echo "<h3>Slots Machine</h3><hr />";
+echo "<h3><i class='game-icon game-icon-pokecog'></i> Slots</h3><hr />";
 if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
     $_POST['bet'] = abs($_POST['bet']);
     if ($_POST['bet'] > $ir['primary_currency']) {
@@ -79,7 +79,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` - {$_POST['bet']} WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'gambling', "Lost {$_POST['bet']} in slots.");
     }
-    alert($alerttype, $title, "You pull down the handle and slots begin to spin. They show {$slot[1]}, {$slot[2]}, {$slot[3]}. {$phrase}", true, "?tresde={$tresder}");
+    alert($alerttype, $title, "You pull down the handle and slots begin to spin. They show {$slot[1]}, {$slot[2]}, {$slot[3]}. {$phrase}", false);
     $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
     $tresder = Random(100, 999);
     echo "<br />
