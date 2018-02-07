@@ -6,4 +6,7 @@ Chivalry Engine is incomplete, however, for those interested in the developement
 If you run into issues, or wish to add your own modules, fork the repository and your changes. When complete, submit a well documented pull request!
 
 # Requirements
-A web-server with PHP 5.5+ and MySQLi support. Users need to have Javascript enabled or a lot of the core features won't work.
+A web-server with PHP 5.5+ and MySQLi support. Users need to have Javascript enabled or a lot of the core features won't work.  
+  
+  # Live Game
+Want to give the engine a test in a live game instance? Check out (Chivalry is Dead)[chivalryisdeadgame.com]
