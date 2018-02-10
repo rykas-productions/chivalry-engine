@@ -198,7 +198,7 @@ function new_crime()
     } else {
         $_POST['name'] = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
         $_POST['brave'] = (isset($_POST['brave']) && is_numeric($_POST['brave'])) ? abs(intval($_POST['brave'])) : '';
-        $_POST['percform'] = (isset($_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
+        $_POST['percform'] = (isset($_POST['percform']) && preg_match("/^[a-z0-9\p{Sm}()*.\/-]+([\\s]{1}[a-z0-9\p{Sm}()*.\/-]|[a-z0-9\p{Sm}()*.\/-])*$/i", $_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
         $_POST['PRICURMAX'] = (isset($_POST['PRICURMAX']) && is_numeric($_POST['PRICURMAX'])) ? abs(intval($_POST['PRICURMAX'])) : 0;
         $_POST['PRICURMIN'] = (isset($_POST['PRICURMIN']) && is_numeric($_POST['PRICURMIN'])) ? abs(intval($_POST['PRICURMIN'])) : 0;
         $_POST['SECURMAX'] = (isset($_POST['SECURMAX']) && is_numeric($_POST['SECURMAX'])) ? abs(intval($_POST['SECURMAX'])) : 0;
@@ -443,7 +443,7 @@ function edit_crime()
         $_POST['name'] = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
         $_POST['brave'] = (isset($_POST['brave']) && is_numeric($_POST['brave'])) ? abs(intval($_POST['brave'])) : '';
         $_POST['crimeID'] = (isset($_POST['crimeID']) && is_numeric($_POST['crimeID'])) ? abs(intval($_POST['crimeID'])) : '';
-        $_POST['percform'] = (isset($_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
+        $_POST['percform'] = (isset($_POST['percform']) && preg_match("/^[a-z0-9\p{Sm}()*.\/-]+([\\s]{1}[a-z0-9\p{Sm}()*.\/-]|[a-z0-9\p{Sm}()*.\/-])*$/i", $_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
         $_POST['PRICURMAX'] = (isset($_POST['PRICURMAX']) && is_numeric($_POST['PRICURMAX'])) ? abs(intval($_POST['PRICURMAX'])) : 0;
         $_POST['PRICURMIN'] = (isset($_POST['PRICURMIN']) && is_numeric($_POST['PRICURMIN'])) ? abs(intval($_POST['PRICURMIN'])) : 0;
         $_POST['SECURMAX'] = (isset($_POST['SECURMAX']) && is_numeric($_POST['SECURMAX'])) ? abs(intval($_POST['SECURMAX'])) : 0;
