@@ -106,8 +106,24 @@ function crime()
             alert('danger', "Uh Oh!", "You do not have enough to commit this crime. You only have {$ir['brave']}", true, 'criminal.php');
             die($h->endpage());
         } else {
-            $ec = "\$sucrate=" . str_replace(array("LEVEL", "EXP", "WILL", "IQ"), array($ir['level'], $ir['xp'], $ir['will'], $ir['iq']), $r['crimePERCFORM']) . ";";
-            eval($ec);
+            //Fix from Kyle Massacre. Thanks!
+            //https://github.com/KyleMassacre
+            $ec = str_ireplace(array("LEVEL", "EXP", "WILL", "IQ"), array($ir['level'], $ir['xp'], $ir['will'], $ir['iq']), $r['crimePERCFORM']) . ";";
+            $tokens = token_get_all("<?php {$ec}");
+            $expr = '';
+            foreach($tokens as $token)
+            {
+                if(is_string($token))
+                {
+                    if(in_array($token, array('(', ')', '+', '-', '/', '*'), true))
+                        $expr .= $token;
+                    continue;
+                }
+                list($id, $text) = $token;
+                if(in_array($id, array(T_DNUMBER, T_LNUMBER)))
+                    $expr .= $text;
+            }
+            eval("\$sucrate={$expr};");
             $ir['brave'] -= $r['crimeBRAVE'];
             $api->UserInfoSet($userid, "brave", "-{$r['crimeBRAVE']}");
             if (Random(1, 100) <= $sucrate) {
