@@ -123,7 +123,15 @@ function crime()
                 if(in_array($id, array(T_DNUMBER, T_LNUMBER)))
                     $expr .= $text;
             }
-            eval("\$sucrate={$expr};");
+            try 
+            {
+                eval("\$sucrate={$expr};");
+            }
+            catch (ParseError $e)
+            {
+                alert('danger',"Uh Oh!","Issue detected with crime. Please contact the game administration",true,'crime.php');
+                die($h->endpage());
+            }
             $ir['brave'] -= $r['crimeBRAVE'];
             $api->UserInfoSet($userid, "brave", "-{$r['crimeBRAVE']}");
             if (Random(1, 100) <= $sucrate) {
