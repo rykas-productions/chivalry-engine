@@ -125,7 +125,15 @@ function crime()
                 if(in_array($id, array(T_DNUMBER, T_LNUMBER)))
                     $expr .= $text;
             }
-            $sucrate=$m->evaluate($expr);
+            try 
+            {
+                $sucrate=$m->evaluate($expr); 
+            }
+            catch (\Error $e)
+            {
+                alert('danger',"Uh Oh!","There's an issue with this crime. Please contact the game administration.",true,'criminal.php');
+                die($h->endpage());
+            }
             if (!$sucrate)
             {
                 alert('danger',"Uh Oh!","There's an issue with this crime. Please contact the game administration.",true,'criminal.php');
