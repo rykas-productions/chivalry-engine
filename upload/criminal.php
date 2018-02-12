@@ -8,6 +8,8 @@
 */
 $macropage = ('criminal.php');
 require('globals.php');
+include('class/class_evalmath.php');
+$m = new EvalMath;
 echo "<h3>Criminal Center</h3>";
 if ($api->UserStatus($ir['userid'], 'infirmary') || $api->UserStatus($ir['userid'], 'dungeon')) {
     alert('danger', "Uh Oh!", "You cannot commit crimes while in the infirmary or dungeon.");
@@ -123,13 +125,10 @@ function crime()
                 if(in_array($id, array(T_DNUMBER, T_LNUMBER)))
                     $expr .= $text;
             }
-            try 
+            $sucrate=$m->evaluate($expr);
+            if (!$sucrate)
             {
-                eval("\$sucrate={$expr};");
-            }
-            catch (ParseError $e)
-            {
-                alert('danger',"Uh Oh!","Issue detected with crime. Please contact the game administration",true,'crime.php');
+                alert('danger',"Uh Oh!","There's an issue with this crime. Please contact the game administration.",true,'criminal.php');
                 die($h->endpage());
             }
             $ir['brave'] -= $r['crimeBRAVE'];
