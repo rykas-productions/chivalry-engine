@@ -78,7 +78,7 @@ function home()
 
 function crime()
 {
-    global $db, $userid, $ir, $h, $api;
+    global $db, $userid, $ir, $h, $api, $m;
     $tresder = (Random(100, 999));
     $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
     if (!isset($_GET['c'])) {
