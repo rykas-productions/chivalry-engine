@@ -153,7 +153,7 @@ function large()
 {
 	global $db,$api,$userid,$h,$ir;
 	$bombid = 62;
-	$infirmarytime = Random(1000, 6000);
+	$infirmarytime = Random(7500, 50000);
 	$infirmaryreason = $db->escape("Bomb from <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
 	$notif = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> bombed you, putting you in the infirmary for {$infirmarytime} minutes.";
 
@@ -168,7 +168,11 @@ function large()
 			alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
 			die($h->endpage());
 		}
-
+        if ($ir['lastbomb'] > time()-604800)
+        {
+            alert('danger', "Uh Oh!", "You may not use another large explosive so soon. Try again in " . TimeUntil_Parse($ir['lastbomb']+604800) . ".", true, 'inventory.php');
+			die($h->endpage());
+        }
 		if (empty($_POST['user'])) {
 			alert('danger', "Uh Oh!", "You did not fill out the form completely.", true, 'inventory.php');
 			die($h->endpage());
@@ -177,11 +181,28 @@ function large()
 			alert('danger', "Uh Oh!", "You cannot bomb yourself.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']}");
+		$q = $db->query("SELECT `userid`,`kills`,`hp`,`maxhp` FROM `users` WHERE `userid` = {$_POST['user']}");
 		if ($db->num_rows($q) == 0) {
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
+        $r=$db->fetch_row($q);
+        if ($api->UserStatus($_POST['user'],'infirmary'))
+        {
+            alert('danger',"Uh Oh!","You may not use this bomb on players in the infirmary. The causalities would be too great.",true,'inventory.php');
+            die($h->endpage());
+        }
+        if ($r['hp'] < $r['maxhp'])
+        {
+            alert('danger',"Uh Oh!","You may only use this bomb on players with full health.",true,'inventory.php');
+            die($h->endpage());
+        }
+        if ($r['kills'] < 100)
+        {
+            alert('danger',"Uh Oh!","You cannot use this bomb on a player with less than 100 kills.",true,'inventory.php');
+            die($h->endpage());
+        }
+        $time=time();
 		put_infirmary($_POST['user'], $infirmarytime, $infirmaryreason);
 		$api->UserTakeItem($userid, $bombid, 1);
 		$api->GameAddNotification($_POST['user'], $notif);
@@ -190,6 +211,7 @@ function large()
 		$ublink="<a href='../profile.php?user={$_POST['user']}'>{$userbomb}</a>";
 		alert("success", "Success", "You have successfully bombed {$userbomb}.", true, 'inventory.php');
 		$api->SystemLogsAdd($userid,'bomb',"Bombed {$ublink} for {$infirmarytime} minutes.");
+        $db->query("UPDATE `user_settings` SET `lastbomb` = {$time} WHERE `userid` = {$userid}");
 		$h->endpage();
 
 	} else {

@@ -126,6 +126,33 @@ switch ($_GET['action']) {
 	case "votedlogs":
         logs('voted');
         break;
+    case "loginrewardlogs":
+        logs('loginreward');
+        break;
+    case "achievementlogs":
+        logs('achievement');
+        break;
+    case "heallogs":
+        logs('heal');
+        break;
+    case "taxlogs":
+        logs('tax');
+        break;
+    case "itemrequestlogs":
+        logs('irequest');
+        break;
+    case "marriagelogs":
+        logs('marriage');
+        break;
+    case "preferenceslogs":
+        logs('preferences');
+        break;
+    case "hexbagslogs":
+        logs('hexbags');
+        break;
+    case "borlogs":
+        logs('bor');
+        break;
     case "mail":
         maillogs();
         break;
@@ -155,7 +182,7 @@ function logs($name)
         return;
     }
     $mypage = floor($_GET['st'] / 100) + 1;
-    echo pagination(100,$attacks,$_GET['st'],"?action={$logname}logs&st=");
+    echo pagination(100,$attacks,$_GET['st'],"?action={$_GET['action']}&st=");
     echo "<table class='table table-bordered table-hover table-striped'>
     		<tr>
     			<th>Log Time</th>
@@ -184,7 +211,7 @@ function logs($name)
     $db->free_result($q);
     echo "
     </table>";
-    echo pagination(100,$attacks,$_GET['st'],"?action={$logname}logs&st=");
+    echo pagination(100,$attacks,$_GET['st'],"?action={$_GET['action']}&st=");
     $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of the {$logname} logs.");
 }
 
@@ -211,7 +238,7 @@ function userlogs()
             alert("danger", "Uh Oh!", "This user does not have anything logged.", true, 'index.php');
             return;
         }
-        echo pagination(100,$logs,$_GET['st'],"?action=userlogs&user={$user}&st=");
+        echo pagination(100,$logs,$_GET['st'],"?action={$_GET['action']}&user={$user}&st=");
 		echo "
 		<table class='table table-bordered table-hover'>
 				<thead>
@@ -250,7 +277,7 @@ function userlogs()
 		</tbody>
 		</table>
 		<br />";
-		echo pagination(100,$logs,$_GET['st'],"?action=userlogs&user={$user}&st=");
+		echo pagination(100,$logs,$_GET['st'],"?action={$_GET['action']}&user={$user}&st=");
         $mypage = floor($_GET['st'] / 100) + 1;
         $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of User ID {$user}'s user logs.");
         $h->endpage();
@@ -322,7 +349,7 @@ function alllogs()
         alert('danger', "Uh Oh!", "There haven't been any game actions yet.", true, 'index.php');
         return;
     }
-    echo pagination(100,$attacks,$_GET['st'],"?action={$logname}logs&st=");
+    echo pagination(100,$attacks,$_GET['st'],"?action={$_GET['action']}logs&st=");
     echo "<table class='table table-bordered table-hover table-striped'>
     		<tr>
     			<th>Log Time</th>
@@ -350,7 +377,7 @@ function alllogs()
     }
     $db->free_result($q);
     echo "</table>";
-    echo pagination(100,$attacks,$_GET['st'],"?action={$logname}logs&st=");
+    echo pagination(100,$attacks,$_GET['st'],"?action={$_GET['action']}logs&st=");
     $mypage = floor($_GET['st'] / 100) + 1;
     $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of the game logs.");
 }
@@ -376,7 +403,7 @@ function maillogs()
         alert('danger', "Uh Oh!", "There doesn't appear to be any sent messages yet.", true, 'index.php');
         return;
     }
-    echo pagination(100, $attacks, $_GET['st'], "?action=mail&st=");
+    echo pagination(100, $attacks, $_GET['st'], "?action={$_GET['action']}&st=");
     echo "<table class='table table-bordered table-hover table-striped'>
     		<tr>
     			<th>Time</th>
@@ -406,7 +433,7 @@ function maillogs()
     }
     $db->free_result($q);
     echo "</table>";
-    echo pagination(100,$attacks,$_GET['st'],"?action=mail&st=");
+    echo pagination(100,$attacks,$_GET['st'],"?action={$_GET['action']}&st=");
     $mypage = floor($_GET['st'] / 100) + 1;
     $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of the {$logname} logs.");
 }

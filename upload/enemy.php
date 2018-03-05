@@ -26,7 +26,7 @@ switch ($_GET['action'])
 }
 function enemy_list()
 {
-    global $db, $ir, $userid, $h;
+    global $db, $ir, $userid, $h, $api;
 	$ir['friend_count']=$db->fetch_single($db->query("SELECT COUNT(`enemy_id`) FROM `enemy` WHERE `enemy_user` = {$userid}"));
     echo "
 <a href='?action=add'>Add an enemy</a><br />
@@ -49,7 +49,7 @@ These are the people on your enemy list.
    ";
     $q =
             $db->query(
-                    "SELECT `comment`, `enemy_id`, `laston`, `vip_days`,
+                    "SELECT `comment`, `enemy_id`, `laston`, `vip_days`, `vipcolor`, 
                      `username`, `userid`
                      FROM `enemy` AS `fl`
                      LEFT JOIN `users` AS `u` ON `fl`.`enemy_user` = `u`.`userid`
@@ -58,11 +58,23 @@ These are the people on your enemy list.
     while ($r = $db->fetch_row($q))
     {
 		$laston=time()-900;
+        if ($api->UserStatus($r['userid'],'dungeon'))
+        {
+            $attacklink="Not Attackable";
+        }
+        elseif ($api->UserStatus($r['userid'],'infirmary'))
+        {
+            $attacklink="Not Attackable";
+        }
+        else
+        {
+            $attacklink="<a href='attack.php?user={$r['userid']}'>Attack</a>";
+        }
         $on =
                 ($r['laston'] >= $laston)
                         ? '<span class="text-success">Online</font>'
                         : '<span class="text-danger">Offline</font>';
-		$r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fas fa-shield-alt'
+		$r['username'] = ($r['vip_days']) ? "<span class='{$r['vipcolor']}'>{$r['username']} <i class='fas fa-shield-alt'
         data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
         if (!$r['comment'])
         {
@@ -72,7 +84,7 @@ These are the people on your enemy list.
 		<tr>
 			<td><a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]</td>
 			<td><a href='inbox.php?action=compose&user={$r['userid']}'>Mail</a></td>
-			<td><a href='attack.php?user={$r['userid']}'>Attack</a></td>
+			<td>{$attacklink}</td>
 			<td><a href='?action=remove&f={$r['enemy_id']}'>Remove</a></td>
 			<td>" . strip_tags($r['comment']) . "<br />[<a href='?action=ccomment&f={$r['enemy_id']}'>Change</a>]</td>
 			<td>$on</td>

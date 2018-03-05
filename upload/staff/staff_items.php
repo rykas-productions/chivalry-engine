@@ -125,6 +125,7 @@ function create()
 						<option value='guard'>Guard</option>
 						<option value='labor'>Labor</option>
 						<option value='iq'>IQ</option>
+						<option value='luck'>Luck</option>
 						<option value='infirmary'>Infirmary Time</option>
 						<option value='dungeon'>Dungeon Time</option>
 						<option value='primary_currency'>Copper Coins</option>
@@ -224,7 +225,7 @@ function create()
                         array('energy', 'will', 'brave', 'hp', 'level',
                             'strength', 'agility', 'guard',
                             'labor', 'iq', 'infirmary', 'dungeon',
-                            'primary_currency', 'secondary_currency', 'xp', 'vip_days')))
+                            'primary_currency', 'secondary_currency', 'xp', 'vip_days', 'luck')))
                     ? $_POST[$efxkey . 'stat'] : 'energy';
             $_POST[$efxkey . 'dir'] =
                 (isset($_POST[$efxkey . 'dir'])
@@ -572,7 +573,7 @@ function edititem()
                 "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
                 "primary_currency" => "Copper Coins", "secondary_currency"
             => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-                "VIP Days");
+                "VIP Days", "luck" => "Luck");
         for ($i = 1; $i <= 3; $i++) {
             if (!empty($itemi["effect" . $i])) {
                 $efx = unserialize($itemi["effect" . $i]);
@@ -690,7 +691,7 @@ function edititem()
                         array('energy', 'will', 'brave', 'hp',
                             'strength', 'agility', 'guard',
                             'labor', 'iq', 'infirmary', 'dungeon',
-                            'primary_currency', 'secondary_currency', 'xp', 'vip_days')))
+                            'primary_currency', 'secondary_currency', 'xp', 'vip_days', 'luck')))
                     ? $_POST[$efxkey . 'stat'] : 'energy';
             $_POST[$efxkey . 'dir'] =
                 (isset($_POST[$efxkey . 'dir'])

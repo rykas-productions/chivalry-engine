@@ -56,14 +56,14 @@ if ($_POST['step'] == 1)
 		die($h->endpage());
 	}
 	echo "Now, enter how many Copper Coins you wish to invest. You can only invest 
-	what's in your bank account. You may only invest up to 1,000,000 Copper Coins at 
+	what's in your bank account. You may only invest up to 2,500,000 Copper Coins at 
 	this time. <b>You currently have " . number_format($ir['bank']) . " Copper Coins 
 	in your bank account.</b><br />
 	<form method='post'>
 		<input type='hidden' value='2' name='step'>
 		<input type='hidden' value='{$_POST['duration']}' name='duration'>
-		<input type='number' value='{$ir['bank']}' name='invest' min='1' max='1000000' required='1' class='form-control'>
-		<input type='submit' class='bnt btn-primary' value='Invest'>
+		<input type='number' value='{$ir['bank']}' name='invest' min='1' max='2500000' required='1' class='form-control'>
+		<input type='submit' class='btn btn-primary' value='Invest'>
 	</form>";
 	$h->endpage();
 }
@@ -81,9 +81,9 @@ if ($_POST['step'] == 2)
 		alert('danger',"Uh Oh!","You are trying to invest more Copper Coins than you currently have available to you.");
 		die($h->endpage());
 	}
-	if ($_POST['invest'] > 1000000)
+	if ($_POST['invest'] > 2500000)
 	{
-		alert('danger',"Uh Oh!","You may only invest up to 1,000,000 Copper Coins at a time.");
+		alert('danger',"Uh Oh!","You may only invest up to 2,500,000 Copper Coins at a time.");
 		die($h->endpage());
 	}
 	if ($_POST['duration'] == 5)

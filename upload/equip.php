@@ -17,8 +17,12 @@ switch ($_GET['slot']) {
     case 'armor':
         armor();
         break;
+    case 'potion':
+        potion();
+        break;
     default:
-        die();
+        alert('danger',"Uh Oh!","Please specific an action.",true,'inventory.php');
+        die($h->endpage());
         break;
 }
 function weapon()
@@ -67,6 +71,16 @@ function weapon()
 			{
 				while ($sbr=$db->fetch_row($sbq))
 				{
+                    $stats =
+					array("energy" => "Maximum Energy", "will" => "Maximum Will",
+						"brave" => "Maximum Bravery", "level" => "Level",
+						"maxhp" => "Maximum Health", "strength" => "Strength",
+						"agility" => "Agility", "guard" => "Guard",
+						"labor" => "Labor", "iq" => "IQ",
+						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+						"primary_currency" => "Copper Coins", "secondary_currency"
+					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+						"VIP Days");
 					if ($sbr['direction'] == 'pos')
 					{
 						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
@@ -74,6 +88,8 @@ function weapon()
 						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
 							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
 						}
+                        $mod='lost';
+						$ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
 					}
 					else
 					{
@@ -82,12 +98,16 @@ function weapon()
 						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
 							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
 						}
+                        $mod='gained';
+						$ir[$sbr['stat']] = $ir[$sbr['stat']]+$sbr['number'];
 					}
-					$ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
-					$statloss .= "{$sbr['number']} {$sbr['stat']}, ";
+                    if (empty($statloss))
+                        $statloss .= "{$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
+                    else
+                        $statloss .= ", {$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
 					$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$_POST['type']}'");
 				}
-				alert('info',"Information!","You have lost {$statloss} when you unequipped your weapon.",false);
+				alert('info',"Information!","You have {$statloss} when you unequipped your weapon.",false);
 			}
             $weapname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_POST['type']]}"));
             $api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} as their {$slot}");
@@ -103,6 +123,16 @@ function weapon()
 		$txt='';
 		for ($enum = 1; $enum <= 3; $enum++) {
             if ($r["effect{$enum}_on"] == 'true') {
+                $stats =
+					array("energy" => "Maximum Energy", "will" => "Maximum Will",
+						"brave" => "Maximum Bravery", "level" => "Level",
+						"maxhp" => "Maximum Health", "strength" => "Strength",
+						"agility" => "Agility", "guard" => "Guard",
+						"labor" => "Labor", "iq" => "IQ",
+						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+						"primary_currency" => "Copper Coins", "secondary_currency"
+					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+						"VIP Days");
                 $einfo = unserialize($r["effect{$enum}"]);
                 if ($einfo['inc_type'] == "percent") {
                     if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
@@ -142,7 +172,10 @@ function weapon()
                 }
 				$db->query("INSERT INTO `equip_gains` VALUES ('{$userid}', '{$einfo['stat']}', '{$einfo['dir']}', '{$inc}', '{$_POST['type']}')");
 				$dir= ($einfo['dir'] == 'pos') ? "gained" : "lost" ;
-				$txt.=" You have {$dir} {$inc} {$einfo['stat']} while you have this weapon equipped.";
+                if (empty($txt))
+                    $txt.=" {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
+                else
+                    $txt.=", {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
 			}
         }
         //Remove the item from their inventory, and equip it! Lets log that they equipped it, and give the user a friendly
@@ -151,7 +184,7 @@ function weapon()
         $db->query("UPDATE `users` SET `{$_POST['type']}` = {$r['itmid']} WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their {$slot}.");
         alert('success', "Success!", "You have successfully equipped {$r['itmname']} as your weapon in your {$slot_name}
-		    slot. {$txt}", true, 'inventory.php', 'Back', true);
+		    slot. You have {$txt} while you have this weapon equipped.", true, 'inventory.php', 'Back', true);
     } else {
         //Form to select what slot to equip the weapon to.
         echo "<h3>Equip a Weapon Form</h3>
@@ -218,6 +251,16 @@ function armor()
 			{
 				while ($sbr=$db->fetch_row($sbq))
 				{
+                    $stats =
+					array("energy" => "Maximum Energy", "will" => "Maximum Will",
+						"brave" => "Maximum Bravery", "level" => "Level",
+						"maxhp" => "Maximum Health", "strength" => "Strength",
+						"agility" => "Agility", "guard" => "Guard",
+						"labor" => "Labor", "iq" => "IQ",
+						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+						"primary_currency" => "Copper Coins", "secondary_currency"
+					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+						"VIP Days");
 					if ($sbr['direction'] == 'pos')
 					{
 						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
@@ -225,6 +268,8 @@ function armor()
 						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
 							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
 						}
+                        $mod='lost';
+                        $ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
 					}
 					else
 					{
@@ -233,18 +278,32 @@ function armor()
 						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
 							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
 						}
+                        $mod='gained';
+                        $ir[$sbr['stat']] = $ir[$sbr['stat']]+$sbr['number'];
 					}
-					$ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
-					$statloss .= "{$sbr['number']} {$sbr['stat']}, ";
+					if (empty($statloss))
+                        $statloss .= "{$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
+                    else
+                        $statloss .= ", {$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
 					$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$_POST['type']}'");
 				}
-				alert('info',"Information!","You have lost {$statloss} when you unequipped your {$armorname}.",false);
+				alert('info',"Information!","You have {$statloss} when you unequipped your {$armorname}.",false);
 			}
             $api->SystemLogsAdd($userid, 'equip', "Unequipped {$armorname} as their armor.");
         }
 		$txt='';
 		for ($enum = 1; $enum <= 3; $enum++) {
             if ($r["effect{$enum}_on"] == 'true') {
+                $stats =
+					array("energy" => "Maximum Energy", "will" => "Maximum Will",
+						"brave" => "Maximum Bravery", "level" => "Level",
+						"maxhp" => "Maximum Health", "strength" => "Strength",
+						"agility" => "Agility", "guard" => "Guard",
+						"labor" => "Labor", "iq" => "IQ",
+						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+						"primary_currency" => "Copper Coins", "secondary_currency"
+					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+						"VIP Days");
                 $einfo = unserialize($r["effect{$enum}"]);
                 if ($einfo['inc_type'] == "percent") {
                     if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
@@ -284,7 +343,10 @@ function armor()
                 }
 				$db->query("INSERT INTO `equip_gains` VALUES ('{$userid}', '{$einfo['stat']}', '{$einfo['dir']}', '{$inc}', '{$_POST['type']}')");
 				$dir= ($einfo['dir'] == 'pos') ? "gained" : "lost" ;
-				$txt.=" You have {$dir} {$inc} {$einfo['stat']} while you have this armor equipped.";
+				if (empty($txt))
+                    $txt.=" {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
+                else
+                    $txt.=", {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
 			}
         }
         //Take the item from their inventory, equip it, log that it was equipped, and give a sucecss message to the player.
@@ -293,7 +355,7 @@ function armor()
 				  SET `equip_armor` = {$r['itmid']}
 				  WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their armor.");
-        alert('success', "Success!", "You have equipped your {$r['itmname']} into your armor slot. {$txt}", true, 'inventory.php', 'Back', true);
+        alert('success', "Success!", "You have equipped your {$r['itmname']} into your armor slot. You have {$txt} while you have this armor equipped.", true, 'inventory.php', 'Back', true);
     } else {
         //Equip armor form.
         echo "<h3>Equip Armor Form</h3><hr />
@@ -303,6 +365,77 @@ function armor()
 	<input type='hidden' name='type' value='equip_armor'  />
 	<input type='submit' class='btn btn-primary' value='Equip Armor' />
 	</form>";
+    }
+    $h->endpage();
+}
+function potion()
+{
+    global $db,$api,$h,$userid,$ir;
+    //Make sure the Item ID is safe for database work.
+    $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : 0;
+    //Select the Item's info from the database.
+    $id =
+        $db->query(
+            "SELECT `itmid`, `itmname`, `effect1`, `effect2`, 
+					`effect3`,  `effect1_on`, `effect2_on`, `effect3_on`, `itmtype`
+					FROM `inventory` AS `iv`
+					LEFT JOIN `items` AS `it`
+					ON `iv`.`inv_itemid` = `it`.`itmid`
+					WHERE `iv`.`inv_id` = {$_GET['ID']}
+					AND `iv`.`inv_userid` = $userid
+					LIMIT 1");
+    //Check that the item actually exists, if not, stop them.
+    if ($db->num_rows($id) == 0) {
+        $db->free_result($id);
+        alert('danger', "Uh Oh!", "The potion you're trying to equip does not exist.", true, 'inventory.php');
+        die($h->endpage());
+    } else {
+        $r = $db->fetch_row($id);
+        $db->free_result($id);
+    }
+    if (($r['itmtype'] != 8) && ($r['itmtype'] != 7))
+    {
+        alert('danger', "Uh Oh!", "Cannot equip this item to your potion slot.", true, 'inventory.php');
+        die($h->endpage());
+    }
+    if (isset($_POST['type']))
+    {
+        if ($_POST['type'] !== 'equip_potion') {
+            alert('danger', "Uh Oh!", "You cannot equip potions to an invalid slot.", true, 'inventory.php');
+            die($h->endpage());
+        }
+        
+        if (!$r['effect1_on'] && !$r['effect2_on'] && !$r['effect3_on']) {
+            alert('danger', "Uh Oh!", "You cannot equip this potion as it has no effects.", true, 'inventory.php');
+            die($h->endpage());
+        }
+        if (($r['itmtype'] != 8) && ($r['itmtype'] != 7))
+        {
+            alert('danger', "Uh Oh!", "Cannot equip this item to your potion slot.", true, 'inventory.php');
+            die($h->endpage());
+        }
+        //Potion equipping.
+        $potionexclusion=array(17,123,68);
+        if (in_array($r['itmid'],$potionexclusion))
+        {
+            alert('danger', "Uh Oh!", "You may not equip this item in your potion slot.", true, 'inventory.php');
+            die($h->endpage());
+        }
+        $db->query("UPDATE `users`
+				  SET `equip_potion` = {$r['itmid']}
+				  WHERE `userid` = {$userid}");
+        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their potion.");
+        alert('success',"Success!","You have successfully equipped {$r['itmname']} as your combat potion.",true,'inventory.php');
+        die($h->endpage());
+    }
+    else
+    {
+        echo "<h3>Equip Potion Form</h3><hr />
+        <form method='post' action='?slot=potion&ID={$_GET['ID']}'>
+            You are attempting to equip your {$r['itmname']} as your potion for use in combat.
+            <input type='hidden' name='type' value='equip_potion'  /><br />
+            <input type='submit' class='btn btn-primary' value='Equip Potion' />
+        </form>";
     }
     $h->endpage();
 }

@@ -17,6 +17,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+require('lib/bbcode_engine.php');
 $CurrentTime = time();
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
@@ -40,9 +41,8 @@ switch ($_GET['action']) {
 }
 function news_home()
 {
-    global $db, $h, $CurrentTime;
+    global $db, $h, $CurrentTime, $parser;
     $AdsQuery = $db->query("SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
-    $db->query("DELETE FROM `newspaper_ads` WHERE `news_end` < {$CurrentTime}");
     if ($db->num_rows($AdsQuery) == 0) {
         alert("danger", "Uh Oh!", "There aren't any newspaper ads at this time. Maybe you should <a href='?action=buyad'>list</a> one?", false);
         die($h->endpage());
@@ -64,6 +64,7 @@ function news_home()
 			<tbody>
 	";
     while ($Ads = $db->fetch_row($AdsQuery)) {
+        $parser->parse($Ads['news_text']);
         $UserName = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$Ads['news_owner']}"));
         echo "	<tr>
 					<td>
@@ -72,7 +73,7 @@ function news_home()
 						Ad Ends: " . date('F j, Y g:i:s a', $Ads['news_end']) . "</small>
 					</td>
 					<td>
-						{$Ads['news_text']}
+						{$parser->getAsHtml()}
 					</td>
 				</tr>";
     }

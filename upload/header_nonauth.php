@@ -18,7 +18,11 @@ class headers
         <html lang="en">
         <head>
             <center>
-				<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cerulean/bootstrap.min.css">
+				<link rel="stylesheet" href="css/game-icons.css">
+				<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
+				<link rel="stylesheet" href="css/game-v1.2.min.css">
+                <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon"/>
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,74 +31,10 @@ class headers
                 <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
                 <meta http-equiv="Cache-control" content="public">
                 <meta property="og:image" content="assets/img/logo.png"/>
-                <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon"/>
-				<link rel="stylesheet" href="css/game-icons.css">
-                <?php
-                if ($_COOKIE['theme'] == 1)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
-                    <meta name="theme-color" content="#343a40">
-                    <?php
-					$hdr='navbar-dark bg-dark';
-                }
-                if ($_COOKIE['theme'] == 2)
-                {
-                    ?>
-                    <link rel="stylesheet" href="css/darkly.bs4.b2.min.css">
-                    <meta name="theme-color" content="#303030">
-					<?php
-					$hdr='navbar-light bg-light';
-                }
-				if ($_COOKIE['theme'] == 3)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
-                    <meta name="theme-color" content="#4E5D6C">
-					<?php
-					$hdr='navbar-dark bg-dark';
-                }
-				if ($_COOKIE['theme'] == 4)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
-                    <meta name="theme-color" content="#272B30">
-					<?php
-					$hdr='navbar-dark bg-dark';
-                }
-				if ($_COOKIE['theme'] == 5)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
-                    <meta name="theme-color" content="#04519b">
-					<?php
-					$hdr='navbar-dark bg-dark';
-                }
-				if ($_COOKIE['theme'] == 6)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
-					<meta name="theme-color" content="#78C2AD">
-					<?php
-					$hdr='navbar-dark bg-primary';
-                }
-				if ($_COOKIE['theme'] == 7)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
-                    <meta name="theme-color" content="#772953">
-					<?php
-					$hdr='navbar-dark bg-dark';
-                }
-				if ($_COOKIE['theme'] == 8)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
-                    <meta name="theme-color" content="#060606">
-					<?php
-					$hdr='navbar-dark bg-dark';
-                }
-                ?>
+				<meta name="theme-color" content="#04519b">
+				<?php
+				$hdr='navbar-dark bg-dark';
+				?>
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']} - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; ?>
         </head>
@@ -125,11 +65,15 @@ class headers
                             <a class="nav-link" href="gamerules2.php"><i
                                     class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
                         </li>
+						<li class="nav-item">
+                            <a class="nav-link" href="privacy.php"><i
+                                    class="fa fa-fw fa-user-secret"></i> <?php echo "Privacy Policy"; ?></a>
+                        </li>
                     </ul>
                     <div class="my-2 my-lg-0">
                         <ul class="navbar-nav mr-auto">
-                            <li class="navbar-text">
-                                <i class="fa fa-sign-in-alt" aria-hidden="true"></i> <?php echo "Already have an account?"; ?>
+                            <li class="nav-item">
+                                <div class='nav-link'><i class="fa fa-sign-in-alt" aria-hidden="true"></i> <?php echo "Already have an account?"; ?></div>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
@@ -140,10 +84,13 @@ class headers
 									<form class="px-4 py-3" method="post" action="authenticate.php">
 										<p class="dropdown"><?php echo "Sign In!"; ?></p>
 										<div class="form-group">
-											<input type="email" class="form-control" id="email" placeholder="email@example.com" name="email" required>
+											<input type="email" class="form-control" id="email1" placeholder="email@example.com" name="email" required>
 										</div>
 										<div class="form-group">
-											<input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+											<input type="password" class="form-control" id="password1" name="password" placeholder="Password" required>
+										</div>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="remember" class="form-check-input" value="yes"> Remember Me
 										</div>
 										<button type="submit" class="btn btn-primary btn-block"><i class="fa fa-sign-in-alt" aria-hidden="true"></i> Sign in</button>
 										<?php echo $csrf; ?>
@@ -192,8 +139,6 @@ class headers
 
         </div>
         <!-- /.container -->
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
-        <link rel="stylesheet" href="css/game-v1.2.min.css">
 		
         <!-- jQuery Version 3.2.1 -->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -205,6 +150,7 @@ class headers
         <!-- Other JavaScript -->
         <script src="js/register-min.js" async defer></script>
 		<script type="text/javascript" src="js/clock.min.js"></script>
+		<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
 		<script type="text/javascript"> 
 		  $(document).ready(function(){ 
 			customtimestamp = parseInt($("#jqclock").data("time"));

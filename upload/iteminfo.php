@@ -51,50 +51,44 @@ if (!$itmid) {
 				<td>
 					{$id['itmdesc']}
 				</td>
-			</tr>
-			<tr>
+			</tr>";
+            $towns='';
+            $sq=$db->query("SELECT `sitemSHOP` FROM `shopitems` WHERE `sitemITEMID` = {$_GET['ID']}");
+            if ($db->num_rows($sq) > 0)
+            {
+                echo"
+                <tr>
 				<th width='33%'>
 					Available in Town(s)
 				</th>
 				<td>";
-					$towns='';
-					$sq=$db->query("SELECT `sitemSHOP` FROM `shopitems` WHERE `sitemITEMID` = {$_GET['ID']}");
-					if ($db->num_rows($sq) == 0)
-					{
-						echo "N/A";
-					}
-					else
-					{
-						while ($sr=$db->fetch_row($sq))
-						{
-							$shop=$db->fetch_single($db->query("SELECT `shopLOCATION` FROM `shops` WHERE `shopID` = {$sr['sitemSHOP']}"));
-							$towns.= "<a href='travel.php?to={$shop}'>{$api->SystemTownIDtoName($shop)}</a>, ";
-						}
-					}
+                    while ($sr=$db->fetch_row($sq))
+                    {
+                        $shop=$db->fetch_single($db->query("SELECT `shopLOCATION` FROM `shops` WHERE `shopID` = {$sr['sitemSHOP']}"));
+                        $towns.= "<a href='travel.php?to={$shop}'>{$api->SystemTownIDtoName($shop)}</a>, ";
+                    }
 					echo $towns;
+            }
 				echo"
 				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Available in Mine(s)
-				</th>
-				<td>";
-					$towns2='';
-					$sq=$db->query("SELECT `mine_location` FROM `mining_data` WHERE `mine_copper_item` = {$_GET['ID']} OR `mine_silver_item` = {$_GET['ID']} OR `mine_gold_item` = {$_GET['ID']} OR `mine_gem_item` = {$_GET['ID']}");
-					if ($db->num_rows($sq) == 0)
-					{
-						echo "N/A";
-					}
-					else
-					{
+			</tr>";
+            $towns2='';
+            $sq=$db->query("SELECT `mine_location` FROM `mining_data` WHERE `mine_copper_item` = {$_GET['ID']} OR `mine_silver_item` = {$_GET['ID']} OR `mine_gold_item` = {$_GET['ID']} OR `mine_gem_item` = {$_GET['ID']}");
+			if ($db->num_rows($sq) > 0)
+            {
+               echo" 
+                <tr>
+                    <th width='33%'>
+                        Available in Mine(s)
+                    </th>
+                    <td>";
 						while ($sr=$db->fetch_row($sq))
 						{
 							$shop2=$sr['mine_location'];
 							$towns2.= "<a href='travel.php?to={$shop2}'>{$api->SystemTownIDtoName($shop2)}</a>, ";
 						}
-					}
 					echo $towns2;
+            }
 				echo"
 				</td>
 			</tr>
@@ -138,7 +132,7 @@ if (!$itmid) {
                         "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
                         "primary_currency" => "Copper Coins", "secondary_currency"
                     => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-                        "VIP Days");
+                        "VIP Days", "luck" => "Luck");
                 $statformatted = $stats["{$einfo['stat']}"];
                 echo "
 				<tr>

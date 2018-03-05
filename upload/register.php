@@ -9,11 +9,11 @@
 require("globals_nonauth.php");
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 //Check if someone is already registered on this IP.
-if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1) {
+/*if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1) {
     alert('danger', "Uh Oh!", "You can only have one account per IP Address. We're going to stop you from registering for now.", true, 'login.php');
     die($h->endpage());
 
-}
+}*/
 if (!isset($_GET['REF'])) {
     $_GET['REF'] = 0;
 }
@@ -21,7 +21,7 @@ $_GET['REF'] = abs($_GET['REF']);
 if ($_GET['REF']) {
     $_GET['REF'] = $_GET['REF'];
 }
-$username = (isset($_POST['username']) && is_string($_POST['username'])) ? stripslashes($_POST['username']) : '';
+$username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['username'])) ? $db->escape(strip_tags(stripslashes($_POST['username']))) : '';
 if (!empty($username)) {
     //If the registration captcha is enabled.
     if ($set['RegistrationCaptcha'] == 'ON') {
@@ -114,10 +114,10 @@ if (!empty($username)) {
         $CurrentTime = time();
         $db->query("INSERT INTO `users`
 					(`username`,`email`,`password`,`level`,`gender`,`class`,
-					`lastip`,`registerip`,`registertime`,`loginip`,`display_pic`)
+					`lastip`,`registerip`,`registertime`,`loginip`,`display_pic`,`vip_days`)
 					VALUES ('{$e_username}','{$e_email}','{$e_encpsw}','1','{$e_gender}',
 					'{$e_class}','{$IP}','{$IP}','{$CurrentTime}', '{$IP}', 
-					'{$profilepic}')");
+					'{$profilepic}','3')");
         $i = $db->insert_id();
         $db->query("UPDATE `users` SET `brave`='10',`maxbrave`='10',`hp`='100',
 					`maxhp`='100',`maxwill`='100',`will`='100',`energy`='24',
@@ -132,7 +132,7 @@ if (!empty($username)) {
                 "INSERT INTO `userstats`
 					 VALUES({$i}, 900, 1100, 1000, 1000, 1000, 100)");
         }
-        if ($e_class == 'Defender') {
+        if ($e_class == 'Guardian') {
             $db->query(
                 "INSERT INTO `userstats`
 					 VALUES({$i}, 1000, 900, 1100, 1000, 1000, 100)");
@@ -143,6 +143,7 @@ if (!empty($username)) {
             $e_rip = $db->escape($rem_IP);
             $db->query("INSERT INTO `referals`
 			VALUES (NULL, {$_POST['ref']}, '{$e_rip}', {$i}, '{$IP}',{$CurrentTime})");
+			$db->query("UPDATE `user_settings` SET `ref_count` = `ref_count` + 1 WHERE `userid` = {$_POST['ref']}");
         }
         $db->query("INSERT INTO `infirmary`
 			(`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) 
@@ -150,11 +151,15 @@ if (!empty($username)) {
         $db->query("INSERT INTO `dungeon`
 			(`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) 
 			VALUES ('{$i}', 'N/A', '0', '0');");
-        $api->UserGiveItem($i,5,50);
-        $api->UserGiveItem($i,29,50);
+        //Give starter items.
+        $api->UserGiveItem($i,6,50);
+        $api->UserGiveItem($i,30,50);
+        $api->UserGiveItem($i,33,250);
+        $api->UserGiveCurrency($i,'primary',10000);
+        $api->UserGiveCurrency($i,'secondary',50);
         $mail="Welcome to Chivalry is Dead, {$e_username}. We hope you stay a while and hang out. To get started,
-        check out the Explore page and visit the Hexbags under the Gambling tab. Here you will gain many awesome starter items. Should
-        your fortune be unkind, your inventory has 50 lockpicks and 50 leeches to get you out of the Infirmary and Dungeon when needed.";
+        check out the Explore page and visit the [url='hexbags.php']Hexbags[/url] under the Gambling tab. Here you will gain many awesome starter items. Should
+        your fortune be unkind, your inventory has 50 Dungeon Keys and 50 Linen Wraps to get you out of the Infirmary and Dungeon when needed.";
         session_regenerate_id();
         $_SESSION['loggedin'] = 1;
         $_SESSION['userid'] = $i;
@@ -182,7 +187,7 @@ if (!empty($username)) {
         //User registered, lets log them in.
         alert('success', "Success!", "You have successfully signed up to play {$set['WebsiteName']}. Click here to <a href='tutorial.php'>Sign In</a>", false);
         $url=determine_game_urlbase();
-        $WelcomeMSGEmail="Welcome to the game, {$e_username}!<br />We hope you enjoy our lovely game and stick around for a while! If you have any questions or concerns, please contact a staff member in-game!<br />Thank you!<br /> -{$set['WebsiteName']}<br /><a href='http://{$url}'>http://{$url}</a>";
+        $WelcomeMSGEmail="Welcome to Chivalry is Dead, {$e_username}!<br />We hope you enjoy our lovely game and stick around for a while! If you have any questions or concerns, please contact a staff member in-game!<br />Thank you!<br /> -{$set['WebsiteName']}<br /><a href='https://{$url}'>https://{$url}</a>";
         $api->SystemSendEmail($e_email,$WelcomeMSGEmail,"{$set['WebsiteName']} Registration",$set['sending_email']);
 		$api->GameAddMail($i,"Welcome to Chivalry is Dead",$mail,1);
         die($h->endpage());
@@ -194,7 +199,7 @@ if (!empty($username)) {
 	<table class='table table-bordered'>
 		<form method='post'>
 			<tr>
-				<th>
+				<th width='33%'>
 					Username
 				</th>
 				<td>
@@ -211,7 +216,7 @@ if (!empty($username)) {
 				</th>
 				<td>
 					<div class='input-group'>
-						<span class='input-group-text'><i class='game-icon game-icon-envelope'></i></span>
+						<span class='input-group-text'><i class='fas fa-fw fa-inbox'></i></span>
 						<input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
                     </div>
 					<div id='emailresult' class='invalid-feedback'></div>
@@ -269,6 +274,7 @@ if (!empty($username)) {
 								<option value='Guardian'>Guardian</option>
 							</select>
 						</div>
+						<div id='teamresult'></div>
 						<div id='teamresult' class='invalid-feedback'></div>
 					</td>
 				</tr>
@@ -285,7 +291,7 @@ if (!empty($username)) {
 						Promo Code
 					</th>
 					<td>
-						<input type='text' class='form-control' id='promo' value='' name='promo' placeholder='Can be empty'>
+						<input type='text' class='form-control' id='promo' value='CHIVALRY2018' name='promo' placeholder='Can be empty'>
 					</td>
 				</tr>
 				<tr>

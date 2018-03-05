@@ -786,43 +786,60 @@ class api
                 $userdata['will'] = 0;
             }
         }
+		$modifier=((getSkillLevel($userid,3)*2.5)/100);
+		$nmodifier=((getSkillLevel($userid,3)*1)/100);
         //User's class is warrior
         if ($userdata['class'] == 'Warrior') {
             //Trained stat is strength, double its output.
             if ($stat == 'strength') {
-                $gain *= 1.5;
+                $gain *= (1.5 - $modifier);
             }
             //Trained stat is guard, half its output.
             if ($stat == 'guard') {
-                $gain /= 2;
+                $gain *= (0.5 + $nmodifier);
             }
         }
         //User's class is Rogue.
         if ($userdata['class'] == 'Rogue') {
             //Trained stat is agility, double its output.
             if ($stat == 'agility') {
-                $gain *= 1.5;
+                $gain *= (1.5 - $modifier);
             }
             //Trained stat is strength, half its output.
             if ($stat == 'strength') {
-                $gain /= 2;
+                $gain *= (0.5 - $nmodifier);
             }
         }
         //User's class is Defender.
         if ($userdata['class'] == 'Guardian') {
             //Trained stat is guard, double its output.
             if ($stat == 'guard') {
-                $gain *= 1.5;
+                $gain *= (1.5 - $modifier);
             }
             //Trained stat is agility, half its output.
             if ($stat == 'agility') {
-                $gain /= 2;
+                $gain *= (0.5 + $nmodifier);
             }
         }
+		if ($stat == 'labor')
+		{
+			if ($multiplier == 4)
+			{
+				$labgain=((getSkillLevel($userid,12)*3)/100);
+				$gain=$gain+($gain*$labgain);
+			}
+		}
         //Add multiplier, if needed.
         $gain *= $multiplier;
         //Round the gained stats.
         $gain = floor($gain);
+		
+		//Lucked out for 5% more stats?
+		if (calculateLuck($userid))
+		{
+			$gain = $gain + ($gain*0.07);
+		}
+		
         //Update the user's stats.
         $db->query("UPDATE `userstats`
                     SET `{$stat}` = `{$stat}` + {$gain}

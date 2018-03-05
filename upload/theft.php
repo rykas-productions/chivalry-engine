@@ -13,10 +13,6 @@ if (empty($_GET['user'])) {
     alert('danger', "Uh Oh!", "Please specify the user you wish to rob.", true, 'index.php');
     die($h->endpage());
 }
-if ($ir['vip_days'] == 0) {
-    alert('danger', "Uh Oh!", "You can only rob players if you have VIP Days.", true, 'index.php');
-    die($h->endpage());
-}
 if ($api->UserInfoGet($userid, 'brave', true) < 25) {
     alert('danger', "Uh Oh!", "You need 25% Brave to rob someone.", true, 'index.php');
     die($h->endpage());
@@ -53,7 +49,9 @@ if (isset($_POST['rob'])) {
     $api->UserInfoSet($userid, 'brave', -25, true);
     $minimum = round($r * 0.05);
     $maximum = round($r * 0.1);
+	$specialnumber=((getSkillLevel($userid,5)*5)/100);
     $stolen = Random($minimum, $maximum);
+	$stolen = $stolen+($stolen*$specialnumber);
 	$stolenn = number_format($stolen);
     if ($chance == 1) {
         alert('danger', "Uh Oh!", "You attempted to rob {$robbed}, but got destroyed by their over-protective step mother.", true, 'dungeon.php');

@@ -41,10 +41,7 @@ require "global_func.php";
 $domain = determine_game_urlbase();
 //If user is not logged in, redirect to login page.
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) {
-	if ($_COOKIE['login_expire'] > time())
-		$login_url = "login2.php";
-	else
-		$login_url = "login.php";
+	$login_url = "login.php";
     header("Location: {$login_url}");
     exit;
 }
@@ -79,7 +76,10 @@ if (isset($jobquery) && $jobquery) {
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
-                     LEFT JOIN `jobs` AS `j` ON `j`.`jRANK` = `u`.`job`
+                     LEFT JOIN `jobs` AS `j` 
+					 ON `j`.`jRANK` = `u`.`job`
+					 LEFT JOIN `user_skills` AS `sk` 
+					 ON `sk`.`userid` = `u`.`userid`
                      LEFT JOIN `job_ranks` AS `jr`
                      ON `jr`.`jrID` = `u`.`jobrank`
 					 INNER JOIN `user_settings` AS `uas`
@@ -95,7 +95,10 @@ if (isset($jobquery) && $jobquery) {
                      ON `u`.`userid`=`us`.`userid`
 					 INNER JOIN `user_settings` AS `uas`
                      ON `u`.`userid`=`uas`.`userid`
-                     LEFT JOIN `estates` AS `e` ON `e`.`house_will` = `u`.`maxwill`
+                     LEFT JOIN `estates` AS `e` 
+					 ON `e`.`house_will` = `u`.`maxwill`
+					 LEFT JOIN `user_skills` AS `sk` 
+					 ON `sk`.`userid` = `u`.`userid`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
 } else if (isset($voterquery) && $voterquery) {
@@ -113,6 +116,8 @@ if (isset($jobquery) && $jobquery) {
                      ON `u`.`userid`=`uv`.`userid`
 					 INNER JOIN `user_settings` AS `uas`
                      ON `u`.`userid`=`uas`.`userid`
+					 LEFT JOIN `user_skills` AS `sk` 
+					 ON `sk`.`userid` = `u`.`userid`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
 } else {
@@ -124,6 +129,8 @@ if (isset($jobquery) && $jobquery) {
                      ON `u`.`userid`=`us`.`userid`
 					 INNER JOIN `user_settings` AS `uas`
                      ON `u`.`userid`=`uas`.`userid`
+					 LEFT JOIN `user_skills` AS `sk` 
+					 ON `sk`.`userid` = `u`.`userid`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
 }
@@ -190,4 +197,12 @@ if ($db->num_rows($get)) {
     $api->GameAddNotification($r['user'], "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
     $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$r['user']} AND `sip_time` < {$time}");
 }
+$UIDB = $db->query("SELECT * FROM `mining` WHERE `userid` = {$userid}");
+if (!($db->num_rows($UIDB))) {
+    $db->query("INSERT INTO `mining` (`userid`, `max_miningpower`, `miningpower`, `miningxp`, `buyable_power`, `mining_level`) 
+    VALUES ('{$userid}', '100', '100', '0', '1', '1');");
+}
 include('dailyreward.php');
+
+//For chat, maybe?
+$_SESSION['userName']=$ir['username'];

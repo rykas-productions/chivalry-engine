@@ -12,6 +12,71 @@ if ((!file_exists('./installer.lock')) && (file_exists('installer.php'))) {
 }
 require("globals_nonauth.php");
 require('lib/bbcode_engine.php');
+if ((isset($_COOKIE['uuid'])) && (isset($_COOKIE['token'])))
+{
+    $uuid = (isset($_COOKIE['uuid']) && is_numeric($_COOKIE['uuid'])) ? abs($_COOKIE['uuid']) : 0;
+    $token = $db->escape(strip_tags(stripslashes($_COOKIE['token'])));
+    $fetch=$db->query("SELECT * FROM `auto_login` WHERE `UUID` = '{$uuid}' AND `Token` = '{$token}'");
+    if ($db->num_rows($fetch) > 0)
+    {
+        $rm=$db->fetch_row($fetch);
+        session_regenerate_id();
+        $_SESSION['userid'] = $rm['userid'];
+        $uade=$db->query("SELECT * FROM `user_settings` WHERE `userid` = {$rm['userid']}");
+        $uadr=$db->fetch_row($uade);
+        if ($uadr['2fa_on'] == 1)
+        {
+            $encpsw = encode_password($raw_password,$rm['user_level']);
+            $e_encpsw = $db->escape($encpsw);
+            //Update user's password as an extra security mesaure.
+            $db->query("UPDATE `users` SET `password` = '{$e_encpsw}' WHERE `userid` = {$_SESSION['userid']}");
+            header("Location: authenication_2f.php");
+            exit;
+        }
+        $_SESSION['loggedin'] = 1;
+        $_SESSION['last_login'] = time();
+        setcookie('login_expire', time() + 604800, time() + 604800);
+        $IP = $db->escape($_SERVER['REMOTE_ADDR']);
+        $invis=$db->fetch_single($db->query("SELECT `invis` FROM `user_settings` WHERE `userid` = {$rm['userid']}"));
+        if ($invis < time())
+        {
+            $db->query("UPDATE `users`
+                  SET `loginip` = '{$IP}',
+                  `last_login` = '{$_SESSION['last_login']}',
+                  `laston` = '{$_SESSION['last_login']}'
+                   WHERE `userid` = {$rm['userid']}");
+        }
+        else
+        {
+            $db->query("UPDATE `users`
+                  SET `loginip` = '{$IP}'
+                   WHERE `userid` = {$rm['userid']}");
+        }
+        //Generate new auto-login key
+        $nuuid=Random();
+        $ntoken=hash('sha512',randomizer());
+        $db->query("INSERT INTO `auto_login` (`UUID`, `Token`, `userid`) VALUES ('{$nuuid}', '{$ntoken}', '{$rm['userid']}')");
+        setcookie('uuid',$nuuid);
+        setcookie('token',$ntoken);
+        //Remove login attempts for this account.
+        $db->query("DELETE FROM `login_attempts` WHERE `userid` = {$_SESSION['userid']}");
+        $loggedin_url = 'loggedin.php';
+        //Log that the user logged in successfully.
+        $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
+        //Delete password recovery attempts from DB if they exist for this user.
+        $db->query("DELETE FROM `pw_recovery` WHERE `pwr_email` = '{$form_email}'");
+        header("Location: {$loggedin_url}");
+        $db->query("DELETE FROM `auto_login` WHERE `Token` = '{$token}' AND `UUID` = '{$uuid}'");
+        exit;
+    }
+    else
+    {
+        setcookie('uuid','');
+        setcookie('token','');
+        $db->query("DELETE FROM `auto_login` WHERE `UUID` = '{$uuid}'");
+        $db->query("DELETE FROM `auto_login` WHERE `Token` = '{$token}'");
+    }
+}
 $currentpage = $_SERVER['REQUEST_URI'];
 $cpage = strip_tags(stripslashes($currentpage));
 $domain = determine_game_urlbase();

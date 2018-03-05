@@ -8,25 +8,34 @@
 */
 if ($ir['rewarded'] == 0)
 {
-    $tokenreward=Random(5,25)*($ir['dayslogged']+1);
-    $scrollreward=Random(1,2)*($ir['dayslogged']+1);
-	$luck=Random(2,10);
-    $reward=Random(-5,5);
+    $tokenreward=Random(5000,75000);
+    $scrollreward=Random(5,25);
+	$luck=Random(5,25);
+    $reward=Random(1,10);
     if ($reward <= 5)
     {
-        $api->GameAddNotification($userid,"For logging in today, you have received " . number_format($tokenreward) . " Chivalry Tokens.");
-        $api->UserGiveCurrency($userid,'secondary',$tokenreward);
+        $api->GameAddNotification($userid,"For logging in today, you have received " . number_format($tokenreward) . " Copper Coins.");
+        $api->UserGiveCurrency($userid,'primary',$tokenreward);
+        $api->SystemLogsAdd($userid, 'loginreward', "Received " . number_format($tokenreward) . " Copper Coins.");
     }
 	elseif ($reward == 6 || $reward == 7)
     {
-        $api->GameAddNotification($userid,"For logging in today, your luck has changed by {$luck}%.");
+        $api->GameAddNotification($userid,"For logging in today, your luck has increased by {$luck}%.");
 		$db->query("UPDATE `userstats` SET `luck` = `luck` + ({$luck}) WHERE `userid` = {$userid}");
+        $api->SystemLogsAdd($userid, 'loginreward', "Received {$luck}% Luck.");
         
     }
-    if ($reward >= 8)
+    if ($reward == 8)
     {
-        $api->GameAddNotification($userid,"For logging in today, you have received " . number_format($scrollreward) . " Chivalry Scrolls.");
+        $api->GameAddNotification($userid,"For logging in today, you have received a Mysterious Potion.");
+        $api->UserGiveItem($userid,123,1);
+        $api->SystemLogsAdd($userid, 'loginreward', "Received Mysterious Potion."); 
+    }
+    if ($reward >= 9)
+    {
+        $api->GameAddNotification($userid,"For logging in today, you have received " . number_format($scrollreward) . " Chivalry Gym Scrolls.");
         $api->UserGiveItem($userid,18,$scrollreward);
+        $api->SystemLogsAdd($userid, 'loginreward', "Received {$scrollreward} Chivalry Gym Scrolls.");
     }
     $db->query("UPDATE `users` SET `rewarded` = 1 WHERE `userid` = {$userid}");
 }

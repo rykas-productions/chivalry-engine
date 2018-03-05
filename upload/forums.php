@@ -109,7 +109,7 @@ function idx()
                      WHERE `ff_auth` = 'public'
                      ORDER BY `ff_id` ASC");
     ?>
-    <table class='table table-bordered table-hover'>
+    <table class='table table-bordered table-hover table-striped'>
     <thead>
     <tr>
         <th>
@@ -130,9 +130,9 @@ function idx()
     <?php
     while ($r = $db->fetch_row($q)) {
         $t = DateTime_Parse($r['ff_lp_time'], true, true);
-        $pnq = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
+        $pnq = $db->query("SELECT `username`,`vip_days`,`vipcolor` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
         $pn = $db->fetch_row($pnq);
-        $username = ($pn['vip_days']) ? "<span class='text-danger'>{$pn['username']}
+        $username = ($pn['vip_days']) ? "<span class='{$pn['vipcolor']}'>{$pn['username']}
             <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn['vip_days']} VIP Days remaining.'></i></span>" :
             $pn['username'];
 
@@ -145,7 +145,7 @@ function idx()
         $topicname = $db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
         echo "<tr>
 					<td>
-						<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
+						<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
 						<small class='hidden-xs-down'><br />{$r['ff_desc']}</small>
 					</td>
 					<td class='hidden-xs-down'>
@@ -156,7 +156,7 @@ function idx()
 					</td>
 					<td>
 						{$t}<br />
-						In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1' style='font-weight: 800;'>{$topicname}</a><br />
+						In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
 						By <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
 					</td>
               </tr>";
@@ -174,7 +174,7 @@ function idx()
                      WHERE `ff_auth` = 'staff'
                      ORDER BY `ff_id` ASC");
         ?>
-        <table class='table table-bordered table-hover'>
+        <table class='table table-bordered table-hover table-striped'>
         <thead>
         <tr>
             <th>
@@ -195,9 +195,9 @@ function idx()
         <?php
         while ($r = $db->fetch_row($q)) {
             $t = DateTime_Parse($r['ff_lp_time'], true, true);
-            $pnq = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
+            $pnq = $db->query("SELECT `username`,`vip_days`, `vipcolor` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
             $pn = $db->fetch_row($pnq);
-            $username = ($pn['vip_days']) ? "<span class='text-danger'>{$pn['username']}
+            $username = ($pn['vip_days']) ? "<span class='{$pn['vipcolor']}'>{$pn['username']}
                 <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn['vip_days']} VIP Days remaining.'></i></span>" :
                 $pn['username'];
 
@@ -210,7 +210,7 @@ function idx()
             $topicname = $db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
             echo "<tr>
         		<td>
-        			<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
+        			<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
         			<small class='hidden-xs-down'><br />{$r['ff_desc']}</small>
         		</td>
         		<td class='hidden-xs-down'>
@@ -221,7 +221,7 @@ function idx()
 				</td>
         		<td>
 					{$t}<br />
-					In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1' style='font-weight: 800;'>{$topicname}</a><br />
+					In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
 					By <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
                 </td>
               </tr>";
@@ -261,6 +261,19 @@ function viewforum()
 		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
 		die($h->endpage());
 	}
+    if (isset($_GET['rate']))
+    {
+        $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
+        if ((empty($_GET['topic'])) || (empty($_GET['rate'])))
+        {
+            alert('danger', "Uh Oh!", "Please use the links to up-vote a thread.", false);
+        }
+        else
+        {
+            updateRating($_GET['topic'],$_GET['rate']);
+            alert('success','Success!',"You have successfully rated this topic.",false);
+        }
+    }
 	if (permission("CanCreateThread",$userid))
 		$ntl = "&nbsp;[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
 	else
@@ -276,9 +289,12 @@ function viewforum()
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
     echo pagination(20, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
     ?>
-    <table class='table table-bordered table-hover'>
+    <table class='table table-bordered table-hover table-striped'>
     <thead>
     <tr>
+        <th>
+            <?php echo "Rating"; ?>
+        </th>
         <th>
             <?php echo "Topic"; ?>
         </th>
@@ -307,16 +323,18 @@ function viewforum()
     while ($r2 = $db->fetch_row($q)) {
         $t1 = DateTime_Parse($r2['ft_start_time'], true, true);
         $t2 = DateTime_Parse($r2['ft_last_time'], true, true);
+        $threadrating = $db->fetch_single($db->query("SELECT SUM(`rating`) FROM `forum_tops_rating` WHERE `topic_id` = {$r2['ft_id']}"));
+        $threadrating = number_format($threadrating);
         $pt = ($r2['ft_pinned']) ? " <i class='fa fa-thumbtack' aria-hidden='true'></i>" : "" ;
         $lt = ($r2['ft_locked']) ? " <i class='fa fa-lock' aria-hidden='true'></i>" : "" ;
-        $pnq1 = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r2['ft_owner_id']}");
+        $pnq1 = $db->query("SELECT `username`,`vip_days`,`vipcolor` FROM `users` WHERE `userid` = {$r2['ft_owner_id']}");
         $pn1 = $db->fetch_row($pnq1);
-        $pn1['username'] = ($pn1['vip_days']) ? "<span class='text-danger'>{$pn1['username']}
+        $pn1['username'] = ($pn1['vip_days']) ? "<span class='{$pn1['vipcolor']}'>{$pn1['username']}
             <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn1['vip_days']} VIP Days remaining.'></i></span>" :
             $pn1['username'];
-        $pnq2 = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r2['ft_last_id']}");
+        $pnq2 = $db->query("SELECT `username`,`vip_days`,`vipcolor` FROM `users` WHERE `userid` = {$r2['ft_last_id']}");
         $pn2 = $db->fetch_row($pnq2);
-        $pn2['username'] = ($pn2['vip_days']) ? "<span class='text-danger'>{$pn2['username']}
+        $pn2['username'] = ($pn2['vip_days']) ? "<span class='{$pn2['vipcolor']}'>{$pn2['username']}
             <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn2['vip_days']} VIP Days remaining.'></i></span>" :
             $pn2['username'];
         $pcq = $db->query("SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_topic_id` = {$r2['ft_id']}");
@@ -328,6 +346,9 @@ function viewforum()
             $pn1['username'] = "Non-existent User";
         }
         echo "<tr>
+                <td>
+                <a href='?viewforum={$_GET['viewforum']}&rate=1&topic={$r2['ft_id']}'>+</a> {$threadrating} <a href='?viewforum={$_GET['viewforum']}&rate=-1&topic={$r2['ft_id']}'>-</a>
+                </td>
         		<td>
 					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
 					<small class='hidden-xs-down'>{$r2['ft_desc']}</small>
@@ -398,6 +419,11 @@ function viewtopic()
 	</ol>";
     $posts_topic = $topic['ft_posts'];
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
+	if (isset($_GET['lastpost']))
+    {
+		$postslastpage= floor($posts_topic/20);
+		$st = $postslastpage*20;
+    }
     echo pagination(20, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
     if (!($ir['user_level'] == 'Member')) {
         $lock = ($topic['ft_locked'] == 0) ? 'Lock Topic' : 'Unlock Topic' ;
@@ -418,14 +444,14 @@ function viewtopic()
 					<input type='hidden' value='pin' name='act'>
 					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
 					<input type='submit' class='btn btn-primary' value='{$pin}'>
-				</form>
+				</form> 
 			</td>
 			<td align='center'>
 				<form>
 					<input type='hidden' value='lock' name='act'>
 					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
 					<input type='submit' class='btn btn-primary' value='{$lock}'>
-				</form>
+				</form> 
 			</td>
 			<td>
 				<form action='?act=deletopic'>
@@ -447,7 +473,7 @@ function viewtopic()
 			<input type='hidden' value='lock' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
 			<input type='submit' class='btn btn-primary' value='{$lock}'>
-		</form>
+		</form> 
 		<form action='?act=deletopic'>
 			<input type='hidden' value='deletopic' name='act'>
 			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
@@ -455,7 +481,7 @@ function viewtopic()
 		</form>
 	</div><br /> ";
     }
-    echo "<table class='table table-bordered'>";
+    echo "<table class='table table-bordered table-striped'>";
     $q3 =
         $db->query(
             "SELECT `fp_editor_time`, `fp_editor_id`, `fp_edit_count`,
@@ -466,29 +492,29 @@ function viewtopic()
                      LIMIT {$st}, 20");
     $no = $st;
     while ($r = $db->fetch_row($q3)) {
-        $PNQ = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid`={$r['fp_poster_id']}");
+        $PNQ = $db->query("SELECT `username`,`vip_days`,`vipcolor` FROM `users` WHERE `userid`={$r['fp_poster_id']}");
         $PN = $db->fetch_row($PNQ);
-        $PN['username'] = ($PN['vip_days']) ? "<span class='text-danger'>{$PN['username']}
+        $PN['username'] = ($PN['vip_days']) ? "<span class='{$PN['vipcolor']}'>{$PN['username']}
             <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$PN['vip_days']} VIP Days remaining.'></i></span>" :
             $PN['username'];
 
-        $qlink = "[<a href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>Quote</a>]";
+        $qlink = "<a class='btn btn-primary btn-sm' href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'><i class='fas fa-quote-right'></i></a> ";
         if ($api->UserMemberLevelGet($userid, 'forum moderator') || $userid == $r['fp_poster_id']) {
             $elink =
-                "[<a href='?act=edit&post={$r['fp_id']}&topic={$_GET['viewtopic']}'>Edit</a>]";
+                "<a class='btn btn-primary btn-sm' href='?act=edit&post={$r['fp_id']}&topic={$_GET['viewtopic']}'><i class='fas fa-edit'></i></a> ";
         } else {
             $elink = "";
         }
         $no++;
         if ($no > 1 and ($api->UserMemberLevelGet($userid, 'forum moderator'))) {
             $dlink =
-                "[<a href='?act=delepost&post={$r['fp_id']}'>Delete</a>]";
+                "<a class='btn btn-primary btn-sm' href='?act=delepost&post={$r['fp_id']}'><i class='fas fa-trash-alt'></i></a> ";
         } else {
             $dlink = "";
         }
         if ($api->UserMemberLevelGet($userid, 'forum moderator')) {
-            $wlink = "[<a href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'>Warn</a>]";
-            $blink = "[<a href='staff/staff_punish.php?action=forumban&user={$r['fp_poster_id']}'>Forum Ban</a>]";
+            $wlink = "<a class='btn btn-primary btn-sm' href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'><i class='fas fa-exclamation'></i></a> ";
+            $blink = "<a class='btn btn-primary btn-sm' href='staff/staff_punish.php?action=forumban&user={$r['fp_poster_id']}'><i class='fas fa-ban'></i></a> ";
         } else {
             $wlink = "";
             $blink = "";
@@ -523,20 +549,21 @@ function viewtopic()
         }
         if ($memb['userid'] > 0) {
             if ($memb['display_pic']) {
-                $av = "<img src='{$memb['display_pic']}' class='img-fluid'>";
+                $av = "<img src='" . parseImage($memb['display_pic']) . "' class='img-fluid' width='350'>";
             } else {
                 $av = "";
             }
             $memb['signature'] = $parser->parse($memb['signature']);
             $memb['signature'] = $parser->getAsHtml($memb['signature']);
         }
+		$rlink="<a class='btn btn-primary btn-sm' href='playerreport.php?userid={$r['fp_poster_id']}'><i class='fas fa-flag'></i></a>";
         $parser->parse($r['fp_text']);
         $r['fp_text'] = $parser->getAsHtml();
         echo "<tr>
-				<th width='25%'>Post #{$no}</th>
-				<th>
-				Posted {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink}
-				</th>
+				<td width='25%' align='left'><b>Post #{$no}</b></td>
+				<td align='left'>
+					<b>Posted {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink} {$rlink}</b>
+				</td>
 			 </tr>
 			 <tr>
 				<td valign='top'>";
@@ -546,18 +573,21 @@ function viewtopic()
 
             $usertopicsq = $db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_owner_id`={$r['fp_poster_id']}");
             $usertopics = $db->fetch_single($usertopicsq);
-            print
+			$infirm = ($api->UserStatus($r['fp_poster_id'], 'infirmary')) ? "<i class='game-icon game-icon-hospital-cross'></i>" : "" ;
+            $dung = ($api->UserStatus($r['fp_poster_id'], 'dungeon')) ? "<i class='game-icon game-icon-cage'></i>" : "" ;
+			print
                 "<div class='hidden-xs-down'>{$av}</div><a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a>
                     	[{$r['fp_poster_id']}]<br />
                      <b>Rank:</b> {$memb['user_level']}<br />
 					 <b>Post Count:</b> {$userposts}<br />
-					 <b>Topic Count:</b> {$usertopics}<br />";
+					 <b>Topic Count:</b> {$usertopics}<br />
+					 {$dung} {$infirm}";
         } else {
             print "<b>Non-existent User</b>";
         }
         print
             "</td>
-			   	 <td>
+			   	 <td align='left'>
                     {$r['fp_text']}
                     {$edittext}<br />
 					<hr />
@@ -580,12 +610,12 @@ function viewtopic()
 							Post Response
 							</th>
 						<td>
-							<textarea class='form-control' rows='5' cols='40' id='post' placeholder='You can use BBCode.' name='fp_text' required></textarea>
+							<textarea class='form-control' id='post' placeholder='You can use BBCode.' name='fp_text' required></textarea>
 						</td>
 					</tr>
 					<tr>
 						<td colspan='2'> 
-							<input type='submit' value='Submit Reply' class='btn btn-primary'>
+							<input type='submit' value='Submit Reply' class='btn btn-primary btn-block'>
 						</td>
 					</tr>
 				</table>
@@ -660,7 +690,24 @@ function reply()
             alert('danger', "Uh Oh!", "Forum replies can only be, at maximum, 65,535 characters in length.", true, "forums.php?viewtopic={$_GET['reply']}");
             die($h->endpage());
         }
-
+		$lastfivemins=time()-300;
+		$postcount=$db->fetch_single($db->query("SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_poster_id` = {$userid} AND `fp_time` > {$lastfivemins}"));
+		if ($postcount == 3)
+		{
+			$api->SystemLogsAdd(1, 'staff', "Forum Warned <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] for 'Spamming'.");
+			$api->SystemLogsAdd(1, 'forumwarn', "Forum Warned <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] for 'Spamming'.");
+			$api->GameAddNotification($userid, "You have been received a forum warning for the following reason: Spamming.");
+			staffnotes_entry($userid,"Forum warned for 'Spamming'.");
+		}
+		if ($postcount >= 5)
+		{
+			$endtime = time() + (3 * 86400);
+			$db->query("INSERT INTO `forum_bans` VALUES(NULL,  {$userid}, 1, {$endtime}, 'Spamming')");
+			$api->SystemLogsAdd(1, 'staff', "Forum banned <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] for 3 days for Spamming.");
+			$api->SystemLogsAdd(1, 'forumban', "Forum banned <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] for 3 days for Spamming.");
+			$api->GameAddNotification($userid, "The game administration has forum banned you for 3 days for the following reason: 'Spamming'.");
+			staffnotes_entry($userid,"Forum banned for 3 days, with reason 'Spamming'.");
+		}
         $post_time = time();
         $db->query("
             INSERT INTO `forum_posts` 
@@ -762,12 +809,12 @@ function newtopicform()
 				<label for='fp_text'>Opening Post</label>
 			</th>
 			<td>
-				<textarea rows='8' class='form-control' cols='45' placeholder='You can use BBCode!' name='fp_text' id='fp_text' required></textarea>
+				<textarea class='form-control' placeholder='You can use BBCode!' name='fp_text' id='fp_text' required></textarea>
 			</td>
 		</tr>
 		<tr>
 			<td align='center' colspan='2'>
-				<input type='submit' class='btn btn-lg btn-primary' value='Post Topic' />
+				<input type='submit' class='btn btn-lg btn-outline-primary' value='Post Topic' />
 			</td>
 	</table>
 	<input type='hidden' name='verf' value='{$code}' />
@@ -941,12 +988,12 @@ function quote()
 					<label for='fp_text'>Reply</label>
 				</th>
 				<td>
-					<textarea rows='8' class='form-control' cols='45' name='fp_text' id='fp_text' required>[quote=\"{$Who}\"]{$text}[/quote]</textarea>
+					<textarea class='form-control' name='fp_text' id='fp_text' required>[quote=\"{$Who}\"]{$text}[/quote]</textarea>
 				</td>
 			</tr>
 			<tr>
 				<td colspan='2' align='center'>
-					<input type='submit' class='btn btn-lg btn-primary' value='Submit Reply' />
+					<input type='submit' class='btn btn-lg btn-outline-primary' value='Submit Reply' />
 				</td>
 			</tr>
 		</table>
@@ -1037,7 +1084,7 @@ function edit()
 			Editing a post
 			</th>
         	<td>
-        		<textarea rows='7' class='form-control' cols='40' name='fp_text'>{$fp_text}</textarea>
+        		<textarea class='form-control' name='fp_text'>{$fp_text}</textarea>
         	</td>
         </tr>
         <tr>
@@ -1180,6 +1227,8 @@ function move()
     $api->SystemLogsAdd($userid, 'staff', "Moved Topic {$topic['ft_name']} to {$forum['ff_name']}");
     recache_forum($topic['ft_forum_id']);
     recache_forum($_POST['forum']);
+    $_GET['viewtopic']=$_GET['topic'];
+    viewtopic();
 }
 
 function lock()
@@ -1212,15 +1261,17 @@ function lock()
                  SET `ft_locked` = 0
                  WHERE `ft_id` = {$_GET['topic']}");
         alert('success', "Success!", "You have unlocked this topic.", false);
-        $api->SystemLogsAdd($userid, 'staff', "Unlocked Topic {$r['ft_name']}");
+        $api->SystemLogsAdd($userid, 'staff', "Unlocked Topic {$r['ft_name']}.");
     } else {
         $db->query(
             "UPDATE `forum_topics`
                  SET `ft_locked` = 1
                  WHERE `ft_id` = {$_GET['topic']}");
         alert('success', "Success!", "You have locked this topic.", false);
-        $api->SystemLogsAdd($userid, 'staff', "Locked Topic {$r['ft_name']}");
+        $api->SystemLogsAdd($userid, 'staff', "Locked Topic {$r['ft_name']}.");
     }
+    $_GET['viewtopic']=$_GET['topic'];
+    viewtopic();
 }
 
 function pin()
@@ -1252,16 +1303,18 @@ function pin()
             "UPDATE `forum_topics`
                  SET `ft_pinned` = 0
                  WHERE `ft_id` = {$_GET['topic']}");
-        alert('success', "Success!", "You have unpinned this topic.", true, "forums.php?viewtopic={$r['ft_id']}");
+        alert('success', "Success!", "You have unpinned this topic.", false);
         $api->SystemLogsAdd($userid, 'staff', "Unpinned Topic {$r['ft_name']}");
     } else {
         $db->query(
             "UPDATE `forum_topics`
                  SET `ft_pinned` = 1
                  WHERE `ft_id` = {$_GET['topic']}");
-        alert('success', "Success!", "You have pinned this topic.", true, "forums.php?viewtopic={$r['ft_id']}");
+        alert('success', "Success!", "You have pinned this topic.", false);
         $api->SystemLogsAdd($userid, 'staff', "Pinned Topic {$r['ft_name']}");
     }
+    $_GET['viewtopic']=$r['ft_id'];
+    viewtopic();
 }
 
 function delepost()
@@ -1303,10 +1356,12 @@ function delepost()
     $db->query(
         "DELETE FROM `forum_posts`
     		    WHERE `fp_id` = {$post['fp_id']}");
-    alert('success', "Success!", "You have deleted this post.", true, "forums.php?viewtopic={$post['fp_topic_id']}");
+    alert('success', "Success!", "You have deleted this post.", false);
     recache_topic($post['fp_topic_id']);
     recache_forum($post['ff_id']);
     $api->SystemLogsAdd($userid, 'staff', "Deleted post ({$post['fp_id']}) in {$topic['ft_name']}");
+    $_GET['viewtopic']=$post['fp_topic_id'];
+    viewtopic();
 
 }
 
@@ -1335,6 +1390,24 @@ function deletopic()
     alert('success', "Success!", "You have deleted this topic successfully.", true, 'forums.php');
     recache_forum($topic['ft_forum_id']);
     $api->SystemLogsAdd($userid, 'staff', "Deleted topic {$topic['ft_name']}");
+}
+
+function updateRating($topic,$rating)
+{
+    global $db,$userid,$api;
+    if (($rating != 1) && ($rating != -1))
+    {
+        $rating = 0;
+    }
+    $q=$db->query("SELECT * FROM `forum_tops_rating` WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
+    if ($db->num_rows($q) == 0)
+    {
+        $db->query("INSERT INTO `forum_tops_rating` (`topic_id`, `rating`, `userid`) VALUES ('{$topic}', '{$rating}', '{$userid}')");
+    }
+    else
+    {
+        $db->query("UPDATE `forum_tops_rating` SET `rating` = {$rating} WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
+    }
 }
 
 $h->endpage();

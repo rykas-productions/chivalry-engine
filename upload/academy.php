@@ -173,7 +173,16 @@ function start()
         alert('danger', "Uh Oh!", "You have already graduated from this course. No need to enroll again.", true, 'academy.php');
         die($h->endpage());
     }
-    $completed = time() + ($course['ac_days'] * 86400); //Current Time + (Academy days * seconds in a day)
+	$timestamp=$course['ac_days'] * 86400;
+	if (getSkillLevel($userid,11))
+	{
+		$iq=round($ir['iq']/5000);
+		if ($iq > 15)
+			$iq=15;
+		$iq=$iq/100;
+		$timestamp=$timestamp*(1-$iq);
+	}
+    $completed = time() + ($timestamp); //Current Time + (Academy days * seconds in a day)
     $db->query("UPDATE `users` SET `course` = {$_GET['id']},
                 `course_complete` = {$completed} 
                 WHERE `userid` = {$userid}");

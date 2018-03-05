@@ -29,7 +29,7 @@ function DateTime_Parse($time_stamp, $ago = true, $override = false)
             $time_difference = $time_difference / $lengths[$i];
         }
         //For added precision, lets go over 2 decimal places.
-        $time_difference = round($time_difference, 2);
+        $time_difference = round($time_difference);
         //If $ago is true, lets add "ago" after our string.
         if ($ago == true) {
             $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . ' ago';
@@ -59,7 +59,7 @@ function TimeUntil_Parse($time_stamp)
         $time_difference = $time_difference / $lengths[$i];
     }
     //For added precision, lets round to the 2nd decimal place.
-    $time_difference = round($time_difference, 2);
+    $time_difference = round($time_difference);
     //Add an 's' if needed.
     $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
     //Return $date
@@ -134,7 +134,7 @@ function put_infirmary($user, $time, $reason)
     //Select the $user's current infirmary out time.
     $Infirmary = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$user}"));
     //Since the time is in minutes, lets multiply the $time by 60. (Otherwise we would be adding seconds)
-    $TimeMath = $time * 60;
+    $TimeMath = ($time * 60)+Random(-59,59);
     //If $user is currently not in the infirmary, lets add the time! (Their out time is the Unix Timestamp plus $TimeMath)
     if ($Infirmary <= $CurrentTime) {
         $db->query("UPDATE `infirmary` SET `infirmary_out` = {$CurrentTime} + {$TimeMath}, `infirmary_in` = {$CurrentTime},
@@ -174,7 +174,7 @@ function put_dungeon($user, $time, $reason)
     //Select $user's dungeon exit time.
     $Dungeon = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$user}"));
     //Since we're dealing with minutes, lets multiply $time by 60.
-    $TimeMath = $time * 60;
+    $TimeMath = ($time * 60)+Random(-59,59);
     //If $user is not in the dungeon already, lets set their exit time to $CurrentTime + $TimeMath
     if ($Dungeon <= $CurrentTime) {
         $db->query("UPDATE `dungeon` SET `dungeon_out` = {$CurrentTime} + {$TimeMath}, `dungeon_in` = {$CurrentTime},
@@ -914,6 +914,9 @@ function check_data()
 
     //Remove players' mail bans if needed.
     $db->query("DELETE FROM `mail_bans` WHERE `mbTIME` < {$time}");
+    
+    //Delete from newspaper when needed.
+    $db->query("DELETE FROM `newspaper_ads` WHERE `news_end` < {$time}");
 
     $q3 = $db->query("SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} AND `gw_winner` = 0");
     if ($db->num_rows($q3) > 0) {
@@ -973,6 +976,8 @@ function check_data()
             guildnotificationadd($r3['gw_declaree'], "Your guild has tied the {$guild_declare} guild in battle.");
             guildnotificationadd($r3['gw_declarer'], "Your guild has tied the {$guild_declared} guild in battle.");
         }
+        $r3['gw_drpoints']=$r3['gw_drpoints']*3;
+        $r3['gw_depoints']=$r3['gw_depoints']*3;
         //Update guild experience, if needed.
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} WHERE `guild_id` = {$r3['gw_declarer']}");
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} WHERE `guild_id` = {$r3['gw_declaree']}");
@@ -1048,7 +1053,7 @@ function check_data()
             $winnings = 0;
             $result = 'failure';
         }
-        $xp=Random(1,5)*$r2['gcUSERS'];
+        $xp=Random(1,5);
         $db->query("UPDATE `guild`
                     SET `guild_primcurr` = `guild_primcurr` + {$winnings},
                     `guild_crime` = 0,
@@ -1070,6 +1075,22 @@ function check_data()
             notification_add($qr['userid'], "Your guild's crime was a complete {$result}! Click <a href='gclog.php?ID=$i'>here</a> to view more information.");
         }
     }
+	$db->query("UPDATE `guild` SET `guild_debt_time` = 0 WHERE `guild_primcurr` > -1");
+	//Dissolve guild if debt unpaid.
+	$gdup=$db->query("SELECT * FROM `guild` WHERE `guild_debt_time` < {$time} AND `guild_debt_time` > 0");
+	while ($gdr=$db->fetch_row($gdup))
+	{
+		notification_add($gdr['guild_owner'], "Your guild was dissolved since it could not pay off its debt.");
+		$db->query("DELETE FROM `guild_applications` WHERE `ga_guild` = {$gdr['guild_id']}");
+		$db->query("DELETE FROM `guild_armory` WHERE `gaGUILD` = {$gdr['guild_id']}");
+		$db->query("DELETE FROM `guild_notifications` WHERE `gn_guild` = {$gdr['guild_id']}");
+		$db->query("DELETE FROM `guild_wars` WHERE `gw_declarer` = {$gdr['guild_id']}");
+		$db->query("DELETE FROM `guild_wars` WHERE `gw_declaree` = {$gdr['guild_id']}");
+		$db->query("DELETE FROM `guild` WHERE `guild_id` = {$gdr['guild_id']}");
+		$db->query("DELETE FROM `guild_alliances` WHERE `alliance_a` = {$gdr['guild_id']}");
+		$db->query("DELETE FROM `guild_alliances` WHERE `alliance_b` = {$gdr['guild_id']}");
+		$db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$gdr['guild_id']}");
+	}
 }
 
 /**
@@ -1078,39 +1099,49 @@ function check_data()
 function check_level()
 {
     global $ir, $userid, $db;
-    $ir['xp_needed'] = round(($ir['level'] + 1.5) * ($ir['level'] + 1.5) * ($ir['level'] + 1.5) * 1.5);
-    if ($ir['xp'] >= $ir['xp_needed']) {
-        $expu = $ir['xp'] - $ir['xp_needed'];
-        $ir['level'] += 1;
-        $ir['xp'] = $expu;
-        $ir['energy'] += 2;
-        $ir['brave'] += 2;
-        $ir['maxenergy'] += 2;
-        $ir['maxbrave'] += 2;
-        $ir['hp'] += 50;
-        $ir['maxhp'] += 50;
-        $ir['xp_needed'] = round(($ir['level'] + 2.25) * ($ir['level'] + 2.25) * ($ir['level'] + 2.25) * 2);
-        //Increase user's everything.
-        $db->query("UPDATE `users` SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2,
-					`brave` = `brave` + 2, `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2,
-					`hp` = `hp` + 50, `maxhp` = `maxhp` + 50 WHERE `userid` = {$userid}");
-        //Give the user some stats for leveling up.
-        $StatGain = round(($ir['level'] * 100) / Random(2, 6));
-        $StatGainFormat = number_format($StatGain);
-        //Assign the stat gain to the user's class of choice.
-        if ($ir['class'] == 'Warrior') {
-            $Stat = 'strength';
-        } elseif ($ir['class'] == 'Rogue') {
-            $Stat = 'agility';
-        } else {
-            $Stat = 'guard';
+	if ($ir['level'] < 67)
+		$ir['xp_needed'] = round(($ir['level'] + 1.5) * ($ir['level'] + 1.5) * ($ir['level'] + 1.5) * 1.5);
+	if (($ir['level'] >= 67) && ($ir['level'] < 100))
+		$ir['xp_needed'] = round(($ir['level'] + 3.5) * ($ir['level'] + 3.5) * ($ir['level'] + 3.5) * 3.5);
+	if (($ir['level'] >= 100) && ($ir['level'] < 150))
+		$ir['xp_needed'] = round(($ir['level'] + 5.8) * ($ir['level'] + 5.8) * ($ir['level'] + 5.8) * 5.8);
+	if (($ir['level'] >= 150) && ($ir['level'] < 300))
+		$ir['xp_needed'] = round(($ir['level'] + 8.5) * ($ir['level'] + 8.5) * ($ir['level'] + 8.5) * 8.5);
+    if ($ir['level'] < 125)
+    {
+        if ($ir['xp'] >= $ir['xp_needed']) {
+            $expu = $ir['xp'] - $ir['xp_needed'];
+            $ir['level'] += 1;
+            $ir['xp'] = $expu;
+            $ir['energy'] += 2;
+            $ir['brave'] += 2;
+            $ir['maxenergy'] += 2;
+            $ir['maxbrave'] += 2;
+            $ir['hp'] += 50;
+            $ir['maxhp'] += 50;
+            $ir['xp_needed'] = round(($ir['level'] + 1.5) * ($ir['level'] + 1.5) * ($ir['level'] + 1.5) * 1.5);
+            //Increase user's everything.
+            $db->query("UPDATE `users` SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2,
+                        `brave` = `brave` + 2, `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2,
+                        `hp` = `hp` + 50, `maxhp` = `maxhp` + 50 WHERE `userid` = {$userid}");
+            //Give the user some stats for leveling up.
+            $StatGain = round(($ir['level'] * Random(125,250)) / Random(2, 6));
+            $StatGainFormat = number_format($StatGain);
+            //Assign the stat gain to the user's class of choice.
+            if ($ir['class'] == 'Warrior') {
+                $Stat = 'strength';
+            } elseif ($ir['class'] == 'Rogue') {
+                $Stat = 'agility';
+            } else {
+                $Stat = 'guard';
+            }
+            //Credit the stat gain.
+            $db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
+            //Tell the user they've gained some stats.
+            notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
+            //Log the level up, along with the stats gained.
+            SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
         }
-        //Credit the stat gain.
-        $db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
-        //Tell the user they've gained some stats.
-        notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
-        //Log the level up, along with the stats gained.
-        SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
     }
 }
 
@@ -2099,7 +2130,7 @@ function returnIcon($item,$size=1)
 
 function cslog($type='log',$txt)
 {
-	echo "<script>console.{$type}('{$txt}')</script>";
+	echo "<script>console.{$type}('{$txt}');</script>";
 }
 
 function encrypt_message($msg,$sender,$receiver)
@@ -2173,5 +2204,49 @@ function calculateLuck($user)
 	{
 		$db->query("UPDATE `userstats` SET `luck` = `luck` - 5 WHERE `userid` = {$user}");
 		return true;
+	}
+}
+function getSkillLevel($user,$id)
+{
+	global $db;
+	$q = $db->query("SELECT `skill_lvl` 
+					FROM `user_skills` 
+					WHERE `userid` = {$user} 
+					AND `skill_id` = {$id}");
+	if ($db->num_rows($q) == 0)
+		return 0;
+	else
+		return $db->fetch_single($q);
+}
+function parseImage($url)
+{
+	if (strpos($url, 'https://') !== false) 
+	{
+		return $url;
+	}
+	else
+	{
+		$url=removeFrontTag($url);
+		return "https://images.weserv.nl/?url={$url}&errorredirect=ssl:{$url}";
+	}
+}
+function removeFrontTag($url)
+{
+	$url=str_replace("http://","",$url);
+	$url=str_replace("https://","",$url);
+	$url=str_replace("www.","",$url);
+	return $url;
+}
+function user_log($user,$logname,$value=1)
+{
+	global $db;
+	$q=$db->query("SELECT * FROM `user_logging` WHERE `userid` = {$user} AND `log_name` = '{$logname}'");
+	if ($db->num_rows($q) == 0)
+	{
+		$db->query("INSERT INTO `user_logging` (`userid`, `log_name`, `value`) VALUES ('{$user}', '{$logname}', '{$value}')");
+	}
+	else
+	{
+		$db->query("UPDATE `user_logging` SET `value` = `value` + {$value} WHERE `userid` = {$user} and `log_name` = '{$logname}'");
 	}
 }

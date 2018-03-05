@@ -28,7 +28,7 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $userid, $api;
-    $q = $db->query("SELECT * FROM `smelt_recipes` ORDER BY `smelt_id` ASC");
+    $q = $db->query("SELECT * FROM `smelt_recipes` ORDER BY `smelt_output` ASC");
     echo "<table class='table table-bordered table-striped'>
 	<tr>
 		<th>

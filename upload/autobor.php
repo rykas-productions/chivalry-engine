@@ -60,64 +60,90 @@ if (isset($_POST['open']))
 	$explosives=0;
 	$gymscroll=0;
 	$attackscroll=0;
+    $mystery=0;
+    $needle=0;
 	$nothing=0;
 	while($number < $_POST['open'])
 	{
 		$number=$number+1;
-		$chance=Random(1,105);
-		if ($chance <= 30)
+		$chance=Random(1,95);
+		if ($chance <= 35)
 		{
-			$cash=Random(500,2500);
+			$cash=Random(650,4000);
 			$copper=$copper+$cash;
+            $api->SystemLogsAdd($userid,"bor","Received {$cash} Copper Coins.");
 		}
-		elseif (($chance > 30) && ($chance <= 45))
+		elseif (($chance > 35) && ($chance <= 45))
 		{
-			$cash=Random(5,10);
+			$cash=Random(15,35);
+			$specialnumber=((getSkillLevel($userid,2)*2.5)/100);
+			$cash=round($cash+($cash*$specialnumber));
 			$tokens=$tokens+$cash;
+            $api->SystemLogsAdd($userid,"bor","Received {$cash} Chivalry Tokens.");
 		}
-		elseif (($chance > 45) && ($chance <= 55))
+		elseif (($chance > 45) && ($chance <= 50))
 		{
-			$cash=Random(5,20);
+			$cash=Random(3,10);
 			$infirmary=$infirmary+$cash;
+            $api->SystemLogsAdd($userid,"bor","Received {$cash} Infirmary minutes.");
+		}
+		elseif (($chance > 50) && ($chance <= 55))
+		{
+			$bread=$bread+1;
+            $api->SystemLogsAdd($userid,"bor","Received Bread.");
 		}
 		elseif (($chance > 55) && ($chance <= 60))
 		{
-			$bread=$bread+1;
+			$venison=$venison+1;
+            $api->SystemLogsAdd($userid,"bor","Received Venison.");
+		}
+		elseif (($chance > 60) && ($chance <= 65))
+		{
+			$potion=$potion+1;
+            $api->SystemLogsAdd($userid,"bor","Received Small Health Potion.");
 		}
 		elseif (($chance > 65) && ($chance <= 70))
 		{
-			$venison=$venison+1;
+			$rng=Random(2,4);
+			$wraps=$wraps+$rng;
+            $api->SystemLogsAdd($userid,"bor","Received {$rng} Linen Wraps.");
 		}
 		elseif (($chance > 70) && ($chance <= 75))
 		{
-			$potion=$potion+1;
-		}
-		elseif (($chance > 75) && ($chance <= 80))
-		{
-			$rng=Random(2,4);
-			$wraps=$wraps+$rng;
-		}
-		elseif (($chance > 80) && ($chance <= 85))
-		{
 			$rng=Random(2,4);
 			$keys=$keys+$rng;
+            $api->SystemLogsAdd($userid,"bor","Received {$rng} Dungeon Keys.");
 		}
-		elseif (($chance > 85) && ($chance <= 93))
+		elseif (($chance > 75) && ($chance <= 83))
 		{
 			$rng=Random(1,2);
 			$explosives=$explosives+$rng;
+            $api->SystemLogsAdd($userid,"bor","Received {$rng} Small Explosives.");
 		}
-		elseif (($chance == 98) || ($chance == 99))
+		elseif (($chance > 83) && ($chance <= 86))
 		{
 			$gymscroll=$gymscroll+1;
+            $api->SystemLogsAdd($userid,"bor","Received Chivalry Gym Pass.");
 		}
-		elseif (($chance > 99) && ($chance <= 103))
+		elseif (($chance > 86) && ($chance <= 88))
 		{
 			$attackscroll=$attackscroll+1;
+            $api->SystemLogsAdd($userid,"bor","Received Distant Attack Scroll.");
+		}
+        elseif (($chance > 88) && ($chance <= 89))
+		{
+			$mystery=$mystery+1;
+            $api->SystemLogsAdd($userid,"bor","Received Mysterious Potion.");
+		}
+        elseif (($chance > 89) && ($chance <= 92))
+		{
+			$needle=$needle+1;
+            $api->SystemLogsAdd($userid,"bor","Received Acupuncture Needle.");
 		}
 		else
 		{
 			$nothing=$nothing+1;
+            $api->SystemLogsAdd($userid,"bor","Received nothing.");
 		}
 	}
 	$db->query("UPDATE `users` SET `bor` = `bor` - {$_POST['open']} WHERE `userid` = {$userid}");
@@ -134,6 +160,8 @@ if (isset($_POST['open']))
 		{$explosives} Small Explosive(s).<br />
 		{$gymscroll} Chivalry Gym Pass(es)<br />
 		{$attackscroll} Distant Attack Scroll(s)<br />
+        {$needle} Acupuncture Needle(s)<br />
+        {$mystery} Mysterious Potion(s)<br />
 		{$nothing} Boxes of Random had nothing in them.";
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
@@ -146,6 +174,8 @@ if (isset($_POST['open']))
 	$api->UserGiveItem($userid,28,$explosives);
 	$api->UserGiveItem($userid,18,$gymscroll);
 	$api->UserGiveItem($userid,90,$attackscroll);
+    $api->UserGiveItem($userid,123,$mystery);
+    $api->UserGiveItem($userid,100,$needle);
 	$api->UserTakeItem($userid,33,$_POST['open']);
 	
 }

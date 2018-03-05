@@ -103,7 +103,7 @@ function fedjail()
         $api->SystemLogsAdd($userid, 'staff', "Placed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] into the federal dungeon for {$days} days for {$_POST['reason']}.");
         $api->SystemLogsAdd($userid, 'fedjail', "Placed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] into the federal dungeon for {$days} days for {$_POST['reason']}.");
         alert('success', "Success!", "You have placed {$api->SystemUserIDtoName($_POST['user'])} in the federal dungeon for {$days} days for {$_POST['reason']}. ", true, 'index.php');
-        staffnotes_entry($_POST['user'],"Placed in the federal dungeon for {$_POST['days']} days for '{$_POST['reason']}'.");
+        staffnotes_entry($_POST['user'],"Placed in the federal dungeon for {$days} days for '{$_POST['reason']}'.");
 		die($h->endpage());
     } else {
         $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
@@ -709,7 +709,7 @@ function forumban()
         $api->SystemLogsAdd($userid, 'forumban', "Forum banned <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for {$days} days for {$_POST['reason']}.");
         $api->GameAddNotification($_POST['user'], "The game administration has forum banned you for {$days} days for the following reason: '{$_POST['reason']}'.");
         alert('success', "Success!", "You have successfully forum banned {$api->SystemUserIDtoName($_POST['user'])} for {$days} days for {$_POST['reason']}.", true, 'index.php');
-        staffnotes_entry($_POST['user'],"Forum banned for {$days}, with reason '{$_POST['reason']}'.");
+        staffnotes_entry($_POST['user'],"Forum banned for {$days} days, with reason '{$_POST['reason']}'.");
 		die($h->endpage());
     } else {
         $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;

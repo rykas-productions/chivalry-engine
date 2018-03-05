@@ -23,7 +23,7 @@ if (!$_GET['user']) {
                     `loginip`, `registerip`, `staff_notes`, `town_name`,
                     `house_name`, `guild_name`, `fed_out`, `fed_reason`,
 					`infirmary_reason`, `infirmary_out`, `dungeon_reason`, `dungeon_out`,
-					`browser`, `os`, `screensize`, `description`, `location`
+					`browser`, `os`, `screensize`, `description`, `location`, `vipcolor`
                     FROM `users` `u`
                     INNER JOIN `town` AS `t`
                     ON `u`.`location` = `t`.`town_id`
@@ -64,17 +64,19 @@ if (!$_GET['user']) {
 				$p1=$ir;
 				$p2=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
 				$event=$p2;
+                $ring=$api->SystemItemIDtoName($mt['proposer_ring']);
 			}
 			else
 			{
 				$p1=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 				$p2=$ir;
 				$event=$p1;
+                $ring=$api->SystemItemIDtoName($mt['proposed_ring']);
 			}
 			$married="<a href='profile.php?user={$event['userid']}'>{$event['username']}</a>";
 		}
-        $displaypic = ($r['display_pic']) ? "<img src='{$r['display_pic']}' class='img-thumbnail img-fluid' width='250' height='250'>" : '';
-        $user_name = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fas fa-shield-alt'
+        $displaypic = ($r['display_pic']) ? "<img src='" . parseImage($r['display_pic']) . "' class='img-thumbnail img-fluid' width='350'>" : '';
+        $user_name = ($r['vip_days']) ? "<span class='{$r['vipcolor']}'>{$r['username']} <i class='fas fa-shield-alt'
             data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
         $ref_q =
             $db->query(
@@ -197,6 +199,10 @@ if (!$_GET['user']) {
 			Location: <a href='travel.php?to={$r['location']}'>{$r['town_name']}</a><br />
 			Level: " . number_format($r['level']) . "<br />
 			Married: {$married}<br />";
+            if (isset($ring))
+            {
+                echo "Ring: {$ring}<br />";
+            }
         echo ($r['guild']) ? "Guild: <a href='guilds.php?action=view&id={$r['guild']}'>{$r['guild_name']}</a><br />" : '';
         echo "Health: " . number_format($r['hp']) . "/" . number_format($r['maxhp']) . "<br />";
 
@@ -306,17 +312,21 @@ if (!$_GET['user']) {
 					<a href='attack.php?user={$r['userid']}' class='btn btn-danger'><i class='game-icon game-icon-crossed-swords'></i> Attack {$r['username']}</a>
 					<br />
 					<br />
+					<a href='theft.php?user={$r['userid']}' class='btn btn-primary'><i class='game-icon game-icon-profit'></i> Rob {$r['username']}</a>
+					<br />
+					<br />
 					<a href='hirespy.php?user={$r['userid']}' class='btn btn-primary'><i class='fas fa-user-secret'></i> Spy On {$r['username']}</a>
 					<br />
 					<br />
-					<a href='contacts.php?action=add&user={$r['userid']}' class='btn btn-primary'><i class='fas fa-address-card'></i> Add {$r['username']} to Contact List</a>";
+					<a href='contacts.php?action=add&user={$r['userid']}' class='btn btn-primary'><i class='fas fa-address-card'></i> Add {$r['username']} to Contact List</a>
+                    <br />
+					<br />
+					<a href='poke.php?user={$r['userid']}' class='btn btn-primary'><i class='fas fa-hand-point-right'></i> Poke {$r['username']}</a>";
 					?>
 				  </div>
 				  <div id="vip" class="tab-pane">
 					<?php
-						echo "<a href='theft.php?user={$r['userid']}' class='btn btn-primary'><i class='game-icon game-icon-profit'></i> Rob {$r['username']}</a>
-						<br />
-						<br />
+						echo "
 						<a href='friends.php?action=add&ID={$r['userid']}' class='btn btn-primary'><i class='fas fa-fw fa-smile'></i> Add {$r['username']} as Friend</a>
 						<br />
 						<br />
@@ -370,7 +380,7 @@ if (!$_GET['user']) {
 							</tr>
 							<tr>
 								<td>Location</td>
-								<td>{$fg['city']}, {$fg['state']}, {$fg['country']}, ({$fg['isocode']})</td>
+								<td>{$fg['state']}, {$fg['country']}</td>
 							</tr>
 							<tr>
 								<td>Risk Level</td>
@@ -408,7 +418,7 @@ if (!$_GET['user']) {
 					<form action='staff/staff_punish.php?action=staffnotes' method='post'>
 						Staff Notes
 						<br />
-						<textarea rows='7' class='form-control' name='staffnotes'>"
+						<textarea class='form-control' name='staffnotes'>"
                 . htmlentities($r['staff_notes'], ENT_QUOTES, 'ISO-8859-1')
                 . "</textarea>
 						<br />
@@ -421,13 +431,13 @@ if (!$_GET['user']) {
 				  </div>
 				</div>
 				<h3>Profile Comments</h3> <?php
-				$cq=$db->query("SELECT * FROM `comments` WHERE `cRECEIVE` = {$_GET['user']}  ORDER BY `cTIME` DESC LIMIT 8");
+				$cq=$db->query("SELECT * FROM `comments` WHERE `cRECEIVE` = {$_GET['user']}  ORDER BY `cTIME` DESC LIMIT 5");
 				echo "<table class='table table-bordered'>";
 				while ($cr = $db->fetch_row($cq))
 				{
 
 					$ci=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$cr['cSEND']}"));
-					$dp = ($ci['display_pic']) ? "<img src='{$ci['display_pic']}' class='img-thumbnail img-responsive' width='50' height='50'>" : '';
+					$dp = ($ci['display_pic']) ? "<img src='" . parseImage($ci['display_pic']) . "' class='img-thumbnail img-responsive' width='50' height='50'>" : '';
 					echo "<tr>
 					<td align='left' width='25%'>
 					{$dp} 
@@ -462,10 +472,10 @@ if (!$_GET['user']) {
 							$csrf=request_csrf_html('comment');
 							echo"
 							<form method='post'>
-								<textarea class='form-control' name='comment' cols='40' rows='7'></textarea>
+								<textarea class='form-control' name='comment'></textarea>
 								{$csrf}
 								<br />
-								<input type='submit' value='Post Comment' class='btn btn-primary'>
+								<button class='btn btn-primary' type='submit'><i class='far fa-comment'></i> Post Comment</button>
 							</form>";
 						}
 					}

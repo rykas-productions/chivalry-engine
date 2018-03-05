@@ -72,7 +72,7 @@ if (empty($_GET['item'])) {
                 if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
                     $upd = $ir[$einfo['stat']];
                 }
-                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labour', 'iq', 'luck'))) {
                     $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
                 } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
                     $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
@@ -81,7 +81,7 @@ if (empty($_GET['item'])) {
         }
         alert('success', "Success!", "You have successfully used your {$r['itmname']}!", true, "itemuse.php?item={$_GET['item']}", "Use Another");
       $api->UserTakeItem($userid, $r['inv_itemid'], 1);
-      $api->SystemLogsAdd($userid, 'itemuse', "Used a/an {$r['itmname']} item.");
+      $api->SystemLogsAdd($userid, 'itemuse', "Used {$r['itmname']}.");
     }
     }
 $h->endpage();

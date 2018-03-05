@@ -9,11 +9,6 @@
 */
 $macropage = ('mine.php');
 require('globals.php');
-$UIDB = $db->query("SELECT * FROM `mining` WHERE `userid` = {$userid}");
-if (!($db->num_rows($UIDB))) {
-    $db->query("INSERT INTO `mining` (`userid`, `max_miningpower`, `miningpower`, `miningxp`, `buyable_power`, `mining_level`) 
-    VALUES ('{$userid}', '100', '100', '0', '1', '1');");
-}
 $MUS = ($db->fetch_row($db->query("SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 mining_levelup();
 echo "<h2><i class='game-icon game-icon-mining'></i> Dangerous Mines</h2><hr />";
@@ -25,6 +20,24 @@ if ($api->UserStatus($userid, 'dungeon')) {
     alert('danger', "Locked Up!", "You cannot go mining if you're in the dungeon.");
     die($h->endpage());
 }
+if ($MUS['mining_level'] < 10)
+		$CostForPower=10;
+	elseif (($MUS['mining_level'] >= 10) && ($MUS['mining_level'] < 20))
+		$CostForPower=15;
+	elseif (($MUS['mining_level'] >= 20) && ($MUS['mining_level'] < 50))
+		$CostForPower=25;
+	elseif (($MUS['mining_level'] >= 50) && ($MUS['mining_level'] < 75))
+		$CostForPower=50;
+	elseif (($MUS['mining_level'] >= 75) && ($MUS['mining_level'] < 100))
+		$CostForPower=75;
+	elseif (($MUS['mining_level'] >= 100) && ($MUS['mining_level'] < 150))
+		$CostForPower=100;
+	elseif (($MUS['mining_level'] >= 150) && ($MUS['mining_level'] < 200))
+		$CostForPower=175;
+	elseif (($MUS['mining_level'] >= 200) && ($MUS['mining_level'] < 300))
+		$CostForPower=325;
+	else
+		$CostForPower=500;
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -42,6 +55,8 @@ switch ($_GET['action']) {
 function home()
 {
     global $MUS, $db, $api;
+    //Anti-refresh RNG.
+    $tresder = (Random(100, 999));
     $mineen = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
     $minexp = min(round($MUS['miningxp'] / $MUS['xp_needed'] * 100), 100);
     echo "Welcome to the dangerous mines, brainless moron! If you're lucky, you'll strike riches. If not... the mine
@@ -79,7 +94,7 @@ function home()
     <u>Open Mines</u><br />";
     $minesql = $db->query("SELECT * FROM `mining_data` ORDER BY `mine_level` ASC");
     while ($mines = $db->fetch_row($minesql)) {
-        echo "[<a href='?action=mine&spot={$mines['mine_id']}'>" . $api->SystemTownIDtoName($mines['mine_location']) . " - Level {$mines['mine_level']}</a>]<br />";
+        echo "[<a href='?action=mine&spot={$mines['mine_id']}&tresde={$tresder}'>" . $api->SystemTownIDtoName($mines['mine_location']) . " - Level {$mines['mine_level']}</a>]<br />";
     }
 
     echo "<br /><br />
@@ -89,25 +104,7 @@ function home()
 
 function buypower()
 {
-    global $userid, $db, $ir, $MUS, $h, $api;
-	if ($MUS['mining_level'] < 10)
-		$CostForPower=10;
-	elseif (($MUS['mining_level'] >= 10) && ($MUS['mining_level'] < 20))
-		$CostForPower=15;
-	elseif (($MUS['mining_level'] >= 20) && ($MUS['mining_level'] < 50))
-		$CostForPower=25;
-	elseif (($MUS['mining_level'] >= 50) && ($MUS['mining_level'] < 75))
-		$CostForPower=50;
-	elseif (($MUS['mining_level'] >= 75) && ($MUS['mining_level'] < 100))
-		$CostForPower=75;
-	elseif (($MUS['mining_level'] >= 100) && ($MUS['mining_level'] < 150))
-		$CostForPower=100;
-	elseif (($MUS['mining_level'] >= 150) && ($MUS['mining_level'] < 200))
-		$CostForPower=175;
-	elseif (($MUS['mining_level'] >= 200) && ($MUS['mining_level'] < 300))
-		$CostForPower=325;
-	else
-		$CostForPower=500;
+    global $userid, $db, $ir, $MUS, $h, $api, $CostForPower;
     if (isset($_POST['sets']) && ($_POST['sets'] > 0)) {
         $sets = abs($_POST['sets']);
         $totalcost = $sets * $CostForPower;
@@ -141,12 +138,23 @@ function buypower()
 
 function mine()
 {
-    global $db, $MUS, $ir, $userid, $api, $h;
+    global $db, $MUS, $ir, $userid, $api, $h, $CostForPower;
+    $tresder = (Random(100, 999));
+    $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
     if (!isset($_GET['spot']) || empty($_GET['spot'])) {
         alert('danger', "Uh Oh!", "Please select the mine you wish to mine at.", true, 'mine.php');
         die($h->endpage());
     } else {
         $spot = abs($_GET['spot']);
+        if (!isset($_SESSION['tresde'])) {
+            $_SESSION['tresde'] = 0;
+        }
+        if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
+            alert('danger', "Uh Oh!", "Please do not refresh while mining, thank you!", true, "?action=mine&spot={$_GET['spot']}&tresde={$tresder}");
+            $_SESSION['number'] = 0;
+            die($h->endpage());
+        }
+        $_SESSION['tresde'] = $_GET['tresde'];
         $mineinfo = $db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$spot}");
         if (!($db->num_rows($mineinfo))) {
             alert('danger', "Uh Oh!", "The mine you are trying to mine at does not exist.", true, 'mine.php');
@@ -158,6 +166,8 @@ function mine()
             if (!$api->UserEquippedItem($userid, 'primary', $MSI['mine_pickaxe'])) {
 
             }
+			$specialnumber=((getSkillLevel($userid,13)*5)/100);
+			$MSI['mine_iq']=$MSI['mine_iq']-($MSI['mine_iq']*$specialnumber);
             if ($MUS['mining_level'] < $MSI['mine_level']) {
                 alert('danger', "Uh Oh!", "You are too low level to mine here. You need mining level {$MSI['mine_level']} to mine here.", true, 'mine.php');
                 die($h->endpage());
@@ -197,7 +207,7 @@ function mine()
             }
             if ($Rolls <= 3) {
                 $NegRolls = Random(1, 3);
-                $NegTime = Random(5, 25) * ($MUS['mining_level'] * .25);
+                $NegTime = Random($CostForPower/2, $CostForPower*2);
                 if ($NegRolls == 1) {
                     alert('danger', "Uh Oh!", "You begin to mine and touch off a natural gas leak. Kaboom.", false);
                     $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and was put into the infirmary for {$NegTime} minutes.");
@@ -248,7 +258,7 @@ function mine()
                 $xpgain = 15 * $MUS['mining_level'];
             }
             echo "<hr />
-            [<a href='?action=mine&spot={$spot}'>Mine Again</a>]<br />
+            [<a href='?action=mine&spot={$spot}&tresde={$tresder}'>Mine Again</a>]<br />
             [<a href='mine.php'>Pack it Up</a>]";
             $db->query("UPDATE `mining` SET `miningxp`=`miningxp`+ {$xpgain}, `miningpower`=`miningpower`-'{$MSI['mine_power_use']}' WHERE `userid` = {$userid}");
         }

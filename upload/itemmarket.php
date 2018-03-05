@@ -38,7 +38,14 @@ switch ($_GET['action']) {
 function index()
 {
     global $db, $userid, $api;
-    echo "[<a href='?action=add'>Add Your Own Listing</a>]
+    echo "
+	<form>
+		Search Item Market
+		" . itemmarket_dropdown('item') . "
+		<input type='submit' value='Search' class='btn btn-primary'>
+	</form>
+	<hr />
+	[<a href='?action=add'>Add Your Own Listing</a>]
 	<br />
 	<table class='table table-bordered table-hover table-striped'>
 		<tr>
@@ -49,8 +56,46 @@ function index()
 			<th>Links</th>
 		</tr>
    ";
-
-    $q =
+   if (isset($_GET['item']))
+   {
+	   $_GET['item'] = (isset($_GET['item']) && is_numeric($_GET['item'])) ? abs($_GET['item']) : '';
+	   if ($_GET['item'] > 0)
+	   {
+	   $q =
+        $db->query(
+            "SELECT `imPRICE`, `imQTY`, `imCURRENCY`, `imADDER`,
+                     `imID`, `itmid`, `itmname`, `userid`,`username`, `itmdesc`,
+                     `itmtypename`
+                     FROM `itemmarket` AS `im`
+                     INNER JOIN `items` AS `i`
+                     ON `im`.`imITEM` = `i`.`itmid`
+                     INNER JOIN `users` AS `u`
+                     ON `u`.`userid` = `im`.`imADDER`
+                     INNER JOIN `itemtypes` AS `it`
+                     ON `i`.`itmtype` = `it`.`itmtypeid`
+					 WHERE `imITEM` = {$_GET['item']}
+                     ORDER BY `i`.`itmtype`, `i`.`itmname`, `u`.`username` ASC");
+	   }
+	   else
+	   {
+		   $q =
+			$db->query(
+            "SELECT `imPRICE`, `imQTY`, `imCURRENCY`, `imADDER`,
+                     `imID`, `itmid`, `itmname`, `userid`,`username`, `itmdesc`,
+                     `itmtypename`
+                     FROM `itemmarket` AS `im`
+                     INNER JOIN `items` AS `i`
+                     ON `im`.`imITEM` = `i`.`itmid`
+                     INNER JOIN `users` AS `u`
+                     ON `u`.`userid` = `im`.`imADDER`
+                     INNER JOIN `itemtypes` AS `it`
+                     ON `i`.`itmtype` = `it`.`itmtypeid`
+                     ORDER BY `i`.`itmtype`, `i`.`itmname`, `u`.`username` ASC");
+	   }
+   }
+   else
+   {
+		$q =
         $db->query(
             "SELECT `imPRICE`, `imQTY`, `imCURRENCY`, `imADDER`,
                      `imID`, `itmid`, `itmname`, `userid`,`username`, `itmdesc`,
@@ -63,6 +108,7 @@ function index()
                      INNER JOIN `itemtypes` AS `it`
                      ON `i`.`itmtype` = `it`.`itmtypeid`
                      ORDER BY `i`.`itmtype`, `i`.`itmname`, `u`.`username` ASC");
+   }
     $cblah = 1;
     $lt = "";
     while ($r = $db->fetch_row($q)) {
@@ -82,11 +128,11 @@ function index()
         }
         if ($r['imADDER'] == $userid) {
             $link =
-                "[<a href='?action=remove&ID={$r['imID']}'>Remove</a>]";
+                "<a class='btn btn-primary btn-sm' href='?action=remove&ID={$r['imID']}'><i class='far fa-trash-alt'></i></a>";
         } else {
             $link =
-                "[<a href='?action=buy&ID={$r['imID']}'>Buy</a>]
-                    [<a href='?action=gift&ID={$r['imID']}'>Gift</a>]";
+                "<a class='btn btn-primary btn-sm' href='?action=buy&ID={$r['imID']}'><i class='fas fa-dollar-sign'></i></a>
+                    <a class='btn btn-primary btn-sm' href='?action=gift&ID={$r['imID']}'><i class='fas fa-gift'></i></a>";
         }
         $r['itmdesc'] = htmlentities($r['itmdesc'], ENT_QUOTES);
 		$icon = returnIcon($r['itmid']);
@@ -212,6 +258,7 @@ function buy()
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
         $curre = ($r['imCURRENCY'] == 'primary') ? 'Copper Coins' : 'Chivalry Tokens';
         $final_price = $api->SystemReturnTax($r['imPRICE'] * $_POST['QTY']);
+		$taxed=$final_price-($final_price*0.05);
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
             die($h->endpage());
@@ -227,18 +274,18 @@ function buy()
             $db->query("UPDATE `itemmarket` SET `imQTY` = `imQTY` - {$_POST['QTY']} WHERE `imID` = {$_GET['ID']}");
         }
         $db->query("UPDATE `users` SET `$curr` = `$curr` - {$final_price} WHERE `userid` = $userid");
-        $db->query("UPDATE `users` SET `$curr` = `$curr` + {$final_price} WHERE `userid` = {$r['imADDER']}");
+        $db->query("UPDATE `users` SET `$curr` = `$curr` + {$taxed} WHERE `userid` = {$r['imADDER']}");
         notification_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought
-                {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
+                {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($taxed) . " {$curre}.");
         $imb_log = $db->escape("Bought {$r['itmname']} x{$_POST['QTY']} from the item market for
 			    " . number_format($final_price) . " {$curre} from user ID {$r['imADDER']}");
         alert('success', "Success!", "You have successfully bought {$r['itmname']} x{$_POST['QTY']} from the item
 			    market for " . number_format($final_price) . " {$curre}", true, 'itemmarket.php');
         $api->SystemLogsAdd($userid, 'imarket', $imb_log);
         if ($r['imCURRENCY'] == 'primary') {
-            $api->SystemCreditTax($api->SystemReturnTaxOnly($final_price), 1, -1);
+            $api->SystemCreditTax($api->SystemReturnTaxOnly($taxed)*$_POST['QTY'], 1, -1);
         } else {
-            $api->SystemCreditTax($api->SystemReturnTaxOnly($final_price), 2, -1);
+            $api->SystemCreditTax($api->SystemReturnTaxOnly($taxed)*$_POST['QTY'], 2, -1);
         }
     }
 }
@@ -313,12 +360,13 @@ function gift()
         } elseif ($_POST['QTY'] < $r['imQTY']) {
             $db->query("UPDATE `itemmarket` SET `imQTY` = `imQTY` - {$_POST['QTY']} WHERE `imID` = {$_POST['ID']}");
         }
+		$taxed=$final_price-($final_price*0.05);
         $db->query("UPDATE `users` SET `{$curr}` = `{$curr}` - {$final_price} WHERE `userid`= {$userid}");
-        $db->query("UPDATE `users` SET `{$curr}` = `{$curr}` + {$final_price} WHERE `userid` = {$r['imADDER']}");
+        $db->query("UPDATE `users` SET `{$curr}` = `{$curr}` + {$taxed} WHERE `userid` = {$r['imADDER']}");
         notification_add($_POST['user'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought you
             {$_POST['QTY']} {$r['itmname']}(s) from the market.");
         notification_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought
-            {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
+            {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($taxed) . " {$curre}.");
         $imb_log = $db->escape("Bought {$r['itmname']} x{$_POST['QTY']} from the item market for
 		    " . number_format($final_price) . " {$curre} from User ID {$r['imADDER']} and gifted to User ID {$_POST['user']}");
         $api->SystemLogsAdd($userid, 'imarket', $imb_log);
@@ -326,9 +374,9 @@ function gift()
 		    " . number_format($final_price) . " {$curre} from User ID {$r['imADDER']} and gifted to User ID
 		    {$_POST['user']}", true, 'index.php');
         if ($r['imCURRENCY'] == 'primary') {
-            $api->SystemCreditTax($api->SystemReturnTaxOnly($final_price), 1, -1);
+            $api->SystemCreditTax($api->SystemReturnTaxOnly($taxed), 1, -1);
         } else {
-            $api->SystemCreditTax($api->SystemReturnTaxOnly($final_price), 2, -1);
+            $api->SystemCreditTax($api->SystemReturnTaxOnly($taxed), 2, -1);
         }
 
     } else {
@@ -386,7 +434,6 @@ function add()
     $_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs($_POST['ID']) : '';
     $_POST['price'] = (isset($_POST['price']) && is_numeric($_POST['price'])) ? abs($_POST['price']) : '';
     $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
-    $_POST['currency'] = (isset($_POST['currency']) && in_array($_POST['currency'], array('primary', 'secondary'))) ? $_POST['currency'] : 'primary';
     if ($_POST['price'] && $_POST['QTY'] && $_POST['ID']) {
         if (!isset($_POST['verf']) || !verify_csrf_code("imadd_form", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
@@ -399,19 +446,19 @@ function add()
         } else {
             $checkq = $db->query("SELECT `imID` FROM `itemmarket` WHERE  `imITEM` =
 								{$_POST['ID']} AND  `imPRICE` = {$_POST['price']}
-								AND  `imADDER` = {$userid} AND `imCURRENCY` = '{$_POST['currency']}'");
+								AND  `imADDER` = {$userid} AND `imCURRENCY` = 'primary'");
             if ($db->num_rows($checkq) > 0) {
                 $cqty = $db->fetch_row($checkq);
                 $db->query("UPDATE `itemmarket` SET `imQTY` = `imQTY` + {$_POST['QTY']} WHERE `imID` = {$cqty['imID']}");
             } else {
                 $db->query("INSERT INTO `itemmarket` VALUES  (NULL,
 							'{$_POST['ID']}', {$userid}, {$_POST['price']},
-							'{$_POST['currency']}', {$_POST['QTY']})");
+							'primary', {$_POST['QTY']})");
             }
             $db->free_result($checkq);
             item_remove($userid, $_POST['ID'], $_POST['QTY']);
             $itemname=$api->SystemItemIDtoName($_POST['ID']);
-			$currency = ($_POST['currency'] == 'primary') ? "Copper Coins" : "Chivalry Tokens";
+			$currency = "Copper Coins";
             $imadd_log = $db->escape("Listed {$_POST['QTY']} {$itemname}(s) on the item market for {$_POST['price']} {$currency}");
             $api->SystemLogsAdd($userid, 'imarket', $imadd_log);
 			$num_format=number_format($_POST['price']);
@@ -445,21 +492,10 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					Price per Item
+					Price per Item*
 				</th>
 				<td>
 					<input  type='number' min='1' required='1' class='form-control' name='price' />
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Currency Type
-				</th>
-				<td>
-					<select name='currency' type='dropdown' class='form-control'>
-						<option value='primary'>Copper Coins</option>
-						<option value='secondary'>Chivalry Tokens</option>
-					</select>
 				</td>
 			</tr>
 			<tr>
@@ -469,8 +505,43 @@ function add()
 			</tr>
 			{$csrf}
 		</table>
-		</form>";
+		</form>
+		*=5% will be taken from this number for market fees.";
     }
+}
+function itemmarket_dropdown($ddname = "item", $selected = -1)
+{
+    global $db, $userid;
+    $ret = "<select name='$ddname' type='dropdown' class='form-control'>";
+    $q =
+        $db->query(
+            "SELECT `i`.*, `it`.*
+    				 FROM `itemmarket` AS `i`
+    				 INNER JOIN `items` AS `it`
+    				 ON `i`.`imITEM` = `it`.`itmid`
+    				 ORDER BY `itmname` ASC");
+    if ($selected == -1) {
+        $first = 0;
+    } else {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['itmid']}'";
+		if (!isset($count[$r['itmid']]))
+			$count[$r['itmid']]=0;
+		if ($count[$r['itmid']] == 0)
+		{
+			if ($selected == $r['itmid'] || $first == 0) {
+				$ret .= " selected='selected'";
+				$first = 1;
+			}
+			$ret .= ">{$r['itmname']}</option>";
+			$count[$r['itmid']]=$count[$r['itmid']]+1;
+		}
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
 }
 
 $h->endpage();

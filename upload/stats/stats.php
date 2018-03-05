@@ -32,9 +32,11 @@ $TotalSecondaryCurrency = $db->fetch_single($db->query("SELECT SUM(`secondary_cu
 //Select the total for primary currency in bank.
 $TotalBank = $db->fetch_single($db->query("SELECT SUM(`bank`) FROM `users` WHERE `user_level` != 'NPC' AND `bank` > -1  AND `userid` != 1"));
 $TotalBankToken = $db->fetch_single($db->query("SELECT SUM(`tokenbank`) FROM `users` WHERE `user_level` != 'NPC' AND `tokenbank` > -1  AND `userid` != 1"));
+$TotalBigBank = $db->fetch_single($db->query("SELECT SUM(`bigbank`) FROM `users` WHERE `user_level` != 'NPC' AND `bigbank` > -1  AND `userid` != 1"));
+
 
 //All the primary currency
-$TotalBankandPC = $TotalBank + $TotalPrimaryCurrency + $TotalInvestmentPC + $TotalGuildPC;
+$TotalBankandPC = $TotalBank + $TotalPrimaryCurrency + $TotalInvestmentPC + $TotalGuildPC + $TotalBigBank;
 $TotalBankandSC = $TotalBankToken + $TotalSecondaryCurrency + $TotalGuildSC;
 
 //Select total count of register users.
@@ -45,6 +47,7 @@ $TotalUserCount = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `use
 $AveragePrimaryCurrencyPerPlayer = round($TotalPrimaryCurrency / $TotalUserCount);
 $AverageTokenBank = round($TotalBankToken / $TotalUserCount);
 $AverageBank = round($TotalBank / $TotalUserCount);
+$AverageBigBank = round($TotalBigBank / $TotalUserCount);
 
 //Figure out average secondary currency per player by dividing the total secondary currency by the total amount of users
 //then round up.

@@ -18,7 +18,6 @@ class headers
         <html lang="en">
         <head>
             <center>
-				<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -29,20 +28,21 @@ class headers
                 <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon"/>
 				<link rel="stylesheet" href="../css/game-v1.2.min.css">
 				<link rel="stylesheet" href="../css/game-icons.css">
+				<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
                 <!-- CSS -->
                 <?php
                 if ($ir['theme'] == 1)
                 {
                     ?>
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
-                    <meta name="theme-color" content="#343a40">
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/yeti/bootstrap.min.css">
+					<meta name="theme-color" content="#333">
 					<?php
 					$hdr='navbar-dark bg-dark';
                 }
                 if ($ir['theme'] == 2)
                 {
                     ?>
-                    <link rel="stylesheet" href="../css/darkly.bs4.b2.min.css">
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/darkly/bootstrap.min.css">
                     <meta name="theme-color" content="#303030">
 					<?php
 					$hdr='navbar-light bg-light';
@@ -50,7 +50,7 @@ class headers
 				if ($ir['theme'] == 3)
                 {
                     ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/superhero/bootstrap.min.css">
                     <meta name="theme-color" content="#4E5D6C">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -58,7 +58,7 @@ class headers
 				if ($ir['theme'] == 4)
                 {
                     ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/slate/bootstrap.min.css">
                     <meta name="theme-color" content="#272B30">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -66,7 +66,7 @@ class headers
 				if ($ir['theme'] == 5)
                 {
                     ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cerulean/bootstrap.min.css">
                     <meta name="theme-color" content="#04519b">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -74,7 +74,7 @@ class headers
 				if ($ir['theme'] == 6)
                 {
                     ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/minty/bootstrap.min.css">
 					<meta name="theme-color" content="#78C2AD">
 					<?php
 					$hdr='navbar-dark bg-primary';
@@ -82,7 +82,7 @@ class headers
 				if ($ir['theme'] == 7)
                 {
                     ?>
-                    <link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/united/bootstrap.min.css">
                     <meta name="theme-color" content="#772953">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -90,10 +90,18 @@ class headers
 				if ($ir['theme'] == 8)
 				{
 					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cyborg/bootstrap.min.css">
 					<meta name="theme-color" content="#060606">
 					<?php
 					$hdr='navbar-dark bg-dark';
+				}
+                if ($ir['theme'] == 9)
+				{
+					?>
+					<link rel="stylesheet" href="../css/valentines-day-cid-v4.css">
+					<meta name="theme-color" content="#CC00FF">
+					<?php
+					$hdr='navbar-dark bg-primary';
 				}
                 ?>
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
@@ -133,11 +141,11 @@ class headers
                             <li class="nav-item">
                                 <a class="nav-link"
                                    href="../notifications.php"><?php echo "<i
-                                        class='fa fa-fw fa-globe'></i> Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
+                                        class='fas fa-fw fa-bell'></i> Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="../inventory.php"><?php echo "<i
-                                        class='game-icon game-icon-knapsack'></i> Inventory"; ?></a>
+                                        class='fas fa-fw fa-briefcase'></i> Inventory"; ?></a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
@@ -145,7 +153,7 @@ class headers
                                     <?php
                                     //User has a display picture, lets show it!
                                     if ($ir['display_pic']) {
-                                        echo "<img src='{$ir['display_pic']}' width='24' height='24'>";
+                                        echo "<img src='{$ir['display_pic']}' width='30' height='30'>";
                                     }
                                     echo " Hello, {$ir['username']}!";
                                     ?>
@@ -309,6 +317,7 @@ class headers
     {
         global $db, $ir, $set;
         $query_extra = '';
+        include('../analytics.php');
 		if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
 		{
 			?>
@@ -321,20 +330,18 @@ class headers
 
         </div>
         <!-- /.container -->
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
-
         <!-- jQuery Version 3.2.1 -->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
         <script src="../js/game.js" async defer></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-        <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async
-                defer></script>
+        <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
+		<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
 		<script type="text/javascript" src="../js/clock.min.js"></script>
 		<script type="text/javascript"> 
 		  $(document).ready(function(){ 

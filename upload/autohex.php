@@ -50,63 +50,90 @@ if (isset($_POST['open']))
 	$guard=0;
 	$borg=0;
 	$nothing=0;
+    $sticks=0;
+    $rocks=0;
 	while($number < $_POST['open'])
 	{
 		$number=$number+1;
-		$chance=Random(1,100);
-		if ($chance <= 25)
+		$chance=Random(1,95);
+		if ($chance <= 35)
 		{
-			$cash=Random(50,1000);
+			$cash=Random(750,5000);
 			$copper=$copper+$cash;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Copper Coins.");
 		}
-		elseif (($chance > 25) && ($chance <= 40))
+		elseif (($chance > 35) && ($chance <= 45))
 		{
-			$cash=Random(1,5);
+			$cash=Random(5,25);
+			$specialnumber=((getSkillLevel($userid,2)*2.5)/100);
+			$cash=round($cash+($cash*$specialnumber));
 			$tokens=$tokens+$cash;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Chivalry Tokens.");
 		}
-		elseif (($chance > 40) && ($chance <= 50))
+		elseif (($chance > 45) && ($chance <= 50))
 		{
-			$cash=Random(5,25);
+			$cash=Random(30,60);
 			$dungeon=$dungeon+$cash;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Dungeon minutes.");
 		}
-		elseif (($chance > 50) && ($chance <= 60))
+		elseif (($chance > 50) && ($chance <= 55))
 		{
-			$cash=Random(5,25);
+			$cash=Random(30,60);
 			$infirmary=$infirmary+$cash;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Infirmary minutes.");
 		}
-		elseif (($chance > 70) && ($chance <= 75))
+		elseif (($chance > 55) && ($chance <= 60))
 		{
-			$rng=Random(1,4);
+			$rng=Random(2,5);
 			$leeches=$leeches+$rng;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$rng} Leeches.");
 		}
-		elseif (($chance > 75) && ($chance <= 80))
+		elseif (($chance > 60) && ($chance <= 65))
 		{
-			$rng=Random(1,4);
+			$rng=Random(2,5);
 			$lockpicks=$lockpicks+$rng;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$rng} Lockpicks.");
 		}
-		elseif (($chance > 80) && ($chance <= 83))
+		elseif (($chance > 65) && ($chance <= 68))
 		{
-			$gain=Random(1,5)*$ir['level'];
+			$gain=Random(1,10)*$ir['level'];
 			$strength=$strength+$gain;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Strength.");
 		}
-		elseif (($chance > 83) && ($chance <= 86))
+		elseif (($chance > 68) && ($chance <= 71))
 		{
-			$gain=Random(1,5)*$ir['level'];
+			$gain=Random(1,10)*$ir['level'];
 			$agility=$agility+$gain;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Agility.");
 		}
-		elseif (($chance > 86) && ($chance <= 89))
+		elseif (($chance > 71) && ($chance <= 74))
 		{
-			$gain=Random(1,5)*$ir['level'];
+			$gain=Random(1,10)*$ir['level'];
 			$guard=$guard+$gain;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Guard.");
 		}
-		elseif ($chance >= 93)
+        elseif (($chance > 74) && ($chance <= 80))
+        {
+            $gain=Random(2,10);
+            $rocks=$rocks+$gain;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Heavy Rocks.");
+        }
+        elseif (($chance > 80) && ($chance <= 86))
+        {
+            $gain=Random(2,10);
+            $sticks=$sticks+$gain;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Sharpened Sticks.");
+        }
+		elseif (($chance > 86) && ($chance <= 93))
 		{
-			$bor=Random(1,10);
+			$bor=Random(2,15);
 			$borg=$borg+$bor;
+            $api->SystemLogsAdd($userid,"hexbags","Received {$bor} Boxes of Random.");
 		}
 		else
 		{
 			$nothing=$nothing+1;
+            $api->SystemLogsAdd($userid,"hexbags","Received nothing.");
 		}
 	}
 	$db->query("UPDATE `users` SET `hexbags` = `hexbags` - {$_POST['open']} WHERE `userid` = {$userid}");
@@ -118,6 +145,8 @@ if (isset($_POST['open']))
 		{$infirmary} minutes in the infirmary.<br />
 		{$leeches} Leeches<br />
 		{$lockpicks} Lockpicks.<br />
+        {$rocks} Heavy Rocks.<br />
+		{$sticks} Sharpened Sticks.<br />
 		{$strength} strength.<br />
 		{$agility} agility.<br />
 		{$guard} guard.<br />
@@ -129,6 +158,8 @@ if (isset($_POST['open']))
 	$api->UserStatusSet($userid,'dungeon',$dungeon,"Hexbag Theft");
 	$api->UserGiveItem($userid,5,$leeches);
 	$api->UserGiveItem($userid,29,$lockpicks);
+    $api->UserGiveItem($userid,2,$rocks);
+    $api->UserGiveItem($userid,1,$sticks);
 	$db->query("UPDATE `userstats` 
 				SET `strength` = `strength` + {$strength}, 
 				`agility` = `agility` + {$agility}, 

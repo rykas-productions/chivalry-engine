@@ -25,6 +25,8 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
     }
     $np = $db->fetch_row($npq);
     $db->free_result($npq);
+	$currentprice=$mp['house_price']*0.75;
+	$np['house_price']=$np['house_price']-$currentprice;
     //Estate's will is lower than user's current estate.
     if ($np['house_will'] < $mp['house_will']) {
         alert('danger', "Uh Oh!", "The house you are trying to buy is worse than what you currently have.", true, 'estates.php');
@@ -42,11 +44,6 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
         alert('danger', "Uh Oh!", "You are not a high level enough to buy this estate.", true, 'estates.php');
         die($h->endpage());
     } 
-	else if ($api->UserEquippedItem($userid,'armor',86))
-	{
-		alert('danger', "Uh Oh!", "Please unequip your 2017 Turkey Armor before you purchase an estate.", true, 'estates.php');
-        die($h->endpage());
-	}
 	//User passes all checks.
     else {
         //Update user's max will, remove currency, and set will to 0.
@@ -81,6 +78,8 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
 	</tr>";
     //List all game's estates.
     while ($r = $db->fetch_row($hq)) {
+		$currentprice=$mp['house_price']*0.75;
+		$r['house_price']=$r['house_price']-$currentprice;
         echo "
 		<tr>
 			<td>

@@ -11,7 +11,7 @@ require("globals.php");
 echo "<h3><i class='fas fa-list'></i> Item Appendix</h3><hr />This page lists all the items in the game, along with how many are in circulation.
     This may be useful for players who do item flipping, or those who are just plain old curious. Hovering over the
     item will give you its description. Tapping its name will take you to its info page<hr />
-    [<a href='?view=all'>All</a>][<a href='?view=weapon'>Weapons Only</a>][<a href='?view=armor'>Armors Only</a>]";
+    [<a href='?view=all'>All</a>] [<a href='?view=weapon'>Weapons Only</a>] [<a href='?view=armor'>Armors Only</a>]";
 if (!isset($_GET['view']))
     $_GET['view'] = '';
 if ($_GET['view'] == 'weapon') {
@@ -25,7 +25,7 @@ if ($_GET['view'] == 'weapon') {
     $q = $db->query("SELECT * FROM `items` WHERE `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 }
 echo "
-<table class='table table-bordered'>
+<table class='table table-bordered table-striped'>
     <tr>
         <th>
             Item Name

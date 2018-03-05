@@ -388,7 +388,7 @@ function trivia()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' value='Submit Answers' class='btn btn-primary'>
+				<input type='submit' value='Submit Answers' class='btn btn-outline-primary'>
 			</td>
 		</tr>
 		</table>

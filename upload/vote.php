@@ -23,6 +23,12 @@ switch ($_GET['action']) {
 	case "apex":
 		apex();
 		break;
+	case "dog":
+		dog();
+		break;
+    case "bbogd":
+		bbogd();
+		break;
     default:
         home();
         break;
@@ -77,6 +83,28 @@ function home()
 	{
 		$awgvote="<a href='?action=apex'>Vote</a>";
 	}
+	$q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'dog'");
+	$vote_count = $db->fetch_single($q);
+	$db->free_result($q);
+	if ($vote_count > 0)
+	{
+		$dogvote="<span class='text-danger'>Already voted.</span>";
+	}
+	else
+	{
+		$dogvote="<a href='?action=dog'>Vote</a>";
+	}
+    $q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'bbogd'");
+	$vote_count = $db->fetch_single($q);
+	$db->free_result($q);
+	if ($vote_count > 0)
+	{
+		$bbogdvote="<span class='text-danger'>Already voted.</span>";
+	}
+	else
+	{
+		$bbogdvote="<a href='?action=bbogd'>Vote</a>";
+	}
 	echo"
 	<table class='table table-bordered'>
 		<tr>
@@ -89,17 +117,6 @@ function home()
 			<th>
 				Link
 			</th>
-		</tr>
-		<tr>
-			<td>
-				Top Web Games
-			</td>
-			<td>
-				20,000 Copper Coins
-			</td>
-			<td>
-				{$twgvote}
-			</td>
 		</tr>
 		<tr>
 			<td>
@@ -134,8 +151,41 @@ function home()
 				{$awgvote}
 			</td>
 		</tr>
+		<tr>
+			<td>
+				Directory of Games
+			</td>
+			<td>
+				75 Chivalry Tokens
+			</td>
+			<td>
+				{$dogvote}
+			</td>
+		</tr>
+        <tr>
+			<td>
+				BBOGD
+			</td>
+			<td>
+				75 Chivalry Tokens
+			</td>
+			<td>
+				{$bbogdvote}
+			</td>
+		</tr>
 	</table>";
     $h->endpage();
+    /*<tr>
+			<td>
+				Top Web Games
+			</td>
+			<td>
+				25,000 Copper Coins
+			</td>
+			<td>
+				{$twgvote}
+			</td>
+		</tr>*/
 }
 function twg()
 {
@@ -203,6 +253,40 @@ function apex()
     else
     {
         header("Location: http://apexwebgaming.com/index.php?a=in&u=TheMasterGeneral&i_id={$userid}");
+        exit;
+    }
+}
+function dog()
+{
+    global $db,$userid,$api,$h;
+    $q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'dog'");
+    $vote_count = $db->fetch_single($q);
+    $db->free_result($q);
+    if ($vote_count > 0)
+    {
+        alert('danger',"Uh Oh!","You have already voted at Directory of Games today. If you vote again, you will not be rewarded.",true,"http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2317&votedef={$userid}","Vote Again");
+        $h->endpage();
+    }
+    else
+    {
+        header("Location: http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2317&votedef={$userid}");
+        exit;
+    }
+}
+function bbogd()
+{
+    global $db,$userid,$api,$h;
+    $q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'bbogd'");
+    $vote_count = $db->fetch_single($q);
+    $db->free_result($q);
+    if ($vote_count > 0)
+    {
+        alert('danger',"Uh Oh!","You have already voted at BBOGD today. If you vote again, you will not be rewarded.",true,"https://bbogd.com/vote/chivalry-is-dead/{$userid}","Vote Again");
+        $h->endpage();
+    }
+    else
+    {
+        header("Location: https://bbogd.com/vote/chivalry-is-dead/{$userid}");
         exit;
     }
 }

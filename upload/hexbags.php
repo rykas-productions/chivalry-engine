@@ -36,72 +36,99 @@ if ($api->UserStatus($userid,'infirmary'))
     die($h->endpage());
 }
 $db->query("UPDATE `users` SET `hexbags` = `hexbags` - 1 WHERE `userid` = {$userid}");
-$chance=Random(1,100);
-if ($chance <= 25)
+$chance=Random(1,95);
+if ($chance <= 35)
 {
-    $cash=Random(50,1000);
-    echo "You open this hexbag and pull out {$cash} Copper Coins. Cool!";
+    $cash=Random(500,2500);
+    echo "You open this hexbag and pull out {$cash} Copper Coins.";
     $api->UserGiveCurrency($userid,'primary',$cash);
+    $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Copper Coins.");
 }
-elseif (($chance > 25) && ($chance <= 40))
+elseif (($chance > 35) && ($chance <= 46))
 {
-    $cash=Random(1,5);
-    echo "You quickly open this hexbag and pull out {$cash} Chivalry Tokens. Neat!";
+    $cash=Random(5,25);
+	$specialnumber=((getSkillLevel($userid,2)*2.5)/100);
+	$cash=round($cash+($cash*$specialnumber));
+    echo "You quickly open this hexbag and pull out {$cash} Chivalry Tokens.";
 	$api->UserGiveCurrency($userid,'secondary',$cash);
+    $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Chivalry Tokens.");
 }
-elseif (($chance > 40) && ($chance <= 50))
+elseif (($chance > 45) && ($chance <= 50))
 {
-    $cash=Random(5,25);
+    $cash=Random(30,60);
     echo "You greedy bastard. You attempt to snatch a handful of hexbags and run. You get stopped and escorted to the
-    dungeon. Nice try, bud.";
+    dungeon.";
     $api->UserStatusSet($userid,'dungeon',$cash,"Hexbag Theft");
+    $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Dungeon minutes.");
 }
-elseif (($chance > 50) && ($chance <= 60))
+elseif (($chance > 50) && ($chance <= 55))
 {
-    $cash=Random(5,25);
-    echo "You reach your hand into this hexbag without looking and stick yourself with a dirty needle. Oops. To the infirmary
+    $cash=Random(30,60);
+    echo "You reach your hand into this hexbag without looking and stick yourself with a dirty needle. To the infirmary
     you go.";
     $api->UserStatusSet($userid,'infirmary',$cash,"Dirty Needle");
+    $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Infirmary minutes.");
 }
-elseif (($chance > 70) && ($chance <= 75))
+elseif (($chance > 55) && ($chance <= 60))
 {
-	$rng=Random(1,4);
-    echo "You open this hexbag and find yourself {$rng} Leech(es)! Nifty!";
+	$rng=Random(2,5);
+    echo "You open this hexbag and find yourself {$rng} Leeches.";
     $api->UserGiveItem($userid,5,$rng);
+    $api->SystemLogsAdd($userid,"hexbags","Received {$rng} Leeches.");
 }
-elseif (($chance > 75) && ($chance <= 80))
+elseif (($chance > 60) && ($chance <= 65))
 {
-	$rng=Random(1,4);
-    echo "You open this hexbag and find yourself {$rng} Lockpick(s)! Nifty!";
+	$rng=Random(2,5);
+    echo "You open this hexbag and find yourself {$rng} Lockpicks.";
     $api->UserGiveItem($userid,29,$rng);
+    $api->SystemLogsAdd($userid,"hexbags","Received {$rng} Lockpicks.");
 }
-elseif (($chance > 80) && ($chance <= 83))
+elseif (($chance > 65) && ($chance <= 68))
 {
-    $gain=Random(1,5)*$ir['level'];
-    echo "You open this hexbag and rip it in half. I guess your strength needs increased by {$gain}";
+    $gain=Random(1,10)*$ir['level'];
+    echo "You open this hexbag and rip it in half. Your Strength increases by {$gain}.";
     $db->query("UPDATE `userstats` SET `strength` = `strength` + {$gain} WHERE `userid` = {$userid}");
+    $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Strength.");
 }
-elseif (($chance > 83) && ($chance <= 86))
+elseif (($chance > 68) && ($chance <= 71))
 {
-    $gain=Random(1,5)*$ir['level'];
-    echo "You open this hexbag quickly. I guess your agility needs increased by {$gain}";
+    $gain=Random(1,10)*$ir['level'];
+    echo "You open this hexbag quickly. Your Agility increases by {$gain}.";
     $db->query("UPDATE `userstats` SET `agility` = `agility` + {$gain} WHERE `userid` = {$userid}");
+    $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Agility.");
 }
-elseif (($chance > 86) && ($chance <= 89))
+elseif (($chance > 71) && ($chance <= 74))
 {
-    $gain=Random(1,5)*$ir['level'];
-    echo "You open this hexbag and get a paper cut. You don't shed a tear! How manly. I guess your guard needs increased by {$gain}";
+    $gain=Random(1,10)*$ir['level'];
+    echo "You open this hexbag and get a paper cut and you shrug off the pain. Your Guard increases by {$gain}.";
     $db->query("UPDATE `userstats` SET `guard` = `guard` + {$gain} WHERE `userid` = {$userid}");
+    $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Guard.");
 }
-elseif ($chance >= 93)
+elseif (($chance > 74) && ($chance <= 80))
 {
-    $bor=Random(1,10);
+    $rocks=Random(2,10);
+    echo "You open this hexbag and find {$rocks} Heavy Rocks. They're in your inventory.";
+    $api->UserGiveItem($userid,2,$rocks);
+    $api->SystemLogsAdd($userid,"hexbags","Received {$rocks} Heavy Rocks.");
+}
+elseif (($chance > 80) && ($chance <= 86))
+{
+    $rocks=Random(2,10);
+    echo "You open this hexbag and find {$rocks} Sharpened Sticks. They're in your inventory.";
+    $api->UserGiveItem($userid,1,$rocks);
+    $api->SystemLogsAdd($userid,"hexbags","Received {$rocks} Sharpened Sticks.");
+}
+elseif (($chance > 86) && ($chance <= 93))
+{
+    $bor=Random(2,15);
     echo "You open this hexbag and find {$bor} of Boxes of Randoms. They're in your inventory.";
     $api->UserGiveItem($userid,33,$bor);
+    $api->SystemLogsAdd($userid,"hexbags","Received {$bor} Boxes of Random.");
 }
 else
 {
     echo "You reach into this hexbag and feel something warm and squishy. You decide its best to keep it in there for now.";
+    $api->SystemLogsAdd($userid,"hexbags","Received nothing.");
 }
 echo " You have {$left} Hexbags remaining for today.<hr />
 <a href='?tresde={$tresder}'>Open Another</a><br />

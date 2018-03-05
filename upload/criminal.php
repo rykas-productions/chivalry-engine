@@ -8,6 +8,8 @@
 */
 $macropage = ('criminal.php');
 require('globals.php');
+include('class/class_evalmath.php');
+$m = new EvalMath;
 echo "<h3><i class='game-icon game-icon-robber'></i> Criminal Center</h3>";
 if ($api->UserStatus($ir['userid'], 'infirmary') || $api->UserStatus($ir['userid'], 'dungeon')) {
     alert('danger', "Uh Oh!", "You cannot commit crimes while in the infirmary or dungeon.");
@@ -76,7 +78,7 @@ function home()
 
 function crime()
 {
-    global $db, $userid, $ir, $h, $api;
+    global $db, $userid, $ir, $h, $api, $m;
     $tresder = (Random(100, 999));
     $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
     if (!isset($_GET['c'])) {
@@ -106,21 +108,56 @@ function crime()
             alert('danger', "Uh Oh!", "You do not have enough to commit this crime. You only have {$ir['brave']}", true, 'criminal.php');
             die($h->endpage());
         } else {
-            $ec = "\$sucrate=" . str_replace(array("LEVEL", "EXP", "WILL", "IQ"), array($ir['level'], $ir['xp'], $ir['will'], $ir['iq']), $r['crimePERCFORM']) . ";";
-            eval($ec);
+            //Fix from Kyle Massacre. Thanks!
+            //https://github.com/KyleMassacre
+            $ec = str_ireplace(array("LEVEL", "EXP", "WILL", "IQ"), array($ir['level'], $ir['xp'], $ir['will'], $ir['iq']), $r['crimePERCFORM']) . ";";
+            $tokens = token_get_all("<?php {$ec}");
+            $expr = '';
+            foreach($tokens as $token)
+            {
+                if(is_string($token))
+                {
+                    if(in_array($token, array('(', ')', '+', '-', '/', '*'), true))
+                        $expr .= $token;
+                    continue;
+                }
+                list($id, $text) = $token;
+                if(in_array($id, array(T_DNUMBER, T_LNUMBER)))
+                    $expr .= $text;
+            }
+            $sucrate=$m->evaluate($expr);
+            try 
+            {
+                $sucrate=$m->evaluate($expr); 
+            }
+            catch (\Error $e)
+            {
+                alert('danger',"Uh Oh!","There's an issue with this crime. Please contact the game administration.",true,'criminal.php');
+                die($h->endpage());
+            }
+            if (!$sucrate)
+            {
+                alert('danger',"Uh Oh!","There's an issue with this crime. Please contact the game administration.",true,'criminal.php');
+                die($h->endpage());
+            }
+			$specialnumber=((getSkillLevel($userid,10)*10)/100);
+			$sucrate=$sucrate+($sucrate*$specialnumber);
             $ir['brave'] -= $r['crimeBRAVE'];
             $api->UserInfoSet($userid, "brave", "-{$r['crimeBRAVE']}");
             if (Random(1, 100) <= $sucrate) {
                 if (!empty($r['crimePRICURMIN'])) {
                     $prim_currency = Random($r['crimePRICURMIN'], $r['crimePRICURMAX']);
                     $api->UserGiveCurrency($userid, 'primary', $prim_currency);
+					crime_log($_GET['c'],true,'copper',$prim_currency);
                 }
                 if (!empty($r['crimeSECCURMIN'])) {
                     $sec_currency = Random($r['crimeSECCURMIN'], $r['crimeSECURMAX']);
                     $api->UserGiveCurrency($userid, 'secondary', $sec_currency);
+					crime_log($_GET['c'],true,'token',$sec_currency);
                 }
-                if (!empty($r['crimeSUCCESSITEM'])) {
-                    $api->UserGiveItem($userid, $r['crimeSUCCESSITEM'], 1);
+                if (!empty($r['crimeITEMSUC'])) {
+                    item_add($userid, $r['crimeITEMSUC'], 1);
+					crime_log($_GET['c'],true,'item',1);
                 }
                 if (empty($prim_currency)) {
                     $prim_currency = 0;
@@ -128,12 +165,12 @@ function crime()
                 if (empty($sec_currency)) {
                     $sec_currency = 0;
                 }
-                if (empty($r['crimeSUCCESSITEM'])) {
-                    $r['crimeSUCCESSITEM'] = 0;
+                if (empty($r['crimeITEMSUC'])) {
+                    $r['crimeITEMSUC'] = 0;
                 }
                 $text = str_ireplace("{money}", $prim_currency, $r['crimeSTEXT']);
                 $text = str_ireplace("{secondary}", $sec_currency, $r['crimeSTEXT']);
-                $text = str_ireplace("{item}", $api->SystemItemIDtoName($r['crimeSUCCESSITEM']), $r['crimeSTEXT']);
+                $text = str_ireplace("{item}", $api->SystemItemIDtoName($r['crimeITEMSUC']), $r['crimeSTEXT']);
                 $title = "Success!";
                 $type = 'success';
                 $api->UserInfoSetStatic($userid, "xp", $ir['xp'] + $r['crimeXP']);
@@ -145,9 +182,43 @@ function crime()
                 $text = str_replace("{time}", $dtime, $r['crimeFTEXT']);
                 $api->UserStatusSet($userid, 'dungeon', $dtime, $r['crimeDUNGREAS']);
                 $api->SystemLogsAdd($userid, 'crime', "Failed to commit the {$r['crimeNAME']} crime.");
+				crime_log($_GET['c'],false,0,0);
             }
             alert("{$type}", "{$title}", "{$r['crimeITEXT']} {$text}", true, "?action=crime&c={$_GET['c']}&tresde={$tresder}", "Attempt Again");
             die($h->endpage());
         }
     }
+}
+function crime_log($crimeid,$won,$wontype,$wonqty)
+{
+	global $db,$userid,$api;
+	$q=$db->query("SELECT * FROM `crime_logs` WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
+	if ($db->num_rows($q) == 0)
+	{
+		$db->query("INSERT INTO `crime_logs` 
+					(`userid`, `crimeid`, `crimetotal`, `crimesuccess`,
+					`crimecopper`, `crimetoken`, `crimeitem`) 
+					VALUES 
+					('{$userid}', '{$crimeid}', '0', '0', '0', '0', '0')");
+	}
+	$db->free_result($q);
+	$q=$db->query("SELECT * FROM `crime_logs` WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
+	$r=$db->fetch_row($q);
+	$db->query("UPDATE `crime_logs` SET `crimetotal` = `crimetotal` + 1 WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
+	if ($won)
+	{
+		if ($wontype == 'copper')
+		{
+			$db->query("UPDATE `crime_logs` SET `crimecopper` = `crimecopper` + {$wonqty} WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
+		}
+		if ($wontype == 'token')
+		{
+			$db->query("UPDATE `crime_logs` SET `crimetoken` = `crimetoken` + {$wonqty} WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
+		}
+		if ($wontype == 'item')
+		{
+			$db->query("UPDATE `crime_logs` SET `crimeitem` = `crimeitem` + 1 WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
+		}
+		$db->query("UPDATE `crime_logs` SET `crimesuccess` = `crimesuccess` + 1 WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
+	}
 }

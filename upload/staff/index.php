@@ -20,7 +20,7 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 				<th>
 					Server PHP Version
 				</th>
-				<td>
+				<td align='left'>
 					" . phpversion() . "
 				</td>
 			</tr>
@@ -28,7 +28,7 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 				<th>
 					Server Database Version
 				</th>
-				<td>
+				<td align='left'>
 					{$MySQLIVersion}
 				</td>
 			</tr>
@@ -36,7 +36,7 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 				<th>
 					Chivalry Engine Version
 				</th>
-				<td>
+				<td align='left'>
 					{$set['Version_Number']}
 				</td>
 			</tr>
@@ -44,7 +44,7 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 				<th>
 					Chivalry Engine Update Checker
 				</th>
-				<td>
+				<td align='left'>
 					" . version_json() . "
 				</td>
 			</tr>
@@ -52,7 +52,7 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 				<th>
 					Chivalry Engine API Version
 				</th>
-				<td>
+				<td align='left'>
 					{$api->SystemReturnAPIVersion()}
 				</td>
 			</tr>
@@ -62,7 +62,7 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 }
 echo "
 </div>
-	<div class='col-md-4'>
+	<div class='col-md-4' align='left'>
 		<ul class='nav nav-pills flex-column'>";
 if ($api->UserMemberLevelGet($userid, 'admin')) {
     echo "
@@ -132,7 +132,7 @@ echo "
 			</li>
 		</ul>
 	</div>
-	<div class='col-md-8'>
+	<div class='col-md-8' align='left'>
 		<div class='tab-content'>";
 if ($api->UserMemberLevelGet($userid, 'admin')) {
     echo "<div id='ADMIN' class='tab-pane'>
@@ -422,6 +422,38 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 								<td>
                                     <a href='staff_logs.php?action=theft'>Theft Logs</a>
 								</td>
+							</tr>
+                            </tr>
+								<td>
+									<a href='staff_logs.php?action=loginrewardlogs'>Login Reward Logs</a>
+								</td>
+								<td>
+                                    <a href='staff_logs.php?action=achievementlogs'>Achievement Logs</a>
+								</td>
+							</tr>
+                            </tr>
+								<td>
+									<a href='staff_logs.php?action=heallogs'>Heal Logs</a>
+								</td>
+								<td>
+                                    <a href='staff_logs.php?action=marriagelogs'>Marriage Logs</a>
+								</td>
+							</tr>
+                            </tr>
+								<td>
+									<a href='staff_logs.php?action=itemrequestlogs'>Item Request Logs</a>
+								</td>
+								<td>
+                                    <a href='staff_logs.php?action=taxlogs'>Tax Logs</a>
+								</td>
+							</tr>
+                            </tr>
+								<td>
+									<a href='staff_logs.php?action=hexbagslogs'>Hexbags Logs</a>
+								</td>
+								<td>
+                                    <a href='staff_logs.php?action=borlogs'>BOR Logs</a>
+								</td>
 							</tr>";
                         if ($api->UserMemberLevelGet($userid, 'admin')) {
                             echo "
@@ -462,7 +494,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 										<a href='staff_logs.php?action=votedlogs'>Voting Logs</a>
 									</td>
 									<td>
-										
+										<a href='staff_logs.php?action=preferenceslogs'>Preferences Logs</a>
 									</td>
 								</tr>";
                             }

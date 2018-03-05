@@ -88,7 +88,6 @@ if ($verified) {
     //Everything checks out... so lets credit the pack.
 	$fpi['vip_qty']=$fpi['vip_qty']*$qty;
     item_add($for, $fpi['vip_item'], $fpi['vip_qty']);
-	item_add($for, 89*floor($_POST['mc_gross']), 1);
     //Log everything
 	$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$friendly_number} WHERE `setting_name` = 'MonthlyDonationGoal'");
     $db->query("INSERT INTO `vips_accepted` VALUES(NULL, {$buyer}, {$for}, {$pack}, " . time() . ", '{$txn_id}')");

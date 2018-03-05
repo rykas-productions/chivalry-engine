@@ -18,6 +18,7 @@ function csrf_error()
 
 echo "<h3><i class='far fa-flag'></i> Player Report</h3><hr />";
 if (empty($_POST['userid'])) {
+	$_GET['userid'] = (isset($_GET['userid']) && is_numeric($_GET['userid'])) ? abs($_GET['userid']) : '';
     $code = request_csrf_code('report_form');
     echo "Know someone who broke the rules, or is just being dishonorable? This is the place to report them. Report the
         user just once. Reporting the same user multiple times will slow down the process. If you are found to be
@@ -31,7 +32,7 @@ if (empty($_POST['userid'])) {
 				User
 			</th>
 			<td>
-				<input type='number' min='1' required='1' name='userid' class='form-control'>
+				" . user_dropdown('userid',$_GET['userid']) . "
 			</td>
 		</tr>
 		<tr>
@@ -68,6 +69,16 @@ if (empty($_POST['userid'])) {
         die($h->endpage());
     }
     $db->free_result($q);
+	$adminq=$db->query("SELECT `userid` FROM `users` WHERE `user_level` = 'Admin'");
+	while ($adminr=$db->fetch_row($adminq))
+	{
+		$api->GameAddNotification($adminr['userid'],"A player report has been filed and submitted. Please read it <a href='staff/staff_users.php?action=reports'>here</a>.");
+	}
+	$assist=$db->query("SELECT `userid` FROM `users` WHERE `user_level` = 'Assistant'");
+	while ($asr=$db->fetch_row($assist))
+	{
+		$api->GameAddNotification($asr['userid'],"A player report has been filed and submitted. Please read it <a href='staff/staff_users.php?action=reports'>here</a>.");
+	}
     $db->query("INSERT INTO `reports` VALUES(NULL, $userid, {$_POST['userid']}, '{$_POST['reason']}')");
     alert('success', "Success!", "You have successfully reported the user. Staff may send you a message asking
 		    questions about the report you just sent. Please answer them to the best of your ability.", true, 'index.php');

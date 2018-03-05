@@ -100,7 +100,7 @@ function heal()
             }
             //Cost = 25 Secondary Currenxy x Times to Heal
             //Times = 30 Minutes x Times to Heal
-            $cost = 25 * $_GET['times'];
+            $cost = 15 * $_GET['times'];
             $time = 30 * $_GET['times'];
             //User does not have enough Chivalry Tokens to heal that many times.
             if ($ir['secondary_currency'] < $cost) {
@@ -121,7 +121,7 @@ function heal()
         } else {
             echo "How many times do you wish to heal {$api->SystemUserIDtoName($_GET['user'])}?<br />
             1 Set = 30 minutes<br />
-            1 Set = 25 Chivalry Tokens<br />
+            1 Set = 15 Chivalry Tokens<br />
             <form>
                 <input type='hidden' name='user' value='{$_GET['user']}'>
                 <input type='hidden' name='action' value='heal'>

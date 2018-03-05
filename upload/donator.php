@@ -18,7 +18,7 @@ if (isset($_GET['user']))
 	}
 	echo "<h3>VIP Packs</h3><hr />If you purchase a VIP Package from below, you will be gifted the following depending on
 		the package your purchase. All purchases are final. If you commit fraud, you will be removed from the game permanently.";
-	$goal=15;
+	$goal=25;
 	$progress=round(($set['MonthlyDonationGoal']/$goal)*100);
 	$bg = ($set['MonthlyDonationGoal'] >= $goal) ? "bg-success" : "" ;
 	$set['MonthlyDonationGoal']=round($set['MonthlyDonationGoal'],2);
@@ -31,7 +31,7 @@ if (isset($_GET['user']))
 	<br />";
 		
 	echo "
-	<table class='table table-bordered'>
+	<table class='table table-bordered table-striped'>
 		<tr>
 			<th>
 				Pack Offer
@@ -78,7 +78,7 @@ if (isset($_GET['user']))
 						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
 						"primary_currency" => "Copper Coins", "secondary_currency"
 					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
+						"VIP Days*");
 				$statformatted = $stats["{$einfo['stat']}"];
 				echo "{$einfo['dir']} {$statformatted} by " . number_format($einfo['inc_amount']) . "{$einfo['inc_type']}.<br />";
 			} //If item has no effects, lets list the description instead.
@@ -95,28 +95,28 @@ if (isset($_GET['user']))
 		echo "
 			</td>
 			<td>
-				<form action='https://www.paypal.com/cgi-bin/webscr' method='post'>
-				<input type='hidden' name='cmd' value='_xclick' />
-				<input type='hidden' name='business' value='{$set['PaypalEmail']}' />
-				<input type='hidden' name='item_name' value='{$domain}|VIP|{$r['vip_id']}|{$_GET['user']}|{$userid}' />
-				<input type='hidden' name='amount' value='{$r['vip_cost']}' />
-				<input type='hidden' name='no_shipping' value='1' />
-				<input type='hidden' name='return' value='http://{$domain}/donatordone.php?action=done' />
-				<input type='hidden' name='cancel_return' value='http://{$domain}/donatordone.php?action=cancel' />
-				<input type='hidden' name='notify_url' value='http://{$domain}/donator_ipn.php' />
-				<input type='hidden' name='cn' value='Your Player ID' />
-				<input type='hidden' name='currency_code' value='USD' />
-				<input type='hidden' name='tax' value='0' />
-				<input type='hidden' name='rm' value='2'>
-				<input type='number' min='1' max='20' name='quantity' class='form-control' required='1' placeholder='Quantity'>
-				<input type='image' src='https://www.paypal.com/en_US/i/btn/x-click-but21.gif' border='0' name='submit' alt='Make payments with PayPal - it's fast, free and secure!' />
-				</form>
+                <form action='https://www.paypal.com/cgi-bin/webscr' method='post'>
+                    <input type='hidden' name='cmd' value='_xclick' />
+                    <input type='hidden' name='business' value='{$set['PaypalEmail']}' />
+                    <input type='hidden' name='item_name' value='{$domain}|VIP|{$r['vip_id']}|{$_GET['user']}|{$userid}' />
+                    <input type='hidden' name='amount' value='{$r['vip_cost']}' />
+                    <input type='hidden' name='no_shipping' value='1' />
+                    <input type='hidden' name='return' value='http://{$domain}/donatordone.php?action=done' />
+                    <input type='hidden' name='cancel_return' value='http://{$domain}/donatordone.php?action=cancel' />
+                    <input type='hidden' name='notify_url' value='http://{$domain}/donator_ipn.php' />
+                    <input type='hidden' name='cn' value='Your Player ID' />
+                    <input type='hidden' name='currency_code' value='USD' />
+                    <input type='hidden' name='tax' value='0' />
+                    <input type='hidden' name='rm' value='2'>
+                    <input type='number' min='1' max='100' value='1' name='quantity' class='form-control' required='1' placeholder='Quantity'>
+                        <button class='btn btn-primary' type='submit'><i class='fab fa-paypal'></i> Pay with PayPal</button>
+                </form>
 			</td>
 		</tr>";
 	}
-	echo "</table><br />
-	VIP Days disable ads around the game. You'll also receive 33% energy refill instead of 16%. You'll also receive a shield by
-	 your name, and your name will change color.";
+	echo "</table>
+	*VIP Days disable ads around the game. You'll also receive 33% energy refill instead of 16%. You'll also receive a shield by
+	 your name, and your name will change color. You also gain access to a Friends and Enemies list.";
 }
 else
 {

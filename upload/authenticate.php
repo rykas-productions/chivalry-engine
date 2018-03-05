@@ -112,6 +112,10 @@ else {
 
     }
     session_regenerate_id();
+    if (date('j') == 14)
+    {
+        $db->query("UPDATE `user_settings` SET `theme` = 9 WHERE `userid` = {$mem['userid']}");
+    }
     $_SESSION['userid'] = $mem['userid'];
 	$uade=$db->query("SELECT * FROM `user_settings` WHERE `userid` = {$mem['userid']}");
 	if ($db->num_rows($uade) == 0)
@@ -131,11 +135,30 @@ else {
 	$_SESSION['loggedin'] = 1;
 	$_SESSION['last_login'] = time();
 	setcookie('login_expire', time() + 604800, time() + 604800);
-    $db->query("UPDATE `users`
+    $invis=$db->fetch_single($db->query("SELECT `invis` FROM `user_settings` WHERE `userid` = {$mem['userid']}"));
+    if ($invis < time())
+    {
+        $db->query("UPDATE `users`
               SET `loginip` = '{$IP}',
               `last_login` = '{$CurrentTime}',
               `laston` = '{$CurrentTime}'
                WHERE `userid` = {$mem['userid']}");
+    }
+    else
+    {
+        $db->query("UPDATE `users`
+              SET `loginip` = '{$IP}'
+               WHERE `userid` = {$mem['userid']}");
+    }
+    //Generate keys for auto-login.
+    if ($_POST['remember'] == 'yes')
+    {
+        $uuid=Random();
+        $token=hash('sha512',randomizer());
+        $db->query("INSERT INTO `auto_login` (`UUID`, `Token`, `userid`) VALUES ('{$uuid}', '{$token}', '{$mem['userid']}')");
+        setcookie('uuid',$uuid);
+        setcookie('token',$token);
+    }
     $encpsw = encode_password($raw_password,$mem['user_level']);
     $e_encpsw = $db->escape($encpsw);
     //Update user's password as an extra security mesaure.

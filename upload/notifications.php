@@ -56,18 +56,18 @@ $query = $db->query("SELECT *
 while ($notif = $db->fetch_row($query)) {
     $NotificationTime = DateTime_Parse($notif['notif_time']);
     if ($notif['notif_status'] == 'unread') {
-        $Status = "<span class='badge badge-pill badge-danger'>Unread</span>";
+        $Status = "<span class='badge badge-pill badge-danger'><i class='fas fa-times'></i></span>";
     } else {
-        $Status = "<span class='badge badge-pill badge-success'>Read</span>";
+        $Status = "<span class='badge badge-pill badge-success'><i class='fas fa-check'></i></span>";
     }
     echo "
 	<tr>
 		<td>
 			{$NotificationTime}<br />
-				{$Status}<br />
-				[<a href='notifications.php?delete={$notif['notif_id']}'>Delete</a>]
+				{$Status} <a class='btn btn-primary btn-sm' href='?delete={$notif['notif_id']}'><i class='fas fa-trash-alt'></i></a>
+				
 		</td>
-		<td>
+		<td align='left'>
 			{$notif['notif_text']}
 		</td>
 	</tr>";

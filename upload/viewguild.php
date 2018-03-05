@@ -6,6 +6,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+$voterquery = 1;
 require('globals.php');
 if (!$ir['guild']) {
     alert('danger', "Uh Oh!", "You are not in a guild.", true, 'index.php');
@@ -21,6 +22,8 @@ if (!$ir['guild']) {
     if ($db->fetch_single($wq) > 0) {
         alert('warning', "Guild Wars in Progress", "Your guild is in {$db->fetch_single($wq)} wars. View active wars <a href='?action=warview'>here</a>.", false);
     }
+	if ($gd['guild_primcurr'] < 0)
+		alert('info',"Guild Debt!","Your guild is in debt. If your debt is not paid off in " . TimeUntil_Parse($gd['guild_debt_time']) . " your guild will be dissolved.",false);
     echo "
 	<h3><u>Your Guild, {$gd['guild_name']}</u></h3>
    	";
@@ -64,6 +67,12 @@ if (!$ir['guild']) {
 		case "forums":
             guild_forums();
             break;
+		case "viewpolls":
+			guild_polls();
+			break;
+		case "oldpolls":
+			guild_oldpolls();
+			break;
         default:
             home();
             break;
@@ -79,7 +88,7 @@ function home()
 		"<div class='container'>
 			<div class='row'>
 				<div class='col-lg-6 mx-auto'>
-					<img src='{$gd['guild_pic']}' placeholder='The {$gd['guild_name']} guild picture.' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>
+					<img src='" . parseImage($gd['guild_pic']) . "' placeholder='The {$gd['guild_name']} guild picture.' width='300' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>
 				</div>
 			</div>
 		</div>";
@@ -119,7 +128,10 @@ function home()
 				</td>
 			</tr>
 			<tr>
-				<td colspan='2'>";
+				<td>
+					<a href='?action=viewpolls'>Guild Polls</a>
+				</td>
+				<td>";
 				if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
 					echo "<a href='?action=staff&act2=idx'>Staff Room</a>";
 				echo"
@@ -146,7 +158,7 @@ function home()
     $q = $db->query("SELECT * FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']} ORDER BY `gn_time` DESC  LIMIT 10");
     echo "
 	<table class='table table-bordered'>
-		<tr>
+		<tr align='left'>
 			<th>
 			    Notification Info
             </th>
@@ -157,9 +169,9 @@ function home()
    	";
     while ($r = $db->fetch_row($q)) {
         echo "
-		<tr>
+		<tr align='left'>
 			<td>
-			    " . date('F j Y, g:i:s a', $r['gn_time']) . "
+			    " . DateTime_Parse($r['gn_time']) . "
             </td>
 			<td>
 			    {$r['gn_text']}
@@ -168,12 +180,13 @@ function home()
    		";
     }
     $db->free_result($q);
-    echo "</table>";
+    echo "</table>
+";
 }
 
 function summary()
 {
-    global $db, $gd, $set;
+    global $db, $gd, $set, $ir, $api;
 
     //List all the guild's information
     echo "
@@ -183,7 +196,7 @@ function summary()
 			Guild Information
 		</th>
 	</tr>
-	<tr>
+	<tr align='left'>
 		<th>
 			Leader
 		</th>
@@ -198,7 +211,7 @@ function summary()
     }
     echo "</td>
 	</tr>
-	<tr>
+	<tr align='left'>
 		<th>
 			Co-Leader
 		</th>
@@ -216,7 +229,7 @@ function summary()
     $db->free_result($vpq);
     $cnt = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
     echo "
-	<tr>
+	<tr align='left'>
 		<th>
 			Members
 		</th>
@@ -224,7 +237,7 @@ function summary()
 			" . $db->fetch_single($cnt) . " / " . $gd['guild_level'] * 5 . "
 		</td>
 	</tr>
-	<tr>
+	<tr align='left'>
 		<th>
 			Level
 		</th>
@@ -232,7 +245,7 @@ function summary()
 			{$gd['guild_level']}
 		</td>
 	</tr>
-	<tr>
+	<tr align='left'>
 		<th>
 			Experience
 		</th>
@@ -240,7 +253,7 @@ function summary()
 			{$gd['guild_xp']} / " . $gd['guild_level'] * 36 . "
 		</td>
 	</tr>
-	<tr>
+	<tr align='left'>
 		<th>
 			Copper Coins
 		</th>
@@ -248,13 +261,34 @@ function summary()
 			" . number_format($gd['guild_primcurr']) . " / " . number_format($gd['guild_level'] * $set['GUILD_PRICE']) . "
 		</td>
 	</tr>
-	<tr>
+	<tr align='left'>
 		<th>
 			Chivalry Tokens
 		</th>
 		<td>
 			" . number_format($gd['guild_seccurr']) . "
 		</td>
+	</tr>
+	<tr align='left'>
+		<th>
+			Allies
+		</th>
+		<td>";
+			$q=$db->query("SELECT * 
+							FROM `guild_alliances` 
+							WHERE (`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']})
+							AND `alliance_true` = 1");
+			while ($r=$db->fetch_row($q))
+			{
+				$type = ($r['alliance_type'] == 1) ? "Traditional" : "Non-aggressive";
+				if ($r['alliance_a'] == $ir['guild'])
+					$otheralliance=$r['alliance_b'];
+				else
+					$otheralliance=$r['alliance_a'];
+				echo "<a href='?action=view&id={$otheralliance}'>{$api->GuildFetchInfo($otheralliance,'guild_name')}</a><br />";
+			}
+		
+		echo"</td>
 	</tr>
       </table>
 	  <a href='viewguild.php'>Go Back</a>";
@@ -384,7 +418,7 @@ function members()
     //List all the guild members. ^_^
     echo "
     <table class='table table-bordered table-striped'>
-		<tr>
+		<tr align='left'>
     		<th>
 				User
 			</th>
@@ -412,8 +446,8 @@ function members()
 		if ((!$api->UserStatus($r['userid'], 'dungeon')) && (!$api->UserStatus($r['userid'], 'infirmary')))
 			$r['status'] .= "Perfectly Fine<br />";
         echo "
-		<tr>
-        	<td width='15%'>
+		<tr align='left'>
+        	<td width='10%'>
 				<img src='{$r['display_pic']}' class='img-fluid'><br />
 				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a>
 			</td>
@@ -555,25 +589,42 @@ function atklogs()
 {
     global $db, $ir, $api;
     //Select the last 50 attacks involving someone in the guild.
-    $atks = $db->query("SELECT `l`.*, `u`.`guild`, `u`.`userid`
-                        FROM `logs` as `l`
-                        INNER JOIN `users` as `u`
-                        ON `l`.`log_user` = `u`.`userid`
-                        WHERE (`u`.`guild` = {$ir['guild']}) AND log_type = 'attacking'
-                        ORDER BY `log_time` DESC
+    $atks = $db->query("SELECT `a`.*, `u1`.*, `u2`.*
+                        FROM `attack_logs` AS `a`
+                        INNER JOIN `users` AS `u1`
+                        ON `attacker` = `u1`.`userid`
+                        INNER JOIN `users` AS `u2`
+                        ON `attacked` = `u2`.`userid`
+                        WHERE `result` != 'lost'
+                        AND (`u1`.`guild` = {$ir['guild']} 
+                        OR `u2`.`guild` = {$ir['guild']})
+                        ORDER BY `attack_time` DESC
                         LIMIT 50");
     echo "<b>Last 50 attacks involving anyone in your guild</b><br />
 	<table class='table table-bordered'>
-		<tr>
+		<tr align='left'>
 			<th>Time</th>
 			<th>Attack Info</th>
 		</tr>";
     while ($r = $db->fetch_row($atks)) {
-        $d = DateTime_Parse($r['log_time']);
-        echo "<tr>
+        $rowcolor = ($api->UserInfoGet($r['attacker'],'guild') == $ir['guild']) ? "text-success" : "text-danger";
+        $d = DateTime_Parse($r['attack_time']);
+        if ($r['result'] == 'xp')
+        {
+            $didwhat = "<span class='{$rowcolor} font-weight-bold'>used</span> <a href='profile.php?user={$r['attacked']}'>{$api->SystemUserIDtoName($r['attacked'])}</a> <span class='{$rowcolor} font-weight-bold'>for experience</span>.";
+        }
+        if ($r['result'] == 'beatup')
+        {
+            $didwhat = "<span class='{$rowcolor} font-weight-bold'>severely beat up</span> <a href='profile.php?user={$r['attacked']}'>{$api->SystemUserIDtoName($r['attacked'])}</a>.";
+        }
+        if ($r['result'] == 'mugged')
+        {
+            $didwhat = "<span class='{$rowcolor} font-weight-bold'>mugged</span> <a href='profile.php?user={$r['attacked']}'>{$api->SystemUserIDtoName($r['attacked'])}</a>.";
+        }
+        echo "<tr align='left'>
         		<td>$d</td>
         		<td>
-					" . $api->SystemUserIDtoName($r['log_user']) . " {$r['log_text']}
+                <a href='profile.php?user={$r['attacker']}'>{$api->SystemUserIDtoName($r['attacker'])}</a> {$didwhat}
         		</td>
         	  </tr>";
     }
@@ -589,9 +640,11 @@ function warview()
     $wq = $db->query("SELECT * FROM `guild_wars` WHERE
 					(`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) 
 					AND `gw_winner` = 0");
-    echo "<b>These are the current wars your guild is participating in.</b><hr />
+    echo "<b>These are the current wars your guild is participating in.</b> It costs your guild 15,000 Copper Coins per attack your guild 
+	wins, and 25,000 Copper Coins per attack your guild loses. This will be taken from your guild's vault following each attack. If your guild 
+	cannot afford this, your guild will go into debt. If you fail to pay your debt off in 7 days, your guild will be dissolved.<hr />
 	<table class='table table-bordered'>
-		<tr>
+		<tr align='left'>
 			<th>
 				Declarer
 			</th>
@@ -603,7 +656,7 @@ function warview()
 			</th>
 		</tr>";
     while ($r = $db->fetch_row($wq)) {
-        echo "<tr>
+        echo "<tr align='left'>
 				<td>
 					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
 						(Points: " . number_format($r['gw_drpoints']) . ")
@@ -641,7 +694,7 @@ function armory()
                              ORDER BY `i`.`itmtype` ASC, `i`.`itmname` ASC");
         echo "<table class='table table-bordered table-striped'>
 	    <thead>
-		<tr>
+		<tr align='left'>
 			<th>
 			    Item (Qty)
             </th>
@@ -661,7 +714,7 @@ function armory()
             }
             $i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
             echo "
-            <tr>
+            <tr align='left'>
         		<td>
 					<a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='right' title='{$i['itmdesc']}'>
 						{$api->SystemItemIDtoName($i['itmid'])}
@@ -740,6 +793,181 @@ function crimes()
     }
 }
 
+function guild_polls()
+{
+	global $db, $userid, $ir, $h;
+    echo "Cast your vote today!<br />";
+
+    $_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs($_POST['poll']) : '';
+    $_POST['choice'] = (isset($_POST['choice']) && is_numeric($_POST['choice'])) ? abs($_POST['choice']) : '';
+    $ir['voted'] = unserialize($ir['voted']);
+    if (!$_POST['choice'] || !$_POST['poll']) {
+        echo "<a href='?action=oldpolls'>View Closed Polls</a>";
+    }
+    if ($_POST['choice'] && $_POST['poll']) {
+        if (isset($ir['voted'][$_POST['poll']])) {
+            alert('danger', "Uh Oh!", "You have already voted in this poll.");
+            die($h->endpage());
+        }
+        $check_q = $db->query("SELECT COUNT(`id`) FROM `polls`  WHERE `active` = '1' AND `id` = {$_POST['poll']} AND `visibility` = {$ir['guild']}");
+        if ($db->fetch_single($check_q) == 0) {
+            $db->free_result($check_q);
+            alert('danger', "Uh Oh!", "Poll does not exist, or is no longer active.");
+            die($h->endpage());
+        }
+        $db->free_result($check_q);
+        $ir['voted'][$_POST['poll']] = $_POST['choice'];
+        $ser = $db->escape(serialize($ir['voted']));
+        $db->query(
+            "UPDATE `uservotes`
+				 SET `voted` = '$ser'
+				 WHERE `userid` = $userid");
+        $db->query("UPDATE `polls` SET `voted{$_POST['choice']}` = `voted{$_POST['choice']}` + 1 WHERE `active` = '1' AND `id` = {$_POST['poll']}");
+        alert('success', "Success!", "You have successfully submitted your vote.", true, '?action=viewpolls');
+    } else {
+        $q = $db->query("SELECT * FROM `polls` WHERE `active` = '1' AND `visibility` = {$ir['guild']}");
+        if (!$db->num_rows($q)) {
+            echo "<br />There's no polls open at this time.";
+        } else {
+            while ($r = $db->fetch_row($q)) {
+                $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
+                if (isset($ir['voted'][$r['id']])) {
+                    echo "<br />
+					<table class='table table-bordered'>
+						<tr>
+							<th width='40%'>Polling Options</th>
+							<th width='10%'>Votes</th>
+							<th>Percentage</th>
+						</tr>
+						<tr>
+							<th colspan='3'>Polling Question: {$r['question']} (Already Voted!)</th>
+						</tr>";
+                    if (!$r['hidden']) {
+                        for ($i = 1; $i <= 10; $i++) {
+                            if ($r['choice' . $i]) {
+                                $k = 'choice' . $i;
+                                $ke = 'voted' . $i;
+                                if ($r['votes'] != 0) {
+                                    $perc = round(($r[$ke] / $r['votes'] * 100));
+                                } else {
+                                    $perc = 0;
+                                }
+                                echo "<tr>
+									<td>{$r[$k]}</td>
+									<td>{$r[$ke]}</td>
+									<td>
+										<div class='progress'>
+											<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' aria-valuemin='0' aria-valuemax='100' style='width:{$perc}%'>
+												{$perc}%
+											</div>
+										</div>
+									</td>
+								  </tr>";
+                            }
+                        }
+                    } else {
+                        echo "<tr>
+							<td colspan='4' align='center'>
+								Results are hidden until the poll ends.
+							</td>
+						  </tr>";
+                    }
+                    $myvote = $r['choice' . $ir['voted'][$r['id']]];
+                    echo "<tr>
+						<th colspan='2'>You Voted: {$myvote}</th>
+						<th colspan='2'>Total Votes " . number_format($r['votes']) . "</th>
+					  </tr>
+				</table>";
+                } else {
+                    echo "<br />
+				<form method='post'>
+					<input type='hidden' name='poll' value='{$r['id']}' />
+					<table class='table table-bordered'>
+						<tr>
+							<th>Polling Options</th>
+							<th>Select</th>
+						</tr>
+						<tr>
+							<th colspan='2'>Polling Question: {$r['question']} (Not Voted)</th>
+						</tr>";
+                    for ($i = 1; $i <= 10; $i++) {
+                        if ($r['choice' . $i]) {
+                            $k = 'choice' . $i;
+                            if ($i == 1) {
+                                $c = "checked='checked'";
+                            } else {
+                                $c = "";
+                            }
+                            echo "<tr>
+								<td>{$r[$k]}</td>
+								<td><input type='radio' class='form-control' name='choice' value='$i' $c /></td>
+							  </tr>";
+                        }
+                    }
+                    echo "<tr>
+						<td colspan='2'><input type='submit' class='btn btn-primary' value='Cast Vote' /></td>
+					  </tr>
+				</table></form>";
+                }
+            }
+        }
+		echo "<br /><a href='viewguild.php'>Go Back</a>";
+        $db->free_result($q);
+    }
+}
+
+function guild_oldpolls()
+{
+	global $db, $ir;
+    echo "<a href='?action=viewpolls'>Cast Your Vote!</a><br />";
+    $q =
+        $db->query("SELECT * FROM `polls` WHERE `active` = '0' AND `visibility` = {$ir['guild']} ORDER BY `id` DESC");
+    if (!$db->num_rows($q)) {
+        alert('danger', "Uh Oh!", "There are no closed polls.", true, '?action=viewpolls');
+    } else {
+        while ($r = $db->fetch_row($q)) {
+            $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
+            echo "<table class='table table-bordered'>
+					<tr>
+						<th width='40%'>Polling Options</th>
+						<th width='10%'>Votes</th>
+						<th>Percentage</th>
+					</tr>
+					<tr>
+						<th colspan='4'>Polling Question: {$r['question']}</th>
+					</tr>";
+            for ($i = 1; $i <= 10; $i++) {
+                if ($r['choice' . $i]) {
+                    $k = 'choice' . $i;
+                    $ke = 'voted' . $i;
+                    if ($r['votes'] != 0) {
+                        $perc = round($r[$ke] / $r['votes'] * 100);
+                    } else {
+                        $perc = 0;
+                    }
+                    echo "<tr>
+							<td>{$r[$k]}</td>
+							<td>{$r[$ke]}</td>
+							<td>
+								<div class='progress'>
+											<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' aria-valuemin='0' aria-valuemax='100' style='width:{$perc}%'>
+												{$perc}%
+											</div>
+										</div>
+							</td>
+						  </tr>";
+                }
+            }
+            echo "<tr>
+					<th colspan='4'>Total Votes: {$r['votes']}</th>
+				  </tr>
+			</table><br />
+			<a href='viewguild.php'>Go Back</a>";
+        }
+    }
+    $db->free_result($q);
+}
+
 function staff()
 {
     global $userid, $gd, $h;
@@ -811,6 +1039,21 @@ function staff()
 			case "blockapps":
                 staff_blockapps();
                 break;
+			case "doally":
+                staff_ally();
+                break;
+			case "viewrally":
+                staff_view_alliance_request();
+                break;
+			case "viewallies":
+                staff_view_alliances();
+                break;
+			case "addpoll":
+                add_poll();
+                break;
+			case "endpoll":
+                end_poll();
+                break;
             default:
                 staff_idx();
                 break;
@@ -825,7 +1068,7 @@ function staff_idx()
 {
     global $db, $userid, $gd;
     echo "<table class='table table-bordered'>
-	<tr>
+	<tr align='left'>
 		<td>
 			<b>Guild Co-Leader</b><br />
 			<a href='?action=staff&act2=apps'>Application Management</a><br />
@@ -840,6 +1083,8 @@ function staff_idx()
 			<a href='?action=staff&act2=masspay'>Mass Pay Guild</a><br />
 			<a href='?action=staff&act2=levelup'>Level Up Guild</a><br />
 			<a href='?action=staff&act2=crimes'>Guild Crimes</a><br />
+			<a href='?action=staff&act2=addpoll'>Start Poll</a><br />
+			<a href='?action=staff&act2=endpoll'>End Poll</a><br />
 		</td>";
     if ($gd['guild_owner'] == $userid) {
         echo "
@@ -853,12 +1098,219 @@ function staff_idx()
             echo "<a href='?action=staff&act2=untown'>Surrender Guild Town</a><br />
 				<a href='?action=staff&act2=tax'>Change Town Tax</a><br />";
         }
-        echo "<a href='?action=staff&act2=declarewar'>Declare War</a><br />
-<a href='?action=staff&act2=dissolve'>Dissolve Guild</a><br />
+        echo "<a href='?action=staff&act2=doally'>Declare Alliance</a><br />
+		<a href='?action=staff&act2=viewrally'>View Alliance Requests</a><br />
+		<a href='?action=staff&act2=viewallies'>View Allies</a><br />
+		<a href='?action=staff&act2=declarewar'>Declare War</a><br />
+		<a href='?action=staff&act2=dissolve'>Dissolve Guild</a><br />
 		</td>";
     }
     echo "</tr></table>
 	<a href='viewguild.php'>Go Back</a>";
+}
+
+function add_poll()
+{
+	global $db, $h, $userid, $api, $ir;
+    if (isset($_POST['question'])) {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_startpoll', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quickly next time.");
+            die($h->endpage());
+        }
+        $question = (isset($_POST['question'])) ? $db->escape(strip_tags(stripslashes($_POST['question']))) : '';
+        $choice1 = (isset($_POST['choice1'])) ? $db->escape(strip_tags(stripslashes($_POST['choice1']))) : '';
+        $choice2 = (isset($_POST['choice2'])) ? $db->escape(strip_tags(stripslashes($_POST['choice2']))) : '';
+        $choice3 = (isset($_POST['choice3'])) ? $db->escape(strip_tags(stripslashes($_POST['choice3']))) : '';
+        $choice4 = (isset($_POST['choice4'])) ? $db->escape(strip_tags(stripslashes($_POST['choice4']))) : '';
+        $choice5 = (isset($_POST['choice5'])) ? $db->escape(strip_tags(stripslashes($_POST['choice5']))) : '';
+        $choice6 = (isset($_POST['choice6'])) ? $db->escape(strip_tags(stripslashes($_POST['choice6']))) : '';
+        $choice7 = (isset($_POST['choice7'])) ? $db->escape(strip_tags(stripslashes($_POST['choice7']))) : '';
+        $choice8 = (isset($_POST['choice8'])) ? $db->escape(strip_tags(stripslashes($_POST['choice8']))) : '';
+        $choice9 = (isset($_POST['choice9'])) ? $db->escape(strip_tags(stripslashes($_POST['choice9']))) : '';
+        $choice10 = (isset($_POST['choice10'])) ? $db->escape(strip_tags(stripslashes($_POST['choice10']))) : '';
+        $hidden = (isset($_POST['hidden']) && is_numeric($_POST['hidden'])) ? abs(intval($_POST['hidden'])) : '';
+        if (empty($question) || empty($choice1) || empty($choice2)) {
+            alert('danger', "Uh Oh!", "Please be sure to fill out the question, and two polling options. Thank you.");
+            die($h->endpage());
+        }
+        $db->query("INSERT INTO `polls` (`active`, `question`, `choice1`,
+					`choice2`, `choice3`,`choice4`, `choice5`, `choice6`, 
+					`choice7`, `choice8`,`choice9`, `choice10`, `hidden`, 
+					`visibility`)
+                     VALUES
+					 ('1', '$question', '$choice1', '$choice2',
+                     '$choice3', '$choice4', '$choice5', '$choice6',
+                     '$choice7', '$choice8', '$choice9' ,'$choice10',
+                     '{$_POST['hidden']}', '{$ir['guild']}')");
+        alert('success', "Success!", "You have successfully created a poll for your guild.", true, 'index.php');
+        $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `guild` = {$ir['guild']}");
+        while ($r = $db->fetch_row($q)) {
+            notification_add($r['userid'], "Your guild has started a poll. Vote in it <a href='viewguild.php?action=viewpolls'>here</a>.");
+        }
+        die($h->endpage());
+    } else {
+        echo "Start a Poll";
+        $csrf = request_csrf_html('staff_startpoll');
+        echo "<hr />
+		<form method='post'>
+		<table class='table table-bordered'>
+			<tr>
+				<th width='33%'>
+					Question
+				</th>
+				<td>
+					<input type='text' required='1' class='form-control' name='question' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Choice 1
+				</th>
+				<td>
+					<input type='text' required='1' class='form-control' name='choice1' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Choice 2
+				</th>
+				<td>
+					<input type='text' required='1' class='form-control' name='choice2' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Choice 3
+				</th>
+				<td>
+					<input type='text' class='form-control' name='choice3' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Choice 4
+				</th>
+				<td>
+					<input type='text' class='form-control' name='choice4' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Choice 5
+				</th>
+				<td>
+					<input type='text' class='form-control' name='choice5' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Choice 6
+				</th>
+				<td>
+					<input type='text' class='form-control' name='choice6' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Choice 7
+				</th>
+				<td>
+					<input type='text' class='form-control' name='choice7' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Choice 8
+				</th>
+				<td>
+					<input type='text' class='form-control' name='choice8' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Choice 9
+				</th>
+				<td>
+					<input type='text' class='form-control' name='choice9' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Choice 10
+				</th>
+				<td>
+					<input type='text' class='form-control' name='choice10' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Hide results until poll is closed?
+				</th>
+				<td>
+					<select name='hidden' class='form-control' type='dropdown'>
+						<option value='0'>No</option>
+						<option value='1'>Yes</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' class='btn btn-primary' value='Create Poll'>
+				</td>
+			</tr>
+		</table>
+		{$csrf}
+		</form>
+		<a href='?action=staff&act2=idx'>Go Back</a>";
+    }
+}
+
+function end_poll()
+{
+	global $db, $h, $api, $userid, $ir;
+    $_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs(intval($_POST['poll'])) : '';
+    if (empty($_POST['poll'])) {
+        $csrf = request_csrf_html('staff_endpoll');
+        echo "
+        Select the poll you wish to end.
+        <br />
+        <form method='post'>
+           ";
+        $q =
+            $db->query(
+                "SELECT `id`, `question`
+                         FROM `polls`
+                         WHERE `active` = '1' 
+						 AND `visibility` = {$ir['guild']}");
+        echo "<select name='poll' class='form-control' type='dropdown'>";
+        while ($r = $db->fetch_row($q)) {
+            echo "<option value='{$r['id']}'>Poll ID: {$r['id']} - {$r['question']}</option>";
+        }
+        $db->free_result($q);
+        echo "</select>" . $csrf . "
+			<br /><input type='submit' class='btn btn-primary' value='End Poll' />
+		</form>
+   		<a href='?action=staff&act2=idx'>Go Back</a>";
+    } else {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_endpoll', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quickly next time.");
+            die($h->endpage());
+        }
+        $q = $db->query("SELECT COUNT(`id`) FROM `polls` WHERE `id` = {$_POST['poll']} AND `visibility` = {$ir['guild']}");
+        if ($db->fetch_single($q) == 0) {
+            $db->free_result($q);
+            alert('danger', "Uh Oh!", "This poll does not exist, and thus, cannot be ended.");
+            die($h->endpage());
+        }
+        $db->free_result($q);
+        $db->query("UPDATE `polls` SET `active` = '0' WHERE `id` = {$_POST['poll']}");
+        alert('success', "Success!", "You have closed this poll to responses.", true, 'index.php');
+        $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `guild` = {$ir['guild']}");
+        while ($r = $db->fetch_row($q)) {
+            notification_add($r['userid'], "Your guild has closed a poll. View the results <a href='viewguild.php?action=viewpolls'>here</a>.");
+        }
+        die($h->endpage());
+    }
 }
 
 function staff_apps()
@@ -897,7 +1349,7 @@ function staff_apps()
 
                 //Make sure the guild has enough capacity to accept this member.
                 $cnt = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
-
+				$gd['guild_capacity']=$gd['guild_level']*5;
                 //Guild does not have enough capacity to accept another member.s
                 if ($gd['guild_capacity'] <= $db->fetch_single($cnt)) {
                     $db->free_result($cnt);
@@ -945,7 +1397,7 @@ function staff_apps()
         <b>Application Management</b>
         <br />
         <table class='table table-bordered table-striped'>
-        		<tr>
+        		<tr align='left'>
         			<th>Filing Time</th>
         			<th>Applicant</th>
 					<th>Level</th>
@@ -963,7 +1415,7 @@ function staff_apps()
         while ($r = $db->fetch_row($q)) {
             $r['ga_text'] = htmlentities($r['ga_text'], ENT_QUOTES, 'ISO-8859-1', false);
             echo "
-            <tr>
+            <tr align='left'>
             	<td>
 					" . DateTime_Parse($r['ga_time']) . "
             	</td>
@@ -995,13 +1447,19 @@ function staff_apps()
             </tr>
                ";
         }
-        echo "</table>";
+        echo "</table>
+		<a href='?action=staff&act2=idx'>Go Back</a>";
     }
 }
 
 function staff_vault()
 {
     global $db, $userid, $gd, $api, $h, $wq;
+	if ($gd['guild_primcurr'] < 0)
+	{
+		alert('danger',"Uh Oh!","You cannot take money from your guild's vault until your debt is paid off.",true,"?action=staff&act2=idx");
+		die($h->endpage());
+	}
     if (isset($_POST['primary']) || isset($_POST['secondary'])) {
 
         //Verify CSRF check has passed.
@@ -1270,6 +1728,11 @@ function staff_massmail()
 function staff_masspayment()
 {
     global $db, $api, $userid, $gd, $h, $wq;
+	if ($gd['guild_primcurr'] < 0)
+	{
+		alert('danger',"Uh Oh!","You cannot take money from your guild's vault until your debt is paid off.",true,"?action=staff&act2=idx");
+		die($h->endpage());
+	}
     if (isset($_POST['payment'])) {
 
         //Verify the CSRF check has passed.
@@ -1630,7 +2093,7 @@ function staff_untown()
             $r = $db->fetch_single($townowned);
             alert('success', "Success!", "You have surrendered your guild's town.", true, '?action=staff&act2=idx');
             $db->query("UPDATE `town`
-                        SET `town_guild_owner` = 0
+                        SET `town_guild_owner` = 0, `town_tax` = 0 
                         WHERE `town_id` = {$r}");
             $api->GuildAddNotification($gd['guild_id'], "Your guild has willingly given up their town.");
             $api->SystemLogsAdd($userid, 'guilds', "Willingly surrendered {$gd['guild_name']}'s town, {$api->SystemTownIDtoName($r)}.");
@@ -1652,8 +2115,6 @@ function staff_declare()
     global $db, $gd, $api, $h, $userid, $ir;
     //Verify current user is the guild owner.
     if ($userid == $gd['guild_owner']) {
-        alert('danger', "Uh Oh!", "The warring aspect of guilds are still in the works.", true, '?action=staff&act2=idx');
-		die($h->endpage());
         if (isset($_POST['guild'])) {
 
             //Verify POST is safe to work with.
@@ -1664,6 +2125,12 @@ function staff_declare()
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
+			
+			if ($gd['guild_primcurr'] < 500000)
+			{
+				alert('danger',"Uh Oh!","Your guild does not have enough Copper Coins to declare war.");
+				die($h->endpage());
+			}
 
             //Check if the declared guild is the current guild, and stop them if that's the case.
             if ($_POST['guild'] == $gd['guild_id']) {
@@ -1747,6 +2214,19 @@ function staff_declare()
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild, as they do not have 5 members currently in their guild.");
                 die($h->endpage());
             }
+			
+			//Are you guys allies?
+			$cfaq=$db->query("SELECT * 
+								FROM `guild_alliances` 
+								WHERE 
+								(`alliance_a` = {$ir['guild']} AND `alliance_b` = {$_POST['guild']}) 
+								OR 
+								(`alliance_b` = {$ir['guild']} AND `alliance_a` = {$_POST['guild']})");
+			if ($db->num_rows($cfaq) != 0)
+			{
+				alert('danger',"Uh Oh!","You cannot declare war on an allied guild.");
+				die($h->endpage());
+			}
             $r = $db->fetch_row($data_q);
             $endtime = time() + 259200;
 
@@ -1754,9 +2234,45 @@ function staff_declare()
             $db->query("INSERT INTO `guild_wars` VALUES (NULL, {$gd['guild_id']}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
             $api->GameAddNotification($r['guild_owner'], "The {$gd['guild_name']} guild has declared war on your guild.");
             $api->GuildAddNotification($_POST['guild'], "The {$gd['guild_name']} guild has declared war on your guild.");
-            $api->GuildAddNotification($gd['guild_id'], "Your guild has declared war on {$r['guild_name']}");
+            $api->GuildAddNotification($gd['guild_id'], "Your guild has declared war on {$r['guild_name']}.");
+			
+			$allyq=$db->query("SELECT * FROM `guild_alliances` WHERE (`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']})");
+			while ($ar=$db->fetch_row($allyq))
+			{
+				if ($ar['alliance_a'] == $ir['guild'])
+					$otheralliance=$ar['alliance_b'];
+				else
+					$otheralliance=$ar['alliance_a'];
+				if ($ar['alliance_type'] == 2)
+				{
+					$api->GuildAddNotification($ir['guild'],"Your guild has broken the alliance with {$api->GuildFetchInfo($otheralliance)} by declaring war.");
+					$api->GuildAddNotification($otheralliance,"{$gd['guild_name']} has broken the alliance with your guild by declaring war.");
+					$db->query("DELETE FROM `guild_alliances` WHERE `alliance_id` = {$ar['alliance_id']}");
+				}
+				else
+				{
+					$api->GuildAddNotification($otheralliance,"{$gd['guild_name']} has declared war on {$r['guild_name']}, bringing in your guild to help fight.");
+					$api->GameAddNotification($r['guild_owner'], "The {$api->GuildFetchInfo($otheralliance)} guild has declared war on your guild.");
+					$api->GuildAddNotification($_POST['guild'], "The {$api->GuildFetchInfo($otheralliance)} guild has declared war on your guild.");
+					$db->query("INSERT INTO `guild_wars` VALUES (NULL, {$otheralliance}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
+				}
+			}
+			
+			$allyq2=$db->query("SELECT * FROM `guild_alliances` WHERE (`alliance_a` = {$_POST['guild']} OR `alliance_b` = {$_POST['guild']})");
+			while ($ar=$db->fetch_row($allyq2))
+			{
+				if ($ar['alliance_a'] == $_POST['guild'])
+					$otheralliance=$ar['alliance_b'];
+				else
+					$otheralliance=$ar['alliance_a'];
+				$api->GuildAddNotification($otheralliance,"{$r['guild_name']} had war declared upon them by {$gd['guild_name']}, bringing in your guild to help fight.");
+				$api->GameAddNotification($userid, "The {$api->GuildFetchInfo($otheralliance)} guild has declared war on your guild.");
+				$api->GuildAddNotification($ir['guild'], "The {$api->GuildFetchInfo($otheralliance)} guild has declared war on your guild.");
+				$db->query("INSERT INTO `guild_wars` VALUES (NULL, {$otheralliance}, {$ir['guild']}, 0, 0, {$endtime}, 0)");
+			}
+			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 500000 WHERE `guild_id` = {$ir['guild']}");
             $api->SystemLogsAdd($userid, 'guilds', "Declared war on {$r['guild_name']} [{$_POST['guild']}]");
-            alert('success', "Success!", "You have declared war on {$r['guild_name']}", true, '?action=staff&act2=idx');
+            alert('success', "Success!", "You have declared war on {$r['guild_name']}.", true, '?action=staff&act2=idx');
         } else {
             $csrf = request_csrf_html('guild_staff_declarewar');
             echo "
@@ -1764,7 +2280,8 @@ function staff_declare()
 			<form method='post'>
 				<tr>
 					<th colspan='2'>
-						You can declare war on another guild. Be ready to reap what you sow.
+						It costs 500,000 Copper Coins to declare war on another guild. If you have allies, they will come to your aid. Note, however, 
+						if they have allies, they will declare war on your guild to protect their alliance.
 					</th>
 				</tr>
 				<tr>
@@ -1918,6 +2435,9 @@ function staff_dissolve()
             $db->query("DELETE FROM `guild_wars` WHERE `gw_declarer` = {$ir['guild']}");
             $db->query("DELETE FROM `guild_wars` WHERE `gw_declaree` = {$ir['guild']}");
             $db->query("DELETE FROM `guild` WHERE `guild_id` = {$ir['guild']}");
+			$db->query("DELETE FROM `guild_alliances` WHERE `alliance_a` = {$ir['guild']}");
+			$db->query("DELETE FROM `guild_alliances` WHERE `alliance_b` = {$ir['guild']}");
+            $db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$ir['guild']}");
             $db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$ir['guild']}");
             alert("success", "Success!", "You have successfully dissolved your guild.", true, 'index.php');
         } else {
@@ -2233,13 +2753,308 @@ function staff_blockapps()
 		echo "Here you may block guild applications. Players will not be able to send in a guild application unless disabled.
 		<form method='post'>
 			<input type='hidden' name='action' value='block'>
-			<input type='submit' class='btn-danger btn' value='Block Applications'>
+			<input type='submit' class='btn-outline-danger btn' value='Block Applications'>
 		</form>
 		<form method='post'>
 			<input type='hidden' name='action' value='allow'>
-			<input type='submit' class='btn-primary btn' value='Allow Applications'>
+			<input type='submit' class='btn-outline-primary btn' value='Allow Applications'>
 		</form>
 		<a href='?action=staff&act2=idx'>Go Back</a>";
 	}
+}
+function staff_ally()
+{
+	global $db,$gd,$userid,$api,$ir,$h;
+	//Check if user is the owner of the guild.
+    if ($userid == $gd['guild_owner']) 
+	{
+        if (isset($_POST['guild']))
+		{
+			$_POST['guild'] = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs($_POST['guild']) : 0;
+
+            //Verify CSRF check has passed.
+            if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_ally_request", stripslashes($_POST['verf']))) {
+                alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+                die($h->endpage());
+            }
+			if ($_POST['guild'] == $ir['guild'])
+			{
+				alert('danger',"Uh Oh!","You cannot send an alliance request to your own guild.");
+				die($h->endpage());
+			}
+			$gexist=$db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_POST['guild']}");
+			if ($db->num_rows($gexist) == 0)
+			{
+				alert('danger',"Uh Oh!","You cannot send an ally request to a non-existent guild.");
+				die($h->endpage());
+			}
+			$exist=$db->query("SELECT * 
+								FROM `guild_alliances` 
+								WHERE 
+								(`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']}) 
+								AND 
+								(`alliance_a` = {$_POST['guild']} OR `alliance_b` = {$_POST['guild']})");
+			if ($db->num_rows($exist) != 0)
+			{
+				alert('danger',"Uh Oh!","It appears you already have an outstanding alliance request, or are already allied with this guild.");
+				die($h->endpage());
+			}
+			$type = ($_POST['type'] == 'traditional') ? 1 : 2;
+			$api->GuildAddNotification($ir['guild'],"Your guild has sent an alliance request to {$api->GuildFetchInfo($_POST['guild'],'guild_name')}.");
+			$api->GuildAddNotification($_POST['guild'],"{$gd['guild_name']} has sent an alliance request.");
+			$db->query("INSERT INTO `guild_alliances` (`alliance_a`, `alliance_b`, `alliance_type`, `alliance_true`) VALUES ('{$ir['guild']}', '{$_POST['guild']}', '{$type}', '0')");
+			alert('success',"Success!","Alliance request has been sent successfully.",true,'?action=staff&act2=idx');
+		}
+		else
+		{
+			$csrf = request_csrf_html('guild_staff_ally_request');
+			echo "Select the guild you wish to form an alliance with, then select the alliance 
+			type. Traditional alliance is an alliance where if either guild declares war, 
+			the other guild will come to its aid. Non-aggressive alliances are when guilds 
+			will only help when their alliance guild has war declared upon it. The alliance will 
+			break in an Non-aggressive alliance if either party declares war on a third party.<br />
+			<form method='post'>
+				" . guilds_dropdown() . "
+				<select name='type' class='form-control'>
+					<option value='traditional'>Tradtional</option>
+					<option value='nap'>Non-aggressive</option>
+					{$csrf}
+					<input type='submit' value='Request Alliance' class='btn btn-primary'>
+				</select>
+			</form>
+			<a href='?action=staff&act2=idx'>Go Back</a>";
+		}
+    } 
+	else 
+	{
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
+    }
+}
+function staff_view_alliance_request()
+{
+	global $db,$gd,$userid,$api,$ir,$h;
+	//Check if user is the owner of the guild.
+    if ($userid == $gd['guild_owner']) 
+	{
+		if (isset($_GET['accept']))
+		{
+			$_GET['accept'] = (isset($_GET['accept']) && is_numeric($_GET['accept'])) ? abs($_GET['accept']) : 0;
+			$exist=$db->query("SELECT * 
+								FROM `guild_alliances` 
+								WHERE `alliance_id` = {$_GET['accept']}
+								AND `alliance_b` = {$ir['guild']}
+								AND `alliance_true` = 0");
+			if ($db->num_rows($exist) == 0)
+			{
+				alert('danger',"Uh Oh!","Request does not exist or does not belong to you.",false);
+			}
+			else
+			{
+				$re=$db->fetch_row($exist);
+				alert('success',"Success!","Alliance request accepted successfully.",false);
+				$db->query("UPDATE `guild_alliances` SET `alliance_true` = 1 WHERE `alliance_id` = {$_GET['accept']}");
+				$api->GuildAddNotification($ir['guild'],"Your guild has accepted {$api->GuildFetchInfo($re['alliance_a'],'guild_name')}'s alliance request.");
+				$api->GuildAddNotification($re['alliance_a'],"{$gd['guild_name']} has accepted your guild's alliance request.");
+			}
+		}
+		if (isset($_GET['decline']))
+		{
+			$_GET['decline'] = (isset($_GET['decline']) && is_numeric($_GET['decline'])) ? abs($_GET['decline']) : 0;
+			$exist=$db->query("SELECT * 
+								FROM `guild_alliances` 
+								WHERE `alliance_id` = {$_GET['decline']}
+								AND `alliance_b` = {$ir['guild']}
+								AND `alliance_true` = 0");
+			if ($db->num_rows($exist) == 0)
+			{
+				alert('danger',"Uh Oh!","Request does not exist or does not belong to you.",false);
+			}
+			else
+			{
+				$re=$db->fetch_row($exist);
+				alert('success',"Success!","Alliance request declined successfully.",false);
+				$db->query("DELETE FROM `guild_alliances` WHERE `alliance_id` = {$_GET['decline']}");
+				$api->GuildAddNotification($ir['guild'],"Your guild has declined {$api->GuildFetchInfo($re['alliance_a'],'guild_name')}'s alliance request.");
+				$api->GuildAddNotification($re['alliance_a'],"{$gd['guild_name']} has declined your guild's alliance request.");
+			}
+		}
+		if (isset($_GET['delete']))
+		{
+			$_GET['delete'] = (isset($_GET['delete']) && is_numeric($_GET['delete'])) ? abs($_GET['delete']) : 0;
+			$exist=$db->query("SELECT * 
+								FROM `guild_alliances` 
+								WHERE `alliance_id` = {$_GET['delete']}
+								AND `alliance_a` = {$ir['guild']}
+								AND `alliance_true` = 0");
+			if ($db->num_rows($exist) == 0)
+			{
+				alert('danger',"Uh Oh!","Request does not exist or does not belong to you.",false);
+			}
+			else
+			{
+				$re=$db->fetch_row($exist);
+				alert('success',"Success!","Alliance request was successfully withdrawn.",false);
+				$db->query("DELETE FROM `guild_alliances` WHERE `alliance_id` = {$_GET['delete']}");
+				$api->GuildAddNotification($ir['guild'],"Your guild has withdrawn their alliance request to {$api->GuildFetchInfo($re['alliance_a'],'guild_name')}.");
+				$api->GuildAddNotification($re['alliance_b'],"{$gd['guild_name']} has withdrawn their alliance request.");
+			}
+		}
+		echo "These are the alliance requests your guild has received. Traditional alliance 
+		is an alliance where if either guild declares war,the other guild will come to its aid. 
+		Non-aggressive alliances are when guilds will only help when their alliance guild has 
+		war declared upon it. The alliance will break in an Non-aggressive alliance if either 
+		party declares war on a third party.
+		<table class='table table-bordered'>
+			<tr>
+				<th>
+					Guild Name
+				</th>
+				<th>
+					Alliance Type
+				</th>
+				<th>
+					Links
+				</th>
+			</tr>";
+			$q=$db->query("SELECT * FROM `guild_alliances` WHERE `alliance_b` = {$ir['guild']} AND `alliance_true` = 0");
+			while ($r=$db->fetch_row($q))
+			{
+				$type = ($r['alliance_type'] == 1) ? "Traditional" : "Non-aggressive";
+				echo "
+				<tr>
+					<td>
+						{$api->GuildFetchInfo($r['alliance_a'],'guild_name')}
+					</td>
+					<td>
+						{$type}
+					</td>
+					<td>
+						[<a href='?action=staff&act2=viewrally&accept={$r['alliance_id']}'>Accept</a>] || 
+						[<a href='?action=staff&act2=viewrally&decline={$r['alliance_id']}'>Decline</a>]
+					</td>
+				</tr>";
+			}
+		echo "</table>
+		<br />
+		These are the alliance requests your guild has sent out.<table class='table table-bordered'>
+			<tr>
+				<th>
+					Guild Name
+				</th>
+				<th>
+					Alliance Type
+				</th>
+				<th>
+					Links
+				</th>
+			</tr>";
+		$q=$db->query("SELECT * FROM `guild_alliances` WHERE `alliance_a` = {$ir['guild']} AND `alliance_true` = 0");
+		while ($r=$db->fetch_row($q))
+		{
+			$type = ($r['alliance_type'] == 1) ? "Traditional" : "Non-aggressive";
+			echo "
+			<tr>
+				<td>
+					{$api->GuildFetchInfo($r['alliance_b'],'guild_name')}
+				</td>
+				<td>
+					{$type}
+				</td>
+				<td>
+					[<a href='?action=staff&act2=viewrally&delete={$r['alliance_id']}'>Delete</a>]
+				</td>
+			</tr>";
+		}
+		echo"</table>
+		<a href='?action=staff&act2=idx'>Go Back</a>";
+    } 
+	else 
+	{
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
+    }
+}
+function staff_view_alliances()
+{
+	global $db,$gd,$userid,$api,$ir,$h;
+	//Check if user is the owner of the guild.
+    if ($userid == $gd['guild_owner']) 
+	{
+		if (isset($_GET['delete']))
+		{
+			$_GET['delete'] = (isset($_GET['delete']) && is_numeric($_GET['delete'])) ? abs($_GET['delete']) : 0;
+			$exist=$db->query("SELECT * 
+								FROM `guild_alliances` 
+								WHERE `alliance_id` = {$_GET['delete']}
+								AND (`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']})
+								AND `alliance_true` = 1");
+			if ($db->num_rows($exist) == 0)
+			{
+				alert('danger',"Uh Oh!","This alliance does not exist, or does not belong to you.",false);
+			}
+			else
+			{
+				$re=$db->fetch_row($exist);
+				if ($re['alliance_a'] == $ir['guild'])
+				{
+					$broked=$re['alliance_b'];
+				}
+				else
+				{
+					$broked=$re['alliance_a'];
+				}
+				alert('success',"Success!","Alliance was successfully destroyed.",false);
+				$db->query("DELETE FROM `guild_alliances` WHERE `alliance_id` = {$_GET['delete']}");
+				$api->GuildAddNotification($ir['guild'],"Your guild has broke their alliance with {$api->GuildFetchInfo($re['alliance_a'],'guild_name')}.");
+				$api->GuildAddNotification($broked,"{$gd['guild_name']} has broke their alliance with your guild.");
+			}
+		}
+		echo "These are the alliances your guild has. Traditional alliance 
+		is an alliance where if either guild declares war,the other guild will come to its aid. 
+		Non-aggressive alliances are when guilds will only help when their alliance guild has 
+		war declared upon it. The alliance will break in an Non-aggressive alliance if either 
+		party declares war on a third party.
+		<table class='table table-bordered'>
+			<tr>
+				<th>
+					Guild Name
+				</th>
+				<th>
+					Alliance Type
+				</th>
+				<th>
+					Links
+				</th>
+			</tr>";
+			$q=$db->query("SELECT * 
+								FROM `guild_alliances` 
+								WHERE (`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']})
+								AND `alliance_true` = 1");
+			while ($r=$db->fetch_row($q))
+			{
+				$type = ($r['alliance_type'] == 1) ? "Traditional" : "Non-aggressive";
+				if ($r['alliance_a'] == $ir['guild'])
+					$otheralliance=$r['alliance_b'];
+				else
+					$otheralliance=$r['alliance_a'];
+				echo "
+				<tr>
+					<td>
+						{$api->GuildFetchInfo($otheralliance,'guild_name')}
+					</td>
+					<td>
+						{$type}
+					</td>
+					<td>
+						[<a href='?action=staff&act2=viewallies&delete={$r['alliance_id']}'>Break Alliance</a>]
+					</td>
+				</tr>";
+			}
+		echo "</table>
+		<a href='?action=staff&act2=idx'>Go Back</a>";
+    } 
+	else 
+	{
+        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
+    }
 }
 $h->endpage();

@@ -1,31 +1,33 @@
 <?php
 require('globals.php');
 echo "
-<table class='table table-bordered'>
-	<tr>
-		<td>
-			<a href='inbox.php'><i class='fas fa-fw fa-inbox'></i> Inbox</a>
-		</td>
-		<td>
-			<a href='inbox.php?action=outbox'><i class='fas fa-fw fa-envelope'></i> Outbox</a>
-		</td>
-		<td>
-			<a href='inbox.php?action=compose'><i class='fas fa-fw fa-file'></i> Compose</a>
-		</td>
-		<td>
-			<a href='blocklist.php'><i class='fas fa-fw fa-ban'></i> Blocklist</a>
-		</td>
-		<td>
-			<a href='inbox.php?action=delall'><i class='fas fa-fw fa-trash-alt'></i> Delete All</a>
-		</td>
-		<td>
-			<a href='inbox.php?action=archive'><i class='fas fa-fw fa-save'></i> Archive</a>
-		</td>
-		<td>
-			<a href='contacts.php'><i class='fas fa-fw fa-address-book'></i> Contacts</a>
-		</td>
-	</tr>
-</table>";
+<div class='table-responsive'>
+    <table class='table table-bordered'>
+        <tr>
+            <td>
+                <a href='inbox.php'><i class='fas fa-fw fa-inbox'></i><br />Inbox</a>
+            </td>
+            <td>
+                <a href='inbox.php?action=outbox'><i class='fas fa-fw fa-envelope'></i><br />Outbox</a>
+            </td>
+            <td>
+                <a href='inbox.php?action=compose'><i class='fas fa-fw fa-file'></i><br />Compose</a>
+            </td>
+            <td>
+                <a href='blocklist.php'><i class='fas fa-fw fa-ban'></i><br />Blocklist</a>
+            </td>
+            <td>
+                <a href='inbox.php?action=delall'><i class='fas fa-fw fa-trash-alt'></i><br />Delete All</a>
+            </td>
+            <td>
+                <a href='inbox.php?action=archive'><i class='fas fa-fw fa-save'></i><br />Archive</a>
+            </td>
+            <td>
+                <a href='contacts.php'><i class='fas fa-fw fa-address-book'></i><br />Contacts</a>
+            </td>
+        </tr>
+    </table>
+</div>";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }

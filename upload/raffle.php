@@ -12,9 +12,9 @@ VALUES (NULL, 'lotterycash', '100000');
 require("globals.php");
 
 //Config
-	$minimumpot = 10000;			//Minimum pot.
+	$minimumpot = 250000;			//Minimum pot.
 	$costtoplay = 10000;			//Cost to get a ticket.
-	$addedtopot = 9000;				//How much, out of per ticket, is added to the pot.
+	$addedtopot = 8500;				//How much, out of per ticket, is added to the pot.
 	$add2potformat = number_format($addedtopot);
 	$cost2playformat = number_format($costtoplay);
 	$minimumpotformat = number_format($minimumpot);
@@ -40,11 +40,12 @@ function lottery_home()
 {
 	global $db, $ir, $c, $userid, $h, $minimumpotformat, $cost2playformat, $add2potformat, $set, $currentwinnings;
 	$csrf=request_csrf_code('lottery_buy');
+    $winchance=round((1/$set['raffle_chance'])*100,2);
 	echo 
 		"<h3>Raffle</h3>
 		The pot starts at {$minimumpotformat}. It costs {$cost2playformat} to play. {$add2potformat} is deducted from your 
-		ticket and added into the pot. Whoever gets the lucky ticket will get all the cash in the pot. You have a 1 and 
-		{$set['raffle_chance']} chance to win the raffle. Chances are increased very occasionally as you play.<br />
+		ticket and added into the pot. Whoever gets the lucky ticket will get all the cash in the pot. You have a {$winchance}% chance to 
+        win the raffle. Chances are increased very occasionally as you play.<br />
 		<br />
 		<b>Current Pot: {$currentwinnings}<br /></b>
 		<br />
@@ -66,8 +67,13 @@ function lottery_play()
 		alert('danger',"Uh Oh!","You do not have enough Copper Coins to play.",true,'raffle.php');
 		die($h->endpage());
 	}
-	$increase_chance=Random(1,3);
-	if ($increase_chance == 2)
+    if ($userid == $set['raffle_last_winner'])
+    {
+        alert('danger',"Uh Oh!","You cannot participate in the raffle until another player wins.",true,'raffle.php');
+        die($h->endpage()); 
+    }
+	$increase_chance=Random(1,5);
+	if ($increase_chance == 3)
 	{
 		if ($set['raffle_chance'] > 10)
 		{
@@ -89,7 +95,8 @@ function lottery_play()
 		$db->query("UPDATE `settings` SET `setting_value` = {$minimumpot} WHERE `setting_id` = {$lotteryid}");
 		$text="<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] has won the Chivalry is Dead Raffle and pocketed {$winnings} Copper Coins. A new raffle has been opened.";
 		$api->GameAddAnnouncement($text);
-		$db->query("UPDATE `settings` SET `setting_value` = 500 WHERE `setting_name` = 'raffle_chance'");
+		$db->query("UPDATE `settings` SET `setting_value` = 1000 WHERE `setting_name` = 'raffle_chance'");
+        $db->query("UPDATE `settings` SET `setting_value` = {$userid} WHERE `setting_name` = 'raffle_last_winner'");
 	}
 	if ($chance >= 2)	//Loser, loser, someone's got a bruiser!
 	{

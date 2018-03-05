@@ -36,31 +36,35 @@ function menu()
     global $db;
     echo "<h3><i class='game-icon game-icon-dozen'></i> Guild Listing</h3>
 	<a href='?action=create'>Create a Guild</a><hr />";
-    echo "<table class='table table-bordered table-hover'>
-	<tr>
-		<th>Guild Pic</th>
-		<th>Guild Name</th>
+    echo "<table class='table table-bordered table-striped'>
+    <thead>
+	<tr align='left'>
+		<th width='15%'>Guild</th>
 		<th>Level</th>
 		<th>Members</th>
 		<th>Leader</th>
-	</tr>";
+        <th>Misc Info</th>
+	</tr>
+    </thead>
+    <tbody>";
     $gq = $db->query(
-        "SELECT `guild_id`, `guild_town_id`, `guild_owner`, `guild_name`,
-			`userid`, `username`, `guild_level`, `guild_capacity`, `guild_pic`
+        "SELECT `guild_id`, `guild_town_id`, `guild_owner`, `guild_name`, `guild_debt_time`, 
+			`userid`, `username`, `guild_level`, `guild_capacity`, `guild_pic`, `guild_hasarmory`, `guild_ba`
 			FROM `guild` AS `g`
 			LEFT JOIN `users` AS `u` ON `g`.`guild_owner` = `u`.`userid`
 			ORDER BY `g`.`guild_id` ASC");
     //List all the in-game guilds.
     while ($gd = $db->fetch_row($gq)) {
 		$gd['guild_capacity']=$gd['guild_level']*5;
-		$gd['guild_pic'] = ($gd['guild_pic']) ? "<img src='{$gd['guild_pic']}' class='img-fluid' width='75' height='75'>" : '';
+        $hasarmory = ($gd['guild_hasarmory'] == 'true') ? "<span class='text-success'>Yes</span>" : "<span class='text-danger'>No</span>";
+        $appacc = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Yes</span>" : "<span class='text-danger'>No</span>";
+        $indebt = ($gd['guild_debt_time'] == 0) ? "<span class='text-success'>No</span>" : "<span class='text-danger'>Yes</span>";
+		$gd['guild_pic'] = ($gd['guild_pic']) ? "<img src='" . parseImage($gd['guild_pic']) . "' class='img-fluid' style='max-width: 75px;'>" : '';
         echo "
-		<tr>
+		<tr align='left'>
 			<td>
-				{$gd['guild_pic']}
-			</td>
-			<td>
-				<a href='?action=view&id={$gd['guild_id']}'>{$gd['guild_name']}</a>
+				{$gd['guild_pic']}<br />
+                <a href='?action=view&id={$gd['guild_id']}'>{$gd['guild_name']}</a>
 			</td>
 			<td>
 				{$gd['guild_level']}
@@ -75,9 +79,14 @@ function menu()
 			<td>
 				<a href='profile.php?user={$gd['userid']}'>{$gd['username']}</a>
 			</td>
+            <td>
+                Accepting Applications? {$appacc}<br />
+                Has Armory? {$hasarmory}<br />
+                In Debt? {$indebt}
+            </td>
 		</tr>";
     }
-    echo "</table>";
+    echo "</tbody></table>";
 
 }
 
@@ -194,7 +203,7 @@ function view()
 			"<div class='container'>
 				<div class='row'>
 					<div class='col-lg-6 mx-auto'>
-						<img src='{$gd['guild_pic']}' placeholder='The {$gd['guild_name']} guild picture.' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>
+						<img src='" . parseImage($gd['guild_pic']) . "' placeholder='The {$gd['guild_name']} guild picture.' width='300' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>
 					</div>
 				</div>
 			</div>";
@@ -202,7 +211,17 @@ function view()
 		$gd['guild_capacity']=$gd['guild_level']*5;
         echo "
 		<table class='table table-bordered'>
-			<tr>
+            <tr>
+				<th colspan='2'>
+					{$gd['guild_name']} Description
+				</th>
+			</tr>
+            <tr>
+                <td colspan='2'>
+					{$gd['guild_desc']}
+				</td>
+            </tr>
+			<tr align='left'>
 				<th>
 					Guild Leader
 				</th>
@@ -210,7 +229,7 @@ function view()
 					<a href='profile.php?user={$gd['guild_owner']}'> " . $api->SystemUserIDtoName($gd['guild_owner']) . "</a>
 				</td>
 			</tr>
-			<tr>
+			<tr align='left'>
 				<th>
 					Guild Co-Leader
 				</th>
@@ -218,7 +237,7 @@ function view()
 					<a href='profile.php?user={$gd['guild_coowner']}'> " . $api->SystemUserIDtoName($gd['guild_coowner']) . "</a>
 				</td>
 			</tr>
-			<tr>
+			<tr align='left'>
 				<th>
 					Guild Level
 				</th>
@@ -226,15 +245,7 @@ function view()
 					" . number_format($gd['guild_level']) . "
 				</td>
 			</tr>
-			<tr>
-				<th>
-					{$gd['guild_name']} Description
-				</th>
-				<td>
-					{$gd['guild_desc']}
-				</td>
-			</tr>
-			<tr>
+			<tr align='left'>
 				<th>
 					Members
 				</th>
@@ -247,7 +258,7 @@ function view()
         echo number_format($cnt) . " / " . number_format($gd['guild_capacity']) . "
 				</td>
 			</tr>
-			<tr>
+			<tr align='left'>
 				<th>
 					Guild Location
 				</th>
@@ -255,7 +266,28 @@ function view()
         echo $api->SystemTownIDtoName($gd['guild_town_id']) . "
 				</td>
 			</tr>
-			<tr>
+			<tr align='left'>
+		<th>
+			Allies
+		</th>
+		<td>";
+			$q=$db->query("SELECT * 
+							FROM `guild_alliances` 
+							WHERE (`alliance_a` = {$_GET['id']} OR `alliance_b` = {$_GET['id']})
+							AND `alliance_true` = 1");
+			while ($r=$db->fetch_row($q))
+			{
+				$type = ($r['alliance_type'] == 1) ? "Traditional" : "Non-aggressive";
+				if ($r['alliance_a'] == $_GET['id'])
+					$otheralliance=$r['alliance_b'];
+				else
+					$otheralliance=$r['alliance_a'];
+				echo "<a href='?action=view&id={$otheralliance}'>{$api->GuildFetchInfo($otheralliance,'guild_name')}</a><br />";
+			}
+		
+		echo"</td>
+	</tr>
+			<tr align='left'>
 				<th>
 					<a href='?action=memberlist&id={$_GET['id']}'>View Members</a>
 				</th>

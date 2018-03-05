@@ -12,7 +12,7 @@ require('lib/bbcode_engine.php');
 $AnnouncementCount = $ir['announcements'];
 //Select all data from the announcements data table.
 $q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC");
-echo "<table class='table table-bordered table-hover'>
+echo "<table class='table table-bordered table-striped'>
 <thead>
 	<tr>
 		<th width='33%'>Info</th>

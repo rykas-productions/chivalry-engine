@@ -19,7 +19,90 @@ class headers
         <html lang="en">
         <head>
             <center>
-				<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+                <?php
+                //Select count of user's unread messages.
+                $ir['mail'] = $db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
+                //Select count of user's unread notifications.
+                $ir['notifications'] = $db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
+                $unread=$ir['mail']+$ir['notifications']+$ir['announcements'];
+                $title = ($unread == 0) ? "{$set['WebsiteName']}" : "({$unread}) {$set['WebsiteName']}";
+                echo "<title>{$title}</title>";
+				if ($ir['theme'] == 1)
+				{
+					?>
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/yeti/bootstrap.min.css">
+					<meta name="theme-color" content="#333">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 2)
+				{
+					?>
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/darkly/bootstrap.min.css">
+					<meta name="theme-color" content="#303030">
+					<?php
+					$hdr='navbar-light bg-light';
+				}
+				if ($ir['theme'] == 3)
+				{
+					?>
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/superhero/bootstrap.min.css">
+					<meta name="theme-color" content="#4E5D6C">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 4)
+				{
+					?>
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/slate/bootstrap.min.css">
+					<meta name="theme-color" content="#272B30">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 5)
+				{
+					?>
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cerulean/bootstrap.min.css">
+					<meta name="theme-color" content="#04519b">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 6)
+				{
+					?>
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/minty/bootstrap.min.css">
+					<meta name="theme-color" content="#78C2AD">
+					<?php
+					$hdr='navbar-dark bg-primary';
+				}
+				if ($ir['theme'] == 7)
+				{
+					?>
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/united/bootstrap.min.css">
+					<meta name="theme-color" content="#772953">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 8)
+				{
+					?>
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cyborg/bootstrap.min.css">
+					<meta name="theme-color" content="#060606">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+                if ($ir['theme'] == 9)
+				{
+					?>
+					<link rel="stylesheet" href="css/valentines-day-cid-v4.css">
+					<meta name="theme-color" content="#CC00FF">
+					<?php
+					$hdr='navbar-dark bg-primary';
+				}
+				setcookie('theme', $ir['theme']);
+				?>
+				<link rel="stylesheet" href="css/game-v1.2.min.css">
+				<link rel="stylesheet" href="css/game-icons.css">
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -29,94 +112,18 @@ class headers
                 <meta property="og:image" content="assets/img/logo.png"/>
                 <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon"/>
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
-                <?php 
-					echo "<title>{$set['WebsiteName']}</title>";
-				?>
-				<link rel="stylesheet" href="css/game-v1.2.min.css">
-				<link rel="stylesheet" href="css/game-icons.css">
-				<?php
-				if ($ir['theme'] == 1)
-				{
-					?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
-					<meta name="theme-color" content="#343a40">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 2)
-				{
-					?>
-					<link rel="stylesheet" href="css/darkly.bs4.b2.min.css">
-					<meta name="theme-color" content="#303030">
-					<?php
-					$hdr='navbar-light bg-light';
-				}
-				if ($ir['theme'] == 3)
-				{
-					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
-					<meta name="theme-color" content="#4E5D6C">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 4)
-				{
-					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
-					<meta name="theme-color" content="#272B30">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 5)
-				{
-					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
-					<meta name="theme-color" content="#04519b">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 6)
-				{
-					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
-					<meta name="theme-color" content="#78C2AD">
-					<?php
-					$hdr='navbar-dark bg-primary';
-				}
-				if ($ir['theme'] == 7)
-				{
-					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
-					<meta name="theme-color" content="#772953">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 8)
-				{
-					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
-					<meta name="theme-color" content="#060606">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				setcookie('theme', $ir['theme']);
-				?>
 				</head>
     <?php
     //If the called script wants the menu hidden.
     if (empty($menuhide))
     {
-    //Select count of user's unread messages.
-    $ir['mail'] = $db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
-    //Select count of user's unread notifications.
-    $ir['notifications'] = $db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
     ?>
         <body>
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
             <a class="navbar-brand" href="index.php">
 					<?php 
-						echo "<img src='assets/img/logo-optimized.png' width='30' height='30' alt=''>
+						echo "<img src='assets/img/logo-optimized.png' width='32' height='32' alt=''>
 						{$set['WebsiteName']}"; 
 					?>
 				</a>
@@ -130,12 +137,17 @@ class headers
                         <?php
                         if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
                         {
-                            ?><a class="nav-link" href="forums.php"><?php echo "Forums"; ?></a><?php
+                            ?>
+                                <a class="nav-link" href="forums.php"><?php echo "Forums"; ?></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="<?php echo"/chat/?userName={$ir['username']}"; ?>"><?php echo "Chat"; ?></a>
+                            <?php
                         }
                         else
                         {
                             ?><a class="nav-link" href="explore.php"><?php echo "<i
-                                        class='fa fa-fw fa-compass fa-spin'></i> Explore"; ?></a><?php
+                                        class='far fa-fw fa-compass fa-spin'></i> Explore"; ?></a><?php
                         }
                         ?>
                     </li>
@@ -150,11 +162,11 @@ class headers
                         <li class="nav-item">
                             <a class="nav-link"
                                href="notifications.php"><?php echo "<i
-                                        class='fas fa-fw fa-globe'></i> Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
+                                        class='fas fa-fw fa-bell'></i> Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="inventory.php"><?php echo "<i
-                                        class='game-icon game-icon-knapsack'></i> Inventory"; ?></a>
+                                        class='fas fa-fw fa-briefcase'></i> Inventory"; ?></a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
@@ -162,7 +174,7 @@ class headers
                                 <?php
                                 //User has a display picture, lets show it!
                                 if ($ir['display_pic']) {
-                                    echo "<img src='{$ir['display_pic']}' width='24' height='24'>";
+                                    echo "<img src='" . parseImage($ir['display_pic']) . "' width='32' height='32'>";
                                 }
                                 echo " Hello, {$ir['username']}!";
                                 ?>
@@ -182,20 +194,12 @@ class headers
                                             class="fas fa-fw fa fa-terminal"></i> <?php echo "Staff Panel"; ?></a>
                                 <?php
                                 }
-								if ($ir['vip_days'] > 0)
-								{
-									?>
-										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="friends.php"><i
-											class="far fa-fw fa-smile"></i> <?php echo "Friends"; ?></a>
-										<a class="dropdown-item" href="enemy.php"><i
-											class="far fa-fw fa-frown"></i> <?php echo "Enemies"; ?></a>
-									<?php
-								}
-                                ?>
+								?>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="gamerules.php"><i
                                         class="fas fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
+								<a class="dropdown-item" href="privacy.php"><i
+                                        class="fas fa-fw fa-user-secret"></i> <?php echo "Privacy Policy"; ?></a>
                                 <a class="dropdown-item" href="logout.php"><i
                                         class="fas fa-fw fa-power-off"></i> <?php echo "Logout"; ?></a>
                             </div>
@@ -225,14 +229,28 @@ class headers
     }
     $fed = $db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
     $votecount=$db->fetch_single($db->query("SELECT COUNT(`voted`) FROM `votes` WHERE `userid` = {$userid}"));
-    if ($votecount < 4) {
+    if ($votecount < 5) {
         echo "<b><a href='vote.php' class='text-success'>[Vote for {$set['WebsiteName']}<span class='hidden-sm-down'> at various Voting Websites and be rewarded</span>.]</a></b><br />";
     }
     echo "<b><a href='donator.php' class='text-danger'>[Donate to {$set['WebsiteName']}.<span class='hidden-sm-down'> Packs start at $1 and you receive tons of benefits.</span>]</a></b><br />";
     if ($ir['protection'] > time())
 	{
-		echo "<b><span class='text-info'>You have protection for the next " . TimeUntil_Parse($ir['protection']) . ".</span></b><br />";
+		echo "<b><span class='text-info'>You have protection active for the next " . TimeUntil_Parse($ir['protection']) . ".</span></b><br />";
 	}
+    if ($ir['invis'] > time())
+	{
+		echo "<b><span class='text-info'>You have invisibility active for the next " . TimeUntil_Parse($ir['invis']) . ".</span></b><br />";
+	}
+    if ($ir['tut_on'] == 1)
+    {
+        $page = $db->escape(strip_tags(stripslashes(basename($_SERVER['PHP_SELF']))));
+        $tq=$db->query("SELECT * FROM `tutorial` WHERE `page` = '{$page}'");
+        if ($db->num_rows($tq) > 0)
+        {
+            $tr=$db->fetch_row($tq);
+            alert('info',"Tutorial!",$tr['tutorial'],true,'preferences.php?action=tuttoggle',"Disable Tutorial");
+        }
+    }
 
 	
 	//User's federal jail sentence is completed. Let them play again.
@@ -325,13 +343,23 @@ class headers
 		}
 	}
 	$luckrng=Random(1,250);
-	if ($luckrng == 160)
+	if (!isset($_SESSION['lucked_out']))
+		$_SESSION['lucked_out']=0;
+	if ($_SESSION['lucked_out'] < time())
 	{
-		if (($ir['luck'] > 50) && ($ir['luck'] < 150))
+		if ($luckrng == 160)
 		{
-			$thisrng=Random(-5,5);
-			$db->query("UPDATE `userstats` SET `luck` = `luck` + ({$thisrng}) WHERE `userid` = {$userid}");
-			$api->GameAddNotification($userid,"While walking around the kingdom, your luck has changed by {$thisrng}%.");
+			$thisrng=0;
+			if (($ir['luck'] > 50) && ($ir['luck'] < 150))
+			{
+				while ($thisrng == 0)
+				{
+					$thisrng=Random(-5,5);
+				}
+				$_SESSION['lucked_out']=time()+3600;
+				$db->query("UPDATE `userstats` SET `luck` = `luck` + ({$thisrng}) WHERE `userid` = {$userid}");
+				$api->GameAddNotification($userid,"While walking around the kingdom, your luck has changed by {$thisrng}%.");
+			}
 		}
 	}
     //User needs to reverify with reCaptcha
@@ -345,23 +373,23 @@ class headers
 		<?php
 		die($h->endpage());
 		}
-    //Script calls for reCaptcha to be loaded.
-    if (isset($macropage))
-    {
-    //Set User to need verified.
-    $db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
-    echo "This is a needed evil. Please confirm you are not a bot."; ?>
-        <form action='macro.php' method='post'>
-            <center>
-                <div class='g-recaptcha' data-theme='light'
-                     data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
-            </center>
-            <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
-            <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" data-dismiss="modal">
-        </form>
-        <?php
-        die($h->endpage());
-    }
+		//Script calls for reCaptcha to be loaded.
+		if (isset($macropage))
+		{
+			//Set User to need verified.
+			$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
+			echo "This is a needed evil. Please confirm you are not a bot."; ?>
+				<form action='macro.php' method='post' name='myform'>
+					<center>
+						<div class='g-recaptcha' data-theme='light'
+							 data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
+					</center>
+					<input type='hidden' value='<?php echo $macropage; ?>' name='page'>
+					<input type='submit' value="<?php echo "Verify"; ?>" class="btn btn-primary" data-dismiss="modal">
+				</form>
+				<?php
+				die($h->endpage());
+		}
     }
         //Set user's timezone.
         date_default_timezone_set("America/New_York");
@@ -412,10 +440,10 @@ class headers
 
     function endpage()
     {
-        global $db, $ir, $StartTime, $set;
+        global $db, $ir, $StartTime, $set, $userid, $api;
         $query_extra = '';
-		if ($ir['analytics'] == 1)
-			include('analytics.php');
+        include('analytics.php');
+        include('marriage_perks.php');
         //Set mysqldebug in the URL to get query debugging as an admin.
     if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
     {
@@ -436,6 +464,8 @@ class headers
         <!-- /.container -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
         
+        <script src="js/notifications/main.js"></script>
+        
         <!-- jQuery Version 3.2.1 -->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
@@ -445,6 +475,8 @@ class headers
 
         <!-- Other JavaScript -->
         <script src="js/game.js"></script>
+        <script src="js/register-min.js" async defer></script>
+		<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
 		<script type="text/javascript" src="js/clock.min.js"></script>

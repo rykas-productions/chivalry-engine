@@ -95,6 +95,7 @@ function buy()
         die($h->endpage());
     }
     $totalcost = $r['sec_cost'] * $r['sec_total'];
+	$taxed=$totalcost-($totalcost*0.04);
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) {
         alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'secmarket.php');
         die($h->endpage());
@@ -102,9 +103,9 @@ function buy()
     $api->SystemLogsAdd($userid, 'secmarket', "Bought {$r['sec_total']} Chivalry Tokens from the market for {$totalcost} Copper Coins.");
     $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
     $api->UserTakeCurrency($userid, 'primary', $totalcost);
-    $api->UserGiveCurrency($r['sec_user'], 'primary', $totalcost);
+    $api->UserGiveCurrency($r['sec_user'], 'primary', $taxed);
     $api->GameAddNotification($r['sec_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has bought your
-        {$r['sec_total']} Chivalry Tokens offer from the market for a total of {$totalcost}.");
+        {$r['sec_total']} Chivalry Tokens offer from the market for a total of {$taxed}.");
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
     alert('success', "Success!", "You have bought {$r['sec_total']} Chivalry Tokens for {$totalcost} Copper Coins", true, 'secmarket.php');
     die($h->endpage());
@@ -149,6 +150,16 @@ function add()
             alert('danger', "Uh Oh!", "You are trying to add more Chivalry Tokens than you currently have.");
             die($h->endpage());
         }
+		if ($_POST['cost'] > 50000)
+		{
+			alert('danger', "Uh Oh!", "The pricing you set is too expensive.");
+            die($h->endpage());
+		}
+		if ($_POST['cost'] < 1000)
+		{
+			alert('danger', "Uh Oh!", "The pricing you set is too cheap.");
+            die($h->endpage());
+		}
         $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`)
 					VALUES ('{$userid}', '{$_POST['cost']}', '{$_POST['qty']}');");
         $api->UserTakeCurrency($userid, 'secondary', $_POST['qty']);
@@ -171,10 +182,10 @@ function add()
 				</tr>
 				<tr>
 					<th>
-						Price (Each)
+						Price (Each)*
 					</th>
 					<td>
-						<input type='number' name='cost' class='form-control' required='1' min='1' value='200'>
+						<input type='number' name='cost' class='form-control' required='1' min='1000' max='50000' value='1000'>
 					</td>
 				<tr>
 				
@@ -185,7 +196,8 @@ function add()
 					</td>
 				</tr>
 			</table>
-		</form>";
+		</form>
+		*=Price subject to 4% market fee.";
     }
 }
 

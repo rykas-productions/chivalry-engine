@@ -14,7 +14,9 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	die($h->endpage());
 }
 $tresder = (Random(100, 999));
-$maxbet = $ir['level'] * 250;
+$maxbet = $ir['level'] * 500;
+$specialnumber=((getSkillLevel($userid,8)*7.5)/100);
+$maxbet=round($maxbet+($maxbet*$specialnumber));
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
@@ -48,26 +50,47 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         die($h->endpage());
     }
     $slot = array();
-    $slot[1] = Random(0, 9);
-    $slot[2] = Random(0, 9);
-    $slot[3] = Random(0, 9);
+	if (isRigged())
+	{
+		$accepted=0;
+		while ($accepted != 3)
+		{
+			$slot[1] = Random(0, 9);
+			$slot[2] = Random(0, 9);
+			$slot[3] = Random(0, 9);
+			if (($slot[1] != $slot[2]) && ($slot[1] != $slot[3]) && ($slot[2] != $slot[3]))
+			{
+				$accepted = 3;
+			}
+		}
+	}
+    else
+	{
+		$slot[1] = Random(0, 9);
+		$slot[2] = Random(0, 9);
+		$slot[3] = Random(0, 9);
+	}
     if ($slot[1] == $slot[2] && $slot[2] == $slot[3]) {
-        $gain = $_POST['bet'] * 15;
+        $gain = $_POST['bet'] * 25;
         $title = "Success!";
         $alerttype = 'success';
         $win = 1;
         $phrase = "All three line up. Jack pot! You win an extra " . number_format($gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in slots.");
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
+		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$gain} WHERE `setting_name` = 'casino_give'");
+		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
     } else if ($slot[1] == $slot[2] || $slot[2] == $slot[3]
         || $slot[1] == $slot[3]
     ) {
-        $gain = $_POST['bet'] * 10;
+        $gain = $_POST['bet'] * 12.5;
         $title = "Success!";
         $alerttype = 'success';
         $win = 1;
         $phrase = "Two slots line up. Awesome! You win an extra " . number_format($gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in slots.");
+		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$gain} WHERE `setting_name` = 'casino_give'");
+		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
     } else {
 
@@ -78,6 +101,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $phrase = "Round and round the slots go. Unlucky! None of them line up!";
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` - {$_POST['bet']} WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'gambling', "Lost {$_POST['bet']} in slots.");
+		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
     }
     alert($alerttype, $title, "You pull down the handle and slots begin to spin. They show {$slot[1]}, {$slot[2]}, {$slot[3]}. {$phrase}", false);
     $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
@@ -104,7 +128,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 				Bet
 			</th>
 			<td>
-				<input type='number' class='form-control' name='bet' min='1' max='{$maxbet}' value='5' />
+				<input type='number' class='form-control' name='bet' min='1' max='{$maxbet}' value='{$maxbet}' />
 			</td>
 		</tr>
 		<tr>
@@ -114,5 +138,13 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 		</tr>
 	</table>
 	</form>";
+}
+function isRigged()
+{
+	global $db,$set;
+	if ($set['casino_take'] > $set['casino_give']*1.5)
+		return false;
+	else
+		return true;	
 }
 $h->endpage();

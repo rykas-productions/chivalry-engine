@@ -44,11 +44,14 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<u>Personal Stats</u>
 	<br />
-	There are currently five stats in-game: Strength, Agility, Guard, IQ and Labor.
-	<br />Increasing your Strength will increase how much damage you can dish out in combat.
-	<br />Increasing Agility will increase your chance of one of your strikes connecting with your opponent.
-	<br />Increasing your Guard will decrease the damage your opponents do to you.
-	<br />IQ and Labor are miscellaneous stats used around the game. It's good to have these at a fairly decent level.
+	There are currently six stats in-game: Strength, Agility, Guard, IQ, Labor and Luck.
+	<br /><b>Strength</b> will increase how much damage you can dish out in combat.
+	<br /><b>Agility</b> will increase your chance of one of your strikes connecting with your opponent.
+	<br /><b>Guard</b> will decrease the damage your opponents do to you.
+	<br /><b>IQ</b> and <b>Labor</b> are miscellaneous stats used around the game. It's good to have these at a fairly decent level.
+	<br /><b>Luck</b> is a stat that changes randomly as you progress around the game. Occasionally, if luck is on your side, 
+	you will get free refills at the Chivalry Token temple, or extra items while you mine. However, once you luck out, 
+	your luck will drop. You can read more about Luck <a href='forums.php?viewtopic=121&lastpost=1'>here</a>.
 	<br />
 	<br />
 <hr />
@@ -194,8 +197,8 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Referral Link</u>
 	<br />
 	Your referral link is your personal registration link. Giving this to your friends will allow you to receive
-	rewards when your friends register. Post this link anywhere you see fit. Just don't be a jerk and spam it on
-	other games.
+	rewards when your friends register. Post this link anywhere you see fit. <u>Just don't be a jerk and spam it on
+	other games.</u>
 	<br />
 	<br />
 <hr />
@@ -216,7 +219,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Power Training</u>
 	<br />
 	Power training is the term used to describe when you spend excessive amounts of time, patience and skill training
-	your stats to have a signifcant increase. Power training blows through your resources quickly, so it's a good idea
+	your stats to have a significant increase. Power training blows through your resources quickly, so it's a good idea
 	to make sure you have enough Chivalry Tokens before you start power training.
 	<br />The idea is to have your Will maxed out, and train using all your Energy in one session, then refilling both
 	your Energy and Will before training again. This is complex, so don't worry if you do not understand how this works.
@@ -320,13 +323,16 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Password Change</u>
 	<br />
 	You may change your password at will. We highly recommend using a password you haven't used elsewhere, and cycling
-	your password out every 3 months or so. We take reasonable steps to ensure your password isn't stolen.
+	your password out every 3 months or so. We take reasonable steps to ensure your password isn't stolen. Every time 
+	you change your password, your encryption code for your in-game messages gets changed. This basically means that message 
+	you wrote prior the password change will no longer be reader by you, or the person you sent it to.
 	<br />
 	<br />
-	<u>Timezone Change</u>
+	<u>Theme Change</u>
 	<br />
-	You can change your timezone to be different than the server's time. Note that all internal server times are ran off of
-	Unix Time, or GMT-0.
+	The default theme too bright or bland for you? You can change how the game looks to you here. There should be plenty 
+	of themes that suit your liking. Note, however, some themes require you to own VIP days to use. But don't worry, once you 
+	tick the theme, you'll continue to use it until you choose another.
 	<br />
 	<br />
 	<u>Email Opt Setting</u>
@@ -350,5 +356,48 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<u>Forum Signature</u>
 	<br />
-	You can change your forum signature. You may use BBCode. Please keep it PG-13";
+	You can change your forum signature. You may use BBCode. Please keep it PG-13
+	<br />
+	<br />
+	<u>Disable Alerts</u>
+	<br />
+	Tired of the blue notifications alerting you whenever you have unread mail or notifications? You can disable those annoying 
+	things here.
+	<br />
+	<br />
+	<u>Player Description Change</u>
+	<br />
+	Want other players to know what you're all about in-game? Write a bio about you which will show on your profile here. Please 
+	keep whatever you write within the Game Rules. We'd hate to have to remove your wonderful writing skills.
+	<br />
+	<br />
+	<u>Quick-Use Item Change</u>
+	<br />
+	IYou can choose to use other dungeon or infirmary items here if you don't have leeches or lockpicks, or just want to remove more 
+	time for less clicks. The choice is yours, naturally.
+	<br />
+	<br />
+	<u>Forum Notifications</u>
+	<br />
+	This will send you a notification every time someone responds to a forum thread you've created. This is off by default. If you are 
+	a social butterfly, you'd probably want this on.
+	<br />
+	<br />
+	<u>User Input Setting</u>
+	<br />
+	Change how you select other users in game. By default, everyone uses the dropdown. If you don't like it, you may manually enter 
+	User ID's instead.
+	<br />
+	<br />
+	<u>Two-factor Authentication</u>
+	<br />
+	Two-factor authentication adds an extra layer of security to your account. We recommend you set this up, but its entirely optional.
+	<br />
+	<br />
+	<u>Analytics</u>
+	<br />
+	You can choose to opt-out of analytical tracking, but we recommend you keep them on. They help the staff know where in the game needs 
+	improvement.
+	<br />
+	<br />";
 $h->endpage();

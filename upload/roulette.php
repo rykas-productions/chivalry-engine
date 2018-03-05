@@ -14,7 +14,9 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	die($h->endpage());
 }
 $tresder = (Random(100, 999));
-$maxbet = $ir['level'] * 250;
+$maxbet = $ir['level'] * 500;
+$specialnumber=((getSkillLevel($userid,8)*7.5)/100);
+$maxbet=$maxbet+($maxbet*$specialnumber);
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
@@ -55,14 +57,30 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         die($h->endpage());
     }
     $slot = array();
-    $slot[1] = Random(0, 36);
+	$accepted=false;
+	if (isRigged())
+	{
+		while (!$accepted)
+		{
+			$slot[1] = Random(0, 36);
+			if ($slot[1] != $_POST['number'])
+				$accepted=true;
+		}
+			
+	}
+	else
+	{
+		$slot[1] = Random(0, 36);
+	}
     if ($slot[1] == $_POST['number']) {
-        $gain = $_POST['bet'] * 5;
+        $gain = $_POST['bet'] * 25;
         $title = "Success!";
         $alerttype = 'success';
         $win = 1;
         $phrase = " and won! You keep your bet, and pocket an extra " . number_format($gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in roulette.");
+		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$gain} WHERE `setting_name` = 'casino_give'");
+		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
     } else {
 
@@ -73,6 +91,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $phrase = ". You lose your bet. Sorry man.";
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` - {$_POST['bet']} WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'gambling', "Lost {$_POST['bet']} in roulette.");
+		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
     }
     alert($alerttype, $title, "You put in your bet and pull the handle down. Around and around the wheel spins. It stops
 	    and lands on {$slot[1]} {$phrase}", true, "roulette.php?tresde={$tresder}");
@@ -120,5 +139,13 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 		</tr>
 	</table>
 	</form>";
+}
+function isRigged()
+{
+	global $db,$set;
+	if ($set['casino_take'] > $set['casino_give']*1.5)
+		return false;
+	else
+		return true;	
 }
 $h->endpage();

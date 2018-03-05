@@ -12,14 +12,17 @@ define('DEBUG', true);
 function error_critical($human_error, $debug_error, $action, $context = array())
 {
     global $userid, $domain, $set;
-    echo "<title>{$set['WebsiteName']} - Critical Error</title>";
+    echo "<title>Critical Error</title>";
     if (isset($set) && is_array($set) && array_key_exists('WebsiteName', $set)) {
-        echo "<h1>{$set['WebsiteName']} - Critical Error</h1>";
+        echo "<h1>Critical Error</h1>";
     } else {
         echo '<h1>Internal Server Error</h1>';
     }
     if (DEBUG) {
-        echo 'A critical error has occurred, and page execution has stopped. If this issue persists, please notify an admin or web developer right away!<br />'
+        echo "A critical error has occurred, and page execution has stopped. Check out Chivalry is 
+        Dead on <a href='https://www.facebook.com/officialcidgame/'>Facebook</a> or 
+        <a href='https://twitter.com/cidgame'>Twitter</a> for more information if you cannot use the 
+        game. Please contact an administrator and give them the following information.<br />"
             . 'Below are the details:<br /><pre>' . $debug_error
             . '<br /><br />' . '<strong>Action taken:</strong> ' . $action
             . '<br /><br /></pre>';
@@ -33,8 +36,9 @@ function error_critical($human_error, $debug_error, $action, $context = array())
         }
 		*/
     } else {
-        echo 'A critical error has occurred, and this page cannot be displayed. '
-            . 'Try again later. If this error persists, please alert an admin as soon as possible!';
+        echo "A critical error has occurred, and this page cannot be displayed. Try again later. 
+        Check out Chivalry is Dead on <a href='https://www.facebook.com/officialcidgame/'>Facebook</a> 
+        or <a href='https://twitter.com/cidgame'>Twitter</a> for more information if you cannot use the game.";
         if (!empty($human_error)) {
             echo '<br />' . $human_error;
         }

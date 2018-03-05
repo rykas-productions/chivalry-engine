@@ -60,7 +60,7 @@ function new_crime()
         $csrf = request_csrf_html('staff_newcrime');
         echo "Adding a new Crime<br />
 		<form method='post'>
-			<table class='table table-bordered table-responsive'>
+			<table class='table table-bordered'>
 				<tr>
 					<th width='33%'>
 						Crime Name
@@ -198,7 +198,7 @@ function new_crime()
     } else {
         $_POST['name'] = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
         $_POST['brave'] = (isset($_POST['brave']) && is_numeric($_POST['brave'])) ? abs(intval($_POST['brave'])) : '';
-        $_POST['percform'] = (isset($_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
+        $_POST['percform'] = (isset($_POST['percform']) && preg_match("/^[a-z0-9\p{Sm}\s()*.\/-_]+([\\s]{1}[a-z0-9\p{Sm}\s()*.\/-_]|[a-z0-9\p{Sm}\s()*.\/-_])*$/i", $_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
         $_POST['PRICURMAX'] = (isset($_POST['PRICURMAX']) && is_numeric($_POST['PRICURMAX'])) ? abs(intval($_POST['PRICURMAX'])) : 0;
         $_POST['PRICURMIN'] = (isset($_POST['PRICURMIN']) && is_numeric($_POST['PRICURMIN'])) ? abs(intval($_POST['PRICURMIN'])) : 0;
         $_POST['SECURMAX'] = (isset($_POST['SECURMAX']) && is_numeric($_POST['SECURMAX'])) ? abs(intval($_POST['SECURMAX'])) : 0;
@@ -301,7 +301,7 @@ function edit_crime()
         $csrf = request_csrf_html('staff_editcrime2');
         echo "Edit Crime Form<br />
 		<form method='post'>
-			<table class='table table-bordered table-responsive'>
+			<table class='table table-bordered'>
 				<tr>
 					<th width='33%'>
 						Crime Name
@@ -443,7 +443,7 @@ function edit_crime()
         $_POST['name'] = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
         $_POST['brave'] = (isset($_POST['brave']) && is_numeric($_POST['brave'])) ? abs(intval($_POST['brave'])) : '';
         $_POST['crimeID'] = (isset($_POST['crimeID']) && is_numeric($_POST['crimeID'])) ? abs(intval($_POST['crimeID'])) : '';
-        $_POST['percform'] = (isset($_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
+        $_POST['percform'] = (isset($_POST['percform']) && preg_match("/^[a-z0-9\p{Sm}\s()*.\/-_]+([\\s]{1}[a-z0-9\p{Sm}\s()*.\/-_]|[a-z0-9\p{Sm}\s()*.\/-_])*$/i", $_POST['percform'])) ? $db->escape(strip_tags(stripslashes($_POST['percform']))) : '';
         $_POST['PRICURMAX'] = (isset($_POST['PRICURMAX']) && is_numeric($_POST['PRICURMAX'])) ? abs(intval($_POST['PRICURMAX'])) : 0;
         $_POST['PRICURMIN'] = (isset($_POST['PRICURMIN']) && is_numeric($_POST['PRICURMIN'])) ? abs(intval($_POST['PRICURMIN'])) : 0;
         $_POST['SECURMAX'] = (isset($_POST['SECURMAX']) && is_numeric($_POST['SECURMAX'])) ? abs(intval($_POST['SECURMAX'])) : 0;
@@ -576,7 +576,7 @@ function new_crimegroup()
         $csrf = request_csrf_html('staff_newcrimegroup');
         echo "Adding a new crime group<br />
 		<form method='post'>
-			<table class='table table-bordered table-responsive'>
+			<table class='table table-bordered'>
 				<tr>
 					<th>
 						Crime Group Name
@@ -658,7 +658,7 @@ function edit_crimegroup()
         $db->free_result($d);
         $csrf = request_csrf_html('staff_editcrimegroup2');
         echo "<form method='post'>
-			<table class='table table-bordered table-responsive'>
+			<table class='table table-bordered'>
 				<tr>
 					<th>
 						Crime Group Name

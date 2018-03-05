@@ -365,7 +365,7 @@ function announce()
         echo "Use this form to post an announcement to the game. Please be sure you are clear and concise with your
         wording. Do not spam if possible.<br />
 		<form method='post'>
-			<textarea name='announcement' rows='5' class='form-control'></textarea>
+			<textarea name='announcement' class='form-control'></textarea>
 			<input type='submit' class='btn btn-primary' value='Create Announcement'>
 			{$csrf}
 		</form>";

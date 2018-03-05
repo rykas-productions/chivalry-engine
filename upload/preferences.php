@@ -44,14 +44,23 @@ switch ($_GET['action']) {
 	case 'userdropdown':
         userdropdown();
         break;
-	case 'analytics':
-        analytics();
-        break;
 	case 'forumalert':
         forumalert();
         break;
+    case 'tuttoggle':
+        tuttoggle();
+        break;
 	case '2fa':
         twofa();
+        break;
+    case 'webnotif':
+        webnotif();
+        break;
+    case 'classreset':
+        classreset();
+        break;
+    case 'changeemail':
+        changeemail();
         break;
     default:
         prefs_home();
@@ -73,7 +82,7 @@ function prefs_home()
 			</tr>
 			<tr>
 				<td>
-					<a href='?action=themechange'>Change Theme</a>
+					<a href='?action=changeemail'>Change Email Address</a>
 				</td>
 				<td>
 					<a href='?action=emailchange'>Change Email Opt-Setting</a>
@@ -115,8 +124,16 @@ function prefs_home()
 				<td>
 				    <a href='?action=2fa'>Two-factor Authentication</a>
 				</td>
+                <td>
+                    <a href='?action=classreset'>Class Reset</a>
+                </td>
+			</tr>
+            <tr>
 				<td>
-					<a href='?action=analytics'>Analytics</a>
+				    <a href='?action=themechange'>Change Theme</a>
+				</td>
+				<td>
+					<a href='?action=tuttoggle'>Tutorial Toggle</a>
 				</td>
 			</tr>
 		</tbody>
@@ -125,28 +142,29 @@ function prefs_home()
 
 function name_change()
 {
-    global $db, $ir, $userid, $h;
+    global $db, $ir, $userid, $h, $api;
     if (empty($_POST['newname'])) {
         $csrf = request_csrf_html('prefs_namechange');
         echo "<br />
 		<h3>Username Change</h3>
-		Here you can change your name that is shown throughout the game.<br />
+		Here you can change your name that is shown throughout the game. It will cost you 5 Chivalry Tokens to change your name.<br />
 		<div class='form-group'>
 		<form method='post'>
-			<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' value='{$ir['username']}' name='newname' />
+			<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' value='{$ir['username']}' name='newname' onkeyup='CheckUsername(this.value);' />
 			<br />
 			{$csrf}
 			<input type='submit' class='btn btn-primary' value='Change Username' />
 			</div>
+            <div id='usernameresult' class='invalid-feedback'></div>
 		</form>";
     } else {
         if (!isset($_POST['verf']) || !verify_csrf_code('prefs_namechange', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
             die($h->endpage());
         }
-        $_POST['newname'] = (isset($_POST['newname']) && is_string($_POST['newname'])) ? stripslashes($_POST['newname']) : '';
+        $_POST['newname'] = (isset($_POST['newname']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['newname'])) ? $db->escape(strip_tags(stripslashes($_POST['newname']))) : '';
         if (empty($_POST['newname'])) {
-            alert('danger', "Uh Oh!", "Please fill out the form and try again.");
+            alert('danger', "Uh Oh!", "Invalid username specified. Please fill out the form and try again.");
             die($h->endpage());
         } elseif (((strlen($_POST['newname']) > 20) OR (strlen($_POST['newname']) < 3))) {
             alert('danger', "Uh Oh!", "Usernames must be at least 3 characters in length, and a maximum of 20.");
@@ -157,21 +175,44 @@ function name_change()
             alert('danger', "Uh Oh!", "The username you chose is already in use.");
             die($h->endpage());
         }
+        if (!$api->UserHasCurrency($userid,'secondary',5))
+        {
+            alert('danger',"Uh Oh!","You do nto have enough Chivalry Tokens to change your name.");
+            die($h->endpage());
+        }
+        $api->UserTakeCurrency($userid,'secondary',5);
         $_POST['newname'] = $db->escape(htmlentities($_POST['newname'], ENT_QUOTES, 'ISO-8859-1'));
         $db->query("UPDATE `users` SET `username` = '{$_POST['newname']}'  WHERE `userid` = $userid");
         alert('success', "Success!", "You have changed your username to {$_POST['newname']}.", true, 'preferences.php');
+        $api->SystemLogsAdd($userid, 'preferences', "Changed username from {$ir['username']} to {$_POST['newname']}.");
     }
 }
 
 function pw_change()
 {
-    global $db, $ir, $h, $api;
+    global $db, $ir, $h, $api, $userid;
+	if (isset($_GET['newkey']))
+	{
+		if ($_GET['csrf'] != $_SESSION['newkeycsrf'])
+		{
+			alert('danger',"Uh Oh!","Invalid CSRF token. Encryption key not regenerated.",false);
+		}
+		else
+		{
+			$nrandomizer=randomizer();
+            $db->query("UPDATE `user_settings` SET `security_key` = '{$nrandomizer}' WHERE `userid` = {$ir['userid']}");
+			alert('success',"Success!","New encryption key generated.",false);
+            $api->SystemLogsAdd($userid, 'preferences', "Generated new encryption key.");
+		}
+	}
     if (empty($_POST['oldpw'])) {
         $csrf = request_csrf_html('prefs_changepw');
+		$_SESSION['newkeycsrf']=randomizer();
         echo "
 	<h3>Password Change</h3>
 	<hr />
-	Remember that changing your password will make all your previously sent and received messages unreadable.
+	Remember that changing your password will make all your previously sent and received messages unreadable. You 
+	may click <a href='?action=pwchange&newkey=1&csrf={$_SESSION['newkeycsrf']}'>here</a> if you just wish to regenerate your message encryption key.
 	<form method='post'>
 	<table class='table table-bordered'>
 	<tr>
@@ -187,8 +228,9 @@ function pw_change()
 			New Password
 		</th>
 		<td>
-			<input type='password' required='1' class='form-control' name='newpw' />
-		</td>
+			<input type='password' id='password' required='1' class='form-control' onkeyup='CheckPasswords(this.value);' name='newpw' />
+            <div id='passwordresult'></div>
+        </td>
 	</tr>
 	<tr>
 		<th>
@@ -227,6 +269,7 @@ function pw_change()
             $randomizer=randomizer();
             $db->query("UPDATE `user_settings` SET `security_key` = '{$randomizer}' WHERE `userid` = {$ir['userid']}");
             alert('success', "Success!", "You password was updated successfully.", true, 'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Changed password.");
 			$api->SystemSendEmail($ir['email'], "This email is to let you know that your password has been changed. If this by your doing, you may ignore this email. If not, someone may now have access to your account. Use the password reset form on the login page to reset your password.", "Chivalry is Dead Password Change");
         }
     }
@@ -234,7 +277,7 @@ function pw_change()
 
 function pic_change()
 {
-    global $db, $h, $userid, $ir;
+    global $db, $h, $userid, $ir, $api;
     if (!isset($_POST['newpic'])) {
         $csrf = request_csrf_html('prefs_changepic');
         echo "
@@ -271,13 +314,14 @@ function pic_change()
         $img = htmlentities($_POST['newpic'], ENT_QUOTES, 'ISO-8859-1');
         alert('success', "Success!", "You have successfully updated your display picture to what's shown below.", true, 'preferences.php');
         echo "<img src='{$img}' width='250' height='250' class='img-thumbnail img-fluid'>";
+        $api->SystemLogsAdd($userid, 'preferences', "Changed display picture.");
         $db->query("UPDATE `users` SET `display_pic` = '" . $db->escape($npic) . "' WHERE `userid` = {$userid}");
     }
 }
 
 function sigchange()
 {
-    global $db, $ir, $userid, $h;
+    global $db, $ir, $userid, $h, $api;
     if (isset($_POST['sig'])) {
         $_POST['sig'] = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['sig']))));
         if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesig', stripslashes($_POST['verf']))) {
@@ -290,6 +334,7 @@ function sigchange()
         }
         $db->query("UPDATE `users` SET `signature` = '{$_POST['sig']}' WHERE `userid` = {$userid}");
         alert('success', "Success!", "Your signature has been updated successfully.", true, 'preferences.php');
+        $api->SystemLogsAdd($userid, 'preferences', "Changed forum signature.");
     } else {
         $ir['signature'] = strip_tags(stripslashes($ir['signature']));
         $csrf = request_csrf_html('prefs_changesig');
@@ -321,7 +366,7 @@ function sigchange()
 
 function sexchange()
 {
-    global $db, $userid, $ir, $h;
+    global $db, $userid, $ir, $h, $api;
     if (isset($_POST['gender'])) {
         if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesex', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
@@ -338,6 +383,7 @@ function sexchange()
         $e_gender = $db->escape(stripslashes($_POST['gender']));
         $db->query("UPDATE `users` SET `gender` = '{$e_gender}' WHERE `userid` = {$userid}");
         alert('success', "Success!", "You have successfully changed your sex into {$_POST['gender']}.", true, 'preferences.php');
+        $api->SystemLogsAdd($userid, 'preferences', "Changed sex to {$_POST['gender']}.");
     } else {
         $g = ($ir['gender'] == "Male") ?
             $g = "	<option value='Male'>Male</option>
@@ -375,7 +421,7 @@ function sexchange()
 
 function emailchange()
 {
-    global $db, $userid, $ir, $h;
+    global $db, $userid, $ir, $h, $api;
     if (isset($_POST['opt'])) {
         $_POST['opt'] = (isset($_POST['opt']) && is_numeric($_POST['opt'])) ? abs($_POST['opt']) : 0;
         if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changeopt', stripslashes($_POST['verf']))) {
@@ -388,6 +434,7 @@ function emailchange()
         }
         $db->query("UPDATE `user_settings` SET `email_optin` = {$_POST['opt']} WHERE `userid` = {$userid}");
         alert('success', "Success!", "You have changed your email opt setting.", true, 'preferences.php');
+        $api->SystemLogsAdd($userid, 'preferences', "Changed email opt setting.");
     } else {
         $g = ($ir['email_optin'] == 0) ?
             $g = "	<option value='1'>Opt-In</option>
@@ -424,6 +471,51 @@ function emailchange()
     }
 }
 
+function changeemail()
+{
+    global $db,$userid,$api,$h,$ir,$set;
+    if (isset($_POST['email']))
+    {
+        //Verify CSRF check has passed.
+        if (!isset($_POST['verf']) || !verify_csrf_code("email_form_pref", stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+            die($h->endpage());
+        }
+        if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email']))) {
+            alert('danger', "Uh Oh!", "It appears you have input an invalid or non-existent email address. Go back and try again.");
+            die($h->endpage());
+        }
+        if ($ir['email'] == $_POST['email'])
+        {
+            alert('danger',"Uh Oh!","You cannot change your email to your current email address.");
+            die($h->endpage());
+        }
+        $e_email = $db->escape(stripslashes($_POST['email']));
+        $q2 = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'");
+        if ($db->fetch_single($q2) != 0)
+        {
+            alert('danger', "Uh Oh!", "The email you've chosen is already in use by another player.");
+            die($h->endpage());
+        }
+        $url=determine_game_urlbase();
+        $WelcomeMSGEmail="This is an automated email to let you know that your account in Chivalry is Dead, {$ir['username']} [{$userid}], has had its linked email address changed from {$ir['email']} to {$e_email}. If you have any questions or concerns, please contact a staff member in-game!<br /> -{$set['WebsiteName']}<br /><a href='https://{$url}'>https://{$url}</a>";
+        $api->SystemSendEmail($ir['email'],$WelcomeMSGEmail,"{$set['WebsiteName']} Email Change",$set['sending_email']);
+        $db->query("UPDATE `users` SET `email` = '{$e_email}', `force_logout` = 'true' WHERE `userid` = {$userid}");
+        alert('success',"Success!","You have successfully changed your email from {$ir['email']} to {$e_email}. Please log in again.",true,'logout.php');
+        die($h->endpage());
+    } else {
+        $csrf=request_csrf_html('email_form_pref');
+        echo "<h3>Changing Account Email</h3><hr />
+        Use this form to change your account's email address. Please input a valid email address. Please contact the administration if you wish to lock your email address to changes.<br />
+        <form method='post'>
+            {$csrf}
+            <input type='email' name='email' value='{$ir['email']}' class='form-control' required='1' id='email' onkeyup='CheckEmail(this.value);'>
+            <div id='emailresult' class='invalid-feedback'></div>
+            <input type='submit' name='Change Email' class='btn btn-primary'>
+        </form>";
+    }
+}
+
 function notifoff()
 {
 	global $db,$userid,$api,$h;
@@ -433,11 +525,13 @@ function notifoff()
 		{
 			$db->query("UPDATE `user_settings` SET `disable_alerts` = 1 WHERE `userid` = {$userid}");
 			alert('success',"Success!","You have successfully disabled the notification alerts.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Disabled notification pop up.");
 		}
 		else
 		{
 			$db->query("UPDATE `user_settings` SET `disable_alerts` = 0 WHERE `userid` = {$userid}");
 			alert('success',"Success!","You have successfully enabled the notification alerts.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Enabled notification pop up.");
 		}
     }
     else
@@ -457,7 +551,7 @@ function notifoff()
 
 function themechange()
 {
-    global $db, $userid, $h, $ir;
+    global $db, $userid, $h, $ir, $api;
     if (isset($_POST['theme'])) {
         $_POST['theme'] = (isset($_POST['theme']) && is_numeric($_POST['theme'])) ? abs($_POST['theme']) : 1;
         if ($_POST['theme'] < 1 || $_POST['theme'] > 8) {
@@ -474,11 +568,6 @@ function themechange()
 			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
 			die($h->endpage());
 		}
-		elseif ($_POST['theme'] == 7 && $ir['vip_days'] == 0)
-		{
-			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
-			die($h->endpage());
-		}
 		elseif ($_POST['theme'] == 8 && $ir['vip_days'] == 0)
 		{
 			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
@@ -487,6 +576,7 @@ function themechange()
 		else {
             alert('success', "Success!", "You have successfully changed your theme.", true, 'preferences.php');
             $db->query("UPDATE `user_settings` SET `theme` = {$_POST['theme']} WHERE `userid` = {$userid}");
+            $api->SystemLogsAdd($userid, 'preferences', "Changed theme to Theme ID {$_POST['theme']}.");
             die($h->endpage());
         }
     } else {
@@ -499,8 +589,8 @@ function themechange()
 				</tr>
 				<tr>
 					<td>
-						Default<br />
-						<img src='assets/img/themes/defaultbig227x123.jpg' class='img-thumbnail img-responsive'>
+						Yeti<br />
+						<img src='assets/img/themes/yeti-theme.jpg' class='img-thumbnail img-responsive'>
 						<form method='post'>
 							<input type='hidden' value='1' name='theme'>
 							<input type='submit' class='btn btn-primary' value='Pick this one'>
@@ -508,7 +598,7 @@ function themechange()
 					</td>
 					<td>
 						Darkly<br />
-						<img src='assets/img/themes/darklybig227x123.jpg' class='img-thumbnail img-responsive'>
+						<img src='assets/img/themes/darkly-theme.jpg' class='img-thumbnail img-responsive'>
 						<form method='post'>
 							<input type='hidden' value='2' name='theme'>
 							<input type='submit' class='btn btn-primary' value='Pick this one'>
@@ -516,17 +606,17 @@ function themechange()
 					</td>
 				</tr>
 				<tr>
-					<td>
-						Superhero<br />
-						<img src='assets/img/themes/superherobig227x123.jpg' class='img-thumbnail img-responsive'>
+                    <td>
+						United<br />
+						<img src='assets/img/themes/united-theme.jpg' class='img-thumbnail img-responsive'>
 						<form method='post'>
-							<input type='hidden' value='3' name='theme'>
+							<input type='hidden' value='7' name='theme'>
 							<input type='submit' class='btn btn-primary' value='Pick this one'>
 						</form>
 					</td>
 					<td>
 						Slate<br />
-						<img src='assets/img/themes/slatebig227x123.jpg' class='img-thumbnail img-responsive'>
+						<img src='assets/img/themes/slate-theme.jpg' class='img-thumbnail img-responsive'>
 						<form method='post'>
 							<input type='hidden' value='4' name='theme'>
 							<input type='submit' class='btn btn-primary' value='Pick this one'>
@@ -536,7 +626,7 @@ function themechange()
 				<tr>
 					<td>
 						Cerulean<br />
-						<img src='assets/img/themes/ceruleanbig227x123.jpg' class='img-thumbnail img-responsive'>";
+						<img src='assets/img/themes/cerulean-theme.jpg' class='img-thumbnail img-responsive'>";
 						if ($ir['vip_days'] != 0)
 						{
 							echo "
@@ -552,9 +642,19 @@ function themechange()
 						}
 						echo"
 					</td>
-					<td>
+                    <td>
+						Superhero<br />
+						<img src='assets/img/themes/superhero-theme.jpg' class='img-thumbnail img-responsive'>
+						<form method='post'>
+							<input type='hidden' value='3' name='theme'>
+							<input type='submit' class='btn btn-primary' value='Pick this one'>
+						</form>
+					</td>
+				</tr>
+				<tr>
+                    <td>
 						Minty<br />
-						<img src='assets/img/themes/minty227x123.jpg' class='img-thumbnail img-responsive'>";
+						<img src='assets/img/themes/minty-theme.jpg' class='img-thumbnail img-responsive'>";
 						if ($ir['vip_days'] != 0)
 						{
 							echo "
@@ -570,23 +670,23 @@ function themechange()
 						}
 						echo"
 					</td>
-				</tr>
-				<tr>
-					<td>
-						United<br />
-						<img src='assets/img/themes/united227x123.jpg' class='img-thumbnail img-responsive'>
-						<form method='post'>
-							<input type='hidden' value='7' name='theme'>
-							<input type='submit' class='btn btn-primary' value='Pick this one'>
-						</form>
-					</td>
 					<td>
 						Cyborg<br />
-						<img src='assets/img/themes/cyborg227x123.jpg' class='img-thumbnail img-responsive'>
-						<form method='post'>
-							<input type='hidden' value='8' name='theme'>
-							<input type='submit' class='btn btn-primary' value='Pick this one'>
-						</form>
+						<img src='assets/img/themes/cyborg-theme.jpg' class='img-thumbnail img-responsive'>";
+						if ($ir['vip_days'] != 0)
+						{
+							echo "
+							<form method='post'>
+								<input type='hidden' value='8' name='theme'>
+								<input type='submit' class='btn btn-primary' value='Pick this one'>
+							</form>
+							";
+						}
+						else
+						{
+							echo "<br />VIPs only.";
+						}
+						echo"
 					</td>
 				</tr>
 			</table>";
@@ -594,7 +694,7 @@ function themechange()
 }
 function descchange()
 {
-	global $db, $h, $userid, $ir;
+	global $db, $h, $userid, $ir, $api;
     if (isset($_POST['desc'])) {
 
         //Verify CSRF check has passed.
@@ -616,6 +716,7 @@ function descchange()
         //Update the guild's announcement.
         $db->query("UPDATE `users` SET `description` = '{$ament}' WHERE `userid` = {$userid}");
         alert('success', "Success!", "You have updated your profile's description.", true, 'preferences.php');
+        $api->SystemLogsAdd($userid, 'preferences', "Changed profile description.");
     } else {
         //Escape the announcement for safety reasons.
         $am_for_area = strip_tags($ir['description']);
@@ -647,7 +748,7 @@ function descchange()
 }
 function quicklinks()
 {
-	global $db,$userid,$ir,$h;
+	global $db,$userid,$ir,$h,$api;
 	if (isset($_POST['dungeon']))
 	{
 		$dungeon = (isset($_POST['dungeon']) && is_numeric($_POST['dungeon'])) ? abs($_POST['dungeon']) : 1;
@@ -657,13 +758,14 @@ function quicklinks()
 			alert("danger","Uh Oh!","You have selected an invalid dungeon item.");
 			die($h->endpage());
 		}
-		if ($infirmary < 1 || $infirmary > 2)
+		if ($infirmary < 1 || $infirmary > 3)
 		{
 			alert("danger","Uh Oh!","You have selected an invalid infirmary item.");
 			die($h->endpage());
 		}
 		$db->query("UPDATE `user_settings` SET `ditem` = {$dungeon}, `iitem` = {$infirmary} WHERE `userid` = {$userid}");
 		alert('success',"Success!","You have successfully updated your infirmary and dungeon quick links",true,'preferences.php');
+        $api->SystemLogsAdd($userid, 'preferences', "Updated quick links.");
 	}
 	else
 	{
@@ -674,8 +776,8 @@ function quicklinks()
 					Dungeon Item
 					<select name='dungeon' class='form-control'>
 						<option value='1'>Lockpick</option>
-						<option value='2'>Key</option>
-						<option value='3'>Key Set</option>
+						<option value='2'>Dungeon Key</option>
+						<option value='3'>Dungeon Key Set</option>
 					</select>
 				</div>
 				<div class='col-md-6'>
@@ -683,6 +785,7 @@ function quicklinks()
 					<select name='infirmary' class='form-control'>
 						<option value='1'>Leech</option>
 						<option value='2'>Linen Wrap</option>
+                        <option value='3'>Acupuncture Needle</option>
 					</select>
 				</div>
 			</div>
@@ -700,11 +803,13 @@ function userdropdown()
 		{
 			$db->query("UPDATE `user_settings` SET `dropdown` = 0 WHERE `userid` = {$userid}");
 			alert('success',"Success!","You have set your user input to the dropdown.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Updated User Input to Dropdown.");
 		}
 		else
 		{
 			$db->query("UPDATE `user_settings` SET `dropdown` = 1 WHERE `userid` = {$userid}");
 			alert('success',"Success!","You have set your user input to number input.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Updated User Input to Numbers.");
 		}
     }
     else
@@ -730,18 +835,19 @@ function forumalert()
 		{
 			$db->query("UPDATE `user_settings` SET `forum_alert` = 0 WHERE `userid` = {$userid}");
 			alert('success',"Success!","You have successfully disabled forum notifications.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Disabled forum notifications.");
 		}
 		else
 		{
 			$db->query("UPDATE `user_settings` SET `forum_alert` = 1 WHERE `userid` = {$userid}");
 			alert('success',"Success!","You have successfully enabled forum notifications.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Enabled forum notifications.");
 		}
     }
     else
     {
         echo "You can choose to receive notifications if players respond to your forum threads. You will not get notifications 
-		if you respond to your own threads. You will not get notifications if your thread is locked, deleted, stickied, etc. By 
-		default, this is off. You <i>must</i> opt-in to receive notifications.<br />
+		if you respond to your own threads. By default, this is off. You <i>must</i> opt-in to receive notifications.<br />
         <form method='post'>
             <input type='hidden' value='disable' name='do'>
             <input type='submit' class='btn btn-primary' value='Disable Notifications'>
@@ -749,39 +855,6 @@ function forumalert()
 		<form method='post'>
             <input type='hidden' value='enable' name='do'>
             <input type='submit' class='btn btn-primary' value='Enable Notifications'>
-        </form>";
-    }
-}
-
-function analytics()
-{
-	global $db,$userid,$api,$h;
-    if (isset($_POST['do']))
-    {
-		if ($_POST['do'] == 'disable')
-		{
-			$db->query("UPDATE `user_settings` SET `analytics` = 0 WHERE `userid` = {$userid}");
-			alert('success',"Success!","You have successfully disabled analytics.",true,'preferences.php');
-		}
-		else
-		{
-			$db->query("UPDATE `user_settings` SET `analytics` = 1 WHERE `userid` = {$userid}");
-			alert('success',"Success!","You have successfully enabled analytics.",true,'preferences.php');
-		}
-    }
-    else
-    {
-        echo "You can choose to enable or disable analytics. Analytics are used to understand how players use the game, 
-		improve performance, and are generally very nice to have. They're anonymous in nature and are harmless to have enabled. 
-		However, those who are strong privacy advocates usually tend to like this setting off. Its recommended that you keep them 
-		on to help the game. By default, they're enabled.
-        <form method='post'>
-            <input type='hidden' value='disable' name='do'>
-            <input type='submit' class='btn btn-primary' value='Disable Analytics'>
-        </form>
-		<form method='post'>
-            <input type='hidden' value='enable' name='do'>
-            <input type='submit' class='btn btn-primary' value='Enable Analytics'>
         </form>";
     }
 }
@@ -809,6 +882,7 @@ function twofa()
 				$db->query("INSERT INTO `2fa_table` (`userid`, `secret_key`) VALUES ({$userid}, '{$_SESSION['2fa_secret']}')");
 				$_SESSION['2fa_secret']=NULL;
 				$_SESSION['2fa_code']=NULL;
+                $api->SystemLogsAdd($userid, 'preferences', "Enabled two-factor authentication.");
 			} 
 			else 
 			{
@@ -841,6 +915,7 @@ function twofa()
 		{
 			$db->query("UPDATE `user_settings` SET `2fa_on` = 0 WHERE `userid` = {$userid}");
 			$db->query("DELETE FROM `2fa_table` WHERE `userid` = {$userid}");
+            $api->SystemLogsAdd($userid, 'preferences', "Disabled two-factor authentication.");
 			alert('success',"Success!","You have successfully removed two-factor authentication from your account. Please delete any keys/settings from your authenticator app.",true,'preferences.php');
 		}
 		else
@@ -853,6 +928,158 @@ function twofa()
 			</form>";
 		}
 	}
+}
+
+function webnotif()
+{
+    ?>
+        <button disabled class="js-push-btn btn btn-primary">
+        Enable Push Messaging
+      </button>
+    <?php
+}
+
+function classreset()
+{
+    global $db,$userid,$api,$h,$ir;
+    if ($ir['classreset'] == 1)
+    {
+        alert('danger',"Uh Oh!","You've already reset your class once. If you wish to do so again, please contact CID Admin to discuss.",true,'preferences.php');
+        die($h->endpage());
+    }
+    if (isset($_POST['class']))
+    {
+        if ($_POST['class'] == $ir['class'])
+        {
+            alert('danger',"Uh Oh!","Why would you want to waste your only class reset to select the class you already are?");
+            die($h->endpage());
+        }
+        if (($_POST['class'] != 'Guardian') && ($_POST['class'] != 'Warrior') && ($_POST['class'] != 'Warrior'))
+        {
+            alert('danger',"Uh Oh!","Invalid class selected.");
+            die($h->endpage());
+        }
+        if ($ir['iq'] < 10000)
+        {
+            alert('danger',"Uh Oh!","You need at least 10,000 IQ to change your class.");
+            die($h->endpage());
+        }
+        if (($ir['equip_primary'] + $ir['equip_secondary'] + $ir['equip_armor']) != 0)
+        {
+            alert('danger',"Uh Oh!", "Please remove your equipment before using this feature.");
+            die($h->endpage());
+        }
+        if ($ir['class'] == 'Guardian')
+        {
+            if ($_POST['class'] == 'Warrior')
+            {
+                $strength=$ir['guard']-($ir['guard']*0.25);
+                $agility=$ir['strength']-($ir['strength']*0.25);
+                $guard=$ir['agility']-($ir['agility']*0.25);
+            }
+            if ($_POST['class'] == 'Rogue')
+            {
+                $strength=$ir['agility']-($ir['agility']*0.25);
+                $agility=$ir['guard']-($ir['guard']*0.25);
+                $guard=$ir['strength']-($ir['strength']*0.25);
+            }
+        }
+        if ($ir['class'] == 'Rogue')
+        {
+            if ($_POST['class'] == 'Warrior')
+            {
+                $strength=$ir['agility']-($ir['agility']*0.25);
+                $agility=$ir['guard']-($ir['guard']*0.25);
+                $guard=$ir['strength']-($ir['strength']*0.25);
+            }
+            if ($_POST['class'] == 'Guardian')
+            {
+                $strength=$ir['guard']-($ir['guard']*0.25);
+                $agility=$ir['strength']-($ir['strength']*0.25);
+                $guard=$ir['agility']-($ir['agility']*0.25);
+            }
+        }
+        if ($ir['class'] == 'Warrior')
+        {
+            if ($_POST['class'] == 'Rogue')
+            {
+                $strength=$ir['guard']-($ir['guard']*0.25);
+                $agility=$ir['strength']-($ir['strength']*0.25);
+                $guard=$ir['agility']-($ir['agility']*0.25);
+            }
+            if ($_POST['class'] == 'Guardian')
+            {
+                $strength=$ir['agility']-($ir['agility']*0.25);
+                $agility=$ir['guard']-($ir['guard']*0.25);
+                $guard=$ir['strength']-($ir['strength']*0.25);
+            }
+        }
+        $strength=round($strength);
+        $agility=round($agility);
+        $guard=round($guard);
+        $db->query("UPDATE `userstats` 
+                    SET `strength` = {$strength}, 
+                    `agility` = {$agility}, 
+                    `guard` = {$guard}, 
+                    `iq` = `iq` - 10000 
+                    WHERE `userid` = {$userid}");
+        $db->query("UPDATE `users` SET `class` = '{$_POST['class']}' WHERE `userid` = {$userid}");
+        $db->query("UPDATE `user_settings` SET `classreset` = `classreset` + 1 WHERE `userid` = {$userid}");
+        $api->SystemLogsAdd($userid, 'preferences', "Changed class to {$_POST['class']}.");
+        alert('success',"Success!","You have successfully changed your class to {$_POST['class']}.",true,'preferences.php');
+    }
+    else
+    {
+        echo "Don't like the class you chose at registration? No problem! Here you may change your class <b>once</b>. However, 
+        there are a few catches. Your stats will be changed to reflect the class you change yourself into. If you're becoming a 
+        Warrior from a Guardian, Your Strength will become your Agility, your Agility will become your Guard, and your Guard will become your 
+        Strength. If this seems confusing to you, please contact staff before you act. You will also receive a 25% reduction on 
+        your stats. You must also have at least 10,000 IQ to use this feature. You must also have no armor or weapons equipped.
+        <br /> You are currently part of the {$ir['class']} class.<br />
+        Warrior: Extra Strength, Normal Agility, Less Guard<br />
+        Rogue: Less Strength, Extra Agility, Normal Guard<br />
+        Guardian: Normal Strength, Less Agility, Extra Guard<br />
+        <form method='post'>
+            <select name='class' id='class' class='form-control' type='dropdown'>
+                <option value='Warrior'>Warrior</option>
+                <option value='Rogue'>Rogue</option>
+                <option value='Guardian'>Guardian</option>
+            </select>
+            <input type='submit' value='Change Class' class='btn btn-primary'>
+        </form>";
+    }
+}
+
+function tuttoggle()
+{
+	global $db,$userid,$api,$h;
+    if (isset($_POST['do']))
+    {
+		if ($_POST['do'] == 'disable')
+		{
+			$db->query("UPDATE `user_settings` SET `tut_on` = 0 WHERE `userid` = {$userid}");
+			alert('success',"Success!","You have successfully disabled the tutorial.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Disabled tutorial.");
+		}
+		else
+		{
+			$db->query("UPDATE `user_settings` SET `tut_on` = 1 WHERE `userid` = {$userid}");
+			alert('success',"Success!","You have successfully enabled the tutorial.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Enabled tutorial.");
+		}
+    }
+    else
+    {
+        echo "Here you may toggle the tutorial. By default, its enabled.<br />
+        <form method='post'>
+            <input type='hidden' value='disable' name='do'>
+            <input type='submit' class='btn btn-primary' value='Disable Tutorial'>
+        </form>
+		<form method='post'>
+            <input type='hidden' value='enable' name='do'>
+            <input type='submit' class='btn btn-primary' value='Enable Tutorial'>
+        </form>";
+    }
 }
 
 $h->endpage();

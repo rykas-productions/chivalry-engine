@@ -1,7 +1,7 @@
 <?php
 require('globals_nonauth.php');
 echo "<h3>{$set['WebsiteName']} Privacy Policy</h3><hr />";
-echo "{$set['WebsiteName']} is seriously commited towards protecting the privacy of its users when processing personal
+echo "{$set['WebsiteName']} is seriously committed towards protecting the privacy of its users when processing personal
     data and considers this for all business practices. {$set['WebsiteName']} observes the pertinent data
     protection guidelines. These data protection provisions apply to all services offered on websites operated by
     {$set['WebsiteName']} as well as to portals and to all online games offered by {$set['WebsiteName']} ('Website')
@@ -28,7 +28,7 @@ echo "<h4>1. Capturing and Use of Your Personal Data by {$set['WebsiteName']}</h
     to adapt the services offered to your requirements.
     <br />
     <br />
-    1.2 In principle, {$set['WebsiteName']} only gains knowledge of, captures and utilises such data which you provide
+    1.2 In principle, {$set['WebsiteName']} only gains knowledge of, captures and utilities such data which you provide
     when using the website within the scope of your initial registration and full user registration and, if applicable,
     when making use of services subject to a charge. Upon initial registration and full user registration, all you need
     is to give a user name and an email address.
@@ -44,9 +44,9 @@ echo "<h4>1. Capturing and Use of Your Personal Data by {$set['WebsiteName']}</h
     regarding passing on data to third parties in clause 5 'Passing personal data to third parties'.
     <br />
     <br />
-    1.4 Here, {$set['WebsiteName']} points out that inventory data, utilisation data and statement data according to
+    1.4 Here, {$set['WebsiteName']} points out that inventory data, utilization data and statement data according to
     Articles 14, 15 of the Telecommunications Act or Article 28 of the Federal Data Protection Act are collected,
-    processed and used and this is done, as far as required, even beyond the fulfilment of an agreement.
+    processed and used and this is done, as far as required, even beyond the fulfillment of an agreement.
     {$set['WebsiteName']} reserves the right to store IP addresses and log files for a reasonable period of time
     after making use of the website to monitor whether the user complies with the conditions and game rules, in
     particular to ensure proper processing of the payment that you have authorized. This process especially serves
@@ -63,7 +63,7 @@ echo "<h4>1. Capturing and Use of Your Personal Data by {$set['WebsiteName']}</h
     <br />
     <br />
     1.6 Within the scope of legal provisions, {$set['WebsiteName']} immediately deletes personal data at the
-    authorised person's request, provided this does not contradict mandatory legal retention obligations.
+    authorized person's request, provided this does not contradict mandatory legal retention obligations.
     <hr />";
 //Section 2
 echo "<h4>2. Receipt of Information About the Game / Newsletter</h4>
@@ -97,14 +97,15 @@ echo "<h4>3. The Use of Cookies and Web Beacons</h4>
     3.2.1 Google Analytics<br />
     Google Analytics, a web analysis service from the provider Google Incorporated ('Google'), collects and stores
     data on the company's website, enabling the creation of user profiles under pseudonyms. These user profiles
-    serve to analyse visitor behaviour and are evaluated in order to improve and design our offer so as to meet the
+    serve to analyze visitor behavior and are evaluated in order to improve and design our offer so as to meet the
     demands. Cookies can be used for this purpose. You can prevent cookies being installed by making a corresponding
     adjustment to your browser software; however, we must point out that if you do so, you may not be able to use
     all the functions on this website to the full extent. The pseudonymous user profiles are not merged with
     personal data via the pseudonym carrier without an especially granted approval by the affected person. You can,
     at any time with effect for the future, object to the collection and storing of data for the purpose of web
     analysis by installing the browser add-on to deactivate Google Analytics.
-    (<a href='https://tools.google.com/dlpage/gaoptout'>https://tools.google.com/dlpage/gaoptout</a>).<br /><br />
+    (<a href='https://tools.google.com/dlpage/gaoptout'>https://tools.google.com/dlpage/gaoptout</a>). Optionally, you 
+	may opt-out of analytical tracking by disabling it in your in-game preferences menu.<br /><br />
     3.3. Advertising by Third Parties, Links to Other Websites<br />
     3.3.1 From time to time, the website may also contain advertising by a third party and interactive links to third
     party Internet appearances for which {$set['WebsiteName']} is not responsible. In particular, {$set['WebsiteName']}
@@ -113,8 +114,8 @@ echo "<h4>3. The Use of Cookies and Web Beacons</h4>
     appearances as well as their compliance with the provisions of the Data Protection Act.<hr />";
 //Section 4
 echo "<h4>4. Data security</h4>
-	4.1 At all times,  {$set['WebsiteName']}, to a reasonable extent, to prevent unauthorised access to your personal
-	data as well as the unauthorised use or falsification of theses data and to minimise the corresponding risks.
+	4.1 At all times,  {$set['WebsiteName']}, to a reasonable extent, to prevent unauthorized access to your personal
+	data as well as the unauthorized use or falsification of theses data and to minimize the corresponding risks.
 	Nevertheless, the provision of personal data, whether this is done personally, by telephone or over the Internet, is
 	always associated with risks and no technological system is fully exempt from the possibility of manipulation or
 	sabotage.<hr />";
@@ -122,18 +123,18 @@ echo "<h4>4. Data security</h4>
 echo "<h4>5. Passing Personal Data to Third Parties</h4>
 	5.1 {$set['WebsiteName']} will, in principle, only pass your personal and/or billing-related data to third parties,
 	that is to partner companies, other companies cooperating with {$set['WebsiteName']}, external service providers and
-    investigative authorities as far as this is required to fulfil the agreement and for the aforementioned purposes,
+    investigative authorities as far as this is required to fulfill the agreement and for the aforementioned purposes,
     in particular for payment processing as well as to protect other users or as provided by law. Payment processing
     takes place via external service providers (e.g. credit card companies, banks, PaySafe, Wallie, Clickandbuy,
     Moneybookers, Paypal, Global Collect). Your protected interests are considered according to the legal provisions.
     External service providers are obliged to treat your data confidentially and securely and may only use your data as
-    far as this is required to fulfil their duties. We point out that {$set['WebsiteName']} may be obliged to pass
+    far as this is required to fulfill their duties. We point out that {$set['WebsiteName']} may be obliged to pass
     data on the basis of legal provisions (e.g. passing to investigative authorities). Data are only passed as far as
     this is required or prescribed by law.
     <br />
     <br />
     <u>In the event of payment arrears {$set['WebsiteName']} will, if necessary, instruct a collection company or a
-    lawyer to collect the payable amount. The required data are passed for this purpose and utilised in compliance
+    lawyer to collect the payable amount. The required data are passed for this purpose and utilized in compliance
     with all data protection guidelines.</u>
     <br />
     <br />
@@ -142,7 +143,7 @@ echo "<h4>5. Passing Personal Data to Third Parties</h4>
     previously given your express approval.<hr />";
 //Section 6
 echo "<h4>6. Changes</h4>
-    {$set['WebsiteName']} an change these data protection provisions or change the content of the page or change or
+    {$set['WebsiteName']} can change these data protection provisions or change the content of the page or change or
     block access to these pages at any time. {$set['WebsiteName']} will use suitable means to point out such changes.
     <hr />";
 //Section 7

@@ -68,7 +68,7 @@ if (isset($_GET["stat"]) && $_GET["amnt"]) {
             $str_select = "selected";
         } //Agility is the chosen stat.
         elseif ($stat == "agility") {
-            alert('success', "Success!", "You beging to run laps. You have gained " . number_format($gain) . " Agility by completing
+            alert('success', "Success!", "You begin to run laps. You have gained " . number_format($gain) . " Agility by completing
 			    {$_GET['amnt']} laps. You now have " . number_format($NewStatAmount) . " Agility and {$EnergyLeft} Energy left.", false);
             //Have agility selected for the next training.
             $agl_select = "selected";
@@ -91,7 +91,7 @@ if (isset($_GET["stat"]) && $_GET["amnt"]) {
             $all_select = "selected";
         }
         //Log the user's training attempt.
-        $api->SystemLogsAdd($userid, 'training', "Trained their {$stat} {$_GET['amnt']} times and gained " . number_format($gain) . ".");
+        $api->SystemLogsAdd($userid, 'training', "Trained {$stat} {$_GET['amnt']} times and gained " . number_format($gain) . ".");
         echo "<hr />";
         $ir['energy'] -= $_GET['amnt'];
         if ($stat != 'all')

@@ -40,9 +40,6 @@ function home()
 				<th>
 					Reason
 				</th>
-				<th class='hidden-xs'>
-					Check-in
-				</th>
 				<th>
 					Check-out
 				</th>
@@ -64,9 +61,6 @@ function home()
 				</td>
 				<td>
 					{$Infirmary['dungeon_reason']}
-				</td>
-				<td class='hidden-xs'>
-					" . DateTime_Parse($Infirmary['dungeon_in']) . "
 				</td>
 				<td>
 					" . TimeUntil_Parse($Infirmary['dungeon_out']) . "
@@ -147,16 +141,10 @@ function bust()
 			    {$brave}%.", true, 'dungeon.php');
             die($h->endpage());
         }
-        //User does not have 25% will.
-		$will=$api->UserInfoGet($userid, 'will', true);
-        if ($will < 5) {
-            alert('danger', "Uh Oh!", "You do not have enough will to bust someone out. You need at least 5% Will, and you only have {$will}%.", true, 'dungeon.php');
-            die($h->endpage());
-        }
         //Update user's info.
-        $api->UserInfoSet($userid, 'will', -5, true);
         $api->UserInfoSet($userid, 'brave', -10, true);
-        $mult = $api->UserInfoGet($_GET['user'], 'level') * $api->UserInfoGet($_GET['user'], 'level');
+		$lvl=$api->UserInfoGet($_GET['user'], 'level');
+		$mult = Random($lvl+($lvl/2),$lvl*$lvl);
         $chance = min(($ir['level'] / $mult) * 50 + 1, 95);
         //User is successful.
         if (Random(1, 100) < $chance) {
@@ -171,7 +159,7 @@ function bust()
 			die($h->endpage());
         } //User failed. Tell person and throw user in dungeon.
         else {
-            $time = min($mult, 100);
+            $time = min($mult, Random(100,$lvl+100));
             $reason = $db->escape("Caught trying to bust out {$api->SystemUserIDtoName($_GET['user'])}");
             $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
                 failed to bust you out of the dungeon.");

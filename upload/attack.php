@@ -51,6 +51,7 @@ function attacking()
         //If RNG is not the same number stored in session
         if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
             $_SESSION['attacking'] = 0;
+            $_SESSION['attack_scroll'] = 0;
             $ir['attacking'] = 0;
             $api->UserInfoSetStatic($userid, "attacking", 0);
             alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}");
@@ -74,7 +75,7 @@ function attacking()
         die($h->endpage());
     } //If the user has no HP, and is not already attacking.
     else if ($ir['hp'] <= 1 && $ir['attacking'] == 0) {
-        alert("danger", "Unconscious!", "You have no HP, so you cannot attack. Come back when your HP has refilled.", true, 'index.php');
+        alert("danger", "Uh Oh!", "You have no HP, so you cannot attack. Come back when your HP has refilled.", true, 'index.php');
         die($h->endpage());
     } //If the user has left a previous after losing.
     else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] > 1) {
@@ -85,7 +86,7 @@ function attacking()
     $youdata = $ir;
     $laston = time() - 900;
     $q = $db->query("SELECT `u`.`userid`, `hp`, `equip_armor`, `username`,
-	       `equip_primary`, `equip_secondary`, `guild`, `location`, `maxhp`,
+	       `equip_primary`, `equip_secondary`, `equip_potion`, `guild`, `location`, `maxhp`, `class`, 
 	       `guard`, `agility`, `strength`, `gender`, `level`, `laston`, `protection`, `display_pic`
 			FROM `users` AS `u`
 			INNER JOIN `userstats` AS `us` ON `u`.`userid` = `us`.`userid`
@@ -125,6 +126,32 @@ function attacking()
 		}
 		
 	}
+	$specialnumber=((getSkillLevel($userid,6)*3)/100);
+	if ($ir['class'] == 'Warrior')
+	{
+		$ir['strength']=$ir['strength']+($ir['strength']*$specialnumber);
+	}
+	if ($ir['class'] == 'Rogue')
+	{
+		$ir['agility']=$ir['agility']+($ir['agility']*$specialnumber);
+	}
+	if ($ir['class'] == 'Guardian')
+	{
+		$ir['guard']=$ir['guard']+($ir['guard']*$specialnumber);
+	}
+	$specialnumber2=((getSkillLevel($odata['userid'],6)*3)/100);
+	if ($odata['class'] == 'Warrior')
+	{
+		$odata['strength']=$odata['strength']+($odata['strength']*$specialnumber2);
+	}
+	if ($odata['class'] == 'Rogue')
+	{
+		$odata['agility']=$odata['agility']+($odata['agility']*$specialnumber2);
+	}
+	if ($odata['class'] == 'Guardian')
+	{
+		$odata['guard']=$odata['guard']+($odata['guard']*$specialnumber2);
+	}
     //Check that the opponent has 1 health point.
     if ($odata['hp'] == 1) {
         $_SESSION['attacking'] = 0;
@@ -139,15 +166,25 @@ function attacking()
 		$_SESSION['attack_scroll'] = 0;
         $ir['attacking'] = 0;
         $api->UserInfoSetStatic($userid, "attacking", 0);
-        alert("danger", "Unconscious!", "{$odata['username']} is currently in the infirmary. Try again later.", true, 'index.php');
+        alert("danger", "Uh Oh!", "{$odata['username']} is currently in the infirmary. Try again later.", true, 'index.php');
         die($h->endpage());
-    } //Check if the current user is in the infirmary.
+    }
+	//Check if opponnent has at least 1/2 health
+	else if (($api->UserInfoGet($_GET['user'],'hp',true) < 50) && $ir['attacking'] == 0) {
+		$_SESSION['attacking'] = 0;
+		$_SESSION['attack_scroll'] = 0;
+        $ir['attacking'] = 0;
+        $api->UserInfoSetStatic($userid, "attacking", 0);
+        alert("danger", "Uh Oh!", "{$odata['username']} does not have at least half their health.", true, 'index.php');
+        die($h->endpage());
+	}
+	//Check if the current user is in the infirmary.
     else if ($api->UserStatus($ir['userid'], 'infirmary') == true) {
         $_SESSION['attacking'] = 0;
 		$_SESSION['attack_scroll'] = 0;
         $ir['attacking'] = 0;
         $api->UserInfoSetStatic($userid, "attacking", 0);
-        alert("danger", "Unconscious!", "You are currently in the infirmary. Try again after you heal out.", true, 'index.php');
+        alert("danger", "Uh Oh!", "You are currently in the infirmary. Try again after you heal out.", true, 'index.php');
         die($h->endpage());
     } //Check if the opponent is in the dungeon.
     else if ($api->UserStatus($_GET['user'], 'dungeon') == true) {
@@ -155,7 +192,7 @@ function attacking()
 		$_SESSION['attack_scroll'] = 0;
         $ir['attacking'] = 0;
         $api->UserInfoSetStatic($userid, "attacking", 0);
-        alert("danger", "Locked Up!", "{$odata['username']} is currently in the dungeon. Try again later.", true, 'index.php');
+        alert("danger", "Uh Oh!", "{$odata['username']} is currently in the dungeon. Try again later.", true, 'index.php');
         die($h->endpage());
     } //Check if the current user is in the dungeon.
     else if ($api->UserStatus($userid, 'dungeon') == true) {
@@ -163,7 +200,7 @@ function attacking()
 		$_SESSION['attack_scroll'] = 0;
         $ir['attacking'] = 0;
         $api->UserInfoSetStatic($userid, "attacking", 0);
-        alert("danger", "Locked Up!", "You are currently in the dungeon. Try again after you've paid your debt to society.", true, 'index.php');
+        alert("danger", "Uh Oh!", "You are currently in the dungeon. Try again after you've paid your debt to society.", true, 'index.php');
         die($h->endpage());
     } //Check if opponent has permission to be attacked.
     else if (permission('CanBeAttack', $_GET['user']) == false) {
@@ -236,12 +273,12 @@ function attacking()
         $api->UserInfoSetStatic($userid, "attacking", $ir['attacking']);
         $_GET['nextstep'] = (isset($_GET['nextstep']) && is_numeric($_GET['nextstep'])) ? abs($_GET['nextstep']) : '';
         //Check if the current user is attacking with a weapon that they have equipped.
-        if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary']) {
+        if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary'] && $_GET['weapon'] != $ir['equip_potion']) {
             alert("danger", "Security Issue!", "You cannot attack with a weapon you don't have equipped... You lost your
 			                                experience for that.", true, 'index.php');
             die($h->endpage());
         }
-        $winfo_sql = "SELECT `itmname`, `weapon`, `ammo` FROM `items` WHERE `itmid` = {$_GET['weapon']} LIMIT 1";
+        $winfo_sql = "SELECT `itmname`, `weapon`, `ammo`, `itmtype`, `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on` FROM `items` WHERE `itmid` = {$_GET['weapon']} LIMIT 1";
         $qo = $db->query($winfo_sql);
         //If the weapon chosen is not a valid weapon.
         if ($db->num_rows($qo) == 0) {
@@ -260,19 +297,65 @@ function attacking()
 		$mydamage = round(($r1['weapon'] * $youdata['strength'] / ($odata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 		$hitratio = max(10, min(60 * $ir['agility'] / $odata['agility'], 95));
 		$ttu='';
+        //Item used is a potion... so don't do damage.
+        if (($r1['itmtype'] == 8) || ($r1['itmtype'] == 7))
+        {
+            $dodamage=false;
+            $usepotion=true;
+        }
+        else
+        {
+            $dodamage=true;
+            $usepotion=false;
+        }
 		if ($r1['ammo'] > 0)
 		{
 			if (!$api->UserHasItem($userid,$r1['ammo'],1))
 			{
-				alert('danger',"Uh Oh!","You need at least one {$api->SystemItemIDtoName($r1['ammo'])} to use your {$api->SystemItemIDtoName($_GET['weapon'])}. It has been unequipped and moved to your inventory.",false);
-				$mydamage=0;
+				if ($_GET['weapon'] == $ir['equip_primary'])
+				{
+					$ir['equip_primary'] = 0;
+					$slot='equip_primary';
+				}
+				if ($_GET['weapon'] == $ir['equip_secondary'])
+				{
+					$ir['equip_secondary'] = 0;
+					$slot='equip_secondary';
+				}
+				$sbq=$db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$slot}'");
+				$statloss='';
+				if ($db->num_rows($sbq) > 0)
+				{
+					$statloss .= "You have lost ";
+					while ($sbr=$db->fetch_row($sbq))
+					{
+						if ($sbr['direction'] == 'pos')
+						{
+							if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+								$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
+							} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
+								$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
+							}
+						}
+						else
+						{
+							if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+								$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
+							} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
+								$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
+							}
+						}
+						$ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
+						$statloss .= "{$sbr['number']} {$sbr['stat']}, ";
+						$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$slot}'");
+					}
+					$statloss .= "when you unequipped this item.";
+				}
+				alert('danger',"Uh Oh!","You need at least one {$api->SystemItemIDtoName($r1['ammo'])} to use your {$api->SystemItemIDtoName($_GET['weapon'])}. {$statloss} It has been unequipped and moved to your inventory.",false);
+				$dodamage=false;
 				$db->query("UPDATE `users` SET `equip_primary` = 0 WHERE `equip_primary` = {$_GET['weapon']} AND `userid` = {$userid}");
 				$db->query("UPDATE `users` SET `equip_secondary` = 0 WHERE `equip_secondary` = {$_GET['weapon']} AND `userid` = {$userid}");
 				$api->UserGiveItem($userid,$_GET['weapon'],1);
-				if ($_GET['weapon'] == $ir['equip_primary'])
-					$ir['equip_primary'] = 0;
-				if ($_GET['weapon'] == $ir['equip_secondary'])
-					$ir['equip_secondary'] = 0;
 			}
 			else
 			{
@@ -280,59 +363,134 @@ function attacking()
 				$ttu="You take aim with your {$api->SystemItemIDtoName($_GET['weapon'])} and fire.";
 			}
 		}
+		$missed=0;
         //If the attack attempt was connected.
-        if (Random(1, 100) <= $hitratio) {
-            //If the opponent has armor equipped.
-            if ($odata['equip_armor'] > 0) {
-                $armorinfo_sql = "SELECT `armor` FROM `items` WHERE `itmid` = {$odata['equip_armor']} LIMIT 1";
-                $q3 = $db->query($armorinfo_sql);
-                //Check that the armor is valid.
-                if ($db->num_rows($q3) > 0) {
-                    $mydamage -= $db->fetch_single($q3);
+		if ($dodamage)
+		{
+			if (Random(1, 100) <= $hitratio) {
+				//If the opponent has armor equipped.
+				if ($odata['equip_armor'] > 0) {
+					$armorinfo_sql = "SELECT `armor` FROM `items` WHERE `itmid` = {$odata['equip_armor']} LIMIT 1";
+					$q3 = $db->query($armorinfo_sql);
+					//Check that the armor is valid.
+					if ($db->num_rows($q3) > 0) {
+						$specialnumb=((getSkillLevel($odata['userid'],9)*7.5)/100);
+						$mydamage -= $db->fetch_single($q3)-($db->fetch_single($q3)*$specialnumb);
+					}
+					$db->free_result($q3);
+				}
+				$theirbeforehp = $odata['hp'];
+				//Fix damage...
+				if ($mydamage < -100000) {
+					$mydamage = abs($mydamage);
+				} else if ($mydamage < 1) {
+					$mydamage = 1;
+				}
+				$crit = Random(1, 40);
+				//If user makes a critical hit, multiply damage.
+				if ($crit == 17) {
+					$mydamage *= Random(20, 40) / 10;
+				} //If unlucky crit... reduce damage.
+				else if ($crit == 25 OR $crit == 8) {
+					$mydamage /= (Random(20, 40) / 10);
+				}
+				if ($mydamage > $theirbeforehp) {
+					$mydamage = $odata['hp'];
+				}
+				$mydamage = round($mydamage);
+				$odata['hp'] -= $mydamage;
+				if ($odata['hp'] == 1) {
+					$odata['hp'] = 0;
+					$mydamage += 1;
+				}
+			}
+			else
+			{
+				$missed=1;
+			}
+		}
+		else
+		{
+			$mydamage=0;
+		}
+        if (!$usepotion)
+        {
+            if ($missed == 1)
+            {
+                alert('warning', "Attempt {$_GET['nextstep']}!", "{$ttu} You attempt to strike {$odata['username']} but missed. Your
+                    opponent has {$odata['hp']} HP Remaining.", false, '', true);
+            }
+            else
+            {
+                //Reduce health.
+                $db->query("UPDATE `users` SET `hp` = `hp` - {$mydamage} WHERE `userid` = {$_GET['user']}");
+                $db->query("DELETE FROM `spy_advantage` WHERE `user` = {$userid} AND `spied` = {$_GET['user']}");
+                alert('success', "Attempt {$_GET['nextstep']}!", "{$ttu} Using your {$r1['itmname']} you manage to strike
+                {$odata['username']} dealing {$mydamage} damage. Your opponent has {$odata['hp']} HP remaining.", false, '', true);
+                $_SESSION['attackdmg'] += $mydamage;
+                user_log($userid,'dmgdone',$mydamage);
+            }
+        }
+        else
+        {
+            if ($api->UserHasItem($userid,$_GET['weapon'],1))
+            {
+                for ($enum = 1; $enum <= 3; $enum++) {
+                    if ($r1["effect{$enum}_on"] == 'true') {
+                        $einfo = unserialize($r1["effect{$enum}"]);
+                        if ($einfo['inc_type'] == "percent") {
+                            if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
+                                $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
+                            } elseif (in_array($einfo['stat'], array('dungeon', 'infirmary'))) {
+                                $EndTime = $db->fetch_single($db->query("SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
+                                $inc = round((($EndTime - $Time) / 100 * $einfo['inc_amount']) / 60);
+                            } else {
+                                $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
+                            }
+                        } else {
+                            $inc = $einfo['inc_amount'];
+                        }
+                        if ($einfo['dir'] == "pos") {
+                            if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
+                                $ir[$einfo['stat']] = min($ir[$einfo['stat']] + $inc, $ir['max' . $einfo['stat']]);
+                            } elseif ($einfo['stat'] == 'infirmary') {
+                                put_infirmary($userid, $inc, 'Item Misuse');
+                            } elseif ($einfo['stat'] == 'dungeon') {
+                                put_dungeon($userid, $inc, 'Item Misuse');
+                            } else {
+                                $ir[$einfo['stat']] += $inc;
+                            }
+                        } else {
+                            if ($einfo['stat'] == 'infirmary') {
+                                if (user_infirmary($userid) == true) {
+                                    remove_infirmary($userid, $inc);
+                                }
+                            } elseif ($einfo['stat'] == 'dungeon') {
+                                if (user_dungeon($userid) == true) {
+                                    remove_dungeon($userid, $inc);
+                                }
+                            } else {
+                                $ir[$einfo['stat']] = max($ir[$einfo['stat']] - $inc, 0);
+                            }
+                        }
+                        if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
+                            $upd = $ir[$einfo['stat']];
+                        }
+                        if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labour', 'iq', 'luck'))) {
+                            $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
+                        } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
+                            $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
+                        }
+                    }
                 }
-                $db->free_result($q3);
+                alert('success', "Attempt {$_GET['nextstep']}!", "{$ttu} You consume your {$r1['itmname']}.", false, '', true);
+                $api->UserTakeItem($userid,$_GET['weapon'],1);
             }
-            $theirbeforehp = $odata['hp'];
-            //Fix damage...
-            if ($mydamage < -100000) {
-                $mydamage = abs($mydamage);
-            } else if ($mydamage < 1) {
-                $mydamage = 1;
+            else
+            {
+                alert('warning',"Warning!","You do not have enough of {$api->SystemItemIDtoName($_GET['weapon'])} to use.",false);
+                $db->query("UPDATE `users` SET `equip_potion` = 0 WHERE `userid` = {$userid}");
             }
-            $crit = Random(1, 40);
-            //If user makes a critical hit, multiply damage.
-            if ($crit == 17) {
-                $mydamage *= Random(20, 40) / 10;
-            } //If unlucky crit... reduce damage.
-            else if ($crit == 25 OR $crit == 8) {
-                $mydamage /= (Random(20, 40) / 10);
-            }
-            if ($mydamage > $theirbeforehp) {
-                $mydamage = $odata['hp'];
-            }
-            $mydamage = round($mydamage);
-            $odata['hp'] -= $mydamage;
-            if ($odata['hp'] == 1) {
-                $odata['hp'] = 0;
-                $mydamage += 1;
-            }
-            //Fixes query error if the opponent HP is lower than 0.
-            if (($odata['hp'] - $mydamage) < 0) {
-                $mydamage = $mydamage + $odata['hp'];
-            }
-            //If opponent HP lower than 0, set to 0.
-            if ($odata['hp'] < 0) {
-                $odata['hp'] = 0;
-            }
-            //Reduce health.
-			$db->query("UPDATE `users` SET `hp` = `hp` - {$mydamage} WHERE `userid` = {$_GET['user']}");
-			$db->query("DELETE FROM `spy_advantage` WHERE `user` = {$userid} AND `spied` = {$_GET['user']}");
-            alert('success', "Attempt {$_GET['nextstep']}!", "{$ttu} Using your {$r1['itmname']} you manage to strike
-            {$odata['username']} dealing {$mydamage} damage. Your opponent has {$odata['hp']} HP remaining.", false, '', true);
-			$_SESSION['attackdmg'] += $mydamage;
-        } else {
-            alert('warning', "Attempt {$_GET['nextstep']}!", "{$ttu} You attempt to strike {$odata['username']} but missed. Your
-            opponent has {$odata['hp']} HP Remaining.", false, '', true);
         }
         //Win fight because opponent's health is 0 or lower.
         if ($odata['hp'] <= 0) {
@@ -346,11 +504,13 @@ function attacking()
 			<form action='?action=xp&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Gain Experience' /></form>";
         } //The opponent is not down... he gets to attack.
         else {
-            $eq = $db->query("SELECT `itmname`,`weapon`,`ammo`,`itmid` FROM  `items` WHERE `itmid` IN({$odata['equip_primary']}, {$odata['equip_secondary']})");
+            $eq = $db->query("SELECT `itmname`,`weapon`,`ammo`,`itmid`,`itmtype`, `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on` FROM  `items` WHERE `itmid` IN({$odata['equip_primary']}, {$odata['equip_secondary']}, {$odata['equip_potion']})");
             //If opponent does not have a valid weapon equipped, make them punch with fists.
             if ($db->num_rows($eq) == 0) {
                 $wep = "Fists";
                 $dam = round(round((($odata['strength'] / $ir['guard'] / 100)) + 1) * (Random(10000, 12000) / 10000));
+                $theydodmg=true;
+                $theyusepotion=false;
             } else {
                 $cnt = 0;
                 while ($r = $db->fetch_row($eq)) {
@@ -361,86 +521,221 @@ function attacking()
                 $weptouse = Random(0, $cnt - 1);    //Select opponent weapon to use.
                 $wep = $enweps[$weptouse]['itmname'];
                 $dam = round(($enweps[$weptouse]['weapon'] * $odata['strength'] / ($youdata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
-				if ($enweps[$weptouse]['ammo'] > 0)
-				{
-					if (!$api->UserHasItem($_GET['user'],$enweps[$weptouse]['ammo'],1))
-					{
-						$dam=0;
-						$db->query("UPDATE `users` SET `equip_primary` = 0 WHERE `equip_primary` = {$enweps[$weptouse]['itmid']} AND `userid` = {$_GET['user']}");
-						$db->query("UPDATE `users` SET `equip_secondary` = 0 WHERE `equip_secondary` = {$enweps[$weptouse]['itmid']} AND `userid` = {$_GET['user']}");
-						$api->UserGiveItem($_GET['user'],$enweps[$weptouse]['itmid'],1);
-						$api->GameAddNotification($_GET['user'],"You have ran out of ammo for your {$wep}. It has been unequipped and moved to your inventory.");
-					}
-					else
-					{
-						$api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
-					}
-				}
-            }
-            $hitratio = max(10, min(60 * $odata['agility'] / $ir['agility'], 95));
-            //If hit connects with user.
-            if (Random(1, 100) <= $hitratio) {
-                //If user has armor equipped.
-                if ($ir['equip_armor'] > 0) {
-                    $q3 = $db->query("SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']} LIMIT 1");
-                    //If user has valid armor equipped.
-                    if ($db->num_rows($q3) > 0) {
-                        $dam -= $db->fetch_single($q3);
+				//Item used is a potion... so don't do damage.
+                if (($enweps[$weptouse]['itmtype'] == 8) || ($enweps[$weptouse]['itmtype'] == 7))
+                {
+                    $theydodmg=false;
+                    $theyusepotion=true;
+                }
+                else
+                {
+                    $theydodmg=true;
+                    $theyusepotion=false;
+                }
+                if ($enweps[$weptouse]['ammo'] > 0)
+                {
+                    if (!$api->UserHasItem($_GET['user'],$enweps[$weptouse]['ammo'],1))
+                    {
+                        $theydodmg=false;
+                        $ouq=$db->query("SELECT `equip_primary`,`equip_secondary`,`equip_potion` FROM `users` WHERE `userid` = {$_GET['user']}");
+                        $our=$db->fetch_row($ouq);
+                        if ($enweps[$weptouse]['itmid'] == $our['equip_primary'])
+                        {
+                            $slot = 'equip_primary';
+                        }
+                        elseif ($enweps[$weptouse]['itmid'] == $our['equip_secondary'])
+                        {
+                            $slot = 'equip_secondary';
+                        }
+                        elseif ($enweps[$weptouse]['itmid'] == $our['equip_potion'])
+                        {
+                            $slot = 'equip_potion';
+                        }
+                        $sbq=$db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$_GET['user']} and `slot` = '{$slot}'");
+                        $statloss='';
+                        if ($db->num_rows($sbq) > 0)
+                        {
+                            $statloss .= "You have lost ";
+                            while ($sbr=$db->fetch_row($sbq))
+                            {
+                                if ($sbr['direction'] == 'pos')
+                                {
+                                    if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+                                        $db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$_GET['user']}");
+                                    } elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
+                                        $db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$_GET['user']}");
+                                    }
+                                }
+                                else
+                                {
+                                    if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+                                        $db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
+                                    } elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
+                                        $db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
+                                    }
+                                }
+                                $ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
+                                $statloss .= "{$sbr['number']} {$sbr['stat']}, ";
+                                $db->query("DELETE FROM `equip_gains` WHERE `userid` = {$_GET['user']} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$slot}'");
+                            }
+                            $statloss .= "when you unequipped this item.";
+                            $db->query("UPDATE `users` SET `equip_primary` = 0 WHERE `equip_primary` = {$enweps[$weptouse]['itmid']} AND `userid` = {$_GET['user']}");
+                            $db->query("UPDATE `users` SET `equip_secondary` = 0 WHERE `equip_secondary` = {$enweps[$weptouse]['itmid']} AND `userid` = {$_GET['user']}");
+                            $api->UserGiveItem($_GET['user'],$enweps[$weptouse]['itmid'],1);
+                            $api->GameAddNotification($_GET['user'],"You have ran out of ammo for your {$wep}. {$statloss} It has been unequipped and moved to your inventory.");
+                        }
+                        else
+                        {
+                            $api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
+                        }
                     }
-                    $db->free_result($q3);
                 }
-                $yourbeforehp = $ir['hp'];
-                //If the user doesn't have armor equipped.
-                if ($dam < -100000) {
-                    $dam = abs($dam);
-                } //If damage is lower than 1, set to 1.
-                else if ($dam < 1) {
-                    $dam = 1;
-                }
-                $crit = Random(1, 40);
-                //RNG for critical damage, multiply damage!
-                if ($crit == 17) {
-                    $dam *= Random(20, 40) / 10;
-                } //Unlucky... crit is weak.
-                else if ($crit == 25 OR $crit == 8) {
-                    $dam /= (Random(20, 40) / 10);
-                }
-                $dam = round($dam);
-                $youdata['hp'] -= $dam;
-                //If user has 1 hp.
-                if ($youdata['hp'] == 1) {
-                    $dam += 1;
-                    $youdata['hp'] = 0;
-                }
-                if (($ir['hp'] - $dam) < 0) {
-                    $dam = $ir['hp'];
-                    $youdata['hp'] = 0;
-                }
-                //If user HP less than 0, set to 0.
-                if ($ir['hp'] < 0) {
-                    $ir['hp'] = 0;
-                }
-                if ($dam > $yourbeforehp) {
-                    $dam = $ir['hp'];
-                }
-				$db->query("UPDATE `users` SET `hp` = `hp` - {$dam} WHERE `userid` = {$userid}");
-                $ns = $_GET['nextstep'] + 1;
-                alert('danger', "Attempt {$ns}!", "Using their {$wep}, {$odata['username']} managed to strike you dealing
-                 {$dam} damage. You have {$youdata['hp']} HP remaining.", false, '', true);
-            } //Opponent misses their hit.
-            else {
-                $ns = $_GET['nextstep'] + 1;
-                alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have {$youdata['hp']} HP remaining.", false);
             }
-            //User has no HP left, redirect to loss.
-            if ($youdata['hp'] <= 0) {
-                $youdata['hp'] = 0;
-                $_SESSION['attacklost'] = $_GET['user'];
-                $api->UserInfoSet($userid, "hp", 0);
-                echo "<form action='?action=lost&ID={$_GET['user']}' method='post'><input type='submit' class='btn btn-primary' value='Lose Fight' />";
+                $miss=0;
+                if ($theydodmg)
+                {
+                    $hitratio = max(10, min(60 * $odata['agility'] / $ir['agility'], 95));
+                    //If hit connects with user.
+                    if (Random(1, 100) <= $hitratio) {
+                        //If user has armor equipped.
+                        if ($ir['equip_armor'] > 0) {
+                            $q3 = $db->query("SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']} LIMIT 1");
+                            //If user has valid armor equipped.
+                            if ($db->num_rows($q3) > 0) {
+                                $specialnumb2=((getSkillLevel($ir['userid'],9)*7.5)/100);
+                                $dam -= $db->fetch_single($q3)-($db->fetch_single($q3)*$specialnumb2);
+                            }
+                            $db->free_result($q3);
+                        }
+                        $yourbeforehp = $ir['hp'];
+                        //If the user doesn't have armor equipped.
+                        if ($dam < -100000) {
+                            $dam = abs($dam);
+                        } //If damage is lower than 1, set to 1.
+                        else if ($dam < 1) {
+                            $dam = 1;
+                        }
+                        $crit = Random(1, 40);
+                        //RNG for critical damage, multiply damage!
+                        if ($crit == 17) {
+                            $dam *= Random(20, 40) / 10;
+                        } //Unlucky... crit is weak.
+                        else if ($crit == 25 OR $crit == 8) {
+                            $dam /= (Random(20, 40) / 10);
+                        }
+                        $dam = round($dam);
+                        $youdata['hp'] -= $dam;
+                        //If user has 1 hp.
+                        if ($youdata['hp'] == 1) {
+                            $dam += 1;
+                            $youdata['hp'] = 0;
+                        }
+                        if (($ir['hp'] - $dam) < 0) {
+                            $dam = $ir['hp'];
+                            $youdata['hp'] = 0;
+                        }
+                        //If user HP less than 0, set to 0.
+                        if ($ir['hp'] < 0) {
+                            $ir['hp'] = 0;
+                        }
+                        if ($dam > $yourbeforehp) {
+                            $dam = $ir['hp'];
+                        }
+                    } //Opponent misses their hit.
+                    else {
+                        $miss=1;
+                    }
+                }
+                else
+                {
+                    $dam=0;
+                }
+                $ns = $_GET['nextstep'] + 1;
+                if (!$theyusepotion)
+                {
+                    if ($miss == 1)
+                    {
+                        alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have {$youdata['hp']} HP remaining.", false);
+                    }
+                    else
+                    {
+                        $db->query("UPDATE `users` SET `hp` = `hp` - {$dam} WHERE `userid` = {$userid}");
+                        alert('danger', "Attempt {$ns}!", "Using their {$wep}, {$odata['username']} managed to strike you dealing
+                         {$dam} damage. You have {$youdata['hp']} HP remaining.", false, '', true);
+                         user_log($_GET['user'],'dmgdone',$dam);
+                    }
+                }
+                else
+                {
+                    if ($api->UserHasItem($_GET['user'],$enweps[$weptouse]['itmid'],1))
+                    {
+                        for ($enum = 1; $enum <= 3; $enum++) {
+                            if ($enweps[$weptouse]["effect{$enum}_on"] == 'true') {
+                                $einfo = unserialize($enweps[$weptouse]["effect{$enum}"]);
+                                if ($einfo['inc_type'] == "percent") {
+                                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
+                                        $inc = round($odata['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
+                                    } elseif (in_array($einfo['stat'], array('dungeon', 'infirmary'))) {
+                                        $EndTime = $db->fetch_single($db->query("SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
+                                        $inc = round((($EndTime - $Time) / 100 * $einfo['inc_amount']) / 60);
+                                    } else {
+                                        $inc = round($odata[$einfo['stat']] / 100 * $einfo['inc_amount']);
+                                    }
+                                } else {
+                                    $inc = $einfo['inc_amount'];
+                                }
+                                if ($einfo['dir'] == "pos") {
+                                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
+                                        $odata[$einfo['stat']] = min($odata[$einfo['stat']] + $inc, $odata['max' . $einfo['stat']]);
+                                    } elseif ($einfo['stat'] == 'infirmary') {
+                                        put_infirmary($_GET['user'], $inc, 'Item Misuse');
+                                    } elseif ($einfo['stat'] == 'dungeon') {
+                                        put_dungeon($_GET['user'], $inc, 'Item Misuse');
+                                    } else {
+                                        $odata[$einfo['stat']] += $inc;
+                                    }
+                                } else {
+                                    if ($einfo['stat'] == 'infirmary') {
+                                        if (user_infirmary($_GET['user']) == true) {
+                                            remove_infirmary($_GET['user'], $inc);
+                                        }
+                                    } elseif ($einfo['stat'] == 'dungeon') {
+                                        if (user_dungeon($_GET['user']) == true) {
+                                            remove_dungeon($_GET['user'], $inc);
+                                        }
+                                    } else {
+                                        $odata[$einfo['stat']] = max($odata[$einfo['stat']] - $inc, 0);
+                                    }
+                                }
+                                if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
+                                    $upd = $odata[$einfo['stat']];
+                                }
+                                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labour', 'iq', 'luck'))) {
+                                    $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$_GET['user']}");
+                                } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
+                                    $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$_GET['user']}");
+                                }
+                            }
+                        }
+                        alert('danger', "Attempt {$ns}!", "{$odata['username']} consumes {$wep}!", false, '', true);
+                        $api->UserTakeItem($_GET['user'],$enweps[$weptouse]['itmid'],1);
+                    }
+                    else
+                    {
+                        $api->GameAddNotification($_GET['user'],"You ran out of your potion in combat.");
+                        alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have {$youdata['hp']} HP remaining.", false);
+                        $db->query("UPDATE `users` SET `equip_potion` = 0 WHERE `userid` = {$_GET['user']}");
+                    }
+                }
+                //User has no HP left, redirect to loss.
+                if ($youdata['hp'] <= 0) {
+                    $youdata['hp'] = 0;
+                    $_SESSION['attacklost'] = $_GET['user'];
+                    $api->UserInfoSet($userid, "hp", 0);
+                    echo "<form action='?action=lost&ID={$_GET['user']}' method='post'><input type='submit' class='btn btn-primary' value='Lose Fight' />";
+                }
             }
-        }
-    } //Opponent has less than 5 HP, fight cannot start.
+	}	//Opponent has less than 5 HP, fight cannot start.
     else if ($odata['hp'] < 5) {
 		$_SESSION['attacking'] = 0;
 		$_SESSION['attack_scroll'] = 0;
@@ -476,7 +771,7 @@ function attacking()
         $vars['hpopp'] = 100 - $vars['hpperc'];
         $vars2['hpperc'] = round($odata['hp'] / $odata['maxhp'] * 100);
         $vars2['hpopp'] = 100 - $vars2['hpperc'];
-        $mw = $db->query("SELECT `itmid`,`itmname` FROM  `items`  WHERE `itmid` IN({$ir['equip_primary']}, {$ir['equip_secondary']})");
+        $mw = $db->query("SELECT `itmid`,`itmname` FROM  `items`  WHERE `itmid` IN({$ir['equip_primary']}, {$ir['equip_secondary']}, {$ir['equip_potion']})");
         echo "<table class='table table-bordered'>
 		<tr>
 			<th colspan='2'>
@@ -496,6 +791,9 @@ function attacking()
                 }
                 if ($r['itmid'] == $ir['equip_secondary']) {
                     echo "<tr><th>Secondary Weapon</th>";
+                }
+                if ($r['itmid'] == $ir['equip_potion']) {
+                    echo "<tr><th>Potion</th>";
                 }
                 echo "<td>" . returnIcon($r['itmid']) . " <a href='?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}'>{$r['itmname']}</a></td></tr>";
             }
@@ -595,11 +893,12 @@ function beat()
                     $whoswho = $db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                     //Give points to user's guild.
                     if ($whoswho['gw_declarer'] == $ir['guild']) {
-                        $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
+                        $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 3 WHERE `gw_id` = {$wr}");
                     } else {
-                        $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
+                        $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 3 WHERE `gw_id` = {$wr}");
                     }
                     $additionaltext = "By winning this fight, you've earned your guild a point in the guild war.";
+					guilddebt($ir['guild'],$r['guild']);
                 }
             }
 
@@ -695,11 +994,12 @@ function lost()
                 $whoswho = $db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                 //Give opponent's guild a point.
                 if ($whoswho['gw_declarer'] == $ir['guild']) {
-                    $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
+                    $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 5 WHERE `gw_id` = {$wr}");
                 } else {
-                    $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
+                    $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 5 WHERE `gw_id` = {$wr}");
                 }
                 $additionaltext = "You have gained a point for your opponent's guild.";
+				guilddebt($r['guild'],$ir['guild']);
             }
         }
     }
@@ -742,19 +1042,28 @@ function xp()
             exit($h->endpage());
         } else {
             $qe = $r['level'] * $r['level'] * $r['level'];
+			$specialnumber=((getSkillLevel($userid,14)*1)/100);
 			if ($api->UserEquippedItem($userid,'primary',93))
+			{
 				$qe=$qe+($qe*0.03);
+				$qe=$qe+($qe*$specialnumber);
+			}
 			if ($api->UserEquippedItem($userid,'secondary',93))
+			{
 				$qe=$qe+($qe*0.03);
-            $expgain = Random($qe / 2, $qe);
+				$qe=$qe+($qe*$specialnumber);
+			}
+            $expgain = Random($qe / 4, $qe / 2);
             $ir['total'] = $ir['strength'] + $ir['agility'] + $ir['guard'];
             $ot = $db->fetch_row($db->query("SELECT * FROM `userstats` WHERE `userid` = {$r['userid']}"));
             $ototal = $ot['strength'] + $ot['agility'] + $ot['guard'];
             //Opponent is not within 75% of user's stats, so user only
             //gains 25% of the XP they would normally get.
 			$xplostequip='';
+			$xploststat='';
             if (($ir['total'] * 0.5) > $ototal) {
                 $expgain = $expgain * 0.25;
+				$xploststat="Your experience gains were decreased severely because there was no challenge in this fight.";
             }
             if ($expgain < 0) {
                 $expgain = $expgain * -1;
@@ -806,13 +1115,14 @@ function xp()
                             $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
                         }
                         $additionaltext = "For winning this fight, you have gained your guild 1 point.";
+						guilddebt($ir['guild'],$r['guild']);
                     }
                 }
 
             }
             //Tell user they won, and if they received a point or not.
             alert('success', "You've bested {$r['username']}!", "You decide to finish the fight the honorable way. You
-			    have gained ({$expperc}%, " . round($expgain,2) . ") experience for this. {$xplostequip} {$additionaltext}", true, 'index.php');
+			    have gained ({$expperc}%, " . round($expgain,2) . ") experience for this. {$xploststat} {$xplostequip} {$additionaltext}", true, 'index.php');
 
             $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$userid}");
             $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$r['userid']}");
@@ -821,11 +1131,11 @@ function xp()
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
                 $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
             }
-			$last5=time()-300;
+			$last5=time()-600;
 			$attackedcount=$db->fetch_single($db->query("SELECT COUNT(`attack_id`) FROM `attack_logs` WHERE `attacked` = {$r['userid']} AND `result` = 'xp' AND `attack_time` > {$last5}"));
 			if ($attackedcount > 3)
 			{
-				$loss=$ototal*0.01;
+				$loss=$ototal*0.03;
 				$db->query("UPDATE `userstats` 
 							SET `strength` = `strength` - {$loss},
 							`agility` = `agility` - {$loss},
@@ -870,7 +1180,9 @@ function mug()
 			attacklog($userid,$_GET['ID'],'mugged');
 			$minimum=round($r['primary_currency']*0.02);
 			$maximum=round($r['primary_currency']*0.2);
+			$specialnumber=((getSkillLevel($userid,5)*5)/100);
             $stole = Random($minimum,$maximum);
+			$stole = $stole+($stole*$specialnumber);
             $hosptime = Random(20, 40) + floor($ir['level'] / 6);
             $hospreason = $db->escape("Robbed by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
             //Set opponent HP to 1.
@@ -901,11 +1213,12 @@ function mug()
                         $whoswho = $db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                         //Give user's guild a point.
                         if ($whoswho['gw_declarer'] == $ir['guild']) {
-                            $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
+                            $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 2 WHERE `gw_id` = {$wr}");
                         } else {
-                            $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
+                            $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 2 WHERE `gw_id` = {$wr}");
                         }
                         $additionaltext = "For winning this fight, you've won your guild 1 point.";
+						guilddebt($ir['guild'],$r['guild']);
                     }
                 }
 
@@ -939,12 +1252,6 @@ function mug()
                 } else {
                     $db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
                 }
-				if ($_GET['ID'] == 10)
-				{
-					$feathers=Random(5,30);
-					$additionaltext .= " You have managed to pluck {$feathers} Turkey Feathers off this turkey.";
-					$api->UserGiveItem($userid,88,$feathers);
-				}
                 //Tell user they took an item.
                 $api->GameAddNotification($userid, "For mugging the " . $api->SystemUserIDtoName($r['userid']) . " bot, you have gained 1 " . $api->SystemItemIDtoName($results2['botitem']));
             }
@@ -959,6 +1266,14 @@ function attacklog($attacker,$attacked,$result)
 	global $db;
 	$time=time();
 	$db->query("INSERT INTO `attack_logs` (`attack_time`, `attacker`, `attacked`, `result`) VALUES ('{$time}', '{$attacker}', '{$attacked}', '{$result}')");
+}
+function guilddebt($winner,$loser)
+{
+	global $db;
+	$sevendays=time()+604800;
+	$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 15000  WHERE `guild_id` = {$winner}");
+	$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 25000  WHERE `guild_id` = {$loser}");
+	$db->query("UPDATE `guild` SET `guild_debt_time` = {$sevendays} WHERE `guild_primcurr` < 0 AND `guild_debt_time` = 0");
 }
 
 $h->endpage();

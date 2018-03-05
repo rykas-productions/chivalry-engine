@@ -13,7 +13,7 @@
 	License: http://www.dbad-license.org/
 */
 require('globals.php');
-echo "<h3><i class='game-icon game-icon-lovers'></i> Marriage Center</h3><hr />";
+echo "<h3><i class='game-icon game-icon-linked-rings'></i> Marriage Center</h3><hr />";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -44,6 +44,9 @@ else
 			break;
 		case "divorce":
 			divorce();
+			break;
+       case "ring":
+			ring();
 			break;
 		default:
 			home_wed();
@@ -208,6 +211,8 @@ function home_wed()
 		$title2=$un;
 		$p1=$ir;
 		$p2=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
+        $p1['ring']=$mt['proposer_ring'];
+        $p2['ring']=$mt['proposed_ring'];
 	}
 	else
 	{
@@ -216,11 +221,16 @@ function home_wed()
 		$title2=$ir['username'];
 		$p1=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 		$p2=$ir;
+        $p2['ring']=$mt['proposer_ring'];
+        $p1['ring']=$mt['proposed_ring'];
+        
 	}
 	$p1['estate'] = $db->fetch_single($db->query("SELECT `house_name` FROM `estates` WHERE `house_will` = {$p1['maxwill']}"));
 	$p2['estate'] = $db->fetch_single($db->query("SELECT `house_name` FROM `estates` WHERE `house_will` = {$p2['maxwill']}"));
 	$p1['bank'] = ($p1['bank'] == -1) ? 'Unpurchased account' : number_format($p1['bank']);
 	$p2['bank'] = ($p2['bank'] == -1) ? 'Unpurchased account' : number_format($p2['bank']);
+    $p1['bigbank'] = ($p1['bigbank'] == -1) ? 'Unpurchased account' : number_format($p1['bigbank']);
+	$p2['bigbank'] = ($p2['bigbank'] == -1) ? 'Unpurchased account' : number_format($p2['bigbank']);
 	if ($mt['happiness'] == 0)
 		$mt['happiness']=$mt['happiness'];
 	if ($mt['happiness'] < 0)
@@ -239,15 +249,48 @@ function home_wed()
 			{$title2}'s Info
 		</th>
 	</tr>
+    <tr>
+		<td>
+			Copper Coins
+		</td>
+		<td align='center'>
+			" . number_format($p1['primary_currency']) . "
+		</td>
+		<td align='center'>
+			" . number_format($p2['primary_currency']) . "
+		</td>
+	</tr>
 	<tr>
 		<td>
-			Copper Coins Account
+			Bank Account
 		</td>
 		<td align='center'>
 			{$p1['bank']}
 		</td>
 		<td align='center'>
 			{$p2['bank']}
+		</td>
+	</tr>
+    <tr>
+		<td>
+			Federal Bank Account
+		</td>
+		<td align='center'>
+			{$p1['bigbank']}
+		</td>
+		<td align='center'>
+			{$p2['bigbank']}
+		</td>
+	</tr>
+    <tr>
+		<td>
+			Rings
+		</td>
+		<td align='center'>
+			{$api->SystemItemIDtoName($p1['ring'])}
+		</td>
+		<td align='center'>
+			{$api->SystemItemIDtoName($p2['ring'])}
 		</td>
 	</tr>
 	<tr>
@@ -315,18 +358,20 @@ function argue()
 		alert('danger',"Uh Oh!","You begin to argue with your spouse. After a little while, they humiliate you. You've lost your will to continue for now. Your marriage loses one happiness point.",true,'marriage.php');
 		$db->query("UPDATE `users` SET `will` = 0 WHERE `userid` = {$userid}");
 		$db->query("UPDATE `marriage_tmg` SET `happiness` = `happiness` - 1 WHERE `marriage_id` = {$mt['marriage_id']}");
-		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, started an arguement with you and you humilated them. Your marriage lost one happiness point.");
-		$api->SystemLogsAdd($userid,'marriage',"Argued with their spouse and got humilated.");
-		$api->SystemLogsAdd($event,'marriage',"Argued with their spouse and humilated their spouse.");
+		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, started an argument with you and you humiliated them. Your marriage lost one happiness point.");
+		$api->SystemLogsAdd($userid,'marriage',"Argued with their spouse and got humiliated.");
+        $happiness=$mt['happiness']-1;
+		$api->SystemLogsAdd($event,'marriage',"Argued with their spouse and humiliated their spouse.");
 	}
 	if ($outcome == 2)
 	{
 		alert('success',"Success!","You begin to argue with your spouse. After a little while, you humiliate Them. They've lost their will to continue the day. Your marriage loses one happiness point.",true,'marriage.php');
 		$db->query("UPDATE `users` SET `will` = 0 WHERE `userid` = {$p2['userid']}");
 		$db->query("UPDATE `marriage_tmg` SET `happiness` = `happiness` - 1 WHERE `marriage_id` = {$mt['marriage_id']}");
-		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, started an arguement with you and you were humilated. You've lost all your will, and your marriage lost one happiness point.");
-		$api->SystemLogsAdd($event,'marriage',"Argued with their spouse and got humilated.");
-		$api->SystemLogsAdd($userid,'marriage',"Argued with their spouse and humilated their spouse.");
+		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, started an argument with you and you were humiliated. You've lost all your will, and your marriage lost one happiness point.");
+		$api->SystemLogsAdd($event,'marriage',"Argued with their spouse and got humiliated.");
+        $happiness=$mt['happiness']-1;
+		$api->SystemLogsAdd($userid,'marriage',"Argued with their spouse and humiliated their spouse.");
 	}
 	if ($outcome == 3)
 	{
@@ -335,8 +380,9 @@ function argue()
 		alert('success',"Success!","You begin to argue with your spouse. After a little while, you lose your temper and punch them in the eye. They end up having to go to the infirmary, and you need to spend some time in dungeon. Your marriage loses 5 happiness points.",true,'marriage.php');
 		$api->UserStatusSet($event, 'infirmary', $infirm, "Spousal Abuse");
 		$api->UserStatusSet($userid, 'dungeon', $dung, "Spousal Abuse");
+        $happiness=$mt['happiness']-5;
 		$db->query("UPDATE `marriage_tmg` SET `happiness` = `happiness` - 5 WHERE `marriage_id` = {$mt['marriage_id']}");
-		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, started an arguement with you and you punched you in the eye. You are resting in the infirmary, and they're resting in the dungeon. Your marriage lost 5 happiness points.");
+		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, started an argument with you and you punched you in the eye. You are resting in the infirmary, and they're resting in the dungeon. Your marriage lost 5 happiness points.");
 		$api->SystemLogsAdd($event,'marriage',"Argued with their spouse and got punched.");
 		$api->SystemLogsAdd($userid,'marriage',"Argued with their spouse and punched their spouse.");
 	}
@@ -347,11 +393,23 @@ function argue()
 		alert('success',"Success!","You begin to argue with your spouse. After a little while, they lose their temper and punch you in the eye. You end up having to go to the infirmary, and they need to spend some time in the dungeon. Your marriage loses 5 happiness points.",true,'marriage.php');
 		$api->UserStatusSet($userid, 'infirmary', $infirm, "Spousal Abuse");
 		$api->UserStatusSet($event, 'dungeon', $dung, "Spousal Abuse");
+        $happiness=$mt['happiness']-5;
 		$db->query("UPDATE `marriage_tmg` SET `happiness` = `happiness` - 5 WHERE `marriage_id` = {$mt['marriage_id']}");
-		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, started an arguement with you and you punched them in the eye. You are resting in the dungeon, and they're resting in the infirmary. Your marriage lost one happiness point.");
+		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, started an argument with you and you punched them in the eye. You are resting in the dungeon, and they're resting in the infirmary. Your marriage lost one happiness point.");
 		$api->SystemLogsAdd($userid,'marriage',"Argued with their spouse and got punched.");
 		$api->SystemLogsAdd($event,'marriage',"Argued with their spouse and punched their spouse.");
 	}
+    if ($mt['happiness'] >= 10)
+    {
+        if ($happiness < 10)
+        {
+            alert('info',"Information!","Your marriage's happiness dropped too low for you and your spouse to wear your rings.",false);
+            $api->GameAddNotification($event, "Your marriage's happiness dropped too low. You've removed your ring and put it back in your inventory.");
+            $api->UserGiveItem($mt['proposer_id'],$mt['proposer_ring'],1);
+            $api->UserGiveItem($mt['proposed_id'],$mt['proposed_ring'],1);
+            $db->query("UPDATE `marriage_tmg` SET `proposer_ring` = 0, `proposed_ring` = 0 WHERE `marriage_id` = {$mt['marriage_id']}");
+        }
+    }
 	$db->query("UPDATE `users` SET `energy` = 0 WHERE `userid` = {$userid}");
 }
 function slept()
@@ -375,9 +433,9 @@ function slept()
 		alert('danger',"Uh Oh!","You can only sleep with one person while in the infirmary and/or dungeon, and trust me when I say its not your spouse.",true,'marriage.php');
 		die($h->endpage());
 	}
-	if ($ir['brave'] < $ir['maxbrave'])
+	if ($ir['brave'] < $ir['maxbrave']/2)
 	{
-		alert('danger',"Uh Oh!","You must have 100% bravery to even attempt to sleep with your spouse.",true,'marriage.php');
+		alert('danger',"Uh Oh!","You must have 50% bravery to even attempt to sleep with your spouse.",true,'marriage.php');
 		die($h->endpage());
 	}
 	$outcome=Random(1,3);
@@ -479,6 +537,10 @@ function divorce()
 			alert('danger',"Uh Oh!","Your request has been blocked for your security. Try to be quicker next time.",true,'marriage.php');
 			die($h->endpage());
 		}
+        if ($mt['proposer_ring'] > 0)
+            $api->UserGiveItem($mt['proposer_id'],$mt['proposer_ring'],1);
+        if ($mt['proposed_ring'] > 0)
+            $api->UserGiveItem($mt['proposed_id'],$mt['proposed_ring'],1);
 		alert('success',"Success!","You have successfully divorced your spouse.",true,'index.php');
 		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, has divorced you.");
 		$db->query("UPDATE `users` SET `will` = 0 WHERE `userid` = {$userid} AND `userid` = {$event}");
@@ -494,5 +556,46 @@ function divorce()
 			{$csrf}
 		</form>";
 	}
+}
+
+function ring()
+{
+    global $db,$ir,$userid,$h,$mi,$api;
+	$mt=$db->fetch_row($mi);
+    $ring = (isset($_GET['ring']) && is_numeric($_GET['ring'])) ? abs($_GET['ring']) : '';
+    $ringsarray=array(113,114,115,116);
+    if ($mt['happiness'] < 10)
+    {
+        alert('danger',"Uh Oh!","You may not equip a ring until your marriage happiness is at least 10.");
+        die($h->endpage());
+    }
+    if (!in_array($ring,$ringsarray))
+    {
+        alert('danger',"Uh Oh!","You are trying to wear an invalid ring.");
+        die($h->endpage());
+    }
+    if (!$api->UserHasItem($userid,$ring,1))
+    {
+        alert('danger',"Uh Oh!","You do not have this ring to wear.",true,'inventory.php');
+        die($h->endpage());
+    }
+	if ($mt['proposer_id'] == $userid)
+	{
+        if ($mt['proposer_ring'] > 0)
+        {
+            $api->UserGiveItem($userid,$mt['proposer_ring'],1);
+        }
+		$db->query("UPDATE `marriage_tmg` SET `proposer_ring` = {$ring} WHERE `marriage_id` = {$mt['marriage_id']}");
+	}
+	else
+	{
+        if ($mt['proposed_ring'] > 0)
+        {
+            $api->UserGiveItem($userid,$mt['proposed_ring'],1);
+        }
+		$db->query("UPDATE `marriage_tmg` SET `proposed_ring` = {$ring} WHERE `marriage_id` = {$mt['marriage_id']}");
+	}
+    $api->UserTakeItem($userid,$ring,1);
+    alert('success',"Success!","You put on your wedding ring.",true,'inventory.php');
 }
 $h->endpage();

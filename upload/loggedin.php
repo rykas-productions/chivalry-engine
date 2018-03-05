@@ -89,7 +89,7 @@ echo "<table class='table table-hover table-bordered'>
 		    Luck: {$ir['luck']}%
 		</td>
 		<td>
-		    
+		    <a href='skills.php'>View Skills</a>
 		</td>
 	</tr>
 </tbody>";

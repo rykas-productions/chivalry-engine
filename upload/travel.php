@@ -9,7 +9,17 @@
 */
 require('globals.php');
 //Set cost to travel to a variable
-$cost_of_travel = 250 * $ir['level'];
+$cost_of_travel = 375 * $ir['level'];
+//Block access if user is in the infirmary.
+if ($api->UserStatus($ir['userid'], 'infirmary')) {
+    alert('danger', "Unconscious!", "You cannot travel while you're in the infirmary.", false);
+    die($h->endpage());
+}
+//Block access if user is in the dungeon.
+if ($api->UserStatus($ir['userid'], 'dungeon')) {
+    alert('danger', "Locked Up!", "You cannot travel while you're in the dungeon.");
+    die($h->endpage());
+}
 echo "<h3>Travel Agent</h3><hr />";
 //Make sure GET is set to work with.
 $_GET['to'] = (isset($_GET['to']) && is_numeric($_GET['to'])) ? abs($_GET['to']) : '';
@@ -83,6 +93,7 @@ if (empty($_GET['to'])) {
             //Tell user they have traveled successfully.
             alert('success', "Success!", "You have successfully paid " . number_format($cost_of_travel) . " Copper Coins to take a horse to {$cityName}.", true, "index.php");
             $api->SystemLogsAdd($userid, 'travel', "Traveled to {$cityName} for {$cost_of_travel} Copper Coins.");
+			user_log($userid,'travel');
             die($h->endpage());
         }
         $db->free_result($q);

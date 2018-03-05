@@ -88,7 +88,7 @@ function respondappeal()
 		die($h->endpage());
 	}
 	$q=$db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$_GET['case']}");
-	if ($db->num_rows($q) == 1)
+	if ($db->num_rows($q) != 1)
 	{
 		alert('danger',"Uh Oh!","The user you're trying to respond to does not exist, or is not in federal dungeon.",true,'?action=viewappeal');
 		die($h->endpage());
@@ -125,7 +125,7 @@ function pardon()
 		die($h->endpage());
 	}
 	$q=$db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$_GET['case']}");
-	if ($db->num_rows($q) == 1)
+	if ($db->num_rows($q) != 1)
 	{
 		alert('danger',"Uh Oh!","The user you're trying to respond to does not exist, or is not in federal dungeon.",true,'?action=viewappeal');
 		die($h->endpage());

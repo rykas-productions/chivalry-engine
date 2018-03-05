@@ -40,10 +40,12 @@ echo "Order By:
 <br />
 <a href='?st={$st}&by={$by}&ord=asc'>Ascending</a> |
 <a href='?st={$st}&by={$by}&ord=desc'>Descending</a>
+<br />
+<a href='search.php'>Search</a>
 <br /><br />";
 
 //Select the users info
-$q = $db->query("SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `fedjail`
+$q = $db->query("SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `fedjail`, `vipcolor`
                 FROM `users` ORDER BY `{$by}` {$ord}  LIMIT {$st}, 100");
 $no1 = $st + 1;
 $no2 = min($st + 100, $membs);
@@ -64,7 +66,7 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
    ";
 //Display the users info.
 while ($r = $db->fetch_row($q)) {
-    $r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fas fa-shield-alt'
+    $r['username'] = ($r['vip_days']) ? "<span class='{$r['vipcolor']}'>{$r['username']} <i class='fas fa-shield-alt'
         data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
 	$r['username'] = ($r['fedjail']) ? "<s>{$r['username']}</s>" : $r['username'];
     echo "	<tr>

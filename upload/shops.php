@@ -60,12 +60,13 @@ function home()
 
 function shop()
 {
-    global $db, $ir, $api;
+    global $db, $ir, $api, $userid;
     $_GET['shop'] = abs($_GET['shop']);
     $sd = $db->query("SELECT `shopLOCATION`, `shopNAME` FROM `shops` WHERE `shopID` = {$_GET['shop']}");
     if ($db->num_rows($sd) > 0) {
         $shopdata = $db->fetch_row($sd);
         if ($shopdata['shopLOCATION'] == $ir['location']) {
+			$specialnumber=((getSkillLevel($userid,7)*5)/100);
             echo "You begin browsing the stock at {$shopdata['shopNAME']}<br />
 			<table class='table table-bordered'>
 				<tr>
@@ -87,6 +88,7 @@ function shop()
                              `itmname` ASC");
             $lt = "";
             while ($r = $db->fetch_row($qtwo)) {
+				$r['itmbuyprice']=$r['itmbuyprice']-($r['itmbuyprice']*$specialnumber);
                 if ($lt != $r['itmtypename']) {
                     $lt = $r['itmtypename'];
                     echo "<tr>
@@ -136,6 +138,8 @@ function buy()
                 alert('danger', "Uh Oh!", "You are trying to buy from a non-existent shop.", true, "shops.php");
             } else {
                 $itemd = $db->fetch_row($q);
+				$specialnumber=((getSkillLevel($userid,7)*5)/100);
+				$itemd['itmbuyprice']=$itemd['itmbuyprice']-($itemd['itmbuyprice']*$specialnumber);
                 if ($ir['primary_currency'] < ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty'])) {
                     alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy {$_POST['qty']} {$itemd['itmname']}(s).", true, "shops.php");
                     die($h->endpage());
@@ -158,7 +162,7 @@ function buy()
                 $ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
                 alert('success', "Success!", "You have bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price} Copper Coins.", true, "shops.php");
                 $api->SystemLogsAdd($userid, 'itembuy', $ib_log);
-                $api->SystemCreditTax($api->SystemReturnTaxOnly($itemd['itmbuyprice']), 1, -1);
+                $api->SystemCreditTax($api->SystemReturnTaxOnly($itemd['itmbuyprice']* $_POST['qty']), 1, -1);
             }
             $db->free_result($q);
         }

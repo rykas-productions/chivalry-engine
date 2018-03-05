@@ -76,8 +76,8 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
     } //RNG equals 3, send current player to the dungeon.
     elseif ($rand == 3) {
         alert("danger", "Uh Oh!", "Your hired spy actually turned out to be a dungeon guard. He arrests you.", true, "profile.php?user={$_GET['user']}");
-        $dungtime = Random($ir['level'], $ir['level'] * 3);
-        $api->UserStatusSet($userid, 'dungeon', $dungtime, "Stalkerish Tendencies");
+        $dungtime = Random($ir['level'], $ir['level'] * Random(2,4));
+        $api->UserStatusSet($userid, 'dungeon', $dungtime, "Stalker Tendencies");
         $api->SystemLogsAdd($userid, 'spy', "Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) . " and was sent to the dungeon.");
         die($h->endpage());
     } //RNG equals 4, show the current player the person's stats and weapons.
@@ -108,6 +108,14 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 				</th>
 				<td>
 					" . $api->SystemItemIDtoName($r['equip_armor']) . "
+				</td>
+			</tr>
+            <tr>
+				<th>
+					Potion
+				</th>
+				<td>
+					" . $api->SystemItemIDtoName($r['equip_potion']) . "
 				</td>
 			</tr>
 			<tr>
@@ -148,6 +156,14 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 				</th>
 				<td>
 					" . number_format($r['labor']) . "
+				</td>
+			</tr>
+            <tr>
+				<th>
+					Luck
+				</th>
+				<td>
+					" . number_format($r['luck']) . "%
 				</td>
 			</tr>
 		</table>";

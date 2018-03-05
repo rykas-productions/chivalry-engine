@@ -14,6 +14,16 @@ if (!isset($_SESSION['started'])) {
     $_SESSION['started'] = true;
 }
 require_once('globals_nonauth.php');
+if ((isset($_COOKIE['uuid'])) && (isset($_COOKIE['token'])))
+{
+    $uuid = (isset($_COOKIE['uuid']) && is_numeric($_COOKIE['uuid'])) ? abs($_COOKIE['uuid']) : 0;
+    $token = $db->escape(strip_tags(stripslashes($_COOKIE['token'])));
+    $fetch=$db->query("SELECT * FROM `auto_login` WHERE `UUID` = '{$uuid}' AND `Token` = '{$token}'");
+    if ($db->num_rows($fetch) > 0)
+    {
+        $db->query("DELETE FROM `auto_login` WHERE `Token` = '{$token}' AND `UUID` = '{$uuid}'");
+    }
+}
 if (isset($_SESSION['userid'])) {
     $sessid = abs($_SESSION['userid']);
     if (isset($_SESSION['attacking']) && $_SESSION['attacking'] > 0) {

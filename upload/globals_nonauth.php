@@ -11,11 +11,6 @@
 if (strpos($_SERVER['PHP_SELF'], "globals_nonauth.php") !== false) {
     exit;
 }
-//If theme isn't stored in cookie, set it to cookie.
-if (!isset($_COOKIE['theme'])) {
-    setcookie('theme', 1, time() + 86400);
-    $_COOKIE['theme'] = 1;
-}
 $time = time();
 //Set session name and start it.
 session_name('CENGINE');
