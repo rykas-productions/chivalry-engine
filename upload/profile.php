@@ -312,7 +312,7 @@ if (!$_GET['user']) {
 				<tr>
 					<th>Badge</th>
 					<td>" . returnIcon($r['equip_badge'],4) . "<br />
-					{$api->SystemItemIDtoName($r['equip_badge'])}
+					<a href='iteminfo.php?ID={$r['equip_badge']}'>{$api->SystemItemIDtoName($r['equip_badge'])}</a>
 					</td>
 				</tr>";
 		}
