@@ -51,42 +51,39 @@ function check_level()
 {
     global $ir, $userid, $db;
 	$ir['xp_needed'] = round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2);
-    if ($ir['level'] < 175)
-    {
-        if ($ir['xp'] >= $ir['xp_needed']) {
-            $expu = $ir['xp'] - $ir['xp_needed'];
-            $ir['level'] += 1;
-            $ir['xp'] = $expu;
-            $ir['energy'] += 2;
-            $ir['brave'] += 2;
-            $ir['maxenergy'] += 2;
-            $ir['maxbrave'] += 2;
-            $ir['hp'] += 50;
-            $ir['maxhp'] += 50;
-            $ir['xp_needed'] = round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2);
-            //Increase user's everything.
-            $db->query("UPDATE `users` SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2,
-                        `brave` = `brave` + 2, `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2,
-                        `hp` = `hp` + 50, `maxhp` = `maxhp` + 50 WHERE `userid` = {$userid}");
-            //Give the user some stats for leveling up.
-            $StatGain = round(($ir['level'] * Random(125,250)) / Random(2, 6));
-            $StatGainFormat = number_format($StatGain);
-            //Assign the stat gain to the user's class of choice.
-            if ($ir['class'] == 'Warrior') {
-                $Stat = 'strength';
-            } elseif ($ir['class'] == 'Rogue') {
-                $Stat = 'agility';
-            } else {
-                $Stat = 'guard';
-            }
-            //Credit the stat gain.
-            $db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
-            //Tell the user they've gained some stats.
-            notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
-            //Log the level up, along with the stats gained.
-            SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
-        }
-    }
+	if ($ir['xp'] >= $ir['xp_needed']) {
+		$expu = $ir['xp'] - $ir['xp_needed'];
+		$ir['level'] += 1;
+		$ir['xp'] = $expu;
+		$ir['energy'] += 2;
+		$ir['brave'] += 2;
+		$ir['maxenergy'] += 2;
+		$ir['maxbrave'] += 2;
+		$ir['hp'] += 50;
+		$ir['maxhp'] += 50;
+		$ir['xp_needed'] = round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2);
+		//Increase user's everything.
+		$db->query("UPDATE `users` SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2,
+					`brave` = `brave` + 2, `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2,
+					`hp` = `hp` + 50, `maxhp` = `maxhp` + 50 WHERE `userid` = {$userid}");
+		//Give the user some stats for leveling up.
+		$StatGain = round(($ir['level'] * Random(125,250)) / Random(2, 6));
+		$StatGainFormat = number_format($StatGain);
+		//Assign the stat gain to the user's class of choice.
+		if ($ir['class'] == 'Warrior') {
+			$Stat = 'strength';
+		} elseif ($ir['class'] == 'Rogue') {
+			$Stat = 'agility';
+		} else {
+			$Stat = 'guard';
+		}
+		//Credit the stat gain.
+		$db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
+		//Tell the user they've gained some stats.
+		notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
+		//Log the level up, along with the stats gained.
+		SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
+	}
 }
 
 /*
