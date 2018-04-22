@@ -86,5 +86,6 @@ while ($gfr=$db->fetch_row($gdfq))
 $cutoff = time() - 86400;
 $uq=$db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` != 1 AND `laston` > {$cutoff} ORDER BY RAND() LIMIT 1");
 $ur=$db->fetch_single($uq);
+item_add($ur,154,1);
 $db->query("UPDATE `settings` SET `setting_value` = '{$ur}' WHERE `setting_name` = 'random_player_showcase'");
 ?>
