@@ -8,8 +8,8 @@
 */
 if ($ir['rewarded'] == 0)
 {
-    $tokenreward=Random(5000,75000);
-    $scrollreward=Random(5,25);
+    $tokenreward=$ir['level']*Random(50,750);
+    $scrollreward=Random(5,15);
 	$luck=Random(5,25);
     $reward=Random(1,10);
     if ($reward <= 5)

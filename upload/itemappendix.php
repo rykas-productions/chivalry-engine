@@ -16,13 +16,13 @@ if (!isset($_GET['view']))
     $_GET['view'] = '';
 if ($_GET['view'] == 'weapon') {
     //Select all the in-game weapons
-    $q = $db->query("SELECT * FROM `items` WHERE `weapon` != 0 AND `itmbuyable` = 'true' ORDER BY `weapon` ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `weapon` != 0 AND `itmbuyable` = 'true' ORDER BY `weapon` ASC");
 } elseif ($_GET['view'] == 'armor') {
     //Select all the in-game armor
-    $q = $db->query("SELECT * FROM `items` WHERE `armor` != 0 AND `itmbuyable` = 'true' ORDER BY `armor` ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `armor` != 0 AND `itmbuyable` = 'true' ORDER BY `armor` ASC");
 } else {
     //Select all the game items.
-    $q = $db->query("SELECT * FROM `items` WHERE `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 }
 echo "
 <table class='table table-bordered table-striped'>
@@ -36,15 +36,15 @@ echo "
     </tr>";
 while ($r = $db->fetch_row($q)) {
     //Select game item count. This only accounts for items in an user's inventory. Nothing else.
-    $q2 = $db->fetch_single($db->query("SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$r['itmid']} AND `inv_userid` != 1"));
-    $q3 = $db->fetch_single($db->query("SELECT COUNT(`equip_primary`) FROM `users` WHERE `equip_primary` = {$r['itmid']} AND `userid` != 1"));
-	$q4 = $db->fetch_single($db->query("SELECT COUNT(`equip_secondary`) FROM `users` WHERE `equip_secondary` = {$r['itmid']} AND `userid` != 1"));
-	$q5 = $db->fetch_single($db->query("SELECT COUNT(`equip_armor`) FROM `users` WHERE `equip_armor` = {$r['itmid']} AND `userid` != 1"));
-	$q6 = $db->fetch_single($db->query("SELECT SUM(`imQTY`) FROM `itemmarket` WHERE `imITEM` = {$r['itmid']}"));
-	$q7 = $db->fetch_single($db->query("SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$r['itmid']} AND `gaGUILD` != 1"));
+    $q2 = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$r['itmid']} AND `inv_userid` != 1"));
+    $q3 = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_primary`) FROM `users` WHERE `equip_primary` = {$r['itmid']} AND `userid` != 1"));
+	$q4 = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_secondary`) FROM `users` WHERE `equip_secondary` = {$r['itmid']} AND `userid` != 1"));
+	$q5 = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_armor`) FROM `users` WHERE `equip_armor` = {$r['itmid']} AND `userid` != 1"));
+	$q6 = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`imQTY`) FROM `itemmarket` WHERE `imITEM` = {$r['itmid']}"));
+	$q7 = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$r['itmid']} AND `gaGUILD` != 1"));
 	
 	$total=$q2+$q3+$q4+$q5+$q6+$q7;
-	$icon=returnIcon($r['itmid'],1.5);
+	$icon=returnIcon($r['itmid'],2);
     echo "
         <tr>
             <td>

@@ -57,13 +57,12 @@ function home()
 				Remove
 			</th>
 		</tr>";
-    $q = $db->query("SELECT `b`.*, `u`.* FROM `blocklist` AS `b`
+    $q = $db->query("/*qc=on*/SELECT `b`.*, `u`.* FROM `blocklist` AS `b`
                      LEFT JOIN `users` AS `u` ON `b`.`blocked` = `u`.`userid` WHERE `b`.`blocker` = {$userid}
                      ORDER BY `u`.`username` ASC");
     //List the user's contact list.
     while ($r = $db->fetch_row($q)) {
-        $r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fa fa-shield'
-        data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
+        $r['username'] = parseUsername($r['userid']);
         echo "
 		<tr>
 			<td>
@@ -84,10 +83,10 @@ function add()
     //User has specifed someone to add to contact list.
     if (isset($_POST['user'])) {
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
-        $qc = $db->query("SELECT COUNT(`block_id`) FROM `blocklist` WHERE `blocker` = {$userid} AND `blocked` = {$_POST['user']}");
+        $qc = $db->query("/*qc=on*/SELECT COUNT(`block_id`) FROM `blocklist` WHERE `blocker` = {$userid} AND `blocked` = {$_POST['user']}");
         $dupe_count = $db->fetch_single($qc);
         $db->free_result($qc);
-        $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
+        $q = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
         //Person specifed already on contact list.
         if ($dupe_count > 0) {
             alert('danger', "Uh Oh!", "You already have this user on your block list.");
@@ -150,7 +149,7 @@ function remove()
         alert('danger', "Uh Oh!", "You must specify a contact you wish to remove.", true, 'blocklist.php');
         die($h->endpage());
     }
-    $qc = $db->query("SELECT COUNT(`block_id`) FROM `blocklist` WHERE `blocker` = {$userid} AND `block_id` = {$_GET['user']}");
+    $qc = $db->query("/*qc=on*/SELECT COUNT(`block_id`) FROM `blocklist` WHERE `blocker` = {$userid} AND `block_id` = {$_GET['user']}");
     $exist_count = $db->fetch_single($qc);
     $db->free_result($qc);
     //Specified person is not on list.

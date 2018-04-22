@@ -69,21 +69,24 @@ if (isset($_POST['open']))
 		$chance=Random(1,95);
 		if ($chance <= 35)
 		{
-			$cash=Random(650,4000);
+			$cash=Random(650,3000);
+			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
 			$copper=$copper+$cash;
             $api->SystemLogsAdd($userid,"bor","Received {$cash} Copper Coins.");
 		}
 		elseif (($chance > 35) && ($chance <= 45))
 		{
-			$cash=Random(15,35);
-			$specialnumber=((getSkillLevel($userid,2)*2.5)/100);
+			$cash=Random(10,25);
+			$specialnumber=((getSkillLevel($userid,11)*5)/100);
 			$cash=round($cash+($cash*$specialnumber));
+			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
 			$tokens=$tokens+$cash;
             $api->SystemLogsAdd($userid,"bor","Received {$cash} Chivalry Tokens.");
 		}
 		elseif (($chance > 45) && ($chance <= 50))
 		{
-			$cash=Random(3,10);
+			$cash=Random(10,30);
+			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
 			$infirmary=$infirmary+$cash;
             $api->SystemLogsAdd($userid,"bor","Received {$cash} Infirmary minutes.");
 		}
@@ -105,27 +108,30 @@ if (isset($_POST['open']))
 		elseif (($chance > 65) && ($chance <= 70))
 		{
 			$rng=Random(2,4);
+			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
 			$wraps=$wraps+$rng;
             $api->SystemLogsAdd($userid,"bor","Received {$rng} Linen Wraps.");
 		}
 		elseif (($chance > 70) && ($chance <= 75))
 		{
 			$rng=Random(2,4);
+			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
 			$keys=$keys+$rng;
             $api->SystemLogsAdd($userid,"bor","Received {$rng} Dungeon Keys.");
 		}
 		elseif (($chance > 75) && ($chance <= 83))
 		{
 			$rng=Random(1,2);
+			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
 			$explosives=$explosives+$rng;
             $api->SystemLogsAdd($userid,"bor","Received {$rng} Small Explosives.");
 		}
-		elseif (($chance > 83) && ($chance <= 86))
+		elseif (($chance > 83) && ($chance <= 85))
 		{
 			$gymscroll=$gymscroll+1;
             $api->SystemLogsAdd($userid,"bor","Received Chivalry Gym Pass.");
 		}
-		elseif (($chance > 86) && ($chance <= 88))
+		elseif (($chance > 85) && ($chance <= 88))
 		{
 			$attackscroll=$attackscroll+1;
             $api->SystemLogsAdd($userid,"bor","Received Distant Attack Scroll.");

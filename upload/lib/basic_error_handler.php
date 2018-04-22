@@ -11,7 +11,7 @@ define('DEBUG', true);
 
 function error_critical($human_error, $debug_error, $action, $context = array())
 {
-    global $userid, $domain, $set;
+    global $userid, $domain, $set, $h;
     echo "<title>Critical Error</title>";
     if (isset($set) && is_array($set) && array_key_exists('WebsiteName', $set)) {
         echo "<h1>Critical Error</h1>";
@@ -19,13 +19,10 @@ function error_critical($human_error, $debug_error, $action, $context = array())
         echo '<h1>Internal Server Error</h1>';
     }
     if (DEBUG) {
-        echo "A critical error has occurred, and page execution has stopped. Check out Chivalry is 
+        alert("danger","{$debug_error}","{$action}<hr />Check out Chivalry is 
         Dead on <a href='https://www.facebook.com/officialcidgame/'>Facebook</a> or 
         <a href='https://twitter.com/cidgame'>Twitter</a> for more information if you cannot use the 
-        game. Please contact an administrator and give them the following information.<br />"
-            . 'Below are the details:<br /><pre>' . $debug_error
-            . '<br /><br />' . '<strong>Action taken:</strong> ' . $action
-            . '<br /><br /></pre>';
+        game. ",false);
         // Only uncomment the below if you know what you're doing,
         // for debug purposes.
         /*
@@ -36,14 +33,17 @@ function error_critical($human_error, $debug_error, $action, $context = array())
         }
 		*/
     } else {
-        echo "A critical error has occurred, and this page cannot be displayed. Try again later. 
-        Check out Chivalry is Dead on <a href='https://www.facebook.com/officialcidgame/'>Facebook</a> 
-        or <a href='https://twitter.com/cidgame'>Twitter</a> for more information if you cannot use the game.";
+        alert("danger","Critical Error!","It appears you've ran into an error and execution of this script was halted. We're sorry for the inconvenience.<hr />Check out Chivalry is 
+        Dead on <a href='https://www.facebook.com/officialcidgame/'>Facebook</a> or 
+        <a href='https://twitter.com/cidgame'>Twitter</a> for more information if you cannot use the 
+        game.",false);
         if (!empty($human_error)) {
             echo '<br />' . $human_error;
         }
     }
     error_log($debug_error);
+    if (isset($h))
+        $h->endpage();
     exit;
 }
 
@@ -86,11 +86,7 @@ function error_php($errno, $errstr, $errfile = '', $errline = 0, $errcontext = a
                     $errname = 'User Deprecation Notice';
                     break;
             }
-            echo '<pre>A non-critical error has occurred. Page execution will continue. '
-                . 'Below are the details:<br /><strong>' . $errname
-                . '</strong>: ' . $errstr . ' (' . $errno . ')'
-                . '<br /><br />' . '<strong>Line executed</strong>: '
-                . $errfile . ':' . $errline . '<br /><br />';
+            alert('warning',"{$errname}!","{$errstr} ({$errno}) on {$errfile}:{$errline}",false);
             // Only uncomment the below if you know what you're doing,
             // for debug purposes.
             /*

@@ -12,7 +12,7 @@ require('globals.php');
 require('lib/bbcode_engine.php');
 
 //See if user is mail-banned
-$q2 = $db->query("SELECT * FROM `mail_bans` WHERE `mbUSER` = {$userid}");
+$q2 = $db->query("/*qc=on*/SELECT * FROM `mail_bans` WHERE `mbUSER` = {$userid}");
 if ($db->num_rows($q2) != 0) {
     $r = $db->fetch_row($q2);
     $r['days'] = TimeUntil_Parse($r['mbTIME']);
@@ -88,12 +88,12 @@ function home()
 	    //Select last 15 messages that were sent to the current player and display to the player.
 	if ($ir['mail'] == 0)
 	{
-		$MailQuery = $db->query("SELECT * FROM `mail` WHERE `mail_to` = '{$userid}' ORDER BY `mail_time` desc LIMIT 15");
+		$MailQuery = $db->query("/*qc=on*/SELECT * FROM `mail` WHERE `mail_to` = '{$userid}' ORDER BY `mail_time` desc LIMIT 15");
 		$info="Showing your 15 latest messages.";
 	}
 	else
 	{
-		$MailQuery = $db->query("SELECT * FROM `mail` WHERE `mail_to` = '{$userid}' AND `mail_status` = 'Unread' ORDER BY `mail_time` desc");
+		$MailQuery = $db->query("/*qc=on*/SELECT * FROM `mail` WHERE `mail_to` = '{$userid}' AND `mail_status` = 'Unread' ORDER BY `mail_time` desc");
 		$info="Showing your unread messages.";
 	}
 	echo "<b>{$info}</b>";
@@ -110,11 +110,10 @@ function home()
 		</th>
 	</tr>";
     while ($r = $db->fetch_row($MailQuery)) {
-        //Select sender's username and display picture.
-        $un1 = $db->fetch_row($db->query("SELECT `username`,`display_pic` FROM `users` WHERE `userid` = {$r['mail_from']}"));
         //Bind their picture to a variable... if they have one.
         //Bind if the message has been previously read or not.
         $status = ($r['mail_status'] == 'unread') ? $unread=1 : $unread=0;
+        $un1['username'] = parseUsername($r['mail_from']);
 		if ($status == 1)
 		{
 			$sub = ($r['mail_subject']) ? "<b>{$r['mail_subject']}</b><br />" : "<b><i>No Subject</i></b>";
@@ -162,27 +161,29 @@ function read()
         die($h->endpage());
     }
     //Message does not exist, or does not belong to the current player.
-    if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0) {
+    if ($db->num_rows($db->query("/*qc=on*/SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0) {
         alert("danger", "Uh Oh!", "This message is non-existent, or does not belong to you.", true, 'inbox.php');
         die($h->endpage());
     }
     //Grab all message data from the database for this message
-    $msg = $db->fetch_row($db->query("SELECT * FROM `mail` WHERE `mail_id` = {$_GET['msg']}"));
-	$lstmsg=$db->fetch_row($db->query("SELECT * FROM `mail` WHERE `mail_from` = {$userid} AND `mail_to` = {$msg['mail_from']} AND `mail_time` < {$msg['mail_time']} ORDER BY `mail_id` desc LIMIT 1"));
+    $msg = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mail` WHERE `mail_id` = {$_GET['msg']}"));
+	$lstmsg=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mail` WHERE `mail_from` = {$userid} AND `mail_to` = {$msg['mail_from']} AND `mail_time` < {$msg['mail_time']} ORDER BY `mail_id` desc LIMIT 1"));
     //Grab sending player's username and display picture.
-    $un1 = $db->fetch_row($db->query("SELECT `username`,`display_pic` FROM `users` WHERE `userid` = {$msg['mail_from']}"));
+    $un1 = $db->fetch_row($db->query("/*qc=on*/SELECT `username`,`display_pic`,`vip_days`,`vipcolor` FROM `users` WHERE `userid` = {$msg['mail_from']}"));
+    $un1['usernames'] = parseUsername($msg['mail_from']);
+    $ir['username'] = parseUsername($userid);
     //Update message to reflect that it has been read.
     $db->query("UPDATE `mail` SET `mail_status` = 'read' WHERE `mail_id` = {$_GET['msg']}");
     //BBCode parse the message.
     $currentmsg=$parser->parse(decrypt_message($msg['mail_text'],$msg['mail_from'],$userid));
 	$currentmsg=$parser->getAsHtml();
-	$urmsg=$parser->parse(decrypt_message($lstmsg['mail_text'],$userid,$msg['mail_from']));
+	$urmsg=$parser->parse(html_entity_decode(decrypt_message($lstmsg['mail_text'],$userid,$msg['mail_from'])));
 	$urmsg=$parser->getAsHtml();
     //Show sender's picture... if they have one.
     $pic = (empty($un1['display_pic'])) ? "" :
-        "<center><img src='" . parseImage($un1['display_pic']) . "' class='img-fluid hidden-xs' width='175'></center>";
+        "<center><img src='" . parseImage(parseDisplayPic($msg['mail_from'])) . "' class='img-fluid hidden-xs' width='175' alt='{$un1['username']}&#39;s display picture' title='{$un1['username']}&#39;s display picture'></center>";
 	$urpic = (empty($ir['display_pic'])) ? "" :
-        "<center><img src='" . parseImage($ir['display_pic']) . "' class='img-fluid hidden-xs' width='175'></center>";
+        "<center><img src='" . parseImage(parseDisplayPic($userid)) . "' class='img-fluid hidden-xs' width='175' alt='Your display picture.' title='Your display picture'></center>";
 	echo "<table class='table table-bordered'>
 	<tr>
 		<th width='33%'>
@@ -216,7 +217,7 @@ function read()
 	<tr>
 		<td>
 			{$pic}
-			<a href='profile.php?user={$msg['mail_from']}'>{$un1['username']}</a><br />
+			<a href='profile.php?user={$msg['mail_from']}'>{$un1['usernames']}</a><br />
 			" . DateTime_Parse($msg['mail_time']) . "
 		</td>
 		<td>";
@@ -269,8 +270,8 @@ function send()
 {
     global $db, $userid, $h, $api;
     //Clean and sanitize the POST.
-    $subj = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['subject']))));
-    $msg = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['msg']))));
+    $subj = $db->escape(str_replace("\n", "<br />", strip_tags(htmlentities(stripslashes($_POST['subject'])))));
+    $msg = $db->escape(str_replace("\n", "<br />", strip_tags(htmlentities(stripslashes($_POST['msg'])))));
 	$sendto = (isset($_POST['sendto']) && is_string($_POST['sendto'])) ? stripslashes($_POST['sendto']) : '';
     //Player failed the CSRF check... warn them to be quicker next time... or to change their password.
     if (!isset($_POST['verf']) || !verify_csrf_code('inbox_send', stripslashes($_POST['verf']))) {
@@ -293,7 +294,7 @@ function send()
         die($h->endpage());
     }
     //Grab the receiving player's information.
-    $q = $db->query("SELECT `userid` FROM `users` WHERE `username` = '{$sendto}'");
+    $q = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `username` = '{$sendto}'");
     //Receiving player does not exist.
     if ($db->num_rows($q) == 0) {
         $db->free_result($q);
@@ -318,7 +319,7 @@ function send()
     alert('success', "Success!", "Message has been sent successfully", false);
 	//Mailban the user if needed?
 	$fiveminago=time()-300;
-	$lastthreemsg=$db->query("SELECT * 
+	$lastthreemsg=$db->query("/*qc=on*/SELECT * 
 								FROM `mail` 
 								WHERE `mail_from` = {$userid} 
 								AND `mail_time` >= {$fiveminago}");
@@ -385,11 +386,11 @@ function outbox()
         </thead>
         <tbody>";
     //Grab all the messages the current player has writen and display them to the user.
-    $query = $db->query("SELECT * FROM `mail` WHERE `mail_from` = {$userid} ORDER BY `mail_time` desc LIMIT 15");
+    $query = $db->query("/*qc=on*/SELECT * FROM `mail` WHERE `mail_from` = {$userid} ORDER BY `mail_time` desc LIMIT 15");
     while ($msg = $db->fetch_row($query)) {
         $sent = DateTime_Parse($msg['mail_time']);
         //Grab recipient's user name.
-        $sentto = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$msg['mail_to']}"));
+        $sentto = parseUsername($msg['mail_to']);
 		$sub = ($msg['mail_subject']) ? "<b><u>Subject: {$msg['mail_subject']}</u></b><br />" : "";
         //Parse message with BBCode.
         $msg['mail_text']=decrypt_message($msg['mail_text'],$userid,$msg['mail_to']);
@@ -412,7 +413,7 @@ function outbox()
             </td>
         </tr>";
     }
-    echo "</tbody></table>'";
+    echo "</tbody></table>";
 }
 
 function compose()
@@ -422,7 +423,7 @@ function compose()
     $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
     //GET is set and greater than 0, so let's fetch the username associated that's on the GET.
     $username = (isset($_GET['user']) && ($_GET['user'] > 0)) ?
-        $username = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}")) :
+        $username = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}")) :
         '';
     //Permission check to see if player can send mail.
     if (permission('CanReplyMail', $userid)) {
@@ -505,7 +506,7 @@ function delete()
         die($h->endpage());
     }
     //Message does not exist, or does not belong to the current player.
-    if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0) {
+    if ($db->num_rows($db->query("/*qc=on*/SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0) {
         alert("danger", "Uh Oh!", "This message is non-existent, or does not belong to you.", false);
         home();
         die($h->endpage());
@@ -515,5 +516,4 @@ function delete()
     alert('success', "Success!", "Message has been deleted successfully.", false);
     home();
 }
-
 $h->endpage();

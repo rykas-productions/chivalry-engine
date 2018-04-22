@@ -18,106 +18,67 @@ class headers
         <html lang="en">
         <head>
             <center>
-                <meta charset="utf-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                <meta name="description" content="<?php echo $set['Website_Description']; ?>">
-                <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
-                <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
-                <meta property="og:image" content="../assets/img/logo.png"/>
-                <link rel="shortcut icon" href="../assets/img/logo.png" type="image/x-icon"/>
-				<link rel="stylesheet" href="../css/game-v1.2.min.css">
-				<link rel="stylesheet" href="../css/game-icons.css">
-				<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
                 <!-- CSS -->
                 <?php
                 if ($ir['theme'] == 1)
-                {
-                    ?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/yeti/bootstrap.min.css">
-					<meta name="theme-color" content="#333">
-					<?php
-					$hdr='navbar-dark bg-dark';
-                }
-                if ($ir['theme'] == 2)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/darkly/bootstrap.min.css">
-                    <meta name="theme-color" content="#303030">
-					<?php
-					$hdr='navbar-light bg-light';
-                }
-				if ($ir['theme'] == 3)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/superhero/bootstrap.min.css">
-                    <meta name="theme-color" content="#4E5D6C">
-					<?php
-					$hdr='navbar-dark bg-dark';
-                }
-				if ($ir['theme'] == 4)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/slate/bootstrap.min.css">
-                    <meta name="theme-color" content="#272B30">
-					<?php
-					$hdr='navbar-dark bg-dark';
-                }
-				if ($ir['theme'] == 5)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cerulean/bootstrap.min.css">
-                    <meta name="theme-color" content="#04519b">
-					<?php
-					$hdr='navbar-dark bg-dark';
-                }
-				if ($ir['theme'] == 6)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/minty/bootstrap.min.css">
-					<meta name="theme-color" content="#78C2AD">
-					<?php
-					$hdr='navbar-dark bg-primary';
-                }
-				if ($ir['theme'] == 7)
-                {
-                    ?>
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/united/bootstrap.min.css">
-                    <meta name="theme-color" content="#772953">
-					<?php
-					$hdr='navbar-dark bg-dark';
-                }
-				if ($ir['theme'] == 8)
 				{
 					?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cyborg/bootstrap.min.css">
+					<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1.0.5/css/bootstrap-v.1.5.css">
+                    <meta name="theme-color" content="rgba(0, 0, 0, .8)">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 2)
+				{
+					?>
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.0/darkly/bootstrap.min.css">
+					<meta name="theme-color" content="#303030">
+					<?php
+					$hdr='navbar-light bg-light';
+				}
+				if ($ir['theme'] == 3)
+				{
+					?>
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.0/slate/bootstrap.min.css">
+					<meta name="theme-color" content="#272B30">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 4)
+				{
+					?>
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.0/cyborg/bootstrap.min.css">
 					<meta name="theme-color" content="#060606">
 					<?php
 					$hdr='navbar-dark bg-dark';
 				}
-                if ($ir['theme'] == 9)
-				{
-					?>
-					<link rel="stylesheet" href="../css/valentines-day-cid-v4.css">
-					<meta name="theme-color" content="#CC00FF">
-					<?php
-					$hdr='navbar-dark bg-primary';
-				}
                 ?>
-                <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
+				<meta charset="utf-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+				<meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                <meta name="description" content="<?php echo $set['Website_Description']; ?>">
+                <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
+                <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
+                <meta property="og:image" content="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png"/>
+				<link rel="shortcut icon" href="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png" type="image/x-icon"/>
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/css/game-icons.min.css">
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/css/game-v1.11.min.css">
+				<link rel="icon" sizes="192x192" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png">
+				<link rel="icon" sizes="128x128" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png">
                 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
         </head>
         <?php
         if (empty($menuhide)) {
-            $ir['mail'] = $db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
-            $ir['notifications'] = $db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
+            $ir['mail'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
+            $ir['notifications'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
             ?>
             <body>
             <!-- Navigation -->
             <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
                 <a class="navbar-brand" href="index.php">
 					<?php 
-						echo "<img src='../assets/img/logo-optimized.png' width='30' height='30' alt=''>
+						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png' width='30' height='30' alt=''>
 						{$set['WebsiteName']}"; 
 					?>
 				</a>
@@ -179,7 +140,7 @@ class headers
                                     <a class="dropdown-item" href="../gamerules.php"><i
                                             class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
                                     <a class="dropdown-item" href="../logout.php"><i
-                                            class="fa fa-fw fa-power-off"></i> <?php echo "Log Out"; ?></a>
+                                            class="fas fa-sign-out-alt"></i> <?php echo "Log Out"; ?></a>
                                 </div>
                             </li>
                         </ul>
@@ -196,12 +157,12 @@ class headers
             </noscript>
             <?php
             $IP = $db->escape($_SERVER['REMOTE_ADDR']);
-            $ipq = $db->query("SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
+            $ipq = $db->query("/*qc=on*/SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
             if ($db->num_rows($ipq) > 0) {
                 alert('danger', "Uh Oh!", "You have been IP Banned. Please contact support.", false);
                 die($h->endpage());
             }
-            $fed = $db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
+            $fed = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
             if ($fed['fed_out'] < $time) {
                 $db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
                 $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
@@ -209,7 +170,7 @@ class headers
             //User is in federal jail. Stop their access.
     if ($ir['fedjail'] > 0) {
 		$lasthour=time()-3600;
-		$fq2=$db->query("SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} AND `fja_time` >= {$lasthour} LIMIT 1");
+		$fq2=$db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} AND `fja_time` >= {$lasthour} LIMIT 1");
 		if (isset($_POST['fedappeal']))
 		{
 			$msg = $db->escape(stripslashes($_POST['fedappeal']));
@@ -226,7 +187,7 @@ class headers
 		}
         alert('info', "Federal Dungeon!", "You are locked away in Federal Dungeon for the next
 					    " . TimeUntil_Parse($fed['fed_out']) . ". You were placed in here for <b>{$fed['fed_reason']}</b>.", false);
-		$fq=$db->query("SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} ORDER BY `fja_time` ASC");
+		$fq=$db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} ORDER BY `fja_time` ASC");
 		echo "<table class='table table-bordered'>";
 		while ($fr = $db->fetch_row($fq))
 		{
@@ -263,12 +224,12 @@ class headers
                 alert('info', "New Announcements!", "You have {$ir['announcements']} unread announcements.", true, '../announcements.php', "View Announcements");
             }
             if ($api->UserStatus($ir['userid'], 'infirmary') == true) {
-                $InfirmaryOut = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
+                $InfirmaryOut = $db->fetch_single($db->query("/*qc=on*/SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
                 $InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
                 alert('info', "Unconscious!", "You are in the infirmary for the next {$InfirmaryRemain}.", true, '../inventory', 'View Inventory');
             }
             if ($api->UserStatus($ir['userid'], 'dungeon') == true) {
-                $DungeonOut = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
+                $DungeonOut = $db->fetch_single($db->query("/*qc=on*/SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
                 $DungeonRemain = TimeUntil_Parse($DungeonOut);
                 alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, '../inventory', 'View Inventory');
             }
@@ -315,7 +276,7 @@ class headers
 
     function endpage()
     {
-        global $db, $ir, $set;
+        global $db, $ir, $set, $userid;
         $query_extra = '';
         include('../analytics.php');
 		if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
@@ -330,20 +291,20 @@ class headers
 
         </div>
         <!-- /.container -->
-        <!-- jQuery Version 3.2.1 -->
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+       <!-- jQuery Version 3.3.1 -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
-        <script src="../js/game.js" async defer></script>
+        <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/css/game-v1.11.min.css" async defer></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
 		<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
-		<script type="text/javascript" src="../js/clock.min.js"></script>
-		<script type="text/javascript"> 
+		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/js/clock.min.js"></script>
+		<script> 
 		  $(document).ready(function(){ 
 			customtimestamp = parseInt($("#jqclock").data("time"));
 			$("#jqclock").clock({"langSet":"en","timestamp":customtimestamp,"timeFormat":" g:i:s a"}); 
@@ -367,7 +328,7 @@ class headers
                 }
 				if ($ir['vip_days'] == 0)
 				{
-					include('ads/ad_header.php');
+					include('../ads/ad_header.php');
 				}
                 ?>
 				</span>

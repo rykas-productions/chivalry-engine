@@ -64,8 +64,12 @@ else {
 function index()
 {
     global $ir, $bank_maxfee, $bank_feepercent, $db, $userid;
+    if ($ir['vip_days'] == 0)
+        $interest=2;
+    else
+        $interest=4;
     echo "<b>You currently have " . number_format($ir['bank']) . " in your City Bank account.</b><br />
-				At the end of each and everyday, your balance will increase by 2%. You will not gain interest if 
+				At the end of each and everyday, your balance will increase by {$interest}%. You will not gain interest if 
 				your balance is over 10,000,000 Copper Coins. You must be active within the past 24 hours for this to 
 				effect you.<br />
 				<table class='table table-bordered'>
@@ -88,7 +92,7 @@ function index()
 						</td>
 					</tr>
 				</table>";
-	$q=$db->query("SELECT * FROM `bank_investments` WHERE `userid` = {$userid}");
+	$q=$db->query("/*qc=on*/SELECT * FROM `bank_investments` WHERE `userid` = {$userid}");
 	if ($db->num_rows($q) == 0)
 	{
 		echo "[<a href='investment.php'>Start Investment</a>]";
@@ -160,5 +164,4 @@ function withdraw()
         $api->SystemLogsAdd($userid, 'bank', "Withdrew " . number_format($_POST['withdraw']) . ".");
     }
 }
-
 $h->endpage();

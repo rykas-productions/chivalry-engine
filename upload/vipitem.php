@@ -99,7 +99,7 @@ function vipcolor()
     }
     if (isset($_POST['color']))
     {
-        $validcolors=array('text-danger','text-success','text-primary','text-secondary','text-warning','text-info');
+        $validcolors=array('text-danger','text-success','text-primary','text-secondary','text-warning','text-info','blue_to_red','indigo_to_pink','green_to_yellow','light_to_dark');
         if (!in_array($_POST['color'],$validcolors))
         {
             alert('danger',"Uh Oh!","You specified an invalid VIP Color.");
@@ -126,7 +126,11 @@ function vipcolor()
         Option 2 - <span class='text-primary'>{$ir['username']}</span><br />
         Option 3 - <span class='text-secondary'>{$ir['username']}</span><br />
         Option 4 - <span class='text-warning'>{$ir['username']}</span><br />
-        Option 5 - <span class='text-info'>{$ir['username']}</span>
+        Option 5 - <span class='text-info'>{$ir['username']}</span><br />
+        Option 6 - <span class='blue_to_red'>{$ir['username']}</span><br />
+        Option 7 - <span class='indigo_to_pink'>{$ir['username']}</span><br />
+        Option 8 - <span class='green_to_yellow'>{$ir['username']}</span><br />
+        Option 9 - <span class='light_to_dark'>{$ir['username']}</span><br />
         <hr />
         Now what color would you like to use?
         <form method='post'>
@@ -137,6 +141,10 @@ function vipcolor()
                 <option value='text-secondary'>Option 3</option>
                 <option value='text-warning'>Option 4</option>
                 <option value='text-info'>Option 5</option>
+                <option value='blue_to_red'>Option 6</option>
+                <option value='indigo_to_pink'>Option 7</option>
+                <option value='green_to_yellow'>Option 8</option>
+                <option value='light_to_dark'>Option 9</option>
             </select><br />
             <input type='submit' value='Change Color' class='btn btn-primary'>
         </form>";        

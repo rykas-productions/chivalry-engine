@@ -28,7 +28,7 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $userid, $api;
-    $q = $db->query("SELECT * FROM `smelt_recipes` ORDER BY `smelt_output` ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` ORDER BY `smelt_output` ASC");
     echo "<table class='table table-bordered table-striped'>
 	<tr>
 		<th>
@@ -50,7 +50,7 @@ function home()
         $n = 0;
 		$r['hasitem']=0;
 		foreach ($ex as $i) {
-			$do_they_have = $db->query("SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i}");
+			$do_they_have = $db->query("/*qc=on*/SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i}");
             if ($db->num_rows($do_they_have) > 0) {
 				$r['hasitem']=$r['hasitem']+1;
 			}
@@ -65,10 +65,10 @@ function home()
 				<td>";
 			$n = 0;
 			foreach ($ex as $i) {
-				$get_items_needed = $db->query("SELECT `itmname` FROM `items` WHERE `itmid`={$i}");
+				$get_items_needed = $db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid`={$i}");
 				$t = $db->fetch_row($get_items_needed);
 
-				$do_they_have = $db->query("SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i} AND `inv_qty`>={$qty[$n]}");
+				$do_they_have = $db->query("/*qc=on*/SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i} AND `inv_qty`>={$qty[$n]}");
 				if ($db->num_rows($do_they_have) == 0) {
 					$t['itmname'] = "<span class='text-danger'>" . $t['itmname'] . "";
 					$can_craft = FALSE;
@@ -97,7 +97,7 @@ function smelt()
 {
     global $db, $userid, $api, $h;
     $_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : 0;
-    $q = $db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$_GET['id']}");
+    $q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$_GET['id']}");
     if ($db->num_rows($q) == 0) {
         alert('danger', "Uh Oh!", "You are trying to smelt a non-existent recipe.", true, "smelt.php");
         die($h->endpage());
@@ -110,9 +110,9 @@ function smelt()
     $qty = explode(",", $r['smelt_quantity']);
     $n = 0;
     foreach ($ex as $i) {
-        $get_items_needed = $db->query("SELECT `itmname` FROM `items` WHERE `itmid`={$i}");
+        $get_items_needed = $db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid`={$i}");
         $t = $db->fetch_row($get_items_needed);
-        $do_they_have = $db->query("SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i} AND `inv_qty`>={$qty[$n]}");
+        $do_they_have = $db->query("/*qc=on*/SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i} AND `inv_qty`>={$qty[$n]}");
         if ($db->num_rows($do_they_have) == 0) {
             $needs = $t['itmname'] . " x " . $qty[$n];
             $can_craft = FALSE;

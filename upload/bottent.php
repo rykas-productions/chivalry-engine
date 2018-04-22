@@ -13,7 +13,7 @@ echo "<h3><i class='game-icon game-icon-guards'></i> NPC Battle List</h3><hr />W
     an item. These items may or may not be useful in your adventures. To deter players getting massive amounts of items,
     you can only attack these NPCs every so often. Their cooldown is listed here as well. To receive the item, you must
     mug the bot.<hr />";
-$query = $db->query("SELECT * FROM `botlist`");
+$query = $db->query("/*qc=on*/SELECT * FROM `botlist`");
 echo "<table class='table table-bordered'>
 <tr>
 	<th>
@@ -32,10 +32,10 @@ echo "<table class='table table-bordered'>
 //List all the bots.
 while ($result = $db->fetch_row($query)) {
     //Grab the last time the user attacked this bot.
-    $timequery = $db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
+    $timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
     $r2 = $db->fetch_single($timequery);
     //Grab bot's stats.
-    $r3 = $db->fetch_row($db->query("SELECT `strength`,`agility`,`guard` FROM `userstats` WHERE `userid` = {$result['botuser']}"));
+    $r3 = $db->fetch_row($db->query("/*qc=on*/SELECT `strength`,`agility`,`guard` FROM `userstats` WHERE `userid` = {$result['botuser']}"));
     $ustats = $ir['strength'] + $ir['agility'] + $ir['guard'];
     $themstats = $r3['strength'] + $r3['agility'] + $r3['guard'];
     //Chance the user can beat the bot.

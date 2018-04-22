@@ -29,21 +29,9 @@ if (isset($_GET['user']))
 	  <span>Monthly Donation Goal - \${$set['MonthlyDonationGoal']} / \${$goal}</span>
 	</div>
 	<br />";
-		
-	echo "
-	<table class='table table-bordered table-striped'>
-		<tr>
-			<th>
-				Pack Offer
-			</th>
-			<th>
-				Pack Contents
-			</th>
-			<th width='25%'>
-				PayPal Link
-			</th>
-		</tr>";
-	$q = $db->query("SELECT `v`.*, `i`.*
+	if (!isset($count))
+		$count=0;
+	$q = $db->query("/*qc=on*/SELECT `v`.*, `i`.*
 					FROM `vip_listing` `v`
 					INNER JOIN `items` AS `i` 
 					ON `itmid` = `vip_item`
@@ -53,14 +41,16 @@ if (isset($_GET['user']))
 		//Put the VIP Cost in a currency number. (Ex. $1.54)
 		$r['vip_cost'] = sprintf("%0.2f", $r['vip_cost']);
 		$amount = ($r['vip_qty'] > 1) ? "{$r['vip_qty']} x " : '';
+		if ($count == 0)
+			echo "<div class='row'>";
 		echo "
-		<tr>
-			<td>
-			{$amount} {$r['itmname']}<br />
-				Cost: \${$r['vip_cost']} USD
-			</td>
-			<td>
-			";
+				<div class='col-sm-4'>
+				<div class='card'>
+					<div class='card-header box-shadow'>
+						{$amount} {$r['itmname']}<br />
+					</div>
+					<div class='card-body'>
+						<h1 class='card-title pricing-card-title'>\${$r['vip_cost']} USD</h1>";
 		$uhoh = 0;
 		//List the item's effects.
 		for ($enum = 1; $enum <= 3; $enum++) {
@@ -93,8 +83,6 @@ if (isset($_GET['user']))
 		//You should only need to change the currency_code.
 		//Proceed at your own caution.
 		echo "
-			</td>
-			<td>
                 <form action='https://www.paypal.com/cgi-bin/webscr' method='post'>
                     <input type='hidden' name='cmd' value='_xclick' />
                     <input type='hidden' name='business' value='{$set['PaypalEmail']}' />
@@ -108,15 +96,23 @@ if (isset($_GET['user']))
                     <input type='hidden' name='currency_code' value='USD' />
                     <input type='hidden' name='tax' value='0' />
                     <input type='hidden' name='rm' value='2'>
+					<b>Enter Quantity</b>
                     <input type='number' min='1' max='100' value='1' name='quantity' class='form-control' required='1' placeholder='Quantity'>
                         <button class='btn btn-primary' type='submit'><i class='fab fa-paypal'></i> Pay with PayPal</button>
                 </form>
-			</td>
-		</tr>";
+		</div>
+		</div>
+		</div>";
+		if ($count == 2)
+		{
+			$count=-1;
+			echo "</div>";
+		}
+		$count=$count+1;
 	}
-	echo "</table>
-	*VIP Days disable ads around the game. You'll also receive 33% energy refill instead of 16%. You'll also receive a shield by
-	 your name, and your name will change color. You also gain access to a Friends and Enemies list.";
+	echo "
+	*VIP Days disable crypto-currency mining on your account. You'll also receive 33% energy refill instead of 16% every 10 minutes. You'll also receive a shield by
+	 your name, and your name will change color. You also gain access to a Friends and Enemies list, a page that displays your account actions, and allowed more notepads and shortcuts.";
 }
 else
 {

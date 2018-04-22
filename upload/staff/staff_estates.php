@@ -42,14 +42,14 @@ function addestate()
             alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_name` = '{$name}'");
+        $q = $db->query("/*qc=on*/SELECT COUNT(`house_id`) FROM `estates` WHERE `house_name` = '{$name}'");
         if ($db->fetch_single($q) > 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The estate name you've chosen is already in use.");
             die($h->endpage());
         }
         $db->free_result($q);
-        $q = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$will}");
+        $q = $db->query("/*qc=on*/SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$will}");
         if ($db->fetch_single($q) > 0) {
             alert('danger', "Uh Oh!", "You cannot have more than one estate with the same Will level.");
             die($h->endpage());
@@ -126,7 +126,7 @@ function delestate()
             alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$_POST['estate']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_id` = {$_POST['estate']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "You are trying to delete a non-existent Estate.");
@@ -194,12 +194,12 @@ function editestate()
             alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `house_id` FROM `estates` WHERE `house_will` = {$will} AND `house_id` != {$_POST['id']}");
+        $q = $db->query("/*qc=on*/SELECT `house_id` FROM `estates` WHERE `house_will` = {$will} AND `house_id` != {$_POST['id']}");
         if ($db->num_rows($q)) {
             alert('danger', "Uh Oh!", "You cannot have more than one Estate with the same Will.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `house_will` FROM `estates` WHERE `house_id` = {$_POST['id']}");
+        $q = $db->query("/*qc=on*/SELECT `house_will` FROM `estates` WHERE `house_id` = {$_POST['id']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "You are trying to edit a non-existent estate.");
@@ -224,7 +224,7 @@ function editestate()
             alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$_POST['estate']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_id` = {$_POST['estate']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The estate you're trying to edit does not exist.");

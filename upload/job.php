@@ -17,7 +17,7 @@ $_GET['interview'] = (isset($_GET['interview']) && is_numeric($_GET['interview']
 if (empty($ir['job'])) {
     if (empty($_GET['interview'])) {
         echo "It appears you are unemployed. A list of businesses hiring are listed below.<br />";
-        $q = $db->query("SELECT * FROM `jobs`");
+        $q = $db->query("/*qc=on*/SELECT * FROM `jobs`");
         echo "<table class='table table-bordered'>
         <tr>
             <th>
@@ -52,7 +52,7 @@ if (empty($ir['job'])) {
         echo "</table>";
         $db->free_result($q);
     } else {
-        $q = $db->query("SELECT `j`.*, `jr`.*
+        $q = $db->query("/*qc=on*/SELECT `j`.*, `jr`.*
                         FROM `jobs` AS `j`
                         INNER JOIN `job_ranks` AS `jr`
                         ON `j`.`jSTART` = `jr`.`jrID`
@@ -120,10 +120,9 @@ function job_index()
 	$maxpayprim=($ir['jrPRIMPAY']*0.3);
 	$maxpaysecc=($ir['jrSECONDARY']*0.3);
     echo "<h3><i class='game-icon game-icon-push'></i> Your Job</h3>
-    You currently work in the {$ir['jNAME']}! You receive will " . number_format($ir['jrPRIMPAY']) . " Copper Coins each hour 
-	you work the required amount you're supposed to. Otherwise, you take home " . number_format($maxpayprim) . " Copper Coins.
-	You will only be paid if its Monday through Friday, between 9am and 5pm gametime.
-	You've worked {$ir['jobwork']} / {$ir['jrACT']} times this hour.
+    You currently work in the {$ir['jNAME']}! You receive will " . number_format($ir['jrPRIMPAY']) . " Copper Coins and/or 
+    " . number_format($ir['jrSECONDARY']) . " Copper Coins each hour 
+	you work. You will only be paid if its Monday through Friday, between 9am and 5pm gametime.
     <table class='table table-bordered'>
     <tr>
         <th>
@@ -136,7 +135,7 @@ function job_index()
             Requirements
         </th>
     </tr>";
-    $q = $db->query("SELECT * FROM `job_ranks` WHERE `jrJOB` = {$ir['job']} ORDER BY (`jrPRIMPAY` + `jrSECONDARY`) ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `job_ranks` WHERE `jrJOB` = {$ir['job']} ORDER BY (`jrPRIMPAY` + `jrSECONDARY`) ASC");
     while ($r = $db->fetch_row($q)) {
         echo "
         <tr>
@@ -153,14 +152,11 @@ function job_index()
             <td>
                 " . number_format($r['jrSTR']) . " Strength<br />
                 " . number_format($r['jrLAB']) . " Labor<br />
-                " . number_format($r['jrIQ']) . " IQ<br />
-                " . number_format($r['jrACT']) . " Work/Hour
+                " . number_format($r['jrIQ']) . " IQ
             </td>
         </tr>";
     }
     echo "</table>
-    &gt; <a href='?action=work'>Begin Work</a>
-	<br />
     &gt; <a href='?action=promote'>Try To Get Promoted</a>
 	<br />
 	&gt; <a href='?action=quit'>Quit Job</a>";
@@ -178,7 +174,7 @@ function job_quit()
 function job_promote()
 {
     global $db, $h, $ir, $userid;
-    $q = $db->query("SELECT *
+    $q = $db->query("/*qc=on*/SELECT *
                     FROM `job_ranks`
                     WHERE (`jrPRIMPAY` + `jrSECONDARY`) > ({$ir['jrPRIMPAY']} + {$ir['jrSECONDARY']})
                     AND `jrSTR` <= {$ir['strength']}
@@ -198,48 +194,3 @@ function job_promote()
     $db->free_result($q);
     $h->endpage();
 }
-
-function job_work()
-{
-    global $db, $h, $ir, $userid, $api;
-    if (!isset($_GET['dowork'])) {
-        if ($ir['jobwork'] >= $ir['jrACT']) {
-            alert('danger', "Uh Oh!", "You've already worked the maximum times you are required to this hour. You will not
-            gain overtime! Take it easy, bro.", true, 'job.php');
-        } else {
-            echo "You need to work {$ir['jrACT']} times an hour to get paid. You've only worked {$ir['jobwork']} this hour.
-        Each attempt at working will deplete your energy by 10%, and your Will by 5%. Do you wish to work?<br />
-        <a class='btn btn-primary' href='?action=work&dowork=1'>Begin Working</a>
-        ";
-        }
-    } else {
-        $will = ($api->UserInfoGet($userid, 'will', true));
-        $energy = ($api->UserInfoGet($userid, 'energy', true));
-        if ($ir['jobwork'] >= $ir['jrACT']) {
-            alert('danger', "Uh Oh!", "You've already worked the maximum times you are required to this hour. You will not
-            gain overtime! Take it easy, bro.", true, 'job.php');
-            die($h->endpage());
-        }
-        if ($will < 7) {
-            alert("danger", "Uh Oh!", "You need 7% Will to work, you only have {$will}%.", true, '?action=work');
-            die($h->endpage());
-        }
-        if ($energy < 10) {
-            alert("danger", "Uh Oh!", "You need 10% Energy to work, you only have {$energy}%.", true, '?action=work');
-            die($h->endpage());
-        }
-        $WorkUnits = Random(0, 2);
-        if ($WorkUnits == 0) {
-            alert("danger", "Uh Oh!", "You were unable to focus, and thus, you were not able to work as hard as you should have. You have worked {$ir['jobwork']} times.", false);
-        } else {
-            alert("success", "Success!", "You got to work and knocked out {$WorkUnits} pieces of work. How productive! You have worked {$ir['jobwork']} times.", false);
-        }
-        $db->query("UPDATE `users` SET `jobwork` = `jobwork` + {$WorkUnits} WHERE `userid` = {$userid}");
-        $api->UserInfoSet($userid, 'will', -7, true);
-        $api->UserInfoSet($userid, 'energy', -10, true);
-        echo "<a class='btn btn-primary' href='?action=work&dowork=1'>Work Again</a><br /><br />
-        <a class='btn btn-primary' href='job.php'>Go Back</a>";
-    }
-    $h->endpage();
-}
-

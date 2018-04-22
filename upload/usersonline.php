@@ -25,7 +25,7 @@ $_GET['act'] = (isset($_GET['act']) && is_numeric($_GET['act'])) ? abs($_GET['ac
 $last_on = time() - ($_GET['act'] * 60);
 
 //Select all players on in the time period set in the GET.
-$q = $db->query("SELECT * FROM `users` WHERE `laston` > {$last_on} ORDER BY `laston` DESC");
+$q = $db->query("/*qc=on*/SELECT * FROM `users` WHERE `laston` > {$last_on} ORDER BY `laston` DESC");
 echo "<table class='table table-bordered table-striped'>
 	<tr>
 		<th>
@@ -36,6 +36,7 @@ echo "<table class='table table-bordered table-striped'>
 		</th>
 	</tr>";
 while ($r = $db->fetch_row($q)) {
+    $r['username']=parseUsername($r['userid']);
     echo "<tr>
 		<td>
 			<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]

@@ -37,7 +37,7 @@ function home()
             alert('danger', "Uh Oh!", "You have already voted in this poll.");
             die($h->endpage());
         }
-        $check_q = $db->query("SELECT COUNT(`id`) FROM `polls`  WHERE `active` = '1' AND `id` = {$_POST['poll']} AND `visibility` = 0");
+        $check_q = $db->query("/*qc=on*/SELECT COUNT(`id`) FROM `polls`  WHERE `active` = '1' AND `id` = {$_POST['poll']} AND `visibility` = 0");
         if ($db->fetch_single($check_q) == 0) {
             $db->free_result($check_q);
             alert('danger', "Uh Oh!", "Poll does not exist, or is no longer active.");
@@ -53,7 +53,7 @@ function home()
         $db->query("UPDATE `polls` SET `voted{$_POST['choice']}` = `voted{$_POST['choice']}` + 1 WHERE `active` = '1' AND `id` = {$_POST['poll']}");
         alert('success', "Success!", "You have successfully submitted your vote.", true, 'polling.php');
     } else {
-        $q = $db->query("SELECT * FROM `polls` WHERE `active` = '1' AND `visibility` = 0");
+        $q = $db->query("/*qc=on*/SELECT * FROM `polls` WHERE `active` = '1' AND `visibility` = 0");
         if (!$db->num_rows($q)) {
             echo "<br />There's no polls open at this time.";
         } else {
@@ -148,7 +148,7 @@ function viewpolls()
     global $db;
     echo "<a href='polling.php'>Cast Your Vote!</a><br />";
     $q =
-        $db->query("SELECT * FROM `polls` WHERE `active` = '0' AND `visibility` = 0 ORDER BY `id` DESC");
+        $db->query("/*qc=on*/SELECT * FROM `polls` WHERE `active` = '0' AND `visibility` = 0 ORDER BY `id` DESC");
     if (!$db->num_rows($q)) {
         alert('danger', "Uh Oh!", "There are no closed polls.", true, 'polling.php');
     } else {

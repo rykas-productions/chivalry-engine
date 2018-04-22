@@ -29,7 +29,7 @@ function viewappeal()
 {
 	global $db,$userid,$api,$h;
 	echo "<h3>Viewing Fedjail Appeals</h3><hr />";
-	$q=$db->query("SELECT * FROM `fedjail_appeals` ORDER BY `fja_time` DESC");
+	$q=$db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` ORDER BY `fja_time` DESC");
 	echo "<table class='table table-bordered'>
 	<tr>
 		<thead>
@@ -87,13 +87,13 @@ function respondappeal()
 		alert('danger',"Uh Oh!","Please select the case you wish to respond to.",true,'?action=viewappeal');
 		die($h->endpage());
 	}
-	$q=$db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$_GET['case']}");
+	$q=$db->query("/*qc=on*/SELECT * FROM `fedjail` WHERE `fed_userid` = {$_GET['case']}");
 	if ($db->num_rows($q) != 1)
 	{
 		alert('danger',"Uh Oh!","The user you're trying to respond to does not exist, or is not in federal dungeon.",true,'?action=viewappeal');
 		die($h->endpage());
 	}
-	$q2=$db->query("SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$_GET['case']} ORDER BY `fja_time` DESC LIMIT 1");
+	$q2=$db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$_GET['case']} ORDER BY `fja_time` DESC LIMIT 1");
 	$r=$db->fetch_row($q2);
 	if (isset($_POST['response']))
 	{
@@ -124,13 +124,13 @@ function pardon()
 		alert('danger',"Uh Oh!","Please select the case you wish to respond to.",true,'?action=viewappeal');
 		die($h->endpage());
 	}
-	$q=$db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$_GET['case']}");
+	$q=$db->query("/*qc=on*/SELECT * FROM `fedjail` WHERE `fed_userid` = {$_GET['case']}");
 	if ($db->num_rows($q) != 1)
 	{
 		alert('danger',"Uh Oh!","The user you're trying to respond to does not exist, or is not in federal dungeon.",true,'?action=viewappeal');
 		die($h->endpage());
 	}
-	$q2=$db->query("SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$_GET['case']} ORDER BY `fja_time` DESC LIMIT 1");
+	$q2=$db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$_GET['case']} ORDER BY `fja_time` DESC LIMIT 1");
 	$threedays=time()+259200;
 	$db->query("UPDATE `fedjail` SET `fed_out` = {$threedays} WHERE `fed_userid` = {$_GET['case']}");
 	alert('success',"Success!","User pardoned successfully. They will be let out in 3 days.",true,'?action=viewappeal');

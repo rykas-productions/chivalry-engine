@@ -11,7 +11,7 @@
 require('globals.php');
 echo "<h3><i class='game-icon game-icon-closed-doors'></i> Federal Dungeon</h3>
 	This is where you go if you break the game rules. Be smart, follow the rules!";
-$q = $db->query("SELECT * FROM `fedjail` ORDER BY `fed_out` ASC");
+$q = $db->query("/*qc=on*/SELECT * FROM `fedjail` ORDER BY `fed_out` ASC");
 echo "<table class='table table-bordered'>
 	<tr>
 		<th>
@@ -32,7 +32,7 @@ while ($r = $db->fetch_row($q)) {
     echo "
 	<tr>
     	<td>
-    		<a href='profile.php?user={$r['fed_userid']}'>{$api->SystemUserIDtoName($r['fed_userid'])}</a>
+    		<a href='profile.php?user={$r['fed_userid']}'>" . parseUsername($r['fed_userid']) . "</a>
     	</td>
     	<td>
 			" . TimeUntil_Parse($r['fed_out']) . "
@@ -41,14 +41,14 @@ while ($r = $db->fetch_row($q)) {
 			{$r['fed_reason']}
 		</td>
     	<td>
-    		<a href='profile.php?user={$r['fed_jailedby']}'>{$api->SystemUserIDtoName($r['fed_jailedby'])}</a>
+    		<a href='profile.php?user={$r['fed_jailedby']}'>" . parseUsername($r['fed_jailedby']) . "</a>
     	</td>
     </tr>";
 }
 echo "</table>";
 $db->free_result($q);
 echo "We have no real good reason to put mail banned players here... but we still did.";
-$q = $db->query("SELECT * FROM `mail_bans` ORDER BY `mbTIME` ASC");
+$q = $db->query("/*qc=on*/SELECT * FROM `mail_bans` ORDER BY `mbTIME` ASC");
 echo "<table class='table table-bordered'>
 	<tr>
 		<th>
@@ -69,7 +69,7 @@ while ($r = $db->fetch_row($q)) {
     echo "
 	<tr>
     	<td>
-    		<a href='profile.php?user={$r['mbUSER']}'>{$api->SystemUserIDtoName($r['mbUSER'])}</a>
+    		<a href='profile.php?user={$r['mbUSER']}'>" . parseUsername($r['mbUSER']) . "</a>
     	</td>
     	<td>
 			" . TimeUntil_Parse($r['mbTIME']) . "
@@ -78,7 +78,7 @@ while ($r = $db->fetch_row($q)) {
 			{$r['mbREASON']}
 		</td>
     	<td>
-    		<a href='profile.php?user={$r['mbBANNER']}'>{$api->SystemUserIDtoName($r['mbBANNER'])}</a>
+    		<a href='profile.php?user={$r['mbBANNER']}'>" . parseUsername($r['mbBANNER']) . "</a>
     	</td>
     </tr>";
 }
@@ -86,7 +86,7 @@ echo "</table>";
 $db->free_result($q);
 
 echo "The same holds true for forum bans.";
-$q = $db->query("SELECT * FROM `forum_bans` ORDER BY `fb_time` ASC");
+$q = $db->query("/*qc=on*/SELECT * FROM `forum_bans` ORDER BY `fb_time` ASC");
 echo "<table class='table table-bordered'>
 	<tr>
 		<th>
@@ -107,7 +107,7 @@ while ($r = $db->fetch_row($q)) {
     echo "
 	<tr>
     	<td>
-    		<a href='profile.php?user={$r['fb_user']}'>{$api->SystemUserIDtoName($r['fb_user'])}</a>
+    		<a href='profile.php?user={$r['fb_user']}'>" . parseUsername($r['fb_user']) . "</a>
     	</td>
     	<td>
 			" . TimeUntil_Parse($r['fb_time']) . "
@@ -116,7 +116,7 @@ while ($r = $db->fetch_row($q)) {
 			{$r['fb_reason']}
 		</td>
     	<td>
-    		<a href='profile.php?user={$r['fb_banner']}'>{$api->SystemUserIDtoName($r['fb_banner'])}</a>
+    		<a href='profile.php?user={$r['fb_banner']}'>" . parseUsername($r['fb_banner']) . "</a>
     	</td>
     </tr>";
 }

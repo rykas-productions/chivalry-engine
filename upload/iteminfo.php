@@ -14,7 +14,7 @@ if (!$itmid) {
 } else {
     $q =
         $db->query(
-            "SELECT `i`.*, `itmtypename`
+            "/*qc=on*/SELECT `i`.*, `itmtypename`
                      FROM `items` AS `i`
                      INNER JOIN `itemtypes` AS `it`
                      ON `i`.`itmtype` = `it`.`itmtypeid`
@@ -33,7 +33,7 @@ if (!$itmid) {
 			</tr>
 			<tr>
 				<td colspan='2'>
-					" . returnIcon($itmid,3) . "
+					" . returnIcon($itmid,5) . "
 				</td>
 			</tr>
 			<tr>
@@ -53,7 +53,7 @@ if (!$itmid) {
 				</td>
 			</tr>";
             $towns='';
-            $sq=$db->query("SELECT `sitemSHOP` FROM `shopitems` WHERE `sitemITEMID` = {$_GET['ID']}");
+            $sq=$db->query("/*qc=on*/SELECT `sitemSHOP` FROM `shopitems` WHERE `sitemITEMID` = {$_GET['ID']}");
             if ($db->num_rows($sq) > 0)
             {
                 echo"
@@ -64,7 +64,7 @@ if (!$itmid) {
 				<td>";
                     while ($sr=$db->fetch_row($sq))
                     {
-                        $shop=$db->fetch_single($db->query("SELECT `shopLOCATION` FROM `shops` WHERE `shopID` = {$sr['sitemSHOP']}"));
+                        $shop=$db->fetch_single($db->query("/*qc=on*/SELECT `shopLOCATION` FROM `shops` WHERE `shopID` = {$sr['sitemSHOP']}"));
                         $towns.= "<a href='travel.php?to={$shop}'>{$api->SystemTownIDtoName($shop)}</a>, ";
                     }
 					echo $towns;
@@ -73,7 +73,7 @@ if (!$itmid) {
 				</td>
 			</tr>";
             $towns2='';
-            $sq=$db->query("SELECT `mine_location` FROM `mining_data` WHERE `mine_copper_item` = {$_GET['ID']} OR `mine_silver_item` = {$_GET['ID']} OR `mine_gold_item` = {$_GET['ID']} OR `mine_gem_item` = {$_GET['ID']}");
+            $sq=$db->query("/*qc=on*/SELECT `mine_location` FROM `mining_data` WHERE `mine_copper_item` = {$_GET['ID']} OR `mine_silver_item` = {$_GET['ID']} OR `mine_gold_item` = {$_GET['ID']} OR `mine_gem_item` = {$_GET['ID']}");
 			if ($db->num_rows($sq) > 0)
             {
                echo" 

@@ -261,6 +261,38 @@ google.charts.load('current', {'packages':['corechart']});
 					" . number_format($TotalGuildCount) . "
 				</td>
 			</tr>
+            <tr>
+				<td>
+					Castle Theme
+				</td>
+				<td>
+					" . number_format($Castle) . "
+				</td>
+			</tr>
+            <tr>
+				<td>
+					Darkly Theme
+				</td>
+				<td>
+					" . number_format($Darkly) . "
+				</td>
+			</tr>
+            <tr>
+				<td>
+					Slate Theme
+				</td>
+				<td>
+					" . number_format($Slate) . "
+				</td>
+			</tr>
+            <tr>
+				<td>
+					Cyborg Theme
+				</td>
+				<td>
+					" . number_format($Cyborg) . "
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<table width='100%' class='table table-bordered'>

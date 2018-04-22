@@ -18,27 +18,27 @@ class headers
         <!DOCTYPE html>
         <html lang="en">
         <head>
-            <center>
+                <center>
                 <?php
                 //Select count of user's unread messages.
-                $ir['mail'] = $db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
+                $ir['mail'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
                 //Select count of user's unread notifications.
-                $ir['notifications'] = $db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
-                $unread=$ir['mail']+$ir['notifications']+$ir['announcements'];
-                $title = ($unread == 0) ? "{$set['WebsiteName']}" : "({$unread}) {$set['WebsiteName']}";
+                $ir['notifications'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
+                $title = "{$set['WebsiteName']} - {$ir['username']}";
                 echo "<title>{$title}</title>";
-				if ($ir['theme'] == 1)
+				setcookie('theme', $ir['theme']);
+                if ($ir['theme'] == 1)
 				{
 					?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/yeti/bootstrap.min.css">
-					<meta name="theme-color" content="#333">
+					<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1.0.5/css/bootstrap-v.1.5.css">
+                    <meta name="theme-color" content="rgba(0, 0, 0, .8)">
 					<?php
 					$hdr='navbar-dark bg-dark';
 				}
 				if ($ir['theme'] == 2)
 				{
 					?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/darkly/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.0/darkly/bootstrap.min.css">
 					<meta name="theme-color" content="#303030">
 					<?php
 					$hdr='navbar-light bg-light';
@@ -46,72 +46,33 @@ class headers
 				if ($ir['theme'] == 3)
 				{
 					?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/superhero/bootstrap.min.css">
-					<meta name="theme-color" content="#4E5D6C">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.0/slate/bootstrap.min.css">
+					<meta name="theme-color" content="#272B30">
 					<?php
 					$hdr='navbar-dark bg-dark';
 				}
 				if ($ir['theme'] == 4)
 				{
 					?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/slate/bootstrap.min.css">
-					<meta name="theme-color" content="#272B30">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 5)
-				{
-					?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cerulean/bootstrap.min.css">
-					<meta name="theme-color" content="#04519b">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 6)
-				{
-					?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/minty/bootstrap.min.css">
-					<meta name="theme-color" content="#78C2AD">
-					<?php
-					$hdr='navbar-dark bg-primary';
-				}
-				if ($ir['theme'] == 7)
-				{
-					?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/united/bootstrap.min.css">
-					<meta name="theme-color" content="#772953">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 8)
-				{
-					?>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cyborg/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.0/cyborg/bootstrap.min.css">
 					<meta name="theme-color" content="#060606">
 					<?php
 					$hdr='navbar-dark bg-dark';
 				}
-                if ($ir['theme'] == 9)
-				{
-					?>
-					<link rel="stylesheet" href="css/valentines-day-cid-v4.css">
-					<meta name="theme-color" content="#CC00FF">
-					<?php
-					$hdr='navbar-dark bg-primary';
-				}
-				setcookie('theme', $ir['theme']);
-				?>
-				<link rel="stylesheet" href="css/game-v1.2.min.css">
-				<link rel="stylesheet" href="css/game-icons.css">
+                ?>
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+				<meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <meta name="description" content="<?php echo $set['Website_Description']; ?>">
                 <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
                 <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
-                <meta property="og:image" content="assets/img/logo.png"/>
-                <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon"/>
-                <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
+                <meta property="og:image" content="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png"/>
+                <link rel="shortcut icon" href="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png" type="image/x-icon"/>
+				<link rel="icon" sizes="192x192" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png">
+				<link rel="icon" sizes="128x128" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png">
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/css/game-v1.11.min.css">
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/css/game-icons.min.css">
 				</head>
     <?php
     //If the called script wants the menu hidden.
@@ -121,9 +82,9 @@ class headers
         <body>
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
-            <a class="navbar-brand" href="index.php">
+            <a class="navbar-brand" href="#" data-toggle="modal" data-target="#userInfo">
 					<?php 
-						echo "<img src='assets/img/logo-optimized.png' width='32' height='32' alt=''>
+						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png' width='30' height='30' alt='Chivalry is Dead logo' title='Chivalry is Dead logo'>
 						{$set['WebsiteName']}"; 
 					?>
 				</a>
@@ -174,7 +135,7 @@ class headers
                                 <?php
                                 //User has a display picture, lets show it!
                                 if ($ir['display_pic']) {
-                                    echo "<img src='" . parseImage($ir['display_pic']) . "' width='32' height='32'>";
+                                    echo "<img src='" . parseImage($ir['display_pic']) . "' width='30' height='30' alt='Your display picture.' title='Your display picture.'>";
                                 }
                                 echo " Hello, {$ir['username']}!";
                                 ?>
@@ -201,7 +162,7 @@ class headers
 								<a class="dropdown-item" href="privacy.php"><i
                                         class="fas fa-fw fa-user-secret"></i> <?php echo "Privacy Policy"; ?></a>
                                 <a class="dropdown-item" href="logout.php"><i
-                                        class="fas fa-fw fa-power-off"></i> <?php echo "Logout"; ?></a>
+                                        class="fas fa-sign-out-alt"></i> <?php echo "Logout"; ?></a>
                             </div>
                         </li>
                     </ul>
@@ -221,14 +182,14 @@ class headers
         </noscript>
     <?php
     $IP = $db->escape($_SERVER['REMOTE_ADDR']);
-    $ipq = $db->query("SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
+    $ipq = $db->query("/*qc=on*/SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
     //User's IP is banned, so lets stop access.
     if ($db->num_rows($ipq) > 0) {
         alert('danger', "Uh Oh!", "You have been IP banned.", false);
         die($h->endpage());
     }
-    $fed = $db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
-    $votecount=$db->fetch_single($db->query("SELECT COUNT(`voted`) FROM `votes` WHERE `userid` = {$userid}"));
+    $fed = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
+    $votecount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`voted`) FROM `votes` WHERE `userid` = {$userid}"));
     if ($votecount < 5) {
         echo "<b><a href='vote.php' class='text-success'>[Vote for {$set['WebsiteName']}<span class='hidden-sm-down'> at various Voting Websites and be rewarded</span>.]</a></b><br />";
     }
@@ -244,7 +205,7 @@ class headers
     if ($ir['tut_on'] == 1)
     {
         $page = $db->escape(strip_tags(stripslashes(basename($_SERVER['PHP_SELF']))));
-        $tq=$db->query("SELECT * FROM `tutorial` WHERE `page` = '{$page}'");
+        $tq=$db->query("/*qc=on*/SELECT * FROM `tutorial` WHERE `page` = '{$page}'");
         if ($db->num_rows($tq) > 0)
         {
             $tr=$db->fetch_row($tq);
@@ -261,7 +222,7 @@ class headers
     //User is in federal jail. Stop their access.
     if ($ir['fedjail'] > 0) {
 		$lasthour=time()-3600;
-		$fq2=$db->query("SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} AND `fja_time` >= {$lasthour} LIMIT 1");
+		$fq2=$db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} AND `fja_time` >= {$lasthour} LIMIT 1");
 		if (isset($_POST['fedappeal']))
 		{
 			$msg = $db->escape(stripslashes($_POST['fedappeal']));
@@ -278,7 +239,7 @@ class headers
 		}
         alert('info', "Federal Dungeon!", "You are locked away in Federal Dungeon for the next
 					    " . TimeUntil_Parse($fed['fed_out']) . ". You were placed in here for <b>{$fed['fed_reason']}</b>.", false);
-		$fq=$db->query("SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} ORDER BY `fja_time` ASC");
+		$fq=$db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} ORDER BY `fja_time` ASC");
 		echo "<table class='table table-bordered'>";
 		while ($fr = $db->fetch_row($fq))
 		{
@@ -321,13 +282,13 @@ class headers
     }
     //User is in the infirmary, tell them for how long.
     if ($api->UserStatus($ir['userid'], 'infirmary')) {
-        $InfirmaryOut = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
+        $InfirmaryOut = $db->fetch_single($db->query("/*qc=on*/SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
         $InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
         alert('info', "Unconscious!", "You are in the Infirmary for the next {$InfirmaryRemain}.", true, "quickuse.php?infirmary", "Use Item");
     }
     //User is in the dungeon, tell them how long.
     if ($api->UserStatus($ir['userid'], 'dungeon')) {
-        $DungeonOut = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
+        $DungeonOut = $db->fetch_single($db->query("/*qc=on*/SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
         $DungeonRemain = TimeUntil_Parse($DungeonOut);
         alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, "quickuse.php?dungeon", "Use Item");
     }
@@ -342,7 +303,7 @@ class headers
 			$db->query("UPDATE `user_settings` SET `artifacts` = `artifacts` + 1, `artifact_time` = " . time() . " WHERE `userid` = {$userid}");
 		}
 	}
-	$luckrng=Random(1,250);
+	$luckrng=Random(1,200);
 	if (!isset($_SESSION['lucked_out']))
 		$_SESSION['lucked_out']=0;
 	if ($_SESSION['lucked_out'] < time())
@@ -352,13 +313,17 @@ class headers
 			$thisrng=0;
 			if (($ir['luck'] > 50) && ($ir['luck'] < 150))
 			{
+			    $minimumluck=-3;
+			    //Lucky Day
+			    $specialnumber=((getSkillLevel($userid,26)*1)/100);
+			    $minimumluck=$minimumluck+$specialnumber;
 				while ($thisrng == 0)
 				{
-					$thisrng=Random(-5,5);
+                    $thisrng=Random($minimumluck,7);
 				}
 				$_SESSION['lucked_out']=time()+3600;
+				alert('info','Lucked Out!',"While walking around the kingdom, your luck has changed by {$thisrng}%.",false);
 				$db->query("UPDATE `userstats` SET `luck` = `luck` + ({$thisrng}) WHERE `userid` = {$userid}");
-				$api->GameAddNotification($userid,"While walking around the kingdom, your luck has changed by {$thisrng}%.");
 			}
 		}
 	}
@@ -379,20 +344,20 @@ class headers
 			//Set User to need verified.
 			$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
 			echo "This is a needed evil. Please confirm you are not a bot."; ?>
+                <center>
 				<form action='macro.php' method='post' name='myform'>
-					<center>
 						<div class='g-recaptcha' data-theme='light'
 							 data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
-					</center>
 					<input type='hidden' value='<?php echo $macropage; ?>' name='page'>
 					<input type='submit' value="<?php echo "Verify"; ?>" class="btn btn-primary" data-dismiss="modal">
 				</form>
+                </center>
 				<?php
 				die($h->endpage());
 		}
     }
-        //Set user's timezone.
-        date_default_timezone_set("America/New_York");
+        include('2018easter_find.php');
+        include('rickroll.php');
     }
     }
 
@@ -443,6 +408,7 @@ class headers
         global $db, $ir, $StartTime, $set, $userid, $api;
         $query_extra = '';
         include('analytics.php');
+        include('userinfo.php');
         include('marriage_perks.php');
         //Set mysqldebug in the URL to get query debugging as an admin.
     if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
@@ -459,28 +425,24 @@ class headers
         </div>
         </div>
         <!-- /.row -->
-
         </div>
         <!-- /.container -->
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
         
-        <script src="js/notifications/main.js"></script>
-        
-        <!-- jQuery Version 3.2.1 -->
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <!-- jQuery Version 3.3.1 -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
-        <script src="js/game.js"></script>
-        <script src="js/register-min.js" async defer></script>
+        <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/js/game-v1.1.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/js/register-min.js" async defer></script>
 		<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
-		<script type="text/javascript" src="js/clock.min.js"></script>
-		<script type="text/javascript"> 
+		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/js/clock.min.js"></script>
+		<script> 
 		  $(document).ready(function(){ 
 			customtimestamp = parseInt($("#jqclock").data("time"));
 			$("#jqclock").clock({"langSet":"en","timestamp":customtimestamp,"timeFormat":" g:i:s a"}); 
@@ -491,7 +453,8 @@ class headers
             <div class='container'>
 				<span>
                 <?php
-				$timestamp=time()-18000;
+				//$timestamp=time()-18000;
+                $timestamp=time()-14400;
                 //Print copyright info, Chivalry Engine info, and current time.
                 echo "<hr />
 					Time is now <span id='jqclock' class='jqclock' data-time='{$timestamp}'>" . date('l, F j, Y g:i:s a') . "</span><br />
@@ -510,6 +473,7 @@ class headers
                 ?>
 				</span>
             </div>
+            </center>
         </footer>
 		</body>
         </html>

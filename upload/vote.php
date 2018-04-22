@@ -39,7 +39,7 @@ function home()
     echo "Here you may vote for {$set['WebsiteName']} at various RPG toplists and be rewarded. Whether or not you voted is
 	logged. If you scam this system, you will be dealt with severely. If you do not get rewarded, try voting again later.
 	<br />";
-	$q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'twg'");
+	$q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'twg'");
 	$vote_count = $db->fetch_single($q);
 	$db->free_result($q);
 	if ($vote_count > 0)
@@ -50,7 +50,7 @@ function home()
 	{
 		$twgvote="<a href='?action=twg'>Vote</a>";
 	}
-	$q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'top100'");
+	$q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'top100'");
 	$vote_count = $db->fetch_single($q);
 	$db->free_result($q);
 	if ($vote_count > 0)
@@ -61,7 +61,7 @@ function home()
 	{
 		$thavote="<a href='?action=top100'>Vote</a>";
 	}
-	$q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'mgp'");
+	$q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'mgp'");
 	$vote_count = $db->fetch_single($q);
 	$db->free_result($q);
 	if ($vote_count > 0)
@@ -72,7 +72,7 @@ function home()
 	{
 		$mgpollvote="<a href='?action=mgpoll'>Vote</a>";
 	}
-	$q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'apex'");
+	$q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'apex'");
 	$vote_count = $db->fetch_single($q);
 	$db->free_result($q);
 	if ($vote_count > 0)
@@ -83,7 +83,7 @@ function home()
 	{
 		$awgvote="<a href='?action=apex'>Vote</a>";
 	}
-	$q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'dog'");
+	$q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'dog'");
 	$vote_count = $db->fetch_single($q);
 	$db->free_result($q);
 	if ($vote_count > 0)
@@ -94,7 +94,7 @@ function home()
 	{
 		$dogvote="<a href='?action=dog'>Vote</a>";
 	}
-    $q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'bbogd'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'bbogd'");
 	$vote_count = $db->fetch_single($q);
 	$db->free_result($q);
 	if ($vote_count > 0)
@@ -123,7 +123,7 @@ function home()
 				Top 100 Arena
 			</td>
 			<td>
-				25 Hexbags
+				100 Chivalry Token Voucher
 			</td>
 			<td>
 				{$thavote}
@@ -134,7 +134,7 @@ function home()
 				MGPoll
 			</td>
 			<td>
-				75 Chivalry Tokens
+				3 Chivalry Gym Scrolls
 			</td>
 			<td>
 				{$mgpollvote}
@@ -145,7 +145,7 @@ function home()
 				Apex Web Gaming
 			</td>
 			<td>
-				50 Boxes of Random
+				10 Explosives
 			</td>
 			<td>
 				{$awgvote}
@@ -156,7 +156,7 @@ function home()
 				Directory of Games
 			</td>
 			<td>
-				75 Chivalry Tokens
+				100,000 Copper Coins
 			</td>
 			<td>
 				{$dogvote}
@@ -190,7 +190,7 @@ function home()
 function twg()
 {
     global $db,$userid,$api,$h;
-    $q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'twg'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'twg'");
     $vote_count = $db->fetch_single($q);
     $db->free_result($q);
     if ($vote_count > 0)
@@ -207,7 +207,7 @@ function twg()
 function top100()
 {
     global $db,$userid,$api,$h;
-    $q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'top100'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'top100'");
     $vote_count = $db->fetch_single($q);
     $db->free_result($q);
     if ($vote_count > 0)
@@ -225,7 +225,7 @@ function top100()
 function mgpoll()
 {
     global $db,$userid,$api,$h;
-    $q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'mgp'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'mgp'");
     $vote_count = $db->fetch_single($q);
     $db->free_result($q);
     if ($vote_count > 0)
@@ -242,7 +242,7 @@ function mgpoll()
 function apex()
 {
     global $db,$userid,$api,$h;
-    $q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'apex'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'apex'");
     $vote_count = $db->fetch_single($q);
     $db->free_result($q);
     if ($vote_count > 0)
@@ -259,7 +259,7 @@ function apex()
 function dog()
 {
     global $db,$userid,$api,$h;
-    $q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'dog'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'dog'");
     $vote_count = $db->fetch_single($q);
     $db->free_result($q);
     if ($vote_count > 0)
@@ -276,7 +276,7 @@ function dog()
 function bbogd()
 {
     global $db,$userid,$api,$h;
-    $q = $db->query("SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'bbogd'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'bbogd'");
     $vote_count = $db->fetch_single($q);
     $db->free_result($q);
     if ($vote_count > 0)

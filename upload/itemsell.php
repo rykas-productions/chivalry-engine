@@ -15,7 +15,7 @@ if (permission('CanSellToGame', $userid) == true) {
     if (!empty($_POST['qty']) && !empty($_GET['ID'])) {
         $id =
             $db->query(
-                "SELECT `inv_qty`, `itmsellprice`, `itmid`, `itmname`
+                "/*qc=on*/SELECT `inv_qty`, `itmsellprice`, `itmid`, `itmname`
 						 FROM `inventory` AS `iv`
 						 INNER JOIN `items` AS `it`
 						 ON `iv`.`inv_itemid` = `it`.`itmid`
@@ -34,6 +34,9 @@ if (permission('CanSellToGame', $userid) == true) {
                 alert('danger', "Uh Oh!", "You are trying to sell more items than you currently have.");
             } else {
                 $price = $r['itmsellprice'] * $_POST['qty'];
+                //Scammer skill
+                $specialnumber=((getSkillLevel($userid,16)*2)/100);
+                $price = $price+($price*$specialnumber);
                 $api->UserTakeItem($userid, $r['itmid'], $_POST['qty']);
                 $api->UserGiveCurrency($userid, 'primary', $price);
                 $priceh = number_format($price);
@@ -47,7 +50,7 @@ if (permission('CanSellToGame', $userid) == true) {
     } else if (!empty($_GET['ID']) && empty($_POST['qty'])) {
         $id =
             $db->query(
-                "SELECT `inv_qty`, `itmname`
+                "/*qc=on*/SELECT `inv_qty`, `itmname`
 						 FROM `inventory` AS `iv`
 						 INNER JOIN `items` AS `it`
 						 ON `iv`.`inv_itemid` = `it`.`itmid`

@@ -1,6 +1,6 @@
 <?php
 $rng=Random(1,100);
-$mi=$db->query("SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$userid} OR `proposed_id` = {$userid}) AND `together` = 1");
+$mi=$db->query("/*qc=on*/SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$userid} OR `proposed_id` = {$userid}) AND `together` = 1");
 $mt=$db->fetch_row($mi);
 //Assign the proper values.
 if ($mt['proposer_id'] == $userid)
@@ -93,6 +93,10 @@ if ($mt['happiness'] > 9)
             $newmarriage=time();
             if (($proposedlo > time()-600) && ($proposerlo > time()-600))
             {
+                if (getSkillLevel($mt['proposed_id'],27) != 0)
+                    $increase2=$increase2+10;
+                if (getSkillLevel($mt['proposer_id'],27) != 0)
+                    $increase=$increase+10;
                 if ($rng < 6)
                 {
                     $api->UserInfoSet($mt['proposed_id'],$stat2,$increase2);

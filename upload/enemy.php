@@ -27,7 +27,7 @@ switch ($_GET['action'])
 function enemy_list()
 {
     global $db, $ir, $userid, $h, $api;
-	$ir['friend_count']=$db->fetch_single($db->query("SELECT COUNT(`enemy_id`) FROM `enemy` WHERE `enemy_user` = {$userid}"));
+	$ir['friend_count']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`enemy_id`) FROM `enemy` WHERE `enemy_user` = {$userid}"));
     echo "
 <a href='?action=add'>Add an enemy</a><br />
 These are the people on your enemy list.
@@ -49,7 +49,7 @@ These are the people on your enemy list.
    ";
     $q =
             $db->query(
-                    "SELECT `comment`, `enemy_id`, `laston`, `vip_days`, `vipcolor`, 
+                    "/*qc=on*/SELECT `comment`, `enemy_id`, `laston`, `vip_days`, `vipcolor`, 
                      `username`, `userid`
                      FROM `enemy` AS `fl`
                      LEFT JOIN `users` AS `u` ON `fl`.`enemy_user` = `u`.`userid`
@@ -109,7 +109,7 @@ function add_friend()
                     : '';
         $qc =
                 $db->query(
-                        "SELECT COUNT(`enemy_adder`)
+                        "/*qc=on*/SELECT COUNT(`enemy_adder`)
                          FROM `enemy`
                          WHERE `enemy_adder` = $userid
                          AND `enemy_user` = {$_POST['ID']}");
@@ -117,7 +117,7 @@ function add_friend()
         $db->free_result($qc);
         $q =
                 $db->query(
-                        "SELECT `username`
+                        "/*qc=on*/SELECT `username`
                          FROM `users`
                          WHERE `userid` = {$_POST['ID']}");
         if ($dupe_count > 0)
@@ -193,7 +193,7 @@ function remove_friend()
 
     $q =
             $db->query(
-                    "SELECT `enemy_adder`
+                    "/*qc=on*/SELECT `enemy_adder`
                      FROM `enemy`
                      WHERE `enemy_id` = {$_GET['f']} AND `enemy_adder` = $userid");
     if ($db->num_rows($q) == 0)
@@ -220,7 +220,7 @@ function change_comment()
             $db->escape(strip_tags(stripslashes($_POST['comment'])));
         $q =
                 $db->query(
-                        "SELECT COUNT(`enemy_id`)
+                        "/*qc=on*/SELECT COUNT(`enemy_id`)
                      FROM `enemy`
                      WHERE `enemy_id` = {$_POST['f']} AND `enemy_adder` = $userid");
         if ($db->fetch_single($q) == 0)
@@ -246,7 +246,7 @@ function change_comment()
         }
         $q =
                 $db->query(
-                        "SELECT `comment`
+                        "/*qc=on*/SELECT `comment`
                          FROM `enemy`
                          WHERE `enemy_id` = {$_GET['f']}
                          AND `enemy_adder` = $userid");

@@ -62,19 +62,19 @@ if (empty($_POST['userid'])) {
         alert('danger', "Uh Oh!", "Player reports can only be, at maximum, 1,250 characters in length.");
         die($h->endpage());
     }
-    $q = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
     if ($db->fetch_single($q) == 0) {
         $db->free_result($q);
         alert('danger', "Uh Oh!", "You are trying to report a non-existent user.");
         die($h->endpage());
     }
     $db->free_result($q);
-	$adminq=$db->query("SELECT `userid` FROM `users` WHERE `user_level` = 'Admin'");
+	$adminq=$db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `user_level` = 'Admin'");
 	while ($adminr=$db->fetch_row($adminq))
 	{
 		$api->GameAddNotification($adminr['userid'],"A player report has been filed and submitted. Please read it <a href='staff/staff_users.php?action=reports'>here</a>.");
 	}
-	$assist=$db->query("SELECT `userid` FROM `users` WHERE `user_level` = 'Assistant'");
+	$assist=$db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `user_level` = 'Assistant'");
 	while ($asr=$db->fetch_row($assist))
 	{
 		$api->GameAddNotification($asr['userid'],"A player report has been filed and submitted. Please read it <a href='staff/staff_users.php?action=reports'>here</a>.");

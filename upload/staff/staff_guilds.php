@@ -67,7 +67,7 @@ function viewguild()
         }
 
         //Select the Guild from database to ensure it exists.
-        $q = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The guild you are trying to view does not exist, or is invalid.");
             die($h->endpage());
@@ -77,7 +77,7 @@ function viewguild()
         $r = $db->fetch_row($q);
 
         //Select member count from database.
-        $membcount = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$guild}"));
+        $membcount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$guild}"));
 
         //Show the information grabbed.
         echo "<h3>Viewing Guild Info for Guild ID {$guild}</h3>";
@@ -171,7 +171,7 @@ function viewguild()
     } else {
         //Basic form to select the guild.
         $csrf = request_csrf_html('staff_viewguild');
-        echo "Select the guild from the dropdown you wish to view, then submit the form.<br />
+        echo "/*qc=on*/SELECT the guild from the dropdown you wish to view, then submit the form.<br />
         <form method='post'>
         " . guilds_dropdown() . "
         {$csrf}<br />
@@ -217,7 +217,7 @@ function creditguild()
         }
 
         //Select the Guild from database to ensure it exists.
-        $q = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The guild you are trying to view does not exist, or is invalid.");
             die($h->endpage());
@@ -248,7 +248,7 @@ function creditguild()
     } else {
         //Form to credit a guild.
         $csrf = request_csrf_html('staff_creditguild');
-        echo "Select the guild you wish to credit, then enter how much you wish to credit them, and input a reason.
+        echo "/*qc=on*/SELECT the guild you wish to credit, then enter how much you wish to credit them, and input a reason.
         Submit the form when complete.";
         echo "<form method='post'>
         <table class='table table-bordered'>
@@ -303,7 +303,7 @@ function viewwars()
     echo "<h3>Viewing Guild Wars</h3>
     <table class='table table-bordered'>";
     //Select wars from database that are active.
-    $q = $db->query("SELECT * FROM `guild_wars`
+    $q = $db->query("/*qc=on*/SELECT * FROM `guild_wars`
                     WHERE `gw_winner` = 0 AND
                     `gw_end` > " . time() . "
                     ORDER BY `gw_id` DESC");
@@ -352,7 +352,7 @@ function endwar()
         die($h->endpage());
     }
     //Select the war to be deleted from the database.
-    $q = $db->query("SELECT * FROM `guild_wars`
+    $q = $db->query("/*qc=on*/SELECT * FROM `guild_wars`
                     WHERE `gw_winner` = 0 AND
                     `gw_end` > " . time() . "
                     AND `gw_id` = {$_GET['war']}
@@ -415,7 +415,7 @@ function editguild()
         }
 
         //Select the Guild from database to ensure it exists.
-        $q = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The guild you are trying to view does not exist, or is invalid.");
             die($h->endpage());
@@ -556,21 +556,21 @@ function editguild()
         }
 
         //Select the Guild from database to ensure it exists.
-        $q = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The guild you are trying to view does not exist, or is invalid.");
             die($h->endpage());
         }
 
         //Check that the owner is in the guild
-        $oc = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$owner} AND `guild` = {$guild}");
+        $oc = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$owner} AND `guild` = {$guild}");
         if ($db->num_rows($oc) == 0) {
             alert('danger', "Uh Oh!", "You are trying to set an invalid owner for this guild.");
             die($h->endpage());
         }
 
         //Check that the co-owner is in the guild
-        $oc = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$coowner} AND `guild` = {$guild}");
+        $oc = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$coowner} AND `guild` = {$guild}");
         if ($db->num_rows($oc) == 0) {
             alert('danger', "Uh Oh!", "You are trying to set an invalid co-owner for this guild.");
             die($h->endpage());
@@ -615,7 +615,7 @@ function delguild()
         }
 
         //Select the Guild from database to ensure it exists.
-        $q = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$guild}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The guild you are trying to view does not exist, or is invalid.");
             die($h->endpage());
@@ -667,7 +667,7 @@ function addcrime()
         }
 
         //Check to see if the crime's name is in use already.
-        $q = $db->query("SELECT `gcID` FROM `guild_crimes` WHERE `gcNAME` = '{$name}'");
+        $q = $db->query("/*qc=on*/SELECT `gcID` FROM `guild_crimes` WHERE `gcNAME` = '{$name}'");
         if ($db->num_rows($q) > 0) {
             alert('danger', "Uh Oh!", "You cannot have more than one crime with the same name.");
             die($h->endpage());
@@ -778,7 +778,7 @@ function delcrime()
         }
 
         //Verify crime exists.
-        $cq = $db->query("SELECT `gcUSERS` from `guild_crimes` WHERE `gcID` = {$_POST['crime']}");
+        $cq = $db->query("/*qc=on*/SELECT `gcUSERS` from `guild_crimes` WHERE `gcID` = {$_POST['crime']}");
         if ($db->num_rows($cq) == 0) {
             alert('danger', "Uh Oh!", "You cannot commit a non-existent crime.");
             die($h->endpage());
@@ -798,8 +798,8 @@ function delcrime()
     } else {
         //Select the crimes from database, based on how many members the guild has.
         $csrf = request_csrf_html('staff_delete_guild_crime');
-        $q = $db->query("SELECT * FROM `guild_crimes`");
-        echo "Select the guild crime you wish to delete. Guilds currently planning to commit this crime will have their crime
+        $q = $db->query("/*qc=on*/SELECT * FROM `guild_crimes`");
+        echo "/*qc=on*/SELECT the guild crime you wish to delete. Guilds currently planning to commit this crime will have their crime
         set back to nothing.<br />
         <form method='post'>
             <select name='crime' type='dropdown' class='form-control'>";

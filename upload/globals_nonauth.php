@@ -7,6 +7,8 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+//Set user's timezone.
+date_default_timezone_set("America/New_York");
 //If this file is opened directly.
 if (strpos($_SERVER['PHP_SELF'], "globals_nonauth.php") !== false) {
     exit;
@@ -43,7 +45,7 @@ check_data();
 include("class/class_api.php");
 $api = new api;
 $set = array();
-$settq = $db->query("SELECT *
+$settq = $db->query("/*qc=on*/SELECT *
 					 FROM `settings`");
 //Settings in friendly variables.
 while ($r = $db->fetch_row($settq)) {

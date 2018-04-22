@@ -225,7 +225,7 @@ function new_crime()
             die($h->endpage());
         }
         if (!empty($_POST['item'])) {
-            $qi = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = {$_POST['item']}");
+            $qi = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = {$_POST['item']}");
             $exist_check = $db->fetch_single($qi);
             $db->free_result($qi);
             if ($exist_check == 0) {
@@ -290,7 +290,7 @@ function edit_crime()
             alert('danger', "Uh Oh!", "Please specify a crime you wish to edit.");
             die($h->endpage());
         }
-        $d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
+        $d = $db->query("/*qc=on*/SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
         if ($db->num_rows($d) == 0) {
             $db->free_result($d);
             alert('danger', "Uh Oh!", "The crime you're trying to edit does not exist.");
@@ -472,7 +472,7 @@ function edit_crime()
             die($h->endpage());
         }
         if (!empty($_POST['item'])) {
-            $qi = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = {$_POST['item']}");
+            $qi = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = {$_POST['item']}");
             $exist_check = $db->fetch_single($qi);
             $db->free_result($qi);
             if ($exist_check == 0) {
@@ -509,7 +509,7 @@ function delcrime()
             alert('danger', "Uh Oh!", "Please specify a crime you wish to delete.");
             die($h->endpage());
         }
-        $d = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
+        $d = $db->query("/*qc=on*/SELECT * FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
         if ($db->num_rows($d) == 0) {
             $db->free_result($d);
             alert('danger', "Uh Oh!", "You are trying to delete a non-existent crime.");
@@ -561,7 +561,7 @@ function new_crimegroup()
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
             die($h->endpage());
         }
-        $d = $db->query("SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']}");
+        $d = $db->query("/*qc=on*/SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']}");
         if ($db->fetch_single($d) > 0) {
             $db->free_result($d);
             alert('danger', "Uh Oh!", "You cannot have more than one crime group with the same order number.");
@@ -648,7 +648,7 @@ function edit_crimegroup()
             alert('danger', "Uh Oh!", "Please specify the crime group you wish to edit.");
             die($h->endpage());
         }
-        $d = $db->query("SELECT `cgORDER`, `cgNAME` FROM `crimegroups` WHERE `cgID` = {$_POST['crimegroup']}");
+        $d = $db->query("/*qc=on*/SELECT `cgORDER`, `cgNAME` FROM `crimegroups` WHERE `cgID` = {$_POST['crimegroup']}");
         if ($db->num_rows($d) == 0) {
             $db->free_result($d);
             alert('danger', "Uh Oh!", "The Crime Group you've selected does not exist.");
@@ -699,7 +699,7 @@ function edit_crimegroup()
             alert('danger', "Uh Oh!", "Please fill out the form entirely before submitting.");
             die($h->endpage());
         } else {
-            $d = $db->query("SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']} AND `cgID` != {$_POST['cgID']}");
+            $d = $db->query("/*qc=on*/SELECT COUNT(`cgID`) FROM `crimegroups` WHERE `cgORDER` = {$_POST['cgORDER']} AND `cgID` != {$_POST['cgID']}");
             if ($db->fetch_single($d) > 0) {
                 $db->free_result($d);
                 alert('danger', "Uh Oh!", "You cannot have more than one crime group with the same order number.");
@@ -726,7 +726,7 @@ function delcrimegroup()
             alert('danger', "Uh Oh!", "Please specify the crime group you wish to delete.");
             die($h->endpage());
         }
-        $d = $db->query("SELECT * FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
+        $d = $db->query("/*qc=on*/SELECT * FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
         if ($db->num_rows($d) == 0) {
             $db->free_result($d);
             alert('danger', "Uh Oh!", "The Crime Group you wish to delete does not exist.");

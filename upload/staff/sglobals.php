@@ -44,13 +44,13 @@ $db->configure($_CONFIG['hostname'], $_CONFIG['username'], $_CONFIG['password'],
 $db->connect();
 $c = $db->connection_id;
 $set = array();
-$settq = $db->query("SELECT * FROM `settings`");
+$settq = $db->query("/*qc=on*/SELECT * FROM `settings`");
 while ($r = $db->fetch_row($settq)) {
     $set[$r['setting_name']] = $r['setting_value'];
 }
 global $jobquery, $housequery;
 if (isset($jobquery) && $jobquery) {
-    $is = $db->query("SELECT `u`.*, `us`.*, `j`.*, `jr`.*
+    $is = $db->query("/*qc=on*/SELECT `u`.*, `us`.*, `j`.*, `jr`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -62,7 +62,7 @@ if (isset($jobquery) && $jobquery) {
                      WHERE `u`.`userid` = '{$userid}'
                      LIMIT 1");
 } else if (isset($housequery) && $housequery) {
-    $is = $db->query("SELECT `u`.*, `us`.*, `h`.*
+    $is = $db->query("/*qc=on*/SELECT `u`.*, `us`.*, `h`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -73,7 +73,7 @@ if (isset($jobquery) && $jobquery) {
                      LIMIT 1");
 } else {
     $is = $db->query(
-            "SELECT `u`.*, `us`.*, `uas`.*
+            "/*qc=on*/SELECT `u`.*, `us`.*, `uas`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`

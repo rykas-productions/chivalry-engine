@@ -59,13 +59,13 @@ function add()
             die($h->endpage());
         }
         //Check that the item actually exists, and if it doesn't, stop the creation of this promo code.
-        $q1 = $db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$item}");
+        $q1 = $db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$item}");
         if ($db->num_rows($q1) == 0) {
             alert('danger', "Uh Oh!", "Please select an existing item to give.");
             die($h->endpage());
         }
         //Check that the promo code entered is not in use, and stop creation if it is.
-        $q2 = $db->query("SELECT `promo_id` FROM `promo_codes` WHERE `promo_code` = '{$code}'");
+        $q2 = $db->query("/*qc=on*/SELECT `promo_id` FROM `promo_codes` WHERE `promo_code` = '{$code}'");
         if ($db->num_rows($q2) > 0) {
             alert('danger', "Uh Oh!", "Please specify an unused name for this promo code..");
             die($h->endpage());
@@ -136,7 +136,7 @@ function deletepromo()
             die($h->endpage());
         }
         //Make sure the promotion code to be deleted actually exists.
-        $q = $db->query("SELECT `promo_code` FROM `promo_codes` WHERE `promo_id` = {$code}");
+        $q = $db->query("/*qc=on*/SELECT `promo_code` FROM `promo_codes` WHERE `promo_id` = {$code}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "You are trying to delete an invalid or non-existent promotion code.");
             die($h->endpage());
@@ -158,7 +158,7 @@ function viewpromo()
 {
     echo "<h3>View Promo Codes</h3><hr />";
     global $db, $h, $api;
-    $q = $db->query("SELECT * FROM `promo_codes`");
+    $q = $db->query("/*qc=on*/SELECT * FROM `promo_codes`");
     if ($db->num_rows($q) == 0) {
         alert('danger', "Uh Oh!", "There aren't any promotion codes in game.", true, 'index.php');
         die($h->endpage());

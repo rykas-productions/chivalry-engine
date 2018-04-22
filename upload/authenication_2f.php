@@ -5,7 +5,7 @@ $menuhide = true;
 require_once('globals_nonauth.php');
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 $CurrentTime = time();
-$uade=$db->query("SELECT * FROM `user_settings` WHERE `userid` = {$_SESSION['userid']}");
+$uade=$db->query("/*qc=on*/SELECT * FROM `user_settings` WHERE `userid` = {$_SESSION['userid']}");
 $uadr=$db->fetch_row($uade);
 if ($uadr['2fa_on'] == 0)
 {
@@ -14,7 +14,7 @@ if ($uadr['2fa_on'] == 0)
 }
 if (isset($_POST['code']))
 {
-	$secret=$db->fetch_single($db->query("SELECT `secret_key` FROM `2fa_table` WHERE `userid` = {$_SESSION['userid']}"));
+	$secret=$db->fetch_single($db->query("/*qc=on*/SELECT `secret_key` FROM `2fa_table` WHERE `userid` = {$_SESSION['userid']}"));
 	if (empty($_POST['code']))
 	{
 		alert('danger',"Uh Oh!","You must enter a valid code from your authenticator app.");
@@ -38,7 +38,7 @@ if (isset($_POST['code']))
 					   WHERE `userid` = {$mem['userid']}");
 			//Remove login attempts for this account.
 			$db->query("DELETE FROM `login_attempts` WHERE `userid` = {$_SESSION['userid']}");
-			$loggedin_url = 'loggedin.php';
+			$loggedin_url = 'explore.php';
 			//Log that the user logged in successfully.
 			$api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
 			//Delete password recovery attempts from DB if they exist for this user.

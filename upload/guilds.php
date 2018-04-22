@@ -48,7 +48,7 @@ function menu()
     </thead>
     <tbody>";
     $gq = $db->query(
-        "SELECT `guild_id`, `guild_town_id`, `guild_owner`, `guild_name`, `guild_debt_time`, 
+        "/*qc=on*/SELECT `guild_id`, `guild_town_id`, `guild_owner`, `guild_name`, `guild_debt_time`, `guild_primcurr`,
 			`userid`, `username`, `guild_level`, `guild_capacity`, `guild_pic`, `guild_hasarmory`, `guild_ba`
 			FROM `guild` AS `g`
 			LEFT JOIN `users` AS `u` ON `g`.`guild_owner` = `u`.`userid`
@@ -58,7 +58,7 @@ function menu()
 		$gd['guild_capacity']=$gd['guild_level']*5;
         $hasarmory = ($gd['guild_hasarmory'] == 'true') ? "<span class='text-success'>Yes</span>" : "<span class='text-danger'>No</span>";
         $appacc = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Yes</span>" : "<span class='text-danger'>No</span>";
-        $indebt = ($gd['guild_debt_time'] == 0) ? "<span class='text-success'>No</span>" : "<span class='text-danger'>Yes</span>";
+        $indebt = ($gd['guild_primcurr'] > 0) ? "<span class='text-success'>No</span>" : "<span class='text-danger'>Yes</span>";
 		$gd['guild_pic'] = ($gd['guild_pic']) ? "<img src='" . parseImage($gd['guild_pic']) . "' class='img-fluid' style='max-width: 75px;'>" : '';
         echo "
 		<tr align='left'>
@@ -71,10 +71,11 @@ function menu()
 			</td>
 			<td>";
         $cnt = number_format($db->fetch_single
-        ($db->query("SELECT COUNT(`userid`)
+        ($db->query("/*qc=on*/SELECT COUNT(`userid`)
 										FROM `users` 
 										WHERE `guild` = {$gd['guild_id']}")));
         echo "{$cnt} / {$gd['guild_capacity']}";
+        $gd['username']=parseUsername($gd['userid']);
         echo "</td>
 			<td>
 				<a href='profile.php?user={$gd['userid']}'>{$gd['username']}</a>
@@ -122,7 +123,7 @@ function create()
             $name = $db->escape(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1'));
             $desc = $db->escape(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1'));
             //Guild name is already in use.
-            if ($db->num_rows($db->query("SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}'")) > 0) {
+            if ($db->num_rows($db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}'")) > 0) {
                 alert("danger", "Uh Oh!", "A guild with the name you've chosen already exists!", true, 'back');
                 die($h->endpage());
             }
@@ -188,7 +189,7 @@ function view()
     if (empty($_GET['id'])) {
         header("Location: guilds.php");
     } else {
-        $gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+        $gq = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
         //Guild does not exist.
         if ($db->num_rows($gq) == 0) {
             alert('danger', "Uh Oh!", "The guild you are trying to view does not exist.", true, "guilds.php");
@@ -226,7 +227,7 @@ function view()
 					Guild Leader
 				</th>
 				<td>
-					<a href='profile.php?user={$gd['guild_owner']}'> " . $api->SystemUserIDtoName($gd['guild_owner']) . "</a>
+					<a href='profile.php?user={$gd['guild_owner']}'> " . parseUsername($gd['guild_owner']) . "</a>
 				</td>
 			</tr>
 			<tr align='left'>
@@ -234,7 +235,7 @@ function view()
 					Guild Co-Leader
 				</th>
 				<td>
-					<a href='profile.php?user={$gd['guild_coowner']}'> " . $api->SystemUserIDtoName($gd['guild_coowner']) . "</a>
+					<a href='profile.php?user={$gd['guild_coowner']}'> " . parseUsername($gd['guild_coowner']) . "</a>
 				</td>
 			</tr>
 			<tr align='left'>
@@ -252,7 +253,7 @@ function view()
 				<td>";
         //Count players in this guild.
         $cnt = number_format($db->fetch_single
-        ($db->query("SELECT COUNT(`userid`)
+        ($db->query("/*qc=on*/SELECT COUNT(`userid`)
 										FROM `users` 
 										WHERE `guild` = {$_GET['id']}")));
         echo number_format($cnt) . " / " . number_format($gd['guild_capacity']) . "
@@ -271,7 +272,7 @@ function view()
 			Allies
 		</th>
 		<td>";
-			$q=$db->query("SELECT * 
+			$q=$db->query("/*qc=on*/SELECT * 
 							FROM `guild_alliances` 
 							WHERE (`alliance_a` = {$_GET['id']} OR `alliance_b` = {$_GET['id']})
 							AND `alliance_true` = 1");
@@ -308,7 +309,7 @@ function memberlist()
         alert('danger', "Uh Oh!", "Please specify the guild you wish to view.", true, "guilds.php");
         die($h->endpage());
     }
-    $gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+    $gq = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
     //Guild does not exist.
     if ($db->num_rows($gq) == 0) {
         alert('danger', "Uh Oh!", "You are trying to view a non-existent guild.", true, "guilds.php");
@@ -325,7 +326,7 @@ function memberlist()
 					Level
 				</th>
 		  	</tr>";
-    $q = $db->query("SELECT `userid`, `username`, `level`
+    $q = $db->query("/*qc=on*/SELECT `userid`, `username`, `level`
                      FROM `users`
                      WHERE `guild` = {$gd['guild_id']}
                      ORDER BY `level` DESC");
@@ -333,7 +334,7 @@ function memberlist()
     while ($r = $db->fetch_row($q)) {
         echo "<tr>
         		<td>
-					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a>
+					<a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a>
 				</td>
         		<td>
 					{$r['level']}
@@ -352,7 +353,7 @@ function apply()
         alert('danger', "Uh Oh!", "Please specify the guild you wish to view.", true, "guilds.php");
         die($h->endpage());
     }
-    $gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+    $gq = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
     //Guild does not exist.
     if ($db->num_rows($gq) == 0) {
         alert('danger', "Uh Oh!", "You are trying to apply to a non-existent guild.", true, "guilds.php");
@@ -378,7 +379,7 @@ function apply()
                 immediately, as another person may have access to your account!", true, 'back');
             die($h->endpage());
         }
-        $cnt = $db->query("SELECT * FROM `guild_applications` WHERE `ga_user` = {$userid} && `ga_guild` = {$_GET['id']}");
+        $cnt = $db->query("/*qc=on*/SELECT * FROM `guild_applications` WHERE `ga_user` = {$userid} && `ga_guild` = {$_GET['id']}");
         //User has already submitted an application to this guild.
         if ($db->num_rows($cnt) > 0) {
             alert('danger', "Uh Oh!", "You have already filled out an application to join this guild. Please wait until a
@@ -421,7 +422,7 @@ function wars()
     global $db, $api;
     $time = time();
     echo "<h3><i class='game-icon game-icon-mounted-knight'></i> Guild Wars</h3><hr />";
-    $q = $db->query("SELECT * FROM `guild_wars`
+    $q = $db->query("/*qc=on*/SELECT * FROM `guild_wars`
                     WHERE `gw_winner` = 0 AND 
                     `gw_end` > {$time} 
                     ORDER BY `gw_id` DESC");

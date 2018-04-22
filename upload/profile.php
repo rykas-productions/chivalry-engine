@@ -15,7 +15,7 @@ if (!$_GET['user']) {
 } else {
     $q =
         $db->query(
-            "SELECT `u`.`userid`, `user_level`, `laston`, `last_login`,
+            "/*qc=on*/SELECT `u`.`userid`, `user_level`, `laston`, `last_login`,
                     `registertime`, `vip_days`, `username`, `gender`,
 					`primary_currency`, `secondary_currency`, `level`, `class`,
 					`display_pic`, `hp`, `maxhp`, `guild`,
@@ -51,7 +51,7 @@ if (!$_GET['user']) {
         $ula = ($r['laston'] == 0) ? 'Never' : DateTime_Parse($r['laston']);
         $ull = ($r['last_login'] == 0) ? 'Never' : DateTime_Parse($r['last_login']);
         $sup = date('F j, Y g:i:s a', $r['registertime']);
-		$mi=$db->query("SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$r['userid']} OR `proposed_id` = {$r['userid']}) AND `together` = 1");
+		$mi=$db->query("/*qc=on*/SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$r['userid']} OR `proposed_id` = {$r['userid']}) AND `together` = 1");
 		if ($db->num_rows($mi) == 0)
 		{
 			$married="N/A";
@@ -62,46 +62,45 @@ if (!$_GET['user']) {
 			if ($mt['proposer_id'] == $r['userid'])
 			{
 				$p1=$ir;
-				$p2=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
+				$p2=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
 				$event=$p2;
                 $ring=$api->SystemItemIDtoName($mt['proposer_ring']);
 			}
 			else
 			{
-				$p1=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
+				$p1=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 				$p2=$ir;
 				$event=$p1;
                 $ring=$api->SystemItemIDtoName($mt['proposed_ring']);
 			}
 			$married="<a href='profile.php?user={$event['userid']}'>{$event['username']}</a>";
 		}
-        $displaypic = ($r['display_pic']) ? "<img src='" . parseImage($r['display_pic']) . "' class='img-thumbnail img-fluid' width='350'>" : '';
-        $user_name = ($r['vip_days']) ? "<span class='{$r['vipcolor']}'>{$r['username']} <i class='fas fa-shield-alt'
-            data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
+        $displaypic = ($r['display_pic']) ? "<img src='" . parseImage(parseDisplayPic($r['userid'])) . "' class='img-thumbnail img-fluid' width='350' alt='{$r['username']}&#39;s display picture' title='{$r['username']}&#39;s display picture'>" : '';
+        $user_name = parseUsername($r['userid']);
         $ref_q =
             $db->query(
-                "SELECT COUNT(`referalid`)
+                "/*qc=on*/SELECT COUNT(`referalid`)
                          FROM `referals`
                          WHERE `referal_userid` = {$r['userid']}");
         $ref = $db->fetch_single($ref_q);
         $db->free_result($ref_q);
         $friend_q =
             $db->query(
-                "SELECT COUNT(`friend_id`)
+                "/*qc=on*/SELECT COUNT(`friend_id`)
                          FROM `friends`
                          WHERE `friender` = {$r['userid']}");
         $friend = $db->fetch_single($friend_q);
         $db->free_result($friend_q);
         $enemy_q =
             $db->query(
-                "SELECT COUNT(`enemy_id`)
+                "/*qc=on*/SELECT COUNT(`enemy_id`)
                          FROM `enemy`
                          WHERE `enemy_adder` = {$r['userid']}");
         $enemy = $db->fetch_single($enemy_q);
         $db->free_result($enemy_q);
         $CurrentTime = time();
         $r['daysold'] = DateTime_Parse($r['registertime'], false, true);
-		$mb = $db->query("SELECT * FROM `mail_bans` WHERE `mbUSER` = {$userid}");
+		$mb = $db->query("/*qc=on*/SELECT * FROM `mail_bans` WHERE `mbUSER` = {$userid}");
 		$mbd=0;
 		if ($db->num_rows($mb) != 0)
 			$mbd=1;
@@ -109,7 +108,7 @@ if (!$_GET['user']) {
 		//Submit comment
 		if (isset($_POST['comment']))
 		{
-			$comment = $db->escape(nl2br(htmlentities(stripslashes($_POST['comment']), ENT_QUOTES, 'ISO-8859-1')));
+			$comment = $db->escape(nl2br(strip_tags(stripslashes($_POST['comment']))));
 			if (empty($comment))
 			{
 				alert('danger',"Uh Oh!","Please fill out the comment form before submitting.",false);
@@ -146,7 +145,7 @@ if (!$_GET['user']) {
 				$justposted=1;
 			}
 			$fiveminago=time()-300;
-			$l3c=$db->query("SELECT * FROM `comments` WHERE `cSEND` = {$userid} AND `cTIME` >= {$fiveminago}");
+			$l3c=$db->query("/*qc=on*/SELECT * FROM `comments` WHERE `cSEND` = {$userid} AND `cTIME` >= {$fiveminago}");
 			$same=0;
 			while ($ltr = $db->fetch_row($l3c))
 			{
@@ -174,7 +173,7 @@ if (!$_GET['user']) {
 			}
 			else
 			{
-				$dc=$db->query("SELECT * FROM `comments` WHERE `cID` = {$comment} AND `cRECEIVE` = {$userid}");
+				$dc=$db->query("/*qc=on*/SELECT * FROM `comments` WHERE `cID` = {$comment} AND `cRECEIVE` = {$userid}");
 				if ($db->num_rows($dc) == 0)
 				{
 					alert('danger',"Uh Oh!","This comment does not exist, or does not belong to you.",false);
@@ -205,35 +204,45 @@ if (!$_GET['user']) {
             }
         echo ($r['guild']) ? "Guild: <a href='guilds.php?action=view&id={$r['guild']}'>{$r['guild_name']}</a><br />" : '';
         echo "Health: " . number_format($r['hp']) . "/" . number_format($r['maxhp']) . "<br />";
+        $rcomment=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`cID`) FROM `comments` WHERE `cRECEIVE` = {$_GET['user']}"));
+        if ($rcomment > 5)
+            $r['comments']="5+";
+        else
+            $r['comments']=$rcomment;
 
         ?>
 			</div>
-			<div class="col-lg-9">
-				<ul class="nav nav-tabs nav-justified">
-				  <li class="active nav-item"><a class='nav-link' data-toggle="tab" href="#info"><?php echo "Physical Info"; ?></a></li>
-				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#actions"><?php echo "Actions"; ?></a></li>
-				  <?php
-				  if ($ir['vip_days'] > 0)
-				  {
-					?>
-						<li class='nav-item'><a class='nav-link' data-toggle="tab" href="#vip"><?php echo "VIP Only"; ?></a></li>
-					<?php
-				  }
-				  ?>
-				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#financial"><?php echo "Financial Info"; ?></a></li>
-				  <?php
-        if (!in_array($ir['user_level'], array('Member', 'NPC'))) {
-            echo "<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#staff'>Staff</a></li>";
-        }
-        ?>
+            <div class='col-md-2' align='left'>
+            <ul class='nav flex-column nav-pills'>
+                <li class='nav-item'>
+                    <li class="active nav-item"><a class='nav-link' data-toggle="tab" href="#info"><?php echo "Physical Info"; ?></a></li>
+                    <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#actions"><?php echo "Actions"; ?></a></li>
+                    <?php
+                      if ($ir['vip_days'] > 0)
+                      {
+                        ?>
+                            <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#vip"><?php echo "VIP Only"; ?></a></li>
+                        <?php
+                      }
+                      ?>
+                      <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#financial"><?php echo "Financial Info"; ?></a></li>
+                      <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#comments"><?php echo "Comments <span class='badge badge-pill badge-primary'>{$r['comments']}</span>"; ?></a></li>
+                      <?php
+                      if (!in_array($ir['user_level'], array('Member', 'NPC'))) {
+                        echo "<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#staff'>Staff</a></li>";
+                    }
+                    ?>
+                </li>
 				</ul>
+                </div>
 				<br />
+                <div class='col-md-7'>
 				<div class="tab-content">
 				  <div id="info" class="tab-pane active">
 					<p>
 						<?php
-        echo
-        "
+                        echo
+                        "
 						<table class='table table-bordered'>
 							<tr>
 								<th width='25%'>Sex</th>
@@ -300,13 +309,12 @@ if (!$_GET['user']) {
         }
 
         echo "</table>
-					</p>
 				  </div>
 				  <div id='actions' class='tab-pane'>
-                    <a href='inbox.php?action=compose&user={$r['userid']}' class='btn btn-primary'><i class='game-icon game-icon-envelope'></i> Message {$r['username']}</a>
+                    <a href='#' class='btn btn-primary' data-toggle='modal' data-target='#message'><i class='game-icon game-icon-envelope'></i> Message {$r['username']}</a>
                     <br />
 				    <br />
-				    <a href='sendcash.php?user={$r['userid']}' class='btn btn-primary'><i class='game-icon game-icon-expense'></i> Send {$r['username']} Cash</a>
+				    <a href='#' class='btn btn-primary' data-toggle='modal' data-target='#cash'><i class='game-icon game-icon-expense'></i> Send {$r['username']} Cash</a>
 				    <br />
 				    <br />
 					<a href='attack.php?user={$r['userid']}' class='btn btn-danger'><i class='game-icon game-icon-crossed-swords'></i> Attack {$r['username']}</a>
@@ -370,7 +378,7 @@ if (!$_GET['user']) {
         echo '<div id="staff" class="tab-pane">';
         if (!in_array($ir['user_level'], array('Member', 'NPC'))) {
             $fg = json_decode(get_fg_cache("cache/{$r['lastip']}.json", "{$r['lastip']}", 65655), true);
-            $log = $db->fetch_single($db->query("SELECT `log_text` FROM `logs` WHERE `log_user` = {$r['userid']} ORDER BY `log_id` DESC"));
+            $log = $db->fetch_single($db->query("/*qc=on*/SELECT `log_text` FROM `logs` WHERE `log_user` = {$r['userid']} ORDER BY `log_id` DESC"));
             echo "<a href='staff/staff_punish.php?action=fedjail&user={$r['userid']}' class='btn btn-primary'>Fedjail</a>
                 <a href='staff/staff_punish.php?action=forumban&user={$r['userid']}' class='btn btn-primary'>Forum Ban</a>";
             echo "<table class='table table-bordered'>
@@ -427,22 +435,25 @@ if (!$_GET['user']) {
 					</form>";
         }
         ?>
-				  
 				  </div>
-				</div>
-				<h3>Profile Comments</h3> <?php
-				$cq=$db->query("SELECT * FROM `comments` WHERE `cRECEIVE` = {$_GET['user']}  ORDER BY `cTIME` DESC LIMIT 5");
-				echo "<table class='table table-bordered'>";
+                  <div id="comments" class="tab-pane">
+                <?php
+                    $cq=$db->query("/*qc=on*/SELECT * FROM `comments` WHERE `cRECEIVE` = {$_GET['user']}  ORDER BY `cTIME` DESC LIMIT 5");
+				echo "<table class='table table-bordered'>
+                    <tr>
+                        <th colspan='2'>
+                            Profile Comments
+                        </th>
+                    </tr>";
 				while ($cr = $db->fetch_row($cq))
 				{
-
-					$ci=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$cr['cSEND']}"));
-					$dp = ($ci['display_pic']) ? "<img src='" . parseImage($ci['display_pic']) . "' class='img-thumbnail img-responsive' width='50' height='50'>" : '';
+					$ci['username']=parseUsername($cr['cSEND']);
+					$dp = "<img src='" . parseImage(parseDisplayPic($cr['cSEND'])) . "' class='img-thumbnail img-responsive' width='50' height='50'>";
 					echo "<tr>
-					<td align='left' width='25%'>
+					<td align='left' width='33%'>
 					{$dp} 
 						<a href='profile.php?user={$cr['cSEND']}'>{$ci['username']}</a><br />
-						<small>" . DateTime_Parse($cr['cTIME']) . "";
+						<small>" . DateTime_Parse($cr['cTIME']) . "</small>";
 						if ($userid == $_GET['user'])
 						{
 							echo "<br /><a href='profile.php?user={$userid}&del={$cr['cID']}'>Delete</a>";
@@ -455,16 +466,17 @@ if (!$_GET['user']) {
 					</td>
 					</tr>";
 				}
-				echo "</table><br />";
 				if ($userid != $_GET['user'] && empty($justposted))
 				{
+                    echo"<tr>
+                            <td colspan='2'>";
 					if (!permission("CanComment",$userid))
 					{
 						alert('danger', "Uh Oh!", "You do not have permission to comment on another player's profile.", false);
 					}
 					else
 					{
-						$mb = $db->query("SELECT * FROM `mail_bans` WHERE `mbUSER` = {$userid}");
+						$mb = $db->query("/*qc=on*/SELECT * FROM `mail_bans` WHERE `mbUSER` = {$userid}");
 						if ($db->num_rows($mb) != 0)
 						{ }
 						else
@@ -472,18 +484,20 @@ if (!$_GET['user']) {
 							$csrf=request_csrf_html('comment');
 							echo"
 							<form method='post'>
-								<textarea class='form-control' name='comment'></textarea>
+                                <input type='text' class='form-control' name='comment'>
 								{$csrf}
 								<br />
 								<button class='btn btn-primary' type='submit'><i class='far fa-comment'></i> Post Comment</button>
 							</form>";
 						}
 					}
+                    echo"</td></tr>";
 				}
-				?>
-			</div>
-		</div>
-		<?php
+                echo "</table>
+                </div>
+				  </div>
+                </div>
+		</div>";
     }
 }
 function parse_risk($risk_level)
@@ -501,5 +515,6 @@ function parse_risk($risk_level)
             return "No Risk";
     }
 }
-
+include('forms/sendcash.php');
+include('forms/sendmail.php');
 $h->endpage();

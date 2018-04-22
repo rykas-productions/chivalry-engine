@@ -68,7 +68,7 @@ function ticket()
 	}
 	else
 	{
-		echo "Select the spot you wish to scratch off. You shall receive rewards.<br />
+		echo "/*qc=on*/SELECT the spot you wish to scratch off. You shall receive rewards.<br />
 		<div class='row'>
 			<div class='col-sm'>
 				<a href='?action=ticket&scratch=1'><img src='assets/img/pumpkin-halloween.png' class='img-fluid'></a>

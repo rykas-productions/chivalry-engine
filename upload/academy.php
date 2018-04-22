@@ -14,7 +14,7 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
 {
 	$cd =
         $db->query(
-            "SELECT `ac_name`, `ac_days`, `ac_cost`
+            "/*qc=on*/SELECT `ac_name`, `ac_days`, `ac_cost`
     				 FROM `academy`
     				 WHERE `ac_id` = {$ir['course']}");
     $coud = $db->fetch_row($cd);
@@ -76,19 +76,19 @@ function menu()
     echo "<table class='table table-bordered table-hover'>
 		<thead>
 			<tr>
-				<th>
+				<th width='25%'>
 					Course
 				</th>
-				<th>
+				<th width='40%'>
 					Description
 				</th>
-				<th>
+				<th width='25%'>
 					Cost
 				</th>
-				<th>
+				<th width='5%'>
 					Graduates
 				</th>
-				<th>
+				<th width='5%'>
                     Action
 				</th>
 			</tr>
@@ -96,13 +96,13 @@ function menu()
 		<tbody>
 	   ";
     //Select the courses from in-game.
-    $acadq = $db->query("SELECT * FROM `academy` ORDER BY `ac_level` ASC, `ac_id` ASC");
+    $acadq = $db->query("/*qc=on*/SELECT * FROM `academy` ORDER BY `ac_level` ASC, `ac_id` ASC");
     while ($academy = $db->fetch_row($acadq)) {
-        $cdo = $db->query("SELECT COUNT(`userid`)
+        $cdo = $db->query("/*qc=on*/SELECT COUNT(`userid`)
                              FROM `academy_done`
                              WHERE `userid` = {$userid}
                              AND `course` = {$academy['ac_id']}");
-		$graduates = $db->fetch_single($db->query("SELECT COUNT(`userid`)
+		$graduates = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`)
                              FROM `academy_done`
                              WHERE `course` = {$academy['ac_id']}"));
         //If user has already completed the course.
@@ -145,7 +145,7 @@ function start()
         alert('danger', "Uh Oh!", "You didn't select a valid course to take.", true, 'academy.php');
         die($h->endpage());
     }
-    $courq = $db->query("SELECT * FROM `academy` WHERE `ac_id` = {$_GET['id']} LIMIT 1");
+    $courq = $db->query("/*qc=on*/SELECT * FROM `academy` WHERE `ac_id` = {$_GET['id']} LIMIT 1");
     //If the course specified does not exist.
     if ($db->num_rows($courq) == 0) {
         alert('danger', "Uh Oh!", "The course you chose does not exist. Check your source and try again.", true, 'academy.php');
@@ -164,7 +164,7 @@ function start()
                                 yet you only have {$ir['primary_currency']}", true, 'academy.php');
         die($h->endpage());
     }
-    $cdo = $db->query("SELECT COUNT(`userid`)
+    $cdo = $db->query("/*qc=on*/SELECT COUNT(`userid`)
                              FROM `academy_done`
                              WHERE `userid` = {$userid}
                              AND `course` = {$_GET['id']}");
@@ -174,7 +174,7 @@ function start()
         die($h->endpage());
     }
 	$timestamp=$course['ac_days'] * 86400;
-	if (getSkillLevel($userid,11))
+	if (getSkillLevel($userid,18))
 	{
 		$iq=round($ir['iq']/5000);
 		if ($iq > 15)

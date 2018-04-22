@@ -9,7 +9,9 @@
 */
 require('globals.php');
 //Set cost to travel to a variable
-$cost_of_travel = 375 * $ir['level'];
+$cost_of_travel = 15000 * levelMultiplier($ir['level']);
+if ($cost_of_travel > 50000)
+    $cost_of_travel=50000;
 //Block access if user is in the infirmary.
 if ($api->UserStatus($ir['userid'], 'infirmary')) {
     alert('danger', "Unconscious!", "You cannot travel while you're in the infirmary.", false);
@@ -46,13 +48,13 @@ if (empty($_GET['to'])) {
 		</th>
 	</tr>";
     //Select the towns that are not the current user's town, order them by level requirement
-    $q = $db->query("SELECT * FROM `town` WHERE `town_id` != {$ir['location']} AND `town_min_level` <= {$ir['level']} ORDER BY `town_min_level` ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `town` WHERE `town_id` != {$ir['location']} AND `town_min_level` <= {$ir['level']} ORDER BY `town_min_level` ASC");
 
     //Show this information!
     while ($r = $db->fetch_row($q)) {
         //Does the town in question have a guild owner? If so, select their name! If not... say its unowned.
         if ($r['town_guild_owner'] > 0) {
-            $name = $db->fetch_single($db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r['town_guild_owner']}"));
+            $name = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r['town_guild_owner']}"));
         } else {
             $name = "Unowned";
         }
@@ -67,7 +69,7 @@ if (empty($_GET['to'])) {
    		";
     }
     echo "</table>
-	<img src='assets/img/horse-stable-travel.jpg' class='img-thumbnail img-responsive'>";
+	<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819397/horse-stable-travel.jpg' class='img-thumbnail img-responsive'>";
 } else {
     //User does not have enough cash to travel to this city.
     if ($ir['primary_currency'] < $cost_of_travel) {
@@ -79,7 +81,7 @@ if (empty($_GET['to'])) {
         die($h->endpage());
     } else {
         //Select town info.
-        $q = $db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$_GET['to']} AND `town_min_level` <= {$ir['level']}");
+        $q = $db->query("/*qc=on*/SELECT `town_name` FROM `town` WHERE `town_id` = {$_GET['to']} AND `town_min_level` <= {$ir['level']}");
 
         //Town does not exist or user's level is too low.
         if (!$db->num_rows($q)) {

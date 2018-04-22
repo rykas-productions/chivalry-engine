@@ -189,7 +189,7 @@ function newjob()
             alert('danger', "Uh Oh!", "Job Rank activity requirement must be at least 1.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `jRANK` from `jobs` WHERE `jNAME` = '{$_POST['jNAME']}'");
+        $q = $db->query("/*qc=on*/SELECT `jRANK` from `jobs` WHERE `jNAME` = '{$_POST['jNAME']}'");
         if ($db->num_rows($q) > 0) {
             alert('danger', "Uh Oh!", "You may not have the same job name used more than once.");
             die($h->endpage());
@@ -234,21 +234,21 @@ function jobedit()
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The job you've chosen to edit does not exist or is invalid.");
             die($h->endpage());
         }
         $db->free_result($q);
-        $q = $db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The job rank you've chosen for this job does not exist or is invalid.");
             die($h->endpage());
         }
         $db->free_result($q);
-        $q = $db->query("SELECT `jRANK` from `jobs` WHERE `jNAME` = '{$_POST['jNAME']}' AND `jRANK` != {$_POST['job']}");
+        $q = $db->query("/*qc=on*/SELECT `jRANK` from `jobs` WHERE `jNAME` = '{$_POST['jNAME']}' AND `jRANK` != {$_POST['job']}");
         if ($db->num_rows($q) > 0) {
             alert('danger', "Uh Oh!", "You may not have the same job name used more than once.");
             die($h->endpage());
@@ -272,7 +272,7 @@ function jobedit()
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The job you've chosen to edit does not exist or is invalid.");
@@ -379,7 +379,7 @@ function jobdele()
             die($h->endpage());
         }
         //Select the job to see if it exists.
-        $q = $db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The job you're trying to delete either does not exist, or was previously deleted.");
             die($h->endpage());
@@ -441,7 +441,7 @@ function newjobrank()
             die($h->endpage());
         }
         //Verify the job we want to add a rank to exists.
-        $q = $db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The job you are trying to add a rank to does not exist.");
             die($h->endpage());
@@ -574,7 +574,7 @@ function jobrankedit()
             die($h->endpage());
         }
         //Verify the job we want to add a rank to exists.
-        $q = $db->query("SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `jobs` WHERE `jRANK` = {$_POST['job']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The job you are trying to add a rank to does not exist.");
@@ -582,7 +582,7 @@ function jobrankedit()
         }
         $db->free_result($q);
         //Check that the job rank exists.
-        $q = $db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The job rank you've chosen to edit does not exist.");
@@ -616,7 +616,7 @@ function jobrankedit()
             die($h->endpage());
         }
         //Check that the job rank exists.
-        $q = $db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The job rank you've chosen does not exist.");
             die($h->endpage());
@@ -705,7 +705,7 @@ function jobrankedit()
     //Select the job rank to edit
     if ($_POST['step'] == 0) {
         $csrf = request_csrf_html('staff_jobrankedit');
-        echo "Select the job rank you wish to edit.";
+        echo "/*qc=on*/SELECT the job rank you wish to edit.";
         echo "<form method='post'>
         " . jobrank_dropdown('jobrank') . "
         <input type='hidden' value='1' name='step'>
@@ -732,14 +732,14 @@ function jobrankdele()
             alert('danger', "Uh Oh!", "You have specified an invalid job rank to delete.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `job_ranks` WHERE `jrID` = {$_POST['jobrank']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "You cannot delete a non-existent job rank.");
             die($h->endpage());
         }
         $db->free_result($q);
-        $q = $db->query("SELECT * FROM `jobs` WHERE `jSTART` = {$_POST['jobrank']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `jobs` WHERE `jSTART` = {$_POST['jobrank']}");
         if ($db->num_rows($q) > 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "You cannot delete a job rank which is the starter rank for a job. Please edit

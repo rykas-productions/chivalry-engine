@@ -42,7 +42,7 @@ function name()
         die($h->endpage());
     }
     $name="%{$_GET['name']}%";
-    $q = $db->query("SELECT `userid`, `username`, `level`, `laston`
+    $q = $db->query("/*qc=on*/SELECT `userid`, `username`, `level`, `laston`
                      FROM `users`
                      WHERE `username` LIKE ('{$name}')");
     echo $db->num_rows($q) . " players found.<br />

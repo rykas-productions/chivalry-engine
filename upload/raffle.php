@@ -38,16 +38,17 @@ default:
 }
 function lottery_home()
 {
-	global $db, $ir, $c, $userid, $h, $minimumpotformat, $cost2playformat, $add2potformat, $set, $currentwinnings;
+	global $db, $ir, $c, $userid, $h, $minimumpotformat, $cost2playformat, $add2potformat, $set, $currentwinnings, $api;
 	$csrf=request_csrf_code('lottery_buy');
     $winchance=round((1/$set['raffle_chance'])*100,2);
 	echo 
-		"<h3>Raffle</h3>
-		The pot starts at {$minimumpotformat}. It costs {$cost2playformat} to play. {$add2potformat} is deducted from your 
-		ticket and added into the pot. Whoever gets the lucky ticket will get all the cash in the pot. You have a {$winchance}% chance to 
-        win the raffle. Chances are increased very occasionally as you play.<br />
+		"<h3>Raffle</h3><hr />
+		The pot starts at {$minimumpotformat} Copper Coins. It costs {$cost2playformat} Copper Coins to play. {$add2potformat} Copper Coins is deducted from your 
+		ticket and added into the pot. Whoever gets the lucky ticket will get all the cash in the pot. <u>You have a {$winchance}% chance to 
+        win the raffle.</u> Chances are increased very occasionally as you play.<br />
 		<br />
-		<b>Current Pot: {$currentwinnings}<br /></b>
+		<b>Current Pot:</b> {$currentwinnings} Copper Coins<br />
+        <b>Previous Winner:</b> " . parseUsername($set['raffle_last_winner']) . " [{$set['raffle_last_winner']}]
 		<br />
 		[<a href='?action=play&verf={$csrf}'>Buy Ticket</a>]";
 		
@@ -72,7 +73,7 @@ function lottery_play()
         alert('danger',"Uh Oh!","You cannot participate in the raffle until another player wins.",true,'raffle.php');
         die($h->endpage()); 
     }
-	$increase_chance=Random(1,5);
+	$increase_chance=Random(1,3);
 	if ($increase_chance == 3)
 	{
 		if ($set['raffle_chance'] > 10)

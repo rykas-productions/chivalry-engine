@@ -74,7 +74,7 @@ function ticket()
 	}
 	else
 	{
-		echo "Select the spot you wish to scratch off. You shall receive rewards.<br />
+		echo "/*qc=on*/SELECT the spot you wish to scratch off. You shall receive rewards.<br />
 		<div class='row'>
 			<div class='col-sm'>
 				<a href='?action=ticket&scratch=1'><img src='assets/img/turkey-thanksgiving.png' class='img-fluid'></a>
@@ -105,7 +105,7 @@ function trivia()
 	if (isset($_POST['1']))
 	{
 		$timeend=time();
-		$q2=$db->query("SELECT `timeend` FROM `thanksgiving_trivia` WHERE `userid` = {$userid} AND `timeend` < {$time} AND `timeend` != 0");
+		$q2=$db->query("/*qc=on*/SELECT `timeend` FROM `thanksgiving_trivia` WHERE `userid` = {$userid} AND `timeend` < {$time} AND `timeend` != 0");
 		if ($db->num_rows($q2) > 0)
 		{
 			alert('danger',"Uh Oh!","You have already submitted your answers for this year's trivia.",true,'explore.php');
@@ -193,12 +193,12 @@ function trivia()
 	}
 	else
 	{
-		$q=$db->query("SELECT * FROM `thanksgiving_trivia` WHERE `userid` = {$userid}");
+		$q=$db->query("/*qc=on*/SELECT * FROM `thanksgiving_trivia` WHERE `userid` = {$userid}");
 		if ($db->num_rows($q) == 0)
 		{
 			$db->query("INSERT INTO `thanksgiving_trivia` (`userid`, `timestart`, `timeend`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `13`, `14`, `15`) VALUES ('{$userid}', '{$time}', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0')");
 		}
-		$q2=$db->query("SELECT `timeend` FROM `thanksgiving_trivia` WHERE `userid` = {$userid} AND `timeend` < {$time} AND `timeend` != 0");
+		$q2=$db->query("/*qc=on*/SELECT `timeend` FROM `thanksgiving_trivia` WHERE `userid` = {$userid} AND `timeend` < {$time} AND `timeend` != 0");
 		if ($db->num_rows($q2) > 0)
 		{
 			alert('danger',"Uh Oh!","You have already submitted your answers for this year's trivia.",true,'explore.php');

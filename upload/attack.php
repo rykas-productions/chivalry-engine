@@ -65,6 +65,18 @@ function attacking()
         //Set RNG
         $_SESSION['tresde'] = $_GET['tresde'];
     }
+	$npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$_GET['user']}");
+	//Opponent is registered on bot list.
+	if ($db->num_rows($npcquery) > 0) {
+		$results2 = $db->fetch_row($npcquery);
+		$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$_GET['user']}");
+		$r2d2 = $db->fetch_single($timequery);
+		//Opponent's drop has already been collected and the time hasn't reset.
+		if ((time() <= ($r2d2 + $results2['botcooldown'])) && ($r2d2 > 0)) {
+			alert("danger", "Uh Oh!", "You have already killed this NPC. Try again in " . ParseTimestamp($results2['botcooldown']) .".", true, 'index.php');
+        die($h->endpage());
+		}
+	}
     //If user is not specified.
     if (!$_GET['user']) {
         alert("danger", "Uh Oh!", "You've chosen to attack a non-existent user. Check your source and try again.", true, 'index.php');
@@ -85,7 +97,7 @@ function attacking()
     }
     $youdata = $ir;
     $laston = time() - 900;
-    $q = $db->query("SELECT `u`.`userid`, `hp`, `equip_armor`, `username`,
+    $q = $db->query("/*qc=on*/SELECT `u`.`userid`, `hp`, `equip_armor`, `username`,
 	       `equip_primary`, `equip_secondary`, `equip_potion`, `guild`, `location`, `maxhp`, `class`, 
 	       `guard`, `agility`, `strength`, `gender`, `level`, `laston`, `protection`, `display_pic`
 			FROM `users` AS `u`
@@ -126,7 +138,8 @@ function attacking()
 		}
 		
 	}
-	$specialnumber=((getSkillLevel($userid,6)*3)/100);
+	//Perfection skill
+	$specialnumber=((getSkillLevel($userid,1)*3)/100);
 	if ($ir['class'] == 'Warrior')
 	{
 		$ir['strength']=$ir['strength']+($ir['strength']*$specialnumber);
@@ -139,7 +152,7 @@ function attacking()
 	{
 		$ir['guard']=$ir['guard']+($ir['guard']*$specialnumber);
 	}
-	$specialnumber2=((getSkillLevel($odata['userid'],6)*3)/100);
+	$specialnumber2=((getSkillLevel($odata['userid'],1)*3)/100);
 	if ($odata['class'] == 'Warrior')
 	{
 		$odata['strength']=$odata['strength']+($odata['strength']*$specialnumber2);
@@ -278,7 +291,7 @@ function attacking()
 			                                experience for that.", true, 'index.php');
             die($h->endpage());
         }
-        $winfo_sql = "SELECT `itmname`, `weapon`, `ammo`, `itmtype`, `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on` FROM `items` WHERE `itmid` = {$_GET['weapon']} LIMIT 1";
+        $winfo_sql = "/*qc=on*/SELECT `itmname`, `weapon`, `ammo`, `itmtype`, `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on` FROM `items` WHERE `itmid` = {$_GET['weapon']} LIMIT 1";
         $qo = $db->query($winfo_sql);
         //If the weapon chosen is not a valid weapon.
         if ($db->num_rows($qo) == 0) {
@@ -288,12 +301,15 @@ function attacking()
         }
         $r1 = $db->fetch_row($qo);
         $db->free_result($qo);
-		$spied=$db->query("SELECT `user` FROM `spy_advantage` WHERE `user` = {$userid} and `spied` = {$_GET['user']}");
+		$spied=$db->query("/*qc=on*/SELECT `user` FROM `spy_advantage` WHERE `user` = {$userid} and `spied` = {$_GET['user']}");
 		if (($db->num_rows($spied) > 0) && ($_GET['nextstep'] == 1))
 		{
 			$ir['strength']=$ir['strength']+($ir['strength']*0.1);
 			$ir['agility']=$ir['agility']+($ir['agility']*0.1);
 		}
+		//Sharper blades skill
+		$specialnumber=((getSkillLevel($userid,9)*13)/100);
+		$r1['weapon']=$r1['weapon']+($r1['weapon']*$specialnumber);
 		$mydamage = round(($r1['weapon'] * $youdata['strength'] / ($odata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 		$hitratio = max(10, min(60 * $ir['agility'] / $odata['agility'], 95));
 		$ttu='';
@@ -322,7 +338,7 @@ function attacking()
 					$ir['equip_secondary'] = 0;
 					$slot='equip_secondary';
 				}
-				$sbq=$db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$slot}'");
+				$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$slot}'");
 				$statloss='';
 				if ($db->num_rows($sbq) > 0)
 				{
@@ -359,7 +375,16 @@ function attacking()
 			}
 			else
 			{
-				$api->UserTakeItem($userid,$r1['ammo'],1);
+			    //Ammo dispensery skill
+			    if (getSkillLevel($userid,7) == 0)
+				    $api->UserTakeItem($userid,$r1['ammo'],1);
+			    else
+			    {
+			        if (Random(1,4) != 1)
+			        {
+			            $api->UserTakeItem($userid,$r1['ammo'],1);
+			        }
+			    }
 				$ttu="You take aim with your {$api->SystemItemIDtoName($_GET['weapon'])} and fire.";
 			}
 		}
@@ -370,11 +395,12 @@ function attacking()
 			if (Random(1, 100) <= $hitratio) {
 				//If the opponent has armor equipped.
 				if ($odata['equip_armor'] > 0) {
-					$armorinfo_sql = "SELECT `armor` FROM `items` WHERE `itmid` = {$odata['equip_armor']} LIMIT 1";
+					$armorinfo_sql = "/*qc=on*/SELECT `armor` FROM `items` WHERE `itmid` = {$odata['equip_armor']} LIMIT 1";
 					$q3 = $db->query($armorinfo_sql);
 					//Check that the armor is valid.
 					if ($db->num_rows($q3) > 0) {
-						$specialnumb=((getSkillLevel($odata['userid'],9)*7.5)/100);
+					    //Thickened Skin skill
+						$specialnumb=((getSkillLevel($odata['userid'],6)*6.5)/100);
 						$mydamage -= $db->fetch_single($q3)-($db->fetch_single($q3)*$specialnumb);
 					}
 					$db->free_result($q3);
@@ -402,6 +428,12 @@ function attacking()
 				if ($odata['hp'] == 1) {
 					$odata['hp'] = 0;
 					$mydamage += 1;
+				}
+				if ($r1['ammo'] > 0)
+				{
+    				//True Shot skill
+    				$yourbowdamage=((getSkillLevel($userid,4)*5)/100);
+    				$mydamage=$mydamage+($mydamage*$yourbowdamage);
 				}
 			}
 			else
@@ -441,14 +473,26 @@ function attacking()
                         if ($einfo['inc_type'] == "percent") {
                             if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
                                 $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
+                                //Potent Potion
+                                $specialnumber=((getSkillLevel($userid,3)*1.5)/100);
+                                $inc=$inc+($inc*$specialnumber);
                             } elseif (in_array($einfo['stat'], array('dungeon', 'infirmary'))) {
-                                $EndTime = $db->fetch_single($db->query("SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
+                                $EndTime = $db->fetch_single($db->query("/*qc=on*/SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
                                 $inc = round((($EndTime - $Time) / 100 * $einfo['inc_amount']) / 60);
+                                //Potent Potion
+                                $specialnumber=((getSkillLevel($userid,3)*1.5)/100);
+                                $inc=$inc+($inc*$specialnumber);
                             } else {
                                 $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
+                                //Potent Potion
+                                $specialnumber=((getSkillLevel($userid,3)*1.5)/100);
+                                $inc=$inc+($inc*$specialnumber);
                             }
                         } else {
                             $inc = $einfo['inc_amount'];
+                            //Potent Potion
+                            $specialnumber=((getSkillLevel($userid,3)*1.5)/100);
+                            $inc=$inc+($inc*$specialnumber);
                         }
                         if ($einfo['dir'] == "pos") {
                             if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
@@ -504,7 +548,7 @@ function attacking()
 			<form action='?action=xp&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Gain Experience' /></form>";
         } //The opponent is not down... he gets to attack.
         else {
-            $eq = $db->query("SELECT `itmname`,`weapon`,`ammo`,`itmid`,`itmtype`, `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on` FROM  `items` WHERE `itmid` IN({$odata['equip_primary']}, {$odata['equip_secondary']}, {$odata['equip_potion']})");
+            $eq = $db->query("/*qc=on*/SELECT `itmname`,`weapon`,`ammo`,`itmid`,`itmtype`, `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on` FROM  `items` WHERE `itmid` IN({$odata['equip_primary']}, {$odata['equip_secondary']}, {$odata['equip_potion']})");
             //If opponent does not have a valid weapon equipped, make them punch with fists.
             if ($db->num_rows($eq) == 0) {
                 $wep = "Fists";
@@ -520,6 +564,10 @@ function attacking()
                 $db->free_result($eq);
                 $weptouse = Random(0, $cnt - 1);    //Select opponent weapon to use.
                 $wep = $enweps[$weptouse]['itmname'];
+                //Sharper blades skill
+                $specialnumber=((getSkillLevel($_GET['user'],9)*13)/100);
+                $enweps[$weptouse]['weapon']=$enweps[$weptouse]['weapon']+($enweps[$weptouse]['weapon']*$specialnumber);
+                
                 $dam = round(($enweps[$weptouse]['weapon'] * $odata['strength'] / ($youdata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 				//Item used is a potion... so don't do damage.
                 if (($enweps[$weptouse]['itmtype'] == 8) || ($enweps[$weptouse]['itmtype'] == 7))
@@ -537,7 +585,7 @@ function attacking()
                     if (!$api->UserHasItem($_GET['user'],$enweps[$weptouse]['ammo'],1))
                     {
                         $theydodmg=false;
-                        $ouq=$db->query("SELECT `equip_primary`,`equip_secondary`,`equip_potion` FROM `users` WHERE `userid` = {$_GET['user']}");
+                        $ouq=$db->query("/*qc=on*/SELECT `equip_primary`,`equip_secondary`,`equip_potion` FROM `users` WHERE `userid` = {$_GET['user']}");
                         $our=$db->fetch_row($ouq);
                         if ($enweps[$weptouse]['itmid'] == $our['equip_primary'])
                         {
@@ -551,7 +599,7 @@ function attacking()
                         {
                             $slot = 'equip_potion';
                         }
-                        $sbq=$db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$_GET['user']} and `slot` = '{$slot}'");
+                        $sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$_GET['user']} and `slot` = '{$slot}'");
                         $statloss='';
                         if ($db->num_rows($sbq) > 0)
                         {
@@ -586,7 +634,16 @@ function attacking()
                         }
                         else
                         {
-                            $api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
+                            //Ammo dispensery skill
+                            if (getSkillLevel($_GET['user'],7) == 0)
+                                $api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
+                            else
+                            {
+                                if (Random(1,4) != 1)
+                                {
+                                    $api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
+                                }
+                            }
                         }
                     }
                 }
@@ -599,10 +656,10 @@ function attacking()
                     if (Random(1, 100) <= $hitratio) {
                         //If user has armor equipped.
                         if ($ir['equip_armor'] > 0) {
-                            $q3 = $db->query("SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']} LIMIT 1");
+                            $q3 = $db->query("/*qc=on*/SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']} LIMIT 1");
                             //If user has valid armor equipped.
                             if ($db->num_rows($q3) > 0) {
-                                $specialnumb2=((getSkillLevel($ir['userid'],9)*7.5)/100);
+                                $specialnumb2=((getSkillLevel($ir['userid'],6)*7.5)/100);
                                 $dam -= $db->fetch_single($q3)-($db->fetch_single($q3)*$specialnumb2);
                             }
                             $db->free_result($q3);
@@ -641,6 +698,12 @@ function attacking()
                         if ($dam > $yourbeforehp) {
                             $dam = $ir['hp'];
                         }
+                        if ($enweps[$weptouse]['ammo'] > 0)
+                        {
+                            //True Shot skill
+                            $theirbowdamage=((getSkillLevel($_GET['user'],4)*5)/100);
+                            $dam=$dam+($dam*$theirbowdamage);
+                        }
                     } //Opponent misses their hit.
                     else {
                         $miss=1;
@@ -675,14 +738,26 @@ function attacking()
                                 if ($einfo['inc_type'] == "percent") {
                                     if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
                                         $inc = round($odata['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
+                                        //Potent Potion
+                                        $specialnumber=((getSkillLevel($_GET['user'],3)*1.5)/100);
+                                        $inc=$inc+($inc*$specialnumber);
                                     } elseif (in_array($einfo['stat'], array('dungeon', 'infirmary'))) {
-                                        $EndTime = $db->fetch_single($db->query("SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
+                                        $EndTime = $db->fetch_single($db->query("/*qc=on*/SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
                                         $inc = round((($EndTime - $Time) / 100 * $einfo['inc_amount']) / 60);
+                                        //Potent Potion
+                                        $specialnumber=((getSkillLevel($_GET['user'],3)*1.5)/100);
+                                        $inc=$inc+($inc*$specialnumber);
                                     } else {
                                         $inc = round($odata[$einfo['stat']] / 100 * $einfo['inc_amount']);
+                                        //Potent Potion
+                                        $specialnumber=((getSkillLevel($_GET['user'],3)*1.5)/100);
+                                        $inc=$inc+($inc*$specialnumber);
                                     }
                                 } else {
                                     $inc = $einfo['inc_amount'];
+                                    //Potent Potion
+                                    $specialnumber=((getSkillLevel($_GET['user'],3)*1.5)/100);
+                                    $inc=$inc+($inc*$specialnumber);
                                 }
                                 if ($einfo['dir'] == "pos") {
                                     if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
@@ -771,10 +846,10 @@ function attacking()
         $vars['hpopp'] = 100 - $vars['hpperc'];
         $vars2['hpperc'] = round($odata['hp'] / $odata['maxhp'] * 100);
         $vars2['hpopp'] = 100 - $vars2['hpperc'];
-        $mw = $db->query("SELECT `itmid`,`itmname` FROM  `items`  WHERE `itmid` IN({$ir['equip_primary']}, {$ir['equip_secondary']}, {$ir['equip_potion']})");
+        $mw = $db->query("/*qc=on*/SELECT `itmid`,`itmname` FROM  `items`  WHERE `itmid` IN({$ir['equip_primary']}, {$ir['equip_secondary']}, {$ir['equip_potion']})");
         echo "<table class='table table-bordered'>
 		<tr>
-			<th colspan='2'>
+			<th colspan='3'>
 				Choose a weapon to attack with.
 			</th>
 		</tr>";
@@ -787,15 +862,15 @@ function attacking()
                     $ns = $_GET['nextstep'] + 2;
                 }
                 if ($r['itmid'] == $ir['equip_primary']) {
-                    echo "<tr><th>Primary Weapon</th>";
+                    echo "<tr><th align='left'>Primary Weapon</th>";
                 }
                 if ($r['itmid'] == $ir['equip_secondary']) {
-                    echo "<tr><th>Secondary Weapon</th>";
+                    echo "<tr><th align='left'>Secondary Weapon</th>";
                 }
                 if ($r['itmid'] == $ir['equip_potion']) {
-                    echo "<tr><th>Potion</th>";
+                    echo "<tr><th align='left'>Potion</th>";
                 }
-                echo "<td>" . returnIcon($r['itmid']) . " <a href='?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}'>{$r['itmname']}</a></td></tr>";
+                echo "<td>" . returnIcon($r['itmid'],2) . "</td><td align='left'><a href='?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}'>{$r['itmname']}</a></td></tr>";
             }
         } //If no weapons equipped, tell him to get back!
         else {
@@ -804,8 +879,8 @@ function attacking()
         $db->free_result($mw);
         echo "</table>";
 		
-		$yourpic = ($ir['display_pic']) ? "<img src='{$ir['display_pic']}' class='img-thumbnail img-responsive' width='75' height='75'>" : "";
-		$theirpic = ($odata['display_pic']) ? "<img src='{$odata['display_pic']}' class='img-thumbnail img-responsive' width='75' height='75'>" : "";
+		$yourpic = ($ir['display_pic']) ? "<img src='{$ir['display_pic']}' class='img-thumbnail img-responsive' width='125'>" : "";
+		$theirpic = ($odata['display_pic']) ? "<img src='{$odata['display_pic']}' class='img-thumbnail img-responsive' width='125'>" : "";
         echo "
 		<table class='table table-bordered'>
 			<tr>
@@ -842,7 +917,7 @@ function beat()
 	$_SESSION['attack_scroll'] = 0;
     $ir['attacking'] = 0;
     $api->UserInfoSetStatic($userid, "attacking", 0);
-    $od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
+    $od = $db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
     //User attempts to win a fight they didn't win.
     if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID']) {
         $api->UserInfoSet($userid, "xp", 0);
@@ -882,26 +957,39 @@ function beat()
         $additionaltext = "";
         //Both players are in a guild.
         if ($ir['guild'] > 0 && $r['guild'] > 0) {
-            $oppguild = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+            $oppguild = $db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
             if ($db->num_rows($oppguild) > 0) {
-                $warq = $db->query("SELECT `gw_id` FROM `guild_wars`
+                $warq = $db->query("/*qc=on*/SELECT `gw_id` FROM `guild_wars`
 				WHERE `gw_winner` = 0 AND (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
 				OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
                 //Both players' guilds are at war with each other.
                 if ($db->num_rows($warq) > 0) {
                     $wr = $db->fetch_single($warq);
-                    $whoswho = $db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
+                    $whoswho = $db->fetch_row($db->query("/*qc=on*/SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                     //Give points to user's guild.
                     if ($whoswho['gw_declarer'] == $ir['guild']) {
                         $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 3 WHERE `gw_id` = {$wr}");
                     } else {
                         $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 3 WHERE `gw_id` = {$wr}");
                     }
-                    $additionaltext = "By winning this fight, you've earned your guild a point in the guild war.";
+                    $additionaltext .= "By winning this fight, you've earned your guild a point in the guild war.";
 					guilddebt($ir['guild'],$r['guild']);
                 }
             }
 
+        }
+        //Bounty hunter stuff!
+        $bhq=$db->query("/*qc=on*/SELECT * FROM `bounty_hunter` WHERE `bh_user` = {$r['userid']}");
+        if ($db->num_rows($bhq) > 0)
+        {
+            $bhr=$db->fetch_row($bhq);
+            //Double the infirmary time.
+            put_infirmary($r['userid'], $hosptime, $hospreason);
+            $api->GameAddNotification($r['userid'], "Your infirmary time was doubled since you had a bounty on your head.");
+            $api->UserGiveCurrency($userid,'primary',$bhr['bh_bounty']);
+            $bounty_format=number_format($bhr['bh_bounty']);
+            $db->query("DELETE FROM `bounty_hunter` WHERE `bh_id` = {$bhr['bh_id']}");
+            $additionaltext .= " You have received {$bounty_format} Copper Coins for hospitalizing this user while they had a bounty on their head. They also received double infirmary time.";
         }
         //Tell player they won and ended the fight, and if they gained a guild war point.
         alert('success', "You've Bested {$r['username']}!!", "Your actions have caused {$r['username']} {$hosptime} minutes in the infirmary. {$additionaltext}", true, 'index.php');
@@ -914,6 +1002,24 @@ function beat()
             $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
 
         }
+		$npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$r['userid']}");
+		//Opponent is registered on bot list.
+		if ($db->num_rows($npcquery) > 0) {
+			$results2 = $db->fetch_row($npcquery);
+			$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$r['userid']}");
+			$r2 = $db->fetch_single($timequery);
+			//Opponent's drop has already been collected and the time hasn't reset.
+			if ((time() <= ($r2 + $results2['botcooldown'])) && ($r2 > 0)) {}
+			else {
+				$time = time();
+				$exists = $db->query("/*qc=on*/SELECT `botid` FROM `botlist_hits` WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
+				if ($db->num_rows($exists) == 0) {
+					$db->query("INSERT INTO `botlist_hits` (`userid`, `botid`, `lasthit`) VALUES ('{$userid}', '{$r['userid']}', '{$time}')");
+				} else {
+					$db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
+				}
+			}
+		}
     } else {
         die($h->endpage());
     }
@@ -938,7 +1044,7 @@ function lost()
         alert('warning', "Security Issue!", "You are trying to lose a fight against non-existent user.", true, 'index.php');
         die($h->endpage());
     }
-    $od = $db->query("SELECT `username`, `level`, `user_level`,
+    $od = $db->query("/*qc=on*/SELECT `username`, `level`, `user_level`,
                       `guild`, `xp` FROM `users` WHERE `userid` = {$_GET['ID']}");
     //The opponent does not exist.
     if (!$db->num_rows($od)) {
@@ -948,7 +1054,7 @@ function lost()
     $r = $db->fetch_row($od);
     $db->free_result($od);
     $qe = $ir['level'] * $ir['level'] * $ir['level'];
-    $expgain = Random($qe / 2, $qe);
+    $expgain = Random($qe / 4, $qe);
     //User loses XP for losing the fight.
     if ($expgain < 0) {
         $expgain = $expgain * -1;
@@ -967,7 +1073,7 @@ function lost()
     //Give winner some XP
     $r['xp_needed'] = round(($r['level'] + 1.5) * ($r['level'] + 1.5) * ($r['level'] + 1.5) * 1.5);
     $qe2 = $r['level'] * $r['level'] * $r['level'];
-    $expgain2 = Random($qe2 / 2, $qe2);
+    $expgain2 = Random($qe2 / 4, $qe2);
     $expgainp2 = $expgain2 / $r['xp_needed'] * 100;
     $expperc2 = round($expgainp2 / $r['xp_needed'] * 100);
     //Tell opponent that they were attacked by user, and emerged victorious.
@@ -983,15 +1089,15 @@ function lost()
     $additionaltext = "";
     //Both players in a guild.
     if ($ir['guild'] > 0 && $r['guild'] > 0) {
-        $oppguild = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+        $oppguild = $db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
         if ($db->num_rows($oppguild) > 0) {
-            $warq = $db->query("SELECT `gw_id` FROM `guild_wars`
+            $warq = $db->query("/*qc=on*/SELECT `gw_id` FROM `guild_wars`
 				WHERE `gw_winner` = 0 AND (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
 				OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
             //Both players' guilds are at war.
             if ($db->num_rows($warq) > 0) {
                 $wr = $db->fetch_single($warq);
-                $whoswho = $db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
+                $whoswho = $db->fetch_row($db->query("/*qc=on*/SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                 //Give opponent's guild a point.
                 if ($whoswho['gw_declarer'] == $ir['guild']) {
                     $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 5 WHERE `gw_id` = {$wr}");
@@ -1018,7 +1124,7 @@ function xp()
 	$_SESSION['attack_scroll'] = 0;
     $ir['attacking'] = 0;
     $api->UserInfoSetStatic($userid, "attacking", 0);
-    $od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
+    $od = $db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
     //User did not win the attack, or the attack they won is not against the current opponent.
     if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID']) {
         $api->UserInfoSet($userid, "xp", 0);
@@ -1041,8 +1147,11 @@ function xp()
 			    which is what just happened to you.", true, 'index.php');
             exit($h->endpage());
         } else {
-            $qe = $r['level'] * $r['level'] * $r['level'];
-			$specialnumber=((getSkillLevel($userid,14)*1)/100);
+            //XP gained is Opponent's Level x Opponent's Level x Opponent's Level.
+            $qe = ($r['level'] * $r['level'] * $r['level']);
+            //Seasoned Warrior Skill
+			$specialnumber=((getSkillLevel($userid,5)*3)/100);
+            //Add 3% bonus if Exp. token is equipped
 			if ($api->UserEquippedItem($userid,'primary',93))
 			{
 				$qe=$qe+($qe*0.03);
@@ -1053,33 +1162,26 @@ function xp()
 				$qe=$qe+($qe*0.03);
 				$qe=$qe+($qe*$specialnumber);
 			}
-            $expgain = Random($qe / 4, $qe / 2);
-            $ir['total'] = $ir['strength'] + $ir['agility'] + $ir['guard'];
-            $ot = $db->fetch_row($db->query("SELECT * FROM `userstats` WHERE `userid` = {$r['userid']}"));
-            $ototal = $ot['strength'] + $ot['agility'] + $ot['guard'];
-            //Opponent is not within 75% of user's stats, so user only
-            //gains 25% of the XP they would normally get.
+            //Make the XP gained a little random...
+            $expgain = Random($qe / 4, $qe);
 			$xplostequip='';
 			$xploststat='';
-            if (($ir['total'] * 0.5) > $ototal) {
-                $expgain = $expgain * 0.25;
-				$xploststat="Your experience gains were decreased severely because there was no challenge in this fight.";
-            }
-            if ($expgain < 0) {
-                $expgain = $expgain * -1;
-            }
-			$weapons=$db->fetch_row($db->query("SELECT `equip_primary`, `equip_secondary`, `equip_armor`
+			$weapons=$db->fetch_row($db->query("/*qc=on*/SELECT `equip_primary`, `equip_secondary`, `equip_armor`
                                                 FROM `users`
                                                 WHERE `userid` = {$r['userid']}"));
-            //Opponnent does not have any armor or weapon equipped, dock the user's XP another 75%
+            $ostat=$db->fetch_row($db->query("/*qc=on*/SELECT `strength`,`agility`,`guard` FROM `userstats` WHERE `userid` = {$r['userid']}"));
+            $ototal=$ostat['strength']+$ostat['agility']+$ostat['guard'];            
+            //Opponent does not have any armor or weapon equipped, dock the user's XP another 75%
             if (empty($weapons['equip_primary']) && empty($weapons['equip_secondary'])
                 || empty($weapons['equip_armor']))
             {
-                $expgain=$expgain*0.25;
-                $xplostequip="Your experience gains were decreased because your opponent had no equipment.";
+                $expgain=$expgain*0.05;
+                $xplostequip="Your experience gains were decreased by 95% because your opponent had no equipment.";
             }
+            if ($expgain < 1)
+                $expgain = 1;
             $expperc = round($expgain / $ir['xp_needed'] * 100);
-            $hosptime = Random(5, 10) + floor($ir['level'] / 10);
+            $hosptime = Random(5, 15) + floor($ir['level'] / 10);
             //Give user XP.
 			attacklog($userid,$_GET['ID'],'xp');
             $db->query("UPDATE `users` SET `xp` = `xp` + {$expgain} WHERE `userid` = {$userid}");
@@ -1099,15 +1201,15 @@ function xp()
             $additionaltext = "";
             //Both players are in a guild.
             if ($ir['guild'] > 0 && $r['guild'] > 0) {
-                $oppguild = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+                $oppguild = $db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
                 if ($db->num_rows($oppguild) > 0) {
-					$warq = $db->query("SELECT `gw_id` FROM `guild_wars`
+					$warq = $db->query("/*qc=on*/SELECT `gw_id` FROM `guild_wars`
 				WHERE `gw_winner` = 0 AND (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
 				OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
                     //Both players' guilds are at war with each other.
                     if ($db->num_rows($warq) > 0) {
                         $wr = $db->fetch_single($warq);
-                        $whoswho = $db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
+                        $whoswho = $db->fetch_row($db->query("/*qc=on*/SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                         //Give user's guild a point.
                         if ($whoswho['gw_declarer'] == $ir['guild']) {
                             $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 1 WHERE `gw_id` = {$wr}");
@@ -1131,18 +1233,38 @@ function xp()
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
                 $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
             }
-			$last5=time()-600;
-			$attackedcount=$db->fetch_single($db->query("SELECT COUNT(`attack_id`) FROM `attack_logs` WHERE `attacked` = {$r['userid']} AND `result` = 'xp' AND `attack_time` > {$last5}"));
-			if ($attackedcount > 3)
-			{
-				$loss=$ototal*0.03;
-				$db->query("UPDATE `userstats` 
-							SET `strength` = `strength` - {$loss},
-							`agility` = `agility` - {$loss},
-							`guard` = `guard` - {$loss}
-							WHERE `userid` = {$r['userid']}");
-				$api->GameAddNotification($r['userid'],"You have lost " . round($loss) . " strength, agility and guard for allowing yourself to be used for experience too frequently.");
+			$npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$r['userid']}");
+			//Opponent is registered on bot list.
+			if ($db->num_rows($npcquery) > 0) {
+				$results2 = $db->fetch_row($npcquery);
+				$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$r['userid']}");
+				$r2 = $db->fetch_single($timequery);
+				//Opponent's drop has already been collected and the time hasn't reset.
+				if ((time() <= ($r2 + $results2['botcooldown'])) && ($r2 > 0)) {}
+				else {
+					$time = time();
+					$exists = $db->query("/*qc=on*/SELECT `botid` FROM `botlist_hits` WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
+					if ($db->num_rows($exists) == 0) {
+						$db->query("INSERT INTO `botlist_hits` (`userid`, `botid`, `lasthit`) VALUES ('{$userid}', '{$r['userid']}', '{$time}')");
+					} else {
+						$db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
+					}
+				}
 			}
+            if ($r['user_level'] != 'NPC') {
+                $last5=time()-600;
+                $attackedcount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`attack_id`) FROM `attack_logs` WHERE `attacked` = {$r['userid']} AND `result` = 'xp' AND `attack_time` > {$last5}"));
+                if ($attackedcount > 3)
+                {
+                    $loss=$ototal*0.03;
+                    $db->query("UPDATE `userstats` 
+                                SET `strength` = `strength` - {$loss},
+                                `agility` = `agility` - {$loss},
+                                `guard` = `guard` - {$loss}
+                                WHERE `userid` = {$r['userid']}");
+                    $api->GameAddNotification($r['userid'],"You have lost " . round($loss) . " strength, agility and guard for allowing yourself to be used for experience too frequently.");
+                }
+            }
         }
     }
 }
@@ -1155,7 +1277,7 @@ function mug()
 	$_SESSION['attack_scroll'] = 0;
     $ir['attacking'] = 0;
     $api->UserInfoSetStatic($userid, "attacking", 0);
-    $od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
+    $od = $db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
     //User did not win fight, or won fight against someone else.
     if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID']) {
         $api->UserInfoSet($userid, "xp", 0);
@@ -1180,7 +1302,7 @@ function mug()
 			attacklog($userid,$_GET['ID'],'mugged');
 			$minimum=round($r['primary_currency']*0.02);
 			$maximum=round($r['primary_currency']*0.2);
-			$specialnumber=((getSkillLevel($userid,5)*5)/100);
+			$specialnumber=((getSkillLevel($userid,14)*5)/100);
             $stole = Random($minimum,$maximum);
 			$stole = $stole+($stole*$specialnumber);
             $hosptime = Random(20, 40) + floor($ir['level'] / 6);
@@ -1202,15 +1324,15 @@ function mug()
             $additionaltext = "";
             //Both players are in a guild.
             if ($ir['guild'] > 0 && $r['guild'] > 0) {
-                $oppguild = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+                $oppguild = $db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
                 if ($db->num_rows($oppguild) > 0) {
-                    $warq = $db->query("SELECT `gw_id` FROM `guild_wars`
+                    $warq = $db->query("/*qc=on*/SELECT `gw_id` FROM `guild_wars`
 				    WHERE `gw_winner` = 0 AND (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
 				    OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
                     //Both players' guilds are at war with each other.
                     if ($db->num_rows($warq) > 0) {
                         $wr = $db->fetch_single($warq);
-                        $whoswho = $db->fetch_row($db->query("SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
+                        $whoswho = $db->fetch_row($db->query("/*qc=on*/SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                         //Give user's guild a point.
                         if ($whoswho['gw_declarer'] == $ir['guild']) {
                             $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 2 WHERE `gw_id` = {$wr}");
@@ -1231,11 +1353,11 @@ function mug()
                 $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
             }
         }
-        $npcquery = $db->query("SELECT * FROM `botlist` WHERE `botuser` = {$r['userid']}");
+        $npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$r['userid']}");
         //Opponent is registered on bot list.
         if ($db->num_rows($npcquery) > 0) {
             $results2 = $db->fetch_row($npcquery);
-            $timequery = $db->query("SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$r['userid']}");
+            $timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$r['userid']}");
             $r2 = $db->fetch_single($timequery);
             //Opponent's drop has already been collected and the time hasn't reset.
             if ((time() <= ($r2 + $results2['botcooldown'])) && ($r2 > 0)) {
@@ -1245,7 +1367,7 @@ function mug()
                 //Give user the bot's item.
                 $api->UserGiveItem($userid, $results2['botitem'], 1);
                 $time = time();
-                $exists = $db->query("SELECT `botid` FROM `botlist_hits` WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
+                $exists = $db->query("/*qc=on*/SELECT `botid` FROM `botlist_hits` WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
                 //Place user's hittime into database.
                 if ($db->num_rows($exists) == 0) {
                     $db->query("INSERT INTO `botlist_hits` (`userid`, `botid`, `lasthit`) VALUES ('{$userid}', '{$r['userid']}', '{$time}')");

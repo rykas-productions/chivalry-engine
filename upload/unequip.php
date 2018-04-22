@@ -20,15 +20,15 @@ if ($ir[$_GET['type']] == 0) {
 //Give item to user and set their slot to 0
 if ($_GET['type'] != 'equip_potion')
     item_add($userid, $ir[$_GET['type']], 1);
-$sbq=$db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_GET['type']}'");
+$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_GET['type']}'");
 $statloss='';
 if ($db->num_rows($sbq) > 0)
 {
 	while ($sbr=$db->fetch_row($sbq))
 	{
         $stats =
-					array("energy" => "Maximum Energy", "will" => "Maximum Will",
-						"brave" => "Maximum Bravery", "level" => "Level",
+					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
+						"maxbrave" => "Maximum Bravery", "level" => "Level",
 						"maxhp" => "Maximum Health", "strength" => "Strength",
 						"agility" => "Agility", "guard" => "Guard",
 						"labor" => "Labor", "iq" => "IQ",
@@ -70,7 +70,7 @@ $names = array('equip_primary' => "Primary Weapon",
     'equip_armor' => "Armor",
     'equip_potion' => "Combat Potion");
 //Tell user their slot is now empty
-$weapname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_GET['type']]}"));
+$weapname = $db->fetch_single($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_GET['type']]}"));
 $api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} from their {$_GET['type']} slot.");
 alert('success', "Success!", "You have successfully unequipped your {$weapname} from your {$names[$_GET['type']]} slot. You have {$statloss}", true, 'inventory.php');
 $h->endpage();

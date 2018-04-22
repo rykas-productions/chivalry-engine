@@ -30,14 +30,14 @@ function home()
 {
     global $db, $h;
     $crimes = array();
-    $q2 = $db->query("SELECT `crimeGROUP`, `crimeNAME`, `crimeBRAVE`, `crimeID` FROM `crimes` ORDER BY `crimeBRAVE` ASC");
+    $q2 = $db->query("/*qc=on*/SELECT `crimeGROUP`, `crimeNAME`, `crimeBRAVE`, `crimeID` FROM `crimes` ORDER BY `crimeBRAVE` ASC");
     while ($r2 = $db->fetch_row($q2)) {
         $crimes[] = $r2;
     }
     //Anti-refresh RNG.
     $tresder = (Random(100, 999));
     $db->free_result($q2);
-    $q = $db->query("SELECT `cgID`, `cgNAME` FROM `crimegroups` ORDER BY `cgORDER` ASC");
+    $q = $db->query("/*qc=on*/SELECT `cgID`, `cgNAME` FROM `crimegroups` ORDER BY `cgORDER` ASC");
     echo "
 	<table class='table table-bordered'>
 		<tr>
@@ -97,7 +97,7 @@ function crime()
     if ($_GET['c'] <= 0) {
         alert('danger', "Invalid Crime!", "You have chosen to commit and invalid crime.", true, 'criminal.php');
     } else {
-        $q = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_GET['c']} LIMIT 1");
+        $q = $db->query("/*qc=on*/SELECT * FROM `crimes` WHERE `crimeID` = {$_GET['c']} LIMIT 1");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Invalid Crime!", "You are trying to commit a non-existent crime.", true, 'criminal.php');
             die($h->endpage());
@@ -140,7 +140,7 @@ function crime()
                 alert('danger',"Uh Oh!","There's an issue with this crime. Please contact the game administration.",true,'criminal.php');
                 die($h->endpage());
             }
-			$specialnumber=((getSkillLevel($userid,10)*10)/100);
+			$specialnumber=((getSkillLevel($userid,17)*20)/100);
 			$sucrate=$sucrate+($sucrate*$specialnumber);
             $ir['brave'] -= $r['crimeBRAVE'];
             $api->UserInfoSet($userid, "brave", "-{$r['crimeBRAVE']}");
@@ -192,7 +192,7 @@ function crime()
 function crime_log($crimeid,$won,$wontype,$wonqty)
 {
 	global $db,$userid,$api;
-	$q=$db->query("SELECT * FROM `crime_logs` WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
+	$q=$db->query("/*qc=on*/SELECT * FROM `crime_logs` WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
 	if ($db->num_rows($q) == 0)
 	{
 		$db->query("INSERT INTO `crime_logs` 
@@ -202,7 +202,7 @@ function crime_log($crimeid,$won,$wontype,$wonqty)
 					('{$userid}', '{$crimeid}', '0', '0', '0', '0', '0')");
 	}
 	$db->free_result($q);
-	$q=$db->query("SELECT * FROM `crime_logs` WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
+	$q=$db->query("/*qc=on*/SELECT * FROM `crime_logs` WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
 	$r=$db->fetch_row($q);
 	$db->query("UPDATE `crime_logs` SET `crimetotal` = `crimetotal` + 1 WHERE `userid` = {$userid} AND `crimeid` = {$crimeid}");
 	if ($won)

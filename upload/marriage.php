@@ -18,8 +18,8 @@ if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
 }
-$mi=$db->query("SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$userid} OR `proposed_id` = {$userid}) AND `together` = 1");
-$po=$db->query("SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$userid} OR `proposed_id` = {$userid}) AND `together` = 0");
+$mi=$db->query("/*qc=on*/SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$userid} OR `proposed_id` = {$userid}) AND `together` = 1");
+$po=$db->query("/*qc=on*/SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$userid} OR `proposed_id` = {$userid}) AND `together` = 0");
 if ($db->num_rows($mi) == 0)
 {
 	switch ($_GET['action'])
@@ -56,7 +56,7 @@ else
 function home_unwed()
 {
 	global $db,$ir,$h,$mi,$userid,$po,$api;
-	$proposed=$db->query("SELECT * FROM `marriage_tmg` WHERE `proposed_id` = {$userid} AND `together` = 0");
+	$proposed=$db->query("/*qc=on*/SELECT * FROM `marriage_tmg` WHERE `proposed_id` = {$userid} AND `together` = 0");
 	$p=$db->fetch_row($po);
 	//If player is unwed, and has no proposals inbound.
 	if ($db->num_rows($po) == 0)
@@ -79,7 +79,7 @@ function home_unwed()
 				alert('danger',"Uh Oh!","You cannot be so lonely that you would want to marry yourself, right?");
 				die($h->endpage());
 			}
-			$q=$db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}");
+			$q=$db->query("/*qc=on*/SELECT `user_level` FROM `users` WHERE `userid` = {$user}");
 			if ($db->num_rows($q) == 0)
 			{
 				alert('danger',"Uh Oh!","User is invalid or does not exist.");
@@ -90,7 +90,7 @@ function home_unwed()
 				alert('danger',"Uh Oh!","You cannot marry more than one person at a time.");
 				die($h->endpage());
 			}
-			$my=$db->query("SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$user} OR `proposed_id` = {$user}) AND `together` = true");
+			$my=$db->query("/*qc=on*/SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$user} OR `proposed_id` = {$user}) AND `together` = true");
 			if ($db->num_rows($my) > 0)
 			{
 				alert('danger',"Uh Oh!","You cannot propose to another player while they're married.");
@@ -114,7 +114,7 @@ function home_unwed()
 	//If player has a proposal inbound.
 	elseif ($db->num_rows($proposed) > 0)
 	{
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$p['proposer_id']}"));
+		$un=$db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$p['proposer_id']}"));
 		if (isset($_POST['action']))
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code('marriage_proposed', stripslashes($_POST['verf'])))
@@ -122,7 +122,7 @@ function home_unwed()
 				alert('danger',"Uh Oh!","Your action has been blocked for your security. Try filling out the form quicker next time.");
 				die($h->endpage());
 			}
-			$proid=$db->query("SELECT `marriage_id` FROM `marriage_tmg` WHERE (`proposer_id` = {$p['proposer_id']} AND `proposed_id` = {$userid}) AND `together` = 0");
+			$proid=$db->query("/*qc=on*/SELECT `marriage_id` FROM `marriage_tmg` WHERE (`proposer_id` = {$p['proposer_id']} AND `proposed_id` = {$userid}) AND `together` = 0");
 			$proidq=$db->fetch_single($proid);
 			if ($db->num_rows($proid) == 0)
 			{
@@ -138,7 +138,7 @@ function home_unwed()
 			}
 			elseif ($_POST['action'] == 'accept')
 			{
-				$already_married=$db->query("SELECT `marriage_id` FROM `marriage_tmg` WHERE (`proposer_id` = {$p['proposer_id']} AND `proposed_id` = {$p['proposer_id']}) AND `together` = 1");
+				$already_married=$db->query("/*qc=on*/SELECT `marriage_id` FROM `marriage_tmg` WHERE (`proposer_id` = {$p['proposer_id']} AND `proposed_id` = {$p['proposer_id']}) AND `together` = 1");
 				if ($db->num_rows($already_married) > 0)
 				{
 					alert('danger',"Uh Oh!","You cannot accept this proposal as the sender has already gotten married. We're going to remove this proposal for you.");
@@ -175,7 +175,7 @@ function home_unwed()
 	//If player has proposal outbound.
 	else
 	{
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$p['proposed_id']}"));
+		$un=$db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$p['proposed_id']}"));
 		if (isset($_POST['divorce']))
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code('marriage_cancel', stripslashes($_POST['verf'])))
@@ -206,27 +206,27 @@ function home_wed()
 	$mt=$db->fetch_row($mi);
 	if ($mt['proposer_id'] == $userid)
 	{
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
+		$un=$db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
 		$title1=$ir['username'];
 		$title2=$un;
 		$p1=$ir;
-		$p2=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
+		$p2=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
         $p1['ring']=$mt['proposer_ring'];
         $p2['ring']=$mt['proposed_ring'];
 	}
 	else
 	{
-		$un=$db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
+		$un=$db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 		$title1=$un;
 		$title2=$ir['username'];
-		$p1=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
+		$p1=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 		$p2=$ir;
         $p2['ring']=$mt['proposer_ring'];
         $p1['ring']=$mt['proposed_ring'];
         
 	}
-	$p1['estate'] = $db->fetch_single($db->query("SELECT `house_name` FROM `estates` WHERE `house_will` = {$p1['maxwill']}"));
-	$p2['estate'] = $db->fetch_single($db->query("SELECT `house_name` FROM `estates` WHERE `house_will` = {$p2['maxwill']}"));
+	$p1['estate'] = $db->fetch_single($db->query("/*qc=on*/SELECT `house_name` FROM `estates` WHERE `house_will` = {$p1['maxwill']}"));
+	$p2['estate'] = $db->fetch_single($db->query("/*qc=on*/SELECT `house_name` FROM `estates` WHERE `house_will` = {$p2['maxwill']}"));
 	$p1['bank'] = ($p1['bank'] == -1) ? 'Unpurchased account' : number_format($p1['bank']);
 	$p2['bank'] = ($p2['bank'] == -1) ? 'Unpurchased account' : number_format($p2['bank']);
     $p1['bigbank'] = ($p1['bigbank'] == -1) ? 'Unpurchased account' : number_format($p1['bigbank']);
@@ -333,12 +333,12 @@ function argue()
 	if ($mt['proposer_id'] == $userid)
 	{
 		$p1=$ir;
-		$p2=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
+		$p2=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
 		$event=$p2['userid'];
 	}
 	else
 	{
-		$p1=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
+		$p1=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 		$p2=$ir;
 		$event=$p1['userid'];
 	}
@@ -419,12 +419,12 @@ function slept()
 	if ($mt['proposer_id'] == $userid)
 	{
 		$p1=$ir;
-		$p2=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
+		$p2=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
 		$event=$p2['userid'];
 	}
 	else
 	{
-		$p1=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
+		$p1=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 		$p2=$ir;
 		$event=$p1['userid'];
 	}
@@ -473,12 +473,12 @@ function letter()
 	if ($mt['proposer_id'] == $userid)
 	{
 		$p1=$ir;
-		$p2=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
+		$p2=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
 		$event=$p2['userid'];
 	}
 	else
 	{
-		$p1=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
+		$p1=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 		$p2=$ir;
 		$event=$p1['userid'];
 	}
@@ -501,6 +501,16 @@ function letter()
 			die($h->endpage());
 		}
 		$api->GameAddMail($event,"Spouse Love Letter", $msg, $userid);
+		if (getSkillLevel($userid,24) != 0)
+		{
+		    //Flirty Words
+		    $specialnumber=((getSkillLevel($userid,24)*2)/100);
+		    $chance = $chance+($chance*$specialnumber);
+		    if (Random(1,100) <= $chance)
+		    {
+		        $db->query("UPDATE `marriage_tmg` SET `happiness` = `happiness` + 1 WHERE `marriage_id` = {$mt['marriage_id']}");
+		    }
+		}
 		alert('success',"Success!","You have successfully sent your love letter. May their knees tremble at what you have said.",true,'marriage.php');
 	}
 	else
@@ -521,12 +531,12 @@ function divorce()
 	if ($mt['proposer_id'] == $userid)
 	{
 		$p1=$ir;
-		$p2=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
+		$p2=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
 		$event=$p2['userid'];
 	}
 	else
 	{
-		$p1=$db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
+		$p1=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 		$p2=$ir;
 		$event=$p1['userid'];
 	}
@@ -563,7 +573,7 @@ function ring()
     global $db,$ir,$userid,$h,$mi,$api;
 	$mt=$db->fetch_row($mi);
     $ring = (isset($_GET['ring']) && is_numeric($_GET['ring'])) ? abs($_GET['ring']) : '';
-    $ringsarray=array(113,114,115,116);
+    $ringsarray=array(113,114,115,116,125,126,127);
     if ($mt['happiness'] < 10)
     {
         alert('danger',"Uh Oh!","You may not equip a ring until your marriage happiness is at least 10.");

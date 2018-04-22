@@ -50,7 +50,7 @@ function home()
 				Actions
 			</th>
 		</tr>";
-    $q = $db->query("SELECT * FROM `sec_market` ORDER BY `sec_cost` ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `sec_market` ORDER BY `sec_cost` ASC");
     while ($r = $db->fetch_row($q)) {
         $totalcost = $r['sec_total'] * $r['sec_cost'];
         if ($r['sec_user'] == $userid) {
@@ -60,7 +60,7 @@ function home()
         }
         echo "<tr>
 				<td>
-					<a href='profile.php?user={$r['sec_user']}'>{$api->SystemUserIDtoName($r['sec_user'])}</a> [{$r['sec_user']}]
+					<a href='profile.php?user={$r['sec_user']}'>" . parseUsername($r['sec_user']) . "</a> [{$r['sec_user']}]
 				</td>
 				<td>
 					" . number_format($r['sec_total']) . "
@@ -84,7 +84,7 @@ function buy()
         alert('danger', "Uh Oh!", "Please specify a listing you wish to buy.", true, 'secmarket.php');
         die($h->endpage());
     }
-    $q = $db->query("SELECT * FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
+    $q = $db->query("/*qc=on*/SELECT * FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
     if ($db->num_rows($q) == 0) {
         alert('danger', "Uh Oh!", "Please specify an existent listing to buy.", true, 'secmarket.php');
         die($h->endpage());
@@ -95,7 +95,7 @@ function buy()
         die($h->endpage());
     }
     $totalcost = $r['sec_cost'] * $r['sec_total'];
-	$taxed=$totalcost-($totalcost*0.04);
+	$taxed=$totalcost-($totalcost*0.02);
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) {
         alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'secmarket.php');
         die($h->endpage());
@@ -119,7 +119,7 @@ function remove()
         alert('danger', "Uh Oh!", "Please specify a listing you wish to remove.", true, 'secmarket.php');
         die($h->endpage());
     }
-    $q = $db->query("SELECT * FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
+    $q = $db->query("/*qc=on*/SELECT * FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
     if ($db->num_rows($q) == 0) {
         alert('danger', "Uh Oh!", "You are trying to remove a non-existent listing.", true, 'secmarket.php');
         die($h->endpage());
@@ -155,7 +155,7 @@ function add()
 			alert('danger', "Uh Oh!", "The pricing you set is too expensive.");
             die($h->endpage());
 		}
-		if ($_POST['cost'] < 1000)
+		if ($_POST['cost'] < 200)
 		{
 			alert('danger', "Uh Oh!", "The pricing you set is too cheap.");
             die($h->endpage());
@@ -185,7 +185,7 @@ function add()
 						Price (Each)*
 					</th>
 					<td>
-						<input type='number' name='cost' class='form-control' required='1' min='1000' max='50000' value='1000'>
+						<input type='number' name='cost' class='form-control' required='1' min='200' max='50000' value='200'>
 					</td>
 				<tr>
 				
@@ -197,7 +197,7 @@ function add()
 				</tr>
 			</table>
 		</form>
-		*=Price subject to 4% market fee.";
+		*=Price subject to 2% market fee.";
     }
 }
 

@@ -15,21 +15,16 @@ if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 }
 //Delete things from more than 30 days ago
 $last24 = time() - 86400;
-$ThirtyDaysAgo = time() - 2592000;
-$plussevenday=time() + 604800;
-$db->query("DELETE FROM `logs` WHERE `log_time` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `mail` WHERE `mail_time` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `notifications` WHERE `notif_time` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `guild_notifications` WHERE `gn_time` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `comments` WHERE `cTIME` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `fedjail_appeals` WHERE `fja_time` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `guild_crime_log` WHERE `gclTIME` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `login_attempts` WHERE `timestamp` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `attack_logs` WHERE `attack_time` < {$ThirtyDaysAgo}");
+$plussevenday = time() + 604800;
 
 $db->query("UPDATE `users` SET `vip_days`=`vip_days`-1 WHERE `vip_days` > 0");
-$db->query("UPDATE `users` SET `bank`=`bank`+(`bank`/50) WHERE `bank`>0 AND `laston` > {$last24} AND `bank`<10000000");
-$db->query("UPDATE `users` SET `bigbank`=`bigbank`+(`bigbank`/50) WHERE `bigbank`>0 AND `laston` > {$last24} AND `bigbank`<50000000");
+//Non-VIP Bank Interest
+$db->query("UPDATE `users` SET `bank`=`bank`+(`bank`/50) WHERE `bank`>0 AND `laston` > {$last24} AND `bank`<10000001 AND `vip_days` = 0");
+$db->query("UPDATE `users` SET `bigbank`=`bigbank`+(`bigbank`/50) WHERE `bigbank`>0 AND `laston` > {$last24} AND `bigbank`<50000001 AND `vip_days` = 0");
+//VIP Bank Interest
+$db->query("UPDATE `users` SET `bank`=`bank`+(`bank`/25) WHERE `bank`>0 AND `laston` > {$last24} AND `bank`<10000001 AND `vip_days` != 0");
+$db->query("UPDATE `users` SET `bigbank`=`bigbank`+(`bigbank`/25) WHERE `bigbank`>0 AND `laston` > {$last24} AND `bigbank`<50000001 AND `vip_days` != 0");
+
 $db->query("UPDATE `users` SET `hexbags` = 100, `bor` = 500");
 
 $db->query("UPDATE `users` SET `dayslogged` = 0 WHERE `laston` < {$last24}");
@@ -41,7 +36,7 @@ $db->query("UPDATE `settings` SET `setting_value` = 0 WHERE `setting_name` = 'ca
 $db->query("UPDATE `settings` SET `setting_value` = 0 WHERE `setting_name` = 'casino_take'");
 
 $db->query("UPDATE `bank_investments` SET `days_left` = `days_left` - 1");
-$biq=$db->query("SELECT * FROM `bank_investments` WHERE `days_left` = 0");
+$biq=$db->query("/*qc=on*/SELECT * FROM `bank_investments` WHERE `days_left` = 0");
 while ($riq = $db->fetch_row($biq))
 {
 	$add=$riq['amount']*($riq['interest']/100);
@@ -61,10 +56,10 @@ $db->query("UPDATE `settings` SET `setting_value` = '{$thirtyday}' WHERE `settin
 $db->query("TRUNCATE TABLE `votes`");
 
 //Guild daily fee
-$gdfq=$db->query("SELECT * FROM `guild`");
+$gdfq=$db->query("/*qc=on*/SELECT * FROM `guild`");
 while ($gfr=$db->fetch_row($gdfq))
 {
-	$warquery=$db->query("SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gfr['guild_id']} OR `gw_declaree` = {$gfr['guild_id']}");
+	$warquery=$db->query("/*qc=on*/SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gfr['guild_id']} OR `gw_declaree` = {$gfr['guild_id']}");
 	if ($db->num_rows($warquery) == 0)
 	{
 		if ($gfr['guild_primcurr'] < 100000)
@@ -86,4 +81,10 @@ while ($gfr=$db->fetch_row($gdfq))
 		}
 	}
 }
+
+//Random player showcase
+$cutoff = time() - 86400;
+$uq=$db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` != 1 AND `laston` > {$cutoff} ORDER BY RAND() LIMIT 1");
+$ur=$db->fetch_single($uq);
+$db->query("UPDATE `settings` SET `setting_value` = '{$ur}' WHERE `setting_name` = 'random_player_showcase'");
 ?>

@@ -61,7 +61,7 @@ function add()
                      '{$_POST['hidden']}')");
         alert('success', "Success!", "You have successfully created a poll.", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Started a game poll.");
-        $q = $db->query("SELECT `userid`, `username` FROM `users`");
+        $q = $db->query("/*qc=on*/SELECT `userid`, `username` FROM `users`");
         while ($r = $db->fetch_row($q)) {
             notification_add($r['userid'], "The game administration has added a poll for you to vote in. Please do so by visiting <a href='polling.php'>here</a>.");
         }
@@ -195,7 +195,7 @@ function close()
            ";
         $q =
             $db->query(
-                "SELECT `id`, `question`
+                "/*qc=on*/SELECT `id`, `question`
                          FROM `polls`
                          WHERE `active` = '1'");
         echo "<select name='poll' class='form-control' type='dropdown'>";
@@ -213,7 +213,7 @@ function close()
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quickly next time.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT COUNT(`id`) FROM `polls` WHERE `id` = {$_POST['poll']}");
+        $q = $db->query("/*qc=on*/SELECT COUNT(`id`) FROM `polls` WHERE `id` = {$_POST['poll']}");
         if ($db->fetch_single($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "This poll does not exist, and thus, cannot be ended.");
@@ -223,7 +223,7 @@ function close()
         $db->query("UPDATE `polls` SET `active` = '0' WHERE `id` = {$_POST['poll']}");
         alert('success', "Success!", "You have closed this poll to respones.", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Closed a game poll.");
-        $q = $db->query("SELECT `userid`, `username` FROM `users`");
+        $q = $db->query("/*qc=on*/SELECT `userid`, `username` FROM `users`");
         while ($r = $db->fetch_row($q)) {
             notification_add($r['userid'], "The game administration has closed a recent poll. View the results <a href='polling.php?action=viewpolls'>here</a>.");
         }

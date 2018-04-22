@@ -26,7 +26,7 @@ function home()
     //Bind current unix timestamp to a variable.
     $CurrentTime = time();
     //Select player count of those in the infirmary.
-    $PlayerCount = $db->fetch_single($db->query("SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime}"));
+    $PlayerCount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime}"));
     //List them out now.
     echo "<h3><i class='game-icon game-icon-hospital-cross'></i> The Infirmary</h3><hr />
 	<small>There's currently " . number_format($PlayerCount) . " users in the infirmary.</small>
@@ -49,13 +49,13 @@ function home()
 			</tr>
 		</thead>
 		<tbody>";
-    $query = $db->query("SELECT * FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime} ORDER BY `infirmary_out` DESC");
+    $query = $db->query("/*qc=on*/SELECT * FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime} ORDER BY `infirmary_out` DESC");
     while ($Infirmary = $db->fetch_row($query)) {
         echo "
 			<tr>
 				<td>
 					<a href='profile.php?user={$Infirmary['infirmary_user']}'>
-						{$api->SystemUserIDtoName($Infirmary['infirmary_user'])}
+						" . parseUsername($Infirmary['infirmary_user']) . "
 					</a> [{$Infirmary['infirmary_user']}]
 				</td>
 				<td>

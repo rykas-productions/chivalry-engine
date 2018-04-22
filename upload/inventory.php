@@ -14,7 +14,7 @@ echo "<h3><i class='game-icon game-icon-swords-emblem'></i> Your Equipment</h3><
 	<div class='col-sm-3'>
 		<div class='card'>
 			<div class='card-header'>
-				Weapon #1 ";
+				Weapon ";
 if (!empty($ir['equip_primary'])) {
     echo "(<a href='unequip.php?type=equip_primary'>Unequip</a>)";
 }
@@ -22,8 +22,8 @@ echo "
 			</div>
 			<div class='card-body'>";
 if (!empty($ir['equip_primary'])) {
-	$dam=$db->fetch_single($db->query("SELECT `weapon` FROM `items` WHERE `itmid` = {$ir['equip_primary']}"));
-    echo "" . returnIcon($ir['equip_primary'],2) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom' title='Weapon Rating: {$dam}'>{$api->SystemItemIDtoName($ir['equip_primary'])}</a>";
+	$dam=$db->fetch_single($db->query("/*qc=on*/SELECT `weapon` FROM `items` WHERE `itmid` = {$ir['equip_primary']}"));
+    echo "" . returnIcon($ir['equip_primary'],4) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom' title='Weapon Rating: {$dam}'>{$api->SystemItemIDtoName($ir['equip_primary'])}</a>";
 } else {
     echo "No Weapon";
 }
@@ -35,7 +35,7 @@ echo "
 	<div class='col-sm-3'>
 		<div class='card'>
 			<div class='card-header'>
-				Weapon #2 ";
+				Weapon ";
 if (!empty($ir['equip_secondary'])) {
     echo "(<a href='unequip.php?type=equip_secondary'>Unequip</a>)";
 }
@@ -43,8 +43,8 @@ echo "
 			</div>
 			<div class='card-body'>";
 if (!empty($ir['equip_secondary'])) {
-	$dam2=$db->fetch_single($db->query("SELECT `weapon` FROM `items` WHERE `itmid` = {$ir['equip_secondary']}"));
-    echo "" . returnIcon($ir['equip_secondary'],2) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom' title='Weapon Rating: {$dam2}'>{$api->SystemItemIDtoName($ir['equip_secondary'])}</a>";
+	$dam2=$db->fetch_single($db->query("/*qc=on*/SELECT `weapon` FROM `items` WHERE `itmid` = {$ir['equip_secondary']}"));
+    echo "" . returnIcon($ir['equip_secondary'],4) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom' title='Weapon Rating: {$dam2}'>{$api->SystemItemIDtoName($ir['equip_secondary'])}</a>";
 } else {
     echo "No Weapon";
 }
@@ -64,8 +64,8 @@ echo "
 			</div>
 			<div class='card-body'>";
 if (!empty($ir['equip_armor'])) {
-	$armor=$db->fetch_single($db->query("SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
-    echo "" . returnIcon($ir['equip_armor'],2) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom' title='Armor Rating: {$armor}'>{$api->SystemItemIDtoName($ir['equip_armor'])}</a>";
+	$armor=$db->fetch_single($db->query("/*qc=on*/SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
+    echo "" . returnIcon($ir['equip_armor'],4) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom' title='Armor Rating: {$armor}'>{$api->SystemItemIDtoName($ir['equip_armor'])}</a>";
 } else {
     echo "No Armor";
 }
@@ -85,7 +85,7 @@ echo "
 			</div>
 			<div class='card-body'>";
 if (!empty($ir['equip_potion'])) {
-    echo "" . returnIcon($ir['equip_potion'],2) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom'>{$api->SystemItemIDtoName($ir['equip_potion'])}</a>";
+    echo "" . returnIcon($ir['equip_potion'],4) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom'>{$api->SystemItemIDtoName($ir['equip_potion'])}</a>";
 } else {
     echo "No Potion";
 }
@@ -98,7 +98,7 @@ echo "<hr />
 <h3><i class='fas fa-fw fa-briefcase'></i> Your Inventory</h3><hr />";
 $inv =
     $db->query(
-        "SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
+        "/*qc=on*/SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
                  `effect1_on`, `effect2_on`, `effect3_on`,
                  `weapon`, `armor`, `itmtypename`, `itmdesc`, `icon`
                  FROM `inventory` AS `iv`
@@ -107,12 +107,13 @@ $inv =
                  INNER JOIN `itemtypes` AS `it`
                  ON `i`.`itmtype` = `it`.`itmtypeid`
                  WHERE `iv`.`inv_userid` = {$userid}
+                 AND `iv`.`inv_qty` > 0
                  ORDER BY `i`.`itmtype` ASC, `i`.`itmname` ASC");
 echo "<b>Your items are listed below.</b><br />
 	<table class='table table-bordered table-striped'>
 	    <thead>
 		<tr>
-			<th>Item (Qty)</th>
+			<th colspan='2'>Item (Qty)</th>
 			<th class='hidden-xs-down'>Item Cost (Total)</th>
 			<th>Links</th>
 		</tr></thead>";
@@ -121,16 +122,19 @@ while ($i = $db->fetch_row($inv)) {
     if ($lt != $i['itmtypename']) {
         $lt = $i['itmtypename'];
         echo "\n<thead><tr>
-            			<th colspan='4'>
+            			<th colspan='5'>
             				<b>{$lt}</b>
             			</th>
             		</tr></thead>";
     }
     $i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
-	$icon = returnIcon($i['itmid'],1.2);
+	$icon = returnIcon($i['itmid'],1.5);
     echo "<tr>
+                <td>
+                    {$icon}
+                </td>
         		<td align='left'>
-					{$icon} <a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='bottom' title='{$i['itmdesc']}'>
+					<a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='bottom' title='{$i['itmdesc']}'>
 						{$api->SystemItemIDtoName($i['itmid'])}
 					</a>";
     if ($i['inv_qty'] > 1) {
@@ -158,6 +162,10 @@ while ($i = $db->fetch_row($inv)) {
 	if ($i['itmid'] == 62)
     {
         echo " [<a href='bomb.php?action=large'>Set Charge</a>]";
+    }
+    if ($i['itmid'] == 149)
+    {
+        echo " [<a href='bomb.php?action=rickroll'>Rick-roll</a>]";
     }
     //Box of Random
     if ($i['itmid'] == 33)
@@ -191,6 +199,16 @@ while ($i = $db->fetch_row($inv)) {
     {
         echo " [<a href='2017thanksgiving.php?action=ticket'>Scratch</a>]";
     }
+    //St Patties Scratch Ticket
+    if ($i['itmid'] == 137)
+    {
+        echo " [<a href='2018stpatties.php?action=ticket'>Scratch</a>]";
+    }
+    //Easter Scratch Ticket
+    if ($i['itmid'] == 147)
+    {
+        echo " [<a href='2018easter.php?action=ticket'>Squish</a>]";
+    }
 	//Auto Hexbag Opener
     if ($i['itmid'] == 91)
     {
@@ -201,7 +219,7 @@ while ($i = $db->fetch_row($inv)) {
     {
         echo " [<a href='vipitem.php?item=classreset'>Redeem</a>]";
     }
-    //Class Reset Scroll
+    //Skill Reset Scroll
     if ($i['itmid'] == 122)
     {
         echo " [<a href='vipitem.php?item=skillreset'>Redeem</a>]";
@@ -217,7 +235,6 @@ while ($i = $db->fetch_row($inv)) {
         echo " [<a href='mysteriouspotion.php'>Drink</a>]";
     }
     //VIP Color Changer
-    //Mysterious Potion
     if ($i['itmid'] == 128)
     {
         echo " [<a href='vipitem.php?item=vipcolor'>Use</a>]";
@@ -234,7 +251,7 @@ while ($i = $db->fetch_row($inv)) {
         echo " [<a href='equip.php?slot=armor&ID={$i['inv_id']}'>Equip Armor</a>]";
     }
     //Potion equipping.
-    $potionexclusion=array(17,123,68);
+        $potionexclusion=array(17,123,68,138,95,96,148);
     if ((($i['itmtypename'] == 'Potions') || ($i['itmtypename'] == 'Food')) && (!in_array($i['itmid'],$potionexclusion)))
         echo " [<a href='equip.php?slot=potion&ID={$i['inv_id']}'>Equip Potion</a>]";
     echo "</td>

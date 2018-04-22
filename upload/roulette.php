@@ -15,7 +15,7 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 }
 $tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 500;
-$specialnumber=((getSkillLevel($userid,8)*7.5)/100);
+$specialnumber=((getSkillLevel($userid,29)*25)/100);
 $maxbet=$maxbet+($maxbet*$specialnumber);
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {

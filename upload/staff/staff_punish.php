@@ -79,7 +79,7 @@ function fedjail()
             alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$_POST['user']}");
+        $q = $db->query("/*qc=on*/SELECT `user_level` FROM `users` WHERE `userid` = {$_POST['user']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "This user does not exist.");
@@ -91,7 +91,7 @@ function fedjail()
             alert('danger', "Uh Oh!", "You cannot place administrators into the federal dungeon. Please remove their privilege and try again.");
             die($h->endpage());
         }
-        $already_fed = $db->query("SELECT `fed_id` FROM `fedjail` WHERE `fed_userid` = {$_POST['user']}");
+        $already_fed = $db->query("/*qc=on*/SELECT `fed_id` FROM `fedjail` WHERE `fed_userid` = {$_POST['user']}");
         if ($db->num_rows($already_fed) > 0) {
             alert('danger', "Uh Oh!", "This user is already in the federal dungeon. Please edit their sentence.");
             die($h->endpage());
@@ -175,7 +175,7 @@ function editfedjail()
             die($h->endpage());
         }
         //Check that the user exists and is in federal dungeon.
-        $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `fedjail` > 0");
+        $q = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `fedjail` > 0");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "User does not exist, or is currently not in the federal dungeon.");
             die($h->endpage());
@@ -255,7 +255,7 @@ function unfedjail()
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
-        $check = $db->query("SELECT `fed_id` FROM `fedjail` WHERE `fed_userid` = {$_POST['user']} LIMIT 1");
+        $check = $db->query("/*qc=on*/SELECT `fed_id` FROM `fedjail` WHERE `fed_userid` = {$_POST['user']} LIMIT 1");
         if ($db->num_rows($check) == 0) {
             alert('danger', "Uh Oh!", "This user is not in the federal dungeon.");
             die($h->endpage());
@@ -318,7 +318,7 @@ function mailban()
         }
 
         //Check that the user exists
-        $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
+        $q = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "You cannot mail ban users that do not exist.");
@@ -332,7 +332,7 @@ function mailban()
         }
 
         //See if user is already mail-banned
-        $q2 = $db->query("SELECT * FROM `mail_bans` WHERE `mbUSER` = {$_POST['user']}");
+        $q2 = $db->query("/*qc=on*/SELECT * FROM `mail_bans` WHERE `mbUSER` = {$_POST['user']}");
         if ($db->num_rows($q2) != 0) {
             alert('danger', "Uh Oh!", "This user is already mail-banned.");
             die($h->endpage());
@@ -410,7 +410,7 @@ function unmailban()
         }
 
         //Check that the user is mail banned or not.
-        $check = $db->query("SELECT `mbID` FROM `mail_bans` WHERE `mbUSER` = {$_POST['user']} LIMIT 1");
+        $check = $db->query("/*qc=on*/SELECT `mbID` FROM `mail_bans` WHERE `mbUSER` = {$_POST['user']} LIMIT 1");
         if ($db->num_rows($check) == 0) {
             alert('danger', "Uh Oh!", "This user is not currently mail banned.");
             die($h->endpage());
@@ -471,7 +471,7 @@ function forumwarn()
             alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.");
             die($h->endpage());
         }
-        $check = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']} LIMIT 1");
+        $check = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']} LIMIT 1");
         if ($db->num_rows($check) == 0) {
             alert('danger', "Uh Oh!", "The user you are attempting to warn does not exist.");
             die($h->endpage());
@@ -546,7 +546,7 @@ function ipsearch()
 				Registration
 			</th>
 		</tr>";
-        $q = $db->query("SELECT `username`,`userid`,`registertime`,`level`
+        $q = $db->query("/*qc=on*/SELECT `username`,`userid`,`registertime`,`level`
 						FROM `users` WHERE `lastip` = '{$queryip}' 
 						OR `registerip` = '{$queryip}' 
 						OR `loginip` = '{$queryip}'
@@ -685,7 +685,7 @@ function forumban()
             alert('danger', "Uh Oh!", "Please fill out the previous form completely before submitting again.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$_POST['user']}");
+        $q = $db->query("/*qc=on*/SELECT `user_level` FROM `users` WHERE `userid` = {$_POST['user']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "This user does not exist.");
@@ -697,7 +697,7 @@ function forumban()
             alert('danger', "Uh Oh!", "You cannot forum ban an administrator.");
             die($h->endpage());
         }
-        $already_fed = $db->query("SELECT `fb_id` FROM `forum_bans` WHERE `fb_user` = {$_POST['user']}");
+        $already_fed = $db->query("/*qc=on*/SELECT `fb_id` FROM `forum_bans` WHERE `fb_user` = {$_POST['user']}");
         if ($db->num_rows($already_fed) > 0) {
             alert('danger', "Uh Oh!", "This user is already forum banned. Please edit their ban.");
             die($h->endpage());
@@ -771,7 +771,7 @@ function unforumban()
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
-        $check = $db->query("SELECT `fb_id` FROM `forum_bans` WHERE `fb_user` = {$_POST['user']} LIMIT 1");
+        $check = $db->query("/*qc=on*/SELECT `fb_id` FROM `forum_bans` WHERE `fb_user` = {$_POST['user']} LIMIT 1");
         if ($db->num_rows($check) == 0) {
             alert('danger', "Uh Oh!", "This user is not forum banned.");
             die($h->endpage());
@@ -819,7 +819,7 @@ function staffnotes()
         alert('danger', "Uh Oh!", "Please specify a user's notes you wish to update.", true, 'index.php');
         die($h->endpage());
     }
-    $q = $db->query("SELECT `staff_notes` FROM `users` WHERE `userid` = {$_POST['ID']}");
+    $q = $db->query("/*qc=on*/SELECT `staff_notes` FROM `users` WHERE `userid` = {$_POST['ID']}");
     if ($db->num_rows($q) == 0) {
         $db->free_result($q);
         alert('danger', "Uh Oh!", "The user's notes you're trying to update does not exist.", true, 'index.php');
@@ -848,7 +848,7 @@ function massmail()
             alert('danger', "Uh Oh!", "Sent messages can only be, at maximum, 65,655 characters in length.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `userid`,`user_level` FROM `users`");
+        $q = $db->query("/*qc=on*/SELECT `userid`,`user_level` FROM `users`");
         $sent = 0;
         while ($r = $db->fetch_row($q)) {
             echo "Sending Mail to {$api->SystemUserIDtoName($r['userid'])} ...";
@@ -915,15 +915,16 @@ function massemail()
             alert('danger', "Uh Oh!", "At maximum, messages can only be 65,655 characters in length.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `u`.`userid`,`user_level`,`email` 
+        $q = $db->query("/*qc=on*/SELECT `u`.`userid`,`user_level`,`email`,`username`,`level` 
 						FROM `users` AS `u` 
 						INNER JOIN `user_settings` AS `uas`
 						ON `u`.`userid`=`uas`.`userid`
 						WHERE `uas`.`email_optin` = 1 AND `u`.`user_level` != 'NPC'");
         $sent = 0;
         while ($r = $db->fetch_row($q)) {
+            $nmsg=str_ireplace(array("{USERNAME}", "{LEVEL}", "{USERID}"), array($r['username'], $r['level'], $r['userid']), $msg);
             echo "Sending Email to {$api->SystemUserIDtoName($r['userid'])} ...";
-            if ($api->SystemSendEmail($r['email'], $msg, $subject, $from)) {
+            if ($api->SystemSendEmail($r['email'], $nmsg, $subject, $from)) {
                 echo "... Success.";
                 $sent = $sent + 1;
             } else {
@@ -984,7 +985,7 @@ function banip()
             alert('danger', "Uh Oh!", "You did not input a valid IP Address.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
+        $q = $db->query("/*qc=on*/SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
         if ($db->num_rows($q) > 0) {
             alert('danger', "Uh Oh!", "The IP Address you input is already banned.");
             die($h->endpage());
@@ -1034,7 +1035,7 @@ function unbanip()
             alert('danger', "Uh Oh!", "Please specify the IP Address you wish to pardon.", true, '?action=unbanip');
             die($h->endpage());
         }
-        $q = $db->query("SELECT * FROM `ipban` WHERE `ip_id` = {$_GET['id']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `ipban` WHERE `ip_id` = {$_GET['id']}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The IP Address you wish to unban is not banned.", true, '?action=unbanip');
             die($h->endpage());
@@ -1053,7 +1054,7 @@ function unbanip()
 				Link
 			</th>
 		</tr>";
-        $q = $db->query("SELECT * FROM `ipban`");
+        $q = $db->query("/*qc=on*/SELECT * FROM `ipban`");
         $csrf = request_csrf_html('staff_unbanip');
         while ($r = $db->fetch_row($q)) {
             echo "<tr>
@@ -1086,7 +1087,7 @@ function spamhammer()
             alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$_POST['user']}");
+        $q = $db->query("/*qc=on*/SELECT `user_level` FROM `users` WHERE `userid` = {$_POST['user']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "This user does not exist.");
@@ -1098,7 +1099,7 @@ function spamhammer()
             alert('danger', "Uh Oh!", "You cannot place administrators into the federal dungeon. Please remove their privilege and try again.");
             die($h->endpage());
         }
-        $already_fed = $db->query("SELECT `fed_id` FROM `fedjail` WHERE `fed_userid` = {$_POST['user']}");
+        $already_fed = $db->query("/*qc=on*/SELECT `fed_id` FROM `fedjail` WHERE `fed_userid` = {$_POST['user']}");
         if ($db->num_rows($already_fed) > 0) {
             alert('danger', "Uh Oh!", "This user is already in the federal dungeon. Please edit their sentence.");
             die($h->endpage());

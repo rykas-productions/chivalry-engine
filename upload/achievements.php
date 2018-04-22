@@ -187,6 +187,51 @@ switch ($_GET['action']) {
     case 'dayslogged5':
         dayslogged(365,61);
         break;
+    case 'iq1':
+        iq(10000,62);
+        break;
+    case 'iq2':
+        iq(25000,63);
+        break;
+    case 'iq3':
+        iq(100000,64);
+        break;
+    case 'iq4':
+        iq(1000000,65);
+        break;
+    case 'iq5':
+        iq(5000000,66);
+        break;
+	case 'vip1':
+        vip(10,67);
+        break;
+    case 'vip2':
+        vip(30,68);
+        break;
+    case 'vip3':
+        vip(90,69);
+        break;
+    case 'vip4':
+        vip(180,70);
+        break;
+    case 'vip5':
+        vip(365,71);
+        break;
+	case 'labor1':
+        labor(100000,72);
+        break;
+    case 'labor2':
+        labor(500000,73);
+        break;
+    case 'labor3':
+        labor(1000000,74);
+        break;
+    case 'labor4':
+        labor(10000000,75);
+        break;
+    case 'labor5':
+        labor(50000000,76);
+        break;
     default:
         home();
         break;
@@ -197,7 +242,7 @@ function home()
 	echo "Here's a list of in-game achievements. Click on an achievement to be rewarded with it. You may only 
 	be rewarded once per achievement. Each achievement you complete will get you 1 skill point.";
 	$count=1;
-	while ($count != 62)
+	while ($count != 78)
 	{
 		$class[$count]= (userHasAchievement($count)) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
 		$count=$count+1;
@@ -307,13 +352,39 @@ function home()
 			<a {$class[60]} href='?action=dayslogged4'>120 Days</a><br />
 			<a {$class[61]} href='?action=dayslogged5'>365 Days</a><br />
 		</div>
+	</div>
+    <div class='row'>
+		<div class='col-sm'>
+			<u><b>IQ</b></u><br />
+			<a {$class[62]} href='?action=iq1'>10,000 IQ</a><br />
+			<a {$class[63]} href='?action=iq2'>25,000 IQ</a><br />
+			<a {$class[64]} href='?action=iq3'>100,000 IQ</a><br />
+			<a {$class[65]} href='?action=iq4'>1,000,000 IQ</a><br />
+			<a {$class[66]} href='?action=iq5'>5,000,000 IQ</a><br />
+		</div>
+		<div class='col-sm'>
+			<u><b>VIP Days</b></u><br />
+			<a {$class[67]} href='?action=vip1'>10 VIP Days</a><br />
+			<a {$class[68]} href='?action=vip2'>30 VIP Days</a><br />
+			<a {$class[69]} href='?action=vip3'>90 VIP Days</a><br />
+			<a {$class[70]} href='?action=vip4'>180 VIP Days</a><br />
+			<a {$class[71]} href='?action=vip5'>365 VIP Days</a><br />
+		</div>
+		<div class='col-sm'>
+            <u><b>Labor</b></u><br />
+			<a {$class[72]} href='?action=labor1'>100,000 Labor</a><br />
+			<a {$class[73]} href='?action=labor2'>500,000 Labor</a><br />
+			<a {$class[74]} href='?action=labor3'>1,000,000 Labor</a><br />
+			<a {$class[75]} href='?action=labor4'>10,000,000 Labor</a><br />
+			<a {$class[76]} href='?action=labor5'>50,000,000 Labor</a><br />
+		</div>
 	</div>";
 	$h->endpage();
 }
 function level($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
@@ -329,13 +400,13 @@ function level($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the Level {$level} achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the Level {$level} achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function busts($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
@@ -351,19 +422,19 @@ function busts($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the Total Busts {$level} achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the Total Busts {$level} achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function mine($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
 		die($h->endpage());
 	}
-	$minelvl=$db->fetch_single($db->query("SELECT `mining_level` FROM `mining` WHERE `userid` = {$userid}"));
+	$minelvl=$db->fetch_single($db->query("/*qc=on*/SELECT `mining_level` FROM `mining` WHERE `userid` = {$userid}"));
 	if ($minelvl < $level)
 	{
 		alert('danger',"Uh Oh!","Your mining level is too low to receive this achievement. You need to be mining level {$level}. You have a mining level of {$minelvl}.",true,'achievements.php');
@@ -374,13 +445,13 @@ function mine($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the Mining Level {$level} achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the Mining Level {$level} achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function kills($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
@@ -396,13 +467,13 @@ function kills($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the {$level} kills achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the {$level} kills achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function deaths($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
@@ -418,19 +489,19 @@ function deaths($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the {$level} deaths achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the {$level} deaths achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function refers($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
 		die($h->endpage());
 	}
-	$ref=$db->fetch_single($db->query("SELECT COUNT(`referalid`) FROM `referals` WHERE `referal_userid` = {$userid}"));
+	$ref=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`referalid`) FROM `referals` WHERE `referal_userid` = {$userid}"));
 	if ($ref < $level)
 	{
 		alert('danger',"Uh Oh!","Your referral count is too low to receive this achievement. You need to have at least {$level} referral. You only have {$ref}.",true,'achievements.php');
@@ -441,19 +512,19 @@ function refers($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the {$level} referrals achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the {$level} referrals achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function crimecopper($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
 		die($h->endpage());
 	}
-	$crimecopper=$db->fetch_single($db->query("SELECT SUM(`crimecopper`) FROM `crime_logs` WHERE `userid` = {$userid}"));
+	$crimecopper=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`crimecopper`) FROM `crime_logs` WHERE `userid` = {$userid}"));
 	if ($crimecopper < $level)
 	{
 		alert('danger',"Uh Oh!","You haven't gained enough Copper Coins from crimes yet to receive this achievement. You've only stole {$crimecopper}",true,'achievements.php');
@@ -464,19 +535,19 @@ function crimecopper($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the stolen {$level} Copper Coins achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the stolen {$level} Copper Coins achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function travel($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
 		die($h->endpage());
 	}
-	$crimecopper=$db->fetch_single($db->query("SELECT SUM(`value`) FROM `user_logging` WHERE `userid` = {$userid} AND `log_name` = 'travel'"));
+	$crimecopper=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`value`) FROM `user_logging` WHERE `userid` = {$userid} AND `log_name` = 'travel'"));
 	if (empty($crimecopper))
 		$crimecopper=0;
 	if ($crimecopper < $level)
@@ -489,19 +560,19 @@ function travel($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the Travel {$level} times achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the Travel {$level} times achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function damage($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
 		die($h->endpage());
 	}
-	$crimecopper=$db->fetch_single($db->query("SELECT SUM(`value`) FROM `user_logging` WHERE `userid` = {$userid} AND `log_name` = 'dmgdone'"));
+	$crimecopper=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`value`) FROM `user_logging` WHERE `userid` = {$userid} AND `log_name` = 'dmgdone'"));
 	if (empty($crimecopper))
 		$crimecopper=0;
 	if ($crimecopper < $level)
@@ -514,19 +585,19 @@ function damage($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the {$level} damage dealt achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the {$level} damage dealt achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function worth($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
 		die($h->endpage());
 	}
-	$worth=$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*1000)+($ir['tokenbank']*1000);
+	$worth=$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*200)+($ir['tokenbank']*200);
 	if (empty($worth))
 		$worth=0;
 	if ($worth < $level)
@@ -539,19 +610,19 @@ function worth($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the {$level} Net Worth achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the {$level} Net Worth achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function posts($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
 		die($h->endpage());
 	}
-	$posts=$db->fetch_single($db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$userid}"));
+	$posts=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$userid}"));
 	if (empty($posts))
 		$posts=0;
 	if ($posts < $level)
@@ -564,13 +635,13 @@ function posts($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the {$level} forum posts achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the {$level} forum posts achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function dayslogged($level,$id)
 {
 	global $db,$ir,$userid,$api,$h;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
@@ -589,7 +660,82 @@ function dayslogged($level,$id)
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	alert('success',"Success!","You have successfully achieved the {$level} days logged in consecutively achievement and were rewarded {$tokens} Copper Coins.",true,'achievements.php');
+	alert('success',"Success!","You have successfully achieved the {$level} days logged in consecutively achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
+	$h->endpage();
+}
+function iq($level,$id)
+{
+	global $db,$ir,$userid,$api,$h;
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	if ($db->num_rows($achieved) > 0)
+	{
+		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
+		die($h->endpage());
+	}
+	$posts=$ir['iq'];
+	if (empty($posts))
+		$posts=0;
+	if ($posts < $level)
+	{
+		alert('danger',"Uh Oh!","You do not have enough IQ to receive this award. You only have {$posts} IQ.",true,'achievements.php');
+		die($h->endpage());
+	}
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
+	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} IQ.");
+	$tokens=Random(25000,100000);
+	$api->UserGiveCurrency($userid,'primary',$tokens);
+	givePoint($userid);
+	alert('success',"Success!","You have successfully achieved the {$level} IQ achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
+	$h->endpage();
+}
+function vip($level,$id)
+{
+	global $db,$ir,$userid,$api,$h;
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	if ($db->num_rows($achieved) > 0)
+	{
+		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
+		die($h->endpage());
+	}
+	$posts=$ir['vip_days'];
+	if (empty($posts))
+		$posts=0;
+	if ($posts < $level)
+	{
+		alert('danger',"Uh Oh!","You do not have enough VIP Days to receive this award. You only have {$posts} VIP Days.",true,'achievements.php');
+		die($h->endpage());
+	}
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
+	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} VIP Days.");
+	$tokens=Random(25000,100000);
+	$api->UserGiveCurrency($userid,'primary',$tokens);
+	givePoint($userid);
+	alert('success',"Success!","You have successfully achieved the {$level} VIP Days achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
+	$h->endpage();
+}
+function labor($level,$id)
+{
+	global $db,$ir,$userid,$api,$h;
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	if ($db->num_rows($achieved) > 0)
+	{
+		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
+		die($h->endpage());
+	}
+	$posts=$ir['labor'];
+	if (empty($posts))
+		$posts=0;
+	if ($posts < $level)
+	{
+		alert('danger',"Uh Oh!","You do not have enough labor to receive this award. You only have {$posts} labor.",true,'achievements.php');
+		die($h->endpage());
+	}
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
+	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} labor.");
+	$tokens=Random(25000,100000);
+	$api->UserGiveCurrency($userid,'primary',$tokens);
+	givePoint($userid);
+	alert('success',"Success!","You have successfully achieved the {$level} labor achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function givePoint($userid)
@@ -600,7 +746,7 @@ function givePoint($userid)
 function userHasAchievement($id)
 {
 	global $db,$userid;
-	$achieved=$db->query("SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 		return true;
 }

@@ -10,7 +10,7 @@ require('sglobals.php');
 echo "<h2>Staff Panel Index</h2>
 	<hr />";
 if ($api->UserMemberLevelGet($userid, 'admin')) {
-    $versq = $db->query("SELECT VERSION()");
+    $versq = $db->query("/*qc=on*/SELECT VERSION()");
     $MySQLIVersion = $db->fetch_single($versq);
     $db->free_result($versq);
     echo "
@@ -574,7 +574,7 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 					<tbody>";
     $q =
         $db->query(
-            "SELECT `log_user`, `log_text`, `log_time`, `log_ip`, `username`
+            "/*qc=on*/SELECT `log_user`, `log_text`, `log_time`, `log_ip`, `username`
 							 FROM `logs` AS `s`
 							 INNER JOIN `users` AS `u`
 							 ON `s`.`log_user` = `u`.`userid`

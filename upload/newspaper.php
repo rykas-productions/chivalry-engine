@@ -42,7 +42,7 @@ switch ($_GET['action']) {
 function news_home()
 {
     global $db, $h, $CurrentTime, $parser;
-    $AdsQuery = $db->query("SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
+    $AdsQuery = $db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
     if ($db->num_rows($AdsQuery) == 0) {
         alert("danger", "Uh Oh!", "There aren't any newspaper ads at this time. Maybe you should <a href='?action=buyad'>list</a> one?", false);
         die($h->endpage());
@@ -65,10 +65,10 @@ function news_home()
 	";
     while ($Ads = $db->fetch_row($AdsQuery)) {
         $parser->parse($Ads['news_text']);
-        $UserName = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$Ads['news_owner']}"));
+        $UserName = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$Ads['news_owner']}"));
         echo "	<tr>
 					<td>
-						Posted By <a href='profile.php?user={$Ads['news_owner']}'>{$UserName}</a> [{$Ads['news_owner']}]<br />
+						Posted By <a href='profile.php?user={$Ads['news_owner']}'>" . parseUsername($Ads['news_owner']) . "</a> [{$Ads['news_owner']}]<br />
 						<small>Posted At: " . DateTime_Parse($Ads['news_start']) . "<br />
 						Ad Ends: " . date('F j, Y g:i:s a', $Ads['news_end']) . "</small>
 					</td>

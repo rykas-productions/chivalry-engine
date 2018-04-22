@@ -18,11 +18,6 @@ class headers
         <html lang="en">
         <head>
             <center>
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0/cerulean/bootstrap.min.css">
-				<link rel="stylesheet" href="css/game-icons.css">
-				<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
-				<link rel="stylesheet" href="css/game-v1.2.min.css">
-                <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon"/>
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -30,11 +25,11 @@ class headers
                 <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
                 <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
                 <meta http-equiv="Cache-control" content="public">
-                <meta property="og:image" content="assets/img/logo.png"/>
-				<meta name="theme-color" content="#04519b">
-				<?php
-				$hdr='navbar-dark bg-dark';
-				?>
+				<link rel="icon" sizes="192x192" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png">
+				<link rel="icon" sizes="128x128" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png">
+                <meta property="og:image" content="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png"/>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1.0.5/css/bootstrap-v.1.5.css">
+                <meta name="theme-color" content="rgba(0, 0, 0, .8)">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']} - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; ?>
         </head>
@@ -44,10 +39,10 @@ class headers
             $csrf = request_csrf_html('login');
             ?>
             <!-- Navigation -->
-            <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
+            <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
                 <a class="navbar-brand" href="index.php">
 					<?php 
-						echo "<img src='assets/img/logo-optimized.png' width='30' height='30' alt=''>
+						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png' width='30' height='30' alt=''>
 						{$set['WebsiteName']}"; 
 					?>
 				</a>
@@ -114,7 +109,7 @@ class headers
         </noscript>
         <?php
         $IP = $db->escape($_SERVER['REMOTE_ADDR']);
-        $ipq = $db->query("SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
+        $ipq = $db->query("/*qc=on*/SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
         if ($db->num_rows($ipq) > 0) {
             alert('danger', "Uh Oh!", "You are currently IP Banned. Sorry about that.", false);
             die($h->endpage());
@@ -139,17 +134,20 @@ class headers
 
         </div>
         <!-- /.container -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/css/game-v1.11.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/css/game-icons.css">
+        <link rel="shortcut icon" href="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png" type="image/x-icon"/>
 		
-        <!-- jQuery Version 3.2.1 -->
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <!-- jQuery Version 3.3.1 -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
-        <script src="js/register-min.js" async defer></script>
-		<script type="text/javascript" src="js/clock.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/js/register-min.js" async defer></script>
+		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/js/clock.min.js"></script>
 		<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
 		<script type="text/javascript"> 
 		  $(document).ready(function(){ 
@@ -161,7 +159,7 @@ class headers
             <div class='container'>
 				<span>
                 <?php
-				$timestamp=time()-18000;
+				$timestamp=time()-14400;
                 //Print copyright info, Chivalry Engine info, and current time.
                 echo "<hr />
 					Time is now <span id='jqclock' class='jqclock' data-time='{$timestamp}'>" . date('l, F j, Y g:i:s a') . "</span><br />

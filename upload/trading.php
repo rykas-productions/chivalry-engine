@@ -31,7 +31,7 @@ function home()
 				Link
 			</th>
 		</tr>";
-	$q1=$db->query("SELECT * FROM `trading` WHERE `tradeuserb` = {$userid}");
+	$q1=$db->query("/*qc=on*/SELECT * FROM `trading` WHERE `tradeuserb` = {$userid}");
 	while ($r1=$db->fetch_row($q1))
 	{
 		echo "<tr>
@@ -46,7 +46,7 @@ function home()
 			</td>
 		</tr>";
 	}
-	$q2=$db->query("SELECT * FROM `trading` WHERE `tradeusera` = {$userid}");
+	$q2=$db->query("/*qc=on*/SELECT * FROM `trading` WHERE `tradeusera` = {$userid}");
 	while ($r2=$db->fetch_row($q2))
 	{
 		echo "<tr>
@@ -81,7 +81,7 @@ function create()
 				$cycle++;
 				var_dump($_POST['item'][$cycle]);
 				$item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
-				$q=$db->query("SELECT `itmid` FROM `items` WHERE `itmid` = {$item}");
+				$q=$db->query("/*qc=on*/SELECT `itmid` FROM `items` WHERE `itmid` = {$item}");
 				if ($db->num_rows($q) == 0)
 				{
 					$error=$error+1;

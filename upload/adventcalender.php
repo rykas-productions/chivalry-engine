@@ -198,7 +198,7 @@ function day($today)
 		die($h->endpage());
 	}
 	//Already got today's prize?
-	$q=$db->query("SELECT * FROM `advent_calender` WHERE `userid` = {$userid} and `day` = {$day}");
+	$q=$db->query("/*qc=on*/SELECT * FROM `advent_calender` WHERE `userid` = {$userid} and `day` = {$day}");
 	if ($db->num_rows($q) != 0)
 	{
 		alert('danger',"Uh Oh!","It appears you've already taken today's reward. Come back tomorrow!",true,'adventcalender.php');

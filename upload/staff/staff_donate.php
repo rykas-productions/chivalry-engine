@@ -59,12 +59,12 @@ function addpack()
             die($h->endpage());
         }
         $db_cost = $cost / 100;
-        $q = $db->query("SELECT `itmid` FROM `items` WHERE `itmid` = {$_POST['pack']}");
+        $q = $db->query("/*qc=on*/SELECT `itmid` FROM `items` WHERE `itmid` = {$_POST['pack']}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The item you wish to list as a pack does not exist.");
             die($h->endpage());
         }
-        $q2 = $db->query("SELECT `vip_item` FROM `vip_listing` WHERE `vip_item` = {$_POST['pack']} AND `vip_qty` = {$_POST['qty']} AND `vip_cost` = '{$db_cost}'");
+        $q2 = $db->query("/*qc=on*/SELECT `vip_item` FROM `vip_listing` WHERE `vip_item` = {$_POST['pack']} AND `vip_qty` = {$_POST['qty']} AND `vip_cost` = '{$db_cost}'");
         if ($db->num_rows($q2) > 0) {
             alert('danger', "Uh Oh!", "You already have this item listed on the VIP Pack Listing.");
             die($h->endpage());
@@ -130,7 +130,7 @@ function delpack()
             alert('danger', "Uh Oh!", "Please select a VIP Pack you wish to remove.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `vip_item` FROM `vip_listing` WHERE `vip_id` = {$_POST['pack']}");
+        $q = $db->query("/*qc=on*/SELECT `vip_item` FROM `vip_listing` WHERE `vip_id` = {$_POST['pack']}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The VIP Pack you wish to remove has already been removed.");
             die($h->endpage());
@@ -205,7 +205,7 @@ function editpack()
             die($h->endpage());
         }
         $db_cost = $cost / 100;
-        $q = $db->query("SELECT `itmid` FROM `items` WHERE `itmid` = {$_POST['item']}");
+        $q = $db->query("/*qc=on*/SELECT `itmid` FROM `items` WHERE `itmid` = {$_POST['item']}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The item you wish to list as a pack does not exist.");
             die($h->endpage());
@@ -223,7 +223,7 @@ function editpack()
             alert('danger', "Uh Oh!", "Please select a VIP Pack you wish to edit.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT * FROM `vip_listing` WHERE `vip_id` = {$_POST['pack']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `vip_listing` WHERE `vip_id` = {$_POST['pack']}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "The VIP Pack you wish to edit does not exist or is invalid.");
             die($h->endpage());
@@ -306,7 +306,7 @@ function vipitem_dropdown($ddname = "pack", $selected = -1)
     global $db, $api;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
-        $db->query("SELECT *
+        $db->query("/*qc=on*/SELECT *
     				 FROM `vip_listing`
     				 ORDER BY `vip_cost` ASC");
     if ($selected < 1) {

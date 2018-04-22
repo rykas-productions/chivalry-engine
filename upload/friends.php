@@ -27,7 +27,7 @@ switch ($_GET['action'])
 function friends_list()
 {
     global $db, $ir, $userid, $h, $api;
-	$ir['friend_count']=$db->fetch_single($db->query("SELECT COUNT(`friend_id`) FROM `friends` WHERE `friended` = {$userid}"));
+	$ir['friend_count']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`friend_id`) FROM `friends` WHERE `friended` = {$userid}"));
     echo "
 <a href='?action=add'>Add an friend</a><br />
 These are the people on your friends list.
@@ -49,7 +49,7 @@ These are the people on your friends list.
    ";
     $q =
             $db->query(
-                    "SELECT `comment`, `friend_id`, `laston`, `vip_days`, `vipcolor`, 
+                    "/*qc=on*/SELECT `comment`, `friend_id`, `laston`, `vip_days`, `vipcolor`, 
                      `username`, `userid`
                      FROM `friends` AS `fl`
                      LEFT JOIN `users` AS `u` ON `fl`.`friended` = `u`.`userid`
@@ -86,7 +86,7 @@ These are the people on your friends list.
 			<td><a href='inbox.php?action=compose&user={$r['userid']}'>Mail</a></td>
 			<td>{$attacklink}</td>
 			<td><a href='?action=remove&f={$r['friend_id']}'>Remove</a></td>
-			<td>" . strip_tags($r['comment']) . "<br />[<a href='?action=ccomment&f={$r['friend_id']}'>Change</a>]</td>
+			<td>" . strip_tags(html_entity_decode($r['comment'])) . "<br />[<a href='?action=ccomment&f={$r['friend_id']}'>Change</a>]</td>
 			<td>$on</td>
 		</tr>
    ";
@@ -105,11 +105,11 @@ function add_friend()
                     ? abs(intval($_POST['ID'])) : '';
 		$_POST['comment'] =
             (isset($_POST['comment']) && is_string($_POST['comment']))
-                    ? $db->escape(strip_tags(stripslashes($_POST['comment'])))
+                    ? $db->escape(strip_tags(htmlentities(stripslashes($_POST['comment']))))
                     : '';
         $qc =
                 $db->query(
-                        "SELECT COUNT(`friender`)
+                        "/*qc=on*/SELECT COUNT(`friender`)
                          FROM `friends`
                          WHERE `friender` = $userid
                          AND `friended` = {$_POST['ID']}");
@@ -117,7 +117,7 @@ function add_friend()
         $db->free_result($qc);
         $q =
                 $db->query(
-                        "SELECT `username`
+                        "/*qc=on*/SELECT `username`
                          FROM `users`
                          WHERE `userid` = {$_POST['ID']}");
         if ($dupe_count > 0)
@@ -194,7 +194,7 @@ function remove_friend()
 
     $q =
             $db->query(
-                    "SELECT `friender`
+                    "/*qc=on*/SELECT `friender`
                      FROM `friends`
                      WHERE `friend_id` = {$_GET['f']} AND `friender` = $userid");
     if ($db->num_rows($q) == 0)
@@ -218,10 +218,10 @@ function change_comment()
             (isset($_POST['f']) && is_numeric($_POST['f']))
                     ? abs(intval($_POST['f'])) : '';
 		$_POST['comment'] =
-            $db->escape(strip_tags(stripslashes($_POST['comment'])));
+            $db->escape(strip_tags(htmlentities(stripslashes($_POST['comment']))));
         $q =
                 $db->query(
-                        "SELECT COUNT(`friend_id`)
+                        "/*qc=on*/SELECT COUNT(`friend_id`)
                      FROM `friends`
                      WHERE `friend_id` = {$_POST['f']} AND `friender` = $userid");
         if ($db->fetch_single($q) == 0)
@@ -247,7 +247,7 @@ function change_comment()
         }
         $q =
                 $db->query(
-                        "SELECT `comment`
+                        "/*qc=on*/SELECT `comment`
                          FROM `friends`
                          WHERE `friend_id` = {$_GET['f']}
                          AND `friender` = $userid");
@@ -255,9 +255,7 @@ function change_comment()
         {
             $r = $db->fetch_row($q);
             $comment =
-                    stripslashes(
-                            htmlentities($r['comment'], ENT_QUOTES,
-                                    'ISO-8859-1'));
+                    stripslashes(html_entity_decode($r['comment']));
             echo "
 			<form method='post'>
 			<table class='table table-bordered'>

@@ -22,7 +22,7 @@ if (!is_ajax()) {
 require_once('../../globals_nonauth.php');
 $username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['username'])) ? $db->escape(strip_tags(stripslashes($_POST['username']))) : '';
 $e_username = $db->escape($username);
-$q = $db->query("SELECT COUNT(`userid`) FROM users WHERE username = '{$e_username}'");
+$q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM users WHERE username = '{$e_username}'");
 if (empty($username)) {
     $newclass = 'form-control is-invalid';
     $warning = "Please enter a valid username.";

@@ -67,6 +67,14 @@ function create()
 					<input type='text' name='itemicon' class='form-control'>
 				</td>
 			</tr>
+            <tr>
+				<th width='33%'>
+					Color
+				</th>
+				<td>
+					<input type='text' name='itemcolor' class='form-control'>
+				</td>
+			</tr>
 			<tr>
 				<th width='33%'>
 					Item Type
@@ -191,6 +199,7 @@ function create()
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
             die($h->endpage());
         }
+        $itmcolor = (isset($_POST['itemcolor']) && is_string($_POST['itemcolor'])) ? $db->escape(strip_tags(stripslashes($_POST['itemcolor']))) : '';
         $itmname = (isset($_POST['itemname']) && is_string($_POST['itemname'])) ? $db->escape(strip_tags(stripslashes($_POST['itemname']))) : '';
         $itmdesc = (isset($_POST['itemdesc'])) ? $db->escape(strip_tags(stripslashes($_POST['itemdesc']))) : '';
 		$icon = (isset($_POST['itemicon'])) ? $db->escape(strip_tags(stripslashes($_POST['itemicon']))) : '';
@@ -200,17 +209,17 @@ function create()
         $itmbuyprice = (isset($_POST['itembuy']) && is_numeric($_POST['itembuy'])) ? abs(intval($_POST['itembuy'])) : 0;
         $itmsellprice = (isset($_POST['itemsell']) && is_numeric($_POST['itemsell'])) ? abs(intval($_POST['itemsell'])) : 0;
 		$ammo = (isset($_POST['ammo']) && is_numeric($_POST['ammo'])) ? abs(intval($_POST['ammo'])) : 0;
-        if (empty($itmname) || empty($itmdesc) || empty($itmtype) || empty($itmbuyprice) || empty($itmsellprice)) {
+        if (empty($itmname) || empty($itmdesc)|| empty($itmcolor) || empty($itmtype) || empty($itmbuyprice) || empty($itmsellprice)) {
             alert('danger', "Uh Oh!", "You are missing one or more of the required inputs on the previous form.");
             die($h->endpage());
         }
-        $inq = $db->query("SELECT `itmid` FROM `items` WHERE `itmname` = '{$itmname}'");
+        $inq = $db->query("/*qc=on*/SELECT `itmid` FROM `items` WHERE `itmname` = '{$itmname}'");
         if ($db->num_rows($inq) > 0) {
             $db->free_result($inq);
             alert('danger', "Uh Oh!", "An item with the same name already exists.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypeid` = '{$itmtype}'");
+        $q = $db->query("/*qc=on*/SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypeid` = '{$itmtype}'");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The item type you've chosen does not exist.");
@@ -263,7 +272,7 @@ function create()
 					 '{$_POST['effect1on']}', '{$effects[1]}',
                      '{$_POST['effect2on']}', '{$effects[2]}',
                      '{$_POST['effect3on']}', '{$effects[3]}', 
-					 {$weapon}, {$armor}, '{$icon}', {$ammo})");
+					 {$weapon}, {$armor}, '{$icon}', {$ammo}, '{$itmcolor}')");
         $api->SystemLogsAdd($userid, 'staff', "Created item {$itmname}.");
         alert('success', "Success!", "You have successfully created the {$itmname} item.", true, 'index.php');
     }
@@ -309,7 +318,7 @@ function createitmgroup()
             alert('danger', "Uh Oh!", "Please fill out the previous form completely before submitting it.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypename` = '{$name}'");
+        $q = $db->query("/*qc=on*/SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypename` = '{$name}'");
         if ($db->num_rows($q) > 0) {
             $db->free_result($q);
             alert("danger", "Uh Oh!", "The item group name you've chosen is already in use.");
@@ -363,7 +372,7 @@ function deleteitem()
         }
         $d =
             $db->query(
-                "SELECT `itmname`
+                "/*qc=on*/SELECT `itmname`
                      FROM `items`
                      WHERE `itmid` = {$_POST['item']}");
         if ($db->num_rows($d) == 0) {
@@ -444,8 +453,8 @@ function giveitem()
             alert('danger', "Uh Oh!", "Please specify the qunatity of item you wish to give.");
             die($h->endpage());
         } else {
-            $q = $db->query("SELECT `itmid`,`itmname` FROM `items` WHERE `itmid` = {$_POST['item']}");
-            $q2 = $db->query("SELECT `userid`,`username` FROM `users` WHERE `userid` = {$_POST['user']}");
+            $q = $db->query("/*qc=on*/SELECT `itmid`,`itmname` FROM `items` WHERE `itmid` = {$_POST['item']}");
+            $q2 = $db->query("/*qc=on*/SELECT `userid`,`username` FROM `users` WHERE `userid` = {$_POST['user']}");
             if ($db->num_rows($q) == 0) {
                 alert('danger', "Uh Oh!", "The item you wish to give does not exist.");
                 die($h->endpage());
@@ -487,7 +496,7 @@ function edititem()
             alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.");
             die($h->endpage());
         }
-        $d = $db->query("SELECT * FROM `items` WHERE `itmid` = {$_POST['item']}");
+        $d = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmid` = {$_POST['item']}");
         if ($db->num_rows($d) == 0) {
             $db->free_result($d);
             alert('danger', "Uh Oh!", "You are trying to edit an item that does not exist.");
@@ -499,6 +508,7 @@ function edititem()
         $itmname = addslashes($itemi['itmname']);
         $itmdesc = addslashes($itemi['itmdesc']);
 		$itmicon = addslashes($itemi['icon']);
+        $itmcolor = addslashes($itemi['color']);
         echo "<form method='post'>
 					<input type='hidden' name='itemid' value='{$_POST['item']}' />
 					<input type='hidden' name='step' value='3' />
@@ -525,6 +535,14 @@ function edititem()
 				</th>
 				<td>
 					<input type='text' name='itemicon' value='{$itmicon}' class='form-control'>
+				</td>
+			</tr>
+            <tr>
+				<th width='33%'>
+					Color
+				</th>
+				<td>
+					<input type='text' name='itemcolor' value='{$itmcolor}' class='form-control'>
 				</td>
 			</tr>
 			<tr>
@@ -595,7 +613,7 @@ function edititem()
 						<br /><b>Stat</b> <select class='form-control' name='effect{$i}stat' type='dropdown'>";
             foreach ($stats as $k => $v) {
                 echo ($k == $efx['stat'])
-                    ? '<option value="' . $k . '" selected="selected">' . $v
+                    ? '<option value="' . $k . '" selected="/*qc=on*/SELECTed">' . $v
                     . '</option>'
                     : '<option value="' . $k . '">' . $v . '</option>';
             }
@@ -658,6 +676,7 @@ function edititem()
             die($h->endpage());
         }
         $itemid = (isset($_POST['itemid']) && is_numeric($_POST['itemid'])) ? abs(intval($_POST['itemid'])) : 0;
+        $itmcolor = (isset($_POST['itemcolor']) && is_string($_POST['itemcolor'])) ? stripslashes($_POST['itemcolor']) : '';
         $itmname = (isset($_POST['itemname']) && is_string($_POST['itemname'])) ? stripslashes($_POST['itemname']) : '';
         $itmdesc = (isset($_POST['itemdesc'])) ? $db->escape(strip_tags(stripslashes($_POST['itemdesc']))) : '';
 		$itmicon = (isset($_POST['itemicon'])) ? $db->escape(strip_tags(stripslashes($_POST['itemicon']))) : '';
@@ -670,13 +689,13 @@ function edititem()
             alert('danger', "Uh Oh!", "You are missing one or more required inputs from the previous form.");
             die($h->endpage());
         }
-        $inq = $db->query("SELECT `itmid` FROM `items` WHERE `itmname` = '{$itmname}' AND `itmid` != {$itemid}");
+        $inq = $db->query("/*qc=on*/SELECT `itmid` FROM `items` WHERE `itmname` = '{$itmname}' AND `itmid` != {$itemid}");
         if ($db->num_rows($inq) > 0) {
             $db->free_result($inq);
             alert('danger', "Uh Oh!", "You cannot have more than one item with the same name.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypeid` = '{$itmtype}'");
+        $q = $db->query("/*qc=on*/SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypeid` = '{$itmtype}'");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The item group you've chosen does not exist.");
@@ -689,7 +708,7 @@ function edititem()
                 (isset($_POST[$efxkey . 'stat'])
                     && in_array($_POST[$efxkey . 'stat'],
                         array('energy', 'will', 'brave', 'hp',
-                            'strength', 'agility', 'guard',
+                            'strength', 'agility', 'guard', 'level',
                             'labor', 'iq', 'infirmary', 'dungeon',
                             'primary_currency', 'secondary_currency', 'xp', 'vip_days', 'luck')))
                     ? $_POST[$efxkey . 'stat'] : 'energy';
@@ -727,7 +746,7 @@ function edititem()
 						`effect1_on` = '{$_POST['effect1on']}', `effect1` = '{$effects[1]}',
 						`effect2_on` = '{$_POST['effect2on']}', `effect2` = '{$effects[2]}',
 						`effect3_on` = '{$_POST['effect3on']}', `effect3` = '{$effects[3]}',
-						`weapon` = {$weapon}, `armor` = {$armor}, `icon` = '{$itmicon}' WHERE `itmid` = {$itemid }");
+						`weapon` = {$weapon}, `armor` = {$armor}, `icon` = '{$itmicon}', `color` = '{$itmcolor}' WHERE `itmid` = {$itemid }");
         alert('success', "Success!", "You successfully have edited the {$api->SystemItemIDtoName($itemid)} item.", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited Item {$api->SystemItemIDtoName($itemid)}.");
     } else {

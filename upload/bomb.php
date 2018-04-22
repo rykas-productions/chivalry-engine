@@ -20,6 +20,9 @@ switch ($_GET['action']) {
 	case 'large':
         large();
         break;
+    case 'rickroll':
+        rickroll();
+        break;
 	case 'pumpkin':
         pumpkin();
         break;
@@ -55,12 +58,12 @@ function small()
 			alert('danger', "Uh Oh!", "You cannot bomb yourself.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']}");
+		$q = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']}");
 		if ($db->num_rows($q) == 0) {
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q2 = $db->query("SELECT `protection` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
+		$q2 = $db->query("/*qc=on*/SELECT `protection` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
 		$r=$db->fetch_single($q2);
 		if ($r > time())
 		{
@@ -116,12 +119,12 @@ function medium()
 			alert('danger', "Uh Oh!", "You cannot bomb yourself.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']}");
+		$q = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']}");
 		if ($db->num_rows($q) == 0) {
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q2 = $db->query("SELECT `protection` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
+		$q2 = $db->query("/*qc=on*/SELECT `protection` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
 		$r=$db->fetch_single($q2);
 		if ($r > time())
 		{
@@ -181,7 +184,7 @@ function large()
 			alert('danger', "Uh Oh!", "You cannot bomb yourself.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q = $db->query("SELECT `userid`,`kills`,`hp`,`maxhp` FROM `users` WHERE `userid` = {$_POST['user']}");
+		$q = $db->query("/*qc=on*/SELECT `userid`,`kills`,`hp`,`maxhp` FROM `users` WHERE `userid` = {$_POST['user']}");
 		if ($db->num_rows($q) == 0) {
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
@@ -253,12 +256,12 @@ function pumpkin()
 			alert('danger', "Uh Oh!", "You cannot toss a pumpkin at yourself.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']}");
+		$q = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']}");
 		if ($db->num_rows($q) == 0) {
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q2 = $db->query("SELECT `protection` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
+		$q2 = $db->query("/*qc=on*/SELECT `protection` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
 		$r=$db->fetch_single($q2);
 		if ($r > time())
 		{
@@ -281,6 +284,69 @@ function pumpkin()
 			" . user_dropdown('user',$userid) . "
 			{$csrf}
 			<input type='submit' value='Toss Pumpkin' class='btn btn-primary'>
+		</form>";
+		$h->endpage();
+	}
+}
+function rickroll()
+{
+	global $db,$api,$userid,$h,$ir;
+	$bombid = 149;
+	$notif = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has rick-rolled you.";
+
+	if (!$api->UserHasItem($userid, $bombid, 1)) {
+		alert('danger', "Uh Oh!", "It appears you do not have the required item. If this is false, please contact an admin.", true, 'inventory.php');
+		die($h->endpage());
+	}
+	if (isset($_POST['user'])) {
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+
+		if (!isset($_POST['verf']) || !verify_csrf_code("bomb_form", stripslashes($_POST['verf']))) {
+			alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
+			die($h->endpage());
+		}
+
+		if (empty($_POST['user'])) {
+			alert('danger', "Uh Oh!", "You did not fill out the form completely.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		if ($_POST['user'] == $userid) {
+			alert('danger', "Uh Oh!", "You cannot rick-roll yourself.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		$q = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']}");
+		if ($db->num_rows($q) == 0) {
+			alert('danger', "Uh Oh!", "You are trying to rick-roll a user that does not exist.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		$q2 = $db->query("/*qc=on*/SELECT `protection`,`rickroll` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
+		$r=$db->fetch_row($q2);
+		if ($r['protection'] > time())
+		{
+			alert('danger', "Uh Oh!", "You are trying to rick-roll a user that has protection.", true, 'inventory.php');
+			die($h->endpage());
+		}
+        if ($r['rickroll'] != 0)
+        {
+            alert('danger', "Uh Oh!", "This user already has a pending rick-roll. Try again later.", true, 'inventory.php');
+			die($h->endpage());
+        }
+		$api->UserTakeItem($userid, $bombid, 1);
+		$api->GameAddNotification($_POST['user'], $notif);
+		$userbomb=$api->SystemUserIDtoName($_POST['user']);
+		$db->query("UPDATE `user_settings` SET `rickroll` = {$userid} WHERE `userid` = {$_POST['user']}");
+		$ublink="<a href='../profile.php?user={$_POST['user']}'>{$userbomb}</a>";
+		alert("success", "Success", "You have successfully rick-rolled {$userbomb}. They will receive their torture on their next action.", true, 'inventory.php');
+		$api->SystemLogsAdd($userid,'bomb',"Rick-rolled {$ublink}.");
+		$h->endpage();
+
+	} else {
+		$csrf = request_csrf_html('bomb_form');
+		echo "Enter the User ID whom you wish to rick-roll. They will receive their punishment on their next action.<br />
+		<form method='post'>
+			" . user_dropdown('user',$userid) . "
+			{$csrf}
+			<input type='submit' value='Rick-roll' class='btn btn-primary'>
 		</form>";
 		$h->endpage();
 	}

@@ -10,8 +10,9 @@ require('globals.php');
 $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
 $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
 $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : '';
+$_POST['msg'] = (isset($_POST['msg'])) ? $db->escape(strip_tags(stripslashes($_POST['msg']))) : '';
 if (!empty($_POST['qty']) && !empty($_POST['user'])) {
-    $id = $db->query("SELECT `inv_qty`, `inv_itemid`, `itmname`, `itmid`
+    $id = $db->query("/*qc=on*/SELECT `inv_qty`, `inv_itemid`, `itmname`, `itmid`
                      FROM `inventory` AS `iv` INNER JOIN `items` AS `it`
                      ON `iv`.`inv_itemid` = `it`.`itmid` WHERE `iv`.`inv_id` = {$_GET['ID']}
                      AND iv.`inv_userid` = {$userid}
@@ -21,7 +22,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
         die($h->endpage());
     } else {
         $r = $db->fetch_row($id);
-        $m = $db->query("SELECT `lastip`,`username` FROM `users` WHERE `userid` = {$_POST['user']} LIMIT 1");
+        $m = $db->query("/*qc=on*/SELECT `lastip`,`username` FROM `users` WHERE `userid` = {$_POST['user']} LIMIT 1");
         if (!isset($_POST['verf']) || !verify_csrf_code("senditem_{$_GET['ID']}", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Form requests expire quickly. Go back and try again!");
             die($h->endpage());
@@ -38,13 +39,21 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
             alert('danger', "Uh Oh!", "You cannot send an item to someone on the same IP Address as you.", true, 'inventory.php');
             die($h->endpage());
         } else {
+            if (empty($_POST['msg']))
+            {
+                notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
+                from <a href='profile.php?user=$userid'>{$ir['username']}</a>.");
+            }
+            else
+            {
+                notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
+                from <a href='profile.php?user=$userid'>{$ir['username']}</a> with the message: <u>{$_POST['msg']}</u>.");
+            }
             $rm = $db->fetch_row($m);
             item_remove($userid, $r['inv_itemid'], $_POST['qty']);
             item_add($_POST['user'], $r['inv_itemid'], $_POST['qty']);
             alert('success', "Success!", "You have successfully sent {$_POST['qty']} {$r['itmname']}(s) to
 			    {$rm['username']}.", true, 'inventory.php');
-            notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
-                from <a href='profile.php?user=$userid'>{$ir['username']}</a>.");
             $log = $db->escape("Sent {$_POST['qty']} {$r['itmname']}(s) to {$rm['username']} [{$_POST['user']}].");
             $api->SystemLogsAdd($userid, 'itemsend', $log);
         }
@@ -52,7 +61,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
     }
     $db->free_result($id);
 } elseif (!empty($_GET['ID'])) {
-    $id = $db->query("SELECT `inv_qty`, `inv_itemid`, `itmname`, `itmid`
+    $id = $db->query("/*qc=on*/SELECT `inv_qty`, `inv_itemid`, `itmname`, `itmid`
                      FROM `inventory` AS `iv` INNER JOIN `items` AS `it`
                      ON `iv`.`inv_itemid` = `it`.`itmid` WHERE `iv`.`inv_id` = {$_GET['ID']}
                      AND iv.`inv_userid` = {$userid}
@@ -87,9 +96,17 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
 						<input type='number' min='1' max='{$r['inv_qty']}' class='form-control' name='qty' value='{$r['inv_qty']}' />
 					</td>
 				</tr>
+                <tr>
+					<th>
+						Message
+					</th>
+					<td>
+						<input type='text' class='form-control' name='msg' />
+					</td>
+				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='Send Items'>
+						<input type='submit' class='btn btn-primary' value='Send Item'>
 					</td>
 				</tr>
 			</table>

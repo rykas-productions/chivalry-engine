@@ -67,12 +67,12 @@ function addmine()
             alert('danger', "Uh Oh!", "Your output minimums cannot be higher than their maximums.");
             die($h->endpage());
         } else {
-            $CitySQL = ($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$city}"));
-            $PickSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$pick}"));
-            $CFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$cflakes}"));
-            $SFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$sflakes}"));
-            $GFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gflakes}"));
-            $GemSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gem}"));
+            $CitySQL = ($db->query("/*qc=on*/SELECT `town_name` FROM `town` WHERE `town_id` = {$city}"));
+            $PickSQL = ($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$pick}"));
+            $CFSQL = ($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$cflakes}"));
+            $SFSQL = ($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$sflakes}"));
+            $GFSQL = ($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$gflakes}"));
+            $GemSQL = ($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$gem}"));
 
             if ($db->num_rows($CitySQL) == 0) {
                 alert('danger', "Uh Oh!", "The town you've chosen does not exist.");
@@ -294,12 +294,12 @@ function editmine()
             alert('danger', "Uh Oh!", "The item minimum outputs cannot be higher than their maximums.");
             die($h->endpage());
         } else {
-            $CitySQL = ($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$city}"));
-            $PickSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$pick}"));
-            $CFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$cflakes}"));
-            $SFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$sflakes}"));
-            $GFSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gflakes}"));
-            $GemSQL = ($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gem}"));
+            $CitySQL = ($db->query("/*qc=on*/SELECT `town_name` FROM `town` WHERE `town_id` = {$city}"));
+            $PickSQL = ($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$pick}"));
+            $CFSQL = ($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$cflakes}"));
+            $SFSQL = ($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$sflakes}"));
+            $GFSQL = ($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$gflakes}"));
+            $GemSQL = ($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$gem}"));
             if ($db->num_rows($CitySQL) == 0) {
                 alert('danger', "Uh Oh!", "The town you have chosen does not exist.");
                 die($h->endpage());
@@ -333,11 +333,11 @@ function editmine()
         }
     } elseif ($_POST['step'] == 1) {
         $mine = (isset($_POST['mine']) && is_numeric($_POST['mine'])) ? abs(intval($_POST['mine'])) : '';
-        if ($db->num_rows($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}")) == 0) {
+        if ($db->num_rows($db->query("/*qc=on*/SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}")) == 0) {
             alert('danger', "Uh Oh!", "You are trying to edit a non-existent mine.");
             die($h->endpage());
         } else {
-            $mi = $db->fetch_row($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}"));
+            $mi = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}"));
             echo "Edit a mine with this form. The name of the mine will be based on its location and level.<br />
             <table class='table table-bordered'>
                 <form method='post'>
@@ -472,7 +472,7 @@ function editmine()
             </table>";
         }
     } else {
-        echo "Select the mine you wish to edit.<br />
+        echo "/*qc=on*/SELECT the mine you wish to edit.<br />
         <form method='post'>
         <input type='hidden' name='step' value='1'>
         " . mines_dropdown("mine") . "<br />
@@ -486,7 +486,7 @@ function delmine()
     global $db, $userid, $api, $h;
     if (isset($_POST['mine'])) {
         $mine = (isset($_POST['mine']) && is_numeric($_POST['mine'])) ? abs(intval($_POST['mine'])) : '';
-        if ($db->num_rows($db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}")) == 0) {
+        if ($db->num_rows($db->query("/*qc=on*/SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}")) == 0) {
             alert('danger', "Uh Oh!", "You are trying to delete a non-existent mine.");
             die($h->endpage());
         } else {
@@ -496,7 +496,7 @@ function delmine()
             die($h->endpage());
         }
     } else {
-        echo "Select the mine you wish to delete. This cannot be undone.<br />
+        echo "/*qc=on*/SELECT the mine you wish to delete. This cannot be undone.<br />
         <form method='post'>
         " . mines_dropdown("mine") . "<br />
         <input type='submit' class='btn btn-primary' value='Delete Mine'>
@@ -510,7 +510,7 @@ function mines_dropdown($ddname = "mine", $selected = -1)
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
         $db->query(
-            "SELECT `mine_id`, `mine_location`, `mine_level`
+            "/*qc=on*/SELECT `mine_id`, `mine_location`, `mine_level`
                      FROM `mining_data`
                      ORDER BY `mine_level` ASC");
     if ($selected == -1) {
@@ -519,7 +519,7 @@ function mines_dropdown($ddname = "mine", $selected = -1)
         $first = 1;
     }
     while ($r = $db->fetch_row($q)) {
-        $CityName = $db->fetch_single($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$r['mine_location']}"));
+        $CityName = $db->fetch_single($db->query("/*qc=on*/SELECT `town_name` FROM `town` WHERE `town_id` = {$r['mine_location']}"));
         $ret .= "\n<option value='{$r['mine_id']}'";
         if ($selected == $r['mine_id'] || $first == 0) {
             $ret .= " selected='selected'";

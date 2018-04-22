@@ -15,7 +15,7 @@ if (!isset($_GET['deleteall'])) {
 }
 $_GET['delete'] = abs($_GET['delete']);
 if ($_GET['delete'] > 0) {
-    $d_c = $db->query("SELECT COUNT(`notif_user`)
+    $d_c = $db->query("/*qc=on*/SELECT COUNT(`notif_user`)
                       FROM `notifications`
                       WHERE `notif_id` = {$_GET['delete']}
                       AND `notif_user` = {$userid}");
@@ -48,7 +48,7 @@ echo "
 	<tr>
 </thead>
 <tbody>";
-$query = $db->query("SELECT *
+$query = $db->query("/*qc=on*/SELECT *
                 FROM `notifications`
                 WHERE `notif_user` = $userid
         		ORDER BY `notif_time` DESC

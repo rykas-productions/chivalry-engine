@@ -27,7 +27,7 @@ function home()
     global $db, $h, $api;
     $CurrentTime = time();
     //Count how many users are in the dungeon.
-    $PlayerCount = $db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime}"));
+    $PlayerCount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime}"));
     echo "<h3><i class='game-icon game-icon-cage'></i> The Dungeon</h3><hr />
 	<small>There's current " . number_format($PlayerCount) . " players in the dungeon.</small>
 	<hr />
@@ -50,13 +50,13 @@ function home()
 		</thead>
 		<tbody>";
     //List users in the dungeon.
-    $query = $db->query("SELECT * FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime} ORDER BY `dungeon_out` DESC");
+    $query = $db->query("/*qc=on*/SELECT * FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime} ORDER BY `dungeon_out` DESC");
     while ($Infirmary = $db->fetch_row($query)) {
         echo "
 			<tr>
 				<td>
 					<a href='profile.php?user={$Infirmary['dungeon_user']}'>
-						{$api->SystemUserIDtoName($Infirmary['dungeon_user'])}
+						" . parseUsername($Infirmary['dungeon_user']) . "
 					</a>
 				</td>
 				<td>

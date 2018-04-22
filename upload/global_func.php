@@ -6,6 +6,8 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+require('global_func_user.php');
+require('global_func_dropdown.php');
 /*
 	Parses the time since the timestamp given.
 	@param int $time_stamp for time since.
@@ -86,790 +88,12 @@ function ParseTimestamp($time)
 }
 
 /*
-	The function for testing if a player is in the hospital.
-	@param int $user The user who to test for.
-*/
-
-function user_infirmary($user)
-{
-    global $db;
-    //Assign current Unix Time to a variable.
-    $CurrentTime = time();
-    //Select user from infirmary if their exit infirmary time is after the current Unix Timestamp.
-    $query = $db->query("SELECT `infirmary_user` FROM `infirmary` WHERE `infirmary_user` = {$user} AND
-                        `infirmary_out` > {$CurrentTime}");
-    //Return false if they return no rows, true if they do.
-    $return = ($db->num_rows($query) == 0) ? false : true;
-    return $return;
-}
-
-/*
-	The function for testing if a player is in the dungeon.
-	@param int $user The user who to test for.
-*/
-function user_dungeon($user)
-{
-    global $db;
-    //Assign current Unix Time to a variable.
-    $CurrentTime = time();
-    //Select user from dungeon if their exit dungeon time is after the current Unix Timestamp.
-    $query = $db->query("SELECT `dungeon_user` FROM `dungeon` WHERE `dungeon_user` = {$user} AND
-						`dungeon_out` > {$CurrentTime}");
-    //Return false if they return no rows, true if they do.
-    $return = ($db->num_rows($query) == 0) ? false : true;
-    return $return;
-}
-
-/*
-	The function for putting/adding onto someones infirmary time.
-	@param int $user The user to put in the infirmary
-	@param int $time The time (in minutes) to add.
-	@param text $reason The reason the user is in the infirmary.
-*/
-function put_infirmary($user, $time, $reason)
-{
-    global $db;
-    //Assign current Unix Timestamp to a variable.
-    $CurrentTime = time();
-    //Select the $user's current infirmary out time.
-    $Infirmary = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$user}"));
-    //Since the time is in minutes, lets multiply the $time by 60. (Otherwise we would be adding seconds)
-    $TimeMath = ($time * 60)+Random(-59,59);
-    //If $user is currently not in the infirmary, lets add the time! (Their out time is the Unix Timestamp plus $TimeMath)
-    if ($Infirmary <= $CurrentTime) {
-        $db->query("UPDATE `infirmary` SET `infirmary_out` = {$CurrentTime} + {$TimeMath}, `infirmary_in` = {$CurrentTime},
-					`infirmary_reason` = '{$reason}' WHERE `infirmary_user` = {$user}");
-    } //If $user is already in the infirmary, lets just add $TimeMath onto their current sentence.
-    else {
-        $db->query("UPDATE `infirmary` SET `infirmary_out` = `infirmary_out` + {$TimeMath}, `infirmary_reason` = '{$reason}'
-					WHERE `infirmary_user` = {$user}");
-    }
-}
-
-/*
-	The function for removing someones infirmary time.
-	@param int $user The user to put in the infirmary
-	@param int $time The time (in minutes) to remove.
-*/
-function remove_infirmary($user, $time)
-{
-    global $db;
-    //Multiply $time by 60 since we're dealing with minutes, not seconds.
-    $TimeMath = $time * 60;
-    //Remove $TimeMath from their stay. $user will be removed from infirmary automatically, if needed.
-    $db->query("UPDATE `infirmary` SET `infirmary_out` = `infirmary_out` - '{$TimeMath}' WHERE `infirmary_user` = {$user}");
-}
-
-/*
-	The function for putting/adding onto someones dungeon time.
-	@param int $user The user to put in the dungeon
-	@param int $time The time (in minutes) to add.
-	@param text $reason The reason the user is in the dungeon.
-*/
-function put_dungeon($user, $time, $reason)
-{
-    global $db;
-    //Assign current Unix Timestamp to a variable.
-    $CurrentTime = time();
-    //Select $user's dungeon exit time.
-    $Dungeon = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$user}"));
-    //Since we're dealing with minutes, lets multiply $time by 60.
-    $TimeMath = ($time * 60)+Random(-59,59);
-    //If $user is not in the dungeon already, lets set their exit time to $CurrentTime + $TimeMath
-    if ($Dungeon <= $CurrentTime) {
-        $db->query("UPDATE `dungeon` SET `dungeon_out` = {$CurrentTime} + {$TimeMath}, `dungeon_in` = {$CurrentTime},
-					`dungeon_reason` = '{$reason}' WHERE `dungeon_user` = {$user}");
-    } //$user is already in the dungeon, so lets just add $TimeMath to their sentence.
-    else {
-        $db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` + {$TimeMath}, `dungeon_reason` = '{$reason}'
-					WHERE `dungeon_user` = {$user}");
-    }
-}
-
-/*
-	The function for removing someones infirmary time.
-	@param int $user The user to put in the infirmary
-	@param int $time The time (in minutes) to remove.
-*/
-function remove_dungeon($user, $time)
-{
-    global $db;
-    //Multiply $time by 60 since we're dealing with minutes, not seconds.
-    $TimeMath = $time * 60;
-    //Remove $TimeMath from $user's dungeon sentence. $user will be automatically removed from the dungeon if needed.
-    $db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` - '{$TimeMath}' WHERE `dungeon_user` = {$user}");
-}
-
-/*
 	The function for testing for a valid email.
 	@param text $email The email to test for.
 */
 function valid_email($email)
 {
     return (filter_var($email, FILTER_VALIDATE_EMAIL) === $email);
-}
-
-/**
- * Constructs a drop-down listbox of all the item types in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the item type which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first item type alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function itemtype_dropdown($ddname = "item_type", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `itmtypeid`, `itmtypename`
-    				 FROM `itemtypes`
-    				 ORDER BY `itmtypeid` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['itmtypeid']}'";
-        if ($selected == $r['itmtypeid'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['itmtypename']}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the items that are weapons in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the item which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first item alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function weapon_dropdown($ddname = "weapon", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `itmid`, `itmname`
-    				 FROM `items` WHERE `weapon` > 0
-    				 ORDER BY `itmid` ASC");
-    if ($selected < 1) {
-        $ret .= "<option value='0' selected='selected'>-- None --</option>";
-    } else {
-        $ret .= "<option value='0'>-- None --</option>";
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['itmid']}'";
-        if ($selected == $r['itmid']) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['itmname']} [ID: {$r['itmid']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the items that are armor in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the item which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first item alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function armor_dropdown($ddname = "armor", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `itmid`, `itmname`
-    				 FROM `items` WHERE `armor` > 0
-    				 ORDER BY `itmid` ASC");
-    if ($selected < 1) {
-        $ret .= "<option value='0' selected='selected'>-- None --</option>";
-    } else {
-        $ret .= "<option value='0'>-- None --</option>";
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['itmid']}'";
-        if ($selected == $r['itmid']) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['itmname']} [ID: {$r['itmid']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the items in the game to let the user select one, including a "None" option.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the item which should be selected by default.<br />
- * Not specifying this or setting it to a number less than 1 makes "None" selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function item_dropdown($ddname = "item", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `itmid`, `itmname`
-    				 FROM `items`
-    				 ORDER BY `itmid` ASC");
-    if ($selected < 1) {
-        $ret .= "<option value='0' selected='selected'>-- None --</option>";
-    } else {
-        $ret .= "<option value='0'>-- None --</option>";
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['itmid']}'";
-        if ($selected == $r['itmid']) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['itmname']} [{$r['itmid']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the academy courses in the game to let the user select one, including a "None" option.
- * @param string $acadname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID number of the academy which should be selected by default.
- * Not specifying this or setting it to a number less than 1 makes "None" selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function academy_dropdown($acadname = "academy", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$acadname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `ac_id`, `ac_name`
-    				 FROM `academy`
-    				 ORDER BY `ac_id` ASC");
-    if ($selected < 1) {
-        $ret .= "<option value='0' selected='selected'>-- None --</option>";
-    } else {
-        $ret .= "<option value='0'>-- None --</option>";
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['ac_id']}'";
-        if ($selected == $r['ac_id']) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['ac_name']} [{$r['ac_id']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the locations in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID number of the location which should be selected by default.
- * Not specifying this or setting it to -1 makes the first item alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function location_dropdown($ddname = "location", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `town_id`, `town_name`, `town_min_level`
-    				 FROM `town`
-    				 ORDER BY `town_id` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['town_id']}'";
-        if ($selected == $r['town_id'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['town_name']} (Level {$r['town_min_level']})</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the shops in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the shop which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first shop alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function shop_dropdown($ddname = "shop", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `shopID`, `shopNAME`
-    				 FROM `shops`
-    				 ORDER BY `shopID` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['shopID']}'";
-        if ($selected == $r['shopID'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['shopNAME']}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the registered users in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the user who should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function user_dropdown($ddname = "user", $selected = -1)
-{
-    global $db, $ir;
-	if ($ir['dropdown'] == 0)
-	{
-		$ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-		$q =
-			$db->query(
-				"SELECT `userid`, `username`
-						 FROM `users`
-						 ORDER BY `userid` ASC");
-		if ($selected == -1) {
-			$first = 0;
-		} else {
-			$first = 1;
-		}
-		while ($r = $db->fetch_row($q)) {
-			$ret .= "\n<option value='{$r['userid']}'";
-			if ($selected == $r['userid'] || $first == 0) {
-				$ret .= " selected='selected'";
-				$first = 1;
-			}
-			$ret .= ">{$r['username']} [{$r['userid']}]</option>";
-		}
-		$db->free_result($q);
-		$ret .= "\n</select>";
-	}
-	else
-	{
-		if ($selected == -1)
-			$selected = 0;
-		$ret = "<input type='number' value='{$selected}' name='{$ddname}' class='form-control'>";
-	}
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the users with user level NPC in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the user who should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function user2_dropdown($ddname = "user", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `userid`, `username`
-    				 FROM `users`
-					 WHERE `user_level` = 'NPC'
-    				 ORDER BY `userid` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['userid']}'";
-        if ($selected == $r['userid'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the guilds in-game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the guild who should be selected by default.
- * Not specifying this or setting it to -1 makes the first guild be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function guilds_dropdown($ddname = "guild", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='{$ddname}' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `guild_id`, `guild_name`
-    				 FROM `guild`
-    				 ORDER BY `guild_id` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['guild_id']}'";
-        if ($selected == $r['guild_id'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['guild_name']} [{$r['guild_id']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the users in the specified guild to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $guild_id [optional] The ID Number of the guild who should be selected from.
- * @param int $selected [optional] The ID Number of the bot who should be selected by default.
- * Not specifying this or setting it to -1 makes the first bot alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function guild_user_dropdown($ddname = "user", $guild_id, $selected = -1)
-{
-    global $db;
-    $ret = "<select name='{$ddname}' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `userid`, `username`
-    				 FROM `users`
-					 WHERE `guild` = {$guild_id}
-    				 ORDER BY `userid` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['userid']}'";
-        if ($selected == $r['userid'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the challenge bot NPC users in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the bot who should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first bot alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function npcbot_dropdown($ddname = "bot", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `u`.`userid`, `u`.`username`
-                     FROM `botlist` AS `cb`
-                     INNER JOIN `users` AS `u`
-                     ON `cb`.`botuser` = `u`.`userid`
-                     ORDER BY `u`.`userid` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['userid']}'";
-        if ($selected == $r['userid'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the users in federal jail in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the user who should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function fed_user_dropdown($ddname = "user", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `userid`, `username`
-                     FROM `users`
-                     WHERE `fedjail` = 1
-                     ORDER BY `userid` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['userid']}'";
-        if ($selected == $r['userid'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the mail banned users in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the user who should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function mailb_user_dropdown($ddname = "user", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query("SELECT `mbUSER`, `mbID`, `username`
-                    FROM `mail_bans` `m`
-                    INNER JOIN `users` AS `u`
-                    ON `u`.`userid` = `m`.`mbUSER`
-                    ORDER BY `mbTIME` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['mbUSER']}'";
-        if ($selected == $r['mbUSER'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['username']} [{$r['mbUSER']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the forum banned users in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the user who should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function forumb_user_dropdown($ddname = "user", $selected = -1)
-{
-    global $db, $api;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `fb_user`,`fb_id`
-                     FROM `forum_bans`
-                     ORDER BY `fb_user` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['fb_user']}'";
-        if ($selected == $r['fb_user'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$api->SystemUserIDtoName($r['fb_user'])} [{$r['fb_user']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the houses in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the house which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first house alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function estate_dropdown($ddname = "estate", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `house_id`, `house_name`, `house_will`
-    				 FROM `estates`
-    				 ORDER BY `house_will` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['house_id']}'";
-        if ($selected == $r['house_id'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['house_name']}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the houses in the game to let the user select one.<br />
- * However, the values in the list box return the house's maximum will value instead of its ID.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the house which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first house alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function estate2_dropdown($ddname = "house", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `house_will`, `house_name`
-    				 FROM `estates`
-    				 ORDER BY `house_will` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['house_will']}'";
-        if ($selected == $r['house_will'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['house_name']} (Will: {$r['house_will']})</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the crimes in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the crime which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first crime alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function crime_dropdown($ddname = "crime", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `crimeID`, `crimeNAME`
-    				 FROM `crimes`
-    				 ORDER BY `crimeNAME` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['crimeID']}'";
-        if ($selected == $r['crimeID'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['crimeNAME']}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the crime groups in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the crime group which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first crime group alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function crimegroup_dropdown($ddname = "crimegroup", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `cgID`, `cgNAME`
-    				 FROM `crimegroups`
-    				 ORDER BY `cgNAME` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['cgID']}'";
-        if ($selected == $r['cgID'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['cgNAME']}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
 }
 
 /**
@@ -902,7 +126,7 @@ function check_data()
 		$db->query("UPDATE `users` SET `brave` = `maxbrave` WHERE `userid` = {$ir['userid']}");
 	if ($ir['will'] > $ir['maxwill'])
 		$db->query("UPDATE `users` SET `will` = `maxwill` WHERE `userid` = {$ir['userid']}");
-    $q1 = $db->query("SELECT `fed_userid` FROM `fedjail` WHERE `fed_out` < {$time}");
+    $q1 = $db->query("/*qc=on*/SELECT `fed_userid` FROM `fedjail` WHERE `fed_out` < {$time}");
     //Remove players from federal jail, if needed.
     if ($db->num_rows($q1) > 0) {
         $q2 = $db->fetch_single($q1);
@@ -918,15 +142,15 @@ function check_data()
     //Delete from newspaper when needed.
     $db->query("DELETE FROM `newspaper_ads` WHERE `news_end` < {$time}");
 
-    $q3 = $db->query("SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} AND `gw_winner` = 0");
+    $q3 = $db->query("/*qc=on*/SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} AND `gw_winner` = 0");
     if ($db->num_rows($q3) > 0) {
         $r3 = $db->fetch_row($q3);
         //Select guild war declarer's name
         $guild_declare = $db->fetch_single(
-            $db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declarer']}"));
+            $db->query("/*qc=on*/SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declarer']}"));
         //Select guild war declaree's name
         $guild_declared = $db->fetch_single(
-            $db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declaree']}"));
+            $db->query("/*qc=on*/SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declaree']}"));
         //Guild War declarer has more points than the declaree.
         if ($r3['gw_drpoints'] > $r3['gw_depoints']) {
             //Make the declarer the winner,
@@ -935,9 +159,9 @@ function check_data()
             guildnotificationadd($r3['gw_declaree'], "Your guild was defeated in battle by the {$guild_declare} guild.");
             //Select the town ID where the guilds own.
             $town = $db->fetch_single(
-                $db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
+                $db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
             $town2 = $db->fetch_single(
-                $db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
+                $db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
             //If the declaree has a town under their control
             if ($town2 > 0) {
                 //The declarer guild has no town of their own, so take from the declaree.
@@ -957,9 +181,9 @@ function check_data()
             guildnotificationadd($r3['gw_declarer'], "Your guild was defeated in battle by the {$guild_declared} guild.");
             //Select the town ID where the guilds own.
             $town = $db->fetch_single(
-                $db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
+                $db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
             $town2 = $db->fetch_single(
-                $db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
+                $db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
             //If the declarer has a town under their control
             if ($town > 0) {
                 //The declaree does not have a town, so take it from the declarer.
@@ -986,13 +210,13 @@ function check_data()
     $time = time();
     //Select a User's ID and Course ID if their completion time is less than the Unix Timestamp, and they still have
     //not been credited from their completion.
-    $coursedone = $db->query("SELECT `userid`,`course` FROM `users` WHERE `course` > 0 AND `course_complete` < {$time}");
+    $coursedone = $db->query("/*qc=on*/SELECT `userid`,`course` FROM `users` WHERE `course` > 0 AND `course_complete` < {$time}");
     $course_cache = array();
     //Loop until no more users have courses left.
     while ($r = $db->fetch_row($coursedone)) {
         //If the course in question is not stored in cache, lets store it.
         if (!array_key_exists($r['course'], $course_cache)) {
-            $cd = $db->query("SELECT `ac_str`, `ac_agl`, `ac_grd`, `ac_lab`, `ac_iq`, `ac_name`
+            $cd = $db->query("/*qc=on*/SELECT `ac_str`, `ac_agl`, `ac_grd`, `ac_lab`, `ac_iq`, `ac_name`
 							 FROM `academy`
 							 WHERE `ac_id` = {$r['course']}");
             $coud = $db->fetch_row($cd);
@@ -1040,9 +264,9 @@ function check_data()
         notification_add($r['userid'], "Congratulations, you completed the {$coud['ac_name']} course and gained {$ev}!");
     }
     //Check guild crimes!
-    $guildcrime = $db->query("SELECT * FROM `guild` WHERE `guild_crime` > 0 AND `guild_crime_done` < {$time}");
+    $guildcrime = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_crime` > 0 AND `guild_crime_done` < {$time}");
     while ($r = $db->fetch_row($guildcrime)) {
-        $r2 = $db->fetch_row($db->query("SELECT * FROM `guild_crimes` WHERE `gcID` = {$r['guild_crime']}"));
+        $r2 = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `guild_crimes` WHERE `gcID` = {$r['guild_crime']}"));
         $suc = Random(0, 1);
         if ($suc == 1) {
             $log = $r2['gcSTART'] . $r2['gcSUCC'];
@@ -1070,14 +294,14 @@ function check_data()
                     VALUES
                     ('{$r['guild_crime']}', '{$r['guild_id']}', '{$log}', '{$result}', '{$winnings}', '" . time() . "');");
         $i = $db->insert_id();
-        $qm = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$r['guild_id']}");
+        $qm = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `guild` = {$r['guild_id']}");
         while ($qr = $db->fetch_row($qm)) {
             notification_add($qr['userid'], "Your guild's crime was a complete {$result}! Click <a href='gclog.php?ID=$i'>here</a> to view more information.");
         }
     }
 	$db->query("UPDATE `guild` SET `guild_debt_time` = 0 WHERE `guild_primcurr` > -1");
 	//Dissolve guild if debt unpaid.
-	$gdup=$db->query("SELECT * FROM `guild` WHERE `guild_debt_time` < {$time} AND `guild_debt_time` > 0");
+	$gdup=$db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_debt_time` < {$time} AND `guild_debt_time` > 0");
 	while ($gdr=$db->fetch_row($gdup))
 	{
 		notification_add($gdr['guild_owner'], "Your guild was dissolved since it could not pay off its debt.");
@@ -1091,58 +315,7 @@ function check_data()
 		$db->query("DELETE FROM `guild_alliances` WHERE `alliance_b` = {$gdr['guild_id']}");
 		$db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$gdr['guild_id']}");
 	}
-}
-
-/**
- * Internal function: used to see if a user is due to level up, and if so, perform that levelup.
- */
-function check_level()
-{
-    global $ir, $userid, $db;
-	if ($ir['level'] < 67)
-		$ir['xp_needed'] = round(($ir['level'] + 1.5) * ($ir['level'] + 1.5) * ($ir['level'] + 1.5) * 1.5);
-	if (($ir['level'] >= 67) && ($ir['level'] < 100))
-		$ir['xp_needed'] = round(($ir['level'] + 3.5) * ($ir['level'] + 3.5) * ($ir['level'] + 3.5) * 3.5);
-	if (($ir['level'] >= 100) && ($ir['level'] < 150))
-		$ir['xp_needed'] = round(($ir['level'] + 5.8) * ($ir['level'] + 5.8) * ($ir['level'] + 5.8) * 5.8);
-	if (($ir['level'] >= 150) && ($ir['level'] < 300))
-		$ir['xp_needed'] = round(($ir['level'] + 8.5) * ($ir['level'] + 8.5) * ($ir['level'] + 8.5) * 8.5);
-    if ($ir['level'] < 125)
-    {
-        if ($ir['xp'] >= $ir['xp_needed']) {
-            $expu = $ir['xp'] - $ir['xp_needed'];
-            $ir['level'] += 1;
-            $ir['xp'] = $expu;
-            $ir['energy'] += 2;
-            $ir['brave'] += 2;
-            $ir['maxenergy'] += 2;
-            $ir['maxbrave'] += 2;
-            $ir['hp'] += 50;
-            $ir['maxhp'] += 50;
-            $ir['xp_needed'] = round(($ir['level'] + 1.5) * ($ir['level'] + 1.5) * ($ir['level'] + 1.5) * 1.5);
-            //Increase user's everything.
-            $db->query("UPDATE `users` SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2,
-                        `brave` = `brave` + 2, `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2,
-                        `hp` = `hp` + 50, `maxhp` = `maxhp` + 50 WHERE `userid` = {$userid}");
-            //Give the user some stats for leveling up.
-            $StatGain = round(($ir['level'] * Random(125,250)) / Random(2, 6));
-            $StatGainFormat = number_format($StatGain);
-            //Assign the stat gain to the user's class of choice.
-            if ($ir['class'] == 'Warrior') {
-                $Stat = 'strength';
-            } elseif ($ir['class'] == 'Rogue') {
-                $Stat = 'agility';
-            } else {
-                $Stat = 'guard';
-            }
-            //Credit the stat gain.
-            $db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
-            //Tell the user they've gained some stats.
-            notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
-            //Log the level up, along with the stats gained.
-            SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
-        }
-    }
+    $db->query("DELETE FROM `bounty_hunter` WHERE `bh_time` < {$time}");
 }
 
 /**
@@ -1159,137 +332,6 @@ function guildnotificationadd($guild_id, $text)
         "INSERT INTO `guild_notifications`
              VALUES(NULL, {$guild_id}, " . time() . ", '{$text}')");
     return true;
-}
-
-/**
- * Get the "rank" a user has for a particular stat - if the return is n, then the user has the n'th highest value for that stat.
- * @param int $stat The value of the current user's stat.
- * @param string $mykey The stat to be ranked in. Must be a valid column name in the userstats table
- * @return integer The user's rank in the stat
- */
-function get_rank($stat, $mykey)
-{
-    global $db, $userid;
-    //Select count of users who have higher $mykey based upon $stat. Excluding the current user, admins and NPCs
-    if ($mykey != 'all') {
-        $q = $db->query("SELECT count(`u`.`userid`) FROM `userstats` AS `us` LEFT JOIN `users` AS `u`
-                    ON `us`.`userid` = `u`.`userid` WHERE {$mykey} > {$stat} AND `us`.`userid` != {$userid}
-                    AND `u`.`user_level` != 'Admin' AND `u`.`user_level` != 'NPC'");
-    } else {
-        $q = $db->query("SELECT count(`u`.`userid`) FROM `userstats` AS `us` LEFT JOIN `users` AS `u`
-                    ON `us`.`userid` = `u`.`userid` WHERE `strength`+`agility`+`guard`+`labor`+`iq` > {$stat} AND `us`.`userid` != {$userid}
-                    AND `u`.`user_level` != 'Admin' AND `u`.`user_level` != 'NPC'");
-    }
-    $result = $db->fetch_single($q) + 1;
-    $db->free_result($q);
-    //Return the count from earlier.
-    return $result;
-}
-
-/**
- * Give a particular user a particular quantity of some item.
- * @param int $user The user ID who is to be given the item
- * @param int $itemid The item ID which is to be given
- * @param int $qty The item quantity to be given
- * @param int $notid [optional] If specified and greater than zero, prevents the item given database entry combining with inventory id $notid.
- */
-function item_add($user, $itemid, $qty, $notid = 0)
-{
-    global $db;
-    //Select $itemid's item name.
-    $ie = $db->fetch_single($db->query("SELECT COUNT(`itmname`) FROM `items` WHERE `itmid` = {$itemid}"));
-    //If the name returns, continue
-    if ($ie > 0) {
-        //We want $itemid to go into its own stack. Select the inventory ID to make sure this doesn't happen.
-        if ($notid > 0) {
-            $q = $db->query("SELECT `inv_id` FROM `inventory` WHERE `inv_userid` = {$user} AND `inv_itemid` = {$itemid}
-							 AND `inv_id` != {$notid} LIMIT 1");
-        } //We don't care if the $itemid merges into an existing inventory stack. Let's select the first stack then.
-        else {
-            $q = $db->query("SELECT `inv_id` FROM `inventory` WHERE `inv_userid` = {$user} AND `inv_itemid` = {$itemid}
-							 LIMIT 1");
-        }
-        //If the inventory stack exists, add $qty to it and return true to signify we succeeded at adding the item.
-        if ($db->num_rows($q) > 0) {
-            $r = $db->fetch_row($q);
-            $db->query("UPDATE `inventory` SET `inv_qty` = `inv_qty` + {$qty} WHERE `inv_id` = {$r['inv_id']}");
-            return true;
-        }
-        //The inventory does not exist and/or we don't want $itemid to merge into an inventory stack, so lets create
-        //a new one and return true.
-        else {
-            $db->query("INSERT INTO `inventory` (`inv_itemid`, `inv_userid`, `inv_qty`) VALUES ({$itemid}, {$user}, {$qty})");
-            return true;
-        }
-    }
-}
-
-/**
- * Take away from a particular user a particular quantity of some item.<br />
- * If they don't have enough of that item to be taken, takes away any that they do have.
- * @param int $user The user ID who is to lose the item
- * @param int $itemid The item ID which is to be taken
- * @param int $qty The item quantity to be taken
- */
-function item_remove($user, $itemid, $qty)
-{
-    global $db;
-    //Select $itemid's item name.
-    $ie = $db->fetch_single($db->query("SELECT COUNT(`itmname`) FROM `items` WHERE `itmid` = {$itemid}"));
-    //If $itemid actually exists, it'll return a name, so lets continue if that's the case.
-    if ($ie > 0) {
-        //Select the inventory ID number where $itemid's is stored for $user.
-        $q = $db->query("SELECT `inv_id`, `inv_qty` FROM `inventory` WHERE `inv_userid` = {$user}
-						 AND `inv_itemid` = {$itemid} LIMIT 1");
-        //User has an inventory id for $itemid!
-        if ($db->num_rows($q) > 0) {
-            $r = $db->fetch_row($q);
-            //$user's $itemid quantity is greater than $qty, so remove only $qty and return true.
-            if ($r['inv_qty'] > $qty) {
-                $db->query("UPDATE `inventory` SET `inv_qty` = `inv_qty` - {$qty} WHERE `inv_id` = {$r['inv_id']}");
-                return true;
-            } //$user's $itemid quantity is lower than $qty, so delete the inventory ID entirely and return true.
-            else {
-                $db->query("DELETE FROM `inventory` WHERE `inv_id` = {$r['inv_id']}");
-                return true;
-            }
-        }
-    }
-    $db->free_result($q);
-}
-
-/**
- * Constructs a drop-down listbox of all the forums in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the forum w hich should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function forum_dropdown($ddname = "forum", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `ff_id`, `ff_name`
-    				 FROM `forum_forums`
-    				 ORDER BY `ff_name` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['ff_id']}'";
-        if ($selected == $r['ff_id'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['ff_name']} [{$r['ff_id']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
 }
 
 /**
@@ -1431,19 +473,21 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
 		$js='info';
 	}
     else
+	{
         $icon = 'exclamation-circle';
 		$js='log';
+	}
     if ($doredirect) {
         $redirect = ($redirect == 'back') ? $_SERVER['REQUEST_URI'] : $redirect;
-        echo "<div class='alert alert-{$type}'>
-				<i class='fa fa-{$icon}' aria-hidden='true'></i>
-					<strong>{$title}</strong> 
+        echo "<div class='alert alert-{$type}' role='alert'>
+				<strong class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
+					{$title}</strong> 
 						{$text} > <a href='{$redirect}' class='alert-link'>{$redirecttext}</a>
 				</div>";
     } else {
-        echo "<div class='alert alert-{$type}'>
-                    <i class='fa fa-{$icon}' aria-hidden='true'></i>
-					    <strong>{$title}</strong>
+        echo "<div class='alert alert-{$type}' role='alert'>
+                    <strong class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
+					{$title}</strong> 
 					        {$text}
                 </div>";
     }
@@ -1604,27 +648,6 @@ function update_fg_info($ip)
     return $content;
 }
 
-/**
- * Tests to see if the user's permission is allowed or not.
- *
- * @param string $perm The permission to test for
- * @param int $user The user to test on
- *
- * @return bool                Returns true if the user has this,
- *                            false if not.
- */
-function permission($perm, $user)
-{
-    global $db;
-    $Query = $db->query("SELECT `perm_disable` FROM `permissions` WHERE `perm_name` = '{$perm}' AND `perm_user` = {$user}");
-    if ($db->num_rows($Query) == 0)
-        return true;
-    $q = $db->fetch_single($Query);
-    if ($q == 'false')
-        //User does have this permission
-        return true;
-}
-
 /*
    Gets the user's operating system and inserts it into the database.
    @param string $uagent	User agent to test with.
@@ -1662,7 +685,7 @@ function getOS($uagent)
             $os_platform = $value;
         }
     }
-    $count = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
+    $count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
     if ($count == 0)
         $db->query("INSERT INTO `userdata` (`userid`, `useragent`, `screensize`, `os`, `browser`) VALUES ({$userid}, '{$uagent}', '', '{$os_platform}', '')");
     else
@@ -1700,7 +723,7 @@ function getBrowser($uagent)
             $browser = $value;
         }
     }
-    $count = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
+    $count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
     if ($count == 0)
         $db->query("INSERT INTO `userdata` (`userid`, `useragent`, `browser`) VALUES ({$userid}, '{$uagent}', '{$broswer}')");
     else
@@ -1731,38 +754,6 @@ function Random($min = 0, $max = PHP_INT_MAX)
     else
         return mt_rand($min, $max);
 }
-
-/*
-	Creates a dropdown for smelting recipes.
-*/
-function smelt_dropdown($ddname = 'smelt', $selected = -1)
-{
-    global $db, $api;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `smelt_id`, `smelt_output`, `smelt_qty_output`
-                     FROM `smelt_recipes`
-                     ORDER BY `smelt_id` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $itemname = $api->SystemItemIDtoName($r['smelt_output']);
-        $ret .= "\n<option value='{$r['smelt_id']}'";
-        if ($selected == $r['smelt_id'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['smelt_qty_output']} x {$itemname}</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
 /*
 	Gets the contents of a file if it exists, otherwise grabs and caches 
 */
@@ -1814,7 +805,7 @@ function recache_topic($topic)
     echo "Recaching Topic ID #{$topic} ... ";
     $q =
         $db->query(
-            "SELECT `fp_poster_id`, `fp_poster_id`, `fp_time`
+            "/*qc=on*/SELECT `fp_poster_id`, `fp_poster_id`, `fp_time`
                      FROM `forum_posts`
                      WHERE `fp_topic_id` = {$topic}
                      ORDER BY `fp_time` DESC
@@ -1830,7 +821,7 @@ function recache_topic($topic)
         $db->free_result($q);
         $posts_q =
             $db->query(
-                "SELECT COUNT(`fp_id`)
+                "/*qc=on*/SELECT COUNT(`fp_id`)
         					   FROM `forum_posts`
         					   WHERE `fp_topic_id` = {$topic}");
         $posts = $db->fetch_single($posts_q);
@@ -1858,7 +849,7 @@ function recache_forum($forum)
     echo "Recaching Forum ID #{$forum} ... ";
     $q =
         $db->query(
-					"SELECT `p`.*, `t`.*
+					"/*qc=on*/SELECT `p`.*, `t`.*
                      FROM `forum_posts` AS `p`
                      LEFT JOIN `forum_topics` AS `t`
                      ON `p`.`fp_topic_id` = `t`.`ft_id`
@@ -1932,113 +923,6 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
         return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
 }
 
-/**
- * Constructs a drop-down listbox of all the items in the user's inventory to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function inventory_dropdown($ddname = "item", $selected = -1)
-{
-    global $db, $userid;
-    $ret = "<select name='$ddname' type='dropdown' class='form-control'>";
-    $q =
-        $db->query(
-            "SELECT `i`.*, `it`.*
-    				 FROM `inventory` AS `i`
-    				 INNER JOIN `items` AS `it`
-    				 ON `i`.`inv_itemid` = `it`.`itmid`
-    				 WHERE `inv_userid` = {$userid}
-    				 ORDER BY `itmname` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['itmid']}'";
-        if ($selected == $r['itmid'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['itmname']} (You Have {$r['inv_qty']})</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the jobs in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The <i>ID number</i> of the job which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first job alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function job_dropdown($ddname = "job", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `jRANK`, `jNAME`
-    				 FROM `jobs`
-    				 ORDER BY `jRANK` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['jRANK']}'";
-        if ($selected == $r['jRANK'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['jNAME']} [ID: {$r['jRANK']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
-/**
- * Constructs a drop-down listbox of all the job ranks in the game to let the user select one.
- * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
- * @param int $selected [optional] The <i>ID number</i> of the job rank which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first job's first job rank alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function jobrank_dropdown($ddname = "jobrank", $selected = -1)
-{
-    global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
-    $q =
-        $db->query(
-            "SELECT `jrID`, `jNAME`, `jrRANK`
-                     FROM `job_ranks` AS `jr`
-                     INNER JOIN `jobs` AS `j`
-                     ON `jr`.`jrJOB` = `j`.`jRANK`
-                     ORDER BY `jr`.`jrRANK` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['jrID']}'";
-        if ($selected == $r['jrID'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['jrRANK']} [{$r['jNAME']}]</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
 function pagination($perpage, $total, $currentpage, $url)
 {
     global $db;
@@ -2076,55 +960,25 @@ function pagination($perpage, $total, $currentpage, $url)
     return $output;
 }
 
-/**
- * Constructs a drop-down listbox of all the items in the user's guild's to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
- * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
- * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
- * @return string The HTML code for the listbox, to be inserted in a form.
- */
-function armory_dropdown($ddname = "item", $selected = -1)
-{
-    global $db, $ir;
-    $ret = "<select name='$ddname' type='dropdown' class='form-control'>";
-    $q =
-        $db->query(
-            "SELECT `i`.*, `it`.*
-    				 FROM `guild_armory` AS `i`
-    				 INNER JOIN `items` AS `it`
-    				 ON `i`.`gaITEM` = `it`.`itmid`
-    				 WHERE `gaGUILD` = {$ir['guild']}
-    				 ORDER BY `itmname` ASC");
-    if ($selected == -1) {
-        $first = 0;
-    } else {
-        $first = 1;
-    }
-    while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['itmid']}'";
-        if ($selected == $r['itmid'] || $first == 0) {
-            $ret .= " selected='selected'";
-            $first = 1;
-        }
-        $ret .= ">{$r['itmname']} (Armory: {$r['gaQTY']})</option>";
-    }
-    $db->free_result($q);
-    $ret .= "\n</select>";
-    return $ret;
-}
-
 function returnIcon($item,$size=1)
 {
 	global $db;
-	$q = $db->fetch_single($db->query("SELECT `icon` FROM `items` WHERE `itmid` = {$item}"));
+	$q = $db->fetch_row($db->query("/*qc=on*/SELECT `icon`,`color` FROM `items` WHERE `itmid` = {$item}"));
 	if (empty($q))
 	{
 		return "";
 	}
 	else
 	{
-		$total=$size*4;
-		return "<font size='{$total}'><i class='{$q}'></i></font>";
+        if (!empty($q['color']))
+        {
+            return "<i class='{$q['icon']}' style='font-size:{$size}rem; color: {$q['color']};'></i>";
+        }
+        else
+        {
+            return "<i class='{$q['icon']}' style='font-size:{$size}rem;'></i>";
+        }
+		
 	}
 }
 
@@ -2136,8 +990,8 @@ function cslog($type='log',$txt)
 function encrypt_message($msg,$sender,$receiver)
 {
     global $db;
-    $senderkey=$db->fetch_single($db->query("SELECT `security_key` from `user_settings` WHERE `userid` = {$sender}"));
-    $receiverkey=$db->fetch_single($db->query("SELECT `security_key` from `user_settings` WHERE `userid` = {$receiver}"));
+    $senderkey=$db->fetch_single($db->query("/*qc=on*/SELECT `security_key` from `user_settings` WHERE `userid` = {$sender}"));
+    $receiverkey=$db->fetch_single($db->query("/*qc=on*/SELECT `security_key` from `user_settings` WHERE `userid` = {$receiver}"));
     $key = hash("sha512","{$senderkey}.{$receiverkey}");
 	if (openssl_encrypt($msg,"AES-256-ECB",$key))
 		return openssl_encrypt($msg,"AES-256-ECB",$key);
@@ -2148,8 +1002,8 @@ function encrypt_message($msg,$sender,$receiver)
 function decrypt_message($msg,$sender,$receiver)
 {
     global $db;
-    $senderkey=$db->fetch_single($db->query("SELECT `security_key` from `user_settings` WHERE `userid` = {$sender}"));
-    $receiverkey=$db->fetch_single($db->query("SELECT `security_key` from `user_settings` WHERE `userid` = {$receiver}"));
+    $senderkey=$db->fetch_single($db->query("/*qc=on*/SELECT `security_key` from `user_settings` WHERE `userid` = {$sender}"));
+    $receiverkey=$db->fetch_single($db->query("/*qc=on*/SELECT `security_key` from `user_settings` WHERE `userid` = {$receiver}"));
     $key = hash("sha512","{$senderkey}.{$receiverkey}");
 	if (openssl_decrypt($msg,"AES-256-ECB",$key))
 		return stripslashes(str_replace(array("\\n\\r", "\\n", "\\r"), "", openssl_decrypt($msg,"AES-256-ECB",$key)));
@@ -2165,7 +1019,7 @@ function staffnotes_entry($user,$text,$whodo=-1)
     if (empty($user) || !isset($text)) {
         return false;
     }
-    $q = $db->query("SELECT `staff_notes` FROM `users` WHERE `userid` = {$user}");
+    $q = $db->query("/*qc=on*/SELECT `staff_notes` FROM `users` WHERE `userid` = {$user}");
     if ($db->num_rows($q) == 0) {
         return false;
     }
@@ -2193,31 +1047,6 @@ function staffnotes_entry($user,$text,$whodo=-1)
 	$sql="{$text}{$notes}";
 	$db->query("UPDATE `users` SET `staff_notes` = '{$sql}' WHERE `userid` = {$user}");
 }
-function calculateLuck($user)
-{
-	global $db;
-	$r=$db->fetch_single($db->query("SELECT `luck` FROM `userstats` WHERE `userid` = {$user}"));
-	$lucked=$r*-1;
-	$adjustedluck=100+(100+$lucked);
-	$luckrng=Random(0,$adjustedluck);
-	if ($luckrng == 1)
-	{
-		$db->query("UPDATE `userstats` SET `luck` = `luck` - 5 WHERE `userid` = {$user}");
-		return true;
-	}
-}
-function getSkillLevel($user,$id)
-{
-	global $db;
-	$q = $db->query("SELECT `skill_lvl` 
-					FROM `user_skills` 
-					WHERE `userid` = {$user} 
-					AND `skill_id` = {$id}");
-	if ($db->num_rows($q) == 0)
-		return 0;
-	else
-		return $db->fetch_single($q);
-}
 function parseImage($url)
 {
 	if (strpos($url, 'https://') !== false) 
@@ -2240,7 +1069,7 @@ function removeFrontTag($url)
 function user_log($user,$logname,$value=1)
 {
 	global $db;
-	$q=$db->query("SELECT * FROM `user_logging` WHERE `userid` = {$user} AND `log_name` = '{$logname}'");
+	$q=$db->query("/*qc=on*/SELECT * FROM `user_logging` WHERE `userid` = {$user} AND `log_name` = '{$logname}'");
 	if ($db->num_rows($q) == 0)
 	{
 		$db->query("INSERT INTO `user_logging` (`userid`, `log_name`, `value`) VALUES ('{$user}', '{$logname}', '{$value}')");
@@ -2249,4 +1078,12 @@ function user_log($user,$logname,$value=1)
 	{
 		$db->query("UPDATE `user_logging` SET `value` = `value` + {$value} WHERE `userid` = {$user} and `log_name` = '{$logname}'");
 	}
+}
+
+function isApp()
+{
+    global $ir;
+    if ($ir['browser'] == 'App')
+        if ($ir['os'] == 'Android')
+            return true;
 }

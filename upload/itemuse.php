@@ -12,7 +12,7 @@ $_GET['item'] = (isset($_GET['item']) && is_numeric($_GET['item'])) ? abs($_GET[
 if (empty($_GET['item'])) {
     alert('danger', "Uh Oh!", "Please specify an item to use.", true, 'inventory.php');
 } else {
-    $i = $db->query("SELECT `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on`,
+    $i = $db->query("/*qc=on*/SELECT `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on`,
                      `itmname`, `inv_itemid`, `weapon`, `armor` FROM `inventory` AS `iv` INNER JOIN `items` AS `i`
                      ON `iv`.`inv_itemid` = `i`.`itmid` WHERE `iv`.`inv_id` = {$_GET['item']}
                      AND `iv`.`inv_userid` = $userid");
@@ -37,14 +37,26 @@ if (empty($_GET['item'])) {
                 if ($einfo['inc_type'] == "percent") {
                     if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
                         $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
+                        //Item Potency
+                        $specialnumber=((getSkillLevel($userid,25)*3)/100);
+                        $inc=$inc+($inc*$specialnumber);
                     } elseif (in_array($einfo['stat'], array('dungeon', 'infirmary'))) {
-                        $EndTime = $db->fetch_single($db->query("SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
+                        $EndTime = $db->fetch_single($db->query("/*qc=on*/SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
                         $inc = round((($EndTime - $Time) / 100 * $einfo['inc_amount']) / 60);
+                        //Item Potency
+                        $specialnumber=((getSkillLevel($userid,25)*3)/100);
+                        $inc=$inc+($inc*$specialnumber);
                     } else {
+                        //Item Potency
+                        $specialnumber=((getSkillLevel($userid,25)*3)/100);
+                        $inc=$inc+($inc*$specialnumber);
                         $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
                     }
                 } else {
                     $inc = $einfo['inc_amount'];
+                    //Item Potency
+                    $specialnumber=((getSkillLevel($userid,25)*3)/100);
+                    $inc=$inc+($inc*$specialnumber);
                 }
                 if ($einfo['dir'] == "pos") {
                     if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
@@ -77,6 +89,13 @@ if (empty($_GET['item'])) {
                 } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
                     $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
                 }
+            }
+        }
+        if (getSkillLevel($userid,28) != 0)
+        {
+            if (Random(1,20) == 1)
+            {
+                $api->UserInfoSet($userid, 'energy', Random(1,5), true);
             }
         }
         alert('success', "Success!", "You have successfully used your {$r['itmname']}!", true, "itemuse.php?item={$_GET['item']}", "Use Another");

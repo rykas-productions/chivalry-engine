@@ -67,13 +67,12 @@ function home()
 				Remove
 			</th>
 		</tr>";
-    $q = $db->query("SELECT `c`.`c_ID`, `u`.`vip_days`, `username`, `userid`, `vipcolor` FROM `contact_list` AS `c`
+    $q = $db->query("/*qc=on*/SELECT `c`.`c_ID`, `u`.`vip_days`, `username`, `userid`, `vipcolor` FROM `contact_list` AS `c`
                      LEFT JOIN `users` AS `u` ON `c`.`c_ADDED` = `u`.`userid` WHERE `c`.`c_ADDER` = $userid
                      ORDER BY `u`.`username` ASC");
     //List the user's contact list.
     while ($r = $db->fetch_row($q)) {
-        $r['username'] = ($r['vip_days']) ? "<span class='{$r['vipcolor']}'>{$r['username']} <i class='fa fa-shield'
-        data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
+        $r['username'] = parseUsername($r['userid']);
         echo "
 		<tr>
 			<td>
@@ -97,10 +96,10 @@ function add()
     //User has specifed someone to add to contact list.
     if (isset($_POST['user'])) {
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
-        $qc = $db->query("SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ADDED` = {$_POST['user']}");
+        $qc = $db->query("/*qc=on*/SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ADDED` = {$_POST['user']}");
         $dupe_count = $db->fetch_single($qc);
         $db->free_result($qc);
-        $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
+        $q = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
         //Person specifed already on contact list.
         if ($dupe_count > 0) {
             alert('danger', "Uh Oh!", "You already have this user on your contact list.");
@@ -158,7 +157,7 @@ function remove()
         alert('danger', "Uh Oh!", "You must specify a contact you wish to remove.", true, 'contacts.php');
         die($h->endpage());
     }
-    $qc = $db->query("SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ID` = {$_GET['contact']}");
+    $qc = $db->query("/*qc=on*/SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ID` = {$_GET['contact']}");
     $exist_count = $db->fetch_single($qc);
     $db->free_result($qc);
     //Specified person is not on list.

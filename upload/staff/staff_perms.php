@@ -57,7 +57,7 @@ function viewperm()
                           INNER JOIN `users` AS `u`
                           ON `u`.`userid` = `p`.`perm_user`
                           WHERE `perm_user` = {$_POST['userid']}");
-            $UserName = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
+            $UserName = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
             if (!isset($_POST['verf']) || !verify_csrf_code('staff_perm_1', stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
                 die($h->endpage());
@@ -154,10 +154,10 @@ function editperm()
             alert('danger', "Uh Oh!", "You specified an invalid input. Try again!");
             die($h->endpage());
         } else {
-            $UserName = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
+            $UserName = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
             if ($_POST['enable'] == 'disable') {
-                $BanQuery = $db->fetch_row($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}"));
-                if ($db->num_rows($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}")) > 0) {
+                $BanQuery = $db->fetch_row($db->query("/*qc=on*/SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}"));
+                if ($db->num_rows($db->query("/*qc=on*/SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}")) > 0) {
                     alert('danger', "Permission Already Given!", "This user already has this permission specified. Try again, please!");
                     die($h->endpage());
                 } else {
@@ -167,8 +167,8 @@ function editperm()
                     die($h->endpage());
                 }
             } else {
-                $BanQuery = $db->fetch_row($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}"));
-                if ($db->num_rows($db->query("SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}")) == 0) {
+                $BanQuery = $db->fetch_row($db->query("/*qc=on*/SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}"));
+                if ($db->num_rows($db->query("/*qc=on*/SELECT `perm_id` FROM `permissions` WHERE `perm_name` = '{$_POST['permission']}' AND `perm_user` = {$_POST['userid']}")) == 0) {
                     alert('danger', "Permission Not Existent!", "This user already has full access to this permission. Enabling it again would do nothing...");
                     die($h->endpage());
                 } else {
@@ -187,7 +187,7 @@ function resetperm()
     global $db, $h, $userid, $api;
     if (!isset($_POST['userid'])) {
         $csrf = request_csrf_html('staff_perm_3');
-        echo "Select a user to reset their permissions.";
+        echo "/*qc=on*/SELECT a user to reset their permissions.";
         echo "
         	<form method='post'>
 			" . user_dropdown('userid') . "
@@ -208,7 +208,7 @@ function resetperm()
             alert('danger', 'Confirm Action!', 'Go back and make sure you type CONFIRM in the box.');
             die($h->endpage());
         } else {
-            $UserName = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
+            $UserName = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}"));
             $db->query("DELETE FROM `permissions` WHERE `perm_user` = {$_POST['userid']}");
             alert('success', "User's Permissions Reset!", "You have successfully reset {$UserName}'s permissions.", true, 'index.php');
             $api->SystemLogsAdd($userid, 'staff', "Reset <a href='../profile.php?user={$_POST['userid']}'>{$UserName}</a> [{$_POST['userid']}]'s permissions.");

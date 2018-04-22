@@ -44,14 +44,14 @@ function newshop()
         if (empty($_POST['sn']) || empty($_POST['sd'])) {
             alert('danger', "Uh Oh!", "Please fill in the form completely before submitting.");
         } else {
-            $q = $db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$_POST['sl']}");
+            $q = $db->query("/*qc=on*/SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$_POST['sl']}");
             if ($db->fetch_single($q) == 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "The town you have chosen to place the town in does not exist.");
                 die($h->endpage());
             }
             $db->free_result($q);
-            $q = $db->query("SELECT COUNT(`shopID`) FROM `shops` WHERE `shopNAME` = '{$_POST['sn']}'");
+            $q = $db->query("/*qc=on*/SELECT COUNT(`shopID`) FROM `shops` WHERE `shopNAME` = '{$_POST['sn']}'");
             if ($db->fetch_single($q) > 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "You cannot have more than one town with the same name.");
@@ -117,7 +117,7 @@ function delshop()
             alert('danger', "Action Blocked!", "This action has been blocked for your security. Please fill in the form quickly next time.");
             die($h->endpage());
         }
-        $shpq = $db->query("SELECT `shopNAME` FROM `shops` WHERE `shopID` = {$_POST['shop']}");
+        $shpq = $db->query("/*qc=on*/SELECT `shopNAME` FROM `shops` WHERE `shopID` = {$_POST['shop']}");
         if ($db->num_rows($shpq) == 0) {
             $db->free_result($shpq);
             alert('danger', "Uh Oh!", "The shop you have chosen to delete does not exist.");
@@ -172,9 +172,9 @@ function newitem()
             alert('danger', "Uh Oh!", "Please fill out the form completely before submitting.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT COUNT(`shopID`) FROM `shops` WHERE `shopID` = {$_POST['shop']}");
-        $q2 = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = {$_POST['item']}");
-        $q3 = $db->query("SELECT COUNT(`sitemID`) FROM `shopitems` WHERE `sitemITEMID` = {$_POST['item']} AND `sitemSHOP` = {$_POST['shop']}");
+        $q = $db->query("/*qc=on*/SELECT COUNT(`shopID`) FROM `shops` WHERE `shopID` = {$_POST['shop']}");
+        $q2 = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = {$_POST['item']}");
+        $q3 = $db->query("/*qc=on*/SELECT COUNT(`sitemID`) FROM `shopitems` WHERE `sitemITEMID` = {$_POST['item']} AND `sitemSHOP` = {$_POST['shop']}");
         if ($db->fetch_single($q) == 0 || $db->fetch_single($q2) == 0) {
             $db->free_result($q);
             $db->free_result($q2);

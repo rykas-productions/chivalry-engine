@@ -90,7 +90,7 @@ function home()
             </th>
         </tr>";
     //List the challenges the player has sent/received.
-    $q = $db->query("SELECT * FROM `russian_roulette` WHERE `challengee` = {$userid} OR `challenger` = {$userid}");
+    $q = $db->query("/*qc=on*/SELECT * FROM `russian_roulette` WHERE `challengee` = {$userid} OR `challenger` = {$userid}");
     while ($r = $db->fetch_row($q)) {
         //Player is the challenger in this challenge. Give them option to withdraw bet.
         if ($userid == $r['challenger'])
@@ -102,10 +102,10 @@ function home()
         echo "
         <tr>
             <td>
-                {$api->SystemUserIDtoName($r['challenger'])} [{$r['challenger']}]
+                " . parseUsername($r['challenger']) . " [{$r['challenger']}]
             </td>
             <td>
-                {$api->SystemUserIDtoName($r['challengee'])} [{$r['challengee']}]
+                " . parseUsername($r['challengee']) . " [{$r['challengee']}]
             </td>
             <td>
                 " . number_format($r['reward']) . " Copper Coins
@@ -129,7 +129,7 @@ function bet()
         alert('danger', "Uh Oh!", "Please select a valid user to play against.");
         die($h->endpage());
     }
-    $q = $db->query("SELECT `userid`
+    $q = $db->query("/*qc=on*/SELECT `userid`
                     FROM `users`
                     WHERE `userid` = {$_POST['user']}");
     //User to challenge does not exist.
@@ -148,7 +148,7 @@ function bet()
         die($h->endpage());
     }
     //User has already been challenge by the current player.
-    $q2 = $db->query("SELECT `challengee`
+    $q2 = $db->query("/*qc=on*/SELECT `challengee`
                     FROM `russian_roulette`
                     WHERE `challengee` = {$_POST['user']}
                     AND `challenger` = {$userid}");
@@ -178,7 +178,7 @@ function wdrr()
         alert('danger', "Uh Oh!", "Please select a valid user to withdraw your challenge from.");
         die($h->endpage());
     }
-    $q = $db->query("SELECT `userid`
+    $q = $db->query("/*qc=on*/SELECT `userid`
                     FROM `users`
                     WHERE `userid` = {$_GET['id']}");
     //Person to withdraw against does not exist.
@@ -186,7 +186,7 @@ function wdrr()
         alert('danger', "Uh Oh!", "The user you are trying to withdraw your challenge from does not exist.", true, 'russianroulette.php');
         die($h->endpage());
     }
-    $q2 = $db->query("SELECT `challengee`
+    $q2 = $db->query("/*qc=on*/SELECT `challengee`
                     FROM `russian_roulette`
                     WHERE `challengee` = {$_GET['id']}
                     AND `challenger` = {$userid}");
@@ -196,7 +196,7 @@ function wdrr()
         die($h->endpage());
     }
     //Checks passed, delete it all.
-    $r = $db->fetch_single($db->query("SELECT `reward`
+    $r = $db->fetch_single($db->query("/*qc=on*/SELECT `reward`
                                     FROM `russian_roulette`
                                     WHERE `challengee` = {$_GET['id']}
                                     AND `challenger` = {$userid}"));
@@ -220,7 +220,7 @@ function dorr()
         alert('danger', "Uh Oh!", "Please select a valid user to accept the challenge from.");
         die($h->endpage());
     }
-    $q = $db->query("SELECT `userid`
+    $q = $db->query("/*qc=on*/SELECT `userid`
                     FROM `users`
                     WHERE `userid` = {$_GET['id']}");
     //Person to withdraw against does not exist.
@@ -228,7 +228,7 @@ function dorr()
         alert('danger', "Uh Oh!", "The user you are trying to accept the challenge from does not exist.", true, 'russianroulette.php');
         die($h->endpage());
     }
-    $q2 = $db->query("SELECT `challengee`
+    $q2 = $db->query("/*qc=on*/SELECT `challengee`
                     FROM `russian_roulette`
                     WHERE `challengee` = {$userid}
                     AND `challenger` = {$_GET['id']}");
@@ -237,7 +237,7 @@ function dorr()
         alert('danger', "Uh Oh!", "You do not have any challenges open with this user.", true, 'russianroulette.php');
         die($h->endpage());
     }
-    $r = $db->fetch_single($db->query("SELECT `reward`
+    $r = $db->fetch_single($db->query("/*qc=on*/SELECT `reward`
                                     FROM `russian_roulette`
                                     WHERE `challengee` = {$userid}
                                     AND `challenger` = {$_GET['id']}"));
@@ -289,7 +289,7 @@ function dontrr()
         alert('danger', "Uh Oh!", "Please select a valid user to decline a challenge from.");
         die($h->endpage());
     }
-    $q = $db->query("SELECT `userid`
+    $q = $db->query("/*qc=on*/SELECT `userid`
                     FROM `users`
                     WHERE `userid` = {$_GET['id']}");
     //Person to withdraw against does not exist.
@@ -297,7 +297,7 @@ function dontrr()
         alert('danger', "Uh Oh!", "The user you are trying to decline a challenge that does not exist.", true, 'russianroulette.php');
         die($h->endpage());
     }
-    $q2 = $db->query("SELECT `challengee`
+    $q2 = $db->query("/*qc=on*/SELECT `challengee`
                     FROM `russian_roulette`
                     WHERE `challengee` = {$userid}
                     AND `challenger` = {$_GET['id']}");
@@ -306,7 +306,7 @@ function dontrr()
         alert('danger', "Uh Oh!", "You do not have any challenges open with this user.", true, 'russianroulette.php');
         die($h->endpage());
     }
-    $r = $db->fetch_single($db->query("SELECT `reward`
+    $r = $db->fetch_single($db->query("/*qc=on*/SELECT `reward`
                                     FROM `russian_roulette`
                                     WHERE `challengee` = {$userid}
                                     AND `challenger` = {$_GET['id']}"));

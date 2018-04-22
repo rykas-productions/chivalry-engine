@@ -24,7 +24,7 @@ require_once('../../globals_nonauth.php');
 $email = isset($_POST['email']) ? stripslashes($_POST['email']) : '';
 if (isset($email)) {
     $e_email = $db->escape($email);
-    $q = $db->query("SELECT COUNT(`userid`) FROM users WHERE `email` = '{$e_email}'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM users WHERE `email` = '{$e_email}'");
     if (empty($email)) {
         $newclass = 'form-control is-invalid';
         $warning="Please specify a valid email.";

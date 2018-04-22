@@ -19,7 +19,7 @@ if ($_POST['archive'] == 'inbox') {
 					<th>From</th>
 					<th>Subject/Message</th>
 				</tr>";
-    $q = $db->query("SELECT `mail_time`, `mail_subject`, `mail_text`, `userid`, `username`
+    $q = $db->query("/*qc=on*/SELECT `mail_time`, `mail_subject`, `mail_text`, `userid`, `username`
 					FROM `mail` AS `m`
 					LEFT JOIN `users` AS `u` ON `m`.`mail_from` = `u`.`userid`
 					WHERE `m`.`mail_to` = $userid
@@ -55,7 +55,7 @@ if ($_POST['archive'] == 'inbox') {
 			</tr>";
     $q =
         $db->query(
-            "SELECT `mail_time`, `mail_subject`, `mail_text`,
+            "/*qc=on*/SELECT `mail_time`, `mail_subject`, `mail_text`,
 					`userid`, `username`
 					FROM `mail` AS `m`
 					LEFT JOIN `users` AS `u` ON `m`.`mail_to` = `u`.`userid`

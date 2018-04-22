@@ -18,7 +18,7 @@ if (($_GET['user']) == $userid) {
     alert('danger', "Uh Oh!", "You cannot poke yourself.", true, "profile.php?user={$_GET['user']}");
     die($h->endpage());
 }
-$q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}");
+$q = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}");
 if ($db->num_rows($q) == 0) {
     alert('danger', "Uh Oh!", "You cannot poke a non-existent user.", true, "index.php");
     die($h->endpage());

@@ -11,7 +11,7 @@ require('lib/bbcode_engine.php');
 //How many announcements the user hasn't read.
 $AnnouncementCount = $ir['announcements'];
 //Select all data from the announcements data table.
-$q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC");
+$q = $db->query("/*qc=on*/SELECT * FROM `announcements` ORDER BY `ann_time` DESC");
 echo "<table class='table table-bordered table-striped'>
 <thead>
 	<tr>
@@ -30,7 +30,7 @@ while ($r = $db->fetch_row($q)) {
         $new = "<br /><span class='badge badge-pill badge-success'>Read</span>";
     }
     //Select announcement poster's name.
-    $PosterQuery = $db->query("SELECT `username`
+    $PosterQuery = $db->query("/*qc=on*/SELECT `username`
                                 FROM `users` 
                                 WHERE `userid` = {$r['ann_poster']}");
     $Poster = $db->fetch_single($PosterQuery);

@@ -9,7 +9,7 @@
 */
 require("globals.php");
 $staff = array();
-$q = $db->query("SELECT `userid`, `laston`, `username`, `user_level`
+$q = $db->query("/*qc=on*/SELECT `userid`, `laston`, `username`, `user_level`
  				 FROM `users`
  				 WHERE `user_level` IN('Admin', 'Forum Moderator', 'Assistant')
  				 ORDER BY `userid` ASC");
@@ -34,7 +34,7 @@ foreach ($staff as $r) {
     if ($r['user_level'] == 'Admin') {
         echo "<tr>
 				<td>
-					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+					<a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a> [{$r['userid']}]
 				</td>
 				<td>
 					" . DateTime_Parse($r['laston']) . "
@@ -63,7 +63,7 @@ foreach ($staff as $r) {
     if ($r['user_level'] == 'Assistant') {
         echo "<tr>
 				<td>
-					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+					<a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a> [{$r['userid']}]
 				</td>
 				<td>
 					" . DateTime_Parse($r['laston']) . "
@@ -92,7 +92,7 @@ foreach ($staff as $r) {
     if ($r['user_level'] == 'Forum Moderator') {
         echo "<tr>
 				<td>
-					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+					<a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a> [{$r['userid']}]
 				</td>
 				<td>
 					" . DateTime_Parse($r['laston']) . "

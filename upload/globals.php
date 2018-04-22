@@ -9,6 +9,8 @@
 */
 //Profiler start time
 $StartTime = microtime();
+//Set user's timezone.
+date_default_timezone_set("America/New_York");
 //If file is loaded directly.
 if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false) {
     exit;
@@ -32,6 +34,7 @@ if (!isset($_COOKIE['theme'])) {
     setcookie('theme', '1', time() + 86400);
 }
 ob_start();
+require('vendor/autoload.php');
 //Require the error handler and developer helper files.
 require "lib/basic_error_handler.php";
 require "lib/dev_help.php";
@@ -63,7 +66,7 @@ $db->configure($_CONFIG['hostname'], $_CONFIG['username'], $_CONFIG['password'],
 $db->connect();
 $c = $db->connection_id;
 $set = array();
-$settq = $db->query("SELECT * FROM `settings`");
+$settq = $db->query("/*qc=on*/SELECT * FROM `settings`");
 //Settings get resolved to be used easily elsewhere.
 while ($r = $db->fetch_row($settq)) {
     $set[$r['setting_name']] = $r['setting_value'];
@@ -72,7 +75,7 @@ global $jobquery, $housequery, $voterquery;
 if (isset($jobquery) && $jobquery) {
     $is =
         $db->query(
-            "SELECT `u`.*, `us`.*, `j`.*, `jr`.*, `uas`.*
+            "/*qc=on*/SELECT `u`.*, `us`.*, `j`.*, `jr`.*, `uas`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -89,7 +92,7 @@ if (isset($jobquery) && $jobquery) {
 } else if (isset($housequery) && $housequery) {
     $is =
         $db->query(
-            "SELECT `u`.*, `us`.*, `e`.*
+            "/*qc=on*/SELECT `u`.*, `us`.*, `e`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -102,13 +105,13 @@ if (isset($jobquery) && $jobquery) {
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
 } else if (isset($voterquery) && $voterquery) {
-    $UIDB = $db->query("SELECT * FROM `uservotes` WHERE `userid` = {$userid}");
+    $UIDB = $db->query("/*qc=on*/SELECT * FROM `uservotes` WHERE `userid` = {$userid}");
     if (!($db->num_rows($UIDB))) {
         $db->query("INSERT INTO `uservotes` (`userid`, `voted`) VALUES ('{$userid}', '');");
     }
     $is =
         $db->query(
-            "SELECT `u`.*, `us`.*, `uv`.*, `uas`.*
+            "/*qc=on*/SELECT `u`.*, `us`.*, `uv`.*, `uas`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -123,7 +126,7 @@ if (isset($jobquery) && $jobquery) {
 } else {
     $is =
         $db->query(
-            "SELECT `u`.*, `us`.*, `uas`.*
+            "/*qc=on*/SELECT `u`.*, `us`.*, `uas`.*
                      FROM `users` AS `u`
                      INNER JOIN `userstats` AS `us`
                      ON `u`.`userid`=`us`.`userid`
@@ -162,6 +165,8 @@ check_level();
 check_data();
 $os=getOS($_SERVER['HTTP_USER_AGENT']);
 $browser=getBrowser($_SERVER['HTTP_USER_AGENT']);
+$ir['os']=$os;
+$ir['browser']=$browser;
 $h = new headers;
 //Include API file.
 include("class/class_api.php");
@@ -188,16 +193,16 @@ cslog('log',"You are using {$browser} on {$os}.");
 /*foreach (glob("crons/*.php") as $filename) {
     include $filename;
 }*/
-$get = $db->query("SELECT `sip_recipe`,`sip_user` FROM `smelt_inprogress` WHERE `sip_time` < {$time}");
+$get = $db->query("/*qc=on*/SELECT `sip_recipe`,`sip_user` FROM `smelt_inprogress` WHERE `sip_time` < {$time}");
 //Select completed smelting recipes and give to the user.
 if ($db->num_rows($get)) {
     $r = $db->fetch_row($get);
-    $r2 = $db->fetch_row($db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r}"));
+    $r2 = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r}"));
     $api->UserGiveItem($r['user'], $r2['smelt_output'], $r2['smelt_qty_output']);
     $api->GameAddNotification($r['user'], "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
     $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$r['user']} AND `sip_time` < {$time}");
 }
-$UIDB = $db->query("SELECT * FROM `mining` WHERE `userid` = {$userid}");
+$UIDB = $db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid}");
 if (!($db->num_rows($UIDB))) {
     $db->query("INSERT INTO `mining` (`userid`, `max_miningpower`, `miningpower`, `miningxp`, `buyable_power`, `mining_level`) 
     VALUES ('{$userid}', '100', '100', '0', '1', '1');");

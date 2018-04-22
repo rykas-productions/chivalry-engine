@@ -174,7 +174,7 @@ function logs($name)
         $_GET['st'] = 0;
     }
     $st = abs(intval($_GET['st']));
-    $q = $db->query("SELECT COUNT(`log_id`) FROM `logs` WHERE `log_type` = '{$logname}'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`log_id`) FROM `logs` WHERE `log_type` = '{$logname}'");
     $attacks = $db->fetch_single($q);
     $db->free_result($q);
     if ($attacks == 0) {
@@ -192,13 +192,13 @@ function logs($name)
        ";
     $q =
         $db->query(
-            "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
+            "/*qc=on*/SELECT `log_user`, `log_time`, `log_text`, `log_ip`
                      FROM `logs`
 					 WHERE `log_type` = '{$logname}'
                      ORDER BY `log_time` DESC
                      LIMIT $st, 100");
     while ($r = $db->fetch_row($q)) {
-        $un = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
+        $un = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
 		<tr>
         	<td>" . DateTime_Parse($r['log_time'])
@@ -230,7 +230,7 @@ function userlogs()
         }
         $st = abs(intval($_GET['st']));
         $app = 100;
-        $q = $db->query("SELECT COUNT(`log_id`)
+        $q = $db->query("/*qc=on*/SELECT COUNT(`log_id`)
 						 FROM `logs` WHERE `log_type` != 'staff' AND `log_user` = {$_GET['user']}");
         $logs = $db->fetch_single($q);
         $db->free_result($q);
@@ -250,7 +250,7 @@ function userlogs()
 				</thead>
 				<tbody>
 		   ";
-        $LogsQuery = $db->query("SELECT `log_type`,`log_text`,`log_time`,`username`,`userid`
+        $LogsQuery = $db->query("/*qc=on*/SELECT `log_type`,`log_text`,`log_time`,`username`,`userid`
 								FROM `logs` AS `lt`
 								INNER JOIN `users` AS `u`
 								ON `lt`.`log_user` = `u`.`userid`
@@ -342,7 +342,7 @@ function alllogs()
     }
     $st = abs(intval($_GET['st']));
     $app = 100;
-    $q = $db->query("SELECT COUNT(`log_id`) FROM `logs` WHERE `log_type` != 'staff'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`log_id`) FROM `logs` WHERE `log_type` != 'staff'");
     $attacks = $db->fetch_single($q);
     $db->free_result($q);
     if ($attacks == 0) {
@@ -359,13 +359,13 @@ function alllogs()
        ";
     $q =
         $db->query(
-            "SELECT `log_user`, `log_time`, `log_text`, `log_ip`
+            "/*qc=on*/SELECT `log_user`, `log_time`, `log_text`, `log_ip`
                      FROM `logs`
 					 WHERE `log_type` != 'staff'
                      ORDER BY `log_time` DESC
                      LIMIT $st, $app");
     while ($r = $db->fetch_row($q)) {
-        $un = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
+        $un = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
 		<tr>
         	<td>" . DateTime_Parse($r['log_time'])
@@ -396,7 +396,7 @@ function maillogs()
     }
     $st = abs(intval($_GET['st']));
     $app = 100;
-    $q = $db->query("SELECT COUNT(`mail_id`) FROM `mail`");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`mail_id`) FROM `mail`");
     $attacks = $db->fetch_single($q);
     $db->free_result($q);
     if ($attacks == 0) {
@@ -413,13 +413,13 @@ function maillogs()
     			<th>Message</th>
     		</tr>
        ";
-    $q = $db->query("SELECT *
+    $q = $db->query("/*qc=on*/SELECT *
                      FROM `mail`
                      ORDER BY `mail_time` DESC
                      LIMIT $st, $app");
     while ($r = $db->fetch_row($q)) {
-        $un = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['mail_from']}"));
-        $un2 = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['mail_to']}"));
+        $un = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$r['mail_from']}"));
+        $un2 = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$r['mail_to']}"));
 		$r['mail_text']=decrypt_message($r['mail_text'],$r['mail_from'],$r['mail_to']);
         echo "
 		<tr>

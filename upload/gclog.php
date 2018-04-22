@@ -17,7 +17,7 @@ if (empty($_GET['ID'])) {
 }
 
 //Select the log from the database.
-$q = $db->query("SELECT * FROM `guild_crime_log` WHERE `gclID` = {$_GET['ID']}");
+$q = $db->query("/*qc=on*/SELECT * FROM `guild_crime_log` WHERE `gclID` = {$_GET['ID']}");
 
 //Make sure the crime log exists.
 if ($db->num_rows($q) == 0) {
@@ -32,7 +32,7 @@ if ($ir['guild'] != $r['gclGUILD']) {
     alert('danger', "Uh Oh!", "You cannot view this log as you are not part of the guild who committed it.", true, 'index.php');
     die($h->endpage());
 }
-$name=$db->fetch_single($db->query("SELECT `gcNAME` FROM `guild_crimes` WHERE `gcID` = {$r['gclCID']}"));
+$name=$db->fetch_single($db->query("/*qc=on*/SELECT `gcNAME` FROM `guild_crimes` WHERE `gcID` = {$r['gclCID']}"));
 echo "Here is the information on the crime.
 <br />
 <b>Crime:</b> {$name}

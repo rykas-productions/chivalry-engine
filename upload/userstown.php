@@ -25,7 +25,7 @@ $allowed_ord = array('asc', 'desc', 'ASC', 'DESC');
 $ord = (isset($_GET['ord']) && in_array($_GET['ord'], $allowed_ord, true)) ? $_GET['ord'] : 'ASC';
 echo "<h3><i class='game-icon game-icon-village'></i> Town Userlist</h3>";
 //Select user count
-$cnt = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$ir['location']}");
+$cnt = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$ir['location']}");
 $membs = $db->fetch_single($cnt);
 
 //Pagination function!!
@@ -45,7 +45,7 @@ echo "Order By:
 <br /><br />";
 
 //Select the users info
-$q = $db->query("SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `vipcolor`
+$q = $db->query("/*qc=on*/SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `vipcolor`
                 FROM `users` WHERE `location` = {$ir['location']} ORDER BY `{$by}` {$ord}  LIMIT {$st}, 100");
 $no1 = $st + 1;
 $no2 = min($st + 100, $membs);
@@ -66,8 +66,7 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
    ";
 //Display the users info.
 while ($r = $db->fetch_row($q)) {
-    $r['username'] = ($r['vip_days']) ? "<span class='{$r['vipcolor']}'>{$r['username']} <i class='fas fa-shield-alt'
-        data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
+    $r['username'] = parseUsername($r['userid']);
     echo "	<tr>
 				<td>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]

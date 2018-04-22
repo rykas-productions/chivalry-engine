@@ -31,7 +31,7 @@ function home()
 {
     global $db, $ir;
     echo "You begin looking through town to see the shops that interest you. You find a small handful.<br />";
-    $q = $db->query("SELECT `shopID`, `shopNAME`, `shopDESCRIPTION` FROM `shops` WHERE `shopLOCATION` = {$ir['location']}");
+    $q = $db->query("/*qc=on*/SELECT `shopID`, `shopNAME`, `shopDESCRIPTION` FROM `shops` WHERE `shopLOCATION` = {$ir['location']}");
     if ($db->num_rows($q) == 0) {
         echo "This town doesn't have any shops, funny enough.";
     } else {
@@ -53,7 +53,7 @@ function home()
 					  </tr>";
         }
         echo "</table>
-		<img src='assets/img/shop.jpg' class='img-thumbnail img-responsive'>";
+		<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819462/shop.jpg' class='img-thumbnail img-responsive'>";
         $db->free_result($q);
     }
 }
@@ -62,21 +62,21 @@ function shop()
 {
     global $db, $ir, $api, $userid;
     $_GET['shop'] = abs($_GET['shop']);
-    $sd = $db->query("SELECT `shopLOCATION`, `shopNAME` FROM `shops` WHERE `shopID` = {$_GET['shop']}");
+    $sd = $db->query("/*qc=on*/SELECT `shopLOCATION`, `shopNAME` FROM `shops` WHERE `shopID` = {$_GET['shop']}");
     if ($db->num_rows($sd) > 0) {
         $shopdata = $db->fetch_row($sd);
         if ($shopdata['shopLOCATION'] == $ir['location']) {
-			$specialnumber=((getSkillLevel($userid,7)*5)/100);
+			$specialnumber=((getSkillLevel($userid,13)*5)/100);
             echo "You begin browsing the stock at {$shopdata['shopNAME']}<br />
 			<table class='table table-bordered'>
 				<tr>
-					<th>Item</th>
+					<th colspan='2'>Item</th>
 					<th>Price</th>
 					<th width='25%'>Buy</th>
 				</tr>";
             $qtwo =
                 $db->query(
-                    "SELECT `itmtypename`, `itmname`, `itmdesc`, `itmid`,
+                    "/*qc=on*/SELECT `itmtypename`, `itmname`, `itmdesc`, `itmid`,
                              `itmbuyprice`, `itmsellprice`, `sitemID`
                              FROM `shopitems` AS `si`
                              INNER JOIN `items` AS `i`
@@ -92,12 +92,15 @@ function shop()
                 if ($lt != $r['itmtypename']) {
                     $lt = $r['itmtypename'];
                     echo "<tr>
-                    			<td colspan='3'><b>{$lt}</b></td>
+                    			<td colspan='4'><b>{$lt}</b></td>
                     		</tr>";
                 }
-				$icon = returnIcon($r['itmid'],1.75);
+				$icon = returnIcon($r['itmid'],3);
                 echo "<tr>
-                			<td>{$icon}<br /><a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip'"; ?> title="<?php echo $r['itmdesc']; ?>" <?php echo ">{$r['itmname']}</a></td>
+                            <td>
+                            {$icon}
+                            </td>
+                			<td><a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip'"; ?> title="<?php echo $r['itmdesc']; ?>" <?php echo ">{$r['itmname']}</a></td>
                 			<td>" . number_format($api->SystemReturnTax($r['itmbuyprice'])) . "</td>
                             <td>
                             	<form action='?action=buy&ID={$r['sitemID']}' method='post'>
@@ -127,7 +130,7 @@ function buy()
         if (empty($_GET['ID']) OR empty($_POST['qty'])) {
             alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.", true, "shops.php");
         } else {
-            $q = $db->query("SELECT `itmid`, `itmbuyprice`, `itmname`, `itmbuyable`, `shopLOCATION`
+            $q = $db->query("/*qc=on*/SELECT `itmid`, `itmbuyprice`, `itmname`, `itmbuyable`, `shopLOCATION`
 							FROM `shopitems` AS `si`
 							INNER JOIN `shops` AS `s`
 							ON `si`.`sitemSHOP` = `s`.`shopID`
@@ -138,7 +141,7 @@ function buy()
                 alert('danger', "Uh Oh!", "You are trying to buy from a non-existent shop.", true, "shops.php");
             } else {
                 $itemd = $db->fetch_row($q);
-				$specialnumber=((getSkillLevel($userid,7)*5)/100);
+				$specialnumber=((getSkillLevel($userid,13)*5)/100);
 				$itemd['itmbuyprice']=$itemd['itmbuyprice']-($itemd['itmbuyprice']*$specialnumber);
                 if ($ir['primary_currency'] < ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty'])) {
                     alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy {$_POST['qty']} {$itemd['itmname']}(s).", true, "shops.php");

@@ -8,35 +8,52 @@
 */
 require("globals.php");
 include('facebook.php');
+if (isset($_POST['sc_shortcut'])) {
+    $sc = (isset($_POST['sc_shortcut'])) ? $db->escape(strip_tags(stripslashes($_POST['sc_shortcut']))) : '';
+    $name = (isset($_POST['sc_name'])) ? $db->escape(strip_tags(stripslashes($_POST['sc_name']))) : '';
+    $file = strstr($sc, '.php', true);
+
+    if ((empty($sc)) || (empty($name))) {
+        alert('danger', "Uh Oh!", "Missing one ore more required inputs.", false);
+    } elseif (!file_exists("{$file}.php")) {
+        alert('danger', "Uh Oh!", "Web-page does not exist.", false);
+    } else {
+        $db->query("INSERT INTO `shortcut` (`sc_link`, `sc_name`, `sc_userid`) VALUES ('{$sc}', '{$name}', '{$userid}')");
+        alert('success', "Success!", "Shortcut added successfully.", false);
+    }
+}
+if (isset($_GET['delete'])) {
+    $_GET['delete'] = (isset($_GET['delete']) && is_numeric($_GET['delete'])) ? abs($_GET['delete']) : '';
+    if (!empty($_GET['delete'])) {
+        $db->query("DELETE FROM `shortcut` WHERE `sc_id` = {$_GET['delete']} AND `sc_userid` = {$userid}");
+        alert('success', "Success!", "Shortcut deleted successfully.", false);
+    }
+}
 //Anti-refresh RNG.
 $tresder = (Random(100, 999));
 $time = time();
-$last15=$time-900;
+$last15 = $time - 900;
 //Select users in infirmary and dungeon to list later on the page.
-$dung_count = $db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$time}"));
-$infirm_count = $db->fetch_single($db->query("SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$time}"));
-$market = $db->fetch_single($db->query("SELECT COUNT(`imID`) FROM `itemmarket`"));
-$rmarket = $db->fetch_single($db->query("SELECT COUNT(`irID`) FROM `itemrequest`"));
-$secmarket = $db->fetch_single($db->query("SELECT COUNT(`sec_id`) FROM `sec_market`"));
-$forumposts = $db->fetch_single($db->query("SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_time` > {$last15}"));
-$chat = $db->fetch_single($db->query("SELECT COUNT(`userID`) FROM `ajax_chat_online`"));
-$wars = $db->fetch_single($db->query("SELECT COUNT(`gw_id`) FROM `guild_wars` WHERE `gw_end` > {$time}"));
-$users = number_format($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users`")));
-$userson = number_format($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$last15}")));
-$userstown = number_format($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$ir['location']}")));
-$paperads = $db->fetch_single($db->query("SELECT COUNT(`news_id`) FROM `newspaper_ads` WHERE `news_end` > {$time}"));
-$rr = $db->fetch_single($db->query("SELECT COUNT(`challenger`) FROM `russian_roulette` WHERE `challengee` = {$userid}"));
+$dung_count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$time}"));
+$bounty_count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`bh_id`) FROM `bounty_hunter`"));
+$infirm_count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$time}"));
+$market = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`imID`) FROM `itemmarket`"));
+$rmarket = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`irID`) FROM `itemrequest`"));
+$secmarket = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`sec_id`) FROM `sec_market`"));
+$forumposts = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_time` > {$last15}"));
+$chat = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userID`) FROM `ajax_chat_online`"));
+$wars = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`gw_id`) FROM `guild_wars` WHERE `gw_end` > {$time}"));
+$users = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users`")));
+$userson = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$last15}")));
+$userstown = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$ir['location']}")));
+$paperads = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`news_id`) FROM `newspaper_ads` WHERE `news_end` > {$time}"));
+$rr = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`challenger`) FROM `russian_roulette` WHERE `challengee` = {$userid}"));
 $bank = ($ir['bank'] > -1) ? number_format($ir['bank']) : "N/A";
 $bigbank = ($ir['bigbank'] > -1) ? number_format($ir['bigbank']) : "N/A";
 $tbank = ($ir['tokenbank'] > -1) ? number_format($ir['tokenbank']) : "N/A";
-$guildcount = $db->fetch_single($db->query("SELECT COUNT(`guild_id`) FROM `guild`"));
-$MUS = ($db->fetch_row($db->query("SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
-$energy=$api->UserInfoGet($userid,'energy',true);
-$brave=$api->UserInfoGet($userid,'brave',true);
-$will=$api->UserInfoGet($userid,'will',true);
-$xp=round($ir['xp'] / $ir['xp_needed'] * 100);
-$hp=$api->UserInfoGet($userid,'hp',true);
-$miningenergy=min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
+$guildcount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`guild_id`) FROM `guild`"));
+$MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
+$miningenergy = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
 if (empty($dung_count)) {
     $dung_count = 0;
 }
@@ -98,17 +115,16 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 				Social District
 			</a>
 		</li>";
-		if ($ir['vip_days'])
-		{
-			echo"
+if ($ir['vip_days']) {
+    echo "
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#VIP'>
 					<i class='fas fa-shield-alt'></i>
 					VIP District
 				</a>
 			</li>";
-		}
-		echo"
+}
+echo "
 	</ul>
 </div>
 <div class='col-md-4'>
@@ -119,7 +135,8 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 					<a href='shops.php'><i class='game-icon game-icon-shop'></i> Local Shops</a><br />
 					<a href='itemmarket.php'><i class='game-icon game-icon-trade'></i> Item Market <span class='badge badge-pill badge-primary'>{$market}</span></a><br />
 					<a href='itemrequest.php'><i class='game-icon game-icon-trade'></i> Item Request <span class='badge badge-pill badge-primary'>{$rmarket}</span></a><br />
-					<a href='secmarket.php'><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />
+					<a href='secmarket.php'><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />";
+                    echo"
 				</div>
 			</div>
 		</div>
@@ -128,11 +145,10 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 				<div class='card-body'>
 				    <a href='job.php'><i class='game-icon game-icon-push'></i> Work Center</a><br />
 					<a href='bank.php'><i class='game-icon game-icon-bank'></i> City Bank <span class='badge badge-pill badge-primary'>{$bank}</span></a><br />";
-                    if ($ir['level'] > 74)
-                    {
-                        echo "<a href='bigbank.php'><i class='game-icon game-icon-bank'></i> Federal Bank <span class='badge badge-pill badge-primary'>{$bigbank}</span></a><br />";
-                    }
-                    echo"
+if ($ir['level'] > 74) {
+    echo "<a href='bigbank.php'><i class='game-icon game-icon-bank'></i> Federal Bank <span class='badge badge-pill badge-primary'>{$bigbank}</span></a><br />";
+}
+echo "
 					<a href='tokenbank.php'><i class='game-icon game-icon-chest'></i> Chivalry Token Bank <span class='badge badge-pill badge-primary'>{$tbank}</span></a><br />
 					<a href='estates.php'><i class='game-icon game-icon-house'></i> Estate Agent</a><br />
 					<a href='travel.php'><i class='game-icon game-icon-horseshoe'></i> Travel Agent</a><br />
@@ -151,6 +167,7 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 					<a href='criminal.php'><i class='game-icon game-icon-robber'></i> Criminal Center</a><br />
 					<a href='academy.php'><i class='game-icon game-icon-diploma'></i> Local Academy</a><br />
 					<a href='achievements.php'><i class='game-icon game-icon-achievement'></i> Achievements</a><br />
+                    <a href='bounty.php'><i class='game-icon game-icon-game-icon game-icon-shadow-grasp'></i> Bounty Hunter <span class='badge badge-pill badge-primary'>{$bounty_count}</span></a><br />
 				</div>
 			</div>
 		</div>
@@ -175,13 +192,13 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 					<a href='russianroulette.php'><i class='game-icon game-icon-revolver'></i> Russian Roulette <span class='badge badge-pill badge-primary'>{$rr}</span></a><br />
 					<a href='roulette.php?tresde={$tresder}'><i class='game-icon game-icon-table'></i> Roulette Table</a><br />
 					<a href='slots.php?tresde={$tresder}'><i class='game-icon game-icon-pokecog'></i> Slot Machines</a><br />";
-                    if ($ir['level'] > 49)
-                        echo "<a href='bigslots.php?tresde={$tresder}'><i class='game-icon game-icon-pokecog'></i> Federal Slots</a><br />";
-                    echo"
+if ($ir['level'] > 49)
+    echo "<a href='bigslots.php?tresde={$tresder}'><i class='game-icon game-icon-pokecog'></i> Federal Slots</a><br />";
+echo "
 					<a href='hexbags.php?tresde={$tresder}'><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags <span class='badge badge-pill badge-primary'>{$ir['hexbags']}</span></a><br />";
-					if ($ir['autohex'] > 0)
-						echo "<a href='autohex.php'><i class='game-icon game-icon-open-treasure-chest'></i> Auto Hexbags <span class='badge badge-pill badge-primary'>{$ir['autohex']}</span></a><br />";
-					echo"
+if ($ir['autohex'] > 0)
+    echo "<a href='autohex.php'><i class='game-icon game-icon-open-treasure-chest'></i> Auto Hexbags <span class='badge badge-pill badge-primary'>{$ir['autohex']}</span></a><br />";
+echo "
 					<a href='raffle.php'><i class='fas fa-ticket-alt'></i> CID Raffle <span class='badge badge-pill badge-primary'>" . number_format($set['lotterycash']) . "</span></a><br />
 				</div>
 			</div>
@@ -189,11 +206,11 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 		<div id='GUILDS' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>";
-					//User is in a guild.
-					if ($ir['guild'] > 0) {
-						echo "<a href='viewguild.php'><i class='game-icon game-icon-minions'></i> Visit Your Guild</a><br />";
-					}
-					echo "
+//User is in a guild.
+if ($ir['guild'] > 0) {
+    echo "<a href='viewguild.php'><i class='game-icon game-icon-minions'></i> Visit Your Guild</a><br />";
+}
+echo "
 					<a href='guilds.php'><i class='game-icon game-icon-dozen'></i> Guild Listing <span class='badge badge-pill badge-primary'>{$guildcount}</span></a><br />
 					<a href='guilds.php?action=wars'><i class='game-icon game-icon-mounted-knight'></i> Guild Wars</a> <span class='badge badge-pill badge-danger'>{$wars}</span><br />
 				</div>
@@ -215,9 +232,8 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 				</div>
 			</div>
 		</div>";
-		if ($ir['vip_days'])
-		{
-			echo"
+if ($ir['vip_days']) {
+    echo "
 			<div id='VIP' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
@@ -227,100 +243,21 @@ echo "<h4>You begin exploring the town. You find a few things that could keep yo
 				</div>
 			</div>
 		</div>";
-		}
-	echo"</div>
-</div>
-<div class='col-md-4'>
-	<div class='card'>
-		<div class='card-body'>
-				<div class='row'>
-					<div class='col-8' align='left'>
-						Energy {$energy}%
-					</div>
-					<div class='col-4'>
-						<a href='temple.php?action=energy'><i class='fas fa-sync'></i></a>
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col-12'>
-						<div class='progress'>
-							<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$ir['energy']}' style='width:{$energy}%' aria-valuemin='0' aria-valuemax='{$ir['maxenergy']}'></div>
-						</div>
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col-8' align='left'>
-						Brave {$ir['brave']} / {$ir['maxbrave']}
-					</div>
-					<div class='col-4'>
-						<a href='temple.php?action=brave'><i class='fas fa-sync'></i></a>
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col-12'>
-						<div class='progress'>
-							<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$brave}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'></div>
-						</div>
-					</div>
-				</div>
-					<div class='row'>
-						<div class='col-8' align='left'>
-							Will {$will}%
-						</div>
-						<div class='col-4'>
-							<a href='temple.php?action=will'><i class='fas fa-sync'></i></a>
-						</div>
-					</div>
-				<div class='row'>
-					<div class='col-12'>
-						<div class='progress'>
-							<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$will}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'></div>
-						</div>
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col-8' align='left'>
-						XP {$xp}%
-					</div>
-				</div>
-				<div class='progress'>
-					<div class='progress-bar bg-warning' role='progressbar' aria-valuenow='{$ir['xp']}' style='width:{$xp}%' aria-valuemin='0' aria-valuemax='{$ir['xp_needed']}'></div>
-				</div>
-				<div class='row'>
-					<div class='col-8' align='left'>
-						HP {$hp}%
-					</div>
-				</div>
-				<div class='progress'>
-					<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'></div>
-				</div>
-					<div class='row'>
-						<div class='col-8' align='left'>
-							Level {$ir['level']}
-						</div>
-					</div>
-				<div class='container-fluid'>
-					<div class='row'>
-						Copper Coins
-						" . number_format($ir['primary_currency']) . "
-					</div>
-				</div>
-				<div class='container-fluid'>
-					<div class='row'>
-						Chivalry Tokens
-						" . number_format($ir['secondary_currency']) . "
-					</div>
-				</div>
-				<div class='container-fluid'>
-					<div class='row'>
-						Luck
-						" . number_format($ir['luck']) . "%
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+}
+echo "</div>
+</div><div class='col-sm-4'>
+        <div class='card'>
+            <div class='card-header'>
+                Your Shortcuts [<a href='#' data-toggle='modal' data-target='#addShortcut'>Add Shortcut</a>]
+            </div>
+            <div class='card-body' align='left'>";
+$q = $db->query("/*qc=on*/SELECT * FROM `shortcut` WHERE `sc_userid` = {$userid}");
+while ($r = $db->fetch_row($q)) {
+    echo "<a href='{$r['sc_link']}'>{$r['sc_name']}</a> [<a href='?delete={$r['sc_id']}'>&times;</a>]<br />";
+}
+echo "</div>
+        </div>
+    </div>
 </div>";
 //referral link.
 echo "	<div class='row'>
@@ -331,4 +268,5 @@ echo "	<div class='row'>
                 <a href='https://twitter.com/cidgame?ref_src=twsrc%5Etfw' class='twitter-follow-button' data-size='large' data-dnt='true' data-show-count='false'>Follow @cidgame</a><script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script>
 			</div>
 		</div>";
+include('explore_shortcut.php');
 $h->endpage();

@@ -17,7 +17,7 @@ if ($api->UserInfoGet($userid, 'brave', true) < 25) {
     alert('danger', "Uh Oh!", "You need 25% Brave to rob someone.", true, 'index.php');
     die($h->endpage());
 }
-$q = $db->query("SELECT `primary_currency` FROM `users` WHERE `userid` = {$_GET['user']}");
+$q = $db->query("/*qc=on*/SELECT `primary_currency` FROM `users` WHERE `userid` = {$_GET['user']}");
 if ($db->num_rows($q) == 0) {
     alert('danger', "Uh Oh!", "The user you're trying to rob is invalid or does not exist.", true, 'index.php');
     die($h->endpage());
@@ -49,7 +49,7 @@ if (isset($_POST['rob'])) {
     $api->UserInfoSet($userid, 'brave', -25, true);
     $minimum = round($r * 0.05);
     $maximum = round($r * 0.1);
-	$specialnumber=((getSkillLevel($userid,5)*5)/100);
+	$specialnumber=((getSkillLevel($userid,14)*5)/100);
     $stolen = Random($minimum, $maximum);
 	$stolen = $stolen+($stolen*$specialnumber);
 	$stolenn = number_format($stolen);

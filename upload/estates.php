@@ -10,13 +10,13 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-$mpq = $db->query("SELECT * FROM `estates` WHERE `house_will` = {$ir['maxwill']} LIMIT 1");
+$mpq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_will` = {$ir['maxwill']} LIMIT 1");
 $mp = $db->fetch_row($mpq);
 $db->free_result($mpq);
 //User is trying to buy an estate.
 if (isset($_GET['property']) && is_numeric($_GET['property'])) {
     $_GET['property'] = abs($_GET['property']);
-    $npq = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$_GET['property']}");
+    $npq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_id` = {$_GET['property']}");
     //Estate does not exist.
     if ($db->num_rows($npq) == 0) {
         $db->free_result($npq);
@@ -59,7 +59,7 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
     echo "Your current estate is the <b>{$mp['house_name']}</b>.<br />
 		The houses you can buy are listed below. Click a house to buy it. Your Will helps determine how much you
 		gain while training, and it helps with committing crimes.<br />";
-    $hq = $db->query("SELECT * FROM `estates` WHERE `house_will` > {$ir['maxwill']} ORDER BY `house_will` ASC");
+    $hq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_will` > {$ir['maxwill']} ORDER BY `house_will` ASC");
     echo "
 	<table class='table table-bordered'>
 	<tr>

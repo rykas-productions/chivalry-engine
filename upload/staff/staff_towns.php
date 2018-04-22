@@ -41,7 +41,7 @@ function addtown()
             alert('danger', "Action Blocked!", "This action has been blocked for your security. Please submit the form quickly");
             die($h->endpage());
         }
-        $q = $db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_name` = '{$name}'");
+        $q = $db->query("/*qc=on*/SELECT COUNT(`town_id`) FROM `town` WHERE `town_name` = '{$name}'");
         if ($db->fetch_single($q) > 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The town name you've chosen is already in use.");
@@ -109,7 +109,7 @@ function deltown()
     echo "<h3>Removing a Town</h3><hr />";
     if (isset($_POST['town'])) {
         $town = (isset($_POST['town']) && is_numeric($_POST['town'])) ? abs(intval($_POST['town'])) : 0;
-        $q = $db->query("SELECT `town_id`, `town_name` FROM `town` WHERE `town_id` = {$town}");
+        $q = $db->query("/*qc=on*/SELECT `town_id`, `town_name` FROM `town` WHERE `town_id` = {$town}");
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_deltown', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action has been blocked for your security. Please submit the form quickly");
             die($h->endpage());
@@ -171,7 +171,7 @@ function edittown()
             $name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
             $tax = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs(intval($_POST['tax'])) : 0;
             $id = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : 0;
-            $q = $db->query("SELECT * FROM `town` WHERE `town_id` = {$id}");
+            $q = $db->query("/*qc=on*/SELECT * FROM `town` WHERE `town_id` = {$id}");
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
                 alert("danger", "Uh Oh!", "The town you are wishing to edit does not exist, or is invalid.");
@@ -181,7 +181,7 @@ function edittown()
                 alert('danger', "Action Blocked!", "This action has been blocked for your security. Please submit the form quickly");
                 die($h->endpage());
             }
-            $q = $db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_name` = '{$name}' && `town_id` != {$id}");
+            $q = $db->query("/*qc=on*/SELECT COUNT(`town_id`) FROM `town` WHERE `town_name` = '{$name}' && `town_id` != {$id}");
             if ($db->fetch_single($q) > 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "The town name you've chosen is already in use.");
@@ -204,7 +204,7 @@ function edittown()
             break;
         case 1:
             $_POST['location'] = (isset($_POST['location']) && is_numeric($_POST['location'])) ? abs(intval($_POST['location'])) : 0;
-            $q = $db->query("SELECT * FROM `town` WHERE `town_id` = {$_POST['location']}");
+            $q = $db->query("/*qc=on*/SELECT * FROM `town` WHERE `town_id` = {$_POST['location']}");
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
                 alert("danger", "Uh Oh!", "The town you are wishing to edit does not exist, or is invalid.");

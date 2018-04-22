@@ -20,12 +20,6 @@ if (user_dungeon($userid))
     alert('danger',"Uh Oh!","You cannot use the Temple of Fortune if you're in the dungeon.",true,'dungeon.php');
     die($h->endpage());
 }
-if ($ir['theme'] == 9)
-{
-    $set['energy_refill_cost']=10;
-    $set['will_refill_cost']=3;
-    $set['brave_refill_cost']=5;
-}
 if (Random(1,50) == 6)
 {
     put_infirmary($userid, Random(1,10), 'Downstairs');
@@ -54,7 +48,7 @@ switch ($_GET['action']) {
 	case 'protection':
         protection();
         break;
-	case 'coppertotoken':
+    case 'coppertotoken':
         coppertotoken();
         break;
 	case 'tokentocopper':
@@ -68,16 +62,16 @@ function home()
 {
     //Main index.
     global $set,$userid;
-	$extraiq=(getSkillLevel($userid,4)*3);
+	$extraiq=(getSkillLevel($userid,12)*5);
     echo "Welcome to the Temple of Fortune. Here you may spend your Chivalry Tokens as you see fit!";
     echo "<br />
 	<a class='btn btn-primary' href='?action=energy'>Refill Energy - " . number_format($set['energy_refill_cost']) . " Chivalry Tokens</a><br /><br />
 	<a class='btn btn-primary' href='?action=brave'>Regenerate 5% Bravery - " . number_format($set['brave_refill_cost']) . " Chivalry Tokens</a><br /><br />
 	<a class='btn btn-primary' href='?action=will'>Regenerate 5% Will - " . number_format($set['will_refill_cost']) . " Chivalry Tokens</a><br /><br />
 	<a class='btn btn-primary' href='?action=iq'>Buy IQ - " . number_format($set['iq_per_sec']) . "* Per Token</a><br /><br />
-	<a class='btn btn-primary' href='?action=protection'>Buy Protection - 7 Chivalry Tokens per Minute</a><br /><br />
-	<a class='btn btn-primary' href='?action=coppertotoken'>50k Copper Coins -> 1 Chivalry Token</a><br /><br />
-	<a class='btn btn-primary' href='?action=tokentocopper'>1 Chivalry Token -> 1k Copper Coins</a><br /><br />
+	<a class='btn btn-primary' href='?action=protection'>Buy Protection - 5 Chivalry Tokens per Minute</a><br /><br />
+    <a class='btn btn-primary' href='?action=coppertotoken'>50k Copper Coins -> 1 Chivalry Token</a><br /><br />
+	<a class='btn btn-primary' href='?action=tokentocopper'>1 Chivalry Token -> 200 Copper Coins</a><br /><br />
 	<br />
 	*=You will receive an extra {$extraiq}% IQ per Token because of your skills.";
 }
@@ -193,7 +187,7 @@ function iq()
             alert('danger', "Uh Oh!", "You do not have enough Chivalry Tokens to buy that much IQ.");
             die($h->endpage());
         }
-		$specialnumber=((getSkillLevel($userid,4)*3)/100);
+		$specialnumber=((getSkillLevel($userid,12)*5)/100);
 		$totalcost=$totalcost+($totalcost*$specialnumber);
         //Take the currency and give the user some IQ.
         $api->UserTakeCurrency($userid, 'secondary', $_POST['iq']);
@@ -201,7 +195,7 @@ function iq()
         alert('success', "Success!", "You have successfully traded " . number_format($_POST['iq']) . " Chivalry Tokens for " . number_format($totalcost) . " IQ Points.", true, 'temple.php');
         $api->SystemLogsAdd($userid, 'temple', "Traded {$_POST['iq']} Chivalry Tokens for {$totalcost} IQ.");
     } else {
-		$extraiq=(getSkillLevel($userid,4)*3);
+		$extraiq=(getSkillLevel($userid,12)*5);
         alert('info', "Information!", "You can trade in your Chivalry Tokens for IQ at a ratio of {$set['iq_per_sec']}*
 		per Chivalry Tokens. You currently have " . number_format($ir['secondary_currency']) . " Chivalry Tokens.", false);
         echo "<table class='table table-bordered'>
@@ -246,10 +240,10 @@ function protection()
 		}
 		if ($protection > 60)
 		{
-			alert('danger',"Uh Oh!","You may only purchase 30 minutes of protection at a time.");
+			alert('danger',"Uh Oh!","You may only purchase 60 minutes of protection at a time.");
 			die($h->endpage());
 		}
-		$cost=$protection*7;
+		$cost=$protection*5;
 		if (!($api->UserHasCurrency($userid,'secondary',$cost)))
 		{
 			alert('danger',"Uh Oh!","You need {$cost} Chivalry Tokens for {$protection} minutes of protection. You only have {$ir['secondary_currency']}.");
@@ -268,7 +262,7 @@ function protection()
 		echo "Write some checks with your mouth that your ass cannot cash? Buying protection might be for you!
 		Protection will make it so you cannot be bombed with small or medium explosives, or be attacked. However, 
 		if you attack another player, you will lose your protection. Its quite simple. <br /><b>Each minute of protection 
-		will cost you 7 Chivalry Tokens.</b> You may not buy more than 60 minutes at a time. So, how many minutes of 
+		will cost you 5 Chivalry Tokens.</b> You may not buy more than 60 minutes at a time. So, how many minutes of 
 		protection would you like to buy?<br />
 		<form method='post'>
 			<input type='number' min='1' name='protection' max='60' class='form-control' required='1'>
@@ -332,7 +326,7 @@ function tokentocopper()
 			alert('danger',"Uh Oh!","Please specify how many tokens you wish to exchange for Copper Coins.");
 			die($h->endpage());
 		}
-		$cost=$token*1000;
+		$cost=$token*200;
 		if (!$api->UserHasCurrency($userid,'secondary',$token))
 		{
 			alert('danger',"Uh Oh!","You do not have enough Chivalry Tokens to exchange for {$cost} Copper Coins. You need {$token} Chivalry Tokens.");
@@ -346,7 +340,7 @@ function tokentocopper()
 	else
 	{
 		$csrf=request_csrf_html('copper');
-		echo "You may convert your Chivalry Tokens to Copper Coins at 1,000 Copper Coins per Token. This is to 
+		echo "You may convert your Chivalry Tokens to Copper Coins at 200 Copper Coins per Token. This is to 
 		limit the minimum value of Chivalry Tokens when taking in account for inflation in the game. This price 
 		is very likely to change as the game progresses. How many tokens would you like to exchange?
 		<form method='post'>

@@ -59,7 +59,7 @@ function index()
 	   {
 		   $q =
 			$db->query(
-            "SELECT `irCOST`, `irQTY`, `irITEM`, `irUSER`,
+            "/*qc=on*/SELECT `irCOST`, `irQTY`, `irITEM`, `irUSER`,
                      `irID`, `itmid`, `itmname`, `userid`,`username`, `itmdesc`,
                      `itmtypename`
                      FROM `itemrequest` AS `ir`
@@ -76,7 +76,7 @@ function index()
 	   {
 		   $q =
 			$db->query(
-            "SELECT `irCOST`, `irQTY`, `irITEM`, `irUSER`,
+            "/*qc=on*/SELECT `irCOST`, `irQTY`, `irITEM`, `irUSER`,
                      `irID`, `itmid`, `itmname`, `userid`,`username`, `itmdesc`,
                      `itmtypename`
                      FROM `itemrequest` AS `ir`
@@ -93,7 +93,7 @@ function index()
    {
 		$q =
         $db->query(
-            "SELECT `irCOST`, `irQTY`, `irITEM`, `irUSER`,
+            "/*qc=on*/SELECT `irCOST`, `irQTY`, `irITEM`, `irUSER`,
                      `irID`, `itmid`, `itmname`, `userid`,`username`, `itmdesc`,
                      `itmtypename`
                      FROM `itemrequest` AS `ir`
@@ -128,7 +128,7 @@ function index()
         echo "
 		<tr>
 			<td>
-				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+				<a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a> [{$r['userid']}]
 			</td>
 			<td>
 				{$icon} <a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>{$r['itmname']}</a>";
@@ -156,7 +156,7 @@ function remove()
         alert('danger', "Uh Oh!", "Please specify the offer you wish to remove.", true, 'itemrequest.php');
         die($h->endpage());
     }
-    $q = $db->query("SELECT *
+    $q = $db->query("/*qc=on*/SELECT *
                     FROM `itemrequest` AS `ir` INNER JOIN `items` AS `i`
                     ON `ir`.`irITEM` = `i`.`itmid`  WHERE `ir`.`irID` = {$_GET['ID']}
                     AND `ir`.`irUSER` = {$userid}");
@@ -180,7 +180,7 @@ function buy()
     $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
     $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
     if ($_GET['ID'] && !$_POST['QTY']) {
-        $q = $db->query("SELECT `irUSER`, `irCOST`, `irQTY`,
+        $q = $db->query("/*qc=on*/SELECT `irUSER`, `irCOST`, `irQTY`,
                          `irITEM`, `irID`, `itmname` FROM `itemrequest` AS `ir`
                          INNER JOIN `items` AS `i` ON `i`.`itmid` = `ir`.`irITEM`
                          WHERE `ir`.`irID` = {$_GET['ID']}");
@@ -220,7 +220,7 @@ function buy()
     } elseif (!$_GET['ID']) {
         alert('danger', "Uh Oh!", "Please specify an offer you wish to fulfill.", true, 'itemrequest.php');
     } else {
-        $q = $db->query("SELECT `irUSER`, `irCOST`, `irQTY`,
+        $q = $db->query("/*qc=on*/SELECT `irUSER`, `irCOST`, `irQTY`,
 						`irITEM`, `irID`, `itmname` FROM `itemrequest` AS `ir`
 						INNER JOIN `items` AS `i` ON `i`.`itmid` = `ir`.`irITEM`
 						WHERE `ir`.`irID` = {$_GET['ID']}");
@@ -243,7 +243,7 @@ function buy()
             alert('danger', "Uh Oh!", "You cannot fulfill an offer from someone who shares your IP Address.", true, 'itemrequest.php');
             die($h->endpage());
         }
-        $final_price = $api->SystemReturnTax($r['irCOST'] * $_POST['QTY']);
+        $final_price = $r['irCOST'] * $_POST['QTY'];
 		$taxed=$final_price-($final_price*0.02);
         if ($_POST['QTY'] > $r['irQTY']) {
             alert('danger', "Uh Oh!", "You are trying to fulfill more than the listing's request.");
@@ -350,7 +350,7 @@ function add()
     $ret = "<select name='$ddname' type='dropdown' class='form-control'>";
     $q =
         $db->query(
-            "SELECT `i`.*, `it`.*
+            "/*qc=on*/SELECT `i`.*, `it`.*
     				 FROM `itemrequest` AS `i`
     				 INNER JOIN `items` AS `it`
     				 ON `i`.`irITEM` = `it`.`itmid`

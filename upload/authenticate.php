@@ -19,15 +19,15 @@ if (!isset($_POST['verf']) || !verify_csrf_code('login', stripslashes($_POST['ve
 $QuarterHour = ($CurrentTime - 900);
 $Hour = ($CurrentTime - 3600);
 $Day = ($CurrentTime - 86400);
-$DQuery = $db->query("SELECT `timestamp`
+$DQuery = $db->query("/*qc=on*/SELECT `timestamp`
                     FROM `login_attempts`
                     WHERE `ip` = '{$IP}'
                     AND `timestamp` > {$Day}");
-$HQuery = $db->query("SELECT `timestamp`
+$HQuery = $db->query("/*qc=on*/SELECT `timestamp`
                     FROM `login_attempts`
                     WHERE `ip` = '{$IP}'
                     AND `timestamp` > {$Hour}");
-$FTMQuery = $db->query("SELECT `timestamp`
+$FTMQuery = $db->query("/*qc=on*/SELECT `timestamp`
                       FROM `login_attempts`
                       WHERE `ip` = '{$IP}'
                       AND `timestamp` > {$QuarterHour}");
@@ -55,24 +55,24 @@ if (empty($email) || empty($password)) {
 }
 $form_email = $db->escape(stripslashes($email));
 $raw_password = stripslashes($password);
-$uq = $db->query("SELECT `userid`,`password`
+$uq = $db->query("/*qc=on*/SELECT `userid`,`password`
                 FROM `users`
                 WHERE `email` = '$form_email' LIMIT 1");
-$UQ = $db->query("SELECT `userid`,`password`,`user_level`
+$UQ = $db->query("/*qc=on*/SELECT `userid`,`password`,`user_level`
                 FROM `users`
                 WHERE `email` = '$form_email' LIMIT 1");
 
 $userid = $db->fetch_row($uq);
 
-$DUNQuery = $db->query("SELECT `timestamp`
+$DUNQuery = $db->query("/*qc=on*/SELECT `timestamp`
                       FROM `login_attempts`
                       WHERE `userid` = '{$userid['userid']}'
                       AND `timestamp` > {$Day}");
-$HUNQuery = $db->query("SELECT `timestamp`
+$HUNQuery = $db->query("/*qc=on*/SELECT `timestamp`
                       FROM `login_attempts`
                       WHERE `userid` = '{$userid['userid']}'
                       AND `timestamp` > {$Hour}");
-$QHQuery = $db->query("SELECT `timestamp`
+$QHQuery = $db->query("/*qc=on*/SELECT `timestamp`
                       FROM `login_attempts`
                       WHERE `userid` = '{$userid['userid']}'
                       AND `timestamp` > {$QuarterHour}");
@@ -112,12 +112,8 @@ else {
 
     }
     session_regenerate_id();
-    if (date('j') == 14)
-    {
-        $db->query("UPDATE `user_settings` SET `theme` = 9 WHERE `userid` = {$mem['userid']}");
-    }
     $_SESSION['userid'] = $mem['userid'];
-	$uade=$db->query("SELECT * FROM `user_settings` WHERE `userid` = {$mem['userid']}");
+	$uade=$db->query("/*qc=on*/SELECT * FROM `user_settings` WHERE `userid` = {$mem['userid']}");
 	if ($db->num_rows($uade) == 0)
 	{
 		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$mem['userid']}')");
@@ -135,7 +131,7 @@ else {
 	$_SESSION['loggedin'] = 1;
 	$_SESSION['last_login'] = time();
 	setcookie('login_expire', time() + 604800, time() + 604800);
-    $invis=$db->fetch_single($db->query("SELECT `invis` FROM `user_settings` WHERE `userid` = {$mem['userid']}"));
+    $invis=$db->fetch_single($db->query("/*qc=on*/SELECT `invis` FROM `user_settings` WHERE `userid` = {$mem['userid']}"));
     if ($invis < time())
     {
         $db->query("UPDATE `users`
@@ -165,7 +161,7 @@ else {
     $db->query("UPDATE `users` SET `password` = '{$e_encpsw}' WHERE `userid` = {$_SESSION['userid']}");
     //Remove login attempts for this account.
     $db->query("DELETE FROM `login_attempts` WHERE `userid` = {$_SESSION['userid']}");
-    $loggedin_url = 'loggedin.php';
+    $loggedin_url = 'explore.php';
     //Log that the user logged in successfully.
     $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
     //Delete password recovery attempts from DB if they exist for this user.

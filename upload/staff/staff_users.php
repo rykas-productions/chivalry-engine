@@ -300,27 +300,27 @@ function createuser()
             die($h->endpage());
         }
         if ($equip_prim > 0) {
-            $pwq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
+            $pwq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
             if ($db->fetch_single($pwq) == 0) {
                 alert('danger', "Uh Oh!", "You are trying to equip an invalid weapon.");
                 die($h->endpage());
             }
         }
         if ($equip_sec > 0) {
-            $swq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
+            $swq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
             if ($db->fetch_single($swq) == 0) {
                 alert('danger', "Uh Oh!", "You are trying to equip an invalid weapon.");
                 die($h->endpage());
             }
         }
         if ($equip_armor > 0) {
-            $aq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
+            $aq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
             if ($db->fetch_single($aq) == 0) {
                 alert('danger', "Uh Oh!", "You are trying to equip an invalid armor.");
                 die($h->endpage());
             }
         }
-        $CityQuery = $db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
+        $CityQuery = $db->query("/*qc=on*/SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
         if ($db->fetch_single($CityQuery) == 0) {
             alert('danger', "Uh Oh!", "You are trying to place the user in an invalid town.");
             die($h->endpage());
@@ -329,8 +329,8 @@ function createuser()
         $e_class = $db->escape(stripslashes($_POST['class']));
         $e_username = $db->escape($username);
         $e_email = $db->escape(stripslashes($_POST['email']));
-        $q = $db->query("SELECT COUNT(`userid`) FROM `users`  WHERE `username` = '{$e_username}'");
-        $q2 = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'");
+        $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users`  WHERE `username` = '{$e_username}'");
+        $q2 = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'");
         $u_check = $db->fetch_single($q);
         $e_check = $db->fetch_single($q2);
         $db->free_result($q);
@@ -391,7 +391,7 @@ function edituser()
             alert('danger', "Uh Oh!", "Please select the user you wish to edit.");
             die($h->endpage());
         }
-        $d = $db->query("SELECT `i`.*, `d`.*, `username`,
+        $d = $db->query("/*qc=on*/SELECT `i`.*, `d`.*, `username`,
 		`level`, `primary_currency`,`secondary_currency`, `equip_primary`,
 		`maxwill`, `bank`, `strength`, `agility`, `guard`, `equip_secondary`,
 		`labor`, `IQ`, `location`, `equip_armor`, `email`
@@ -639,52 +639,52 @@ function edituser()
             alert('danger', "Uh Oh!", "Please specify an email and username.");
             die($h->endpage());
         }
-        $u_exists = $db->query("SELECT `userid` FROM `users` WHERE `userid` = {$user}");
+        $u_exists = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` = {$user}");
         if ($db->num_rows($u_exists) == 0) {
             $db->free_result($u_exists);
             alert('danger', "Uh Oh!", "The user you are trying to edit does not exist.");
             die($h->endpage());
         }
-        $h_exists = $db->query("SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$maxwill}");
+        $h_exists = $db->query("/*qc=on*/SELECT COUNT(`house_id`) FROM `estates` WHERE `house_will` = {$maxwill}");
         if ($db->fetch_single($h_exists) == 0) {
             $db->free_result($h_exists);
             alert("danger", "Uh Oh!", "The house you're trying to have this user live in does not exist.");
             die($h->endpage());
         }
-        $u = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$username}' AND `userid` != {$user}");
+        $u = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$username}' AND `userid` != {$user}");
         if ($db->fetch_single($u) != 0) {
             $db->free_result($u);
             alert('danger', "Uh Oh!", "The username for this user is already in use.");
             die($h->endpage());
         }
-        $e = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$email}' AND `userid` != {$user}");
+        $e = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$email}' AND `userid` != {$user}");
         if ($db->fetch_single($e) != 0) {
             $db->free_result($e);
             alert('danger', "Uh Oh!", "The email address input is already in use.");
             die($h->endpage());
         }
         if ($equip_prim > 0) {
-            $pwq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
+            $pwq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_prim}' AND `weapon` > 0");
             if ($db->fetch_single($pwq) == 0) {
                 alert('danger', "Uh Oh!", "The primary weapon selected does not exist.");
                 die($h->endpage());
             }
         }
         if ($equip_sec > 0) {
-            $swq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
+            $swq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_sec}' AND `weapon` > 0");
             if ($db->fetch_single($swq) == 0) {
                 alert('danger', "Uh Oh!", "The secondary weapon selected does not exist.");
                 die($h->endpage());
             }
         }
         if ($equip_armor > 0) {
-            $aq = $db->query("SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
+            $aq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_armor}' AND `armor` > 0");
             if ($db->fetch_single($aq) == 0) {
                 alert('danger', "Uh Oh!", "The armor selected does not exist.");
                 die($h->endpage());
             }
         }
-        $CityQuery = $db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
+        $CityQuery = $db->query("/*qc=on*/SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
         if ($db->fetch_single($CityQuery) == 0) {
             alert('danger', "Uh Oh!", "The town you wish the user to be in does not exist.");
             die($h->endpage());
@@ -833,7 +833,7 @@ function deleteuser()
                 alert('danger', "Uh Oh!", "You cannot delete your account, or the game owner's account.");
                 die($h->endpage());
             }
-            $d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
+            $d = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
             if ($db->num_rows($d) == 0) {
                 $db->free_result($d);
                 alert('danger', "Uh Oh!", "You cannot delete a non-existent account.");
@@ -878,7 +878,7 @@ function deleteuser()
                 alert('warning', "Success!", "You have not deleted this account.");
                 die($h->endpage());
             }
-            $d = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}");
+            $d = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_POST['userid']}");
             if ($db->num_rows($d) == 0) {
                 alert('danger', "Uh Oh!", "The account you are trying to delete does not exist.");
                 die($h->endpage());
@@ -950,7 +950,7 @@ function logout()
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
         }
-        $d = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
+        $d = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
         if ($db->fetch_single($d) == 0) {
             $db->free_result($d);
             alert('danger', "Uh Oh!", "You are trying to force a non-existent account to log out.");
@@ -1007,7 +1007,7 @@ function changepw()
             alert('danger', "Uh Oh!", "You cannot change the game owner's password.");
             die($h->endpage());
         }
-        $ul = $db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
+        $ul = $db->fetch_single($db->query("/*qc=on*/SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
         if (($ul == 'Admin') && ($userid > 1)) {
             alert('danger', "Uh Oh!", "You cannot change an Administrator's password.");
             die($h->endpage());
@@ -1071,7 +1071,7 @@ function masspay()
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT `userid`,`username` FROM `users` WHERE `user_level` != 'NPC'");
+        $q = $db->query("/*qc=on*/SELECT `userid`,`username` FROM `users` WHERE `user_level` != 'NPC'");
         while ($r = $db->fetch_row($q)) {
             $api->UserGiveCurrency($r['userid'], 'primary', $primary);
             $api->UserGiveCurrency($r['userid'], 'seconday', $secondary);
@@ -1130,7 +1130,7 @@ function preport()
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.", false);
             die($h->endpage());
         } else {
-            $q = $db->query("SELECT `report_id` FROM `reports` WHERE `report_id` = {$_GET['ID']}");
+            $q = $db->query("/*qc=on*/SELECT `report_id` FROM `reports` WHERE `report_id` = {$_GET['ID']}");
             if ($db->num_rows($q) == 0) {
                 alert('danger', "Uh Oh!", "This report does not exist!", false);
             } else {
@@ -1140,7 +1140,7 @@ function preport()
             }
         }
     }
-    $q = $db->query("SELECT * FROM `reports`");
+    $q = $db->query("/*qc=on*/SELECT * FROM `reports`");
     $csrf = request_csrf_code('staff_delreport');
     echo "<table class='table table-bordered'>
     <tr>

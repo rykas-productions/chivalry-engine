@@ -20,7 +20,7 @@ function csrf_error()
 }
 
 echo "<h3><i class='far fa-comment-alt'></i> {$set['WebsiteName']} Forums</h3><hr />";
-$fb = $db->fetch_row($db->query("SELECT * FROM `forum_bans` WHERE `fb_user` = {$userid}"));
+$fb = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `forum_bans` WHERE `fb_user` = {$userid}"));
 if ($fb['fb_time'] > $time) {
     alert('danger', "Uh Oh!", "You are currently forum banned for the next " . TimeUntil_Parse($fb['fb_time']) . ". You
 	    were banned for {$fb['fb_reason']}. If you feel the ban was unjustified, please contact an admin
@@ -102,7 +102,7 @@ function idx()
     global $ir, $db, $api, $userid;
     $q =
         $db->query(
-            "SELECT `ff_lp_time`, `ff_id`, `ff_name`, `ff_desc`,
+            "/*qc=on*/SELECT `ff_lp_time`, `ff_id`, `ff_name`, `ff_desc`,
 					`ff_lp_t_id`,
                      `ff_lp_poster_id`
                      FROM `forum_forums`
@@ -130,19 +130,21 @@ function idx()
     <?php
     while ($r = $db->fetch_row($q)) {
         $t = DateTime_Parse($r['ff_lp_time'], true, true);
-        $pnq = $db->query("SELECT `username`,`vip_days`,`vipcolor` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
-        $pn = $db->fetch_row($pnq);
-        $username = ($pn['vip_days']) ? "<span class='{$pn['vipcolor']}'>{$pn['username']}
-            <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn['vip_days']} VIP Days remaining.'></i></span>" :
-            $pn['username'];
+        $username = parseUsername($r['ff_lp_poster_id']);
 
-        $topicsq = $db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
+        $topicsq = $db->query("/*qc=on*/SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
 
-        $postsq = $db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `ff_id`={$r['ff_id']}");
+        $postsq = $db->query("/*qc=on*/SELECT COUNT('fp_id') FROM `forum_posts` WHERE `ff_id`={$r['ff_id']}");
         $posts = $db->fetch_single($postsq);
         $topics = $db->fetch_single($topicsq);
 
-        $topicname = $db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
+        $topicname = $db->fetch_single($db->query("/*qc=on*/SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
+        if (strlen($topicname) > 32)
+        {
+            $topicname = substr($topicname,0,32);
+            $topicname = "{$topicname}...";
+        }
+        
         echo "<tr>
 					<td>
 						<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
@@ -167,7 +169,7 @@ function idx()
         echo "<hr /><h3>Staff Only Forums</h3><hr />";
         $q =
             $db->query(
-                "SELECT `ff_lp_time`, `ff_id`, `ff_name`, `ff_desc`,
+                "/*qc=on*/SELECT `ff_lp_time`, `ff_id`, `ff_name`, `ff_desc`,
                      `ff_lp_t_id`,
                      `ff_lp_poster_id`
                      FROM `forum_forums`
@@ -195,19 +197,15 @@ function idx()
         <?php
         while ($r = $db->fetch_row($q)) {
             $t = DateTime_Parse($r['ff_lp_time'], true, true);
-            $pnq = $db->query("SELECT `username`,`vip_days`, `vipcolor` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
-            $pn = $db->fetch_row($pnq);
-            $username = ($pn['vip_days']) ? "<span class='{$pn['vipcolor']}'>{$pn['username']}
-                <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn['vip_days']} VIP Days remaining.'></i></span>" :
-                $pn['username'];
+            $username = parseUsername($r['ff_lp_poster_id']);
 
-            $topicsq = $db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
+            $topicsq = $db->query("/*qc=on*/SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_forum_id`={$r['ff_id']}");
 
-            $postsq = $db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `ff_id`={$r['ff_id']}");
+            $postsq = $db->query("/*qc=on*/SELECT COUNT('fp_id') FROM `forum_posts` WHERE `ff_id`={$r['ff_id']}");
             $posts = $db->fetch_single($postsq);
             $topics = $db->fetch_single($topicsq);
 
-            $topicname = $db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
+            $topicname = $db->fetch_single($db->query("/*qc=on*/SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
             echo "<tr>
         		<td>
         			<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
@@ -241,7 +239,7 @@ function viewforum()
     }
     $q =
         $db->query(
-            "SELECT *
+            "/*qc=on*/SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = '{$_GET['viewforum']}'");
     if ($db->num_rows($q) == 0) {
@@ -282,7 +280,7 @@ function viewforum()
 		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item active'>{$r['ff_name']} {$ntl}</li>	
 	</ol>";
-    $posts_topic = $db->fetch_single($db->query("SELECT COUNT(`ft_id`) 
+    $posts_topic = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`ft_id`) 
 													FROM `forum_topics` 
 													WHERE 
 													`ft_forum_id` = {$_GET['viewforum']}"));
@@ -313,7 +311,7 @@ function viewforum()
     <?php
     $q =
         $db->query(
-            "SELECT `ft_start_time`, `ft_last_time`, `ft_pinned`,
+            "/*qc=on*/SELECT `ft_start_time`, `ft_last_time`, `ft_pinned`,
                      `ft_locked`, `ft_id`, `ft_name`, `ft_desc`, `ft_posts`,
                      `ft_owner_id`, `ft_last_id`
                      FROM `forum_topics`
@@ -323,21 +321,13 @@ function viewforum()
     while ($r2 = $db->fetch_row($q)) {
         $t1 = DateTime_Parse($r2['ft_start_time'], true, true);
         $t2 = DateTime_Parse($r2['ft_last_time'], true, true);
-        $threadrating = $db->fetch_single($db->query("SELECT SUM(`rating`) FROM `forum_tops_rating` WHERE `topic_id` = {$r2['ft_id']}"));
+        $threadrating = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`rating`) FROM `forum_tops_rating` WHERE `topic_id` = {$r2['ft_id']}"));
         $threadrating = number_format($threadrating);
         $pt = ($r2['ft_pinned']) ? " <i class='fa fa-thumbtack' aria-hidden='true'></i>" : "" ;
         $lt = ($r2['ft_locked']) ? " <i class='fa fa-lock' aria-hidden='true'></i>" : "" ;
-        $pnq1 = $db->query("SELECT `username`,`vip_days`,`vipcolor` FROM `users` WHERE `userid` = {$r2['ft_owner_id']}");
-        $pn1 = $db->fetch_row($pnq1);
-        $pn1['username'] = ($pn1['vip_days']) ? "<span class='{$pn1['vipcolor']}'>{$pn1['username']}
-            <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn1['vip_days']} VIP Days remaining.'></i></span>" :
-            $pn1['username'];
-        $pnq2 = $db->query("SELECT `username`,`vip_days`,`vipcolor` FROM `users` WHERE `userid` = {$r2['ft_last_id']}");
-        $pn2 = $db->fetch_row($pnq2);
-        $pn2['username'] = ($pn2['vip_days']) ? "<span class='{$pn2['vipcolor']}'>{$pn2['username']}
-            <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$pn2['vip_days']} VIP Days remaining.'></i></span>" :
-            $pn2['username'];
-        $pcq = $db->query("SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_topic_id` = {$r2['ft_id']}");
+        $pn1['username'] = parseUsername($r2['ft_owner_id']);
+        $pn2['username'] = parseUsername($r2['ft_last_id']);
+        $pcq = $db->query("/*qc=on*/SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_topic_id` = {$r2['ft_id']}");
         $pc = $db->fetch_single($pcq);
         if (!$pn2) {
             $pn2['username'] = "Non-existent User";
@@ -381,7 +371,7 @@ function viewtopic()
     }
     $q =
         $db->query(
-            "SELECT *
+            "/*qc=on*/SELECT *
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['viewtopic']}");
     if ($db->num_rows($q) == 0) {
@@ -393,7 +383,7 @@ function viewtopic()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT * FROM `forum_forums`
+            "/*qc=on*/SELECT * FROM `forum_forums`
                     WHERE `ff_id` = {$topic['ft_forum_id']}");
     if ($db->num_rows($q2) == 0) {
         $db->free_result($q2);
@@ -484,7 +474,7 @@ function viewtopic()
     echo "<table class='table table-bordered table-striped'>";
     $q3 =
         $db->query(
-            "SELECT `fp_editor_time`, `fp_editor_id`, `fp_edit_count`,
+            "/*qc=on*/SELECT `fp_editor_time`, `fp_editor_id`, `fp_edit_count`,
                      `fp_time`, `fp_id`, `fp_poster_id`, `fp_text`
                      FROM `forum_posts`
                      WHERE `fp_topic_id` = {$topic['ft_id']}
@@ -492,11 +482,7 @@ function viewtopic()
                      LIMIT {$st}, 20");
     $no = $st;
     while ($r = $db->fetch_row($q3)) {
-        $PNQ = $db->query("SELECT `username`,`vip_days`,`vipcolor` FROM `users` WHERE `userid`={$r['fp_poster_id']}");
-        $PN = $db->fetch_row($PNQ);
-        $PN['username'] = ($PN['vip_days']) ? "<span class='{$PN['vipcolor']}'>{$PN['username']}
-            <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$PN['vip_days']} VIP Days remaining.'></i></span>" :
-            $PN['username'];
+        $PN['username'] = parseUsername($r['fp_poster_id']);
 
         $qlink = "<a class='btn btn-primary btn-sm' href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'><i class='fas fa-quote-right'></i></a> ";
         if ($api->UserMemberLevelGet($userid, 'forum moderator') || $userid == $r['fp_poster_id']) {
@@ -520,8 +506,7 @@ function viewtopic()
             $blink = "";
         }
         $t = DateTime_Parse($r['fp_time']);
-        $editornameq = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['fp_editor_id']} LIMIT 1");
-        $editorname = $db->fetch_single($editornameq);
+        $editorname = parseUsername($r['fp_editor_id']);
         if ($r['fp_edit_count'] > 0) {
             $edittext =
                 "\n<br /><small><i>Last edited by <a href='profile.php?user={$r['fp_editor_id']}'>{$editorname}</a> at "
@@ -533,7 +518,7 @@ function viewtopic()
         if (!isset($precache[$r['fp_poster_id']])) {
             $membq =
                 $db->query(
-                    "SELECT `userid`,
+                    "/*qc=on*/SELECT `userid`,
                             `user_level`,`username`,`display_pic`, `signature`
                              FROM `users`
                              WHERE `userid` = {$r['fp_poster_id']}");
@@ -549,7 +534,7 @@ function viewtopic()
         }
         if ($memb['userid'] > 0) {
             if ($memb['display_pic']) {
-                $av = "<img src='" . parseImage($memb['display_pic']) . "' class='img-fluid' width='350'>";
+                $av = "<img src='" . parseImage(parseDisplayPic($memb['userid'])) . "' class='img-fluid' width='350' alt='{$memb['username']}&#39;s display picture' title='{$memb['username']}&#39;s display picture'>";
             } else {
                 $av = "";
             }
@@ -557,7 +542,7 @@ function viewtopic()
             $memb['signature'] = $parser->getAsHtml($memb['signature']);
         }
 		$rlink="<a class='btn btn-primary btn-sm' href='playerreport.php?userid={$r['fp_poster_id']}'><i class='fas fa-flag'></i></a>";
-        $parser->parse($r['fp_text']);
+        $r['fp_text']=$parser->parse($r['fp_text']);
         $r['fp_text'] = $parser->getAsHtml();
         echo "<tr>
 				<td width='25%' align='left'><b>Post #{$no}</b></td>
@@ -568,10 +553,10 @@ function viewtopic()
 			 <tr>
 				<td valign='top'>";
         if ($memb['userid'] > 0) {
-            $userpostsq = $db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$r['fp_poster_id']}");
+            $userpostsq = $db->query("/*qc=on*/SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$r['fp_poster_id']}");
             $userposts = $db->fetch_single($userpostsq);
 
-            $usertopicsq = $db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_owner_id`={$r['fp_poster_id']}");
+            $usertopicsq = $db->query("/*qc=on*/SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_owner_id`={$r['fp_poster_id']}");
             $usertopics = $db->fetch_single($usertopicsq);
 			$infirm = ($api->UserStatus($r['fp_poster_id'], 'infirmary')) ? "<i class='game-icon game-icon-hospital-cross'></i>" : "" ;
             $dung = ($api->UserStatus($r['fp_poster_id'], 'dungeon')) ? "<i class='game-icon game-icon-cage'></i>" : "" ;
@@ -647,7 +632,7 @@ function reply()
     }
     $q =
         $db->query(
-            "SELECT `ft_forum_id`, `ft_locked`, `ft_name`, `ft_id`
+            "/*qc=on*/SELECT `ft_forum_id`, `ft_locked`, `ft_name`, `ft_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['reply']}");
     if ($db->num_rows($q) == 0) {
@@ -659,7 +644,7 @@ function reply()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT *
+            "/*qc=on*/SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
     if ($db->num_rows($q2) == 0) {
@@ -685,13 +670,13 @@ function reply()
 		die($h->endpage());
 	}
     if ($topic['ft_locked'] == 0) {
-        $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['fp_text']))));
+        $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />", strip_tags(htmlentities(stripslashes($_POST['fp_text'])))));
         if ((strlen($_POST['fp_text']) > 65535)) {
             alert('danger', "Uh Oh!", "Forum replies can only be, at maximum, 65,535 characters in length.", true, "forums.php?viewtopic={$_GET['reply']}");
             die($h->endpage());
         }
 		$lastfivemins=time()-300;
-		$postcount=$db->fetch_single($db->query("SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_poster_id` = {$userid} AND `fp_time` > {$lastfivemins}"));
+		$postcount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_poster_id` = {$userid} AND `fp_time` > {$lastfivemins}"));
 		if ($postcount == 3)
 		{
 			$api->SystemLogsAdd(1, 'staff', "Forum Warned <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] for 'Spamming'.");
@@ -727,9 +712,9 @@ function reply()
                  `ff_lp_poster_id` = $userid,
                  `ff_lp_t_id` = {$_GET['reply']}
                  WHERE `ff_id` = {$forum['ff_id']}");
-		$toq1=$db->fetch_single($db->query("SELECT `ft_owner_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['reply']}"));
-		$topicname=$db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_id` = {$_GET['reply']}"));
-		$toq2=$db->fetch_single($db->query("SELECT `forum_alert` FROM `user_settings` WHERE `userid` = {$toq1}"));
+		$toq1=$db->fetch_single($db->query("/*qc=on*/SELECT `ft_owner_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['reply']}"));
+		$topicname=$db->fetch_single($db->query("/*qc=on*/SELECT `ft_name` FROM `forum_topics` WHERE `ft_id` = {$_GET['reply']}"));
+		$toq2=$db->fetch_single($db->query("/*qc=on*/SELECT `forum_alert` FROM `user_settings` WHERE `userid` = {$toq1}"));
 		if (($toq2 == 1) && ($userid != $toq1))
 		{
 			$api->GameAddNotification($toq1,"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has replied to your forum topic, {$topicname}. Click <a href='forums.php?viewtopic={$_GET['reply']}&lastpost=1'>here</a> to read it.");
@@ -754,7 +739,7 @@ function newtopicform()
     }
     $q =
         $db->query(
-            "SELECT *
+            "/*qc=on*/SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = '{$_GET['forum']}'");
     if ($db->num_rows($q) == 0) {
@@ -835,7 +820,7 @@ function newtopic()
     }
     $q =
         $db->query(
-            "SELECT *
+            "/*qc=on*/SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = {$_GET['forum']}");
     if ($db->num_rows($q) == 0) {
@@ -863,18 +848,18 @@ function newtopic()
     $u = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
     $u = $db->escape($u);
     $_POST['ft_name'] =
-        $db->escape(strip_tags(stripslashes($_POST['ft_name'])));
+        $db->escape(strip_tags(htmlentities(stripslashes($_POST['ft_name']))));
     if ((strlen($_POST['ft_name']) > 255)) {
         alert('danger', "Uh Oh!", "Topic names can only be, at maximum, 255 characters in length.", true, "back");
         die($h->endpage());
     }
     $_POST['ft_desc'] =
-        $db->escape(strip_tags(stripslashes($_POST['ft_desc'])));
+        $db->escape(strip_tags(htmlentities(stripslashes($_POST['ft_desc']))));
     if ((strlen($_POST['ft_desc']) > 255)) {
         alert('danger', "Uh Oh!", "Topic descriptions can only be, at maximum, 255 characters in length.", true, "back");
         die($h->endpage());
     }
-    $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['fp_text']))));
+    $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />", strip_tags(htmlentities(stripslashes($_POST['fp_text'])))));
     if ((strlen($_POST['fp_text']) > 65535)) {
         alert('danger', "Uh Oh!", "Open posts can only be, at maximum, 65,535 characters in length.", true, "back");
         die($h->endpage());
@@ -937,7 +922,7 @@ function quote()
         die($h->endpage());
     }
     $q =
-        $db->query("SELECT `ft_forum_id`, `ft_name`, `ft_locked`, `ft_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['viewtopic']}");
+        $db->query("/*qc=on*/SELECT `ft_forum_id`, `ft_name`, `ft_locked`, `ft_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['viewtopic']}");
     if ($db->num_rows($q) == 0) {
         $db->free_result($q);
         alert('danger', "Forum topic does not exist!", "You are attempting to interact with a topic that does not exist. Check your source and try again.", true, "forums.php");
@@ -947,7 +932,7 @@ function quote()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT *
+            "/*qc=on*/SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
     if ($db->num_rows($q2) == 0) {
@@ -967,10 +952,10 @@ function quote()
 		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['viewtopic']}");
 		die($h->endpage());
 	}
-    $q3 = $db->query("SELECT `fp_text` FROM `forum_posts` WHERE `fp_id` = {$_GET['fpid']}");
+    $q3 = $db->query("/*qc=on*/SELECT `fp_text` FROM `forum_posts` WHERE `fp_id` = {$_GET['fpid']}");
     $text = $db->fetch_single($q3);
-    $text = strip_tags(stripslashes($text));
-    $q4 = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['quotename']}");
+    $text = strip_tags(html_entity_decode(stripslashes($text)));
+    $q4 = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_GET['quotename']}");
     $Who = $db->fetch_single($q4);
     echo "<ol class='breadcrumb'>
 		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
@@ -1014,7 +999,7 @@ function edit()
     }
     $q =
         $db->query(
-            "SELECT `ft_forum_id`, `ft_name`, `ft_id`
+            "/*qc=on*/SELECT `ft_forum_id`, `ft_name`, `ft_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0) {
@@ -1026,7 +1011,7 @@ function edit()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT *
+            "/*qc=on*/SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
     if ($db->num_rows($q2) == 0) {
@@ -1053,7 +1038,7 @@ function edit()
     }
     $q3 =
         $db->query(
-            "SELECT `fp_poster_id`, `fp_text`
+            "/*qc=on*/SELECT `fp_poster_id`, `fp_text`
                      FROM `forum_posts`
                      WHERE `fp_id` = {$_GET['post']}");
     if ($db->num_rows($q3) == 0) {
@@ -1074,7 +1059,7 @@ function edit()
 		<li class='breadcrumb-item active'>Edit Post Form</li>
 	</ol>";
     $edit_csrf = request_csrf_code("forums_editpost_{$_GET['post']}");
-    $fp_text = strip_tags(stripslashes($post['fp_text']));
+    $fp_text = strip_tags(html_entity_decode(stripslashes($post['fp_text'])));
     echo <<<EOF
 <form action='?act=editsub&topic={$topic['ft_id']}&post={$_GET['post']}' method='post'>
 <input type='hidden' name='verf' value='{$edit_csrf}' />
@@ -1111,7 +1096,7 @@ function editsub()
     }
     $q =
         $db->query(
-            "SELECT `ft_forum_id`
+            "/*qc=on*/SELECT `ft_forum_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0) {
@@ -1123,7 +1108,7 @@ function editsub()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT *
+            "/*qc=on*/SELECT *
                      FROM `forum_forums`
                      WHERE `ff_id` = {$topic['ft_forum_id']}");
     if ($db->num_rows($q2) == 0) {
@@ -1145,7 +1130,7 @@ function editsub()
 	}
     $q3 =
         $db->query(
-            "SELECT `fp_poster_id`
+            "/*qc=on*/SELECT `fp_poster_id`
                      FROM `forum_posts`
                      WHERE `fp_id` = {$_GET['post']}");
     if ($db->num_rows($q3) == 0) {
@@ -1159,7 +1144,7 @@ function editsub()
         alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
-    $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['fp_text']))));
+    $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />", strip_tags(htmlentities(stripslashes($_POST['fp_text'])))));
     if ((strlen($_POST['fp_text']) > 65535)) {
         alert('danger', "Uh Oh!", "Posts can only be, at maximum, 65,535 characters in length.", true, "forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
@@ -1195,7 +1180,7 @@ function move()
         alert('danger', "Uh Oh!", "Please select a topic you wish to view.", true, "forums.php");
         die($h->endpage());
     }
-    $q = $db->query("SELECT `ft_name`, `ft_forum_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
+    $q = $db->query("/*qc=on*/SELECT `ft_name`, `ft_forum_id` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0) {
         $db->free_result($q);
         alert('danger', "Forum topic does not exist!", "You are attempting to interact with a topic that does not exist. Check your source and try again.", true, "forums.php");
@@ -1205,7 +1190,7 @@ function move()
     $db->free_result($q);
     $q2 =
         $db->query(
-            "SELECT `ff_name`
+            "/*qc=on*/SELECT `ff_name`
                      FROM `forum_forums`
                      WHERE `ff_id` = {$_POST['forum']}");
     if ($db->num_rows($q2) == 0) {
@@ -1245,7 +1230,7 @@ function lock()
     }
     $q =
         $db->query(
-            "SELECT `ft_name`,`ft_locked`,`ft_forum_id`, `ft_id`
+            "/*qc=on*/SELECT `ft_name`,`ft_locked`,`ft_forum_id`, `ft_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0) {
@@ -1288,7 +1273,7 @@ function pin()
     }
     $q =
         $db->query(
-            "SELECT `ft_name`, `ft_pinned`, `ft_forum_id`, `ft_id`
+            "/*qc=on*/SELECT `ft_name`, `ft_pinned`, `ft_forum_id`, `ft_id`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0) {
@@ -1331,7 +1316,7 @@ function delepost()
     }
     $q3 =
         $db->query(
-            "SELECT *
+            "/*qc=on*/SELECT *
                      FROM `forum_posts`
                      WHERE `fp_id` = {$_GET['post']}");
     if ($db->num_rows($q3) == 0) {
@@ -1343,7 +1328,7 @@ function delepost()
     $db->free_result($q3);
     $q =
         $db->query(
-            "SELECT `ft_name`
+            "/*qc=on*/SELECT `ft_name`
                      FROM `forum_topics`
                      WHERE `ft_id` = {$post['fp_topic_id']}");
     if ($db->num_rows($q) == 0) {
@@ -1377,7 +1362,7 @@ function deletopic()
         alert('danger', "Uh Oh!", "Please select a topic you wish to view.", true, 'forums.php');
         die($h->endpage());
     }
-    $q = $db->query("SELECT `ft_forum_id`, `ft_name` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
+    $q = $db->query("/*qc=on*/SELECT `ft_forum_id`, `ft_name` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
     if ($db->num_rows($q) == 0) {
         $db->free_result($q);
         alert('danger', "Forum topic does not exist!", "You are attempting to interact with a topic that does not exist. Check your source and try again.", true, "forums.php?viewtopic={$_GET['topic']}");
@@ -1399,7 +1384,7 @@ function updateRating($topic,$rating)
     {
         $rating = 0;
     }
-    $q=$db->query("SELECT * FROM `forum_tops_rating` WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
+    $q=$db->query("/*qc=on*/SELECT * FROM `forum_tops_rating` WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
     if ($db->num_rows($q) == 0)
     {
         $db->query("INSERT INTO `forum_tops_rating` (`topic_id`, `rating`, `userid`) VALUES ('{$topic}', '{$rating}', '{$userid}')");
@@ -1409,5 +1394,4 @@ function updateRating($topic,$rating)
         $db->query("UPDATE `forum_tops_rating` SET `rating` = {$rating} WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
     }
 }
-
 $h->endpage();

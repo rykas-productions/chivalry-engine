@@ -44,7 +44,7 @@ if ($verified) {
     }
 
     //Check to see if transaction has already been processed.
-    $dp_check = $db->query("SELECT COUNT(`vipID`) FROM `vips_accepted` WHERE `vipTXN` = '{$txn_id}'");
+    $dp_check = $db->query("/*qc=on*/SELECT COUNT(`vipID`) FROM `vips_accepted` WHERE `vipTXN` = '{$txn_id}'");
     if ($db->fetch_single($dp_check) > 0) {
         $db->free_result($dp_check);
         $api->SystemLogsAdd($buyer, 'donate', "Attempted to donate, but their transaction ID, {$txn_id}, was already processed.");
@@ -72,7 +72,7 @@ if ($verified) {
     }
     //Pack ID to fetch from DB
     $pack = abs((int)$packr[2]);
-    $pi = $db->query("SELECT * FROM `vip_listing` WHERE `vip_id` = {$pack}");
+    $pi = $db->query("/*qc=on*/SELECT * FROM `vip_listing` WHERE `vip_id` = {$pack}");
     //Check if pack is real.
     if ($db->num_rows($pi) == 0) {
         $api->SystemLogsAdd($buyer, 'donate', "Attempted to donate, but attempted to buy a non-existent pack, (Pack # {$packr[2]} .");

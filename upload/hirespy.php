@@ -31,7 +31,7 @@ if ($_GET['user'] == $userid) {
     die($h->endpage());
 }
 //Grab GET user's information.
-$q = $db->query("SELECT `u`.*, `us`.* FROM `users` `u` INNER JOIN `userstats` AS `us` ON `us`.`userid` = `u`.`userid` WHERE `u`.`userid` = {$_GET['user']}");
+$q = $db->query("/*qc=on*/SELECT `u`.*, `us`.* FROM `users` `u` INNER JOIN `userstats` AS `us` ON `us`.`userid` = `u`.`userid` WHERE `u`.`userid` = {$_GET['user']}");
 //User does not exist, so do not allow spy to be bought.
 if ($db->num_rows($q) == 0) {
     alert("danger", "Uh Oh!", "The player you're trying to hire a spy upon does not exist.", true, "profile.php?user={$_GET['user']}");
@@ -176,7 +176,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 		</tr></thead>";
 		$inv =
 		$inv=$db->query(
-			"SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
+			"/*qc=on*/SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
                  `effect1_on`, `effect2_on`, `effect3_on`,
                  `weapon`, `armor`, `itmtypename`, `itmdesc`
                  FROM `inventory` AS `iv`

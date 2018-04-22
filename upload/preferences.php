@@ -32,9 +32,6 @@ switch ($_GET['action']) {
     case 'notifoff':
         notifoff();
         break;
-    case 'themechange':
-        themechange();
-        break;
 	case 'descchange':
         descchange();
         break;
@@ -61,6 +58,12 @@ switch ($_GET['action']) {
         break;
     case 'changeemail':
         changeemail();
+        break;
+    case 'adstoggle':
+        adtoggle();
+        break;
+    case 'themechange':
+        themechange();
         break;
     default:
         prefs_home();
@@ -130,10 +133,18 @@ function prefs_home()
 			</tr>
             <tr>
 				<td>
-				    <a href='?action=themechange'>Change Theme</a>
+				    <a href='?action=adstoggle'>Ad Toggle</a>
 				</td>
 				<td>
 					<a href='?action=tuttoggle'>Tutorial Toggle</a>
+				</td>
+			</tr>
+            <tr>
+				<td>
+				    <a href='?action=themechange'>Change Theme</a>
+				</td>
+				<td>
+					
 				</td>
 			</tr>
 		</tbody>
@@ -143,6 +154,11 @@ function prefs_home()
 function name_change()
 {
     global $db, $ir, $userid, $h, $api;
+    if (date('j') == 1)
+    {
+        alert('danger',"Uh Oh!","To promote a more doggy themed game, all name-changes must be submitted to staff members for approval. We highly recommend puns.",true,'preferences.php');
+        die($h->endpage());
+    }
     if (empty($_POST['newname'])) {
         $csrf = request_csrf_html('prefs_namechange');
         echo "<br />
@@ -278,6 +294,11 @@ function pw_change()
 function pic_change()
 {
     global $db, $h, $userid, $ir, $api;
+    if (date('j') == 1)
+    {
+        alert('danger',"Uh Oh!","To promote a more doggy themed game, all display picture changes must be submitted to staff members for approval. We highly recommend doggies.",true,'preferences.php');
+        die($h->endpage());
+    }
     if (!isset($_POST['newpic'])) {
         $csrf = request_csrf_html('prefs_changepic');
         echo "
@@ -491,7 +512,7 @@ function changeemail()
             die($h->endpage());
         }
         $e_email = $db->escape(stripslashes($_POST['email']));
-        $q2 = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'");
+        $q2 = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'");
         if ($db->fetch_single($q2) != 0)
         {
             alert('danger', "Uh Oh!", "The email you've chosen is already in use by another player.");
@@ -549,149 +570,6 @@ function notifoff()
     }
 }
 
-function themechange()
-{
-    global $db, $userid, $h, $ir, $api;
-    if (isset($_POST['theme'])) {
-        $_POST['theme'] = (isset($_POST['theme']) && is_numeric($_POST['theme'])) ? abs($_POST['theme']) : 1;
-        if ($_POST['theme'] < 1 || $_POST['theme'] > 8) {
-            alert('danger', "Uh Oh!", "The theme you wish to load is not valid.");
-            die($h->endpage());
-        }
-		elseif ($_POST['theme'] == 5 && $ir['vip_days'] == 0)
-		{
-			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
-			die($h->endpage());
-		}
-		elseif ($_POST['theme'] == 6 && $ir['vip_days'] == 0)
-		{
-			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
-			die($h->endpage());
-		}
-		elseif ($_POST['theme'] == 8 && $ir['vip_days'] == 0)
-		{
-			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
-			die($h->endpage());
-		}
-		else {
-            alert('success', "Success!", "You have successfully changed your theme.", true, 'preferences.php');
-            $db->query("UPDATE `user_settings` SET `theme` = {$_POST['theme']} WHERE `userid` = {$userid}");
-            $api->SystemLogsAdd($userid, 'preferences', "Changed theme to Theme ID {$_POST['theme']}.");
-            die($h->endpage());
-        }
-    } else {
-        echo "
-			<table class='table table-bordered'>
-				<tr>
-					<th colspan='2'>
-						Select the theme you wish to be seen as you play.
-					</th>
-				</tr>
-				<tr>
-					<td>
-						Yeti<br />
-						<img src='assets/img/themes/yeti-theme.jpg' class='img-thumbnail img-responsive'>
-						<form method='post'>
-							<input type='hidden' value='1' name='theme'>
-							<input type='submit' class='btn btn-primary' value='Pick this one'>
-						</form>
-					</td>
-					<td>
-						Darkly<br />
-						<img src='assets/img/themes/darkly-theme.jpg' class='img-thumbnail img-responsive'>
-						<form method='post'>
-							<input type='hidden' value='2' name='theme'>
-							<input type='submit' class='btn btn-primary' value='Pick this one'>
-						</form>
-					</td>
-				</tr>
-				<tr>
-                    <td>
-						United<br />
-						<img src='assets/img/themes/united-theme.jpg' class='img-thumbnail img-responsive'>
-						<form method='post'>
-							<input type='hidden' value='7' name='theme'>
-							<input type='submit' class='btn btn-primary' value='Pick this one'>
-						</form>
-					</td>
-					<td>
-						Slate<br />
-						<img src='assets/img/themes/slate-theme.jpg' class='img-thumbnail img-responsive'>
-						<form method='post'>
-							<input type='hidden' value='4' name='theme'>
-							<input type='submit' class='btn btn-primary' value='Pick this one'>
-						</form>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Cerulean<br />
-						<img src='assets/img/themes/cerulean-theme.jpg' class='img-thumbnail img-responsive'>";
-						if ($ir['vip_days'] != 0)
-						{
-							echo "
-							<form method='post'>
-								<input type='hidden' value='5' name='theme'>
-								<input type='submit' class='btn btn-primary' value='Pick this one'>
-							</form>
-							";
-						}
-						else
-						{
-							echo "<br />VIPs only.";
-						}
-						echo"
-					</td>
-                    <td>
-						Superhero<br />
-						<img src='assets/img/themes/superhero-theme.jpg' class='img-thumbnail img-responsive'>
-						<form method='post'>
-							<input type='hidden' value='3' name='theme'>
-							<input type='submit' class='btn btn-primary' value='Pick this one'>
-						</form>
-					</td>
-				</tr>
-				<tr>
-                    <td>
-						Minty<br />
-						<img src='assets/img/themes/minty-theme.jpg' class='img-thumbnail img-responsive'>";
-						if ($ir['vip_days'] != 0)
-						{
-							echo "
-							<form method='post'>
-								<input type='hidden' value='6' name='theme'>
-								<input type='submit' class='btn btn-primary' value='Pick this one'>
-							</form>
-							";
-						}
-						else
-						{
-							echo "<br />VIPs only.";
-						}
-						echo"
-					</td>
-					<td>
-						Cyborg<br />
-						<img src='assets/img/themes/cyborg-theme.jpg' class='img-thumbnail img-responsive'>";
-						if ($ir['vip_days'] != 0)
-						{
-							echo "
-							<form method='post'>
-								<input type='hidden' value='8' name='theme'>
-								<input type='submit' class='btn btn-primary' value='Pick this one'>
-							</form>
-							";
-						}
-						else
-						{
-							echo "<br />VIPs only.";
-						}
-						echo"
-					</td>
-				</tr>
-			</table>";
-    }
-}
 function descchange()
 {
 	global $db, $h, $userid, $ir, $api;
@@ -769,7 +647,7 @@ function quicklinks()
 	}
 	else
 	{
-		echo "Select your infirmary/dungeon quick use items.<br />
+		echo "/*qc=on*/SELECT your infirmary/dungeon quick use items.<br />
 		<form method='post'>
 			<div class='row'>
 				<div class='col-md-6'>
@@ -1081,5 +959,131 @@ function tuttoggle()
         </form>";
     }
 }
-
+function adtoggle()
+{
+	global $db,$userid,$api,$h;
+    if (isset($_POST['do']))
+    {
+		if ($_POST['do'] == 'disable')
+		{
+			$db->query("UPDATE `user_settings` SET `adtype` = 0 WHERE `userid` = {$userid}");
+			alert('success',"Success!","You have chosen normal ads.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Enabled normal ads.");
+		}
+		else
+		{
+			$db->query("UPDATE `user_settings` SET `adtype` = 1 WHERE `userid` = {$userid}");
+			alert('success',"Success!","You have chosen to mine cryptocurrency.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Enabled cryptocurrency mining.");
+		}
+    }
+    else
+    {
+        echo "Here you may change the monetization option you contribute towards the game when you have no VIP Days.
+        By default, you will use normal ads. The advantage of these is that don't consume a lot of power, but could 
+        potentially play sounds, open pop-ups and eat lots of data. You may opt-in to mine cryptocurrency using your 
+        computer's hardware. This has the advantage of using very little data, but will consume lots of power, and depending 
+        on your device, quickly wipe your battery. <b>You will not mine if you're on a mobile device.</b><br />
+        <form method='post'>
+            <input type='hidden' value='disable' name='do'>
+            <input type='submit' class='btn btn-primary' value='Normal Ads'>
+        </form>
+		<form method='post'>
+            <input type='hidden' value='enable' name='do'>
+            <input type='submit' class='btn btn-primary' value='Cryptocurrency'>
+        </form>";
+    }
+}
+function themechange()
+{
+    global $db, $userid, $h, $ir, $api;
+    if (isset($_POST['theme'])) {
+        $_POST['theme'] = (isset($_POST['theme']) && is_numeric($_POST['theme'])) ? abs($_POST['theme']) : 1;
+        if ($_POST['theme'] < 1 || $_POST['theme'] > 4) {
+            alert('danger', "Uh Oh!", "The theme you wish to load is not valid.");
+            die($h->endpage());
+        }
+		elseif ($_POST['theme'] == 3 && $ir['vip_days'] == 0)
+		{
+			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
+			die($h->endpage());
+		}
+		elseif ($_POST['theme'] == 4 && $ir['vip_days'] == 0)
+		{
+			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
+			die($h->endpage());
+		}
+		else {
+            alert('success', "Success!", "You have successfully changed your theme.", true, 'preferences.php');
+            $db->query("UPDATE `user_settings` SET `theme` = {$_POST['theme']} WHERE `userid` = {$userid}");
+            $api->SystemLogsAdd($userid, 'preferences', "Changed theme to Theme ID {$_POST['theme']}.");
+            die($h->endpage());
+        }
+    } else {
+        echo "
+			<table class='table table-bordered'>
+				<tr>
+					<th colspan='2'>
+						Select the theme you wish to be seen as you play.
+					</th>
+				</tr>
+				<tr>
+					<td>
+						Castle<br />
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770280/themes/castle.jpg' class='img-thumbnail img-responsive'>
+						<form method='post'>
+							<input type='hidden' value='1' name='theme'>
+							<input type='submit' class='btn btn-primary' value='Pick this one'>
+						</form>
+					</td>
+					<td>
+						Darkly<br />
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770277/themes/darkly.jpg' class='img-thumbnail img-responsive'>
+						<form method='post'>
+							<input type='hidden' value='2' name='theme'>
+							<input type='submit' class='btn btn-primary' value='Pick this one'>
+						</form>
+					</td>
+				</tr>
+				<tr>
+                    <td>
+						Slate<br />
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/slate.jpg' class='img-thumbnail img-responsive'>";
+						if ($ir['vip_days'] != 0)
+						{
+							echo "
+							<form method='post'>
+								<input type='hidden' value='3' name='theme'>
+								<input type='submit' class='btn btn-primary' value='Pick this one'>
+							</form>
+							";
+						}
+						else
+						{
+							echo "<br />VIPs only.";
+						}
+						echo"
+					</td>
+					<td>
+						Cyborg<br />
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770282/themes/cyborg.jpg' class='img-thumbnail img-responsive'>";
+						if ($ir['vip_days'] != 0)
+						{
+							echo "
+							<form method='post'>
+								<input type='hidden' value='4' name='theme'>
+								<input type='submit' class='btn btn-primary' value='Pick this one'>
+							</form>
+							";
+						}
+						else
+						{
+							echo "<br />VIPs only.";
+						}
+						echo"
+					</td>
+				</tr>
+			</table>";
+    }
+}
 $h->endpage();

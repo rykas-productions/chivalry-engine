@@ -31,7 +31,7 @@ function weapon()
     //Make sure the Item ID is safe for database use.
     $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : 0;
     //Select all its info.
-    $id = $db->query("SELECT `weapon`, `itmid`, `itmname`, `effect1`, `effect2`, 
+    $id = $db->query("/*qc=on*/SELECT `weapon`, `itmid`, `itmname`, `effect1`, `effect2`, 
 					`effect3`,  `effect1_on`, `effect2_on`, `effect3_on`
 					FROM `inventory` AS `iv`
 					LEFT JOIN `items` AS `it`
@@ -65,15 +65,15 @@ function weapon()
         if ($ir[$_POST['type']] > 0) {
             $api->UserGiveItem($userid, $ir[$_POST['type']], 1);
             $slot = ($_POST['type'] == 'equip_primary') ? 'Primary Weapon' : 'Secondary Weapon';
-			$sbq=$db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_POST['type']}'");
+			$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_POST['type']}'");
 			$statloss='';
 			if ($db->num_rows($sbq) > 0)
 			{
 				while ($sbr=$db->fetch_row($sbq))
 				{
                     $stats =
-					array("energy" => "Maximum Energy", "will" => "Maximum Will",
-						"brave" => "Maximum Bravery", "level" => "Level",
+					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
+						"maxbrave" => "Maximum Bravery", "level" => "Level",
 						"maxhp" => "Maximum Health", "strength" => "Strength",
 						"agility" => "Agility", "guard" => "Guard",
 						"labor" => "Labor", "iq" => "IQ",
@@ -109,7 +109,7 @@ function weapon()
 				}
 				alert('info',"Information!","You have {$statloss} when you unequipped your weapon.",false);
 			}
-            $weapname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_POST['type']]}"));
+            $weapname = $db->fetch_single($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_POST['type']]}"));
             $api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} as their {$slot}");
         }
         //Make the slot name friendly for the logger and user.
@@ -124,8 +124,8 @@ function weapon()
 		for ($enum = 1; $enum <= 3; $enum++) {
             if ($r["effect{$enum}_on"] == 'true') {
                 $stats =
-					array("energy" => "Maximum Energy", "will" => "Maximum Will",
-						"brave" => "Maximum Bravery", "level" => "Level",
+					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
+						"maxbrave" => "Maximum Bravery", "level" => "Level",
 						"maxhp" => "Maximum Health", "strength" => "Strength",
 						"agility" => "Agility", "guard" => "Guard",
 						"labor" => "Labor", "iq" => "IQ",
@@ -211,7 +211,7 @@ function armor()
     //Select the Item's info from the database.
     $id =
         $db->query(
-            "SELECT `armor`, `itmid`, `itmname`, `effect1`, `effect2`, 
+            "/*qc=on*/SELECT `armor`, `itmid`, `itmname`, `effect1`, `effect2`, 
 					`effect3`,  `effect1_on`, `effect2_on`, `effect3_on`
 					FROM `inventory` AS `iv`
 					LEFT JOIN `items` AS `it`
@@ -244,16 +244,16 @@ function armor()
         //was unequipped.
         if ($ir['equip_armor'] > 0) {
             $api->UserGiveItem($userid, $ir['equip_armor'], 1);
-			$sbq=$db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_POST['type']}'");
+			$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_POST['type']}'");
 			$statloss='';
-			$armorname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
+			$armorname = $db->fetch_single($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
 			if ($db->num_rows($sbq) > 0)
 			{
 				while ($sbr=$db->fetch_row($sbq))
 				{
                     $stats =
-					array("energy" => "Maximum Energy", "will" => "Maximum Will",
-						"brave" => "Maximum Bravery", "level" => "Level",
+					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
+						"maxbrave" => "Maximum Bravery", "level" => "Level",
 						"maxhp" => "Maximum Health", "strength" => "Strength",
 						"agility" => "Agility", "guard" => "Guard",
 						"labor" => "Labor", "iq" => "IQ",
@@ -295,8 +295,8 @@ function armor()
 		for ($enum = 1; $enum <= 3; $enum++) {
             if ($r["effect{$enum}_on"] == 'true') {
                 $stats =
-					array("energy" => "Maximum Energy", "will" => "Maximum Will",
-						"brave" => "Maximum Bravery", "level" => "Level",
+					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
+						"maxbrave" => "Maximum Bravery", "level" => "Level",
 						"maxhp" => "Maximum Health", "strength" => "Strength",
 						"agility" => "Agility", "guard" => "Guard",
 						"labor" => "Labor", "iq" => "IQ",
@@ -376,7 +376,7 @@ function potion()
     //Select the Item's info from the database.
     $id =
         $db->query(
-            "SELECT `itmid`, `itmname`, `effect1`, `effect2`, 
+            "/*qc=on*/SELECT `itmid`, `itmname`, `effect1`, `effect2`, 
 					`effect3`,  `effect1_on`, `effect2_on`, `effect3_on`, `itmtype`
 					FROM `inventory` AS `iv`
 					LEFT JOIN `items` AS `it`
@@ -415,7 +415,7 @@ function potion()
             die($h->endpage());
         }
         //Potion equipping.
-        $potionexclusion=array(17,123,68);
+        $potionexclusion=array(17,123,68,138,95,96,148);
         if (in_array($r['itmid'],$potionexclusion))
         {
             alert('danger', "Uh Oh!", "You may not equip this item in your potion slot.", true, 'inventory.php');

@@ -11,14 +11,14 @@ require('globals.php');
 if (!$ir['guild']) {
     alert('danger', "Uh Oh!", "You are not in a guild.", true, 'index.php');
 } else {
-    $gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}");
+    $gq = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}");
     if ($db->num_rows($gq) == 0) {
         alert('danger', "Uh Oh!", "Your guild's data could not be selected. Please contact an admin immediately.");
         die($h->endpage());
     }
     $gd = $db->fetch_row($gq);
     $db->free_result($gq);
-    $wq = $db->query("SELECT COUNT(`gw_id`) FROM `guild_wars` WHERE (`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) AND `gw_winner` = 0");
+    $wq = $db->query("/*qc=on*/SELECT COUNT(`gw_id`) FROM `guild_wars` WHERE (`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) AND `gw_winner` = 0");
     if ($db->fetch_single($wq) > 0) {
         alert('warning', "Guild Wars in Progress", "Your guild is in {$db->fetch_single($wq)} wars. View active wars <a href='?action=warview'>here</a>.", false);
     }
@@ -57,6 +57,9 @@ if (!$ir['guild']) {
             break;
         case "armory":
             armory();
+            break;
+		case "gym":
+            gym();
             break;
         case "adonate":
             adonate();
@@ -131,12 +134,22 @@ function home()
 				<td>
 					<a href='?action=viewpolls'>Guild Polls</a>
 				</td>
-				<td>";
-				if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
-					echo "<a href='?action=staff&act2=idx'>Staff Room</a>";
-				echo"
+				<td>
+					<a href='?action=gym'>Guild Gym</a>
 				</td>
-			</tr>
+			</tr>";
+			if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid)
+			{
+					echo "
+				<tr>
+					<td>
+						<a href='?action=staff&act2=idx'>Staff Room</a>
+					</td>
+					<td>
+					</td>
+				</tr>";
+			}
+				echo"
 	</table>
 	<br />
 	<table class='table table-bordered'>
@@ -155,7 +168,7 @@ function home()
 	<b>Last 10 Guild Notifications</b>
 	<br />
    	";
-    $q = $db->query("SELECT * FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']} ORDER BY `gn_time` DESC  LIMIT 10");
+    $q = $db->query("/*qc=on*/SELECT * FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']} ORDER BY `gn_time` DESC  LIMIT 10");
     echo "
 	<table class='table table-bordered'>
 		<tr align='left'>
@@ -202,13 +215,8 @@ function summary()
 		</th>
 		<td>
        ";
-    $pq = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$gd['guild_owner']}");
-    if ($db->num_rows($pq) > 0) {
-        $ldrnm = $db->fetch_single($pq);
+    $ldrnm = parseUsername($gd['guild_owner']);
         echo "<a href='profile.php?user={$gd['guild_owner']}'> {$ldrnm} </a>";
-    } else {
-        echo "N/A";
-    }
     echo "</td>
 	</tr>
 	<tr align='left'>
@@ -216,18 +224,11 @@ function summary()
 			Co-Leader
 		</th>
 		<td>";
-    $db->free_result($pq);
-    $vpq = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$gd['guild_coowner']}");
-    if ($db->num_rows($vpq) > 0) {
-        $vldrnm = $db->fetch_single($vpq);
+   $vldrnm = parseUsername($gd['guild_coowner']);
         echo "<a href='profile.php?user={$gd['guild_coowner']}'> {$vldrnm} </a>";
-    } else {
-        echo "N/A";
-    }
     echo "</td>
 	</tr>";
-    $db->free_result($vpq);
-    $cnt = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
+    $cnt = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
     echo "
 	<tr align='left'>
 		<th>
@@ -274,7 +275,7 @@ function summary()
 			Allies
 		</th>
 		<td>";
-			$q=$db->query("SELECT * 
+			$q=$db->query("/*qc=on*/SELECT * 
 							FROM `guild_alliances` 
 							WHERE (`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']})
 							AND `alliance_true` = 1");
@@ -298,7 +299,7 @@ function guild_forums()
 {
 	global $db, $ir, $userid, $gd;
     $q = $db->query(
-                    "SELECT *
+                    "/*qc=on*/SELECT *
                      FROM `forum_forums`
                      WHERE `ff_auth` = 'guild'
                      AND `ff_owner` = {$ir['guild']}");
@@ -435,7 +436,7 @@ function members()
 				&nbsp;
 			</th>
     	</tr>";
-    $q = $db->query("SELECT `userid`, `username`, `level`, `display_pic`, `primary_currency` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` DESC");
+    $q = $db->query("/*qc=on*/SELECT `userid`, `username`, `level`, `display_pic`, `primary_currency` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` DESC");
     $csrf = request_csrf_html('guild_kickuser');
     while ($r = $db->fetch_row($q)) {
 		$r['status'] = '';
@@ -445,11 +446,13 @@ function members()
 			$r['status'] .= "In Dungeon<br />";
 		if ((!$api->UserStatus($r['userid'], 'dungeon')) && (!$api->UserStatus($r['userid'], 'infirmary')))
 			$r['status'] .= "Perfectly Fine<br />";
+        $r['username2']=parseUsername($r['userid']);
+        $r['display_pic']=parseImage(parseDisplayPic($r['userid']));
         echo "
 		<tr align='left'>
         	<td width='10%'>
 				<img src='{$r['display_pic']}' class='img-fluid'><br />
-				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a>
+				<a href='profile.php?user={$r['userid']}'>{$r['username2']}</a>
 			</td>
         	<td>
 				{$r['level']}
@@ -515,7 +518,7 @@ function staff_kick()
             alert('danger', "Uh Oh!", "You cannot kick members from your guild while you are at war.", true, '?action=members');
         } else {
             //User to be kicked exists and is in the guild.
-            $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = $who AND `guild` = {$gd['guild_id']}");
+            $q = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = $who AND `guild` = {$gd['guild_id']}");
             if ($db->num_rows($q) > 0) {
                 //Kick the user and add the notification.
                 $kdata = $db->fetch_row($q);
@@ -589,7 +592,7 @@ function atklogs()
 {
     global $db, $ir, $api;
     //Select the last 50 attacks involving someone in the guild.
-    $atks = $db->query("SELECT `a`.*, `u1`.*, `u2`.*
+    $atks = $db->query("/*qc=on*/SELECT `a`.*, `u1`.*, `u2`.*
                         FROM `attack_logs` AS `a`
                         INNER JOIN `users` AS `u1`
                         ON `attacker` = `u1`.`userid`
@@ -637,7 +640,7 @@ function warview()
 {
     global $db, $ir, $api;
     //Select all active wars.
-    $wq = $db->query("SELECT * FROM `guild_wars` WHERE
+    $wq = $db->query("/*qc=on*/SELECT * FROM `guild_wars` WHERE
 					(`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) 
 					AND `gw_winner` = 0");
     echo "<b>These are the current wars your guild is participating in.</b> It costs your guild 15,000 Copper Coins per attack your guild 
@@ -683,7 +686,7 @@ function armory()
     } else {
         //List all the armory items.
         echo "Here are the items your guild currently has stockpiled in its armory. You may donate items <a href='?action=adonate'>here</a>.<br />";
-        $inv = $db->query("SELECT `gaQTY`, `itmsellprice`, `itmid`, `gaID`,
+        $inv = $db->query("/*qc=on*/SELECT `gaQTY`, `itmsellprice`, `itmid`, `gaID`,
                              `weapon`, `armor`, `itmtypename`, `itmdesc`
                              FROM `guild_armory` AS `iv`
                              INNER JOIN `items` AS `i`
@@ -728,6 +731,175 @@ function armory()
         }
         echo "</table>";
     }
+}
+
+function gym()
+{
+	global $db, $gd, $h, $api, $ir, $userid;
+	$macropage = ('viewguild.php?action=gym');
+	$multiplier = 1+(($gd['guild_level']/100)*5);
+	if ($multiplier > 2.25)
+		$multiplier = 2.25;
+	if ($gd['guild_level'] < 3)
+	{
+		alert('danger',"Uh Oh!","You guild needs to be at least level 3 to access the guild gym!",true,'viewguild.php');
+		die($h->endpage());
+	}
+	//User is in the infirmary
+	if ($api->UserStatus($ir['userid'], 'infirmary')) {
+		alert("danger", "Unconscious!", "You cannot train while you're in the infirmary.", true, 'index.php');
+		die($h->endpage());
+	}
+	//User is in the dungeon.
+	if ($api->UserStatus($ir['userid'], 'dungeon')) {
+		alert("danger", "Locked Up!", "You cannot train while you're in the dungeon.", true, 'index.php');
+		die($h->endpage());
+	}
+	//Convert POST values to Stat Names.
+	$statnames = array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor", "All" => "all");
+	//Training amount is not set, so set to 0.
+	if (!isset($_GET["amnt"])) {
+		$_GET["amnt"] = 0;
+	}
+	$_GET["amnt"] = abs($_GET["amnt"]);
+	if (isset($_GET["stat"]) && $_GET["amnt"]) {
+		//User trained stat does not exist.
+		if (!isset($statnames[$_GET['stat']])) {
+			alert("danger", "Uh Oh!", "The stat you've chosen to train does not exist or cannot be trained.", true, 'back');
+			die($h->endpage());
+		}
+		$stat = $statnames[$_GET['stat']];
+		//User is trying to train using more energy than they have.
+		if ($_GET['amnt'] > $ir['energy']) {
+			alert("danger", "Uh Oh!", "You are trying to train using more energy than you currently have.", false);
+		} else {
+			$gain = 0;
+			$extraecho = '';
+			if ($stat == 'all') {
+				$gainstr = $api->UserTrain($userid, 'strength', $_GET['amnt'] / 4, $multiplier);
+				$gainagl = $api->UserTrain($userid, 'agility', $_GET['amnt'] / 4, $multiplier);
+				$gaingrd = $api->UserTrain($userid, 'guard', $_GET['amnt'] / 4, $multiplier);
+				$gainlab = $api->UserTrain($userid, 'labor', $_GET['amnt'] / 4, $multiplier);
+			} else {
+				$gain = $api->UserTrain($userid, $_GET['stat'], $_GET['amnt'], $multiplier);
+			}
+			//Update energy left and stat's new count.
+			if ($stat != 'all')
+				$NewStatAmount = $ir[$stat] + $gain;
+			$EnergyLeft = $ir['energy'] - $_GET['amnt'];
+			//Strength is chosen stat
+			if ($stat == "strength") {
+				alert('success', "Success!", "You begin to lift weights. You have gained " . number_format($gain) . " Strength by completing
+					{$_GET['amnt']} sets of weights. You now have " . number_format($NewStatAmount) . " Strength and {$EnergyLeft} Energy left.", false);
+				//Have strength selected for the next training.
+				$str_select = "/*qc=on*/SELECTed";
+			} //Agility is the chosen stat.
+			elseif ($stat == "agility") {
+				alert('success', "Success!", "You begin to run laps. You have gained " . number_format($gain) . " Agility by completing
+					{$_GET['amnt']} laps. You now have " . number_format($NewStatAmount) . " Agility and {$EnergyLeft} Energy left.", false);
+				//Have agility selected for the next training.
+				$agl_select = "/*qc=on*/SELECTed";
+			} //Guard is the chosen stat.
+			elseif ($stat == "guard") {
+				alert('success', "Success!", "You begin swimming in the pool. You have gained " . number_format($gain) . " Guard by swimming for
+					{$_GET['amnt']} minutes. You now have " . number_format($NewStatAmount) . " Guard and {$EnergyLeft} left.", false);
+				//Have guard selected for the next training.
+				$grd_select = "/*qc=on*/SELECTed";
+			} //Labor is the chosen stat.
+			elseif ($stat == "labor") {
+				alert('success', "Success!", "You begin moving boxes around the gym. You have gained " . number_format($gain) . " Labor by moving
+					{$_GET['amnt']} sets of boxes. You now have " . number_format($NewStatAmount) . " and {$EnergyLeft} Energy left.", false);
+				//Have guard selected for the next training.
+				$lab_select = "/*qc=on*/SELECTed";
+			} elseif ($stat == "all") {
+				alert('success', "Success!", "You begin training your Strength, Agility, Guard and Labor all at once. You
+					have gained {$gainstr} Strength, {$gainagl} Agility, {$gaingrd} Guard and {$gainlab} Labor. You have
+					{$EnergyLeft} Energy left.");
+				$all_select = "/*qc=on*/SELECTed";
+			}
+			//Log the user's training attempt.
+			$api->SystemLogsAdd($userid, 'training', "Trained {$stat} {$_GET['amnt']} times and gained " . number_format($gain) . ".");
+			echo "<hr />";
+			$ir['energy'] -= $_GET['amnt'];
+			if ($stat != 'all')
+				$ir[$stat] += $gain;
+			}
+		}
+		//Small logic to keep the last trained stat selected.
+		if (!isset($str_select)) {
+			$str_select = '';
+		}
+		if (!isset($agl_select)) {
+			$agl_select = '';
+		}
+		if (!isset($grd_select)) {
+			$grd_select = '';
+		}
+		if (!isset($lab_select)) {
+			$lab_select = '';
+		}
+		if (!isset($all_select)) {
+			$all_select = '';
+		}
+		//Grab the user's stat ranks.
+		$ir['strank'] = get_rank($ir['strength'], 'strength');
+		$ir['agirank'] = get_rank($ir['agility'], 'agility');
+		$ir['guarank'] = get_rank($ir['guard'], 'guard');
+		$ir['labrank'] = get_rank($ir['labor'], 'labor');
+		$ir['all_four'] = ($ir['labor'] + $ir['strength'] + $ir['agility'] + $ir['guard']);
+		$ir['af_rank'] = get_rank($ir['all_four'], 'all');
+		echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to
+		{$ir['energy']} times. The guild gym will give you X{$multiplier} gains.<hr />
+		<table class='table table-bordered'>
+			<tr>
+				<form method='get'>
+					<input type='hidden' name='action' value='gym'>
+					<th>
+						Stat
+					</th>
+					<td>
+						<select type='dropdown' name='stat' class='form-control'>
+							<option {$str_select} value='Strength'>
+								Strength (Have " . number_format($ir['strength']) . "; Ranked: {$ir['strank']})
+							</option>
+							<option {$agl_select} value='Agility'>
+								Agility (Have " . number_format($ir['agility']) . "; Ranked: {$ir['agirank']})
+							</option>
+							<option {$grd_select} value='Guard'>
+								Guard (Have " . number_format($ir['guard']) . "; Ranked: {$ir['guarank']})
+							</option>
+							<option {$lab_select} value='Labor'>
+								Labor (Have " . number_format($ir['labor']) . "; Ranked: {$ir['labrank']})
+							</option>
+							<option {$all_select} value='All'>
+								All Four (Have " . number_format($ir['all_four']) . "; Ranked: {$ir['af_rank']})
+							</option>
+						</select>
+					</td>
+			</tr>
+			<tr>
+				<th>
+					Training Duration
+				</th>
+				<td>
+					<input type='number' class='form-control' min='1' max='{$ir['energy']}' name='amnt' value='{$ir['energy']}' />
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+					<input type='submit' class='btn btn-primary' value='Train' />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href='temple.php?action=energy' class='btn btn-primary'>Refill Energy</a>
+				</td>
+				<td>
+					<a href='temple.php?action=will' class='btn btn-primary'>Regen Will</a>
+				</td>
+			</tr>
+				</form>
+		</table>";
 }
 
 function adonate()
@@ -786,7 +958,7 @@ function crimes()
     global $gd, $db;
     if ($gd['guild_crime'] > 0) {
         $ttc = TimeUntil_Parse($gd['guild_crime_done']);
-        $gcname = $db->fetch_single($db->query("SELECT `gcNAME` from `guild_crimes` WHERE `gcID` = {$gd['guild_crime']}"));
+        $gcname = $db->fetch_single($db->query("/*qc=on*/SELECT `gcNAME` from `guild_crimes` WHERE `gcID` = {$gd['guild_crime']}"));
         echo "Your guild will be attempting to commit the {$gcname} crime. It will begin in {$ttc}.";
     } else {
         echo "Your guild is not currently planning on committing a crime. Contact your guild's leadership to stage one.";
@@ -809,7 +981,7 @@ function guild_polls()
             alert('danger', "Uh Oh!", "You have already voted in this poll.");
             die($h->endpage());
         }
-        $check_q = $db->query("SELECT COUNT(`id`) FROM `polls`  WHERE `active` = '1' AND `id` = {$_POST['poll']} AND `visibility` = {$ir['guild']}");
+        $check_q = $db->query("/*qc=on*/SELECT COUNT(`id`) FROM `polls`  WHERE `active` = '1' AND `id` = {$_POST['poll']} AND `visibility` = {$ir['guild']}");
         if ($db->fetch_single($check_q) == 0) {
             $db->free_result($check_q);
             alert('danger', "Uh Oh!", "Poll does not exist, or is no longer active.");
@@ -825,7 +997,7 @@ function guild_polls()
         $db->query("UPDATE `polls` SET `voted{$_POST['choice']}` = `voted{$_POST['choice']}` + 1 WHERE `active` = '1' AND `id` = {$_POST['poll']}");
         alert('success', "Success!", "You have successfully submitted your vote.", true, '?action=viewpolls');
     } else {
-        $q = $db->query("SELECT * FROM `polls` WHERE `active` = '1' AND `visibility` = {$ir['guild']}");
+        $q = $db->query("/*qc=on*/SELECT * FROM `polls` WHERE `active` = '1' AND `visibility` = {$ir['guild']}");
         if (!$db->num_rows($q)) {
             echo "<br />There's no polls open at this time.";
         } else {
@@ -921,7 +1093,7 @@ function guild_oldpolls()
 	global $db, $ir;
     echo "<a href='?action=viewpolls'>Cast Your Vote!</a><br />";
     $q =
-        $db->query("SELECT * FROM `polls` WHERE `active` = '0' AND `visibility` = {$ir['guild']} ORDER BY `id` DESC");
+        $db->query("/*qc=on*/SELECT * FROM `polls` WHERE `active` = '0' AND `visibility` = {$ir['guild']} ORDER BY `id` DESC");
     if (!$db->num_rows($q)) {
         alert('danger', "Uh Oh!", "There are no closed polls.", true, '?action=viewpolls');
     } else {
@@ -1094,7 +1266,7 @@ function staff_idx()
 			<a href='?action=staff&act2=name'>Change Guild Name</a><br />
 			<a href='?action=staff&act2=desc'>Change Guild Description</a><br />
 			<a href='?action=staff&act2=town'>Change Guild Town</a><br />";
-        if ($db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) {
+        if ($db->fetch_single($db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) {
             echo "<a href='?action=staff&act2=untown'>Surrender Guild Town</a><br />
 				<a href='?action=staff&act2=tax'>Change Town Tax</a><br />";
         }
@@ -1143,7 +1315,7 @@ function add_poll()
                      '$choice7', '$choice8', '$choice9' ,'$choice10',
                      '{$_POST['hidden']}', '{$ir['guild']}')");
         alert('success', "Success!", "You have successfully created a poll for your guild.", true, 'index.php');
-        $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `guild` = {$ir['guild']}");
+        $q = $db->query("/*qc=on*/SELECT `userid`, `username` FROM `users` WHERE `guild` = {$ir['guild']}");
         while ($r = $db->fetch_row($q)) {
             notification_add($r['userid'], "Your guild has started a poll. Vote in it <a href='viewguild.php?action=viewpolls'>here</a>.");
         }
@@ -1278,7 +1450,7 @@ function end_poll()
            ";
         $q =
             $db->query(
-                "SELECT `id`, `question`
+                "/*qc=on*/SELECT `id`, `question`
                          FROM `polls`
                          WHERE `active` = '1' 
 						 AND `visibility` = {$ir['guild']}");
@@ -1296,7 +1468,7 @@ function end_poll()
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quickly next time.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT COUNT(`id`) FROM `polls` WHERE `id` = {$_POST['poll']} AND `visibility` = {$ir['guild']}");
+        $q = $db->query("/*qc=on*/SELECT COUNT(`id`) FROM `polls` WHERE `id` = {$_POST['poll']} AND `visibility` = {$ir['guild']}");
         if ($db->fetch_single($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "This poll does not exist, and thus, cannot be ended.");
@@ -1305,7 +1477,7 @@ function end_poll()
         $db->free_result($q);
         $db->query("UPDATE `polls` SET `active` = '0' WHERE `id` = {$_POST['poll']}");
         alert('success', "Success!", "You have closed this poll to responses.", true, 'index.php');
-        $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `guild` = {$ir['guild']}");
+        $q = $db->query("/*qc=on*/SELECT `userid`, `username` FROM `users` WHERE `guild` = {$ir['guild']}");
         while ($r = $db->fetch_row($q)) {
             notification_add($r['userid'], "Your guild has closed a poll. View the results <a href='viewguild.php?action=viewpolls'>here</a>.");
         }
@@ -1327,7 +1499,7 @@ function staff_apps()
         }
 
         //Verify the application exists and belongs to this guild.
-        $aq = $db->query("SELECT `ga_user`
+        $aq = $db->query("/*qc=on*/SELECT `ga_user`
                          FROM `guild_applications`
                          WHERE `ga_id` = {$_POST['app']}
                          AND `ga_guild` = {$gd['guild_id']}");
@@ -1348,7 +1520,7 @@ function staff_apps()
                 //User is accepted, yay!
 
                 //Make sure the guild has enough capacity to accept this member.
-                $cnt = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
+                $cnt = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
 				$gd['guild_capacity']=$gd['guild_level']*5;
                 //Guild does not have enough capacity to accept another member.s
                 if ($gd['guild_capacity'] <= $db->fetch_single($cnt)) {
@@ -1364,7 +1536,7 @@ function staff_apps()
                 }
 
                 //Select the town level if the guild's got one.
-                $townlevel = $db->fetch_single($db->query("SELECT `town_min_level` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
+                $townlevel = $db->fetch_single($db->query("/*qc=on*/SELECT `town_min_level` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
 
                 //Applicant cannot reach the town the guild owns.
                 if ($townlevel > $api->UserInfoGet($appdata['ga_user'], 'level') && $townlevel > 0) {
@@ -1407,7 +1579,7 @@ function staff_apps()
    		";
         $q =
             $db->query(
-                "SELECT *
+                "/*qc=on*/SELECT *
                          FROM `guild_applications`
                          WHERE `ga_guild` = {$gd['guild_id']}
 						 ORDER BY `ga_time` DESC");
@@ -1497,7 +1669,7 @@ function staff_vault()
         }
 
         //Check that the user to receive the cash is in the guild and/or exists.
-        $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
+        $q = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Uh Oh!", "You are trying to give to a user that does not exist, or is not in the guild.");
             die($h->endpage());
@@ -1585,7 +1757,7 @@ function staff_coowner()
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
 
         //Verify the user chosen is existent and is in the guild.
-        $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
+        $q = $db->query("/*qc=on*/SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
         if ($db->num_rows($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "You cannot give co-leadership abilities to someone that does not exist, or is not
@@ -1690,7 +1862,7 @@ function staff_massmail()
         //Escape the message.
         $_POST['text'] = (isset($_POST['text'])) ? $db->escape(htmlentities(stripslashes($_POST['text']), ENT_QUOTES, 'ISO-8859-1')) : '';
         $subj = 'Guild Mass Mail';
-        $q = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$gd['guild_id']}");
+        $q = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `guild` = {$gd['guild_id']}");
         //Send the mail out to everyone in the guild.
         while ($r = $db->fetch_row($q)) {
             $api->GameAddMail($r['userid'], $subj, $_POST['text'], $userid);
@@ -1743,7 +1915,7 @@ function staff_masspayment()
 
         //Make sure the POST is safe to work with.
         $_POST['payment'] = (isset($_POST['payment']) && is_numeric($_POST['payment'])) ? abs($_POST['payment']) : 0;
-        $cnt = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}"));
+        $cnt = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}"));
 
         //Make sure there's enough Copper Coins to pay each member of the guild the amount specified.
         if (($_POST['payment'] * $cnt) > $gd['guild_primcurr']) {
@@ -1755,7 +1927,7 @@ function staff_masspayment()
             alert('danger', "Uh Oh!", "You cannot mass pay your guild while at war.");
             die($h->endpage());
         } else {
-            $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `guild` = {$gd['guild_id']}");
+            $q = $db->query("/*qc=on*/SELECT `userid`, `username` FROM `users` WHERE `guild` = {$gd['guild_id']}");
             //Pay each member.
             while ($r = $db->fetch_row($q)) {
                 //User shares an IP with the user being paid... stop this.
@@ -1875,7 +2047,7 @@ function staff_leader()
             $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
 
             //Select the user from database.
-            $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
+            $q = $db->query("/*qc=on*/SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
 
             //User does not exist, or is not in the guild.
             if ($db->num_rows($q) == 0) {
@@ -1886,7 +2058,7 @@ function staff_leader()
             $db->free_result($q);
 
             //Update the guild's leader and log everything.
-            $db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
+            $db->query("UPDATE `guild` SET `guild_owner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
             $api->GameAddNotification($_POST['user'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you leader privileges for the {$gd['guild_name']} guild.");
             $api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
             alert('success', "Success!", "You have transferred your leadership privileges over to {$api->SystemUserIDtoName($_POST['user'])}.", true, '?action=staff&act2=idx');
@@ -1939,7 +2111,7 @@ function staff_name()
             $name = $db->escape(nl2br(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1')));
 
             //Select guilds with the same name.
-            $cnt = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}' AND `guild_id` != {$gd['guild_id']}");
+            $cnt = $db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}' AND `guild_id` != {$gd['guild_id']}");
 
             //If there's a guild with the same name, disallow the name change.
             if ($db->num_rows($cnt) > 0) {
@@ -2000,20 +2172,20 @@ function staff_town()
             $town = (isset($_POST['town']) && is_numeric($_POST['town'])) ? abs($_POST['town']) : 0;
 
             //Make sure current guild doesn't already have a town.
-            $cnt = $db->fetch_single($db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
+            $cnt = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`town_id`) FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
             if ($cnt > 0) {
                 alert('danger', "Uh Oh!", "Your guild already owns a town. Surrender your current town to own a new one.");
                 die($h->endpage());
             }
 
             //Make sure town claimed exists.
-            if ($db->num_rows($db->query("SELECT `town_id` FROM `town` WHERE `town_id` = {$town}")) == 0) {
+            if ($db->num_rows($db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_id` = {$town}")) == 0) {
                 alert('danger', "Uh Oh!", "The town you wish to own does not exist.");
                 die($h->endpage());
             }
 
             //Check to see if the town is unowned.
-            if ($db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$town}")) > 0) {
+            if ($db->fetch_single($db->query("/*qc=on*/SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$town}")) > 0) {
                 alert('danger', "Uh Oh!", "The town you wish to own is already owned by another guild. If you want this town, declare war on them!");
                 die($h->endpage());
             }
@@ -2023,8 +2195,8 @@ function staff_town()
                 alert('danger', "Uh Oh!", "You may not change your guild's town while at war.");
                 die($h->endpage());
             }
-            $lowestlevel = $db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` ASC LIMIT 1"));
-            $townlevel = $db->fetch_single($db->query("SELECT `town_min_level` FROM `town` WHERE `town_id` = {$town}"));
+            $lowestlevel = $db->fetch_single($db->query("/*qc=on*/SELECT `level` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` ASC LIMIT 1"));
+            $townlevel = $db->fetch_single($db->query("/*qc=on*/SELECT `town_min_level` FROM `town` WHERE `town_id` = {$town}"));
 
             //Verify that everyone in the guild can reach the city.
             if ($townlevel > $lowestlevel) {
@@ -2078,7 +2250,7 @@ function staff_untown()
     if ($userid == $gd['guild_owner']) {
 
         //Check to be sure the guild has a town under their control
-        $townowned = $db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}");
+        $townowned = $db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}");
         if ($db->num_rows($townowned) == 0) {
             alert('danger', "Uh Oh!", "Your guild doesn't have a town to surrender.", true, '?action=staff&act2=idx');
             die($h->endpage());
@@ -2144,7 +2316,7 @@ function staff_declare()
 			}
 
             //Verify that the declared guild exists.
-            $data_q = $db->query("SELECT `guild_name`,`guild_owner`
+            $data_q = $db->query("/*qc=on*/SELECT `guild_name`,`guild_owner`
                                   FROM `guild`
                                   WHERE `guild_id` = {$_POST['guild']}");
             if ($db->num_rows($data_q) == 0) {
@@ -2155,7 +2327,7 @@ function staff_declare()
 
             //Make sure the two guilds are not at war already.
             $time = time();
-            $iswarredon = $db->query("SELECT `gw_id`
+            $iswarredon = $db->query("/*qc=on*/SELECT `gw_id`
                                       FROM `guild_wars`
                                       WHERE `gw_declarer` = {$gd['guild_id']}
                                       AND `gw_declaree` = {$_POST['guild']}
@@ -2166,7 +2338,7 @@ function staff_declare()
             }
 
             //Make sure the two guilds are not at war already.
-            $iswarredon1 = $db->query("SELECT `gw_id`
+            $iswarredon1 = $db->query("/*qc=on*/SELECT `gw_id`
                                         FROM `guild_wars`
                                         WHERE `gw_declaree` = {$gd['guild_id']}
                                         AND `gw_declarer` = {$_POST['guild']}
@@ -2178,7 +2350,7 @@ function staff_declare()
 
             //Check to see if its been a week since the last war.
             $lastweek = $time - 604800;
-            $istoosoon = $db->fetch_single($db->query("SELECT `gw_end`
+            $istoosoon = $db->fetch_single($db->query("/*qc=on*/SELECT `gw_end`
                                                         FROM `guild_wars`
                                                         WHERE `gw_declarer` = {$gd['guild_id']}
                                                         AND `gw_declaree` = {$_POST['guild']}
@@ -2190,7 +2362,7 @@ function staff_declare()
             }
 
             //Check to see if its been a week since the last war.
-            $istoosoon1 = $db->fetch_single($db->query("SELECT `gw_end`
+            $istoosoon1 = $db->fetch_single($db->query("/*qc=on*/SELECT `gw_end`
                                                         FROM `guild_wars`
                                                         WHERE `gw_declaree` = {$gd['guild_id']}
                                                         AND `gw_declarer` = {$_POST['guild']}
@@ -2200,8 +2372,8 @@ function staff_declare()
                 alert('danger', "Uh Oh!", "You cannot declare war on this guild as its been less than a week since the last war concluded.");
                 die($h->endpage());
             }
-            $yourcount = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$ir['guild']}");
-            $theircount = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$_POST['guild']}");
+            $yourcount = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `guild` = {$ir['guild']}");
+            $theircount = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `guild` = {$_POST['guild']}");
 
             //Current guild does not have 5 members.
             if ($db->num_rows($yourcount) < 5) {
@@ -2216,7 +2388,7 @@ function staff_declare()
             }
 			
 			//Are you guys allies?
-			$cfaq=$db->query("SELECT * 
+			$cfaq=$db->query("/*qc=on*/SELECT * 
 								FROM `guild_alliances` 
 								WHERE 
 								(`alliance_a` = {$ir['guild']} AND `alliance_b` = {$_POST['guild']}) 
@@ -2236,7 +2408,7 @@ function staff_declare()
             $api->GuildAddNotification($_POST['guild'], "The {$gd['guild_name']} guild has declared war on your guild.");
             $api->GuildAddNotification($gd['guild_id'], "Your guild has declared war on {$r['guild_name']}.");
 			
-			$allyq=$db->query("SELECT * FROM `guild_alliances` WHERE (`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']})");
+			$allyq=$db->query("/*qc=on*/SELECT * FROM `guild_alliances` WHERE (`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']})");
 			while ($ar=$db->fetch_row($allyq))
 			{
 				if ($ar['alliance_a'] == $ir['guild'])
@@ -2258,7 +2430,7 @@ function staff_declare()
 				}
 			}
 			
-			$allyq2=$db->query("SELECT * FROM `guild_alliances` WHERE (`alliance_a` = {$_POST['guild']} OR `alliance_b` = {$_POST['guild']})");
+			$allyq2=$db->query("/*qc=on*/SELECT * FROM `guild_alliances` WHERE (`alliance_a` = {$_POST['guild']} OR `alliance_b` = {$_POST['guild']})");
 			while ($ar=$db->fetch_row($allyq2))
 			{
 				if ($ar['alliance_a'] == $_POST['guild'])
@@ -2344,7 +2516,7 @@ function staff_tax()
     //Check if the user is the owner of the guild.
     if ($userid == $gd['guild_owner']) {
         //Guild does not own a town, so tell them so.
-        if (!$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) {
+        if (!$db->fetch_single($db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) {
             alert('danger', "Uh Oh!", "Your guild does not own a town to set a tax rate on.", true, '?action=staff&act2=idx');
             die($h->endpage());
         }
@@ -2364,13 +2536,13 @@ function staff_tax()
                 die($h->endpage());
             }
             //Update town's tax rate.
-            $town_id = $db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
+            $town_id = $db->fetch_single($db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
             $db->query("UPDATE `town` SET `town_tax` = {$_POST['tax']} WHERE `town_guild_owner` = {$gd['guild_id']}");
             $api->SystemLogsAdd($userid, 'tax', "Set tax rate to {$_POST['tax']}% in {$api->SystemTownIDtoName($town_id)}.");
             alert('success', "Success!", "You have set the tax rate of {$api->SystemTownIDtoName($town_id)} to {$_POST['tax']}%.", true, '?action=staff&act2=idx');
         } else {
             $csrf = request_csrf_html('guild_staff_tax');
-            $current_tax = $db->fetch_single($db->query("SELECT `town_tax` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
+            $current_tax = $db->fetch_single($db->query("/*qc=on*/SELECT `town_tax` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
             echo "
 			<table class='table table-bordered'>
 			<form method='post'>
@@ -2421,7 +2593,7 @@ function staff_dissolve()
             }
 
             //Select all guild members, and tell them what happened to their guild via notification.
-            $q = $db->query("SELECT `userid`,`username` FROM `users` WHERE `guild` = {$ir['guild']}");
+            $q = $db->query("/*qc=on*/SELECT `userid`,`username` FROM `users` WHERE `guild` = {$ir['guild']}");
             while ($r = $db->fetch_row($q)) {
                 $api->GameAddNotification($r['userid'], "Your guild, {$gd['guild_name']}, has been dissolved by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}].");
             }
@@ -2499,7 +2671,7 @@ function staff_armory()
             }
 
             //Verify user chosen is in the guild.
-            $q = $db->query("SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
+            $q = $db->query("/*qc=on*/SELECT `userid`, `username` FROM `users` WHERE `userid` = {$_POST['user']} AND `guild` = {$gd['guild_id']}");
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "You cannot give items to someone not in your guild.");
@@ -2508,7 +2680,7 @@ function staff_armory()
             $db->free_result($q);
 
             //Verify the item chosen exists.
-            $q = $db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$_POST['item']}");
+            $q = $db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$_POST['item']}");
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "You cannot give out non-existent items.");
@@ -2560,7 +2732,7 @@ function staff_crimes()
 {
     global $db, $userid, $api, $h, $ir, $gd;
     //Select the guild's member count.
-    $cnt = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$ir['guild']}");
+    $cnt = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$ir['guild']}");
     $membs = $db->fetch_single($cnt);
     $db->free_result($cnt);
     if (isset($_POST['crime'])) {
@@ -2579,7 +2751,7 @@ function staff_crimes()
             die($h->endpage());
         }
         //Verify crime exists.
-        $cq = $db->query("SELECT `gcUSERS` from `guild_crimes` WHERE `gcID` = {$_POST['crime']}");
+        $cq = $db->query("/*qc=on*/SELECT `gcUSERS` from `guild_crimes` WHERE `gcID` = {$_POST['crime']}");
         if ($db->num_rows($cq) == 0) {
             alert('danger', "Uh Oh!", "You cannot commit a non-existent crime.");
             die($h->endpage());
@@ -2601,14 +2773,14 @@ function staff_crimes()
         alert('success', "Success!", "You have started to plan this crime. It will take 24 hours to commit.", true, '?action=staff&act2=idx');
     } else {
         //Select the crimes from database, based on how many members the guild has.
-        $q = $db->query("SELECT *
+        $q = $db->query("/*qc=on*/SELECT *
                          FROM `guild_crimes`
                          WHERE `gcUSERS` <= $membs");
 
         //If there's crimes the guild can commit.
         if ($db->num_rows($q) > 0) {
             $csrf = request_csrf_html('guild_staff_crimes');
-            echo "Select the crime you wish your guild to commit.<br />
+            echo "/*qc=on*/SELECT the crime you wish your guild to commit.<br />
             <form method='post'>
                 <select name='crime' type='dropdown' class='form-control'>";
             while ($r = $db->fetch_row($q)) {
@@ -2782,13 +2954,13 @@ function staff_ally()
 				alert('danger',"Uh Oh!","You cannot send an alliance request to your own guild.");
 				die($h->endpage());
 			}
-			$gexist=$db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_POST['guild']}");
+			$gexist=$db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$_POST['guild']}");
 			if ($db->num_rows($gexist) == 0)
 			{
 				alert('danger',"Uh Oh!","You cannot send an ally request to a non-existent guild.");
 				die($h->endpage());
 			}
-			$exist=$db->query("SELECT * 
+			$exist=$db->query("/*qc=on*/SELECT * 
 								FROM `guild_alliances` 
 								WHERE 
 								(`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']}) 
@@ -2808,7 +2980,7 @@ function staff_ally()
 		else
 		{
 			$csrf = request_csrf_html('guild_staff_ally_request');
-			echo "Select the guild you wish to form an alliance with, then select the alliance 
+			echo "/*qc=on*/SELECT the guild you wish to form an alliance with, then select the alliance 
 			type. Traditional alliance is an alliance where if either guild declares war, 
 			the other guild will come to its aid. Non-aggressive alliances are when guilds 
 			will only help when their alliance guild has war declared upon it. The alliance will 
@@ -2839,7 +3011,7 @@ function staff_view_alliance_request()
 		if (isset($_GET['accept']))
 		{
 			$_GET['accept'] = (isset($_GET['accept']) && is_numeric($_GET['accept'])) ? abs($_GET['accept']) : 0;
-			$exist=$db->query("SELECT * 
+			$exist=$db->query("/*qc=on*/SELECT * 
 								FROM `guild_alliances` 
 								WHERE `alliance_id` = {$_GET['accept']}
 								AND `alliance_b` = {$ir['guild']}
@@ -2860,7 +3032,7 @@ function staff_view_alliance_request()
 		if (isset($_GET['decline']))
 		{
 			$_GET['decline'] = (isset($_GET['decline']) && is_numeric($_GET['decline'])) ? abs($_GET['decline']) : 0;
-			$exist=$db->query("SELECT * 
+			$exist=$db->query("/*qc=on*/SELECT * 
 								FROM `guild_alliances` 
 								WHERE `alliance_id` = {$_GET['decline']}
 								AND `alliance_b` = {$ir['guild']}
@@ -2881,7 +3053,7 @@ function staff_view_alliance_request()
 		if (isset($_GET['delete']))
 		{
 			$_GET['delete'] = (isset($_GET['delete']) && is_numeric($_GET['delete'])) ? abs($_GET['delete']) : 0;
-			$exist=$db->query("SELECT * 
+			$exist=$db->query("/*qc=on*/SELECT * 
 								FROM `guild_alliances` 
 								WHERE `alliance_id` = {$_GET['delete']}
 								AND `alliance_a` = {$ir['guild']}
@@ -2916,7 +3088,7 @@ function staff_view_alliance_request()
 					Links
 				</th>
 			</tr>";
-			$q=$db->query("SELECT * FROM `guild_alliances` WHERE `alliance_b` = {$ir['guild']} AND `alliance_true` = 0");
+			$q=$db->query("/*qc=on*/SELECT * FROM `guild_alliances` WHERE `alliance_b` = {$ir['guild']} AND `alliance_true` = 0");
 			while ($r=$db->fetch_row($q))
 			{
 				$type = ($r['alliance_type'] == 1) ? "Traditional" : "Non-aggressive";
@@ -2948,7 +3120,7 @@ function staff_view_alliance_request()
 					Links
 				</th>
 			</tr>";
-		$q=$db->query("SELECT * FROM `guild_alliances` WHERE `alliance_a` = {$ir['guild']} AND `alliance_true` = 0");
+		$q=$db->query("/*qc=on*/SELECT * FROM `guild_alliances` WHERE `alliance_a` = {$ir['guild']} AND `alliance_true` = 0");
 		while ($r=$db->fetch_row($q))
 		{
 			$type = ($r['alliance_type'] == 1) ? "Traditional" : "Non-aggressive";
@@ -2982,7 +3154,7 @@ function staff_view_alliances()
 		if (isset($_GET['delete']))
 		{
 			$_GET['delete'] = (isset($_GET['delete']) && is_numeric($_GET['delete'])) ? abs($_GET['delete']) : 0;
-			$exist=$db->query("SELECT * 
+			$exist=$db->query("/*qc=on*/SELECT * 
 								FROM `guild_alliances` 
 								WHERE `alliance_id` = {$_GET['delete']}
 								AND (`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']})
@@ -3025,7 +3197,7 @@ function staff_view_alliances()
 					Links
 				</th>
 			</tr>";
-			$q=$db->query("SELECT * 
+			$q=$db->query("/*qc=on*/SELECT * 
 								FROM `guild_alliances` 
 								WHERE (`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']})
 								AND `alliance_true` = 1");

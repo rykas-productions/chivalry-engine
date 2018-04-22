@@ -89,7 +89,7 @@ function addforum()
             alert('danger', "Uh Oh!", "Please specify a category description.");
             die($h->endpage());
         } else {
-            $q = $db->query("SELECT COUNT(`ff_id`) FROM `forum_forums` WHERE `ff_name` = '{$name}'");
+            $q = $db->query("/*qc=on*/SELECT COUNT(`ff_id`) FROM `forum_forums` WHERE `ff_name` = '{$name}'");
             if ($db->fetch_single($q)) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "The category name is already in used.");
@@ -125,14 +125,14 @@ function editforum()
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Please submit the form as quickly as possible next time.");
                 die($h->endpage());
             }
-            $q = $db->query("SELECT COUNT(`ff_id`) FROM `forum_forums` WHERE `ff_name` = '{$name}' AND `ff_id` != {$_POST['id']}");
+            $q = $db->query("/*qc=on*/SELECT COUNT(`ff_id`) FROM `forum_forums` WHERE `ff_name` = '{$name}' AND `ff_id` != {$_POST['id']}");
             if ($db->fetch_single($q) > 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "The name you've chosen is already in use by another category.");
                 die($h->endpage());
             }
             $db->free_result($q);
-            $q = $db->query("SELECT COUNT(`ff_id`)  FROM `forum_forums` WHERE `ff_id` = {$_POST['id']}");
+            $q = $db->query("/*qc=on*/SELECT COUNT(`ff_id`)  FROM `forum_forums` WHERE `ff_id` = {$_POST['id']}");
             if ($db->fetch_single($q) == 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "You are trying to edit a non-existent forum category.");
@@ -153,7 +153,7 @@ function editforum()
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Please submit the form as quickly as possible next time.");
                 die($h->endpage());
             }
-            $q = $db->query("SELECT `ff_auth`, `ff_name`, `ff_desc`  FROM `forum_forums` WHERE `ff_id` = {$_POST['id']}");
+            $q = $db->query("/*qc=on*/SELECT `ff_auth`, `ff_name`, `ff_desc`  FROM `forum_forums` WHERE `ff_id` = {$_POST['id']}");
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "You are trying to edit a non-existent forum category.");
@@ -240,7 +240,7 @@ function delforum()
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Please submit the form as quickly as possible next time.");
             die($h->endpage());
         }
-        $q = $db->query("SELECT COUNT(`ff_id`) FROM `forum_forums` WHERE `ff_id` = {$_POST['forum']}");
+        $q = $db->query("/*qc=on*/SELECT COUNT(`ff_id`) FROM `forum_forums` WHERE `ff_id` = {$_POST['forum']}");
         if ($db->fetch_single($q) == 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "You are trying to delete a non-existent category.");
@@ -250,7 +250,7 @@ function delforum()
         $db->query("DELETE FROM `forum_posts` WHERE `ff_id` = {$_POST['forum']}");
         $db->query("DELETE FROM `forum_topics` WHERE `ft_forum_id` = {$_POST['forum']}");
         $db->query("DELETE FROM `forum_forums` WHERE `ff_id` = {$_POST['forum']}");
-        $q = $db->query("SELECT `ff_name` FROM `forum_forums`  WHERE `ff_id` = {$_POST['forum']}");
+        $q = $db->query("/*qc=on*/SELECT `ff_name` FROM `forum_forums`  WHERE `ff_id` = {$_POST['forum']}");
         $old = $db->fetch_single($q);
         $db->free_result($q);
         alert('success', "Success!", "You have successfully deleted the {$old} forum category.", true, 'index.php');

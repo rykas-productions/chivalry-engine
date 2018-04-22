@@ -15,7 +15,7 @@ if (!$api->UserHasItem($userid,123,1))
 $effect=Random(1,10);
 if ($effect == 1)
 {
-    $effect='were posioned. You have lost all your health.';
+    $effect='were poisoned. You have lost all your health.';
     $db->query("UPDATE `users` SET `hp` = 0 WHERE `userid` = {$userid}");
 }
 if ($effect == 2)
@@ -25,7 +25,7 @@ if ($effect == 2)
 }
 if ($effect == 3)
 {
-    $visittown=$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_min_level` <= {$ir['level']} AND `town_id` != {$ir['location']} ORDER BY RAND() LIMIT 1"));
+    $visittown=$db->fetch_single($db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_min_level` <= {$ir['level']} AND `town_id` != {$ir['location']} ORDER BY RAND() LIMIT 1"));
     if ($ir['level'] < 5)
     {
         $town = 1;
@@ -49,9 +49,8 @@ if ($effect == 4)
 }
 if ($effect == 5)
 {
-    $newname=$db->escape(strip_tags(stripslashes(strrev($ir['username']))));
-    $effect="and it reversed your name! Nice to meet you, {$newname}.";
-    $db->query("UPDATE `users` SET `username` = '{$newname}' WHERE `userid` = {$userid}");
+    $effect="and it refilled your Will to maximum.";
+    $db->query("UPDATE `users` SET `will` = `maxwill` WHERE `userid` = {$userid}");
 }
 if ($effect == 6)
 {
@@ -64,9 +63,9 @@ if ($effect == 7)
 }
 if ($effect == 8)
 {
-    $rng=Random(5,15);
-    $effect="had your work at your job lessened by {$rng}.";
-    $db->query("UPDATE `users` SET `jobwork` = `jobwork` + {$rng} WHERE `userid` = {$userid}");
+    $newname=$db->escape(strip_tags(stripslashes(str_shuffle($ir['username']))));
+    $effect="and it randomized your name! Nice to meet you, {$newname}.";
+    $db->query("UPDATE `users` SET `username` = '{$newname}' WHERE `userid` = {$userid}");
 }
 if ($effect == 9)
 {

@@ -42,14 +42,14 @@ function addbot()
                 alert('danger', "Uh Oh!", "Please fill out the form completely.");
                 die($h->endpage());
             }
-            $q = $db->query("SELECT `botid` FROM `botlist` WHERE `botuser` = {$user}");
+            $q = $db->query("/*qc=on*/SELECT `botid` FROM `botlist` WHERE `botuser` = {$user}");
             if ($db->num_rows($q) > 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "You cannot have the same bot listed twice.");
                 die($h->endpage());
             }
             $db->free_result($q);
-            $q = $db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
+            $q = $db->fetch_single($db->query("/*qc=on*/SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
             if (!($q == 'NPC')) {
                 alert('danger', "Uh Oh!", "You cannot add a non-NPC to the NPC Bot Tent.");
                 die($h->endpage());
@@ -121,7 +121,7 @@ function delbot()
                 alert('danger', "Uh Oh!", "Please select a bot to delete.");
                 die($h->endpage());
             }
-            $q = $db->query("SELECT `botid` FROM `botlist` WHERE `botuser` = {$bot}");
+            $q = $db->query("/*qc=on*/SELECT `botid` FROM `botlist` WHERE `botuser` = {$bot}");
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "The NPC you've selected is not on the NPC Bot Tent, thus, cannot be removed.");

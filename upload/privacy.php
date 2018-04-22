@@ -57,7 +57,7 @@ echo "<h4>1. Capturing and Use of Your Personal Data by {$set['WebsiteName']}</h
     in full at the end of this deadline.
     <br />
     <br />
-    1.5 At its own initiative or at your request, {$set['WebsiteName']} an complete, correct or delete incomplete,
+    1.5 At its own initiative or at your request, {$set['WebsiteName']} can complete, correct or delete incomplete,
     incorrect and/or outdated personal data which {$set['WebsiteName']} stores in connection with the operation of
     the website.
     <br />

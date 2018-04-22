@@ -68,8 +68,8 @@ if (!empty($username)) {
     $e_class = $db->escape(stripslashes($_POST['class']));
     $e_username = $db->escape($username);
     $e_email = $db->escape(stripslashes($_POST['email']));
-    $q = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$e_username}'");
-    $q2 = $db->query("SELECT COUNT(`userid`)  FROM `users` WHERE `email` = '{$e_email}'");
+    $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$e_username}'");
+    $q2 = $db->query("/*qc=on*/SELECT COUNT(`userid`)  FROM `users` WHERE `email` = '{$e_email}'");
     $u_check = $db->fetch_single($q);
     $e_check = $db->fetch_single($q2);
     $db->free_result($q);
@@ -93,7 +93,7 @@ if (!empty($username)) {
         $IP = $db->escape($_SERVER['REMOTE_ADDR']);
         //If the registrating user was referred to the game by someone.
         if ($_POST['ref']) {
-            $q = $db->query("SELECT `lastip` FROM `users` WHERE `userid` = {$_POST['ref']}");
+            $q = $db->query("/*qc=on*/SELECT `lastip` FROM `users` WHERE `userid` = {$_POST['ref']}");
             //If referring does not exist.
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
@@ -158,7 +158,7 @@ if (!empty($username)) {
         $api->UserGiveCurrency($i,'primary',10000);
         $api->UserGiveCurrency($i,'secondary',50);
         $mail="Welcome to Chivalry is Dead, {$e_username}. We hope you stay a while and hang out. To get started,
-        check out the Explore page and visit the [url='hexbags.php']Hexbags[/url] under the Gambling tab. Here you will gain many awesome starter items. Should
+        check out the Explore page and visit the [url=hexbags.php]Hexbags[/url] under the Gambling tab. Here you will gain many awesome starter items. Should
         your fortune be unkind, your inventory has 50 Dungeon Keys and 50 Linen Wraps to get you out of the Infirmary and Dungeon when needed.";
         session_regenerate_id();
         $_SESSION['loggedin'] = 1;
@@ -168,7 +168,7 @@ if (!empty($username)) {
         if (isset($_POST['promo'])) {
             $code = (isset($_POST['promo'])) ? $db->escape(strip_tags(stripslashes($_POST['promo']))) : '';
             if (!empty($code)) {
-                $promocodereal = $db->query("SELECT * FROM `promo_codes` WHERE `promo_code` = '{$code}'");
+                $promocodereal = $db->query("/*qc=on*/SELECT * FROM `promo_codes` WHERE `promo_code` = '{$code}'");
                 if ($db->num_rows($promocodereal) > 0) {
                     $pcrr = $db->fetch_row($promocodereal);
                     item_add($i, $pcrr['promo_item'], 1);

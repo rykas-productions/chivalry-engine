@@ -152,7 +152,7 @@ function addacademy()
             alert('danger', "Uh Oh!", "Please be sure to input some stats to be gained by completing the course.");
             die($h->endpage());
         }
-        $inq = $db->query("SELECT `ac_id` FROM `academy` WHERE `ac_name` = '{$name}'");
+        $inq = $db->query("/*qc=on*/SELECT `ac_id` FROM `academy` WHERE `ac_name` = '{$name}'");
         if ($db->num_rows($inq) > 0) {
             $db->free_result($inq);
             alert('danger', "Uh Oh!", "You cannot have more than one course with the same name.");
@@ -201,7 +201,7 @@ function delacademy()
         }
         $d =
             $db->query(
-                "SELECT `ac_name`
+                "/*qc=on*/SELECT `ac_name`
 					 FROM `academy`
 					 WHERE `ac_id` = {$_POST['academy']}");
         if ($db->num_rows($d) == 0) {
@@ -237,7 +237,7 @@ function editacademy()
             $grd = (isset($_POST['grd']) && is_numeric($_POST['grd'])) ? abs(intval($_POST['grd'])) : 0;
             $lab = (isset($_POST['lab']) && is_numeric($_POST['lab'])) ? abs(intval($_POST['lab'])) : 0;
             $iq = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs(intval($_POST['iq'])) : 0;
-            $q = $db->query("SELECT * FROM `academy` WHERE `ac_id` = {$id}");
+            $q = $db->query("/*qc=on*/SELECT * FROM `academy` WHERE `ac_id` = {$id}");
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
                 alert("danger", "Uh Oh!", "The course you are wishing to edit does not exist, or is invalid.");
@@ -262,7 +262,7 @@ function editacademy()
             break;
         case 1:
             $_POST['academy'] = (isset($_POST['academy']) && is_numeric($_POST['academy'])) ? abs(intval($_POST['academy'])) : 0;
-            $q = $db->query("SELECT * FROM `academy` WHERE `ac_id` = {$_POST['academy']}");
+            $q = $db->query("/*qc=on*/SELECT * FROM `academy` WHERE `ac_id` = {$_POST['academy']}");
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
                 alert("danger", "Uh Oh!", "The course you are wishing to edit does not exist, or is invalid.");
