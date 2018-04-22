@@ -185,7 +185,7 @@ if (!empty($username)) {
         $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
         $db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
         //User registered, lets log them in.
-        alert('success', "Success!", "You have successfully signed up to play {$set['WebsiteName']}. Click here to <a href='tutorial.php'>Sign In</a>", false);
+        alert('success', "Success!", "You have successfully signed up to play {$set['WebsiteName']}. Click here to <a href='explore.php'>Sign In</a>", false);
         $url=determine_game_urlbase();
         $WelcomeMSGEmail="Welcome to Chivalry is Dead, {$e_username}!<br />We hope you enjoy our lovely game and stick around for a while! If you have any questions or concerns, please contact a staff member in-game!<br />Thank you!<br /> -{$set['WebsiteName']}<br /><a href='https://{$url}'>https://{$url}</a>";
         $api->SystemSendEmail($e_email,$WelcomeMSGEmail,"{$set['WebsiteName']} Registration",$set['sending_email']);
