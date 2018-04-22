@@ -1163,7 +1163,7 @@ function xp()
 				$qe=$qe+($qe*$specialnumber);
 			}
             //Make the XP gained a little random...
-            $expgain = Random($qe / 4, $qe);
+            $expgain = Random($qe / 2, $qe);
 			$xplostequip='';
 			$xploststat='';
 			$weapons=$db->fetch_row($db->query("/*qc=on*/SELECT `equip_primary`, `equip_secondary`, `equip_armor`
@@ -1175,8 +1175,8 @@ function xp()
             if (empty($weapons['equip_primary']) && empty($weapons['equip_secondary'])
                 || empty($weapons['equip_armor']))
             {
-                $expgain=$expgain*0.05;
-                $xplostequip="Your experience gains were decreased by 95% because your opponent had no equipment.";
+                $expgain=$expgain*0.5;
+                $xplostequip="Your experience gains were decreased by 50% because your opponent had no equipment.";
             }
             if ($expgain < 1)
                 $expgain = 1;
