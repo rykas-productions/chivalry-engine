@@ -65,18 +65,6 @@ function attacking()
         //Set RNG
         $_SESSION['tresde'] = $_GET['tresde'];
     }
-	$npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$_GET['user']}");
-	//Opponent is registered on bot list.
-	if ($db->num_rows($npcquery) > 0) {
-		$results2 = $db->fetch_row($npcquery);
-		$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$_GET['user']}");
-		$r2d2 = $db->fetch_single($timequery);
-		//Opponent's drop has already been collected and the time hasn't reset.
-		if ((time() <= ($r2d2 + $results2['botcooldown'])) && ($r2d2 > 0)) {
-			alert("danger", "Uh Oh!", "You have already killed this NPC. Try again in " . ParseTimestamp($results2['botcooldown']) .".", true, 'index.php');
-        die($h->endpage());
-		}
-	}
     //If user is not specified.
     if (!$_GET['user']) {
         alert("danger", "Uh Oh!", "You've chosen to attack a non-existent user. Check your source and try again.", true, 'index.php');
