@@ -161,6 +161,13 @@ function mine()
             die($h->endpage());
         } else {
             $MSI = $db->fetch_row($mineinfo);
+			$nextspot=$spot+1;
+			$nextmineslevel = $db->fetch_single($db->query("SELECT `mine_level` FROM `mining_data` WHERE `mine_id` = {$nextspot}"));
+			if ($MSI['mine_level'] >= $nextmineslevel)
+			{
+				alert('danger',"Uh Oh!","This mine is too easy for you. Leave it for the newbies.",true,'mine.php');
+				die($h->endpage());
+			}
 			$specialnumber=((getSkillLevel($userid,15)*10)/100);
 			$MSI['mine_iq']=$MSI['mine_iq']-($MSI['mine_iq']*$specialnumber);
             if ($MUS['mining_level'] < $MSI['mine_level']) {
@@ -176,6 +183,11 @@ function mine()
                 alert('danger', "Uh Oh!", "You do not have enough mining power to mine here. You need {$MSI['mine_power_use']}.", true, 'mine.php');
                 die($h->endpage());
             }
+			elseif ($MUS['mining_level'] >= $nextmineslevel)
+			{
+				alert('danger',"Uh Oh!","This mine is too easy for you. Leave it for the newbies.",true,'mine.php');
+				die($h->endpage());
+			}
             $unequipped=0;
             if (!$api->UserHasItem($userid, $MSI['mine_pickaxe'], 1))
                 $unequipped++;
@@ -253,7 +265,7 @@ function mine()
                 alert('success', "Success!", "You have carefully excavated out a single " . $api->SystemItemIDtoName($MSI['mine_gem_item']) . ".", false);
                 $api->UserGiveItem($userid, $MSI['mine_gem_item'], 1);
                 $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined 1x {$api->SystemItemIDtoName($MSI['mine_gem_item'])}.");
-                $xpgain = 35 * $MUS['mining_level'];
+                $xpgain = 17 * $MUS['mining_level'];
             }
             echo "<hr />
             [<a href='?action=mine&spot={$spot}&tresde={$tresder}'>Mine Again</a>]<br />
