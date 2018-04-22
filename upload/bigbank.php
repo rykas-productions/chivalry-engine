@@ -46,6 +46,7 @@ else {
             alert('success', "Success!", "You have successfully bought a federal bank account for " . number_format($bank_cost), true, 'bigbank.php');
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bigbank", 0);
+			item_add($userid,155,1);
         } //Player is too poor to afford account.
         else {
             alert('danger', "Uh oh!", "You do not have enough cash to buy a federal bank account. You need at least
