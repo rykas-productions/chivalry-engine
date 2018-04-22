@@ -134,7 +134,7 @@ function home()
 				MGPoll
 			</td>
 			<td>
-				3 Chivalry Gym Scrolls
+				50 Boxes of Random
 			</td>
 			<td>
 				{$mgpollvote}
@@ -145,7 +145,7 @@ function home()
 				Apex Web Gaming
 			</td>
 			<td>
-				10 Explosives
+				+25 Hexbags
 			</td>
 			<td>
 				{$awgvote}

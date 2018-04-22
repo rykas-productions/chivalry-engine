@@ -43,8 +43,8 @@ function mgpoll()
 	$api->SystemLogsAdd($_POST['id'],'voted',"Voted at MGPoll.");
 	$db->query("INSERT INTO `votes` VALUES ({$_POST['id']}, 'mgp')");
 	$db->query("INSERT INTO `vote_raffle` (`userid`) VALUES ('{$_POST['id']}')");
-    $api->UserGiveItem($_POST['id'],18,3);
-	$api->GameAddNotification($_POST['id'],"Your vote at MGPoll has been verified successfully. You have been credited 3 Chivalry Gym Scrolls.");
+    $api->UserGiveItem($_POST['id'],33,50);
+	$api->GameAddNotification($_POST['id'],"Your vote at MGPoll has been verified successfully. You have been credited 50 Boxes of Random.");
 }
 function top100()
 {
@@ -88,8 +88,8 @@ function apex()
 	$api->SystemLogsAdd($_POST['i'],'voted',"Voted at Apex Web Gaming.");
 	$db->query("INSERT INTO `votes` VALUES ({$_POST['i']}, 'apex')");
 	$db->query("INSERT INTO `vote_raffle` (`userid`) VALUES ('{$_POST['i']}')");
-	$api->UserGiveItem($_POST['i'],28,10);
-	$api->GameAddNotification($_POST['i'],"Your vote at Apex Web Gaming has been verified successfully. You have been credited 10 Explosives.");
+	$db->query("UPDATE `users` SET `hexbags` = `hexbags` + 25 WHERE `userid` = {$_POST['i']}");
+	$api->GameAddNotification($_POST['i'],"Your vote at Apex Web Gaming has been verified successfully. You have been credited an extra 25 Hexbags.");
 	
 }
 function dog()
