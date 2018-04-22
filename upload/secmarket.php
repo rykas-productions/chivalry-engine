@@ -155,7 +155,7 @@ function add()
 			alert('danger', "Uh Oh!", "The pricing you set is too expensive.");
             die($h->endpage());
 		}
-		if ($_POST['cost'] < 200)
+		if ($_POST['cost'] < 1000)
 		{
 			alert('danger', "Uh Oh!", "The pricing you set is too cheap.");
             die($h->endpage());

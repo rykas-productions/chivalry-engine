@@ -71,7 +71,7 @@ function home()
 	<a class='btn btn-primary' href='?action=iq'>Buy IQ - " . number_format($set['iq_per_sec']) . "* Per Token</a><br /><br />
 	<a class='btn btn-primary' href='?action=protection'>Buy Protection - 5 Chivalry Tokens per Minute</a><br /><br />
     <a class='btn btn-primary' href='?action=coppertotoken'>50k Copper Coins -> 1 Chivalry Token</a><br /><br />
-	<a class='btn btn-primary' href='?action=tokentocopper'>1 Chivalry Token -> 200 Copper Coins</a><br /><br />
+	<a class='btn btn-primary' href='?action=tokentocopper'>1 Chivalry Token -> 1,000 Copper Coins</a><br /><br />
 	<br />
 	*=You will receive an extra {$extraiq}% IQ per Token because of your skills.";
 }
@@ -326,7 +326,7 @@ function tokentocopper()
 			alert('danger',"Uh Oh!","Please specify how many tokens you wish to exchange for Copper Coins.");
 			die($h->endpage());
 		}
-		$cost=$token*200;
+		$cost=$token*1000;
 		if (!$api->UserHasCurrency($userid,'secondary',$token))
 		{
 			alert('danger',"Uh Oh!","You do not have enough Chivalry Tokens to exchange for {$cost} Copper Coins. You need {$token} Chivalry Tokens.");
@@ -340,7 +340,7 @@ function tokentocopper()
 	else
 	{
 		$csrf=request_csrf_html('copper');
-		echo "You may convert your Chivalry Tokens to Copper Coins at 200 Copper Coins per Token. This is to 
+		echo "You may convert your Chivalry Tokens to Copper Coins at 1,000 Copper Coins per Token. This is to 
 		limit the minimum value of Chivalry Tokens when taking in account for inflation in the game. This price 
 		is very likely to change as the game progresses. How many tokens would you like to exchange?
 		<form method='post'>
