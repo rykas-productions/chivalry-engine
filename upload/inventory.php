@@ -250,6 +250,8 @@ while ($i = $db->fetch_row($inv)) {
     if ($i['armor'] > 0) {
         echo " [<a href='equip.php?slot=armor&ID={$i['inv_id']}'>Equip Armor</a>]";
     }
+	if ($i['itmtypename'] == 'Badges')
+		echo " [<a href='equip.php?slot=badge&ID={$i['inv_id']}'>Equip Badge</a>]";
     //Potion equipping.
         $potionexclusion=array(17,123,68,138,95,96,148);
     if ((($i['itmtypename'] == 'Potions') || ($i['itmtypename'] == 'Food')) && (!in_array($i['itmid'],$potionexclusion)))

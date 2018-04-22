@@ -20,6 +20,9 @@ switch ($_GET['slot']) {
     case 'potion':
         potion();
         break;
+	case 'badge':
+        badge();
+        break;
     default:
         alert('danger',"Uh Oh!","Please specific an action.",true,'inventory.php');
         die($h->endpage());
@@ -435,6 +438,69 @@ function potion()
             You are attempting to equip your {$r['itmname']} as your potion for use in combat.
             <input type='hidden' name='type' value='equip_potion'  /><br />
             <input type='submit' class='btn btn-primary' value='Equip Potion' />
+        </form>";
+    }
+    $h->endpage();
+}
+function badge()
+{
+    global $db,$api,$h,$userid,$ir;
+    //Make sure the Item ID is safe for database work.
+    $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : 0;
+    //Select the Item's info from the database.
+    $id =
+        $db->query(
+            "/*qc=on*/SELECT `itmid`, `itmname`, `itmtype`
+					FROM `inventory` AS `iv`
+					LEFT JOIN `items` AS `it`
+					ON `iv`.`inv_itemid` = `it`.`itmid`
+					WHERE `iv`.`inv_id` = {$_GET['ID']}
+					AND `iv`.`inv_userid` = $userid
+					LIMIT 1");
+    //Check that the item actually exists, if not, stop them.
+    if ($db->num_rows($id) == 0) {
+        $db->free_result($id);
+        alert('danger', "Uh Oh!", "The badge you're trying to equip does not exist.", true, 'inventory.php');
+        die($h->endpage());
+    } else {
+        $r = $db->fetch_row($id);
+        $db->free_result($id);
+    }
+	if ($r['itmtype'] != 13)
+	{
+		alert('danger', "Uh Oh!", "Cannot equip this item to your badge slot.", true, 'inventory.php');
+		die($h->endpage());
+	}
+    if (isset($_POST['type']))
+    {
+        if ($_POST['type'] !== 'equip_badge') {
+            alert('danger', "Uh Oh!", "You cannot equip badges to an invalid slot.", true, 'inventory.php');
+            die($h->endpage());
+        }
+        
+        if ($r['itmtype'] != 13)
+		{
+			alert('danger', "Uh Oh!", "Cannot equip this item to your badge slot.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		if ($ir['equip_badge'] > 0)
+			item_add($userid,$ir['equip_badge'],1);
+		item_remove($userid,$r['itmid'],1);
+        $db->query("UPDATE `users`
+				  SET `equip_badge` = {$r['itmid']}
+				  WHERE `userid` = {$userid}");
+        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their badge.");
+        alert('success',"Success!","You have successfully equipped {$r['itmname']} as your badge.",true,'inventory.php');
+        die($h->endpage());
+    }
+    else
+    {
+        echo "<h3>Equip Badge Form</h3><hr />
+        <form method='post' action='?slot=badge&ID={$_GET['ID']}'>
+            You are attempting to equip your {$r['itmname']} as your badge. Badges are purely cosmetic items that 
+			are shown off on your profile.
+            <input type='hidden' name='type' value='equip_badge'  /><br />
+            <input type='submit' class='btn btn-primary' value='Equip Badge' />
         </form>";
     }
     $h->endpage();

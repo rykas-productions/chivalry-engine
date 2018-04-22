@@ -21,7 +21,7 @@ if (!$_GET['user']) {
 					`display_pic`, `hp`, `maxhp`, `guild`,
                     `fedjail`, `bank`, `lastip`, `lastip`,
                     `loginip`, `registerip`, `staff_notes`, `town_name`,
-                    `house_name`, `guild_name`, `fed_out`, `fed_reason`,
+                    `house_name`, `guild_name`, `fed_out`, `fed_reason`, `equip_badge`, 
 					`infirmary_reason`, `infirmary_out`, `dungeon_reason`, `dungeon_out`,
 					`browser`, `os`, `screensize`, `description`, `location`, `vipcolor`
                     FROM `users` `u`
@@ -307,6 +307,15 @@ if (!$_GET['user']) {
 								</td>
 							</tr>";
         }
+		if ($r['equip_badge']) {
+			echo "
+				<tr>
+					<th>Badge</th>
+					<td>" . returnIcon($r['equip_badge'],4) . "<br />
+					{$api->SystemItemIDtoName($r['equip_badge'])}
+					</td>
+				</tr>";
+		}
 
         echo "</table>
 				  </div>
