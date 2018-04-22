@@ -12,16 +12,6 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	alert('danger',"Uh Oh!","You cannot visit the Chivalry Token Bank while in the infirmary or dungeon.",true,'index.php');
 	die($h->endpage());
 }
-if (($ir['equip_primary'] + $ir['equip_secondary']) == 0)
-{
-    alert('danger',"Uh Oh!","Due to a recent robbery, the Chivalry Token Bank requires that every customer come in with at least one weapon equipped.",true,'explore.php');
-    die($h->endpage());
-}
-if ($ir['equip_armor'] == 0)
-{
-    alert('danger',"Uh Oh!","Due to a recent robbery, the Chivalry Token Bank requires that every customer come in with armor equipped.",true,'explore.php');
-    die($h->endpage());
-}
 echo "<h3><i class='game-icon game-icon-chest'></i> Token Bank</h3>";
 //User has purchased a bank account.
 if ($ir['tokenbank'] > -1) {

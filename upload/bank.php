@@ -12,16 +12,6 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	alert('danger',"Uh Oh!","You cannot visit the bank while in the infirmary or dungeon.",true,'index.php');
 	die($h->endpage());
 }
-if (($ir['equip_primary'] + $ir['equip_secondary']) == 0)
-{
-    alert('danger',"Uh Oh!","Due to a recent robbery, the City Bank requires that every customer come in with at least one weapon equipped.",true,'explore.php');
-    die($h->endpage());
-}
-if ($ir['equip_armor'] == 0)
-{
-    alert('danger',"Uh Oh!","Due to a recent robbery, the City Bank requires that every customer come in with armor equipped.",true,'explore.php');
-    die($h->endpage());
-}
 $bank_cost = $set['bank_cost'];
 $bank_maxfee = $set['bank_maxfee'];
 $bank_feepercent = $set['bankfee_percent'];
