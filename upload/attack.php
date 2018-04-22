@@ -990,24 +990,6 @@ function beat()
             $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
 
         }
-		$npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$r['userid']}");
-		//Opponent is registered on bot list.
-		if ($db->num_rows($npcquery) > 0) {
-			$results2 = $db->fetch_row($npcquery);
-			$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$r['userid']}");
-			$r2 = $db->fetch_single($timequery);
-			//Opponent's drop has already been collected and the time hasn't reset.
-			if ((time() <= ($r2 + $results2['botcooldown'])) && ($r2 > 0)) {}
-			else {
-				$time = time();
-				$exists = $db->query("/*qc=on*/SELECT `botid` FROM `botlist_hits` WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
-				if ($db->num_rows($exists) == 0) {
-					$db->query("INSERT INTO `botlist_hits` (`userid`, `botid`, `lasthit`) VALUES ('{$userid}', '{$r['userid']}', '{$time}')");
-				} else {
-					$db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
-				}
-			}
-		}
     } else {
         die($h->endpage());
     }
@@ -1221,24 +1203,6 @@ function xp()
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
                 $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
             }
-			$npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$r['userid']}");
-			//Opponent is registered on bot list.
-			if ($db->num_rows($npcquery) > 0) {
-				$results2 = $db->fetch_row($npcquery);
-				$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$r['userid']}");
-				$r2 = $db->fetch_single($timequery);
-				//Opponent's drop has already been collected and the time hasn't reset.
-				if ((time() <= ($r2 + $results2['botcooldown'])) && ($r2 > 0)) {}
-				else {
-					$time = time();
-					$exists = $db->query("/*qc=on*/SELECT `botid` FROM `botlist_hits` WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
-					if ($db->num_rows($exists) == 0) {
-						$db->query("INSERT INTO `botlist_hits` (`userid`, `botid`, `lasthit`) VALUES ('{$userid}', '{$r['userid']}', '{$time}')");
-					} else {
-						$db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
-					}
-				}
-			}
             if ($r['user_level'] != 'NPC') {
                 $last5=time()-600;
                 $attackedcount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`attack_id`) FROM `attack_logs` WHERE `attacked` = {$r['userid']} AND `result` = 'xp' AND `attack_time` > {$last5}"));
