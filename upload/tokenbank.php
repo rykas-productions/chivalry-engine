@@ -39,6 +39,7 @@ else {
             $api->UserTakeCurrency($userid, 'secondary', 100);
             $api->UserInfoSet($userid, "tokenbank", 0);
             $api->SystemLogsAdd($userid, 'tokenbank', 'Purchased token bank account');
+			item_add($userid,156,1);
         } else {
             alert('danger', "Uh oh!", "You are too poor to afford a Token Bank account. You need at least 100 Chivalry Tokens.", true, 'bank.php');
         }
