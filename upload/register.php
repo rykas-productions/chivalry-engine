@@ -291,7 +291,7 @@ if (!empty($username)) {
 						Promo Code
 					</th>
 					<td>
-						<input type='text' class='form-control' id='promo' value='CHIVALRY2018' name='promo' placeholder='Can be empty'>
+						<input type='text' class='form-control' id='promo' name='promo' placeholder='Can be empty'>
 					</td>
 				</tr>
 				<tr>
