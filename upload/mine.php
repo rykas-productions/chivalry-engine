@@ -258,7 +258,7 @@ function mine()
                 alert('success', "Success!", "You have carefully excavated out a single " . $api->SystemItemIDtoName($MSI['mine_gem_item']) . ".", false);
                 $api->UserGiveItem($userid, $MSI['mine_gem_item'], 1);
                 $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined 1x {$api->SystemItemIDtoName($MSI['mine_gem_item'])}.");
-                $xpgain = 15 * $MUS['mining_level'];
+                $xpgain = 35 * $MUS['mining_level'];
             }
             echo "<hr />
             [<a href='?action=mine&spot={$spot}&tresde={$tresder}'>Mine Again</a>]<br />
