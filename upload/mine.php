@@ -161,11 +161,6 @@ function mine()
             die($h->endpage());
         } else {
             $MSI = $db->fetch_row($mineinfo);
-            $query = $db->query("/*qc=on*/SELECT `inv_itemid` FROM `inventory` where `inv_itemid` = {$MSI['mine_pickaxe']} && `inv_userid` = {$userid}");
-            $i = $db->fetch_row($query);
-            if (!$api->UserEquippedItem($userid, 'primary', $MSI['mine_pickaxe'])) {
-
-            }
 			$specialnumber=((getSkillLevel($userid,15)*10)/100);
 			$MSI['mine_iq']=$MSI['mine_iq']-($MSI['mine_iq']*$specialnumber);
             if ($MUS['mining_level'] < $MSI['mine_level']) {
@@ -231,7 +226,7 @@ function mine()
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']) . ".", false);
                     $api->UserGiveItem($userid, $MSI['mine_copper_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_copper_item'])}.");
-                    $xpgain = ($flakes * 0.35);
+                    $xpgain = ($flakes * 0.35) * $spot;
 
                 } elseif ($PosRolls == 2) {
 					if (calculateLuck($userid))
@@ -242,7 +237,7 @@ function mine()
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']) . ".", false);
                     $api->UserGiveItem($userid, $MSI['mine_silver_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_silver_item'])}.");
-                    $xpgain = ($flakes * 0.55);
+                    $xpgain = ($flakes * 0.55) * $spot;
                 } else {
 					if (calculateLuck($userid))
 						$flakes = Random($MSI['mine_gold_min']+($MSI['mine_gold_min']/4), $MSI['mine_gold_max']+($MSI['mine_gold_max']/4));
@@ -252,7 +247,7 @@ function mine()
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']) . ".", false);
                     $api->UserGiveItem($userid, $MSI['mine_gold_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_gold_item'])}.");
-                    $xpgain = ($flakes * 0.75);
+                    $xpgain = ($flakes * 0.75) * $spot;
                 }
             } else {
                 alert('success', "Success!", "You have carefully excavated out a single " . $api->SystemItemIDtoName($MSI['mine_gem_item']) . ".", false);
