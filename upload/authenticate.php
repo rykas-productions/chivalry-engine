@@ -119,15 +119,6 @@ else {
 		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$mem['userid']}')");
 	}
 	$uadr=$db->fetch_row($uade);
-	if ($uadr['2fa_on'] == 1)
-	{
-		$encpsw = encode_password($raw_password,$mem['user_level']);
-		$e_encpsw = $db->escape($encpsw);
-		//Update user's password as an extra security mesaure.
-		$db->query("UPDATE `users` SET `password` = '{$e_encpsw}' WHERE `userid` = {$_SESSION['userid']}");
-		header("Location: authenication_2f.php");
-		exit;
-	}
 	$_SESSION['loggedin'] = 1;
 	$_SESSION['last_login'] = time();
 	setcookie('login_expire', time() + 604800, time() + 604800);

@@ -47,9 +47,6 @@ switch ($_GET['action']) {
     case 'tuttoggle':
         tuttoggle();
         break;
-	case '2fa':
-        twofa();
-        break;
     case 'webnotif':
         webnotif();
         break;
@@ -125,7 +122,7 @@ function prefs_home()
 			</tr>
 			<tr>
 				<td>
-				    <a href='?action=2fa'>Two-factor Authentication</a>
+				    <a href='?action=themechange'>Change Theme</a>
 				</td>
                 <td>
                     <a href='?action=classreset'>Class Reset</a>
@@ -137,14 +134,6 @@ function prefs_home()
 				</td>
 				<td>
 					<a href='?action=tuttoggle'>Tutorial Toggle</a>
-				</td>
-			</tr>
-            <tr>
-				<td>
-				    <a href='?action=themechange'>Change Theme</a>
-				</td>
-				<td>
-					
 				</td>
 			</tr>
 		</tbody>
@@ -735,86 +724,6 @@ function forumalert()
             <input type='submit' class='btn btn-primary' value='Enable Notifications'>
         </form>";
     }
-}
-
-function twofa()
-{
-	global $db,$userid,$api,$h,$set,$ir;
-	include_once("lib/PHPGangsta/GoogleAuthenticator.php");
-	if ($ir['2fa_on'] == 0)
-	{
-		$ga = new PHPGangsta_GoogleAuthenticator();
-		echo "<h3>Enabling Two-factor Authentication</h3><hr />";
-		if (isset($_POST['code']))
-		{
-			if (empty($_POST['code']))
-			{
-				alert('danger',"Uh Oh!","You must enter a valid code from your authenticator app. Please delete the currently stored 2fa listing in your app before trying again.");
-				die($h->endpage());
-			}
-			$result=$ga->verifyCode($_SESSION['2fa_secret'], $_POST['code'], 10);
-			if ($result) 
-			{
-				alert('success',"Success!","Two-factor authentication has been enabled on your account successfully.",true,'preferences.php');
-				$db->query("UPDATE `user_settings` SET `2fa_on` = 1 WHERE `userid` = {$userid}");
-				$db->query("INSERT INTO `2fa_table` (`userid`, `secret_key`) VALUES ({$userid}, '{$_SESSION['2fa_secret']}')");
-				$_SESSION['2fa_secret']=NULL;
-				$_SESSION['2fa_code']=NULL;
-                $api->SystemLogsAdd($userid, 'preferences', "Enabled two-factor authentication.");
-			} 
-			else 
-			{
-				alert('danger',"Uh Oh!","Your code was invalid. Please delete the currently stored 2fa listing in your app before trying again.");
-				die($h->endpage());
-			}
-		}
-		else
-		{
-			$secret = $ga->createSecret();
-			$qrCodeUrl = $ga->getQRCodeGoogleUrl($ir['username'], $secret, $set['WebsiteName']);
-			echo"
-			Scan this QR-Code:<br />
-			<img src='{$qrCodeUrl}' /><br />
-			Or, enter this key:<br />
-			<b>{$secret}</b>
-			<hr />
-			Now verify the code you have on your authenticator app.<br />
-			<form method='post'>
-				<input type='number' min='0' placeholder='This is the code your authenticator app shows.' class='form-control' required='1' name='code'>
-				<input type='submit' class='btn btn-primary' value='Enable 2FA'>
-			</form>";
-			$_SESSION['2fa_code'] = $ga->getCode($secret);
-			$_SESSION['2fa_secret'] = $secret;
-		}
-	}
-	else
-	{
-		if (isset($_POST['do']))
-		{
-			$db->query("UPDATE `user_settings` SET `2fa_on` = 0 WHERE `userid` = {$userid}");
-			$db->query("DELETE FROM `2fa_table` WHERE `userid` = {$userid}");
-            $api->SystemLogsAdd($userid, 'preferences', "Disabled two-factor authentication.");
-			alert('success',"Success!","You have successfully removed two-factor authentication from your account. Please delete any keys/settings from your authenticator app.",true,'preferences.php');
-		}
-		else
-		{
-			echo "Are you sure you wish to disable two-factor authentication? All your previous codes will be invalidated.
-			<br />
-			<form method='post'>
-				<input type='hidden' value='yes' name='do'>
-				<input type='submit' class='btn btn-danger' name='Disable 2FA'>
-			</form>";
-		}
-	}
-}
-
-function webnotif()
-{
-    ?>
-        <button disabled class="js-push-btn btn btn-primary">
-        Enable Push Messaging
-      </button>
-    <?php
 }
 
 function classreset()
