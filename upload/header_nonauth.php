@@ -163,7 +163,7 @@ class headers
                 //Print copyright info, Chivalry Engine info, and current time.
                 echo "<hr />
 					Time is now <span id='jqclock' class='jqclock' data-time='{$timestamp}'>" . date('l, F j, Y g:i:s a') . "</span><br />
-					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source availabe on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
+					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
                 ?>
 				</span>
             </div>
