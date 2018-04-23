@@ -127,9 +127,6 @@ function prefs_home()
 			</tr>
             <tr>
 				<td>
-				    <a href='?action=adstoggle'>Ad Toggle</a>
-				</td>
-				<td>
 					<a href='?action=tuttoggle'>Tutorial Toggle</a>
 				</td>
 			</tr>
