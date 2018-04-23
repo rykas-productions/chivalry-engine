@@ -187,7 +187,7 @@ echo "</div>
             <img class="featurette-image img-fluid mx-auto" src="https://res.cloudinary.com/dydidizue/image/upload/v1520819749/logo.png" alt="The Best">
           </div>
         </div>
-		<link href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1.0.6/css/login.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/login.min.css" rel="stylesheet">
 
 <?php
 $h->endpage();

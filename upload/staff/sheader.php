@@ -19,11 +19,14 @@ class headers
         <head>
             <center>
                 <!-- CSS -->
-                <?php
+				<?php
+                $title = "{$set['WebsiteName']} - {$ir['username']}";
+                echo "<title>{$title}</title>";
+				setcookie('theme', $ir['theme']);
                 if ($ir['theme'] == 1)
 				{
 					?>
-					<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1.0.5/css/bootstrap-v.1.5.css">
+					<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/bootstrap-v.1.5.min.css">
                     <meta name="theme-color" content="rgba(0, 0, 0, .8)">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -53,20 +56,20 @@ class headers
 					$hdr='navbar-dark bg-dark';
 				}
                 ?>
-				<meta charset="utf-8">
+                <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-				<meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+				<meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <meta name="description" content="<?php echo $set['Website_Description']; ?>">
                 <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
                 <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
                 <meta property="og:image" content="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png"/>
-				<link rel="shortcut icon" href="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png" type="image/x-icon"/>
-				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/css/game-icons.min.css">
-				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/css/game-v1.11.min.css">
+                <link rel="shortcut icon" href="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png" type="image/x-icon"/>
 				<link rel="icon" sizes="192x192" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png">
 				<link rel="icon" sizes="128x128" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png">
-                <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/game-v1.11.min.css">
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/game-icons.min.css">
+				</head>
         </head>
         <?php
         if (empty($menuhide)) {
@@ -291,7 +294,7 @@ class headers
 
         </div>
         <!-- /.container -->
-       <!-- jQuery Version 3.3.1 -->
+        <!-- jQuery Version 3.3.1 -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
@@ -299,11 +302,12 @@ class headers
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1.0.7/css/game-v1.11.min.css">
+        <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/game-v1.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js" async defer></script>
+		<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
-		<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
-		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn/js/clock.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/clock.min.js"></script>
 		<script> 
 		  $(document).ready(function(){ 
 			customtimestamp = parseInt($("#jqclock").data("time"));
