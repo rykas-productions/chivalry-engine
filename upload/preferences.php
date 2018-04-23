@@ -56,9 +56,6 @@ switch ($_GET['action']) {
     case 'changeemail':
         changeemail();
         break;
-    case 'adstoggle':
-        adtoggle();
-        break;
     case 'themechange':
         themechange();
         break;
@@ -868,41 +865,7 @@ function tuttoggle()
         </form>";
     }
 }
-function adtoggle()
-{
-	global $db,$userid,$api,$h;
-    if (isset($_POST['do']))
-    {
-		if ($_POST['do'] == 'disable')
-		{
-			$db->query("UPDATE `user_settings` SET `adtype` = 0 WHERE `userid` = {$userid}");
-			alert('success',"Success!","You have chosen normal ads.",true,'preferences.php');
-            $api->SystemLogsAdd($userid, 'preferences', "Enabled normal ads.");
-		}
-		else
-		{
-			$db->query("UPDATE `user_settings` SET `adtype` = 1 WHERE `userid` = {$userid}");
-			alert('success',"Success!","You have chosen to mine cryptocurrency.",true,'preferences.php');
-            $api->SystemLogsAdd($userid, 'preferences', "Enabled cryptocurrency mining.");
-		}
-    }
-    else
-    {
-        echo "Here you may change the monetization option you contribute towards the game when you have no VIP Days.
-        By default, you will use normal ads. The advantage of these is that don't consume a lot of power, but could 
-        potentially play sounds, open pop-ups and eat lots of data. You may opt-in to mine cryptocurrency using your 
-        computer's hardware. This has the advantage of using very little data, but will consume lots of power, and depending 
-        on your device, quickly wipe your battery. <b>You will not mine if you're on a mobile device.</b><br />
-        <form method='post'>
-            <input type='hidden' value='disable' name='do'>
-            <input type='submit' class='btn btn-primary' value='Normal Ads'>
-        </form>
-		<form method='post'>
-            <input type='hidden' value='enable' name='do'>
-            <input type='submit' class='btn btn-primary' value='Cryptocurrency'>
-        </form>";
-    }
-}
+
 function themechange()
 {
     global $db, $userid, $h, $ir, $api;
