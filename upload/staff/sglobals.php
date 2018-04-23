@@ -6,6 +6,7 @@
 	Author: TheMasterGeneral
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
+include('../forms/include_top.php');
 if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false) {
     exit;
 }

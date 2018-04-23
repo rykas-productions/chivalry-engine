@@ -119,7 +119,7 @@ class headers
 
     function endpage()
     {
-        global $db, $ir, $set;
+        global $db, $ir, $set, $start;
         $query_extra = '';
 		include('analytics.php');
     if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
@@ -164,7 +164,8 @@ class headers
                 echo "<hr />
 					Time is now <span id='jqclock' class='jqclock' data-time='{$timestamp}'>" . date('l, F j, Y g:i:s a') . "</span><br />
 					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
-                ?>
+                include('forms/include_end.php');
+				?>
 				</span>
             </div>
         </footer>

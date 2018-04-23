@@ -7,6 +7,8 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+//Profiler start time
+include('forms/include_top.php');
 //Set user's timezone.
 date_default_timezone_set("America/New_York");
 //If this file is opened directly.

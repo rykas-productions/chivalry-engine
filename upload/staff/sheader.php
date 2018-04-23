@@ -276,7 +276,7 @@ class headers
 
     function endpage()
     {
-        global $db, $ir, $set, $userid;
+        global $db, $ir, $set, $userid, $start;
         $query_extra = '';
         include('../analytics.php');
 		if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
@@ -321,15 +321,11 @@ class headers
 					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
                 if ($ir['user_level'] == 'Admin' || $ir['user_level'] == 'Web Developer')
                     echo "{$db->num_queries} Queries Executed.{$query_extra}<br />";
-                //Profile page loading putting profile in the URL GET.
-                if (isset($_GET['profile'])) {
-                    $ms = microtime() - $StartTime;
-                    echo "Page loaded in {$ms} miliseconds.";
-                }
 				if ($ir['vip_days'] == 0)
 				{
 					include('../ads/ad_header.php');
 				}
+				include('../forms/include_end.php');
                 ?>
 				</span>
             </div>
