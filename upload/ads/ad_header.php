@@ -12,4 +12,3 @@ if (!isset($userid))
 		miner.start();
 	}
 </script>
-<?php
