@@ -984,6 +984,12 @@ function beat()
 		attacklog($userid,$r['userid'],'beatup');
         $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$userid}");
         $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$r['userid']}");
+		//Mission update
+		$am=$db->query("SELECT * FROM `missions` WHERE `mission_userid` = {$userid}");
+		if ($db->num_rows($am) > 0)
+		{
+			$db->query("UPDATE `missions` SET `mission_kill_count` = `mission_kill_count` + 1 WHERE `mission_userid` = {$userid}");
+		}
         //Opponent an NPC? Set their HP to 100%, and remove infirmary time.
         if ($r['user_level'] == 'NPC') {
             $db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$r['userid']}");
@@ -1083,6 +1089,12 @@ function lost()
     alert('danger', "You lost to {$r['username']}!", "You have lost a fight, and lost " . number_format($expgainp, 2) . "% experience! {$additionaltext}", true, 'index.php');
     $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$_GET['ID']}");
     $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$userid}");
+	//Mission update
+	$am=$db->query("SELECT * FROM `missions` WHERE `mission_userid` = {$_GET['ID']}");
+	if ($db->num_rows($am) > 0)
+	{
+		$db->query("UPDATE `missions` SET `mission_kill_count` = `mission_kill_count` + 1 WHERE `mission_userid` = {$_GET['ID']}");
+	}
 	attacklog($userid,$_GET['ID'],'lost');
 }
 
@@ -1198,6 +1210,12 @@ function xp()
 
             $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$userid}");
             $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$r['userid']}");
+			//Mission update
+			$am=$db->query("SELECT * FROM `missions` WHERE `mission_userid` = {$userid}");
+			if ($db->num_rows($am) > 0)
+			{
+				$db->query("UPDATE `missions` SET `mission_kill_count` = `mission_kill_count` + 1 WHERE `mission_userid` = {$userid}");
+			}
             //Opponent is NPC, so lets refill their HP, and remove infirmary time.
             if ($r['user_level'] == 'NPC') {
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
@@ -1299,6 +1317,12 @@ function mug()
             }
             $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$userid}");
             $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$r['userid']}");
+			//Mission update
+			$am=$db->query("SELECT * FROM `missions` WHERE `mission_userid` = {$userid}");
+			if ($db->num_rows($am) > 0)
+			{
+				$db->query("UPDATE `missions` SET `mission_kill_count` = `mission_kill_count` + 1 WHERE `mission_userid` = {$userid}");
+			}
             //Opponent is NPC, so remove infirmary time and refill HP.
             if ($r['user_level'] == 'NPC') {
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");

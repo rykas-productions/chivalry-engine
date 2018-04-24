@@ -316,6 +316,7 @@ function check_data()
 		$db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$gdr['guild_id']}");
 	}
     $db->query("DELETE FROM `bounty_hunter` WHERE `bh_time` < {$time}");
+	missionCheck();
 }
 
 /**
@@ -1109,4 +1110,23 @@ function isApp()
     if ($ir['browser'] == 'App')
         if ($ir['os'] == 'Android')
             return true;
+}
+function missionCheck()
+{
+	global $db, $api;
+	$time=time();
+	$q=$db->query("/*qc=on*/SELECT * FROM `missions` WHERE `mission_end` < {$time}");
+	while ($r=$db->fetch_row($q))
+	{
+		if ($r['mission_kill_count'] < $r['mission_kills'])
+		{
+			notification_add($r['mission_userid'],"You have completely failed your mission. Better luck next time.");
+		}
+		else
+		{
+			notification_add($r['mission_userid'],"You have successfully completed your mission. You have been credited " . number_format($r['mission_reward']) . " Copper Coins.");
+			$db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$r['mission_reward']} WHERE `userid` = {$r['mission_userid']}");
+		}
+		$db->query("DELETE FROM `missions` WHERE `mission_id` = {$r['mission_id']}");
+	}
 }
