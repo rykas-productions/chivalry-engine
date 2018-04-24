@@ -48,6 +48,7 @@ while ($r = $db->fetch_row($q)) {
 			FROM `users` WHERE `equip_primary` = {$r['itmid']} AND `userid` != 1"));
 	$total=$q2+$q3;
 	$icon=returnIcon($r['itmid'],2);
+	$r['itmdesc'] = htmlentities($r['itmdesc'], ENT_QUOTES);
     echo "
         <tr>
             <td>

@@ -99,8 +99,8 @@ echo "<hr />
 $inv =
     $db->query(
         "/*qc=on*/SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
-                 `effect1_on`, `effect2_on`, `effect3_on`,
-                 `weapon`, `armor`, `itmtypename`, `itmdesc`, `icon`
+                 `effect1_on`, `effect2_on`, `effect3_on`, `itmname`, 
+                 `weapon`, `armor`, `itmtypename`, `itmdesc`
                  FROM `inventory` AS `iv`
                  INNER JOIN `items` AS `i`
                  ON `iv`.`inv_itemid` = `i`.`itmid`
@@ -135,7 +135,7 @@ while ($i = $db->fetch_row($inv)) {
                 </td>
         		<td align='left'>
 					<a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='bottom' title='{$i['itmdesc']}'>
-						{$api->SystemItemIDtoName($i['itmid'])}
+						{$i['itmname']}
 					</a>";
     if ($i['inv_qty'] > 1) {
         echo " (" . number_format($i['inv_qty']) . ")";
