@@ -7,6 +7,8 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 include('../forms/include_top.php');
+@ini_set('zlib.output_compression', 1);
+ob_implicit_flush(true);
 if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false) {
     exit;
 }

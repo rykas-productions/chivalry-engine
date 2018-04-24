@@ -9,6 +9,8 @@
 */
 //Profiler start time
 include('forms/include_top.php');
+@ini_set('zlib.output_compression', 1);
+ob_implicit_flush(true);
 //Set user's timezone.
 date_default_timezone_set("America/New_York");
 //If this file is opened directly.
