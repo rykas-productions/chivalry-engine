@@ -654,37 +654,45 @@ function update_fg_info($ip)
 */
 function getOS($uagent)
 {
-    global $db, $userid;
-    $uagent = $db->escape(strip_tags(stripslashes($uagent)));
-    $os_platform = "Unknown OS Platform";
-    $os_array = array(
-        '/windows nt 10/i' => 'Windows 10',
-        '/windows nt 6.3/i' => 'Windows 8.1',
-        '/windows nt 6.2/i' => 'Windows 8',
-        '/windows nt 6.1/i' => 'Windows 7',
-        '/windows nt 6.0/i' => 'Windows Vista',
-        '/windows nt 5.1/i' => 'Windows XP',
-        '/windows phone 8.0/i' => 'Windows Phone',
-        '/windows xp/i' => 'Windows XP',
-        '/macintosh|mac os x/i' => 'Mac OS X',
-        '/mac_powerpc/i' => 'Mac OS 9',
-        '/linux/i' => 'Linux',
-        '/ubuntu/i' => 'Ubuntu',
-        '/iphone/i' => 'iPhone',
-        '/ipod/i' => 'iPod',
-        '/ipad/i' => 'iPad',
-        '/android/i' => 'Android',
-        '/blackberry/i' => 'BlackBerry',
-		'/cros/i' => 'Chrome OS',
-		'/playstation 4/i' => 'Playstation 4',
-        '/webos/i' => 'Mobile'
-    );
+    global $db, $userid, $ir;
+	if (($ir['analytics'] == 1) && ($ir['acceptance'] != -1))
+	{
+		$uagent = $db->escape(strip_tags(stripslashes($uagent)));
+		$os_platform = "Unknown OS Platform";
+		$os_array = array(
+			'/windows nt 10/i' => 'Windows 10',
+			'/windows nt 6.3/i' => 'Windows 8.1',
+			'/windows nt 6.2/i' => 'Windows 8',
+			'/windows nt 6.1/i' => 'Windows 7',
+			'/windows nt 6.0/i' => 'Windows Vista',
+			'/windows nt 5.1/i' => 'Windows XP',
+			'/windows phone 8.0/i' => 'Windows Phone',
+			'/windows xp/i' => 'Windows XP',
+			'/macintosh|mac os x/i' => 'Mac OS X',
+			'/mac_powerpc/i' => 'Mac OS 9',
+			'/linux/i' => 'Linux',
+			'/ubuntu/i' => 'Ubuntu',
+			'/iphone/i' => 'iPhone',
+			'/ipod/i' => 'iPod',
+			'/ipad/i' => 'iPad',
+			'/android/i' => 'Android',
+			'/blackberry/i' => 'BlackBerry',
+			'/cros/i' => 'Chrome OS',
+			'/playstation 4/i' => 'Playstation 4',
+			'/webos/i' => 'Mobile'
+		);
 
-    foreach ($os_array as $regex => $value) {
-        if (preg_match($regex, $uagent)) {
-            $os_platform = $value;
-        }
-    }
+		foreach ($os_array as $regex => $value) {
+			if (preg_match($regex, $uagent)) {
+				$os_platform = $value;
+			}
+		}
+	}
+	else
+	{
+		$os_platform = "Unknown OS Platform";
+		$uagent = "N/A";
+	}
     $count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
     if ($count == 0)
         $db->query("INSERT INTO `userdata` (`userid`, `useragent`, `screensize`, `os`, `browser`) VALUES ({$userid}, '{$uagent}', '', '{$os_platform}', '')");
@@ -699,30 +707,38 @@ function getOS($uagent)
 */
 function getBrowser($uagent)
 {
-    global $db, $userid;
-    $user_agent = $db->escape(strip_tags(stripslashes($uagent)));
-    $browser = "Unknown Browser";
-    $browser_array = array(
-        '/msie/i' => 'Internet Explorer',
-		'/trident/i' => 'Internet Explorer',
-        '/firefox/i' => 'Firefox',
-        '/safari/i' => 'Safari',
-        '/chrome/i' => 'Chrome',
-        '/edge/i' => 'Edge',
-        '/opera/i' => 'Opera',
-        '/netscape/i' => 'Netscape',
-        '/maxthon/i' => 'Maxthon',
-        '/konqueror/i' => 'Konqueror',
-        '/opr/i' => 'Opera',
-        '/mobile/i' => 'Handheld Browser',
-		'/playstation 4/i' => 'Playstation 4 Browser',
-        '/CEngine-App/i' => 'App'
-    );
-    foreach ($browser_array as $regex => $value) {
-        if (preg_match($regex, $user_agent)) {
-            $browser = $value;
-        }
-    }
+    global $db, $userid, $ir;
+	if (($ir['analytics'] == 1) && ($ir['acceptance'] != -1))
+	{
+		$user_agent = $db->escape(strip_tags(stripslashes($uagent)));
+		$browser = "Unknown Browser";
+		$browser_array = array(
+			'/msie/i' => 'Internet Explorer',
+			'/trident/i' => 'Internet Explorer',
+			'/firefox/i' => 'Firefox',
+			'/safari/i' => 'Safari',
+			'/chrome/i' => 'Chrome',
+			'/edge/i' => 'Edge',
+			'/opera/i' => 'Opera',
+			'/netscape/i' => 'Netscape',
+			'/maxthon/i' => 'Maxthon',
+			'/konqueror/i' => 'Konqueror',
+			'/opr/i' => 'Opera',
+			'/mobile/i' => 'Handheld Browser',
+			'/playstation 4/i' => 'Playstation 4 Browser',
+			'/CEngine-App/i' => 'App'
+		);
+		foreach ($browser_array as $regex => $value) {
+			if (preg_match($regex, $user_agent)) {
+				$browser = $value;
+			}
+		}
+	}
+	else
+	{
+		$browser = "Unknown Browser";
+		$user_agent = "N/A";
+	}
     $count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
     if ($count == 0)
         $db->query("INSERT INTO `userdata` (`userid`, `useragent`, `browser`) VALUES ({$userid}, '{$uagent}', '{$broswer}')");
@@ -966,7 +982,7 @@ function returnIcon($item,$size=1)
 	$q = $db->fetch_row($db->query("/*qc=on*/SELECT `icon`,`color` FROM `items` WHERE `itmid` = {$item}"));
 	if (empty($q))
 	{
-		return "";
+		return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
 	}
 	else
 	{

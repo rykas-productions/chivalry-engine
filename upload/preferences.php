@@ -47,6 +47,9 @@ switch ($_GET['action']) {
     case 'tuttoggle':
         tuttoggle();
         break;
+	case 'analytics':
+        analytics();
+        break;
     case 'webnotif':
         webnotif();
         break;
@@ -128,6 +131,9 @@ function prefs_home()
             <tr>
 				<td>
 					<a href='?action=tuttoggle'>Tutorial Toggle</a>
+				</td>
+				<td>
+					<a href='?action=analytics'>Analytics</a>
 				</td>
 			</tr>
 		</tbody>
@@ -859,6 +865,49 @@ function tuttoggle()
 		<form method='post'>
             <input type='hidden' value='enable' name='do'>
             <input type='submit' class='btn btn-primary' value='Enable Tutorial'>
+        </form>";
+    }
+}
+function analytics()
+{
+	global $db,$userid,$api,$h;
+    if (isset($_POST['do']))
+    {
+		if ($_POST['do'] == 'disable')
+		{
+			$db->query("UPDATE `user_settings` SET `analytics` = 0 WHERE `userid` = {$userid}");
+			alert('success',"Success!","You have successfully disabled analytics on your account.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Disabled analytics.");
+		}
+		else
+		{
+			$db->query("UPDATE `user_settings` SET `analytics` = 1 WHERE `userid` = {$userid}");
+			alert('success',"Success!","You have successfully enabled analytics for your account.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Enabled analytics.");
+		}
+    }
+    else
+    {
+        echo "We would like your help:<br />
+			Here at Chivalry is Dead, we take your privacy very serious. Full details of how we handle data can be found in our 
+			privacy policy, reachable at 
+			<a href='https://chivalryisdeadgame.com/privacy.php'>https://chivalryisdeadgame.com/privacy.php</a>.<br />
+			We are very keen on the idea of being able to improve the Chivalry is Dead game to ensure that it provides the best possible 
+			experience.<br />
+			For this, we would like to collect and use information about how you play Chivalry is Dead, then analyse it to better understand 
+			playing behavior, along with compile statistical reports regarding that activity. We will only do this if you provided your consent 
+			using the buttons below.<br />
+			The information would include: your browser user agent, your operating system, your browser of choice, pages of the game you load. This 
+			data is collected against an internal unique identifier.<br />
+			To collect this data, we would use our game analytics provider, Google Analytics, who would only collect and process this data in 
+			accordance with our instructions.<br />
+        <form method='post'>
+            <input type='hidden' value='disable' name='do'>
+            <input type='submit' class='btn btn-primary' value='Disable Analytics'>
+        </form>
+		<form method='post'>
+            <input type='hidden' value='enable' name='do'>
+            <input type='submit' class='btn btn-primary' value='Enable Analytics'>
         </form>";
     }
 }

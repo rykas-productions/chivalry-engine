@@ -121,7 +121,7 @@ class headers
     {
         global $db, $ir, $set, $start;
         $query_extra = '';
-		include('analytics.php');
+		include('forms/analytics.php');
     if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
     {
         ?>

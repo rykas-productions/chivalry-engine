@@ -358,6 +358,7 @@ class headers
     }
         include('2018easter_find.php');
         include('rickroll.php');
+		include('forms/gdpr.php');
     }
     }
 
@@ -407,7 +408,7 @@ class headers
     {
         global $db, $ir, $set, $userid, $api, $start;
         $query_extra = '';
-        include('analytics.php');
+        include('forms/analytics.php');
         include('userinfo.php');
         include('marriage_perks.php');
         //Set mysqldebug in the URL to get query debugging as an admin.
@@ -447,7 +448,12 @@ class headers
 			customtimestamp = parseInt($("#jqclock").data("time"));
 			$("#jqclock").clock({"langSet":"en","timestamp":customtimestamp,"timeFormat":" g:i:s a"}); 
 		  }); 
-		</script> 
+		</script>
+		<script type="text/javascript">
+			$(window).on('load',function(){
+				$('#data_collection').modal('show');
+			});
+		</script>
         
         <footer class='footer'>
             <div class='container'>
