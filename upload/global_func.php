@@ -978,23 +978,30 @@ function pagination($perpage, $total, $currentpage, $url)
 
 function returnIcon($item,$size=1)
 {
-	global $db;
-	$q = $db->fetch_row($db->query("/*qc=on*/SELECT `icon`,`color` FROM `items` WHERE `itmid` = {$item}"));
-	if (empty($q))
+	global $db, $ir;
+	if ($ir['icons'] == 1)
 	{
-		return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
+		$q = $db->fetch_row($db->query("/*qc=on*/SELECT `icon`,`color` FROM `items` WHERE `itmid` = {$item}"));
+		if (empty($q['icon']))
+		{
+			return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
+		}
+		else
+		{
+			if (!empty($q['color']))
+			{
+				return "<i class='{$q['icon']}' style='font-size:{$size}rem; color: {$q['color']};'></i>";
+			}
+			else
+			{
+				return "<i class='{$q['icon']}' style='font-size:{$size}rem;'></i>";
+			}
+			
+		}
 	}
 	else
 	{
-        if (!empty($q['color']))
-        {
-            return "<i class='{$q['icon']}' style='font-size:{$size}rem; color: {$q['color']};'></i>";
-        }
-        else
-        {
-            return "<i class='{$q['icon']}' style='font-size:{$size}rem;'></i>";
-        }
-		
+		return;
 	}
 }
 

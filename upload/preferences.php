@@ -62,6 +62,9 @@ switch ($_GET['action']) {
     case 'themechange':
         themechange();
         break;
+	case 'icontoggle':
+        icontoggle();
+        break;
     default:
         prefs_home();
         break;
@@ -134,6 +137,11 @@ function prefs_home()
 				</td>
 				<td>
 					<a href='?action=analytics'>Analytics</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href='?action=icontoggle'>Item Icons</a>
 				</td>
 			</tr>
 		</tbody>
@@ -865,6 +873,37 @@ function tuttoggle()
 		<form method='post'>
             <input type='hidden' value='enable' name='do'>
             <input type='submit' class='btn btn-primary' value='Enable Tutorial'>
+        </form>";
+    }
+}
+function icontoggle()
+{
+	global $db,$userid,$api,$h;
+    if (isset($_POST['do']))
+    {
+		if ($_POST['do'] == 'disable')
+		{
+			$db->query("UPDATE `user_settings` SET `icons` = 0 WHERE `userid` = {$userid}");
+			alert('success',"Success!","You have successfully disabled item icons.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Disabled item icons.");
+		}
+		else
+		{
+			$db->query("UPDATE `user_settings` SET `icons` = 1 WHERE `userid` = {$userid}");
+			alert('success',"Success!","You have successfully enabled item icons.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Enabled item icons.");
+		}
+    }
+    else
+    {
+        echo "Here you may disable in-game item icons. Doing so may allow the game to load quicker on lower-end machines.<br />
+        <form method='post'>
+            <input type='hidden' value='disable' name='do'>
+            <input type='submit' class='btn btn-primary' value='Disable Icons'>
+        </form>
+		<form method='post'>
+            <input type='hidden' value='enable' name='do'>
+            <input type='submit' class='btn btn-primary' value='Enable Icons'>
         </form>";
     }
 }
