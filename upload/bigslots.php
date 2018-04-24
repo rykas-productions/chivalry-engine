@@ -20,7 +20,7 @@ if ($ir['level'] < 50)
 }
 $tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 750;
-$minbet = $ir['level'] * 500;
+$minbet = $ir['level'] * 250;
 $specialnumber=((getSkillLevel($userid,29)*25)/100);
 $maxbet=round($maxbet+($maxbet*$specialnumber));
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
@@ -67,12 +67,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
     $slot[3] = Random(0, 9);
     $slot[4] = Random(0, 9);
     $slot[5] = Random(0, 9);
-    $slot[6] = Random(0, 9);
-    $slot[7] = Random(0, 9);
-    $slot[8] = Random(0, 9);
-    $slot[9] = Random(0, 9);
-    $slot[10] = Random(0, 9);
-    while ($c < 11)
+    while ($c < 6)
     {
         $count[$c]=0;
         $c=$c+1;
@@ -89,40 +84,30 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
             $count[4]=$count[4]+1;
         if ($s == 5)
             $count[5]=$count[5]+1;
-        if ($s == 6)
-            $count[6]=$count[6]+1;
-        if ($s == 8)
-            $count[8]=$count[8]+1;
-        if ($s == 7)
-            $count[7]=$count[7]+1;
-        if ($s == 9)
-            $count[9]=$count[9]+1;
-        if ($s == 10)
-            $count[10]=$count[10]+1;
         
     }
     $win=false;
     foreach ($count as $d)
     {
-        if ($d > 5)
+        if ($d > 2)
             $win=true;
     }
-    if ($slot[1] == $slot[2] && $slot[2] == $slot[3] && $slot[3] == $slot[4] && $slot[4] == $slot[5] && $slot[5] == $slot[6] && $slot[6] == $slot[7] && $slot[7] == $slot[8] && $slot[8] == $slot[9] && $slot[9] == $slot[10]) {
-        $gain = $_POST['bet'] * 30;
+    if ($slot[1] == $slot[2] && $slot[2] == $slot[3] && $slot[3] == $slot[4] && $slot[4] == $slot[5]) {
+        $gain = $_POST['bet'] * 20;
         $title = "Success!";
         $alerttype = 'success';
         $win = 1;
-        $phrase = "All ten line up. Jack pot! You win an extra " . number_format($gain);
+        $phrase = "All five line up. Jack pot! You win an extra " . number_format($gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in federal slots.");
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$gain} WHERE `setting_name` = 'casino_give'");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
     } elseif ($win) {
-        $gain = $_POST['bet'] * 10;
+        $gain = $_POST['bet'] * 7.5;
         $title = "Success!";
         $alerttype = 'success';
         $win = 1;
-        $phrase = "Five numbers line up. Jack pot! You win an extra " . number_format($gain);
+        $phrase = "Three numbers line up. Jack pot! You win an extra " . number_format($gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in federal slots.");
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$gain} WHERE `setting_name` = 'casino_give'");
@@ -138,7 +123,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $api->SystemLogsAdd($userid, 'gambling', "Lost {$_POST['bet']} in  federal slots.");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
     }
-    alert($alerttype, $title, "You pull down the handle and slots begin to spin. They show {$slot[1]}, {$slot[2]}, {$slot[3]}, {$slot[4]}, {$slot[5]}, {$slot[6]}, {$slot[7]}, {$slot[8]}, {$slot[9]}, {$slot[10]}. {$phrase}", false);
+    alert($alerttype, $title, "You pull down the handle and slots begin to spin. They show {$slot[1]}, {$slot[2]}, {$slot[3]}, {$slot[4]}, {$slot[5]}. {$phrase}", false);
     $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
     $tresder = Random(100, 999);
     echo "<br />
@@ -156,7 +141,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 			<th colspan='2'>
 				Welcome to the Federal Slots. Bet some of your hard earned cash for a slim chance to win big! At your
 				level, we've imposed a betting restriction of " . number_format($maxbet) . " Copper Coins. You must bet at least 
-                " . number_format($minbet) . " Copper Coins to bet here. Ten numbers lining up gets you the best prize, where five gets you a small prize.
+                " . number_format($minbet) . " Copper Coins to bet here. All five numbers lining up gets you the best prize, where three gets you a small prize.
 			</th>
 		</tr>
 		<tr>
