@@ -20,7 +20,7 @@ if (isset($_GET['dungeon'])) {
 		}
 		$api->UserTakeItem($userid, 29, 1);
 		$api->UserStatusSet($userid, 'dungeon', -10, 'Placeholder');
-		$api->SystemLogsAdd($userid, 'itemuse', "Used a/an Lockpick item.");
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Lockpick.");
 		alert('success', "Success!", "Lockpick was used successfully.", true, 'index.php');
 		$h->endpage();
 	}
@@ -36,7 +36,7 @@ if (isset($_GET['dungeon'])) {
 		}
 		$api->UserTakeItem($userid, 30, 1);
 		$api->UserStatusSet($userid, 'dungeon', -30, '');
-		$api->SystemLogsAdd($userid, 'itemuse', "Used a/an Key item.");
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Dungeon Key.");
 		alert('success', "Success!", "Dungeon Key was used successfully.", true, 'index.php');
 		$h->endpage();
 	}
@@ -52,7 +52,7 @@ if (isset($_GET['dungeon'])) {
 		}
 		$api->UserTakeItem($userid, 31, 1);
 		$api->UserStatusSet($userid, 'dungeon', -75, '');
-		$api->SystemLogsAdd($userid, 'itemuse', "Used a/an Dungeon Key Set item.");
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Dungeon Key Set.");
 		alert('success', "Success!", "Dungeon Key Set was used successfully.", true, 'index.php');
 		$h->endpage();
 	}
@@ -69,7 +69,7 @@ if (isset($_GET['dungeon'])) {
 		}
 		$api->UserTakeItem($userid, 5, 1, '');
 		$api->UserStatusSet($userid, 'infirmary', -10, 'Placeholder');
-		$api->SystemLogsAdd($userid, 'itemuse', "Used a/an Leech item.");
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Leech.");
 		alert('success', "Success!", "Leech was used successfully.", true, 'index.php');
 		$h->endpage();
 	}
@@ -85,7 +85,7 @@ if (isset($_GET['dungeon'])) {
 		}
 		$api->UserTakeItem($userid, 6, 1);
 		$api->UserStatusSet($userid, 'infirmary', -30, '');
-		$api->SystemLogsAdd($userid, 'itemuse', "Used a/an Linen Wrap item.");
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Linen Wrap.");
 		alert('success', "Success!", "Linen Wrap was used successfully.", true, 'index.php');
 		$h->endpage();
 	}
@@ -102,7 +102,7 @@ if (isset($_GET['dungeon'])) {
 		$api->UserTakeItem($userid, 100, 1);
         $api->UserInfoSet($userid,'hp',5,true);
 		$api->UserStatusSet($userid, 'infirmary', -75, '');
-		$api->SystemLogsAdd($userid, 'itemuse', "Used a/an Acupuncture Needle item.");
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Acupuncture Needle.");
 		alert('success', "Success!", "Acupuncture Needle was used successfully.", true, 'index.php');
 		$h->endpage();
 	}
