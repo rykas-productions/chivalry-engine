@@ -68,16 +68,16 @@ if (isset($_POST['open']))
 	while($number < $_POST['open'])
 	{
 		$number=$number+1;
-		$chance=Random(1,91);
+		$chance=Random(1,86);
 		if ($chance <= 30)
 		{
-			$cash=Random(750,3000);
+			$cash=Random(750,2750);
 			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
 			$copper=$copper+$cash;
 		}
 		elseif (($chance > 30) && ($chance <= 40))
 		{
-			$cash=Random(10,25);
+			$cash=Random(5,20);
 			$specialnumber=((getSkillLevel($userid,11)*5)/100);
 			$cash=round($cash+($cash*$specialnumber));
 			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
@@ -85,7 +85,7 @@ if (isset($_POST['open']))
 		}
 		elseif (($chance > 40) && ($chance <= 50))
 		{
-			$cash=Random(5,15);
+			$cash=Random(5,10);
 			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
 			$infirmary=$infirmary+$cash;
 		}
@@ -113,29 +113,29 @@ if (isset($_POST['open']))
 			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
 			$keys=$keys+$rng;
 		}
-		elseif (($chance > 75) && ($chance <= 83))
+		elseif (($chance > 75) && ($chance <= 78))
 		{
 			$rng=Random(1,2);
 			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
 			$explosives=$explosives+$rng;
 		}
-		elseif (($chance > 83) && ($chance <= 85))
+		elseif (($chance > 78) && ($chance <= 80))
 		{
 			$gymscroll=$gymscroll+1;
 		}
-		elseif (($chance > 85) && ($chance <= 86))
+		elseif (($chance > 80) && ($chance <= 81))
 		{
 			$attackscroll=$attackscroll+1;
 		}
-        elseif (($chance > 86) && ($chance <= 87))
+        elseif (($chance > 81) && ($chance <= 82))
 		{
 			$mystery=$mystery+1;
 		}
-        elseif (($chance > 87) && ($chance <= 88))
+        elseif (($chance > 82) && ($chance <= 83))
 		{
 			$needle=$needle+1;
 		}
-		elseif ($chance == 89)
+		elseif ($chance == 84)
 		{
 			if (Random(1,10) == 9)
 			{
@@ -146,7 +146,7 @@ if (isset($_POST['open']))
 				$nothing=$nothing+1;
 			}
 		}
-		elseif ($chance == 90)
+		elseif ($chance == 85)
 		{
 			if (Random(1,10) == 9)
 			{

@@ -42,10 +42,10 @@ if (!$api->UserHasItem($userid,33,1))
 }
 $db->query("UPDATE `users` SET `bor` = `bor` - 1 WHERE `userid` = {$userid}");
 $api->UserTakeItem($userid,33,1);
-$chance=Random(1,91);
+$chance=Random(1,86);
 if ($chance <= 30)
 {
-    $cash=Random(750,3000);
+    $cash=Random(750,2750);
 	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
     echo "You open this Box of Random and pull out " . number_format($cash) . " Copper Coins. Cool!";
     $api->UserGiveCurrency($userid,'primary',$cash);
@@ -53,7 +53,7 @@ if ($chance <= 30)
 }
 elseif (($chance > 30) && ($chance <= 40))
 {
-    $cash=Random(10,25);
+    $cash=Random(5,20);
 	$specialnumber=((getSkillLevel($userid,11)*5)/100);
 	$cash=round($cash+($cash*$specialnumber));
 	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
@@ -63,7 +63,7 @@ elseif (($chance > 30) && ($chance <= 40))
 }
 elseif (($chance > 40) && ($chance <= 50))
 {
-    $cash=Random(5,15);
+    $cash=Random(5,10);
 	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
     echo "Tick, tock. Ka-boom!";
     $api->UserStatusSet($userid,'infirmary',$cash,"Ticking Box");
@@ -103,7 +103,7 @@ elseif (($chance > 70) && ($chance <= 75))
     $api->UserGiveItem($userid,30,$rng);
     $api->SystemLogsAdd($userid,"bor","Received {$rng} Dungeon Keys.");
 }
-elseif (($chance > 75) && ($chance <= 83))
+elseif (($chance > 75) && ($chance <= 78))
 {
 	$rng=Random(1,2);
 	$rng=round($rng+($rng*levelMultiplier($ir['level'])));
@@ -111,31 +111,31 @@ elseif (($chance > 75) && ($chance <= 83))
     $api->UserGiveItem($userid,28,$rng);
     $api->SystemLogsAdd($userid,"bor","Received {$rng} Small Explosives.");
 }
-elseif (($chance > 83) && ($chance <= 85))
+elseif (($chance > 78) && ($chance <= 80))
 {
     echo "You open this Box of Random and find a Chivalry Gym Pass.";
     $api->UserGiveItem($userid,18,1);
     $api->SystemLogsAdd($userid,"bor","Received Chivalry Gym Pass.");
 }
-elseif (($chance > 85) && ($chance <= 86))
+elseif (($chance > 80) && ($chance <= 81))
 {
 	echo "You open this Box of Random and find a Distant Attack Scroll.";
     $api->UserGiveItem($userid,90,1);
     $api->SystemLogsAdd($userid,"bor","Received Distant Attack Scroll.");
 }
-elseif (($chance > 86) && ($chance <= 87))
+elseif (($chance > 81) && ($chance <= 82))
 {
 	echo "You open this Box of Random and find a Mysterious Potion.";
     $api->UserGiveItem($userid,123,1);
     $api->SystemLogsAdd($userid,"bor","Received Mysterious Potion.");
 }
-elseif (($chance > 87) && ($chance <= 88))
+elseif (($chance > 82) && ($chance <= 83))
 {
 	echo "You open this Box of Random and find an Acupuncture Needle.";
     $api->UserGiveItem($userid,100,1);
     $api->SystemLogsAdd($userid,"bor","Received Acupuncture Needle.");
 }
-elseif ($chance == 89)
+elseif ($chance == 84)
 {
 	if (Random(1,10) == 9)
 	{
@@ -149,7 +149,7 @@ elseif ($chance == 89)
 		$api->SystemLogsAdd($userid,"bor","Received nothing.");
 	}
 }
-elseif ($chance == 90)
+elseif ($chance == 85)
 {
 	if (Random(1,10) == 9)
 	{
