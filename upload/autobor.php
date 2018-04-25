@@ -48,6 +48,7 @@ if (isset($_POST['open']))
 		alert('danger',"Uh Oh!","You do not have that many Boxes of Random in your inventory to open that many.");
 		die($h->endpage());
 	}
+	$lvlmultiplier=levelMultiplier($ir['level']);
 	$number=0;
 	$copper=0;
 	$tokens=0;
@@ -72,7 +73,7 @@ if (isset($_POST['open']))
 		if ($chance <= 30)
 		{
 			$cash=Random(750,2750);
-			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+			$cash=round($cash+($cash*$lvlmultiplier));
 			$copper=$copper+$cash;
 		}
 		elseif (($chance > 30) && ($chance <= 40))
@@ -80,13 +81,13 @@ if (isset($_POST['open']))
 			$cash=Random(5,20);
 			$specialnumber=((getSkillLevel($userid,11)*5)/100);
 			$cash=round($cash+($cash*$specialnumber));
-			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+			$cash=round($cash+($cash*$lvlmultiplier));
 			$tokens=$tokens+$cash;
 		}
 		elseif (($chance > 40) && ($chance <= 50))
 		{
 			$cash=Random(5,10);
-			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+			$cash=round($cash+($cash*$lvlmultiplier));
 			$infirmary=$infirmary+$cash;
 		}
 		elseif (($chance > 50) && ($chance <= 55))
@@ -104,19 +105,19 @@ if (isset($_POST['open']))
 		elseif (($chance > 65) && ($chance <= 70))
 		{
 			$rng=Random(2,4);
-			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
+			$rng=round($rng+($rng*$lvlmultiplier));
 			$wraps=$wraps+$rng;
 		}
 		elseif (($chance > 70) && ($chance <= 75))
 		{
 			$rng=Random(2,4);
-			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
+			$rng=round($rng+($rng*$lvlmultiplier));
 			$keys=$keys+$rng;
 		}
 		elseif (($chance > 75) && ($chance <= 78))
 		{
 			$rng=Random(1,2);
-			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
+			$rng=round($rng+($rng*$lvlmultiplier));
 			$explosives=$explosives+$rng;
 		}
 		elseif (($chance > 78) && ($chance <= 80))
