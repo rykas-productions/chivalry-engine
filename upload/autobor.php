@@ -62,94 +62,103 @@ if (isset($_POST['open']))
 	$attackscroll=0;
     $mystery=0;
     $needle=0;
+	$hexbags=0;
+	$rickitybomb=0;
 	$nothing=0;
 	while($number < $_POST['open'])
 	{
 		$number=$number+1;
-		$chance=Random(1,95);
-		if ($chance <= 35)
+		$chance=Random(1,91);
+		if ($chance <= 30)
 		{
-			$cash=Random(650,3000);
+			$cash=Random(750,3000);
 			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
 			$copper=$copper+$cash;
-            $api->SystemLogsAdd($userid,"bor","Received {$cash} Copper Coins.");
 		}
-		elseif (($chance > 35) && ($chance <= 45))
+		elseif (($chance > 30) && ($chance <= 40))
 		{
 			$cash=Random(10,25);
 			$specialnumber=((getSkillLevel($userid,11)*5)/100);
 			$cash=round($cash+($cash*$specialnumber));
 			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
 			$tokens=$tokens+$cash;
-            $api->SystemLogsAdd($userid,"bor","Received {$cash} Chivalry Tokens.");
 		}
-		elseif (($chance > 45) && ($chance <= 50))
+		elseif (($chance > 40) && ($chance <= 50))
 		{
-			$cash=Random(10,30);
 			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
 			$infirmary=$infirmary+$cash;
-            $api->SystemLogsAdd($userid,"bor","Received {$cash} Infirmary minutes.");
 		}
 		elseif (($chance > 50) && ($chance <= 55))
 		{
 			$bread=$bread+1;
-            $api->SystemLogsAdd($userid,"bor","Received Bread.");
 		}
 		elseif (($chance > 55) && ($chance <= 60))
 		{
 			$venison=$venison+1;
-            $api->SystemLogsAdd($userid,"bor","Received Venison.");
 		}
 		elseif (($chance > 60) && ($chance <= 65))
 		{
 			$potion=$potion+1;
-            $api->SystemLogsAdd($userid,"bor","Received Small Health Potion.");
 		}
 		elseif (($chance > 65) && ($chance <= 70))
 		{
 			$rng=Random(2,4);
 			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
 			$wraps=$wraps+$rng;
-            $api->SystemLogsAdd($userid,"bor","Received {$rng} Linen Wraps.");
 		}
 		elseif (($chance > 70) && ($chance <= 75))
 		{
 			$rng=Random(2,4);
 			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
 			$keys=$keys+$rng;
-            $api->SystemLogsAdd($userid,"bor","Received {$rng} Dungeon Keys.");
 		}
 		elseif (($chance > 75) && ($chance <= 83))
 		{
 			$rng=Random(1,2);
 			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
 			$explosives=$explosives+$rng;
-            $api->SystemLogsAdd($userid,"bor","Received {$rng} Small Explosives.");
 		}
 		elseif (($chance > 83) && ($chance <= 85))
 		{
 			$gymscroll=$gymscroll+1;
-            $api->SystemLogsAdd($userid,"bor","Received Chivalry Gym Pass.");
 		}
-		elseif (($chance > 85) && ($chance <= 88))
+		elseif (($chance > 85) && ($chance <= 86))
 		{
 			$attackscroll=$attackscroll+1;
-            $api->SystemLogsAdd($userid,"bor","Received Distant Attack Scroll.");
 		}
-        elseif (($chance > 88) && ($chance <= 89))
+        elseif (($chance > 86) && ($chance <= 87))
 		{
 			$mystery=$mystery+1;
-            $api->SystemLogsAdd($userid,"bor","Received Mysterious Potion.");
 		}
-        elseif (($chance > 89) && ($chance <= 92))
+        elseif (($chance > 87) && ($chance <= 88))
 		{
 			$needle=$needle+1;
-            $api->SystemLogsAdd($userid,"bor","Received Acupuncture Needle.");
+		}
+		elseif ($chance == 89)
+		{
+			if (Random(1,10) == 9)
+			{
+				$rickitybomb=$rickitybomb+1;
+			}
+			else
+			{
+				$nothing=$nothing+1;
+			}
+		}
+		elseif ($chance == 90)
+		{
+			if (Random(1,10) == 9)
+			{
+				$hexbags=$hexbags+Random(1,3);
+			}
+			else
+			{
+				$nothing=$nothing+1;
+			}
 		}
 		else
 		{
 			$nothing=$nothing+1;
-            $api->SystemLogsAdd($userid,"bor","Received nothing.");
 		}
 	}
 	$db->query("UPDATE `users` SET `bor` = `bor` - {$_POST['open']} WHERE `userid` = {$userid}");
@@ -164,10 +173,12 @@ if (isset($_POST['open']))
 		{$venison} Venison.<br />
 		{$potion} Small Health Potion(s).<br />
 		{$explosives} Small Explosive(s).<br />
-		{$gymscroll} Chivalry Gym Pass(es)<br />
+		{$gymscroll} Chivalry Gym Pass(s)<br />
 		{$attackscroll} Distant Attack Scroll(s)<br />
         {$needle} Acupuncture Needle(s)<br />
         {$mystery} Mysterious Potion(s)<br />
+		{$hexbags} extra Hexbag(s)<br />
+		{$rickitybomb} Rickity Bomb(s)
 		{$nothing} Boxes of Random had nothing in them.";
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
@@ -182,7 +193,26 @@ if (isset($_POST['open']))
 	$api->UserGiveItem($userid,90,$attackscroll);
     $api->UserGiveItem($userid,123,$mystery);
     $api->UserGiveItem($userid,100,$needle);
+	$api->UserGiveItem($userid,149,$rickitybomb);
+	$db->query("UPDATE `users` SET `hexbags` = `hexbags` + {$hexbags} WHERE `userid` = {$userid}");
 	$api->UserTakeItem($userid,33,$_POST['open']);
+	//Logs here
+	$api->SystemLogsAdd($userid,"bor","Received {$nothing} nothing(s).");
+	$api->SystemLogsAdd($userid,"bor","Received {$needle} Acupuncture Needle(s).");
+	$api->SystemLogsAdd($userid,"bor","Received {$mystery} Mysterious Potion(s).");
+	$api->SystemLogsAdd($userid,"bor","Received {$attackscroll} Distant Attack Scroll(s).");
+	$api->SystemLogsAdd($userid,"bor","Received {$gymscroll} Chivalry Gym Pass(s).");
+	$api->SystemLogsAdd($userid,"bor","Received {$explosives} Small Explosives.");
+	$api->SystemLogsAdd($userid,"bor","Received {$keys} Dungeon Keys.");
+	$api->SystemLogsAdd($userid,"bor","Received {$wraps} Linen Wraps.");
+	$api->SystemLogsAdd($userid,"bor","Received {$infirmary} infirmary.");
+	$api->SystemLogsAdd($userid,"bor","Received {$copper} Copper Coins.");
+	$api->SystemLogsAdd($userid,"bor","Received {$tokens} Chivalry Tokens.");
+	$api->SystemLogsAdd($userid,"bor","Received {$bread} Bread(s).");
+	$api->SystemLogsAdd($userid,"bor","Received {$venison} Venison.");
+	$api->SystemLogsAdd($userid,"bor","Received {$potion} Small Health Potion(s).");
+	$api->SystemLogsAdd($userid,"bor","Received {$hexbags} Hexbag(s).");
+	$api->SystemLogsAdd($userid,"bor","Received {$rickitybomb} Rickity Bomb(s).");
 	
 }
 else
