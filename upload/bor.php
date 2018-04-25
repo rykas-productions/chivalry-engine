@@ -63,6 +63,7 @@ elseif (($chance > 30) && ($chance <= 40))
 }
 elseif (($chance > 40) && ($chance <= 50))
 {
+    $cash=Random(5,15);
 	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
     echo "Tick, tock. Ka-boom!";
     $api->UserStatusSet($userid,'infirmary',$cash,"Ticking Box");
