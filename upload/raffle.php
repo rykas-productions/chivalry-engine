@@ -44,8 +44,8 @@ function lottery_home()
 	echo 
 		"<h3>Raffle</h3><hr />
 		The pot starts at {$minimumpotformat} Copper Coins. It costs {$cost2playformat} Copper Coins to play. {$add2potformat} Copper Coins is deducted from your 
-		ticket and added into the pot. Whoever gets the lucky ticket will get all the cash in the pot. <u>You have a {$winchance}% chance to 
-        win the raffle.</u> Chances are increased very occasionally as you play.<br />
+		ticket and added into the pot. Whoever gets the lucky ticket will get all the cash in the pot, along with a <a href='iteminfo.php?ID=160'>Badge of Luck</a>. 
+		<u>You have a {$winchance}% chance to win the raffle.</u> Chances are increased very occasionally as you play.<br />
 		<br />
 		<b>Current Pot:</b> {$currentwinnings} Copper Coins<br />
         <b>Previous Winner:</b> " . parseUsername($set['raffle_last_winner']) . " [{$set['raffle_last_winner']}]
@@ -89,6 +89,7 @@ function lottery_play()
 	if ($chance == 1)	//Winner, winner, chicken dinner!!
 	{
 		$winnings=number_format($set['lotterycash']);
+		$api->UserGiveItem($userid,160,1);
 		alert('success',"Success!","You paid the fee and won the raffle's prize pot ({$winnings} Copper Coins)! Congratulations!",true,"?action=play&verf={$csrf}","Play Again");
 		//Adds money!
 		$api->UserGiveCurrency($userid, 'primary', $set['lotterycash']);
