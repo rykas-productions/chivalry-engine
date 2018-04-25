@@ -38,6 +38,7 @@ if (isset($_POST['open']))
 		alert('danger',"Uh Oh!","You are trying to open more Hexbags than you currently have redeemed on your account.");
 		die($h->endpage());
 	}
+	$lvlmultiplier=levelMultiplier($ir['level']);
 	$number=0;
 	$copper=0;
 	$tokens=0;
@@ -59,93 +60,80 @@ if (isset($_POST['open']))
 		if ($chance <= 35)
 		{
 			$cash=Random(750,3500);
-			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+			$cash=round($cash+($cash*$lvlmultiplier));
 			$copper=$copper+$cash;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Copper Coins.");
 		}
 		elseif (($chance > 35) && ($chance <= 45))
 		{
 			$cash=Random(5,20);
 			$specialnumber=((getSkillLevel($userid,11)*5)/100);
 			$cash=round($cash+($cash*$specialnumber));
-			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+			$cash=round($cash+($cash*$lvlmultiplier));
 			$tokens=$tokens+$cash;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Chivalry Tokens.");
 		}
 		elseif (($chance > 45) && ($chance <= 50))
 		{
 			$cash=Random(30,60);
-			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+			$cash=round($cash+($cash*$lvlmultiplier));
 			$dungeon=$dungeon+$cash;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Dungeon minutes.");
 		}
 		elseif (($chance > 50) && ($chance <= 55))
 		{
 			$cash=Random(30,60);
-			$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+			$cash=round($cash+($cash*$lvlmultiplier));
 			$infirmary=$infirmary+$cash;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$cash} Infirmary minutes.");
 		}
 		elseif (($chance > 55) && ($chance <= 60))
 		{
 			$rng=Random(2,5);
-			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
+			$rng=round($rng+($rng*$lvlmultiplier));
 			$leeches=$leeches+$rng;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$rng} Leeches.");
 		}
 		elseif (($chance > 60) && ($chance <= 65))
 		{
 			$rng=Random(2,5);
-			$rng=round($rng+($rng*levelMultiplier($ir['level'])));
+			$rng=round($rng+($rng*$lvlmultiplier));
 			$lockpicks=$lockpicks+$rng;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$rng} Lockpicks.");
 		}
 		elseif (($chance > 65) && ($chance <= 68))
 		{
 			$gain=Random(1,10)*$ir['level'];
-			$gain=round($gain+($gain*levelMultiplier($ir['level'])));
+			$gain=round($gain+($gain*$lvlmultiplier));
 			$strength=$strength+$gain;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Strength.");
 		}
 		elseif (($chance > 68) && ($chance <= 71))
 		{
 			$gain=Random(1,10)*$ir['level'];
-			$gain=round($gain+($gain*levelMultiplier($ir['level'])));
+			$gain=round($gain+($gain*$lvlmultiplier));
 			$agility=$agility+$gain;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Agility.");
 		}
 		elseif (($chance > 71) && ($chance <= 74))
 		{
 			$gain=Random(1,10)*$ir['level'];
-			$gain=round($gain+($gain*levelMultiplier($ir['level'])));
+			$gain=round($gain+($gain*$lvlmultiplier));
 			$guard=$guard+$gain;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Guard.");
 		}
         elseif (($chance > 74) && ($chance <= 80))
         {
             $gain=Random(2,10);
-			$gain=round($gain+($gain*levelMultiplier($ir['level'])));
+			$gain=round($gain+($gain*$lvlmultiplier));
             $rocks=$rocks+$gain;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Heavy Rocks.");
         }
         elseif (($chance > 80) && ($chance <= 86))
         {
             $gain=Random(2,10);
-			$gain=round($gain+($gain*levelMultiplier($ir['level'])));
+			$gain=round($gain+($gain*$lvlmultiplier));
             $sticks=$sticks+$gain;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$gain} Sharpened Sticks.");
         }
 		elseif (($chance > 86) && ($chance <= 93))
 		{
 			$bor=Random(2,15);
-			$gain=round($bor+($bor*levelMultiplier($ir['level'])));
+			$gain=round($bor+($bor*$lvlmultiplier));
 			$borg=$borg+$bor;
-            $api->SystemLogsAdd($userid,"hexbags","Received {$bor} Boxes of Random.");
 		}
 		else
 		{
 			$nothing=$nothing+1;
-            $api->SystemLogsAdd($userid,"hexbags","Received nothing.");
 		}
 	}
 	$db->query("UPDATE `users` SET `hexbags` = `hexbags` - {$_POST['open']} WHERE `userid` = {$userid}");
@@ -178,6 +166,20 @@ if (isset($_POST['open']))
 				`guard` = `guard` + {$guard} 
 				WHERE `userid` = {$userid}");
 	$api->UserGiveItem($userid,33,$borg);
+	//Logs
+	$api->SystemLogsAdd($userid,"hexbags","Received {$copper} Copper Coins.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$tokens} Chivalry Tokens.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$dungeon} dungeon minutes.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$infirmary} infirmary minutes.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$leeches} Leeches.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$lockpicks} Lockpicks.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$rocks} Heavy Rocks.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$sticks} Sharpened Sticks.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$strength} Strength.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$agility} Agility");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$guard} Guard.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$borg} Boxes of Random.");
+	$api->SystemLogsAdd($userid,"hexbags","Received {$nothing} nothing(s).");
 }
 else
 {
