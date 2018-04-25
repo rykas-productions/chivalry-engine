@@ -108,7 +108,7 @@ if (!$_GET['user']) {
 		//Submit comment
 		if (isset($_POST['comment']))
 		{
-			$comment = $db->escape(nl2br(strip_tags(stripslashes($_POST['comment']))));
+			$comment = $db->escape(nl2br(strip_tags(htmlentities(stripslashes($_POST['comment'])))));
 			if (empty($comment))
 			{
 				alert('danger',"Uh Oh!","Please fill out the comment form before submitting.",false);
@@ -471,7 +471,7 @@ if (!$_GET['user']) {
 					</td>
 					
 					<td>
-						{$cr['cTEXT']}
+						" . html_entity_decode($cr['cTEXT']) . "
 					</td>
 					</tr>";
 				}
