@@ -99,5 +99,41 @@ $parser->addCodeDefinition($builder->build());
 $builder = new JBBCode\CodeDefinitionBuilder('warning', '<span class="text-warning">{param}</span>');
 $parser->addCodeDefinition($builder->build());
 
+//Line
 $builder = new JBBCode\CodeDefinitionBuilder('hr', '<hr></hr>');
+$parser->addCodeDefinition($builder->build());
+
+//Mp3 Player
+$builder = new JBBCode\CodeDefinitionBuilder('mp3', '<audio controls>
+															  <source src="{param}" type="audio/mpeg">
+															Your browser does not support the audio element.
+															</audio>');
+$parser->addCodeDefinition($builder->build());
+//Ogg Player
+$builder = new JBBCode\CodeDefinitionBuilder('ogg', '<audio controls>
+															  <source src="{param}" type="audio/ogg">
+															Your browser does not support the audio element.
+															</audio>');
+$parser->addCodeDefinition($builder->build());
+//Wav Player
+$builder = new JBBCode\CodeDefinitionBuilder('wav', '<audio controls>
+															  <source src="{param}" type="audio/wav">
+															Your browser does not support the audio element.
+															</audio>');
+$parser->addCodeDefinition($builder->build());
+
+//Mp4 Player
+$builder = new JBBCode\CodeDefinitionBuilder('mp4', '<div class="embed-responsive embed-responsive-16by9">
+                                                            <video controls>
+															  <source src="{param}" type="video/mp4">
+															Your browser does not support the video tag.
+															</video></div>');
+$parser->addCodeDefinition($builder->build());
+
+//WebM Player
+$builder = new JBBCode\CodeDefinitionBuilder('webm', '<div class="embed-responsive embed-responsive-16by9">
+                                                            <video controls>
+															  <source src="{param}" type="video/webm">
+															Your browser does not support the video tag.
+															</video></div>');
 $parser->addCodeDefinition($builder->build());
