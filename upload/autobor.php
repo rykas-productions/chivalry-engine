@@ -179,7 +179,7 @@ if (isset($_POST['open']))
         {$needle} Acupuncture Needle(s)<br />
         {$mystery} Mysterious Potion(s)<br />
 		{$hexbags} extra Hexbag(s)<br />
-		{$rickitybomb} Rickity Bomb(s)
+		{$rickitybomb} Rickity Bomb(s)<br />
 		{$nothing} Boxes of Random had nothing in them.";
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
