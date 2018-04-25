@@ -990,6 +990,12 @@ function beat()
 		{
 			$db->query("UPDATE `missions` SET `mission_kill_count` = `mission_kill_count` + 1 WHERE `mission_userid` = {$userid}");
 		}
+		//Credit badge if needed.
+		$ir['kills']=$ir['kills']+1;
+		if ($ir['kills'] == 3000)
+		{
+			$api->UserGiveItem($userid,161,1);
+		}
         //Opponent an NPC? Set their HP to 100%, and remove infirmary time.
         if ($r['user_level'] == 'NPC') {
             $db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$r['userid']}");
@@ -1020,7 +1026,7 @@ function lost()
         alert('warning', "Security Issue!", "You are trying to lose a fight against non-existent user.", true, 'index.php');
         die($h->endpage());
     }
-    $od = $db->query("/*qc=on*/SELECT `username`, `level`, `user_level`,
+    $od = $db->query("/*qc=on*/SELECT `username`, `level`, `user_level`, `kills`
                       `guild`, `xp` FROM `users` WHERE `userid` = {$_GET['ID']}");
     //The opponent does not exist.
     if (!$db->num_rows($od)) {
@@ -1094,6 +1100,12 @@ function lost()
 	if ($db->num_rows($am) > 0)
 	{
 		$db->query("UPDATE `missions` SET `mission_kill_count` = `mission_kill_count` + 1 WHERE `mission_userid` = {$_GET['ID']}");
+	}
+	//Credit badge if needed.
+	$r['kills']=$rr['kills']+1;
+	if ($rr['kills'] == 3000)
+	{
+		$api->UserGiveItem($_GET['ID'],161,1);
 	}
 	attacklog($userid,$_GET['ID'],'lost');
 }
@@ -1216,6 +1228,12 @@ function xp()
 			{
 				$db->query("UPDATE `missions` SET `mission_kill_count` = `mission_kill_count` + 1 WHERE `mission_userid` = {$userid}");
 			}
+			//Credit badge if needed.
+			$ir['kills']=$ir['kills']+1;
+			if ($ir['kills'] == 3000)
+			{
+				$api->UserGiveItem($userid,161,1);
+			}
             //Opponent is NPC, so lets refill their HP, and remove infirmary time.
             if ($r['user_level'] == 'NPC') {
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
@@ -1322,6 +1340,12 @@ function mug()
 			if ($db->num_rows($am) > 0)
 			{
 				$db->query("UPDATE `missions` SET `mission_kill_count` = `mission_kill_count` + 1 WHERE `mission_userid` = {$userid}");
+			}
+			//Credit badge if needed.
+			$ir['kills']=$ir['kills']+1;
+			if ($ir['kills'] == 3000)
+			{
+				$api->UserGiveItem($userid,161,1);
 			}
             //Opponent is NPC, so remove infirmary time and refill HP.
             if ($r['user_level'] == 'NPC') {
