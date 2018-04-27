@@ -439,7 +439,7 @@ class headers
         <!-- Other JavaScript -->
         <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/game-v1.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js" async defer></script>
-		<script src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
+		<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
 		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/clock.min.js"></script>
