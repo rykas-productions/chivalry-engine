@@ -16,6 +16,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+$disablespeed=1;
 require("globals.php");
 require('lib/bbcode_engine.php');
 $CurrentTime = time();

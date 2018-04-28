@@ -7,6 +7,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+$disablespeed=1;
 require("globals.php");
 
 //Everything's in this file.
