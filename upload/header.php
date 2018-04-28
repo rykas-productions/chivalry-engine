@@ -71,7 +71,7 @@ class headers
                 <link rel="shortcut icon" href="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png" type="image/x-icon"/>
 				<link rel="icon" sizes="192x192" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png">
 				<link rel="icon" sizes="128x128" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png">
-				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1.0.9/css/game-v1.11.min.css">
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/game-v1.11.min.css">
 				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/game-icons.min.css">
 				</head>
     <?php
@@ -107,11 +107,8 @@ class headers
                         }
                         else
                         {
-                            ?>
-								<a class="nav-link" href="explore.php">
-									<i class='far fa-fw fa-compass fa-spin'></i> Explore
-								</a>
-							<?php
+                            ?><a class="nav-link" href="explore.php"><?php echo "<i
+                                        class='far fa-fw fa-compass fa-spin'></i> Explore"; ?></a><?php
                         }
                         ?>
                     </li>
@@ -119,43 +116,28 @@ class headers
                 <div class="my-2 my-lg-0">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <div class="fa-2x">
-                                <a class="nav-link"
-                                   href="inbox.php">
-									<span class="fa-layers fa-fw">
-										<i class="fas fa-envelope"></i>
-											<span class="fa-layers-counter" style="background:Tomato"><?php echo $ir['mail']; ?></span>
-									</span>
-								</a>
-								</div>
+                            <a class="nav-link"
+                               href="inbox.php"><?php echo "<i
+                                        class='fas fa-fw fa-inbox'></i> Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
                         </li>
                         <li class="nav-item">
-                                <div class="fa-2x">
-                                <a class="nav-link"
-                                   href="notifications.php">
-									<span class="fa-layers fa-fw">
-										<i class="fas fa-bell"></i>
-											<span class="fa-layers-counter" style="background:Tomato"><?php echo $ir['notifications']; ?></span>
-									</span>
-								</a>
-								</div>
-                            </li>
-                            <li class="nav-item">
-								<div class="fa-2x">
-                                <a class="nav-link" href="inventory.php">
-									<i class='fas fa-fw fa-briefcase'></i>
-								</a>
-								</div>
-                            </li>
+                            <a class="nav-link"
+                               href="notifications.php"><?php echo "<i
+                                        class='fas fa-fw fa-bell'></i> Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.php"><?php echo "<i
+                                        class='fas fa-fw fa-briefcase'></i> Inventory"; ?></a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <?php
                                 //User has a display picture, lets show it!
-								if ($ir['display_pic']) {
-									echo "<img src='{$ir['display_pic']}' width='45' height='45'>";
-								}
-								echo " Hello, {$ir['username']}!";
+                                if ($ir['display_pic']) {
+                                    echo "<img src='" . parseImage($ir['display_pic']) . "' width='30' height='30' alt='Your display picture.' title='Your display picture.'>";
+                                }
+                                echo " Hello, {$ir['username']}!";
                                 ?>
                             </a>
 
