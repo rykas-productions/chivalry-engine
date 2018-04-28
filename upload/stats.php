@@ -26,7 +26,6 @@ google.charts.load('current', {'packages':['corechart']});
 		  ['Windows Phone',     {$WinPho}],
 		  ['Blackberry',     {$Blackberry}],
 		  ['Mobile',     {$Mobile}],
-		  ['Unknown',     {$UnknownOS}],
 		  ['iPhone',     {$iPhone}],
 		  ['iPod',     {$iPod}],
 		  ['iPad',     {$iPad}],
@@ -53,7 +52,6 @@ google.charts.load('current', {'packages':['corechart']});
 		  ['Maxthon',     {$Maxthon}],
 		  ['Konqueror',     {$Konqueror}],
 		  ['Mobile Browser',     {$MobileBro}],
-		  ['Unknown',     {$UnknownBro}],
 		  ['Mobile App', {$App}],
           ['Firefox',     {$FF}]
         ]);

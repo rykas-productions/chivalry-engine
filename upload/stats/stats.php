@@ -77,7 +77,6 @@ $Android = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `u
 $Blackberry = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Blackberry'"));
 $Mobile = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Mobile'"));
 $WinPho = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Windows Phone'"));
-$UnknownOS = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Unknown OS Platform'"));
 $ChromeOS = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `os` = 'Chrome OS'"));
 
 //Browser Choice
@@ -92,7 +91,6 @@ $Maxthon = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `u
 $Konqueror = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Konquerer'"));
 $MobileBro = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Handheld Browser'"));
 $App = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'App'"));
-$UnknownBro = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `browser` = 'Unknown Browser'"));
 
 //Theme Choice
 $Castle = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 1"));
