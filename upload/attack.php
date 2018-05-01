@@ -686,6 +686,8 @@ function attacking()
                         if ($dam > $yourbeforehp) {
                             $dam = $ir['hp'];
                         }
+						if (!isset($enweps[$weptouse]['ammo']))
+							$enweps[$weptouse]['ammo']=0;
                         if ($enweps[$weptouse]['ammo'] > 0)
                         {
                             //True Shot skill
