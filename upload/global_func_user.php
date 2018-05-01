@@ -328,7 +328,7 @@ function levelMultiplier($level)
 		return 1;
 	if (($level >= 100) && ($level < 150))
 		return 1.5;
-	if (($level >= 150) && ($level < 200))
+	if (($level >= 150) && ($level < 250))
 		return 1.75;
 	if (($level >= 250) && ($level < 400))
 		return 2.25;
