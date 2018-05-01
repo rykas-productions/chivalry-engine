@@ -686,12 +686,15 @@ function attacking()
                         if ($dam > $yourbeforehp) {
                             $dam = $ir['hp'];
                         }
-                        if ($enweps[$weptouse]['ammo'] > 0)
-                        {
-                            //True Shot skill
-                            $theirbowdamage=((getSkillLevel($_GET['user'],4)*5)/100);
-                            $dam=$dam+($dam*$theirbowdamage);
-                        }
+						if ($wep != "Fists")
+						{
+							if ($enweps[$weptouse]['ammo'] > 0)
+							{
+								//True Shot skill
+								$theirbowdamage=((getSkillLevel($_GET['user'],4)*5)/100);
+								$dam=$dam+($dam*$theirbowdamage);
+							}
+						}
                     } //Opponent misses their hit.
                     else {
                         $miss=1;
