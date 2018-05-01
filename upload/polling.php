@@ -84,10 +84,9 @@ function home()
 									<td>{$r[$k]}</td>
 									<td>{$r[$ke]}</td>
 									<td>
-										<div class='progress'>
-											<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' aria-valuemin='0' aria-valuemax='100' style='width:{$perc}%'>
-												{$perc}%
-											</div>
+										<div class='progress' style='height: 1rem;'>
+											<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'></div>
+											<span>{$perc}%</span>
 										</div>
 									</td>
 								  </tr>";
@@ -176,11 +175,10 @@ function viewpolls()
 							<td>{$r[$k]}</td>
 							<td>{$r[$ke]}</td>
 							<td>
-								<div class='progress'>
-											<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' aria-valuemin='0' aria-valuemax='100' style='width:{$perc}%'>
-												{$perc}%
-											</div>
-										</div>
+								<div class='progress' style='height: 1rem;'>
+									<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'></div>
+									<span>{$perc}%</span>
+								</div>
 							</td>
 						  </tr>";
                 }
