@@ -1102,8 +1102,8 @@ function lost()
 		$db->query("UPDATE `missions` SET `mission_kill_count` = `mission_kill_count` + 1 WHERE `mission_userid` = {$_GET['ID']}");
 	}
 	//Credit badge if needed.
-	$r['kills']=$rr['kills']+1;
-	if ($rr['kills'] == 3000)
+	$r['kills']=$r['kills']+1;
+	if ($r['kills'] == 3000)
 	{
 		$api->UserGiveItem($_GET['ID'],161,1);
 	}
