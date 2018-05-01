@@ -996,6 +996,8 @@ function beat()
 		{
 			$api->UserGiveItem($userid,161,1);
 		}
+		//200 User Event
+		$db->query("UPDATE `user_settings` SET `holiday` = `holiday` + 1 WHERE `userid` = {$userid}");
         //Opponent an NPC? Set their HP to 100%, and remove infirmary time.
         if ($r['user_level'] == 'NPC') {
             $db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$r['userid']}");
@@ -1107,6 +1109,8 @@ function lost()
 	{
 		$api->UserGiveItem($_GET['ID'],161,1);
 	}
+	//200 User Event
+	$db->query("UPDATE `user_settings` SET `holiday` = `holiday` + 1 WHERE `userid` = {$_GET['ID']}");
 	attacklog($userid,$_GET['ID'],'lost');
 }
 
@@ -1234,6 +1238,8 @@ function xp()
 			{
 				$api->UserGiveItem($userid,161,1);
 			}
+			//200 User Event
+			$db->query("UPDATE `user_settings` SET `holiday` = `holiday` + 1 WHERE `userid` = {$userid}");
             //Opponent is NPC, so lets refill their HP, and remove infirmary time.
             if ($r['user_level'] == 'NPC') {
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
@@ -1347,6 +1353,8 @@ function mug()
 			{
 				$api->UserGiveItem($userid,161,1);
 			}
+			//200 User Event
+			$db->query("UPDATE `user_settings` SET `holiday` = `holiday` + 1 WHERE `userid` = {$userid}");
             //Opponent is NPC, so remove infirmary time and refill HP.
             if ($r['user_level'] == 'NPC') {
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");

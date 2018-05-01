@@ -135,8 +135,8 @@ echo "
 					<a href='shops.php'><i class='game-icon game-icon-shop'></i> Local Shops</a><br />
 					<a href='itemmarket.php'><i class='game-icon game-icon-trade'></i> Item Market <span class='badge badge-pill badge-primary'>{$market}</span></a><br />
 					<a href='itemrequest.php'><i class='game-icon game-icon-trade'></i> Item Request <span class='badge badge-pill badge-primary'>{$rmarket}</span></a><br />
-					<a href='secmarket.php'><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />";
-                    echo"
+					<a href='secmarket.php'><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />
+					<a href='200usersevent.php'>200 Users Event</a><br />
 				</div>
 			</div>
 		</div>
@@ -192,7 +192,7 @@ echo "
 				<div class='card-body'>
 					<a href='russianroulette.php'><i class='game-icon game-icon-revolver'></i> Russian Roulette <span class='badge badge-pill badge-primary'>{$rr}</span></a><br />
 					<a href='roulette.php?tresde={$tresder}'><i class='game-icon game-icon-table'></i> Roulette Table</a><br />
-					<a href='slots.php?tresde={$tresder}'><i class='game-icon game-icon-pokecog'></i> Slot Machines</a><br />";
+					<a href='slots.php?tresde={$tresder}'><i class='game-icon game-icon-pokecog spinner'></i> Slot Machines</a><br />";
 if ($ir['level'] > 49)
     echo "<a href='bigslots.php?tresde={$tresder}'><i class='game-icon game-icon-pokecog'></i> Federal Slots</a><br />";
 echo "
