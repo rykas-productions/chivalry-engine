@@ -356,7 +356,6 @@ class headers
 				die($h->endpage());
 		}
     }
-        include('2018easter_find.php');
         include('rickroll.php');
 		include('forms/gdpr.php');
     }
