@@ -573,7 +573,7 @@ function attacking()
                     if (!$api->UserHasItem($_GET['user'],$enweps[$weptouse]['ammo'],1))
                     {
                         $theydodmg=false;
-                        $ouq=$db->query("/*qc=on*/SELECT `equip_primary`,`equip_secondary`,`equip_potion` FROM `users` WHERE `userid` = {$_GET['user']}");
+                        $ouq=$db->query("/*qc=on*/SELECT `equip_primary`,`equip_secondary`,`equip_potion`,`ammo` FROM `users` WHERE `userid` = {$_GET['user']}");
                         $our=$db->fetch_row($ouq);
                         if ($enweps[$weptouse]['itmid'] == $our['equip_primary'])
                         {
@@ -686,8 +686,6 @@ function attacking()
                         if ($dam > $yourbeforehp) {
                             $dam = $ir['hp'];
                         }
-						if (!isset($enweps[$weptouse]['ammo']))
-							$enweps[$weptouse]['ammo']=0;
                         if ($enweps[$weptouse]['ammo'] > 0)
                         {
                             //True Shot skill
