@@ -126,33 +126,22 @@ function attacking()
 		}
 		
 	}
+	$npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$_GET['user']}");
 	//Perfection skill
 	$specialnumber=((getSkillLevel($userid,1)*3)/100);
 	if ($ir['class'] == 'Warrior')
-	{
 		$ir['strength']=$ir['strength']+($ir['strength']*$specialnumber);
-	}
 	if ($ir['class'] == 'Rogue')
-	{
 		$ir['agility']=$ir['agility']+($ir['agility']*$specialnumber);
-	}
 	if ($ir['class'] == 'Guardian')
-	{
 		$ir['guard']=$ir['guard']+($ir['guard']*$specialnumber);
-	}
 	$specialnumber2=((getSkillLevel($odata['userid'],1)*3)/100);
 	if ($odata['class'] == 'Warrior')
-	{
 		$odata['strength']=$odata['strength']+($odata['strength']*$specialnumber2);
-	}
 	if ($odata['class'] == 'Rogue')
-	{
 		$odata['agility']=$odata['agility']+($odata['agility']*$specialnumber2);
-	}
 	if ($odata['class'] == 'Guardian')
-	{
 		$odata['guard']=$odata['guard']+($odata['guard']*$specialnumber2);
-	}
     //Check that the opponent has 1 health point.
     if ($odata['hp'] == 1) {
         $_SESSION['attacking'] = 0;
@@ -227,7 +216,7 @@ function attacking()
         $api->UserInfoSetStatic($userid, "attacking", 0);
         alert("danger", "Uh Oh!", "You cannot attack online players who are level two or below.", true, 'index.php');
         die($h->endpage());
-    }
+    }	//User has protection
 	else if ($odata['protection'] > time())
 	{
 		$_SESSION['attacking'] = 0;
@@ -236,6 +225,20 @@ function attacking()
         $api->UserInfoSetStatic($userid, "attacking", 0);
         alert("danger", "Uh Oh!", "You cannot attack this player as they have protection.", true, 'index.php');
         die($h->endpage());
+	}
+	else if ($db->num_rows($npcquery) > 0) {
+		$results2 = $db->fetch_row($npcquery);
+		$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$_GET['user']}");
+		$r2 = $db->fetch_single($timequery);
+		//Opponent's drop has already been collected and the time hasn't reset.
+		if ((time() <= ($r2 + 900)) && ($r2 > 0)) {
+			$_SESSION['attacking'] = 0;
+			$_SESSION['attack_scroll'] = 0;
+			$ir['attacking'] = 0;
+			$api->UserInfoSetStatic($userid, "attacking", 0);
+			alert('danger',"Uh Oh!","You cannot attack this NPC at this time. Try again a little later.",true,'explore.php');
+			die($h->endpage());
+		}
 	}
     $_GET['weapon'] = (isset($_GET['weapon']) && is_numeric($_GET['weapon'])) ? abs($_GET['weapon']) : '';
     //If weapon is specified via $_GET, attack!!
@@ -1248,6 +1251,27 @@ function xp()
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
                 $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
             }
+			$npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$r['userid']}");
+			//Opponent is registered on bot list.
+			if ($db->num_rows($npcquery) > 0) {
+				$results2 = $db->fetch_row($npcquery);
+				$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$r['userid']}");
+				$r2 = $db->fetch_single($timequery);
+				//Opponent's drop has already been collected and the time hasn't reset.
+				if ((time() <= ($r2 + $results2['botcooldown'])) && ($r2 > 0)) {
+					//Nope
+				} //Bot's item can be collected.
+				else {
+					$time = time();
+					$exists = $db->query("/*qc=on*/SELECT `botid` FROM `botlist_hits` WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
+					//Place user's hittime into database.
+					if ($db->num_rows($exists) == 0) {
+						$db->query("INSERT INTO `botlist_hits` (`userid`, `botid`, `lasthit`) VALUES ('{$userid}', '{$r['userid']}', '{$time}')");
+					} else {
+						$db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
+					}
+				}
+			}
             if ($r['user_level'] != 'NPC') {
                 $last5=time()-600;
                 $attackedcount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`attack_id`) FROM `attack_logs` WHERE `attacked` = {$r['userid']} AND `result` = 'xp' AND `attack_time` > {$last5}"));
