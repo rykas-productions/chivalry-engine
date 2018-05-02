@@ -31,7 +31,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<u>Personal Information</u>
 	<br />
-	If you click the {$set['WebsiteName']} on the top left corner, it'll redirect you to the main index where you can
+	If you click the {$set['WebsiteName']} on the top left corner, it'll open a window where you can
 	view your personal information. This page shows your Stats, Level, Copper Coins, Chivalry Tokens, VIP Days,
 	Health, Experience, Will, Brave and Energy. You can also update your Personal Notepad here as well.
 	<br />Energy is used for training and attacking.
@@ -63,7 +63,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Navigation Bar</u>
 	<br />
 	The navigation bar (or dropdown) is your gateway to the game.
-	<br />Clicking on the game name in the top left corner will take you to your Personal Info page.
+	<br />Clicking on {$set['WebsiteName']} in the top left corner will open a window to your Personal Info page.
 	<br />Clicking on Explore will allow you to explore many of the features of the game. (More information on this later!)
 	<br />Clicking Mail will take you to your personal mailbox where you can write and read letters to others.
 	<br />Notifications will take you to your notification box, where game events will be posted if they involve you.
@@ -78,8 +78,9 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
     your name in-game.
     <br />Clicking on Settings will take you to your account settings. Here you can change your display picture,
     password, username, and forum signature!
-     <br />Clicking Game Rules will show you the rules of the game. It's recommended that you read these over so you
+	<br />Clicking Game Rules will show you the rules of the game. It's recommended that you read these over so you
      know what you can and cannot do.
+     <br />Clicking Privacy Policy will show you what {$set['WebsiteName']} does with your information.
      <br />Finally, clicking Logout will terminate your session.
     <br />
     <br />
@@ -91,37 +92,42 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Shops</u>
 	<br />
 	Hovering over the Shops category will display the numerous ways you can buy things in the game.
-	<br />Local Shops are the game-created shops in your town. You'll find an infinite amount of items in these shops.
-	<br />However, if you're wanting something a little more flashy, the Item Market is a market ran exclusively by other players. You'll find all sorts
+	<br /><a href='shops.php'>Local Shops</a> are the game-created shops in your town. You'll find an infinite amount of items in these shops.
+	<br />However, if you're wanting something a little more flashy, the <a href='itemmarket.php'>Item Market</a> is a market ran exclusively by other players. You'll find all sorts
 	of items for sale here. Note, that players also set their own pricing.
-	<br />The Chivalry Tokens Market is an easy way to convert your Secondary
-	Currency into Copper Coins, depending on the market demand.
+	<br />Not finding the item you want? The <a href='itemrequest.php'>Item Request</a> page will allow you to request an item, along with your price.
+	<br />The <a href='secmarket.php'>Chivalry Tokens Market</a> is an easy way to convert your Chivalry Tokens into Copper Coins, depending on the market demand.
 	<br />
 	<br />
 	<u>Financial</u><br />
 	Hovering over Financial will greet you with a category of ways to use your currency.
-	<br />Work Center is where you begin your long life of working for 'the man'. You need to have special requirements
+	<br /><a href='work.php'>Work Center</a> is where you begin your long life of working for 'the man'. You need to have special requirements
 	to join some jobs, however.
-	<br />The Bank will allow you safely store your Copper Coins. Storing in the Bank will keep your money safe from
-	 being robbed from you, and even gain you interest at midnight each night.
-	 <br />Clicking Estates will allow you to view the estates available to purchase. Buying an estate will increase
+	<br />The <a href='bank.php'>City Bank</a> will allow you safely store your Copper Coins. Storing in the Bank will keep your money safe from
+	 being robbed from you, and even gain you interest at midnight each night. As you progress in {$set['WebsiteName']}, more banks may become available to you.
+	 <br />The <a href='tokenbank.php'>Chivalry Token Bank</a> will allow you store your Chivalry Tokens. You will not gain interest.
+	 <br />Clicking <a href='estates.php'>Estate Agent</a> will allow you to view the estates available to purchase. Buying an estate will increase
 	 your Maximum Will, thus improving your gains while training.
-	 <br />If you're starting to hate the town you're in, Horse Travel is your ticket to other towns. Mind you, towns
+	 <br />If you're starting to hate the town you're in, visiting the <a href='travel.php'>Travel Agent</a> will be your ticket to other towns. Mind you, towns
 	 may have Level requirements, and varying tax levels.
-	 <br />The Temple of Fortune is where you can spend your Chivalry Tokens. You can refill your Energy, Will, and
-	 Brave here. You may also purchase IQ.
+	 <br />The <a href='temple.php'>Temple of Fortune</a> is where you can spend your Chivalry Tokens. You can refill your Energy, Will, and
+	 Brave here. You may also purchase IQ and bodyguard protection. You may also convert your Chivalry Tokens to Copper at 1 for 1,000 Copper Coins.
 	<br />
 	<br />
 	<u>Working</u>
 	<br />
     You will find that the work category is where you will spend a lot of your time at.
-    <br />Mining is a great place to find riches. Be careful though, as nearby warriors may get jealous of your haul.
+    <br />Visiting the <a href='mine.php'>Dangerous Mines</a> is a great way to find riches. Be careful though, as nearby warriors may get jealous of your haul.
     If you're too careless, you could also ignite a gas pocket, placing yourself into the Infirmary.
-    <br />The Smeltery can be used to smelt your items gained while  mining, into better items. Obviously, you will need
-     the required items for this to work. The NPC Battle List will allow you to quickly attack NPCs. If you mug the NPCs
+    <br />The <a href='smelt.php'>Blacksmith's Smeltery</a> can be used to smelt your items gained while  mining, into better items. Obviously, you will need
+     the required items for this to work.
+	 <br />The <a href='bottent.php'>NPC Battle List</a> will allow you to quickly attack NPCs. If you mug the NPCs
      listed, you will be able to get a special item drop. Note that this can only happen once per each bot's cooldown
      time.
-     <br />The Gym is the palce you'll want to visit if you have any hope of taking down an enemy.
+     <br /><a href='gym.php'>The Gym</a> is the palce you'll want to visit if you have any hope of taking down an enemy. You'll be able 
+	 to train your Strength, Guard, Agility and Labor here.
+	 <br />The <a href='chivalry_gym.php'>Chivalry Gym</a> is just like the normal Gym, however, you must have a 
+	 <a href='iteminfo.php?ID=18'>Chivalry Gym Scroll</a> to use it, but you will receive four times the gains you would have normally.
      <br />The Criminal Center is where you may commit crimes to gain treasure or goods. You need Bravery and good IQ
      for your level.
      <br />The Learning Academy is where you may enroll in a course that increase your stats in exchange for a lengthy
@@ -325,14 +331,13 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	You may change your password at will. We highly recommend using a password you haven't used elsewhere, and cycling
 	your password out every 3 months or so. We take reasonable steps to ensure your password isn't stolen. Every time 
 	you change your password, your encryption code for your in-game messages gets changed. This basically means that message 
-	you wrote prior the password change will no longer be reader by you, or the person you sent it to.
+	you wrote prior the password change will no longer be read by you, or the person you sent it to.
 	<br />
 	<br />
-	<u>Theme Change</u>
+	<u>Email Change</u>
 	<br />
-	The default theme too bright or bland for you? You can change how the game looks to you here. There should be plenty 
-	of themes that suit your liking. Note, however, some themes require you to own VIP days to use. But don't worry, once you 
-	tick the theme, you'll continue to use it until you choose another.
+	You may change your account's linked email address. This simply changes the email you use to login with, and the email address you 
+	wish to receive game communications from.
 	<br />
 	<br />
 	<u>Email Opt Setting</u>
@@ -389,15 +394,33 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	User ID's instead.
 	<br />
 	<br />
-	<u>Two-factor Authentication</u>
+	<u>Theme Change</u>
 	<br />
-	Two-factor authentication adds an extra layer of security to your account. We recommend you set this up, but its entirely optional.
+	The default theme too bland for you? You can change how the game looks to you here. There should be plenty 
+	of themes that suit your liking. Note, however, some themes require you to own VIP days to use. But don't worry, once you 
+	tick the theme, you'll continue to use it until you choose another.
+	<br />
+	<br />
+	<u>Class Reset</u>
+	<br />
+	If you do not like the class you chose when you first started the game, you may change it once for 10,000 IQ. Note that you will lose 25% of each 
+	of your combat stats in the process. You may reset your class more times if you purchase the respective item from the VIP Store.
+	<br />
+	<br />
+	<u>Tutorial Toggle</u>
+	<br />
+	Toggled on by default, the on-page tutorial will give you tips on each page you visit.
 	<br />
 	<br />
 	<u>Analytics</u>
 	<br />
 	You can choose to opt-out of analytical tracking, but we recommend you keep them on. They help the staff know where in the game needs 
 	improvement.
+	<br />
+	<br />
+	<u>Item Icons</u>
+	<br />
+	Disable item icons here. Disabling icons may improve game performance for some players.
 	<br />
 	<br />";
 $h->endpage();
