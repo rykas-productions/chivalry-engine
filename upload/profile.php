@@ -23,7 +23,7 @@ if (!$_GET['user']) {
                     `loginip`, `registerip`, `staff_notes`, `town_name`,
                     `house_name`, `guild_name`, `fed_out`, `fed_reason`, `equip_badge`, 
 					`infirmary_reason`, `infirmary_out`, `dungeon_reason`, `dungeon_out`,
-					`browser`, `os`, `screensize`, `description`, `location`, `vipcolor`
+					`browser`, `os`, `description`, `location`, `vipcolor`, `town_min_level`
                     FROM `users` `u`
                     INNER JOIN `town` AS `t`
                     ON `u`.`location` = `t`.`town_id`
@@ -195,7 +195,7 @@ if (!$_GET['user']) {
         echo "{$displaypic}<br />
 			{$r['username']} [{$r['userid']}]<br />
 			Rank: {$r['user_level']}<br />
-			Location: <a href='travel.php?to={$r['location']}'>{$r['town_name']}</a><br />
+			Location: <a href='travel.php?to={$r['location']}' data-toggle='tooltip' data-placement='bottom' title='Minimum Level: {$r['town_min_level']}'>{$r['town_name']}</a><br />
 			Level: " . number_format($r['level']) . "<br />
 			Married: {$married}<br />";
             if (isset($ring))
@@ -312,7 +312,7 @@ if (!$_GET['user']) {
 				<tr>
 					<th>Badge</th>
 					<td>" . returnIcon($r['equip_badge'],4) . "<br />
-					<a href='iteminfo.php?ID={$r['equip_badge']}'>{$api->SystemItemIDtoName($r['equip_badge'])}</a>
+					<a href='iteminfo.php?ID={$r['equip_badge']}' data-toggle='tooltip' data-placement='bottom' title='{$r['username']}&#39;s Profile Badge.'>{$api->SystemItemIDtoName($r['equip_badge'])}</a>
 					</td>
 				</tr>";
 		}

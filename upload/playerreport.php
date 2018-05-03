@@ -40,7 +40,7 @@ if (empty($_POST['userid'])) {
 			    Report Text
 			</th>
 			<td>
-				<textarea class='form-control' required='1' maxlength='1250' name='reason' rows='5'></textarea>
+				<textarea class='form-control' required='1'name='reason'></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -57,10 +57,6 @@ if (empty($_POST['userid'])) {
     $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs($_POST['userid']) : '';
     if (!isset($_POST['verf']) || !verify_csrf_code('report_form', stripslashes($_POST['verf']))) {
         csrf_error();
-    }
-    if (strlen($_POST['reason']) > 1250) {
-        alert('danger', "Uh Oh!", "Player reports can only be, at maximum, 1,250 characters in length.");
-        die($h->endpage());
     }
     $q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");
     if ($db->fetch_single($q) == 0) {

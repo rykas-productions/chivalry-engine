@@ -94,7 +94,7 @@ function home()
     <u>Open Mines</u><br />";
     $minesql = $db->query("/*qc=on*/SELECT * FROM `mining_data` ORDER BY `mine_level` ASC");
     while ($mines = $db->fetch_row($minesql)) {
-        echo "[<a href='?action=mine&spot={$mines['mine_id']}&tresde={$tresder}'>" . $api->SystemTownIDtoName($mines['mine_location']) . " - Level {$mines['mine_level']}</a>]<br />";
+        echo "[<a href='?action=mine&spot={$mines['mine_id']}&tresde={$tresder}' data-toggle='tooltip' data-placement='right' title='IQ Required: " . number_format($mines['mine_iq']) . "'>" . $api->SystemTownIDtoName($mines['mine_location']) . " - Level {$mines['mine_level']}</a>]<br />";
     }
 
     echo "<br />

@@ -307,8 +307,8 @@ function parseUsername($id)
     global $db;
     $q = $db->query("/*qc=on*/SELECT `username`,`vip_days`,`vipcolor` FROM `users` WHERE `userid` = {$id}");
     $r = $db->fetch_row($q);
-    $username = ($r['vip_days']) ? "<span class='{$r['vipcolor']}'>{$r['username']}
-            <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" :
+    $username = ($r['vip_days']) ? "<span class='{$r['vipcolor']}' data-toggle='tooltip' data-placement='bottom' title='{$r['vip_days']} VIP Days remaining.'>{$r['username']}
+            <i class='fas fa-shield-alt'></i></span>" :
             $r['username'];
     return $username;
 }
