@@ -11,6 +11,9 @@ $cost[3]=round(50*$multi);
 $cost[4]=round(100*$multi);
 $cost[5]=round(75*$multi);
 $cost[6]=round(75*$multi);
+$cost[7]=round(115*$multi);
+$cost[8]=round(115*$multi);
+$cost[9]=round(130*$multi);
 switch ($_GET['action']) {
     case "purchase1":
         purchase(164,$cost[1]);
@@ -29,6 +32,15 @@ switch ($_GET['action']) {
         break;
 	case "purchase6":
         purchase(93,$cost[6]);
+        break;
+	case "purchase7":
+        purchase(167,$cost[7]);
+        break;
+	case "purchase8":
+        purchase(168,$cost[8]);
+        break;
+	case "purchase9":
+        purchase(148,$cost[9]);
         break;
     default:
         home();
@@ -109,6 +121,41 @@ function home()
 					<div class='card-body'>
 						" . returnIcon(93,7) . "<br />
 						<a href='?action=purchase6' class='btn btn-primary'>Purchase - {$cost[6]} Points</a>
+					</div>
+				</div>
+		</div>
+	</div>
+		<div class='row'>
+		<div class='col-sm-4'>
+				<div class='card'>
+					<div class='card-header box-shadow'>
+						<a href='iteminfo.php?ID=167'>Tome of Labor</a>
+					</div>
+					<div class='card-body'>
+						" . returnIcon(167,7) . "<br />
+						<a href='?action=purchase7' class='btn btn-primary'>Purchase - {$cost[7]} Points</a>
+					</div>
+				</div>
+		</div>
+		<div class='col-sm-4'>
+				<div class='card'>
+					<div class='card-header box-shadow'>
+						<a href='iteminfo.php?ID=168'>Tome of Intelligence</a>
+					</div>
+					<div class='card-body'>
+						" . returnIcon(168,7) . "<br />
+						<a href='?action=purchase8' class='btn btn-primary'>Purchase - {$cost[8]} Points</a>
+					</div>
+				</div>
+		</div>
+		<div class='col-sm-4'>
+				<div class='card'>
+					<div class='card-header box-shadow'>
+						<a href='iteminfo.php?ID=148'>Tome of Experience</a>
+					</div>
+					<div class='card-body'>
+						" . returnIcon(148,7) . "<br />
+						<a href='?action=purchase6' class='btn btn-primary'>Purchase - {$cost[9]} Points</a>
 					</div>
 				</div>
 		</div>
