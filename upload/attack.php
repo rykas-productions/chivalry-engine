@@ -338,7 +338,7 @@ function attacking()
 					{
 						if ($sbr['direction'] == 'pos')
 						{
-							if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+							if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
 								$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
 							} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
 								$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
@@ -346,7 +346,7 @@ function attacking()
 						}
 						else
 						{
-							if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+							if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
 								$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
 							} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
 								$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
@@ -511,7 +511,7 @@ function attacking()
                         if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
                             $upd = $ir[$einfo['stat']];
                         }
-                        if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labour', 'iq', 'luck'))) {
+                        if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq', 'luck'))) {
                             $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
                         } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
                             $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
@@ -599,7 +599,7 @@ function attacking()
                             {
                                 if ($sbr['direction'] == 'pos')
                                 {
-                                    if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+                                    if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
                                         $db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$_GET['user']}");
                                     } elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
                                         $db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$_GET['user']}");
@@ -607,7 +607,7 @@ function attacking()
                                 }
                                 else
                                 {
-                                    if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+                                    if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
                                         $db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
                                     } elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
                                         $db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
@@ -779,7 +779,7 @@ function attacking()
                                 if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
                                     $upd = $odata[$einfo['stat']];
                                 }
-                                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labour', 'iq', 'luck'))) {
+                                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq', 'luck'))) {
                                     $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$_GET['user']}");
                                 } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
                                     $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$_GET['user']}");

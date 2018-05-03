@@ -38,7 +38,7 @@ if ($db->num_rows($sbq) > 0)
 						"VIP Days");
 		if ($sbr['direction'] == 'pos')
 		{
-			if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+			if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
 				$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
 			} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
 				$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
@@ -48,7 +48,7 @@ if ($db->num_rows($sbq) > 0)
 		}
 		else
 		{
-			if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+			if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
 				$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
 			} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
 				$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
