@@ -229,12 +229,12 @@ class headers
             if ($api->UserStatus($ir['userid'], 'infirmary') == true) {
                 $InfirmaryOut = $db->fetch_single($db->query("/*qc=on*/SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
                 $InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
-                alert('info', "Unconscious!", "You are in the infirmary for the next {$InfirmaryRemain}.", true, '../inventory', 'View Inventory');
+                alert('info', "Unconscious!", "You are in the infirmary for the next {$InfirmaryRemain}.", true, 'quickuse.php?infirmary', 'Use Item');
             }
             if ($api->UserStatus($ir['userid'], 'dungeon') == true) {
                 $DungeonOut = $db->fetch_single($db->query("/*qc=on*/SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
                 $DungeonRemain = TimeUntil_Parse($DungeonOut);
-                alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, '../inventory', 'View Inventory');
+                alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, 'quickuse.php?dungeon', 'Use Item');
             }
             date_default_timezone_set("America/New_York");
         }
