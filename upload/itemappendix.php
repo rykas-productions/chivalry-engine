@@ -11,21 +11,61 @@ require("globals.php");
 echo "<h3><i class='fas fa-list'></i> Item Appendix</h3><hr />This page lists all the items in the game, along with how many are in circulation.
     This may be useful for players who do item flipping, or those who are just plain old curious. Hovering over the
     item will give you its description. Tapping its name will take you to its info page<hr />
-    [<a href='?view=all'>All</a>] [<a href='?view=weapon'>Weapons Only</a>] [<a href='?view=armor'>Armors Only</a>] [<a href='?view=badge'>Badges Only</a>]";
+    [<a href='?view=weapon'>Weapons</a>] [<a href='?view=armor'>Armor</a>] [<a href='?view=badge'>Badges</a>] [<a href='?view=vip'>VIP Items</a>] 
+	[<a href='?view=infirmary'>Infirmary Items</a>] [<a href='?view=dungeon'>Dungeon Items</a>] [<a href='?view=material'>Materials</a>] [<a href='?view=food'>Food</a>] 
+	[<a href='?view=potions'>Potions</a>] [<a href='?view=holiday'>Holiday Items</a>] [<a href='?view=scrolls'>Scrolls</a>] [<a href='?view=rings'>Rings</a>] 
+	[<a href='?view=badge'>Badges</a>] [<a href='?view=other'>Other</a>]";
 if (!isset($_GET['view']))
-    $_GET['view'] = '';
+    $_GET['view'] = 'weapon';
 if ($_GET['view'] == 'weapon') {
     //Select all the in-game weapons
-    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `weapon` != 0 AND `itmbuyable` = 'true' ORDER BY `weapon` ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 1 AND `itmbuyable` = 'true' ORDER BY `weapon` ASC");
 } elseif ($_GET['view'] == 'armor') {
     //Select all the in-game armor
-    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `armor` != 0 AND `itmbuyable` = 'true' ORDER BY `armor` ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 2 AND `itmbuyable` = 'true' ORDER BY `armor` ASC");
+} elseif ($_GET['view'] == 'vip') {
+    //Select all the in-game armor
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 3 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+} elseif ($_GET['view'] == 'infirmary') {
+    //Select all the in-game armor
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 4 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+} elseif ($_GET['view'] == 'dungeon') {
+    //Select all the in-game armor
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 5 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+} 
+elseif ($_GET['view'] == 'material') {
+    //Select all the in-game armor
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 6 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+}
+elseif ($_GET['view'] == 'food') {
+    //Select all the in-game armor
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 7 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+}
+elseif ($_GET['view'] == 'potions') {
+    //Select all the in-game armor
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 8 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+} 
+elseif ($_GET['view'] == 'other') {
+    //Select all the in-game armor
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 9 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+} 
+elseif ($_GET['view'] == 'holiday') {
+    //Select all the in-game armor
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 10 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+} 
+elseif ($_GET['view'] == 'scrolls') {
+    //Select all the in-game armor
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 11 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+} 
+elseif ($_GET['view'] == 'rings') {
+    //Select all the in-game armor
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 12 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } elseif ($_GET['view'] == 'badge') {
     //Select all the in-game armor
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 13 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } else {
-    //Select all the game items.
-    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+    alert('danger',"Uh Oh!","Please select a valid item category type.",true,'explore.php');
+	die($h->endpage());
 }
 echo "
 <table class='table table-bordered table-striped'>
