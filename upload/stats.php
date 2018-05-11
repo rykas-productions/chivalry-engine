@@ -80,6 +80,7 @@ google.charts.load('current', {'packages':['corechart']});
 		chart5.draw(data5, options5);
       }
 </script>
+[<a href='stats.php'>All Users</a>] || [<a href='?active'>Users active in last week</a>]
 	<table width='50%' class='table table-bordered table-hover table-striped'>
 		<thead>
 			<tr>
