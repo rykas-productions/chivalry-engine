@@ -105,6 +105,12 @@ echo "
                 " . number_format($ir['secondary_currency']) . "
             </div>
         </div>
+		<div class='container-fluid'>
+            <div class='row'>
+                Mutton:
+                " . number_format($ir['premium_currency']) . "
+            </div>
+        </div>
         <hr />
         <div class='row'>
                 <div class='col-8' align='left'>

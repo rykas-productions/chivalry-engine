@@ -140,6 +140,7 @@ function create()
 						<option value='secondary_currency'>Chivalry Tokens</option>
 						<option value='xp'>Experience</option>
 						<option value='vip_days'>VIP Days</option>
+						<option value='premium_currency'>Mutton</option>
 					</select>
 					<br />
 					<b>Direction</b> <select name='effect{$i}dir' class='form-control' type='dropdown'>
@@ -234,7 +235,7 @@ function create()
                         array('energy', 'will', 'brave', 'hp', 'level',
                             'strength', 'agility', 'guard',
                             'labor', 'iq', 'infirmary', 'dungeon',
-                            'primary_currency', 'secondary_currency', 'xp', 'vip_days', 'luck')))
+                            'primary_currency', 'secondary_currency', 'xp', 'vip_days', 'luck', 'premium_currency')))
                     ? $_POST[$efxkey . 'stat'] : 'energy';
             $_POST[$efxkey . 'dir'] =
                 (isset($_POST[$efxkey . 'dir'])
@@ -591,7 +592,7 @@ function edititem()
                 "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
                 "primary_currency" => "Copper Coins", "secondary_currency"
             => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-                "VIP Days", "luck" => "Luck");
+                "VIP Days", "luck" => "Luck", "premium_currency" => "Mutton");
         for ($i = 1; $i <= 3; $i++) {
             if (!empty($itemi["effect" . $i])) {
                 $efx = unserialize($itemi["effect" . $i]);
@@ -710,7 +711,7 @@ function edititem()
                         array('energy', 'will', 'brave', 'hp',
                             'strength', 'agility', 'guard', 'level',
                             'labor', 'iq', 'infirmary', 'dungeon',
-                            'primary_currency', 'secondary_currency', 'xp', 'vip_days', 'luck')))
+                            'primary_currency', 'secondary_currency', 'xp', 'vip_days', 'luck', 'premium_currency')))
                     ? $_POST[$efxkey . 'stat'] : 'energy';
             $_POST[$efxkey . 'dir'] =
                 (isset($_POST[$efxkey . 'dir'])

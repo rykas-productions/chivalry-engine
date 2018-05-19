@@ -132,7 +132,7 @@ if (!$itmid) {
                         "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
                         "primary_currency" => "Copper Coins", "secondary_currency"
                     => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-                        "VIP Days", "luck" => "Luck");
+                        "VIP Days", "luck" => "Luck", "premium_currency" => "Mutton");
                 $statformatted = $stats["{$einfo['stat']}"];
                 echo "
 				<tr>
