@@ -103,10 +103,12 @@ function create()
 						<b><u>Effect #{$i}</u></b>
 					</th>
 					<td>
-						<input type='radio' class='form-control' name='effect{$i}on' value='true' /> Enable Effect
-						<input type='radio' class='form-control' name='effect{$i}on' value='false' checked='checked' /> Disable Effect
+						<select name='effecton[]' type='dropdown' class='form-control'>
+                            <option value='false'>Disable Effect</option>
+                            <option value='true'>Enable Effect</option>
+                        </select>
 					<br />
-					<b>Stat</b> <select name='effect{$i}stat' type='dropdown' class='form-control'>
+					<b>Stat</b> <select name='effectstat[]' type='dropdown' class='form-control'>
 						<option value='energy'>Energy</option>
 						<option value='will'>Will</option>
 						<option value='brave'>Bravery</option>
@@ -125,13 +127,13 @@ function create()
 						<option value='vip_days'>VIP Days</option>
 					</select>
 					<br />
-					<b>Direction</b> <select name='effect{$i}dir' class='form-control' type='dropdown'>
+					<b>Direction</b> <select name='effectdir[]' class='form-control' type='dropdown'>
 						<option value='pos'>Increase/Add</option>
 						<option value='neg'>Decrease/Remove</option>
 					</select>
 					<br />
-					<b>Amount</b> <input type='number' min='0' class='form-control' name='effect{$i}amount' value='0' />
-					<select name='effect{$i}type' class='form-control' type='dropdown'>
+					<b>Amount</b> <input type='number' min='0' class='form-control' name='effectamount[]' value='0' />
+					<select name='effecttype[]' class='form-control' type='dropdown'>
 						<option value='figure'>Value</option>
 						<option value='percent'>Percentage</option>
 					</select>
@@ -198,52 +200,42 @@ function create()
             die($h->endpage());
         }
         $itmbuy = ($_POST['itembuyable'] == 'on') ? 'true' : 'false';
-        for ($i = 1; $i <= 3; $i++) {
-            $efxkey = "effect{$i}";
-            $_POST[$efxkey . 'stat'] =
-                (isset($_POST[$efxkey . 'stat'])
-                    && in_array($_POST[$efxkey . 'stat'],
-                        array('energy', 'will', 'brave', 'hp', 'level',
-                            'strength', 'agility', 'guard',
-                            'labor', 'iq', 'infirmary', 'dungeon',
-                            'primary_currency', 'secondary_currency', 'xp', 'vip_days')))
-                    ? $_POST[$efxkey . 'stat'] : 'energy';
-            $_POST[$efxkey . 'dir'] =
-                (isset($_POST[$efxkey . 'dir'])
-                    && in_array($_POST[$efxkey . 'dir'],
-                        array('pos', 'neg'))) ? $_POST[$efxkey . 'dir']
-                    : 'pos';
-            $_POST[$efxkey . 'type'] =
-                (isset($_POST[$efxkey . 'type'])
-                    && in_array($_POST[$efxkey . 'type'],
-                        array('figure', 'percent')))
-                    ? $_POST[$efxkey . 'type'] : 'figure';
-            $_POST[$efxkey . 'amount'] =
-                (isset($_POST[$efxkey . 'amount'])
-                    && is_numeric($_POST[$efxkey . 'amount']))
-                    ? abs(intval($_POST[$efxkey . 'amount'])) : 0;
-            $_POST[$efxkey . 'on'] =
-                (isset($_POST[$efxkey . 'on'])
-                    && in_array($_POST[$efxkey . 'on'], array('true', 'false')))
-                    ? $_POST[$efxkey . 'on'] : 0;
-            $effects[$i] =
-                $db->escape(
-                    serialize(
-                        array("stat" => $_POST[$efxkey . 'stat'],
-                            "dir" => $_POST[$efxkey . 'dir'],
-                            "inc_type" => $_POST[$efxkey . 'type'],
-                            "inc_amount" => abs(
-                                (int)$_POST[$efxkey
-                                . 'amount']))));
+        foreach($_POST['effecton'] as $key => $field)
+        {
+            $field=($field == 'true') ? 'true' : 'false';
         }
+        foreach($_POST['effectstat'] as $key => $field)
+        {
+            $field=(isset($field) && in_array($field, 
+                array('energy', 'will', 'brave', 'hp', 'level',
+                'strength', 'agility', 'guard',
+                'labor', 'iq', 'infirmary', 'dungeon',
+                'primary_currency', 'secondary_currency', 'xp', 'vip_days')))
+                ? $field : 'energy';
+        }
+        foreach($_POST['effectamount'] as $key => $field)
+        {
+            $field = (isset($field) && is_numeric($field)) ? abs(intval($field)) : 0;
+        }
+        foreach($_POST['effectdir'] as $key => $field)
+        {
+            $field = (isset($field) && in_array($field, array('pos', 'neg'))) ? $field : 'pos';
+        }
+        foreach($_POST['effecttype'] as $key => $field)
+        {
+            $field = (isset($field) && in_array($field, array('figure', 'percent'))) ? $field : 'figure';
+        }
+        $itemeffectarray=json_encode(
+                            array_merge($_POST['effecton'],
+                                $_POST['effectstat'],
+                                $_POST['effectamount'],
+                                $_POST['effectdir'],
+                                $_POST['effecttype']));
         $m =
             $db->query(
                 "INSERT INTO `items`
 						VALUES(NULL, '{$itmtype}', '{$itmname}', '{$itmdesc}',
-                     {$itmbuyprice}, {$itmsellprice}, '{$itmbuy}', 
-					 '{$_POST['effect1on']}', '{$effects[1]}',
-                     '{$_POST['effect2on']}', '{$effects[2]}',
-                     '{$_POST['effect3on']}', '{$effects[3]}', 
+                     {$itmbuyprice}, {$itmsellprice}, '{$itmbuy}', '{$itemeffectarray}', 
 					 {$weapon}, {$armor})");
         $api->SystemLogsAdd($userid, 'staff', "Created item {$itmname}.");
         alert('success', "Success!", "You have successfully created the {$itmname} item.", true, 'index.php');

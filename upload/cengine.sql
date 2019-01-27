@@ -492,12 +492,7 @@ CREATE TABLE `items` (
   `itmbuyprice` int(11) UNSIGNED NOT NULL,
   `itmsellprice` int(11) UNSIGNED NOT NULL,
   `itmbuyable` enum('false','true') NOT NULL,
-  `effect1_on` enum('false','true') NOT NULL,
-  `effect1` text NOT NULL,
-  `effect2_on` enum('false','true') NOT NULL,
-  `effect2` text NOT NULL,
-  `effect3_on` enum('false','true') NOT NULL,
-  `effect3` text NOT NULL,
+  `itmeffects` text NOT NULL,
   `weapon` int(11) UNSIGNED NOT NULL,
   `armor` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
