@@ -25,7 +25,7 @@ if (empty($_GET['item'])) {
     } else {
         $r = $db->fetch_row($i);
         $db->free_result($i);
-        $iterations=array_sum(json_decode($r['itmeffects_toggle']));
+        $iterations=count(json_decode($r['itmeffects_toggle']));
         $toggle=json_decode($r['itmeffects_toggle']);
         $stat=json_decode($r['itmeffects_stat']);
         $dir=json_decode($r['itmeffects_dir']);
@@ -43,12 +43,12 @@ if (empty($_GET['item'])) {
                 if ($type[$usecount] == 'percent')
                 {
                     if (in_array($stat[$usecount], array('energy', 'will', 'brave', 'hp'))) {
-                        $inc = round($ir['max' . $stat[$usecount]] / 100 * $einfo['inc_amount']);
+                        $inc = round($ir['max' . $stat[$usecount]] / 100 * $amount[$usecount]);
                     } elseif (in_array($stat[$usecount], array('dungeon', 'infirmary'))) {
                         $EndTime = $db->fetch_single($db->query("SELECT `{$stat[$usecount]}_out` FROM `{$stat[$usecount]}` WHERE `{$stat[$usecount]}_user` = {$userid}"));
-                        $inc = round((($EndTime - $Time) / 100 * $einfo['inc_amount']) / 60);
+                        $inc = round((($EndTime - $Time) / 100 * $amount[$usecount]) / 60);
                     } else {
-                        $inc = round($ir[$stat[$usecount]] / 100 * $einfo['inc_amount']);
+                        $inc = round($ir[$stat[$usecount]] / 100 * $amount[$usecount]);
                     }
                 }
                 else
