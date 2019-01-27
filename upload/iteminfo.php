@@ -80,7 +80,6 @@ if (!$itmid) {
         $type=json_decode($id['itmeffects_type']);
         $amount=json_decode($id['itmeffects_amount']);
         $usecount=0;
-        var_dump($iterations);
         while ($usecount != $iterations)
         {
             if ($toggle[$usecount] == 1)
