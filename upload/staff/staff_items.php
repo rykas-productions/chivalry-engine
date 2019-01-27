@@ -104,8 +104,8 @@ function create()
 					</th>
 					<td>
 						<select name='effecton[]' type='dropdown' class='form-control'>
-                            <option value='false'>Disable Effect</option>
-                            <option value='true'>Enable Effect</option>
+                            <option value='0'>Disable Effect</option>
+                            <option value='1'>Enable Effect</option>
                         </select>
 					<br />
 					<b>Stat</b> <select name='effectstat[]' type='dropdown' class='form-control'>
@@ -202,7 +202,7 @@ function create()
         $itmbuy = ($_POST['itembuyable'] == 'on') ? 'true' : 'false';
         foreach($_POST['effecton'] as $key => $field)
         {
-            $field=($field == 'true') ? 'true' : 'false';
+            $field=($field == 1) ? 1 : 0;
         }
         foreach($_POST['effectstat'] as $key => $field)
         {
@@ -225,18 +225,17 @@ function create()
         {
             $field = (isset($field) && in_array($field, array('figure', 'percent'))) ? $field : 'figure';
         }
-        $itemeffectarray=json_encode(
-                            array_merge($_POST['effecton'],
-                                $_POST['effectstat'],
-                                $_POST['effectamount'],
-                                $_POST['effectdir'],
-                                $_POST['effecttype']));
+        $effectarray=(json_encode($_POST['effecton']));
+        $statarray=(json_encode($_POST['effectstat']));
+        $amountarray=(json_encode($_POST['effectamount']));
+        $dirarray=(json_encode($_POST['effectdir']));
+        $typearray=(json_encode($_POST['effecttype']));
         $m =
             $db->query(
                 "INSERT INTO `items`
 						VALUES(NULL, '{$itmtype}', '{$itmname}', '{$itmdesc}',
-                     {$itmbuyprice}, {$itmsellprice}, '{$itmbuy}', '{$itemeffectarray}', 
-					 {$weapon}, {$armor})");
+                     {$itmbuyprice}, {$itmsellprice}, '{$itmbuy}', '{$effectarray}', '{$statarray}', '{$dirarray}', '{$amountarray}', '{$typearray}',
+					 '{$weapon}', '{$armor}')");
         $api->SystemLogsAdd($userid, 'staff', "Created item {$itmname}.");
         alert('success', "Success!", "You have successfully created the {$itmname} item.", true, 'index.php');
     }

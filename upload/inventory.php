@@ -75,7 +75,7 @@ echo "<hr />
 $inv =
     $db->query(
         "SELECT `inv_qty`, `itmsellprice`, `itmid`, `inv_id`,
-                 `effect1_on`, `effect2_on`, `effect3_on`,
+                 `itmeffects_toggle`,
                  `weapon`, `armor`, `itmtypename`, `itmdesc`
                  FROM `inventory` AS `iv`
                  INNER JOIN `items` AS `i`
@@ -118,7 +118,7 @@ while ($i = $db->fetch_row($inv)) {
         	  <td>
         	  	[<a href='itemsend.php?ID={$i['inv_id']}'>Send</a>]
         	  	[<a href='itemsell.php?ID={$i['inv_id']}'>Sell</a>]";
-    if ($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' || $i['effect3_on'] == 'true') {
+    if (array_sum(json_decode($i['itmeffects_toggle'])) > 0) {
         echo " [<a href='itemuse.php?item={$i['inv_id']}'>Use</a>]";
     }
     if ($i['weapon'] > 0) {
