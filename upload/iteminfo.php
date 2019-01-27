@@ -73,11 +73,20 @@ if (!$itmid) {
         echo "
 				</td>
 			</tr>";
-        for ($enum = 1; $enum <= 3; $enum++) {
-            if ($id["effect{$enum}_on"] == 'true') {
-                $einfo = unserialize($id["effect{$enum}"]);
-                $einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
-                $einfo['dir'] = ($einfo['dir'] == 'pos') ? 'Increases' : 'Decreases';
+        $iterations=count(json_decode($id['itmeffects_toggle']));
+        $toggle=json_decode($id['itmeffects_toggle']);
+        $stat=json_decode($id['itmeffects_stat']);
+        $dir=json_decode($id['itmeffects_dir']);
+        $type=json_decode($id['itmeffects_type']);
+        $amount=json_decode($id['itmeffects_amount']);
+        $usecount=0;
+        var_dump($iterations);
+        while ($usecount != $iterations)
+        {
+            if ($toggle[$usecount] == 1)
+            {
+                $type[$usecount] = ($type[$usecount] == 'percent') ? '%' : '';
+                $dir[$usecount] = ($dir[$usecount] == 'pos') ? 'Increases' : 'Decreases';
                 $stats =
                     array("energy" => "Energy", "will" => "Will",
                         "brave" => "Bravery", "level" => "Level",
@@ -85,20 +94,22 @@ if (!$itmid) {
                         "agility" => "Agility", "guard" => "Guard",
                         "labor" => "Labor", "iq" => "IQ",
                         "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                        "primary_currency" => "Primary Currency", "secondary_currency"
-                    => "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
+                        "primary_currency" => "Primary Currency", 
+                        "secondary_currency" => "Secondary Currency", 
+                        "crimexp" => "Experience", "vip_days" =>
                         "VIP Days");
-                $statformatted = $stats["{$einfo['stat']}"];
-                echo "
+                $statformatted = $stats["{$stat[$usecount]}"];
+                 echo "
 				<tr>
 					<th>
-						Item Effect #{$enum}
+						Item Effect
 					</th>
 					<td>
-					{$einfo['dir']} {$statformatted} by " . number_format($einfo['inc_amount']) . "{$einfo['inc_type']}.
+					{$dir[$usecount]} {$statformatted} by " . number_format($amount[$usecount]) . "{$type[$usecount]}.
 					</td>
 				</tr>";
             }
+            $usecount=$usecount+1;
         }
         if ($id['weapon']) {
             echo "<tr>
