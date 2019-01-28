@@ -22,8 +22,8 @@ function DateTime_Parse($time_stamp, $ago = true, $override = false)
     //If the time difference is less than 1 day, OR if $override is set to true. This will display how long ago the
     //timestamp was in seconds/minutes/hours/days/etc.
     if ($time_difference < 86400 || $override == true) {
-        $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
-        $lengths = array(60, 60, 24, 7, 4.35, 12);
+        $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade', 'century');
+        $lengths = array(60, 60, 24, 7, 4.35, 12, 10, 10);
         //Go to the largest unit of time as possible.
         for ($i = 0; $time_difference >= $lengths[$i]; $i++) {
             $time_difference = $time_difference / $lengths[$i];
@@ -52,8 +52,8 @@ function TimeUntil_Parse($time_stamp)
 {
     //Time difference is Unix Timestamp subtracted from $time_stamp.
     $time_difference = $time_stamp - time();
-    $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
-    $lengths = array(60, 60, 24, 7, 4.35, 12);
+    $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade', 'century');
+    $lengths = array(60, 60, 24, 7, 4.35, 12, 10, 10);
     //Get to the biggest unit type as possible.
     for ($i = 0; $time_difference >= $lengths[$i]; $i++) {
         $time_difference = $time_difference / $lengths[$i];
