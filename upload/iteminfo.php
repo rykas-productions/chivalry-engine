@@ -95,7 +95,7 @@ if (!$itmid) {
                         "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
                         "primary_currency" => "Primary Currency", 
                         "secondary_currency" => "Secondary Currency", 
-                        "crimexp" => "Experience", "vip_days" =>
+                        "xp" => "Experience", "vip_days" =>
                         "VIP Days");
                 $statformatted = $stats["{$stat[$usecount]}"];
                  echo "
