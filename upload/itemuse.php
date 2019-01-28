@@ -84,7 +84,7 @@ if (empty($_GET['item'])) {
                 if (!(in_array($stat[$usecount], array('dungeon', 'infirmary')))) {
                     $upd = $ir[$stat[$usecount]];
                 }
-                if (in_array($stat[$usecount], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+                if (in_array($stat[$usecount], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
                     $db->query("UPDATE `userstats` SET `{$stat[$usecount]}` = '{$upd}' WHERE `userid` = {$userid}");
                 } elseif (!(in_array($stat[$usecount], array('dungeon', 'infirmary')))) {
                     $db->query("UPDATE `users` SET `{$stat[$usecount]}` = '{$upd}' WHERE `userid` = {$userid}");
