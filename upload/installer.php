@@ -500,6 +500,13 @@ function install()
 	'persistent' => 0,
 	'driver' => '{$db_driver}',
 	'code' => '{$code}',
+    'primary_currency' => 'Primary Currency',
+    'secondary_currency' => 'Secondary Currency',
+    'strength_stat' => 'Strength',
+    'agility_stat' => 'Agility',
+    'guard_stat' => 'Guard',
+    'iq_stat' => 'IQ',
+    'labor_stat' => 'Labor'
 );
 ?>
 EOF;
