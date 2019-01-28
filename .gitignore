@@ -1,0 +1,6 @@
+
+*.sql
+upload/config.php
+upload/cengine.sql
+upload/test.php
+upload/cache/update_check.txt

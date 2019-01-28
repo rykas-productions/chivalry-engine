@@ -27,7 +27,9 @@ class headers
                 <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
                 <meta property="og:image" content=""/>
                 <link rel="shortcut icon" href="" type="image/x-icon"/>
-                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+                <link rel="stylesheet" href="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css">
+                <link rel="stylesheet" href="css/sidebar-themes.css">
                 <meta name="theme-color" content="#e7e7e7">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
@@ -40,77 +42,138 @@ class headers
     $ir['mail'] = $db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
     //Select count of user's unread notifications.
     $ir['notifications'] = $db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
+    $energy = $api->UserInfoGet($userid, 'energy', true);
+    $brave = $api->UserInfoGet($userid, 'brave', true);
+    $will = $api->UserInfoGet($userid, 'will', true);
+    $xp = round($ir['xp'] / $ir['xp_needed'] * 100);
+    $hp = $api->UserInfoGet($userid, 'hp', true);
     ?>
         <body>
-        <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav"
-                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="CENGINENav">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="explore.php"><?php echo "Explore"; ?></a>
-                    </li>
-                </ul>
-                <div class="my-2 my-lg-0">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               href="inbox.php"><?php echo "Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               href="notifications.php"><?php echo "Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="inventory.php"><?php echo "Inventory"; ?></a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <?php
-                                //User has a display picture, lets show it!
-                                if ($ir['display_pic']) {
-                                    echo "<img src='{$ir['display_pic']}' width='24' height='24'>";
-                                }
-                                echo " Hello, {$ir['username']}!";
-                                ?>
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i
-                                        class="fa fa-fw fa-user"></i> <?php echo "Profile"; ?></a>
-                                <a class="dropdown-item" href="preferences.php?action=menu"><i
-                                        class="fa fa-fw fa-gear"></i><?php echo "Preferences"; ?></a>
-                                <?php
-                                //User is a staff member, so lets show the panel's link.
-                                if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant'))) {
-                                    ?>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="staff/index.php"><i
-                                            class="fa fa-fw fa fa-terminal"></i> <?php echo "Staff Panel"; ?></a>
-                                <?php
-                                }
-                                ?>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="gamerules.php"><i
-                                        class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
-                                <a class="dropdown-item" href="logout.php"><i
-                                        class="fa fa-fw fa-power-off"></i> <?php echo "Logout"; ?></a>
-                            </div>
+        <div class="page-wrapper default-theme sidebar-bg toggled">
+        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+            <i class="fas fa-bars"></i>
+          </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <!-- sidebar-brand  -->
+                <div class="sidebar-item sidebar-brand">
+                    <a href="index.php"><?php echo $set['WebsiteName']; ?></a>
+                    <div id='close-sidebar'>
+                        <i class='fas fa-times'></i>
+                    </div>
+                </div>
+                <div class=" sidebar-item sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>
+                            User Info<br />
+                            <?php  
+                            echo "Energy {$energy}%<br />
+                            Brave {$brave}%<br />
+                            Will {$will}%<br />
+                            XP {$xp}%<br />
+                            HP {$hp}%"; ?>
+                </span>
                         </li>
                     </ul>
+                </div>
+                <!-- sidebar-menu  -->
+                <div class=" sidebar-item sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>General</span>
+                        </li>
+                        <li>
+                            <a href="inventory.php">
+                                <span class="menu-text">Inventory</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="explore.php">
+                                <span class="menu-text">Explore</span>
+                            </a>
+                        </li>
+                        <li class="header-menu">
+                            <span>Activities</span>
+                        </li>
+                        <li>
+                            <a href="gym.php">
+                                <span class="menu-text">Gym</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="criminal.php">
+                                <span class="menu-text">Crimes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="academy.php">
+                                <span class="menu-text">Academy</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="dungeon.php">
+                                <span class="menu-text">Dungeon</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="infirmary.php">
+                                <span class="menu-text">Infirmary</span>
+                            </a>
+                        </li>
+                        <li class="header-menu">
+                            <span>Social</span>
+                        </li>
+                        <li>
+                            <a href="forums.php">
+                                <span class="menu-text">Forums</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="newspaper.php">
+                                <span class="menu-text">Newspaper</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-footer  -->
+            <div class="sidebar-footer">
+                <div class="dropdown">
+                    <a href="notifications.php">
+                        <i class="fa fa-bell"></i>
+                        <span class="badge badge-pill badge-success notification"><?php echo $ir['notifications']; ?></span>
+                    </a>
+                </div>
+                <div class="dropdown">
+                    <a href="inbox.php">
+                        <i class="fa fa-envelope"></i>
+                        <span class="badge badge-pill badge-success notification"><?php echo $ir['mail']; ?></span>
+                    </a>
+                </div>
+                <div class="dropdown">
+                    <a href="preferences.php">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                </div>
+                <div>
+                    <a href="logout.php">
+                        <i class="fa fa-power-off"></i>
+                    </a>
+                </div>
+                <div class="pinned-footer">
+                    <a href="#">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </a>
                 </div>
             </div>
         </nav>
 
         <!-- Page Content -->
-        <div class="container">
-        <div class="row">
-        <div class="col-sm-12 text-center">
+        <main class="page-content pt-2">
+            <div id="overlay" class="overlay"></div>
+            <div class="container-fluid p-5">
         <noscript>
             <?php
             //User doesn't have javascript turned on, so lets tell them.
@@ -277,13 +340,50 @@ class headers
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
         <script src="js/game.js"></script>
+        <script src="js/sidemenu.js"></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
+        <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script type="text/javascript">
+	jQuery(function ($) {
+        $(".sidebar-dropdown > a").click(function() {
+      $(".sidebar-submenu").slideUp(200);
+      if (
+        $(this)
+          .parent()
+          .hasClass("active")
+      ) {
+        $(".sidebar-dropdown").removeClass("active");
+        $(this)
+          .parent()
+          .removeClass("active");
+      } else {
+        $(".sidebar-dropdown").removeClass("active");
+        $(this)
+          .next(".sidebar-submenu")
+          .slideDown(200);
+        $(this)
+          .parent()
+          .addClass("active");
+      }
+    });
+
+    $("#close-sidebar").click(function() {
+      $(".page-wrapper").removeClass("toggled");
+        localStorage.setItem("toggle", "toggled");
+    });
+    $("#show-sidebar").click(function() {
+      $(".page-wrapper").addClass("toggled");
+        localStorage.setItem("toggle", "");
+    });
+   
+});	</script>
         </body>
         <footer>
             <p>
