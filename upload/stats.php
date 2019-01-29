@@ -137,7 +137,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Primary Currency Withdrawn
+					{$_CONFIG['primary_currency']} Withdrawn
 				</td>
 				<td>
 					" . number_format($TotalPrimaryCurrency) . "
@@ -145,7 +145,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Primary Currency Banked
+					{$_CONFIG['primary_currency']} Banked
 				</td>
 				<td>
 					" . number_format($TotalBank) . "
@@ -153,7 +153,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Total Primary Currency
+					Total {$_CONFIG['primary_currency']}
 				</td>
 				<td>
 					" . number_format($TotalBankandPC) . "
@@ -169,7 +169,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Average Primary Currency per Player
+					Average {$_CONFIG['primary_currency']} per Player
 				</td>
 				<td>
 					" . number_format($AveragePrimaryCurrencyPerPlayer) . "

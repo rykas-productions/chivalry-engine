@@ -93,7 +93,7 @@ if (!$itmid) {
                         "agility" => "Agility", "guard" => "Guard",
                         "labor" => "Labor", "iq" => "IQ",
                         "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                        "primary_currency" => "Primary Currency", 
+                        "primary_currency" => "{$_CONFIG['primary_currency']}", 
                         "secondary_currency" => "Secondary Currency", 
                         "xp" => "Experience", "vip_days" =>
                         "VIP Days");

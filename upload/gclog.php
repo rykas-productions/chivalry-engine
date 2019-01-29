@@ -44,5 +44,5 @@ echo "Here is the information on the crime.
 <br />
 <b>Result:</b> {$r['gclRESULT']}
 <br />
-<b>Primary Currency Earned:</b> " . number_format($r['gclWINNING']);
+<b>{$_CONFIG['primary_currency']} Earned:</b> " . number_format($r['gclWINNING']);
 $h->endpage();

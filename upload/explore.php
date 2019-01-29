@@ -35,7 +35,7 @@ echo "<h4>You begin exploring {$api->SystemTownIDtoName($ir['location'])}. You f
 			<u><b>Shopping District</b></u><br />
 			<a href='shops.php'>Local Shops</a><br />
 			<a href='itemmarket.php'>Item Market</a><br />
-            <a href='secmarket.php'>Secondary Currency Market</a><br />
+            <a href='secmarket.php'>{$_CONFIG['secondary_currency']} Market</a><br />
 		</div>
 		<div class='col-sm'>
 			<u><b>Financial District</b></u><br />

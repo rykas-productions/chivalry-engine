@@ -111,7 +111,7 @@ function shop()
 
 function buy()
 {
-    global $db, $userid, $ir, $api, $h;
+    global $db, $userid, $ir, $api, $h, $_CONFIG;
     $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(($_GET['ID'])) : '';
     $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(($_POST['qty'])) : '';
     if (permission('CanBuyFromGame', $userid) == true) {
@@ -130,7 +130,7 @@ function buy()
             } else {
                 $itemd = $db->fetch_row($q);
                 if ($ir['primary_currency'] < ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty'])) {
-                    alert('danger', "Uh Oh!", "You do not have enough Primary Currency to buy {$_POST['qty']} {$itemd['itmname']}(s).", true, "shops.php");
+                    alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['primary_currency']} to buy {$_POST['qty']} {$itemd['itmname']}(s).", true, "shops.php");
                     die($h->endpage());
                 }
                 if ($itemd['itmbuyable'] == 'false') {
@@ -149,7 +149,7 @@ function buy()
 						 SET `primary_currency` = `primary_currency` - $price
 						 WHERE `userid` = $userid");
                 $ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
-                alert('success', "Success!", "You have bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price} Primary Currency.", true, "shops.php");
+                alert('success', "Success!", "You have bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price} {$_CONFIG['primary_currency']}.", true, "shops.php");
                 $api->SystemLogsAdd($userid, 'itembuy', $ib_log);
                 $api->SystemCreditTax($api->SystemReturnTaxOnly($itemd['itmbuyprice']), 1, -1);
             }

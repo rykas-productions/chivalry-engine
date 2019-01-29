@@ -46,7 +46,7 @@ echo "<table class='table table-hover table-bordered'>
 	</tr>
 	<tr>
 		<td>
-		Primary Currency: " . number_format($ir['primary_currency']) . "
+		{$_CONFIG['primary_currency']}: " . number_format($ir['primary_currency']) . "
 		</td>
 		<td>
 		Secondary Currency: " . number_format($ir['secondary_currency']) . "

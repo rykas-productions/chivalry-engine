@@ -49,7 +49,7 @@ switch ($_GET['action']) {
 }
 function viewguild()
 {
-    global $db, $userid, $api, $h;
+    global $db, $userid, $api, $h, $_CONFIG;
     if (isset($_POST['guild'])) {
         //Make sure input is safe.
         $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
@@ -116,7 +116,7 @@ function viewguild()
         </tr>
         <tr>
             <th>
-                Primary Currency
+                {$_CONFIG['primary_currency']}
             </th>
             <td>
                 " . number_format($r['guild_primcurr']) . "
@@ -183,7 +183,7 @@ function viewguild()
 
 function creditguild()
 {
-    global $db, $userid, $api, $h;
+    global $db, $userid, $api, $h, $_CONFIG;
     if (isset($_POST['guild'])) {
         //Make sure all inputs are safe!
         $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
@@ -205,7 +205,7 @@ function creditguild()
 
         //Make sure the primary/secondary currency is input.
         if ((empty($prim)) && (empty($sec))) {
-            alert('danger', "Uh Oh!", "Please input how much Primary Currency and/or Secondary Currency you wish to
+            alert('danger', "Uh Oh!", "Please input how much {$_CONFIG['primary_currency']} and/or Secondary Currency you wish to
             credit to this guild.");
             die($h->endpage());
         }
@@ -234,15 +234,15 @@ function creditguild()
         $primf = number_format($prim);
 
         //Notify the guild they've received some cash!
-        $api->GuildAddNotification($guild, "The game administration has credited your guild {$primf} Primary Currency
+        $api->GuildAddNotification($guild, "The game administration has credited your guild {$primf} {$_CONFIG['primary_currency']}
         and/or {$secf} Secondary Currency for reason: {$reason}.");
 
         //Log the entry
-        $api->SystemLogsAdd($userid, 'staff', "Credited Guild ID {$guild} with {$primf} Primary Currency and/or {$secf}
+        $api->SystemLogsAdd($userid, 'staff', "Credited Guild ID {$guild} with {$primf} {$_CONFIG['primary_currency']} and/or {$secf}
         Secondary Currency with reason '{$reason}'.");
 
         //Success to the end user.
-        alert('success', "Success!", "You have successfully credited Guild ID {$guild} with {$primf} Primary Currency
+        alert('success', "Success!", "You have successfully credited Guild ID {$guild} with {$primf} {$_CONFIG['primary_currency']}
         and/or {$secf} Secondary Currency with reason '{$reason}'.", true, 'index.php');
         $h->endpage();
     } else {
@@ -262,7 +262,7 @@ function creditguild()
         </tr>
         <tr>
             <th>
-                Primary Currency
+                {$_CONFIG['primary_currency']}
             </th>
             <td>
                 <input type='number' name='primary' value='0' required='1' min='0' class='form-control'>
@@ -382,7 +382,7 @@ function endwar()
 
 function editguild()
 {
-    global $db, $userid, $api, $h;
+    global $db, $userid, $api, $h, $_CONFIG;
     //Set the first step so it goes to the correct page.
     if (!isset($_POST['step'])) {
         $_POST['step'] = 0;
@@ -405,7 +405,7 @@ function editguild()
         //Validate CSRF check.
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_editguild_1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
-            //die($h->endpage());
+            die($h->endpage());
         }
 
         //Make sure guild is still valid input.
@@ -482,7 +482,7 @@ function editguild()
         </tr>
         <tr>
             <th>
-                Primary Currency
+                {$_CONFIG['primary_currency']}
             </th>
             <td>
                 <input type='number' min='0' name='primary' class='form-control' value='{$r['guild_primcurr']}'>

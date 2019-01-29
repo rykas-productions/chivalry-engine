@@ -85,7 +85,7 @@ function menu()
 			{$academy['ac_desc']}
 		</td>
 		<td>
-			" . number_format($academy['ac_cost']) . " Primary Currency
+			" . number_format($academy['ac_cost']) . " {$_CONFIG['primary_currency']}
 		</td>
 		<td>
 			{$do}
@@ -116,7 +116,7 @@ function start()
 		                        {$course['ac_level']} or above.", true, 'academy.php');
         die($h->endpage());
     }
-    //If the user doesn't have enough primary currency for this course.
+    //If the user doesn't have enough {$_CONFIG['primary_currency']} for this course.
     if ($course['ac_cost'] > $ir['primary_currency']) {
         alert('danger', "Uh Oh!", "You do not have enough cash to take this course. You need {$course['ac_cost']},
                                 yet you only have {$ir['primary_currency']}", true, 'academy.php');

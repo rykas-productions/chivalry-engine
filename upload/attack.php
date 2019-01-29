@@ -736,11 +736,11 @@ function mug()
             //Place opponent in infirmary.
             $api->UserStatusSet($r['userid'], 'infirmary', $hosptime, $hospreason);
             //Tell opponent they were mugged, and for how much, by user.
-            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Primary Currency.");
+            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " {$_CONFIG['primary_currency']}.");
             //Log that the user won and stole some primary currency, and that
             //the opponent lost and lost primary currency.
-            $api->SystemLogsAdd($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole {$stole} Primary Currency.");
-            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost {$stole} Primary Currency.");
+            $api->SystemLogsAdd($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole {$stole} {$_CONFIG['primary_currency']}.");
+            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost {$stole} {$_CONFIG['primary_currency']}.");
             $_SESSION['attackwon'] = 0;
             $additionaltext = "";
             //Both players are in a guild.

@@ -32,7 +32,7 @@ switch ($_GET['action']) {
 }
 function index()
 {
-    global $db, $userid, $api;
+    global $db, $userid, $api, $_CONFIG;
     echo "[<a href='?action=add'>Add Your Own Listing</a>]
 	<br />
 	<table class='table table-bordered table-hover table-striped'>
@@ -69,8 +69,8 @@ function index()
         }
         $ctprice = ($r['imPRICE'] * $r['imQTY']);
         if ($r['imCURRENCY'] == 'primary') {
-            $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " Primary Currency";
-            $tprice = number_format($api->SystemReturnTax($ctprice)) . " Primary Currency";
+            $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " {$_CONFIG['primary_currency']}";
+            $tprice = number_format($api->SystemReturnTax($ctprice)) . " {$_CONFIG['primary_currency']}";
         } else {
             $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " Secondary Currency";
             $tprice = number_format($api->SystemReturnTax($ctprice)) . " Secondary Currency";
@@ -204,7 +204,7 @@ function buy()
             die($h->endpage());
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
-        $curre = ($r['imCURRENCY'] == 'primary') ? 'Primary Currency' : 'Secondary Currency';
+        $curre = ($r['imCURRENCY'] == 'primary') ? '{$_CONFIG['primary_currency']}' : 'Secondary Currency';
         $final_price = $api->SystemReturnTax($r['imPRICE'] * $_POST['QTY']);
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
@@ -285,7 +285,7 @@ function gift()
             die($h->endpage());
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
-        $curre = ($r['imCURRENCY'] == 'primary') ? 'Primary Currency' : 'Secondary Currency';
+        $curre = ($r['imCURRENCY'] == 'primary') ? '{$_CONFIG['primary_currency']}' : 'Secondary Currency';
         $final_price = $api->SystemReturnTax($r['imPRICE'] * $_POST['QTY']);
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
@@ -449,7 +449,7 @@ function add()
 				</th>
 				<td>
 					<select name='currency' type='dropdown' class='form-control'>
-						<option value='primary'>Primary Currency</option>
+						<option value='primary'>{$_CONFIG['primary_currency']}</option>
 						<option value='secondary'>Secondary Currency</option>
 					</select>
 				</td>

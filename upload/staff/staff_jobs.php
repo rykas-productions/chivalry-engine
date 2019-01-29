@@ -40,7 +40,7 @@ switch ($_GET['action']) {
 }
 function newjob()
 {
-    global $db, $userid, $h, $api;
+    global $db, $userid, $h, $api, $_CONFIG;
     echo "<h3>Create Job</h3><hr />";
     if (!isset($_POST['jNAME'])) {
         $csrf = request_csrf_html('staff_newjob');
@@ -103,7 +103,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					Primary Currency
+					{$_CONFIG['primary_currency']}
 				</th>
 				<td>
 					<input type='number' min='0' name='jrPRIMPAY' required='1' class='form-control'>
@@ -407,7 +407,7 @@ function jobdele()
 
 function newjobrank()
 {
-    global $db, $userid, $api, $h;
+    global $db, $userid, $api, $h, $_CONFIG;
     echo "<h3>Create Job Rank</h3><hr />";
     if (isset($_POST['job'])) {
         $_POST['rank'] = (isset($_POST['rank']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
@@ -468,7 +468,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    Primary Currency Pay
+                    {$_CONFIG['primary_currency']} Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='primpay' class='form-control'>
@@ -535,7 +535,7 @@ function newjobrank()
 
 function jobrankedit()
 {
-    global $db, $userid, $api, $h;
+    global $db, $userid, $api, $h, $_CONFIG;
     echo "<h3>Edit Job Rank</h3><hr />";
     //Set step to 0 if no step specified.
     if (!isset($_POST['step']))
@@ -639,7 +639,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    Primary Currency Pay
+                    {$_CONFIG['primary_currency']} Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrPRIMPAY']}' required='1' name='primpay' class='form-control'>

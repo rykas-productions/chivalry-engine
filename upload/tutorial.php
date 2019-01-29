@@ -32,7 +32,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Personal Information</u>
 	<br />
 	If you click the {$set['WebsiteName']} on the top left corner, it'll redirect you to the main index where you can
-	view your personal information. This page shows your Stats, Level, Primary Currency, Secondary Currency, VIP Days,
+	view your personal information. This page shows your Stats, Level, {$_CONFIG['primary_currency']}, Secondary Currency, VIP Days,
 	Health, Experience, Will, Brave and Energy. You can also update your Personal Notepad here as well.
 	<br />Energy is used for training and attacking.
 	<br />Will effects how much you gain while training, so in turn, a low will level means low gains in the gym.
@@ -92,14 +92,14 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />However, if you're wanting something a little more flashy, the Item Market is a market ran exclusively by other players. You'll find all sorts
 	of items for sale here. Note, that players also set their own pricing.
 	<br />The Secondary Currency Market is an easy way to convert your Secondary
-	Currency into Primary Currency, depending on the market demand.
+	Currency into {$_CONFIG['primary_currency']}, depending on the market demand.
 	<br />
 	<br />
 	<u>Financial</u><br />
 	Hovering over Financial will greet you with a category of ways to use your currency.
 	<br />Work Center is where you begin your long life of working for 'the man'. You need to have special requirements
 	to join some jobs, however.
-	<br />The Bank will allow you safely store your Primary Currency. Storing in the Bank will keep your money safe from
+	<br />The Bank will allow you safely store your {$_CONFIG['primary_currency']}. Storing in the Bank will keep your money safe from
 	 being robbed from you, and even gain you interest at midnight each night.
 	 <br />Clicking Estates will allow you to view the estates available to purchase. Buying an estate will increase
 	 your Maximum Will, thus improving your gains while training.
@@ -129,7 +129,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	This category has no general theme, to be honest.
 	<br />Checking out User List will list all the registered users in-game, and allow you to organize them by Level,
-	ID, Primary Currency or name.
+	ID, {$_CONFIG['primary_currency']} or name.
 	<br />Clicking Users Online will list the players online in the last 15 minutes. You can customize this to any
 	duration you wish.
 	<br />Staff List will list all in-game staff. These players uphold the law and order of the game. If you have any
@@ -151,7 +151,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />In either case, Russian Roulette is a deadly game that you can challenge your friends to. You point a gun to
 	each other's heads until someone is shot. If you're shot, game over.
 	<br />If that's too high risk for you, how about trying out High/Low? Simply decide if the next drawn number will be
-	 higher or lower than the current number. If you're right, you pocket some extra Primary Currency.
+	 higher or lower than the current number. If you're right, you pocket some extra {$_CONFIG['primary_currency']}.
 	 <br />If you want a little more thrill, check out Roulette! Pick a number, bet on it, and hope you win!
 	 <br />Finally, if you want to play a game of chance, how about betting at the Slot Machines?
 	<br />
@@ -230,7 +230,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Robbing</u>
 	<br />
 	After successfully besting your opponent in combat, you can choose to Mug them. This will allow you to steal some
-	of their Primary Currency, and place them into the Infirmary. The amount you steal is based upon how much you are
+	of their {$_CONFIG['primary_currency']}, and place them into the Infirmary. The amount you steal is based upon how much you are
 	able to snatch from their person. Obviously, if they have nothing on their person, you won't get anything.
 	<br />
 	<br />
@@ -273,7 +273,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Creation</u>
 	<br />
 	You can create a guild once you reach level {$set['GUILD_LEVEL']} for " . number_format($set['GUILD_PRICE']) . "
-	Primary Currency. You are given an option to choose its name, and a friendly (or not so friendly) description. Once
+	{$_CONFIG['primary_currency']}. You are given an option to choose its name, and a friendly (or not so friendly) description. Once
 	you purchase a guild, you become its owner. You have full control of that guild!
 	<br />
 	<br />

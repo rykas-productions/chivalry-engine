@@ -49,7 +49,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
     $rand = Random(1, 4);
     //Current user does not have the required Primary Currency to buy a spy.
     if ($ir['primary_currency'] < $r['level'] * 500) {
-        alert("danger", "Uh Oh!", "You do not have enough Primary Currency to hire a spy to spy on this user.", true, "profile.php?user={$_GET['user']}");
+        alert("danger", "Uh Oh!", "You do not have enough {$_CONFIG['primary_currency']} to hire a spy to spy on this user.", true, "profile.php?user={$_GET['user']}");
         die($h->endpage());
     }
     //Take the spy cost from the player.
@@ -157,7 +157,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 } //Starting form.
 else {
     echo "You are attempting to hire a spy on " . $api->SystemUserIDtoName($_GET['user']) .
-        ". Spies cost 500 Primary currency multiplied by their level. (" . number_format(500 * $r['level']) . "
+        ". Spies cost 500 {$_CONFIG['primary_currency']} multiplied by their level. (" . number_format(500 * $r['level']) . "
 	in this case.) Success is not guaranteed.<br />
 	<form action='?user={$_GET['user']}' method='post'>
 		<input type='hidden' name='do' value='yes'>

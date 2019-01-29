@@ -34,7 +34,7 @@ switch ($_GET['action']) {
 }
 function create()
 {
-    global $db, $ir, $h, $userid, $api;
+    global $db, $ir, $h, $userid, $api, $_CONFIG;
     if ($ir['user_level'] != 'Admin') {
         alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
         die($h->endpage());
@@ -96,7 +96,7 @@ function create()
 					<h4>Item Usage</h4>
 				</td>
 			</tr>";
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 1; $i <= 25; $i++) {
             echo "
 				<tr>
 					<th>
@@ -121,7 +121,7 @@ function create()
 						<option value='iq'>IQ</option>
 						<option value='infirmary'>Infirmary Time</option>
 						<option value='dungeon'>Dungeon Time</option>
-						<option value='primary_currency'>Primary Currency</option>
+						<option value='primary_currency'>{$_CONFIG['primary_currency']}</option>
 						<option value='secondary_currency'>Secondary Currency</option>
 						<option value='xp'>Experience</option>
 						<option value='vip_days'>VIP Days</option>
@@ -441,7 +441,7 @@ function giveitem()
 
 function edititem()
 {
-    global $db, $api, $userid, $h;
+    global $db, $api, $userid, $h, $_CONFIG;
     if (!$api->UserMemberLevelGet($userid,'admin')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
         die($h->endpage());
@@ -534,7 +534,7 @@ function edititem()
                 "agility" => "Agility", "guard" => "Guard",
                 "labor" => "Labor", "iq" => "IQ",
                 "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                "primary_currency" => "Primary Currency", "secondary_currency"
+                "primary_currency" => "{$_CONFIG['primary_currency']}", "secondary_currency"
             => "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
                 "VIP Days");
         for ($i = 1; $i <= 3; $i++) {

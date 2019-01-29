@@ -134,7 +134,7 @@ function create()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						Creating a guild. Guilds cost " . number_format($cg_price) . " Primary Currency
+						Creating a guild. Guilds cost " . number_format($cg_price) . " {$_CONFIG['primary_currency']}
 					</th>
 				</tr>
 				<tr>

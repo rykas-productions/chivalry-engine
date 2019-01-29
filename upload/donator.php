@@ -56,7 +56,7 @@ while ($r = $db->fetch_row($q)) {
                     "agility" => "Agility", "guard" => "Guard",
                     "labor" => "Labor", "iq" => "IQ",
                     "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                    "primary_currency" => "Primary Currency", "secondary_currency"
+                    "primary_currency" => "{$_CONFIG['primary_currency']}", "secondary_currency"
                 => "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
                     "VIP Days");
             $statformatted = $stats["{$einfo['stat']}"];
