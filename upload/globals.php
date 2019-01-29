@@ -23,10 +23,6 @@ if (!isset($_SESSION['started'])) {
     session_regenerate_id();
     $_SESSION['started'] = true;
 }
-//Set user's theme to cookies for 30 days.
-if (!isset($_COOKIE['theme'])) {
-    setcookie('theme', '1', time() + 86400);
-}
 ob_start();
 //Require the error handler and developer helper files.
 require "lib/basic_error_handler.php";
@@ -114,10 +110,6 @@ if (isset($jobquery) && $jobquery) {
 }
 //Put user's data into friendly variable.
 $ir = $db->fetch_row($is);
-//Put user's current theme to cookie.
-if (!isset($_COOKIE['theme'])) {
-    setcookie('theme', $ir['theme'], time() + 86400);
-}
 //If user's account is forced to log out, close session.
 if ($ir['force_logout'] != 'false') {
     $db->query("UPDATE `users` SET `force_logout` = 'false' WHERE `userid` = {$userid}");

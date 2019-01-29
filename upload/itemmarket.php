@@ -35,7 +35,7 @@ function index()
     global $db, $userid, $api;
     echo "[<a href='?action=add'>Add Your Own Listing</a>]
 	<br />
-	<table class='table table-responsive table-bordered table-hover table-striped'>
+	<table class='table table-bordered table-hover table-striped'>
 		<tr>
 			<th>Listing Owner</th>
 			<th>Item x Quantity</th>
