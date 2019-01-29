@@ -995,7 +995,6 @@ CREATE TABLE `users` (
   `fedjail` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `staff_notes` mediumtext NOT NULL,
   `location` tinyint(11) UNSIGNED NOT NULL DEFAULT '1',
-  `timezone` enum('Pacific/Wake','Pacific/Apia','America/Adak','America/Anchorage','America/Los_Angeles','America/Denver','America/Chicago','America/New_York','America/Halifax','America/Godthab','America/Noronha','Atlantic/Cape_Verde','Europe/London','Europe/Berlin','Europe/Bucharest','Europe/Moscow','Asia/Tehran','Asia/Muscat','Asia/Kabul','Asia/Karachi','Asia/Calcutta','Asia/Katmandu','Asia/Novosibirsks','America/Godthab','Asia/Rangoon','Asia/Bangkok','Australia/Perth','Asia/Tokyo','Australia/Darwin','Australia/Sydney','Asia/Magadan','Pacific/Auckland','Pacific/Tongatapu') NOT NULL DEFAULT 'Europe/London',
   `description` text NOT NULL,
   `last_verified` int(11) UNSIGNED NOT NULL,
   `need_verify` tinyint(4) NOT NULL,

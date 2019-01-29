@@ -135,7 +135,7 @@ class headers
                             </a>
                         </li>
                         <li class="header-menu">
-                            <span><?php echo "Time is now " . date('F j, Y') . " " . date('g:i:s a'); ?></span>
+                            <span><?php echo date('F j, Y') . " " . date('g:i:s a'); ?></span>
                         </li>
                     </ul>
                 </div>
@@ -257,8 +257,6 @@ class headers
         die($h->endpage());
     }
     }
-        //Set user's timezone.
-        date_default_timezone_set($ir['timezone']);
     }
     }
 
