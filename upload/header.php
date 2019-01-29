@@ -50,9 +50,9 @@ class headers
     ?>
         <body>
         <div class="page-wrapper default-theme sidebar-bg toggled">
-        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+        <div id="show-sidebar" class="btn btn-sm btn-dark">
             <i class="fas fa-bars"></i>
-          </a>
+        </div>
         <nav id="sidebar" class="sidebar-wrapper">
             <div class="sidebar-content">
                 <!-- sidebar-brand  -->
@@ -133,6 +133,9 @@ class headers
                             <a href="newspaper.php">
                                 <span class="menu-text">Newspaper</span>
                             </a>
+                        </li>
+                        <li class="header-menu">
+                            <span><?php echo "Time is now " . date('F j, Y') . " " . date('g:i:s a'); ?></span>
                         </li>
                     </ul>
                 </div>
@@ -385,24 +388,6 @@ class headers
    
 });	</script>
         </body>
-        <footer>
-            <p>
-                <br/>
-                <?php
-                //Print copyright info, Chivalry Engine info, and current time.
-                echo "<hr />
-					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
-					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}.";
-                if ($ir['user_level'] == 'Admin' || $ir['user_level'] == 'Web Developer')
-                    echo "<br/>{$db->num_queries} Queries Executed.{$query_extra}<br />";
-                //Profile page loading putting profile in the URL GET.
-                if (isset($_GET['profile'])) {
-                    $ms = microtime() - $StartTime;
-                    echo "Page loaded in {$ms} miliseconds.";
-                }
-                ?>
-            </p>
-        </footer>
         </html>
     <?php
     }
