@@ -138,7 +138,7 @@ function remove()
 
 function buy()
 {
-    global $db, $ir, $userid, $h, $api;
+    global $db, $ir, $userid, $h, $api, $_CONFIG;
     $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
     $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
     if ($_GET['ID'] && !$_POST['QTY']) {
@@ -204,7 +204,7 @@ function buy()
             die($h->endpage());
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
-        $curre = ($r['imCURRENCY'] == 'primary') ? '{$_CONFIG['primary_currency']}' : 'Secondary Currency';
+        $curre = ($r['imCURRENCY'] == 'primary') ? $_CONFIG['primary_currency'] : 'Secondary Currency';
         $final_price = $api->SystemReturnTax($r['imPRICE'] * $_POST['QTY']);
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
@@ -239,7 +239,7 @@ function buy()
 
 function gift()
 {
-    global $db, $ir, $userid, $h, $api;
+    global $db, $ir, $userid, $h, $api, $_CONFIG;
     $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
     $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
     $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
@@ -285,7 +285,7 @@ function gift()
             die($h->endpage());
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
-        $curre = ($r['imCURRENCY'] == 'primary') ? '{$_CONFIG['primary_currency']}' : 'Secondary Currency';
+        $curre = ($r['imCURRENCY'] == 'primary') ? $_CONFIG['primary_currency'] : 'Secondary Currency';
         $final_price = $api->SystemReturnTax($r['imPRICE'] * $_POST['QTY']);
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
@@ -376,7 +376,7 @@ function gift()
 
 function add()
 {
-    global $userid, $db, $h, $api;
+    global $userid, $db, $h, $api, $_CONFIG;
     $_POST['ID'] = (isset($_POST['ID']) && is_numeric($_POST['ID'])) ? abs($_POST['ID']) : '';
     $_POST['price'] = (isset($_POST['price']) && is_numeric($_POST['price'])) ? abs($_POST['price']) : '';
     $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
