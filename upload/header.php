@@ -12,7 +12,7 @@ class headers
 {
     function startheaders()
     {
-        global $ir, $set, $h, $db, $menuhide, $userid, $macropage, $api, $time;
+        global $ir, $set, $h, $db, $menuhide, $userid, $macropage, $api, $time, $_CONFIG;
         //Load the meta headers.
         ?>
         <!DOCTYPE html>
@@ -66,14 +66,16 @@ class headers
                     <ul>
                         <li class="header-menu">
                             <span>
-                            User Info<br />
                             <?php  
-                            echo "Energy {$energy}%<br />
+                            echo "{$ir['username']} [{$userid}]<br />
+                            Energy {$energy}%<br />
                             Brave {$brave}%<br />
                             Will {$will}%<br />
                             XP {$xp}%<br />
-                            HP {$hp}%"; ?>
-                </span>
+                            HP {$hp}%<br />
+                            {$_CONFIG['primary_currency']}: " . number_format($ir['primary_currency']) . "<br />
+                            {$_CONFIG['secondary_currency']}: " . number_format($ir['secondary_currency']); ?>
+                            </span>
                         </li>
                     </ul>
                 </div>
@@ -132,6 +134,19 @@ class headers
                         <li>
                             <a href="newspaper.php">
                                 <span class="menu-text">Newspaper</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="profile.php?user=<?php echo $userid; ?>">
+                                <span class="menu-text">Your Profile</span>
+                            </a>
+                        </li>
+                        <li class="header-menu">
+                            <span>Staff</span>
+                        </li>
+                        <li>
+                            <a href="staff/index.php">
+                                <span class="menu-text">Staff Panel</span>
                             </a>
                         </li>
                         <li class="header-menu">
@@ -352,39 +367,18 @@ class headers
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
         <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
         <script type="text/javascript">
-	jQuery(function ($) {
-        $(".sidebar-dropdown > a").click(function() {
-      $(".sidebar-submenu").slideUp(200);
-      if (
-        $(this)
-          .parent()
-          .hasClass("active")
-      ) {
-        $(".sidebar-dropdown").removeClass("active");
-        $(this)
-          .parent()
-          .removeClass("active");
-      } else {
-        $(".sidebar-dropdown").removeClass("active");
-        $(this)
-          .next(".sidebar-submenu")
-          .slideDown(200);
-        $(this)
-          .parent()
-          .addClass("active");
-      }
-    });
-
-    $("#close-sidebar").click(function() {
-      $(".page-wrapper").removeClass("toggled");
-        localStorage.setItem("toggle", "toggled");
-    });
-    $("#show-sidebar").click(function() {
-      $(".page-wrapper").addClass("toggled");
-        localStorage.setItem("toggle", "");
-    });
-   
-});	</script>
+            jQuery(function ($) {
+            $("#close-sidebar").click(function() {
+              $(".page-wrapper").removeClass("toggled");
+                localStorage.setItem("toggle", "toggled");
+            });
+            $("#show-sidebar").click(function() {
+              $(".page-wrapper").addClass("toggled");
+                localStorage.setItem("toggle", "");
+            });
+           
+        });	
+        </script>
         </body>
         </html>
     <?php
