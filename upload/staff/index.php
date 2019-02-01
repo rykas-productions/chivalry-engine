@@ -64,52 +64,8 @@ echo "
 </div>
 	<div class='col-md-4'>
 		<ul class='nav nav-pills flex-column'>";
-if ($api->UserMemberLevelGet($userid, 'admin')) {
-    echo "
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#ADMIN'>Admin</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#MODULES'>Modules</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#SHOPS'>Shops</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#BOTS'>NPCs</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#JOBS'>Jobs</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#TOWN'>Towns</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#ESTATES'>Estates</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#MINES'>Mines</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#SMELT'>Smeltery</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#ACADEMY'>Academy</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#PROMO'>Promo Codes</a>
-			</li>";
-}
 if ($api->UserMemberLevelGet($userid, 'assistant')) {
-    echo "<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#ITEMS'>Items</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#USERS'>Users</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#GUILDS'>Guilds</a>
-			</li>
+    echo "
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#LOGS'>Logs</a>
 			</li>
@@ -131,165 +87,13 @@ echo "
 	</div>
 	<div class='col-md-8'>
 		<div class='tab-content'>";
-if ($api->UserMemberLevelGet($userid, 'admin')) {
-    echo "<div id='ADMIN' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_settings.php?action=basicset'>Game Settings</a><br />
-								<a href='staff_settings.php?action=announce'>Create Announcement</a><br />
-								<a href='staff_settings.php?action=diagnostics'>Game Diagnostics</a><br />
-								<a href='staff_donate.php?action=addpack'>Add VIP Pack</a><br />
-								<a href='staff_donate.php?action=editpack'>Edit VIP Pack</a><br />
-								<a href='staff_donate.php?action=delpack'>Delete VIP Pack</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='MODULES' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_criminal.php'>Crimes</a>
-							</div>
-						</div>
-					</div>
-					<div id='PROMO' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_promo.php?action=addpromo'>Create Promotion Code</a><br />
-								<a href='staff_promo.php?action=viewpromo'>View Promotion Codes</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='SHOPS' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_shops.php?action=newshop'>Create Shop</a><br />
-								<a href='staff_shops.php?action=delshop'>Delete Shop</a><br />
-								<a href='staff_shops.php?action=newitem'>Add Stock to Shop</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='BOTS' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_bots.php?action=addbot'>Add NPC Bot</a><br />
-								<a href='staff_bots.php?action=delbot'>Delete NPC Bot</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='TOWN' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_towns.php?action=addtown'>Create Town</a><br />
-								<a href='staff_towns.php?action=edittown'>Edit Town</a><br />
-								<a href='staff_towns.php?action=deltown'>Delete Town</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='ACADEMY' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_academy.php?action=add'>Create Academy Course</a><br />
-								<a href='staff_academy.php?action=edit'>Edit Academy Course</a><br />
-								<a href='staff_academy.php?action=del'>Delete Academy Course</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='ESTATES' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_estates.php?action=addestate'>Create Estate</a><br />
-								<a href='staff_estates.php?action=editestate'>Edit Estate</a><br />
-								<a href='staff_estates.php?action=delestate'>Delete Estate</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='MINES' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_mine.php?action=addmine'>Create Mine</a><br />
-								<a href='staff_mine.php?action=editmine'>Edit Mine</a><br />
-								<a href='staff_mine.php?action=delmine'>Delete Mine</a>
-							</div>
-						</div>
-					</div>
-					<div id='SMELT' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_smelt.php?action=add'>Create Smelting Recipe</a><br />
-								<a href='staff_smelt.php?action=del'>Delete Smelting Recipe</a>
-							</div>
-						</div>
-					</div>
-					<div id='JOBS' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_jobs.php?action=newjob'>Create Job</a><br />
-								<a href='staff_jobs.php?action=jobedit'>Edit Job</a><br />
-								<a href='staff_jobs.php?action=jobdele'>Delete Job</a><br />
-								<a href='staff_jobs.php?action=newjobrank'>Create Job Rank</a><br />
-								<a href='staff_jobs.php?action=jobrankedit'>Edit Job Rank</a><br />
-								<a href='staff_jobs.php?action=jobrankdele'>Delete Job Rank</a><br />
-							</div>
-						</div>
-					</div>
-					";
-}
 if ($api->UserMemberLevelGet($userid, 'assistant')) {
-    echo "<div id='GUILDS' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_guilds.php?action=viewguild'>View Guild</a><br />
-								<a href='staff_guilds.php?action=editguild'>Edit Guild</a><br />
-								<a href='staff_guilds.php?action=delguild'>Delete Guild</a><br />
-								<a href='staff_guilds.php?action=creditguild'>Credit Guild</a><br />
-								<a href='staff_guilds.php?action=viewwars'>View Guild Wars</a><br />
-								<a href='staff_guilds.php?action=addcrime'>Create Guild Crime</a><br />
-								<a href='staff_guilds.php?action=delcrime'>Delete Guild Crime</a><br />
-							</div>
-						</div>
-					</div>
-					";
-}
-if ($api->UserMemberLevelGet($userid, 'assistant')) {
-    echo "<div id='ITEMS' class='tab-pane'>
-					<div class='card'>
-						<div class='card-body'>";
-    if ($api->UserMemberLevelGet($userid, 'admin')) {
-        echo "
-								<a href='staff_items.php?action=createitmgroup'>Create Item Group</a><br />
-								<a href='staff_items.php?action=create'>Create Item</a><br />
-								<a href='staff_items.php?action=edit'>Edit Item</a><br />
-								<a href='staff_items.php?action=delete'>Delete Item</a><br />";
-    }
     echo "
-							<a href='staff_items.php?action=giveitem'>Gift Item</a><br />
-						</div>
-					</div>
-				</div>
 				<div id='POLL' class='tab-pane'>
 					<div class='card'>
 						<div class='card-body'>
 							<a href='staff_polling.php?action=addpoll'>Create Poll</a><br />
 							<a href='staff_polling.php?action=closepoll'>End Poll</a><br />
-						</div>
-					</div>
-				</div>
-				<div id='USERS' class='tab-pane'>
-					<div class='card'>
-						<div class='card-body'>";
-    if ($api->UserMemberLevelGet($userid, 'admin')) {
-        echo "
-								<a href='staff_users.php?action=createuser'>Create User</a><br />
-								<a href='staff_users.php?action=edituser'>Edit User</a><br />
-								<a href='staff_users.php?action=deleteuser'>Delete User</a><br />
-								<a href='staff_users.php?action=changepw'>Change User's Password</a><br />
-								<a href='staff_settings.php?action=restore'>Restore Users</a><br />
-								<a href='staff_settings.php?action=staff'>Set User Level</a><br />";
-    }
-    echo "
-                            <a href='staff_users.php?action=masspayment'>Send Mass Payment</a><br />
-                            <a href='staff_users.php?action=reports'>View Player Reports</a><br />
-							<a href='staff_users.php?action=logout'>Force Logout User</a><br />
 						</div>
 					</div>
 				</div>

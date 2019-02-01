@@ -25,9 +25,15 @@ switch ($_GET['action']) {
         editacademy();
         break;
     default:
-        echo "404";
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+    echo "<h3>Academy Staff Menu</h3><hr />
+    <a href='?action=add' class='btn btn-primary'>Add Course</a><br /><br />
+    <a href='?action=edit' class='btn btn-primary'>Edit Course</a><br /><br />
+    <a href='?action=del' class='btn btn-primary'>Delete Course</a><br /><br />";
 }
 function addacademy()
 {

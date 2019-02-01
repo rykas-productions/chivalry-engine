@@ -7,7 +7,7 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require_once('sglobals.php');
-echo "<h3>Staff Criminal Center</h3><hr />";
+echo "<h3>Crimes Staff Menu</h3><hr />";
 if ($ir['user_level'] != "Admin") {
     alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
     die($h->endpage());
@@ -44,12 +44,12 @@ switch ($_GET['action']) {
 function home()
 {
     echo "
-	<a href='?action=newcrimegroup'>Create Crime Group</a><br />
-	<a href='?action=newcrime'>Create Crime</a><br />
-	<a href='?action=editcrime'>Edit Crime</a><br />
-	<a href='?action=delcrime'>Delete Crime</a><br />
-	<a href='?action=editcrimegroup'>Edit Crime Group</a><br />
-	<a href='?action=delcrimegroup'>Delete Crime Group</a><br />
+	<a href='?action=newcrimegroup' class='btn btn-primary'>Create Crime Group</a><br /><br />
+	<a href='?action=newcrime' class='btn btn-primary'>Create Crime</a><br /><br />
+	<a href='?action=editcrime' class='btn btn-primary'>Edit Crime</a><br /><br />
+	<a href='?action=delcrime' class='btn btn-primary'>Delete Crime</a><br /><br />
+	<a href='?action=editcrimegroup' class='btn btn-primary'>Edit Crime Group</a><br /><br />
+	<a href='?action=delcrimegroup' class='btn btn-primary'>Delete Crime Group</a><br />
 	";
 }
 

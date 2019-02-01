@@ -12,7 +12,7 @@ class headers
 {
     function startheaders()
     {
-        global $ir, $set, $h, $db, $menuhide, $userid, $api, $time;
+        global $ir, $set, $h, $db, $menuhide, $userid, $api, $time, $_CONFIG;
         ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -27,8 +27,8 @@ class headers
                 <meta property="og:image" content=""/>
                 <link rel="shortcut icon" href="" type="image/x-icon"/>
                 <!-- CSS -->
-                <link rel="stylesheet"
-                      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+                <link rel="stylesheet" href="../css/sidebar-themes.css">
                 <meta name="theme-color" content="#e7e7e7">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
@@ -37,78 +37,365 @@ class headers
         if (empty($menuhide)) {
             $ir['mail'] = $db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
             $ir['notifications'] = $db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
+            $energy = $api->UserInfoGet($userid, 'energy', true);
+            $brave = $api->UserInfoGet($userid, 'brave', true);
+            $will = $api->UserInfoGet($userid, 'will', true);
+            $xp = round($ir['xp'] / $ir['xp_needed'] * 100);
+            $hp = $api->UserInfoGet($userid, 'hp', true);
             ?>
-            <body>
-            <!-- Navigation -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav"
-                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="CENGINENav">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="../index.php"><?php echo "Back to Game"; ?></a>
-                        </li>
-                    </ul>
-                    <div class="my-2 my-lg-0">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   href="../inbox.php"><?php echo "Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   href="../notifications.php"><?php echo "Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="../inventory.php"><?php echo "Inventory"; ?></a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <?php
-                                    //User has a display picture, lets show it!
-                                    if ($ir['display_pic']) {
-                                        echo "<img src='{$ir['display_pic']}' width='24' height='24'>";
-                                    }
-                                    echo " Hello, {$ir['username']}!";
-                                    ?>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item"
-                                       href="../profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i
-                                            class="fa fa-fw fa-user"></i> <?php echo "Profile"; ?></a>
-                                    <a class="dropdown-item" href="../preferences.php?action=menu"><i
-                                            class="fa fa-fw fa-gear"></i><?php echo "Preferences"; ?></a>
-                                    <?php
-                                    //User is a staff member, so lets show the panel's link.
-                                    if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant'))) {
-                                        ?>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="index.php"><i
-                                                class="fa fa-fw fa fa-terminal"></i> <?php echo "Staff Panel"; ?></a>
-                                    <?php
-                                    }
-                                    ?>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="../gamerules.php"><i
-                                            class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
-                                    <a class="dropdown-item" href="../logout.php"><i
-                                            class="fa fa-fw fa-power-off"></i> <?php echo "Log Out"; ?></a>
-                                </div>
-                            </li>
-                        </ul>
+        <body>
+        <div class="page-wrapper default-theme sidebar-bg toggled">
+        <div id="show-sidebar" class="btn btn-sm btn-dark">
+            <i class="fas fa-bars"></i>
+        </div>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <!-- sidebar-brand  -->
+                <div class="sidebar-item sidebar-brand">
+                    <a href="index.php"><?php echo $set['WebsiteName']; ?></a>
+                    <div id='close-sidebar'>
+                        <i class='fas fa-times'></i>
                     </div>
                 </div>
-            </nav>
+                <div class=" sidebar-item sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>
+                            <?php  
+                            echo "{$ir['username']} [{$userid}]<br />
+                            Energy {$energy}%<br />
+                            Brave {$brave}%<br />
+                            Will {$will}%<br />
+                            XP {$xp}%<br />
+                            HP {$hp}%<br />
+                            {$_CONFIG['primary_currency']}: " . number_format($ir['primary_currency']) . "<br />
+                            {$_CONFIG['secondary_currency']}: " . number_format($ir['secondary_currency']); ?>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+                <div class=" sidebar-item sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>General</span>
+                        </li>
+                        <li>
+                            <a href="../index.php">
+                                <span class="menu-text">Back to Game</span>
+                            </a>
+                        </li>
+                        <li class="header-menu">
+                            <span>Staff Options</span>
+                            <?php
+                            if ($api->UserMemberLevelGet($userid, 'admin')) {
+                                ?>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Admin</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href="staff_settings.php">Game Core</a>
+                                            </li>
+                                            <li>
+                                                <a href="staff_settings.php?action=announce">Create Announcement</a>
+                                            </li>
+                                            <li>
+                                                <a href="staff_academy.php">Academy</a>
+                                            </li>
+                                            <li>
+                                                <a href="staff_criminal.php">Crimes</a>
+                                            </li>
+                                            <li>
+                                                <a href="staff_shops.php">Shops</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">NPCs</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href='staff_bots.php?action=addbot'>Add NPC Bot</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_bots.php?action=delbot'>Delete NPC Bot</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Jobs</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href='staff_jobs.php?action=newjob'>Create Job</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_jobs.php?action=jobedit'>Edit Job</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_jobs.php?action=jobdele'>Delete Job</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_jobs.php?action=newjobrank'>Create Job Rank</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_jobs.php?action=jobrankedit'>Edit Job Rank</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_jobs.php?action=jobrankdele'>Delete Job Rank</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Towns</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href='staff_towns.php?action=addtown'>Create Town</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_towns.php?action=edittown'>Edit Town</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_towns.php?action=deltown'>Delete Town</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Estates</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href='staff_estates.php?action=addestate'>Create Estate</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_estates.php?action=editestate'>Edit Estate</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_estates.php?action=delestate'>Delete Estate</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Mines</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href='staff_mine.php?action=addmine'>Create Mine</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_mine.php?action=editmine'>Edit Mine</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_mine.php?action=delmine'>Delete Mine</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Promo Codes</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href='staff_promo.php?action=addpromo'>Create Promo Code</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_promo.php?action=viewpromo'>View Promo Codes</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Blacksmith</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href='staff_smelt.php?action=add'>Create Recipe</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_smelt.php?action=del'>Delete Recipe</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <?php
+                            }
+                            if ($api->UserMemberLevelGet($userid, 'admin')) 
+                            {
+                                ?>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Items</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <?php
+                                            if ($api->UserMemberLevelGet($userid, 'admin')) 
+                                            {
+                                                ?>
+                                                <li>
+                                                    <a href='staff_items.php?action=createitmgroup'>Create Item Group</a>
+                                                </li>
+                                                <li>
+                                                    <a href='staff_items.php?action=create'>Create Item</a>
+                                                </li>
+                                                <li>
+                                                    <a href='staff_items.php?action=edit'>Edit Item</a>
+                                                </li>
+                                                <li>
+                                                   <a href='staff_items.php?action=delete'>Delete Item</a>
+                                                </li>
+                                                <?php
+                                            }
+                                            ?>
+                                            <li>
+                                                <a href='staff_items.php?action=giveitem'>Gift Item</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Users</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <?php
+                                            if ($api->UserMemberLevelGet($userid, 'admin')) 
+                                            {
+                                                ?>
+                                                <li>
+                                                    <a href='staff_users.php?action=createuser'>Create User</a>
+                                                </li>
+                                                <li>
+                                                    <a href='staff_users.php?action=edituser'>Edit User</a>
+                                                </li>
+                                                <li>
+                                                    <a href='staff_users.php?action=deleteuser'>Delete User</a>
+                                                </li>
+                                                <li>
+                                                   <a href='staff_users.php?action=changepw'>Change User's Password</a>
+                                                </li>
+                                                <li>
+                                                   <a href='staff_settings.php?action=restore'>Restore Users</a>
+                                                </li>
+                                                <li>
+                                                   <a href='staff_settings.php?action=staff'>Set User Level</a>
+                                                </li>
+                                                <?php
+                                            }
+                                            ?>
+                                            <li>
+                                                <a href='staff_users.php?action=masspayment'>Send Mass Payment</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_users.php?action=reports'>View Player Reports</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_users.php?action=logout'>Force Logout User</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Guilds</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href='staff_guilds.php?action=viewguild'>View Guild</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_guilds.php?action=editguild'>Edit Guild</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_guilds.php?action=delguild'>Delete Guild</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_guilds.php?action=creditguild'>Credit Guild</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_guilds.php?action=viewwars'>View Guild Wars</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_guilds.php?action=addcrime'>Create Guild Crime</a>
+                                            </li>
+                                            <li>
+                                                <a href='staff_guilds.php?action=delcrime'>Delete Guild Crime</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <?php
+                            }
+                            ?>
+                        </li>
+                        <li class="header-menu">
+                            <span><?php echo date('F j, Y') . " " . date('g:i:s a'); ?></span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-footer  -->
+            <div class="sidebar-footer">
+                <div class="dropdown">
+                    <a href="../notifications.php">
+                        <i class="fa fa-bell"></i>
+                        <span class="badge badge-pill badge-success notification"><?php echo $ir['notifications']; ?></span>
+                    </a>
+                </div>
+                <div class="dropdown">
+                    <a href="../inbox.php">
+                        <i class="fa fa-envelope"></i>
+                        <span class="badge badge-pill badge-success notification"><?php echo $ir['mail']; ?></span>
+                    </a>
+                </div>
+                <div class="dropdown">
+                    <a href="../preferences.php">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                </div>
+                <div>
+                    <a href="../logout.php">
+                        <i class="fa fa-power-off"></i>
+                    </a>
+                </div>
+                <div class="pinned-footer">
+                    <a href="#">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
 
-            <!-- Page Content -->
-            <div class="container">
-            <div class="row">
-            <div class="col-sm-12 text-center">
+        <!-- Page Content -->
+        <main class="page-content pt-2">
+            <div id="overlay" class="overlay"></div>
+            <div class="container-fluid p-5">
             <noscript>
                 <?php alert('info', "Information!", "Please enable Javascript.", false); ?>
             </noscript>
@@ -148,7 +435,6 @@ class headers
                 $DungeonRemain = TimeUntil_Parse($DungeonOut);
                 alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, '../inventory', 'View Inventory');
             }
-            date_default_timezone_set($ir['timezone']);
         }
     }
 
@@ -178,12 +464,12 @@ class headers
     {
         global $db, $ir, $set;
         $query_extra = '';
-    if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
-    {
+        if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
+        {
+            ?>
+            <pre class='pre-scrollable'> <?php var_dump($db->queries) ?> </pre> <?php
+        }
         ?>
-        <pre class='pre-scrollable'> <?php var_dump($db->queries) ?> </pre> <?php
-    }
-    ?>
         </div>
         </div>
         <!-- /.row -->
@@ -191,34 +477,36 @@ class headers
         </div>
         <!-- /.container -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="../css/game.css">
-
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- jQuery Version 3.2.1 -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
-        <script src="../js/game.js" async defer></script>
+        <script src="../js/game.js"></script>
+        <script src="../js/sidemenu.js"></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-        <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async
-                defer></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
+        <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
+        <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script type="text/javascript">
+            jQuery(function ($) {
+            $("#close-sidebar").click(function() {
+              $(".page-wrapper").removeClass("toggled");
+                localStorage.setItem("toggle", "toggled");
+            });
+            $("#show-sidebar").click(function() {
+              $(".page-wrapper").addClass("toggled");
+                localStorage.setItem("toggle", "");
+            });
+           
+        });	
+        </script>
         </body>
-        <footer>
-            <p>
-                <br/>
-                <?php
-                echo "<hr />
-					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
-					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}.";
-                if ($ir['user_level'] == 'Admin' || $ir['user_level'] == 'Web Developer')
-                    echo "<br/>{$db->num_queries} Queries Executed.{$query_extra}<br />";
-                ?>
-            </p>
-        </footer>
         </html>
     <?php
     }

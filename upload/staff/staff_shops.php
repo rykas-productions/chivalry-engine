@@ -7,7 +7,7 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
-echo "<h3>Shops</h3><hr />";
+echo "<h3>Shops Staff Panel</h3><hr />";
 if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
     alert('danger', "Uh Oh!", "You do not have permission to be here.");
     die($h->endpage());
@@ -26,9 +26,16 @@ switch ($_GET['action']) {
         delshop();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+    echo "
+	<a href='?action=newshop' class='btn btn-primary'>Create Shop</a><br /><br />
+	<a href='?action=newitem' class='btn btn-primary'>Add Stock</a><br /><br />
+	<a href='?action=delshop' class='btn btn-primary'>Delete Shop</a>
+	";
 }
 function newshop()
 {

@@ -35,9 +35,20 @@ switch ($_GET['action']) {
         staff();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+    global $h;
+    echo "
+    <a href='?action=basicset' class='btn btn-primary'>Game Settings</a><br /><br />
+    <a href='?action=announce' class='btn btn-primary'>Create Announcement</a><br /><br />
+    <a href='?action=diagnostics' class='btn btn-primary'>Game Diagnostics</a><br /><br />
+    <a href='staff_donate.php?action=addpack' class='btn btn-primary'>Add VIP Pack</a><br /><br />
+    <a href='staff_donate.php?action=editpack' class='btn btn-primary'>Edit VIP Pack</a><br /><br />
+    <a href='staff_donate.php?action=delpack' class='btn btn-primary'>Delete VIP Pack</a><br /><br />";
+    $h->endpage();
 }
 function basicsettings()
 {
