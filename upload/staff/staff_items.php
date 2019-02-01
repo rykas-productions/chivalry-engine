@@ -96,7 +96,7 @@ function create()
 					<h4>Item Usage</h4>
 				</td>
 			</tr>";
-        for ($i = 1; $i <= 25; $i++) {
+        for ($i = 1; $i <= 3; $i++) {
             echo "
 				<tr>
 					<th>
@@ -114,15 +114,15 @@ function create()
 						<option value='brave'>Bravery</option>
 						<option value='hp'>Health</option>
 						<option value='level'>Level</option>
-						<option value='strength'>Strength</option>
-						<option value='agility'>Agility</option>
-						<option value='guard'>Guard</option>
-						<option value='labor'>Labor</option>
-						<option value='iq'>IQ</option>
+						<option value='strength'>{$_CONFIG['strength_stat']}</option>
+						<option value='agility'>{$_CONFIG['agility_stat']}</option>
+						<option value='guard'>{$_CONFIG['guard_stat']}</option>
+						<option value='labor'>{$_CONFIG['labor_stat']}</option>
+						<option value='iq'>{$_CONFIG['iq_stat']}</option>
 						<option value='infirmary'>Infirmary Time</option>
 						<option value='dungeon'>Dungeon Time</option>
 						<option value='primary_currency'>{$_CONFIG['primary_currency']}</option>
-						<option value='secondary_currency'>Secondary Currency</option>
+						<option value='secondary_currency'>{$_CONFIG['secondary_currency']}</option>
 						<option value='xp'>Experience</option>
 						<option value='vip_days'>VIP Days</option>
 					</select>
@@ -530,60 +530,62 @@ function edititem()
         $stats =
             array("energy" => "Energy", "will" => "Will",
                 "brave" => "Bravery", "level" => "Level",
-                "hp" => "Health", "strength" => "Strength",
-                "agility" => "Agility", "guard" => "Guard",
-                "labor" => "Labor", "iq" => "IQ",
+                "hp" => "Health", "strength" => $_CONFIG['strength_stat'],
+                "agility" => $_CONFIG['agility_stat'], "guard" => $_CONFIG['guard_stat'],
+                "labor" => $_CONFIG['labor_stat'], "iq" => $_CONFIG['iq_stat'],
                 "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                "primary_currency" => "{$_CONFIG['primary_currency']}", "secondary_currency"
-            => "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
+                "primary_currency" => $_CONFIG['primary_currency'], "secondary_currency"
+            => $_CONFIG['secondary_currency'], "crimexp" => "Experience", "vip_days" =>
                 "VIP Days");
-        for ($i = 1; $i <= 3; $i++) {
-            if (!empty($itemi["effect" . $i])) {
-                $efx = unserialize($itemi["effect" . $i]);
-            } else {
-                $efx = array("inc_amount" => 0);
-            }
-            $switch1 =
-                ($itemi['effect' . $i . '_on'] == 'true') ? " checked='checked'" : "";
-            $switch2 =
-                ($itemi['effect' . $i . '_on'] == 'true') ? "" : " checked='checked'";
-            echo "
-				<tr>
-					<th>
-						<b><u>Effect #{$i}</u></b>
-					</th>
-					<td>
-						<input type='radio' class='form-control' name='effect{$i}on' value='true'$switch1 /> Enable Effect
-						<input type='radio' class='form-control' name='effect{$i}on' value='false'$switch2 /> Disable Effect
-						<br /><b>Stat</b> <select class='form-control' name='effect{$i}stat' type='dropdown'>";
-            foreach ($stats as $k => $v) {
-                echo ($k == $efx['stat'])
-                    ? '<option value="' . $k . '" selected="selected">' . $v
-                    . '</option>'
-                    : '<option value="' . $k . '">' . $v . '</option>';
-            }
-            $str =
-                ($efx['dir'] == "neg")
-                    ? "<option value='pos'>Increase/Add</option>
-									<option value='neg' selected='selected'>Decrease/Remove</option>"
-                    : "<option value='pos' selected='selected'>Increase/Add</option>
-									<option value='neg'>Decrease/Remove</option>";
-            $str2 =
-                ($efx['inc_type'] == "percent")
-                    ? "<option value='figure'>Value</option>
-									<option value='percent' selected='selected'>Percentage</option>"
-                    : "<option value='figure' selected='selected'>Value</option>
-									<option value='percent'>Percentage</option>";
-
-            echo "
-				</select>
-				<br />
-					<b>Direction</b> <select class='form-control' name='effect{$i}dir' type='dropdown'> {$str} </select>
-				<br />
-					<b>Amount</b> <input type='text' class='form-control' name='effect{$i}amount' value='{$efx['inc_amount']}' />
-						<select name='effect{$i}type' class='form-control' type='dropdown'>{$str2}</select>
-				</td></tr>
-				   ";
+        $iterations=count(json_decode($itemi['itmeffects_toggle']));
+        $toggle=json_decode($itemi['itmeffects_toggle']);
+        $stat=json_decode($itemi['itmeffects_stat']);
+        $dir=json_decode($itemi['itmeffects_dir']);
+        $type=json_decode($itemi['itmeffects_type']);
+        $amount=json_decode($itemi['itmeffects_amount']);
+        $usecount=0;
+        while ($usecount != $iterations)
+        {
+            $switch1 = ($toggle[$usecount] == 1) ? " selected" : "";
+            $switch2 = ($toggle[$usecount] == 1) ? "" : " selected";
+            $switch3 = ($dir[$usecount] == "pos") ? "selected" : "";
+            $switch4 = ($dir[$usecount] == "pos") ? "" : " selected";
+            $switch5 = ($type[$usecount] == "figure") ? "selected" : "";
+            $switch6 = ($type[$usecount] == "figure") ? "" : " selected";
+            echo "<tr>
+                <th>
+                    Item Effect
+                </th>
+                <td>
+                    <select name='effecton[]' type='dropdown' class='form-control'>
+                        <option value='0'{$switch2}>Disable Effect</option>
+                        <option value='1'{$switch1}>Enable Effect</option>
+                    </select>
+                <br />
+                <b>Stat</b> <select name='effectstat[]' type='dropdown' class='form-control'>";
+                    foreach ($stats as $k => $v)
+                    {
+                        echo ($k == $stat[$usecount])
+                        ? '<option value="' . $k . '" selected="selected">' . $v
+                        . '</option>'
+                        : '<option value="' . $k . '">' . $v . '</option>';
+                    }
+                    echo"
+                </select>
+                <br />
+                <b>Direction</b> <select name='effectdir[]' class='form-control' type='dropdown'>
+                    <option value='pos'{$switch3}>Increase/Add</option>
+                    <option value='neg'{$switch4}>Decrease/Remove</option>
+                </select>
+                <br />
+                <b>Amount</b> <input type='number' min='0' class='form-control' name='effectamount[]' value='{$amount[$usecount]}' />
+                <select name='effecttype[]' class='form-control' type='dropdown'>
+                    <option value='figure'{$switch5}>Value</option>
+                    <option value='percent'{$switch6}>Percentage</option>
+                </select>
+                </td>
+            </tr>";
+            $usecount=$usecount+1;
         }
         echo "
 			<tr>
@@ -645,51 +647,43 @@ function edititem()
             die($h->endpage());
         }
         $itmbuy = ($_POST['itembuyable'] == 'on') ? 'true' : 'false';
-        for ($i = 1; $i <= 3; $i++) {
-            $efxkey = "effect{$i}";
-            $_POST[$efxkey . 'stat'] =
-                (isset($_POST[$efxkey . 'stat'])
-                    && in_array($_POST[$efxkey . 'stat'],
-                        array('energy', 'will', 'brave', 'hp',
-                            'strength', 'agility', 'guard',
-                            'labor', 'iq', 'infirmary', 'dungeon',
-                            'primary_currency', 'secondary_currency', 'xp', 'vip_days')))
-                    ? $_POST[$efxkey . 'stat'] : 'energy';
-            $_POST[$efxkey . 'dir'] =
-                (isset($_POST[$efxkey . 'dir'])
-                    && in_array($_POST[$efxkey . 'dir'],
-                        array('pos', 'neg'))) ? $_POST[$efxkey . 'dir']
-                    : 'pos';
-            $_POST[$efxkey . 'type'] =
-                (isset($_POST[$efxkey . 'type'])
-                    && in_array($_POST[$efxkey . 'type'],
-                        array('figure', 'percent')))
-                    ? $_POST[$efxkey . 'type'] : 'figure';
-            $_POST[$efxkey . 'amount'] =
-                (isset($_POST[$efxkey . 'amount'])
-                    && is_numeric($_POST[$efxkey . 'amount']))
-                    ? abs(intval($_POST[$efxkey . 'amount'])) : 0;
-            $_POST[$efxkey . 'on'] =
-                (isset($_POST[$efxkey . 'on'])
-                    && in_array($_POST[$efxkey . 'on'], array('true', 'false')))
-                    ? $_POST[$efxkey . 'on'] : 0;
-            $effects[$i] =
-                $db->escape(
-                    serialize(
-                        array("stat" => $_POST[$efxkey . 'stat'],
-                            "dir" => $_POST[$efxkey . 'dir'],
-                            "inc_type" => $_POST[$efxkey . 'type'],
-                            "inc_amount" => abs(
-                                (int)$_POST[$efxkey
-                                . 'amount']))));
+        foreach($_POST['effecton'] as $key => $field)
+        {
+            $field=($field == 1) ? 1 : 0;
         }
+        foreach($_POST['effectstat'] as $key => $field)
+        {
+            $field=(isset($field) && in_array($field, 
+                array('energy', 'will', 'brave', 'hp', 'level',
+                'strength', 'agility', 'guard',
+                'labor', 'iq', 'infirmary', 'dungeon',
+                'primary_currency', 'secondary_currency', 'xp', 'vip_days')))
+                ? $field : 'energy';
+        }
+        foreach($_POST['effectamount'] as $key => $field)
+        {
+            $field = (isset($field) && is_numeric($field)) ? abs(intval($field)) : 0;
+        }
+        foreach($_POST['effectdir'] as $key => $field)
+        {
+            $field = (isset($field) && in_array($field, array('pos', 'neg'))) ? $field : 'pos';
+        }
+        foreach($_POST['effecttype'] as $key => $field)
+        {
+            $field = (isset($field) && in_array($field, array('figure', 'percent'))) ? $field : 'figure';
+        }
+        $effectarray=(json_encode($_POST['effecton']));
+        $statarray=(json_encode($_POST['effectstat']));
+        $amountarray=(json_encode($_POST['effectamount']));
+        $dirarray=(json_encode($_POST['effectdir']));
+        $typearray=(json_encode($_POST['effecttype']));
         $db->query("UPDATE `items` SET `itmname` = '{$itmname}',
 						`itmtype` = {$itmtype}, `itmdesc` = '{$itmdesc}',
 						`itmbuyprice` = {$itmbuyprice}, `itmsellprice` = {$itmsellprice},
-						`effect1_on` = '{$_POST['effect1on']}', `effect1` = '{$effects[1]}',
-						`effect2_on` = '{$_POST['effect2on']}', `effect2` = '{$effects[2]}',
-						`effect3_on` = '{$_POST['effect3on']}', `effect3` = '{$effects[3]}',
-						`weapon` = {$weapon}, `armor` = {$armor} WHERE `itmid` = {$itemid }");
+                        `itmeffects_toggle` = '{$effectarray}', `itmeffects_stat` = '{$statarray}',
+                        `itmeffects_dir` = '{$dirarray}', `itmeffects_amount` = '{$amountarray}', 
+                        `itmeffects_type` = '{$typearray}', `weapon` = {$weapon}, `armor` = {$armor} 
+                        WHERE `itmid` = {$itemid }");
         alert('success', "Success!", "You successfully have edited the {$api->SystemItemIDtoName($itemid)} item.", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited Item {$api->SystemItemIDtoName($itemid)}.");
     } else {
