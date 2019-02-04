@@ -1769,7 +1769,7 @@ function isImage($url)
 /*
  * Function to fetch current version of Chivalry Engine
  */
-function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
+function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine-v2.json')
 {
     global $set;
     $engine_version = $set['Version_Number'];
