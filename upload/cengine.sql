@@ -940,19 +940,6 @@ CREATE TABLE `town` (
 INSERT INTO `town` (`town_id`, `town_name`, `town_min_level`, `town_guild_owner`, `town_tax`) VALUES
 (1, 'Default Town', 1, 0, 0);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `userdata`
---
-
-CREATE TABLE `userdata` (
-  `userid` int(11) UNSIGNED NOT NULL,
-  `useragent` text NOT NULL,
-  `screensize` text NOT NULL,
-  `os` text NOT NULL,
-  `browser` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1362,12 +1349,6 @@ ALTER TABLE `town`
   ADD UNIQUE KEY (`town_id`);
 
 --
--- Indexes for table `userdata`
---
-ALTER TABLE `userdata`
-  ADD UNIQUE KEY `unique` (`userid`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -1626,11 +1607,6 @@ ALTER TABLE `smelt_recipes`
 --
 ALTER TABLE `town`
   MODIFY `town_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `userdata`
---
-ALTER TABLE `userdata`
-  MODIFY `userid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `users`
 --

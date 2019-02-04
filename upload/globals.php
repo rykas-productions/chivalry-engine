@@ -130,8 +130,6 @@ if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SE
 //Basic chceks around the game.
 check_level();
 check_data();
-getOS($_SERVER['HTTP_USER_AGENT']);
-getBrowser($_SERVER['HTTP_USER_AGENT']);
 $h = new headers;
 //Include API file.
 include("class/class_api.php");
