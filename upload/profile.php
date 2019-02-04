@@ -21,11 +21,10 @@ if (!$_GET['user']) {
                     `registertime`, `vip_days`, `username`, `gender`,
 					`primary_currency`, `secondary_currency`, `level`, `class`,
 					`display_pic`, `hp`, `maxhp`, `guild`,
-                    `fedjail`, `bank`, `lastip`, `lastip`,
+                    `fedjail`, `lastip`, `lastip`,
                     `loginip`, `registerip`, `staff_notes`, `town_name`,
                     `house_name`, `guild_name`, `fed_out`, `fed_reason`,
-					`infirmary_reason`, `infirmary_out`, `dungeon_reason`, `dungeon_out`,
-					`browser`, `os`, `screensize`
+					`infirmary_reason`, `infirmary_out`, `dungeon_reason`, `dungeon_out`
                     FROM `users` `u`
                     INNER JOIN `town` AS `t`
                     ON `u`.`location` = `t`.`town_id`
