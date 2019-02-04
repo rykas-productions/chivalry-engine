@@ -1440,7 +1440,7 @@ ALTER TABLE `enemy`
 -- AUTO_INCREMENT for table `estates`
 --
 ALTER TABLE `estates`
-  MODIFY `house_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `house_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `fedjail`
 --
@@ -1625,7 +1625,7 @@ ALTER TABLE `smelt_recipes`
 -- AUTO_INCREMENT for table `town`
 --
 ALTER TABLE `town`
-  MODIFY `town_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `town_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `userdata`
 --
