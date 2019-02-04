@@ -190,6 +190,9 @@ CREATE TABLE `estates` (
   `house_level` int(11) UNSIGNED DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO `estates` (`house_id`, `house_name`, `house_price`, `house_will`, `house_level`) VALUES
+(1, 'Default Estate', 0, 100, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -933,6 +936,9 @@ CREATE TABLE `town` (
   `town_guild_owner` int(11) UNSIGNED NOT NULL,
   `town_tax` tinyint(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `town` (`town_id`, `town_name`, `town_min_level`, `town_guild_owner`, `town_tax`) VALUES
+(1, 'Default Town', 1, 0, 0);
 
 -- --------------------------------------------------------
 
