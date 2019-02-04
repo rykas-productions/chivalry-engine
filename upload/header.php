@@ -141,6 +141,11 @@ class headers
                                 <span class="menu-text">Your Profile</span>
                             </a>
                         </li>
+						<li>
+                            <a href="announcements.php">
+                                <span class="menu-text">Announcements <span class='badge badge-pill badge-primary'><?php echo $ir['announcements']; ?></span></span>
+                            </a>
+                        </li>
                         <li class="header-menu">
                             <span>Staff</span>
                         </li>

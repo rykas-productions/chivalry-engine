@@ -61,7 +61,7 @@ echo "<h4>You begin exploring {$api->SystemTownIDtoName($ir['location'])}. You f
 				<a href='fedjail.php'>Federal Dungeon</a><br />
 				<a href='stats.php'>Game Statistics</a><br />
 				<a href='playerreport.php'>Player Report</a><br />
-				<a href='announcements.php'>Announcements <span class='badge badge-pill badge-primary'>{$ir['announcements']}</span></a>
+				<a href='announcements.php'>Announcements </a>
 		</div>
 		<div class='col-sm'>
 			<u><b>Gambling District</b></u><br />
