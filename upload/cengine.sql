@@ -190,6 +190,9 @@ CREATE TABLE `estates` (
   `house_level` int(11) UNSIGNED DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO `estates` (`house_id`, `house_name`, `house_price`, `house_will`, `house_level`) VALUES
+(1, 'Default Estate', 0, 100, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -935,6 +938,9 @@ CREATE TABLE `town` (
   `town_tax` tinyint(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO `town` (`town_id`, `town_name`, `town_min_level`, `town_guild_owner`, `town_tax`) VALUES
+(1, 'Default Town', 1, 0, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -1436,7 +1442,7 @@ ALTER TABLE `enemy`
 -- AUTO_INCREMENT for table `estates`
 --
 ALTER TABLE `estates`
-  MODIFY `house_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `house_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `fedjail`
 --
@@ -1621,7 +1627,7 @@ ALTER TABLE `smelt_recipes`
 -- AUTO_INCREMENT for table `town`
 --
 ALTER TABLE `town`
-  MODIFY `town_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `town_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `userdata`
 --
