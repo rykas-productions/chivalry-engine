@@ -224,49 +224,39 @@ if (!$_GET['user']) {
 				  <?php
         echo '<div id="staff" class="tab-pane">';
         if (!in_array($ir['user_level'], array('Member', 'NPC'))) {
-            $fg = json_decode(get_fg_cache("cache/{$r['lastip']}.json", "{$r['lastip']}", 65655), true);
-            $log = $db->fetch_single($db->query("SELECT `log_text` FROM `logs` WHERE `log_user` = {$r['userid']} ORDER BY `log_id` DESC"));
+            $log = $db->fetch_row($db->query("SELECT `log_text`,`log_time` FROM `logs` WHERE `log_user` = {$r['userid']} ORDER BY `log_id` DESC"));
             echo "<a href='staff/staff_punish.php?action=fedjail&user={$r['userid']}' class='btn btn-primary'>Fedjail</a>
                 <a href='staff/staff_punish.php?action=forumban&user={$r['userid']}' class='btn btn-primary'>Forum Ban</a>";
             echo "<table class='table table-bordered'>
 							<tr>
 								<th width='33%'>Data</th>
 								<th>Output</th>
-							</tr>
-							<tr>
-								<td>Location</td>
-								<td>{$fg['city']}, {$fg['state']}, {$fg['country']}, ({$fg['isocode']})</td>
-							</tr>
-							<tr>
-								<td>Risk Level</td>
-								<td>" . parse_risk($fg['risk_level']) . "</td>
+								<th>Details</th>
 							</tr>
 							<tr>
 								<td>Last Hit</td>
 								<td>{$r['lastip']}</td>
+								<td>" . gethostbyaddr($r['lastip']) . "</td>
 							</tr>
 							<tr>
 								<td>Last Login</td>
 								<td>{$r['loginip']}</td>
+								<td>" . gethostbyaddr($r['loginip']) . "</td>
 							</tr>
 							<tr>
 								<td>Sign Up</td>
 								<td>{$r['registerip']}</td>
+								<td>" . gethostbyaddr($r['registerip']) . "</td>
 							</tr>
 							<tr>
 								<td>
 									Last Action
 								</td>
 								<td>
-									{$log}
-								</td>
-							</tr>
-							<tr>
-								<td>
-									Browser/OS
+									{$log['log_text']}
 								</td>
 								<td>
-									{$r['browser']}/{$r['os']}
+									" . DateTime_Parse($log['log_time']) . "
 								</td>
 							</tr>
 					</table>
@@ -290,20 +280,4 @@ if (!$_GET['user']) {
 		<?php
     }
 }
-function parse_risk($risk_level)
-{
-    switch ($risk_level) {
-        case 2:
-            return "Spam";
-        case 3:
-            return "Open Public Proxy";
-        case 4:
-            return "Tor Node";
-        case 5:
-            return "Honeypot / Botnet / DDOS Attack";
-        default:
-            return "No Risk";
-    }
-}
-
 $h->endpage();
