@@ -1337,16 +1337,29 @@ function verify_user_password($input, $pass)
  * the game's database.
  *
  * @param string $password The password to be encoded
+ * @param bool $usebtterpasswordgen Use ARGON2I as your encryption method, rather than BCRYPT. May not be supported on your host.
  *
  * @return string    The resulting encoded password.
  */
-function encode_password($password)
+function encode_password($password, $usebetterpasswordgen=false)
 {
     global $set;
-    //Set the password cost via settings.
+	//Set the password cost via settings.
     $options = ['cost' => $set['Password_Effort'],];
-    //Return the generated password.
-    return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
+	if (($usebetterpasswordgen == true) && defined('PASSWORD_ARGON2I'))
+	{
+		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
+	}
+	elseif (($usebetterpasswordgen == true) && defined('PASSWORD_ARGON2I') == false)
+	{
+		trigger_error("You have better password generation set to true, but your host does not appear to support it. Set it to false to disable this alert.",E_USER_WARNING);
+		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
+	}
+	else
+	{
+		//Return the generated password.
+		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
+	}
 }
 
 /**
