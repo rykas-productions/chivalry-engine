@@ -1266,10 +1266,10 @@ function randomizer()
     $Safe = true;
     //Use PHP V7's Random Bytes generator first!
     if (function_exists('random_bytes'))
-        return bin2hex(random_bytes(128));
+        return bin2hex(random_bytes(256));
     //If we can't... lets use OpenSSL's random bytes generator
     elseif (function_exists('openssl_random_pseudo_bytes'))
-        return bin2hex(openssl_random_pseudo_bytes(128, $Safe));
+        return bin2hex(openssl_random_pseudo_bytes(256, $Safe));
     //That fails... use our shitty one. ;/
     else
         return sha1(decbin(Random(1, PHP_INT_MAX)));
@@ -1346,7 +1346,7 @@ function encode_password($password)
     //Set the password cost via settings.
     $options = ['cost' => $set['Password_Effort'],];
     //Return the generated password.
-    return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_DEFAULT, $options);
+    return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
 }
 
 /**
@@ -1494,46 +1494,6 @@ function get_filesize_remote($url)
         return 0;
     }
     return (int)$headers['content-length'];
-}
-
-/*
-	Gets the contents of a file if it exists, otherwise grabs and caches 
-*/
-function get_fg_cache($file, $ip, $hours = 1)
-{
-    $current_time = time();
-    $expire_time = $hours * 60 * 60;
-    if (file_exists($file)) {
-        $file_time = filemtime($file);
-        if ($current_time - $expire_time < $file_time) {
-            return file_get_contents($file);
-        } else {
-            $content = update_fg_info($ip);
-            file_put_contents($file, $content);
-            return $content;
-        }
-    } else {
-        $content = update_fg_info($ip);
-        file_put_contents($file, $content);
-        return $content;
-    }
-}
-
-/* 
-	Gets content from a URL via curl 
-*/
-function update_fg_info($ip)
-{
-    global $set;
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.fraudguard.io/ip/$ip",
-        CURLOPT_USERPWD => "{$set['FGUsername']}:{$set['FGPassword']}",
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_RETURNTRANSFER => true));
-    $content = curl_exec($curl);
-    curl_close($curl);
-    return $content;
 }
 
 /**
