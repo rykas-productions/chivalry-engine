@@ -99,8 +99,6 @@ if (!$api->UserMemberLevelGet($userid, 'forum moderator')) {
 }
 check_level();
 check_data();
-getOS($_SERVER['HTTP_USER_AGENT']);
-getBrowser($_SERVER['HTTP_USER_AGENT']);
 $h = new headers;
 $h->startheaders();
 $fm = number_format($ir['primary_currency']);
