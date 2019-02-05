@@ -145,23 +145,6 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Fraudguard IO Username<br />
-					<small>(<a href='https://fraudguard.io/'>http://bit.ly/2apOVX0</a>)</small>
-				</th>
-				<td>
-					<input type='text' class='form-control' name='fgun' value='{$set['FGUsername']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Fraudguard IO Password
-				</th>
-				<td>
-					<input type='text' class='form-control' name='fgpw' value='{$set['FGPassword']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
 					ReCaptcha Public Key<br />
 					<small>(<a href='https://www.google.com/recaptcha/admin'>http://bit.ly/2oJ0Bus</a>)</small>
 				</th>
@@ -283,8 +266,6 @@ function basicsettings()
         $Paypal = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'ppemail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['ppemail'])) : '';
         $GameOwner = (isset($_POST['ownername']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['ownername'])) ? $db->escape(strip_tags(stripslashes($_POST['ownername']))) : '';
         $GameDesc = (isset($_POST['gamedesc'])) ? $db->escape(strip_tags(stripslashes($_POST['gamedesc']))) : '';
-        $FGPW = (isset($_POST['fgpw'])) ? $db->escape(strip_tags(stripslashes($_POST['fgpw']))) : '';
-        $FGUN = (isset($_POST['fgun'])) ? $db->escape(strip_tags(stripslashes($_POST['fgun']))) : '';
         $rcpb = (isset($_POST['rcpublic'])) ? $db->escape(strip_tags(stripslashes($_POST['rcpublic']))) : '';
         $rcpr = (isset($_POST['rcprivate'])) ? $db->escape(strip_tags(stripslashes($_POST['rcprivate']))) : '';
         $PasswordEffort = (isset($_POST['PWEffort']) && is_numeric($_POST['PWEffort'])) ? abs(intval($_POST['PWEffort'])) : 10;
@@ -318,12 +299,6 @@ function basicsettings()
         } elseif (empty($AttackEnergy)) {
             alert('danger', "Uh Oh!", "Please specify the attack energy usage.");
             die($h->endpage());
-        } elseif (empty($FGPW)) {
-            alert('danger', "Uh Oh!", "Please specify your Fraud Guard IO Password.");
-            die($h->endpage());
-        } elseif (empty($FGUN)) {
-            alert('danger', "Uh Oh!", "Please specify your Fraud Guard IO Username");
-            die($h->endpage());
         } elseif (empty($rcpb)) {
             alert('danger', "Uh Oh!", "Please specify your ReCaptcha Public Key.");
             die($h->endpage());
@@ -344,8 +319,6 @@ function basicsettings()
             $db->query("UPDATE `settings` SET `setting_value` = '{$GameDesc}' WHERE `setting_name` = 'Website_Description'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$GameOwner}' WHERE `setting_name` = 'WebsiteOwner'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$Paypal}' WHERE `setting_name` = 'PaypalEmail'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$FGPW}' WHERE `setting_name` = 'FGPassword'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$FGUN}' WHERE `setting_name` = 'FGUsername'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$BankCost}' WHERE `setting_name` = 'bank_cost'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$BankFeeMax}' WHERE `setting_name` = 'bank_maxfee'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$BankFeePerc}' WHERE `setting_name` = 'bank_feepercent'");

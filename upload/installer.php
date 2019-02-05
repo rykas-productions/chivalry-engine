@@ -276,20 +276,6 @@ function config()
     		</tr>
 			<tr>
     			<th>
-    				Fraudguard IO Username<br />
-    				<small><a href='https://fraudguard.io/'>https://fraudguard.io/</a></small>
-    			</th>
-    			<td><input type='text' name='fgun' class='form-control' required='1' /></td>
-    		</tr>
-			<tr>
-    			<th>
-    				Fraudguard IO Password<br />
-    				<small><a href='https://fraudguard.io/'>https://fraudguard.io/</a></small>
-    			</th>
-    			<td><input type='password' name='fgpw' class='form-control' required='1' /></td>
-    		</tr>
-			<tr>
-    			<th>
     				ReCaptcha Public Key<br />
     				<small><a href='https://www.google.com/recaptcha/admin'>https://www.google.com/recaptcha/admin</a></small>
     			</th>
@@ -357,8 +343,6 @@ function install()
 {
    global $Version,$Build;
    menuprint('sql');
-	$fgun = (isset($_POST['fgun'])) ? gpc_cleanup($_POST['fgun']) : '';
-	$fgpw = (isset($_POST['fgpw'])) ? gpc_cleanup($_POST['fgpw']) : '';
 	$recappriv = (isset($_POST['recappriv'])) ? gpc_cleanup($_POST['recappriv']) : '';
 	$recappub = (isset($_POST['recappub'])) ? gpc_cleanup($_POST['recappub']) : '';
     $paypal = (isset($_POST['paypal']) && filter_input(INPUT_POST, 'paypal', FILTER_VALIDATE_EMAIL)) ? gpc_cleanup($_POST['paypal']) : '';
@@ -443,10 +427,6 @@ function install()
 	if ((empty($pweffort)) || ($pweffort < 5) || ($pweffort > 20))
 	{
 		$errors[] = 'Password Effort either blank, lower than five or higher than twenty!';
-	}
-	if (empty($fgpw) || (empty($fgun)))
-	{
-		$errors[] = 'Fraudguard I/O information empty.';
 	}
 	if (empty($recappub) || (empty($recappriv)))
 	{
@@ -572,8 +552,6 @@ EOF;
 						"INSERT INTO `userstats`
 						 VALUES($i, 1000, 900, 1100, 1000, 1000)");
 	}
-	$db->query("INSERT INTO `settings` VALUES(NULL, 'FGUsername', '{$fgun}')");
-	$db->query("INSERT INTO `settings` VALUES(NULL, 'FGPassword', '{$fgpw}')");
     $db->query("INSERT INTO `settings` VALUES(NULL, 'WebsiteName', '{$ins_game_name}')");
     $db->query("INSERT INTO `settings` VALUES(NULL, 'WebsiteOwner', '{$ins_game_owner}')");
     $db->query("INSERT INTO `settings` VALUES(NULL, 'PaypalEmail', '{$ins_paypal}')");
