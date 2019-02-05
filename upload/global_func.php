@@ -29,7 +29,7 @@ function DateTime_Parse($time_stamp, $ago = true, $override = false)
             $time_difference = $time_difference / $lengths[$i];
         }
         //For added precision, lets go over 2 decimal places.
-        $time_difference = round($time_difference, 2);
+        $time_difference = round($time_difference);
         //If $ago is true, lets add "ago" after our string.
         if ($ago == true) {
             $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . ' ago';
@@ -59,7 +59,7 @@ function TimeUntil_Parse($time_stamp)
         $time_difference = $time_difference / $lengths[$i];
     }
     //For added precision, lets round to the 2nd decimal place.
-    $time_difference = round($time_difference, 2);
+    $time_difference = round($time_difference);
     //Add an 's' if needed.
     $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
     //Return $date
