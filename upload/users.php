@@ -64,7 +64,7 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
    ";
 //Display the users info.
 while ($r = $db->fetch_row($q)) {
-    $r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fa fa-shield'
+    $r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fas fa-shield-alt'
         data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
     echo "	<tr>
 				<td>
