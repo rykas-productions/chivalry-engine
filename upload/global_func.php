@@ -1246,12 +1246,15 @@ function forum_dropdown($ddname = "forum", $selected = -1)
  */
 function request_csrf_code($formid)
 {
+    global $db;
     //Assign Unix Timestamp to a variable.
     $time = time();
     //Generate the token from the randomizer function, and hash it with sha512.
-    $token = hash('sha512', (randomizer()));
+    $token = randomizer();
+	$IP = $db->escape($_SERVER['REMOTE_ADDR']);
+	$user_agent = $db->escape(strip_tags(stripslashes($_SERVER['HTTP_USER_AGENT'])));
     //Store the CSRF Form into $_SESSION.
-    $_SESSION["csrf_{$formid}"] = array('token' => $token, 'issued' => $time);
+    $_SESSION["csrf_{$formid}"] = array('token' => $token, 'issued' => $time, 'ip' => $IP, 'useragent' => $user_agent);
     //Return the token.
     return $token;
 }
@@ -1294,19 +1297,28 @@ function request_csrf_html($formid)
  */
 function verify_csrf_code($formid, $code, $expiry = 300)
 {
+	global $db;
     //User does not have a CSRF Session started for $formid, or its missing information.
     if (!isset($_SESSION["csrf_{$formid}"]) || !is_array($_SESSION["csrf_{$formid}"])) {
         return false;
     } else {
+		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
+		$user_agent = $db->escape(strip_tags(stripslashes($_SERVER['HTTP_USER_AGENT'])));
         //Set verified to false until we can be sure they have verified successfully.
         $verified = false;
         //Assign the CSRF $formid to a variable.
         $token = $_SESSION["csrf_{$formid}"];
         //Check to see if the token is still valid.
-        if ($token['issued'] + $expiry > time()) {
-            //User becomes verified if the code matches the token that was stored in $_SESSION
-            $verified = ($token['token'] === $code);
-        }
+		if ($token['ip'] == $IP)
+		{
+			if ($token['useragent'] == $user_agent)
+			{
+				if ($token['issued'] + $expiry > time()) {
+					//User becomes verified if the code matches the token that was stored in $_SESSION
+					$verified = ($token['token'] === $code);
+				}
+			}
+		}
         //Unset the CSRF $formid from $_SESSION
         unset($_SESSION["csrf_{$formid}"]);
         //Return if the user has verified successfully or not.
@@ -1346,7 +1358,7 @@ function encode_password($password, $usebetterpasswordgen=false)
     global $set;
 	//Set the password cost via settings.
     $options = ['cost' => $set['Password_Effort'],];
-	if (($usebetterpasswordgen == true) && defined('PASSWORD_ARGON2I'))
+	if (($usebetterpasswordgen == true) && (defined('PASSWORD_ARGON2I') == true))
 	{
 		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
 	}
