@@ -63,6 +63,7 @@ class headers
                             <span>
                             <?php  
                             echo "{$ir['username']} [{$userid}]<br />
+                            Level {$ir['level']}<br />
                             Energy {$energy}%<br />
                             Brave {$brave}%<br />
                             Will {$will}%<br />
