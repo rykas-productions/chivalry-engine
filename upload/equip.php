@@ -85,10 +85,10 @@ function weapon()
 		What slot do you want to equip your {$r['itmname']} in? If you have a weapon already equipped in that slot,
 		it'll be moved to your inventory.<br />
 		<form action='?slot=weapon&ID={$_GET['ID']}' method='post'>
-			<input type='radio' class='form-control' name='type' value='equip_primary' checked='checked' />
-			    Equip as Primary Weapon<br />
-		<input type='radio' class='form-control' name='type' value='equip_secondary' />
-		    Equip as Secondary Weapon<br />
+            <select name='type' class='form-control' type='dropdown'>
+                <option value='equip_primary'>Equip as Primary</option>
+                <option value='equip_secondary'>Equip as Secondary</option>
+            </select>
 		<input type='submit' value='Equip Weapon' class='btn btn-primary'>
 		</form>
 		";
