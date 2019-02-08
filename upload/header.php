@@ -146,6 +146,9 @@ class headers
                                 <span class="menu-text">Announcements <span class='badge badge-pill badge-primary'><?php echo $ir['announcements']; ?></span></span>
                             </a>
                         </li>
+                        <?php if ($api->UserMemberLevelGet($userid,"forum moderator"))
+                        {
+                            ?>
                         <li class="header-menu">
                             <span>Staff</span>
                         </li>
@@ -154,6 +157,7 @@ class headers
                                 <span class="menu-text">Staff Panel</span>
                             </a>
                         </li>
+                        <?php } ?>
                         <li class="header-menu">
                             <span><?php echo date('F j, Y') . " " . date('g:i:s a'); ?></span>
                         </li>

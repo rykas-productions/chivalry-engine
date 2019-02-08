@@ -101,6 +101,11 @@ check_level();
 check_data();
 $h = new headers;
 $h->startheaders();
+if (!$api->UserMemberLevelGet($userid,"forum moderator"))
+{
+  header("Location: ../explore.php");
+  exit;
+}
 $fm = number_format($ir['primary_currency']);
 $cm = number_format($ir['secondary_currency']);
 $lv = date('F j, Y, g:i a', $ir['laston']);
