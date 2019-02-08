@@ -181,9 +181,6 @@ if (!$_GET['user']) {
 					<a href='hirespy.php?user={$r['userid']}' class='btn btn-primary'>Spy On {$r['username']}</a>
 					<br />
 					<br />
-					<a href='poke.php?user={$r['userid']}' class='btn btn-primary'>Poke {$r['username']}</a>
-					<br />
-					<br />
 					<a href='contacts.php?action=add&user={$r['userid']}' class='btn btn-primary'>Add {$r['username']} to Contact List</a>
 				  ";
         ?>
