@@ -141,8 +141,7 @@ function buy()
                     alert('danger', "Uh Oh!", "You are not in the same town as this shop and cannot buy from it.", true, "shops.php");
                     die($h->endpage());
                 }
-
-                $price = $itemd['itmbuyprice'] * $_POST['qty']);
+                $price = $itemd['itmbuyprice'] * $_POST['qty'];
                 item_add($userid, $itemd['itmid'], $_POST['qty']);
                 $db->query(
                     "UPDATE `users`
