@@ -40,18 +40,10 @@ if (empty($_GET['to'])) {
 
     //Show this information!
     while ($r = $db->fetch_row($q)) {
-        //Does the town in question have a guild owner? If so, select their name! If not... say its unowned.
-        if ($r['town_guild_owner'] > 0) {
-            $name = $db->fetch_single($db->query("SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r['town_guild_owner']}"));
-        } else {
-            $name = "Unowned";
-        }
         echo "
 		<tr>
 			<td>{$r['town_name']}</td>
 			<td>{$r['town_min_level']}</td>
-			<td>{$name}</td>
-			<td>{$r['town_tax']}%</td>
 			<td><a href='?to={$r['town_id']}'>Travel</a></td>
 		</tr>
    		";

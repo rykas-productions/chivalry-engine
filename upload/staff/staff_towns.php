@@ -36,7 +36,6 @@ function addtown()
     if (isset($_POST['name'])) {
         $level = (isset($_POST['minlevel']) && is_numeric($_POST['minlevel'])) ? abs(intval($_POST['minlevel'])) : 1;
         $name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
-        $tax = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs(intval($_POST['tax'])) : 0;
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_addtown', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action has been blocked for your security. Please submit the form quickly");
             die($h->endpage());
@@ -47,16 +46,12 @@ function addtown()
             alert('danger', "Uh Oh!", "The town name you've chosen is already in use.");
             die($h->endpage());
         }
-        if ($tax < 0 || $tax > 20) {
-            alert('danger', "Uh Oh!", "Tax levels can only be between 0-20%.");
-            die($h->endpage());
-        }
         if ($level < 0) {
             alert('danger', "Uh Oh!", "Please specify a minimum level requirement.");
             die($h->endpage());
         }
         $db->free_result($q);
-        $db->query("INSERT INTO `town` (`town_name`, `town_min_level`, `town_guild_owner`, `town_tax`) VALUES ('{$name}', '{$level}', '0', '{$tax}');");
+        $db->query("INSERT INTO `town` (`town_name`, `town_min_level`) VALUES ('{$name}', '{$level}');");
         $api->SystemLogsAdd($userid, 'staff', "Created a town named {$name}.");
         alert('success', "Success!", "You have successfully created the {$name} town.", true, 'index.php');
     } else {
@@ -169,7 +164,6 @@ function edittown()
         case 2:
             $level = (isset($_POST['minlevel']) && is_numeric($_POST['minlevel'])) ? abs(intval($_POST['minlevel'])) : 1;
             $name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
-            $tax = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs(intval($_POST['tax'])) : 0;
             $id = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : 0;
             $q = $db->query("SELECT * FROM `town` WHERE `town_id` = {$id}");
             if ($db->num_rows($q) == 0) {
@@ -187,17 +181,13 @@ function edittown()
                 alert('danger', "Uh Oh!", "The town name you've chosen is already in use.");
                 die($h->endpage());
             }
-            if ($tax < 0 || $tax > 20) {
-                alert('danger', "Uh Oh!", "Tax levels can only be between 0-20%.");
-                die($h->endpage());
-            }
             if ($level < 0) {
                 alert('danger', "Uh Oh!", "Please specify a minimum level requirement.");
                 die($h->endpage());
             }
             $db->free_result($q);
             $db->query("UPDATE `town`
-                        SET `town_name` = '{$name}', `town_min_level` = {$level}, `town_tax` = {$tax}
+                        SET `town_name` = '{$name}', `town_min_level` = {$level}
                         WHERE `town_id` = {$id}");
             alert("success", "Success!", "You have successfully edited the {$name} town.", true, 'index.php');
             $api->SystemLogsAdd($userid, 'staff', "Edited the {$name} town.");
@@ -239,14 +229,6 @@ function edittown()
                         </th>
                         <td>
                             <input type='number' name='minlevel' min='0' required='1' class='form-control' value='{$r['town_min_level']}'>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Taxation Level
-                        </th>
-                        <td>
-                            <input type='number' name='tax' min='0' max='20' required='1' class='form-control' value='{$r['town_tax']}'>
                         </td>
                     </tr>
                     <tr>

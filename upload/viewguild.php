@@ -705,20 +705,11 @@ function staff()
             case "name":
                 staff_name();
                 break;
-            case "town":
-                staff_town();
-                break;
-            case "untown":
-                staff_untown();
-                break;
             case "declarewar":
                 staff_declare();
                 break;
             case "levelup":
                 staff_levelup();
-                break;
-            case "tax":
-                staff_tax();
                 break;
             case "dissolve":
                 staff_dissolve();
@@ -763,13 +754,8 @@ function staff_idx()
 			<a href='?action=staff&act2=leader'>Transfer Leader</a><br />
 			<a href='?action=staff&act2=name'>Change Guild Name</a><br />
 			<a href='?action=staff&act2=desc'>Change Guild Description</a><br />
-			<a href='?action=staff&act2=town'>Change Guild Town</a><br />";
-        if ($db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) {
-            echo "<a href='?action=staff&act2=untown'>Surrender Guild Town</a><br />
-				<a href='?action=staff&act2=tax'>Change Town Tax</a><br />";
-        }
-        echo "<a href='?action=staff&act2=declarewar'>Declare War</a><br />
-<a href='?action=staff&act2=dissolve'>Dissovle Guild</a><br />
+            <a href='?action=staff&act2=declarewar'>Declare War</a><br />
+            <a href='?action=staff&act2=dissolve'>Dissovle Guild</a><br />
 		</td>";
     }
     echo "</tr></table>
@@ -1434,133 +1420,6 @@ function staff_name()
     }
 }
 
-function staff_town()
-{
-    global $db, $gd, $api, $h, $userid, $wq;
-
-    //Verify current user is the guild owner.
-    if ($userid == $gd['guild_owner']) {
-        if (isset($_POST['town'])) {
-
-            //Verify CSRF
-            if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_town", stripslashes($_POST['verf']))) {
-                alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
-                die($h->endpage());
-            }
-            //Make sure POST is safe to work with.
-            $town = (isset($_POST['town']) && is_numeric($_POST['town'])) ? abs($_POST['town']) : 0;
-
-            //Make sure current guild doesn't already have a town.
-            $cnt = $db->fetch_single($db->query("SELECT COUNT(`town_id`) FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
-            if ($cnt > 0) {
-                alert('danger', "Uh Oh!", "Your guild already owns a town. Surrender your current town to own a new one.");
-                die($h->endpage());
-            }
-
-            //Make sure town claimed exists.
-            if ($db->num_rows($db->query("SELECT `town_id` FROM `town` WHERE `town_id` = {$town}")) == 0) {
-                alert('danger', "Uh Oh!", "The town you wish to own does not exist.");
-                die($h->endpage());
-            }
-
-            //Check to see if the town is unowned.
-            if ($db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$town}")) > 0) {
-                alert('danger', "Uh Oh!", "The town you wish to own is already owned by another guild. If you want this town, declare war on them!");
-                die($h->endpage());
-            }
-
-            //Check to see if current guild is at war, if so, stop them.
-            if ($db->fetch_single($wq) > 0) {
-                alert('danger', "Uh Oh!", "You may not change your guild's town while at war.");
-                die($h->endpage());
-            }
-            $lowestlevel = $db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` ASC LIMIT 1"));
-            $townlevel = $db->fetch_single($db->query("SELECT `town_min_level` FROM `town` WHERE `town_id` = {$town}"));
-
-            //Verify that everyone in the guild can reach the city.
-            if ($townlevel > $lowestlevel) {
-                alert('danger', "Uh Oh!", "You cannot own this town as there are members in your guild who cannot access it.");
-                die($h->endpage());
-            }
-
-            //Update everything. City is now the guild's.
-            $db->query("UPDATE `town` SET `town_guild_owner` = {$gd['guild_id']} WHERE `town_id` = {$town}");
-            $api->GuildAddNotification($gd['guild_id'], "Your guild has successfully claimed {$api->SystemTownIDtoName($town)}.");
-            alert('success', "Success!", "You have successfully claimed {$api->SystemTownIDtoName($town)} for your guild.", true, '?action=staff&act2=idx');
-        } else {
-            $csrf = request_csrf_html('guild_staff_town');
-            echo "
-			<form method='post'>
-				<table class='table table-bordered'>
-					<tr>
-						<th colspan='2'>
-							You can claim a town for your guild here. This town must be unowned, and must be accessible
-							to all your guild members. If it is currently owned, you must declare war on the owning
-							guild to get a chance to claim the town as yours.
-						</th>
-					</tr>
-					<tr>
-						<th>
-							Town
-						</th>
-						<td>
-							" . location_dropdown('town') . "
-						</td>
-					</tr>
-					<tr>
-						<td colspan='2'>
-							<input type='submit' value='Claim Town' class='btn btn-primary'>
-						</td>
-					</tr>
-					{$csrf}
-				</table>
-			</form>
-			<a href='?action=staff&act2=idx'>Go Back</a>";
-        }
-    } else {
-        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
-    }
-}
-
-function staff_untown()
-{
-    global $db, $gd, $api, $h, $userid, $wq;
-    //Verify current user is the guild's owner.
-    if ($userid == $gd['guild_owner']) {
-
-        //Check to be sure the guild has a town under their control
-        $townowned = $db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}");
-        if ($db->num_rows($townowned) == 0) {
-            alert('danger', "Uh Oh!", "Your guild doesn't have a town to surrender.", true, '?action=staff&act2=idx');
-            die($h->endpage());
-
-            //Check that the guild is not at war.
-        } else if ($db->fetch_single($wq) > 0) {
-            alert('danger', "Uh Oh!", "You cannot surrender your town while at war.", true, '?action=staff&act2=idx');
-            die($h->endpage());
-        } elseif (isset($_POST['confirm'])) {
-
-            //Surrender the town.
-            $r = $db->fetch_single($townowned);
-            alert('success', "Success!", "You have surrendered your guild's town.", true, '?action=staff&act2=idx');
-            $db->query("UPDATE `town`
-                        SET `town_guild_owner` = 0
-                        WHERE `town_id` = {$r}");
-            $api->GuildAddNotification($gd['guild_id'], "Your guild was willingly given up their town.");
-            $api->SystemLogsAdd($userid, 'guilds', "Willingly surrendered {$gd['guild_name']}'s town, {$api->SystemTownIDtoName($r)}.");
-        } else {
-            echo "Are you sure you wish to surrender your guild's town? This is not reversible.<br />
-			<form method='post'>
-				<input type='hidden' name='confirm' value='yes'>
-				<input type='submit' class='btn btn-success' value='Yes'>
-			</form>
-			<a href='?action=staff&act2=idx'>Go Back</a>";
-        }
-    } else {
-        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
-    }
-}
-
 function staff_declare()
 {
     global $db, $gd, $api, $h, $userid, $ir;
@@ -1725,72 +1584,6 @@ function staff_levelup()
 			<input type='submit' value='Level Up' class='btn btn-success'>
 		</form>
 		<a href='?action=staff&act2=idx'>Go Back</a>";
-    }
-}
-
-function staff_tax()
-{
-    global $db, $gd, $api, $h, $userid;
-    //Check if the user is the owner of the guild.
-    if ($userid == $gd['guild_owner']) {
-        //Guild does not own a town, so tell them so.
-        if (!$db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) {
-            alert('danger', "Uh Oh!", "Your guild does not own a town to set a tax rate on.", true, '?action=staff&act2=idx');
-            die($h->endpage());
-        }
-        if (isset($_POST['tax'])) {
-            //Verify the variables are safe to work with.
-            $_POST['tax'] = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs($_POST['tax']) : 0;
-
-            //Verify CSRF check has passed.
-            if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_tax", stripslashes($_POST['verf']))) {
-                alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
-                die($h->endpage());
-            }
-
-            //Make sure tax rate is between 0-10%
-            if ($_POST['tax'] < 0 || $_POST['tax'] > 10) {
-                alert('danger', "Uh Oh!", "You can only set a tax rate between 0% and 10%");
-                die($h->endpage());
-            }
-            //Update town's tax rate.
-            $town_id = $db->fetch_single($db->query("SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
-            $db->query("UPDATE `town` SET `town_tax` = {$_POST['tax']} WHERE `town_guild_owner` = {$gd['guild_owner']}");
-            $api->SystemLogsAdd($userid, 'tax', "Set tax rate to {$_POST['tax']}% in {$api->SystemTownIDtoName($town_id)}.");
-            alert('success', "Success!", "You have set the tax rate of {$api->SystemTownIDtoName($town_id)} to {$_POST['tax']}%.", true, '?action=staff&act2=idx');
-
-        } else {
-            $csrf = request_csrf_html('guild_staff_tax');
-            $current_tax = $db->fetch_single($db->query("SELECT `town_tax` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}"));
-            echo "
-			<table class='table table-bordered'>
-			<form method='post'>
-				<tr>
-					<th colspan='2'>
-						You may change the tax rate for the town your guild owns here.
-					</th>
-				</tr>
-				<tr>
-					<th>
-						Tax Rate (Percent)
-					</th>
-					<td>
-						<input type='number' name='tax' class='form-control' value='{$current_tax}' min='0' max='20' required='1'>
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='Change Tax'>
-					</td>
-				</tr>
-			{$csrf}
-			</form>
-			</table>
-			<a href='?action=staff&act2=idx'>Go Back</a>";
-        }
-
-    } else {
-        alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
     }
 }
 
