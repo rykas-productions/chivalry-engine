@@ -307,7 +307,6 @@ CREATE TABLE `gamerules` (
 
 CREATE TABLE `guild` (
   `guild_id` int(11) UNSIGNED NOT NULL,
-  `guild_town_id` int(11) UNSIGNED NOT NULL,
   `guild_owner` int(11) UNSIGNED NOT NULL,
   `guild_coowner` int(11) UNSIGNED NOT NULL,
   `guild_primcurr` int(11) UNSIGNED NOT NULL,
@@ -932,13 +931,11 @@ CREATE TABLE `smelt_recipes` (
 CREATE TABLE `town` (
   `town_id` int(11) UNSIGNED NOT NULL,
   `town_name` tinytext NOT NULL,
-  `town_min_level` int(11) UNSIGNED NOT NULL,
-  `town_guild_owner` int(11) UNSIGNED NOT NULL,
-  `town_tax` tinyint(11) UNSIGNED NOT NULL
+  `town_min_level` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `town` (`town_id`, `town_name`, `town_min_level`, `town_guild_owner`, `town_tax`) VALUES
-(1, 'Default Town', 1, 0, 0);
+INSERT INTO `town` (`town_id`, `town_name`, `town_min_level`) VALUES
+(1, 'Default Town', 1);
 
 
 -- --------------------------------------------------------

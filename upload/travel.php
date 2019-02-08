@@ -25,12 +25,6 @@ if (empty($_GET['to'])) {
 		<th width='15%'>
 			Level Required
 		</th>
-		<th>
-			Guild
-		</th>
-		<th width='15%'>
-			Tax Level
-		</th>
 		<th width='10%'>
 			>>>
 		</th>
