@@ -52,7 +52,7 @@ if (isset($_GET['user'])) {
         $api->UserTakeCurrency($userid, 'primary', $_POST['send']);
         $api->SystemLogsAdd($userid, 'sendcash', "Sent {$cashformat} {$_CONFIG['primary_currency']} to {$user2format}.");
         alert("success", "Success!", "You have successfully sent {$user2format} {$cashformat} {$_CONFIG['primary_currency']}.", true, "profile.php?user={$_GET['user']}");
-
+        $h->endpage();
     } else {
         echo "You are attempting to send {$_CONFIG['primary_currency']} to {$api->SystemUserIDtoName($_GET['user'])}. You have
         " . number_format($ir['primary_currency']) . " {$_CONFIG['primary_currency']} you can send. How much do you wish to send?";
