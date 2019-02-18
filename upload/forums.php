@@ -111,7 +111,7 @@ function idx()
     ?>
     <table class='table table-bordered table-hover'>
     <thead>
-    <tr class='table-primary'>
+    <tr>
         <th>
             <?php echo "Category"; ?>
         </th>
@@ -145,7 +145,7 @@ function idx()
         $topicname = $db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
         echo "<tr>
 					<td>
-						<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
+						<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
 						<small class='hidden-xs-down'><br />{$r['ff_desc']}</small>
 					</td>
 					<td class='hidden-xs-down'>
@@ -156,7 +156,7 @@ function idx()
 					</td>
 					<td>
 						{$t}<br />
-						In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1' style='font-weight: 800;'>{$topicname}</a><br />
+						In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
 						By <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
 					</td>
               </tr>";
@@ -176,7 +176,7 @@ function idx()
         ?>
         <table class='table table-bordered table-hover'>
         <thead>
-        <tr class='table-primary'>
+        <tr>
             <th>
                 <?php echo "Category"; ?>
             </th>
@@ -257,7 +257,7 @@ function viewforum()
             die($h->endpage());
         }
     }
-    $ntl = "&nbsp;[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
+    $ntl = "[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
     echo "<ol class='breadcrumb'>
 		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item active'>{$r['ff_name']} {$ntl}</li>	
@@ -271,18 +271,18 @@ function viewforum()
     ?>
     <table class='table table-bordered table-hover'>
     <thead>
-    <tr class='table-primary'>
+    <tr>
         <th>
-            <?php echo "Topic"; ?>
+            Topic
         </th>
         <th class='hidden-xs-down'>
-            <?php echo "Post Count"; ?>
+            Post Count
         </th>
         <th class='hidden-xs-down'>
-            <?php echo "Created"; ?>
+            Created
         </th>
         <th>
-            <?php echo "Latest Post"; ?>
+            Latest Post
         </th>
     </tr>
     </thead>
@@ -320,8 +320,7 @@ function viewforum()
         if (!$pn1) {
             $pn1['username'] = "Non-existent User";
         }
-        $authored = ($r2['ft_owner_id'] == $userid) ? "table-warning" : "" ;
-        echo "<tr class='{$authored}'>
+        echo "<tr>
         		<td>
 					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
 					<small class='hidden-xs-down'>{$r2['ft_desc']}</small>
@@ -515,7 +514,7 @@ function viewtopic()
         }
         if ($memb['userid'] > 0) {
             if ($memb['display_pic']) {
-                $av = "<img src='{$memb['display_pic']}' class='img-responsive' width='75'>";
+                $av = "<img src='{$memb['display_pic']}' class='img-responsive'>";
             } else {
                 $av = "";
             }
@@ -524,7 +523,7 @@ function viewtopic()
         }
         $parser->parse($r['fp_text']);
         $r['fp_text'] = $parser->getAsHtml();
-        echo "<tr class='table-primary'>
+        echo "<tr>
 				<th width='25%'>Post #{$no}</th>
 				<th>
 				Posted {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink}
@@ -1061,14 +1060,12 @@ function editsub()
              SET 
              `fp_text` = '{$_POST['fp_text']}', `fp_editor_id` = $userid,
              `fp_editor_id` = '{$userid}',
-             `fp_editor_time` = " . time()
-        . ",
+             `fp_editor_time` = " . time() . ",
              `fp_edit_count` = `fp_edit_count` + 1
              WHERE `fp_id` = {$_GET['post']}");
 
     alert('success', "Success!", "You have edited this post successfully.", false);
-    echo "<br />
-   ";
+    echo "<br />";
     $_GET['viewtopic'] = $_GET['topic'];
     viewtopic();
 
