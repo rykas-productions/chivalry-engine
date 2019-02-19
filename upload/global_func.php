@@ -219,7 +219,7 @@ function valid_email($email)
 function itemtype_dropdown($ddname = "item_type", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `itmtypeid`, `itmtypename`
@@ -253,7 +253,7 @@ function itemtype_dropdown($ddname = "item_type", $selected = -1)
 function weapon_dropdown($ddname = "weapon", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `itmid`, `itmname`
@@ -287,7 +287,7 @@ function weapon_dropdown($ddname = "weapon", $selected = -1)
 function armor_dropdown($ddname = "armor", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `itmid`, `itmname`
@@ -321,7 +321,7 @@ function armor_dropdown($ddname = "armor", $selected = -1)
 function item_dropdown($ddname = "item", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `itmid`, `itmname`
@@ -355,7 +355,7 @@ function item_dropdown($ddname = "item", $selected = -1)
 function academy_dropdown($acadname = "academy", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$acadname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$acadname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `ac_id`, `ac_name`
@@ -389,7 +389,7 @@ function academy_dropdown($acadname = "academy", $selected = -1)
 function location_dropdown($ddname = "location", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `town_id`, `town_name`, `town_min_level`
@@ -423,7 +423,7 @@ function location_dropdown($ddname = "location", $selected = -1)
 function shop_dropdown($ddname = "shop", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `shopID`, `shopNAME`
@@ -457,7 +457,7 @@ function shop_dropdown($ddname = "shop", $selected = -1)
 function user_dropdown($ddname = "user", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `userid`, `username`
@@ -491,7 +491,7 @@ function user_dropdown($ddname = "user", $selected = -1)
 function user2_dropdown($ddname = "user", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `userid`, `username`
@@ -526,7 +526,7 @@ function user2_dropdown($ddname = "user", $selected = -1)
 function guilds_dropdown($ddname = "guild", $selected = -1)
 {
     global $db;
-    $ret = "<select name='{$ddname}' class='form-control' type='dropdown'>";
+    $ret = "<select name='{$ddname}' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `guild_id`, `guild_name`
@@ -561,7 +561,7 @@ function guilds_dropdown($ddname = "guild", $selected = -1)
 function guild_user_dropdown($ddname = "user", $guild_id, $selected = -1)
 {
     global $db;
-    $ret = "<select name='{$ddname}' class='form-control' type='dropdown'>";
+    $ret = "<select name='{$ddname}' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `userid`, `username`
@@ -596,7 +596,7 @@ function guild_user_dropdown($ddname = "user", $guild_id, $selected = -1)
 function npcbot_dropdown($ddname = "bot", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `u`.`userid`, `u`.`username`
@@ -632,7 +632,7 @@ function npcbot_dropdown($ddname = "bot", $selected = -1)
 function fed_user_dropdown($ddname = "user", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `userid`, `username`
@@ -667,7 +667,7 @@ function fed_user_dropdown($ddname = "user", $selected = -1)
 function mailb_user_dropdown($ddname = "user", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query("SELECT `mbUSER`, `mbID`, `username`
                     FROM `mail_bans` `m`
@@ -702,7 +702,7 @@ function mailb_user_dropdown($ddname = "user", $selected = -1)
 function forumb_user_dropdown($ddname = "user", $selected = -1)
 {
     global $db, $api;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `fb_user`,`fb_id`
@@ -736,7 +736,7 @@ function forumb_user_dropdown($ddname = "user", $selected = -1)
 function estate_dropdown($ddname = "estate", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `house_id`, `house_name`, `house_will`
@@ -771,7 +771,7 @@ function estate_dropdown($ddname = "estate", $selected = -1)
 function estate2_dropdown($ddname = "house", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `house_will`, `house_name`
@@ -805,7 +805,7 @@ function estate2_dropdown($ddname = "house", $selected = -1)
 function crime_dropdown($ddname = "crime", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `crimeID`, `crimeNAME`
@@ -839,7 +839,7 @@ function crime_dropdown($ddname = "crime", $selected = -1)
 function crimegroup_dropdown($ddname = "crimegroup", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `cgID`, `cgNAME`
@@ -1215,7 +1215,7 @@ function item_remove($user, $itemid, $qty)
 function forum_dropdown($ddname = "forum", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `ff_id`, `ff_name`
@@ -1572,7 +1572,7 @@ function Random($min = 0, $max = PHP_INT_MAX)
 function smelt_dropdown($ddname = 'smelt', $selected = -1)
 {
     global $db, $api;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `smelt_id`, `smelt_output`, `smelt_qty_output`
@@ -1777,7 +1777,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
 function inventory_dropdown($ddname = "item", $selected = -1)
 {
     global $db, $userid;
-    $ret = "<select name='$ddname' type='dropdown' class='form-control'>";
+    $ret = "<select name='$ddname' type='dropdown' class='custom-select'>";
     $q =
         $db->query(
             "SELECT `i`.*, `it`.*
@@ -1814,7 +1814,7 @@ function inventory_dropdown($ddname = "item", $selected = -1)
 function job_dropdown($ddname = "job", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `jRANK`, `jNAME`
@@ -1848,7 +1848,7 @@ function job_dropdown($ddname = "job", $selected = -1)
 function jobrank_dropdown($ddname = "jobrank", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `jrID`, `jNAME`, `jrRANK`
@@ -1921,7 +1921,7 @@ function pagination($perpage, $total, $currentpage, $url)
 function armory_dropdown($ddname = "item", $selected = -1)
 {
     global $db, $ir;
-    $ret = "<select name='$ddname' type='dropdown' class='form-control'>";
+    $ret = "<select name='$ddname' type='dropdown' class='custom-select'>";
     $q =
         $db->query(
             "SELECT `i`.*, `it`.*
