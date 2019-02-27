@@ -13,6 +13,9 @@ if (!defined('MONO_ON')) {
 
 class api
 {
+	function __construct() {
+		include('class_api_user.php');
+	}
     /*
         Returns the API version.
     */
