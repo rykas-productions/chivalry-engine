@@ -1520,28 +1520,6 @@ function get_filesize_remote($url)
     }
     return (int)$headers['content-length'];
 }
-
-/**
- * Tests to see if the user's permission is allowed or not.
- *
- * @param string $perm The permission to test for
- * @param int $user The user to test on
- *
- * @return bool                Returns true if the user has this,
- *                            false if not.
- */
-function permission($perm, $user)
-{
-    global $db;
-    $Query = $db->query("SELECT `perm_disable` FROM `permissions` WHERE `perm_name` = '{$perm}' AND `perm_user` = {$user}");
-    if ($db->num_rows($Query) == 0)
-        return true;
-    $q = $db->fetch_single($Query);
-    if ($q == 'false')
-        //User does have this permission
-        return true;
-}
-
 //Please use $api->SystemLogsAdd(); instead
 function SystemLogsAdd($user, $logtype, $input)
 {

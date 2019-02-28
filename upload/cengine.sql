@@ -711,19 +711,6 @@ CREATE TABLE `notifications` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permissions`
---
-
-CREATE TABLE `permissions` (
-  `perm_id` int(11) UNSIGNED NOT NULL,
-  `perm_user` int(11) UNSIGNED NOT NULL,
-  `perm_name` tinytext NOT NULL,
-  `perm_disable` enum('true','false') NOT NULL DEFAULT 'true'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `polls`
 --
 
@@ -1268,12 +1255,6 @@ ALTER TABLE `notifications`
   ADD UNIQUE KEY (`notif_id`);
 
 --
--- Indexes for table `permissions`
---
-ALTER TABLE `permissions`
-  ADD UNIQUE KEY (`perm_id`);
-
---
 -- Indexes for table `polls`
 --
 ALTER TABLE `polls`
@@ -1539,11 +1520,7 @@ ALTER TABLE `newspaper_ads`
 --
 ALTER TABLE `notifications`
   MODIFY `notif_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `permissions`
---
-ALTER TABLE `permissions`
-  MODIFY `perm_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  
 --
 -- AUTO_INCREMENT for table `polls`
 --
