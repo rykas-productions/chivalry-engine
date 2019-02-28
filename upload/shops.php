@@ -114,46 +114,44 @@ function buy()
     global $db, $userid, $ir, $api, $h, $_CONFIG;
     $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(($_GET['ID'])) : '';
     $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(($_POST['qty'])) : '';
-    if (permission('CanBuyFromGame', $userid) == true) {
-        if (empty($_GET['ID']) OR empty($_POST['qty'])) {
-            alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.", true, "shops.php");
-        } else {
-            $q = $db->query("SELECT `itmid`, `itmbuyprice`, `itmname`, `itmbuyable`, `shopLOCATION`
-							FROM `shopitems` AS `si`
-							INNER JOIN `shops` AS `s`
-							ON `si`.`sitemSHOP` = `s`.`shopID`
-							INNER JOIN `items` AS `i`
-							ON `si`.`sitemITEMID` = `i`.`itmid`
-							WHERE `sitemID` = {$_GET['ID']}");
-            if ($db->num_rows($q) == 0) {
-                alert('danger', "Uh Oh!", "You are trying to buy from a non-existent shop.", true, "shops.php");
-            } else {
-                $itemd = $db->fetch_row($q);
-                if ($ir['primary_currency'] < ($itemd['itmbuyprice'] * $_POST['qty'])) {
-                    alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['primary_currency']} to buy {$_POST['qty']} {$itemd['itmname']}(s).", true, "shops.php");
-                    die($h->endpage());
-                }
-                if ($itemd['itmbuyable'] == 'false') {
-                    alert('danger', "Uh Oh!", "You cannot buy {$itemd['itmname']}s this way.", true, "shops.php");
-                    die($h->endpage());
-                }
-                if ($itemd['shopLOCATION'] != $ir['location']) {
-                    alert('danger', "Uh Oh!", "You are not in the same town as this shop and cannot buy from it.", true, "shops.php");
-                    die($h->endpage());
-                }
-                $price = $itemd['itmbuyprice'] * $_POST['qty'];
-                item_add($userid, $itemd['itmid'], $_POST['qty']);
-                $db->query(
-                    "UPDATE `users`
-						 SET `primary_currency` = `primary_currency` - $price
-						 WHERE `userid` = $userid");
-                $ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
-                alert('success', "Success!", "You have bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price} {$_CONFIG['primary_currency']}.", true, "shops.php");
-                $api->SystemLogsAdd($userid, 'itembuy', $ib_log);
-            }
-            $db->free_result($q);
-        }
-    }
+	if (empty($_GET['ID']) OR empty($_POST['qty'])) {
+		alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.", true, "shops.php");
+	} else {
+		$q = $db->query("SELECT `itmid`, `itmbuyprice`, `itmname`, `itmbuyable`, `shopLOCATION`
+						FROM `shopitems` AS `si`
+						INNER JOIN `shops` AS `s`
+						ON `si`.`sitemSHOP` = `s`.`shopID`
+						INNER JOIN `items` AS `i`
+						ON `si`.`sitemITEMID` = `i`.`itmid`
+						WHERE `sitemID` = {$_GET['ID']}");
+		if ($db->num_rows($q) == 0) {
+			alert('danger', "Uh Oh!", "You are trying to buy from a non-existent shop.", true, "shops.php");
+		} else {
+			$itemd = $db->fetch_row($q);
+			if ($ir['primary_currency'] < ($itemd['itmbuyprice'] * $_POST['qty'])) {
+				alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['primary_currency']} to buy {$_POST['qty']} {$itemd['itmname']}(s).", true, "shops.php");
+				die($h->endpage());
+			}
+			if ($itemd['itmbuyable'] == 'false') {
+				alert('danger', "Uh Oh!", "You cannot buy {$itemd['itmname']}s this way.", true, "shops.php");
+				die($h->endpage());
+			}
+			if ($itemd['shopLOCATION'] != $ir['location']) {
+				alert('danger', "Uh Oh!", "You are not in the same town as this shop and cannot buy from it.", true, "shops.php");
+				die($h->endpage());
+			}
+			$price = $itemd['itmbuyprice'] * $_POST['qty'];
+			item_add($userid, $itemd['itmid'], $_POST['qty']);
+			$db->query(
+				"UPDATE `users`
+					 SET `primary_currency` = `primary_currency` - $price
+					 WHERE `userid` = $userid");
+			$ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
+			alert('success', "Success!", "You have bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price} {$_CONFIG['primary_currency']}.", true, "shops.php");
+			$api->SystemLogsAdd($userid, 'itembuy', $ib_log);
+		}
+		$db->free_result($q);
+	}
 }
 
 $h->endpage();

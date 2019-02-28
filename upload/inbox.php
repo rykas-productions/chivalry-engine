@@ -189,10 +189,8 @@ function read()
 		</td>
 	</tr>
 	</table>
-	<hr />";
-    //Permission check to see if the current player can reply to messages. If they can, show the reply form.
-    if (permission('CanReplyMail', $userid)) {
-        echo "Quick Reply Form<br />
+	<hr />
+	Quick Reply Form<br />
 		<form method='post' action='?action=send'>
 		<table class='table table-bordered'>
 		<tr>
@@ -200,7 +198,7 @@ function read()
 				To
 			</th>
 			<td>
-				<input type='text' class='form-control' readonly='1' name='sendto' required='1' value='{$un1['username']}'>
+				<input type='text' class='form-control' name='sendto' required='1' value='{$un1['username']}'>
 			</td>
 		</tr>
 		<tr>
@@ -208,7 +206,7 @@ function read()
 				Subject
 			</th>
 			<td>
-				<input type='text' class='form-control' maxlength='50' name='subject' value='{$msg['mail_subject']}'>
+				<input type='text' class='form-control' name='subject' value='{$msg['mail_subject']}'>
 			</td>
 		</tr>
 		<tr>
@@ -216,7 +214,7 @@ function read()
 				Message
 			</th>
 			<td>
-				<textarea class='form-control' rows='5' required='1' maxlength='65655' name='msg'></textarea>
+				<textarea class='form-control' required='1' name='msg'></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -227,7 +225,6 @@ function read()
 		</table>
 		<input type='hidden' name='verf' value='{$code}' />
 		</form>";
-    }
 }
 
 function send()
@@ -360,8 +357,6 @@ function compose()
     $username = (isset($_GET['user']) && ($_GET['user'] > 0)) ?
         $username = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}")) :
         '';
-    //Permission check to see if player can send mail.
-    if (permission('CanReplyMail', $userid)) {
         //Request CSRF Code and display the message composer form.
         $code = request_csrf_code('inbox_send');
         echo "
@@ -380,7 +375,7 @@ function compose()
 				Subject
 			</th>
 			<td>
-				<input type='text' class='form-control' maxlength='50' name='subject'>
+				<input type='text' class='form-control' name='subject'>
 			</td>
 		</tr>
 		<tr>
@@ -388,7 +383,7 @@ function compose()
 				Message
 			</th>
 			<td>
-				<textarea class='form-control' rows='5' required='1' maxlength='65655' name='msg'></textarea>
+				<textarea class='form-control' required='1' name='msg'></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -399,7 +394,6 @@ function compose()
 		</table>
 		<input type='hidden' name='verf' value='{$code}' />
 		</form>";
-    }
 }
 
 function archive()
