@@ -135,6 +135,7 @@ $h = new headers;
 include("class/class_api.php");
 $api = new api;
 $api->user = new user;
+$api->guild = new guild;
 //If requested file doesn't want the header hidden.
 if (isset($nohdr) == false || !$nohdr) {
     $h->startheaders();

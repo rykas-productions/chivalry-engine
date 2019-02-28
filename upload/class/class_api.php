@@ -15,6 +15,7 @@ class api
 {
 	function __construct() {
 		include('class_api_user.php');
+		include('class_api_guild.php');
 	}
     /*
         Returns the API version.
@@ -35,6 +36,7 @@ class api
     function UserHasCurrency($user, $type, $minimum)
     {
         global $db;
+		trigger_error("Deprecation notice.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
         $type = $db->escape(stripslashes(strtolower($type)));
@@ -60,6 +62,7 @@ class api
     function UserGiveItem($user, $item, $quantity)
     {
         global $db;
+		trigger_error("Deprecation notice.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
@@ -79,6 +82,7 @@ class api
     function UserTakeItem($user, $item, $quantity)
     {
         global $db;
+		trigger_error("Deprecation notice.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
@@ -98,6 +102,7 @@ class api
     function UserGiveCurrency($user, $type, $quantity)
     {
         global $db;
+		trigger_error("Deprecation notice.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $type = $db->escape(stripslashes(strtolower($type)));
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
@@ -121,6 +126,7 @@ class api
     function UserTakeCurrency($user, $type, $quantity)
     {
         global $db;
+		trigger_error("Deprecation notice.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $type = $db->escape(stripslashes(strtolower($type)));
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
@@ -145,6 +151,7 @@ class api
     function UserEquippedItem($user, $slot, $itemid = -1)
     {
         global $db;
+		trigger_error("Deprecation notice.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $slot = $db->escape(stripslashes(strtolower($slot)));
         if ($slot == 'primary' || $slot == 'secondary' || $slot == 'armor') {
@@ -181,6 +188,7 @@ class api
     function UserStatus($user, $status)
     {
         global $db;
+		trigger_error("Deprecation notice.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $status = $db->escape(stripslashes(strtolower($status)));
         if ($status == 'infirmary') {
@@ -202,6 +210,7 @@ class api
     function UserStatusSet($user, $place, $time, $reason)
     {
         global $db;
+		trigger_error("Deprecation notice.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $reason = $db->escape(stripslashes($reason));
         $place = $db->escape(stripslashes(strtolower($place)));
@@ -305,6 +314,7 @@ class api
     function UserMemberLevelGet($user, $level, $exact = false)
     {
         global $db;
+		trigger_error("Deprecation notice.");
         $level = $db->escape(stripslashes(strtolower($level)));
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         if ($user > 0) {
@@ -361,6 +371,7 @@ class api
     function UserHasItem($user, $item, $qty = 1)
     {
         global $db;
+		trigger_error("Deprecation notice.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
         $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;

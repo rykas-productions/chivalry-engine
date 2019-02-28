@@ -20,12 +20,12 @@ if (empty($infirm_count)) {
     $infirm_count = 0;
 }
 //Block access if user is in the infirmary.
-if ($api->UserStatus($ir['userid'], 'infirmary')) {
+if ($api->user->inInfirmary($userid)) {
     alert('danger', "Unconscious!", "You cannot visit the town while you're in the infirmary.", false);
     die($h->endpage());
 }
 //Block access if user is in the dungeon.
-if ($api->UserStatus($ir['userid'], 'dungeon')) {
+if ($api->user->inDungeon($userid)) {
     alert('danger', "Locked Up!", "You cannot visit the town while you're in the dungeon.");
     die($h->endpage());
 }

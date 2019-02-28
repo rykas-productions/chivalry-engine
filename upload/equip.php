@@ -58,7 +58,7 @@ function weapon()
         //Check to see if the chosen slot has a weapon equipped to it already. If true, give them their item back, and
         //log the unequip.
         if ($ir[$_POST['type']] > 0) {
-            $api->UserGiveItem($userid, $ir[$_POST['type']], 1);
+			$api->user->giveItem($userid, $ir[$_POST['type']], 1);
             $slot = ($_POST['type'] == 'equip_primary') ? 'Primary Weapon' : 'Secondary Weapon';
             $weapname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_POST['type']]}"));
             $api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} as their {$slot}");
@@ -73,7 +73,7 @@ function weapon()
         }
         //Remove the item from their inventory, and equip it! Lets log that they equipped it, and give the user a friendly
         //event saying they equipped their item as a weapon.
-        $api->UserTakeItem($userid, $r['itmid'], 1);
+		$api->user->takeItem($userid, $r['itmid'], 1);
         $db->query("UPDATE `users` SET `{$_POST['type']}` = {$r['itmid']} WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their {$slot}.");
         alert('success', "Success!", "You have successfully equipped {$r['itmname']} as your weapon in your {$slot_name}
@@ -135,12 +135,12 @@ function armor()
         //Check that the user has an armor already equipped. If true, give them their old armor back, and log that it
         //was unequipped.
         if ($ir['equip_armor'] > 0) {
-            $api->UserGiveItem($userid, $ir['equip_armor'], 1);
+			$api->user->giveItem($userid, $ir['equip_armor'], 1);
             $armorname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
             $api->SystemLogsAdd($userid, 'equip', "Unequipped {$armorname} as their armor.");
         }
         //Take the item from their inventory, equip it, log that it was equipped, and give a sucecss message to the player.
-        $api->UserTakeItem($userid, $r['itmid'], 1);
+		$api->user->takeItem($userid, $r['itmid'], 1);
         $db->query("UPDATE `users`
 				  SET `equip_armor` = {$r['itmid']}
 				  WHERE `userid` = {$userid}");

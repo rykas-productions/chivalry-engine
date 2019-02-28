@@ -147,7 +147,7 @@ class headers
                                 <span class="menu-text">Announcements <span class='badge badge-pill badge-primary'><?php echo $ir['announcements']; ?></span></span>
                             </a>
                         </li>
-                        <?php if ($api->UserMemberLevelGet($userid,"forum moderator"))
+                        <?php if ($api->user->getStaffLevel($userid,"forum moderator"))
                         {
                             ?>
                         <li class="header-menu">
@@ -242,13 +242,13 @@ class headers
         alert('info', "New Announcements!", "You have {$ir['announcements']} unread announcements.", true, 'announcements.php', "View Announcements");
     }
     //User is in the infirmary, tell them for how long.
-    if ($api->UserStatus($ir['userid'], 'infirmary')) {
+    if ($api->user->inInfirmary($userid)) {
         $InfirmaryOut = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
         $InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
         alert('info', "Unconscious!", "You are in the Infirmary for the next {$InfirmaryRemain}.", true, "inventory.php", "View Inventory");
     }
     //User is in the dungeon, tell them how long.
-    if ($api->UserStatus($ir['userid'], 'dungeon')) {
+    if ($api->user->inDungeon($userid)) {
         $DungeonOut = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
         $DungeonRemain = TimeUntil_Parse($DungeonOut);
         alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, "inventory.php", "View Inventory");

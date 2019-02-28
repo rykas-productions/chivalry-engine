@@ -136,7 +136,7 @@ function start()
                 `course_complete` = {$completed} 
                 WHERE `userid` = {$userid}");
     //Update user's course, and course completion time.
-    $api->UserTakeCurrency($userid, 'primary', $course['ac_cost']); //Take user's money.
+	$api->user->takeCurrency($userid, 'primary', $course['ac_cost']);
     alert('success', "Success!", "You have successfully enrolled yourself in the {$course['ac_name']} course. It will
 	                            completed in {$course['ac_days']} days.", true, 'index.php');
 }

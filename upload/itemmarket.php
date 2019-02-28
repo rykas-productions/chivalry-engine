@@ -69,11 +69,11 @@ function index()
         }
         $ctprice = ($r['imPRICE'] * $r['imQTY']);
         if ($r['imCURRENCY'] == 'primary') {
-            $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " {$_CONFIG['primary_currency']}";
-            $tprice = number_format($api->SystemReturnTax($ctprice)) . " {$_CONFIG['primary_currency']}";
+            $price = number_format($r['imPRICE']) . " {$_CONFIG['primary_currency']}";
+            $tprice = number_format($ctprice) . " {$_CONFIG['primary_currency']}";
         } else {
-            $price = number_format($api->SystemReturnTax($r['imPRICE'])) . " Secondary Currency";
-            $tprice = number_format($api->SystemReturnTax($ctprice)) . " Secondary Currency";
+            $price = number_format($r['imPRICE']) . " Secondary Currency";
+            $tprice = number_format($ctprice) . " Secondary Currency";
         }
         if ($r['imADDER'] == $userid) {
             $link =
@@ -205,7 +205,7 @@ function buy()
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
         $curre = ($r['imCURRENCY'] == 'primary') ? $_CONFIG['primary_currency'] : 'Secondary Currency';
-        $final_price = $api->SystemReturnTax($r['imPRICE'] * $_POST['QTY']);
+        $final_price = $r['imPRICE'] * $_POST['QTY'];
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
             die($h->endpage());

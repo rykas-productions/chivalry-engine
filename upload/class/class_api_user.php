@@ -160,7 +160,7 @@ class user
         Returns true if user is in the infirmary
         Returns false if user is not in the infirmary
     */
-    function inInfirmary($user, $status)
+    function inInfirmary($user)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -223,5 +223,90 @@ class user
 			remove_dungeon($user, $time);
 			return true;
 		}
+    }
+	/*
+     * Function to simulate a user training.
+     * @param int userid = User ID of the player you wish to simular.
+     * @param text stat = Stat you wish for the user to train.
+     * @param int times = How much you wish the user to train.
+     * Returns stats gained.
+     */
+    function train($userid, $stat, $times, $multiplier = 1)
+    {
+        global $db;
+        $userid = (isset($userid) && is_numeric($userid)) ? abs(intval($userid)) : 0;
+        $stat = $db->escape(stripslashes(strtolower($stat)));
+        $times = (isset($times) && is_numeric($times)) ? abs(intval($times)) : 0;
+        $multiplier = (isset($multiplier) && is_numeric($multiplier)) ? abs(intval($multiplier)) : 1;
+        //Return empty if the call isn't complete.
+        if (empty($userid) || (empty($stat)) || (empty($times))) {
+            return 0;
+        }
+        $StatArray = array("strength", "agility", "guard", "labor", "iq");
+        if (!in_array($stat, $StatArray)) {
+            return -1;
+        }
+        $udq = $db->query("SELECT * FROM `users` WHERE `userid` = {$userid}");
+        $userdata = $db->fetch_row($udq);
+        $gain = 0;
+        //Do while value is less than the user's energy input, then add one to value.
+        for ($i = 0; $i < $times; $i++) {
+            //(1-4)/(600-1000)*(500-1000)*((User's Will+25)/175)
+            $gain +=
+                Random(1, 4) / Random(600, 1000) * Random(500, 1000) * (($userdata['will'] + 25) / 175);
+            //Subtract a random number from user's will.
+            $userdata['will'] -= Random(1, 3);
+            //User's will ends up negative, set to zero.
+            if ($userdata['will'] < 0) {
+                $userdata['will'] = 0;
+            }
+        }
+        //User's class is warrior
+        if ($userdata['class'] == 'Warrior') {
+            //Trained stat is strength, double its output.
+            if ($stat == 'strength') {
+                $gain *= 2;
+            }
+            //Trained stat is guard, half its output.
+            if ($stat == 'guard') {
+                $gain /= 2;
+            }
+        }
+        //User's class is Rogue.
+        if ($userdata['class'] == 'Rogue') {
+            //Trained stat is agility, double its output.
+            if ($stat == 'agility') {
+                $gain *= 2;
+            }
+            //Trained stat is strength, half its output.
+            if ($stat == 'strength') {
+                $gain /= 2;
+            }
+        }
+        //User's class is Defender.
+        if ($userdata['class'] == 'Defender') {
+            //Trained stat is guard, double its output.
+            if ($stat == 'guard') {
+                $gain *= 2;
+            }
+            //Trained stat is agility, half its output.
+            if ($stat == 'agility') {
+                $gain /= 2;
+            }
+        }
+        //Add multiplier, if needed.
+        $gain *= $multiplier;
+        //Round the gained stats.
+        $gain = floor($gain);
+        //Update the user's stats.
+        $db->query("UPDATE `userstats`
+                    SET `{$stat}` = `{$stat}` + {$gain}
+                    WHERE `userid` = {$userid}");
+        //Update user's will and energy.
+        $db->query("UPDATE `users`
+                    SET `will` = {$userdata['will']},
+                    `energy` = `energy` - {$times}
+                    WHERE `userid` = {$userid}");
+        return $gain;
     }
 }

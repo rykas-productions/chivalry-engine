@@ -106,11 +106,11 @@ function news_buy()
         $endtime=time()+(86400*$days);
 
         //Make sure user has the cash to buy this ad.
-        if (!$api->UserHasCurrency($userid, 'primary', $totalcost)) {
+        if (!$api->user->hasCurrency($userid, 'primary', $totalcost)) {
             alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['primary_currency']} to place this ad.");
             die($h->endpage());
         }
-        $api->UserTakeCurrency($userid,'primary',$totalcost);
+        $api->user->takeCurrency($userid,'primary',$totalcost);
         alert('success',"Success!","You have successfully purchased a newspaper ad.",true,'newspaper.php');
         $db->query("INSERT INTO `newspaper_ads`
                     (`news_cost`, `news_start`, `news_end`, `news_owner`, `news_text`)

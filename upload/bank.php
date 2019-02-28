@@ -34,7 +34,7 @@ else {
         if ($ir['primary_currency'] >= $bank_cost) {
 
             alert('success', "Success!", "You have successfully bought a bank account for " . number_format($bank_cost), true, 'bank.php');
-            $api->UserTakeCurrency($userid, 'primary', $bank_cost);
+			$api->user->takeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bank", 0);
             $api->SystemLogsAdd($userid, 'bank', 'Purchased bank account');
         } //Player is too poor to afford account.
@@ -91,7 +91,7 @@ function deposit()
         $gain = $_POST['deposit'] - $fee;
         $ir['bank'] += $gain;
         //Update user's bank and primary currency info.
-        $api->UserTakeCurrency($userid, 'primary', $_POST['deposit']);
+		$api->user->takeCurrency($userid, 'primary', $_POST['deposit']);
         $api->UserInfoSetStatic($userid, "bank", $ir['bank']);
         alert('success', "Success!", "You hand over " . number_format($_POST['deposit']) . " to be deposited. After the
 		    fee (" . number_format($fee) . ") is taken from your deposit, " . number_format($gain) . " is added to your
@@ -112,7 +112,7 @@ function withdraw()
         $gain = $_POST['withdraw'];
         $ir['bank'] -= $gain;
         //Update user's info.
-        $api->UserGiveCurrency($userid, 'primary', $_POST['withdraw']);
+		$api->user->giveCurrency($userid, 'primary', $_POST['withdraw']);
         $api->UserInfoSetStatic($userid, "bank", $ir['bank']);
         alert('success', "Success!", "You have successfully withdrew " . number_format($_POST['withdraw']) . " from your
 		    bank account. You have now have " . number_format($ir['bank']) . " left in your account.", true, 'bank.php');
