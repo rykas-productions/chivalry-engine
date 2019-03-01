@@ -22,12 +22,11 @@ switch ($_GET['step']) {
 }
 function one()
 {
-    global $db, $from, $set, $api;
+    global $db, $from, $set, $api, $h;
     if (isset($_POST['email'])) {
         if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email']))) {
             alert('danger', "Uh Oh!", "You input an invalid email address.", false);
-            require("footer.php");
-            exit;
+            die($h->endpage());
         }
         $e_email = $db->escape(stripslashes($_POST['email']));
         $IP = $db->escape($_SERVER['REMOTE_ADDR']);

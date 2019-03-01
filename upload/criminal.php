@@ -144,14 +144,14 @@ function crime()
             if (Random(1, 100) <= $sucrate) {
                 if (!empty($r['crimePRICURMIN'])) {
                     $prim_currency = Random($r['crimePRICURMIN'], $r['crimePRICURMAX']);
-                    $api->UserGiveCurrency($userid, 'primary', $prim_currency);
+                    $api->user->giveCurrency($userid, 'primary', $prim_currency);
                 }
                 if (!empty($r['crimeSECURMIN'])) {
                     $sec_currency = Random($r['crimeSECURMIN'], $r['crimeSECCURMAX']);
-                    $api->UserGiveCurrency($userid, 'secondary', $sec_currency);
+                    $api->user->giveCurrency($userid, 'secondary', $sec_currency);
                 }
                 if (!empty($r['crimeSUCCESSITEM'])) {
-                    $api->UserGiveItem($userid, $r['crimeSUCCESSITEM'], 1);
+                    $api->user->giveItem($userid, $r['crimeSUCCESSITEM'], 1);
                 }
                 if (empty($prim_currency)) {
                     $prim_currency = 0;
@@ -167,14 +167,14 @@ function crime()
                 $text = str_replace("{item}", $api->SystemItemIDtoName($r['crimeSUCCESSITEM']), $r['crimeSTEXT']);
                 $title = "Success!";
                 $type = 'success';
-                $api->UserInfoSetStatic($userid, "xp", $ir['xp'] + $r['crimeXP']);
+                $api->user->setInfo($userid, "xp", $r['crimeXP']);
                 $api->SystemLogsAdd($userid, 'crime', "Successfully committed the {$r['crimeNAME']} crime.");
             } else {
                 $title = "Uh Oh!";
                 $type = 'danger';
                 $dtime = Random($r['crimeDUNGMIN'], $r['crimeDUNGMAX']);
                 $text = str_replace("{time}", $dtime, $r['crimeFTEXT']);
-                $api->UserStatusSet($userid, 'dungeon', $dtime, $r['crimeDUNGREAS']);
+                $api->user->setDungeon($userid, $dtime, $r['crimeDUNGREAS']);
                 $api->SystemLogsAdd($userid, 'crime', "Failed to commit the {$r['crimeNAME']} crime.");
             }
             alert("{$type}", "{$title}", "{$r['crimeITEXT']} {$text}", true, 'criminal.php');

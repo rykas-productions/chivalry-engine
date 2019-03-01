@@ -95,9 +95,9 @@ function buy()
         die($h->endpage());
     }
     $api->SystemLogsAdd($userid, 'secmarket', "Bought {$r['sec_total']} Secondary Currency from the market for {$totalcost} {$_CONFIG['primary_currency']}.");
-    $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
-    $api->UserTakeCurrency($userid, 'primary', $totalcost);
-    $api->UserGiveCurrency($r['sec_user'], 'primary', $totalcost);
+    $api->user->giveCurrency($userid, 'secondary', $r['sec_total']);
+    $api->user->takeCurrency($userid, 'primary', $totalcost);
+    $api->user->giveCurrency($r['sec_user'], 'primary', $totalcost);
     $api->GameAddNotification($r['sec_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has bought your
         {$r['sec_total']} Secondary Currency offer from the market for a total of {$totalcost}.");
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
@@ -124,7 +124,7 @@ function remove()
         die($h->endpage());
     }
     $api->SystemLogsAdd($userid, 'secmarket', "Removed {$r['sec_total']} Secondary Currency from the market.");
-    $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
+    $api->user->giveCurrency($userid, 'secondary', $r['sec_total']);
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
     alert('success', "Success!", "You have removed your listing for {$r['sec_total']} Secondary Currency from the market.", true, 'secmarket.php');
     die($h->endpage());
@@ -146,7 +146,7 @@ function add()
         }
         $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`)
 					VALUES ('{$userid}', '{$_POST['cost']}', '{$_POST['qty']}');");
-        $api->UserTakeCurrency($userid, 'secondary', $_POST['qty']);
+        $api->user->takeCurrency($userid, 'secondary', $_POST['qty']);
         $api->SystemLogsAdd($userid, 'secmarket', "Added {$_POST['qty']} to the secondary market for {$_POST['cost']} {$_CONFIG['primary_currency']} each.");
         alert('success', "Success!", "You have added your {$_POST['qty']} Secondary Currency to the market for
 		    {$_POST['cost']} {$_CONFIG['primary_currency']} each.", true, 'secmarket.php');

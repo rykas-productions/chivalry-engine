@@ -8,7 +8,7 @@
 */
 require('sglobals.php');
 echo "<h2>Staff Mines</h2><hr />";
-if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+if (!$api->user->getStaffLevel($userid, 'Admin')) {
     alert('danger', "Uh Oh!", "You do not have permission to be here.");
     die($h->endpage());
 }

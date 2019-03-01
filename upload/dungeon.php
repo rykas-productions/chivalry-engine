@@ -92,19 +92,19 @@ function bail()
             die($h->endpage());
         }
         //Specified user is not in the dungeon.
-        if ($api->UserStatus($_GET['user'], 'dungeon') == false) {
+        if (!$api->user->inDungeon($_GET['user'])) {
             alert('danger', "Uh Oh!", "The user you wish to bail out is not in the dungeon.", true, 'dungeon.php');
             die($h->endpage());
         }
-        $cost = 250 * $api->UserInfoGet($_GET['user'], 'level', false);
+        $cost = 250 * $api->user->getInfo($_GET['user'], 'level');
         //User does not have enough primary currency to bail this user out.
-        if ($api->UserHasCurrency($userid, 'primary', $cost) == false) {
+        if (!$api->user->hasCurrency($userid, 'primary', $cost)) {
             alert('danger', "Uh Oh!", "You do not have enough cash to bail this user out. You need
 			    " . number_format($cost) . ".", true, 'dungeon.php');
             die($h->endpage());
         }
         //Person specified is bailed out. Take user's currency, log the action, and tell the person what happened.
-        $api->UserTakeCurrency($userid, 'primary', $cost);
+        $api->user->takeCurrency($userid, 'primary', $cost);
         $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
             successfully bailed you out of the dungeon.");
         alert('success', "Success!", "You have successfully bailed out {$api->SystemUserIDtoName($_GET['user'])}", true, 'dungeon.php');
@@ -126,30 +126,30 @@ function bust()
             die($h->endpage());
         }
         //Person not in the dungeon.
-        if ($api->UserStatus($_GET['user'], 'dungeon') == false) {
+        if (!$api->user->inDungeon($_GET['user'])) {
             alert('danger', "Uh Oh!", "This person is not in the dungeon, so you cannot bust them out.", true, 'dungeon.php');
             die($h->endpage());
         }
         //User is in the dungeon.
-        if ($api->UserStatus($userid, 'dungeon')) {
+        if (!$api->user->inDungeon($userid)) {
             alert('danger', "Uh Oh!", "You are already in the dungeon, so you cannot bust others out.", true, 'dungeon.php');
             die($h->endpage());
         }
         //User does not have 10% brave.
-        if ($api->UserInfoGet($userid, 'brave', true) < 10) {
+        if ($api->user->infoGetPercent($userid, 'brave') < 10) {
             alert('danger', "Uh Oh!", "You are not brave enough to bust someone out. You need 10 Brave, you only have
 			    {$ir['brave']}.", true, 'dungeon.php');
             die($h->endpage());
         }
         //User does not have 25% will.
-        if ($api->UserInfoGet($userid, 'will', true) < 25) {
+        if ($api->user->infoGetPercent($userid, 'will') < 25) {
             alert('danger', "Uh Oh!", "You do not have enough will to bust someone out. You need at least 25%.", true, 'dungeon.php');
             die($h->endpage());
         }
         //Update user's info.
-        $api->UserInfoSet($userid, 'will', -25, true);
-        $api->UserInfoSet($userid, 'brave', -10, true);
-        $mult = $api->UserInfoGet($_GET['user'], 'level') * $api->UserInfoGet($_GET['user'], 'level');
+        $api->user->infoSetPercent($userid, 'will', -25);
+        $api->user->infoSetPercent($userid, 'brave', -10);
+        $mult = $api->user->infoGet($_GET['user'], 'level') * $api->user->infoGet($_GET['user'], 'level');
         $chance = min(($ir['level'] / $mult) * 50 + 1, 95);
         //User is successful.
         if (Random(1, 100) < $chance) {
@@ -166,7 +166,7 @@ function bust()
             $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
                 failed to bust you out of the dungeon.");
             alert('danger', "Uh Oh!", "While trying to bust your friend out, you were spotted by a guard.", true, 'dungeon.php');
-            $api->UserStatusSet($userid, 'dungeon', $time, $reason);
+            $api->user->setDungeon($userid, $time, $reason);
             die($h->endpage());
         }
     } else {

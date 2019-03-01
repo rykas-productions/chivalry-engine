@@ -9,17 +9,6 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
-//Put stats into a friendly percentage
-$enperc = round($ir['energy'] / $ir['maxenergy'] * 100);
-$wiperc = round($ir['will'] / $ir['maxwill'] * 100);
-$experc = round($ir['xp'] / $ir['xp_needed'] * 100);
-$brperc = round($ir['brave'] / $ir['maxbrave'] * 100);
-$hpperc = round($ir['hp'] / $ir['maxhp'] * 100);
-$enopp = 100 - $enperc;
-$wiopp = 100 - $wiperc;
-$exopp = 100 - $experc;
-$bropp = 100 - $brperc;
-$hpopp = 100 - $hpperc;
 //Player is attempting to update their personal notepad.
 if (isset($_POST['pn_update'])) {
     //Sanitize the notepad entry

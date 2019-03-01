@@ -62,7 +62,7 @@ if (empty($_GET['to'])) {
             die($h->endpage());
         } else {
             //Update user!
-            $api->UserTakeCurrency($userid,'primary',$cost_of_travel);
+            $api->user->takeCurrency($userid,'primary',$cost_of_travel);
             $db->query("UPDATE `users` SET `location` = {$_GET['to']} WHERE `userid` = {$userid}");
             $cityName = $db->fetch_single($q);
             //Tell user they have traveled successfully.

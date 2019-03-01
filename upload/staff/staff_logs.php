@@ -7,7 +7,7 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine/
 */
 require('sglobals.php');
-if ($api->UserMemberLevelGet($userid, 'Assistant') == false) {
+if (!$api->user->getStaffLevel($userid, 'Assistant')) {
     alert('danger', "Uh Oh!", "You do not have permission to be here.");
     die($h->endpage());
 }

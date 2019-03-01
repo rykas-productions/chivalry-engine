@@ -40,7 +40,7 @@ switch ($_GET['action']) {
 function createuser()
 {
     global $db, $h, $api, $userid, $_CONFIG;
-    if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+    if (!$api->user->getStaffLevel($userid, 'Admin')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.");
         die($h->endpage());
     }
@@ -768,7 +768,7 @@ function edituser()
 function deleteuser()
 {
     global $db, $userid, $h, $api, $ir;
-    if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+    if (!$api->user->getStaffLevel($userid, 'Admin')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.");
         die($h->endpage());
     }
@@ -898,7 +898,7 @@ function deleteuser()
 function logout()
 {
     global $db, $h, $userid, $api;
-    if ($api->UserMemberLevelGet($userid, 'Assistant') == false) {
+    if (!$api->user->getStaffLevel($userid, 'Assistant')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.");
         die($h->endpage());
     }
@@ -950,7 +950,7 @@ function logout()
 function changepw()
 {
     global $db, $h, $userid, $api;
-    if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+    if (!$api->user->getStaffLevel($userid, 'Admin')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.");
         die($h->endpage());
     }
@@ -1014,7 +1014,7 @@ function changepw()
 function masspay()
 {
     global $db, $h, $userid, $api, $_CONFIG;
-    if ($api->UserMemberLevelGet($userid, 'assistant') == false) {
+    if (!$api->user->getStaffLevel($userid, 'assistant')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.");
         die($h->endpage());
     }
@@ -1031,8 +1031,8 @@ function masspay()
         }
         $q = $db->query("SELECT `userid`,`username` FROM `users` WHERE `user_level` != 'NPC'");
         while ($r = $db->fetch_row($q)) {
-            $api->UserGiveCurrency($r['userid'], 'primary', $primary);
-            $api->UserGiveCurrency($r['userid'], 'seconday', $secondary);
+            $api->user->giveCurrency($r['userid'], 'primary', $primary);
+            $api->user->giveCurrency($r['userid'], 'seconday', $secondary);
             $api->GameAddNotification($r['userid'], "The administration has given a mass payment of {$primary} {$_CONFIG['primary_currency']} and/or {$secondary} Secondary Currency to the game.");
             echo "Successfully paid {$r['username']}.<br />";
         }
@@ -1077,7 +1077,7 @@ function masspay()
 function preport()
 {
     global $db, $userid, $api, $h;
-    if ($api->UserMemberLevelGet($userid, 'assistant') == false) {
+    if ($api->user->getStaffLevel($userid, 'assistant') == false) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.");
         die($h->endpage());
     }

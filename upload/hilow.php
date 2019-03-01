@@ -43,7 +43,7 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
         $guessed = (isset($_SESSION['number']) && is_numeric($_SESSION['number'])) ? abs($_SESSION['number']) : Random(1, 100);
         $numb = Random(1, 100);
         //Take the player's better.
-        $api->UserTakeCurrency($userid, 'primary', $maxbet);
+        $api->user->takeCurrency($userid, 'primary', $maxbet);
         //Change is suspected to be higher, but new number is lower than original number.
         if ($guessed > $numb && $_POST['change'] == 'higher') {
             alert('danger', "Uh Oh!", "You guessed the game operator would show a number higher than {$guessed}.
@@ -75,7 +75,7 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
             $api->SystemLogsAdd($userid, 'gambling', "Number tied in high/low.");
         }
         //Give the user their winnings, if possible.
-        $api->UserGiveCurrency($userid, 'primary', $gain);
+        $api->user->giveCurrency($userid, 'primary', $gain);
         //Bind 0 to SESSION to not have abuse.
         $_SESSION['number'] = 0;
     }

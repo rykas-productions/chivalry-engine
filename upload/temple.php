@@ -55,8 +55,8 @@ function energy()
             alert('danger', "Uh Oh!", "You already have full energy.", true, 'temple.php');
         } else {
             //Refill the user's energy and take their {$_CONFIG['secondary_currency']}.
-            $api->UserInfoSet($userid, 'energy', 100, true);
-            $api->UserTakeCurrency($userid, 'secondary', $set['energy_refill_cost']);
+            $api->user->setInfo($userid, 'energy', 100, true);
+            $api->user->takeCurrency($userid, 'secondary', $set['energy_refill_cost']);
             alert('success', "Success!", "You have paid {$set['energy_refill_cost']} {$_CONFIG['secondary_currency']} to refill your energy.", true, 'temple.php');
             $api->SystemLogsAdd($userid, 'temple', "Traded {$set['energy_refill_cost']} {$_CONFIG['secondary_currency']} to refill their Energy.");
         }
@@ -75,8 +75,8 @@ function brave()
             alert('danger', "Uh Oh!", "You already have full Bravery.", true, 'temple.php');
         } else {
             //Refill the user's bravery by 5% and take their {$_CONFIG['secondary_currency']}.
-            $api->UserInfoSet($userid, 'brave', 5, true);
-            $api->UserTakeCurrency($userid, 'secondary', $set['brave_refill_cost']);
+            $api->user->setInfo($userid, 'brave', 5, true);
+            $api->user->takeCurrency($userid, 'secondary', $set['brave_refill_cost']);
             alert('success', "Success!", "You have paid {$set['brave_refill_cost']} to regenerate 5% Bravery.", true, 'temple.php');
             $api->SystemLogsAdd($userid, 'temple', "Traded {$set['brave_refill_cost']} {$_CONFIG['secondary_currency']} to regenerate 5% Brave.");
         }
@@ -95,8 +95,8 @@ function will()
             alert('danger', "Uh Oh!", "You already have full Will.", true, 'temple.php');
         } else {
             //Refill the user's will by 5% and take their {$_CONFIG['secondary_currency']}.
-            $api->UserInfoSet($userid, 'will', 5, true);
-            $api->UserTakeCurrency($userid, 'secondary', $set['will_refill_cost']);
+            $api->user->setInfo($userid, 'will', 5, true);
+            $api->user->takeCurrency($userid, 'secondary', $set['will_refill_cost']);
             alert('success', "Success!", "You have paid {$set['will_refill_cost']} {$_CONFIG['secondary_currency']} to regenerate 5% Will", true, 'temple.php');
             $api->SystemLogsAdd($userid, 'temple', "Traded {$set['will_refill_cost']} {$_CONFIG['secondary_currency']} to regenerate 5% Will.");
         }
@@ -126,7 +126,7 @@ function iq()
             die($h->endpage());
         }
         //Take the currency and give the user some IQ.
-        $api->UserTakeCurrency($userid, 'secondary', $_POST['iq']);
+        $api->user->takeCurrency($userid, 'secondary', $_POST['iq']);
         $db->query("UPDATE `userstats` SET `iq` = `iq` + {$totalcost} WHERE `userid` = {$userid}");
         alert('success', "Success!", "You have successfully traded " . number_format($_POST['iq']) . " {$_CONFIG['secondary_currency']} for " . number_format($totalcost) . " IQ Points.", true, 'temple.php');
         $api->SystemLogsAdd($userid, 'temple', "Traded {$_POST['iq']} {$_CONFIG['secondary_currency']} for {$totalcost} IQ.");

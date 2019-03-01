@@ -356,7 +356,7 @@ function deleteitem()
 function giveitem()
 {
     global $db, $userid, $h, $api;
-    if (!$api->UserMemberLevelGet($userid,'assistant')) {
+    if (!$api->user->getStaffLevel($userid,'assistant')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
         die($h->endpage());
     }
@@ -429,7 +429,7 @@ function giveitem()
                 $user = $db->fetch_row($q2);
                 $db->free_result($q);
                 $db->free_result($q2);
-                $api->UserGiveItem($_POST['user'], $_POST['item'], $_POST['qty']);
+                $api->user->giveItem($_POST['user'], $_POST['item'], $_POST['qty']);
                 $api->GameAddNotification($_POST['user'], "The administration has gifted you {$_POST['qty']} {$item['itmname']}(s) to your inventory.");
                 $api->SystemLogsAdd($userid, 'staff', "Gave {$_POST['qty']} <a href='../iteminfo.php?ID={$_POST['item']}'>{$item['itmname']}</a>(s) to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
                 alert('success', "Success!", "You have successfully given {$_POST['qty']} {$item['itmname']}(s) to {$user['username']}.", true, 'index.php');
@@ -442,7 +442,7 @@ function giveitem()
 function edititem()
 {
     global $db, $api, $userid, $h, $_CONFIG;
-    if (!$api->UserMemberLevelGet($userid,'admin')) {
+    if (!$api->user->getStaffLevel($userid,'admin')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
         die($h->endpage());
     }

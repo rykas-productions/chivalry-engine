@@ -48,8 +48,8 @@ if (isset($_GET['user'])) {
         $user2format = "<a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}]";
         $cashformat = number_format($_POST['send']);
         $api->GameAddNotification($_POST['user'], "{$userformat} has sent you {$cashformat} {$_CONFIG['primary_currency']}.");
-        $api->UserGiveCurrency($_POST['user'], 'primary', $_POST['send']);
-        $api->UserTakeCurrency($userid, 'primary', $_POST['send']);
+        $api->user->giveCurrency($_POST['user'], 'primary', $_POST['send']);
+        $api->user->takeCurrency($userid, 'primary', $_POST['send']);
         $api->SystemLogsAdd($userid, 'sendcash', "Sent {$cashformat} {$_CONFIG['primary_currency']} to {$user2format}.");
         alert("success", "Success!", "You have successfully sent {$user2format} {$cashformat} {$_CONFIG['primary_currency']}.", true, "profile.php?user={$_GET['user']}");
         $h->endpage();

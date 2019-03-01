@@ -8,7 +8,7 @@
 */
 require('sglobals.php');
 echo "<h3>Admin Settings</h3><hr />";
-if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+if ($api->user->getStaffLevel($userid, 'Admin') == false) {
     alert('danger', "Uh Oh!", "You do not have permission to be here.");
     die($h->endpage());
 }
@@ -312,6 +312,8 @@ function basicsettings()
             alert('danger', "Uh Oh!", "Please specify a ReCaptcha time that isn't less than 5 minutes.");
             die($h->endpage());
         } else {
+			if ($recaptchatime == 99999999999)
+				$db->query("UPDATE users SET `need_verify` = 0");
             $db->query("UPDATE `settings` SET `setting_value` = {$RefAward} WHERE `setting_name` = 'ReferalKickback'");
             $db->query("UPDATE `settings` SET `setting_value` = {$AttackEnergy} WHERE `setting_name` = 'AttackEnergyCost'");
             $db->query("UPDATE `settings` SET `setting_value` = {$PasswordEffort} WHERE `setting_name` = 'Password_Effort'");
@@ -513,7 +515,7 @@ function staff()
             alert('danger', "Uh Oh!", "Please specify an existent user.");
             die($h->endpage());
         }
-        $api->UserInfoSetStatic($_POST['user'], 'user_level', $_POST['priv']);
+        $api->user->setInfoStatic($_POST['user'], 'user_level', $_POST['priv']);
         alert('success', "Success!", "You have updated {$api->SystemUserIDtoName($_POST['user'])}'s User Level to {$_POST['priv']}.");
         die($h->endpage());
     } else {

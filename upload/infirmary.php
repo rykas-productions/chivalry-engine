@@ -108,9 +108,9 @@ function heal()
                 die($h->endpage());
             } else {
                 //Healed successfully!
-                $api->UserStatusSet($_GET['user'], 'infirmary', $time * -1, 'Not read');
+                $api->user->setInfirmary($_GET['user'], 'infirmary', $time * -1, 'Not read');
                 //Take current user's secondary currency
-                $api->UserTakeCurrency($userid, 'secondary', $cost);
+                $api->user->takeCurrency($userid, 'secondary', $cost);
                 //Add a friendly note.
                 $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has healed you {$_GET['times']} times.");
                 //Log it!

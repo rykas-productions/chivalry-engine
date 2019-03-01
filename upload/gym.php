@@ -12,12 +12,12 @@
 $macropage = ('gym.php');
 require("globals.php");
 //User is in the infirmary
-if ($api->UserStatus($ir['userid'], 'infirmary')) {
+if ($api->user->inInfirmary($ir['userid'])) {
     alert("danger", "Unconscious!", "You cannot train while you're in the infirmary.", true, 'index.php');
     die($h->endpage());
 }
 //User is in the dungeon.
-if ($api->UserStatus($ir['userid'], 'dungeon')) {
+if ($api->user->inDungeon($ir['userid'])) {
     alert("danger", "Locked Up!", "You cannot train while you're in the dungeon.", true, 'index.php');
     die($h->endpage());
 }
@@ -50,12 +50,12 @@ if (isset($_POST["stat"]) && $_POST["amnt"]) {
         $gain = 0;
         $extraecho = '';
         if ($stat == 'all') {
-            $gainstr = $api->UserTrain($userid, 'strength', $_POST['amnt'] / 4);
-            $gainagl = $api->UserTrain($userid, 'agility', $_POST['amnt'] / 4);
-            $gaingrd = $api->UserTrain($userid, 'guard', $_POST['amnt'] / 4);
-            $gainlab = $api->UserTrain($userid, 'labor', $_POST['amnt'] / 4);
+            $gainstr = $api->user->train($userid, 'strength', $_POST['amnt'] / 4);
+            $gainagl = $api->user->train($userid, 'agility', $_POST['amnt'] / 4);
+            $gaingrd = $api->user->train($userid, 'guard', $_POST['amnt'] / 4);
+            $gainlab = $api->user->train($userid, 'labor', $_POST['amnt'] / 4);
         } else {
-            $gain = $api->UserTrain($userid, $_POST['stat'], $_POST['amnt']);
+            $gain = $api->user->train($userid, $_POST['stat'], $_POST['amnt']);
         }
         //Update energy left and stat's new count.
         if ($stat != 'all')

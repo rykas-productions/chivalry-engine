@@ -8,7 +8,7 @@
 */
 require('sglobals.php');
 //Check for proper staff privledges
-if ($api->UserMemberLevelGet($userid, 'assistant') == false) {
+if (!$api->user->getStaffLevel($userid, 'assistant')) {
     alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
     die($h->endpage());
 }

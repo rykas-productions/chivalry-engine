@@ -53,7 +53,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
         die($h->endpage());
     }
     //Take the spy cost from the player.
-    $api->UserTakeCurrency($userid, 'primary', $r['level'] * 500);
+    $api->user->takeCurrency($userid, 'primary', $r['level'] * 500);
     //RNG equals 1 or 2, the spy has failed.
     if ($rand == 1 || $rand == 2) {
         //Specific event RNG
@@ -77,7 +77,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
     elseif ($rand == 3) {
         alert("danger", "Uh Oh!", "Your hired spy actually turned out to be a dungeon guard. He arrests you.", true, "profile.php?user={$_GET['user']}");
         $dungtime = Random($ir['level'], $ir['level'] * 3);
-        $api->UserStatusSet($userid, 'dungeon', $dungtime, "Stalkerish Tendencies");
+        $api->user->setDungeon($userid, $dungtime, "Stalkerish Tendencies");
         $api->SystemLogsAdd($userid, 'spy', "Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) . " and was sent to the dungeon.");
         die($h->endpage());
     } //RNG equals 4, show the current player the person's stats and weapons.

@@ -8,7 +8,7 @@
 */
 require('sglobals.php');
 //User is not an admin, so redirect them back to the main index.
-if (!$api->UserMemberLevelGet($userid, 'admin')) {
+if (!$api->user->getStaffLevel($userid, 'admin')) {
     alert('danger', "Uh Oh!", "You do not have permission to be here!", true, 'index.php');
     die($h->endpage());
 }
