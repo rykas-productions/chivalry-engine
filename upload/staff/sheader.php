@@ -37,11 +37,11 @@ class headers
         if (empty($menuhide)) {
             $ir['mail'] = $db->fetch_single($db->query("SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
             $ir['notifications'] = $db->fetch_single($db->query("SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
-            $energy = $api->UserInfoGet($userid, 'energy', true);
-            $brave = $api->UserInfoGet($userid, 'brave', true);
-            $will = $api->UserInfoGet($userid, 'will', true);
+            $energy = $api->user->getInfoPercent($userid, 'energy');
+            $brave = $api->user->getInfoPercent($userid, 'brave');
+            $will = $api->user->getInfoPercent($userid, 'will');
             $xp = round($ir['xp'] / $ir['xp_needed'] * 100);
-            $hp = $api->UserInfoGet($userid, 'hp', true);
+            $hp = $api->user->getInfoPercent($userid, 'hp');
             ?>
         <body>
         <div class="page-wrapper default-theme sidebar-bg toggled">
@@ -89,7 +89,7 @@ class headers
                         <li class="header-menu">
                             <span>Staff Options</span>
                             <?php
-                            if ($api->UserMemberLevelGet($userid, 'admin')) {
+                            if ($api->user->getStaffLevel($userid, 'admin')) {
                                 ?>
                                 <li class="sidebar-dropdown">
                                     <a href="#">
@@ -243,7 +243,7 @@ class headers
                                 </li>
                                 <?php
                             }
-                            if ($api->UserMemberLevelGet($userid, 'admin')) 
+                            if ($api->user->getStaffLevel($userid, 'admin')) 
                             {
                                 ?>
                                 <li class="sidebar-dropdown">
@@ -253,7 +253,7 @@ class headers
                                     <div class="sidebar-submenu">
                                         <ul>
                                             <?php
-                                            if ($api->UserMemberLevelGet($userid, 'admin')) 
+                                            if ($api->user->getStaffLevel($userid, 'admin')) 
                                             {
                                                 ?>
                                                 <li>
@@ -284,7 +284,7 @@ class headers
                                     <div class="sidebar-submenu">
                                         <ul>
                                             <?php
-                                            if ($api->UserMemberLevelGet($userid, 'admin')) 
+                                            if ($api->user->getStaffLevel($userid, 'admin')) 
                                             {
                                                 ?>
                                                 <li>
@@ -426,12 +426,12 @@ class headers
             if ($ir['announcements'] > 0) {
                 alert('info', "New Announcements!", "You have {$ir['announcements']} unread announcements.", true, '../announcements.php', "View Announcements");
             }
-            if ($api->UserStatus($ir['userid'], 'infirmary') == true) {
+            if ($api->user->inInfirmary($ir['userid'])) {
                 $InfirmaryOut = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
                 $InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
                 alert('info', "Unconscious!", "You are in the infirmary for the next {$InfirmaryRemain}.", true, '../inventory', 'View Inventory');
             }
-            if ($api->UserStatus($ir['userid'], 'dungeon') == true) {
+            if ($api->user->inDungeon($ir['userid'])) {
                 $DungeonOut = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
                 $DungeonRemain = TimeUntil_Parse($DungeonOut);
                 alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, '../inventory', 'View Inventory');
@@ -453,7 +453,7 @@ class headers
         }
         if ($dosessh && ($_SESSION['attacking'] || $ir['attacking'])) {
             $hosptime = Random(10, 50);
-            $api->UserStatusSet($userid, 'infirmary', $hosptime, "Ran from a fight");
+            $api->user->setInfirmary($userid, $hosptime, "Ran from a fight");
             alert("warning", "Uh Oh!", "For leaving your previous fight, you were placed in the Infirmary for {$hosptime}
             minutes, and lost all your experience.", false);
             $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");

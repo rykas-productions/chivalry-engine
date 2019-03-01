@@ -9,7 +9,7 @@
 require('sglobals.php');
 echo "<h2>Staff Panel Index</h2>
 	<hr />";
-if ($api->UserMemberLevelGet($userid, 'admin')) {
+if ($api->user->getStaffLevel($userid, 'admin')) {
     $versq = $db->query("SELECT VERSION()");
     $MySQLIVersion = $db->fetch_single($versq);
     $db->free_result($versq);
@@ -64,7 +64,7 @@ echo "
 </div>
 	<div class='col-md-4'>
 		<ul class='nav nav-pills flex-column'>";
-if ($api->UserMemberLevelGet($userid, 'assistant')) {
+if ($api->user->getStaffLevel($userid, 'assistant')) {
     echo "
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#LOGS'>Logs</a>
@@ -87,7 +87,7 @@ echo "
 	</div>
 	<div class='col-md-8'>
 		<div class='tab-content'>";
-if ($api->UserMemberLevelGet($userid, 'assistant')) {
+if ($api->user->getStaffLevel($userid, 'assistant')) {
     echo "
 				<div id='POLL' class='tab-pane'>
 					<div class='card'>
@@ -210,7 +210,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 
 								</td>
 							</tr>";
-    if ($api->UserMemberLevelGet($userid, 'admin')) {
+    if ($api->user->getStaffLevel($userid, 'admin')) {
         echo "
 								<tr>
 									<td>
@@ -266,7 +266,7 @@ echo "
 							<a href='staff_punish.php?action=unforumban'>Un-Forum Ban User</a><br />
 							<a href='staff_punish.php?action=ipsearch'>IP Search</a><br />
 							<a href='staff_punish.php?action=massmail'>Send Mass Mail</a><br />";
-if ($api->UserMemberLevelGet($userid, 'admin')) {
+if ($api->user->getStaffLevel($userid, 'admin')) {
     echo "<a href='staff_punish.php?action=massemail'>Send Mass Email</a><br />
 									<a href='staff_punish.php?action=banip'>Ban IP Address</a><br />
 									<a href='staff_punish.php?action=unbanip'>Pardon IP Address</a><br />";
@@ -286,7 +286,7 @@ echo "
 			</div>
 		</div>
 	</div>";
-if ($api->UserMemberLevelGet($userid, 'admin')) {
+if ($api->user->getStaffLevel($userid, 'admin')) {
     echo "
 				<div class='col-md-12'><hr />
 			<h3>Last 15 Staff Actions</h3><hr />

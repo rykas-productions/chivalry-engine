@@ -93,7 +93,9 @@ if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SE
 }
 include("../class/class_api.php");
 $api = new api;
-if (!$api->UserMemberLevelGet($userid, 'forum moderator')) {
+$api->user = new user;
+$api->guild = new guild;
+if (!$api->user->getStaffLevel($userid, 'forum moderator')) {
     $index = ('../index.php');
     header("Location: {$index}");
 }
@@ -101,21 +103,15 @@ check_level();
 check_data();
 $h = new headers;
 $h->startheaders();
-if (!$api->UserMemberLevelGet($userid,"forum moderator"))
-{
-  header("Location: ../explore.php");
-  exit;
-}
 $fm = number_format($ir['primary_currency']);
 $cm = number_format($ir['secondary_currency']);
 $lv = date('F j, Y, g:i a', $ir['laston']);
 global $atkpage;
 $staffpage = 1;
-if ($atkpage) {
+if ($atkpage)
     $h->userdata($ir, 0);
-} else {
+else
     $h->userdata($ir);
-}
 foreach (glob("../crons/*.php") as $filename) {
     include $filename;
 } 
