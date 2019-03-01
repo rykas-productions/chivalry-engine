@@ -73,6 +73,46 @@ class user
             return true;
         }
     }
+	/*
+        Test to see whether or not the specified user has the item and optionally, an amount of the item.
+        @param int user = User to test on.
+        @param int item = Item ID to test for.
+        @param int qty = Quantity to test for. Optional. [Default: 1]
+        Returns true if the user has the item and requried quantity. False if otherwise.
+
+    */
+    function hasItem($user, $item, $qty = 1)
+    {
+        global $db;
+        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+        $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
+        $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
+        if ($user > 0 || $item > 0 || $qty > 0) {
+            $i = $db->fetch_single($db->query("SELECT `inv_qty` FROM `inventory` WHERE `inv_userid` = {$user} && `inv_itemid` = {$item}"));
+            if ($qty == 1) 
+                if ($i >= 1)
+                    return true;
+            else
+                if ($i >= $qty)
+                    return true;
+        }
+    }
+	/*
+        Function to fetch item count from a user's inventory.
+        @param int userid = User ID of the player to test inventory.
+        @param int itemid = Item ID to count.
+        Returns the count of Item ID found on the user.
+    */
+    function countItem($userid, $itemid)
+    {
+        global $db;
+        $userid = (isset($userid) && is_numeric($userid)) ? abs(intval($userid)) : 0;
+        $itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
+        if (!empty($userid) || !empty($itemid)) {
+            $qty = $db->fetch_single($db->query("SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$itemid} AND `inv_userid` = {$userid}"));
+            return $qty;
+        }
+    }
     /*
         Gives user specified amount of currency type.
         @param int user = User ID to give currency to.
@@ -461,4 +501,106 @@ class user
 			return round($min / $max * 100);
 		}
 	}
+	/*
+        Function to set a user's info a static value.
+        @param int user = User ID you wish to set a specific stat to.
+        @param text stat = Stat to alter.
+        @param int state = Value to set the stat to.
+        Returns true if the stat was updated, false otherwise.
+        Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
+    */
+    function setInfoStatic($user, $stat, $state)
+    {
+        global $db, $api;
+        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+        $stat = $db->escape(stripslashes(strtolower($stat)));
+        if (in_array($stat, array('password', 'email', 'lastip', 'loginip',
+            'registerip', 'personal_notes', 'staff_notes'))) {
+            trigger_error("You do not have permission to set the {$stat} on this user.", E_ERROR);
+        } else {
+            if (is_int($state)) {
+                $state = (isset($state) && is_numeric($state)) ? abs(intval($state)) : 0;
+            } else {
+                $state = $db->escape(stripslashes($state));
+            }
+            if ($user > 0) {
+                if (!($api->SystemUserIDtoName($user) == false)) {
+                    $db->query("UPDATE `users` SET `{$stat}` = '{$state}' WHERE `userid` = '{$user}'");
+                    return true;
+                }
+            }
+        }
+    }
+	/*
+        Adds a notification for the specified user.
+        @param int user = User ID to send notification to.
+        @param text text = Notification text.
+        Returns true always.
+    */
+    function addNotification($user, $text)
+    {
+        notification_add($user, $text);
+        return true;
+    }
+
+    /*
+        Adds an in-game message for the player specified.
+        @param int user = User ID message is sent to.
+        @param text subj = Message subject.
+        @param text msg = Message text.
+        @param int from = User ID message is from..
+        Returns true when message is sent. False if message fails.
+    */
+    function addMail($user, $subj, $msg, $from)
+    {
+        global $db;
+        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+        $from = (isset($from) && is_numeric($from)) ? abs(intval($from)) : 0;
+        $subj = $db->escape(stripslashes($subj));
+        $msg = $db->escape(stripslashes($msg));
+        $time = time();
+        $userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$user}");
+        if ($db->num_rows($userexist) > 0) {
+            $db->free_result($userexist);
+            $userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$from}");
+            if ($db->num_rows($userexist) > 0) {
+                $db->query("INSERT INTO `mail`
+				(`mail_to`, `mail_from`, `mail_status`, `mail_subject`, `mail_text`, `mail_time`) 
+				VALUES 
+				('{$user}', '{$from}', 'unread', '{$subj}', '{$msg}', '{$time}');");
+                return true;
+            }
+        }
+    }
+	/*
+        Returns the username of the user id specified.
+        @param int user = User's name we're trying to fetch.
+        On success, returns the user id's name, on failure, it returns false.
+    */
+    function getNamefromID($user)
+    {
+        global $db;
+        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+        $name = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}");
+        if ($db->num_rows($name) > 0) {
+            $username = $db->fetch_single($name);
+            return $username;
+        }
+    }
+
+    /*
+        Returns the userid  of the username specified.
+        @param string name = User's ID we're trying to fetch.
+        On success, returns the user's id, on failure, it returns false.
+    */
+    function getIDfromName($name)
+    {
+        global $db;
+        $name = $db->escape(stripslashes($name));
+        $id = $db->query("SELECT `userid` FROM `users` WHERE `username` = '{$name}'");
+        if ($db->num_rows($id) > 0) {
+            $usrid = $db->fetch_single($id);
+            return $usrid;
+        }
+    }
 }
