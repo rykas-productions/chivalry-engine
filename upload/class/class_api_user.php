@@ -309,4 +309,156 @@ class user
                     WHERE `userid` = {$userid}");
         return $gain;
     }
+	 /*
+        Get the user's member level. Can test for exact member level, or if user is above specified member level.
+        @param int user = User to test on.
+        @param text level = Member level to test for. [Valid: npc, member, web dev, forum moderator, assistant, admin]
+        @param boolean exact = Return true if ranked ONLY specified level. [Default: false]
+        Returns true if user is exactly or equal to/above specified member level. False if not.
+    */
+
+    //This function needs refactored ASAP
+    function getStaffLevel($user, $level, $exact = false)
+    {
+        global $db;
+        $level = $db->escape(stripslashes(strtolower($level)));
+        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+        if ($user > 0) {
+            $userexist = $db->query("SELECT `userid` FROM `users` WHERE `userid` =  {$user}");
+            if ($db->num_rows($userexist) > 0) {
+                $ulevel = $db->fetch_single($db->query("SELECT `user_level` FROM `users` WHERE `userid` = {$user}"));
+                if ($exact == true) {
+                    if ($level == $ulevel) {
+                        return true;
+                    }
+                } else {
+                    if ($level == 'member') {
+                        if ($ulevel == 'Member' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
+                            || $ulevel == 'Web Developer' || $ulevel == 'Admin'
+                        ) {
+                            return true;
+                        }
+                    } elseif ($level == 'forum moderator') {
+                        if ($ulevel == 'Forum Moderator' || $ulevel == 'Assistant' || $ulevel == 'Web Developer' || $ulevel == 'Admin') {
+                            return true;
+                        }
+                    } elseif ($level == 'assistant') {
+                        if ($ulevel == 'Assistant' || $ulevel == 'Web Developer' || $ulevel == 'Admin') {
+                            return true;
+                        }
+                    } elseif ($level == 'web dev') {
+                        if ($ulevel == 'Web Developer' || $ulevel == 'Admin') {
+                            return true;
+                        }
+                    } elseif ($level == 'npc') {
+                        if ($ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
+                            || $ulevel == 'Web Developer' || $ulevel == 'Admin'
+                        ) {
+                            return true;
+                        }
+                    } elseif ($level == 'admin') {
+                        if ($ulevel == 'Admin') {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+	/*
+        Set the specified user's stat to a value.
+        @param int user = User to test on.
+        @param text stat = User's table row to return.
+        @param int change = Numeric change (as a value)
+        Returns the value in the stat specified.
+        Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
+    */
+	function setInfo($user, $stat, $change)
+	{
+		global $db;
+        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+        $stat = $db->escape(stripslashes(strtolower($stat)));
+		$change = (isset($change) && is_numeric($change)) ? intval($change) : 0;
+        if (in_array($stat, array('password', 'email', 'lastip', 'loginip', 'registerip', 'personal_notes', 'staff_notes')))
+		{
+            trigger_error("You do not have permission to set the {$stat} on this user.", E_ERROR);
+        } 
+		else
+		{
+			$db->query("UPDATE users SET `{$stat}` = `{$stat}` + {$change} WHERE `userid` = {$user}");
+			$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
+			return true;
+		}
+	}
+	/*
+        Set the specified user's stat to a percent.
+        @param int user = User to test on.
+        @param text stat = User's table row to return.
+        @param int change = Numeric change (as percent)
+        Returns the value in the stat specified.
+        Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
+    */
+	function setInfoPercent($user, $stat, $change)
+	{
+		global $db;
+        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+        $stat = $db->escape(stripslashes(strtolower($stat)));
+		$change = (isset($change) && is_numeric($change)) ? intval($change) : 0;
+        if (in_array($stat, array('password', 'email', 'lastip', 'loginip', 'registerip', 'personal_notes', 'staff_notes')))
+		{
+            trigger_error("You do not have permission to set the {$stat} on this user.", E_ERROR);
+        } 
+		else
+		{
+			$maxstat = $db->fetch_single($db->query("SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
+			$number = ($change / 100) * $maxstat;
+			$db->query("UPDATE users SET `{$stat}`=`{$stat}`+{$number} WHERE `{$stat}` < `max{$stat}`");
+			$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
+			return true;
+		}
+	}
+	/*
+        Returns the specified user's stat
+        @param int user = User to test on.
+        @param text stat = User's table row to return.
+        Returns the value in the stat specified.
+		Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
+    */
+	function getInfo($user, $stat)
+	{
+		global $db;
+        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+        $stat = $db->escape(stripslashes(strtolower($stat)));
+        if (in_array($stat, array('password', 'email', 'lastip', 'loginip', 'registerip', 'personal_notes', 'staff_notes')))
+		{
+            trigger_error("You do not have permission to get the {$stat} on this user.", E_ERROR);
+        }
+		else
+		{
+			return $db->fetch_single($db->query("SELECT `{$stat}` FROM `users` WHERE `userid` = {$user}"));
+		}
+	}
+	/*
+        Returns the specified user's stat as a percent
+        @param int user = User to test on.
+        @param text stat = User's table row to return.
+        Returns the value in the stat specified.
+		Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
+    */
+	function getInfoPercent($user, $stat)
+	{
+		global $db;
+        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
+        $stat = $db->escape(stripslashes(strtolower($stat)));
+        if (in_array($stat, array('password', 'email', 'lastip', 'loginip', 'registerip', 'personal_notes', 'staff_notes'))) 
+		{
+            trigger_error("You do not have permission to get the {$stat} on this user.", E_ERROR);
+        } 
+		else
+		{
+			$min = $db->fetch_single($db->query("SELECT `{$stat}` FROM `users` WHERE `userid` = {$user}"));
+			$max = $db->fetch_single($db->query("SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
+			return round($min / $max * 100);
+		}
+	}
 }

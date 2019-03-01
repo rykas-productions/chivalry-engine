@@ -93,7 +93,7 @@ if (empty($_GET['item'])) {
             $usecount++;
         }
         alert('success', "Success!", "You have successfully used your {$r['itmname']}!", true, "itemuse.php?item={$_GET['item']}", "Use Another");
-      $api->UserTakeItem($userid, $r['inv_itemid'], 1);
+      $api->user->takeItem($userid, $r['inv_itemid'], 1);
       $api->SystemLogsAdd($userid, 'itemuse', "Used a/an {$r['itmname']} item.");
     }
     }

@@ -94,37 +94,6 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
 				</tr>
 			</table>
 			<input type='hidden' name='verf' value='{$code}' />
-		</form>
-		<form action='?ID={$_GET['ID']}' method='post'>
-			<table class='table table-bordered'>
-				<tr>
-					<th colspan='2'>
-						Alternatively, you can enter a User ID number.
-					</th>
-				</tr>
-				<tr>
-					<th>
-						User ID
-					</th>
-					<td>
-						<input type='number' min='1' class='form-control' name='user' />
-					</td>
-				</tr>
-				<tr>
-					<th>
-						Quantity
-					</th>
-					<td>
-						<input type='number' min='1' max='{$r['inv_qty']}' class='form-control' name='qty' value='{$r['inv_qty']}' />
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='Send Items'>
-					</td>
-				</tr>
-			</table>
-			<input type='hidden' name='verf' value='{$code}' />
 		</form>";
     }
     $db->free_result($id);

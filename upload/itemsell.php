@@ -33,8 +33,8 @@ if (!empty($_POST['qty']) && !empty($_GET['ID'])) {
 			alert('danger', "Uh Oh!", "You are trying to sell more items than you currently have.");
 		} else {
 			$price = $r['itmsellprice'] * $_POST['qty'];
-			$api->UserTakeItem($userid, $r['itmid'], $_POST['qty']);
-			$api->UserGiveCurrency($userid, 'primary', $price);
+			$api->user->takeItem($userid, $r['itmid'], $_POST['qty']);
+			$api->user->giveCurrency($userid, 'primary', $price);
 			$priceh = number_format($price);
 			alert('success', "Success!", "You have successfully sold {$_POST['qty']} {$r['itmname']}(s) back to the
 				game for {$priceh} {$_CONFIG['primary_currency']}.", true, 'inventory.php');
