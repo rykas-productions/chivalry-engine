@@ -40,7 +40,7 @@ function one()
 			The link will expire approximately 30 minutes after the password reset process.<br />
 			<br />
 			If you cannot click the URL for whatever reason, please paste in http://" . determine_game_urlbase() . "/pwreset.php?step=two&code={$token} into your URL bar.";
-            $api->SystemSendEmail($to, $body, $subject, $from);
+            $api->game->sendEmail($to, $body, $subject, $from);
             $expire = time() + 1800;
             $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$e_email}'");
             $db->query("INSERT INTO `pw_recovery` (`pwr_ip`, `pwr_email`, `pwr_code`, `pwr_expire`) VALUES ('{$IP}', '{$e_email}', '{$token}', '{$expire}')");
@@ -74,7 +74,7 @@ function two()
             $subject = "{$set['WebsiteName']} Password Recovery";
             $body = "Your password has been successfully updated to {$pw}
 			<br /> Please use this to log in from now on. We highly recommend changing your password as soon as you log in.";
-            $api->SystemSendEmail($to, $body, $subject, $from);
+            $api->game->sendEmail($to, $body, $subject, $from);
             $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$pwr['pwr_email']}'");
             $e_pw = encode_password($pw);
             $db->query("UPDATE `users` SET `password` = '{$e_pw}' WHERE `email` = '{$pwr['pwr_email']}'");

@@ -103,7 +103,7 @@ function viewguild()
                 Guild Owner
             </th>
             <td>
-                {$api->SystemUserIDtoName($r['guild_owner'])} [{$r['guild_owner']}]
+                {$api->user->getNamefromID($r['guild_owner'])} [{$r['guild_owner']}]
             </td>
         </tr>
         <tr>
@@ -111,7 +111,7 @@ function viewguild()
                 Guild Co-Owner
             </th>
             <td>
-                {$api->SystemUserIDtoName($r['guild_coowner'])} [{$r['guild_coowner']}]
+                {$api->user->getNamefromID($r['guild_coowner'])} [{$r['guild_coowner']}]
             </td>
         </tr>
         <tr>
@@ -165,7 +165,7 @@ function viewguild()
         </table>";
 
         //Log that the staff member has view this guild's information.
-        $api->SystemLogsAdd($userid, 'staff', "Viewed {$r['guild_name']} [{$guild}]'s Guild Info.");
+        $api->game->addLog($userid, 'staff', "Viewed {$r['guild_name']} [{$guild}]'s Guild Info.");
         $h->endpage();
 
     } else {
@@ -234,11 +234,11 @@ function creditguild()
         $primf = number_format($prim);
 
         //Notify the guild they've received some cash!
-        $api->GuildAddNotification($guild, "The game administration has credited your guild {$primf} {$_CONFIG['primary_currency']}
+        $api->guild->addNotification($guild, "The game administration has credited your guild {$primf} {$_CONFIG['primary_currency']}
         and/or {$secf} Secondary Currency for reason: {$reason}.");
 
         //Log the entry
-        $api->SystemLogsAdd($userid, 'staff', "Credited Guild ID {$guild} with {$primf} {$_CONFIG['primary_currency']} and/or {$secf}
+        $api->game->addLog($userid, 'staff', "Credited Guild ID {$guild} with {$primf} {$_CONFIG['primary_currency']} and/or {$secf}
         Secondary Currency with reason '{$reason}'.");
 
         //Success to the end user.
@@ -336,7 +336,7 @@ function viewwars()
     //Forget the wars query.
     $db->free_result($q);
     //Log that the wars were viewed.
-    $api->SystemLogsAdd($userid, 'staff', "Viewed active guild wars.");
+    $api->game->addLog($userid, 'staff', "Viewed active guild wars.");
     echo "</table>";
     $h->endpage();
 }
@@ -375,7 +375,7 @@ function endwar()
     $log = "Ended the war between {$gang1} and {$gang2}.";
 
     //Log the war being deleted, then tell the user that it was successful.
-    $api->SystemLogsAdd($userid, 'staff', $log);
+    $api->game->addLog($userid, 'staff', $log);
     alert('success', "Success!", "You have ended the war between {$gang1} and {$gang2}!", false);
     viewwars();
 }
@@ -590,7 +590,7 @@ function editguild()
                     `guild_hasarmory` = '{$armory}'
                     WHERE `guild_id` = {$guild}");
         alert('success', 'Success!', "You have successfully edited the {$name} guild!", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Edited the <a href='../guilds.php?action=view&id={$guild}'>{$name}</a> Guild.");
+        $api->game->addLog($userid, 'staff', "Edited the <a href='../guilds.php?action=view&id={$guild}'>{$name}</a> Guild.");
     }
     $h->endpage();
 }
@@ -633,7 +633,7 @@ function delguild()
 
         //Alert user and log!
         alert('success', "Success!", "You have successfully deleted Guild ID {$guild}.");
-        $api->SystemLogsAdd($userid, 'staff', "Deleted Guild ID {$guild}.");
+        $api->game->addLog($userid, 'staff', "Deleted Guild ID {$guild}.");
         $h->endpage();
     } else {
         $csrf = request_csrf_html('staff_delete_guild');
@@ -688,7 +688,7 @@ function addcrime()
         $db->query("INSERT INTO `guild_crimes`
                     (`gcNAME`, `gcUSERS`, `gcSTART`, `gcSUCC`, `gcFAIL`, `gcMINCASH`, `gcMAXCASH`)
                     VALUES ('{$name}', '{$memb}', '{$start}', '{$success}', '{$fail}', '{$min}', '{$max}')");
-        $api->SystemLogsAdd($userid, 'staff', "Created the {$name} Guild Crime.");
+        $api->game->addLog($userid, 'staff', "Created the {$name} Guild Crime.");
         alert('success', "Success!", "You have successfully created the {$name} Guild Crime.", true, 'index.php');
         $h->endpage();
     } else {
@@ -792,7 +792,7 @@ function delcrime()
 
         //Delete the crime now.
         $db->query("DELETE FROM `guild_crimes` WHERE `gcID` = {$_POST['crime']}");
-        $api->SystemLogsAdd($userid, 'staff', "Delete Guild Crime ID {$_POST['crime']}.");
+        $api->game->addLog($userid, 'staff', "Delete Guild Crime ID {$_POST['crime']}.");
         alert('success', 'Success!', "You have successfully deleted this guild crime.", true, 'index.php');
         $h->endpage();
     } else {

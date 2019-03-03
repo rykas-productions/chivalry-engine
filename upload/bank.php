@@ -36,7 +36,7 @@ else {
             alert('success', "Success!", "You have successfully bought a bank account for " . number_format($bank_cost), true, 'bank.php');
 			$api->user->takeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bank", 0);
-            $api->SystemLogsAdd($userid, 'bank', 'Purchased bank account');
+            $api->game->addLog($userid, 'bank', 'Purchased bank account');
         } //Player is too poor to afford account.
         else {
             alert('danger', "Uh oh!", "You do not have enough cash to buy a bank account. You need at least
@@ -92,12 +92,12 @@ function deposit()
         $ir['bank'] += $gain;
         //Update user's bank and primary currency info.
 		$api->user->takeCurrency($userid, 'primary', $_POST['deposit']);
-        $api->UserInfoSetStatic($userid, "bank", $ir['bank']);
+        $api->user->setInfoStatic($userid, "bank", $ir['bank']);
         alert('success', "Success!", "You hand over " . number_format($_POST['deposit']) . " to be deposited. After the
 		    fee (" . number_format($fee) . ") is taken from your deposit, " . number_format($gain) . " is added to your
 		    bank account. You now have " . number_format($ir['bank']) . " in your account.", true, 'bank.php');
         //Log bank transaction.
-        $api->SystemLogsAdd($userid, 'bank', "Deposited " . number_format($_POST['deposit']) . ".");
+        $api->game->addLog($userid, 'bank', "Deposited " . number_format($_POST['deposit']) . ".");
     }
 }
 
@@ -113,11 +113,11 @@ function withdraw()
         $ir['bank'] -= $gain;
         //Update user's info.
 		$api->user->giveCurrency($userid, 'primary', $_POST['withdraw']);
-        $api->UserInfoSetStatic($userid, "bank", $ir['bank']);
+        $api->user->setInfoStatic($userid, "bank", $ir['bank']);
         alert('success', "Success!", "You have successfully withdrew " . number_format($_POST['withdraw']) . " from your
 		    bank account. You have now have " . number_format($ir['bank']) . " left in your account.", true, 'bank.php');
         //Log transaction.
-        $api->SystemLogsAdd($userid, 'bank', "Withdrew " . number_format($_POST['withdraw']) . ".");
+        $api->game->addLog($userid, 'bank', "Withdrew " . number_format($_POST['withdraw']) . ".");
     }
 }
 

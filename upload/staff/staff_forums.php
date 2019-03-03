@@ -99,7 +99,7 @@ function addforum()
             $db->query("INSERT INTO `forum_forums` (`ff_name`, `ff_desc`, `ff_lp_t_id`, `ff_lp_poster_id`, `ff_auth`, `ff_lp_time`)
 			VALUES ('{$name}', '{$desc}', '0', '0', '{$auth}', '0');");
             alert('success', "Success!", "You have successfully created a {$auth} forum category called {$name}.", true, 'index.php');
-            $api->SystemLogsAdd($userid, 'staff', "Created a {$auth} Forum Category called {$name}.");
+            $api->game->addLog($userid, 'staff', "Created a {$auth} Forum Category called {$name}.");
         }
     }
 }
@@ -141,7 +141,7 @@ function editforum()
             $db->free_result($q);
             $db->query("UPDATE `forum_forums` SET `ff_desc` = '$desc', `ff_name` = '$name', `ff_auth` = '$auth' WHERE `ff_id` = {$_POST['id']}");
             alert('success', "Success!", "You have successfully edited the {$name} forum category.", true, 'index.php');
-            $api->SystemLogsAdd($userid, 'staff', "Edited forum {$name}");
+            $api->game->addLog($userid, 'staff', "Edited forum {$name}");
             break;
         case "1":
             $_POST['id'] = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : '';
@@ -254,7 +254,7 @@ function delforum()
         $old = $db->fetch_single($q);
         $db->free_result($q);
         alert('success', "Success!", "You have successfully deleted the {$old} forum category.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Deleted forum {$old}, along with posts and topics posted inside.");
+        $api->game->addLog($userid, 'staff', "Deleted forum {$old}, along with posts and topics posted inside.");
     }
 }
 

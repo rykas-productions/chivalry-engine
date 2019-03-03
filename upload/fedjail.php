@@ -32,7 +32,7 @@ while ($r = $db->fetch_row($q)) {
     echo "
 	<tr>
     	<td>
-    		<a href='profile.php?user={$r['fed_userid']}'>{$api->SystemUserIDtoName($r['fed_userid'])}</a>
+    		<a href='profile.php?user={$r['fed_userid']}'>{$api->user->getNamefromID($r['fed_userid'])}</a>
     	</td>
     	<td>
 			" . TimeUntil_Parse($r['fed_out']) . "
@@ -41,7 +41,7 @@ while ($r = $db->fetch_row($q)) {
 			{$r['fed_reason']}
 		</td>
     	<td>
-    		<a href='profile.php?user={$r['fed_jailedby']}'>{$api->SystemUserIDtoName($r['fed_jailedby'])}</a>
+    		<a href='profile.php?user={$r['fed_jailedby']}'>{$api->user->getNamefromID($r['fed_jailedby'])}</a>
     	</td>
     </tr>";
 }
@@ -69,7 +69,7 @@ while ($r = $db->fetch_row($q)) {
     echo "
 	<tr>
     	<td>
-    		<a href='profile.php?user={$r['mbUSER']}'>{$api->SystemUserIDtoName($r['mbUSER'])}</a>
+    		<a href='profile.php?user={$r['mbUSER']}'>{$api->user->getNamefromID($r['mbUSER'])}</a>
     	</td>
     	<td>
 			" . TimeUntil_Parse($r['mbTIME']) . "
@@ -78,7 +78,7 @@ while ($r = $db->fetch_row($q)) {
 			{$r['mbREASON']}
 		</td>
     	<td>
-    		<a href='profile.php?user={$r['mbBANNER']}'>{$api->SystemUserIDtoName($r['mbBANNER'])}</a>
+    		<a href='profile.php?user={$r['mbBANNER']}'>{$api->user->getNamefromID($r['mbBANNER'])}</a>
     	</td>
     </tr>";
 }
@@ -107,7 +107,7 @@ while ($r = $db->fetch_row($q)) {
     echo "
 	<tr>
     	<td>
-    		<a href='profile.php?user={$r['fb_user']}'>{$api->SystemUserIDtoName($r['fb_user'])}</a>
+    		<a href='profile.php?user={$r['fb_user']}'>{$api->user->getNamefromID($r['fb_user'])}</a>
     	</td>
     	<td>
 			" . TimeUntil_Parse($r['fb_time']) . "
@@ -116,7 +116,7 @@ while ($r = $db->fetch_row($q)) {
 			{$r['fb_reason']}
 		</td>
     	<td>
-    		<a href='profile.php?user={$r['fb_banner']}'>{$api->SystemUserIDtoName($r['fb_banner'])}</a>
+    		<a href='profile.php?user={$r['fb_banner']}'>{$api->user->getNamefromID($r['fb_banner'])}</a>
     	</td>
     </tr>";
 }

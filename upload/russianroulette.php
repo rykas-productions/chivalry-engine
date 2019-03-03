@@ -9,11 +9,11 @@
 require("globals.php");
 echo "<h3>Russian Roulette</h3><hr />";
 //Do not allow the user to play Russian Roulette if they're in the dungeon/infirmary.
-if ($api->UserStatus($userid, 'dungeon')) {
+if ($api->user->inDungeon($userid)) {
     alert('danger', "Uh Oh!", "You cannot play Russian Roulette while in the dungeon.");
     die($h->endpage());
 }
-if ($api->UserStatus($userid, 'infirmary')) {
+if ($api->inInfirmary($userid)) {
     alert('danger', "Uh Oh!", "You cannot play Russian Roulette while in the infirmary.");
     die($h->endpage());
 }
@@ -102,10 +102,10 @@ function home()
         echo "
         <tr>
             <td>
-                {$api->SystemUserIDtoName($r['challenger'])} [{$r['challenger']}]
+                {$api->user->getNamefromID($r['challenger'])} [{$r['challenger']}]
             </td>
             <td>
-                {$api->SystemUserIDtoName($r['challengee'])} [{$r['challengee']}]
+                {$api->user->getNamefromID($r['challengee'])} [{$r['challengee']}]
             </td>
             <td>
                 " . number_format($r['reward']) . " {$_CONFIG['primary_currency']}
@@ -161,11 +161,11 @@ function bet()
                 (`challengee`, `challenger`, `reward`)
                 VALUES ('{$_POST['user']}', '{$userid}', '{$_POST['bet']}');");
     //Alert the receiver
-    $NotifText = "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has challenged you to a round of Russian Roulette. View the challenge <a href='russianroulette.php'>here</a>.";
-    $api->GameAddNotification($_POST['user'], $NotifText);
+    $NotifText = "<a href='profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a> has challenged you to a round of Russian Roulette. View the challenge <a href='russianroulette.php'>here</a>.";
+    $api->user->addNotification($_POST['user'], $NotifText);
     $api->user->takeCurrency($userid, 'primary', $_POST['bet']);
-    alert('success', "Success!", "You have successfully challenged {$api->SystemUserIDtoName($_POST['user'])} to a round of Russian Roulette.", true, 'russianroulette.php');
-    $api->SystemLogsAdd($userid, 'rr', "Challenged <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>. Bet: {$_POST['bet']}.");
+    alert('success', "Success!", "You have successfully challenged {$api->user->getNamefromID($_POST['user'])} to a round of Russian Roulette.", true, 'russianroulette.php');
+    $api->game->addLog($userid, 'rr', "Challenged <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a>. Bet: {$_POST['bet']}.");
     die($h->endpage());
 }
 
@@ -201,13 +201,13 @@ function wdrr()
                                     WHERE `challengee` = {$_GET['id']}
                                     AND `challenger` = {$userid}"));
     $api->user->giveCurrency($userid, 'primary', $r);
-    $NotifText = "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has withdrawn their Russian Roulette challenge.";
-    $api->GameAddNotification($_GET['id'], $NotifText);
+    $NotifText = "<a href='profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a> has withdrawn their Russian Roulette challenge.";
+    $api->user->addNotification($_GET['id'], $NotifText);
     $db->query("DELETE FROM `russian_roulette`
                 WHERE `challengee` = {$_GET['id']}
                 AND `challenger` = {$userid}");
-    alert('success', "Success!", "You have successfully withdrawn your Russian Roulette challenge against {$api->SystemUserIDtoName($_GET['id'])}.", true, 'russianroulette.php');
-    $api->SystemLogsAdd($userid, 'rr', "Withdrew challenge against <a href='../profile.php?user={$_GET['id']}'>{$api->SystemUserIDtoName($_GET['id'])}</a>. Bet: {$r}.");
+    alert('success', "Success!", "You have successfully withdrawn your Russian Roulette challenge against {$api->user->getNamefromID($_GET['id'])}.", true, 'russianroulette.php');
+    $api->game->addLog($userid, 'rr', "Withdrew challenge against <a href='../profile.php?user={$_GET['id']}'>{$api->user->getNamefromID($_GET['id'])}</a>. Bet: {$r}.");
     die($h->endpage());
 }
 
@@ -253,24 +253,24 @@ function dorr()
     $actuallywon = (($r * 2) * 0.9);
     if ($rand <= $half) {
         //You win
-        alert('success', "Success!", "You play a round of Russian Roulette against {$api->SystemUserIDtoName($_GET['id'])}
+        alert('success', "Success!", "You play a round of Russian Roulette against {$api->user->getNamefromID($_GET['id'])}
          and won " . number_format($actuallywon) . " {$_CONFIG['primary_currency']}.", true, 'index.php');
         $winner = $userid;
         $loser = $_GET['id'];
-        $NotifText = "You lost a round of Russian Roulette against {$api->SystemUserIDtoName($userid)} and lost {$r} {$_CONFIG['primary_currency']}.";
-        $api->SystemLogsAdd($userid, 'rr', "Won against <a href='../profile.php?user={$_GET['id']}'>{$api->SystemUserIDtoName($_GET['id'])}</a>. Gained: {$actuallywon}.");
-        $api->SystemLogsAdd($_GET['id'], 'rr', "Lost against <a href='../profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a>. Lost: {$actuallywon}.");
+        $NotifText = "You lost a round of Russian Roulette against {$api->user->getNamefromID($userid)} and lost {$r} {$_CONFIG['primary_currency']}.";
+        $api->game->addLog($userid, 'rr', "Won against <a href='../profile.php?user={$_GET['id']}'>{$api->user->getNamefromID($_GET['id'])}</a>. Gained: {$actuallywon}.");
+        $api->game->addLog($_GET['id'], 'rr', "Lost against <a href='../profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a>. Lost: {$actuallywon}.");
     } else {
         //You lose
-        alert('danger', "Uh Oh!", "You play a round of Russian Roulette against {$api->SystemUserIDtoName($_GET['id'])}
+        alert('danger', "Uh Oh!", "You play a round of Russian Roulette against {$api->user->getNamefromID($_GET['id'])}
          and lost " . number_format($actuallywon) . " {$_CONFIG['primary_currency']}.", true, 'index.php');
         $winner = $_GET['id'];
         $loser = $userid;
-        $NotifText = "You won a round of Russian Roulette against {$api->SystemUserIDtoName($userid)} and gained {$r} {$_CONFIG['primary_currency']}.";
-        $api->SystemLogsAdd($_GET['id'], 'rr', "Won against <a href='../profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a>. Gained: {$actuallywon}.");
-        $api->SystemLogsAdd($userid, 'rr', "Lost against <a href='../profile.php?user={$_GET['id']}'>{$api->SystemUserIDtoName($_GET['id'])}</a>. Lost: {$actuallywon}.");
+        $NotifText = "You won a round of Russian Roulette against {$api->user->getNamefromID($userid)} and gained {$r} {$_CONFIG['primary_currency']}.";
+        $api->game->addLog($_GET['id'], 'rr', "Won against <a href='../profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a>. Gained: {$actuallywon}.");
+        $api->game->addLog($userid, 'rr', "Lost against <a href='../profile.php?user={$_GET['id']}'>{$api->user->getNamefromID($_GET['id'])}</a>. Lost: {$actuallywon}.");
     }
-    $api->GameAddNotification($_GET['id'], $NotifText);
+    $api->user->addNotification($_GET['id'], $NotifText);
     $api->user->giveCurrency($winner, 'primary', $actuallywon);
     $api->user->setInfirmary($loser, Random(10, 35), "Deadly Games");
     $api->user->setInfoStatic($loser, 'hp', 0);
@@ -316,12 +316,12 @@ function dontrr()
                                     WHERE `challengee` = {$_GET['id']}
                                     AND `challenger` = {$userid}"));
     $api->user->giveCurrency($_GET['id'], 'primary', $r);
-    $NotifText = "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has declined yourr Russian Roulette challenge. Your cash has been returned.";
-    $api->GameAddNotification($_GET['id'], $NotifText);
+    $NotifText = "<a href='profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a> has declined yourr Russian Roulette challenge. Your cash has been returned.";
+    $api->user->addNotification($_GET['id'], $NotifText);
     $db->query("DELETE FROM `russian_roulette`
                 WHERE `challenger` = {$_GET['id']}
                 AND `challengee` = {$userid}");
-    alert('success', "Success!", "You have successfully declined the Russian Roulette challenge from {$api->SystemUserIDtoName($_GET['id'])}.", true, 'russianroulette.php');
-    $api->SystemLogsAdd($userid, 'rr', "Declined <a href='../profile.php?user={$_GET['id']}'>{$api->SystemUserIDtoName($_GET['id'])}</a>'s match.");
+    alert('success', "Success!", "You have successfully declined the Russian Roulette challenge from {$api->user->getNamefromID($_GET['id'])}.", true, 'russianroulette.php');
+    $api->game->addLog($userid, 'rr', "Declined <a href='../profile.php?user={$_GET['id']}'>{$api->user->getNamefromID($_GET['id'])}</a>'s match.");
     die($h->endpage());
 }

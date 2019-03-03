@@ -236,7 +236,7 @@ function create()
 						VALUES(NULL, '{$itmtype}', '{$itmname}', '{$itmdesc}',
                      {$itmbuyprice}, {$itmsellprice}, '{$itmbuy}', '{$effectarray}', '{$statarray}', '{$dirarray}', '{$amountarray}', '{$typearray}',
 					 '{$weapon}', '{$armor}')");
-        $api->SystemLogsAdd($userid, 'staff', "Created item {$itmname}.");
+        $api->game->addLog($userid, 'staff', "Created item {$itmname}.");
         alert('success', "Success!", "You have successfully created the {$itmname} item.", true, 'index.php');
     }
 }
@@ -287,7 +287,7 @@ function createitmgroup()
             alert("danger", "Uh Oh!", "The item group name you've chosen is already in use.");
             die($h->endpage());
         }
-        $api->SystemLogsAdd($userid, 'staff', "Created item type {$name}.");
+        $api->game->addLog($userid, 'staff', "Created item type {$name}.");
         alert('success', "Success!", "You have successfully created the {$name} item group.", true, 'index.php');
         $db->query("INSERT INTO `itemtypes` VALUES(NULL, '{$name}')");
 
@@ -345,7 +345,7 @@ function deleteitem()
         }
         $itemname = $db->fetch_single($d);
         $db->free_result($d);
-        $api->SystemLogsAdd($userid, 'staff', "Deleted item {$itemname}.");
+        $api->game->addLog($userid, 'staff', "Deleted item {$itemname}.");
         $db->query("DELETE FROM `items` WHERE `itmid` = {$_POST['item']}");
         $db->query("DELETE FROM `inventory` WHERE `inv_itemid` = {$_POST['item']}");
         alert("success", "Success!", "You have successfully deleted the {$itemname} item from the game.", true, 'index.php');
@@ -430,8 +430,8 @@ function giveitem()
                 $db->free_result($q);
                 $db->free_result($q2);
                 $api->user->giveItem($_POST['user'], $_POST['item'], $_POST['qty']);
-                $api->GameAddNotification($_POST['user'], "The administration has gifted you {$_POST['qty']} {$item['itmname']}(s) to your inventory.");
-                $api->SystemLogsAdd($userid, 'staff', "Gave {$_POST['qty']} <a href='../iteminfo.php?ID={$_POST['item']}'>{$item['itmname']}</a>(s) to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
+                $api->user->addNotification($_POST['user'], "The administration has gifted you {$_POST['qty']} {$item['itmname']}(s) to your inventory.");
+                $api->game->addLog($userid, 'staff', "Gave {$_POST['qty']} <a href='../iteminfo.php?ID={$_POST['item']}'>{$item['itmname']}</a>(s) to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
                 alert('success', "Success!", "You have successfully given {$_POST['qty']} {$item['itmname']}(s) to {$user['username']}.", true, 'index.php');
                 die($h->endpage());
             }
@@ -685,7 +685,7 @@ function edititem()
                         `itmeffects_type` = '{$typearray}', `weapon` = {$weapon}, `armor` = {$armor} 
                         WHERE `itmid` = {$itemid }");
         alert('success', "Success!", "You successfully have edited the {$api->SystemItemIDtoName($itemid)} item.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Edited Item {$api->SystemItemIDtoName($itemid)}.");
+        $api->game->addLog($userid, 'staff', "Edited Item {$api->SystemItemIDtoName($itemid)}.");
     } else {
         $csrf = request_csrf_html('staff_edititem1');
         echo "

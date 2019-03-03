@@ -15,7 +15,7 @@ if (isset($_POST['g-recaptcha-response'])) {
     //Did not get a reCaptcha response from the user.
     if (!$captcha) {
         alert('danger', "Uh Oh!", "ReCaptcha response returned empty. Go back and try again.", true, $page);
-        $api->SystemLogsAdd($userid, 'verify', "ReCaptcha returned empty.");
+        $api->game->addLog($userid, 'verify', "ReCaptcha returned empty.");
         header("refresh:5;url={$page}");
         die($h->endpage());
     }
@@ -24,20 +24,20 @@ if (isset($_POST['g-recaptcha-response'])) {
     //User did not successfully verify themselves with reCaptcha.
     if ($response['success'] == false) {
         alert('danger', "Uh Oh!", "You have failed to pass the ReCaptcha check. Go back and try again.", true, $page);
-        $api->SystemLogsAdd($userid, 'verify', "Verified unsuccessfully.");
+        $api->game->addLog($userid, 'verify', "Verified unsuccessfully.");
         header("refresh:5;url={$page}");
         die($h->endpage());
     } //Use has been verified! :D
     else {
         $time = time();
         $db->query("UPDATE users SET `last_verified`={$time}, `need_verify` = 0 WHERE userid={$userid}");
-        $api->SystemLogsAdd($userid, 'verify', "Verified successfully.");
+        $api->game->addLog($userid, 'verify', "Verified successfully.");
         header("Location: {$page}");
         die($h->endpage());
     }
 } //reCaptcha response has not been received from the player.
 else {
-    $api->SystemLogsAdd($userid, 'verify', "Did not receive ReCaptcha response.");
+    $api->game->addLog($userid, 'verify', "Did not receive ReCaptcha response.");
     alert('danger', "Uh Oh!", "Go back, please.", true, $page);
     header("refresh:5;url={$page}");
     die($h->endpage());

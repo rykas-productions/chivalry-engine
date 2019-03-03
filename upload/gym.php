@@ -92,7 +92,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"]) {
             $all_select = "selected";
         }
         //Log the user's training attempt.
-        $api->SystemLogsAdd($userid, 'training', "Trained their {$stat} {$_POST['amnt']} times and gained {$gain}.");
+        $api->game->addLog($userid, 'training', "Trained their {$stat} {$_POST['amnt']} times and gained {$gain}.");
         echo "<hr />";
         $ir['energy'] -= $_POST['amnt'];
         if ($stat != 'all')

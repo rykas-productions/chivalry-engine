@@ -47,7 +47,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $alerttype = 'success';
         $win = 1;
         $phrase = " and won! You keep your bet, and pocket an extra " . number_format($gain);
-        $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in roulette.");
+        $api->game->addLog($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in roulette.");
     } else {
 
         $title = "Uh Oh!";
@@ -55,7 +55,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $win = 0;
         $gain = -$_POST['bet'];
         $phrase = ". You lose your bet. Sorry man.";
-        $api->SystemLogsAdd($userid, 'gambling', "Lost {$_POST['bet']} in roulette.");
+        $api->game->addLog($userid, 'gambling', "Lost {$_POST['bet']} in roulette.");
     }
     alert($alerttype, $title, "You put in your bet and pull the handle down. Around and around the wheel spins. It stops
 	    and lands on {$slot[1]} {$phrase}", true, "roulette.php?tresde={$tresder}");

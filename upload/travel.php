@@ -68,7 +68,7 @@ if (empty($_GET['to'])) {
             //Tell user they have traveled successfully.
             alert('success', "Success!", "You have successfully paid " . number_format($cost_of_travel) . " Primary
 			 Currency to take a horse to {$cityName}.", true, "index.php");
-            $api->SystemLogsAdd($userid, 'travel', "Traveled to {$cityName} for {$cost_of_travel}.");
+            $api->game->addLog($userid, 'travel', "Traveled to {$cityName} for {$cost_of_travel}.");
             die($h->endpage());
         }
         $db->free_result($q);

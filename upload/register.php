@@ -163,19 +163,19 @@ if (!empty($username)) {
                     $pcrr = $db->fetch_row($promocodereal);
                     item_add($i, $pcrr['promo_item'], 1);
                     $db->query("UPDATE `promo_codes` SET `promo_use` = `promo_use` + 1 WHERE `promo_code` = '{$code}'");
-                    $api->GameAddNotification($i, "Your promotion code was valid! Check your inventory for your item!");
+                    $api->user->addNotification($i, "Your promotion code was valid! Check your inventory for your item!");
                 } else {
-                    $api->GameAddNotification($i, "Your promotion code was invalid.");
+                    $api->user->addNotification($i, "Your promotion code was invalid.");
                 }
             }
         }
-        $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
+        $api->game->addLog($_SESSION['userid'], 'login', "Successfully logged in.");
         $db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
         //User registered, lets log them in.
         alert('success', "Success!", "You have successfully signed up to play {$set['WebsiteName']}. Click here to <a href='tutorial.php'>Sign In</a>", false);
         $url=determine_game_urlbase();
         $WelcomeMSGEmail="Welcome to the game, {$e_username}!<br />We hope you enjoy our lovely game and stick around for a while! If you have any questions or concerns, please contact a staff member in-game!<br />Thank you!<br /> -{$set['WebsiteName']}<br /><a href='http://{$url}'>http://{$url}</a>";
-        $api->SystemSendEmail($e_email,$WelcomeMSGEmail,"{$set['WebsiteName']} Registration",$set['sending_email']);
+        $api->game->sendEmail($e_email,$WelcomeMSGEmail,"{$set['WebsiteName']} Registration",$set['sending_email']);
         die($h->endpage());
     }
     $h->endpage();

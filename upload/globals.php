@@ -160,7 +160,7 @@ $get = $db->query("SELECT `sip_recipe`,`sip_user` FROM `smelt_inprogress` WHERE 
 if ($db->num_rows($get)) {
     $r = $db->fetch_row($get);
     $r2 = $db->fetch_row($db->query("SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r}"));
-    $api->UserGiveItem($r['user'], $r2['smelt_output'], $r2['smelt_qty_output']);
-    $api->GameAddNotification($r['user'], "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
+    $api->user->giveItem($r['user'], $r2['smelt_output'], $r2['smelt_qty_output']);
+    $api->user->addNotification($r['user'], "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
     $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$r['user']} AND `sip_time` < {$time}");
 }

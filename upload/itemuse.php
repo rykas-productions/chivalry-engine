@@ -70,11 +70,11 @@ if (empty($_GET['item'])) {
                 else
                 {
                     if ($stat[$usecount] == 'infirmary') {
-                        if (user_infirmary($userid) == true) {
+                        if (user_infirmary($userid)) {
                             remove_infirmary($userid, $inc);
                         }
                     } elseif ($stat[$usecount] == 'dungeon') {
-                        if (user_dungeon($userid) == true) {
+                        if (user_dungeon($userid)) {
                             remove_dungeon($userid, $inc);
                         }
                     } else {
@@ -94,7 +94,7 @@ if (empty($_GET['item'])) {
         }
         alert('success', "Success!", "You have successfully used your {$r['itmname']}!", true, "itemuse.php?item={$_GET['item']}", "Use Another");
       $api->user->takeItem($userid, $r['inv_itemid'], 1);
-      $api->SystemLogsAdd($userid, 'itemuse', "Used a/an {$r['itmname']} item.");
+      $api->game->addLog($userid, 'itemuse', "Used a/an {$r['itmname']} item.");
     }
     }
 $h->endpage();

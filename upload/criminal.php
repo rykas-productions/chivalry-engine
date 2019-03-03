@@ -11,7 +11,7 @@ require('globals.php');
 include('class/class_evalmath.php');
 $m = new EvalMath;
 echo "<h3>Criminal Center</h3>";
-if ($api->UserStatus($ir['userid'], 'infirmary') || $api->UserStatus($ir['userid'], 'dungeon')) {
+if ($api->user->inInfirmary($ir['userid']) || $api->user->inDungeon($ir['userid'])) {
     alert('danger', "Uh Oh!", "You cannot commit crimes while in the infirmary or dungeon.");
     die($h->endpage());
 }
@@ -140,7 +140,7 @@ function crime()
                 die($h->endpage());
             }
             $ir['brave'] -= $r['crimeBRAVE'];
-            $api->UserInfoSet($userid, "brave", "-{$r['crimeBRAVE']}");
+            $api->user->setInfo($userid, "brave", "-{$r['crimeBRAVE']}");
             if (Random(1, 100) <= $sucrate) {
                 if (!empty($r['crimePRICURMIN'])) {
                     $prim_currency = Random($r['crimePRICURMIN'], $r['crimePRICURMAX']);
@@ -164,18 +164,18 @@ function crime()
                 }
                 $text = str_replace("{money}", $prim_currency, $r['crimeSTEXT']);
                 $text = str_replace("{secondary}", $sec_currency, $r['crimeSTEXT']);
-                $text = str_replace("{item}", $api->SystemItemIDtoName($r['crimeSUCCESSITEM']), $r['crimeSTEXT']);
+                $text = str_replace("{item}", $api->game->getItemNameFromID($r['crimeSUCCESSITEM']), $r['crimeSTEXT']);
                 $title = "Success!";
                 $type = 'success';
                 $api->user->setInfo($userid, "xp", $r['crimeXP']);
-                $api->SystemLogsAdd($userid, 'crime', "Successfully committed the {$r['crimeNAME']} crime.");
+                $api->game->addLog($userid, 'crime', "Successfully committed the {$r['crimeNAME']} crime.");
             } else {
                 $title = "Uh Oh!";
                 $type = 'danger';
                 $dtime = Random($r['crimeDUNGMIN'], $r['crimeDUNGMAX']);
                 $text = str_replace("{time}", $dtime, $r['crimeFTEXT']);
                 $api->user->setDungeon($userid, $dtime, $r['crimeDUNGREAS']);
-                $api->SystemLogsAdd($userid, 'crime', "Failed to commit the {$r['crimeNAME']} crime.");
+                $api->game->addLog($userid, 'crime', "Failed to commit the {$r['crimeNAME']} crime.");
             }
             alert("{$type}", "{$title}", "{$r['crimeITEXT']} {$text}", true, 'criminal.php');
             die($h->endpage());

@@ -377,7 +377,7 @@ function viewtopic()
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff') {
-        if ($api->UserMemberLevelGet($userid, 'forum moderator') == false) {
+        if ($api->user->getStaffLevel($userid, 'forum moderator') == false) {
             alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
             die($h->endpage());
         }
@@ -464,20 +464,20 @@ function viewtopic()
             $PN['username'];
 
         $qlink = "[<a href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>Quote</a>]";
-        if ($api->UserMemberLevelGet($userid, 'forum moderator') || $userid == $r['fp_poster_id']) {
+        if ($api->user->getStaffLevel($userid, 'forum moderator') || $userid == $r['fp_poster_id']) {
             $elink =
                 "[<a href='?act=edit&post={$r['fp_id']}&topic={$_GET['viewtopic']}'>Edit</a>]";
         } else {
             $elink = "";
         }
         $no++;
-        if ($no > 1 and ($api->UserMemberLevelGet($userid, 'forum moderator'))) {
+        if ($no > 1 and ($api->user->getStaffLevel($userid, 'forum moderator'))) {
             $dlink =
                 "[<a href='?act=delepost&post={$r['fp_id']}'>Delete</a>]";
         } else {
             $dlink = "";
         }
-        if ($api->UserMemberLevelGet($userid, 'forum moderator')) {
+        if ($api->user->getStaffLevel($userid, 'forum moderator')) {
             $wlink = "[<a href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'>Warn</a>]";
             $blink = "[<a href='staff/staff_punish.php?action=forumban&user={$r['fp_poster_id']}'>Forum Ban</a>]";
         } else {
@@ -624,7 +624,7 @@ function reply()
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff') {
-        if ($api->UserMemberLevelGet($userid, 'forum moderator') == false) {
+        if ($api->user->getStaffLevel($userid, 'forum moderator') == false) {
             alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
             die($h->endpage());
         }
@@ -686,7 +686,7 @@ function newtopicform()
     $r = $db->fetch_row($q);
     $db->free_result($q);
     if ($r['ff_auth'] == 'staff') {
-        if ($api->UserMemberLevelGet($userid, 'forum moderator') == false) {
+        if ($api->user->getStaffLevel($userid, 'forum moderator') == false) {
             alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
             die($h->endpage());
         }
@@ -758,7 +758,7 @@ function newtopic()
     $r = $db->fetch_row($q);
     $db->free_result($q);
     if ($r['ff_auth'] == 'staff') {
-        if ($api->UserMemberLevelGet($userid, 'forum moderator') == false) {
+        if ($api->user->getStaffLevel($userid, 'forum moderator') == false) {
             alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
             die($h->endpage());
         }
@@ -861,7 +861,7 @@ function quote()
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff') {
-        if ($api->UserMemberLevelGet($userid, 'forum moderator') == false) {
+        if ($api->user->getStaffLevel($userid, 'forum moderator') == false) {
             alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
             die($h->endpage());
         }
@@ -936,7 +936,7 @@ function edit()
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff') {
-        if (!$api->UserMemberLevelGet($userid, 'forum moderator')) {
+        if (!$api->user->getStaffLevel($userid, 'forum moderator')) {
             alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['topic']}");
             die($h->endpage());
         }
@@ -958,7 +958,7 @@ function edit()
     }
     $post = $db->fetch_row($q3);
     $db->free_result($q3);
-    if (!($api->UserMemberLevelGet($userid, 'forum moderator') || $userid == $post['fp_poster_id'])) {
+    if (!($api->user->getStaffLevel($userid, 'forum moderator') || $userid == $post['fp_poster_id'])) {
         alert('danger', "Security Issue!", "You do not have permission to edit this post.", true, "forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
@@ -1029,7 +1029,7 @@ function editsub()
     $forum = $db->fetch_row($q2);
     $db->free_result($q2);
     if ($forum['ff_auth'] == 'staff') {
-        if (!($api->UserMemberLevelGet($userid, 'forum moderator'))) {
+        if (!($api->user->getStaffLevel($userid, 'forum moderator'))) {
             alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['topic']}");
             die($h->endpage());
         }
@@ -1046,7 +1046,7 @@ function editsub()
     }
     $post = $db->fetch_row($q3);
     $db->free_result($q3);
-    if (!(($api->UserMemberLevelGet($userid, 'forum moderator')) || $ir['userid'] == $post['fp_poster_id'])) {
+    if (!(($api->user->getStaffLevel($userid, 'forum moderator')) || $ir['userid'] == $post['fp_poster_id'])) {
         alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
@@ -1074,7 +1074,7 @@ function editsub()
 function move()
 {
     global $userid, $h, $db, $api;
-    if (!($api->UserMemberLevelGet($userid, 'forum moderator'))) {
+    if (!($api->user->getStaffLevel($userid, 'forum moderator'))) {
         alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
         die($h->endpage());
     }
@@ -1109,7 +1109,7 @@ function move()
              SET `ft_forum_id` = {$_POST['forum']}
              WHERE `ft_id` = {$_GET['topic']}");
     alert('success', "Success!", "Topic was moved successfully.", true, "forums.php?viewtopic={$_GET['topic']}");
-    $api->SystemLogsAdd($userid, 'staff', "Moved Topic {$topic['ft_name']} to {$forum['ff_name']}");
+    $api->game->addLog($userid, 'staff', "Moved Topic {$topic['ft_name']} to {$forum['ff_name']}");
     recache_forum($topic['ft_forum_id']);
     recache_forum($_POST['forum']);
 }
@@ -1117,7 +1117,7 @@ function move()
 function lock()
 {
     global $userid, $h, $db, $api;
-    if (!($api->UserMemberLevelGet($userid, 'forum moderator'))) {
+    if (!($api->user->getStaffLevel($userid, 'forum moderator'))) {
         alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
         die($h->endpage());
     }
@@ -1144,21 +1144,21 @@ function lock()
                  SET `ft_locked` = 0
                  WHERE `ft_id` = {$_GET['topic']}");
         alert('success', "Success!", "You have unlocked this topic.", false);
-        $api->SystemLogsAdd($userid, 'staff', "Unlocked Topic {$r['ft_name']}");
+        $api->game->addLog($userid, 'staff', "Unlocked Topic {$r['ft_name']}");
     } else {
         $db->query(
             "UPDATE `forum_topics`
                  SET `ft_locked` = 1
                  WHERE `ft_id` = {$_GET['topic']}");
         alert('success', "Success!", "You have locked this topic.", false);
-        $api->SystemLogsAdd($userid, 'staff', "Locked Topic {$r['ft_name']}");
+        $api->game->addLog($userid, 'staff', "Locked Topic {$r['ft_name']}");
     }
 }
 
 function pin()
 {
     global $userid, $h, $db, $api;
-    if (!($api->UserMemberLevelGet($userid, 'forum moderator'))) {
+    if (!($api->user->getStaffLevel($userid, 'forum moderator'))) {
         alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
         die($h->endpage());
     }
@@ -1185,21 +1185,21 @@ function pin()
                  SET `ft_pinned` = 0
                  WHERE `ft_id` = {$_GET['topic']}");
         alert('success', "Success!", "You have unpinned this topic.", true, "forums.php?viewtopic={$r['ft_id']}");
-        $api->SystemLogsAdd($userid, 'staff', "Unpinned Topic {$r['ft_name']}");
+        $api->game->addLog($userid, 'staff', "Unpinned Topic {$r['ft_name']}");
     } else {
         $db->query(
             "UPDATE `forum_topics`
                  SET `ft_pinned` = 1
                  WHERE `ft_id` = {$_GET['topic']}");
         alert('success', "Success!", "You have pinned this topic.", true, "forums.php?viewtopic={$r['ft_id']}");
-        $api->SystemLogsAdd($userid, 'staff', "Pinned Topic {$r['ft_name']}");
+        $api->game->addLog($userid, 'staff', "Pinned Topic {$r['ft_name']}");
     }
 }
 
 function delepost()
 {
     global $userid, $h, $db, $api;
-    if (!($api->UserMemberLevelGet($userid, 'forum moderator'))) {
+    if (!($api->user->getStaffLevel($userid, 'forum moderator'))) {
         alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
         die($h->endpage());
     }
@@ -1238,7 +1238,7 @@ function delepost()
     alert('success', "Success!", "You have deleted this post.", true, "forums.php?viewtopic={$post['fp_topic_id']}");
     recache_topic($post['fp_topic_id']);
     recache_forum($post['ff_id']);
-    $api->SystemLogsAdd($userid, 'staff', "Deleted post ({$post['fp_id']}) in {$topic['ft_name']}");
+    $api->game->addLog($userid, 'staff', "Deleted post ({$post['fp_id']}) in {$topic['ft_name']}");
 
 }
 
@@ -1246,7 +1246,7 @@ function deletopic()
 {
     global $userid, $h, $db, $api;
     $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
-    if (!($api->UserMemberLevelGet($userid, 'forum moderator'))) {
+    if (!($api->user->getStaffLevel($userid, 'forum moderator'))) {
         alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
@@ -1266,7 +1266,7 @@ function deletopic()
     $db->query("DELETE FROM `forum_posts` WHERE `fp_topic_id` = {$_GET['topic']}");
     alert('success', "Success!", "You have deleted this topic successfully.", true, 'forums.php');
     recache_forum($topic['ft_forum_id']);
-    $api->SystemLogsAdd($userid, 'staff', "Deleted topic {$topic['ft_name']}");
+    $api->game->addLog($userid, 'staff', "Deleted topic {$topic['ft_name']}");
 }
 
 $h->endpage();

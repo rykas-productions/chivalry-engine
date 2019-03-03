@@ -77,17 +77,17 @@ function menu()
 
 function create()
 {
-    global $db, $userid, $api, $ir, $set, $h;
+    global $db, $userid, $api, $ir, $set, $h, $_CONFIG;
     echo "<h3>Create a Guild</h3><hr />";
     $cg_price = $set['GUILD_PRICE'];
     $cg_level = $set['GUILD_LEVEL'];
     //User does not have the minimum required primary currency.
-    if (!($api->UserHasCurrency($userid, 'primary', $cg_price))) {
+    if (!($api->user->hasCurrency($userid, 'primary', $cg_price))) {
         alert("danger", "Uh Oh!", "You do not have enough cash to create a guild! You need
 		    " . number_format($cg_price) . ".", true, 'index.php');
         die($h->endpage());
     } //User level is too low to create a guild.
-    elseif (($api->UserInfoGet($userid, 'level', false)) < $cg_level) {
+    elseif (($api->user->getInfo($userid, 'level', false)) < $cg_level) {
         alert("danger", "Uh Oh!", "You are too low of a level to create a guild. Please level up to Level
 		    " . number_format($cg_level) . " and try again..", true, 'index.php');
         die($h->endpage());
@@ -119,13 +119,13 @@ function create()
 						'{$name}', '{$desc}', '1', '0')");
             $i = $db->insert_id();
             //Take user's primary currency, and have player join the guild.
-            $api->UserTakeCurrency($userid, 'primary', $cg_price);
+            $api->user->takeCurrency($userid, 'primary', $cg_price);
             $db->query("UPDATE `users` SET `guild` = {$i} WHERE `userid` = {$userid}");
             //Tell user they've created a guild.
             alert('success', "Success!", "You have successfully created a guild.", true, "viewguild.php");
             //Log the purchase, and that they've joined a guild.
-            $api->SystemLogsAdd($userid, 'guilds', "Purchased a guild.");
-            $api->SystemLogsAdd($userid, 'guilds', "Joined Guild ID {$i}");
+            $api->game->addLog($userid, 'guilds', "Purchased a guild.");
+            $api->game->addLog($userid, 'guilds', "Joined Guild ID {$i}");
         } else {
             //Request the CSRF form.
             $csrf = request_csrf_html('createguild');
@@ -234,7 +234,7 @@ function view()
 					Guild Location
 				</th>
 				<td>";
-        echo $api->SystemTownIDtoName($gd['guild_town_id']) . "
+        echo $api->game->getTownNameFromID($gd['guild_town_id']) . "
 				</td>
 			</tr>
 			<tr>
@@ -332,10 +332,10 @@ function apply()
         }
         //Tell the guild's owner and co-owner that the user has sent an application.
         if ($gd['guild_owner'] == $gd['guild_coowner']) {
-            $api->GameAddNotification($gd['guild_owner'], "{$ir['username']} has filled and submitted an application to join your guild.");
+            $api->user->addNotification($gd['guild_owner'], "{$ir['username']} has filled and submitted an application to join your guild.");
         } else {
-            $api->GameAddNotification($gd['guild_owner'], "{$ir['username']} has filled and submitted an application to join your guild.");
-            $api->GameAddNotification($gd['guild_coowner'], "{$ir['username']} has filled and submitted an application to join your guild.");
+            $api->user->addNotification($gd['guild_owner'], "{$ir['username']} has filled and submitted an application to join your guild.");
+            $api->user->addNotification($gd['guild_coowner'], "{$ir['username']} has filled and submitted an application to join your guild.");
         }
         $time = time();
         $application = (isset($_POST['application']) && is_string($_POST['application'])) ? $db->escape(htmlentities(stripslashes($_POST['application']), ENT_QUOTES, 'ISO-8859-1')) : '';
@@ -377,14 +377,14 @@ function wars()
         while ($r = $db->fetch_row($q)) {
             echo "<tr>
 				<td>
-					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
+					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->guild->fetchInfo($r['gw_declarer'],'guild_name')}</a><br />
 						(Points: " . number_format($r['gw_drpoints']) . ")
 				</td>
 				<td>
 					VS
 				</td>
 				<td>
-					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}</a><br />
+					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->guild->fetchInfo($r['gw_declaree'],'guild_name')}</a><br />
 						(Points: " . number_format($r['gw_depoints']) . ")
 				</td>
 			</tr>";

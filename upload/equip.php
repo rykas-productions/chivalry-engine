@@ -61,7 +61,7 @@ function weapon()
 			$api->user->giveItem($userid, $ir[$_POST['type']], 1);
             $slot = ($_POST['type'] == 'equip_primary') ? 'Primary Weapon' : 'Secondary Weapon';
             $weapname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_POST['type']]}"));
-            $api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} as their {$slot}");
+            $api->game->addLog($userid, 'equip', "Unequipped {$weapname} as their {$slot}");
         }
         //Make the slot name friendly for the logger and user.
         if ($_POST['type'] == "equip_primary") {
@@ -75,7 +75,7 @@ function weapon()
         //event saying they equipped their item as a weapon.
 		$api->user->takeItem($userid, $r['itmid'], 1);
         $db->query("UPDATE `users` SET `{$_POST['type']}` = {$r['itmid']} WHERE `userid` = {$userid}");
-        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their {$slot}.");
+        $api->game->addLog($userid, 'equip', "Equipped {$r['itmname']} as their {$slot}.");
         alert('success', "Success!", "You have successfully equipped {$r['itmname']} as your weapon in your {$slot_name}
 		    slot. If you had a previous weapon there, it was moved to your inventory.", true, 'inventory.php');
     } else {
@@ -137,14 +137,14 @@ function armor()
         if ($ir['equip_armor'] > 0) {
 			$api->user->giveItem($userid, $ir['equip_armor'], 1);
             $armorname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
-            $api->SystemLogsAdd($userid, 'equip', "Unequipped {$armorname} as their armor.");
+            $api->game->addLog($userid, 'equip', "Unequipped {$armorname} as their armor.");
         }
         //Take the item from their inventory, equip it, log that it was equipped, and give a sucecss message to the player.
 		$api->user->takeItem($userid, $r['itmid'], 1);
         $db->query("UPDATE `users`
 				  SET `equip_armor` = {$r['itmid']}
 				  WHERE `userid` = {$userid}");
-        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their armor.");
+        $api->game->addLog($userid, 'equip', "Equipped {$r['itmname']} as their armor.");
         alert('success', "Success!", "You have equipped your {$r['itmname']} into your armor slot. If you had an armor
 		    there previously, it's been moved to your inventory.", true, 'inventory.php');
     } else {

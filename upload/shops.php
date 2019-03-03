@@ -148,7 +148,7 @@ function buy()
 					 WHERE `userid` = $userid");
 			$ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
 			alert('success', "Success!", "You have bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price} {$_CONFIG['primary_currency']}.", true, "shops.php");
-			$api->SystemLogsAdd($userid, 'itembuy', $ib_log);
+			$api->game->addLog($userid, 'itembuy', $ib_log);
 		}
 		$db->free_result($q);
 	}

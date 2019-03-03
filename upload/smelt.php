@@ -59,7 +59,7 @@ function home()
                 $t['itmname'] = "<span style='color:red;'>" . $t['itmname'] . "</span>";
                 $can_craft = FALSE;
             }
-            $items_needed .= $t['itmname'] . " x " . $qty[$n] . " (Have " . number_format($api->UserCountItem($userid, $i)) . ")<br />";
+            $items_needed .= $t['itmname'] . " x " . $qty[$n] . " (Have " . number_format($api->user->countItem($userid, $i)) . ")<br />";
             $n++;
         }
         unset($n);
@@ -120,13 +120,13 @@ function smelt()
             alert('success', "Success!", "You have begun to smelt this item. It will be complete in {$friendlytime}.", true, "smelt.php");
         } else {
             alert('success', "Success!", "You have successfully smelted this item. It is in your inventory.", true, "smelt.php");
-            $api->UserGiveItem($userid, $r['smelt_output'], $r['smelt_qty_output']);
+            $api->user->giveItem($userid, $r['smelt_output'], $r['smelt_qty_output']);
         }
         $ex = explode(",", $r['smelt_items']);
         $qty = explode(",", $r['smelt_quantity']);
         $n = 0;
         foreach ($ex as $i) {
-            $api->UserTakeItem($userid, $i, $qty[$n]);
+            $api->user->takeItem($userid, $i, $qty[$n]);
             $n++;
         }
         unset($n);

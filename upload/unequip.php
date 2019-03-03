@@ -25,6 +25,6 @@ $names = array('equip_primary' => "Primary Weapon",
     'equip_armor' => "Armor");
 //Tell user their slot is now empty
 $weapname = $db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_GET['type']]}"));
-$api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} from their {$_GET['type']} slot.");
+$api->game->addLog($userid, 'equip', "Unequipped {$weapname} from their {$_GET['type']} slot.");
 alert('success', "Success!", "You have successfully unequipped the item in your {$names[$_GET['type']]} slot.", true, 'inventory.php');
 $h->endpage();

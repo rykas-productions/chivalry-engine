@@ -29,7 +29,7 @@ if ($api->user->inDungeon($userid)) {
     alert('danger', "Locked Up!", "You cannot visit the town while you're in the dungeon.");
     die($h->endpage());
 }
-echo "<h4>You begin exploring {$api->SystemTownIDtoName($ir['location'])}. You find a few things that could keep you occupied.</h4>
+echo "<h4>You begin exploring {$api->game->getTownNameFromID($ir['location'])}. You find a few things that could keep you occupied.</h4>
 <div class='row'>
 		<div class='col-sm'>
 			<u><b>Shopping District</b></u><br />

@@ -202,8 +202,8 @@ function job_work()
         ";
         }
     } else {
-        $will = ($api->UserInfoGet($userid, 'will', true));
-        $energy = ($api->UserInfoGet($userid, 'energy', true));
+        $will = ($api->user->getInfoPercent($userid, 'will', true));
+        $energy = ($api->user->getInfoPercent($userid, 'energy', true));
         if ($ir['jobwork'] >= $ir['jrACT']) {
             alert('danger', "Uh Oh!", "You've already worked the maximum times you are required to this hour. You will not
             gain overtime! Take it easy, bro.", true, 'job.php');
@@ -224,8 +224,8 @@ function job_work()
             alert("success", "Success!", "You got to work and knocked out {$WorkUnits} pieces of work. How productive! You have worked {$ir['jobwork']} times.", false);
         }
         $db->query("UPDATE `users` SET `jobwork` = `jobwork` + {$WorkUnits} WHERE `userid` = {$userid}");
-        $api->UserInfoSet($userid, 'will', -7, true);
-        $api->UserInfoSet($userid, 'energy', -10, true);
+        $api->user->setInfoPercent($userid, 'will', -7);
+        $api->user->setInfoPercent($userid, 'energy', -10);
         echo "<a class='btn btn-primary' href='?action=work&dowork=1'>Work Again</a><br /><br />
         <a class='btn btn-primary' href='job.php'>Go Back</a>";
     }

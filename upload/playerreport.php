@@ -57,8 +57,8 @@ if (empty($_POST['userid'])) {
     if (!isset($_POST['verf']) || !verify_csrf_code('report_form', stripslashes($_POST['verf']))) {
         csrf_error();
     }
-    if (strlen($_POST['reason']) > 1250) {
-        alert('danger', "Uh Oh!", "Player reports can only be, at maximum, 1,250 characters in length.");
+    if (strlen($_POST['reason']) > 30000) {
+        alert('danger', "Uh Oh!", "Player reports can only be, at maximum, 30,000 characters in length.");
         die($h->endpage());
     }
     $q = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$_POST['userid']}");

@@ -59,7 +59,7 @@ function home()
 			<tr>
 				<td>
 					<a href='profile.php?user={$Infirmary['dungeon_user']}'>
-						{$api->SystemUserIDtoName($Infirmary['dungeon_user'])}
+						{$api->user->getNameFromID($Infirmary['dungeon_user'])}
 					</a>
 				</td>
 				<td>
@@ -105,9 +105,9 @@ function bail()
         }
         //Person specified is bailed out. Take user's currency, log the action, and tell the person what happened.
         $api->user->takeCurrency($userid, 'primary', $cost);
-        $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
+        $api->user->addNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
             successfully bailed you out of the dungeon.");
-        alert('success', "Success!", "You have successfully bailed out {$api->SystemUserIDtoName($_GET['user'])}", true, 'dungeon.php');
+        alert('success', "Success!", "You have successfully bailed out {$api->user->getNameFromID($_GET['user'])}", true, 'dungeon.php');
         $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$_GET['user']}");
         die($h->endpage());
     } else {
@@ -154,7 +154,7 @@ function bust()
         //User is successful.
         if (Random(1, 100) < $chance) {
             //Add notification, and tell the user.
-            $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
+            $api->user->addNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
                 successfully busted you out of the dungeon.");
             alert('success', "Success!", "You have successfully busted them out of the dungeon.", true, 'dungeon.php');
             $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$_GET['user']}");
@@ -162,8 +162,8 @@ function bust()
         } //User failed. Tell person and throw user in dungeon.
         else {
             $time = min($mult, 100);
-            $reason = $db->escape("Caught trying to bust out {$api->SystemUserIDtoName($_GET['user'])}");
-            $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
+            $reason = $db->escape("Caught trying to bust out {$api->user->getNameFromID($_GET['user'])}");
+            $api->user->addNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
                 failed to bust you out of the dungeon.");
             alert('danger', "Uh Oh!", "While trying to bust your friend out, you were spotted by a guard.", true, 'dungeon.php');
             $api->user->setDungeon($userid, $time, $reason);

@@ -286,7 +286,7 @@ function donate()
 									" . number_format($_POST['primary']) . " {$_CONFIG['primary_currency']} and/or
 									" . number_format($_POST['secondary']) . " Secondary Currency to the guild.");
             $api->guild->addNotification($gd['guild_id'], $event);
-            $api->SystemLogsAdd($userid, 'guild_vault', "Donated " . number_format($_POST['primary']) . " Primary
+            $api->game->addLog($userid, 'guild_vault', "Donated " . number_format($_POST['primary']) . " Primary
                 Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency to their guild.");
             alert('success', "Success!", "You have successfully donated " . number_format($_POST['primary']) . " Primary
 			Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency to your guild.", true, 'viewguild.php');
@@ -417,7 +417,7 @@ function staff_kick()
                 $d_oname = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
                 alert('success', "Success!", "You have kicked {$kdata['username']} from the guild.", true, '?action=members');
                 $their_event = "You were kicked out of the {$gd['guild_name']} guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.";
-                $api->GameAddNotification($who, $their_event);
+                $api->user->addNotification($who, $their_event);
                 $event = $db->escape("<a href='profile.php?user={$who}'>{$d_username}</a> was kicked out of the guild by <a href='profile.php?user={$userid}'>{$d_oname}</a>.");
                 $api->guild->addNotification($gd['guild_id'], $event);
             } else {
@@ -500,7 +500,7 @@ function atklogs()
         echo "<tr>
         		<td>$d</td>
         		<td>
-					" . $api->SystemUserIDtoName($r['log_user']) . " {$r['log_text']}
+					" . $api->user->getNamefromID($r['log_user']) . " {$r['log_text']}
         		</td>
         	  </tr>";
     }
@@ -532,11 +532,11 @@ function warview()
     while ($r = $db->fetch_row($wq)) {
         echo "<tr>
 				<td>
-					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
+					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->guild->fetchInfo($r['gw_declarer'],'guild_name')}</a><br />
 						(Points: " . number_format($r['gw_drpoints']) . ")
 				</td>
 				<td>
-					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}</a><br />
+					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->guild->fetchInfo($r['gw_declaree'],'guild_name')}</a><br />
 						(Points: " . number_format($r['gw_depoints']) . ")
 				</td>
 				<td>
@@ -591,7 +591,7 @@ function armory()
             <tr>
         		<td>
 					<a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='right' title='{$i['itmdesc']}'>
-						{$api->SystemItemIDtoName($i['itmid'])}
+						{$api->game->getItemNameFromID($i['itmid'])}
 					</a>";
             if ($i['gaQTY'] > 1) {
                 echo " (" . number_format($i['gaQTY']) . ")";
@@ -623,22 +623,22 @@ function adonate()
             }
 
             //Verify item exists
-            if (!$api->SystemItemIDtoName($_POST['item'])) {
+            if (!$api->game->getItemNameFromID($_POST['item'])) {
                 alert('danger', "Uh Oh!", "You are trying to donate a non-existent item.");
                 die($h->endpage());
             }
 
             //Verify user has the item/quantity
-            if (!$api->UserHasItem($userid, $_POST['item'], $_POST['qty'])) {
+            if (!$api->user->hasItem($userid, $_POST['item'], $_POST['qty'])) {
                 alert('danger', "Uh Oh!", "You are trying to donate an item you don't have, or an amount you don't have.");
                 die($h->endpage());
             }
 
             //Donation successful!, log everything.
-            $item = $api->SystemItemIDtoName($_POST['item']);
+            $item = $api->game->getItemNameFromID($_POST['item']);
             $api->user->takeItem($userid, $_POST['item'], $_POST['qty']);
             $api->guild->giveItem($userid, $_POST['item'], $_POST['qty']);
-            $api->SystemLogsAdd($userid, 'guilds', "Donated {$_POST['qty']} {$item}(s) to their guild's armory.");
+            $api->game->addLog($userid, 'guilds', "Donated {$_POST['qty']} {$item}(s) to their guild's armory.");
             $api->guild->addNotification($ir['guild'], "{$ir['username']} has donated {$_POST['qty']} {$item}(s) to the guild's armory.");
             alert("success", "Success!", "You have successfully donated {$_POST['qty']} $item}(s) to your guild's armory.", true, "?action=armory");
         } else {
@@ -788,14 +788,14 @@ function staff_apps()
             //User declines the application. Delete the application, and alert the applicant they were declined.
             if ($what == 'decline') {
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
-                $api->GameAddNotification($appdata['ga_user'], "We regret to inform you that your application to join the {$gd['guild_name']} guild was declined.");
+                $api->user->addNotification($appdata['ga_user'], "We regret to inform you that your application to join the {$gd['guild_name']} guild was declined.");
                 $event = $db->escape("<a href='profile.php?user={$userid}'>{$ir['username']}</a> has declined
                                         <a href='profile.php?user={$appdata['ga_user']}'>
-                                        " . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s  application to join
+                                        " . $api->user->getNamefromID($appdata['ga_user']) . "</a>'s  application to join
                                          the guild.");
                 //Add to guild notifications.
                 $api->guild->addNotification($gd['guild_id'], $event);
-                alert('success', "Success!", "You have denied " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s application to join the guild.'");
+                alert('success', "Success!", "You have denied " . $api->user->getNamefromID($appdata['ga_user']) . "'s application to join the guild.'");
             } else {
                 //User is accepted, yay!
 
@@ -827,14 +827,14 @@ function staff_apps()
 
                 //Delete the application and put the applicant inside the guild! Woo!
                 $db->query("DELETE FROM `guild_applications` WHERE `ga_id` = {$_POST['app']}");
-                $api->GameAddNotification($appdata['ga_user'], "Your application to join the {$gd['guild_name']} guild was accepted.");
+                $api->user->addNotification($appdata['ga_user'], "Your application to join the {$gd['guild_name']} guild was accepted.");
                 $event = "<a href='profile.php?user={$userid}'>{$ir['username']}</a>
 									has accepted <a href='profile.php?user={$appdata['ga_user']}'>
-									" . $api->SystemUserIDtoName($appdata['ga_user']) . "</a>'s 
+									" . $api->user->getNamefromID($appdata['ga_user']) . "</a>'s 
 									application to join the guild.";
                 $api->guild->addNotification($gd['guild_id'], $event);
                 $db->query("UPDATE `users` SET `guild` = {$gd['guild_id']} WHERE `userid` = {$appdata['ga_user']}");
-                alert('success', "Success!", "You have accepted " . $api->SystemUserIDtoName($appdata['ga_user']) . "'s applicantion to join the guild.");
+                alert('success', "Success!", "You have accepted " . $api->user->getNamefromID($appdata['ga_user']) . "'s applicantion to join the guild.");
             }
         } else {
             alert('danger', "Uh Oh!", "You are trying to accept a non-existent application.");
@@ -868,11 +868,11 @@ function staff_apps()
 					" . DateTime_Parse($r['ga_time']) . "
             	</td>
             	<td>
-					<a href='profile.php?user={$r['ga_user']}'>" . $api->SystemUserIDtoName($r['ga_user']) . "</a>
+					<a href='profile.php?user={$r['ga_user']}'>" . $api->user->getNamefromID($r['ga_user']) . "</a>
             		[{$r['ga_user']}]
 				</td>
             	<td>
-					" . $api->UserInfoGet($r['ga_user'], 'level') . "
+					" . $api->user->getInfo($r['ga_user'], 'level') . "
 				</td>
 				<td>
 					{$r['ga_text']}
@@ -933,7 +933,7 @@ function staff_vault()
         }
 
         //Recipient is on the same IP Address as the sender... stop.
-        if ($api->SystemCheckUsersIPs($userid, $_POST['user'])) {
+        if ($api->user->checkIP($userid, $_POST['user'])) {
             alert('danger', "Uh Oh!", "You cannot give from the guild's vault if you share the same IP address as the recipient.");
             die($h->endpage());
         }
@@ -956,15 +956,15 @@ function staff_vault()
         $api->user->giveCurrency($_POST['user'], 'secondary', $_POST['secondary']);
         $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$_POST['primary']},
                       `guild_seccurr` = `guild_seccurr` - {$_POST['secondary']} WHERE `guild_id` = {$gd['guild_id']}");
-        $api->GameAddNotification($_POST['user'], "You were given " . number_format($_POST['primary']) . " Primary
+        $api->user->addNotification($_POST['user'], "You were given " . number_format($_POST['primary']) . " Primary
             Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency from your guild's vault.");
         $api->guild->addNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>
-            {$api->SystemUserIDtoName($userid)}</a> has given <a href='profile.php?user={$_POST['user']}'>
-            {$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . "
+            {$api->user->getNamefromID($userid)}</a> has given <a href='profile.php?user={$_POST['user']}'>
+            {$api->user->getNamefromID($_POST['user'])}</a> " . number_format($_POST['primary']) . "
             {$_CONFIG['primary_currency']} and/or " . number_format($_POST['secondary']) . " Secondary Currency from the guild's
             vault.");
-        alert('success', "Success!", "You have given {$api->SystemUserIDtoName($_POST['user'])} ", true, '?action=staff&act2=idx');
-        $api->SystemLogsAdd($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " {$_CONFIG['primary_currency']} and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
+        alert('success', "Success!", "You have given {$api->user->getNamefromID($_POST['user'])} ", true, '?action=staff&act2=idx');
+        $api->game->addLog($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> " . number_format($_POST['primary']) . " {$_CONFIG['primary_currency']} and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
     } else {
         $csrf = request_csrf_html('guild_staff_vault');
         echo "<form method='post'>
@@ -1038,9 +1038,9 @@ function staff_coowner()
 
         //Update the guild's leader.
         $db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
-        $api->GameAddNotification($_POST['user'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you co-leader privileges for the {$gd['guild_name']} guild.");
-        $api->guild->addNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred co-leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
-        alert('success', "Success!", "You have successfully transferred co-leadership privileges to {$api->SystemUserIDtoName($_POST['user'])}.", true, '?action=staff&act2=idx');
+        $api->user->addNotification($_POST['user'], "<a href='profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a> has transferred you co-leader privileges for the {$gd['guild_name']} guild.");
+        $api->guild->addNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a> has transferred co-leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a>.");
+        alert('success', "Success!", "You have successfully transferred co-leadership privileges to {$api->user->getNamefromID($_POST['user'])}.", true, '?action=staff&act2=idx');
     } else {
         $csrf = request_csrf_html('guild_staff_coleader');
         echo "<form method='post'>
@@ -1135,7 +1135,7 @@ function staff_massmail()
         $q = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$gd['guild_id']}");
         //Send the mail out to everyone in the guild.
         while ($r = $db->fetch_row($q)) {
-            $api->GameAddMail($r['userid'], $subj, $_POST['text'], $userid);
+            $api->user->addMail($r['userid'], $subj, $_POST['text'], $userid);
         }
         alert('success', "Success!", "Mass mail has been sent successfully.", true, '?action=staff&act2=idx');
     } else {
@@ -1196,12 +1196,12 @@ function staff_masspayment()
             //Pay each member.
             while ($r = $db->fetch_row($q)) {
                 //User shares an IP with the user being paid... stop this.
-                if ($api->SystemCheckUsersIPs($userid, $r['userid'])) {
+                if ($api->user->checkIP($userid, $r['userid'])) {
                     alert('danger', "Uh Oh!", "{$r['username']} could not receive their Mass Payment because they share an IP Address with you.");
                 } else {
                     //Pay everyone.
                     $gd['guild_primcurr'] -= $_POST['payment'];
-                    $api->GameAddNotification($r['userid'], "You were given a mass-payment of {$_POST['payment']} {$_CONFIG['primary_currency']} from your guild.");
+                    $api->user->addNotification($r['userid'], "You were given a mass-payment of {$_POST['payment']} {$_CONFIG['primary_currency']} from your guild.");
                     $api->user->giveCurrency($r['userid'], 'primary', $_POST['payment']);
                     alert('success', "Success!", "{$r['username']} was paid {$_POST['payment']} {$_CONFIG['primary_currency']}.");
                 }
@@ -1210,7 +1210,7 @@ function staff_masspayment()
             $db->query("UPDATE `guild` SET `guild_primcurr` = {$gd['guild_primcurr']} WHERE `guild_id` = {$gd['guild_id']}");
             $notif = $db->escape("A mass payment of " . number_format($_POST['payment']) . " {$_CONFIG['primary_currency']} was sent out to the members of the guild.");
             $api->guild->addNotification($gd['guild_id'], $notif);
-            $api->SystemLogsAdd($userid, 'guilds', "Sent a mass payment of " . number_format($_POST['payment']) . "to their guild.");
+            $api->game->addLog($userid, 'guilds', "Sent a mass payment of " . number_format($_POST['payment']) . "to their guild.");
             alert('success', "Success!", "Mass payment complete.", true, '?action=staff&act2=idx');
         }
     } else {
@@ -1324,9 +1324,9 @@ function staff_leader()
 
             //Update the guild's leader and log everything.
             $db->query("UPDATE `guild` SET `guild_coowner` = {$_POST['user']} WHERE `guild_id` = {$gd['guild_id']}");
-            $api->GameAddNotification($_POST['user'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred you leader privileges for the {$gd['guild_name']} guild.");
-            $api->guild->addNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a> has transferred leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>.");
-            alert('success', "Success!", "You have transferred your leadership privileges over to {$api->SystemUserIDtoName($_POST['user'])}.", true, '?action=staff&act2=idx');
+            $api->user->addNotification($_POST['user'], "<a href='profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a> has transferred you leader privileges for the {$gd['guild_name']} guild.");
+            $api->guild->addNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a> has transferred leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a>.");
+            alert('success', "Success!", "You have transferred your leadership privileges over to {$api->user->getNamefromID($_POST['user'])}.", true, '?action=staff&act2=idx');
         } else {
             $csrf = request_csrf_html('guild_staff_leader');
             echo "<form method='post'>
@@ -1518,10 +1518,10 @@ function staff_declare()
 
             //Start the war, and notify all parties involved.
             $db->query("INSERT INTO `guild_wars` VALUES (NULL, {$gd['guild_id']}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
-            $api->GameAddNotification($r['guild_owner'], "The {$gd['guild_name']} guild has declared war on your guild.");
+            $api->user->addNotification($r['guild_owner'], "The {$gd['guild_name']} guild has declared war on your guild.");
             $api->guild->addNotification($_POST['guild'], "The {$gd['guild_name']} guild has declared war on your guild.");
             $api->guild->addNotification($gd['guild_id'], "Your guild has declared war on {$r['guild_name']}");
-            $api->SystemLogsAdd($userid, 'guilds', "Declared war on {$r['guild_name']} [{$_POST['guild']}]");
+            $api->game->addLog($userid, 'guilds', "Declared war on {$r['guild_name']} [{$_POST['guild']}]");
             alert('success', "Success!", "You have declared war on {$r['guild_name']}", true, '?action=staff&act2=idx');
         } else {
             $csrf = request_csrf_html('guild_staff_declarewar');
@@ -1571,7 +1571,7 @@ function staff_levelup()
             $db->query("UPDATE `guild` SET `guild_level` = `guild_level` + 1,
 			`guild_xp` = `guild_xp` - {$xprequired} WHERE `guild_id` = {$gd['guild_id']}");
             alert('success', "Success!", "You have successfully leveled up your guild.", true, '?action=staff&act2=idx');
-            $api->SystemLogsAdd($userid, 'guilds', "Leveled up the {$gd['guild_name']} guild.");
+            $api->game->addLog($userid, 'guilds', "Leveled up the {$gd['guild_name']} guild.");
             $api->guild->addNotification($gd['guild_id'], "Your guild has leveled up!");
         }
     } else {
@@ -1607,10 +1607,10 @@ function staff_dissolve()
             //Select all guild members, and tell them what happened to their guild via notification.
             $q = $db->query("SELECT `userid`,`username` FROM `users` WHERE `guild` = {$ir['guild']}");
             while ($r = $db->fetch_row($q)) {
-                $api->GameAddNotification($r['userid'], "Your guild, {$gd['guild_name']}, has been dissolved by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}].");
+                $api->user->addNotification($r['userid'], "Your guild, {$gd['guild_name']}, has been dissolved by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}].");
             }
             //Log the guild being deleted.
-            $api->SystemLogsAdd($userid, 'guilds', "Dissolved Guild ID {$ir['guild']}");
+            $api->game->addLog($userid, 'guilds', "Dissolved Guild ID {$ir['guild']}");
 
             //Delete everything.
             $db->query("DELETE FROM `guild_applications` WHERE `ga_guild` = {$ir['guild']}");
@@ -1659,7 +1659,7 @@ function staff_armory()
                         WHERE `guild_id` = {$gd['guild_id']}");
             //Log
             alert('success', 'Success!', "You have successfully purchased an armory for your guild.");
-            $api->SystemLogsAdd($userid, 'guilds', "Purchased guild armory.");
+            $api->game->addLog($userid, 'guilds', "Purchased guild armory.");
         } else {
             echo "Your guild does not have an armory. It will cost your guild " . number_format($cost) . " Primary
             Currency to purchase an armory. Do you wish to purchase an armory for your guild?<br />
@@ -1704,7 +1704,7 @@ function staff_armory()
             }
 
             //Check users' IP Address. Returns false if not and/or same user
-            if ($api->SystemCheckUsersIPs($userid, $_POST['user'])) {
+            if ($api->user->checkIP($userid, $_POST['user'])) {
                 alert('danger', "Uh Oh!", "You cannot give items to players who share the same IP Address as you.");
                 die($h->endpage());
             }
@@ -1714,14 +1714,14 @@ function staff_armory()
             $api->user->giveItem($_POST['user'], $_POST['item'], $_POST['qty']);
 
             //Resolve item to variable
-            $item = $api->SystemItemIDtoName($_POST['item']);
-            $user = $api->SystemUserIDtoName($_POST['user']);
+            $item = $api->game->getItemNameFromID($_POST['item']);
+            $user = $api->user->getNamefromID($_POST['user']);
 
             //Notification
-            $api->GameAddNotification($_POST['user'], "You have been given {$_POST['qty']} {$item}(s) from your guild's armory.");
+            $api->user->addNotification($_POST['user'], "You have been given {$_POST['qty']} {$item}(s) from your guild's armory.");
             $api->guild->addNotification($ir['guild'], "{$ir['username']} has given {$_POST['qty']} {$item}(s) from your guild's armory to {$user}.");
             alert('success', "Success!", "You have successfully given {$_POST['qty']} {$item}(s) from your guild's armory to {$user}.", true, "?action=staff&act2=idx");
-            $api->SystemLogsAdd($userid, 'guilds', "Gave {$user} {$_POST['qty']} {$item}(s) from their armory.");
+            $api->game->addLog($userid, 'guilds', "Gave {$user} {$_POST['qty']} {$item}(s) from their armory.");
         } else {
             //Giving item form.
             $csrf = request_csrf_html('guild_give_item');

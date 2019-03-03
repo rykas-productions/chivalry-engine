@@ -53,7 +53,7 @@ if ($api->user->getStaffLevel($userid, 'admin')) {
 					Chivalry Engine API Version
 				</th>
 				<td>
-					{$api->SystemReturnAPIVersion()}
+					{$api->game->returnAPIVersion()}
 				</td>
 			</tr>
 		</tbody>

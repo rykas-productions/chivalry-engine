@@ -55,7 +55,7 @@ function home()
 			<tr>
 				<td>
 					<a href='profile.php?user={$Infirmary['infirmary_user']}'>
-						{$api->SystemUserIDtoName($Infirmary['infirmary_user'])}
+						{$api->user->getNamefromID($Infirmary['infirmary_user'])}
 					</a> [{$Infirmary['infirmary_user']}]
 				</td>
 				<td>
@@ -112,14 +112,14 @@ function heal()
                 //Take current user's secondary currency
                 $api->user->takeCurrency($userid, 'secondary', $cost);
                 //Add a friendly note.
-                $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has healed you {$_GET['times']} times.");
+                $api->user->addNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has healed you {$_GET['times']} times.");
                 //Log it!
-                $api->SystemLogsAdd($userid, 'heal', "Healed {$api->SystemUserIDtoName($_GET['user'])} {$_GET['times']} times.");
-                alert('success', "Success!", "You have healed {$api->SystemUserIDtoName($_GET['user'])} {$_GET['times']}
+                $api->game->addLog($userid, 'heal', "Healed {$api->user->getNamefromID($_GET['user'])} {$_GET['times']} times.");
+                alert('success', "Success!", "You have healed {$api->user->getNamefromID($_GET['user'])} {$_GET['times']}
                 times, costing you {$cost} Secondary Currency.", true, 'index.php');
             }
         } else {
-            echo "How many times do you wish to heal {$api->SystemUserIDtoName($_GET['user'])}?<br />
+            echo "How many times do you wish to heal {$api->user->getNamefromID($_GET['user'])}?<br />
             1 Set = 30 minutes<br />
             1 Set = 25 Secondary Currency<br />
             <form>

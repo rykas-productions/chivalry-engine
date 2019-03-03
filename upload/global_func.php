@@ -719,7 +719,7 @@ function forumb_user_dropdown($ddname = "user", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$api->SystemUserIDtoName($r['fb_user'])} [{$r['fb_user']}]</option>";
+        $ret .= ">{$api->user->getNamefromID($r['fb_user'])} [{$r['fb_user']}]</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -1562,7 +1562,7 @@ function smelt_dropdown($ddname = 'smelt', $selected = -1)
         $first = 1;
     }
     while ($r = $db->fetch_row($q)) {
-        $itemname = $api->SystemItemIDtoName($r['smelt_output']);
+        $itemname = $api->game->getItemNameFromID($r['smelt_output']);
         $ret .= "\n<option value='{$r['smelt_id']}'";
         if ($selected == $r['smelt_id'] || $first == 0) {
             $ret .= " selected='selected'";

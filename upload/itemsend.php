@@ -34,7 +34,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
         } else if ($userid == $_POST['user']) {
             alert('danger', "Uh Oh!", "You cannot send yourself items.", true, 'inventory.php');
             die($h->endpage());
-        } else if ($api->SystemCheckUsersIPs($userid, $_POST['user'])) {
+        } else if ($api->user->checkIP($userid, $_POST['user'])) {
             alert('danger', "Uh Oh!", "You cannot send an item to someone on the same IP Address as you.", true, 'inventory.php');
             die($h->endpage());
         } else {
@@ -46,7 +46,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
             notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
                 from <a href='profile.php?user=$userid'>{$ir['username']}</a>.");
             $log = $db->escape("Sent {$_POST['qty']} {$r['itmname']}(s) to {$rm['username']} [{$_POST['user']}].");
-            $api->SystemLogsAdd($userid, 'itemsend', $log);
+            $api->game->addLog($userid, 'itemsend', $log);
         }
         $db->free_result($m);
     }

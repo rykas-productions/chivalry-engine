@@ -97,9 +97,9 @@ function fedjail()
         $days = $_POST['days'];
         $_POST['days'] = time() + ($_POST['days'] * 86400);
         $db->query("INSERT INTO `fedjail` VALUES(NULL, {$_POST['user']}, {$_POST['days']}, {$userid}, '{$_POST['reason']}')");
-        $api->SystemLogsAdd($userid, 'staff', "Placed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] into the federal dungeon for {$days} days for {$_POST['reason']}.");
-        $api->SystemLogsAdd($userid, 'fedjail', "Placed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] into the federal dungeon for {$days} days for {$_POST['reason']}.");
-        alert('success', "Success!", "You have placed {$api->SystemUserIDtoName($_POST['user'])} in the federal dungeon for {$days} days for {$_POST['reason']}. ", true, 'index.php');
+        $api->game->addLog($userid, 'staff', "Placed <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}] into the federal dungeon for {$days} days for {$_POST['reason']}.");
+        $api->game->addLog($userid, 'fedjail', "Placed <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}] into the federal dungeon for {$days} days for {$_POST['reason']}.");
+        alert('success', "Success!", "You have placed {$api->user->getNamefromID($_POST['user'])} in the federal dungeon for {$days} days for {$_POST['reason']}. ", true, 'index.php');
         die($h->endpage());
     } else {
         $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
@@ -177,7 +177,7 @@ function editfedjail()
             die($h->endpage());
         }
         //Check if user is an admin... you can't fed admins!
-        if ($api->UserMemberLevelGet($_POST['user'], 'admin')) {
+        if ($api->user->getStaffLevel($_POST['user'], 'admin')) {
             alert('danger', "Uh Oh!", "You cannot place admins in the federal dungeon.");
             die($h->endpage());
         }
@@ -187,15 +187,15 @@ function editfedjail()
                     SET `fed_out` = {$jailout},
                     `fed_reason` = '{$_POST['reason']}'
                     WHERE `fed_userid` = {$_POST['user']}");
-        $log = "Edited <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a>
+        $log = "Edited <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a>
                 [{$_POST['user']}]'s federal dungeon sentence.";
 
         //Log the action
-        $api->SystemLogsAdd($userid, 'staff', $log);
-        $api->SystemLogsAdd($userid, 'fedjail', $log);
+        $api->game->addLog($userid, 'staff', $log);
+        $api->game->addLog($userid, 'fedjail', $log);
 
         //Send the alert!
-        alert('success', "Success!", "You have successfully edited {$api->SystemUserIDtoName($_POST['user'])}
+        alert('success', "Success!", "You have successfully edited {$api->user->getNamefromID($_POST['user'])}
             [{$_POST['user']}]'s federal dungeon sentence.", true, 'index.php');
     } else {
         $csrf = request_csrf_html('staff_editfedjail');
@@ -257,9 +257,9 @@ function unfedjail()
         }
         $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['user']}");
         $db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$_POST['user']}");
-        $api->SystemLogsAdd($userid, 'staff', "Removed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] from the federal dungeon.");
-        $api->SystemLogsAdd($userid, 'fedjail', "Removed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] from the federal dungeon.");
-        alert('success', "Success!", "You have successfully removed {$api->SystemUserIDtoName($_POST['user'])} from the federal dungeon.", true, 'index.php');
+        $api->game->addLog($userid, 'staff', "Removed <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}] from the federal dungeon.");
+        $api->game->addLog($userid, 'fedjail', "Removed <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}] from the federal dungeon.");
+        alert('success', "Success!", "You have successfully removed {$api->user->getNamefromID($_POST['user'])} from the federal dungeon.", true, 'index.php');
     } else {
         $csrf = request_csrf_html('staff_unfeduser');
         echo "<form method='post'>
@@ -320,7 +320,7 @@ function mailban()
         }
 
         //Check that the user is not an admin.
-        if ($api->UserMemberLevelGet($_POST['user'], 'admin')) {
+        if ($api->user->getStaffLevel($_POST['user'], 'admin')) {
             alert('danger', "Uh Oh!", "You cannot mail ban game admins.");
             die($h->endpage());
         }
@@ -338,9 +338,9 @@ function mailban()
         $db->query("INSERT INTO `mail_bans`
                     (`mbUSER`, `mbREASON`, `mbBANNER`, `mbTIME`) VALUES
                     ('{$_POST['user']}', '{$_POST['reason']}', '{$userid}', '{$time}')");
-        $user = $api->SystemUserIDtoName($_POST['user']);
-        $api->SystemLogsAdd($userid, 'staff', "Mail banned {$user} [{$_POST['user']}] for {$_POST['days']} days for {$_POST['reason']}.");
-        $api->GameAddNotification($_POST['user'], "You have been mail-banned for {$_POST['days']} days for the reason: '{$_POST['reason']}'.");
+        $user = $api->user->getNamefromID($_POST['user']);
+        $api->game->addLog($userid, 'staff', "Mail banned {$user} [{$_POST['user']}] for {$_POST['days']} days for {$_POST['reason']}.");
+        $api->user->addNotification($_POST['user'], "You have been mail-banned for {$_POST['days']} days for the reason: '{$_POST['reason']}'.");
         alert('success', "Success!", "You have successfully mailed banned {$user} for {$_POST['days']} days for {$_POST['reason']}.");
     } else {
         $csrf = request_csrf_html('staff_mailban');
@@ -413,10 +413,10 @@ function unmailban()
         $db->query("DELETE FROM `mail_bans` WHERE `mbUSER` = {$_POST['user']}");
 
         //Notify user they're unbanned
-        $api->GameAddNotification($_POST['user'], "The game administration has removed your mail ban. You can use the mailing system again.");
-        $un = $api->SystemUserIDtoName($_POST['user']);
+        $api->user->addNotification($_POST['user'], "The game administration has removed your mail ban. You can use the mailing system again.");
+        $un = $api->user->getNamefromID($_POST['user']);
         //Log the unban.
-        $api->SystemLogsAdd($userid, 'staff', "Removed {$un} [{$_POST['user']}]'s mail ban.");
+        $api->game->addLog($userid, 'staff', "Removed {$un} [{$_POST['user']}]'s mail ban.");
         alert('success', "Success!", "You have successfully removed {$un} [{$_POST['user']}]'s mail ban.", true, 'index.php');
     } else {
         $csrf = request_csrf_html('staff_unmailban');
@@ -467,10 +467,10 @@ function forumwarn()
             alert('danger', "Uh Oh!", "The user you are attempting to warn does not exist.");
             die($h->endpage());
         }
-        $api->SystemLogsAdd($userid, 'staff', "Forum Warned <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for '{$_POST['reason']}'.");
-        $api->SystemLogsAdd($userid, 'forumwarn', "Forum Warned <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for '{$_POST['reason']}'.");
-        $api->GameAddNotification($_POST['user'], "You have been received a forum warning for the following reason: {$_POST['reason']}.");
-        alert('success', "Success!", "You have forum warned {$api->SystemUserIDtoName($_POST['user'])}.");
+        $api->game->addLog($userid, 'staff', "Forum Warned <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}] for '{$_POST['reason']}'.");
+        $api->game->addLog($userid, 'forumwarn', "Forum Warned <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}] for '{$_POST['reason']}'.");
+        $api->user->addNotification($_POST['user'], "You have been received a forum warning for the following reason: {$_POST['reason']}.");
+        alert('success', "Success!", "You have forum warned {$api->user->getNamefromID($_POST['user'])}.");
     } else {
         $csrf = request_csrf_html('staff_forumwarn');
         echo "<form method='post'>
@@ -642,7 +642,7 @@ function massjail()
             $safe_id = abs($id);
             $days = ($_POST['days'] * 86400) + time();
             $db->query("INSERT INTO `fedjail` VALUES(NULL, {$safe_id}, {$days}, {$userid}, '{$_POST['reason']}')");
-            $api->SystemLogsAdd($userid, 'fedjail', "Placed <a href='../profile.php?user={$safe_id}'>{$api->SystemUserIDtoName($safe_id)}</a> [{$safe_id}] into the federal dungeon for {$days} days for {$_POST['reason']}.");
+            $api->game->addLog($userid, 'fedjail', "Placed <a href='../profile.php?user={$safe_id}'>{$api->user->getNamefromID($safe_id)}</a> [{$safe_id}] into the federal dungeon for {$days} days for {$_POST['reason']}.");
             echo "Placing User ID {$safe_id} into the federal dungeon.<br />";
             $ju[] = $id;
         }
@@ -650,7 +650,7 @@ function massjail()
     if (count($ju) > 0) {
         $juv = implode(',', $ju);
         $re = $db->query("UPDATE `users` SET `fedjail` = 1 WHERE `userid` IN({$juv})");
-        $api->SystemLogsAdd($userid, 'staff', "Mass jailed User IDs {$juv} for {$_POST['days']} days for {$_POST['reason']}.");
+        $api->game->addLog($userid, 'staff', "Mass jailed User IDs {$juv} for {$_POST['days']} days for {$_POST['reason']}.");
         alert('success', "Success!", "You have placed User IDs {$juv} into the federal dungeon.", true, 'index.php');
         die($h->endpage());
     } else {
@@ -694,10 +694,10 @@ function forumban()
         $days = $_POST['days'];
         $_POST['days'] = time() + ($_POST['days'] * 86400);
         $db->query("INSERT INTO `forum_bans` VALUES(NULL, {$_POST['user']}, {$userid}, {$_POST['days']}, '{$_POST['reason']}')");
-        $api->SystemLogsAdd($userid, 'staff', "Forum banned <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for {$days} days for {$_POST['reason']}.");
-        $api->SystemLogsAdd($userid, 'forumban', "Forum banned <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}] for {$days} days for {$_POST['reason']}.");
-        $api->GameAddNotification($_POST['user'], "The game administration has forum banned you for {$days} days for the following reason: '{$_POST['reason']}'.");
-        alert('success', "Success!", "You have successfully forum banned {$api->SystemUserIDtoName($_POST['user'])} for {$days} days for {$_POST['reason']}.", true, 'index.php');
+        $api->game->addLog($userid, 'staff', "Forum banned <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}] for {$days} days for {$_POST['reason']}.");
+        $api->game->addLog($userid, 'forumban', "Forum banned <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}] for {$days} days for {$_POST['reason']}.");
+        $api->user->addNotification($_POST['user'], "The game administration has forum banned you for {$days} days for the following reason: '{$_POST['reason']}'.");
+        alert('success', "Success!", "You have successfully forum banned {$api->user->getNamefromID($_POST['user'])} for {$days} days for {$_POST['reason']}.", true, 'index.php');
         die($h->endpage());
     } else {
         $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
@@ -765,10 +765,10 @@ function unforumban()
             die($h->endpage());
         }
         $db->query("DELETE FROM `forum_bans` WHERE `fb_user` = {$_POST['user']}");
-        $api->SystemLogsAdd($userid, 'staff', "Removed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}]'s forum ban");
-        $api->SystemLogsAdd($userid, 'forumban', "Removed <a href='../profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}]'s forum ban.");
-        $api->GameAddNotification($_POST['user'], "The game administration has removed your forum ban. You may use the forum once again.");
-        alert('success', "Success!", "You have successfully removed {$api->SystemUserIDtoName($_POST['user'])}'s forum ban.", true, 'index.php');
+        $api->game->addLog($userid, 'staff', "Removed <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}]'s forum ban");
+        $api->game->addLog($userid, 'forumban', "Removed <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}]'s forum ban.");
+        $api->user->addNotification($_POST['user'], "The game administration has removed your forum ban. You may use the forum once again.");
+        alert('success', "Success!", "You have successfully removed {$api->user->getNamefromID($_POST['user'])}'s forum ban.", true, 'index.php');
     } else {
         $csrf = request_csrf_html('staff_unforumban');
         echo "<form method='post'>
@@ -813,8 +813,8 @@ function staffnotes()
         die($h->endpage());
     }
     $db->query("UPDATE `users` SET `staff_notes` = '{$_POST['staffnotes']}' WHERE `userid` = '{$_POST['ID']}'");
-    $api->SystemLogsAdd($userid, 'staff', "Updated <a href='../profile.php?user={$_POST['ID']}'>{$api->SystemUserIDtoName($_POST['ID'])}</a> [{$_POST['ID']}]'s staff notes.");
-    alert('success', "Success!", "You have successfully updated {$api->SystemUserIDtoName($_POST['ID'])}'s staff notes.", true, "../profile.php?user={$_POST['ID']}");
+    $api->game->addLog($userid, 'staff', "Updated <a href='../profile.php?user={$_POST['ID']}'>{$api->user->getNamefromID($_POST['ID'])}</a> [{$_POST['ID']}]'s staff notes.");
+    alert('success', "Success!", "You have successfully updated {$api->user->getNamefromID($_POST['ID'])}'s staff notes.", true, "../profile.php?user={$_POST['ID']}");
 }
 
 function massmail()
@@ -838,11 +838,11 @@ function massmail()
         $q = $db->query("SELECT `userid`,`user_level` FROM `users`");
         $sent = 0;
         while ($r = $db->fetch_row($q)) {
-            echo "Sending Mail to {$api->SystemUserIDtoName($r['userid'])} ...";
+            echo "Sending Mail to {$api->user->getNamefromID($r['userid'])} ...";
             if ($r['user_level'] == 'NPC') {
                 echo "... Failed.";
             } else {
-                if ($api->GameAddMail($r['userid'], "{$set['WebsiteName']} Mass Mail", $msg, $userid) == true) {
+                if ($api->user->addMail($r['userid'], "{$set['WebsiteName']} Mass Mail", $msg, $userid) == true) {
                     echo "... Success.";
                     $sent = $sent + 1;
                 } else {
@@ -852,7 +852,7 @@ function massmail()
             echo "<br />";
         }
         alert('success', "Success!", "You successfully sent a mass mail to {$sent} players", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Sent a mass mail.");
+        $api->game->addLog($userid, 'staff', "Sent a mass mail.");
     } else {
         $csrf = request_csrf_html('staff_massmail');
         echo "<table class='table table-bordered'>
@@ -905,8 +905,8 @@ function massemail()
         $q = $db->query("SELECT `userid`,`user_level`,`email` FROM `users` WHERE `email_optin` = 1 AND `user_level` != 'NPC'");
         $sent = 0;
         while ($r = $db->fetch_row($q)) {
-            echo "Sending Email to {$api->SystemUserIDtoName($r['userid'])} ...";
-            if ($api->SystemSendEmail($r['email'], $msg, $subject, $from)) {
+            echo "Sending Email to {$api->user->getNamefromID($r['userid'])} ...";
+            if ($api->game->sendEmail($r['email'], $msg, $subject, $from)) {
                 echo "... Success.";
                 $sent = $sent + 1;
             } else {
@@ -915,7 +915,7 @@ function massemail()
             echo "<br />";
         }
         alert('success', "Success!", "You successfully sent a mass email to {$sent} players", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Sent a mass email.");
+        $api->game->addLog($userid, 'staff', "Sent a mass email.");
     } else {
         $csrf = request_csrf_html('staff_massemail');
         echo "<table class='table table-bordered'>
@@ -974,7 +974,7 @@ function banip()
         }
         $db->query("INSERT INTO `ipban` VALUES (NULL, '{$IP}');");
         alert('success', "Success!", "You have successfully banned the {$IP} IP Address.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "IP Banned {$IP}.");
+        $api->game->addLog($userid, 'staff', "IP Banned {$IP}.");
     } else {
         $csrf = request_csrf_html('staff_banip');
         echo "<form method='post'>
@@ -1023,7 +1023,7 @@ function unbanip()
             die($h->endpage());
         }
         $IP = $db->fetch_row($q);
-        $api->SystemLogsAdd($userid, 'staff', "Unbanned IP {$IP['ip_id']}");
+        $api->game->addLog($userid, 'staff', "Unbanned IP {$IP['ip_id']}");
         $db->query("DELETE FROM `ipban` WHERE `ip_id` = {$_GET['id']}");
         alert('success', "Success!", "You have successfully unbanned the {$IP['ip_id']} IP Address.", true, 'index.php');
     } else {

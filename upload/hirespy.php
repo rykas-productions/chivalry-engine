@@ -16,12 +16,12 @@ if (empty($_GET['user'])) {
     die($h->endpage());
 }
 //Current user is in the infirmary, don't let them buy a spy.
-if ($api->UserStatus($userid, 'infirmary')) {
+if ($api->user->inInfirmary($userid)) {
     alert('danger', "Unconscious!", "You cannot hire a spy on someone if you're in the infirmary.", true, "profile.php?user={$_GET['user']}");
     die($h->endpage());
 }
 //Current user is in the dungeon, don't let them buy a spy.
-if ($api->UserStatus($userid, 'dungeon')) {
+if ($api->user->inDungeon($userid)) {
     alert('danger', "Locked Up!", "You cannot hire a spy on someone if you're in the dungeon.", true, "profile.php?user={$_GET['user']}");
     die($h->endpage());
 }
@@ -60,17 +60,17 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
         $rand2 = Random(1, 3);
         //Spy failed and the person being spied on only knows that /someone/ has made an attempt to spy on them.
         if ($rand2 <= 2) {
-            $api->GameAddNotification($_GET['user'], "An unknown user has attempted to spy on you and failed.");
+            $api->user->addNotification($_GET['user'], "An unknown user has attempted to spy on you and failed.");
             alert("danger", "Uh Oh!", "Your spy attempts to get information on your target. Your spy is noticed. Your
 			    target doesn't get wind of who you are.", true, "profile.php?user={$_GET['user']}");
-            $api->SystemLogsAdd($userid, 'spy', "Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) . " and failed.");
+            $api->game->addLog($userid, 'spy', "Tried to spy on " . $api->user->getNamefromID($_GET['user']) . " and failed.");
             die($h->endpage());
         } //Spy failed and hte person bein spied on now knows who's been attempting to spy.
         else {
-            $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has attempted to spy on you and failed.");
+            $api->user->addNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has attempted to spy on you and failed.");
             alert("danger", "Uh Oh!", "Your spy attempts to get information on your target. Your spy is noticed and
 			    attacked! To save his own life, he name drops you. Your target now knows who sent the agent.", true, 'index.php');
-            $api->SystemLogsAdd($userid, 'spy', "Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) . " and failed.");
+            $api->game->addLog($userid, 'spy', "Tried to spy on " . $api->user->getNamefromID($_GET['user']) . " and failed.");
             die($h->endpage());
         }
     } //RNG equals 3, send current player to the dungeon.
@@ -78,7 +78,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
         alert("danger", "Uh Oh!", "Your hired spy actually turned out to be a dungeon guard. He arrests you.", true, "profile.php?user={$_GET['user']}");
         $dungtime = Random($ir['level'], $ir['level'] * 3);
         $api->user->setDungeon($userid, $dungtime, "Stalkerish Tendencies");
-        $api->SystemLogsAdd($userid, 'spy', "Tried to spy on " . $api->SystemUserIDtoName($_GET['user']) . " and was sent to the dungeon.");
+        $api->game->addLog($userid, 'spy', "Tried to spy on " . $api->user->getNamefromID($_GET['user']) . " and was sent to the dungeon.");
         die($h->endpage());
     } //RNG equals 4, show the current player the person's stats and weapons.
     else {
@@ -91,7 +91,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 					Primary Weapon
 				</th>
 				<td>
-					" . $api->SystemItemIDtoName($r['equip_primary']) . "
+					" . $api->game->getItemNameFromID($r['equip_primary']) . "
 				</td>
 			</tr>
 			<tr>
@@ -99,7 +99,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 					Secondary Weapon
 				</th>
 				<td>
-					" . $api->SystemItemIDtoName($r['equip_secondary']) . "
+					" . $api->game->getItemNameFromID($r['equip_secondary']) . "
 				</td>
 			</tr>
 			<tr>
@@ -107,7 +107,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 					Armor
 				</th>
 				<td>
-					" . $api->SystemItemIDtoName($r['equip_armor']) . "
+					" . $api->game->getItemNameFromID($r['equip_armor']) . "
 				</td>
 			</tr>
 			<tr>
@@ -152,11 +152,11 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 			</tr>
 		</table>";
         //Save to the log.
-        $api->SystemLogsAdd($userid, 'spy', "Successfully spied on " . $api->SystemUserIDtoName($_GET['user']));
+        $api->game->addLog($userid, 'spy', "Successfully spied on " . $api->user->getNamefromID($_GET['user']));
     }
 } //Starting form.
 else {
-    echo "You are attempting to hire a spy on " . $api->SystemUserIDtoName($_GET['user']) .
+    echo "You are attempting to hire a spy on " . $api->user->getNamefromID($_GET['user']) .
         ". Spies cost 500 {$_CONFIG['primary_currency']} multiplied by their level. (" . number_format(500 * $r['level']) . "
 	in this case.) Success is not guaranteed.<br />
 	<form action='?user={$_GET['user']}' method='post'>

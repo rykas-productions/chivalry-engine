@@ -204,7 +204,7 @@ function newjob()
         $j = $db->insert_id();
         $db->query("UPDATE `jobs` SET `jSTART` = {$j} WHERE `jRANK` = {$i}");
         alert('success', "Success!", "You have successfully created the {$_POST['jNAME']} job!", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Created the {$_POST['jNAME']} job.");
+        $api->game->addLog($userid, 'staff', "Created the {$_POST['jNAME']} job.");
     }
 }
 
@@ -261,7 +261,7 @@ function jobedit()
                     `jSTART` = {$_POST['jobrank']}
                     WHERE `jRANK` = {$_POST['job']}");
         alert('success', "Success!", "You have successfully updated the {$_POST['jNAME']} job.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Updated the {$_POST['jNAME']} [{$_POST['job']}] job");
+        $api->game->addLog($userid, 'staff', "Updated the {$_POST['jNAME']} [{$_POST['job']}] job");
     } elseif ($_POST['step'] == 1) {
         $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
         if (empty($_POST['job'])) {
@@ -392,7 +392,7 @@ function jobdele()
         $unemployed = $db->affected_rows();
         alert('success', "Success!", "You have successfully deleted this job. {$ranksdel} job rank(s) were removed.
             {$unemployed} player(s) are now jobless due to this deletion.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Deleted Job ID {$_POST['job']}.");
+        $api->game->addLog($userid, 'staff', "Deleted Job ID {$_POST['job']}.");
     } else {
         $csrf = request_csrf_html('staff_deljob');
         echo "<form method='post'>
@@ -452,7 +452,7 @@ function newjobrank()
                     VALUES (NULL, '{$_POST['rank']}', '{$_POST['job']}', '{$_POST['primpay']}', '{$_POST['seccpay']}',
                     '{$_POST['workunit']}', '{$_POST['str']}', '{$_POST['lab']}', '{$_POST['iq']}')");
         alert('success', "Success!", "You have successfully created the {$_POST['rank']} job rank!", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Created the {$_POST['rank']} job rank.");
+        $api->game->addLog($userid, 'staff', "Created the {$_POST['rank']} job rank.");
     } else {
         $csrf = request_csrf_html('staff_newjobrank');
         echo "Fill out this form to add more job ranks to a specific job.";
@@ -600,7 +600,7 @@ function jobrankedit()
                     `jrIQ` = {$_POST['iq']}
                     WHERE `jrID` = {$_POST['jobrank']}");
         alert('success', "Success!", "You have successfully edited the {$_POST['rank']} job rank!", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Edited the {$_POST['rank']} Job Rank.");
+        $api->game->addLog($userid, 'staff', "Edited the {$_POST['rank']} Job Rank.");
     }
     //Edit form
     if ($_POST['step'] == 1) {

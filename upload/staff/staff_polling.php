@@ -60,7 +60,7 @@ function add()
                      '$choice7', '$choice8', '$choice9' ,'$choice10',
                      '{$_POST['hidden']}')");
         alert('success', "Success!", "You have successfully created a poll.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Started a game poll.");
+        $api->game->addLog($userid, 'staff', "Started a game poll.");
         $q = $db->query("SELECT `userid`, `username` FROM `users`");
         while ($r = $db->fetch_row($q)) {
             notification_add($r['userid'], "The game administration has added a poll for you to vote in. Please do so by visiting <a href='polling.php'>here</a>.");
@@ -222,7 +222,7 @@ function close()
         $db->free_result($q);
         $db->query("UPDATE `polls` SET `active` = '0' WHERE `id` = {$_POST['poll']}");
         alert('success', "Success!", "You have closed this poll to respones.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Closed a game poll.");
+        $api->game->addLog($userid, 'staff', "Closed a game poll.");
         $q = $db->query("SELECT `userid`, `username` FROM `users`");
         while ($r = $db->fetch_row($q)) {
             notification_add($r['userid'], "The game administration has closed a recent poll. View the results <a href='polling.php?action=viewpolls'>here</a>.");

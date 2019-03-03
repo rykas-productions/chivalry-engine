@@ -112,7 +112,7 @@ function add()
         else {
             $db->query("INSERT INTO `contact_list` VALUES (NULL, {$_POST['user']}, {$userid})");
             $db->free_result($q);
-            alert('success', "Success!", "You have successfully added " . $api->SystemUserIDtoName($_POST['user']) . "
+            alert('success', "Success!", "You have successfully added " . $api->user->getNameFromID($_POST['user']) . "
 			    to your contact list.", true, 'contacts.php');
         }
     } else {

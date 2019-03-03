@@ -74,7 +74,7 @@ function add()
         $db->query("INSERT INTO `promo_codes`
                     (`promo_code`, `promo_item`, `promo_use`)
                     VALUES  ('{$code}', {$item}, 0)");
-        $api->SystemLogsAdd($userid, 'staff', "Added Promotion Code '{$code}'.'");
+        $api->game->addLog($userid, 'staff', "Added Promotion Code '{$code}'.'");
         alert('success', "Success!", "You have successfully added Promotion Code '{$code}' to the game.", true, "index.php");
         $h->endpage();
     } else {
@@ -145,7 +145,7 @@ function deletepromo()
         $r = $db->fetch_single($q);
         $db->query("DELETE FROM `promo_codes` WHERE `promo_id` = {$code}");
         alert("success", "Success!", "You have successfully deleted the {$r} promotion code.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Deleted the {$r} promotion code.");
+        $api->game->addLog($userid, 'staff', "Deleted the {$r} promotion code.");
         $h->endpage();
     } else {
         alert('danger', "Uh Oh!", "Please select the promotion code you wish to delete.", true, '?action=viewpromo');
@@ -187,7 +187,7 @@ function viewpromo()
                     {$r['promo_code']}
                 </td>
                 <td>
-                    " . $api->SystemItemIDtoName($r['promo_item']) . "
+                    " . $api->game->getItemNameFromID($r['promo_item']) . "
                 </td>
                 <td>
                     " . number_format($r['promo_use']) . "

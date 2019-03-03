@@ -42,7 +42,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $alerttype = 'success';
         $win = 1;
         $phrase = "All three line up. Jack pot! You win an extra " . number_format($gain);
-        $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in slots.");
+        $api->game->addLog($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in slots.");
     } else if ($slot[1] == $slot[2] || $slot[2] == $slot[3]
         || $slot[1] == $slot[3]
     ) {
@@ -51,7 +51,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $alerttype = 'success';
         $win = 1;
         $phrase = "Two slots line up. Awesome! You win an extra " . number_format($gain);
-        $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in slots.");
+        $api->game->addLog($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in slots.");
     } else {
 
         $title = "Uh Oh!";
@@ -59,7 +59,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $win = 0;
         $gain = -$_POST['bet'];
         $phrase = "Round and round the slots go. Unlucky! None of them line up!";
-        $api->SystemLogsAdd($userid, 'gambling', "Lost {$_POST['bet']} in slots.");
+        $api->game->addLog($userid, 'gambling', "Lost {$_POST['bet']} in slots.");
     }
     alert($alerttype, $title, "You pull down the handle and slots begin to spin. They show {$slot[1]}, {$slot[2]}, {$slot[3]}. {$phrase}", true, "?tresde={$tresder}");
     $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");

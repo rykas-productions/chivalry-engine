@@ -42,7 +42,7 @@ while ($result = $db->fetch_row($query)) {
     $chance = round((($ustats / $themstats) * 100) / 2, 1);
     $chance = ($chance < 100) ? $chance : 100;
     //Assign bot name to variable to cut down on queries.
-    $botname = $api->SystemUserIDtoName($result['botuser']);
+    $botname = $api->user->getNameFromID($result['botuser']);
     //Player cannot attack the bot.
     if ((time() <= ($r2 + $result['botcooldown'])) && ($r2 > 0)) {
         $cooldown = ($r2 + $result['botcooldown']) - time();
@@ -60,13 +60,13 @@ while ($result = $db->fetch_row($query)) {
 	<tr>
 		<td>
 			{$botname} [{$result['botuser']}]<br />
-			Level " . $api->UserInfoGet($result['botuser'], 'level') . "
+			Level " . $api->user->getInfo($result['botuser'], 'level') . "
 		</td>
 		<td class='hidden-xs'>
 			" . ParseTimestamp($result['botcooldown']) . "
 		</td>
 		<td>
-			" . $api->SystemItemIDtoName($result['botitem']) . "
+			" . $api->game->getItemNameFromID($result['botitem']) . "
 		</td>
 		<td>
 			{$attack}

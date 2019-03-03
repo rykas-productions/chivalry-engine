@@ -167,7 +167,7 @@ function logs($name)
     echo "
     </table>";
     echo pagination(100,$attacks,$_GET['st'],"?action={$logname}logs&st=");
-    $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of the {$logname} logs.");
+    $api->game->addLog($userid, 'staff', "Viewed Page #{$mypage} of the {$logname} logs.");
 }
 
 function userlogs()
@@ -234,7 +234,7 @@ function userlogs()
 		<br />";
 		echo pagination(100,$logs,$_GET['st'],"?action=userlogs&user={$user}&st=");
         $mypage = floor($_GET['st'] / 100) + 1;
-        $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of User ID {$user}'s user logs.");
+        $api->game->addLog($userid, 'staff', "Viewed Page #{$mypage} of User ID {$user}'s user logs.");
         $h->endpage();
     } else {
         echo "<table class='table table-bordered'>
@@ -333,7 +333,7 @@ function alllogs()
     echo "</table>";
     echo pagination(100,$attacks,$_GET['st'],"?action={$logname}logs&st=");
     $mypage = floor($_GET['st'] / 100) + 1;
-    $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of the game logs.");
+    $api->game->addLog($userid, 'staff', "Viewed Page #{$mypage} of the game logs.");
 }
 
 function maillogs()
@@ -388,7 +388,7 @@ function maillogs()
     echo "</table>";
     echo pagination(100,$attacks,$_GET['st'],"?action=mail&st=");
     $mypage = floor($_GET['st'] / 100) + 1;
-    $api->SystemLogsAdd($userid, 'staff', "Viewed Page #{$mypage} of the {$logname} logs.");
+    $api->game->addLog($userid, 'staff', "Viewed Page #{$mypage} of the {$logname} logs.");
 }
 
 $h->endpage();

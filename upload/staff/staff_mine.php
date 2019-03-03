@@ -108,7 +108,7 @@ function addmine()
                 '{$gflakesmin}', '{$gflakesmax}', '{$pick}', '{$iq}', 
                 '{$power}', '{$cflakes}', '{$sflakes}', '{$gflakes}', 
                 '{$gem}');");
-                $api->SystemLogsAdd($userid, "staff", "Added a mine in " . $api->SystemTownIDtoName($city));
+                $api->game->addLog($userid, "staff", "Added a mine in " . $api->SystemTownIDtoName($city));
                 alert('success', "Success!", "You have successfully created a mine in " . $api->SystemTownIDtoName($city));
                 die($h->endpage());
             }
@@ -325,7 +325,7 @@ function editmine()
                 `mine_gold_item` = '{$gflakes}', `mine_gold_max` = '{$gflakesmax}', `mine_gold_min` = '{$gflakesmin}', 
                 `mine_pickaxe` = '{$pick}', `mine_iq` = '{$iq}', `mine_gem_item` = '{$gem}', `mine_power_use` = '{$power}' 
                 WHERE `mine_id` = {$mine}");
-                $api->SystemLogsAdd($userid, "staff", "Edited Mine ID #{$mine}");
+                $api->game->addLog($userid, "staff", "Edited Mine ID #{$mine}");
                 alert('success', "Success!", "You have successfully edited Mine ID #{$mine}.", true, 'index.php');
                 die($h->endpage());
             }
@@ -491,7 +491,7 @@ function delmine()
             die($h->endpage());
         } else {
             $db->query("DELETE FROM `mining_data` WHERE `mine_id` = {$mine}");
-            $api->SystemLogsAdd($userid, "staff", "Deleted a mine.");
+            $api->game->addLog($userid, "staff", "Deleted a mine.");
             alert('success', "Success!", "You have successfully deleted this mine.", true, 'index.php');
             die($h->endpage());
         }

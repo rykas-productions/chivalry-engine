@@ -111,7 +111,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Maximum Seconary Currency
+						Success Maximum Secondary Currency
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMAX' />
@@ -243,7 +243,7 @@ function new_crime()
 		'{$_POST['stext']}', '{$_POST['jtext']}', '{$_POST['jtimemin']}', 
 		'{$_POST['jtimemax']}', '{$_POST['jreason']}', '{$_POST['xp']}');");
         alert('success', "Success!", "You have successfully created the {$_POST['name']} crime.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Created crime {$_POST['name']}");
+        $api->game->addLog($userid, 'staff', "Created crime {$_POST['name']}");
     }
 }
 
@@ -476,7 +476,7 @@ function edit_crime()
             $exist_check = $db->fetch_single($qi);
             $db->free_result($qi);
             if ($exist_check == 0) {
-                alert('danger', "Uh Oh!", "The crime you are trying to edit does not exist.");
+                alert('danger', "Uh Oh!", "The item you wish for this crime to drop does not exist.");
                 die($h->endpage());
             }
         }
@@ -492,7 +492,7 @@ function edit_crime()
 			 `crimeDUNGMAX` = {$_POST['jtimemax']}, `crimeXP` = {$_POST['xp']}
              WHERE `crimeID` = {$_POST['crimeID']}");
         alert('success', "Success!", "You have successfully edited the {$_POST['name']} crime.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Edited crime {$_POST['name']}");
+        $api->game->addLog($userid, 'staff', "Edited crime {$_POST['name']}");
     }
 }
 
@@ -517,7 +517,7 @@ function delcrime()
         }
         $db->query("DELETE FROM `crimes` WHERE `crimeID` = {$_POST['crime']}");
         alert('success', "Success!", "You have successfully deleted Crime ID #{$_POST['crime']}.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Deleted Crime ID {$_POST['crime']}.");
+        $api->game->addLog($userid, 'staff', "Deleted Crime ID {$_POST['crime']}.");
 
     } else {
         $csrf = request_csrf_html('staff_delcrime');
@@ -570,7 +570,7 @@ function new_crimegroup()
         $db->free_result($d);
         $db->query("INSERT INTO `crimegroups` (`cgNAME`, `cgORDER`) VALUES('{$_POST['cgNAME']}', '{$_POST['cgORDER']}')");
         alert('success', "Success!", "You have successfully created the {$_POST['cgNAME']} Crime Group.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Created Crime Group {$_POST['cgNAME']}");
+        $api->game->addLog($userid, 'staff', "Created Crime Group {$_POST['cgNAME']}");
 
     } else {
         $csrf = request_csrf_html('staff_newcrimegroup');
@@ -708,7 +708,7 @@ function edit_crimegroup()
             $db->free_result($d);
             $db->query("UPDATE `crimegroups` SET `cgNAME` = '{$_POST['cgNAME']}', `cgORDER` = '{$_POST['cgORDER']}' WHERE `cgID` = '{$_POST['cgID']}'");
             alert('success', "Success!", "You have successfully edited the {$_POST['cgNAME']} Crime Group.", true, 'index.php');
-            $api->SystemLogsAdd($userid, 'staff', "Edited Crime Group {$_POST['cgNAME']}");
+            $api->game->addLog($userid, 'staff', "Edited Crime Group {$_POST['cgNAME']}");
         }
     }
 }
@@ -734,7 +734,7 @@ function delcrimegroup()
         }
         $db->query("DELETE FROM `crimegroups` WHERE `cgID` = {$_POST['crimeGROUP']}");
         alert('success', "Success!", "You have successfully deleted Crime Group ID #{$_POST['crimeGROUP']}.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Deleted Crime Group ID {$_POST['crimeGROUP']}.");
+        $api->game->addLog($userid, 'staff', "Deleted Crime Group ID {$_POST['crimeGROUP']}.");
     } else {
         $csrf = request_csrf_html('staff_delcrimegroup');
         echo "<form method='post'>

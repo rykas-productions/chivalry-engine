@@ -131,7 +131,7 @@ function remove()
     item_add($userid, $r['imITEM'], $r['imQTY']);
     $db->query("DELETE FROM `itemmarket` WHERE `imID` = {$_GET['ID']}");
     $imr_log = $db->escape("Removed {$r['itmname']} x {$r['imQTY']} from the item market.");
-    $api->SystemLogsAdd($userid, 'imarket', $imr_log);
+    $api->game->addLog($userid, 'imarket', $imr_log);
     alert('success', "Success!", "You have removed your offer successfully. Your item(s) have returned to your inventory."
         , true, 'itemmarket.php');
 }
@@ -199,7 +199,7 @@ function buy()
             alert('danger', "Uh Oh!", "You cannot buy your own offer, silly.", true, 'itemmarket.php');
             die($h->endpage());
         }
-        if ($api->SystemCheckUsersIPs($userid, $r['imADDER'])) {
+        if ($api->user->checkIP($userid, $r['imADDER'])) {
             alert('danger', "Uh Oh!", "You cannot buy an offer from someone who shares your IP Address.", true, 'itemmarket.php');
             die($h->endpage());
         }
@@ -228,12 +228,7 @@ function buy()
 			    " . number_format($final_price) . " {$curre} from user ID {$r['imADDER']}");
         alert('success', "Success!", "You have successfully bought {$r['itmname']} x{$_POST['QTY']} from the item
 			    market for " . number_format($final_price) . " {$curre}", true, 'itemmarket.php');
-        $api->SystemLogsAdd($userid, 'imarket', $imb_log);
-        if ($r['imCURRENCY'] == 'primary') {
-            $api->SystemCreditTax($api->SystemReturnTaxOnly($final_price), 1, -1);
-        } else {
-            $api->SystemCreditTax($api->SystemReturnTaxOnly($final_price), 2, -1);
-        }
+        $api->game->addLog($userid, 'imarket', $imb_log);
     }
 }
 
@@ -276,11 +271,11 @@ function gift()
             alert('danger', "Uh Oh!", "You cannot buy your own offer, silly.", true, 'itemmarket.php');
             die($h->endpage());
         }
-        if ($api->SystemCheckUsersIPs($userid, $r['imADDER'])) {
+        if ($api->user->checkIP($userid, $r['imADDER'])) {
             alert('danger', "Uh Oh!", "You cannot buy an offer from someone who shares your IP Address.", true, 'itemmarket.php');
             die($h->endpage());
         }
-        if ($api->SystemCheckUsersIPs($userid, $_POST['user'])) {
+        if ($api->user->checkIP($userid, $_POST['user'])) {
             alert('danger', "Uh Oh!", "You cannot gift an offer to someone who shares your IP Address.", true, 'itemmarket.php');
             die($h->endpage());
         }
@@ -315,15 +310,10 @@ function gift()
             {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
         $imb_log = $db->escape("Bought {$r['itmname']} x{$_POST['QTY']} from the item market for
 		    " . number_format($final_price) . " {$curre} from User ID {$r['imADDER']} and gifted to User ID {$_POST['user']}");
-        $api->SystemLogsAdd($userid, 'imarket', $imb_log);
+        $api->game->addLog($userid, 'imarket', $imb_log);
         alert('success', "Success!", "You have bought {$r['itmname']} x{$_POST['QTY']} from the item market for
 		    " . number_format($final_price) . " {$curre} from User ID {$r['imADDER']} and gifted to User ID
 		    {$_POST['user']}", true, 'index.php');
-        if ($r['imCURRENCY'] == 'primary') {
-            $api->SystemCreditTax($api->SystemReturnTaxOnly($final_price), 1, -1);
-        } else {
-            $api->SystemCreditTax($api->SystemReturnTaxOnly($final_price), 2, -1);
-        }
 
     } else {
         $q = $db->query("SELECT `imADDER`, `imCURRENCY`, `imPRICE`, `imQTY`,
@@ -406,7 +396,7 @@ function add()
             item_remove($userid, $_POST['ID'], $_POST['QTY']);
             $itemname=$api->SystemItemIDtoName($_POST['ID']);
             $imadd_log = $db->escape("Listed {$_POST['QTY']} {$itemname}(s) on the item market for {$_POST['price']} {$_POST['currency']}");
-            $api->SystemLogsAdd($userid, 'imarket', $imadd_log);
+            $api->game->addLog($userid, 'imarket', $imadd_log);
             alert('success', "Success!", "You have successfully listed {$_POST['QTY']} {$itemname}(s) on the item
 			    market for {$_POST['price']} {$_POST['currency']}.", true, 'itemmarket.php');
         }

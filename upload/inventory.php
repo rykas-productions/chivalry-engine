@@ -21,7 +21,7 @@ echo "
 			</div>
 			<div class='card-body'>";
 if (!empty($ir['equip_primary'])) {
-    echo $api->SystemItemIDtoName($ir['equip_primary']);
+    echo $api->game->getItemNameFromID($ir['equip_primary']);
 } else {
     echo "No Weapon";
 }
@@ -41,7 +41,7 @@ echo "
 			</div>
 			<div class='card-body'>";
 if (!empty($ir['equip_secondary'])) {
-    echo $api->SystemItemIDtoName($ir['equip_secondary']);
+    echo $api->game->getItemNameFromID($ir['equip_secondary']);
 } else {
     echo "No Weapon";
 }
@@ -61,7 +61,7 @@ echo "
 			</div>
 			<div class='card-body'>";
 if (!empty($ir['equip_armor'])) {
-    echo $api->SystemItemIDtoName($ir['equip_armor']);
+    echo $api->game->getItemNameFromID($ir['equip_armor']);
 } else {
     echo "No Armor";
 }
@@ -106,7 +106,7 @@ while ($i = $db->fetch_row($inv)) {
     echo "<tr>
         		<td>
 					<a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='right' title='{$i['itmdesc']}'>
-						{$api->SystemItemIDtoName($i['itmid'])}
+						{$api->game->getItemNameFromID($i['itmid'])}
 					</a>";
     if ($i['inv_qty'] > 1) {
         echo " (" . number_format($i['inv_qty']) . ")";

@@ -62,7 +62,7 @@ function addestate()
             alert('danger', "Uh Oh!", "You cannot have an estate with less than 100 will.");
             die($h->endpage());
         }
-        $api->SystemLogsAdd($userid, 'staff', "Created an estate named {$name}.");
+        $api->game->addLog($userid, 'staff', "Created an estate named {$name}.");
         alert('success', "Success!", "You have successfully created the {$name} Estate.", true, 'index.php');
         $db->query("INSERT INTO `estates` (`house_name`, `house_price`, `house_will`, `house_level`) VALUES ('{$name}', '{$cost}', '{$will}', '{$lvl}')");
     } else {
@@ -142,7 +142,7 @@ function delestate()
                  `maxwill` = 100, `will` = LEAST(100, `will`) WHERE `maxwill` = {$old['house_will']}");
         $db->query("DELETE FROM `estates` WHERE `house_id` = {$old['house_id']}");
         alert('success', "Success!", "You have deleted the {$old['house_name']} estate.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Deleted the {$old['house_name']} estate.");
+        $api->game->addLog($userid, 'staff', "Deleted the {$old['house_name']} estate.");
     } else {
         $csrf = request_csrf_html('staff_delestate');
         echo "<form method='post'>
@@ -215,7 +215,7 @@ function editestate()
         $db->query("UPDATE `users` SET `maxwill` = {$will}, `will` = LEAST(`will`, {$will})
 					WHERE `maxwill` = {$oldwill}");
         alert('success', "Success!", "You have successfully updated the {$name} estate.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Edited the {$name} estate.");
+        $api->game->addLog($userid, 'staff', "Edited the {$name} estate.");
         die($h->endpage());
     }
     if ($_POST['step'] == 1) {

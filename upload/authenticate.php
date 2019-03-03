@@ -128,7 +128,7 @@ else {
     $db->query("DELETE FROM `login_attempts` WHERE `userid` = {$_SESSION['userid']}");
     $loggedin_url = 'loggedin.php';
     //Log that the user logged in successfully.
-    $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
+    $api->game->addLog($_SESSION['userid'], 'login', "Successfully logged in.");
     //Delete password recovery attempts from DB if they exist for this user.
     $db->query("DELETE FROM `pw_recovery` WHERE `pwr_email` = '{$form_email}'");
     header("Location: {$loggedin_url}");

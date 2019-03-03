@@ -321,15 +321,15 @@ class headers
                 if ($result == 1) {
                     $infirmtime = Random(20, 60);
                     $api->user->setInfirmary($userid, $infirmtime, "Attacked by Bandits");
-                    $api->GameAddNotification($userid, "While randomly walking about in this town, you were attacked by
+                    $api->user->addNotification($userid, "While randomly walking about in this town, you were attacked by
 					    a group of bandits as a message to your guild leader.");
                 }
                 if ($result == 2) {
-                    $api->GameAddNotification($userid, "While randomly walking about in this town, you successfully
+                    $api->user->addNotification($userid, "While randomly walking about in this town, you successfully
 					    fended off a group of bandits.");
                 }
                 if ($result == 3) {
-                    $api->GameAddNotification($userid, "While randomly walking about in this town, you were attacked by
+                    $api->user->addNotification($userid, "While randomly walking about in this town, you were attacked by
 					    a group of bandits. Luckily, a player nearby was able to fight them off for you.");
                 }
             }

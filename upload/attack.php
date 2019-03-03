@@ -459,13 +459,13 @@ function beat()
         //Place opponent in infirmary.
         $api->user->setInfirmary($r['userid'], $hosptime, $hospreason);
         //Give opponent notification that they were attacked.
-        $api->GameAddNotification($r['userid'], "You were hospitalized by <a href='profile.php?user=$userid'>{$ir['username']}</a>
+        $api->user->addNotification($r['userid'], "You were hospitalized by <a href='profile.php?user=$userid'>{$ir['username']}</a>
                                                     for {$hosptime} minutes.");
         //Log that the user won the fight.
-        $api->SystemLogsAdd($userid, 'attacking', "Hospitalized <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$_GET['ID']}]
+        $api->game->addLog($userid, 'attacking', "Hospitalized <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$_GET['ID']}]
                                                 for {$hosptime} minutes.");
         //Log that the opponent lost the fight.
-        $api->SystemLogsAdd($_GET['ID'], 'attacking', "Hospitalized by <a href='profile.php?user={$userid}'>{$ir['username']}</a>
+        $api->game->addLog($_GET['ID'], 'attacking', "Hospitalized by <a href='profile.php?user={$userid}'>{$ir['username']}</a>
                                                     [{$userid}] for {$hosptime} minutes.");
         $_SESSION['attackwon'] = false;
         $additionaltext = "";
@@ -553,12 +553,12 @@ function lost()
     $expgainp2 = $expgain2 / $r['xp_needed'] * 100;
     $expperc2 = round($expgainp / $r['xp_needed'] * 100);
     //Tell opponent that they were attacked by user, and emerged victorious.
-    $api->GameAddNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a>
+    $api->user->addNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a>
                                             picked a fight against you and lost. You've gained {$expperc2}% experience.");
     //Log that the user lost.
-    $api->SystemLogsAdd($userid, 'attacking', "Attacked <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$_GET['ID']}] and lost.");
+    $api->game->addLog($userid, 'attacking', "Attacked <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$_GET['ID']}] and lost.");
     //Log that the opponent won.
-    $api->SystemLogsAdd($_GET['ID'], 'attacking', "Attacked by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and won.");
+    $api->game->addLog($_GET['ID'], 'attacking', "Attacked by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and won.");
     //Increase opponent's XP for winning.
     $api->user->setInfo($_GET['ID'], "xp", $expgainp2);
     $_SESSION['attacklost'] = 0;
@@ -641,12 +641,12 @@ function xp()
             //Place opponent in infirmary.
             $api->user->setInfirmary($r['userid'], $hosptime, $hospreason);
             //Tell opponent they were attacked by the user and lost.
-            $api->GameAddNotification($r['userid'], "<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you
+            $api->user->addNotification($r['userid'], "<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you
                 and used you for experience.");
             //Log that the user won.
-            $api->SystemLogsAdd($userid, 'attacking', "Attacked <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and gained {$expperc}% Experience.");
+            $api->game->addLog($userid, 'attacking', "Attacked <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and gained {$expperc}% Experience.");
             //Log that the opponent lost.
-            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Attacked by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and left for experience.");
+            $api->game->addLog($_GET['ID'], 'attacking', "Attacked by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and left for experience.");
             $_SESSION['attackwon'] = 0;
             $additionaltext = "";
             //Both players are in a guild.
@@ -721,11 +721,11 @@ function mug()
             //Place opponent in infirmary.
             $api->user->setInfirmary($r['userid'], $hosptime, $hospreason);
             //Tell opponent they were mugged, and for how much, by user.
-            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " {$_CONFIG['primary_currency']}.");
+            $api->user->addNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " {$_CONFIG['primary_currency']}.");
             //Log that the user won and stole some primary currency, and that
             //the opponent lost and lost primary currency.
-            $api->SystemLogsAdd($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole {$stole} {$_CONFIG['primary_currency']}.");
-            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost {$stole} {$_CONFIG['primary_currency']}.");
+            $api->game->addLog($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole {$stole} {$_CONFIG['primary_currency']}.");
+            $api->game->addLog($_GET['ID'], 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost {$stole} {$_CONFIG['primary_currency']}.");
             $_SESSION['attackwon'] = 0;
             $additionaltext = "";
             //Both players are in a guild.
@@ -781,7 +781,7 @@ function mug()
                     $db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
                 }
                 //Tell user they took an item.
-                $api->GameAddNotification($userid, "For mugging the " . $api->SystemUserIDtoName($r['userid']) . " bot, you have gained 1 " . $api->SystemItemIDtoName($results2['botitem']));
+                $api->user->addNotification($userid, "For mugging the " . $api->SystemUserIDtoName($r['userid']) . " bot, you have gained 1 " . $api->SystemItemIDtoName($results2['botitem']));
             }
         }
     }

@@ -165,7 +165,7 @@ function addacademy()
             die($h->endpage());
         }
         $db->query("INSERT INTO `academy` VALUES (NULL, '{$name}', '{$desc}', '{$cost}', '{$lvl}', '{$days}', '{$str}', '{$agl}', '{$grd}', '{$lab}', '{$iq}')");
-        $api->SystemLogsAdd($userid, 'staff', "Created academy course {$name}.");
+        $api->game->addLog($userid, 'staff', "Created academy course {$name}.");
         alert('success', "Success!", "You have successfully added the {$name} course.", true, 'index.php');
     }
 }
@@ -218,7 +218,7 @@ function delacademy()
         $academyname = $db->fetch_single($d);
         $db->free_result($d);
         $db->query("DELETE FROM `academy` WHERE `ac_id` = {$_POST['academy']}");
-        $api->SystemLogsAdd($userid, 'staff', "Deleted academy {$academyname}.");
+        $api->game->addLog($userid, 'staff', "Deleted academy {$academyname}.");
         alert("success", "Success!", "You have successfully deleted the {$academyname} academic course.", true, 'index.php');
         die($h->endpage());
     }
@@ -264,7 +264,7 @@ function editacademy()
                          `ac_iq` = {$iq}
                          WHERE `ac_id` = {$id}");
             alert('success', "Success!", "You have successfully edited the {$name} Academy Course.", true, 'index.php');
-            $api->SystemLogsAdd($userid, 'staff', "Edited the {$name} Course.");
+            $api->game->addLog($userid, 'staff', "Edited the {$name} Course.");
             break;
         case 1:
             $_POST['academy'] = (isset($_POST['academy']) && is_numeric($_POST['academy'])) ? abs(intval($_POST['academy'])) : 0;

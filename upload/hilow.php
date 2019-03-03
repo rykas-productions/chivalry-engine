@@ -49,30 +49,30 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
             alert('danger', "Uh Oh!", "You guessed the game operator would show a number higher than {$guessed}.
 			    The number revealed is {$numb}. You have lost this bet.", false);
             $gain = 0;
-            $api->SystemLogsAdd($userid, 'gambling', "Bet higher number in High/Low and lost {$maxbet}");
+            $api->game->addLog($userid, 'gambling', "Bet higher number in High/Low and lost {$maxbet}");
         } //Change is suspected to be higher, and user is correct.
         elseif ($guessed < $numb && $_POST['change'] == 'higher') {
             alert('success', "Success!", "You guessed the game operator would show a number higher than {$guessed}.
 			    The number revealed is {$numb}. You won this bet!", false);
             $gain = $maxbet * 1.5;
-            $api->SystemLogsAdd($userid, 'gambling', "Bet higher number in High/Low and won {$gain}");
+            $api->game->addLog($userid, 'gambling', "Bet higher number in High/Low and won {$gain}");
         } //Change is suspected to be lower, and user is correct.
         elseif ($guessed > $numb && $_POST['change'] == 'lower') {
             alert('success', "Success!", "You guessed the game operator would show a number lower than {$guessed}.
 			    The number revealed is {$numb}. You have won this bet!", false);
             $gain = $maxbet * 1.5;
-            $api->SystemLogsAdd($userid, 'gambling', "Bet lower number in High/Low and won {$gain}");
+            $api->game->addLog($userid, 'gambling', "Bet lower number in High/Low and won {$gain}");
         } //Change is suspected to be lower, but the new number is higher than the original.
         elseif ($guessed < $numb && $_POST['change'] == 'lower') {
             alert('danger', "Uh Oh!", "You guessed the game operator would show a number less than {$guessed}. The number
 			    revealed is {$numb}. You lose this round.", false);
             $gain = 0;
-            $api->SystemLogsAdd($userid, 'gambling', "Bet lower number in High/Low and lost {$maxbet}");
+            $api->game->addLog($userid, 'gambling', "Bet lower number in High/Low and lost {$maxbet}");
         } //The new number is the same as the old number.
         else {
             alert('success', "Success!", "The number drawn is the same nubmer as last time. You've lost nothing.", false);
             $gain = $maxbet;
-            $api->SystemLogsAdd($userid, 'gambling', "Number tied in high/low.");
+            $api->game->addLog($userid, 'gambling', "Number tied in high/low.");
         }
         //Give the user their winnings, if possible.
         $api->user->giveCurrency($userid, 'primary', $gain);

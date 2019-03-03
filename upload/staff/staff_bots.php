@@ -54,13 +54,13 @@ function addbot()
                 alert('danger', "Uh Oh!", "You cannot add a non-NPC to the NPC Bot Tent.");
                 die($h->endpage());
             }
-            if ($api->SystemItemIDtoName($item) == false) {
+            if (!$api->game->getItemNameFromID($item)) {
                 alert('danger', "Uh Oh!", "The item you've chosen for this bot to drop does not exist.");
                 die($h->endpage());
             }
             $db->query("INSERT INTO `botlist` (`botuser`, `botitem`, `botcooldown`) VALUES ('{$user}', '{$item}', '{$cooldown}')");
             alert('success', "Success!", "You have successfully added NPC User ID {$user} to the Bot Tent.", true, 'index.php');
-            $api->SystemLogsAdd($userid, 'staff', "Added User ID {$user} to the bot list.");
+            $api->game->addLog($userid, 'staff', "Added User ID {$user} to the bot list.");
             die($h->endpage());
         }
     } else {
@@ -129,7 +129,7 @@ function delbot()
             }
             $db->query("DELETE FROM `botlist` WHERE `botuser` = {$bot}");
             alert('success', "Success!", "You have removed NPC ID {$bot} from the Bot Tent.", true, 'index.php');
-            $api->SystemLogsAdd($userid, 'staff', "Deleted User ID {$bot} from the bot list.");
+            $api->game->addLog($userid, 'staff', "Deleted User ID {$bot} from the bot list.");
         }
     } else {
         $csrf = request_csrf_html('staff_bot_del');
