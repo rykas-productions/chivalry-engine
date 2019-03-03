@@ -603,4 +603,25 @@ class user
             return $usrid;
         }
     }
+    /*
+        Function to test if the inputted users share IPs at all.
+        @param int user1 = User ID of the first player.
+        @param int user2 = User ID of the second player.
+        Returns true if the users share an IP, false if not. Will also return false if both variables are equal.
+    */
+    function checkIP($user1, $user2)
+    {
+        global $db;
+        $user1 = (isset($user1) && is_numeric($user1)) ? abs(intval($user1)) : 0;
+        $user2 = (isset($user2) && is_numeric($user2)) ? abs(intval($user2)) : 0;
+        if (!empty($user1) || !empty($user2)) {
+            if ($user1 != $user2) {
+                $s = $db->fetch_row($db->query("SELECT `lastip`,`loginip`,`registerip` FROM `users` WHERE `userid` = {$user1}"));
+                $r = $db->fetch_row($db->query("SELECT `lastip`,`loginip`,`registerip` FROM `users` WHERE `userid` = {$user2}"));
+                if ($s['lastip'] == $r['lastip'] || $s['loginip'] == $r['loginip'] || $s['registerip'] == $r['registerip']) {
+                    return true;
+                }
+            }
+        }
+    }
 }

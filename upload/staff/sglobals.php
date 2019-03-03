@@ -91,10 +91,12 @@ if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SE
     header("Location: {$login_url}");
     exit;
 }
+//Include API file.
 include("../class/class_api.php");
 $api = new api;
 $api->user = new user;
 $api->guild = new guild;
+$api->game = new game;
 if (!$api->user->getStaffLevel($userid, 'forum moderator')) {
     $index = ('../index.php');
     header("Location: {$index}");
