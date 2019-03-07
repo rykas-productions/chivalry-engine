@@ -401,6 +401,7 @@ class headers
                 <?php alert('info', "Information!", "Please enable Javascript.", false); ?>
             </noscript>
             <?php
+            require "../lib/dev_help.php";
             $IP = $db->escape($_SERVER['REMOTE_ADDR']);
             $ipq = $db->query("SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
             if ($db->num_rows($ipq) > 0) {

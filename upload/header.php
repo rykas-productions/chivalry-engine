@@ -209,6 +209,8 @@ class headers
 					?>
 				</noscript>
 			<?php
+            //Dev help document.
+            require "lib/dev_help.php";
 			$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 			$ipq = $db->query("SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
 			//User's IP is banned, so lets stop access.

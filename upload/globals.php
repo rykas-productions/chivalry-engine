@@ -26,7 +26,6 @@ if (!isset($_SESSION['started'])) {
 ob_start();
 //Require the error handler and developer helper files.
 require "lib/basic_error_handler.php";
-require "lib/dev_help.php";
 set_error_handler('error_php');
 //Require main functions file.
 require "global_func.php";
