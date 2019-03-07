@@ -28,17 +28,13 @@ class headers
                 <meta property="og:image" content=""/>
                 <link rel="shortcut icon" href="" type="image/x-icon"/>
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-                <meta name="theme-color" content="#e7e7e7">
+                <meta name="theme-color" content="#343a40">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
         </head>
         <body>
-        <?php
-        if (!isset($menuhide)) {
-            $csrf = request_csrf_html('login');
-            ?>
-            <!-- Navigation -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav"
                         aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,57 +51,8 @@ class headers
                                     class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
                         </li>
                     </ul>
-                    <div class="my-2 my-lg-0">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="navbar-text">
-                                <i class="fa fa-sign-in" aria-hidden="true"></i> <?php echo "Already have an account?"; ?>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
-                                   aria-haspopup="true" aria-expanded="false">
-                                    <?php echo "Log in"; ?>
-                                </a>
-                                <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
-                                    <li>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p class="dropdown"><?php echo "Sign In! <a href='pwreset.php'>Forgot Password?</a>"; ?></p>
-
-                                                <form role="form" method="post" action="authenticate.php"
-                                                      accept-charset="UTF-8" id="login-nav">
-                                                    <?php echo $csrf; ?>
-                                                    <div class="form-group">
-                                                        <label class="sr-only"
-                                                               for="exampleInputEmail2"><?php echo "Email Address"; ?></label>
-                                                        <input type="email" class="form-control" id="exampleInputEmail2"
-                                                               placeholder="<?php echo "Your Email Address"; ?>"
-                                                               name="email" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="sr-only"
-                                                               for="exampleInputPassword2"><?php echo "Password"; ?></label>
-                                                        <input type="password" class="form-control"
-                                                               id="exampleInputPassword2" name="password"
-                                                               placeholder="<?php echo "Your Password"; ?>" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button type="submit"
-                                                                class="btn btn-primary btn-block"><?php echo "Sign In"; ?></button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <div class="bottom text-center">
-                                        <?php echo "New here? <a href='register.php'>Sign up</a> for an account!"; ?>
-                                    </div>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </nav>
-        <?php } ?>
         <!-- Page Content -->
         <div class="container">
         <div class="row">
@@ -126,12 +73,12 @@ class headers
     {
         global $db, $ir, $set;
         $query_extra = '';
-    if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
-    {
+        if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
+        {
+            ?>
+            <pre class='pre-scrollable'> <?php var_dump($db->queries) ?> </pre> <?php
+        }
         ?>
-        <pre class='pre-scrollable'> <?php var_dump($db->queries) ?> </pre> <?php
-    }
-    ?>
         </div>
         </div>
         <!-- /.row -->
@@ -150,18 +97,7 @@ class headers
 
         <!-- Other JavaScript -->
         <script src="js/register-min.js" async defer></script>
-        <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         </body>
-        <footer>
-            <p>
-                <br/>
-                <?php
-                echo "<hr />
-					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />
-					Powered by <a href='https://github.com/MasterGeneral156/chivalry-engine'>codes</a> by TheMasterGeneral.
-					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}.";?>
-            </p>
-        </footer>
         </html>
     <?php
     }

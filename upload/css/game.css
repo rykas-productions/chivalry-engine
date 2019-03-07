@@ -71,47 +71,6 @@ div.quotetop {
         display: none !important;
     }
 }
-#login-dp {
-    min-width: 250px;
-    padding: 14px 14px 0;
-    overflow: hidden;
-    background-color: rgba(255, 255, 255, .8);
-}
-
-#login-dp .help-block {
-    font-size: 12px
-}
-
-#login-dp .bottom {
-    background-color: rgba(255, 255, 255, .8);
-    border-top: 1px solid #ddd;
-    clear: both;
-    padding: 14px;
-}
-
-#login-dp .social-buttons {
-    margin: 12px 0
-}
-
-#login-dp .social-buttons a {
-    width: 49%;
-}
-
-#login-dp .form-group {
-    margin-bottom: 10px;
-}
-
-@media (max-width: 768px) {
-    #login-dp {
-        background-color: inherit;
-        color: rgba(0,0,0,.9);
-    }
-
-    #login-dp .bottom {
-        background-color: inherit;
-        border-top: 0 none;
-    }
-}
 @-webkit-keyframes swing {
   0%, 30%, 50%, 70%, 100% {
     -webkit-transform: rotate(0deg);
