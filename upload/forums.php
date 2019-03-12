@@ -234,8 +234,8 @@ function idx()
 function viewforum()
 {
     global $ir, $db, $h, $userid;
-    $_GET['viewforum'] = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs($_GET['viewforum']) : '';
-    if (empty($_GET['viewforum'])) {
+	$forum = filter_input(INPUT_GET, 'viewforum', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+    if (empty($forum)) {
         alert('danger', "Uh Oh!", "You must enter a forum category you wish to view.", true, "forums.php");
         die($h->endpage());
     }
@@ -243,7 +243,7 @@ function viewforum()
         $db->query(
             "SELECT `ff_auth`, `ff_name`
                      FROM `forum_forums`
-                     WHERE `ff_id` = '{$_GET['viewforum']}'");
+                     WHERE `ff_id` = '{$forum}'");
     if ($db->num_rows($q) == 0) {
         $db->free_result($q);
         alert('danger', "Non-existent Forum Category!", "You are attempting to view a non-existent forum category. Check your source and try again.", true, "forums.php");
@@ -257,7 +257,7 @@ function viewforum()
             die($h->endpage());
         }
     }
-    $ntl = "[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
+    $ntl = "[<a href='?act=newtopicform&forum={$forum}'>New Topic</a>]";
     echo "<ol class='breadcrumb'>
 		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item active'>{$r['ff_name']} {$ntl}</li>	
@@ -265,9 +265,9 @@ function viewforum()
     $posts_topic = $db->fetch_single($db->query("SELECT COUNT(`ft_id`) 
 													FROM `forum_topics` 
 													WHERE 
-													`ft_forum_id` = {$_GET['viewforum']}"));
+													`ft_forum_id` = {$forum}"));
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
-    echo pagination(20, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
+    echo pagination(20, $posts_topic, $st, "?viewforum={$forum}&amp;st=");
     ?>
     <table class='table table-bordered table-hover'>
     <thead>
@@ -294,7 +294,7 @@ function viewforum()
                      `ft_locked`, `ft_id`, `ft_name`, `ft_desc`, `ft_posts`,
                      `ft_owner_id`, `ft_last_id`
                      FROM `forum_topics`
-                     WHERE `ft_forum_id` = {$_GET['viewforum']}
+                     WHERE `ft_forum_id` = {$forum}
                      ORDER BY `ft_pinned` DESC, `ft_last_time` DESC
 					 LIMIT {$st}, 20");
     while ($r2 = $db->fetch_row($q)) {
@@ -337,7 +337,7 @@ function viewforum()
               </tr>\n";
     }
     echo "</tbody></table>";
-    echo pagination(20, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
+    echo pagination(20, $posts_topic, $st, "?viewforum={$forum}&amp;st=");
     $db->free_result($q);
 }
 
@@ -346,8 +346,8 @@ function viewtopic()
     global $ir, $userid, $parser, $db, $h, $api;
     $code = request_csrf_code('forum_reply');
     $precache = array();
-    $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
-    if (empty($_GET['viewtopic'])) {
+	$topic = filter_input(INPUT_GET, 'viewtopic', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+    if (empty($topic)) {
         alert('danger', "Uh Oh!", "You must enter a topic you wish to view.", true, "forums.php");
         die($h->endpage());
     }
@@ -356,7 +356,7 @@ function viewtopic()
             "SELECT `ft_forum_id`, `ft_name`, `ft_posts`, `ft_id`,
                     `ft_locked`, `ft_pinned`
                      FROM `forum_topics`
-                     WHERE `ft_id` = {$_GET['viewtopic']}");
+                     WHERE `ft_id` = {$topic}");
     if ($db->num_rows($q) == 0) {
         $db->free_result($q);
         alert('danger', "Forum topic does not exist!", "You are attempting to interact with a topic that does not exist. Check your source and try again.", true, "forums.php");
@@ -394,7 +394,7 @@ function viewtopic()
         $lock = ($topic['ft_locked'] == 0) ? 'Lock Topic' : 'Unlock Topic' ;
         $pin = ($topic['ft_pinned'] == 0) ? 'Pin Topic' : 'Unpin Topic' ;
         echo "
-	<form action='?act=move&topic={$_GET['viewtopic']}' method='post'>
+	<form action='?act=move&topic={$topic}' method='post'>
     <b>Move Topic To</b> " . forum_dropdown('forum')
             . "
 	<input type='submit' value='Move Topic' class='btn btn-primary' />
@@ -407,21 +407,21 @@ function viewtopic()
 			<td>
 				<form>
 					<input type='hidden' value='pin' name='act'>
-					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+					<input type='hidden' name='topic' value='{$topic}'>
 					<input type='submit' class='btn btn-primary' value='{$pin}'>
 				</form>
 			</td>
 			<td align='center'>
 				<form>
 					<input type='hidden' value='lock' name='act'>
-					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+					<input type='hidden' name='topic' value='{$topic}'>
 					<input type='submit' class='btn btn-primary' value='{$lock}'>
 				</form>
 			</td>
 			<td>
 				<form action='?act=deletopic'>
 					<input type='hidden' value='deletopic' name='act'>
-					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+					<input type='hidden' name='topic' value='{$topic}'>
 					<input type='submit' class='btn btn-primary' value='Delete'>
 				</form>
 			</td>
@@ -431,17 +431,17 @@ function viewtopic()
 	<div class='hidden-md-up'>
 		<form>
 			<input type='hidden' value='pin' name='act'>
-			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+			<input type='hidden' name='topic' value='{$topic}'>
 			<input type='submit' class='btn btn-primary' value='{$pin}'>
 		</form>
 		<form>
 			<input type='hidden' value='lock' name='act'>
-			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+			<input type='hidden' name='topic' value='{$topic}'>
 			<input type='submit' class='btn btn-primary' value='{$lock}'>
 		</form>
 		<form action='?act=deletopic'>
 			<input type='hidden' value='deletopic' name='act'>
-			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+			<input type='hidden' name='topic' value='{$topic}'>
 			<input type='submit' class='btn btn-primary' value='Delete'>
 		</form>
 	</div><br /> ";
@@ -463,10 +463,10 @@ function viewtopic()
             <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$PN['vip_days']} VIP Days remaining.'></i></span>" :
             $PN['username'];
 
-        $qlink = "[<a href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>Quote</a>]";
+        $qlink = "[<a href='?act=quote&viewtopic={$topic}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>Quote</a>]";
         if ($api->user->getStaffLevel($userid, 'forum moderator') || $userid == $r['fp_poster_id']) {
             $elink =
-                "[<a href='?act=edit&post={$r['fp_id']}&topic={$_GET['viewtopic']}'>Edit</a>]";
+                "[<a href='?act=edit&post={$r['fp_id']}&topic={$topic}'>Edit</a>]";
         } else {
             $elink = "";
         }
@@ -591,11 +591,11 @@ function viewtopic()
 function reply()
 {
     global $h, $userid, $db, $api;
-    $_GET['reply'] = (isset($_GET['reply']) && is_numeric($_GET['reply'])) ? abs($_GET['reply']) : '';
+	$reply = filter_input(INPUT_GET, 'reply', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     if (!isset($_POST['verf']) || !verify_csrf_code('forum_reply', stripslashes($_POST['verf']))) {
-        csrf_error("?viewtopic={$_GET['reply']}");
+        csrf_error("?viewtopic={$reply}");
     }
-    if (empty($_GET['reply'])) {
+    if (empty($reply)) {
         alert('danger', "Uh Oh!", "You need to enter a reponse.", true, "forums.php");
         die($h->endpage());
     }
@@ -603,7 +603,7 @@ function reply()
         $db->query(
             "SELECT `ft_forum_id`, `ft_locked`, `ft_name`, `ft_id`
                      FROM `forum_topics`
-                     WHERE `ft_id` = {$_GET['reply']}");
+                     WHERE `ft_id` = {$reply}");
     if ($db->num_rows($q) == 0) {
         $db->free_result($q);
         alert('danger', "Forum topic does not exist!", "You are attempting to interact with a topic that does not exist. Check your source and try again.", true, "forums.php");
@@ -632,7 +632,7 @@ function reply()
     if ($topic['ft_locked'] == 0) {
         $_POST['fp_text'] = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['fp_text']))));
         if ((strlen($_POST['fp_text']) > 65535)) {
-            alert('danger', "Uh Oh!", "Forum replies can only be, at maximum, 65,535 characters in length.", true, "forums.php?viewtopic={$_GET['reply']}");
+            alert('danger', "Uh Oh!", "Forum replies can only be, at maximum, 65,535 characters in length.", true, "forums.php?viewtopic={$reply}");
             die($h->endpage());
         }
 
@@ -643,22 +643,22 @@ function reply()
 			`fp_topic_id`, `fp_editor_id`, 
 			`fp_edit_count`, `fp_editor_time`, 
 			`fp_text`, `ff_id`) VALUES 
-			(NULL, '$userid', '$post_time', '{$_GET['reply']}', '0', '0', '0', '{$_POST['fp_text']}', '{$forum['ff_id']}');");
+			(NULL, '$userid', '$post_time', '{$reply}', '0', '0', '0', '{$_POST['fp_text']}', '{$forum['ff_id']}');");
         $db->query(
             "UPDATE `forum_topics`
                  SET `ft_last_id` = $userid,
                  `ft_last_time` = {$post_time}, `ft_posts` = `ft_posts` + 1
-                 WHERE `ft_id` = {$_GET['reply']}");
+                 WHERE `ft_id` = {$reply}");
         $db->query(
             "UPDATE `forum_forums`
                  SET `ff_lp_time` = {$post_time},
                  `ff_lp_poster_id` = $userid,
-                 `ff_lp_t_id` = {$_GET['reply']}
+                 `ff_lp_t_id` = {$reply}
                  WHERE `ff_id` = {$forum['ff_id']}");
         alert('success', "Success!", "Your reply has posted successfully.", false);
         echo "<br />";
         $_GET['lastpost'] = 1;
-        $_GET['viewtopic'] = $_GET['reply'];
+        $_GET['viewtopic'] = $reply;
         viewtopic();
     } else {
         echo "This topic is locked. You cannot reply to it.";
@@ -668,8 +668,8 @@ function reply()
 function newtopicform()
 {
     global $userid, $h, $db, $api;
-    $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
-    if (empty($_GET['forum'])) {
+	$forum = filter_input(INPUT_GET, 'forum', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+    if (empty($forum)) {
         alert('danger', "Uh Oh!", "You must specify a forum you wish to create this topic in.", true, "forums.php");
         die($h->endpage());
     }
@@ -677,10 +677,10 @@ function newtopicform()
         $db->query(
             "SELECT `ff_auth`, `ff_name`
                      FROM `forum_forums`
-                     WHERE `ff_id` = '{$_GET['forum']}'");
+                     WHERE `ff_id` = '{$forum}'");
     if ($db->num_rows($q) == 0) {
         $db->free_result($q);
-        alert('danger', "Forum topic does not exist!", "You are attempting to interact with a topic that does not exist. Check your source and try again.", true, "forums.php?viewforum={$_GET['forum']}");
+        alert('danger', "Forum topic does not exist!", "You are attempting to interact with a topic that does not exist. Check your source and try again.", true, "forums.php?viewforum={$forum}");
         die($h->endpage());
     }
     $r = $db->fetch_row($q);
@@ -691,14 +691,14 @@ function newtopicform()
             die($h->endpage());
         }
     }
-    $code = request_csrf_code("forums_newtopic_{$_GET['forum']}");
+    $code = request_csrf_code("forums_newtopic_{$forum}");
     echo "<ol class='breadcrumb'>
 		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
-		<li class='breadcrumb-item'><a href='?viewforum={$_GET['forum']}'>{$r['ff_name']}</a></li>
+		<li class='breadcrumb-item'><a href='?viewforum={$forum}'>{$r['ff_name']}</a></li>
 		<li class='breadcrumb-item active'>New Topic Form</li>
 	</ol>";
     echo <<<EOF
-<form method='post' action='?act=newtopic&forum={$_GET['forum']}'>
+<form method='post' action='?act=newtopic&forum={$forum}'>
 	<table class='table'>
 		<tr>
 			<th>

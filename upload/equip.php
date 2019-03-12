@@ -25,13 +25,13 @@ function weapon()
 {
     global $db, $h, $userid, $ir, $api;
     //Make sure the Item ID is safe for database use.
-    $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : 0;
+	$safe_id = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //Select all its info.
     $id = $db->query("SELECT `weapon`, `itmid`, `itmname`
 					FROM `inventory` AS `iv`
 					LEFT JOIN `items` AS `it`
 					ON `iv`.`inv_itemid` = `it`.`itmid`
-					WHERE `iv`.`inv_id` = {$_GET['ID']}
+					WHERE `iv`.`inv_id` = {$safe_id}
 					AND `iv`.`inv_userid` = {$userid}
 					LIMIT 1");
     //Check that the item exists. If not, stop them here.
@@ -84,7 +84,7 @@ function weapon()
 		<hr />
 		What slot do you want to equip your {$r['itmname']} in? If you have a weapon already equipped in that slot,
 		it'll be moved to your inventory.<br />
-		<form action='?slot=weapon&ID={$_GET['ID']}' method='post'>
+		<form action='?slot=weapon&ID={$safe_id}' method='post'>
             <select name='type' class='form-control' type='dropdown'>
                 <option value='equip_primary'>Equip as Primary</option>
                 <option value='equip_secondary'>Equip as Secondary</option>
@@ -100,7 +100,7 @@ function armor()
 {
     global $db, $h, $userid, $ir, $api;
     //Make sure the Item ID is safe for database work.
-    $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : 0;
+    $safe_id = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //Select the Item's info from the database.
     $id =
         $db->query(
@@ -108,7 +108,7 @@ function armor()
 					FROM `inventory` AS `iv`
 					LEFT JOIN `items` AS `it`
 					ON `iv`.`inv_itemid` = `it`.`itmid`
-					WHERE `iv`.`inv_id` = {$_GET['ID']}
+					WHERE `iv`.`inv_id` = {$safe_id}
 					AND `iv`.`inv_userid` = $userid
 					LIMIT 1");
     //Check that the item actually exists, if not, stop them.
@@ -150,7 +150,7 @@ function armor()
     } else {
         //Equip armor form.
         echo "<h3>Equip Armor Form</h3><hr />
-	<form action='?slot=armor&ID={$_GET['ID']}' method='post'>
+	<form action='?slot=armor&ID={$safe_id}' method='post'>
 	You are attempting to equip your {$r['itmname']} as armor. If you have an armor on now, it'll be moved to your
 	inventory.<br />
 	<input type='hidden' name='type' value='equip_armor'  />

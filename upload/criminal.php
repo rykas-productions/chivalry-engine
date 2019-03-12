@@ -80,24 +80,24 @@ function crime()
 {
     global $db, $userid, $ir, $h, $api, $m;
     $tresder = (Random(100, 999));
-    $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
-    if (!isset($_GET['c'])) {
-        $_GET['c'] = 0;
+	$tresde = filter_input(INPUT_GET, 'tresde', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+    if (!isset($c)) {
+        $c = 0;
     }
-    $_GET['c'] = abs($_GET['c']);
+	$c = filter_input(INPUT_GET, 'c', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     if (!isset($_SESSION['tresde'])) {
         $_SESSION['tresde'] = 0;
     }
-    if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
-        alert('danger', "Uh Oh!", "Please do not refresh while committing crimes, thank you!", true, "?c={$_GET['c']}&tresde={$tresder}");
+    if (($_SESSION['tresde'] == $tresde) || $tresde < 100) {
+        alert('danger', "Uh Oh!", "Please do not refresh while committing crimes, thank you!", true, "?c={$c}&tresde={$tresder}");
         $_SESSION['number'] = 0;
         die($h->endpage());
     }
-    $_SESSION['tresde'] = $_GET['tresde'];
-    if ($_GET['c'] <= 0) {
+    $_SESSION['tresde'] = $tresde;
+    if ($c <= 0) {
         alert('danger', "Invalid Crime!", "You have chosen to commit and invalid crime.", true, 'criminal.php');
     } else {
-        $q = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$_GET['c']} LIMIT 1");
+        $q = $db->query("SELECT * FROM `crimes` WHERE `crimeID` = {$c} LIMIT 1");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Invalid Crime!", "You are trying to commit a non-existent crime.", true, 'criminal.php');
             die($h->endpage());

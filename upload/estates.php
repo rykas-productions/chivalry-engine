@@ -14,9 +14,9 @@ $mpq = $db->query("SELECT * FROM `estates` WHERE `house_will` = {$ir['maxwill']}
 $mp = $db->fetch_row($mpq);
 $db->free_result($mpq);
 //User is trying to buy an estate.
-if (isset($_GET['property']) && is_numeric($_GET['property'])) {
-    $_GET['property'] = abs($_GET['property']);
-    $npq = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$_GET['property']}");
+if (isset($property) && is_numeric($property)) {
+	$property = filter_input(INPUT_GET, 'property', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+    $npq = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$property}");
     //Estate does not exist.
     if ($db->num_rows($npq) == 0) {
         $db->free_result($npq);

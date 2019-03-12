@@ -78,9 +78,9 @@ function index()
 function deposit()
 {
     global $ir, $userid, $bank_maxfee, $bank_feepercent, $api;
-    $_POST['deposit'] = abs($_POST['deposit']);
+	$deposit = filter_input(INPUT_POST, 'deposit', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //User is trying to deposit more than they have.
-    if ($_POST['deposit'] > $ir['primary_currency']) {
+    if ($deposit > $ir['primary_currency']) {
         alert('danger', "Uh Oh!", "You are trying to deposit more cash than you current have!", true, 'bank.php');
     } else {
         $fee = ceil($_POST['deposit'] * $bank_feepercent / 100);
@@ -88,36 +88,36 @@ function deposit()
             $fee = $bank_maxfee;
         }
         //$gain is amount put into account after the fee is taken.
-        $gain = $_POST['deposit'] - $fee;
+        $gain = $deposit - $fee;
         $ir['bank'] += $gain;
         //Update user's bank and primary currency info.
-		$api->user->takeCurrency($userid, 'primary', $_POST['deposit']);
+		$api->user->takeCurrency($userid, 'primary', $deposit);
         $api->user->setInfoStatic($userid, "bank", $ir['bank']);
-        alert('success', "Success!", "You hand over " . number_format($_POST['deposit']) . " to be deposited. After the
+        alert('success', "Success!", "You hand over " . number_format($deposit) . " to be deposited. After the
 		    fee (" . number_format($fee) . ") is taken from your deposit, " . number_format($gain) . " is added to your
 		    bank account. You now have " . number_format($ir['bank']) . " in your account.", true, 'bank.php');
         //Log bank transaction.
-        $api->game->addLog($userid, 'bank', "Deposited " . number_format($_POST['deposit']) . ".");
+        $api->game->addLog($userid, 'bank', "Deposited " . number_format($deposit) . ".");
     }
 }
 
 function withdraw()
 {
     global $ir, $userid, $api;
-    $_POST['withdraw'] = abs($_POST['withdraw']);
+	$withdraw = filter_input(INPUT_POST, 'withdraw', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //User is trying to withdraw more than they have stored.
-    if ($_POST['withdraw'] > $ir['bank']) {
+    if ($withdraw > $ir['bank']) {
         alert('danger', "Uh Oh!", "You are trying to withdraw more cash than you currently have available in your account.", true, 'bank.php');
     } else {
-        $gain = $_POST['withdraw'];
+        $gain = $withdraw;
         $ir['bank'] -= $gain;
         //Update user's info.
-		$api->user->giveCurrency($userid, 'primary', $_POST['withdraw']);
+		$api->user->giveCurrency($userid, 'primary', $withdraw);
         $api->user->setInfoStatic($userid, "bank", $ir['bank']);
-        alert('success', "Success!", "You have successfully withdrew " . number_format($_POST['withdraw']) . " from your
+        alert('success', "Success!", "You have successfully withdrew " . number_format($withdraw) . " from your
 		    bank account. You have now have " . number_format($ir['bank']) . " left in your account.", true, 'bank.php');
         //Log transaction.
-        $api->game->addLog($userid, 'bank', "Withdrew " . number_format($_POST['withdraw']) . ".");
+        $api->game->addLog($userid, 'bank', "Withdrew " . number_format($withdraw) . ".");
     }
 }
 

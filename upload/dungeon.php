@@ -85,18 +85,18 @@ function bail()
 {
     global $db, $userid, $ir, $h, $api;
     if (isset($_GET['user'])) {
-        $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
+		$get_user = filter_input(INPUT_GET, 'user', FILTER_SANITIZE_NUMBER_INT) ?: 0;
         //Specified user is invalid or empty.
-        if (empty($_GET['user']) || $_GET['user'] == 0) {
+        if (empty($get_user) || $get_user == 0) {
             alert('danger', "Uh Oh!", "You must select a user you wish to bail out.", true, 'dungeon.php');
             die($h->endpage());
         }
         //Specified user is not in the dungeon.
-        if (!$api->user->inDungeon($_GET['user'])) {
+        if (!$api->user->inDungeon($get_user)) {
             alert('danger', "Uh Oh!", "The user you wish to bail out is not in the dungeon.", true, 'dungeon.php');
             die($h->endpage());
         }
-        $cost = 250 * $api->user->getInfo($_GET['user'], 'level');
+        $cost = 250 * $api->user->getInfo($get_user, 'level');
         //User does not have enough primary currency to bail this user out.
         if (!$api->user->hasCurrency($userid, 'primary', $cost)) {
             alert('danger', "Uh Oh!", "You do not have enough cash to bail this user out. You need
@@ -105,10 +105,10 @@ function bail()
         }
         //Person specified is bailed out. Take user's currency, log the action, and tell the person what happened.
         $api->user->takeCurrency($userid, 'primary', $cost);
-        $api->user->addNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
+        $api->user->addNotification($get_user, "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
             successfully bailed you out of the dungeon.");
-        alert('success', "Success!", "You have successfully bailed out {$api->user->getNameFromID($_GET['user'])}", true, 'dungeon.php');
-        $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$_GET['user']}");
+        alert('success', "Success!", "You have successfully bailed out {$api->user->getNameFromID($get_user)}", true, 'dungeon.php');
+        $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$get_user}");
         die($h->endpage());
     } else {
         alert('danger', "Uh Oh!", "You must select a person to bail out.", true, 'dungeon.php');
@@ -119,14 +119,14 @@ function bust()
 {
     global $db, $userid, $ir, $h, $api;
     if (isset($_GET['user'])) {
-        $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
+		$get_user = filter_input(INPUT_GET, 'user', FILTER_SANITIZE_NUMBER_INT) ?: 0;
         //Person input is invalid or empty.
-        if (empty($_GET['user']) || $_GET['user'] == 0) {
+        if (empty($get_user) || $get_user == 0) {
             alert('danger', "Uh Oh!", "You must select a person to bust out of the dungeon.", true, 'dungeon.php');
             die($h->endpage());
         }
         //Person not in the dungeon.
-        if (!$api->user->inDungeon($_GET['user'])) {
+        if (!$api->user->inDungeon($get_user)) {
             alert('danger', "Uh Oh!", "This person is not in the dungeon, so you cannot bust them out.", true, 'dungeon.php');
             die($h->endpage());
         }
@@ -149,21 +149,21 @@ function bust()
         //Update user's info.
         $api->user->infoSetPercent($userid, 'will', -25);
         $api->user->infoSetPercent($userid, 'brave', -10);
-        $mult = $api->user->infoGet($_GET['user'], 'level') * $api->user->infoGet($_GET['user'], 'level');
+        $mult = $api->user->infoGet($get_user, 'level') * $api->user->infoGet($get_user, 'level');
         $chance = min(($ir['level'] / $mult) * 50 + 1, 95);
         //User is successful.
         if (Random(1, 100) < $chance) {
             //Add notification, and tell the user.
-            $api->user->addNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
+            $api->user->addNotification($get_user, "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
                 successfully busted you out of the dungeon.");
             alert('success', "Success!", "You have successfully busted them out of the dungeon.", true, 'dungeon.php');
-            $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$_GET['user']}");
+            $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$get_user}");
             die($h->endpage());
         } //User failed. Tell person and throw user in dungeon.
         else {
             $time = min($mult, 100);
-            $reason = $db->escape("Caught trying to bust out {$api->user->getNameFromID($_GET['user'])}");
-            $api->user->addNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
+            $reason = $db->escape("Caught trying to bust out {$api->user->getNameFromID($get_user)}");
+            $api->user->addNotification($get_user, "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
                 failed to bust you out of the dungeon.");
             alert('danger', "Uh Oh!", "While trying to bust your friend out, you were spotted by a guard.", true, 'dungeon.php');
             $api->user->setDungeon($userid, $time, $reason);

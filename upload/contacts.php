@@ -93,16 +93,16 @@ function add()
     global $db, $userid, $api;
     //User has specifed someone to add to contact list.
     if (isset($_POST['user'])) {
-        $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
-        $qc = $db->query("SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ADDED` = {$_POST['user']}");
+		$user = filter_input(INPUT_POST, 'user', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+        $qc = $db->query("SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ADDED` = {$user}");
         $dupe_count = $db->fetch_single($qc);
         $db->free_result($qc);
-        $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$_POST['user']}");
+        $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}");
         //Person specifed already on contact list.
         if ($dupe_count > 0) {
             alert('danger', "Uh Oh!", "You already have this user on your contact list.");
         } //Person specifed is the current user.
-        else if ($userid == $_POST['user']) {
+        else if ($userid == $user) {
             alert('danger', "Uh Oh!", "You cannot add yourself to your contact list.");
         } //Person specifed does not exist.
         else if ($db->num_rows($q) == 0) {
@@ -110,16 +110,16 @@ function add()
             alert('danger', "Uh Oh!", "User you wish to add does not exist.");
         } //Person is added to contacts list.
         else {
-            $db->query("INSERT INTO `contact_list` VALUES (NULL, {$_POST['user']}, {$userid})");
+            $db->query("INSERT INTO `contact_list` VALUES (NULL, {$user}, {$userid})");
             $db->free_result($q);
-            alert('success', "Success!", "You have successfully added " . $api->user->getNameFromID($_POST['user']) . "
+            alert('success', "Success!", "You have successfully added " . $api->user->getNameFromID($user) . "
 			    to your contact list.", true, 'contacts.php');
         }
     } else {
         if (!isset($_GET['user'])) {
             $_GET['user'] = $userid;
         } else {
-            $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
+            $user = (isset($user) && is_numeric($user)) ? abs($user) : '';
         }
         echo "<table class='table table-bordered'>
 		<form action='?action=add' method='post'>
@@ -149,13 +149,13 @@ function add()
 function remove()
 {
     global $db, $userid, $h;
-    $_GET['contact'] = (isset($_GET['contact']) && is_numeric($_GET['contact'])) ? abs($_GET['contact']) : '';
+	$contact = filter_input(INPUT_GET, 'contact', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //User is trying to remove someone from contact list, but didn't specify their ID.
-    if (empty($_GET['contact'])) {
+    if (empty($contact)) {
         alert('danger', "Uh Oh!", "You must specify a contact you wish to remove.", true, 'contacts.php');
         die($h->endpage());
     }
-    $qc = $db->query("SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ID` = {$_GET['contact']}");
+    $qc = $db->query("SELECT COUNT(`c_ADDER`) FROM `contact_list` WHERE `c_ADDER` = {$userid} AND `c_ID` = {$contact}");
     $exist_count = $db->fetch_single($qc);
     $db->free_result($qc);
     //Specified person is not on list.
@@ -164,7 +164,7 @@ function remove()
         die($h->endpage());
     }
     //Remove from list.
-    $db->query("DELETE FROM `contact_list` WHERE `c_ID` = {$_GET['contact']} AND `c_ADDER` = {$userid}");
+    $db->query("DELETE FROM `contact_list` WHERE `c_ID` = {$contact} AND `c_ADDER` = {$userid}");
     alert('success', "Success!", "You have successfully removed this user from your contact list.", true, 'contacts.php');
 }
 

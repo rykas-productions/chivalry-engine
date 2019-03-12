@@ -35,8 +35,8 @@ function attacking()
     //and lessens the chance of a misclick and losing XP.
     $atkpage = 1;
     $tresder = Random(100, 999);    //RNG to prevent refreshing while attacking, thus
-    //breaking progression of the attack system.
-    $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
+									//breaking progression of the attack system.
+	$attacked_user = filter_input(INPUT_GET, 'user', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     if (empty($_GET['nextstep'])) {
         $_GET['nextstep'] = 0;
     }
@@ -56,11 +56,11 @@ function attacking()
         $_SESSION['tresde'] = $_GET['tresde'];
     }
     //If user is not specified.
-    if (!$_GET['user']) {
+    if (!$attacked_user) {
         alert("danger", "Uh Oh!", "You've chosen to attack a non-existent user. Check your source and try again.", true, 'index.php');
         die($h->endpage());
     } //If the user is trying to attack himself.
-    else if ($_GET['user'] == $userid) {
+    else if ($attacked_user == $userid) {
         alert("danger", "Uh Oh!", "Depressed or not, you cannot attack yourself.", true, 'index.php');
         die($h->endpage());
     } //If the user has no HP, and is not already attacking.
@@ -80,7 +80,7 @@ function attacking()
 	       `guard`, `agility`, `strength`, `gender`, `level`, `laston`
 			FROM `users` AS `u`
 			INNER JOIN `userstats` AS `us` ON `u`.`userid` = `us`.`userid`
-			WHERE `u`.`userid` = {$_GET['user']}
+			WHERE `u`.`userid` = {$attacked_user}
 			LIMIT 1");
     //Test for if the specified user is a valid and registered user.
     if ($db->num_rows($q) == 0) {
@@ -90,7 +90,7 @@ function attacking()
     $odata = $db->fetch_row($q);
     $db->free_result($q);
     //Check current user's last attacked user, and see that its the specified user.
-    if ($ir['attacking'] && $ir['attacking'] != $_GET['user']) {
+    if ($ir['attacking'] && $ir['attacking'] != $attacked_user) {
         $_SESSION['attacklost'] = 0;
         alert("danger", "Uh Oh!", "An unknown error has occurred. Please try again, or contact the admin team.", true, 'index.php');
         $api->user->setInfoStatic($userid, "attacking", 0);
@@ -104,7 +104,7 @@ function attacking()
         alert("danger", "Uh Oh!", "{$odata['username']} doesn't have health to be attacked.", true, 'index.php');
         die($h->endpage());
     } //Check if the opponent is currently in the infirmary.
-    else if ($api->user->inInfirmary($_GET['user'])) {
+    else if ($api->user->inInfirmary($attacked_user)) {
         $_SESSION['attacking'] = 0;
         $ir['attacking'] = 0;
         $api->user->setInfoStatic($userid, "attacking", 0);
@@ -118,7 +118,7 @@ function attacking()
         alert("danger", "Unconscious!", "You are currently in the infirmary. Try again after you heal out.", true, 'index.php');
         die($h->endpage());
     } //Check if the opponent is in the dungeon.
-    else if ($api->user->inDungeon($_GET['user'])) {
+    else if ($api->user->inDungeon($attacked_user)) {
         $_SESSION['attacking'] = 0;
         $ir['attacking'] = 0;
         $api->user->setInfoStatic($userid, "attacking", 0);
@@ -238,7 +238,7 @@ function attacking()
                 $odata['hp'] = 0;
             }
             //Reduce health.
-            $api->user->setInfo($_GET['user'], "hp", "-{$mydamage}", false);
+            $api->user->setInfo($attacked_user, "hp", "-{$mydamage}", false);
             alert('success', "Attempt {$_GET['nextstep']}!", "Using your {$r1['itmname']} you manage to strike
             {$odata['username']} dealing {$mydamage} damage. Your opponent has {$odata['hp']} HP remaining.", false);
             $_SESSION['attackdmg'] += $mydamage;
@@ -249,13 +249,13 @@ function attacking()
         //Win fight because opponent's health is 0 or lower.
         if ($odata['hp'] <= 0) {
             $odata['hp'] = 0;
-            $_SESSION['attackwon'] = $_GET['user'];
-            $api->user->setInfo($_GET['user'], 'hp', 0);
+            $_SESSION['attackwon'] = $attacked_user;
+            $api->user->setInfo($attacked_user, 'hp', 0);
             echo "<br />
 			<b>You have struck down {$odata['username']}. What do you wish to do to them now?</b><br />
-			<form action='?action=mug&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Rob Them' /></form><br />
-			<form action='?action=beat&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Increase Infirmary Time' /></form><br />
-			<form action='?action=xp&ID={$_GET['user']}' method='post'><input class='btn btn-primary' type='submit' value='Gain Experience' /></form>";
+			<form action='?action=mug&ID={$attacked_user}' method='post'><input class='btn btn-primary' type='submit' value='Rob Them' /></form><br />
+			<form action='?action=beat&ID={$attacked_user}' method='post'><input class='btn btn-primary' type='submit' value='Increase Infirmary Time' /></form><br />
+			<form action='?action=xp&ID={$attacked_user}' method='post'><input class='btn btn-primary' type='submit' value='Gain Experience' /></form>";
         } //The opponent is not down... he gets to attack.
         else {
             $eq = $db->query("SELECT `itmname`,`weapon` FROM  `items` WHERE `itmid` IN({$odata['equip_primary']}, {$odata['equip_secondary']})");
@@ -332,9 +332,9 @@ function attacking()
             //User has no HP left, redirect to loss.
             if ($youdata['hp'] <= 0) {
                 $youdata['hp'] = 0;
-                $_SESSION['attacklost'] = $_GET['user'];
+                $_SESSION['attacklost'] = $attacked_user;
                 $api->user->setInfo($userid, "hp", 0);
-                echo "<form action='?action=lost&ID={$_GET['user']}' method='post'><input type='submit' class='btn btn-primary' value='Lose Fight' />";
+                echo "<form action='?action=lost&ID={$attacked_user}' method='post'><input type='submit' class='btn btn-primary' value='Lose Fight' />";
             }
         }
     } //Opponent has less than 5 HP, fight cannot start.
@@ -386,7 +386,7 @@ function attacking()
                 if ($r['itmid'] == $ir['equip_secondary']) {
                     echo "<tr><th>Secondary Weapon</th>";
                 }
-                echo "<td><a href='attack.php?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}'>{$r['itmname']}</a></td></tr>";
+                echo "<td><a href='attack.php?nextstep={$ns}&user={$attacked_user}&weapon={$r['itmid']}&tresde={$tresder}'>{$r['itmname']}</a></td></tr>";
             }
         } //If no weapons equipped, tell him to get back!
         else {
@@ -427,13 +427,13 @@ function attacking()
 function beat()
 {
     global $db, $userid, $ir, $h, $api;
-    $_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
+	$safe_id = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $_SESSION['attacking'] = 0;
     $ir['attacking'] = 0;
     $api->user->setInfoStatic($userid, "attacking", 0);
-    $od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
+    $od = $db->query("SELECT * FROM `users` WHERE `userid` = {$safe_id}");
     //User attempts to win a fight they didn't win.
-    if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID']) {
+    if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $safe_id) {
         $api->user->setInfo($userid, "xp", 0);
         alert("danger", "Security Issue!", "You did not beat this player. You've lost all your experience for that.", true, 'index.php');
         die($h->endpage());
@@ -462,10 +462,10 @@ function beat()
         $api->user->addNotification($r['userid'], "You were hospitalized by <a href='profile.php?user=$userid'>{$ir['username']}</a>
                                                     for {$hosptime} minutes.");
         //Log that the user won the fight.
-        $api->game->addLog($userid, 'attacking', "Hospitalized <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$_GET['ID']}]
+        $api->game->addLog($userid, 'attacking', "Hospitalized <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$safe_id}]
                                                 for {$hosptime} minutes.");
         //Log that the opponent lost the fight.
-        $api->game->addLog($_GET['ID'], 'attacking', "Hospitalized by <a href='profile.php?user={$userid}'>{$ir['username']}</a>
+        $api->game->addLog($safe_id, 'attacking', "Hospitalized by <a href='profile.php?user={$userid}'>{$ir['username']}</a>
                                                     [{$userid}] for {$hosptime} minutes.");
         $_SESSION['attackwon'] = false;
         $additionaltext = "";
@@ -506,23 +506,23 @@ function beat()
 function lost()
 {
     global $db, $userid, $ir, $h, $api;
-    $_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
+	$safe_id = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $_SESSION['attacking'] = 0;
     $ir['attacking'] = 0;
     //User did not lose fight, or lost fight to someone else.
-    if (!isset($_SESSION['attacklost']) || $_SESSION['attacklost'] != $_GET['ID']) {
+    if (!isset($_SESSION['attacklost']) || $_SESSION['attacklost'] != $safe_id) {
         $api->user->setInfo($userid, "xp", 0);
         alert("danger", "Security Issue!", "You did not lose your last fight to this player. You've lost all your
 		                                    experience for that.", true, 'index.php');
         die($h->endpage());
     }
     //If the opponent is not specified
-    if (!$_GET['ID']) {
+    if (!$safe_id) {
         alert('warning', "Security Issue!", "You are trying to lose a fight against non-existent user.", true, 'index.php');
         die($h->endpage());
     }
     $od = $db->query("SELECT `username`, `level`, `user_level`,
-                      `guild`, `xp` FROM `users` WHERE `userid` = {$_GET['ID']}");
+                      `guild`, `xp` FROM `users` WHERE `userid` = {$safe_id}");
     //The opponent does not exist.
     if (!$db->num_rows($od)) {
         echo "The user you've lost to does not exist.";
@@ -553,14 +553,14 @@ function lost()
     $expgainp2 = $expgain2 / $r['xp_needed'] * 100;
     $expperc2 = round($expgainp / $r['xp_needed'] * 100);
     //Tell opponent that they were attacked by user, and emerged victorious.
-    $api->user->addNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a>
+    $api->user->addNotification($safe_id, "<a href='profile.php?user=$userid'>{$ir['username']}</a>
                                             picked a fight against you and lost. You've gained {$expperc2}% experience.");
     //Log that the user lost.
-    $api->game->addLog($userid, 'attacking', "Attacked <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$_GET['ID']}] and lost.");
+    $api->game->addLog($userid, 'attacking', "Attacked <a href='../profile.php?user={$safe_id}'>{$r['username']}</a> [{$safe_id}] and lost.");
     //Log that the opponent won.
-    $api->game->addLog($_GET['ID'], 'attacking', "Attacked by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and won.");
+    $api->game->addLog($safe_id, 'attacking', "Attacked by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and won.");
     //Increase opponent's XP for winning.
-    $api->user->setInfo($_GET['ID'], "xp", $expgainp2);
+    $api->user->setInfo($safe_id, "xp", $expgainp2);
     $_SESSION['attacklost'] = 0;
     $additionaltext = "";
     //Both players in a guild.
@@ -591,13 +591,13 @@ function lost()
 function xp()
 {
     global $db, $userid, $ir, $h, $api;
-    $_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
+	$safe_id = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $_SESSION['attacking'] = 0;
     $ir['attacking'] = 0;
     $api->user->setInfoStatic($userid, "attacking", 0);
-    $od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
+    $od = $db->query("SELECT * FROM `users` WHERE `userid` = {$safe_id}");
     //User did not win the attack, or the attack they won is not against the current opponent.
-    if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID']) {
+    if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $safe_id) {
         $api->user->setInfo($userid, "xp", 0);
         alert("danger", "Security Issue!", "You didn't win your last fight against this player. You've lost your
 		    experience for that.", true, 'index.php');
@@ -644,9 +644,9 @@ function xp()
             $api->user->addNotification($r['userid'], "<a href='profile.php?u=$userid'>{$ir['username']}</a> attacked you
                 and used you for experience.");
             //Log that the user won.
-            $api->game->addLog($userid, 'attacking', "Attacked <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and gained {$expperc}% Experience.");
+            $api->game->addLog($userid, 'attacking', "Attacked <a href='../profile.php?user={$safe_id}'>{$r['username']}</a> [{$r['userid']}] and gained {$expperc}% Experience.");
             //Log that the opponent lost.
-            $api->game->addLog($_GET['ID'], 'attacking', "Attacked by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and left for experience.");
+            $api->game->addLog($safe_id, 'attacking', "Attacked by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and left for experience.");
             $_SESSION['attackwon'] = 0;
             $additionaltext = "";
             //Both players are in a guild.
@@ -684,13 +684,13 @@ function xp()
 function mug()
 {
     global $db, $userid, $ir, $h, $api;
-    $_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
+	$safe_id = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $_SESSION['attacking'] = 0;
     $ir['attacking'] = 0;
     $api->user->setInfoStatic($userid, "attacking", 0);
-    $od = $db->query("SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
+    $od = $db->query("SELECT * FROM `users` WHERE `userid` = {$safe_id}");
     //User did not win fight, or won fight against someone else.
-    if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID']) {
+    if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $safe_id) {
         $api->user->setInfo($userid, "xp", 0);
         alert("danger", "Security Issue!", "You didn't win the fight against this opponent. You've lost all your
 		    experience.", true, 'index.php');
@@ -724,8 +724,8 @@ function mug()
             $api->user->addNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " {$_CONFIG['primary_currency']}.");
             //Log that the user won and stole some primary currency, and that
             //the opponent lost and lost primary currency.
-            $api->game->addLog($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole {$stole} {$_CONFIG['primary_currency']}.");
-            $api->game->addLog($_GET['ID'], 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost {$stole} {$_CONFIG['primary_currency']}.");
+            $api->game->addLog($userid, 'attacking', "Mugged <a href='../profile.php?user={$safe_id}'>{$r['username']}</a> [{$r['userid']}] and stole {$stole} {$_CONFIG['primary_currency']}.");
+            $api->game->addLog($safe_id, 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost {$stole} {$_CONFIG['primary_currency']}.");
             $_SESSION['attackwon'] = 0;
             $additionaltext = "";
             //Both players are in a guild.

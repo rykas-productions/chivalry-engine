@@ -97,13 +97,13 @@ function menu()
 function start()
 {
     global $db, $userid, $ir, $h, $api;
-    $_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : 0;
+	$course_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //If the user doesn't specific a course to take.
-    if (empty($_GET['id'])) {
+    if (empty($course_id)) {
         alert('danger', "Uh Oh!", "You didn't select a valid course to take.", true, 'academy.php');
         die($h->endpage());
     }
-    $courq = $db->query("SELECT * FROM `academy` WHERE `ac_id` = {$_GET['id']} LIMIT 1");
+    $courq = $db->query("SELECT * FROM `academy` WHERE `ac_id` = {$course_id} LIMIT 1");
     //If the course specified does not exist.
     if ($db->num_rows($courq) == 0) {
         alert('danger', "Uh Oh!", "The course you chose does not exist. Check your source and try again.", true, 'academy.php');
@@ -125,14 +125,14 @@ function start()
     $cdo = $db->query("SELECT COUNT(`userid`)
                              FROM `academy_done`
                              WHERE `userid` = {$userid}
-                             AND `course` = {$_GET['id']}");
+                             AND `course` = {$course_id}");
     //If the user has already taken this course.
     if ($db->fetch_single($cdo) > 0) {
         alert('danger', "Uh Oh!", "You have already graduated from this course. No need to enroll again.", true, 'academy.php');
         die($h->endpage());
     }
     $completed = time() + ($course['ac_days'] * 86400); //Current Time + (Academy days * seconds in a day)
-    $db->query("UPDATE `users` SET `course` = {$_GET['id']},
+    $db->query("UPDATE `users` SET `course` = {$course_id},
                 `course_complete` = {$completed} 
                 WHERE `userid` = {$userid}");
     //Update user's course, and course completion time.
