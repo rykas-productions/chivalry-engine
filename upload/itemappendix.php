@@ -11,7 +11,7 @@ require("globals.php");
 echo "<h3><i class='fas fa-list'></i> Item Appendix</h3><hr />This page lists all the items in the game, along with how many are in circulation.
     This may be useful for players who do item flipping, or those who are just plain old curious. Hovering over the
     item will give you its description. Tapping its name will take you to its info page<hr />
-    [<a href='?view=weapon'>Weapons</a>] [<a href='?view=armor'>Armor</a>] [<a href='?view=badge'>Badges</a>] [<a href='?view=vip'>VIP Items</a>] 
+    [<a href='?view=weapon'>Weapons</a>] [<a href='?view=armor'>Armor</a>] [<a href='?view=vip'>VIP Items</a>] 
 	[<a href='?view=infirmary'>Infirmary Items</a>] [<a href='?view=dungeon'>Dungeon Items</a>] [<a href='?view=material'>Materials</a>] [<a href='?view=food'>Food</a>] 
 	[<a href='?view=potions'>Potions</a>] [<a href='?view=holiday'>Holiday Items</a>] [<a href='?view=scrolls'>Scrolls</a>] [<a href='?view=rings'>Rings</a>] 
 	[<a href='?view=badge'>Badges</a>] [<a href='?view=other'>Other</a>]";

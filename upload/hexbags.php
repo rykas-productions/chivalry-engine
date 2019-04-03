@@ -7,18 +7,11 @@
 	Website: 	http://chivalryisdead.x10.mx/
 */
 require('globals.php');
-$tresder = Random(100, 999);
 echo "<h3><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags</h3><hr />";
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
 }
-if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
-{
-    alert("danger", "Uh Oh!", "Please do not refresh while opening hexbags. Thank you!", true, "?tresde={$tresder}");
-    die($h->endpage());
-}
-$_SESSION['tresde'] = $_GET['tresde'];
 $left=$ir['hexbags']-1;
 if ($ir['hexbags'] == 0)
 {
@@ -36,7 +29,7 @@ if ($api->UserStatus($userid,'infirmary'))
     die($h->endpage());
 }
 $db->query("UPDATE `users` SET `hexbags` = `hexbags` - 1 WHERE `userid` = {$userid}");
-$chance=Random(1,95);
+$chance=Random(1,96);
 if ($chance <= 35)
 {
     $cash=Random(500,3500);
@@ -137,12 +130,18 @@ elseif (($chance > 86) && ($chance <= 93))
     $api->UserGiveItem($userid,33,$bor);
     $api->SystemLogsAdd($userid,"hexbags","Received {$bor} Boxes of Random.");
 }
+elseif ($chance == 94)
+{
+    echo "You open this hexbag and find an Assassination Note. Its in your inventory.";
+    $api->UserGiveItem($userid,222,1);
+    $api->SystemLogsAdd($userid,"hexbags","Received Assassination Note.");
+}
 else
 {
     echo "You reach into this hexbag and feel something warm and squishy. You decide its best to keep it in there for now.";
     $api->SystemLogsAdd($userid,"hexbags","Received nothing.");
 }
 echo " You have {$left} Hexbags remaining for today.<hr />
-<a href='?tresde={$tresder}'>Open Another</a><br />
+<a href='hexbags.php'>Open Another</a><br />
 <a href='explore.php'>Back to Town</a>";
 $h->endpage();

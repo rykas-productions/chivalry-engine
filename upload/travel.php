@@ -48,7 +48,7 @@ if (empty($_GET['to'])) {
 		</th>
 	</tr>";
     //Select the towns that are not the current user's town, order them by level requirement
-    $q = $db->query("/*qc=on*/SELECT * FROM `town` WHERE `town_id` != {$ir['location']} AND `town_min_level` <= {$ir['level']} ORDER BY `town_min_level` ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `town` WHERE `town_id` != {$ir['location']} ORDER BY `town_min_level` ASC");
 
     //Show this information!
     while ($r = $db->fetch_row($q)) {

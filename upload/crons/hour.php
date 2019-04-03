@@ -8,7 +8,12 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
-require_once('../globals_nonauth.php');
+require_once(__DIR__ .'/../globals_nonauth.php');
+if (!isset($argv))
+{
+    exit;
+}
+$_GET['code']=substr($argv[1],5);
 if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 {
     exit;
@@ -39,6 +44,6 @@ $db->query("DELETE FROM `guild_crime_log` WHERE `gclTIME` < {$ThirtyDaysAgo}");
 $db->query("DELETE FROM `login_attempts` WHERE `timestamp` < {$lastweek}");
 $db->query("DELETE FROM `attack_logs` WHERE `attack_time` < {$ThirtyDaysAgo}");
 $db->query("UPDATE `user_settings` SET `winnings_this_hour` = 0");
-$db->query("UPDATE `settings` SET `setting_value` = `setting_value` - 1 WHERE `setting_name` = 'raffle_chance'");
+$db->query("UPDATE `settings` SET `setting_value` = `setting_value` - 1 WHERE `setting_name` = 'raffle_chance' AND `setting_value` > 10");
 $db->query("UPDATE `settings` SET `setting_value` = `setting_value` + 1000 WHERE `setting_id` = 28");
 ?>

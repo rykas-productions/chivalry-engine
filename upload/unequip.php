@@ -43,7 +43,7 @@ if ($db->num_rows($sbq) > 0)
 			} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
 				$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
 			}
-            $mod='gained';
+            $mod='lost';
             $ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
 		}
 		else

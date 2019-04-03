@@ -65,6 +65,9 @@ switch ($_GET['action']) {
 	case 'icontoggle':
         icontoggle();
         break;
+    case 'steamlink':
+        steamlink();
+        break;
     default:
         prefs_home();
         break;
@@ -136,12 +139,15 @@ function prefs_home()
 					<a href='?action=tuttoggle'>Tutorial Toggle</a>
 				</td>
 				<td>
-					<a href='?action=analytics'>Analytics</a>
+					<a href='?action=icontoggle'>Item Icons</a>
 				</td>
 			</tr>
-			<tr>
+            <tr>
 				<td>
-					<a href='?action=icontoggle'>Item Icons</a>
+					<a href='?action=steamlink'>Link Steam Account</a>
+				</td>
+				<td>
+					
 				</td>
 			</tr>
 		</tbody>
@@ -151,11 +157,6 @@ function prefs_home()
 function name_change()
 {
     global $db, $ir, $userid, $h, $api;
-    if (date('j') == 1)
-    {
-        alert('danger',"Uh Oh!","To promote a more doggy themed game, all name-changes must be submitted to staff members for approval. We highly recommend puns.",true,'preferences.php');
-        die($h->endpage());
-    }
     if (empty($_POST['newname'])) {
         $csrf = request_csrf_html('prefs_namechange');
         echo "<br />
@@ -291,11 +292,6 @@ function pw_change()
 function pic_change()
 {
     global $db, $h, $userid, $ir, $api;
-    if (date('j') == 1)
-    {
-        alert('danger',"Uh Oh!","To promote a more doggy themed game, all display picture changes must be submitted to staff members for approval. We highly recommend doggies.",true,'preferences.php');
-        die($h->endpage());
-    }
     if (!isset($_POST['newpic'])) {
         $csrf = request_csrf_html('prefs_changepic');
         echo "
@@ -318,8 +314,8 @@ function pic_change()
         $npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
         if (!empty($npic)) {
             $sz = get_filesize_remote($npic);
-            if ($sz <= 0 || $sz >= 1048576) {
-                alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 1MB.");
+            if ($sz <= 0 || $sz >= 5000000) {
+                alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 5MB.");
                 $h->endpage();
                 exit;
             }
@@ -628,12 +624,12 @@ function quicklinks()
 	{
 		$dungeon = (isset($_POST['dungeon']) && is_numeric($_POST['dungeon'])) ? abs($_POST['dungeon']) : 1;
 		$infirmary = (isset($_POST['infirmary']) && is_numeric($_POST['infirmary'])) ? abs($_POST['infirmary']) : 1;
-		if ($dungeon < 1 || $dungeon > 3)
+		if ($dungeon < 1 || $dungeon > 4)
 		{
 			alert("danger","Uh Oh!","You have selected an invalid dungeon item.");
 			die($h->endpage());
 		}
-		if ($infirmary < 1 || $infirmary > 3)
+		if ($infirmary < 1 || $infirmary > 6)
 		{
 			alert("danger","Uh Oh!","You have selected an invalid infirmary item.");
 			die($h->endpage());
@@ -653,6 +649,7 @@ function quicklinks()
 						<option value='1'>Lockpick</option>
 						<option value='2'>Dungeon Key</option>
 						<option value='3'>Dungeon Key Set</option>
+                        <option value='4'>Negative Begone</option>
 					</select>
 				</div>
 				<div class='col-md-6'>
@@ -661,6 +658,9 @@ function quicklinks()
 						<option value='1'>Leech</option>
 						<option value='2'>Linen Wrap</option>
                         <option value='3'>Acupuncture Needle</option>
+                        <option value='4'>Med-go-bye</option>
+                        <option value='5'>Priority Voucher</option>
+                        <option value='6'>Negative Begone</option>
 					</select>
 				</div>
 			</div>
@@ -737,11 +737,7 @@ function forumalert()
 function classreset()
 {
     global $db,$userid,$api,$h,$ir;
-    if ($ir['classreset'] == 1)
-    {
-        alert('danger',"Uh Oh!","You've already reset your class once. If you wish to do so again, please contact CID Admin to discuss.",true,'preferences.php');
-        die($h->endpage());
-    }
+    echo "<h3>Class Change</h3><hr />";
     if (isset($_POST['class']))
     {
         if ($_POST['class'] == $ir['class'])
@@ -749,14 +745,14 @@ function classreset()
             alert('danger',"Uh Oh!","Why would you want to waste your only class reset to select the class you already are?");
             die($h->endpage());
         }
-        if (($_POST['class'] != 'Guardian') && ($_POST['class'] != 'Warrior') && ($_POST['class'] != 'Warrior'))
+        if (($_POST['class'] != 'Guardian') && ($_POST['class'] != 'Warrior') && ($_POST['class'] != 'Rogue'))
         {
             alert('danger',"Uh Oh!","Invalid class selected.");
             die($h->endpage());
         }
-        if ($ir['iq'] < 10000)
+        if ($ir['iq'] < 50000)
         {
-            alert('danger',"Uh Oh!","You need at least 10,000 IQ to change your class.");
+            alert('danger',"Uh Oh!","You need at least 50,000 IQ to change your class.");
             die($h->endpage());
         }
         if (($ir['equip_primary'] + $ir['equip_secondary'] + $ir['equip_armor']) != 0)
@@ -816,21 +812,20 @@ function classreset()
                     SET `strength` = {$strength}, 
                     `agility` = {$agility}, 
                     `guard` = {$guard}, 
-                    `iq` = `iq` - 10000 
+                    `iq` = `iq` - 50000 
                     WHERE `userid` = {$userid}");
         $db->query("UPDATE `users` SET `class` = '{$_POST['class']}' WHERE `userid` = {$userid}");
-        $db->query("UPDATE `user_settings` SET `classreset` = `classreset` + 1 WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'preferences', "Changed class to {$_POST['class']}.");
         alert('success',"Success!","You have successfully changed your class to {$_POST['class']}.",true,'preferences.php');
     }
     else
     {
-        echo "Don't like the class you chose at registration? No problem! Here you may change your class <b>once</b>. However, 
+        echo "Don't like the class you chose at registration? No problem! Here you may change your class. However, 
         there are a few catches. Your stats will be changed to reflect the class you change yourself into. If you're becoming a 
         Warrior from a Guardian, Your Strength will become your Agility, your Agility will become your Guard, and your Guard will become your 
         Strength. If this seems confusing to you, please contact staff before you act. You will also receive a 25% reduction on 
-        your stats. You must also have at least 10,000 IQ to use this feature. You must also have no armor or weapons equipped.
-        <br /> You are currently part of the {$ir['class']} class.<br />
+        your stats. You must also have at least 50,000 IQ to use this feature. You must also have no armor or weapons equipped.
+        <br /> <b>You are currently part of the {$ir['class']} class.</b><br />
         Warrior: Extra Strength, Normal Agility, Less Guard<br />
         Rogue: Less Strength, Extra Agility, Normal Guard<br />
         Guardian: Normal Strength, Less Agility, Extra Guard<br />
@@ -907,56 +902,13 @@ function icontoggle()
         </form>";
     }
 }
-function analytics()
-{
-	global $db,$userid,$api,$h;
-    if (isset($_POST['do']))
-    {
-		if ($_POST['do'] == 'disable')
-		{
-			$db->query("UPDATE `user_settings` SET `analytics` = 0 WHERE `userid` = {$userid}");
-			alert('success',"Success!","You have successfully disabled analytics on your account.",true,'preferences.php');
-            $api->SystemLogsAdd($userid, 'preferences', "Disabled analytics.");
-		}
-		else
-		{
-			$db->query("UPDATE `user_settings` SET `analytics` = 1 WHERE `userid` = {$userid}");
-			alert('success',"Success!","You have successfully enabled analytics for your account.",true,'preferences.php');
-            $api->SystemLogsAdd($userid, 'preferences', "Enabled analytics.");
-		}
-    }
-    else
-    {
-        echo "We would like your help:<br />
-			Here at Chivalry is Dead, we take your privacy very serious. Full details of how we handle data can be found in our 
-			privacy policy, reachable at 
-			<a href='https://chivalryisdeadgame.com/privacy.php'>https://chivalryisdeadgame.com/privacy.php</a>.<br />
-			We are very keen on the idea of being able to improve the Chivalry is Dead game to ensure that it provides the best possible 
-			experience.<br />
-			For this, we would like to collect and use information about how you play Chivalry is Dead, then analyse it to better understand 
-			playing behavior, along with compile statistical reports regarding that activity. We will only do this if you provided your consent 
-			using the buttons below.<br />
-			The information would include: your browser user agent, your operating system, your browser of choice, pages of the game you load. This 
-			data is collected against an internal unique identifier.<br />
-			To collect this data, we would use our game analytics provider, Google Analytics, who would only collect and process this data in 
-			accordance with our instructions.<br />
-        <form method='post'>
-            <input type='hidden' value='disable' name='do'>
-            <input type='submit' class='btn btn-primary' value='Disable Analytics'>
-        </form>
-		<form method='post'>
-            <input type='hidden' value='enable' name='do'>
-            <input type='submit' class='btn btn-primary' value='Enable Analytics'>
-        </form>";
-    }
-}
 
 function themechange()
 {
     global $db, $userid, $h, $ir, $api;
     if (isset($_POST['theme'])) {
         $_POST['theme'] = (isset($_POST['theme']) && is_numeric($_POST['theme'])) ? abs($_POST['theme']) : 1;
-        if ($_POST['theme'] < 1 || $_POST['theme'] > 4) {
+        if ($_POST['theme'] < 1 || $_POST['theme'] > 7) {
             alert('danger', "Uh Oh!", "The theme you wish to load is not valid.");
             die($h->endpage());
         }
@@ -966,6 +918,16 @@ function themechange()
 			die($h->endpage());
 		}
 		elseif ($_POST['theme'] == 4 && $ir['vip_days'] == 0)
+		{
+			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
+			die($h->endpage());
+		}
+		elseif ($_POST['theme'] == 5 && $ir['vip_days'] == 0)
+		{
+			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
+			die($h->endpage());
+		}
+		elseif ($_POST['theme'] == 6 && $ir['vip_days'] == 0)
 		{
 			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
 			die($h->endpage());
@@ -981,13 +943,13 @@ function themechange()
 			<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
-						Select the theme you wish to be seen as you play.
+						Select the theme you wish to see as you play.
 					</th>
 				</tr>
 				<tr>
 					<td>
-						Castle<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770280/themes/castle.jpg' class='img-thumbnail img-responsive'>
+						Original<br />
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1534631618/orignal.jpg' class='img-thumbnail img-responsive'>
 						<form method='post'>
 							<input type='hidden' value='1' name='theme'>
 							<input type='submit' class='btn btn-primary' value='Pick this one'>
@@ -1004,13 +966,13 @@ function themechange()
 				</tr>
 				<tr>
                     <td>
-						Slate<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/slate.jpg' class='img-thumbnail img-responsive'>";
+						Cerulean<br />
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770277/themes/cerulean.jpg' class='img-thumbnail img-responsive'>";
 						if ($ir['vip_days'] != 0)
 						{
 							echo "
 							<form method='post'>
-								<input type='hidden' value='3' name='theme'>
+								<input type='hidden' value='6' name='theme'>
 								<input type='submit' class='btn btn-primary' value='Pick this one'>
 							</form>
 							";
@@ -1040,7 +1002,82 @@ function themechange()
 						echo"
 					</td>
 				</tr>
+				<tr>
+                    <td>
+						United<br />
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/united.jpg' class='img-thumbnail img-responsive'>";
+						if ($ir['vip_days'] != 0)
+						{
+							echo "
+							<form method='post'>
+								<input type='hidden' value='5' name='theme'>
+								<input type='submit' class='btn btn-primary' value='Pick this one'>
+							</form>
+							";
+						}
+						else
+						{
+							echo "<br />VIPs only.";
+						}
+						echo"
+					</td>
+					<td>
+						Slate<br />
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/slate.jpg' class='img-thumbnail img-responsive'>";
+						if ($ir['vip_days'] != 0)
+						{
+							echo "
+							<form method='post'>
+								<input type='hidden' value='3' name='theme'>
+								<input type='submit' class='btn btn-primary' value='Pick this one'>
+							</form>
+							";
+						}
+						else
+						{
+							echo "<br />VIPs only.";
+						}
+						echo"
+					</td>
+				</tr>
+                <tr>
+					<td>
+						Castle<br />
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/castle.jpg' class='img-thumbnail img-responsive'>";
+							echo "
+							<form method='post'>
+								<input type='hidden' value='7' name='theme'>
+								<input type='submit' class='btn btn-primary' value='Pick this one'>
+							</form>
+					</td>
+				</tr>
 			</table>";
+    }
+}
+function steamlink()
+{
+    global $db,$userid,$api,$h;
+    require ('lib/steamauth/steamauth.php');
+    $q=$db->query("SELECT * FROM `steam_account_link` WHERE `steam_linked` = {$userid}");
+    if ($db->num_rows($q) != 0)
+    {
+        alert("danger","Uh Oh!","You already have a Steam Account linked to your game account.",true,'preferences.php?action=menu');
+        die($h->endpage());
+    }
+    if(!isset($_SESSION['steamid'])) {
+        loginbutton2();
+    }
+    else
+    {
+        include ('lib/steamauth/userInfo.php');
+        $check=$db->query("SELECT * FROM `steam_account_link` WHERE `steam_id` = {$steamprofile['steamid']}");
+        if ($db->num_rows($check) != 0)
+        {
+            alert('danger',"Uh Oh!","That Steam Account has already been linked to a Chivalry is Dead account. Try again with another Steam Account.");
+            die($h->endpage());
+        }
+        $db->query("INSERT INTO `steam_account_link` (`steam_linked`, `steam_id`) VALUES ('{$userid}', '{$steamprofile['steamid']}')");
+        alert("success","Success!","You have successfully linked Steam Account ID: <b>{$steamprofile['steamid']}</b> to your Chivalry is Dead account. You may now use it to log in.",true,'preferences.php?action=menu');
     }
 }
 $h->endpage();

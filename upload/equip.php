@@ -86,7 +86,7 @@ function weapon()
 						"VIP Days");
 					if ($sbr['direction'] == 'pos')
 					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
+						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
 							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
 						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
 							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
@@ -418,7 +418,7 @@ function potion()
             die($h->endpage());
         }
         //Potion equipping.
-        $potionexclusion=array(17,123,68,138,95,96,148);
+        $potionexclusion=array(17,123,68,138,95,96,148,177);
         if (in_array($r['itmid'],$potionexclusion))
         {
             alert('danger', "Uh Oh!", "You may not equip this item in your potion slot.", true, 'inventory.php');

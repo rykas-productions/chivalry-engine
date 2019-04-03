@@ -359,7 +359,9 @@ function basicsettings()
 
 function announce()
 {
-    global $db, $userid, $h, $api;
+    global $db, $userid, $h, $api, $ir;
+    require_once '../lib/DiscordMsg/Msg.php';
+    require_once '../lib/DiscordMsg/DiscordMsg.php';
     if (!isset($_POST['announcement'])) {
         $csrf = request_csrf_html('staff_announce');
         echo "Use this form to post an announcement to the game. Please be sure you are clear and concise with your
@@ -385,6 +387,8 @@ function announce()
             $db->query("UPDATE `users` SET `announcements` = `announcements` + 1");
             alert('success', "Success!", "You have successfully posted an announcement.", true, '../announcements.php');
             $api->SystemLogsAdd($userid, 'staff', "Posted an announcement.");
+            $msg = new \AG\DiscordMsg("New Announcement from {$ir['username']}: {$_POST['announcement']}");
+            $msg->send();
         }
     }
     $h->endpage();

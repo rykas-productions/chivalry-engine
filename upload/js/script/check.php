@@ -69,25 +69,25 @@ if (!isset($_POST['password'])) { // If they are trying to view this without ?pa
         echo "<br />";
         if ($score <= 3 || $score == 0) {
             // If there total points are equal or less than 2.
-            $overall = "<div class='progress-bar progress-bar-danger' role='progressbar' aria-valuenow='{$score}'
+            $overall = "<div class='progress-bar' role='progressbar' aria-valuenow='{$score}'
 				aria-valuemin='0' aria-valuemax='10' style='width:{$score}0%'>
 				{$score}0% Strong</div>";
             $newclass="is-valid";
         } elseif ($score <= 5) {
             // If there total points are equal or less than 5.
-            $overall = "<div class='progress-bar progress-bar-warning' role='progressbar' aria-valuenow='{$score}'
+            $overall = "<div class='progress-bar' role='progressbar' aria-valuenow='{$score}'
 				aria-valuemin='0' aria-valuemax='10' style='width:{$score}0%'>
 				{$score}0% Strong</div>";
             $newclass="is-valid";
         } elseif ($score <= 8) {
             // If there total points are equal or less than 8.
-            $overall = "<div class='progress-bar progress-bar-info' role='progressbar' aria-valuenow='{$score}'
+            $overall = "<div class='progress-bar' role='progressbar' aria-valuenow='{$score}'
 				aria-valuemin='0' aria-valuemax='10' style='width:{$score}0%'>
 				{$score}0% Strong</div>";
             $newclass="is-valid";
         } elseif ($score >= 8) {
             // If there total points are greator than 10.
-            $overall = "<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='{$score}'
+            $overall = "<div class='progress-bar' role='progressbar' aria-valuenow='{$score}'
 				aria-valuemin='0' aria-valuemax='10' style='width:{$score}0%'>
 				{$score}0% Strong</div>";
             $newclass="is-valid";

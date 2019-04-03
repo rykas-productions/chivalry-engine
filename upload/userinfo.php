@@ -37,8 +37,8 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$ir['energy']}' style='width:{$energy}%' aria-valuemin='0' aria-valuemax='{$ir['maxenergy']}'></div>
-                    <span>{$energy}% ({$ir['energy']} / {$ir['maxenergy']})</span>
+                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['energy']}' style='width:{$energy}%' aria-valuemin='0' aria-valuemax='{$ir['maxenergy']}'></div>
+                    <span>{$energy}% (" . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) .")</span>
                 </div>
             </div>
         </div>
@@ -53,8 +53,8 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$brave}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'></div>
-                    <span>{$brave}% ({$ir['brave']} / {$ir['maxbrave']})</span>
+                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$brave}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'></div>
+                    <span>{$brave}% (" . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . ")</span>
                 </div>
             </div>
         </div>
@@ -69,8 +69,8 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$will}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'></div>
-                    <span>{$will}% ({$ir['will']} / {$ir['maxwill']})</span>
+                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$will}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'></div>
+                    <span>{$will}% (" . number_format($ir['will']) . " / " . number_format($ir['maxwill']). ")</span>
                 </div>
             </div>
         </div>
@@ -80,8 +80,8 @@ echo "
             </div>
         </div>
         <div class='progress' style='height: 1rem;'>
-            <div class='progress-bar bg-warning' role='progressbar' aria-valuenow='{$ir['xp']}' style='width:{$xp}%' aria-valuemin='0' aria-valuemax='{$ir['xp_needed']}'></div>
-            <span>{$xp}% ({$ir['xp']} / {$ir['xp_needed']})</span>
+            <div class='progress-bar bg-warning progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['xp']}' style='width:{$xp}%' aria-valuemin='0' aria-valuemax='{$ir['xp_needed']}'></div>
+            <span>{$xp}% (" . number_format($ir['xp']) . " / " . number_format($ir['xp_needed']) . ")</span>
         </div>
         <div class='row'>
             <div class='col-8' align='left'>
@@ -89,8 +89,8 @@ echo "
             </div>
         </div>
         <div class='progress' style='height: 1rem;'>
-            <div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'></div>
-            <span>{$hp}% ({$ir['hp']} / {$ir['maxhp']})</span>
+            <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'></div>
+            <span>{$hp}% (" . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . ")</span>
         </div>
         <hr />
         <div class='container-fluid'>
@@ -102,13 +102,7 @@ echo "
         <div class='container-fluid'>
             <div class='row'>
                 Chivalry Tokens:
-                " . number_format($ir['secondary_currency']) . "
-            </div>
-        </div>
-		<div class='container-fluid'>
-            <div class='row'>
-                Mutton:
-                " . number_format($ir['premium_currency']) . "
+                " . number_format($ir['secondary_currency']) . " [<a href='alltoken.php'>Bank</a>]
             </div>
         </div>
         <hr />
@@ -134,6 +128,12 @@ echo "
             <div class='row'>
                 Busts: 
                 {$ir['busts']}
+            </div>
+        </div>
+		<div class='container-fluid'>
+            <div class='row'>
+                Location: 
+                {$api->SystemTownIDtoName($ir['location'])}
             </div>
         </div>
         <div class='container-fluid'>

@@ -26,6 +26,12 @@ switch ($_GET['action']) {
 	case 'pumpkin':
         pumpkin();
         break;
+    case 'snowball':
+        snowball();
+        break;
+    case 'assassin':
+        assassin();
+        break;
     default:
         alert('danger',"Uh Oh!","Please select the bomb you wish to use.",true,'inventory.php');
         break;
@@ -288,6 +294,56 @@ function pumpkin()
 		$h->endpage();
 	}
 }
+function snowball()
+{
+	global $db,$api,$userid,$h,$ir;
+	$bombid = 202;
+	$notif = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has threw a snowball at you and it got under your armor. Brrr!";
+
+	if (!$api->UserHasItem($userid, $bombid, 1)) {
+		alert('danger', "Uh Oh!", "It appears you do not have the required item. If this is false, please contact an admin.", true, 'inventory.php');
+		die($h->endpage());
+	}
+	if (isset($_POST['user'])) {
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+
+		if (!isset($_POST['verf']) || !verify_csrf_code("bomb_form", stripslashes($_POST['verf']))) {
+			alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
+			die($h->endpage());
+		}
+
+		if (empty($_POST['user'])) {
+			alert('danger', "Uh Oh!", "You did not fill out the form completely.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		if ($_POST['user'] == $userid) {
+			alert('danger', "Uh Oh!", "You cannot toss a snowball at yourself.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		$q = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` = {$_POST['user']}");
+		if ($db->num_rows($q) == 0) {
+			alert('danger', "Uh Oh!", "You are trying to throw a snowball at a user that does not exist.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		$api->UserTakeItem($userid, $bombid, 1);
+		$api->GameAddNotification($_POST['user'], $notif);
+		$userbomb=$api->SystemUserIDtoName($_POST['user']);
+		$ublink="<a href='../profile.php?user={$_POST['user']}'>{$userbomb}</a>";
+		alert("success", "Success", "You have successfully tossed a snowball at {$userbomb}.", true, 'inventory.php');
+		$api->SystemLogsAdd($userid,'bomb',"Threw snowball at {$ublink}.");
+		$h->endpage();
+
+	} else {
+		$csrf = request_csrf_html('bomb_form');
+		echo "Enter the User ID whom you wish to toss a snowball at.<br />
+		<form method='post'>
+			" . user_dropdown('user',$userid) . "
+			{$csrf}
+			<input type='submit' value='Toss Snowball' class='btn btn-primary'>
+		</form>";
+		$h->endpage();
+	}
+}
 function rickroll()
 {
 	global $db,$api,$userid,$h,$ir;
@@ -347,6 +403,61 @@ function rickroll()
 			" . user_dropdown('user',$userid) . "
 			{$csrf}
 			<input type='submit' value='Rick-roll' class='btn btn-primary'>
+		</form>";
+		$h->endpage();
+	}
+}
+function assassin()
+{
+	global $db,$api,$userid,$h,$ir;
+	$bombid = 222;
+	$infirmarytime = (Random(75, 175) + floor($ir['level'] / 2)*2);
+	$infirmaryreason = $db->escape("Assassinated by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
+	$notif = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has assassinated you, putting you in the infirmary for {$infirmarytime} minutes.";
+
+	if (!$api->UserHasItem($userid, $bombid, 1)) {
+		alert('danger', "Uh Oh!", "It appears you do not have the required item. If this is false, please contact an admin.", true, 'inventory.php');
+		die($h->endpage());
+	}
+	if (isset($_POST['user'])) {
+		$_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+
+		if (!isset($_POST['verf']) || !verify_csrf_code("bomb_form", stripslashes($_POST['verf']))) {
+			alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
+			die($h->endpage());
+		}
+		if (empty($_POST['user'])) {
+			alert('danger', "Uh Oh!", "You did not fill out the form completely.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		if ($_POST['user'] == $userid) {
+			alert('danger', "Uh Oh!", "You cannot assassinate yourself.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		$q = $db->query("/*qc=on*/SELECT `userid`,`kills`,`hp`,`maxhp` FROM `users` WHERE `userid` = {$_POST['user']}");
+		if ($db->num_rows($q) == 0) {
+			alert('danger', "Uh Oh!", "You are trying to assassinate a user that does not exist.", true, 'inventory.php');
+			die($h->endpage());
+		}
+        $r=$db->fetch_row($q);
+        $time=time();
+		put_infirmary($_POST['user'], $infirmarytime, $infirmaryreason);
+		$api->UserTakeItem($userid, $bombid, 1);
+		$api->GameAddNotification($_POST['user'], $notif);
+		$userbomb=$api->SystemUserIDtoName($_POST['user']);
+		$db->query("UPDATE `users` SET `hp` = 0 WHERE `userid` = {$_POST['user']}");
+		$ublink="<a href='../profile.php?user={$_POST['user']}'>{$userbomb}</a>";
+		alert("success", "Success", "You have successfully assassinated {$userbomb}. They received {$infirmarytime} minutes in the infirmary.", true, 'inventory.php');
+		$api->SystemLogsAdd($userid,'bomb',"Assassinated {$ublink} for {$infirmarytime} minutes.");
+		$h->endpage();
+
+	} else {
+		$csrf = request_csrf_html('bomb_form');
+		echo "Enter the User ID whom you wish to assassinated. They will be notified and put into the infirmary.<br />
+		<form method='post'>
+			" . user_dropdown('user',$userid) . "
+			{$csrf}
+			<input type='submit' value='Assassinate' class='btn btn-primary'>
 		</form>";
 		$h->endpage();
 	}

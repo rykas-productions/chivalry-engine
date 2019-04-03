@@ -22,7 +22,7 @@ function ticket()
 	global $h,$db,$api,$userid;
 	if (!$api->UserHasItem($userid,63,1))
 	{
-		alert('danger',"Uh Oh!","You need a 2017 Halloween Scratch Ticket to be here.",true,'inventory.php');
+		alert('danger',"Uh Oh!","You need a 2018 Halloween Scratch Ticket to be here.",true,'inventory.php');
 		die($h->endpage());
 	}
 	if (isset($_GET['scratch']))
@@ -48,13 +48,13 @@ function ticket()
 		}
 		elseif ($rng == 4)
 		{
-			$cash=Random(5,15);
+			$cash=Random(15,50);
 			alert("success","Success!","You scratch this spot off and you win {$cash} Chivalry Gym Scrolls. Congratulations!",true,'inventory.php');
 			$api->UserGiveItem($userid,18,$cash);
 		}
 		elseif ($rng == 5)
 		{
-			$cash=Random(10,30);
+			$cash=Random(3,6);
 			alert("success","Success!","You scratch this spot off and you win {$cash} Small Explosives. Congratulations!",true,'inventory.php');
 			$api->UserGiveItem($userid,28,$cash);
 		}

@@ -34,8 +34,6 @@ function home()
     while ($r2 = $db->fetch_row($q2)) {
         $crimes[] = $r2;
     }
-    //Anti-refresh RNG.
-    $tresder = (Random(100, 999));
     $db->free_result($q2);
     $q = $db->query("/*qc=on*/SELECT `cgID`, `cgNAME` FROM `crimegroups` ORDER BY `cgORDER` ASC");
     echo "
@@ -63,7 +61,7 @@ function home()
 							{$v['crimeBRAVE']}
 						</td>
 						<td>
-							<a href='?action=crime&c={$v['crimeID']}&tresde={$tresder}'>
+							<a href='?action=crime&c={$v['crimeID']}'>
 								Commit Crime
 							</a>
 						</td>
@@ -79,21 +77,10 @@ function home()
 function crime()
 {
     global $db, $userid, $ir, $h, $api, $m;
-    $tresder = (Random(100, 999));
-    $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
     if (!isset($_GET['c'])) {
         $_GET['c'] = 0;
     }
     $_GET['c'] = abs($_GET['c']);
-    if (!isset($_SESSION['tresde'])) {
-        $_SESSION['tresde'] = 0;
-    }
-    if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
-        alert('danger', "Uh Oh!", "Please do not refresh while committing crimes, thank you!", true, "?c={$_GET['c']}&tresde={$tresder}");
-        $_SESSION['number'] = 0;
-        die($h->endpage());
-    }
-    $_SESSION['tresde'] = $_GET['tresde'];
     if ($_GET['c'] <= 0) {
         alert('danger', "Invalid Crime!", "You have chosen to commit and invalid crime.", true, 'criminal.php');
     } else {
@@ -184,7 +171,7 @@ function crime()
                 $api->SystemLogsAdd($userid, 'crime', "Failed to commit the {$r['crimeNAME']} crime.");
 				crime_log($_GET['c'],false,0,0);
             }
-            alert("{$type}", "{$title}", "{$r['crimeITEXT']} {$text}", true, "?action=crime&c={$_GET['c']}&tresde={$tresder}", "Attempt Again");
+            alert("{$type}", "{$title}", "{$r['crimeITEXT']} {$text}", true, "?action=crime&c={$_GET['c']}", "Attempt Again");
             die($h->endpage());
         }
     }

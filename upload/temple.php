@@ -26,6 +26,13 @@ if (Random(1,50) == 6)
     alert('danger',"Uh Oh!","While walking up to the Temple of Fortune, you trip up the stairs and fall all the way down. You need to go to the infirmary.",true,'infirmary.php');
     die($h->endpage());
 }
+if ($ir['theme'] == 7)
+{
+    $set['energy_refill_cost']=7;
+    $set['brave_refill_cost']=7;
+    $set['will_refill_cost']=3;
+    
+}
 echo "<h3><i class='game-icon game-icon-mayan-pyramid'></i> Temple of Fortune</h3><hr />";
 //Set the GET to nothing if not set.
 if (!isset($_GET['action'])) {

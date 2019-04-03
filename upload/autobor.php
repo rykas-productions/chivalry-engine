@@ -65,11 +65,12 @@ if (isset($_POST['open']))
     $needle=0;
 	$hexbags=0;
 	$rickitybomb=0;
+	$herbofminer=0;
 	$nothing=0;
 	while($number < $_POST['open'])
 	{
 		$number=$number+1;
-		$chance=Random(1,86);
+		$chance=Random(1,87);
 		if ($chance <= 30)
 		{
 			$cash=Random(750,2750);
@@ -158,6 +159,10 @@ if (isset($_POST['open']))
 				$nothing=$nothing+1;
 			}
 		}
+		elseif ($chance == 86)
+		{
+			$herbofminer=$herbofminer+1;
+		}
 		else
 		{
 			$nothing=$nothing+1;
@@ -181,6 +186,7 @@ if (isset($_POST['open']))
         {$mystery} Mysterious Potion(s)<br />
 		{$hexbags} extra Hexbag(s)<br />
 		{$rickitybomb} Rickity Bomb(s)<br />
+		{$herbofminer} Herb of the Enlightened Miner(s)<br />
 		{$nothing} Boxes of Random had nothing in them.";
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
@@ -196,6 +202,7 @@ if (isset($_POST['open']))
     $api->UserGiveItem($userid,123,$mystery);
     $api->UserGiveItem($userid,100,$needle);
 	$api->UserGiveItem($userid,149,$rickitybomb);
+	$api->UserGiveItem($userid,177,$herbofminer);
 	$db->query("UPDATE `users` SET `hexbags` = `hexbags` + {$hexbags} WHERE `userid` = {$userid}");
 	$api->UserTakeItem($userid,33,$_POST['open']);
 	//Logs here
@@ -215,6 +222,7 @@ if (isset($_POST['open']))
 	$api->SystemLogsAdd($userid,"bor","Received {$potion} Small Health Potion(s).");
 	$api->SystemLogsAdd($userid,"bor","Received {$hexbags} Hexbag(s).");
 	$api->SystemLogsAdd($userid,"bor","Received {$rickitybomb} Rickity Bomb(s).");
+	$api->SystemLogsAdd($userid,"bor","Received {$herbofminer} Herb of the Enlightened Miner(s).");
 	
 }
 else

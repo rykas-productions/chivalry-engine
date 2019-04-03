@@ -73,8 +73,8 @@ function lottery_play()
         alert('danger',"Uh Oh!","You cannot participate in the raffle until another player wins.",true,'raffle.php');
         die($h->endpage()); 
     }
-	$increase_chance=Random(1,3);
-	if ($increase_chance == 3)
+	$increase_chance=Random(1,2);
+	if ($increase_chance == 2)
 	{
 		if ($set['raffle_chance'] > 10)
 		{

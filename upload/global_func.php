@@ -62,6 +62,8 @@ function TimeUntil_Parse($time_stamp)
     }
     //For added precision, lets round to the 2nd decimal place.
     $time_difference = round($time_difference);
+	if ($time_difference < 0)
+		$time_difference = 0;
     //Add an 's' if needed.
     $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
     //Return $date
@@ -102,13 +104,13 @@ function valid_email($email)
  * @param string $text The notification's text. This should be fully sanitized for HTML, but not pre-escaped for database insertion.
  * @return true
  */
-function notification_add($userid, $text)
+function notification_add($userid, $text, $icon='', $color='')
 {
     global $db;
     $text = $db->escape($text);
     $db->query(
         "INSERT INTO `notifications`
-             VALUES(NULL, $userid, " . time() . ", 'unread', '$text')");
+             VALUES(NULL, $userid, " . time() . ", 'unread', '$text', '{$icon}', '{$color}')");
     return true;
 }
 
@@ -342,12 +344,14 @@ function guildnotificationadd($guild_id, $text)
  */
 function request_csrf_code($formid)
 {
+	global $db;
     //Assign Unix Timestamp to a variable.
     $time = time();
     //Generate the token from the randomizer function, and hash it with sha512.
     $token = randomizer();
+	$user_agent = $db->escape(strip_tags(stripslashes($_SERVER['HTTP_USER_AGENT'])));
     //Store the CSRF Form into $_SESSION.
-    $_SESSION["csrf_{$formid}"] = array('token' => $token, 'issued' => $time);
+    $_SESSION["csrf_{$formid}"] = array('token' => $token, 'issued' => $time, 'useragent' => $user_agent);
     //Return the token.
     return $token;
 }
@@ -390,18 +394,24 @@ function request_csrf_html($formid)
  */
 function verify_csrf_code($formid, $code, $expiry = 300)
 {
+	global $db;
     //User does not have a CSRF Session started for $formid, or its missing information.
     if (!isset($_SESSION["csrf_{$formid}"]) || !is_array($_SESSION["csrf_{$formid}"])) {
         return false;
     } else {
+		$IP = $db->escape($_SERVER['REMOTE_ADDR']);
+		$user_agent = $db->escape(strip_tags(stripslashes($_SERVER['HTTP_USER_AGENT'])));
         //Set verified to false until we can be sure they have verified successfully.
         $verified = false;
         //Assign the CSRF $formid to a variable.
         $token = $_SESSION["csrf_{$formid}"];
         //Check to see if the token is still valid.
-        if ($token['issued'] + $expiry > time()) {
-            //User becomes verified if the code matches the token that was stored in $_SESSION
-            $verified = ($token['token'] === $code);
+        if ($token['useragent'] == $user_agent)
+        {
+            if ($token['issued'] + $expiry > time()) {
+                //User becomes verified if the code matches the token that was stored in $_SESSION
+                $verified = ($token['token'] === $code);
+            }
         }
         //Unset the CSRF $formid from $_SESSION
         unset($_SESSION["csrf_{$formid}"]);
@@ -481,14 +491,14 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
     if ($doredirect) {
         $redirect = ($redirect == 'back') ? $_SERVER['REQUEST_URI'] : $redirect;
         echo "<div class='alert alert-{$type}' role='alert'>
-				<strong class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
-					{$title}</strong> 
+				<h5 class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
+					{$title}</h5> 
 						{$text} > <a href='{$redirect}' class='alert-link'>{$redirecttext}</a>
 				</div>";
     } else {
         echo "<div class='alert alert-{$type}' role='alert'>
-                    <strong class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
-					{$title}</strong> 
+                    <h5 class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
+					{$title}</h5> 
 					        {$text}
                 </div>";
     }
@@ -656,43 +666,35 @@ function update_fg_info($ip)
 function getOS($uagent)
 {
     global $db, $userid, $ir;
-	if (($ir['analytics'] == 1) && ($ir['acceptance'] != -1))
-	{
-		$uagent = $db->escape(strip_tags(stripslashes($uagent)));
-		$os_platform = "Unknown OS Platform";
-		$os_array = array(
-			'/windows nt 10/i' => 'Windows 10',
-			'/windows nt 6.3/i' => 'Windows 8.1',
-			'/windows nt 6.2/i' => 'Windows 8',
-			'/windows nt 6.1/i' => 'Windows 7',
-			'/windows nt 6.0/i' => 'Windows Vista',
-			'/windows nt 5.1/i' => 'Windows XP',
-			'/windows phone 8.0/i' => 'Windows Phone',
-			'/windows xp/i' => 'Windows XP',
-			'/macintosh|mac os x/i' => 'Mac OS X',
-			'/mac_powerpc/i' => 'Mac OS 9',
-			'/linux/i' => 'Linux',
-			'/ubuntu/i' => 'Ubuntu',
-			'/iphone/i' => 'iPhone',
-			'/ipod/i' => 'iPod',
-			'/ipad/i' => 'iPad',
-			'/android/i' => 'Android',
-			'/blackberry/i' => 'BlackBerry',
-			'/cros/i' => 'Chrome OS',
-			'/playstation 4/i' => 'Playstation 4',
-			'/webos/i' => 'Mobile'
-		);
+	$uagent = $db->escape(strip_tags(stripslashes($uagent)));
+	$os_platform = "Unknown OS Platform";
+	$os_array = array(
+		'/windows nt 10/i' => 'Windows 10',
+		'/windows nt 6.3/i' => 'Windows 8.1',
+		'/windows nt 6.2/i' => 'Windows 8',
+		'/windows nt 6.1/i' => 'Windows 7',
+		'/windows nt 6.0/i' => 'Windows Vista',
+		'/windows nt 5.1/i' => 'Windows XP',
+		'/windows phone 8.0/i' => 'Windows Phone',
+		'/windows xp/i' => 'Windows XP',
+		'/macintosh|mac os x/i' => 'Mac OS X',
+		'/mac_powerpc/i' => 'Mac OS 9',
+		'/linux/i' => 'Linux',
+		'/ubuntu/i' => 'Ubuntu',
+		'/iphone/i' => 'iPhone',
+		'/ipod/i' => 'iPod',
+		'/ipad/i' => 'iPad',
+		'/android/i' => 'Android',
+		'/blackberry/i' => 'BlackBerry',
+		'/cros/i' => 'Chrome OS',
+		'/playstation 4/i' => 'Playstation 4',
+		'/webos/i' => 'Mobile'
+	);
 
-		foreach ($os_array as $regex => $value) {
-			if (preg_match($regex, $uagent)) {
-				$os_platform = $value;
-			}
+	foreach ($os_array as $regex => $value) {
+		if (preg_match($regex, $uagent)) {
+			$os_platform = $value;
 		}
-	}
-	else
-	{
-		$os_platform = "Unknown OS Platform";
-		$uagent = "N/A";
 	}
     $count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
     if ($count == 0)
@@ -709,36 +711,28 @@ function getOS($uagent)
 function getBrowser($uagent)
 {
     global $db, $userid, $ir;
-	if (($ir['analytics'] == 1) && ($ir['acceptance'] != -1))
-	{
-		$user_agent = $db->escape(strip_tags(stripslashes($uagent)));
-		$browser = "Unknown Browser";
-		$browser_array = array(
-			'/msie/i' => 'Internet Explorer',
-			'/trident/i' => 'Internet Explorer',
-			'/firefox/i' => 'Firefox',
-			'/safari/i' => 'Safari',
-			'/chrome/i' => 'Chrome',
-			'/edge/i' => 'Edge',
-			'/opera/i' => 'Opera',
-			'/netscape/i' => 'Netscape',
-			'/maxthon/i' => 'Maxthon',
-			'/konqueror/i' => 'Konqueror',
-			'/opr/i' => 'Opera',
-			'/mobile/i' => 'Handheld Browser',
-			'/playstation 4/i' => 'Playstation 4 Browser',
-			'/CEngine-App/i' => 'App'
-		);
-		foreach ($browser_array as $regex => $value) {
-			if (preg_match($regex, $user_agent)) {
-				$browser = $value;
-			}
+	$user_agent = $db->escape(strip_tags(stripslashes($uagent)));
+	$browser = "Unknown Browser";
+	$browser_array = array(
+		'/msie/i' => 'Internet Explorer',
+		'/trident/i' => 'Internet Explorer',
+		'/firefox/i' => 'Firefox',
+		'/safari/i' => 'Safari',
+		'/chrome/i' => 'Chrome',
+		'/edge/i' => 'Edge',
+		'/opera/i' => 'Opera',
+		'/netscape/i' => 'Netscape',
+		'/maxthon/i' => 'Maxthon',
+		'/konqueror/i' => 'Konqueror',
+		'/opr/i' => 'Opera',
+		'/mobile/i' => 'Handheld Browser',
+		'/playstation 4/i' => 'Playstation 4 Browser',
+		'/CEngine-App/i' => 'App'
+	);
+	foreach ($browser_array as $regex => $value) {
+		if (preg_match($regex, $user_agent)) {
+			$browser = $value;
 		}
-	}
-	else
-	{
-		$browser = "Unknown Browser";
-		$user_agent = "N/A";
 	}
     $count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
     if ($count == 0)
@@ -1111,6 +1105,23 @@ function isApp()
         if ($ir['os'] == 'Android')
             return true;
 }
+function isMobile()
+{
+	global $ir;
+	if ($ir['os'] == 'Android')
+		return true;
+	elseif ($ir['os'] == 'iPhone')
+		return true;
+	elseif ($ir['os'] == 'iPad')
+		return true;
+	elseif ($ir['os'] == 'iPod')
+		return true;
+	elseif ($ir['os'] == 'Mobile')
+		return true;
+	else
+		return false;
+}
+
 function missionCheck()
 {
 	global $db, $api;
@@ -1129,4 +1140,23 @@ function missionCheck()
 		}
 		$db->query("DELETE FROM `missions` WHERE `mission_id` = {$r['mission_id']}");
 	}
+}
+
+function toast($title,$txt,$time=-1,$icon='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png')
+{
+    if ($time == -1)
+        $time=time();
+    echo "<div class='toast' role='alert' aria-live='assertive' aria-atomic='true' id='toast' data-delay='3000' style='z-index: 1000; position: absolute; top: 0; right: 0;'>
+            <div class='toast-header'>
+                <img src='{$icon}' class='rounded mr-2'>
+                    <strong class='mr-auto'>{$title}</strong>
+                    <small>" . DateTime_Parse($time) . "</small>
+                    <button type='button' class='ml-2 mb-1 close' data-dismiss='toast' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+            </div>
+          <div class='toast-body'>
+            {$txt}
+          </div>
+        </div>";
 }

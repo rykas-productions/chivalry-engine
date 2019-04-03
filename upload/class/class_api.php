@@ -10,7 +10,8 @@
 if (!defined('MONO_ON')) {
     exit;
 }
-
+//require_once 'lib/DiscordMsg/Msg.php';
+//require_once 'lib/DiscordMsg/DiscordMsg.php';
 class api
 {
     /*
@@ -231,9 +232,9 @@ class api
         @param text text = Notification text.
         Returns true always.
     */
-    function GameAddNotification($user, $text)
+    function GameAddNotification($user, $text, $icon = '', $color = '')
     {
-        notification_add($user, $text);
+        notification_add($user, $text, $icon, $color);
         return true;
     }
 
@@ -289,6 +290,8 @@ class api
             $db->query("UPDATE `users` SET `announcements` = `announcements` + 1");
             return true;
         }
+        $msg = new \AG\DiscordMsg("New Announcement from {$api->SystemUserIDtoName($poster)}: {$text}");
+        $msg->send();
     }
 
     /*

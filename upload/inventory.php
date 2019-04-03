@@ -239,6 +239,46 @@ while ($i = $db->fetch_row($inv)) {
     {
         echo " [<a href='vipitem.php?item=vipcolor'>Use</a>]";
     }
+	//Mining Herb
+    if ($i['itmid'] == 177)
+    {
+        echo " [<a href='mine.php?action=herb'>Use</a>]";
+    }
+	//2018 Halloween
+    if ($i['itmid'] == 189)
+    {
+        echo " [<a href='2018halloween.php?action=ticket'>Scratch</a>]";
+    }
+	//2018 Thanksgiving
+    if ($i['itmid'] == 195)
+    {
+        echo " [<a href='2018thanksgiving.php?action=ticket'>Scratch</a>]";
+    }
+    //2018 Christmas
+    if ($i['itmid'] == 203)
+    {
+        echo " [<a href='2018christmas.php?action=ticket'>Scratch</a>]";
+    }
+    //Snowball
+    if ($i['itmid'] == 202)
+    {
+        echo " [<a href='bomb.php?action=snowball'>Toss</a>]";
+    }
+    //CID Admin Scroll
+    if ($i['itmid'] == 205)
+    {
+        echo " [<a href='gym_ca.php'>Use</a>]";
+    }
+    //CID Scratch Ticket
+    if ($i['itmid'] == 210)
+    {
+        echo " [<a href='scratchticket.php?action=cidticket'>Scratch</a>]";
+    }
+    //Assassin Note
+    if ($i['itmid'] == 222)
+    {
+        echo " [<a href='bomb.php?action=assassin'>Assassinate</a>]";
+    }
     $ringsarray=array(113,114,115,116,125,126,127);
     if (in_array($i['itmid'],$ringsarray))
     {
@@ -253,7 +293,7 @@ while ($i = $db->fetch_row($inv)) {
 	if ($i['itmtypename'] == 'Badges')
 		echo " [<a href='equip.php?slot=badge&ID={$i['inv_id']}'>Equip Badge</a>]";
     //Potion equipping.
-        $potionexclusion=array(17,123,68,138,95,96,148);
+        $potionexclusion=array(17,123,68,138,95,96,148,177);
     if ((($i['itmtypename'] == 'Potions') || ($i['itmtypename'] == 'Food')) && (!in_array($i['itmid'],$potionexclusion)))
         echo " [<a href='equip.php?slot=potion&ID={$i['inv_id']}'>Equip Potion</a>]";
     echo "</td>

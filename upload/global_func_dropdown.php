@@ -754,7 +754,7 @@ function inventory_dropdown($ddname = "item", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['itmname']} (You Have {$r['inv_qty']})</option>";
+        $ret .= ">{$r['itmname']} (You Have " . number_format($r['inv_qty']) . ")</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";

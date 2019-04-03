@@ -25,7 +25,7 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
     }
     $np = $db->fetch_row($npq);
     $db->free_result($npq);
-	$currentprice=$mp['house_price']*0.75;
+	$currentprice=$mp['house_price']*1;
 	$np['house_price']=$np['house_price']-$currentprice;
     //Estate's will is lower than user's current estate.
     if ($np['house_will'] < $mp['house_will']) {
@@ -78,7 +78,7 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
 	</tr>";
     //List all game's estates.
     while ($r = $db->fetch_row($hq)) {
-		$currentprice=$mp['house_price']*0.75;
+		$currentprice=$mp['house_price'];
 		$r['house_price']=$r['house_price']-$currentprice;
         echo "
 		<tr>

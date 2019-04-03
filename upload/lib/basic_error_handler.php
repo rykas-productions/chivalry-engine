@@ -86,7 +86,8 @@ function error_php($errno, $errstr, $errfile = '', $errline = 0, $errcontext = a
                     $errname = 'User Deprecation Notice';
                     break;
             }
-            alert('warning',"{$errname}!","{$errstr} ({$errno}) on {$errfile}:{$errline}",false);
+            echo "{$errname}! // {$errstr} ({$errno}) on {$errfile}:{$errline}";
+            //alert('warning',"{$errname}!","{$errstr} ({$errno}) on {$errfile}:{$errline}",false);
             // Only uncomment the below if you know what you're doing,
             // for debug purposes.
             /*

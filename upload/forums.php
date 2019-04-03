@@ -259,7 +259,7 @@ function viewforum()
 		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
 		die($h->endpage());
 	}
-    if (isset($_GET['rate']))
+    /*if (isset($_GET['rate']))
     {
         $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
         if ((empty($_GET['topic'])) || (empty($_GET['rate'])))
@@ -271,7 +271,7 @@ function viewforum()
             updateRating($_GET['topic'],$_GET['rate']);
             alert('success','Success!',"You have successfully rated this topic.",false);
         }
-    }
+    }*/
 	if (permission("CanCreateThread",$userid))
 		$ntl = "&nbsp;[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
 	else
@@ -290,9 +290,6 @@ function viewforum()
     <table class='table table-bordered table-hover table-striped'>
     <thead>
     <tr>
-        <th>
-            <?php echo "Rating"; ?>
-        </th>
         <th>
             <?php echo "Topic"; ?>
         </th>
@@ -336,9 +333,6 @@ function viewforum()
             $pn1['username'] = "Non-existent User";
         }
         echo "<tr>
-                <td>
-                <a href='?viewforum={$_GET['viewforum']}&rate=1&topic={$r2['ft_id']}'>+</a> {$threadrating} <a href='?viewforum={$_GET['viewforum']}&rate=-1&topic={$r2['ft_id']}'>-</a>
-                </td>
         		<td>
 					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
 					<small class='hidden-xs-down'>{$r2['ft_desc']}</small>

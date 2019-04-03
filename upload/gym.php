@@ -11,6 +11,8 @@
 */
 $macropage = ('gym.php');
 require("globals.php");
+$energy = $api->UserInfoGet($userid, 'energy', true);
+$will = $api->UserInfoGet($userid, 'will', true);
 //User is in the infirmary
 if ($api->UserStatus($ir['userid'], 'infirmary')) {
     alert("danger", "Unconscious!", "You cannot train while you're in the infirmary.", true, 'index.php');
@@ -157,10 +159,10 @@ echo "Choose the stat you wish to train, and enter how many times you wish to tr
 	</tr>
 	<tr>
 		<td>
-		    <a href='temple.php?action=energy' class='btn btn-primary'>Refill Energy</a>
+		    <a href='temple.php?action=energy' class='btn btn-primary'>Refill Energy ({$energy}%)</a>
         </td>
         <td>
-		    <a href='temple.php?action=will' class='btn btn-primary'>Regen Will</a>
+		    <a href='temple.php?action=will' class='btn btn-primary'>Regen Will ({$will}%)</a>
         </td>
 	</tr>
 	    </form>

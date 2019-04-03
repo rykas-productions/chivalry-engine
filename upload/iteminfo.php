@@ -20,6 +20,18 @@ if (!$itmid) {
                      ON `i`.`itmtype` = `it`.`itmtypeid`
                      WHERE `i`.`itmid` = {$itmid}
                      LIMIT 1");
+					 //Select game item count. This only accounts for items in an user's inventory. Nothing else.
+	$q2= $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`inv_qty`),
+			(/*qc=on*/SELECT SUM(`imQTY`) FROM `itemmarket` WHERE `imITEM` = {$itmid}), 
+			(/*qc=on*/SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$itmid} AND `gaGUILD` != 1)
+			FROM `inventory` WHERE `inv_itemid` = {$itmid} AND `inv_userid` != 1"));
+	$q3=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_primary`),
+			(/*qc=on*/SELECT COUNT(`equip_secondary`) FROM `users` WHERE `equip_secondary` = {$itmid} AND `userid` != 1),
+			(/*qc=on*/SELECT COUNT(`equip_armor`) FROM `users` WHERE `equip_armor` = {$itmid} AND `userid` != 1),
+			(/*qc=on*/SELECT COUNT(`equip_potion`) FROM `users` WHERE `equip_potion` = {$itmid} AND `userid` != 1),
+			(/*qc=on*/SELECT COUNT(`equip_badge`) FROM `users` WHERE `equip_badge` = {$itmid} AND `userid` != 1)
+			FROM `users` WHERE `equip_primary` = {$itmid} AND `userid` != 1"));
+	$total=$q2+$q3;
     if ($db->num_rows($q) == 0) {
         alert('danger', 'Uh Oh!', 'Invalid or non-existent Item ID.', true, 'inventory.php');
     } else {
@@ -118,6 +130,14 @@ if (!$itmid) {
         echo "
 				</td>
 			</tr>";
+		echo "<tr>
+			<th>
+				Total in Circulation
+			</th>
+			<td>
+				" . number_format($total) . "
+			</td>
+		</tr>";
         for ($enum = 1; $enum <= 3; $enum++) {
             if ($id["effect{$enum}_on"] == 'true') {
                 $einfo = unserialize($id["effect{$enum}"]);

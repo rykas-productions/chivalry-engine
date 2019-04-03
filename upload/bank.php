@@ -58,10 +58,10 @@ function index()
     if ($ir['vip_days'] == 0)
         $interest=2;
     else
-        $interest=4;
+        $interest=5;
     echo "<b>You currently have " . number_format($ir['bank']) . " in your City Bank account.</b><br />
 				At the end of each and everyday, your balance will increase by {$interest}%. You will not gain interest if 
-				your balance is over 10,000,000 Copper Coins. You must be active within the past 24 hours for this to 
+				your balance is over 20,000,000 Copper Coins. You must be active within the past 24 hours for this to 
 				effect you.<br />
 				<table class='table table-bordered'>
 					<tr>
@@ -155,4 +155,6 @@ function withdraw()
         $api->SystemLogsAdd($userid, 'bank', "Withdrew " . number_format($_POST['withdraw']) . ".");
     }
 }
+if ($ir['vip_days'] == 0)
+    include('ads/ad_bank.php');
 $h->endpage();

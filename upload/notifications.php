@@ -37,16 +37,6 @@ if ($_GET['deleteall'] > 0) {
 echo "
 <b>Last fifteen notifications</b>
 <table class='table table-bordered table-hover table-striped'>
-<thead>
-	<tr>
-		<th width='33%'>
-			Notification Info
-		</th>
-		<th>
-			Notification Content
-		</th>
-	<tr>
-</thead>
 <tbody>";
 $query = $db->query("/*qc=on*/SELECT *
                 FROM `notifications`
@@ -60,15 +50,33 @@ while ($notif = $db->fetch_row($query)) {
     } else {
         $Status = "<span class='badge badge-pill badge-success'><i class='fas fa-check'></i></span>";
     }
+	if (empty($notif['notif_icon']))
+	{
+		$icon= "<i class='fas fa-question' style='font-size:3rem;'></i>";
+	}
+	else
+	{
+		if (!empty($notif['notif_color']))
+		{
+			$icon = "<i class='{$notif['notif_icon']}' style='font-size:3rem; color: {$notif['notif_color']};'></i>";
+		}
+		else
+		{
+			$icon = "<i class='{$notif['notif_icon']}' style='font-size:3rem;'></i>";
+		}
+		
+	}
     echo "
 	<tr>
 		<td>
-			{$NotificationTime}<br />
-				{$Status} <a class='btn btn-primary btn-sm' href='?delete={$notif['notif_id']}'><i class='fas fa-trash-alt'></i></a>
-				
+			{$icon}
 		</td>
 		<td align='left'>
-			{$notif['notif_text']}
+			{$notif['notif_text']}<hr />
+			{$NotificationTime}
+		</td>
+		<td>
+			{$Status} <a class='btn btn-primary btn-sm' href='?delete={$notif['notif_id']}'><i class='fas fa-trash-alt'></i></a>
 		</td>
 	</tr>";
 }

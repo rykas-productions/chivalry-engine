@@ -121,7 +121,7 @@ function job_index()
 	$maxpaysecc=($ir['jrSECONDARY']*0.3);
     echo "<h3><i class='game-icon game-icon-push'></i> Your Job</h3>
     You currently work in the {$ir['jNAME']}! You receive will " . number_format($ir['jrPRIMPAY']) . " Copper Coins and/or 
-    " . number_format($ir['jrSECONDARY']) . " Copper Coins each hour 
+    " . number_format($ir['jrSECONDARY']) . " Chivalry Tokens each hour 
 	you work. You will only be paid if its Monday through Friday, between 9am and 5pm gametime.
     <table class='table table-bordered'>
     <tr>

@@ -11,6 +11,8 @@
 */
 $macropage = ('chivalry_gym.php');
 require("globals.php");
+$energy = $api->UserInfoGet($userid, 'energy', true);
+$will = $api->UserInfoGet($userid, 'will', true);
 if (!$api->UserHasItem($userid,18,1))
 {
     alert("danger", "Uh Oh!", "You need at least one Chivalry Gym Scroll to use the Chivalry Gym.", true, 'index.php');
@@ -123,7 +125,7 @@ $ir['labrank'] = get_rank($ir['labor'], 'labor');
 $ir['all_four'] = ($ir['labor'] + $ir['strength'] + $ir['agility'] + $ir['guard']);
 $ir['af_rank'] = get_rank($ir['all_four'], 'all');
 echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to
-{$ir['energy']} times. Remember, since this is the Chivalry Gym, you gains are multiplied by four.<hr />
+{$ir['energy']} times. Remember, since this is the Chivalry Gym, your gains are multiplied by four.<hr />
 <table class='table table-bordered'>
 	<tr>
 		<form method='get'>
@@ -165,10 +167,10 @@ echo "Choose the stat you wish to train, and enter how many times you wish to tr
 	</tr>
 	<tr>
 		<td>
-		    <a href='temple.php?action=energy' class='btn btn-primary'>Refill Energy</a>
+		    <a href='temple.php?action=energy' class='btn btn-primary'>Refill Energy ({$energy}%)</a>
         </td>
         <td>
-		    <a href='temple.php?action=will' class='btn btn-primary'>Regen Will</a>
+		    <a href='temple.php?action=will' class='btn btn-primary'>Regen Will ({$will}%)</a>
         </td>
 	</tr>
 	    </form>

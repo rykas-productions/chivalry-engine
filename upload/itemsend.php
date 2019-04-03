@@ -42,12 +42,12 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
             if (empty($_POST['msg']))
             {
                 notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
-                from <a href='profile.php?user=$userid'>{$ir['username']}</a>.");
+                from <a href='profile.php?user=$userid'>{$ir['username']}</a>.", 'fas fa-share-square', 'green');
             }
             else
             {
                 notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
-                from <a href='profile.php?user=$userid'>{$ir['username']}</a> with the message: <u>{$_POST['msg']}</u>.");
+                from <a href='profile.php?user=$userid'>{$ir['username']}</a> with the message: <u>{$_POST['msg']}</u>.", 'fas fa-share-square', 'green');
             }
             $rm = $db->fetch_row($m);
             item_remove($userid, $r['inv_itemid'], $_POST['qty']);

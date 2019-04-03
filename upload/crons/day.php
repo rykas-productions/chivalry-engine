@@ -8,7 +8,12 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
-require_once('../globals_nonauth.php');
+require_once(__DIR__ .'/../globals_nonauth.php');
+if (!isset($argv))
+{
+    exit;
+}
+$_GET['code']=substr($argv[1],5);
 if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 {
     exit;
@@ -19,13 +24,16 @@ $plussevenday = time() + 604800;
 
 $db->query("UPDATE `users` SET `vip_days`=`vip_days`-1 WHERE `vip_days` > 0");
 //Non-VIP Bank Interest
-$db->query("UPDATE `users` SET `bank`=`bank`+(`bank`/50) WHERE `bank`>0 AND `laston` > {$last24} AND `bank`<10000001 AND `vip_days` = 0");
-$db->query("UPDATE `users` SET `bigbank`=`bigbank`+(`bigbank`/50) WHERE `bigbank`>0 AND `laston` > {$last24} AND `bigbank`<50000001 AND `vip_days` = 0");
+$db->query("UPDATE `users` SET `bank`=`bank`+(`bank`/50) WHERE `bank`>0 AND `laston` > {$last24} AND `bank`<20000001 AND `vip_days` = 0");
+$db->query("UPDATE `users` SET `bigbank`=`bigbank`+(`bigbank`/50) WHERE `bigbank`>0 AND `laston` > {$last24} AND `bigbank`<100000001 AND `vip_days` = 0");
+$db->query("UPDATE `users` SET `vaultbank`=`vaultbank`+(`vaultbank`/50) WHERE `vaultbank`>0 AND `laston` > {$last24} AND `vaultbank`<300000001 AND `vip_days` = 0");
 //VIP Bank Interest
-$db->query("UPDATE `users` SET `bank`=`bank`+(`bank`/25) WHERE `bank`>0 AND `laston` > {$last24} AND `bank`<10000001 AND `vip_days` != 0");
-$db->query("UPDATE `users` SET `bigbank`=`bigbank`+(`bigbank`/25) WHERE `bigbank`>0 AND `laston` > {$last24} AND `bigbank`<50000001 AND `vip_days` != 0");
+$db->query("UPDATE `users` SET `bank`=`bank`+(`bank`/20) WHERE `bank`>0 AND `laston` > {$last24} AND `bank`<20000001 AND `vip_days` != 0");
+$db->query("UPDATE `users` SET `bigbank`=`bigbank`+(`bigbank`/20) WHERE `bigbank`>0 AND `laston` > {$last24} AND `bigbank`<100000001 AND `vip_days` != 0");
+$db->query("UPDATE `users` SET `vaultbank`=`vaultbank`+(`vaultbank`/20) WHERE `vaultbank`>0 AND `laston` > {$last24} AND `vaultbank`<300000001 AND `vip_days` != 0");
 
 $db->query("UPDATE `users` SET `hexbags` = 100, `bor` = 500");
+$db->query("UPDATE `user_settings` SET `att_dg` = 0");
 
 $db->query("UPDATE `users` SET `dayslogged` = 0 WHERE `laston` < {$last24}");
 $db->query("UPDATE `users` SET `dayslogged` = `dayslogged` + 1 WHERE `laston` > {$last24}");
@@ -86,6 +94,6 @@ while ($gfr=$db->fetch_row($gdfq))
 $cutoff = time() - 86400;
 $uq=$db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` != 1 AND `laston` > {$cutoff} ORDER BY RAND() LIMIT 1");
 $ur=$db->fetch_single($uq);
+$api->GameAddNotification($ur,"You have been chosen as the Player of the Day! Your profile will be displayed on the login page, and you've received a unique badge in your inventory.");
 item_add($ur,154,1);
-$db->query("UPDATE `settings` SET `setting_value` = '{$ur}' WHERE `setting_name` = 'random_player_showcase'");
 ?>

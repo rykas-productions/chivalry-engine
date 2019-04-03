@@ -31,7 +31,7 @@ if (isset($_POST['do'])) {
     }
     alert('success', "Success!", "You have poked this user.", true, "profile.php?user={$_GET['user']}");
     $api->SystemLogsAdd($userid, 'pokes', "Poked " . $api->SystemUserIDtoName($_GET['user']) . "[{$_GET['user']}]");
-    $api->GameAddNotification($_GET['user'], "You have been poked by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}].");
+    $api->GameAddNotification($_GET['user'], "You have been poked by <a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}].", 'far fa-hand-point-right');
 } else {
     echo "You sure you wanna poke " . $api->SystemUserIDtoName($_GET['user']) . "?";
     $csrf = request_csrf_html('poke');

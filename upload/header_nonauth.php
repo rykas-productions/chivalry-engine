@@ -7,7 +7,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
-
+require ('lib/steamauth/steamauth.php');
 class headers
 {
     function startheaders()
@@ -29,9 +29,11 @@ class headers
 				<link rel="icon" sizes="128x128" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png">
                 <meta property="og:image" content="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png"/>
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/bootstrap-v.1.5.min.css">
-                <meta name="theme-color" content="rgba(0, 0, 0, .8)">
+					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
-                <?php echo "<title>{$set['WebsiteName']} - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; ?>
+                <?php echo "<title>{$set['WebsiteName']} - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; 
+                date_default_timezone_set("Europe/London");
+                ?>
         </head>
         <body>
         <?php
@@ -70,30 +72,10 @@ class headers
                             <li class="nav-item">
                                 <div class='nav-link'><i class="fa fa-sign-in-alt" aria-hidden="true"></i> <?php echo "Already have an account?"; ?></div>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
-                                   aria-haspopup="true" aria-expanded="false">
+                            <li class="nav-item">
+                                <a class="nav-link" href="loginpage.php" id="dropdown01">
                                     <?php echo "Log in"; ?>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-									<form class="px-4 py-3" method="post" action="authenticate.php">
-										<p class="dropdown"><?php echo "Sign In!"; ?></p>
-										<div class="form-group">
-											<input type="email" class="form-control" id="email1" placeholder="email@example.com" name="email" required>
-										</div>
-										<div class="form-group">
-											<input type="password" class="form-control" id="password1" name="password" placeholder="Password" required>
-										</div>
-                                        <div class="form-check">
-                                            <input type="checkbox" name="remember" class="form-check-input" value="yes"> Remember Me
-										</div>
-										<button type="submit" class="btn btn-primary btn-block"><i class="fa fa-sign-in-alt" aria-hidden="true"></i> Sign in</button>
-										<?php echo $csrf; ?>
-									</form>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="register.php">New around here? Sign up!</a>
-									<a class="dropdown-item" href="pwreset.php">Forgot password?</a>
-								</div>
                             </li>
                         </ul>
                     </div>
@@ -108,7 +90,8 @@ class headers
             <?php alert('info', "Information!", "Please enable Javascript.", false); ?>
         </noscript>
         <?php
-        $IP = $db->escape($_SERVER['REMOTE_ADDR']);
+        $remote = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : '127.0.0.1';
+        $IP = $db->escape($remote);
         $ipq = $db->query("/*qc=on*/SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
         if ($db->num_rows($ipq) > 0) {
             alert('danger', "Uh Oh!", "You are currently IP Banned. Sorry about that.", false);
@@ -121,7 +104,7 @@ class headers
     {
         global $db, $ir, $set, $start;
         $query_extra = '';
-		include('forms/analytics.php');
+        include('ads/ad_nonlogin.html');
     if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
     {
         ?>
@@ -134,35 +117,28 @@ class headers
 
         </div>
         <!-- /.container -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1.0.8/css/game-v1.11.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/game-icons.min.css">
+        <link rel="stylesheet" href="css/game-19.4.1.css">
+        <link rel="stylesheet" href="https://seiyria.com/gameicons-font/css/game-icons.css">
         <link rel="shortcut icon" href="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png" type="image/x-icon"/>
 		
         <!-- jQuery Version 3.3.1 -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
         <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js" async defer></script>
 		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/clock.min.js"></script>
 		<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
-		<script type="text/javascript"> 
-		  $(document).ready(function(){ 
-			customtimestamp = parseInt($("#jqclock").data("time"));
-			$("#jqclock").clock({"langSet":"en","timestamp":customtimestamp,"timeFormat":" g:i:s a"}); 
-		  }); 
-		</script> 
         <footer class='footer'>
             <div class='container'>
 				<span>
                 <?php
-				$timestamp=time()-14400;
                 //Print copyright info, Chivalry Engine info, and current time.
                 echo "<hr />
-					Time is now <span id='jqclock' class='jqclock' data-time='{$timestamp}'>" . date('l, F j, Y g:i:s a') . "</span><br />
+					Time is now " . date('l, F j, Y g:i:s a') . "<br />
 					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
                 include('forms/include_end.php');
 				?>

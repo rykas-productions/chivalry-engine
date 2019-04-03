@@ -38,7 +38,8 @@ function home()
     global $set, $h, $db, $userid;
     echo "Here you may vote for {$set['WebsiteName']} at various RPG toplists and be rewarded. Whether or not you voted is
 	logged. If you scam this system, you will be dealt with severely. If you do not get rewarded, try voting again later.
-	<br />";
+	<br />
+    You can spend Vote Points at the <a href='votestore.php'>Vote Point Store</a>.";
 	$q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'twg'");
 	$vote_count = $db->fetch_single($q);
 	$db->free_result($q);
@@ -123,7 +124,7 @@ function home()
 				Top 100 Arena
 			</td>
 			<td>
-				100 Chivalry Token Voucher
+				1 Vote Point
 			</td>
 			<td>
 				{$thavote}
@@ -134,7 +135,7 @@ function home()
 				MGPoll
 			</td>
 			<td>
-				50 Boxes of Random
+				1 Vote Point
 			</td>
 			<td>
 				{$mgpollvote}
@@ -145,7 +146,7 @@ function home()
 				Apex Web Gaming
 			</td>
 			<td>
-				+25 Hexbags
+				1 Vote Point
 			</td>
 			<td>
 				{$awgvote}
@@ -156,7 +157,7 @@ function home()
 				Directory of Games
 			</td>
 			<td>
-				100,000 Copper Coins
+				1 Vote Point
 			</td>
 			<td>
 				{$dogvote}
@@ -167,7 +168,7 @@ function home()
 				BBOGD
 			</td>
 			<td>
-				75 Chivalry Tokens
+				1 Vote Point
 			</td>
 			<td>
 				{$bbogdvote}
@@ -180,7 +181,7 @@ function home()
 				Top Web Games
 			</td>
 			<td>
-				25,000 Copper Coins
+				1 Vote Point
 			</td>
 			<td>
 				{$twgvote}

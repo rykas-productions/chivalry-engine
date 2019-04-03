@@ -1,10 +1,8 @@
 <?php
 require('globals.php');
-$count=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`referalid`) FROM `referals` WHERE `referal_userid` = {$userid} AND `time` > 1523722251"));
 echo "<h3>Referral List</h3><hr />
 This page lists all the players you have referred to the game. This is so you can find them easily at a later date.
-You can find their name, level, when you referred them and the time they were last active. <b>For the referral contest 
-ending May 1th, you've recruited {$count} players.</b>
+You can find their name, level, when you referred them and the time they were last active.
 <hr />";
 $q=$db->query("/*qc=on*/SELECT * FROM `referals` WHERE `referal_userid` = {$userid}");
 if ($db->num_rows($q) == 0)

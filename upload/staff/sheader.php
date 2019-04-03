@@ -22,19 +22,18 @@ class headers
 				<?php
                 $title = "{$set['WebsiteName']} - {$ir['username']}";
                 echo "<title>{$title}</title>";
-				setcookie('theme', $ir['theme']);
                 if ($ir['theme'] == 1)
 				{
 					?>
-					<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/bootstrap-v.1.5.min.css">
-                    <meta name="theme-color" content="rgba(0, 0, 0, .8)">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+                    <meta name="theme-color" content="#333">
 					<?php
 					$hdr='navbar-dark bg-dark';
 				}
 				if ($ir['theme'] == 2)
 				{
 					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.0/darkly/bootstrap.min.css">
+					<link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
 					<meta name="theme-color" content="#303030">
 					<?php
 					$hdr='navbar-light bg-light';
@@ -42,7 +41,7 @@ class headers
 				if ($ir['theme'] == 3)
 				{
 					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.0/slate/bootstrap.min.css">
+					<link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
 					<meta name="theme-color" content="#272B30">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -50,8 +49,32 @@ class headers
 				if ($ir['theme'] == 4)
 				{
 					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.0/cyborg/bootstrap.min.css">
+					<link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
 					<meta name="theme-color" content="#060606">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 5)
+				{
+					?>
+					<link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
+					<meta name="theme-color" content="#772953">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 6)
+				{
+					?>
+					<link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
+					<meta name="theme-color" content="#04519b">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+                if ($ir['theme'] == 7)
+				{
+					?>
+					<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/bootstrap-v.1.5.min.css">
+					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
 					<?php
 					$hdr='navbar-dark bg-dark';
 				}
@@ -67,7 +90,7 @@ class headers
                 <link rel="shortcut icon" href="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png" type="image/x-icon"/>
 				<link rel="icon" sizes="192x192" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png">
 				<link rel="icon" sizes="128x128" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png">
-				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1.0.8/css/game-v1.11.min.css">
+				<link rel="stylesheet" href="css/game-19.4.1.css">
 				<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/game-icons.min.css">
 				</head>
         </head>
@@ -236,7 +259,7 @@ class headers
                 $DungeonRemain = TimeUntil_Parse($DungeonOut);
                 alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, '../quickuse.php?dungeon', 'Use Item');
             }
-            date_default_timezone_set("America/New_York");
+            date_default_timezone_set("Europe/London");
         }
     }
 
@@ -281,7 +304,6 @@ class headers
     {
         global $db, $ir, $set, $userid, $start;
         $query_extra = '';
-        include('../forms/analytics.php');
 		if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
 		{
 			?>
@@ -298,8 +320,8 @@ class headers
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
         <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/game-v1.1.min.js"></script>
@@ -308,20 +330,13 @@ class headers
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
 		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/clock.min.js"></script>
-		<script> 
-		  $(document).ready(function(){ 
-			customtimestamp = parseInt($("#jqclock").data("time"));
-			$("#jqclock").clock({"langSet":"en","timestamp":customtimestamp,"timeFormat":" g:i:s a"}); 
-		  }); 
-		</script> 
         <footer class='footer'>
             <div class='container'>
 				<span>
                 <?php
-				$timestamp=time()-18000;
                 //Print copyright info, Chivalry Engine info, and current time.
                 echo "<hr />
-					Time is now <span id='jqclock' class='jqclock' data-time='{$timestamp}'>" . date('l, F j, Y g:i:s a') . "</span><br />
+					Time is now " . date('l, F j, Y g:i:s a') . "<br />
 					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
                 if ($ir['user_level'] == 'Admin' || $ir['user_level'] == 'Web Developer')
                     echo "{$db->num_queries} Queries Executed.{$query_extra}<br />";

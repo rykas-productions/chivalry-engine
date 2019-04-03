@@ -8,6 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
+$percentoff=1;
 if (isset($_GET['user']))
 {
 	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : $userid;
@@ -17,8 +18,8 @@ if (isset($_GET['user']))
 		die($h->endpage());
 	}
 	echo "<h3>VIP Packs</h3><hr />If you purchase a VIP Package from below, you will be gifted the following depending on
-		the package your purchase. All purchases are final. If you commit fraud, you will be removed from the game permanently. Looking 
-		to spend your Mutton? Click <a href='vipstore.php'>here</a>!";
+		the package your purchase. All purchases are final. If you commit fraud, you will be removed from the game permanently.<br />
+        As of January 9th, 2019, each donation will give a <a href='iteminfo.php?ID=128'>IP Color Changer</a>.";
 	$goal=25;
 	$progress=round(($set['MonthlyDonationGoal']/$goal)*100);
 	$bg = ($set['MonthlyDonationGoal'] >= $goal) ? "bg-success" : "" ;
@@ -40,7 +41,7 @@ if (isset($_GET['user']))
 	//List the donator packages.
 	while ($r = $db->fetch_row($q)) {
 		//Put the VIP Cost in a currency number. (Ex. $1.54)
-		$r['vip_cost'] = sprintf("%0.2f", $r['vip_cost']);
+		$r['vip_cost'] = sprintf("%0.2f", $r['vip_cost']*$percentoff);
 		$amount = ($r['vip_qty'] > 1) ? "{$r['vip_qty']} x " : '';
 		if ($count == 0)
 			echo "<div class='row'>";
@@ -48,7 +49,7 @@ if (isset($_GET['user']))
 				<div class='col-sm-4'>
 				<div class='card'>
 					<div class='card-header box-shadow'>
-						{$amount} {$r['itmname']}<br />
+						{$amount} <a href='iteminfo.php?ID={$r['vip_item']}'>{$r['itmname']}</a><br />
 					</div>
 					<div class='card-body'>
 						<h1 class='card-title pricing-card-title'>\${$r['vip_cost']} USD</h1>";

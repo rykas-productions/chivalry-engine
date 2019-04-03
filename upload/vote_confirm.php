@@ -43,8 +43,8 @@ function mgpoll()
 	$api->SystemLogsAdd($_POST['id'],'voted',"Voted at MGPoll.");
 	$db->query("INSERT INTO `votes` VALUES ({$_POST['id']}, 'mgp')");
 	$db->query("INSERT INTO `vote_raffle` (`userid`) VALUES ('{$_POST['id']}')");
-    $api->UserGiveItem($_POST['id'],33,50);
-	$api->GameAddNotification($_POST['id'],"Your vote at MGPoll has been verified successfully. You have been credited 50 Boxes of Random.");
+    $db->query("UPDATE `users` SET `vote_points` = `vote_points` + 1 WHERE `userid` = {$_POST['id']}");
+	$api->GameAddNotification($_POST['id'],"Your vote at MGPoll has been verified successfully. You have been credited 1 Vote Point.", "game-icon game-icon-vote");
 }
 function top100()
 {
@@ -58,8 +58,8 @@ function top100()
 	$api->SystemLogsAdd($_GET['id'],'voted',"Voted at Top 100 Arena.");
 	$db->query("INSERT INTO `votes` VALUES ({$_GET['id']}, 'top100')");
 	$db->query("INSERT INTO `vote_raffle` (`userid`) VALUES ('{$_GET['id']}')");
-    $api->UserGiveItem($_GET['id'],130,1);
-	$api->GameAddNotification($_GET['id'],"Your vote at Top 100 Arena has been verified successfully. You have been credited a 100 Chivalry Token Voucher.");
+    $db->query("UPDATE `users` SET `vote_points` = `vote_points` + 1 WHERE `userid` = {$_GET['id']}");
+	$api->GameAddNotification($_GET['id'],"Your vote at Top 100 Arena has been verified successfully. You have been credited 1 Vote Point.", "game-icon game-icon-vote");
 }
 function twg()
 {
@@ -73,8 +73,8 @@ function twg()
 	$api->SystemLogsAdd($_POST['uid'],'voted',"Voted at Top Web Games.");
 	$db->query("INSERT INTO `votes` VALUES ({$_POST['uid']}, 'twg')");
 	$db->query("INSERT INTO `vote_raffle` (`userid`) VALUES ('{$_POST['uid']}')");
-	$api->UserGiveCurrency($_POST['uid'],'primary',25000);
-	$api->GameAddNotification($_POST['uid'],"Your vote at Top Web Games has been verified successfully. You have been credited 25,000 Copper Coins.");
+    $db->query("UPDATE `users` SET `vote_points` = `vote_points` + 1 WHERE `userid` = {$_POST['uid']}");
+	$api->GameAddNotification($_POST['uid'],"Your vote at Top Web Games has been verified successfully. You have been credited 1 Vote Point.", "game-icon game-icon-vote");
 }
 function apex()
 {
@@ -88,8 +88,8 @@ function apex()
 	$api->SystemLogsAdd($_POST['i'],'voted',"Voted at Apex Web Gaming.");
 	$db->query("INSERT INTO `votes` VALUES ({$_POST['i']}, 'apex')");
 	$db->query("INSERT INTO `vote_raffle` (`userid`) VALUES ('{$_POST['i']}')");
-	$db->query("UPDATE `users` SET `hexbags` = `hexbags` + 25 WHERE `userid` = {$_POST['i']}");
-	$api->GameAddNotification($_POST['i'],"Your vote at Apex Web Gaming has been verified successfully. You have been credited an extra 25 Hexbags.");
+    $db->query("UPDATE `users` SET `vote_points` = `vote_points` + 1 WHERE `userid` = {$_POST['i']}");
+	$api->GameAddNotification($_POST['i'],"Your vote at Apex Web Gaming has been verified successfully. You have been credited 1 Vote Point.", "game-icon game-icon-vote");
 	
 }
 function dog()
@@ -104,8 +104,8 @@ function dog()
 	$api->SystemLogsAdd($_GET['votedef'],'voted',"Voted at Directory of Games.");
 	$db->query("INSERT INTO `votes` VALUES ({$_GET['votedef']}, 'dog')");
 	$db->query("INSERT INTO `vote_raffle` (`userid`) VALUES ('{$_GET['votedef']}')");
-	$api->UserGiveCurrency($_GET['votedef'],'primary',100000);
-	$api->GameAddNotification($_GET['votedef'],"Your vote at Directory of Games has been verified successfully. You have been credited 100,000 Copper Coins.");
+	$db->query("UPDATE `users` SET `vote_points` = `vote_points` + 1 WHERE `userid` = {$_GET['votedef']}");
+	$api->GameAddNotification($_GET['votedef'],"Your vote at Directory of Games has been verified successfully. You have been credited 1 Vote Point.", "game-icon game-icon-vote");
 }
 function bbogd()
 {
@@ -119,6 +119,6 @@ function bbogd()
 	$api->SystemLogsAdd($_GET['userid'],'voted',"Voted at BBOGD.");
 	$db->query("INSERT INTO `votes` VALUES ({$_GET['userid']}, 'bbogd')");
 	$db->query("INSERT INTO `vote_raffle` (`userid`) VALUES ('{$_GET['userid']}')");
-	$api->UserGiveCurrency($_GET['userid'],'secondary',75);
-	$api->GameAddNotification($_GET['userid'],"Your vote at BBOGD has been verified successfully. You have been credited 75 Chivalry Tokens.");
+	$db->query("UPDATE `users` SET `vote_points` = `vote_points` + 1 WHERE `userid` = {$_GET['userid']}");
+	$api->GameAddNotification($_GET['userid'],"Your vote at BBOGD has been verified successfully. You have been credited 1 Vote Point.", "game-icon game-icon-vote");
 }

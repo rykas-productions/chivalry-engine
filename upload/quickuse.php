@@ -61,7 +61,27 @@ if (isset($_GET['dungeon'])) {
 		alert('success', "Success!", "Dungeon Key Set was used successfully. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
-} elseif (isset($_GET['infirmary'])) {
+    if ($ir['ditem'] == 4)
+	{
+		if (!$api->UserHasItem($userid, 206, 1)) {
+			alert("danger", "Uh Oh!", "You need at least one Negative Begone to use this quick link.", true, 'index.php');
+			die($h->endpage());
+		}
+		if (!$api->UserStatus($userid, 'dungeon')) {
+			alert("danger", "Uh Oh!", "Why would you want to use a Negative Begone if you're not in the dungeon?", true, 'index.php');
+			die($h->endpage());
+		}
+		$TR=TimeUntil_Parse(time());
+		$api->UserTakeItem($userid, 206, 1);
+		$db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$userid}");
+        $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` = {$userid}");
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Negative Begone.");
+		alert('success', "Success!", "Negative Begone was used successfully. You have {$TR} remaining.", true, 'index.php');
+		$h->endpage();
+	}
+} 
+elseif (isset($_GET['infirmary'])) 
+{
     if ($ir['iitem'] == 1)
 	{
 		if (!$api->UserHasItem($userid, 5, 1)) {
@@ -112,6 +132,60 @@ if (isset($_GET['dungeon'])) {
 		$api->UserStatusSet($userid, 'infirmary', -75, '');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Acupuncture Needle.");
 		alert('success', "Success!", "Acupuncture Needle was used successfully. You have {$TR} remaining.", true, 'index.php');
+		$h->endpage();
+	}
+    if ($ir['iitem'] == 4)
+	{
+		if (!$api->UserHasItem($userid, 98, 1)) {
+			alert("danger", "Uh Oh!", "You need at least one Med-go-bye to use this quick link.", true, 'index.php');
+			die($h->endpage());
+		}
+		if (!$api->UserStatus($userid, 'infirmary')) {
+			alert("danger", "Uh Oh!", "Why would you want to use a Med-go-bye if you're not in the infirmary?", true, 'index.php');
+			die($h->endpage());
+		}
+		$TR=TimeUntil_Parse($InfirmaryOut-$InfirmaryOut);
+		$api->UserTakeItem($userid, 98, 1);
+        $api->UserInfoSet($userid,'hp',100,true);
+		$api->UserStatusSet($userid, 'infirmary', -75, '');
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Med-go-bye.");
+		alert('success', "Success!", "Med-go-bye was used successfully. You have {$TR} remaining.", true, 'index.php');
+		$h->endpage();
+	}
+    if ($ir['iitem'] == 5)
+	{
+		if (!$api->UserHasItem($userid, 207, 1)) {
+			alert("danger", "Uh Oh!", "You need at least one Priority Voucher to use this quick link.", true, 'index.php');
+			die($h->endpage());
+		}
+		if (!$api->UserStatus($userid, 'infirmary')) {
+			alert("danger", "Uh Oh!", "Why would you want to use a Priority Voucher if you're not in the infirmary?", true, 'index.php');
+			die($h->endpage());
+		}
+        $inc = round((($EndTime - $Time) / 100 * 50) / 60);
+		$TR=TimeUntil_Parse($InfirmaryOut-$inc);
+		$api->UserTakeItem($userid, 207, 1);
+		$api->UserStatusSet($userid, 'infirmary', -75, '');
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Priority Voucher");
+		alert('success', "Success!", "Priority Voucher was used successfully. You have {$TR} remaining.", true, 'index.php');
+		$h->endpage();
+	}
+    if ($ir['iitem'] == 6)
+	{
+		if (!$api->UserHasItem($userid, 206, 1)) {
+			alert("danger", "Uh Oh!", "You need at least one Negative Begone to use this quick link.", true, 'index.php');
+			die($h->endpage());
+		}
+		if (!$api->UserStatus($userid, 'infirmary')) {
+			alert("danger", "Uh Oh!", "Why would you want to use a Negative Begone if you're not in the infirmary?", true, 'index.php');
+			die($h->endpage());
+		}
+		$TR=TimeUntil_Parse($DungeonOut-$DungeonOut);
+		$api->UserTakeItem($userid, 206, 1);
+        $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$userid}");
+        $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` = {$userid}");
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Negative Begone.");
+		alert('success', "Success!", "Negative Begone was used successfully. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
 } else {

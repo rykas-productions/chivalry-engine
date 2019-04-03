@@ -8,6 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
+$percentoff=1;
 require_once('globals_nonauth.php');
 require('class/PaypalIPN.php');
 $wantedcurrency = "USD";
@@ -80,22 +81,25 @@ if ($verified) {
     }
     $fpi = $db->fetch_row($pi);
     //Make sure the user paid the correct amount.
-	$adjcost=$fpi['vip_cost']*$qty;
+	$adjcost=($fpi['vip_cost']*$qty)*$percentoff;
     if ($adjcost != $payment_amount) {
         $api->SystemLogsAdd($buyer, 'donate', "Attempted to donate for {$qty} x VIP pack #{$packr[2]}(s), but only paid \${$payment_amount}. (Pack Costs \${$adjcost})");
         exit;
     }
+	$vipticketgiven=floor($adjcost);
     //Everything checks out... so lets credit the pack.
 	$fpi['vip_qty']=$fpi['vip_qty']*$qty;
     item_add($for, $fpi['vip_item'], $fpi['vip_qty']);
+    item_add($for, 128, 1);
     //Log everything
 	$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$friendly_number} WHERE `setting_name` = 'MonthlyDonationGoal'");
     $db->query("INSERT INTO `vips_accepted` VALUES(NULL, {$buyer}, {$for}, {$pack}, " . time() . ", '{$txn_id}')");
+	//$api->UserGiveItem($buyer,89,$vipticketgiven);
     $api->SystemLogsAdd($payer, 'donate', "{$payer_email} donated \${$payment_amount} for {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . ".");
 	$mailtext="{$api->SystemUserIDtoName($payer)} [{$payer}] spent \${$payment_amount} for {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . "(s) and sent them to you! You should go thank them!";
+	$api->GameAddNotification($payer,"Your \${$payment_amount} donation for your {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . " item has been successfully credited to {$api->SystemUserIDtoName($for)} [{$for}].");
 	if ($payer != $for)
-		$api->GameAddNotification($payer,"Your \${$payment_amount} donation for your {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . " item has been successfully credited to {$api->SystemUserIDtoName($for)} [{$for}].");
-	$api->GameAddMail($for,"Chivalry is Dead Donation",$mailtext,1);
+		$api->GameAddMail($for,"Chivalry is Dead Donation",$mailtext,1);
 }
 // Reply with an empty 200 response to indicate to PayPal the IPN was received correctly.
 header("HTTP/1.1 200 OK");

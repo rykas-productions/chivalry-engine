@@ -12,12 +12,12 @@ $parser = new JBBCode\Parser();
 $parser->addCodeDefinitionSet(new JBBCode\DefaultCodeDefinitionSet());
 
 //URL with option
-$builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{option}">{param}</a>');
+$builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{option}">{param} <i class="fas fa-external-link-alt"></i></a>');
 $builder->setUseOption(true);
 $parser->addCodeDefinition($builder->build());
 
 //URL
-$builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{param}">{param}</a>');
+$builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{param}">{param} <i class="fas fa-external-link-alt"></i></a>');
 $parser->addCodeDefinition($builder->build());
 
 //Quote with option 
@@ -97,6 +97,10 @@ $parser->addCodeDefinition($builder->build());
 
 //Warning
 $builder = new JBBCode\CodeDefinitionBuilder('warning', '<span class="text-warning">{param}</span>');
+$parser->addCodeDefinition($builder->build());
+
+//Mention
+$builder = new JBBCode\CodeDefinitionBuilder('mention', '<a href="profile.php?user={param}">@Username</a>');
 $parser->addCodeDefinition($builder->build());
 
 //Line

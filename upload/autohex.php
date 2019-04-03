@@ -53,10 +53,11 @@ if (isset($_POST['open']))
 	$nothing=0;
     $sticks=0;
     $rocks=0;
+    $notes=0;
 	while($number < $_POST['open'])
 	{
 		$number=$number+1;
-		$chance=Random(1,95);
+		$chance=Random(1,96);
 		if ($chance <= 35)
 		{
 			$cash=Random(750,3500);
@@ -131,6 +132,10 @@ if (isset($_POST['open']))
 			$gain=round($bor+($bor*$lvlmultiplier));
 			$borg=$borg+$bor;
 		}
+        elseif ($chance == 94)
+		{
+			$notes=$notes+1;
+		}
 		else
 		{
 			$nothing=$nothing+1;
@@ -151,6 +156,7 @@ if (isset($_POST['open']))
 		{$agility} agility.<br />
 		{$guard} guard.<br />
 		{$borg} Boxes of Random.<br />
+        {$notes} Assassination Notes.<br />
 		{$nothing} Hexbags had nothing in them.";
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
@@ -166,6 +172,7 @@ if (isset($_POST['open']))
 				`guard` = `guard` + {$guard} 
 				WHERE `userid` = {$userid}");
 	$api->UserGiveItem($userid,33,$borg);
+    $api->UserGiveItem($userid,222,$notes);
 	//Logs
 	$api->SystemLogsAdd($userid,"hexbags","Received {$copper} Copper Coins.");
 	$api->SystemLogsAdd($userid,"hexbags","Received {$tokens} Chivalry Tokens.");
@@ -179,6 +186,7 @@ if (isset($_POST['open']))
 	$api->SystemLogsAdd($userid,"hexbags","Received {$agility} Agility");
 	$api->SystemLogsAdd($userid,"hexbags","Received {$guard} Guard.");
 	$api->SystemLogsAdd($userid,"hexbags","Received {$borg} Boxes of Random.");
+    $api->SystemLogsAdd($userid,"hexbags","Received {$notes} Assassination Notes.");
 	$api->SystemLogsAdd($userid,"hexbags","Received {$nothing} nothing(s).");
 }
 else

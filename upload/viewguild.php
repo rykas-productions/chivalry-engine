@@ -22,6 +22,7 @@ if (!$ir['guild']) {
     if ($db->fetch_single($wq) > 0) {
         alert('warning', "Guild Wars in Progress", "Your guild is in {$db->fetch_single($wq)} wars. View active wars <a href='?action=warview'>here</a>.", false);
     }
+	$gd['xp_needed'] = round(($gd['guild_level'] + 1) * ($gd['guild_level'] + 1) * ($gd['guild_level'] + 1) * 2.2);
 	if ($gd['guild_primcurr'] < 0)
 		alert('info',"Guild Debt!","Your guild is in debt. If your debt is not paid off in " . TimeUntil_Parse($gd['guild_debt_time']) . " your guild will be dissolved.",false);
     echo "
@@ -75,6 +76,9 @@ if (!$ir['guild']) {
 			break;
 		case "oldpolls":
 			guild_oldpolls();
+			break;
+		case "donatexp":
+			guild_donatexp();
 			break;
         default:
             home();
@@ -251,7 +255,7 @@ function summary()
 			Experience
 		</th>
 		<td>
-			{$gd['guild_xp']} / " . $gd['guild_level'] * 36 . "
+			{$gd['guild_xp']} / {$gd['xp_needed']} [<a href='?action=donatexp'>Donate Experience</a>]
 		</td>
 	</tr>
 	<tr align='left'>
@@ -293,6 +297,53 @@ function summary()
 	</tr>
       </table>
 	  <a href='viewguild.php'>Go Back</a>";
+}
+
+function guild_donatexp()
+{
+	global $db, $gd, $set, $ir, $api, $h, $userid;
+	$xpformula = $ir['xp_needed']/65;
+	if ($xpformula < 1000)
+		$xpformula = 1000;
+	$xpformula=round($xpformula);
+	
+	if (isset($_POST['xp']))
+	{
+		$_POST['xp'] = (isset($_POST['xp']) && is_numeric($_POST['xp'])) ? abs(intval($_POST['xp'])) : 0;
+		if (empty($_POST['xp']))
+		{
+			alert('danger',"Uh Oh!","You need to input the amount of experience you wish to donate.");
+			die($h->endpage());
+		}
+		if ($_POST['xp'] < $xpformula)
+		{
+			alert('danger',"Uh Oh!","You need to donate, at minimum, " . number_format($xpformula) . " experience points.");
+			die($h->endpage());
+		}
+		$points=floor($_POST['xp']/$xpformula);
+		$xprequired=$points*$xpformula;
+		if ($ir['xp'] < $xprequired)
+		{
+			alert('danger',"Uh Oh!","You do not have the required experience to donate that much.");
+			die($h->endpage());
+		}
+		$db->query("UPDATE `users` SET `xp` = `xp` - {$xprequired} WHERE `userid` = {$userid}");
+		updateDonations($gd['guild_id'],$userid,'xp',$xprequired);
+		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$points} WHERE `guild_id` = {$gd['guild_id']}");
+		$event = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> exchanged " . number_format($xprequired) . " experience for {$points} guild experience.";
+		$api->GuildAddNotification($gd['guild_id'], $event);
+		alert('success',"Success!","You have successfully traded " . number_format($xprequired) . " experience for {$points} guild experience.");
+	}
+	else
+	{
+		echo "Here you may donate your experience points to your guild at a ratio of " . number_format($xpformula) . " experience points for 1 Guild 
+		Experience Point. You currently have " . number_format($ir['xp']) . " experience points which you can donate. <b>This tool will only take even 
+		amounts of experience (Only in groups of {$xpformula}.)</b> How many do you wish to donate to your guild? Experience points donate cannot be given back.<br />
+		<form method='post'>
+			<input type='number' name='xp' min='{$xpformula}' value='{$xpformula}' class='form-control'>
+			<input type='submit' class='btn btn-primary' value='Donate XP'>
+		</form>";
+	}
 }
 
 function guild_forums()
@@ -366,6 +417,8 @@ function donate()
             //Donate the currencies!
             $api->UserTakeCurrency($userid, 'primary', $_POST['primary']);
             $api->UserTakeCurrency($userid, 'secondary', $_POST['secondary']);
+			updateDonations($gd['guild_id'],$userid,'copper',$_POST['primary']);
+			updateDonations($gd['guild_id'],$userid,'tokens',$_POST['secondary']);
             $db->query("UPDATE `guild`
                         SET `guild_primcurr` = `guild_primcurr` + {$_POST['primary']},
 					    `guild_seccurr` = `guild_seccurr` + {$_POST['secondary']}
@@ -420,17 +473,14 @@ function members()
     echo "
     <table class='table table-bordered table-striped'>
 		<tr align='left'>
-    		<th>
+    		<th width='20%'>
 				User
 			</th>
     		<th>
 				Level
 			</th>
 			<th>
-				Copper Coins
-			</th>
-			<th>
-				Status
+				Donations*
 			</th>
     		<th>
 				&nbsp;
@@ -448,22 +498,23 @@ function members()
 			$r['status'] .= "Perfectly Fine<br />";
         $r['username2']=parseUsername($r['userid']);
         $r['display_pic']=parseImage(parseDisplayPic($r['userid']));
+		$r2=$db->fetch_row($db->query("SELECT * FROM `guild_donations` WHERE `userid` = {$r['userid']} AND `guildid` = {$gd['guild_id']}"));
         echo "
-		<tr align='left'>
-        	<td width='10%'>
+		<tr>
+        	<td>
 				<img src='{$r['display_pic']}' class='img-fluid'><br />
-				<a href='profile.php?user={$r['userid']}'>{$r['username2']}</a>
+				<a href='profile.php?user={$r['userid']}'>{$r['username2']}</a><br />
+				{$r['status']}
 			</td>
         	<td>
 				{$r['level']}
 			</td>
 			<td>
-				" . number_format($r['primary_currency']) . "
+			Copper Coins: " . number_format($r2['copper']) . "<br />
+			Chivalry Tokens: " . number_format($r2['tokens']) . "<br />
+			Experience: " . number_format($r2['xp']) . "
 			</td>
-			<td>
-				{$r['status']}
-			</td>
-        	<td width='25%'>
+        	<td>
            ";
         if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
             echo "
@@ -483,6 +534,7 @@ function members()
     $db->free_result($q);
     echo "
 	</table>
+	<small>*=Since 10/7/2018 at 5:21PM</small>
 	<br />
 	<a href='viewguild.php'>Go Back</a>
    	";
@@ -737,7 +789,10 @@ function gym()
 {
 	global $db, $gd, $h, $api, $ir, $userid;
 	$macropage = ('viewguild.php?action=gym');
-	$multiplier = 1+(($gd['guild_level']/100)*5);
+	if ($gd['guild_bonus_time'] > time())
+		$multiplier = 1.65+(($gd['guild_level']/100)*5);
+	else
+		$multiplier = 1.1+(($gd['guild_level']/100)*5);
 	if ($multiplier > 2.25)
 		$multiplier = 2.25;
 	if ($gd['guild_level'] < 3)
@@ -1226,6 +1281,9 @@ function staff()
 			case "endpoll":
                 end_poll();
                 break;
+			case "boost":
+                staff_bonus();
+                break;
             default:
                 staff_idx();
                 break;
@@ -1257,6 +1315,7 @@ function staff_idx()
 			<a href='?action=staff&act2=crimes'>Guild Crimes</a><br />
 			<a href='?action=staff&act2=addpoll'>Start Poll</a><br />
 			<a href='?action=staff&act2=endpoll'>End Poll</a><br />
+			<a href='?action=staff&act2=boost'>Enable Boost</a><br />
 		</td>";
     if ($gd['guild_owner'] == $userid) {
         echo "
@@ -2483,7 +2542,7 @@ function staff_levelup()
 {
     global $db, $gd, $api, $userid;
     //Experience required set to variable
-    $xprequired = $gd['guild_level'] * 36;
+    $xprequired = $gd['xp_needed'];
     if (isset($_POST['do'])) {
 
         //Guild does not have enough experience to level up.
@@ -2727,7 +2786,41 @@ function staff_armory()
         }
     }
 }
-
+function staff_bonus()
+{
+	global $db,$gd,$userid,$api,$ir,$h,$set;
+	$cost = $set['GUILD_PRICE'] * 4;
+	if (isset($_POST['action']))
+	{
+		if ($_POST['action'] == 'enable')
+		{
+			if ($gd['guild_bonus_time'] > time())
+			{
+				alert('danger',"Uh Oh!","Your guild already has boost activated.");
+				die($h->endpage());
+			}
+			if ($gd['guild_primcurr'] < $cost)
+			{
+				alert('danger',"Uh Oh!","Your guild does not have enough Copper Coins to enable training Boost.");
+				die($h->endpage());
+			}
+			$bonustime=time()+((60*60)*3);
+			$db->query("UPDATE `guild` SET `guild_bonus_time` = {$bonustime}, `guild_primcurr` = `guild_primcurr` - {$cost} WHERE `guild_id` = {$gd['guild_id']}");
+			$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has paid " . number_format($cost) . " Copper Coins to enable training boost in your guild's gym for the next 3 hours.");
+			alert('success',"Success!","You successfully enabled training boost for all your guild members that use your guild's gym. Reminder, that this boost is only affective in your guild's gym, and will end 3 hours from now.",true,'?action=staff&act2=idx');
+		}
+	}
+	else
+	{
+		echo "Enable training boost for your guild? It'll cost your guild " . number_format($cost) . " Copper Coins. The Training Boost is only affective in 
+		your Guild's Gym. This boost will also only last for 3 hours.
+		<form method='post'>
+			<input type='hidden' name='action' value='enable'>
+			<input type='submit' class='btn-primary btn' value='Enable Boost'>
+		</form>
+		<a href='?action=staff&act2=idx'>Go Back</a>";
+	}
+}
 function staff_crimes()
 {
     global $db, $userid, $api, $h, $ir, $gd;
@@ -3228,5 +3321,15 @@ function staff_view_alliances()
 	{
         alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
     }
+}
+function updateDonations($guildid,$userid,$type,$increase)
+{
+	global $db;
+	$q=$db->query("SELECT * FROM `guild_donations` WHERE `guildid` = {$guildid} AND `userid` = {$userid}");
+	if ($db->num_rows($q) == 0)
+	{
+		$db->query("INSERT INTO `guild_donations` (`userid`, `guildid`, `copper`, `tokens`, `xp`) VALUES ('{$userid}', '{$guildid}', '0', '0', '0')");
+	}
+	$db->query("UPDATE `guild_donations` SET `{$type}` = `{$type}` + {$increase} WHERE `userid` = {$userid} AND `guildid` = {$guildid}");
 }
 $h->endpage();

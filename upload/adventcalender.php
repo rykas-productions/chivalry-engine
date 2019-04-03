@@ -1,12 +1,12 @@
 <?php
 require('globals.php');
-if (time() < 1512104400)
+if (time() < 1543640400)
 {
-	$until=TimeUntil_Parse(1512104400);
+	$until=TimeUntil_Parse(1543640400);
 	alert("danger","Uh Oh!","The advent calender cannot be used for another {$until}.",true,'explore.php');
 	die($h->endpage());
 }
-if (time() > 1514264400)
+if (time() > 1545796800)
 {
 	alert("danger","Uh Oh!","The advent calender cannot be used after Christmas.",true,'explore.php');
 	die($h->endpage());
@@ -99,7 +99,7 @@ function home()
 	global $h;
 	echo "Find today's date, and open the spot for your prize!
 	<br />
-	<table height='600' width='996' class='table table-bordered' background='assets/img/christmas/advent-calender-1110.jpg'>
+	<table height='600' width='996' class='table table-bordered' background='https://farmeramaaid.files.wordpress.com/2011/11/advent-calendar-wallpaper.jpg'>
 		<tr>
 			<td>
 			<a href='?day=11'>11th</a>
@@ -227,13 +227,13 @@ function day($today)
 	}
 	if ($day == 5)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 50,000 Copper Coins.",true,'adventcalender.php');
-		$api->UserGiveCurrency($userid,'primary',50000);
+		alert('success',"Success!","You open up today's calender spot and receive 500,000 Copper Coins.",true,'adventcalender.php');
+		$api->UserGiveCurrency($userid,'primary',500000);
 	}
 	if ($day == 6)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 250 Chivalry Tokens.",true,'adventcalender.php');
-		$api->UserGiveCurrency($userid,'secondary',250);
+		alert('success',"Success!","You open up today's calender spot and receive 2,500 Chivalry Tokens.",true,'adventcalender.php');
+		$api->UserGiveCurrency($userid,'secondary',2500);
 	}
 	if ($day == 7)
 	{
@@ -242,13 +242,13 @@ function day($today)
 	}
 	if ($day == 8)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 100 Copper Flakes.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,23,100);
+		alert('success',"Success!","You open up today's calender spot and receive 1,000 Copper Flakes.",true,'adventcalender.php');
+		$api->UserGiveItem($userid,23,1000);
 	}
 	if ($day == 9)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 2 Chivalry Gym Passes.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,18,2);
+		alert('success',"Success!","You open up today's calender spot and receive 5 Chivalry Gym Passes.",true,'adventcalender.php');
+		$api->UserGiveItem($userid,18,5);
 	}
 	if ($day == 10)
 	{
@@ -257,13 +257,13 @@ function day($today)
 	}
 	if ($day == 11)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 20 Coal.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,22,20);
+		alert('success',"Success!","You open up today's calender spot and receive 200 Coal.",true,'adventcalender.php');
+		$api->UserGiveItem($userid,22,200);
 	}
 	if ($day == 12)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 1 Flawed Sapphire.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,25,1);
+		alert('success',"Success!","You open up today's calender spot and receive 1 Small Sapphire.",true,'adventcalender.php');
+		$api->UserGiveItem($userid,162,1);
 	}
 	if ($day == 13)
 	{
@@ -317,13 +317,13 @@ function day($today)
 	}
 	if ($day == 23)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 5 Small Cash Boosts.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,27,5);
+		alert('success',"Success!","You open up today's calender spot and receive 20 Small Cash Boosts.",true,'adventcalender.php');
+		$api->UserGiveItem($userid,27,20);
 	}
 	if ($day == 24)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 50 Boxes of Random.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,33,50);
+		alert('success',"Success!","You open up today's calender spot and receive 500 Boxes of Random.",true,'adventcalender.php');
+		$api->UserGiveItem($userid,33,500);
 	}
 	if ($day == 25)
 	{

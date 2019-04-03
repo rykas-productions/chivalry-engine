@@ -6,6 +6,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+$nohdr=1;
 if ((!file_exists('./installer.lock')) && (file_exists('installer.php'))) {
     header("Location: installer.php");
     die();

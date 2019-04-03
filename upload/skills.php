@@ -171,7 +171,7 @@ function home()
                     <tr>
                         <td {$locked[7]}>
                             Ammo Dispensery (5 Points)<br />
-                            <small>25% chance to not use ammo with ranged weapons.<br /></small>
+                            <small>50% chance to not use ammo with ranged weapons.<br /></small>
                             " . getSkillLevel($userid,7) . " / 1
                             <br />
                             {$button['7']}
@@ -185,7 +185,7 @@ function home()
                         </td>
                         <td {$locked[9]}>
                             Sharper Blades (5 Points)<br />
-                            <small>+13% Weapon Value.<br /></small>
+                            <small>+20% Weapon Value.<br /></small>
                             " . getSkillLevel($userid,9) . " / 1
                             <br />
                             {$button['9']}
@@ -424,16 +424,11 @@ function canGetSkill($id)
 function skill_reset()
 {
     global $db,$ir,$api,$userid,$h;
-    if ($ir['skillreset'] == 1)
-    {
-        alert('danger',"Uh Oh!","You may only reset your skill tree once for free.",true,'skills.php');
-        die($h->endpage());
-    }
     if (isset($_POST['confirm']))
     {
-        if ($ir['labor'] < 25000)
+        if ($ir['iq'] < 75000)
         {
-            alert('danger',"Uh Oh!","You need at least 25,000 labor to reset your skill tree.");
+            alert('danger',"Uh Oh!","You need at least 75,000 IQ to reset your skill tree.");
             die($h->endpage());
         }
         $q=$db->query("/*qc=on*/SELECT * FROM `user_skills` WHERE `userid` = {$userid}");
@@ -443,16 +438,16 @@ function skill_reset()
             die($h->endpage());
         }
         $q2=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `achievements_done` WHERE `userid` = {$userid}"));
-        $db->query("UPDATE `user_settings` SET `skill_points` = {$q2}, `skillreset` = `skillreset` + 1 WHERE `userid` = {$userid}");
         $db->query("DELETE FROM `user_skills` WHERE `userid` = {$userid}");
-        $db->query("UPDATE `userstats` SET `labor` = `labor` - 25000 WHERE `userid` = {$userid}");
-        alert('success',"Success!","Your skill tree has been reset successfully.",true,'skills.php');
+        $db->query("UPDATE `userstats` SET `iq` = `iq` - 75000 WHERE `userid` = {$userid}");
+        $points=1+$q2;
+        $db->query("UPDATE `user_settings` SET `skill_points` = {$points} WHERE `userid` = {$userid}");
+        alert('success',"Success!","Your skill tree has been reset successfully. You now have {$points} to spend.",true,'skills.php');
     }
     else
     {
         echo "Are you sure you want to reset your skill tree? You will receive all your spent points back and 
-        will be able to redistribute your points as you see fit. This can only be done once.  It will cost you 
-        25,000 labor.<br />
+        will be able to redistribute your points as you see fit. It will cost you 75,000 IQ.<br />
         <form method='post'>
             <input type='hidden' value='yes' name='confirm'>
             <input type='submit' value='Reset' class='btn btn-primary'>

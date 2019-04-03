@@ -67,7 +67,8 @@ function check_level()
 					`brave` = `brave` + 2, `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2,
 					`hp` = `hp` + 50, `maxhp` = `maxhp` + 50 WHERE `userid` = {$userid}");
 		//Give the user some stats for leveling up.
-		$StatGain = round(($ir['level'] * Random(125,250)) / Random(2, 6));
+		$StatGain = round(($ir['level'] * Random(150,275)) / Random(2, 6));
+		$StatGain = $StatGain+($StatGain*levelMultiplier($ir['level']));
 		$StatGainFormat = number_format($StatGain);
 		//Assign the stat gain to the user's class of choice.
 		if ($ir['class'] == 'Warrior') {
@@ -80,7 +81,7 @@ function check_level()
 		//Credit the stat gain.
 		$db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
 		//Tell the user they've gained some stats.
-		notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
+		notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.", "game-icon game-icon-corporal");
 		//Log the level up, along with the stats gained.
 		SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
 	}
@@ -326,10 +327,18 @@ function levelMultiplier($level)
 {
 	if ($level < 100)
 		return 1;
-	if (($level >= 100) && ($level < 150))
+	elseif (($level >= 100) && ($level < 150))
 		return 1.5;
-	if (($level >= 150) && ($level < 250))
+	elseif (($level >= 150) && ($level < 250))
 		return 1.75;
-	if (($level >= 250) && ($level < 400))
+	elseif (($level >= 250) && ($level < 400))
 		return 2.25;
+    elseif (($level >= 400) && ($level < 500))
+		return 2.75;
+    elseif (($level >= 500) && ($level < 600))
+		return 3;
+    elseif (($level >= 600) && ($level < 700))
+		return 3.5;
+    else
+		return 4;
 }

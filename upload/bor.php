@@ -42,7 +42,7 @@ if (!$api->UserHasItem($userid,33,1))
 }
 $db->query("UPDATE `users` SET `bor` = `bor` - 1 WHERE `userid` = {$userid}");
 $api->UserTakeItem($userid,33,1);
-$chance=Random(1,86);
+$chance=Random(1,87);
 if ($chance <= 30)
 {
     $cash=Random(750,2750);
@@ -163,6 +163,12 @@ elseif ($chance == 85)
 		echo "You open this Box of Random and get a bunch of junk.";
 		$api->SystemLogsAdd($userid,"bor","Received nothing.");
 	}
+}
+elseif ($chance == 86)
+{
+	echo "You open this Box of Random and find an Herb of the Enlightened Miner.";
+    $api->UserGiveItem($userid,177,1);
+    $api->SystemLogsAdd($userid,"bor","Received Herb of the Enlightened Miner.");
 }
 else
 {

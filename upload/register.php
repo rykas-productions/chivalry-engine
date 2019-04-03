@@ -138,8 +138,10 @@ if (!empty($username)) {
 					 VALUES({$i}, 1000, 900, 1100, 1000, 1000, 100)");
         }
         if ($_POST['ref']) {
-            $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']} WHERE `userid` = {$_POST['ref']}");
-            notification_add($_POST['ref'], "For referring {$e_username} to the game, you have earned {$set['ReferalKickback']} valuable Chivalry Tokens(s)!");
+            $api->UserGiveItem($_POST['ref'],18,10);
+            $api->UserGiveItem($i,18,10);
+            $api->UserGiveItem($_POST['ref'],210,1);
+            notification_add($_POST['ref'], "For referring {$e_username} to the game, you have earned 10 Chivalry Gym Scrolls!");
             $e_rip = $db->escape($rem_IP);
             $db->query("INSERT INTO `referals`
 			VALUES (NULL, {$_POST['ref']}, '{$e_rip}', {$i}, '{$IP}',{$CurrentTime})");
@@ -181,7 +183,7 @@ if (!empty($username)) {
         }
 		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$_SESSION['userid']}')");
         $randophrase=randomizer();
-        $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}' WHERE `userid` = {$_SESSION['userid']}");
+        $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}', `theme` = 7 WHERE `userid` = {$_SESSION['userid']}");
         $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
         $db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
         //User registered, lets log them in.
@@ -295,10 +297,11 @@ if (!empty($username)) {
 					</td>
 				</tr>
 				<tr>
-					<td colspan='2'>
-						<i>By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a>
+					<td colspan='2'>";
+                        alert("info","Just so you know...","By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a>
 						and our <a href='privacy.php'>Privacy Policy</a>. You also agree that you wish to opt-in to our
-						game newsletter. You may opt-out at anytime by checking your in-game settings.</i>
+						game newsletter. You may opt-out at anytime by checking your in-game settings.",false);
+                        echo "
 					</td>
 				</tr>
 				<tr>

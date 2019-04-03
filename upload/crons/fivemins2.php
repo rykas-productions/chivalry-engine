@@ -8,7 +8,12 @@
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
-require_once('../globals_nonauth.php');
+require_once(__DIR__ .'/../globals_nonauth.php');
+if (!isset($argv))
+{
+    exit;
+}
+$_GET['code']=substr($argv[1],5);
 if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 {
     exit;
@@ -20,7 +25,7 @@ $db->query("UPDATE `mining` SET `miningpower`=`max_miningpower` WHERE `miningpow
 $db->query("UPDATE `users` SET `brave`=`brave`+((`maxbrave`/10)+0.5) WHERE `brave`<`maxbrave`");
 $db->query("UPDATE `users` SET `brave`=`maxbrave` WHERE `brave`>`maxbrave`");
 //HP Refill
-$db->query("UPDATE users SET hp=hp+(maxhp/2) WHERE hp<maxhp AND userid != 10");
+$db->query("UPDATE users SET hp=hp+(maxhp/2) WHERE hp<maxhp");
 $db->query("UPDATE users SET hp=maxhp WHERE hp>maxhp");
 //Energy Refill
 $db->query("UPDATE users SET energy=energy+(maxenergy/(6)) WHERE energy<maxenergy AND vip_days=0");

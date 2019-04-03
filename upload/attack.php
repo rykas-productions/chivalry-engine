@@ -8,6 +8,7 @@
 */
 $atkpage = 1;
 require("globals.php");
+$votecount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`voted`) FROM `votes` WHERE `userid` = {$userid}"));
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -30,7 +31,7 @@ switch ($_GET['action']) {
 }
 function attacking()
 {
-    global $db, $userid, $ir, $h, $api, $set, $atkpage;
+    global $db, $userid, $ir, $h, $api, $set, $atkpage, $votecount;
 	$_SESSION['attack_scroll']=0;
     $menuhide = 1;                    //Hide the menu so players cannot load other pages,
     //and lessens the chance of a misclick and losing XP.
@@ -83,6 +84,21 @@ function attacking()
         alert("danger", "Uh Oh!", "You cannot start another attack after you ran from the last one.", true, 'index.php');
         die($h->endpage());
     }
+	else if ($_GET['user'] == 20 && $votecount != 5)
+	{
+		alert("danger", "Uh Oh!", "You cannot attack Your Doppleganger until you've voted completely for the day.", true, 'index.php');
+        die($h->endpage());
+	}
+	else if ($_GET['user'] == 21 && date('j') != 22)
+	{
+		alert("danger", "Uh Oh!", "Due to kingdom wide laws, turkeys may only be hunted on Thanksgiving.", true, 'index.php');
+        die($h->endpage());
+	}
+	else if ($ir['att_dg'] == 1 && $_GET['user'] == 20)
+	{
+		alert("danger", "Uh Oh!", "You've already attacked your doppleganger for the day.", true, 'index.php');
+        die($h->endpage());
+	}
     $youdata = $ir;
     $laston = time() - 900;
     $q = $db->query("/*qc=on*/SELECT `u`.`userid`, `hp`, `equip_armor`, `username`,
@@ -142,6 +158,46 @@ function attacking()
 		$odata['agility']=$odata['agility']+($odata['agility']*$specialnumber2);
 	if ($odata['class'] == 'Guardian')
 		$odata['guard']=$odata['guard']+($odata['guard']*$specialnumber2);
+	if ($_GET['user'] == 20 && $_SESSION['attacking'] == 0)
+	{
+		$db->query("UPDATE `users` 
+					SET `hp` = {$ir['maxhp']}, `maxhp` = {$ir['maxhp']}
+					WHERE `userid` = 20");
+	}
+	if ($_GET['user'] == 20)
+	{
+		$statrandom=Random(1,3);
+		if ($statrandom == 1)
+		{
+			$str=$ir['strength'];
+			$agl=$ir['agility'];
+			$grd=$ir['guard'];
+		}
+		if ($statrandom == 2)
+		{
+			$agl=$ir['strength'];
+			$grd=$ir['agility'];
+			$str=$ir['guard'];
+		}
+		if ($statrandom == 3)
+		{
+			$grd=$ir['strength'];
+			$str=$ir['agility'];
+			$agl=$ir['guard'];
+		}
+		$db->query("UPDATE `userstats` 
+					SET `strength` = {$str},
+					`agility` = {$agl},
+					`guard` = {$grd}
+					WHERE `userid` = 20");
+		$db->query("UPDATE `users` 
+					SET `equip_armor` = {$ir['equip_armor']},
+					`equip_primary` = {$ir['equip_primary']},
+					`equip_secondary` = {$ir['equip_secondary']},
+					`equip_potion` = {$ir['equip_potion']},
+					`level` = {$ir['level']}
+					WHERE `userid` = 20");
+	}
     //Check that the opponent has 1 health point.
     if ($odata['hp'] == 1) {
         $_SESSION['attacking'] = 0;
@@ -229,9 +285,11 @@ function attacking()
 	else if ($db->num_rows($npcquery) > 0) {
 		$results2 = $db->fetch_row($npcquery);
 		$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$_GET['user']}");
+		$time2query = $db->query("/*qc=on*/SELECT `botcooldown` FROM `botlist` WHERE `botid` = {$_GET['user']}");
 		$r2 = $db->fetch_single($timequery);
+		$r3 = $db->fetch_single($time2query);
 		//Opponent's drop has already been collected and the time hasn't reset.
-		if ((time() <= ($r2 + 900)) && ($r2 > 0)) {
+		if ((time() <= ($r2 + $r3)) && ($r2 > 0)) {
 			$_SESSION['attacking'] = 0;
 			$_SESSION['attack_scroll'] = 0;
 			$ir['attacking'] = 0;
@@ -299,7 +357,7 @@ function attacking()
 			$ir['agility']=$ir['agility']+($ir['agility']*0.1);
 		}
 		//Sharper blades skill
-		$specialnumber=((getSkillLevel($userid,9)*13)/100);
+		$specialnumber=((getSkillLevel($userid,9)*20)/100);
 		$r1['weapon']=$r1['weapon']+($r1['weapon']*$specialnumber);
 		$mydamage = round(($r1['weapon'] * $youdata['strength'] / ($odata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 		$hitratio = max(10, min(60 * $ir['agility'] / $odata['agility'], 95));
@@ -371,7 +429,7 @@ function attacking()
 				    $api->UserTakeItem($userid,$r1['ammo'],1);
 			    else
 			    {
-			        if (Random(1,4) != 1)
+			        if (Random(1,4) <= 2)
 			        {
 			            $api->UserTakeItem($userid,$r1['ammo'],1);
 			        }
@@ -576,7 +634,7 @@ function attacking()
                     if (!$api->UserHasItem($_GET['user'],$enweps[$weptouse]['ammo'],1))
                     {
                         $theydodmg=false;
-                        $ouq=$db->query("/*qc=on*/SELECT `equip_primary`,`equip_secondary`,`equip_potion`,`ammo` FROM `users` WHERE `userid` = {$_GET['user']}");
+                        $ouq=$db->query("/*qc=on*/SELECT `equip_primary`,`equip_secondary`,`equip_potion` FROM `users` WHERE `userid` = {$_GET['user']}");
                         $our=$db->fetch_row($ouq);
                         if ($enweps[$weptouse]['itmid'] == $our['equip_primary'])
                         {
@@ -621,7 +679,7 @@ function attacking()
                             $db->query("UPDATE `users` SET `equip_primary` = 0 WHERE `equip_primary` = {$enweps[$weptouse]['itmid']} AND `userid` = {$_GET['user']}");
                             $db->query("UPDATE `users` SET `equip_secondary` = 0 WHERE `equip_secondary` = {$enweps[$weptouse]['itmid']} AND `userid` = {$_GET['user']}");
                             $api->UserGiveItem($_GET['user'],$enweps[$weptouse]['itmid'],1);
-                            $api->GameAddNotification($_GET['user'],"You have ran out of ammo for your {$wep}. {$statloss} It has been unequipped and moved to your inventory.");
+                            $api->GameAddNotification($_GET['user'],"You have ran out of ammo for your {$wep}. {$statloss} It has been unequipped and moved to your inventory.", 'game-icon game-icon-ammo-box', 'red');
                         }
                         else
                         {
@@ -791,7 +849,7 @@ function attacking()
                     }
                     else
                     {
-                        $api->GameAddNotification($_GET['user'],"You ran out of your potion in combat.");
+                        $api->GameAddNotification($_GET['user'],"You ran out of your potion in combat.", 'fas fa-exclamation-circle', 'red');
                         alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have {$youdata['hp']} HP remaining.", false);
                         $db->query("UPDATE `users` SET `equip_potion` = 0 WHERE `userid` = {$_GET['user']}");
                     }
@@ -883,7 +941,7 @@ function attacking()
 				</th>
 				<td class='align-middle'>
 					<div class='progress' style='height: 1rem;'>
-						<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$vars['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars['hpperc']}%'></div>
+						<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars['hpperc']}%'></div>
 							<span>{$vars['hpperc']}% ({$youdata['hp']} / {$youdata['maxhp']})</span>
 					</div>
 				</td>
@@ -894,7 +952,7 @@ function attacking()
 				</th>
 				<td class='align-middle'>
 					<div class='progress' style='height: 1rem;'>
-						<div class='progress-bar bg-success' role='progressbar' aria-valuenow='{$vars2['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars2['hpperc']}%'></div>
+						<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars2['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars2['hpperc']}%'></div>
 							<span>{$vars2['hpperc']}% ({$odata['hp']} / {$odata['maxhp']})</span>
 					</div>
 				</td>
@@ -940,7 +998,7 @@ function beat()
         $api->UserStatusSet($r['userid'], 'infirmary', $hosptime, $hospreason);
         //Give opponent notification that they were attacked.
         $api->GameAddNotification($r['userid'], "You were hospitalized by <a href='profile.php?user=$userid'>{$ir['username']}</a>
-                                                    for {$hosptime} minutes.");
+                                                    for {$hosptime} minutes.", 'game-icon game-icon-internal-injury', 'red');
         //Log that the user won the fight.
         $api->SystemLogsAdd($userid, 'attacking', "Hospitalized <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$_GET['ID']}]
                                                 for {$hosptime} minutes.");
@@ -979,7 +1037,7 @@ function beat()
             $bhr=$db->fetch_row($bhq);
             //Double the infirmary time.
             put_infirmary($r['userid'], $hosptime, $hospreason);
-            $api->GameAddNotification($r['userid'], "Your infirmary time was doubled since you had a bounty on your head.");
+            $api->GameAddNotification($r['userid'], "Your infirmary time was doubled since you had a bounty on your head.", 'game-icon game-icon-coins', '#B87333');
             $api->UserGiveCurrency($userid,'primary',$bhr['bh_bounty']);
             $bounty_format=number_format($bhr['bh_bounty']);
             $db->query("DELETE FROM `bounty_hunter` WHERE `bh_id` = {$bhr['bh_id']}");
@@ -1002,14 +1060,26 @@ function beat()
 		{
 			$api->UserGiveItem($userid,161,1);
 		}
-		//200 User Event
-		$db->query("UPDATE `user_settings` SET `holiday` = `holiday` + 1 WHERE `userid` = {$userid}");
         //Opponent an NPC? Set their HP to 100%, and remove infirmary time.
         if ($r['user_level'] == 'NPC') {
             $db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$r['userid']}");
             $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
 
         }
+		if ($r['userid'] == 20)
+			{
+				$api->UserGiveItem($userid,187,1);
+				$api->UserGiveCurrency($userid,'primary',500000);
+				$api->UserGiveCurrency($userid,'secondary',500);
+				$db->query("UPDATE `user_settings` SET `att_dg` = 1 WHERE `userid` = {$userid}");
+				$api->GameAddNotification($userid,"For slaying Your Doppleganger in battle, you've received a unique badge, 500,000 Copper Coins and 500 Chivalry Tokens.",'game-icon game-icon-backup','purple');
+			}
+		if ($r['userid'] == 21)
+		{
+			$feathers=Random(10,50);
+			$api->UserGiveItem($userid,197,$feathers);
+			$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
+		}
     } else {
         die($h->endpage());
     }
@@ -1034,7 +1104,7 @@ function lost()
         alert('warning', "Security Issue!", "You are trying to lose a fight against non-existent user.", true, 'index.php');
         die($h->endpage());
     }
-    $od = $db->query("/*qc=on*/SELECT `username`, `level`, `user_level`, `kills`
+    $od = $db->query("/*qc=on*/SELECT `username`, `level`, `user_level`, `kills`,
                       `guild`, `xp` FROM `users` WHERE `userid` = {$_GET['ID']}");
     //The opponent does not exist.
     if (!$db->num_rows($od)) {
@@ -1068,7 +1138,7 @@ function lost()
     $expperc2 = round($expgainp2 / $r['xp_needed'] * 100);
     //Tell opponent that they were attacked by user, and emerged victorious.
     $api->GameAddNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a>
-                                            picked a fight against you and lost. You've gained {$expperc2}% experience.");
+                                            picked a fight against you and lost. You've gained {$expperc2}% experience.", 'game-icon game-icon-crossed-swords', 'green');
     //Log that the user lost.
     $api->SystemLogsAdd($userid, 'attacking', "Attacked <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$_GET['ID']}] and lost.");
     //Log that the opponent won.
@@ -1115,8 +1185,6 @@ function lost()
 	{
 		$api->UserGiveItem($_GET['ID'],161,1);
 	}
-	//200 User Event
-	$db->query("UPDATE `user_settings` SET `holiday` = `holiday` + 1 WHERE `userid` = {$_GET['ID']}");
 	attacklog($userid,$_GET['ID'],'lost');
 }
 
@@ -1154,16 +1222,16 @@ function xp()
             //XP gained is Opponent's Level x Opponent's Level x Opponent's Level.
             $qe = ($r['level'] * $r['level'] * $r['level']);
             //Seasoned Warrior Skill
-			$specialnumber=((getSkillLevel($userid,5)*3)/100);
-            //Add 3% bonus if Exp. token is equipped
+			$specialnumber=((getSkillLevel($userid,5)*5)/100);
+            //Add 10% bonus if Exp. token is equipped
 			if ($api->UserEquippedItem($userid,'primary',93))
 			{
-				$qe=$qe+($qe*0.03);
+				$qe=$qe+($qe*0.1);
 				$qe=$qe+($qe*$specialnumber);
 			}
 			if ($api->UserEquippedItem($userid,'secondary',93))
 			{
-				$qe=$qe+($qe*0.03);
+				$qe=$qe+($qe*0.1);
 				$qe=$qe+($qe*$specialnumber);
 			}
             //Make the XP gained a little random...
@@ -1196,7 +1264,7 @@ function xp()
             $api->UserStatusSet($r['userid'], 'infirmary', $hosptime, $hospreason);
             //Tell opponent they were attacked by the user and lost.
             $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> attacked you
-                and used you for experience.");
+                and used you for experience.", 'game-icon game-icon-crossed-swords', 'red');
             //Log that the user won.
             $api->SystemLogsAdd($userid, 'attacking', "Attacked <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and gained {$expperc}% Experience.");
             //Log that the opponent lost.
@@ -1244,8 +1312,6 @@ function xp()
 			{
 				$api->UserGiveItem($userid,161,1);
 			}
-			//200 User Event
-			$db->query("UPDATE `user_settings` SET `holiday` = `holiday` + 1 WHERE `userid` = {$userid}");
             //Opponent is NPC, so lets refill their HP, and remove infirmary time.
             if ($r['user_level'] == 'NPC') {
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
@@ -1272,6 +1338,20 @@ function xp()
 					}
 				}
 			}
+			if ($r['userid'] == 20)
+			{
+				$api->UserGiveItem($userid,187,1);
+				$api->UserGiveCurrency($userid,'primary',500000);
+				$api->UserGiveCurrency($userid,'secondary',500);
+				$db->query("UPDATE `user_settings` SET `att_dg` = 1 WHERE `userid` = {$userid}");
+				$api->GameAddNotification($userid,"For slaying Your Doppleganger in battle, you've received a unique badge, 500,000 Copper Coins and 500 Chivalry Tokens.",'game-icon game-icon-backup','purple');
+			}
+			if ($r['userid'] == 21)
+			{
+				$feathers=Random(10,50);
+				$api->UserGiveItem($userid,197,$feathers);
+				$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
+			}
             if ($r['user_level'] != 'NPC') {
                 $last5=time()-600;
                 $attackedcount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`attack_id`) FROM `attack_logs` WHERE `attacked` = {$r['userid']} AND `result` = 'xp' AND `attack_time` > {$last5}"));
@@ -1283,7 +1363,7 @@ function xp()
                                 `agility` = `agility` - {$loss},
                                 `guard` = `guard` - {$loss}
                                 WHERE `userid` = {$r['userid']}");
-                    $api->GameAddNotification($r['userid'],"You have lost " . round($loss) . " strength, agility and guard for allowing yourself to be used for experience too frequently.");
+                    $api->GameAddNotification($r['userid'],"You have lost " . round($loss) . " strength, agility and guard for allowing yourself to be used for experience too frequently.", 'game-icon game-icon-crucifix', 'red');
                 }
             }
         }
@@ -1336,7 +1416,7 @@ function mug()
             //Place opponent in infirmary.
             $api->UserStatusSet($r['userid'], 'infirmary', $hosptime, $hospreason);
             //Tell opponent they were mugged, and for how much, by user.
-            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Copper Coins.");
+            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Copper Coins.", 'game-icon game-icon-robber', 'red');
             //Log that the user won and stole some Copper Coins, and that
             //the opponent lost and lost Copper Coins.
             $api->SystemLogsAdd($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole {$stole} Copper Coins.");
@@ -1380,13 +1460,25 @@ function mug()
 			{
 				$api->UserGiveItem($userid,161,1);
 			}
-			//200 User Event
-			$db->query("UPDATE `user_settings` SET `holiday` = `holiday` + 1 WHERE `userid` = {$userid}");
             //Opponent is NPC, so remove infirmary time and refill HP.
             if ($r['user_level'] == 'NPC') {
                 $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
                 $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
             }
+			if ($r['userid'] == 20)
+			{
+				$api->UserGiveItem($userid,187,1);
+				$api->UserGiveCurrency($userid,'primary',500000);
+				$api->UserGiveCurrency($userid,'secondary',500);
+				$db->query("UPDATE `user_settings` SET `att_dg` = 1 WHERE `userid` = {$userid}");
+				$api->GameAddNotification($userid,"For slaying Your Doppleganger in battle, you've received a unique badge, 500,000 Copper Coins and 500 Chivalry Tokens.",'game-icon game-icon-backup','purple');
+			}
+			if ($r['userid'] == 21)
+			{
+				$feathers=Random(10,50);
+				$api->UserGiveItem($userid,197,$feathers);
+				$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
+			}
         }
         $npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$r['userid']}");
         //Opponent is registered on bot list.
@@ -1410,7 +1502,7 @@ function mug()
                     $db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
                 }
                 //Tell user they took an item.
-                $api->GameAddNotification($userid, "For mugging the " . $api->SystemUserIDtoName($r['userid']) . " bot, you have gained 1 " . $api->SystemItemIDtoName($results2['botitem']));
+                $api->GameAddNotification($userid, "For mugging the " . $api->SystemUserIDtoName($r['userid']) . " bot, you have gained 1 " . $api->SystemItemIDtoName($results2['botitem']) . ".", 'game-icon game-icon-open-treasure-chest', 'brown');
             }
         }
 		//Tell user they won the fight, and how much currency they took.

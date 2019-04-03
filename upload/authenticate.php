@@ -107,7 +107,7 @@ else {
         $db->query("INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES ('{$IP}', '{$mem['userid']}', '{$CurrentTime}');");
         notification_add($mem['userid'], "Someone has just recently attempted to gain access to your account and failed.
 		    If this was you, you do not need to do anything. However, if this was not, you should change your password
-		    immediately!");
+		    immediately!", 'fas fa-exclamation-circle', 'red');
         die("<h3>{$set['WebsiteName']} Error</h3> Invalid Email and/or Password.<br /> <a href='login.php'>Back</a>");
 
     }
@@ -136,15 +136,6 @@ else {
         $db->query("UPDATE `users`
               SET `loginip` = '{$IP}'
                WHERE `userid` = {$mem['userid']}");
-    }
-    //Generate keys for auto-login.
-    if ($_POST['remember'] == 'yes')
-    {
-        $uuid=Random();
-        $token=hash('sha512',randomizer());
-        $db->query("INSERT INTO `auto_login` (`UUID`, `Token`, `userid`) VALUES ('{$uuid}', '{$token}', '{$mem['userid']}')");
-        setcookie('uuid',$uuid);
-        setcookie('token',$token);
     }
     $encpsw = encode_password($raw_password,$mem['user_level']);
     $e_encpsw = $db->escape($encpsw);

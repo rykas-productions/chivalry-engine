@@ -52,6 +52,15 @@ switch ($_GET['action']) {
 	case 'mine3':
         mine(50,13);
         break;
+    case 'mine4':
+        mine(75,82);
+        break;
+    case 'mine5':
+        mine(100,83);
+        break;
+    case 'mine6':
+        mine(200,84);
+        break;
 	case 'kill1':
         kills(10,14);
         break;
@@ -232,6 +241,21 @@ switch ($_GET['action']) {
     case 'labor5':
         labor(50000000,76);
         break;
+    case 'course1':
+        course(1,77);
+        break;
+    case 'course2':
+        course(5,78);
+        break;
+    case 'course3':
+        course(10,79);
+        break;
+    case 'course4':
+        course(20,80);
+        break;
+    case 'course5':
+        course(40,81);
+        break;
     default:
         home();
         break;
@@ -242,7 +266,7 @@ function home()
 	echo "Here's a list of in-game achievements. Click on an achievement to be rewarded with it. You may only 
 	be rewarded once per achievement. Each achievement you complete will get you 1 skill point.";
 	$count=1;
-	while ($count != 78)
+	while ($count != 86)
 	{
 		$class[$count]= (userHasAchievement($count)) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
 		$count=$count+1;
@@ -258,13 +282,16 @@ function home()
 			<a {$class[50]} href='?action=level7'>Level 150</a><br />
 			<a {$class[4]} href='?action=level4'>Level 200</a><br />
 			<a {$class[5]} href='?action=level5'>Level 300</a><br />
-			<a {$class[51]} href='?action=leve8'>Level 500</a><br />
+			<a {$class[51]} href='?action=level8'>Level 500</a><br />
 		</div>
 		<div class='col-sm'>
 			<u><b>Mining Level</b></u><br />
 			<a {$class[11]} href='?action=mine1'>Mining Level 10</a><br />
 			<a {$class[12]} href='?action=mine2'>Mining Level 20</a><br />
 			<a {$class[13]} href='?action=mine3'>Mining Level 50</a><br />
+            <a {$class[82]} href='?action=mine4'>Mining Level 75</a><br />
+            <a {$class[83]} href='?action=mine5'>Mining Level 100</a><br />
+            <a {$class[84]} href='?action=mine6'>Mining Level 200</a><br />
 		</div>
 		<div class='col-sm'>
 			<u><b>Busts</b></u><br />
@@ -377,6 +404,16 @@ function home()
 			<a {$class[74]} href='?action=labor3'>1,000,000 Labor</a><br />
 			<a {$class[75]} href='?action=labor4'>10,000,000 Labor</a><br />
 			<a {$class[76]} href='?action=labor5'>50,000,000 Labor</a><br />
+		</div>
+	</div>
+    <div class='row'>
+		<div class='col-sm'>
+			<u><b>Courses Completed</b></u><br />
+			<a {$class[77]} href='?action=course1'>1 Course</a><br />
+			<a {$class[78]} href='?action=course2'>5 Courses</a><br />
+			<a {$class[79]} href='?action=course3'>10 Courses</a><br />
+			<a {$class[80]} href='?action=course4'>20 Courses</a><br />
+			<a {$class[81]} href='?action=course5'>40 Courses</a><br />
 		</div>
 	</div>";
 	$h->endpage();
@@ -597,7 +634,7 @@ function worth($level,$id)
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
 		die($h->endpage());
 	}
-	$worth=$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*200)+($ir['tokenbank']*200);
+	$worth=$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*1000)+($ir['tokenbank']*1000)+$ir['vaultbank'];
 	if (empty($worth))
 		$worth=0;
 	if ($worth < $level)
@@ -736,6 +773,32 @@ function labor($level,$id)
 	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
 	alert('success',"Success!","You have successfully achieved the {$level} labor achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
+	$h->endpage();
+}
+function course($level,$id)
+{
+	global $db,$ir,$userid,$api,$h;
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	if ($db->num_rows($achieved) > 0)
+	{
+		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
+		die($h->endpage());
+	}
+    
+	$posts=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `academy_done` WHERE `userid` = {$userid}"));
+	if (empty($posts))
+		$posts=0;
+	if ($posts < $level)
+	{
+		alert('danger',"Uh Oh!","You do not have enough completed courses to receive this award. You only have {$posts} courses completed.",true,'achievements.php');
+		die($h->endpage());
+	}
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
+	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} completed courses.");
+	$tokens=Random(25000,100000);
+	$api->UserGiveCurrency($userid,'primary',$tokens);
+	givePoint($userid);
+	alert('success',"Success!","You have successfully achieved the {$level} courss completed achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function givePoint($userid)

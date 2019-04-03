@@ -8,7 +8,7 @@ if ($db->num_rows($am) == 0)
 	{
 		$days=Random(1,3);
 		$kills=(Random(5,15)+Random($ir['level']/4,$ir['level']/2))*$days;
-		$reward=$kills*Random(750,2000);
+		$reward=$kills*Random(4500,8000);
 		$endtime=time()+($days*86400);
 		$db->query("INSERT INTO `missions` 
 		(`mission_userid`, `mission_kills`, 

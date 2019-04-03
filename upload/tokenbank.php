@@ -111,5 +111,6 @@ function withdraw()
         $api->SystemLogsAdd($userid, 'tokenbank', "Withdrew " . number_format($_POST['withdraw']) . " Chivalry Tokens.");
     }
 }
-
+if ($ir['vip_days'] == 0)
+    include('ads/ad_bank.php');
 $h->endpage();

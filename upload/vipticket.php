@@ -15,21 +15,19 @@ if ($rng == 1)
 }
 elseif ($rng == 2)
 {
-	$cash=Random(5000,1000);
+	$cash=Random(5000,7500);
 	alert("success","Success!","You scratch this spot off and you win {$cash} Chivalry Tokens. Congratulations!",true,'inventory.php');
 	$api->UserGiveCurrency($userid,'secondary',$cash);
 }
 elseif ($rng == 3)
 {
-	$cash=Random(100,500);
-	alert("success","Success!","You scratch this spot off and you win {$cash} Linen Wraps. Congratulations!",true,'inventory.php');
-	$api->UserGiveItem($userid,6,$cash);
+	alert("success","Success!","You scratch this spot off and you win a Salty Badge. Congratulations!",true,'inventory.php');
+	$api->UserGiveItem($userid,163,1);
 }
 elseif ($rng == 4)
 {
-	$cash=Random(100,500);
-	alert("success","Success!","You scratch this spot off and you win {$cash} Keys. Congratulations!",true,'inventory.php');
-	$api->UserGiveItem($userid,30,$cash);
+	alert("success","Success!","You scratch this spot off and you win a VIP Shield Badge. Congratulations!",true,'inventory.php');
+	$api->UserGiveItem($userid,159,1);
 }
 elseif ($rng == 5)
 {

@@ -1,9 +1,9 @@
 <?php
 require('globals.php');
 $time=time();
-if ($ir['potion_drink'] > ($time-10800))
+if ($ir['potion_drink'] > ($time-3600))
 {
-    $comebacktime=$ir['potion_drink']+10800;
+    $comebacktime=$ir['potion_drink']+3600;
     alert('danger',"Uh Oh!","You must wait for the potion to clear out of your system first before you drink another. Come back in " . TimeUntil_Parse($comebacktime) . ".",true,'inventory.php');
     die($h->endpage());
 }
@@ -39,7 +39,7 @@ if ($effect == 3)
 }
 if ($effect == 4)
 {
-    $luck=Random(-5,25);
+    $luck=Random(0,30);
     $db->query("UPDATE `userstats` SET `luck` = `luck` + '{$luck}' WHERE `userid` = {$userid}");
     if (($ir['luck'] + $luck) > 150)
     {
