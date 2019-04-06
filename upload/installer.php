@@ -488,7 +488,6 @@ function install()
     'iq_stat' => 'IQ',
     'labor_stat' => 'Labor'
 );
-?>
 EOF;
     $f = fopen('config.php', 'w');
     fwrite($f, $config_file);
