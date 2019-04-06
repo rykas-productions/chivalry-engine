@@ -27,9 +27,9 @@ $statnames = array("Strength" => "strength", "Agility" => "agility", "Guard" => 
 if (!isset($_POST["amnt"])) {
     $_POST["amnt"] = 0;
 }
-$_POST["amnt"] = abs($_POST["amnt"]);
+$amnt = filter_input(INPUT_POST, 'amnt', FILTER_SANITIZE_NUMBER_INT) ?: 0;
 echo "<h3>The Gym</h3>";
-if (isset($_POST["stat"]) && $_POST["amnt"]) {
+if (isset($_POST["stat"]) && $amnt) {
     //User trained stat does not exist.
     if (!isset($statnames[$_POST['stat']])) {
         alert("danger", "Uh Oh!", "The stat you've chosen to train does not exist or cannot be trained.", true, 'back');
@@ -44,45 +44,45 @@ if (isset($_POST["stat"]) && $_POST["amnt"]) {
     }
     $stat = $statnames[$_POST['stat']];
     //User is trying to train using more energy than they have.
-    if ($_POST['amnt'] > $ir['energy']) {
+    if ($amnt > $ir['energy']) {
         alert("danger", "Uh Oh!", "You are trying to train using more energy than you currently have.", false);
     } else {
         $gain = 0;
         $extraecho = '';
         if ($stat == 'all') {
-            $gainstr = $api->user->train($userid, 'strength', $_POST['amnt'] / 4);
-            $gainagl = $api->user->train($userid, 'agility', $_POST['amnt'] / 4);
-            $gaingrd = $api->user->train($userid, 'guard', $_POST['amnt'] / 4);
-            $gainlab = $api->user->train($userid, 'labor', $_POST['amnt'] / 4);
+            $gainstr = $api->user->train($userid, 'strength', $amnt / 4);
+            $gainagl = $api->user->train($userid, 'agility', $amnt / 4);
+            $gaingrd = $api->user->train($userid, 'guard', $amnt / 4);
+            $gainlab = $api->user->train($userid, 'labor', $amnt / 4);
         } else {
-            $gain = $api->user->train($userid, $_POST['stat'], $_POST['amnt']);
+            $gain = $api->user->train($userid, $_POST['stat'], $amnt);
         }
         //Update energy left and stat's new count.
         if ($stat != 'all')
             $NewStatAmount = $ir[$stat] + $gain;
-        $EnergyLeft = $ir['energy'] - $_POST['amnt'];
+        $EnergyLeft = $ir['energy'] - $amnt;
         //Strength is chosen stat
         if ($stat == "strength") {
             alert('success', "Success!", "You begin to lift weights. You have gained {$gain} Strength by completing
-			    {$_POST['amnt']} sets of weights. You now have {$NewStatAmount} Strength and {$EnergyLeft} Energy left.", false);
+			    {$amnt} sets of weights. You now have {$NewStatAmount} Strength and {$EnergyLeft} Energy left.", false);
             //Have strength selected for the next training.
             $str_select = "selected";
         } //Agility is the chosen stat.
         elseif ($stat == "agility") {
             alert('success', "Success!", "You beging to run laps. You have gained {$gain} Agility by completing
-			    {$_POST['amnt']} laps. You now have {$NewStatAmount} Agility and {$EnergyLeft} Energy left.", false);
+			    {$amnt} laps. You now have {$NewStatAmount} Agility and {$EnergyLeft} Energy left.", false);
             //Have agility selected for the next training.
             $agl_select = "selected";
         } //Guard is the chosen stat.
         elseif ($stat == "guard") {
             alert('success', "Success!", "You begin swimming in the pool. You have gained {$gain} Guard by swimming for
-			    {$_POST['amnt']} minutes. You now have {$NewStatAmount} Guard and {$EnergyLeft} left.", false);
+			    {$amnt} minutes. You now have {$NewStatAmount} Guard and {$EnergyLeft} left.", false);
             //Have guard selected for the next training.
             $grd_select = "selected";
         } //Labor is the chosen stat.
         elseif ($stat == "labor") {
             alert('success', "Success!", "You begin moving boxes around the gym. You have gained {$gain} Labor by moving
-                {$_POST['amnt']} sets of boxes. You now have {$NewStatAmount} and {$EnergyLeft} Energy left.", false);
+                {$amnt} sets of boxes. You now have {$NewStatAmount} and {$EnergyLeft} Energy left.", false);
             //Have guard selected for the next training.
             $lab_select = "selected";
         } elseif ($stat == "all") {
@@ -94,7 +94,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"]) {
         //Log the user's training attempt.
         $api->game->addLog($userid, 'training', "Trained their {$stat} {$_POST['amnt']} times and gained {$gain}.");
         echo "<hr />";
-        $ir['energy'] -= $_POST['amnt'];
+        $ir['energy'] -= $amnt;
         if ($stat != 'all')
             $ir[$stat] += $gain;
     }

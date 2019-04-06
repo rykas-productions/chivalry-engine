@@ -78,48 +78,48 @@ function heal()
     //User is specified in the GET
     if (isset($_GET['user'])) {
         //Sanitize the user ID input.
-        $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
+        $user = filter_input(INPUT_GET, 'user', FILTER_SANITIZE_NUMBER_INT) ?: 0;
         //GET is empty/truncated after sanitation
-        if (empty($_GET['user']) || $_GET['user'] == 0) {
+        if (empty($user) || $user == 0) {
             alert('danger', "Uh Oh!", "You are attempting to heal an invalid or non-existent user.", true, 'infirmary.php');
             die($h->endpage());
         }
         //User to heal is not in the infirmary.
-        if ($api->UserStatus($_GET['user'], 'infirmary') == false) {
+        if (!$api->user->inInfirmary($user)) {
             alert('danger', "Uh Oh!", "You are attempting to heal out a player who's not even in the infirmary.", true, 'infirmary.php');
             die($h->endpage());
         }
         //Make sure the user is specifying how many times to heal.
         if (isset($_GET['times'])) {
             //Sanitize how many times the user wishes to heal.
-            $_GET['times'] = (isset($_GET['times']) && is_numeric($_GET['times'])) ? abs($_GET['times']) : 0;
+            $times = filter_input(INPUT_GET, 'times', FILTER_SANITIZE_NUMBER_INT) ?: 0;
             //Healing times is truncated/empty after sanitation.
-            if (empty($_GET['times'])) {
+            if (empty($times)) {
                 alert('danger', "Uh Oh!", "You are attempting to heal an invalid or non-existent user.", true, 'infirmary.php');
                 die($h->endpage());
             }
             //Cost = 25 Secondary Currenxy x Times to Heal
             //Times = 30 Minutes x Times to Heal
-            $cost = 25 * $_GET['times'];
-            $time = 30 * $_GET['times'];
+            $cost = 25 * $times;
+            $time = 30 * $times;
             //User does not have enough secondary currency to heal that many times.
             if ($ir['secondary_currency'] < $cost) {
                 alert('danger', "Uh Oh!", "You do not have enough Secondary Currency to heal {$_GET['times']} sets.", true, 'infirmary.php');
                 die($h->endpage());
             } else {
                 //Healed successfully!
-                $api->user->setInfirmary($_GET['user'], 'infirmary', $time * -1, 'Not read');
+                $api->user->setInfirmary($user, $time * -1, 'Not read');
                 //Take current user's secondary currency
                 $api->user->takeCurrency($userid, 'secondary', $cost);
                 //Add a friendly note.
-                $api->user->addNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has healed you {$_GET['times']} times.");
+                $api->user->addNotification($user, "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has healed you {$times} times.");
                 //Log it!
-                $api->game->addLog($userid, 'heal', "Healed {$api->user->getNamefromID($_GET['user'])} {$_GET['times']} times.");
-                alert('success', "Success!", "You have healed {$api->user->getNamefromID($_GET['user'])} {$_GET['times']}
+                $api->game->addLog($userid, 'heal', "Healed {$api->user->getNamefromID($user)} {$_GET['times']} times.");
+                alert('success', "Success!", "You have healed {$api->user->getNamefromID($user)} {$times}
                 times, costing you {$cost} Secondary Currency.", true, 'index.php');
             }
         } else {
-            echo "How many times do you wish to heal {$api->user->getNamefromID($_GET['user'])}?<br />
+            echo "How many times do you wish to heal {$api->user->getNamefromID($user)}?<br />
             1 Set = 30 minutes<br />
             1 Set = 25 Secondary Currency<br />
             <form>

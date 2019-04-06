@@ -13,7 +13,7 @@ require("globals.php");
 $tresder = (Random(100, 999));
 //User's max bet is their level * 500, capping out at 10,000
 $maxbet = (10000 < $ir['level'] * 500) ? 10000 : $ir['level'] * 500;
-$_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
+$tresde = filter_input(INPUT_GET, 'tresde', FILTER_SANITIZE_NUMBER_INT) ?: 0;
 //Anti-refresh bound isn't bound to SESSION, so bind 0 to it.
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
@@ -25,13 +25,13 @@ if ($ir['primary_currency'] < $maxbet) {
     die($h->endpage());
 }
 //The RNG received from GET does not equal RNG in SESSION, or is less than 100
-if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
+if (($_SESSION['tresde'] == $tresde) || $tresde < 100) {
     alert('danger', "Uh Oh!", "Do not refresh while playing High/Low.", true, "hilow.php?tresde={$tresder}");
     $_SESSION['number'] = 0;
     die($h->endpage());
 }
 //Bind RNG from GET to SESSION
-$_SESSION['tresde'] = $_GET['tresde'];
+$_SESSION['tresde'] = $tresde;
 echo "<h3>High/Low</h3><hr />";
 if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower'))) {
     //Player did not select a number.

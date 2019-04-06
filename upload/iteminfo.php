@@ -7,8 +7,8 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : '';
-$itmid = $_GET['ID'];
+$ID = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+$itmid = $ID;
 if (!$itmid) {
     alert('danger', 'Uh Oh!', 'Invalid or non-existent Item ID.', true, 'inventory.php');
 } else {

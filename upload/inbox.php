@@ -146,23 +146,23 @@ function read()
     //Request CSRF code for if the user wishes to send a reply.
     $code = request_csrf_code('inbox_send');
     //Grab the message ID from GET.
-    $_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs($_GET['msg']) : 0;
+    $msg_id = filter_input(INPUT_GET, 'msg', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //Message ID is empty.
-    if (empty($_GET['msg'])) {
+    if (empty($msg_id)) {
         alert('danger', "Uh Oh!", "This message is non-existent, or does not belong to you.", true, 'inbox.php');
         die($h->endpage());
     }
     //Message does not exist, or does not belong to the current player.
-    if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0) {
+    if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$msg_id} AND `mail_to` = {$userid}")) == 0) {
         alert("danger", "Uh Oh!", "This message is non-existent, or does not belong to you.", true, 'inbox.php');
         die($h->endpage());
     }
     //Grab all message data from the database for this message
-    $msg = $db->fetch_row($db->query("SELECT * FROM `mail` WHERE `mail_id` = {$_GET['msg']}"));
+    $msg = $db->fetch_row($db->query("SELECT * FROM `mail` WHERE `mail_id` = {$msg_id}"));
     //Grab sending player's username and display picture.
     $un1 = $db->fetch_row($db->query("SELECT `username`,`display_pic` FROM `users` WHERE `userid` = {$msg['mail_from']}"));
     //Update message to reflect that it has been read.
-    $db->query("UPDATE `mail` SET `mail_status` = 'read' WHERE `mail_id` = {$_GET['msg']}");
+    $db->query("UPDATE `mail` SET `mail_status` = 'read' WHERE `mail_id` = {$msg_id}");
     //BBCode parse the message.
     $parser->parse($msg['mail_text']);
     //Show sender's picture... if they have one.
@@ -350,13 +350,11 @@ function outbox()
 
 function compose()
 {
-    global $db, $userid;
+    global $db;
     //Sanitize GET
-    $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
+    $user = filter_input(INPUT_GET, 'user', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //GET is set and greater than 0, so let's fetch the username associated that's on the GET.
-    $username = (isset($_GET['user']) && ($_GET['user'] > 0)) ?
-        $username = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}")) :
-        '';
+    $username = (isset($user) && ($user > 0)) ? $username = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}")) : '';
         //Request CSRF Code and display the message composer form.
         $code = request_csrf_code('inbox_send');
         echo "
@@ -425,21 +423,21 @@ function delete()
 {
     global $db, $userid, $h;
     //Sanitize the GET.
-    $_GET['msg'] = (isset($_GET['msg']) && is_numeric($_GET['msg'])) ? abs($_GET['msg']) : 0;
+    $msg = filter_input(INPUT_GET, 'msg', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //Message ID isn't set.
-    if (empty($_GET['msg'])) {
+    if (empty($msg)) {
         alert('danger', "Uh Oh!", "This message is non-existent, or does not belong to you.", false);
         home();
         die($h->endpage());
     }
     //Message does not exist, or does not belong to the current player.
-    if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$_GET['msg']} AND `mail_to` = {$userid}")) == 0) {
+    if ($db->num_rows($db->query("SELECT `mail_id` FROM `mail` WHERE `mail_id` = {$msg} AND `mail_to` = {$userid}")) == 0) {
         alert("danger", "Uh Oh!", "This message is non-existent, or does not belong to you.", false);
         home();
         die($h->endpage());
     }
     //Delete message.
-    $db->query("DELETE FROM `mail` WHERE `mail_id` = {$_GET['msg']}");
+    $db->query("DELETE FROM `mail` WHERE `mail_id` = {$msg}");
     alert('success', "Success!", "Message has been deleted successfully.", false);
     home();
 }

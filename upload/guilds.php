@@ -168,12 +168,12 @@ function create()
 function view()
 {
     global $db, $h, $api;
-    $_GET['id'] = abs($_GET['id']);
+    $guild_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //Guild ID has not been entered, so redirect them to main guild listing.
     if (empty($_GET['id'])) {
         header("Location: guilds.php");
     } else {
-        $gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+        $gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}");
         //Guild does not exist.
         if ($db->num_rows($gq) == 0) {
             alert('danger', "Uh Oh!", "The guild you are trying to view does not exist.", true, "guilds.php");
@@ -189,7 +189,7 @@ function view()
 					Guild Leader
 				</th>
 				<td>
-					<a href='profile.php?user={$gd['guild_owner']}'> " . $api->SystemUserIDtoName($gd['guild_owner']) . "</a>
+					<a href='profile.php?user={$gd['guild_owner']}'> " . $api->user->getNameFromID($gd['guild_owner']) . "</a>
 				</td>
 			</tr>
 			<tr>
@@ -197,7 +197,7 @@ function view()
 					Guild Co-Leader
 				</th>
 				<td>
-					<a href='profile.php?user={$gd['guild_coowner']}'> " . $api->SystemUserIDtoName($gd['guild_coowner']) . "</a>
+					<a href='profile.php?user={$gd['guild_coowner']}'> " . $api->user->getNameFromID($gd['guild_coowner']) . "</a>
 				</td>
 			</tr>
 			<tr>
@@ -252,13 +252,13 @@ function view()
 function memberlist()
 {
     global $db, $h;
-    $_GET['id'] = abs($_GET['id']);
+    $guild_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //Guild is not specified.
-    if (empty($_GET['id'])) {
+    if (empty($guild_id )) {
         alert('danger', "Uh Oh!", "Please specify the guild you wish to view.", true, "guilds.php");
         die($h->endpage());
     }
-    $gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+    $gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id }");
     //Guild does not exist.
     if ($db->num_rows($gq) == 0) {
         alert('danger', "Uh Oh!", "You are trying to view a non-existent guild.", true, "guilds.php");
@@ -296,13 +296,13 @@ function memberlist()
 function apply()
 {
     global $db, $userid, $ir, $api, $h;
-    $_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
+    $guild_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //Guild is not specified.
-    if (empty($_GET['id'])) {
+    if (empty($guild_id)) {
         alert('danger', "Uh Oh!", "Please specify the guild you wish to view.", true, "guilds.php");
         die($h->endpage());
     }
-    $gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$_GET['id']}");
+    $gq = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}");
     //Guild does not exist.
     if ($db->num_rows($gq) == 0) {
         alert('danger', "Uh Oh!", "You are trying to apply to a non-existent guild.", true, "guilds.php");
@@ -323,7 +323,7 @@ function apply()
                 immediately, as another person may have access to your account!", true, 'back');
             die($h->endpage());
         }
-        $cnt = $db->query("SELECT * FROM `guild_applications` WHERE `ga_user` = {$userid} && `ga_guild` = {$_GET['id']}");
+        $cnt = $db->query("SELECT * FROM `guild_applications` WHERE `ga_user` = {$userid} && `ga_guild` = {$guild_id}");
         //User has already submitted an application to this guild.
         if ($db->num_rows($cnt) > 0) {
             alert('danger', "Uh Oh!", "You have already filled out an application to join this guild. Please wait until a

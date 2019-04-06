@@ -8,16 +8,16 @@
 */
 require('globals.php');
 //Secure the GET
-$_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : 0;
+$gcid = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
 
 //Verify that the GET is still set.
-if (empty($_GET['ID'])) {
+if (empty($gcid)) {
     alert('danger', "Uh Oh!", "Please specify the guild crime log you wish to view.", true, 'index.php');
     die($h->endpage());
 }
 
 //Select the log from the database.
-$q = $db->query("SELECT * FROM `guild_crime_log` WHERE `gclID` = {$_GET['ID']}");
+$q = $db->query("SELECT * FROM `guild_crime_log` WHERE `gclID` = {$gcid}");
 
 //Make sure the crime log exists.
 if ($db->num_rows($q) == 0) {

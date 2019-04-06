@@ -18,7 +18,6 @@ class headers
         <!DOCTYPE html>
         <html lang="en">
         <head>
-            <center>
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -273,10 +272,8 @@ class headers
 				$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
 				echo "This is a needed evil. Please confirm you are not a bot."; ?>
 					<form action='macro.php' method='post'>
-						<center>
 							<div class='g-recaptcha' data-theme='light'
 								 data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
-						</center>
 						<input type='hidden' value='<?php echo $macropage; ?>' name='page'>
 						<input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" data-dismiss="modal">
 					</form>
