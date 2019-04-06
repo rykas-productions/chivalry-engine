@@ -223,14 +223,14 @@ function mine()
 function mining_levelup()
 {
     global $db, $userid, $MUS;
-    $MUS['xp_needed'] = round(($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * 4.4);
+    $MUS['xp_needed'] = round(($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1);
     if ($MUS['miningxp'] >= $MUS['xp_needed']) {
         $expu = $MUS['miningxp'] - $MUS['xp_needed'];
         $MUS['mining_level'] += 1;
         $MUS['miningxp'] = $expu;
         $MUS['buyable_power'] += 1;
         $MUS['xp_needed'] =
-            round(($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * ($MUS['mining_level'] + 1) * 4.4);
+            round(($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1);
         $db->query("UPDATE `mining` SET `mining_level` = `mining_level` + 1, `miningxp` = {$expu},
                  `buyable_power` = `buyable_power` + 1 WHERE `userid` = {$userid}");
     }
