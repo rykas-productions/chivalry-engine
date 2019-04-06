@@ -11,6 +11,10 @@ if ((!file_exists('./installer.lock')) && (file_exists('installer.php'))) {
     die();
 }
 require("globals_nonauth.php");
+$last24hr=time()-86400;
+$totalplayers=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users`"));
+$playersonline=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$last24hr}"));
+$signups=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `registertime` > {$last24hr}"));
 $currentpage = $_SERVER['REQUEST_URI'];
 $cpage = strip_tags(stripslashes($currentpage));
 $domain = determine_game_urlbase();
@@ -48,7 +52,7 @@ echo "
     <div class='col-sm-4'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
-                Top 10 Players
+                Highest Ranked Players
             </div>
             <div class='card-body'>";
                 $Rank = 0;
@@ -67,6 +71,21 @@ echo "
                     echo "{$Rank}) {$pdata['username']} [{$pdata['userid']}] (Level {$pdata['level']})<br />";
                 }
                 echo"
+            </div>
+        </div>
+    </div>
+</div>
+<div class='row'>
+    <div class='col-sm-4'>
+        <div class='card'>
+            <div class='card-header bg-dark text-white'>
+                No Installation Required!
+            </div>
+            <div class='card-body'>
+                Free Registration<br />
+                " . number_format($playersonline) . " Players Online Today<br />
+                " . number_format($totalplayers) . " Total Players<br />
+                " . number_format($signups) . " New Players Today
             </div>
         </div>
     </div>
