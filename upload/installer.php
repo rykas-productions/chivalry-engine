@@ -57,11 +57,11 @@ function menuprint($highlight)
         }
         if ($k == $highlight)
         {
-            echo '<span style="color: black;">' . $v . '</span>';
+            echo '<span class="text-dark">' . $v . '</span>';
         }
         else
         {
-            echo '<span style="color: gray;">' . $v . '</span>';
+            echo '<span class="text-muted">' . $v . '</span>';
         }
     }
     echo '<hr />';
@@ -73,57 +73,57 @@ function diagnostics()
     menuprint("diag");
     if (version_compare(phpversion(), '5.5.0') < 0)
     {
-        $pv = '<span style="color: red">Failed</span>';
+        $pv = '<span class="text-danger">Failed</span>';
         $pvf = 0;
     }
     else
     {
-        $pv = "<span style='color: green'>Pass! PHP Version is " . phpversion();  "!</span>";
+        $pv = "<span class='text-success''>Pass! PHP Version is " . phpversion() . "!</span>";
         $pvf = 1;
     }
     if (is_writable('./'))
     {
-        $wv = '<span style="color: green">Pass! Game folder is writable.</span>';
+        $wv = '<span class="text-success">Pass! Game folder is writable.</span>';
         $wvf = 1;
     }
     else
     {
-        $wv = '<span style="color: red">Fail!</span>';
+        $wv = '<span class="text-danger">Fail!</span>';
         $wvf = 0;
     }
 	if (function_exists('openssl_random_pseudo_bytes'))
     {
-        $ov = '<span style="color: green">Pass! OpenSSL Random Pseudo Bytes detected!</span>';
+        $ov = '<span class="text-success">Pass! OpenSSL Random Pseudo Bytes detected!</span>';
         $ovf = 1;
     }
     else
     {
-        $ov = '<span style="color: red">Failed...</span>';
+        $ov = '<span class="text-danger">Failed...</span>';
         $ovf = 0;
     }
 	if (function_exists('password_hash'))
     {
-        $hv = '<span style="color: green">Pass! Using stronger password hash method.</span>';
+        $hv = '<span class="text-success">Pass! Using stronger password hash method.</span>';
         $hvf = 1;
     }
     else
     {
-        $hv = '<span style="color: red">Failed...</span>';
+        $hv = '<span class="text-danger">Failed...</span>';
         $hvf = 0;
     }
 	if (extension_loaded('pdo_mysql'))
     {
-        $pdv = '<span style="color: green">PDO detected. Please use PDO!</span>';
+        $pdv = '<span class="text-success">PDO detected. Please use PDO!</span>';
         $pdf = 1;
     }
     elseif (function_exists('mysqli_connect'))
     {
-        $pdv = '<span style="color: orange">PDO not detected. Use MySQLi!</span>';
+        $pdv = '<span class="text-warning">PDO not detected. Use MySQLi!</span>';
         $pdf = 1;
     }
 	else
 	{
-		$pdv = '<span style="color: red">No acceptable database handler found. Installer will not continue.</span>';
+		$pdv = '<span class="text-danger">No acceptable database handler found. Installer will not continue.</span>';
         $pdf = 0;
 	}
     echo "
@@ -161,7 +161,7 @@ function diagnostics()
     {
         echo "
 		<hr />
-		<span style='color: red; font-weight: bold;'>
+		<span class='text-danger'>
 		One of the basic diagnostics failed, so Setup cannot continue.
 		Please fix the ones that failed and try again.
 		</span>
@@ -186,7 +186,7 @@ function config()
     <form action='installer.php?code=install' method='post'>
     <table class='table table-bordered table-hover'>
     		<tr>
-    			<th colspan='2'>Database Config</th>
+    			<th colp='2'>Database Config</th>
     		</tr>
     		<tr>
     			<th>Database Driver</td>
@@ -239,7 +239,7 @@ function config()
     			<td><input type='text' name='database' class='form-control' required='1' value='' /></td>
     		</tr>
     		<tr>
-    			<th colspan='2'>Game Config</th>
+    			<th colp='2'>Game Config</th>
     		</tr>
     		<tr>
     			<th>Game Name</th>
@@ -289,7 +289,7 @@ function config()
     			<td><input type='password' name='recappriv' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
-    			<th colspan='2'>Admin User</th>
+    			<th colp='2'>Admin User</th>
     		</tr>
     		<tr>
     			<th>Username</th>
@@ -327,7 +327,7 @@ function config()
     			</td>
     		</tr>
     		<tr>
-    			<td colspan='2' align='center'>
+    			<td colp='2' align='center'>
     				<input type='submit' value='Install' class='btn btn-primary' />
     			</td>
     		</tr>
@@ -441,7 +441,7 @@ function install()
         <ul>";
         foreach ($errors as $error)
         {
-            echo "<li><span style='color: red;'>{$error}</span></li>";
+            echo "<li><span class='text-danger'>{$error}</span></li>";
         }
         echo "</ul>
         &gt; <a href='installer.php?code=config'>Go back to config</a>";
