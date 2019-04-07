@@ -1360,7 +1360,7 @@ function encode_password($password, $usebetterpasswordgen=false)
     $options = ['cost' => $set['Password_Effort'],];
 	if (($usebetterpasswordgen == true) && (defined('PASSWORD_ARGON2I') == true))
 	{
-		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
+		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_ARGON2I, $options);
 	}
 	elseif (($usebetterpasswordgen == true) && defined('PASSWORD_ARGON2I') == false)
 	{
