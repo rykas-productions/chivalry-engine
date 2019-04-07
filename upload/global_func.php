@@ -211,15 +211,15 @@ function valid_email($email)
 
 /**
  * Constructs a drop-down listbox of all the item types in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the item type which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first item type alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function itemtype_dropdown($ddname = "item_type", $selected = -1)
+function itemtype_dropdown($dropdownname = "item_type", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `itmtypeid`, `itmtypename`
@@ -245,15 +245,15 @@ function itemtype_dropdown($ddname = "item_type", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the items that are weapons in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the item which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first item alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function weapon_dropdown($ddname = "weapon", $selected = -1)
+function weapon_dropdown($dropdownname = "weapon", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `itmid`, `itmname`
@@ -279,15 +279,15 @@ function weapon_dropdown($ddname = "weapon", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the items that are armor in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the item which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first item alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function armor_dropdown($ddname = "armor", $selected = -1)
+function armor_dropdown($dropdownname = "armor", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `itmid`, `itmname`
@@ -313,15 +313,15 @@ function armor_dropdown($ddname = "armor", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the items in the game to let the user select one, including a "None" option.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the item which should be selected by default.<br />
  * Not specifying this or setting it to a number less than 1 makes "None" selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function item_dropdown($ddname = "item", $selected = -1)
+function item_dropdown($dropdownname = "item", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `itmid`, `itmname`
@@ -381,15 +381,15 @@ function academy_dropdown($acadname = "academy", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the locations in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID number of the location which should be selected by default.
  * Not specifying this or setting it to -1 makes the first item alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function location_dropdown($ddname = "location", $selected = -1)
+function location_dropdown($dropdownname = "location", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `town_id`, `town_name`, `town_min_level`
@@ -415,15 +415,15 @@ function location_dropdown($ddname = "location", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the shops in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the shop which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first shop alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function shop_dropdown($ddname = "shop", $selected = -1)
+function shop_dropdown($dropdownname = "shop", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `shopID`, `shopNAME`
@@ -449,15 +449,15 @@ function shop_dropdown($ddname = "shop", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the registered users in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the user who should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function user_dropdown($ddname = "user", $selected = -1)
+function user_dropdown($dropdownname = "user", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `userid`, `username`
@@ -483,15 +483,15 @@ function user_dropdown($ddname = "user", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the users with user level NPC in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the user who should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function user2_dropdown($ddname = "user", $selected = -1)
+function user2_dropdown($dropdownname = "user", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `userid`, `username`
@@ -518,15 +518,15 @@ function user2_dropdown($ddname = "user", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the guilds in-game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the guild who should be selected by default.
  * Not specifying this or setting it to -1 makes the first guild be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function guilds_dropdown($ddname = "guild", $selected = -1)
+function guilds_dropdown($dropdownname = "guild", $selected = -1)
 {
     global $db;
-    $ret = "<select name='{$ddname}' class='custom-select' type='dropdown'>";
+    $ret = "<select name='{$dropdownname}' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `guild_id`, `guild_name`
@@ -552,16 +552,16 @@ function guilds_dropdown($ddname = "guild", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the users in the specified guild to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $guild_id [optional] The ID Number of the guild who should be selected from.
  * @param int $selected [optional] The ID Number of the bot who should be selected by default.
  * Not specifying this or setting it to -1 makes the first bot alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function guild_user_dropdown($ddname = "user", $guild_id, $selected = -1)
+function guild_user_dropdown($dropdownname = "user", $guild_id, $selected = -1)
 {
     global $db;
-    $ret = "<select name='{$ddname}' class='custom-select' type='dropdown'>";
+    $ret = "<select name='{$dropdownname}' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `userid`, `username`
@@ -588,15 +588,15 @@ function guild_user_dropdown($ddname = "user", $guild_id, $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the challenge bot NPC users in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the bot who should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first bot alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function npcbot_dropdown($ddname = "bot", $selected = -1)
+function npcbot_dropdown($dropdownname = "bot", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `u`.`userid`, `u`.`username`
@@ -624,15 +624,15 @@ function npcbot_dropdown($ddname = "bot", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the users in federal jail in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the user who should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function fed_user_dropdown($ddname = "user", $selected = -1)
+function fed_user_dropdown($dropdownname = "user", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `userid`, `username`
@@ -659,15 +659,15 @@ function fed_user_dropdown($ddname = "user", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the mail banned users in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the user who should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function mailb_user_dropdown($ddname = "user", $selected = -1)
+function mailb_user_dropdown($dropdownname = "user", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query("SELECT `mbUSER`, `mbID`, `username`
                     FROM `mail_bans` `m`
@@ -694,15 +694,15 @@ function mailb_user_dropdown($ddname = "user", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the forum banned users in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the user who should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function forumb_user_dropdown($ddname = "user", $selected = -1)
+function forumb_user_dropdown($dropdownname = "user", $selected = -1)
 {
     global $db, $api;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `fb_user`,`fb_id`
@@ -728,15 +728,15 @@ function forumb_user_dropdown($ddname = "user", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the houses in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the house which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first house alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function estate_dropdown($ddname = "estate", $selected = -1)
+function estate_dropdown($dropdownname = "estate", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `house_id`, `house_name`, `house_will`
@@ -763,15 +763,15 @@ function estate_dropdown($ddname = "estate", $selected = -1)
 /**
  * Constructs a drop-down listbox of all the houses in the game to let the user select one.<br />
  * However, the values in the list box return the house's maximum will value instead of its ID.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the house which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first house alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function estate2_dropdown($ddname = "house", $selected = -1)
+function estate2_dropdown($dropdownname = "house", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `house_will`, `house_name`
@@ -797,15 +797,15 @@ function estate2_dropdown($ddname = "house", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the crimes in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the crime which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first crime alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function crime_dropdown($ddname = "crime", $selected = -1)
+function crime_dropdown($dropdownname = "crime", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `crimeID`, `crimeNAME`
@@ -831,15 +831,15 @@ function crime_dropdown($ddname = "crime", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the crime groups in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the crime group which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first crime group alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function crimegroup_dropdown($ddname = "crimegroup", $selected = -1)
+function crimegroup_dropdown($dropdownname = "crimegroup", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `cgID`, `cgNAME`
@@ -1207,15 +1207,15 @@ function item_remove($user, $itemid, $qty)
 
 /**
  * Constructs a drop-down listbox of all the forums in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the forum w hich should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function forum_dropdown($ddname = "forum", $selected = -1)
+function forum_dropdown($dropdownname = "forum", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `ff_id`, `ff_name`
@@ -1547,10 +1547,10 @@ function Random($min = 0, $max = PHP_INT_MAX)
 /*
 	Creates a dropdown for smelting recipes.
 */
-function smelt_dropdown($ddname = 'smelt', $selected = -1)
+function smelt_dropdown($dropdownname = 'smelt', $selected = -1)
 {
     global $db, $api;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `smelt_id`, `smelt_output`, `smelt_qty_output`
@@ -1747,15 +1747,15 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
 
 /**
  * Constructs a drop-down listbox of all the items in the user's inventory to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function inventory_dropdown($ddname = "item", $selected = -1)
+function inventory_dropdown($dropdownname = "item", $selected = -1)
 {
     global $db, $userid;
-    $ret = "<select name='$ddname' type='dropdown' class='custom-select'>";
+    $ret = "<select name='$dropdownname' type='dropdown' class='custom-select'>";
     $q =
         $db->query(
             "SELECT `i`.*, `it`.*
@@ -1784,15 +1784,15 @@ function inventory_dropdown($ddname = "item", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the jobs in the game to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The <i>ID number</i> of the job which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first job alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function job_dropdown($ddname = "job", $selected = -1)
+function job_dropdown($dropdownname = "job", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `jRANK`, `jNAME`
@@ -1818,15 +1818,15 @@ function job_dropdown($ddname = "job", $selected = -1)
 
 /**
  * Constructs a drop-down listbox of all the job ranks in the game to let the user select one.
- * @param string $ddname The "name" attribute the &lt;select&gt; attribute should have
+ * @param string $dropdownname The "name" attribute the &lt;select&gt; attribute should have
  * @param int $selected [optional] The <i>ID number</i> of the job rank which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first job's first job rank alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function jobrank_dropdown($ddname = "jobrank", $selected = -1)
+function jobrank_dropdown($dropdownname = "jobrank", $selected = -1)
 {
     global $db;
-    $ret = "<select name='$ddname' class='custom-select' type='dropdown'>";
+    $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
     $q =
         $db->query(
             "SELECT `jrID`, `jNAME`, `jrRANK`
@@ -1891,15 +1891,15 @@ function pagination($perpage, $total, $currentpage, $url)
 
 /**
  * Constructs a drop-down listbox of all the items in the user's guild's to let the user select one.
- * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param string $dropdownname The "name" attribute the <select> attribute should have
  * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
  * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function armory_dropdown($ddname = "item", $selected = -1)
+function armory_dropdown($dropdownname = "item", $selected = -1)
 {
     global $db, $ir;
-    $ret = "<select name='$ddname' type='dropdown' class='custom-select'>";
+    $ret = "<select name='$dropdownname' type='dropdown' class='custom-select'>";
     $q =
         $db->query(
             "SELECT `i`.*, `it`.*
