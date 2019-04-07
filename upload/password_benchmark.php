@@ -47,6 +47,7 @@ if (isset($_POST['password'])) {
 function benchmark($password, $cost = 4)
 {
     $start = microtime(true);
-    password_hash($password, PASSWORD_BCRYPT, ['cost' => $cost]);
+    $options = ['cost' => $cost,];
+    password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
     return microtime(true) - $start;
 }
