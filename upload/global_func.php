@@ -884,8 +884,50 @@ function notification_add($userid, $text)
 */
 function check_data()
 {
-    global $db, $time;
-    $q1 = $db->query("SELECT `fed_userid` FROM `fedjail` WHERE `fed_out` < {$time}");
+	checkGuildCrimes();
+	checkGuildWars();
+	checkAcademy();
+	removePunishments();
+}
+function checkGuildCrimes()
+{
+	global $db, $time;
+	//Check guild crimes!
+    $guildcrime = $db->query("SELECT * FROM `guild` WHERE `guild_crime` > 0 AND `guild_crime_done` < {$time}");
+    while ($r = $db->fetch_row($guildcrime)) {
+        $r2 = $db->fetch_row($db->query("SELECT * FROM `guild_crimes` WHERE `gcID` = {$r['guild_crime']}"));
+        $suc = Random(0, 1);
+        if ($suc == 1) {
+            $log = $r2['gcSTART'] . $r2['gcSUCC'];
+            $winnings = Random($r2['gcMINCASH'], $r2['gcMAXCASH']);
+            $result = 'Success';
+        } else {
+            $log = $r2['gcSTART'] . $r2['gcFAIL'];
+            $winnings = 0;
+            $result = 'Failure';
+        }
+        $xp=Random(1,5);
+        $db->query("UPDATE `guild`
+                    SET `guild_primcurr` = `guild_primcurr` + {$winnings},
+                    `guild_crime` = 0,
+                    `guild_crime_done` = 0,
+                    `guild_xp` = `guild_xp` + {$xp}
+                    WHERE `guild_id` = {$r['guild_id']}");
+        $db->query("INSERT INTO `guild_crime_log`
+                    (`gclCID`, `gclGUILD`, `gclLOG`, `gclRESULT`, `gclWINNING`, `gclTIME`)
+                    VALUES
+                    ('{$r['guild_crime']}', '{$r['guild_id']}', '{$log}', '{$result}', '{$winnings}', '" . time() . "');");
+        $i = $db->insert_id();
+        $qm = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$r['guild_id']}");
+        while ($qr = $db->fetch_row($qm)) {
+            notification_add($qr['userid'], "Your guild's crime was a complete {$result}! Click <a href='gclog.php?ID=$i'>here</a> to view more information.");
+        }
+    }
+}
+function removePunishments()
+{
+	global $db,$time;
+	$q1 = $db->query("SELECT `fed_userid` FROM `fedjail` WHERE `fed_out` < {$time}");
     //Remove players from federal jail, if needed.
     if ($db->num_rows($q1) > 0) {
         $q2 = $db->fetch_single($q1);
@@ -897,8 +939,12 @@ function check_data()
 
     //Remove players' mail bans if needed.
     $db->query("DELETE FROM `mail_bans` WHERE `mbTIME` < {$time}");
+}
 
-    $q3 = $db->query("SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} AND `gw_winner` = 0");
+function checkGuildWars()
+{
+	global $db, $time;
+	$q3 = $db->query("SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} AND `gw_winner` = 0");
     if ($db->num_rows($q3) > 0) {
         $r3 = $db->fetch_row($q3);
         //Select guild war declarer's name
@@ -960,8 +1006,11 @@ function check_data()
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} WHERE `guild_id` = {$r3['gw_declarer']}");
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} WHERE `guild_id` = {$r3['gw_declaree']}");
     }
-    //Assign the Unix Timestamp to a variable.
-    $time = time();
+}
+
+function checkAcademy()
+{
+	global $db, $time;
     //Select a User's ID and Course ID if their completion time is less than the Unix Timestamp, and they still have
     //not been credited from their completion.
     $coursedone = $db->query("SELECT `userid`,`course` FROM `users` WHERE `course` > 0 AND `course_complete` < {$time}");
@@ -1017,39 +1066,7 @@ function check_data()
         //Give the user a notification saying they've completed their course.
         notification_add($r['userid'], "Congratulations, you completed the {$coud['ac_name']} course and gained {$ev}!");
     }
-    //Check guild crimes!
-    $guildcrime = $db->query("SELECT * FROM `guild` WHERE `guild_crime` > 0 AND `guild_crime_done` < {$time}");
-    while ($r = $db->fetch_row($guildcrime)) {
-        $r2 = $db->fetch_row($db->query("SELECT * FROM `guild_crimes` WHERE `gcID` = {$r['guild_crime']}"));
-        $suc = Random(0, 1);
-        if ($suc == 1) {
-            $log = $r2['gcSTART'] . $r2['gcSUCC'];
-            $winnings = Random($r2['gcMINCASH'], $r2['gcMAXCASH']);
-            $result = 'Success';
-        } else {
-            $log = $r2['gcSTART'] . $r2['gcFAIL'];
-            $winnings = 0;
-            $result = 'Failure';
-        }
-        $xp=Random(1,5);
-        $db->query("UPDATE `guild`
-                    SET `guild_primcurr` = `guild_primcurr` + {$winnings},
-                    `guild_crime` = 0,
-                    `guild_crime_done` = 0,
-                    `guild_xp` = `guild_xp` + {$xp}
-                    WHERE `guild_id` = {$r['guild_id']}");
-        $db->query("INSERT INTO `guild_crime_log`
-                    (`gclCID`, `gclGUILD`, `gclLOG`, `gclRESULT`, `gclWINNING`, `gclTIME`)
-                    VALUES
-                    ('{$r['guild_crime']}', '{$r['guild_id']}', '{$log}', '{$result}', '{$winnings}', '" . time() . "');");
-        $i = $db->insert_id();
-        $qm = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$r['guild_id']}");
-        while ($qr = $db->fetch_row($qm)) {
-            notification_add($qr['userid'], "Your guild's crime was a complete {$result}! Click <a href='gclog.php?ID=$i'>here</a> to view more information.");
-        }
-    }
 }
-
 /**
  * Internal function: used to see if a user is due to level up, and if so, perform that levelup.
  */
