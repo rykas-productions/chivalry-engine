@@ -93,7 +93,7 @@ function diagnostics()
     }
 	if (function_exists('openssl_random_pseudo_bytes'))
     {
-        $ov = '<span class="text-success">Pass! OpenSSL Random Pseudo Bytes detected!</span>';
+        $ov = '<span class="text-success">Pass!</span>';
         $ovf = 1;
     }
     else
@@ -103,7 +103,7 @@ function diagnostics()
     }
 	if (function_exists('password_hash'))
     {
-        $hv = '<span class="text-success">Pass! Using stronger password hash method.</span>';
+        $hv = '<span class="text-success">Pass!</span>';
         $hvf = 1;
     }
     else
