@@ -58,14 +58,7 @@ if (!empty($username)) {
         die($h->endpage());
 
     }
-    //Check class
-    if (!isset($_POST['class']) || ($_POST['class'] != 'Warrior' && $_POST['class'] != 'Rogue' && $_POST['class'] != 'Defender')) {
-        alert('danger', "Uh Oh!", "You are trying to register as an invalid class.");
-        die($h->endpage());
-
-    }
     $e_gender = $db->escape(stripslashes($_POST['gender']));
-    $e_class = $db->escape(stripslashes($_POST['class']));
     $e_username = $db->escape($username);
     $e_email = $db->escape(stripslashes($_POST['email']));
     $q = $db->query("SELECT COUNT(`userid`) FROM `users` WHERE `username` = '{$e_username}'");
@@ -122,21 +115,7 @@ if (!empty($username)) {
         $db->query("UPDATE `users` SET `brave`='10',`maxbrave`='10',`hp`='100',
 					`maxhp`='100',`maxwill`='100',`will`='100',`energy`='24',
 					`maxenergy`='24' WHERE `userid`={$i}");
-        if ($e_class == 'Warrior') {
-            $db->query(
-                "INSERT INTO `userstats`
-					 VALUES({$i}, 1100, 1000, 900, 1000, 1000)");
-        }
-        if ($e_class == 'Rogue') {
-            $db->query(
-                "INSERT INTO `userstats`
-					 VALUES({$i}, 900, 1100, 1000, 1000, 1000)");
-        }
-        if ($e_class == 'Defender') {
-            $db->query(
-                "INSERT INTO `userstats`
-					 VALUES({$i}, 1000, 900, 1100, 1000, 1000)");
-        }
+        $db->query("INSERT INTO `userstats` VALUES({$i}, 1000, 1000, 1000, 1000, 1000)");
         if ($_POST['ref']) {
             $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']} WHERE `userid` = {$_POST['ref']}");
             notification_add($_POST['ref'], "For referring $username to the game, you have earned {$set['ReferalKickback']} valuable Secondary Currency(s)!");
@@ -229,20 +208,6 @@ if (!empty($username)) {
 							<option value='Male'>Male</option>
 							<option value='Female'>Female</option>
 						</select>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						Class
-					</th>
-					<td>
-						<select name='class' id='class' class='form-control' onchange='OutputTeam(this)' type='dropdown'>
-							<option></option>
-							<option value='Warrior'>Warrior</option>
-							<option value='Rogue'>Rogue</option>
-							<option value='Defender'>Defender</option>
-						</select>
-						<div id='teamresult' class='invalid-feedback'></div>
 					</td>
 				</tr>
 				<tr>

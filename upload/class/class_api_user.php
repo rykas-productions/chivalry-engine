@@ -301,39 +301,6 @@ class user
                 $userdata['will'] = 0;
             }
         }
-        //User's class is warrior
-        if ($userdata['class'] == 'Warrior') {
-            //Trained stat is strength, double its output.
-            if ($stat == 'strength') {
-                $gain *= 2;
-            }
-            //Trained stat is guard, half its output.
-            if ($stat == 'guard') {
-                $gain /= 2;
-            }
-        }
-        //User's class is Rogue.
-        if ($userdata['class'] == 'Rogue') {
-            //Trained stat is agility, double its output.
-            if ($stat == 'agility') {
-                $gain *= 2;
-            }
-            //Trained stat is strength, half its output.
-            if ($stat == 'strength') {
-                $gain /= 2;
-            }
-        }
-        //User's class is Defender.
-        if ($userdata['class'] == 'Defender') {
-            //Trained stat is guard, double its output.
-            if ($stat == 'guard') {
-                $gain *= 2;
-            }
-            //Trained stat is agility, half its output.
-            if ($stat == 'agility') {
-                $gain /= 2;
-            }
-        }
         //Add multiplier, if needed.
         $gain *= $multiplier;
         //Round the gained stats.

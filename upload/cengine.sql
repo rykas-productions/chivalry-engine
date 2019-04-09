@@ -940,7 +940,6 @@ CREATE TABLE `users` (
   `level` int(11) UNSIGNED NOT NULL DEFAULT '1',
   `xp` bigint(11) NOT NULL DEFAULT '0',
   `gender` enum('Male','Female') NOT NULL DEFAULT 'Male',
-  `class` enum('Warrior','Rogue','Defender') NOT NULL DEFAULT 'Warrior',
   `lastip` tinytext NOT NULL,
   `loginip` tinytext NOT NULL,
   `registerip` tinytext NOT NULL,

@@ -316,16 +316,6 @@ function config()
     				</select>
     			</td>
     		</tr>
-			<tr>
-    			<th>Class</th>
-    			<td>
-    				<select name='class' class='form-control' required='1' type='dropdown'>
-    					<option value='Warrior'>Warrior</option>
-    					<option value='Rogue'>Rogue</option>
-						<option value='Defender'>Defender</option>
-    				</select>
-    			</td>
-    		</tr>
     		<tr>
     			<td colp='2' align='center'>
     				<input type='submit' value='Install' class='btn btn-primary' />
@@ -348,7 +338,6 @@ function install()
     $paypal = (isset($_POST['paypal']) && filter_input(INPUT_POST, 'paypal', FILTER_VALIDATE_EMAIL)) ? gpc_cleanup($_POST['paypal']) : '';
     $adm_email = (isset($_POST['a_email']) && filter_input(INPUT_POST, 'a_email', FILTER_VALIDATE_EMAIL)) ? gpc_cleanup($_POST['a_email']) : '';
     $adm_username = (isset($_POST['a_username']) && strlen($_POST['a_username']) > 3) ? gpc_cleanup($_POST['a_username']) : '';
-    $adm_class = (isset($_POST['class']) && in_array($_POST['class'], array('Warrior', 'Rogue', 'Defender'), true)) ? $_POST['class'] : 'Warrior';
 	$adm_gender = (isset($_POST['gender']) && in_array($_POST['gender'], array('Male', 'Female'), true)) ? $_POST['gender'] : 'Male';
     $description = (isset($_POST['game_description'])) ? gpc_cleanup($_POST['game_description']) : '';
     $owner = (isset($_POST['game_owner']) && strlen($_POST['game_owner']) > 3) ? gpc_cleanup($_POST['game_owner']) : '';
@@ -525,32 +514,14 @@ EOF;
     $ins_game_owner = $db->escape(htmlentities($owner, ENT_QUOTES, 'ISO-8859-1'));
 	$CurrentTime=time();
 	$db->query("INSERT INTO `users` 
-	(`username`, `user_level`, `email`, `password`, `gender`, 
-	`class`, `lastip`, `registerip`,
-	`registertime`,`display_pic`) 
+	(`username`, `user_level`, `email`, `password`, `gender`,
+	 `lastip`, `registerip`, `registertime`,`display_pic`) 
 	VALUES ('{$ins_username}', 'Admin', '{$ins_email}', 
-	'{$e_encpsw}', '{$adm_gender}', '{$adm_class}', '{$IP}', 
+	'{$e_encpsw}', '{$adm_gender}', '{$IP}', 
 	'{$IP}', '{$CurrentTime}', '{$profilepic}');");
     $i = $db->insert_id();
 	$e_class = $adm_class;
-    if ($e_class == 'Warrior')
-	{
-		$db->query(
-						"INSERT INTO `userstats`
-						 VALUES($i, 1100, 1000, 900, 1000, 1000)");
-	}
-	if ($e_class == 'Rogue')
-	{
-				$db->query(
-						"INSERT INTO `userstats`
-						 VALUES($i, 900, 1100, 1000, 1000, 1000)");
-	}
-	if ($e_class == 'Defender')
-	{
-				$db->query(
-						"INSERT INTO `userstats`
-						 VALUES($i, 1000, 900, 1100, 1000, 1000)");
-	}
+    $db->query("INSERT INTO `userstats` VALUES($i, 1000, 1000, 1000, 1000, 1000)");
     $db->query("INSERT INTO `settings` VALUES(NULL, 'WebsiteName', '{$ins_game_name}')");
     $db->query("INSERT INTO `settings` VALUES(NULL, 'WebsiteOwner', '{$ins_game_owner}')");
     $db->query("INSERT INTO `settings` VALUES(NULL, 'PaypalEmail', '{$ins_paypal}')");
