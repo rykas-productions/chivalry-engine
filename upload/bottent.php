@@ -14,21 +14,21 @@ echo "<h3>Bot Tent</h3><hr />Welcome to the Bot Tent. Here you may challenge NPC
     you can only attack these NPCs every so often. Their cooldown is listed here as well. To receive the item, you must
     mug the bot.<hr />";
 $query = $db->query("SELECT * FROM `botlist`");
-echo "<table class='table table-bordered'>
-<tr>
-	<th>
-		Bot Name
-	</th>
-	<th class='hidden-xs'>
-		Bot Cooldown
-	</th>
-	<th>
-		Bot Item Drop
-	</th>
-	<th>
-		Attack
-	</th>
-</tr>";
+echo "<div class='cotainer'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>Bot</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Cooldown</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Drop Item</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Attack</h4>
+		</div>
+</div><hr />";
 //List all the bots.
 while ($result = $db->fetch_row($query)) {
     //Grab the last time the user attacked this bot.
@@ -57,21 +57,22 @@ while ($result = $db->fetch_row($query)) {
     }
     //Table row formatting.
     echo "
-	<tr>
-		<td>
+	<div class='row'>
+		<div class='col-sm'>
 			{$botname} [{$result['botuser']}]<br />
 			Level " . $api->user->getInfo($result['botuser'], 'level') . "
-		</td>
-		<td class='hidden-xs'>
+		</div>
+		<div class='col-sm'>
 			" . timestampParse($result['botcooldown']) . "
-		</td>
-		<td>
+		</div>
+		<div class='col-sm'>
 			" . $api->game->getItemNameFromID($result['botitem']) . "
-		</td>
-		<td>
+		</div>
+		<div class='col-sm'>
 			{$attack}
-		</td>
-	</tr>";
+		</div>
+	</div>
+	<hr />";
 }
-echo "</table>";
+echo "</div>";
 $h->endpage();

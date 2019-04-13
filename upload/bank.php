@@ -53,26 +53,26 @@ function index()
     echo "<b>You current have " . number_format($ir['bank']) . " in your bank account.</b><br />
 				At the end of each and everyday, your bank balance will increase by 2%. You must be active within the
 				past 24 hours for this to effect you.<br />
-				<table class='table table-bordered'>
-					<tr>
-						<td width='50%'>
+				<div class='cotainer'>
+                    <div class='row'>
+						<div class='col-sm'>
 							It'll cost you {$bank_feepercent}% of the money you deposit. (Max " . number_format($bank_maxfee) . ".)
 							<form action='bank.php?action=deposit' method='post'>
 								<b>Your Cash</b><br />
 								<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' required='1' name='deposit' value='{$ir['primary_currency']}'><br />
 								<input type='submit' value='Deposit' class='btn btn-primary'>
 							</form>
-						</td>
-						<td>
+						</div>
+						<div class='col-sm'>
 							It doesn't cost you anything to withdraw from your account.
 							<form action='bank.php?action=withdraw' method='post'>
 								<b>Your Bank Balance</b><br />
 								<input type='number' min='1' max='{$ir['bank']}' class='form-control' required='1' name='withdraw' value='{$ir['bank']}'><br />
 								<input type='submit' value='Withdraw' class='btn btn-primary'>
 							</form>
-						</td>
-					</tr>
-				</table>";
+						</div>
+					</div>
+				</div>";
 }
 
 function deposit()

@@ -8,28 +8,30 @@
 */
 require('globals.php');
 echo "
+<div class='table-responsive'>
 <table class='table table-bordered'>
-	<tr>
+	<div class='row'>
 		<td>
 			<a href='inbox.php'>Inbox</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=outbox'>Outbox</a>
+			<a href='?action=outbox'>Outbox</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=compose'>Compose</a>
+			<a href='?action=compose'>Compose</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=delall'>Delete All</a>
+			<a href='?action=delall'>Delete All</a>
 		</td>
 		<td>
-			<a href='inbox.php?action=archive'>Archive</a>
+			<a href='?action=archive'>Archive</a>
 		</td>
 		<td>
 			<a href='contacts.php'>Contacts</a>
 		</td>
-	</tr>
-</table>";
+	</div>
+</table>
+</div>";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -50,42 +52,43 @@ function home()
     echo "<a href='?action=add'>Add Contact</a><br />
 	These are the players you've added to your contact list.
 	<br />
-	<table class='table table-bordered table-striped'>
-		<tr>
-			<th>
-				User
-			</th>
-			<th>
-				Message
-			</th>
-			<th>
-				Remove
-			</th>
-		</tr>";
+	<div class='container'>
+	    <div class='row'>
+			<div class='col-sm'>
+				<h4>User</h4>
+			</div>
+			<div class='col-sm'>
+				<h4>Message</h4>
+			</div>
+			<div class='col-sm'>
+				<h4>Remove</h4>
+			</div>
+		</div>
+		<hr />";
     $q = $db->query("SELECT `c`.`c_ID`, `u`.`vip_days`, `username`, `userid` FROM `contact_list` AS `c`
                      LEFT JOIN `users` AS `u` ON `c`.`c_ADDED` = `u`.`userid` WHERE `c`.`c_ADDER` = $userid
                      ORDER BY `u`.`username` ASC");
     //List the user's contact list.
     while ($r = $db->fetch_row($q)) {
         $d = '';
-        $r['username'] = ($r['vip_days']) ? "<span style='color:red; font-weight:bold;'>{$r['username']}</span>
+        $r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']}</span>
                         <span class='glyphicon glyphicon-star' data-toggle='tooltip'
                         title='{$r['username']} has {$r['vip_days']} VIP Days remaining.'></span>" : $r['username'];
         echo "
-		<tr>
-			<td>
+		<div class='row'>
+			<div class='col-sm'>
 				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
-			</td>
-			<td>
+			</div>
+			<div class='col-sm'>
 				<a href='inbox.php?action=compose&user={$r['userid']}'>Message</a>
-			</td>
-			<td>
+			</div>
+			<div class='col-sm'>
 				<a href='?action=remove&contact={$r['c_ID']}'>Remove Contact</a>
-			</td>
-		</tr>";
+			</div>
+		</div>";
     }
     $db->free_result($q);
-    echo '</table>';
+    echo '</div>';
 }
 
 function add()
@@ -121,28 +124,33 @@ function add()
         } else {
             $user = (isset($user) && is_numeric($user)) ? abs($user) : '';
         }
-        echo "<table class='table table-bordered'>
-		<form action='?action=add' method='post'>
-			<tr>
-				<th colspan='2'>
-				Add Contact Form
-				</th>
-			</tr>
-			<tr>
-				<th>
-					Enter a User ID
-				</th>
-				<td>
-					<input type='number' class='form-control' required='1' min='1' name='user' value='{$_GET['user']}'>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' value='Add Contact' class='btn btn-primary'>
-				</td>
-			</tr>
-		</form>
-		</table>";
+        echo "<form action='?action=add' method='post'>
+            <div class='cotainer'>
+                <div class='row'>
+                        <div class='row'>
+                            <div class='col-sm-12'>
+                                <h4>Add Contact Form</h4>
+                            </div>
+                        </div>
+                </div>
+                <hr />
+                <div class='row'>
+                    <div class='col-sm'>
+                        Enter a User ID
+                    </div>
+                    <div class='col-sm'>
+                        <input type='number' class='form-control' required='1' min='1' name='user' value='{$_GET['user']}'>
+                    </div>
+                </div>
+                <hr />
+                <div class='row'>
+                    <div class='col-sm'>
+                        <input type='submit' value='Add Contact' class='btn btn-primary'>
+                    </div>
+                </div>
+                    </form>
+		        </div>
+		    </div>";
     }
 }
 
