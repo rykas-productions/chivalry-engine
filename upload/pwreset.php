@@ -48,7 +48,7 @@ function one()
         alert('success', "Success!", "If there is an account associated to the email address you input, you will be
 		    emailed with steps on how to start the password reset process.", false);
     } else {
-        alert('info', "Information!", "Please enter the email adress tied to your account so we can send information on how to reset your password. Please be sure to check your junk folder.", false);
+        alert('info', "Information!", "Please enter the email address tied to your account so we can send information on how to reset your password. Please be sure to check your junk folder.", false);
         echo "
 		<form method='post'>
 			<input type='email' name='email' required='1' class='form-control'>
