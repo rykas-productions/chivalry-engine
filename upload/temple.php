@@ -42,7 +42,7 @@ function home()
 	<a class='btn btn-outline-primary' href='?action=energy'>Refill Energy - " . number_format($set['energy_refill_cost']) . " {$_CONFIG['secondary_currency']}</a><br /><br />
 	<a class='btn btn-outline-primary' href='?action=brave'>Regenerate 5% Bravery - " . number_format($set['brave_refill_cost']) . " {$_CONFIG['secondary_currency']}</a><br /><br />
 	<a class='btn btn-outline-primary' href='?action=will'>Regenerate 5% Will - " . number_format($set['will_refill_cost']) . " {$_CONFIG['secondary_currency']}</a><br /><br />
-	<a class='btn btn-outline-primary' href='?action=iq'>Refill IQ - " . number_format($set['iq_per_sec']) . " {$_CONFIG['secondary_currency']}</a><br /><br />";
+	<a class='btn btn-outline-primary' href='?action=iq'>Refill {$_CONFIG['iq_stat']} - " . number_format($set['iq_per_sec']) . " {$_CONFIG['secondary_currency']}</a><br /><br />";
 }
 
 function energy()
@@ -114,7 +114,7 @@ function iq()
 
         //POST is empty.
         if (empty($_POST['iq'])) {
-            alert('danger', "Uh Oh!", "Please specify how much {$_CONFIG['secondary_currency']} you wish to trade in for IQ.");
+            alert('danger', "Uh Oh!", "Please specify how much {$_CONFIG['secondary_currency']} you wish to trade in for {$_CONFIG['iq_stat']}.");
             die($h->endpage());
         }
         //IQ gained is coins exchanged multiplied by game setting for how much IQ per coin.
@@ -122,7 +122,7 @@ function iq()
 
         //User does not have enough {$_CONFIG['secondary_currency']} to exchange for how much they said they wanted in IQ.
         if ($api->user->hasCurrency($userid, 'secondary', $_POST['iq']) == false) {
-            alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['secondary_currency']} to buy that much IQ.");
+            alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['secondary_currency']} to buy that much {$_CONFIG['iq_stat']}.");
             die($h->endpage());
         }
         //Take the currency and give the user some IQ.
@@ -131,7 +131,7 @@ function iq()
         alert('success', "Success!", "You have successfully traded " . number_format($_POST['iq']) . " {$_CONFIG['secondary_currency']} for " . number_format($totalcost) . " IQ Points.", true, 'temple.php');
         $api->game->addLog($userid, 'temple', "Traded {$_POST['iq']} {$_CONFIG['secondary_currency']} for {$totalcost} IQ.");
     } else {
-        alert('info', "Information!", "You can trade in your {$_CONFIG['secondary_currency']} for IQ at a ratio of {$set['iq_per_sec']}
+        alert('info', "Information!", "You can trade in your {$_CONFIG['secondary_currency']} for {$_CONFIG['iq_stat']} at a ratio of {$set['iq_per_sec']}
 		per {$_CONFIG['secondary_currency']}. You currently have " . number_format($ir['secondary_currency']) . " {$_CONFIG['secondary_currency']}.", false);
         echo "<table class='table table-bordered'>
 			<form method='post'>
@@ -145,7 +145,7 @@ function iq()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='Trade for IQ'>
+					<input type='submit' class='btn btn-primary' value='Trade for {$_CONFIG['iq_stat']}'>
 				</td>
 			</tr>
 			</form>

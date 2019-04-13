@@ -120,7 +120,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            IQ
+            {$_CONFIG['iq_stat']}
         </th>
         <td>
             {$IQFormat} (Ranked: {$IQRank})

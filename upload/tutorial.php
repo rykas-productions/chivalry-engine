@@ -44,11 +44,11 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<u>Personal Stats</u>
 	<br />
-	There are currently five stats in-game: {$_CONFIG['strength_stat']}, {$_CONFIG['agility_stat']}, {$_CONFIG['guard_stat']}, IQ and Labor.
+	There are currently five stats in-game: {$_CONFIG['strength_stat']}, {$_CONFIG['agility_stat']}, {$_CONFIG['guard_stat']}, {$_CONFIG['iq_stat']} and Labor.
 	<br />Increasing your {$_CONFIG['strength_stat']} will increase how much damage you can dish out in combat.
 	<br />Increasing {$_CONFIG['agility_stat']} will increase your chance of one of your strikes connecting with your opponent.
 	<br />Increasing your {$_CONFIG['guard_stat']} will decrease the damage your opponents do to you.
-	<br />IQ and Labor are miscellaneous stats used around the game. It's good to have these at a fairly decent level.
+	<br />{$_CONFIG['iq_stat']} and Labor are miscellaneous stats used around the game. It's good to have these at a fairly decent level.
 	<br />
 	<br />
 <hr />
@@ -106,7 +106,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	 <br />If you're starting to hate the town you're in, Horse Travel is your ticket to other towns. Mind you, towns
 	 may have Level requirements, and varying tax levels.
 	 <br />The Temple of Fortune is where you can spend your {$_CONFIG['secondary_currency']}. You can refill your Energy, Will, and
-	 Brave here. You may also purchase IQ.
+	 Brave here. You may also purchase {$_CONFIG['iq_stat']}.
 	<br />
 	<br />
 	<u>Working</u>
@@ -119,7 +119,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
      listed, you will be able to get a special item drop. Note that this can only happen once per each bot's cooldown
      time.
      <br />The Gym is the palce you'll want to visit if you have any hope of taking down an enemy.
-     <br />The Criminal Center is where you may commit crimes to gain treasure or goods. You need Bravery and good IQ
+     <br />The Criminal Center is where you may commit crimes to gain treasure or goods. You need Bravery and good {$_CONFIG['iq_stat']}
      for your level.
      <br />The Learning Academy is where you may enroll in a course that increase your stats in exchange for a lengthy
      studying period.

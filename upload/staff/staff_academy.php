@@ -121,7 +121,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					Course IQ
+					Course {$_CONFIG['iq_stat']}
 				</th>
 				<td>
 					<input type='number' required='1' name='iq' min='0' value='0' class='form-control'>
@@ -363,7 +363,7 @@ function editacademy()
                     </tr>
                     <tr>
                         <th>
-                            Course IQ
+                            Course {$_CONFIG['iq_stat']}
                         </th>
                         <td>
                             <input type='number' required='1' name='iq' min='0' class='form-control' value='{$r['ac_iq']}'>

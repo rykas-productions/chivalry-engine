@@ -201,7 +201,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							IQ
+							{$_CONFIG['iq_stat']}
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='10' name='iq' value='1000'>
@@ -560,7 +560,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					IQ
+					{$_CONFIG['iq_stat']}
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='IQ' value='{$itemi['IQ']}' />

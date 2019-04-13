@@ -226,7 +226,7 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					IQ per {$_CONFIG['secondary_currency']}
+					{$_CONFIG['iq_stat']} per {$_CONFIG['secondary_currency']}
 				</th>
 				<td>
 					<input type='number' name='iqpersec' class='form-control' min='1' required='1' value='{$set['iq_per_sec']}'>

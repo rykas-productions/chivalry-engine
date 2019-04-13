@@ -140,7 +140,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					IQ
+					{$_CONFIG['iq_stat']}
 				</th>
 				<td>
 					<input type='number' min='0' name='jIQ' required='1' class='form-control'>
@@ -508,7 +508,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    IQ Requirement
+                    {$_CONFIG['iq_stat']} Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='iq' class='form-control'>
@@ -679,7 +679,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    IQ Requirement
+                    {$_CONFIG['iq_stat']} Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrIQ']}' required='1' name='iq' class='form-control'>

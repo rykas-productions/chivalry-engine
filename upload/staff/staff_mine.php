@@ -141,7 +141,7 @@ function addmine()
                 </tr>
                 <tr>
                     <th>
-						IQ Requirement
+						{$_CONFIG['iq_stat']} Requirement
                     </th>
                     <td>
                         <input type='number' class='form-control' name='IQ' min='1' required='1'> 
@@ -361,7 +361,7 @@ function editmine()
                     </tr>
                     <tr>
                         <th>
-                            IQ Requirement
+                            {$_CONFIG['iq_stat']} Requirement
                         </th>
                         <td>
                             <input type='number' class='form-control' name='iq' min='1' value='{$mi['mine_iq']}' required='1'> 
