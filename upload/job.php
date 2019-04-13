@@ -60,7 +60,7 @@ if (empty($ir['job'])) {
         $r = $db->fetch_row($q);
         $db->free_result($q);
         echo "<b>{$r['jBOSS']}:</b> So, {$ir['username']}, it appears you are wanting to work with our company. Can you tell me a little bit about yourself?<br />
-        <b>{$ir['username']}:</b> Of course! I'm level {$ir['level']}, have {$ir['strength']} strength, {$ir['iq']} IQ, and {$ir['labor']} labor. I hope these skills are useful to the company.<br />";
+        <b>{$ir['username']}:</b> Of course! I'm level {$ir['level']}, have {$ir['{$_CONFIG['strength_stat']}']} strength, {$ir['iq']} IQ, and {$ir['labor']} labor. I hope these skills are useful to the company.<br />";
         if ($ir['strength'] >= $r['jrSTR'] && $ir['labor'] >= $r['jrLAB'] && $ir['iq'] >= $r['jrIQ']) {
             $db->query("UPDATE `users`
                         SET `job` = {$_GET['interview']},
@@ -74,7 +74,7 @@ if (empty($ir['job'])) {
             echo "<b>{$r['jBOSS']}:</b> We apologize, {$ir['username']}, but you do not have the necessary requirements needed to join our company. You'll need";
             if ($ir['strength'] < $r['jrSTR']) {
                 $s = $r['jrSTR'] - $ir['strength'];
-                echo " $s more strength, ";
+                echo " $s more {$_CONFIG['strength_stat']}, ";
             }
             if ($ir['labor'] < $r['jrLAB']) {
                 $s = $r['jrLAB'] - $ir['labor'];
@@ -140,7 +140,7 @@ function job_index()
                 {$r['jrSECONDARY']} Secondary
             </td>
             <td>
-                {$r['jrSTR']} Strength<br />
+                {$r['jrSTR']} {$_CONFIG['strength_stat']}<br />
                 {$r['jrLAB']} Labor<br />
                 {$r['jrIQ']} IQ<br />
                 {$r['jrACT']} Work/Hour

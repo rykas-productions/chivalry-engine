@@ -52,7 +52,7 @@ while ($r = $db->fetch_row($q)) {
             $stats =
                 array("energy" => "Energy", "will" => "Will",
                     "brave" => "Bravery", "level" => "Level",
-                    "hp" => "Health", "strength" => "Strength",
+                    "hp" => "Health", "strength" => "{$_CONFIG['strength_stat']}",
                     "agility" => "Agility", "guard" => "Guard",
                     "labor" => "Labor", "iq" => "IQ",
                     "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",

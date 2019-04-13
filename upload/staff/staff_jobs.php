@@ -124,7 +124,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					Strength
+					{$_CONFIG['strength_stat']}
 				</th>
 				<td>
 					<input type='number' min='0' name='jSTR' required='1' class='form-control'>
@@ -492,7 +492,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    Strength Requirement
+                    {$_CONFIG['strength_stat']} Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='str' class='form-control'>
@@ -663,7 +663,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    Strength Requirement
+                    {$_CONFIG['strength_stat']} Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrSTR']}' required='1' name='str' class='form-control'>

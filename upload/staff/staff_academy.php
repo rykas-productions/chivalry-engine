@@ -89,7 +89,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					Course Strength
+					Course {$_CONFIG['strength_stat']}
 				</th>
 				<td>
 					<input type='number' required='1' name='str' min='0' value='0' class='form-control'>
@@ -331,7 +331,7 @@ function editacademy()
                     </tr>
                     <tr>
                         <th>
-                            Course Strength
+                            Course {$_CONFIG['strength_stat']}
                         </th>
                         <td>
                             <input type='number' required='1' name='str' min='0' class='form-control' value='{$r['ac_str']}'>

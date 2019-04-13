@@ -112,7 +112,7 @@ if (isset($_POST['do']) && (isset($user))) {
 			</tr>
 			<tr>
 				<th>
-					Strength
+					{$_CONFIG['strength_stat']}
 				</th>
 				<td>
 					" . number_format($r['strength']) . "

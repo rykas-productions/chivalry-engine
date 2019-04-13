@@ -63,9 +63,9 @@ if (isset($_POST["stat"]) && $amnt) {
         $EnergyLeft = $ir['energy'] - $amnt;
         //Strength is chosen stat
         if ($stat == "strength") {
-            alert('success', "Success!", "You begin to lift weights. You have gained {$gain} Strength by completing
-			    {$amnt} sets of weights. You now have {$NewStatAmount} Strength and {$EnergyLeft} Energy left.", false);
-            //Have strength selected for the next training.
+            alert('success', "Success!", "You begin to lift weights. You have gained {$gain} {$_CONFIG['strength_stat']} by completing
+			    {$amnt} sets of weights. You now have {$NewStatAmount} {$_CONFIG['strength_stat']} and {$EnergyLeft} Energy left.", false);
+            //Have {$_CONFIG['strength_stat']} selected for the next training.
             $str_select = "selected";
         } //Agility is the chosen stat.
         elseif ($stat == "agility") {
@@ -86,8 +86,8 @@ if (isset($_POST["stat"]) && $amnt) {
             //Have guard selected for the next training.
             $lab_select = "selected";
         } elseif ($stat == "all") {
-            alert('success', "Success!", "You begin training your Strength, Agility, Guard and Labor all at once. You
-                have gained {$gainstr} Strength, {$gainagl} Agility, {$gaingrd} Guard and {$gainlab} Labor. You have
+            alert('success', "Success!", "You begin training your {$_CONFIG['strength_stat']}, Agility, Guard and Labor all at once. You
+                have gained {$gainstr} {$_CONFIG['strength_stat']}, {$gainagl} Agility, {$gaingrd} Guard and {$gainlab} Labor. You have
                 {$EnergyLeft} Energy left.");
             $all_select = "selected";
         }
@@ -134,7 +134,7 @@ echo "Choose the stat you wish to train, and enter how many times you wish to tr
 			<td>
 				<select type='dropdown' name='stat' class='form-control'>
 					<option {$str_select} value='Strength'>
-					    Strength (Have {$ir['strength']}, Ranked: {$ir['strank']})
+					    {$_CONFIG['strength_stat']} (Have {$ir['{$_CONFIG['strength_stat']}']}, Ranked: {$ir['strank']})
                     </option>
 					<option {$agl_select} value='Agility'>
 					    Agility (Have {$ir['agility']}, Ranked: {$ir['agirank']})

@@ -528,7 +528,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Strength
+					{$_CONFIG['strength_stat']}
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='strength' value='{$itemi['strength']}' />
