@@ -105,7 +105,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					Course Guard
+					Course {$_CONFIG['guard_stat']}
 				</th>
 				<td>
 					<input type='number' required='1' name='grd' min='0' value='0' class='form-control'>
@@ -347,7 +347,7 @@ function editacademy()
                     </tr>
                     <tr>
                         <th>
-                            Course Guard
+                            Course {$_CONFIG['guard_stat']}
                         </th>
                         <td>
                             <input type='number' required='1' name='grd' min='0' class='form-control' value='{$r['ac_grd']}'>

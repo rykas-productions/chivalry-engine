@@ -56,7 +56,7 @@ echo "<a href='?stat=level'>Level</a>
 echo "<br />";
 echo "<a href='?stat=strength'>{$_CONFIG['strength_stat']}</a>
 		|| <a href='?stat=agility'>{$_CONFIG['agility_stat']}</a>
-        || <a href='?stat=guard'>Guard</a>
+        || <a href='?stat=guard'>{$_CONFIG['guard_stat']}</a>
         || <a href='?stat=labor'>Labor</a>
 		|| <a href='?stat=iq'>IQ</a>
         || <a href='?stat=total'>Total Stats</a>";

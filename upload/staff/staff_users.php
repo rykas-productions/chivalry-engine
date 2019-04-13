@@ -185,7 +185,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Guard
+							{$_CONFIG['guard_stat']}
 						</th>
 						<td>
 							<input type='number' required='1' id='guard' class='form-control' min='10' name='guard' value='900'>
@@ -544,7 +544,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Guard
+					{$_CONFIG['guard_stat']}
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='guard' value='{$itemi['guard']}' />

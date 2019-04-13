@@ -75,8 +75,8 @@ if (isset($_POST["stat"]) && $amnt) {
             $agl_select = "selected";
         } //Guard is the chosen stat.
         elseif ($stat == "guard") {
-            alert('success', "Success!", "You begin swimming in the pool. You have gained {$gain} Guard by swimming for
-			    {$amnt} minutes. You now have {$NewStatAmount} Guard and {$EnergyLeft} left.", false);
+            alert('success', "Success!", "You begin swimming in the pool. You have gained {$gain} {$_CONFIG['guard_stat']} by swimming for
+			    {$amnt} minutes. You now have {$NewStatAmount} {$_CONFIG['guard_stat']} and {$EnergyLeft} left.", false);
             //Have guard selected for the next training.
             $grd_select = "selected";
         } //Labor is the chosen stat.
@@ -86,8 +86,8 @@ if (isset($_POST["stat"]) && $amnt) {
             //Have guard selected for the next training.
             $lab_select = "selected";
         } elseif ($stat == "all") {
-            alert('success', "Success!", "You begin training your {$_CONFIG['strength_stat']}, {$_CONFIG['agility_stat']}, Guard and Labor all at once. You
-                have gained {$gainstr} {$_CONFIG['strength_stat']}, {$gainagl} {$_CONFIG['agility_stat']}, {$gaingrd} Guard and {$gainlab} Labor. You have
+            alert('success', "Success!", "You begin training your {$_CONFIG['strength_stat']}, {$_CONFIG['agility_stat']}, {$_CONFIG['guard_stat']} and Labor all at once. You
+                have gained {$gainstr} {$_CONFIG['strength_stat']}, {$gainagl} {$_CONFIG['agility_stat']}, {$gaingrd} {$_CONFIG['guard_stat']} and {$gainlab} Labor. You have
                 {$EnergyLeft} Energy left.");
             $all_select = "selected";
         }
@@ -140,7 +140,7 @@ echo "Choose the stat you wish to train, and enter how many times you wish to tr
 					    {$_CONFIG['agility_stat']} (Have {$ir['agility']}, Ranked: {$ir['agirank']})
                     </option>
 					<option {$grd_select} value='Guard'>
-					    Guard (Have {$ir['guard']}, Ranked: {$ir['guarank']})
+					    {$_CONFIG['guard_stat']} (Have {$ir['guard']}, Ranked: {$ir['guarank']})
                     </option>
 					<option {$lab_select} value='Labor'>
 					    Labor (Have {$ir['labor']}, Ranked: {$ir['labrank']})

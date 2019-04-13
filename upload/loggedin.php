@@ -104,7 +104,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            Guard
+            {$_CONFIG['guard_stat']}
         </th>
         <td>
             {$GuardFormat} (Ranked: {$GuardRank})

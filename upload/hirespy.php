@@ -128,7 +128,7 @@ if (isset($_POST['do']) && (isset($user))) {
 			</tr>
 			<tr>
 				<th>
-					Guard
+					{$_CONFIG['guard_stat']}
 				</th>
 				<td>
 					" . number_format($r['guard']) . "
