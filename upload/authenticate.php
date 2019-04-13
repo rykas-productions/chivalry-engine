@@ -10,35 +10,16 @@
 $menuhide = true;
 require_once('globals_nonauth.php');
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);
-$CurrentTime = time();
 $email = (array_key_exists('email', $_POST) && is_string($_POST['email'])) ? $_POST['email'] : '';
 $password = (array_key_exists('password', $_POST) && is_string($_POST['password'])) ? $_POST['password'] : '';
 if (!isset($_POST['verf']) || !checkCSRF('login', stripslashes($_POST['verf']))) {
     die("<h3>{$set['WebsiteName']} Error</h3> CSRF Check failed. Please submit the form quicker next time.");
 }
-$QuarterHour = ($CurrentTime - 900);
-$Hour = ($CurrentTime - 3600);
-$Day = ($CurrentTime - 86400);
-$DQuery = $db->query("SELECT `timestamp`
-                    FROM `login_attempts`
-                    WHERE `ip` = '{$IP}'
-                    AND `timestamp` > {$Day}");
-$HQuery = $db->query("SELECT `timestamp`
-                    FROM `login_attempts`
-                    WHERE `ip` = '{$IP}'
-                    AND `timestamp` > {$Hour}");
+$QuarterHour = (time() - 900);
 $FTMQuery = $db->query("SELECT `timestamp`
                       FROM `login_attempts`
                       WHERE `ip` = '{$IP}'
                       AND `timestamp` > {$QuarterHour}");
-//User has failed to login 9 or more times within the last day.
-if ($db->num_rows($DQuery) >= 9) {
-    die("<h3>{$set['WebsiteName']} Error</h3> You cannot attempt to log in anymore for the next 24 hours.");
-}
-//User has failed to login 6 or more times within the last hour.
-if ($db->num_rows($HQuery) >= 6) {
-    die("<h3>{$set['WebsiteName']} Error</h3> You cannot attempt to log in anymore for the next 1 hour.");
-}
 //User has failed to login 3 or more times within the last 15 minutes.
 if ($db->num_rows($FTMQuery) >= 3) {
     die("<h3>{$set['WebsiteName']} Error</h3> You cannot attempt to log in anymore for the next 15 minutes.");
@@ -63,27 +44,10 @@ $UQ = $db->query("SELECT `userid`,`password`
                 WHERE `email` = '$form_email' LIMIT 1");
 
 $userid = $db->fetch_row($uq);
-
-$DUNQuery = $db->query("SELECT `timestamp`
-                      FROM `login_attempts`
-                      WHERE `userid` = '{$userid['userid']}'
-                      AND `timestamp` > {$Day}");
-$HUNQuery = $db->query("SELECT `timestamp`
-                      FROM `login_attempts`
-                      WHERE `userid` = '{$userid['userid']}'
-                      AND `timestamp` > {$Hour}");
 $QHQuery = $db->query("SELECT `timestamp`
                       FROM `login_attempts`
                       WHERE `userid` = '{$userid['userid']}'
                       AND `timestamp` > {$QuarterHour}");
-//Account has failed to login 9 times in the past day.
-if ($db->num_rows($DUNQuery) >= 9) {
-    die("<h3>{$set['WebsiteName']} Error</h3> You cannot attempt to log in anymore for the next 24 hours.");
-}
-//Account has failed to login 6 times in the past hour.
-if ($db->num_rows($HUNQuery) >= 6) {
-    die("<h3>{$set['WebsiteName']} Error</h3> You cannot attempt to log in anymore for the next 1 hour.");
-}
 //Account has failed to login 3 times in the past 15 minutes.
 if ($db->num_rows($QHQuery) >= 3) {
     die("<h3>{$set['WebsiteName']} Error</h3> You cannot attempt to log in anymore for the next 15 minutes.");
