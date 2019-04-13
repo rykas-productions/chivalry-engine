@@ -50,7 +50,6 @@ $api = new api;
 $api->user = new user;
 $api->guild = new guild;
 $api->game = new game;
-$api = new api;
 $set = array();
 $settq = $db->query("SELECT *
 					 FROM `settings`");
