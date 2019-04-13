@@ -193,7 +193,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Labor
+							{$_CONFIG['labor_stat']}
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='10' name='labor' value='1000'>
@@ -552,7 +552,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Labor
+					{$_CONFIG['labor_stat']}
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='labor' value='{$itemi['labor']}' />

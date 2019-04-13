@@ -112,7 +112,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            Labor
+            {$_CONFIG['labor_stat']}
         </th>
         <td>
             {$LaborFormat} (Ranked: {$LaborRank})

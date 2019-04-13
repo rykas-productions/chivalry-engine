@@ -144,7 +144,7 @@ if (isset($_POST['do']) && (isset($user))) {
 			</tr>
 			<tr>
 				<th>
-					Labor
+					{$_CONFIG['labor_stat']}
 				</th>
 				<td>
 					" . number_format($r['labor']) . "

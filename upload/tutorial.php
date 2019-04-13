@@ -44,11 +44,11 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<u>Personal Stats</u>
 	<br />
-	There are currently five stats in-game: {$_CONFIG['strength_stat']}, {$_CONFIG['agility_stat']}, {$_CONFIG['guard_stat']}, {$_CONFIG['iq_stat']} and Labor.
+	There are currently five stats in-game: {$_CONFIG['strength_stat']}, {$_CONFIG['agility_stat']}, {$_CONFIG['guard_stat']}, {$_CONFIG['iq_stat']} and {$_CONFIG['labor_stat']}.
 	<br />Increasing your {$_CONFIG['strength_stat']} will increase how much damage you can dish out in combat.
 	<br />Increasing {$_CONFIG['agility_stat']} will increase your chance of one of your strikes connecting with your opponent.
 	<br />Increasing your {$_CONFIG['guard_stat']} will decrease the damage your opponents do to you.
-	<br />{$_CONFIG['iq_stat']} and Labor are miscellaneous stats used around the game. It's good to have these at a fairly decent level.
+	<br />{$_CONFIG['iq_stat']} and {$_CONFIG['labor_stat']} are miscellaneous stats used around the game. It's good to have these at a fairly decent level.
 	<br />
 	<br />
 <hr />

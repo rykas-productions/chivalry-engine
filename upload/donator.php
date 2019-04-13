@@ -54,7 +54,7 @@ while ($r = $db->fetch_row($q)) {
                     "brave" => "Bravery", "level" => "Level",
                     "hp" => "Health", "strength" => "{$_CONFIG['strength_stat']}",
                     "agility" => "{$_CONFIG['agility_stat']}", "guard" => "{$_CONFIG['guard_stat']}",
-                    "labor" => "Labor", "iq" => "IQ",
+                    "labor" => "{$_CONFIG['labor_stat']}", "iq" => "IQ",
                     "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
                     "primary_currency" => "{$_CONFIG['primary_currency']}", "secondary_currency"
                 => "{$_CONFIG['secondary_currency']}", "crimexp" => "Experience", "vip_days" =>

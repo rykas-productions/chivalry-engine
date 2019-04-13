@@ -132,7 +132,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					Labor
+					{$_CONFIG['labor_stat']}
 				</th>
 				<td>
 					<input type='number' min='0' name='jLAB' required='1' class='form-control'>
@@ -500,7 +500,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    Labor Requirement
+                    {$_CONFIG['labor_stat']} Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='lab' class='form-control'>
@@ -671,7 +671,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    Labor Requirement
+                    {$_CONFIG['labor_stat']} Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrLAB']}' required='1' name='lab' class='form-control'>
