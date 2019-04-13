@@ -85,37 +85,42 @@ $inv =
                  WHERE `iv`.`inv_userid` = {$userid}
                  ORDER BY `i`.`itmtype` ASC, `i`.`itmname` ASC");
 echo "<b>Your items are listed below.</b><br />
-	<table class='table table-bordered table-striped'>
-	    <thead>
-		<tr>
-			<th>Item (Qty)</th>
-			<th class='hidden-xs-down'>Item Cost (Total)</th>
-			<th>Links</th>
-		</tr></thead>";
+<div class='cotainer'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>Item (Quantity)</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Cost (total)</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Actions</h4>
+		</div>
+</div><hr />";
 $lt = "";
 while ($i = $db->fetch_row($inv)) {
     if ($lt != $i['itmtypename']) {
         $lt = $i['itmtypename'];
-        echo "\n<thead><tr>
-            			<th colspan='4'>
-            				<b>{$lt}</b>
-            			</th>
-            		</tr></thead>";
+        echo "<div class='row'>
+		<div class='col-sm'>
+		    <h3>{$lt}</h3>
+		</div>
+</div><hr />";
     }
     $i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
-    echo "<tr>
-        		<td>
+    echo "<div class='row'>
+        		<div class='col-sm'>
 					<a href='iteminfo.php?ID={$i['itmid']}' data-toggle='tooltip' data-placement='right' title='{$i['itmdesc']}'>
 						{$api->game->getItemNameFromID($i['itmid'])}
 					</a>";
     if ($i['inv_qty'] > 1) {
         echo " (" . number_format($i['inv_qty']) . ")";
     }
-    echo "</td>
-        	  <td class='hidden-xs-down'>" . number_format($i['itmsellprice']);
+    echo "</div>
+        	  <div class='col-sm'>" . number_format($i['itmsellprice']);
     echo "  (" . number_format($i['itmsellprice'] * $i['inv_qty']) . ")";
-    echo "</td>
-        	  <td>
+    echo "</div>
+        	  <div class='col-sm'>
         	  	[<a href='itemsend.php?ID={$i['inv_id']}'>Send</a>]
         	  	[<a href='itemsell.php?ID={$i['inv_id']}'>Sell</a>]";
     if (array_sum(json_decode($i['itmeffects_toggle'])) > 0) {
@@ -127,9 +132,10 @@ while ($i = $db->fetch_row($inv)) {
     if ($i['armor'] > 0) {
         echo " [<a href='equip.php?slot=armor&ID={$i['inv_id']}'>Equip Armor</a>]";
     }
-    echo "</td>
-        </tr>";
+    echo "</div>
+        </div>
+        <hr />";
 }
-echo "</table>";
+echo "</div>";
 $db->free_result($inv);
 $h->endpage();
