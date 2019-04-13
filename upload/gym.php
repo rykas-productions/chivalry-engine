@@ -134,7 +134,7 @@ echo "Choose the stat you wish to train, and enter how many times you wish to tr
 			<td>
 				<select type='dropdown' name='stat' class='form-control'>
 					<option {$str_select} value='Strength'>
-					    {$_CONFIG['strength_stat']} (Have {$ir['{$_CONFIG['strength_stat']}']}, Ranked: {$ir['strank']})
+					    {$_CONFIG['strength_stat']} (Have {$ir['strength']}, Ranked: {$ir['strank']})
                     </option>
 					<option {$agl_select} value='Agility'>
 					    {$_CONFIG['agility_stat']} (Have {$ir['agility']}, Ranked: {$ir['agirank']})
@@ -143,7 +143,7 @@ echo "Choose the stat you wish to train, and enter how many times you wish to tr
 					    {$_CONFIG['guard_stat']} (Have {$ir['guard']}, Ranked: {$ir['guarank']})
                     </option>
 					<option {$lab_select} value='Labor'>
-					    {$_CONFIG['labor_stat']} (Have {$ir['{$_CONFIG['labor_stat']}']}, Ranked: {$ir['labrank']})
+					    {$_CONFIG['labor_stat']} (Have {$ir['labor']}, Ranked: {$ir['labrank']})
                     </option>
 					<option {$all_select} value='All'>
 					    All Four (Have {$ir['all_four']}, Ranked: {$ir['af_rank']})
