@@ -60,7 +60,7 @@ if (empty($ir['job'])) {
         $r = $db->fetch_row($q);
         $db->free_result($q);
         echo "<b>{$r['jBOSS']}:</b> So, {$ir['username']}, it appears you are wanting to work with our company. Can you tell me a little bit about yourself?<br />
-        <b>{$ir['username']}:</b> Of course! I'm level {$ir['level']}, have {$ir['{$_CONFIG['strength_stat']}']} strength, {$ir['iq']} {$_CONFIG['iq_stat']}, and {$ir['labor']} {$_CONFIG['labor_stat']}. I hope these skills are useful to the company.<br />";
+        <b>{$ir['username']}:</b> Of course! I'm level {$ir['level']}, have {$ir['strength']} strength, {$ir['iq']} {$_CONFIG['iq_stat']}, and {$ir['labor']} {$_CONFIG['labor_stat']}. I hope these skills are useful to the company.<br />";
         if ($ir['strength'] >= $r['jrSTR'] && $ir['labor'] >= $r['jrLAB'] && $ir['iq'] >= $r['jrIQ']) {
             $db->query("UPDATE `users`
                         SET `job` = {$_GET['interview']},
