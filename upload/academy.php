@@ -39,25 +39,22 @@ switch ($_GET['action']) {
 
 function menu()
 {
-    global $db, $userid;
-    echo "<table class='table table-bordered table-hover'>
-		<thead>
-			<tr>
-				<th>
-					Course
-				</th>
-				<th>
-					Description
-				</th>
-				<th>
-					Cost
-				</th>
-				<th>
-                    Action
-				</th>
-			</tr>
-		</thead>
-		<tbody>
+    global $db, $userid, $_CONFIG;
+    echo "<div class='cotainer'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>Course</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Description</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Cost</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Actions</h4>
+		</div>
+</div><hr />
 	   ";
     //Select the courses from in-game.
     $acadq = $db->query("SELECT * FROM `academy` ORDER BY `ac_level` ASC, `ac_id` ASC");
@@ -72,31 +69,33 @@ function menu()
         } else {
             $do = "<a href='?action=start&id={$academy['ac_id']}'>Attend</a>";
         }
-        echo "<tr>
-		<td>
+        echo "<div class='row'>
+		<div class='col-sm'>
 			{$academy['ac_name']}<br />";
-        //Hide academy level requirement if there is no requirement.
-        if (!empty($academy['ac_level'])) {
-            echo "Level: {$academy['ac_level']}";
-        }
+            //Hide academy level requirement if there is no requirement.
+            if (!empty($academy['ac_level'])) {
+                echo "Level: {$academy['ac_level']}";
+            }
         echo "
-		</td>
-		<td>
+		</div>
+		<div class='col-sm'>
 			{$academy['ac_desc']}
-		</td>
-		<td>
+		</div>
+		<div class='col-sm'>
 			" . number_format($academy['ac_cost']) . " {$_CONFIG['primary_currency']}
-		</td>
-		<td>
+		</div>
+		<div class='col-sm'>
 			{$do}
-		</td>";
+		</div>
+		</div>
+		<hr />";
     }
-    echo "</tbody></table>";
+    echo "</div>";
 }
 
 function start()
 {
-    global $db, $userid, $ir, $h, $api;
+    global $db, $userid, $ir, $h, $api, $_CONFIG;
 	$course_id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //If the user doesn't specific a course to take.
     if (empty($course_id)) {
