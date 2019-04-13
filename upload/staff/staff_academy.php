@@ -37,7 +37,7 @@ function menu()
 }
 function addacademy()
 {
-    global $h, $db, $userid, $api, $ir;
+    global $h, $db, $userid, $api, $_CONFIG;
     if (!isset($_POST['name'])) {
         $csrf = getHtmlCSRF('staff_newacademy');
         echo "<form method='post'>
@@ -172,7 +172,7 @@ function addacademy()
 
 function delacademy()
 {
-    global $db, $ir, $h, $userid, $api;
+    global $db, $ir, $h, $userid, $api, $_CONFIG;
     if (!isset($_POST['academy'])) {
         $csrf = getHtmlCSRF('staff_delacademy');
         echo "<h4>Deleting an Academic Course</h4>
@@ -226,7 +226,7 @@ function delacademy()
 
 function editacademy()
 {
-    global $db, $userid, $api, $h;
+    global $db, $userid, $api, $h, $_CONFIG;
     if (!isset($_POST['step'])) {
         $_POST['step'] = '0';
     }

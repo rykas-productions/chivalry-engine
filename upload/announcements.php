@@ -36,7 +36,7 @@ while ($r = $db->fetch_row($q)) {
                 Posted By <a href='profile.php?user={$r['ann_poster']}'>{$Poster}</a> {$AnnouncementTime} {$new}
             </div>
             <div class='card-body'>
-                <p class='card-text'>With supporting text below as a natural lead-in to additional content.</p>
+                <p class='card-text'>{$r['ann_text']}</p>
             </div>
         </div><br />";
 }
