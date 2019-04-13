@@ -13,7 +13,7 @@ if ($api->user->inDungeon($userid)) {
     alert('danger', "Uh Oh!", "You cannot play Russian Roulette while in the dungeon.");
     die($h->endpage());
 }
-if ($api->inInfirmary($userid)) {
+if ($api->user->inInfirmary($userid)) {
     alert('danger', "Uh Oh!", "You cannot play Russian Roulette while in the infirmary.");
     die($h->endpage());
 }
