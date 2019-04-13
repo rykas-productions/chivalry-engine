@@ -57,7 +57,7 @@ while ($r = $db->fetch_row($q)) {
                     "labor" => "Labor", "iq" => "IQ",
                     "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
                     "primary_currency" => "{$_CONFIG['primary_currency']}", "secondary_currency"
-                => "Secondary Currency", "crimexp" => "Experience", "vip_days" =>
+                => "{$_CONFIG['secondary_currency']}", "crimexp" => "Experience", "vip_days" =>
                     "VIP Days");
             $statformatted = $stats["{$einfo['stat']}"];
             echo "{$einfo['dir']} {$statformatted} by " . number_format($einfo['inc_amount']) . "{$einfo['inc_type']}.<br />";

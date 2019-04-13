@@ -104,7 +104,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Secondary Currency in Circulation
+					{$_CONFIG['secondary_currency']} in Circulation
 				</td>
 				<td>
 					" . number_format($TotalSecondaryCurrency) . "
@@ -120,7 +120,7 @@ google.charts.load('current', {'packages':['corechart']});
 			</tr>
 			<tr>
 				<td>
-					Average Secondary Currency per Player
+					Average {$_CONFIG['secondary_currency']} per Player
 				</td>
 				<td>
 					" . number_format($AverageSecondaryCurrencyPerPlayer) . "

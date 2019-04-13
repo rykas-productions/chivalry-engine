@@ -103,7 +103,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Minimum Secondary Currency
+						Success Minimum {$_CONFIG['secondary_currency']}
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMIN' />
@@ -111,7 +111,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Maximum Secondary Currency
+						Success Maximum {$_CONFIG['secondary_currency']}
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMAX' />
@@ -344,7 +344,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						Sucess Minimum Secondary Currency
+						Sucess Minimum {$_CONFIG['secondary_currency']}
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMIN' value='{$itemi['crimeSECCURMIN']}' />
@@ -352,7 +352,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Maximum Secondary Currency
+						Success Maximum {$_CONFIG['secondary_currency']}
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMAX' value='{$itemi['crimeSECURMAX']}' />

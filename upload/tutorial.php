@@ -32,7 +32,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Personal Information</u>
 	<br />
 	If you click the {$set['WebsiteName']} on the top left corner, it'll redirect you to the main index where you can
-	view your personal information. This page shows your Stats, Level, {$_CONFIG['primary_currency']}, Secondary Currency, VIP Days,
+	view your personal information. This page shows your Stats, Level, {$_CONFIG['primary_currency']}, {$_CONFIG['secondary_currency']}, VIP Days,
 	Health, Experience, Will, Brave and Energy. You can also update your Personal Notepad here as well.
 	<br />Energy is used for training and attacking.
 	<br />Will effects how much you gain while training, so in turn, a low will level means low gains in the gym.
@@ -91,7 +91,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />Local Shops are the game-created shops in your town. You'll find an infinite amount of items in these shops.
 	<br />However, if you're wanting something a little more flashy, the Item Market is a market ran exclusively by other players. You'll find all sorts
 	of items for sale here. Note, that players also set their own pricing.
-	<br />The Secondary Currency Market is an easy way to convert your Secondary
+	<br />The {$_CONFIG['secondary_currency']} Market is an easy way to convert your Secondary
 	Currency into {$_CONFIG['primary_currency']}, depending on the market demand.
 	<br />
 	<br />
@@ -105,7 +105,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	 your Maximum Will, thus improving your gains while training.
 	 <br />If you're starting to hate the town you're in, Horse Travel is your ticket to other towns. Mind you, towns
 	 may have Level requirements, and varying tax levels.
-	 <br />The Temple of Fortune is where you can spend your Secondary Currency. You can refill your Energy, Will, and
+	 <br />The Temple of Fortune is where you can spend your {$_CONFIG['secondary_currency']}. You can refill your Energy, Will, and
 	 Brave here. You may also purchase IQ.
 	<br />
 	<br />

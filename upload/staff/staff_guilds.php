@@ -124,7 +124,7 @@ function viewguild()
         </tr>
         <tr>
             <th>
-                Secondary Currency
+                {$_CONFIG['secondary_currency']}
             </th>
             <td>
                 " . number_format($r['guild_seccurr']) . "
@@ -205,7 +205,7 @@ function creditguild()
 
         //Make sure the primary/secondary currency is input.
         if ((empty($prim)) && (empty($sec))) {
-            alert('danger', "Uh Oh!", "Please input how much {$_CONFIG['primary_currency']} and/or Secondary Currency you wish to
+            alert('danger', "Uh Oh!", "Please input how much {$_CONFIG['primary_currency']} and/or {$_CONFIG['secondary_currency']} you wish to
             credit to this guild.");
             die($h->endpage());
         }
@@ -235,15 +235,15 @@ function creditguild()
 
         //Notify the guild they've received some cash!
         $api->guild->addNotification($guild, "The game administration has credited your guild {$primf} {$_CONFIG['primary_currency']}
-        and/or {$secf} Secondary Currency for reason: {$reason}.");
+        and/or {$secf} {$_CONFIG['secondary_currency']} for reason: {$reason}.");
 
         //Log the entry
         $api->game->addLog($userid, 'staff', "Credited Guild ID {$guild} with {$primf} {$_CONFIG['primary_currency']} and/or {$secf}
-        Secondary Currency with reason '{$reason}'.");
+        {$_CONFIG['secondary_currency']} with reason '{$reason}'.");
 
         //Success to the end user.
         alert('success', "Success!", "You have successfully credited Guild ID {$guild} with {$primf} {$_CONFIG['primary_currency']}
-        and/or {$secf} Secondary Currency with reason '{$reason}'.", true, 'index.php');
+        and/or {$secf} {$_CONFIG['secondary_currency']} with reason '{$reason}'.", true, 'index.php');
         $h->endpage();
     } else {
         //Form to credit a guild.
@@ -270,7 +270,7 @@ function creditguild()
         </tr>
         <tr>
             <th>
-                Secondary Currency
+                {$_CONFIG['secondary_currency']}
             </th>
             <td>
                 <input type='number' name='secondary' value='0' required='1' min='0' class='form-control'>
@@ -490,7 +490,7 @@ function editguild()
         </tr>
         <tr>
             <th>
-                Secondary Currency
+                {$_CONFIG['secondary_currency']}
             </th>
             <td>
                 <input type='number' min='0' name='secondary' class='form-control' value='{$r['guild_seccurr']}'>

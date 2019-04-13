@@ -148,7 +148,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Secondary Currency
+							{$_CONFIG['secondary_currency']}
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' value='0' name='sec_currency'>
@@ -475,7 +475,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Secondary Currency
+					{$_CONFIG['secondary_currency']}
 				</th>
 				<td>
 					<input type='number' min='0' class='form-control' required='1' name='sec_currency' value='{$itemi['secondary_currency']}' />
@@ -1022,7 +1022,7 @@ function masspay()
         $primary = (isset($_POST['pay']) && is_numeric($_POST['pay'])) ? abs(intval($_POST['pay'])) : 0;
         $secondary = (isset($_POST['pay1']) && is_numeric($_POST['pay1'])) ? abs(intval($_POST['pay1'])) : 0;
         if (empty($primary) && empty($secondary)) {
-            alert('danger', "Uh Oh", "If you wish to give a mass payment, please give either {$_CONFIG['primary_currency']} or Secondary Currency.");
+            alert('danger', "Uh Oh", "If you wish to give a mass payment, please give either {$_CONFIG['primary_currency']} or {$_CONFIG['secondary_currency']}.");
             die($h->endpage());
         }
         if (!isset($_POST['verf']) || !checkCSRF('staff_masspay', stripslashes($_POST['verf']))) {
@@ -1033,11 +1033,11 @@ function masspay()
         while ($r = $db->fetch_row($q)) {
             $api->user->giveCurrency($r['userid'], 'primary', $primary);
             $api->user->giveCurrency($r['userid'], 'seconday', $secondary);
-            $api->GameAddNotification($r['userid'], "The administration has given a mass payment of {$primary} {$_CONFIG['primary_currency']} and/or {$secondary} Secondary Currency to the game.");
+            $api->GameAddNotification($r['userid'], "The administration has given a mass payment of {$primary} {$_CONFIG['primary_currency']} and/or {$secondary} {$_CONFIG['secondary_currency']} to the game.");
             echo "Successfully paid {$r['username']}.<br />";
         }
         alert('success', 'Success!', "You have successfully mass paid the game.", true, 'index.php');
-        $api->$game->addLog($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} Secondary Currency.");
+        $api->$game->addLog($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} {$_CONFIG['secondary_currency']}.");
     } else {
         $csrf = getHtmlCSRF('staff_masspay');
         echo "<table class='table table-bordered'>
@@ -1058,7 +1058,7 @@ function masspay()
             </tr>
             <tr>
                 <th>
-                    Secondary Currency
+                    {$_CONFIG['secondary_currency']}
                 </th>
                 <td>
                     <input type='number' required='1' value='0' name='pay1' class='form-control'>

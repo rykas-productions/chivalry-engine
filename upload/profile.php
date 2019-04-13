@@ -195,7 +195,7 @@ if (!$_GET['user']) {
 								<td> " . number_format($r['primary_currency']) . "</td>
 							</tr>
 							<tr>
-								<th>Secondary Currency</th>
+								<th>{$_CONFIG['secondary_currency']}</th>
 								<td>" . number_format($r['secondary_currency']) . "</td>
 							</tr>
 							<tr>

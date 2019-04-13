@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-echo "<h3>Secondary Currency Market</h3><hr />";
+echo "<h3>{$_CONFIG['secondary_currency']} Market</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -94,14 +94,14 @@ function buy()
         alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['primary_currency']} to buy this listing.", true, 'secmarket.php');
         die($h->endpage());
     }
-    $api->game->addLog($userid, 'secmarket', "Bought {$r['sec_total']} Secondary Currency from the market for {$totalcost} {$_CONFIG['primary_currency']}.");
+    $api->game->addLog($userid, 'secmarket', "Bought {$r['sec_total']} {$_CONFIG['secondary_currency']} from the market for {$totalcost} {$_CONFIG['primary_currency']}.");
     $api->user->giveCurrency($userid, 'secondary', $r['sec_total']);
     $api->user->takeCurrency($userid, 'primary', $totalcost);
     $api->user->giveCurrency($r['sec_user'], 'primary', $totalcost);
     $api->user->addNotification($r['sec_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has bought your
-        {$r['sec_total']} Secondary Currency offer from the market for a total of {$totalcost}.");
+        {$r['sec_total']} {$_CONFIG['secondary_currency']} offer from the market for a total of {$totalcost}.");
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
-    alert('success', "Success!", "You have bought {$r['sec_total']} Secondary Currency for {$totalcost} {$_CONFIG['primary_currency']}", true, 'secmarket.php');
+    alert('success', "Success!", "You have bought {$r['sec_total']} {$_CONFIG['secondary_currency']} for {$totalcost} {$_CONFIG['primary_currency']}", true, 'secmarket.php');
     die($h->endpage());
 }
 
@@ -123,10 +123,10 @@ function remove()
         alert('danger', "Uh Oh!", "You are trying to remove a lising you do not own.", true, 'secmarket.php');
         die($h->endpage());
     }
-    $api->game->addLog($userid, 'secmarket', "Removed {$r['sec_total']} Secondary Currency from the market.");
+    $api->game->addLog($userid, 'secmarket', "Removed {$r['sec_total']} {$_CONFIG['secondary_currency']} from the market.");
     $api->user->giveCurrency($userid, 'secondary', $r['sec_total']);
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
-    alert('success', "Success!", "You have removed your listing for {$r['sec_total']} Secondary Currency from the market.", true, 'secmarket.php');
+    alert('success', "Success!", "You have removed your listing for {$r['sec_total']} {$_CONFIG['secondary_currency']} from the market.", true, 'secmarket.php');
     die($h->endpage());
 }
 
@@ -141,18 +141,18 @@ function add()
             die($h->endpage());
         }
         if (!($api->user->hasCurrency($userid, 'secondary', $_POST['qty']))) {
-            alert('danger', "Uh Oh!", "You are trying to add more Secondary Currency than you currently have.");
+            alert('danger', "Uh Oh!", "You are trying to add more {$_CONFIG['secondary_currency']} than you currently have.");
             die($h->endpage());
         }
         $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`)
 					VALUES ('{$userid}', '{$_POST['cost']}', '{$_POST['qty']}');");
         $api->user->takeCurrency($userid, 'secondary', $_POST['qty']);
         $api->game->addLog($userid, 'secmarket', "Added {$_POST['qty']} to the secondary market for {$_POST['cost']} {$_CONFIG['primary_currency']} each.");
-        alert('success', "Success!", "You have added your {$_POST['qty']} Secondary Currency to the market for
+        alert('success', "Success!", "You have added your {$_POST['qty']} {$_CONFIG['secondary_currency']} to the market for
 		    {$_POST['cost']} {$_CONFIG['primary_currency']} each.", true, 'secmarket.php');
         die($h->endpage());
     } else {
-        alert('info', "Information!", "Fill out this form completely to add your Secondary Currency to the market.", false);
+        alert('info', "Information!", "Fill out this form completely to add your {$_CONFIG['secondary_currency']} to the market.", false);
         echo "
 		<form method='post'>
 			<table class='table table-bordered'>

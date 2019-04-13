@@ -92,7 +92,7 @@ echo "<h4>You begin exploring {$api->game->getTownNameFromID($ir['location'])}. 
 //referral link.
 echo "	<div class='row'>
 			<div class='col-md-12'>
-				Share your referral link to gain 25 Secondary Currency every time a friend joins!<br />
+				Share your referral link to gain 25 {$_CONFIG['secondary_currency']} every time a friend joins!<br />
 				<code>{$domain}/register.php?REF={$userid}</code>
 			</div>
 		</div>";

@@ -111,7 +111,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					Secondary Currency
+					{$_CONFIG['secondary_currency']}
 				</th>
 				<td>
 					<input type='number' min='0' name='jrSECONDARY' required='1' class='form-control'>
@@ -476,7 +476,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    Secondary Currency Pay
+                    {$_CONFIG['secondary_currency']} Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='seccpay' class='form-control'>
@@ -647,7 +647,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    Secondary Currency Pay
+                    {$_CONFIG['secondary_currency']} Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrSECONDARY']}' required='1' name='seccpay' class='form-control'>

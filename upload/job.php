@@ -66,7 +66,7 @@ if (empty($ir['job'])) {
                         SET `job` = {$_GET['interview']},
                         `jobrank` = {$r['jrID']}
                         WHERE `userid` = {$userid}");
-            echo "<b>{$r['jBOSS']}:</b> It appears you fit our basic requirements. Is starting at {$r['jrPRIMPAY']} {$_CONFIG['primary_currency']} and/or {$r['jrSECONDARY']} Secondary Currency per hour fine with you?<br />
+            echo "<b>{$r['jBOSS']}:</b> It appears you fit our basic requirements. Is starting at {$r['jrPRIMPAY']} {$_CONFIG['primary_currency']} and/or {$r['jrSECONDARY']} {$_CONFIG['secondary_currency']} per hour fine with you?<br />
             <b>{$ir['username']}:</b> Yes it is!<br />
             <b>{$r['jBOSS']}:</b> Alright, well, get to work then! Welcome aboard!<br />
             <a href='job.php'>Get to Work</a>";
@@ -114,7 +114,7 @@ function job_index()
     global $db, $ir, $h;
     echo "<h3>Your Job</h3>
     You currently work in the {$ir['jNAME']}! You receive {$ir['jrPRIMPAY']} {$_CONFIG['primary_currency']} and/or
-    {$ir['jrSECONDARY']} Secondary Currency each hour you work as you're required. You've worked {$ir['jobwork']} /
+    {$ir['jrSECONDARY']} {$_CONFIG['secondary_currency']} each hour you work as you're required. You've worked {$ir['jobwork']} /
     {$ir['jrACT']} times this hour.
     <table class='table table-bordered'>
     <tr>

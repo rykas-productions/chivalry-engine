@@ -51,7 +51,7 @@ else {
 }
 echo "<a href='?stat=level'>Level</a>
         || <a href='?stat=primary_currency'>{$_CONFIG['primary_currency']}</a>
-        || <a href='?stat=secondary_currency'>Secondary Currency</a>
+        || <a href='?stat=secondary_currency'>{$_CONFIG['secondary_currency']}</a>
 		|| <a href='?stat=mining_level'>Mining Level</a>";
 echo "<br />";
 echo "<a href='?stat=strength'>Strength</a>

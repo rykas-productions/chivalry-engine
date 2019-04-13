@@ -104,7 +104,7 @@ function heal()
             $time = 30 * $times;
             //User does not have enough secondary currency to heal that many times.
             if ($ir['secondary_currency'] < $cost) {
-                alert('danger', "Uh Oh!", "You do not have enough Secondary Currency to heal {$_GET['times']} sets.", true, 'infirmary.php');
+                alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['secondary_currency']} to heal {$_GET['times']} sets.", true, 'infirmary.php');
                 die($h->endpage());
             } else {
                 //Healed successfully!
@@ -116,12 +116,12 @@ function heal()
                 //Log it!
                 $api->game->addLog($userid, 'heal', "Healed {$api->user->getNamefromID($user)} {$_GET['times']} times.");
                 alert('success', "Success!", "You have healed {$api->user->getNamefromID($user)} {$times}
-                times, costing you {$cost} Secondary Currency.", true, 'index.php');
+                times, costing you {$cost} {$_CONFIG['secondary_currency']}.", true, 'index.php');
             }
         } else {
             echo "How many times do you wish to heal {$api->user->getNamefromID($user)}?<br />
             1 Set = 30 minutes<br />
-            1 Set = 25 Secondary Currency<br />
+            1 Set = 25 {$_CONFIG['secondary_currency']}<br />
             <form>
                 <input type='hidden' name='user' value='{$_GET['user']}'>
                 <input type='hidden' name='action' value='heal'>

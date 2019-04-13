@@ -72,8 +72,8 @@ function index()
             $price = number_format($r['imPRICE']) . " {$_CONFIG['primary_currency']}";
             $tprice = number_format($ctprice) . " {$_CONFIG['primary_currency']}";
         } else {
-            $price = number_format($r['imPRICE']) . " Secondary Currency";
-            $tprice = number_format($ctprice) . " Secondary Currency";
+            $price = number_format($r['imPRICE']) . " {$_CONFIG['secondary_currency']}";
+            $tprice = number_format($ctprice) . " {$_CONFIG['secondary_currency']}";
         }
         if ($r['imADDER'] == $userid) {
             $link =
