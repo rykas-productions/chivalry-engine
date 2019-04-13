@@ -22,7 +22,7 @@ if ($api->user->inDungeon($ir['userid'])) {
     die($h->endpage());
 }
 //Convert POST values to Stat Names.
-$statnames = array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor", "All" => "all");
+$statnames = array("Strength" => "strength", "Agility" => "{$_CONFIG['agility_stat']}", "Guard" => "guard", "Labor" => "labor", "All" => "all");
 //Training amount is not set, so set to 0.
 if (!isset($_POST["amnt"])) {
     $_POST["amnt"] = 0;
@@ -69,8 +69,8 @@ if (isset($_POST["stat"]) && $amnt) {
             $str_select = "selected";
         } //Agility is the chosen stat.
         elseif ($stat == "agility") {
-            alert('success', "Success!", "You beging to run laps. You have gained {$gain} Agility by completing
-			    {$amnt} laps. You now have {$NewStatAmount} Agility and {$EnergyLeft} Energy left.", false);
+            alert('success', "Success!", "You beging to run laps. You have gained {$gain} {$_CONFIG['agility_stat']} by completing
+			    {$amnt} laps. You now have {$NewStatAmount} {$_CONFIG['agility_stat']} and {$EnergyLeft} Energy left.", false);
             //Have agility selected for the next training.
             $agl_select = "selected";
         } //Guard is the chosen stat.
@@ -86,8 +86,8 @@ if (isset($_POST["stat"]) && $amnt) {
             //Have guard selected for the next training.
             $lab_select = "selected";
         } elseif ($stat == "all") {
-            alert('success', "Success!", "You begin training your {$_CONFIG['strength_stat']}, Agility, Guard and Labor all at once. You
-                have gained {$gainstr} {$_CONFIG['strength_stat']}, {$gainagl} Agility, {$gaingrd} Guard and {$gainlab} Labor. You have
+            alert('success', "Success!", "You begin training your {$_CONFIG['strength_stat']}, {$_CONFIG['agility_stat']}, Guard and Labor all at once. You
+                have gained {$gainstr} {$_CONFIG['strength_stat']}, {$gainagl} {$_CONFIG['agility_stat']}, {$gaingrd} Guard and {$gainlab} Labor. You have
                 {$EnergyLeft} Energy left.");
             $all_select = "selected";
         }
@@ -137,7 +137,7 @@ echo "Choose the stat you wish to train, and enter how many times you wish to tr
 					    {$_CONFIG['strength_stat']} (Have {$ir['{$_CONFIG['strength_stat']}']}, Ranked: {$ir['strank']})
                     </option>
 					<option {$agl_select} value='Agility'>
-					    Agility (Have {$ir['agility']}, Ranked: {$ir['agirank']})
+					    {$_CONFIG['agility_stat']} (Have {$ir['agility']}, Ranked: {$ir['agirank']})
                     </option>
 					<option {$grd_select} value='Guard'>
 					    Guard (Have {$ir['guard']}, Ranked: {$ir['guarank']})

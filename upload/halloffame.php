@@ -54,8 +54,8 @@ echo "<a href='?stat=level'>Level</a>
         || <a href='?stat=secondary_currency'>{$_CONFIG['secondary_currency']}</a>
 		|| <a href='?stat=mining_level'>Mining Level</a>";
 echo "<br />";
-echo "<a href='?stat={$_CONFIG['strength_stat']}'>Strength</a>
-		|| <a href='?stat=agility'>Agility</a>
+echo "<a href='?stat=strength'>{$_CONFIG['strength_stat']}</a>
+		|| <a href='?stat=agility'>{$_CONFIG['agility_stat']}</a>
         || <a href='?stat=guard'>Guard</a>
         || <a href='?stat=labor'>Labor</a>
 		|| <a href='?stat=iq'>IQ</a>

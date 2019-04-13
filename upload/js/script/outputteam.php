@@ -27,10 +27,10 @@ if ($class == 'Warrior') {
     $warning = "Warriors begin with more {$_CONFIG['strength_stat']} and less guard.";
     $newclass = 'form-control is-valid';
 } elseif ($class == 'Rogue') {
-    $warning = "Rogues start with more agility and less {$_CONFIG['strength_stat']}.";
+    $warning = "Rogues start with more {$_CONFIG['agility_stat']} and less {$_CONFIG['strength_stat']}.";
     $newclass = 'form-control is-valid';
 } elseif ($class == 'Defender') {
-    $warning = "Defenders begin with more guard and less agility.";
+    $warning = "Defenders begin with more guard and less {$_CONFIG['agility_stat']}.";
     $newclass = 'form-control is-valid';
 } else {
     $warning = "Please select a valid class.";

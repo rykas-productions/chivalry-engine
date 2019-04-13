@@ -120,7 +120,7 @@ if (isset($_POST['do']) && (isset($user))) {
 			</tr>
 			<tr>
 				<th>
-					Agility
+					{$_CONFIG['agility_stat']}
 				</th>
 				<td>
 					" . number_format($r['agility']) . "

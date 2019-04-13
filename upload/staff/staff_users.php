@@ -177,7 +177,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Agility
+							{$_CONFIG['agility_stat']}
 						</th>
 						<td>
 							<input type='number' required='1' id='agility' class='form-control' min='10' name='agility' value='1000'>
@@ -536,7 +536,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					Agility
+					{$_CONFIG['agility_stat']}
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='agility' value='{$itemi['agility']}' />

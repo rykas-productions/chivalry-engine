@@ -44,9 +44,9 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<u>Personal Stats</u>
 	<br />
-	There are currently five stats in-game: {$_CONFIG['strength_stat']}, Agility, Guard, IQ and Labor.
+	There are currently five stats in-game: {$_CONFIG['strength_stat']}, {$_CONFIG['agility_stat']}, Guard, IQ and Labor.
 	<br />Increasing your {$_CONFIG['strength_stat']} will increase how much damage you can dish out in combat.
-	<br />Increasing Agility will increase your chance of one of your strikes connecting with your opponent.
+	<br />Increasing {$_CONFIG['agility_stat']} will increase your chance of one of your strikes connecting with your opponent.
 	<br />Increasing your Guard will decrease the damage your opponents do to you.
 	<br />IQ and Labor are miscellaneous stats used around the game. It's good to have these at a fairly decent level.
 	<br />
@@ -224,7 +224,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<hr />
 	<a name='combat'><h4>Combat</h4></a>
 	To get almost anywhere in our game, you need to fight others in combat. The weak will fall, and the strong will
-	reign supreme. Increasing your Agility, {$_CONFIG['strength_stat']}, and Guard will increase your chance of success in combat.
+	reign supreme. Increasing your {$_CONFIG['agility_stat']}, {$_CONFIG['strength_stat']}, and Guard will increase your chance of success in combat.
 	<br />
 	<br />
 	<u>Robbing</u>
