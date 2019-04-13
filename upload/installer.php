@@ -91,7 +91,7 @@ function diagnostics()
         $wv = '<span class="text-danger">Fail!</span>';
         $wvf = 0;
     }
-	if (function_exists('openssl_random_pseudo_bytes'))
+	if (function_exists('openssl_randomNumber_pseudo_bytes'))
     {
         $ov = '<span class="text-success">Pass!</span>';
         $ovf = 1;
@@ -146,13 +146,13 @@ function diagnostics()
     			<td>{$hv}</td>
     		</tr>
 			<tr>
-    			<td>OpenSSL Random Pseudo Bytes avaliable?</td>
+    			<td>OpenSSL randomNumber Pseudo Bytes avaliable?</td>
     			<td>{$ov}</td>
     		</tr>
     		<tr>
     			<td>Is Chivalry Engine up to date?</td>
     			<td>
-        			" . version_json() . "
+        			" . getEngineVersion() . "
         		</td>
         	</tr>
     </table>
@@ -448,7 +448,7 @@ function install()
     echo '... Successful.<br />';
     echo 'Writing game config file...';
     echo 'Write Config...';
-    $code = sha1(openssl_random_pseudo_bytes(64));
+    $code = sha1(openssl_randomNumber_pseudo_bytes(64));
     if (file_exists("config.php"))
     {
         unlink("config.php");
@@ -588,7 +588,7 @@ if ($_GET['code'] != 'install')
 	require_once('installer_foot.php');
 }
 /* gets the contents of a file if it exists, otherwise grabs and caches */
-function get_cached_file($url,$file,$hours=1) 
+function getCachedFile($url,$file,$hours=1)
 {
 	$current_time = time(); 
 	$expire_time = $hours * 60 * 60;
@@ -601,19 +601,19 @@ function get_cached_file($url,$file,$hours=1)
 		}
 		else
 		{
-			$content = update_file($url,$file);
+			$content = updateFile($url,$file);
 			file_put_contents($file,$content);
 			return $content;
 		}
 	}
 	else 
 	{
-		$content = update_file($url,$file);
+		$content = updateFile($url,$file);
 		file_put_contents($file,$content);
 		return $content;
 	}
 }
-function update_file($url)
+function updateFile($url)
 {
 	global $db,$set;
 	$content = "404";
@@ -629,11 +629,11 @@ function update_file($url)
 /*
  * Function to fetch current version of Chivalry Engine
  */
-function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
+function getEngineVersion($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
     global $set;
     $engine_version = $set['Version_Number'];
-    $json = json_decode(get_cached_file($url, __DIR__ . "/cache/update_check.txt"), true);
+    $json = json_decode(getCachedFile($url, __DIR__ . "/cache/update_check.txt"), true);
     if (is_null($json))
         return "Update checker failed.";
     if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)

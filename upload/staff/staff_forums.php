@@ -33,7 +33,7 @@ function addforum()
 {
     global $h, $db, $userid, $api;
     if (!isset($_POST['name'])) {
-        $csrf = request_csrf_html('staff_addforum');
+        $csrf = getHtmlCSRF('staff_addforum');
         echo "
         <h3>Add Forum Category</h3>
         <hr />
@@ -78,7 +78,7 @@ function addforum()
         $name = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
         $desc = (isset($_POST['desc'])) ? $db->escape(strip_tags(stripslashes($_POST['desc']))) : '';
         $auth = (isset($_POST['auth']) && in_array($_POST['auth'], array('staff', 'public'), true)) ? $_POST['auth'] : 'public';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_addforum', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_addforum', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Please submit the form as quickly as possible next time.");
             die($h->endpage());
         }
@@ -121,7 +121,7 @@ function editforum()
                 alert('danger', "Uh Oh!", "Please fill out the previous form completely before submitting.");
                 die($h->endpage());
             }
-            if (!isset($_POST['verf']) || !verify_csrf_code('staff_editforum2', stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF('staff_editforum2', stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Please submit the form as quickly as possible next time.");
                 die($h->endpage());
             }
@@ -149,7 +149,7 @@ function editforum()
                 alert('danger', "Uh Oh!", "Please specify the forum category you wish to edit.");
                 die($h->endpage());
             }
-            if (!isset($_POST['verf']) || !verify_csrf_code('staff_editforum1', stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF('staff_editforum1', stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Please submit the form as quickly as possible next time.");
                 die($h->endpage());
             }
@@ -163,7 +163,7 @@ function editforum()
             $db->free_result($q);
             $check_p = ($old['ff_auth'] == 'public') ? 'selected' : '';
             $check_s = ($old['ff_auth'] == 'staff') ? 'selected' : '';
-            $csrf = request_csrf_html('staff_editforum2');
+            $csrf = getHtmlCSRF('staff_editforum2');
             echo "
 			<form method='post'>
 							<input type='hidden' name='step' value='2'>
@@ -206,11 +206,11 @@ function editforum()
 			</form>";
             break;
         default:
-            $csrf = request_csrf_html('staff_editforum1');
+            $csrf = getHtmlCSRF('staff_editforum1');
             echo "
 			<form method='post'>
 				<input type='hidden' name='step' value='1' />
-				<b>Editing a Category</b> " . forum_dropdown("id") . "<br />
+				<b>Editing a Category</b> " . dropdownForum("id") . "<br />
 				{$csrf}
 				<input type='submit' class='btn btn-primary' value='Edit Category' />
 			</form>
@@ -224,19 +224,19 @@ function delforum()
     global $db, $h, $userid, $api;
     echo "<h3>Delete Category</h3><hr />";
     if (!isset($_POST['forum'])) {
-        $csrf = request_csrf_html('staff_delforum');
+        $csrf = getHtmlCSRF('staff_delforum');
         echo "
 		Deleting a category is permanent. The posts and threads inside will also be deleted. Select a category to delete
 		<br />
 		<form method='post'>
-        	<b>Category</b> " . forum_dropdown("forum") . "
+        	<b>Category</b> " . dropdownForum("forum") . "
         <br />
         	{$csrf}
         	<input type='submit' class='btn btn-primary' value='Delete Category' />
         </form>";
     } else {
         $_POST['forum'] = (isset($_POST['forum']) && is_numeric($_POST['forum'])) ? abs(intval($_POST['forum'])) : '';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_delforum', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_delforum', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Please submit the form as quickly as possible next time.");
             die($h->endpage());
         }

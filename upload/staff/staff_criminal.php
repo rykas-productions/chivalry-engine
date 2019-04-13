@@ -57,7 +57,7 @@ function new_crime()
 {
     global $db, $userid, $api, $h, $_CONFIG;
     if (!isset($_POST['name'])) {
-        $csrf = request_csrf_html('staff_newcrime');
+        $csrf = getHtmlCSRF('staff_newcrime');
         echo "Adding a new Crime<br />
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
@@ -122,7 +122,7 @@ function new_crime()
 						Success Item
 					</th>
 					<td>
-						" . item_dropdown('item') . "
+						" . dropdownItem('item') . "
 					</td>
 				</tr>
 				<tr>
@@ -130,7 +130,7 @@ function new_crime()
 						Crime Group
 					</th>
 					<td>
-						" . crimegroup_dropdown('group') . "
+						" . dropdownCrimeGroup('group') . "
 					</td>
 				</tr>
 				<tr>
@@ -220,7 +220,7 @@ function new_crime()
             alert('danger', "Uh Oh!", "You are missing one or more required inputs on the previous form.");
             die($h->endpage());
         }
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrime', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_newcrime', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
             die($h->endpage());
         }
@@ -254,7 +254,7 @@ function edit_crime()
         $_POST['step'] = 0;
     }
     if ($_POST['step'] == 0) {
-        $csrf = request_csrf_html('staff_editcrime1');
+        $csrf = getHtmlCSRF('staff_editcrime1');
         echo "<form action='?action=editcrime' method='post'>";
         echo "
 		<table class='table table-bordered'>
@@ -268,7 +268,7 @@ function edit_crime()
 					Crime
 				</th>
 				<td>
-					" . crime_dropdown('crime') . "
+					" . dropdownCrime('crime') . "
 				</td>
 			</tr>
 			<tr>
@@ -282,7 +282,7 @@ function edit_crime()
     }
     if ($_POST['step'] == 1) {
         $_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime1', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editcrime1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
             die($h->endpage());
         }
@@ -298,7 +298,7 @@ function edit_crime()
         }
         $itemi = $db->fetch_row($d);
         $db->free_result($d);
-        $csrf = request_csrf_html('staff_editcrime2');
+        $csrf = getHtmlCSRF('staff_editcrime2');
         echo "Edit Crime Form<br />
 		<form method='post'>
 			<table class='table table-bordered'>
@@ -363,7 +363,7 @@ function edit_crime()
 						Success Item
 					</th>
 					<td>
-						" . item_dropdown('item', $itemi['crimeITEMSUC']) . "
+						" . dropdownItem('item', $itemi['crimeITEMSUC']) . "
 					</td>
 				</tr>
 				<tr>
@@ -371,7 +371,7 @@ function edit_crime()
 						Crime Group
 					</th>
 					<td>
-						" . crimegroup_dropdown('group', $itemi['crimeGROUP']) . "
+						" . dropdownCrimeGroup('group', $itemi['crimeGROUP']) . "
 					</td>
 				</tr>
 				<tr>
@@ -467,7 +467,7 @@ function edit_crime()
             alert('danger', "Uh Oh!", "Please specify the crime you wish to edit.");
             die($h->endpage());
         }
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrime2', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editcrime2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
             die($h->endpage());
         }
@@ -501,7 +501,7 @@ function delcrime()
     global $db, $userid, $api, $h;
     if (isset($_POST['crime'])) {
         $_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : '';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrime', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_delcrime', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
             die($h->endpage());
         }
@@ -520,7 +520,7 @@ function delcrime()
         $api->game->addLog($userid, 'staff', "Deleted Crime ID {$_POST['crime']}.");
 
     } else {
-        $csrf = request_csrf_html('staff_delcrime');
+        $csrf = getHtmlCSRF('staff_delcrime');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -533,7 +533,7 @@ function delcrime()
 					Crime
 				</th>
 				<td>
-					" . crime_dropdown('crime') . "
+					" . dropdownCrime('crime') . "
 				</td>
 			</tr>
 			<tr>
@@ -557,7 +557,7 @@ function new_crimegroup()
             alert('danger', "Uh Oh!", "Please fill out the form before submitting it.");
             die($h->endpage());
         }
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newcrimegroup', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_newcrimegroup', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
             die($h->endpage());
         }
@@ -573,7 +573,7 @@ function new_crimegroup()
         $api->game->addLog($userid, 'staff', "Created Crime Group {$_POST['cgNAME']}");
 
     } else {
-        $csrf = request_csrf_html('staff_newcrimegroup');
+        $csrf = getHtmlCSRF('staff_newcrimegroup');
         echo "Adding a new crime group<br />
 		<form method='post'>
 			<table class='table table-bordered'>
@@ -612,7 +612,7 @@ function edit_crimegroup()
         $_POST['step'] = 0;
     }
     if ($_POST['step'] == 0) {
-        $csrf = request_csrf_html('staff_editcrimegroup1');
+        $csrf = getHtmlCSRF('staff_editcrimegroup1');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -625,7 +625,7 @@ function edit_crimegroup()
 					Crime Group
 				</th>
 				<td>
-					" . crimegroup_dropdown('crimegroup') . "
+					" . dropdownCrimeGroup('crimegroup') . "
 				</td>
 			</tr>
 			<tr>
@@ -640,7 +640,7 @@ function edit_crimegroup()
     }
     if ($_POST['step'] == 1) {
         $_POST['crimegroup'] = (isset($_POST['crimegroup']) && is_numeric($_POST['crimegroup'])) ? abs(intval($_POST['crimegroup'])) : '';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup1', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editcrimegroup1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
             die($h->endpage());
         }
@@ -656,7 +656,7 @@ function edit_crimegroup()
         }
         $itemi = $db->fetch_row($d);
         $db->free_result($d);
-        $csrf = request_csrf_html('staff_editcrimegroup2');
+        $csrf = getHtmlCSRF('staff_editcrimegroup2');
         echo "<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -691,7 +691,7 @@ function edit_crimegroup()
         $_POST['cgNAME'] = (isset($_POST['cgNAME']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['cgNAME'])) ? $db->escape(strip_tags(stripslashes($_POST['cgNAME']))) : '';
         $_POST['cgORDER'] = (isset($_POST['cgORDER']) && is_numeric($_POST['cgORDER'])) ? abs(intval($_POST['cgORDER'])) : '';
         $_POST['cgID'] = (isset($_POST['cgID']) && is_numeric($_POST['cgID'])) ? abs(intval($_POST['cgID'])) : '';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editcrimegroup2', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editcrimegroup2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
             die($h->endpage());
         }
@@ -718,7 +718,7 @@ function delcrimegroup()
     global $db, $userid, $api, $h;
     if (isset($_POST['crimeGROUP'])) {
         $_POST['crimeGROUP'] = (isset($_POST['crimeGROUP']) && is_numeric($_POST['crimeGROUP'])) ? abs(intval($_POST['crimeGROUP'])) : '';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_delcrimegroup', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_delcrimegroup', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Forms expire quickly. Go back and try again!");
             die($h->endpage());
         }
@@ -736,7 +736,7 @@ function delcrimegroup()
         alert('success', "Success!", "You have successfully deleted Crime Group ID #{$_POST['crimeGROUP']}.", true, 'index.php');
         $api->game->addLog($userid, 'staff', "Deleted Crime Group ID {$_POST['crimeGROUP']}.");
     } else {
-        $csrf = request_csrf_html('staff_delcrimegroup');
+        $csrf = getHtmlCSRF('staff_delcrimegroup');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -749,7 +749,7 @@ function delcrimegroup()
 					Crime Group
 				</th>
 				<td>
-					" . crimegroup_dropdown('crimeGROUP') . "
+					" . dropdownCrimeGroup('crimeGROUP') . "
 				</td>
 			</tr>
 			<tr>

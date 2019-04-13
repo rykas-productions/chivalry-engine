@@ -71,7 +71,7 @@ function name_change()
 {
     global $db, $ir, $userid, $h;
     if (empty($_POST['newname'])) {
-        $csrf = request_csrf_html('prefs_namechange');
+        $csrf = getHtmlCSRF('prefs_namechange');
         echo "<br />
 		<h3>Username Change</h3>
 		Here you can change your name that is shown throughout the game.<br />
@@ -84,7 +84,7 @@ function name_change()
 			</div>
 		</form>";
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('prefs_namechange', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('prefs_namechange', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -111,7 +111,7 @@ function pw_change()
 {
     global $db, $ir, $h;
     if (empty($_POST['oldpw'])) {
-        $csrf = request_csrf_html('prefs_changepw');
+        $csrf = getHtmlCSRF('prefs_changepw');
         echo "
 	<h3>Password Change</h3>
 	<hr />
@@ -152,20 +152,20 @@ function pw_change()
 	</table>
    	";
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepw', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('prefs_changepw', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
             die($h->endpage());
         }
         $oldpw = stripslashes($_POST['oldpw']);
         $newpw = stripslashes($_POST['newpw']);
         $newpw2 = stripslashes($_POST['newpw2']);
-        if (!verify_user_password($oldpw, $ir['password'])) {
+        if (!checkUserPassword($oldpw, $ir['password'])) {
             alert('danger', "Uh Oh!", "Invalid old password.");
         } else if ($newpw !== $newpw2) {
             alert('danger', "Uh Oh!", "New password and confirmation did not match.");
         } else {
             // Re-encode password
-            $new_psw = $db->escape(encode_password($newpw));
+            $new_psw = $db->escape(encodePassword($newpw));
             $db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$ir['userid']}");
             alert('success', "Success!", "You password was updated successfully.", true, 'preferences.php');
         }
@@ -176,7 +176,7 @@ function pic_change()
 {
     global $db, $h, $userid, $ir;
     if (!isset($_POST['newpic'])) {
-        $csrf = request_csrf_html('prefs_changepic');
+        $csrf = getHtmlCSRF('prefs_changepic');
         echo "
 		<h3>Change Display Picture</h3>
 		<hr />
@@ -190,13 +190,13 @@ function pic_change()
 		</form>
 		";
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepic', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('prefs_changepic', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
             die($h->endpage());
         }
         $npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
         if (!empty($npic)) {
-            $sz = get_filesize_remote($npic);
+            $sz = getRemoteFileSize($npic);
             if ($sz <= 0 || $sz >= 1048576) {
                 alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 1MB.");
                 $h->endpage();
@@ -220,7 +220,7 @@ function sigchange()
     global $db, $ir, $userid, $h;
     if (isset($_POST['sig'])) {
         $_POST['sig'] = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['sig']))));
-        if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesig', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('prefs_changesig', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -232,7 +232,7 @@ function sigchange()
         alert('success', "Success!", "Your signature has been updated successfully.", true, 'preferences.php');
     } else {
         $ir['signature'] = strip_tags(stripslashes($ir['signature']));
-        $csrf = request_csrf_html('prefs_changesig');
+        $csrf = getHtmlCSRF('prefs_changesig');
         echo "<form method='post'>
 		<table class='table-bordered table'>
 			<tr>
@@ -263,7 +263,7 @@ function sexchange()
 {
     global $db, $userid, $ir, $h;
     if (isset($_POST['gender'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changesex', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('prefs_changesex', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -284,7 +284,7 @@ function sexchange()
 					<option value='Female'>Female</option>" :
             $g = "	<option value='Female'>Male</option>
 					<option value='Male'>Female</option>";
-        $csrf = request_csrf_html('prefs_changesex');
+        $csrf = getHtmlCSRF('prefs_changesex');
         echo "<table class='table table-bordered'>
 		<form method='post'>
 		<tr>
@@ -318,7 +318,7 @@ function emailchange()
     global $db, $userid, $ir, $h;
     if (isset($_POST['opt'])) {
         $_POST['opt'] = (isset($_POST['opt']) && is_numeric($_POST['opt'])) ? abs($_POST['opt']) : 0;
-        if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changeopt', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('prefs_changeopt', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -334,7 +334,7 @@ function emailchange()
 					<option value='0'>Opt-Out</option>" :
             $g = "	<option value='0'>Opt-Out</option>
 					<option value='1'>Opt-In</option>";
-        $csrf = request_csrf_html('prefs_changeopt');
+        $csrf = getHtmlCSRF('prefs_changeopt');
         $optsetting = ($ir['email_optin'] == 1) ? "Opt-in" : "Opt-out";
         echo "<table class='table table-bordered'>
 		<form method='post'>

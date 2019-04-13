@@ -51,7 +51,7 @@ class user
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
-        if (item_add($user, $item, $quantity)) {
+        if (addItem($user, $item, $quantity)) {
             return true;
         }
     }
@@ -69,7 +69,7 @@ class user
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
-        if (item_remove($user, $item, $quantity)) {
+        if (takeItem($user, $item, $quantity)) {
             return true;
         }
     }
@@ -204,7 +204,7 @@ class user
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-        return user_infirmary($user);
+        return userInInfirmary($user);
     }
 	/*
         Tests the inputted user to see if they're in the dungeon
@@ -216,7 +216,7 @@ class user
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-        return user_dungeon($user);
+        return userInDungeon($user);
     }
 	/*
         Places or removes infirmary time on the specified user.
@@ -233,11 +233,11 @@ class user
         $reason = $db->escape(stripslashes($reason));
 		if ($time >= 0) {
 			$time = (isset($time) && is_numeric($time)) ? abs(intval($time)) : 0;
-			put_infirmary($user, $time, $reason);
+			userPutInfirmary($user, $time, $reason);
 			return true;
 		} elseif ($time < 0) {
 			$time = (isset($time) && is_numeric($time)) ? abs(intval($time)) : 0;
-			remove_infirmary($user, $time);
+			userRemoveInfirmary($user, $time);
 			return true;
 		}
     }
@@ -256,11 +256,11 @@ class user
         $reason = $db->escape(stripslashes($reason));
 		if ($time >= 0) {
 			$time = (isset($time) && is_numeric($time)) ? abs(intval($time)) : 0;
-			put_dungeon($user, $time, $reason);
+			userPutDungeon($user, $time, $reason);
 			return true;
 		} elseif ($time < 0) {
 			$time = (isset($time) && is_numeric($time)) ? abs(intval($time)) : 0;
-			remove_dungeon($user, $time);
+			userRemoveDungeon($user, $time);
 			return true;
 		}
     }
@@ -293,9 +293,9 @@ class user
         for ($i = 0; $i < $times; $i++) {
             //(1-4)/(600-1000)*(500-1000)*((User's Will+25)/175)
             $gain +=
-                Random(1, 4) / Random(600, 1000) * Random(500, 1000) * (($userdata['will'] + 25) / 175);
-            //Subtract a random number from user's will.
-            $userdata['will'] -= Random(1, 3);
+                randomNumber(1, 4) / randomNumber(600, 1000) * randomNumber(500, 1000) * (($userdata['will'] + 25) / 175);
+            //Subtract a randomNumber number from user's will.
+            $userdata['will'] -= randomNumber(1, 3);
             //User's will ends up negative, set to zero.
             if ($userdata['will'] < 0) {
                 $userdata['will'] = 0;
@@ -506,7 +506,7 @@ class user
     */
     function addNotification($user, $text)
     {
-        notification_add($user, $text);
+        addNotification($user, $text);
         return true;
     }
 

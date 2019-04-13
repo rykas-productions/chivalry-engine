@@ -37,7 +37,7 @@ foreach ($staff as $r) {
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 				</td>
 				<td>
-					" . DateTime_Parse($r['laston']) . "
+					" . dateTimeParse($r['laston']) . "
 				</td>
 				<td>
 					<a href='inbox.php?action=compose&user={$r['userid']}'>Send {$r['username']} Message</a>
@@ -66,7 +66,7 @@ foreach ($staff as $r) {
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 				</td>
 				<td>
-					" . DateTime_Parse($r['laston']) . "
+					" . dateTimeParse($r['laston']) . "
 				</td>
 				<td>
 					<a href='inbox.php?action=compose&user={$r['userid']}'>Send {$r['username']} Message</a>
@@ -95,7 +95,7 @@ foreach ($staff as $r) {
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 				</td>
 				<td>
-					" . DateTime_Parse($r['laston']) . "
+					" . dateTimeParse($r['laston']) . "
 				</td>
 				<td>
 					<a href='inbox.php?action=compose&user={$r['userid']}'>Send {$r['username']} Message</a>

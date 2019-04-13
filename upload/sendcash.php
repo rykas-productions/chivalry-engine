@@ -56,7 +56,7 @@ if (isset($_GET['user'])) {
     } else {
         echo "You are attempting to send {$_CONFIG['primary_currency']} to {$api->user->getNamefromID($_GET['user'])}. You have
         " . number_format($ir['primary_currency']) . " {$_CONFIG['primary_currency']} you can send. How much do you wish to send?";
-        $csrf = request_csrf_html("sendcash_{$_GET['user']}");
+        $csrf = getHtmlCSRF("sendcash_{$_GET['user']}");
         echo "<form method='post' action='?user={$_GET['user']}'>
             <input type='hidden' value='{$_GET['user']}' name='user'>
             <input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' required='1' name='send'>

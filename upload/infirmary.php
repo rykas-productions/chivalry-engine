@@ -62,7 +62,7 @@ function home()
 					{$Infirmary['infirmary_reason']}
 				</td>
 				<td>
-					" . TimeUntil_Parse($Infirmary['infirmary_out']) . "
+					" . timeUntilParse($Infirmary['infirmary_out']) . "
 				</td>
 				<td>
 					[<a href='?action=heal&user={$Infirmary['infirmary_user']}'>Heal User</a>]

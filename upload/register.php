@@ -35,7 +35,7 @@ if (!empty($username)) {
         unset($_SESSION['captcha']);
     }
     //If the email is inputted, and valid.
-    if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email']))) {
+    if (!isset($_POST['email']) || !validEmail(stripslashes($_POST['email']))) {
         alert('danger', "Uh Oh!", "You input an invalid email address.");
         die($h->endpage());
 
@@ -101,7 +101,7 @@ if (!empty($username)) {
                 die($h->endpage());
             }
         }
-        $encpsw = encode_password($base_pw);    //Encode the password.
+        $encpsw = encodePassword($base_pw);    //Encode the password.
         $e_encpsw = $db->escape($encpsw);
         $profilepic = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($e_email))) . "?s=250.jpg";
         $CurrentTime = time();
@@ -118,7 +118,7 @@ if (!empty($username)) {
         $db->query("INSERT INTO `userstats` VALUES({$i}, 1000, 1000, 1000, 1000, 1000)");
         if ($_POST['ref']) {
             $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']} WHERE `userid` = {$_POST['ref']}");
-            notification_add($_POST['ref'], "For referring $username to the game, you have earned {$set['ReferalKickback']} valuable Secondary Currency(s)!");
+            addNotification($_POST['ref'], "For referring $username to the game, you have earned {$set['ReferalKickback']} valuable Secondary Currency(s)!");
             $e_rip = $db->escape($rem_IP);
             $db->query("INSERT INTO `referals`
 			VALUES (NULL, {$_POST['ref']}, '{$e_rip}', {$i}, '{$IP}',{$CurrentTime})");
@@ -140,7 +140,7 @@ if (!empty($username)) {
                 $promocodereal = $db->query("SELECT * FROM `promo_codes` WHERE `promo_code` = '{$code}'");
                 if ($db->num_rows($promocodereal) > 0) {
                     $pcrr = $db->fetch_row($promocodereal);
-                    item_add($i, $pcrr['promo_item'], 1);
+                    addItem($i, $pcrr['promo_item'], 1);
                     $db->query("UPDATE `promo_codes` SET `promo_use` = `promo_use` + 1 WHERE `promo_code` = '{$code}'");
                     $api->user->addNotification($i, "Your promotion code was valid! Check your inventory for your item!");
                 } else {
@@ -152,7 +152,7 @@ if (!empty($username)) {
         $db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
         //User registered, lets log them in.
         alert('success', "Success!", "You have successfully signed up to play {$set['WebsiteName']}. Click here to <a href='tutorial.php'>Sign In</a>", false);
-        $url=determine_game_urlbase();
+        $url=getGameURL();
         $WelcomeMSGEmail="Welcome to the game, {$e_username}!<br />We hope you enjoy our lovely game and stick around for a while! If you have any questions or concerns, please contact a staff member in-game!<br />Thank you!<br /> -{$set['WebsiteName']}<br /><a href='http://{$url}'>http://{$url}</a>";
         $api->game->sendEmail($e_email,$WelcomeMSGEmail,"{$set['WebsiteName']} Registration",$set['sending_email']);
         die($h->endpage());

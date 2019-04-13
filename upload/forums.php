@@ -22,7 +22,7 @@ function csrf_error()
 echo "<h3>{$set['WebsiteName']} Forums</h3><hr />";
 $fb = $db->fetch_row($db->query("SELECT * FROM `forum_bans` WHERE `fb_user` = {$userid}"));
 if ($fb['fb_time'] > $time) {
-    alert('danger', "Uh Oh!", "You are currently forum banned for the next " . TimeUntil_Parse($fb['fb_time']) . ". You
+    alert('danger', "Uh Oh!", "You are currently forum banned for the next " . timeUntilParse($fb['fb_time']) . ". You
 	    were banned for {$fb['fb_reason']}. If you feel the ban was unjustified, please contact an admin
 	    immediately.", true, 'index.php');
     die($h->endpage());
@@ -90,7 +90,7 @@ switch ($_GET['act']) {
         break;
     case 'recache':
         if (isset($_GET['forum'])) {
-            recache_forum($_GET['forum']);
+            recacheForum($_GET['forum']);
         }
         break;
     default:
@@ -129,7 +129,7 @@ function idx()
     <tbody>
     <?php
     while ($r = $db->fetch_row($q)) {
-        $t = DateTime_Parse($r['ff_lp_time'], true, true);
+        $t = dateTimeParse($r['ff_lp_time'], true, true);
         $pnq = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
         $pn = $db->fetch_row($pnq);
         $username = ($pn['vip_days']) ? "<span class='text-danger'>{$pn['username']}
@@ -194,7 +194,7 @@ function idx()
         <tbody>
         <?php
         while ($r = $db->fetch_row($q)) {
-            $t = DateTime_Parse($r['ff_lp_time'], true, true);
+            $t = dateTimeParse($r['ff_lp_time'], true, true);
             $pnq = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r['ff_lp_poster_id']}");
             $pn = $db->fetch_row($pnq);
             $username = ($pn['vip_days']) ? "<span class='text-danger'>{$pn['username']}
@@ -298,8 +298,8 @@ function viewforum()
                      ORDER BY `ft_pinned` DESC, `ft_last_time` DESC
 					 LIMIT {$st}, 20");
     while ($r2 = $db->fetch_row($q)) {
-        $t1 = DateTime_Parse($r2['ft_start_time'], true, true);
-        $t2 = DateTime_Parse($r2['ft_last_time'], true, true);
+        $t1 = dateTimeParse($r2['ft_start_time'], true, true);
+        $t2 = dateTimeParse($r2['ft_last_time'], true, true);
         $pt = ($r2['ft_pinned']) ? " <i class='fa fa-thumb-tack' aria-hidden='true'></i>" : "" ;
         $lt = ($r2['ft_locked']) ? " <i class='fa fa-lock' aria-hidden='true'></i>" : "" ;
         $pnq1 = $db->query("SELECT `username`,`vip_days` FROM `users` WHERE `userid` = {$r2['ft_owner_id']}");
@@ -344,7 +344,7 @@ function viewforum()
 function viewtopic()
 {
     global $ir, $userid, $parser, $db, $h, $api;
-    $code = request_csrf_code('forum_reply');
+    $code = getCodeCSRF('forum_reply');
     $precache = array();
 	$topic = filter_input(INPUT_GET, 'viewtopic', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     if (empty($topic)) {
@@ -395,7 +395,7 @@ function viewtopic()
         $pin = ($topic['ft_pinned'] == 0) ? 'Pin Topic' : 'Unpin Topic' ;
         echo "
 	<form action='?act=move&topic={$topic}' method='post'>
-    <b>Move Topic To</b> " . forum_dropdown('forum')
+    <b>Move Topic To</b> " . dropdownForum('forum')
             . "
 	<input type='submit' value='Move Topic' class='btn btn-primary' />
 	</form>
@@ -484,13 +484,13 @@ function viewtopic()
             $wlink = "";
             $blink = "";
         }
-        $t = DateTime_Parse($r['fp_time']);
+        $t = dateTimeParse($r['fp_time']);
         $editornameq = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['fp_editor_id']} LIMIT 1");
         $editorname = $db->fetch_single($editornameq);
         if ($r['fp_edit_count'] > 0) {
             $edittext =
                 "\n<br /><small><i>Last edited by <a href='viewuser.php?u={$r['fp_editor_id']}'>{$editorname}</a> at "
-                . DateTime_Parse($r['fp_editor_time'])
+                . dateTimeParse($r['fp_editor_time'])
                 . ", edited <b>{$r['fp_edit_count']}</b> times total.</i></small>";
         } else {
             $edittext = "";
@@ -592,7 +592,7 @@ function reply()
 {
     global $h, $userid, $db, $api;
 	$reply = filter_input(INPUT_GET, 'reply', FILTER_SANITIZE_NUMBER_INT) ?: 0;
-    if (!isset($_POST['verf']) || !verify_csrf_code('forum_reply', stripslashes($_POST['verf']))) {
+    if (!isset($_POST['verf']) || !checkCSRF('forum_reply', stripslashes($_POST['verf']))) {
         csrf_error("?viewtopic={$reply}");
     }
     if (empty($reply)) {
@@ -691,7 +691,7 @@ function newtopicform()
             die($h->endpage());
         }
     }
-    $code = request_csrf_code("forums_newtopic_{$forum}");
+    $code = getCodeCSRF("forums_newtopic_{$forum}");
     echo "<ol class='breadcrumb'>
 		<li class='breadcrumb-item'><a href='forums.php'>Forums Home</a></li>
 		<li class='breadcrumb-item'><a href='?viewforum={$forum}'>{$r['ff_name']}</a></li>
@@ -738,7 +738,7 @@ function newtopic()
 {
     global $ir, $userid, $h, $db, $api;
     $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
-    if (!isset($_POST['verf']) || !verify_csrf_code("forums_newtopic_{$_GET['forum']}", stripslashes($_POST['verf']))) {
+    if (!isset($_POST['verf']) || !checkCSRF("forums_newtopic_{$_GET['forum']}", stripslashes($_POST['verf']))) {
         csrf_error("?act=newtopicform&forum={$_GET['forum']}");
     }
     if (empty($_GET['forum'])) {
@@ -827,7 +827,7 @@ function emptyallforums()
 function quote()
 {
     global $userid, $h, $db, $api;
-    $code = request_csrf_code('forum_reply');
+    $code = getCodeCSRF('forum_reply');
     $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
     $_GET['fpid'] = (isset($_GET['fpid']) && is_numeric($_GET['fpid'])) ? abs($_GET['fpid']) : '';
     $_GET['quotename'] = (isset($_GET['quotename']) && is_numeric($_GET['quotename'])) ? abs($_GET['quotename']) : '';
@@ -968,7 +968,7 @@ function edit()
 		<li class='breadcrumb-item'><a href='?viewtopic={$_GET['topic']}'>{$topic['ft_name']}</a></li>
 		<li class='breadcrumb-item active'>Edit Post Form</li>
 	</ol>";
-    $edit_csrf = request_csrf_code("forums_editpost_{$_GET['post']}");
+    $edit_csrf = getCodeCSRF("forums_editpost_{$_GET['post']}");
     $fp_text = strip_tags(stripslashes($post['fp_text']));
     echo <<<EOF
 <form action='?act=editsub&topic={$topic['ft_id']}&post={$_GET['post']}' method='post'>
@@ -1001,7 +1001,7 @@ function editsub()
         alert("danger", "Uh Oh!", "Please specify a topic you wish to view.", true, "forums.php");
         die($h->endpage());
     }
-    if (!isset($_POST['verf']) || !verify_csrf_code("forums_editpost_{$_GET['post']}", stripslashes($_POST['verf']))) {
+    if (!isset($_POST['verf']) || !checkCSRF("forums_editpost_{$_GET['post']}", stripslashes($_POST['verf']))) {
         csrf_error("?viewtopic={$_GET['topic']}");
     }
     $q =
@@ -1110,8 +1110,8 @@ function move()
              WHERE `ft_id` = {$_GET['topic']}");
     alert('success', "Success!", "Topic was moved successfully.", true, "forums.php?viewtopic={$_GET['topic']}");
     $api->game->addLog($userid, 'staff', "Moved Topic {$topic['ft_name']} to {$forum['ff_name']}");
-    recache_forum($topic['ft_forum_id']);
-    recache_forum($_POST['forum']);
+    recacheForum($topic['ft_forum_id']);
+    recacheForum($_POST['forum']);
 }
 
 function lock()
@@ -1236,8 +1236,8 @@ function delepost()
         "DELETE FROM `forum_posts`
     		    WHERE `fp_id` = {$post['fp_id']}");
     alert('success', "Success!", "You have deleted this post.", true, "forums.php?viewtopic={$post['fp_topic_id']}");
-    recache_topic($post['fp_topic_id']);
-    recache_forum($post['ff_id']);
+    recacheTopic($post['fp_topic_id']);
+    recacheForum($post['ff_id']);
     $api->game->addLog($userid, 'staff', "Deleted post ({$post['fp_id']}) in {$topic['ft_name']}");
 
 }
@@ -1265,7 +1265,7 @@ function deletopic()
     $db->query("DELETE FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
     $db->query("DELETE FROM `forum_posts` WHERE `fp_topic_id` = {$_GET['topic']}");
     alert('success', "Success!", "You have deleted this topic successfully.", true, 'forums.php');
-    recache_forum($topic['ft_forum_id']);
+    recacheForum($topic['ft_forum_id']);
     $api->game->addLog($userid, 'staff', "Deleted topic {$topic['ft_name']}");
 }
 

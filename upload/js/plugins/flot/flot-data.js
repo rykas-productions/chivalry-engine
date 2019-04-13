@@ -1116,7 +1116,7 @@ $(function () {
 
     var data = [];
 
-    function getRandomData() {
+    function getrandomNumberData() {
 
         if (data.length) {
             data = data.slice(1);
@@ -1124,7 +1124,7 @@ $(function () {
 
         while (data.length < maximum) {
             var previous = data.length ? data[data.length - 1] : 50;
-            var y = previous + Math.random() * 10 - 5;
+            var y = previous + Math.randomNumber() * 10 - 5;
             data.push(y < 0 ? 0 : y > 100 ? 100 : y);
         }
 
@@ -1141,7 +1141,7 @@ $(function () {
     //
 
     series = [{
-        data: getRandomData(),
+        data: getrandomNumberData(),
         lines: {
             fill: true
         }
@@ -1191,10 +1191,10 @@ $(function () {
         }
     });
 
-    // Update the random dataset at 25FPS for a smoothly-animating chart
+    // Update the randomNumber dataset at 25FPS for a smoothly-animating chart
 
-    setInterval(function updateRandom() {
-        series[0].data = getRandomData();
+    setInterval(function updaterandomNumber() {
+        series[0].data = getrandomNumberData();
         plot.setData(series);
         plot.draw();
     }, 40);

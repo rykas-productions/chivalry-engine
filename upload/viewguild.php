@@ -250,7 +250,7 @@ function donate()
         $_POST['secondary'] = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs(intval($_POST['secondary'])) : 0;
 
         //Verify we passed the CSRF check.
-        if (!isset($_POST['verf']) || !verify_csrf_code('guild_donate', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('guild_donate', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -292,7 +292,7 @@ function donate()
 			Currency and/or " . number_format($_POST['secondary']) . " Secondary Currency to your guild.", true, 'viewguild.php');
         }
     } else {
-        $csrf = request_csrf_html('guild_donate');
+        $csrf = getHtmlCSRF('guild_donate');
         echo "
 		<form action='?action=donate' method='post'>
 			<table class='table table-bordered'>
@@ -342,7 +342,7 @@ function members()
 			</th>
     	</tr>";
     $q = $db->query("SELECT `userid`, `username`, `level`, `display_pic` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` DESC");
-    $csrf = request_csrf_html('guild_kickuser');
+    $csrf = getHtmlCSRF('guild_kickuser');
     while ($r = $db->fetch_row($q)) {
         echo "
 		<tr>
@@ -385,7 +385,7 @@ function staff_kick()
     if ($gd['guild_owner'] == $userid || $gd['guild_coowner'] == $userid) {
 
         //Verify CSRF check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code("guild_kickuser", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("guild_kickuser", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.", true, '?action=members');
             die($h->endpage());
         }
@@ -442,7 +442,7 @@ function leave()
     if (isset($_POST['submit']) && $_POST['submit'] == 'yes') {
 
         //Verify CSRF Check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code("guild_leave", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("guild_leave", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -462,7 +462,7 @@ function leave()
     } elseif (isset($_POST['submit']) && $_POST['submit'] == 'no') {
         alert('success', "Success!", "You have chosen to stay in your guild.", true, 'viewguild.php');
     } else {
-        $csrf = request_csrf_html('guild_leave');
+        $csrf = getHtmlCSRF('guild_leave');
         echo "Do you really want to leave your guild?
         <form action='?action=leave' method='post'>
             {$csrf}
@@ -496,7 +496,7 @@ function atklogs()
 			<th>Attack Info</th>
 		</tr>";
     while ($r = $db->fetch_row($atks)) {
-        $d = DateTime_Parse($r['log_time']);
+        $d = dateTimeParse($r['log_time']);
         echo "<tr>
         		<td>$d</td>
         		<td>
@@ -540,7 +540,7 @@ function warview()
 						(Points: " . number_format($r['gw_depoints']) . ")
 				</td>
 				<td>
-					" . TimeUntil_Parse($r['gw_end']) . "
+					" . timeUntilParse($r['gw_end']) . "
 				</td>
 			</tr>";
     }
@@ -617,7 +617,7 @@ function adonate()
             $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : 0;
 
             //Verify CSRF Check has passed.
-            if (!isset($_POST['verf']) || !verify_csrf_code("guild_armory_donate", stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF("guild_armory_donate", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
@@ -642,10 +642,10 @@ function adonate()
             $api->guild->addNotification($ir['guild'], "{$ir['username']} has donated {$_POST['qty']} {$item}(s) to the guild's armory.");
             alert("success", "Success!", "You have successfully donated {$_POST['qty']} $item}(s) to your guild's armory.", true, "?action=armory");
         } else {
-            $csrf = request_csrf_html('guild_armory_donate');
+            $csrf = getHtmlCSRF('guild_armory_donate');
             echo "<form method='post'>
             Fill out the form completely to donate an item to your guild.<br />
-            " . inventory_dropdown() . "<br />
+            " . dropdownInventory() . "<br />
             <input type='number' name='qty' placeholder='Quantity' class='form-control'>
             <br />
             {$csrf}
@@ -659,7 +659,7 @@ function crimes()
 {
     global $gd, $db;
     if ($gd['guild_crime'] > 0) {
-        $ttc = TimeUntil_Parse($gd['guild_crime_done']);
+        $ttc = timeUntilParse($gd['guild_crime_done']);
         $gcname = $db->fetch_single($db->query("SELECT `gcNAME` from `guild_crimes` WHERE `gcID` = {$gd['guild_crime']}"));
         echo "Your guild will be attempting to commit the {$gcname} crime. It will begin in {$ttc}.";
     } else {
@@ -770,7 +770,7 @@ function staff_apps()
     if (!empty($_POST['app']) && !empty($what)) {
 
         //Verify that the CSRF check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_apps", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("guild_staff_apps", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -859,13 +859,13 @@ function staff_apps()
                          FROM `guild_applications`
                          WHERE `ga_guild` = {$gd['guild_id']}
 						 ORDER BY `ga_time` DESC");
-        $csrf = request_csrf_html('guild_staff_apps');
+        $csrf = getHtmlCSRF('guild_staff_apps');
         while ($r = $db->fetch_row($q)) {
             $r['ga_text'] = htmlentities($r['ga_text'], ENT_QUOTES, 'ISO-8859-1', false);
             echo "
             <tr>
             	<td>
-					" . DateTime_Parse($r['ga_time']) . "
+					" . dateTimeParse($r['ga_time']) . "
             	</td>
             	<td>
 					<a href='profile.php?user={$r['ga_user']}'>" . $api->user->getNamefromID($r['ga_user']) . "</a>
@@ -905,7 +905,7 @@ function staff_vault()
     if (isset($_POST['primary']) || isset($_POST['secondary'])) {
 
         //Verify CSRF check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_vault", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("guild_staff_vault", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -966,7 +966,7 @@ function staff_vault()
         alert('success', "Success!", "You have given {$api->user->getNamefromID($_POST['user'])} ", true, '?action=staff&act2=idx');
         $api->game->addLog($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> " . number_format($_POST['primary']) . " {$_CONFIG['primary_currency']} and/or " . number_format($_POST['secondary']) . " Secondary Currency from their guild's vault.");
     } else {
-        $csrf = request_csrf_html('guild_staff_vault');
+        $csrf = getHtmlCSRF('guild_staff_vault');
         echo "<form method='post'>
         <table class='table table-bordered'>
             <tr>
@@ -980,7 +980,7 @@ function staff_vault()
                     User
                 </th>
                 <td>
-                    " . guild_user_dropdown('user', $gd['guild_id']) . "
+                    " . dropdownGuildUser('user', $gd['guild_id']) . "
                 </td>
             </tr>
             <tr>
@@ -1018,7 +1018,7 @@ function staff_coowner()
     if (isset($_POST['user'])) {
 
         //Verify CSRF check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_coleader", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("guild_staff_coleader", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -1042,7 +1042,7 @@ function staff_coowner()
         $api->guild->addNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a> has transferred co-leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a>.");
         alert('success', "Success!", "You have successfully transferred co-leadership privileges to {$api->user->getNamefromID($_POST['user'])}.", true, '?action=staff&act2=idx');
     } else {
-        $csrf = request_csrf_html('guild_staff_coleader');
+        $csrf = getHtmlCSRF('guild_staff_coleader');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -1055,7 +1055,7 @@ function staff_coowner()
 					User
 				</th>
 				<td>
-					" . guild_user_dropdown('user', $gd['guild_id'], $gd['guild_coowner']) . "
+					" . dropdownGuildUser('user', $gd['guild_id'], $gd['guild_coowner']) . "
 				</td>
 			</tr>
 			<tr>
@@ -1076,7 +1076,7 @@ function staff_announcement()
     if (isset($_POST['ament'])) {
 
         //Verify CSRF check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_ament", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("guild_staff_ament", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -1090,7 +1090,7 @@ function staff_announcement()
     } else {
         //Escape the announcement for safety reasons.
         $am_for_area = strip_tags($gd['guild_announcement']);
-        $csrf = request_csrf_html('guild_staff_ament');
+        $csrf = getHtmlCSRF('guild_staff_ament');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -1124,7 +1124,7 @@ function staff_massmail()
     if (isset($_POST['text'])) {
 
         //Verify the CSRF check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_massmail", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("guild_staff_massmail", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -1139,7 +1139,7 @@ function staff_massmail()
         }
         alert('success', "Success!", "Mass mail has been sent successfully.", true, '?action=staff&act2=idx');
     } else {
-        $csrf = request_csrf_html('guild_staff_massmail');
+        $csrf = getHtmlCSRF('guild_staff_massmail');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -1173,7 +1173,7 @@ function staff_masspayment()
     if (isset($_POST['payment'])) {
 
         //Verify the CSRF check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_masspay", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("guild_staff_masspay", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -1214,7 +1214,7 @@ function staff_masspayment()
             alert('success', "Success!", "Mass payment complete.", true, '?action=staff&act2=idx');
         }
     } else {
-        $csrf = request_csrf_html('guild_staff_masspay');
+        $csrf = getHtmlCSRF('guild_staff_masspay');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -1250,7 +1250,7 @@ function staff_desc()
         if (isset($_POST['desc'])) {
 
             //Verify CSRF check has passed.
-            if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_desc", stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF("guild_staff_desc", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
@@ -1264,7 +1264,7 @@ function staff_desc()
         } else {
             //Escape the description for safety reasons.
             $am_for_area = strip_tags($gd['guild_desc']);
-            $csrf = request_csrf_html('guild_staff_desc');
+            $csrf = getHtmlCSRF('guild_staff_desc');
             echo "<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -1303,7 +1303,7 @@ function staff_leader()
         if (isset($_POST['user'])) {
 
             //Verify CSRF check has passed.
-            if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_leader", stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF("guild_staff_leader", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
@@ -1328,7 +1328,7 @@ function staff_leader()
             $api->guild->addNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$api->user->getNamefromID($userid)}</a> has transferred leader privileges to <a href='profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a>.");
             alert('success', "Success!", "You have transferred your leadership privileges over to {$api->user->getNamefromID($_POST['user'])}.", true, '?action=staff&act2=idx');
         } else {
-            $csrf = request_csrf_html('guild_staff_leader');
+            $csrf = getHtmlCSRF('guild_staff_leader');
             echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -1341,7 +1341,7 @@ function staff_leader()
 					User
 				</th>
 				<td>
-					" . guild_user_dropdown('user', $gd['guild_id'], $gd['guild_owner']) . "
+					" . dropdownGuildUser('user', $gd['guild_id'], $gd['guild_owner']) . "
 				</td>
 			</tr>
 			<tr>
@@ -1368,7 +1368,7 @@ function staff_name()
         if (isset($_POST['name'])) {
 
             //Check that the CSRF check has passed.
-            if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_name", stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF("guild_staff_name", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
@@ -1389,7 +1389,7 @@ function staff_name()
             alert('success', "Success!", "You have changed your guild's name to {$name}.", true, '?action=staff&act2=idx');
         } else {
             $am_for_area = strip_tags($gd['guild_name']);
-            $csrf = request_csrf_html('guild_staff_name');
+            $csrf = getHtmlCSRF('guild_staff_name');
             echo "<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -1431,7 +1431,7 @@ function staff_declare()
             $_POST['guild'] = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs($_POST['guild']) : 0;
 
             //Verify CSRF check has passed.
-            if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_declarewar", stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF("guild_staff_declarewar", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
@@ -1524,7 +1524,7 @@ function staff_declare()
             $api->game->addLog($userid, 'guilds', "Declared war on {$r['guild_name']} [{$_POST['guild']}]");
             alert('success', "Success!", "You have declared war on {$r['guild_name']}", true, '?action=staff&act2=idx');
         } else {
-            $csrf = request_csrf_html('guild_staff_declarewar');
+            $csrf = getHtmlCSRF('guild_staff_declarewar');
             echo "
 			<table class='table table-bordered'>
 			<form method='post'>
@@ -1538,7 +1538,7 @@ function staff_declare()
 						Guild
 					</th>
 					<td>
-						" . guilds_dropdown() . "
+						" . dropdownGuild() . "
 					</td>
 				</tr>
 				<tr>
@@ -1594,7 +1594,7 @@ function staff_dissolve()
     if ($userid == $gd['guild_owner']) {
         if (isset($_POST['do'])) {
             //Verify CSRF check has passed.
-            if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_dissolve", stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF("guild_staff_dissolve", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
@@ -1622,7 +1622,7 @@ function staff_dissolve()
             $db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$ir['guild']}");
             alert("success", "Success!", "You have successfully dissolved your guild.", true, 'index.php');
         } else {
-            $csrf = request_csrf_html('guild_staff_dissolve');
+            $csrf = getHtmlCSRF('guild_staff_dissolve');
             echo "Are you sure you wish to dissolve your guild? This action cannot be undone. Everything in the guild's
             armory and vault will be removed from the game entirely.<br />
             <form method='post'>
@@ -1674,7 +1674,7 @@ function staff_armory()
             $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : 0;
 
             //Verify CSRF check is successful.
-            if (!isset($_POST['verf']) || !verify_csrf_code("guild_give_item", stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF("guild_give_item", stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
                 die($h->endpage());
             }
@@ -1724,11 +1724,11 @@ function staff_armory()
             $api->game->addLog($userid, 'guilds', "Gave {$user} {$_POST['qty']} {$item}(s) from their armory.");
         } else {
             //Giving item form.
-            $csrf = request_csrf_html('guild_give_item');
+            $csrf = getHtmlCSRF('guild_give_item');
             echo "Fill out the form below completely to give out items from your armory.<br />
             <form method='post'>
-            " . guild_user_dropdown('user', $ir['guild']) . "<br />
-            " . armory_dropdown() . "<br />
+            " . dropdownGuildUser('user', $ir['guild']) . "<br />
+            " . dropdownArmory() . "<br />
             <input type='number' required='1' min='1' name='qty' placeholder='Quantity' class='form-control'><br />
             <input type='submit' value='Give Item' class='btn btn-primary'>
             {$csrf}
@@ -1749,7 +1749,7 @@ function staff_crimes()
         $_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : 0;
 
         //Verify CSRF check is successful.
-        if (!isset($_POST['verf']) || !verify_csrf_code("guild_staff_crimes", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("guild_staff_crimes", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -1788,7 +1788,7 @@ function staff_crimes()
 
         //If there's crimes the guild can commit.
         if ($db->num_rows($q) > 0) {
-            $csrf = request_csrf_html('guild_staff_crimes');
+            $csrf = getHtmlCSRF('guild_staff_crimes');
             echo "Select the crime you wish your guild to commit.<br />
             <form method='post'>
                 <select name='crime' type='dropdown' class='form-control'>";

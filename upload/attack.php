@@ -34,7 +34,7 @@ function attacking()
     $menuhide = 1;                    //Hide the menu so players cannot load other pages,
     //and lessens the chance of a misclick and losing XP.
     $atkpage = 1;
-    $tresder = Random(100, 999);    //RNG to prevent refreshing while attacking, thus
+    $tresder = randomNumber(100, 999);    //RNG to prevent refreshing while attacking, thus
 									//breaking progression of the attack system.
 	$attacked_user = filter_input(INPUT_GET, 'user', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     if (empty($_GET['nextstep'])) {
@@ -191,10 +191,10 @@ function attacking()
         }
         $r1 = $db->fetch_row($qo);
         $db->free_result($qo);
-        $mydamage = round(($r1['weapon'] * $youdata['strength'] / ($odata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
+        $mydamage = round(($r1['weapon'] * $youdata['strength'] / ($odata['guard'] / 1.5)) * (randomNumber(10000, 12000) / 10000));
         $hitratio = max(10, min(60 * $ir['agility'] / $odata['agility'], 95));
         //If the attack attempt was connected.
-        if (Random(1, 100) <= $hitratio) {
+        if (randomNumber(1, 100) <= $hitratio) {
             //If the opponent has armor equipped.
             if ($odata['equip_armor'] > 0) {
                 $armorinfo_sql = "SELECT `armor` FROM `items` WHERE `itmid` = {$odata['equip_armor']} LIMIT 1";
@@ -212,13 +212,13 @@ function attacking()
             } else if ($mydamage < 1) {
                 $mydamage = 1;
             }
-            $crit = Random(1, 40);
+            $crit = randomNumber(1, 40);
             //If user makes a critical hit, multiply damage.
             if ($crit == 17) {
-                $mydamage *= Random(20, 40) / 10;
+                $mydamage *= randomNumber(20, 40) / 10;
             } //If unlucky crit... reduce damage.
             else if ($crit == 25 OR $crit == 8) {
-                $mydamage /= (Random(20, 40) / 10);
+                $mydamage /= (randomNumber(20, 40) / 10);
             }
             if ($mydamage > $theirbeforehp) {
                 $mydamage = $odata['hp'];
@@ -262,7 +262,7 @@ function attacking()
             //If opponent does not have a valid weapon equipped, make them punch with fists.
             if ($db->num_rows($eq) == 0) {
                 $wep = "Fists";
-                $dam = round(round((($odata['strength'] / $ir['guard'] / 100)) + 1) * (Random(10000, 12000) / 10000));
+                $dam = round(round((($odata['strength'] / $ir['guard'] / 100)) + 1) * (randomNumber(10000, 12000) / 10000));
             } else {
                 $cnt = 0;
                 while ($r = $db->fetch_row($eq)) {
@@ -270,13 +270,13 @@ function attacking()
                     $cnt++;
                 }
                 $db->free_result($eq);
-                $weptouse = Random(0, $cnt - 1);    //Select opponent weapon to use.
+                $weptouse = randomNumber(0, $cnt - 1);    //Select opponent weapon to use.
                 $wep = $enweps[$weptouse]['itmname'];
-                $dam = round(($enweps[$weptouse]['weapon'] * $odata['strength'] / ($youdata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
+                $dam = round(($enweps[$weptouse]['weapon'] * $odata['strength'] / ($youdata['guard'] / 1.5)) * (randomNumber(10000, 12000) / 10000));
             }
             $hitratio = max(10, min(60 * $odata['agility'] / $ir['agility'], 95));
             //If hit connects with user.
-            if (Random(1, 100) <= $hitratio) {
+            if (randomNumber(1, 100) <= $hitratio) {
                 //If user has armor equipped.
                 if ($ir['equip_armor'] > 0) {
                     $q3 = $db->query("SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']} LIMIT 1");
@@ -294,13 +294,13 @@ function attacking()
                 else if ($dam < 1) {
                     $dam = 1;
                 }
-                $crit = Random(1, 40);
+                $crit = randomNumber(1, 40);
                 //RNG for critical damage, multiply damage!
                 if ($crit == 17) {
-                    $dam *= Random(20, 40) / 10;
+                    $dam *= randomNumber(20, 40) / 10;
                 } //Unlucky... crit is weak.
                 else if ($crit == 25 OR $crit == 8) {
-                    $dam /= (Random(20, 40) / 10);
+                    $dam /= (randomNumber(20, 40) / 10);
                 }
                 $dam = round($dam);
                 $youdata['hp'] -= $dam;
@@ -452,7 +452,7 @@ function beat()
             alert('danger', "Uh Oh!", "Your opponent was already beat. Maybe next time.", true, 'index.php');
             die($h->endpage());
         }
-        $hosptime = Random(75, 175) + floor($ir['level'] / 2);
+        $hosptime = randomNumber(75, 175) + floor($ir['level'] / 2);
         $hospreason = $db->escape("Hospitalized By <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
         //Set opponent's HP to 1. Means fight is over.
         $api->user->setInfo($r['userid'], "hp", 1);
@@ -531,7 +531,7 @@ function lost()
     $r = $db->fetch_row($od);
     $db->free_result($od);
     $qe = $ir['level'] * $ir['level'] * $ir['level'];
-    $expgain = Random($qe / 2, $qe);
+    $expgain = randomNumber($qe / 2, $qe);
     //User loses XP for losing the fight.
     if ($expgain < 0) {
         $expgain = $expgain * -1;
@@ -542,14 +542,14 @@ function lost()
     else
         $api->user->setInfo($userid, "xp", "-{$expgain}");
     $api->user->setInfoStatic($userid, "attacking", 0);
-    $hosptime = Random(75, 175) + floor($ir['level'] / 2);
+    $hosptime = randomNumber(75, 175) + floor($ir['level'] / 2);
     $hospreason = "Lost a Fight";
     //Place user in infirmary.
     $api->user->setInfirmary($userid, $hosptime, $hospreason);
     //Give winner some XP
     $r['xp_needed'] = round(($r['level'] + 2.25) * ($r['level'] + 2.25) * ($r['level'] + 2.25) * 2);
     $qe2 = $r['level'] * $r['level'] * $r['level'];
-    $expgain2 = Random($qe2 / 2, $qe2);
+    $expgain2 = randomNumber($qe2 / 2, $qe2);
     $expgainp2 = $expgain2 / $r['xp_needed'] * 100;
     $expperc2 = round($expgainp / $r['xp_needed'] * 100);
     //Tell opponent that they were attacked by user, and emerged victorious.
@@ -619,7 +619,7 @@ function xp()
             exit($h->endpage());
         } else {
             $qe = $r['level'] * $r['level'] * $r['level'];
-            $expgain = Random($qe / 2, $qe);
+            $expgain = randomNumber($qe / 2, $qe);
             $ir['total'] = $ir['strength'] + $ir['agility'] + $ir['guard'];
             $ot = $db->fetch_row($db->query("SELECT * FROM `userstats` WHERE `userid` = {$r['userid']}"));
             $ototal = $ot['strength'] + $ot['agility'] + $ot['guard'];
@@ -632,7 +632,7 @@ function xp()
                 $expgain = $expgain * -1;
             }
             $expperc = round($expgain / $ir['xp_needed'] * 100);
-            $hosptime = Random(5, 30) + floor($ir['level'] / 10);
+            $hosptime = randomNumber(5, 30) + floor($ir['level'] / 10);
             //Give user XP.
             $api->user->setInfo($userid, "xp", $expgain);
             $hospreason = $db->escape("Used for Experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
@@ -710,7 +710,7 @@ function mug()
             alert('danger', "Uh Oh!", "Stop trying to abuse bugs, dude. You've lost all your experience.", true, 'index.php');
             exit($h->endpage());
         } else {
-            $stole = round($r['primary_currency'] / (Random(200, 1000) / 5));
+            $stole = round($r['primary_currency'] / (randomNumber(200, 1000) / 5));
             $hosptime = rand(20, 40) + floor($ir['level'] / 8);
             $hospreason = $db->escape("Robbed by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
             //Set opponent HP to 1.

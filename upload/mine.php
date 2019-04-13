@@ -162,15 +162,15 @@ function mine()
                     $xpgain = 0;
                 }
                 if ($ir['iq'] <= $MSI['mine_iq'] + ($MSI['mine_iq'] * .3)) {
-                    $Rolls = Random(1, 5);
+                    $Rolls = randomNumber(1, 5);
                 } elseif ($ir['iq'] >= $MSI['mine_iq'] + ($MSI['mine_iq'] * .3) && ($ir['iq'] <= $MSI['mine_iq'] + ($MSI['mine_iq'] * .6))) {
-                    $Rolls = Random(1, 10);
+                    $Rolls = randomNumber(1, 10);
                 } else {
-                    $Rolls = Random(1, 15);
+                    $Rolls = randomNumber(1, 15);
                 }
                 if ($Rolls <= 3) {
-                    $NegRolls = Random(1, 3);
-                    $NegTime = Random(5, 25) * ($MUS['mining_level'] * .25);
+                    $NegRolls = randomNumber(1, 3);
+                    $NegTime = randomNumber(5, 25) * ($MUS['mining_level'] * .25);
                     if ($NegRolls == 1) {
                         alert('danger', "Uh Oh!", "You begin to mine and touch off a natural gas leak. Kaboom.", false);
                         $api->game->addLog($userid, 'mining', "Mined at {$api->game->getTownNameFromID($MSI['mine_location'])} [{$MSI['mine_location']}] and was put into the infirmary for {$NegTime} minutes.");
@@ -184,22 +184,22 @@ function mine()
                         $api->game->addLog($userid, 'mining', "Mined at {$api->game->getTownNameFromID($MSI['mine_location'])} [{$MSI['mine_location']}] and was unsuccessful.");
                     }
                 } elseif ($Rolls >= 3 && $Rolls <= 14) {
-                    $PosRolls = Random(1, 3);
+                    $PosRolls = randomNumber(1, 3);
                     if ($PosRolls == 1) {
-                        $flakes = Random($MSI['mine_copper_min'], $MSI['mine_copper_max']);
+                        $flakes = randomNumber($MSI['mine_copper_min'], $MSI['mine_copper_max']);
                         alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->game->getItemNameFromID($MSI['mine_copper_item']), false);
                         $api->user->giveItem($userid, $MSI['mine_copper_item'], $flakes);
                         $api->game->addLog($userid, 'mining', "Mined at {$api->game->getTownNameFromID($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->game->getItemNameFromID($MSI['mine_copper_item'])}.");
                         $xpgain = $flakes * 0.15;
 
                     } elseif ($PosRolls == 2) {
-                        $flakes = Random($MSI['mine_silver_min'], $MSI['mine_silver_max']);
+                        $flakes = randomNumber($MSI['mine_silver_min'], $MSI['mine_silver_max']);
                         alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->game->getItemNameFromID($MSI['mine_silver_item']), false);
                         $api->user->giveItem($userid, $MSI['mine_silver_item'], $flakes);
                         $api->game->addLog($userid, 'mining', "Mined at {$api->game->getTownNameFromID($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->game->getItemNameFromID($MSI['mine_silver_item'])}.");
                         $xpgain = $flakes * 0.35;
                     } else {
-                        $flakes = Random($MSI['mine_gold_min'], $MSI['mine_gold_max']);
+                        $flakes = randomNumber($MSI['mine_gold_min'], $MSI['mine_gold_max']);
                         alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->game->getItemNameFromID($MSI['mine_gold_item']), false);
                         $api->user->giveItem($userid, $MSI['mine_gold_item'], $flakes);
                         $api->game->addLog($userid, 'mining', "Mined at {$api->game->getTownNameFromID($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->game->getItemNameFromID($MSI['mine_gold_item'])}.");

@@ -73,15 +73,15 @@ echo "<table class='table table-hover table-bordered'>
 </tbody>";
 
 //Get the stat ranks. Players like this apparently.
-$StrengthRank = get_rank($ir['strength'], 'strength');
+$StrengthRank = getRank($ir['strength'], 'strength');
 $StrengthFormat = number_format($ir['strength']);
-$AgilityRank = get_rank($ir['agility'], 'agility');
+$AgilityRank = getRank($ir['agility'], 'agility');
 $AgilityFormat = number_format($ir['agility']);
-$GuardRank = get_rank($ir['guard'], 'guard');
+$GuardRank = getRank($ir['guard'], 'guard');
 $GuardFormat = number_format($ir['guard']);
-$IQRank = get_rank($ir['iq'], 'iq');
+$IQRank = getRank($ir['iq'], 'iq');
 $IQFormat = number_format($ir['iq']);
-$LaborRank = get_rank($ir['labor'], 'labor');
+$LaborRank = getRank($ir['labor'], 'labor');
 $LaborFormat = number_format($ir['labor']);
 $AllFourFormat = number_format($ir['strength'] + $ir['agility'] + $ir['guard'] + $ir['labor'] + $ir['iq']);
 

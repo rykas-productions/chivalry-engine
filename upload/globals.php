@@ -29,7 +29,7 @@ require "lib/basic_error_handler.php";
 set_error_handler('error_php');
 //Require main functions file.
 require "global_func.php";
-$domain = determine_game_urlbase();
+$domain = getGameURL();
 //If user is not logged in, redirect to login page.
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) {
     $login_url = "login.php";
@@ -127,8 +127,8 @@ if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SE
     exit;
 }
 //Basic chceks around the game.
-check_level();
-check_data();
+checkLevel();
+checkData();
 $h = new headers;
 //Include API file.
 include("class/class_api.php");

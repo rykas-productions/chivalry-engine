@@ -82,7 +82,7 @@ if ($verified) {
         exit;
     }
     //Everything checks out... so lets credit the pack.
-    item_add($for, $fpi['vip_item'], $fpi['vip_qty']);
+    addItem($for, $fpi['vip_item'], $fpi['vip_qty']);
     //Log everything
     $db->query("INSERT INTO `vips_accepted` VALUES(NULL, {$buyer}, {$for}, {$pack}, " . time() . ", '{$txn_id}')");
     $api->game->addLog($buyer, 'donate', "{$payer_email} donated \${$payment_amount} for VIP Pack #{$packr[2]}.");

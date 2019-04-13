@@ -9,8 +9,8 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
-$code = request_csrf_code('inbox_send');
-$code2 = request_csrf_code('cash_send');
+$code = getCodeCSRF('inbox_send');
+$code2 = getCodeCSRF('cash_send');
 $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
 if (!$_GET['user']) {
     alert("danger", "Uh Oh!", "Please specify a user you wish to view.", true, 'index.php');
@@ -49,8 +49,8 @@ if (!$_GET['user']) {
         $r = $db->fetch_row($q);
         $db->free_result($q);
         $lon = ($r['laston'] > 0) ? date('F j, Y g:i:s a', $r['laston']) : "Never";
-        $ula = ($r['laston'] == 0) ? 'Never' : DateTime_Parse($r['laston']);
-        $ull = ($r['last_login'] == 0) ? 'Never' : DateTime_Parse($r['last_login']);
+        $ula = ($r['laston'] == 0) ? 'Never' : dateTimeParse($r['laston']);
+        $ull = ($r['last_login'] == 0) ? 'Never' : dateTimeParse($r['last_login']);
         $sup = date('F j, Y g:i:s a', $r['registertime']);
         $displaypic = ($r['display_pic']) ? "<img src='{$r['display_pic']}' class='img-thumbnail img-responsive' width='250' height='250'>" : '';
         $user_name = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fas fa-shield-alt'
@@ -77,7 +77,7 @@ if (!$_GET['user']) {
         $enemy = $db->fetch_single($enemy_q);
         $db->free_result($enemy_q);
         $CurrentTime = time();
-        $r['daysold'] = DateTime_Parse($r['registertime'], false, true);
+        $r['daysold'] = dateTimeParse($r['registertime'], false, true);
 
         $rhpperc = round($r['hp'] / $r['maxhp'] * 100);
         echo "<h3>{$user_name}'s Profile</h3>";
@@ -137,20 +137,20 @@ if (!$_GET['user']) {
 								<th>Age</th>
 								<td>{$r['daysold']}</td>
 							</tr>";
-        if (user_infirmary($r['userid'])) {
+        if (userInInfirmary($r['userid'])) {
             echo "
 							<tr>
 								<th>Infirmary</th>
-								<td>In the infirmary for " . TimeUntil_Parse($r['infirmary_out']) . ".<br />
+								<td>In the infirmary for " . timeUntilParse($r['infirmary_out']) . ".<br />
 								{$r['infirmary_reason']}
 								</td>
 							</tr>";
         }
-        if (user_dungeon($r['userid'])) {
+        if (userInDungeon($r['userid'])) {
             echo "
 							<tr>
 								<th>Dungeon</th>
-								<td>In the dungeon for " . TimeUntil_Parse($r['dungeon_out']) . ".<br />
+								<td>In the dungeon for " . timeUntilParse($r['dungeon_out']) . ".<br />
 								{$r['dungeon_reason']}
 								</td>
 							</tr>";
@@ -159,7 +159,7 @@ if (!$_GET['user']) {
             echo "
 							<tr>
 								<th>Federal Dungeon</th>
-								<td>In the federal dungeon for " . TimeUntil_Parse($r['fed_out']) . ".<br />
+								<td>In the federal dungeon for " . timeUntilParse($r['fed_out']) . ".<br />
 								{$r['fed_reason']}
 								</td>
 							</tr>";
@@ -253,7 +253,7 @@ if (!$_GET['user']) {
 									{$log['log_text']}
 								</td>
 								<td>
-									" . DateTime_Parse($log['log_time']) . "
+									" . dateTimeParse($log['log_time']) . "
 								</td>
 							</tr>
 					</table>

@@ -46,7 +46,7 @@ while ($result = $db->fetch_row($query)) {
     //Player cannot attack the bot.
     if ((time() <= ($r2 + $result['botcooldown'])) && ($r2 > 0)) {
         $cooldown = ($r2 + $result['botcooldown']) - time();
-        $attack = "Cooldown Remaining: " . ParseTimestamp($cooldown);
+        $attack = "Cooldown Remaining: " . timestampParse($cooldown);
     } //Player CAN attack the bot.
     else {
         $attack = "<form action='attack.php'>
@@ -63,7 +63,7 @@ while ($result = $db->fetch_row($query)) {
 			Level " . $api->user->getInfo($result['botuser'], 'level') . "
 		</td>
 		<td class='hidden-xs'>
-			" . ParseTimestamp($result['botcooldown']) . "
+			" . timestampParse($result['botcooldown']) . "
 		</td>
 		<td>
 			" . $api->game->getItemNameFromID($result['botitem']) . "

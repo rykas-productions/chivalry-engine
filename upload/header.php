@@ -227,7 +227,7 @@ class headers
 			//User is in federal jail. Stop their access.
 			if ($ir['fedjail'] > 0) {
 				alert('info', "Federal Dungeon!", "You are locked away in Federal Dungeon for the next
-								" . TimeUntil_Parse($fed['fed_out']) . ". You were placed in here for <b>{$fed['fed_reason']}</b>", false);
+								" . timeUntilParse($fed['fed_out']) . ". You were placed in here for <b>{$fed['fed_reason']}</b>", false);
 				die($h->endpage());
 			}
 			//Tell user when they have unread messages, when they do.
@@ -245,13 +245,13 @@ class headers
 			//User is in the infirmary, tell them for how long.
 			if ($api->user->inInfirmary($userid)) {
 				$InfirmaryOut = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
-				$InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
+				$InfirmaryRemain = timeUntilParse($InfirmaryOut);
 				alert('info', "Unconscious!", "You are in the Infirmary for the next {$InfirmaryRemain}.", true, "inventory.php", "View Inventory");
 			}
 			//User is in the dungeon, tell them how long.
 			if ($api->user->inDungeon($userid)) {
 				$DungeonOut = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
-				$DungeonRemain = TimeUntil_Parse($DungeonOut);
+				$DungeonRemain = timeUntilParse($DungeonOut);
 				alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, "inventory.php", "View Inventory");
 			}
 			//User needs to reverify with reCaptcha
@@ -303,7 +303,7 @@ class headers
             $_SESSION['attacking'] = 0;
         //If user does not end a fight correctly, take their XP and warn them.
         if ($dosessh && ($_SESSION['attacking'] || $ir['attacking'])) {
-            $hosptime = Random(10, 50);
+            $hosptime = randomNumber(10, 50);
             $api->user->setInfirmary($userid, $hosptime, "Ran from a fight");
             alert("warning", "Uh Oh!", "For leaving your previous fight, you were placed in the Infirmary for {$hosptime}
             minutes, and lost all your experience.", false);
@@ -313,22 +313,22 @@ class headers
         $townguild = $db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$ir['location']}"));
         //User is in a guild, and the guild has control of the current town.
         if (($townguild == $ir['guild']) && ($townguild > 0) && ($ir['guild'] > 0)) {
-            $encounterchance = Random(1, 1000);
+            $encounterchance = randomNumber(1, 1000);
             //User gets robbed!
             if ($encounterchance == 1) {
-                $result = Random(1, 2);
+                $result = randomNumber(1, 2);
                 if ($result == 1) {
-                    $infirmtime = Random(20, 60);
+                    $infirmtime = randomNumber(20, 60);
                     $api->user->setInfirmary($userid, $infirmtime, "Attacked by Bandits");
-                    $api->user->addNotification($userid, "While randomly walking about in this town, you were attacked by
+                    $api->user->addNotification($userid, "While randomNumberly walking about in this town, you were attacked by
 					    a group of bandits as a message to your guild leader.");
                 }
                 if ($result == 2) {
-                    $api->user->addNotification($userid, "While randomly walking about in this town, you successfully
+                    $api->user->addNotification($userid, "While randomNumberly walking about in this town, you successfully
 					    fended off a group of bandits.");
                 }
                 if ($result == 3) {
-                    $api->user->addNotification($userid, "While randomly walking about in this town, you were attacked by
+                    $api->user->addNotification($userid, "While randomNumberly walking about in this town, you were attacked by
 					    a group of bandits. Luckily, a player nearby was able to fight them off for you.");
                 }
             }

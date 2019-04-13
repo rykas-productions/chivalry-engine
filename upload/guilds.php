@@ -98,7 +98,7 @@ function create()
     } else {
         if (isset($_POST['name'])) {
             //User fails the CSRF verification.
-            if (!isset($_POST['verf']) || !verify_csrf_code('createguild', stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF('createguild', stripslashes($_POST['verf']))) {
                 alert('danger', "CSRF Error!", "The action you were trying to do was blocked. It was blocked because you
 				    loaded another page on the game. If you have not loaded a different page during this time, change
 				    your password immediately, as another person may have access to your account!");
@@ -128,7 +128,7 @@ function create()
             $api->game->addLog($userid, 'guilds', "Joined Guild ID {$i}");
         } else {
             //Request the CSRF form.
-            $csrf = request_csrf_html('createguild');
+            $csrf = getHtmlCSRF('createguild');
             echo "<form action='?action=create' method='post'>";
             echo "
 			<table class='table table-bordered'>
@@ -317,7 +317,7 @@ function apply()
     echo "<h3>Submitting an Application to join the {$gd['guild_name']} guild.</h3><hr />";
     if (isset($_POST['application'])) {
         //User fails CSRF verification
-        if (!isset($_POST['verf']) || !verify_csrf_code('guild_apply', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('guild_apply', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "The action you were trying to do was blocked. It was blocked because you loaded
                 another page on the game. If you have not loaded a different page during this time, change your password
                 immediately, as another person may have access to your account!", true, 'back');
@@ -349,7 +349,7 @@ function apply()
         alert('success', "Success!", "You application has been submitted successfully.", true, "guilds.php?action=view&id={$_GET['id']}");
     } else {
         //Request CSRF form.
-        $csrf = request_csrf_html('guild_apply');
+        $csrf = getHtmlCSRF('guild_apply');
         echo "
 		<form action='?action=apply&id={$_GET['id']}' method='post'>
 			Write your application to join this guild here. The more information you can provide, the higher chance you

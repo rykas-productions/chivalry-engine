@@ -60,9 +60,9 @@ if (empty($_GET['item'])) {
                     if (in_array($stat[$usecount], array('energy', 'will', 'brave', 'hp'))) {
                         $ir[$stat[$usecount]] = min($ir[$stat[$usecount]] + $inc, $ir['max' . $stat[$usecount]]);
                     } elseif ($stat[$usecount] == 'infirmary') {
-                        put_infirmary($userid, $inc, 'Item Misuse');
+                        userPutInfirmary($userid, $inc, 'Item Misuse');
                     } elseif ($stat[$usecount] == 'dungeon') {
-                        put_dungeon($userid, $inc, 'Item Misuse');
+                        userPutDungeon($userid, $inc, 'Item Misuse');
                     } else {
                         $ir[$stat[$usecount]] += $inc;
                     }
@@ -70,12 +70,12 @@ if (empty($_GET['item'])) {
                 else
                 {
                     if ($stat[$usecount] == 'infirmary') {
-                        if (user_infirmary($userid)) {
-                            remove_infirmary($userid, $inc);
+                        if (userInInfirmary($userid)) {
+                            userRemoveInfirmary($userid, $inc);
                         }
                     } elseif ($stat[$usecount] == 'dungeon') {
-                        if (user_dungeon($userid)) {
-                            remove_dungeon($userid, $inc);
+                        if (userInDungeon($userid)) {
+                            userRemoveDungeon($userid, $inc);
                         }
                     } else {
                         $ir[$stat[$usecount]] = max($ir[$stat[$usecount]] - $inc, 0);

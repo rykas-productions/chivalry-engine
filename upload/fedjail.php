@@ -35,7 +35,7 @@ while ($r = $db->fetch_row($q)) {
     		<a href='profile.php?user={$r['fed_userid']}'>{$api->user->getNamefromID($r['fed_userid'])}</a>
     	</td>
     	<td>
-			" . TimeUntil_Parse($r['fed_out']) . "
+			" . timeUntilParse($r['fed_out']) . "
 		</td>
     	<td>
 			{$r['fed_reason']}
@@ -72,7 +72,7 @@ while ($r = $db->fetch_row($q)) {
     		<a href='profile.php?user={$r['mbUSER']}'>{$api->user->getNamefromID($r['mbUSER'])}</a>
     	</td>
     	<td>
-			" . TimeUntil_Parse($r['mbTIME']) . "
+			" . timeUntilParse($r['mbTIME']) . "
 		</td>
     	<td>
 			{$r['mbREASON']}
@@ -110,7 +110,7 @@ while ($r = $db->fetch_row($q)) {
     		<a href='profile.php?user={$r['fb_user']}'>{$api->user->getNamefromID($r['fb_user'])}</a>
     	</td>
     	<td>
-			" . TimeUntil_Parse($r['fb_time']) . "
+			" . timeUntilParse($r['fb_time']) . "
 		</td>
     	<td>
 			{$r['fb_reason']}

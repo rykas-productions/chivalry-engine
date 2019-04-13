@@ -38,7 +38,7 @@ function addestate()
         $name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
         $will = (isset($_POST['will']) && is_numeric($_POST['will'])) ? abs(intval($_POST['will'])) : 100;
         $cost = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : 0;
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_addestate', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_addestate', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
             die($h->endpage());
         }
@@ -66,7 +66,7 @@ function addestate()
         alert('success', "Success!", "You have successfully created the {$name} Estate.", true, 'index.php');
         $db->query("INSERT INTO `estates` (`house_name`, `house_price`, `house_will`, `house_level`) VALUES ('{$name}', '{$cost}', '{$will}', '{$lvl}')");
     } else {
-        $csrf = request_csrf_html('staff_addestate');
+        $csrf = getHtmlCSRF('staff_addestate');
         echo "<form action='?action=addestate' method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -122,7 +122,7 @@ function delestate()
     global $db, $userid, $api, $h;
     if (isset($_POST['estate'])) {
         $_POST['estate'] = (isset($_POST['estate']) && is_numeric($_POST['estate'])) ? abs(intval($_POST['estate'])) : '';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_delestate', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_delestate', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
             die($h->endpage());
         }
@@ -144,7 +144,7 @@ function delestate()
         alert('success', "Success!", "You have deleted the {$old['house_name']} estate.", true, 'index.php');
         $api->game->addLog($userid, 'staff', "Deleted the {$old['house_name']} estate.");
     } else {
-        $csrf = request_csrf_html('staff_delestate');
+        $csrf = getHtmlCSRF('staff_delestate');
         echo "<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -158,7 +158,7 @@ function delestate()
 						Estate
 					</th>
 					<td>
-						" . estate_dropdown() . "
+						" . dropdownEstate() . "
 					</td>
 				</tr>
 				<tr>
@@ -184,7 +184,7 @@ function editestate()
         $will = (isset($_POST['will']) && is_numeric($_POST['will'])) ? abs(intval($_POST['will'])) : 100;
         $cost = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : 0;
         $_POST['id'] = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : 0;
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editestate2', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editestate2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
             die($h->endpage());
         }
@@ -220,7 +220,7 @@ function editestate()
     }
     if ($_POST['step'] == 1) {
         $_POST['estate'] = (isset($_POST['estate']) && is_numeric($_POST['estate'])) ? abs(intval($_POST['estate'])) : 0;
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editestate1', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editestate1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
             die($h->endpage());
         }
@@ -232,7 +232,7 @@ function editestate()
         }
         $old = $db->fetch_row($q);
         $db->free_result($q);
-        $csrf = request_csrf_html('staff_editestate2');
+        $csrf = getHtmlCSRF('staff_editestate2');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -284,7 +284,7 @@ function editestate()
 		</form>";
     }
     if ($_POST['step'] == 0) {
-        $csrf = request_csrf_html('staff_editestate1');
+        $csrf = getHtmlCSRF('staff_editestate1');
         echo "<form method='post'>
 			<input type='hidden' name='step' value='1' />
 			<table class='table table-bordered'>
@@ -298,7 +298,7 @@ function editestate()
 						Estate
 					</th>
 					<td>
-						" . estate_dropdown() . "
+						" . dropdownEstate() . "
 					</td>
 				</tr>
 				<tr>

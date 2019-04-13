@@ -36,7 +36,7 @@ if (isset($_POST["stat"]) && $amnt) {
         die($h->endpage());
     }
     //User fails CSRF check.
-    if (!isset($_POST['verf']) || !verify_csrf_code('gym_train', stripslashes($_POST['verf']))) {
+    if (!isset($_POST['verf']) || !checkCSRF('gym_train', stripslashes($_POST['verf']))) {
         alert('danger', "Action Blocked!", "The action you were trying to do was blocked. It was blocked because you loaded
             another page on the game. If you have not loaded a different page during this time, change your password
             immediately, as another person may have access to your account!", true, 'index.php');
@@ -116,14 +116,14 @@ if (!isset($all_select)) {
     $all_select = '';
 }
 //Grab the user's stat ranks.
-$ir['strank'] = get_rank($ir['strength'], 'strength');
-$ir['agirank'] = get_rank($ir['agility'], 'agility');
-$ir['guarank'] = get_rank($ir['guard'], 'guard');
-$ir['labrank'] = get_rank($ir['labor'], 'labor');
+$ir['strank'] = getRank($ir['strength'], 'strength');
+$ir['agirank'] = getRank($ir['agility'], 'agility');
+$ir['guarank'] = getRank($ir['guard'], 'guard');
+$ir['labrank'] = getRank($ir['labor'], 'labor');
 $ir['all_four'] = ($ir['labor'] + $ir['strength'] + $ir['agility'] + $ir['guard']);
-$ir['af_rank'] = get_rank($ir['all_four'], 'all');
+$ir['af_rank'] = getRank($ir['all_four'], 'all');
 //Request CSRF code.
-$code = request_csrf_html('gym_train');
+$code = getHtmlCSRF('gym_train');
 echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to {$ir['energy']} times.<hr />
 <table class='table table-bordered'>
 	<tr>

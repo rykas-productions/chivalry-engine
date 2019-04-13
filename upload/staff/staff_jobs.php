@@ -43,7 +43,7 @@ function newjob()
     global $db, $userid, $h, $api, $_CONFIG;
     echo "<h3>Create Job</h3><hr />";
     if (!isset($_POST['jNAME'])) {
-        $csrf = request_csrf_html('staff_newjob');
+        $csrf = getHtmlCSRF('staff_newjob');
         echo "<form method='post'>";
         echo "<table class='table table-bordered'>
             <tr>
@@ -169,7 +169,7 @@ function newjob()
         $_POST['jIQ'] = (isset($_POST['jIQ']) && is_numeric($_POST['jIQ'])) ? abs(intval($_POST['jIQ'])) : 0;
         $_POST['jACT'] = (isset($_POST['jACT']) && is_numeric($_POST['jACT'])) ? abs(intval($_POST['jACT'])) : 0;
 
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newjob', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_newjob', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
             die($h->endpage());
         }
@@ -230,7 +230,7 @@ function jobedit()
             alert('danger', "Uh Oh!", "Please fill out all the fields.");
             die($h->endpage());
         }
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editjob2', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editjob2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
             die($h->endpage());
         }
@@ -268,7 +268,7 @@ function jobedit()
             alert('danger', "Uh Oh!", "Please specify the job you wish to edit.");
             die($h->endpage());
         }
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editjob1', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editjob1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
             die($h->endpage());
         }
@@ -280,7 +280,7 @@ function jobedit()
         }
         $r = $db->fetch_row($q);
         $db->free_result($q);
-        $csrf = request_csrf_html('staff_editjob2');
+        $csrf = getHtmlCSRF('staff_editjob2');
         $jobname = addslashes($r['jNAME']);
         $jobdesc = addslashes($r['jDESC']);
         $jobowner = addslashes($r['jBOSS']);
@@ -320,7 +320,7 @@ function jobedit()
 					First Job Rank
 				</th>
 				<td>
-					" . jobrank_dropdown('jobrank', $r['jSTART']) . "
+					" . dropdownJobRank('jobrank', $r['jSTART']) . "
 				</td>
 			</tr>
 			<tr>
@@ -334,7 +334,7 @@ function jobedit()
         <input type='hidden' value='{$_POST['job']}' name='job'>
 		</form>";
     } else {
-        $csrf = request_csrf_html('staff_editjob1');
+        $csrf = getHtmlCSRF('staff_editjob1');
         echo "<form method='post'><table class='table table-bordered'>
         <input type='hidden' value='1' name='step'>
         <tr>
@@ -348,7 +348,7 @@ function jobedit()
             </th>
             <td>
 
-                " . job_dropdown() . "
+                " . dropdownJob() . "
             </td>
         </tr>
          <tr>
@@ -369,7 +369,7 @@ function jobdele()
     if (isset($_POST['job'])) {
         $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
         //Verify CSRF
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_deljob', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_deljob', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
             die($h->endpage());
         }
@@ -394,11 +394,11 @@ function jobdele()
             {$unemployed} player(s) are now jobless due to this deletion.", true, 'index.php');
         $api->game->addLog($userid, 'staff', "Deleted Job ID {$_POST['job']}.");
     } else {
-        $csrf = request_csrf_html('staff_deljob');
+        $csrf = getHtmlCSRF('staff_deljob');
         echo "<form method='post'>
         Please select the form you wish to delete. Users who are currently employed here will have their job data set
         back to default<br />
-        " . job_dropdown() . "<br />
+        " . dropdownJob() . "<br />
         <input type='submit' value='Delete Job' class='btn btn-primary'>
         {$csrf}
         </form>";
@@ -421,7 +421,7 @@ function newjobrank()
         $_POST['seccpay'] = (isset($_POST['seccpay']) && is_numeric($_POST['seccpay'])) ? abs(intval($_POST['seccpay'])) : 0;
         $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
         //Verify CSRF
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newjobrank', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_newjobrank', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
             die($h->endpage());
         }
@@ -454,7 +454,7 @@ function newjobrank()
         alert('success', "Success!", "You have successfully created the {$_POST['rank']} job rank!", true, 'index.php');
         $api->game->addLog($userid, 'staff', "Created the {$_POST['rank']} job rank.");
     } else {
-        $csrf = request_csrf_html('staff_newjobrank');
+        $csrf = getHtmlCSRF('staff_newjobrank');
         echo "Fill out this form to add more job ranks to a specific job.";
         echo "<form method='post'>
         <table class='table table-bordered'>
@@ -487,7 +487,7 @@ function newjobrank()
                     Job
                 </th>
                 <td>
-                    " . job_dropdown() . "
+                    " . dropdownJob() . "
                 </td>
             </tr>
             <tr>
@@ -554,7 +554,7 @@ function jobrankedit()
         $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
         $_POST['jobrank'] = (isset($_POST['jobrank']) && is_numeric($_POST['jobrank'])) ? abs(intval($_POST['jobrank'])) : 0;
         //Verify CSRF
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editjobrank2', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editjobrank2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
             die($h->endpage());
         }
@@ -606,7 +606,7 @@ function jobrankedit()
     if ($_POST['step'] == 1) {
         $_POST['jobrank'] = (isset($_POST['jobrank']) && is_numeric($_POST['jobrank'])) ? abs(intval($_POST['jobrank'])) : 0;
         //Verify CSRF
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_jobrankedit', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_jobrankedit', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
             die($h->endpage());
         }
@@ -623,7 +623,7 @@ function jobrankedit()
         }
         //If it does, select its data.
         $r = $db->fetch_row($q);
-        $csrf = request_csrf_html('staff_editjobrank2');
+        $csrf = getHtmlCSRF('staff_editjobrank2');
         echo "Fill out this form to edit this jobrank.";
         echo "<form method='post'>
         <input type='hidden' value='2' name='step'>
@@ -658,7 +658,7 @@ function jobrankedit()
                     Job
                 </th>
                 <td>
-                    " . job_dropdown('job', $r['jrJOB']) . "
+                    " . dropdownJob('job', $r['jrJOB']) . "
                 </td>
             </tr>
             <tr>
@@ -704,10 +704,10 @@ function jobrankedit()
     }
     //Select the job rank to edit
     if ($_POST['step'] == 0) {
-        $csrf = request_csrf_html('staff_jobrankedit');
+        $csrf = getHtmlCSRF('staff_jobrankedit');
         echo "Select the job rank you wish to edit.";
         echo "<form method='post'>
-        " . jobrank_dropdown('jobrank') . "
+        " . dropdownJobRank('jobrank') . "
         <input type='hidden' value='1' name='step'>
         <input type='submit' value='Edit Jobrank' class='btn btn-primary'>
         {$csrf}
@@ -723,7 +723,7 @@ function jobrankdele()
     if (isset($_POST['jobrank'])) {
         $_POST['jobrank'] = (isset($_POST['jobrank']) && is_numeric($_POST['jobrank'])) ? abs(intval($_POST['jobrank'])) : 0;
         //Verify CSRF
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_deljobrank', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_deljobrank', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
             die($h->endpage());
         }
@@ -753,10 +753,10 @@ function jobrankdele()
         alert('success', "Success!", "You have successfully deleted Job Rank ID {$_POST['jobrank']}. {$unemployed} players
          need to reapply to their job.", true, 'index.php');
     } else {
-        $csrf = request_csrf_html('staff_deljobrank');
+        $csrf = getHtmlCSRF('staff_deljobrank');
         echo "Please select the job rank you wish to delete. You can only delete ranks that are not a job's first rank.<br />
         <form method='post'>
-            " . jobrank_dropdown() . "<br />
+            " . dropdownJobRank() . "<br />
             <input type='submit' value='Delete Job Rank' class='btn btn-primary'>
             {$csrf}
         </form>

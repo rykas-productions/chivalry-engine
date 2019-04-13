@@ -45,7 +45,7 @@ if ($api->user->getStaffLevel($userid, 'admin')) {
 					Chivalry Engine Update Checker
 				</th>
 				<td>
-					" . version_json() . "
+					" . getEngineVersion() . "
 				</td>
 			</tr>
 			<tr>
@@ -321,7 +321,7 @@ if ($api->user->getStaffLevel($userid, 'admin')) {
         echo "
 				<tr>
 					<td>
-						" . DateTime_Parse($r['log_time']) . "
+						" . dateTimeParse($r['log_time']) . "
 					</td>
 					<td>
 						<a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]

@@ -55,7 +55,7 @@ function viewguild()
         $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
 
         //Validate CSRF check.
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_viewguild', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_viewguild', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
             die($h->endpage());
         }
@@ -170,10 +170,10 @@ function viewguild()
 
     } else {
         //Basic form to select the guild.
-        $csrf = request_csrf_html('staff_viewguild');
+        $csrf = getHtmlCSRF('staff_viewguild');
         echo "Select the guild from the dropdown you wish to view, then submit the form.<br />
         <form method='post'>
-        " . guilds_dropdown() . "
+        " . dropdownGuild() . "
         {$csrf}<br />
         <input type='submit' value='View Guild' class='btn btn-primary'>
         </form>";
@@ -192,7 +192,7 @@ function creditguild()
         $reason = (isset($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : '';
 
         //Validate successful CSRF
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_creditguild', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_creditguild', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
             die($h->endpage());
         }
@@ -247,7 +247,7 @@ function creditguild()
         $h->endpage();
     } else {
         //Form to credit a guild.
-        $csrf = request_csrf_html('staff_creditguild');
+        $csrf = getHtmlCSRF('staff_creditguild');
         echo "Select the guild you wish to credit, then enter how much you wish to credit them, and input a reason.
         Submit the form when complete.";
         echo "<form method='post'>
@@ -257,7 +257,7 @@ function creditguild()
                 Guild
             </th>
             <td>
-                " . guilds_dropdown() . "
+                " . dropdownGuild() . "
             </td>
         </tr>
         <tr>
@@ -313,7 +313,7 @@ function viewwars()
         die($h->endpage());
     }
     //Request CSRF token
-    $csrf = request_csrf_code('staff_guild_end_war');
+    $csrf = getCodeCSRF('staff_guild_end_war');
     //Display the wars to the user!
     while ($r = $db->fetch_row($q)) {
         echo "<tr>
@@ -347,7 +347,7 @@ function endwar()
     //Sanitize the war to be deleted.
     $_GET['war'] = (isset($_GET['war']) && is_numeric($_GET['war'])) ? abs(intval($_GET['war'])) : 0;
     //Verify the CSRF
-    if (!isset($_GET['csrf']) || !verify_csrf_code('staff_guild_end_war', stripslashes($_GET['csrf']))) {
+    if (!isset($_GET['csrf']) || !checkCSRF('staff_guild_end_war', stripslashes($_GET['csrf']))) {
         alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
         die($h->endpage());
     }
@@ -389,11 +389,11 @@ function editguild()
     }
     //Selecting the guild to edit.
     if ($_POST['step'] == 0) {
-        $csrf = request_csrf_html('staff_editguild_1');
+        $csrf = getHtmlCSRF('staff_editguild_1');
         echo "Please select the guild you wish to edit from the dropdown below.<br />
         <form method='post'>
             <input type='hidden' value='1' name='step'>
-            " . guilds_dropdown() . "<br />
+            " . dropdownGuild() . "<br />
             {$csrf}
             <input type='submit' value='Edit Guild' class='btn btn-primary'>
         </form>";
@@ -403,7 +403,7 @@ function editguild()
         $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
 
         //Validate CSRF check.
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editguild_1', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editguild_1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
             die($h->endpage());
         }
@@ -433,7 +433,7 @@ function editguild()
         echo "<h3>Editing Guild ID {$guild}</h3>";
 
         //CSRF request
-        $csrf = request_csrf_html('staff_editguild_2');
+        $csrf = getHtmlCSRF('staff_editguild_2');
 
         //Load the editing form
         echo "<table class='table table-bordered'><form method='post'>
@@ -469,7 +469,7 @@ function editguild()
                 Guild Owner
             </th>
             <td>
-                " . guild_user_dropdown('owner', $guild, $r['guild_owner']) . "
+                " . dropdownGuildUser('owner', $guild, $r['guild_owner']) . "
             </td>
         </tr>
         <tr>
@@ -477,7 +477,7 @@ function editguild()
                 Guild Co-Owner
             </th>
             <td>
-                " . guild_user_dropdown('coowner', $guild, $r['guild_coowner']) . "
+                " . dropdownGuildUser('coowner', $guild, $r['guild_coowner']) . "
             </td>
         </tr>
         <tr>
@@ -544,7 +544,7 @@ function editguild()
         $armory = $_POST['armory'];
 
         //Validate CSRF check.
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editguild_2', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editguild_2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
             die($h->endpage());
         }
@@ -603,7 +603,7 @@ function delguild()
         $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
 
         //Validate CSRF check.
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_delete_guild', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_delete_guild', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
             die($h->endpage());
         }
@@ -636,11 +636,11 @@ function delguild()
         $api->game->addLog($userid, 'staff', "Deleted Guild ID {$guild}.");
         $h->endpage();
     } else {
-        $csrf = request_csrf_html('staff_delete_guild');
+        $csrf = getHtmlCSRF('staff_delete_guild');
         echo "<form method='post'>
         Please select the guild you wish to delete. This will delete EVERYTHING and cannot be reversed.<br />
         {$csrf}
-        " . guilds_dropdown() . "<br />
+        " . dropdownGuild() . "<br />
         <input type='submit' value='Delete Guild' class='btn btn-primary'>
         </form>";
         $h->endpage();
@@ -661,7 +661,7 @@ function addcrime()
         $fail = $db->escape(htmlentities(stripslashes($_POST['fail']), ENT_QUOTES, 'ISO-8859-1'));
 
         //Validate CSRF check.
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_create_guild_crime', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_create_guild_crime', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
             die($h->endpage());
         }
@@ -692,7 +692,7 @@ function addcrime()
         alert('success', "Success!", "You have successfully created the {$name} Guild Crime.", true, 'index.php');
         $h->endpage();
     } else {
-        $csrf = request_csrf_html('staff_create_guild_crime');
+        $csrf = getHtmlCSRF('staff_create_guild_crime');
         echo "<form method='post'>
         Fill out this form completely to add a new guild crime.
         <table class='table table-bordered'>
@@ -772,7 +772,7 @@ function delcrime()
         $_POST['crime'] = (isset($_POST['crime']) && is_numeric($_POST['crime'])) ? abs(intval($_POST['crime'])) : 0;
 
         //Verify CSRF check is successful.
-        if (!isset($_POST['verf']) || !verify_csrf_code("staff_delete_guild_crime", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("staff_delete_guild_crime", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -797,7 +797,7 @@ function delcrime()
         $h->endpage();
     } else {
         //Select the crimes from database, based on how many members the guild has.
-        $csrf = request_csrf_html('staff_delete_guild_crime');
+        $csrf = getHtmlCSRF('staff_delete_guild_crime');
         $q = $db->query("SELECT * FROM `guild_crimes`");
         echo "Select the guild crime you wish to delete. Guilds currently planning to commit this crime will have their crime
         set back to nothing.<br />

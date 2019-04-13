@@ -18,7 +18,7 @@ function csrf_error()
 
 echo "<h3>Player Report</h3><hr />";
 if (empty($_POST['userid'])) {
-    $code = request_csrf_code('report_form');
+    $code = getCodeCSRF('report_form');
     echo "Know someone who broke the rules, or is just being dishonorable? This is the place to report them. Report the
         user just once. Reporting the same user multiple times will slow down the process. If you are found to be
         abusing the player report system, you will be placed away in federal jail. Information you enter here will
@@ -54,7 +54,7 @@ if (empty($_POST['userid'])) {
 } else {
     $_POST['reason'] = (isset($_POST['reason']) && is_string($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : '';
     $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs($_POST['userid']) : '';
-    if (!isset($_POST['verf']) || !verify_csrf_code('report_form', stripslashes($_POST['verf']))) {
+    if (!isset($_POST['verf']) || !checkCSRF('report_form', stripslashes($_POST['verf']))) {
         csrf_error();
     }
     if (strlen($_POST['reason']) > 30000) {

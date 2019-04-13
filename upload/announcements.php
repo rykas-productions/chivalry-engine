@@ -26,7 +26,7 @@ while ($r = $db->fetch_row($q)) {
                                 WHERE `userid` = {$r['ann_poster']}");
     $Poster = $db->fetch_single($PosterQuery);
     //Parse the announcement time into a user friendly timestamp.
-    $AnnouncementTime = DateTime_Parse($r['ann_time']);
+    $AnnouncementTime = dateTimeParse($r['ann_time']);
     //Make the announcement text safe for the users to read, in case of staff panel compromise.
     $r['ann_text'] = nl2br($r['ann_text']);
     

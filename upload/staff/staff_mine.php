@@ -128,7 +128,7 @@ function addmine()
 						Location
                     </th>
                     <td>
-                        " . location_dropdown("city") . "
+                        " . dropdownLocation("city") . "
                     </td>
                 </tr>
                 <tr>
@@ -160,7 +160,7 @@ function addmine()
 						Required Pickaxe
                     </th>
                     <td>
-                        " . item_dropdown("pick") . "
+                        " . dropdownItem("pick") . "
                     </td>
                 </tr>
                 <tr>
@@ -168,7 +168,7 @@ function addmine()
 						Item #1
                     </th>
                     <td>
-                        " . item_dropdown("cflakes") . "
+                        " . dropdownItem("cflakes") . "
                     </td>
                 </tr>
                 <tr>
@@ -176,7 +176,7 @@ function addmine()
 						Item #2
                     </th>
                     <td>
-                        " . item_dropdown("sflakes") . "
+                        " . dropdownItem("sflakes") . "
                     </td>
                 </tr>
                 <tr>
@@ -184,7 +184,7 @@ function addmine()
 						Item #3
                     </th>
                     <td>
-                        " . item_dropdown("gflakes") . "
+                        " . dropdownItem("gflakes") . "
                     </td>
                 </tr>
                 <tr>
@@ -192,7 +192,7 @@ function addmine()
 						Gem Item
                     </th>
                     <td>
-                        " . item_dropdown("gem") . "
+                        " . dropdownItem("gem") . "
                     </td>
                 </tr>
                 <tr>
@@ -348,7 +348,7 @@ function editmine()
 							Location
                         </th>
                         <td>
-                            " . location_dropdown("city", $mi['mine_location']) . "
+                            " . dropdownLocation("city", $mi['mine_location']) . "
                         </td>
                     </tr>
                     <tr>
@@ -380,7 +380,7 @@ function editmine()
                             Pickaxe Item
                         </th>
                         <td>
-                            " . item_dropdown("pick", $mi['mine_pickaxe']) . "
+                            " . dropdownItem("pick", $mi['mine_pickaxe']) . "
                         </td>
                     </tr>
                     <tr>
@@ -388,7 +388,7 @@ function editmine()
                             Item #1
                         </th>
                         <td>
-                            " . item_dropdown("cflakes", $mi['mine_copper_item']) . "
+                            " . dropdownItem("cflakes", $mi['mine_copper_item']) . "
                         </td>
                     </tr>
                     <tr>
@@ -396,7 +396,7 @@ function editmine()
                             Item #2
                         </th>
                         <td>
-                            " . item_dropdown("sflakes", $mi['mine_silver_item']) . "
+                            " . dropdownItem("sflakes", $mi['mine_silver_item']) . "
                         </td>
                     </tr>
                     <tr>
@@ -404,7 +404,7 @@ function editmine()
                             Item #3
                         </th>
                         <td>
-                            " . item_dropdown("gflakes", $mi['mine_gold_item']) . "
+                            " . dropdownItem("gflakes", $mi['mine_gold_item']) . "
                         </td>
                     </tr>
                     <tr>
@@ -412,7 +412,7 @@ function editmine()
                             Gem Item
                         </th>
                         <td>
-                            " . item_dropdown("gem", $mi['mine_gem_item']) . "
+                            " . dropdownItem("gem", $mi['mine_gem_item']) . "
                         </td>
                     </tr>
                     <tr>

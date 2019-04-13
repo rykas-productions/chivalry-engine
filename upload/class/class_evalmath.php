@@ -536,17 +536,17 @@ class EvalMathFuncs {
         return $res;
     }
 
-    protected static $randomseed = null;
+    protected static $randomNumberseed = null;
 
-    static function set_random_seed($randomseed) {
-        self::$randomseed = $randomseed;
+    static function set_randomNumber_seed($randomNumberseed) {
+        self::$randomNumberseed = $randomNumberseed;
     }
 
-    static function get_random_seed() {
-        if (is_null(self::$randomseed)){
+    static function get_randomNumber_seed() {
+        if (is_null(self::$randomNumberseed)){
             return microtime();
         } else {
-            return self::$randomseed;
+            return self::$randomNumberseed;
         }
     }
 
@@ -555,20 +555,20 @@ class EvalMathFuncs {
             return false; //error
         }
         $noofchars = ceil(log($max + 1 - $min, '16'));
-        $md5string = md5(self::get_random_seed());
+        $md5string = md5(self::get_randomNumber_seed());
         $stringoffset = 0;
         do {
             while (($stringoffset + $noofchars) > strlen($md5string)){
                 $md5string .= md5($md5string);
             }
-            $randomno = hexdec(substr($md5string, $stringoffset, $noofchars));
+            $randomNumberno = hexdec(substr($md5string, $stringoffset, $noofchars));
             $stringoffset += $noofchars;
-        } while (($min + $randomno) > $max);
-        return $min + $randomno;
+        } while (($min + $randomNumberno) > $max);
+        return $min + $randomNumberno;
     }
 
     static function rand_float() {
-        $randomvalues = unpack('v', md5(self::get_random_seed(), true));
-        return array_shift($randomvalues) / 65536;
+        $randomNumbervalues = unpack('v', md5(self::get_randomNumber_seed(), true));
+        return array_shift($randomNumbervalues) / 65536;
     }
 }

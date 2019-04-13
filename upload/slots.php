@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
-$tresder = (Random(100, 999));
+$tresder = (randomNumber(100, 999));
 $maxbet = $ir['level'] * 500;
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
@@ -33,9 +33,9 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         die($h->endpage());
     }
     $slot = array();
-    $slot[1] = Random(0, 9);
-    $slot[2] = Random(0, 9);
-    $slot[3] = Random(0, 9);
+    $slot[1] = randomNumber(0, 9);
+    $slot[2] = randomNumber(0, 9);
+    $slot[3] = randomNumber(0, 9);
     if ($slot[1] == $slot[2] && $slot[2] == $slot[3]) {
         $gain = $_POST['bet'] * 79;
         $title = "Success!";
@@ -63,7 +63,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
     }
     alert($alerttype, $title, "You pull down the handle and slots begin to spin. They show {$slot[1]}, {$slot[2]}, {$slot[3]}. {$phrase}", true, "?tresde={$tresder}");
     $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
-    $tresder = Random(100, 999);
+    $tresder = randomNumber(100, 999);
     echo "<br />
 	<form action='?tresde={$tresder}' method='post'>
     	<input type='hidden' name='bet' value='{$_POST['bet']}' />

@@ -18,7 +18,7 @@ if ($ir[$_GET['type']] == 0) {
     die($h->endpage());
 }
 //Give item to user and set their slot to 0
-item_add($userid, $ir[$_GET['type']], 1);
+addItem($userid, $ir[$_GET['type']], 1);
 $db->query("UPDATE `users` SET `{$_GET['type']}` = 0 WHERE `userid` = {$ir['userid']}");
 $names = array('equip_primary' => "Primary Weapon",
     'equip_secondary' => "Secondary Weapon",

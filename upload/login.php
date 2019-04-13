@@ -17,8 +17,8 @@ $playersonline=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users`
 $signups=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `registertime` > {$last24hr}"));
 $currentpage = $_SERVER['REQUEST_URI'];
 $cpage = strip_tags(stripslashes($currentpage));
-$domain = determine_game_urlbase();
-$csrf = request_csrf_html('login');
+$domain = getGameURL();
+$csrf = getHtmlCSRF('login');
 echo "
 <div class='row'>
     <div class='col-sm-4'>

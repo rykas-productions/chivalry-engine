@@ -156,7 +156,7 @@ function logs($name)
         $un = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
 		<tr>
-        	<td>" . DateTime_Parse($r['log_time'])
+        	<td>" . dateTimeParse($r['log_time'])
             . "</td>
         	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
         	<td>{$r['log_text']}</td>
@@ -217,7 +217,7 @@ function userlogs()
             echo "
 				<tr>
 					<td>
-						" . DateTime_Parse($r['log_time']) . "
+						" . dateTimeParse($r['log_time']) . "
 					</td>
 					<td>
 						<a href='../profile.php?user={$user}'>{$r['username']}</a> [{$user}]
@@ -250,7 +250,7 @@ function userlogs()
 					User
 				</th>
 				<td>
-					" . user_dropdown('user') . "
+					" . dropdownUser('user') . "
 				</td>
 			</tr>
 			<tr>
@@ -322,7 +322,7 @@ function alllogs()
         $un = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
         echo "
 		<tr>
-        	<td>" . DateTime_Parse($r['log_time'])
+        	<td>" . dateTimeParse($r['log_time'])
             . "</td>
         	<td><a href='../profile.php?user={$r['log_user']}'>{$un}</a> [{$r['log_user']}]</td>
         	<td>{$r['log_text']}</td>
@@ -376,7 +376,7 @@ function maillogs()
         $un2 = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['mail_to']}"));
         echo "
 		<tr>
-        	<td>" . DateTime_Parse($r['mail_time']) . "</td>
+        	<td>" . dateTimeParse($r['mail_time']) . "</td>
         	<td>{$r['mail_subject']}</td>
         	<td><a href='../profile.php?user={$r['mail_from']}'>{$un}</a> [{$r['mail_from']}]</td>
         	<td><a href='../profile.php?user={$r['mail_to']}'>{$un2}</a> [{$r['mail_to']}]</td>

@@ -43,7 +43,7 @@ function add()
         $code = (isset($_POST['code'])) ? $db->escape(strip_tags(stripslashes($_POST['code']))) : '';
         $item = (isset($_POST['item']) && is_numeric($_POST['item'])) ? abs(intval($_POST['item'])) : 0;
         //User has failed the CSRF check
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_promo_add', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_promo_add', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form
             quickly next time.");
             die($h->endpage());
@@ -79,7 +79,7 @@ function add()
         $h->endpage();
     } else {
         //Create the form
-        $csrf = request_csrf_html('staff_promo_add');
+        $csrf = getHtmlCSRF('staff_promo_add');
         echo "<form method='post'>";
         echo "<table class='table table-bordered'>
         <tr>
@@ -100,7 +100,7 @@ function add()
                 Promo Item
             </th>
             <td>
-                " . item_dropdown() . "
+                " . dropdownItem() . "
             </td>
         </tr>
         <tr>
@@ -125,7 +125,7 @@ function deletepromo()
         //Sanitize and validate that the promo code is a number.
         $code = (isset($_GET['promo']) && is_numeric($_GET['promo'])) ? abs(intval($_GET['promo'])) : 0;
         //User has failed the CSRF check
-        if (!isset($_GET['verf']) || !verify_csrf_code('staff_promo_delete', stripslashes($_GET['verf']))) {
+        if (!isset($_GET['verf']) || !checkCSRF('staff_promo_delete', stripslashes($_GET['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form
             quickly next time.");
             die($h->endpage());
@@ -179,7 +179,7 @@ function viewpromo()
             </th>
         </tr>";
         //Request CSRF Code
-        $csrf = request_csrf_code('staff_promo_delete');
+        $csrf = getCodeCSRF('staff_promo_delete');
         while ($r = $db->fetch_row($q)) {
             echo "
             <tr>

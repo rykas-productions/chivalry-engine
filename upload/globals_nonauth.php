@@ -43,7 +43,7 @@ $db->configure($_CONFIG['hostname'], $_CONFIG['username'],
 $db->connect();
 $c = $db->connection_id;
 //Update data in-game externally.
-check_data();
+checkData();
 //Include API file.
 include("class/class_api.php");
 $api = new api;

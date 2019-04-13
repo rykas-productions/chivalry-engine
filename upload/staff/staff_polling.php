@@ -31,7 +31,7 @@ function add()
 {
     global $db, $h, $userid, $api;
     if (isset($_POST['question'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_startpoll', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_startpoll', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quickly next time.");
             die($h->endpage());
         }
@@ -63,12 +63,12 @@ function add()
         $api->game->addLog($userid, 'staff', "Started a game poll.");
         $q = $db->query("SELECT `userid`, `username` FROM `users`");
         while ($r = $db->fetch_row($q)) {
-            notification_add($r['userid'], "The game administration has added a poll for you to vote in. Please do so by visiting <a href='polling.php'>here</a>.");
+            addNotification($r['userid'], "The game administration has added a poll for you to vote in. Please do so by visiting <a href='polling.php'>here</a>.");
         }
         die($h->endpage());
     } else {
         echo "Start a Poll";
-        $csrf = request_csrf_html('staff_startpoll');
+        $csrf = getHtmlCSRF('staff_startpoll');
         echo "<hr />
 		<form method='post'>
 		<table class='table table-bordered'>
@@ -187,7 +187,7 @@ function close()
     global $db, $h, $api, $userid;
     $_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs(intval($_POST['poll'])) : '';
     if (empty($_POST['poll'])) {
-        $csrf = request_csrf_html('staff_endpoll');
+        $csrf = getHtmlCSRF('staff_endpoll');
         echo "
         Select the poll you wish to end.
         <br />
@@ -209,7 +209,7 @@ function close()
    		";
         $h->endpage();
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_endpoll', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_endpoll', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quickly next time.");
             die($h->endpage());
         }
@@ -225,7 +225,7 @@ function close()
         $api->game->addLog($userid, 'staff', "Closed a game poll.");
         $q = $db->query("SELECT `userid`, `username` FROM `users`");
         while ($r = $db->fetch_row($q)) {
-            notification_add($r['userid'], "The game administration has closed a recent poll. View the results <a href='polling.php?action=viewpolls'>here</a>.");
+            addNotification($r['userid'], "The game administration has closed a recent poll. View the results <a href='polling.php?action=viewpolls'>here</a>.");
         }
         die($h->endpage());
     }

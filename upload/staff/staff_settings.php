@@ -54,7 +54,7 @@ function basicsettings()
 {
     global $h, $db, $set, $api, $userid;
     if (!isset($_POST['gamename'])) {
-        $csrf = request_csrf_html('staff_sett_1');
+        $csrf = getHtmlCSRF('staff_sett_1');
         echo "
 		<div class='table-responsive'>
 		<form method='post'>
@@ -255,7 +255,7 @@ function basicsettings()
         </form>";
         $h->endpage();
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_sett_1', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_sett_1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for your security. Please fill out the form quickly next time.");
             die($h->endpage());
         }
@@ -337,7 +337,7 @@ function basicsettings()
             $db->query("UPDATE `settings` SET `setting_value` = '{$iqpersec}' WHERE `setting_name` = 'iq_per_sec'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$sendemail}' WHERE `setting_name` = 'sending_email'");
             alert('success', "Success!", "You have successfully updated the game settings.", true, 'index.php');
-            $api->SystemLogsAdd($userid, 'staff', "Updated game settings.");
+            $api->$game->addLog($userid, 'staff', "Updated game settings.");
         }
         $h->endpage();
     }
@@ -347,7 +347,7 @@ function announce()
 {
     global $db, $userid, $h, $api;
     if (!isset($_POST['announcement'])) {
-        $csrf = request_csrf_html('staff_announce');
+        $csrf = getHtmlCSRF('staff_announce');
         echo "Use this form to post an announcement to the game. Please be sure you are clear and concise with your
         wording. Do not spam if possible.<br />
 		<form method='post'>
@@ -360,7 +360,7 @@ function announce()
             alert('danger', "Uh Oh!", "Please enter announcement text.");
             die($h->endpage());
         } else {
-            if (!isset($_POST['verf']) || !verify_csrf_code('staff_announce', stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF('staff_announce', stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Your action was blocked for your security. Please fill out the form quickly next time.");
                 die($h->endpage());
             }
@@ -370,7 +370,7 @@ function announce()
 			VALUES (NULL, '{$_POST['announcement']}', '{$time}', '{$userid}');");
             $db->query("UPDATE `users` SET `announcements` = `announcements` + 1");
             alert('success', "Success!", "You have successfully posted an announcement.", true, '../announcements.php');
-            $api->SystemLogsAdd($userid, 'staff', "Posted an announcement.");
+            $api->$game->addLog($userid, 'staff', "Posted an announcement.");
         }
     }
     $h->endpage();
@@ -400,7 +400,7 @@ function diagnostics()
     } else {
         $pdv = "<span style='color: red'>Fail</span>";
     }
-    if (function_exists('openssl_random_pseudo_bytes')) {
+    if (function_exists('openssl_randomNumber_pseudo_bytes')) {
         $ov = "<span style='color: green'>Success</span>";
     } else {
         $ov = "<span style='color: red'>Fail</span>";
@@ -458,12 +458,12 @@ function diagnostics()
     		<tr>
     			<td>Chivalry Engine Update Checker</td>
     			<td>
-        			" . version_json() . "
+        			" . getEngineVersion() . "
         		</td>
         	</tr>
     </table>
        ";
-    $api->SystemLogsAdd($userid, 'staff', "Viewed game diagnostics.");
+    $api->$game->addLog($userid, 'staff', "Viewed game diagnostics.");
     $h->endpage();
 }
 
@@ -481,7 +481,7 @@ function restore()
         $db->query("UPDATE `users` SET `hp`=`maxhp`,`energy`=`maxenergy`,`brave`=`maxbrave`,`will`=`maxwill`");
         $db->query("UPDATE `dungeon` SET `dungeon_out` = 0");
         $db->query("UPDATE `infirmary` SET `infirmary_out` = 0");
-        $api->SystemLogsAdd($userid, 'staff', "Restored all users.");
+        $api->$game->addLog($userid, 'staff', "Restored all users.");
         alert('success', "Success!", "You have restored your player base.", true, 'index.php');
         $h->endpage();
     }
@@ -490,7 +490,7 @@ function restore()
 function errlog()
 {
     global $api, $userid, $h;
-    $api->SystemLogsAdd($userid, 'staff', "Viewed the error log.");
+    $api->$game->addLog($userid, 'staff', "Viewed the error log.");
     echo "
 	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents("../error_log") . "</textarea>";
     $h->endpage();
@@ -500,7 +500,7 @@ function staff()
 {
     global $db, $api, $h;
     if (isset($_POST['user'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_priv', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_priv', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for your security. Please fill out the form quickly next time.");
             die($h->endpage());
         }
@@ -519,7 +519,7 @@ function staff()
         alert('success', "Success!", "You have updated {$api->SystemUserIDtoName($_POST['user'])}'s User Level to {$_POST['priv']}.");
         die($h->endpage());
     } else {
-        $csrf = request_csrf_html('staff_priv');
+        $csrf = getHtmlCSRF('staff_priv');
         echo "<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -532,7 +532,7 @@ function staff()
 						User
 					</th>
 					<td>
-						" . user_dropdown('user') . "
+						" . dropdownUser('user') . "
 					</td>
 				</tr>
 				

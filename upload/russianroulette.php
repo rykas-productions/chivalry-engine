@@ -55,7 +55,7 @@ function home()
                  User
             </th>
             <td>
-                " . user_dropdown('user', $userid) . "
+                " . dropdownUser('user', $userid) . "
             </td>
         </tr>
         <tr>
@@ -249,7 +249,7 @@ function dorr()
     $api->user->takeCurrency($userid, 'primary', $r);
     $max = PHP_INT_MAX;
     $half = $max / 2;
-    $rand = Random(0, $max);
+    $rand = randomNumber(0, $max);
     $actuallywon = (($r * 2) * 0.9);
     if ($rand <= $half) {
         //You win
@@ -272,7 +272,7 @@ function dorr()
     }
     $api->user->addNotification($_GET['id'], $NotifText);
     $api->user->giveCurrency($winner, 'primary', $actuallywon);
-    $api->user->setInfirmary($loser, Random(10, 35), "Deadly Games");
+    $api->user->setInfirmary($loser, randomNumber(10, 35), "Deadly Games");
     $api->user->setInfoStatic($loser, 'hp', 0);
     $db->query("DELETE FROM `russian_roulette`
                 WHERE `challenger` = {$_GET['id']}

@@ -40,7 +40,7 @@ function create()
         die($h->endpage());
     }
     if (!isset($_POST['itemname'])) {
-        $csrf = request_csrf_html('staff_newitem');
+        $csrf = getHtmlCSRF('staff_newitem');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -64,7 +64,7 @@ function create()
 					Item Type
 				</th>
 				<td>
-					" . itemtype_dropdown('itmtype') . "
+					" . dropdownItemType('itmtype') . "
 				</td>
 			</tr>
 			<tr>
@@ -172,7 +172,7 @@ function create()
 		{$csrf}
 		</form>";
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newitem', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_newitem', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
             die($h->endpage());
         }
@@ -249,7 +249,7 @@ function createitmgroup()
         die($h->endpage());
     }
     if (!isset($_POST['name'])) {
-        $csrf = request_csrf_html('staff_newitemtype');
+        $csrf = getHtmlCSRF('staff_newitemtype');
         echo "
         <h4>Create Item Group</h4>
 		<form method='post'>
@@ -273,7 +273,7 @@ function createitmgroup()
            ";
     } else {
         $name = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newitemtype', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_newitemtype', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
             die($h->endpage());
         }
@@ -302,7 +302,7 @@ function deleteitem()
         die($h->endpage());
     }
     if (!isset($_POST['item'])) {
-        $csrf = request_csrf_html('staff_killitem');
+        $csrf = getHtmlCSRF('staff_killitem');
         echo "<h4>Deleting an Item</h4>
 		The item you select will be deleted permanently. There isn't a confirmation prompt, so be 100% sure.
 		<form method='post'>
@@ -312,7 +312,7 @@ function deleteitem()
 						Item
 					</th>
 					<td>
-						" . item_dropdown('item') . "
+						" . dropdownItem('item') . "
 					</td>
 				</tr>
 				<tr>
@@ -324,7 +324,7 @@ function deleteitem()
 			{$csrf}
 		</form>";
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_killitem', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_killitem', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
             die($h->endpage());
         }
@@ -362,7 +362,7 @@ function giveitem()
     }
     if (!isset($_POST['user']) || !isset($_POST['item'])) {
         echo "<h3>Gift Item Form</h3>";
-        $csrf = request_csrf_html('staff_giveitem');
+        $csrf = getHtmlCSRF('staff_giveitem');
         echo "
 		<form method='post'>
 			<table class='table table-bordered table-responsive'>
@@ -371,7 +371,7 @@ function giveitem()
 						User
 					</th>
 					<td>
-						" . user_dropdown('user') . "
+						" . dropdownUser('user') . "
 					</td>
 				</tr>
 				<tr>
@@ -379,7 +379,7 @@ function giveitem()
 						Item
 					</th>
 					<td>
-						" . item_dropdown('item') . "
+						" . dropdownItem('item') . "
 					</td>
 				</tr>
 				<tr>
@@ -399,7 +399,7 @@ function giveitem()
 			</table>
 		</form>";
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_giveitem', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_giveitem', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
             die($h->endpage());
         }
@@ -450,7 +450,7 @@ function edititem()
         $_POST['step'] = 0;
     }
     if ($_POST['step'] == 2) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_edititem1', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_edititem1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
             die($h->endpage());
         }
@@ -467,7 +467,7 @@ function edititem()
         }
         $itemi = $db->fetch_row($d);
         $db->free_result($d);
-        $csrf = request_csrf_html('staff_edititem2');
+        $csrf = getHtmlCSRF('staff_edititem2');
         $itmname = addslashes($itemi['itmname']);
         $itmdesc = addslashes($itemi['itmdesc']);
         echo "<form method='post'>
@@ -495,7 +495,7 @@ function edititem()
 					Item Type
 				</th>
 				<td>
-					" . itemtype_dropdown('itmtype', $itemi['itmtype']) . "
+					" . dropdownItemType('itmtype', $itemi['itmtype']) . "
 				</td>
 			</tr>
 			<tr>
@@ -618,7 +618,7 @@ function edititem()
 		{$csrf}
 		</form>";
     } elseif ($_POST['step'] == 3) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_edititem2', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_edititem2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
             die($h->endpage());
         }
@@ -687,7 +687,7 @@ function edititem()
         alert('success', "Success!", "You successfully have edited the {$api->SystemItemIDtoName($itemid)} item.", true, 'index.php');
         $api->game->addLog($userid, 'staff', "Edited Item {$api->SystemItemIDtoName($itemid)}.");
     } else {
-        $csrf = request_csrf_html('staff_edititem1');
+        $csrf = getHtmlCSRF('staff_edititem1');
         echo "
 	<table class='table table-bordered'>
 		<form method='post'>
@@ -701,7 +701,7 @@ function edititem()
 					Item
 				</th>
 				<td>
-					" . item_dropdown('item') . "
+					" . dropdownItem('item') . "
 				</td>
 			</tr>
 			<tr>

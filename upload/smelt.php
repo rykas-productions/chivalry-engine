@@ -116,7 +116,7 @@ function smelt()
             $db->query("INSERT INTO `smelt_inprogress` (
 				`sip_user`, `sip_recipe`, `sip_time`) 
 				VALUES ('{$userid}', '{$_GET['id']}', '{$rcomplete}');");
-            $friendlytime = TimeUntil_Parse(time() + $r['smelttime']);
+            $friendlytime = timeUntilParse(time() + $r['smelttime']);
             alert('success', "Success!", "You have begun to smelt this item. It will be complete in {$friendlytime}.", true, "smelt.php");
         } else {
             alert('success', "Success!", "You have successfully smelted this item. It is in your inventory.", true, "smelt.php");

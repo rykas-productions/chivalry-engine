@@ -9,8 +9,8 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
-//Random number generator for anti-refreshing.
-$tresder = (Random(100, 999));
+//randomNumber number generator for anti-refreshing.
+$tresder = (randomNumber(100, 999));
 //User's max bet is their level * 500, capping out at 10,000
 $maxbet = (10000 < $ir['level'] * 500) ? 10000 : $ir['level'] * 500;
 $tresde = filter_input(INPUT_GET, 'tresde', FILTER_SANITIZE_NUMBER_INT) ?: 0;
@@ -40,8 +40,8 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
         die($h->endpage());
     } else {
         //Bind guessed number from SESSION into a variable.
-        $guessed = (isset($_SESSION['number']) && is_numeric($_SESSION['number'])) ? abs($_SESSION['number']) : Random(1, 100);
-        $numb = Random(1, 100);
+        $guessed = (isset($_SESSION['number']) && is_numeric($_SESSION['number'])) ? abs($_SESSION['number']) : randomNumber(1, 100);
+        $numb = randomNumber(1, 100);
         //Take the player's better.
         $api->user->takeCurrency($userid, 'primary', $maxbet);
         //Change is suspected to be higher, but new number is lower than original number.
@@ -81,7 +81,7 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
     }
 } else {
     //Generate starting number and bind it to SESSION.
-    $numb = Random(1, 100);
+    $numb = randomNumber(1, 100);
     $_SESSION['number'] = $numb;
     echo "Welcome to High/Low. Here you will place a bet whether or not the next drawn number will be higher or lower
         than the currently drawn number. The number range is 1 through 100.<br />

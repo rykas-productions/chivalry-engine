@@ -24,22 +24,22 @@ function one()
 {
     global $db, $from, $set, $api, $h;
     if (isset($_POST['email'])) {
-        if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email']))) {
+        if (!isset($_POST['email']) || !validEmail(stripslashes($_POST['email']))) {
             alert('danger', "Uh Oh!", "You input an invalid email address.", false);
             die($h->endpage());
         }
         $e_email = $db->escape(stripslashes($_POST['email']));
         $IP = $db->escape($_SERVER['REMOTE_ADDR']);
         $email = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'"));
-        $token = randomizer();
+        $token = getrandomNumberString();
         if ($email > 0) {
             $to = $e_email;
             $subject = "{$set['WebsiteName']} Password Recovery";
-            $body = "Recently, someone has attempted to reset your password. Click <a href='http://" . determine_game_urlbase() . "/pwreset.php?step=two&code={$token}'>here</a>
+            $body = "Recently, someone has attempted to reset your password. Click <a href='http://" . getGameURL() . "/pwreset.php?step=two&code={$token}'>here</a>
 			to start the password reset process. If this wasn't you, do not click this link. 
 			The link will expire approximately 30 minutes after the password reset process.<br />
 			<br />
-			If you cannot click the URL for whatever reason, please paste in http://" . determine_game_urlbase() . "/pwreset.php?step=two&code={$token} into your URL bar.";
+			If you cannot click the URL for whatever reason, please paste in http://" . getGameURL() . "/pwreset.php?step=two&code={$token} into your URL bar.";
             $api->game->sendEmail($to, $body, $subject, $from);
             $expire = time() + 1800;
             $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$e_email}'");
@@ -69,14 +69,14 @@ function two()
             alert('danger', "Uh Oh!", "Your password recovery token has expired.", false);
         } else {
             $pwr = $db->fetch_row($db->query("SELECT * FROM `pw_recovery` WHERE `pwr_code` = '{$token}'"));
-            $pw = substr(randomizer(), 0, 16);
+            $pw = substr(getrandomNumberString(), 0, 16);
             $to = $pwr['pwr_email'];
             $subject = "{$set['WebsiteName']} Password Recovery";
             $body = "Your password has been successfully updated to {$pw}
 			<br /> Please use this to log in from now on. We highly recommend changing your password as soon as you log in.";
             $api->game->sendEmail($to, $body, $subject, $from);
             $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$pwr['pwr_email']}'");
-            $e_pw = encode_password($pw);
+            $e_pw = encodePassword($pw);
             $db->query("UPDATE `users` SET `password` = '{$e_pw}' WHERE `email` = '{$pwr['pwr_email']}'");
             $db->query("DELETE FROM `pw_recovery` WHERE `pwr_code` = '{$token}'");
             alert('success', "Success!", "Your new password has been emailed to you. If you were previously logged in,

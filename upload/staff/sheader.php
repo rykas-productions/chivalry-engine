@@ -415,7 +415,7 @@ class headers
             }
             if ($ir['fedjail'] > 0) {
                 alert('info', "Federal Dungeon!", "You have been placed in the Federal Dungeon for
-                        " . TimeUntil_Parse($fed['fed_out']) . " You are in for the crime of <b>{$fed['fed_reason']}</b>", false);
+                        " . timeUntilParse($fed['fed_out']) . " You are in for the crime of <b>{$fed['fed_reason']}</b>", false);
                 die($h->endpage());
             }
             if ($ir['mail'] > 0) {
@@ -429,12 +429,12 @@ class headers
             }
             if ($api->user->inInfirmary($ir['userid'])) {
                 $InfirmaryOut = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
-                $InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
+                $InfirmaryRemain = timeUntilParse($InfirmaryOut);
                 alert('info', "Unconscious!", "You are in the infirmary for the next {$InfirmaryRemain}.", true, '../inventory', 'View Inventory');
             }
             if ($api->user->inDungeon($ir['userid'])) {
                 $DungeonOut = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
-                $DungeonRemain = TimeUntil_Parse($DungeonOut);
+                $DungeonRemain = timeUntilParse($DungeonOut);
                 alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, '../inventory', 'View Inventory');
             }
         }
@@ -453,7 +453,7 @@ class headers
             $_SESSION['attacking'] = 0;
         }
         if ($dosessh && ($_SESSION['attacking'] || $ir['attacking'])) {
-            $hosptime = Random(10, 50);
+            $hosptime = randomNumber(10, 50);
             $api->user->setInfirmary($userid, $hosptime, "Ran from a fight");
             alert("warning", "Uh Oh!", "For leaving your previous fight, you were placed in the Infirmary for {$hosptime}
             minutes, and lost all your experience.", false);

@@ -22,7 +22,7 @@ require "../lib/basic_error_handler.php";
 require "../lib/dev_help.php";
 set_error_handler('error_php');
 require "../global_func.php";
-$domain = determine_game_urlbase();
+$domain = getGameURL();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) {
     $login_url = "../login.php";
     header("Location: {$login_url}");
@@ -101,8 +101,8 @@ if (!$api->user->getStaffLevel($userid, 'forum moderator')) {
     $index = ('../index.php');
     header("Location: {$index}");
 }
-check_level();
-check_data();
+checkLevel();
+checkData();
 $h = new headers;
 $h->startheaders();
 $fm = number_format($ir['primary_currency']);

@@ -68,7 +68,7 @@ function news_home()
         echo "	<tr>
 					<td>
 						Posted By <a href='profile.php?user={$Ads['news_owner']}'>{$UserName}</a> [{$Ads['news_owner']}]<br />
-						<small>Posted At: " . DateTime_Parse($Ads['news_start']) . "<br />
+						<small>Posted At: " . dateTimeParse($Ads['news_start']) . "<br />
 						Ad Ends: " . date('F j, Y g:i:s a', $Ads['news_end']) . "</small>
 					</td>
 					<td>
@@ -89,7 +89,7 @@ function news_buy()
         $days = (isset($_POST['ad_length']) && is_numeric($_POST['ad_length'])) ? abs($_POST['ad_length']) : 0;
 
         //Verify CSRF check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code("buy_ad", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("buy_ad", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
@@ -118,7 +118,7 @@ function news_buy()
                     ('{$totalcost}', '{$CurrentTime}', '{$endtime}', '{$userid}', '{$ad}')");
 
     } else {
-        $csrf = request_csrf_html('buy_ad');
+        $csrf = getHtmlCSRF('buy_ad');
         echo "<h3>Buying an Ad</h3>
         " . alert("info", "Information!", "Remember, buying an ad is subject to the game rules. If you post something
             here that will break a game rule, you will be warned and your ad will be removed. If you find someone abusing

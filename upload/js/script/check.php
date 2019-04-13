@@ -15,7 +15,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD'])) 
     }
 }
 require_once('../../global_func.php');
-if (!is_ajax()) {
+if (!isAjax()) {
     header('HTTP/1.1 400 Bad Request');
     exit;
 }

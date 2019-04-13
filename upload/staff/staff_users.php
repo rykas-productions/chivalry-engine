@@ -45,7 +45,7 @@ function createuser()
         die($h->endpage());
     }
     if (!isset($_POST['username'])) {
-        $csrf = request_csrf_html('staff_user_1');
+        $csrf = getHtmlCSRF('staff_user_1');
         echo "<hr /><h4>Create a User</h4><hr />";
         echo "
 			<table class='table table-bordered'>
@@ -217,7 +217,7 @@ function createuser()
 							Town
 						</th>
 						<td>
-							" . location_dropdown("city") . "
+							" . dropdownLocation("city") . "
 						</td>
 					</tr>
 					<tr>
@@ -225,7 +225,7 @@ function createuser()
 							Primary Weapon
 						</th>
 						<td>
-							" . weapon_dropdown("primary_weapon", 0) . "
+							" . dropdownWeapon("primary_weapon", 0) . "
 						</td>
 					</tr>
 					<tr>
@@ -233,7 +233,7 @@ function createuser()
 							Secondary Weapon
 						</th>
 						<td>
-							" . weapon_dropdown("secondary_weapon", 0) . "
+							" . dropdownWeapon("secondary_weapon", 0) . "
 						</td>
 					</tr>
 					<tr>
@@ -241,7 +241,7 @@ function createuser()
 							Armor
 						</th>
 						<td>
-							" . armor_dropdown("armor", 0) . "
+							" . dropdownArmor("armor", 0) . "
 						</td>
 					</tr>
 					<tr>
@@ -253,7 +253,7 @@ function createuser()
 				</form>
 			</table>";
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_user_1', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_user_1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
         }
@@ -276,7 +276,7 @@ function createuser()
         $equip_armor = (isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
         $city = (isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : 1;
 
-        if (!isset($_POST['email']) || !valid_email(stripslashes($_POST['email']))) {
+        if (!isset($_POST['email']) || !validEmail(stripslashes($_POST['email']))) {
             alert('danger', "Uh Oh!", "You input an invalid email address.");
             die($h->endpage());
         }
@@ -352,7 +352,7 @@ function createuser()
             $Energy = (20) + $_POST['level'] * 4;
             $Brave = (6) + $_POST['level'] * 4;
             $time = time();
-            $encpsw = encode_password($pw);
+            $encpsw = encodePassword($pw);
             $e_encpsw = $db->escape($encpsw);
             $db->query("INSERT INTO `users`
 			(`userid`, `username`, `user_level`, `email`, `password`, `level`, 
@@ -370,7 +370,7 @@ function createuser()
             $db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
             $db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
             alert('success', "Success!", "You have successfully created the user named {$e_username}.", true, 'index.php');
-            $api->SystemLogsAdd($userid, 'staff', "Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
+            $api->$game->addLog($userid, 'staff', "Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
         }
     }
 }
@@ -382,7 +382,7 @@ function edituser()
         $_POST['step'] = 0;
     }
     if ($_POST['step'] == 2) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser1', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_edituser1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
         }
@@ -423,7 +423,7 @@ function edituser()
         if ($itemi['dungeon'] < 0) {
             $itemi['dungeon'] = 0;
         }
-        $csrf = request_csrf_html('staff_edituser2');
+        $csrf = getHtmlCSRF('staff_edituser2');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -518,7 +518,7 @@ function edituser()
 					Estate
 				</th>
 				<td>
-					" . estate2_dropdown("maxwill", $itemi['maxwill']) . "
+					" . dropdownEstateWill("maxwill", $itemi['maxwill']) . "
 				</td>
 			</tr>
 			<tr>
@@ -576,7 +576,7 @@ function edituser()
 					Town
 				</th>
 				<td>
-					" . location_dropdown("city", $itemi['location']) . "
+					" . dropdownLocation("city", $itemi['location']) . "
 				</td>
 			</tr>
 			<tr>
@@ -584,7 +584,7 @@ function edituser()
 					Primary Weapon
 				</th>
 				<td>
-					" . weapon_dropdown("primary_weapon", $itemi['equip_primary']) . "
+					" . dropdownWeapon("primary_weapon", $itemi['equip_primary']) . "
 				</td>
 			</tr>
 			<tr>
@@ -592,7 +592,7 @@ function edituser()
 					Secondary Weapon
 				</th>
 				<td>
-					" . weapon_dropdown("secondary_weapon", $itemi['equip_secondary']) . "
+					" . dropdownWeapon("secondary_weapon", $itemi['equip_secondary']) . "
 				</td>
 			</tr>
 			<tr>
@@ -600,7 +600,7 @@ function edituser()
 					Armor
 				</th>
 				<td>
-					" . armor_dropdown("armor", $itemi['equip_armor']) . "
+					" . dropdownArmor("armor", $itemi['equip_armor']) . "
 				</td>
 			</tr>
 		</table>
@@ -609,7 +609,7 @@ function edituser()
     </form>
        ";
     } elseif ($_POST['step'] == 3) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_edituser2', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_edituser2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
         }
@@ -710,9 +710,9 @@ function edituser()
             $api->UserStatusSet($user, 'dungeon', $_POST['dungeon'], $dungeonr);
         }
         alert('success', "Success!", "You have successfully edited {$username}'s account.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
+        $api->$game->addLog($userid, 'staff', "Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
     } else {
-        $csrf = request_csrf_html('staff_edituser1');
+        $csrf = getHtmlCSRF('staff_edituser1');
         echo "Editing an User
     <br />
 	<table class='table table-bordered'>
@@ -727,7 +727,7 @@ function edituser()
 					User
 				</th>
 				<td>
-					" . user_dropdown('user') . "
+					" . dropdownUser('user') . "
 				</td>
 			</tr>
 			<tr>
@@ -777,7 +777,7 @@ function deleteuser()
     }
     switch ($_GET['step']) {
         default:
-            $csrf = request_csrf_html('staff_deluser1');
+            $csrf = getHtmlCSRF('staff_deluser1');
             echo "<table class='table table-bordered'>
 				<tr>
 					<th colspan='2'>
@@ -791,7 +791,7 @@ function deleteuser()
 						User
 					</th>
 					<td>
-						" . user_dropdown('user') . "
+						" . dropdownUser('user') . "
 					</td>
 				</tr>
 				<tr>
@@ -825,7 +825,7 @@ function deleteuser()
             break;
         case 2:
             $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
-            if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser1', stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF('staff_deluser1', stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
                 die($h->endpage());
             }
@@ -841,7 +841,7 @@ function deleteuser()
             }
             $username = htmlentities($db->fetch_single($d), ENT_QUOTES, 'ISO-8859-1');
             $db->free_result($d);
-            $csrf = request_csrf_html('staff_deluser2');
+            $csrf = getHtmlCSRF('staff_deluser2');
             echo "
 			<form action='?action=deleteuser&step=3' method='post'>
 			<input type='hidden' name='userid' value='{$_POST['user']}' />
@@ -864,7 +864,7 @@ function deleteuser()
 			</form>";
             break;
         case 3:
-            if (!isset($_POST['verf']) || !verify_csrf_code('staff_deluser2', stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF('staff_deluser2', stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
                 die($h->endpage());
             }
@@ -888,7 +888,7 @@ function deleteuser()
             $db->query("DELETE FROM `userstats` WHERE `userid` = {$_POST['userid']}");
             $db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$_POST['userid']}");
             $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['userid']}");
-            $api->SystemLogsAdd($userid, 'staff', "Deleted user {$username} [{$_POST['userid']}].");
+            $api->$game->addLog($userid, 'staff', "Deleted user {$username} [{$_POST['userid']}].");
             alert("success", "Success!", "You have deleted {$username}'s account.", true, 'index.php');
             die($h->endpage());
             break;
@@ -904,7 +904,7 @@ function logout()
     }
     $_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
     if (!empty($_POST['userid'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_forcelogout', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_forcelogout', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
         }
@@ -916,10 +916,10 @@ function logout()
         }
         $db->free_result($d);
         $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `userid` = {$_POST['userid']}");
-        $api->SystemLogsAdd($userid, 'staff', "Forced User ID {$_POST['userid']} to log out.");
+        $api->$game->addLog($userid, 'staff', "Forced User ID {$_POST['userid']} to log out.");
         alert("success", "Success!", "You have successfully forced User ID {$_POST['userid']} to log out.", true, 'index.php');
     } else {
-        $csrf = request_csrf_html('staff_forcelogout');
+        $csrf = getHtmlCSRF('staff_forcelogout');
         echo "
 		<form action='?action=logout' method='post'>
 			<table class='table table-bordered'>
@@ -933,7 +933,7 @@ function logout()
 						User
 					</th>
 					<td>
-						" . user_dropdown('userid') . "
+						" . dropdownUser('userid') . "
 					</td>
 				</tr>
 				<tr>
@@ -957,7 +957,7 @@ function changepw()
     if ((isset($_POST['user'])) && (isset($_POST['pw']))) {
         $pw = stripslashes($_POST['pw']);
         $user = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_changepw', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_changepw', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
         }
@@ -970,12 +970,12 @@ function changepw()
             alert('danger', "Uh Oh!", "You cannot change an Administrator's password.");
             die($h->endpage());
         }
-        $new_psw = $db->escape(encode_password($pw));
+        $new_psw = $db->escape(encodePassword($pw));
         $db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$user}");
         alert('success', "Success!", "You have successfully changed User ID {$user}'s password.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Changed User ID {$user}'s password.");
+        $api->$game->addLog($userid, 'staff', "Changed User ID {$user}'s password.");
     } else {
-        $csrf = request_csrf_html('staff_changepw');
+        $csrf = getHtmlCSRF('staff_changepw');
         echo "
 		<form action='?action=changepw' method='post'>
 			<table class='table table-bordered'>
@@ -989,7 +989,7 @@ function changepw()
 						User
 					</th>
 					<td>
-						" . user_dropdown('user') . "
+						" . dropdownUser('user') . "
 					</td>
 				</tr>
 				<tr>
@@ -1025,7 +1025,7 @@ function masspay()
             alert('danger', "Uh Oh", "If you wish to give a mass payment, please give either {$_CONFIG['primary_currency']} or Secondary Currency.");
             die($h->endpage());
         }
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_masspay', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_masspay', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
         }
@@ -1037,9 +1037,9 @@ function masspay()
             echo "Successfully paid {$r['username']}.<br />";
         }
         alert('success', 'Success!', "You have successfully mass paid the game.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} Secondary Currency.");
+        $api->$game->addLog($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} Secondary Currency.");
     } else {
-        $csrf = request_csrf_html('staff_masspay');
+        $csrf = getHtmlCSRF('staff_masspay');
         echo "<table class='table table-bordered'>
         <form method='post'>
         {$csrf}
@@ -1084,7 +1084,7 @@ function preport()
     echo "<h3>Player Reports</h3><hr />";
     if (isset($_GET['ID'])) {
         $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : 0;
-        if (!isset($_GET['verf']) || !verify_csrf_code('staff_delreport', stripslashes($_GET['verf']))) {
+        if (!isset($_GET['verf']) || !checkCSRF('staff_delreport', stripslashes($_GET['verf']))) {
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.", false);
             die($h->endpage());
         } else {
@@ -1093,13 +1093,13 @@ function preport()
                 alert('danger', "Uh Oh!", "This report does not exist!", false);
             } else {
                 $db->query("DELETE FROM `reports` WHERE `report_id` = {$_GET['ID']}");
-                $api->SystemLogsAdd($userid, 'staff', "Cleared Player Report ID #{$_GET['ID']}.");
+                $api->$game->addLog($userid, 'staff', "Cleared Player Report ID #{$_GET['ID']}.");
                 alert('success', "Success!", "You have successfully cleared Player Report ID #{$_GET['ID']}.", false);
             }
         }
     }
     $q = $db->query("SELECT * FROM `reports`");
-    $csrf = request_csrf_code('staff_delreport');
+    $csrf = getCodeCSRF('staff_delreport');
     echo "<table class='table table-bordered'>
     <tr>
         <th>

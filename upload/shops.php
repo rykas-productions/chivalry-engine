@@ -141,7 +141,7 @@ function buy()
 				die($h->endpage());
 			}
 			$price = $itemd['itmbuyprice'] * $_POST['qty'];
-			item_add($userid, $itemd['itmid'], $_POST['qty']);
+			addItem($userid, $itemd['itmid'], $_POST['qty']);
 			$db->query(
 				"UPDATE `users`
 					 SET `primary_currency` = `primary_currency` - $price

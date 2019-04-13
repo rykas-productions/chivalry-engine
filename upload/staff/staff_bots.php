@@ -31,7 +31,7 @@ function addbot()
 {
     global $db, $api, $h, $userid;
     if (isset($_POST['user'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_bot_add', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_bot_add', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Try again, but be quicker!");
             die($h->endpage());
         } else {
@@ -64,7 +64,7 @@ function addbot()
             die($h->endpage());
         }
     } else {
-        $csrf = request_csrf_html('staff_bot_add');
+        $csrf = getHtmlCSRF('staff_bot_add');
         echo "
 		<form method='post'>
 			<table class='table table-bordered'>
@@ -78,7 +78,7 @@ function addbot()
 						Bot
 					</th>
 					<td>
-						" . user2_dropdown('user') . "
+						" . dropdownNPC('user') . "
 					</td>
 				</tr>
 				<tr>
@@ -86,7 +86,7 @@ function addbot()
 						Item Drop
 					</th>
 					<td>
-						" . item_dropdown('item') . "
+						" . dropdownItem('item') . "
 					</td>
 				</tr>
 				<tr>
@@ -112,7 +112,7 @@ function delbot()
 {
     global $db, $userid, $api, $h;
     if (isset($_POST['bot'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_bot_del', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_bot_del', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Try again, but be quicker!");
             die($h->endpage());
         } else {
@@ -132,7 +132,7 @@ function delbot()
             $api->game->addLog($userid, 'staff', "Deleted User ID {$bot} from the bot list.");
         }
     } else {
-        $csrf = request_csrf_html('staff_bot_del');
+        $csrf = getHtmlCSRF('staff_bot_del');
         echo "
 		<form action='?action=delbot' method='post'>
 		<table class='table table-bordered'>
@@ -146,7 +146,7 @@ function delbot()
 					Bot
 				</th>
 				<td>
-					" . npcbot_dropdown() . "
+					" . dropdownNPCBot() . "
 				</td>
 			</tr>
 			<tr>

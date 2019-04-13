@@ -19,7 +19,7 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
     				 WHERE `ac_id` = {$ir['course']}");
     $coud = $db->fetch_row($cd);
     $db->free_result($cd);
-    echo "You are currently enrolled in the {$coud['ac_name']} course. You will be finished in " . TimeUntil_Parse($ir['course_complete']) . ".";
+    echo "You are currently enrolled in the {$coud['ac_name']} course. You will be finished in " . timeUntilParse($ir['course_complete']) . ".";
     die($h->endpage());
 }
 if (!isset($_GET['action'])) {

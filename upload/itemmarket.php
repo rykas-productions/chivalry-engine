@@ -128,7 +128,7 @@ function remove()
         die($h->endpage());
     }
     $r = $db->fetch_row($q);
-    item_add($userid, $r['imITEM'], $r['imQTY']);
+    addItem($userid, $r['imITEM'], $r['imQTY']);
     $db->query("DELETE FROM `itemmarket` WHERE `imID` = {$_GET['ID']}");
     $imr_log = $db->escape("Removed {$r['itmname']} x {$r['imQTY']} from the item market.");
     $api->game->addLog($userid, 'imarket', $imr_log);
@@ -153,7 +153,7 @@ function buy()
         }
         $r = $db->fetch_row($q);
         $db->free_result($q);
-        $csrf = request_csrf_html("imbuy_{$ID}");
+        $csrf = getHtmlCSRF("imbuy_{$ID}");
         echo "<form method='post' action='?action=buy&ID={$ID}'>
 		<table class='table table-bordered'>
 			<tr>
@@ -191,7 +191,7 @@ function buy()
         }
         $r = $db->fetch_row($q);
         $db->free_result($q);
-        if (!isset($_POST['verf']) || !verify_csrf_code("imbuy_{$ID}", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("imbuy_{$ID}", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
             die($h->endpage());
         }
@@ -214,7 +214,7 @@ function buy()
             alert('danger', "Uh Oh!", "You are trying to buy more than there's currently available in this listing.");
             die($h->endpage());
         }
-        item_add($userid, $r['imITEM'], $QTY);
+        addItem($userid, $r['imITEM'], $QTY);
         if ($_POST['QTY'] == $r['imQTY']) {
             $db->query("DELETE FROM `itemmarket` WHERE `imID` = {$ID}");
         } elseif ($_POST['QTY'] < $r['imQTY']) {
@@ -222,7 +222,7 @@ function buy()
         }
         $db->query("UPDATE `users` SET `$curr` = `$curr` - {$final_price} WHERE `userid` = $userid");
         $db->query("UPDATE `users` SET `$curr` = `$curr` + {$final_price} WHERE `userid` = {$r['imADDER']}");
-        notification_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought
+        addNotification($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought
                 {$_POST['QTY']} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
         $imb_log = $db->escape("Bought {$r['itmname']} x {$QTY} from the item market for
 			    " . number_format($final_price) . " {$curre} from user ID {$r['imADDER']}");
@@ -246,7 +246,7 @@ function gift()
             alert('danger', "Uh Oh!", "Please fill out the previous form completely before submitting it.");
             die($h->endpage());
         }
-        if (!isset($_POST['verf']) || !verify_csrf_code("imgift_{$ID}", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("imgift_{$ID}", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
             die($h->endpage());
         }
@@ -294,7 +294,7 @@ function gift()
             alert('danger', "Uh Oh!", "You cannot gift this listing to the listing owner.");
             die($h->endpage());
         }
-        item_add($user, $r['imITEM'], $QTY);
+        addItem($user, $r['imITEM'], $QTY);
         if ($QTY == $r['imQTY']) {
             $db->query(
                 "DELETE FROM `itemmarket`
@@ -304,9 +304,9 @@ function gift()
         }
         $db->query("UPDATE `users` SET `{$curr}` = `{$curr}` - {$final_price} WHERE `userid`= {$userid}");
         $db->query("UPDATE `users` SET `{$curr}` = `{$curr}` + {$final_price} WHERE `userid` = {$r['imADDER']}");
-        notification_add($POST_ID, "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought you
+        addNotification($POST_ID, "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought you
             {$QTY} {$r['itmname']}(s) from the market.");
-        notification_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought
+        addNotification($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought
             {$QTY} {$r['itmname']}(s) from the market for " . number_format($final_price) . " {$curre}.");
         $imb_log = $db->escape("Bought {$r['itmname']} x{$_POST['QTY']} from the item market for
 		    " . number_format($final_price) . " {$curre} from User ID {$r['imADDER']} and gifted to User ID {$_POST['user']}");
@@ -327,7 +327,7 @@ function gift()
         }
         $r = $db->fetch_row($q);
         $db->free_result($q);
-        $csrf = request_csrf_html("imgift_{$ID}");
+        $csrf = getHtmlCSRF("imgift_{$ID}");
         echo "<form method='post' action='?action=gift&ID={$ID}'>
 		<input type='hidden' name='ID' value='{$ID}' />
 		<table class='table table-bordered'>
@@ -342,7 +342,7 @@ function gift()
 					Gift To
 				</th>
 				<td>
-					" . user_dropdown('user') . "
+					" . dropdownUser('user') . "
 				</td>
 			</tr>
 			<tr>
@@ -372,7 +372,7 @@ function add()
     $id = filter_input(INPUT_POST, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $_POST['currency'] = (isset($_POST['currency']) && in_array($_POST['currency'], array('primary', 'secondary'))) ? $_POST['currency'] : 'primary';
     if ($price && $QTY && $id) {
-        if (!isset($_POST['verf']) || !verify_csrf_code("imadd_form", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("imadd_form", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
             die($h->endpage());
         }
@@ -393,7 +393,7 @@ function add()
 							'{$_POST['currency']}', {$QTY})");
             }
             $db->free_result($checkq);
-            item_remove($userid, $id, $qty);
+            takeItem($userid, $id, $qty);
             $itemname=$api->game->getItemNameFromID($id);
             $imadd_log = $db->escape("Listed {$QTY} {$itemname}(s) on the item market for {$price} {$_POST['currency']}");
             $api->game->addLog($userid, 'imarket', $imadd_log);
@@ -401,7 +401,7 @@ function add()
 			    market for {$price} {$_POST['currency']}.", true, 'itemmarket.php');
         }
     } else {
-        $csrf = request_csrf_html("imadd_form");
+        $csrf = getHtmlCSRF("imadd_form");
         echo "<form method='post' action='?action=add'>
 		<table class='table table-bordered'>
 			<tr>
@@ -414,7 +414,7 @@ function add()
 					Item
 				</th>
 				<td>
-					" . inventory_dropdown('ID') . "
+					" . dropdownInventory('ID') . "
 				</th>
 			</tr>
 			<tr>

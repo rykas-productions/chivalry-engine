@@ -25,7 +25,7 @@ if (!empty($qty) && !empty($id)) {
 		alert('danger', "Uh Oh!", "You do not have this item to sell.", true, 'inventory.php');
 	} else {
 		$r = $db->fetch_row($id);
-		if (!isset($_POST['verf']) || !verify_csrf_code("sellitem_{$id}", stripslashes($_POST['verf']))) {
+		if (!isset($_POST['verf']) || !checkCSRF("sellitem_{$id}", stripslashes($_POST['verf']))) {
 			alert('danger', "Action Blocked!", "We have blocked your action. Please fill out the form quickly.");
 			die($h->endpage());
 		}
@@ -57,7 +57,7 @@ if (!empty($qty) && !empty($id)) {
 		alert('danger', "Uh Oh!", "You are trying to sell an invalid or non-existent item.", true, 'inventory.php');
 	} else {
 		$r = $db->fetch_row($id);
-		$code = request_csrf_code("sellitem_{$id}");
+		$code = getCodeCSRF("sellitem_{$id}");
 		echo "
 		<b>You are attempting to sell your {$r['itmname']}(s) back to the game. You have
 		" . number_format($r['inv_qty']) . " to sell. How many do you wish to sell?</b>

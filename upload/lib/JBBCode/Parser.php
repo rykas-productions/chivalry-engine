@@ -351,7 +351,7 @@ class Parser
          * prevent stack overflow with a string like [[[[[[[[[...[[[.
          */
         while ('[' == $next) {
-            /* The previous [ was just a random bracket that should be treated as text.
+            /* The previous [ was just a randomNumber bracket that should be treated as text.
              * Continue until we get a non open bracket. */
             $this->createTextNode($parent, '[');
             if (!$tokenizer->hasNext()) {

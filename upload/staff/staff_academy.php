@@ -39,7 +39,7 @@ function addacademy()
 {
     global $h, $db, $userid, $api, $ir;
     if (!isset($_POST['name'])) {
-        $csrf = request_csrf_html('staff_newacademy');
+        $csrf = getHtmlCSRF('staff_newacademy');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 		<tr>
@@ -136,7 +136,7 @@ function addacademy()
 		{$csrf}
 		</form>";
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newacademy', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_newacademy', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
             die($h->endpage());
         }
@@ -174,7 +174,7 @@ function delacademy()
 {
     global $db, $ir, $h, $userid, $api;
     if (!isset($_POST['academy'])) {
-        $csrf = request_csrf_html('staff_delacademy');
+        $csrf = getHtmlCSRF('staff_delacademy');
         echo "<h4>Deleting an Academic Course</h4>
 			The academy you select will be deleted permanently. There isn't a confirmation prompt, so be 100% sure.
 			<form method='post'>
@@ -184,7 +184,7 @@ function delacademy()
 							Course
 						</th>
 						<td>
-							" . academy_dropdown('academy') . "
+							" . dropdownAcademy('academy') . "
 						</td>
 					</tr>
 					<tr>
@@ -196,7 +196,7 @@ function delacademy()
 				{$csrf}
 			</form>";
     } else {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_delacademy', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_delacademy', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
             die($h->endpage());
         }
@@ -274,12 +274,12 @@ function editacademy()
                 alert("danger", "Uh Oh!", "The course you are wishing to edit does not exist, or is invalid.");
                 die($h->endpage());
             }
-            if (!isset($_POST['verf']) || !verify_csrf_code('staff_editacademy1', stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF('staff_editacademy1', stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
                 die($h->endpage());
             }
             $r = $db->fetch_row($q);
-            $csrf = request_csrf_html('staff_editacademy2');
+            $csrf = getHtmlCSRF('staff_editacademy2');
             echo "<form method='post'>
                 <input type='hidden' name='step' value='2' />
         	    <input type='hidden' name='id' value='{$_POST['academy']}' />
@@ -379,12 +379,12 @@ function editacademy()
                 </form>";
             break;
         default:
-            $csrf = request_csrf_html('staff_editacademy1');
+            $csrf = getHtmlCSRF('staff_editacademy1');
             echo "<h3>Edit a Course</h3><hr />
             Please select the academy course you wish to edit.<br />
             <form method='post'>
                 <input type='hidden' name='step' value='1'>
-                " . academy_dropdown() . " <br />
+                " . dropdownAcademy() . " <br />
                 {$csrf}
                 <input type='submit' value='Edit Course' class='btn btn-primary'>
             </form>";

@@ -45,8 +45,8 @@ if (($r['guild'] == $ir['guild']) && ($ir['guild'] != 0)) {
 }
 //Spy has been bought, and all other tests have passed!
 if (isset($_POST['do']) && (isset($user))) {
-    //Random Number Generator to choose what happens.
-    $rand = Random(1, 4);
+    //randomNumber Number Generator to choose what happens.
+    $rand = randomNumber(1, 4);
     //Current user does not have the required Primary Currency to buy a spy.
     if ($ir['primary_currency'] < $r['level'] * 500) {
         alert("danger", "Uh Oh!", "You do not have enough {$_CONFIG['primary_currency']} to hire a spy to spy on this user.", true, "profile.php?user={$user}");
@@ -57,7 +57,7 @@ if (isset($_POST['do']) && (isset($user))) {
     //RNG equals 1 or 2, the spy has failed.
     if ($rand == 1 || $rand == 2) {
         //Specific event RNG
-        $rand2 = Random(1, 3);
+        $rand2 = randomNumber(1, 3);
         //Spy failed and the person being spied on only knows that /someone/ has made an attempt to spy on them.
         if ($rand2 <= 2) {
             $api->user->addNotification($user, "An unknown user has attempted to spy on you and failed.");
@@ -76,7 +76,7 @@ if (isset($_POST['do']) && (isset($user))) {
     } //RNG equals 3, send current player to the dungeon.
     elseif ($rand == 3) {
         alert("danger", "Uh Oh!", "Your hired spy actually turned out to be a dungeon guard. He arrests you.", true, "profile.php?user={$user}");
-        $dungtime = Random($ir['level'], $ir['level'] * 3);
+        $dungtime = randomNumber($ir['level'], $ir['level'] * 3);
         $api->user->setDungeon($userid, $dungtime, "Stalkerish Tendencies");
         $api->game->addLog($userid, 'spy', "Tried to spy on " . $api->user->getNamefromID($user) . " and was sent to the dungeon.");
         die($h->endpage());

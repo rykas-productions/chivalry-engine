@@ -36,7 +36,7 @@ function addtown()
     if (isset($_POST['name'])) {
         $level = (isset($_POST['minlevel']) && is_numeric($_POST['minlevel'])) ? abs(intval($_POST['minlevel'])) : 1;
         $name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_addtown', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_addtown', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action has been blocked for your security. Please submit the form quickly");
             die($h->endpage());
         }
@@ -52,10 +52,10 @@ function addtown()
         }
         $db->free_result($q);
         $db->query("INSERT INTO `town` (`town_name`, `town_min_level`) VALUES ('{$name}', '{$level}');");
-        $api->SystemLogsAdd($userid, 'staff', "Created a town named {$name}.");
+        $api->$game->addLog($userid, 'staff', "Created a town named {$name}.");
         alert('success', "Success!", "You have successfully created the {$name} town.", true, 'index.php');
     } else {
-        $csrf = request_csrf_html('staff_addtown');
+        $csrf = getHtmlCSRF('staff_addtown');
         echo "<form action='?action=addtown' method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -105,7 +105,7 @@ function deltown()
     if (isset($_POST['town'])) {
         $town = (isset($_POST['town']) && is_numeric($_POST['town'])) ? abs(intval($_POST['town'])) : 0;
         $q = $db->query("SELECT `town_id`, `town_name` FROM `town` WHERE `town_id` = {$town}");
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_deltown', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_deltown', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action has been blocked for your security. Please submit the form quickly");
             die($h->endpage());
         }
@@ -124,9 +124,9 @@ function deltown()
         $db->query("UPDATE `shops` SET `shopLOCATION` = 1 WHERE `shopLOCATION` = {$old['town_id']}");
         $db->query("DELETE FROM `town` WHERE `town_id` = {$old['town_id']}");
         alert('success', "Success!", "You have successfully removed the {$old['town_name']} town from the game.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Deleted the town called {$old['town_name']}.");
+        $api->$game->addLog($userid, 'staff', "Deleted the town called {$old['town_name']}.");
     } else {
-        $csrf = request_csrf_html('staff_deltown');
+        $csrf = getHtmlCSRF('staff_deltown');
         echo "
 		<form action='?action=deltown' method='post'>
 			<table class='table table-bordered'>
@@ -140,7 +140,7 @@ function deltown()
 						Town
 					</th>
 					<td>
-						" . location_dropdown("town") . "
+						" . dropdownLocation("town") . "
 					</td>
 				</tr>
 				<tr>
@@ -171,7 +171,7 @@ function edittown()
                 alert("danger", "Uh Oh!", "The town you are wishing to edit does not exist, or is invalid.");
                 die($h->endpage());
             }
-            if (!isset($_POST['verf']) || !verify_csrf_code('staff_edittown2', stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF('staff_edittown2', stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "This action has been blocked for your security. Please submit the form quickly");
                 die($h->endpage());
             }
@@ -190,7 +190,7 @@ function edittown()
                         SET `town_name` = '{$name}', `town_min_level` = {$level}
                         WHERE `town_id` = {$id}");
             alert("success", "Success!", "You have successfully edited the {$name} town.", true, 'index.php');
-            $api->SystemLogsAdd($userid, 'staff', "Edited the {$name} town.");
+            $api->$game->addLog($userid, 'staff', "Edited the {$name} town.");
             break;
         case 1:
             $_POST['location'] = (isset($_POST['location']) && is_numeric($_POST['location'])) ? abs(intval($_POST['location'])) : 0;
@@ -200,12 +200,12 @@ function edittown()
                 alert("danger", "Uh Oh!", "The town you are wishing to edit does not exist, or is invalid.");
                 die($h->endpage());
             }
-            if (!isset($_POST['verf']) || !verify_csrf_code('staff_edittown1', stripslashes($_POST['verf']))) {
+            if (!isset($_POST['verf']) || !checkCSRF('staff_edittown1', stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "Forms expire fairly quickly. Go back and submit it quicker!");
                 die($h->endpage());
             }
             $r = $db->fetch_row($q);
-            $csrf = request_csrf_html('staff_edittown2');
+            $csrf = getHtmlCSRF('staff_edittown2');
             echo "<form method='post'>
                 <input type='hidden' name='step' value='2' />
         	    <input type='hidden' name='id' value='{$_POST['location']}' />
@@ -241,12 +241,12 @@ function edittown()
                 </form>";
             break;
         default:
-            $csrf = request_csrf_html('staff_edittown1');
+            $csrf = getHtmlCSRF('staff_edittown1');
             echo "<h3>Edit a Town</h3><hr />
             Please select the town you wish to edit.<br />
             <form method='post'>
                 <input type='hidden' name='step' value='1'>
-                " . location_dropdown() . " <br />
+                " . dropdownLocation() . " <br />
                 {$csrf}
                 <input type='submit' value='Edit Town' class='btn btn-primary'>
             </form>";

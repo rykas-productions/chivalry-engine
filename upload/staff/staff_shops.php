@@ -41,7 +41,7 @@ function newshop()
 {
     global $h, $userid, $api, $db;
     if (isset($_POST['sn'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newshop', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_newshop', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action has been blocked for your security. Please fill in the form quickly next time.");
             die($h->endpage());
         }
@@ -66,12 +66,12 @@ function newshop()
             }
             $db->free_result($q);
             $db->query("INSERT INTO `shops` VALUES(NULL, {$_POST['sl']}, '{$_POST['sn']}', '{$_POST['sd']}')");
-            $api->SystemLogsAdd($userid, 'staff', "Created shop {$_POST['sn']}.");
+            $api->$game->addLog($userid, 'staff', "Created shop {$_POST['sn']}.");
             alert('success', "Success!", "You have successfully created the {$_POST['sn']} shop.", true, 'index.php');
             die($h->endpage());
         }
     } else {
-        $csrf = request_csrf_html('staff_newshop');
+        $csrf = getHtmlCSRF('staff_newshop');
         echo "
 		<form method='post'>
 		<table class='table table-bordered'>
@@ -101,7 +101,7 @@ function newshop()
 				Shop Location
 			</th>
 			<td>
-				" . location_dropdown("sl") . "
+				" . dropdownLocation("sl") . "
 			</td>
 		</tr>
 		{$csrf}
@@ -120,7 +120,7 @@ function delshop()
     global $db, $api, $h, $userid;
     $_POST['shop'] = (isset($_POST['shop']) && is_numeric($_POST['shop'])) ? abs(intval($_POST['shop'])) : '';
     if (!empty($_POST['shop'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_delshop', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_delshop', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action has been blocked for your security. Please fill in the form quickly next time.");
             die($h->endpage());
         }
@@ -134,11 +134,11 @@ function delshop()
         $db->free_result($shpq);
         $db->query("DELETE FROM `shops` WHERE `shopID` = {$_POST['shop']}");
         $db->query("DELETE FROM `shopitems` WHERE `sitemSHOP` = {$_POST['shop']}");
-        $api->SystemLogsAdd($userid, 'staff', "Deleted shop {$sn}.");
+        $api->$game->addLog($userid, 'staff', "Deleted shop {$sn}.");
         alert('success', "Success!", "You have successfully deleted the {$sn} shop.", true, 'index.php');
         die($h->endpage());
     } else {
-        $csrf = request_csrf_html('staff_delshop');
+        $csrf = getHtmlCSRF('staff_delshop');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 			<tr>
@@ -151,7 +151,7 @@ function delshop()
 					Shop
 				</th>
 				<td>
-					" . shop_dropdown("shop") . "
+					" . dropdownShop("shop") . "
 				</td>
 			</tr>
 			<tr>
@@ -169,7 +169,7 @@ function newitem()
 {
     global $db, $h, $userid, $api;
     if (isset($_POST['item'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_newstock', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_newstock', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action has been blocked for your security. Please fill in the form quickly next time.");
             die($h->endpage());
         }
@@ -197,11 +197,11 @@ function newitem()
         $db->free_result($q2);
         $db->free_result($q3);
         $db->query("INSERT INTO `shopitems` VALUES(NULL, {$_POST['shop']}, {$_POST['item']})");
-        $api->SystemLogsAdd($userid, 'staff', "Added Item ID {$api->SystemItemIDtoName($_POST['item'])} to Shop ID {$_POST['shop']}.");
+        $api->$game->addLog($userid, 'staff', "Added Item ID {$api->SystemItemIDtoName($_POST['item'])} to Shop ID {$_POST['shop']}.");
         alert('success', "Success!", "You have successfully added {$api->SystemItemIDtoName($_POST['item'])} to Shop ID {$_POST['shop']}.", true, 'index.php');
         die($h->endpage());
     } else {
-        $csrf = request_csrf_html('staff_newstock');
+        $csrf = getHtmlCSRF('staff_newstock');
         echo "<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -214,7 +214,7 @@ function newitem()
 						Shop
 					</th>
 					<td>
-						" . shop_dropdown("shop") . "
+						" . dropdownShop("shop") . "
 					</td>
 				</tr>
 				<tr>
@@ -222,7 +222,7 @@ function newitem()
 						Item to Stock
 					</th>
 					<td>
-						" . item_dropdown("item") . "
+						" . dropdownItem("item") . "
 					</td>
 				</tr>
 				<tr>

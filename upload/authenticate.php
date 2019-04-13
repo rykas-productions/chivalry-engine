@@ -13,7 +13,7 @@ $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 $CurrentTime = time();
 $email = (array_key_exists('email', $_POST) && is_string($_POST['email'])) ? $_POST['email'] : '';
 $password = (array_key_exists('password', $_POST) && is_string($_POST['password'])) ? $_POST['password'] : '';
-if (!isset($_POST['verf']) || !verify_csrf_code('login', stripslashes($_POST['verf']))) {
+if (!isset($_POST['verf']) || !checkCSRF('login', stripslashes($_POST['verf']))) {
     die("<h3>{$set['WebsiteName']} Error</h3> CSRF Check failed. Please submit the form quicker next time.");
 }
 $QuarterHour = ($CurrentTime - 900);
@@ -100,12 +100,12 @@ else {
     $db->free_result($UQ);
     //Verify user's password, then log them in.
     $login_failed = false;
-    $login_failed = !(verify_user_password($raw_password, $mem['password']));
+    $login_failed = !(checkUserPassword($raw_password, $mem['password']));
     //Login failed
     if ($login_failed) {
         //Log login attempt.
         $db->query("INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES ('{$IP}', '{$mem['userid']}', '{$CurrentTime}');");
-        notification_add($mem['userid'], "Someone has just recently attempted to gain access to your account and failed.
+        addNotification($mem['userid'], "Someone has just recently attempted to gain access to your account and failed.
 		    If this was you, you do not need to do anything. However, if this was not, you should change your password
 		    immediately!");
         die("<h3>{$set['WebsiteName']} Error</h3> Invalid Email and/or Password.<br /> <a href='login.php'>Back</a>");
@@ -120,7 +120,7 @@ else {
               `last_login` = '{$CurrentTime}',
               `laston` = '{$CurrentTime}'
                WHERE `userid` = {$mem['userid']}");
-    $encpsw = encode_password($raw_password);
+    $encpsw = encodePassword($raw_password);
     $e_encpsw = $db->escape($encpsw);
     //Update user's password as an extra security mesaure.
     $db->query("UPDATE `users` SET `password` = '{$e_encpsw}' WHERE `userid` = {$_SESSION['userid']}");

@@ -34,7 +34,7 @@ function addpack()
 {
     global $db, $userid, $api, $h;
     if (isset($_POST['pack'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_vip_add', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_vip_add', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action has been blocked for your security. Please submit forms quickly!");
             die($h->endpage());
         }
@@ -73,7 +73,7 @@ function addpack()
         $api->game->addLog($userid, 'staff', "Added {$api->game->getItemNameFromID($_POST['pack'])} to the VIP Store for \${$db_cost}.");
         alert('success', "Success!", "You have successfully added the {$api->game->getItemNameFromID($_POST['pack'])} to the VIP Store for \${$db_cost}.", true, 'index.php');
     } else {
-        $csrf = request_csrf_html('staff_vip_add');
+        $csrf = getHtmlCSRF('staff_vip_add');
         echo "<form method='post'>
 				<table class='table table-bordered'>
 					<tr>
@@ -86,7 +86,7 @@ function addpack()
 							VIP Pack Item
 						</th>
 						<td>
-							" . item_dropdown('pack') . "
+							" . dropdownItem('pack') . "
 						</td>
 					</tr>
 					<tr>
@@ -121,7 +121,7 @@ function delpack()
 {
     global $db, $userid, $api, $h;
     if (isset($_POST['pack'])) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_vip_del', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_vip_del', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action has been blocked for your security. Please submit forms quickly!");
             die($h->endpage());
         }
@@ -140,7 +140,7 @@ function delpack()
         $api->game->addLog($userid, 'staff', "Removed an item from the VIP Store.");
         alert('success', "Success!", "You have successfully removed this pack from the VIP Store.", true, 'index.php');
     } else {
-        $csrf = request_csrf_html('staff_vip_del');
+        $csrf = getHtmlCSRF('staff_vip_del');
         echo "<form method='post'>
 				<table class='table table-bordered'>
 					<tr>
@@ -153,7 +153,7 @@ function delpack()
 							VIP Pack
 						</th>
 						<td>
-							" . vipitem_dropdown() . "
+							" . vipdropdownItem() . "
 						</td>
 					</tr>
 					<tr>
@@ -175,7 +175,7 @@ function editpack()
         $_POST['step'] = 0;
     }
     if ($_POST['step'] == 2) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_vip_edit2', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_vip_edit2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action has been blocked for your security. Please submit forms quickly!");
             die($h->endpage());
         }
@@ -219,7 +219,7 @@ function editpack()
         $api->game->addLog($userid, 'staff', "Edited {$api->game->getItemNameFromID($_POST['item'])}'s VIP Pack.");
         alert('success', "Success!", "You have successfully edited the {$api->game->getItemNameFromID($_POST['item'])} VIP Pack.", true, 'index.php');
     } elseif ($_POST['step'] == 1) {
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_vip_edit1', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_vip_edit1', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action has been blocked for your security. Please submit forms quickly!");
             die($h->endpage());
         }
@@ -234,7 +234,7 @@ function editpack()
             die($h->endpage());
         }
         $r = $db->fetch_row($q);
-        $csrf = request_csrf_html('staff_vip_edit2');
+        $csrf = getHtmlCSRF('staff_vip_edit2');
         echo "<form method='post'>
 				<table class='table table-bordered'>
 				<input type='hidden' value='2' name='step'>
@@ -249,7 +249,7 @@ function editpack()
 							VIP Pack Item
 						</th>
 						<td>
-							" . item_dropdown('item', $r['vip_item']) . "
+							" . dropdownItem('item', $r['vip_item']) . "
 						</td>
 					</tr>
 					<tr>
@@ -277,7 +277,7 @@ function editpack()
 				{$csrf}
 		</form>";
     } else {
-        $csrf = request_csrf_html('staff_vip_edit1');
+        $csrf = getHtmlCSRF('staff_vip_edit1');
         echo "<form method='post'>
 				<table class='table table-bordered'>
 					<tr>
@@ -290,7 +290,7 @@ function editpack()
 							VIP Pack
 						</th>
 						<td>
-							" . vipitem_dropdown() . "
+							" . vipdropdownItem() . "
 						</td>
 					</tr>
 					<tr>
@@ -306,7 +306,7 @@ function editpack()
     $h->endpage();
 }
 
-function vipitem_dropdown($ddname = "pack", $selected = -1)
+function vipdropdownItem($ddname = "pack", $selected = -1)
 {
     global $db, $api;
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";

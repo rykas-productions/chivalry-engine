@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
-$tresder = (Random(100, 999));
+$tresder = (randomNumber(100, 999));
 $maxbet = $ir['level'] * 250;
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
@@ -40,7 +40,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         die($h->endpage());
     }
     $slot = array();
-    $slot[1] = Random(0, 36);
+    $slot[1] = randomNumber(0, 36);
     if ($slot[1] == $_POST['number']) {
         $gain = $_POST['bet'] * 50;
         $title = "Success!";
@@ -60,7 +60,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
     alert($alerttype, $title, "You put in your bet and pull the handle down. Around and around the wheel spins. It stops
 	    and lands on {$slot[1]} {$phrase}", true, "roulette.php?tresde={$tresder}");
     $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + ({$gain}) WHERE `userid` = {$userid}");
-    $tresder = Random(100, 999);
+    $tresder = randomNumber(100, 999);
     echo "<br />
 	<form action='roulette.php?tresde={$tresder}' method='post'>
     	<input type='hidden' name='bet' value='{$_POST['bet']}' />

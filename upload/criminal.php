@@ -35,7 +35,7 @@ function home()
         $crimes[] = $r2;
     }
     //Anti-refresh RNG.
-    $tresder = (Random(100, 999));
+    $tresder = (randomNumber(100, 999));
     $db->free_result($q2);
     $q = $db->query("SELECT `cgID`, `cgNAME` FROM `crimegroups` ORDER BY `cgORDER` ASC");
     echo "
@@ -79,7 +79,7 @@ function home()
 function crime()
 {
     global $db, $userid, $ir, $h, $api, $m;
-    $tresder = (Random(100, 999));
+    $tresder = (randomNumber(100, 999));
 	$tresde = filter_input(INPUT_GET, 'tresde', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     if (!isset($c)) {
         $c = 0;
@@ -141,13 +141,13 @@ function crime()
             }
             $ir['brave'] -= $r['crimeBRAVE'];
             $api->user->setInfo($userid, "brave", "-{$r['crimeBRAVE']}");
-            if (Random(1, 100) <= $sucrate) {
+            if (randomNumber(1, 100) <= $sucrate) {
                 if (!empty($r['crimePRICURMIN'])) {
-                    $prim_currency = Random($r['crimePRICURMIN'], $r['crimePRICURMAX']);
+                    $prim_currency = randomNumber($r['crimePRICURMIN'], $r['crimePRICURMAX']);
                     $api->user->giveCurrency($userid, 'primary', $prim_currency);
                 }
                 if (!empty($r['crimeSECURMIN'])) {
-                    $sec_currency = Random($r['crimeSECURMIN'], $r['crimeSECCURMAX']);
+                    $sec_currency = randomNumber($r['crimeSECURMIN'], $r['crimeSECCURMAX']);
                     $api->user->giveCurrency($userid, 'secondary', $sec_currency);
                 }
                 if (!empty($r['crimeSUCCESSITEM'])) {
@@ -172,7 +172,7 @@ function crime()
             } else {
                 $title = "Uh Oh!";
                 $type = 'danger';
-                $dtime = Random($r['crimeDUNGMIN'], $r['crimeDUNGMAX']);
+                $dtime = randomNumber($r['crimeDUNGMIN'], $r['crimeDUNGMAX']);
                 $text = str_replace("{time}", $dtime, $r['crimeFTEXT']);
                 $api->user->setDungeon($userid, $dtime, $r['crimeDUNGREAS']);
                 $api->game->addLog($userid, 'crime', "Failed to commit the {$r['crimeNAME']} crime.");

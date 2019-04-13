@@ -41,7 +41,7 @@ while ($r = $db->fetch_row($q)) {
 			<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 		</td>
 		<td>
-			" . DateTime_Parse($r['laston']) . "
+			" . dateTimeParse($r['laston']) . "
 		</td>
 	</tr>";
 }

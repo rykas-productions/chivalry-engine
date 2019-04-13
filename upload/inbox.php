@@ -15,7 +15,7 @@ require('lib/bbcode_engine.php');
 $q2 = $db->query("SELECT * FROM `mail_bans` WHERE `mbUSER` = {$userid}");
 if ($db->num_rows($q2) != 0) {
     $r = $db->fetch_row($q2);
-    $r['days'] = TimeUntil_Parse($r['mbTIME']);
+    $r['days'] = timeUntilParse($r['mbTIME']);
     alert('danger', "Uh Oh!", "You've been mail-banned for {$r['days']}. Reason: {$r['mbREASON']}", true, 'index.php');
     die($h->endpage());
 }
@@ -144,7 +144,7 @@ function read()
 {
     global $db, $userid, $h, $parser;
     //Request CSRF code for if the user wishes to send a reply.
-    $code = request_csrf_code('inbox_send');
+    $code = getCodeCSRF('inbox_send');
     //Grab the message ID from GET.
     $msg_id = filter_input(INPUT_GET, 'msg', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     //Message ID is empty.
@@ -237,7 +237,7 @@ function send()
             $_POST['sendto']) && ((strlen($_POST['sendto']) < 32) && (strlen($_POST['sendto']) >= 3))) ?
         $_POST['sendto'] : '';
     //Player failed the CSRF check... warn them to be quicker next time... or to change their password.
-    if (!isset($_POST['verf']) || !verify_csrf_code('inbox_send', stripslashes($_POST['verf']))) {
+    if (!isset($_POST['verf']) || !checkCSRF('inbox_send', stripslashes($_POST['verf']))) {
         alert('danger', "Action Blocked!", "Your action has been blocked for security reasons. Form requests expire fairly quickly. Be sure to be quicker next time.");
         die($h->endpage());
     }
@@ -356,7 +356,7 @@ function compose()
     //GET is set and greater than 0, so let's fetch the username associated that's on the GET.
     $username = (isset($user) && ($user > 0)) ? $username = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}")) : '';
         //Request CSRF Code and display the message composer form.
-        $code = request_csrf_code('inbox_send');
+        $code = getCodeCSRF('inbox_send');
         echo "
 		<form method='post' action='?action=send'>
 		<table class='table table-bordered'>

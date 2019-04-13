@@ -68,7 +68,7 @@ function fedjail()
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
         $_POST['reason'] = (isset($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : 0;
         $_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs($_POST['days']) : 0;
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_feduser', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_feduser', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -103,7 +103,7 @@ function fedjail()
         die($h->endpage());
     } else {
         $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
-        $csrf = request_csrf_html('staff_feduser');
+        $csrf = getHtmlCSRF('staff_feduser');
         echo "
 		<h3>
 			Jailing User
@@ -120,7 +120,7 @@ function fedjail()
 					User
 				</th>
 				<td>
-					" . user_dropdown('user', $_GET['user']) . "
+					" . dropdownUser('user', $_GET['user']) . "
 				</td>
 			</tr>
 			<tr>
@@ -160,7 +160,7 @@ function editfedjail()
         $_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs(intval($_POST['days'])) : 0;
 
         //Verify CSRF Check has passed
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editfedjail', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_editfedjail', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -198,7 +198,7 @@ function editfedjail()
         alert('success', "Success!", "You have successfully edited {$api->user->getNamefromID($_POST['user'])}
             [{$_POST['user']}]'s federal dungeon sentence.", true, 'index.php');
     } else {
-        $csrf = request_csrf_html('staff_editfedjail');
+        $csrf = getHtmlCSRF('staff_editfedjail');
         echo "Fill out this form to edit a user's federal dungeon sentence. If the dropdown is empty, that means there is no users
         in the federal dungeon.<br />
         <form method='post'>
@@ -208,7 +208,7 @@ function editfedjail()
                     User
                 </th>
                 <td>
-                    " . fed_user_dropdown() . "
+                    " . dropdownFedJailUser() . "
                 </td>
             </tr>
             <tr>
@@ -246,7 +246,7 @@ function unfedjail()
     $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
     if (isset($_POST['user'])) {
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_unfeduser', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_unfeduser', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -261,7 +261,7 @@ function unfedjail()
         $api->game->addLog($userid, 'fedjail', "Removed <a href='../profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> [{$_POST['user']}] from the federal dungeon.");
         alert('success', "Success!", "You have successfully removed {$api->user->getNamefromID($_POST['user'])} from the federal dungeon.", true, 'index.php');
     } else {
-        $csrf = request_csrf_html('staff_unfeduser');
+        $csrf = getHtmlCSRF('staff_unfeduser');
         echo "<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -274,7 +274,7 @@ function unfedjail()
 						User
 					</th>
 					<td>
-						" . fed_user_dropdown('user', $_GET['user']) . "
+						" . dropdownFedJailUser('user', $_GET['user']) . "
 					</td>
 				</tr>
 				<tr>
@@ -300,7 +300,7 @@ function mailban()
         $_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs($_POST['days']) : 0;
 
         //Verify the CSRF check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_mailban', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_mailban', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -343,7 +343,7 @@ function mailban()
         $api->user->addNotification($_POST['user'], "You have been mail-banned for {$_POST['days']} days for the reason: '{$_POST['reason']}'.");
         alert('success', "Success!", "You have successfully mailed banned {$user} for {$_POST['days']} days for {$_POST['reason']}.");
     } else {
-        $csrf = request_csrf_html('staff_mailban');
+        $csrf = getHtmlCSRF('staff_mailban');
         echo "
 		<table class='table table-bordered'>
 			<tr>
@@ -357,7 +357,7 @@ function mailban()
 					User
 				</th>
 				<td>
-					" . user_dropdown('user', $_GET['user']) . "
+					" . dropdownUser('user', $_GET['user']) . "
 				</td>
 			</tr>
 			<tr>
@@ -397,7 +397,7 @@ function unmailban()
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
 
         //Verify that the CSRF check has passed.
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_unmailban', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_unmailban', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -419,7 +419,7 @@ function unmailban()
         $api->game->addLog($userid, 'staff', "Removed {$un} [{$_POST['user']}]'s mail ban.");
         alert('success', "Success!", "You have successfully removed {$un} [{$_POST['user']}]'s mail ban.", true, 'index.php');
     } else {
-        $csrf = request_csrf_html('staff_unmailban');
+        $csrf = getHtmlCSRF('staff_unmailban');
         echo "<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -432,7 +432,7 @@ function unmailban()
 						User
 					</th>
 					<td>
-						" . mailb_user_dropdown('user', $_GET['user']) . "
+						" . dropdownMailbanUser('user', $_GET['user']) . "
 					</td>
 				</tr>
 				<tr>
@@ -454,7 +454,7 @@ function forumwarn()
     if (isset($_POST['user'])) {
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
         $_POST['reason'] = $db->escape(strip_tags(stripslashes($_POST['reason'])));
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_forumwarn', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_forumwarn', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -472,7 +472,7 @@ function forumwarn()
         $api->user->addNotification($_POST['user'], "You have been received a forum warning for the following reason: {$_POST['reason']}.");
         alert('success', "Success!", "You have forum warned {$api->user->getNamefromID($_POST['user'])}.");
     } else {
-        $csrf = request_csrf_html('staff_forumwarn');
+        $csrf = getHtmlCSRF('staff_forumwarn');
         echo "<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -485,7 +485,7 @@ function forumwarn()
 						User
 					</th>
 					<td>
-						" . user_dropdown('user', $_GET['user']) . "
+						" . dropdownUser('user', $_GET['user']) . "
 					</td>
 				</tr>
 				<tr>
@@ -513,7 +513,7 @@ function ipsearch()
     echo "<h3>IP Lookup</h3><hr />";
     if (isset($_POST['ip'])) {
         $_POST['ip'] = (filter_input(INPUT_POST, 'ip', FILTER_VALIDATE_IP)) ? $_POST['ip'] : '';
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_ipsearch', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_ipsearch', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -556,7 +556,7 @@ function ipsearch()
 				</td>
 			</tr>";
         }
-        $csrf = request_csrf_html('staff_massjail');
+        $csrf = getHtmlCSRF('staff_massjail');
         echo "</table>
 		<form action='?action=massjail' method='post'>
 		<input type='hidden' name='ids' value='" . implode(",", $ids) . "' />
@@ -591,7 +591,7 @@ function ipsearch()
 		{$csrf}
 		</form>";
     } else {
-        $csrf = request_csrf_html('staff_ipsearch');
+        $csrf = getHtmlCSRF('staff_ipsearch');
         echo "
 		<form method='post'>
 			<table class='table table-bordered'>
@@ -622,7 +622,7 @@ function ipsearch()
 function massjail()
 {
     global $db, $userid, $api, $h;
-    if (!isset($_POST['verf']) || !verify_csrf_code('staff_massjail', stripslashes($_POST['verf']))) {
+    if (!isset($_POST['verf']) || !checkCSRF('staff_massjail', stripslashes($_POST['verf']))) {
         alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
         die($h->endpage());
     }
@@ -666,7 +666,7 @@ function forumban()
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
         $_POST['reason'] = (isset($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : 0;
         $_POST['days'] = (isset($_POST['days']) && is_numeric($_POST['days'])) ? abs($_POST['days']) : 0;
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_forumban', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_forumban', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -701,7 +701,7 @@ function forumban()
         die($h->endpage());
     } else {
         $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
-        $csrf = request_csrf_html('staff_forumban');
+        $csrf = getHtmlCSRF('staff_forumban');
         echo "
 		<h3>
 			Forum Ban
@@ -718,7 +718,7 @@ function forumban()
 					User
 				</th>
 				<td>
-					" . user_dropdown('user', $_GET['user']) . "
+					" . dropdownUser('user', $_GET['user']) . "
 				</td>
 			</tr>
 			<tr>
@@ -755,7 +755,7 @@ function unforumban()
     $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
     if (isset($_POST['user'])) {
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_unforumban', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_unforumban', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -770,7 +770,7 @@ function unforumban()
         $api->user->addNotification($_POST['user'], "The game administration has removed your forum ban. You may use the forum once again.");
         alert('success', "Success!", "You have successfully removed {$api->user->getNamefromID($_POST['user'])}'s forum ban.", true, 'index.php');
     } else {
-        $csrf = request_csrf_html('staff_unforumban');
+        $csrf = getHtmlCSRF('staff_unforumban');
         echo "<form method='post'>
 			<table class='table table-bordered'>
 				<tr>
@@ -783,7 +783,7 @@ function unforumban()
 						User
 					</th>
 					<td>
-						" . forumb_user_dropdown('user', $_GET['user']) . "
+						" . dropdownForumBanUser('user', $_GET['user']) . "
 					</td>
 				</tr>
 				<tr>
@@ -823,7 +823,7 @@ function massmail()
     echo "<h3>Mass Mailer</h3><hr>";
     if (isset($_POST['msg'])) {
         $msg = $_POST['msg'];
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_massmail', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_massmail', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -854,7 +854,7 @@ function massmail()
         alert('success', "Success!", "You successfully sent a mass mail to {$sent} players", true, 'index.php');
         $api->game->addLog($userid, 'staff', "Sent a mass mail.");
     } else {
-        $csrf = request_csrf_html('staff_massmail');
+        $csrf = getHtmlCSRF('staff_massmail');
         echo "<table class='table table-bordered'>
 		<form method='post'>
 		<tr>
@@ -890,7 +890,7 @@ function massemail()
     if (isset($_POST['msg'])) {
         $msg = $_POST['msg'];
         $subject = $_POST['subject'];
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_massemail', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_massemail', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -917,7 +917,7 @@ function massemail()
         alert('success', "Success!", "You successfully sent a mass email to {$sent} players", true, 'index.php');
         $api->game->addLog($userid, 'staff', "Sent a mass email.");
     } else {
-        $csrf = request_csrf_html('staff_massemail');
+        $csrf = getHtmlCSRF('staff_massemail');
         echo "<table class='table table-bordered'>
 		<form method='post'>
 		<tr>
@@ -959,7 +959,7 @@ function banip()
     echo "<h3>Ban IP</h3><hr />";
     if (isset($_POST['ip'])) {
         $IP = $db->escape($_POST['ip']);
-        if (!isset($_POST['verf']) || !verify_csrf_code('staff_banip', stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF('staff_banip', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -976,7 +976,7 @@ function banip()
         alert('success', "Success!", "You have successfully banned the {$IP} IP Address.", true, 'index.php');
         $api->game->addLog($userid, 'staff', "IP Banned {$IP}.");
     } else {
-        $csrf = request_csrf_html('staff_banip');
+        $csrf = getHtmlCSRF('staff_banip');
         echo "<form method='post'>
 		<table class='table table-bordered'>
 		<tr>
@@ -1009,7 +1009,7 @@ function unbanip()
     echo "<h3>Pardon IP Address</h3><hr />";
     if (isset($_GET['id'])) {
         $_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : '';
-        if (!isset($_GET['verf']) || !verify_csrf_code('staff_unbanip', stripslashes($_GET['verf']))) {
+        if (!isset($_GET['verf']) || !checkCSRF('staff_unbanip', stripslashes($_GET['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
             die($h->endpage());
         }
@@ -1037,7 +1037,7 @@ function unbanip()
 			</th>
 		</tr>";
         $q = $db->query("SELECT * FROM `ipban`");
-        $csrf = request_csrf_html('staff_unbanip');
+        $csrf = getHtmlCSRF('staff_unbanip');
         while ($r = $db->fetch_row($q)) {
             echo "<tr>
 				<td>

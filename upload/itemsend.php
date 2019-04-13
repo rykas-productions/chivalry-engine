@@ -22,7 +22,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
     } else {
         $r = $db->fetch_row($id);
         $m = $db->query("SELECT `lastip`,`username` FROM `users` WHERE `userid` = {$_POST['user']} LIMIT 1");
-        if (!isset($_POST['verf']) || !verify_csrf_code("senditem_{$_GET['ID']}", stripslashes($_POST['verf']))) {
+        if (!isset($_POST['verf']) || !checkCSRF("senditem_{$_GET['ID']}", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Form requests expire quickly. Go back and try again!");
             die($h->endpage());
         } elseif ($_POST['qty'] > $r['inv_qty']) {
@@ -39,11 +39,11 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
             die($h->endpage());
         } else {
             $rm = $db->fetch_row($m);
-            item_remove($userid, $r['inv_itemid'], $_POST['qty']);
-            item_add($_POST['user'], $r['inv_itemid'], $_POST['qty']);
+            takeItem($userid, $r['inv_itemid'], $_POST['qty']);
+            addItem($_POST['user'], $r['inv_itemid'], $_POST['qty']);
             alert('success', "Success!", "You have successfully send {$_POST['qty']} {$r['itmname']}(s) to
 			    {$rm['username']}.", true, 'inventory.php');
-            notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
+            addNotification($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
                 from <a href='profile.php?user=$userid'>{$ir['username']}</a>.");
             $log = $db->escape("Sent {$_POST['qty']} {$r['itmname']}(s) to {$rm['username']} [{$_POST['user']}].");
             $api->game->addLog($userid, 'itemsend', $log);
@@ -62,7 +62,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
         die($h->endpage());
     } else {
         $r = $db->fetch_row($id);
-        $code = request_csrf_code("senditem_{$_GET['ID']}");
+        $code = getCodeCSRF("senditem_{$_GET['ID']}");
         echo "
 		<form action='?ID={$_GET['ID']}' method='post'>
 			<table class='table table-bordered'>
@@ -76,7 +76,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
 						User
 					</th>
 					<td>
-						" . user_dropdown('user') . "
+						" . dropdownUser('user') . "
 					</td>
 				</tr>
 				<tr>

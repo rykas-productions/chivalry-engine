@@ -58,7 +58,7 @@ function add()
 		(`smelt_time`, `smelt_items`, `smelt_quantity`, `smelt_output`, `smelt_qty_output`) 
 		VALUES 
 		('{$_POST['timetocomplete']}', '{$items}', '{$qty}', '{$_POST['smelted_item']}', '{$_POST['smelted_item_qty']}')");
-        $api->SystemLogsAdd($userid, 'staff', "Created smelting recipe for " . $api->SystemItemIDtoName($_POST['smelted_item']));
+        $api->$game->addLog($userid, 'staff', "Created smelting recipe for " . $api->SystemItemIDtoName($_POST['smelted_item']));
         alert('success', "Success!", "You have successfully created a blacksmith recipe for " . $api->SystemItemIDtoName($_POST['smelted_item']), true, 'index.php');
     } else {
         echo "<form id='craft' method='post'>
@@ -73,7 +73,7 @@ function add()
 						Received Item
 					</th>
 					<td>
-						" . item_dropdown("smelted_item") . "
+						" . dropdownItem("smelted_item") . "
 					</td>
 				</tr>
 				<tr>
@@ -106,7 +106,7 @@ function add()
 							Required Item
 						</th>
 						<td>
-							<div id='input1' class='clonedInput'>" . item_dropdown("required_item") . "<br /></div>
+							<div id='input1' class='clonedInput'>" . dropdownItem("required_item") . "<br /></div>
 						</td>
 					</tr>
 				<tr>
@@ -149,7 +149,7 @@ function del()
         }
         $db->query("DELETE FROM `smelt_recipes` WHERE `smelt_id` = {$_POST['smelt']}");
         $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_recipe` = {$_POST['smelt']}");
-        $api->SystemLogsAdd($userid, 'staff', "Removed Blacksmith Recipe ID #{$_POST['smelt']}");
+        $api->$game->addLog($userid, 'staff', "Removed Blacksmith Recipe ID #{$_POST['smelt']}");
         alert('success', "Success!", "You have successfully removed Blacksmith Recipe ID #{$_POST['smelt']}", true, 'index.php');
     } else {
         echo "<form action='?action=del' method='post'>
@@ -164,7 +164,7 @@ function del()
 					Recipe
 				</th>
 				<td>
-					" . smelt_dropdown() . "
+					" . dropdownBlacksmith() . "
 				</td>
 			</tr>
 			<tr>

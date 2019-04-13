@@ -66,10 +66,10 @@ function home()
 					{$Infirmary['dungeon_reason']}
 				</td>
 				<td class='hidden-xs'>
-					" . DateTime_Parse($Infirmary['dungeon_in']) . "
+					" . dateTimeParse($Infirmary['dungeon_in']) . "
 				</td>
 				<td>
-					" . TimeUntil_Parse($Infirmary['dungeon_out']) . "
+					" . timeUntilParse($Infirmary['dungeon_out']) . "
 				</td>
 				<td>
 					[<a href='?action=bail&user={$Infirmary['dungeon_user']}'>Bail Out</a>]
@@ -152,7 +152,7 @@ function bust()
         $mult = $api->user->infoGet($get_user, 'level') * $api->user->infoGet($get_user, 'level');
         $chance = min(($ir['level'] / $mult) * 50 + 1, 95);
         //User is successful.
-        if (Random(1, 100) < $chance) {
+        if (randomNumber(1, 100) < $chance) {
             //Add notification, and tell the user.
             $api->user->addNotification($get_user, "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
                 successfully busted you out of the dungeon.");

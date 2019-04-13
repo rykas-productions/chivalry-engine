@@ -8,7 +8,7 @@
 */
 require("globals.php");
 //Anti-refresh RNG.
-$tresder = (Random(100, 999));
+$tresder = (randomNumber(100, 999));
 $time = time();
 //Select users in infirmary and dungeon to list later on the page.
 $dung_count = $db->fetch_single($db->query("SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$time}"));
