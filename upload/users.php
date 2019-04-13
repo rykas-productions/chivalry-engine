@@ -49,37 +49,37 @@ $no1 = $st + 1;
 $no2 = min($st + 100, $membs);
 echo "
 Showing users {$no1} to {$no2} by order of {$by} {$ord}.
-<table class='table table-bordered table-hover table-striped'>
-			<tr>
-				<th>
-					User
-				</th>
-				<th>
-					{$_CONFIG['primary_currency']}
-				</th>
-				<th>
-					Level
-				</th>
-			</tr>
-   ";
+<div class='cotainer'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>User</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>{$_CONFIG['primary_currency']}</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Level</h4>
+		</div>
+</div><hr />";
 //Display the users info.
 while ($r = $db->fetch_row($q)) {
     $r['username'] = ($r['vip_days']) ? "<span class='text-danger'>{$r['username']} <i class='fas fa-shield-alt'
         data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
-    echo "	<tr>
-				<td>
+    echo "	<div class='row'>
+				<div class='col-sm'>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
-				</td>
-				<td>
+				</div>
+				<div class='col-sm'>
 					" . number_format($r['primary_currency']) . "
-				</td>
-				<td>
+				</div>
+				<div class='col-sm'>
 					{$r['level']}
-				</td>
-			</tr>";
+				</div>
+			</div>
+			<hr />";
 }
 $db->free_result($q);
-echo '</table>';
+echo '</div>';
 //Pagination function!
 echo pagination(100, $membs, $st, "?by={$by}&ord={$ord}&st=");
 $h->endpage();
