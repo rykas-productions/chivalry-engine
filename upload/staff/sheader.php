@@ -12,26 +12,25 @@ class headers
 {
     function startheaders()
     {
-        global $ir, $set, $h, $db, $menuhide, $userid, $api, $time, $_CONFIG;
+        global $ir, $set, $h, $db, $menuhide, $userid, $time, $_CONFIG, $api;
         ?>
         <!DOCTYPE html>
         <html lang="en">
         <head>
-            <center>
-                <meta charset="utf-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-                <meta name="description" content="<?php echo $set['Website_Description']; ?>">
-                <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
-                <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
-                <meta property="og:image" content=""/>
-                <link rel="shortcut icon" href="" type="image/x-icon"/>
-                <!-- CSS -->
-                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-                <link rel="stylesheet" href="../css/sidebar-themes.css">
-                <meta name="theme-color" content="#e7e7e7">
-                <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
-                <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <meta name="description" content="<?php echo $set['Website_Description']; ?>">
+            <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
+            <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
+            <meta property="og:image" content=""/>
+            <link rel="shortcut icon" href="" type="image/x-icon"/>
+            <!-- CSS -->
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+            <link rel="stylesheet" href="../css/sidebar-themes.css">
+            <meta name="theme-color" content="#e7e7e7">
+            <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
+            <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
         </head>
         <?php
         if (empty($menuhide)) {
@@ -442,7 +441,7 @@ class headers
 
     function userdata($ir, $dosessh = 1)
     {
-        global $db, $userid;;
+        global $db, $userid, $api;
         $IP = $db->escape($_SERVER['REMOTE_ADDR']);
         $db->query("UPDATE `users` SET `laston` = {$_SERVER['REQUEST_TIME']}, `lastip` = '{$IP}'  WHERE `userid` = {$userid}");
         if (!$ir['email']) {
@@ -464,7 +463,7 @@ class headers
 
     function endpage()
     {
-        global $db, $ir, $set;
+        global $db, $ir;
         $query_extra = '';
         if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
         {
@@ -494,7 +493,7 @@ class headers
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
-        <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script src="https://malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
         <script type="text/javascript">
             jQuery(function ($) {
             $("#close-sidebar").click(function() {

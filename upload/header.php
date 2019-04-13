@@ -373,7 +373,7 @@ class headers
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
-        <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script src="https://malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
         <script type="text/javascript">
             jQuery(function ($) {
             $("#close-sidebar").click(function() {
