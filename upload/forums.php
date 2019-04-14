@@ -109,24 +109,24 @@ function idx()
                      WHERE `ff_auth` = 'public'
                      ORDER BY `ff_id` ASC");
     ?>
-    <table class='table table-bordered table-hover'>
-    <thead>
-    <tr>
-        <th>
-            <?php echo "Category"; ?>
-        </th>
-        <th class='hidden-xs-down'>
-            <?php echo "Posts"; ?>
-        </th>
-        <th class='hidden-xs-down'>
-            <?php echo "Topics"; ?>
-        </th>
-        <th>
-            <?php echo "Latest Post"; ?>
-        </th>
-    </tr>
-    </thead>
-    <tbody>
+    <div class='cotainer'>
+    
+    <div class='row'>
+        <div class='col-sm'>
+            <h4>Category</h4>
+        </div>
+        <div class='col-sm'>
+            <h4>Posts</h4>
+        </div>
+        <div class='col-sm'>
+            <h4>Topics</h4>
+        </div>
+        <div class='col-sm'>
+            <h4>Last Post</h4>
+        </div>
+    </div>
+    <hr />
+    
     <?php
     while ($r = $db->fetch_row($q)) {
         $t = dateTimeParse($r['ff_lp_time'], true, true);
@@ -143,25 +143,25 @@ function idx()
         $topics = $db->fetch_single($topicsq);
 
         $topicname = $db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
-        echo "<tr>
-					<td>
+        echo "<div class='row'>
+					<div class='col-sm'>
 						<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
 						<small class='hidden-xs-down'><br />{$r['ff_desc']}</small>
-					</td>
-					<td class='hidden-xs-down'>
+					</div>
+					<div class='col-sm'>
 						{$posts}
-					</td>
-					<td class='hidden-xs-down'>
+					</div>
+					<div class='col-sm'>
 						{$topics}
-					</td>
-					<td>
+					</div>
+					<div class='col-sm'>
 						{$t}<br />
 						In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
 						By <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
-					</td>
-              </tr>";
+					</div>
+              </div><hr />";
     }
-    echo "</table>";
+    echo "</div>";
     $db->free_result($q);
     if (($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Forum Moderator') || ($ir['user_level'] == 'Web Developer')) {
         echo "<hr /><h3>Staff Only Forums</h3><hr />";
@@ -174,24 +174,25 @@ function idx()
                      WHERE `ff_auth` = 'staff'
                      ORDER BY `ff_id` ASC");
         ?>
-        <table class='table table-bordered table-hover'>
-        <thead>
-        <tr>
-            <th>
-                <?php echo "Category"; ?>
-            </th>
-            <th class='hidden-xs-down'>
-                <?php echo "Posts"; ?>
-            </th>
-            <th class='hidden-xs-down'>
-                <?php echo "Topics"; ?>
-            </th>
-            <th>
-                <?php echo "Latest Post"; ?>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
+        <div class='cotainer'>
+
+        <div class='row'>
+            <div class='col-sm'>
+                <h4>Category</h4>
+            </div>
+            <div class='col-sm'>
+                <h4>Posts</h4>
+            </div>
+            <div class='col-sm'>
+                <h4>Topics</h4>
+            </div>
+            <div class='col-sm'>
+                <h4>Last Post</h4>
+            </div>
+        </div>
+        <hr />
+        
+        
         <?php
         while ($r = $db->fetch_row($q)) {
             $t = dateTimeParse($r['ff_lp_time'], true, true);
@@ -208,25 +209,25 @@ function idx()
             $topics = $db->fetch_single($topicsq);
 
             $topicname = $db->fetch_single($db->query("SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
-            echo "<tr>
-        		<td>
+            echo "<div class='row'>
+        		<div class='col-sm'>
         			<a href='?viewforum={$r['ff_id']}' style='font-weight: 800;'>{$r['ff_name']}</a>
         			<small class='hidden-xs-down'><br />{$r['ff_desc']}</small>
-        		</td>
-        		<td class='hidden-xs-down'>
+        		</div>
+        		<div class='col-sm'>
 					{$posts}
-				</td>
-        		<td class='hidden-xs-down'>
+				</div>
+        		<div class='col-sm'>
 					{$topics}
-				</td>
-        		<td>
+				</div>
+        		<div class='col-sm'>
 					{$t}<br />
 					In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1' style='font-weight: 800;'>{$topicname}</a><br />
 					By <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
-                </td>
-              </tr>";
+                </div>
+              </div>";
         }
-        echo "</tbody></table>";
+        echo "</div>";
         $db->free_result($q);
     }
 }
@@ -269,24 +270,24 @@ function viewforum()
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
     echo pagination(20, $posts_topic, $st, "?viewforum={$forum}&amp;st=");
     ?>
-    <table class='table table-bordered table-hover'>
-    <thead>
-    <tr>
-        <th>
-            Topic
-        </th>
-        <th class='hidden-xs-down'>
-            Post Count
-        </th>
-        <th class='hidden-xs-down'>
-            Created
-        </th>
-        <th>
-            Latest Post
-        </th>
-    </tr>
-    </thead>
-    <tbody>
+    <div class='cotainer'>
+    
+    <div class='row'>
+        <div class='col-sm'>
+            <h4>Topic</h4>
+        </div>
+        <div class='col-sm'>
+            <h4>Post Count</h4>
+        </div>
+        <div class='col-sm'>
+            <h4>Created</h4>
+        </div>
+        <div class='col-sm'>
+            <h4>Latest Post</h4>
+        </div>
+    </div><hr />
+    
+    
     <?php
     $q =
         $db->query(
@@ -320,23 +321,23 @@ function viewforum()
         if (!$pn1) {
             $pn1['username'] = "Non-existent User";
         }
-        echo "<tr>
-        		<td>
+        echo "<div class='row'>
+        		<div class='col-sm'>
 					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
 					<small class='hidden-xs-down'>{$r2['ft_desc']}</small>
-				</td>
-				<td class='hidden-xs-down'>{$pc}</td>
-				<td class='hidden-xs-down'> 
+				</div>
+				<div class='col-sm'>{$pc}</div>
+				<div class='col-sm'> 
 					{$t1}<br />
 					By <a href='profile.php?user={$r2['ft_owner_id']}'>{$pn1['username']}</a>
-                </td>
-                <td>
+                </div>
+                <div class='col-sm'>
 					{$t2}<br />
                     By <a href='profile.php?user={$r2['ft_last_id']}'>{$pn2['username']}</a>
-                </td>
-              </tr>\n";
+                </div>
+              </div><hr />";
     }
-    echo "</tbody></table>";
+    echo "</div>";
     echo pagination(20, $posts_topic, $st, "?viewforum={$forum}&amp;st=");
     $db->free_result($q);
 }
@@ -346,8 +347,8 @@ function viewtopic()
     global $ir, $userid, $parser, $db, $h, $api;
     $code = getCodeCSRF('forum_reply');
     $precache = array();
-	$topic = filter_input(INPUT_GET, 'viewtopic', FILTER_SANITIZE_NUMBER_INT) ?: 0;
-    if (empty($topic)) {
+	$viewtopic = filter_input(INPUT_GET, 'viewtopic', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+    if (empty($viewtopic)) {
         alert('danger', "Uh Oh!", "You must enter a topic you wish to view.", true, "forums.php");
         die($h->endpage());
     }
@@ -356,7 +357,7 @@ function viewtopic()
             "SELECT `ft_forum_id`, `ft_name`, `ft_posts`, `ft_id`,
                     `ft_locked`, `ft_pinned`
                      FROM `forum_topics`
-                     WHERE `ft_id` = {$topic}");
+                     WHERE `ft_id` = {$viewtopic}");
     if ($db->num_rows($q) == 0) {
         $db->free_result($q);
         alert('danger', "Forum topic does not exist!", "You are attempting to interact with a topic that does not exist. Check your source and try again.", true, "forums.php");
@@ -390,63 +391,42 @@ function viewtopic()
     $posts_topic = $topic['ft_posts'];
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
     echo pagination(20, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
-    if (!($ir['user_level'] == 'Member')) {
+    if (!($ir['user_level'] == 'Member'))
+    {
         $lock = ($topic['ft_locked'] == 0) ? 'Lock Topic' : 'Unlock Topic' ;
         $pin = ($topic['ft_pinned'] == 0) ? 'Pin Topic' : 'Unpin Topic' ;
         echo "
-	<form action='?act=move&topic={$topic}' method='post'>
-    <b>Move Topic To</b> " . dropdownForum('forum')
-            . "
+	<form action='?act=move&topic={$viewtopic}' method='post'>
+    <b>Move Topic To</b> " . dropdownForum('forum') . "
 	<input type='submit' value='Move Topic' class='btn btn-primary' />
 	</form>
 	<br />
-	<center>
-	<div class='hidden-sm-down'>
-	<table>
-		<tr>
-			<td>
+		<div class='row'>
+			<div class='col-sm'>
 				<form>
 					<input type='hidden' value='pin' name='act'>
-					<input type='hidden' name='topic' value='{$topic}'>
+					<input type='hidden' name='topic' value='{$viewtopic}'>
 					<input type='submit' class='btn btn-primary' value='{$pin}'>
 				</form>
-			</td>
-			<td align='center'>
+			</div>
+			<div class='col-sm'>
 				<form>
 					<input type='hidden' value='lock' name='act'>
-					<input type='hidden' name='topic' value='{$topic}'>
+					<input type='hidden' name='topic' value='{$viewtopic}'>
 					<input type='submit' class='btn btn-primary' value='{$lock}'>
 				</form>
-			</td>
-			<td>
+			</div>
+			<div class='col-sm'>
 				<form action='?act=deletopic'>
 					<input type='hidden' value='deletopic' name='act'>
-					<input type='hidden' name='topic' value='{$topic}'>
+					<input type='hidden' name='topic' value='{$viewtopic}'>
 					<input type='submit' class='btn btn-primary' value='Delete'>
 				</form>
-			</td>
-		</tr>
-	</table>
-	</div>
-	<div class='hidden-md-up'>
-		<form>
-			<input type='hidden' value='pin' name='act'>
-			<input type='hidden' name='topic' value='{$topic}'>
-			<input type='submit' class='btn btn-primary' value='{$pin}'>
-		</form>
-		<form>
-			<input type='hidden' value='lock' name='act'>
-			<input type='hidden' name='topic' value='{$topic}'>
-			<input type='submit' class='btn btn-primary' value='{$lock}'>
-		</form>
-		<form action='?act=deletopic'>
-			<input type='hidden' value='deletopic' name='act'>
-			<input type='hidden' name='topic' value='{$topic}'>
-			<input type='submit' class='btn btn-primary' value='Delete'>
-		</form>
+			</div>
+		</div>
 	</div><br /> ";
     }
-    echo "<table class='table table-bordered'>";
+    echo "<div class='container'>";
     $q3 =
         $db->query(
             "SELECT `fp_editor_time`, `fp_editor_id`, `fp_edit_count`,
@@ -463,10 +443,10 @@ function viewtopic()
             <i class='fas fa-shield-alt' data-toggle='tooltip' title='{$PN['vip_days']} VIP Days remaining.'></i></span>" :
             $PN['username'];
 
-        $qlink = "[<a href='?act=quote&viewtopic={$topic}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>Quote</a>]";
+        $qlink = "[<a href='?act=quote&viewtopic={$viewtopic}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'>Quote</a>]";
         if ($api->user->getStaffLevel($userid, 'forum moderator') || $userid == $r['fp_poster_id']) {
             $elink =
-                "[<a href='?act=edit&post={$r['fp_id']}&topic={$topic}'>Edit</a>]";
+                "[<a href='?act=edit&post={$r['fp_id']}&topic={$viewtopic}'>Edit</a>]";
         } else {
             $elink = "";
         }
@@ -513,73 +493,73 @@ function viewtopic()
             $memb = $precache[$r['fp_poster_id']];
         }
         if ($memb['userid'] > 0) {
-            if ($memb['display_pic']) {
-                $av = "<img src='{$memb['display_pic']}' class='img-responsive'>";
-            } else {
+            if ($memb['display_pic'])
+                $av = "<img src='{$memb['display_pic']}' class='img-fluid'>";
+            else
                 $av = "";
-            }
             $memb['signature'] = $parser->parse($memb['signature']);
             $memb['signature'] = $parser->getAsHtml($memb['signature']);
         }
         $parser->parse($r['fp_text']);
         $r['fp_text'] = $parser->getAsHtml();
-        echo "<tr>
-				<th width='25%'>Post #{$no}</th>
-				<th>
-				Posted {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink}
-				</th>
-			 </tr>
-			 <tr>
-				<td valign='top'>";
-        if ($memb['userid'] > 0) {
-            $userpostsq = $db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$r['fp_poster_id']}");
-            $userposts = $db->fetch_single($userpostsq);
+        echo "<div class='row'>
+				<div class='col-sm-2'><h4>Post #{$no}</h4></div>
+				<div class='col-sm'>
+				<h4>Posted {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink}</h4>
+				</div>
+			 </div><hr />
+			 <div class='row'>
+				<div class='col-sm-2'>";
+                    if ($memb['userid'] > 0) {
+                        $userpostsq = $db->query("SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$r['fp_poster_id']}");
+                        $userposts = $db->fetch_single($userpostsq);
 
-            $usertopicsq = $db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_owner_id`={$r['fp_poster_id']}");
-            $usertopics = $db->fetch_single($usertopicsq);
-            print
-                "<div class='hidden-xs-down'>{$av}</div><a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a>
-                    	[{$r['fp_poster_id']}]<br />
-                     <b>Rank:</b> {$memb['user_level']}<br />
-					 <b>Post Count:</b> {$userposts}<br />
-					 <b>Topic Count:</b> {$usertopics}<br />";
-        } else {
-            print "<b>Non-existent User</b>";
-        }
+                        $usertopicsq = $db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_owner_id`={$r['fp_poster_id']}");
+                        $usertopics = $db->fetch_single($usertopicsq);
+                        print
+                            "{$av}<a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a>
+                                    [{$r['fp_poster_id']}]<br />
+                                 <b>Rank:</b> {$memb['user_level']}<br />
+                                 <b>Post Count:</b> {$userposts}<br />
+                                 <b>Topic Count:</b> {$usertopics}<br />";
+                    } else {
+                        print "<b>Non-existent User</b>";
+                    }
         print
-            "</td>
-			   	 <td>
+            "</div>
+			   	 <div class='col-sm'>
                     {$r['fp_text']}
                     {$edittext}<br />
 					<hr />
                     {$memb['signature']}
-                 </td>
-		</tr>";
+                 </div>
+		</div><hr />";
     }
     $db->free_result($q3);
-    echo "</table>";
+    echo "</div>";
     echo pagination(20, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
     if ($topic['ft_locked'] == 0) {
         echo "<br />
 		<br />
+		<div class='container'>
 		<form action='?reply={$topic['ft_id']}' method='post'>
 			<table class='table'>
-				<tr>
-					<th>
+				<div class='row'>
+					<div class='col-sm'>
 						Post Response
-						</th>
-					<td>
+						</div>
+					<div class='col-sm'>
 						<textarea class='form-control' rows='5' cols='40' id='post' placeholder='You can use BBCode.' name='fp_text' required></textarea>
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'> 
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-sm'> 
 						<input type='submit' value='Submit Reply' class='btn btn-primary'>
-					</td>
-				</tr>
-			</table>
+					</div>
+				</div>
+			</div>
 			<input type='hidden' name='verf' value='{$code}' />
-		</form>
+		</form></div>
 		";
     } else {
         echo "<br />
@@ -700,35 +680,35 @@ function newtopicform()
     echo <<<EOF
 <form method='post' action='?act=newtopic&forum={$forum}'>
 	<table class='table'>
-		<tr>
-			<th>
+		<div class='row'>
+			<div class='col-sm'>
 				<label for='ft_name'>Topic Name</label>
-			</th>
-			<td>
+			</div>
+			<div class='col-sm'>
 				<input type='text' class='form-control' id='ft_name' name='ft_name' required>
-			</td>
-		</tr>
-		<tr>
-			<th>
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-sm'>
 				<label for='ft_desc'>Topic Description</label>
-			</th>
-			<td>
+			</div>
+			<div class='col-sm'>
 				<input type='text' class='form-control' id='ft_desc' name='ft_desc'>
-			</td>
-		</tr>
-		<tr>
-			<th>
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-sm'>
 				<label for='fp_text'>Opening Post</label>
-			</th>
-			<td>
+			</div>
+			<div class='col-sm'>
 				<textarea rows='8' class='form-control' cols='45' placeholder='You can use BBCode!' name='fp_text' id='fp_text' required></textarea>
-			</td>
-		</tr>
-		<tr>
-			<td align='center' colspan='2'>
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-sm'>
 				<input type='submit' class='btn btn-lg btn-primary' value='Post Topic' />
-			</td>
-	</table>
+			</div>
+	</div>
 	<input type='hidden' name='verf' value='{$code}' />
 </form>
 EOF;
@@ -882,20 +862,20 @@ function quote()
 		<b>Quoting a post</b><br />
 		<form method='post' action='forums.php?reply={$topic['ft_id']}'>
 		<table class='table'>
-			<tr>
-				<th>
+			<div class='row'>
+				<div class='col-sm'>
 					<label for='fp_text'>Reply</label>
-				</th>
-				<td>
+				</div>
+				<div class='col-sm'>
 					<textarea rows='8' class='form-control' cols='45' name='fp_text' id='fp_text' required>[quote={$Who}]{$text}[/quote]</textarea>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2' align='center'>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-sm'>
 					<input type='submit' class='btn btn-lg btn-primary' value='Submit Reply' />
-				</td>
-			</tr>
-		</table>
+				</div>
+			</div>
+		</div>
 		<input type='hidden' name='verf' value='{$code}' />
 		</form>";
     } else {
@@ -974,20 +954,20 @@ function edit()
 <form action='?act=editsub&topic={$topic['ft_id']}&post={$_GET['post']}' method='post'>
 <input type='hidden' name='verf' value='{$edit_csrf}' />
     <table class='table'>
-        <tr>
-        	<th>
+        <div class='row'>
+        	<div class='col-sm'>
 			Editing a post
-			</th>
-        	<td>
+			</div>
+        	<div class='col-sm'>
         		<textarea rows='7' class='form-control' cols='40' name='fp_text'>{$fp_text}</textarea>
-        	</td>
-        </tr>
-        <tr>
-        	<td align='center' colspan='2'>
+        	</div>
+        </div>
+        <div class='row'>
+        	<div class='col-sm'>
 				<input type='submit' class='btn btn-primary' value='Edit Post'>
-			</th>
-        </tr>
-    </table>
+			</div>
+        </div>
+    </div>
 </form>
 EOF;
 }
