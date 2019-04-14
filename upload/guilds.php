@@ -36,13 +36,15 @@ function menu()
     global $db;
     echo "<h3>Guild Listing</h3>
 	<a href='?action=create'>Create a Guild</a><hr />";
-    echo "<table class='table table-bordered table-hover'>
-	<tr>
-		<th>Guild Name</th>
-		<th>Level</th>
-		<th>Members</th>
-		<th>Leader</th>
-	</tr>";
+    echo "<div class='container'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>Guild Info</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Members</h4>
+		</div>
+</div><hr />";
     $gq = $db->query(
         "SELECT `guild_id`, `guild_town_id`, `guild_owner`, `guild_name`,
 			`userid`, `username`, `guild_level`, `guild_capacity`
@@ -52,26 +54,22 @@ function menu()
     //List all the in-game guilds.
     while ($gd = $db->fetch_row($gq)) {
         echo "
-		<tr>
-			<td>
-				<a href='?action=view&id={$gd['guild_id']}'>{$gd['guild_name']}</a>
-			</td>
-			<td>
-				{$gd['guild_level']}
-			</td>
-			<td>";
+		<div class='row'>
+			<div class='col-sm'>
+				<a href='?action=view&id={$gd['guild_id']}'>{$gd['guild_name']}</a><br />
+				Level: {$gd['guild_level']}<br />
+				Leader: <a href='profile.php?user={$gd['userid']}'>{$gd['username']}</a>
+			</div>
+			<div class='col-sm'>";
         $cnt = number_format($db->fetch_single
         ($db->query("SELECT COUNT(`userid`)
 										FROM `users` 
 										WHERE `guild` = {$gd['guild_id']}")));
         echo "{$cnt} / {$gd['guild_capacity']}";
-        echo "</td>
-			<td>
-				<a href='profile.php?user={$gd['userid']}'>{$gd['username']}</a>
-			</td>
-		</tr>";
+        echo "</div>
+		</div><hr />";
     }
-    echo "</table>";
+    echo "</div>";
 
 }
 
@@ -131,35 +129,35 @@ function create()
             $csrf = getHtmlCSRF('createguild');
             echo "<form action='?action=create' method='post'>";
             echo "
-			<table class='table table-bordered'>
-				<tr>
+			<div class='container'>
+				<div class='row'>
 					<th colspan='2'>
 						Creating a guild. Guilds cost " . number_format($cg_price) . " {$_CONFIG['primary_currency']}
-					</th>
-				</tr>
-				<tr>
-					<th>
+					</div>
+				</div><hr />
+				<div class='row'>
+					<div class='col-sm'>
 						Guild Name
-					</th>
-					<td>
+					</div>
+					<div class='col-sm'>
 						<input type='text' required='1' class='form-control' name='name' />
-					</td>
-				</tr>
-				<tr>
-					<th>
+					</div>
+				</div><hr />
+				<div class='row'>
+					<div class='col-sm'>
 						Guild Description
-					</th>
-					<td>
+					</div>
+					<div class='col-sm'>
 						<textarea name='desc' required='1' class='form-control' cols='40' rows='7'></textarea>
-					</td>
-				</tr>
-				<tr>
+					</div>
+				</div><hr />
+				<div class='row'>
 					<td colspan='2'>
 						<input type='submit' value='Create Guild for " . number_format($cg_price) . "!' class='btn btn-primary'>
-					</td>
-				</tr>
+					</div>
+				</div><hr />
 				{$csrf}
-			</table>
+			</div>
 			</form>";
         }
     }
@@ -183,69 +181,69 @@ function view()
         $gd = $db->fetch_row($gq);
         echo "<h3>{$gd['guild_name']} Guild</h3>";
         echo "
-		<table class='table table-bordered'>
-			<tr>
-				<th>
+		<div class='container'>
+			<div class='row'>
+				<div class='col-sm'>
 					Guild Leader
-				</th>
-				<td>
+				</div>
+				<div class='col-sm'>
 					<a href='profile.php?user={$gd['guild_owner']}'> " . $api->user->getNameFromID($gd['guild_owner']) . "</a>
-				</td>
-			</tr>
-			<tr>
-				<th>
+				</div>
+			</div><hr />
+			<div class='row'>
+				<div class='col-sm'>
 					Guild Co-Leader
-				</th>
-				<td>
+				</div>
+				<div class='col-sm'>
 					<a href='profile.php?user={$gd['guild_coowner']}'> " . $api->user->getNameFromID($gd['guild_coowner']) . "</a>
-				</td>
-			</tr>
-			<tr>
-				<th>
+				</div>
+			</div><hr />
+			<div class='row'>
+				<div class='col-sm'>
 					Guild Level
-				</th>
-				<td>
+				</div>
+				<div class='col-sm'>
 					" . number_format($gd['guild_level']) . "
-				</td>
-			</tr>
-			<tr>
-				<th>
+				</div>
+			</div><hr />
+			<div class='row'>
+				<div class='col-sm'>
 					{$gd['guild_name']} Description
-				</th>
-				<td>
+				</div>
+				<div class='col-sm'>
 					{$gd['guild_desc']}
-				</td>
-			</tr>
-			<tr>
-				<th>
+				</div>
+			</div><hr />
+			<div class='row'>
+				<div class='col-sm'>
 					Members
-				</th>
-				<td>";
+				</div>
+				<div class='col-sm'>";
         //Count players in this guild.
         $cnt = number_format($db->fetch_single
         ($db->query("SELECT COUNT(`userid`)
 										FROM `users` 
 										WHERE `guild` = {$_GET['id']}")));
         echo number_format($cnt) . " / " . number_format($gd['guild_capacity']) . "
-				</td>
-			</tr>
-			<tr>
-				<th>
+				</div>
+			</div><hr />
+			<div class='row'>
+				<div class='col-sm'>
 					Guild Location
-				</th>
-				<td>";
+				</div>
+				<div class='col-sm'>";
         echo $api->game->getTownNameFromID($gd['guild_town_id']) . "
-				</td>
-			</tr>
-			<tr>
-				<th>
+				</div>
+			</div><hr />
+			<div class='row'>
+				<div class='col-sm'>
 					<a href='?action=memberlist&id={$_GET['id']}'>View Members</a>
-				</th>
-				<td>
+				</div>
+				<div class='col-sm'>
 					<a href='?action=apply&id={$_GET['id']}'>Apply</a>
-				</td>
-			</tr>
-		</table>";
+				</div>
+			</div><hr />
+		</div>";
     }
 }
 
@@ -266,31 +264,31 @@ function memberlist()
     }
     $gd = $db->fetch_row($gq);
     echo "<h3>Members Enlisted in the {$gd['guild_name']} guild</h3>
-	<table class='table table-bordered'>
-		  	<tr>
-		  		<th>
-					User
-				</th>
-		  		<th>
-					Level
-				</th>
-		  	</tr>";
+	<div class='container'>
+		  	<div class='row'>
+		  		<div class='col-sm'>
+					<h4>User</h4>
+				</div>
+		  		<div class='col-sm'>
+					<h4>Level</h4>
+				</div>
+		  	</div><hr />";
     $q = $db->query("SELECT `userid`, `username`, `level`
                      FROM `users`
                      WHERE `guild` = {$gd['guild_id']}
                      ORDER BY `level` DESC");
     //List players in the guild.
     while ($r = $db->fetch_row($q)) {
-        echo "<tr>
-        		<td>
-					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a>
-				</td>
-        		<td>
+        echo "<div class='row'>
+        		<div class='col-sm'>
+					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+				</div>
+        		<div class='col-sm'>
 					{$r['level']}
-				</td>
-			</tr>";
+				</div>
+			</div><hr />";
     }
-    echo "</table>";
+    echo "</div>";
 }
 
 function apply()
@@ -372,24 +370,24 @@ function wars()
                     ORDER BY `gw_id` DESC");
     //There is at least one active guild war.
     if ($db->num_rows($q) > 0) {
-        echo "<table class='table table-bordered'>";
+        echo "<div class='container'>";
         //List the active guild wars.
         while ($r = $db->fetch_row($q)) {
-            echo "<tr>
-				<td>
+            echo "<div class='row'>
+				<div class='col-sm'>
 					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->guild->fetchInfo($r['gw_declarer'],'guild_name')}</a><br />
 						(Points: " . number_format($r['gw_drpoints']) . ")
-				</td>
-				<td>
+				</div>
+				<div class='col-sm'>
 					VS
-				</td>
-				<td>
+				</div>
+				<div class='col-sm'>
 					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->guild->fetchInfo($r['gw_declaree'],'guild_name')}</a><br />
 						(Points: " . number_format($r['gw_depoints']) . ")
-				</td>
-			</tr>";
+				</div>
+			</div><hr />";
         }
-        echo "</table>";
+        echo "</div>";
     } //No guild wars.
     else {
         alert('danger', "Uh Oh!", "There are currently no guilds warring at this time.", false);

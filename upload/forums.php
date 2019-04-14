@@ -109,7 +109,7 @@ function idx()
                      WHERE `ff_auth` = 'public'
                      ORDER BY `ff_id` ASC");
     ?>
-    <div class='cotainer'>
+    <div class='container'>
     
     <div class='row'>
         <div class='col-sm'>
@@ -174,7 +174,7 @@ function idx()
                      WHERE `ff_auth` = 'staff'
                      ORDER BY `ff_id` ASC");
         ?>
-        <div class='cotainer'>
+        <div class='container'>
 
         <div class='row'>
             <div class='col-sm'>
@@ -270,7 +270,7 @@ function viewforum()
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
     echo pagination(20, $posts_topic, $st, "?viewforum={$forum}&amp;st=");
     ?>
-    <div class='cotainer'>
+    <div class='container'>
     
     <div class='row'>
         <div class='col-sm'>
@@ -517,7 +517,7 @@ function viewtopic()
                         $usertopicsq = $db->query("SELECT COUNT('ft_id') FROM `forum_topics` WHERE `ft_owner_id`={$r['fp_poster_id']}");
                         $usertopics = $db->fetch_single($usertopicsq);
                         print
-                            "{$av}<a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a>
+                            "{$av}<br /><a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a>
                                     [{$r['fp_poster_id']}]<br />
                                  <b>Rank:</b> {$memb['user_level']}<br />
                                  <b>Post Count:</b> {$userposts}<br />
@@ -527,6 +527,9 @@ function viewtopic()
                     }
         print
             "</div>
+                <div class='hidden-md-down'>
+                <hr />
+                </div>
 			   	 <div class='col-sm'>
                     {$r['fp_text']}
                     {$edittext}<br />

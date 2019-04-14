@@ -12,7 +12,7 @@ require('globals.php');
 echo "<h3>Federal Dungeon</h3>
 	This is where you go if you break the game rules. Be smart, follow the rules!";
 $q = $db->query("SELECT * FROM `fedjail` ORDER BY `fed_out` ASC");
-echo "<div class='cotainer'>
+echo "<div class='container'>
 <div class='row'>
 		<div class='col-sm'>
 		    <h4>User</h4>
@@ -49,7 +49,7 @@ echo "</div>";
 $db->free_result($q);
 echo "We have no real good reason to put mail banned players here... but we still did.";
 $q = $db->query("SELECT * FROM `mail_bans` ORDER BY `mbTIME` ASC");
-echo "<div class='cotainer'>
+echo "<div class='container'>
 <div class='row'>
 		<div class='col-sm'>
 		    <h4>User</h4>
@@ -87,7 +87,7 @@ $db->free_result($q);
 
 echo "The same holds true for forum bans.";
 $q = $db->query("SELECT * FROM `forum_bans` ORDER BY `fb_time` ASC");
-echo "<div class='cotainer'>
+echo "<div class='container'>
 <div class='row'>
 		<div class='col-sm'>
 		    <h4>User</h4>

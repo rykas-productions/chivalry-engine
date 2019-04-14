@@ -9,7 +9,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
-$macropage = ('gym.php');
+//$macropage = ('gym.php');
 require("globals.php");
 //User is in the infirmary
 if ($api->user->inInfirmary($ir['userid'])) {
@@ -125,13 +125,13 @@ $ir['af_rank'] = getRank($ir['all_four'], 'all');
 //Request CSRF code.
 $code = getHtmlCSRF('gym_train');
 echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to {$ir['energy']} times.<hr />
-<table class='table table-bordered'>
-	<tr>
-		<form action='gym.php' method='post'>
-			<th>
-			    Stat
-            </th>
-			<td>
+<form method='post'>
+<div class='container'>
+	<div class='row'>
+			<div class='col-sm-3'>
+			    <h4>Stat</h4>
+            </div>
+			<div class='col-sm'>
 				<select type='dropdown' name='stat' class='form-control'>
 					<option {$str_select} value='Strength'>
 					    {$_CONFIG['strength_stat']} (Have {$ir['strength']}, Ranked: {$ir['strank']})
@@ -149,30 +149,30 @@ echo "Choose the stat you wish to train, and enter how many times you wish to tr
 					    All Four (Have {$ir['all_four']}, Ranked: {$ir['af_rank']})
                     </option>
 				</select>
-			</td>
-	</tr>
-	<tr>
-		<th>
-		    Training Duration
-        </th>
-		<td>
-		    <input type='number' class='form-control' min='1' max='{$ir['energy']}' name='amnt' value='{$ir['energy']}' />
-        </td>
-	</tr>
-	<tr>
-		<td colspan='2'>
+            </div>
+    </div>
+    <div class='row'>
+            <div class='col-sm-3'>
+                <h4>Training Duration</h4>
+            </div>
+            <div class='col-sm'>
+                <input type='number' class='form-control' min='1' max='{$ir['energy']}' name='amnt' value='{$ir['energy']}' />
+            </div>
+    </div>
+	<div class='row'>
+		<div class='col-sm'>
 		    <input type='submit' class='btn btn-primary' value='Train' />
-        </td>
-	</tr>
-	<tr>
-		<td>
+        </div>
+	</div>
+	<div class='row'>
+		<div class='col-sm'>
 		    <a href='temple.php?action=energy' class='btn btn-primary'>Refill Energy</a>
-        </td>
-        <td>
+        </div>
+        <div class='col-sm'>
 		    <a href='temple.php?action=will' class='btn btn-primary'>Regen Will</a>
-        </td>
-	</tr>
+        </div>
+	</div>
 	    {$code}
-	    </form>
-</table>";
+</div>
+</form>";
 $h->endpage();
