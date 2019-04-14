@@ -12,115 +12,115 @@ require('globals.php');
 echo "<h3>Federal Dungeon</h3>
 	This is where you go if you break the game rules. Be smart, follow the rules!";
 $q = $db->query("SELECT * FROM `fedjail` ORDER BY `fed_out` ASC");
-echo "<table class='table table-bordered'>
-	<tr>
-		<th>
-			Player
-		</th>
-		<th>
-			Remaining Time
-		</th>
-		<th>
-			Reason
-		</th>
-		<th>
-			Jailer
-		</th>
-	</tr>";
+echo "<div class='cotainer'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>User</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Reason</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Sentence</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Jailer</h4>
+		</div>
+</div><hr />";
 //List all the players in the federal jail.
 while ($r = $db->fetch_row($q)) {
     echo "
-	<tr>
-    	<td>
+	<div class='row'>
+    	<div class='col-sm'>
     		<a href='profile.php?user={$r['fed_userid']}'>{$api->user->getNamefromID($r['fed_userid'])}</a>
-    	</td>
-    	<td>
+    	</div>
+    	<div class='col-sm'>
 			" . timeUntilParse($r['fed_out']) . "
-		</td>
-    	<td>
+		</div>
+    	<div class='col-sm'>
 			{$r['fed_reason']}
-		</td>
-    	<td>
+		</div>
+    	<div class='col-sm'>
     		<a href='profile.php?user={$r['fed_jailedby']}'>{$api->user->getNamefromID($r['fed_jailedby'])}</a>
-    	</td>
-    </tr>";
+    	</div>
+    </div><hr />";
 }
-echo "</table>";
+echo "</div>";
 $db->free_result($q);
 echo "We have no real good reason to put mail banned players here... but we still did.";
 $q = $db->query("SELECT * FROM `mail_bans` ORDER BY `mbTIME` ASC");
-echo "<table class='table table-bordered'>
-	<tr>
-		<th>
-			Player
-		</th>
-		<th>
-			Remaining Time
-		</th>
-		<th>
-			Reason
-		</th>
-		<th>
-			Banner
-		</th>
-	</tr>";
+echo "<div class='cotainer'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>User</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Reason</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Sentence</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Jailer</h4>
+		</div>
+</div><hr />";
 //List all the players who are mail banned
 while ($r = $db->fetch_row($q)) {
     echo "
-	<tr>
-    	<td>
+	<div class='row'>
+    	<div class='col-sm'>
     		<a href='profile.php?user={$r['mbUSER']}'>{$api->user->getNamefromID($r['mbUSER'])}</a>
-    	</td>
-    	<td>
+    	</div>
+    	<div class='col-sm'>
 			" . timeUntilParse($r['mbTIME']) . "
-		</td>
-    	<td>
+		</div>
+    	<div class='col-sm'>
 			{$r['mbREASON']}
-		</td>
-    	<td>
+		</div>
+    	<div class='col-sm'>
     		<a href='profile.php?user={$r['mbBANNER']}'>{$api->user->getNamefromID($r['mbBANNER'])}</a>
-    	</td>
-    </tr>";
+    	</div>
+    </div><hr />";
 }
-echo "</table>";
+echo "</div>";
 $db->free_result($q);
 
 echo "The same holds true for forum bans.";
 $q = $db->query("SELECT * FROM `forum_bans` ORDER BY `fb_time` ASC");
-echo "<table class='table table-bordered'>
-	<tr>
-		<th>
-			Player
-		</th>
-		<th>
-			Remaining Time
-		</th>
-		<th>
-			Reason
-		</th>
-		<th>
-			Banner
-		</th>
-	</tr>";
+echo "<div class='cotainer'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>User</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Reason</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Sentence</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Jailer</h4>
+		</div>
+</div><hr />";
 //List all the players who are mail banned
 while ($r = $db->fetch_row($q)) {
     echo "
-	<tr>
-    	<td>
+	<div class='row'>
+    	<div class='col-sm'>
     		<a href='profile.php?user={$r['fb_user']}'>{$api->user->getNamefromID($r['fb_user'])}</a>
-    	</td>
-    	<td>
+    	</div>
+    	<div class='col-sm'>
 			" . timeUntilParse($r['fb_time']) . "
-		</td>
-    	<td>
+		</div>
+    	<div class='col-sm'>
 			{$r['fb_reason']}
-		</td>
-    	<td>
+		</div>
+    	<div class='col-sm'>
     		<a href='profile.php?user={$r['fb_banner']}'>{$api->user->getNamefromID($r['fb_banner'])}</a>
-    	</td>
-    </tr>";
+    	</div>
+    </div><hr />";
 }
-echo "</table>";
+echo "</div>";
 $db->free_result($q);
 
 $h->endpage();

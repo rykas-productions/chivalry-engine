@@ -38,41 +38,41 @@ function home()
     $tresder = (randomNumber(100, 999));
     $db->free_result($q2);
     $q = $db->query("SELECT `cgID`, `cgNAME` FROM `crimegroups` ORDER BY `cgORDER` ASC");
-    echo "
-	<table class='table table-bordered'>
-		<tr>
-			<th>
-				Crime
-			</th>
-			<th>
-				Bravery Cost
-			</th>
-			<th>
-				Commit
-			</th>
-		</tr>";
+    echo "<div class='cotainer'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>Crime</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Brave</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Action</h4>
+		</div>
+</div><hr />";
     while ($r = $db->fetch_row($q)) {
-        echo "<tr><td colspan='3' class='h'>{$r['cgNAME']} Crimes</td></tr>";
+        echo "<div class='row'><div class='col-sm'>{$r['cgNAME']} Crimes</div></div>";
         foreach ($crimes as $v) {
             if ($v['crimeGROUP'] == $r['cgID']) {
-                echo "<tr>
-						<td>
+                echo "<div class='row'>
+						<div class='col-sm'>
 							{$v['crimeNAME']}
-						</td>
-						<td>
+						</div>
+						<div class='col-sm'>
 							{$v['crimeBRAVE']}
-						</td>
-						<td>
+						</div>
+						<div class='col-sm'>
 							<a href='?action=crime&c={$v['crimeID']}&tresde={$tresder}'>
 								Commit Crime
 							</a>
-						</td>
-					</tr>";
+						</div>
+					</div>
+					<hr />";
             }
         }
     }
     $db->free_result($q);
-    echo "</table>";
+    echo "</div>";
     $h->endpage();
 }
 

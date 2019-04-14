@@ -31,51 +31,44 @@ function home()
     echo "<h3>The Dungeon</h3><hr />
 	<small>There's current " . number_format($PlayerCount) . " players in the dungeon.</small>
 	<hr />
-	<table class='table table-hover table-bordered'>
-		<thead>
-			<tr>
-				<th>
-					User
-				</th>
-				<th>
-					Reason
-				</th>
-				<th class='hidden-xs'>
-					Check-in
-				</th>
-				<th>
-					Check-out
-				</th>
-				<th>
-					Actions
-				</th>
-			</tr>
-		</thead>
-		<tbody>";
+	<div class='cotainer'>
+        <div class='row'>
+            <div class='col-sm'>
+                <h4>User</h4>
+            </div>
+            <div class='col-sm'>
+                <h4>Reason</h4>
+            </div>
+            <div class='col-sm'>
+                <h4>Time Remaining</h4>
+            </div>
+             <div class='col-sm'>
+                <h4>Actions</h4>
+            </div>
+    </div>
+    <hr />";
     //List users in the dungeon.
     $query = $db->query("SELECT * FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime} ORDER BY `dungeon_out` DESC");
     while ($Infirmary = $db->fetch_row($query)) {
         echo "
-			<tr>
-				<td>
+			<div class='row'>
+				<div class='col-sm'>
 					<a href='profile.php?user={$Infirmary['dungeon_user']}'>
 						{$api->user->getNameFromID($Infirmary['dungeon_user'])}
 					</a>
-				</td>
-				<td>
+				</div>
+				<div class='col-sm'>
 					{$Infirmary['dungeon_reason']}
-				</td>
-				<td class='hidden-xs'>
-					" . dateTimeParse($Infirmary['dungeon_in']) . "
-				</td>
-				<td>
+				</div>
+				<div class='col-sm'>
 					" . timeUntilParse($Infirmary['dungeon_out']) . "
-				</td>
-				<td>
+				</div>
+				<div class='col-sm'>
 					[<a href='?action=bail&user={$Infirmary['dungeon_user']}'>Bail Out</a>]
 					[<a href='?action=bust&user={$Infirmary['dungeon_user']}'>Bust Out</a>]
-				</td>
-			</tr>";
+				</div>
+			</div>
+			<hr />";
     }
     echo "</tbody></table>";
     $h->endpage();

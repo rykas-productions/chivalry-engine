@@ -10,19 +10,18 @@
 require_once('globals.php');
 echo "<h3>VIP Packs</h3><hr />If you purchase a VIP Package from below, you will be gifted the following depending on
     the package your purchase. All purchases are final. If you commit fraud, you will be removed from the game permanently.";
-echo "
-<table class='table table-bordered'>
-	<tr>
-		<th>
-			Pack Offer
-		</th>
-		<th>
-			Pack Contents
-		</th>
-		<th width='25%'>
-			PayPal Link
-		</th>
-	</tr>";
+echo "<div class='cotainer'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>Offer</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Contents</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>PayPal</h4>
+		</div>
+</div><hr />";
 $q = $db->query("SELECT `v`.*, `i`.*
 				FROM `vip_listing` `v`
 				INNER JOIN `items` AS `i` 
@@ -34,47 +33,54 @@ while ($r = $db->fetch_row($q)) {
     $r['vip_cost'] = sprintf("%0.2f", $r['vip_cost']);
     $amount = ($r['vip_qty'] > 1) ? "{$r['vip_qty']} x " : '';
     echo "
-	<tr>
-		<td>
+	<div class='row'>
+		<div class='col-sm'>
 		{$amount} {$r['itmname']}<br />
 			Cost: \${$r['vip_cost']} USD
-		</td>
-		<td>
+		</div>
+		<div class='col-sm'>
 		";
-    $uhoh = 0;
     //List the item's effects.
-    for ($enum = 1; $enum <= 3; $enum++) {
-        if ($r["effect{$enum}_on"] == 'true') {
-            //Lets make the item's effects more user friendly to read, eh.
-            $einfo = unserialize($r["effect{$enum}"]);
-            $einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
-            $einfo['dir'] = ($einfo['dir'] == 'pos') ? "Increases" : "Decreases";
+    $iterations=count(json_decode($r['itmeffects_toggle']));
+    $toggle=json_decode($r['itmeffects_toggle']);
+    $stat=json_decode($r['itmeffects_stat']);
+    $dir=json_decode($r['itmeffects_dir']);
+    $type=json_decode($r['itmeffects_type']);
+    $amount=json_decode($r['itmeffects_amount']);
+    $usecount=0;
+    $uhoh=0;
+    while ($usecount != $iterations)
+    {
+        if ($toggle[$usecount] == 1)
+        {
+            $uhoh+=1;
+            $type[$usecount] = ($type[$usecount] == 'percent') ? '%' : '';
+            $dir[$usecount] = ($dir[$usecount] == 'pos') ? 'Increases' : 'Decreases';
             $stats =
                 array("energy" => "Energy", "will" => "Will",
                     "brave" => "Bravery", "level" => "Level",
                     "hp" => "Health", "strength" => "{$_CONFIG['strength_stat']}",
                     "agility" => "{$_CONFIG['agility_stat']}", "guard" => "{$_CONFIG['guard_stat']}",
-                    "labor" => "{$_CONFIG['labor_stat']}", "iq" => "IQ",
+                    "labor" => "{$_CONFIG['labor_stat']}", "iq" => "{$_CONFIG['iq_stat']}",
                     "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                    "primary_currency" => "{$_CONFIG['primary_currency']}", "secondary_currency"
-                => "{$_CONFIG['secondary_currency']}", "crimexp" => "Experience", "vip_days" =>
+                    "primary_currency" => "{$_CONFIG['primary_currency']}",
+                    "secondary_currency" => "{$_CONFIG['secondary_currency']}",
+                    "xp" => "Experience", "vip_days" =>
                     "VIP Days");
-            $statformatted = $stats["{$einfo['stat']}"];
-            echo "{$einfo['dir']} {$statformatted} by " . number_format($einfo['inc_amount']) . "{$einfo['inc_type']}.<br />";
-        } //If item has no effects, lets list the description instead.
-        else {
-            $uhoh++;
+            $statformatted = $stats["{$stat[$usecount]}"];
+            echo "{$dir[$usecount]} {$statformatted} by " . number_format($amount[$usecount]) . "{$type[$usecount]}.<br />";
         }
-        if ($uhoh == 3) {
-            echo "{$r['itmdesc']}";
-        }
+        $usecount=$usecount+1;
+    }
+    if ($uhoh == 0) {
+        echo $r['itmdesc'];
     }
     //The form handles a lot of the internals for the pack info.
     //You should only need to change the currency_code.
     //Proceed at your own caution.
     echo "
-		</td>
-		<td>
+		</div>
+		<div class='col-sm'>
 			<form action='https://www.paypal.com/cgi-bin/webscr' method='post'>
 			<input type='hidden' name='cmd' value='_xclick' />
 			<input type='hidden' name='business' value='{$set['PaypalEmail']}' />
@@ -90,10 +96,11 @@ while ($r = $db->fetch_row($q)) {
 			<input type='hidden' name='rm' value='2'>
 			<input type='image' src='https://www.paypal.com/en_US/i/btn/x-click-but21.gif' border='0' name='submit' alt='Make payments with PayPal - it's fast, free and secure!' />
 			</form>
-		</td>
-	</tr>";
+		</div>
+	</div>
+	<hr />";
 }
-echo "</table><br />
+echo "</div><br />
 VIP Days disable ads around the game. You'll also receive 16% energy refill instead of 8%. You'll also receive a star by
  your name, and your name will change color.";
 $h->endpage();

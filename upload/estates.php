@@ -74,40 +74,37 @@ else if (isset($_GET['sellhouse'])) {
     }
     $hq = $db->query("SELECT * FROM `estates` WHERE `house_will` > {$ir['maxwill']} ORDER BY `house_will` ASC");
     echo "
-	<table class='table table-bordered'>
-	<tr>
-		<th>
-			Estate Name
-		</th>
-		<th>
-			Level Requirement
-		</th>
-		<th>
-			Cost
-		</th>
-		<th>
-			Will Level
-		</th>
-	</tr>";
+	<div class='cotainer'>
+        <div class='row'>
+            <div class='col-sm'>
+                <h4>Estate</h4>
+            </div>
+            <div class='col-sm'>
+                <h4>Level</h4>
+            </div>
+            <div class='col-sm'>
+                <h4>Cost</h4>
+            </div>
+    </div>
+    <hr />";
     //List all game's estates.
     while ($r = $db->fetch_row($hq)) {
         echo "
-		<tr>
-			<td>
-				<a href='?property={$r['house_id']}'>{$r['house_name']}</a>
-			</td>
-			<td>
+		<div class='row'>
+			<div class='col-sm'>
+				<a href='?property={$r['house_id']}'>{$r['house_name']}</a><br />
+				Will: " . number_format($r['house_will']) . "
+			</div>
+			<div class='col-sm'>
 				" . number_format($r['house_level']) . "
-			</td>
-			<td>
+			</div>
+			<div class='col-sm'>
 				" . number_format($r['house_price']) . "
-			</td>
-			<td>
-				" . number_format($r['house_will']) . "
-			</td>
-		</tr>";
+			</div>
+		</div>
+		<hr />";
     }
-    echo "</table>";
+    echo "</div>";
     $db->free_result($hq);
 }
 $h->endpage();
