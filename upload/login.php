@@ -89,5 +89,17 @@ echo "
             </div>
         </div>
     </div>
+    <div class='col-sm-8'>
+        <div class='card'>
+            <div class='card-header bg-dark text-white'>
+                Powered by FOSS!
+            </div>
+            <div class='card-body'>
+                This game runs on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/v2'>Chivalry Engine 
+                version {$set['Version_Number']}</a>, created by <a href='https://twitter.com/DaMG156'>MasterGeneral156
+                </a>.
+            </div>
+        </div>
+    </div>
 </div>";
 $h->endpage();
