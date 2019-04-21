@@ -12,3 +12,8 @@ upload/.idea/modules.xml
 upload/.idea/vcs.xml
 upload/.idea/workspace.xml
 upload/.idea/sqldialects.xml
+*.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/vcs.xml
