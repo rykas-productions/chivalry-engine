@@ -110,14 +110,22 @@ function home()
                     echo "<br />
 				<form method='post'>
 					<input type='hidden' name='poll' value='{$r['id']}' />
-					<table class='table table-bordered'>
-						<tr>
-							<th>Polling Options</th>
-							<th>Select</th>
-						</tr>
-						<tr>
-							<th colspan='2'>Polling Question: {$r['question']} (Not Voted)</th>
-						</tr>";
+					<div class='container'>
+                        <div class='row'>
+                                <div class='col-sm'>
+                                    <h4>Polling Options</h4>
+                                </div>
+                                <div class='col-sm'>
+                                    <h4>Select</h4>
+                                </div>
+                        </div>
+                        <hr />
+                        <div class='row'>
+                            <div class='col-sm'>
+                                <h5>Polling Question: {$r['question']} (Not Voted)</h5>
+                            </div>
+                        </div>
+                        <hr />";
                     for ($i = 1; $i <= 10; $i++) {
                         if ($r['choice' . $i]) {
                             $k = 'choice' . $i;
@@ -126,16 +134,25 @@ function home()
                             } else {
                                 $c = "";
                             }
-                            echo "<tr>
-								<td>{$r[$k]}</td>
-								<td><input type='radio' class='form-control' name='choice' value='$i' $c /></td>
-							  </tr>";
+                            echo "
+                            <div class='row'>
+                                <div class='col-sm'>
+                                    {$r[$k]}
+                                </div>
+                                <div class='col-sm'>
+                                    <input type='radio' class='form-control' name='choice' value='$i' $c />
+                                </div>
+                             </div>
+                             <hr />";
                         }
                     }
-                    echo "<tr>
-						<td colspan='2'><input type='submit' class='btn btn-primary' value='Cast Vote' /></td>
-					  </tr>
-				</table></form>";
+                    echo "<div class='row'>
+                                <div class='col-sm'>
+                                    <input type='submit' class='btn btn-primary' value='Cast Vote' />
+                                </div>
+                             </div>
+                             <hr />
+				</div></form>";
                 }
             }
         }
