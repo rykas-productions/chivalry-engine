@@ -230,3 +230,4 @@ function close()
         die($h->endpage());
     }
 }
+$h->endpage();
