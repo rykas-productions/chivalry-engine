@@ -53,41 +53,26 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 <hr />
 <a name='navigation'><h4>Navigation</h4></a>
-	Being able to view and navigate through {$set['WebsiteName']} is important! The top navigation bar (or dropdown, if
-	you're on mobile) is where you will find access to the rest of the game.
+	Being able to view and navigate through {$set['WebsiteName']} is important! The pop-out menu is where you will find access to the rest of the game.
 	<br />
 	<br />
-	<u>Navigation Bar</u>
+	<u>Pop-out Menu</u>
 	<br />
-	The navigation bar (or dropdown) is your gateway to the game.
+	The Pop-out is your gateway to the game.
 	<br />Clicking on the game name in the top left corner will take you to your Personal Info page.
 	<br />Clicking on Explore will allow you to explore many of the features of the game. (More information on this later!)
-	<br />Clicking Mail will take you to your personal mailbox where you can write and read letters to others.
-	<br />Notifications will take you to your notification box, where game events will be posted if they involve you.
+	<br />Clicking the envelope icon will take you to your personal mailbox where you can write and read letters to others.
+	<br />Clicking on the bell icon will take you to your notification box, where game events will be posted if they involve you.
 	<br />Clicking Inventory will allow you to view the items you have in your inventory, along with the gear you have
 	equipped.
 	<br />
 	<br />
-	<u>Navigation Bar Dropdown</u>
-	<br />
-    Clicking the 'Hello, {$ir['username']}' Dropdown will display more information.
-    <br />Clicking on Profile will take you to your personal profile page. This is what others see when they click on
-    your name in-game.
-    <br />Clicking on Settings will take you to your account settings. Here you can change your display picture,
-    password, username, and forum signature!
-     <br />Clicking Game Rules will show you the rules of the game. It's recommended that you read these over so you
-     know what you can and cannot do.
-     <br />Finally, clicking Logout will terminate your session.
-    <br />
-    <br />
 <hr>
 <a name='explore'><h4>Exploring</h4></a>
 	Exploring is the best way around the game. The explore page is the highway to all other game features.
 	<br />
 	<br />
 	<u>Shops</u>
-	<br />
-	Hovering over the Shops category will display the numerous ways you can buy things in the game.
 	<br />Local Shops are the game-created shops in your town. You'll find an infinite amount of items in these shops.
 	<br />However, if you're wanting something a little more flashy, the Item Market is a market ran exclusively by other players. You'll find all sorts
 	of items for sale here. Note, that players also set their own pricing.
@@ -95,8 +80,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	Currency into {$_CONFIG['primary_currency']}, depending on the market demand.
 	<br />
 	<br />
-	<u>Financial</u><br />
-	Hovering over Financial will greet you with a category of ways to use your currency.
+	<u>Financial</u>
 	<br />Work Center is where you begin your long life of working for 'the man'. You need to have special requirements
 	to join some jobs, however.
 	<br />The Bank will allow you safely store your {$_CONFIG['primary_currency']}. Storing in the Bank will keep your money safe from
@@ -110,8 +94,6 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<br />
 	<u>Working</u>
-	<br />
-    You will find that the work category is where you will spend a lot of your time at.
     <br />Mining is a great place to find riches. Be careful though, as nearby warriors may get jealous of your haul.
     If you're too careless, you could also ignite a gas pocket, placing yourself into the Infirmary.
     <br />The Smeltery can be used to smelt your items gained while  mining, into better items. Obviously, you will need
@@ -126,8 +108,6 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
     <br />
     <br />
 	<u>Administration</u>
-	<br />
-	This category has no general theme, to be honest.
 	<br />Checking out User List will list all the registered users in-game, and allow you to organize them by Level,
 	ID, {$_CONFIG['primary_currency']} or name.
 	<br />Clicking Users Online will list the players online in the last 15 minutes. You can customize this to any
@@ -136,7 +116,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	issues, you should contact them!
 	<br />The Federal Dungeon is where bad folks go. If you follow the rules, you won't ever have to get locked up. If
 	you get locked up, you will lose access to almost all game features.
-	<br />Game Stats will list your game statistics. There's a lot shown here, so check it out to get an idea!
+	<br />Game Statistics will list your game statistics. There's a lot shown here, so check it out to get an idea!
 	<br />If you suspect a player breaking a rule, use the Player Report link to report them. Reports here are
 	anonymous, and your information won't be used in investigations against players. If you abuse this form, however,
 	you will be dealt with harshly.
@@ -145,10 +125,8 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />The Item Appendix lists all in-game items. You can use this to see how many items are in circulation.
 	<br />
 	<br />
-	<u>Games</u><br />
-	We have several games for you to play to keep your mind off the stress of the game. Games inside of a game. Isn't
-	this how you destroy the world?
-	<br />In either case, Russian Roulette is a deadly game that you can challenge your friends to. You point a gun to
+	<u>Games</u>
+	<br />Russian Roulette is a deadly game that you can challenge your friends to. You point a gun to
 	each other's heads until someone is shot. If you're shot, game over.
 	<br />If that's too high risk for you, how about trying out High/Low? Simply decide if the next drawn number will be
 	 higher or lower than the current number. If you're right, you pocket some extra {$_CONFIG['primary_currency']}.
@@ -157,9 +135,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<br />
 	<u>Guilds</u>
-	<br />
-	Hovering over the Guilds section will display links pertaining to guilds.
-	<br />Firstly, if you have joined a guild, Your Guild will take you to view your guild.
+	<br />Firstly, if you have joined a guild, 'Visit Your Guild' will take you to view your guild.
 	<br />However, this is useless if you aren't in a guild. To join a guild, or view possible enemies of your own guild,
 	 clicking on Guild List will list all the guilds in the game.
 	 <br />Clicking on a guild's name will allow you to view detailed information about the guild.
@@ -168,27 +144,13 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<br />
 	<u>Social</u>
-	<br />
-	Opening the Social section will allow you to view numerous things to do around the game.
-	<br />Firstly, the Dungeon will list the players in the dungeon. You will be placed here if you are caught
-	committing crimes.
-	<br />The Infirmary will show those who are receiving medical treatment. You will be placed here if you sustain
-	excessive injuries.
 	<br />The Forums are a great place to talk to other members of the game. Please note that its likely someone will give
-	 you a hard time. Simlpy don't take it too hard. It's all in the name of fun.
-	<br />The Game newspaper can be used to place ads in-game for whatever reason.
+	 you a hard time. Simply don't take it too hard. It's all in the name of fun.
 	<br />The Polling Center is used when the game administration wishes to receive input on something. Voting is optional,
 	but recommended if you wish to have any input on changes in-game.
 	<br />The Hall of Fame lists the top 20 players in each category. If you're not on this list, don't feel bad! Take some
 	time to get yourself in a better state!
 	<br />The Game Tutorial tells you how to play the game. Click this if you're confused... oh wait... you already did.
-	<br />
-	<br />
-	<u>Top 10 Players</u>
-	<br />
-	The Top 10 Players listing will list the top ten strongest players in the game, in order of total stats. These are
-	the players you want to beat. It's a high honor to be a part of this list. It takes lots of time and dedication to
-	get here. Don't be upset if you can't get here.
 	<br />
 	<br />
 	<u>Referral Link</u>
@@ -216,7 +178,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Power Training</u>
 	<br />
 	Power training is the term used to describe when you spend excessive amounts of time, patience and skill training
-	your stats to have a signifcant increase. Power training blows through your resources quickly, so it's a good idea
+	your stats to have a significant increase. Power training blows through your resources quickly, so it's a good idea
 	to make sure you have enough Secondary Currency before you start power training.
 	<br />The idea is to have your Will maxed out, and train using all your Energy in one session, then refilling both
 	your Energy and Will before training again. This is complex, so don't worry if you do not understand how this works.
@@ -307,7 +269,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<hr>
 	<a name='settings'><h4>Account Settings</h4></a>
-	By going to your preferences page (from the dropdown), you'll be able to change key information about your account.
+	By going to your preferences page (by selecting the gear icon from the menu), you'll be able to change key information about your account.
 	It is highly recommended you check out this page, as more options may end up becoming available.
 	<br />
 	<br />
@@ -321,12 +283,6 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	You may change your password at will. We highly recommend using a password you haven't used elsewhere, and cycling
 	your password out every 3 months or so. We take reasonable steps to ensure your password isn't stolen.
-	<br />
-	<br />
-	<u>Timezone Change</u>
-	<br />
-	You can change your timezone to be different than the server's time. Note that all internal server times are ran off of
-	Unix Time, or GMT-0.
 	<br />
 	<br />
 	<u>Email Opt Setting</u>
