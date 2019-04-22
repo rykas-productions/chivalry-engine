@@ -677,8 +677,6 @@ function sendData($gamename, $dbtype, $url='https://chivalryisdeadgame.com/chiva
     curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
     curl_setopt ($ch, CURLOPT_POST, 1);
     $result = curl_exec ($ch);
-
-    echo $result;
     curl_close($ch);
 }
 function getGameURL()
