@@ -91,7 +91,7 @@ function diagnostics()
         $wv = '<span class="text-danger">Fail!</span>';
         $wvf = 0;
     }
-	if (function_exists('openssl_randomNumber_pseudo_bytes'))
+	if (function_exists('openssl_random_pseudo_bytes'))
     {
         $ov = '<span class="text-success">Pass!</span>';
         $ovf = 1;
@@ -142,11 +142,11 @@ function diagnostics()
     			<td>{$pdv}</td>
     		</tr>
 			<tr>
-    			<td>Password_Hash avaliable?</td>
+    			<td>Password_Hash available?</td>
     			<td>{$hv}</td>
     		</tr>
 			<tr>
-    			<td>OpenSSL randomNumber Pseudo Bytes avaliable?</td>
+    			<td>OpenSSL available?</td>
     			<td>{$ov}</td>
     		</tr>
     		<tr>
@@ -460,7 +460,7 @@ function install()
     echo '... Successful.<br />';
     echo 'Writing game config file...';
     echo 'Write Config...';
-    $code = sha1(openssl_randomNumber_pseudo_bytes(64));
+    $code = sha1(openssl_random_pseudo_bytes(64));
     if (file_exists("config.php"))
     {
         unlink("config.php");
