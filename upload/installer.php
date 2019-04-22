@@ -239,6 +239,18 @@ function config()
     			<td><input type='text' name='database' class='form-control' required='1' value='' /></td>
     		</tr>
     		<tr>
+    			<th>
+    				Send Install Info?<br />
+    				<small>Just your domain name, codebase version, install date, game name and database type.</small>
+    			</th>
+    			<td>
+    				<select name='analytics' class='form-control' required='1' type='dropdown'>
+    					<option value='true'>True</option>
+    					<option value='false'>False</option>
+    				</select>
+    			</td>
+    		</tr>
+    		<tr>
     			<th colp='2'>Game Config</th>
     		</tr>
     		<tr>
@@ -439,7 +451,7 @@ function install()
     }
     // Try to establish DB connection first...
     echo 'Attempting DB connection...';
-    require_once("class/class_db_mysqli.php");
+    require_once("class/class_db_{$db_driver}.php");
     $db = new database;
     $db->configure($db_hostname, $db_username, $db_password, $db_database, 0);
     $db->connect();
@@ -582,6 +594,11 @@ EOF;
         }
     }
 	echo "<br />Crons have been set to start tomorrow at midnight.";
+    if ($_POST['analytics'])
+    {
+        sendData($ins_game_name,$db_driver);
+        echo "<br />Analytics have been sent. TheMasterGeneral thanks you!";
+    }
 }
 if ($_GET['code'] != 'install')
 {
@@ -640,4 +657,47 @@ function getEngineVersion($url = 'https://raw.githubusercontent.com/MasterGenera
         return "Chivalry Engine is up to date.";
     else
         return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
+}
+
+/*
+ * Function to send analytical data to TheMasterGeneral, if the installer chooses to.
+ */
+function sendData($gamename, $dbtype, $url='https://chivalryisdeadgame.com/chivalry-engine-analytics.php')
+{
+    global $Version;
+    $postdata = "domain=" . getGameURL() . "&install=" . time() ."&gamename={$gamename}&dbtype={$dbtype}&version={$Version}";
+    $ch = curl_init();
+    curl_setopt ($ch, CURLOPT_URL, $url);
+    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6");
+    curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt ($ch, CURLOPT_REFERER, $url);
+    curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
+    curl_setopt ($ch, CURLOPT_POST, 1);
+    $result = curl_exec ($ch);
+
+    echo $result;
+    curl_close($ch);
+}
+function getGameURL()
+{
+    $domain = $_SERVER['HTTP_HOST'];
+    $turi = $_SERVER['REQUEST_URI'];
+    $turiq = '';
+    for ($t = strlen($turi) - 1; $t >= 0; $t--) {
+        if ($turi[$t] != '/') {
+            $turiq = $turi[$t] . $turiq;
+        } else {
+            break;
+        }
+    }
+    $turiq = '/' . $turiq;
+    if ($turiq == '/') {
+        $domain .= substr($turi, 0, -1);
+    } else {
+        $domain .= str_replace($turiq, '', $turi);
+    }
+    return $domain;
 }
