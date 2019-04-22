@@ -40,9 +40,6 @@ echo "<table class='table table-hover table-bordered'>
 	</tr>
 	<tr>
 		<td>
-		    Class: {$ir['class']}
-		</td>
-		<td>
 		    VIP Days: " . number_format($ir['vip_days']) . "
 		</td>
 	</tr>

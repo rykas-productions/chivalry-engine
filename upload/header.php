@@ -310,29 +310,6 @@ class headers
             $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");
             $_SESSION['attacking'] = 0;
         }
-        $townguild = $db->fetch_single($db->query("SELECT `town_guild_owner` FROM `town` WHERE `town_id` = {$ir['location']}"));
-        //User is in a guild, and the guild has control of the current town.
-        if (($townguild == $ir['guild']) && ($townguild > 0) && ($ir['guild'] > 0)) {
-            $encounterchance = randomNumber(1, 1000);
-            //User gets robbed!
-            if ($encounterchance == 1) {
-                $result = randomNumber(1, 2);
-                if ($result == 1) {
-                    $infirmtime = randomNumber(20, 60);
-                    $api->user->setInfirmary($userid, $infirmtime, "Attacked by Bandits");
-                    $api->user->addNotification($userid, "While randomNumberly walking about in this town, you were attacked by
-					    a group of bandits as a message to your guild leader.");
-                }
-                if ($result == 2) {
-                    $api->user->addNotification($userid, "While randomNumberly walking about in this town, you successfully
-					    fended off a group of bandits.");
-                }
-                if ($result == 3) {
-                    $api->user->addNotification($userid, "While randomNumberly walking about in this town, you were attacked by
-					    a group of bandits. Luckily, a player nearby was able to fight them off for you.");
-                }
-            }
-        }
     }
 
     function endpage()
