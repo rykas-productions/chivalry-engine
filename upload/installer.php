@@ -532,7 +532,6 @@ EOF;
 	'{$e_encpsw}', '{$adm_gender}', '{$IP}', 
 	'{$IP}', '{$CurrentTime}', '{$profilepic}');");
     $i = $db->insert_id();
-	$e_class = $adm_class;
     $db->query("INSERT INTO `userstats` VALUES($i, 1000, 1000, 1000, 1000, 1000)");
     $db->query("INSERT INTO `settings` VALUES(NULL, 'WebsiteName', '{$ins_game_name}')");
     $db->query("INSERT INTO `settings` VALUES(NULL, 'WebsiteOwner', '{$ins_game_owner}')");
@@ -594,7 +593,7 @@ EOF;
         }
     }
 	echo "<br />Crons have been set to start tomorrow at midnight.";
-    if ($_POST['analytics'])
+    if ($_POST['analytics'] == 'true')
     {
         sendData($ins_game_name,$db_driver);
         echo "<br />Analytics have been sent. TheMasterGeneral thanks you!";
