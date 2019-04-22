@@ -544,6 +544,12 @@ EOF;
 	$db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
 	$db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
     echo '... Done.<br />';
+    if ($_POST['analytics'] == 'true')
+    {
+        echo "Sending install analytics...";
+        sendData($ins_game_name,$db_driver);
+        echo "Analytics have been sent. TheMasterGeneral thanks you!<br />";
+    }
     $path = dirname($_SERVER['SCRIPT_FILENAME']);
     echo "
     <h2>Installation Complete!</h2>
@@ -593,11 +599,6 @@ EOF;
         }
     }
 	echo "<br />Crons have been set to start tomorrow at midnight.";
-    if ($_POST['analytics'] == 'true')
-    {
-        sendData($ins_game_name,$db_driver);
-        echo "<br />Analytics have been sent. TheMasterGeneral thanks you!";
-    }
 }
 if ($_GET['code'] != 'install')
 {
