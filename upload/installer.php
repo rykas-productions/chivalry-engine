@@ -71,7 +71,7 @@ function diagnostics()
 {
 	global $Build;
     menuprint("diag");
-    if (version_compare(phpversion(), '5.5.0') < 0)
+    if (version_compare(phpversion(), '7.0.0') < 0)
     {
         $pv = '<span class="text-danger">Failed</span>';
         $pvf = 0;
@@ -83,7 +83,7 @@ function diagnostics()
     }
     if (is_writable('./'))
     {
-        $wv = '<span class="text-success">Pass! Game folder is writable.</span>';
+        $wv = '<span class="text-success">Pass!</span>';
         $wvf = 1;
     }
     else
@@ -98,7 +98,7 @@ function diagnostics()
     }
     else
     {
-        $ov = '<span class="text-danger">Failed...</span>';
+        $ov = '<span class="text-danger">Fail!</span>';
         $ovf = 0;
     }
 	if (function_exists('password_hash'))
@@ -108,7 +108,7 @@ function diagnostics()
     }
     else
     {
-        $hv = '<span class="text-danger">Failed...</span>';
+        $hv = '<span class="text-danger">Fail!</span>';
         $hvf = 0;
     }
 	if (extension_loaded('pdo_mysql'))
@@ -126,11 +126,31 @@ function diagnostics()
 		$pdv = '<span class="text-danger">No acceptable database handler found. Installer will not continue.</span>';
         $pdf = 0;
 	}
+    if (function_exists('curl_init'))
+    {
+        $cuv = "<span class='text-success'>Pass!</span>";
+        $cuf=1;
+    }
+    else
+     {
+        $cuv = "<span class='text-danger'>Fail</span>";
+        $cuf=0;
+     }
+    if (function_exists('fopen'))
+    {
+        $fov = "<span class='text-success'>Success</span>";
+        $fof=1;
+    }
+    else
+     {
+        $fov = "<span class='text-danger'>Fail</span>";
+        $fof=0;
+     }
     echo "
     <h3>Basic Diagnostic Results:</h3>
     <table class='table table-bordered table-hover'>
     		<tr>
-    			<td>Is the server's PHP Version greater than 5.5.0?</td>
+    			<td>Is the server's PHP Version greater than 7.0.0?</td>
     			<td>{$pv}</td>
     		</tr>
     		<tr>
@@ -150,6 +170,14 @@ function diagnostics()
     			<td>{$ov}</td>
     		</tr>
     		<tr>
+    			<td>cURL available?</td>
+    			<td>{$cuv}</td>
+    		</tr>
+    		<tr>
+    			<td>fopen available?</td>
+    			<td>{$fov}</td>
+    		</tr>
+    		<tr>
     			<td>Is Chivalry Engine up to date?</td>
     			<td>
         			" . getEngineVersion() . "
@@ -157,7 +185,7 @@ function diagnostics()
         	</tr>
     </table>
        ";
-    if ($pvf + $pdf + $wvf + $hvf + $ovf < 5)
+    if ($pvf + $pdf + $wvf + $hvf + $ovf + $cuv + $fov < 7)
     {
         echo "
 		<hr />
