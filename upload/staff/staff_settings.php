@@ -382,46 +382,44 @@ function diagnostics()
     global $h, $userid, $api;
     $dir = substr(__DIR__, 0, strpos(__DIR__, "\staff"));
     if (version_compare(phpversion(), '5.5.0') < 0) {
-        $pv = "<span style='color: red'>Fail</span>";
+        $pv = "<span class='text-danger'>Fail</span>";
     } else {
-        $pv = "<span style='color: green'>Success</span>";
+        $pv = "<span class='text-success'>Success</span>";
     }
     if (is_writable('./')) {
-        $wv = "<span style='color: green'>Success</span>";
+        $wv = "<span class='text-success'>Success</span>";
     } else {
-        $wv = "<span style='color: red'>Fail</span>";
+        $wv = "<span class='text-danger'>Fail</span>";
     }
     if (function_exists('mysqli_connect')) {
-        $dv = "<span style='color: green'>Success</span>";
+        $dv = "<span class='text-success'>Success</span>";
     } else {
-        $dv = "<span style='color: red'>Fail</span>";
+        $dv = "<span class='text-danger'>Fail</span>";
     }
     if (extension_loaded('pdo')) {
-        $pdv = "<span style='color: green'>Success</span>";
+        $pdv = "<span class='text-success'>Success</span>";
     } else {
-        $pdv = "<span style='color: red'>Fail</span>";
+        $pdv = "<span class='text-danger'>Fail</span>";
     }
-    if (function_exists('openssl_randomNumber_pseudo_bytes')) {
-        $ov = "<span style='color: green'>Success</span>";
+    if (function_exists('openssl_random_pseudo_bytes')) {
+        $ov = "<span class='text-success'>Success</span>";
     } else {
-        $ov = "<span style='color: red'>Fail</span>";
+        $ov = "<span class='text-danger'>Fail</span>";
     }
     if (function_exists('password_hash')) {
-        $hv = '<span style="color: green">Pass! Using stronger password hash method.</span>';
-        $hvf = 1;
+        $hv = '<span class="text-success">Pass! Using stronger password hash method.</span>';
     } else {
-        $hv = '<span style="color: red">Failed...</span>';
-        $hvf = 0;
+        $hv = '<span class="text-danger">Failed...</span>';
     }
     if (function_exists('curl_init')) {
-        $cuv = "<span style='color: green'>Success</span>";
+        $cuv = "<span class='text-success'>Success</span>";
     } else {
-        $cuv = "<span style='color: red'>Fail</span>";
+        $cuv = "<span class='text-danger'>Fail</span>";
     }
     if (function_exists('fopen')) {
-        $fov = "<span style='color: green'>Success</span>";
+        $fov = "<span class='text-success'>Success</span>";
     } else {
-        $fov = "<span style='color: red'>Fail</span>";
+        $fov = "<span class='text-danger'>Fail</span>";
     }
     echo "<table class='table table-bordered table-hover'>
     		<tr>
