@@ -19,7 +19,6 @@ if (!isset($_SESSION['started'])) {
 }
 ob_start();
 require "../lib/basic_error_handler.php";
-require "../lib/dev_help.php";
 set_error_handler('error_php');
 require "../global_func.php";
 $domain = getGameURL();
