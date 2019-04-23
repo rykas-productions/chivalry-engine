@@ -646,7 +646,7 @@ function updateFile($url)
 /*
  * Function to fetch current version of Chivalry Engine
  */
-function getEngineVersion($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
+function getEngineVersion($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine-v2.json')
 {
     global $set;
     $engine_version = $set['Version_Number'];
