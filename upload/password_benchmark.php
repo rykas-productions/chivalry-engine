@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 <?php
 /*
 	File:		password_benchmark.php
@@ -35,13 +37,13 @@ if (isset($_POST['password'])) {
     echo "Password Hash benchmark. Lets figure out the ideal time for your server. The default values are recommended values. Change them if you must.<br />
 	<form method='post'>
 		Test Password<br />
-		<input type='text' name='password' value='Bx^PzAeCp8w?+]Y' required='1'>
+		<input type='text' class='form-control' name='password' value='Bx^PzAeCp8w?+]Y' required='1'>
 		<br />
 		Ideal Time (In Milliseconds)
 		<br />
-		<input type='number' name='ms' value='100' required='1'>
+		<input type='number' name='ms' class='form-control' value='100' required='1'>
 		<br />
-		<input type='submit'>
+		<input class='btn btn-primary' type='submit'>
 	</form>";
 }
 function benchmark($password, $cost = 4)
