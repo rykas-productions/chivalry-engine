@@ -8,11 +8,14 @@
 */
 require("globals_nonauth.php");
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);
+if ($set['enforce_no_multis'] == 'true')
+{
 //Check if someone is already registered on this IP.
-if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1) {
-    alert('danger', "Uh Oh!", "You can only have one account per IP Address. We're going to stop you from registering for now.", true, 'login.php');
-    die($h->endpage());
+    if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1) {
+        alert('danger', "Uh Oh!", "You can only have one account per IP Address. We're going to stop you from registering for now.", true, 'login.php');
+        die($h->endpage());
 
+    }
 }
 if (!isset($_GET['REF'])) {
     $_GET['REF'] = 0;

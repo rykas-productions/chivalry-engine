@@ -110,11 +110,10 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Force SSL<br />
-					<small>(Does nothing yet)</small>
+					Enforce Single Account per IP
 				</th>
 				<td>
-					<input type='text' readonly='1' class='form-control' value='{$set['HTTPS_Support']}'>
+					<input type='text' name='nomulti' class='form-control' value='{$set['enforce_no_multis']}'>
 				</td>
 			</tr>
 			<tr>
@@ -281,6 +280,7 @@ function basicsettings()
         $refillbrave = (isset($_POST['refillbrave']) && is_numeric($_POST['refillbrave'])) ? abs(intval($_POST['refillbrave'])) : 10;
         $refillwill = (isset($_POST['refillwill']) && is_numeric($_POST['refillwill'])) ? abs(intval($_POST['refillwill'])) : 5;
         $iqpersec = (isset($_POST['iqpersec']) && is_numeric($_POST['iqpersec'])) ? abs(intval($_POST['iqpersec'])) : 5;
+        $multicontrol = (isset($_POST['nomulti'])  && in_array($_POST['nomulti'], array('true', 'false'), true)) ? $_POST['nomulti'] : 'true';
         if (empty($GameName)) {
             alert('danger', "Uh Oh!", "Please specify a game name.");
             die($h->endpage());
@@ -336,6 +336,7 @@ function basicsettings()
             $db->query("UPDATE `settings` SET `setting_value` = '{$refillwill}' WHERE `setting_name` = 'will_refill_cost'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$iqpersec}' WHERE `setting_name` = 'iq_per_sec'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$sendemail}' WHERE `setting_name` = 'sending_email'");
+            $db->query("UPDATE `settings` SET `setting_value` = '{$multicontrol}' WHERE `setting_name` = 'enforce_no_multis'");
             alert('success', "Success!", "You have successfully updated the game settings.", true, 'index.php');
             $api->$game->addLog($userid, 'staff', "Updated game settings.");
         }
