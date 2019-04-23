@@ -9,7 +9,7 @@
 if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false) {
     exit;
 }
-session_name('CENGINE');
+session_name('CEV2');
 session_start();
 $time = time();
 header('X-Frame-Options: SAMEORIGIN');

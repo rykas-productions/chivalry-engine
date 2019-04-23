@@ -14,7 +14,7 @@ if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false) {
     exit;
 }
 //Set session name, then start session.
-session_name('CENGINE');
+session_name('CEV2');
 session_start();
 $time = time();
 header('X-Frame-Options: SAMEORIGIN');

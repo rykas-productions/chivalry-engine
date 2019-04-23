@@ -14,7 +14,7 @@ if (file_exists('./installer.lock'))
 $Version=('pre-2.0d');
 $Build=('pre-2.0d');
 define('MONO_ON', 1);
-session_name('CENGINE');
+session_name('CEV2');
 session_start();
 if (!isset($_SESSION['started']))
 {
