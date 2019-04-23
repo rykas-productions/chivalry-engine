@@ -646,14 +646,14 @@ function updateFile($url)
 /*
  * Function to fetch current version of Chivalry Engine
  */
-function getEngineVersion($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine-v2.json')
+function getEngineVersion($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
     global $set;
     $engine_version = $set['Version_Number'];
     $json = json_decode(getCachedFile($url, __DIR__ . "/cache/update_check.txt"), true);
     if (is_null($json))
         return "Update checker failed.";
-    if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
+    if (version_compare($engine_version, $json['latest-v2']) == 0 || version_compare($engine_version, $json['latest']) == 1)
         return "Chivalry Engine is up to date.";
     else
         return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
