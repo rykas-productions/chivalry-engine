@@ -19,7 +19,7 @@ if (!$_GET['user']) {
         $db->query(
             "SELECT `u`.`userid`, `user_level`, `laston`, `last_login`,
                     `registertime`, `vip_days`, `username`, `gender`,
-					`primary_currency`, `secondary_currency`, `level`, `class`,
+					`primary_currency`, `secondary_currency`, `level`,
 					`display_pic`, `hp`, `maxhp`, `guild`,
                     `fedjail`, `lastip`, `lastip`,
                     `loginip`, `registerip`, `staff_notes`, `town_name`,
@@ -38,8 +38,6 @@ if (!$_GET['user']) {
                     ON `g`.`guild_id` = `u`.`guild`
                     LEFT JOIN `fedjail` AS `f`
                     ON `f`.`fed_userid` = `u`.`userid`
-					LEFT JOIN `userdata` AS `ud`
-                    ON `ud`.`userid` = `u`.`userid`
                     WHERE `u`.`userid` = {$_GET['user']}");
 
     if ($db->num_rows($q) == 0) {
