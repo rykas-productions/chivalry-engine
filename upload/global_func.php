@@ -1089,23 +1089,9 @@ function checkLevel()
         $db->query("UPDATE `users` SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2,
 					`brave` = `brave` + 2, `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2,
 					`hp` = `hp` + 50, `maxhp` = `maxhp` + 50 WHERE `userid` = {$userid}");
-        //Give the user some stats for leveling up.
-        $StatGain = round(($ir['level'] * 100) / randomNumber(2, 6));
-        $StatGainFormat = number_format($StatGain);
-        //Assign the stat gain to the user's class of choice.
-        if ($ir['class'] == 'Warrior') {
-            $Stat = 'strength';
-        } elseif ($ir['class'] == 'Rogue') {
-            $Stat = 'agility';
-        } else {
-            $Stat = 'guard';
-        }
-        //Credit the stat gain.
-        $db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
-        //Tell the user they've gained some stats.
-        addNotification($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.");
+        addNotification($userid, "You have successfully leveled up.");
         //Log the level up, along with the stats gained.
-        addLog($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
+        addLog($userid, 'level', "Leveled up to level {$ir['level']}.");
     }
 }
 
@@ -1282,17 +1268,7 @@ function getCodeCSRF($formid)
  */
 function getrandomNumberString()
 {
-    //Set to true for stronger randomNumberization on OpenSSL
-    $Safe = true;
-    //Use PHP V7's randomNumber Bytes generator first!
-    if (function_exists('randomNumber_bytes'))
-        return bin2hex(randomNumber_bytes(256));
-    //If we can't... lets use OpenSSL's randomNumber bytes generator
-    elseif (function_exists('openssl_randomNumber_pseudo_bytes'))
-        return bin2hex(openssl_randomNumber_pseudo_bytes(256, $Safe));
-    //That fails... use our shitty one. ;/
-    else
-        return sha1(decbin(randomNumber(1, PHP_INT_MAX)));
+    return bin2hex(randomNumber_bytes(256));
 }
 
 /**
@@ -1537,7 +1513,7 @@ function getRemoteFileSize($url)
     }
     return (int)$headers['content-length'];
 }
-//Please use $api->$game->addLog(); instead
+//Please use $api->game->addLog(); instead
 function addLog($user, $logtype, $input)
 {
     global $db;
@@ -1756,7 +1732,7 @@ function getEngineVersion($url = 'https://raw.githubusercontent.com/MasterGenera
     $json = json_decode(getCachedFile($url, __DIR__ . "/cache/update_check.txt"), true);
     if (is_null($json))
         return "Update checker failed.";
-    if (version_compare($engine_version, $json['latest-v2']) == 0 || version_compare($engine_version, $json['latest']) == 1)
+    if (version_compare($engine_version, $json['latest-v2']) == 0 || version_compare($engine_version, $json['latest-v2']) == 1)
         return "Chivalry Engine is up to date.";
     else
         return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
