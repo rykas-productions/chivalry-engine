@@ -11,7 +11,7 @@
 	@param int $time_stamp for time since.
 	@param boolean $ago to display the "ago" after the string. (Default = true)
 */
-function dateTimeParse($time_stamp, $ago = true, $override = false)
+function dateTimeParse(int $time_stamp, bool $ago = true, bool $override = false)
 {
     //Check if $time_stamp is 0, if true, return N/A
     if ($time_stamp == 0) {
@@ -48,7 +48,7 @@ function dateTimeParse($time_stamp, $ago = true, $override = false)
 	Parses how much time until the timestamp given.
 	$param int $time_stamp for the timestamp.
 */
-function timeUntilParse($time_stamp)
+function timeUntilParse(int $time_stamp)
 {
     //Time difference is Unix Timestamp subtracted from $time_stamp.
     $time_difference = $time_stamp - time();
@@ -69,7 +69,7 @@ function timeUntilParse($time_stamp)
 /*
 	Parses the timestamp into a human friendly number.
 */
-function timestampParse($time)
+function timestampParse(int $time)
 {
     $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year');
     $lengths = array(60, 60, 24, 7, 4.35, 12);
@@ -90,7 +90,7 @@ function timestampParse($time)
 	@param int $user The user who to test for.
 */
 
-function userInInfirmary($user)
+function userInInfirmary(int $user)
 {
     global $db;
     //Assign current Unix Time to a variable.
@@ -107,7 +107,7 @@ function userInInfirmary($user)
 	The function for testing if a player is in the dungeon.
 	@param int $user The user who to test for.
 */
-function userInDungeon($user)
+function userInDungeon(int $user)
 {
     global $db;
     //Assign current Unix Time to a variable.
@@ -126,7 +126,7 @@ function userInDungeon($user)
 	@param int $time The time (in minutes) to add.
 	@param text $reason The reason the user is in the infirmary.
 */
-function userPutInfirmary($user, $time, $reason)
+function userPutInfirmary(int $user, int $time, string $reason)
 {
     global $db;
     //Assign current Unix Timestamp to a variable.
@@ -151,7 +151,7 @@ function userPutInfirmary($user, $time, $reason)
 	@param int $user The user to put in the infirmary
 	@param int $time The time (in minutes) to remove.
 */
-function userRemoveInfirmary($user, $time)
+function userRemoveInfirmary(int $user, int $time)
 {
     global $db;
     //Multiply $time by 60 since we're dealing with minutes, not seconds.
@@ -166,7 +166,7 @@ function userRemoveInfirmary($user, $time)
 	@param int $time The time (in minutes) to add.
 	@param text $reason The reason the user is in the dungeon.
 */
-function userPutDungeon($user, $time, $reason)
+function userPutDungeon(int $user, int $time, string $reason)
 {
     global $db;
     //Assign current Unix Timestamp to a variable.
@@ -191,7 +191,7 @@ function userPutDungeon($user, $time, $reason)
 	@param int $user The user to put in the infirmary
 	@param int $time The time (in minutes) to remove.
 */
-function userRemoveDungeon($user, $time)
+function userRemoveDungeon(int $user, int $time)
 {
     global $db;
     //Multiply $time by 60 since we're dealing with minutes, not seconds.
@@ -204,7 +204,7 @@ function userRemoveDungeon($user, $time)
 	The function for testing for a valid email.
 	@param text $email The email to test for.
 */
-function validEmail($email)
+function validEmail(string $email)
 {
     return (filter_var($email, FILTER_VALIDATE_EMAIL) === $email);
 }
@@ -216,7 +216,7 @@ function validEmail($email)
  * Not specifying this or setting it to -1 makes the first item type alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownItemType($dropdownname = "item_type", $selected = -1)
+function dropdownItemType(string $dropdownname = "item_type", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -250,7 +250,7 @@ function dropdownItemType($dropdownname = "item_type", $selected = -1)
  * Not specifying this or setting it to -1 makes the first item alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownWeapon($dropdownname = "weapon", $selected = -1)
+function dropdownWeapon(string $dropdownname = "weapon", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -284,7 +284,7 @@ function dropdownWeapon($dropdownname = "weapon", $selected = -1)
  * Not specifying this or setting it to -1 makes the first item alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownArmor($dropdownname = "armor", $selected = -1)
+function dropdownArmor(string $dropdownname = "armor", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -318,7 +318,7 @@ function dropdownArmor($dropdownname = "armor", $selected = -1)
  * Not specifying this or setting it to a number less than 1 makes "None" selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownItem($dropdownname = "item", $selected = -1)
+function dropdownItem(string $dropdownname = "item", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -352,7 +352,7 @@ function dropdownItem($dropdownname = "item", $selected = -1)
  * Not specifying this or setting it to a number less than 1 makes "None" selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownAcademy($acadname = "academy", $selected = -1)
+function dropdownAcademy(string $acadname = "academy", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$acadname' class='custom-select' type='dropdown'>";
@@ -386,7 +386,7 @@ function dropdownAcademy($acadname = "academy", $selected = -1)
  * Not specifying this or setting it to -1 makes the first item alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownLocation($dropdownname = "location", $selected = -1)
+function dropdownLocation(string $dropdownname = "location", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -420,7 +420,7 @@ function dropdownLocation($dropdownname = "location", $selected = -1)
  * Not specifying this or setting it to -1 makes the first shop alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownShop($dropdownname = "shop", $selected = -1)
+function dropdownShop(string $dropdownname = "shop", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -454,7 +454,7 @@ function dropdownShop($dropdownname = "shop", $selected = -1)
  * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownUser($dropdownname = "user", $selected = -1)
+function dropdownUser(string $dropdownname = "user", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -488,7 +488,7 @@ function dropdownUser($dropdownname = "user", $selected = -1)
  * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownNPC($dropdownname = "user", $selected = -1)
+function dropdownNPC(string $dropdownname = "user", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -523,7 +523,7 @@ function dropdownNPC($dropdownname = "user", $selected = -1)
  * Not specifying this or setting it to -1 makes the first guild be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownGuild($dropdownname = "guild", $selected = -1)
+function dropdownGuild(string $dropdownname = "guild", int $selected = -1)
 {
     global $db;
     $ret = "<select name='{$dropdownname}' class='custom-select' type='dropdown'>";
@@ -558,7 +558,7 @@ function dropdownGuild($dropdownname = "guild", $selected = -1)
  * Not specifying this or setting it to -1 makes the first bot alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownGuildUser($dropdownname = "user", $guild_id, $selected = -1)
+function dropdownGuildUser(string $dropdownname = "user", int $guild_id, int $selected = -1)
 {
     global $db;
     $ret = "<select name='{$dropdownname}' class='custom-select' type='dropdown'>";
@@ -593,7 +593,7 @@ function dropdownGuildUser($dropdownname = "user", $guild_id, $selected = -1)
  * Not specifying this or setting it to -1 makes the first bot alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownNPCBot($dropdownname = "bot", $selected = -1)
+function dropdownNPCBot(string $dropdownname = "bot", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -629,7 +629,7 @@ function dropdownNPCBot($dropdownname = "bot", $selected = -1)
  * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownFedJailUser($dropdownname = "user", $selected = -1)
+function dropdownFedJailUser(string $dropdownname = "user", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -664,7 +664,7 @@ function dropdownFedJailUser($dropdownname = "user", $selected = -1)
  * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownMailbanUser($dropdownname = "user", $selected = -1)
+function dropdownMailbanUser(string $dropdownname = "user", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -699,7 +699,7 @@ function dropdownMailbanUser($dropdownname = "user", $selected = -1)
  * Not specifying this or setting it to -1 makes the first user alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownForumBanUser($dropdownname = "user", $selected = -1)
+function dropdownForumBanUser(string $dropdownname = "user", int $selected = -1)
 {
     global $db, $api;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -733,7 +733,7 @@ function dropdownForumBanUser($dropdownname = "user", $selected = -1)
  * Not specifying this or setting it to -1 makes the first house alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownEstate($dropdownname = "estate", $selected = -1)
+function dropdownEstate(string $dropdownname = "estate", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -768,7 +768,7 @@ function dropdownEstate($dropdownname = "estate", $selected = -1)
  * Not specifying this or setting it to -1 makes the first house alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownEstateWill($dropdownname = "house", $selected = -1)
+function dropdownEstateWill(string $dropdownname = "house", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -802,7 +802,7 @@ function dropdownEstateWill($dropdownname = "house", $selected = -1)
  * Not specifying this or setting it to -1 makes the first crime alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownCrime($dropdownname = "crime", $selected = -1)
+function dropdownCrime(string $dropdownname = "crime", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -836,7 +836,7 @@ function dropdownCrime($dropdownname = "crime", $selected = -1)
  * Not specifying this or setting it to -1 makes the first crime group alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownCrimeGroup($dropdownname = "crimegroup", $selected = -1)
+function dropdownCrimeGroup(string $dropdownname = "crimegroup", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -869,7 +869,7 @@ function dropdownCrimeGroup($dropdownname = "crimegroup", $selected = -1)
  * @param string $text The notification's text. This should be fully sanitized for HTML, but not pre-escaped for database insertion.
  * @return true
  */
-function addNotification($userid, $text)
+function addNotification(int $userid, string $text)
 {
     global $db;
     $text = $db->escape($text);
@@ -1115,7 +1115,7 @@ function checkLevel()
  * @param string $text The notification's text. This should be fully sanitized for HTML, but not pre-escaped for database insertion.
  * @return true
  */
-function addGuildNotification($guild_id, $text)
+function addGuildNotification(int $guild_id, string $text)
 {
     global $db;
     $text = $db->escape($text);
@@ -1131,7 +1131,7 @@ function addGuildNotification($guild_id, $text)
  * @param string $mykey The stat to be ranked in. Must be a valid column name in the userstats table
  * @return integer The user's rank in the stat
  */
-function getRank($stat, $mykey)
+function getRank(int $stat, string $mykey)
 {
     global $db, $userid;
     //Select count of users who have higher $mykey based upon $stat. Excluding the current user, admins and NPCs
@@ -1157,7 +1157,7 @@ function getRank($stat, $mykey)
  * @param int $qty The item quantity to be given
  * @param int $notid [optional] If specified and greater than zero, prevents the item given database entry combining with inventory id $notid.
  */
-function addItem($user, $itemid, $qty, $notid = 0)
+function addItem(int $user, int $itemid, int $qty, int $notid = 0)
 {
     global $db;
     //Select $itemid's item name.
@@ -1195,7 +1195,7 @@ function addItem($user, $itemid, $qty, $notid = 0)
  * @param int $itemid The item ID which is to be taken
  * @param int $qty The item quantity to be taken
  */
-function takeItem($user, $itemid, $qty)
+function takeItem(int $user, int $itemid, int $qty)
 {
     global $db;
     //Select $itemid's item name.
@@ -1229,7 +1229,7 @@ function takeItem($user, $itemid, $qty)
  * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownForum($dropdownname = "forum", $selected = -1)
+function dropdownForum(string $dropdownname = "forum", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -1261,7 +1261,7 @@ function dropdownForum($dropdownname = "forum", $selected = -1)
  * @param string $formid A unique string used to identify this form to match up its submission with the right token.
  * @return string The code issued to be added to the form.
  */
-function getCodeCSRF($formid)
+function getCodeCSRF(string $formid)
 {
     global $db;
     //Assign Unix Timestamp to a variable.
@@ -1280,19 +1280,9 @@ function getCodeCSRF($formid)
  * Request a randomNumberly generated phrase.
  * Returns the randomNumberly generated phrase.
  */
-function getrandomNumberString()
+function getRandomString()
 {
-    //Set to true for stronger randomNumberization on OpenSSL
-    $Safe = true;
-    //Use PHP V7's randomNumber Bytes generator first!
-    if (function_exists('randomNumber_bytes'))
-        return bin2hex(randomNumber_bytes(256));
-    //If we can't... lets use OpenSSL's randomNumber bytes generator
-    elseif (function_exists('openssl_randomNumber_pseudo_bytes'))
-        return bin2hex(openssl_randomNumber_pseudo_bytes(256, $Safe));
-    //That fails... use our shitty one. ;/
-    else
-        return sha1(decbin(randomNumber(1, PHP_INT_MAX)));
+        return bin2hex(random_bytes(256));
 }
 
 /**
@@ -1300,7 +1290,7 @@ function getrandomNumberString()
  * @param string $formid A unique string used to identify this form to match up its submission with the right token.
  * @return string The HTML for the code issued to be added to the form.
  */
-function getHtmlCSRF($formid)
+function getHtmlCSRF(string $formid)
 {
     return "<input type='hidden' name='verf' value='" . getCodeCSRF($formid) . "' />";
 }
@@ -1312,7 +1302,7 @@ function getHtmlCSRF($formid)
  * @param int $expiry The amount of time the CSRF is valid for. Default 300 seconds.
  * @return boolean Whether the user provided a valid code or not
  */
-function checkCSRF($formid, $code, $expiry = 300)
+function checkCSRF(string $formid, string $code, int $expiry = 300)
 {
 	global $db;
     //User does not have a CSRF Session started for $formid, or its missing information.
@@ -1354,7 +1344,7 @@ function checkCSRF($formid, $code, $expiry = 300)
  * @return boolean    true for equal, false for not (login failed etc)
  *
  */
-function checkUserPassword($input, $pass)
+function checkUserPassword(string $input, string $pass)
 {
     //Check that the password matches or not.
     $return = (password_verify(base64_encode(hash('sha256', $input, true)), $pass)) ? true : false;
@@ -1366,29 +1356,15 @@ function checkUserPassword($input, $pass)
  * the game's database.
  *
  * @param string $password The password to be encoded
- * @param bool $usebtterpasswordgen Use ARGON2I as your encryption method, rather than BCRYPT. May not be supported on your host.
  *
  * @return string    The resulting encoded password.
  */
-function encodePassword($password, $usebetterpasswordgen=false)
+function encodePassword(string $password)
 {
     global $set;
 	//Set the password cost via settings.
     $options = ['cost' => $set['Password_Effort'],];
-	if (($usebetterpasswordgen == true) && (defined('PASSWORD_ARGON2I') == true))
-	{
-		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_ARGON2I, $options);
-	}
-	elseif (($usebetterpasswordgen == true) && defined('PASSWORD_ARGON2I') == false)
-	{
-		trigger_error("You have better password generation set to true, but your host does not appear to support it. Set it to false to disable this alert.",E_USER_WARNING);
-		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
-	}
-	else
-	{
-		//Return the generated password.
-		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
-	}
+    return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
 }
 
 /**
@@ -1401,7 +1377,7 @@ function encodePassword($password, $usebetterpasswordgen=false)
  * Text $redirecttext = Text to be shown on the redirect link. [Default = Back]
  */
 
-function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $redirecttext = 'Back')
+function alert(string $type, string $title, string $text, bool $doredirect = true, string $redirect = 'back', string $redirecttext = 'Back')
 {
     //This function is a horrible mess dude..
     if ($type == 'danger')
@@ -1474,7 +1450,7 @@ function isAjax()
  *                        not determine its size.
  */
 
-function getRemoteFileSize($url)
+function getRemoteFileSize(string $url)
 {
     // Retrieve headers
     if (strlen($url) < 8) {
@@ -1538,7 +1514,7 @@ function getRemoteFileSize($url)
     return (int)$headers['content-length'];
 }
 //Please use $api->$game->addLog(); instead
-function addLog($user, $logtype, $input)
+function addLog(int $user, string $logtype, string $input)
 {
     global $db;
     $time = time();
@@ -1552,19 +1528,15 @@ function addLog($user, $logtype, $input)
 				(NULL, '{$logtype}', '{$user}', '{$time}', '{$input}', '{$IP}');");
 }
 
-//Fall back for PHP 7 functions on a PHP < 7 versions.
-function randomNumber($min = 0, $max = PHP_INT_MAX)
+function randomNumber(int $min = PHP_INT_MIN, int $max = PHP_INT_MAX)
 {
-    if (function_exists('randomNumber_int'))
-        return randomNumber_int($min, $max);
-    else
-        return mt_rand($min, $max);
+    return random_int($min, $max);
 }
 
 /*
 	Creates a dropdown for smelting recipes.
 */
-function dropdownBlacksmith($dropdownname = 'smelt', $selected = -1)
+function dropdownBlacksmith(string $dropdownname = 'smelt', int $selected = -1)
 {
     global $db, $api;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -1595,7 +1567,7 @@ function dropdownBlacksmith($dropdownname = 'smelt', $selected = -1)
 /*
 	Gets the contents of a file if it exists, otherwise grabs and caches 
 */
-function getCachedFile($url, $file, $hours = 1)
+function getCachedFile(string $url, string $file, int $hours = 1)
 {
     $current_time = time();
     $expire_time = $hours * 60 * 60;
@@ -1618,7 +1590,7 @@ function getCachedFile($url, $file, $hours = 1)
 /* 
 	Gets content from a URL via curl 
 */
-function updateFile($url)
+function updateFile(string $url)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
@@ -1633,7 +1605,7 @@ function updateFile($url)
 /*
 	Function to recache the specified forum topic
 */
-function recacheTopic($topic)
+function recacheTopic(int $topic)
 {
     global $db;
     $topic = abs((int)$topic);
@@ -1677,7 +1649,7 @@ function recacheTopic($topic)
 /*
 	Function to recache the specified forum
 */
-function recacheForum($forum)
+function recacheForum(int $forum)
 {
     global $db;
     $forum = abs((int)$forum);
@@ -1715,7 +1687,7 @@ function recacheForum($forum)
     echo " ... Recaching completed.<br />";
 }
 
-function isImage($url)
+function isImage(string $url)
 {
     $params = array('http' => array(
         'method' => 'HEAD'
@@ -1749,7 +1721,7 @@ function isImage($url)
 /*
  * Function to fetch current version of Chivalry Engine
  */
-function getEngineVersion($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine-v2.json')
+function getEngineVersion(string $url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine-v2.json')
 {
     global $set;
     $engine_version = $set['Version_Number'];
@@ -1769,7 +1741,7 @@ function getEngineVersion($url = 'https://raw.githubusercontent.com/MasterGenera
  * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownInventory($dropdownname = "item", $selected = -1)
+function dropdownInventory(string $dropdownname = "item", int $selected = -1)
 {
     global $db, $userid;
     $ret = "<select name='$dropdownname' type='dropdown' class='custom-select'>";
@@ -1806,7 +1778,7 @@ function dropdownInventory($dropdownname = "item", $selected = -1)
  * Not specifying this or setting it to -1 makes the first job alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownJob($dropdownname = "job", $selected = -1)
+function dropdownJob(string $dropdownname = "job", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -1840,7 +1812,7 @@ function dropdownJob($dropdownname = "job", $selected = -1)
  * Not specifying this or setting it to -1 makes the first job's first job rank alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownJobRank($dropdownname = "jobrank", $selected = -1)
+function dropdownJobRank(string $dropdownname = "jobrank", int $selected = -1)
 {
     global $db;
     $ret = "<select name='$dropdownname' class='custom-select' type='dropdown'>";
@@ -1869,7 +1841,7 @@ function dropdownJobRank($dropdownname = "jobrank", $selected = -1)
     return $ret;
 }
 
-function pagination($perpage, $total, $currentpage, $url)
+function pagination(int $perpage, int $total, int $currentpage, string $url)
 {
     global $db;
     $pages = ceil($total / $perpage);
@@ -1913,7 +1885,7 @@ function pagination($perpage, $total, $currentpage, $url)
  * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
  * @return string The HTML code for the listbox, to be inserted in a form.
  */
-function dropdownArmory($dropdownname = "item", $selected = -1)
+function dropdownArmory(string $dropdownname = "item", int $selected = -1)
 {
     global $db, $ir;
     $ret = "<select name='$dropdownname' type='dropdown' class='custom-select'>";
