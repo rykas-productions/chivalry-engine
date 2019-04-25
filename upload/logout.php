@@ -7,7 +7,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
-session_name('CENGINE');
+session_name('CEV2');
 session_start();
 if (!isset($_SESSION['started'])) {
     session_regenerate_id();

@@ -9,7 +9,7 @@
 if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false) {
     exit;
 }
-session_name('CENGINE');
+session_name('CEV2');
 session_start();
 $time = time();
 header('X-Frame-Options: SAMEORIGIN');
@@ -19,7 +19,6 @@ if (!isset($_SESSION['started'])) {
 }
 ob_start();
 require "../lib/basic_error_handler.php";
-require "../lib/dev_help.php";
 set_error_handler('error_php');
 require "../global_func.php";
 $domain = getGameURL();
