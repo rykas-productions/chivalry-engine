@@ -96,7 +96,7 @@ class headers
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
         <!-- Other JavaScript -->
-        <script src="js/register-min.js" async defer></script>
+        <script src="js/register.js" async defer></script>
         </body>
         </html>
     <?php
