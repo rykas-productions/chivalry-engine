@@ -1513,7 +1513,7 @@ function getRemoteFileSize(string $url)
     }
     return (int)$headers['content-length'];
 }
-//Please use $api->$game->addLog(); instead
+//Please use $api->game->addLog(); instead
 function addLog(int $user, string $logtype, string $input)
 {
     global $db;

@@ -370,7 +370,7 @@ function createuser()
             $db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
             $db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
             alert('success', "Success!", "You have successfully created the user named {$e_username}.", true, 'index.php');
-            $api->$game->addLog($userid, 'staff', "Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
+            $api->game->addLog($userid, 'staff', "Created user <a href='../profile.php?user={$i}'>{$e_username}</a>.");
         }
     }
 }
@@ -710,7 +710,7 @@ function edituser()
             $api->UserStatusSet($user, 'dungeon', $_POST['dungeon'], $dungeonr);
         }
         alert('success', "Success!", "You have successfully edited {$username}'s account.", true, 'index.php');
-        $api->$game->addLog($userid, 'staff', "Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
+        $api->game->addLog($userid, 'staff', "Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
     } else {
         $csrf = getHtmlCSRF('staff_edituser1');
         echo "Editing an User
@@ -888,7 +888,7 @@ function deleteuser()
             $db->query("DELETE FROM `userstats` WHERE `userid` = {$_POST['userid']}");
             $db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$_POST['userid']}");
             $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$_POST['userid']}");
-            $api->$game->addLog($userid, 'staff', "Deleted user {$username} [{$_POST['userid']}].");
+            $api->game->addLog($userid, 'staff', "Deleted user {$username} [{$_POST['userid']}].");
             alert("success", "Success!", "You have deleted {$username}'s account.", true, 'index.php');
             die($h->endpage());
             break;
@@ -916,7 +916,7 @@ function logout()
         }
         $db->free_result($d);
         $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `userid` = {$_POST['userid']}");
-        $api->$game->addLog($userid, 'staff', "Forced User ID {$_POST['userid']} to log out.");
+        $api->game->addLog($userid, 'staff', "Forced User ID {$_POST['userid']} to log out.");
         alert("success", "Success!", "You have successfully forced User ID {$_POST['userid']} to log out.", true, 'index.php');
     } else {
         $csrf = getHtmlCSRF('staff_forcelogout');
@@ -973,7 +973,7 @@ function changepw()
         $new_psw = $db->escape(encodePassword($pw));
         $db->query("UPDATE `users` SET `password` = '{$new_psw}' WHERE `userid` = {$user}");
         alert('success', "Success!", "You have successfully changed User ID {$user}'s password.", true, 'index.php');
-        $api->$game->addLog($userid, 'staff', "Changed User ID {$user}'s password.");
+        $api->game->addLog($userid, 'staff', "Changed User ID {$user}'s password.");
     } else {
         $csrf = getHtmlCSRF('staff_changepw');
         echo "
@@ -1037,7 +1037,7 @@ function masspay()
             echo "Successfully paid {$r['username']}.<br />";
         }
         alert('success', 'Success!', "You have successfully mass paid the game.", true, 'index.php');
-        $api->$game->addLog($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} {$_CONFIG['secondary_currency']}.");
+        $api->game->addLog($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} {$_CONFIG['secondary_currency']}.");
     } else {
         $csrf = getHtmlCSRF('staff_masspay');
         echo "<table class='table table-bordered'>
@@ -1093,7 +1093,7 @@ function preport()
                 alert('danger', "Uh Oh!", "This report does not exist!", false);
             } else {
                 $db->query("DELETE FROM `reports` WHERE `report_id` = {$_GET['ID']}");
-                $api->$game->addLog($userid, 'staff', "Cleared Player Report ID #{$_GET['ID']}.");
+                $api->game->addLog($userid, 'staff', "Cleared Player Report ID #{$_GET['ID']}.");
                 alert('success', "Success!", "You have successfully cleared Player Report ID #{$_GET['ID']}.", false);
             }
         }

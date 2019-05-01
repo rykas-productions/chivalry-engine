@@ -52,7 +52,7 @@ function addtown()
         }
         $db->free_result($q);
         $db->query("INSERT INTO `town` (`town_name`, `town_min_level`) VALUES ('{$name}', '{$level}');");
-        $api->$game->addLog($userid, 'staff', "Created a town named {$name}.");
+        $api->game->addLog($userid, 'staff', "Created a town named {$name}.");
         alert('success', "Success!", "You have successfully created the {$name} town.", true, 'index.php');
     } else {
         $csrf = getHtmlCSRF('staff_addtown');
@@ -124,7 +124,7 @@ function deltown()
         $db->query("UPDATE `shops` SET `shopLOCATION` = 1 WHERE `shopLOCATION` = {$old['town_id']}");
         $db->query("DELETE FROM `town` WHERE `town_id` = {$old['town_id']}");
         alert('success', "Success!", "You have successfully removed the {$old['town_name']} town from the game.", true, 'index.php');
-        $api->$game->addLog($userid, 'staff', "Deleted the town called {$old['town_name']}.");
+        $api->game->addLog($userid, 'staff', "Deleted the town called {$old['town_name']}.");
     } else {
         $csrf = getHtmlCSRF('staff_deltown');
         echo "
@@ -190,7 +190,7 @@ function edittown()
                         SET `town_name` = '{$name}', `town_min_level` = {$level}
                         WHERE `town_id` = {$id}");
             alert("success", "Success!", "You have successfully edited the {$name} town.", true, 'index.php');
-            $api->$game->addLog($userid, 'staff', "Edited the {$name} town.");
+            $api->game->addLog($userid, 'staff', "Edited the {$name} town.");
             break;
         case 1:
             $_POST['location'] = (isset($_POST['location']) && is_numeric($_POST['location'])) ? abs(intval($_POST['location'])) : 0;

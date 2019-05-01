@@ -338,7 +338,7 @@ function basicsettings()
             $db->query("UPDATE `settings` SET `setting_value` = '{$sendemail}' WHERE `setting_name` = 'sending_email'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$multicontrol}' WHERE `setting_name` = 'enforce_no_multis'");
             alert('success', "Success!", "You have successfully updated the game settings.", true, 'index.php');
-            $api->$game->addLog($userid, 'staff', "Updated game settings.");
+            $api->game->addLog($userid, 'staff', "Updated game settings.");
         }
         $h->endpage();
     }
@@ -371,7 +371,7 @@ function announce()
 			VALUES (NULL, '{$_POST['announcement']}', '{$time}', '{$userid}');");
             $db->query("UPDATE `users` SET `announcements` = `announcements` + 1");
             alert('success', "Success!", "You have successfully posted an announcement.", true, '../announcements.php');
-            $api->$game->addLog($userid, 'staff', "Posted an announcement.");
+            $api->game->addLog($userid, 'staff', "Posted an announcement.");
         }
     }
     $h->endpage();
@@ -462,7 +462,7 @@ function diagnostics()
         	</tr>
     </table>
        ";
-    $api->$game->addLog($userid, 'staff', "Viewed game diagnostics.");
+    $api->game->addLog($userid, 'staff', "Viewed game diagnostics.");
     $h->endpage();
 }
 
@@ -480,7 +480,7 @@ function restore()
         $db->query("UPDATE `users` SET `hp`=`maxhp`,`energy`=`maxenergy`,`brave`=`maxbrave`,`will`=`maxwill`");
         $db->query("UPDATE `dungeon` SET `dungeon_out` = 0");
         $db->query("UPDATE `infirmary` SET `infirmary_out` = 0");
-        $api->$game->addLog($userid, 'staff', "Restored all users.");
+        $api->game->addLog($userid, 'staff', "Restored all users.");
         alert('success', "Success!", "You have restored your player base.", true, 'index.php');
         $h->endpage();
     }
@@ -489,7 +489,7 @@ function restore()
 function errlog()
 {
     global $api, $userid, $h;
-    $api->$game->addLog($userid, 'staff', "Viewed the error log.");
+    $api->game->addLog($userid, 'staff', "Viewed the error log.");
     echo "
 	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents("../error_log") . "</textarea>";
     $h->endpage();

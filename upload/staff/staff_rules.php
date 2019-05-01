@@ -53,7 +53,7 @@ function addrule()
             $rule = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['rule']))));
             $db->query("INSERT INTO `gamerules` (`rule_id`, `rule_text`) VALUES (NULL, '{$rule}');");
             alert('success', "Success!", "You have successfully added a new game rule.");
-            $api->$game->addLog($userid, 'staff', "Created a new rule.");
+            $api->game->addLog($userid, 'staff', "Created a new rule.");
         }
     }
 }
