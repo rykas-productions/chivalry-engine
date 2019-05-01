@@ -9,7 +9,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
-//$macropage = ('gym.php');
+$macropage = ('gym.php');
 require("globals.php");
 //User is in the infirmary
 if ($api->user->inInfirmary($ir['userid'])) {
