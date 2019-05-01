@@ -96,7 +96,7 @@ function create()
 					<h4>Item Usage</h4>
 				</td>
 			</tr>";
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 1; $i <= $_CONFIG['item_effects']; $i++) {
             echo "
 				<tr>
 					<th>

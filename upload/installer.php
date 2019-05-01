@@ -514,7 +514,8 @@ function install()
     'agility_stat' => 'Agility',
     'guard_stat' => 'Guard',
     'iq_stat' => 'IQ',
-    'labor_stat' => 'Labor'
+    'labor_stat' => 'Labor',
+    'item_effects' => 3
 );
 EOF;
     $f = fopen('config.php', 'w');
