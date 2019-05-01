@@ -109,10 +109,10 @@ if (!empty($username)) {
         $profilepic = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($e_email))) . "?s=250.jpg";
         $CurrentTime = time();
         $db->query("INSERT INTO `users`
-					(`username`,`email`,`password`,`level`,`gender`,`class`,
+					(`username`,`email`,`password`,`level`,`gender`,
 					`lastip`,`registerip`,`registertime`,`loginip`,`display_pic`)
 					VALUES ('{$e_username}','{$e_email}','{$e_encpsw}','1','{$e_gender}',
-					'{$e_class}','{$IP}','{$IP}','{$CurrentTime}', '{$IP}', 
+					'{$IP}','{$IP}','{$CurrentTime}', '{$IP}', 
 					'{$profilepic}')");
         $i = $db->insert_id();
         $db->query("UPDATE `users` SET `brave`='10',`maxbrave`='10',`hp`='100',
