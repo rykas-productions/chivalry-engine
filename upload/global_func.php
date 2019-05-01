@@ -1266,8 +1266,8 @@ function getCodeCSRF(string $formid)
     global $db;
     //Assign Unix Timestamp to a variable.
     $time = time();
-    //Generate the token from the getrandomNumberString function, and hash it with sha512.
-    $token = getrandomNumberString();
+    //Generate the token from getRandomString(), and hash it with sha512.
+    $token = getRandomString();
 	$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 	$user_agent = $db->escape(strip_tags(stripslashes($_SERVER['HTTP_USER_AGENT'])));
     //Store the CSRF Form into $_SESSION.
@@ -1721,7 +1721,7 @@ function isImage(string $url)
 /*
  * Function to fetch current version of Chivalry Engine
  */
-function getEngineVersion(string $url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine-v2.json')
+function getEngineVersion(string $url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
     global $set;
     $engine_version = $set['Version_Number'];

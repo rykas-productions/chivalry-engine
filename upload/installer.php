@@ -69,7 +69,6 @@ function menuprint($highlight)
 
 function diagnostics()
 {
-	global $Build;
     menuprint("diag");
     if (version_compare(phpversion(), '7.0.0') < 0)
     {
