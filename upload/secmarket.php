@@ -55,7 +55,7 @@ function home()
         }
         echo "<tr>
 				<td>
-					<a href='profile.php?user={$r['sec_user']}'>{$api->SystemUserIDtoName($r['sec_user'])}</a> [{$r['sec_user']}]
+					<a href='profile.php?user={$r['sec_user']}'>{$api->user->getNamefromID($r['sec_user'])}</a> [{$r['sec_user']}]
 				</td>
 				<td>
 					" . number_format($r['sec_total']) . "

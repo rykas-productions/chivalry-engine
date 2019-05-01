@@ -781,7 +781,7 @@ function mug()
                     $db->query("UPDATE `botlist_hits` SET `lasthit` = {$time} WHERE `userid` = {$userid} AND `botid` = {$r['userid']}");
                 }
                 //Tell user they took an item.
-                $api->user->addNotification($userid, "For mugging the " . $api->SystemUserIDtoName($r['userid']) . " bot, you have gained 1 " . $api->SystemItemIDtoName($results2['botitem']));
+                $api->user->addNotification($userid, "For mugging the " . $api->user->getNamefromID($r['userid']) . " bot, you have gained 1 " . $api->SystemItemIDtoName($results2['botitem']));
             }
         }
     }

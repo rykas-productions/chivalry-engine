@@ -510,12 +510,12 @@ function staff()
             alert('danger', "Uh Oh!", "You are trying to give an invalid privilege.");
             die($h->endpage());
         }
-        if (!($api->SystemUserIDtoName($_POST['user']))) {
+        if (!($api->user->getNamefromID($_POST['user']))) {
             alert('danger', "Uh Oh!", "Please specify an existent user.");
             die($h->endpage());
         }
         $api->user->setInfoStatic($_POST['user'], 'user_level', $_POST['priv']);
-        alert('success', "Success!", "You have updated {$api->SystemUserIDtoName($_POST['user'])}'s User Level to {$_POST['priv']}.");
+        alert('success', "Success!", "You have updated {$api->user->getNamefromID($_POST['user'])}'s User Level to {$_POST['priv']}.");
         die($h->endpage());
     } else {
         $csrf = getHtmlCSRF('staff_priv');

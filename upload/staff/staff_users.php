@@ -1119,10 +1119,10 @@ function preport()
         echo "
         <tr>
             <td>
-                <a href='../profile.php?user={$r['reporter_id']}'>{$api->SystemUserIDtoName($r['reporter_id'])}</a> [{$r['reporter_id']}]
+                <a href='../profile.php?user={$r['reporter_id']}'>{$api->user->getNamefromID($r['reporter_id'])}</a> [{$r['reporter_id']}]
             </td>
             <td>
-                <a href='../profile.php?user={$r['reportee_id']}'>{$api->SystemUserIDtoName($r['reportee_id'])}</a> [{$r['reportee_id']}]
+                <a href='../profile.php?user={$r['reportee_id']}'>{$api->user->getNamefromID($r['reportee_id'])}</a> [{$r['reportee_id']}]
             </td>
             <td>
                 {$r['report_text']}

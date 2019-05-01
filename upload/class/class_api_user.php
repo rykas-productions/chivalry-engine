@@ -491,7 +491,7 @@ class user
                 $state = $db->escape(stripslashes($state));
             }
             if ($user > 0) {
-                if (!($api->SystemUserIDtoName($user) == false)) {
+                if (!($api->user->getNamefromID($user) == false)) {
                     $db->query("UPDATE `users` SET `{$stat}` = '{$state}' WHERE `userid` = '{$user}'");
                     return true;
                 }
