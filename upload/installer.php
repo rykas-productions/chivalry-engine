@@ -296,7 +296,7 @@ function config()
     				Game Description<br />
     				<small>This is shown on the login page.</small>
     			</th>
-    			<td><textarea rows='6' cols='40' name='game_description' class='form-control' required='1'></textarea></td>
+    			<td><textarea name='game_description' class='form-control' required='1'></textarea></td>
     		</tr>
     		<tr>
     			<th>

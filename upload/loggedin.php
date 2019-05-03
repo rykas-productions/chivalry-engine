@@ -135,7 +135,7 @@ echo "
 <form method='post'>
     <div class='form-group'>
         <label for='pn_update'>Your Personal Notepad</label>
-        <textarea class='form-control' rows='5' name='pn_update' id='pn_update'>{$ir['personal_notes']}</textarea>
+        <textarea class='form-control' name='pn_update' id='pn_update'>{$ir['personal_notes']}</textarea>
     </div>
     <button type='submit' class='btn btn-primary'>Update Notepad</button>
 </form>";
