@@ -14,51 +14,42 @@ if ($api->user->getStaffLevel($userid, 'admin')) {
     $MySQLIVersion = $db->fetch_single($versq);
     $db->free_result($versq);
     echo "
-	<table class='table table-bordered table-hover'>
-		<tbody>
-			<tr>
-				<th>
-					Server PHP Version
-				</th>
-				<td>
-					" . phpversion() . "
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Server Database Version
-				</th>
-				<td>
-					{$MySQLIVersion}
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine Version
-				</th>
-				<td>
-					{$set['Version_Number']}
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine Update Checker
-				</th>
-				<td>
-					" . getEngineVersion() . "
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine API Version
-				</th>
-				<td>
-					{$api->game->returnAPIVersion()}
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<hr />";
+<div class='cotainer'>
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>PHP Version</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Database Version</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Chivalry Engine Version</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Update Checker</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>CE API Version</h4>
+		</div>
+</div><hr />
+<div class='row'>
+		<div class='col-sm'>
+		    " . phpversion() . "
+		</div>
+		<div class='col-sm'>
+		    " . $MySQLIVersion . "
+		</div>
+		<div class='col-sm'>
+		    " . $set['Version_Number'] . "
+		</div>
+		<div class='col-sm'>
+		    " . getEngineVersion() . "
+		</div>
+		<div class='col-sm'>
+		    " . $api->game->returnAPIVersion() . "
+		</div>
+</div><hr />
+</div>";
 }
 echo "
 </div>
