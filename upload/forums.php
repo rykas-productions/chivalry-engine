@@ -552,7 +552,7 @@ function viewtopic()
 						Post Response
 						</div>
 					<div class='col-sm'>
-						<textarea class='form-control' rows='5' cols='40' id='post' placeholder='You can use BBCode.' name='fp_text' required></textarea>
+						<textarea class='form-control' id='post' placeholder='You can use BBCode.' name='fp_text' required></textarea>
 					</div>
 				</div>
 				<div class='row'>
@@ -704,7 +704,7 @@ function newtopicform()
 				<label for='fp_text'>Opening Post</label>
 			</div>
 			<div class='col-sm'>
-				<textarea rows='8' class='form-control' cols='45' placeholder='You can use BBCode!' name='fp_text' id='fp_text' required></textarea>
+			    <textarea class='form-control' placeholder='You can use BBCode!' name='fp_text' id='fp_text' required></textarea>
 			</div>
 		</div>
 		<div class='row'>

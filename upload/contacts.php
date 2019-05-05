@@ -15,16 +15,16 @@ echo "
 			<a href='inbox.php'>Inbox</a>
 		</td>
 		<td>
-			<a href='?action=outbox'>Outbox</a>
+			<a href='inbox.php?action=outbox'>Outbox</a>
 		</td>
 		<td>
-			<a href='?action=compose'>Compose</a>
+			<a href='inbox.php?action=compose'>Compose</a>
 		</td>
 		<td>
-			<a href='?action=delall'>Delete All</a>
+			<a href='inbox.php?action=delall'>Delete All</a>
 		</td>
 		<td>
-			<a href='?action=archive'>Archive</a>
+			<a href='inbox.php?action=archive'>Archive</a>
 		</td>
 		<td>
 			<a href='contacts.php'>Contacts</a>

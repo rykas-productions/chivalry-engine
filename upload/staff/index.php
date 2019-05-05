@@ -14,51 +14,40 @@ if ($api->user->getStaffLevel($userid, 'admin')) {
     $MySQLIVersion = $db->fetch_single($versq);
     $db->free_result($versq);
     echo "
-	<table class='table table-bordered table-hover'>
-		<tbody>
-			<tr>
-				<th>
-					Server PHP Version
-				</th>
-				<td>
-					" . phpversion() . "
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Server Database Version
-				</th>
-				<td>
-					{$MySQLIVersion}
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine Version
-				</th>
-				<td>
-					{$set['Version_Number']}
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine Update Checker
-				</th>
-				<td>
-					" . getEngineVersion() . "
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine API Version
-				</th>
-				<td>
-					{$api->game->returnAPIVersion()}
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<hr />";
+<div class='row'>
+		<div class='col-sm'>
+		    <h4>PHP Version</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Database Version</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Chivalry Engine Version</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>Update Checker</h4>
+		</div>
+		<div class='col-sm'>
+		    <h4>CE API Version</h4>
+		</div>
+</div><hr />
+<div class='row'>
+		<div class='col-sm'>
+		    " . phpversion() . "
+		</div>
+		<div class='col-sm'>
+		    " . $MySQLIVersion . "
+		</div>
+		<div class='col-sm'>
+		    " . $set['Version_Number'] . "
+		</div>
+		<div class='col-sm'>
+		    " . getEngineVersion() . "
+		</div>
+		<div class='col-sm'>
+		    " . $api->game->returnAPIVersion() . "
+		</div>
+</div><hr />";
 }
 echo "
 </div>
@@ -288,26 +277,20 @@ echo "
 	</div>";
 if ($api->user->getStaffLevel($userid, 'admin')) {
     echo "
-				<div class='col-md-12'><hr />
-			<h3>Last 15 Staff Actions</h3><hr />
-			<table class='table table-bordered table-hover'>
-					<thead>
-					<tr>
-						<th>
-							Timestamp
-						</th>
-						<th>
-							Staff Member
-						</th>
-						<th>
-							Log
-						</th>
-						<th class='hidden-xs'>
-							IP Address
-						</th>
-					</tr>
-					</thead>
-					<tbody>";
+    <div class='row'>
+            <div class='col-sm'>
+                <h4>Timestamp</h4>
+            </div>
+            <div class='col-sm'>
+                <h4>Staff</h4>
+            </div>
+            <div class='col-sm'>
+                <h4>Action</h4>
+            </div>
+            <div class='col-sm'>
+                <h4>IP Address</h4>
+            </div>
+    </div><hr />";
     $q =
         $db->query(
             "SELECT `log_user`, `log_text`, `log_time`, `log_ip`, `username`
@@ -319,23 +302,21 @@ if ($api->user->getStaffLevel($userid, 'admin')) {
 							 LIMIT 15");
     while ($r = $db->fetch_row($q)) {
         echo "
-				<tr>
-					<td>
-						" . dateTimeParse($r['log_time']) . "
-					</td>
-					<td>
-						<a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]
-					</td>
-					<td>
-						{$r['log_text']}
-					</td>
-					<td class='hidden-xs'>
-						{$r['log_ip']}
-					</td>
-				</tr>
-				";
+         <div class='row'>
+            <div class='col-sm'>
+                " . dateTimeParse($r['log_time']) . "
+            </div>
+            <div class='col-sm'>
+                <a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]
+            </div>
+            <div class='col-sm'>
+                {$r['log_text']}
+            </div>
+            <div class='col-sm'>
+                {$r['log_ip']}
+            </div>
+        </div><hr />";
     }
     $db->free_result($q);
-    echo '</tbody></table></div>';
 }
 $h->endpage();

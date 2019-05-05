@@ -254,7 +254,7 @@ if (!$_GET['user']) {
 					<form action='staff/staff_punish.php?action=staffnotes' method='post'>
 						Staff Notes
 						<br />
-						<textarea rows='7' class='form-control' name='staffnotes'>"
+						<textarea class='form-control' name='staffnotes'>"
                 . htmlentities($r['staff_notes'], ENT_QUOTES, 'ISO-8859-1')
                 . "</textarea>
 						<br />
