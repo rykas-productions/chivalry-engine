@@ -13,8 +13,12 @@ $ready_to_run = $db->query("SELECT `nextUpdate` FROM `crons` WHERE `file`='{$fil
 //Place your queries inside this conditional
 if ($db->num_rows($ready_to_run)) {
     //Mining refill
-    $db->query("UPDATE mining SET miningpower=miningpower+(max_miningpower/(10)) WHERE miningpower<max_miningpower");
-    $db->query("UPDATE mining SET miningpower=max_miningpower WHERE miningpower>max_miningpower");
+    $db->query("UPDATE `mining` 
+                SET `miningpower` = `miningpower` + (`max_miningpower` / 10) 
+                WHERE `miningpower` < `max_miningpower`");
+    $db->query("UPDATE `mining` 
+                SET `miningpower` = `max_miningpower`
+                WHERE `miningpower` > `max_miningpower`");
 
     $allusers_query = "UPDATE `users` SET `brave` = LEAST(`brave` + ((`maxbrave` / 10) + 0.5), `maxbrave`),
         `hp` = LEAST(`hp` + (`maxhp` / 3), `maxhp`), `will` = LEAST(`will` + (`maxwill` / 20), `maxwill`),
