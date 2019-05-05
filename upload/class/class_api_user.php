@@ -21,7 +21,7 @@ class user
         Returns true if user has more cash than required.
         Returns false if user does not exist or does not have the minimum cash requred.
     */
-    function hasCurrency($user, $type, $minimum)
+    function hasCurrency(int $user, string $type, int $minimum)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -45,9 +45,8 @@ class user
         Returns true if item successfully given to the user.
         Returns false if item failed to be given to user.
     */
-    function giveItem($user, $item, $quantity)
+    function giveItem(int $user, int $item, int $quantity)
     {
-        global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
@@ -63,9 +62,8 @@ class user
         Returns true if item successfully taken from the user.
         Returns false if item failed to be taken from user.
     */
-    function takeItem($user, $item, $quantity)
+    function takeItem(int $user, int $item, int $quantity)
     {
-        global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
@@ -81,7 +79,7 @@ class user
         Returns true if the user has the item and requried quantity. False if otherwise.
 
     */
-    function hasItem($user, $item, $qty = 1)
+    function hasItem(int $user, int $item, int $qty = 1)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -103,7 +101,7 @@ class user
         @param int itemid = Item ID to count.
         Returns the count of Item ID found on the user.
     */
-    function countItem($userid, $itemid)
+    function countItem(int $userid, int $itemid)
     {
         global $db;
         $userid = (isset($userid) && is_numeric($userid)) ? abs(intval($userid)) : 0;
@@ -121,7 +119,7 @@ class user
         Returns true if user has received currency.
         Returns false if user does not receive currency.
     */
-    function giveCurrency($user, $type, $quantity)
+    function giveCurrency(int $user, string $type, int $quantity)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -143,7 +141,7 @@ class user
         Returns true if user has lost currency.
         Returns false if user does not lose any currency.
     */
-    function takeCurrency($user, $type, $quantity)
+    function takeCurrency(int $user, string $type, int $quantity)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -166,7 +164,7 @@ class user
         Returns true if user has item equipped
         Returns false if user does not have item equipped.
     */
-    function itemEquipped($user, $slot, $itemid = -1)
+    function itemEquipped(int $user, string $slot, int $itemid = -1)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -200,9 +198,8 @@ class user
         Returns true if user is in the infirmary
         Returns false if user is not in the infirmary
     */
-    function inInfirmary($user)
+    function inInfirmary(int $user)
     {
-        global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         return userInInfirmary($user);
     }
@@ -212,9 +209,8 @@ class user
         Returns true if user is in the dungeon.
         Returns false if user is not in the dungeon.
     */
-    function inDungeon($user)
+    function inDungeon(int $user)
     {
-        global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         return userInDungeon($user);
     }
@@ -226,7 +222,7 @@ class user
         Returns true if user is placed in the infirmary, or is removed from it.
         Returns false otherwise.
     */
-    function setInfirmary($user, $time, $reason)
+    function setInfirmary(int $user, int $time, string $reason)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -249,7 +245,7 @@ class user
         Returns true if user is placed in the dungeon, or is removed from it.
         Returns false otherwise.
     */
-	function setDungeon($user, $time, $reason)
+	function setDungeon(int $user, int $time, string $reason)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -266,12 +262,12 @@ class user
     }
 	/*
      * Function to simulate a user training.
-     * @param int userid = User ID of the player you wish to simular.
+     * @param int userid = User ID of the player you wish to simulate.
      * @param text stat = Stat you wish for the user to train.
      * @param int times = How much you wish the user to train.
      * Returns stats gained.
      */
-    function train($userid, $stat, $times, $multiplier = 1)
+    function train(int $userid, string $stat, int $times, int $multiplier = 1)
     {
         global $db;
         $userid = (isset($userid) && is_numeric($userid)) ? abs(intval($userid)) : 0;
@@ -325,7 +321,7 @@ class user
     */
 
     //This function needs refactored ASAP
-    function getStaffLevel($user, $level, $exact = false)
+    function getStaffLevel(int $user, string $level, bool $exact = false)
     {
         global $db;
         $level = $db->escape(stripslashes(strtolower($level)));
@@ -380,7 +376,7 @@ class user
         Returns the value in the stat specified.
         Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
     */
-	function setInfo($user, $stat, $change)
+	function setInfo(int $user, string $stat, int $change)
 	{
 		global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -405,7 +401,7 @@ class user
         Returns the value in the stat specified.
         Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
     */
-	function setInfoPercent($user, $stat, $change)
+	function setInfoPercent(int $user, string $stat, int $change)
 	{
 		global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -431,7 +427,7 @@ class user
         Returns the value in the stat specified.
 		Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
     */
-	function getInfo($user, $stat)
+	function getInfo(int $user, string $stat)
 	{
 		global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -452,7 +448,7 @@ class user
         Returns the value in the stat specified.
 		Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
     */
-	function getInfoPercent($user, $stat)
+	function getInfoPercent(int $user, string $stat)
 	{
 		global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -476,7 +472,7 @@ class user
         Returns true if the stat was updated, false otherwise.
         Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
     */
-    function setInfoStatic($user, $stat, $state)
+    function setInfoStatic(int $user, string $stat, int $state)
     {
         global $db, $api;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -504,7 +500,7 @@ class user
         @param text text = Notification text.
         Returns true always.
     */
-    function addNotification($user, $text)
+    function addNotification(int $user, string $text)
     {
         addNotification($user, $text);
         return true;
@@ -518,7 +514,7 @@ class user
         @param int from = User ID message is from..
         Returns true when message is sent. False if message fails.
     */
-    function addMail($user, $subj, $msg, $from)
+    function addMail(int $user, string $subj, string $msg, int $from)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -544,7 +540,7 @@ class user
         @param int user = User's name we're trying to fetch.
         On success, returns the user id's name, on failure, it returns false.
     */
-    function getNamefromID($user)
+    function getNamefromID(int $user)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -560,7 +556,7 @@ class user
         @param string name = User's ID we're trying to fetch.
         On success, returns the user's id, on failure, it returns false.
     */
-    function getIDfromName($name)
+    function getIDfromName(string $name)
     {
         global $db;
         $name = $db->escape(stripslashes($name));
@@ -576,7 +572,7 @@ class user
         @param int user2 = User ID of the second player.
         Returns true if the users share an IP, false if not. Will also return false if both variables are equal.
     */
-    function checkIP($user1, $user2)
+    function checkIP(int $user1, int $user2)
     {
         global $db;
         $user1 = (isset($user1) && is_numeric($user1)) ? abs(intval($user1)) : 0;

@@ -18,7 +18,7 @@ class game
         @param int poster = User ID of poster. Optional. [Defaults = 1]
         Returns true when announcement is made. False if fail.
     */
-    function createAnnouncement($text, $poster = 1)
+    function createAnnouncement(string $text, int $poster = 1)
     {
         global $db;
         $text = $db->escape(str_replace("\n", "<br />", stripslashes($text)));
@@ -40,7 +40,7 @@ class game
         @param text logtype = Log type. Can be whatever. See available logs in staff panel for standardized names.
         @param text input = Text to be entered in the log.
     */
-    function addLog($user, $logtype, $input)
+    function addLog(int $user, string $logtype, string $input)
     {
         global $db;
         $time = time();
@@ -55,7 +55,7 @@ class game
         @param int itemid = Item's name we're trying to fetch.
         On success, returns the item id's name, on failure, it returns false.
     */
-    function getItemNameFromID($itemid)
+    function getItemNameFromID(int $itemid)
     {
         global $db;
         $itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
@@ -70,7 +70,7 @@ class game
         @param string name = Item's ID we're trying to fetch.
         On success, returns the item's id, on failure, it returns false.
     */
-    function getItemIDfromName($name)
+    function getItemIDfromName(string $name)
     {
         global $db;
         $name = $db->escape(stripslashes($name));
@@ -85,7 +85,7 @@ class game
         @param int id = Town ID's name we're trying to getch.
         On success, returns the town's name, on failure, it returns false.
     */
-    function getTownNameFromID($id)
+    function getTownNameFromID(int $id)
     {
         global $db;
         $id = (isset($id) && is_numeric($id)) ? abs(intval($id)) : 0;
@@ -103,7 +103,7 @@ class game
      * @param email from = Email account sender [Optional, Default = "Game Sending Email"]
      * Returns Email was sent successfully.
     */
-    function sendEmail($to, $body, $subject = '', $from = '')
+    function sendEmail(string $to, string $body, string $subject = '', string $from = '')
     {
         global $set;
         if (empty($from))

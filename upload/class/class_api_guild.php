@@ -21,7 +21,7 @@ class guild
      * Returns true if item successfully removed.
      * Returns false if item failed to be taken away.
      */
-    function takeItem($guild, $item, $qty)
+    function takeItem(int $guild, int $item, int $qty)
     {
         global $db;
         //Select $item's item name.
@@ -55,7 +55,7 @@ class guild
      * Returns true if item successfully given to the guild.
      * Returns false if item failed to be given to guild.
      */
-    function giveItem($guild, $item, $qty)
+    function giveItem(int $guild, int $item, int $qty)
     {
         global $db;
         //Select $item's item name.
@@ -82,7 +82,7 @@ class guild
         @param text notification = Notification text.
         Returns true if the notification was added successfully, false otherwise.
     */
-    function addNotification($guild_id, $notification)
+    function addNotification(int $guild_id, string $notification)
     {
         global $db;
         $notification = $db->escape(stripslashes($notification));
@@ -102,7 +102,7 @@ class guild
         @param text field = Data field to return. Optional. If left null/empty, will return all fields.
         Returns all fields if field is empty, otherwise it'll return a single field.
     */
-    function fetchInfo($guild_id, $field = null)
+    function fetchInfo(int $guild_id, string $field = null)
     {
         global $db;
         $guild_id = (isset($guild_id) && is_numeric($guild_id)) ? abs(intval($guild_id)) : 0;
