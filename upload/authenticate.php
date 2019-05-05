@@ -8,6 +8,7 @@
 */
 //I wish to rewrite this mess eventually.
 $menuhide = true;
+$CurrentTime = time();
 require_once('globals_nonauth.php');
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 $email = (array_key_exists('email', $_POST) && is_string($_POST['email'])) ? $_POST['email'] : '';
