@@ -15,11 +15,6 @@ $OwnedBank = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` W
 $Male = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `gender` = 'Male' AND `user_level` != 'NPC'"));
 $Female = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `gender` = 'Female' AND `user_level` != 'NPC'"));
 
-//Select count of players's class
-$Warrior = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `class` = 'Warrior' AND `user_level` != 'NPC'"));
-$Rogue = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `class` = 'Rogue' AND `user_level` != 'NPC'"));
-$Defender = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `class` = 'Defender' AND `user_level` != 'NPC'"));
-
 //Select the Total Primary Currency in the game.
 $TotalPrimaryCurrency = $db->fetch_single($db->query("SELECT SUM(`primary_currency`) FROM `users` WHERE `user_level` != 'NPC'"));
 

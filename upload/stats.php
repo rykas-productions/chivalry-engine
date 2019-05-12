@@ -14,50 +14,6 @@ require("stats/stats.php");
 
 //This is... messy.
 echo "<h3>Statistics Center</h3><hr />
-<script>
-google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-		
-		var data2 = google.visualization.arrayToDataTable([
-          ['Users', 'Amount'],
-          ['Male',     {$Male}],
-          ['Female',      {$Female}]
-        ]);
-		
-		var data3 = google.visualization.arrayToDataTable([
-          ['Users', 'Amount'],
-          ['Warrior',     {$Warrior}],
-          ['Rogue',      {$Rogue}],
-		  ['Defender',      {$Defender}]
-        ]);
-		
-		var options2 = {
-          title: 'Gender Ratio'
-        };
-		
-		var options3 = {
-          title: 'Class Ratio',
-		  colors: ['#FF0000', '#0000FF', '#00FF00']
-        };
-
-		var chart2 = new google.visualization.PieChart(document.getElementById('gender'));
-		var chart3 = new google.visualization.PieChart(document.getElementById('class'));
-
-		chart2.draw(data2, options2);
-		chart3.draw(data3, options3);
-      }
-</script>
-	<table width='100%' class='table table-bordered'>
-		<tr>
-			<td width='50%'>
-				<div id='gender'></div>
-			</td>
-			<td width='50%'>
-				<div id='class'></div>
-			</td>
-		</tr>
-	</table>
 	<table width='50%' class='table table-bordered table-hover table-striped'>
 		<thead>
 			<tr>
@@ -76,6 +32,22 @@ google.charts.load('current', {'packages':['corechart']});
 				</td>
 				<td>
 					" . number_format($TotalUserCount) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Males
+				</td>
+				<td>
+					" . number_format($Male) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Females
+				</td>
+				<td>
+					" . number_format($Female) . "
 				</td>
 			</tr>
 			<tr>
