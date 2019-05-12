@@ -380,8 +380,7 @@ function announce()
 function diagnostics()
 {
     global $h, $userid, $api;
-    $dir = substr(__DIR__, 0, strpos(__DIR__, "\staff"));
-    if (version_compare(phpversion(), '5.5.0') < 0) {
+    if (version_compare(phpversion(), '7.0.0') < 0) {
         $pv = "<span class='text-danger'>Fail</span>";
     } else {
         $pv = "<span class='text-success'>Success</span>";
@@ -423,7 +422,7 @@ function diagnostics()
     }
     echo "<table class='table table-bordered table-hover'>
     		<tr>
-    			<td>Server PHP Version Greater than 5.5</td>
+    			<td>Server PHP Version Greater than 7.0</td>
     			<td>{$pv}</td>
     		</tr>
     		<tr>
