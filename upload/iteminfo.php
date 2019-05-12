@@ -80,6 +80,12 @@ if (!$itmid) {
         $type=json_decode($id['itmeffects_type']);
         $amount=json_decode($id['itmeffects_amount']);
         $usecount=0;
+        echo "
+				<tr>
+					<th>
+						Item Effect
+					</th>
+					<td>";
         while ($usecount != $iterations)
         {
             if ($toggle[$usecount] == 1)
@@ -98,18 +104,12 @@ if (!$itmid) {
                         "xp" => "Experience", "vip_days" =>
                         "VIP Days");
                 $statformatted = $stats["{$stat[$usecount]}"];
-                 echo "
-				<tr>
-					<th>
-						Item Effect
-					</th>
-					<td>
-					{$dir[$usecount]} {$statformatted} by " . number_format($amount[$usecount]) . "{$type[$usecount]}.
-					</td>
-				</tr>";
+				echo "	{$dir[$usecount]} {$statformatted} by " . number_format($amount[$usecount]) . "{$type[$usecount]};";
             }
             $usecount=$usecount+1;
         }
+        echo "</td>
+				</tr>";
         if ($id['weapon']) {
             echo "<tr>
 				<th width='33%'>
