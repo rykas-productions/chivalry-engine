@@ -46,7 +46,7 @@ function menu()
 		</div>
 </div><hr />";
     $gq = $db->query(
-        "SELECT `guild_id`, `guild_town_id`, `guild_owner`, `guild_name`,
+        "SELECT `guild_id`, `guild_owner`, `guild_name`,
 			`userid`, `username`, `guild_level`, `guild_capacity`
 			FROM `guild` AS `g`
 			LEFT JOIN `users` AS `u` ON `g`.`guild_owner` = `u`.`userid`
@@ -110,10 +110,10 @@ function create()
                 die($h->endpage());
             }
             $db->query("INSERT INTO `guild`
-						(`guild_town_id`, `guild_owner`, `guild_coowner`, `guild_primcurr`, 
+						(`guild_owner`, `guild_coowner`, `guild_primcurr`, 
 						`guild_seccurr`, `guild_hasarmory`, `guild_capacity`, `guild_name`, `guild_desc`, 
 						`guild_level`, `guild_xp`) 
-						VALUES ('{$ir['location']}', '{$userid}', '{$userid}', '0', '0', 'false', '5', 
+						VALUES ('{$userid}', '{$userid}', '0', '0', 'false', '5', 
 						'{$name}', '{$desc}', '1', '0')");
             $i = $db->insert_id();
             //Take user's primary currency, and have player join the guild.
