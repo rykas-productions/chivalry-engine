@@ -204,7 +204,7 @@ function diagnostics()
         	</tr>
     </table>
        ";
-    if ($pvf + $pdf + $wvf + $hvf + $ovf + $cuv + $fov < 7)
+    if ($pvf + $wvf + $ovf + $hvf + $pdf + $cuf + $fof < 7)
     {
         echo "
 		<hr />
