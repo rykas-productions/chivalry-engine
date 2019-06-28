@@ -89,6 +89,7 @@ function menuprint($highlight)
 
 function diagnostics()
 {
+	global $Version, $Build;
     menuprint("diag");
     if (version_compare(phpversion(), '7.0.0') < 0)
     {
@@ -195,6 +196,10 @@ function diagnostics()
     		<tr>
     			<td>fopen available?</td>
     			<td>{$fov}</td>
+    		</tr>
+			<tr>
+    			<td>Chivalry Engine Version</td>
+    			<td>{$Version} (Build: {$Build})</td>
     		</tr>
     		<tr>
     			<td>Is Chivalry Engine up to date?</td>
@@ -694,17 +699,17 @@ function updateFile($url)
 /*
  * Function to fetch current version of Chivalry Engine
  */
-function getEngineVersion($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
+function getEngineVersion(string $url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
     global $set;
     $engine_version = $set['Version_Number'];
     $json = json_decode(getCachedFile($url, __DIR__ . "/cache/update_check.txt"), true);
     if (is_null($json))
         return "Update checker failed.";
-    if (version_compare($engine_version, $json['latest-v2']) == 0 || version_compare($engine_version, $json['latest-v2']) == 1)
+    if (version_compare($engine_version, $json['latest-v2']) == 0 || version_compare($engine_version, $json['latest-v2']) == 1 || version_compare($engine_version, $json['latest-v2']) == -1)
         return "Chivalry Engine is up to date.";
     else
-        return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
+        return "Chivalry Engine version {$json['latest-v2']} available. Download it <a href='{$json['download-latest']}'>here</a>.";
 }
 
 /*
