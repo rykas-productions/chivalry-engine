@@ -2,7 +2,7 @@
 Chivalry Engine is a free to use and open source engine created by TheMasterGeneral. Built on top of Bootstrap V4, Chivalry Engine is a mobile-first experience. It should work well on any modern device/browser.
 
 # Requirements
-A web-server with PHP 7.0+ and MySQLi support. Users need to have Javascript enabled or a lot of the core features won't work.  
+A web-server with PHP 7.0+ and MySQLi support. Users need to have Javascript enabled or a lot of the core features won't work. With the inclusion of Bootstrap V4, you cannot run this engine on clients running Internet Explorer 9 or older. Its recommended that users on Android use a browser different to the default one, unless they're running Android 5.0 or newer. 
   
 # Live Game
 Want to give v1 of the engine a test in a live game instance? Check out [Chivalry is Dead](https://chivalryisdeadgame.com)!
