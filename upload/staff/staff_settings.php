@@ -74,7 +74,7 @@ function menu()
 }
 function basicsettings()
 {
-    global $h, $db, $set, $api, $userid;
+    global $h, $db, $set, $api, $userid, $_CONFIG;
     if (!isset($_POST['gamename'])) {
         $csrf = getHtmlCSRF('staff_sett_1');
         echo "
