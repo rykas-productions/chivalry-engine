@@ -60,7 +60,7 @@ if (empty($_POST['userid'])) {
 			    Report Text
 			</th>
 			<td>
-				<textarea class='form-control' required='1' maxlength='1250' name='reason' rows='5'></textarea>
+				<textarea class='form-control' required='1' name='reason'></textarea>
 			</td>
 		</tr>
 		<tr>

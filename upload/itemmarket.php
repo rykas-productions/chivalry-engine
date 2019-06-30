@@ -157,7 +157,7 @@ function remove()
 
 function buy()
 {
-    global $db, $ir, $userid, $h, $api, $_CONFIG;
+    global $db, $ir, $userid, $h, $api;
     $ID = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $QTY = filter_input(INPUT_POST, 'QTY', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     if ($ID && !$QTY) {
@@ -223,7 +223,7 @@ function buy()
             die($h->endpage());
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
-        $curre = ($r['imCURRENCY'] == 'primary') ? $_CONFIG['primary_currency'] : $_CONFIG['secondary_currency'];
+        $curre = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
         $final_price = $r['imPRICE'] * $_POST['QTY'];
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
@@ -253,7 +253,7 @@ function buy()
 
 function gift()
 {
-    global $db, $ir, $userid, $h, $api, $_CONFIG;
+    global $db, $ir, $userid, $h, $api;
     $ID = filter_input(INPUT_GET, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $QTY = filter_input(INPUT_POST, 'QTY', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $user = filter_input(INPUT_POST, 'user', FILTER_SANITIZE_NUMBER_INT) ?: 0;
@@ -299,7 +299,7 @@ function gift()
             die($h->endpage());
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
-        $curre = ($r['imCURRENCY'] == 'primary') ? $_CONFIG['primary_currency'] : $_CONFIG['secondary_currency'];
+        $curre = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
         $final_price = $api->SystemReturnTax($r['imPRICE'] * $_POST['QTY']);
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
@@ -385,7 +385,7 @@ function gift()
 
 function add()
 {
-    global $userid, $db, $h, $api, $_CONFIG;
+    global $userid, $db, $h, $api;
     $QTY = filter_input(INPUT_POST, 'QTY', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $id = filter_input(INPUT_POST, 'ID', FILTER_SANITIZE_NUMBER_INT) ?: 0;
@@ -400,7 +400,7 @@ function add()
             alert('danger', "Uh Oh!", "You are trying to add an item you do not have, or trying to add more than you have.", true, 'inventory.php');
             die($h->endpage());
         } else {
-            $checkq = $db->query("SELECT `imID` FROM `itemmarket` WHERE  `imITEM` =
+            $checkq = $db->query("SELECT `imID` FROM `itemmarket` WHERE  `imITEM` = 
 								{$ID} AND  `imPRICE` = {$price}
 								AND  `imADDER` = {$userid} AND `imCURRENCY` = '{$_POST['currency']}'");
             if ($db->num_rows($checkq) > 0) {
@@ -458,8 +458,8 @@ function add()
 				</th>
 				<td>
 					<select name='currency' type='dropdown' class='form-control'>
-						<option value='primary'>{$_CONFIG['primary_currency']}</option>
-						<option value='secondary'>{$_CONFIG['secondary_currency']}</option>
+						<option value='primary'>" . constant("primary_currency") . "</option>
+						<option value='secondary'>" . constant("secondary_currency") . "</option>
 					</select>
 				</td>
 			</tr>
