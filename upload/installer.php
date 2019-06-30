@@ -525,23 +525,20 @@ function install()
     $config_file =
             <<<EOF
 <?php
-            {$lit_config} = array(
-	'hostname' => '{$e_db_hostname}',
-	'username' => '{$e_db_username}',
-	'password' => '{$e_db_password}',
-	'database' => '{$e_db_database}',
-	'persistent' => 0,
-	'driver' => '{$db_driver}',
-	'code' => '{$code}',
-    'primary_currency' => 'Primary Currency',
-    'secondary_currency' => 'Secondary Currency',
-    'strength_stat' => 'Strength',
-    'agility_stat' => 'Agility',
-    'guard_stat' => 'Guard',
-    'iq_stat' => 'IQ',
-    'labor_stat' => 'Labor',
-    'item_effects' => 3
-);
+define('db_host','{$e_db_hostname}');
+define('db_username','{$e_db_username}');
+define('db_password','{$e_db_password}');
+define('db_database','cev2');
+define('db_driver','{$e_db_database}');
+define('game_key','{$code}');
+define('primary_currency','Primary Currency');
+define('secondary_currency','Secondary Currency');
+define('stat_strength','Strength');
+define('stat_agility','Agility');
+define('stat_labor','Labor');
+define('stat_guard','Guard');
+define('stat_iq','IQ');
+define('itemeffects',3);
 EOF;
     $f = fopen('config.php', 'w');
     fwrite($f, $config_file);
