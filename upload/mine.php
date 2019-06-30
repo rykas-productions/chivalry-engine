@@ -131,11 +131,11 @@ function buypower()
 						`max_miningpower` = `max_miningpower` + ($sets*10) 
 						WHERE `userid` = {$userid}");
             $api->game->addLog($userid, 'mining', "Exchanged {$totalcost} IQ for {$sets} sets of mining power.");
-            alert('success', "Success!", "You have traded " . number_format($totalcost) . " {$_CONFIG['iq_stat']} for {$sets} of mining power.", true, 'mine.php');
+            alert('success', "Success!", "You have traded " . number_format($totalcost) . " " . constant("stat_iq") . " for {$sets} of mining power.", true, 'mine.php');
         }
     } else {
         echo "You can buy {$MUS['buyable_power']} sets of mining power. One set is equal to 10 mining power. You unlock
-            more sets by leveling your mining level. Each set will cost you " . number_format($CostForPower) . " {$_CONFIG['iq_stat']}.
+            more sets by leveling your mining level. Each set will cost you " . number_format($CostForPower) . " " . constant("stat_iq") . ".
             How many do you wish to buy?";
         echo "<br />
         <form method='post'>
@@ -169,7 +169,7 @@ function mine()
                 alert('danger', "Uh Oh!", "To mine at a mine, you need to be in the same town its located.", true, 'mine.php');
                 die($h->endpage());
             } elseif ($ir['iq'] < $MSI['mine_iq']) {
-                alert('danger', "Uh Oh!", "Your {$_CONFIG['iq_stat']} is too low to mine here. You need {$MSI['mine_iq']} {$_CONFIG['iq_stat']}.", true, 'mine.php');
+                alert('danger', "Uh Oh!", "Your " . constant("stat_iq") . " is too low to mine here. You need {$MSI['mine_iq']} " . constant("stat_iq") . ".", true, 'mine.php');
                 die($h->endpage());
             } elseif ($MUS['miningpower'] < $MSI['mine_power_use']) {
                 alert('danger', "Uh Oh!", "You do not have enough mining power to mine here. You need {$MSI['mine_power_use']}.", true, 'mine.php');

@@ -64,10 +64,10 @@ echo "<table class='table table-hover table-bordered'>
 	</tr>
 	<tr>
 		<td>
-		{$_CONFIG['primary_currency']}: " . number_format($ir['primary_currency']) . "
+		" . constant("primary_currency") . ": " . number_format($ir['primary_currency']) . "
 		</td>
 		<td>
-		{$_CONFIG['secondary_currency']}: " . number_format($ir['secondary_currency']) . "
+		" . constant("secondary_currency") . ": " . number_format($ir['secondary_currency']) . "
 		</td>
 	</tr>
 	<tr>
@@ -106,7 +106,7 @@ echo "
 <table class='table table-bordered'>
     <tr>
         <th width='25%'>
-            Strength
+            " . constant("stat_strength") . "
         </th>
         <td>
             {$StrengthFormat} (Ranked: {$StrengthRank})
@@ -114,7 +114,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            Agility
+            " . constant("stat_agility") . "
         </th>
         <td>
             {$AgilityFormat} (Ranked: {$AgilityRank})
@@ -122,7 +122,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            {$_CONFIG['guard_stat']}
+            " . constant("stat_guard") . "
         </th>
         <td>
             {$GuardFormat} (Ranked: {$GuardRank})
@@ -130,7 +130,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            {$_CONFIG['labor_stat']}
+            " . constant("stat_labor") . "
         </th>
         <td>
             {$LaborFormat} (Ranked: {$LaborRank})
@@ -138,7 +138,7 @@ echo "
     </tr>
     <tr>
         <th width='25%'>
-            {$_CONFIG['iq_stat']}
+            " . constant("stat_iq") . "
         </th>
         <td>
             {$IQFormat} (Ranked: {$IQRank})

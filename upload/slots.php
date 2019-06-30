@@ -99,7 +99,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 		<tr>
 			<th colspan='2'>
 				Welcome to the slots machine. Bet some of your hard earned cash for a slim chance to win big! At your
-				level, we've imposed a betting restriction of " . number_format($maxbet) . " {$_CONFIG['primary_currency']}.
+				level, we've imposed a betting restriction of " . number_format($maxbet) . " " . constant("primary_currency") . ".
 			</th>
 		</tr>
 		<tr>

@@ -521,7 +521,6 @@ function install()
     $e_db_username = addslashes($db_username);
     $e_db_password = addslashes($db_password);
     $e_db_database = addslashes($db_database);
-    $lit_config = '$_CONFIG';
     $config_file =
             <<<EOF
 <?php

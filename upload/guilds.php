@@ -96,7 +96,7 @@ function menu()
 
 function create()
 {
-    global $db, $userid, $api, $ir, $set, $h, $_CONFIG;
+    global $db, $userid, $api, $ir, $set, $h;
     echo "<h3>Create a Guild</h3><hr />";
     $cg_price = $set['GUILD_PRICE'];
     $cg_level = $set['GUILD_LEVEL'];
@@ -153,7 +153,7 @@ function create()
 			<div class='container'>
 				<div class='row'>
 					<th colspan='2'>
-						Creating a guild. Guilds cost " . number_format($cg_price) . " {$_CONFIG['primary_currency']}
+						Creating a guild. Guilds cost " . number_format($cg_price) . " " . constant("primary_currency") . "
 					</div>
 				</div><hr />
 				<div class='row'>

@@ -77,7 +77,7 @@ function home()
 
 function new_crime()
 {
-    global $db, $userid, $api, $h, $_CONFIG;
+    global $db, $userid, $api, $h;
     if (!isset($_POST['name'])) {
         $csrf = getHtmlCSRF('staff_newcrime');
         echo "Adding a new Crime<br />
@@ -109,7 +109,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Minimum {$_CONFIG['primary_currency']}
+						Success Minimum " . constant("primary_currency") . "
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMIN' />
@@ -117,7 +117,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Maximum {$_CONFIG['primary_currency']}
+						Success Maximum " . constant("primary_currency") . "
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMAX' />
@@ -125,7 +125,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Minimum {$_CONFIG['secondary_currency']}
+						Success Minimum " . constant("secondary_currency") . "
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMIN' />
@@ -133,7 +133,7 @@ function new_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Maximum {$_CONFIG['secondary_currency']}
+						Success Maximum " . constant("secondary_currency") . "
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMAX' />
@@ -271,7 +271,7 @@ function new_crime()
 
 function edit_crime()
 {
-    global $db, $userid, $h, $api, $_CONFIG;
+    global $db, $userid, $h, $api;
     if (!isset($_POST['step'])) {
         $_POST['step'] = 0;
     }
@@ -350,7 +350,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Minimum {$_CONFIG['primary_currency']}
+						Success Minimum " . constant("primary_currency") . "
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMIN' value='{$itemi['crimePRICURMIN']}' />
@@ -358,7 +358,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Maximum {$_CONFIG['primary_currency']}
+						Success Maximum " . constant("primary_currency") . "
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='PRICURMAX' value='{$itemi['crimePRICURMAX']}' />
@@ -366,7 +366,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						Sucess Minimum {$_CONFIG['secondary_currency']}
+						Sucess Minimum " . constant("secondary_currency") . "
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMIN' value='{$itemi['crimeSECCURMIN']}' />
@@ -374,7 +374,7 @@ function edit_crime()
 				</tr>
 				<tr>
 					<th>
-						Success Maximum {$_CONFIG['secondary_currency']}
+						Success Maximum " . constant("secondary_currency") . "
 					</th>
 					<td>
 						<input type='number' min='0' class='form-control' required='1' name='SECURMAX' value='{$itemi['crimeSECURMAX']}' />

@@ -74,7 +74,7 @@ function menu()
 }
 function basicsettings()
 {
-    global $h, $db, $set, $api, $userid, $_CONFIG;
+    global $h, $db, $set, $api, $userid;
     if (!isset($_POST['gamename'])) {
         $csrf = getHtmlCSRF('staff_sett_1');
         echo "
@@ -247,7 +247,7 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['iq_stat']} per {$_CONFIG['secondary_currency']}
+					" . constant("stat_iq") . " per " . constant("secondary_currency") . "
 				</th>
 				<td>
 					<input type='number' name='iqpersec' class='form-control' min='1' required='1' value='{$set['iq_per_sec']}'>

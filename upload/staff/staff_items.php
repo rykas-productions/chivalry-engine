@@ -56,7 +56,7 @@ switch ($_GET['action']) {
 }
 function create()
 {
-    global $db, $ir, $h, $userid, $api, $_CONFIG;
+    global $db, $ir, $h, $userid, $api;
     if ($ir['user_level'] != 'Admin') {
         alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
         die($h->endpage());
@@ -118,7 +118,7 @@ function create()
 					<h4>Item Usage</h4>
 				</td>
 			</tr>";
-        for ($i = 1; $i <= $_CONFIG['item_effects']; $i++) {
+        for ($i = 1; $i <= constant("itemeffects"); $i++) {
             echo "
 				<tr>
 					<th>
@@ -136,15 +136,15 @@ function create()
 						<option value='brave'>Bravery</option>
 						<option value='hp'>Health</option>
 						<option value='level'>Level</option>
-						<option value='strength'>{$_CONFIG['strength_stat']}</option>
-						<option value='agility'>{$_CONFIG['agility_stat']}</option>
-						<option value='guard'>{$_CONFIG['guard_stat']}</option>
-						<option value='labor'>{$_CONFIG['labor_stat']}</option>
-						<option value='iq'>{$_CONFIG['iq_stat']}</option>
+						<option value='strength'>" . constant("stat_strength") . "</option>
+						<option value='agility'>" . constant("stat_agility") . "</option>
+						<option value='guard'>" . constant("stat_guard") . "</option>
+						<option value='labor'>" . constant("stat_labor") . "</option>
+						<option value='iq'>" . constant("stat_iq") . "</option>
 						<option value='infirmary'>Infirmary Time</option>
 						<option value='dungeon'>Dungeon Time</option>
-						<option value='primary_currency'>{$_CONFIG['primary_currency']}</option>
-						<option value='secondary_currency'>{$_CONFIG['secondary_currency']}</option>
+						<option value='primary_currency'>" . constant("primary_currency") . "</option>
+						<option value='secondary_currency'>" . constant("secondary_currency") . "</option>
 						<option value='xp'>Experience</option>
 						<option value='vip_days'>VIP Days</option>
 					</select>
@@ -463,7 +463,7 @@ function giveitem()
 
 function edititem()
 {
-    global $db, $api, $userid, $h, $_CONFIG;
+    global $db, $api, $userid, $h;
     if (!$api->user->getStaffLevel($userid,'admin')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
         die($h->endpage());
@@ -552,12 +552,12 @@ function edititem()
         $stats =
             array("energy" => "Energy", "will" => "Will",
                 "brave" => "Bravery", "level" => "Level",
-                "hp" => "Health", "strength" => $_CONFIG['strength_stat'],
-                "agility" => $_CONFIG['agility_stat'], "guard" => $_CONFIG['guard_stat'],
-                "labor" => $_CONFIG['labor_stat'], "iq" => $_CONFIG['iq_stat'],
+                "hp" => "Health", "strength" => constant("stat_strength"),
+                "agility" => constant("stat_agility"), "guard" => constant("stat_guard"),
+                "labor" => constant("stat_labor"), "iq" => constant("stat_iq"),
                 "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                "primary_currency" => $_CONFIG['primary_currency'], "secondary_currency"
-            => $_CONFIG['secondary_currency'], "crimexp" => "Experience", "vip_days" =>
+                "primary_currency" => constant("primary_currency"), "secondary_currency"
+            => constant("secondary_currency"), "crimexp" => "Experience", "vip_days" =>
                 "VIP Days");
         $iterations=count(json_decode($itemi['itmeffects_toggle']));
         $toggle=json_decode($itemi['itmeffects_toggle']);

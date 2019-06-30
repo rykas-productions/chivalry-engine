@@ -62,7 +62,7 @@ switch ($_GET['action']) {
 }
 function newjob()
 {
-    global $db, $userid, $h, $api, $_CONFIG;
+    global $db, $userid, $h, $api;
     echo "<h3>Create Job</h3><hr />";
     if (!isset($_POST['jNAME'])) {
         $csrf = getHtmlCSRF('staff_newjob');
@@ -125,7 +125,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['primary_currency']}
+					" . constant("primary_currency") . "
 				</th>
 				<td>
 					<input type='number' min='0' name='jrPRIMPAY' required='1' class='form-control'>
@@ -133,7 +133,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['secondary_currency']}
+					" . constant("secondary_currency") . "
 				</th>
 				<td>
 					<input type='number' min='0' name='jrSECONDARY' required='1' class='form-control'>
@@ -146,7 +146,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['strength_stat']}
+					" . constant("stat_strength") . "
 				</th>
 				<td>
 					<input type='number' min='0' name='jSTR' required='1' class='form-control'>
@@ -154,7 +154,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['labor_stat']}
+					" . constant("stat_labor") . "
 				</th>
 				<td>
 					<input type='number' min='0' name='jLAB' required='1' class='form-control'>
@@ -162,7 +162,7 @@ function newjob()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['iq_stat']}
+					" . constant("stat_iq") . "
 				</th>
 				<td>
 					<input type='number' min='0' name='jIQ' required='1' class='form-control'>
@@ -429,7 +429,7 @@ function jobdele()
 
 function newjobrank()
 {
-    global $db, $userid, $api, $h, $_CONFIG;
+    global $db, $userid, $api, $h;
     echo "<h3>Create Job Rank</h3><hr />";
     if (isset($_POST['job'])) {
         $_POST['rank'] = (isset($_POST['rank']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i",
@@ -490,7 +490,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['primary_currency']} Pay
+                    " . constant("primary_currency") . " Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='primpay' class='form-control'>
@@ -498,7 +498,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['secondary_currency']} Pay
+                    " . constant("secondary_currency") . " Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='seccpay' class='form-control'>
@@ -514,7 +514,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['strength_stat']} Requirement
+                    " . constant("stat_strength") . " Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='str' class='form-control'>
@@ -522,7 +522,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['labor_stat']} Requirement
+                    " . constant("stat_labor") . " Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='lab' class='form-control'>
@@ -530,7 +530,7 @@ function newjobrank()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['iq_stat']} Requirement
+                    " . constant("stat_iq") . " Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='0' required='1' name='iq' class='form-control'>
@@ -557,7 +557,7 @@ function newjobrank()
 
 function jobrankedit()
 {
-    global $db, $userid, $api, $h, $_CONFIG;
+    global $db, $userid, $api, $h;
     echo "<h3>Edit Job Rank</h3><hr />";
     //Set step to 0 if no step specified.
     if (!isset($_POST['step']))
@@ -661,7 +661,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['primary_currency']} Pay
+                    " . constant("primary_currency") . " Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrPRIMPAY']}' required='1' name='primpay' class='form-control'>
@@ -669,7 +669,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['secondary_currency']} Pay
+                    " . constant("secondary_currency") . " Pay
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrSECONDARY']}' required='1' name='seccpay' class='form-control'>
@@ -685,7 +685,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['strength_stat']} Requirement
+                    " . constant("stat_strength") . " Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrSTR']}' required='1' name='str' class='form-control'>
@@ -693,7 +693,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['labor_stat']} Requirement
+                    " . constant("stat_labor") . " Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrLAB']}' required='1' name='lab' class='form-control'>
@@ -701,7 +701,7 @@ function jobrankedit()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['iq_stat']} Requirement
+                    " . constant("stat_iq") . " Requirement
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrIQ']}' required='1' name='iq' class='form-control'>

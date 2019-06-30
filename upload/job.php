@@ -81,7 +81,9 @@ if (empty($ir['job'])) {
         $r = $db->fetch_row($q);
         $db->free_result($q);
         echo "<b>{$r['jBOSS']}:</b> So, {$ir['username']}, it appears you are wanting to work with our company. Can you tell me a little bit about yourself?<br />
-        <b>{$ir['username']}:</b> Of course! I'm level {$ir['level']}, have {$ir['strength']} strength, {$ir['iq']} {$_CONFIG['iq_stat']}, and {$ir['labor']} {$_CONFIG['labor_stat']}. I hope these skills are useful to the company.<br />";
+        <b>{$ir['username']}:</b> Of course! I'm level {$ir['level']}, have {$ir['strength']} " . constant("stat_strength") . ", 
+		{$ir['iq']} " . constant("stat_iq") . ", and {$ir['labor']} " . constant("stat_labor") . ". 
+		I hope these skills are useful to the company.<br />";
         if ($ir['strength'] >= $r['jrSTR'] && $ir['labor'] >= $r['jrLAB'] && $ir['iq'] >= $r['jrIQ']) {
             $db->query("UPDATE `users`
                         SET `job` = {$_GET['interview']},
@@ -95,15 +97,15 @@ if (empty($ir['job'])) {
             echo "<b>{$r['jBOSS']}:</b> We apologize, {$ir['username']}, but you do not have the necessary requirements needed to join our company. You'll need";
             if ($ir['strength'] < $r['jrSTR']) {
                 $s = $r['jrSTR'] - $ir['strength'];
-                echo " $s more {$_CONFIG['strength_stat']}, ";
+                echo " $s more " . constant("stat_strength") . ", ";
             }
             if ($ir['labor'] < $r['jrLAB']) {
                 $s = $r['jrLAB'] - $ir['labor'];
-                echo " $s more labor, ";
+                echo " $s more " . constant("stat_labor") . ", ";
             }
             if ($ir['iq'] < $r['jrIQ']) {
                 $s = $r['jrIQ'] - $ir['iq'];
-                echo " $s more {$_CONFIG['iq_stat']}, ";
+                echo " $s more " . constant("stat_iq") . ", ";
             }
             echo "before you'll be able to work here with our company.
 			<br />
@@ -134,8 +136,8 @@ function job_index()
 {
     global $db, $ir, $h;
     echo "<h3>Your Job</h3>
-    You currently work in the {$ir['jNAME']}! You receive {$ir['jrPRIMPAY']} {$_CONFIG['primary_currency']} and/or
-    {$ir['jrSECONDARY']} {$_CONFIG['secondary_currency']} each hour you work as you're required. You've worked {$ir['jobwork']} /
+    You currently work in the {$ir['jNAME']}! You receive {$ir['jrPRIMPAY']} " . constant("primary_currency") . " and/or
+    {$ir['jrSECONDARY']} " . constant("secondary_currency") . " each hour you work as you're required. You've worked {$ir['jobwork']} /
     {$ir['jrACT']} times this hour.
     <table class='table table-bordered'>
     <tr>
@@ -157,13 +159,13 @@ function job_index()
                 {$r['jrRANK']}
             </td>
             <td>
-                {$r['jrPRIMPAY']} Primary<br />
-                {$r['jrSECONDARY']} Secondary
+                {$r['jrPRIMPAY']} " . constant("primary_currency") . "<br />
+                {$r['jrSECONDARY']} " . constant("secondary_currency") . "
             </td>
             <td>
-                {$r['jrSTR']} {$_CONFIG['strength_stat']}<br />
-                {$r['jrLAB']} Labor<br />
-                {$r['jrIQ']} {$_CONFIG['iq_stat']}<br />
+                {$r['jrSTR']} " . constant("stat_strength") . "<br />
+                {$r['jrLAB']} " . constant("stat_labor") . "<br />
+                {$r['jrIQ']} " . constant("stat_iq") . "<br />
                 {$r['jrACT']} Work/Hour
             </td>
         </tr>";

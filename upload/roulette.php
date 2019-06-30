@@ -97,7 +97,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 			<th colspan='2'>
 				Ready to test your luck? Awesome! Here at the roulette table, the house always wins. To combat players
 				losing all their wealth in one go, we've put in a bet restriction. At your level, you can only bet
-				" . number_format($maxbet) . " {$_CONFIG['primary_currency']}.
+				" . number_format($maxbet) . " " . constant("primary_currency") . ".
 			</th>
 		</tr>
 		<tr>

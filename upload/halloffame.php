@@ -71,15 +71,15 @@ else {
                     LIMIT 20");
 }
 echo "<a href='?stat=level'>Level</a>
-        || <a href='?stat=primary_currency'>{$_CONFIG['primary_currency']}</a>
-        || <a href='?stat=secondary_currency'>{$_CONFIG['secondary_currency']}</a>
+        || <a href='?stat=primary_currency'>" . constant("primary_currency") . "</a>
+        || <a href='?stat=secondary_currency'>" . constant("secondary_currency") . "</a>
 		|| <a href='?stat=mining_level'>Mining Level</a>";
 echo "<br />";
-echo "<a href='?stat=strength'>{$_CONFIG['strength_stat']}</a>
-		|| <a href='?stat=agility'>{$_CONFIG['agility_stat']}</a>
-        || <a href='?stat=guard'>{$_CONFIG['guard_stat']}</a>
-        || <a href='?stat=labor'>{$_CONFIG['labor_stat']}</a>
-		|| <a href='?stat=iq'>{$_CONFIG['iq_stat']}</a>
+echo "<a href='?stat=strength'>" . constant("stat_strength") . "</a>
+		|| <a href='?stat=agility'>" . constant("stat_agility") . "</a>
+        || <a href='?stat=guard'>" . constant("stat_guard") . "</a>
+        || <a href='?stat=labor'>" . constant("stat_labor") . "</a>
+		|| <a href='?stat=iq'>" . constant("stat_iq") . "</a>
         || <a href='?stat=total'>Total Stats</a>";
 echo "<br />Listing the 20 players with the highest {$_GET['stat']}.";
 echo "<table class='table table-bordered'>

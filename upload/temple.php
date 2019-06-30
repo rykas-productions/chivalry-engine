@@ -55,18 +55,18 @@ switch ($_GET['action']) {
 function home()
 {
     //Main index.
-    global $set, $_CONFIG;
-    echo "Welcome to the Temple of Fortune. Here you may spend your {$_CONFIG['secondary_currency']} as you see fit!";
+    global $set;
+    echo "Welcome to the Temple of Fortune. Here you may spend your " . constant("secondary_currency") . " as you see fit!";
     echo "<br />
-	<a class='btn btn-outline-primary' href='?action=energy'>Refill Energy - " . number_format($set['energy_refill_cost']) . " {$_CONFIG['secondary_currency']}</a><br /><br />
-	<a class='btn btn-outline-primary' href='?action=brave'>Regenerate 5% Bravery - " . number_format($set['brave_refill_cost']) . " {$_CONFIG['secondary_currency']}</a><br /><br />
-	<a class='btn btn-outline-primary' href='?action=will'>Regenerate 5% Will - " . number_format($set['will_refill_cost']) . " {$_CONFIG['secondary_currency']}</a><br /><br />
-	<a class='btn btn-outline-primary' href='?action=iq'>Refill {$_CONFIG['iq_stat']} - " . number_format($set['iq_per_sec']) . " {$_CONFIG['secondary_currency']}</a><br /><br />";
+	<a class='btn btn-outline-primary' href='?action=energy'>Refill Energy - " . number_format($set['energy_refill_cost']) . " " . constant("secondary_currency") . "</a><br /><br />
+	<a class='btn btn-outline-primary' href='?action=brave'>Regenerate 5% Bravery - " . number_format($set['brave_refill_cost']) . " " . constant("secondary_currency") . "</a><br /><br />
+	<a class='btn btn-outline-primary' href='?action=will'>Regenerate 5% Will - " . number_format($set['will_refill_cost']) . " " . constant("secondary_currency") . "</a><br /><br />
+	<a class='btn btn-outline-primary' href='?action=iq'>Refill " . constant("stat_iq") . " - " . number_format($set['iq_per_sec']) . " " . constant("secondary_currency") . "</a><br /><br />";
 }
 
 function energy()
 {
-    global $api, $userid, $set, $_CONFIG;
+    global $api, $userid, $set;
     //User has enough {$_CONFIG['secondary_currency']} to refill their energy.
     if ($api->user->hasCurrency($userid, 'secondary', $set['energy_refill_cost'])) {
         //User's energy is already full.
@@ -76,17 +76,17 @@ function energy()
             //Refill the user's energy and take their {$_CONFIG['secondary_currency']}.
             $api->user->setInfo($userid, 'energy', 100, true);
             $api->user->takeCurrency($userid, 'secondary', $set['energy_refill_cost']);
-            alert('success', "Success!", "You have paid {$set['energy_refill_cost']} {$_CONFIG['secondary_currency']} to refill your energy.", true, 'temple.php');
-            $api->game->addLog($userid, 'temple', "Traded {$set['energy_refill_cost']} {$_CONFIG['secondary_currency']} to refill their Energy.");
+            alert('success', "Success!", "You have paid {$set['energy_refill_cost']} " . constant("secondary_currency") . " to refill your energy.", true, 'temple.php');
+            $api->game->addLog($userid, 'temple', "Traded {$set['energy_refill_cost']} " . constant("secondary_currency") . " to refill their Energy.");
         }
     } else {
-        alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['secondary_currency']} to refill your energy.", true, 'temple.php');
+        alert('danger', "Uh Oh!", "You do not have enough " . constant("secondary_currency") . " to refill your energy.", true, 'temple.php');
     }
 }
 
 function brave()
 {
-    global $api, $userid, $set, $_CONFIG;
+    global $api, $userid, $set;
     //User has enoguh {$_CONFIG['secondary_currency']} to refill their brave
     if ($api->user->hasCurrency($userid, 'secondary', $set['brave_refill_cost'])) {
         //User's brave is already full.
@@ -96,17 +96,17 @@ function brave()
             //Refill the user's bravery by 5% and take their {$_CONFIG['secondary_currency']}.
             $api->user->setInfo($userid, 'brave', 5, true);
             $api->user->takeCurrency($userid, 'secondary', $set['brave_refill_cost']);
-            alert('success', "Success!", "You have paid {$set['brave_refill_cost']} to regenerate 5% Bravery.", true, 'temple.php');
-            $api->game->addLog($userid, 'temple', "Traded {$set['brave_refill_cost']} {$_CONFIG['secondary_currency']} to regenerate 5% Brave.");
+            alert('success', "Success!", "You have paid {$set['brave_refill_cost']} " . constant("secondary_currency") . " to regenerate 5% Bravery.", true, 'temple.php');
+            $api->game->addLog($userid, 'temple', "Traded {$set['brave_refill_cost']} " . constant("secondary_currency") . " to regenerate 5% Brave.");
         }
     } else {
-        alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['secondary_currency']} to refill your Bravery.", true, 'temple.php');
+        alert('danger', "Uh Oh!", "You do not have enough " . constant("secondary_currency") . " to refill your Bravery.", true, 'temple.php');
     }
 }
 
 function will()
 {
-    global $api, $userid, $set, $_CONFIG;
+    global $api, $userid, $set;
     //User has enough {$_CONFIG['secondary_currency']} to refill their will.
     if ($api->user->hasCurrency($userid, 'secondary', $set['will_refill_cost'])) {
         //User's will is already at 100%
@@ -116,24 +116,24 @@ function will()
             //Refill the user's will by 5% and take their {$_CONFIG['secondary_currency']}.
             $api->user->setInfo($userid, 'will', 5, true);
             $api->user->takeCurrency($userid, 'secondary', $set['will_refill_cost']);
-            alert('success', "Success!", "You have paid {$set['will_refill_cost']} {$_CONFIG['secondary_currency']} to regenerate 5% Will", true, 'temple.php');
-            $api->game->addLog($userid, 'temple', "Traded {$set['will_refill_cost']} {$_CONFIG['secondary_currency']} to regenerate 5% Will.");
+            alert('success', "Success!", "You have paid {$set['will_refill_cost']} " . constant("secondary_currency") . " to regenerate 5% Will", true, 'temple.php');
+            $api->game->addLog($userid, 'temple', "Traded {$set['will_refill_cost']} " . constant("secondary_currency") . " to regenerate 5% Will.");
         }
     } else {
-        alert('danger', "Uh Oh!", "You do have have enough {$_CONFIG['secondary_currency']} to refill your Will.", true, 'temple.php');
+        alert('danger', "Uh Oh!", "You do have have enough " . constant("secondary_currency") . " to refill your Will.", true, 'temple.php');
     }
 }
 
 function iq()
 {
-    global $db, $api, $userid, $ir, $h, $set, $_CONFIG;
+    global $db, $api, $userid, $ir, $h, $set;
     if (isset($_POST['iq'])) {
         //Make sure the POST is safe to work with.
         $_POST['iq'] = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs($_POST['iq']) : '';
 
         //POST is empty.
         if (empty($_POST['iq'])) {
-            alert('danger', "Uh Oh!", "Please specify how much {$_CONFIG['secondary_currency']} you wish to trade in for {$_CONFIG['iq_stat']}.");
+            alert('danger', "Uh Oh!", "Please specify how much " . constant("secondary_currency") . " you wish to trade in for " . constant("stat_iq") . ".");
             die($h->endpage());
         }
         //IQ gained is coins exchanged multiplied by game setting for how much IQ per coin.
@@ -141,7 +141,7 @@ function iq()
 
         //User does not have enough {$_CONFIG['secondary_currency']} to exchange for how much they said they wanted in IQ.
         if ($api->user->hasCurrency($userid, 'secondary', $_POST['iq']) == false) {
-            alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['secondary_currency']} to buy that much {$_CONFIG['iq_stat']}.");
+            alert('danger', "Uh Oh!", "You do not have enough " . constant("secondary_currency") . " to buy that much " . constant("stat_iq") . ".");
             die($h->endpage());
         }
         //Take the currency and give the user some IQ.
@@ -150,13 +150,13 @@ function iq()
         alert('success', "Success!", "You have successfully traded " . number_format($_POST['iq']) . " {$_CONFIG['secondary_currency']} for " . number_format($totalcost) . " IQ Points.", true, 'temple.php');
         $api->game->addLog($userid, 'temple', "Traded {$_POST['iq']} {$_CONFIG['secondary_currency']} for {$totalcost} IQ.");
     } else {
-        alert('info', "Information!", "You can trade in your {$_CONFIG['secondary_currency']} for {$_CONFIG['iq_stat']} at a ratio of {$set['iq_per_sec']}
-		per {$_CONFIG['secondary_currency']}. You currently have " . number_format($ir['secondary_currency']) . " {$_CONFIG['secondary_currency']}.", false);
+        alert('info', "Information!", "You can trade in your " . constant("secondary_currency") . " for " . constant("stat_iq") . " at a ratio of {$set['iq_per_sec']}
+		per " . constant("secondary_currency") . ". You currently have " . number_format($ir['secondary_currency']) . " " . constant("secondary_currency") . ".", false);
         echo "<table class='table table-bordered'>
 			<form method='post'>
 			<tr>
 				<th>
-					{$_CONFIG['secondary_currency']}
+					" . constant("secondary_currency") . "
 				</th>
 				<td>
 					<input type='number' class='form-control' name='iq' min='1' max='{$ir['secondary_currency']}' required='1'>
@@ -164,7 +164,7 @@ function iq()
 			</tr>
 			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='Trade for {$_CONFIG['iq_stat']}'>
+					<input type='submit' class='btn btn-primary' value='Trade for " . constant("stat_iq") . "'>
 				</td>
 			</tr>
 			</form>

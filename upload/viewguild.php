@@ -243,7 +243,7 @@ function summary()
 	</tr>
 	<tr>
 		<th>
-			{$_CONFIG['primary_currency']}
+			" . constant("primary_currency") . "
 		</th>
 		<td>
 			" . number_format($gd['guild_primcurr']) . " / " . number_format($gd['guild_level'] * $set['GUILD_PRICE']) . "
@@ -251,7 +251,7 @@ function summary()
 	</tr>
 	<tr>
 		<th>
-			{$_CONFIG['secondary_currency']}
+			" . constant("secondary_currency") . "
 		</th>
 		<td>
 			" . number_format($gd['guild_seccurr']) . "
@@ -263,7 +263,7 @@ function summary()
 
 function donate()
 {
-    global $db, $userid, $ir, $gd, $api, $h, $set, $_CONFIG;
+    global $db, $userid, $ir, $gd, $api, $h, $set;
     if (isset($_POST['primary'])) {
 
         //Make sure the POST is safe to work with.
@@ -284,15 +284,15 @@ function donate()
 
         //Trying to donate more primary than user has.
         if ($_POST['primary'] > $ir['primary_currency']) {
-            alert('danger', "Uh Oh!", "You are trying to donate more {$_CONFIG['primary_currency']} than you currently have.");
+            alert('danger', "Uh Oh!", "You are trying to donate more " . constant("primary_currency") . " than you currently have.");
             die($h->endpage());
             //Trying to donate more secondary than user has.
         } else if ($_POST['secondary'] > $ir['secondary_currency']) {
-            alert('danger', "Uh Oh!", "You are trying to donate more {$_CONFIG['secondary_currency']} than you currently have.");
+            alert('danger', "Uh Oh!", "You are trying to donate more " . constant("secondary_currency") . " than you currently have.");
             die($h->endpage());
             //Donation amount would fill up the guild's vault.
         } else if ($_POST['primary'] + $gd['guild_primcurr'] > $gd['guild_level'] * $set['GUILD_PRICE']) {
-            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . $gd['guild_level'] * $set['GUILD_PRICE'] . " {$_CONFIG['primary_currency']}.");
+            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . $gd['guild_level'] * $set['GUILD_PRICE'] . " " . constant("primary_currency") . ".");
             die($h->endpage());
         } else {
             //Donate the currencies!
@@ -304,13 +304,13 @@ function donate()
 					    WHERE `guild_id` = {$gd['guild_id']}");
             $my_name = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
             $event = $db->escape("<a href='profile.php?user={$userid}'>{$my_name}</a> donated
-									" . number_format($_POST['primary']) . " {$_CONFIG['primary_currency']} and/or
-									" . number_format($_POST['secondary']) . " {$_CONFIG['secondary_currency']} to the guild.");
+									" . number_format($_POST['primary']) . " " . constant("primary_currency") . " and/or
+									" . number_format($_POST['secondary']) . " " . constant("secondary_currency") . " to the guild.");
             $api->guild->addNotification($gd['guild_id'], $event);
-            $api->game->addLog($userid, 'guild_vault', "Donated " . number_format($_POST['primary']) . " Primary
-                Currency and/or " . number_format($_POST['secondary']) . " {$_CONFIG['secondary_currency']} to their guild.");
-            alert('success', "Success!", "You have successfully donated " . number_format($_POST['primary']) . " Primary
-			Currency and/or " . number_format($_POST['secondary']) . " {$_CONFIG['secondary_currency']} to your guild.", true, 'viewguild.php');
+            $api->game->addLog($userid, 'guild_vault', "Donated " . number_format($_POST['primary']) . " " . constant("primary_currency") . "
+			and/or " . number_format($_POST['secondary']) . " " . constant("secondary_currency") . " to their guild.");
+            alert('success', "Success!", "You have successfully donated " . number_format($_POST['primary']) . " " . constant("primary_currency") . "
+			and/or " . number_format($_POST['secondary']) . " " . constant("secondary_currency") . " to your guild.", true, 'viewguild.php');
         }
     } else {
         $csrf = getHtmlCSRF('guild_donate');
@@ -320,16 +320,16 @@ function donate()
 			<tr>
 				<th colspan='2'>
 					Enter the amount of currency you wish to donate to your guild " . number_format($ir['primary_currency']) . "
-					{$_CONFIG['primary_currency']} and " . number_format($ir['secondary_currency']) . " {$_CONFIG['secondary_currency']}
+					" . constant("primary_currency") . " and " . number_format($ir['secondary_currency']) . " " . constant("secondary_currency") . "
 				</th>
 			</tr>
     		<tr>
     			<td>
-    				<b>{$_CONFIG['primary_currency']}</b><br />
+    				<b>" . constant("primary_currency") . "</b><br />
     				<input type='number' name='primary' value='0' required='1' max='{$ir['primary_currency']}' class='form-control' min='0' />
     			</td>
     			<td>
-    				<b>{$_CONFIG['secondary_currency']}</b><br />
+    				<b>" . constant("secondary_currency") . "</b><br />
     				<input type='number' name='secondary' required='1' max='{$ir['secondary_currency']}' class='form-control' value='0' min='0' />
     			</td>
     		</tr>
@@ -922,7 +922,7 @@ function staff_apps()
 
 function staff_vault()
 {
-    global $db, $userid, $gd, $api, $h, $wq, $_CONFIG;
+    global $db, $userid, $gd, $api, $h, $wq;
     if (isset($_POST['primary']) || isset($_POST['secondary'])) {
 
         //Verify CSRF check has passed.
@@ -937,13 +937,13 @@ function staff_vault()
 
         //Attempting to give more primary currency than the guild currently has.
         if ($_POST['primary'] > $gd['guild_primcurr']) {
-            alert('danger', "Uh Oh!", "You are trying to give out more {$_CONFIG['primary_currency']} than your guild has in its vault.");
+            alert('danger', "Uh Oh!", "You are trying to give out more " . constant("primary_currency") . " than your guild has in its vault.");
             die($h->endpage());
         }
 
         //Attempting to give more secondary currency than the guild currently has.
         if ($_POST['secondary'] > $gd['guild_seccurr']) {
-            alert('danger', "Uh Oh!", "You are trying to give out more {$_CONFIG['secondary_currency']} than your guild has in its vault.");
+            alert('danger', "Uh Oh!", "You are trying to give out more " . constant("secondary_currency") . " than your guild has in its vault.");
             die($h->endpage());
         }
 
@@ -977,23 +977,25 @@ function staff_vault()
         $api->user->giveCurrency($_POST['user'], 'secondary', $_POST['secondary']);
         $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$_POST['primary']},
                       `guild_seccurr` = `guild_seccurr` - {$_POST['secondary']} WHERE `guild_id` = {$gd['guild_id']}");
-        $api->user->addNotification($_POST['user'], "You were given " . number_format($_POST['primary']) . " Primary
-            Currency and/or " . number_format($_POST['secondary']) . " {$_CONFIG['secondary_currency']} from your guild's vault.");
+        $api->user->addNotification($_POST['user'], "You were given " . number_format($_POST['primary']) . " " . constant("primary_currency") . "
+		and/or " . number_format($_POST['secondary']) . " " . constant("secondary_currency") . " from your guild's vault.");
         $api->guild->addNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>
             {$api->user->getNamefromID($userid)}</a> has given <a href='profile.php?user={$_POST['user']}'>
             {$api->user->getNamefromID($_POST['user'])}</a> " . number_format($_POST['primary']) . "
-            {$_CONFIG['primary_currency']} and/or " . number_format($_POST['secondary']) . " {$_CONFIG['secondary_currency']} from the guild's
+            " . constant("primary_currency") . " and/or " . number_format($_POST['secondary']) . " " . constant("secondary_currency") . " from the guild's
             vault.");
         alert('success', "Success!", "You have given {$api->user->getNamefromID($_POST['user'])} ", true, '?action=staff&act2=idx');
-        $api->game->addLog($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> " . number_format($_POST['primary']) . " {$_CONFIG['primary_currency']} and/or " . number_format($_POST['secondary']) . " {$_CONFIG['secondary_currency']} from their guild's vault.");
+        $api->game->addLog($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->user->getNamefromID($_POST['user'])}</a> 
+		" . number_format($_POST['primary']) . " " . constant("primary_currency") . " and/or " . number_format($_POST['secondary']) . " 
+		" . constant("secondary_currency") . " from their guild's vault.");
     } else {
         $csrf = getHtmlCSRF('guild_staff_vault');
         echo "<form method='post'>
         <table class='table table-bordered'>
             <tr>
                 <th colspan='2'>
-                    You may give out currency from your guild's vault. Your vault currently has " . number_format($gd['guild_primcurr']) . " {$_CONFIG['primary_currency']} and
-                    " . number_format($gd['guild_seccurr']) . " {$_CONFIG['secondary_currency']}.
+                    You may give out currency from your guild's vault. Your vault currently has " . number_format($gd['guild_primcurr']) . " " . constant("primary_currency") . " and
+                    " . number_format($gd['guild_seccurr']) . " " . constant("secondary_currency") . ".
                 </th>
             </tr>
             <tr>
@@ -1006,7 +1008,7 @@ function staff_vault()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['primary_currency']}
+                    " . constant("primary_currency") . "
                 </th>
                 <td>
                     <input type='number' class='form-control' min='0' max='{$gd['guild_primcurr']}' name='primary'>
@@ -1014,7 +1016,7 @@ function staff_vault()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['secondary_currency']}
+                    " . constant("secondary_currency") . "
                 </th>
                 <td>
                     <input type='number' class='form-control' min='0' max='{$gd['guild_seccurr']}' name='secondary'>
@@ -1190,7 +1192,7 @@ function staff_massmail()
 
 function staff_masspayment()
 {
-    global $db, $api, $userid, $gd, $h, $wq, $_CONFIG;
+    global $db, $api, $userid, $gd, $h, $wq;
     if (isset($_POST['payment'])) {
 
         //Verify the CSRF check has passed.
@@ -1205,7 +1207,7 @@ function staff_masspayment()
 
         //Make sure there's enough primary currency to pay each member of the guild the amount specified.
         if (($_POST['payment'] * $cnt) > $gd['guild_primcurr']) {
-            alert('danger', "Uh Oh!", "You do not have enough currency in your vault to give out that much to each member.");
+            alert('danger', "Uh Oh!", "You do not have enough " . constant("primary_currency") . " in your vault to give out that much to each member.");
             die($h->endpage());
 
             //Check that the guild is not at war.
@@ -1222,14 +1224,14 @@ function staff_masspayment()
                 } else {
                     //Pay everyone.
                     $gd['guild_primcurr'] -= $_POST['payment'];
-                    $api->user->addNotification($r['userid'], "You were given a mass-payment of {$_POST['payment']} {$_CONFIG['primary_currency']} from your guild.");
+                    $api->user->addNotification($r['userid'], "You were given a mass-payment of {$_POST['payment']} " . constant("primary_currency") . " from your guild.");
                     $api->user->giveCurrency($r['userid'], 'primary', $_POST['payment']);
-                    alert('success', "Success!", "{$r['username']} was paid {$_POST['payment']} {$_CONFIG['primary_currency']}.");
+                    alert('success', "Success!", "{$r['username']} was paid {$_POST['payment']} " . constant("primary_currency") . ".");
                 }
             }
             //Notify the user of the success and log everything.
             $db->query("UPDATE `guild` SET `guild_primcurr` = {$gd['guild_primcurr']} WHERE `guild_id` = {$gd['guild_id']}");
-            $notif = $db->escape("A mass payment of " . number_format($_POST['payment']) . " {$_CONFIG['primary_currency']} was sent out to the members of the guild.");
+            $notif = $db->escape("A mass payment of " . number_format($_POST['payment']) . " " . constant("primary_currency") . " was sent out to the members of the guild.");
             $api->guild->addNotification($gd['guild_id'], $notif);
             $api->game->addLog($userid, 'guilds', "Sent a mass payment of " . number_format($_POST['payment']) . "to their guild.");
             alert('success', "Success!", "Mass payment complete.", true, '?action=staff&act2=idx');
@@ -1660,7 +1662,7 @@ function staff_dissolve()
 
 function staff_armory()
 {
-    global $db, $gd, $api, $h, $set, $userid, $ir, $_CONFIG;
+    global $db, $gd, $api, $h, $set, $userid, $ir;
     //Check to see if the guild has bought the armory.
     if ($gd['guild_hasarmory'] == 'false') {
 
@@ -1670,7 +1672,7 @@ function staff_armory()
 
             //Guild does not have enough Primary Currency to buy the armory.
             if ($gd['guild_primcurr'] < $cost) {
-                alert('danger', "Uh Oh!", "Your guild does not have enough {$_CONFIG['primary_currency']} to buy an armory.", true, '?action=staff&act2=idx');
+                alert('danger', "Uh Oh!", "Your guild does not have enough " . constant("primary_currency") . " to buy an armory.", true, '?action=staff&act2=idx');
                 die($h->endpage());
             }
             //Buy the armory and remove the currency.

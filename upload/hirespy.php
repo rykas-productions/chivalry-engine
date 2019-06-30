@@ -70,7 +70,7 @@ if (isset($_POST['do']) && (isset($user))) {
     $rand = randomNumber(1, 4);
     //Current user does not have the required Primary Currency to buy a spy.
     if ($ir['primary_currency'] < $r['level'] * 500) {
-        alert("danger", "Uh Oh!", "You do not have enough {$_CONFIG['primary_currency']} to hire a spy to spy on this user.", true, "profile.php?user={$user}");
+        alert("danger", "Uh Oh!", "You do not have enough " . constant("primary_currency") . " to hire a spy to spy on this user.", true, "profile.php?user={$user}");
         die($h->endpage());
     }
     //Take the spy cost from the player.
@@ -133,7 +133,7 @@ if (isset($_POST['do']) && (isset($user))) {
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['strength_stat']}
+					" . constant("stat_strength") . "
 				</th>
 				<td>
 					" . number_format($r['strength']) . "
@@ -141,7 +141,7 @@ if (isset($_POST['do']) && (isset($user))) {
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['agility_stat']}
+					" . constant("stat_agility") . "
 				</th>
 				<td>
 					" . number_format($r['agility']) . "
@@ -149,7 +149,7 @@ if (isset($_POST['do']) && (isset($user))) {
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['guard_stat']}
+					" . constant("stat_guard") . "
 				</th>
 				<td>
 					" . number_format($r['guard']) . "
@@ -157,7 +157,7 @@ if (isset($_POST['do']) && (isset($user))) {
 			</tr>
 			<tr>
 				<th>
-					IQ
+					" . constant("stat_iq") . "
 				</th>
 				<td>
 					" . number_format($r['iq']) . "
@@ -165,7 +165,7 @@ if (isset($_POST['do']) && (isset($user))) {
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['labor_stat']}
+					" . constant("stat_labor") . "
 				</th>
 				<td>
 					" . number_format($r['labor']) . "
@@ -178,7 +178,7 @@ if (isset($_POST['do']) && (isset($user))) {
 } //Starting form.
 else {
     echo "You are attempting to hire a spy on " . $api->user->getNamefromID($user) .
-        ". Spies cost 500 {$_CONFIG['primary_currency']} multiplied by their level. (" . number_format(500 * $r['level']) . "
+        ". Spies cost 500 " . constant("primary_currency") . " multiplied by their level. (" . number_format(500 * $r['level']) . "
 	in this case.) Success is not guaranteed.<br />
 	<form action='?user={$_GET['user']}' method='post'>
 		<input type='hidden' name='do' value='yes'>

@@ -101,7 +101,7 @@ function news_home()
 
 function news_buy()
 {
-    global $db, $api, $h, $userid, $CurrentTime, $_CONFIG;
+    global $db, $api, $h, $userid, $CurrentTime;
     if (isset($_POST['init_cost'])) {
         //Make sure POST is safe to work with
         $ad = $db->escape(nl2br(htmlentities(stripslashes($_POST['ad_text']), ENT_QUOTES, 'ISO-8859-1')));
@@ -127,11 +127,11 @@ function news_buy()
 
         //Make sure user has the cash to buy this ad.
         if (!$api->user->hasCurrency($userid, 'primary', $totalcost)) {
-            alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['primary_currency']} to place this ad.");
+            alert('danger', "Uh Oh!", "You do not have enough " . constant("primary_currency") . " to place this ad.");
             die($h->endpage());
         }
         $api->user->takeCurrency($userid,'primary',$totalcost);
-        alert('success',"Success!","You have successfully purchased a newspaper ad.",true,'newspaper.php');
+        alert('success',"Success!","You have successfully purchased a newspaper ad for " . number_format($totalcost) . " " . constant("primary_currency") . ".",true,'newspaper.php');
         $db->query("INSERT INTO `newspaper_ads`
                     (`news_cost`, `news_start`, `news_end`, `news_owner`, `news_text`)
                     VALUES
@@ -158,7 +158,7 @@ function news_buy()
                 <tr>
                     <td>
                         Ad Runtime<br />
-                        <small>Each day will add 1,250 {$_CONFIG['primary_currency']} to your cost.</small>
+                        <small>Each day will add 1,250 " . constant("primary_currency") . " to your cost.</small>
                     </td>
                     <td>
                         <input type='number' value='1' min='1' name='ad_length' id='days' onkeyup='total_cost();' required='1' class='form-control'>
@@ -167,7 +167,7 @@ function news_buy()
                 <tr>
                     <td>
                         Ad Text<br />
-                        <small>Each character is worth 5 {$_CONFIG['primary_currency']}.</small>
+                        <small>Each character is worth 5 " . constant("primary_currency") . ".</small>
                     </td>
                     <td>
                         <textarea class='form-control' name='ad_text' id='chars' onkeyup='total_cost();' required='1'></textarea>

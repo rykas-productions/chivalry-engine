@@ -56,7 +56,7 @@ echo "Order By:
 <a href='?st={$st}&by=userid&ord={$ord}'>User ID</a>&nbsp;|
 <a href='?st={$st}&by=username&ord={$ord}'>Username</a>&nbsp;|
 <a href='?st={$st}&by=level&ord={$ord}'>Level</a>&nbsp;|
-<a href='?st={$st}&by=primary_currency&ord={$ord}'>{$_CONFIG['primary_currency']}</a>
+<a href='?st={$st}&by=primary_currency&ord={$ord}'>" . constant("primary_currency") . "</a>
 <br />
 <a href='?st={$st}&by={$by}&ord=asc'>Ascending</a> |
 <a href='?st={$st}&by={$by}&ord=desc'>Descending</a>
@@ -75,7 +75,7 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 		    <h4>User</h4>
 		</div>
 		<div class='col-sm'>
-		    <h4>{$_CONFIG['primary_currency']}</h4>
+		    <h4>" . constant("primary_currency") . "</h4>
 		</div>
 		<div class='col-sm'>
 		    <h4>Level</h4>

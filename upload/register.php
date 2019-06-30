@@ -142,7 +142,7 @@ if (!empty($username)) {
         $db->query("INSERT INTO `userstats` VALUES({$i}, 1000, 1000, 1000, 1000, 1000)");
         if ($_POST['ref']) {
             $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + {$set['ReferalKickback']} WHERE `userid` = {$_POST['ref']}");
-            addNotification($_POST['ref'], "For referring $username to the game, you have earned {$set['ReferalKickback']} valuable {$_CONFIG['secondary_currency']}(s)!");
+            addNotification($_POST['ref'], "For referring $username to the game, you have earned {$set['ReferalKickback']} valuable " . constant("secondary_currency") . "(s)!");
             $e_rip = $db->escape($rem_IP);
             $db->query("INSERT INTO `referals`
 			VALUES (NULL, {$_POST['ref']}, '{$e_rip}', {$i}, '{$IP}',{$CurrentTime})");

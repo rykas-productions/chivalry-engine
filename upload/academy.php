@@ -60,7 +60,7 @@ switch ($_GET['action']) {
 
 function menu()
 {
-    global $db, $userid, $_CONFIG;
+    global $db, $userid;
     echo "<div class='cotainer'>
 <div class='row'>
 		<div class='col-sm'>
@@ -103,7 +103,7 @@ function menu()
 			{$academy['ac_desc']}
 		</div>
 		<div class='col-sm'>
-			" . number_format($academy['ac_cost']) . " {$_CONFIG['primary_currency']}
+			" . number_format($academy['ac_cost']) . " " . constant("primary_currency") . "
 		</div>
 		<div class='col-sm'>
 			{$do}
@@ -138,8 +138,8 @@ function start()
     }
     //If the user doesn't have enough {$_CONFIG['primary_currency']} for this course.
     if ($course['ac_cost'] > $ir['primary_currency']) {
-        alert('danger', "Uh Oh!", "You do not have enough cash to take this course. You need {$course['ac_cost']},
-                                yet you only have {$ir['primary_currency']}", true, 'academy.php');
+        alert('danger', "Uh Oh!", "You do not have enough " . constant("primary_currency") . " to take this course. You need " . number_format($course['ac_cost']) . ",
+                                yet you only have " . number_format($ir['primary_currency']) . ".", true, 'academy.php');
         die($h->endpage());
     }
     $cdo = $db->query("SELECT COUNT(`userid`)

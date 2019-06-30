@@ -81,7 +81,7 @@ else if (isset($_GET['sellhouse'])) {
         //Give user 75% of the estate's cost, set max will to 100, will to 0.
         $price = round($mp['house_price'] * 0.75);
         $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$price}, `will` = 0, `maxwill` = 100 WHERE `userid` = $userid");
-        alert('success', "Success!", "You have successfully sold your estate for " . number_format($price) . "!", true, 'estates.php');
+        alert('success', "Success!", "You have successfully sold your estate for " . number_format($price) . " " . constant("primary_currency") . "!", true, 'estates.php');
     }
 } else {
     echo "Your current estate is the <b>{$mp['house_name']}</b>.<br />

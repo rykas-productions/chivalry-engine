@@ -41,7 +41,7 @@ if ($api->user->inDungeon($ir['userid'])) {
     die($h->endpage());
 }
 //Convert POST values to Stat Names.
-$statnames = array("Strength" => "strength", "Agility" => "{$_CONFIG['agility_stat']}", "Guard" => "guard", "Labor" => "{$_CONFIG['labor_stat']}", "All" => "all");
+$statnames = array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor", "All" => "all");
 //Training amount is not set, so set to 0.
 if (!isset($_POST["amnt"])) {
     $_POST["amnt"] = 0;
@@ -82,36 +82,37 @@ if (isset($_POST["stat"]) && $amnt) {
         $EnergyLeft = $ir['energy'] - $amnt;
         //Strength is chosen stat
         if ($stat == "strength") {
-            alert('success', "Success!", "You begin to lift weights. You have gained {$gain} {$_CONFIG['strength_stat']} by completing
-			    {$amnt} sets of weights. You now have {$NewStatAmount} {$_CONFIG['strength_stat']} and {$EnergyLeft} Energy left.", false);
+            alert('success', "Success!", "You begin to lift weights. You have gained {$gain} " . constant("stat_strength") . " by completing
+			    {$amnt} sets of weights. You now have {$NewStatAmount} " . constant("stat_strength") . " and {$EnergyLeft} Energy left.", false);
             //Have {$_CONFIG['strength_stat']} selected for the next training.
             $str_select = "selected";
         } //Agility is the chosen stat.
         elseif ($stat == "agility") {
-            alert('success', "Success!", "You beging to run laps. You have gained {$gain} {$_CONFIG['agility_stat']} by completing
-			    {$amnt} laps. You now have {$NewStatAmount} {$_CONFIG['agility_stat']} and {$EnergyLeft} Energy left.", false);
+            alert('success', "Success!", "You beging to run laps. You have gained {$gain} " . constant("stat_agility") . " by completing
+			    {$amnt} laps. You now have {$NewStatAmount} " . constant("stat_agility") . " and {$EnergyLeft} Energy left.", false);
             //Have agility selected for the next training.
             $agl_select = "selected";
         } //Guard is the chosen stat.
         elseif ($stat == "guard") {
-            alert('success', "Success!", "You begin swimming in the pool. You have gained {$gain} {$_CONFIG['guard_stat']} by swimming for
-			    {$amnt} minutes. You now have {$NewStatAmount} {$_CONFIG['guard_stat']} and {$EnergyLeft} left.", false);
+            alert('success', "Success!", "You begin swimming in the pool. You have gained {$gain} " . constant("stat_guard") . " by swimming for
+			    {$amnt} minutes. You now have {$NewStatAmount} " . constant("stat_guard") . " and {$EnergyLeft} left.", false);
             //Have guard selected for the next training.
             $grd_select = "selected";
         } //Labor is the chosen stat.
         elseif ($stat == "labor") {
-            alert('success', "Success!", "You begin moving boxes around the gym. You have gained {$gain} {$_CONFIG['labor_stat']} by moving
-                {$amnt} sets of boxes. You now have {$NewStatAmount} and {$EnergyLeft} Energy left.", false);
+            alert('success', "Success!", "You begin moving boxes around the gym. You have gained {$gain} " . constant("stat_labor") . " by moving
+                {$amnt} sets of boxes. You now have {$NewStatAmount} " . constant("stat_labor") . " and {$EnergyLeft} Energy left.", false);
             //Have guard selected for the next training.
             $lab_select = "selected";
         } elseif ($stat == "all") {
-            alert('success', "Success!", "You begin training your {$_CONFIG['strength_stat']}, {$_CONFIG['agility_stat']}, {$_CONFIG['guard_stat']} and {$_CONFIG['labor_stat']} all at once. You
-                have gained {$gainstr} {$_CONFIG['strength_stat']}, {$gainagl} {$_CONFIG['agility_stat']}, {$gaingrd} {$_CONFIG['guard_stat']} and {$gainlab} {$_CONFIG['labor_stat']}. You have
-                {$EnergyLeft} Energy left.");
+            alert('success', "Success!", "You begin training your " . constant("stat_strength") . ", " . constant("stat_agility") . ", 
+				" . constant("stat_guard") . " and " . constant("stat_labor") . " all at once. You have gained {$gainstr} 
+				" . constant("stat_strength") . ", {$gainagl} " . constant("stat_agility") . ", {$gaingrd} " . constant("stat_guard") . " and 
+				{$gainlab} " . constant("stat_labor") . ". You have {$EnergyLeft} Energy left.");
             $all_select = "selected";
         }
         //Log the user's training attempt.
-        $api->game->addLog($userid, 'training', "Trained their {$stat} {$_POST['amnt']} times and gained {$gain}.");
+        $api->game->addLog($userid, 'training', "Trained their " . constant("stat_{$stat}") . " {$_POST['amnt']} times and gained {$gain}.");
         echo "<hr />";
         $ir['energy'] -= $amnt;
         if ($stat != 'all')
@@ -153,16 +154,16 @@ echo "Choose the stat you wish to train, and enter how many times you wish to tr
 			<div class='col-sm'>
 				<select type='dropdown' name='stat' class='form-control'>
 					<option {$str_select} value='Strength'>
-					    {$_CONFIG['strength_stat']} (Have {$ir['strength']}, Ranked: {$ir['strank']})
+					    " . constant("stat_strength") . " (Have {$ir['strength']}, Ranked: {$ir['strank']})
                     </option>
 					<option {$agl_select} value='Agility'>
-					    {$_CONFIG['agility_stat']} (Have {$ir['agility']}, Ranked: {$ir['agirank']})
+					    " . constant("stat_agility") . " (Have {$ir['agility']}, Ranked: {$ir['agirank']})
                     </option>
 					<option {$grd_select} value='Guard'>
-					    {$_CONFIG['guard_stat']} (Have {$ir['guard']}, Ranked: {$ir['guarank']})
+					    " . constant("stat_guard") . " (Have {$ir['guard']}, Ranked: {$ir['guarank']})
                     </option>
 					<option {$lab_select} value='Labor'>
-					    {$_CONFIG['labor_stat']} (Have {$ir['labor']}, Ranked: {$ir['labrank']})
+					    " . constant("stat_labor") . " (Have {$ir['labor']}, Ranked: {$ir['labrank']})
                     </option>
 					<option {$all_select} value='All'>
 					    All Four (Have {$ir['all_four']}, Ranked: {$ir['af_rank']})

@@ -72,7 +72,7 @@ echo "<h3>Statistics Center</h3><hr />
 			</tr>
 			<tr>
 				<td>
-					{$_CONFIG['primary_currency']} Withdrawn
+					" . constant("primary_currency") . " Withdrawn
 				</td>
 				<td>
 					" . number_format($TotalPrimaryCurrency) . "
@@ -80,7 +80,7 @@ echo "<h3>Statistics Center</h3><hr />
 			</tr>
 			<tr>
 				<td>
-					{$_CONFIG['primary_currency']} Banked
+					" . constant("primary_currency") . " Banked
 				</td>
 				<td>
 					" . number_format($TotalBank) . "
@@ -88,7 +88,7 @@ echo "<h3>Statistics Center</h3><hr />
 			</tr>
 			<tr>
 				<td>
-					Total {$_CONFIG['primary_currency']}
+					Total " . constant("primary_currency") . "
 				</td>
 				<td>
 					" . number_format($TotalBankandPC) . "
@@ -96,7 +96,7 @@ echo "<h3>Statistics Center</h3><hr />
 			</tr>
 			<tr>
 				<td>
-					{$_CONFIG['secondary_currency']} in Circulation
+					" . constant("secondary_currency") . " in Circulation
 				</td>
 				<td>
 					" . number_format($TotalSecondaryCurrency) . "
@@ -104,7 +104,7 @@ echo "<h3>Statistics Center</h3><hr />
 			</tr>
 			<tr>
 				<td>
-					Average {$_CONFIG['primary_currency']} per Player
+					Average " . constant("primary_currency") . " per Player
 				</td>
 				<td>
 					" . number_format($AveragePrimaryCurrencyPerPlayer) . "
@@ -112,7 +112,7 @@ echo "<h3>Statistics Center</h3><hr />
 			</tr>
 			<tr>
 				<td>
-					Average {$_CONFIG['secondary_currency']} per Player
+					Average " . constant("secondary_currency") . " per Player
 				</td>
 				<td>
 					" . number_format($AverageSecondaryCurrencyPerPlayer) . "

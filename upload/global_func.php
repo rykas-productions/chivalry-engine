@@ -1057,22 +1057,22 @@ function checkAcademy()
         //Course credits strength, so add onto the query.
         if ($coud['ac_str'] > 0) {
             $upd .= ", us.strength = us.strength + {$coud['ac_str']}";
-            $ev .= ", {$coud['ac_str']} Strength";
+            $ev .= ", {$coud['ac_str']} " . constant("stat_strength") . "";
         }
         //Course credits guard, so add onto the query.
         if ($coud['ac_grd'] > 0) {
             $upd .= ", us.guard = us.guard + {$coud['ac_grd']}";
-            $ev .= ", {$coud['ac_grd']} Guard";
+            $ev .= ", {$coud['ac_grd']} " . constant("stat_guard") . "";
         }
         //Course credits labor, so add onto the query.
         if ($coud['ac_lab'] > 0) {
             $upd .= ", us.labor = us.labor + {$coud['ac_lab']}";
-            $ev .= ", {$coud['ac_lab']} Labor";
+            $ev .= ", {$coud['ac_lab']} " . constant("stat_labor") . "";
         }
         //Course credits agility, so add onto the query.
         if ($coud['ac_agl'] > 0) {
             $upd .= ", us.agility = us.agility + {$coud['ac_agl']}";
-            $ev .= ", {$coud['ac_agl']} Agility";
+            $ev .= ", {$coud['ac_agl']} " . constant("stat_agility") . "";
         }
         //Course credits IQ, so add onto the query.
         if ($coud['ac_iq'] > 0) {

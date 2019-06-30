@@ -71,7 +71,7 @@ switch ($_GET['action']) {
 }
 function viewguild()
 {
-    global $db, $userid, $api, $h, $_CONFIG;
+    global $db, $userid, $api, $h;
     if (isset($_POST['guild'])) {
         //Make sure input is safe.
         $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
@@ -138,7 +138,7 @@ function viewguild()
         </tr>
         <tr>
             <th>
-                {$_CONFIG['primary_currency']}
+                " . constant("primary_currency") . "
             </th>
             <td>
                 " . number_format($r['guild_primcurr']) . "
@@ -146,7 +146,7 @@ function viewguild()
         </tr>
         <tr>
             <th>
-                {$_CONFIG['secondary_currency']}
+                " . constant("secondary_currency") . "
             </th>
             <td>
                 " . number_format($r['guild_seccurr']) . "
@@ -205,7 +205,7 @@ function viewguild()
 
 function creditguild()
 {
-    global $db, $userid, $api, $h, $_CONFIG;
+    global $db, $userid, $api, $h;
     if (isset($_POST['guild'])) {
         //Make sure all inputs are safe!
         $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
@@ -227,7 +227,7 @@ function creditguild()
 
         //Make sure the primary/secondary currency is input.
         if ((empty($prim)) && (empty($sec))) {
-            alert('danger', "Uh Oh!", "Please input how much {$_CONFIG['primary_currency']} and/or {$_CONFIG['secondary_currency']} you wish to
+            alert('danger', "Uh Oh!", "Please input how much " . constant("primary_currency") . " and/or " . constant("secondary_currency") . " you wish to
             credit to this guild.");
             die($h->endpage());
         }
@@ -256,16 +256,16 @@ function creditguild()
         $primf = number_format($prim);
 
         //Notify the guild they've received some cash!
-        $api->guild->addNotification($guild, "The game administration has credited your guild {$primf} {$_CONFIG['primary_currency']}
-        and/or {$secf} {$_CONFIG['secondary_currency']} for reason: {$reason}.");
+        $api->guild->addNotification($guild, "The game administration has credited your guild {$primf} " . constant("primary_currency") . "
+        and/or {$secf} " . constant("secondary_currency") . " for reason: {$reason}.");
 
         //Log the entry
-        $api->game->addLog($userid, 'staff', "Credited Guild ID {$guild} with {$primf} {$_CONFIG['primary_currency']} and/or {$secf}
-        {$_CONFIG['secondary_currency']} with reason '{$reason}'.");
+        $api->game->addLog($userid, 'staff', "Credited Guild ID {$guild} with {$primf} " . constant("primary_currency") . " and/or {$secf}
+        " . constant("secondary_currency") . " with reason '{$reason}'.");
 
         //Success to the end user.
-        alert('success', "Success!", "You have successfully credited Guild ID {$guild} with {$primf} {$_CONFIG['primary_currency']}
-        and/or {$secf} {$_CONFIG['secondary_currency']} with reason '{$reason}'.", true, 'index.php');
+        alert('success', "Success!", "You have successfully credited Guild ID {$guild} with {$primf} " . constant("primary_currency") . "
+        and/or {$secf} " . constant("secondary_currency") . " with reason '{$reason}'.", true, 'index.php');
         $h->endpage();
     } else {
         //Form to credit a guild.
@@ -284,7 +284,7 @@ function creditguild()
         </tr>
         <tr>
             <th>
-                {$_CONFIG['primary_currency']}
+                " . constant("primary_currency") . "
             </th>
             <td>
                 <input type='number' name='primary' value='0' required='1' min='0' class='form-control'>
@@ -292,7 +292,7 @@ function creditguild()
         </tr>
         <tr>
             <th>
-                {$_CONFIG['secondary_currency']}
+                " . constant("secondary_currency") . "
             </th>
             <td>
                 <input type='number' name='secondary' value='0' required='1' min='0' class='form-control'>
@@ -404,7 +404,7 @@ function endwar()
 
 function editguild()
 {
-    global $db, $userid, $api, $h, $_CONFIG;
+    global $db, $userid, $api, $h;
     //Set the first step so it goes to the correct page.
     if (!isset($_POST['step'])) {
         $_POST['step'] = 0;
@@ -504,7 +504,7 @@ function editguild()
         </tr>
         <tr>
             <th>
-                {$_CONFIG['primary_currency']}
+                " . constant("primary_currency") . "
             </th>
             <td>
                 <input type='number' min='0' name='primary' class='form-control' value='{$r['guild_primcurr']}'>
@@ -512,7 +512,7 @@ function editguild()
         </tr>
         <tr>
             <th>
-                {$_CONFIG['secondary_currency']}
+                " . constant("secondary_currency") . "
             </th>
             <td>
                 <input type='number' min='0' name='secondary' class='form-control' value='{$r['guild_seccurr']}'>

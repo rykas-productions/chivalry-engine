@@ -204,11 +204,11 @@ if (!$_GET['user']) {
             "
 						<table class='table table-bordered'>
 							<tr>
-								<th width='25%'>{$_CONFIG['primary_currency']}</th>
+								<th width='25%'>" . constant("primary_currency") . "</th>
 								<td> " . number_format($r['primary_currency']) . "</td>
 							</tr>
 							<tr>
-								<th>{$_CONFIG['secondary_currency']}</th>
+								<th>" . constant("secondary_currency") . "</th>
 								<td>" . number_format($r['secondary_currency']) . "</td>
 							</tr>
 							<tr>

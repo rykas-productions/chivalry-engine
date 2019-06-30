@@ -41,7 +41,7 @@ if (!isset($_SESSION['tresde'])) {
 }
 //User has less primary currency than their maximum bet.
 if ($ir['primary_currency'] < $maxbet) {
-    alert('danger', "Uh Oh!", "You do not have enough {$_CONFIG['primary_currency']} to place your bet. You need " . number_format($maxbet), true, 'explore.php');
+    alert('danger', "Uh Oh!", "You do not have enough " . constant("primary_currency") . " to place your bet. You need " . number_format($maxbet) . ".", true, 'explore.php');
     $_SESSION['number'] = 0;
     die($h->endpage());
 }

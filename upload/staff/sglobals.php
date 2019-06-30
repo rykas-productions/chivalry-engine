@@ -57,7 +57,6 @@ $_SESSION['last_active'] = time();
 $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
 require "sheader.php";
 include "../config.php";
-global $_CONFIG;
 define("MONO_ON", 1);
 require "../class/class_db_" . constant("db_driver") . ".php";
 $db = new database;

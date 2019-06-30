@@ -56,7 +56,7 @@ echo "<h4>You begin exploring {$api->game->getTownNameFromID($ir['location'])}. 
 			<u><b>Shopping District</b></u><br />
 			<a href='shops.php'>Local Shops</a><br />
 			<a href='itemmarket.php'>Item Market</a><br />
-            <a href='secmarket.php'>{$_CONFIG['secondary_currency']} Market</a><br />
+            <a href='secmarket.php'>" . constant("secondary_currency") . " Market</a><br />
 		</div>
 		<div class='col-sm'>
 			<u><b>Financial District</b></u><br />
@@ -113,7 +113,7 @@ echo "<h4>You begin exploring {$api->game->getTownNameFromID($ir['location'])}. 
 //referral link.
 echo "	<div class='row'>
 			<div class='col-md-12'>
-				Share your referral link to gain 25 {$_CONFIG['secondary_currency']} every time a friend joins!<br />
+				Share your referral link to gain 25 " . constant("secondary_currency") . " every time a friend joins!<br />
 				<code>{$domain}/register.php?REF={$userid}</code>
 			</div>
 		</div>";

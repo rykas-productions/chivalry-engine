@@ -53,7 +53,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Personal Information</u>
 	<br />
 	If you click the {$set['WebsiteName']} on the top left corner, it'll redirect you to the main index where you can
-	view your personal information. This page shows your Stats, Level, {$_CONFIG['primary_currency']}, {$_CONFIG['secondary_currency']}, VIP Days,
+	view your personal information. This page shows your Stats, Level, " . constant("primary_currency") . ", " . constant("secondary_currency") . ", VIP Days,
 	Health, Experience, Will, Brave and Energy. You can also update your Personal Notepad here as well.
 	<br />Energy is used for training and attacking.
 	<br />Will effects how much you gain while training, so in turn, a low will level means low gains in the gym.
@@ -65,11 +65,12 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />
 	<u>Personal Stats</u>
 	<br />
-	There are currently five stats in-game: {$_CONFIG['strength_stat']}, {$_CONFIG['agility_stat']}, {$_CONFIG['guard_stat']}, {$_CONFIG['iq_stat']} and {$_CONFIG['labor_stat']}.
-	<br />Increasing your {$_CONFIG['strength_stat']} will increase how much damage you can dish out in combat.
-	<br />Increasing {$_CONFIG['agility_stat']} will increase your chance of one of your strikes connecting with your opponent.
-	<br />Increasing your {$_CONFIG['guard_stat']} will decrease the damage your opponents do to you.
-	<br />{$_CONFIG['iq_stat']} and {$_CONFIG['labor_stat']} are miscellaneous stats used around the game. It's good to have these at a fairly decent level.
+	There are currently five stats in-game: " . constant("stat_strength") . ", " . constant("stat_agility") . ", " . constant("stat_guard") . ", 
+	" . constant("stat_labor") . " and " . constant("stat_iq") . ".
+	<br />Increasing your " . constant("stat_strength") . " will increase how much damage you can dish out in combat.
+	<br />Increasing " . constant("stat_agility") . " will increase your chance of one of your strikes connecting with your opponent.
+	<br />Increasing your " . constant("stat_guard") . " will decrease the damage your opponents do to you.
+	<br />" . constant("stat_iq") . " and " . constant("stat_labor") . " are miscellaneous stats used around the game. It's good to have these at a fairly decent level.
 	<br />
 	<br />
 <hr />
@@ -97,21 +98,21 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />Local Shops are the game-created shops in your town. You'll find an infinite amount of items in these shops.
 	<br />However, if you're wanting something a little more flashy, the Item Market is a market ran exclusively by other players. You'll find all sorts
 	of items for sale here. Note, that players also set their own pricing.
-	<br />The {$_CONFIG['secondary_currency']} Market is an easy way to convert your Secondary
-	Currency into {$_CONFIG['primary_currency']}, depending on the market demand.
+	<br />The " . constant("secondary_currency") . " Market is an easy way to convert your Secondary
+	Currency into " . constant("primary_currency") . ", depending on the market demand.
 	<br />
 	<br />
 	<u>Financial</u>
 	<br />Work Center is where you begin your long life of working for 'the man'. You need to have special requirements
 	to join some jobs, however.
-	<br />The Bank will allow you safely store your {$_CONFIG['primary_currency']}. Storing in the Bank will keep your money safe from
+	<br />The Bank will allow you safely store your " . constant("primary_currency") . ". Storing in the Bank will keep your money safe from
 	 being robbed from you, and even gain you interest at midnight each night.
 	 <br />Clicking Estates will allow you to view the estates available to purchase. Buying an estate will increase
 	 your Maximum Will, thus improving your gains while training.
 	 <br />If you're starting to hate the town you're in, Horse Travel is your ticket to other towns. Mind you, towns
 	 may have Level requirements, and varying tax levels.
-	 <br />The Temple of Fortune is where you can spend your {$_CONFIG['secondary_currency']}. You can refill your Energy, Will, and
-	 Brave here. You may also purchase {$_CONFIG['iq_stat']}.
+	 <br />The Temple of Fortune is where you can spend your " . constant("secondary_currency") . ". You can refill your Energy, Will, and
+	 Brave here. You may also purchase " . constant("stat_iq") . ".
 	<br />
 	<br />
 	<u>Working</u>
@@ -122,7 +123,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
      listed, you will be able to get a special item drop. Note that this can only happen once per each bot's cooldown
      time.
      <br />The Gym is the palce you'll want to visit if you have any hope of taking down an enemy.
-     <br />The Criminal Center is where you may commit crimes to gain treasure or goods. You need Bravery and good {$_CONFIG['iq_stat']}
+     <br />The Criminal Center is where you may commit crimes to gain treasure or goods. You need Bravery and good " . constant("stat_iq") . "
      for your level.
      <br />The Learning Academy is where you may enroll in a course that increase your stats in exchange for a lengthy
      studying period.
@@ -130,7 +131,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
     <br />
 	<u>Administration</u>
 	<br />Checking out User List will list all the registered users in-game, and allow you to organize them by Level,
-	ID, {$_CONFIG['primary_currency']} or name.
+	ID, " . constant("primary_currency") . " or name.
 	<br />Clicking Users Online will list the players online in the last 15 minutes. You can customize this to any
 	duration you wish.
 	<br />Staff List will list all in-game staff. These players uphold the law and order of the game. If you have any
@@ -150,7 +151,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<br />Russian Roulette is a deadly game that you can challenge your friends to. You point a gun to
 	each other's heads until someone is shot. If you're shot, game over.
 	<br />If that's too high risk for you, how about trying out High/Low? Simply decide if the next drawn number will be
-	 higher or lower than the current number. If you're right, you pocket some extra {$_CONFIG['primary_currency']}.
+	 higher or lower than the current number. If you're right, you pocket some extra " . constant("primary_currency") . ".
 	 <br />If you want a little more thrill, check out Roulette! Pick a number, bet on it, and hope you win!
 	 <br />Finally, if you want to play a game of chance, how about betting at the Slot Machines?
 	<br />
@@ -207,13 +208,13 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<hr />
 	<a name='combat'><h4>Combat</h4></a>
 	To get almost anywhere in our game, you need to fight others in combat. The weak will fall, and the strong will
-	reign supreme. Increasing your {$_CONFIG['agility_stat']}, {$_CONFIG['strength_stat']}, and {$_CONFIG['guard_stat']} will increase your chance of success in combat.
+	reign supreme. Increasing your " . constant("stat_agility") . ", " . constant("stat_strength") . ", and " . constant("stat_guard") . " will increase your chance of success in combat.
 	<br />
 	<br />
 	<u>Robbing</u>
 	<br />
 	After successfully besting your opponent in combat, you can choose to Mug them. This will allow you to steal some
-	of their {$_CONFIG['primary_currency']}, and place them into the Infirmary. The amount you steal is based upon how much you are
+	of their " . constant("primary_currency") . ", and place them into the Infirmary. The amount you steal is based upon how much you are
 	able to snatch from their person. Obviously, if they have nothing on their person, you won't get anything.
 	<br />
 	<br />
@@ -256,7 +257,7 @@ yourself. Declare war on a person, or a whole guild. The choice is yours.
 	<u>Creation</u>
 	<br />
 	You can create a guild once you reach level {$set['GUILD_LEVEL']} for " . number_format($set['GUILD_PRICE']) . "
-	{$_CONFIG['primary_currency']}. You are given an option to choose its name, and a friendly (or not so friendly) description. Once
+	" . constant("primary_currency") . ". You are given an option to choose its name, and a friendly (or not so friendly) description. Once
 	you purchase a guild, you become its owner. You have full control of that guild!
 	<br />
 	<br />

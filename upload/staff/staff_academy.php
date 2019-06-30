@@ -59,7 +59,7 @@ function menu()
 }
 function addacademy()
 {
-    global $h, $db, $userid, $api, $_CONFIG;
+    global $h, $db, $userid, $api;
     if (!isset($_POST['name'])) {
         $csrf = getHtmlCSRF('staff_newacademy');
         echo "<form method='post'>
@@ -111,7 +111,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					Course {$_CONFIG['strength_stat']}
+					Course " . constant("stat_strength") . "
 				</th>
 				<td>
 					<input type='number' required='1' name='str' min='0' value='0' class='form-control'>
@@ -119,7 +119,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					Course {$_CONFIG['agility_stat']}
+					Course " . constant("stat_agility") . "
 				</th>
 				<td>
 					<input type='number' required='1' name='agl' min='0' value='0' class='form-control'>
@@ -127,7 +127,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					Course {$_CONFIG['guard_stat']}
+					Course " . constant("stat_guard") . "
 				</th>
 				<td>
 					<input type='number' required='1' name='grd' min='0' value='0' class='form-control'>
@@ -135,7 +135,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					Course {$_CONFIG['labor_stat']}
+					Course " . constant("stat_labor") . "
 				</th>
 				<td>
 					<input type='number' required='1' name='lab' min='0' value='0' class='form-control'>
@@ -143,7 +143,7 @@ function addacademy()
 			</tr>
 			<tr>
 				<th>
-					Course {$_CONFIG['iq_stat']}
+					Course " . constant("stat_iq") . "
 				</th>
 				<td>
 					<input type='number' required='1' name='iq' min='0' value='0' class='form-control'>
@@ -194,7 +194,7 @@ function addacademy()
 
 function delacademy()
 {
-    global $db, $ir, $h, $userid, $api, $_CONFIG;
+    global $db, $ir, $h, $userid, $api;
     if (!isset($_POST['academy'])) {
         $csrf = getHtmlCSRF('staff_delacademy');
         echo "<h4>Deleting an Academic Course</h4>
@@ -248,7 +248,7 @@ function delacademy()
 
 function editacademy()
 {
-    global $db, $userid, $api, $h, $_CONFIG;
+    global $db, $userid, $api, $h;
     if (!isset($_POST['step'])) {
         $_POST['step'] = '0';
     }
@@ -353,7 +353,7 @@ function editacademy()
                     </tr>
                     <tr>
                         <th>
-                            Course {$_CONFIG['strength_stat']}
+                            Course " . constant("stat_strength") . "
                         </th>
                         <td>
                             <input type='number' required='1' name='str' min='0' class='form-control' value='{$r['ac_str']}'>
@@ -361,7 +361,7 @@ function editacademy()
                     </tr>
                     <tr>
                         <th>
-                            Course {$_CONFIG['agility_stat']}
+                            Course " . constant("stat_agility") . "
                         </th>
                         <td>
                             <input type='number' required='1' name='agl' min='0' class='form-control' value='{$r['ac_agl']}'>
@@ -369,7 +369,7 @@ function editacademy()
                     </tr>
                     <tr>
                         <th>
-                            Course {$_CONFIG['guard_stat']}
+                            Course " . constant("stat_guard") . "
                         </th>
                         <td>
                             <input type='number' required='1' name='grd' min='0' class='form-control' value='{$r['ac_grd']}'>
@@ -377,7 +377,7 @@ function editacademy()
                     </tr>
                     <tr>
                         <th>
-                            Course {$_CONFIG['labor_stat']}
+                            Course " . constant("stat_labor") . "
                         </th>
                         <td>
                             <input type='number' required='1' name='lab' min='0' class='form-control' value='{$r['ac_lab']}'>
@@ -385,7 +385,7 @@ function editacademy()
                     </tr>
                     <tr>
                         <th>
-                            Course {$_CONFIG['iq_stat']}
+                            Course " . constant("stat_iq") . "
                         </th>
                         <td>
                             <input type='number' required='1' name='iq' min='0' class='form-control' value='{$r['ac_iq']}'>

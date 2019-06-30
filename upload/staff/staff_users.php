@@ -61,7 +61,7 @@ switch ($_GET['action']) {
 }
 function createuser()
 {
-    global $db, $h, $api, $userid, $_CONFIG;
+    global $db, $h, $api, $userid;
     if (!$api->user->getStaffLevel($userid, 'Admin')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.");
         die($h->endpage());
@@ -162,7 +162,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$_CONFIG['primary_currency']}
+							" . constant("primary_currency") . "
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' name='prim_currency' value='100'>
@@ -170,7 +170,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$_CONFIG['secondary_currency']}
+							" . constant("secondary_currency") . "
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='0' value='0' name='sec_currency'>
@@ -191,7 +191,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							Strength
+							" . constant("stat_strength") . "
 						</th>
 						<td>
 							<input type='number' required='1' id='strength' class='form-control' min='10' name='strength' value='1100'>
@@ -199,7 +199,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$_CONFIG['agility_stat']}
+							" . constant("stat_agility") . "
 						</th>
 						<td>
 							<input type='number' required='1' id='agility' class='form-control' min='10' name='agility' value='1000'>
@@ -207,7 +207,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$_CONFIG['guard_stat']}
+							" . constant("stat_guard") . "
 						</th>
 						<td>
 							<input type='number' required='1' id='guard' class='form-control' min='10' name='guard' value='900'>
@@ -215,7 +215,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$_CONFIG['labor_stat']}
+							" . constant("stat_labor") . "
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='10' name='labor' value='1000'>
@@ -223,7 +223,7 @@ function createuser()
 					</tr>
 					<tr>
 						<th>
-							{$_CONFIG['iq_stat']}
+							" . constant("stat_iq") . "
 						</th>
 						<td>
 							<input type='number' required='1' class='form-control' min='10' name='iq' value='1000'>
@@ -399,7 +399,7 @@ function createuser()
 
 function edituser()
 {
-    global $db, $h, $userid, $api, $_CONFIG;
+    global $db, $h, $userid, $api;
     if (!isset($_POST['step'])) {
         $_POST['step'] = 0;
     }
@@ -481,7 +481,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['primary_currency']}
+					" . constant("primary_currency") . "
 				</th>
 				<td>
 					<input type='number' min='0' class='form-control' required='1' name='prim_currency' value='{$itemi['primary_currency']}' />
@@ -497,7 +497,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['secondary_currency']}
+					" . constant("secondary_currency") . "
 				</th>
 				<td>
 					<input type='number' min='0' class='form-control' required='1' name='sec_currency' value='{$itemi['secondary_currency']}' />
@@ -550,7 +550,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['strength_stat']}
+					" . constant("stat_strength") . "
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='strength' value='{$itemi['strength']}' />
@@ -558,7 +558,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['agility_stat']}
+					" . constant("stat_agility") . "
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='agility' value='{$itemi['agility']}' />
@@ -566,7 +566,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['guard_stat']}
+					" . constant("stat_guard") . "
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='guard' value='{$itemi['guard']}' />
@@ -574,7 +574,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['labor_stat']}
+					" . constant("stat_labor") . "
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='labor' value='{$itemi['labor']}' />
@@ -582,7 +582,7 @@ function edituser()
 			</tr>
 			<tr>
 				<th>
-					{$_CONFIG['iq_stat']}
+					" . constant("stat_iq") . "
 				</th>
 				<td>
 					<input type='number' min='1' class='form-control' required='1' name='IQ' value='{$itemi['IQ']}' />
@@ -1035,7 +1035,7 @@ function changepw()
 
 function masspay()
 {
-    global $db, $h, $userid, $api, $_CONFIG;
+    global $db, $h, $userid, $api;
     if (!$api->user->getStaffLevel($userid, 'assistant')) {
         alert('danger', "Uh Oh!", "You do not have permission to be here.");
         die($h->endpage());
@@ -1044,7 +1044,7 @@ function masspay()
         $primary = (isset($_POST['pay']) && is_numeric($_POST['pay'])) ? abs(intval($_POST['pay'])) : 0;
         $secondary = (isset($_POST['pay1']) && is_numeric($_POST['pay1'])) ? abs(intval($_POST['pay1'])) : 0;
         if (empty($primary) && empty($secondary)) {
-            alert('danger', "Uh Oh", "If you wish to give a mass payment, please give either {$_CONFIG['primary_currency']} or {$_CONFIG['secondary_currency']}.");
+            alert('danger', "Uh Oh", "If you wish to give a mass payment, please give either " . constant("primary_currency") . " or " . constant("secondary_currency") . ".");
             die($h->endpage());
         }
         if (!isset($_POST['verf']) || !checkCSRF('staff_masspay', stripslashes($_POST['verf']))) {
@@ -1055,11 +1055,11 @@ function masspay()
         while ($r = $db->fetch_row($q)) {
             $api->user->giveCurrency($r['userid'], 'primary', $primary);
             $api->user->giveCurrency($r['userid'], 'seconday', $secondary);
-            $api->GameAddNotification($r['userid'], "The administration has given a mass payment of {$primary} {$_CONFIG['primary_currency']} and/or {$secondary} {$_CONFIG['secondary_currency']} to the game.");
+            $api->GameAddNotification($r['userid'], "The administration has given a mass payment of {$primary} " . constant("primary_currency") . " and/or {$secondary} " . constant("secondary_currency") . " to the game.");
             echo "Successfully paid {$r['username']}.<br />";
         }
         alert('success', 'Success!', "You have successfully mass paid the game.", true, 'index.php');
-        $api->game->addLog($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} {$_CONFIG['secondary_currency']}.");
+        $api->game->addLog($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} " . constant("secondary_currency") . ".");
     } else {
         $csrf = getHtmlCSRF('staff_masspay');
         echo "<table class='table table-bordered'>
@@ -1072,7 +1072,7 @@ function masspay()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['primary_currency']}
+                    " . constant("primary_currency") . "
                 </th>
                 <td>
                     <input type='number' required='1' value='0' name='pay' class='form-control'>
@@ -1080,7 +1080,7 @@ function masspay()
             </tr>
             <tr>
                 <th>
-                    {$_CONFIG['secondary_currency']}
+                    " . constant("secondary_currency") . "
                 </th>
                 <td>
                     <input type='number' required='1' value='0' name='pay1' class='form-control'>

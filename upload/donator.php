@@ -80,12 +80,12 @@ while ($r = $db->fetch_row($q)) {
             $stats =
                 array("energy" => "Energy", "will" => "Will",
                     "brave" => "Bravery", "level" => "Level",
-                    "hp" => "Health", "strength" => "{$_CONFIG['strength_stat']}",
-                    "agility" => "{$_CONFIG['agility_stat']}", "guard" => "{$_CONFIG['guard_stat']}",
-                    "labor" => "{$_CONFIG['labor_stat']}", "iq" => "{$_CONFIG['iq_stat']}",
+                    "hp" => "Health", "strength" => constant("stat_strength"),
+                    "agility" => constant("stat_agility"), "guard" => constant("stat_guard"),
+                    "labor" => constant("stat_labor"), "iq" => constant("stat_iq"),
                     "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                    "primary_currency" => "{$_CONFIG['primary_currency']}",
-                    "secondary_currency" => "{$_CONFIG['secondary_currency']}",
+                    "primary_currency" => constant("primary_currency"),
+                    "secondary_currency" => constant("secondary_currency"),
                     "xp" => "Experience", "vip_days" =>
                     "VIP Days");
             $statformatted = $stats["{$stat[$usecount]}"];

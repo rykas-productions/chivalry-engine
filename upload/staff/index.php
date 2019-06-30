@@ -199,7 +199,7 @@ if ($api->user->getStaffLevel($userid, 'assistant')) {
 							</tr>
 							</tr>
 								<td>
-									<a href='staff_logs.php?action=secmarket'>{$_CONFIG['secondary_currency']} Market Logs</a>
+									<a href='staff_logs.php?action=secmarket'>" . constant("secondary_currency") . " Market Logs</a>
 								</td>
 								<td>
 									<a href='staff_logs.php?action=mining'>Mining Logs</a>
@@ -215,7 +215,7 @@ if ($api->user->getStaffLevel($userid, 'assistant')) {
 							</tr>
 							</tr>
 								<td>
-									<a href='staff_logs.php?action=primsend'>{$_CONFIG['primary_currency']} Xfer Logs</a>
+									<a href='staff_logs.php?action=primsend'>" . constant("primary_currency") . " Xfer Logs</a>
 								</td>
 								<td>
 

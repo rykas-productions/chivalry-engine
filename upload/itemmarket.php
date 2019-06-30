@@ -51,7 +51,7 @@ switch ($_GET['action']) {
 }
 function index()
 {
-    global $db, $userid, $api, $_CONFIG;
+    global $db, $userid, $api;
     echo "[<a href='?action=add'>Add Your Own Listing</a>]
 	<br />
 	<table class='table table-bordered table-hover table-striped'>
@@ -88,11 +88,11 @@ function index()
         }
         $ctprice = ($r['imPRICE'] * $r['imQTY']);
         if ($r['imCURRENCY'] == 'primary') {
-            $price = number_format($r['imPRICE']) . " {$_CONFIG['primary_currency']}";
-            $tprice = number_format($ctprice) . " {$_CONFIG['primary_currency']}";
+            $price = number_format($r['imPRICE']) . " " . constant("primary_currency");
+            $tprice = number_format($ctprice) . " " . constant("primary_currency");
         } else {
-            $price = number_format($r['imPRICE']) . " {$_CONFIG['secondary_currency']}";
-            $tprice = number_format($ctprice) . " {$_CONFIG['secondary_currency']}";
+            $price = number_format($r['imPRICE']) . " " . constant("secondary_currency");
+            $tprice = number_format($ctprice) . " " . constant("secondary_currency");
         }
         if ($r['imADDER'] == $userid) {
             $link =

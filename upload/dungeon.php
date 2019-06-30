@@ -122,7 +122,7 @@ function bail()
         $api->user->takeCurrency($userid, 'primary', $cost);
         $api->user->addNotification($get_user, "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
             successfully bailed you out of the dungeon.");
-        alert('success', "Success!", "You have successfully bailed out {$api->user->getNameFromID($get_user)}", true, 'dungeon.php');
+        alert('success', "Success!", "You have successfully bailed out {$api->user->getNameFromID($get_user)} for " . number_format($cost) . " " . constant("primary_currency") . ".", true, 'dungeon.php');
         $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$get_user}");
         die($h->endpage());
     } else {

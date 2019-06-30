@@ -32,7 +32,7 @@ class headers
 {
     function startheaders()
     {
-        global $ir, $set, $h, $db, $menuhide, $userid, $time, $_CONFIG, $api;
+        global $ir, $set, $h, $db, $menuhide, $userid, $time, $api;
         ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -88,8 +88,8 @@ class headers
                             Will {$will}%<br />
                             XP {$xp}%<br />
                             HP {$hp}%<br />
-                            {$_CONFIG['primary_currency']}: " . number_format($ir['primary_currency']) . "<br />
-                            {$_CONFIG['secondary_currency']}: " . number_format($ir['secondary_currency']); ?>
+                            " . constant("primary_currency") . ": " . number_format($ir['primary_currency']) . "<br />
+                            " . constant("secondary_currency") . ": " . number_format($ir['secondary_currency']); ?>
                             </span>
                         </li>
                     </ul>
