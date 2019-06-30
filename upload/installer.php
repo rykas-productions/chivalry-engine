@@ -31,8 +31,8 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('pre-2.0d');
-$Build=('pre-2.0d');
+$Version=('pre-2.0e');
+$Build=('pre-2.0e');
 define('MONO_ON', 1);
 session_name('CEV2');
 session_start();
