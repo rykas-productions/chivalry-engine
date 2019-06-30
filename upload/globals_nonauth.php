@@ -55,11 +55,10 @@ require "header_nonauth.php";
 include "config.php";
 define("MONO_ON", 1);
 //Connect to database.
-require "class/class_db_{$_CONFIG['driver']}.php";
-require_once('global_func.php');
+require "class/class_db_" . constant("db_driver") . ".php";
+require "global_func.php";
 $db = new database;
-$db->configure($_CONFIG['hostname'], $_CONFIG['username'],
-    $_CONFIG['password'], $_CONFIG['database'], $_CONFIG['persistent']);
+$db->configure(constant("db_host"), constant("db_username"), constant("db_password"), constant("db_database"), 0);
 $db->connect();
 $c = $db->connection_id;
 //Update data in-game externally.
