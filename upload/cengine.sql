@@ -66,7 +66,7 @@ CREATE TABLE `academy` (
   `ac_grd` int(11) UNSIGNED NOT NULL,
   `ac_lab` int(11) UNSIGNED NOT NULL,
   `ac_iq` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -77,7 +77,7 @@ CREATE TABLE `academy` (
 CREATE TABLE `academy_done` (
   `userid` int(11) UNSIGNED NOT NULL,
   `course` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -103,7 +103,7 @@ CREATE TABLE `botlist` (
   `botuser` int(11) UNSIGNED NOT NULL,
   `botitem` int(11) UNSIGNED NOT NULL,
   `botcooldown` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -115,7 +115,7 @@ CREATE TABLE `botlist_hits` (
   `userid` int(11) UNSIGNED NOT NULL,
   `botid` int(11) UNSIGNED NOT NULL,
   `lasthit` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -176,7 +176,7 @@ CREATE TABLE `crimes` (
 CREATE TABLE `crons` (
   `file` varchar(30) COLLATE latin1_general_ci NOT NULL,
   `nextUpdate` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- --------------------------------------------------------
 
@@ -247,7 +247,7 @@ CREATE TABLE `forum_bans` (
   `fb_banner` int(11) UNSIGNED NOT NULL,
   `fb_time` int(11) UNSIGNED NOT NULL,
   `fb_reason` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -325,7 +325,7 @@ CREATE TABLE `friends` (
 CREATE TABLE `gamerules` (
   `rule_id` int(11) UNSIGNED NOT NULL,
   `rule_text` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -360,7 +360,7 @@ CREATE TABLE `guild_applications` (
   `ga_guild` int(11) UNSIGNED NOT NULL,
   `ga_time` int(11) UNSIGNED NOT NULL,
   `ga_text` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -374,7 +374,7 @@ CREATE TABLE `guild_armory` (
   `gaITEM` INT(11) UNSIGNED NOT NULL ,
   `gaQTY` INT(11) UNSIGNED NOT NULL ,
    UNIQUE (`gaID`)
-) ENGINE = MyISAM;
+) ENGINE = InnoDB;
 
 -- --------------------------------------------------------
 
@@ -392,7 +392,7 @@ CREATE TABLE `guild_crimes` (
   `gcMINCASH` INT(11) UNSIGNED NOT NULL ,
   `gcMAXCASH` INT(11) UNSIGNED NOT NULL ,
   UNIQUE (`gcID`)
-) ENGINE = MyISAM;
+) ENGINE = InnoDB;
 
 -- --------------------------------------------------------
 
@@ -409,7 +409,7 @@ CREATE TABLE `guild_crime_log` (
   `gclWINNING` INT(11) UNSIGNED NOT NULL ,
   `gclTIME` INT(11) UNSIGNED NOT NULL ,
   UNIQUE (`gclID`)
-) ENGINE = MyISAM;
+) ENGINE = InnoDB;
 
 -- --------------------------------------------------------
 
@@ -422,7 +422,7 @@ CREATE TABLE `guild_notifications` (
   `gn_guild` int(11) UNSIGNED NOT NULL,
   `gn_time` int(11) UNSIGNED NOT NULL,
   `gn_text` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -438,7 +438,7 @@ CREATE TABLE `guild_wars` (
   `gw_depoints` int(11) UNSIGNED NOT NULL,
   `gw_end` int(11) UNSIGNED NOT NULL,
   `gw_winner` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -475,7 +475,7 @@ CREATE TABLE `inventory` (
 CREATE TABLE `ipban` (
   `ip_id` int(11) UNSIGNED NOT NULL,
   `ip_ip` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -491,7 +491,7 @@ CREATE TABLE `itemauction` (
   `ia_end` int(11) UNSIGNED NOT NULL,
   `ia_bidder` int(11) UNSIGNED NOT NULL,
   `ia_bid` bigint(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -506,7 +506,7 @@ CREATE TABLE `itemmarket` (
   `imPRICE` int(11) NOT NULL DEFAULT '0',
   `imCURRENCY` enum('primary','secondary') NOT NULL DEFAULT 'primary',
   `imQTY` int(11) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -545,7 +545,7 @@ CREATE TABLE `itemselllogs` (
   `qty` int(11) UNSIGNED NOT NULL,
   `time` int(11) UNSIGNED NOT NULL,
   `log` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -572,7 +572,7 @@ CREATE TABLE `jobs` (
   `jDESC` TEXT NOT NULL ,
   `jBOSS` INT NOT NULL ,
   UNIQUE (`jRANK`)
-) ENGINE = MyISAM;
+) ENGINE = InnoDB;
 
 -- --------------------------------------------------------
 
@@ -590,7 +590,7 @@ CREATE TABLE `job_ranks` (
   `jrLAB` INT(11) UNSIGNED NOT NULL ,
   `jrIQ` INT(11) UNSIGNED NOT NULL ,
   UNIQUE (`jrID`)
-) ENGINE = MyISAM;
+) ENGINE = InnoDB;
 
 -- --------------------------------------------------------
 
@@ -617,7 +617,7 @@ CREATE TABLE `logs` (
   `log_time` int(11) UNSIGNED NOT NULL,
   `log_text` text NOT NULL,
   `log_ip` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -647,7 +647,7 @@ CREATE TABLE `mail_bans` (
   `mbBANNER` INT(11) UNSIGNED NOT NULL ,
   `mbTIME` INT(11) UNSIGNED NOT NULL ,
   UNIQUE (`mbID`)
-) ENGINE = MyISAM;
+) ENGINE = InnoDB;
 
 -- --------------------------------------------------------
 
@@ -705,7 +705,7 @@ CREATE TABLE `modules` (
   `module_link` text NOT NULL,
   `module_update` text NOT NULL,
   `module_version` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -781,7 +781,7 @@ CREATE TABLE `promo_codes` (
   `promo_code` text NOT NULL,
   `promo_item` int(11) UNSIGNED NOT NULL,
   `promo_use` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -835,7 +835,7 @@ CREATE TABLE `russian_roulette` (
   `challengee` int(11) UNSIGNED NOT NULL,
   `challenger` int(11) UNSIGNED NOT NULL,
   `reward` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -848,7 +848,7 @@ CREATE TABLE `sec_market` (
   `sec_user` int(11) UNSIGNED NOT NULL,
   `sec_cost` int(11) UNSIGNED NOT NULL,
   `sec_total` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -895,7 +895,7 @@ CREATE TABLE `shopitems` (
   `sitemID` int(11) NOT NULL,
   `sitemSHOP` int(11) NOT NULL DEFAULT '0',
   `sitemITEMID` int(11) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -908,7 +908,7 @@ CREATE TABLE `shops` (
   `shopLOCATION` int(11) NOT NULL DEFAULT '0',
   `shopNAME` varchar(255) NOT NULL DEFAULT '',
   `shopDESCRIPTION` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -921,7 +921,7 @@ CREATE TABLE `smelt_inprogress` (
   `sip_user` int(11) UNSIGNED NOT NULL,
   `sip_recipe` int(11) UNSIGNED NOT NULL,
   `sip_time` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1047,7 +1047,7 @@ CREATE TABLE `vips_accepted` (
   `vipPACKID` int(11) UNSIGNED NOT NULL,
   `vipTIME` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `vipTXN` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1060,7 +1060,7 @@ CREATE TABLE `vip_listing` (
   `vip_item` int(11) UNSIGNED NOT NULL,
   `vip_cost` decimal(10,2) NOT NULL,
   `vip_qty` int(11) UNSIGNED NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Indexes for dumped tables
