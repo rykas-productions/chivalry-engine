@@ -527,8 +527,8 @@ function install()
 define('db_host','{$e_db_hostname}');
 define('db_username','{$e_db_username}');
 define('db_password','{$e_db_password}');
-define('db_database','cev2');
-define('db_driver','{$db_driver}');
+define('db_database','{$e_db_database}');
+define('db_driver','{$db_driver}');		//mysqli or pdo
 define('game_key','{$code}');
 define('primary_currency','Primary Currency');
 define('secondary_currency','Secondary Currency');
