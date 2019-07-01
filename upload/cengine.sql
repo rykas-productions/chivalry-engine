@@ -391,7 +391,7 @@ CREATE TABLE `guild_crimes` (
   `gcFAIL` TEXT NOT NULL ,
   `gcMINCASH` INT(11) UNSIGNED NOT NULL ,
   `gcMAXCASH` INT(11) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`gcID`)
+  UNIQUE (`gcID`)
 ) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
@@ -408,7 +408,7 @@ CREATE TABLE `guild_crime_log` (
   `gclRESULT` TEXT NOT NULL ,
   `gclWINNING` INT(11) UNSIGNED NOT NULL ,
   `gclTIME` INT(11) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`gclID`)
+  UNIQUE (`gclID`)
 ) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
@@ -646,7 +646,7 @@ CREATE TABLE `mail_bans` (
   `mbREASON` TEXT NOT NULL ,
   `mbBANNER` INT(11) UNSIGNED NOT NULL ,
   `mbTIME` INT(11) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`mbID`)
+  UNIQUE (`mbID`)
 ) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
