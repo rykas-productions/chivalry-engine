@@ -81,7 +81,7 @@ class headers
                 if ($ir['theme'] == 7)
 				{
 					?>
-					<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/bootstrap-v.1.5.min.css">
+					<link rel="stylesheet" href="css/castle.css">
 					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
 					<?php
 					$hdr='navbar-dark bg-dark';

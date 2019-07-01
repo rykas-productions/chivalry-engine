@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
-$percentoff=1;
+$percentoff=0.5;
 if (isset($_GET['user']))
 {
 	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : $userid;
@@ -19,7 +19,7 @@ if (isset($_GET['user']))
 	}
 	echo "<h3>VIP Packs</h3><hr />If you purchase a VIP Package from below, you will be gifted the following depending on
 		the package your purchase. All purchases are final. If you commit fraud, you will be removed from the game permanently.<br />
-        As of January 9th, 2019, each donation will give a <a href='iteminfo.php?ID=128'>IP Color Changer</a>.";
+        As of January 9th, 2019, each donation will give a <a href='iteminfo.php?ID=128'>VIP Color Changer</a>.";
 	$goal=25;
 	$progress=round(($set['MonthlyDonationGoal']/$goal)*100);
 	$bg = ($set['MonthlyDonationGoal'] >= $goal) ? "bg-success" : "" ;

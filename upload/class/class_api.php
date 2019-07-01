@@ -795,7 +795,7 @@ class api
                     $userdata['will'] -= Random(1, 3);
                 else
                 {
-                    if (Random(1,4) != 1)
+                    if (Random(1,2) != 1)
                         $userdata['will'] -= Random(1, 3);
                 }
             //User's will ends up negative, set to zero.

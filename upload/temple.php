@@ -49,6 +49,9 @@ switch ($_GET['action']) {
     case 'will':
         will();
         break;
+	case 'willall':
+        will();
+        break;
     case 'iq':
         iq();
         break;
@@ -75,6 +78,7 @@ function home()
 	<a class='btn btn-primary' href='?action=energy'>Refill Energy - " . number_format($set['energy_refill_cost']) . " Chivalry Tokens</a><br /><br />
 	<a class='btn btn-primary' href='?action=brave'>Regenerate 5% Bravery - " . number_format($set['brave_refill_cost']) . " Chivalry Tokens</a><br /><br />
 	<a class='btn btn-primary' href='?action=will'>Regenerate 5% Will - " . number_format($set['will_refill_cost']) . " Chivalry Tokens</a><br /><br />
+	<a class='btn btn-primary' href='?action=willall'>Regenerate 100% Will - " . number_format($set['will_refill_cost']*20) . " Chivalry Tokens</a><br /><br />
 	<a class='btn btn-primary' href='?action=iq'>Buy IQ - " . number_format($set['iq_per_sec']) . "* Per Token</a><br /><br />
 	<a class='btn btn-primary' href='?action=protection'>Buy Protection - 5 Chivalry Tokens per Minute</a><br /><br />
     <a class='btn btn-primary' href='?action=coppertotoken'>50k Copper Coins -> 1 Chivalry Token</a><br /><br />
@@ -167,6 +171,35 @@ function will()
 				$api->UserTakeCurrency($userid, 'secondary', $set['will_refill_cost']);
 				alert('success', "Success!", "You have paid {$set['will_refill_cost']} Chivalry Tokens to regenerate 5% Will", true, 'temple.php');
 				$api->SystemLogsAdd($userid, 'temple', "Traded {$set['will_refill_cost']} Chivalry Tokens to regenerate 5% Will.");
+			}
+        }
+    } else {
+        alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", true, 'temple.php');
+    }
+}
+function willall()
+{
+    global $api, $userid, $set;
+    //User has enough Chivalry Tokens to refill their will.
+    if ($api->UserHasCurrency($userid, 'secondary', $set['will_refill_cost']*20)) {
+        //User's will is already at 100%
+        if ($api->UserInfoGet($userid, 'will', true) == 100) {
+            alert('danger', "Uh Oh!", "You already have full Will.", true, 'temple.php');
+        } else {
+			if (calculateLuck($userid))
+			{
+				//Refill the user's will by 5% and take their Chivalry Tokens.
+				$api->UserInfoSet($userid, 'will', 100, true);
+				alert('success', "Success!", "Luck is on your side today! You received a free will regeneration!", true, 'temple.php');
+				$api->SystemLogsAdd($userid, 'temple', "Traded 0 Chivalry Tokens to regenerate 100% Will.");
+			}
+			else
+			{
+				//Refill the user's will by 5% and take their Chivalry Tokens.
+				$api->UserInfoSet($userid, 'will', 100, true);
+				$api->UserTakeCurrency($userid, 'secondary', $set['will_refill_cost']*20);
+				alert('success', "Success!", "You have paid " . number_format($set['will_refill_cost']*20) . " Chivalry Tokens to regenerate 100% Will", true, 'temple.php');
+				$api->SystemLogsAdd($userid, 'temple', "Traded " . number_format($set['will_refill_cost']*20) . " Chivalry Tokens to regenerate 100% Will.");
 			}
         }
     } else {

@@ -81,7 +81,7 @@ if ($_POST['step'] == 0)
 if ($_POST['step'] == 1)
 {
 	$_POST['duration'] = abs($_POST['duration']);
-	$max=5000000*levelMultiplier($ir['level']);
+	$max=10000000*levelMultiplier($ir['level']);
 	$maxformat=number_format($max);
 	if (!in_array($_POST['duration'],$duration))
 	{
@@ -114,8 +114,8 @@ if ($_POST['step'] == 2)
 		alert('danger',"Uh Oh!","You are trying to invest more Copper Coins than you currently have available to you.");
 		die($h->endpage());
 	}
-	$formatted=number_format(5000000*levelMultiplier($ir['level']));
-	if ($_POST['invest'] > (5000000*levelMultiplier($ir['level'])))
+	$formatted=number_format(10000000*levelMultiplier($ir['level']));
+	if ($_POST['invest'] > (10000000*levelMultiplier($ir['level'])))
 	{
 		alert('danger',"Uh Oh!","You may only invest up to {$formatted} Copper Coins at a time.");
 		die($h->endpage());

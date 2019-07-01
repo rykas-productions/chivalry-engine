@@ -50,7 +50,7 @@ function permission($perm, $user)
 function check_level()
 {
     global $ir, $userid, $db;
-	$ir['xp_needed'] = round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2);
+	$ir['xp_needed'] = (round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2)/$ir['reset']);
 	if ($ir['xp'] >= $ir['xp_needed']) {
 		$expu = $ir['xp'] - $ir['xp_needed'];
 		$ir['level'] += 1;
@@ -61,7 +61,7 @@ function check_level()
 		$ir['maxbrave'] += 2;
 		$ir['hp'] += 50;
 		$ir['maxhp'] += 50;
-		$ir['xp_needed'] = round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2);
+		$ir['xp_needed'] = (round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2)/$ir['reset']);
 		//Increase user's everything.
 		$db->query("UPDATE `users` SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2,
 					`brave` = `brave` + 2, `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2,

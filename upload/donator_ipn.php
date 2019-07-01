@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
-$percentoff=1;
+$percentoff=0.5;
 require_once('globals_nonauth.php');
 require('class/PaypalIPN.php');
 $wantedcurrency = "USD";
@@ -91,6 +91,7 @@ if ($verified) {
 	$fpi['vip_qty']=$fpi['vip_qty']*$qty;
     item_add($for, $fpi['vip_item'], $fpi['vip_qty']);
     item_add($for, 128, 1);
+    item_add($payer, 89, $vipticketgiven);
     //Log everything
 	$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$friendly_number} WHERE `setting_name` = 'MonthlyDonationGoal'");
     $db->query("INSERT INTO `vips_accepted` VALUES(NULL, {$buyer}, {$for}, {$pack}, " . time() . ", '{$txn_id}')");

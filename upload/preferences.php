@@ -68,6 +68,9 @@ switch ($_GET['action']) {
     case 'steamlink':
         steamlink();
         break;
+	case 'reset':
+        resetacc();
+        break;
     default:
         prefs_home();
         break;
@@ -1079,5 +1082,23 @@ function steamlink()
         $db->query("INSERT INTO `steam_account_link` (`steam_linked`, `steam_id`) VALUES ('{$userid}', '{$steamprofile['steamid']}')");
         alert("success","Success!","You have successfully linked Steam Account ID: <b>{$steamprofile['steamid']}</b> to your Chivalry is Dead account. You may now use it to log in.",true,'preferences.php?action=menu');
     }
+}
+function resetacc()
+{
+    global $db,$userid,$api,$h;
+    if ($ir['reset'] == 6)
+	{
+		alert('danger',"Uh Oh!","You can only reset your account 5 times.",true,'preferences.php');
+		die($h->endpage());
+	}
+	if (($ir['equip_armor'] + $ir['equip_primary'] + $ir['equip_secondary']) != 0) 
+	{
+		alert('danger',"Uh Oh!","You can only use this feature when you have no equipment on you.",true,'preferences.php');
+		die($h->endpage());
+	}
+	if (isset($_POST['reset']))
+	{
+		
+	}
 }
 $h->endpage();
