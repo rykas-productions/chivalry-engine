@@ -37,18 +37,18 @@ if (!defined('MONO_ON'))
 </div>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
 <link rel="stylesheet" href="css/game.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<!-- jQuery Version 3.2.1 -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 
-<!-- Bootstrap Core JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<!-- jQuery Version 3.4.0 -->
+<script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+
+<!-- Core Bootstrap Javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <!-- Other JavaScript -->
 <script src="js/game.js"></script>
-<script src='https://www.google.com/recaptcha/api.js' async defer></script>
-<script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
 </body>
 <footer>
     <p>
