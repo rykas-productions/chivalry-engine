@@ -29,6 +29,9 @@
 */
 //Profiler start time
 $StartTime = microtime();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 //If file is loaded directly.
 if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false) {
     exit;

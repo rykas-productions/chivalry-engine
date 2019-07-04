@@ -62,6 +62,7 @@ function error_critical($human_error, $debug_error, $action, $context = array())
         }
     }
     error_log($debug_error);
+	file_put_contents('../error.log', $debug_error, FILE_APPEND);
     exit;
 }
 

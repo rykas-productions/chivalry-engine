@@ -65,9 +65,13 @@ class headers
 			$will = $api->user->getInfoPercent($userid, 'will');
 			$xp = round($ir['xp'] / $ir['xp_needed'] * 100);
 			$hp = $api->user->getInfoPercent($userid, 'hp');
+			if ($ir['sidemenu'] == 0)
+				$toggle='toggled';
+			else
+				$toggle='';
 			?>
 				<body>
-				<div class="page-wrapper default-theme sidebar-bg toggled">
+				<div class="page-wrapper default-theme sidebar-bg <?php echo $toggle; ?>">
 				<div id="show-sidebar" class="btn btn-sm btn-dark">
 					<i class="fas fa-bars"></i>
 				</div>
@@ -374,13 +378,18 @@ class headers
             jQuery(function ($) {
             $("#close-sidebar").click(function() {
               $(".page-wrapper").removeClass("toggled");
-                localStorage.setItem("toggle", "toggled");
-            });
+				$.post('js/script/menu.php', { value: 1}, 
+					function(returnedData){
+						 console.log(returnedData);
+				});
+			});
             $("#show-sidebar").click(function() {
               $(".page-wrapper").addClass("toggled");
-                localStorage.setItem("toggle", "");
+			  $.post('js/script/menu.php', { value: 0}, 
+					function(returnedData){
+						 console.log(returnedData);
+				});
             });
-           
         });	
         </script>
         </body>

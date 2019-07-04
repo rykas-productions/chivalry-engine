@@ -56,9 +56,6 @@ $(document).ready(function () {
         $('#btnAdd').prop('disabled', false);
     });
     $('#btnDel').attr('disabled', 'disabled');
-    var remove = localStorage.getItem("toggle");
-    console.log(remove);
-    $(".page-wrapper").removeClass(remove);
 
 });
 $(function () {
