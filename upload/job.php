@@ -124,9 +124,6 @@ if (empty($ir['job'])) {
         case 'promote':
             job_promote();
             break;
-        case 'work':
-            job_work();
-            break;
         default:
             job_index();
             break;
@@ -137,8 +134,7 @@ function job_index()
     global $db, $ir, $h;
     echo "<h3>Your Job</h3>
     You currently work in the {$ir['jNAME']}! You receive {$ir['jrPRIMPAY']} " . constant("primary_currency") . " and/or
-    {$ir['jrSECONDARY']} " . constant("secondary_currency") . " each hour you work as you're required. You've worked {$ir['jobwork']} /
-    {$ir['jrACT']} times this hour.
+    {$ir['jrSECONDARY']} " . constant("secondary_currency") . " each hour you work.
     <table class='table table-bordered'>
     <tr>
         <th>
@@ -166,13 +162,10 @@ function job_index()
                 {$r['jrSTR']} " . constant("stat_strength") . "<br />
                 {$r['jrLAB']} " . constant("stat_labor") . "<br />
                 {$r['jrIQ']} " . constant("stat_iq") . "<br />
-                {$r['jrACT']} Work/Hour
             </td>
         </tr>";
     }
     echo "</table>
-    &gt; <a href='?action=work'>Begin Work</a>
-	<br />
     &gt; <a href='?action=promote'>Try To Get Promoted</a>
 	<br />
 	&gt; <a href='?action=quit'>Quit Job</a>";
@@ -210,48 +203,3 @@ function job_promote()
     $db->free_result($q);
     $h->endpage();
 }
-
-function job_work()
-{
-    global $db, $h, $ir, $userid, $api;
-    if (!isset($_GET['dowork'])) {
-        if ($ir['jobwork'] >= $ir['jrACT']) {
-            alert('danger', "Uh Oh!", "You've already worked the maximum times you are required to this hour. You will not
-            gain overtime! Take it easy, bro.", true, 'job.php');
-        } else {
-            echo "You need to work {$ir['jrACT']} times an hour to get paid. You've only worked {$ir['jobwork']} this hour.
-        Each attempt at working will deplete your energy by 10%, and your Will by 5%. Do you wish to work?<br />
-        <a class='btn btn-primary' href='?action=work&dowork=1'>Begin Working</a>
-        ";
-        }
-    } else {
-        $will = ($api->user->getInfoPercent($userid, 'will', true));
-        $energy = ($api->user->getInfoPercent($userid, 'energy', true));
-        if ($ir['jobwork'] >= $ir['jrACT']) {
-            alert('danger', "Uh Oh!", "You've already worked the maximum times you are required to this hour. You will not
-            gain overtime! Take it easy, bro.", true, 'job.php');
-            die($h->endpage());
-        }
-        if ($will < 7) {
-            alert("danger", "Uh Oh!", "You need 7% Will to work, you only have {$will}%.", true, '?action=work');
-            die($h->endpage());
-        }
-        if ($energy < 10) {
-            alert("danger", "Uh Oh!", "You need 10% Energy to work, you only have {$energy}%.", true, '?action=work');
-            die($h->endpage());
-        }
-        $WorkUnits = randomNumber(0, 2);
-        if ($WorkUnits == 0) {
-            alert("danger", "Uh Oh!", "You were unable to focus, and thus, you were not able to work as hard as you should have. You have worked {$ir['jobwork']} times.", false);
-        } else {
-            alert("success", "Success!", "You got to work and knocked out {$WorkUnits} pieces of work. How productive! You have worked {$ir['jobwork']} times.", false);
-        }
-        $db->query("UPDATE `users` SET `jobwork` = `jobwork` + {$WorkUnits} WHERE `userid` = {$userid}");
-        $api->user->setInfoPercent($userid, 'will', -7);
-        $api->user->setInfoPercent($userid, 'energy', -10);
-        echo "<a class='btn btn-primary' href='?action=work&dowork=1'>Work Again</a><br /><br />
-        <a class='btn btn-primary' href='job.php'>Go Back</a>";
-    }
-    $h->endpage();
-}
-

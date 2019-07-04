@@ -41,7 +41,7 @@ if ($db->num_rows($ready_to_run)) {
         SET `u`.`primary_currency` = `u`.`primary_currency` + `jr`.`jrPRIMPAY`,
         `u`.`secondary_currency` = `u`.`secondary_currency` + `jr`.`jrSECONDARY`
         WHERE `u`.`job` > 0 AND `u`.`jobrank` > 0 AND `u`.`jobwork` >= `jr`.`jrACT`");
-    $db->query("UPDATE `users` SET `jobwork` = 0 WHERE `jobwork` > 0 AND `job` > 0 AND `jobrank` > 0");
+    $db->query("UPDATE `users` SET `jobwork` = 0 WHERE `job` > 0 AND `jobrank` > 0");
 
     //Update queries!
     $db->query("UPDATE `crons` SET `nextUpdate`=`nextUpdate`+{$time} WHERE `file`='{$file}'");

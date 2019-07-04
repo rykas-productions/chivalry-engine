@@ -111,14 +111,6 @@ function newjob()
 				</td>
 			</tr>
 			<tr>
-				<th>
-					Required Activity
-				</th>
-				<td>
-					<input type='number' min='1' name='jACT' required='1' class='form-control'>
-				</td>
-			</tr>
-			<tr>
 				<th colspan='2'>
 					Hourly Wage
 				</th>
@@ -189,7 +181,6 @@ function newjob()
         $_POST['jSTR'] = (isset($_POST['jSTR']) && is_numeric($_POST['jSTR'])) ? abs(intval($_POST['jSTR'])) : 0;
         $_POST['jLAB'] = (isset($_POST['jLAB']) && is_numeric($_POST['jLAB'])) ? abs(intval($_POST['jLAB'])) : 0;
         $_POST['jIQ'] = (isset($_POST['jIQ']) && is_numeric($_POST['jIQ'])) ? abs(intval($_POST['jIQ'])) : 0;
-        $_POST['jACT'] = (isset($_POST['jACT']) && is_numeric($_POST['jACT'])) ? abs(intval($_POST['jACT'])) : 0;
 
         if (!isset($_POST['verf']) || !checkCSRF('staff_newjob', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "We have blocked this action for your security. Please submit forms quickly.");
@@ -207,10 +198,6 @@ function newjob()
             alert('danger', "Uh Oh!", "Please specify the hourly wage for this job rank.");
             die($h->endpage());
         }
-        if (empty($_POST['jACT'])) {
-            alert('danger', "Uh Oh!", "Job Rank activity requirement must be at least 1.");
-            die($h->endpage());
-        }
         $q = $db->query("SELECT `jRANK` from `jobs` WHERE `jNAME` = '{$_POST['jNAME']}'");
         if ($db->num_rows($q) > 0) {
             alert('danger', "Uh Oh!", "You may not have the same job name used more than once.");
@@ -220,9 +207,9 @@ function newjob()
                       VALUES (NULL, '{$_POST['jNAME']}', '0', '{$_POST['jDESC']}', '{$_POST['jBOSS']}')");
         $i = $db->insert_id();
         $db->query("INSERT INTO `job_ranks`
-                    (`jrID`, `jrRANK`, `jrJOB`, `jrPRIMPAY`, `jrSECONDARY`, `jrACT`, `jrSTR`, `jrLAB`, `jrIQ`)
+                    (`jrID`, `jrRANK`, `jrJOB`, `jrPRIMPAY`, `jrSECONDARY`, `jrSTR`, `jrLAB`, `jrIQ`)
                     VALUES (NULL, '{$_POST['jrNAME']}', '{$i}', '{$_POST['jrPRIMPAY']}', '{$_POST['jrSECONDARY']}',
-                    '{$_POST['jACT']}', '{$_POST['jSTR']}', '{$_POST['jLAB']}', '{$_POST['jIQ']}')");
+                    '{$_POST['jSTR']}', '{$_POST['jLAB']}', '{$_POST['jIQ']}')");
         $j = $db->insert_id();
         $db->query("UPDATE `jobs` SET `jSTART` = {$j} WHERE `jRANK` = {$i}");
         alert('success', "Success!", "You have successfully created the {$_POST['jNAME']} job!", true, 'index.php');
@@ -537,14 +524,6 @@ function newjobrank()
                 </td>
             </tr>
             <tr>
-                <th>
-                    Work Units Required
-                </th>
-                <td>
-                    <input type='number' min='0' value='0' required='1' name='workunit' class='form-control'>
-                </td>
-            </tr>
-            <tr>
                 <td colspan='2'>
                     <input type='submit' value='Create Job Rank' class='btn btn-primary'>
                 </td>
@@ -569,8 +548,6 @@ function jobrankedit()
         $_POST['str'] = (isset($_POST['str']) && is_numeric($_POST['str'])) ? abs(intval($_POST['str'])) : 0;
         $_POST['lab'] = (isset($_POST['lab']) && is_numeric($_POST['lab'])) ? abs(intval($_POST['lab'])) : 0;
         $_POST['iq'] = (isset($_POST['iq']) && is_numeric($_POST['iq'])) ? abs(intval($_POST['iq'])) : 0;
-        $_POST['workunit'] = (isset($_POST['workunit']) && is_numeric($_POST['workunit'])) ?
-            abs(intval($_POST['workunit'])) : 0;
         $_POST['primpay'] = (isset($_POST['primpay']) && is_numeric($_POST['primpay'])) ? abs(intval($_POST['primpay'])) : 0;
         $_POST['seccpay'] = (isset($_POST['seccpay']) && is_numeric($_POST['seccpay'])) ? abs(intval($_POST['seccpay'])) : 0;
         $_POST['job'] = (isset($_POST['job']) && is_numeric($_POST['job'])) ? abs(intval($_POST['job'])) : 0;
@@ -588,11 +565,6 @@ function jobrankedit()
         //Verify we have the wages
         if (empty($_POST['primpay']) && (empty($_POST['seccpay']))) {
             alert('danger', "Uh Oh!", "Please specify the hourly wage for this job rank.");
-            die($h->endpage());
-        }
-        //Verify we have job activity requirements
-        if (empty($_POST['workunit'])) {
-            alert('danger', "Uh Oh!", "Job Rank activity requirement must be at least 1.");
             die($h->endpage());
         }
         //Verify the job we want to add a rank to exists.
@@ -616,7 +588,6 @@ function jobrankedit()
                     `jrJOB` = {$_POST['job']},
                     `jrPRIMPAY` = {$_POST['primpay']},
                     `jrSECONDARY` = {$_POST['seccpay']},
-                    `jrACT` = {$_POST['workunit']},
                     `jrSTR` = {$_POST['str']},
                     `jrLAB` = {$_POST['lab']},
                     `jrIQ` = {$_POST['iq']}
@@ -705,14 +676,6 @@ function jobrankedit()
                 </th>
                 <td>
                     <input type='number' min='0' value='{$r['jrIQ']}' required='1' name='iq' class='form-control'>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    Work Units Required
-                </th>
-                <td>
-                    <input type='number' min='0' value='{$r['jrACT']}' required='1' name='workunit' class='form-control'>
                 </td>
             </tr>
             <tr>
