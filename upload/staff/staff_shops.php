@@ -219,8 +219,8 @@ function newitem()
         $db->free_result($q2);
         $db->free_result($q3);
         $db->query("INSERT INTO `shopitems` VALUES(NULL, {$_POST['shop']}, {$_POST['item']})");
-        $api->game->addLog($userid, 'staff', "Added Item ID {$api->SystemItemIDtoName($_POST['item'])} to Shop ID {$_POST['shop']}.");
-        alert('success', "Success!", "You have successfully added {$api->SystemItemIDtoName($_POST['item'])} to Shop ID {$_POST['shop']}.", true, 'index.php');
+        $api->game->addLog($userid, 'staff', "Added {$api->game->getItemNameFromID($_POST['item'])} to Shop ID {$_POST['shop']}'s Stock.");
+        alert('success', "Success!", "You have successfully added {$api->game->getItemNameFromID($_POST['item'])} to Shop ID {$_POST['shop']}'s stock.", true, 'index.php');
         die($h->endpage());
     } else {
         $csrf = getHtmlCSRF('staff_newstock');
