@@ -67,24 +67,49 @@ function menuprint($highlight)
             array('diag' => '1. Diagnostics', 'input' => '2. Configuration',
                     'sql' => '3. Installation & Extras',);
     $c = 0;
-    echo "<hr />";
+    ?>
+	<!-- Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="index.php">Chivalry Engine Installer</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="CENGINENav">
+                    <ul class="navbar-nav mr-auto">
+	<?php
     foreach ($items as $k => $v)
     {
         $c++;
         if ($c > 1)
         {
-            echo ' >> ';
+            echo "<li class='nav-item'>
+					<a class='nav-link disabled' href='#'> >> </a>
+				</li>";
         }
         if ($k == $highlight)
         {
-            echo '<span class="text-dark">' . $v . '</span>';
+			echo "<li class='nav-item active'>
+					<a class='nav-link' href='#'>{$v}</a>
+				</li>";
         }
         else
         {
-            echo '<span class="text-muted">' . $v . '</span>';
+            echo "<li class='nav-item'>
+					<a class='nav-link disabled' href='#'>{$v}</a>
+				</li>";
         }
     }
-    echo '<hr />';
+    ?>
+			</ul>
+		</div>
+	</nav>
+	<!-- Page Content -->
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 text-center">
+	<?php
 }
 
 function diagnostics()

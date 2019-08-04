@@ -45,7 +45,3 @@ ob_start();
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 			<meta name="theme-color" content="#e7e7e7">
 		</head>
-		<body>
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-12 text-center">
