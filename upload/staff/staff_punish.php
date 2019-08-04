@@ -79,9 +79,30 @@ switch ($_GET['action']) {
         unmailban();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	global $api, $userid;
+	echo "<h3>Punishment Staff Menu</h3><hr />
+	<a href='?action=forumwarn' class='btn btn-primary'>Give Forum Warn</a><br /><br />
+	<a href='?action=forumban' class='btn btn-primary'>Give Forum Ban</a><br /><br />
+	<a href='?action=unforumban' class='btn btn-primary'>Remove Forum Ban</a><br /><br />
+	<a href='?action=mailban' class='btn btn-primary'>Give Mail Warn</a><br /><br />
+	<a href='?action=unmailban' class='btn btn-primary'>Remove Mail Ban</a><br /><br />
+	<a href='?action=fedjail' class='btn btn-primary'>Give Federal Dungeon</a><br /><br />";
+	if ($api->user->getStaffLevel($userid, 'assistant')) 
+	{
+		echo "<a href='?action=editfedjail' class='btn btn-primary'>Federal Dungeon Edit</a><br /><br />
+		<a href='?action=unfedjail' class='btn btn-primary'>Federal Dungeon Pardon</a><br /><br />
+		<a href='?action=ipsearch' class='btn btn-primary'>IP Search</a><br /><br />";
+	}
+	if ($api->user->getStaffLevel($userid, 'admin')) 
+	{
+		echo "<a href='?action=banip' class='btn btn-primary'>Ban IP Address</a><br /><br />
+		<a href='?action=unbanip' class='btn btn-primary'>Pardon IP Address</a><br /><br />";
+	}
 }
 function fedjail()
 {

@@ -29,13 +29,12 @@
 	SOFTWARE.
 */
 require('sglobals.php');
-echo "<h3>Staff Smeltery</h3><hr />";
 if ($api->user->getStaffLevel($userid, 'Admin') == false) {
     alert('danger', "Uh Oh!", "You do not have permission to be here.");
     die($h->endpage());
 }
 if (!isset($_GET['action'])) {
-    $_GET['action'] = 'add';
+    $_GET['action'] = '';
 }
 switch ($_GET['action']) {
     case 'add':
@@ -45,13 +44,19 @@ switch ($_GET['action']) {
         del();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	echo "<h3>Blacksmith Staff Menu</h3><hr />
+    <a href='?action=add' class='btn btn-primary'>Create Smelt</a><br /><br />
+    <a href='?action=del' class='btn btn-primary'>Delete Smelt</a><br /><br />";
 }
 function add()
 {
     global $db, $api, $h, $userid;
+	echo "<h3>Adding to Blacksmith...</h3><hr />";
     if (isset($_POST['smelted_item'])) {
         $_POST['smelted_item'] = (isset($_POST['smelted_item']) && is_numeric($_POST['smelted_item'])) ? abs(intval($_POST['smelted_item'])) : 0;
         $_POST['smelted_item_qty'] = (isset($_POST['smelted_item_qty']) && is_numeric($_POST['smelted_item_qty'])) ? abs(intval($_POST['smelted_item_qty'])) : 0;
@@ -163,6 +168,7 @@ function add()
 function del()
 {
     global $db, $userid, $api, $h;
+	echo "<h3>Deleting from Blacksmith...</h3><hr />";
     if (isset($_POST['smelt'])) {
         $_POST['smelt'] = (isset($_POST['smelt']) && is_numeric($_POST['smelt'])) ? abs(intval($_POST['smelt'])) : 0;
         if ($_POST['smelt'] == 0) {

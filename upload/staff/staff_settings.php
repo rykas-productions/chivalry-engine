@@ -107,6 +107,14 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
+					Staff Menu Text
+				</th>
+				<td>
+					<textarea name='staff_text' required='1' class='form-control' rows='5'>{$set['staff_text']}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<th>
 					Referral Award
 				</th>
 				<td>
@@ -287,6 +295,7 @@ function basicsettings()
         $Paypal = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'ppemail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['ppemail'])) : '';
         $GameOwner = (isset($_POST['ownername']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['ownername'])) ? $db->escape(strip_tags(stripslashes($_POST['ownername']))) : '';
         $GameDesc = (isset($_POST['gamedesc'])) ? $db->escape(strip_tags(stripslashes($_POST['gamedesc']))) : '';
+		$StaffText = (isset($_POST['staff_text'])) ? $db->escape(strip_tags(stripslashes($_POST['staff_text']))) : '';
         $rcpb = (isset($_POST['rcpublic'])) ? $db->escape(strip_tags(stripslashes($_POST['rcpublic']))) : '';
         $rcpr = (isset($_POST['rcprivate'])) ? $db->escape(strip_tags(stripslashes($_POST['rcprivate']))) : '';
         $PasswordEffort = (isset($_POST['PWEffort']) && is_numeric($_POST['PWEffort'])) ? abs(intval($_POST['PWEffort'])) : 10;
@@ -359,6 +368,7 @@ function basicsettings()
             $db->query("UPDATE `settings` SET `setting_value` = '{$iqpersec}' WHERE `setting_name` = 'iq_per_sec'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$sendemail}' WHERE `setting_name` = 'sending_email'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$multicontrol}' WHERE `setting_name` = 'enforce_no_multis'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$StaffText}' WHERE `setting_name` = 'staff_text'");
             alert('success', "Success!", "You have successfully updated the game settings.", true, 'index.php');
             $api->game->addLog($userid, 'staff', "Updated game settings.");
         }

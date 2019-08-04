@@ -65,9 +65,25 @@ switch ($_GET['action']) {
         delcrime();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	global $h, $api, $userid;
+	echo "<h3>Guild Staff Menu</h3><hr />";
+	if ($api->user->getStaffLevel($userid, 'admin'))
+	{
+		echo "<a href='?action=viewguild' class='btn btn-primary'>View Guild</a><br /><br />
+		<a href='?action=editguild' class='btn btn-primary'>Edit Guild</a><br /><br />
+		<a href='?action=delguild' class='btn btn-primary'>Delete Guild</a><br /><br />";
+	}
+	echo "
+	<a href='?action=creditguild' class='btn btn-primary'>Credit Guild</a><br /><br />
+	<a href='?action=viewwars' class='btn btn-primary'>View Guild Wars</a><br /><br />
+	<a href='?action=addcrime' class='btn btn-primary'>Create Guild Crime</a><br /><br />
+	<a href='?action=delcrime' class='btn btn-primary'>Delete Guild Crime</a><br /><br />";
+	$h->endpage();
 }
 function viewguild()
 {

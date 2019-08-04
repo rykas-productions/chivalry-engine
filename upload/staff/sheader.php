@@ -111,6 +111,11 @@ class headers
                         </li>
                         <li class="header-menu">
                             <span>Staff Options</span>
+							<li>
+								<a href="index.php">
+									<span class="menu-text">Staff Index</span>
+								</a>
+							</li>
                             <?php
                             if ($api->user->getStaffLevel($userid, 'admin')) {
                                 ?>
@@ -135,248 +140,117 @@ class headers
                                             <li>
                                                 <a href="staff_shops.php">Shops</a>
                                             </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="#">
-                                        <span class="menu-text">NPCs</span>
-                                    </a>
-                                    <div class="sidebar-submenu">
-                                        <ul>
-                                            <li>
-                                                <a href='staff_bots.php?action=addbot'>Add NPC Bot</a>
+											<li>
+                                                <a href="staff_bots.php">NPCs</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_bots.php?action=delbot'>Delete NPC Bot</a>
+											<li>
+                                                <a href="staff_jobs.php">Jobs</a>
                                             </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="#">
-                                        <span class="menu-text">Jobs</span>
-                                    </a>
-                                    <div class="sidebar-submenu">
-                                        <ul>
-                                            <li>
-                                                <a href='staff_jobs.php?action=newjob'>Create Job</a>
+											<li>
+                                                <a href="staff_towns.php">Towns</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_jobs.php?action=jobedit'>Edit Job</a>
+											<li>
+                                                <a href="staff_mine.php">Mines</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_jobs.php?action=jobdele'>Delete Job</a>
+											<li>
+                                                <a href="staff_promo.php">Promo Codes</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_jobs.php?action=newjobrank'>Create Job Rank</a>
+											<li>
+                                                <a href="staff_smelt.php">Blacksmith</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_jobs.php?action=jobrankedit'>Edit Job Rank</a>
+											<li>
+                                                <a href="staff_items.php">Items</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_jobs.php?action=jobrankdele'>Delete Job Rank</a>
+											<li>
+                                                <a href="staff_users.php">Users</a>
                                             </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="#">
-                                        <span class="menu-text">Towns</span>
-                                    </a>
-                                    <div class="sidebar-submenu">
-                                        <ul>
-                                            <li>
-                                                <a href='staff_towns.php?action=addtown'>Create Town</a>
+											<li>
+                                                <a href="staff_guilds.php">Guilds</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_towns.php?action=edittown'>Edit Town</a>
+											<li>
+                                                <a href="staff_polling.php">Polls</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_towns.php?action=deltown'>Delete Town</a>
+											<li>
+                                                <a href="staff_forums.php">Forums</a>
                                             </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="#">
-                                        <span class="menu-text">Estates</span>
-                                    </a>
-                                    <div class="sidebar-submenu">
-                                        <ul>
-                                            <li>
-                                                <a href='staff_estates.php?action=addestate'>Create Estate</a>
-                                            </li>
-                                            <li>
-                                                <a href='staff_estates.php?action=editestate'>Edit Estate</a>
-                                            </li>
-                                            <li>
-                                                <a href='staff_estates.php?action=delestate'>Delete Estate</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="#">
-                                        <span class="menu-text">Mines</span>
-                                    </a>
-                                    <div class="sidebar-submenu">
-                                        <ul>
-                                            <li>
-                                                <a href='staff_mine.php?action=addmine'>Create Mine</a>
-                                            </li>
-                                            <li>
-                                                <a href='staff_mine.php?action=editmine'>Edit Mine</a>
-                                            </li>
-                                            <li>
-                                                <a href='staff_mine.php?action=delmine'>Delete Mine</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="#">
-                                        <span class="menu-text">Promo Codes</span>
-                                    </a>
-                                    <div class="sidebar-submenu">
-                                        <ul>
-                                            <li>
-                                                <a href='staff_promo.php?action=addpromo'>Create Promo Code</a>
-                                            </li>
-                                            <li>
-                                                <a href='staff_promo.php?action=viewpromo'>View Promo Codes</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="#">
-                                        <span class="menu-text">Blacksmith</span>
-                                    </a>
-                                    <div class="sidebar-submenu">
-                                        <ul>
-                                            <li>
-                                                <a href='staff_smelt.php?action=add'>Create Recipe</a>
-                                            </li>
-                                            <li>
-                                                <a href='staff_smelt.php?action=del'>Delete Recipe</a>
+											<li>
+                                                <a href="staff_punish.php">Punishments</a>
                                             </li>
                                         </ul>
                                     </div>
                                 </li>
                                 <?php
-                            }
-                            if ($api->user->getStaffLevel($userid, 'admin')) 
-                            {
+							}
+                            if ($api->user->getStaffLevel($userid, 'assistant')) {
                                 ?>
                                 <li class="sidebar-dropdown">
                                     <a href="#">
-                                        <span class="menu-text">Items</span>
-                                    </a>
-                                    <div class="sidebar-submenu">
-                                        <ul>
-                                            <?php
-                                            if ($api->user->getStaffLevel($userid, 'admin')) 
-                                            {
-                                                ?>
-                                                <li>
-                                                    <a href='staff_items.php?action=createitmgroup'>Create Item Group</a>
-                                                </li>
-                                                <li>
-                                                    <a href='staff_items.php?action=create'>Create Item</a>
-                                                </li>
-                                                <li>
-                                                    <a href='staff_items.php?action=edit'>Edit Item</a>
-                                                </li>
-                                                <li>
-                                                   <a href='staff_items.php?action=delete'>Delete Item</a>
-                                                </li>
-                                                <?php
-                                            }
-                                            ?>
-                                            <li>
-                                                <a href='staff_items.php?action=giveitem'>Gift Item</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="#">
-                                        <span class="menu-text">Users</span>
-                                    </a>
-                                    <div class="sidebar-submenu">
-                                        <ul>
-                                            <?php
-                                            if ($api->user->getStaffLevel($userid, 'admin')) 
-                                            {
-                                                ?>
-                                                <li>
-                                                    <a href='staff_users.php?action=createuser'>Create User</a>
-                                                </li>
-                                                <li>
-                                                    <a href='staff_users.php?action=edituser'>Edit User</a>
-                                                </li>
-                                                <li>
-                                                    <a href='staff_users.php?action=deleteuser'>Delete User</a>
-                                                </li>
-                                                <li>
-                                                   <a href='staff_users.php?action=changepw'>Change User's Password</a>
-                                                </li>
-                                                <li>
-                                                   <a href='staff_settings.php?action=restore'>Restore Users</a>
-                                                </li>
-                                                <li>
-                                                   <a href='staff_settings.php?action=staff'>Set User Level</a>
-                                                </li>
-                                                <?php
-                                            }
-                                            ?>
-                                            <li>
-                                                <a href='staff_users.php?action=masspayment'>Send Mass Payment</a>
-                                            </li>
-                                            <li>
-                                                <a href='staff_users.php?action=reports'>View Player Reports</a>
-                                            </li>
-                                            <li>
-                                                <a href='staff_users.php?action=logout'>Force Logout User</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="#">
-                                        <span class="menu-text">Guilds</span>
+                                        <span class="menu-text">Assistant</span>
                                     </a>
                                     <div class="sidebar-submenu">
                                         <ul>
                                             <li>
-                                                <a href='staff_guilds.php?action=viewguild'>View Guild</a>
+                                                <a href="staff_settings.php?action=announce">Create Announcement</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_guilds.php?action=editguild'>Edit Guild</a>
+											<li>
+                                                <a href="staff_items.php">Items</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_guilds.php?action=delguild'>Delete Guild</a>
+											<li>
+                                                <a href="staff_users.php">Users</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_guilds.php?action=creditguild'>Credit Guild</a>
+											<li>
+                                                <a href="staff_guilds.php">Guilds</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_guilds.php?action=viewwars'>View Guild Wars</a>
+											<li>
+                                                <a href="staff_forums.php">Forums</a>
                                             </li>
-                                            <li>
-                                                <a href='staff_guilds.php?action=addcrime'>Create Guild Crime</a>
-                                            </li>
-                                            <li>
-                                                <a href='staff_guilds.php?action=delcrime'>Delete Guild Crime</a>
+											<li>
+                                                <a href="staff_punish.php">Punishments</a>
                                             </li>
                                         </ul>
                                     </div>
                                 </li>
-                                <?php
+								<?php
                             }
-                            ?>
+							if ($api->user->getStaffLevel($userid, 'forum moderator')) {
+                                ?>
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <span class="menu-text">Forum Moderator</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li>
+                                                <a href="staff_forums.php">Forums</a>
+                                            </li>
+											<li>
+                                                <a href="staff_punish.php">Punishments</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+								<?php
+                            }
+							?>
                         </li>
+						<li class="header-menu">
+						<span>Staff Online</span>
+						<?php
+						$last15=time()-(15*60);
+						$sq=$db->query("SELECT `userid`, `username`, `laston` FROM `users` WHERE `user_level` != 'Member' AND `user_level` != 'NPC' AND `laston` > {$last15}");
+						while ($r=$db->fetch_row($sq))
+						{
+							echo "
+							<li>
+								<a href='../profile.php?user={$r['userid']}'>
+									<span>
+										{$r['username']} [{$r['userid']}] - " . dateTimeParse($r['laston']) . "
+									</span>
+								</a>
+							</li>";
+						}
+						?>
+						</li>
                         <li class="header-menu">
                             <span><?php echo date('F j, Y') . " " . date('g:i:s a'); ?></span>
                         </li>

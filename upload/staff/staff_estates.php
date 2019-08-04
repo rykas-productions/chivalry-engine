@@ -47,9 +47,15 @@ switch ($_GET['action']) {
         delestate();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	echo "<h3>Estate Staff Menu</h3><hr />
+    <a href='?action=addestate' class='btn btn-primary'>Create Estate</a><br /><br />
+    <a href='?action=editestate' class='btn btn-primary'>Edit Estate</a><br /><br />
+    <a href='?action=delestate' class='btn btn-primary'>Delete Estate</a><br /><br />";
 }
 function addestate()
 {

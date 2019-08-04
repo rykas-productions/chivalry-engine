@@ -29,7 +29,6 @@
 	SOFTWARE.
 */
 require('sglobals.php');
-echo "<h3>Staff Polling</h3><hr />";
 if (!$api->user->getStaffLevel($userid, 'Admin')) {
     alert('danger', "Uh Oh!", "You do not have permission to be here.");
     die($h->endpage());
@@ -45,12 +44,18 @@ switch ($_GET['action']) {
         close();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	echo "<h3>Polling Staff Menu</h3><hr />
+	<a href='?action=addpoll' class='btn btn-primary'>Create Poll</a><br /><br />
+	<a href='?action=closepoll' class='btn btn-primary'>Close Poll</a><br /><br />";
 }
 function add()
 {
+	echo "<h3>Starting a Poll...</h3><hr />";
     global $db, $h, $userid, $api;
     if (isset($_POST['question'])) {
         if (!isset($_POST['verf']) || !checkCSRF('staff_startpoll', stripslashes($_POST['verf']))) {
@@ -89,7 +94,6 @@ function add()
         }
         die($h->endpage());
     } else {
-        echo "Start a Poll";
         $csrf = getHtmlCSRF('staff_startpoll');
         echo "<hr />
 		<form method='post'>
@@ -207,6 +211,7 @@ function add()
 function close()
 {
     global $db, $h, $api, $userid;
+	echo "<h3>Close a Poll...</h3><hr />";
     $_POST['poll'] = (isset($_POST['poll']) && is_numeric($_POST['poll'])) ? abs(intval($_POST['poll'])) : '';
     if (empty($_POST['poll'])) {
         $csrf = getHtmlCSRF('staff_endpoll');

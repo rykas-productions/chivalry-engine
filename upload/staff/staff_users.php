@@ -32,6 +32,11 @@ require('sglobals.php');
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
+if (!$api->user->getStaffLevel($userid, 'assistant')) 
+{
+	alert('danger',"Uh Oh!","You do not have the proper permissions to be here.");
+	die($h->endpage());
+}
 switch ($_GET['action']) {
     case "createuser":
         createuser();
@@ -55,9 +60,29 @@ switch ($_GET['action']) {
         preport();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	global $api, $userid;
+	echo "<h4>User Staff Menu</h4><hr />";
+	if ($api->user->getStaffLevel($userid, 'admin')) 
+	{
+		echo "
+		<a href='?action=createuser' class='btn btn-primary'>Create User</a><br /><br />
+		<a href='?action=edituser' class='btn btn-primary'>Edit User</a><br /><br />
+		<a href='?action=deleteuser' class='btn btn-primary'>Delete User</a><br /><br />
+		<a href='?action=changepw' class='btn btn-primary'>Change User Password</a><br /><br />
+		<a href='staff_settings.php?action=restore' class='btn btn-primary'>Restore Users</a><br /><br />
+		<a href='staff_settings.php?action=staff' class='btn btn-primary'>Set User Rank</a><br /><br />
+		<a href='staff_punish.php?action=massemail' class='btn btn-primary'>Send Mass Email</a><br /><br />";
+	}
+	echo "
+	<a href='staff_punish.php?action=massmail' class='btn btn-primary'>Send Mass Mail</a><br /><br />
+    <a href='?action=masspayment' class='btn btn-primary'>Send Mass Payment</a><br /><br />
+    <a href='?action=reports' class='btn btn-primary'>View Player Reports</a><br /><br />
+	<a href='?action=logout' class='btn btn-primary'>Force User Logout</a><br /><br />";
 }
 function createuser()
 {

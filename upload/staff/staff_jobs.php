@@ -56,9 +56,18 @@ switch ($_GET['action']) {
         jobrankdele();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	echo "<h3>Job Staff Menu</h3><hr />
+    <a href='?action=newjob' class='btn btn-primary'>Create Job</a><br /><br />
+    <a href='?action=jobedit' class='btn btn-primary'>Edit Job</a><br /><br />
+    <a href='?action=jobdel' class='btn btn-primary'>Delete Job</a><br /><br />
+	<a href='?action=newjobrank' class='btn btn-primary'>Create Job Rank</a><br /><br />
+	<a href='?action=jobrankedit' class='btn btn-primary'>Edit Job Rank</a><br /><br />
+	<a href='?action=jobrankdele' class='btn btn-primary'>Delete Job Rank</a><br /><br />";
 }
 function newjob()
 {

@@ -47,9 +47,15 @@ switch ($_GET['action']) {
         delforum();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	echo "<h3>Forums Staff Menu</h3><hr />
+	<a href='?action=addforum' class='btn btn-primary'>Create Forum</a><br /><br />
+	<a href='?action=editforum' class='btn btn-primary'>Edit Forum</a><br /><br />
+	<a href='?action=delforum' class='btn btn-primary'>Remove Forum</a><br /><br />";
 }
 function addforum()
 {

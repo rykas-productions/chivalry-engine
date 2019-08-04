@@ -47,9 +47,15 @@ switch ($_GET['action']) {
         deltown();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	echo "<h3>Town Staff Menu</h3><hr />
+    <a href='?action=addtown' class='btn btn-primary'>Create Town</a><br /><br />
+    <a href='?action=edittown' class='btn btn-primary'>Edit Town</a><br /><br />
+    <a href='?action=deltown' class='btn btn-primary'>Delete Town</a><br /><br />";
 }
 function addtown()
 {

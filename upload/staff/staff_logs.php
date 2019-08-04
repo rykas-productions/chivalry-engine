@@ -134,9 +134,50 @@ switch ($_GET['action']) {
         maillogs();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	global $api, $userid;
+	echo "<h3>Logs Staff Menu</h3><hr />
+	<a href='?action=alllogs' class='btn btn-primary'>General Game Logs</a><br /><br />
+	<a href='?action=mail' class='btn btn-primary'>Mail Logs</a><br /><br />
+	<a href='?action=userlogs' class='btn btn-primary'>User Specific Logs</a><br /><br />
+	<a href='?action=traininglogs' class='btn btn-primary'>Training Logs</a><br /><br />
+	<a href='?action=attackinglogs' class='btn btn-primary'>Attack Logs</a><br /><br />
+	<a href='?action=loginlogs' class='btn btn-primary'>Login Logs</a><br /><br />
+	<a href='?action=equiplogs' class='btn btn-primary'>Equipping Logs</a><br /><br />
+	<a href='?action=banklogs' class='btn btn-primary'>Bank Logs</a><br /><br />
+	<a href='?action=crimelogs' class='btn btn-primary'>Crime Logs</a><br /><br />
+	<a href='?action=itemuselogs' class='btn btn-primary'>Item Usage Logs</a><br /><br />
+	<a href='?action=itembuylogs' class='btn btn-primary'>Item Buy Logs</a><br /><br />
+	<a href='?action=itemselllogs' class='btn btn-primary'>Item Sell Logs</a><br /><br />
+	<a href='?action=itemmarketlogs' class='btn btn-primary'>Item Market Logs</a><br /><br />
+	<a href='?action=itemsendlogs' class='btn btn-primary'>Item Send Logs</a><br /><br />
+	<a href='?action=verifylogs' class='btn btn-primary'>ReCaptcha Logs</a><br /><br />
+	<a href='?action=spylogs' class='btn btn-primary'>Spy Logs</a><br /><br />
+	<a href='?action=gamblinglogs' class='btn btn-primary'>Gambling Logs Logs</a><br /><br />
+	<a href='?action=pokes' class='btn btn-primary'>Poke Logs</a><br /><br />
+	<a href='?action=guilds' class='btn btn-primary'>Guild Logs</a><br /><br />
+	<a href='?action=guildvault' class='btn btn-primary'>Guild Vault Logs</a><br /><br />
+	<a href='?action=level' class='btn btn-primary'>Level Logs</a><br /><br />
+	<a href='?action=templelogs' class='btn btn-primary'>Temple Logs</a><br /><br />
+	<a href='?action=secmarket' class='btn btn-primary'>" . constant("secondary_currency") . " Market Logs</a><br /><br />
+	<a href='?action=mining' class='btn btn-primary'>Mining Logs</a><br /><br />
+	<a href='?action=rrlogs' class='btn btn-primary'>Russian Roulette Logs</a><br /><br />
+	<a href='?action=travellogs' class='btn btn-primary'>Travel Logs</a><br /><br />
+	<a href='?action=primsend' class='btn btn-primary'>" . constant("primary_currency") . "</a><br /><br />";
+	if ($api->user->getStaffLevel($userid, 'admin')) 
+	{
+		echo "<u><b>Admin Logs</u></b><hr />
+		<a href='?action=stafflogs' class='btn btn-primary'>Staff Logs</a><br /><br />
+		<a href='?action=fedjaillogs' class='btn btn-primary'>Federal Dungeon Logs</a><br /><br />
+		<a href='?action=forumwarn' class='btn btn-primary'>Forum Warn Logs</a><br /><br />
+		<a href='?action=forumban' class='btn btn-primary'>Forum Ban Logs</a><br /><br />
+		<a href='?action=donatelogs' class='btn btn-primary'>Donation Logs</a><br /><br />
+		<a href='staff_settings.php?action=errlog' class='btn btn-primary'>Game Error Log</a><br /><br />";
+	}
 }
 function logs($name)
 {

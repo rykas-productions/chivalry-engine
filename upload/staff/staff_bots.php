@@ -29,7 +29,6 @@
 	SOFTWARE.
 */
 require('sglobals.php');
-echo "<h3>Staff Bot Tent</h3>";
 if ($ir['user_level'] != "Admin") {
     alert('danger', "Uh Oh!", "You do not have permission to be here.", true, 'index.php');
     die($h->endpage());
@@ -45,13 +44,19 @@ switch ($_GET['action']) {
         delbot();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        home();
         break;
+}
+function home()
+{
+	echo "<h3>NPC Staff Menu</h3><hr />
+    <a href='?action=addbot' class='btn btn-primary'>Add NPC</a><br /><br />
+    <a href='?action=delbot' class='btn btn-primary'>Delete NPC</a><br /><br />";
 }
 function addbot()
 {
     global $db, $api, $h, $userid;
+	echo "<h3>NPC Add Bot</h3><hr />";
     if (isset($_POST['user'])) {
         if (!isset($_POST['verf']) || !checkCSRF('staff_bot_add', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Try again, but be quicker!");
@@ -133,6 +138,7 @@ function addbot()
 function delbot()
 {
     global $db, $userid, $api, $h;
+	echo "<h3>NPC Delete Bot</h3><hr />";
     if (isset($_POST['bot'])) {
         if (!isset($_POST['verf']) || !checkCSRF('staff_bot_del', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Try again, but be quicker!");

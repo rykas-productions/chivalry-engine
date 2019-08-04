@@ -50,9 +50,16 @@ switch ($_GET['action']) {
         viewpromo();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;;
+}
+function menu()
+{
+	global $h;
+	echo "<h3>Promo Code Staff Menu</h3><hr />
+    <a href='?action=addpromo' class='btn btn-primary'>Create Promo Code</a><br /><br />
+    <a href='?action=viewpromo' class='btn btn-primary'>View Promo Codes</a><br /><br />";
+	$h->endpage();
 }
 //Function for adding a promo code to the game.
 function add()

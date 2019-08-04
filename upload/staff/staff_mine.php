@@ -52,6 +52,13 @@ switch ($_GET['action']) {
         die($h->endpage());
         break;
 }
+function menu()
+{
+	echo "<h3>Mining Staff Menu</h3><hr />
+    <a href='?action=addmine' class='btn btn-primary'>Create Mine</a><br /><br />
+    <a href='?action=editmine' class='btn btn-primary'>Edit Mine</a><br /><br />
+    <a href='?action=delmine' class='btn btn-primary'>Delete Mine</a><br /><br />";
+}
 function addmine()
 {
     global $db, $userid, $api, $h;

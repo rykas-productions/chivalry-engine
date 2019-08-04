@@ -50,9 +50,22 @@ switch ($_GET['action']) {
         giveitem();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
+}
+function menu()
+{
+	global $api, $userid;
+	if ($api->user->getStaffLevel($userid, 'admin'))
+	{
+		echo "
+		<a href='?action=create' class='btn btn-primary'>Create Item</a><br /><br />
+		<a href='?action=edit' class='btn btn-primary'>Edit Item</a><br /><br />
+		<a href='?action=delete' class='btn btn-primary'>Delete Item</a><br /><br />
+		<a href='?action=createitmgroup' class='btn btn-primary'>Create Item Group</a><br /><br />";
+	}
+	echo "
+	<a href='?action=giveitem' class='btn btn-primary'>Give Item</a><br /><br />";
 }
 function create()
 {
