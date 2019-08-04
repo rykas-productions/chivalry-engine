@@ -50,24 +50,26 @@ function home()
     if ($db->num_rows($q) == 0) {
         echo "This town doesn't have any shops, funny enough.";
     } else {
-        echo "<table class='table table-bordered'>
-			<tr>
-				<th>
-					Shop's Name
-				</th>
-				<th>
-					Shop's Description
-				</th>
-			</tr>";
+		echo "<div class='row'>
+				<div class='col-sm'>
+					<h4>Shop Name</h4>
+				</div>
+				<div class='col-sm'>
+					<h4>Shop Desc</h4>
+				</div>
+			</div>
+			<hr />";
         while ($r = $db->fetch_row($q)) {
-            echo "<tr>
-						<td>
-							<a href='?action=shop&shop={$r['shopID']}'>{$r['shopNAME']}</a>
-						</td>
-						<td>{$r['shopDESCRIPTION']}</td>
-					  </tr>";
+			echo "<div class='row'>
+					<div class='col-sm'>
+						<a href='?action=shop&shop={$r['shopID']}'>{$r['shopNAME']}</a>
+					</div>
+					<div class='col-sm'>
+						{$r['shopDESCRIPTION']}
+					</div>
+				</div>
+				<hr />";
         }
-        echo "</table>";
         $db->free_result($q);
     }
 }
@@ -81,12 +83,18 @@ function shop()
         $shopdata = $db->fetch_row($sd);
         if ($shopdata['shopLOCATION'] == $ir['location']) {
             echo "You begin browsing the stock at {$shopdata['shopNAME']}<br />
-			<table class='table table-bordered'>
-				<tr>
-					<th>Item</th>
-					<th>Price</th>
-					<th width='25%'>Buy</th>
-				</tr>";
+				<div class='row'>
+				<div class='col-sm'>
+					<h4>Item</h4>
+				</div>
+				<div class='col-sm'>
+					<h4>Price</h4>
+				</div>
+				<div class='col-sm'>
+					<h4>Purchase</h4>
+				</div>
+			</div>
+			<hr />";
             $qtwo =
                 $db->query(
                     "SELECT `itmtypename`, `itmname`, `itmdesc`, `itmid`,
@@ -103,20 +111,28 @@ function shop()
             while ($r = $db->fetch_row($qtwo)) {
                 if ($lt != $r['itmtypename']) {
                     $lt = $r['itmtypename'];
-                    echo "<tr>
-                    			<td colspan='3'><b>{$lt}</b></td>
-                    		</tr>";
+                    echo "<div class='row'>
+							<div class='col-sm'>
+								<h5><u><b>{$lt}</b></u></h5>
+							</div>
+						</div>
+						<hr />";
                 }
-                echo "<tr>
-                			<td><a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip'"; ?> title="<?php echo $r['itmdesc']; ?>" <?php echo ">{$r['itmname']}</a></td>
-                			<td>" . number_format($r['itmbuyprice']) . "</td>
-                            <td>
-                            	<form action='?action=buy&ID={$r['sitemID']}' method='post'>
+				echo "<div class='row'>
+						<div class='col-sm'>
+							<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip'"; ?> title="<?php echo $r['itmdesc']; ?>" <?php echo ">{$r['itmname']}</a>
+						</div>
+						<div class='col-sm'>
+							" . number_format($r['itmbuyprice']) . "
+						</div>
+						<div class='col-sm'>
+							<form action='?action=buy&ID={$r['sitemID']}' method='post'>
                             		Quantity <input class='form-control' type='number' min='1' name='qty' value='1' />
                             		<input class='btn btn-primary' type='submit' value='Buy' />
                             	</form>
-                            </td>
-                        </tr>";
+						</div>
+					</div>
+					<hr />";
             }
             $db->free_result($qtwo);
             echo "</table>";

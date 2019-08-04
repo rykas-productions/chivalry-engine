@@ -54,16 +54,25 @@ function index()
     global $db, $userid, $api;
     echo "[<a href='?action=add'>Add Your Own Listing</a>]
 	<br />
-	<table class='table table-bordered table-hover table-striped'>
-		<tr>
-			<th>Listing Owner</th>
-			<th>Item x Quantity</th>
-			<th>Price/Item</th>
-			<th>Total Price</th>
-			<th>Links</th>
-		</tr>
+	<div class='row'>
+		<div class='col-sm'>
+			<h3>Listing Owner</h3>
+		</div>
+		<div class='col-sm'>
+			<h3>Item / Quantity</h3>
+		</div>
+		<div class='col-sm'>
+			<h3>Cost / item</h3>
+		</div>
+		<div class='col-sm'>
+			<h3>Total Cost</h3>
+		</div>
+		<div class='col-sm'>
+			<h3>Actions</h3>
+		</div>
+	</div>
+	<hr />
    ";
-
     $q =
         $db->query(
             "SELECT `imPRICE`, `imQTY`, `imCURRENCY`, `imADDER`,
@@ -82,9 +91,12 @@ function index()
     while ($r = $db->fetch_row($q)) {
         if ($lt != $r['itmtypename']) {
             $lt = $r['itmtypename'];
-            echo "<tr>
-					<td colspan='5' align='center'><b>{$lt}</b></td>
-				</tr>";
+            echo "<div class='row'>
+							<div class='col-sm'>
+								<h5><u><b>{$lt}</b></u></h5>
+							</div>
+						</div>
+						<hr />";
         }
         $ctprice = ($r['imPRICE'] * $r['imQTY']);
         if ($r['imCURRENCY'] == 'primary') {
@@ -103,30 +115,28 @@ function index()
                     [<a href='?action=gift&ID={$r['imID']}'>Gift</a>]";
         }
         $r['itmdesc'] = htmlentities($r['itmdesc'], ENT_QUOTES);
-        echo "
-		<tr>
-			<td>
-				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
-			</td>
-			<td>
-				<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>{$r['itmname']}</a>";
-        if ($r['imQTY'] > 1) {
-            echo " x {$r['imQTY']}";
-        }
-        echo "</td>
-			<td>
-				{$price}
-			</td>
-			<td>
+		echo "<div class='row'>
+				<div class='col-sm'>
+					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+				</div>
+				<div class='col-sm'>";
+				if ($r['imQTY'] > 1)
+					echo number_format($r['imQTY']) . " x 
+					<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>{$r['itmname']}</a>
+				</div>
+				<div class='col-sm'>
+					{$price}
+				</div>
+				<div class='col-sm'>
 				{$tprice}
-			</td>
-			<td>
+				</div>
+				<div class='col-sm'>
 				{$link}
-			</td>
-		</tr>";
+				</div>
+			</div>
+			<hr />";
     }
     $db->free_result($q);
-    echo "</table>";
 }
 
 function remove()
