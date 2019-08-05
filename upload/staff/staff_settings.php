@@ -535,7 +535,7 @@ function staff()
             die($h->endpage());
         }
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
-        $_POST['priv'] = (isset($_POST['priv'])) ? $db->escape(strip_tags(stripslashes($_POST['priv']))) : 'member';
+        $_POST['priv'] = (isset($_POST['priv'])) ? $db->escape(strip_tags(stripslashes($_POST['priv']))) : 'Member';
         $priv_array = array('Member', 'Admin', 'Web Developer', 'Forum Moderator', 'Assistant', 'NPC');
         if (!in_array($_POST['priv'], $priv_array)) {
             alert('danger', "Uh Oh!", "You are trying to give an invalid privilege.");
@@ -545,7 +545,7 @@ function staff()
             alert('danger', "Uh Oh!", "Please specify an existent user.");
             die($h->endpage());
         }
-        $api->user->setInfoStatic($_POST['user'], 'user_level', $_POST['priv']);
+        $db->query("UPDATE `users` SET `user_level` = '{$_POST['priv']}' WHERE `userid` = {$_POST['user']}");
         alert('success', "Success!", "You have updated {$api->user->getNamefromID($_POST['user'])}'s User Level to {$_POST['priv']}.");
         die($h->endpage());
     } else {

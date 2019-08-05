@@ -48,8 +48,7 @@ switch ($_GET['action']) {
         delmine();
         break;
     default:
-        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
-        die($h->endpage());
+        menu();
         break;
 }
 function menu()
@@ -137,8 +136,8 @@ function addmine()
                 '{$gflakesmin}', '{$gflakesmax}', '{$pick}', '{$iq}', 
                 '{$power}', '{$cflakes}', '{$sflakes}', '{$gflakes}', 
                 '{$gem}');");
-                $api->game->addLog($userid, "staff", "Added a mine in " . $api->SystemTownIDtoName($city));
-                alert('success', "Success!", "You have successfully created a mine in " . $api->SystemTownIDtoName($city));
+                $api->game->addLog($userid, "staff", "Added a mine in " . $api->game->getTownNameFromID($city));
+                alert('success', "Success!", "You have successfully created a mine in " . $api->game->getTownNameFromID($city));
                 die($h->endpage());
             }
 
