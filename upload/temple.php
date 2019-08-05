@@ -70,11 +70,11 @@ function energy()
     //User has enough {$_CONFIG['secondary_currency']} to refill their energy.
     if ($api->user->hasCurrency($userid, 'secondary', $set['energy_refill_cost'])) {
         //User's energy is already full.
-        if ($api->UserInfoGet($userid, 'energy', true) == 100) {
+        if ($api->user->getInfoPercent($userid, 'energy') == 100) {
             alert('danger', "Uh Oh!", "You already have full energy.", true, 'temple.php');
         } else {
             //Refill the user's energy and take their {$_CONFIG['secondary_currency']}.
-            $api->user->setInfo($userid, 'energy', 100, true);
+            $api->user->setInfoPercent($userid, 'energy', 100);
             $api->user->takeCurrency($userid, 'secondary', $set['energy_refill_cost']);
             alert('success', "Success!", "You have paid {$set['energy_refill_cost']} " . constant("secondary_currency") . " to refill your energy.", true, 'temple.php');
             $api->game->addLog($userid, 'temple', "Traded {$set['energy_refill_cost']} " . constant("secondary_currency") . " to refill their Energy.");
@@ -90,11 +90,11 @@ function brave()
     //User has enoguh {$_CONFIG['secondary_currency']} to refill their brave
     if ($api->user->hasCurrency($userid, 'secondary', $set['brave_refill_cost'])) {
         //User's brave is already full.
-        if ($api->UserInfoGet($userid, 'brave', true) == 100) {
+        if ($api->user->getInfoPercent($userid, 'brave') == 100) {
             alert('danger', "Uh Oh!", "You already have full Bravery.", true, 'temple.php');
         } else {
             //Refill the user's bravery by 5% and take their {$_CONFIG['secondary_currency']}.
-            $api->user->setInfo($userid, 'brave', 5, true);
+            $api->user->setInfoPercent($userid, 'brave', 5);
             $api->user->takeCurrency($userid, 'secondary', $set['brave_refill_cost']);
             alert('success', "Success!", "You have paid {$set['brave_refill_cost']} " . constant("secondary_currency") . " to regenerate 5% Bravery.", true, 'temple.php');
             $api->game->addLog($userid, 'temple', "Traded {$set['brave_refill_cost']} " . constant("secondary_currency") . " to regenerate 5% Brave.");
@@ -110,11 +110,11 @@ function will()
     //User has enough {$_CONFIG['secondary_currency']} to refill their will.
     if ($api->user->hasCurrency($userid, 'secondary', $set['will_refill_cost'])) {
         //User's will is already at 100%
-        if ($api->UserInfoGet($userid, 'will', true) == 100) {
+        if ($api->user->getInfoPercent($userid, 'will') == 100) {
             alert('danger', "Uh Oh!", "You already have full Will.", true, 'temple.php');
         } else {
             //Refill the user's will by 5% and take their {$_CONFIG['secondary_currency']}.
-            $api->user->setInfo($userid, 'will', 5, true);
+            $api->user->setInfoPercent($userid, 'will', 5);
             $api->user->takeCurrency($userid, 'secondary', $set['will_refill_cost']);
             alert('success', "Success!", "You have paid {$set['will_refill_cost']} " . constant("secondary_currency") . " to regenerate 5% Will", true, 'temple.php');
             $api->game->addLog($userid, 'temple', "Traded {$set['will_refill_cost']} " . constant("secondary_currency") . " to regenerate 5% Will.");
@@ -147,8 +147,8 @@ function iq()
         //Take the currency and give the user some IQ.
         $api->user->takeCurrency($userid, 'secondary', $_POST['iq']);
         $db->query("UPDATE `userstats` SET `iq` = `iq` + {$totalcost} WHERE `userid` = {$userid}");
-        alert('success', "Success!", "You have successfully traded " . number_format($_POST['iq']) . " {$_CONFIG['secondary_currency']} for " . number_format($totalcost) . " IQ Points.", true, 'temple.php');
-        $api->game->addLog($userid, 'temple', "Traded {$_POST['iq']} {$_CONFIG['secondary_currency']} for {$totalcost} IQ.");
+        alert('success', "Success!", "You have successfully traded " . number_format($_POST['iq']) . " " . constant('secondary_currency') . " for " . number_format($totalcost) . " IQ Points.", true, 'temple.php');
+        $api->game->addLog($userid, 'temple', "Traded {$_POST['iq']} " . constant('secondary_currency') . " for {$totalcost} " . constant('stat_iq') . ".");
     } else {
         alert('info', "Information!", "You can trade in your " . constant("secondary_currency") . " for " . constant("stat_iq") . " at a ratio of {$set['iq_per_sec']}
 		per " . constant("secondary_currency") . ". You currently have " . number_format($ir['secondary_currency']) . " " . constant("secondary_currency") . ".", false);
