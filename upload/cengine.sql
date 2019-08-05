@@ -1005,7 +1005,8 @@ CREATE TABLE `users` (
   `need_verify` tinyint(4) NOT NULL,
   `course` int(11) UNSIGNED NOT NULL,
   `course_complete` int(11) UNSIGNED NOT NULL,
-  `email_optin` tinyint(1) NOT NULL DEFAULT '1'
+  `email_optin` tinyint(1) NOT NULL DEFAULT '1',
+  `sidemenu` int(11) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
