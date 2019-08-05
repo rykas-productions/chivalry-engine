@@ -33,7 +33,7 @@ $mpq = $db->query("SELECT * FROM `estates` WHERE `house_will` = {$ir['maxwill']}
 $mp = $db->fetch_row($mpq);
 $db->free_result($mpq);
 //User is trying to buy an estate.
-if (isset($property) && is_numeric($property)) {
+if (isset($_GET['property']) && is_numeric($_GET['property'])) {
 	$property = filter_input(INPUT_GET, 'property', FILTER_SANITIZE_NUMBER_INT) ?: 0;
     $npq = $db->query("SELECT * FROM `estates` WHERE `house_id` = {$property}");
     //Estate does not exist.
@@ -78,8 +78,7 @@ else if (isset($_GET['sellhouse'])) {
         alert('danger', "Uh Oh!", "You cannot sell your estate if you don't have one!");
     } //User sells estate.
     else {
-        //Give user 75% of the estate's cost, set max will to 100, will to 0.
-        $price = round($mp['house_price'] * 0.75);
+        $price = $mp['house_price'];
         $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$price}, `will` = 0, `maxwill` = 100 WHERE `userid` = $userid");
         alert('success', "Success!", "You have successfully sold your estate for " . number_format($price) . " " . constant("primary_currency") . "!", true, 'estates.php');
     }
