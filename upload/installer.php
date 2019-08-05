@@ -31,8 +31,8 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('2.0-rc1');
-$Build=('2.0-rc1');
+$Version=('2.0.0');
+$Build=('2.0.0');
 define('MONO_ON', 1);
 session_name('CEV2');
 session_start();
