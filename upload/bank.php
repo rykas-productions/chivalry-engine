@@ -56,7 +56,7 @@ else {
 
             alert('success', "Success!", "You have successfully bought a bank account for " . number_format($bank_cost) . " " . constant("primary_currency") . ".", true, 'bank.php');
 			$api->user->takeCurrency($userid, 'primary', $bank_cost);
-            $api->UserInfoSet($userid, "bank", 0);
+            $api->user->setInfoStatic($userid, 'bank', 0);
             $api->game->addLog($userid, 'bank', 'Purchased bank account');
         } //Player is too poor to afford account.
         else {
