@@ -89,7 +89,7 @@ if (empty($ir['job'])) {
                         SET `job` = {$_GET['interview']},
                         `jobrank` = {$r['jrID']}
                         WHERE `userid` = {$userid}");
-            echo "<b>{$r['jBOSS']}:</b> It appears you fit our basic requirements. Is starting at {$r['jrPRIMPAY']} {$_CONFIG['primary_currency']} and/or {$r['jrSECONDARY']} {$_CONFIG['secondary_currency']} per hour fine with you?<br />
+            echo "<b>{$r['jBOSS']}:</b> It appears you fit our basic requirements. Is starting at {$r['jrPRIMPAY']} " . constant('primary_currency') . " and/or {$r['jrSECONDARY']} " . constant('secondary_currency') . " per hour fine with you?<br />
             <b>{$ir['username']}:</b> Yes it is!<br />
             <b>{$r['jBOSS']}:</b> Alright, well, get to work then! Welcome aboard!<br />
             <a href='job.php'>Get to Work</a>";

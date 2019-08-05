@@ -71,6 +71,7 @@ echo "<h4>You begin exploring {$api->game->getTownNameFromID($ir['location'])}. 
 			<a href='mine.php'>Dangerous Mines</a><br />
             <a href='smelt.php'>Blacksmith's Smeltery</a><br />
             <a href='bottent.php'>NPC Battle List</a><br />
+			<a href='job.php'>Job Center</a><br />
 		</div>
 	</div>
 	<div class='row'>
@@ -82,7 +83,8 @@ echo "<h4>You begin exploring {$api->game->getTownNameFromID($ir['location'])}. 
 				<a href='fedjail.php'>Federal Dungeon</a><br />
 				<a href='stats.php'>Game Statistics</a><br />
 				<a href='playerreport.php'>Player Report</a><br />
-				<a href='announcements.php'>Announcements </a>
+				<a href='announcements.php'>Announcements </a><br />
+				<a href='itemappendix.php'>Item Appendix</a>
 		</div>
 		<div class='col-sm'>
 			<u><b>Gambling District</b></u><br />
