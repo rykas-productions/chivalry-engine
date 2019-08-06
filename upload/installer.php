@@ -31,10 +31,10 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('pre-2.0e');
-$Build=('pre-2.0e');
+$Version=('3.0.0-alpha1');
+$Build=('3.0.0-alpha1');
 define('MONO_ON', 1);
-session_name('CEV2');
+session_name('CEV3');
 session_start();
 if (!isset($_SESSION['started']))
 {

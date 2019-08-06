@@ -38,7 +38,7 @@ if (!isset($_COOKIE['theme'])) {
 }
 $time = time();
 //Set session name and start it.
-session_name('CEV2');
+session_name('CEV3');
 @session_start();
 header('X-Frame-Options: SAMEORIGIN');
 //If session is not started, regenerate ID and load it.

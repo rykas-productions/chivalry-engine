@@ -31,7 +31,7 @@
 if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false) {
     exit;
 }
-session_name('CEV2');
+session_name('CEV3');
 session_start();
 $time = time();
 header('X-Frame-Options: SAMEORIGIN');
