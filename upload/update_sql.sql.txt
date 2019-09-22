@@ -1,1 +1,0 @@
-ALTER TABLE `users` ADD `sidemenu` INT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER `email_optin`;

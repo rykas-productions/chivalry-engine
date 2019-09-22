@@ -1,7 +1,7 @@
 <?php
 /*
-	File:		login.php
-	Created: 	9/22/2019 at 5:01PM Eastern Time
+	File:		functions/global_functions.php
+	Created: 	9/22/2019 at 4:17PM Eastern Time
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/rykas-productions/chivalry-engine
 	MIT License
@@ -22,16 +22,17 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-require('globals_nonauth.php');
-echo "<div class='ui grid'>
-	<div class='six wide column'>
-		<h3>Login</h3><hr />";
-		createForm('post','authenticate.php',array(array('email','email','Email Address'), array('password','password','Password')), 'Log In');
-	echo
-	"</div>
-	<div class='ten wide column'>
-		The Story<br />
-		WTF WTF WTF WTF
-	</div>
-</div>";
-$h->endHeaders();
+//A simple function to create forms, to cut down on bloat.
+function createForm($method, $action, $inputsArray, $submitButtonName)
+{
+	echo "<form class='ui form' method='{$method}' action='{$action}'>";
+	foreach ($inputsArray as $input) 
+	{
+		echo "<div class='field'>
+		<label>{$input[2]}</label>
+		<input type='{$input[0]}' name='{$input[1]}' placeholder='{$input[2]}'>
+		</div>";
+	}
+	echo "<button class='ui button' type='submit'>{$submitButtonName}</button>
+	</form>";
+}

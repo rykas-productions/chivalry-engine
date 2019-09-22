@@ -1,7 +1,7 @@
 <?php
 /*
-	File:		login.php
-	Created: 	9/22/2019 at 5:01PM Eastern Time
+	File:		functions/func_startup.php
+	Created: 	9/22/2019 at 4:17PM Eastern Time
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/rykas-productions/chivalry-engine
 	MIT License
@@ -22,16 +22,32 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-require('globals_nonauth.php');
-echo "<div class='ui grid'>
-	<div class='six wide column'>
-		<h3>Login</h3><hr />";
-		createForm('post','authenticate.php',array(array('email','email','Email Address'), array('password','password','Password')), 'Log In');
-	echo
-	"</div>
-	<div class='ten wide column'>
-		The Story<br />
-		WTF WTF WTF WTF
-	</div>
-</div>";
-$h->endHeaders();
+/*
+	Function to check if the file currently being accessed, is 
+	being directly accessed or not. (Via include or URL)
+	Returns true if its being directly accessed.
+	Returns false if it is not being directly accessed.
+*/
+function checkDirectAccess($file)
+{
+	if (strpos($_SERVER['PHP_SELF'], $file) !== false)
+		return false;
+	else
+		return true;
+}
+function setSession($sessionName)
+{
+	session_name($sessionName);
+	@session_start();
+	if (!isset($_SESSION['started'])) 
+	{
+		session_regenerate_id();
+		$_SESSION['started'] = true;
+	}
+	ob_start();
+}
+function enableErrorOutput()
+{
+	error_reporting(E_ALL);
+	ini_set('display_errors', 1);
+}
