@@ -33,13 +33,8 @@ define('DEBUG', true);
 
 function error_critical($human_error, $debug_error, $action, $context = array())
 {
-    global $userid, $domain, $set;
-    echo "<title>{$set['WebsiteName']} - Critical Error</title>";
-    if (isset($set) && is_array($set) && array_key_exists('WebsiteName', $set)) {
-        echo "<h1>{$set['WebsiteName']} - Critical Error</h1>";
-    } else {
+    echo "<title>Critical Error</title>";
         echo '<h1>Internal Server Error</h1>';
-    }
     if (DEBUG) {
         echo 'A critical error has occurred, and page execution has stopped. If this issue persists, please notify an admin or web developer right away!<br />'
             . 'Below are the details:<br /><pre>' . $debug_error
@@ -62,7 +57,7 @@ function error_critical($human_error, $debug_error, $action, $context = array())
         }
     }
     error_log($debug_error);
-	file_put_contents('../error.log', $debug_error, FILE_APPEND);
+	file_put_contents('./error.log', $debug_error, FILE_APPEND);
     exit;
 }
 

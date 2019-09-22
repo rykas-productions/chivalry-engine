@@ -23,22 +23,23 @@
 	SOFTWARE.
 */
 require('functions/func_startup.php');
+register_shutdown_function('shutdown');
 //Comment out to disable raw PHP errors.
 enableErrorOutput();
 if (!checkDirectAccess('globals_nonauth.php'))
 {
-	echo "whaddup";
+	die('This file may not be accessed directly.');
 }
 setSession('CEV3');
-require('lib/basic_error_handler.php');
+require('./lib/basic_error_handler.php');
 set_error_handler('error_php');
 //Require styling.
-require('headers_nonauth.php');
-require('config.php');
+require('./headers_nonauth.php');
+require('./config.php');
 //Connect to database.
-var_dump(constant('db_driver'));
-require('class/class_db_' . constant("db_driver") . '.php');
-require('functions/global_functions.php');
+define('MONO_ON', 1);
+require("./class/class_db_mysqli.php");
+require('./functions/global_functions.php');
 $db = new database;
 $db->configure(constant("db_host"), constant("db_username"), constant("db_password"), constant("db_database"), 0);
 $db->connect();
