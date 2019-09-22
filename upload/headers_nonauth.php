@@ -44,7 +44,7 @@ class headers
 	}
 	function loadCSS()
 	{
-		echo '<link rel="stylesheet" type="text/css" href="semantic/semantic.min.css">
+		echo '<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
 		<style type="text/css">
 			.main.container 
 			{
@@ -54,8 +54,9 @@ class headers
 	}
 	function loadJS()
 	{
-		echo '<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-			<script src="semantic/semantic.min.js"></script>';
+		echo '<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+		<script src="assets/js/bootstrap.js"></script>';
 	}
 	function loadTopMenu()
 	{

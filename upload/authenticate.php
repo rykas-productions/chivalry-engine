@@ -1,7 +1,7 @@
 <?php
 /*
-	File:		functions/global_functions.php
-	Created: 	9/22/2019 at 4:17PM Eastern Time
+	File:		authenticate.php
+	Created: 	9/22/2019 at 6:55PM Eastern Time
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/rykas-productions/chivalry-engine
 	MIT License
@@ -22,22 +22,19 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-//A simple function to create forms, to cut down on bloat.
-include('functions/func_escape.php');
-function createForm($method, $action, $inputsArray, $submitButtonName)
+require('globals_nonauth.php');
+include('functions/func_auth.php');
+$safeEmail = makeSafeText($_POST['email']);
+$safePassword = makeSafeText($_POST['password']);
+$userid = checkValidEmail();
+if ($userid == 0)
 {
-	echo "<form class='ui form' method='{$method}' action='{$action}'>";
-	foreach ($inputsArray as $input) 
-	{
-		echo "<div class='field'>
-		<label>{$input[2]}</label>
-		<input type='{$input[0]}' name='{$input[1]}' placeholder='{$input[2]}'>
-		</div>";
-	}
-	echo "<button class='ui button' type='submit'>{$submitButtonName}</button>
-	</form>";
+	echo "Invalid login creditials input.";
+	exit;
 }
-function generatePassword($plainTextPassword)
+$q=$db->query("SELECT `password` FROM `users_core` WHERE `userid` = {$userid}");
+if (!(checkUserPassword($raw_password, $safePassword)))
 {
-	return password_hash(base64_encode(hash('sha256', $plainTextPassword, true)), PASSWORD_BCRYPT);
+	echo "Invalid login creditials input.";
+	exit;
 }
