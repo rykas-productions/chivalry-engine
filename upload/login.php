@@ -23,15 +23,28 @@
 	SOFTWARE.
 */
 require('globals_nonauth.php');
-echo "<div class='ui grid'>
-	<div class='six wide column'>
-		<h3>Login</h3><hr />";
-		createForm('post','authenticate.php',array(array('email','email','Email Address'), array('password','password','Password')), 'Log In');
-	echo
-	"</div>
-	<div class='ten wide column'>
-		The Story<br />
-		WTF WTF WTF WTF
+echo "
+<div class='row'>
+	<div class='col-sm-4'>
+		<div class='card'>
+			<div class='card-header bg-dark text-white'>
+				Log In Today!
+			</div>
+			<div class='card-body'>";
+				createPostForm('authenticate.php',array(array('email','email','Email Address'), array('password','password','Password')), 'Log In');
+			echo 
+			"</div>
+		</div>
+	</div>
+	<div class='col-sm-8'>
+		<div class='card'>
+			<div class='card-header bg-dark text-white'>
+				Game Info
+			</div>
+			<div class='card-body'>
+				This is a placeholder text for Chivalry Engine V3, Alpha 1
+			</div>
+		</div>
 	</div>
 </div>";
 $h->endHeaders();
