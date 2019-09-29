@@ -26,3 +26,32 @@ function generatePassword($plainTextPassword)
 {
 	return password_hash(base64_encode(hash('sha256', $plainTextPassword, true)), PASSWORD_BCRYPT);
 }
+function createAccount($username, $password, $email)
+{
+	global $db;
+	$encodedPassword=generatePassword($password);
+	$db->query("INSERT INTO `users_core` (`username`, `email`, `password`) VALUES ('{$username}', '{$email}', '{$encodedPassword}')");
+}
+function checkUsableEmail($email)
+{
+	global $db;
+	$q=$db->query("SELECT `userid` FROM `users_core` WHERE `email` = '{$email}'");
+	if ($db->num_rows($q) == 0)
+		return true;
+	else
+		return false;
+}
+function checkUsableUsername($username)
+{
+	global $db;
+	$q=$db->query("SELECT `userid` FROM `users_core` WHERE `username` = '{$username}'");
+	if ($db->num_rows($q) == 0)
+		return true;
+	else
+		return false;
+	
+}
+function checkConfirmedPassword($password, $passwordConfirm)
+{
+		return $password == $passwordConfirm;
+}

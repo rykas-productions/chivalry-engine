@@ -25,13 +25,46 @@
 require('globals_nonauth.php');
 if (isset($_POST['email']))
 {
-	
+	$safeUsername = makeSafeText($_POST['username']);
+	$safeEmail = makeSafeText($_POST['email']);
+	$safePassword = makeSafeText($_POST['password']);
+	$safeConfirmPassword = makeSafeText($_POST['cpassword']);
+	if (empty($safeUsername))
+	{
+		die('Username not input or invalid.');
+	}
+	if (empty($safeEmail))
+	{
+		die('Email not input or invalid.');
+	}
+	if (empty($safePassword))
+	{
+		die('Password not input or invalid.');
+	}
+	if (empty($safeConfirmPassword))
+	{
+		die('Password confirmation not input or invalid.');
+	}
+	if (!checkUsableUsername($safeUsername))
+	{
+		die('Username already in use.');
+	}
+	if (!checkUsableEmail($safeEmail))
+	{
+		die('Username already in use.');
+	}
+	if (!checkConfirmedPassword($safePassword, $safeConfirmPassword))
+	{
+		die('Password and password confirmation do not match.');
+	}
+	createAccount($safeUsername, $safePassword, $safeEmail);
+	die('Account created successfully.');
 }
 else
 {
 	echo "<h3>{$set['gameName']} Registration</h3><hr />";
 	createPostForm('register.php',array(
-										array('text','username','Game Name'),
+										array('text','username','Username'),
 										array('email','email','Email Address'), 
 										array('password','password','Password'), 
 										array('password','cpassword','Confirm Password')
