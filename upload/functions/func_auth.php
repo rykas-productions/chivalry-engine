@@ -44,3 +44,26 @@ function checkUserPassword($rawPassword, $password)
     $return = (password_verify(base64_encode(hash('sha256', $rawPassword, true)), $password)) ? true : false;
     return $return;
 }
+function getPasswordByUserID($userid)
+{
+	global $db;
+	return $db->fetch_single($db->query("SELECT `password` FROM `users_core` WHERE `userid` = {$userid}"));
+}
+function accountLoginUpdate($userid)
+{
+	global $db;
+	$time=returnUnixTimestamp();
+	$ip=getUserIP();
+	$db->query("UPDATE `users_account_data` 
+				SET `loginTime`='{$time}', `lastActionTime`='{$time}',
+				`loginIP`='{$ip}', `lastActionIP`='{$ip}' 
+				WHERE `userid` = {$userid}");
+	
+}
+function setActiveSession($userid)
+{
+	session_regenerate_id();
+	$_SESSION['loggedin'] = 1;
+	$_SESSION['userid'] = $userid;
+	$_SESSION['last_login'] = returnUnixTimestamp();
+}
