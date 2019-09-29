@@ -24,3 +24,4 @@
 */
 require('./globals_auth.php');
 success("You have logged in as {$ir['username']}! More to come soon...");
+createFourCols("Username: {$ir['username']}", "User ID: {$ir['userid']}","Email: {$ir['email']}","IP: {$ir['lastActionIP']}");
