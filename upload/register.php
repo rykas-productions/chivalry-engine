@@ -31,34 +31,42 @@ if (isset($_POST['email']))
 	$safeConfirmPassword = makeSafeText($_POST['cpassword']);
 	if (empty($safeUsername))
 	{
-		die('Username not input or invalid.');
+		dangerRedirect('Invalid or empty username input.');
+		die($h->endHeaders());
 	}
 	if (empty($safeEmail))
 	{
-		die('Email not input or invalid.');
+		dangerRedirect('Invalid or empty email input.');
+		die($h->endHeaders());
 	}
 	if (empty($safePassword))
 	{
-		die('Password not input or invalid.');
+		dangerRedirect('Invalid or empty password input.');
+		die($h->endHeaders());
 	}
 	if (empty($safeConfirmPassword))
 	{
-		die('Password confirmation not input or invalid.');
+		dangerRedirect('Invalid or empty password confirmation input.');
+		die($h->endHeaders());
 	}
 	if (!checkUsableUsername($safeUsername))
 	{
-		die('Username already in use.');
+		dangerRedirect("The username you've chosen ({$safeUsername}) is already in use.");
+		die($h->endHeaders());
 	}
 	if (!checkUsableEmail($safeEmail))
 	{
-		die('Username already in use.');
+		dangerRedirect("The email address you've chosen ({$safeEmail}) is already in use.");
+		die($h->endHeaders());
 	}
 	if (!checkConfirmedPassword($safePassword, $safeConfirmPassword))
 	{
-		die('Password and password confirmation do not match.');
+		dangerRedirect("Password and Password confirmation do not match.");
+		die($h->endHeaders());
 	}
 	createAccount($safeUsername, $safePassword, $safeEmail);
-	die('Account created successfully.');
+	successRedirect('Account has been created successfully.', 'login.php', 'Login Page');
+	die($h->endHeaders());
 }
 else
 {
