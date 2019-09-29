@@ -51,3 +51,7 @@ function returnUnixTimestamp()
 {
 	return time();
 }
+function headerRedirect($location)
+{
+	return header("Location: {$location}");
+}
