@@ -68,3 +68,26 @@ function getUserIP()
 {
 	return makeSafeText($_SERVER['REMOTE_ADDR']);
 }
+function autoSessionCheck()
+{
+	if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) 
+	{
+		headerRedirect('./login.php');
+		exit;
+	}
+	if (isset($_SESSION['last_active']) && (returnUnixTimestamp() - $_SESSION['last_active'] > constant('sessionTimeoutSeconds'))) 
+	{
+		headerRedirect('./login.php');
+		exit;
+	}
+}
+function returnCurrentUserData($userid)
+{
+	global $db;
+	return $db->fetch_row($db->query("SELECT `u`.*, `ud`.*
+                     FROM `users_core` AS `u`
+                     INNER JOIN `users_account_data` AS `ud`
+                     ON `u`.`userid`=`ud`.`userid`
+                     WHERE `u`.`userid` = {$userid}
+                     LIMIT 1"));
+}
