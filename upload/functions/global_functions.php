@@ -24,6 +24,7 @@
 */
 //A simple function to create forms, to cut down on bloat.
 include('functions/func_escape.php');
+include('functions/func_account.php');
 function createForm($method, $action, $inputsArray, $submitButtonName)
 {
 	echo "<form method='{$method}' action='{$action}'>";
@@ -37,7 +38,11 @@ function createForm($method, $action, $inputsArray, $submitButtonName)
 	echo "<button class='btn btn-primary' type='submit'>{$submitButtonName}</button>
 	</form>";
 }
-function generatePassword($plainTextPassword)
+function createPostForm($action, $inputsArray, $submitButtonName)
 {
-	return password_hash(base64_encode(hash('sha256', $plainTextPassword, true)), PASSWORD_BCRYPT);
+	createForm('post', $action, $inputsArray, $submitButtonName);
+}
+function createGetForm($action, $inputsArray, $submitButtonName)
+{
+	createForm('get', $action, $inputsArray, $submitButtonName);
 }
