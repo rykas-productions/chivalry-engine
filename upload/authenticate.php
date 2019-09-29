@@ -26,7 +26,7 @@ require('globals_nonauth.php');
 include('functions/func_auth.php');
 $safeEmail = makeSafeText($_POST['email']);
 $safePassword = makeSafeText($_POST['password']);
-$userid = checkValidEmail();
+$userid = checkValidEmail($safeEmail);
 if ($userid == 0)
 {
 	echo "Invalid login creditials input.";

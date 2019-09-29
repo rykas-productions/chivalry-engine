@@ -33,9 +33,8 @@ class headers
 				<html>
 					<head>
 					<!-- Standard Meta -->
-					<meta charset="utf-8" />
-					<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-					<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+					<meta charset="utf-8">
+					<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 					<!-- Site Properties -->
 					<title><?php echo $set['gameName']; ?></title>
 		<?php
@@ -46,9 +45,9 @@ class headers
 	{
 		echo '<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
 		<style type="text/css">
-			.main.container 
+			main > .container 
 			{
-				margin-top: 7em;
+				padding: 60px 15px 0;
 			}
 		</style>';
 	}
@@ -56,28 +55,39 @@ class headers
 	{
 		echo '<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-		<script src="assets/js/bootstrap.js"></script>';
+		<script src="assets/js/bootstrap.js"></script>
+		</head>';
 	}
 	function loadTopMenu()
 	{
 		global $set;
 		echo '
-		</head>
-		<body>
-			<div class="ui fixed inverted menu">
-				<div class="ui container">
-					<a href="#" class="header item">
-						<img class="logo" src="assets/images/logo.png">' . $set['gameName'] . '
-					</a>
-					<a href="login.php" class="item">Login</a>
-					<a href="register.php" class="item">Register</a>
+		<header>
+			<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+				<a class="navbar-brand" href="login.php">' . $set['gameName'] . '</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarCollapse">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="register.php">Register</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="gamerules.php" tabindex="-1" aria-disabled="true">Game Rules</a>
+						</li>
+					</ul>
 				</div>
-			</div>
-			<div class="ui main text container">';
+			</nav>
+		</header>
+		<body>
+		<main role="main" class="flex-shrink-0">
+			<div class="container">';
 	}
 	function endBody()
 	{
-		echo '</div></body>';
+		echo '</div>
+		</body>';
 	}
 	function startFooter()
 	{
