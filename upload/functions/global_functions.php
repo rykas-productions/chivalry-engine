@@ -26,15 +26,15 @@
 include('functions/func_escape.php');
 function createForm($method, $action, $inputsArray, $submitButtonName)
 {
-	echo "<form class='ui form' method='{$method}' action='{$action}'>";
+	echo "<form method='{$method}' action='{$action}'>";
 	foreach ($inputsArray as $input) 
 	{
-		echo "<div class='field'>
-		<label>{$input[2]}</label>
-		<input type='{$input[0]}' name='{$input[1]}' placeholder='{$input[2]}'>
+		echo "<div class='form-group'>
+		<label for='{$input[1]}'>{$input[2]}</label>
+		<input type='{$input[0]}' name='{$input[1]}' class='form-control' placeholder='{$input[2]}'>
 		</div>";
 	}
-	echo "<button class='ui button' type='submit'>{$submitButtonName}</button>
+	echo "<button class='btn btn-primary' type='submit'>{$submitButtonName}</button>
 	</form>";
 }
 function generatePassword($plainTextPassword)
