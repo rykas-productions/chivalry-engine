@@ -25,6 +25,7 @@
 //A simple function to create forms, to cut down on bloat.
 include('functions/func_escape.php');
 include('functions/func_account.php');
+include('functions/func_alerts.php');
 function createForm($method, $action, $inputsArray, $submitButtonName)
 {
 	echo "<form method='{$method}' action='{$action}'>";
