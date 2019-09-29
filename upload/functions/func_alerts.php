@@ -53,7 +53,7 @@ function success($text)
 {
 	alert('success','Success!',$text, false);
 }
-function successRedirect($text, $redirectLink, $redirectText)
+function successRedirect($text, $redirectLink = 'back', $redirectText = 'Back')
 {
 	alert('success','Success!',$text, true, $redirectLink, $redirectText);
 }
@@ -61,7 +61,7 @@ function danger($text)
 {
 	alert('danger','Success!',$text, false);
 }
-function dangerRedirect($text, $redirectLink, $redirectText)
+function dangerRedirect($text, $redirectLink = 'back', $redirectText = 'Back')
 {
 	alert('danger','Uh Oh!',$text, true, $redirectLink, $redirectText);
 }
@@ -69,7 +69,7 @@ function info($text)
 {
 	alert('info','Information!',$text, false);
 }
-function infoRedirect($text, $redirectLink, $redirectText)
+function infoRedirect($text, $redirectLink = 'back', $redirectText = 'Back')
 {
 	alert('info','Information!',$text, true, $redirectLink, $redirectText);
 }
@@ -77,7 +77,7 @@ function warning($text)
 {
 	alert('warning','Warning!',$text, false);
 }
-function warningRedirect($text, $redirectLink, $redirectText)
+function warningRedirect($text, $redirectLink = 'back', $redirectText = 'Back')
 {
 	alert('warning','Warning!',$text, true, $redirectLink, $redirectText);
 }
