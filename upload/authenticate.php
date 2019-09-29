@@ -33,7 +33,7 @@ if ($userid == 0)
 	exit;
 }
 $q=$db->query("SELECT `password` FROM `users_core` WHERE `userid` = {$userid}");
-if (!(checkUserPassword($raw_password, $safePassword)))
+if (!(checkUserPassword($safePassword, $safePassword)))
 {
 	echo "Invalid login creditials input.";
 	exit;

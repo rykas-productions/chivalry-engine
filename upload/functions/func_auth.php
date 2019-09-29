@@ -38,9 +38,9 @@ function checkValidEmail($email)
 	else
 		return 0;
 }
-function checkUserPassword($userid, $password)
+function checkUserPassword($rawPassword, $password)
 {
 	//Check that the password matches or not.
-    $return = (password_verify(base64_encode(hash('sha256', $input, true)), $pass)) ? true : false;
+    $return = (password_verify(base64_encode(hash('sha256', $rawPassword, true)), $password)) ? true : false;
     return $return;
 }
