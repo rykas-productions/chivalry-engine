@@ -47,3 +47,7 @@ function createGetForm($action, $inputsArray, $submitButtonName)
 {
 	createForm('get', $action, $inputsArray, $submitButtonName);
 }
+function returnUnixTimestamp()
+{
+	return time();
+}

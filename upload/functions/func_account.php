@@ -31,6 +31,8 @@ function createAccount($username, $password, $email)
 	global $db;
 	$encodedPassword=generatePassword($password);
 	$db->query("INSERT INTO `users_core` (`username`, `email`, `password`) VALUES ('{$username}', '{$email}', '{$encodedPassword}')");
+	$i = $db->insert_id();
+	createUserData($i);
 }
 function checkUsableEmail($email)
 {
@@ -54,4 +56,15 @@ function checkUsableUsername($username)
 function checkConfirmedPassword($password, $passwordConfirm)
 {
 		return $password == $passwordConfirm;
+}
+function createUserData($userid)
+{
+	global $db;
+	$time=returnUnixTimestamp();
+	$IP=getUserIP();
+	$db->query("INSERT INTO `users_account_data` VALUES ('{$userid}', '0', '{$time}', '{$time}', '', '1', '1', '0', '127.0.0.1', '{$IP}', '{$IP}')");
+}
+function getUserIP()
+{
+	return makeSafeText($_SERVER['REMOTE_ADDR']);
 }

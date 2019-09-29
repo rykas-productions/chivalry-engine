@@ -29,12 +29,14 @@ $safePassword = makeSafeText($_POST['password']);
 $userid = checkValidEmail($safeEmail);
 if ($userid == 0)
 {
-	echo "Invalid login creditials input.";
-	exit;
+	dangerRedirect('Invalid account creditials. User does not exist.', 'login.php', 'Back');
+	die($h->endHeaders());
 }
-$q=$db->query("SELECT `password` FROM `users_core` WHERE `userid` = {$userid}");
-if (!(checkUserPassword($safePassword, $safePassword)))
+$accountPassword=getPasswordByUserID($userid);
+if (!(checkUserPassword($safePassword, $accountPassword)))
 {
-	echo "Invalid login creditials input.";
-	exit;
+	dangerRedirect('Invalid account creditials. Passwords do not match.', 'login.php', 'Back');
+	die($h->endHeaders());
 }
+accountLoginUpdate($userid);
+successRedirect("You've successfully logged in. You will be redirected shortly. Click the following link if you are not redirected automatically.", 'explore.php', "Force Redirect");
