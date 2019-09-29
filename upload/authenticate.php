@@ -41,4 +41,4 @@ if (!(checkUserPassword($safePassword, $accountPassword)))
 setActiveSession($userid);
 accountLoginUpdate($userid);
 successRedirect("You've successfully logged in. You will be redirected shortly. Click the following link if you are not redirected automatically.", 'explore.php', "Force Redirect");
-headerRedirect('loggedin.php');
+headerRedirect('./loggedin.php');
