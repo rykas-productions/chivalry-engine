@@ -50,3 +50,10 @@ $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
 $ir=returnCurrentUserData($userid);
 $h = new headers;
 $h->startHeaders();
+if (isset($moduleID) && !empty($moduleID))
+{
+	if (function_exists('initialize'))
+		initialize();
+	else
+		trigger_error("Module ID: {$moduleID} does not have the required initialize(); function in file. Please create it.");
+}
