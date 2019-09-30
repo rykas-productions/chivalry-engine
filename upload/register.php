@@ -156,7 +156,7 @@ if (!empty($username)) {
         //Give starter items.
         $api->UserGiveItem($i,6,50);
         $api->UserGiveItem($i,30,50);
-        $api->UserGiveItem($i,33,250);
+        $api->UserGiveItem($i,33,3000);
         $api->UserGiveCurrency($i,'primary',10000);
         $api->UserGiveCurrency($i,'secondary',50);
         $mail="Welcome to Chivalry is Dead, {$e_username}. We hope you stay a while and hang out. To get started,

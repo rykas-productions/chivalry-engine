@@ -156,8 +156,8 @@ echo "
 					<a href='itemrequest.php'><i class='game-icon game-icon-trade'></i> Item Request <span class='badge badge-pill badge-primary'>{$rmarket}</span></a><br />
 					<a href='secmarket.php'><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />
                     <a href='itemweekshop.php'>Item of the Week</a><br />
-                    <a href='votestore.php'>Vote Point Store</a>";
-					echo"
+                    <a href='votestore.php'>Vote Point Store</a><br />
+					<a href='vipmarket.php'>VIP Days Market</a>
 				</div>
 			</div>
 		</div>

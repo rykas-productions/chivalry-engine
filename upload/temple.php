@@ -50,7 +50,7 @@ switch ($_GET['action']) {
         will();
         break;
 	case 'willall':
-        will();
+        willall();
         break;
     case 'iq':
         iq();
@@ -384,7 +384,7 @@ function tokentocopper()
 		limit the minimum value of Chivalry Tokens when taking in account for inflation in the game. This price 
 		is very likely to change as the game progresses. How many tokens would you like to exchange?
 		<form method='post'>
-			<input type='number' min='1' name='token' max='{$ir['secondary_currency']}' class='form-control' required='1'>
+			<input type='number' min='1' name='token' max='{$ir['secondary_currency']}' value='{$ir['secondary_currency']}' class='form-control' required='1'>
 			<input type='submit' class='btn btn-primary' value='Convert to Copper'>
 			{$csrf}
 		</form>";

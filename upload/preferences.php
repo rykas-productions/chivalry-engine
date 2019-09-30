@@ -71,6 +71,9 @@ switch ($_GET['action']) {
 	case 'reset':
         resetacc();
         break;
+	case 'loginlogs':
+        loginlogs();
+        break;
     default:
         prefs_home();
         break;
@@ -79,82 +82,78 @@ function prefs_home()
 {
     global $ir;
     echo "Welcome to your account settings, {$ir['username']}. Here you can change many options concerning your account.<br />
-	<table class='table table-bordered'>
-		<tbody>
-			<tr>
-				<td>
-					<a href='?action=namechange'>Change Name</a>
-				</td>
-				<td>
-					<a href='?action=pwchange'>Change Password</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a href='?action=changeemail'>Change Email Address</a>
-				</td>
-				<td>
-					<a href='?action=emailchange'>Change Email Opt-Setting</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a href='?action=picchange'>Change Display Picture</a>
-				</td>
-				<td>
-					<a href='?action=sexchange'>Change Sex</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a href='?action=sigchange'>Change Forum Signature</a>
-				</td>
-				<td>
-                    <a href='?action=notifoff'>Disable Alerts</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a href='?action=descchange'>Change Player Description</a>
-				</td>
-				<td>
-					<a href='?action=quicklink'>Change Quick-Use Items</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-				    <a href='?action=forumalert'>Forum Notifications</a>
-				</td>
-				<td>
-					<a href='?action=userdropdown'>User Input Setting</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-				    <a href='?action=themechange'>Change Theme</a>
-				</td>
-                <td>
-                    <a href='?action=classreset'>Class Reset</a>
-                </td>
-			</tr>
-            <tr>
-				<td>
-					<a href='?action=tuttoggle'>Tutorial Toggle</a>
-				</td>
-				<td>
-					<a href='?action=icontoggle'>Item Icons</a>
-				</td>
-			</tr>
-            <tr>
-				<td>
-					<a href='?action=steamlink'>Link Steam Account</a>
-				</td>
-				<td>
-					
-				</td>
-			</tr>
-		</tbody>
-	</table>";
+		<div class='row'>
+			<div class='col-sm'>
+				<a href='?action=namechange'>Change Name</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=pwchange'>Change Password</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=changeemail'>Change Email Address</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=emailchange'>Change Email Opt-Setting</a>
+			</div>
+		</div>
+		<hr />
+		<div class='row'>
+			<div class='col-sm'>
+				<a href='?action=picchange'>Change Display Picture</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=sexchange'>Change Sex</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=sigchange'>Change Forum Signature</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=notifoff'>Disable Alerts</a>
+			</div>
+		</div>
+		<hr />
+		<div class='row'>
+			<div class='col-sm'>
+				<a href='?action=descchange'>Change Player Description</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=quicklink'>Change Quick-Use Items</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=forumalert'>Forum Notifications</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=userdropdown'>User Input Setting</a>
+			</div>
+		</div>
+		<hr />
+		<div class='row'>
+			<div class='col-sm'>
+				<a href='?action=themechange'>Change Theme</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=classreset'>Class Reset</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=tuttoggle'>Tutorial Toggle</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=icontoggle'>Toggle Item Icons</a>
+			</div>
+		</div>
+		<hr />
+		<div class='row'>
+			<div class='col-sm'>
+				<a href='?action=steamlink'>Link Steam Account</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=loginlogs'>Login Logs</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=reset'>Account Reset</a>
+			</div>
+		</div>
+		<hr />";
 }
 
 function name_change()
@@ -632,7 +631,7 @@ function quicklinks()
 			alert("danger","Uh Oh!","You have selected an invalid dungeon item.");
 			die($h->endpage());
 		}
-		if ($infirmary < 1 || $infirmary > 6)
+		if ($infirmary < 1 || $infirmary > 7)
 		{
 			alert("danger","Uh Oh!","You have selected an invalid infirmary item.");
 			die($h->endpage());
@@ -643,7 +642,7 @@ function quicklinks()
 	}
 	else
 	{
-		echo "/*qc=on*/SELECT your infirmary/dungeon quick use items.<br />
+		echo "Please select the items you wish to use for your dungeon and infirmary quick links.<br />
 		<form method='post'>
 			<div class='row'>
 				<div class='col-md-6'>
@@ -664,6 +663,7 @@ function quicklinks()
                         <option value='4'>Med-go-bye</option>
                         <option value='5'>Priority Voucher</option>
                         <option value='6'>Negative Begone</option>
+						<option value='7'>Medical Package</option>
 					</select>
 				</div>
 			</div>
@@ -915,26 +915,6 @@ function themechange()
             alert('danger', "Uh Oh!", "The theme you wish to load is not valid.");
             die($h->endpage());
         }
-		elseif ($_POST['theme'] == 3 && $ir['vip_days'] == 0)
-		{
-			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
-			die($h->endpage());
-		}
-		elseif ($_POST['theme'] == 4 && $ir['vip_days'] == 0)
-		{
-			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
-			die($h->endpage());
-		}
-		elseif ($_POST['theme'] == 5 && $ir['vip_days'] == 0)
-		{
-			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
-			die($h->endpage());
-		}
-		elseif ($_POST['theme'] == 6 && $ir['vip_days'] == 0)
-		{
-			alert('danger',"Uh Oh!", "The theme you've chosen is for VIPs Only.");
-			die($h->endpage());
-		}
 		else {
             alert('success', "Success!", "You have successfully changed your theme.", true, 'preferences.php');
             $db->query("UPDATE `user_settings` SET `theme` = {$_POST['theme']} WHERE `userid` = {$userid}");
@@ -970,84 +950,43 @@ function themechange()
 				<tr>
                     <td>
 						Cerulean<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770277/themes/cerulean.jpg' class='img-thumbnail img-responsive'>";
-						if ($ir['vip_days'] != 0)
-						{
-							echo "
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770277/themes/cerulean.jpg' class='img-thumbnail img-responsive'>
 							<form method='post'>
 								<input type='hidden' value='6' name='theme'>
 								<input type='submit' class='btn btn-primary' value='Pick this one'>
 							</form>
-							";
-						}
-						else
-						{
-							echo "<br />VIPs only.";
-						}
-						echo"
 					</td>
 					<td>
 						Cyborg<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770282/themes/cyborg.jpg' class='img-thumbnail img-responsive'>";
-						if ($ir['vip_days'] != 0)
-						{
-							echo "
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770282/themes/cyborg.jpg' class='img-thumbnail img-responsive'>
 							<form method='post'>
 								<input type='hidden' value='4' name='theme'>
 								<input type='submit' class='btn btn-primary' value='Pick this one'>
 							</form>
-							";
-						}
-						else
-						{
-							echo "<br />VIPs only.";
-						}
-						echo"
 					</td>
 				</tr>
 				<tr>
                     <td>
 						United<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/united.jpg' class='img-thumbnail img-responsive'>";
-						if ($ir['vip_days'] != 0)
-						{
-							echo "
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/united.jpg' class='img-thumbnail img-responsive'>
 							<form method='post'>
 								<input type='hidden' value='5' name='theme'>
 								<input type='submit' class='btn btn-primary' value='Pick this one'>
 							</form>
-							";
-						}
-						else
-						{
-							echo "<br />VIPs only.";
-						}
-						echo"
 					</td>
 					<td>
 						Slate<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/slate.jpg' class='img-thumbnail img-responsive'>";
-						if ($ir['vip_days'] != 0)
-						{
-							echo "
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/slate.jpg' class='img-thumbnail img-responsive'>
 							<form method='post'>
 								<input type='hidden' value='3' name='theme'>
 								<input type='submit' class='btn btn-primary' value='Pick this one'>
 							</form>
-							";
-						}
-						else
-						{
-							echo "<br />VIPs only.";
-						}
-						echo"
 					</td>
 				</tr>
                 <tr>
 					<td>
 						Castle<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/castle.jpg' class='img-thumbnail img-responsive'>";
-							echo "
+						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/castle.jpg' class='img-thumbnail img-responsive'>
 							<form method='post'>
 								<input type='hidden' value='7' name='theme'>
 								<input type='submit' class='btn btn-primary' value='Pick this one'>
@@ -1079,16 +1018,22 @@ function steamlink()
             alert('danger',"Uh Oh!","That Steam Account has already been linked to a Chivalry is Dead account. Try again with another Steam Account.");
             die($h->endpage());
         }
+		$api->SystemLogsAdd($userid, 'preferences', "Linked Steam Account ID: {$steamprofile['steamid']}}");
         $db->query("INSERT INTO `steam_account_link` (`steam_linked`, `steam_id`) VALUES ('{$userid}', '{$steamprofile['steamid']}')");
         alert("success","Success!","You have successfully linked Steam Account ID: <b>{$steamprofile['steamid']}</b> to your Chivalry is Dead account. You may now use it to log in.",true,'preferences.php?action=menu');
     }
 }
 function resetacc()
 {
-    global $db,$userid,$api,$h;
+    global $db,$userid,$api,$h,$ir;
     if ($ir['reset'] == 6)
 	{
 		alert('danger',"Uh Oh!","You can only reset your account 5 times.",true,'preferences.php');
+		die($h->endpage());
+	}
+	if ($ir['level'] < 500)
+	{
+		alert('danger',"Uh Oh!","You can only reset your account when you are over level 500.",true,'preferences.php');
 		die($h->endpage());
 	}
 	if (($ir['equip_armor'] + $ir['equip_primary'] + $ir['equip_secondary']) != 0) 
@@ -1098,7 +1043,138 @@ function resetacc()
 	}
 	if (isset($_POST['reset']))
 	{
-		
+		alert('info',"What's Up?","Chivalry is Dead is attempting to reset your account... if you run into errors please contact staff.",false);
+		$accquery="UPDATE `users` SET `xp` = 0, `level` = 1, `will` = 100, `maxwill` = 100, `hp` = 100, `maxhp` = 100,
+		`energy` = 24, `maxenergy` = 24, `brave` = 10, `maxbrave` = 10, `vip_days` = `vip_days` + 3, `job` = 0, `jobrank` = 0, 
+		`primary_currency` = 0, `secondary_currency` = 0, `location` = 1, `course` = 0, `course_complete` = 0, `busts` = 0, `deaths` = 0,
+		`kills` = 0, `tokenbank` = -1, `bigbank` = -1, `bank` = -1, `vaultbank` = 0, `equip_potion` = 0
+		WHERE `userid` = {$userid}";
+		$statquery="UPDATE `userstats` SET `strength` = 1000, `agility` = 1000, `guard` = 1000, `iq` = 100, `labor` = 1000 WHERE `userid` = {$userid}";
+		$mail="Welcome to Chivalry is Dead, {$ir['username']}. We hope you stay a while and hang out. To get started,
+        check out the Explore page and visit the [url=hexbags.php]Hexbags[/url] under the Gambling tab. Here you will gain many awesome starter items. Should
+        your fortune be unkind, your inventory has 50 Dungeon Keys and 50 Linen Wraps to get you out of the Infirmary and Dungeon when needed.";
+		$randophrase=randomizer();
+		/*$api->UserGiveItem();
+		$api->UserGiveItem();
+		$api->UserGiveItem();*/
+		$hex=$ir['autohex'];
+		$bor=$ir['autobor'];
+		$reset=$ir['reset'];
+		echo "Deleting your inventory... ";
+			if ($db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$userid}"))
+				echo "...inventory deleted.";
+			else
+				echo "...failed to remove inventory.";
+		echo "<br />Deleting item market offers... ";
+			if ($db->query("DELETE FROM `itemmarket` WHERE `imADDER` = {$userid}"))
+				echo "...item market offers deleted.";
+			else
+			echo "...failed to delete item market offers.";
+		echo "<br />Deleting item request offers... ";
+			if ($db->query("DELETE FROM `itemrequest` WHERE `irUSER` = {$userid}"))
+				echo "...item request offers deleted.";
+			else
+				echo "...failed to remove item request offers.";
+		echo "<br />Deleting Chivalry Token market offers... ";
+			if ($db->query("DELETE FROM `sec_market` WHERE `sec_user` = {$userid}"))
+				echo "...Chivalry Token Market offers deleted.";
+			else
+				echo "...failed to remove Chivalry Token Market offers.";
+		echo "<br />Updating account details... ";
+			if ($db->query($accquery))
+				echo "...done.";
+			else
+				echo "...fail.";
+		echo "<br />Updating user stats... ";
+			if ($db->query($statquery))
+				echo "...done.";
+			else
+				echo "...fail.";
+		echo "<br />Updating user settings table to default... ";
+		$db->query("DELETE FROM `user_settings` WHERE `userid` = {$userid}");
+		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$userid}')");
+        $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}', `theme` = 7, `autobor` = {$bor} + 3000, `autohex` = {$hex} + 300 WHERE `userid` = {$userid}");
+		echo "...done<br />Giving starter items... ";
+			//Give starter items.
+			$api->UserGiveItem($userid,6,50);
+			$api->UserGiveItem($userid,30,50);
+			$api->UserGiveItem($userid,33,3000);
+			$api->UserGiveCurrency($userid,'primary',10000);
+			$api->UserGiveCurrency($userid,'secondary',50);
+		echo "...starter items given successfully.";
+		echo "<br />Deleting skills tree... ";
+			if ($db->query("DELETE FROM `user_skills` WHERE `userid` = {$userid}"))
+				echo "...deleted successfully.";
+			else
+				echo "...failed.";
+		echo "<br />Resetting player's achievements... ";
+			if ($db->query("DELETE FROM `achievements_done` WHERE `userid` = {$userid}"))
+				echo "...success!";
+			else
+				echo "...failed";
+		echo "<br />Removing active bank investments... ";
+			if ($db->query("DELETE FROM `bank_investments` WHERE `userid` = {$userid}"))
+				echo "...success!";
+			else
+				echo "...failed";
+		echo "<br />Resetting academy courses... ";
+			if ($db->query("DELETE FROM `academy_done` WHERE `userid` = {$userid}"))
+				echo "...success!";
+			else
+				echo "...failed";
+		echo "<br />Finishing up... we'll just be a moment.";
+			$api->GameAddMail($userid,"Welcome to Chivalry is Dead",$mail,1);
+			$db->query("DELETE FROM `mining` WHERE `userid` = {$userid}");
+			$api->UserGiveItem($userid,246,$reset-1);
+			$db->query("UPDATE `user_settings` SET `reset` = {$reset} + 1 WHERE `userid` = {$userid}");
+		alert('success',"Success!","Your account has been reset. Please log in to continue.",true,'logout.php');
+		$api->SystemLogsAdd($userid, 'preferences', "Successfully reset account. (Reset # {$reset})");
 	}
+	else
+	{
+		echo "Everything about your account will reset. Items on the market will be removed. Your inventory will be wiped. Your stats will be reset. You will be cleared of any currency you may have. Consider it a fresh start.<br />
+		Would you like to go through with it? This cannot be undone for whatever reason.
+		<form method='post'>
+			<input type='hidden' value='yes' name='reset'>
+			<input type='submit' class='btn btn-danger' value='Yes, reset!'>
+		</form>";
+	}
+}
+function loginlogs()
+{
+    global $db,$userid,$api,$h;
+	echo "<h3>Login Logs</h3><hr />
+	This is mainly for your peace of mind. We expose the time, date, and IP Address of the action You should never show this screen to anyone, no matter what they promise.
+	Chivalry is Dead Staff will never ask for this page either. They have ways to get this information using the in-game staff logs.
+	<table class='table table-bordered table-hover table-striped'>
+    		<tr>
+    			<th>Log Time</th>
+    			<th>Action</th>
+				<th>Action IP</th>
+    		</tr>
+       ";
+    $q =
+        $db->query(
+            "/*qc=on*/SELECT `log_user`, `log_time`, `log_text`, `log_ip`
+                     FROM `logs`
+					 WHERE `log_type` = 'login' 
+					 AND `log_user` = {$userid} 
+                     ORDER BY `log_time` DESC
+                     LIMIT 20");
+    while ($r = $db->fetch_row($q)) {
+        $un = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$r['log_user']}"));
+        echo "
+		<tr>
+        	<td>" . DateTime_Parse($r['log_time'])
+            . "</td>
+        	<td>{$r['log_text']}</td>
+			<td>{$r['log_ip']}</td>
+           ";
+        echo '</tr>';
+    }
+    $db->free_result($q);
+    echo "
+    </table>";
+	$api->SystemLogsAdd($userid, 'preferences', "Viewed their login logs.");
 }
 $h->endpage();

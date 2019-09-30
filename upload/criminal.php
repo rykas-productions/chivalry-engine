@@ -28,9 +28,9 @@ switch ($_GET['action']) {
 }
 function home()
 {
-    global $db, $h;
+    global $db, $h, $ir, $m, $userid;
     $crimes = array();
-    $q2 = $db->query("/*qc=on*/SELECT `crimeGROUP`, `crimeNAME`, `crimeBRAVE`, `crimeID` FROM `crimes` ORDER BY `crimeBRAVE` ASC");
+    $q2 = $db->query("/*qc=on*/SELECT `crimeGROUP`, `crimeNAME`, `crimeBRAVE`, `crimeID`, `crimePERCFORM` FROM `crimes` ORDER BY `crimeBRAVE` ASC");
     while ($r2 = $db->fetch_row($q2)) {
         $crimes[] = $r2;
     }
@@ -53,9 +53,42 @@ function home()
         echo "<tr><td colspan='3' class='h'>{$r['cgNAME']} Crimes</td></tr>";
         foreach ($crimes as $v) {
             if ($v['crimeGROUP'] == $r['cgID']) {
+				//Fix from Kyle Massacre. Thanks!
+				//https://github.com/KyleMassacre
+				$ec = str_ireplace(array("LEVEL", "EXP", "WILL", "IQ"), array($ir['level'], $ir['xp'], $ir['will'], $ir['iq']), $v['crimePERCFORM']) . ";";
+				$tokens = token_get_all("<?php {$ec}");
+				$expr = '';
+				foreach($tokens as $token)
+				{
+					if(is_string($token))
+					{
+						if(in_array($token, array('(', ')', '+', '-', '/', '*'), true))
+							$expr .= $token;
+						continue;
+					}
+					list($id, $text) = $token;
+					if(in_array($id, array(T_DNUMBER, T_LNUMBER)))
+						$expr .= $text;
+				}
+				$v['sucrate']=$m->evaluate($expr);
+				try 
+				{
+					$v['sucrate']=$m->evaluate($expr); 
+				}
+				catch (\Error $e)
+				{
+					alert('danger',"Uh Oh!","There's an issue with this crime. Please contact the game administration.",true,'criminal.php');
+					die($h->endpage());
+				}
+				$specialnumber=((getSkillLevel($userid,17)*20)/100);
+				$v['sucrate']=$v['sucrate']+($v['sucrate']*$specialnumber);
+				if ($v['sucrate'] > 100)
+					$v['sucrate']=100;
+				$v['sucrate']=round($v['sucrate']);
                 echo "<tr>
 						<td>
-							{$v['crimeNAME']}
+							{$v['crimeNAME']}<br />
+							Success Chance: {$v['sucrate']}%
 						</td>
 						<td>
 							{$v['crimeBRAVE']}

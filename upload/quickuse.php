@@ -188,6 +188,24 @@ elseif (isset($_GET['infirmary']))
 		alert('success', "Success!", "Negative Begone was used successfully. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
+	if ($ir['iitem'] == 7)
+	{
+		if (!$api->UserHasItem($userid, 216, 1)) {
+			alert("danger", "Uh Oh!", "You need at least one Medical Package to use this quick link.", true, 'index.php');
+			die($h->endpage());
+		}
+		if (!$api->UserStatus($userid, 'infirmary')) {
+			alert("danger", "Uh Oh!", "Why would you want to use a Acupuncture Needle if you're not in the infirmary?", true, 'index.php');
+			die($h->endpage());
+		}
+		$TR=TimeUntil_Parse($InfirmaryOut-(200*60));
+		$api->UserTakeItem($userid, 216, 1);
+        $api->UserInfoSet($userid,'hp',50,true);
+		$api->UserStatusSet($userid, 'infirmary', -200, '');
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Medical Package.");
+		alert('success', "Success!", "Medical Package was used successfully. You have {$TR} remaining.", true, 'index.php');
+		$h->endpage();
+	}
 } else {
     //Nope
     alert('danger',"Uh Oh!","No action specified.",true,'index.php');

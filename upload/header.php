@@ -205,7 +205,7 @@ class headers
             ?>
         </noscript>
     <?php
-    date_default_timezone_set("Europe/London");
+    date_default_timezone_set("America/New_York");
     $IP = $db->escape($_SERVER['REMOTE_ADDR']);
     $ipq = $db->query("/*qc=on*/SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
     //User's IP is banned, so lets stop access.
@@ -218,7 +218,7 @@ class headers
     if ($votecount < 5) {
         echo "<b><a href='vote.php' class='text-success'>[Vote for {$set['WebsiteName']}<span class='hidden-sm-down'> at various Voting Websites and be rewarded</span>.]</a></b><br />";
     }
-    echo "<b><a href='donator.php' class='text-danger'>[Donate to {$set['WebsiteName']}.<span class='hidden-sm-down'> Packs start at $1 and you receive tons of benefits.</span>]</a></b><br />";
+	echo "<b><a href='donator.php' class='text-danger'>[Donate to {$set['WebsiteName']}.<span class='hidden-sm-down'> Packs start at $1 and you receive tons of benefits.</span>]</a></b><br />";
     if ($ir['protection'] > time())
 	{
 		echo "<b><span class='text-info'>You have protection active for the next " . TimeUntil_Parse($ir['protection']) . ".</span></b><br />";

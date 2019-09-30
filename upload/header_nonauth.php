@@ -67,18 +67,6 @@ class headers
                                     class="fa fa-fw fa-user-secret"></i> <?php echo "Privacy Policy"; ?></a>
                         </li>
                     </ul>
-                    <div class="my-2 my-lg-0">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item">
-                                <div class='nav-link'><i class="fa fa-sign-in-alt" aria-hidden="true"></i> <?php echo "Already have an account?"; ?></div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="loginpage.php" id="dropdown01">
-                                    <?php echo "Log in"; ?>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </nav>
         <?php } ?>

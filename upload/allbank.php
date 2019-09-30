@@ -10,25 +10,20 @@ $bank_maxfee = $set['bank_maxfee'];
 $bank_feepercent = $set['bankfee_percent'];
 if ($ir['primary_currency'] == 0)
 {
-    alert('danger',"Uh Oh!","You don not have any Copper Coins to deposit.",true,'bank.php');
+    alert('danger',"Uh Oh!","You do not have any Copper Coins to deposit.",true,'bank.php');
     die($h->endpage());
 }
 else
 {
-    $fee = ceil($ir['primary_currency'] * $bank_feepercent / 100);
-    if ($fee > $bank_maxfee) {
-        $fee = $bank_maxfee;
-    }
     //$gain is amount put into account after the fee is taken.
-    $gain = $ir['primary_currency'] - $fee;
-    $ir['bank'] += $gain;
-    //Update user's bank and Copper Coins info.
-    $api->UserTakeCurrency($userid, 'primary', $ir['primary_currency']);
-    $api->UserInfoSetStatic($userid, "bank", $ir['bank']);
-    alert('success', "Success!", "You hand over " . number_format($ir['primary_currency']) . " to be deposited. After the
-        fee (" . number_format($fee) . " Copper Coins) is taken from your deposit, " . number_format($gain) . " is added to your
-        bank account. You now have " . number_format($ir['bank']) . " in your account.", true, 'bank.php');
-    //Log bank transaction.
-    $api->SystemLogsAdd($userid, 'bank', "Deposited " . number_format($ir['primary_currency']) . ".");
-    $h->endpage();
+	$gain = $ir['primary_currency'];
+	$ir['bank'] += $gain;
+	//Update user's bank and Copper Coins info.
+	$api->UserTakeCurrency($userid, 'primary', $ir['primary_currency']);
+	$api->UserInfoSetStatic($userid, "bank", $ir['bank']);
+	alert('success', "Success!", "You hand over " . number_format($ir['primary_currency']) . " Copper Coins to be deposited. You now have " . number_format($ir['bank']) . " Copper Coins 
+	in your City Bank.", true, 'bank.php');
+	//Log bank transaction.
+	$api->SystemLogsAdd($userid, 'bank', "Deposited " . number_format($ir['primary_currency']) . ".");
+	 die($h->endpage());
 }

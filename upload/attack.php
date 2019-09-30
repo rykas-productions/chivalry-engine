@@ -285,16 +285,18 @@ function attacking()
 	else if ($db->num_rows($npcquery) > 0) {
 		$results2 = $db->fetch_row($npcquery);
 		$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$_GET['user']}");
-		$time2query = $db->query("/*qc=on*/SELECT `botcooldown` FROM `botlist` WHERE `botid` = {$_GET['user']}");
+		$time2query = $db->query("/*qc=on*/SELECT `botcooldown` FROM `botlist` WHERE `botuser` = {$_GET['user']}");
 		$r2 = $db->fetch_single($timequery);
 		$r3 = $db->fetch_single($time2query);
 		//Opponent's drop has already been collected and the time hasn't reset.
+		//if time <= (last hit + bot cooldown) AND `last hit` > 0
 		if ((time() <= ($r2 + $r3)) && ($r2 > 0)) {
 			$_SESSION['attacking'] = 0;
 			$_SESSION['attack_scroll'] = 0;
+			$cooldown = ($r2 + $r3) - time();
 			$ir['attacking'] = 0;
 			$api->UserInfoSetStatic($userid, "attacking", 0);
-			alert('danger',"Uh Oh!","You cannot attack this NPC at this time. Try again a little later.",true,'explore.php');
+			alert('danger',"Uh Oh!","You cannot attack this NPC at this time. Try again in " . ParseTimestamp($cooldown) . ".",true,'explore.php');
 			die($h->endpage());
 		}
 	}
@@ -326,7 +328,7 @@ function attacking()
                 $EnergyPercent = floor(100 / $set['AttackEnergyCost']);
                 $UserCurrentEnergy = $api->UserInfoGet($userid,'energy',true);
                 alert("danger", "Uh Oh!", "Attacking someone requires you to have {$EnergyPercent}% Energy. You currently
-				                        only have {$UserCurrentEnergy}%", true, 'index.php');
+				                        only have {$UserCurrentEnergy}%.", true, 'index.php');
                 die($h->endpage());
             }
         }
@@ -359,6 +361,8 @@ function attacking()
 		//Sharper blades skill
 		$specialnumber=((getSkillLevel($userid,9)*20)/100);
 		$r1['weapon']=$r1['weapon']+($r1['weapon']*$specialnumber);
+		if ($_GET['weapon'] == 235)
+			$r1['weapon']=($r1['weapon']*0.25) *$ir['level'];
 		$mydamage = round(($r1['weapon'] * $youdata['strength'] / ($odata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 		$hitratio = max(10, min(60 * $ir['agility'] / $odata['agility'], 95));
 		$ttu='';

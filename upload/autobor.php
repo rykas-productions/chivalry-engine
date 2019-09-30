@@ -1,4 +1,5 @@
 <?php
+$macropage = ('autobor.php');
 require('globals.php');
 if ($ir['bor'] == 0)
 {

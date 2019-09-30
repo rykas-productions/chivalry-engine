@@ -15,7 +15,11 @@ echo "<h3><i class='fas fa-toggle-on'></i> Users Online</h3><hr />
 [<a href='?act=5'>5 Minutes</a>]
 [<a href='?act=15'>15 Minutes</a>]
 [<a href='?act=60'>1 Hour</a>]
-[<a href='?act=1440'>1 Day</a>]<hr />";
+[<a href='?act=1440'>1 Day</a>]
+[<a href='?act=43200'>7 Days</a>]
+[<a href='?act=10080'>30 Days</a>]
+[<a href='?act=131400'>1 Quarter</a>]
+[<a href='?act=525600'>1 Year</a>]<hr />";
 
 //Time period isn't set, so set it to 15.
 if (!isset($_GET['act'])) {

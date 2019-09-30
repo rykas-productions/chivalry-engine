@@ -319,6 +319,24 @@ function check_data()
 	}
     $db->query("DELETE FROM `bounty_hunter` WHERE `bh_time` < {$time}");
 	missionCheck();
+	checkGuildVault();
+}
+
+function checkGuildVault()
+{
+	global $db, $api, $set, $userid, $ir;
+	if (isset($ir['guild']))
+	{
+		$q = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']} AND `guild_id` != 0");
+		while ($r = $db->fetch_row($q))
+		{
+			$maxvault = $r['guild_level'] * $set['GUILD_PRICE'];
+			if ($r['guild_primcurr'] > ($maxvault+1))
+			{
+				$db->query("UPDATE `guild` SET `guild_primcurr` = {$maxvault} WHERE `guild_id` = {$r['guild_id']}");
+			}
+		}
+	}
 }
 
 /**

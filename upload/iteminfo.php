@@ -176,6 +176,8 @@ if (!$itmid) {
 			</tr>";
         }
         if ($id['weapon']) {
+			if ($_GET['ID'] == 235)
+				$id['weapon']=($id['weapon']*0.25)*$ir['level'];
             echo "<tr>
 				<th width='33%'>
 					Item Weapon Rating

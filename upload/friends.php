@@ -17,6 +17,9 @@ switch ($_GET['action'])
 	case "remove":
 		remove_friend();
 		break;
+	case "spy":
+		spy();
+		break;
 	case "ccomment":
 		change_comment();
 		break;
@@ -29,10 +32,8 @@ function friends_list()
     global $db, $ir, $userid, $h, $api;
 	$ir['friend_count']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`friend_id`) FROM `friends` WHERE `friended` = {$userid}"));
     echo "
-<a href='?action=add'>Add an friend</a><br />
-These are the people on your friends list.
-<br />
-    {$ir['friend_count']} player(s) have added you to their friends list.
+[<a href='?action=add'>Add an friend</a>] || [<a href='?action=spy'>Hire Spy</a>]<br />
+These are the people on your friends list. " . number_format($ir['friend_count']) . " player(s) have added you to their friends list.
 <br />
 <table class='table table-bordered table-striped'>
 		<thead>
@@ -290,5 +291,86 @@ function change_comment()
             alert("danger","Uh Oh!","You can only edit a friend's comment for friends who are on your friends list.",true,'friends.php');
         }
     }
+	$h->endpage();
+}
+function spy()
+{
+	global $db, $userid, $api, $h, $ir;
+	echo "<h3>Hire Spy</h3>";
+	//Block access if user is in the infirmary.
+	if ($api->UserStatus($ir['userid'], 'infirmary')) {
+		alert('danger', "Unconscious!", "You cannot hire a spy while in the infirmary.", false);
+		die($h->endpage());
+	}
+	//Block access if user is in the dungeon.
+	if ($api->UserStatus($ir['userid'], 'dungeon')) {
+		alert('danger', "Locked Up!", "You cannot hire a spy while in the dungeon.");
+		die($h->endpage());
+	}
+	if (isset($_POST['userid']))
+	{
+		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
+		$q =
+                $db->query(
+                        "/*qc=on*/SELECT `username`
+                         FROM `users`
+                         WHERE `userid` = {$_POST['userid']}");
+        if ($userid == $_POST['userid'])
+        {
+            alert('danger',"Uh Oh!","You can read your own friends list, by the way...");
+        }
+        else if ($db->num_rows($q) == 0)
+        {
+            alert('danger',"Uh Oh!","You are trying to spy on a non-existent user.");
+        }
+		elseif ($ir['primary_currency'] < 5000000)
+		{
+			alert('danger',"Uh Oh!","You do not have enough Copper Coins to hire this spy. You need 5,000,000 
+			Copper Coins and you've only got " . number_format($ir['primary_currency']) . " Copper Coins.");
+		}
+		else
+        {
+			$api->UserTakeCurrency($userid,'primary',5000000);
+            $rng = Random(1,10);
+			if ($rng <= 4)
+			{
+				alert('danger',"Uh Oh!","Your spy took your Copper Coins and ran. Wow... what the fuck.");
+			}
+			elseif (($rng <= 8) && ($rng > 4))
+			{
+				$time = $ir['level'] * (Random(1,5));
+				alert('danger',"Uh Oh!","Your spy took the money... but then smacked you out cold. You wake up to find out he was a dungeon guard in disguise... and in a dungeon cell...");
+				$api->UserStatusSet($userid,'dungeon',$time,'Sketchy Spy');
+			}
+			else
+			{
+				$qc =
+                $db->query(
+                        "/*qc=on*/SELECT COUNT(`friender`)
+                         FROM `friends`
+                         WHERE `friender` = {$_POST['userid']}
+                         AND `friended` = {$userid}");
+				$dupe_count = $db->fetch_single($qc);
+				if ($dupe_count == 0)
+				{
+					alert('success',"Success!","Your spy takes the money and walks off. He returns to let you know that {$api->SystemUserIDtoName($_POST['userid'])} [{$_POST['userid']}] has <b>not</b> added you to their friends list.");
+				}
+				else
+				{
+					alert('success',"Success!","Your spy takes the money and walks off. He returns to let you know that {$api->SystemUserIDtoName($_POST['userid'])} [{$_POST['userid']}] has added you to their friends list.");
+				}
+			}
+        }
+	}
+	else
+	{
+		echo "This spy is a little different. You may use this spy to find out if someone has added you to their friends list. This spy costs a flat fee 
+		of 5,000,000 Copper Coins.<br />
+		<u>Just select the user you're curious if they've added you to their friends list, and a spy will attempt to let you know.</u>
+		<form method='post'>
+			" . user_dropdown('userid') . "
+			<input type='submit' class='btn btn-primary'>
+		</form>";
+	}
 	$h->endpage();
 }

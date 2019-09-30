@@ -51,6 +51,9 @@ switch ($_GET['action']) {
 	case 'herb':
 		mine_item();
 		break;
+	case 'potion':
+		potion();
+		break;
     default:
         home();
         break;
@@ -104,7 +107,9 @@ function home()
     }
 
     echo "<br />
-    [<a href='?action=buypower'>Buy Power Sets</a>]<br />";
+    [<a href='?action=buypower'>Buy Power Sets</a>]<br />
+	[<a href='?action=herb'>Use Mining Herb</a>]<br />
+	[<a href='?action=potion'>Drink Mining Potion</a>]<br />";
 
 }
 
@@ -304,6 +309,28 @@ function mine_item()
 		$wornofftime=time()+3600;
 		$db->query("UPDATE `mining` SET `mine_boost` = {$wornofftime} WHERE `userid` = {$userid}");
 		$api->UserTakeItem($userid, 177, 1);
+	}
+	else
+	{
+		alert('danger',"Uh Oh!","You do not have the required item to be here.",true,'inventory.php');
+		die($h->endpage());
+	}
+}
+
+function potion()
+{
+	global $db, $userid, $api, $h, $MUS;
+	if ($MUS['miningpower'] >= $MUS['max_miningpower'])
+	{
+		alert('danger',"Uh Oh!","There's no point in drinking a mining potion if you have full energy.",true,'inventory.php');
+		die($h->endpage());
+	}
+	if ($api->UserHasItem($userid, 227, 1))
+	{
+		alert('success',"Success!","You've drank a Mining Potion and had your mining energy refilled to 100%.",true,'inventory.php');
+		$wornofftime=time()+3600;
+		$db->query("UPDATE `mining` SET `mining_power` = `max_miningpower` WHERE `userid` = {$userid}");
+		$api->UserTakeItem($userid, 227, 1);
 	}
 	else
 	{

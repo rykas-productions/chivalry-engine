@@ -415,6 +415,10 @@ function home()
 			<a {$class[80]} href='?action=course4'>20 Courses</a><br />
 			<a {$class[81]} href='?action=course5'>40 Courses</a><br />
 		</div>
+		<div class='col-sm'>
+			<u><b>Misc</b></u><br />
+			<a {$class[85]} href='#'>Chump Change</a><br />
+		</div>
 	</div>";
 	$h->endpage();
 }

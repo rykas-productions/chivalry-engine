@@ -9,6 +9,7 @@ INSERT INTO `settings`
 (`conf_id`, `conf_name`, `conf_value`) 
 VALUES (NULL, 'lotterycash', '100000');
 */
+$macropage = ('raffle.php');
 require("globals.php");
 
 //Config

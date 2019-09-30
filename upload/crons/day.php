@@ -32,7 +32,7 @@ $db->query("UPDATE `users` SET `bank`=`bank`+(`bank`/20) WHERE `bank`>0 AND `las
 $db->query("UPDATE `users` SET `bigbank`=`bigbank`+(`bigbank`/20) WHERE `bigbank`>0 AND `laston` > {$last24} AND `bigbank`<100000001 AND `vip_days` != 0");
 $db->query("UPDATE `users` SET `vaultbank`=`vaultbank`+(`vaultbank`/20) WHERE `vaultbank`>0 AND `laston` > {$last24} AND `vaultbank`<300000001 AND `vip_days` != 0");
 
-$db->query("UPDATE `users` SET `hexbags` = 100, `bor` = 500");
+$db->query("UPDATE `users` SET `hexbags` = 100, `bor` = 1000");
 $db->query("UPDATE `user_settings` SET `att_dg` = 0");
 
 $db->query("UPDATE `users` SET `dayslogged` = 0 WHERE `laston` < {$last24}");
@@ -89,6 +89,8 @@ while ($gfr=$db->fetch_row($gdfq))
 		}
 	}
 }
+//Guild daily interest.
+$db->query("UPDATE `guild` SET `guild_primcurr`=`guild_primcurr`+(`guild_primcurr`/20) WHERE `guild_primcurr`>0");
 
 //Random player showcase
 $cutoff = time() - 86400;

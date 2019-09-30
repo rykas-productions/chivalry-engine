@@ -259,7 +259,7 @@ class headers
                 $DungeonRemain = TimeUntil_Parse($DungeonOut);
                 alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, '../quickuse.php?dungeon', 'Use Item');
             }
-            date_default_timezone_set("Europe/London");
+            date_default_timezone_set("America/New_York");
         }
     }
 

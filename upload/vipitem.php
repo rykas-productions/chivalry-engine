@@ -45,7 +45,7 @@ function autobor()
 	global $db,$h,$api, $userid;
 	if ($api->UserHasItem($userid,92))
 	{
-		$db->query("UPDATE `user_settings` SET `autobor` = `autobor` + 30000 WHERE `userid` = {$userid}");
+		$db->query("UPDATE `user_settings` SET `autobor` = `autobor` + 60000 WHERE `userid` = {$userid}");
 		$api->UserTakeItem($userid,92,1);
 		alert("success","Success!","Auto Boxes of Random Opener has been redeemed to your account.",true,'inventory.php');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Auto Boxes of Random Opener.");

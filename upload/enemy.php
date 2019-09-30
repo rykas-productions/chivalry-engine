@@ -20,6 +20,9 @@ switch ($_GET['action'])
 	case "ccomment":
 		change_comment();
 		break;
+	case "spy":
+		spy();
+		break;
 	default:
 		enemy_list();
 		break;
@@ -29,10 +32,8 @@ function enemy_list()
     global $db, $ir, $userid, $h, $api;
 	$ir['friend_count']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`enemy_id`) FROM `enemy` WHERE `enemy_user` = {$userid}"));
     echo "
-<a href='?action=add'>Add an enemy</a><br />
-These are the people on your enemy list.
-<br />
-    {$ir['friend_count']} player(s) have added you to their enemy list.
+[<a href='?action=add'>Add an Enemy</a>] || [<a href='?action=spy'>Hire Spy</a>]<br />
+These are the people on your enemy list. " . number_format($ir['friend_count']) . " player(s) have added you to their enemy list.
 <br />
 <table class='table table-bordered table-striped'>
 		<thead>
@@ -291,5 +292,84 @@ function change_comment()
             alert("danger","Uh Oh!","You can only edit a enemy's comment for enemy who are on your enemy list.",true,'enemy.php');
         }
     }
+	$h->endpage();
+}
+function spy()
+{
+	global $db, $userid, $api, $h, $ir;
+	echo "<h3>Hire Spy</h3>";
+	//Block access if user is in the infirmary.
+	if ($api->UserStatus($ir['userid'], 'infirmary')) {
+		alert('danger', "Unconscious!", "You cannot hire a spy while in the infirmary.", false);
+		die($h->endpage());
+	}
+	//Block access if user is in the dungeon.
+	if ($api->UserStatus($ir['userid'], 'dungeon')) {
+		alert('danger', "Locked Up!", "You cannot hire a spy while in the dungeon.");
+		die($h->endpage());
+	}
+	if (isset($_POST['userid']))
+	{
+		$_POST['userid'] = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : '';
+		$q =
+                $db->query(
+                        "/*qc=on*/SELECT `username`
+                         FROM `users`
+                         WHERE `userid` = {$_POST['userid']}");
+        if ($userid == $_POST['userid'])
+        {
+            alert('danger',"Uh Oh!","You can read your own friends list, by the way...");
+        }
+        else if ($db->num_rows($q) == 0)
+        {
+            alert('danger',"Uh Oh!","You are trying to spy on a non-existent user.");
+        }
+		elseif ($ir['primary_currency'] < 5000000)
+		{
+			alert('danger',"Uh Oh!","You do not have enough Copper Coins to hire this spy. You need 5,000,000 
+			Copper Coins and you've only got " . number_format($ir['primary_currency']) . " Copper Coins.");
+		}
+		else
+        {
+			$api->UserTakeCurrency($userid,'primary',5000000);
+            $rng = Random(1,10);
+			if ($rng <= 4)
+			{
+				alert('danger',"Uh Oh!","Your spy took your Copper Coins and ran. Wow... what the fuck.");
+			}
+			elseif (($rng <= 8) && ($rng > 4))
+			{
+				$time = $ir['level'] * (Random(1,5));
+				alert('danger',"Uh Oh!","Your spy took the money... but then smacked you out cold. You wake up to find out he was a dungeon guard in disguise... and in a dungeon cell...");
+				$api->UserStatusSet($userid,'dungeon',$time,'Sketchy Spy');
+			}
+			else
+			{
+				$qc = $db->query("/*qc=on*/SELECT COUNT(`enemy_adder`)
+									FROM `enemy`
+									 WHERE `enemy_adder` = {$_POST['userid']}
+									 AND `enemy_user` = {$userid}");
+				$dupe_count = $db->fetch_single($qc);
+				if ($dupe_count == 0)
+				{
+					alert('success',"Success!","Your spy takes the money and walks off. He returns to let you know that {$api->SystemUserIDtoName($_POST['userid'])} [{$_POST['userid']}] has <b>not</b> added you to their enemy list.");
+				}
+				else
+				{
+					alert('success',"Success!","Your spy takes the money and walks off. He returns to let you know that {$api->SystemUserIDtoName($_POST['userid'])} [{$_POST['userid']}] has added you to their enemy list.");
+				}
+			}
+        }
+	}
+	else
+	{
+		echo "This spy is a little different. You may use this spy to find out if someone has added you to their enemy list. This spy costs a flat fee 
+		of 5,000,000 Copper Coins.<br />
+		<u>Just select the user you're curious if they've added you to their enemy list, and a spy will attempt to let you know.</u>
+		<form method='post'>
+			" . user_dropdown('userid') . "
+			<input type='submit' class='btn btn-primary'>
+		</form>";
+	}
 	$h->endpage();
 }

@@ -6,6 +6,7 @@
 	Author: 	TheMasterGeneral, Original by ImJustIsabella
 	Website:	https://github.com/MasterGeneral156/chivalry-engine
 */
+$macropage = ('russianroulette.php');
 require("globals.php");
 echo "<h3><i class='game-icon game-icon-revolver'></i> Russian Roulette</h3><hr />";
 //Do not allow the user to play Russian Roulette if they're in the dungeon/infirmary.

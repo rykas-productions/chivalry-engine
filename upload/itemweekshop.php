@@ -1,50 +1,58 @@
 <?php
+$macropage = ('itemweekshop.php');
 require('globals.php');
 echo "<h4>Item of the Week</h4><hr />
-Here you may buy the three Items of the Week for a 50% discount. This should change weekly, so check back often.<br />";
+Here you may buy the three Items of the Week for a 20% discount. This should change weekly, so check back often.<br />";
 $item2=$db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$set['itemweek2']}"));
 $item1=$db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$set['itemweek1']}"));
 $item3=$db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$set['itemweek3']}"));
-$item1price=$item1['itmbuyprice']-($item1['itmbuyprice']/2);
-$item2price=$item2['itmbuyprice']-($item2['itmbuyprice']/2);
-$item3price=$item3['itmbuyprice']-($item3['itmbuyprice']/2);
-if (isset($_GET['buy1']))
+$item1price=$item1['itmbuyprice']-($item1['itmbuyprice']/5);
+$item2price=$item2['itmbuyprice']-($item2['itmbuyprice']/5);
+$item3price=$item3['itmbuyprice']-($item3['itmbuyprice']/5);
+if (!isset($_POST['item']))
+	$_POST['item']=0;
+if (isset($_POST['qty']))
+	$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : '';
+if ($_POST['item'] == 1)
 {
-    if ($api->UserHasCurrency($userid,'primary',$item1price))
+	$totalcost=$item1price*$_POST['qty'];
+    if ($api->UserHasCurrency($userid,'primary',$totalcost))
     {
-        $api->UserTakeCurrency($userid,'primary',$item1price);
-        $api->UserGiveItem($userid,$item1['itmid'],1);
-        alert('success',"Success!","You have successfully bought 1 {$item1['itmname']}.",false);
+        $api->UserTakeCurrency($userid,'primary',$totalcost);
+        $api->UserGiveItem($userid,$item1['itmid'],$_POST['qty']);
+        alert('success',"Success!","You have successfully bought {$_POST['qty']} {$item1['itmname']}(s) for " . number_format($totalcost) . " Copper Coins.",false);
     }
     else
     {
-        alert('danger',"Uh Oh!","You do not have enough Copper Coins to buy a {$item1['itmname']}.",false);
+        alert('danger',"Uh Oh!","You do not have enough Copper Coins to buy {$_POST['qty']} {$item1['itmname']}(s).",false);
     }
 }
-if (isset($_GET['buy2']))
+if ($_POST['item'] == 2)
 {
-    if ($api->UserHasCurrency($userid,'primary',$item2price))
+	$totalcost=$item2price*$_POST['qty'];
+    if ($api->UserHasCurrency($userid,'primary',$totalcost))
     {
-        $api->UserTakeCurrency($userid,'primary',$item2price);
-        $api->UserGiveItem($userid,$item2['itmid'],1);
-        alert('success',"Success!","You have successfully bought 1 {$item2['itmname']}.",false);
+        $api->UserTakeCurrency($userid,'primary',$totalcost);
+        $api->UserGiveItem($userid,$item2['itmid'],$_POST['qty']);
+        alert('success',"Success!","You have successfully bought {$_POST['qty']} {$item2['itmname']}(s) for " . number_format($totalcost) . " Copper Coins.",false);
     }
     else
     {
-        alert('danger',"Uh Oh!","You do not have enough Copper Coins to buy a {$item2['itmname']}.",false);
+        alert('danger',"Uh Oh!","You do not have enough Copper Coins to buy {$_POST['qty']} {$item2['itmname']}(s).",false);
     }
 }
-if (isset($_GET['buy3']))
+if ($_POST['item'] == 3)
 {
-    if ($api->UserHasCurrency($userid,'primary',$item3price))
+	$totalcost=$item3price*$_POST['qty'];
+    if ($api->UserHasCurrency($userid,'primary',$totalcost))
     {
-        $api->UserTakeCurrency($userid,'primary',$item3price);
-        $api->UserGiveItem($userid,$item3['itmid'],1);
-        alert('success',"Success!","You have successfully bought 1 {$item3['itmname']}.",false);
+        $api->UserTakeCurrency($userid,'primary',$totalcost);
+        $api->UserGiveItem($userid,$item3['itmid'],$_POST['qty']);
+        alert('success',"Success!","You have successfully bought {$_POST['qty']} {$item3['itmname']}(s) for " . number_format($totalcost) . " Copper Coins.",false);
     }
     else
     {
-        alert('danger',"Uh Oh!","You do not have enough Copper Coins to buy a {$item3['itmname']}.",false);
+        alert('danger',"Uh Oh!","You do not have enough Copper Coins to buy buy {$_POST['qty']} {$item3['itmname']}(s).",false);
     }
 }
 echo "<div class='row'>
@@ -84,7 +92,12 @@ echo "<div class='row'>
 			}
 		}
         echo "<br />
-        <a href='?buy1' class='btn btn-primary'>Buy</a></div>
+        <form method='post'>
+			<input type='number' name='qty' name='qty' min='1' placeholder='Quantity' class='form-control'>
+			<input type='hidden' name='item' value='1'>
+			<input type='submit' value='Buy' class='btn btn-primary'>
+		</form>
+		</div>
 		</div>
         </div>
         ";
@@ -125,7 +138,12 @@ echo "
 			}
 		}
         echo "<br />
-        <a href='?buy2' class='btn btn-primary'>Buy</a></div>
+        <form method='post'>
+			<input type='number' name='qty' min='1' placeholder='Quantity' class='form-control'>
+			<input type='hidden' name='item' value='2'>
+			<input type='submit' value='Buy' class='btn btn-primary'>
+		</form>
+		</div>
 		</div>
         </div>
         ";
@@ -166,7 +184,11 @@ echo "
 			}
 		}
         echo "<br />
-        <a href='?buy3' class='btn btn-primary'>Buy</a></div>
+		<form method='post'>
+			<input type='number' name='qty' min='1' placeholder='Quantity' class='form-control'>
+			<input type='hidden' name='item' value='3'>
+			<input type='submit' value='Buy' class='btn btn-primary'>
+		</form>
 		</div>
         </div>
         </div>

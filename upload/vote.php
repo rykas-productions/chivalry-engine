@@ -36,10 +36,13 @@ switch ($_GET['action']) {
 function home()
 {
     global $set, $h, $db, $userid;
+	$totalvotes=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `vote_raffle`"));
+	$yourvotes=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `vote_raffle` WHERE `userid` = {$userid}"));
     echo "Here you may vote for {$set['WebsiteName']} at various RPG toplists and be rewarded. Whether or not you voted is
 	logged. If you scam this system, you will be dealt with severely. If you do not get rewarded, try voting again later.
 	<br />
-    You can spend Vote Points at the <a href='votestore.php'>Vote Point Store</a>.";
+    You can spend Vote Points at the <a href='votestore.php'>Vote Point Store</a>.<br />
+	You have voted {$yourvotes} times this month. There are {$totalvotes} votes for this month.";
 	$q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'twg'");
 	$vote_count = $db->fetch_single($q);
 	$db->free_result($q);

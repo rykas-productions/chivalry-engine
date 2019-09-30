@@ -210,7 +210,7 @@ function summary()
 	<table class='table table-bordered'>
 	<tr>
 		<th colspan='2'>
-			Guild Information
+			{$gd['guild_name']} [{$gd['guild_id']}] Information
 		</th>
 	</tr>
 	<tr align='left'>
@@ -255,12 +255,12 @@ function summary()
 			Experience
 		</th>
 		<td>
-			{$gd['guild_xp']} / {$gd['xp_needed']} [<a href='?action=donatexp'>Donate Experience</a>]
+			" . number_format($gd['guild_xp']) . " / " . number_format($gd['xp_needed']) . " [<a href='?action=donatexp'>Donate Experience</a>]
 		</td>
 	</tr>
 	<tr align='left'>
 		<th>
-			Copper Coins
+			Copper Coins*
 		</th>
 		<td>
 			" . number_format($gd['guild_primcurr']) . " / " . number_format($gd['guild_level'] * $set['GUILD_PRICE']) . "
@@ -296,6 +296,7 @@ function summary()
 		echo"</td>
 	</tr>
       </table>
+	  * = Increased every night by 2%.
 	  <a href='viewguild.php'>Go Back</a>";
 }
 

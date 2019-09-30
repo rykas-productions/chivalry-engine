@@ -10,7 +10,7 @@ require('globals.php');
 echo "<h3><i class='game-icon game-icon-crown'></i> Hall of Fame</h3><hr />";
 //Add stats to this array.
 $StatArray = array('total', 'level', 'strength', 'agility', 'guard', 'labor', 'iq',
-    'primary_currency', 'mining_level', 'secondary_currency', 'busts', 'kills', 'deaths', 'richest', 'crypto');
+    'primary_currency', 'mining_level', 'secondary_currency', 'busts', 'kills', 'deaths', 'richest');
 //Stat is not chosen, set to level.
 if (!isset($_GET['stat'])) {
     $_GET['stat'] = 'level';
@@ -48,12 +48,6 @@ elseif ($_GET['stat'] == 'richest')
                     ON `u`.`userid` = `us`.`userid`
                     WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0");
 }
-elseif ($_GET['stat'] == 'crypto')
-{
-    require "class/coinhive-api.php";
-    $ch = new CoinHiveAPI('M7tq1e3TbEJcTxldHJjWmwMHrKX4eGyR');
-    $top20 = $ch->get('/user/top');
-}
  //GET wants anything else ranked.
 else {
     $q = $db->query("/*qc=on*/SELECT `u`.*, `us`.*
@@ -77,8 +71,7 @@ echo "<a href='?stat=strength'>Strength</a>
         || <a href='?stat=guard'>Guard</a>
         || <a href='?stat=labor'>Labor</a>
 		|| <a href='?stat=iq'>IQ</a>
-        || <a href='?stat=total'>Total Stats</a>
-        || <a href='?stat=crypto'>Mined Crypto</a>";
+        || <a href='?stat=total'>Total Stats</a>";
 echo "<br />Listing the 20 players with the highest {$_GET['stat']}.";
 echo "<table class='table table-bordered'>
 <tr>
@@ -90,7 +83,7 @@ echo "<table class='table table-bordered'>
     </th>";
 if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
     || $_GET['stat'] == 'mining_level' || $_GET['stat'] == 'busts' || $_GET['stat'] == 'kills'
-    || $_GET['stat'] == 'deaths' || $_GET['stat'] == 'crypto' || $_GET['stat'] == 'richest'
+    || $_GET['stat'] == 'deaths' || $_GET['stat'] == 'richest'
 ) {
     echo "<th width='45%'>
                 Value
@@ -122,24 +115,6 @@ if ($_GET['stat'] != 'crypto')
         echo "
         </tr>";
         $rank++;
-    }
-}
-else
-{
-    foreach ($top20['users'] as $users)
-    {
-        echo "<tr>
-            <td>
-                {$rank}
-            </td>
-            <td>
-                <a href='profile.php?user={$users['name']}'>" . parseUsername($users['name']) . "</a> [{$users['name']}]
-            </td>
-            <td>
-                " . number_format($users['total']) . "
-            </td>
-        </tr>";
-        $rank=$rank+1;
     }
 }
 echo "</table>";

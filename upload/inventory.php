@@ -279,6 +279,21 @@ while ($i = $db->fetch_row($inv)) {
     {
         echo " [<a href='bomb.php?action=assassin'>Assassinate</a>]";
     }
+	//Assassin Note
+    if ($i['itmid'] == 222)
+    {
+        echo " [<a href='bomb.php?action=assassin'>Set Bomb</a>]";
+    }
+	//Mining Potion
+    if ($i['itmid'] == 227)
+    {
+        echo " [<a href='mine.php?action=potion'>Drink</a>]";
+    }
+	//Spell Tome Key
+    if ($i['itmid'] == 250)
+    {
+        echo " [<a href='spellbook.php'>Unlock Tome</a>]";
+    }
     $ringsarray=array(113,114,115,116,125,126,127);
     if (in_array($i['itmid'],$ringsarray))
     {
@@ -299,6 +314,7 @@ while ($i = $db->fetch_row($inv)) {
     echo "</td>
         </tr>";
 }
-echo "</table>";
+echo "</table>
+<a href='inventdump.php' class='btn btn-danger'>Dump Inventory</a>";
 $db->free_result($inv);
 $h->endpage();

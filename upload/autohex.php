@@ -1,4 +1,6 @@
 <?php
+$macropage = ('autohex.php');
+$multipler = 1.0;
 require('globals.php');
 if ($ir['autohex'] == 0)
 {
@@ -60,13 +62,13 @@ if (isset($_POST['open']))
 		$chance=Random(1,96);
 		if ($chance <= 35)
 		{
-			$cash=Random(750,3500);
+			$cash=Random(750,3500)*$multipler;
 			$cash=round($cash+($cash*$lvlmultiplier));
 			$copper=$copper+$cash;
 		}
 		elseif (($chance > 35) && ($chance <= 45))
 		{
-			$cash=Random(5,20);
+			$cash=Random(5,20)*$multipler;
 			$specialnumber=((getSkillLevel($userid,11)*5)/100);
 			$cash=round($cash+($cash*$specialnumber));
 			$cash=round($cash+($cash*$lvlmultiplier));
@@ -74,61 +76,61 @@ if (isset($_POST['open']))
 		}
 		elseif (($chance > 45) && ($chance <= 50))
 		{
-			$cash=Random(30,60);
+			$cash=Random(30,60)*$multipler;
 			$cash=round($cash+($cash*$lvlmultiplier));
 			$dungeon=$dungeon+$cash;
 		}
 		elseif (($chance > 50) && ($chance <= 55))
 		{
-			$cash=Random(30,60);
+			$cash=Random(30,60)*$multipler;
 			$cash=round($cash+($cash*$lvlmultiplier));
 			$infirmary=$infirmary+$cash;
 		}
 		elseif (($chance > 55) && ($chance <= 60))
 		{
-			$rng=Random(2,5);
+			$rng=Random(2,5)*$multipler;
 			$rng=round($rng+($rng*$lvlmultiplier));
 			$leeches=$leeches+$rng;
 		}
 		elseif (($chance > 60) && ($chance <= 65))
 		{
-			$rng=Random(2,5);
+			$rng=Random(2,5)*$multipler;
 			$rng=round($rng+($rng*$lvlmultiplier));
 			$lockpicks=$lockpicks+$rng;
 		}
 		elseif (($chance > 65) && ($chance <= 68))
 		{
-			$gain=Random(1,10)*$ir['level'];
+			$gain=(Random(1,10)*$ir['level'])*$multipler;
 			$gain=round($gain+($gain*$lvlmultiplier));
 			$strength=$strength+$gain;
 		}
 		elseif (($chance > 68) && ($chance <= 71))
 		{
-			$gain=Random(1,10)*$ir['level'];
+			$gain=(Random(1,10)*$ir['level'])*$multipler;
 			$gain=round($gain+($gain*$lvlmultiplier));
 			$agility=$agility+$gain;
 		}
 		elseif (($chance > 71) && ($chance <= 74))
 		{
-			$gain=Random(1,10)*$ir['level'];
+			$gain=(Random(1,10)*$ir['level'])*$multipler;
 			$gain=round($gain+($gain*$lvlmultiplier));
 			$guard=$guard+$gain;
 		}
         elseif (($chance > 74) && ($chance <= 80))
         {
-            $gain=Random(2,10);
+            $gain=Random(2,10)*$multipler;
 			$gain=round($gain+($gain*$lvlmultiplier));
             $rocks=$rocks+$gain;
         }
         elseif (($chance > 80) && ($chance <= 86))
         {
-            $gain=Random(2,10);
+            $gain=Random(2,10)*$multipler;
 			$gain=round($gain+($gain*$lvlmultiplier));
             $sticks=$sticks+$gain;
         }
 		elseif (($chance > 86) && ($chance <= 93))
 		{
-			$bor=Random(2,15);
+			$bor=Random(2,15)*$multipler;
 			$gain=round($bor+($bor*$lvlmultiplier));
 			$borg=$borg+$bor;
 		}
@@ -144,20 +146,20 @@ if (isset($_POST['open']))
 	$db->query("UPDATE `users` SET `hexbags` = `hexbags` - {$_POST['open']} WHERE `userid` = {$userid}");
 	$db->query("UPDATE `user_settings` SET `autohex` = `autohex` - {$_POST['open']} WHERE `userid` = {$userid}");
 	echo "After automatically opening {$number} Hexbags, you have gained the following:<br />
-		{$copper} Copper Coins<br />
-		{$tokens} Chivalry Tokens<br />
-		{$dungeon} minutes in the dungeon.<br />
-		{$infirmary} minutes in the infirmary.<br />
-		{$leeches} Leeches<br />
-		{$lockpicks} Lockpicks.<br />
-        {$rocks} Heavy Rocks.<br />
-		{$sticks} Sharpened Sticks.<br />
-		{$strength} strength.<br />
-		{$agility} agility.<br />
-		{$guard} guard.<br />
-		{$borg} Boxes of Random.<br />
-        {$notes} Assassination Notes.<br />
-		{$nothing} Hexbags had nothing in them.";
+		" . number_format($copper) . " Copper Coins<br />
+		" . number_format($tokens) . " Chivalry Tokens<br />
+		" . number_format($dungeon) . " minutes in the dungeon.<br />
+		" . number_format($infirmary) . " minutes in the infirmary.<br />
+		" . number_format($leeches) . " Leeches<br />
+		" . number_format($lockpicks) . " Lockpicks.<br />
+        " . number_format($rocks) . " Heavy Rocks.<br />
+		" . number_format($sticks) . " Sharpened Sticks.<br />
+		" . number_format($strength) . " strength.<br />
+		" . number_format($agility) . " agility.<br />
+		" . number_format($guard) . " guard.<br />
+		" . number_format($borg) . " Boxes of Random.<br />
+        " . number_format($notes) . " Assassination Notes.<br />
+		" . number_format($nothing) . " Hexbags had nothing in them.";
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
 	$api->UserStatusSet($userid,'infirmary',$infirmary,"Dirty Needle");
@@ -174,8 +176,8 @@ if (isset($_POST['open']))
 	$api->UserGiveItem($userid,33,$borg);
     $api->UserGiveItem($userid,222,$notes);
 	//Logs
-	$api->SystemLogsAdd($userid,"hexbags","Received {$copper} Copper Coins.");
-	$api->SystemLogsAdd($userid,"hexbags","Received {$tokens} Chivalry Tokens.");
+	$api->SystemLogsAdd($userid,"hexbags","Received " . number_format($copper) . " Copper Coins.");
+	$api->SystemLogsAdd($userid,"hexbags","Received " . number_format($tokens) . " Chivalry Tokens.");
 	$api->SystemLogsAdd($userid,"hexbags","Received {$dungeon} dungeon minutes.");
 	$api->SystemLogsAdd($userid,"hexbags","Received {$infirmary} infirmary minutes.");
 	$api->SystemLogsAdd($userid,"hexbags","Received {$leeches} Leeches.");

@@ -66,7 +66,7 @@ function index()
 				<table class='table table-bordered'>
 					<tr>
 						<td width='50%'>
-							It'll cost you {$bank_feepercent}% of the money you deposit. (Max " . number_format($bank_maxfee) . ")
+							Deposits are free.
 							<form action='?action=deposit' method='post'>
 								<b>Copper Coins</b><br />
 								<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' required='1' name='deposit' value='{$ir['primary_currency']}'><br />
@@ -118,19 +118,14 @@ function deposit()
     if ($_POST['deposit'] > $ir['primary_currency']) {
         alert('danger', "Uh Oh!", "You are trying to deposit more cash than you current have!", true, 'bank.php');
     } else {
-        $fee = ceil($_POST['deposit'] * $bank_feepercent / 100);
-        if ($fee > $bank_maxfee) {
-            $fee = $bank_maxfee;
-        }
         //$gain is amount put into account after the fee is taken.
-        $gain = $_POST['deposit'] - $fee;
+        $gain = $_POST['deposit'];
         $ir['bank'] += $gain;
         //Update user's bank and Copper Coins info.
         $api->UserTakeCurrency($userid, 'primary', $_POST['deposit']);
         $api->UserInfoSetStatic($userid, "bank", $ir['bank']);
-        alert('success', "Success!", "You hand over " . number_format($_POST['deposit']) . " to be deposited. After the
-		    fee (" . number_format($fee) . " Copper Coins) is taken from your deposit, " . number_format($gain) . " is added to your
-		    bank account. You now have " . number_format($ir['bank']) . " in your account.", true, 'bank.php');
+        alert('success', "Success!", "You hand over " . number_format($_POST['deposit']) . " to be deposited. " . number_format($gain) . " Copper Coins 
+		is added to your bank account. You now have " . number_format($ir['bank']) . " in your account.", true, 'bank.php');
         //Log bank transaction.
         $api->SystemLogsAdd($userid, 'bank', "Deposited " . number_format($_POST['deposit']) . ".");
     }
