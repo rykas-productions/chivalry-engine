@@ -118,7 +118,7 @@ function createCard($cardTitle,$cardBody)
 	<div class='card'>
 		<div class='card-body'>
 			<h5 class='card-title'>{$cardTitle}</h5>
-			<p class='card-text'><{$cardBody}</p>
+			<p class='card-text'>{$cardBody}</p>
 		</div>
 	</div>";
 }
