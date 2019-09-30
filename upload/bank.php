@@ -1,7 +1,7 @@
 <?php
 /*
-	File:		functions/func_config.php
-	Created: 	9/29/2019 at 9:40PM Eastern Time
+	File:		bank.php
+	Created: 	9/29/2019 at 10:50PM Eastern Time
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/rykas-productions/chivalry-engine
 	MIT License
@@ -22,38 +22,47 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-function readConfigFromDB($moduleName)
+$moduleID=('bank');
+require('./globals_auth.php');
+if (!readConfigFromDB($moduleID))
 {
-	global $db;
-	$q=$db->query("SELECT `setting_value` FROM `game_settings` WHERE `setting_name` = '{$moduleName}_config'");
-	if ($db->num_rows($q) == 0)
-		return false;
+	$defaultConfig = formatConfig(array('bankOpeningFee' => 5000, 'bankWithdrawPercent' => 5, 'bankWithdrawMaxFee' => 1000));
+	writeConfigToDB($moduleID, $defaultConfig);
+	echo "Installing default config...";
+	headerRedirect("bank.php");
+}
+elseif (isset($_GET['config']) && ($ir['staffLevel'] == 2))
+{
+	echo "<h3>Config for {$moduleID}</h3><hr />";
+	if (isset($_POST['change']))
+	{
+		
+	}
 	else
-		return $db->fetch_single($q);
-	
+	{
+		$config=getConfigForPHP($moduleID);
+		foreach ($config as $k => $v)
+		{
+			echo "{$v}";
+		}
+	}
 }
-function writeConfigToDB($moduleName, $configJson)
+else
 {
-	global $db;
-	$db->query("INSERT INTO `game_settings` (`setting_name`, `setting_value`) VALUES ('{$moduleName}_config', '{$configJson}')");
-}
-function readConfigFromFile($moduleName)
-{
-	
-}
-function writeConfigToFile($moduleName, $configJson)
-{
-	
-}
-function formatConfig($string)
-{
-	return json_encode($string);
-}
-function unformatConfig($json)
-{
-	return json_decode($json, true);
-}
-function getConfigForPHP($moduleName)
-{
-	return unformatConfig(readConfigFromDB($moduleName));
+	$config=getConfigForPHP($moduleID);
+	if ($ir['primaryCurrencyBank'] = -1)
+	{
+		if (isset($_GET['buy']))
+		{
+			
+		}
+		else
+		{
+			echo "Do you wish to buy a bank account? It'll cost you " . number_format($config['bankOpeningFee']) . " " . constant("primary_currency") . "<br />
+			<a href='?buy'>Yes, Please!</a>";
+		}
+	}
+	else
+	{
+	}
 }
