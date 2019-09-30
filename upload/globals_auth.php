@@ -55,5 +55,33 @@ if (isset($moduleID) && !empty($moduleID))
 	if (function_exists('initialize'))
 		initialize();
 	else
-		trigger_error("Module ID: {$moduleID} does not have the required initialize(); function in file. Please create it.");
+		trigger_error("Module ID: {$moduleID} does not have the required `initialize();` function in file. Please create it.");
+	if (isset($_GET['config']) && ($ir['staffLevel'] == 2))
+	{
+		echo "<h3>Config for {$moduleID}</h3><hr />";
+		if (isset($_POST['formSubmitValue']))
+		{
+			$configArray = [];
+			foreach ($_POST as $k => $v)
+			{
+				if (!($k == 'formSubmitValue'))
+				{
+					$configArray[$k] = $v;
+				}
+			}
+			writeConfigToDB($moduleID, formatConfig($configArray));
+			echo "Updated module config.";
+		}
+		else
+		{
+			$config=getConfigForPHP($moduleID);
+			$formArray=array();
+			foreach ($config as $k => $v)
+			{
+				array_push($formArray,array('text',$k,$k,$v));
+			}
+			createPostForm('?config',$formArray, 'Update Module Config');
+		}
+		die($h->endHeaders());
+	}
 }
