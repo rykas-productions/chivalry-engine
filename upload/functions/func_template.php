@@ -67,6 +67,27 @@ function createFourCols($col1, $col2, $col3, $col4)
 		</div>
 	</div>";
 }
+function createFiveCols($col1, $col2, $col3, $col4, $col5)
+{
+	echo "
+	<div class='row'>
+		<div class='col-sm'>
+			{$col1}
+		</div>
+		<div class='col-sm'>
+			{$col2}
+		</div>
+		<div class='col-sm'>
+			{$col3}
+		</div>
+		<div class='col-sm'>
+			{$col4}
+		</div>
+		<div class='col-sm'>
+			{$col5}
+		</div>
+	</div>";
+}
 function createSixCols($col1, $col2, $col3, $col4, $col5, $col6)
 {
 	echo "
