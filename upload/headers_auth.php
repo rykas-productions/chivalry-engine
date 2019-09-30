@@ -83,6 +83,7 @@ class headers
 		<body>
 		<main role="main" class="flex-shrink-0">
 			<div class="container">';
+			$this->loadStatBar();
 	}
 	function endBody()
 	{
@@ -102,5 +103,20 @@ class headers
 		$this->endBody();
 		$this->startFooter();
 		$this->endFooter();
+	}
+	function loadStatBar()
+	{
+		global $ir;
+		$accBar="{$ir['username']} [{$ir['userid']}]<br />
+		Level: {$ir['level']}<br />
+		Experience: {$ir['experience']}<br />
+		Primary Currency: {$ir['primaryCurrencyHeld']}";
+		$infoBar="Account info here...";
+		$statBar=createProgressBarLabel(returnPercentage($ir['energy'], $ir['maxEnergy']), "Energy: {$ir['energy']} / {$ir['maxEnergy']}") . "<br />" .
+		createProgressBarLabel(returnPercentage($ir['brave'], $ir['maxBrave']), "Brave: {$ir['brave']} / {$ir['maxBrave']}") . "<br />" .
+		createProgressBarLabel(returnPercentage($ir['will'], $ir['maxWill']), "Will: {$ir['will']} / {$ir['maxWill']}") . "<br />" .
+		createProgressBarLabel(returnPercentage($ir['hp'], $ir['maxHP']), "HP: {$ir['hp']} / {$ir['maxHP']}");
+		createThreeCols(createTitlelessCard($accBar), createTitlelessCard($infoBar), createTitlelessCard($statBar));
+		
 	}
 }

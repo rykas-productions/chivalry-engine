@@ -56,3 +56,7 @@ function headerRedirect($location)
 {
 	return header("Location: {$location}");
 }
+function returnPercentage($min, $max)
+{
+	return round($min / $max * 100);
+}

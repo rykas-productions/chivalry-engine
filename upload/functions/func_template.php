@@ -112,3 +112,33 @@ function createSixCols($col1, $col2, $col3, $col4, $col5, $col6)
 		</div>
 	</div>";
 }
+function createCard($cardTitle,$cardBody)
+{
+	return "
+	<div class='card'>
+		<div class='card-body'>
+			<h5 class='card-title'>{$cardTitle}</h5>
+			<p class='card-text'><{$cardBody}</p>
+		</div>
+	</div>";
+}
+function createTitlelessCard($cardBody)
+{
+	return "
+	<div class='card'>
+		<div class='card-body'>
+			<p class='card-text'>{$cardBody}</p>
+		</div>
+	</div>";
+}
+function createProgressBar($filledPercentage)
+{
+	return createProgressBarLabel($filledPercentage, "{$filledPercentage}%");
+}
+function createProgressBarLabel($filledPercentage, $label)
+{
+	return "
+	<div class='progress'>
+		<div class='progress-bar' role='progressbar' style='width: {$filledPercentage}%'>{$label}</div>
+	</div>";
+}
