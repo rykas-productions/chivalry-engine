@@ -67,7 +67,15 @@ function createUserData($userid)
 }
 function createUserStats($userid)
 {
-	$db->query("INSERT INTO `users_account_data` VALUES ('{$userid}')");
+	global $db;
+	$db->query("INSERT INTO `users_stats` 
+		(`userid`, `level`, `experience`, `strength`, `agility`, 
+		`guard`, `labor`, `iq`, `energy`, `maxEnergy`, `will`, 
+		`maxWill`, `brave`, `maxBrave`, `hp`, `maxHP`, 
+		`primaryCurrencyHeld`, `primaryCurrencyBank`) 
+		VALUES ('{$userid}', '1', '0', '10', '10', '10', '10', 
+		'10', '10', '10', '100', '100', '5', '5', '100', '100', 
+		'100', '-1')");
 }
 function getUserIP()
 {
