@@ -35,7 +35,6 @@ function initialize()
 		headerRedirect("bank.php");
 	}
 }
-$config=getConfigForPHP($moduleID);
 if ($ir['primaryCurrencyBank'] = -1)
 {
 	if (isset($_GET['buy']))
@@ -44,7 +43,7 @@ if ($ir['primaryCurrencyBank'] = -1)
 	}
 	else
 	{
-		echo "Do you wish to buy a bank account? It'll cost you " . number_format($config['bankOpeningFee']) . " " . constant("primary_currency") . "<br />
+		echo "Do you wish to buy a bank account? It'll cost you " . number_format($moduleConfig['bankOpeningFee']) . " " . constant("primary_currency") . "<br />
 		<a href='?buy'>Yes, Please!</a>";
 	}
 }

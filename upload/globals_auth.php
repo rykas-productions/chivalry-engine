@@ -56,6 +56,7 @@ if (isset($moduleID) && !empty($moduleID))
 		initialize();
 	else
 		trigger_error("Module ID: {$moduleID} does not have the required `initialize();` function in file. Please create it.");
+	$moduleConfig=getConfigForPHP($moduleID);
 	if (isset($_GET['config']) && ($ir['staffLevel'] == 2))
 	{
 		echo "<h3>Config for {$moduleID}</h3><hr />";
