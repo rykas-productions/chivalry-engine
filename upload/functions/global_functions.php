@@ -34,36 +34,21 @@ function createForm($method, $action, $inputsArray, $submitButtonName)
 	echo "<form method='{$method}' action='{$action}'>";
 	foreach ($inputsArray as $input) 
 	{
+		if (!isset($input[3]))
+			$input[3]='';
 		echo "<div class='form-group'>
 		<label for='{$input[1]}'>{$input[2]}</label>
-		<input type='{$input[0]}' name='{$input[1]}' class='form-control' placeholder='{$input[2]}'>
-		</div>";
-	}
-	echo "<button class='btn btn-primary' type='submit'>{$submitButtonName}</button>
-	</form>";
-}
-function createFormHiddenValue($method, $action, $inputsArray, $submitButtonName, $hiddenValue)
-{
-	echo "<form method='{$method}' action='{$action}'>";
-	foreach ($inputsArray as $input) 
-	{
-		echo "<div class='form-group'>
-		<label for='{$input[1]}'>{$input[2]}</label>
-		<input type='{$input[0]}' name='{$input[1]}' class='form-control' placeholder='{$input[2]}'>
+		<input type='{$input[0]}' name='{$input[1]}' class='form-control' placeholder='{$input[2]}' value='{$input[3]}'>
 		</div>";
 	}
 	echo "
-	<input type='hidden' name='{$hiddenValue}' value='1'>
+	<input type='hidden' name='formSubmitValue' value='1'>
 	<button class='btn btn-primary' type='submit'>{$submitButtonName}</button>
 	</form>";
 }
 function createPostForm($action, $inputsArray, $submitButtonName)
 {
 	createForm('post', $action, $inputsArray, $submitButtonName);
-}
-function createPostFormHiddenValue($action, $inputsArray, $submitButtonName, $hiddenValue)
-{
-	createFormHiddenValue('post', $action, $inputsArray, $submitButtonName, $hiddenValue);
 }
 function createGetForm($action, $inputsArray, $submitButtonName)
 {
