@@ -111,3 +111,23 @@ function returnUnreadMailCount()
 	global $db, $userid;
 	return $db->num_rows($db->query("SELECT `mailID` FROM `mail` WHERE `mailTo` = {$userid} AND `mailReadTime` = 0"));
 }
+function checkInfirmary($user = '')
+{
+	global $db, $userid;
+	if (empty($user))
+		$user = $userid;
+	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = {$user}");
+	if ($db->fetch_single($q) < returnUnixTimestamp())
+		return false;
+	else
+		return true;
+}
+function returnRemainingInfirmaryTime($user = '')
+{
+	global $db, $userid;
+	if (empty($user))
+		$user = $userid;
+	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = {$user}");
+	$r=$db->fetch_single($q);
+	return $r - returnUnixTimestamp();
+}
