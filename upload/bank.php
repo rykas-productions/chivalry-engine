@@ -24,45 +24,30 @@
 */
 $moduleID=('bank');
 require('./globals_auth.php');
-if (!readConfigFromDB($moduleID))
+function initialize()
 {
-	$defaultConfig = formatConfig(array('bankOpeningFee' => 5000, 'bankWithdrawPercent' => 5, 'bankWithdrawMaxFee' => 1000));
-	writeConfigToDB($moduleID, $defaultConfig);
-	echo "Installing default config...";
-	headerRedirect("bank.php");
+	global $moduleID;
+	if (!readConfigFromDB($moduleID))
+	{
+		$defaultConfig = formatConfig(array('bankOpeningFee' => 5000, 'bankWithdrawPercent' => 5, 'bankWithdrawMaxFee' => 1000));
+		writeConfigToDB($moduleID, $defaultConfig);
+		echo "Installing default config...";
+		headerRedirect("bank.php");
+	}
 }
-elseif (isset($_GET['config']) && ($ir['staffLevel'] == 2))
+$config=getConfigForPHP($moduleID);
+if ($ir['primaryCurrencyBank'] = -1)
 {
-	echo "<h3>Config for {$moduleID}</h3><hr />";
-	if (isset($_POST['change']))
+	if (isset($_GET['buy']))
 	{
 		
 	}
 	else
 	{
-		$config=getConfigForPHP($moduleID);
-		foreach ($config as $k => $v)
-		{
-			echo "{$v}";
-		}
+		echo "Do you wish to buy a bank account? It'll cost you " . number_format($config['bankOpeningFee']) . " " . constant("primary_currency") . "<br />
+		<a href='?buy'>Yes, Please!</a>";
 	}
 }
 else
 {
-	$config=getConfigForPHP($moduleID);
-	if ($ir['primaryCurrencyBank'] = -1)
-	{
-		if (isset($_GET['buy']))
-		{
-			
-		}
-		else
-		{
-			echo "Do you wish to buy a bank account? It'll cost you " . number_format($config['bankOpeningFee']) . " " . constant("primary_currency") . "<br />
-			<a href='?buy'>Yes, Please!</a>";
-		}
-	}
-	else
-	{
-	}
 }
