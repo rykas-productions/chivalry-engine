@@ -106,3 +106,8 @@ function returnCurrentUserData($userid)
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1"));
 }
+function returnUnreadMailCount()
+{
+	global $db, $userid;
+	return $db->num_rows($db->query("SELECT `mailID` FROM `mail` WHERE `mailTo` = {$userid} AND `mailReadTime` = 0"));
+}

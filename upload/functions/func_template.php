@@ -142,3 +142,11 @@ function createProgressBarLabel($filledPercentage, $label)
 		<div class='progress-bar bg-success' role='progressbar' style='width: {$filledPercentage}%'>{$label}</div>
 	</div>";
 }
+function returnFormattedUnreadMail()
+{
+	$q=returnUnreadMailCount();
+	if ($q == 0)
+		return "You have 0 unread messages. View <a href='#'>here</a>.";
+	else
+		return "<span class='text-danger'>You have {$q} unread messages. View <a href='#'>here</a>.</span>";
+}

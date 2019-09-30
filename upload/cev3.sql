@@ -23,6 +23,20 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `mail`
+--
+
+CREATE TABLE `mail` (
+  `mailID` int(10) UNSIGNED NOT NULL,
+  `mailFrom` int(10) UNSIGNED NOT NULL,
+  `mailTo` int(10) UNSIGNED NOT NULL,
+  `mailTime` int(11) NOT NULL,
+  `mailSubject` text NOT NULL,
+  `mailText` text NOT NULL,
+  `mailReadTime` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
 -- Table structure for table `users_account_data`
 --
 
@@ -83,6 +97,12 @@ CREATE TABLE `users_stats` (
 --
 
 --
+-- Indexes for table `mail`
+--
+ALTER TABLE `mail`
+  ADD PRIMARY KEY (`mailID`);
+  
+--
 -- Indexes for table `users_account_data`
 --
 ALTER TABLE `users_account_data`
@@ -103,6 +123,12 @@ ALTER TABLE `users_stats`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `mail`
+--
+ALTER TABLE `mail`
+  MODIFY `mailID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users_core`
