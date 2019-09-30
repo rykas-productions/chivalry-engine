@@ -35,7 +35,11 @@ function readConfigFromDB($moduleName)
 function writeConfigToDB($moduleName, $configJson)
 {
 	global $db;
-	$db->query("INSERT INTO `game_settings` (`setting_name`, `setting_value`) VALUES ('{$moduleName}_config', '{$configJson}')");
+	$q=$db->query("SELECT `setting_value` FROM `game_settings` WHERE `setting_name` = '{$moduleName}_config'");
+	if ($db->num_rows($q) == 0)
+		$db->query("INSERT INTO `game_settings` (`setting_name`, `setting_value`) VALUES ('{$moduleName}_config', '{$configJson}')");
+	else
+		$db->query("UPDATE `game_settings` SET `setting_value` = '{$configJson}' WHERE `setting_name` = '{$moduleName}_config'");
 }
 function readConfigFromFile($moduleName)
 {
@@ -47,7 +51,7 @@ function writeConfigToFile($moduleName, $configJson)
 }
 function formatConfig($string)
 {
-	return json_encode($string);
+	return json_encode($string, JSON_FORCE_OBJECT);
 }
 function unformatConfig($json)
 {
