@@ -110,7 +110,8 @@ class headers
 		$accBar="{$ir['username']} [{$ir['userid']}]<br />
 		Level: {$ir['level']}<br />
 		Experience: {$ir['experience']}<br />
-		Primary Currency: {$ir['primaryCurrencyHeld']}";
+		Primary Currency: {$ir['primaryCurrencyHeld']}<br />
+		[<a href='logout.php'>Logout</a>]";
 		$infoBar="Account info here...";
 		$statBar=createProgressBarLabel(returnPercentage($ir['energy'], $ir['maxEnergy']), "Energy: {$ir['energy']} / {$ir['maxEnergy']}") . "<br />" .
 		createProgressBarLabel(returnPercentage($ir['brave'], $ir['maxBrave']), "Brave: {$ir['brave']} / {$ir['maxBrave']}") . "<br />" .
