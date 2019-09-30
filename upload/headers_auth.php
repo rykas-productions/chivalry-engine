@@ -112,7 +112,7 @@ class headers
 		Experience: {$ir['experience']}<br />
 		Primary Currency: {$ir['primaryCurrencyHeld']}<br />
 		[<a href='logout.php'>Logout</a>]";
-		$infoBar=returnFormattedUnreadMail();
+		$infoBar=returnFormattedUnreadMail() . "" . returnFormattedInfirmary();
 		$statBar=createProgressBarLabel(returnPercentage($ir['energy'], $ir['maxEnergy']), "Energy: {$ir['energy']} / {$ir['maxEnergy']}") . "<br />" .
 		createProgressBarLabel(returnPercentage($ir['brave'], $ir['maxBrave']), "Brave: {$ir['brave']} / {$ir['maxBrave']}") . "<br />" .
 		createProgressBarLabel(returnPercentage($ir['will'], $ir['maxWill']), "Will: {$ir['will']} / {$ir['maxWill']}") . "<br />" .
