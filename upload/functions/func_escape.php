@@ -28,3 +28,12 @@ function makeSafeText($text)
 	$text = (isset($text) && is_string($text)) ? stripslashes($text) : '';
 	return $db->escape(htmlentities($text, ENT_QUOTES, 'ISO-8859-1'));
 }
+
+function makeSafeInt($int)
+{
+	return (isset($int) && is_numeric($int)) ? abs($int) : 0;
+}
+function stripAll($text)
+{
+	return strip_tags(stripslashes($text));
+}
