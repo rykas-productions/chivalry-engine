@@ -139,6 +139,6 @@ function createProgressBarLabel($filledPercentage, $label)
 {
 	return "
 	<div class='progress'>
-		<div class='progress-bar' role='progressbar' style='width: {$filledPercentage}%'>{$label}</div>
+		<div class='progress-bar bg-success' role='progressbar' style='width: {$filledPercentage}%'>{$label}</div>
 	</div>";
 }
