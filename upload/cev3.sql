@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 29, 2019 at 08:11 PM
+-- Generation Time: Sep 29, 2019 at 08:14 PM
 -- Server version: 10.3.15-MariaDB-1
 -- PHP Version: 7.3.4-2
 
@@ -32,7 +32,6 @@ CREATE TABLE `users_account_data` (
   `registrationTime` int(11) NOT NULL,
   `lastActionTime` int(11) NOT NULL,
   `profilePicture` text NOT NULL,
-  `level` int(10) UNSIGNED NOT NULL DEFAULT 1,
   `staffLevel` tinyint(4) NOT NULL DEFAULT 1,
   `loginIP` text NOT NULL,
   `registrationIP` text NOT NULL,
