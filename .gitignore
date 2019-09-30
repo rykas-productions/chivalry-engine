@@ -1,6 +1,5 @@
 upload/config.php
 upload/test.php
-*.iml
 .idea/
 upload/.idea/
 *.log
