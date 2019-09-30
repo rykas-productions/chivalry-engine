@@ -118,6 +118,7 @@ class headers
 		createProgressBarLabel(returnPercentage($ir['will'], $ir['maxWill']), "Will: {$ir['will']} / {$ir['maxWill']}") . "<br />" .
 		createProgressBarLabel(returnPercentage($ir['hp'], $ir['maxHP']), "HP: {$ir['hp']} / {$ir['maxHP']}");
 		createThreeCols(createTitlelessCard($accBar), createTitlelessCard($infoBar), createTitlelessCard($statBar));
+		echo "<hr />";
 		
 	}
 }
