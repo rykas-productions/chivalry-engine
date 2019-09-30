@@ -24,4 +24,11 @@
 */
 require('./globals_auth.php');
 success("You have logged in as {$ir['username']}! More to come soon...");
-createFourCols("Username: {$ir['username']}", "User ID: {$ir['userid']}","Email: {$ir['email']}","IP: {$ir['lastActionIP']}");
+createFourCols("Username: {$ir['username']} [{$ir['userid']}]","Email: {$ir['email']}", "Account Access: {$ir['staffLevel']}","IP: {$ir['lastActionIP']}");
+echo "<hr />";
+createFiveCols("Strength: {$ir['strength']}","Agility: {$ir['agility']}","Guard: {$ir['guard']}","IQ: {$ir['iq']}","Labor: {$ir['labor']}");
+echo "<hr />";
+createThreeCols("Level: {$ir['level']}", "Experience: {$ir['experience']}","Primary Currency: {$ir['primaryCurrencyHeld']}");
+echo "<hr />";
+createFourCols("Energy: {$ir['energy']} / {$ir['maxEnergy']}", "Brave: {$ir['brave']} / {$ir['maxBrave']}","Will: {$ir['will']} / {$ir['maxWill']}","HP: {$ir['hp']} / {$ir['maxHP']}");
+echo "<hr />";

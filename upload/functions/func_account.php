@@ -33,6 +33,7 @@ function createAccount($username, $password, $email)
 	$db->query("INSERT INTO `users_core` (`username`, `email`, `password`) VALUES ('{$username}', '{$email}', '{$encodedPassword}')");
 	$i = $db->insert_id();
 	createUserData($i);
+	createUserStats($i);
 }
 function checkUsableEmail($email)
 {
@@ -62,7 +63,11 @@ function createUserData($userid)
 	global $db;
 	$time=returnUnixTimestamp();
 	$IP=getUserIP();
-	$db->query("INSERT INTO `users_account_data` VALUES ('{$userid}', '0', '{$time}', '{$time}', '', '1', '1', '0', '127.0.0.1', '{$IP}', '{$IP}')");
+	$db->query("INSERT INTO `users_account_data` VALUES ('{$userid}', '0', '{$time}', '{$time}', '', '1', '127.0.0.1', '{$IP}', '{$IP}')");
+}
+function createUserStats($userid)
+{
+	$db->query("INSERT INTO `users_account_data` VALUES ('{$userid}')");
 }
 function getUserIP()
 {
@@ -84,10 +89,12 @@ function autoSessionCheck()
 function returnCurrentUserData($userid)
 {
 	global $db;
-	return $db->fetch_row($db->query("SELECT `u`.*, `ud`.*
+	return $db->fetch_row($db->query("SELECT `u`.*, `ud`.*, `us`.*
                      FROM `users_core` AS `u`
                      INNER JOIN `users_account_data` AS `ud`
-                     ON `u`.`userid`=`ud`.`userid`
+                     ON `u`.`userid` = `ud`.`userid`
+					 INNER JOIN `users_stats` AS `us`
+                     ON `u`.`userid` = `us`.`userid`
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1"));
 }

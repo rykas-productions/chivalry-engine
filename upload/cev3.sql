@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 29, 2019 at 07:46 PM
+-- Generation Time: Sep 29, 2019 at 08:11 PM
 -- Server version: 10.3.15-MariaDB-1
 -- PHP Version: 7.3.4-2
 
@@ -34,7 +34,6 @@ CREATE TABLE `users_account_data` (
   `profilePicture` text NOT NULL,
   `level` int(10) UNSIGNED NOT NULL DEFAULT 1,
   `staffLevel` tinyint(4) NOT NULL DEFAULT 1,
-  `experience` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `loginIP` text NOT NULL,
   `registrationIP` text NOT NULL,
   `lastActionIP` text NOT NULL
@@ -53,6 +52,33 @@ CREATE TABLE `users_core` (
   `password` text NOT NULL COMMENT 'Account password'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_stats`
+--
+
+CREATE TABLE `users_stats` (
+  `userid` int(11) UNSIGNED NOT NULL,
+  `level` int(11) UNSIGNED NOT NULL DEFAULT 1,
+  `experience` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `strength` int(11) UNSIGNED NOT NULL DEFAULT 10,
+  `agility` int(11) UNSIGNED NOT NULL DEFAULT 10,
+  `guard` int(11) UNSIGNED NOT NULL DEFAULT 10,
+  `labor` int(11) UNSIGNED NOT NULL DEFAULT 10,
+  `iq` int(11) UNSIGNED NOT NULL DEFAULT 10,
+  `energy` int(11) UNSIGNED NOT NULL DEFAULT 10,
+  `maxEnergy` int(11) UNSIGNED NOT NULL DEFAULT 10,
+  `will` int(11) UNSIGNED NOT NULL DEFAULT 100,
+  `maxWill` int(11) UNSIGNED NOT NULL DEFAULT 100,
+  `brave` int(11) UNSIGNED NOT NULL DEFAULT 5,
+  `maxBrave` int(11) UNSIGNED NOT NULL DEFAULT 5,
+  `hp` int(11) UNSIGNED NOT NULL DEFAULT 100,
+  `maxHP` int(11) UNSIGNED NOT NULL DEFAULT 100,
+  `primaryCurrencyHeld` int(11) UNSIGNED NOT NULL DEFAULT 100,
+  `primaryCurrencyBank` int(11) NOT NULL DEFAULT -1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -68,6 +94,12 @@ ALTER TABLE `users_account_data`
 --
 ALTER TABLE `users_core`
   ADD UNIQUE KEY `userid` (`userid`);
+
+--
+-- Indexes for table `users_stats`
+--
+ALTER TABLE `users_stats`
+  ADD PRIMARY KEY (`userid`);
 
 --
 -- AUTO_INCREMENT for dumped tables
