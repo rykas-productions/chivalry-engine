@@ -35,11 +35,21 @@ function initialize()
 		headerRedirect("bank.php");
 	}
 }
-if ($ir['primaryCurrencyBank'] = -1)
+if ($ir['primaryCurrencyBank'] == -1)
 {
 	if (isset($_GET['buy']))
 	{
-		
+		if (returnPlayerPrimaryCurrency($userid) >= $moduleConfig['bankOpeningFee'])
+		{
+			removePlayerPrimaryCurrency($userid, $moduleConfig['bankOpeningFee']);
+			$db->query("UPDATE `user_stats` SET `primaryCurrencyBank` = 0 WHERE `userid` = {$userid}");
+			successRedirect("You have successfully bought a bank account for " . number_format($moduleConfig['bankOpeningFee']) . " " . constant("primary_currency") . ".");
+			
+		}
+		else
+		{
+			dangerRedirect("You need at least " . number_format($moduleConfig['bankOpeningFee']) . " " . constant("primary_currency") . " to purchase a bank account.");
+		}
 	}
 	else
 	{
@@ -49,4 +59,69 @@ if ($ir['primaryCurrencyBank'] = -1)
 }
 else
 {
+	if (!isset($_GET['action']))
+        $_GET['action'] = '';
+	switch ($_GET['action']) 
+	{
+        case "deposit":
+            deposit();
+            break;
+        case "withdraw":
+            withdraw();
+            break;
+        default:
+            home();
+            break;
+    }
+}
+function home()
+{
+	global $ir, $moduleConfig;
+	echo "<b>You current have " . number_format($ir['primaryCurrencyBank']) . " in your bank account.</b><br />
+				<div class='cotainer'>
+					<div class='row'>
+						<div class='col-sm'>";
+							createPostForm('?action=deposit',array(array('number','deposit','Bank Deposit', $ir['primaryCurrencyHeld'])), 'Deposit');
+						echo "</div>
+						<div class='col-sm'>";
+							createPostForm('?action=withdraw',array(array('number','withdraw','Bank Withdrawal', $ir['primaryCurrencyBank'])), 'Withdraw');
+						echo "</div>
+					</div>
+				</div>";
+}
+function deposit()
+{
+	global $ir, $moduleConfig, $db;
+	$deposit = makeSafeInt($_POST['deposit']);
+	if ($ir['primaryCurrencyHeld'] < $deposit)
+	{
+		dangerRedirect("You are trying to deposit more cash than you have on your player.","bank.php","Back");
+	}
+	else
+	{
+		$ir['primaryCurrencyBank'] += $deposit;
+		removePlayerPrimaryCurrency($ir['userid'], $deposit);
+		$db->query("UPDATE `users_stats` 
+					SET `primaryCurrencyBank` = `primaryCurrencyBank` + {$deposit} 
+					WHERE `userid` = {$ir['userid']}");
+		successRedirect("You have deposited " . number_format($deposit) . " into your bank account.","bank.php","Back");
+	}
+}
+function withdraw()
+{
+	global $ir, $moduleConfig, $db;
+	$withdraw = makeSafeInt($_POST['withdraw']);
+	if ($ir['primaryCurrencyBank'] < $withdraw)
+	{
+		dangerRedirect("You are trying to withdraw more cash than you have in your bank account.","bank.php","Back");
+	}
+	else
+	{
+		$ir['primaryCurrencyBank'] -= $withdraw;
+		addPlayerPrimaryCurrency($ir['userid'], $withdraw);
+		$db->query("UPDATE `users_stats` 
+					SET `primaryCurrencyBank` = `primaryCurrencyBank` - {$withdraw} 
+					WHERE `userid` = {$ir['userid']}");
+		successRedirect("You have withdrawn " . number_format($withdraw) . " from your bank account.","bank.php","Back");
+	}
 }
