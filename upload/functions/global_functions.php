@@ -29,6 +29,8 @@ include('functions/func_alerts.php');
 include('functions/func_template.php');
 include('functions/func_format.php');
 include('functions/func_config.php');
+include('functions/func_player.php');
+
 function createForm($method, $action, $inputsArray, $submitButtonName)
 {
 	echo "<form method='{$method}' action='{$action}'>";
