@@ -54,7 +54,7 @@ createThreeCols(createCard(
 							),
 				createCard(
 							"High Risk Gambling",
-							"<a href='#'>Slots</a><br />
+							"<a href='slots.php'>Slots</a><br />
 							<a href='#'>Roulette</a><br />"
 							),
 				createCard(
