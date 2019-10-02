@@ -23,13 +23,13 @@
 	SOFTWARE.
 */
 //A simple function to create forms, to cut down on bloat.
-include('functions/func_escape.php');
-include('functions/func_account.php');
-include('functions/func_alerts.php');
-include('functions/func_template.php');
-include('functions/func_format.php');
-include('functions/func_config.php');
-include('functions/func_player.php');
+include('./functions/func_escape.php');
+include('./functions/func_account.php');
+include('./functions/func_alerts.php');
+include('./functions/func_template.php');
+include('./functions/func_format.php');
+include('./functions/func_config.php');
+include('./functions/func_player.php');
 
 function createForm($method, $action, $inputsArray, $submitButtonName)
 {
@@ -67,4 +67,8 @@ function headerRedirect($location)
 function returnPercentage($min, $max)
 {
 	return round($min / $max * 100);
+}
+function returnRandomNumber($min = PHP_INT_MIN, $max = PHP_INT_MAX)
+{
+	return random_int($min, $max);
 }
