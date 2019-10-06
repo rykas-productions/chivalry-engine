@@ -36,7 +36,7 @@ createThreeCols(createCard(
 							),
 				createCard(
 							"Personal Work",
-							"<a href='#'>Gym</a><br />
+							"<a href='gym.php'>Gym</a><br />
 							<a href='#'>Crimes</a><br />
 							<a href='#'>Academy</a><br />
 							<a href='#'>Work</a>"
