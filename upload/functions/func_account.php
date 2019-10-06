@@ -131,3 +131,14 @@ function returnRemainingInfirmaryTime($user = '')
 	$r=$db->fetch_single($q);
 	return $r - returnUnixTimestamp();
 }
+function logUserIP()
+{
+	global $userid, $db;
+	$userIP=getUserIP();
+	$time=returnUnixTimestamp();
+	$q=$db->query("SELECT * FROM `users_ips` WHERE `userID` = {$userid} AND `userIP` = '{$userIP}'");
+	if ($db->num_rows($q) == 0)
+		$db->query("INSERT INTO `users_ips` (`userID`, `userIP`, `userLastUsed`) VALUES ('{$userid}', '{$userIP}', '{$time}')");
+	else
+		$db->query("UPDATE `users_ips` SET `userLastUsed` = {$time} WHERE `userid` = {$userid} AND `userIP` = '{$userIP}'");
+}

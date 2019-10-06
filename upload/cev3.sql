@@ -68,6 +68,17 @@ CREATE TABLE `users_core` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `users_ips`
+--
+
+CREATE TABLE `users_ips` (
+  `userLogID` int(11) UNSIGNED NOT NULL,
+  `userID` int(10) UNSIGNED NOT NULL,
+  `userIP` text NOT NULL,
+  `userLastUsed` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
 -- Table structure for table `users_stats`
 --
 
@@ -115,6 +126,12 @@ ALTER TABLE `users_core`
   ADD UNIQUE KEY `userid` (`userid`);
 
 --
+-- Indexes for table `users_ips`
+--
+ALTER TABLE `users_ips`
+  ADD PRIMARY KEY (`userLogID`);
+
+--
 -- Indexes for table `users_stats`
 --
 ALTER TABLE `users_stats`
@@ -135,6 +152,12 @@ ALTER TABLE `mail`
 --
 ALTER TABLE `users_core`
   MODIFY `userid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Account ID';
+  
+--
+-- AUTO_INCREMENT for table `users_ips`
+--
+ALTER TABLE `users_ips`
+  MODIFY `userLogID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

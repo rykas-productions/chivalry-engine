@@ -86,3 +86,4 @@ if (isset($moduleID) && !empty($moduleID))
 		die($h->endHeaders());
 	}
 }
+logUserIP();
