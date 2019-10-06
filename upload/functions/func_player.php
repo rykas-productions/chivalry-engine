@@ -40,3 +40,34 @@ function removePlayerPrimaryCurrency($user, $primaryCurrency)
 				SET `primaryCurrencyHeld` = `primaryCurrencyHeld` - {$primaryCurrency} 
 				WHERE `userid` = {$user}");
 }
+function simulateGym($userTrain, $statToTrain, $energyToTrain, $statMultiplier = 1)
+{
+	global $db;
+	$userTrain = makeSafeInt($userTrain);
+	$statToTrain = makeSafeText($statToTrain);
+	$energyToTrain = makeSafeInt($energyToTrain);
+	$statMultiplier = makeSafeInt($statMultiplier);
+	if (empty($userTrain) || (empty($statToTrain)) || (empty($energyToTrain)))
+		return 0;
+	$statArray = array("strength", "agility", "guard", "labor", "iq");
+	if (!in_array($statToTrain, $statArray))
+		return -1;
+	$udq = $db->query("SELECT * FROM `users_stats` WHERE `userid` = {$userTrain}");
+	$userData = $db->fetch_row($udq);
+	$gain = 0;
+	for ($i = 0; $i < $energyToTrain; $i++) 
+	{
+		$gain += returnRandomNumber(1, 4) / returnRandomNumber(600, 1000) * returnRandomNumber(500, 1000) * (($userData['will'] + 25) / 175);
+		$userData['will'] -= returnRandomNumber(1, 3);
+		if ($userData['will'] < 0)
+			$userData['will'] = 0;
+	}
+	$gain *= $statMultiplier;
+	$gain = floor($gain);
+	$db->query("UPDATE `users_stats` 
+				SET `{$statToTrain}` = `{$statToTrain}` + {$gain},
+				`will` = {$userData['will']},
+				`energy` = `energy` - {$energyToTrain}
+				WHERE `userid` = {$userTrain}");
+	return $gain;
+}
