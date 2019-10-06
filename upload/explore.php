@@ -49,7 +49,7 @@ createThreeCols(createCard(
 							<a href='#'>Federal Dungeon</a><br />
 							<a href='#'>Game Statis</a><br />
 							<a href='#'>Player Report</a><br />
-							<a href='#'>Announcements</a><br />
+							<a href='announcements.php'>Announcements</a><br />
 							<a href='#'>Item Appendix</a><br />"
 							),
 				createCard(
