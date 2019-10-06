@@ -43,11 +43,11 @@ function returnFormattedInfirmary()
 	else
 		return "";
 }
-function parseDateTime($timestamp)
+function parseDateTime($timeStamp)
 {
-	if ($timestamp == 0)
+	if ($timeStamp == 0)
         return "N/A";
-	return date('F j, Y, g:i:s a', $time_stamp);
+	return date('F j, Y, g:i:s a', $timeStamp);
 }
 function parseTimeUntil($timestamp)
 {
@@ -62,4 +62,12 @@ function parseTimeUntil($timestamp)
     $time_difference = round($time_difference);
     $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
     return $date;
+}
+function returnFormattedAnnouncement()
+{
+	global $ir;
+	if ($ir['unreadAnnouncements'] == 0)
+		return "You have 0 unread announcements.<br />";
+	else
+		return "<span class='text-danger'>You have {$ir['unreadAnnouncements']} unread announcements.</span><br />";
 }
