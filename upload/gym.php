@@ -1,7 +1,7 @@
 <?php
 /*
 	File:		gym.php
-	Created: 	10/6/2019 at 10:43PM Eastern Time
+	Created: 	10/6/2019 at 10:43AM Eastern Time
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/rykas-productions/chivalry-engine
 	MIT License
