@@ -67,7 +67,7 @@ createThreeCols("",
 				createCard(
 							"Social",
 							"<a href='#'>Dungeon</a><br />
-							<a href='#'>Infirmary</a><br />
+							<a href='infirmary.php'>Infirmary</a><br />
 							<a href='#'>In-Game Forums</a><br />
 							<a href='#'>Newspaper</a><br />
 							<a href='#'>Hall of Fame</a><br />
