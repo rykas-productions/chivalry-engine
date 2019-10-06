@@ -67,7 +67,7 @@ if (isset($moduleID) && !empty($moduleID))
 			{
 				if (!($k == 'formSubmitValue'))
 				{
-					$configArray[$k] = $v;
+					$configArray[$k] = makeSafeText($v);
 				}
 			}
 			writeConfigToDB($moduleID, formatConfig($configArray));
