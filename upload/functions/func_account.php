@@ -29,8 +29,12 @@ function generatePassword($plainTextPassword)
 function createAccount($username, $password, $email)
 {
 	global $db;
+	$UUID=getValidUUID();
 	$encodedPassword=generatePassword($password);
-	$db->query("INSERT INTO `users_core` (`username`, `email`, `password`) VALUES ('{$username}', '{$email}', '{$encodedPassword}')");
+	$db->query("INSERT INTO `users_core` 
+				(`userid`, `username`, `email`, `password`) 
+				VALUES 
+				('{$UUID}', '{$username}', '{$email}', '{$encodedPassword}')");
 	$i = $db->insert_id();
 	createUserData($i);
 	createUserStats($i);
@@ -63,7 +67,7 @@ function createUserData($userid)
 	global $db;
 	$time=returnUnixTimestamp();
 	$IP=getUserIP();
-	$db->query("INSERT INTO `users_account_data` VALUES ('{$userid}', '0', '{$time}', '{$time}', '', '1', '127.0.0.1', '{$IP}', '{$IP}')");
+	$db->query("INSERT INTO `users_account_data` VALUES ('{$userid}', '0', '{$time}', '{$time}', '', '1', '127.0.0.1', '{$IP}', '{$IP}', '0')");
 }
 function createUserStats($userid)
 {
@@ -109,14 +113,14 @@ function returnCurrentUserData($userid)
 function returnUnreadMailCount()
 {
 	global $db, $userid;
-	return $db->num_rows($db->query("SELECT `mailID` FROM `mail` WHERE `mailTo` = {$userid} AND `mailReadTime` = 0"));
+	return $db->num_rows($db->query("SELECT `mailID` FROM `mail` WHERE `mailTo` = '{$userid}' AND `mailReadTime` = 0"));
 }
 function checkInfirmary($user = '')
 {
 	global $db, $userid;
 	if (empty($user))
 		$user = $userid;
-	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = {$user}");
+	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = '{$user}'");
 	if ($db->fetch_single($q) < returnUnixTimestamp())
 		return false;
 	else
@@ -127,7 +131,7 @@ function returnRemainingInfirmaryTime($user = '')
 	global $db, $userid;
 	if (empty($user))
 		$user = $userid;
-	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = {$user}");
+	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = '{$user}'");
 	$r=$db->fetch_single($q);
 	return $r - returnUnixTimestamp();
 }
@@ -136,9 +140,33 @@ function logUserIP()
 	global $userid, $db;
 	$userIP=getUserIP();
 	$time=returnUnixTimestamp();
-	$q=$db->query("SELECT * FROM `users_ips` WHERE `userID` = {$userid} AND `userIP` = '{$userIP}'");
+	$q=$db->query("SELECT * FROM `users_ips` WHERE `userID` = '{$userid}' AND `userIP` = '{$userIP}'");
 	if ($db->num_rows($q) == 0)
 		$db->query("INSERT INTO `users_ips` (`userID`, `userIP`, `userLastUsed`) VALUES ('{$userid}', '{$userIP}', '{$time}')");
 	else
-		$db->query("UPDATE `users_ips` SET `userLastUsed` = {$time} WHERE `userid` = {$userid} AND `userIP` = '{$userIP}'");
+		$db->query("UPDATE `users_ips` SET `userLastUsed` = {$time} WHERE `userid` = '{$userid}' AND `userIP` = '{$userIP}'");
+}
+function createUserUUID() {
+    return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        returnRandomNumber( 0, 0xffff ), returnRandomNumber( 0, 0xffff ),
+        returnRandomNumber( 0, 0xffff ),
+        returnRandomNumber( 0, 0x0fff ) | 0x4000,
+        returnRandomNumber( 0, 0x3fff ) | 0x8000,
+        returnRandomNumber( 0, 0xffff ), returnRandomNumber( 0, 0xffff ), returnRandomNumber( 0, 0xffff )
+    );
+}
+function getValidUUID()
+{
+	global $db;
+	$continueLoop=true;
+	while ($continueLoop)
+	{
+		$UUID=createUserUUID();
+		$q=$db->query("SELECT `userid` FROM `users_core` WHERE `userid` = '{$UUID}'");
+		if ($db->num_rows($q) == 0)
+		{
+			$continueLoop=false;
+			return $UUID;
+		}
+	}
 }

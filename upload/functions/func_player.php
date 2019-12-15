@@ -31,14 +31,14 @@ function addPlayerPrimaryCurrency($user,$primaryCurrency)
 	global $db;
 	$db->query("UPDATE `users_stats` 
 				SET `primaryCurrencyHeld` = `primaryCurrencyHeld` + {$primaryCurrency} 
-				WHERE `userid` = {$user}");
+				WHERE `userid` = '{$user}'");
 }
 function removePlayerPrimaryCurrency($user, $primaryCurrency)
 {
 	global $db;
 	$db->query("UPDATE `users_stats` 
 				SET `primaryCurrencyHeld` = `primaryCurrencyHeld` - {$primaryCurrency} 
-				WHERE `userid` = {$user}");
+				WHERE `userid` = '{$user}'");
 }
 function simulateGym($userTrain, $statToTrain, $energyToTrain, $statMultiplier = 1)
 {
@@ -52,7 +52,7 @@ function simulateGym($userTrain, $statToTrain, $energyToTrain, $statMultiplier =
 	$statArray = array("strength", "agility", "guard", "labor", "iq");
 	if (!in_array($statToTrain, $statArray))
 		return -1;
-	$udq = $db->query("SELECT * FROM `users_stats` WHERE `userid` = {$userTrain}");
+	$udq = $db->query("SELECT * FROM `users_stats` WHERE `userid` = '{$userTrain}'");
 	$userData = $db->fetch_row($udq);
 	$gain = 0;
 	for ($i = 0; $i < $energyToTrain; $i++) 
@@ -68,6 +68,6 @@ function simulateGym($userTrain, $statToTrain, $energyToTrain, $statMultiplier =
 				SET `{$statToTrain}` = `{$statToTrain}` + {$gain},
 				`will` = {$userData['will']},
 				`energy` = `energy` - {$energyToTrain}
-				WHERE `userid` = {$userTrain}");
+				WHERE `userid` = '{$userTrain}'");
 	return $gain;
 }

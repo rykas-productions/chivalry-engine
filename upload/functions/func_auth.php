@@ -47,7 +47,7 @@ function checkUserPassword($rawPassword, $password)
 function getPasswordByUserID($userid)
 {
 	global $db;
-	return $db->fetch_single($db->query("SELECT `password` FROM `users_core` WHERE `userid` = {$userid}"));
+	return $db->fetch_single($db->query("SELECT `password` FROM `users_core` WHERE `userid` = '{$userid}'"));
 }
 function accountLoginUpdate($userid)
 {
@@ -57,7 +57,7 @@ function accountLoginUpdate($userid)
 	$db->query("UPDATE `users_account_data` 
 				SET `loginTime`='{$time}', `lastActionTime`='{$time}',
 				`loginIP`='{$ip}', `lastActionIP`='{$ip}' 
-				WHERE `userid` = {$userid}");
+				WHERE `userid` = '{$userid}'");
 	
 }
 function setActiveSession($userid)
