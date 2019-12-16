@@ -35,9 +35,8 @@ function createAccount($username, $password, $email)
 				(`userid`, `username`, `email`, `password`) 
 				VALUES 
 				('{$UUID}', '{$username}', '{$email}', '{$encodedPassword}')");
-	$i = $db->insert_id();
-	createUserData($i);
-	createUserStats($i);
+	createUserData($UUID);
+	createUserStats($UUID);
 }
 function checkUsableEmail($email)
 {
