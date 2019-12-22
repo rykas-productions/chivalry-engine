@@ -29,7 +29,16 @@ function initialize()
 	global $moduleID;
 	if (!readConfigFromDB($moduleID))
 	{
-		$defaultConfig = formatConfig(array('statMultiplier' => 1.0, 'itemRequired' => 0, 'vipDaysRequired' => false));
+		$moduleConfig=array(
+		'moduleID' => $moduleID,
+		'moduleAuthor' => 'TheMasterGeneral',
+		'moduleURL' => 'https://github.com/rykas-productions/chivalry-engine',
+		'moduleVersion' => 1,
+		'statMultiplier' => 1.0,
+		'itemRequired' => 0,
+		'vipDaysRequired' => false
+		);
+		$defaultConfig = formatConfig($moduleConfig);
 		writeConfigToDB($moduleID, $defaultConfig);
 		echo "Installing default config...";
 		headerRedirect("gym.php");
