@@ -55,7 +55,7 @@ if (isset($moduleID) && !empty($moduleID))
 	if (function_exists('initialize'))
 		initialize();
 	else
-		trigger_error("Module ID: {$moduleID} does not have the required `initialize();` function in file. Please create it.");
+		trigger_error("Module ID: <span class='font-weight-bold'><u>{$moduleID}</u></span> does not have the required `initialize();` function in file. Please create it.");
 	$moduleConfig=getConfigForPHP($moduleID);
 	if (isset($_GET['config']) && ($ir['staffLevel'] == 2))
 	{
