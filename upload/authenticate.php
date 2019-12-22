@@ -29,13 +29,13 @@ $safePassword = makeSafeText($_POST['password']);
 $userid = checkValidEmail($safeEmail);
 if ($userid == 0)
 {
-	dangerRedirect('Invalid account creditials. User does not exist.', 'login.php', 'Back');
+	dangerRedirect('Invalid account creditials.', 'login.php', 'Back');
 	die($h->endHeaders());
 }
 $accountPassword=getPasswordByUserID($userid);
 if (!(checkUserPassword($safePassword, $accountPassword)))
 {
-	dangerRedirect('Invalid account creditials. Passwords do not match.', 'login.php', 'Back');
+	dangerRedirect('Invalid account creditials.', 'login.php', 'Back');
 	die($h->endHeaders());
 }
 setActiveSession($userid);
