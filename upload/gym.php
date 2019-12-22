@@ -29,7 +29,7 @@ function initialize()
 	global $moduleID;
 	if (!readConfigFromDB($moduleID))
 	{
-		$moduleConfig=array(
+		$moduleConfigArray=array(
 		'moduleID' => $moduleID,
 		'moduleAuthor' => 'TheMasterGeneral',
 		'moduleURL' => 'https://github.com/rykas-productions/chivalry-engine',
@@ -38,11 +38,17 @@ function initialize()
 		'itemRequired' => 0,
 		'vipDaysRequired' => false
 		);
-		$defaultConfig = formatConfig($moduleConfig);
+		$defaultConfig = formatConfig($moduleConfigArray);
 		writeConfigToDB($moduleID, $defaultConfig);
 		echo "Installing default config...";
 		headerRedirect("gym.php");
 	}
+}
+//Check if an item is required to use this gym,
+//and then verify if the player has that item.
+if ($moduleConfig['itemRequired'] > 0)
+{
+	//TODO: Add code to check for item in inventory... when inventory is added.
 }
 $statNames = array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor");
 echo "<h3>Gym</h3><br />

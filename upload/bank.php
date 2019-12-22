@@ -29,7 +29,16 @@ function initialize()
 	global $moduleID;
 	if (!readConfigFromDB($moduleID))
 	{
-		$defaultConfig = formatConfig(array('bankOpeningFee' => 5000, 'bankWithdrawPercent' => 5, 'bankWithdrawMaxFee' => 1000));
+		$moduleConfigArray=array(
+		'moduleID' => $moduleID,
+		'moduleAuthor' => 'TheMasterGeneral',
+		'moduleURL' => 'https://github.com/rykas-productions/chivalry-engine',
+		'moduleVersion' => 1,
+		'bankOpeningFee' => 5000,
+		'bankWithdrawPercent' => 5,
+		'bankWithdrawMaxFee' => 1000
+		);
+		$defaultConfig = formatConfig($moduleConfigArray);
 		writeConfigToDB($moduleID, $defaultConfig);
 		echo "Installing default config...";
 		headerRedirect("bank.php");
