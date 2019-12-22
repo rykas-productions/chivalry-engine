@@ -29,7 +29,17 @@ function initialize()
 	global $moduleID;
 	if (!readConfigFromDB($moduleID))
 	{
-		$defaultConfig = formatConfig(array('maxBetPerLevel' => 750, 'maxBetHardCap' => 100000, 'threeSlotWinningMultipler' => 75, 'twoSlotWinningMultipler' => 35));
+		$moduleConfigArray=array(
+		'moduleID' => $moduleID,
+		'moduleAuthor' => 'TheMasterGeneral',
+		'moduleURL' => 'https://github.com/rykas-productions/chivalry-engine',
+		'moduleVersion' => 1,
+		'maxBetPerLevel' => 750,
+		'maxBetHardCap' => 100000,
+		'threeSlotWinningMultipler' => 75,
+		'twoSlotWinningMultipler' => 35
+		);
+		$defaultConfig = formatConfig($moduleConfigArray);
 		writeConfigToDB($moduleID, $defaultConfig);
 		echo "Installing default config...";
 		headerRedirect("slots.php");
