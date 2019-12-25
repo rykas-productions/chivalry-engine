@@ -33,8 +33,8 @@ define('DEBUG', true);
 
 function error_critical($human_error, $debug_error, $action, $context = array())
 {
-    echo "<title>Critical Error</title>";
-        echo '<h1>Internal Server Error</h1>';
+    echo "<title>Chivalry Engine V3 Error</title>";
+        echo '<h1>Internal Engien Error</h1>';
     if (DEBUG) {
         echo 'A critical error has occurred, and page execution has stopped. If this issue persists, please notify an admin or web developer right away!<br />'
             . 'Below are the details:<br /><pre>' . $debug_error
