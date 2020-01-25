@@ -32,13 +32,27 @@ if ($api->UserStatus($ir['userid'], 'dungeon')) {
 echo "<h4>You begin exploring the town. You find a few things that could keep you occupied.</h4></div>
 <div class='col-md-4'>
 	<ul class='nav flex-column nav-pills'>
-		<a class='nav-link' data-toggle='tab' href='#SHOPS'>Shopping District</a>
-		<a class='nav-link' data-toggle='tab' href='#FD'>Financial District</a>
-		<a class='nav-link' data-toggle='tab' href='#HL'>Working District</a>
-		<a class='nav-link' data-toggle='tab' href='#ADMIN'>Administration District</a>
-		<a class='nav-link' data-toggle='tab' href='#GAMES'>Gambling District</a>
-		<a class='nav-link' data-toggle='tab' href='#GUILDS'>Guilds District</a>
-		<a class='nav-link' data-toggle='tab' href='#PINTER'>Social District</a>
+		<li class='nav-item'>
+			<a class='nav-link' data-toggle='tab' href='#SHOPS'>Shopping District</a>
+		</li>
+		<li class='nav-item'>
+			<a class='nav-link' data-toggle='tab' href='#FD'>Financial District</a>
+		</li>
+		<li class='nav-item'>
+			<a class='nav-link' data-toggle='tab' href='#HL'>Working District</a>
+		</li>
+		<li class='nav-item'>
+			<a class='nav-link' data-toggle='tab' href='#ADMIN'>Administration District</a>
+		</li>
+		<li class='nav-item'>
+			<a class='nav-link' data-toggle='tab' href='#GAMES'>Gambling District</a>
+		</li>
+		<li class='nav-item'>
+			<a class='nav-link' data-toggle='tab' href='#GUILDS'>Guilds District</a>
+		</li>
+		<li class='nav-item'>
+			<a class='nav-link' data-toggle='tab' href='#PINTER'>Social District</a>
+		</li>
 	</ul>
 </div>
 <div class='col-md-4'>
