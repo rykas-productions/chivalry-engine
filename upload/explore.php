@@ -25,6 +25,7 @@ $dung_count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`dungeon_user`
 $bounty_count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`bh_id`) FROM `bounty_hunter`"));
 $infirm_count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$time}"));
 $market = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`imID`) FROM `itemmarket`"));
+$vipMarket = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`vip_id`) FROM `vip_market`"));
 $rmarket = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`irID`) FROM `itemrequest`"));
 $secmarket = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`sec_id`) FROM `sec_market`"));
 $forumposts = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_time` > {$last15}"));
@@ -75,8 +76,8 @@ echo "
 					<a href='itemrequest.php'><i class='game-icon game-icon-trade'></i> Item Request <span class='badge badge-pill badge-primary'>{$rmarket}</span></a><br />
 					<a href='secmarket.php'><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />
                     <a href='itemweekshop.php'>Item of the Week</a><br />
-                    <a href='votestore.php'>Vote Point Store</a><br />
-					<a href='vipmarket.php'>VIP Days Market</a>
+                    <a href='votestore.php'>Vote Point Store <span class='badge badge-pill badge-primary'>" . number_format($ir['vote_points']) . "</span></a><br />
+					<a href='vipmarket.php'>VIP Days Market <span class='badge badge-pill badge-primary'>" . number_format($vipMarket) . "</span></a><br />
 		</div>
 		<div class='col-sm'>
 			<u><b>Financial District</b></u><br />

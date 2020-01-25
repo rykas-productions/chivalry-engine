@@ -37,9 +37,23 @@ if ($ir['rewarded'] == 0)
         $api->UserGiveItem($userid,18,$scrollreward);
         $api->SystemLogsAdd($userid, 'loginreward', "Received {$scrollreward} Chivalry Gym Scrolls.");
     }
-    $db->query("UPDATE `users` SET `rewarded` = 1 WHERE `userid` = {$userid}");
-	/*if (date('j') == 25)
+	if (Random(1,100) == 42)
 	{
-		$api->UserGiveItem($userid,203,1);
-	}*/
+		$api->GameAddNotification($userid,"You were randomly selected to receive a Login Badge! Check your inventory.", "far fa-clock", "magenta");
+        $api->UserGiveItem($userid,272,1);
+        $api->SystemLogsAdd($userid, 'loginreward', "Received Login Badge.");
+	}
+    $db->query("UPDATE `users` SET `rewarded` = 1 WHERE `userid` = {$userid}");
+	if (date('n') == 10)
+	{
+		if (date('j') == 31)
+		{
+			$api->UserGiveItem($userid,264,1);
+			$api->UserGiveItem($userid,265,1);
+		}
+		/*if ((date('j') > 19) && (date('j') < 27))
+		{
+			$api->UserGiveItem($userid,268,1);
+		}*/
+	}
 }

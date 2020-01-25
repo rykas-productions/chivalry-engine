@@ -123,7 +123,7 @@ function attacking()
         $api->UserInfoSetStatic($userid, "attacking", 0);
         die($h->endpage());
     }
-	if ($_GET['scroll'] > 0)
+	if ($_GET['scroll'] == 1)
 	{
 		if (($ir['location'] + 2) < $odata['location'])
 		{
@@ -139,6 +139,35 @@ function attacking()
 		{
 			$_SESSION['attack_scroll']=1;
 			$api->UserTakeItem($userid,90,1);
+		}
+		
+	}
+	if ($_GET['scroll'] == 2)
+	{
+		if (($ir['location'] + 5) < $odata['location'])
+		{
+			alert('danger',"Uh Oh!","This user is too far away to use a Further Distance Attack Scroll!",true,'index.php');
+			die($h->endpage());
+		}
+		elseif (($ir['location'] - 5) > $odata['location'])
+		{
+			alert('danger',"Uh Oh!","This user is too far away to use a Further Distance Attack Scroll!",true,'index.php');
+			die($h->endpage());
+		}
+		else
+		{
+			$_SESSION['attack_scroll']=1;
+			$api->UserTakeItem($userid,247,1);
+		}
+		
+	}
+	if ($_GET['scroll'] == 3)
+	{
+		$_SESSION['attack_scroll']=1;
+		if (Random(1,1000) == 512)
+		{
+			$api->UserTakeItem($userid,266,1);
+			$api->GameAddNotification($userid,"Your Mirror of the Distant Warrior has shattered.");
 		}
 		
 	}
@@ -169,21 +198,21 @@ function attacking()
 		$statrandom=Random(1,3);
 		if ($statrandom == 1)
 		{
-			$str=$ir['strength'];
-			$agl=$ir['agility'];
-			$grd=$ir['guard'];
+			$str=$ir['strength']*1.15;
+			$agl=$ir['agility']*1.15;
+			$grd=$ir['guard']*1.15;
 		}
 		if ($statrandom == 2)
 		{
-			$agl=$ir['strength'];
-			$grd=$ir['agility'];
-			$str=$ir['guard'];
+			$agl=$ir['strength']*1.5;
+			$grd=$ir['agility']*1.5;
+			$str=$ir['guard']*1.5;
 		}
 		if ($statrandom == 3)
 		{
-			$grd=$ir['strength'];
-			$str=$ir['agility'];
-			$agl=$ir['guard'];
+			$grd=$ir['strength']*0.9;
+			$str=$ir['agility']*0.9;
+			$agl=$ir['guard']*0.9;
 		}
 		$db->query("UPDATE `userstats` 
 					SET `strength` = {$str},
@@ -503,7 +532,7 @@ function attacking()
             if ($missed == 1)
             {
                 alert('warning', "Attempt {$_GET['nextstep']}!", "{$ttu} You attempt to strike {$odata['username']} but missed. Your
-                    opponent has {$odata['hp']} HP Remaining.", false, '', true);
+                    opponent has " . number_format($odata['hp']) . " HP Remaining.", false, '', true);
             }
             else
             {
@@ -511,7 +540,7 @@ function attacking()
                 $db->query("UPDATE `users` SET `hp` = `hp` - {$mydamage} WHERE `userid` = {$_GET['user']}");
                 $db->query("DELETE FROM `spy_advantage` WHERE `user` = {$userid} AND `spied` = {$_GET['user']}");
                 alert('success', "Attempt {$_GET['nextstep']}!", "{$ttu} Using your {$r1['itmname']} you manage to strike
-                {$odata['username']} dealing {$mydamage} damage. Your opponent has {$odata['hp']} HP remaining.", false, '', true);
+                {$odata['username']} dealing " . number_format($mydamage) . " damage. Your opponent has " . number_format($odata['hp']) . " HP remaining.", false, '', true);
                 $_SESSION['attackdmg'] += $mydamage;
                 user_log($userid,'dmgdone',$mydamage);
             }
@@ -774,13 +803,13 @@ function attacking()
                 {
                     if ($miss == 1)
                     {
-                        alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have {$youdata['hp']} HP remaining.", false);
+                        alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have " . number_format($youdata['hp']) . " HP remaining.", false);
                     }
                     else
                     {
                         $db->query("UPDATE `users` SET `hp` = `hp` - {$dam} WHERE `userid` = {$userid}");
                         alert('danger', "Attempt {$ns}!", "Using their {$wep}, {$odata['username']} managed to strike you dealing
-                         {$dam} damage. You have {$youdata['hp']} HP remaining.", false, '', true);
+                         " . number_format($dam) . " damage. You have " . number_format($youdata['hp']) . " HP remaining.", false, '', true);
                          user_log($_GET['user'],'dmgdone',$dam);
                     }
                 }
@@ -854,7 +883,7 @@ function attacking()
                     else
                     {
                         $api->GameAddNotification($_GET['user'],"You ran out of your potion in combat.", 'fas fa-exclamation-circle', 'red');
-                        alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have {$youdata['hp']} HP remaining.", false);
+                        alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have " . number_format($youdata['hp']) . " HP remaining.", false);
                         $db->query("UPDATE `users` SET `equip_potion` = 0 WHERE `userid` = {$_GET['user']}");
                     }
                 }
@@ -889,7 +918,15 @@ function attacking()
         alert("danger", "Uh Oh!", "You and your opponent are in different towns.", true, 'index.php');
         if ($api->UserHasItem($userid,90,1))
 		{
-			echo "<br />[<a href='?user={$_GET['user']}&scroll=1'>Use Distant Attack Scroll</a>]";
+			echo "<br />[<a href='?user={$_GET['user']}&scroll=1'>Use Distant Attack Scroll</a>]<br />";
+		}
+		if ($api->UserHasItem($userid,247,1))
+		{
+			echo "<br />[<a href='?user={$_GET['user']}&scroll=2'>Use Further Distance Attack Scroll</a>]<br />";
+		}
+		if ($api->UserHasItem($userid,266,1))
+		{
+			echo "<br />[<a href='?user={$_GET['user']}&scroll=3'>Use Mirror of the Distant Warrior</a>]";
 		}
 		
 		die($h->endpage());
@@ -946,7 +983,7 @@ function attacking()
 				<td class='align-middle'>
 					<div class='progress' style='height: 1rem;'>
 						<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars['hpperc']}%'></div>
-							<span>{$vars['hpperc']}% ({$youdata['hp']} / {$youdata['maxhp']})</span>
+							<span>{$vars['hpperc']}% (" . number_format($youdata['hp']) . " / " .  number_format($youdata['maxhp']) . ")</span>
 					</div>
 				</td>
 			</tr>
@@ -957,7 +994,7 @@ function attacking()
 				<td class='align-middle'>
 					<div class='progress' style='height: 1rem;'>
 						<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars2['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars2['hpperc']}%'></div>
-							<span>{$vars2['hpperc']}% ({$odata['hp']} / {$odata['maxhp']})</span>
+							<span>{$vars2['hpperc']}% (" . number_format($odata['hp']) . " / " . number_format($odata['maxhp']) . ")</span>
 					</div>
 				</td>
 			</tr>
@@ -1002,13 +1039,13 @@ function beat()
         $api->UserStatusSet($r['userid'], 'infirmary', $hosptime, $hospreason);
         //Give opponent notification that they were attacked.
         $api->GameAddNotification($r['userid'], "You were hospitalized by <a href='profile.php?user=$userid'>{$ir['username']}</a>
-                                                    for {$hosptime} minutes.", 'game-icon game-icon-internal-injury', 'red');
+                                                    for " . number_format($hosptime) . " minutes.", 'game-icon game-icon-internal-injury', 'red');
         //Log that the user won the fight.
         $api->SystemLogsAdd($userid, 'attacking', "Hospitalized <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$_GET['ID']}]
-                                                for {$hosptime} minutes.");
+                                                for " . number_format($hosptime) . " minutes.");
         //Log that the opponent lost the fight.
         $api->SystemLogsAdd($_GET['ID'], 'attacking', "Hospitalized by <a href='profile.php?user={$userid}'>{$ir['username']}</a>
-                                                    [{$userid}] for {$hosptime} minutes.");
+                                                    [{$userid}] for " . number_format($hosptime) . " minutes.");
         $_SESSION['attackwon'] = false;
         $additionaltext = "";
         //Both players are in a guild.
@@ -1048,7 +1085,7 @@ function beat()
             $additionaltext .= " You have received {$bounty_format} Copper Coins for hospitalizing this user while they had a bounty on their head. They also received double infirmary time.";
         }
         //Tell player they won and ended the fight, and if they gained a guild war point.
-        alert('success', "You've Bested {$r['username']}!!", "Your actions have caused {$r['username']} {$hosptime} minutes in the infirmary. {$additionaltext}", true, 'index.php');
+        alert('success', "You've Bested {$r['username']}!!", "Your actions have caused {$r['username']} " . number_format($hosptime) . " minutes in the infirmary. {$additionaltext}", true, 'index.php');
 		attacklog($userid,$r['userid'],'beatup');
         $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$userid}");
         $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$r['userid']}");
@@ -1174,7 +1211,7 @@ function lost()
         }
     }
     //Tell user they lost, and if they gave the other guild a point.
-    alert('danger', "You lost to {$r['username']}!", "You have lost a fight, and lost " . number_format($expgainp, 2) . "% experience! {$additionaltext}", true, 'index.php');
+    alert('danger', "You lost to {$r['username']}!", "You have lost a fight, and lost " . number_format($expgainp) . "% experience! {$additionaltext}", true, 'index.php');
     $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$_GET['ID']}");
     $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$userid}");
 	//Mission update
@@ -1300,7 +1337,7 @@ function xp()
             }
             //Tell user they won, and if they received a point or not.
             alert('success', "You've bested {$r['username']}!", "You decide to finish the fight the honorable way. You
-			    have gained ({$expperc}%, " . round($expgain,2) . ") experience for this. {$xploststat} {$xplostequip} {$additionaltext}", true, 'index.php');
+			    have gained (" . number_format($expperc) . "%, " . number_format($expgain) . ") experience for this. {$xploststat} {$xplostequip} {$additionaltext}", true, 'index.php');
 
             $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$userid}");
             $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$r['userid']}");
@@ -1367,7 +1404,7 @@ function xp()
                                 `agility` = `agility` - {$loss},
                                 `guard` = `guard` - {$loss}
                                 WHERE `userid` = {$r['userid']}");
-                    $api->GameAddNotification($r['userid'],"You have lost " . round($loss) . " strength, agility and guard for allowing yourself to be used for experience too frequently.", 'game-icon game-icon-crucifix', 'red');
+                    $api->GameAddNotification($r['userid'],"You have lost " . number_format($loss) . " strength, agility and guard for allowing yourself to be used for experience too frequently.", 'game-icon game-icon-crucifix', 'red');
                 }
             }
         }
@@ -1423,8 +1460,8 @@ function mug()
             $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Copper Coins.", 'game-icon game-icon-robber', 'red');
             //Log that the user won and stole some Copper Coins, and that
             //the opponent lost and lost Copper Coins.
-            $api->SystemLogsAdd($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole {$stole} Copper Coins.");
-            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost {$stole} Copper Coins.");
+            $api->SystemLogsAdd($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole " . number_format($stole) . " Copper Coins.");
+            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost " . number_format($stole) . " Copper Coins.");
             $_SESSION['attackwon'] = 0;
             $additionaltext = "";
             //Both players are in a guild.
@@ -1511,7 +1548,7 @@ function mug()
         }
 		//Tell user they won the fight, and how much currency they took.
             alert('success', "You have bested {$r['username']}!", "You have knocked them out and taken out their wallet.
-			    You snag some cash and run away. (" . number_format($stole) . "). {$additionaltext}", true, 'index.php');
+			    You grab their wallet and take " . number_format($stole) . " Copper Coins! {$additionaltext}", true, 'index.php');
     }
 }
 function attacklog($attacker,$attacked,$result)

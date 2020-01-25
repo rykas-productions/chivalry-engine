@@ -28,12 +28,15 @@ if (!isset($_GET['active']))
 	$TotalInvestmentPC = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`amount`) FROM `bank_investments` WHERE `userid` != 1"));
 
 	//Select the Total Secondary Currency in the game.
-	$TotalSecondaryCurrency = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`secondary_currency`) FROM `users` WHERE `user_level` != 'NPC'  AND `userid` != 1"));
+	$tsc1 = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`secondary_currency`) FROM `users` WHERE `user_level` != 'NPC'  AND `userid` != 1"));
+	$tsc2 = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`tokenbank`) FROM `users` WHERE `user_level` != 'NPC'  AND `userid` != 1"));
+	$TotalSecondaryCurrency=$tsc1+$tsc2;
 
 	//Select the total for primary currency in bank.
 	$TotalBank = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`bank`) FROM `users` WHERE `user_level` != 'NPC' AND `bank` > -1  AND `userid` != 1"));
 	$TotalBankToken = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`tokenbank`) FROM `users` WHERE `user_level` != 'NPC' AND `tokenbank` > -1  AND `userid` != 1"));
 	$TotalBigBank = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`bigbank`) FROM `users` WHERE `user_level` != 'NPC' AND `bigbank` > -1  AND `userid` != 1"));
+	$TotalVaultBank = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`vaultbank`) FROM `users` WHERE `user_level` != 'NPC' AND `bigbank` > -1  AND `userid` != 1"));
 
 	//Select total count of register users.
 	$TotalUserCount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `user_level` != 'NPC'  AND `userid` != 1"));
@@ -90,11 +93,15 @@ $TotalNotif = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`notif_id`) FR
 $TotalMail = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`mail_id`) FROM `mail`"));
 
 //Theme Choice
-$Castle = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 1"));
+$Default = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 1"));
 $Darkly = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 2"));
 $Slate = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 3"));
 $Cyborg = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 4"));
+$United = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 5"));
+$Cerulean = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 6"));
+$Castle = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 7"));
+$Sunset = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 8"));
 
 //All the primary currency
-$TotalBankandPC = $TotalBank + $TotalPrimaryCurrency + $TotalInvestmentPC + $TotalGuildPC + $TotalBigBank;
+$TotalBankandPC = $TotalBank + $TotalPrimaryCurrency + $TotalInvestmentPC + $TotalGuildPC + $TotalBigBank + $TotalVaultBank;
 $TotalBankandSC = $TotalBankToken + $TotalSecondaryCurrency + $TotalGuildSC;

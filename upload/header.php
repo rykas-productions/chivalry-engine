@@ -33,7 +33,7 @@ class headers
                 if ($ir['theme'] == 1)
 				{
 					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
                     <meta name="theme-color" content="#333">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -41,7 +41,7 @@ class headers
 				if ($ir['theme'] == 2)
 				{
 					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/darkly/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css">
 					<meta name="theme-color" content="#303030">
 					<?php
 					$hdr='navbar-light bg-light';
@@ -49,7 +49,7 @@ class headers
 				if ($ir['theme'] == 3)
 				{
 					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/slate/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/slate/bootstrap.min.css">
 					<meta name="theme-color" content="#272B30">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -57,7 +57,7 @@ class headers
 				if ($ir['theme'] == 4)
 				{
 					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/cyborg/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cyborg/bootstrap.min.css">
 					<meta name="theme-color" content="#060606">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -65,7 +65,7 @@ class headers
 				if ($ir['theme'] == 5)
 				{
 					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/united/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/united/bootstrap.min.css">
 					<meta name="theme-color" content="#772953">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -73,7 +73,7 @@ class headers
 				if ($ir['theme'] == 6)
 				{
 					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/cerulean/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
 					<meta name="theme-color" content="#04519b">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -82,6 +82,14 @@ class headers
 				{
 					?>
 					<link rel="stylesheet" href="css/castle.css">
+					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 8)
+				{
+					?>
+					<link rel="stylesheet" href="css/bright-castle.css">
 					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -210,7 +218,7 @@ class headers
     $ipq = $db->query("/*qc=on*/SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
     //User's IP is banned, so lets stop access.
     if ($db->num_rows($ipq) > 0) {
-        alert('danger', "Uh Oh!", "You have been IP banned.", false);
+        alert('danger', "Uh Oh!", "You have been IP banned. There is no way around this.", false);
         die($h->endpage());
     }
     $fed = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
@@ -226,6 +234,10 @@ class headers
     if ($ir['invis'] > time())
 	{
 		echo "<b><span class='text-info'>You have invisibility active for the next " . TimeUntil_Parse($ir['invis']) . ".</span></b><br />";
+	}
+	if ($ir['will_overcharge'] > time())
+	{
+		echo "<b><span class='text-info'>You have Will Overcharge active for the next " . TimeUntil_Parse($ir['will_overcharge']) . ".</span></b><br />";
 	}
     if ($ir['tut_on'] == 1)
     {
@@ -447,16 +459,16 @@ class headers
         <!-- /.container -->
         
         <!-- jQuery Version 3.3.1 -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
         <script src="js/game-v1.2.3.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js" async defer></script>
-		<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
+		<script defer src="https://use.fontawesome.com/releases/v5.11.2/js/all.js"></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
 		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/clock.min.js"></script>
         <footer class='footer'>

@@ -25,7 +25,7 @@ class headers
                 if ($ir['theme'] == 1)
 				{
 					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
                     <meta name="theme-color" content="#333">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -33,7 +33,7 @@ class headers
 				if ($ir['theme'] == 2)
 				{
 					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css">
 					<meta name="theme-color" content="#303030">
 					<?php
 					$hdr='navbar-light bg-light';
@@ -41,7 +41,7 @@ class headers
 				if ($ir['theme'] == 3)
 				{
 					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/slate/bootstrap.min.css">
 					<meta name="theme-color" content="#272B30">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -49,7 +49,7 @@ class headers
 				if ($ir['theme'] == 4)
 				{
 					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cyborg/bootstrap.min.css">
 					<meta name="theme-color" content="#060606">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -57,7 +57,7 @@ class headers
 				if ($ir['theme'] == 5)
 				{
 					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/united/bootstrap.min.css">
 					<meta name="theme-color" content="#772953">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -65,7 +65,7 @@ class headers
 				if ($ir['theme'] == 6)
 				{
 					?>
-					<link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css">
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
 					<meta name="theme-color" content="#04519b">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -73,7 +73,15 @@ class headers
                 if ($ir['theme'] == 7)
 				{
 					?>
-					<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/css/bootstrap-v.1.5.min.css">
+					<link rel="stylesheet" href="../css/castle.css">
+					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
+					<?php
+					$hdr='navbar-dark bg-dark';
+				}
+				if ($ir['theme'] == 8)
+				{
+					?>
+					<link rel="stylesheet" href="../css/bright-castle.css">
 					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
 					<?php
 					$hdr='navbar-dark bg-dark';
@@ -317,11 +325,11 @@ class headers
         </div>
         <!-- /.container -->
         <!-- jQuery Version 3.3.1 -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
         <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/game-v1.1.min.js"></script>

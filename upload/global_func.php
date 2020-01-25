@@ -126,7 +126,7 @@ function check_data()
 		$db->query("UPDATE `users` SET `energy` = `maxenergy` WHERE `userid` = {$ir['userid']}");
 	if ($ir['brave'] > $ir['maxbrave'])
 		$db->query("UPDATE `users` SET `brave` = `maxbrave` WHERE `userid` = {$ir['userid']}");
-	if ($ir['will'] > $ir['maxwill'])
+	if (($ir['will'] > $ir['maxwill']) && ($ir['will_overcharge'] < time()))
 		$db->query("UPDATE `users` SET `will` = `maxwill` WHERE `userid` = {$ir['userid']}");
     $q1 = $db->query("/*qc=on*/SELECT `fed_userid` FROM `fedjail` WHERE `fed_out` < {$time}");
     //Remove players from federal jail, if needed.
@@ -995,9 +995,14 @@ function returnIcon($item,$size=1)
 	if ($ir['icons'] == 1)
 	{
 		$q = $db->fetch_row($db->query("/*qc=on*/SELECT `icon`,`color` FROM `items` WHERE `itmid` = {$item}"));
+		$imageIcons=array(262);
 		if (empty($q['icon']))
 		{
 			return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
+		}
+		elseif (in_array($item,$imageIcons))
+		{
+			return "<img src='{$q['icon']}' class='img-fluid'>";
 		}
 		else
 		{
@@ -1177,4 +1182,16 @@ function toast($title,$txt,$time=-1,$icon='https://res.cloudinary.com/dydidizue/
             {$txt}
           </div>
         </div>";
+}
+function updateMostUsersCount()
+{
+	global $db, $set;
+	$cutOff=time()-900;	//15 Minutes
+	$countUsers=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$cutOff}"));
+	if ($set['mostUsersOn'] <= $countUsers)
+	{
+		$currentTime=time();
+		$db->query("UPDATE `settings` SET `setting_value` = {$currentTime} WHERE `setting_name` = 'mostUsersOnTime'");
+		$db->query("UPDATE `settings` SET `setting_value` = {$countUsers} WHERE `setting_name` = 'mostUsersOn'");
+	}
 }

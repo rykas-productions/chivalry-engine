@@ -9,6 +9,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+$multi=1.0;
 $macropage = ('gym.php');
 require("globals.php");
 $energy = $api->UserInfoGet($userid, 'energy', true);
@@ -45,12 +46,12 @@ if (isset($_GET["stat"]) && $_GET["amnt"]) {
         $gain = 0;
         $extraecho = '';
         if ($stat == 'all') {
-            $gainstr = $api->UserTrain($userid, 'strength', $_GET['amnt'] / 4);
-            $gainagl = $api->UserTrain($userid, 'agility', $_GET['amnt'] / 4);
-            $gaingrd = $api->UserTrain($userid, 'guard', $_GET['amnt'] / 4);
-            $gainlab = $api->UserTrain($userid, 'labor', $_GET['amnt'] / 4);
+            $gainstr = $api->UserTrain($userid, 'strength', $_GET['amnt'] / 4, $multi);
+            $gainagl = $api->UserTrain($userid, 'agility', $_GET['amnt'] / 4, $multi);
+            $gaingrd = $api->UserTrain($userid, 'guard', $_GET['amnt'] / 4, $multi);
+            $gainlab = $api->UserTrain($userid, 'labor', $_GET['amnt'] / 4, $multi);
         } else {
-            $gain = $api->UserTrain($userid, $_GET['stat'], $_GET['amnt']);
+            $gain = $api->UserTrain($userid, $_GET['stat'], $_GET['amnt'], $multi);
         }
         //Update energy left and stat's new count.
         if ($stat != 'all')
@@ -117,7 +118,8 @@ $ir['guarank'] = get_rank($ir['guard'], 'guard');
 $ir['labrank'] = get_rank($ir['labor'], 'labor');
 $ir['all_four'] = ($ir['labor'] + $ir['strength'] + $ir['agility'] + $ir['guard']);
 $ir['af_rank'] = get_rank($ir['all_four'], 'all');
-echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to {$ir['energy']} times.<hr />
+echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to {$ir['energy']} times.<br />
+The Normal Gym will give you " . number_format($multi*100) . "% the stats you'd gain at the Normal Gym.
 <table class='table table-bordered'>
 	<tr>
 		<form method='get'>

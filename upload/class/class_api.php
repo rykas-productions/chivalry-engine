@@ -416,7 +416,7 @@ class api
         Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
 
     */
-    function UserInfoSet($user, $stat, $change, $percent = false)
+    function UserInfoSet($user, $stat, $change, $percent = false, $fixMin = true)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -430,11 +430,13 @@ class api
                     $maxstat = $db->fetch_single($db->query("/*qc=on*/SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
                     $number = ($change / 100) * $maxstat;
                     $db->query("UPDATE users SET `{$stat}`=`{$stat}`+{$number} WHERE `{$stat}` < `max{$stat}` AND `userid` = {$user}");
-                    $db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
+                    if ($fixMin)
+						$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
                     return true;
                 } else {
                     $db->query("UPDATE users SET `{$stat}` = `{$stat}` + {$change} WHERE `userid` = {$user}");
-                    $db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
+					if ($fixMin)
+						$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
                     return true;
                 }
             } elseif ($change == 0) {
@@ -446,11 +448,13 @@ class api
                     $maxstat = $db->fetch_single($db->query("/*qc=on*/SELECT `max{$stat}` FROM `users` WHERE `userid` = {$user}"));
                     $number = ($change / 100) * $maxstat;
                     $db->query("UPDATE users SET `{$stat}` = `{$stat}` - {$number} WHERE `userid` = {$user}");
-                    $db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
+                    if ($fixMin)
+						$db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
                     return true;
                 } else {
                     $db->query("UPDATE users SET `{$stat}` = `{$stat}` - {$change} WHERE `userid` = {$user}");
-                    $db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
+                    if ($fixMin)
+						$db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
                     return true;
                 }
             }

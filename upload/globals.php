@@ -213,6 +213,7 @@ if (!($db->num_rows($UIDB))) {
     VALUES ('{$userid}', '100', '100', '0', '1', '1');");
 }
 include('dailyreward.php');
+updateMostUsersCount();
 
 //For chat, maybe?
 $_SESSION['userName']=$ir['username'];

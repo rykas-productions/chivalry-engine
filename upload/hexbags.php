@@ -52,7 +52,7 @@ elseif (($chance > 35) && ($chance <= 46))
 }
 elseif (($chance > 45) && ($chance <= 50))
 {
-    $cash=Random(30,60)*$multipler;
+    $cash=Random(5,15)*$multipler;
 	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
     echo "You greedy bastard. You attempt to snatch a handful of hexbags and run. You get stopped and escorted to the
     dungeon.";
@@ -61,7 +61,7 @@ elseif (($chance > 45) && ($chance <= 50))
 }
 elseif (($chance > 50) && ($chance <= 55))
 {
-    $cash=Random(30,60)*$multipler;
+    $cash=Random(5,15)*$multipler;
 	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
     echo "You reach your hand into this hexbag without looking and stick yourself with a dirty needle. To the infirmary
     you go.";
@@ -142,6 +142,11 @@ else
 {
     echo "You reach into this hexbag and feel something warm and squishy. You decide its best to keep it in there for now.";
     $api->SystemLogsAdd($userid,"hexbags","Received nothing.");
+	if (Random(1,25) == 10)
+	{
+		$api->GameAddNotification($userid,"You were given the Hexbags Badge!", "fas fa-poo-storm", "#a17445");
+		$api->UserGiveItem($userid,274,1);
+	}
 }
 echo " You have {$left} Hexbags remaining for today.<hr />
 <a href='hexbags.php'>Open Another</a><br />

@@ -79,13 +79,13 @@ while ($gfr=$db->fetch_row($gdfq))
 						SET `guild_debt_time` = {$plussevenday} 
 						WHERE `guild_id` = {$gfr['guild_id']} 
 						AND `guild_debt_time` = 0");
-			$api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins to sustain itself, but has gone into debt.");
+			$api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep, but has gone into debt.");
 			$api->GameAddNotification($gfr['guild_owner'], "Your guild has gone into debt!");
 		}
 		else
 		{
 			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
-			$api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins to sustain itself.");
+			$api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep.");
 		}
 	}
 }
@@ -98,4 +98,7 @@ $uq=$db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` != 1 AND `l
 $ur=$db->fetch_single($uq);
 $api->GameAddNotification($ur,"You have been chosen as the Player of the Day! Your profile will be displayed on the login page, and you've received a unique badge in your inventory.");
 item_add($ur,154,1);
+
+//Holiday!
+$db->query("UPDATE `user_settings` SET `holiday` = 0");
 ?>

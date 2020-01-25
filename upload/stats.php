@@ -118,6 +118,14 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 			</tr>
 			<tr>
 				<td>
+					Copper in Vault
+				</td>
+				<td>
+					" . number_format($TotalVaultBank) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
 					Chivalry Tokens Withdrawn
 				</td>
 				<td>
@@ -201,7 +209,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 					Original Theme
 				</td>
 				<td>
-					" . number_format($Castle) . "
+					" . number_format($Default) . "
 				</td>
 			</tr>
             <tr>
@@ -226,6 +234,38 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 				</td>
 				<td>
 					" . number_format($Cyborg) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
+					United Theme
+				</td>
+				<td>
+					" . number_format($United) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Cerulean Theme
+				</td>
+				<td>
+					" . number_format($Cerulean) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Castle Theme
+				</td>
+				<td>
+					" . number_format($Castle) . "
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Sunset Theme
+				</td>
+				<td>
+					" . number_format($Sunset) . "
 				</td>
 			</tr>
 		</tbody>

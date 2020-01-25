@@ -91,7 +91,8 @@ echo "
                 Free Registration<br />
                 " . number_format($playersonline) . " Players Online Today<br />
                 " . number_format($totalplayers) . " Total Players<br />
-                " . number_format($signups) . " New Players Today
+                " . number_format($signups) . " New Players Today<br />
+				Most Users Online were " . number_format($set['mostUsersOn']) . " users, on " . DateTime_Parse($set['mostUsersOnTime']) . "
             </div>
         </div>
     </div>

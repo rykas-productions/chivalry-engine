@@ -1,8 +1,8 @@
 <script>
     function total_cost() {
-        var day = parseInt((document.getElementById("days").value) * 1250);
+        var day = parseInt((document.getElementById("days").value) * 2000);
         var init = parseInt((document.getElementById("init").value));
-        var charlength = parseInt((document.getElementById("chars").value.length) * 5);
+        var charlength = parseInt((document.getElementById("chars").value.length) * 7);
         var totalcost = day + init + charlength;
         var output = document.getElementById("output").value = totalcost;
     }
@@ -42,14 +42,14 @@ switch ($_GET['action']) {
 }
 function news_home()
 {
-    global $db, $h, $CurrentTime, $parser;
+    global $db, $h, $CurrentTime, $parser, $userid;
     $AdsQuery = $db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
     if ($db->num_rows($AdsQuery) == 0) {
         alert("danger", "Uh Oh!", "There aren't any newspaper ads at this time. Maybe you should <a href='?action=buyad'>list</a> one?", false);
         die($h->endpage());
     }
     echo "<h3>The Newspaper</h3>
-	<small>List an ad <a href='?action=buyad'>here</a>.<hr />";
+	<small>List an ad <a href='?action=buyad'>here</a>. Listings begin at 25,000 Copper Coins!<hr />";
     echo "
 		<table class='table table-bordered'>
 			<thead>
@@ -66,6 +66,8 @@ function news_home()
 	";
     while ($Ads = $db->fetch_row($AdsQuery)) {
         $parser->parse($Ads['news_text']);
+		if ($userid == 1)
+			var_dump($Ads);
         $UserName = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$Ads['news_owner']}"));
         echo "	<tr>
 					<td>
@@ -101,17 +103,22 @@ function news_buy()
             die($h->endpage());
         }
         //Add up the costs
-        $charcost = ((strlen($ad)) * 5);
-        $daycost = $days * 1250;
+        $charcost = ((strlen($ad)) * 7);
+        $daycost = $days * 2000;
         $totalcost = $daycost + $charcost + $initcost;
         //End Time
         $endtime=time()+(86400*$days);
 
         //Make sure user has the cash to buy this ad.
         if (!$api->UserHasCurrency($userid, 'primary', $totalcost)) {
-            alert('danger', "Uh Oh!", "You do not have enough Copper Coins to place this ad.");
+            alert('danger', "Uh Oh!", "You do not have enough Copper Coins to place this ad. You need " . number_format($totalcost) . " Copper Coins.");
             die($h->endpage());
         }
+		if ($days > 7)
+		{
+			alert('danger', "Uh Oh!", "An ad's maximum runtime may only be 7 days.");
+            die($h->endpage());
+		}
         $api->UserTakeCurrency($userid,'primary',$totalcost);
         alert('success',"Success!","You have successfully purchased a newspaper ad.",true,'newspaper.php');
         $db->query("INSERT INTO `newspaper_ads`
@@ -140,16 +147,16 @@ function news_buy()
                 <tr>
                     <td>
                         Ad Runtime<br />
-                        <small>Each day will add 1,250 Copper Coins to your cost.</small>
+                        <small>Each day will add 2,000 Copper Coins to your cost.</small>
                     </td>
                     <td>
-                        <input type='number' value='1' min='1' name='ad_length' id='days' onkeyup='total_cost();' required='1' class='form-control'>
+                        <input type='number' value='1' min='1' max='7' name='ad_length' id='days' onkeyup='total_cost();' required='1' class='form-control'>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         Ad Text<br />
-                        <small>Each character is worth 5 Copper Coins.</small>
+                        <small>Each character is worth 7 Copper Coins.</small>
                     </td>
                     <td>
                         <textarea class='form-control' name='ad_text' id='chars' onkeyup='total_cost();' required='1'></textarea>

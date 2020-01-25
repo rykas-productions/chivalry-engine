@@ -74,7 +74,8 @@ function home()
 	}
 	else
 	{
-		$mgpollvote="<a href='?action=mgpoll'>Vote</a>";
+		//$mgpollvote="<a href='?action=mgpoll'>Vote</a>";
+		$mgpollvote="<span class='text-warning'>Voting site down.</span>";
 	}
 	$q = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `votes` WHERE `userid` = $userid AND `voted` = 'apex'");
 	$vote_count = $db->fetch_single($q);
@@ -108,6 +109,7 @@ function home()
 	else
 	{
 		$bbogdvote="<a href='?action=bbogd'>Vote</a>";
+		//$bbogdvote="<span class='text-warning'>Voting site down.</span>";
 	}
 	echo"
 	<table class='table table-bordered'>
@@ -177,9 +179,7 @@ function home()
 				{$bbogdvote}
 			</td>
 		</tr>
-	</table>";
-    $h->endpage();
-    /*<tr>
+		<tr>
 			<td>
 				Top Web Games
 			</td>
@@ -189,7 +189,10 @@ function home()
 			<td>
 				{$twgvote}
 			</td>
-		</tr>*/
+		</tr>
+	</table>";
+    $h->endpage();
+    /**/
 }
 function twg()
 {

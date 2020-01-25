@@ -7,6 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 $voterquery = 1;
+$multi = 1.0;
 require('globals.php');
 if (!$ir['guild']) {
     alert('danger', "Uh Oh!", "You are not in a guild.", true, 'index.php');
@@ -263,7 +264,7 @@ function summary()
 			Copper Coins*
 		</th>
 		<td>
-			" . number_format($gd['guild_primcurr']) . " / " . number_format($gd['guild_level'] * $set['GUILD_PRICE']) . "
+			" . number_format($gd['guild_primcurr']) . " / " . number_format((($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) . "
 		</td>
 	</tr>
 	<tr align='left'>
@@ -411,7 +412,7 @@ function donate()
             alert('danger', "Uh Oh!", "You are trying to donate more Chivalry Tokens than you currently have.");
             die($h->endpage());
             //Donation amount would fill up the guild's vault.
-        } else if ($_POST['primary'] + $gd['guild_primcurr'] > $gd['guild_level'] * $set['GUILD_PRICE']) {
+        } else if ($_POST['primary'] + $gd['guild_primcurr'] > (($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) {
             alert('danger', "Uh Oh!", "Your guild's vault can only hold " . $gd['guild_level'] * $set['GUILD_PRICE'] . " Copper Coins.");
             die($h->endpage());
         } else {
@@ -788,14 +789,14 @@ function armory()
 
 function gym()
 {
-	global $db, $gd, $h, $api, $ir, $userid;
+	global $db, $gd, $h, $api, $ir, $userid, $multi;
 	$macropage = ('viewguild.php?action=gym');
 	if ($gd['guild_bonus_time'] > time())
-		$multiplier = 1.65+(($gd['guild_level']/100)*5);
+		$multiplier = (1.95+(($gd['guild_level']/100)*6.25)*$multi);
 	else
-		$multiplier = 1.1+(($gd['guild_level']/100)*5);
-	if ($multiplier > 2.25)
-		$multiplier = 2.25;
+		$multiplier = (1.25+(($gd['guild_level']/100)*6.25)*$multi);
+	if ($multiplier > (2.5*$multi))
+		$multiplier = (2.5*$multi);
 	if ($gd['guild_level'] < 3)
 	{
 		alert('danger',"Uh Oh!","You guild needs to be at least level 3 to access the guild gym!",true,'viewguild.php');
@@ -905,7 +906,8 @@ function gym()
 		$ir['all_four'] = ($ir['labor'] + $ir['strength'] + $ir['agility'] + $ir['guard']);
 		$ir['af_rank'] = get_rank($ir['all_four'], 'all');
 		echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to
-		{$ir['energy']} times. The guild gym will give you X{$multiplier} gains.<hr />
+		" . number_format($ir['energy']) . " times. <br />
+		The guild gym will give you " . number_format($multiplier*100) . "% the stats you'd gain at the Normal Gym.
 		<table class='table table-bordered'>
 			<tr>
 				<form method='get'>

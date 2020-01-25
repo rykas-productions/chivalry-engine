@@ -28,7 +28,7 @@ switch ($_GET['action']) {
 }
 function home()
 {
-    global $db, $h, $ir, $m, $userid;
+    global $db, $h, $ir, $m, $userid, $api;
     $crimes = array();
     $q2 = $db->query("/*qc=on*/SELECT `crimeGROUP`, `crimeNAME`, `crimeBRAVE`, `crimeID`, `crimePERCFORM` FROM `crimes` ORDER BY `crimeBRAVE` ASC");
     while ($r2 = $db->fetch_row($q2)) {
@@ -82,6 +82,8 @@ function home()
 				}
 				$specialnumber=((getSkillLevel($userid,17)*20)/100);
 				$v['sucrate']=$v['sucrate']+($v['sucrate']*$specialnumber);
+				if ($api->UserHasItem($userid,284,1))
+					$v['sucrate']=$v['sucrate']+($v['sucrate']*0.1);
 				if ($v['sucrate'] > 100)
 					$v['sucrate']=100;
 				$v['sucrate']=round($v['sucrate']);

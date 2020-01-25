@@ -21,7 +21,7 @@ function buy()
         alert("danger","Uh Oh!","You have chosen to buy a non-existent listing.",true,'votestore.php');
         die($h->endpage());
     }
-    if (($_GET['option'] < 0) || ($_GET['option'] > 11))
+    if (($_GET['option'] < 0) || ($_GET['option'] > 16))
     {
         alert("danger","Uh Oh!","You have chosen to buy a non-existent listing.",true,'votestore.php');
         die($h->endpage());
@@ -29,9 +29,10 @@ function buy()
     $cost=1;
     $cost1=array(1,2,3,4);
     $cost3=array(9);
-    $cost5=array(5,11);
-    $cost25=array(10);
-    $cost50=array(6);
+    $cost5=array(5,11,12);
+	$cost10=array(16);
+    $cost25=array(10,13);
+    $cost50=array(6,15);
     $cost150=array(7,8);
     if (in_array($_GET['option'],$cost3))
     {
@@ -40,6 +41,10 @@ function buy()
     if (in_array($_GET['option'],$cost5))
     {
         $cost=5;
+    }
+	if (in_array($_GET['option'],$cost10))
+    {
+        $cost=10;
     }
     if (in_array($_GET['option'],$cost25))
     {
@@ -63,7 +68,7 @@ function buy()
     //100 Chivalry Tokens
     if ($_GET['option'] == 1)
     {
-        $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + 100 WHERE `userid` = {$userid}");
+        $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + 500 WHERE `userid` = {$userid}");
     }
     //50 Boxes of Random
     if ($_GET['option'] == 2)
@@ -120,6 +125,31 @@ function buy()
     {
         $api->UserGiveItem($userid,209,1);
     }
+	//Book Key
+    if ($_GET['option'] == 12)
+    {
+        $api->UserGiveItem($userid,250,1);
+    }
+	//Book
+    if ($_GET['option'] == 13)
+    {
+        $api->UserGiveItem($userid,249,1);
+    }
+	//Mining Energy Potion
+    if ($_GET['option'] == 14)
+    {
+        $api->UserGiveItem($userid,227,1);
+    }
+	//Will Stimulant
+    if ($_GET['option'] == 15)
+    {
+        $api->UserGiveItem($userid,227,1);
+    }
+	//Daily Reward Reset
+    if ($_GET['option'] == 16)
+    {
+        $db->query("UPDATE `users` SET `rewarded` = 0 WHERE `userid` = {$userid}");
+    }
     alert("success","Success!","You have successfully traded {$cost} Vote Points for a reward! Check your inventory.",true,'votestore.php');
     die($h->endpage());
 }
@@ -131,7 +161,7 @@ function home()
     <table class='table table-bordered'>
         <tr>
             <th>
-                100 Chivalry Tokens
+                500 Chivalry Tokens
             </th>
             <td>
                 <a href='?action=buy&option=1'>1 Vote Point</a>
@@ -185,6 +215,30 @@ function home()
                 <a href='?action=buy&option=11'>5 Vote Points</a>
             </td>
         </tr>
+		<tr>
+            <th>
+                Locked Spell Book Key
+            </th>
+            <td>
+                <a href='?action=buy&option=12'>5 Vote Points</a>
+            </td>
+        </tr>
+		<tr>
+            <th>
+                Daily Reward Reset
+            </th>
+            <td>
+                <a href='?action=buy&option=16'>10 Vote Points</a>
+            </td>
+        </tr>
+		<tr>
+            <th>
+                Mining Energy Potion
+            </th>
+            <td>
+                <a href='?action=buy&option=14'>15 Vote Points</a>
+            </td>
+        </tr>
         <tr>
             <th>
                 10 Maximum Mining Power
@@ -193,12 +247,28 @@ function home()
                 <a href='?action=buy&option=10'>25 Vote Points</a>
             </td>
         </tr>
+		<tr>
+            <th>
+                Locked Spell Book
+            </th>
+            <td>
+                <a href='?action=buy&option=13'>25 Vote Points</a>
+            </td>
+        </tr>
         <tr>
             <th>
                 $1 VIP Pack
             </th>
             <td>
                 <a href='?action=buy&option=6'>50 Vote Points</a>
+            </td>
+        </tr>
+		<tr>
+            <th>
+                Will Stimulant Potion
+            </th>
+            <td>
+                <a href='?action=buy&option=15'>50 Vote Points</a>
             </td>
         </tr>
         <tr>

@@ -1,5 +1,6 @@
 <?php
 $macropage = ('autobor.php');
+$multipler=1.0;
 require('globals.php');
 if ($ir['bor'] == 0)
 {
@@ -72,23 +73,23 @@ if (isset($_POST['open']))
 	{
 		$number=$number+1;
 		$chance=Random(1,87);
-		if ($chance <= 30)
+		if ($chance <= 35)
 		{
-			$cash=Random(750,2750);
+			$cash=Random(750,2250)*$multipler;
 			$cash=round($cash+($cash*$lvlmultiplier));
 			$copper=$copper+$cash;
 		}
-		elseif (($chance > 30) && ($chance <= 40))
+		elseif (($chance > 35) && ($chance <= 40))
 		{
-			$cash=Random(5,20);
+			$cash=Random(5,20)*$multipler;
 			$specialnumber=((getSkillLevel($userid,11)*5)/100);
 			$cash=round($cash+($cash*$specialnumber));
 			$cash=round($cash+($cash*$lvlmultiplier));
 			$tokens=$tokens+$cash;
 		}
-		elseif (($chance > 40) && ($chance <= 50))
+		elseif (($chance > 45) && ($chance <= 50))
 		{
-			$cash=Random(5,10);
+			$cash=Random(2,5)*$multipler;
 			$cash=round($cash+($cash*$lvlmultiplier));
 			$infirmary=$infirmary+$cash;
 		}
@@ -106,19 +107,19 @@ if (isset($_POST['open']))
 		}
 		elseif (($chance > 65) && ($chance <= 70))
 		{
-			$rng=Random(2,4);
+			$rng=Random(2,4)*$multipler;
 			$rng=round($rng+($rng*$lvlmultiplier));
 			$wraps=$wraps+$rng;
 		}
 		elseif (($chance > 70) && ($chance <= 75))
 		{
-			$rng=Random(2,4);
+			$rng=Random(2,4)*$multipler;
 			$rng=round($rng+($rng*$lvlmultiplier));
 			$keys=$keys+$rng;
 		}
 		elseif (($chance > 75) && ($chance <= 78))
 		{
-			$rng=Random(1,2);
+			$rng=Random(1,2)*$multipler;
 			$rng=round($rng+($rng*$lvlmultiplier));
 			$explosives=$explosives+$rng;
 		}
@@ -172,23 +173,23 @@ if (isset($_POST['open']))
 	$db->query("UPDATE `users` SET `bor` = `bor` - {$_POST['open']} WHERE `userid` = {$userid}");
 	$db->query("UPDATE `user_settings` SET `autobor` = `autobor` - {$_POST['open']} WHERE `userid` = {$userid}");
 	echo "After automatically opening {$number} Boxes of Random, you have gained the following:<br />
-		{$copper} Copper Coins.<br />
-		{$tokens} Chivalry Tokens.<br />
-		{$infirmary} minutes in the infirmary.<br />
-		{$wraps} Linen Wraps<br />
-		{$keys} Dungeon Keys.<br />
-		{$bread} Bread.<br />
-		{$venison} Venison.<br />
-		{$potion} Small Health Potion(s).<br />
-		{$explosives} Small Explosive(s).<br />
-		{$gymscroll} Chivalry Gym Pass(s)<br />
-		{$attackscroll} Distant Attack Scroll(s)<br />
-        {$needle} Acupuncture Needle(s)<br />
-        {$mystery} Mysterious Potion(s)<br />
-		{$hexbags} extra Hexbag(s)<br />
-		{$rickitybomb} Rickity Bomb(s)<br />
-		{$herbofminer} Herb of the Enlightened Miner(s)<br />
-		{$nothing} Boxes of Random had nothing in them.";
+		" . number_format($copper) . " Copper Coins.<br />
+		" . number_format($tokens) . " Chivalry Tokens.<br />
+		" . number_format($infirmary) . " minutes in the infirmary.<br />
+		" . number_format($wraps) . " Linen Wraps<br />
+		" . number_format($keys) . " Dungeon Keys.<br />
+		" . number_format($bread) . " Bread.<br />
+		" . number_format($venison) . " Venison.<br />
+		" . number_format($potion) . " Small Health Potion(s).<br />
+		" . number_format($explosives) . " Small Explosive(s).<br />
+		" . number_format($gymscroll) . " Chivalry Gym Pass(s)<br />
+		" . number_format($attackscroll) . " Distant Attack Scroll(s)<br />
+        " . number_format($needle) . " Acupuncture Needle(s)<br />
+        " . number_format($mystery) . " Mysterious Potion(s)<br />
+		" . number_format($hexbags) . " extra Hexbag(s)<br />
+		" . number_format($rickitybomb) . " Rickity Bomb(s)<br />
+		" . number_format($herbofminer) . " Herb of the Enlightened Miner(s)<br />
+		" . number_format($nothing) . " Boxes of Random had nothing in them.";
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
 	$api->UserStatusSet($userid,'infirmary',$infirmary,"Ticking Box");

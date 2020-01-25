@@ -306,11 +306,31 @@ function item_remove($user, $itemid, $qty)
 function parseUsername($id)
 {
     global $db;
-    $q = $db->query("/*qc=on*/SELECT `username`,`vip_days`,`vipcolor` FROM `users` WHERE `userid` = {$id}");
+    $q = $db->query("/*qc=on*/SELECT 	`username`, `vip_days`, `vipcolor`, 
+										`equip_badge`, `fedjail`,`user_level`
+										FROM `users` 
+										WHERE `userid` = {$id}");
     $r = $db->fetch_row($q);
-    $username = ($r['vip_days']) ? "<span class='{$r['vipcolor']}' data-toggle='tooltip' data-placement='bottom' title='{$r['vip_days']} VIP Days remaining.'>{$r['username']}
-            <i class='fas fa-shield-alt'></i></span>" :
-            $r['username'];
+		
+	if ($r['fedjail'] > 0)
+	{
+		$username = "<span class='text-muted'><s>{$r['username']}</s></span>";
+	}
+	
+	elseif ($r['user_level'] == 'NPC')
+	{
+		$username = "<span class='font-weight-light'>{$r['username']}</span>";
+	}
+	elseif ($r['vip_days'] > 0)
+	{
+		if ($r['equip_badge'] == 0)
+			$r['equip_badge'] = 159;
+		$username = "<span class='{$r['vipcolor']}' data-toggle='tooltip' data-placement='bottom' title='" . number_format($r['vip_days']) . " VIP Days remaining.'>{$r['username']} " . returnIcon($r['equip_badge']) . "</span>";
+	}
+	else
+	{
+		$username = $r['username'];
+	}
     return $username;
 }
 

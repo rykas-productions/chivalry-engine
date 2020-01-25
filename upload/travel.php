@@ -12,6 +12,8 @@ require('globals.php');
 $cost_of_travel = 15000 * levelMultiplier($ir['level']);
 if ($cost_of_travel > 50000)
     $cost_of_travel=50000;
+if ($api->UserHasItem($userid,269))
+	$cost_of_travel = $cost_of_travel*0.5;
 //Block access if user is in the infirmary.
 if ($api->UserStatus($ir['userid'], 'infirmary')) {
     alert('danger', "Unconscious!", "You cannot travel while you're in the infirmary.", false);
@@ -95,6 +97,11 @@ if (empty($_GET['to'])) {
             //Tell user they have traveled successfully.
             alert('success', "Success!", "You have successfully paid " . number_format($cost_of_travel) . " Copper Coins to take a horse to {$cityName}.", true, "index.php");
             $api->SystemLogsAdd($userid, 'travel', "Traveled to {$cityName} for {$cost_of_travel} Copper Coins.");
+			if (Random(1,100) == 42)
+			{
+				$api->GameAddNotification($userid,"You found a Travel Badge while travelling to your current town. Check your inventory.", "fas fa-horse", "#594026");
+				$api->UserGiveItem($userid,273,1);
+			}
 			user_log($userid,'travel');
             die($h->endpage());
         }

@@ -184,27 +184,6 @@ function read()
         "<center><img src='" . parseImage(parseDisplayPic($msg['mail_from'])) . "' class='img-fluid hidden-xs' width='175' alt='{$un1['username']}&#39;s display picture' title='{$un1['username']}&#39;s display picture'></center>";
 	$urpic = (empty($ir['display_pic'])) ? "" :
         "<center><img src='" . parseImage(parseDisplayPic($userid)) . "' class='img-fluid hidden-xs' width='175' alt='Your display picture.' title='Your display picture'></center>";
-	echo "<table class='table table-bordered'>
-	<tr>
-		<th width='33%'>
-			Previous Response
-		</th>
-		<th>
-			Subject: {$lstmsg['mail_subject']}
-		</th>
-	</tr>
-	<tr>
-		<td>
-			{$urpic}
-			<a href='profile.php?user={$userid}'>{$ir['username']}</a><br />
-			" . DateTime_Parse($lstmsg['mail_time']) . "
-		</td>
-		<td>";
-    echo $urmsg;
-    echo "
-		</td>
-	</tr>
-	</table>";
     echo "<table class='table table-bordered'>
 	<tr>
 		<th width='33%'>

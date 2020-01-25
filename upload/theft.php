@@ -56,11 +56,11 @@ if (isset($_POST['rob'])) {
     if ($chance == 1) {
         alert('danger', "Uh Oh!", "You attempted to rob {$robbed}, but got destroyed by their over-protective step mother.", true, 'dungeon.php');
         $api->SystemLogsAdd($userid, 'theft', "Robbed {$robbed} [{$_GET['user']}] but failed.");
-        $api->GameAddNotification($_GET['user'], "{$ir['username']} [{$userid}] attempted to rob you, but was stopped by your over-protective step mother.");
+        $api->GameAddNotification($_GET['user'], "{$ir['username']} [{$userid}] attempted to rob you, but was stopped by your over-protective step mother.",'game-icon game-icon-venus-of-willendorf','purple');
         die($h->endpage());
     } else {
         alert("success", "Success!", "You have successfully robbed {$robbed} of {$stolenn} Copper Coins.");
-        $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] has robbed you of {$stolenn} Copper Coins.");
+        $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] has robbed you of {$stolenn} Copper Coins.",'game-icon game-icon-robber','inherent');
         $api->UserTakeCurrency($_GET['user'], 'primary', $stolen);
         $api->UserGiveCurrency($userid, 'primary', $stolen);
         $api->SystemLogsAdd($userid, 'theft', "Robbed {$robbed} [{$_GET['user']}] and stole {$stolenn} Copper Coins.");

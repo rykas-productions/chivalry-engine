@@ -18,17 +18,14 @@ if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 {
     exit;
 }
-if ((date('w') > 0) && (date('w') < 6))
+if ((date('G') >= 9) && (date('G') <= 17))
 {
-	if ((date('G') >= 9) && (date('G') <= 17))
-	{
-		//Job crons!
-		$db->query("UPDATE `users` AS `u`
-			LEFT JOIN `job_ranks` as `jr` ON `jr`.`jrID` = `u`.`jobrank`
-			SET `u`.`primary_currency` = `u`.`primary_currency` + `jr`.`jrPRIMPAY`,
-			`u`.`secondary_currency` = `u`.`secondary_currency` + `jr`.`jrSECONDARY` 
-			WHERE `u`.`job` > 0 AND `u`.`jobrank` > 0");
-	}
+	//Job crons!
+	$db->query("UPDATE `users` AS `u`
+		LEFT JOIN `job_ranks` as `jr` ON `jr`.`jrID` = `u`.`jobrank`
+		SET `u`.`primary_currency` = `u`.`primary_currency` + `jr`.`jrPRIMPAY`,
+		`u`.`secondary_currency` = `u`.`secondary_currency` + `jr`.`jrSECONDARY` 
+		WHERE `u`.`job` > 0 AND `u`.`jobrank` > 0");
 }
 $ThirtyDaysAgo = time() - 2592000;
 $plussevenday=time() + 604800;

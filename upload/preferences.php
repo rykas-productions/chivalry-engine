@@ -299,7 +299,7 @@ function pic_change()
         echo "
 		<h3>Change Display Picture</h3>
 		<hr />
-		Your images must be externally hosted. Any images that are not 250x250 will be scaled accordingly.<br />
+		Your images must be externally hosted.<br />
 		New Picture Link<br />
 		<form method='post'>
 			<input type='url' name='newpic' class='form-control' value='{$ir['display_pic']}' />
@@ -316,8 +316,8 @@ function pic_change()
         $npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
         if (!empty($npic)) {
             $sz = get_filesize_remote($npic);
-            if ($sz <= 0 || $sz >= 5000000) {
-                alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 5MB.");
+            if ($sz <= 0 || $sz >= 15000000) {
+                alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 15MB.");
                 $h->endpage();
                 exit;
             }
@@ -911,7 +911,7 @@ function themechange()
     global $db, $userid, $h, $ir, $api;
     if (isset($_POST['theme'])) {
         $_POST['theme'] = (isset($_POST['theme']) && is_numeric($_POST['theme'])) ? abs($_POST['theme']) : 1;
-        if ($_POST['theme'] < 1 || $_POST['theme'] > 7) {
+        if ($_POST['theme'] < 1 || $_POST['theme'] > 8) {
             alert('danger', "Uh Oh!", "The theme you wish to load is not valid.");
             die($h->endpage());
         }
@@ -922,78 +922,80 @@ function themechange()
             die($h->endpage());
         }
     } else {
-        echo "
-			<table class='table table-bordered'>
-				<tr>
-					<th colspan='2'>
-						Select the theme you wish to see as you play.
-					</th>
-				</tr>
-				<tr>
-					<td>
-						Original<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1534631618/orignal.jpg' class='img-thumbnail img-responsive'>
-						<form method='post'>
-							<input type='hidden' value='1' name='theme'>
-							<input type='submit' class='btn btn-primary' value='Pick this one'>
-						</form>
-					</td>
-					<td>
-						Darkly<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770277/themes/darkly.jpg' class='img-thumbnail img-responsive'>
-						<form method='post'>
-							<input type='hidden' value='2' name='theme'>
-							<input type='submit' class='btn btn-primary' value='Pick this one'>
-						</form>
-					</td>
-				</tr>
-				<tr>
-                    <td>
-						Cerulean<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770277/themes/cerulean.jpg' class='img-thumbnail img-responsive'>
-							<form method='post'>
-								<input type='hidden' value='6' name='theme'>
-								<input type='submit' class='btn btn-primary' value='Pick this one'>
-							</form>
-					</td>
-					<td>
-						Cyborg<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770282/themes/cyborg.jpg' class='img-thumbnail img-responsive'>
-							<form method='post'>
-								<input type='hidden' value='4' name='theme'>
-								<input type='submit' class='btn btn-primary' value='Pick this one'>
-							</form>
-					</td>
-				</tr>
-				<tr>
-                    <td>
-						United<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/united.jpg' class='img-thumbnail img-responsive'>
-							<form method='post'>
-								<input type='hidden' value='5' name='theme'>
-								<input type='submit' class='btn btn-primary' value='Pick this one'>
-							</form>
-					</td>
-					<td>
-						Slate<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/slate.jpg' class='img-thumbnail img-responsive'>
-							<form method='post'>
-								<input type='hidden' value='3' name='theme'>
-								<input type='submit' class='btn btn-primary' value='Pick this one'>
-							</form>
-					</td>
-				</tr>
-                <tr>
-					<td>
-						Castle<br />
-						<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/castle.jpg' class='img-thumbnail img-responsive'>
-							<form method='post'>
-								<input type='hidden' value='7' name='theme'>
-								<input type='submit' class='btn btn-primary' value='Pick this one'>
-							</form>
-					</td>
-				</tr>
-			</table>";
+        echo "Select the theme you wish to see as you play Chivalry is Dead.
+		<hr />
+		<div class='row'>
+			<div class='col-sm'>
+				Original<br />
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1534631618/orignal.jpg' class='img-thumbnail img-responsive'>
+				<form method='post'>
+					<input type='hidden' value='1' name='theme'>
+					<input type='submit' class='btn btn-primary' value='Original'>
+				</form>
+			</div>
+			<div class='col-sm'>
+				Darkly<br />
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770277/themes/darkly.jpg' class='img-thumbnail img-responsive'>
+				<form method='post'>
+					<input type='hidden' value='2' name='theme'>
+					<input type='submit' class='btn btn-primary' value='Darkly'>
+				</form>
+			</div>
+			<div class='col-sm'>
+				Cerulean<br />
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770277/themes/cerulean.jpg' class='img-thumbnail img-responsive'>
+					<form method='post'>
+						<input type='hidden' value='6' name='theme'>
+						<input type='submit' class='btn btn-primary' value='Cerulean'>
+					</form>
+			</div>
+		</div>
+		<hr />
+		<div class='row'>
+			<div class='col-sm'>
+				Cyborg<br />
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770282/themes/cyborg.jpg' class='img-thumbnail img-responsive'>
+					<form method='post'>
+						<input type='hidden' value='4' name='theme'>
+						<input type='submit' class='btn btn-primary' value='Cyborg'>
+					</form>
+			</div>
+			<div class='col-sm'>
+				United<br />
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/united.jpg' class='img-thumbnail img-responsive'>
+					<form method='post'>
+						<input type='hidden' value='5' name='theme'>
+						<input type='submit' class='btn btn-primary' value='United'>
+					</form>
+			</div>
+			<div class='col-sm'>
+				Slate<br />
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/slate.jpg' class='img-thumbnail img-responsive'>
+					<form method='post'>
+						<input type='hidden' value='3' name='theme'>
+						<input type='submit' class='btn btn-primary' value='Slate'>
+					</form>
+			</div>
+		</div>
+		<hr />
+		<div class='row'>
+			<div class='col-sm'>
+				Castle<br />
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/castle.jpg' class='img-thumbnail img-responsive'>
+					<form method='post'>
+						<input type='hidden' value='7' name='theme'>
+						<input type='submit' class='btn btn-primary' value='Castle'>
+					</form>
+			</div>
+			<div class='col-sm'>
+				Sunset<br />
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1555983405/themes/sunset.png' class='img-thumbnail img-responsive'>
+					<form method='post'>
+						<input type='hidden' value='8' name='theme'>
+						<input type='submit' class='btn btn-primary' value='Sunset'>
+					</form>
+			</div>
+		</div>";
     }
 }
 function steamlink()

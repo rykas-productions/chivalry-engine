@@ -19,6 +19,9 @@ switch ($_GET['item']) {
     case 'vipcolor':
         vipcolor();
         break;
+	case 'willstim':
+        willovercharge();
+        break;
     default:
         alert("danger","Uh Oh!","Please specify a valid VIP Item to use!",true,'inventory.php');
 		$h->endpage();
@@ -150,4 +153,25 @@ function vipcolor()
         </form>";        
     }
     $h->endpage();
+}
+function willovercharge()
+{
+	global $db,$h,$api, $userid, $ir;
+	if ($api->UserHasItem($userid,263))
+	{
+		if ($ir['will_overcharge'] < time())
+			$startTime=time();
+		else
+			$startTime=$ir['will_overcharge'];
+		$newTime=$startTime + (60*60)*3;
+		$db->query("UPDATE `user_settings` SET `will_overcharge` = {$newTime} WHERE `userid` = {$userid}");
+		$api->UserTakeItem($userid,263,1);
+		alert("success","Success!","Will Stimulant Potion has been used. You have added 3 hours.",true,'inventory.php');
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Will Stimulant Potion.");
+	}
+	else
+	{
+		alert('danger',"Uh Oh!","You do not have the required item to use this page!",true,'inventory.php');
+	}
+	$h->endpage();
 }

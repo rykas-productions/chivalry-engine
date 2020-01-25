@@ -60,7 +60,7 @@ function home()
 			echo "
 			<tr>
 				<td>
-					{$output_item} x {$r['smelt_qty_output']}
+					{$output_item} x " . number_format($r['smelt_qty_output']) . "
 				</td>
 				<td>";
 			$n = 0;
@@ -73,7 +73,7 @@ function home()
 					$t['itmname'] = "<span class='text-danger'>" . $t['itmname'] . "";
 					$can_craft = FALSE;
 				}
-				$items_needed .= $t['itmname'] . " x " . $qty[$n] . " (Have " . number_format($api->UserCountItem($userid, $i)) . ")</span><br />";
+				$items_needed .= $t['itmname'] . " x " . number_format($qty[$n]) . " (Have " . number_format($api->UserCountItem($userid, $i)) . ")</span><br />";
 				$n++;
 			}
 			unset($n);

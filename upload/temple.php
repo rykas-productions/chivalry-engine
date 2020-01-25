@@ -26,13 +26,6 @@ if (Random(1,50) == 6)
     alert('danger',"Uh Oh!","While walking up to the Temple of Fortune, you trip up the stairs and fall all the way down. You need to go to the infirmary.",true,'infirmary.php');
     die($h->endpage());
 }
-if ($ir['theme'] == 7)
-{
-    $set['energy_refill_cost']=7;
-    $set['brave_refill_cost']=7;
-    $set['will_refill_cost']=3;
-    
-}
 echo "<h3><i class='game-icon game-icon-mayan-pyramid'></i> Temple of Fortune</h3><hr />";
 //Set the GET to nothing if not set.
 if (!isset($_GET['action'])) {
@@ -51,6 +44,9 @@ switch ($_GET['action']) {
         break;
 	case 'willall':
         willall();
+        break;
+	case 'willall2':
+        willall2();
         break;
     case 'iq':
         iq();
@@ -75,15 +71,42 @@ function home()
 	$extraiq=(getSkillLevel($userid,12)*5);
     echo "Welcome to the Temple of Fortune. Here you may spend your Chivalry Tokens as you see fit!";
     echo "<br />
-	<a class='btn btn-primary' href='?action=energy'>Refill Energy - " . number_format($set['energy_refill_cost']) . " Chivalry Tokens</a><br /><br />
-	<a class='btn btn-primary' href='?action=brave'>Regenerate 5% Bravery - " . number_format($set['brave_refill_cost']) . " Chivalry Tokens</a><br /><br />
-	<a class='btn btn-primary' href='?action=will'>Regenerate 5% Will - " . number_format($set['will_refill_cost']) . " Chivalry Tokens</a><br /><br />
-	<a class='btn btn-primary' href='?action=willall'>Regenerate 100% Will - " . number_format($set['will_refill_cost']*20) . " Chivalry Tokens</a><br /><br />
-	<a class='btn btn-primary' href='?action=iq'>Buy IQ - " . number_format($set['iq_per_sec']) . "* Per Token</a><br /><br />
-	<a class='btn btn-primary' href='?action=protection'>Buy Protection - 5 Chivalry Tokens per Minute</a><br /><br />
-    <a class='btn btn-primary' href='?action=coppertotoken'>50k Copper Coins -> 1 Chivalry Token</a><br /><br />
-	<a class='btn btn-primary' href='?action=tokentocopper'>1 Chivalry Token -> 1,000 Copper Coins</a><br /><br />
-	<br />
+	<div class='row'>
+		<div class='col-sm'>
+			<a href='?action=energy'>Refill Energy<br /> " . number_format($set['energy_refill_cost']) . " Chivalry Tokens</a>
+		</div>
+		<div class='col-sm'>
+			<a href='?action=brave'>Regenerate 5% Bravery<br />" . number_format($set['brave_refill_cost']) . " Chivalry Tokens</a>
+		</div>
+		<div class='col-sm'>
+			<a href='?action=will'>Regenerate 5% Will<br />" . number_format($set['will_refill_cost']) . " Chivalry Tokens</a>
+		</div>
+		<div class='col-sm'>
+			<a href='?action=willall'>Regenerate 100% Will<br />" . number_format($set['will_refill_cost']*20) . " Chivalry Tokens</a>
+		</div>
+	</div>
+	<hr />
+	<div class='row'>
+		<div class='col-sm'>
+			<a href='?action=willall2'>Regenerate 1,000% Will<br />" . number_format($set['will_refill_cost']*225) . " Chivalry Tokens</a>
+		</div>
+		<div class='col-sm'>
+			<a href='?action=iq'>Buy IQ <br />" . number_format($set['iq_per_sec']) . "* IQ Per Token</a>
+		</div>
+		<div class='col-sm'>
+			<a href='?action=protection'>Buy Protection<br />5 Chivalry Tokens per Minute</a><br /><br />
+		</div>
+	</div>
+	<hr />
+	<div class='row'>
+		<div class='col-sm'>
+			<a href='?action=coppertotoken'>50k Copper -> 1 Chivalry Token</a>
+		</div>
+		<div class='col-sm'>
+			<a href='?action=tokentocopper'>1 Chivalry Token -> 1,000 Copper</a>
+		</div>
+	</div>
+	<hr />
 	*=You will receive an extra {$extraiq}% IQ per Token because of your skills.";
 }
 
@@ -150,28 +173,30 @@ function brave()
 
 function will()
 {
-    global $api, $userid, $set;
+    global $api, $userid, $set, $ir, $db, $h;
     //User has enough Chivalry Tokens to refill their will.
     if ($api->UserHasCurrency($userid, 'secondary', $set['will_refill_cost'])) {
         //User's will is already at 100%
-        if ($api->UserInfoGet($userid, 'will', true) == 100) {
+        if (($api->UserInfoGet($userid, 'will', true) == 100) && ($ir['will_overcharge'] < time())) {
             alert('danger', "Uh Oh!", "You already have full Will.", true, 'temple.php');
         } else {
+			if ($ir['will'] > ($ir['maxwill'] * 10))
+			{
+				alert('danger',"Uh Oh!","You need to take a break.",true,'index.php');
+				die($h->endpage());
+			}
 			if (calculateLuck($userid))
 			{
-				//Refill the user's will by 5% and take their Chivalry Tokens.
-				$api->UserInfoSet($userid, 'will', 5, true);
 				alert('success', "Success!", "Luck is on your side today! You received a free will regeneration!", true, 'temple.php');
 				$api->SystemLogsAdd($userid, 'temple', "Traded 0 Chivalry Tokens to regenerate 5% Will.");
 			}
 			else
 			{
-				//Refill the user's will by 5% and take their Chivalry Tokens.
-				$api->UserInfoSet($userid, 'will', 5, true);
 				$api->UserTakeCurrency($userid, 'secondary', $set['will_refill_cost']);
 				alert('success', "Success!", "You have paid {$set['will_refill_cost']} Chivalry Tokens to regenerate 5% Will", true, 'temple.php');
 				$api->SystemLogsAdd($userid, 'temple', "Traded {$set['will_refill_cost']} Chivalry Tokens to regenerate 5% Will.");
 			}
+			$db->query("UPDATE `users` SET `will` = `will` + (`maxwill`/20) WHERE `userid` = {$userid}");
         }
     } else {
         alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", true, 'temple.php');
@@ -201,6 +226,30 @@ function willall()
 				alert('success', "Success!", "You have paid " . number_format($set['will_refill_cost']*20) . " Chivalry Tokens to regenerate 100% Will", true, 'temple.php');
 				$api->SystemLogsAdd($userid, 'temple', "Traded " . number_format($set['will_refill_cost']*20) . " Chivalry Tokens to regenerate 100% Will.");
 			}
+        }
+    } else {
+        alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", true, 'temple.php');
+    }
+}
+function willall2()
+{
+    global $api, $userid, $set, $ir, $db, $h;
+	if ($ir['will_overcharge'] < time())
+	{
+		alert('danger',"Uh Oh!","You cannot purchase 1,000% Will at this time. Consume a Will Stimulant Potion and try again.",true,'temple.php');
+		die($h->endpage());
+	}
+    //User has enough Chivalry Tokens to refill their will.
+    if ($api->UserHasCurrency($userid, 'secondary', $set['will_refill_cost']*225)) {
+        //User's will is already at 100%
+        if ($api->UserInfoGet($userid, 'will', true) == 1000) {
+            alert('danger', "Uh Oh!", "You already have 1,000% Will.", true, 'temple.php');
+        } else {
+				$api->UserTakeCurrency($userid, 'secondary', $set['will_refill_cost']*225);
+				alert('success', "Success!", "You have paid " . number_format($set['will_refill_cost']*225) . " Chivalry Tokens to regenerate 1,000% Will", true, 'temple.php');
+				$api->SystemLogsAdd($userid, 'temple', "Traded " . number_format($set['will_refill_cost']*225) . " Chivalry Tokens to regenerate 1,000% Will.");
+				$ir['will'] = $ir['maxwill'] * 10;
+				$db->query("UPDATE `users` SET `will` = {$ir['will']} WHERE `userid` = {$userid}");
         }
     } else {
         alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", true, 'temple.php');

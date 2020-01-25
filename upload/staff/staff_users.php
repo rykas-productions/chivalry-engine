@@ -394,7 +394,7 @@ function edituser()
         $d = $db->query("/*qc=on*/SELECT `i`.*, `d`.*, `username`,
 		`level`, `primary_currency`,`secondary_currency`, `equip_primary`,
 		`maxwill`, `bank`, `strength`, `agility`, `guard`, `equip_secondary`,
-		`labor`, `IQ`, `location`, `equip_armor`, `email`
+		`labor`, `IQ`, `location`, `equip_armor`, `email`, `display_pic`
 		 FROM `users` AS `u`
 		 INNER JOIN `userstats` AS `us`
 		 ON `u`.`userid` = `us`.`userid`
@@ -412,6 +412,7 @@ function edituser()
         $db->free_result($d);
         $CurrentTime = time();
         $itemi['infirmary_reason'] = htmlentities($itemi['infirmary_reason'], ENT_QUOTES, 'ISO-8859-1');
+		$itemi['display_pic'] = htmlentities($itemi['display_pic'], ENT_QUOTES, 'ISO-8859-1');
         $itemi['email'] = htmlentities($itemi['email'], ENT_QUOTES, 'ISO-8859-1');
         $itemi['dungeon_reason'] = htmlentities($itemi['dungeon_reason'], ENT_QUOTES, 'ISO-8859-1');
         $itemi['username'] = htmlentities($itemi['username'], ENT_QUOTES, 'ISO-8859-1');
@@ -447,6 +448,14 @@ function edituser()
 				</th>
 				<td>
 					<input type='text' class='form-control' required='1' name='email' value='{$itemi['email']}' />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Display Pic
+				</th>
+				<td>
+					<input type='text' class='form-control' required='1' name='display_pic' value='{$itemi['display_pic']}' />
 				</td>
 			</tr>
 			<tr>
@@ -617,6 +626,7 @@ function edituser()
         $email = (isset($_POST['email'])) ? $db->escape(strip_tags(stripslashes($_POST['email']))) : '';
         $infirmaryr = (isset($_POST['infirmary_reason'])) ? $db->escape(strip_tags(stripslashes($_POST['infirmary_reason']))) : 'Hurt';
         $dungeonr = (isset($_POST['dungeonreason'])) ? $db->escape(strip_tags(stripslashes($_POST['dungeonreason']))) : 'Locked Up';
+		$displayPic = (isset($_POST['display_pic']) && is_string($_POST['display_pic'])) ? stripslashes($_POST['display_pic']) : '';
 
         $user = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
         $level = (isset($_POST['level']) && is_numeric($_POST['level'])) ? abs(intval($_POST['level'])) : 1;
@@ -701,7 +711,7 @@ function edituser()
         $db->query("UPDATE `users` SET `username` = '{$username}', `level` = {$level}, `primary_currency` = {$money}, `secondary_currency` = {$money2},
 		`energy` = {$energy}, `maxenergy` = {$energy}, `brave` = {$brave}, `maxbrave` = {$brave}, `hp` = {$hp}, `maxhp` = {$hp}, `bank` = {$bank},
 		`equip_armor` = {$equip_armor}, `equip_primary` = {$equip_prim}, `equip_secondary` = {$equip_sec}, `location` = {$city}, `will`= {$will}, `maxwill` = {$maxwill},
-		`email` = '{$email}' WHERE `userid` = {$user}");
+		`email` = '{$email}', `display_pic` = '{$displayPic}' WHERE `userid` = {$user}");
         $db->query("UPDATE `userstats` SET `strength` = {$strength}, `agility` = {$agility}, `guard` = {$guard}, `iq` = {$iq}, `labor` = {$labor} WHERE `userid` = {$user}");
         if ($_POST['infirmary'] > 0) {
             $api->UserStatusSet($user, 'infirmary', $_POST['infirmary'], $infirmaryr);

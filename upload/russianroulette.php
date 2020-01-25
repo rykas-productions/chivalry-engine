@@ -258,7 +258,7 @@ function dorr()
          and won " . number_format($actuallywon) . " Copper Coins.", true, 'index.php');
         $winner = $userid;
         $loser = $_GET['id'];
-        $NotifText = "You lost a round of Russian Roulette against {$api->SystemUserIDtoName($userid)} and lost {$r} Copper Coins.";
+        $NotifText = "You lost a round of Russian Roulette against {$api->SystemUserIDtoName($userid)} and lost " . number_format($r) . " Copper Coins.";
         $api->SystemLogsAdd($userid, 'rr', "Won against <a href='../profile.php?user={$_GET['id']}'>{$api->SystemUserIDtoName($_GET['id'])}</a>. Gained: {$actuallywon}.");
         $api->SystemLogsAdd($_GET['id'], 'rr', "Lost against <a href='../profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a>. Lost: {$actuallywon}.");
     } else {
@@ -267,7 +267,7 @@ function dorr()
          and lost " . number_format($actuallywon) . " Copper Coins.", true, 'index.php');
         $winner = $_GET['id'];
         $loser = $userid;
-        $NotifText = "You won a round of Russian Roulette against {$api->SystemUserIDtoName($userid)} and gained {$r} Copper Coins.";
+        $NotifText = "You won a round of Russian Roulette against {$api->SystemUserIDtoName($userid)} and gained " . number_format($r) . " Copper Coins.";
         $api->SystemLogsAdd($_GET['id'], 'rr', "Won against <a href='../profile.php?user={$userid}'>{$api->SystemUserIDtoName($userid)}</a>. Gained: {$actuallywon}.");
         $api->SystemLogsAdd($userid, 'rr', "Lost against <a href='../profile.php?user={$_GET['id']}'>{$api->SystemUserIDtoName($_GET['id'])}</a>. Lost: {$actuallywon}.");
     }

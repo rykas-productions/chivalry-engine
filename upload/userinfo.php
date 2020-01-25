@@ -3,11 +3,14 @@
 if (strpos($_SERVER['PHP_SELF'], 'userinfo.php') !== false) {
     exit;
 }
+if (!isset($MUS))
+	$MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 $energy = $api->UserInfoGet($userid, 'energy', true);
 $brave = $api->UserInfoGet($userid, 'brave', true);
 $will = $api->UserInfoGet($userid, 'will', true);
 $xp = round($ir['xp'] / $ir['xp_needed'] * 100);
 $hp = $api->UserInfoGet($userid, 'hp', true);
+$mine = round($MUS['miningpower'] / $MUS['max_miningpower'] * 100);
 $StrengthRank = get_rank($ir['strength'], 'strength');
 $AgilityRank = get_rank($ir['agility'], 'agility');
 $GuardRank = get_rank($ir['guard'], 'guard');
@@ -20,7 +23,7 @@ echo "
   <div class='modal-dialog' role='document'>
     <div class='modal-content'>
       <div class='modal-header'>
-        <h5 class='modal-title' id='User Info'>Your Info</h5>
+        <h5 class='modal-title' id='User Info'>Your Info [<a href='index.php'>Home</a>]</h5>
         <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
           <span aria-hidden='true'>&times;</span>
         </button>
@@ -91,6 +94,15 @@ echo "
         <div class='progress' style='height: 1rem;'>
             <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'></div>
             <span>{$hp}% (" . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . ")</span>
+        </div>
+		<div class='row'>
+            <div class='col-8' align='left'>
+                Mining Energy {$mine}%
+            </div>
+        </div>
+        <div class='progress' style='height: 1rem;'>
+            <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningpower']}' style='width:{$mine}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'></div>
+            <span>{$mine}% (" . number_format($MUS['miningpower']) . " / " . number_format($MUS['max_miningpower']) . ")</span>
         </div>
         <hr />
         <div class='container-fluid'>
