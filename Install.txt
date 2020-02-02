@@ -3,7 +3,7 @@ Chivalry Engine Install Guide
 Last Updated: 24/02/2016
 -=-=-=-=-=-=-=-=-=-
 1) Download your favorite flavor of Chivalry Engine.
-	There's two flavors, stable release (which you will find under "Releases", and dev version (which is the master branch)
+	There's two flavors, stable release (which you will find under "Releases", and dev version (which is the master branch))
 
 2) Upload the contents of the "upload" folder to your website's public_html folder.
 
