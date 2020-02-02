@@ -24,22 +24,20 @@
 */
 require('functions/func_startup.php');
 register_shutdown_function('shutdown');
-//Comment out to disable raw PHP errors.
-enableErrorOutput();
+enableErrorOutput();    //Comment out to disable raw PHP errors.
 if (!checkDirectAccess('globals_nonauth.php'))
 {
 	die('This file may not be accessed directly.');
 }
-setSession('CEV3');
-require('./lib/basic_error_handler.php');
+setSession('CEV3'); //Change to whatever session name you'd like.
+require('lib/basic_error_handler.php');
 set_error_handler('error_php');
 //Require styling.
 require('./headers_nonauth.php');
 require('./config.php');
-//Connect to database.
 define('MONO_ON', 1);
-require("./class/class_db_mysqli.php");
-require('./functions/global_functions.php');
+require("class/class_db_mysqli.php");
+require('functions/global_functions.php');
 $db = new database;
 $db->configure(constant("db_host"), constant("db_username"), constant("db_password"), constant("db_database"), 0);
 $db->connect();
