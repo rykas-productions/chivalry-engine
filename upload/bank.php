@@ -98,6 +98,7 @@ function home()
 					</div>
 				</div>";
 }
+
 function deposit()
 {
 	global $ir, $moduleConfig, $db;
@@ -116,6 +117,7 @@ function deposit()
 		successRedirect("You have deposited " . number_format($deposit) . " into your bank account.","bank.php","Back");
 	}
 }
+
 function withdraw()
 {
 	global $ir, $moduleConfig, $db;

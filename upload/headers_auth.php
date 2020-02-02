@@ -41,6 +41,7 @@ class headers
 		$this->loadCSS();
 		$this->loadTopMenu();
 	}
+	
 	function loadCSS()
 	{
 		echo '<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
@@ -51,6 +52,7 @@ class headers
 			}
 		</style>';
 	}
+	
 	function loadJS()
 	{
 		echo '<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -58,6 +60,7 @@ class headers
 		<script src="assets/js/bootstrap.js"></script>
 		</head>';
 	}
+	
 	function loadTopMenu()
 	{
 		global $set;
@@ -85,11 +88,13 @@ class headers
 			<div class="container">';
 			$this->loadStatBar();
 	}
+	
 	function endBody()
 	{
 		echo '</div>
 		</body>';
 	}
+	
 	function startFooter()
 	{
 		$this->loadJS();
@@ -98,12 +103,14 @@ class headers
 	{
 		
 	}
+	
 	function endHeaders()
 	{
 		$this->endBody();
 		$this->startFooter();
 		$this->endFooter();
 	}
+	
 	function loadStatBar()
 	{
 		global $ir;

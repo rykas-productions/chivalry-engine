@@ -41,6 +41,7 @@ class headers
 		$this->loadCSS();
 		$this->loadTopMenu();
 	}
+	
 	function loadCSS()
 	{
 		echo '<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
@@ -51,6 +52,7 @@ class headers
 			}
 		</style>';
 	}
+	
 	function loadJS()
 	{
 		echo '<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -84,19 +86,23 @@ class headers
 		<main role="main" class="flex-shrink-0">
 			<div class="container">';
 	}
+	
 	function endBody()
 	{
 		echo '</div>
 		</body>';
 	}
+	
 	function startFooter()
 	{
 		$this->loadJS();
 	}
+	
 	function endFooter()
 	{
 		
 	}
+	
 	function endHeaders()
 	{
 		$this->endBody();
