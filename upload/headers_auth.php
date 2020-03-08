@@ -27,7 +27,7 @@ class headers
 {
 	function startHeaders()
 	{
-		global $set, $db;
+		global $set;
 		?>
 			<!DOCTYPE html>
 				<html>
