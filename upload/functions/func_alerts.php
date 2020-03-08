@@ -22,62 +22,127 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $redirecttext = 'Back')
+/**
+ * @desc Function to create all in-game alerts. This is the general function.
+ * @param string $alertType         [Danger, Success, Info, Warning, Primary, Secondary]
+ * @param string $alertTitle        The alert's title name.
+ * @param string $alertText         The text shown in the alert.
+ * @param bool $alertRedirect       True/False if you wish to redirect [Default: true]
+ * @param string $alertRedirectLink The link you wish to redirect to. (Ex: back, explore.php) [Default: back] (Back goes to the previous page.)
+ * @param string $alertRedirectText The clickable link for the alert redirect text.
+ * @example alert('success','Success!','You have figured out the success alert',true, 'index.php', 'Go Home');
+ */
+function alert(string $alertType, string $alertTitle, string $alertText, bool $alertRedirect = true, string $alertRedirectLink = 'back', string $alertRedirectText = 'Back')
 {
     //This function is a horrible mess dude..
-    if ($type == 'danger')
-        $icon = "exclamation-triangle";
-    elseif ($type == 'success')
-        $icon = "check-circle";
-    elseif ($type == 'info')
-        $icon = 'info-circle';
+    if ($alertType == 'danger')
+        $alertIcon = "exclamation-triangle";
+    elseif ($alertType == 'success')
+        $alertIcon = "check-circle";
+    elseif ($alertType == 'info')
+        $alertIcon = 'info-circle';
     else
-        $icon = 'exclamation-circle';
-    if ($doredirect) {
-        $redirect = ($redirect == 'back') ? $_SERVER['REQUEST_URI'] : $redirect;
-        echo "<div class='alert alert-{$type}'>
-				<i class='fa fa-{$icon}' aria-hidden='true'></i>
-					<strong>{$title}</strong> 
-						{$text} > <a href='{$redirect}' class='alert-link'>{$redirecttext}</a>
+        $alertIcon = 'exclamation-circle';
+        if ($alertRedirect) {
+        $alertRedirectLink = ($alertRedirectLink == 'back') ? $_SERVER['REQUEST_URI'] : $alertRedirectLink;
+        echo "<div class='alert alert-{$alertType}'>
+				<i class='fa fa-{$alertIcon}' aria-hidden='true'></i>
+					<strong>{$alertTitle}</strong> 
+						{$alertText} > <a href='{$alertRedirectLink}' class='alert-link'>{$alertRedirectText}</a>
 				</div>";
     } else {
-        echo "<div class='alert alert-{$type}'>
-                    <i class='fa fa-{$icon}' aria-hidden='true'></i>
-					    <strong>{$title}</strong>
-					        {$text}
+        echo "<div class='alert alert-{$alertType}'>
+                    <i class='fa fa-{$alertIcon}' aria-hidden='true'></i>
+					    <strong>{$alertTitle}</strong>
+					        {$alertText}
                 </div>";
     }
 }
 
-function success($text)
+/**
+ * @desc Create a simple Success alert.
+ * @param string $alertText Text to be shown on alert.
+ * @example success("You have successfully done this action.");
+ */
+function success(string $alertText)
 {
-	alert('success','Success!',$text, false);
+	alert('success','Success!',$alertText, false);
 }
-function successRedirect($text, $redirectLink = 'back', $redirectText = 'Back')
+
+/**
+ * @desc Create a success alert with a redirect.
+ * @param string $alertText Text to be shown on alert.
+ * @param string $alertRedirectLinkLink Link to go to after alert.
+ * @param string $alertRedirectText Friendly name for link.
+ * @example successRedirect("Successfully completed action", 'bank.php', 'Go to Bank');
+ */
+function successRedirect(string $alertText, string $alertRedirectLinkLink = 'back', string $alertRedirectText = 'Back')
 {
-	alert('success','Success!',$text, true, $redirectLink, $redirectText);
+	alert('success','Success!',$alertText, true, $alertRedirectLinkLink, $alertRedirectText);
 }
-function danger($text)
+
+/**
+ * @desc Create a simple danger alert.
+ * @param string $alertText Text to be shown on alert.
+ * @example danger("This action failed");
+ */
+function danger(string $alertText)
 {
-	alert('danger','Success!',$text, false);
+	alert('danger','Success!',$alertText, false);
 }
-function dangerRedirect($text, $redirectLink = 'back', $redirectText = 'Back')
+
+/**
+ * @desc Create a danger alert with a redirect.
+ * @param string $alertText Text to be shown on alert.
+ * @param string $alertRedirectLinkLink Link to go to after alert.
+ * @param string $alertRedirectText Friendly name for link.
+ * @example dangerRedirect("Go to jail!", 'dungeon.php', 'Do not collect $200');
+ */
+function dangerRedirect(string $alertText, string $alertRedirectLinkLink = 'back', string $alertRedirectText = 'Back')
 {
-	alert('danger','Uh Oh!',$text, true, $redirectLink, $redirectText);
+	alert('danger','Uh Oh!',$alertText, true, $alertRedirectLinkLink, $alertRedirectText);
 }
-function info($text)
+
+/**
+ * @desc Create a simple info alert.
+ * @param string $alertText Text to be shown on alert.
+ * @example info("Have some info!");
+ */
+function info(string $alertText)
 {
-	alert('info','Information!',$text, false);
+	alert('info','Information!',$alertText, false);
 }
-function infoRedirect($text, $redirectLink = 'back', $redirectText = 'Back')
+
+/**
+ * @desc Create a danger alert with a redirect.
+ * @param string $alertText Text to be shown on alert.
+ * @param string $alertRedirectLinkLink Link to go to after alert.
+ * @param string $alertRedirectText Friendly name for link.
+ * @example infoRedirect("Here's some info. Wanna read more?", '#link_to_more_info', 'Read More');
+ */
+function infoRedirect(string $alertText, string $alertRedirectLinkLink = 'back', string $alertRedirectText = 'Back')
 {
-	alert('info','Information!',$text, true, $redirectLink, $redirectText);
+	alert('info','Information!',$alertText, true, $alertRedirectLinkLink, $alertRedirectText);
 }
-function warning($text)
+
+/**
+ * @desc Create a simple warning alert.
+ * @param string $alertText Text to be shown on alert.
+ * @example success("Something happened! Here's a warning!");
+ */
+function warning(string $alertText)
 {
-	alert('warning','Warning!',$text, false);
+	alert('warning','Warning!',$alertText, false);
 }
-function warningRedirect($text, $redirectLink = 'back', $redirectText = 'Back')
+
+/**
+ * @desc Create a warning alert with a redirect.
+ * @param string $alertText Text to be shown on alert.
+ * @param string $alertRedirectLinkLink Link to go to after alert.
+ * @param string $alertRedirectText Friendly name for link.
+ * @example warningRedirect("Have a warning! See the game rules", 'gamerules.php', 'Game Rules');
+ */
+function warningRedirect(string $alertText, string $alertRedirectLinkLink = 'back', string $alertRedirectText = 'Back')
 {
-	alert('warning','Warning!',$text, true, $redirectLink, $redirectText);
+	alert('warning','Warning!',$alertText, true, $alertRedirectLinkLink, $alertRedirectText);
 }

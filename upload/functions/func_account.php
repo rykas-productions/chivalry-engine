@@ -22,11 +22,24 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-function generatePassword($plainTextPassword)
+
+/**
+ * Generates a secure password for database insertion.
+ * @param string $plainTextPassword
+ * @return string
+ */
+function generatePassword(string $plainTextPassword)
 {
 	return password_hash(base64_encode(hash('sha256', $plainTextPassword, true)), PASSWORD_BCRYPT);
 }
-function createAccount($username, $password, $email)
+
+/**
+ * Create a user easily.
+ * @param string $username
+ * @param string $password
+ * @param string $email
+ */
+function createAccount(string $username, string $password, string $email)
 {
 	global $db;
 	$UUID=getValidUUID();
@@ -38,7 +51,13 @@ function createAccount($username, $password, $email)
 	createUserData($UUID);
 	createUserStats($UUID);
 }
-function checkUsableEmail($email)
+
+/**
+ * Check if $email is not already in use.
+ * @param string $email
+ * @return boolean
+ */
+function checkUsableEmail(string $email)
 {
 	global $db;
 	$q=$db->query("SELECT `userid` FROM `users_core` WHERE `email` = '{$email}'");
@@ -47,7 +66,13 @@ function checkUsableEmail($email)
 	else
 		return false;
 }
-function checkUsableUsername($username)
+
+/**
+ * Check if $username is not already in use.
+ * @param string $username
+ * @return boolean
+ */
+function checkUsableUsername(string $username)
 {
 	global $db;
 	$q=$db->query("SELECT `userid` FROM `users_core` WHERE `username` = '{$username}'");
@@ -57,18 +82,37 @@ function checkUsableUsername($username)
 		return false;
 	
 }
-function checkConfirmedPassword($password, $passwordConfirm)
+
+/**
+ * Check that $password and $passwordConfirm are equal.
+ * @param string $password
+ * @param string $passwordConfirm
+ * @return boolean
+ */
+function checkConfirmedPassword(string $password, string $passwordConfirm)
 {
 		return $password == $passwordConfirm;
 }
-function createUserData($userid)
+
+/** 
+ * @desc Create's User Account Data.
+ * @internal This is an internal function and you should never need to use it.
+ * @param string $uuid
+ */
+function createUserData(string $uuid)
 {
 	global $db;
 	$time=returnUnixTimestamp();
 	$IP=getUserIP();
-	$db->query("INSERT INTO `users_account_data` VALUES ('{$userid}', '0', '{$time}', '{$time}', '', '1', '127.0.0.1', '{$IP}', '{$IP}', '0')");
+	$db->query("INSERT INTO `users_account_data` VALUES ('{$uuid}', '0', '{$time}', '{$time}', '', '1', '127.0.0.1', '{$IP}', '{$IP}', '0')");
 }
-function createUserStats($userid)
+
+/**
+ * @desc Creates the User Stat data.
+ * @internal This is an internal function and you should never need to use it.
+ * @param string $uuid
+ */
+function createUserStats(string $uuid)
 {
 	global $db;
 	$db->query("INSERT INTO `users_stats` 
@@ -76,14 +120,24 @@ function createUserStats($userid)
 		`guard`, `labor`, `iq`, `energy`, `maxEnergy`, `will`, 
 		`maxWill`, `brave`, `maxBrave`, `hp`, `maxHP`, 
 		`primaryCurrencyHeld`, `primaryCurrencyBank`) 
-		VALUES ('{$userid}', '1', '0', '10', '10', '10', '10', 
+		VALUES ('{$uuid}', '1', '0', '10', '10', '10', '10', 
 		'10', '10', '10', '100', '100', '5', '5', '100', '100', 
 		'100', '-1')");
 }
+
+/**
+ * @desc Get the current user's IP address.
+ * @return string IP Address
+ */
 function getUserIP()
 {
 	return makeSafeText($_SERVER['REMOTE_ADDR']);
 }
+
+/**
+ * @desc Internal Function - Check to see if the user is authenticated or not.
+ * @internal This is an internal function and you should never need to use it.
+ */
 function autoSessionCheck()
 {
 	if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) 
@@ -97,7 +151,14 @@ function autoSessionCheck()
 		exit;
 	}
 }
-function returnCurrentUserData($userid)
+
+/**
+ * @desc Returns all database stored information for the current user.
+ * @internal This is an internal function and you should never need to use it.
+ * @param string $uuid
+ * @return $ir User Data
+ */
+function returnCurrentUserData(string $uuid)
 {
 	global $db;
 	return $db->fetch_row($db->query("SELECT `u`.*, `ud`.*, `us`.*
@@ -106,34 +167,60 @@ function returnCurrentUserData($userid)
                      ON `u`.`userid` = `ud`.`userid`
 					 INNER JOIN `users_stats` AS `us`
                      ON `u`.`userid` = `us`.`userid`
-                     WHERE `u`.`userid` = {$userid}
+                     WHERE `u`.`userid` = '{$uuid}'
                      LIMIT 1"));
 }
-function returnUnreadMailCount()
+
+/**
+ * @desc Returns unread mails for UUID $uuid
+ * @param string $uuid
+ * @return int Unread Mail
+ */
+function returnUnreadMailCount(string $uuid = '')
 {
 	global $db, $userid;
-	return $db->num_rows($db->query("SELECT `mailID` FROM `mail` WHERE `mailTo` = '{$userid}' AND `mailReadTime` = 0"));
+	if (empty($uuid))
+	    $uuid = $userid;
+	return $db->num_rows($db->query("SELECT `mailID` FROM `mail` WHERE `mailTo` = '{$uuid}' AND `mailReadTime` = 0"));
 }
-function checkInfirmary($user = '')
-{
+
+/**
+ * @desc Check if $uuid is in the infirmary.
+ * @param string $uuid
+ * @return boolean
+ */
+ function checkInfirmary(string $uuid = '') 
+ {
 	global $db, $userid;
-	if (empty($user))
-		$user = $userid;
-	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = '{$user}'");
+	if (empty($uuid))
+		$uuid = $userid;
+	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = '{$uuid}'");
 	if ($db->fetch_single($q) < returnUnixTimestamp())
 		return false;
 	else
 		return true;
 }
-function returnRemainingInfirmaryTime($user = '')
+
+/**
+ * @desc Returns how many seconds $uuid has in the infirmary.
+ * @If $uuid is undefined, will default to current user's UUID.
+ * @param string $uuid
+ * @return number
+ */
+function returnRemainingInfirmaryTime(string $uuid = '')
 {
 	global $db, $userid;
-	if (empty($user))
-		$user = $userid;
-	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = '{$user}'");
+	if (empty($uuid))
+		$uuid = $userid;
+	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = '{$uuid}'");
 	$r=$db->fetch_single($q);
 	return $r - returnUnixTimestamp();
 }
+
+/**
+ * @desc Logs the current player's current IP address. This function will update its current use time.
+ * @internal This is an internal function. Do not use.
+ */
 function logUserIP()
 {
 	global $userid, $db;
@@ -145,7 +232,14 @@ function logUserIP()
 	else
 		$db->query("UPDATE `users_ips` SET `userLastUsed` = {$time} WHERE `userid` = '{$userid}' AND `userIP` = '{$userIP}'");
 }
-function createUserUUID() {
+
+/**
+ * @desc Create a UUID for a user to be assigned to.
+ * @internal This function is internal. Careless editing of this function will result in bricked games.
+ * @return string UUID
+ */
+function createUserUUID() 
+{
     return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
         returnRandomNumber( 0, 0xffff ), returnRandomNumber( 0, 0xffff ),
         returnRandomNumber( 0, 0xffff ),
@@ -154,6 +248,13 @@ function createUserUUID() {
         returnRandomNumber( 0, 0xffff ), returnRandomNumber( 0, 0xffff ), returnRandomNumber( 0, 0xffff )
     );
 }
+
+/**
+ * @desc Attempt to get a valid, unused User UUID.
+ * @internal Internal function.
+ * @return string UUID
+ */
+//@TODO: Make this function work for all tables.
 function getValidUUID()
 {
 	global $db;

@@ -41,23 +41,44 @@ function writeConfigToDB($moduleName, $configJson)
 	else
 		$db->query("UPDATE `game_settings` SET `setting_value` = '{$configJson}' WHERE `setting_name` = '{$moduleName}_config'");
 }
+//TODO Set up config files...
 function readConfigFromFile($moduleName)
 {
 	
 }
+
+//TODO Set up config files...
 function writeConfigToFile($moduleName, $configJson)
 {
 	
 }
-function formatConfig($string)
+
+/**
+ * @desc Internal function to properly format JSON objects to the string used for the database storage.
+ * @param string $string Config string to encode in JSON.
+ * @return string Config JSON
+ */
+function formatConfig(string $string)
 {
 	return json_encode($string, JSON_FORCE_OBJECT);
 }
+
+/**
+ * @desc Internal function to properly remove JSON formatting.
+ * @param json $json json object to turn into a string.
+ * @return json Config String
+ */
 function unformatConfig($json)
 {
 	return json_decode($json, true);
 }
-function getConfigForPHP($moduleName)
+
+/**
+ * @desc Internal function to properly get module config info for use in PHP.
+ * @param string $moduleName Name of the module.
+ * @return string $moduleConfig;
+ */
+function getConfigForPHP(string $moduleName)
 {
 	return unformatConfig(readConfigFromDB($moduleName));
 }

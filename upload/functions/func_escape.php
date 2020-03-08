@@ -22,18 +22,34 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-function makeSafeText($text)
+/**
+ * @desc Makes the text input safe for use.
+ * @param string $text
+ * @return string Escaped Text.
+ */
+function makeSafeText(string $text)
 {
 	global $db;
 	$text = (isset($text) && is_string($text)) ? stripslashes($text) : '';
 	return $db->escape(htmlentities($text, ENT_QUOTES, 'ISO-8859-1'));
 }
 
-function makeSafeInt($int)
+/**
+ * @desc Makes the number input safe for use.
+ * @param int $int
+ * @return int Safe Int
+ */
+function makeSafeInt(int $int)
 {
 	return (isset($int) && is_numeric($int)) ? abs($int) : 0;
 }
-function stripAll($text)
+
+/**
+ * @desc Removes all tags and slashes from string.
+ * @param string $text
+ * @return string
+ */
+function stripAll(string $text)
 {
 	return strip_tags(stripslashes($text));
 }

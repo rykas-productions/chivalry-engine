@@ -22,11 +22,18 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
+//TODO: Wrap all login actions from authenticate.php into attemptAuth();
 function attemptAuth()
 {
 	global $db;
 }
-function checkValidEmail($email)
+/**
+ * @desc Check the email to see if its valid and then return the UUID of the player associated with it.
+ * @param string $email
+ * @return string UUID of the player associated with the email. If zero, no account associated.
+ * @internal This is an internal function.
+ */
+function checkValidEmail(string $email)
 {
 	global $db;
 	$q=$db->query("SELECT `userid` FROM `users_core` WHERE `email` = '{$email}'");
@@ -38,18 +45,46 @@ function checkValidEmail($email)
 	else
 		return 0;
 }
-function checkUserPassword($rawPassword, $password)
+/**
+ * @desc Verify if the input password is correct based on the data stored in the database.
+ * @param string $rawPassword Plain text password.
+ * @param string $password User's password from the database.
+ * @return boolean True if the input password is valid, false if not.
+ */
+function checkUserPassword(string $rawPassword, string $password)
 {
 	//Check that the password matches or not.
     $return = (password_verify(base64_encode(hash('sha256', $rawPassword, true)), $password)) ? true : false;
     return $return;
 }
-function getPasswordByUserID($userid)
+/**
+ * @desc Get the password for the specified UUID.
+ * @param string $uuid Player UUID
+ * @return string Player's password pulled from the database.
+ * @deprecated Use {@link #getPasswordByUUID($uuid)}
+ */
+function getPasswordByUserID(string $uuid)
 {
 	global $db;
-	return $db->fetch_single($db->query("SELECT `password` FROM `users_core` WHERE `userid` = '{$userid}'"));
+	return $db->fetch_single($db->query("SELECT `password` FROM `users_core` WHERE `userid` = '{$uuid}'"));
 }
-function accountLoginUpdate($userid)
+
+/**
+ * @desc Get the password for the specified UUID.
+ * @param string $uuid Player UUID
+ * @return string Player's password pulled from the database.
+ */
+function getPasswordByUUID(string $uuid)
+{
+    global $db;
+    return $db->fetch_single($db->query("SELECT `password` FROM `users_core` WHERE `userid` = '{$uuid}'"));
+}
+
+/**
+ * @desc Internal function to update account data on a log in.
+ * @param string $uuid
+ */
+function accountLoginUpdate(string $uuid)
 {
 	global $db;
 	$time=returnUnixTimestamp();
@@ -57,13 +92,18 @@ function accountLoginUpdate($userid)
 	$db->query("UPDATE `users_account_data` 
 				SET `loginTime`='{$time}', `lastActionTime`='{$time}',
 				`loginIP`='{$ip}', `lastActionIP`='{$ip}' 
-				WHERE `userid` = '{$userid}'");
+				WHERE `userid` = '{$uuid}'");
 	
 }
-function setActiveSession($userid)
+
+/**
+ * @desc Internal function to set the correct session data.
+ * @param string $uuid
+ */
+function setActiveSession(string $uuid)
 {
 	session_regenerate_id();
 	$_SESSION['loggedin'] = 1;
-	$_SESSION['userid'] = $userid;
+	$_SESSION['userid'] = $uuid;
 	$_SESSION['last_login'] = returnUnixTimestamp();
 }

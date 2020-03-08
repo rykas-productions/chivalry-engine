@@ -22,6 +22,10 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
+/**
+ * Internal function to format unread mail notification.
+ * @return string Formatted mail output
+ */
 function returnFormattedUnreadMail()
 {
 	$q=returnUnreadMailCount();
@@ -30,6 +34,11 @@ function returnFormattedUnreadMail()
 	else
 		return "<span class='text-danger'>You have {$q} unread messages. View <a href='#'>here</a>.</span><br />";
 }
+
+/**
+ * Internal function to format the amount of time remaining in the infirmary.
+ * @return string Formatted infirmary output
+ */
 function returnFormattedInfirmary()
 {
 	if (checkInfirmary())
@@ -43,13 +52,25 @@ function returnFormattedInfirmary()
 	else
 		return "";
 }
-function parseDateTime($timeStamp)
+
+/**
+ * @desc Format the Unix Timestamp into date/time.
+ * @param int $timeStamp Unix timestamp
+ * @return string Formatted Date/Time.
+ */
+function parseDateTime(int $timeStamp)
 {
 	if ($timeStamp == 0)
         return "N/A";
 	return date('F j, Y, g:i:s a', $timeStamp);
 }
-function parseTimeUntil($timestamp)
+
+/**
+ * @desc Format how long until the Unix Timestamp from the current Unix Timestamp, then format it into date/time.
+ * @param int $timestamp Future Unix Timestamp
+ * @return string Formatted Future Date/Time.
+ */
+function parseTimeUntil(int $timestamp)
 {
 	$time_difference = $timestamp - time();
     $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade', 'century');
@@ -63,6 +84,11 @@ function parseTimeUntil($timestamp)
     $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
     return $date;
 }
+
+/**
+ * @desc Format the unread announcements.
+ * @return string Formatted Unread Announcements
+ */
 function returnFormattedAnnouncement()
 {
 	global $ir;
