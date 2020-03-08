@@ -30,6 +30,7 @@ include('./functions/func_template.php');
 include('./functions/func_format.php');
 include('./functions/func_config.php');
 include('./functions/func_player.php');
+include('./functions/func_auth.php');
 
 function createForm($method, $action, $inputsArray, $submitButtonName)
 {
