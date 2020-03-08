@@ -1,0 +1,14 @@
+eclipse.preferences.version=1
+org.eclipse.php.core.phpDoc=true
+org.eclipse.php.core.taskCaseSensitive=enabled
+org.eclipse.php.core.taskPriorities=NORMAL,HIGH,NORMAL,NORMAL,HIGH
+org.eclipse.php.core.taskTags=TODO,FIXME,XXX,@todo,@major
+pdt_validator/enabled=true
+pdt_validator/org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier/CannotInstantiateType/severity=ERROR
+pdt_validator/org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier/DuplicateDeclaration/severity=ERROR
+pdt_validator/org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier/ImportNotFound/severity=ERROR
+pdt_validator/org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier/UndefinedType/severity=ERROR
+pdt_validator/org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier/UndefinedVariable/severity=WARNING
+pdt_validator/org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier/UnnecessaryImport/severity=INFO
+pdt_validator/org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier/UnusedImport/severity=INFO
+pdt_validator/org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier/UnusedVariable/severity=INFO
