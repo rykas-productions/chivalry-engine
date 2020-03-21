@@ -257,7 +257,7 @@ function idx()
 function viewforum()
 {
     global $ir, $db, $h, $userid;
-	$forum = filter_input(INPUT_GET, 'viewforum', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+	$forum = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs($_GET['viewforum']) : '';
     if (empty($forum)) {
         alert('danger', "Uh Oh!", "You must enter a forum category you wish to view.", true, "forums.php");
         die($h->endpage());
@@ -369,7 +369,7 @@ function viewtopic()
     global $ir, $userid, $parser, $db, $h, $api;
     $code = getCodeCSRF('forum_reply');
     $precache = array();
-	$viewtopic = filter_input(INPUT_GET, 'viewtopic', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+	$viewtopic = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : 0;
     if (empty($viewtopic)) {
         alert('danger', "Uh Oh!", "You must enter a topic you wish to view.", true, "forums.php");
         die($h->endpage());
@@ -596,7 +596,7 @@ function viewtopic()
 function reply()
 {
     global $h, $userid, $db, $api;
-	$reply = filter_input(INPUT_GET, 'reply', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+	$reply = (isset($_GET['reply']) && is_numeric($_GET['reply'])) ? abs($_GET['reply']) : 0;
     if (!isset($_POST['verf']) || !checkCSRF('forum_reply', stripslashes($_POST['verf']))) {
         csrf_error("?viewtopic={$reply}");
     }
@@ -660,7 +660,7 @@ function reply()
                  `ff_lp_poster_id` = $userid,
                  `ff_lp_t_id` = {$reply}
                  WHERE `ff_id` = {$forum['ff_id']}");
-        alert('success', "Success!", "Your reply has posted successfully.", false);
+        alert('success', "Success!", "Your reply has been posted successfully.", false);
         echo "<br />";
         $_GET['lastpost'] = 1;
         $_GET['viewtopic'] = $reply;
@@ -673,7 +673,7 @@ function reply()
 function newtopicform()
 {
     global $userid, $h, $db, $api;
-	$forum = filter_input(INPUT_GET, 'forum', FILTER_SANITIZE_NUMBER_INT) ?: 0;
+	$forum = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
     if (empty($forum)) {
         alert('danger', "Uh Oh!", "You must specify a forum you wish to create this topic in.", true, "forums.php");
         die($h->endpage());
@@ -742,7 +742,7 @@ EOF;
 function newtopic()
 {
     global $ir, $userid, $h, $db, $api;
-    $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : '';
+    $_GET['forum'] = (isset($_GET['forum']) && is_numeric($_GET['forum'])) ? abs($_GET['forum']) : 0;
     if (!isset($_POST['verf']) || !checkCSRF("forums_newtopic_{$_GET['forum']}", stripslashes($_POST['verf']))) {
         csrf_error("?act=newtopicform&forum={$_GET['forum']}");
     }
