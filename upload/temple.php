@@ -22,7 +22,7 @@ if (user_dungeon($userid))
 }
 if (Random(1,50) == 6)
 {
-    put_infirmary($userid, Random(1,10), 'Downstairs');
+    put_infirmary($userid, Random(1,10), 'Fell down the temple stairs.');
     alert('danger',"Uh Oh!","While walking up to the Temple of Fortune, you trip up the stairs and fall all the way down. You need to go to the infirmary.",true,'infirmary.php');
     die($h->endpage());
 }
@@ -134,6 +134,7 @@ function energy()
 				$api->UserTakeCurrency($userid, 'secondary', $set['energy_refill_cost']);
 				alert('success', "Success!", "You have paid {$set['energy_refill_cost']} Chivalry Tokens to refill your energy.", true, 'temple.php');
 				$api->SystemLogsAdd($userid, 'temple', "Traded {$set['energy_refill_cost']} Chivalry Tokens to refill their Energy.");
+				addToEconomyLog('Temple of Fortune', 'token', ($set['energy_refill_cost'])*-1);
 			}
         }
     } else {
@@ -164,6 +165,7 @@ function brave()
 				$api->UserTakeCurrency($userid, 'secondary', $set['brave_refill_cost']);
 				alert('success', "Success!", "You have paid {$set['brave_refill_cost']} to regenerate 5% Bravery.", true, 'temple.php');
 				$api->SystemLogsAdd($userid, 'temple', "Traded {$set['brave_refill_cost']} Chivalry Tokens to regenerate 5% Brave.");
+				addToEconomyLog('Temple of Fortune', 'token', ($set['brave_refill_cost'])*-1);
 			}
         }
     } else {
@@ -195,6 +197,7 @@ function will()
 				$api->UserTakeCurrency($userid, 'secondary', $set['will_refill_cost']);
 				alert('success', "Success!", "You have paid {$set['will_refill_cost']} Chivalry Tokens to regenerate 5% Will", true, 'temple.php');
 				$api->SystemLogsAdd($userid, 'temple', "Traded {$set['will_refill_cost']} Chivalry Tokens to regenerate 5% Will.");
+				addToEconomyLog('Temple of Fortune', 'token', ($set['will_refill_cost'])*-1);
 			}
 			$db->query("UPDATE `users` SET `will` = `will` + (`maxwill`/20) WHERE `userid` = {$userid}");
         }
@@ -225,6 +228,7 @@ function willall()
 				$api->UserTakeCurrency($userid, 'secondary', $set['will_refill_cost']*20);
 				alert('success', "Success!", "You have paid " . number_format($set['will_refill_cost']*20) . " Chivalry Tokens to regenerate 100% Will", true, 'temple.php');
 				$api->SystemLogsAdd($userid, 'temple', "Traded " . number_format($set['will_refill_cost']*20) . " Chivalry Tokens to regenerate 100% Will.");
+				addToEconomyLog('Temple of Fortune', 'token', ($set['will_refill_cost']*20)*-1);
 			}
         }
     } else {
@@ -250,6 +254,7 @@ function willall2()
 				$api->SystemLogsAdd($userid, 'temple', "Traded " . number_format($set['will_refill_cost']*225) . " Chivalry Tokens to regenerate 1,000% Will.");
 				$ir['will'] = $ir['maxwill'] * 10;
 				$db->query("UPDATE `users` SET `will` = {$ir['will']} WHERE `userid` = {$userid}");
+				addToEconomyLog('Temple of Fortune', 'token', ($set['will_refill_cost']*225)*-1);
         }
     } else {
         alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", true, 'temple.php');
@@ -278,6 +283,7 @@ function iq()
         }
 		$specialnumber=((getSkillLevel($userid,12)*5)/100);
 		$totalcost=$totalcost+($totalcost*$specialnumber);
+		addToEconomyLog('Temple of Fortune', 'token', ($_POST['iq'])*-1);
         //Take the currency and give the user some IQ.
         $api->UserTakeCurrency($userid, 'secondary', $_POST['iq']);
         $db->query("UPDATE `userstats` SET `iq` = `iq` + {$totalcost} WHERE `userid` = {$userid}");
@@ -343,6 +349,7 @@ function protection()
 		alert('success',"Success!","You have successfully traded {$cost} Chivalry Tokens for {$protection} minutes of protection.",true,'temple.php');
 		$api->SystemLogsAdd($userid, 'temple', "Traded {$cost} Chivalry Tokens for {$protection} minutes of protection.");
 		$api->UserTakeCurrency($userid,'secondary',$cost);
+		addToEconomyLog('Temple of Fortune', 'token', ($cost)*-1);
 		$h->endpage();
 	}
 	else
@@ -382,6 +389,8 @@ function coppertotoken()
 			alert('danger',"Uh Oh!","You do not have enough Copper Coins to exchange for {$token} Chivalry Tokens. You need {$cost} Copper Coins.");
 			die($h->endpage());
 		}
+		addToEconomyLog('Temple of Fortune', 'copper', ($cost)*-1);
+		addToEconomyLog('Temple of Fortune', 'token', $token);
 		$api->UserTakeCurrency($userid,'primary',$cost);
 		$api->UserGiveCurrency($userid,'secondary',$token);
 		$api->SystemLogsAdd($userid, 'temple', "Traded {$cost} Copper Coins for {$token} Chivalry Tokens.");
@@ -423,6 +432,8 @@ function tokentocopper()
 		}
 		$api->UserGiveCurrency($userid,'primary',$cost);
 		$api->UserTakeCurrency($userid,'secondary',$token);
+		addToEconomyLog('Temple of Fortune', 'copper', $cost);
+		addToEconomyLog('Temple of Fortune', 'token', ($token)*-1);
 		$api->SystemLogsAdd($userid, 'temple', "Traded {$token} Chivalry Tokens for {$cost} Copper Coins.");
 		alert('success',"Success!","You have successfully traded {$token} Chivalry Tokens for {$cost} Copper Coins.",true,'temple.php');
 	}

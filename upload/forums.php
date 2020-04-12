@@ -10,6 +10,15 @@
 */
 require("globals.php");
 require('lib/bbcode_engine.php');
+if ($ir['guild'] > 0) 
+{
+    $gq = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}");
+	if ($db->num_rows($gq) > 0) 
+	{
+		$gd = $db->fetch_row($gq);
+		$db->free_result($gq);
+	}
+}
 function csrf_error()
 {
     global $h;
@@ -27,6 +36,7 @@ if ($fb['fb_time'] > $time) {
 	    immediately.", true, 'index.php');
     die($h->endpage());
 }
+alert('info',"","Read the Forum rules before posting!!", true, '?viewtopic=167&lastpost=1', 'View Rules');
 if (!isset($_GET['act'])) {
     $_GET['act'] = '';
 }
@@ -75,6 +85,9 @@ switch ($_GET['act']) {
         break;
     case 'lock':
         lock();
+        break;
+	case 'lock2':
+        lock2();
         break;
     case 'delepost':
         delepost();
@@ -259,7 +272,7 @@ function viewforum()
 		alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php");
 		die($h->endpage());
 	}
-    /*if (isset($_GET['rate']))
+    if (isset($_GET['rate']))
     {
         $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
         if ((empty($_GET['topic'])) || (empty($_GET['rate'])))
@@ -271,7 +284,7 @@ function viewforum()
             updateRating($_GET['topic'],$_GET['rate']);
             alert('success','Success!',"You have successfully rated this topic.",false);
         }
-    }*/
+    }
 	if (permission("CanCreateThread",$userid))
 		$ntl = "&nbsp;[<a href='?act=newtopicform&forum={$_GET['viewforum']}'>New Topic</a>]";
 	else
@@ -290,17 +303,20 @@ function viewforum()
     <table class='table table-bordered table-hover table-striped'>
     <thead>
     <tr>
-        <th>
-            <?php echo "Topic"; ?>
-        </th>
-        <th class='hidden-xs-down'>
-            <?php echo "Post Count"; ?>
-        </th>
-        <th class='hidden-xs-down'>
-            <?php echo "Created"; ?>
+		<th>
+            Rating
         </th>
         <th>
-            <?php echo "Latest Post"; ?>
+            Topic
+        </th>
+        <th class='hidden-xs-down'>
+            Posts
+        </th>
+        <th class='hidden-xs-down'>
+            Creation
+        </th>
+        <th>
+            Last Active
         </th>
     </tr>
     </thead>
@@ -315,11 +331,12 @@ function viewforum()
                      WHERE `ft_forum_id` = {$_GET['viewforum']}
                      ORDER BY `ft_pinned` DESC, `ft_last_time` DESC
 					 LIMIT {$st}, 20");
-    while ($r2 = $db->fetch_row($q)) {
+    while ($r2 = $db->fetch_row($q)) 
+	{
         $t1 = DateTime_Parse($r2['ft_start_time'], true, true);
         $t2 = DateTime_Parse($r2['ft_last_time'], true, true);
-        $threadrating = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`rating`) FROM `forum_tops_rating` WHERE `topic_id` = {$r2['ft_id']}"));
-        $threadrating = number_format($threadrating);
+        $votes = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`rating`) FROM `forum_tops_rating` WHERE `topic_id` = {$r2['ft_id']}"));
+		$votes = number_format($votes);
         $pt = ($r2['ft_pinned']) ? " <i class='fa fa-thumbtack' aria-hidden='true'></i>" : "" ;
         $lt = ($r2['ft_locked']) ? " <i class='fa fa-lock' aria-hidden='true'></i>" : "" ;
         $pn1['username'] = parseUsername($r2['ft_owner_id']);
@@ -332,7 +349,21 @@ function viewforum()
         if (!$pn1) {
             $pn1['username'] = "Non-existent User";
         }
+		$uservote = getUserTopicRating($r2['ft_id']);
+		if ($uservote == 1)
+			$type='success';
+		elseif ($uservote == -1)
+			$type='danger';
+		elseif ($uservote == 0)
+			$type='primary';
         echo "<tr>
+				<td>
+					<a href='?viewforum={$_GET['viewforum']}&rate=up&topic={$r2['ft_id']}'>+</a> 
+						<span class='badge badge-pill badge-{$type}'>
+							<a href='?viewforum={$_GET['viewforum']}&rate=none&topic={$r2['ft_id']}' class='text-white'>{$votes}</a>
+						</span> 
+					<a href='?viewforum={$_GET['viewforum']}&rate=down&topic={$r2['ft_id']}'>-</a>
+				</td>
         		<td>
 					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
 					<small class='hidden-xs-down'>{$r2['ft_desc']}</small>
@@ -355,7 +386,7 @@ function viewforum()
 
 function viewtopic()
 {
-    global $ir, $userid, $parser, $db, $h, $api;
+    global $ir, $userid, $parser, $db, $h, $api, $gd;
     $code = request_csrf_code('forum_reply');
     $precache = array();
     $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
@@ -409,7 +440,7 @@ function viewtopic()
 		$st = $postslastpage*20;
     }
     echo pagination(20, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
-    if (!($ir['user_level'] == 'Member')) {
+    if ($ir['user_level'] != 'Member') {
         $lock = ($topic['ft_locked'] == 0) ? 'Lock Topic' : 'Unlock Topic' ;
         $pin = ($topic['ft_pinned'] == 0) ? 'Pin Topic' : 'Unpin Topic' ;
         echo "
@@ -419,52 +450,63 @@ function viewtopic()
 	<input type='submit' value='Move Topic' class='btn btn-primary' />
 	</form>
 	<br />
-	<center>
-	<div class='hidden-sm-down'>
-	<table>
-		<tr>
-			<td>
-				<form>
-					<input type='hidden' value='pin' name='act'>
-					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-primary' value='{$pin}'>
-				</form> 
-			</td>
-			<td align='center'>
-				<form>
-					<input type='hidden' value='lock' name='act'>
-					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-primary' value='{$lock}'>
-				</form> 
-			</td>
-			<td>
-				<form action='?act=deletopic'>
-					<input type='hidden' value='deletopic' name='act'>
-					<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-					<input type='submit' class='btn btn-primary' value='Delete'>
-				</form>
-			</td>
-		</tr>
-	</table>
+	<div class='row'>
+		<div class='col-sm'>
+			<form>
+				<input type='hidden' value='pin' name='act'>
+				<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+				<input type='submit' class='btn btn-primary' value='{$pin}'>
+			</form>
+		</div>
+		<div class='col-sm'>
+			<form>
+				<input type='hidden' value='lock' name='act'>
+				<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+				<input type='submit' class='btn btn-primary' value='{$lock}'>
+			</form>
+		</div>
+		<div class='col-sm'>
+			<form action='?act=deletopic'>
+				<input type='hidden' value='deletopic' name='act'>
+				<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+				<input type='submit' class='btn btn-primary' value='Delete'>
+			</form>
+		</div>
 	</div>
-	<div class='hidden-md-up'>
-		<form>
-			<input type='hidden' value='pin' name='act'>
-			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-primary' value='{$pin}'>
-		</form>
-		<form>
-			<input type='hidden' value='lock' name='act'>
-			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-primary' value='{$lock}'>
-		</form> 
-		<form action='?act=deletopic'>
-			<input type='hidden' value='deletopic' name='act'>
-			<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-			<input type='submit' class='btn btn-primary' value='Delete'>
-		</form>
-	</div><br /> ";
+	<br /> ";
     }
+	/*if ($ir['guild'] == $forum['ff_owner'])
+	{
+		if (isGuildLeadership())
+		{
+			$lock = ($topic['ft_locked'] == 0) ? 'Lock Topic' : 'Unlock Guild Topic' ;
+			$pin = ($topic['ft_pinned'] == 0) ? 'Pin Topic' : 'Unpin Guild Topic' ;
+			echo "
+			<div class='row'>
+				<div class='col-sm'>
+					<form>
+						<input type='hidden' value='pin2' name='act'>
+						<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+						<input type='submit' class='btn btn-primary' value='{$pin}'>
+					</form>
+				</div>
+				<div class='col-sm'>
+					<form>
+						<input type='hidden' value='lock2' name='act'>
+						<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+						<input type='submit' class='btn btn-primary' value='{$lock}'>
+					</form>
+				</div>
+				<div class='col-sm'>
+					<form action='?act=deletopic'>
+						<input type='hidden' value='deletopic2' name='act'>
+						<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+						<input type='submit' class='btn btn-primary' value='Delete Guild Topic'>
+					</form>
+				</div>
+			</div>";
+		}
+	}*/
     echo "<table class='table table-bordered table-striped'>";
     $q3 =
         $db->query(
@@ -536,7 +578,8 @@ function viewtopic()
             $memb['signature'] = $parser->getAsHtml($memb['signature']);
         }
 		$rlink="<a class='btn btn-primary btn-sm' href='playerreport.php?userid={$r['fp_poster_id']}'><i class='fas fa-flag'></i></a>";
-        $r['fp_text']=$parser->parse($r['fp_text']);
+        //$r['fp_text']=replaceMentions($r['fp_text']);
+		$r['fp_text']=$parser->parse($r['fp_text']);
         $r['fp_text'] = $parser->getAsHtml();
         echo "<tr>
 				<td width='25%' align='left'><b>Post #{$no}</b></td>
@@ -675,7 +718,7 @@ function reply()
 		{
 			$api->SystemLogsAdd(1, 'staff', "Forum Warned <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] for 'Spamming'.");
 			$api->SystemLogsAdd(1, 'forumwarn', "Forum Warned <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] for 'Spamming'.");
-			$api->GameAddNotification($userid, "You have been received a forum warning for the following reason: Spamming.");
+			$api->GameAddNotification($userid, "You have automatically been received a forum warning for the following reason: Spamming.");
 			staffnotes_entry($userid,"Forum warned for 'Spamming'.");
 		}
 		if ($postcount >= 5)
@@ -684,8 +727,8 @@ function reply()
 			$db->query("INSERT INTO `forum_bans` VALUES(NULL,  {$userid}, 1, {$endtime}, 'Spamming')");
 			$api->SystemLogsAdd(1, 'staff', "Forum banned <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] for 3 days for Spamming.");
 			$api->SystemLogsAdd(1, 'forumban', "Forum banned <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] for 3 days for Spamming.");
-			$api->GameAddNotification($userid, "The game administration has forum banned you for 3 days for the following reason: 'Spamming'.");
-			staffnotes_entry($userid,"Forum banned for 3 days, with reason 'Spamming'.");
+			$api->GameAddNotification($userid, "You were automtically forum banned you for 3 days for the following reason: 'Spamming'.");
+			staffnotes_entry($userid,"Automatically forum banned for 3 days, with reason 'Spamming'.");
 		}
         $post_time = time();
         $db->query("
@@ -1253,6 +1296,61 @@ function lock()
     viewtopic();
 }
 
+function lock2()
+{
+    global $userid, $h, $db, $api, $ir;
+	$_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
+    if (empty($_GET['topic'])) 
+	{
+        alert('danger', "Uh Oh!", "Please select a topic you wish to view.", true, "forums.php");
+        die($h->endpage());
+    }
+	$q =
+        $db->query(
+            "/*qc=on*/SELECT `ft_name`,`ft_locked`,`ft_forum_id`, `ft_id`
+                     FROM `forum_topics`
+                     WHERE `ft_id` = {$_GET['topic']}");
+    if ($db->num_rows($q) == 0) 
+	{
+        $db->free_result($q);
+        alert('danger', "Forum topic does not exist!", "You are attempting to interact with a topic that does not exist. Check your source and try again.", true, "forums.php?viewtopic={$_GET['topic']}");
+        die($h->endpage());
+    }
+    $r = $db->fetch_row($q);
+    $db->free_result($q);
+    if ($ir['guild'] == $forum['ff_owner'])
+	{
+		if (isGuildLeadership())
+		{
+			if ($r['ft_locked'] == 1) 
+			{
+				$db->query(
+					"UPDATE `forum_topics`
+						 SET `ft_locked` = 0
+						 WHERE `ft_id` = {$_GET['topic']}");
+				alert('success', "Success!", "You have unlocked this topic.", false);
+				$api->SystemLogsAdd($userid, 'guilds', "Unlocked Topic {$r['ft_name']}.");
+			} 
+			else 
+			{
+				$db->query(
+					"UPDATE `forum_topics`
+						 SET `ft_locked` = 1
+						 WHERE `ft_id` = {$_GET['topic']}");
+				alert('success', "Success!", "You have locked this topic.", false);
+				$api->SystemLogsAdd($userid, 'guilds', "Locked Topic {$r['ft_name']}.");
+			}
+		}
+		alert('danger', "Uh Oh!", "You are not a member of this guild's leadership and cannot lock this.", false);
+	}
+	else
+	{
+		alert('danger', "Uh Oh!", "You are not a member of this guild and cannot lock this.", false);
+	}
+    $_GET['viewtopic']=$_GET['topic'];
+    viewtopic();
+}
+
 function pin()
 {
     global $userid, $h, $db, $api;
@@ -1374,18 +1472,68 @@ function deletopic()
 function updateRating($topic,$rating)
 {
     global $db,$userid,$api;
-    if (($rating != 1) && ($rating != -1))
+    if (($rating != 'up') && ($rating != 'down') && ($rating != 'none'))
     {
-        $rating = 0;
+        return;
     }
-    $q=$db->query("/*qc=on*/SELECT * FROM `forum_tops_rating` WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
+    $q=$db->query("SELECT * FROM `forum_tops_rating` WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
     if ($db->num_rows($q) == 0)
     {
-        $db->query("INSERT INTO `forum_tops_rating` (`topic_id`, `rating`, `userid`) VALUES ('{$topic}', '{$rating}', '{$userid}')");
-    }
+		if ($rating == 'up')
+			$db->query("INSERT INTO `forum_tops_rating` (`topic_id`, `rating`, `userid`) VALUES ('{$topic}', 1, '{$userid}')");
+		elseif ($rating == 'down')
+			$db->query("INSERT INTO `forum_tops_rating` (`topic_id`, `rating`, `userid`) VALUES ('{$topic}', -1, '{$userid}')");
+		elseif ($rating == 'none')
+			$db->query("INSERT INTO `forum_tops_rating` (`topic_id`, `rating`, `userid`) VALUES ('{$topic}', 0, '{$userid}')");
+	}
     else
     {
-        $db->query("UPDATE `forum_tops_rating` SET `rating` = {$rating} WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
-    }
+		if ($rating == 'up')
+			$db->query("UPDATE `forum_tops_rating` SET `rating` = 1 WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
+		elseif ($rating == 'down')
+			$db->query("UPDATE `forum_tops_rating` SET `rating` = -1 WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
+		elseif ($rating == 'none')
+			$db->query("UPDATE `forum_tops_rating` SET `rating` = 0 WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
+	}
+}
+
+function getUserTopicRating($topic)
+{
+	global $db,$userid,$api;
+	$q=$db->query("SELECT `rating` FROM `forum_tops_rating` WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
+	if ($db->num_rows($q) == 0)
+		return 0;
+	else
+	{
+		return $db->fetch_single($q);
+	}
+}
+
+function replaceMentions($string)
+{
+	global $api;
+    $mentionID=get_string_between($string, "[mention]", "[/mention]");
+	if ($api->SystemUserIDtoName($mentionID))
+	{
+		$count = 1;
+		while(strpos($string, $mentionID) != false)
+		{
+			$str = preg_replace("/{$mentionID}/", "<a href='profile.php?user={$mentionID}'>@{$api->SystemUserIDtoName($mentionID)}</a>", $string, 1);
+		}
+		return $str;
+	}
+	else
+	{
+		return $string;
+	}
+}
+
+function get_string_between($string, $start, $end){
+    $string = ' ' . $string;
+    $ini = strpos($string, $start);
+    if ($ini == 0) return '';
+    $ini += strlen($start);
+    $len = strpos($string, $end, $ini) - $ini;
+    return substr($string, $ini, $len);
 }
 $h->endpage();

@@ -42,7 +42,7 @@ echo "Here is the information on the crime.
 {$r['gclLOG']}
 <br />
 <br />
-<b>Result:</b> {$r['gclRESULT']}
+<b>Result:</b> " . ucfirst($r['gclRESULT']) . "
 <br />
 <b>Copper Coins Earned:</b> " . number_format($r['gclWINNING']);
 $h->endpage();

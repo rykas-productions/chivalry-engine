@@ -219,3 +219,4 @@ config.php
 error_log
 *.png
 upload/cache/
+upload/test.php

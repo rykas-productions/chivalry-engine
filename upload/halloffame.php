@@ -10,7 +10,7 @@ require('globals.php');
 echo "<h3><i class='game-icon game-icon-crown'></i> Hall of Fame</h3><hr />";
 //Add stats to this array.
 $StatArray = array('total', 'level', 'strength', 'agility', 'guard', 'labor', 'iq',
-    'primary_currency', 'mining_level', 'secondary_currency', 'busts', 'kills', 'deaths', 'richest');
+    'primary_currency', 'mining_level', 'secondary_currency', 'busts', 'kills', 'deaths', 'richest', 'farm_level');
 //Stat is not chosen, set to level.
 if (!isset($_GET['stat'])) {
     $_GET['stat'] = 'level';
@@ -40,6 +40,16 @@ elseif ($_GET['stat'] == 'mining_level') {
                     ORDER BY `mining_level` DESC
                     LIMIT 20");
 }
+elseif ($_GET['stat'] == 'farm_level') 
+{
+    $q = $db->query("/*qc=on*/SELECT `u`.*, `f`.*
+                    FROM `users` `u` 
+                    INNER JOIN `farm_users` AS `f`
+                    ON `u`.`userid` = `f`.`userid`
+					WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
+                    ORDER BY `farm_level` DESC
+                    LIMIT 20");
+}
 elseif ($_GET['stat'] == 'richest')
 {
 	$q = $db->query("/*qc=on*/SELECT `u`.*, `us`.*
@@ -66,7 +76,8 @@ echo "<a href='?stat=level'>Level</a>
 		|| <a href='?stat=kills'>Kills</a>
 		|| <a href='?stat=deaths'>Deaths</a>";
 echo "<br />";
-echo "<a href='?stat=strength'>Strength</a>
+echo "<a href='?stat=farm_level'>Farming Level</a>
+		|| <a href='?stat=strength'>Strength</a>
 		|| <a href='?stat=agility'>Agility</a>
         || <a href='?stat=guard'>Guard</a>
         || <a href='?stat=labor'>Labor</a>
@@ -83,7 +94,7 @@ echo "<table class='table table-bordered'>
     </th>";
 if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
     || $_GET['stat'] == 'mining_level' || $_GET['stat'] == 'busts' || $_GET['stat'] == 'kills'
-    || $_GET['stat'] == 'deaths' || $_GET['stat'] == 'richest'
+    || $_GET['stat'] == 'deaths' || $_GET['stat'] == 'richest' || $_GET['stat'] == 'farm_level'
 ) {
     echo "<th width='45%'>
                 Value
@@ -106,7 +117,7 @@ if ($_GET['stat'] != 'crypto')
             </td>";
         if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
             || $_GET['stat'] == 'mining_level' || $_GET['stat'] == 'busts' || $_GET['stat'] == 'kills'
-            || $_GET['stat'] == 'deaths' || $_GET['stat'] == 'richest'
+            || $_GET['stat'] == 'deaths' || $_GET['stat'] == 'richest' || $_GET['stat'] == 'farm_level'
         ) {
             echo "<td>
                     " . number_format($r[$_GET['stat']]) . "

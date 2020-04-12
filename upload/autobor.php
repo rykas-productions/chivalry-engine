@@ -192,6 +192,8 @@ if (isset($_POST['open']))
 		" . number_format($nothing) . " Boxes of Random had nothing in them.";
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
+	addToEconomyLog('BOR', 'copper', $copper);
+	addToEconomyLog('BOR', 'token', $tokens);
 	$api->UserStatusSet($userid,'infirmary',$infirmary,"Ticking Box");
 	$api->UserGiveItem($userid,6,$wraps);
 	$api->UserGiveItem($userid,30,$keys);

@@ -23,14 +23,6 @@ $last24 = time() - 86400;
 $plussevenday = time() + 604800;
 
 $db->query("UPDATE `users` SET `vip_days`=`vip_days`-1 WHERE `vip_days` > 0");
-//Non-VIP Bank Interest
-$db->query("UPDATE `users` SET `bank`=`bank`+(`bank`/50) WHERE `bank`>0 AND `laston` > {$last24} AND `bank`<20000001 AND `vip_days` = 0");
-$db->query("UPDATE `users` SET `bigbank`=`bigbank`+(`bigbank`/50) WHERE `bigbank`>0 AND `laston` > {$last24} AND `bigbank`<100000001 AND `vip_days` = 0");
-$db->query("UPDATE `users` SET `vaultbank`=`vaultbank`+(`vaultbank`/50) WHERE `vaultbank`>0 AND `laston` > {$last24} AND `vaultbank`<300000001 AND `vip_days` = 0");
-//VIP Bank Interest
-$db->query("UPDATE `users` SET `bank`=`bank`+(`bank`/20) WHERE `bank`>0 AND `laston` > {$last24} AND `bank`<20000001 AND `vip_days` != 0");
-$db->query("UPDATE `users` SET `bigbank`=`bigbank`+(`bigbank`/20) WHERE `bigbank`>0 AND `laston` > {$last24} AND `bigbank`<100000001 AND `vip_days` != 0");
-$db->query("UPDATE `users` SET `vaultbank`=`vaultbank`+(`vaultbank`/20) WHERE `vaultbank`>0 AND `laston` > {$last24} AND `vaultbank`<300000001 AND `vip_days` != 0");
 
 $db->query("UPDATE `users` SET `hexbags` = 100, `bor` = 1000");
 $db->query("UPDATE `user_settings` SET `att_dg` = 0");
@@ -56,7 +48,7 @@ while ($riq = $db->fetch_row($biq))
 $fiveday=Random(3,9);
 $tenday=Random(7,20);
 $twentyday=Random(16,48);
-$thirtyday=Random(28,84);
+$thirtyday=Random(35,64);
 $db->query("UPDATE `settings` SET `setting_value` = '{$fiveday}' WHERE `setting_name` = '5day'");
 $db->query("UPDATE `settings` SET `setting_value` = '{$tenday}' WHERE `setting_name` = '10day'");
 $db->query("UPDATE `settings` SET `setting_value` = '{$twentyday}' WHERE `setting_name` = '20day'");
@@ -89,6 +81,57 @@ while ($gfr=$db->fetch_row($gdfq))
 		}
 	}
 }
+//Bank daily interest
+$bankQuery=$db->query("SELECT `userid`, `bank`, `vip_days` FROM `users` WHERE `bank` > 0 AND `laston` > '{$last24}'");
+while ($r = $db->fetch_row($bankQuery))
+{
+	$maxBank = returnMaxInterest($r['userid']);
+	if ($r['bank'] <= $maxBank)
+	{
+		if ($r['vip_days'] == 0)
+			$perc = 50;
+		else
+			$perc = 20;
+		$addedAmount = $r['bank'] / $perc;
+		$db->query("UPDATE `users` SET `bank` = `bank` + {$addedAmount} WHERE `userid` = {$r['userid']}");
+		addToEconomyLog('Bank Interest', 'copper', $addedAmount);
+		
+	}
+}
+//Big Bank daily interest
+$bankQuery=$db->query("SELECT `userid`, `bigbank`, `vip_days` FROM `users` WHERE `bigbank` > 0 AND `laston` > '{$last24}'");
+while ($r = $db->fetch_row($bankQuery))
+{
+	$maxBank = returnMaxInterest($r['userid'])*10;
+	if ($r['bigbank'] <= $maxBank)
+	{
+		if ($r['vip_days'] == 0)
+			$perc = 50;
+		else
+			$perc = 20;
+		$addedAmount = $r['bigbank'] / $perc;
+		$db->query("UPDATE `users` SET `bigbank` = `bigbank` + {$addedAmount} WHERE `userid` = {$r['userid']}");
+		addToEconomyLog('Bank Interest', 'copper', $addedAmount);
+		
+	}
+}
+//Vault Bank daily interest
+$bankQuery=$db->query("SELECT `userid`, `vaultbank`, `vip_days` FROM `users` WHERE `vault` > 0 AND `laston` > '{$last24}'");
+while ($r = $db->fetch_row($bankQuery))
+{
+	$maxBank = returnMaxInterest($r['userid'])*50;
+	if ($r['vaultbank'] <= $maxBank)
+	{
+		if ($r['vip_days'] == 0)
+			$perc = 50;
+		else
+			$perc = 20;
+		$addedAmount = $r['vault'] / $perc;
+		$db->query("UPDATE `users` SET `vaultbank` = `vaultbank` + {$addedAmount} WHERE `userid` = {$r['userid']}");
+		addToEconomyLog('Bank Interest', 'copper', $addedAmount);
+		
+	}
+}
 //Guild daily interest.
 $db->query("UPDATE `guild` SET `guild_primcurr`=`guild_primcurr`+(`guild_primcurr`/20) WHERE `guild_primcurr`>0");
 
@@ -98,7 +141,4 @@ $uq=$db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` != 1 AND `l
 $ur=$db->fetch_single($uq);
 $api->GameAddNotification($ur,"You have been chosen as the Player of the Day! Your profile will be displayed on the login page, and you've received a unique badge in your inventory.");
 item_add($ur,154,1);
-
-//Holiday!
-$db->query("UPDATE `user_settings` SET `holiday` = 0");
 ?>

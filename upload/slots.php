@@ -50,7 +50,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         die($h->endpage());
     }
     $slot = array();
-	if (isRigged())
+	/*if (isRigged())
 	{
 		$accepted=0;
 		while ($accepted != 3)
@@ -69,7 +69,10 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 		$slot[1] = Random(0, 9);
 		$slot[2] = Random(0, 9);
 		$slot[3] = Random(0, 9);
-	}
+	}*/
+		$slot[1] = Random(0, 9);
+		$slot[2] = Random(0, 9);
+		$slot[3] = Random(0, 9);
     if ($slot[1] == $slot[2] && $slot[2] == $slot[3]) {
         $gain = $_POST['bet'] * 25;
         $title = "Success!";
@@ -77,6 +80,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $win = 1;
         $phrase = "All three line up. Jack pot! You win an extra " . number_format($gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in slots.");
+		addToEconomyLog('Gambling', 'copper', $gain);
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$gain} WHERE `setting_name` = 'casino_give'");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
@@ -88,6 +92,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $alerttype = 'success';
         $win = 1;
         $phrase = "Two slots line up. Awesome! You win an extra " . number_format($gain);
+		addToEconomyLog('Gambling', 'copper', $gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in slots.");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$gain} WHERE `setting_name` = 'casino_give'");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
@@ -99,6 +104,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $win = 0;
         $gain = -$_POST['bet'];
         $phrase = "Round and round the slots go. Unlucky! None of them line up!";
+		addToEconomyLog('Gambling', 'copper', $gain*-1);
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` - {$_POST['bet']} WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'gambling', "Lost {$_POST['bet']} in slots.");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
@@ -138,13 +144,5 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 		</tr>
 	</table>
 	</form>";
-}
-function isRigged()
-{
-	global $db,$set;
-	if ($set['casino_take'] > $set['casino_give']*1.5)
-		return false;
-	else
-		return true;	
 }
 $h->endpage();

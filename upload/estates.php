@@ -10,6 +10,11 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot visit the estate agent while in the infirmary or dungeon.",true,'explore.php');
+	die($h->endpage());
+}
 $mpq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_will` = {$ir['maxwill']} LIMIT 1");
 $mp = $db->fetch_row($mpq);
 $db->free_result($mpq);

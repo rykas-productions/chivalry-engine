@@ -38,7 +38,7 @@ if (isset($_POST['g-recaptcha-response'])) {
 } //reCaptcha response has not been received from the player.
 else {
     $api->SystemLogsAdd($userid, 'verify', "Did not receive ReCaptcha response.");
-    alert('danger', "Uh Oh!", "Go back, please.", true, $page);
+    alert('danger', "Uh Oh!", "We didn't get a ReCaptcha response from you... Weird. Make sure you wait until ReCaptcha is complete before clicking submit.", true, $page);
     header("refresh:5;url={$page}");
     die($h->endpage());
 }

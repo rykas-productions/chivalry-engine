@@ -54,6 +54,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
     }
     //Take the spy cost from the player.
     $api->UserTakeCurrency($userid, 'primary', $r['level'] * 500);
+	addToEconomyLog('Spy Services', 'copper', ($r['level'] * 500)*-1);
     //RNG equals 1 or 2, the spy has failed.
     if ($rand == 1 || $rand == 2) {
         //Specific event RNG

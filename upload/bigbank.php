@@ -47,6 +47,7 @@ else {
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bigbank", 0);
 			item_add($userid,155,1);
+			addToEconomyLog('Bank Fees', 'copper', ($bank_cost)*-1);
         } //Player is too poor to afford account.
         else {
             alert('danger', "Uh oh!", "You do not have enough cash to buy a federal bank account. You need at least
@@ -66,7 +67,7 @@ function index()
         $interest=5;
     echo "<b>You currently have " . number_format($ir['bigbank']) . " Copper Coins in your Federal Bank Account.</b><br />
 				At the end of each and everyday, your balance will increase by {$interest}%. You will not gain interest if 
-				your balance is over 100,000,000 Copper Coins. You must be active within the past 24 hours for this to 
+				your balance is over " . number_format(returnMaxInterest($userid)* 10) . " Copper Coins. You must be active within the past 24 hours for this to 
 				effect you.<br />
 				<table class='table table-bordered'>
 					<tr>
@@ -105,6 +106,7 @@ function deposit()
         //$gain is amount put into account after the fee is taken.
         $gain = $_POST['deposit'] - $fee;
         $ir['bigbank'] += $gain;
+		addToEconomyLog('Bank Fees', 'copper', ($fee)*-1);
         //Update user's bank and Copper Coins info.
         $api->UserTakeCurrency($userid, 'primary', $_POST['deposit']);
         $api->UserInfoSetStatic($userid, "bigbank", $ir['bigbank']);

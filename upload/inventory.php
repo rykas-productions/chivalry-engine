@@ -244,9 +244,12 @@ while ($i = $db->fetch_row($inv)) {
 	//Will Stimulant Potion
     if ($i['itmid'] == 263)
         echo " [<a href='vipitem.php?item=willstim'>Drink</a>]";
-	//Will Stimulant Potion
+	//2nd yr ann scratch off
     if ($i['itmid'] == 268)
         echo " [<a href='scratchticket.php?action=2ndyearann'>Scratch</a>]";
+	//Scroll of the Adminly
+	if ($i['itmid'] == 320)
+        echo " [<a href='goditem.php'>Eat Potato</a>]";
     $ringsarray=array(113,114,115,116,125,126,127);
     if (in_array($i['itmid'],$ringsarray))
         echo " [<a href='marriage.php?action=ring&ring={$i['itmid']}'>Wear Ring</a>]";

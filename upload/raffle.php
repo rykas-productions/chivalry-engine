@@ -11,6 +11,11 @@ VALUES (NULL, 'lotterycash', '100000');
 */
 $macropage = ('raffle.php');
 require("globals.php");
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot visit the Raffle while in the dungeon or infirmary.",true,'explore.php');
+	die($h->endpage());
+}
 
 //Config
 	$minimumpot = 250000;			//Minimum pot.
@@ -86,6 +91,7 @@ function lottery_play()
 	//then adds {$addedtopot} to the pot.
 	$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$addedtopot} WHERE `setting_id` = {$lotteryid}");
 	$api->UserTakeCurrency($userid, 'primary', $costtoplay);
+	addToEconomyLog('Gambling', 'copper', ($costtoplay - $addedtopot)*-1);
 	$csrf=request_csrf_code('lottery_buy');
 	if ($chance == 1)	//Winner, winner, chicken dinner!!
 	{
@@ -99,7 +105,9 @@ function lottery_play()
 		$text="<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] has won the Chivalry is Dead Raffle and pocketed {$winnings} Copper Coins. A new raffle has been opened.";
 		$api->GameAddAnnouncement($text);
 		$db->query("UPDATE `settings` SET `setting_value` = 1000 WHERE `setting_name` = 'raffle_chance'");
-        $db->query("UPDATE `settings` SET `setting_value` = {$userid} WHERE `setting_name` = 'raffle_last_winner'");
+        $db->query("UPDATE `settings` SET `setting_value` = {$userid} WHERE `setting_name` = 'raffle_last_winner'");\
+		addToEconomyLog('Gambling', 'copper', $set['lotterycash']);
+		addToEconomyLog('Gambling', 'copper', $minimumpot);
 	}
 	if ($chance >= 2)	//Loser, loser, someone's got a bruiser!
 	{

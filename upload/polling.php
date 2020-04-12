@@ -60,16 +60,15 @@ function home()
             while ($r = $db->fetch_row($q)) {
                 $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
                 if (isset($ir['voted'][$r['id']])) {
-                    echo "<br />
-					<table class='table table-bordered'>
-						<tr>
-							<th width='40%'>Polling Options</th>
-							<th width='10%'>Votes</th>
-							<th>Percentage</th>
-						</tr>
-						<tr>
-							<th colspan='3'>Polling Question: {$r['question']} (Already Voted!)</th>
-						</tr>";
+                     echo "<hr /><div class='row'>
+								<div class='col-sm-3'>
+									<h3>Poll Question</h3>
+								</div>
+								<div class='col-sm'>
+									<h6>{$r['question']}</h6>
+								</div>
+							</div>
+							<hr />";
                     if (!$r['hidden']) {
                         for ($i = 1; $i <= 10; $i++) {
                             if ($r['choice' . $i]) {
@@ -80,43 +79,61 @@ function home()
                                 } else {
                                     $perc = 0;
                                 }
-                                echo "<tr>
-									<td>{$r[$k]}</td>
-									<td>{$r[$ke]}</td>
-									<td>
-										<div class='progress' style='height: 1rem;'>
-											<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'></div>
-											<span>{$perc}%</span>
+                                echo "<div class='row'>
+										<div class='col-sm-3'>
+											{$r[$k]}
 										</div>
-									</td>
-								  </tr>";
+										<div class='col-sm-1'>
+											{$r[$ke]}
+										</div>
+										<div class='col-sm'>
+											<div class='progress' style='height: 1rem;'>
+												<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'></div>
+												<span>{$perc}%</span>
+											</div>
+										</div>
+									</div>
+									<hr />";
                             }
                         }
                     } else {
-                        echo "<tr>
-							<td colspan='4' align='center'>
-								Results are hidden until the poll ends.
-							</td>
-						  </tr>";
+                        echo "<div class='row'>
+							<div class='col-sm-3'>
+								<h5>Results hidden.</h5>
+							</div>
+						</div>
+						<hr />";
                     }
                     $myvote = $r['choice' . $ir['voted'][$r['id']]];
-                    echo "<tr>
-						<th colspan='2'>You Voted: {$myvote}</th>
-						<th colspan='2'>Total Votes " . number_format($r['votes']) . "</th>
-					  </tr>
-				</table>";
+				echo "<div class='row'>
+							<div class='col-sm-3'>
+								<h5>Total Votes</h5>
+							</div>
+							<div class='col-sm-1'>
+								<h6>" . number_format($r['votes']) . "</h6>
+							</div>
+							<div class='col-sm-3'>
+								<h5>Your Vote</h5>
+							</div>
+							<div class='col-sm-3'>
+								<i>{$myvote}</i>
+							</div>
+						</div>
+						<hr />";
                 } else {
                     echo "<br />
 				<form method='post'>
 					<input type='hidden' name='poll' value='{$r['id']}' />
-					<table class='table table-bordered'>
-						<tr>
-							<th>Polling Options</th>
-							<th>Select</th>
-						</tr>
-						<tr>
-							<th colspan='2'>Polling Question: {$r['question']} (Not Voted)</th>
-						</tr>";
+					<hr />
+					<div class='row'>
+						<div class='col-sm-3'>
+							<h3>Poll Question</h3>
+						</div>
+						<div class='col-sm'>
+							<h6>{$r['question']}</h6>
+						</div>
+					</div>
+					<hr />";
                     for ($i = 1; $i <= 10; $i++) {
                         if ($r['choice' . $i]) {
                             $k = 'choice' . $i;
@@ -125,16 +142,24 @@ function home()
                             } else {
                                 $c = "";
                             }
-                            echo "<tr>
-								<td>{$r[$k]}</td>
-								<td><input type='radio' class='form-control' name='choice' value='$i' $c /></td>
-							  </tr>";
+							echo "<div class='row'>
+								<div class='col-sm-3'>
+									{$r[$k]}
+								</div>
+								<div class='col-sm'>
+										<input type='radio' class='form-control' name='choice' value='{$i}' {$c} />
+									</div>
+							</div>
+							<hr />";
                         }
                     }
-                    echo "<tr>
-						<td colspan='2'><input type='submit' class='btn btn-primary' value='Cast Vote' /></td>
-					  </tr>
-				</table></form>";
+                    echo "<div class='row'>
+							<div class='col-sm'>
+								<input type='submit' class='btn btn-primary' value='Cast Vote' />
+							</div>
+							</div>
+						</form>
+						<hr />";
                 }
             }
         }
@@ -153,15 +178,16 @@ function viewpolls()
     } else {
         while ($r = $db->fetch_row($q)) {
             $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
-            echo "<table class='table table-bordered'>
-					<tr>
-						<th width='40%'>Polling Options</th>
-						<th width='10%'>Votes</th>
-						<th>Percentage</th>
-					</tr>
-					<tr>
-						<th colspan='4'>Polling Question: {$r['question']}</th>
-					</tr>";
+            echo "
+			<hr /><div class='row'>
+				<div class='col-sm-3'>
+					<h3>Poll Question</h3>
+				</div>
+				<div class='col-sm'>
+					<h6>{$r['question']}</h6>
+				</div>
+			</div>
+			<hr />";
             for ($i = 1; $i <= 10; $i++) {
                 if ($r['choice' . $i]) {
                     $k = 'choice' . $i;
@@ -171,22 +197,32 @@ function viewpolls()
                     } else {
                         $perc = 0;
                     }
-                    echo "<tr>
-							<td>{$r[$k]}</td>
-							<td>{$r[$ke]}</td>
-							<td>
+					echo "<div class='row'>
+							<div class='col-sm-3'>
+								{$r[$k]}
+							</div>
+							<div class='col-sm-1'>
+								{$r[$ke]}
+							</div>
+							<div class='col-sm'>
 								<div class='progress' style='height: 1rem;'>
 									<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'></div>
 									<span>{$perc}%</span>
 								</div>
-							</td>
-						  </tr>";
+							</div>
+						</div>
+						<hr />";
                 }
             }
-            echo "<tr>
-					<th colspan='4'>Total Votes: {$r['votes']}</th>
-				  </tr>
-			</table><br />";
+			echo "<div class='row'>
+							<div class='col-sm-3'>
+								<h5>Total Votes</h5>
+							</div>
+							<div class='col-sm-1'>
+								<h6>" . number_format($r['votes']) . "</h6>
+							</div>
+						</div>
+						<hr />";
         }
     }
     $db->free_result($q);

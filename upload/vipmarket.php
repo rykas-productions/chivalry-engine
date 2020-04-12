@@ -8,11 +8,6 @@
 	Website: 	https://chivalryisdeadgame.com/
 */
 require('globals.php');
-if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
-{
-	alert('danger',"Uh Oh!","You cannot visit the VIP Days Market while in the infirmary or dungeon.",true,'index.php');
-	die($h->endpage());
-}
 echo "<h3>VIP Days Market</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
@@ -172,6 +167,7 @@ function buy()
     }
     $totalcost = $r['vip_cost'] * $r['vip_days'];
 	$taxed=$totalcost-($totalcost*0.02);
+	addToEconomyLog('Market Fees', 'copper', ($final_price*0.02)*-1);
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) {
         alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'vipmarket.php');
         die($h->endpage());

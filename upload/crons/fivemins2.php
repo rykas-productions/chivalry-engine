@@ -34,4 +34,9 @@ $db->query("UPDATE users SET energy=maxenergy WHERE energy>maxenergy");
 //Will refill
 $db->query("UPDATE users SET will=will+(maxwill/10) WHERE will<maxwill");
 $db->query("UPDATE users SET will = maxwill WHERE will > maxwill");
+//Farm water update
+$db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_available` + 5");
+$db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_max` WHERE `farm_water_available` > `farm_water_max`");
+
+fiveMinuteFarm();
 ?>

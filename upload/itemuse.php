@@ -49,8 +49,8 @@ if (empty($_GET['item'])) {
                     } else {
                         //Item Potency
                         $specialnumber=((getSkillLevel($userid,25)*3)/100);
-                        $inc=$inc+($inc*$specialnumber);
                         $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
+						$inc=$inc+($inc*$specialnumber);
                     }
                 } else {
                     $inc = $einfo['inc_amount'];

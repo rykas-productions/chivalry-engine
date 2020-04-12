@@ -252,6 +252,75 @@ function basicsettings()
 					</select>
 				</td>
 			</tr>
+			<tr>
+				<th>
+					Game Time Zone
+				</th>
+				<td>
+					<input type='text' name='game_timezone' class='form-control' required='1' value='{$set['game_time']}'>
+				</td>
+			</tr>
+			<tr>
+				<th colspan='2'>
+					Version Control
+				</th>
+			</tr>
+			<tr>
+				<th>
+					Bootstrap
+				</th>
+				<td>
+					<input type='text' name='boostrap_version' class='form-control' required='1' value='{$set['bootstrap_version']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Popper
+				</th>
+				<td>
+					<input type='text' name='popper_version' class='form-control' required='1' value='{$set['popper_version']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Font Awesome
+				</th>
+				<td>
+					<input type='text' name='fontawesome_version' class='form-control' required='1' value='{$set['fontawesome_version']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Bootstrap Hover Tabs
+				</th>
+				<td>
+					<input type='text' name='bshover_tabs_version' class='form-control' required='1' value='{$set['bshover_tabs_version']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Game CSS
+				</th>
+				<td>
+					<input type='text' name='game_css_version' class='form-control' required='1' value='{$set['game_css_version']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Game JS
+				</th>
+				<td>
+					<input type='text' name='game_js_version' class='form-control' required='1' value='{$set['game_js_version']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					jQuery
+				</th>
+				<td>
+					<input type='text' name='jquery_version' class='form-control' required='1' value='{$set['jquery_version']}'>
+				</td>
+			</tr>
 		</table>
 		</div>";
 
@@ -289,7 +358,19 @@ function basicsettings()
         $refillbrave = (isset($_POST['refillbrave']) && is_numeric($_POST['refillbrave'])) ? abs(intval($_POST['refillbrave'])) : 10;
         $refillwill = (isset($_POST['refillwill']) && is_numeric($_POST['refillwill'])) ? abs(intval($_POST['refillwill'])) : 5;
         $iqpersec = (isset($_POST['iqpersec']) && is_numeric($_POST['iqpersec'])) ? abs(intval($_POST['iqpersec'])) : 5;
-        if (empty($GameName)) {
+        //End norm
+		//Start versions
+		$bootstrap = (isset($_POST['bootstrap_version'])) ? $db->escape(strip_tags(stripslashes($_POST['bootstrap_version']))) : '4.4.1';
+		$popper = (isset($_POST['popper_version'])) ? $db->escape(strip_tags(stripslashes($_POST['popper_version']))) : '1.16.0';
+		$fontawesome = (isset($_POST['fontawesome_version'])) ? $db->escape(strip_tags(stripslashes($_POST['fontawesome_version']))) : '5.11.2';
+		$bstab = (isset($_POST['bshover_tabs_version'])) ? $db->escape(strip_tags(stripslashes($_POST['bshover_tabs_version']))) : '3.1.1';
+		$gamejs = (isset($_POST['game_js_version'])) ? $db->escape(strip_tags(stripslashes($_POST['game_js_version']))) : '20.4.1';
+		$gamecss = (isset($_POST['game_css_version'])) ? $db->escape(strip_tags(stripslashes($_POST['game_css_version']))) : '20.4.1';
+		$jquery = (isset($_POST['jquery_version'])) ? $db->escape(strip_tags(stripslashes($_POST['jquery_version']))) : '3.4.1';
+		
+		$gametimezone = (isset($_POST['game_timezone'])) ? $db->escape(strip_tags(stripslashes($_POST['game_timezone']))) : 'Amerca/New_York';
+		
+		if (empty($GameName)) {
             alert('danger', "Uh Oh!", "Please specify a game name.");
             die($h->endpage());
         } elseif (empty($Paypal)) {
@@ -350,7 +431,18 @@ function basicsettings()
             $db->query("UPDATE `settings` SET `setting_value` = '{$refillwill}' WHERE `setting_name` = 'will_refill_cost'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$iqpersec}' WHERE `setting_name` = 'iq_per_sec'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$sendemail}' WHERE `setting_name` = 'sending_email'");
-            alert('success', "Success!", "You have successfully updated the game settings.", true, 'index.php');
+			
+			$db->query("UPDATE `settings` SET `setting_value` = '{$bootstrap}' WHERE `setting_name` = 'bootstrap_version'");
+            $db->query("UPDATE `settings` SET `setting_value` = '{$popper}' WHERE `setting_name` = 'popper_version'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$fontawesome}' WHERE `setting_name` = 'fontawesome_version'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$bstab}' WHERE `setting_name` = 'bshover_tabs_version'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$gamejs}' WHERE `setting_name` = 'game_js_version'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$gamecss}' WHERE `setting_name` = 'game_css_version'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$jquery}' WHERE `setting_name` = 'jquery_version'");
+			
+			$db->query("UPDATE `settings` SET `setting_value` = '{$gametimezone}' WHERE `setting_name` = 'game_time'");
+			
+			alert('success', "Success!", "You have successfully updated the game settings.", true, 'index.php');
             $api->SystemLogsAdd($userid, 'staff', "Updated game settings.");
         }
         $h->endpage();

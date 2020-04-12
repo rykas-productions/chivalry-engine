@@ -8,6 +8,7 @@
 */
 require('global_func_user.php');
 require('global_func_dropdown.php');
+require('global_func_guild.php');
 /*
 	Parses the time since the timestamp given.
 	@param int $time_stamp for time since.
@@ -117,9 +118,9 @@ function notification_add($userid, $text, $icon='', $color='')
 /*
 	Internal Function: Used to update all sorts of things around the game
 */
-function check_data()
+function updateStats()
 {
-    global $db, $time, $ir;
+	global $db, $time, $ir;
 	if ($ir['hp'] > $ir['maxhp'])
 		$db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$ir['userid']}");
 	if ($ir['energy'] > $ir['maxenergy'])
@@ -143,8 +144,13 @@ function check_data()
     
     //Delete from newspaper when needed.
     $db->query("DELETE FROM `newspaper_ads` WHERE `news_end` < {$time}");
+	$db->query("DELETE FROM `bounty_hunter` WHERE `bh_time` < {$time}");
+}
 
-    $q3 = $db->query("/*qc=on*/SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} AND `gw_winner` = 0");
+function updateGuildWars()
+{
+	global $db, $time, $ir;
+	$q3 = $db->query("/*qc=on*/SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} AND `gw_winner` = 0");
     if ($db->num_rows($q3) > 0) {
         $r3 = $db->fetch_row($q3);
         //Select guild war declarer's name
@@ -208,7 +214,12 @@ function check_data()
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} WHERE `guild_id` = {$r3['gw_declarer']}");
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} WHERE `guild_id` = {$r3['gw_declaree']}");
     }
-    //Assign the Unix Timestamp to a variable.
+}
+
+function updateAcademy()
+{
+	global $db, $time, $ir;
+	//Assign the Unix Timestamp to a variable.
     $time = time();
     //Select a User's ID and Course ID if their completion time is less than the Unix Timestamp, and they still have
     //not been credited from their completion.
@@ -235,27 +246,27 @@ function check_data()
         //Course credits strength, so add onto the query.
         if ($coud['ac_str'] > 0) {
             $upd .= ", us.strength = us.strength + {$coud['ac_str']}";
-            $ev .= ", {$coud['ac_str']} Strength";
+            $ev .= "; " . number_format($coud['ac_str']) . " Strength";
         }
         //Course credits guard, so add onto the query.
         if ($coud['ac_grd'] > 0) {
             $upd .= ", us.guard = us.guard + {$coud['ac_grd']}";
-            $ev .= ", {$coud['ac_grd']} Guard";
+            $ev .= "; " . number_format($coud['ac_grd']) . " Guard";
         }
         //Course credits labor, so add onto the query.
         if ($coud['ac_lab'] > 0) {
             $upd .= ", us.labor = us.labor + {$coud['ac_lab']}";
-            $ev .= ", {$coud['ac_lab']} Labor";
+            $ev .= "; " . number_format($coud['ac_lab']) . " Labor";
         }
         //Course credits agility, so add onto the query.
         if ($coud['ac_agl'] > 0) {
             $upd .= ", us.agility = us.agility + {$coud['ac_agl']}";
-            $ev .= ", {$coud['ac_agl']} Agility";
+            $ev .= "; " . number_format($coud['ac_agl']) . " Agility";
         }
         //Course credits IQ, so add onto the query.
         if ($coud['ac_iq'] > 0) {
             $upd .= ", us.IQ = us.IQ + {$coud['ac_iq']}";
-            $ev .= ", {$coud['ac_iq']} IQ";
+            $ev .= "; " . number_format($coud['ac_iq']) . " IQ";
         }
         //Merge all $ev into a comma seperated event.
         $ev = substr($ev, 1);
@@ -265,12 +276,25 @@ function check_data()
         //Give the user a notification saying they've completed their course.
         notification_add($r['userid'], "Congratulations, you completed the {$coud['ac_name']} course and gained {$ev}!");
     }
-    //Check guild crimes!
+}
+
+function checkGuildCrimes()
+{
+	global $db, $time, $ir;
+	//Check guild crimes!
     $guildcrime = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_crime` > 0 AND `guild_crime_done` < {$time}");
     while ($r = $db->fetch_row($guildcrime)) {
+		$last_on = time() - (24 * (60 * 60));
+		$q = $db->query("SELECT `userid` FROM `users` WHERE `laston` > {$last_on} AND `guild` = {$r['guild_id']}");
+		if ($db->num_rows($q) == 0)
+		{
+			$log = "Your guild did not even have enough active participants for this crime in the last day. Your guild failed.";
+            $winnings = 0;
+            $result = 'failure';
+		}
         $r2 = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `guild_crimes` WHERE `gcID` = {$r['guild_crime']}"));
         $suc = Random(0, 1);
-        if ($suc == 1) {
+        if ($suc <= 3) {
             $log = $r2['gcSTART'] . $r2['gcSUCC'];
             $winnings = Random($r2['gcMINCASH'], $r2['gcMAXCASH']);
             $result = 'success';
@@ -279,28 +303,27 @@ function check_data()
             $winnings = 0;
             $result = 'failure';
         }
-        $xp=Random(1,5);
+        $xp=(Random(1,5) * $r['guild_level']) * $r2['gcUSERS'];
         $db->query("UPDATE `guild`
                     SET `guild_primcurr` = `guild_primcurr` + {$winnings},
                     `guild_crime` = 0,
                     `guild_crime_done` = 0,
                     `guild_xp` = `guild_xp` + {$xp}
                     WHERE `guild_id` = {$r['guild_id']}");
-		$max=500000*$r['guild_level'];
-		$db->query("UPDATE `guild` 
-					SET `guild_primcurr` = {$max} 
-					WHERE `guild_primcurr` > {$max} 
-					AND `guild_id` = {$r['guild_id']}");
         $db->query("INSERT INTO `guild_crime_log`
                     (`gclCID`, `gclGUILD`, `gclLOG`, `gclRESULT`, `gclWINNING`, `gclTIME`)
                     VALUES
                     ('{$r['guild_crime']}', '{$r['guild_id']}', '{$log}', '{$result}', '{$winnings}', '" . time() . "');");
         $i = $db->insert_id();
+		addToEconomyLog('Criminal Activities', 'copper', $winnings);
         $qm = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `guild` = {$r['guild_id']}");
         while ($qr = $db->fetch_row($qm)) {
             notification_add($qr['userid'], "Your guild's crime was a complete {$result}! Click <a href='gclog.php?ID=$i'>here</a> to view more information.");
         }
     }
+}
+function checkGuildDebt()
+{
 	$db->query("UPDATE `guild` SET `guild_debt_time` = 0 WHERE `guild_primcurr` > -1");
 	//Dissolve guild if debt unpaid.
 	$gdup=$db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_debt_time` < {$time} AND `guild_debt_time` > 0");
@@ -317,7 +340,14 @@ function check_data()
 		$db->query("DELETE FROM `guild_alliances` WHERE `alliance_b` = {$gdr['guild_id']}");
 		$db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$gdr['guild_id']}");
 	}
-    $db->query("DELETE FROM `bounty_hunter` WHERE `bh_time` < {$time}");
+}
+function check_data()
+{
+    global $db, $time, $ir;
+	updateStats();
+	updateGuildWars();
+	updateAcademy();
+	checkGuildCrimes();
 	missionCheck();
 	checkGuildVault();
 }
@@ -327,10 +357,10 @@ function checkGuildVault()
 	global $db, $api, $set, $userid, $ir;
 	if (isset($ir['guild']))
 	{
-		$q = $db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']} AND `guild_id` != 0");
+		$q = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']} AND `guild_id` != 0");
 		while ($r = $db->fetch_row($q))
 		{
-			$maxvault = $r['guild_level'] * $set['GUILD_PRICE'];
+			$maxvault = (($r['guild_level'] * $set['GUILD_PRICE']) * 20);
 			if ($r['guild_primcurr'] > ($maxvault+1))
 			{
 				$db->query("UPDATE `guild` SET `guild_primcurr` = {$maxvault} WHERE `guild_id` = {$r['guild_id']}");
@@ -489,31 +519,44 @@ function encode_password($password,$lvl='Member')
 function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $redirecttext = 'Back', $mute=false)
 {
     //This function is a horrible mess dude..
-    if ($type == 'danger') {
-        $icon = "exclamation-triangle";
+	if ($type == 'danger') {
+		$icon = "exclamation-triangle";
 		$js='error';
 	}
-    elseif ($type == 'success') {
-        $icon = "check-circle";
+	elseif ($type == 'success') {
+		$icon = "check-circle";
 		$js='log';
 	}
-    elseif ($type == 'info') {
-        $icon = 'info-circle';
+	elseif ($type == 'info') {
+		$icon = 'info-circle';
 		$js='info';
 	}
-    else
+	else
 	{
-        $icon = 'exclamation-circle';
+		$icon = 'exclamation-circle';
 		$js='log';
 	}
-    if ($doredirect) {
+	if ((empty($title)) && ($doredirect))
+	{
+		echo "<div class='alert alert-{$type}' role='alert'>
+						{$text} > <a href='{$redirect}' class='alert-link'>{$redirecttext}</a>
+				</div>";
+	}
+	elseif (empty($title))
+	{
+        echo "<div class='alert alert-{$type}' role='alert'>{$text}</div>";
+    }
+    elseif ($doredirect) 
+	{
         $redirect = ($redirect == 'back') ? $_SERVER['REQUEST_URI'] : $redirect;
         echo "<div class='alert alert-{$type}' role='alert'>
 				<h5 class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
 					{$title}</h5> 
 						{$text} > <a href='{$redirect}' class='alert-link'>{$redirecttext}</a>
 				</div>";
-    } else {
+    }
+	else 
+	{
         echo "<div class='alert alert-{$type}' role='alert'>
                     <h5 class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
 					{$title}</h5> 
@@ -1183,15 +1226,78 @@ function toast($title,$txt,$time=-1,$icon='https://res.cloudinary.com/dydidizue/
           </div>
         </div>";
 }
+
 function updateMostUsersCount()
 {
 	global $db, $set;
 	$cutOff=time()-900;	//15 Minutes
-	$countUsers=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$cutOff}"));
+	$countUsers=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$cutOff}"));
 	if ($set['mostUsersOn'] <= $countUsers)
 	{
 		$currentTime=time();
 		$db->query("UPDATE `settings` SET `setting_value` = {$currentTime} WHERE `setting_name` = 'mostUsersOnTime'");
 		$db->query("UPDATE `settings` SET `setting_value` = {$countUsers} WHERE `setting_name` = 'mostUsersOn'");
+	}
+}
+
+function parseDungeonItemName($dungItem)
+{
+	global $api;
+	if ($dungItem == 1)
+		return $api->SystemItemIDtoName(29);
+	elseif ($dungItem == 2)
+		return $api->SystemItemIDtoName(30);
+	elseif ($dungItem == 3)
+		return $api->SystemItemIDtoName(31);
+	elseif ($dungItem == 4)
+		return $api->SystemItemIDtoName(206);
+	else
+		return "N/A";
+}
+
+function parseInfirmaryItemName($infirmItem)
+{
+	global $api;
+	if ($infirmItem == 1)
+		return $api->SystemItemIDtoName(5);
+	elseif ($infirmItem == 2)
+		return $api->SystemItemIDtoName(6);
+	elseif ($infirmItem == 3)
+		return $api->SystemItemIDtoName(100);
+	elseif ($infirmItem == 4)
+		return $api->SystemItemIDtoName(98);
+	elseif ($infirmItem == 5)
+		return $api->SystemItemIDtoName(207);
+	elseif ($infirmItem == 6)
+		return $api->SystemItemIDtoName(206);
+	elseif ($infirmItem == 7)
+		return $api->SystemItemIDtoName(216);
+	else
+		return "N/A";
+}
+
+function addToEconomyLog($type = 'Misc', $curr = 'copper', $change = 0)
+{
+	global $db;
+	$todayLogID = date('Ymd');
+	$q=$db->query("SELECT *
+					FROM `economy_log` 
+					WHERE `ecDate` = '{$todayLogID}' 
+					AND `ecSource` = '{$type}' 
+					AND `ecCurrency` = '{$curr}' 
+					LIMIT 1");
+	if ($db->num_rows($q) == 0)
+	{
+		$db->query("INSERT INTO `economy_log` (`ecDate`, `ecSource`, `ecCurrency`, `ecChange`) VALUES 
+		('{$todayLogID}', '{$type}', '{$curr}', '{$change}')");
+	}
+	else
+	{
+		$db->query("UPDATE `economy_log` 
+					SET `ecChange` = `ecChange` + '{$change}' 
+					WHERE `ecDate` = '{$todayLogID}' 
+					AND `ecSource` = '{$type}' 
+					AND `ecCurrency` = '{$curr}' 
+					LIMIT 1");
 	}
 }

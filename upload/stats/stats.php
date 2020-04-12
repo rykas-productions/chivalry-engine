@@ -71,6 +71,7 @@ else
 	$TotalBank = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`bank`) FROM `users` WHERE `user_level` != 'NPC' AND `bank` > -1  AND `userid` != 1 AND `laston` > {$last_on}"));
 	$TotalBankToken = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`tokenbank`) FROM `users` WHERE `user_level` != 'NPC' AND `tokenbank` > -1  AND `userid` != 1 AND `laston` > {$last_on}"));
 	$TotalBigBank = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`bigbank`) FROM `users` WHERE `user_level` != 'NPC' AND `bigbank` > -1  AND `userid` != 1 AND `laston` > {$last_on}"));
+	$TotalVaultBank = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`vaultbank`) FROM `users` WHERE `user_level` != 'NPC' AND `bigbank` > -1  AND `userid` != 1 AND `laston` > {$last_on}"));
 
 	//Select total count of register users.
 	$TotalUserCount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `user_level` != 'NPC'  AND `userid` != 1 AND `laston` > {$last_on}"));

@@ -15,6 +15,11 @@ if ($api->UserStatus($ir['userid'], 'infirmary') || $api->UserStatus($ir['userid
     alert('danger', "Uh Oh!", "You cannot commit crimes while in the infirmary or dungeon.");
     die($h->endpage());
 }
+if ($api->UserInfoGet($userid, 'will', true) > 100)
+{
+	alert('danger', "Uh Oh!", "You cannot commit crimes while your will is over 100%!");
+    die($h->endpage());
+}
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -127,7 +132,7 @@ function crime()
         $r = $db->fetch_row($q);
         $db->free_result($q);
         if ($ir['brave'] < $r['crimeBRAVE']) {
-            alert('danger', "Uh Oh!", "You do not have enough to commit this crime. You only have {$ir['brave']}", true, 'criminal.php');
+            alert('danger', "Uh Oh!", "You do not have enough Bravery to commit this crime. You only have {$ir['brave']} Brave.", true, 'criminal.php');
             die($h->endpage());
         } else {
             //Fix from Kyle Massacre. Thanks!
@@ -171,11 +176,13 @@ function crime()
                     $prim_currency = Random($r['crimePRICURMIN'], $r['crimePRICURMAX']);
                     $api->UserGiveCurrency($userid, 'primary', $prim_currency);
 					crime_log($_GET['c'],true,'copper',$prim_currency);
+					addToEconomyLog('Criminal Activities', 'copper', $prim_currency);
                 }
                 if (!empty($r['crimeSECCURMIN'])) {
                     $sec_currency = Random($r['crimeSECCURMIN'], $r['crimeSECURMAX']);
                     $api->UserGiveCurrency($userid, 'secondary', $sec_currency);
 					crime_log($_GET['c'],true,'token',$sec_currency);
+					addToEconomyLog('Criminal Activities', 'token', $sec_currency);
                 }
                 if (!empty($r['crimeITEMSUC'])) {
                     item_add($userid, $r['crimeITEMSUC'], 1);
@@ -190,9 +197,18 @@ function crime()
                 if (empty($r['crimeITEMSUC'])) {
                     $r['crimeITEMSUC'] = 0;
                 }
-                $text = str_ireplace("{money}", $prim_currency, $r['crimeSTEXT']);
-                $text = str_ireplace("{secondary}", $sec_currency, $r['crimeSTEXT']);
-                $text = str_ireplace("{item}", $api->SystemItemIDtoName($r['crimeITEMSUC']), $r['crimeSTEXT']);
+				if ($_GET['c'] == 18)
+				{
+					$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = 86");
+					if ($db->num_rows($achieved) == 0)
+					{
+						$api->GameAddNotification($userid,"You have received the 'King of the World' achievement for slaying the tyrant emperor. We've also given you a special badge, too!");
+						$api->UserGiveItem($userid,294,1);
+						$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '86')");
+						$db->query("UPDATE `user_settings` SET `skill_points` = `skill_points` + 1 WHERE `userid` = {$userid}");
+					}
+				}
+                $text = str_ireplace(array("{money}","{secondary}","{item}"), array(number_format($prim_currency),number_format($sec_currency),$api->SystemItemIDtoName($r['crimeITEMSUC'])), $r['crimeSTEXT']);
                 $title = "Success!";
                 $type = 'success';
                 $api->UserInfoSetStatic($userid, "xp", $ir['xp'] + $r['crimeXP']);
@@ -201,7 +217,7 @@ function crime()
                 $title = "Uh Oh!";
                 $type = 'danger';
                 $dtime = Random($r['crimeDUNGMIN'], $r['crimeDUNGMAX']);
-                $text = str_replace("{time}", $dtime, $r['crimeFTEXT']);
+                $text = str_replace("{time}", number_format($dtime), $r['crimeFTEXT']);
                 $api->UserStatusSet($userid, 'dungeon', $dtime, $r['crimeDUNGREAS']);
                 $api->SystemLogsAdd($userid, 'crime', "Failed to commit the {$r['crimeNAME']} crime.");
 				crime_log($_GET['c'],false,0,0);

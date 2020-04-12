@@ -34,13 +34,21 @@ function one()
         $email = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `email` = '{$e_email}'"));
         $token = randomizer();
         if ($email > 0) {
+			$username=$db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `email` = '{$e_email}'"));
             $to = $e_email;
             $subject = "{$set['WebsiteName']} Password Recovery";
-            $body = "Recently, someone has attempted to reset your password. Click <a href='http://" . determine_game_urlbase() . "/pwreset.php?step=two&code={$token}'>here</a>
-			to start the password reset process. If this wasn't you, do not click this link. 
-			The link will expire approximately 30 minutes after the password reset process.<br />
+			$body = "Greetings {$username}!<br />
+			It appears that at around " . date('l, F j, Y g:i:s a') . " Chivalry is Dead time, a 
+			request was made to reset your in-game password. Before we do, we need to make sure its
+			you who made the request. If it is, great, click 
+			<a href='http://" . determine_game_urlbase() . "/pwreset.php?step=two&code={$token}'>here</a> to 
+			get the password reset process started.<br />
+			If it was not you, please log into the game and change your password immediately, as your 
+			account may be compromised.<br />
 			<br />
-			If you cannot click the URL for whatever reason, please paste in http://" . determine_game_urlbase() . "/pwreset.php?step=two&code={$token} into your URL bar.";
+			If you cannot click the link: (http://" . determine_game_urlbase() . "/pwreset.php?step=two&code={$token})<br />
+			<br />
+			The password reset link will be valid for 30 minutes.";
             $api->SystemSendEmail($to, $body, $subject, $from);
             $expire = time() + 1800;
             $db->query("UPDATE `users` SET `force_logout` = 'true' WHERE `email` = '{$e_email}'");

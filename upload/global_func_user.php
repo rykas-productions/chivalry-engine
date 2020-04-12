@@ -359,6 +359,19 @@ function levelMultiplier($level)
 		return 3;
     elseif (($level >= 600) && ($level < 700))
 		return 3.5;
-    else
-		return 4;
+    elseif (($level >= 700) && ($level < 800))
+		return 4.25;
+	elseif (($level >= 800) && ($level < 900))
+		return 4.5;
+	elseif (($level >= 900) && ($level < 1000))
+		return 4.75;
+	else
+		return 5;
+}
+
+function returnMaxInterest($user)
+{
+	global $db;
+	$level=$db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `userid` = {$user}"));
+	return round(20000000*levelMultiplier($level));
 }

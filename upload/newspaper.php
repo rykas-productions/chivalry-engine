@@ -66,8 +66,6 @@ function news_home()
 	";
     while ($Ads = $db->fetch_row($AdsQuery)) {
         $parser->parse($Ads['news_text']);
-		if ($userid == 1)
-			var_dump($Ads);
         $UserName = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$Ads['news_owner']}"));
         echo "	<tr>
 					<td>
@@ -108,6 +106,7 @@ function news_buy()
         $totalcost = $daycost + $charcost + $initcost;
         //End Time
         $endtime=time()+(86400*$days);
+		addToEconomyLog('Newspaper Fees', 'copper', $totalcost*-1);
 
         //Make sure user has the cash to buy this ad.
         if (!$api->UserHasCurrency($userid, 'primary', $totalcost)) {

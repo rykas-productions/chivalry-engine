@@ -88,6 +88,15 @@ switch ($_GET['action']) {
     case 'skill29':
         skill(29,5);
         break;
+	case 'skill30':
+        skill(30,1);
+        break;
+	case 'skill33':
+        skill(33,3);
+        break;
+	case 'skill36':
+        skill(36,5);
+        break;
     default:
         home();
         break;
@@ -96,7 +105,7 @@ function home()
 {
     global $ir,$userid,$api;
     $loop=1;
-    while ($loop != 30)
+    while ($loop != 37)
     {
         $button[$loop] = (canGetSkill($loop)) ? "<a href='?action=skill{$loop}'>Unlock/Upgrade</a>" : "<span class='text-danger'>Locked</span>";
         $locked[$loop] = (getSkillLevel($userid,$loop) > 0) ? "class='table-active'" : "";
@@ -273,26 +282,33 @@ function home()
             <?php
                 echo "<table class='table'>
                     <tr>
-                        <td {$locked[21]} width='33%'>
+                        <td {$locked[21]} width='25%'>
                             Better Padding (1 Point)<br />
                             <small>Increases chance of sleeping well with your spouse.<br /></small>
                             " . getSkillLevel($userid,21) . " / 1
                             <br />
                             {$button['21']}
                         </td>
-                        <td {$locked[22]} width='33%'>
+                        <td {$locked[22]} width='25%'>
                             Time Reduction (1 Point)<br />
                             <small>-5% Dungeon/Infirmary time, per level.<br /></small>
                             " . getSkillLevel($userid,22) . " / 5
                             <br />
                             {$button['22']}
                         </td>
-                        <td {$locked[23]} width='33%'>
+                        <td {$locked[23]} width='25%'>
                             Overworked (1 Point)<br />
                             <small>+3% Gains when you train Labor at the Chivalry Gym, per level.<br /></small>
                             " . getSkillLevel($userid,23) . " / 5
                             <br />
                             {$button['23']}
+                        </td>
+						<td {$locked[30]} width='25%'>
+                            Well Capacity (1 Point)<br />
+                            <small>+5 Buckets per level.<br /></small>
+                            " . getSkillLevel($userid,30) . " / 5
+                            <br />
+                            {$button['30']}
                         </td>
                     </tr>
                     <tr>
@@ -317,6 +333,13 @@ function home()
                             <br />
                             {$button['26']}
                         </td>
+						<td {$locked[33]} width='25%'>
+                            Careful Tending (3 Points)<br />
+                            <small>-25% Wellness when interacting with plots, per level.<br /></small>
+                            " . getSkillLevel($userid,33) . " / 3
+                            <br />
+                            {$button['33']}
+                        </td>
                     </tr>
                     <tr>
                         <td {$locked[27]}>
@@ -339,6 +362,13 @@ function home()
                             " . getSkillLevel($userid,29) . " / 1
                             <br />
                             {$button['29']}
+                        </td>
+						<td {$locked[36]} width='25%'>
+                            Crop Rotation (5 Points)<br />
+                            <small>-50% Plot stage time<br /></small>
+                            " . getSkillLevel($userid,36) . " / 1
+                            <br />
+                            {$button['36']}
                         </td>
                     </tr>
                 </table>";
@@ -366,15 +396,17 @@ function skill($id,$cost)
 		alert('danger',"Uh Oh!","Please unlock the previous skill before attempting to unlock this one.",true,'skills.php');
 		die($h->endpage());
 	}
+	if ($id == 30)
+		$db->query("UPDATE `farm_users` SET `farm_water_max` = `farm_water_max` + 5 WHERE `userid` = {$userid}");
 	giftSkill($id,$cost);
 	alert('success',"Success!","Skill point was spent successfully.",true,'skills.php');
 	
 }
 function returnMaxLevelSkill($skill)
 {
-    $onepoint = array(1,2,3,11,12,13,22,23);
-    $threepoint = array(4,5,6,14,15,16,24,25,26);
-    $fivepoint = array(7,8,9,17,18,19,21,27,28,29);
+    $onepoint = array(1,2,3,11,12,13,22,23,30);
+    $threepoint = array(4,5,6,14,15,16,24,25,26,33);
+    $fivepoint = array(7,8,9,17,18,19,21,27,28,29,36);
     if (in_array($skill,$onepoint))
         return 5;
     if (in_array($skill,$threepoint))
@@ -410,7 +442,7 @@ function canGetSkill($id)
 	if (getSkillLevel($userid,$id) != returnMaxLevelSkill($id))
 	{
 		$fixedid=$id-3;
-        $alwaysbuy=array(1,2,3,11,12,13,21,22,23);
+        $alwaysbuy=array(1,2,3,11,12,13,21,22,23,30);
         if (in_array($id,$alwaysbuy))
 			return true;
 		else
@@ -437,6 +469,8 @@ function skill_reset()
             alert('danger',"Uh Oh!","You need to spend at least one skill point to be able to reset your skill tree.");
             die($h->endpage());
         }
+		$well=5*getSkillLevel($userid,30);
+		$db->query("UPDATE `farm_users` SET `farm_water_max` = `farm_water_max` - {$well} WHERE `userid` = {$userid}");
         $q2=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `achievements_done` WHERE `userid` = {$userid}"));
         $db->query("DELETE FROM `user_skills` WHERE `userid` = {$userid}");
         $db->query("UPDATE `userstats` SET `iq` = `iq` - 75000 WHERE `userid` = {$userid}");

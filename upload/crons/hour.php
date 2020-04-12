@@ -43,4 +43,6 @@ $db->query("DELETE FROM `attack_logs` WHERE `attack_time` < {$ThirtyDaysAgo}");
 $db->query("UPDATE `user_settings` SET `winnings_this_hour` = 0");
 $db->query("UPDATE `settings` SET `setting_value` = `setting_value` - 1 WHERE `setting_name` = 'raffle_chance' AND `setting_value` > 10");
 $db->query("UPDATE `settings` SET `setting_value` = `setting_value` + 60000 WHERE `setting_id` = 28");
+
+addToEconomyLog('Gambling', 'copper', 60000);
 ?>

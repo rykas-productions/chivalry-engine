@@ -162,6 +162,8 @@ if (isset($_POST['open']))
 		" . number_format($nothing) . " Hexbags had nothing in them.";
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
+	addToEconomyLog('Hexbags', 'copper', $copper);
+	addToEconomyLog('Hexbags', 'token', $tokens);
 	$api->UserStatusSet($userid,'infirmary',$infirmary,"Dirty Needle");
 	$api->UserStatusSet($userid,'dungeon',$dungeon,"Hexbag Theft");
 	$api->UserGiveItem($userid,5,$leeches);

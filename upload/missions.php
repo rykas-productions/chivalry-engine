@@ -1,5 +1,10 @@
 <?php
 require('globals.php');
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot visit the Mission Center while in the dungeon or infirmary.",true,'explore.php');
+	die($h->endpage());
+}
 $am=$db->query("SELECT * FROM `missions` WHERE `mission_userid` = {$userid}");
 echo "<h3><i class='game-icon game-icon-stabbed-note'></i> Missions</h3><hr />";
 if ($db->num_rows($am) == 0)

@@ -10,7 +10,7 @@ $form_email = $db->escape(stripslashes($email));
 $raw_password = stripslashes($password);
 $uq = $db->query("/*qc=on*/SELECT * FROM `steam_account_link` WHERE `steam_id` = '{$form_email}'");
 if ($db->num_rows($uq) == 0) {
-    $username=$steamprofile['steamid'];
+    $username=$steamprofile['personaname'];
     //Register the user
     $db->query("INSERT INTO `users`
 					(`username`,`email`,`password`,`level`,`gender`,`class`,

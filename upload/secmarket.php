@@ -8,11 +8,6 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
-{
-	alert('danger',"Uh Oh!","You cannot visit the Chivalry Token Market while in the infirmary or dungeon.",true,'index.php');
-	die($h->endpage());
-}
 echo "<h3><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
@@ -96,6 +91,7 @@ function buy()
     }
     $totalcost = $r['sec_cost'] * $r['sec_total'];
 	$taxed=$totalcost-($totalcost*0.02);
+	addToEconomyLog('Market Fees', 'copper', ($final_price*0.02)*-1);
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) {
         alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'secmarket.php');
         die($h->endpage());

@@ -46,11 +46,10 @@ $db->configure($_CONFIG['hostname'], $_CONFIG['username'],
     $_CONFIG['password'], $_CONFIG['database'], $_CONFIG['persistent']);
 $db->connect();
 $c = $db->connection_id;
-//Update data in-game externally.
-check_data();
 //Include API file.
 include("class/class_api.php");
 $api = new api;
+require('global_func_farm.php');
 $set = array();
 $settq = $db->query("/*qc=on*/SELECT *
 					 FROM `settings`");
@@ -64,6 +63,8 @@ if (!isset($hidehdr))
 	$h = new headers;
 	$h->startheaders();
 }
+//Update data in-game externally.
+check_data();
 //Run the crons if possible.
 /*foreach (glob("crons/*.php") as $filename) {
     include $filename;

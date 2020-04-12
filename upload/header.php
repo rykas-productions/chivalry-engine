@@ -12,7 +12,8 @@ class headers
 {
     function startheaders()
     {
-        global $ir, $set, $h, $db, $menuhide, $userid, $macropage, $api, $time;
+        global $ir, $set, $h, $db, $menuhide, $userid, $macropage, $api, $time, $sound;
+		cslog('log',"Loading headers for {$set['WebsiteName']}");
         //Load the meta headers.
         ?>
         <!DOCTYPE html>
@@ -30,84 +31,13 @@ class headers
 					$notificon = "fas fa-bell";
 				else
 					$notificon = "fas fa-bell-slash";
-                if ($ir['theme'] == 1)
-				{
-					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-                    <meta name="theme-color" content="#333">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 2)
-				{
-					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css">
-					<meta name="theme-color" content="#303030">
-					<?php
-					$hdr='navbar-light bg-light';
-				}
-				if ($ir['theme'] == 3)
-				{
-					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/slate/bootstrap.min.css">
-					<meta name="theme-color" content="#272B30">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 4)
-				{
-					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cyborg/bootstrap.min.css">
-					<meta name="theme-color" content="#060606">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 5)
-				{
-					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/united/bootstrap.min.css">
-					<meta name="theme-color" content="#772953">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 6)
-				{
-					?>
-					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cerulean/bootstrap.min.css">
-					<meta name="theme-color" content="#04519b">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-                if ($ir['theme'] == 7)
-				{
-					?>
-					<link rel="stylesheet" href="css/castle.css">
-					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-				if ($ir['theme'] == 8)
-				{
-					?>
-					<link rel="stylesheet" href="css/bright-castle.css">
-					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
-					<?php
-					$hdr='navbar-dark bg-dark';
-				}
-                ?>
-                <meta charset="utf-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-				<meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
-                <meta name="description" content="<?php echo $set['Website_Description']; ?>">
-                <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
-                <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
-                <meta property="og:image" content="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png"/>
-                <link rel="shortcut icon" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png" type="image/x-icon"/>
-				<link rel="icon" sizes="192x192" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png">
-				<link rel="icon" sizes="128x128" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png">
-				<link rel="stylesheet" href="css/game-19.4.1.css">
-				<link rel="stylesheet" href="https://seiyria.com/gameicons-font/css/game-icons.css">
+				$this->loadUserTheme($ir['theme']);
+				$this->loadEssentialAssets();
+				$this->returnMetadata();
+				$hdr=$this->getThemeNavbarColor($ir['theme']);
+				$sound->loadSystem();
+				cslog('warn',"Main assets have loaded successfully. Log entries after this point were created by the game or related modules, not the base engine.");
+				?>
 				</head>
     <?php
     //If the called script wants the menu hidden.
@@ -130,19 +60,9 @@ class headers
             <div class="collapse navbar-collapse" id="CENGINENav">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <?php
-                        if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
-                        {
-                            ?>
-                                <a class="nav-link" href="forums.php"><?php echo "Forums"; ?></a>
-                            <?php
-                        }
-                        else
-                        {
-                            ?><a class="nav-link" href="explore.php"><?php echo "<i
-                                        class='far fa-fw fa-compass fa-spin'></i> Explore"; ?></a><?php
-                        }
-                        ?>
+                        <a class="nav-link" href="explore.php">
+							<i class='far fa-fw fa-compass fa-spin'></i> Explore
+						</a>
                     </li>
                 </ul>
                 <div class="my-2 my-lg-0">
@@ -203,9 +123,9 @@ class headers
         </nav>
 
         <!-- Page Content -->
-        <div class="container">
+        <div class="container text-center">
         <div class="row">
-        <div class="col-sm-12 text-center">
+        <div class="col-sm-12">
         <noscript>
             <?php
             //User doesn't have javascript turned on, so lets tell them.
@@ -213,7 +133,7 @@ class headers
             ?>
         </noscript>
     <?php
-    date_default_timezone_set("America/New_York");
+    date_default_timezone_set($set['game_time']);
     $IP = $db->escape($_SERVER['REMOTE_ADDR']);
     $ipq = $db->query("/*qc=on*/SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
     //User's IP is banned, so lets stop access.
@@ -303,69 +223,10 @@ class headers
 		</table>";
         die($h->endpage());
     }
-    if ($ir['disable_alerts'] == 0) {
-        //Tell user when they have unread messages, when they do.
-        if ($ir['mail'] > 0) {
-            alert('info', "New Mail!", "You have {$ir['mail']} unread messages.", true, 'inbox.php', "View Inbox");
-            //toast("New Mail!","You have {$ir['mail']} unread messages.");
-        }
-        //Tell user they have unread notifcations when they do.
-        if ($ir['notifications'] > 0) {
-            alert('info', "New Notifications!", "You have {$ir['notifications']} unread notifications.", true, 'notifications.php', "View Notifications");
-        }
-    }
-    //Tell user they have unread game announcements when they do.
-    if ($ir['announcements'] > 0) {
-        alert('info', "New Announcements!", "You have {$ir['announcements']} unread announcements.", true, 'announcements.php', "View Announcements");
-    }
-    //User is in the infirmary, tell them for how long.
-    if ($api->UserStatus($ir['userid'], 'infirmary')) {
-        $InfirmaryOut = $db->fetch_single($db->query("/*qc=on*/SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
-        $InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
-        alert('info', "Unconscious!", "You are in the Infirmary for the next {$InfirmaryRemain}.", true, "quickuse.php?infirmary", "Use Item");
-    }
-    //User is in the dungeon, tell them how long.
-    if ($api->UserStatus($ir['userid'], 'dungeon')) {
-        $DungeonOut = $db->fetch_single($db->query("/*qc=on*/SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
-        $DungeonRemain = TimeUntil_Parse($DungeonOut);
-        alert('info', "Locked Up!", "You are in the dungeon for the next {$DungeonRemain}.", true, "quickuse.php?dungeon", "Use Item");
-    }
-	//RNG for experience token? O.o
-	$xprng=Random(1,100);
-	if ($xprng == 56 && $ir['artifacts'] != 4)
-	{
-		if (($ir['artifact_time']) < time() - Random(270,360))
-		{
-			alert("info","Artifact!","While wondering around, you find a small artifact laying on the ground. Maybe you should take it to the Blacksmith Smeltery to find out what you can do with it?",false);
-			$api->UserGiveItem($userid,94,1);
-			$db->query("UPDATE `user_settings` SET `artifacts` = `artifacts` + 1, `artifact_time` = " . time() . " WHERE `userid` = {$userid}");
-		}
-	}
-	$luckrng=Random(1,200);
-	if (!isset($_SESSION['lucked_out']))
-		$_SESSION['lucked_out']=0;
-	if ($_SESSION['lucked_out'] < time())
-	{
-		if ($luckrng == 160)
-		{
-			$thisrng=0;
-			if (($ir['luck'] > 50) && ($ir['luck'] < 150))
-			{
-			    $minimumluck=-3;
-			    //Lucky Day
-			    $specialnumber=((getSkillLevel($userid,26)*1)/100);
-			    $minimumluck=$minimumluck+$specialnumber;
-				while ($thisrng == 0)
-				{
-                    $thisrng=Random($minimumluck,7);
-				}
-				$_SESSION['lucked_out']=time()+3600;
-				//alert('info','Lucked Out!',"While walking around the kingdom, your luck has changed by {$thisrng}%.",false);
-                toast("Lucky Day!","While walking around the kingdom, your luck has changed by {$thisrng}%.");
-				$db->query("UPDATE `userstats` SET `luck` = `luck` + ({$thisrng}) WHERE `userid` = {$userid}");
-			}
-		}
-	}
+	$this->showSocialAlerts();
+	$this->showStatusAlerts();
+	$this->doArtifactRNG();
+	$this->doLuckRNG();
     //User needs to reverify with reCaptcha
     if (($ir['last_verified'] < ($time - $set['Revalidate_Time'])) || ($ir['need_verify'] == 1))
     {
@@ -391,6 +252,219 @@ class headers
         include('rickroll.php');
     }
     }
+	
+	function doLuckRNG()
+	{
+		global $db, $ir, $api, $userid;
+		$luckrng=Random(1,200);
+		if (!isset($_SESSION['lucked_out']))
+			$_SESSION['lucked_out']=0;
+		if ($_SESSION['lucked_out'] < time())
+		{
+			if ($luckrng == 160)
+			{
+				$thisrng=0;
+				if (($ir['luck'] > 50) && ($ir['luck'] < 150))
+				{
+					$minimumluck=1;
+					//Lucky Day
+					$specialnumber=((getSkillLevel($userid,26)*1)/100);
+					$minimumluck=$minimumluck+$specialnumber;
+					while ($thisrng == 0)
+					{
+						$thisrng=Random($minimumluck,7);
+					}
+					$_SESSION['lucked_out']=time()+3600;
+					//alert('info','Lucked Out!',"While walking around the kingdom, your luck has changed by {$thisrng}%.",false);
+					toast("Lucky Day!","While walking around the kingdom, your luck has changed by {$thisrng}%.");
+					$db->query("UPDATE `userstats` SET `luck` = `luck` + ({$thisrng}) WHERE `userid` = {$userid}");
+				}
+			}
+		}
+	}
+	
+	function doArtifactRNG()
+	{
+		global $db, $ir, $api;
+		//RNG for experience token? O.o
+		$xprng=Random(1,100);
+		if ($xprng == 56 && $ir['artifacts'] != 4)
+		{
+			if (($ir['artifact_time']) < time() - Random(270,360))
+			{
+				alert("info","","While wondering around, you find a small artifact laying on the ground. Maybe you should take it to the Blacksmith Smeltery to find out what you can do with it?",false);
+				$api->UserGiveItem($userid,94,1);
+				$db->query("UPDATE `user_settings` SET `artifacts` = `artifacts` + 1, `artifact_time` = " . time() . " WHERE `userid` = {$userid}");
+			}
+		}
+	}
+	
+	function showSocialAlerts()
+	{
+		global $ir;
+		echo "<div class='row'>";
+		if ($ir['mail'] > 0) 
+		{
+			echo "<div class='col-sm'>";
+				alert('info', "", "You have {$ir['mail']} unread messages.", true, 'inbox.php', "View");
+			echo "</div>";
+        }
+        //Tell user they have unread notifcations when they do.
+        if ($ir['notifications'] > 0) 
+		{
+			echo "<div class='col-sm'>";
+				alert('info', "", "You have {$ir['notifications']} unread notifications.", true, 'notifications.php', "View");
+			echo "</div>";
+        }
+		//Tell user they have unread game announcements when they do.
+		if ($ir['announcements'] > 0) 
+		{
+			echo "<div class='col-sm'>";
+				alert('info', "", "You have {$ir['announcements']} unread announcements.", true, 'announcements.php', "View");
+			echo "</div>";
+		}
+		echo "</div>";
+	}
+	function showStatusAlerts()
+	{
+		global $ir, $api, $db;
+		echo "<div class='row'>";
+		if ($api->UserStatus($ir['userid'], 'infirmary')) 
+		{
+			$InfirmaryOut = $db->fetch_single($db->query("/*qc=on*/SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
+			$InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
+			echo "<div class='col-sm'>";
+				alert('info', "", "You are in the Infirmary for {$InfirmaryRemain}.", true, "quickuse.php?infirmary", "Use " . parseInfirmaryItemName($ir['iitem']));
+			echo "</div>";
+		}
+		//User is in the dungeon, tell them how long.
+		if ($api->UserStatus($ir['userid'], 'dungeon')) 
+		{
+			$DungeonOut = $db->fetch_single($db->query("/*qc=on*/SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
+			$DungeonRemain = TimeUntil_Parse($DungeonOut);
+			echo "<div class='col-sm'>";
+				alert('info', "", "You are in the dungeon for {$DungeonRemain}.", true, "quickuse.php?dungeon", "Use " . parseDungeonItemName($ir['ditem']));
+			echo "</div>";
+		}
+		echo "</div>";
+	}
+	
+	function loadUserTheme($themeID)
+	{
+		global $set;
+		cslog('log',"User Theme ID: {$themeID}.");
+		if ($themeID == 1)
+		{
+			echo "
+			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/css/bootstrap.min.css'>
+			<meta name='theme-color' content='#333'>";
+		}
+		if ($themeID == 2)
+		{
+			echo "
+			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/darkly/bootstrap.min.css'>
+			<meta name='theme-color' content='#303030'>";
+		}
+		if ($themeID == 3)
+		{
+			echo "
+			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/slate/bootstrap.min.css'>
+			<meta name='theme-color' content='#272B30'>";
+		}
+		if ($themeID == 4)
+		{
+			echo "
+			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/cyborg/bootstrap.min.css'>
+			<meta name='theme-color' content='#060606'>";
+		}
+		if ($themeID == 5)
+		{
+			echo "
+			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/united/bootstrap.min.css'>
+			<meta name='theme-color' content='#772953'>";
+		}
+		if ($themeID == 6)
+		{
+			echo "
+			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/cerulean/bootstrap.min.css'>
+			<meta name='theme-color' content='#04519b'>";
+		}
+		if ($themeID == 7)
+		{
+			echo "
+			<link rel='stylesheet' href='css/castle.css'>
+			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>";
+		}
+		if ($themeID == 8)
+		{
+			echo "
+			<link rel='stylesheet' href='css/bright-castle.css'>
+			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>";
+		}
+	}
+	
+	function getThemeNavbarColor($themeID)
+	{
+		if ($themeID == 2)
+			return 'navbar-light bg-light';
+		else
+			return 'navbar-dark bg-dark';
+	}
+	
+	function loadEssentialAssets()
+	{
+		global $ir, $set;
+		cslog('log',"Essential assets loading now.");
+		$this->loadCSS();
+		$this->loadEarlyJS();
+		cslog('log',"Essential assets loaded successfully.");
+		
+	}
+	
+	function loadCSS()
+	{
+		global $set;
+		cslog('log',"CSS is loading.");
+		echo "<link rel='stylesheet' href='css/game-{$set['game_css_version']}.css'>
+				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css'>";
+		
+	}
+	
+	function loadEarlyJS()
+	{
+		global $set;
+		cslog('log',"Essential JS scripts are loading.");
+		echo "<script src='https://ajax.googleapis.com/ajax/libs/jquery/{$set['jquery_version']}/jquery.min.js'></script>
+		<script src='js/game-v{$set['game_js_version']}.js' async></script>";
+	}
+	
+	function loadJS()
+	{
+		global $ir, $set;
+		cslog('log',"JS is loading.");
+		echo "<script src='https://cdn.jsdelivr.net/npm/popper.js@{$set['popper_version']}/dist/umd/popper.min.js'></script>
+        <script src='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/js/bootstrap.min.js'></script>
+		<script src='https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js' defer></script>
+		<script defer src='https://use.fontawesome.com/releases/v{$set['fontawesome_version']}/js/all.js'></script>
+        <script src='https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v{$set['bshover_tabs_version']}/bootstrap-hover-tabs.js' async defer></script>";
+	}
+	
+	function returnMetadata()
+	{
+		global $set;
+		cslog('log',"Setting website metadata.");
+		echo "<meta charset='utf-8'>
+                <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+				<meta name='author' content='{$set['WebsiteOwner']}'>
+                <meta name='description' content='{$set['Website_Description']}'>
+                <meta property='og:title' content='{$set['WebsiteName']}'/>
+                <meta property='og:description' content='{$set['Website_Description']}'/>
+                <meta property='og:image' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png'/>
+                <link rel='shortcut icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png' type='image/x-icon'/>
+				<link rel='icon' sizes='192x192' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png'>
+				<link rel='icon' sizes='128x128' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png'>";
+	}
 
     function userdata($ir, $dosessh = 1)
     {
@@ -440,6 +514,8 @@ class headers
         $query_extra = '';
         include('userinfo.php');
         include('marriage_perks.php');
+		$this->loadJS();
+		cslog('warn',"Main script has finished executing. Wrapping up now.");
         //Set mysqldebug in the URL to get query debugging as an admin.
     if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
     {
@@ -458,19 +534,6 @@ class headers
         </div>
         <!-- /.container -->
         
-        <!-- jQuery Version 3.3.1 -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-        <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
-        <!-- Other JavaScript -->
-        <script src="js/game-v1.2.3.js"></script>
-        <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js" async defer></script>
-		<script defer src="https://use.fontawesome.com/releases/v5.11.2/js/all.js"></script>
-        <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
-		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/clock.min.js"></script>
         <footer class='footer'>
             <div class='container'>
 				<span>
@@ -485,6 +548,7 @@ class headers
 				?>
 				</span>
             </div>
+			</center>
         </footer>
 		</body>
         </html>

@@ -4,6 +4,11 @@ if ((!file_exists('./installer.lock')) && (file_exists('installer.php'))) {
     die();
 }
 require("globals_nonauth.php");
+require('lib/bbcode_engine.php');
+$AnnouncementQuery = $db->query("/*qc=on*/SELECT `ann_text`,`ann_time` FROM `announcements` ORDER BY `ann_time` desc LIMIT 1");
+$ANN = $db->fetch_row($AnnouncementQuery);
+$ANN['ann_text']=substr($ANN['ann_text'], 0, 330);
+$parser->parse($ANN['ann_text']);
 $last24hr=time()-86400;
 $totalplayers=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users`"));
 $playersonline=$db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$last24hr}"));
@@ -26,8 +31,9 @@ echo "
                     <input type='password' name='password' class='form-control' required='true' placeholder='Your password'><br />
                     <input type='submit' class='btn btn-primary' value='Sign In'><br />
                     New here? <a href='register.php'>Sign up</a> for an account!
-                </form>
-            </div>
+                </form>";
+				loginbutton("rectangle");
+            echo "</div>
         </div>
     </div>
     <div class='col-sm-8'>
@@ -93,6 +99,17 @@ echo "
                 " . number_format($totalplayers) . " Total Players<br />
                 " . number_format($signups) . " New Players Today<br />
 				Most Users Online were " . number_format($set['mostUsersOn']) . " users, on " . DateTime_Parse($set['mostUsersOnTime']) . "
+            </div>
+        </div>
+    </div>
+	<div class='col-sm-8'>
+        <div class='card'>
+            <div class='card-header bg-dark text-white'>
+                Latest Announcement
+            </div>
+            <div class='card-body'>
+                " . $parser->getAsHtml() . "<br />
+				<small>" . DateTime_Parse($ANN['ann_time']) . "</small>
             </div>
         </div>
     </div>

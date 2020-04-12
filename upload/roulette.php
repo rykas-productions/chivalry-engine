@@ -58,7 +58,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
     }
     $slot = array();
 	$accepted=false;
-	if (isRigged())
+	/*if (isRigged())
 	{
 		while (!$accepted)
 		{
@@ -71,13 +71,15 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 	else
 	{
 		$slot[1] = Random(0, 36);
-	}
+	}*/
+	$slot[1] = Random(0, 36);
     if ($slot[1] == $_POST['number']) {
         $gain = $_POST['bet'] * 25;
         $title = "Success!";
         $alerttype = 'success';
         $win = 1;
         $phrase = " and won! You keep your bet, and pocket an extra " . number_format($gain);
+		addToEconomyLog('Gambling', 'copper', $gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in roulette.");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$gain} WHERE `setting_name` = 'casino_give'");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
@@ -89,6 +91,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $win = 0;
         $gain = -$_POST['bet'];
         $phrase = ". You lose your bet. Sorry man.";
+		addToEconomyLog('Gambling', 'copper', $gain*-1);
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` - {$_POST['bet']} WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'gambling', "Lost {$_POST['bet']} in roulette.");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$_POST['bet']} WHERE `setting_name` = 'casino_take'");
@@ -129,7 +132,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 				Pick #
 			</th>
 			<td>
-				<input type='number' class='form-control' name='number' min='1' max='36' value='18' />
+				<input type='number' class='form-control' name='number' min='0' max='36' value='18' />
 			</td>
 		</tr>
 		<tr>
@@ -139,13 +142,5 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 		</tr>
 	</table>
 	</form>";
-}
-function isRigged()
-{
-	global $db,$set;
-	if ($set['casino_take'] > $set['casino_give']*1.5)
-		return false;
-	else
-		return true;	
 }
 $h->endpage();

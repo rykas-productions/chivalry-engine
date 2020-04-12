@@ -9,11 +9,6 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
-{
-	alert('danger',"Uh Oh!","You cannot visit the item request listing while in the infirmary or dungeon.",true,'index.php');
-	die($h->endpage());
-}
 echo "<h3><i class='game-icon game-icon-trade'></i> Item Request Listing</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
@@ -245,6 +240,7 @@ function buy()
         }
         $final_price = $r['irCOST'] * $_POST['QTY'];
 		$taxed=$final_price-($final_price*0.02);
+		addToEconomyLog('Market Fees', 'copper', ($final_price*0.02)*-1);
         if ($_POST['QTY'] > $r['irQTY']) {
             alert('danger', "Uh Oh!", "You are trying to fulfill more than the listing's request.");
             die($h->endpage());

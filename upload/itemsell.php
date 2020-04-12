@@ -44,6 +44,7 @@ if (permission('CanSellToGame', $userid) == true) {
 				    game for {$priceh} Copper Coins.", true, 'inventory.php');
                 $is_log = $db->escape("{$ir['username']} sold {$_POST['qty']} {$r['itmname']}(s) for {$priceh}");
                 $api->SystemLogsAdd($userid, 'itemsell', $is_log);
+				addToEconomyLog('Item Sell to Game', 'copper', $price);
             }
         }
         $db->free_result($id);

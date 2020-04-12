@@ -18,6 +18,18 @@ $IQRank = get_rank($ir['iq'], 'iq');
 $LaborRank = get_rank($ir['labor'], 'labor');
 $AllStatRank = get_rank($ir['strength'] + $ir['agility'] + $ir['guard'] + $ir['labor'] + $ir['iq'], 'all');
 $ir['total_stats'] = $ir['strength'] + $ir['agility'] + $ir['guard'] + $ir['labor'] + $ir['iq'];
+$actualReset = $ir['reset'] - 1;
+$resetGains=0;
+if ($actualReset == 1)
+	$resetGains=50;
+elseif ($actualReset == 2)
+	$resetGains=75;
+elseif ($actualReset == 3)
+	$resetGains=87.5;
+elseif ($actualReset == 4)
+	$resetGains=93.75;
+elseif ($actualReset == 5)
+	$resetGains=96.88;
 echo "
 <div class='modal fade' id='userInfo' tabindex='-1' role='dialog' aria-labelledby='User Info' aria-hidden='true'>
   <div class='modal-dialog' role='document'>
@@ -119,11 +131,16 @@ echo "
         </div>
         <hr />
         <div class='row'>
-                <div class='col-8' align='left'>
-                    Level: {$ir['level']}
-                </div>
+			<div class='col-8' align='left'>
+				Level: {$ir['level']}
+			</div>
+		</div>
+		<div class='container-fluid'>
+            <div class='row'>
+                Prestiege: 
+                " . number_format($actualReset) . " (-{$resetGains}% XP Required)
             </div>
-            
+        </div>
         <div class='container-fluid'>
             <div class='row'>
                 VIP Days: 

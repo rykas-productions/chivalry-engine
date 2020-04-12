@@ -9,7 +9,7 @@
 require("globals.php");
 if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
 {
-	alert('danger',"Uh Oh!","You cannot visit the bank while in the infirmary or dungeon.",true,'index.php');
+	alert('danger',"Uh Oh!","You cannot visit the bank while in the infirmary or dungeon.",true,'explore.php');
 	die($h->endpage());
 }
 $bank_cost = $set['bank_cost'];
@@ -41,6 +41,7 @@ else {
             alert('success', "Success!", "You have successfully bought a bank account for " . number_format($bank_cost), true, 'bank.php');
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bank", 0);
+			addToEconomyLog('Bank Fees', 'copper', ($bank_cost)*-1);
 			item_add($userid,157,1);
         } //Player is too poor to afford account.
         else {
@@ -61,7 +62,7 @@ function index()
         $interest=5;
     echo "<b>You currently have " . number_format($ir['bank']) . " in your City Bank account.</b><br />
 				At the end of each and everyday, your balance will increase by {$interest}%. You will not gain interest if 
-				your balance is over 20,000,000 Copper Coins. You must be active within the past 24 hours for this to 
+				your balance is over " . number_format(returnMaxInterest($userid)) . " Copper Coins. You must be active within the past 24 hours for this to 
 				effect you.<br />
 				<table class='table table-bordered'>
 					<tr>

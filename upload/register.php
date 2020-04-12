@@ -53,8 +53,8 @@ if (!empty($username)) {
 
     }
     //Check Gender
-    if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female')) {
-        alert('danger', "Uh Oh!", "You are trying to register as an invalid sex.");
+    if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female' && $_POST['gender'] != 'Other')) {
+        alert('danger', "Uh Oh!", "You are trying to register as an invalid gender.");
         die($h->endpage());
 
     }
@@ -250,7 +250,7 @@ if (!empty($username)) {
 				</tr>
 				<tr>
 					<th>
-						Sex
+						Gender
 					</th>
 					<td>
 						<div class='input-group'>
@@ -258,6 +258,7 @@ if (!empty($username)) {
 							<select name='gender' class='form-control' type='dropdown'>
 								<option value='Male'>Male</option>
 								<option value='Female'>Female</option>
+								<option value='Other'>Other</option>
 							</select>
 						</div>
 					</td>

@@ -103,6 +103,10 @@ if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SE
 }
 include("../class/class_api.php");
 $api = new api;
+//Load game sound system
+include('../class/class_audio.php');
+$sound = new sound;
+include("../global_func_farm.php");
 if (!$api->UserMemberLevelGet($userid, 'forum moderator')) {
     $index = ('../index.php');
     header("Location: {$index}");

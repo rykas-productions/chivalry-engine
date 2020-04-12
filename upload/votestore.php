@@ -27,8 +27,8 @@ function buy()
         die($h->endpage());
     }
     $cost=1;
-    $cost1=array(1,2,3,4);
-    $cost3=array(9);
+    $cost1=array(2,3,4);
+    $cost3=array(1,9);
     $cost5=array(5,11,12);
 	$cost10=array(16);
     $cost25=array(10,13);
@@ -69,16 +69,18 @@ function buy()
     if ($_GET['option'] == 1)
     {
         $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + 500 WHERE `userid` = {$userid}");
+		addToEconomyLog('Vote Rewards', 'token', 500);
     }
     //50 Boxes of Random
     if ($_GET['option'] == 2)
     {
         $api->UserGiveItem($userid,33,50);
     }
-    //100,000 Copper Coins
+    //250,000 Copper Coins
     if ($_GET['option'] == 3)
     {
-        $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + 100000 WHERE `userid` = {$userid}");
+        $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + 250000 WHERE `userid` = {$userid}");
+		addToEconomyLog('Vote Rewards', 'copper', 250000);
     }
     //25 Hexbags
     if ($_GET['option'] == 4)
@@ -161,14 +163,6 @@ function home()
     <table class='table table-bordered'>
         <tr>
             <th>
-                500 Chivalry Tokens
-            </th>
-            <td>
-                <a href='?action=buy&option=1'>1 Vote Point</a>
-            </td>
-        </tr>
-        <tr>
-            <th>
                 50 Boxes of Random
             </th>
             <td>
@@ -177,7 +171,7 @@ function home()
         </tr>
         <tr>
             <th>
-                100,000 Copper Coins
+                250,000 Copper Coins
             </th>
             <td>
                 <a href='?action=buy&option=3'>1 Vote Point</a>
@@ -197,6 +191,14 @@ function home()
             </th>
             <td>
                 <a href='?action=buy&option=9'>3 Vote Points</a>
+            </td>
+        </tr>
+		<tr>
+            <th>
+                500 Chivalry Tokens
+            </th>
+            <td>
+                <a href='?action=buy&option=1'>3 Vote Point</a>
             </td>
         </tr>
         <tr>

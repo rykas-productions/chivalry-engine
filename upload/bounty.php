@@ -1,5 +1,10 @@
 <?php
 require('globals.php');
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot use Bounty Hunter while in the dungeon or infirmary.",true,'explore.php');
+	die($h->endpage());
+}
 echo "<h3><i class='game-icon game-icon-shadow-grasp'></i> Bounty Hunter</h3>[<a href='#' data-toggle='modal' data-target='#bh_info'>Info</a>] || [<a href='?action=addbounty'>Add Bounty</a>]<hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';

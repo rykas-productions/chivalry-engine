@@ -1082,6 +1082,7 @@ function beat()
             $api->UserGiveCurrency($userid,'primary',$bhr['bh_bounty']);
             $bounty_format=number_format($bhr['bh_bounty']);
             $db->query("DELETE FROM `bounty_hunter` WHERE `bh_id` = {$bhr['bh_id']}");
+			addToEconomyLog('Bounty Hunter', 'copper', $bhr['bh_bounty']);
             $additionaltext .= " You have received {$bounty_format} Copper Coins for hospitalizing this user while they had a bounty on their head. They also received double infirmary time.";
         }
         //Tell player they won and ended the fight, and if they gained a guild war point.
@@ -1113,6 +1114,7 @@ function beat()
 				$api->UserGiveCurrency($userid,'primary',500000);
 				$api->UserGiveCurrency($userid,'secondary',500);
 				$db->query("UPDATE `user_settings` SET `att_dg` = 1 WHERE `userid` = {$userid}");
+				addToEconomyLog('Vote Rewards', 'copper', 500000);
 				$api->GameAddNotification($userid,"For slaying Your Doppleganger in battle, you've received a unique badge, 500,000 Copper Coins and 500 Chivalry Tokens.",'game-icon game-icon-backup','purple');
 			}
 		if ($r['userid'] == 21)
@@ -1385,6 +1387,8 @@ function xp()
 				$api->UserGiveCurrency($userid,'primary',500000);
 				$api->UserGiveCurrency($userid,'secondary',500);
 				$db->query("UPDATE `user_settings` SET `att_dg` = 1 WHERE `userid` = {$userid}");
+				addToEconomyLog('Vote Rewards', 'copper', 500000);
+				addToEconomyLog('Vote Rewards', 'token', 500);
 				$api->GameAddNotification($userid,"For slaying Your Doppleganger in battle, you've received a unique badge, 500,000 Copper Coins and 500 Chivalry Tokens.",'game-icon game-icon-backup','purple');
 			}
 			if ($r['userid'] == 21)
@@ -1512,6 +1516,8 @@ function mug()
 				$api->UserGiveCurrency($userid,'primary',500000);
 				$api->UserGiveCurrency($userid,'secondary',500);
 				$db->query("UPDATE `user_settings` SET `att_dg` = 1 WHERE `userid` = {$userid}");
+				addToEconomyLog('Vote Rewards', 'copper', 500000);
+				addToEconomyLog('Vote Rewards', 'token', 500);
 				$api->GameAddNotification($userid,"For slaying Your Doppleganger in battle, you've received a unique badge, 500,000 Copper Coins and 500 Chivalry Tokens.",'game-icon game-icon-backup','purple');
 			}
 			if ($r['userid'] == 21)

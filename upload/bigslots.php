@@ -98,6 +98,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $alerttype = 'success';
         $win = 1;
         $phrase = "All five line up. Jack pot! You win an extra " . number_format($gain);
+		addToEconomyLog('Gambling', 'copper', $gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in federal slots.");
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$gain} WHERE `setting_name` = 'casino_give'");
@@ -108,6 +109,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $alerttype = 'success';
         $win = 1;
         $phrase = "Three numbers line up. Jack pot! You win an extra " . number_format($gain);
+		addToEconomyLog('Gambling', 'copper', $gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in federal slots.");
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
 		$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$gain} WHERE `setting_name` = 'casino_give'");
@@ -118,6 +120,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $alerttype = 'danger';
         $win = 0;
         $gain = -$_POST['bet'];
+		addToEconomyLog('Gambling', 'copper', $gain*-1);
         $phrase = "Round and round the slots go. Unlucky! None of them line up!";
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` - {$_POST['bet']} WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'gambling', "Lost {$_POST['bet']} in  federal slots.");

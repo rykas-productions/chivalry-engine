@@ -891,7 +891,10 @@ class api
         $headers[] = 'MIME-Version: 1.0';
         $headers[] = 'Content-type: text/html; charset=iso-8859-1';
         $headers[] = "From: Chivalry is Dead <{$from}>";
-        return mail($to, $subject, $body, implode("\r\n", $headers));
+		$htmlhdr="<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png' width='64' height='64'><br /><h4>Chivalry is Dead</h4><hr />";
+		$htmlftr="<hr /> -CID Admin, Chivalry is Dead Developer.<br /><a href='https://www.chivalryisdeadgame.com/'>https://www.chivalryisdeadgame.com/</a>";
+		$realBody= $htmlhdr . $body . $htmlftr;
+        return mail($to, $subject, $realBody, implode("\r\n", $headers));
     }
 
     /*

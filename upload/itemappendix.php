@@ -10,9 +10,10 @@
 require("globals.php");
 echo "<h3><i class='fas fa-list'></i> Item Appendix</h3><hr />This page lists all the items in the game, along with how many are in circulation.
     This may be useful for players who do item flipping, or those who are just plain old curious. Hovering over the
-    item will give you its description. Tapping its name will take you to its info page<hr />
+    item will give you its description. Tapping its name will take you to its info page<br />
+	<small><a href='?view=all'>View All Items</a></small><hr />
     [<a href='?view=weapon'>Weapons</a>] [<a href='?view=armor'>Armor</a>] [<a href='?view=vip'>VIP Items</a>] 
-	[<a href='?view=infirmary'>Infirmary Items</a>] [<a href='?view=dungeon'>Dungeon Items</a>] [<a href='?view=material'>Materials</a>] [<a href='?view=food'>Food</a>] 
+	[<a href='?view=infirmary'>Infirmary Items</a>] [<a href='?view=dungeon'>Dungeon Items</a>] [<a href='?view=material'>Materials</a>] [<a href='?view=seed'>Seeds</a>] [<a href='?view=food'>Food</a>] 
 	[<a href='?view=potions'>Potions</a>] [<a href='?view=holiday'>Holiday Items</a>] [<a href='?view=scrolls'>Scrolls</a>] [<a href='?view=rings'>Rings</a>] 
 	[<a href='?view=badge'>Badges</a>] [<a href='?view=other'>Other</a>]";
 if (!isset($_GET['view']))
@@ -24,45 +25,51 @@ if ($_GET['view'] == 'weapon') {
     //Select all the in-game armor
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 2 AND `itmbuyable` = 'true' ORDER BY `armor` ASC");
 } elseif ($_GET['view'] == 'vip') {
-    //Select all the in-game armor
+    //Select all the in-game VIP Packs
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 3 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } elseif ($_GET['view'] == 'infirmary') {
-    //Select all the in-game armor
+    //Select all the in-game Infirmary Items
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 4 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } elseif ($_GET['view'] == 'dungeon') {
-    //Select all the in-game armor
+    //Select all the in-game Dungeon Items
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 5 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } 
 elseif ($_GET['view'] == 'material') {
-    //Select all the in-game armor
+    //Select all the in-game materials
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 6 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 }
 elseif ($_GET['view'] == 'food') {
-    //Select all the in-game armor
+    //Select all the in-game food
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 7 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 }
 elseif ($_GET['view'] == 'potions') {
-    //Select all the in-game armor
+    //Select all the in-game potions
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 8 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } 
 elseif ($_GET['view'] == 'other') {
-    //Select all the in-game armor
+    //Select all the in-game other items.
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 9 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } 
 elseif ($_GET['view'] == 'holiday') {
-    //Select all the in-game armor
+    //Select all the in-game holiday items.
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 10 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } 
 elseif ($_GET['view'] == 'scrolls') {
-    //Select all the in-game armor
+    //Select all the in-game scrolls
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 11 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } 
 elseif ($_GET['view'] == 'rings') {
-    //Select all the in-game armor
+    //Select all the in-game rings
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 12 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } elseif ($_GET['view'] == 'badge') {
-    //Select all the in-game armor
+    //Select all the in-game badges
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 13 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+} elseif ($_GET['view'] == 'seed') {
+    //Select all the in-game seeds
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 14 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+} elseif ($_GET['view'] == 'all') {
+    //Select all the in-game seeds
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } else {
     alert('danger',"Uh Oh!","Please select a valid item category type.",true,'explore.php');
 	die($h->endpage());
@@ -70,11 +77,17 @@ elseif ($_GET['view'] == 'rings') {
 echo "
 <table class='table table-bordered table-striped'>
     <tr>
-        <th>
-            Item Name
+        <th colspan='2'>
+            Item
         </th>
         <th>
             Quantity in Circulation
+        </th>
+		<th>
+            Total Buy Value
+        </th>
+		<th>
+            Total Sell Value
         </th>
     </tr>";
 while ($r = $db->fetch_row($q)) {
@@ -92,15 +105,26 @@ while ($r = $db->fetch_row($q)) {
 	$total=$q2+$q3;
 	$icon=returnIcon($r['itmid'],2);
 	$r['itmdesc'] = htmlentities($r['itmdesc'], ENT_QUOTES);
+	$totalbuy=$total*$r['itmbuyprice'];
+	$totalsell=$total*$r['itmsellprice'];
     echo "
         <tr>
+			<td>
+				{$icon}
+			</td>
             <td>
-				{$icon}<br /><a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>
+				<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>
                     {$r['itmname']}
                 </a>
             </td>
             <td>
                 " . number_format($total) . "
+            </td>
+			<td>
+                " . number_format($totalbuy) . "
+            </td>
+			<td>
+                " . number_format($totalsell) . "
             </td>
         </tr>";
 }

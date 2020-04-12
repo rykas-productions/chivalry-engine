@@ -167,7 +167,6 @@ if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SE
 }
 //Basic chceks around the game.
 check_level();
-check_data();
 $os=getOS($_SERVER['HTTP_USER_AGENT']);
 $browser=getBrowser($_SERVER['HTTP_USER_AGENT']);
 $ir['os']=$os;
@@ -176,6 +175,10 @@ $h = new headers;
 //Include API file.
 include("class/class_api.php");
 $api = new api;
+//Load game sound system
+include('class/class_audio.php');
+$sound = new sound;
+require('global_func_farm.php');
 //Include Forms file.
 include("class/class_form.php");
 $form = new form;
@@ -213,6 +216,7 @@ if (!($db->num_rows($UIDB))) {
     VALUES ('{$userid}', '100', '100', '0', '1', '1');");
 }
 include('dailyreward.php');
+check_data();
 updateMostUsersCount();
 
 //For chat, maybe?

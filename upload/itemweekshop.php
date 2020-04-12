@@ -1,6 +1,11 @@
 <?php
 $macropage = ('itemweekshop.php');
 require('globals.php');
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot visit the Item of the Week Shop while in the dungeon and infirmary.",true,'explore.php');
+	die($h->endpage());
+}
 echo "<h4>Item of the Week</h4><hr />
 Here you may buy the three Items of the Week for a 20% discount. This should change weekly, so check back often.<br />";
 $item2=$db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$set['itemweek2']}"));
@@ -20,6 +25,7 @@ if ($_POST['item'] == 1)
     {
         $api->UserTakeCurrency($userid,'primary',$totalcost);
         $api->UserGiveItem($userid,$item1['itmid'],$_POST['qty']);
+		addToEconomyLog('Game Shops', 'copper', $totalcost);
         alert('success',"Success!","You have successfully bought {$_POST['qty']} {$item1['itmname']}(s) for " . number_format($totalcost) . " Copper Coins.",false);
     }
     else

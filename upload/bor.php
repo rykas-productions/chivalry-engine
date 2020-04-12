@@ -51,6 +51,7 @@ if ($chance <= 33)
     echo "You open this Box of Random and pull out " . number_format($cash) . " Copper Coins. Cool!";
     $api->UserGiveCurrency($userid,'primary',$cash);
     $api->SystemLogsAdd($userid,"bor","Received {$cash} Copper Coins.");
+	addToEconomyLog('BOR', 'copper', $cash);
 }
 elseif (($chance > 35) && ($chance <= 40))
 {
@@ -61,6 +62,7 @@ elseif (($chance > 35) && ($chance <= 40))
     echo "You quickly open this Box of Random and pull out {$cash} Chivalry Tokens. Neat!";
 	$api->UserGiveCurrency($userid,'secondary',$cash);
     $api->SystemLogsAdd($userid,"bor","Received {$cash} Chivalry Tokens.");
+	addToEconomyLog('BOR', 'token', $cash);
 }
 elseif (($chance > 45) && ($chance <= 50))
 {

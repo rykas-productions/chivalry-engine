@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 $energyCost=1.0;
-$expMod=1.0;
+$expMod=1.05;
 $macropage = ('mine.php');
 require('globals.php');
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
@@ -62,7 +62,7 @@ switch ($_GET['action']) {
 }
 function home()
 {
-    global $MUS, $db, $api;
+    global $MUS, $db, $api, $ir;
     $mineen = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
     $minexp = min(round($MUS['miningxp'] / $MUS['xp_needed'] * 100), 100);
 	if ($MUS['mine_boost'] > time())
@@ -72,46 +72,79 @@ function home()
 	}
     echo "Welcome to the dangerous mines, brainless moron! If you're lucky, you'll strike riches. If not... the mine
         will eat you alive.
-    <br />
-	<table class='table table-bordered'>
-		<tr>
-			<th colspan='2'>
-				You are mining level {$MUS['mining_level']}.
-			</th>
-		</tr>
-		<tr>
-			<th width='33%'>
-				Mining Power
-			</th>
-			<td>
-				<div class='progress' style='height: 1rem;'>
-					<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningpower']}' aria-valuemin='0' aria-valuemax='100' style='width:{$mineen}%'></div>
-						<span>{$mineen}% (" . number_format($MUS['miningpower']) . " / " . number_format($MUS['max_miningpower']) . ")</span>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				Mining Experience
-			</th>
-			<td>
-				<div class='progress' style='height: 1rem;'>
-					<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningxp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$minexp}%'></div>
-						<span>{$minexp}% (" . round($MUS['miningxp'],2) . " / " . number_format($MUS['xp_needed']) . ")</span>
-				</div>
-			</td>
-		</tr>
-	</table>
-    <u>Open Mines</u><br />";
+	<hr />
+	<div class='row'>
+        <div class='col-sm-3' align='left'>
+			Mining Energy - {$mineen}%<br />
+			<small>
+				[<a href='?action=buypower'>Buy Power Sets</a>]<br />
+				[<a href='?action=potion'>Drink Mining Potion</a>]
+			</small>
+		</div>
+		<div class='col-sm'>
+			<div class='progress' style='height: 1rem;'>
+				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningpower']}' style='width:{$mineen}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'></div>
+				<span>{$mineen}% (" . number_format($MUS['miningpower']) . " / " . number_format($MUS['max_miningpower']). ")</span>
+			</div>
+		</div>
+	</div>
+	<hr />
+	<div class='row'>
+        <div class='col-sm-3' align='left'>
+			Mining Experience - {$minexp}%<br />
+			<small>
+				Mining Level {$MUS['mining_level']}<br />
+				[<a href='?action=herb'>Use Mining Herb</a>]
+			</small>
+		</div>
+		<div class='col-sm'>
+			<div class='progress' style='height: 1rem;'>
+				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningxp']}' style='width:{$minexp}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'></div>
+				<span>{$minexp}% (" . number_format($MUS['miningxp']) . " / " . number_format($MUS['max_miningpower']). ")</span>
+			</div>
+		</div>
+	</div>
+	<hr />
+    <div class='row'>
+		<div class='col-sm'>
+			<h4>Location</h4>
+		</div>
+		<div class='col-sm'>
+			<h4>Requirements</h4>
+		</div>
+		<div class='col-sm'>
+			<h4>Mine</h4>
+		</div>
+	</div>
+	<hr />";
     $minesql = $db->query("/*qc=on*/SELECT * FROM `mining_data` ORDER BY `mine_level` ASC");
-    while ($mines = $db->fetch_row($minesql)) {
-        echo "[<a href='?action=mine&spot={$mines['mine_id']}' data-toggle='tooltip' data-placement='right' title='IQ Required: " . number_format($mines['mine_iq']) . "'>" . $api->SystemTownIDtoName($mines['mine_location']) . " - Level {$mines['mine_level']}</a>]<br />";
+    while ($mines = $db->fetch_row($minesql)) 
+	{
+		$specialnumber=((getSkillLevel($ir['userid'],15)*10)/100);
+		$mines['mine_iq']=$mines['mine_iq']-($mines['mine_iq']*$specialnumber);
+		
+		$mininglevel = ($MUS['mining_level'] >= $mines['mine_level']) ? "<span class='text-success'>Mining Level: {$mines['mine_level']}</span>" : "<span class='text-danger'>Mining Level: {$mines['mine_level']}</span>";
+		$iq = ($ir['iq'] >= $mines['mine_iq']) ? "<span class='text-success'>Minimum IQ: " . number_format($mines['mine_iq']) . "</span>" : "<span class='text-danger'>Minimum IQ: " . number_format($mines['mine_iq']) . "</span>";
+		$pickaxe = ($api->UserHasItem($ir['userid'],$mines['mine_pickaxe'],1)) ? "<span class='text-success'>Required Pickaxe: " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>" : "<span class='text-danger'>Required Pickaxe: " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>";
+		$town = ($ir['location'] == $mines['mine_location']) ? "<span class='text-success'>" . $api->SystemTownIDtoName($mines['mine_location']) . "</span>" : "<span class='text-danger'>" . $api->SystemTownIDtoName($mines['mine_location']) . "</span>";
+		
+		echo "<div class='row'>";
+		echo "<div class='col-sm'>
+				{$town}<br />
+				<small><a href='travel.php?to={$mines['mine_location']}'>Travel To</a></small>
+			</div>";
+			echo "
+			<div class='col-sm'>
+				{$mininglevel}<br />
+				{$iq}<br />
+				{$pickaxe}
+			</div>";
+			echo "
+			<div class='col-sm'>
+				<a href='?action=mine&spot={$mines['mine_id']}'>Mine</a>
+			</div>";
+			echo "</div><hr />";
     }
-
-    echo "<br />
-    [<a href='?action=buypower'>Buy Power Sets</a>]<br />
-	[<a href='?action=herb'>Use Mining Herb</a>]<br />
-	[<a href='?action=potion'>Drink Mining Potion</a>]<br />";
 
 }
 
@@ -129,6 +162,7 @@ function buypower()
             die($h->endpage());
 
         } else {
+			addToEconomyLog('Mining', 'token', ($totalcost)*-1);
             $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` - '{$totalcost}' WHERE `userid` = {$userid}");
             $db->query("UPDATE `mining` SET `buyable_power` = `buyable_power` - '$sets', 
 						`max_miningpower` = `max_miningpower` + ($sets*10) 
@@ -266,7 +300,8 @@ function mine()
                     $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_gold_item'])}.");
                 }
             } else {
-				$xpgain = (17 * $MUS['mining_level'])*$expMod;
+				$formula=(14 * $MUS['mining_level'])*$expMod;
+				$xpgain = round(Random($formula/2,$formula*2), 2);
 				if ($MUS['mine_boost'] > time())
 						$xpgain = $xpgain*2;
                 alert('success', "Success!", "You have carefully excavated out a single " . $api->SystemItemIDtoName($MSI['mine_gem_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points.", false);

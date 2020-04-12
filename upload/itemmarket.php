@@ -9,11 +9,6 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
-{
-	alert('danger',"Uh Oh!","You cannot visit the item market while in the infirmary or dungeon.",true,'index.php');
-	die($h->endpage());
-}
 echo "<h3><i class='game-icon game-icon-trade'></i> Item Market</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
@@ -259,6 +254,7 @@ function buy()
         $curre = ($r['imCURRENCY'] == 'primary') ? 'Copper Coins' : 'Chivalry Tokens';
         $final_price = $r['imPRICE'] * $_POST['QTY'];
 		$taxed=$final_price-($final_price*0.02);
+		addToEconomyLog('Market Fees', 'copper', ($final_price*0.02)*-1);
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
             die($h->endpage());
@@ -335,6 +331,8 @@ function gift()
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
         $curre = ($r['imCURRENCY'] == 'primary') ? 'Copper Coins' : 'Chivalry Tokens';
         $final_price = $r['imPRICE'] * $_POST['QTY'];
+		$taxed=$final_price-($final_price*0.02);
+		addToEconomyLog('Market Fees', 'copper', ($final_price*0.02)*-1);
         if ($final_price > $ir[$curr]) {
             alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
             die($h->endpage());

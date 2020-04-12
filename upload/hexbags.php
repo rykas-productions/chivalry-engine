@@ -39,6 +39,7 @@ if ($chance <= 35)
     echo "You open this hexbag and pull out " . number_format($cash) . " Copper Coins.";
     $api->UserGiveCurrency($userid,'primary',$cash);
     $api->SystemLogsAdd($userid,"hexbags","Received " . number_format($cash) . " Copper Coins.");
+	addToEconomyLog('Hexbags', 'copper', $cash);
 }
 elseif (($chance > 35) && ($chance <= 46))
 {
@@ -49,6 +50,7 @@ elseif (($chance > 35) && ($chance <= 46))
     echo "You quickly open this hexbag and pull out " . number_format($cash) . " Chivalry Tokens.";
 	$api->UserGiveCurrency($userid,'secondary',$cash);
     $api->SystemLogsAdd($userid,"hexbags","Received " . number_format($cash) . " Chivalry Tokens.");
+	addToEconomyLog('Hexbags', 'token', $cash);
 }
 elseif (($chance > 45) && ($chance <= 50))
 {

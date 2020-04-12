@@ -251,7 +251,7 @@ function send()
     //Clean and sanitize the POST.
     $subj = $db->escape(str_replace("\n", "<br />", strip_tags(htmlentities(stripslashes($_POST['subject'])))));
     $msg = $db->escape(str_replace("\n", "<br />", strip_tags(htmlentities(stripslashes($_POST['msg'])))));
-	$sendto = (isset($_POST['sendto']) && is_string($_POST['sendto'])) ? stripslashes($_POST['sendto']) : '';
+	$sendto = $db->escape(strip_tags(htmlentities(stripslashes($_POST['sendto']))));
     //Player failed the CSRF check... warn them to be quicker next time... or to change their password.
     if (!isset($_POST['verf']) || !verify_csrf_code('inbox_send', stripslashes($_POST['verf']))) {
         alert('danger', "Action Blocked!", "Your action has been blocked for security reasons. Form requests expire fairly quickly. Be sure to be quicker next time.");

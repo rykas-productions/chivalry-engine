@@ -68,12 +68,9 @@ while ($notif = $db->fetch_row($query)) {
 	}
     echo "
 	<tr>
-		<td>
-			{$icon}
-		</td>
 		<td align='left'>
-			{$notif['notif_text']}<hr />
-			{$NotificationTime}
+			" . stripslashes($notif['notif_text']) . "<br />
+			<small>{$NotificationTime}</small>
 		</td>
 		<td>
 			{$Status} <a class='btn btn-primary btn-sm' href='?delete={$notif['notif_id']}'><i class='fas fa-trash-alt'></i></a>

@@ -102,7 +102,7 @@ function prefs_home()
 				<a href='?action=picchange'>Change Display Picture</a>
 			</div>
 			<div class='col-sm'>
-				<a href='?action=sexchange'>Change Sex</a>
+				<a href='?action=sexchange'>Change Gender</a>
 			</div>
 			<div class='col-sm'>
 				<a href='?action=sigchange'>Change Forum Signature</a>
@@ -196,6 +196,7 @@ function name_change()
             alert('danger',"Uh Oh!","You do nto have enough Chivalry Tokens to change your name.");
             die($h->endpage());
         }
+		addToEconomyLog('Misc', 'token', -5);
         $api->UserTakeCurrency($userid,'secondary',5);
         $_POST['newname'] = $db->escape(htmlentities($_POST['newname'], ENT_QUOTES, 'ISO-8859-1'));
         $db->query("UPDATE `users` SET `username` = '{$_POST['newname']}'  WHERE `userid` = $userid");
@@ -388,35 +389,33 @@ function sexchange()
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
             die($h->endpage());
         }
-        if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female')) {
-            alert('danger', "Uh Oh!", "You cannot change into an invalid sex.");
+        if (!isset($_POST['gender']) || ($_POST['gender'] != 'Male' && $_POST['gender'] != 'Female' && $_POST['gender'] != 'Other')) {
+            alert('danger', "Uh Oh!", "You cannot change into an invalid gender.");
             die($h->endpage());
         }
         if ($ir['gender'] == $_POST['gender']) {
-            alert('danger', "Uh Oh!", "You cannot turn yourself  back into your current sex.");
+            alert('danger', "Uh Oh!", "You cannot turn yourself back into your current gender.");
             die($h->endpage());
         }
         $e_gender = $db->escape(stripslashes($_POST['gender']));
         $db->query("UPDATE `users` SET `gender` = '{$e_gender}' WHERE `userid` = {$userid}");
-        alert('success', "Success!", "You have successfully changed your sex into {$_POST['gender']}.", true, 'preferences.php');
-        $api->SystemLogsAdd($userid, 'preferences', "Changed sex to {$_POST['gender']}.");
+        alert('success', "Success!", "You have successfully changed your gender into {$_POST['gender']}.", true, 'preferences.php');
+        $api->SystemLogsAdd($userid, 'preferences', "Changed gender to {$_POST['gender']}.");
     } else {
-        $g = ($ir['gender'] == "Male") ?
-            $g = "	<option value='Male'>Male</option>
-					<option value='Female'>Female</option>" :
-            $g = "	<option value='Female'>Female</option>
-					<option value='Male'>Male</option>";
+        $g = "<option value='Male'>Male</option>
+				<option value='Female'>Female</option>
+				<option value='Other'>Other</option>";
         $csrf = request_csrf_html('prefs_changesex');
         echo "<table class='table table-bordered'>
 		<form method='post'>
 		<tr>
 			<th colspan='2'>
-				Use this form to change your sex.
+				Use this form to change your gender. You currently identify as {$ir['gender']}.
 			</th>
 		</tr>
 		<tr>
 			<th>
-				Sex
+				Gender
 			</th>
 			<td>
 				<select name='gender' class='form-control' type='dropdown'>
@@ -426,7 +425,7 @@ function sexchange()
 		</tr>
 		<tr>
 			<td colspan='2'>
-				<input type='submit' value='Change Sex' class='btn btn-primary'>
+				<input type='submit' value='Change Gender' class='btn btn-primary'>
 			</td>
 		</tr>
 		{$csrf}
@@ -577,7 +576,7 @@ function descchange()
         }
 
         //Make sure the POST is safe to work with.
-        $ament = $db->escape(nl2br(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1')));
+        $ament = $db->escape(str_replace("\n", "<br />", strip_tags(htmlentities(stripslashes($_POST['desc'])))));
 		
 		$length=strlen($ament);
 		if ($length > 1000)
@@ -922,7 +921,7 @@ function themechange()
             die($h->endpage());
         }
     } else {
-        echo "Select the theme you wish to see as you play Chivalry is Dead.
+        echo "/*qc=on*/SELECT the theme you wish to see as you play Chivalry is Dead.
 		<hr />
 		<div class='row'>
 			<div class='col-sm'>
@@ -1002,7 +1001,7 @@ function steamlink()
 {
     global $db,$userid,$api,$h;
     require ('lib/steamauth/steamauth.php');
-    $q=$db->query("SELECT * FROM `steam_account_link` WHERE `steam_linked` = {$userid}");
+    $q=$db->query("/*qc=on*/SELECT * FROM `steam_account_link` WHERE `steam_linked` = {$userid}");
     if ($db->num_rows($q) != 0)
     {
         alert("danger","Uh Oh!","You already have a Steam Account linked to your game account.",true,'preferences.php?action=menu');
@@ -1014,7 +1013,7 @@ function steamlink()
     else
     {
         include ('lib/steamauth/userInfo.php');
-        $check=$db->query("SELECT * FROM `steam_account_link` WHERE `steam_id` = {$steamprofile['steamid']}");
+        $check=$db->query("/*qc=on*/SELECT * FROM `steam_account_link` WHERE `steam_id` = {$steamprofile['steamid']}");
         if ($db->num_rows($check) != 0)
         {
             alert('danger',"Uh Oh!","That Steam Account has already been linked to a Chivalry is Dead account. Try again with another Steam Account.");

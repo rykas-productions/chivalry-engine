@@ -45,7 +45,7 @@ echo "Order By:
 <br /><br />";
 
 //Select the users info
-$q = $db->query("/*qc=on*/SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `fedjail`, `vipcolor`
+$q = $db->query("/*qc=on*/SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `fedjail`, `vipcolor`, `display_pic`
                 FROM `users` ORDER BY `{$by}` {$ord}  LIMIT {$st}, 100");
 $no1 = $st + 1;
 $no2 = min($st + 100, $membs);
@@ -53,29 +53,28 @@ echo "
 Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 <table class='table table-bordered table-hover table-striped'>
 			<tr>
-				<th>
+				<th colspan='2'>
 					User
 				</th>
 				<th>
-					Copper Coins
-				</th>
-				<th>
-					Level
+					Info
 				</th>
 			</tr>
    ";
 //Display the users info.
 while ($r = $db->fetch_row($q)) {
     $r['username'] = parseUsername($r['userid']);
+	$displaypic = ($r['display_pic']) ? "<img src='" . parseImage(parseDisplayPic($r['userid'])) . "' height='75' alt='' title=''>" : '';
     echo "	<tr>
-				<td>
-					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+				<td width='15%'>
+					{$displaypic}
 				</td>
 				<td>
-					" . number_format($r['primary_currency']) . "
+					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]<br />
 				</td>
 				<td>
-					{$r['level']}
+					Level: " . number_format($r['level']) . "<br />
+					Copper Coins: " . number_format($r['primary_currency']) . "
 				</td>
 			</tr>";
 }

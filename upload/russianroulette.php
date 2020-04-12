@@ -252,6 +252,7 @@ function dorr()
     $half = $max / 2;
     $rand = Random(0, $max);
     $actuallywon = (($r * 2) * 0.9);
+	addToEconomyLog('Gambling Fees', 'copper', (($r*2)-$actuallywon)*-1);
     if ($rand <= $half) {
         //You win
         alert('success', "Success!", "You play a round of Russian Roulette against {$api->SystemUserIDtoName($_GET['id'])}

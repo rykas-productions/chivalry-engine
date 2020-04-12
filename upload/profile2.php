@@ -1,6 +1,6 @@
 <?php
 /*
-	File:		profile.php
+	File:		profile2.php
 	Created: 	4/5/2016 at 12:23AM Eastern Time
 	Info: 		Allows players to view a player's profile page. This
 				displays information about their level, location,
@@ -75,7 +75,7 @@ if (!$_GET['user']) {
 				$event=$p1;
                 $ring=$api->SystemItemIDtoName($mt['proposed_ring']);
 			}
-			$married="<a href='profile.php?user={$event['userid']}'>{$event['username']}</a>";
+			$married="<a href='profile2.php?user={$event['userid']}'>{$event['username']}</a>";
 		}
         $displaypic = ($r['display_pic']) ? "<img src='" . parseImage(parseDisplayPic($r['userid'])) . "' class='img-thumbnail img-fluid' width='350' alt='{$r['username']}&#39;s display picture' title='{$r['username']}&#39;s display picture'>" : '';
         $user_name = parseUsername($r['userid']);
@@ -142,7 +142,7 @@ if (!$_GET['user']) {
 			else
 			{
 				$db->query("INSERT INTO `comments` (`cRECEIVE`, `cSEND`, `cTIME`, `cTEXT`) VALUES ('{$_GET['user']}', '{$userid}', '" . time() . "', '{$comment}')");
-				$api->GameAddNotification($_GET['user'],"{$ir['username']} has left a comment on your profile. Click <a href='profile.php?user={$_GET['user']}'>here</a> to view it.");
+				$api->GameAddNotification($_GET['user'],"{$ir['username']} has left a comment on your profile. Click <a href='profile2.php?user={$_GET['user']}'>here</a> to view it.");
 				alert('success',"Success!","Comment was posted successfully.",false);
 				$justposted=1;
 			}
@@ -466,11 +466,11 @@ if (!$_GET['user']) {
 					echo "<tr>
 					<td align='left' width='33%'>
 					{$dp} 
-						<a href='profile.php?user={$cr['cSEND']}'>{$ci['username']}</a><br />
+						<a href='profile2.php?user={$cr['cSEND']}'>{$ci['username']}</a><br />
 						<small>" . DateTime_Parse($cr['cTIME']) . "</small>";
 						if ($userid == $_GET['user'])
 						{
-							echo "<br /><a href='profile.php?user={$userid}&del={$cr['cID']}'>Delete</a>";
+							echo "<br /><a href='profile2.php?user={$userid}&del={$cr['cID']}'>Delete</a>";
 						}
 						echo"
 					</td>

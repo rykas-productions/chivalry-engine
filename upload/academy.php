@@ -8,6 +8,11 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+{
+	alert('danger',"Uh Oh!","You cannot visit the academy when you're in the infirmary or dungeon.",true,'explore.php');
+	die($h->endpage());
+}
 echo "<h4><i class='game-icon game-icon-diploma'></i> Local Academy</h4><hr>";
 if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and stop them
     //And stop them from taking another.
@@ -26,6 +31,7 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
 	{
 		if ($percentcomplete <= 5)
 		{
+			addToEconomyLog('Academy', 'copper', $coud['ac_cost']);
 			$db->query("UPDATE `users` 
 						SET `primary_currency` = `primary_currency` + {$coud['ac_cost']}, 
 						`course` = 0, 
@@ -188,6 +194,7 @@ function start()
                 WHERE `userid` = {$userid}");
     //Update user's course, and course completion time.
     $api->UserTakeCurrency($userid, 'primary', $course['ac_cost']); //Take user's money.
+	addToEconomyLog('Academy', 'copper', ($course['ac_cost'])*-1);
     alert('success', "Success!", "You have successfully enrolled yourself in the {$course['ac_name']} course. It will
 	                            complete in {$course['ac_days']} days.", true, 'index.php');
 }

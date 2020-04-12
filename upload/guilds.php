@@ -56,9 +56,9 @@ function menu()
     //List all the in-game guilds.
     while ($gd = $db->fetch_row($gq)) {
 		$gd['guild_capacity']=$gd['guild_level']*5;
-        $hasarmory = ($gd['guild_hasarmory'] == 'true') ? "<span class='text-success'>Yes</span>" : "<span class='text-danger'>No</span>";
-        $appacc = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Yes</span>" : "<span class='text-danger'>No</span>";
-        $indebt = ($gd['guild_primcurr'] > 0) ? "<span class='text-success'>No</span>" : "<span class='text-danger'>Yes</span>";
+        $hasarmory = ($gd['guild_hasarmory'] == 'true') ? "<span class='text-success'>Armory</span>" : "<span class='text-danger'>No Armory</span>";
+        $appacc = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Accepting Applications</span>" : "<span class='text-danger'>Recruitment Closed.</span>";
+        $indebt = ($gd['guild_primcurr'] > 0) ? "" : "<span class='text-danger'>In Debt</span>";
 		$gd['guild_pic'] = ($gd['guild_pic']) ? "<img src='" . parseImage($gd['guild_pic']) . "' class='img-fluid' style='max-width: 75px;'>" : '';
         echo "
 		<tr align='left'>
@@ -81,9 +81,9 @@ function menu()
 				<a href='profile.php?user={$gd['userid']}'>{$gd['username']}</a>
 			</td>
             <td>
-                Accepting Applications? {$appacc}<br />
-                Has Armory? {$hasarmory}<br />
-                In Debt? {$indebt}
+                {$appacc}<br />
+                {$hasarmory}<br />
+                {$indebt}
             </td>
 		</tr>";
     }
