@@ -85,7 +85,7 @@ echo "
 		<div class='col-sm'>
 			<div class='progress' style='height: 1rem;'>
 				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$FU['farm_xp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$frmexp}%'></div>
-				<span>{$frmexp}% (" . round($FU['farm_xp']) . " / " . number_format($FU['xp_needed']) . ")</span>
+				<span>{$frmexp}% (" . number_format($FU['farm_xp']) . " / " . number_format($FU['xp_needed']) . ")</span>
 			</div>
 		</div>
 	</div>
@@ -409,7 +409,7 @@ function harvest()
 		$cropOutput = round(Random($sr['seed_qty']/2, $sr['seed_qty']*2));
 		$xp = round($cropOutput * $sr['seed_xp']);
 		$api->UserGiveItem($userid, $sr['seed_output'], $cropOutput);
-		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$xp}");
+		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$xp} WHERE `userid` = {$userid}");
 		if (($r['farm_wellness']-$farmconfig['wellnessPerHarv']) <= 0)
 			$farmconfig['wellnessPerHarv']=$r['farm_wellness'];
 		$db->query("UPDATE `farm_data` SET `farm_time` = 0, `farm_stage` = 0, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerHarv']}, `farm_seed` = 0 WHERE `farm_id` = {$_GET['id']}");

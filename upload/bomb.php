@@ -32,6 +32,9 @@ switch ($_GET['action']) {
     case 'assassin':
         assassin();
         break;
+	case 'defense':
+        defense();
+        break;
     default:
         alert('danger',"Uh Oh!","Please select the bomb you wish to use.",true,'inventory.php');
         break;
@@ -458,6 +461,48 @@ function assassin()
 			" . user_dropdown('user',$userid) . "
 			{$csrf}
 			<input type='submit' value='Assassinate' class='btn btn-primary'>
+		</form>";
+		$h->endpage();
+	}
+}
+
+function defense()
+{
+	global $db,$api,$userid,$h,$ir;
+	$bombid = 225;
+
+	if (!$api->UserHasItem($userid, $bombid, 1)) {
+		alert('danger', "Uh Oh!", "It appears you do not have a {$api->SystemItemIDtoName($bombid)}, which is required to use this form. If this is false, please contact an admin.", true, 'inventory.php');
+		die($h->endpage());
+	}
+	if (isset($_POST['defense'])) {
+
+		if (!isset($_POST['verf']) || !verify_csrf_code("bomb_form", stripslashes($_POST['verf']))) {
+			alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
+			die($h->endpage());
+		}
+		if (empty($_POST['defense'])) {
+			alert('danger', "Uh Oh!", "You did not fill out the form completely.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		if ($ir['defense_bomb'] > 0)
+		{
+			alert('danger', "Uh Oh!", "You already have a defensive bomb set.", true, 'inventory.php');
+			die($h->endpage());
+		}
+		$api->UserTakeItem($userid, $bombid, 1);
+		$db->query("UPDATE `user_settings` SET `defense_bomb` = 1 WHERE `userid` = {$userid}");
+		alert("success", "Success", "You have successfully set up a {$api->SystemItemIDtoName($bombid)}. The next person to attack you will trip it.", true, 'inventory.php');
+		$api->SystemLogsAdd($userid,'bomb',"Set defensive bomb.");
+		$h->endpage();
+
+	} else {
+		$csrf = request_csrf_html('bomb_form');
+		echo "It appears you wish to setup a {$api->SystemItemIDtoName($bombid)} for your protection. Just confirm that below.<br />
+		<form method='post'>
+			<input type='hidden' name='defense' value='1'>
+			{$csrf}
+			<input type='submit' value='Setup {$api->SystemItemIDtoName($bombid)}' class='btn btn-primary'>
 		</form>";
 		$h->endpage();
 	}

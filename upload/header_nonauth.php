@@ -27,12 +27,11 @@ class headers
                 <meta http-equiv="Cache-control" content="public">
 				<link rel="icon" sizes="192x192" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png">
 				<link rel="icon" sizes="128x128" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png">
-                <meta property="og:image" content="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png"/>
+                <meta property='og:image' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_512/v1520819749/logo.png'/>
                 <link rel="stylesheet" href="css/bright-castle.css">
 					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']} - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; 
-                date_default_timezone_set("Europe/London");
                 ?>
         </head>
         <body>
@@ -85,7 +84,7 @@ class headers
             alert('danger', "Uh Oh!", "You are currently IP Banned. Sorry about that.", false);
             die($h->endpage());
         }
-		date_default_timezone_set('America/New_York');
+		date_default_timezone_set($set['game_time']);
     }
 
     function endpage()

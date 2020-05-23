@@ -329,18 +329,19 @@ function guild_donatexp()
 		}
 		$db->query("UPDATE `users` SET `xp` = `xp` - {$xprequired} WHERE `userid` = {$userid}");
 		updateDonations($gd['guild_id'],$userid,'xp',$xprequired);
+		updateDonations($gd['guild_id'],$userid,'guild_xp',$points);
 		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$points} WHERE `guild_id` = {$gd['guild_id']}");
-		$event = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> exchanged " . number_format($xprequired) . " experience for {$points} guild experience.";
+		$event = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> exchanged " . number_format($xprequired) . " experience for " . number_format($points) . " guild experience.";
 		$api->GuildAddNotification($gd['guild_id'], $event);
-		alert('success',"Success!","You have successfully traded " . number_format($xprequired) . " experience for {$points} guild experience.");
+		alert('success',"Success!","You have successfully traded " . number_format($xprequired) . " experience for " . number_format($points) . " guild experience.");
 	}
 	else
 	{
 		echo "Here you may donate your experience points to your guild at a ratio of " . number_format($xpformula) . " experience points for 1 Guild 
 		Experience Point. You currently have " . number_format($ir['xp']) . " experience points which you can donate. <b>This tool will only take even 
-		amounts of experience (Only in groups of {$xpformula}.)</b> How many do you wish to donate to your guild? Experience points donate cannot be given back.<br />
+		amounts of experience (Only in groups of " . number_format($xpformula) . ".)</b> How many do you wish to donate to your guild? Experience points donate cannot be given back.<br />
 		<form method='post'>
-			<input type='number' name='xp' min='{$xpformula}' value='{$xpformula}' class='form-control'>
+			<input type='number' name='xp' min='{$xpformula}' value='{$ir['xp']}' class='form-control'>
 			<input type='submit' class='btn btn-primary' value='Donate XP'>
 		</form>";
 	}
@@ -520,7 +521,8 @@ function members()
 			<td>
 			Copper Coins: " . number_format($r2['copper']) . "<br />
 			Chivalry Tokens: " . number_format($r2['tokens']) . "<br />
-			Experience: " . number_format($r2['xp']) . "
+			Player XP: " . number_format($r2['xp']) . "<br />
+			Guild XP: " . number_format($r2['guild_xp']) . "**
 			</td>
         	<td>
            ";
@@ -542,7 +544,8 @@ function members()
     $db->free_result($q);
     echo "
 	</table>
-	<small>*=Since 10/7/2018 at 5:21PM</small>
+	<small>*=Since 10/7/2018 at 5:21PM<br />
+	**=Since 4/20/20 @ 4:34PM</small>
 	<br />
 	<a href='viewguild.php'>Go Back</a>
    	";

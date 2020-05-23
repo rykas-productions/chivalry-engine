@@ -141,3 +141,7 @@ $builder = new JBBCode\CodeDefinitionBuilder('webm', '<div class="embed-responsi
 															Your browser does not support the video tag.
 															</video></div>');
 $parser->addCodeDefinition($builder->build());
+
+//Rainbow
+$builder = new JBBCode\CodeDefinitionBuilder('rainbow', '<span class="rainbow">{param}</span>');
+$parser->addCodeDefinition($builder->build());

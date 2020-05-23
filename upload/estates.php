@@ -58,6 +58,7 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
                     WHERE `userid` = $userid");
         alert('success', "Success!", "You have successfully bought the {$np['house_name']} estate for
             " . number_format($np['house_price']) . "!", true, 'estates.php');
+			addToEconomyLog('Estates', 'copper', $np['house_price']*-1);
         die($h->endpage());
     }
 } else {

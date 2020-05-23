@@ -20,7 +20,7 @@ switch ($_GET['item']) {
         vipcolor();
         break;
 	case 'willstim':
-        willovercharge();
+        willovercharge2();
         break;
     default:
         alert("danger","Uh Oh!","Please specify a valid VIP Item to use!",true,'inventory.php');
@@ -168,6 +168,23 @@ function willovercharge()
 		$api->UserTakeItem($userid,263,1);
 		alert("success","Success!","Will Stimulant Potion has been used. You have added 3 hours.",true,'inventory.php');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Will Stimulant Potion.");
+	}
+	else
+	{
+		alert('danger',"Uh Oh!","You do not have the required item to use this page!",true,'inventory.php');
+	}
+	$h->endpage();
+}
+function willovercharge2()
+{
+	global $db,$h,$api, $userid, $ir;
+	if ($api->UserHasItem($userid,263))
+	{
+		alert('success','',"We've given you 50,000 Copper Coins, 500 Chivaly Tokens and 4 Chivalry Gym Scrolls for this Will Stim. Thank you!");
+		$api->UserTakeItem($userid,263,1);
+		$api->UserGiveItem($userid,18,4);
+		$api->UserGiveCurrency($userid,'primary',50000);
+		$api->UserGiveCurrency($userid,'secondary',500);
 	}
 	else
 	{

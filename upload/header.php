@@ -49,7 +49,7 @@ class headers
         <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
             <a class="navbar-brand" href="#" data-toggle="modal" data-target="#userInfo">
 					<?php 
-						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png' width='30' height='30' alt='Chivalry is Dead logo' title='Chivalry is Dead logo'>
+						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo.png' width='30' height='30' alt='Chivalry is Dead logo' title='Chivalry is Dead logo'>
 						{$set['WebsiteName']}"; 
 					?>
 				</a>
@@ -249,7 +249,7 @@ class headers
             die($h->endpage());
 		}
     }
-        include('rickroll.php');
+	include('rickroll.php');
     }
     }
 	
@@ -285,7 +285,7 @@ class headers
 	
 	function doArtifactRNG()
 	{
-		global $db, $ir, $api;
+		global $db, $ir, $api, $userid;
 		//RNG for experience token? O.o
 		$xprng=Random(1,100);
 		if ($xprng == 56 && $ir['artifacts'] != 4)
@@ -445,7 +445,7 @@ class headers
 		echo "<script src='https://cdn.jsdelivr.net/npm/popper.js@{$set['popper_version']}/dist/umd/popper.min.js'></script>
         <script src='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/js/bootstrap.min.js'></script>
 		<script src='https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js' defer></script>
-		<script defer src='https://use.fontawesome.com/releases/v{$set['fontawesome_version']}/js/all.js'></script>
+		<script src='https://use.fontawesome.com/releases/v{$set['fontawesome_version']}/js/all.js'></script>
         <script src='https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v{$set['bshover_tabs_version']}/bootstrap-hover-tabs.js' async defer></script>";
 	}
 	
@@ -460,7 +460,7 @@ class headers
                 <meta name='description' content='{$set['Website_Description']}'>
                 <meta property='og:title' content='{$set['WebsiteName']}'/>
                 <meta property='og:description' content='{$set['Website_Description']}'/>
-                <meta property='og:image' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png'/>
+                <meta property='og:image' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_512/v1520819749/logo.png'/>
                 <link rel='shortcut icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png' type='image/x-icon'/>
 				<link rel='icon' sizes='192x192' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png'>
 				<link rel='icon' sizes='128x128' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png'>";

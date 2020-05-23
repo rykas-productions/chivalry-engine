@@ -45,4 +45,8 @@ $db->query("UPDATE `settings` SET `setting_value` = `setting_value` - 1 WHERE `s
 $db->query("UPDATE `settings` SET `setting_value` = `setting_value` + 60000 WHERE `setting_id` = 28");
 
 addToEconomyLog('Gambling', 'copper', 60000);
+
+//Street Bum
+$db->query("UPDATE `user_settings` SET `searchtown` = `searchtown` + 25");
+$db->query("UPDATE `user_settings` SET `searchtown` = 100 WHERE `searchtown` > 100");
 ?>

@@ -21,6 +21,8 @@ if ($ir['level'] < 50)
 $tresder = (Random(100, 999));
 $maxbet = $ir['level'] * 750;
 $minbet = $ir['level'] * 250;
+if ($maxbet > 250000)
+	$maxbet = 250000;
 $specialnumber=((getSkillLevel($userid,29)*25)/100);
 $maxbet=round($maxbet+($maxbet*$specialnumber));
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;

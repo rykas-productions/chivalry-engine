@@ -86,7 +86,7 @@ $bankQuery=$db->query("SELECT `userid`, `bank`, `vip_days` FROM `users` WHERE `b
 while ($r = $db->fetch_row($bankQuery))
 {
 	$maxBank = returnMaxInterest($r['userid']);
-	if ($r['bank'] <= $maxBank)
+	if ($r['bank'] <= ($maxBank+1))
 	{
 		if ($r['vip_days'] == 0)
 			$perc = 50;
@@ -103,7 +103,7 @@ $bankQuery=$db->query("SELECT `userid`, `bigbank`, `vip_days` FROM `users` WHERE
 while ($r = $db->fetch_row($bankQuery))
 {
 	$maxBank = returnMaxInterest($r['userid'])*10;
-	if ($r['bigbank'] <= $maxBank)
+	if ($r['bigbank'] <= ($maxBank+1))
 	{
 		if ($r['vip_days'] == 0)
 			$perc = 50;
@@ -116,17 +116,17 @@ while ($r = $db->fetch_row($bankQuery))
 	}
 }
 //Vault Bank daily interest
-$bankQuery=$db->query("SELECT `userid`, `vaultbank`, `vip_days` FROM `users` WHERE `vault` > 0 AND `laston` > '{$last24}'");
+$bankQuery=$db->query("SELECT `userid`, `vaultbank`, `vip_days` FROM `users` WHERE `vaultbank` > 0 AND `laston` > '{$last24}'");
 while ($r = $db->fetch_row($bankQuery))
 {
 	$maxBank = returnMaxInterest($r['userid'])*50;
-	if ($r['vaultbank'] <= $maxBank)
+	if ($r['vaultbank'] <= ($maxBank+1))
 	{
 		if ($r['vip_days'] == 0)
 			$perc = 50;
 		else
 			$perc = 20;
-		$addedAmount = $r['vault'] / $perc;
+		$addedAmount = $r['vaultbank'] / $perc;
 		$db->query("UPDATE `users` SET `vaultbank` = `vaultbank` + {$addedAmount} WHERE `userid` = {$r['userid']}");
 		addToEconomyLog('Bank Interest', 'copper', $addedAmount);
 		
@@ -136,9 +136,10 @@ while ($r = $db->fetch_row($bankQuery))
 $db->query("UPDATE `guild` SET `guild_primcurr`=`guild_primcurr`+(`guild_primcurr`/20) WHERE `guild_primcurr`>0");
 
 //Random player showcase
-$cutoff = time() - 86400;
-$uq=$db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` != 1 AND `laston` > {$cutoff} ORDER BY RAND() LIMIT 1");
+/*$cutoff = time() - 86400;
+$uq=$db->query("SELECT `userid` FROM `users` WHERE `userid` != 1 AND `laston` > {$cutoff} ORDER BY RAND() LIMIT 1");
 $ur=$db->fetch_single($uq);
-$api->GameAddNotification($ur,"You have been chosen as the Player of the Day! Your profile will be displayed on the login page, and you've received a unique badge in your inventory.");
-item_add($ur,154,1);
+//$api->GameAddNotification($ur,"You have been chosen as the Player of the Day! Your profile will be displayed on the login page, and you've received a unique badge in your inventory.");
+item_add($ur,154,1);*/
+backupDatabase();
 ?>

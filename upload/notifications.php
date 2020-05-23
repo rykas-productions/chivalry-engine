@@ -7,6 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+$viewCount=getCurrentUserPref('notifView', 15);
 if (!isset($_GET['delete'])) {
     $_GET['delete'] = 0;
 }
@@ -35,14 +36,14 @@ if ($_GET['deleteall'] > 0) {
     alert('success', "Success!", "You have successfully deleted all your notifications.", false);
 }
 echo "
-<b>Last fifteen notifications</b>
+<b>Last {$viewCount} notifications</b>
 <table class='table table-bordered table-hover table-striped'>
 <tbody>";
 $query = $db->query("/*qc=on*/SELECT *
                 FROM `notifications`
                 WHERE `notif_user` = $userid
         		ORDER BY `notif_time` DESC
-        		LIMIT 15");
+        		LIMIT {$viewCount}");
 while ($notif = $db->fetch_row($query)) {
     $NotificationTime = DateTime_Parse($notif['notif_time']);
     if ($notif['notif_status'] == 'unread') {

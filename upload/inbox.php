@@ -85,11 +85,12 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $userid, $ir;
-	    //Select last 15 messages that were sent to the current player and display to the player.
+	//Select last 15 messages that were sent to the current player and display to the player.
+	$viewCount=getCurrentUserPref('mailView', 15);
 	if ($ir['mail'] == 0)
 	{
-		$MailQuery = $db->query("/*qc=on*/SELECT * FROM `mail` WHERE `mail_to` = '{$userid}' ORDER BY `mail_time` desc LIMIT 15");
-		$info="Showing your 15 latest messages.";
+		$MailQuery = $db->query("/*qc=on*/SELECT * FROM `mail` WHERE `mail_to` = '{$userid}' ORDER BY `mail_time` desc LIMIT {$viewCount}");
+		$info="Showing your {$viewCount} latest messages.";
 	}
 	else
 	{

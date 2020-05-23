@@ -245,6 +245,7 @@ function idx()
 function viewforum()
 {
     global $ir, $db, $h, $userid, $api;
+	$topicView=getCurrentUserPref('topicView', 20);
     $_GET['viewforum'] = (isset($_GET['viewforum']) && is_numeric($_GET['viewforum'])) ? abs($_GET['viewforum']) : '';
     if (empty($_GET['viewforum'])) {
         alert('danger', "Uh Oh!", "You must enter a forum category you wish to view.", true, "forums.php");
@@ -298,7 +299,7 @@ function viewforum()
 													WHERE 
 													`ft_forum_id` = {$_GET['viewforum']}"));
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
-    echo pagination(20, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
+    echo pagination($topicView, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
     ?>
     <table class='table table-bordered table-hover table-striped'>
     <thead>
@@ -330,7 +331,7 @@ function viewforum()
                      FROM `forum_topics`
                      WHERE `ft_forum_id` = {$_GET['viewforum']}
                      ORDER BY `ft_pinned` DESC, `ft_last_time` DESC
-					 LIMIT {$st}, 20");
+					 LIMIT {$st}, {$topicView}");
     while ($r2 = $db->fetch_row($q)) 
 	{
         $t1 = DateTime_Parse($r2['ft_start_time'], true, true);
@@ -380,7 +381,7 @@ function viewforum()
               </tr>\n";
     }
     echo "</tbody></table>";
-    echo pagination(20, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
+    echo pagination($topicView, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
     $db->free_result($q);
 }
 
@@ -388,6 +389,7 @@ function viewtopic()
 {
     global $ir, $userid, $parser, $db, $h, $api, $gd;
     $code = request_csrf_code('forum_reply');
+	$postView=getCurrentUserPref('postView', 20);
     $precache = array();
     $_GET['viewtopic'] = (isset($_GET['viewtopic']) && is_numeric($_GET['viewtopic'])) ? abs($_GET['viewtopic']) : '';
     if (empty($_GET['viewtopic'])) {
@@ -436,10 +438,10 @@ function viewtopic()
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
 	if (isset($_GET['lastpost']))
     {
-		$postslastpage= floor($posts_topic/20);
-		$st = $postslastpage*20;
+		$postslastpage= floor($posts_topic/$postView);
+		$st = $postslastpage*$postView;
     }
-    echo pagination(20, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
+    echo pagination($postView, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
     if ($ir['user_level'] != 'Member') {
         $lock = ($topic['ft_locked'] == 0) ? 'Lock Topic' : 'Unlock Topic' ;
         $pin = ($topic['ft_pinned'] == 0) ? 'Pin Topic' : 'Unpin Topic' ;
@@ -515,7 +517,7 @@ function viewtopic()
                      FROM `forum_posts`
                      WHERE `fp_topic_id` = {$topic['ft_id']}
                      ORDER BY `fp_time` ASC
-                     LIMIT {$st}, 20");
+                     LIMIT {$st}, {$postView}");
     $no = $st;
     while ($r = $db->fetch_row($q3)) {
         $PN['username'] = parseUsername($r['fp_poster_id']);
@@ -619,7 +621,7 @@ function viewtopic()
     }
     $db->free_result($q3);
     echo "</table>";
-    echo pagination(20, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
+    echo pagination($postView, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
     if ($topic['ft_locked'] == 0) {
 		if (permission("CanReplyForum",$userid))
 		{

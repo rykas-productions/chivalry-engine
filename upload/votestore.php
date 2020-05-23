@@ -26,13 +26,19 @@ function buy()
         alert("danger","Uh Oh!","You have chosen to buy a non-existent listing.",true,'votestore.php');
         die($h->endpage());
     }
+	if ($_GET['option'] == 15)
+    {
+        alert("danger","Uh Oh!","You have chosen to buy a non-existent listing.",true,'votestore.php');
+        die($h->endpage());
+    }
     $cost=1;
     $cost1=array(2,3,4);
     $cost3=array(1,9);
     $cost5=array(5,11,12);
 	$cost10=array(16);
+	$cost15=array(14);
     $cost25=array(10,13);
-    $cost50=array(6,15);
+    $cost50=array(6);
     $cost150=array(7,8);
     if (in_array($_GET['option'],$cost3))
     {
@@ -54,10 +60,13 @@ function buy()
     {
         $cost=50;
     }
-    
     if (in_array($_GET['option'],$cost150))
     {
         $cost=150;
+    }
+	if (in_array($_GET['option'],$cost15))
+    {
+        $cost=15;
     }
     if ($ir['vote_points'] < $cost)
     {
@@ -142,11 +151,6 @@ function buy()
     {
         $api->UserGiveItem($userid,227,1);
     }
-	//Will Stimulant
-    if ($_GET['option'] == 15)
-    {
-        $api->UserGiveItem($userid,227,1);
-    }
 	//Daily Reward Reset
     if ($_GET['option'] == 16)
     {
@@ -227,14 +231,6 @@ function home()
         </tr>
 		<tr>
             <th>
-                Daily Reward Reset
-            </th>
-            <td>
-                <a href='?action=buy&option=16'>10 Vote Points</a>
-            </td>
-        </tr>
-		<tr>
-            <th>
                 Mining Energy Potion
             </th>
             <td>
@@ -263,14 +259,6 @@ function home()
             </th>
             <td>
                 <a href='?action=buy&option=6'>50 Vote Points</a>
-            </td>
-        </tr>
-		<tr>
-            <th>
-                Will Stimulant Potion
-            </th>
-            <td>
-                <a href='?action=buy&option=15'>50 Vote Points</a>
             </td>
         </tr>
         <tr>

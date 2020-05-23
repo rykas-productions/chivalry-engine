@@ -198,6 +198,7 @@ echo "
 					<a href='gym.php' class='{$txtClass}'><i class='game-icon game-icon-weight-lifting-down'></i> The Gym</a><br />
 					<a href='chivalry_gym.php' class='{$txtClass}'><i class='game-icon game-icon-weight-lifting-up'></i> Chivalry Gym</a><br />
 					<a href='criminal.php' class='{$txtClass}'><i class='game-icon game-icon-robber'></i> Criminal Center</a><br />
+					<a href='streetbum.php' class='{$txtClass}'> Street Begging <span class='badge badge-pill badge-primary'>{$ir['searchtown']}</span></a><br />
 					<a href='academy.php' class='{$txtClass}'><i class='game-icon game-icon-diploma'></i> Local Academy</a><br />
 					<a href='achievements.php'><i class='game-icon game-icon-achievement'></i> Achievements</a><br />
                     <a href='bounty.php' class='{$txtClass}'><i class='game-icon game-icon-game-icon game-icon-shadow-grasp'></i> Bounty Hunter <span class='badge badge-pill badge-primary'>{$bounty_count}</span></a><br />
@@ -246,6 +247,7 @@ if ($ir['guild'] > 0) {
 }
 echo "
 					<a href='guilds.php'><i class='game-icon game-icon-dozen'></i> Guild Listing <span class='badge badge-pill badge-primary'>{$guildcount}</span></a><br />
+					<a href='guild_district.php'> Guild Districts</a><br />
 					<a href='guilds.php?action=wars'><i class='game-icon game-icon-mounted-knight'></i> Guild Wars</a> <span class='badge badge-pill badge-danger'>{$wars}</span><br />
 				</div>
 			</div>
@@ -256,6 +258,7 @@ echo "
 				    <a href='dungeon.php'><i class='game-icon game-icon-cage'></i> Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
 					<a href='infirmary.php'><i class='game-icon game-icon-hospital-cross'></i> Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
 					<a href='forums.php'><i class='far fa-comments'></i> CID Forums <span class='badge badge-pill badge-primary'>{$forumposts}</span></a><br />
+					<a href='/chat/?userName={$ir['username']}'><i class='fas fa-comment-dots'></i> CID Chat</a><br />
 					<a href='newspaper.php'><i class='game-icon game-icon-scroll-unfurled'></i> CID Newspaper <span class='badge badge-pill badge-primary'>{$paperads}</span></a><br />
 					<a href='polling.php'><i class='game-icon game-icon-vote'></i> Polling Center</a><br />
 					<a href='halloffame.php'><i class='game-icon game-icon-crown'></i> Hall of Fame</a><br />

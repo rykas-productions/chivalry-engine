@@ -89,7 +89,7 @@ function attacking()
 		alert("danger", "Uh Oh!", "You cannot attack Your Doppleganger until you've voted completely for the day.", true, 'index.php');
         die($h->endpage());
 	}
-	else if ($_GET['user'] == 21 && date('j') != 22)
+	else if ($_GET['user'] == 21)
 	{
 		alert("danger", "Uh Oh!", "Due to kingdom wide laws, turkeys may only be hunted on Thanksgiving.", true, 'index.php');
         die($h->endpage());
@@ -531,7 +531,7 @@ function attacking()
         {
             if ($missed == 1)
             {
-                alert('warning', "Attempt {$_GET['nextstep']}!", "{$ttu} You attempt to strike {$odata['username']} but missed. Your
+                alert('warning', "", "<b>Attempt {$_GET['nextstep']})</b> {$ttu} You attempt to strike {$odata['username']} using your {$api->SystemItemIDtoName($_GET['weapon'])} but missed. Your
                     opponent has " . number_format($odata['hp']) . " HP Remaining.", false, '', true);
             }
             else
@@ -539,7 +539,7 @@ function attacking()
                 //Reduce health.
                 $db->query("UPDATE `users` SET `hp` = `hp` - {$mydamage} WHERE `userid` = {$_GET['user']}");
                 $db->query("DELETE FROM `spy_advantage` WHERE `user` = {$userid} AND `spied` = {$_GET['user']}");
-                alert('success', "Attempt {$_GET['nextstep']}!", "{$ttu} Using your {$r1['itmname']} you manage to strike
+                alert('success', "", "<b>Attempt {$_GET['nextstep']})</b> {$ttu} Using your {$r1['itmname']} you manage to strike
                 {$odata['username']} dealing " . number_format($mydamage) . " damage. Your opponent has " . number_format($odata['hp']) . " HP remaining.", false, '', true);
                 $_SESSION['attackdmg'] += $mydamage;
                 user_log($userid,'dmgdone',$mydamage);
@@ -609,7 +609,7 @@ function attacking()
                         }
                     }
                 }
-                alert('success', "Attempt {$_GET['nextstep']}!", "{$ttu} You consume your {$r1['itmname']}.", false, '', true);
+                alert('success', "", "<b>Attempt {$_GET['nextstep']})</b> {$ttu} You consume your {$r1['itmname']}.", false, '', true);
                 $api->UserTakeItem($userid,$_GET['weapon'],1);
             }
             else
@@ -649,7 +649,8 @@ function attacking()
                 //Sharper blades skill
                 $specialnumber=((getSkillLevel($_GET['user'],9)*13)/100);
                 $enweps[$weptouse]['weapon']=$enweps[$weptouse]['weapon']+($enweps[$weptouse]['weapon']*$specialnumber);
-                
+				if ($enweps[$weptouse]['itmid'] == 235)
+					$enweps[$weptouse]['weapon']=round(($enweps[$weptouse]['weapon']*0.25)*$odata['level']);
                 $dam = round(($enweps[$weptouse]['weapon'] * $odata['strength'] / ($youdata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 				//Item used is a potion... so don't do damage.
                 if (($enweps[$weptouse]['itmtype'] == 8) || ($enweps[$weptouse]['itmtype'] == 7))
@@ -803,12 +804,12 @@ function attacking()
                 {
                     if ($miss == 1)
                     {
-                        alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have " . number_format($youdata['hp']) . " HP remaining.", false);
+                        alert('info', "", "<b>Attempt {$ns})</b> {$odata['username']} attempted to strike you with their {$api->SystemItemIDtoName($enweps[$weptouse]['itmid'])} but missed. You have " . number_format($youdata['hp']) . " HP remaining.", false);
                     }
                     else
                     {
                         $db->query("UPDATE `users` SET `hp` = `hp` - {$dam} WHERE `userid` = {$userid}");
-                        alert('danger', "Attempt {$ns}!", "Using their {$wep}, {$odata['username']} managed to strike you dealing
+                        alert('danger', "", "<b>Attempt {$ns})</b> Using their {$wep}, {$odata['username']} managed to strike you dealing
                          " . number_format($dam) . " damage. You have " . number_format($youdata['hp']) . " HP remaining.", false, '', true);
                          user_log($_GET['user'],'dmgdone',$dam);
                     }
@@ -877,13 +878,13 @@ function attacking()
                                 }
                             }
                         }
-                        alert('danger', "Attempt {$ns}!", "{$odata['username']} consumes {$wep}!", false, '', true);
+                        alert('danger', "", "<b>Attempt {$ns})</b> {$odata['username']} consumes {$wep}!", false, '', true);
                         $api->UserTakeItem($_GET['user'],$enweps[$weptouse]['itmid'],1);
                     }
                     else
                     {
                         $api->GameAddNotification($_GET['user'],"You ran out of your potion in combat.", 'fas fa-exclamation-circle', 'red');
-                        alert('info', "Attempt {$ns}!", "{$odata['username']} attempted to strike you, but missed. You have " . number_format($youdata['hp']) . " HP remaining.", false);
+                        alert('info', "", "<b>Attempt {$ns})</b> {$odata['username']} attempted to strike you, but missed. You have " . number_format($youdata['hp']) . " HP remaining.", false);
                         $db->query("UPDATE `users` SET `equip_potion` = 0 WHERE `userid` = {$_GET['user']}");
                     }
                 }
@@ -903,9 +904,21 @@ function attacking()
         alert("danger", "Uh Oh!", "{$odata['username']}'s health is too low to be attacked.", true, 'index.php');
         die($h->endpage());
     } //Stop combat if user and opponent are in same guild.
-    else if ($ir['guild'] == $odata['guild'] && $ir['guild'] > 0) {
-        alert("danger", "Uh Oh!", "Hit the bong, not your guild mates. {$odata['username']} is in the same guild as you!", true, 'index.php');
-        die($h->endpage());
+    else if ($ir['guild'] == $odata['guild'] && $ir['guild'] > 0)
+	{
+		if (!hasPendantEquipped($userid,339))
+		{
+			alert("danger", "Uh Oh!", "Hit the bong, not your guild mates. {$odata['username']} is in the same guild as you!", true, 'index.php');
+			die($h->endpage());
+		}
+		else
+		{
+			if (!hasPendantEquipped($_GET['user'],339))
+			{
+				alert("danger", "Uh Oh!", "{$odata['username']} does not have {$api->SystemItemIDtoName(339)} Pendant equipped and cannot be attacked now.", true, 'index.php');
+				die($h->endpage());
+			}
+		}
     } //If user does not have enough energy.
     else if ($youdata['energy'] < $youdata['maxenergy'] / $set['AttackEnergyCost']) {
         $EnergyPercent = floor(100 / $set['AttackEnergyCost']);
@@ -940,65 +953,67 @@ function attacking()
         $vars2['hpperc'] = round($odata['hp'] / $odata['maxhp'] * 100);
         $vars2['hpopp'] = 100 - $vars2['hpperc'];
         $mw = $db->query("/*qc=on*/SELECT `itmid`,`itmname` FROM  `items`  WHERE `itmid` IN({$ir['equip_primary']}, {$ir['equip_secondary']}, {$ir['equip_potion']})");
-        echo "<table class='table table-bordered'>
-		<tr>
-			<th colspan='3'>
-				Choose a weapon to attack with.
-			</th>
-		</tr>";
+		echo "<h3>Choose an item to use in combat</h3><hr />
+		<div class='row'>";
         //If user has weapons equipped, allow him to select one.
+		$prim = 0;
         if ($db->num_rows($mw) > 0) {
             while ($r = $db->fetch_row($mw)) {
-                if (!isset($_GET['nextstep'])) {
+                if (!isset($_GET['nextstep']))
                     $ns = 1;
-                } else {
+                else
                     $ns = $_GET['nextstep'] + 2;
+				if ($r['itmid'] == $ir['equip_primary'])
+						$type = "Primary Weapon";
+                elseif ($r['itmid'] == $ir['equip_secondary']) 
+				{
+                    $type = "Secondary Weapon";
                 }
-                if ($r['itmid'] == $ir['equip_primary']) {
-                    echo "<tr><th align='left'>Primary Weapon</th>";
+                elseif ($r['itmid'] == $ir['equip_potion']) 
+				{
+                    $type = "Potion Item";
                 }
-                if ($r['itmid'] == $ir['equip_secondary']) {
-                    echo "<tr><th align='left'>Secondary Weapon</th>";
-                }
-                if ($r['itmid'] == $ir['equip_potion']) {
-                    echo "<tr><th align='left'>Potion</th>";
-                }
-                echo "<td>" . returnIcon($r['itmid'],2) . "</td><td align='left'><a href='?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}'>{$r['itmname']}</a></td></tr>";
+				echo "<div class='col-sm'>
+				<b>{$type}</b><br />
+					" . returnIcon($r['itmid'],4) . "<br />
+					<a href='?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}'>{$r['itmname']}</a>
+				</div>";
             }
         } //If no weapons equipped, tell him to get back!
         else {
             alert("warning", "Uh Oh!", "Sir, you don't have a weapon equipped. You might wanna go back.", true, 'index.php');
         }
         $db->free_result($mw);
-        echo "</table>";
+        echo "</div><hr />";
 		
 		$yourpic = ($ir['display_pic']) ? "<img src='{$ir['display_pic']}' class='img-thumbnail img-responsive' width='125'>" : "";
 		$theirpic = ($odata['display_pic']) ? "<img src='{$odata['display_pic']}' class='img-thumbnail img-responsive' width='125'>" : "";
-        echo "
-		<table class='table table-bordered'>
-			<tr>
-				<th width='25%' class='align-middle'>
-					{$yourpic}<br />{$ir['username']}
-				</th>
-				<td class='align-middle'>
+        echo "<div class='row'>
+				<div class='col-sm-2'>
+					{$yourpic}<br />
+					{$ir['username']}
+				</div>
+				<div class='col-sm'>
 					<div class='progress' style='height: 1rem;'>
-						<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars['hpperc']}%'></div>
-							<span>{$vars['hpperc']}% (" . number_format($youdata['hp']) . " / " .  number_format($youdata['maxhp']) . ")</span>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<th class='align-middle'>
-					{$theirpic}<br />{$odata['username']}
-				</th>
-				<td class='align-middle'>
+					<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars['hpperc']}' style='width:{$vars['hpperc']}%' aria-valuemin='0' aria-valuemax='{$youdata['maxhp']}'></div>
+					<span>{$vars['hpperc']}% (" . number_format($youdata['hp']) . " / " .  number_format($youdata['maxhp']) . ")</span>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class='row'>
+				<div class='col-sm-2'>
+					{$theirpic}<br />
+					{$odata['username']}
+				</div>
+				<div class='col-sm'>
 					<div class='progress' style='height: 1rem;'>
-						<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars2['hpperc']}' aria-valuemin='0' aria-valuemax='100' style='width:{$vars2['hpperc']}%'></div>
-							<span>{$vars2['hpperc']}% (" . number_format($odata['hp']) . " / " . number_format($odata['maxhp']) . ")</span>
-					</div>
-				</td>
-			</tr>
-		</table>";
+					<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars2['hpperc']}' style='width:{$vars['hpperc']}%' aria-valuemin='0' aria-valuemax='{$odata['maxhp']}'></div>
+					<span>{$vars2['hpperc']}% (" . number_format($odata['hp']) . " / " . number_format($odata['maxhp']) . ")</span>
+				</div>
+			</div>
+		</div>
+		<hr />";
     }
 }
 
@@ -1267,12 +1282,7 @@ function xp()
             //Seasoned Warrior Skill
 			$specialnumber=((getSkillLevel($userid,5)*5)/100);
             //Add 10% bonus if Exp. token is equipped
-			if ($api->UserEquippedItem($userid,'primary',93))
-			{
-				$qe=$qe+($qe*0.1);
-				$qe=$qe+($qe*$specialnumber);
-			}
-			if ($api->UserEquippedItem($userid,'secondary',93))
+			if (hasPendantEquipped($userid,93))
 			{
 				$qe=$qe+($qe*0.1);
 				$qe=$qe+($qe*$specialnumber);
@@ -1299,6 +1309,7 @@ function xp()
             $hosptime = Random(5, 15) + floor($ir['level'] / 10);
             //Give user XP.
 			attacklog($userid,$_GET['ID'],'xp');
+			$expgain=autoDonateXP($userid, $expgain, $ir['guild']);
             $db->query("UPDATE `users` SET `xp` = `xp` + {$expgain} WHERE `userid` = {$userid}");
             $hospreason = $db->escape("Used for Experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
             //Set opponent's HP to 1.

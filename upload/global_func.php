@@ -1038,14 +1038,14 @@ function returnIcon($item,$size=1)
 	if ($ir['icons'] == 1)
 	{
 		$q = $db->fetch_row($db->query("/*qc=on*/SELECT `icon`,`color` FROM `items` WHERE `itmid` = {$item}"));
-		$imageIcons=array(262);
+		$imageIcons=array(262,337,322);
 		if (empty($q['icon']))
 		{
 			return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
 		}
-		elseif (in_array($item,$imageIcons))
+		elseif ($q['color'] == 'img')
 		{
-			return "<img src='{$q['icon']}' class='img-fluid'>";
+			return "<img src='{$q['icon']}' style='width:{$size}rem;'>";
 		}
 		else
 		{
@@ -1300,4 +1300,91 @@ function addToEconomyLog($type = 'Misc', $curr = 'copper', $change = 0)
 					AND `ecCurrency` = '{$curr}' 
 					LIMIT 1");
 	}
+}
+
+function addToEconomyLogDate($type = 'Misc', $curr = 'copper', $change = 0, $date)
+{
+	global $db;
+	$todayLogID = date('Ymd', $date);
+	$q=$db->query("SELECT *
+					FROM `economy_log` 
+					WHERE `ecDate` = '{$todayLogID}' 
+					AND `ecSource` = '{$type}' 
+					AND `ecCurrency` = '{$curr}' 
+					LIMIT 1");
+	if ($db->num_rows($q) == 0)
+	{
+		$db->query("INSERT INTO `economy_log` (`ecDate`, `ecSource`, `ecCurrency`, `ecChange`) VALUES 
+		('{$todayLogID}', '{$type}', '{$curr}', '{$change}')");
+	}
+	else
+	{
+		$db->query("UPDATE `economy_log` 
+					SET `ecChange` = `ecChange` + '{$change}' 
+					WHERE `ecDate` = '{$todayLogID}' 
+					AND `ecSource` = '{$type}' 
+					AND `ecCurrency` = '{$curr}' 
+					LIMIT 1");
+	}
+}
+
+function backupDatabase()
+{
+	global $_CONFIG;
+	$filename='cid_backup_'.date('y-m-d').'.sql';
+	$result=exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/mysql/".$filename,$output);
+}
+
+function doDailyDistrictTick()
+{
+	global $db, $api;
+	$districtConfig['WarriorCostDaily'] = 500;
+	$districtConfig['ArcherCostDaily'] = 1000;
+	$districtConfig['GeneralCostDaily'] = 12500;
+	$db->query("UPDATE `guild_district_info` SET `warriors_bought` = 0, `archers_bought` = 0, `moves` = 2");
+	$q=$db->query("SELECT * FROM `guild_district_info`");
+	while ($r=$db->fetch_row($q))
+	{
+		$upkeepFee=0;
+		$warriors = countDeployedWarriors($r['guild_id']);
+		$archers = countDeployedArchers($r['guild_id']);
+		$generals = countDeployedGenerals($r['guild_id']);
+		if ($warriors > 0)
+			$upkeepFee=$upkeepFee + ($warriors * $districtConfig['WarriorCostDaily']);
+		if ($archers > 0)
+			$upkeepFee=$upkeepFee + ($archers * $districtConfig['ArcherCostDaily']);
+		if ($generals > 0)
+			$upkeepFee=$upkeepFee + ($generals * $districtConfig['GeneralCostDaily']);
+		if ($upkeepFee > 0)
+		{
+			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$upkeepFee} WHERE `guild_id` = {$r['guild_id']}");
+			addToEconomyLog('Districts', 'copper', $upkeepFee*-1);
+			$api->GuildAddNotification($r['guild_id'],"Your guild has been charged a district's upkeep fee of " . number_format($upkeepFee) . " Copper Coins.");
+		}
+	}
+}
+function countActiveGuildMembers24Hr($guild_id)
+{
+	global $db;
+	$last_on = time() - (1440*60);
+	$q = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `guild` = {$guild_id} AND `laston` > {$last_on}");
+	return $db->num_rows($q);
+}
+function countDeployedWarriors($guild_id)
+{
+	global $db;
+	$q=$db->query("SELECT SUM(`district_melee`) FROM `guild_districts` WHERE `district_owner` = {$guild_id}");
+	return $db->fetch_single($q);
+}
+function countDeployedArchers($guild_id)
+{
+	global $db;
+	$q=$db->query("SELECT SUM(`district_range`) FROM `guild_districts` WHERE `district_owner` = {$guild_id}");
+	return $db->fetch_single($q);
+}
+function countDeployedGenerals($guild_id)
+{
+	global $db;
+	$q=$db->query("SELECT SUM(`district_general`) FROM `guild_districts` WHERE `district_owner` = {$guild_id}");
+	return $db->fetch_single($q);
 }

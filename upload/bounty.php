@@ -149,6 +149,7 @@ function add_bounty()
     }
     else
     {
+		$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : $userid;
         $csrf=request_csrf_html('bounty_add');
         echo "You may open a bounty on another player here. Bounties must be worth at least 250,000 Copper Coins. A 
         player may only have one bounty opened on their-self at a time. Bounties will be removed after 3 days 
@@ -160,7 +161,7 @@ function add_bounty()
                         Target
                     </th>
                     <td>
-                        " . user_dropdown('user') . "
+                        " . user_dropdown('user', $_GET['user']) . "
                     </td>
                 </tr>
                 <tr>

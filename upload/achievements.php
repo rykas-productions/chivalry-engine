@@ -274,151 +274,257 @@ function home()
 	echo "
 	<div class='row'>
 		<div class='col-sm'>
-			<u><b>Level</b></u><br />
-			<a {$class[1]} href='?action=level1'>Level 5</a><br />
-			<a {$class[2]} href='?action=level2'>Level 25</a><br />
-			<a {$class[49]} href='?action=level6'>Level 50</a><br />
-			<a {$class[3]} href='?action=level3'>Level 100</a><br />
-			<a {$class[50]} href='?action=level7'>Level 150</a><br />
-			<a {$class[4]} href='?action=level4'>Level 200</a><br />
-			<a {$class[5]} href='?action=level5'>Level 300</a><br />
-			<a {$class[51]} href='?action=level8'>Level 500</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Level
+				</div>
+				<div class='card-body'>
+					<a {$class[1]} href='?action=level1'>Level 5</a><br />
+					<a {$class[2]} href='?action=level2'>Level 25</a><br />
+					<a {$class[49]} href='?action=level6'>Level 50</a><br />
+					<a {$class[3]} href='?action=level3'>Level 100</a><br />
+					<a {$class[50]} href='?action=level7'>Level 150</a><br />
+					<a {$class[4]} href='?action=level4'>Level 200</a><br />
+					<a {$class[5]} href='?action=level5'>Level 300</a><br />
+					<a {$class[51]} href='?action=level8'>Level 500</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-			<u><b>Mining Level</b></u><br />
-			<a {$class[11]} href='?action=mine1'>Mining Level 10</a><br />
-			<a {$class[12]} href='?action=mine2'>Mining Level 20</a><br />
-			<a {$class[13]} href='?action=mine3'>Mining Level 50</a><br />
-            <a {$class[82]} href='?action=mine4'>Mining Level 75</a><br />
-            <a {$class[83]} href='?action=mine5'>Mining Level 100</a><br />
-            <a {$class[84]} href='?action=mine6'>Mining Level 200</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Mining Level
+				</div>
+				<div class='card-body'>
+					<a {$class[11]} href='?action=mine1'>Mining Level 10</a><br />
+					<a {$class[12]} href='?action=mine2'>Mining Level 20</a><br />
+					<a {$class[13]} href='?action=mine3'>Mining Level 50</a><br />
+					<a {$class[82]} href='?action=mine4'>Mining Level 75</a><br />
+					<a {$class[83]} href='?action=mine5'>Mining Level 100</a><br />
+					<a {$class[84]} href='?action=mine6'>Mining Level 200</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-			<u><b>Busts</b></u><br />
-			<a {$class[6]} href='?action=bust1'>25 Busts</a><br />
-			<a {$class[7]} href='?action=bust2'>100 Busts</a><br />
-			<a {$class[8]} href='?action=bust3'>250 Busts</a><br />
-			<a {$class[9]} href='?action=bust4'>500 Busts</a><br />
-			<a {$class[10]} href='?action=bust5'>1,000 Busts</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Dungeon Busts
+				</div>
+				<div class='card-body'>
+					<a {$class[6]} href='?action=bust1'>25 Busts</a><br />
+					<a {$class[7]} href='?action=bust2'>100 Busts</a><br />
+					<a {$class[8]} href='?action=bust3'>250 Busts</a><br />
+					<a {$class[9]} href='?action=bust4'>500 Busts</a><br />
+					<a {$class[10]} href='?action=bust5'>1,000 Busts</a><br />
+				</div>
+			</div>
 		</div>
 	</div>
+	<hr />
 	<div class='row'>
 		<div class='col-sm'>
-			<u><b>Kills</b></u><br />
-			<a {$class[14]} href='?action=kill1'>10 Kills</a><br />
-			<a {$class[15]} href='?action=kill2'>50 Kills</a><br />
-			<a {$class[16]} href='?action=kill3'>100 Kills</a><br />
-			<a {$class[17]} href='?action=kill4'>500 Kills</a><br />
-			<a {$class[18]} href='?action=kill5'>1,000 Kills</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Opponents Killed
+				</div>
+				<div class='card-body'>
+					<a {$class[14]} href='?action=kill1'>10 Kills</a><br />
+					<a {$class[15]} href='?action=kill2'>50 Kills</a><br />
+					<a {$class[16]} href='?action=kill3'>100 Kills</a><br />
+					<a {$class[17]} href='?action=kill4'>500 Kills</a><br />
+					<a {$class[18]} href='?action=kill5'>1,000 Kills</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-			<u><b>Deaths</b></u><br />
-			<a {$class[19]} href='?action=death1'>10 Deaths</a><br />
-			<a {$class[20]} href='?action=death2'>50 Deaths</a><br />
-			<a {$class[21]} href='?action=death3'>100 Deaths</a><br />
-			<a {$class[22]} href='?action=death4'>500 Deaths</a><br />
-			<a {$class[23]} href='?action=death5'>1,000 Deaths</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Times Fallen
+				</div>
+				<div class='card-body'>
+					<a {$class[19]} href='?action=death1'>10 Deaths</a><br />
+					<a {$class[20]} href='?action=death2'>50 Deaths</a><br />
+					<a {$class[21]} href='?action=death3'>100 Deaths</a><br />
+					<a {$class[22]} href='?action=death4'>500 Deaths</a><br />
+					<a {$class[23]} href='?action=death5'>1,000 Deaths</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-			<u><b>Referrals</b></u><br />
-			<a {$class[24]} href='?action=refer1'>1 Referral</a><br />
-			<a {$class[25]} href='?action=refer2'>5 Referrals</a><br />
-			<a {$class[26]} href='?action=refer3'>10 Referrals</a><br />
-			<a {$class[27]} href='?action=refer4'>50 Referrals</a><br />
-			<a {$class[28]} href='?action=refer5'>100 Referrals</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Warriors Referred to CID
+				</div>
+				<div class='card-body'>
+					<a {$class[24]} href='?action=refer1'>1 Referral</a><br />
+					<a {$class[25]} href='?action=refer2'>5 Referrals</a><br />
+					<a {$class[26]} href='?action=refer3'>10 Referrals</a><br />
+					<a {$class[27]} href='?action=refer4'>50 Referrals</a><br />
+					<a {$class[28]} href='?action=refer5'>100 Referrals</a><br />
+				</div>
+			</div>
 		</div>
 	</div>
+	<hr />
 	<div class='row'>
 		<div class='col-sm'>
-			<u><b>Copper Coins from Crimes</b></u><br />
-			<a {$class[29]} href='?action=crimec1'>500,000</a><br />
-			<a {$class[30]} href='?action=crimec2'>1,000,000</a><br />
-			<a {$class[31]} href='?action=crimec3'>5,000,000</a><br />
-			<a {$class[32]} href='?action=crimec4'>25,000,000</a><br />
-			<a {$class[33]} href='?action=crimec5'>100,000,000</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Copper Coins Criminally Obtained
+				</div>
+				<div class='card-body'>
+					<a {$class[29]} href='?action=crimec1'>500,000</a><br />
+					<a {$class[30]} href='?action=crimec2'>1,000,000</a><br />
+					<a {$class[31]} href='?action=crimec3'>5,000,000</a><br />
+					<a {$class[32]} href='?action=crimec4'>25,000,000</a><br />
+					<a {$class[33]} href='?action=crimec5'>100,000,000</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-			<u><b>Travel</b></u><br />
-			<a {$class[34]} href='?action=travel1'>1 Time</a><br />
-			<a {$class[35]} href='?action=travel2'>5 Times</a><br />
-			<a {$class[36]} href='?action=travel3'>10 Times</a><br />
-			<a {$class[37]} href='?action=travel4'>50 Times</a><br />
-			<a {$class[38]} href='?action=travel5'>100 Times</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Locations Travelled
+				</div>
+				<div class='card-body'>
+					<a {$class[34]} href='?action=travel1'>1 Time</a><br />
+					<a {$class[35]} href='?action=travel2'>5 Times</a><br />
+					<a {$class[36]} href='?action=travel3'>10 Times</a><br />
+					<a {$class[37]} href='?action=travel4'>50 Times</a><br />
+					<a {$class[38]} href='?action=travel5'>100 Times</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-			<u><b>Total Attack Damage</b></u><br />
-			<a {$class[39]} href='?action=dam1'>1,000 Damage</a><br />
-			<a {$class[40]} href='?action=dam2'>25,000 Damage</a><br />
-			<a {$class[41]} href='?action=dam3'>100,000 Damage</a><br />
-			<a {$class[42]} href='?action=dam4'>1,000,000 Damage</a><br />
-			<a {$class[43]} href='?action=dam5'>25,000,000 Damage</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Damage Dealt
+				</div>
+				<div class='card-body'>
+					<a {$class[39]} href='?action=dam1'>1,000 Damage</a><br />
+					<a {$class[40]} href='?action=dam2'>25,000 Damage</a><br />
+					<a {$class[41]} href='?action=dam3'>100,000 Damage</a><br />
+					<a {$class[42]} href='?action=dam4'>1,000,000 Damage</a><br />
+					<a {$class[43]} href='?action=dam5'>25,000,000 Damage</a><br />
+				</div>
+			</div>
 		</div>
 	</div>
+	<hr />
 	<div class='row'>
 		<div class='col-sm'>
-			<u><b>Net Worth</b></u><br />
-			<a {$class[44]} href='?action=worth1'>500,000</a><br />
-			<a {$class[45]} href='?action=worth2'>5,000,000</a><br />
-			<a {$class[46]} href='?action=worth3'>50,000,000</a><br />
-			<a {$class[47]} href='?action=worth4'>500,000,000</a><br />
-			<a {$class[48]} href='?action=worth5'>1,000,000,000</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Total Net Worth (Copper Coins)
+				</div>
+				<div class='card-body'>
+					<a {$class[44]} href='?action=worth1'>500,000</a><br />
+					<a {$class[45]} href='?action=worth2'>5,000,000</a><br />
+					<a {$class[46]} href='?action=worth3'>50,000,000</a><br />
+					<a {$class[47]} href='?action=worth4'>500,000,000</a><br />
+					<a {$class[48]} href='?action=worth5'>1,000,000,000</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-			<u><b>Forum Posts</b></u><br />
-			<a {$class[52]} href='?action=posts1'>5 Posts</a><br />
-			<a {$class[53]} href='?action=posts2'>25 Posts</a><br />
-			<a {$class[54]} href='?action=posts3'>75 Posts</a><br />
-			<a {$class[55]} href='?action=posts4'>500 Posts</a><br />
-			<a {$class[56]} href='?action=posts5'>1,000 Posts</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Forum Post Count
+				</div>
+				<div class='card-body'>
+					<a {$class[52]} href='?action=posts1'>5 Posts</a><br />
+					<a {$class[53]} href='?action=posts2'>25 Posts</a><br />
+					<a {$class[54]} href='?action=posts3'>75 Posts</a><br />
+					<a {$class[55]} href='?action=posts4'>500 Posts</a><br />
+					<a {$class[56]} href='?action=posts5'>1,000 Posts</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-            <u><b>Consecutive Days Logged In</b></u><br />
-			<a {$class[57]} href='?action=dayslogged1'>7 Days</a><br />
-			<a {$class[58]} href='?action=dayslogged2'>14 Days</a><br />
-			<a {$class[59]} href='?action=dayslogged3'>30 Days</a><br />
-			<a {$class[60]} href='?action=dayslogged4'>120 Days</a><br />
-			<a {$class[61]} href='?action=dayslogged5'>365 Days</a><br />
+            <div class='card'>
+				<div class='card-header'>
+					Consecutive Days Logged In
+				</div>
+				<div class='card-body'>
+					<a {$class[57]} href='?action=dayslogged1'>7 Days</a><br />
+					<a {$class[58]} href='?action=dayslogged2'>14 Days</a><br />
+					<a {$class[59]} href='?action=dayslogged3'>30 Days</a><br />
+					<a {$class[60]} href='?action=dayslogged4'>120 Days</a><br />
+					<a {$class[61]} href='?action=dayslogged5'>365 Days</a><br />
+				</div>
+			</div>
 		</div>
 	</div>
+	<hr />
     <div class='row'>
 		<div class='col-sm'>
-			<u><b>IQ</b></u><br />
-			<a {$class[62]} href='?action=iq1'>10,000 IQ</a><br />
-			<a {$class[63]} href='?action=iq2'>25,000 IQ</a><br />
-			<a {$class[64]} href='?action=iq3'>100,000 IQ</a><br />
-			<a {$class[65]} href='?action=iq4'>1,000,000 IQ</a><br />
-			<a {$class[66]} href='?action=iq5'>5,000,000 IQ</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					IQ Stat
+				</div>
+				<div class='card-body'>
+					<a {$class[62]} href='?action=iq1'>10,000 IQ</a><br />
+					<a {$class[63]} href='?action=iq2'>25,000 IQ</a><br />
+					<a {$class[64]} href='?action=iq3'>100,000 IQ</a><br />
+					<a {$class[65]} href='?action=iq4'>1,000,000 IQ</a><br />
+					<a {$class[66]} href='?action=iq5'>5,000,000 IQ</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-			<u><b>VIP Days</b></u><br />
-			<a {$class[67]} href='?action=vip1'>10 VIP Days</a><br />
-			<a {$class[68]} href='?action=vip2'>30 VIP Days</a><br />
-			<a {$class[69]} href='?action=vip3'>90 VIP Days</a><br />
-			<a {$class[70]} href='?action=vip4'>180 VIP Days</a><br />
-			<a {$class[71]} href='?action=vip5'>365 VIP Days</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Current VIP Days
+				</div>
+				<div class='card-body'>
+					<a {$class[67]} href='?action=vip1'>10 VIP Days</a><br />
+					<a {$class[68]} href='?action=vip2'>30 VIP Days</a><br />
+					<a {$class[69]} href='?action=vip3'>90 VIP Days</a><br />
+					<a {$class[70]} href='?action=vip4'>180 VIP Days</a><br />
+					<a {$class[71]} href='?action=vip5'>365 VIP Days</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-            <u><b>Labor</b></u><br />
-			<a {$class[72]} href='?action=labor1'>100,000 Labor</a><br />
-			<a {$class[73]} href='?action=labor2'>500,000 Labor</a><br />
-			<a {$class[74]} href='?action=labor3'>1,000,000 Labor</a><br />
-			<a {$class[75]} href='?action=labor4'>10,000,000 Labor</a><br />
-			<a {$class[76]} href='?action=labor5'>50,000,000 Labor</a><br />
+            <div class='card'>
+				<div class='card-header'>
+					Labor Stat
+				</div>
+				<div class='card-body'>
+					<a {$class[72]} href='?action=labor1'>100,000 Labor</a><br />
+					<a {$class[73]} href='?action=labor2'>500,000 Labor</a><br />
+					<a {$class[74]} href='?action=labor3'>1,000,000 Labor</a><br />
+					<a {$class[75]} href='?action=labor4'>10,000,000 Labor</a><br />
+					<a {$class[76]} href='?action=labor5'>50,000,000 Labor</a><br />
+				</div>
+			</div>
 		</div>
 	</div>
+	<hr />
     <div class='row'>
 		<div class='col-sm'>
-			<u><b>Courses Completed</b></u><br />
-			<a {$class[77]} href='?action=course1'>1 Course</a><br />
-			<a {$class[78]} href='?action=course2'>5 Courses</a><br />
-			<a {$class[79]} href='?action=course3'>10 Courses</a><br />
-			<a {$class[80]} href='?action=course4'>20 Courses</a><br />
-			<a {$class[81]} href='?action=course5'>40 Courses</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Academic Courses Completed
+				</div>
+				<div class='card-body'>
+					<a {$class[77]} href='?action=course1'>1 Course</a><br />
+					<a {$class[78]} href='?action=course2'>5 Courses</a><br />
+					<a {$class[79]} href='?action=course3'>10 Courses</a><br />
+					<a {$class[80]} href='?action=course4'>20 Courses</a><br />
+					<a {$class[81]} href='?action=course5'>40 Courses</a><br />
+				</div>
+			</div>
 		</div>
 		<div class='col-sm'>
-			<u><b>Misc</b></u><br />
-			<a {$class[85]}>Chump Change</a><br />
-			<a {$class[86]}>King of the World</a><br />
+			<div class='card'>
+				<div class='card-header'>
+					Misc Achievements
+				</div>
+				<div class='card-body'>
+					<a {$class[85]}>Chump Change</a><br />
+					<a {$class[86]}>King of the World</a><br />
+				</div>
 		</div>
 	</div>";
 	$h->endpage();

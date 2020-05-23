@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require_once('globals.php');
-$percentoff=0.75;
+$percentoff=1;
 if (isset($_GET['user']))
 {
 	$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : $userid;
@@ -19,7 +19,8 @@ if (isset($_GET['user']))
 	}
 	echo "<h3>VIP Packs</h3><hr />If you purchase a VIP Package from below, you will be gifted the following depending on
 		the package your purchase. All purchases are final. If you commit fraud, you will be removed from the game permanently.<br />
-        As of January 9th, 2019, each donation will give a <a href='iteminfo.php?ID=128'>VIP Color Changer</a>.";
+        As of January 9th, 2019, each donation will give a <a href='iteminfo.php?ID=128'>VIP Color Changer</a>.<br />
+		Each day you log in with a VIP Day, you will receive 750 Chivalry Tokens automatically to your Token Bank account. Will fallback onto your person if you do not have an account.";
 	$goal=25;
 	$progress=round(($set['MonthlyDonationGoal']/$goal)*100);
 	$bg = ($set['MonthlyDonationGoal'] >= $goal) ? "bg-success" : "" ;
@@ -60,7 +61,7 @@ if (isset($_GET['user']))
 				//Lets make the item's effects more user friendly to read, eh.
 				$einfo = unserialize($r["effect{$enum}"]);
 				$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
-				$einfo['dir'] = ($einfo['dir'] == 'pos') ? "Increases" : "Decreases";
+				$einfo['dir'] = ($einfo['dir'] == 'pos') ? "+" : "-";
 				$stats =
 					array("energy" => "Energy", "will" => "Will",
 						"brave" => "Bravery", "level" => "Level",
@@ -70,9 +71,9 @@ if (isset($_GET['user']))
 						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
 						"primary_currency" => "Copper Coins", "secondary_currency"
 					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days" , "premium_currency" => "Mutton");
+						"VIP Days*" , "premium_currency" => "Mutton");
 				$statformatted = $stats["{$einfo['stat']}"];
-				echo "{$einfo['dir']} {$statformatted} by " . number_format($einfo['inc_amount']) . "{$einfo['inc_type']}.<br />";
+				echo "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted}<br />";
 			} //If item has no effects, lets list the description instead.
 			else {
 				$uhoh++;
@@ -104,7 +105,8 @@ if (isset($_GET['user']))
                 </form>
 		</div>
 		</div>
-		</div>";
+		</div>
+		";
 		if ($count == 2)
 		{
 			$count=-1;
@@ -112,6 +114,9 @@ if (isset($_GET['user']))
 		}
 		$count=$count+1;
 	}
+	echo "</div><hr /><p class='text-muted'><small>*VIP Days grant the following benefits:<br />
+	33% Energy Refill every 5 Minutes; 5% bank interest; Access to Friends List; Access to Enemies List; Access to VIP Logs;
+	Better investment rates; Customizable VIP color and badge; 750 Chivalry Tokens daily; More notepads; More shortcuts;</small></p>";
 }
 else
 {

@@ -87,8 +87,10 @@ function home()
 				}
 				$specialnumber=((getSkillLevel($userid,17)*20)/100);
 				$v['sucrate']=$v['sucrate']+($v['sucrate']*$specialnumber);
-				if ($api->UserHasItem($userid,284,1))
+				if (hasNecklaceEquipped($userid,284))
+				{
 					$v['sucrate']=$v['sucrate']+($v['sucrate']*0.1);
+				}
 				if ($v['sucrate'] > 100)
 					$v['sucrate']=100;
 				$v['sucrate']=round($v['sucrate']);
@@ -169,6 +171,8 @@ function crime()
             }
 			$specialnumber=((getSkillLevel($userid,17)*20)/100);
 			$sucrate=$sucrate+($sucrate*$specialnumber);
+			if (hasNecklaceEquipped($userid,284))
+					$sucrate=$sucrate+($sucrate*0.1);
             $ir['brave'] -= $r['crimeBRAVE'];
             $api->UserInfoSet($userid, "brave", "-{$r['crimeBRAVE']}");
             if (Random(1, 100) <= $sucrate) {

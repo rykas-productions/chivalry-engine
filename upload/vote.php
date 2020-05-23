@@ -207,7 +207,7 @@ function twg()
     }
     else
     {
-        header("Location: http://topwebgames.com/in.aspx?ID=8303&uid={$userid}");
+        header("Location: https://topwebgames.com/game/chivalry-is-dead/vote?uid={$userid}");
         exit;
     }
 }

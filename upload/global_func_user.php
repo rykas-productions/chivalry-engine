@@ -47,43 +47,50 @@ function permission($perm, $user)
 /**
  * Internal function: used to see if a user is due to level up, and if so, perform that levelup.
  */
-function check_level()
+function check_level($disableLevelUp = false)
 {
     global $ir, $userid, $db;
-	$ir['xp_needed'] = (round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2)/$ir['reset']);
-	if ($ir['xp'] >= $ir['xp_needed']) {
-		$expu = $ir['xp'] - $ir['xp_needed'];
-		$ir['level'] += 1;
-		$ir['xp'] = $expu;
-		$ir['energy'] += 2;
-		$ir['brave'] += 2;
-		$ir['maxenergy'] += 2;
-		$ir['maxbrave'] += 2;
-		$ir['hp'] += 50;
-		$ir['maxhp'] += 50;
-		$ir['xp_needed'] = (round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2)/$ir['reset']);
-		//Increase user's everything.
-		$db->query("UPDATE `users` SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2,
-					`brave` = `brave` + 2, `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2,
-					`hp` = `hp` + 50, `maxhp` = `maxhp` + 50 WHERE `userid` = {$userid}");
-		//Give the user some stats for leveling up.
-		$StatGain = round(($ir['level'] * Random(150,275)) / Random(2, 6));
-		$StatGain = $StatGain+($StatGain*levelMultiplier($ir['level']));
-		$StatGainFormat = number_format($StatGain);
-		//Assign the stat gain to the user's class of choice.
-		if ($ir['class'] == 'Warrior') {
-			$Stat = 'strength';
-		} elseif ($ir['class'] == 'Rogue') {
-			$Stat = 'agility';
-		} else {
-			$Stat = 'guard';
+	$ir['xp_needed'] = calculateXPNeeded($userid);
+	if (hasPendantEquipped($ir['userid'],93))
+	{
+		$ir['xp_needed']=$ir['xp_needed']-($ir['xp_needed']*0.1);
+	}
+	if ($disableLevelUp == false)
+	{
+		if ($ir['xp'] >= $ir['xp_needed']) {
+			$expu = $ir['xp'] - $ir['xp_needed'];
+			$ir['level'] += 1;
+			$ir['xp'] = $expu;
+			$ir['energy'] += 2;
+			$ir['brave'] += 2;
+			$ir['maxenergy'] += 2;
+			$ir['maxbrave'] += 2;
+			$ir['hp'] += 50;
+			$ir['maxhp'] += 50;
+			$ir['xp_needed'] = (round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2)/$ir['reset']);
+			//Increase user's everything.
+			$db->query("UPDATE `users` SET `level` = `level` + 1, `xp` = '{$expu}', `energy` = `energy` + 2,
+						`brave` = `brave` + 2, `maxenergy` = `maxenergy` + 2, `maxbrave` = `maxbrave` + 2,
+						`hp` = `hp` + 50, `maxhp` = `maxhp` + 50 WHERE `userid` = {$userid}");
+			//Give the user some stats for leveling up.
+			$StatGain = round(($ir['level'] * Random(150,275)) / Random(2, 6));
+			$StatGain = $StatGain+($StatGain*levelMultiplier($ir['level']));
+			$StatGainFormat = number_format($StatGain);
+			//Assign the stat gain to the user's class of choice.
+			if ($ir['class'] == 'Warrior') {
+				$Stat = 'strength';
+			} elseif ($ir['class'] == 'Rogue') {
+				$Stat = 'agility';
+			} else {
+				$Stat = 'guard';
+			}
+			//Credit the stat gain.
+			$db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
+			//Tell the user they've gained some stats.
+			notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.", "game-icon game-icon-corporal");
+			//Log the level up, along with the stats gained.
+			SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
 		}
-		//Credit the stat gain.
-		$db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
-		//Tell the user they've gained some stats.
-		notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.", "game-icon game-icon-corporal");
-		//Log the level up, along with the stats gained.
-		SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
 	}
 }
 
@@ -374,4 +381,101 @@ function returnMaxInterest($user)
 	global $db;
 	$level=$db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `userid` = {$user}"));
 	return round(20000000*levelMultiplier($level));
+}
+function hasNecklaceEquipped($userid, $itemid)
+{
+	global $db;
+	$q=$db->query("SELECT * FROM `user_equips` WHERE `equip_slot` = 'equip_necklace' AND `userid` = {$userid} AND `itemid` = {$itemid}");
+	if ($db->num_rows($q) > 0)
+		return true;
+	else
+		return false;
+}
+function hasPendantEquipped($userid, $itemid)
+{
+	global $db;
+	$q=$db->query("SELECT * FROM `user_equips` WHERE `equip_slot` = 'equip_pendant' AND `userid` = {$userid} AND `itemid` = {$itemid}");
+	if ($db->num_rows($q) > 0)
+		return true;
+	else
+		return false;
+}
+
+function getCurrentUserPref($prefName, $defaultValue)
+{
+	global $userid, $db;
+	$q=$db->query("SELECT `value` FROM `user_pref` WHERE `preference` = '{$prefName}' AND `userid` = {$userid}");
+	if ($db->num_rows($q) == 0)
+	{
+		$db->query("INSERT INTO `user_pref` (`userid`, `preference`, `value`) VALUES ('{$userid}', '{$prefName}', '{$defaultValue}')");
+		return $defaultValue;
+	}
+	else
+	{
+		return $db->fetch_single($q);
+	}
+}
+
+function setCurrentUserPref($prefName, $value)
+{
+	global $userid, $db;
+	getCurrentUserPref($prefName, $value);
+	$db->query("UPDATE `user_pref` SET `value` = '{$value}' WHERE `userid` = {$userid} AND `preference` = '{$prefName}'");
+}
+
+//Returns remaining XP to have inserted into the user's xp.
+function autoDonateXP($user, $xp, $guild)
+{
+	global $db, $api;
+	$xpformula = calculateXPNeeded($user)/65;
+	if ($xpformula < 1000)
+		$xpformula = 1000;
+	$xpformula=round($xpformula);
+	if ($guild > 0)
+	{
+		$xpAutoDonate=getCurrentUserPref('autoDonateXP', 0);
+		if ($xpAutoDonate > 0)
+		{
+			$toDonate = $xp * ($xpAutoDonate / 100);
+			$points=floor($toDonate/$xpformula);
+			$xprequired=$points*$xpformula;
+			if ($toDonate < $xprequired)
+			{
+				return $xp;
+			}
+			else
+			{
+				updateDonations($guild,$user,'xp',$xprequired);
+				updateDonations($guild,$user,'guild_xp',$points);
+				$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$points} WHERE `guild_id` = {$guild}");
+				$event = "<a href='profile.php?user={$user}'>{$api->SystemUserIDtoName($user)}</a> exchanged " . number_format($xprequired) . " experience for " . number_format($points) . " guild experience.";
+				$api->GuildAddNotification($guild, $event);
+				return $xp - $toDonate;
+			}
+		}
+		else
+		{
+			return $xp;
+		}
+	}
+	else
+	{
+		return $xp;
+	}
+}
+
+function calculateXPNeeded($user)
+{
+	global $db;
+	$q=$db->query("
+		SELECT `level`, `reset`
+		FROM `users` `u`
+		LEFT JOIN `user_settings` AS `us`
+		ON `u`.`userid` = `us`.`userid`
+		WHERE `u`.`userid` = {$user}");
+	//$q=$db->query("SELECT `u`.`level`,`us`.`reset` FROM `users` AS `u` INNER JOIN `user_settings` AS `us` ON `u`.`userid` = `us`.`userid` WHERE `us`.`userid` = {$user}");
+	$r=$db->fetch_row($q);
+	if (!isset($r['reset']))
+		$r['reset'] = 1;
+	return round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2)/$r['reset'];
 }

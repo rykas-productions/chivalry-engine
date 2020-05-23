@@ -12,9 +12,9 @@ echo "<h3><i class='fas fa-list'></i> Item Appendix</h3><hr />This page lists al
     This may be useful for players who do item flipping, or those who are just plain old curious. Hovering over the
     item will give you its description. Tapping its name will take you to its info page<br />
 	<small><a href='?view=all'>View All Items</a></small><hr />
-    [<a href='?view=weapon'>Weapons</a>] [<a href='?view=armor'>Armor</a>] [<a href='?view=vip'>VIP Items</a>] 
-	[<a href='?view=infirmary'>Infirmary Items</a>] [<a href='?view=dungeon'>Dungeon Items</a>] [<a href='?view=material'>Materials</a>] [<a href='?view=seed'>Seeds</a>] [<a href='?view=food'>Food</a>] 
-	[<a href='?view=potions'>Potions</a>] [<a href='?view=holiday'>Holiday Items</a>] [<a href='?view=scrolls'>Scrolls</a>] [<a href='?view=rings'>Rings</a>] 
+    [<a href='?view=weapon'>Weapons</a>] [<a href='?view=armor'>Armor</a>] [<a href='?view=vip'>VIP</a>] 
+	[<a href='?view=infirmary'>Infirmary</a>] [<a href='?view=dungeon'>Dungeon</a>] [<a href='?view=material'>Materials</a>] [<a href='?view=seed'>Seeds</a>] [<a href='?view=food'>Food</a>] 
+	[<a href='?view=potions'>Potions</a>] [<a href='?view=holiday'>Holiday</a>] [<a href='?view=scrolls'>Scrolls</a>] [<a href='?view=rings'>Trinkets</a>] 
 	[<a href='?view=badge'>Badges</a>] [<a href='?view=other'>Other</a>]";
 if (!isset($_GET['view']))
     $_GET['view'] = 'weapon';
@@ -59,8 +59,11 @@ elseif ($_GET['view'] == 'scrolls') {
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 11 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } 
 elseif ($_GET['view'] == 'rings') {
+	$itid=$db->fetch_single($db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypename` = 'Rings'"));
+	$ncid=$db->fetch_single($db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypename` = 'Necklaces'"));
+	$pnid=$db->fetch_single($db->query("SELECT `itmtypeid` FROM `itemtypes` WHERE `itmtypename` = 'Pendants'"));
     //Select all the in-game rings
-    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 12 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
+    $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 12 OR `itmtype` = {$itid} OR `itmtype` = {$ncid} OR `itmtype` = {$pnid} AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
 } elseif ($_GET['view'] == 'badge') {
     //Select all the in-game badges
     $q = $db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmtype` = 13 AND `itmbuyable` = 'true' ORDER BY `itmname` ASC");
@@ -91,18 +94,15 @@ echo "
         </th>
     </tr>";
 while ($r = $db->fetch_row($q)) {
-    //Select game item count. This only accounts for items in an user's inventory. Nothing else.
-	$q2= $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`inv_qty`),
-			(/*qc=on*/SELECT SUM(`imQTY`) FROM `itemmarket` WHERE `imITEM` = {$r['itmid']}), 
-			(/*qc=on*/SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$r['itmid']} AND `gaGUILD` != 1)
-			FROM `inventory` WHERE `inv_itemid` = {$r['itmid']} AND `inv_userid` != 1"));
-	$q3=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_primary`),
-			(/*qc=on*/SELECT COUNT(`equip_secondary`) FROM `users` WHERE `equip_secondary` = {$r['itmid']} AND `userid` != 1),
-			(/*qc=on*/SELECT COUNT(`equip_armor`) FROM `users` WHERE `equip_armor` = {$r['itmid']} AND `userid` != 1),
-			(/*qc=on*/SELECT COUNT(`equip_potion`) FROM `users` WHERE `equip_potion` = {$r['itmid']} AND `userid` != 1),
-			(/*qc=on*/SELECT COUNT(`equip_badge`) FROM `users` WHERE `equip_badge` = {$r['itmid']} AND `userid` != 1)
-			FROM `users` WHERE `equip_primary` = {$r['itmid']} AND `userid` != 1"));
-	$total=$q2+$q3;
+    $armory=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$r['itmid']} AND `gaGUILD` != 1"));
+	$invent=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$r['itmid']} AND `inv_userid` != 1"));
+	$market=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`imQTY`) FROM `itemmarket` WHERE `imITEM` = {$r['itmid']}"));
+	$primary=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_primary`) FROM `users` WHERE `equip_primary` = {$r['itmid']} AND `userid` != 1"));
+	$secondary=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_secondary`) FROM `users` WHERE `equip_secondary` = {$r['itmid']} AND `userid` != 1"));
+	$armor=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_armor`) FROM `users` WHERE `equip_armor` = {$r['itmid']} AND `userid` != 1"));
+	$badge=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_badge`) FROM `users` WHERE `equip_badge` = {$r['itmid']} AND `userid` != 1"));
+	$trink=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_slot`) FROM `user_equips` WHERE `itemid` = {$r['itmid']}"));
+	$total=$invent+$armory+$market+$primary+$secondary+$armor+$badge+$trink;
 	$icon=returnIcon($r['itmid'],2);
 	$r['itmdesc'] = htmlentities($r['itmdesc'], ENT_QUOTES);
 	$totalbuy=$total*$r['itmbuyprice'];

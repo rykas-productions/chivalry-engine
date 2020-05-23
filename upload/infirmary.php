@@ -111,6 +111,7 @@ function heal()
                 $api->UserStatusSet($_GET['user'], 'infirmary', $time * -1, 'Not read');
                 //Take current user's Chivalry Tokens
                 $api->UserTakeCurrency($userid, 'secondary', $cost);
+				addToEconomyLog('Infirmary', 'token', ($cost)*-1);
                 //Add a friendly note.
                 $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has healed you {$_GET['times']} times.",  "game-icon game-icon-healing", "green");
                 //Log it!

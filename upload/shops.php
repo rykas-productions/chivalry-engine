@@ -157,7 +157,7 @@ function buy()
                 }
 
                 $price = ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty']);
-				addToEconomyLog('Game Shops', 'copper', ($itemd['itmbuyprice'] * $_POST['qty'])*-1);
+				addToEconomyLog('Game Shops', 'copper', (($itemd['itmbuyprice'] * $_POST['qty'])*-1));
                 item_add($userid, $itemd['itmid'], $_POST['qty']);
                 $db->query(
                     "UPDATE `users`

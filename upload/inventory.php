@@ -94,6 +94,29 @@ echo "
 		</div>
 	</div>
 </div>";
+$trinkq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid}");
+if ($db->num_rows($trinkq) > 0)
+{
+	echo "<hr /><div class='row'>";
+}
+while ($r=$db->fetch_row($trinkq))
+{
+	echo "<div class='col-sm'>
+	<div class='card'>
+			<div class='card-header'>
+			" . friendlyTrinketName($r['equip_slot']) .  " (<a href='unequip2.php?type={$r['equip_slot']}'>Unequip</a>)
+			</div>
+			<div class='card-body'>
+				" . returnIcon($r['itemid'],4) . "<br />
+				<a href='#' data-toggle='tooltip' data-placement='bottom'>{$api->SystemItemIDtoName($r['itemid'])}</a>
+			</div>
+		</div>
+		</div>";
+}
+if ($db->num_rows($trinkq) > 0)
+{
+	echo "</div>";
+}
 echo "<hr />
 <h3><i class='fas fa-fw fa-briefcase'></i> Your Inventory</h3><hr />";
 $inv =
@@ -147,7 +170,8 @@ while ($i = $db->fetch_row($inv)) {
         	  <td align='left'>
         	  	[<a href='itemsend.php?ID={$i['inv_id']}'>Send</a>]
         	  	[<a href='itemsell.php?ID={$i['inv_id']}'>Sell</a>]";
-    if (($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' || $i['effect3_on'] == 'true') && ($i['armor'] == 0 && $i['weapon'] == 0)) {
+    if (($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' || 
+	$i['effect3_on'] == 'true') && ($i['armor'] == 0 && $i['weapon'] == 0 && $i['itmtypename'] != 'Rings' && $i['itmtypename'] != 'Necklaces' && $i['itmtypename'] != 'Pendants')) {
 			echo " [<a href='itemuse.php?item={$i['inv_id']}'>Use</a>]";
     }
     //Bomb
@@ -243,7 +267,7 @@ while ($i = $db->fetch_row($inv)) {
         echo " [<a href='2019halloween.php?action=ticket'>Scratch</a>]";
 	//Will Stimulant Potion
     if ($i['itmid'] == 263)
-        echo " [<a href='vipitem.php?item=willstim'>Drink</a>]";
+        echo " [<a href='vipitem.php?item=willstim'>Convert</a>]";
 	//2nd yr ann scratch off
     if ($i['itmid'] == 268)
         echo " [<a href='scratchticket.php?action=2ndyearann'>Scratch</a>]";
@@ -260,6 +284,12 @@ while ($i = $db->fetch_row($inv)) {
 
 	if ($i['itmtypename'] == 'Badges')
 		echo " [<a href='equip.php?slot=badge&ID={$i['inv_id']}'>Equip Badge</a>]";
+	if ($i['itmtypename'] == 'Rings')
+		echo " [<a href='equip.php?slot=ring&ID={$i['inv_id']}'>Equip Ring</a>]";
+	if ($i['itmtypename'] == 'Necklaces')
+		echo " [<a href='equip.php?slot=necklace&ID={$i['inv_id']}'>Equip Necklace</a>]";
+	if ($i['itmtypename'] == 'Pendants')
+		echo " [<a href='equip.php?slot=pendant&ID={$i['inv_id']}'>Equip Pendant</a>]";
     //Potion equipping.
         $potionexclusion=array(17,123,68,138,95,96,148,177);
     if ((($i['itmtypename'] == 'Potions') || ($i['itmtypename'] == 'Food')) && (!in_array($i['itmid'],$potionexclusion)))
@@ -271,3 +301,15 @@ echo "</table>
 <a href='inventdump.php' class='btn btn-danger'>Dump Inventory</a>";
 $db->free_result($inv);
 $h->endpage();
+
+function friendlyTrinketName($slot)
+{
+	if ($slot == 'equip_necklace')
+		return "Necklace";
+	if ($slot == 'equip_pendant')
+		return "Pendant"; 
+	if ($slot == 'equip_ring_primary')
+		return "Ring";
+	if ($slot == 'equip_ring_secondary')
+		return "Ring";
+}

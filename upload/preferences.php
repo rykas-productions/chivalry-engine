@@ -74,6 +74,21 @@ switch ($_GET['action']) {
 	case 'loginlogs':
         loginlogs();
         break;
+	case 'forumtopic':
+        forumtopic();
+        break;
+	case 'forumpost':
+        forumpost();
+        break;
+	case 'inboxcount':
+		mailcount();
+        break;
+	case 'notifcount':
+		notifcount();
+        break;
+	case 'guildxp':
+		guildautoxp();
+        break;
     default:
         prefs_home();
         break;
@@ -152,8 +167,26 @@ function prefs_home()
 			<div class='col-sm'>
 				<a href='?action=reset'>Account Reset</a>
 			</div>
+			<div class='col-sm'>
+				<a href='?action=forumtopic'>Change Viewable Topic Count</a>
+			</div>
 		</div>
-		<hr />";
+		<hr />
+		<div class='row'>
+			<div class='col-sm'>
+				<a href='?action=forumpost'>Change Viewable Post Count</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=inboxcount'>Change Viewable Mail</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=notifcount'>Change Viewable Notifications</a>
+			</div>
+			<div class='col-sm'>
+				<a href='?action=guildxp'>Auto Donate XP to Guild</a>
+			</div>
+		</div>
+		<br />";
 }
 
 function name_change()
@@ -757,6 +790,12 @@ function classreset()
             alert('danger',"Uh Oh!","You need at least 50,000 IQ to change your class.");
             die($h->endpage());
         }
+		$tq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$ir['userid']}");
+		if ($db->num_rows($tq) > 0)
+		{
+			alert('danger',"Uh Oh!", "Please remove any and all trinkets before using this.");
+            die($h->endpage());
+		}
         if (($ir['equip_primary'] + $ir['equip_secondary'] + $ir['equip_armor']) != 0)
         {
             alert('danger',"Uh Oh!", "Please remove your equipment before using this feature.");
@@ -1042,13 +1081,19 @@ function resetacc()
 		alert('danger',"Uh Oh!","You can only use this feature when you have no equipment on you.",true,'preferences.php');
 		die($h->endpage());
 	}
+	$tq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$ir['userid']}");
+	if ($db->num_rows($tq) > 0)
+	{
+		alert('danger',"Uh Oh!", "Please remove any and all trinkets before using this.");
+		die($h->endpage());
+	}
 	if (isset($_POST['reset']))
 	{
 		alert('info',"What's Up?","Chivalry is Dead is attempting to reset your account... if you run into errors please contact staff.",false);
 		$accquery="UPDATE `users` SET `xp` = 0, `level` = 1, `will` = 100, `maxwill` = 100, `hp` = 100, `maxhp` = 100,
 		`energy` = 24, `maxenergy` = 24, `brave` = 10, `maxbrave` = 10, `vip_days` = `vip_days` + 3, `job` = 0, `jobrank` = 0, 
 		`primary_currency` = 0, `secondary_currency` = 0, `location` = 1, `course` = 0, `course_complete` = 0, `busts` = 0, `deaths` = 0,
-		`kills` = 0, `tokenbank` = -1, `bigbank` = -1, `bank` = -1, `vaultbank` = 0, `equip_potion` = 0
+		`kills` = 0, `tokenbank` = -1, `bigbank` = -1, `bank` = -1, `vaultbank` = -1, `equip_potion` = 0
 		WHERE `userid` = {$userid}";
 		$statquery="UPDATE `userstats` SET `strength` = 1000, `agility` = 1000, `guard` = 1000, `iq` = 100, `labor` = 1000 WHERE `userid` = {$userid}";
 		$mail="Welcome to Chivalry is Dead, {$ir['username']}. We hope you stay a while and hang out. To get started,
@@ -1093,6 +1138,7 @@ function resetacc()
 				echo "...fail.";
 		echo "<br />Updating user settings table to default... ";
 		$db->query("DELETE FROM `user_settings` WHERE `userid` = {$userid}");
+		$db->query("DELETE FROM `user_logging` WHERE `userid` = {$userid}");
 		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$userid}')");
         $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}', `theme` = 7, `autobor` = {$bor} + 3000, `autohex` = {$hex} + 300 WHERE `userid` = {$userid}");
 		echo "...done<br />Giving starter items... ";
@@ -1177,5 +1223,155 @@ function loginlogs()
     echo "
     </table>";
 	$api->SystemLogsAdd($userid, 'preferences', "Viewed their login logs.");
+}
+function forumtopic()
+{
+    global $db,$userid,$api,$h;
+	$userCount=getCurrentUserPref('topicView',20);
+	if (isset($_POST['topics'])) {
+			$_POST['topics'] = (isset($_POST['topics']) && is_numeric($_POST['topics'])) ? abs($_POST['topics']) : 20;
+			if ($_POST['topics'] < 1)
+			{
+				alert('danger', "Uh Oh!", "You need to be able to view at least one topic.");
+				die($h->endpage());
+			}
+			if ($_POST['topics'] > 100)
+			{
+				alert('danger', "Uh Oh!", "For lag reasons, we've capped this at 100 for now.");
+				die($h->endpage());
+			}
+            alert('success', "Success!", "You have successfully set your forum topic view count to {$_POST['topics']}.", true, 'preferences.php');
+            setCurrentUserPref('topicView',$_POST['topics']);
+            $api->SystemLogsAdd($userid, 'preferences', "Changed forum topic view count to {$_POST['topics']}.");
+            die($h->endpage());
+    } else {
+		echo "<h3>Forum Topic View Count</h3><hr />
+		How many topics would you like to see on a page, maximum. Default is 20.<br />
+		<form method='post'>
+			<input type='number' min='1' max='100' name='topics' value='{$userCount}' class='form-control'>
+			<input type='submit' class='btn btn-primary' value='Set Count'>
+		</form>";
+	}
+	
+}
+function forumpost()
+{
+    global $db,$userid,$api,$h;
+	$userCount=getCurrentUserPref('postView',20);
+	if (isset($_POST['topics'])) {
+			$_POST['topics'] = (isset($_POST['topics']) && is_numeric($_POST['topics'])) ? abs($_POST['topics']) : 20;
+            if ($_POST['topics'] < 1)
+			{
+				alert('danger', "Uh Oh!", "You need to be able to view at least one post.");
+				die($h->endpage());
+			}
+			if ($_POST['topics'] > 100)
+			{
+				alert('danger', "Uh Oh!", "For lag reasons, we've capped this at 100 for now.");
+				die($h->endpage());
+			}
+			alert('success', "Success!", "You have successfully set your forum post view count to {$_POST['topics']}.", true, 'preferences.php');
+            setCurrentUserPref('postView',$_POST['topics']);
+            $api->SystemLogsAdd($userid, 'preferences', "Changed forum post view count to {$_POST['topics']}.");
+            die($h->endpage());
+    } else {
+		echo "<h3>Forum Post View Count</h3><hr />
+		How many replies would you like to see on a page, maximum. Default is 20.<br />
+		<form method='post'>
+			<input type='number' min='1' max='100' name='topics' value='{$userCount}' class='form-control'>
+			<input type='submit' class='btn btn-primary' value='Set Count'>
+		</form>";
+	}
+	
+}
+function mailcount()
+{
+    global $db,$userid,$api,$h;
+	$userCount=getCurrentUserPref('mailView',15);
+	if (isset($_POST['topics'])) {
+			$_POST['topics'] = (isset($_POST['topics']) && is_numeric($_POST['topics'])) ? abs($_POST['topics']) : 15;
+			if ($_POST['topics'] < 1)
+			{
+				alert('danger', "Uh Oh!", "You need to be able to view at least one message.");
+				die($h->endpage());
+			}
+			if ($_POST['topics'] > 100)
+			{
+				alert('danger', "Uh Oh!", "For lag reasons, we've capped this at 100 for now.");
+				die($h->endpage());
+			}
+            alert('success', "Success!", "You have successfully set your mail view count to {$_POST['topics']}.", true, 'preferences.php');
+            setCurrentUserPref('mailView',$_POST['topics']);
+            $api->SystemLogsAdd($userid, 'preferences', "Changed mail view count to {$_POST['topics']}.");
+            die($h->endpage());
+    } else {
+		echo "<h3>Mail View Count</h3><hr />
+		How many messages would you like to see in your inbox at once. Default is 15.<br />
+		<form method='post'>
+			<input type='number' min='1' max='100' name='topics' value='{$userCount}' class='form-control'>
+			<input type='submit' class='btn btn-primary' value='Set Count'>
+		</form>";
+	}
+	
+}
+function notifcount()
+{
+    global $db,$userid,$api,$h;
+	$userCount=getCurrentUserPref('notifView',15);
+	if (isset($_POST['topics'])) {
+			$_POST['topics'] = (isset($_POST['topics']) && is_numeric($_POST['topics'])) ? abs($_POST['topics']) : 15;
+			if ($_POST['topics'] < 1)
+			{
+				alert('danger', "Uh Oh!", "You need to be able to view at least one notification.");
+				die($h->endpage());
+			}
+			if ($_POST['topics'] > 100)
+			{
+				alert('danger', "Uh Oh!", "For lag reasons, we've capped this at 100 for now.");
+				die($h->endpage());
+			}
+            alert('success', "Success!", "You have successfully set your notification view count to {$_POST['topics']}.", true, 'preferences.php');
+            setCurrentUserPref('notifView',$_POST['topics']);
+            $api->SystemLogsAdd($userid, 'preferences', "Changed notification view count to {$_POST['topics']}.");
+            die($h->endpage());
+    } else {
+		echo "<h3>Notification View Count</h3><hr />
+		How many notifications would you like to see at once on your notifications page?. Default is 15.<br />
+		<form method='post'>
+			<input type='number' min='1' max='100' name='topics' value='{$userCount}' class='form-control'>
+			<input type='submit' class='btn btn-primary' value='Set Count'>
+		</form>";
+	}
+	
+}
+function guildautoxp()
+{
+    global $db,$userid,$api,$h;
+	$userCount=getCurrentUserPref('autoDonateXP',0);
+	if (isset($_POST['topics'])) {
+			$_POST['topics'] = (isset($_POST['topics']) && is_numeric($_POST['topics'])) ? abs($_POST['topics']) : 0;
+			if ($_POST['topics'] < 0)
+			{
+				alert('danger', "Uh Oh!", "You need to be able to view at least one notification.");
+				die($h->endpage());
+			}
+			if ($_POST['topics'] > 50)
+			{
+				alert('danger', "Uh Oh!", "You may only donate, at maximum, 50% of your total experience earned.");
+				die($h->endpage());
+			}
+            alert('success', "Success!", "You have successfully set your experience to auto-donate to your guild at {$_POST['topics']}%.", true, 'preferences.php');
+            setCurrentUserPref('autoDonateXP',$_POST['topics']);
+            $api->SystemLogsAdd($userid, 'preferences', "Changed guild xp auto donate to {$_POST['topics']}%.");
+            die($h->endpage());
+    } else {
+		echo "<h3>Guild Experience Auto Donate</h3><hr />
+		How much experience would you like to automatically donate to your guild? The maximum is 50%. Default is 0%.<br />
+		<form method='post'>
+			<input type='number' min='0' max='50' name='topics' value='{$userCount}' class='form-control'>
+			<input type='submit' class='btn btn-primary' value='Set XP Percentage'>
+		</form>";
+	}
+	
 }
 $h->endpage();

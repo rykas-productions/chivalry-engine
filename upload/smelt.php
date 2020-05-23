@@ -8,6 +8,11 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
+if (!isCourseComplete($userid, 22))
+{
+	alert('danger', "Uh Oh!", "Please complete the Blacksmithing academic course before you use the Blacksmith.");
+    die($h->endpage());
+}
 if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
 {
 	alert('danger',"Uh Oh!","You cannot use the smeltery while in the infirmary or dungeon.",true,'index.php');

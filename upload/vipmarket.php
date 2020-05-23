@@ -167,12 +167,12 @@ function buy()
     }
     $totalcost = $r['vip_cost'] * $r['vip_days'];
 	$taxed=$totalcost-($totalcost*0.02);
-	addToEconomyLog('Market Fees', 'copper', ($final_price*0.02)*-1);
+	addToEconomyLog('Market Fees', 'copper', ($totalcost*0.02)*-1);
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) {
         alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'vipmarket.php');
         die($h->endpage());
     }
-    $api->SystemLogsAdd($userid, 'vipmarket', "Bought {$r['vip_days']} Chivalry Tokens from the market for {$totalcost} Copper Coins.");
+    $api->SystemLogsAdd($userid, 'vipmarket', "Bought " . number_format($r['vip_days']) . " VIP Days from the market for " . number_format($totalcost) . " Copper Coins.");
     $api->UserGiveCurrency($userid, 'secondary', $r['vip_days']);
     $db->query("UPDATE `users` SET `vip_days` = `vip_days` + {$r['vip_days']} WHERE `userid` = {$userid}");
     $api->UserTakeCurrency($userid, 'primary', $totalcost);
@@ -180,7 +180,7 @@ function buy()
     $api->GameAddNotification($r['vip_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has bought your
         {$r['vip_days']} VIP Day(s) offer from the market for a total of " . number_format($taxed) . " Copper Coins.");
     $db->query("DELETE FROM `vip_market` WHERE `vip_id` = {$_GET['ID']}");
-    alert('success', "Success!", "You have bought {$r['vip_days']} VIP Day(s) for " . number_format($totalcost) . " Copper Coins.", true, 'vipmarket.php');
+    alert('success', "Success!", "You have bought " . number_format($r['vip_days']) . " VIP Day(s) for " . number_format($totalcost) . " Copper Coins.", true, 'vipmarket.php');
     die($h->endpage());
 }
 
@@ -202,9 +202,9 @@ function remove()
         alert('danger', "Uh Oh!", "You are trying to remove a lising you do not own.", true, 'vipmarket.php');
         die($h->endpage());
     }
-    $api->SystemLogsAdd($userid, 'vipmarket', "Removed {$r['vip_days']} VIP Days from the market.");
+    $api->SystemLogsAdd($userid, 'vipmarket', "Removed " . number_format($r['vip_days']) . " VIP Days from the market.");
     $db->query("UPDATE `users` SET `vip_days` = `vip_days` + {$r['vip_days']} WHERE `userid` = {$userid}");
     $db->query("DELETE FROM `vip_market` WHERE `vip_id` = {$_GET['ID']}");
-    alert('success', "Success!", "You have removed your listing for {$r['vip_days']} VIP Days from the market.", true, 'vipmarket.php');
+    alert('success', "Success!", "You have removed your listing for " . number_format($r['vip_days']) . " VIP Days from the market.", true, 'vipmarket.php');
     die($h->endpage());
 }

@@ -91,19 +91,19 @@ function buy()
     }
     $totalcost = $r['sec_cost'] * $r['sec_total'];
 	$taxed=$totalcost-($totalcost*0.02);
-	addToEconomyLog('Market Fees', 'copper', ($final_price*0.02)*-1);
+	addToEconomyLog('Market Fees', 'copper', ($totalcost*0.02)*-1);
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) {
         alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'secmarket.php');
         die($h->endpage());
     }
-    $api->SystemLogsAdd($userid, 'secmarket', "Bought {$r['sec_total']} Chivalry Tokens from the market for {$totalcost} Copper Coins.");
+    $api->SystemLogsAdd($userid, 'secmarket', "Bought " . number_format($r['sec_total']) . " Chivalry Tokens from the market for " . number_format($totalcost) . " Copper Coins.");
     $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
     $api->UserTakeCurrency($userid, 'primary', $totalcost);
     $api->UserGiveCurrency($r['sec_user'], 'primary', $taxed);
     $api->GameAddNotification($r['sec_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has bought your
-        {$r['sec_total']} Chivalry Tokens offer from the market for a total of {$taxed}.");
+        " . number_format($r['sec_total']) . " Chivalry Tokens offer from the market for a total of " . number_format($taxed) . " Copper Coins.");
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
-    alert('success', "Success!", "You have bought {$r['sec_total']} Chivalry Tokens for {$totalcost} Copper Coins", true, 'secmarket.php');
+    alert('success', "Success!", "You have bought " . number_format($r['sec_total']) . " Chivalry Tokens for " . number_format($totalcost) . " Copper Coins.", true, 'secmarket.php');
     die($h->endpage());
 }
 
@@ -125,10 +125,10 @@ function remove()
         alert('danger', "Uh Oh!", "You are trying to remove a lising you do not own.", true, 'secmarket.php');
         die($h->endpage());
     }
-    $api->SystemLogsAdd($userid, 'secmarket', "Removed {$r['sec_total']} Chivalry Tokens from the market.");
+    $api->SystemLogsAdd($userid, 'secmarket', "Removed " . number_format($r['sec_total']) . " Chivalry Tokens from the market.");
     $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
-    alert('success', "Success!", "You have removed your listing for {$r['sec_total']} Chivalry Tokens from the market.", true, 'secmarket.php');
+    alert('success', "Success!", "You have removed your listing for " . number_format($r['sec_total']) . " Chivalry Tokens from the market.", true, 'secmarket.php');
     die($h->endpage());
 }
 
@@ -159,9 +159,9 @@ function add()
         $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`)
 					VALUES ('{$userid}', '{$_POST['cost']}', '{$_POST['qty']}');");
         $api->UserTakeCurrency($userid, 'secondary', $_POST['qty']);
-        $api->SystemLogsAdd($userid, 'secmarket', "Added {$_POST['qty']} to the secondary market for {$_POST['cost']} Copper Coins each.");
-        alert('success', "Success!", "You have added your {$_POST['qty']} Chivalry Tokens to the market for
-		    {$_POST['cost']} Copper Coins each.", true, 'secmarket.php');
+        $api->SystemLogsAdd($userid, 'secmarket', "Added " . number_format($_POST['qty']) . " to the secondary market for " . number_format($_POST['cost']) . " Copper Coins each.");
+        alert('success', "Success!", "You have added your " . number_format($_POST['qty']) . " Chivalry Tokens to the market for
+		    " . number_format($_POST['cost']) . " Copper Coins each.", true, 'secmarket.php');
         die($h->endpage());
     } else {
         alert('info', "Information!", "Fill out this form completely to add your Chivalry Tokens to the market.", false);
@@ -181,7 +181,7 @@ function add()
 						Price (Each)*
 					</th>
 					<td>
-						<input type='number' name='cost' class='form-control' required='1' min='200' max='50000' value='200'>
+						<input type='number' name='cost' class='form-control' required='1' min='1000' max='50000' value='200'>
 					</td>
 				<tr>
 				

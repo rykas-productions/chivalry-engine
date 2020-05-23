@@ -73,37 +73,31 @@ function home()
     echo "<br />
 	<div class='row'>
 		<div class='col-sm'>
-			<a href='?action=energy'>Refill Energy<br /> " . number_format($set['energy_refill_cost']) . " Chivalry Tokens</a>
+			<a href='?action=energy'>Refill Energy</a><br /><small>" . number_format($set['energy_refill_cost']) . " Chivalry Tokens</small>
 		</div>
 		<div class='col-sm'>
-			<a href='?action=brave'>Regenerate 5% Bravery<br />" . number_format($set['brave_refill_cost']) . " Chivalry Tokens</a>
+			<a href='?action=brave'>Regenerate 5% Bravery</a><br /><small>" . number_format($set['brave_refill_cost']) . " Chivalry Tokens</small>
 		</div>
 		<div class='col-sm'>
-			<a href='?action=will'>Regenerate 5% Will<br />" . number_format($set['will_refill_cost']) . " Chivalry Tokens</a>
+			<a href='?action=will'>Regenerate 5% Will</a><br /><small>" . number_format($set['will_refill_cost']) . " Chivalry Tokens</small>
 		</div>
 		<div class='col-sm'>
-			<a href='?action=willall'>Regenerate 100% Will<br />" . number_format($set['will_refill_cost']*20) . " Chivalry Tokens</a>
-		</div>
-	</div>
-	<hr />
-	<div class='row'>
-		<div class='col-sm'>
-			<a href='?action=willall2'>Regenerate 1,000% Will<br />" . number_format($set['will_refill_cost']*225) . " Chivalry Tokens</a>
-		</div>
-		<div class='col-sm'>
-			<a href='?action=iq'>Buy IQ <br />" . number_format($set['iq_per_sec']) . "* IQ Per Token</a>
-		</div>
-		<div class='col-sm'>
-			<a href='?action=protection'>Buy Protection<br />5 Chivalry Tokens per Minute</a><br /><br />
+			<a href='?action=willall'>Regenerate 100% Will</a><br /><small>" . number_format($set['will_refill_cost']*20) . " Chivalry Tokens</small>
 		</div>
 	</div>
 	<hr />
 	<div class='row'>
 		<div class='col-sm'>
-			<a href='?action=coppertotoken'>50k Copper -> 1 Chivalry Token</a>
+			<a href='?action=iq'>Buy IQ</a><br /><small>" . number_format($set['iq_per_sec']) . "* IQ Per Token</small>
 		</div>
 		<div class='col-sm'>
-			<a href='?action=tokentocopper'>1 Chivalry Token -> 1,000 Copper</a>
+			<a href='?action=protection'>Buy Protection</a><br /><small>5 Chivalry Tokens per Minute</small>
+		</div>
+		<div class='col-sm'>
+			<a href='?action=coppertotoken'>Buy Chivalry Tokens</a><br /><small>50k Copper -> 1 Chivalry Token</small>
+		</div>
+		<div class='col-sm'>
+			<a href='?action=tokentocopper'>Buy Copper Coins</a><br /><small>1 Chivalry Token -> 1K Copper</small>
 		</div>
 	</div>
 	<hr />
@@ -235,7 +229,7 @@ function willall()
         alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", true, 'temple.php');
     }
 }
-function willall2()
+/*function willall2()
 {
     global $api, $userid, $set, $ir, $db, $h;
 	if ($ir['will_overcharge'] < time())
@@ -259,7 +253,7 @@ function willall2()
     } else {
         alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", true, 'temple.php');
     }
-}
+}*/
 
 function iq()
 {

@@ -78,23 +78,17 @@ switch ($_GET['action']) {
 
 function menu()
 {
-    global $db, $userid;
+    global $db, $userid, $ir;
     echo "<table class='table table-bordered table-hover'>
 		<thead>
 			<tr>
-				<th width='25%'>
+				<th width='45%'>
 					Course
 				</th>
-				<th width='40%'>
+				<th width='35%'>
 					Description
 				</th>
 				<th width='25%'>
-					Cost
-				</th>
-				<th width='5%'>
-					Graduates
-				</th>
-				<th width='5%'>
                     Action
 				</th>
 			</tr>
@@ -102,7 +96,7 @@ function menu()
 		<tbody>
 	   ";
     //Select the courses from in-game.
-    $acadq = $db->query("/*qc=on*/SELECT * FROM `academy` ORDER BY `ac_level` ASC, `ac_id` ASC");
+    $acadq = $db->query("/*qc=on*/SELECT * FROM `academy` ORDER BY `ac_level` ASC, `ac_cost` ASC");
     while ($academy = $db->fetch_row($acadq)) {
         $cdo = $db->query("/*qc=on*/SELECT COUNT(`userid`)
                              FROM `academy_done`
@@ -112,28 +106,26 @@ function menu()
                              FROM `academy_done`
                              WHERE `course` = {$academy['ac_id']}"));
         //If user has already completed the course.
-        if ($db->fetch_single($cdo) > 0) {
+        if ($db->fetch_single($cdo) > 0)
             $do = "<i>Graduated</i>";
-        } else {
-            $do = "<a href='?action=start&id={$academy['ac_id']}'>Attend</a>";
-        }
+		elseif ($ir['level'] < $academy['ac_level'])
+			$do = "<span class='text-danger'>Level too low to start.</span>";
+		elseif ($ir['primary_currency'] < $academy['ac_cost'])
+			$do = "<span class='text-danger'>Not enough copper coins.</span>";
+		else
+            $do = "<a href='?action=start&id={$academy['ac_id']}'>Start Course</a>";
         echo "<tr>
 		<td>
-			{$academy['ac_name']}<br />";
-        //Hide academy level requirement if there is no requirement.
-        if (!empty($academy['ac_level'])) {
-            echo "Level: {$academy['ac_level']}";
-        }
-        echo "
+			{$academy['ac_name']}<br />
+			<small><i>{$academy['ac_desc']}</i></small>
 		</td>
 		<td>
-			{$academy['ac_desc']}
-		</td>
-		<td>
-			" . number_format($academy['ac_cost']) . " Copper Coins
-		</td>
-		<td>
-			" . number_format($graduates) . "
+				Cost: " . number_format($academy['ac_cost']) . " Copper Coins<br />
+				Graduates: " . number_format($graduates) . "<br />
+				Course Length: " . number_format($academy['ac_days']) . " Days<br />";
+				if (!empty($academy['ac_level'])) 
+					echo "Level Required: {$academy['ac_level']}";
+				echo "
 		</td>
 		<td>
 			{$do}
@@ -166,8 +158,8 @@ function start()
     }
     //If the user doesn't have enough Copper Coins for this course.
     if ($course['ac_cost'] > $ir['primary_currency']) {
-        alert('danger', "Uh Oh!", "You do not have enough cash to take this course. You need {$course['ac_cost']},
-                                yet you only have {$ir['primary_currency']}", true, 'academy.php');
+        alert('danger', "Uh Oh!", "You do not have enough Copper Coins to take this course. You need " . number_format($course['ac_cost']) . " Copper Coins 
+                                yet you only have " . number_format($ir['primary_currency']) . " Copper Coins.", true, 'academy.php');
         die($h->endpage());
     }
     $cdo = $db->query("/*qc=on*/SELECT COUNT(`userid`)

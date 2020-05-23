@@ -8,9 +8,14 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 $energyCost=1.0;
-$expMod=1.05;
+$expMod=1.0;
 $macropage = ('mine.php');
 require('globals.php');
+if (!isCourseComplete($userid, 23))
+{
+	alert('danger', "Uh Oh!", "Please complete the Precious Metals academic course before you first attempt mining.");
+    die($h->endpage());
+}
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 mining_levelup();
 echo "<h2><i class='game-icon game-icon-mining'></i> Dangerous Mines</h2><hr />";
@@ -99,8 +104,8 @@ function home()
 		</div>
 		<div class='col-sm'>
 			<div class='progress' style='height: 1rem;'>
-				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningxp']}' style='width:{$minexp}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'></div>
-				<span>{$minexp}% (" . number_format($MUS['miningxp']) . " / " . number_format($MUS['max_miningpower']). ")</span>
+				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningxp']}' style='width:{$minexp}%' aria-valuemin='0' aria-valuemax='{$MUS['xp_needed']}'></div>
+				<span>{$minexp}% (" . number_format($MUS['miningxp']) . " / " . number_format($MUS['xp_needed']). ")</span>
 			</div>
 		</div>
 	</div>
@@ -229,6 +234,11 @@ function mine()
                 $unequipped++;
             if (!$api->UserEquippedItem($userid, 'armor', $MSI['mine_pickaxe']))
                 $unequipped++;
+			$itemmulti = 0;
+			if (hasNecklaceEquipped($userid,332))
+			{
+				$itemmulti=20/100;
+			}
             if ($unequipped == 4)
             {
                 alert('danger', "Uh Oh!", "You do not have the required pickaxe to mine here. You need a " . $api->SystemItemIDtoName($MSI['mine_pickaxe']) . " to mine here.", true, "mine.php");
@@ -267,6 +277,7 @@ function mine()
                     else
 						$flakes = Random($MSI['mine_copper_min'], $MSI['mine_copper_max']);
 					$flakes=round($flakes+($flakes*levelMultiplier($ir['level'])));
+					$flakes = $flakes + ($flakes * $itemmulti);
 					$xpgain = (($flakes * 0.35) * $spot)*$expMod;
 					if ($MUS['mine_boost'] > time())
 						$xpgain = $xpgain*2;
@@ -280,6 +291,7 @@ function mine()
                     else
 						$flakes = Random($MSI['mine_silver_min'], $MSI['mine_silver_max']);
 					$flakes=round($flakes+($flakes*levelMultiplier($ir['level'])));
+					$flakes = $flakes + ($flakes * $itemmulti);
 					$xpgain = (($flakes * 0.55) * $spot)*$expMod;
 					if ($MUS['mine_boost'] > time())
 						$xpgain = $xpgain*2;
@@ -292,6 +304,7 @@ function mine()
                     else
 						$flakes = Random($MSI['mine_gold_min'], $MSI['mine_gold_max']);
 					$flakes=round($flakes+($flakes*levelMultiplier($ir['level'])));
+					$flakes = $flakes + ($flakes * $itemmulti);
 					$xpgain = (($flakes * 0.75) * $spot)*$expMod;
 					if ($MUS['mine_boost'] > time())
 						$xpgain = $xpgain*2;
@@ -300,12 +313,15 @@ function mine()
                     $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined {$flakes}x {$api->SystemItemIDtoName($MSI['mine_gold_item'])}.");
                 }
             } else {
+				$itemgive = 1;
+				if (hasNecklaceEquipped($userid,332))
+					$itemgive = 2;
 				$formula=(14 * $MUS['mining_level'])*$expMod;
 				$xpgain = round(Random($formula/2,$formula*2), 2);
 				if ($MUS['mine_boost'] > time())
 						$xpgain = $xpgain*2;
-                alert('success', "Success!", "You have carefully excavated out a single " . $api->SystemItemIDtoName($MSI['mine_gem_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points.", false);
-                $api->UserGiveItem($userid, $MSI['mine_gem_item'], 1);
+                alert('success', "Success!", "You have carefully excavated out {$itemgive} " . $api->SystemItemIDtoName($MSI['mine_gem_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points.", false);
+                $api->UserGiveItem($userid, $MSI['mine_gem_item'], $itemgive);
                 $api->SystemLogsAdd($userid, 'mining', "Mined at {$api->SystemTownIDtoName($MSI['mine_location'])} [{$MSI['mine_location']}] and mined 1x {$api->SystemItemIDtoName($MSI['mine_gem_item'])}.");
             }
             echo "<hr />
@@ -319,8 +335,8 @@ function mine()
 
 function mining_levelup()
 {
-    global $db, $userid, $MUS;
-    $MUS['xp_needed'] = round(($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1);
+    global $db, $userid, $MUS, $ir;
+    $MUS['xp_needed'] = (round(($MUS['mining_level'] + 0.67) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1)/$ir['reset']);
     if ($MUS['miningxp'] >= $MUS['xp_needed']) {
         $expu = $MUS['miningxp'] - $MUS['xp_needed'];
         $MUS['mining_level'] += 1;

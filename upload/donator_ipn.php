@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
-$percentoff=0.75;
+$percentoff=1;
 require_once('globals_nonauth.php');
 require('class/PaypalIPN.php');
 $wantedcurrency = "USD";
@@ -37,6 +37,12 @@ if ($verified) {
     $buyer = abs((int)$packr[3]);
 	$payer = abs((int)$packr[4]);
     $for = $buyer;
+	
+	$msg="Dear {$api->SystemUserIDtoName($payer)} [{$payer}]<br />
+	We wanted to thank you for your recent donation of \${$payment_amount}. Your donation should be processed within 24-48 hours. If not, please contact CID Admin [1] in-game as soon as possible.<br />
+	Your donation will be used to fund the game costs, which typically include hosting, domain costs, and advertising campaigns. We do appreciate it!!";
+	$email=$db->fetch_single($db->query("SELECT `email` FROM `users` WHERE `userid` = {$payer}"));
+	$api->SystemSendEmail($email, $msg, "Your Chivalry is Dead Donation", $set['sending_email']);
 
     //Is payment completed?
     if ($payment_status != "Completed") {
@@ -76,14 +82,14 @@ if ($verified) {
     $pi = $db->query("/*qc=on*/SELECT * FROM `vip_listing` WHERE `vip_id` = {$pack}");
     //Check if pack is real.
     if ($db->num_rows($pi) == 0) {
-        $api->SystemLogsAdd($buyer, 'donate', "Attempted to donate, but attempted to buy a non-existent pack, (Pack # {$packr[2]} .");
+        $api->SystemLogsAdd($buyer, 'donate', "Attempted to donate, but attempted to buy a non-existent pack, ({$api->SystemItemIDtoName($fpi['vip_item'])} .");
         exit;
     }
     $fpi = $db->fetch_row($pi);
     //Make sure the user paid the correct amount.
-	$adjcost=($fpi['vip_cost']*$qty)*$percentoff;
+	$adjcost=round((($fpi['vip_cost']*$qty)*$percentoff), 2);
     if ($adjcost != $payment_amount) {
-        $api->SystemLogsAdd($buyer, 'donate', "Attempted to donate for {$qty} x VIP pack #{$packr[2]}(s), but only paid \${$payment_amount}. (Pack Costs \${$adjcost})");
+        $api->SystemLogsAdd($buyer, 'donate', "Attempted to donate for {$qty} x {$api->SystemItemIDtoName($fpi['vip_item'])}(s), but only paid \${$payment_amount}. (Pack Costs \${$adjcost})");
         exit;
     }
 	$vipticketgiven=floor($adjcost);
@@ -101,6 +107,9 @@ if ($verified) {
 	$api->GameAddNotification($payer,"Your \${$payment_amount} donation for your {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . " item has been successfully credited to {$api->SystemUserIDtoName($for)} [{$for}].");
 	if ($payer != $for)
 		$api->GameAddMail($for,"Chivalry is Dead Donation",$mailtext,1);
+	$msg="Dear {$api->SystemUserIDtoName($payer)} [{$payer}]<br />
+	Your donation of \${$payment_amount} has been accepted, and your {$fpi['vip_qty']} x {$api->SystemItemIDtoName($fpi['vip_item'])}(s) have been credited. We appreciate your donation, as it helps the game.";
+	$api->SystemSendEmail($email, $msg, "Your Chivalry is Dead Donation", $set['sending_email']);
 }
 // Reply with an empty 200 response to indicate to PayPal the IPN was received correctly.
 header("HTTP/1.1 200 OK");

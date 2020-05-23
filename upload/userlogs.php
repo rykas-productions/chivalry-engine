@@ -43,4 +43,22 @@ Last 15 gains while training
 	}
 echo"</table>
 </div>";
+$q=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'mining' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT 15");
+echo"Last 15 mining attempts.
+<div class='table-responsive'>
+	<table class='table table-bordered'>
+		<tr>
+			<th>Time</th>
+			<th>Info</th>
+		</tr>";
+	while ($r = $db->fetch_row($q))
+	{
+		echo "
+		<tr>
+			<td>" . DateTime_Parse($r['log_time']) . "</td>
+			<td>{$r['log_text']}</td>
+		</tr>";
+	}
+echo"</table>
+</div>";
 $h->endpage();

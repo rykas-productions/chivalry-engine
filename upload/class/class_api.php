@@ -970,4 +970,56 @@ class api
 		if ($db->num_rows($q) > 0)
 			return true;
 	}
+	
+	function GuildHasItem($guild, $item, $qty = 1)
+    {
+        global $db;
+		$guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
+        $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
+        if ($guild > 0 || $item > 0 || $qty > 0) {
+            $i = $db->fetch_single($db->query("/*qc=on*/SELECT `gaQTY` FROM `guild_armory` WHERE `gaGUILD` = {$guild} && `gaITEM` = {$item} LIMIT 1"));
+            if ($qty == 1) {
+                if ($i >= 1) {
+                    return true;
+                }
+            } else {
+                if ($i >= $qty) {
+                    return true;
+                }
+            }
+        }
+    }
+	function GuildHasXP($guild, $xp)
+    {
+        global $db;
+		$guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
+        if ($guild > 0 || $item > 0 || $qty > 0) {
+            $i = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_xp` FROM `guild` WHERE `guild_id` = {$guild}"));
+            if ($qty == 1) {
+                if ($i >= 1) {
+                    return true;
+                }
+            } else {
+                if ($i >= $qty) {
+                    return true;
+                }
+            }
+        }
+    }
+	function GuildRemoveXP($guild, $xp)
+    {
+        global $db;
+		$guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
+        $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` - {$xp} WHERE `guild_id` = {$guild}");
+    }
+	function GuildAddXP($guild, $xp)
+    {
+        global $db;
+		$guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
+        $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$xp} WHERE `guild_id` = {$guild}");
+    }
 }
