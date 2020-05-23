@@ -6,59 +6,39 @@ if ($ir['vip_days'] == 0)
 	die($h->endpage());
 }
 $q=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'attacking' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT 15");
-echo"<h3><i class='fas fa-book fa-fw'></i> VIP Logs</h3><hr />
-Last 15 attacks involving you.
-<div class='table-responsive'>
-	<table class='table table-bordered'>
-		<tr>
-			<th>Time</th>
-			<th>Attack Info</th>
-		</tr>";
-	while ($r = $db->fetch_row($q))
-	{
+$q2=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'training' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT 15");
+$q3=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'mining' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT 15");
+echo "
+<div class='row'>
+		<div class='col-md text-left'>
+		<i>Last 15 attack results.</i>
+		<hr />";
+		while ($r = $db->fetch_row($q))
+		{
+			echo "{$r['log_text']}<br />
+			<small>" . DateTime_Parse($r['log_time']) . "</small><hr />";
+		}
 		echo "
-		<tr>
-			<td>" . DateTime_Parse($r['log_time']) . "</td>
-			<td>{$r['log_text']}</td>
-		</tr>";
-	}
-echo"</table>
-</div>";
-$q=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'training' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT 15");
-echo"<hr />
-Last 15 gains while training
-<div class='table-responsive'>
-	<table class='table table-bordered'>
-		<tr>
-			<th>Time</th>
-			<th>Training Info</th>
-		</tr>";
-	while ($r = $db->fetch_row($q))
-	{
+	</div>
+	<div class='col-md text-left'>
+		<i>Last 15 mining attempts.</i>
+		<hr />";
+		while ($r = $db->fetch_row($q3))
+		{
+			echo "{$r['log_text']}<br />
+			<small>" . DateTime_Parse($r['log_time']) . "</small><hr />";
+		}
 		echo "
-		<tr>
-			<td>" . DateTime_Parse($r['log_time']) . "</td>
-			<td>{$r['log_text']}</td>
-		</tr>";
-	}
-echo"</table>
-</div>";
-$q=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'mining' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT 15");
-echo"Last 15 mining attempts.
-<div class='table-responsive'>
-	<table class='table table-bordered'>
-		<tr>
-			<th>Time</th>
-			<th>Info</th>
-		</tr>";
-	while ($r = $db->fetch_row($q))
-	{
+	</div>
+	<div class='col-md text-left'>
+		<i>Last 15 training results.</i>
+		<hr />";
+		while ($r = $db->fetch_row($q2))
+		{
+			echo "{$r['log_text']}<br />
+			<small>" . DateTime_Parse($r['log_time']) . "</small><hr />";
+		}
 		echo "
-		<tr>
-			<td>" . DateTime_Parse($r['log_time']) . "</td>
-			<td>{$r['log_text']}</td>
-		</tr>";
-	}
-echo"</table>
+	</div>
 </div>";
 $h->endpage();
