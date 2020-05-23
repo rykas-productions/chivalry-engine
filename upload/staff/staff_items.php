@@ -403,7 +403,7 @@ function giveitem()
         $csrf = request_csrf_html('staff_giveitem');
         echo "
 		<form method='post'>
-			<table class='table table-bordered table-responsive'>
+			<table class='table table-bordered'>
 				<tr>
 					<th>
 						User
@@ -664,6 +664,14 @@ function edititem()
 				</td>
 			</tr>
 			<tr>
+				<th>
+					Required Ammo
+				</th>
+				<td>
+					" . item_dropdown('ammo') . "
+				</td>
+			</tr>
+			<tr>
 				<td colspan='2'>
 					<input type='submit' value='Edit Item' class='btn btn-primary'>
 				</td>
@@ -677,7 +685,8 @@ function edititem()
             die($h->endpage());
         }
         $itemid = (isset($_POST['itemid']) && is_numeric($_POST['itemid'])) ? abs(intval($_POST['itemid'])) : 0;
-        $itmcolor = (isset($_POST['itemcolor']) && is_string($_POST['itemcolor'])) ? stripslashes($_POST['itemcolor']) : '';
+        $ammo = (isset($_POST['ammo']) && is_numeric($_POST['ammo'])) ? abs(intval($_POST['ammo'])) : 0;
+		$itmcolor = (isset($_POST['itemcolor']) && is_string($_POST['itemcolor'])) ? stripslashes($_POST['itemcolor']) : '';
         $itmname = (isset($_POST['itemname']) && is_string($_POST['itemname'])) ? stripslashes($_POST['itemname']) : '';
         $itmdesc = (isset($_POST['itemdesc'])) ? $db->escape(strip_tags(stripslashes($_POST['itemdesc']))) : '';
 		$itmicon = (isset($_POST['itemicon'])) ? $db->escape(strip_tags(stripslashes($_POST['itemicon']))) : '';
@@ -747,7 +756,7 @@ function edititem()
 						`effect1_on` = '{$_POST['effect1on']}', `effect1` = '{$effects[1]}',
 						`effect2_on` = '{$_POST['effect2on']}', `effect2` = '{$effects[2]}',
 						`effect3_on` = '{$_POST['effect3on']}', `effect3` = '{$effects[3]}',
-						`weapon` = {$weapon}, `armor` = {$armor}, `icon` = '{$itmicon}', `color` = '{$itmcolor}' WHERE `itmid` = {$itemid }");
+						`weapon` = {$weapon}, `armor` = {$armor}, `icon` = '{$itmicon}', `color` = '{$itmcolor}', `ammo` = '{$ammo}' WHERE `itmid` = {$itemid }");
         alert('success', "Success!", "You successfully have edited the {$api->SystemItemIDtoName($itemid)} item.", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited Item {$api->SystemItemIDtoName($itemid)}.");
     } else {

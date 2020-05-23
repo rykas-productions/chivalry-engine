@@ -1138,6 +1138,7 @@ function beat()
 			$api->UserGiveItem($userid,197,$feathers);
 			$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
 		}
+		doExtraBomb($userid, $r['userid']);
     } else {
         die($h->endpage());
     }
@@ -1229,6 +1230,7 @@ function lost()
             }
         }
     }
+	doExtraBomb($_GET['ID'], $userid);
     //Tell user they lost, and if they gave the other guild a point.
     alert('danger', "You lost to {$r['username']}!", "You have lost a fight, and lost " . number_format($expgainp) . "% experience! {$additionaltext}", true, 'index.php');
     $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$_GET['ID']}");
@@ -1425,6 +1427,7 @@ function xp()
                     $api->GameAddNotification($r['userid'],"You have lost " . number_format($loss) . " strength, agility and guard for allowing yourself to be used for experience too frequently.", 'game-icon game-icon-crucifix', 'red');
                 }
             }
+			doExtraBomb($userid, $r['userid']);
         }
     }
 }
@@ -1569,7 +1572,8 @@ function mug()
 		//Tell user they won the fight, and how much currency they took.
             alert('success', "You have bested {$r['username']}!", "You have knocked them out and taken out their wallet.
 			    You grab their wallet and take " . number_format($stole) . " Copper Coins! {$additionaltext}", true, 'index.php');
-    }
+			doExtraBomb($userid, $r['userid']);
+	}
 }
 function attacklog($attacker,$attacked,$result)
 {
@@ -1584,6 +1588,29 @@ function guilddebt($winner,$loser)
 	$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 15000  WHERE `guild_id` = {$winner}");
 	$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 25000  WHERE `guild_id` = {$loser}");
 	$db->query("UPDATE `guild` SET `guild_debt_time` = {$sevendays} WHERE `guild_primcurr` < 0 AND `guild_debt_time` = 0");
+}
+
+function doExtraBomb($user, $infirm)
+{
+	global $api;
+	$doBomb = false;
+	$infirmTime = Random(30,60);
+	if ($api->UserEquippedItem($user, 'primary', 354))
+		$doBomb = true;
+	elseif ($api->UserEquippedItem($user, 'secondary', 354))
+		$doBomb = true;
+	if ($doBomb == true)
+	{
+		if (Random(1,100) == 29)
+		{
+			$api->UserStatusSet($infirm, 'infirmary', $infirmTime, '');
+			$api->GameAddNotification($infirm, "You were bombed while being escorted to the infirmary and need to stay {$infirmTime} minutes longer.");
+			$api->GameAddNotification($user, "You bombed {$api->SystemUserIDtoName($infirm)} while escorting them to the infirmary and did {$infirmTime} minutes of damage.");
+			return true;
+		}
+	}
+	else
+		return false;
 }
 
 $h->endpage();

@@ -158,6 +158,12 @@ if ($ir['rewarded'] == 0)
 	{
 		
 	}
+	//Give login rewards for 2020 big bang event.
+	if ((time() < 1591401600))
+	{
+		$api->UserGiveItem($userid, 351, 1);
+		$api->UserGiveItem($userid, 352, 1);
+	}
 	$db->query("UPDATE `users` SET `rewarded` = 1 WHERE `userid` = {$userid}");
 	
 }

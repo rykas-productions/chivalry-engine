@@ -1172,10 +1172,41 @@ function resetacc()
 		echo "<br />Finishing up... we'll just be a moment.";
 			$api->GameAddMail($userid,"Welcome to Chivalry is Dead",$mail,1);
 			$db->query("DELETE FROM `mining` WHERE `userid` = {$userid}");
-			$api->UserGiveItem($userid,246,$reset-1);
 			$db->query("UPDATE `user_settings` SET `reset` = {$reset} + 1 WHERE `userid` = {$userid}");
 		alert('success',"Success!","Your account has been reset. Please log in to continue.",true,'logout.php');
 		$api->SystemLogsAdd($userid, 'preferences', "Successfully reset account. (Reset # {$reset})");
+		$realReset = $reset - 1;
+		if ($reset == 1)
+		{
+			$api->UserGiveItem($userid,346,1);
+		}
+		if ($reset == 2)
+		{
+			$api->UserGiveItem($userid,346,1);
+			$api->UserGiveItem($userid,347,1);
+		}
+		if ($reset == 3)
+		{
+			$api->UserGiveItem($userid,346,1);
+			$api->UserGiveItem($userid,347,1);
+			$api->UserGiveItem($userid,348,1);
+		}
+		if ($reset == 4)
+		{
+			$api->UserGiveItem($userid,346,1);
+			$api->UserGiveItem($userid,347,1);
+			$api->UserGiveItem($userid,348,1);
+			$api->UserGiveItem($userid,349,1);
+		}
+		if ($reset == 3)
+		{
+			$api->UserGiveItem($userid,346,1);
+			$api->UserGiveItem($userid,347,1);
+			$api->UserGiveItem($userid,348,1);
+			$api->UserGiveItem($userid,349,1);
+			$api->UserGiveItem($userid,350,1);
+		}
+			
 	}
 	else
 	{

@@ -265,6 +265,9 @@ while ($i = $db->fetch_row($inv)) {
 	//Spell Tome Key
     if ($i['itmid'] == 264)
         echo " [<a href='2019halloween.php?action=ticket'>Scratch</a>]";
+	//2020 Big Bang Scratch Off
+    if ($i['itmid'] == 352)
+        echo " [<a href='scratchticket.php?action=2020bang'>Scratch</a>]";
 	//Will Stimulant Potion
     if ($i['itmid'] == 263)
         echo " [<a href='vipitem.php?item=willstim'>Convert</a>]";
