@@ -412,7 +412,7 @@ function donate()
             die($h->endpage());
             //Donation amount would fill up the guild's vault.
         } else if ($_POST['primary'] + $gd['guild_primcurr'] > (($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) {
-            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . $gd['guild_level'] * $set['GUILD_PRICE'] . " Copper Coins.");
+            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . number_format(($gd['guild_level'] * $set['GUILD_PRICE']) * 20) . " Copper Coins.");
             die($h->endpage());
         } else {
             //Donate the currencies!
