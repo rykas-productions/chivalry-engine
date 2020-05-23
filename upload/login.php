@@ -19,7 +19,7 @@ $domain = determine_game_urlbase();
 $csrf = request_csrf_html('login');
 echo "
 <div class='row'>
-    <div class='col-sm-4'>
+    <div class='col-md-4'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
                 Sign In <a href='pwreset.php'>Forgot Password?</a>
@@ -36,7 +36,7 @@ echo "
             echo "</div>
         </div>
     </div>
-    <div class='col-sm-8'>
+    <div class='col-md-8'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
             {$set['WebsiteName']} Info
@@ -48,7 +48,7 @@ echo "
     </div>
 </div>
 <div class='row'>
-    <div class='col-sm-4'>
+    <div class='col-md-4'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
                 Highest Ranked Players
@@ -73,7 +73,7 @@ echo "
             </div>
         </div>
     </div>
-	<div class='col-sm-8'>
+	<div class='col-md-8'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
             Gameplay
@@ -88,7 +88,7 @@ echo "
     </div>
 </div>
 <div class='row'>
-    <div class='col-sm-4'>
+    <div class='col-md-4'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
                 No Installation Required!
@@ -102,7 +102,7 @@ echo "
             </div>
         </div>
     </div>
-	<div class='col-sm-8'>
+	<div class='col-md-8'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
                 Latest Announcement
