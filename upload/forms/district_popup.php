@@ -43,6 +43,14 @@
 				Recruit troops for your guild via Guild Info. The amount of troops you may recruit per day is limited by 
 				how many active players you have in your guild.
 				<hr />
+				<b>Recruiting Troops</b><br />
+				Recruiting troops helps strength your army. Stronger units cost more. Warriors cost 5,000 Copper Coins; Archers 
+				charge 8,500 Copper Coins; Generals charge 125,000 Copper Coins. Warriors are melee, Archers are ranged, Generals 
+				are defensive supportive.<br />
+				<br />
+				If you lose a tile with a general on it, your general will be executed by the enemy guild.<br />
+				<u>There may be more units in the future depending on how they fit and balance.</u>
+				<hr />
 				<b>Movement</b><br />
 				Each day, your guild will be given two movements to spend on transferring troops, attacking, or however you 
 				see fit. You may get an extra two turns if you successfully attack and conquer a tile. Most actions, other than 
@@ -51,7 +59,23 @@
 				<b>Upkeep</b><br />
 				Units actively on duty cost your guild! You will be charged for each unit currently on the board. Warriors on 
 				cost your guild 500 Copper Coins, Archers cost your guild 1,000 Copper Coins, and Generals cost your guild 
-				12,500 Copper Coins. This is taken from your guild's vault once a day.
+				12,500 Copper Coins. This is taken from your guild's vault once a day. <u>There are plans to get tiles owned 
+				factored into the daily upkeep cost, but that is not the case in the beta.</u>
+				<hr />
+				<b>Fortification</b><br />
+				District tiles may be fortified up to 10 times. Fortification increases your defensive value by 10% per 
+				fortification level. A fortification level requires the following: 125 Guild Experience (flat), 
+				1,500 Coal (per fortification level), 3,200 Copper Flakes (per fortification level). These must 
+				be in your guild's armory. Fortifications are lost when you lose ownership of the tile it was on.
+				<hr />
+				<b>Tips</b><br />
+				*Defending from the high-ground will be easy, but taking a high-ground tile will prove a little more difficult.<br />
+				*Attacking a low-ground tile will be easy, defending it will not.<br />
+				*Market tiles are highly sought after. Once you take one, you will have to defend it hard.<br />
+				*A tile cannot be more than one tile type at a time. (IE: High ground + market)<br />
+				*You can recruit troops more than once a day. Check back as more players from your guild log in.<br />
+				*Warriors and Archers can be recruited at a 40:20:1 ratio. 40 Warriors: 20 Archers: 1 Active Guild Member<br />
+				*Active guild members are any player in the guild who's logged in within the last 24 hours at time of page execution.<br />
             </div>
         </div>
     </div>
