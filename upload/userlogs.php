@@ -41,4 +41,20 @@ echo "
 		echo "
 	</div>
 </div>";
+$q=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'xp_gain' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT 15");
+//$q2=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'training' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT 15");
+//$q3=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'mining' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT 15");
+echo "
+<div class='row'>
+		<div class='col-md text-left'>
+		<i>Last 15 experience changes.</i>
+		<hr />";
+		while ($r = $db->fetch_row($q))
+		{
+			echo "{$r['log_text']}<br />
+			<small>" . DateTime_Parse($r['log_time']) . "</small><hr />";
+		}
+		echo "
+	</div>
+</div>";
 $h->endpage();

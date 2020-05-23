@@ -1193,6 +1193,8 @@ function lost()
     $qe2 = $r['level'] * $r['level'] * $r['level'];
     $expgain2 = Random($qe2 / 4, $qe2);
     $expgainp2 = $expgain2 / $r['xp_needed'] * 100;
+	$api->SystemLogsAdd($_GET['ID'], 'xp_gain', "+" . number_format($expgain2) . "XP");
+	$api->SystemLogsAdd($ir['userid'], 'xp_gain', "-" . number_format($expgain) . "XP");
     $expperc2 = round($expgainp2 / $r['xp_needed'] * 100);
     //Tell opponent that they were attacked by user, and emerged victorious.
     $api->GameAddNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a>
@@ -1309,6 +1311,7 @@ function xp()
             $hosptime = Random(5, 15) + floor($ir['level'] / 10);
             //Give user XP.
 			attacklog($userid,$_GET['ID'],'xp');
+			$api->SystemLogsAdd($ir['userid'], 'xp_gain', "+" . number_format($expgain) . "XP");
 			$expgain=autoDonateXP($userid, $expgain, $ir['guild']);
             $db->query("UPDATE `users` SET `xp` = `xp` + {$expgain} WHERE `userid` = {$userid}");
             $hospreason = $db->escape("Used for Experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");

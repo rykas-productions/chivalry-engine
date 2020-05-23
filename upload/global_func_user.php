@@ -450,6 +450,7 @@ function autoDonateXP($user, $xp, $guild)
 				$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$points} WHERE `guild_id` = {$guild}");
 				$event = "<a href='profile.php?user={$user}'>{$api->SystemUserIDtoName($user)}</a> exchanged " . number_format($xprequired) . " experience for " . number_format($points) . " guild experience.";
 				$api->GuildAddNotification($guild, $event);
+				$api->SystemLogsAdd($user, 'xp_gain', "-" . number_format($xprequired) . "XP");
 				return $xp - $toDonate;
 			}
 		}

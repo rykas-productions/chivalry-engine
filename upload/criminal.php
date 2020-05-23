@@ -226,6 +226,7 @@ function crime()
                 $api->SystemLogsAdd($userid, 'crime', "Failed to commit the {$r['crimeNAME']} crime.");
 				crime_log($_GET['c'],false,0,0);
             }
+			$api->SystemLogsAdd($userid, 'xp_gain', "+" . number_format($r['crimeXP']) . "XP");
             alert("{$type}", "{$title}", "{$r['crimeITEXT']} {$text}", true, "?action=crime&c={$_GET['c']}", "Attempt Again");
             die($h->endpage());
         }
