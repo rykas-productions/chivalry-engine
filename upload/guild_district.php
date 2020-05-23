@@ -88,9 +88,23 @@ switch ($_GET['action'])
 	case 'buy':
         guild_buy();
         break;
+	case 'test':
+        test();
+        break;
 	default:
         home();
         break;
+}
+function test()
+{
+	global $districtConfig, $userid, $db, $api, $h, $ir;
+	if ($userid > 1)
+	{
+		alert('danger',"","yo wtf",true,'guild_district.php');
+		die($h->endpage());
+	}
+	updateBarracksTroops(1,5000,2500,5);
+	$db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 2 WHERE `guild_id` = 1");
 }
 function home()
 {
@@ -2318,7 +2332,7 @@ function guild_info()
 	<b>Deployed Archers:</b> " . number_format(countDeployedArchers($gdi['guild_id'])) . "<br />
 	<b>Active Generals:</b> " . number_format(countDeployedGenerals($gdi['guild_id'])) . "<br />
 	<b>Warrior Upkeep Cost:</b> " . number_format(countDeployedWarriors($gdi['guild_id']) * $districtConfig['WarriorCostDaily']) . " Copper Coins<br />
-	<b>Archber Upkeep Cost:</b> " . number_format(countDeployedArchers($gdi['guild_id']) * $districtConfig['ArcherCostDaily']) . " Copper Coins<br />
+	<b>Archer Upkeep Cost:</b> " . number_format(countDeployedArchers($gdi['guild_id']) * $districtConfig['ArcherCostDaily']) . " Copper Coins<br />
 	<b>General Upkeep Cost:</b> " . number_format(countDeployedGenerals($gdi['guild_id']) * $districtConfig['GeneralCostDaily']) . " Copper Coins<br />";
 	
 }
