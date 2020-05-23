@@ -127,12 +127,12 @@ function attacking()
 	{
 		if (($ir['location'] + 2) < $odata['location'])
 		{
-			alert('danger',"Uh Oh!","This user is too far away to use a Distant Attack Scroll!",true,'index.php');
+			alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(90)}!",true,'index.php');
 			die($h->endpage());
 		}
 		elseif (($ir['location'] - 2) > $odata['location'])
 		{
-			alert('danger',"Uh Oh!","This user is too far away to use a Distant Attack Scroll!",true,'index.php');
+			alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(90)}!",true,'index.php');
 			die($h->endpage());
 		}
 		else
@@ -146,12 +146,12 @@ function attacking()
 	{
 		if (($ir['location'] + 5) < $odata['location'])
 		{
-			alert('danger',"Uh Oh!","This user is too far away to use a Further Distance Attack Scroll!",true,'index.php');
+			alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(247)}!",true,'index.php');
 			die($h->endpage());
 		}
 		elseif (($ir['location'] - 5) > $odata['location'])
 		{
-			alert('danger',"Uh Oh!","This user is too far away to use a Further Distance Attack Scroll!",true,'index.php');
+			alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(247)}!",true,'index.php');
 			die($h->endpage());
 		}
 		else
@@ -167,7 +167,7 @@ function attacking()
 		if (Random(1,1000) == 512)
 		{
 			$api->UserTakeItem($userid,266,1);
-			$api->GameAddNotification($userid,"Your Mirror of the Distant Warrior has shattered.");
+			$api->GameAddNotification($userid,"Your {$api->SystemItemIDtoName(266)} has shattered.");
 		}
 		
 	}
@@ -929,19 +929,26 @@ function attacking()
     } //If user and opponent are in different towns.
     else if (($youdata['location'] != $odata['location']) && $_SESSION['attack_scroll'] == 0) {
         alert("danger", "Uh Oh!", "You and your opponent are in different towns.", true, 'index.php');
+		echo "<div class='row'>";
         if ($api->UserHasItem($userid,90,1))
 		{
-			echo "<br />[<a href='?user={$_GET['user']}&scroll=1'>Use Distant Attack Scroll</a>]<br />";
+			echo "<div class='col-md'><a href='?user={$_GET['user']}&scroll=1'>" . returnIcon(90,5) . "</a><br />
+					[<a href='?user={$_GET['user']}&scroll=1'>Use {$api->SystemItemIDtoName(90)}</a>]
+				</div>";
 		}
 		if ($api->UserHasItem($userid,247,1))
 		{
-			echo "<br />[<a href='?user={$_GET['user']}&scroll=2'>Use Further Distance Attack Scroll</a>]<br />";
+			echo "<div class='col-md'><a href='?user={$_GET['user']}&scroll=2'>" . returnIcon(247,5) . "</a><br />
+					[<a href='?user={$_GET['user']}&scroll=2'>Use {$api->SystemItemIDtoName(247)}</a>]
+				</div>";
 		}
 		if ($api->UserHasItem($userid,266,1))
 		{
-			echo "<br />[<a href='?user={$_GET['user']}&scroll=3'>Use Mirror of the Distant Warrior</a>]";
+			echo "<div class='col-md'><a href='?user={$_GET['user']}&scroll=3'>" . returnIcon(266,5) . "</a><br />
+					[<a href='?user={$_GET['user']}&scroll=3'>Use {$api->SystemItemIDtoName(266)}</a>]
+				</div>";
 		}
-		
+		echo "</div>";
 		die($h->endpage());
     }
     //If opponent or user have no HP.
@@ -975,7 +982,7 @@ function attacking()
                 }
 				echo "<div class='col-sm'>
 				<b>{$type}</b><br />
-					" . returnIcon($r['itmid'],4) . "<br />
+					" . returnIcon($r['itmid'],5) . "<br />
 					<a href='?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}'>{$r['itmname']}</a>
 				</div>";
             }
