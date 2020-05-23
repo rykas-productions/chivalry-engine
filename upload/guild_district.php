@@ -103,7 +103,8 @@ function test()
 		alert('danger',"","yo wtf",true,'guild_district.php');
 		die($h->endpage());
 	}
-	updateBarracksTroops(1,5000,2500,5);
+	updateBarracksTroops(1,100000,50000,0);
+	//updateTileTroops(42,-100,-50,0);
 	$db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 2 WHERE `guild_id` = 1");
 }
 function home()
@@ -238,7 +239,8 @@ function view()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 				}
 				echo "[<a href='?action=view&id={$r['district_id']}'>View Info</a>]
 			</td>";
@@ -288,7 +290,8 @@ function view()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 				}
 				echo "[<a href='?action=view&id={$r['district_id']}'>View Info</a>]
 			</td>";
@@ -338,7 +341,8 @@ function view()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 				}
 				echo "[<a href='?action=view&id={$r['district_id']}'>View Info</a>]
 			</td>";
@@ -391,7 +395,8 @@ function view()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 				}
 				echo "[<a href='?action=view&id={$r['district_id']}'>View Info</a>]
 			</td>";
@@ -441,7 +446,8 @@ function view()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (!isGuildDistrict($r['district_id']))
 						echo "[<a href='?action=attack&id={$r['district_id']}'>Attack Tile</a>]<br />";
 					if (isGuildDistrict($r['district_id']))
@@ -498,7 +504,8 @@ function view()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 				}
 				echo "[<a href='?action=view&id={$r['district_id']}'>View Info</a>]
 			</td>";
@@ -551,7 +558,8 @@ function view()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 				}
 				echo "[<a href='?action=view&id={$r['district_id']}'>View Info</a>]
 			</td>";
@@ -601,7 +609,8 @@ function view()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 				}
 				echo "[<a href='?action=view&id={$r['district_id']}'>View Info</a>]
 			</td>";
@@ -651,7 +660,8 @@ function view()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 				}
 				echo "[<a href='?action=view&id={$r['district_id']}'>View Info</a>]
 			</td>";
@@ -756,7 +766,8 @@ function moveto()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -810,7 +821,8 @@ function moveto()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 				}
 				if (isGuildDistrict($r['district_id']))
 					{
@@ -864,7 +876,8 @@ function moveto()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -921,7 +934,8 @@ function moveto()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -976,6 +990,7 @@ function moveto()
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
 					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />
 					<i>Moving from here</i>";
 				}
 				"</td>";
@@ -1025,7 +1040,8 @@ function moveto()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -1082,7 +1098,8 @@ function moveto()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -1136,7 +1153,8 @@ function moveto()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -1190,7 +1208,8 @@ function moveto()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -1299,7 +1318,8 @@ function attack()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -1353,7 +1373,8 @@ function attack()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 				}
 				if (isGuildDistrict($r['district_id']))
 					{
@@ -1407,7 +1428,8 @@ function attack()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -1464,7 +1486,8 @@ function attack()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -1519,6 +1542,7 @@ function attack()
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
 					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />
 					[<a href='?action=attackformbarracks&to={$district_id}'>Attack from Barracks</a>]";
 				}
 				"</td>";
@@ -1568,7 +1592,8 @@ function attack()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -1625,7 +1650,8 @@ function attack()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -1679,7 +1705,8 @@ function attack()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -1733,7 +1760,8 @@ function attack()
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
 					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />";
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
 					if (isGuildDistrict($r['district_id']))
 					{
 						if (isAccessibleFromTile($r['district_id'], $district_id))
@@ -2184,11 +2212,12 @@ function fortify()
 	}
 	$q2=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$attack_to}");
 	$r2=$db->fetch_row($q2);
-	$neededCoal=1500*($r2['district_fortify']+1);
-	$neededCopper=3200*($r2['district_fortify']+1);
+	$neededCoal=1500*($r2['district_fortify'] + 1);
+	$neededCopper=3200*($r2['district_fortify'] + 1);
+	$neededXP = round(125 * (($r2['district_fortify'] + 1) * 2.25));
 	if (isset($_POST['warriors']))
 	{
-		if ($r2['district_fortify'] == 9)
+		if ($r2['district_fortify'] == 10)
 		{
 			alert('danger',"Uh Oh!","You cannot fortify this tile anymore.",true,'guild_district.php');
 			die($h->endpage());
@@ -2203,23 +2232,23 @@ function fortify()
 			alert('danger',"Uh Oh!","Your guild needs " . number_format($neededCopper) . " Copper Flakes in its armory before you can fortify this tile.",true,'guild_district.php');
 			die($h->endpage());
 		}
-		if (!($api->GuildHasXP($ir['guild'], 125)))
+		if (!($api->GuildHasXP($ir['guild'], $neededXP)))
 		{
-			alert('danger',"Uh Oh!","Your guild needs 125 Guild Experience before you can fortify this district.",true,'guild_district.php');
+			alert('danger',"Uh Oh!","Your guild needs " . number_format($neededXP) . " Guild Experience before you can fortify this district.",true,'guild_district.php');
 			die($h->endpage());
 		}
-		$api->SystemLogsAdd($userid,"district","Spent 125 Guild Experience, " . number_format($neededCoal) . " Coal and " . number_format($neededCopper) . " Copper Flakes to fortify tile " . resolveCoordinates($attack_to) .".");
-		$api->GuildTakeItem($ir['guild'],22,$neededCoal);
-		$api->GuildTakeItem($ir['guild'],23,$neededCopper);
-		$api->GuildRemoveXP($ir['guild'],125);
+		$api->SystemLogsAdd($userid,"district","Spent " . number_format($neededXP) . " Guild Experience, " . number_format($neededCoal) . " Coal and " . number_format($neededCopper) . " Copper Flakes to fortify tile " . resolveCoordinates($attack_to) .".");
+		$api->GuildRemoveItem($ir['guild'],22,$neededCoal);
+		$api->GuildRemoveItem($ir['guild'],23,$neededCopper);
+		$api->GuildRemoveXP($ir['guild'],$neededXP);
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		$db->query("UPDATE `guild_districts` SET `district_fortify` = `district_fortify` + 1 WHERE `district_id` = {$attack_to}");
-		alert('success',"","You have successfully fortified this tile at the cost of 125 Guild XP, " . number_format($neededCoal) . " Coal and " . number_format($neededCopper) . " Copper Flakes.");
+		alert('success',"","You have successfully fortified this tile at the cost of " . number_format($neededXP) . " Guild XP, " . number_format($neededCoal) . " Coal and " . number_format($neededCopper) . " Copper Flakes.");
 	}
 	else
 	{
-		echo "You are attempting to fortify this tile. Please click the button to confirm. It costs 125 Guild XP each upgrade.<br />
-		For this district, you will also need " . number_format($neededCoal) . " Coal and " . number_format($neededCopper) . " Copper Flakes.<br />
+		echo "You are attempting to fortify this tile. Please click the button to confirm.<br />
+		For this district, you will need " . number_format($neededXP) . " Guild XP, " . number_format($neededCoal) . " Coal and " . number_format($neededCopper) . " Copper Flakes.<br />
 		<form method='post'>
 			<input type='hidden' name='warriors' value='true'>
 			<input type='submit' class='btn btn-success' value='Fortify'>
@@ -2731,4 +2760,32 @@ function isGuildLeaders($guild, $user)
 		return true;
 	else
 		return false;
+}
+function returnForticationLevel($district_id)
+{
+	global $db;
+	$q=$db->fetch_single($db->query("SELECT `district_fortify` FROM `guild_districts` WHERE `district_id` = {$district_id}"));
+		
+	if ($q == 1)
+		return "I";
+	elseif ($q == 2)
+		return "II";
+	elseif ($q == 3)
+		return "III";
+	elseif ($q == 4)
+		return "VI";
+	elseif ($q == 5)
+		return "V";
+	elseif ($q == 6)
+		return "VI";
+	elseif ($q == 7)
+		return "VII";
+	elseif ($q == 8)
+		return "VIII";
+	elseif ($q == 9)
+		return "IX";
+	elseif ($q == 10)
+		return "X";
+	else
+		return "∅";
 }
