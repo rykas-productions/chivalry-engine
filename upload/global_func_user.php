@@ -479,3 +479,12 @@ function calculateXPNeeded($user)
 		$r['reset'] = 1;
 	return round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2)/$r['reset'];
 }
+function isCourseComplete($userid, $course)
+{
+	global $db;
+	$q=$db->query("SELECT `userid` FROM `academy_done` WHERE `userid` = {$userid} AND `course` = {$course}");
+	if ($db->num_rows($q) > 0)
+		return true;
+	else
+		return false;
+}
