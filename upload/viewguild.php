@@ -3114,6 +3114,12 @@ function staff_armory()
                 alert('danger', "Uh Oh!", "You must give out at least one item.");
                 die($h->endpage());
             }
+			
+			if (!($api->GuildHasItem($ir['guild'],$_POST['item'],$_POST['qty'])))
+			{
+				alert('danger',"Uh Oh!","Your guild does not have " . number_format($_POST['qty']) . " {$api->SystemItemIDtoName($_POST['item'])} in its armory.",true,'guild_district.php');
+				die($h->endpage());
+			}
 
             //Check users' IP Address. Returns false if not and/or same user
             if ($api->SystemCheckUsersIPs($userid, $_POST['user'])) {
