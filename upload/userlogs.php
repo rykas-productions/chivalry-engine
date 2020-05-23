@@ -16,7 +16,7 @@ echo "
 		while ($r = $db->fetch_row($q))
 		{
 			echo "{$r['log_text']}<br />
-			<small>" . DateTime_Parse($r['log_time']) . "</small><hr />";
+			<small>" . DateTime_Parse($r['log_time']) . "</small><br /><br />";
 		}
 		echo "
 	</div>
@@ -26,7 +26,7 @@ echo "
 		while ($r = $db->fetch_row($q3))
 		{
 			echo "{$r['log_text']}<br />
-			<small>" . DateTime_Parse($r['log_time']) . "</small><hr />";
+			<small>" . DateTime_Parse($r['log_time']) . "</small><br /><br />";
 		}
 		echo "
 	</div>
@@ -36,7 +36,7 @@ echo "
 		while ($r = $db->fetch_row($q2))
 		{
 			echo "{$r['log_text']}<br />
-			<small>" . DateTime_Parse($r['log_time']) . "</small><hr />";
+			<small>" . DateTime_Parse($r['log_time']) . "</small><br /><br />";
 		}
 		echo "
 	</div>
@@ -52,7 +52,7 @@ echo "
 		while ($r = $db->fetch_row($q))
 		{
 			echo "{$r['log_text']}<br />
-			<small>" . DateTime_Parse($r['log_time']) . "</small><hr />";
+			<small>" . DateTime_Parse($r['log_time']) . "</small><br /><br />";
 		}
 		echo "
 	</div>
