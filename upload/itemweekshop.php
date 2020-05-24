@@ -62,7 +62,7 @@ if ($_POST['item'] == 3)
     }
 }
 echo "<div class='row'>
-    <div class='col-sm-4'>
+    <div class='col-md'>
     <div class='card'>
         <div class='card-header box-shadow'>
             Price: <s>" . number_format($item1['itmbuyprice']) . "</s> <b>" . number_format($item1price) . "</b> Copper Coins
@@ -108,7 +108,7 @@ echo "<div class='row'>
         </div>
         ";
 echo "
-    <div class='col-sm-4'>
+    <div class='col-md'>
     <div class='card'>
         <div class='card-header box-shadow'>
             Price: <s>" . number_format($item2['itmbuyprice']) . "</s> <b>" . number_format($item2price) . "</b> Copper Coins
@@ -154,7 +154,7 @@ echo "
         </div>
         ";
         echo "
-    <div class='col-sm-4'>
+    <div class='col-md'>
     <div class='card'>
         <div class='card-header box-shadow'>
             Price: <s>" . number_format($item3['itmbuyprice']) . "</s> <b>" . number_format($item3price) . "</b> Copper Coins

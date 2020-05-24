@@ -198,22 +198,22 @@ class headers
 		echo "<div class='row'>";
 		if ($ir['mail'] > 0) 
 		{
-			echo "<div class='col-sm'>";
-				alert('info', "", "You have {$ir['mail']} unread messages.", true, 'inbox.php', "View");
+			echo "<div class='col-md'>";
+				alert('info', "", "You have {$ir['mail']} unread messages.", true, '../inbox.php', "View");
 			echo "</div>";
         }
         //Tell user they have unread notifcations when they do.
         if ($ir['notifications'] > 0) 
 		{
-			echo "<div class='col-sm'>";
-				alert('info', "", "You have {$ir['notifications']} unread notifications.", true, 'notifications.php', "View");
+			echo "<div class='col-md'>";
+				alert('info', "", "You have {$ir['notifications']} unread notifications.", true, '../notifications.php', "View");
 			echo "</div>";
         }
 		//Tell user they have unread game announcements when they do.
 		if ($ir['announcements'] > 0) 
 		{
-			echo "<div class='col-sm'>";
-				alert('info', "", "You have {$ir['announcements']} unread announcements.", true, 'announcements.php', "View");
+			echo "<div class='col-md'>";
+				alert('info', "", "You have {$ir['announcements']} unread announcements.", true, '../announcements.php', "View");
 			echo "</div>";
 		}
 		echo "</div>";

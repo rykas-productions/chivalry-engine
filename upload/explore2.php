@@ -282,7 +282,7 @@ if ($ir['vip_days']) {
 		</div>";
 }
 echo "</div>
-</div><div class='col-sm-4'>
+</div><div class='col-md-4'>
         <div class='card'>
             <div class='card-header'>
                 Your Shortcuts [<a href='#' data-toggle='modal' data-target='#addShortcut'>Add Shortcut</a>]

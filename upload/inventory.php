@@ -11,7 +11,7 @@ require("globals.php");
 $tresder = (Random(100, 999));
 echo "<h3><i class='game-icon game-icon-swords-emblem'></i> Your Equipment</h3><hr />
 <div class='row'>
-	<div class='col-sm-3'>
+	<div class='col-md'>
 		<div class='card'>
 			<div class='card-header'>
 				Weapon ";
@@ -32,7 +32,7 @@ echo "
 		</div>
 	</div>";
 echo "
-	<div class='col-sm-3'>
+	<div class='col-md'>
 		<div class='card'>
 			<div class='card-header'>
 				Weapon ";
@@ -53,7 +53,7 @@ echo "
 		</div>
 	</div>";
 echo "
-	<div class='col-sm-3'>
+	<div class='col-md'>
 		<div class='card'>
 			<div class='card-header'>
 				Armor ";
@@ -74,7 +74,7 @@ echo "
 		</div>
 	</div>";
     echo "
-	<div class='col-sm-3'>
+	<div class='col-md'>
 		<div class='card'>
 			<div class='card-header'>
 				Potion";
