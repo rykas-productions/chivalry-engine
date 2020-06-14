@@ -255,7 +255,6 @@ echo "
 		<div id='PINTER' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-					<b><a href='2020bigbang.php'>2020 Big Bang Event</a></b><br />
 				    <a href='dungeon.php'><i class='game-icon game-icon-cage'></i> Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
 					<a href='infirmary.php'><i class='game-icon game-icon-hospital-cross'></i> Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
 					<a href='forums.php'><i class='far fa-comments'></i> CID Forums <span class='badge badge-pill badge-primary'>{$forumposts}</span></a><br />

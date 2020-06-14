@@ -13,7 +13,7 @@ $macropage = ('mine.php');
 require('globals.php');
 if (!isCourseComplete($userid, 23))
 {
-	alert('danger', "Uh Oh!", "Please complete the Precious Metals academic course before you first attempt mining.");
+	alert('danger', "Uh Oh!", "Please complete the Precious Metals academic course before you first attempt mining.", true, 'explore.php');
     die($h->endpage());
 }
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
@@ -88,8 +88,11 @@ function home()
 		</div>
 		<div class='col-sm'>
 			<div class='progress' style='height: 1rem;'>
-				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningpower']}' style='width:{$mineen}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'></div>
-				<span>{$mineen}% (" . number_format($MUS['miningpower']) . " / " . number_format($MUS['max_miningpower']). ")</span>
+				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningpower']}' style='width:{$mineen}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'>
+					<span>
+						{$mineen}% (" . number_format($MUS['miningpower']) . " / " . number_format($MUS['max_miningpower']). ")
+					</span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -104,8 +107,11 @@ function home()
 		</div>
 		<div class='col-sm'>
 			<div class='progress' style='height: 1rem;'>
-				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningxp']}' style='width:{$minexp}%' aria-valuemin='0' aria-valuemax='{$MUS['xp_needed']}'></div>
-				<span>{$minexp}% (" . number_format($MUS['miningxp']) . " / " . number_format($MUS['xp_needed']). ")</span>
+				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningxp']}' style='width:{$minexp}%' aria-valuemin='0' aria-valuemax='{$MUS['xp_needed']}'>
+					<span>
+						{$minexp}% (" . number_format($MUS['miningxp']) . " / " . number_format($MUS['xp_needed']). ")
+					</span>
+				</div>
 			</div>
 		</div>
 	</div>

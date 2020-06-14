@@ -19,23 +19,9 @@ echo "<h3><i class='game-icon game-icon-guards'></i> NPC Battle List</h3><hr />W
     you can only attack these NPCs every so often. Their cooldown is listed here as well. To receive the item, you must
     mug the bot.<hr />";
 $query = $db->query("/*qc=on*/SELECT * FROM `botlist`");
-echo "<table class='table table-bordered'>
-<tr>
-	<th>
-		Bot Name
-	</th>
-	<th class='hidden-xs'>
-		Bot Cooldown
-	</th>
-	<th>
-		Bot Item Drop
-	</th>
-	<th>
-		Attack
-	</th>
-</tr>";
 //List all the bots.
-while ($result = $db->fetch_row($query)) {
+while ($result = $db->fetch_row($query)) 
+{
     //Grab the last time the user attacked this bot.
     $timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
     $r2 = $db->fetch_single($timequery);
@@ -56,27 +42,26 @@ while ($result = $db->fetch_row($query)) {
     else {
         $attack = "<form action='attack.php'>
 					<input type='hidden' name='user' value='{$result['botuser']}'>
+					<input type='hidden' name='ref' value='bottent'>
 					<input type='submit' class='btn btn-danger' value='Attack {$botname}'>
 					</form>
 					(Odds of Victory {$chance}%)";
     }
-    //Table row formatting.
-    echo "
-	<tr>
-		<td>
-			{$botname} [{$result['botuser']}]<br />
-			Level " . $api->UserInfoGet($result['botuser'], 'level') . "
-		</td>
-		<td class='hidden-xs'>
-			" . ParseTimestamp($result['botcooldown']) . "
-		</td>
-		<td>
-			" . $api->SystemItemIDtoName($result['botitem']) . "
-		</td>
-		<td>
+	echo "
+	<div class='row'>
+		<div class='col-sm'>
+			<a href='profile.php?user={$result['botuser']}'>{$botname}</a> [{$result['botuser']}]<br />
+			<small>
+			Level: " . $api->UserInfoGet($result['botuser'], 'level') . "<br />
+			Cooldown: " . ParseTimestamp($result['botcooldown']) . "<br />
+			Drop: " . $api->SystemItemIDtoName($result['botitem']) . "
+			</small>
+		</div>
+		<div class='col-sm'>
 			{$attack}
-		</td>
-	</tr>";
+		</div>
+	</div>
+	<hr />";
 }
 echo "</table>";
 $h->endpage();

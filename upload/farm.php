@@ -69,8 +69,11 @@ echo "
 		</div>
 		<div class='col-sm'>
 			<div class='progress' style='height: 1rem;'>
-				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$FU['farm_water_available']}' aria-valuemin='0' aria-valuemax='100' style='width:{$frmeen}%'></div>
-				<span>{$frmeen}% (" . number_format($FU['farm_water_available']) . " Buckets / " . number_format($FU['farm_water_max']) . " Buckets)</span>
+				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$FU['farm_water_available']}' aria-valuemin='0' aria-valuemax='100' style='width:{$frmeen}%'>
+					<span>
+						{$frmeen}% (" . number_format($FU['farm_water_available']) . " Buckets / " . number_format($FU['farm_water_max']) . " Buckets)
+					</span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -84,8 +87,11 @@ echo "
 		</div>
 		<div class='col-sm'>
 			<div class='progress' style='height: 1rem;'>
-				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$FU['farm_xp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$frmexp}%'></div>
-				<span>{$frmexp}% (" . number_format($FU['farm_xp']) . " / " . number_format($FU['xp_needed']) . ")</span>
+				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$FU['farm_xp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$frmexp}%'>
+					<span>
+						{$frmexp}% (" . number_format($FU['farm_xp']) . " / " . number_format($FU['xp_needed']) . ")
+					</span>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -30,46 +30,46 @@ function home()
     //List them out now.
     echo "<h3><i class='game-icon game-icon-hospital-cross'></i> The Infirmary</h3><hr />
 	<small>There's currently " . number_format($PlayerCount) . " users in the infirmary.</small>
-	<hr />
-	<table class='table table-hover table-bordered'>
-		<thead>
-			<tr>
-				<th>
-					User
-				</th>
-				<th>
-					Reason
-				</th>
-				<th>
-					Check-out
-				</th>
-				<th>
-					Actions
-				</th>
-			</tr>
-		</thead>
-		<tbody>";
+	<hr />";
+	
+	echo "<div class='row'>
+			<div class='col-md-4'>
+				<h3>Player</h3>
+			</div>
+			<div class='col-md-4'>
+				<h3>Infirmary Status</h3>
+			</div>
+			<div class='col-md-4'>
+				<h3>Actions</h3>
+			</div>
+		</div>
+		<hr />";
     $query = $db->query("/*qc=on*/SELECT * FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime} ORDER BY `infirmary_out` DESC");
-    while ($Infirmary = $db->fetch_row($query)) {
-        echo "
-			<tr>
-				<td>
-					<a href='profile.php?user={$Infirmary['infirmary_user']}'>
-						" . parseUsername($Infirmary['infirmary_user']) . "
-					</a> [{$Infirmary['infirmary_user']}]
-				</td>
-				<td>
-					{$Infirmary['infirmary_reason']}
-				</td>
-				<td>
-					" . TimeUntil_Parse($Infirmary['infirmary_out']) . "
-				</td>
-				<td>
-					[<a href='?action=heal&user={$Infirmary['infirmary_user']}'>Heal User</a>]
-				</td>
-			</tr>";
+    while ($Infirmary = $db->fetch_row($query)) 
+	{
+		$displaypic = "<img src='" . parseImage(parseDisplayPic($Infirmary['infirmary_user'])) . "' height='75' alt='' title=''>";
+		echo "<div class='row'>
+			<div class='col-md-4'>
+				<div class='row'>
+					<div class='col-md'>
+						{$displaypic}
+					</div>
+					<div class='col-md'>
+						<a href='profile.php?user={$Infirmary['infirmary_user']}'> " . parseUsername($Infirmary['infirmary_user']) . " </a> 
+						[{$Infirmary['infirmary_user']}]
+					</div>
+				</div>
+			</div>
+			<div class='col-md-4'>
+				Reason: <i>{$Infirmary['infirmary_reason']}</i><br />
+				Release: " . TimeUntil_Parse($Infirmary['infirmary_out']) . "
+			</div>
+			<div class='col-md-4'>
+				<a class='btn btn-primary' href='?action=heal&user={$Infirmary['infirmary_user']}'>Heal {$api->SystemUserIDtoName($Infirmary['infirmary_user'])}</a>
+			</div>
+		</div>
+		<hr />";
     }
-    echo "</tbody></table>";
 }
 
 function heal()
@@ -100,7 +100,7 @@ function heal()
             }
             //Cost = 25 Secondary Currenxy x Times to Heal
             //Times = 30 Minutes x Times to Heal
-            $cost = 15 * $_GET['times'];
+            $cost = 5 * $_GET['times'];
             $time = 30 * $_GET['times'];
             //User does not have enough Chivalry Tokens to heal that many times.
             if ($ir['secondary_currency'] < $cost) {
@@ -122,7 +122,7 @@ function heal()
         } else {
             echo "How many times do you wish to heal {$api->SystemUserIDtoName($_GET['user'])}?<br />
             1 Set = 30 minutes<br />
-            1 Set = 15 Chivalry Tokens<br />
+            1 Set = 5 Chivalry Tokens<br />
             <form>
                 <input type='hidden' name='user' value='{$_GET['user']}'>
                 <input type='hidden' name='action' value='heal'>

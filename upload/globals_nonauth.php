@@ -33,9 +33,9 @@ require "lib/basic_error_handler.php";
 set_error_handler('error_php');
 //Require styling.
 if (!isset($_GET['othermenu']))
-    require "header_nonauth.php";
+	require "header_nonauth.php";
 else
-        require "header_nonauth2.php";
+		require "header_nonauth2.php";
 include "config.php";
 define("MONO_ON", 1);
 //Connect to database.

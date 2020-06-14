@@ -43,19 +43,19 @@ else {
         //Player has the Copper Coins required to buy an account.
         if ($ir['primary_currency'] >= $bank_cost) {
 
-            alert('success', "Success!", "You have successfully bought a vault bank account for " . number_format($bank_cost), true, 'vaultbank.php');
+            alert('success', "Success!", "You have successfully bought a vault bank account for " . number_format($bank_cost) . " Copper Coins!", true, 'vaultbank.php');
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "vaultbank", 0);
 			item_add($userid,182,1);
 			addToEconomyLog('Bank Fees', 'copper', ($bank_cost)*-1);
         } //Player is too poor to afford account.
         else {
-            alert('danger', "Uh oh!", "You do not have enough cash to buy a vault bank account. You need at least
-                " . number_format($bank_cost), true, 'vaultbank.php');
+            alert('danger', "Uh oh!", "You do not have enough Copper Coins to buy a vault bank account. You need at least
+                " . number_format($bank_cost) . " Copper Coins.", true, 'vaultbank.php');
         }
     } else {
-        echo "Do you wish to buy a Vault Bank Account? It'll cost you " . number_format($bank_cost) . "!<br />
-            <a href='vaultbank.php?buy'>Yes, please!</a>";
+        echo "Do you wish to buy a Vault Bank Account? It'll cost you " . number_format($bank_cost) . " Copper Coins.<br />
+            <a href='?buy'>Yes, please!</a>";
     }
 }
 function index()

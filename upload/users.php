@@ -45,41 +45,57 @@ echo "Order By:
 <br /><br />";
 
 //Select the users info
-$q = $db->query("/*qc=on*/SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `fedjail`, `vipcolor`, `display_pic`
+$q = $db->query("/*qc=on*/SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `fedjail`, `vipcolor`, `display_pic`, `laston`
                 FROM `users` ORDER BY `{$by}` {$ord}  LIMIT {$st}, 100");
 $no1 = $st + 1;
 $no2 = min($st + 100, $membs);
 echo "
-Showing users {$no1} to {$no2} by order of {$by} {$ord}.
-<table class='table table-bordered table-hover table-striped'>
-			<tr>
-				<th colspan='2'>
-					User
-				</th>
-				<th>
-					Info
-				</th>
-			</tr>
-   ";
+Showing users {$no1} to {$no2} by order of {$by} {$ord}.";
 //Display the users info.
-while ($r = $db->fetch_row($q)) {
+while ($r = $db->fetch_row($q)) 
+{
     $r['username'] = parseUsername($r['userid']);
-	$displaypic = ($r['display_pic']) ? "<img src='" . parseImage(parseDisplayPic($r['userid'])) . "' height='75' alt='' title=''>" : '';
-    echo "	<tr>
-				<td width='15%'>
+	$un = $api->SystemUserIDtoName($r['userid']);
+	$displaypic = "<img src='" . parseDisplayPic($r['userid']) . "' height='75' alt='{$un}&#39;s Display picture.' title='{$un}&#39;s Display picture'>";
+	$active = ($r['laston'] > time() - 300) ? "<span class='text-success'>Online</span>" : "<span class='text-danger'>Offline</span>";
+	$infirm = (user_infirmary($r['userid'])) ? "<span class='text-danger'>Infirmary</span>" : "<span class='text-success'>Healthy</span>";
+	$dung = (user_dungeon($r['userid'])) ? "<span class='text-danger'>Dungeon</span>" : "<span class='text-success'>Free</span>";
+    echo "
+	<div class='card'>
+		<div class='card-body'>
+			<div class='row'>
+				<div class='col-sm-2'>
 					{$displaypic}
-				</td>
-				<td>
-					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]<br />
-				</td>
-				<td>
-					Level: " . number_format($r['level']) . "<br />
-					Copper Coins: " . number_format($r['primary_currency']) . "
-				</td>
-			</tr>";
+				</div>
+				<div class='col-sm-2'>
+					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+				</div>
+				<div class='col-sm'>
+					<div class='row'>
+						<div class='col'>
+							Level<br />
+							" . number_format($r['level']) . "<br />
+						</div>
+						<div class='col'>
+							Copper Coins<br />
+							" . number_format($r['primary_currency']) . "
+						</div>
+						<div class='col'>
+							{$active}
+						</div>
+						<div class='col hidden-sm-down'>
+							{$infirm}
+						</div>
+						<div class='col hidden-sm-down'>
+							{$dung}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>";
 }
 $db->free_result($q);
-echo '</table>';
 //Pagination function!
 echo pagination(100, $membs, $st, "?by={$by}&ord={$ord}&st=");
 $h->endpage();

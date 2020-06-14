@@ -43,19 +43,19 @@ else {
         //Player has the Copper Coins required to buy an account.
         if ($ir['primary_currency'] >= $bank_cost) {
 
-            alert('success', "Success!", "You have successfully bought a federal bank account for " . number_format($bank_cost), true, 'bigbank.php');
+            alert('success', "Success!", "You have successfully bought a federal bank account for " . number_format($bank_cost) . " Copper Coins!", true, 'bigbank.php');
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bigbank", 0);
 			item_add($userid,155,1);
 			addToEconomyLog('Bank Fees', 'copper', ($bank_cost)*-1);
         } //Player is too poor to afford account.
         else {
-            alert('danger', "Uh oh!", "You do not have enough cash to buy a federal bank account. You need at least
-                " . number_format($bank_cost), true, 'bigbank.php');
+            alert('danger', "Uh oh!", "You do not have enough Copper Coins to buy a federal bank account. You need at least
+                " . number_format($bank_cost) . " Copper Coins.", true, 'bigbank.php');
         }
     } else {
-        echo "Do you wish to buy a Federal Bank Account? It'll cost you " . number_format($bank_cost) . "!<br />
-            <a href='bigbank.php?buy'>Yes, please!</a>";
+        echo "Do you wish to buy a Federal Bank Account? It'll cost you " . number_format($bank_cost) . " Copper Coins.<br />
+            <a href='?buy'>Yes, please!</a>";
     }
 }
 function index()

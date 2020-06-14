@@ -23,8 +23,8 @@
 				There's three units in the districts: Warriors, Archers and Generals. Warriors are melee units, who get up and 
 				personal with the enemy. Without proper archer cover, however, they're good as gone. Likewise, archers without a 
 				frontline of Warriors are toast.<br />
-				Generals are a purely defensive unit which may be assigned to tiles you own. This grants that tile an extra 50% defense 
-				buff.
+				Generals are a purely defensive unit which may be assigned to tiles you own. This grants that tile an extra 20% defense 
+				buff. You may only place two generals on a single tile at a time.
 				<hr />
 				<b>District Tiles</b><br />
 				Tiles can very easily be identified by the color of their background and border.<br />
@@ -33,9 +33,10 @@
 				Red tiles - Tile owned by others.<br />
 				Green Border - Fortified tile owned by your guild.<br />
 				Red border - Fortified tile owned by other guild.<br />
-				Yellow border - High ground. (10% defense/offense)<br />
-				White border - Low ground (-10% defense/offense)<br />
-				Blue border - Market (-10% troop cost, does not stack)
+				Yellow border - High ground. (+25% defense)<br />
+				White border - Low ground (-25% defense)<br />
+				Blue border - Market (-15% troop cost, stacks)<br />
+				Purple border - Outpost (+15% troops per day, does stack)
 				<hr />
 				<b>Getting Started</b><br />
 				To get on the board, you must attack the outside tiles, and then make your way in. You may attack in any direction 
@@ -63,8 +64,8 @@
 				factored into the daily upkeep cost, but that is not the case in the beta.</u>
 				<hr />
 				<b>Fortification</b><br />
-				District tiles may be fortified up to 10 times. Fortification increases your defensive value by 10% per 
-				fortification level. A fortification level requires the following: 125 Guild Experience (flat), 
+				District tiles may be fortified up to 10 times. Fortification increases your defensive value by 12% per 
+				fortification level. A fortification level requires the following: Guild Experience (Scales with fortification level), 
 				1,500 Coal (per fortification level), 3,200 Copper Flakes (per fortification level). These must 
 				be in your guild's armory. Fortifications are lost when you lose ownership of the tile it was on.
 				<hr />
@@ -73,9 +74,8 @@
 				*Attacking a low-ground tile will be easy, defending it will not.<br />
 				*Market tiles are highly sought after. Once you take one, you will have to defend it hard.<br />
 				*A tile cannot be more than one tile type at a time. (IE: High ground + market)<br />
-				*You can recruit troops more than once a day. Check back as more players from your guild log in.<br />
-				*Warriors and Archers can be recruited at a 40:20:1 ratio. 40 Warriors: 20 Archers: 1 Active Guild Member<br />
-				*Active guild members are any player in the guild who's logged in within the last 24 hours at time of page execution.<br />
+				*You can recruit troops more than once a day. This is helpful is your guild level's up.<br />
+				*Warriors and Archers can be recruited at a 20:10:1 ratio. 20 Warriors: 10 Archers: 1 Guild Level<br />
             </div>
         </div>
     </div>

@@ -349,8 +349,8 @@ function createuser()
             die($h->endpage());
         } else {
             $HP = (50) + $_POST['level'] * 50;
-            $Energy = (20) + $_POST['level'] * 4;
-            $Brave = (6) + $_POST['level'] * 4;
+            $Energy = (22) + $_POST['level'] * 2;
+            $Brave = (8) + $_POST['level'] * 2;
             $time = time();
             $encpsw = encode_password($pw);
             $e_encpsw = $db->escape($encpsw);
@@ -705,9 +705,9 @@ function edituser()
         $oldwill = $db->fetch_single($u_exists);
         $db->free_result($u_exists);
         $will = ($oldwill > $maxwill) ? $maxwill : $oldwill;
-        $energy = 20 + $_POST['level'] * 4;
-        $brave = 6 + $_POST['level'] * 4;
-        $hp = 50 + $_POST['level'] * 50;
+        $energy = 22 + ($_POST['level'] * 2);
+        $brave = 8 + ($_POST['level'] * 2);
+        $hp = 50 + ($_POST['level'] * 50);
         $db->query("UPDATE `users` SET `username` = '{$username}', `level` = {$level}, `primary_currency` = {$money}, `secondary_currency` = {$money2},
 		`energy` = {$energy}, `maxenergy` = {$energy}, `brave` = {$brave}, `maxbrave` = {$brave}, `hp` = {$hp}, `maxhp` = {$hp}, `bank` = {$bank},
 		`equip_armor` = {$equip_armor}, `equip_primary` = {$equip_prim}, `equip_secondary` = {$equip_sec}, `location` = {$city}, `will`= {$will}, `maxwill` = {$maxwill},

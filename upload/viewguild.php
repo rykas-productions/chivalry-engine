@@ -7,7 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 $voterquery = 1;
-$multi = 1.0;
+$multi = 1.25;
 require('globals.php');
 if (!$ir['guild']) {
     alert('danger', "Uh Oh!", "You are not in a guild.", true, 'index.php');
@@ -90,211 +90,293 @@ function home()
 {
     global $db, $userid, $ir, $gd;
     //The main guild index.
+	echo "<div class='row'>
+	<div class='col-md'>";
 	if (!empty($gd['guild_pic']))
 	{
-		echo 
-		"<div class='container'>
+		echo "
+			<img src='" . parseImage($gd['guild_pic']) . "' placeholder='The {$gd['guild_name']} guild picture.' width='300' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>";
+	}
+	else
+	{
+		alert('info','','Tell your guild leadership to set a guild profile picture!',false);
+	}
+		echo "</div><br />
+		<div class='col-md'>
 			<div class='row'>
-				<div class='col-lg-6 mx-auto'>
-					<img src='" . parseImage($gd['guild_pic']) . "' placeholder='The {$gd['guild_name']} guild picture.' width='300' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>
+				<div class='col-4'>
+					<a class='btn btn-primary' href='?action=summary'>Summary</a>
+				</div>
+				<div class='col-4'>
+					<a class='btn btn-primary' href='?action=donate'>Donate</a>
+				</div>
+				<div class='col-4'>
+					<a class='btn btn-primary' href='?action=members'>Members</a>
 				</div>
 			</div>
-		</div>";
-	}
-    echo "
-    <table class='table table-bordered'>
-    		<tr>
-    			<td>
-    			    <a href='?action=summary'>Summary</a>
-                </td>
-    			<td>
-    			    <a href='?action=donate'>Donate</a>
-                </td>
-    		</tr>
-    		<tr>
-    			<td>
-    			    <a href='?action=members'>Members</a>
-                </td>
-    			<td>
-    			    <a href='?action=crimes'>Crimes</a>
-                </td>
-    		</tr>
-    		<tr>
-    			<td>
-    			    <a href='?action=leave'>Leave Guild</a>
-                </td>
-				<td>
-				    <a href='?action=atklogs'>Attack Logs</a>
-                </td>
-    		</tr>
-    		<tr>
-    			<td>
-    			    <a href='?action=armory'>Armory</a>
-                </td>
-    			<td>
-					<a href='?action=forums'>Forums</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a href='?action=viewpolls'>Guild Polls</a>
-				</td>
-				<td>
-					<a href='?action=gym'>Guild Gym</a>
-				</td>
-			</tr>";
-			if (isGuildStaff())
-			{
+			<hr />
+			<div class='row'>
+				<div class='col-4'>
+					<a class='btn btn-primary' href='?action=crimes'>Crimes</a>
+				</div>
+				<div class='col-4'>
+					<a class='btn btn-primary' href='?action=leave'>Leave Guild</a>
+				</div>
+				<div class='col-4'>
+					<a class='btn btn-primary' href='?action=atklogs'>Attack Logs</a>
+				</div>
+			</div>
+			<hr />
+			<div class='row'>
+				<div class='col-4'>
+					<a class='btn btn-primary' href='?action=armory'>Armory</a>
+				</div>
+				<div class='col-4'>
+					<a class='btn btn-primary' href='?action=forums'>Forums</a>
+				</div>
+				<div class='col-4'>
+					<a class='btn btn-primary' href='?action=viewpolls'>Guild Polls</a>
+				</div>
+			</div>
+			<hr />
+			<div class='row'>
+				<div class='col'>
+					<a class='btn btn-primary' href='?action=gym'>Guild Gym</a>
+				</div>";
+				if (isGuildStaff())
+				{
 					echo "
-				<tr>
-					<td>
-						<a href='?action=staff&act2=idx'>Staff Room</a>
-					</td>
-					<td>
-					</td>
-				</tr>";
-			}
+						<div class='col'>
+							<a class='btn btn-primary' href='?action=staff&act2=idx'>Staff Room</a>
+						</div>";
+				}
 				echo"
-	</table>
-	<br />
-	<table class='table table-bordered'>
-		<tr class='table-secondary'>
-			<th>
-			    Guild Announcement
-			</th>
-		</tr>
-		<tr>
-			<td>
-			    {$gd['guild_announcement']}
-			</td>
-		</tr>
-	</table>
-	<br />
+			</div>
+		</div>
+	</div>
+	<hr />";
+	if (!empty($gd['guild_announcement']))
+	{
+		alert('dark','',"<b>Guild Announcement</b><br />{$gd['guild_announcement']}",false);
+	}
+	echo"
+	<hr />
 	<b>Last 10 Guild Notifications</b>
-	<br />
+	<hr />
    	";
     $q = $db->query("/*qc=on*/SELECT * FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']} ORDER BY `gn_time` DESC  LIMIT 10");
-    echo "
-	<table class='table table-bordered'>
-		<tr align='left'>
-			<th>
-			    Notification Info
-            </th>
-			<th>
-			    Notification Content
-            </th>
-		</tr>
-   	";
-    while ($r = $db->fetch_row($q)) {
-        echo "
-		<tr align='left'>
-			<td>
-			    " . DateTime_Parse($r['gn_time']) . "
-            </td>
-			<td>
-			    {$r['gn_text']}
-            </td>
-		</tr>
-   		";
+    while ($r = $db->fetch_row($q)) 
+	{
+		echo "
+		<div class='row'>
+			<div class='col-md text-left'>
+				 {$r['gn_text']}<br />
+				 <small>" . DateTime_Parse($r['gn_time']) . "</small>
+			</div>
+		</div>
+		<hr />";
     }
     $db->free_result($q);
-    echo "</table>
-";
 }
 
 function summary()
 {
-    global $db, $gd, $set, $ir, $api;
-
+    global $db, $gd, $set, $ir, $api, $wq;
+	$cnt = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
+	$ldrnm = parseUsername($gd['guild_owner']);
+	$vldrnm = parseUsername($gd['guild_coowner']);
+	$appnm = parseUsername($gd['guild_app_manager']);
+	$vaultnm = parseUsername($gd['guild_vault_manager']);
+	$crlonm = parseUsername($gd['guild_crime_lord']);
+	$armory = ($gd['guild_hasarmory']) ? "<span class='text-success'>Purchased</span>" : "<span class='text-danger'>Unpurchased</span>";
+	$recruit = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Open</span>" : "<span class='text-danger'>Closed</span>";
+	$debt = ($gd['guild_primcurr'] > 0) ? "<span class='text-success'>No Debt</span>" : "<span class='text-danger'>In Debt!!</span>" ;
+	$wars = ($db->fetch_single($wq) == 0) ? "<span class='text-success'>No active wars</span>" : "<span class='text-danger'> " . number_format($db->fetch_single($wq)) . " active wars</span>";
     //List all the guild's information
-    echo "
-	<table class='table table-bordered'>
-	<tr>
-		<th colspan='2'>
-			{$gd['guild_name']} [{$gd['guild_id']}] Information
-		</th>
-	</tr>
-	<tr align='left'>
-		<th>
-			Guild Staff Members
-		</th>
-		<td>";
-			$ldrnm = parseUsername($gd['guild_owner']);
-			$vldrnm = parseUsername($gd['guild_coowner']);
-			$appnm = parseUsername($gd['guild_app_manager']);
-			$vaultnm = parseUsername($gd['guild_vault_manager']);
-			$crlonm = parseUsername($gd['guild_crime_lord']);
-        echo "	<b>Leader:</b> <a href='profile.php?user={$gd['guild_owner']}'>{$ldrnm}</a><br />
-				<b>Co-Leader:</b> <a href='profile.php?user={$gd['guild_coowner']}'>{$vldrnm}</a><br />
-				<b>Application Manager:</b> <a href='profile.php?user={$gd['guild_app_manager']}'>{$appnm}</a><br />
-				<b>Vault Manager:</b> <a href='profile.php?user={$gd['guild_vault_manager']}'>{$vaultnm}</a><br />
-				<b>Crime Lord:</b> <a href='profile.php?user={$gd['guild_crime_lord']}'>{$crlonm}</a><br />
-		</td>
-	</tr>";
-    $cnt = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
-    echo "
-	<tr align='left'>
-		<th>
-			Members
-		</th>
-		<td>
-			" . $db->fetch_single($cnt) . " / " . $gd['guild_level'] * 5 . "
-		</td>
-	</tr>
-	<tr align='left'>
-		<th>
-			Level
-		</th>
-		<td>
-			{$gd['guild_level']}
-		</td>
-	</tr>
-	<tr align='left'>
-		<th>
-			Experience
-		</th>
-		<td>
-			" . number_format($gd['guild_xp']) . " / " . number_format($gd['xp_needed']) . " [<a href='?action=donatexp'>Donate Experience</a>]
-		</td>
-	</tr>
-	<tr align='left'>
-		<th>
-			Copper Coins*
-		</th>
-		<td>
-			" . number_format($gd['guild_primcurr']) . " / " . number_format((($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) . "
-		</td>
-	</tr>
-	<tr align='left'>
-		<th>
-			Chivalry Tokens
-		</th>
-		<td>
-			" . number_format($gd['guild_seccurr']) . "
-		</td>
-	</tr>
-	<tr align='left'>
-		<th>
-			Allies
-		</th>
-		<td>";
-			$q=$db->query("/*qc=on*/SELECT * 
+	echo "
+	<div class='row'>
+		<div class='col-md'>
+			<div class='card'>
+				<div class='card-header'>
+					Guild Staff
+				</div>
+				<div class='card-body text-left'>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Leader</b>
+						</div>
+						<div class='col-md'>
+							<a href='profile.php?user={$gd['guild_owner']}'>{$ldrnm}</a>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Co-Leader</b>
+						</div>
+						<div class='col-md'>
+							<a href='profile.php?user={$gd['guild_coowner']}'>{$vldrnm}</a>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Application Manager</b>
+						</div>
+						<div class='col-md'>
+							<a href='profile.php?user={$gd['guild_app_manager']}'>{$appnm}</a>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Vault Manager</b>
+						</div>
+						<div class='col-md'>
+							<a href='profile.php?user={$gd['guild_vault_manager']}'>{$vaultnm}</a>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Crime Lord</b>
+						</div>
+						<div class='col-md'>
+							<a href='profile.php?user={$gd['guild_crime_lord']}'>{$crlonm}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='col-md'>
+			<div class='card'>
+				<div class='card-header'>
+					Guild Information
+				</div>
+				<div class='card-body text-left'>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Members</b>
+						</div>
+						<div class='col-md'>
+							" . number_format($db->fetch_single($cnt)) . " / " . number_format($gd['guild_level'] * 5) . "
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Level</b>
+						</div>
+						<div class='col-md'>
+							" . number_format($gd['guild_level']) . "
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>XP</b>
+						</div>
+						<div class='col-md'>
+							" . number_format($gd['guild_xp']) . " / " . number_format($gd['xp_needed']) . "
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+						[<a href='?action=donatexp'>Donate Experience</a>]
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Copper Coins*</b>
+						</div>
+						<div class='col-md'>
+							" . number_format($gd['guild_primcurr']) . " / " . number_format((($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) . "
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Chivalry Tokens</b>
+						</div>
+						<div class='col-md'>
+							" . number_format($gd['guild_seccurr']) . "
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br />";
+	echo "
+	<div class='row'>
+		<div class='col-md'>
+			<div class='card'>
+				<div class='card-header'>
+					Guild Allies
+				</div>
+				<div class='card-body text-left'>
+					<div class='row'>";
+						$q=$db->query("/*qc=on*/SELECT * 
 							FROM `guild_alliances` 
 							WHERE (`alliance_a` = {$ir['guild']} OR `alliance_b` = {$ir['guild']})
 							AND `alliance_true` = 1");
-			while ($r=$db->fetch_row($q))
-			{
-				$type = ($r['alliance_type'] == 1) ? "Traditional" : "Non-aggressive";
-				if ($r['alliance_a'] == $ir['guild'])
-					$otheralliance=$r['alliance_b'];
-				else
-					$otheralliance=$r['alliance_a'];
-				echo "<a href='?action=view&id={$otheralliance}'>{$api->GuildFetchInfo($otheralliance,'guild_name')}</a><br />";
-			}
-		
-		echo"</td>
-	</tr>
-      </table>
+						while ($r=$db->fetch_row($q))
+						{
+							$type = ($r['alliance_type'] == 1) ? "Traditional" : "Non-aggressive";
+							if ($r['alliance_a'] == $ir['guild'])
+								$otheralliance=$r['alliance_b'];
+							else
+								$otheralliance=$r['alliance_a'];
+							echo "<a href='guilds.php?action=view&id={$otheralliance}'>{$api->GuildFetchInfo($otheralliance,'guild_name')}</a><br />";
+						}
+						echo"
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='col-md'>
+			<div class='card'>
+				<div class='card-header'>
+					Guild Bonus
+				</div>
+				<div class='card-body text-left'>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Armory</b>
+						</div>
+						<div class='col-md'>
+							{$armory}
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Recruitment</b>
+						</div>
+						<div class='col-md'>
+							{$recruit}
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Finances</b>
+						</div>
+						<div class='col-md'>
+							{$debt}
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Active Wars</b>
+						</div>
+						<div class='col-md'>
+							{$wars}
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-md'>
+							<b>Daily Upkeep</b>
+						</div>
+						<div class='col-md'>
+							" . number_format(calculateUpkeep()) . " Copper Coins
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	  * = Increased every night by 2%.
 	  <a href='viewguild.php'>Go Back</a>";
 }
@@ -479,71 +561,64 @@ function members()
 {
     global $db, $userid, $gd, $api;
     //List all the guild members. ^_^
-    echo "
-    <table class='table table-bordered table-striped'>
-		<tr align='left'>
-    		<th width='20%'>
-				User
-			</th>
-    		<th>
-				Level
-			</th>
-			<th>
-				Donations*
-			</th>
-    		<th>
-				&nbsp;
-			</th>
-    	</tr>";
+	echo "<div class='row'>
+			<div class='col-md-4'>
+				 <h3>Player</h3>
+			</div>
+			<div class='col-md-4'>
+				 <h3>General Info</h3>
+			</div>
+			<div class='col-md-4'>
+				 <h3>Donations</h3>
+			</div>
+		</div>
+		<hr />";
     $q = $db->query("/*qc=on*/SELECT `userid`, `username`, `level`, `display_pic`, `primary_currency` FROM `users` WHERE `guild` = {$gd['guild_id']} ORDER BY `level` DESC");
     $csrf = request_csrf_html('guild_kickuser');
     while ($r = $db->fetch_row($q)) {
 		$r['status'] = '';
 		if ($api->UserStatus($r['userid'], 'infirmary'))
-			$r['status'] .= "In Infirmary<br />";
+			$r['status'] .= "<span class='text-danger'>Injured</span><br />";
 		if ($api->UserStatus($r['userid'], 'dungeon'))
-			$r['status'] .= "In Dungeon<br />";
+			$r['status'] .= "<span class='text-danger'>Locked Up</span><br />";
 		if ((!$api->UserStatus($r['userid'], 'dungeon')) && (!$api->UserStatus($r['userid'], 'infirmary')))
-			$r['status'] .= "Perfectly Fine<br />";
+			$r['status'] .= "<span class='text-success'>Perfectly Fine</span><br />";
         $r['username2']=parseUsername($r['userid']);
         $r['display_pic']=parseImage(parseDisplayPic($r['userid']));
 		$r2=$db->fetch_row($db->query("SELECT * FROM `guild_donations` WHERE `userid` = {$r['userid']} AND `guildid` = {$gd['guild_id']}"));
-        echo "
-		<tr>
-        	<td>
-				<img src='{$r['display_pic']}' class='img-fluid'><br />
-				<a href='profile.php?user={$r['userid']}'>{$r['username2']}</a><br />
-				{$r['status']}
-			</td>
-        	<td>
-				{$r['level']}
-			</td>
-			<td>
-			Copper Coins: " . number_format($r2['copper']) . "<br />
-			Chivalry Tokens: " . number_format($r2['tokens']) . "<br />
-			Player XP: " . number_format($r2['xp']) . "<br />
-			Guild XP: " . number_format($r2['guild_xp']) . "**
-			</td>
-        	<td>
-           ";
-        if (isGuildLeadership()) {
-            echo "
-					<form action='?action=kick' method='post'>
-						<input type='hidden' name='ID' value='{$r['userid']}' />
-						{$csrf}
-						<input type='submit' class='btn btn-primary' value='Kick {$r['username']}' />
-					</form>";
-        } else {
-            echo "&nbsp;";
-        }
-        echo "
-			</td>
-		</tr>
-   		";
+		   echo "<div class='row'>
+			<div class='col-md-2'>
+				 <img src='{$r['display_pic']}' class='img-fluid'>
+			</div>
+			<div class='col-md-2'>
+				 <a href='profile.php?user={$r['userid']}'>{$r['username2']}</a>
+			</div>
+			<div class='col-md-4'>
+				 Level: {$r['level']}<br />
+				Copper Coins: " . number_format($r['primary_currency']) . "<br />
+				 {$r['status']}";
+				 if (isGuildLeadership())
+				 {
+					 echo "
+						<form action='?action=kick' method='post'>
+							<input type='hidden' name='ID' value='{$r['userid']}' />
+							{$csrf}
+							<input type='submit' class='btn btn-primary' value='Kick {$r['username']}' />
+						</form>";
+				 }
+				 echo "
+			</div>
+			<div class='col-md-4'>
+				 Copper Coins: " . number_format($r2['copper']) . "<br />
+				Chivalry Tokens: " . number_format($r2['tokens']) . "<br />
+				Player XP: " . number_format($r2['xp']) . "<br />
+				Guild XP: " . number_format($r2['guild_xp']) . "**
+			</div>
+		</div>
+		<hr />";
     }
     $db->free_result($q);
     echo "
-	</table>
 	<small>*=Since 10/7/2018 at 5:21PM<br />
 	**=Since 4/20/20 @ 4:34PM</small>
 	<br />
@@ -591,7 +666,24 @@ function staff_kick()
         } else {
             //User to be kicked exists and is in the guild.
             $q = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = $who AND `guild` = {$gd['guild_id']}");
-            if ($db->num_rows($q) > 0) {
+            if ($db->num_rows($q) > 0) 
+			{
+				$count = $api->UserCountItem($who,$gd['guild_sword_item']);
+				if ($count > 0)
+				{
+					$api->UserTakeItem($who,$gd['guild_sword_item'],$count);
+					$api->GuildAddItem($gd['guild_id'], $gd['guild_sword_item'], $count);
+				}
+				if ($api->UserEquippedItem($who, 'primary', $gd['guild_sword_item']))
+				{
+					$db->query("UPDATE `users` SET `equip_primary` = 0 WHERE `userid` = {$who}");
+					$api->GuildAddItem($gd['guild_id'], $gd['guild_sword_item'], 1);
+				}
+				if ($api->UserEquippedItem($who, 'secondary', $gd['guild_sword_item']))
+				{
+					$db->query("UPDATE `users` SET `equip_secondary` = 0 WHERE `userid` = {$who}");
+					$api->GuildAddItem($gd['guild_id'], $gd['guild_sword_item'], 1);
+				}
                 //Kick the user and add the notification.
                 $kdata = $db->fetch_row($q);
                 $db->query("UPDATE `users` SET `guild` = 0 WHERE `userid` = {$who}");
@@ -634,6 +726,22 @@ function leave()
             alert('danger', "Uh Oh!", "You cannot leave your guild while at war.", true, 'viewguild.php');
             die($h->endpage());
         }
+		//Check if player has the guild's special sword.
+		if ($api->UserHasItem($userid, $gd['guild_sword_item'], 1))
+		{
+			alert('danger', "Uh Oh!", "Please donate your {$api->SystemItemIDtoName($gd['guild_sword_item'])} from your inventory to your guild before you leave.", true, 'viewguild.php');
+            die($h->endpage());
+		}
+		if ($api->UserEquippedItem($userid, 'primary', $gd['guild_sword_item']))
+		{
+			alert('danger', "Uh Oh!", "Please donate your {$api->SystemItemIDtoName($gd['guild_sword_item'])} from your primary equipment slot to your guild before you leave.", true, 'viewguild.php');
+            die($h->endpage());
+		}
+		if ($api->UserEquippedItem($userid, 'secondary', $gd['guild_sword_item']))
+		{
+			alert('danger', "Uh Oh!", "Please donate your {$api->SystemItemIDtoName($gd['guild_sword_item'])} from your secondary equipment to your guild before you leave.", true, 'viewguild.php');
+            die($h->endpage());
+		}
 
         //Allow player to leave.
         $db->query("UPDATE `users` SET `guild` = 0  WHERE `userid` = {$userid}");
@@ -675,37 +783,34 @@ function atklogs()
                         OR `u2`.`guild` = {$ir['guild']})
                         ORDER BY `attack_time` DESC
                         LIMIT 50");
-    echo "<b>Last 50 attacks involving anyone in your guild</b><br />
-	<table class='table table-bordered'>
-		<tr align='left'>
-			<th>Time</th>
-			<th>Attack Info</th>
-		</tr>";
-    while ($r = $db->fetch_row($atks)) {
+    echo "<b>Last 50 attacks involving anyone in your guild</b><br />";
+    while ($r = $db->fetch_row($atks)) 
+	{
         $rowcolor = ($api->UserInfoGet($r['attacker'],'guild') == $ir['guild']) ? "text-success" : "text-danger";
         $d = DateTime_Parse($r['attack_time']);
         if ($r['result'] == 'xp')
         {
-            $didwhat = "<span class='{$rowcolor} font-weight-bold'>used</span> <a href='profile.php?user={$r['attacked']}'>{$api->SystemUserIDtoName($r['attacked'])}</a> <span class='{$rowcolor} font-weight-bold'>for experience</span>.";
+            $didwhat = "<span class='{$rowcolor}'>used</span> <a href='profile.php?user={$r['attacked']}'>{$api->SystemUserIDtoName($r['attacked'])}</a> for experience.";
         }
         if ($r['result'] == 'beatup')
         {
-            $didwhat = "<span class='{$rowcolor} font-weight-bold'>severely beat up</span> <a href='profile.php?user={$r['attacked']}'>{$api->SystemUserIDtoName($r['attacked'])}</a>.";
+            $didwhat = "<span class='{$rowcolor}'>severely beat up</span> <a href='profile.php?user={$r['attacked']}'>{$api->SystemUserIDtoName($r['attacked'])}</a>.";
         }
         if ($r['result'] == 'mugged')
         {
-            $didwhat = "<span class='{$rowcolor} font-weight-bold'>mugged</span> <a href='profile.php?user={$r['attacked']}'>{$api->SystemUserIDtoName($r['attacked'])}</a>.";
+            $didwhat = "<span class='{$rowcolor}'>mugged</span> <a href='profile.php?user={$r['attacked']}'>{$api->SystemUserIDtoName($r['attacked'])}</a>.";
         }
-        echo "<tr align='left'>
-        		<td>$d</td>
-        		<td>
-                <a href='profile.php?user={$r['attacker']}'>{$api->SystemUserIDtoName($r['attacker'])}</a> {$didwhat}
-        		</td>
-        	  </tr>";
+		echo "
+		<div class='row'>
+			<div class='col-md text-left'>
+				 <a href='profile.php?user={$r['attacker']}'>{$api->SystemUserIDtoName($r['attacker'])}</a> {$didwhat}<br />
+				 <small>{$d}</small>
+			</div>
+		</div>
+		<hr />";
     }
     $db->free_result($atks);
-    echo "</table>
-	<a href='viewguild.php'>Go Back</a>";
+    echo "<a href='viewguild.php'>Go Back</a>";
 }
 
 function warview()
@@ -897,7 +1002,7 @@ function gym()
 				$all_select = "/*qc=on*/SELECTed";
 			}
 			//Log the user's training attempt.
-			$api->SystemLogsAdd($userid, 'training', "Trained {$stat} {$_GET['amnt']} times and gained " . number_format($gain) . ".");
+			$api->SystemLogsAdd($userid, 'training', "[Guild Gym] {$_GET['amnt']} energy for " . number_format($gain) . " {$stat}.");
 			echo "<hr />";
 			$ir['energy'] -= $_GET['amnt'];
 			if ($stat != 'all')
@@ -1112,8 +1217,7 @@ function guild_polls()
 										</div>
 										<div class='col-sm'>
 											<div class='progress' style='height: 1rem;'>
-												<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'></div>
-												<span>{$perc}%</span>
+												<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'><span>{$perc}%</span></div>
 											</div>
 										</div>
 									</div>
@@ -1231,8 +1335,7 @@ function guild_oldpolls()
 							</div>
 							<div class='col-sm'>
 								<div class='progress' style='height: 1rem;'>
-									<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'></div>
-									<span>{$perc}%</span>
+									<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'><span>{$perc}%</span></div>
 								</div>
 							</div>
 						</div>
@@ -3023,6 +3126,10 @@ function staff_dissolve()
             $db->query("DELETE FROM `guild` WHERE `guild_id` = {$ir['guild']}");
 			$db->query("DELETE FROM `guild_alliances` WHERE `alliance_a` = {$ir['guild']}");
 			$db->query("DELETE FROM `guild_alliances` WHERE `alliance_b` = {$ir['guild']}");
+			$db->query("DELETE FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}");
+			$db->query("DELETE FROM `guild_district_battlelog` WHERE `attacker` = {$ir['guild']}");
+			$db->query("DELETE FROM `guild_district_battlelog` WHERE `defender` = {$ir['guild']}");
+			$db->query("UPDATE `guild_districts` SET `district_owner` = 16 WHERE `district_owner` = {$ir['guild']}");
             $db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$ir['guild']}");
             $db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$ir['guild']}");
 			addToEconomyLog('Guild Fees', 'copper', $gd['guild_primcurr']*-1);
@@ -3306,7 +3413,7 @@ function staff_pic()
 		Your images must be externally hosted. Any images that are not 500x500 will be scaled accordingly.<br />
 		New Picture Link<br />
 		<form method='post'>
-			<input type='url' required='1' name='newpic' class='form-control' value='{$gd['guild_pic']}' />
+			<input type='url' name='newpic' class='form-control' value='{$gd['guild_pic']}' />
 				{$csrf}
 			<br />
 			<input type='submit' class='btn btn-primary' value='Change Guild Pic' />
@@ -3970,6 +4077,30 @@ function staff_sword_reroll()
 	else
 	{
 		alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
+	}
+}
+function calculateUpkeep()
+{
+	global $db, $gd, $set, $ir, $api;
+	//Default starter upkeep. before the districts.
+	$upkeepFee = 100000;
+	$districtConfig['WarriorCostDaily'] = 500;
+	$districtConfig['ArcherCostDaily'] = 1000;
+	$districtConfig['GeneralCostDaily'] = 12500;
+	$q=$db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}");
+	while ($r=$db->fetch_row($q))
+	{
+		$upkeepFee=0;
+		$warriors = countDeployedWarriors($r['guild_id']);
+		$archers = countDeployedArchers($r['guild_id']);
+		$generals = countDeployedGenerals($r['guild_id']);
+		if ($warriors > 0)
+			$upkeepFee=$upkeepFee + ($warriors * $districtConfig['WarriorCostDaily']);
+		if ($archers > 0)
+			$upkeepFee=$upkeepFee + ($archers * $districtConfig['ArcherCostDaily']);
+		if ($generals > 0)
+			$upkeepFee=$upkeepFee + ($generals * $districtConfig['GeneralCostDaily']);
+		return $upkeepFee;
 	}
 }
 $h->endpage();

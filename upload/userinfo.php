@@ -32,7 +32,7 @@ elseif ($actualReset == 5)
 	$resetGains=96.88;
 echo "
 <div class='modal fade' id='userInfo' tabindex='-1' role='dialog' aria-labelledby='User Info' aria-hidden='true'>
-  <div class='modal-dialog' role='document'>
+  <div class='modal-dialog modal-lg' role='document'>
     <div class='modal-content'>
       <div class='modal-header'>
         <h5 class='modal-title' id='User Info'>Your Info [<a href='index.php'>Home</a>]</h5>
@@ -52,8 +52,11 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['energy']}' style='width:{$energy}%' aria-valuemin='0' aria-valuemax='{$ir['maxenergy']}'></div>
-                    <span>{$energy}% (" . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) .")</span>
+                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['energy']}' style='width:{$energy}%' aria-valuemin='0' aria-valuemax='{$ir['maxenergy']}'>
+						<span>
+							{$energy}% (" . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) .")
+						</span>
+					</div>
                 </div>
             </div>
         </div>
@@ -68,8 +71,11 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$brave}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'></div>
-                    <span>{$brave}% (" . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . ")</span>
+                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$brave}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'>
+						<span>
+							{$brave}% (" . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . ")
+						</span>
+					</div>
                 </div>
             </div>
         </div>
@@ -84,8 +90,11 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$will}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'></div>
-                    <span>{$will}% (" . number_format($ir['will']) . " / " . number_format($ir['maxwill']). ")</span>
+                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$will}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'>
+						<span>
+							{$will}% (" . number_format($ir['will']) . " / " . number_format($ir['maxwill']). ")
+						</span>
+					</div>
                 </div>
             </div>
         </div>
@@ -95,8 +104,11 @@ echo "
             </div>
         </div>
         <div class='progress' style='height: 1rem;'>
-            <div class='progress-bar bg-warning progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['xp']}' style='width:{$xp}%' aria-valuemin='0' aria-valuemax='{$ir['xp_needed']}'></div>
-            <span>{$xp}% (" . number_format($ir['xp']) . " / " . number_format($ir['xp_needed']) . ")</span>
+            <div class='progress-bar bg-warning progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['xp']}' style='width:{$xp}%' aria-valuemin='0' aria-valuemax='{$ir['xp_needed']}'>
+				<span>
+					{$xp}% (" . number_format($ir['xp']) . " / " . number_format($ir['xp_needed']) . ")
+				</span>
+			</div>
         </div>
         <div class='row'>
             <div class='col-8' align='left'>
@@ -104,8 +116,11 @@ echo "
             </div>
         </div>
         <div class='progress' style='height: 1rem;'>
-            <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'></div>
-            <span>{$hp}% (" . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . ")</span>
+            <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'>
+				<span>
+					{$hp}% (" . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . ")
+				</span>
+			</div>
         </div>
 		<div class='row'>
             <div class='col-8' align='left'>
@@ -113,8 +128,11 @@ echo "
             </div>
         </div>
         <div class='progress' style='height: 1rem;'>
-            <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningpower']}' style='width:{$mine}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'></div>
-            <span>{$mine}% (" . number_format($MUS['miningpower']) . " / " . number_format($MUS['max_miningpower']) . ")</span>
+            <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningpower']}' style='width:{$mine}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'>
+				<span>
+					{$mine}% (" . number_format($MUS['miningpower']) . " / " . number_format($MUS['max_miningpower']) . ")
+				</span>
+			</div>
         </div>
         <hr />
         <div class='container-fluid'>

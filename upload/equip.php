@@ -204,11 +204,11 @@ function weapon()
 		What slot do you want to equip your {$r['itmname']} in? If you have a weapon already equipped in that slot,
 		it'll be moved to your inventory.<br />
 		<form action='?slot=weapon&ID={$_GET['ID']}' method='post'>
-			<input type='radio' class='form-control' name='type' value='equip_primary' checked='checked' />
-			    Equip as Primary Weapon<br />
-		<input type='radio' class='form-control' name='type' value='equip_secondary' />
-		    Equip as Secondary Weapon<br />
-		<input type='submit' value='Equip Weapon' class='btn btn-primary'>
+			<select name='type' class='form-control' type='dropdown'>
+				<option value='equip_primary'>Primary Weapon</option>
+				<option value='equip_secondary'>Secondary Weapon</option>
+			</select>
+			<input type='submit' value='Equip Weapon' class='btn btn-primary'>
 		</form>
 		";
     }
@@ -695,11 +695,11 @@ function ring()
 		What slot do you want to equip your {$r['itmname']} in? If you have a ring already equipped in that slot,
 		it'll be moved to your inventory.<br />
 		<form action='?slot=ring&ID={$_GET['ID']}' method='post'>
-			<input type='radio' class='form-control' name='type' value='equip_ring_primary' checked='checked' />
-			    Equip as Primary Ring<br />
-		<input type='radio' class='form-control' name='type' value='equip_ring_secondary' />
-		    Equip as Secondary Ring<br />
-		<input type='submit' value='Equip Weapon' class='btn btn-primary'>
+			<select name='type' class='form-control' type='dropdown'>
+				<option value='equip_ring_primary'>Primary Ring</option>
+				<option value='equip_ring_secondary'>Secondary Ring</option>
+			</select>
+			<input type='submit' value='Equip Ring' class='btn btn-primary'>
 		</form>
 		";
     }

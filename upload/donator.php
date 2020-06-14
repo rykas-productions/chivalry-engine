@@ -28,8 +28,11 @@ if (isset($_GET['user']))
 	echo "
 	<br />
 	<div class='progress' style='height: 1rem;'>
-	  <div class='progress-bar {$bg}' role='progressbar' aria-valuenow='{$set['MonthlyDonationGoal']}' aria-valuemin='0' aria-valuemax='{$goal}' style='width: {$progress}%'></div>
-	  <span>Monthly Donation Goal - \${$set['MonthlyDonationGoal']} / \${$goal}</span>
+		<div class='progress-bar {$bg}' role='progressbar' aria-valuenow='{$set['MonthlyDonationGoal']}' aria-valuemin='0' aria-valuemax='{$goal}' style='width: {$progress}%'>
+			<span>
+				Monthly Donation Goal - \${$set['MonthlyDonationGoal']} / \${$goal}
+			</span>
+		</div>
 	</div>
 	<br />";
 	if (!isset($count))

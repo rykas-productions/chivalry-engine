@@ -131,15 +131,23 @@ function home()
 					<a href='profile.php?user={$r['mail_from']}'>
 						{$un1['username']}
 					</a> [{$r['mail_from']}]<br />
-						" . DateTime_Parse($r['mail_time']) . "
+						<small>" . DateTime_Parse($r['mail_time']) . "</small>
 				</td>
 				<td>
-					{$sub}
+					<a href='?action=read&msg={$r['mail_id']}'>{$sub}</a>
 				</td>
 				<td>
-					<a class='btn btn-primary btn-sm' href='?action=read&msg={$r['mail_id']}'><i class='far fa-envelope-open'></i></a>
-					<a class='btn btn-primary btn-sm' href='playerreport.php?userid={$r['mail_from']}'><i class='fas fa-flag'></i></a>
-					<a class='btn btn-primary btn-sm' href='?action=delete&msg={$r['mail_id']}'><i class='fas fa-trash-alt'></i></a>
+					<div class='row'>
+						<div class='col-md'>
+							<a class='btn btn-primary btn-sm' href='?action=read&msg={$r['mail_id']}'><i class='far fa-envelope-open'></i></a>
+						</div>
+						<div class='col-md'>
+							<a class='btn btn-primary btn-sm' href='playerreport.php?userid={$r['mail_from']}'><i class='fas fa-flag'></i></a>
+						</div>
+						<div class='col-md'>
+							<a class='btn btn-primary btn-sm' href='?action=delete&msg={$r['mail_id']}'><i class='fas fa-trash-alt'></i></a>
+						</div>
+					</div>
 				</td>
 			</tr>";
     }

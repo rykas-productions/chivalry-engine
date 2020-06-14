@@ -332,7 +332,7 @@ function parseUsername($id)
 	{
 		if ($r['equip_badge'] == 0)
 			$r['equip_badge'] = 159;
-		$username = "<span class='{$r['vipcolor']}' data-toggle='tooltip' data-placement='bottom' title='" . number_format($r['vip_days']) . " VIP Days remaining.'>{$r['username']} " . returnIcon($r['equip_badge']) . "</span>";
+		$username = "<span class='{$r['vipcolor']} font-weight-bold' data-toggle='tooltip' data-placement='bottom' title='" . number_format($r['vip_days']) . " VIP Days remaining.'>{$r['username']} " . returnIcon($r['equip_badge']) . "</span>";
 	}
 	else
 	{
@@ -346,8 +346,16 @@ function parseDisplayPic($id)
     global $db;
     $q = $db->query("/*qc=on*/SELECT `display_pic` FROM `users` WHERE `userid` = {$id}");
     $r = $db->fetch_single($q);
-    $pic = (empty($r)) ? "" : "" . parseImage($r) . "";
+    $pic = (empty($r)) ? parseImage(getGravatarPic($id)) : parseImage($r);
     return $pic;
+}
+
+function getGravatarPic($id)
+{
+	global $db;
+	$r=$db->fetch_single($db->query("SELECT `email` FROM `users` WHERE `userid` = {$id}"));
+	$link = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($r))) . "?s=250.jpg";
+	return $link;
 }
 
 function levelMultiplier($level)
@@ -381,24 +389,6 @@ function returnMaxInterest($user)
 	global $db;
 	$level=$db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `userid` = {$user}"));
 	return round(20000000*levelMultiplier($level));
-}
-function hasNecklaceEquipped($userid, $itemid)
-{
-	global $db;
-	$q=$db->query("SELECT * FROM `user_equips` WHERE `equip_slot` = 'equip_necklace' AND `userid` = {$userid} AND `itemid` = {$itemid}");
-	if ($db->num_rows($q) > 0)
-		return true;
-	else
-		return false;
-}
-function hasPendantEquipped($userid, $itemid)
-{
-	global $db;
-	$q=$db->query("SELECT * FROM `user_equips` WHERE `equip_slot` = 'equip_pendant' AND `userid` = {$userid} AND `itemid` = {$itemid}");
-	if ($db->num_rows($q) > 0)
-		return true;
-	else
-		return false;
 }
 
 function getCurrentUserPref($prefName, $defaultValue)

@@ -197,121 +197,117 @@ if (!empty($username)) {
     $h->endpage();
 } else {
     echo "
+	<form method='post'>
 	<h3>{$set['WebsiteName']} Registration Form</h3>
-	<table class='table table-bordered'>
-		<form method='post'>
-			<tr>
-				<th width='33%'>
-					Username
-				</th>
-				<td>
-					<div class='input-group'>
-							<span class='input-group-text'><i class='fas fa-id-card fa-fw'></i></span>
-						<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='3-20 characters in length' onkeyup='CheckUsername(this.value);' required>
-					</div>
-					<div id='usernameresult' class='invalid-feedback'></div>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Email
-				</th>
-				<td>
-					<div class='input-group'>
-						<span class='input-group-text'><i class='fas fa-fw fa-inbox'></i></span>
-						<input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
-                    </div>
-					<div id='emailresult' class='invalid-feedback'></div>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Password
-				</th>
-				<td>
-					<div class='input-group'>
-						<span class='input-group-text'><i class='fa fa-key fa-fw'></i></span>
-						<input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='Unique passwords recommended' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
-					</div>
-					<div id='passwordresult'></div>
-				</td>
-				</tr>
-				<tr>
-					<th>
-						Confirm Password
-					</th>
-					<td>
-						<div class='input-group'>
-							<span class='input-group-text'><i class='fa fa-key fa-fw'></i></span>
-							<input type='password' class='form-control' id='cpassword' name='cpassword' minlength='3' maxlength='256' placeholder='Confirm password entered previously' onkeyup='PasswordMatch();' required>
-					    </div>
-						<div id='cpasswordresult' class='invalid-feedback'></div>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						Gender
-					</th>
-					<td>
-						<div class='input-group'>
-							<span class='input-group-text'><i class='fa fa-transgender fa-fw'></i></span>
-							<select name='gender' class='form-control' type='dropdown'>
-								<option value='Male'>Male</option>
-								<option value='Female'>Female</option>
-								<option value='Other'>Other</option>
-							</select>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						Class
-					</th>
-					<td>
-						<div class='input-group'>
-							<span class='input-group-text'><i class='game-icon game-icon-elf-helmet'></i></span>
-							<select name='class' id='class' class='form-control' onchange='OutputTeam(this)' type='dropdown'>
-								<option></option>
-								<option value='Warrior'>Warrior</option>
-								<option value='Rogue'>Rogue</option>
-								<option value='Guardian'>Guardian</option>
-							</select>
-						</div>
-						<div id='teamresult'></div>
-						<div id='teamresult' class='invalid-feedback'></div>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						Referral's ID
-					</th>
-					<td>
-						<input type='number' value='{$_GET['REF']}' class='form-control' id='ref' name='ref' min='0' placeholder='Can be empty. This is a User ID.'>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						Promo Code
-					</th>
-					<td>
-						<input type='text' class='form-control' id='promo' name='promo' placeholder='Can be empty'>
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'>";
-                        alert("info","Just so you know...","By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a>
+		<div class='row text-left'>
+			<div class='col-md-4'>
+				<h5>Username</h5>
+				<small>This is used to identify yourself around the game.<br />Don't worry, you can change this.</small>
+			</div>
+			<div class='col-md-8'>
+				<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='3-20 characters in length' onkeyup='CheckUsername(this.value);' required>
+				<div id='usernameresult' class='invalid-feedback'></div>
+			</div>
+		</div>
+		<hr />
+		<div class='row text-left'>
+			<div class='col-md-4'>
+				<h5>Email</h5>
+				<small>Used to sign into the game and receive game updates!<br />
+				Your email is used soley for authentication and communications between you and us.</small>
+			</div>
+			<div class='col-md-8'>
+				<input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
+				<div id='emailresult' class='invalid-feedback'></div>
+			</div>
+		</div>
+		<hr />
+		<div class='row text-left'>
+			<div class='col-md-4'>
+				<h5>Password</h5>
+				<small>We do our best to keep it safe and secure.<br />
+				Make sure you pick something random!</small>
+			</div>
+			<div class='col-md-8'>
+				<input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='Unique passwords recommended' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
+				<div id='passwordresult'></div>
+			</div>
+		</div>
+		<hr />
+		<div class='row text-left'>
+			<div class='col-md-4'>
+				<h5>Confirm Password</h5>
+				<small>Make sure you type it exactly as before.</small>
+			</div>
+			<div class='col-md-8'>
+				<input type='password' class='form-control' id='cpassword' name='cpassword' minlength='3' maxlength='256' placeholder='Confirm password entered previously' onkeyup='PasswordMatch();' required>
+				<div id='cpasswordresult'></div>
+			</div>
+		</div>
+		<hr />
+		<div class='row text-left'>
+			<div class='col-md-4'>
+				<h5>Gender</h5>
+				<small>What's your player's gender?<br />This can be changed anytime.</small>
+			</div>
+			<div class='col-md-8'>
+				<select name='gender' class='form-control' type='dropdown'>
+					<option value='Male'>Male</option>
+					<option value='Female'>Female</option>
+					<option value='Other'>Other</option>
+				</select>
+			</div>
+		</div>
+		<hr />
+		<div class='row text-left'>
+			<div class='col-md-4'>
+				<h5>Fighting Class</h5>
+				<small>What best suits your fighting style?</small>
+			</div>
+			<div class='col-md-8'>
+				<select name='class' id='class' class='form-control' onchange='OutputTeam(this)' type='dropdown'>
+					<option></option>
+					<option value='Warrior'>Brute Force</option>
+					<option value='Rogue'>Hit Quicker</option>
+					<option value='Guardian'>Damage Tanking</option>
+				</select>
+				<div id='teamresult'></div>
+			</div>
+		</div>
+		<hr />
+		<div class='row text-left'>
+			<div class='col-md-4'>
+				<h5>Referral Code</h5>
+				<small>Did you get a referral code from a friend?</small>
+			</div>
+			<div class='col-md-8'>
+				<input type='number' value='{$_GET['REF']}' class='form-control' id='ref' name='ref' min='0' placeholder='Can be empty. This is a User ID.'>
+			</div>
+		</div>
+		<hr />
+		<div class='row text-left'>
+			<div class='col-md-4'>
+				<h5>Promotional Codes</h5>
+				<small>This is optional. Promotional codes give you an extra boost when you sign up.</small>
+			</div>
+			<div class='col-md-8'>
+				<input type='text' class='form-control' id='promo' name='promo' placeholder='Can be empty'>
+			</div>
+		</div>
+		<hr />
+		<div class='row align-left text-left'>
+		<div class='col-md-9'>";
+		alert("info","","By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a>
 						and our <a href='privacy.php'>Privacy Policy</a>. You also agree that you wish to opt-in to our
 						game newsletter. You may opt-out at anytime by checking your in-game settings.",false);
-                        echo "
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='Register' />
-					</td>
-				</tr>
-			</form>
-		</table>
+		echo "
+		</div>
+		<div class='col-md-3 text-center'>
+			<input type='submit' class='btn btn-primary' value='Register' />
+		</div>
+		</div>
+		<hr />
+	</form>
 	&gt; <a href='login.php'>Login Page</a>";
 }
 $h->endpage();

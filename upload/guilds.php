@@ -35,7 +35,7 @@ function menu()
 {
     global $db;
     echo "<h3><i class='game-icon game-icon-dozen'></i> Guild Listing</h3>
-	<a href='?action=create'>Create a Guild</a><hr />";
+	<a href='?action=create'>Create a Guild - 500K Copper</a><hr />";
     echo "<table class='table table-bordered table-striped'>
     <thead>
 	<tr align='left'>
@@ -100,12 +100,12 @@ function create()
     //User does not have the minimum required Copper Coins.
     if (!($api->UserHasCurrency($userid, 'primary', $cg_price))) {
         alert("danger", "Uh Oh!", "You do not have enough cash to create a guild! You need
-		    " . number_format($cg_price) . ".", true, 'index.php');
+		    " . number_format($cg_price) . " Copper Coins.", true, 'index.php');
         die($h->endpage());
     } //User level is too low to create a guild.
     elseif (($api->UserInfoGet($userid, 'level', false)) < $cg_level) {
         alert("danger", "Uh Oh!", "You are too low of a level to create a guild. Please level up to Level
-		    " . number_format($cg_level) . " and try again..", true, 'index.php');
+		    " . number_format($cg_level) . " and try again.", true, 'index.php');
         die($h->endpage());
     } //User is already in a guild.
     elseif ($ir['guild']) {
@@ -171,7 +171,7 @@ function create()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='Create Guild for " . number_format($cg_price) . "!' class='btn btn-primary'>
+						<input type='submit' value='Create Guild for " . number_format($cg_price) . " Copper Coins' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}

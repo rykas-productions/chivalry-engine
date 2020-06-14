@@ -270,7 +270,7 @@ function basicsettings()
 					Bootstrap
 				</th>
 				<td>
-					<input type='text' name='boostrap_version' class='form-control' required='1' value='{$set['bootstrap_version']}'>
+					<input type='text' name='bootstrap_version' class='form-control' required='1' value='{$set['bootstrap_version']}'>
 				</td>
 			</tr>
 			<tr>

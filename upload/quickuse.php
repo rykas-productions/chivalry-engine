@@ -24,7 +24,7 @@ if (isset($_GET['dungeon'])) {
 		$api->UserTakeItem($userid, 29, 1);
 		$api->UserStatusSet($userid, 'dungeon', -10, 'Placeholder');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Lockpick.");
-		alert('success', "Success!", "Lockpick was used successfully. You have {$TR} remaining.", true, 'index.php');
+		alert('success', "Success!", "Lockpick was used successfully. 10 minutes has been removed from your dungeon sentence. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
 	if ($ir['ditem'] == 2)
@@ -41,7 +41,7 @@ if (isset($_GET['dungeon'])) {
 		$api->UserTakeItem($userid, 30, 1);
 		$api->UserStatusSet($userid, 'dungeon', -30, '');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Dungeon Key.");
-		alert('success', "Success!", "Dungeon Key was used successfully. You have {$TR} remaining.", true, 'index.php');
+		alert('success', "Success!", "Dungeon Key was used successfully. 30 minutes has been removed from your dungeon sentence. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
 	if ($ir['ditem'] == 3)
@@ -58,7 +58,7 @@ if (isset($_GET['dungeon'])) {
 		$api->UserTakeItem($userid, 31, 1);
 		$api->UserStatusSet($userid, 'dungeon', -75, '');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Dungeon Key Set.");
-		alert('success', "Success!", "Dungeon Key Set was used successfully. You have {$TR} remaining.", true, 'index.php');
+		alert('success', "Success!", "Dungeon Key Set was used successfully. 75 minutes has been removed from your dungeon sentence. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
     if ($ir['ditem'] == 4)
@@ -93,10 +93,10 @@ elseif (isset($_GET['infirmary']))
 			die($h->endpage());
 		}
 		$TR=TimeUntil_Parse($InfirmaryOut-(10*60));
-		$api->UserTakeItem($userid, 5, 1, '');
+		$api->UserTakeItem($userid, 5, 1);
 		$api->UserStatusSet($userid, 'infirmary', -10, 'Placeholder');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Leech.");
-		alert('success', "Success!", "Leech was used successfully. You have {$TR} remaining.", true, 'index.php');
+		alert('success', "Success!", "Leech was used successfully. 10 minutes has been removed from your infirmary session. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
 	if ($ir['iitem'] == 2)
@@ -113,7 +113,7 @@ elseif (isset($_GET['infirmary']))
 		$api->UserTakeItem($userid, 6, 1);
 		$api->UserStatusSet($userid, 'infirmary', -30, '');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Linen Wrap.");
-		alert('success', "Success!", "Linen Wrap was used successfully. You have {$TR} remaining.", true, 'index.php');
+		alert('success', "Success!", "Linen Wrap was used successfully. 30 minutes has been removed from your infirmary session. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
     if ($ir['iitem'] == 3)
@@ -131,7 +131,7 @@ elseif (isset($_GET['infirmary']))
         $api->UserInfoSet($userid,'hp',5,true);
 		$api->UserStatusSet($userid, 'infirmary', -75, '');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Acupuncture Needle.");
-		alert('success', "Success!", "Acupuncture Needle was used successfully. You have {$TR} remaining.", true, 'index.php');
+		alert('success', "Success!", "Acupuncture Needle was used successfully. 75 minutes has been removed from your infirmary session. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
     if ($ir['iitem'] == 4)
@@ -147,7 +147,7 @@ elseif (isset($_GET['infirmary']))
 		$TR=TimeUntil_Parse($InfirmaryOut-$InfirmaryOut);
 		$api->UserTakeItem($userid, 98, 1);
         $api->UserInfoSet($userid,'hp',100,true);
-		$api->UserStatusSet($userid, 'infirmary', -75, '');
+		$api->UserStatusSet($userid, 'infirmary', -1000000000, '');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Med-go-bye.");
 		alert('success', "Success!", "Med-go-bye was used successfully. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();

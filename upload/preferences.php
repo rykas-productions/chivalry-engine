@@ -98,91 +98,91 @@ function prefs_home()
     global $ir;
     echo "Welcome to your account settings, {$ir['username']}. Here you can change many options concerning your account.<br />
 		<div class='row'>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=namechange'>Change Name</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=pwchange'>Change Password</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=changeemail'>Change Email Address</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=emailchange'>Change Email Opt-Setting</a>
 			</div>
 		</div>
 		<hr />
 		<div class='row'>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=picchange'>Change Display Picture</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=sexchange'>Change Gender</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=sigchange'>Change Forum Signature</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=notifoff'>Disable Alerts</a>
 			</div>
 		</div>
 		<hr />
 		<div class='row'>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=descchange'>Change Player Description</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=quicklink'>Change Quick-Use Items</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=forumalert'>Forum Notifications</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=userdropdown'>User Input Setting</a>
 			</div>
 		</div>
 		<hr />
 		<div class='row'>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=themechange'>Change Theme</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=classreset'>Class Reset</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=tuttoggle'>Tutorial Toggle</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=icontoggle'>Toggle Item Icons</a>
 			</div>
 		</div>
 		<hr />
 		<div class='row'>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=steamlink'>Link Steam Account</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=loginlogs'>Login Logs</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=reset'>Account Reset</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=forumtopic'>Change Viewable Topic Count</a>
 			</div>
 		</div>
 		<hr />
 		<div class='row'>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=forumpost'>Change Viewable Post Count</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=inboxcount'>Change Viewable Mail</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=notifcount'>Change Viewable Notifications</a>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				<a href='?action=guildxp'>Auto Donate XP to Guild</a>
 			</div>
 		</div>
@@ -884,33 +884,34 @@ function classreset()
 function tuttoggle()
 {
 	global $db,$userid,$api,$h;
-    if (isset($_POST['do']))
-    {
-		if ($_POST['do'] == 'disable')
-		{
-			$db->query("UPDATE `user_settings` SET `tut_on` = 0 WHERE `userid` = {$userid}");
-			alert('success',"Success!","You have successfully disabled the tutorial.",true,'preferences.php');
-            $api->SystemLogsAdd($userid, 'preferences', "Disabled tutorial.");
-		}
-		else
-		{
-			$db->query("UPDATE `user_settings` SET `tut_on` = 1 WHERE `userid` = {$userid}");
-			alert('success',"Success!","You have successfully enabled the tutorial.",true,'preferences.php');
-            $api->SystemLogsAdd($userid, 'preferences', "Enabled tutorial.");
-		}
-    }
-    else
-    {
-        echo "Here you may toggle the tutorial. By default, its enabled.<br />
-        <form method='post'>
-            <input type='hidden' value='disable' name='do'>
-            <input type='submit' class='btn btn-primary' value='Disable Tutorial'>
-        </form>
-		<form method='post'>
-            <input type='hidden' value='enable' name='do'>
-            <input type='submit' class='btn btn-primary' value='Enable Tutorial'>
-        </form>";
-    }
+	$userCount=getCurrentUserPref('tutorialToggle', 'true');
+	if (isset($_POST['topics'])) {
+			if (($_POST['topics'] != 'true') && ($_POST['topics'] != 'false'))
+			{
+				alert('danger', "Uh Oh!", "Invalid tutorial toggle setting.");
+				die($h->endpage());
+			}
+            alert('success', "Success!", "You have successfully set your tutorial toggle to {$_POST['topics']}.", true, 'preferences.php');
+            setCurrentUserPref('tutorialToggle',$_POST['topics']);
+            $api->SystemLogsAdd($userid, 'preferences', "Changed tutorial toggle to {$_POST['topics']}.");
+            die($h->endpage());
+    } else {
+		echo "Here you may toggle the tutorial. By default, its enabled. You have set your tutorial toggle to {$userCount}.
+		<div class='row'>
+			<div class='col-md'>
+				<form method='post'>
+					<input type='hidden' name='topics' value='true' class='form-control'>
+					<input type='submit' class='btn btn-danger' value='Enable Tutorial'>
+				</form>
+			</div>
+			<div class='col-md'>
+				<form method='post'>
+					<input type='hidden' name='topics' value='false' class='form-control'>
+					<input type='submit' class='btn btn-success' value='Disable Tutorial'>
+				</form>
+			</div>
+		</div>";
+	}
 }
 function icontoggle()
 {
@@ -963,25 +964,25 @@ function themechange()
         echo "/*qc=on*/SELECT the theme you wish to see as you play Chivalry is Dead.
 		<hr />
 		<div class='row'>
-			<div class='col-sm'>
+			<div class='col-md'>
 				Original<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1534631618/orignal.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464837/themes/2020-default.png' class='img-thumbnail img-responsive'>
 				<form method='post'>
 					<input type='hidden' value='1' name='theme'>
 					<input type='submit' class='btn btn-primary' value='Original'>
 				</form>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				Darkly<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770277/themes/darkly.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464838/themes/2020-darkly.png' class='img-thumbnail img-responsive'>
 				<form method='post'>
 					<input type='hidden' value='2' name='theme'>
 					<input type='submit' class='btn btn-primary' value='Darkly'>
 				</form>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				Cerulean<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770277/themes/cerulean.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464837/themes/2020-cerulean.png' class='img-thumbnail img-responsive'>
 					<form method='post'>
 						<input type='hidden' value='6' name='theme'>
 						<input type='submit' class='btn btn-primary' value='Cerulean'>
@@ -990,25 +991,25 @@ function themechange()
 		</div>
 		<hr />
 		<div class='row'>
-			<div class='col-sm'>
+			<div class='col-md'>
 				Cyborg<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770282/themes/cyborg.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464837/themes/2020-cyborg.png' class='img-thumbnail img-responsive'>
 					<form method='post'>
 						<input type='hidden' value='4' name='theme'>
 						<input type='submit' class='btn btn-primary' value='Cyborg'>
 					</form>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				United<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/united.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464839/themes/2020-united.png' class='img-thumbnail img-responsive'>
 					<form method='post'>
 						<input type='hidden' value='5' name='theme'>
 						<input type='submit' class='btn btn-primary' value='United'>
 					</form>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				Slate<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/slate.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464839/themes/2020-slate.png' class='img-thumbnail img-responsive'>
 					<form method='post'>
 						<input type='hidden' value='3' name='theme'>
 						<input type='submit' class='btn btn-primary' value='Slate'>
@@ -1017,17 +1018,17 @@ function themechange()
 		</div>
 		<hr />
 		<div class='row'>
-			<div class='col-sm'>
+			<div class='col-md'>
 				Castle<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522770281/themes/castle.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464839/themes/2020-castle.png' class='img-thumbnail img-responsive'>
 					<form method='post'>
 						<input type='hidden' value='7' name='theme'>
 						<input type='submit' class='btn btn-primary' value='Castle'>
 					</form>
 			</div>
-			<div class='col-sm'>
+			<div class='col-md'>
 				Sunset<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1555983405/themes/sunset.png' class='img-thumbnail img-responsive'>
+				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464841/themes/2020-sunset.png' class='img-thumbnail img-responsive'>
 					<form method='post'>
 						<input type='hidden' value='8' name='theme'>
 						<input type='submit' class='btn btn-primary' value='Sunset'>

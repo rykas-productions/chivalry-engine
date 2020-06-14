@@ -8,6 +8,11 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 $bank_cost = $set['bank_cost'];
 $bank_maxfee = $set['bank_maxfee'];
 $bank_feepercent = $set['bankfee_percent'];
+if ($ir['bank'] == -1)
+{
+	alert('danger',"Uh Oh!","Please purchase a City Bank account before using this feature.",true,'explore.php');
+    die($h->endpage());
+}
 if ($ir['primary_currency'] == 0)
 {
     alert('danger',"Uh Oh!","You do not have any Copper Coins to deposit.",true,'bank.php');

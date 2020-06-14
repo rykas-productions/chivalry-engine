@@ -159,7 +159,7 @@ function idx()
         }
         
         echo "<tr>
-					<td>
+					<td width='50%'>
 						<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
 						<small class='hidden-xs-down'><br />{$r['ff_desc']}</small>
 					</td>
@@ -169,7 +169,7 @@ function idx()
 					<td class='hidden-xs-down'>
 						{$topics}
 					</td>
-					<td>
+					<td width='25%'>
 						{$t}<br />
 						In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
 						By <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>

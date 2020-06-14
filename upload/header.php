@@ -47,19 +47,19 @@ class headers
         <body>
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
-            <a class="navbar-brand" href="#" data-toggle="modal" data-target="#userInfo">
+            <a class="navbar-brand updateHoverBtn" href="#" data-toggle="modal" data-target="#userInfo">
 					<?php 
-						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo.png' width='30' height='30' alt='Chivalry is Dead logo' title='Chivalry is Dead logo'>
+						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_30/v1520819749/logo.png' alt=''>
 						{$set['WebsiteName']}"; 
 					?>
 				</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav"
+            <button class="navbar-toggler updateHoverBtn" type="button" data-toggle="collapse" data-target="#CENGINENav"
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="CENGINENav">
+            <div class="collapse navbar-collapse updateHoverBtn" id="CENGINENav">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
+                    <li class="nav-item updateHoverBtn">
                         <a class="nav-link" href="explore.php">
 							<i class='far fa-fw fa-compass fa-spin'></i> Explore
 						</a>
@@ -67,22 +67,22 @@ class headers
                 </ul>
                 <div class="my-2 my-lg-0">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
+                        <li class="nav-item updateHoverBtn">
                             <a class="nav-link"
                                href="inbox.php"><?php echo "<i
-                                        class='fas fa-inbox'></i> Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
+                                        class='fas fa-inbox'></i> Inbox <span class='badge badge-pill badge-primary' id='inboxTop'>{$ir['mail']}</span>"; ?></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link"
+                            <a class="nav-link updateHoverBtn"
                                href="notifications.php"><?php echo "<i
-                                        class='{$notificon}'></i> Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
+                                        class='{$notificon}'></i> Notifications <span class='badge badge-pill badge-primary' id='notifTop'>{$ir['notifications']}</span>"; ?></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="inventory.php"><?php echo "<i
+                            <a class="nav-link updateHoverBtn" href="inventory.php"><?php echo "<i
                                         class='fas fa-briefcase'></i> Inventory"; ?></a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                            <a class="nav-link dropdown-toggle updateHoverBtn" href="#" id="navbarDropdownMenuLink"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <?php
                                 //User has a display picture, lets show it!
@@ -94,26 +94,26 @@ class headers
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i
+                                <a class="dropdown-item" updateHoverBtn href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i
                                         class="fas fa-fw fa-user"></i> <?php echo "Profile"; ?></a>
-                                <a class="dropdown-item" href="preferences.php?action=menu"><i
+                                <a class="dropdown-item updateHoverBtn" href="preferences.php?action=menu"><i
                                         class="fas fa-spin fa-fw fa-cog"></i><?php echo "Preferences"; ?></a>
                                 <?php
                                 //User is a staff member, so lets show the panel's link.
                                 if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant'))) {
                                     ?>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="staff/index.php"><i
+                                    <a class="dropdown-item updateHoverBtn" href="staff/index.php"><i
                                             class="fas fa-fw fa fa-terminal"></i> <?php echo "Staff Panel"; ?></a>
                                 <?php
                                 }
 								?>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="gamerules.php"><i
+                                <a class="dropdown-item updateHoverBtn" href="gamerules.php"><i
                                         class="fas fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
-								<a class="dropdown-item" href="privacy.php"><i
+								<a class="dropdown-item updateHoverBtn" href="privacy.php"><i
                                         class="fas fa-fw fa-user-secret"></i> <?php echo "Privacy Policy"; ?></a>
-                                <a class="dropdown-item" href="logout.php"><i
+                                <a class="dropdown-item updateHoverBtn" href="logout.php"><i
                                         class="fas fa-sign-out-alt"></i> <?php echo "Logout"; ?></a>
                             </div>
                         </li>
@@ -159,7 +159,7 @@ class headers
 	{
 		echo "<b><span class='text-info'>You have Will Overcharge active for the next " . TimeUntil_Parse($ir['will_overcharge']) . ".</span></b><br />";
 	}
-    if ($ir['tut_on'] == 1)
+    if (getCurrentUserPref('tutorialToggle', 'true') == 'true')
     {
         $page = $db->escape(strip_tags(stripslashes(basename($_SERVER['PHP_SELF']))));
         $tq=$db->query("/*qc=on*/SELECT * FROM `tutorial` WHERE `page` = '{$page}'");
@@ -302,28 +302,31 @@ class headers
 	function showSocialAlerts()
 	{
 		global $ir;
-		echo "<div class='row'>";
+		echo "<div class='row' id='socialRow'>";
 		if ($ir['mail'] > 0) 
 		{
 			echo "<div class='col-md'>";
-				alert('info', "", "You have {$ir['mail']} unread messages.", true, 'inbox.php', "View");
+				alert('info', "", "You have " . number_format($ir['mail']) . " unread messages.", true, 'inbox.php', "View");
 			echo "</div>";
         }
         //Tell user they have unread notifcations when they do.
         if ($ir['notifications'] > 0) 
 		{
 			echo "<div class='col-md'>";
-				alert('info', "", "You have {$ir['notifications']} unread notifications.", true, 'notifications.php', "View");
+				alert('info', "", "You have " . number_format($ir['notifications']) . " unread notifications.", true, 'notifications.php', "View");
 			echo "</div>";
         }
 		//Tell user they have unread game announcements when they do.
 		if ($ir['announcements'] > 0) 
 		{
 			echo "<div class='col-md'>";
-				alert('info', "", "You have {$ir['announcements']} unread announcements.", true, 'announcements.php', "View");
+				alert('info', "", "You have " . number_format($ir['announcements']) . " unread announcements.", true, 'announcements.php', "View");
 			echo "</div>";
 		}
 		echo "</div>";
+		echo "
+		<div class='row' id='socialRow2'>
+		</div>";
 	}
 	function showStatusAlerts()
 	{
@@ -392,13 +395,13 @@ class headers
 		if ($themeID == 7)
 		{
 			echo "
-			<link rel='stylesheet' href='css/castle.css'>
+			<link rel='stylesheet' href='css/castle-v{$set['bootstrap_version']}.css'>
 			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>";
 		}
 		if ($themeID == 8)
 		{
 			echo "
-			<link rel='stylesheet' href='css/bright-castle.css'>
+			<link rel='stylesheet' href='css/sunset-v{$set['bootstrap_version']}.css'>
 			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>";
 		}
 	}
@@ -462,8 +465,29 @@ class headers
                 <meta property='og:description' content='{$set['Website_Description']}'/>
                 <meta property='og:image' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_512/v1520819749/logo.png'/>
                 <link rel='shortcut icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png' type='image/x-icon'/>
-				<link rel='icon' sizes='192x192' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png'>
-				<link rel='icon' sizes='128x128' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png'>";
+				<!-- generics -->
+				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_32/v1520819749/logo.png' sizes='32x32'>
+				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_57/v1520819749/logo.png' sizes='57x57'>
+				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_76/v1520819749/logo.png' sizes='76x76'>
+				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_96/v1520819749/logo.png' sizes='96x96'>
+				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png' sizes='128x128'>
+				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png' sizes='192x192'>
+				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_228/v1520819749/logo.png' sizes='228x228'>
+				
+				<!-- Android -->
+				<link rel='shortcut icon' sizes='196x196' href=“https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_196/v1520819749/logo.png'>
+
+				<!-- iOS -->
+				<link rel='apple-touch-icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_120/v1520819749/logo.png' sizes='120x120'>
+				<link rel='apple-touch-icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_152/v1520819749/logo.png' sizes='152x152'>
+				<link rel='apple-touch-icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_180/v1520819749/logo.png' sizes='180x180'>
+
+				<!-- Windows 8 IE 10-->
+				<meta name='msapplication-TileColor' content='#FFFFFF'>
+				<meta name='msapplication-TileImage' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_144/v1520819749/logo.png'>
+
+				<!— Windows 8.1 + IE11 and above —>
+				<meta name='msapplication-config' content='assets/browserconfig.xml' />";
 	}
 
     function userdata($ir, $dosessh = 1)

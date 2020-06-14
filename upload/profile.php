@@ -55,9 +55,11 @@ $db->free_result($q);
 $lon = ($r['laston'] > 0) ? date('F j, Y g:i:s a', $r['laston']) : "Never";
 $ula = ($r['laston'] == 0) ? 'Never' : DateTime_Parse($r['laston']);
 $ull = ($r['last_login'] == 0) ? 'Never' : DateTime_Parse($r['last_login']);
-$active = false;
-if ($r['laston'] > time() - 900)
-	$active = true;
+$active = 0;
+if ($r['laston'] > time() - 300)
+	$active = 1;
+elseif (($r['laston'] < time() - 300) && ($r['laston'] > time() - 900))
+	$active = 2;
 $sup = date('F j, Y g:i:s a', $r['registertime']);
 $mi=$db->query("/*qc=on*/SELECT * FROM `marriage_tmg` WHERE (`proposer_id` = {$r['userid']} OR `proposed_id` = {$r['userid']}) AND `together` = 1");
 if ($db->num_rows($mi) == 0)
@@ -83,7 +85,7 @@ else
 	}
 	$married="<a href='profile.php?user={$event['userid']}'>{$event['username']}</a>";
 }
-$displaypic = ($r['display_pic']) ? "<img src='" . parseImage(parseDisplayPic($r['userid'])) . "' class='img-thumbnail' alt='{$r['username']}&#39;s display picture' title='{$r['username']}&#39;s display picture'>" : '';
+$displaypic = "<img src='" . parseDisplayPic($r['userid']) . "' class='img-thumbnail' alt='{$r['username']}&#39;s display picture' title='{$r['username']}&#39;s display picture'>";
 $user_name = parseUsername($r['userid']);
 $ref_q =
 	$db->query(
@@ -233,10 +235,15 @@ $r['description']=$parser->getAsHtml();
 //Active / Online button
 $activeText = "Offline";
 $activeColor = "text-danger";
-if ($active)
+if ($active == 1)
 {
 	$activeText = "Online";
 	$activeColor = "text-success";
+}
+elseif ($active == 2)
+{
+	$activeText = "Idle";
+	$activeColor = "text-warning";
 }
 
 //Gender icon / color
@@ -715,6 +722,15 @@ echo "<h3>{$user_name}'s Profile</h3>
 			</div>
 		</div>
 	</div>
+</div>
+<div class='row'>
+	<div class='col-12'>";
+		if (!in_array($ir['user_level'], array('Member', 'NPC'))) 
+		{
+			//$parseRisk = parse_risk($fg['risk_level']);
+			echo "<a href='#' class='btn btn-primary' data-toggle='modal' data-target='#staff_popup'>User's Staff Panel</a>";
+		}
+	echo "</div>
 </div>";
 $h->endpage();
 function formatMasteryRank($rank)
@@ -746,3 +762,4 @@ function formatMasteryRank($rank)
 	else
 		return "> X";
 }
+include('forms/staff_popup.php');

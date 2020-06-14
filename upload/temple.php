@@ -12,7 +12,7 @@
 require('globals.php');
 if (user_infirmary($userid))
 {
-    alert('danger',"Uh Oh!","You cannot use the Temple of Fortune if you're in the dungeon.",true,'infirmary.php');
+    alert('danger',"Uh Oh!","You cannot use the Temple of Fortune if you're in the infirmary.",true,'infirmary.php');
     die($h->endpage());
 }
 if (user_dungeon($userid))
@@ -20,7 +20,7 @@ if (user_dungeon($userid))
     alert('danger',"Uh Oh!","You cannot use the Temple of Fortune if you're in the dungeon.",true,'dungeon.php');
     die($h->endpage());
 }
-if (Random(1,50) == 6)
+if (Random(1,100) == 6)
 {
     put_infirmary($userid, Random(1,10), 'Fell down the temple stairs.');
     alert('danger',"Uh Oh!","While walking up to the Temple of Fortune, you trip up the stairs and fall all the way down. You need to go to the infirmary.",true,'infirmary.php');

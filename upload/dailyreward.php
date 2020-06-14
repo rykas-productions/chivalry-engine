@@ -72,14 +72,19 @@ if ($ir['rewarded'] == 0)
 	}
 	elseif ($reward <= 52 && $reward > 50)
 	{
-		if ($ir['will_overcharge'] < time())
-			$startTime=time();
+		$newTime=(60*60)*0.25;
+		$formatTime = $newTime / 60;
+		if ($ir['invis'] > time())
+		{
+			$db->query("UPDATE `user_settings` SET `invis` = `invis` + {$newTime} WHERE `userid` = {$userid}");
+		}
 		else
-			$startTime=$ir['will_overcharge'];
-		$newTime=$startTime + (60*60)*0.25;
-		$db->query("UPDATE `user_settings` SET `will_overcharge` = {$newTime} WHERE `userid` = {$userid}");
-		$api->GameAddNotification($userid,"Go bulk up now!! For logging in, we've given you 15 minutes of free Will Stimulant use. Go train! Thank us later!");
-		$api->SystemLogsAdd($userid, "loginreward", "Received 15 minutes Will Stimulant.");
+		{
+			$time=time()+$newTime;
+			$db->query("UPDATE `user_settings` SET `invis` = {$time} WHERE `userid` = {$userid}");
+		}
+		$api->GameAddNotification($userid,"We've given you {$formatTime} minutes ofinvisibility for your daily log in reward.");
+		$api->SystemLogsAdd($userid, "loginreward", "Received {$formatTime} minutes invisibility.");
 	}
 	elseif ($reward <= 49 && $reward > 47)
 	{

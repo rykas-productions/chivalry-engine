@@ -10,7 +10,7 @@
 require('globals.php');
 if (!isCourseComplete($userid, 22))
 {
-	alert('danger', "Uh Oh!", "Please complete the Blacksmithing academic course before you use the Blacksmith.");
+	alert('danger', "Uh Oh!", "Please complete the Blacksmithing academic course before you use the Blacksmith.", true, 'explore.php');
     die($h->endpage());
 }
 if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))

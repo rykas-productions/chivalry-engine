@@ -31,46 +31,44 @@ if (empty($_GET['to'])) {
     echo "Welcome to the horse stable. You can travel to other cities here, but at a cost. Where would you like to
 	travel today? Note that as you progress further in the game, more locations will be made available to you.
 	It will cost you " . number_format($cost_of_travel) . " Copper Coins to travel today.
-	<table class='table table-bordered'>
-	<tr>
-		<th width='25%'>
-			Town
-		</th>
-		<th width='15%'>
-			Level Required
-		</th>
-		<th>
-			Guild
-		</th>
-		<th width='15%'>
-			Tax Level
-		</th>
-		<th width='10%'>
-			>>>
-		</th>
-	</tr>";
+	<div class='row'>";
     //Select the towns that are not the current user's town, order them by level requirement
     $q = $db->query("/*qc=on*/SELECT * FROM `town` WHERE `town_id` != {$ir['location']} ORDER BY `town_min_level` ASC");
 
     //Show this information!
-    while ($r = $db->fetch_row($q)) {
-        //Does the town in question have a guild owner? If so, select their name! If not... say its unowned.
-        if ($r['town_guild_owner'] > 0) {
-            $name = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r['town_guild_owner']}"));
-        } else {
-            $name = "Unowned";
-        }
-        echo "
-		<tr>
-			<td>{$r['town_name']}</td>
-			<td>{$r['town_min_level']}</td>
-			<td>{$name}</td>
-			<td>{$r['town_tax']}%</td>
-			<td><a href='?to={$r['town_id']}'>Travel</a></td>
-		</tr>
-   		";
+    while ($r = $db->fetch_row($q)) 
+	{
+		$guild_owner = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r['town_guild_owner']}"));
+		$level = ($ir['level'] > $r['town_min_level']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
+		$name = ($r['town_guild_owner'] > 0) ? "Guild Owner: <a href='guilds.php?action=biew&id={$r['town_guild_owner']}'>{$guild_owner}</a><br />" : "" ;
+		$tax = ($r['town_tax'] > 0) ? "Town Tax: {$r['town_tax']}%<br />" : "" ;
+		$guildcolor = ($ir['guild'] == $r['town_guild_owner']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
+		$population = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$r['town_id']}"));
+		echo "
+		<div class='col-md-4'>
+		<div class='card'>
+            <div class='card-header'>
+               <a href='?to={$r['town_id']}'>{$r['town_name']}</a>
+            </div>
+            <div class='card-body'>
+				<span>
+					Population: " . number_format($population) . "<br />
+				</span>
+                <span {$level}>
+					Level Required: " . number_format($r['town_min_level']) . "<br />
+				</span>
+				<span {$guildcolor}>
+					{$name}
+				</span>
+				<span>
+					{$tax}
+				</span>
+            </div>
+        </div>
+		<br />
+		</div>";
     }
-    echo "</table>
+    echo "</div>
 	<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819397/horse-stable-travel.jpg' class='img-thumbnail img-responsive'>";
 } else {
     //User does not have enough cash to travel to this city.

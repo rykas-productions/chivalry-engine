@@ -42,38 +42,47 @@ function name()
         die($h->endpage());
     }
     $name="%{$_GET['name']}%";
-    $q = $db->query("/*qc=on*/SELECT `userid`, `username`, `level`, `laston`
+    $q = $db->query("/*qc=on*/SELECT `vip_days`, `username`, `userid`, `primary_currency`, `level`, `fedjail`, `vipcolor`, `display_pic`, `laston`
                      FROM `users`
                      WHERE `username` LIKE ('{$name}')");
-    echo $db->num_rows($q) . " players found.<br />
-    <table class='table table-bordered table-striped'>
-    <thead>
-        <tr>
-            <th>
-                Username
-            </th>
-            <th>
-                Level
-            </th>
-            <th>
-                Last active
-            </th>
-        </tr>
-    </thead>";
-    while ($r=$db->fetch_row($q))
-    {
-        echo "<tr>
-            <td>
-                <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
-            </td>
-            <td>
-                {$r['level']}
-            </td>
-            <td>
-                " . DateTime_Parse($r['laston']) . "
-            </td>
-        </tr>";
-    }
+    echo $db->num_rows($q) . " players found.<br />";
+    while ($r = $db->fetch_row($q)) 
+	{
+		$r['username'] = parseUsername($r['userid']);
+		$displaypic = ($r['display_pic']) ? "<img src='" . parseImage(parseDisplayPic($r['userid'])) . "' height='75' alt='' title=''>" : '';
+		$active = ($r['laston'] > time() - 300) ? "<span class='text-success'>Online</span>" : "<span class='text-danger'>Offline</span>";
+		$infirm = (user_infirmary($r['userid'])) ? "<span class='text-danger'>Infirmary</span>" : "<span class='text-success'>Healthy</span>";
+		$dung = (user_dungeon($r['userid'])) ? "<span class='text-danger'>Dungeon</span>" : "<span class='text-success'>Free</span>";
+		echo "
+		<div class='row'>
+			<div class='col-md-2'>
+				{$displaypic}
+			</div>
+			<div class='col-md-2'>
+				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+			</div>
+			<div class='col-md'>
+					<div class='row'>
+						<div class='col-md'>
+							Level<br />" . number_format($r['level']) . "<br />
+						</div>
+						<div class='col-md'>
+							Copper Coins<br />" . number_format($r['primary_currency']) . "
+						</div>
+						<div class='col-md'>
+							{$active}
+						</div>
+						<div class='col-md'>
+							{$infirm}
+						</div>
+						<div class='col-md'>
+							{$dung}
+						</div>
+					</div>
+			</div>
+		</div>
+		<hr />";
+	}
     
     echo"</table>
     <a href='search.php'>Go Back</a>";

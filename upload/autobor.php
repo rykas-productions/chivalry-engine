@@ -89,7 +89,7 @@ if (isset($_POST['open']))
 		}
 		elseif (($chance > 45) && ($chance <= 50))
 		{
-			$cash=Random(2,5)*$multipler;
+			$cash=Random(1,3)*$multipler;
 			$cash=round($cash+($cash*$lvlmultiplier));
 			$infirmary=$infirmary+$cash;
 		}

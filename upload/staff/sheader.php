@@ -285,13 +285,13 @@ class headers
 		if ($themeID == 7)
 		{
 			echo "
-			<link rel='stylesheet' href='../css/castle.css'>
+			<link rel='stylesheet' href='../css/castle-v{$set['bootstrap_version']}.css'>
 			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>";
 		}
 		if ($themeID == 8)
 		{
 			echo "
-			<link rel='stylesheet' href='../css/bright-castle.css'>
+			<link rel='stylesheet' href='../css/sunset-v{$set['bootstrap_version']}.css'>
 			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>";
 		}
 	}

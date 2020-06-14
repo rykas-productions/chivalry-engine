@@ -94,7 +94,7 @@ if (isset($_GET["stat"]) && $_GET["amnt"]) {
             $all_select = "/*qc=on*/SELECTed";
         }
         //Log the user's training attempt.
-        $api->SystemLogsAdd($userid, 'training', "Trained {$stat} {$_GET['amnt']} times and gained " . number_format($gain) . ".");
+        $api->SystemLogsAdd($userid, 'training', "[CID Admin Gym] {$_GET['amnt']} energy for " . number_format($gain) . " {$stat}.");
         echo "<hr />";
         $ir['energy'] -= $_GET['amnt'];
         if ($stat != 'all')

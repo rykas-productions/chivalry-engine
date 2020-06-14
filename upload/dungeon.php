@@ -30,48 +30,52 @@ function home()
     $PlayerCount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime}"));
     echo "<h3><i class='game-icon game-icon-cage'></i> The Dungeon</h3><hr />
 	<small>There's current " . number_format($PlayerCount) . " players in the dungeon.</small>
-	<hr />
-	<table class='table table-hover table-bordered'>
-		<thead>
-			<tr>
-				<th>
-					User
-				</th>
-				<th>
-					Reason
-				</th>
-				<th>
-					Check-out
-				</th>
-				<th>
-					Actions
-				</th>
-			</tr>
-		</thead>
-		<tbody>";
-    //List users in the dungeon.
+	<hr />";
+    echo "<div class='row'>
+			<div class='col-md-4'>
+				<h3>Player</h3>
+			</div>
+			<div class='col-md-4'>
+				<h3>Dungeon Status</h3>
+			</div>
+			<div class='col-md-4'>
+				<h3>Actions</h3>
+			</div>
+		</div>
+		<hr />";
     $query = $db->query("/*qc=on*/SELECT * FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime} ORDER BY `dungeon_out` DESC");
-    while ($Infirmary = $db->fetch_row($query)) {
-        echo "
-			<tr>
-				<td>
-					<a href='profile.php?user={$Infirmary['dungeon_user']}'>
-						" . parseUsername($Infirmary['dungeon_user']) . "
-					</a>
-				</td>
-				<td>
-					{$Infirmary['dungeon_reason']}
-				</td>
-				<td>
-					" . TimeUntil_Parse($Infirmary['dungeon_out']) . "
-				</td>
-				<td>
-					[<a href='?action=bail&user={$Infirmary['dungeon_user']}'>Bail Out</a>]
-					[<a href='?action=bust&user={$Infirmary['dungeon_user']}'>Bust Out</a>]
-				</td>
-			</tr>";
+    while ($Infirmary = $db->fetch_row($query)) 
+	{
+		$displaypic = "<img src='" . parseImage(parseDisplayPic($Infirmary['dungeon_user'])) . "' height='75' alt='' title=''>";
+		echo "<div class='row'>
+			<div class='col-md-4'>
+				<div class='row'>
+					<div class='col-md'>
+						{$displaypic}
+					</div>
+					<div class='col-md'>
+						<a href='profile.php?user={$Infirmary['dungeon_user']}'> " . parseUsername($Infirmary['dungeon_user']) . " </a> 
+						[{$Infirmary['dungeon_user']}]
+					</div>
+				</div>
+			</div>
+			<div class='col-md-4'>
+				Reason: <i>{$Infirmary['dungeon_reason']}</i><br />
+				Release: " . TimeUntil_Parse($Infirmary['dungeon_out']) . "
+			</div>
+			<div class='col-md-4'>
+				<div class='row'>
+					<div class='col-md'>
+						<a class='btn btn-primary' href='?action=bust&user={$Infirmary['dungeon_user']}'>Bust {$api->SystemUserIDtoName($Infirmary['dungeon_user'])}</a>
+					</div>
+					<div class='col-md'>
+						<a class='btn btn-primary' href='?action=bail&user={$Infirmary['dungeon_user']}'>Bail {$api->SystemUserIDtoName($Infirmary['dungeon_user'])}</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr />";
     }
-    echo "</tbody></table>";
     $h->endpage();
 }
 

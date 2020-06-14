@@ -150,7 +150,13 @@ else
 		$api->UserGiveItem($userid,274,1);
 	}
 }
-echo " You have {$left} Hexbags remaining for today.<hr />
-<a href='hexbags.php'>Open Another</a><br />
-<a href='explore.php'>Back to Town</a>";
+echo " <b>You have {$left} Hexbags remaining for today.</b><hr />
+<div class='row'>
+		<div class='col'>
+			<a href='hexbags.php' class='btn btn-primary'>Open Another</a>
+		</div>
+		<div class='col'>
+			<a href='explore.php' class='btn btn-danger'>Explore</a>
+		</div>
+	</div>";
 $h->endpage();

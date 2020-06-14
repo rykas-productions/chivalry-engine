@@ -27,19 +27,29 @@ $districtConfig['MaxSizeX'] = 5;
 $districtConfig['MaxSizeY'] = 5;
 $districtConfig['BarracksMaxWarriors'] = 3000;
 $districtConfig['BarracksMaxArchers'] = 1500;
-$districtConfig['GeneralBuff'] = 0.5;
-$districtConfig['GeneralTroops'] = 7500;
+$districtConfig['GeneralBuff'] = 0.2;
+$districtConfig['GeneralTroops'] = 2500;
 $districtConfig['GeneralCost'] = 125000;
 $districtConfig['GeneralCostDaily'] = 12500;
 $districtConfig['WarriorCost'] = 5000;
 $districtConfig['WarriorCostDaily'] = 500;
 $districtConfig['ArcherCost'] = 8500;
 $districtConfig['ArcherCostDaily'] = 1000;
+$districtConfig['coalPerFortify']=1500;
+$districtConfig['copperPerFortify']=3200;
+$districtConfig['xpPerFortify']=125;
+$districtConfig['xpPerFortifyMulti']=2.25;
+$districtConfig['fortifyBuffMulti']=0.12;
+$districtConfig['attackRangeDmgMulti']=1.2;
+$districtConfig['attackDmgWeakeness']=0.75;
+$districtConfig['attackDmgStrength']=1.05;
+$districtConfig['attackDefenseAdvantage']=1.15;
+$districtConfig['maxGenerals'] = 2;
 //end module config
 
 require('globals.php');
 echo "<h3>Guild Districts</h3><hr />
-	[<a href='#' data-toggle='modal' data-target='#district_info'>Info</a>] || [<a href='guild_district.php'>Home</a>] || [<a href='?action=guildinfo'>Your Guild Info</a>] || [<a href='?action=buy'>Buy Troops</a>]<hr />";
+	[<a href='#' data-toggle='modal' data-target='#district_info'>Info</a>] || [<a href='guild_district.php'>Home</a>] || [<a href='?action=guildinfo'>Your Guild Info</a>] || [<a href='?action=buy'>Buy Troops</a>] || [<a href='?action=general'>Hire General</a>]<hr />";
 if ($ir['guild'] > 0)
 {
 	$distQ=$db->query("/*qc=on*/SELECT * FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}");
@@ -88,8 +98,17 @@ switch ($_GET['action'])
 	case 'buy':
         guild_buy();
         break;
+	case 'general':
+        hireGeneral();
+        break;
 	case 'test':
         test();
+        break;
+	case 'attacklog':
+        attlog();
+        break;
+	case 'viewreport':
+		battlereport();
         break;
 	default:
         home();
@@ -103,9 +122,9 @@ function test()
 		alert('danger',"","yo wtf",true,'guild_district.php');
 		die($h->endpage());
 	}
-	updateBarracksTroops(1,100000,50000,0);
-	//updateTileTroops(42,-100,-50,0);
-	$db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 2 WHERE `guild_id` = 1");
+	updateBarracksTroops(16,100000,50000,5);
+	//updateTileTroops(48,-100000,-49774,0);
+	$db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 8 WHERE `guild_id` = 16");
 }
 function home()
 {
@@ -132,6 +151,11 @@ function home()
 				$thicc='medium';
 				$border='#ffc107';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_type'] == 'lowered')
 			{
 				$thicc='medium';
@@ -154,7 +178,7 @@ function home()
 			echo "
 			<td width='20%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />
 				[<a href='?action=view&id={$r['district_id']}'>View Info</a>]
 			</td>";
 		}
@@ -207,6 +231,11 @@ function view()
 			{
 				$color='#b8daff';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_type'] == 'elevated')
 			{
 				$thicc='medium';
@@ -234,7 +263,7 @@ function view()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -263,6 +292,11 @@ function view()
 				$thicc='medium';
 				$border='#ffc107';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_type'] == 'lowered')
 			{
 				$thicc='medium';
@@ -285,7 +319,7 @@ function view()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -319,6 +353,11 @@ function view()
 				$thicc='medium';
 				$border='#f8f9fa';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_type'] == 'market')
 			{
 				$border='#17a2b8';
@@ -336,7 +375,7 @@ function view()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -378,6 +417,11 @@ function view()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -390,7 +434,7 @@ function view()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -429,6 +473,11 @@ function view()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -441,7 +490,7 @@ function view()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -487,6 +536,11 @@ function view()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -499,7 +553,7 @@ function view()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -541,6 +595,11 @@ function view()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -553,7 +612,7 @@ function view()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -592,6 +651,11 @@ function view()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -604,7 +668,7 @@ function view()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -643,6 +707,11 @@ function view()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -655,7 +724,7 @@ function view()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -749,6 +818,11 @@ function moveto()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -761,7 +835,7 @@ function moveto()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -804,6 +878,11 @@ function moveto()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -816,7 +895,7 @@ function moveto()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -859,6 +938,11 @@ function moveto()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -871,7 +955,7 @@ function moveto()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -917,6 +1001,11 @@ function moveto()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -929,7 +1018,7 @@ function moveto()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -972,6 +1061,11 @@ function moveto()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -984,7 +1078,7 @@ function moveto()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1023,6 +1117,11 @@ function moveto()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1035,7 +1134,7 @@ function moveto()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1081,6 +1180,11 @@ function moveto()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1093,7 +1197,7 @@ function moveto()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1136,6 +1240,11 @@ function moveto()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1148,7 +1257,7 @@ function moveto()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1191,6 +1300,11 @@ function moveto()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1203,7 +1317,7 @@ function moveto()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1301,6 +1415,11 @@ function attack()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1313,7 +1432,7 @@ function attack()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1356,6 +1475,11 @@ function attack()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1368,7 +1492,7 @@ function attack()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1411,6 +1535,11 @@ function attack()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1423,7 +1552,7 @@ function attack()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1469,6 +1598,11 @@ function attack()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1481,7 +1615,7 @@ function attack()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1524,6 +1658,11 @@ function attack()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1536,7 +1675,7 @@ function attack()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1575,6 +1714,11 @@ function attack()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1587,7 +1731,7 @@ function attack()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1633,6 +1777,11 @@ function attack()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1645,7 +1794,7 @@ function attack()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1688,6 +1837,11 @@ function attack()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1700,7 +1854,7 @@ function attack()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1743,6 +1897,11 @@ function attack()
 				$border='#17a2b8';
 				$thicc='medium';
 			}
+			if ($r['district_type'] == 'outpost')
+			{
+				$thicc='medium';
+				$border='#9a6790';
+			}
 			if ($r['district_fortify'] > 0)
 			{
 				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
@@ -1755,7 +1914,7 @@ function attack()
 			echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild ID: {$r['district_owner']}<br />";
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
 				if (isDistrictAccessible($r['district_id']))
 				{
 					echo "Warriors: " . number_format($r['district_melee']) . "<br />
@@ -1859,32 +2018,22 @@ function attackfromtile()
 		if ($r['district_type'] == 'elevated')
 		{
 			$attBuff=$attBuff + 0.25;
-			$defBuff=$defBuff - 0.25;
 		}
 		if ($r2['district_type'] == 'elevated')
 		{
-			$attBuff=$attBuff - 0.25;
 			$defBuff=$defBuff + 0.25;
 		}
 		if ($r2['district_type'] == 'lowered')
 		{
 			$attBuff=$attBuff + 0.25;
-			$defBuff=$defBuff - 0.25;
 		}
 		if ($r['district_type'] == 'lowered')
 		{
-			$attBuff=$attBuff - 0.25;
 			$defBuff=$defBuff + 0.25;
-		}
-		if ($r['district_fortify'] > 0)
-		{
-			$attBuff = $attBuff + ($r['district_fortify'] * 0.1);
-			$defBuff = $defBuff - ($r['district_fortify'] * 0.1);
 		}
 		if ($r2['district_fortify'] > 0)
 		{
-			$defBuff = $defBuff + ($r2['district_fortify'] * 0.1);
-			$attBuff = $attBuff - ($r2['district_fortify'] * 0.1);
+			$defBuff = $defBuff + ($r2['district_fortify'] * $districtConfig['fortifyBuffMulti']);
 		}
 		$results=json_decode(doAttack($warriors,$archers,$r2['district_melee'],$r2['district_range'], $r2['district_general'], $attBuff, $defBuff), true);
 		updateTileTroops($r2['district_id'],
@@ -1895,9 +2044,18 @@ function attackfromtile()
 					$results['attack_warrior_lost']*-1,
 					$results['attack_archer_lost']*-1, 0);
 		if ($results['winner'] == 'attack')
+		{
 			$status = "won";
+			$winner = 'attacker';
+		}
 		else
+		{
 			$status = "lost";
+			$winner = 'defender';
+		}
+		$i=logBattle($ir['guild'], $r2['district_owner'], $warriors, $archers, $results['attack_warrior_lost'], 
+		$results['attack_archer_lost'], $r2['district_melee'], $r2['district_range'], $results['defense_warrior_lost'], 
+		$results['defense_archer_lost'], $r2['district_general'], $r2['district_fortify'], $winner);
 		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers to take on 
 		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers. There is 
 		" . number_format($r2['district_general']) . " enemy generals on the battlefield today.<br />
@@ -1914,15 +2072,15 @@ function attackfromtile()
 			$db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 2 WHERE `guild_id` = {$ir['guild']}");
 			echo "<i>This tile now belongs to your guild. Remember to move troops to this tile or it may be conquered from you.</i>";
 			setTileOwnership($r2['district_id'], $ir['guild']);
-			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and emerged victorious! You lost " . number_format($results['attack_warrior_lost']) . " Warriors and " . number_format($results['attack_archer_lost']) . " Archers.");
-			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and lost. While defending, you lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
+			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and emerged victorious! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and lost. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
 			$api->SystemLogsAdd($userid,"district","Conquered tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r['district_id']) . ". Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
 		}
 		if ($status == 'lost')
 		{
 			echo "<i>You have failed to capture this tile. Rebuild your army and try again.</i>";
-			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and lost! You lost " . number_format($results['attack_warrior_lost']) . " Warriors and " . number_format($results['attack_archer_lost']) . " Archers.");
-			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and emerged victorious. While defending, you lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
+			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and lost! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and  and your guild emerged victorious. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
 			$api->SystemLogsAdd($userid,"district","Lost attacking tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . " . Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
 		}
 	}
@@ -2005,18 +2163,15 @@ function attackfrombarracks()
 		$defBuff = 1.0;
 		if ($r2['district_type'] == 'elevated')
 		{
-			$attBuff=$attBuff - 0.25;
 			$defBuff=$defBuff + 0.25;
 		}
 		if ($r2['district_type'] == 'lowered')
 		{
 			$attBuff=$attBuff + 0.25;
-			$defBuff=$defBuff - 0.25;
 		}
 		if ($r2['district_fortify'] > 0)
 		{
-			$defBuff = $defBuff + ($r2['district_fortify'] * 0.1);
-			$attBuff = $attBuff - ($r2['district_fortify'] * 0.1);
+			$defBuff = $defBuff + ($r2['district_fortify'] * $districtConfig['fortifyBuffMulti']);
 		}
 		$results=json_decode(doAttack($warriors,$archers,$r2['district_melee'],$r2['district_range'], $r2['district_general'], $attBuff, $defBuff), true);
 		updateTileTroops($r2['district_id'],
@@ -2027,9 +2182,18 @@ function attackfrombarracks()
 					$results['attack_warrior_lost']*-1,
 					$results['attack_archer_lost']*-1, 0);
 		if ($results['winner'] == 'attack')
+		{
 			$status = "won";
+			$winner = 'attacker';
+		}
 		else
+		{
 			$status = "lost";
+			$winner = 'defender';
+		}
+		$i=logBattle($ir['guild'], $r2['district_owner'], $warriors, $archers, $results['attack_warrior_lost'], 
+		$results['attack_archer_lost'], $r2['district_melee'], $r2['district_range'], $results['defense_warrior_lost'], 
+		$results['defense_archer_lost'], $r2['district_general'], $r2['district_fortify'], $winner);
 		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers to take on 
 		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers. There is 
 		" . number_format($r2['district_general']) . " enemy generals on the battlefield today.<br />
@@ -2046,16 +2210,16 @@ function attackfrombarracks()
 			$db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 2 WHERE `guild_id` = {$ir['guild']}");
 			echo "<i>This tile now belongs to your guild. Remember to move troops to this tile or it may be conquered from you.</i>";
 			setTileOwnership($r2['district_id'], $ir['guild']);
-			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and emerged victorious! You lost " . number_format($results['attack_warrior_lost']) . " Warriors and " . number_format($results['attack_archer_lost']) . " Archers.");
-			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and lost. While defending, you lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
-			$api->SystemLogsAdd($userid,"district","Conquered tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from their barracks. Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
+			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and emerged victorious! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and lost. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->SystemLogsAdd($userid,"district","Conquered tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . ". Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
 		}
 		if ($status == 'lost')
 		{
 			echo "<i>You have failed to capture this tile. Rebuild your army and try again.</i>";
-			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and lost! You lost " . number_format($results['attack_warrior_lost']) . " Warriors and " . number_format($results['attack_archer_lost']) . " Archers.");
-			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and emerged victorious. While defending, you lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
-			$api->SystemLogsAdd($userid,"district","Lost attacking tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from their barracks. Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
+			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and lost! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and  and your guild emerged victorious. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->SystemLogsAdd($userid,"district","Lost attacking tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . " . Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
 		}
 	}
 	else
@@ -2071,6 +2235,45 @@ function attackfrombarracks()
 		</form>";
 	}
 	
+}
+function battlereport()
+{
+	global $districtConfig, $userid, $db, $api, $h, $ir, $gdi;
+	$id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : 0;
+	if (blockAccess($ir['guild']))
+	{
+		alert('danger',"Uh Oh!","You cannot attack while not in a guild.",true,'guild_district.php');
+		die($h->endpage());
+	}
+	if (empty($id)) 
+	{
+		alert('danger', "Uh Oh!", "Please specify the battle log you wish to view.", true, 'guild_district.php');
+		die($h->endpage());
+	}
+	$q = $db->query("/*qc=on*/SELECT * FROM `guild_district_battlelog` WHERE `log_id` = {$id} AND (`attacker` = {$ir['guild']} OR `defender` = {$ir['guild']})");
+	if ($db->num_rows($q) == 0) 
+	{
+		alert('danger', "Uh Oh!", "This battle report does not exist, or does not involve your guild.", true, 'index.php');
+		die($h->endpage());
+	}
+	$r = $db->fetch_row($q);
+	$db->free_result($q);
+	echo "
+	<div class='row'>
+		<div class='col-md'>
+			Attacker: {$api->GuildFetchInfo($r['attacker'],'guild_name')}<br />
+			Warriors: " . number_format($r['attack_war']) . " (-" . number_format($r['attack_war_lost']) . ")<br />
+			Archers: " . number_format($r['attack_arch']) . " (-" . number_format($r['attack_arch_lost']) . ")<br />
+			Time: " . DateTime_Parse($r['log_time']) . "
+		</div>
+		<div class='col-md'>
+			{$api->GuildFetchInfo($r['defender'],'guild_name')}<br />
+			Warriors: " . number_format($r['defend_war']) . " (-" . number_format($r['defend_war_lost']) . ")<br />
+			Archers: " . number_format($r['defend_arch']) . " (-" . number_format($r['defend_archer_lost']) . ")<br />
+			Generals: " . number_format($r['defend_general']) . "<br />
+			Fortification Level: " . number_format($r['defend_fortify']) . "
+		</div>
+	</div>";
 }
 function movefromtile()
 {
@@ -2153,6 +2356,14 @@ function movefromtile()
 			alert('danger',"Uh Oh!","You must move at least one unit.",true,'guild_district.php');
 			die($h->endpage());
 		}
+		if ($generals > 0)
+		{
+			if (($generals + $r['district_general']) > $districtConfig['maxGenerals'])
+			{
+				alert('danger',"Uh Oh!","You may only have {$districtConfig['maxGenerals']} Generals on a tile.",true,'guild_district.php');
+				die($h->endpage());
+			}
+		}
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		$api->SystemLogsAdd($userid,"district","Moved " . number_format($warriors) . " Warriors, " . number_format($archers) . " Archers and  " . number_format($generals) . " Generals from Tile " . resolveCoordinates($r2['district_id']) . " to Tile " . resolveCoordinates($r['district_id']) .".");
 		updateTileTroops($r2['district_id'], $warriors*-1, $archers*-1, $generals*-1);
@@ -2189,11 +2400,6 @@ function fortify()
 		alert('danger',"Uh Oh!","You must be a guild leader or co-leader to fortify tiles.",true,'guild_district.php');
 		die($h->endpage());
 	}
-	if ($gdi['moves'] == 0)
-	{
-		alert('danger',"Uh Oh!","You have ran out of moves for today. Try again tomorrow.",true,'guild_district.php');
-		die($h->endpage());
-	}
 	if (empty($attack_to))
 	{
 		alert('danger',"Uh Oh!","You are attempting to interact with an invalid district.",true,'guild_district.php');
@@ -2212,9 +2418,9 @@ function fortify()
 	}
 	$q2=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$attack_to}");
 	$r2=$db->fetch_row($q2);
-	$neededCoal=1500*($r2['district_fortify'] + 1);
-	$neededCopper=3200*($r2['district_fortify'] + 1);
-	$neededXP = round(125 * (($r2['district_fortify'] + 1) * 2.25));
+	$neededCoal=$districtConfig['coalPerFortify']*($r2['district_fortify'] + 1);
+	$neededCopper=$districtConfig['copperPerFortify']*($r2['district_fortify'] + 1);
+	$neededXP = round($districtConfig['xpPerFortify'] * (($r2['district_fortify'] + 1) * $districtConfig['xpPerFortifyMulti']));
 	if (isset($_POST['warriors']))
 	{
 		if ($r2['district_fortify'] == 10)
@@ -2241,7 +2447,6 @@ function fortify()
 		$api->GuildRemoveItem($ir['guild'],22,$neededCoal);
 		$api->GuildRemoveItem($ir['guild'],23,$neededCopper);
 		$api->GuildRemoveXP($ir['guild'],$neededXP);
-		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		$db->query("UPDATE `guild_districts` SET `district_fortify` = `district_fortify` + 1 WHERE `district_id` = {$attack_to}");
 		alert('success',"","You have successfully fortified this tile at the cost of " . number_format($neededXP) . " Guild XP, " . number_format($neededCoal) . " Coal and " . number_format($neededCopper) . " Copper Flakes.");
 	}
@@ -2318,6 +2523,11 @@ function movefrombarracks()
 			alert('danger',"Uh Oh!","You must move at least one unit.",true,'guild_district.php');
 			die($h->endpage());
 		}
+		if (($generals + $r2['district_general']) > $districtConfig['maxGenerals'])
+		{
+			alert('danger',"Uh Oh!","You may only have {$districtConfig['maxGenerals']} Generals on a tile.",true,'guild_district.php');
+			die($h->endpage());
+		}
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		updateBarracksTroops($ir['guild'], $warriors*-1, $archers*-1, $generals*-1);
 		updateTileTroops($attack_to, $warriors, $archers, $generals);
@@ -2379,26 +2589,41 @@ function guild_buy()
 		alert('danger',"Uh Oh!","You must be a guild leader or co-leader to purchase troops.",true,'guild_district.php');
 		die($h->endpage());
 	}
-	$guildVault = $db->fetch_single($db->query("SELECT `guild_primcurr` FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
-	$perActiveWarrior=40;
-	$perActiveArcher=20;
+	$gi = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
+	if (countTowns() > 0)
+	{
+		$districtConfig['ArcherCost'] = round($districtConfig['ArcherCost'] - ($districtConfig['ArcherCost']*(0.15*countTowns())));
+		$districtConfig['WarriorCost'] = round($districtConfig['WarriorCost'] - ($districtConfig['WarriorCost']*(0.15*countTowns())));
+	}
+	$maxDailyWarriors = 400;
+	$maxDailyArchers = $maxDailyWarriors / 2;
 	
-	$canBuyArcher = $perActiveArcher * countActiveGuildMembers24Hr($gdi['guild_id']);
-	$canBuyWarrior = $perActiveWarrior * countActiveGuildMembers24Hr($gdi['guild_id']);
+	$dailyBuyWarriors = $gi['guild_level'] * 20;
+	$dailyBuyArchers = $gi['guild_level'] * 10;
 	
-	$maxWarrior=400;
-	$maxArcher=200;
+	if ($dailyBuyArchers > $maxDailyArchers)
+		$dailyBuyArchers = $maxDailyArchers;
+	if ($dailyBuyWarriors > $maxDailyWarriors)
+		$dailyBuyWarriors = $maxDailyWarriors;
 	
-	$maxBuyWarriors = $maxWarrior - $gdi['warriors_bought'];
-	$maxBuyArchers = $maxArcher - $gdi['archers_bought'];
+	if (countOutposts() > 0)
+	{
+		$dailyBuyWarriors = round($dailyBuyWarriors + ($dailyBuyWarriors * (0.15 * countOutposts())));
+		$dailyBuyArchers = round($dailyBuyArchers + ($dailyBuyArchers * (0.15 * countOutposts())));
+	}
 	
-	if ($canBuyWarrior > $maxBuyWarriors)
-		$canBuyWarrior = $maxBuyWarriors;
-	if ($canBuyArcher > $maxBuyArchers)
-		$canBuyArcher = $maxBuyArchers;
-	$fixedMaxWar = $canBuyWarrior - $gdi['warriors_bought'];
-	$fixedMaxArc = $canBuyArcher - $gdi['archers_bought'];
+	$currentBuyWarriors = $dailyBuyWarriors - $gdi['warriors_bought'];
+	$currentBuyArchers = $dailyBuyArchers - $gdi['archers_bought'];
 
+	if ($currentBuyArchers < 0)
+		$currentBuyArchers = 0;
+	if ($currentBuyWarriors < 0)
+		$currentBuyWarriors = 0;
+	
+	if ($currentBuyArchers > $dailyBuyArchers)
+		$currentBuyArchers = $dailyBuyArchers;
+	if ($currentBuyWarriors > $dailyBuyWarriors)
+		$currentBuyWarriors = $dailyBuyWarriors;
 	if (isset($_POST['warriors']))
 	{
 		$archers = (isset($_POST['archers']) && is_numeric($_POST['archers'])) ? abs($_POST['archers']) : 0;
@@ -2422,20 +2647,20 @@ function guild_buy()
 			die($h->endpage());
 		}
 		//Recruited warriors and current barracks is over maximum barracks size
-		if (($warriors+$gdi['warriors_bought']) > $canBuyWarrior)
+		if ($warriors > $currentBuyWarriors)
 		{
-			alert('danger',"Uh Oh!","You are trying to buy more warriors than you are allowed to right now.",true,'guild_district.php');
+			alert('danger',"Uh Oh!","You cannot buy " . number_format($warriors) . " Warriors right now. You may only buy " . number_format($currentBuyWarriors) . " Warriors right now.",true,'guild_district.php');
 			die($h->endpage());
 		}
-		if (($archers+$gdi['archers_bought']) > $canBuyArcher)
+		if ($archers > $currentBuyArchers)
 		{
-			alert('danger',"Uh Oh!","You are trying to buy more archers than you are allowed to right now.",true,'guild_district.php');
+			alert('danger',"Uh Oh!","You cannot buy " . number_format($archers) . " Warriors right now. You may only buy " . number_format($currentBuyArchers) . " Archers right now.",true,'guild_district.php');
 			die($h->endpage());
 		}
 		$archerTotal=$archers*$districtConfig['ArcherCost'];
 		$warriorTotal=$warriors*$districtConfig['WarriorCost'];
 		$allTotal = $warriorTotal + $archerTotal;
-		if ($guildVault < $allTotal)
+		if ($gi['guild_primcurr'] < $allTotal)
 		{
 			alert('danger',"Uh Oh!","Your guild needs " . number_format($allTotal) . " Copper Coins in it's vault before you can purchase that many units.",true,'guild_district.php');
 			die($h->endpage());
@@ -2453,16 +2678,69 @@ function guild_buy()
 	}
 	else
 	{
-		echo "How many troops do you wish to buy? Fill and submit the form to confirm. Your guild has " . number_format($guildVault) . " Copper Coins in its vault.<br />
+		echo "How many troops do you wish to buy? Fill and submit the form to confirm. Your guild has " . number_format($gi['guild_primcurr']) . " Copper Coins in its vault.<br />
 		<form method='post'>
 			<b>Warriors</b> (" . number_format($districtConfig['WarriorCost']) . " Copper Coins each)<br />
-			<input type='number' name='warriors' value='{$fixedMaxWar}' max='{$maxBuyWarriors}' min='0' required='1' class='form-control'>
+			<input type='number' name='warriors' value='{$currentBuyWarriors}' max='{$currentBuyWarriors}' min='0' required='1' class='form-control'>
 			<b>Archers</b> (" . number_format($districtConfig['ArcherCost']) . " Copper Coins each)<br />
-			<input type='number' name='archers' value='{$fixedMaxArc}' max='{$maxBuyArchers}' min='0' required='1' class='form-control'>
+			<input type='number' name='archers' value='{$currentBuyArchers}' max='{$currentBuyArchers}' min='0' required='1' class='form-control'>
 			<input type='submit' value='Buy Troops' class='btn btn-success'>
 		</form>";
 	}
 	
+}
+
+function hireGeneral()
+{
+	global $db, $api, $userid, $ir, $gdi, $districtConfig, $h;
+	if (blockAccess($ir['guild']))
+	{
+		alert('danger',"Uh Oh!","You cannot purchase units while not in a guild.",true,'guild_district.php');
+		die($h->endpage());
+	}
+	if (!isGuildLeaders($ir['guild'], $userid))
+	{
+		alert('danger',"Uh Oh!","You must be a guild leader or co-leader to purchase troops.",true,'guild_district.php');
+		die($h->endpage());
+	}
+	$gi = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
+	$availableGenerals = (floor(countActiveTroops() / $districtConfig['GeneralTroops']) - countGenerals());
+	if ($availableGenerals < 0)
+		$availableGenerals = 0;
+	if (countTowns() > 0)
+		$districtConfig['GeneralCost'] = round($districtConfig['GeneralCost'] - ($districtConfig['GeneralCost']*(0.15*countTowns())));
+	if (isset($_POST['warriors']))
+	{
+	
+		$generals = (isset($_POST['warriors']) && is_numeric($_POST['warriors'])) ? abs($_POST['warriors']) : 0;
+		//is the form completely submitted?
+		if ($generals == 0)
+		{
+			alert('danger',"Uh Oh!","Please fill out the form completely before submitting.",true,'guild_district.php');
+			die($h->endpage());
+		}
+		$generalsTotal=$generals*$districtConfig['GeneralCost'];
+		if ($gi['guild_primcurr'] < $generalsTotal)
+		{
+			alert('danger',"Uh Oh!","Your guild needs " . number_format($generalsTotal) . " Copper Coins in it's vault before you can hire that many generals.",true,'guild_district.php');
+			die($h->endpage());
+		}
+		updateBarracksTroops($ir['guild'], 0, 0, $generals);
+		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$generalsTotal} WHERE `guild_id` = {$ir['guild']}");
+		alert('success',"Success!","You have spent " . number_format($generalsTotal) . " Copper Coins and hired " . number_format($generals) . " Warriors for your guild.",true,'guild_district.php');
+		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . number_format($generalsTotal) . " Copper Coins and hired" . number_format($generals) . " Generals for your Guild District.");
+		$api->SystemLogsAdd($userid,"district","Spent " . number_format($generalsTotal) . " Copper Coins for " . number_format($generals) . " Generals.");
+		addToEconomyLog('Districts', 'copper', $generalsTotal*-1);
+	}
+	else
+	{
+		echo "How many generals do you wish to hire? You may hire {$availableGenerals} at this time.. Your guild has " . number_format($gi['guild_primcurr']) . " Copper Coins in its vault.<br />
+		<form method='post'>
+			<b>Generals</b> (" . number_format($districtConfig['GeneralCost']) . " Copper Coins each)<br />
+			<input type='number' name='warriors' value='{$availableGenerals}' max='{$availableGenerals}' min='0' required='1' class='form-control'>
+			<input type='submit' value='Hire General' class='btn btn-success'>
+		</form>";
+	}
 }
 include('forms/district_popup.php');
 $h->endpage();
@@ -2588,7 +2866,7 @@ function doAttack($attackWarrior, $attackArcher, $defenseWarrior, $defenseArcher
 					if ($dfndr == 1)
 					{
 						$defenderRating = mt_rand(100,300) * $defenseBuff;
-						$defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*0.5));
+						$defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*$districtConfig['GeneralBuff']));
 						$attackerRating = mt_rand(100,300) * $attackBuff;
 						//Attacker warrior beats defender warrior
 						if ($attackerRating >= $defenderRating)
@@ -2609,7 +2887,7 @@ function doAttack($attackWarrior, $attackArcher, $defenseWarrior, $defenseArcher
 					else
 					{
 						$defenderRating = mt_rand(50,268) * $defenseBuff;
-						$defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*0.5));
+						$defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*$districtConfig['GeneralBuff']));
 						$attackerRating = mt_rand(50,268) * $attackBuff;
 						//Attacker warrior beats defender archer
 						if ($attackerRating >= $defenderRating)
@@ -2656,7 +2934,7 @@ function doAttack($attackWarrior, $attackArcher, $defenseWarrior, $defenseArcher
 					else
 					{
 						$defenderRating = mt_rand(75,400) * $defenseBuff;
-						$defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*0.5));
+						$defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*$districtConfig['GeneralBuff']));
 						$attackerRating = mt_rand(150,350) * $attackBuff;
 						//Attacker archer beats defender archer
 						if ($attackerRating >= $defenderRating)
@@ -2788,4 +3066,53 @@ function returnForticationLevel($district_id)
 		return "X";
 	else
 		return "∅";
+}
+
+function countTowns()
+{
+	return countMarkets();
+}
+
+function countMarkets()
+{
+	global $db, $ir;
+	return $db->fetch_single($db->query("SELECT COUNT(`district_id`) FROM `guild_districts` WHERE `district_type` = 'market' AND `district_owner` = {$ir['guild']}"));
+}
+
+function countOutposts()
+{
+	global $db, $ir;
+	return $db->fetch_single($db->query("SELECT COUNT(`district_id`) FROM `guild_districts` WHERE `district_type` = 'outpost' AND `district_owner` = {$ir['guild']}"));
+}
+
+function countActiveTroops()
+{
+	global $db, $ir;
+	$warriors = $db->fetch_single($db->query("SELECT SUM(`district_melee`) FROM `guild_districts` WHERE `district_owner` = {$ir['guild']}"));
+	$archers = $db->fetch_single($db->query("SELECT SUM(`district_range`) FROM `guild_districts` WHERE `district_owner` = {$ir['guild']}"));
+	return $archers + $warriors;
+}
+
+function countGenerals()
+{
+	global $db, $ir;
+	$deployed = $db->fetch_single($db->query("SELECT SUM(`district_general`) FROM `guild_districts` WHERE `district_owner` = {$ir['guild']}"));
+	$barracks = $db->fetch_single($db->query("SELECT SUM(`barracks_generals`) FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}"));
+	return $deployed + $barracks;
+}
+
+function logBattle($attacker, $defender, $att_war, $att_range, $att_war_lost, $att_range_lost, $def_war, $def_range, $def_war_lost, $def_range_lost, $def_general, $fortify, $winner)
+{
+	global $db;
+	$time = time();
+	$db->query("INSERT INTO `guild_district_battlelog` 
+		(`attacker`, `defender`, `winner`, `attack_war`, 
+		`attack_war_lost`, `attack_arch`, `attack_arch_lost`, 
+		`defend_war`, `defend_war_lost`, `defend_arch`, 
+		`defend_archer_lost`, `defend_general`, `defend_fortify`, 
+		`log_time`) 
+		VALUES ('{$attacker}', '{$defender}', '{$winner}', '{$att_war}', '{$att_war_lost}', 
+		'{$att_range}', '{$att_range_lost}', '{$def_war}', '{$def_war_lost}', 
+		'{$def_range}', '{$def_range_lost}', '{$def_general}', '{$fortify}', '{$time}')");
+		return $db->insert_id();
 }

@@ -54,7 +54,7 @@ $db->query("UPDATE `settings` SET `setting_value` = '{$tenday}' WHERE `setting_n
 $db->query("UPDATE `settings` SET `setting_value` = '{$twentyday}' WHERE `setting_name` = '20day'");
 $db->query("UPDATE `settings` SET `setting_value` = '{$thirtyday}' WHERE `setting_name` = '30day'");
 $db->query("TRUNCATE TABLE `votes`");
-
+doDailyDistrictTick();
 //Guild daily fee
 $gdfq=$db->query("/*qc=on*/SELECT * FROM `guild`");
 while ($gfr=$db->fetch_row($gdfq))

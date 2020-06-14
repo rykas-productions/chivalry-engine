@@ -88,8 +88,7 @@ function home()
 										</div>
 										<div class='col-sm'>
 											<div class='progress' style='height: 1rem;'>
-												<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'></div>
-												<span>{$perc}%</span>
+												<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'><span>{$perc}%</span></div>
 											</div>
 										</div>
 									</div>
@@ -206,8 +205,7 @@ function viewpolls()
 							</div>
 							<div class='col-sm'>
 								<div class='progress' style='height: 1rem;'>
-									<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'></div>
-									<span>{$perc}%</span>
+									<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'><span>{$perc}%</span></div>
 								</div>
 							</div>
 						</div>

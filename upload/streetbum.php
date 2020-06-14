@@ -48,14 +48,16 @@ function dobum()
 	if ($rand <= 5)
 	{
 		$copper=Random(200,950);
-		$txt = "You beg on the street and receive {$copper} Copper Coins.";
+		$copper=round($copper+($copper*levelMultiplier($ir['level'])));
+		$txt = "You beg on the street and receive " . number_format($copper) . " Copper Coins.";
 		$api->UserGiveCurrency($userid, 'primary', $copper);
 		addToEconomyLog('Begging', 'copper', $copper);
 	}
 	elseif (($rand <= 8) && ($rand > 6))
 	{
 		$copper=Random(10,24);
-		$txt = "You stumble upon {$copper} Chivalry Tokens while begging on the street.";
+		$copper=round($copper+($copper*levelMultiplier($ir['level'])));
+		$txt = "You stumble upon " . number_format($copper) . " Chivalry Tokens while begging on the street.";
 		$api->UserGiveCurrency($userid, 'secondary', $copper);
 		addToEconomyLog('Begging', 'token', $copper);
 	}
@@ -64,7 +66,13 @@ function dobum()
 		$txt = "You did not receive anything while begging.";
 	}
 	echo $txt . " <b>You can beg {$ir['searchtown']} more times this hour.</b><hr />
-	<a href='?action=beg' class='btn btn-primary'>Beg Again</a><br />
-	<a href='explore.php' class='btn btn-danger'>Explore</a>";
+	<div class='row'>
+		<div class='col'>
+			<a href='?action=beg' class='btn btn-primary'>Beg Again</a>
+		</div>
+		<div class='col'>
+			<a href='explore.php' class='btn btn-danger'>Explore</a>
+		</div>
+	</div>";
 	$h->endpage();
 }

@@ -23,14 +23,14 @@ function isGuildAppManager()
 function isGuildCrimeLord()
 {
 	global $gd, $userid;
-	if (isGuildLeader() || $gd['guild_crime_lord'] == $userid)
+	if (isGuildLeadership() || $gd['guild_crime_lord'] == $userid)
 		return true;
 }
 
 function isGuildVaultManager()
 {
 	global $gd, $userid;
-	if (isGuildLeader() || $gd['guild_vault_manager'] == $userid)
+	if (isGuildLeadership() || $gd['guild_vault_manager'] == $userid)
 		return true;
 }
 

@@ -18,7 +18,7 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 }
 
 //Config
-	$minimumpot = 250000;			//Minimum pot.
+	$minimumpot = mt_rand(125000, 350000);			//Minimum pot.
 	$costtoplay = 10000;			//Cost to get a ticket.
 	$addedtopot = 8500;				//How much, out of per ticket, is added to the pot.
 	$add2potformat = number_format($addedtopot);
@@ -49,12 +49,12 @@ function lottery_home()
     $winchance=round((1/$set['raffle_chance'])*100,2);
 	echo 
 		"<h3>Raffle</h3><hr />
-		The pot starts at {$minimumpotformat} Copper Coins. It costs {$cost2playformat} Copper Coins to play. {$add2potformat} Copper Coins is deducted from your 
+		The pot starts between 125,000 and 350,000 Copper Coins. It costs {$cost2playformat} Copper Coins to play. {$add2potformat} Copper Coins is deducted from your 
 		ticket and added into the pot. Whoever gets the lucky ticket will get all the cash in the pot, along with a <a href='iteminfo.php?ID=160'>Badge of Luck</a>. 
 		<u>You have a {$winchance}% chance to win the raffle.</u> Chances are increased very occasionally as you play.<br />
 		<br />
 		<b>Current Pot:</b> {$currentwinnings} Copper Coins<br />
-        <b>Previous Winner:</b> " . parseUsername($set['raffle_last_winner']) . " [{$set['raffle_last_winner']}]
+        <b>Previous Winner:</b> <a href='profile.php?user={$set['raffle_last_winner']}'>" . parseUsername($set['raffle_last_winner']) . "</a> [{$set['raffle_last_winner']}]
 		<br />
 		[<a href='?action=play&verf={$csrf}'>Buy Ticket</a>]";
 		
@@ -102,7 +102,8 @@ function lottery_play()
 		$api->UserGiveCurrency($userid, 'primary', $set['lotterycash']);
 		//Sets the pot back to the minimum.
 		$db->query("UPDATE `settings` SET `setting_value` = {$minimumpot} WHERE `setting_id` = {$lotteryid}");
-		$text="<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] has won the Chivalry is Dead Raffle and pocketed {$winnings} Copper Coins. A new raffle has been opened.";
+		$userLink="<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}]";
+		$text = "The Chivalry is Dead Raffle has been won by {$userLink}. They received " . number_format($winnings) . " Copper Coins. We've started a new raffle that begins at " . number_format($minimumpot) . " Copper Coins. Best of luck!";
 		$api->GameAddAnnouncement($text);
 		$db->query("UPDATE `settings` SET `setting_value` = 1000 WHERE `setting_name` = 'raffle_chance'");
         $db->query("UPDATE `settings` SET `setting_value` = {$userid} WHERE `setting_name` = 'raffle_last_winner'");\

@@ -66,43 +66,31 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
 		The houses you can buy are listed below. Click a house to buy it. Your Will helps determine how much you
 		gain while training, and it helps with committing crimes.<br />";
     $hq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_will` > {$ir['maxwill']} ORDER BY `house_will` ASC");
-    echo "
-	<table class='table table-bordered'>
-	<tr>
-		<th>
-			Estate Name
-		</th>
-		<th>
-			Level Requirement
-		</th>
-		<th>
-			Cost
-		</th>
-		<th>
-			Will Level
-		</th>
-	</tr>";
+	echo "<div class='row'>";
     //List all game's estates.
-    while ($r = $db->fetch_row($hq)) {
+    while ($r = $db->fetch_row($hq)) 
+	{
 		$currentprice=$mp['house_price'];
+		$level = ($ir['level'] > $r['house_level']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
+		$cost = ($ir['primary_currency'] > $r['house_price']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
+		$willdif = $r['house_will'] - $ir['maxwill'];
 		$r['house_price']=$r['house_price']-$currentprice;
-        echo "
-		<tr>
-			<td>
-				<a href='?property={$r['house_id']}'>{$r['house_name']}</a>
-			</td>
-			<td>
-				" . number_format($r['house_level']) . "
-			</td>
-			<td>
-				" . number_format($r['house_price']) . "
-			</td>
-			<td>
-				" . number_format($r['house_will']) . "
-			</td>
-		</tr>";
+		echo "
+		<div class='col-md-4'>
+		<div class='card'>
+            <div class='card-header'>
+                <a href='?property={$r['house_id']}'>{$r['house_name']}</a>
+            </div>
+            <div class='card-body'>
+                <span {$level}>Level Required: " . number_format($r['house_level']) . "</span><br />
+				<span {$cost}>Price: " . number_format($r['house_price']) . " Copper Coins</span><br />
+				Will: " . number_format($r['house_will']) . " (+ " . number_format($willdif) . ")
+            </div>
+        </div>
+		<br />
+		</div>";
     }
-    echo "</table>";
+    echo "</div></table>";
     $db->free_result($hq);
 }
 $h->endpage();

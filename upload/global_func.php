@@ -9,6 +9,7 @@
 require('global_func_user.php');
 require('global_func_dropdown.php');
 require('global_func_guild.php');
+require('global_func_trinket.php');
 /*
 	Parses the time since the timestamp given.
 	@param int $time_stamp for time since.
@@ -25,8 +26,8 @@ function DateTime_Parse($time_stamp, $ago = true, $override = false)
     //If the time difference is less than 1 day, OR if $override is set to true. This will display how long ago the
     //timestamp was in seconds/minutes/hours/days/etc.
     if ($time_difference < 86400 || $override == true) {
-        $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
-        $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
+        $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade', 'century');
+        $lengths = array(60, 60, 24, 7, 4.35, 12, 10, 10);
         //Go to the largest unit of time as possible.
         for ($i = 0; $time_difference >= $lengths[$i]; $i++) {
             $time_difference = $time_difference / $lengths[$i];
@@ -55,8 +56,8 @@ function TimeUntil_Parse($time_stamp)
 {
     //Time difference is Unix Timestamp subtracted from $time_stamp.
     $time_difference = $time_stamp - time();
-    $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
-    $lengths = array(60, 60, 24, 7, 4.35, 12, 10);
+    $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade', 'century');
+    $lengths = array(60, 60, 24, 7, 4.35, 12, 10, 10);
     //Get to the biggest unit type as possible.
     for ($i = 0; $time_difference >= $lengths[$i]; $i++) {
         $time_difference = $time_difference / $lengths[$i];
@@ -410,17 +411,7 @@ function request_csrf_code($formid)
  */
 function randomizer()
 {
-    //Set to true for stronger randomization on OpenSSL
-    $Safe = true;
-    //Use PHP V7's Random Bytes generator first!
-    if (function_exists('random_bytes'))
-        return bin2hex(random_bytes(128));
-    //If we can't... lets use OpenSSL's random bytes generator
-    elseif (function_exists('openssl_random_pseudo_bytes'))
-        return bin2hex(openssl_random_pseudo_bytes(128, $Safe));
-    //That fails... use our shitty one. ;/
-    else
-        return sha1(decbin(Random(1, PHP_INT_MAX)));
+	return bin2hex(random_bytes(32));
 }
 
 /**
@@ -821,10 +812,7 @@ function SystemLogsAdd($user, $logtype, $input)
 //Fall back for PHP 7 functions on a PHP < 7 versions.
 function Random($min = 0, $max = PHP_INT_MAX)
 {
-    if (function_exists('random_int'))
         return random_int($min, $max);
-    else
-        return mt_rand($min, $max);
 }
 /*
 	Gets the contents of a file if it exists, otherwise grabs and caches 
@@ -1362,6 +1350,7 @@ function doDailyDistrictTick()
 			$api->GuildAddNotification($r['guild_id'],"Your guild has been charged a district's upkeep fee of " . number_format($upkeepFee) . " Copper Coins.");
 		}
 	}
+	districtRewards();
 }
 function countActiveGuildMembers24Hr($guild_id)
 {
@@ -1387,4 +1376,61 @@ function countDeployedGenerals($guild_id)
 	global $db;
 	$q=$db->query("SELECT SUM(`district_general`) FROM `guild_districts` WHERE `district_owner` = {$guild_id}");
 	return $db->fetch_single($q);
+}
+function districtRewards()
+{
+	districtRewardMostControlledTiles();
+	districtRewardMostDeployedUnits();
+}
+
+function districtRewardMostDeployedUnits()
+{
+	global $db, $api;
+	$winnerguild = 0;
+	$currentmax = 0;
+	$q = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` != 1 AND `guild_id` != 16");
+	while ($r = $db->fetch_row($q))
+	{
+		$currentGuildID = $r['guild_id'];
+		$currentGuild = 0;
+		$q2 = $db->query("SELECT `district_melee`, `district_range` FROM `guild_districts` WHERE `district_owner` = {$r['guild_id']}");
+		while ($r2 = $db->fetch_row($q2))
+		{
+			$currentGuild = $currentGuild + ($r2['district_melee'] + $r2['district_range']);
+		}
+		if ($currentGuild > $currentmax)
+		{
+			$currentmax = $currentGuild;
+			$winnerguild = $currentGuildID;
+		}
+	}
+	$api->GameAddNotification(1,"{$winnerguild} with {$currentmax}.");
+	$api->GuildAddItem($winnerguild,205,2);
+	$api->GuildAddNotification($winnerguild, "Your guild has the most deployed units on the guild districts and received two {$api->SystemItemIDtoName(205)} to your armory.");
+}
+
+function districtRewardMostControlledTiles()
+{
+	global $db, $api;
+	$winnerguild = 0;
+	$currentmax = 0;
+	$q = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` != 1 AND `guild_id` != 16");
+	while ($r = $db->fetch_row($q))
+	{
+		$currentGuildID = $r['guild_id'];
+		$currentGuild = 0;
+		$q2 = $db->query("SELECT `district_owner` FROM `guild_districts` WHERE `district_owner` = {$r['guild_id']}");
+		while ($r2 = $db->fetch_row($q2))
+		{
+			$currentGuild = $currentGuild + 1;
+		}
+		if ($currentGuild > $currentmax)
+		{
+			$currentmax = $currentGuild;
+			$winnerguild = $currentGuildID;
+		}
+	}
+	$api->GameAddNotification(1,"{$winnerguild} with {$currentmax}.");
+	$api->GuildAddItem($winnerguild,205,2);
+	$api->GuildAddNotification($winnerguild, "Your guild has the most controlled tiles on the guild districts and received two {$api->SystemItemIDtoName(205)} to your armory.");
 }
