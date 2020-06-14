@@ -23,3 +23,4 @@ upload/.idea/php.xml
 upload/.project
 upload/.buildpath
 .project
+*.json
