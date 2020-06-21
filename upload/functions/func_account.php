@@ -240,7 +240,7 @@ function logUserIP()
  */
 function createUserUUID() 
 {
-    return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+    return sprintf( '%04x%04x',
         returnRandomNumber( 0, 0xffff ), returnRandomNumber( 0, 0xffff ),
         returnRandomNumber( 0, 0xffff ),
         returnRandomNumber( 0, 0x0fff ) | 0x4000,
