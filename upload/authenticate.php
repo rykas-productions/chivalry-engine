@@ -23,11 +23,10 @@
 	SOFTWARE.
 */
 require('globals_nonauth.php');
-include('functions/func_auth.php');
 $safeEmail = makeSafeText($_POST['email']);
 $safePassword = makeSafeText($_POST['password']);
 $userid = checkValidEmail($safeEmail);
-if ($userid == 0)
+if (empty($userid))
 {
 	dangerRedirect('Invalid account creditials.', 'login.php', 'Back');
 	die($h->endHeaders());
