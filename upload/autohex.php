@@ -1,6 +1,6 @@
 <?php
 $macropage = ('autohex.php');
-$multipler = 1.0;
+$multipler = 1.25;
 require('globals.php');
 if ($ir['autohex'] == 0)
 {

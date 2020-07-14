@@ -1,6 +1,5 @@
 <?php
 require('globals.php');
-include('facebook.php');
 $blockAccess = false;
 if (isMobile())
 {
@@ -55,25 +54,7 @@ if (empty($dung_count)) {
 if (empty($infirm_count)) {
     $infirm_count = 0;
 }
-if ($paperads == 0)
-{
-	$news="Welcome to Chivalry is Dead.";
-}
-else
-{
-	$news='';
-	$npq=$db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$time} ORDER BY `news_cost` ASC");
-	while ($par=$db->fetch_row($npq))
-		{
-			$phrase = " " . parseUsername($par['news_owner']) . " [{$par['news_owner']}]: {$par['news_text']} //";
-			$news.="{$phrase}";
-		}
-	$news.="//END";
-}
-echo "
-<div class='marquee'>
-	<div class='text'>{$news}</div>
-</div>
+echo"
 <h4>You begin exploring {$api->SystemTownIDtoName($ir['location'])}. You find a few things that could keep you occupied.</h4>
 <div class='row'>
 	<div class='col-sm'>
@@ -111,7 +92,10 @@ echo "
 				<a href='gym.php' class='{$txtClass}'><i class='game-icon game-icon-weight-lifting-down'></i> The Gym</a><br />
 				<a href='chivalry_gym.php' class='{$txtClass}'> <i class='game-icon game-icon-weight-lifting-up'></i> Chivalry Gym</a><br />
 				<a href='criminal.php' class='{$txtClass}'><i class='game-icon game-icon-robber'></i> Criminal Center</a><br />
-				<a href='streetbum.php' class='{$txtClass}'> Street Begging <span class='badge badge-pill badge-primary'>{$ir['searchtown']}</span></a><br />
+				<a href='streetbum.php' class='{$txtClass}'> Street Begging <span class='badge badge-pill badge-primary'>" . number_format($ir['searchtown']) . "</span></a><br />";
+				if ($ir['autobum'] > 0)
+					echo "<a href='autobum.php' class='{$txtClass}'> Auto Street Beg <span class='badge badge-pill badge-primary'>" . number_format($ir['autobum']) . "</span></a><br />";
+				echo"
 				<a href='academy.php' class='{$txtClass}'><i class='game-icon game-icon-diploma'></i> Local Academy</a><br />
 				<a href='achievements.php'><i class='game-icon game-icon-achievement'></i> Achievements</a><br />
 	</div>
@@ -126,8 +110,9 @@ echo "
 			<a href='fedjail.php'><i class='game-icon game-icon-closed-doors'></i> Federal Dungeon</a><br />
 			<a href='stats.php'><i class='fas fa-chart-bar'></i> Game Statistics</a><br />
 			<a href='playerreport.php'><i class='far fa-flag'></i> Player Report</a><br />
-			<a href='announcements.php'><i class='fas fa-bullhorn'></i> Announcements <span class='badge badge-pill badge-primary'>{$ir['announcements']}</span></a><br />
+			<a href='announcements.php'><i class='fas fa-bullhorn'></i> Announcements <span class='badge badge-pill badge-primary'>" . number_format($ir['announcements']) . "</span></a><br />
 			<a href='itemappendix.php'><i class='fas fa-list'></i> Item Appendix</a><br />
+			<a href='milestones.php'>Milestones</a><br />
 	</div>
 	<div class='col-sm'>
 		<u><b>Gambling District</b></u><br />
@@ -136,9 +121,9 @@ echo "
 			<a href='slots.php?tresde={$tresder}' class='{$txtClass}'><i class='game-icon game-icon-pokecog spinner'></i> Slot Machines</a><br />";
 			if ($ir['level'] > 49)
 				echo "<a href='bigslots.php?tresde={$tresder}' class='{$txtClass}'><i class='game-icon game-icon-pokecog'></i> Federal Slots</a><br />";
-			echo "<a href='hexbags.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags <span class='badge badge-pill badge-primary'>{$ir['hexbags']}</span></a><br />";
+			echo "<a href='hexbags.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags <span class='badge badge-pill badge-primary'>" . number_format($ir['hexbags']) . "</span></a><br />";
 			if ($ir['autohex'] > 0)
-				echo "<a href='autohex.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Auto Hexbags <span class='badge badge-pill badge-primary'>{$ir['autohex']}</span></a><br />";
+				echo "<a href='autohex.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Auto Hexbags <span class='badge badge-pill badge-primary'>" . number_format($ir['autohex']) . "</span></a><br />";
 			echo "
 			<a href='raffle.php' class='{$txtClass}'><i class='fas fa-ticket-alt'></i> CID Raffle <span class='badge badge-pill badge-primary'>" . number_format($set['lotterycash']) . "</span></a><br />
 	</div>
@@ -181,9 +166,7 @@ echo "
 echo "	<div class='row'>
 			<div class='col-md-12'>
 				Share your referral link to gain 10 Chivalry Gym Scrolls every time a friend joins!<br />
-				<code>chivalryisdeadgame.com/register.php?REF={$userid}</code><br />
-				<div class='fb-like' data-href='https://www.facebook.com/officialcidgame' data-layout='button' data-action='like' data-size='large' data-show-faces='false' data-share='true'></div><br />
-                <a href='https://twitter.com/cidgame?ref_src=twsrc%5Etfw' class='twitter-follow-button' data-size='large' data-dnt='true' data-show-count='false'>Follow @cidgame</a><script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script>
+				<code>chivalryisdeadgame.com/register.php?REF={$userid}</code>
 			</div>
 		</div>";
 $h->endpage();

@@ -1,5 +1,5 @@
 <div class="modal fade" id="district_info" tabindex="-2" role="dialog" aria-labelledby="district_info" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addShortcutLabel">Guild Districts</h5>
@@ -10,8 +10,7 @@
             <div class="modal-body">
 				<b>Guild District Beta</b><br />
 				Very simply, there's a couple mechanics not yet implemented. This is mainly to test the structure of the mod itself to 
-				be sure it is capabale of what we already have asked of it. At this moment, you may not hire generals yet, and you will not 
-				receive a discount when purchasing troops if you hold a market tile.<br />
+				be sure it is capabale of what we already have asked of it. <br />
 				We haven't implemented any rewards yet, in case this mod ends up being super game breaking. Note, however, guilds that participate 
 				in the beta will be rewarded handsomely by CID Admin once it becomes stable.
 				<hr />
@@ -36,13 +35,13 @@
 				Yellow border - High ground. (+25% defense)<br />
 				White border - Low ground (-25% defense)<br />
 				Blue border - Market (-15% troop cost, stacks)<br />
-				Purple border - Outpost (+15% troops per day, does stack)
+				Purple border - Outpost (+15% troops per day, stacks)
 				<hr />
 				<b>Getting Started</b><br />
 				To get on the board, you must attack the outside tiles, and then make your way in. You may attack in any direction 
 				from a tile.<br />
 				Recruit troops for your guild via Guild Info. The amount of troops you may recruit per day is limited by 
-				how many active players you have in your guild.
+				your guild's level, up to a maximum of 400/200 troops a day.
 				<hr />
 				<b>Recruiting Troops</b><br />
 				Recruiting troops helps strength your army. Stronger units cost more. Warriors cost 5,000 Copper Coins; Archers 
@@ -64,10 +63,10 @@
 				factored into the daily upkeep cost, but that is not the case in the beta.</u>
 				<hr />
 				<b>Fortification</b><br />
-				District tiles may be fortified up to 10 times. Fortification increases your defensive value by 12% per 
-				fortification level. A fortification level requires the following: Guild Experience (Scales with fortification level), 
-				1,500 Coal (per fortification level), 3,200 Copper Flakes (per fortification level). These must 
-				be in your guild's armory. Fortifications are lost when you lose ownership of the tile it was on.
+				District tiles may be fortified up to 5 times. Fortification increases your defensive value by 12% per 
+				fortification level. A fortification level requires the following: Guild Experience and Chivalry Tokens, both of 
+				which scale with the district's fortication level. These must be in your guild's vault/armory. 
+				Fortifications are lost when you lose ownership of the tile it was on.
 				<hr />
 				<b>Tips</b><br />
 				*Defending from the high-ground will be easy, but taking a high-ground tile will prove a little more difficult.<br />

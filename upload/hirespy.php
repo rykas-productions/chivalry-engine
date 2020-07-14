@@ -38,11 +38,6 @@ if ($db->num_rows($q) == 0) {
     die($h->endpage());
 }
 $r = $db->fetch_row($q);
-//GET User is in the same guild as the current player, do not allow spy to be bought.
-if (($r['guild'] == $ir['guild']) && ($ir['guild'] != 0)) {
-    alert("danger", "Uh Oh!", "You cannot hire a spy on someone in your guild.", true, "profile.php?user={$_GET['user']}");
-    die($h->endpage());
-}
 //Spy has been bought, and all other tests have passed!
 if (isset($_POST['do']) && (isset($_GET['user']))) {
     //Random Number Generator to choose what happens.
@@ -422,7 +417,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 								" . returnIcon($i['itmid'],3.5) . "
 							</div>
 							<div class='col-md-8 text-left'>
-								<b>{$i['itmname']}</b> is a {$lt} item.<br />
+								<b><a href='iteminfo.php?ID={$i['itmid']}'>{$i['itmname']}</a></b> is a {$lt} item.<br />
 								<i>{$i['itmdesc']}</i>";
 								$start=0;
 								for ($enum = 1; $enum <= 3; $enum++) 

@@ -22,9 +22,6 @@ if ($ir['bank'] > -1) {
         $_GET['action'] = '';
     }
     switch ($_GET['action']) {
-        case "deposit":
-            deposit();
-            break;
         case "withdraw":
             withdraw();
             break;
@@ -41,6 +38,7 @@ else {
             alert('success', "Success!", "You have successfully bought a bank account for " . number_format($bank_cost) . " Copper Coins!", true, 'bank.php');
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bank", 0);
+			$api->SystemLogsAdd($userid, 'bank', "[City Bank] Purchased account for " . number_format($bank_cost) . " Copper Coins.");
 			addToEconomyLog('Bank Fees', 'copper', ($bank_cost)*-1);
 			item_add($userid,157,1);
         } //Player is too poor to afford account.
@@ -60,30 +58,53 @@ function index()
         $interest=2;
     else
         $interest=5;
-    echo "<b>You currently have " . number_format($ir['bank']) . " in your City Bank account.</b><br />
+    echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['bank']) . "</span> in your City Bank account.</b><br />
 				At the end of each and everyday, your balance will increase by {$interest}%. You will not gain interest if 
 				your balance is over " . number_format(returnMaxInterest($userid)) . " Copper Coins. You must be active within the past 24 hours for this to 
-				effect you.<br />
-				<table class='table table-bordered'>
-					<tr>
-						<td width='50%'>
-							Deposits are free.
-							<form action='?action=deposit' method='post'>
-								<b>Copper Coins</b><br />
-								<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' required='1' name='deposit' value='{$ir['primary_currency']}'><br />
-								<input type='submit' value='Deposit' class='btn btn-primary'>
-							</form>
-						</td>
-						<td>
-							It doesn't cost you anything to withdraw from your account.
-							<form action='?action=withdraw' method='post'>
-								<b>Account Balance</b><br />
-								<input type='number' min='1' max='{$ir['bank']}' class='form-control' required='1' name='withdraw' value='{$ir['bank']}'><br />
-								<input type='submit' value='Withdraw' class='btn btn-primary'>
-							</form>
-						</td>
-					</tr>
-				</table>";
+				effect you.
+				<div id='banksuccess'></div>
+				<div class='row'>
+					<div class='col-lg'>
+						<div class='card'>
+							<div class='card-header'>
+								Deposit (<span id='wallet'>" . number_format($ir['primary_currency']) . " Copper Coins</span>)
+							</div>
+							<div class='card-body'>
+								<form method='post' id='cityBankDeposit' name='cityBankDeposit'>
+									<div class='row'>
+										<div class='col'>
+											<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' id='form_bank_wallet' required='1' name='deposit' value='{$ir['primary_currency']}'>
+										</div>
+										<div class='col-4 col-md-3'>
+											<input type='submit' value='Deposit' class='btn btn-primary' id='cityDeposit'>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<br />
+					</div>
+					<div class='col-lg'>
+						<div class='card'>
+							<div class='card-header'>
+								Withdraw (<span id='bankacc'>" . number_format($ir['bank']) . " Copper Coins</span>)
+							</div>
+							<div class='card-body'>
+								<form method='post' id='cityBankWithdraw' name='cityBankWithdraw'>
+									<div class='row'>
+										<div class='col'>
+											<input type='number' min='1' max='{$ir['bank']}' class='form-control' required='1' id='form_bank_acc' name='withdraw' value='{$ir['bank']}'>
+										</div>
+										<div class='col-4 col-md-3'>
+											<input type='submit' value='Withdraw' class='btn btn-primary' id='cityWithdraw'>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<br />
+					</div>
+				</div>";
 	$q=$db->query("/*qc=on*/SELECT * FROM `bank_investments` WHERE `userid` = {$userid}");
 	if ($db->num_rows($q) == 0)
 	{
@@ -110,47 +131,4 @@ function index()
 			</table>";
 	}
 }
-
-function deposit()
-{
-    global $ir, $userid, $bank_maxfee, $bank_feepercent, $api;
-    $_POST['deposit'] = abs($_POST['deposit']);
-    //User is trying to deposit more than they have.
-    if ($_POST['deposit'] > $ir['primary_currency']) {
-        alert('danger', "Uh Oh!", "You are trying to deposit more cash than you current have!", true, 'bank.php');
-    } else {
-        //$gain is amount put into account after the fee is taken.
-        $gain = $_POST['deposit'];
-        $ir['bank'] += $gain;
-        //Update user's bank and Copper Coins info.
-        $api->UserTakeCurrency($userid, 'primary', $_POST['deposit']);
-        $api->UserInfoSetStatic($userid, "bank", $ir['bank']);
-        alert('success', "Success!", "You hand over " . number_format($_POST['deposit']) . " to be deposited. " . number_format($gain) . " Copper Coins 
-		is added to your bank account. You now have " . number_format($ir['bank']) . " in your account.", true, 'bank.php');
-        //Log bank transaction.
-        $api->SystemLogsAdd($userid, 'bank', "Deposited " . number_format($_POST['deposit']) . ".");
-    }
-}
-
-function withdraw()
-{
-    global $ir, $userid, $api;
-    $_POST['withdraw'] = abs($_POST['withdraw']);
-    //User is trying to withdraw more than they have stored.
-    if ($_POST['withdraw'] > $ir['bank']) {
-        alert('danger', "Uh Oh!", "You are trying to withdraw more cash than you currently have available in your account.", true, 'bank.php');
-    } else {
-        $gain = $_POST['withdraw'];
-        $ir['bank'] -= $gain;
-        //Update user's info.
-        $api->UserGiveCurrency($userid, 'primary', $_POST['withdraw']);
-        $api->UserInfoSetStatic($userid, "bank", $ir['bank']);
-        alert('success', "Success!", "You have successfully withdrew " . number_format($_POST['withdraw']) . " from your
-		    bank account. You have now have " . number_format($ir['bank']) . " left in your account.", true, 'bank.php');
-        //Log transaction.
-        $api->SystemLogsAdd($userid, 'bank', "Withdrew " . number_format($_POST['withdraw']) . ".");
-    }
-}
-if ($ir['vip_days'] == 0)
-    include('ads/ad_bank.php');
 $h->endpage();

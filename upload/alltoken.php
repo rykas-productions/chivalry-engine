@@ -1,10 +1,5 @@
 <?php
 require('globals.php');
-if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
-{
-	alert('danger',"Uh Oh!","You cannot visit the bank while in the infirmary or dungeon.",true,'index.php');
-	die($h->endpage());
-}
 if ($ir['tokenbank'] == -1)
 {
 	alert('danger',"Uh Oh!","Please purchase a Chivalry Token Bank account before using this feature.",true,'explore.php');

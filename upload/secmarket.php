@@ -89,9 +89,17 @@ function buy()
         alert('danger', "Uh Oh!", "You cannot buy your own listing.", true, 'secmarket.php');
         die($h->endpage());
     }
+	if ($api->SystemCheckUsersIPs($userid, $r['sec_user'])) 
+	{
+		alert('danger', "Uh Oh!", "You cannot buy an offer from someone who shares your IP Address.", true, 'itemmarket.php');
+		die($h->endpage());
+	}
     $totalcost = $r['sec_cost'] * $r['sec_total'];
-	$taxed=$totalcost-($totalcost*0.02);
-	addToEconomyLog('Market Fees', 'copper', ($totalcost*0.02)*-1);
+	$remove = 0.02;
+	if ($r['sec_deposit'] == 'true')
+		$remove = $remove + 0.05;
+	$taxed=$totalcost-($totalcost*$remove);
+	addToEconomyLog('Market Fees', 'copper', ($totalcost*$remove)*-1);
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) {
         alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'secmarket.php');
         die($h->endpage());
@@ -100,8 +108,8 @@ function buy()
     $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
     $api->UserTakeCurrency($userid, 'primary', $totalcost);
     $api->UserGiveCurrency($r['sec_user'], 'primary', $taxed);
-    $api->GameAddNotification($r['sec_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has bought your
-        " . number_format($r['sec_total']) . " Chivalry Tokens offer from the market for a total of " . number_format($taxed) . " Copper Coins.");
+    $api->GameAddNotification($r['sec_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> bought 
+        " . number_format($r['sec_total']) . " Chivalry Tokens from the Chivalry Token Market for a total of " . number_format($taxed) . " Copper Coins.");
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
     alert('success', "Success!", "You have bought " . number_format($r['sec_total']) . " Chivalry Tokens for " . number_format($totalcost) . " Copper Coins.", true, 'secmarket.php');
     die($h->endpage());
@@ -138,6 +146,7 @@ function add()
     if (isset($_POST['qty']) && isset($_POST['cost'])) {
         $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : '';
         $_POST['cost'] = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : '';
+		$_POST['deposit'] = (isset($_POST['deposit']) && in_array($_POST['deposit'], array('false', 'true'))) ? $_POST['deposit'] : 'false';
         if (empty($_POST['qty']) || empty($_POST['cost'])) {
             alert('danger', "Uh Oh!", "Please fill out the previous form completely before submitting it.");
             die($h->endpage());
@@ -156,8 +165,8 @@ function add()
 			alert('danger', "Uh Oh!", "The pricing you set is too cheap.");
             die($h->endpage());
 		}
-        $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`)
-					VALUES ('{$userid}', '{$_POST['cost']}', '{$_POST['qty']}');");
+        $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`, `sec_deposit`)
+					VALUES ('{$userid}', '{$_POST['cost']}', '{$_POST['qty']}', '{$_POST['deposit']}');");
         $api->UserTakeCurrency($userid, 'secondary', $_POST['qty']);
         $api->SystemLogsAdd($userid, 'secmarket', "Added " . number_format($_POST['qty']) . " to the secondary market for " . number_format($_POST['cost']) . " Copper Coins each.");
         alert('success', "Success!", "You have added your " . number_format($_POST['qty']) . " Chivalry Tokens to the market for
@@ -170,7 +179,8 @@ function add()
 			<table class='table table-bordered'>
 				<tr>
 					<th>
-						Selling
+						Chivalry Tokens<br />
+						<small>To be listed on the market.</small>
 					</th>
 					<td>
 						<input type='number' name='qty' class='form-control' required='1' min='1' value='{$ir['secondary_currency']}' max='{$ir['secondary_currency']}'>
@@ -178,22 +188,32 @@ function add()
 				</tr>
 				<tr>
 					<th>
-						Price (Each)*
+						Price per Token<br />
+						<small>Subject to a 2% market fee.</small>
 					</th>
 					<td>
-						<input type='number' name='cost' class='form-control' required='1' min='1000' max='50000' value='200'>
+						<input type='number' name='cost' class='form-control' required='1' min='1000' max='50000' value='1000'>
 					</td>
+				</tr>
 				<tr>
-				
+					<th>
+						Deposit Location<br />
+						<small>Automatic bank deposits have a 5% fee.</small>
+					</th>
+					<td>
+						<select name='deposit' type='dropdown' class='form-control'>
+							<option value='false'>Wallet</option>
+							<option value='true'>Bank</option>
+						</select>
+					</td>
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='Add Listing'>
+						<input type='submit' class='btn btn-primary btn-block' value='Add Listing'>
 					</td>
 				</tr>
 			</table>
-		</form>
-		*=Price subject to 2% market fee.";
+		</form>";
     }
 }
 

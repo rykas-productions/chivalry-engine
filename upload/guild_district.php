@@ -35,16 +35,16 @@ $districtConfig['WarriorCost'] = 5000;
 $districtConfig['WarriorCostDaily'] = 500;
 $districtConfig['ArcherCost'] = 8500;
 $districtConfig['ArcherCostDaily'] = 1000;
-$districtConfig['coalPerFortify']=1500;
-$districtConfig['copperPerFortify']=3200;
+$districtConfig['copperPerFortify']=5000;
 $districtConfig['xpPerFortify']=125;
 $districtConfig['xpPerFortifyMulti']=2.25;
-$districtConfig['fortifyBuffMulti']=0.12;
+$districtConfig['fortifyBuffMulti']=0.05;
 $districtConfig['attackRangeDmgMulti']=1.2;
 $districtConfig['attackDmgWeakeness']=0.75;
 $districtConfig['attackDmgStrength']=1.05;
 $districtConfig['attackDefenseAdvantage']=1.15;
 $districtConfig['maxGenerals'] = 2;
+$districtConfig['maxFortify'] = 5;
 //end module config
 
 require('globals.php');
@@ -122,9 +122,8 @@ function test()
 		alert('danger',"","yo wtf",true,'guild_district.php');
 		die($h->endpage());
 	}
-	updateBarracksTroops(16,100000,50000,5);
-	//updateTileTroops(48,-100000,-49774,0);
-	$db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 8 WHERE `guild_id` = 16");
+	$db->query("UPDATE `guild_districts` SET `district_owner` = 0, `district_melee` = 2000, `district_range` = 1000, `district_general` = 0, `district_fortify` = 0");
+	$db->query("TRUNCATE `guild_district_info`");
 }
 function home()
 {
@@ -2418,24 +2417,19 @@ function fortify()
 	}
 	$q2=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$attack_to}");
 	$r2=$db->fetch_row($q2);
-	$neededCoal=$districtConfig['coalPerFortify']*($r2['district_fortify'] + 1);
-	$neededCopper=$districtConfig['copperPerFortify']*($r2['district_fortify'] + 1);
+	$neededTokens=$districtConfig['copperPerFortify']*($r2['district_fortify'] + 1);
+	$guildcurr = $db->fetch_single($db->query("SELECT `guild_seccurr` FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
 	$neededXP = round($districtConfig['xpPerFortify'] * (($r2['district_fortify'] + 1) * $districtConfig['xpPerFortifyMulti']));
 	if (isset($_POST['warriors']))
 	{
-		if ($r2['district_fortify'] == 10)
+		if ($r2['district_fortify'] >= $districtConfig['maxFortify'])
 		{
 			alert('danger',"Uh Oh!","You cannot fortify this tile anymore.",true,'guild_district.php');
 			die($h->endpage());
 		}
-		if (!($api->GuildHasItem($ir['guild'],22,$neededCoal)))
+		if ($guildcurr < $neededTokens)
 		{
-			alert('danger',"Uh Oh!","Your guild needs " . number_format($neededCoal) . " Coal in its armory before you can fortify this tile.",true,'guild_district.php');
-			die($h->endpage());
-		}
-		if (!($api->GuildHasItem($ir['guild'],23,$neededCopper)))
-		{
-			alert('danger',"Uh Oh!","Your guild needs " . number_format($neededCopper) . " Copper Flakes in its armory before you can fortify this tile.",true,'guild_district.php');
+			alert('danger',"Uh Oh!","Your guild needs " . number_format($neededTokens) . " Chivalry Tokens before you can fortify this district.",true,'guild_district.php');
 			die($h->endpage());
 		}
 		if (!($api->GuildHasXP($ir['guild'], $neededXP)))
@@ -2443,17 +2437,18 @@ function fortify()
 			alert('danger',"Uh Oh!","Your guild needs " . number_format($neededXP) . " Guild Experience before you can fortify this district.",true,'guild_district.php');
 			die($h->endpage());
 		}
-		$api->SystemLogsAdd($userid,"district","Spent " . number_format($neededXP) . " Guild Experience, " . number_format($neededCoal) . " Coal and " . number_format($neededCopper) . " Copper Flakes to fortify tile " . resolveCoordinates($attack_to) .".");
-		$api->GuildRemoveItem($ir['guild'],22,$neededCoal);
-		$api->GuildRemoveItem($ir['guild'],23,$neededCopper);
+		$api->SystemLogsAdd($userid,"district","Spent " . number_format($neededXP) . " Guild Experience and " . number_format($neededTokens) . " Chivalry Tokens to fortify tile " . resolveCoordinates($attack_to) .".");
 		$api->GuildRemoveXP($ir['guild'],$neededXP);
+		$db->query("UPDATE `guild` SET `guild_seccurr` = `guild_seccurr` - {$neededTokens} WHERE `guild_id` = {$ir['guild']}");
+		addToEconomyLog('Districts','token', $neededTokens*-1);
 		$db->query("UPDATE `guild_districts` SET `district_fortify` = `district_fortify` + 1 WHERE `district_id` = {$attack_to}");
-		alert('success',"","You have successfully fortified this tile at the cost of " . number_format($neededXP) . " Guild XP, " . number_format($neededCoal) . " Coal and " . number_format($neededCopper) . " Copper Flakes.");
+		alert('success',"","You have successfully fortified this tile at the cost of " . number_format($neededXP) . " Guild XP and " . number_format($neededTokens) . " Chivalry Tokens.");
 	}
 	else
 	{
 		echo "You are attempting to fortify this tile. Please click the button to confirm.<br />
-		For this district, you will need " . number_format($neededXP) . " Guild XP, " . number_format($neededCoal) . " Coal and " . number_format($neededCopper) . " Copper Flakes.<br />
+		For this district, you will need " . number_format($neededXP) . " Guild XP and " . number_format($neededTokens) . " Chivalry Tokens.<br />
+		Districts may be fortified up to a maximum of {$districtConfig['maxFortify']} times.<br />
 		<form method='post'>
 			<input type='hidden' name='warriors' value='true'>
 			<input type='submit' class='btn btn-success' value='Fortify'>

@@ -479,3 +479,36 @@ function isCourseComplete($userid, $course)
 	else
 		return false;
 }
+
+function activityLevel($user)
+{
+	global $db;
+	$r=$db->fetch_row($db->query("SELECT `laston` FROM `users` WHERE `userid` = {$user}"));
+	if ($r['laston'] > time() - 300)
+		return 'active';
+	elseif (($r['laston'] < time() - 300) && ($r['laston'] > time() - 900))
+		return 'idle';
+	else
+		return 'inactive';
+}
+
+function parseActivity($user)
+{
+	$act = activityLevel($user);
+	if ($act == 'active')
+	{
+		$activeText = "Online";
+		$activeColor = "text-success";
+	}
+	elseif ($act == 'idle')
+	{
+		$activeText = "Idle";
+		$activeColor = "text-warning";
+	}
+	elseif ($act == 'inactive')
+	{
+		$activeText = "Offline";
+		$activeColor = "text-danger";
+	}
+	return "<span class='{$activeColor}'>{$activeText}</span>";
+}

@@ -160,20 +160,20 @@ while ($i = $db->fetch_row($inv))
 	$total=$invent+$armory+$market+$primary+$secondary+$armor+$badge+$trink;
 	echo "
 	<div class='card'>
-		<div class='card-header' id='heading{$i['itmid']}'>
+		<div class='card-header bg-transparent' id='heading{$i['itmid']}'>
 			<h2 class='mb-0'>
 				<button class='btn btn-block btn-block text-left' type='button' data-toggle='collapse' data-target='#collapse{$i['itmid']}' aria-expanded='true' aria-controls='collapse{$i['itmid']}'>
 					<div class='row'>
-						<div class='col-md-1'>
+						<div class='col-1'>
 							{$icon}
 						</div>
-						<div class='col-md'>
+						<div class='col-5 col-md-7'>
 							{$i['itmname']}";
 							if ($i['inv_qty'] > 1) 
 								echo "<b> x " . number_format($i['inv_qty']) . "</b>";
 							echo "
 						</div>
-						<div class='col-md-3'>
+						<div class='col'>
 							<div class='row'>
 								<div class='col-4'>";
 								//Item has a normal use button
@@ -188,7 +188,7 @@ while ($i = $db->fetch_row($inv))
 										{
 											
 											echo "<a title='Open {$i['itmname']}.' href='bor.php?tresde={$tresder}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-												<i class='game-icon game-icon-check-mark'></i>
+												<i class='game-icon game-icon-open-chest'></i>
 											</a><br />";
 										}
 										//Bomb
@@ -196,7 +196,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Set charge.' href='bomb.php?action=small' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-mushroom-cloud'></i>
 												</a><br />";
 										}
 										//Medium Bomb
@@ -204,7 +204,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Set charge.' href='bomb.php?action=medium' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-mushroom-cloud'></i>
 												</a><br />";
 										}
 										//Large  bomb
@@ -212,7 +212,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Set charge.' href='bomb.php?action=large' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-mushroom-cloud'></i>
 												</a><br />";
 										}
 										//2017 Halloween Scratch Ticket
@@ -228,7 +228,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Chuck {$i['itmname']}.' href='bomb.php?action=pumpkin' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-throwing-nall'></i>
 												</a><br />";
 										}
 										//Invis Potion
@@ -236,7 +236,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Drink {$i['itmname']}.' href='invispotion.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-pouring-chalice'></i>
 												</a><br />";
 										}
 										//2017 Halloween Scratch Ticket
@@ -252,7 +252,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Scratch {$i['itmname']}.' href='vipticket.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-open-treasure-chest'></i>
 												</a><br />";
 										}
 										//Auto Hexbag Opener
@@ -260,7 +260,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Redeem {$i['itmname']}.' href='vipitem.php?item=autohex' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-open-treasure-chest'></i>
 												</a><br />";
 										}
 										//Auto BOR Opener
@@ -268,7 +268,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Redeem {$i['itmname']}.' href='vipitem.php?item=autobor' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-open-treasure-chest'></i>
 												</a><br />";
 										}
 										//Mysterious Potion
@@ -276,7 +276,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Drink {$i['itmname']}.' href='mysteriouspotion.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-pouring-chalice'></i>
 												</a><br />";
 										}
 										//VIP Color Changer
@@ -284,7 +284,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Use {$i['itmname']}.' href='vipitem.php?item=vipcolor' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-open-treasure-chest'></i>
 												</a><br />";
 										}
 										//2018 St Patties Scratch Ticket
@@ -308,7 +308,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Consume {$i['itmname']}.' href='mine.php?action=herb' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-flame'></i>
 												</a><br />";
 										}
 										//2018 Halloween Scratch Ticket
@@ -332,7 +332,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Toss {$i['itmname']}.' href='bomb.php?action=snowball' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-throwing-ball'></i>
 												</a><br />";
 										}
 										//2018 Christmas Scratch Ticket
@@ -348,14 +348,14 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Train with {$i['itmname']}.' href='gym_ca.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-weight-lifting-down'></i>
 												</a><br />";
 										}
 										//CID Scratch Ticket
 										if ($i['itmid'] == 210)
 										{
 					
-											echo "<a title='Scratch {$i['itmname']}.' href=scratchticket.php?action=cidticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+											echo "<a title='Scratch {$i['itmname']}.' href='scratchticket.php?action=cidticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
 													<i class='game-icon game-icon-check-mark'></i>
 												</a><br />";
 										}
@@ -364,7 +364,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Complete {$i['itmname']}.' href='bomb.php?action=assassin' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-quill'></i>
 												</a><br />";
 										}
 										//Mining Energy Potion
@@ -372,7 +372,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Consume {$i['itmname']}.' href='mine.php?action=potion' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-pouring-chalice'></i>
 												</a><br />";
 										}
 										//Sepll Tome Key
@@ -380,7 +380,7 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Unlock tome.' href='spellbook.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-padlock-open'></i>
 												</a><br />";
 										}
 										//Will Stimulant
@@ -423,55 +423,63 @@ while ($i = $db->fetch_row($inv))
 													<i class='game-icon game-icon-check-mark'></i>
 												</a><br />";
 										}
+										//Auto Street Begger VIP
+										if ($i['itmid'] == 364)
+										{
+					
+											echo "<a title='Redeem {$i['itmname']}.' href='vipitem.php?item=autobum' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-check-mark'></i>
+												</a><br />";
+										}
 										//Rings to not be equipped.
 										$ringsarray=array(113,114,115,116,125,126,127);
 										//Rings that are allowed to be equipped.
 										if (in_array($i['itmid'],$ringsarray))
 										{
 											echo "<a title='Wear {$i['itmname']}.' href='marriage.php?action=ring&ring={$i['itmid']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+													<i class='game-icon game-icon-ring'></i>
 												</a><br />";
 										}
 										//Weapons
 										if ($i['weapon'] > 0)
 										{
-											echo "<a title='Equip {$i['itmname']} as weapon.' href='equip.php?slot=weapon&ID={$i['inv_id']}' class='btn btn-block btn-danger' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+											echo "<a title='Equip {$i['itmname']} as weapon.' href='equip.php?slot=weapon&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-all-for-one'></i>
 												</a><br />";
 										}
 										//Armor
 										if ($i['armor'] > 0)
 										{
-											echo "<a title='Equip {$i['itmname']} as armor.' href='equip.php?slot=armor&ID={$i['inv_id']}' class='btn btn-block btn-success' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+											echo "<a title='Equip {$i['itmname']} as armor.' href='equip.php?slot=armor&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-armor-upgrade'></i>
 												</a><br />";
 										}
 										//Badges
 										if ($i['itmtypename'] == 'Badges')
 										{
-											echo "<a title='Equip {$i['itmname']} as profile badge.' href='equip.php?slot=badge&ID={$i['inv_id']}' class='btn btn-block btn-warning' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+											echo "<a title='Equip {$i['itmname']} as profile badge.' href='equip.php?slot=badge&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-pin'></i>
 												</a><br />";
 										}
 										//Rings
 										if ($i['itmtypename'] == 'Rings')
 										{
-											echo "<a title='Equip {$i['itmname']} as ring trinet.' href='equip.php?slot=ring&ID={$i['inv_id']}' class='btn btn-block btn-warning' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+											echo "<a title='Equip {$i['itmname']} as ring trinet.' href='equip.php?slot=ring&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-ring'></i>
 												</a><br />";
 										}
 										//Necklaces
 										if ($i['itmtypename'] == 'Necklaces')
 										{
-											echo "<a title='Equip {$i['itmname']} as necklace trinket.' href='equip.php?slot=necklace&ID={$i['inv_id']}' class='btn btn-block btn-warning' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+											echo "<a title='Equip {$i['itmname']} as necklace trinket.' href='equip.php?slot=necklace&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-emerald-necklace'></i>
 												</a><br />";
 										}
 										//Pendants
 										if ($i['itmtypename'] == 'Pendants')
 										{
-											echo "<a title='Equip {$i['itmname']} as pendant trinket.' href='equip.php?slot=pendant&ID={$i['inv_id']}' class='btn btn-block btn-warning' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
+											echo "<a title='Equip {$i['itmname']} as pendant trinket.' href='equip.php?slot=pendant&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-ribbon-medal'></i>
 												</a><br />";
 										}
 									echo "
@@ -492,11 +500,11 @@ while ($i = $db->fetch_row($inv))
 		<div id='collapse{$i['itmid']}' class='collapse' aria-labelledby='heading{$i['itmid']}' data-parent='#inventoryAccordian'>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-md-1'>
+					<div class='col-2 col-md-1'>
 						" . returnIcon($i['itmid'],3.5) . "
 					</div>
-					<div class='col-md-8 text-left'>
-						<b>{$i['itmname']}</b> is a {$lt} item.<br />
+					<div class='col-8 text-left'>
+						<b><a href='iteminfo.php?ID={$i['itmid']}'>{$i['itmname']}</a></b> is a {$lt} item.<br />
 						<i>{$i['itmdesc']}</i>";
 						$start=0;
 						for ($enum = 1; $enum <= 3; $enum++) 
@@ -526,7 +534,7 @@ while ($i = $db->fetch_row($inv))
 							}
 						}
 					echo "</div>
-					<div class='cod-md-3'>";
+					<div class='col-3'>";
 					//Potion equipping.
 						$potionexclusion=array(17,123,68,138,95,96,148,177);
 						if ((($i['itmtypename'] == 'Potions') || ($i['itmtypename'] == 'Food')) && (!in_array($i['itmid'],$potionexclusion)))
@@ -550,19 +558,19 @@ while ($i = $db->fetch_row($inv))
 				</div>
 				<hr />
 				<div class='row'>
-					<div class='col-md'>
+					<div class='col'>
 						<b>Buy</b><br />
-						<small>" . number_format($i['itmbuyprice']) . " Copper Coins</small>
+						<small>" . number_format($i['itmbuyprice']) . "</small>
 					</div>
-					<div class='col-md'>
+					<div class='col'>
 						<b>Sell</b><br />
-						<small>" . number_format($i['itmsellprice']) . " Copper Coins</small>
+						<small>" . number_format($i['itmsellprice']) . "</small>
 					</div>
-					<div class='col-md'>
+					<div class='col'>
 						<b>Total Value</b><br />
-						<small>" . number_format($i['inv_qty_value']) . " Copper Coins</small>
+						<small>" . number_format($i['inv_qty_value']) . "</small>
 					</div>
-					<div class='col-md'>
+					<div class='col'>
 						<b>Circulating</b><br />
 						<small>" . number_format($total) . "</small>
 					</div>
@@ -572,7 +580,7 @@ while ($i = $db->fetch_row($inv))
 					if ($i['weapon'] > 0)
 					{
 						echo "
-						<div class='col-md'>
+						<div class='col'>
 							<b>Weapon</b><br />
 							<small>" . number_format($i['weapon']) . "</small>
 						</div>";
@@ -580,7 +588,7 @@ while ($i = $db->fetch_row($inv))
 					if ($i['ammo'] > 0)
 					{
 						echo "
-						<div class='col-md'>
+						<div class='col'>
 							<b>Projectile</b><br />
 							<small>{$api->SystemItemIDtoName($i['ammo'])}</small>
 						</div>";
@@ -588,7 +596,7 @@ while ($i = $db->fetch_row($inv))
 					if ($i['armor'] > 0)
 					{
 						echo "
-						<div class='col-md'>
+						<div class='col'>
 							<b>Armor</b><br />
 							<small>" . number_format($i['armor']) . "</small>
 						</div>";

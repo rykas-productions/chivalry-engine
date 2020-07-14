@@ -32,7 +32,7 @@ foreach ($staff as $r)
 		$r['username'] = parseUsername($r['userid']);
 		$un = $api->SystemUserIDtoName($r['userid']);
 		$displaypic = "<img src='" . parseDisplayPic($r['userid']) . "' height='75' alt='{$un}&#39;s Display picture.' title='{$un}&#39;s Display picture'>";
-		$active = ($r['laston'] > time() - 300) ? "<span class='text-success'>Online</span>" : "<span class='text-danger'>Offline</span>";
+		$active = parseActivity($r['userid']);
 		echo "
 		<div class='card'>
 			<div class='card-body'>

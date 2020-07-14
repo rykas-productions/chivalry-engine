@@ -1090,7 +1090,7 @@ function resetacc()
 	}
 	if (isset($_POST['reset']))
 	{
-		alert('info',"What's Up?","Chivalry is Dead is attempting to reset your account... if you run into errors please contact staff.",false);
+		alert('info',"","Chivalry is Dead is attempting to reset your account... if you run into errors please contact staff.",false);
 		$accquery="UPDATE `users` SET `xp` = 0, `level` = 1, `will` = 100, `maxwill` = 100, `hp` = 100, `maxhp` = 100,
 		`energy` = 24, `maxenergy` = 24, `brave` = 10, `maxbrave` = 10, `vip_days` = `vip_days` + 3, `job` = 0, `jobrank` = 0, 
 		`primary_currency` = 0, `secondary_currency` = 0, `location` = 1, `course` = 0, `course_complete` = 0, `busts` = 0, `deaths` = 0,
@@ -1177,29 +1177,29 @@ function resetacc()
 		alert('success',"Success!","Your account has been reset. Please log in to continue.",true,'logout.php');
 		$api->SystemLogsAdd($userid, 'preferences', "Successfully reset account. (Reset # {$reset})");
 		$realReset = $reset - 1;
-		if ($reset == 1)
+		if ($realReset == 1)
 		{
 			$api->UserGiveItem($userid,346,1);
 		}
-		if ($reset == 2)
+		if ($realReset == 2)
 		{
 			$api->UserGiveItem($userid,346,1);
 			$api->UserGiveItem($userid,347,1);
 		}
-		if ($reset == 3)
+		if ($realReset == 3)
 		{
 			$api->UserGiveItem($userid,346,1);
 			$api->UserGiveItem($userid,347,1);
 			$api->UserGiveItem($userid,348,1);
 		}
-		if ($reset == 4)
+		if ($realReset == 4)
 		{
 			$api->UserGiveItem($userid,346,1);
 			$api->UserGiveItem($userid,347,1);
 			$api->UserGiveItem($userid,348,1);
 			$api->UserGiveItem($userid,349,1);
 		}
-		if ($reset == 3)
+		if ($realReset == 3)
 		{
 			$api->UserGiveItem($userid,346,1);
 			$api->UserGiveItem($userid,347,1);
@@ -1207,7 +1207,7 @@ function resetacc()
 			$api->UserGiveItem($userid,349,1);
 			$api->UserGiveItem($userid,350,1);
 		}
-			
+		die();
 	}
 	else
 	{

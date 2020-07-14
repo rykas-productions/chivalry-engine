@@ -1017,7 +1017,7 @@ function attacking()
 				</div>
 				<div class='col-md'>
 					<div class='progress' style='height: 1rem;'>
-						<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars2['hpperc']}' style='width:{$vars['hpperc']}%' aria-valuemin='0' aria-valuemax='{$odata['maxhp']}'>
+						<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars2['hpperc']}' style='width:{$vars2['hpperc']}%' aria-valuemin='0' aria-valuemax='{$odata['maxhp']}'>
 							<span>
 								{$vars2['hpperc']}% (" . number_format($odata['hp']) . " / " . number_format($odata['maxhp']) . ")
 							</span>

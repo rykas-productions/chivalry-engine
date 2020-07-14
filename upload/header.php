@@ -37,6 +37,7 @@ class headers
 				$hdr=$this->getThemeNavbarColor($ir['theme']);
 				$sound->loadSystem();
 				cslog('warn',"Main assets have loaded successfully. Log entries after this point were created by the game or related modules, not the base engine.");
+				include('ads/ad_all.php');
 				?>
 				</head>
     <?php
@@ -49,7 +50,7 @@ class headers
         <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
             <a class="navbar-brand updateHoverBtn" href="#" data-toggle="modal" data-target="#userInfo">
 					<?php 
-						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_30/v1520819749/logo.png' alt=''>
+						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_32/v1520819749/logo.png' alt=''>
 						{$set['WebsiteName']}"; 
 					?>
 				</a>
@@ -86,9 +87,8 @@ class headers
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <?php
                                 //User has a display picture, lets show it!
-                                if ($ir['display_pic']) {
-                                    echo "<img src='" . parseImage($ir['display_pic']) . "' width='30' height='30' alt='Your display picture.' title='Your display picture.'>";
-                                }
+                                if ($ir['display_pic'])
+                                    echo "<img src='" . parseImage($ir['display_pic']) . "' width='32' height='32' alt='Your display picture.' title='Your display picture.'>";
                                 echo " Hello, {$ir['username']}!";
                                 ?>
                             </a>
@@ -143,11 +143,11 @@ class headers
     }
     $fed = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
     $votecount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`voted`) FROM `votes` WHERE `userid` = {$userid}"));
-    if ($votecount < 5) {
+    if ($votecount < 5) 
         echo "<b><a href='vote.php' class='text-success'>[Vote for {$set['WebsiteName']}<span class='hidden-sm-down'> at various Voting Websites and be rewarded</span>.]</a></b><br />";
-    }
 	echo "<b><a href='donator.php' class='text-danger'>[Donate to {$set['WebsiteName']}.<span class='hidden-sm-down'> Packs start at $1 and you receive tons of benefits.</span>]</a></b><br />";
-    if ($ir['protection'] > time())
+    $this->loadNewsScroller();
+	if ($ir['protection'] > time())
 	{
 		echo "<b><span class='text-info'>You have protection active for the next " . TimeUntil_Parse($ir['protection']) . ".</span></b><br />";
 	}
@@ -239,11 +239,10 @@ class headers
             <script src='https://www.google.com/recaptcha/api.js' async defer></script>
             <form action='macro.php' method='post'>
                 <center>
-                    <div class='g-recaptcha' data-theme='light'
-                         data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
+                    <div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>' data-callback='enableBtn'></div>
                 </center>
                 <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
-                <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" data-dismiss="modal">
+                <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" id="recaptchabtn" disabled="disabled">
             </form>
             <?php
             die($h->endpage());
@@ -305,21 +304,21 @@ class headers
 		echo "<div class='row' id='socialRow'>";
 		if ($ir['mail'] > 0) 
 		{
-			echo "<div class='col-md'>";
+			echo "<div class='col-lg'>";
 				alert('info', "", "You have " . number_format($ir['mail']) . " unread messages.", true, 'inbox.php', "View");
 			echo "</div>";
         }
         //Tell user they have unread notifcations when they do.
         if ($ir['notifications'] > 0) 
 		{
-			echo "<div class='col-md'>";
+			echo "<div class='col-lg'>";
 				alert('info', "", "You have " . number_format($ir['notifications']) . " unread notifications.", true, 'notifications.php', "View");
 			echo "</div>";
         }
 		//Tell user they have unread game announcements when they do.
 		if ($ir['announcements'] > 0) 
 		{
-			echo "<div class='col-md'>";
+			echo "<div class='col-lg'>";
 				alert('info', "", "You have " . number_format($ir['announcements']) . " unread announcements.", true, 'announcements.php', "View");
 			echo "</div>";
 		}
@@ -449,7 +448,8 @@ class headers
         <script src='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/js/bootstrap.min.js'></script>
 		<script src='https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js' defer></script>
 		<script src='https://use.fontawesome.com/releases/v{$set['fontawesome_version']}/js/all.js'></script>
-        <script src='https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v{$set['bshover_tabs_version']}/bootstrap-hover-tabs.js' async defer></script>";
+		<script src='js/underscore-min.js' async defer></script>
+        <script src='https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v{$set['bshover_tabs_version']}/bootstrap-hover-tabs.js'></script>";
 	}
 	
 	function returnMetadata()
@@ -488,6 +488,32 @@ class headers
 
 				<!— Windows 8.1 + IE11 and above —>
 				<meta name='msapplication-config' content='assets/browserconfig.xml' />";
+	}
+	
+	function loadNewsScroller()
+	{
+		global $db;
+		$time = time();
+		$paperads = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`news_id`) FROM `newspaper_ads` WHERE `news_end` > {$time}"));
+		if ($paperads == 0)
+		{
+			$news="Welcome to Chivalry is Dead. // You may post an ad by clicking <a href='newspaper.php?action=buyad'>here</a>.";
+		}
+		else
+		{
+			$news='';
+			$npq=$db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$time} ORDER BY `news_cost` ASC");
+			while ($par=$db->fetch_row($npq))
+				{
+					$phrase = " " . parseUsername($par['news_owner']) . " [{$par['news_owner']}]: {$par['news_text']} //";
+					$news.="{$phrase}";
+				}
+			$news.="//END";
+		}
+		echo "
+		<div class='marquee'>
+			<div class='text'>{$news}</div>
+		</div><br />";
 	}
 
     function userdata($ir, $dosessh = 1)
@@ -557,18 +583,24 @@ class headers
         <!-- /.row -->
         </div>
         <!-- /.container -->
-        
+        <br />
         <footer class='footer'>
             <div class='container'>
+				<div class='row'>
+					<div class='col-lg'>
+						<iframe src="https://discordapp.com/widget?id=548288771871997952&theme=dark" width="350" height="350" allowtransparency="true" frameborder="0"></iframe>
+					</div>
+					<br />
+					<div class='col-lg'>
+						<a class="twitter-timeline" data-width="350" data-height="350" data-dnt="true" data-theme="dark" href="https://twitter.com/cidgame?ref_src=twsrc%5Etfw">Tweets by cidgame</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+					</div>
+					<br />
+				</div>
 				<span>
                 <?php
-                //Print copyright info, Chivalry Engine info, and current time.
-                echo "<hr />
-					Time is now " . date('l, F j, Y g:i:s a') . "<br />
-					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
-                include('forms/include_end.php');
-                if ($ir['vip_days'] == 0)
-                    include('ads/ad_header.php');
+				echo "Time is now " . date('l, F j, Y g:i:s a') . "<br />
+						 {$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
+					include('forms/include_end.php');
 				?>
 				</span>
             </div>

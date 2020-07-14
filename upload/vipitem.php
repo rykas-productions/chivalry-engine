@@ -10,6 +10,9 @@ switch ($_GET['item']) {
 	case 'autobor':
         autobor();
         break;
+	case 'autobum':
+        autobum();
+        break;
     case 'classreset':
         classreset();
         break;
@@ -52,6 +55,22 @@ function autobor()
 		$api->UserTakeItem($userid,92,1);
 		alert("success","Success!","Auto Boxes of Random Opener has been redeemed to your account.",true,'inventory.php');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Auto Boxes of Random Opener.");
+	}
+	else
+	{
+		alert('danger',"Uh Oh!","You do not have the required item to use this page!",true,'inventory.php');
+	}
+	$h->endpage();
+}
+function autobum()
+{
+	global $db,$h,$api, $userid;
+	if ($api->UserHasItem($userid,364))
+	{
+		$db->query("UPDATE `user_settings` SET `autobum` = `autobum` + 10000 WHERE `userid` = {$userid}");
+		$api->UserTakeItem($userid,364,1);
+		alert("success","Success!","Auto Street Begger has been redeemed to your account.",true,'inventory.php');
+		$api->SystemLogsAdd($userid, 'itemuse', "Used Auto Street Begger.");
 	}
 	else
 	{

@@ -13,25 +13,11 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	die($h->endpage());
 }
 echo "<h3><i class='game-icon game-icon-chest'></i> Token Bank</h3>";
-//User has purchased a bank account.
-if ($ir['tokenbank'] > -1) {
-    if (!isset($_GET['action'])) {
-        $_GET['action'] = '';
-    }
-    switch ($_GET['action']) {
-        case "deposit":
-            deposit();
-            break;
-        case "withdraw":
-            withdraw();
-            break;
-        default:
-            index();
-            break;
-    }
-} //User needs to purchase bank account.
-else {
-    if (isset($_GET['buy'])) {
+
+if ($ir['tokenbank'] == -1) 
+{
+    if (isset($_GET['buy'])) 
+	{
         //Player has the Copper Coins required to buy an account.
         if ($api->UserHasCurrency($userid,'secondary',100))
         {
@@ -40,77 +26,61 @@ else {
             $api->UserInfoSet($userid, "tokenbank", 0);
             $api->SystemLogsAdd($userid, 'tokenbank', 'Purchased token bank account');
 			item_add($userid,156,1);
-        } else {
+        } 
+		else 
+		{
             alert('danger', "Uh oh!", "You are too poor to afford a Token Bank account. You need at least 100 Chivalry Tokens.", true, 'bank.php');
         }
-    } else {
+    } 
+	else 
+	{
         echo "Do you wish to buy a Chivalry Token bank account? It'll cost you 100 Chivalry Tokens!<br />
             <a href='?buy'>Yes, please!</a>";
     }
+	die($h->endpage());
 }
-function index()
-{
-    global $ir;
-    echo "<b>You currently have " . number_format($ir['tokenbank']) . " Chivalry Tokens in your bank account.</b><br />
-				<table class='table table-bordered'>
-					<tr>
-						<td width='50%'>
-							<form action='?action=deposit' method='post'>
-								<b>Your Tokens</b><br />
-								<input type='number' min='1' max='{$ir['secondary_currency']}' class='form-control' required='1' name='deposit' value='{$ir['secondary_currency']}'><br />
-								<input type='submit' value='Deposit' class='btn btn-primary'>
-							</form>
-						</td>
-						<td>
-							<form action='?action=withdraw' method='post'>
-								<b>Your Bank Balance</b><br />
-								<input type='number' min='1' max='{$ir['tokenbank']}' class='form-control' required='1' name='withdraw' value='{$ir['tokenbank']}'><br />
-								<input type='submit' value='Withdraw' class='btn btn-primary'>
-							</form>
-						</td>
-					</tr>
-				</table>";
-}
-
-function deposit()
-{
-    global $ir, $userid, $api;
-    $_POST['deposit'] = abs($_POST['deposit']);
-    //User is trying to deposit more than they have.
-    if ($_POST['deposit'] > $ir['secondary_currency']) {
-        alert('danger', "Uh Oh!", "You are trying to deposit more cash than you current have!", true, 'bank.php');
-    } else {
-        $gain = $_POST['deposit'];
-        $ir['tokenbank'] += $gain;
-        //Update user's bank and Copper Coins info.
-        $api->UserTakeCurrency($userid, 'secondary', $_POST['deposit']);
-        $api->UserInfoSetStatic($userid, "tokenbank", $ir['tokenbank']);
-        alert('success', "Success!", "You hand over " . number_format($_POST['deposit']) . " Chivalry Tokens to be
-        deposited. You now have " . number_format($ir['tokenbank']) . " in your account.", true, 'tokenbank.php');
-        //Log bank transaction.
-        $api->SystemLogsAdd($userid, 'tokenbank', "Deposited " . number_format($_POST['deposit']) . " Chivalry tokens.");
-    }
-}
-
-function withdraw()
-{
-    global $ir, $userid, $api;
-    $_POST['withdraw'] = abs($_POST['withdraw']);
-    //User is trying to withdraw more than they have stored.
-    if ($_POST['withdraw'] > $ir['tokenbank']) {
-        alert('danger', "Uh Oh!", "You are trying to withdraw more cash than you currently have available in your account.", true, 'bank.php');
-    } else {
-        $gain = $_POST['withdraw'];
-        $ir['tokenbank'] -= $gain;
-        //Update user's info.
-        $api->UserGiveCurrency($userid, 'secondary', $_POST['withdraw']);
-        $api->UserInfoSetStatic($userid, "tokenbank", $ir['tokenbank']);
-        alert('success', "Success!", "You have successfully withdrew " . number_format($_POST['withdraw']) . " Chivalry Tokens from your
-		    bank account. You have now have " . number_format($ir['tokenbank']) . " left in your account.", true, 'bank.php');
-        //Log transaction.
-        $api->SystemLogsAdd($userid, 'tokenbank', "Withdrew " . number_format($_POST['withdraw']) . " Chivalry Tokens.");
-    }
-}
-if ($ir['vip_days'] == 0)
-    include('ads/ad_bank.php');
+echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['tokenbank']) . "</span> Chivalry Tokens in your Chivalry Token Bank Account.</b><br />
+<div id='banksuccess'></div>
+<div class='row'>
+	<div class='col-lg'>
+		<div class='card'>
+			<div class='card-header'>
+				Deposit (<span id='wallet'>" . number_format($ir['secondary_currency']) . " Chivalry Tokens</span>)
+			</div>
+			<div class='card-body'>
+				<form method='post' id='tokenBankDeposit' name='tokenBankDeposit'>
+					<div class='row'>
+						<div class='col'>
+							<input type='number' min='1' max='{$ir['secondary_currency']}' class='form-control' id='form_bank_wallet' required='1' name='deposit' value='{$ir['secondary_currency']}'>
+						</div>
+						<div class='col-4 col-md-3'>
+							<input type='submit' value='Deposit' class='btn btn-primary' id='tokenDeposit'>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<br />
+	</div>
+	<div class='col-lg'>
+		<div class='card'>
+			<div class='card-header'>
+				Withdraw (<span id='bankacc'>" . number_format($ir['tokenbank']) . " Chivalry Tokens</span>)
+			</div>
+			<div class='card-body'>
+				<form method='post' id='tokenBankWithdraw' name='tokenBankWithdraw'>
+					<div class='row'>
+						<div class='col'>
+							<input type='number' min='1' max='{$ir['tokenbank']}' class='form-control' required='1' id='form_bank_acc' name='withdraw' value='{$ir['tokenbank']}'>
+						</div>
+						<div class='col-4 col-md-3'>
+							<input type='submit' value='Withdraw' class='btn btn-primary' id='tokenWithdraw'>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<br />
+	</div>
+</div>";
 $h->endpage();

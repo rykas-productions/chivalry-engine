@@ -224,7 +224,7 @@ function updateAcademy()
     $time = time();
     //Select a User's ID and Course ID if their completion time is less than the Unix Timestamp, and they still have
     //not been credited from their completion.
-    $coursedone = $db->query("/*qc=on*/SELECT `userid`,`course` FROM `users` WHERE `course` > 0 AND `course_complete` < {$time}");
+    $coursedone = $db->query("SELECT `userid`,`course` FROM `users` WHERE `course` > 0 AND `course_complete` < {$time} LIMIT 1");
     $course_cache = array();
     //Loop until no more users have courses left.
     while ($r = $db->fetch_row($coursedone)) {
@@ -245,27 +245,32 @@ function updateAcademy()
         $upd = "";
         $ev = "";
         //Course credits strength, so add onto the query.
-        if ($coud['ac_str'] > 0) {
+        if ($coud['ac_str'] > 0) 
+		{
             $upd .= ", us.strength = us.strength + {$coud['ac_str']}";
             $ev .= "; " . number_format($coud['ac_str']) . " Strength";
         }
         //Course credits guard, so add onto the query.
-        if ($coud['ac_grd'] > 0) {
+        if ($coud['ac_grd'] > 0) 
+		{
             $upd .= ", us.guard = us.guard + {$coud['ac_grd']}";
             $ev .= "; " . number_format($coud['ac_grd']) . " Guard";
         }
         //Course credits labor, so add onto the query.
-        if ($coud['ac_lab'] > 0) {
+        if ($coud['ac_lab'] > 0) 
+		{
             $upd .= ", us.labor = us.labor + {$coud['ac_lab']}";
             $ev .= "; " . number_format($coud['ac_lab']) . " Labor";
         }
         //Course credits agility, so add onto the query.
-        if ($coud['ac_agl'] > 0) {
+        if ($coud['ac_agl'] > 0) 
+		{
             $upd .= ", us.agility = us.agility + {$coud['ac_agl']}";
             $ev .= "; " . number_format($coud['ac_agl']) . " Agility";
         }
         //Course credits IQ, so add onto the query.
-        if ($coud['ac_iq'] > 0) {
+        if ($coud['ac_iq'] > 0) 
+		{
             $upd .= ", us.IQ = us.IQ + {$coud['ac_iq']}";
             $ev .= "; " . number_format($coud['ac_iq']) . " IQ";
         }
@@ -1268,12 +1273,27 @@ function addToEconomyLog($type = 'Misc', $curr = 'copper', $change = 0)
 {
 	global $db;
 	$todayLogID = date('Ymd');
+	$monthLogID = date('Ym--');
+	$yearLogID = date('Y----');
 	$q=$db->query("SELECT *
 					FROM `economy_log` 
 					WHERE `ecDate` = '{$todayLogID}' 
 					AND `ecSource` = '{$type}' 
 					AND `ecCurrency` = '{$curr}' 
 					LIMIT 1");
+	$q2=$db->query("SELECT *
+					FROM `economy_log` 
+					WHERE `ecDate` = '{$monthLogID}' 
+					AND `ecSource` = '{$type}' 
+					AND `ecCurrency` = '{$curr}' 
+					LIMIT 1");
+	$q3=$db->query("SELECT *
+					FROM `economy_log` 
+					WHERE `ecDate` = '{$yearLogID}' 
+					AND `ecSource` = '{$type}' 
+					AND `ecCurrency` = '{$curr}' 
+					LIMIT 1");
+	//Insert today
 	if ($db->num_rows($q) == 0)
 	{
 		$db->query("INSERT INTO `economy_log` (`ecDate`, `ecSource`, `ecCurrency`, `ecChange`) VALUES 
@@ -1284,6 +1304,36 @@ function addToEconomyLog($type = 'Misc', $curr = 'copper', $change = 0)
 		$db->query("UPDATE `economy_log` 
 					SET `ecChange` = `ecChange` + '{$change}' 
 					WHERE `ecDate` = '{$todayLogID}' 
+					AND `ecSource` = '{$type}' 
+					AND `ecCurrency` = '{$curr}' 
+					LIMIT 1");
+	}
+	//Insert month
+	if ($db->num_rows($q) == 0)
+	{
+		$db->query("INSERT INTO `economy_log` (`ecDate`, `ecSource`, `ecCurrency`, `ecChange`) VALUES 
+		('{$monthLogID}', '{$type}', '{$curr}', '{$change}')");
+	}
+	else
+	{
+		$db->query("UPDATE `economy_log` 
+					SET `ecChange` = `ecChange` + '{$change}' 
+					WHERE `ecDate` = '{$monthLogID}' 
+					AND `ecSource` = '{$type}' 
+					AND `ecCurrency` = '{$curr}' 
+					LIMIT 1");
+	}
+	//Insert year
+	if ($db->num_rows($q) == 0)
+	{
+		$db->query("INSERT INTO `economy_log` (`ecDate`, `ecSource`, `ecCurrency`, `ecChange`) VALUES 
+		('{$yearLogID}', '{$type}', '{$curr}', '{$change}')");
+	}
+	else
+	{
+		$db->query("UPDATE `economy_log` 
+					SET `ecChange` = `ecChange` + '{$change}' 
+					WHERE `ecDate` = '{$yearLogID}' 
 					AND `ecSource` = '{$type}' 
 					AND `ecCurrency` = '{$curr}' 
 					LIMIT 1");
@@ -1346,7 +1396,7 @@ function doDailyDistrictTick()
 		if ($upkeepFee > 0)
 		{
 			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$upkeepFee} WHERE `guild_id` = {$r['guild_id']}");
-			addToEconomyLog('Districts', 'copper', $upkeepFee*-1);
+			addToEconomyLog('Guild Upkeep', 'copper', $upkeepFee*-1);
 			$api->GuildAddNotification($r['guild_id'],"Your guild has been charged a district's upkeep fee of " . number_format($upkeepFee) . " Copper Coins.");
 		}
 	}

@@ -36,6 +36,8 @@ $db->query("UPDATE `settings` SET `setting_value` = 0 WHERE `setting_name` = 'ca
 $db->query("UPDATE `settings` SET `setting_value` = 0 WHERE `setting_name` = 'casino_take'");
 
 $db->query("UPDATE `bank_investments` SET `days_left` = `days_left` - 1");
+//Guild daily interest.
+$db->query("UPDATE `guild` SET `guild_primcurr`=`guild_primcurr`+(`guild_primcurr`/20) WHERE `guild_primcurr`>0");
 $biq=$db->query("/*qc=on*/SELECT * FROM `bank_investments` WHERE `days_left` = 0");
 while ($riq = $db->fetch_row($biq))
 {
@@ -64,21 +66,18 @@ while ($gfr=$db->fetch_row($gdfq))
 	{
 		if ($gfr['guild_primcurr'] < 100000)
 		{
-			$db->query("UPDATE `guild` 
-						SET `guild_primcurr` = `guild_primcurr` - 100000
-						WHERE `guild_id` = {$gfr['guild_id']}");
-			$db->query("UPDATE `guild` 
-						SET `guild_debt_time` = {$plussevenday} 
-						WHERE `guild_id` = {$gfr['guild_id']} 
-						AND `guild_debt_time` = 0");
+			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
+			$db->query("UPDATE `guild` SET `guild_debt_time` = {$plussevenday} WHERE `guild_id` = {$gfr['guild_id']} AND `guild_debt_time` = 0");
 			$api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep, but has gone into debt.");
 			$api->GameAddNotification($gfr['guild_owner'], "Your guild has gone into debt!");
+			$api->GameAddNotification($gfr['guild_coowner'], "Your guild has gone into debt!");
 		}
 		else
 		{
 			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
 			$api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep.");
 		}
+		addToEconomyLog('Guild Upkeep', 'copper', -100000);
 	}
 }
 //Bank daily interest
@@ -132,8 +131,6 @@ while ($r = $db->fetch_row($bankQuery))
 		
 	}
 }
-//Guild daily interest.
-$db->query("UPDATE `guild` SET `guild_primcurr`=`guild_primcurr`+(`guild_primcurr`/20) WHERE `guild_primcurr`>0");
 
 //Random player showcase
 /*$cutoff = time() - 86400;

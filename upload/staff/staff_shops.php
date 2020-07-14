@@ -8,8 +8,9 @@
 */
 require('sglobals.php');
 echo "<h3>Shops</h3><hr />";
-if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
-    alert('danger', "Uh Oh!", "You do not have permission to be here.");
+if (!$api->UserMemberLevelGet($userid, 'Admin')) 
+{
+    alert('danger', "Uh Oh!", "You do not have permission to be here.",true,'index.php');
     die($h->endpage());
 }
 if (!isset($_GET['action'])) {
@@ -24,6 +25,9 @@ switch ($_GET['action']) {
         break;
     case "delshop":
         delshop();
+        break;
+	case "delstock":
+        delstock();
         break;
     default:
         alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
@@ -229,4 +233,34 @@ function newitem()
     }
 }
 
+function delstock()
+{
+	global $db, $h, $userid, $api;
+    if (isset($_GET['id'])) 
+	{
+		$stockid = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : 0;
+		if (empty($stockid))
+		{
+			alert('danger','Uh Oh!', 'Please select a valid entry to delete.', true, '../shops.php');
+			die($h->endpage());
+		}
+		$q = $db->query("SELECT * FROM `shopitems` WHERE `sitemID` = {$stockid}");
+		if ($db->num_rows($q) == 0)
+		{
+			alert('danger','Uh Oh!', 'Non-existent stock to delete.', true, '../shops.php');
+			die($h->endpage());
+		}
+		$r=$db->fetch_row($q);
+		$itemname = $api->SystemItemIDtoName($r['sitemITEMID']);
+		$shopname = $db->fetch_single($db->query("SELECT `shopNAME` FROM `shops` WHERE `shopID` = {$r['sitemSHOP']}"));
+		$db->query("DELETE FROM `shopitems` WHERE `sitemID` = {$stockid} LIMIT 1");
+		alert('success','Success!', "You have removed {$itemname} from the {$shopname} shop.", true, '../shops.php');
+		$api->SystemLogsAdd($userid, 'staff', "Removed {$itemname} from the {$shopname} [{$r['sitemSHOP']}] shop.");
+	}
+	else
+	{
+		alert('danger','Uh Oh!', 'Please select a valid entry to delete.', true, '../shops.php');
+		die($h->endpage());
+	}
+}
 $h->endpage();

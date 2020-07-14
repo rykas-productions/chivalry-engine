@@ -1,4 +1,3 @@
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <?php
 /*
 	File:		stats.php
@@ -15,260 +14,237 @@ require("stats/stats.php");
 
 //This is... messy.
 echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
-[<a href='stats.php'>All Users</a>] || [<a href='?active'>Users active in last week</a>]
-	<table width='50%' class='table table-bordered table-hover table-striped'>
-		<thead>
-			<tr>
-				<th>
-					Statistic
-				</th>
-				<th width='33%'>
-					Value
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>
-					Registered Players
-				</td>
-				<td>
-					" . number_format($TotalUserCount) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Males
-				</td>
-				<td>
-					" . number_format($Male) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Females
-				</td>
-				<td>
-					" . number_format($Female) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Warriors
-				</td>
-				<td>
-					" . number_format($Warrior) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Rogues
-				</td>
-				<td>
-					" . number_format($Rogue) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Guardians
-				</td>
-				<td>
-					" . number_format($Defender) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Total Notifications
-				</td>
-				<td>
-					" . number_format($TotalNotif) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Total Messages
-				</td>
-				<td>
-					" . number_format($TotalMail) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Copper Coins Withdrawn
-				</td>
-				<td>
-					" . number_format($TotalPrimaryCurrency) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Copper in City Bank
-				</td>
-				<td>
-					" . number_format($TotalBank) . "
-				</td>
-			</tr>
-            <tr>
-				<td>
-					Copper in Federal Bank
-				</td>
-				<td>
-					" . number_format($TotalBigBank) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Copper in Vault
-				</td>
-				<td>
-					" . number_format($TotalVaultBank) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Chivalry Tokens Withdrawn
-				</td>
-				<td>
-					" . number_format($TotalSecondaryCurrency) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Chivalry Tokens Banked
-				</td>
-				<td>
-					" . number_format($TotalBankToken) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Total Copper Coins
-				</td>
-				<td>
-					" . number_format($TotalBankandPC) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Total Chivalry Tokens
-				</td>
-				<td>
-					" . number_format($TotalBankandSC) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Average Copper Coins per Player
-				</td>
-				<td>
-					" . number_format($AveragePrimaryCurrencyPerPlayer) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Average Chivalry Tokens per Player
-				</td>
-				<td>
-					" . number_format($AverageSecondaryCurrencyPerPlayer) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Average City Bank Balance
-				</td>
-				<td>
-					" . number_format($AverageBank) . "
-				</td>
-			</tr>
-            <tr>
-				<td>
-					Average Federal Bank Balance
-				</td>
-				<td>
-					" . number_format($AverageBigBank) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Average Chivalry Token Bank Account
-				</td>
-				<td>
-					" . number_format($AverageTokenBank) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Registered Guilds
-				</td>
-				<td>
-					" . number_format($TotalGuildCount) . "
-				</td>
-			</tr>
-            <tr>
-				<td>
-					Original Theme
-				</td>
-				<td>
-					" . number_format($Default) . "
-				</td>
-			</tr>
-            <tr>
-				<td>
-					Darkly Theme
-				</td>
-				<td>
-					" . number_format($Darkly) . "
-				</td>
-			</tr>
-            <tr>
-				<td>
-					Slate Theme
-				</td>
-				<td>
-					" . number_format($Slate) . "
-				</td>
-			</tr>
-            <tr>
-				<td>
-					Cyborg Theme
-				</td>
-				<td>
-					" . number_format($Cyborg) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					United Theme
-				</td>
-				<td>
-					" . number_format($United) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Cerulean Theme
-				</td>
-				<td>
-					" . number_format($Cerulean) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Castle Theme
-				</td>
-				<td>
-					" . number_format($Castle) . "
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Sunset Theme
-				</td>
-				<td>
-					" . number_format($Sunset) . "
-				</td>
-			</tr>
-		</tbody>
-	</table>";
+<div class='row'>
+	<div class='col-md'>
+		<div class='card'>
+			<div class='card-header'>
+					Player Stats
+			</div>
+			<div class='card-body text-left'>
+				<div class='row'>
+					<div class='col'>
+						Registered Players
+					</div>
+					<div class='col'>
+						" . number_format($TotalUserCount) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Males
+					</div>
+					<div class='col'>
+						" . number_format($Male) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Females
+					</div>
+					<div class='col'>
+						" . number_format($Female) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Other
+					</div>
+					<div class='col'>
+						" . number_format($OtherGender) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Warriors
+					</div>
+					<div class='col'>
+						" . number_format($Warrior) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Rogues
+					</div>
+					<div class='col'>
+						" . number_format($Rogue) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Guardian
+					</div>
+					<div class='col'>
+						" . number_format($Defender) . "
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class='col-md'>
+		<div class='card'>
+			<div class='card-header'>
+					Game Stats
+			</div>
+			<div class='card-body text-left'>
+				<div class='row'>
+					<div class='col'>
+						Notifications
+					</div>
+					<div class='col'>
+						" . number_format($TotalNotif) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Messages
+					</div>
+					<div class='col'>
+						" . number_format($TotalMail) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Guilds
+					</div>
+					<div class='col'>
+						" . number_format($TotalGuildCount) . "
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class='row'>
+	<div class='col-md'>
+		<div class='card'>
+			<div class='card-header'>
+					Copper Coins
+			</div>
+			<div class='card-body text-left'>
+				<div class='row'>
+					<div class='col'>
+						Withdrawn Copper Coins
+					</div>
+					<div class='col'>
+						" . number_format($TotalPrimaryCurrency) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Copper in City Bank
+					</div>
+					<div class='col'>
+						" . number_format($TotalBank) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Copper in Federal Bank
+					</div>
+					<div class='col'>
+						" . number_format($TotalBigBank) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Copper in Vault
+					</div>
+					<div class='col'>
+						" . number_format($TotalVaultBank) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Average Copper
+					</div>
+					<div class='col'>
+						" . number_format($AveragePrimaryCurrencyPerPlayer) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Average City Bank Balance
+					</div>
+					<div class='col'>
+						" . number_format($AverageBank) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Average Federal Bank Balance
+					</div>
+					<div class='col'>
+						" . number_format($AverageBigBank) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Average Vault Balance
+					</div>
+					<div class='col'>
+						" . number_format($AverageVaultBank) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Total Copper Coins
+					</div>
+					<div class='col'>
+						" . number_format($TotalBankandPC) . "
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class='col-md'>
+		<div class='card'>
+			<div class='card-header'>
+					Chivalry Tokens
+			</div>
+			<div class='card-body text-left'>
+				<div class='row'>
+					<div class='col'>
+						Withdrawn Chivalry Tokens
+					</div>
+					<div class='col'>
+						" . number_format($TotalSecondaryCurrency) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Banked Chivalry Tokens
+					</div>
+					<div class='col'>
+						" . number_format($TotalBankToken) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Average Chivalry Tokens
+					</div>
+					<div class='col'>
+						" . number_format($AverageSecondaryCurrencyPerPlayer) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Average Chivalry Tokens Banked
+					</div>
+					<div class='col'>
+						" . number_format($AverageTokenBank) . "
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						Total Chivalry Tokens
+					</div>
+					<div class='col'>
+						" . number_format($TotalBankandSC) . "
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>";
 $h->endpage();
 ?>

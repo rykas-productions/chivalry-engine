@@ -78,55 +78,123 @@ elseif ($_GET['view'] == 'rings') {
 	die($h->endpage());
 }
 echo "
-<table class='table table-bordered table-striped'>
-    <tr>
-        <th colspan='2'>
-            Item
-        </th>
-        <th>
-            Quantity in Circulation
-        </th>
-		<th>
-            Total Buy Value
-        </th>
-		<th>
-            Total Sell Value
-        </th>
-    </tr>";
-while ($r = $db->fetch_row($q)) {
-    $armory=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$r['itmid']} AND `gaGUILD` != 1"));
-	$invent=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$r['itmid']} AND `inv_userid` != 1"));
+<div class='accordion' id='inventoryAccordian'>";
+while ($r = $db->fetch_row($q)) 
+{
+	$type = $db->fetch_single($db->query("SELECT `itmtypename` FROM `itemtypes` WHERE `itmtypeid` = {$r['itmtype']}"));
+    $r['itmdesc'] = htmlentities($r['itmdesc'], ENT_QUOTES);
+	$rcon = returnIcon($r['itmid'],2);
+	$armory=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$r['itmid']} AND `gaGUILD` != 1"));
+	$rnvent=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$r['itmid']} AND `inv_userid` != 1"));
 	$market=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`imQTY`) FROM `itemmarket` WHERE `imITEM` = {$r['itmid']}"));
 	$primary=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_primary`) FROM `users` WHERE `equip_primary` = {$r['itmid']} AND `userid` != 1"));
 	$secondary=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_secondary`) FROM `users` WHERE `equip_secondary` = {$r['itmid']} AND `userid` != 1"));
 	$armor=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_armor`) FROM `users` WHERE `equip_armor` = {$r['itmid']} AND `userid` != 1"));
 	$badge=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_badge`) FROM `users` WHERE `equip_badge` = {$r['itmid']} AND `userid` != 1"));
 	$trink=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_slot`) FROM `user_equips` WHERE `itemid` = {$r['itmid']}"));
-	$total=$invent+$armory+$market+$primary+$secondary+$armor+$badge+$trink;
-	$icon=returnIcon($r['itmid'],2);
-	$r['itmdesc'] = htmlentities($r['itmdesc'], ENT_QUOTES);
+	$total=$rnvent+$armory+$market+$primary+$secondary+$armor+$badge+$trink;
 	$totalbuy=$total*$r['itmbuyprice'];
 	$totalsell=$total*$r['itmsellprice'];
     echo "
-        <tr>
-			<td>
-				{$icon}
-			</td>
-            <td>
-				<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>
-                    {$r['itmname']}
-                </a>
-            </td>
-            <td>
-                " . number_format($total) . "
-            </td>
-			<td>
-                " . number_format($totalbuy) . "
-            </td>
-			<td>
-                " . number_format($totalsell) . "
-            </td>
-        </tr>";
+			<div class='card'>
+				<div class='card-header' id='heading{$r['itmid']}'>
+					<h2 class='mb-0'>
+						<button class='btn btn-block btn-block text-left' type='button' data-toggle='collapse' data-target='#collapse{$r['itmid']}' aria-expanded='true' aria-controls='collapse{$r['itmid']}'>
+							<div class='row'>
+								<div class='col-md-1'>
+									{$rcon}
+								</div>
+								<div class='col-md'>
+									{$r['itmname']}
+								</div>
+							</div>
+						</button>
+					</h2>
+				</div>
+				<div id='collapse{$r['itmid']}' class='collapse' aria-labelledby='heading{$r['itmid']}' data-parent='#inventoryAccordian'>
+					<div class='card-body'>
+						<div class='row'>
+							<div class='col-md-1'>
+								" . returnIcon($r['itmid'],3.5) . "
+							</div>
+							<div class='col-md-8 text-left'>
+								<b><a href='iteminfo.php?ID={$r['itmid']}'>{$r['itmname']}</a></b> is a {$type} item.<br />
+								<i>{$r['itmdesc']}</i>";
+								$start=0;
+								for ($enum = 1; $enum <= 3; $enum++) 
+								{
+									if ($r["effect{$enum}_on"] == 'true') 
+									{
+										if ($start == 0)
+										{
+											echo "<br /><b>Effect</b> ";
+											$start = 1;
+										}
+										$einfo = unserialize($r["effect{$enum}"]);
+										$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
+										$einfo['dir'] = ($einfo['dir'] == 'pos') ? '+' : '-';
+										$stats =
+											array("energy" => "Energy", "will" => "Will",
+												"brave" => "Bravery", "level" => "Level",
+												"hp" => "Health", "strength" => "Strength",
+												"agility" => "Agility", "guard" => "Guard",
+												"labor" => "Labor", "iq" => "IQ",
+												"infirmary" => "Infirmary minutes", "dungeon" => "Dungeon minutes",
+												"primary_currency" => "Copper Coins", "secondary_currency"
+											=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+												"VIP Days", "luck" => "Luck", "premium_currency" => "Mutton");
+										$statformatted = $stats["{$einfo['stat']}"];
+										echo "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted}.";
+									}
+								}
+					echo "	</div>
+						</div>
+						<hr />
+						<div class='row'>
+							<div class='col-md'>
+								<b>Buy Value</b><br />
+								<small>" . number_format($totalbuy) . " Copper Coins</small>
+							</div>
+							<div class='col-md'>
+								<b>Sell Value</b><br />
+								<small>" . number_format($totalsell) . " Copper Coins</small>
+							</div>
+							<div class='col-md'>
+								<b>Circulating</b><br />
+								<small>" . number_format($total) . "</small>
+							</div>
+						</div>
+						<hr />
+						<div class='row'>";
+							if ($r['weapon'] > 0)
+							{
+								echo "
+								<div class='col-md'>
+									<b>Weapon</b><br />
+									<small>" . number_format($r['weapon']) . "</small>
+								</div>";
+							}
+							if ($r['ammo'] > 0)
+							{
+								echo "
+								<div class='col-md'>
+									<b>Projectile</b><br />
+									<small><a href='iteminfo.php?ID={$r['ammo']}'>{$api->SystemItemIDtoName($r['ammo'])}</a></small>
+								</div>";
+							}
+							if ($r['armor'] > 0)
+							{
+								echo "
+								<div class='col-md'>
+									<b>Armor</b><br />
+									<small>" . number_format($r['armor']) . "</small>
+								</div>";
+							}
+							echo "
+						</div>
+					</div>
+				</div>
+			</div>";
 }
-echo "</table>";
+echo "</div>";
 $h->endpage();

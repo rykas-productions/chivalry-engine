@@ -82,26 +82,27 @@ function add()
     global $userid, $db, $h, $api, $ir;
     $_POST['price'] = (isset($_POST['price']) && is_numeric($_POST['price'])) ? abs($_POST['price']) : '';
     $_POST['QTY'] = (isset($_POST['QTY']) && is_numeric($_POST['QTY'])) ? abs($_POST['QTY']) : '';
+	$_POST['deposit'] = (isset($_POST['deposit']) && in_array($_POST['deposit'], array('false', 'true'))) ? $_POST['deposit'] : 'false';
     if ($_POST['price'] && $_POST['QTY']) {
         if (!isset($_POST['verf']) || !verify_csrf_code("vmadd_form", stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Form requests expire fairly quickly. Go back and fill in the form faster next time.");
             die($h->endpage());
         }
         if ($ir['vip_days'] < $_POST['QTY']) {
-            alert('danger', "Uh Oh!", "You are trying to add an item you do not have, or trying to add more than you have.", true, 'inventory.php');
+            alert('danger', "Uh Oh!", "You do not have " . number_format($_POST['QTY']) . " VIP Days to sell. You only have " . number_format($ir['vip_days']) . " VIP Days", true, 'inventory.php');
             die($h->endpage());
         } else {
             if ($_POST['price'] < 250000)
             {
-                alert('danger','Uh Oh!',"Your VIP Market offer must cost, at least, 250,000 Copper Coins.");
+                alert('danger','Uh Oh!',"You cannot charge less than 250K Copper Coins per VIP Day.");
                 die($h->endpage());
             }
             if ($_POST['price'] > 10000000)
             {
-                alert('danger','Uh Oh!',"Your VIP Market offer must cost, at most, 10,000,000 Copper Coins.");
+                alert('danger','Uh Oh!',"You cannot charge more than 10M Copper Coins per VIP Day.");
                 die($h->endpage());
             }
-            $db->query("INSERT INTO `vip_market` (`vip_user`, `vip_cost`, `vip_days`) VALUES ('{$userid}', '{$_POST['price']}', '{$_POST['QTY']}')");
+            $db->query("INSERT INTO `vip_market` (`vip_user`, `vip_cost`, `vip_days`, `vip_deposit`) VALUES ('{$userid}', '{$_POST['price']}', '{$_POST['QTY']}', '{$_POST['deposit']}')");
             $db->query("UPDATE `users` SET `vip_days` = `vip_days` - {$_POST['QTY']} WHERE `userid` = {$userid}");
             $imadd_log = $db->escape("Listed {$_POST['QTY']} VIP Days(s) on the item market for {$_POST['price']} Copper Coins.");
             $api->SystemLogsAdd($userid, 'vipmarket', $imadd_log);
@@ -121,7 +122,8 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					VIP Days
+					VIP Days<br />
+					<small>To be listed on the market.</small>
 				</th>
 				<td>
 					<input type='number' min='1' required='1' max='{$ir['vip_days']}' value='{$ir['vip_days']}' class='form-control' name='QTY'>
@@ -129,15 +131,28 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					Price/Day
+					Price per Token<br />
+					<small>Subject to a 2% market fee.</small>
 				</th>
 				<td>
 					<input  type='number' min='250000' required='1' max='10000000' value='1000000' class='form-control' name='price' />
 				</td>
 			</tr>
 			<tr>
+					<th>
+						Deposit Location<br />
+						<small>Automatic bank deposits have a 5% fee.</small>
+					</th>
+					<td>
+						<select name='deposit' type='dropdown' class='form-control'>
+							<option value='false'>Wallet</option>
+							<option value='true'>Bank</option>
+						</select>
+					</td>
+				</tr>
+			<tr>
 				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='Add Listing'
+					<input type='submit' class='btn btn-primary btn-block' value='Add Listing'
 				</td>
 			</tr>
 			{$csrf}
@@ -165,9 +180,17 @@ function buy()
         alert('danger', "Uh Oh!", "You cannot buy your own listing.", true, 'vipmarket.php');
         die($h->endpage());
     }
+	if ($api->SystemCheckUsersIPs($userid, $r['vip_user'])) 
+	{
+		alert('danger', "Uh Oh!", "You cannot buy an offer from someone who shares your IP Address.", true, 'itemmarket.php');
+		die($h->endpage());
+	}
     $totalcost = $r['vip_cost'] * $r['vip_days'];
-	$taxed=$totalcost-($totalcost*0.02);
-	addToEconomyLog('Market Fees', 'copper', ($totalcost*0.02)*-1);
+	$remove = 0.02;
+	if ($r['vip_deposit'] == 'true')
+		$remove = $remove + 0.05;
+	$taxed=$totalcost-($totalcost*$remove);
+	addToEconomyLog('Market Fees', 'copper', ($totalcost*$remove)*-1);
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) {
         alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'vipmarket.php');
         die($h->endpage());

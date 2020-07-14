@@ -25,7 +25,7 @@ switch ($_GET['action']) {
         break;
 }
 function ticket()
-{
+{ 
 	global $h,$db,$api,$userid;
 	if (!$api->UserHasItem($userid,69,1))
 	{

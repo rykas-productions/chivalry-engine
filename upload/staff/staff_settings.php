@@ -42,7 +42,7 @@ switch ($_GET['action']) {
 function basicsettings()
 {
     global $h, $db, $set, $api, $userid;
-    if (!isset($_POST['gamename'])) {
+    if (!isset($_POST['WebsiteName'])) {
         $csrf = request_csrf_html('staff_sett_1');
         echo "
 		<div class='table-responsive'>
@@ -50,26 +50,26 @@ function basicsettings()
 		<table class='table table-bordered table-hover'>
 			<tr>
 				<th>
-					Game's Name
+					Game Name
 				</th>
 				<td width='75%'>
-					<input type='text' name='gamename' class='form-control' required='1' value='{$set['WebsiteName']}'>
+					<input type='text' name='WebsiteName' class='form-control' required='1' value='{$set['WebsiteName']}'>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					Game's Owner
+					Game Owner
 				</th>
 				<td>
-					<input type='text' name='ownername' class='form-control' required='1' value='{$set['WebsiteOwner']}'>
+					<input type='text' name='WebsiteOwner' class='form-control' required='1' value='{$set['WebsiteOwner']}'>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					Game's Description
+					Game Description
 				</th>
 				<td>
-					<textarea name='gamedesc' required='1' class='form-control' rows='5'>{$set['Website_Description']}</textarea>
+					<textarea name='Website_Description' required='1' class='form-control' rows='5'>{$set['Website_Description']}</textarea>
 				</td>
 			</tr>
 			<tr>
@@ -77,7 +77,7 @@ function basicsettings()
 					Referral Award
 				</th>
 				<td>
-					<input type='number' name='refkb' class='form-control' min='1' required='1' value='{$set['ReferalKickback']}'>
+					<input type='number' name='ReferalKickback' class='form-control' min='1' required='1' value='{$set['ReferalKickback']}'>
 				</td>
 			</tr>
 			<tr>
@@ -86,7 +86,7 @@ function basicsettings()
 					<small>(100 divided by this number)</small>
 				</th>
 				<td>
-					<input type='number' name='attenc' class='form-control' min='1' required='1' value='{$set['AttackEnergyCost']}'>
+					<input type='number' name='AttackEnergyCost' class='form-control' min='1' required='1' value='{$set['AttackEnergyCost']}'>
 				</td>
 			</tr>
 			<tr>
@@ -94,16 +94,7 @@ function basicsettings()
 					Max Moves per Attack
 				</th>
 				<td>
-					<input type='number' name='attpersess' class='form-control' min='1' required='1' value='{$set['MaxAttacksPerSession']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Force SSL<br />
-					<small>(Does nothing yet)</small>
-				</th>
-				<td>
-					<input type='text' readonly='1' class='form-control' value='{$set['HTTPS_Support']}'>
+					<input type='number' name='MaxAttacksPerSession' class='form-control' min='1' required='1' value='{$set['MaxAttacksPerSession']}'>
 				</td>
 			</tr>
 			<tr>
@@ -112,7 +103,7 @@ function basicsettings()
 					<small>Lower is faster and less secure.</small>
 				</th>
 				<td>
-					<input type='number' name='PWEffort' min='5' max='20' class='form-control' value='{$set['Password_Effort']}'>
+					<input type='number' name='Password_Effort' min='5' max='20' class='form-control' value='{$set['Password_Effort']}'>
 				</td>
 			</tr>
 			<tr>
@@ -120,7 +111,7 @@ function basicsettings()
 					PayPal Email
 				</th>
 				<td>
-					<input type='email' class='form-control' name='ppemail' value='{$set['PaypalEmail']}'>
+					<input type='email' class='form-control' name='PaypalEmail' value='{$set['PaypalEmail']}'>
 				</td>
 			</tr>
 			<tr>
@@ -129,7 +120,7 @@ function basicsettings()
 					<small>This is the email address used when emails are sent from the game.</small>
 				</th>
 				<td>
-					<input type='email' class='form-control' name='sendemail' value='{$set['sending_email']}'>
+					<input type='email' class='form-control' name='sending_email' value='{$set['sending_email']}'>
 				</td>
 			</tr>
 			<tr>
@@ -138,7 +129,7 @@ function basicsettings()
 					<small>(<a href='https://fraudguard.io/'>http://bit.ly/2apOVX0</a>)</small>
 				</th>
 				<td>
-					<input type='text' class='form-control' name='fgun' value='{$set['FGUsername']}'>
+					<input type='text' class='form-control' name='FGUsername' value='{$set['FGUsername']}'>
 				</td>
 			</tr>
 			<tr>
@@ -146,7 +137,7 @@ function basicsettings()
 					Fraudguard IO Password
 				</th>
 				<td>
-					<input type='text' class='form-control' name='fgpw' value='{$set['FGPassword']}'>
+					<input type='text' class='form-control' name='FGPassword' value='{$set['FGPassword']}'>
 				</td>
 			</tr>
 			<tr>
@@ -155,7 +146,7 @@ function basicsettings()
 					<small>(<a href='https://www.google.com/recaptcha/admin'>http://bit.ly/2oJ0Bus</a>)</small>
 				</th>
 				<td>
-					<input type='text' class='form-control' name='rcpublic' value='{$set['reCaptcha_public']}'>
+					<input type='text' class='form-control' name='reCaptcha_public' value='{$set['reCaptcha_public']}'>
 				</td>
 			</tr>
 			<tr>
@@ -163,7 +154,7 @@ function basicsettings()
 					ReCaptcha Private Key
 				</th>
 				<td>
-					<input type='text' class='form-control' name='rcprivate' value='{$set['reCaptcha_private']}'>
+					<input type='text' class='form-control' name='reCaptcha_private' value='{$set['reCaptcha_private']}'>
 				</td>
 			</tr>
 			<tr>
@@ -171,7 +162,7 @@ function basicsettings()
 					Bank Purchase Fee
 				</th>
 				<td>
-					<input type='number' name='bankbuy' class='form-control' min='1' required='1' value='{$set['bank_cost']}'>
+					<input type='number' name='bank_cost' class='form-control' min='1' required='1' value='{$set['bank_cost']}'>
 				</td>
 			</tr>
 			<tr>
@@ -179,7 +170,7 @@ function basicsettings()
 					Max Bank Deposit Fee
 				</th>
 				<td>
-					<input type='number' name='bankfee' class='form-control' min='1' required='1' value='{$set['bank_maxfee']}'>
+					<input type='number' name='bank_maxfee' class='form-control' min='1' required='1' value='{$set['bank_maxfee']}'>
 				</td>
 			</tr>
 			<tr>
@@ -187,7 +178,7 @@ function basicsettings()
 					Bank Deposit Fee
 				</th>
 				<td>
-					<input type='number' name='bankfeepercent' class='form-control' min='1' required='1' value='{$set['bankfee_percent']}'>
+					<input type='number' name='bankfee_percent' class='form-control' min='1' required='1' value='{$set['bankfee_percent']}'>
 				</td>
 			</tr>
 			<tr>
@@ -195,7 +186,7 @@ function basicsettings()
 					Guild Level Requirement
 				</th>
 				<td>
-					<input type='number' name='guildlvl' class='form-control' min='1' required='1' value='{$set['GUILD_LEVEL']}'>
+					<input type='number' name='GUILD_LEVEL' class='form-control' min='1' required='1' value='{$set['GUILD_LEVEL']}'>
 				</td>
 			</tr>
 			<tr>
@@ -203,7 +194,32 @@ function basicsettings()
 					Guild Cost
 				</th>
 				<td>
-					<input type='number' name='guildcost' class='form-control' min='1' required='1' value='{$set['GUILD_PRICE']}'>
+					<input type='number' name='GUILD_PRICE' class='form-control' min='1' required='1' value='{$set['GUILD_PRICE']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Raffle Winner
+				</th>
+				<td>
+					" . user_dropdown('raffle_last_winner', $set['raffle_last_winner']) . "
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Raffle Cash
+				</th>
+				<td>
+					<input type='number' name='lotterycash' class='form-control' min='1' required='1' value='{$set['lotterycash']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Raffle Chance<br />
+					<small>1 in X chance.</small>
+				</th>
+				<td>
+					<input type='number' name='raffle_chance' class='form-control' min='1' required='1' value='{$set['raffle_chance']}'>
 				</td>
 			</tr>
 			<tr>
@@ -211,7 +227,7 @@ function basicsettings()
 					Energy Refill Cost
 				</th>
 				<td>
-					<input type='number' name='refillenergy' class='form-control' min='1' required='1' value='{$set['energy_refill_cost']}'>
+					<input type='number' name='energy_refill_cost' class='form-control' min='1' required='1' value='{$set['energy_refill_cost']}'>
 				</td>
 			</tr>
 			<tr>
@@ -219,7 +235,7 @@ function basicsettings()
 					Will Refill Cost
 				</th>
 				<td>
-					<input type='number' name='refillwill' class='form-control' min='1' required='1' value='{$set['will_refill_cost']}'>
+					<input type='number' name='will_refill_cost' class='form-control' min='1' required='1' value='{$set['will_refill_cost']}'>
 				</td>
 			</tr>
 			<tr>
@@ -227,7 +243,7 @@ function basicsettings()
 					Bravery Refill Cost
 				</th>
 				<td>
-					<input type='number' name='refillbrave' class='form-control' min='1' required='1' value='{$set['brave_refill_cost']}'>
+					<input type='number' name='brave_refill_cost' class='form-control' min='1' required='1' value='{$set['brave_refill_cost']}'>
 				</td>
 			</tr>
 			<tr>
@@ -235,7 +251,7 @@ function basicsettings()
 					IQ per Chivalry Tokens
 				</th>
 				<td>
-					<input type='number' name='iqpersec' class='form-control' min='1' required='1' value='{$set['iq_per_sec']}'>
+					<input type='number' name='iq_per_sec' class='form-control' min='1' required='1' value='{$set['iq_per_sec']}'>
 				</td>
 			</tr>
 			<tr>
@@ -257,13 +273,29 @@ function basicsettings()
 					Game Time Zone
 				</th>
 				<td>
-					<input type='text' name='game_timezone' class='form-control' required='1' value='{$set['game_time']}'>
+					<input type='text' name='game_time' class='form-control' required='1' value='{$set['game_time']}'>
 				</td>
 			</tr>
 			<tr>
 				<th colspan='2'>
 					Version Control
 				</th>
+			</tr>
+			<tr>
+				<th>
+					Chivalry Engine Version
+				</th>
+				<td>
+					<input type='text' name='Version_Number' class='form-control' required='1' value='{$set['Version_Number']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Chivalry Engine Build Number
+				</th>
+				<td>
+					<input type='text' name='BuildNumber' class='form-control' required='1' value='{$set['BuildNumber']}'>
+				</td>
 			</tr>
 			<tr>
 				<th>
@@ -334,114 +366,92 @@ function basicsettings()
             alert('danger', "Action Blocked!", "Your action was blocked for your security. Please fill out the form quickly next time.");
             die($h->endpage());
         }
-        $GameName = (isset($_POST['gamename']) && preg_match("/^[a-z0-9_.]+([\\s]{1}[a-z0-9_.]|[a-z0-9_.])+$/i", $_POST['gamename'])) ? $db->escape(strip_tags(stripslashes($_POST['gamename']))) : '';
-        $RefAward = (isset($_POST['refkb']) && is_numeric($_POST['refkb'])) ? abs(intval($_POST['refkb'])) : '';
-        $AttackEnergy = (isset($_POST['attenc']) && is_numeric($_POST['attenc'])) ? abs(intval($_POST['attenc'])) : '';
-        $sendemail = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'sendemail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['sendemail'])) : '';
-        $Paypal = (isset($_POST['ppemail']) && filter_input(INPUT_POST, 'ppemail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['ppemail'])) : '';
-        $GameOwner = (isset($_POST['ownername']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['ownername'])) ? $db->escape(strip_tags(stripslashes($_POST['ownername']))) : '';
-        $GameDesc = (isset($_POST['gamedesc'])) ? $db->escape(strip_tags(stripslashes($_POST['gamedesc']))) : '';
-        $FGPW = (isset($_POST['fgpw'])) ? $db->escape(strip_tags(stripslashes($_POST['fgpw']))) : '';
-        $FGUN = (isset($_POST['fgun'])) ? $db->escape(strip_tags(stripslashes($_POST['fgun']))) : '';
-        $rcpb = (isset($_POST['rcpublic'])) ? $db->escape(strip_tags(stripslashes($_POST['rcpublic']))) : '';
-        $rcpr = (isset($_POST['rcprivate'])) ? $db->escape(strip_tags(stripslashes($_POST['rcprivate']))) : '';
-        $PasswordEffort = (isset($_POST['PWEffort']) && is_numeric($_POST['PWEffort'])) ? abs(intval($_POST['PWEffort'])) : 10;
-        $BankFeePerc = (isset($_POST['bankfeepercent']) && is_numeric($_POST['bankfeepercent'])) ? abs(intval($_POST['bankfeepercent'])) : 10;
-        $BankFeeMax = (isset($_POST['bankfee']) && is_numeric($_POST['bankfee'])) ? abs(intval($_POST['bankfee'])) : 5000;
-        $BankCost = (isset($_POST['bankbuy']) && is_numeric($_POST['bankbuy'])) ? abs(intval($_POST['bankbuy'])) : 5000;
-        $recaptchatime = (isset($_POST['recaptchatime']) && is_numeric($_POST['recaptchatime'])) ? abs(intval($_POST['recaptchatime'])) : 3600;
-        $sessiontimeout = (isset($_POST['sessiontimeout']) && is_numeric($_POST['sessiontimeout'])) ? abs(intval($_POST['sessiontimeout'])) : 15;
-        $attpersess = (isset($_POST['attpersess']) && is_numeric($_POST['attpersess'])) ? abs(intval($_POST['attpersess'])) : 50;
-        $guildcost = (isset($_POST['guildcost']) && is_numeric($_POST['guildcost'])) ? abs(intval($_POST['guildcost'])) : 500000;
-        $guildlvl = (isset($_POST['guildlvl']) && is_numeric($_POST['guildlvl'])) ? abs(intval($_POST['guildlvl'])) : 25;
-        $refillenergy = (isset($_POST['refillenergy']) && is_numeric($_POST['refillenergy'])) ? abs(intval($_POST['refillenergy'])) : 10;
-        $refillbrave = (isset($_POST['refillbrave']) && is_numeric($_POST['refillbrave'])) ? abs(intval($_POST['refillbrave'])) : 10;
-        $refillwill = (isset($_POST['refillwill']) && is_numeric($_POST['refillwill'])) ? abs(intval($_POST['refillwill'])) : 5;
-        $iqpersec = (isset($_POST['iqpersec']) && is_numeric($_POST['iqpersec'])) ? abs(intval($_POST['iqpersec'])) : 5;
+        $_POST['WebsiteName'] = (isset($_POST['WebsiteName']) && preg_match("/^[a-z0-9_.]+([\\s]{1}[a-z0-9_.]|[a-z0-9_.])+$/i", $_POST['WebsiteName'])) ? $db->escape(strip_tags(stripslashes($_POST['WebsiteName']))) : '';
+        $_POST['ReferalKickback'] = (isset($_POST['ReferalKickback']) && is_numeric($_POST['ReferalKickback'])) ? abs(intval($_POST['ReferalKickback'])) : '';
+        $_POST['AttackEnergyCost'] = (isset($_POST['AttackEnergyCost']) && is_numeric($_POST['AttackEnergyCost'])) ? abs(intval($_POST['AttackEnergyCost'])) : '';
+        $_POST['sending_email'] = (isset($_POST['sending_email']) && filter_input(INPUT_POST, 'sending_email', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['sending_email'])) : '';
+        $_POST['PaypalEmail'] = (isset($_POST['PaypalEmail']) && filter_input(INPUT_POST, 'PaypalEmail', FILTER_VALIDATE_EMAIL)) ? $db->escape(stripslashes($_POST['PaypalEmail'])) : '';
+        $_POST['WebsiteOwner'] = (isset($_POST['WebsiteOwner']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['WebsiteOwner'])) ? $db->escape(strip_tags(stripslashes($_POST['WebsiteOwner']))) : '';
+        $_POST['Website_Description'] = (isset($_POST['Website_Description'])) ? $db->escape(strip_tags(stripslashes($_POST['Website_Description']))) : '';
+		$_POST['FGPassword'] = (isset($_POST['FGPassword'])) ? $db->escape(strip_tags(stripslashes($_POST['FGPassword']))) : '';
+        $_POST['FGUsername'] = (isset($_POST['FGUsername'])) ? $db->escape(strip_tags(stripslashes($_POST['FGUsername']))) : '';
+        $_POST['reCaptcha_public'] = (isset($_POST['reCaptcha_public'])) ? $db->escape(strip_tags(stripslashes($_POST['reCaptcha_public']))) : '';
+        $_POST['reCaptcha_private'] = (isset($_POST['reCaptcha_private'])) ? $db->escape(strip_tags(stripslashes($_POST['reCaptcha_private']))) : '';
+        $_POST['Password_Effort'] = (isset($_POST['Password_Effort']) && is_numeric($_POST['Password_Effort'])) ? abs(intval($_POST['Password_Effort'])) : 10;
+        $_POST['bank_feepercent'] = (isset($_POST['bank_feepercent']) && is_numeric($_POST['bank_feepercent'])) ? abs(intval($_POST['bank_feepercent'])) : 10;
+        $_POST['bank_maxfee'] = (isset($_POST['bank_maxfee']) && is_numeric($_POST['bank_maxfee'])) ? abs(intval($_POST['bank_maxfee'])) : 5000;
+        $_POST['bank_cost'] = (isset($_POST['bank_cost']) && is_numeric($_POST['bank_cost'])) ? abs(intval($_POST['bank_cost'])) : 5000;
+        $_POST['Revalidate_Time'] = (isset($_POST['Revalidate_Time']) && is_numeric($_POST['Revalidate_Time'])) ? abs(intval($_POST['Revalidate_Time'])) : 3600;
+        $_POST['sessiontimeout'] = (isset($_POST['sessiontimeout']) && is_numeric($_POST['sessiontimeout'])) ? abs(intval($_POST['sessiontimeout'])) : 15;
+        $_POST['MaxAttacksPerSession'] = (isset($_POST['MaxAttacksPerSession']) && is_numeric($_POST['MaxAttacksPerSession'])) ? abs(intval($_POST['MaxAttacksPerSession'])) : 50;
+        $_POST['GUILD_PRICE'] = (isset($_POST['GUILD_PRICE']) && is_numeric($_POST['GUILD_PRICE'])) ? abs(intval($_POST['GUILD_PRICE'])) : 500000;
+        $_POST['GUILD_LEVEL'] = (isset($_POST['GUILD_LEVEL']) && is_numeric($_POST['GUILD_LEVEL'])) ? abs(intval($_POST['GUILD_LEVEL'])) : 25;
+        $_POST['energy_refill_cost'] = (isset($_POST['energy_refill_cost']) && is_numeric($_POST['energy_refill_cost'])) ? abs(intval($_POST['energy_refill_cost'])) : 10;
+        $_POST['brave_refill_cost'] = (isset($_POST['brave_refill_cost']) && is_numeric($_POST['brave_refill_cost'])) ? abs(intval($_POST['brave_refill_cost'])) : 10;
+        $_POST['will_refill_cost'] = (isset($_POST['will_refill_cost']) && is_numeric($_POST['will_refill_cost'])) ? abs(intval($_POST['will_refill_cost'])) : 5;
+        $_POST['iq_per_sec'] = (isset($_POST['iq_per_sec']) && is_numeric($_POST['iq_per_sec'])) ? abs(intval($_POST['iq_per_sec'])) : 5;
         //End norm
 		//Start versions
-		$bootstrap = (isset($_POST['bootstrap_version'])) ? $db->escape(strip_tags(stripslashes($_POST['bootstrap_version']))) : '4.4.1';
-		$popper = (isset($_POST['popper_version'])) ? $db->escape(strip_tags(stripslashes($_POST['popper_version']))) : '1.16.0';
-		$fontawesome = (isset($_POST['fontawesome_version'])) ? $db->escape(strip_tags(stripslashes($_POST['fontawesome_version']))) : '5.11.2';
-		$bstab = (isset($_POST['bshover_tabs_version'])) ? $db->escape(strip_tags(stripslashes($_POST['bshover_tabs_version']))) : '3.1.1';
-		$gamejs = (isset($_POST['game_js_version'])) ? $db->escape(strip_tags(stripslashes($_POST['game_js_version']))) : '20.4.1';
-		$gamecss = (isset($_POST['game_css_version'])) ? $db->escape(strip_tags(stripslashes($_POST['game_css_version']))) : '20.4.1';
-		$jquery = (isset($_POST['jquery_version'])) ? $db->escape(strip_tags(stripslashes($_POST['jquery_version']))) : '3.4.1';
+		$_POST['bootstrap_version'] = (isset($_POST['bootstrap_version'])) ? $db->escape(strip_tags(stripslashes($_POST['bootstrap_version']))) : '4.4.1';
+		$_POST['popper_version'] = (isset($_POST['popper_version'])) ? $db->escape(strip_tags(stripslashes($_POST['popper_version']))) : '1.16.0';
+		$_POST['fontawesome_version'] = (isset($_POST['fontawesome_version'])) ? $db->escape(strip_tags(stripslashes($_POST['fontawesome_version']))) : '5.11.2';
+		$_POST['bshover_tabs_version'] = (isset($_POST['bshover_tabs_version'])) ? $db->escape(strip_tags(stripslashes($_POST['bshover_tabs_version']))) : '3.1.1';
+		$_POST['game_js_version'] = (isset($_POST['game_js_version'])) ? $db->escape(strip_tags(stripslashes($_POST['game_js_version']))) : '20.4.1';
+		$_POST['game_css_version'] = (isset($_POST['game_css_version'])) ? $db->escape(strip_tags(stripslashes($_POST['game_css_version']))) : '20.4.1';
+		$_POST['jquery_version'] = (isset($_POST['jquery_version'])) ? $db->escape(strip_tags(stripslashes($_POST['jquery_version']))) : '3.4.1';
 		
-		$gametimezone = (isset($_POST['game_timezone'])) ? $db->escape(strip_tags(stripslashes($_POST['game_timezone']))) : 'Amerca/New_York';
+		$_POST['BuildNumber'] = (isset($_POST['BuildNumber'])) ? $db->escape(strip_tags(stripslashes($_POST['BuildNumber']))) : '0';
+		$_POST['Version_Number'] = (isset($_POST['Version_Number'])) ? $db->escape(strip_tags(stripslashes($_POST['Version_Number']))) : '1.0.0';
+		$_POST['raffle_chance'] = (isset($_POST['raffle_chance']) && is_numeric($_POST['raffle_chance'])) ? abs(intval($_POST['raffle_chance'])) : 1000;
+		$_POST['lotterycash'] = (isset($_POST['lotterycash']) && is_numeric($_POST['lotterycash'])) ? abs(intval($_POST['lotterycash'])) : 100000;
+		$_POST['raffle_last_winner'] = (isset($_POST['raffle_last_winner']) && is_numeric($_POST['raffle_last_winner'])) ? abs(intval($_POST['raffle_last_winner'])) : 1;
 		
-		if (empty($GameName)) {
+		$_POST['game_time'] = (isset($_POST['game_time'])) ? $db->escape(strip_tags(stripslashes($_POST['game_time']))) : 'Amerca/New_York';
+		
+		if (empty($_POST['WebsiteName'])) {
             alert('danger', "Uh Oh!", "Please specify a game name.");
             die($h->endpage());
-        } elseif (empty($Paypal)) {
+        } elseif (empty($_POST['PaypalEmail'])) {
             alert('danger', "Uh Oh!", "Please specify a PayPal account.");
             die($h->endpage());
-        } elseif (empty($GameOwner)) {
+        } elseif (empty($_POST['WebsiteOwner'])) {
             alert('danger', "Uh Oh!", "Please specify a game owner.");
             die($h->endpage());
-        } elseif (empty($RefAward)) {
+        } elseif (empty($_POST['ReferalKickback'])) {
             alert('danger', "Uh Oh!", "Please specify a referral award.");
             die($h->endpage());
-        } elseif (empty($GameDesc)) {
+        } elseif (empty($_POST['Website_Description'])) {
             alert('danger', "Uh Oh!", "Please specify a game description.");
             die($h->endpage());
-        } elseif (empty($AttackEnergy)) {
+        } elseif (empty($_POST['AttackEnergyCost'])) {
             alert('danger', "Uh Oh!", "Please specify the attack energy usage.");
             die($h->endpage());
-        } elseif (empty($FGPW)) {
+        } elseif (empty($_POST['FGPassword'])) {
             alert('danger', "Uh Oh!", "Please specify your Fraud Guard IO Password.");
             die($h->endpage());
-        } elseif (empty($FGUN)) {
+        } elseif (empty($_POST['FGUsername'])) {
             alert('danger', "Uh Oh!", "Please specify your Fraud Guard IO Username");
             die($h->endpage());
-        } elseif (empty($rcpb)) {
+        } elseif (empty($_POST['reCaptcha_public'])) {
             alert('danger', "Uh Oh!", "Please specify your ReCaptcha Public Key.");
             die($h->endpage());
-        } elseif (empty($rcpr)) {
+        } elseif (empty($_POST['reCaptcha_private'])) {
             alert('danger', "Uh Oh!", "Please specify your ReCaptcha Private Key.");
             die($h->endpage());
-        } elseif (empty($PasswordEffort) || $PasswordEffort < 5 || $PasswordEffort > 20) {
+        } elseif (empty($_POST['Password_Effort']) || $_POST['Password_Effort'] < 5 || $_POST['Password_Effort'] > 20) {
             alert('danger', "Uh Oh!", "Please specify a password effort between 5 and 20.");
             die($h->endpage());
-        } elseif ($recaptchatime < 300) {
+        } elseif ($_POST['Revalidate_Time'] < 300) {
             alert('danger', "Uh Oh!", "Please specify a ReCaptcha time that isn't less than 5 minutes.");
             die($h->endpage());
         } else {
-            $db->query("UPDATE `settings` SET `setting_value` = {$RefAward} WHERE `setting_name` = 'ReferalKickback'");
-            $db->query("UPDATE `settings` SET `setting_value` = {$AttackEnergy} WHERE `setting_name` = 'AttackEnergyCost'");
-            $db->query("UPDATE `settings` SET `setting_value` = {$PasswordEffort} WHERE `setting_name` = 'Password_Effort'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$GameName}' WHERE `setting_name` = 'WebsiteName'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$GameDesc}' WHERE `setting_name` = 'Website_Description'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$GameOwner}' WHERE `setting_name` = 'WebsiteOwner'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$Paypal}' WHERE `setting_name` = 'PaypalEmail'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$FGPW}' WHERE `setting_name` = 'FGPassword'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$FGUN}' WHERE `setting_name` = 'FGUsername'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$BankCost}' WHERE `setting_name` = 'bank_cost'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$BankFeeMax}' WHERE `setting_name` = 'bank_maxfee'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$BankFeePerc}' WHERE `setting_name` = 'bank_feepercent'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$rcpb}' WHERE `setting_name` = 'reCaptcha_public'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$rcpr}' WHERE `setting_name` = 'reCaptcha_private'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$sessiontimeout}' WHERE `setting_name` = 'max_sessiontime'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$recaptchatime}' WHERE `setting_name` = 'Revalidate_Time'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$attpersess}' WHERE `setting_name` = 'MaxAttacksPerSession'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$guildcost}' WHERE `setting_name` = 'GUILD_PRICE'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$guildlvl}' WHERE `setting_name` = 'GUILD_LEVEL'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$refillenergy}' WHERE `setting_name` = 'energy_refill_cost'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$refillbrave}' WHERE `setting_name` = 'brave_refill_cost'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$refillwill}' WHERE `setting_name` = 'will_refill_cost'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$iqpersec}' WHERE `setting_name` = 'iq_per_sec'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$sendemail}' WHERE `setting_name` = 'sending_email'");
-			
-			$db->query("UPDATE `settings` SET `setting_value` = '{$bootstrap}' WHERE `setting_name` = 'bootstrap_version'");
-            $db->query("UPDATE `settings` SET `setting_value` = '{$popper}' WHERE `setting_name` = 'popper_version'");
-			$db->query("UPDATE `settings` SET `setting_value` = '{$fontawesome}' WHERE `setting_name` = 'fontawesome_version'");
-			$db->query("UPDATE `settings` SET `setting_value` = '{$bstab}' WHERE `setting_name` = 'bshover_tabs_version'");
-			$db->query("UPDATE `settings` SET `setting_value` = '{$gamejs}' WHERE `setting_name` = 'game_js_version'");
-			$db->query("UPDATE `settings` SET `setting_value` = '{$gamecss}' WHERE `setting_name` = 'game_css_version'");
-			$db->query("UPDATE `settings` SET `setting_value` = '{$jquery}' WHERE `setting_name` = 'jquery_version'");
-			
-			$db->query("UPDATE `settings` SET `setting_value` = '{$gametimezone}' WHERE `setting_name` = 'game_time'");
-			
+			foreach ($_POST as $k => $v)
+			{
+				$db->query(
+						"UPDATE `settings`
+						 SET `setting_value` = '{$v}'
+						 WHERE `setting_name` = '{$k}'");
+			}
 			alert('success', "Success!", "You have successfully updated the game settings.", true, 'index.php');
             $api->SystemLogsAdd($userid, 'staff', "Updated game settings.");
         }

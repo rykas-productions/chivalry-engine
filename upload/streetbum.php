@@ -48,18 +48,18 @@ function dobum()
 	if ($rand <= 5)
 	{
 		$copper=Random(200,950);
-		$copper=round($copper+($copper*levelMultiplier($ir['level'])));
 		$txt = "You beg on the street and receive " . number_format($copper) . " Copper Coins.";
 		$api->UserGiveCurrency($userid, 'primary', $copper);
 		addToEconomyLog('Begging', 'copper', $copper);
+		$api->SystemLogsAdd($userid,"begging","Received " . number_format($copper) . " Copper Coins.");
 	}
 	elseif (($rand <= 8) && ($rand > 6))
 	{
 		$copper=Random(10,24);
-		$copper=round($copper+($copper*levelMultiplier($ir['level'])));
 		$txt = "You stumble upon " . number_format($copper) . " Chivalry Tokens while begging on the street.";
 		$api->UserGiveCurrency($userid, 'secondary', $copper);
 		addToEconomyLog('Begging', 'token', $copper);
+		$api->SystemLogsAdd($userid,"begging","Received " . number_format($copper) . " Chivalry Tokens.");
 	}
 	else
 	{

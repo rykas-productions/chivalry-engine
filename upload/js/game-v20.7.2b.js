@@ -22,6 +22,38 @@ $(document).ready(function () {
 		});
 		return false;
 	});
+	$('#cityDeposit').click(function()
+	{
+		$.post("js/script/city_bank.php", $("#cityBankDeposit").serialize(),  function(response) 
+		{   
+			 $('#banksuccess').html(response);
+		});
+		return false;
+	});
+	$('#cityWithdraw').click(function()
+	{
+		$.post("js/script/city_bank.php", $("#cityBankWithdraw").serialize(),  function(response) 
+		{   
+			 $('#banksuccess').html(response);
+		});
+		return false;
+	});
+	$('#tokenDeposit').click(function()
+	{
+		$.post("js/script/token_bank.php", $("#tokenBankDeposit").serialize(),  function(response) 
+		{   
+			 $('#banksuccess').html(response);
+		});
+		return false;
+	});
+	$('#tokenWithdraw').click(function()
+	{
+		$.post("js/script/token_bank.php", $("#tokenBankWithdraw").serialize(),  function(response) 
+		{   
+			 $('#banksuccess').html(response);
+		});
+		return false;
+	});
     $('#btnAdd').click(function () {
         var num = $('.clonedInput').length;
         var newNum = new Number(num + 1);
@@ -51,6 +83,13 @@ $(document).ready(function () {
     });
     $('#btnDel').attr('disabled', 'disabled');
     $('#toast').toast('show');
+	$(".updateHoverBtn").mouseover(function() 
+	{
+		$.post("js/script/hover_update.php", "", function(response) 
+		{   
+			 $('#socialRow2').html(response);
+		});
+	});
 
 });
 $(function () {
@@ -125,4 +164,8 @@ function profileButtonTheft(user)
 function profileButtonBlock(user)
 {
 	document.getElementById("profileTxt").innerHTML = "Block contact with " + user + ".";
+}
+ function enableBtn()
+{
+   document.getElementById("recaptchabtn").disabled = false;
 }

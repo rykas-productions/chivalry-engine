@@ -789,6 +789,7 @@ class api
         $udq = $db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$userid}");
         $userdata = $db->fetch_row($udq);
         $gain = 0;
+		$reset = $db->fetch_single($db->query("SELECT `reset` FROM `user_settings` WHERE `userid` = {$userid}"));
         //Do while value is less than the user's energy input, then add one to value.
         for ($i = 0; $i < $times; $i++) {
             //(1-4)/(600-1000)*(500-1000)*((User's Will+25)/175)
@@ -859,6 +860,11 @@ class api
 		if (calculateLuck($userid))
 		{
 			$gain = $gain + ($gain*0.07);
+		}
+		
+		if ($reset > 1)
+		{
+			$gain = $gain + ($gain * (0.1 * $reset)); 
 		}
 		
         //Update the user's stats.
@@ -1021,5 +1027,66 @@ class api
 		$guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
         $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$xp} WHERE `guild_id` = {$guild}");
+    }
+	function GuildHasCurrency($guild, $type, $minimum)
+    {
+        global $db;
+        $guild = (isset($user) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
+        $type = $db->escape(stripslashes(strtolower($type)));
+        $userexist = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$guild}"));
+        if ($userexist) 
+		{
+            if ($type == 'primary' || $type == 'secondary') 
+			{
+				if ($type == 'primary')
+					$typee = 'prim';
+				else
+					$typee = 'sec';
+                $UserMoney = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_{$typee}curr` FROM `guild` WHERE `guild_id` = {$guild}"));
+                if ($UserMoney >= $minimum) 
+                    return true;
+            }
+        }
+    }
+	function GuildGiveCurrency($guild, $type, $quantity)
+    {
+        global $db;
+        $guild = (isset($user) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
+        $type = $db->escape(stripslashes(strtolower($type)));
+        $userexist = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$guild}"));
+        if ($userexist) 
+		{
+            if ($type == 'primary' || $type == 'secondary') 
+			{
+				if ($type == 'primary')
+					$type = 'prim';
+				else
+					$type = 'sec';
+                $db->query("UPDATE `guild` SET `guild_{$type}curr` = `guild_{$type}curr` + {$quantity} WHERE `guild_id` = {$guild}");
+                return true;
+            }
+        }
+    }
+	function GuildRemoveCurrency($guild, $type, $quantity)
+    {
+        global $db;
+        $guild = (isset($user) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
+        $type = $db->escape(stripslashes(strtolower($type)));
+        $userexist = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$guild}"));
+        if ($userexist) 
+		{
+            if ($type == 'primary' || $type == 'secondary') 
+			{
+				if ($type == 'primary')
+					$type = 'prim';
+				else
+					$type = 'sec';
+                $db->query("UPDATE `guild` SET `guild_{$type}curr` = `guild_{$type}curr` - {$quantity} WHERE `guild_id` = {$guild}");
+                return true;
+            }
+        }
     }
 }

@@ -68,30 +68,35 @@ if (isset($_GET["stat"]) && $_GET["amnt"]) {
             alert('success', "Success!", "You begin to lift weights. You have gained " . number_format($gain) . " Strength by completing
 			    {$_GET['amnt']} sets of weights. You now have " . number_format($NewStatAmount) . " Strength and {$EnergyLeft} Energy left.", false);
             //Have strength selected for the next training.
-            $str_select = "/*qc=on*/SELECTed";
+            $str_select = "selected";
+			setcookie('lastTrainedStat', 'strength', time() + 86400);
         } //Agility is the chosen stat.
         elseif ($stat == "agility") {
             alert('success', "Success!", "You begin to run laps. You have gained " . number_format($gain) . " Agility by completing
 			    {$_GET['amnt']} laps. You now have " . number_format($NewStatAmount) . " Agility and {$EnergyLeft} Energy left.", false);
             //Have agility selected for the next training.
-            $agl_select = "/*qc=on*/SELECTed";
+            $agl_select = "selected";
+			setcookie('lastTrainedStat', 'agility', time() + 86400);
         } //Guard is the chosen stat.
         elseif ($stat == "guard") {
             alert('success', "Success!", "You begin swimming in the pool. You have gained " . number_format($gain) . " Guard by swimming for
 			    {$_GET['amnt']} minutes. You now have " . number_format($NewStatAmount) . " Guard and {$EnergyLeft} left.", false);
             //Have guard selected for the next training.
-            $grd_select = "/*qc=on*/SELECTed";
+            $grd_select = "selected";
+			setcookie('lastTrainedStat', 'guard', time() + 86400);
         } //Labor is the chosen stat.
         elseif ($stat == "labor") {
             alert('success', "Success!", "You begin moving boxes around the gym. You have gained " . number_format($gain) . " Labor by moving
                 {$_GET['amnt']} sets of boxes. You now have " . number_format($NewStatAmount) . " and {$EnergyLeft} Energy left.", false);
             //Have guard selected for the next training.
-            $lab_select = "/*qc=on*/SELECTed";
+            $lab_select = "selected";
+			setcookie('lastTrainedStat', 'labor', time() + 86400);
         } elseif ($stat == "all") {
             alert('success', "Success!", "You begin training your Strength, Agility, Guard and Labor all at once. You
                 have gained {$gainstr} Strength, {$gainagl} Agility, {$gaingrd} Guard and {$gainlab} Labor. You have
                 {$EnergyLeft} Energy left.");
-            $all_select = "/*qc=on*/SELECTed";
+            $all_select = "selected";
+			setcookie('lastTrainedStat', 'all', time() + 86400);
         }
         //Log the user's training attempt.
         $api->SystemLogsAdd($userid, 'training', "[Chivalry Gym] {$_GET['amnt']} energy for " . number_format($gain) . " {$stat}.");
@@ -117,6 +122,19 @@ if (!isset($lab_select)) {
 }
 if (!isset($all_select)) {
     $all_select = '';
+}
+if (isset($_COOKIE['lastTrainedStat']))
+{
+    if ($_COOKIE['lastTrainedStat'] == "strength")
+		$str_select = 'selected';
+	elseif ($_COOKIE['lastTrainedStat'] == "agility")
+		$agl_select = 'selected';
+	elseif ($_COOKIE['lastTrainedStat'] == "guard")
+		$grd_select = 'selected';
+	elseif ($_COOKIE['lastTrainedStat'] == "labor")
+		$lab_select = 'selected';
+	elseif ($_COOKIE['lastTrainedStat'] == "all")
+		$all_select = 'selected';
 }
 //Grab the user's stat ranks.
 $ir['strank'] = get_rank($ir['strength'], 'strength');

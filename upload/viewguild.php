@@ -7,7 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 $voterquery = 1;
-$multi = 1.25;
+$multi = 1.0;
 require('globals.php');
 if (!$ir['guild']) {
     alert('danger', "Uh Oh!", "You are not in a guild.", true, 'index.php');
@@ -91,7 +91,7 @@ function home()
     global $db, $userid, $ir, $gd;
     //The main guild index.
 	echo "<div class='row'>
-	<div class='col-md'>";
+	<div class='col-lg'>";
 	if (!empty($gd['guild_pic']))
 	{
 		echo "
@@ -102,7 +102,7 @@ function home()
 		alert('info','','Tell your guild leadership to set a guild profile picture!',false);
 	}
 		echo "</div><br />
-		<div class='col-md'>
+		<div class='col-lg'>
 			<div class='row'>
 				<div class='col-4'>
 					<a class='btn btn-primary' href='?action=summary'>Summary</a>
@@ -169,7 +169,7 @@ function home()
 	{
 		echo "
 		<div class='row'>
-			<div class='col-md text-left'>
+			<div class='col text-left'>
 				 {$r['gn_text']}<br />
 				 <small>" . DateTime_Parse($r['gn_time']) . "</small>
 			</div>
@@ -202,42 +202,42 @@ function summary()
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Leader</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							<a href='profile.php?user={$gd['guild_owner']}'>{$ldrnm}</a>
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Co-Leader</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							<a href='profile.php?user={$gd['guild_coowner']}'>{$vldrnm}</a>
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Application Manager</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							<a href='profile.php?user={$gd['guild_app_manager']}'>{$appnm}</a>
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Vault Manager</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							<a href='profile.php?user={$gd['guild_vault_manager']}'>{$vaultnm}</a>
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Crime Lord</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							<a href='profile.php?user={$gd['guild_crime_lord']}'>{$crlonm}</a>
 						</div>
 					</div>
@@ -251,47 +251,47 @@ function summary()
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Members</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							" . number_format($db->fetch_single($cnt)) . " / " . number_format($gd['guild_level'] * 5) . "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Level</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							" . number_format($gd['guild_level']) . "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>XP</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							" . number_format($gd['guild_xp']) . " / " . number_format($gd['xp_needed']) . "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 						[<a href='?action=donatexp'>Donate Experience</a>]
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Copper Coins*</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							" . number_format($gd['guild_primcurr']) . " / " . number_format((($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) . "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Chivalry Tokens</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							" . number_format($gd['guild_seccurr']) . "
 						</div>
 					</div>
@@ -334,42 +334,42 @@ function summary()
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Armory</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							{$armory}
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Recruitment</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							{$recruit}
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Finances</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							{$debt}
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Active Wars</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							{$wars}
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-md'>
+						<div class='col'>
 							<b>Daily Upkeep</b>
 						</div>
-						<div class='col-md'>
+						<div class='col'>
 							" . number_format(calculateUpkeep()) . " Copper Coins
 						</div>
 					</div>
@@ -562,13 +562,13 @@ function members()
     global $db, $userid, $gd, $api;
     //List all the guild members. ^_^
 	echo "<div class='row'>
-			<div class='col-md-4'>
+			<div class='col-4'>
 				 <h3>Player</h3>
 			</div>
-			<div class='col-md-4'>
+			<div class='col-4'>
 				 <h3>General Info</h3>
 			</div>
-			<div class='col-md-4'>
+			<div class='col-4'>
 				 <h3>Donations</h3>
 			</div>
 		</div>
@@ -587,13 +587,13 @@ function members()
         $r['display_pic']=parseImage(parseDisplayPic($r['userid']));
 		$r2=$db->fetch_row($db->query("SELECT * FROM `guild_donations` WHERE `userid` = {$r['userid']} AND `guildid` = {$gd['guild_id']}"));
 		   echo "<div class='row'>
-			<div class='col-md-2'>
+			<div class='col-2'>
 				 <img src='{$r['display_pic']}' class='img-fluid'>
 			</div>
-			<div class='col-md-2'>
+			<div class='col-2'>
 				 <a href='profile.php?user={$r['userid']}'>{$r['username2']}</a>
 			</div>
-			<div class='col-md-4'>
+			<div class='col-4'>
 				 Level: {$r['level']}<br />
 				Copper Coins: " . number_format($r['primary_currency']) . "<br />
 				 {$r['status']}";
@@ -608,7 +608,7 @@ function members()
 				 }
 				 echo "
 			</div>
-			<div class='col-md-4'>
+			<div class='col-4'>
 				 Copper Coins: " . number_format($r2['copper']) . "<br />
 				Chivalry Tokens: " . number_format($r2['tokens']) . "<br />
 				Player XP: " . number_format($r2['xp']) . "<br />
@@ -802,7 +802,7 @@ function atklogs()
         }
 		echo "
 		<div class='row'>
-			<div class='col-md text-left'>
+			<div class='col text-left'>
 				 <a href='profile.php?user={$r['attacker']}'>{$api->SystemUserIDtoName($r['attacker'])}</a> {$didwhat}<br />
 				 <small>{$d}</small>
 			</div>
@@ -976,30 +976,35 @@ function gym()
 				alert('success', "Success!", "You begin to lift weights. You have gained " . number_format($gain) . " Strength by completing
 					{$_GET['amnt']} sets of weights. You now have " . number_format($NewStatAmount) . " Strength and {$EnergyLeft} Energy left.", false);
 				//Have strength selected for the next training.
-				$str_select = "/*qc=on*/SELECTed";
+				$str_select = "selected";
+				setcookie('lastTrainedStat', 'strength', time() + 86400);
 			} //Agility is the chosen stat.
 			elseif ($stat == "agility") {
 				alert('success', "Success!", "You begin to run laps. You have gained " . number_format($gain) . " Agility by completing
 					{$_GET['amnt']} laps. You now have " . number_format($NewStatAmount) . " Agility and {$EnergyLeft} Energy left.", false);
 				//Have agility selected for the next training.
-				$agl_select = "/*qc=on*/SELECTed";
+				$agl_select = "selected";
+				setcookie('lastTrainedStat', 'agility', time() + 86400);
 			} //Guard is the chosen stat.
 			elseif ($stat == "guard") {
 				alert('success', "Success!", "You begin swimming in the pool. You have gained " . number_format($gain) . " Guard by swimming for
 					{$_GET['amnt']} minutes. You now have " . number_format($NewStatAmount) . " Guard and {$EnergyLeft} left.", false);
 				//Have guard selected for the next training.
-				$grd_select = "/*qc=on*/SELECTed";
+				$grd_select = "selected";
+				setcookie('lastTrainedStat', 'guard', time() + 86400);
 			} //Labor is the chosen stat.
 			elseif ($stat == "labor") {
 				alert('success', "Success!", "You begin moving boxes around the gym. You have gained " . number_format($gain) . " Labor by moving
 					{$_GET['amnt']} sets of boxes. You now have " . number_format($NewStatAmount) . " and {$EnergyLeft} Energy left.", false);
 				//Have guard selected for the next training.
-				$lab_select = "/*qc=on*/SELECTed";
+				$lab_select = "selected";
+				setcookie('lastTrainedStat', 'labor', time() + 86400);
 			} elseif ($stat == "all") {
 				alert('success', "Success!", "You begin training your Strength, Agility, Guard and Labor all at once. You
 					have gained {$gainstr} Strength, {$gainagl} Agility, {$gaingrd} Guard and {$gainlab} Labor. You have
 					{$EnergyLeft} Energy left.");
-				$all_select = "/*qc=on*/SELECTed";
+				$all_select = "selected";
+				setcookie('lastTrainedStat', 'all', time() + 86400);
 			}
 			//Log the user's training attempt.
 			$api->SystemLogsAdd($userid, 'training', "[Guild Gym] {$_GET['amnt']} energy for " . number_format($gain) . " {$stat}.");
@@ -1024,6 +1029,19 @@ function gym()
 		}
 		if (!isset($all_select)) {
 			$all_select = '';
+		}
+		if (isset($_COOKIE['lastTrainedStat']))
+		{
+			if ($_COOKIE['lastTrainedStat'] == "strength")
+				$str_select = 'selected';
+			elseif ($_COOKIE['lastTrainedStat'] == "agility")
+				$agl_select = 'selected';
+			elseif ($_COOKIE['lastTrainedStat'] == "guard")
+				$grd_select = 'selected';
+			elseif ($_COOKIE['lastTrainedStat'] == "labor")
+				$lab_select = 'selected';
+			elseif ($_COOKIE['lastTrainedStat'] == "all")
+				$all_select = 'selected';
 		}
 		//Grab the user's stat ranks.
 		$ir['strank'] = get_rank($ir['strength'], 'strength');

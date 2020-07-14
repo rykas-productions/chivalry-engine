@@ -19,7 +19,7 @@ $domain = determine_game_urlbase();
 $csrf = request_csrf_html('login');
 echo "
 <div class='row'>
-    <div class='col-md-4'>
+    <div class='col-lg-4'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
                 Sign In <a href='pwreset.php'>Forgot Password?</a>
@@ -36,7 +36,7 @@ echo "
             echo "</div>
         </div>
     </div>
-    <div class='col-md-8'>
+    <div class='col-lg-8'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
             {$set['WebsiteName']} Info
@@ -48,7 +48,7 @@ echo "
     </div>
 </div>
 <div class='row'>
-    <div class='col-md-4'>
+    <div class='col-lg-4'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
                 Highest Ranked Players
@@ -73,7 +73,7 @@ echo "
             </div>
         </div>
     </div>
-	<div class='col-md-8'>
+	<div class='col-lg-8'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
             Gameplay
@@ -88,21 +88,20 @@ echo "
     </div>
 </div>
 <div class='row'>
-    <div class='col-md-4'>
+    <div class='col-lg-4'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
                 No Installation Required!
             </div>
             <div class='card-body'>
-                Free Registration<br />
                 " . number_format($playersonline) . " Players Online Today<br />
                 " . number_format($totalplayers) . " Total Players<br />
                 " . number_format($signups) . " New Players Today<br />
-				Most Users Online were " . number_format($set['mostUsersOn']) . " users, on " . DateTime_Parse($set['mostUsersOnTime']) . "
+				Most Users Online: " . number_format($set['mostUsersOn']) . " Users<br />" . DateTime_Parse($set['mostUsersOnTime']) . "
             </div>
         </div>
     </div>
-	<div class='col-md-8'>
+	<div class='col-lg-8'>
         <div class='card'>
             <div class='card-header bg-dark text-white'>
                 Latest Announcement

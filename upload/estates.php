@@ -71,7 +71,7 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
     while ($r = $db->fetch_row($hq)) 
 	{
 		$currentprice=$mp['house_price'];
-		$level = ($ir['level'] > $r['house_level']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
+		$level = ($ir['level'] >= $r['house_level']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
 		$cost = ($ir['primary_currency'] > $r['house_price']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
 		$willdif = $r['house_will'] - $ir['maxwill'];
 		$r['house_price']=$r['house_price']-$currentprice;

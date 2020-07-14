@@ -48,6 +48,7 @@ else {
             $api->UserInfoSet($userid, "bigbank", 0);
 			item_add($userid,155,1);
 			addToEconomyLog('Bank Fees', 'copper', ($bank_cost)*-1);
+			$api->SystemLogsAdd($userid, 'bank', "[Federal Bank] Purchased account for " . number_format($bank_cost) . " Copper Coins.");
         } //Player is too poor to afford account.
         else {
             alert('danger', "Uh oh!", "You do not have enough Copper Coins to buy a federal bank account. You need at least
@@ -114,7 +115,7 @@ function deposit()
 		    fee (" . number_format($fee) . " Copper Coins) is taken from your deposit, " . number_format($gain) . " is added to your
 		    bank account. You now have " . number_format($ir['bigbank']) . " in your account.", true, 'bigbank.php');
         //Log bank transaction.
-        $api->SystemLogsAdd($userid, 'bigbank', "Deposited " . number_format($_POST['deposit']) . ".");
+        $api->SystemLogsAdd($userid, 'bank', "[Federal Bank] Deposited " . number_format($_POST['deposit']) . " Copper Coins.");
     }
 }
 
@@ -134,9 +135,7 @@ function withdraw()
         alert('success', "Success!", "You have successfully withdrew " . number_format($_POST['withdraw']) . " from your
 		    bank account. You have now have " . number_format($ir['bigbank']) . " left in your account.", true, 'bank.php');
         //Log transaction.
-        $api->SystemLogsAdd($userid, 'bigbank', "Withdrew " . number_format($_POST['withdraw']) . ".");
+        $api->SystemLogsAdd($userid, 'bank', "[Federal Bank] Withdrew " . number_format($_POST['withdraw']) . " Copper Coins.");
     }
 }
-if ($ir['vip_days'] == 0)
-    include('ads/ad_bank.php');
 $h->endpage();

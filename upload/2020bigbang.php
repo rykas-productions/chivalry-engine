@@ -1,10 +1,10 @@
 <?php
 require('globals.php');
-/*if ((time() > 1591401600))
+if ((time() > 1591401600))
 {
 	alert('danger',"Uh Oh!","This event is now over.",true,'explore.php');
 	die($h->endpage());
-}*/
+}
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }

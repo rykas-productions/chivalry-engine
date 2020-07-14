@@ -74,65 +74,38 @@ function home()
 
 function heal()
 {
-    global $api, $h, $userid, $ir;
-    //User is specified in the GET
-    if (isset($_GET['user'])) {
-        //Sanitize the user ID input.
-        $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
-        //GET is empty/truncated after sanitation
-        if (empty($_GET['user']) || $_GET['user'] == 0) {
-            alert('danger', "Uh Oh!", "You are attempting to heal an invalid or non-existent user.", true, 'infirmary.php');
-            die($h->endpage());
-        }
-        //User to heal is not in the infirmary.
-        if ($api->UserStatus($_GET['user'], 'infirmary') == false) {
-            alert('danger', "Uh Oh!", "You are attempting to heal out a player who's not even in the infirmary.", true, 'infirmary.php');
-            die($h->endpage());
-        }
-        //Make sure the user is specifying how many times to heal.
-        if (isset($_GET['times'])) {
-            //Sanitize how many times the user wishes to heal.
-            $_GET['times'] = (isset($_GET['times']) && is_numeric($_GET['times'])) ? abs($_GET['times']) : 0;
-            //Healing times is truncated/empty after sanitation.
-            if (empty($_GET['times'])) {
-                alert('danger', "Uh Oh!", "You are attempting to heal an invalid or non-existent user.", true, 'infirmary.php');
-                die($h->endpage());
-            }
-            //Cost = 25 Secondary Currenxy x Times to Heal
-            //Times = 30 Minutes x Times to Heal
-            $cost = 5 * $_GET['times'];
-            $time = 30 * $_GET['times'];
-            //User does not have enough Chivalry Tokens to heal that many times.
-            if ($ir['secondary_currency'] < $cost) {
-                alert('danger', "Uh Oh!", "You do not have enough Chivalry Tokens to heal {$_GET['times']} sets.", true, 'infirmary.php');
-                die($h->endpage());
-            } else {
-                //Healed successfully!
-                $api->UserStatusSet($_GET['user'], 'infirmary', $time * -1, 'Not read');
-                //Take current user's Chivalry Tokens
-                $api->UserTakeCurrency($userid, 'secondary', $cost);
-				addToEconomyLog('Infirmary', 'token', ($cost)*-1);
-                //Add a friendly note.
-                $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has healed you {$_GET['times']} times.",  "game-icon game-icon-healing", "green");
-                //Log it!
-                $api->SystemLogsAdd($userid, 'heal', "Healed {$api->SystemUserIDtoName($_GET['user'])} {$_GET['times']} times.");
-                alert('success', "Success!", "You have healed {$api->SystemUserIDtoName($_GET['user'])} {$_GET['times']}
-                times, costing you {$cost} Chivalry Tokens.", true, 'index.php');
-            }
-        } else {
-            echo "How many times do you wish to heal {$api->SystemUserIDtoName($_GET['user'])}?<br />
-            1 Set = 30 minutes<br />
-            1 Set = 5 Chivalry Tokens<br />
-            <form>
-                <input type='hidden' name='user' value='{$_GET['user']}'>
-                <input type='hidden' name='action' value='heal'>
-                <input type='number' required='1' name='times' class='form-control'>
-                <input type='submit' class='btn btn-primary' value='Heal'>
-            </form>";
-        }
-    } else {
-        alert('danger', "Uh Oh!", "Please specify a user you wish to heal out.", true, 'infirmary.php');
+    global $api, $h, $userid, $ir, $db;
+    $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
+	if (empty($_GET['user'])) 
+	{
+		alert('danger', "Uh Oh!", "You are attempting to heal an invalid or non-existent user.", true, 'infirmary.php');
+		die($h->endpage());
+	}
+	if (!$api->UserStatus($_GET['user'], 'infirmary')) 
+	{
+		alert('danger', "Uh Oh!", "You are attempting to heal out a player who's not even in the infirmary.", true, 'infirmary.php');
+		die($h->endpage());
+	}
+	$outtime = $db->fetch_single($db->query("/*qc=on*/SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$_GET['user']}"));
+	$time_difference = $outtime - time();
+	$mins = $time_difference / 60;
+	$sets = ceil($mins / 30);
+	$cost = $sets * 5;
+	if (!$api->UserHasCurrency($userid, 'secondary', $cost))
+	{
+		alert('danger', "Uh Oh!", "You need " . number_format($cost) . " Chivlary Tokens to heal out {$api->SystemUserIDtoName($_GET['user'])}.", true, 'infirmary.php');
+		die($h->endpage());
     }
+	$api->UserStatusSet($_GET['user'], 'infirmary', (($sets * 30) * -1), 'Not read');
+	addToEconomyLog('Infirmary', 'token', ($cost)*-1);
+	$api->UserTakeCurrency($userid, 'secondary', $cost);
+	$api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . number_format($cost) . " Chivlary Tokens to discharge you from the infirmary.");
+    $api->SystemLogsAdd($userid, 'heal', "Spent " . number_format($cost) . " Chivalry Tokens to heal {$api->SystemUserIDtoName($_GET['user'])}.");
+	alert('success', "Success!", "You have spent " . number_format($cost) . " Chivalry Tokens to heal out {$api->SystemUserIDtoName($_GET['user'])} of the infirmary.", true, 'index.php');
 }
 
+function getTokensNeeded()
+{
+	
+}
 $h->endpage();

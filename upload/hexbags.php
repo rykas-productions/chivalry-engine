@@ -7,7 +7,7 @@
 	Website: 	http://chivalryisdead.x10.mx/
 */
 $macropage = ('hexbags.php');
-$multipler=1.0;
+$multipler=1.25;
 require('globals.php');
 echo "<h3><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags</h3><hr />";
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;

@@ -53,9 +53,10 @@ class headers
 				<!— Windows 8.1 + IE11 and above —>
 				<meta name='msapplication-config' content='assets/browserconfig.xml' />
                 <link rel="stylesheet" href="css/sunset-v4.5.0.css">
-					<meta name="theme-color" content="rgba(0, 0, 0, .8)">
+				<meta name="theme-color" content="rgba(0, 0, 0, .8)">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']} - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; 
+				include('ads/ad_all.php');
                 ?>
         </head>
         <body>
@@ -143,6 +144,7 @@ class headers
         <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js" async defer></script>
 		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/clock.min.js"></script>
 		<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
+		<script data-ad-client="ca-pub-2623548319222554" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <footer class='footer'>
             <div class='container'>
 				<span>

@@ -1,10 +1,5 @@
 <?php
 require('globals.php');
-if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
-{
-	alert('danger',"Uh Oh!","You cannot visit the bank while in the infirmary or dungeon.",true,'index.php');
-	die($h->endpage());
-}
 $bank_cost = $set['bank_cost'];
 $bank_maxfee = $set['bank_maxfee'];
 $bank_feepercent = $set['bankfee_percent'];

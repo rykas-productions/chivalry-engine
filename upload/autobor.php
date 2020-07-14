@@ -1,6 +1,6 @@
 <?php
 $macropage = ('autobor.php');
-$multipler=1.0;
+$multipler=1.25;
 require('globals.php');
 if ($ir['bor'] == 0)
 {

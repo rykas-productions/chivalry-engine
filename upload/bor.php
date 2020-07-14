@@ -8,7 +8,7 @@
 */
 require('globals.php');
 $tresder = Random(100, 999);
-$multipler=1.0;
+$multipler=1.25;
 echo "<h3>Box of Random</h3><hr />";
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
