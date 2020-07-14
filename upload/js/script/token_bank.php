@@ -63,8 +63,8 @@ if (isset($dojs))
 		document.getElementById('wallet').innerHTML = <?php echo "'" . number_format($ir['secondary_currency']) . " Chivlary Tokens'" ?>;
 		document.getElementById('bankacc').innerHTML = <?php echo "'" . number_format($ir['tokenbank']) . " Chivlary Tokens'" ?>;
 		document.getElementById('bankacc2').innerHTML = <?php echo "'" . number_format($ir['tokenbank']) . "'" ?>;
-		document.getElementById("form_bank_acc").value = '0';
-		document.getElementById("form_bank_wallet").value = '0';
+		document.getElementById("form_bank_acc").value = <?php echo "'{$ir['tokenbank']}'" ?>;
+		document.getElementById("form_bank_wallet").value = <?php echo "'{$ir['secondary_currency']}'" ?>;
 	</script>
 	<?php
 }

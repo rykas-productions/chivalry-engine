@@ -27,15 +27,20 @@ if (isset($_POST['deposit']))
 	}
 	else
 	{
-		$gain = $deposit;
+		$fee = ceil($deposit * $bank_feepercent / 100);
+        if ($fee > $bank_maxfee) 
+		{
+            $fee = $bank_maxfee;
+        }
+		$gain = $deposit - $fee;
         $ir['bigbank'] += $gain;
 		$ir['primary_currency'] -= $deposit;
 		$api->UserTakeCurrency($userid, 'primary', $deposit);
-        $api->UserInfoSetStatic($userid, "bank", $ir['bigbank']);
+        $api->UserInfoSetStatic($userid, "bigbank", $ir['bigbank']);
 		//Log bank transaction.
         $api->SystemLogsAdd($userid, 'bank', "[Federal Bank] Deposited " . number_format($deposit) . " Copper Coins.");
-		alert('success', "", "You hand over " . number_format($deposit) . " Copper Coins to be deposited. " . number_format($gain) . " Copper Coins 
-		is added to your bank account. You now have " . number_format($ir['bigbank']) . " Copper Coins in your Federal Bank Account.", false);
+		alert('success', "", "You hand over " . number_format($deposit) . " Copper Coins to be deposited. After the fee of " . number_format($fee) . " Copper Coins is taken, 
+		" . number_format($gain) . " Copper Coins is added to your bank account. You now have " . number_format($ir['bigbank']) . " Copper Coins in your Federal Bank Account.", false);
 		$dojs=true;
 	}
 }
@@ -52,7 +57,7 @@ elseif (isset($_POST['withdraw']))
 		$ir['bigbank'] -= $gain;
 		$ir['primary_currency'] += $withdraw;
 		$api->UserGiveCurrency($userid, 'primary', $withdraw);
-        $api->UserInfoSetStatic($userid, "bank", $ir['bigbank']);
+        $api->UserInfoSetStatic($userid, "bigbank", $ir['bigbank']);
 		$api->SystemLogsAdd($userid, 'bank', "[Federal Bank] Withdrew " . number_format($withdraw) . " Copper Coins.");
 		alert('success', "", "You have successfully withdrew " . number_format($withdraw) . " Copper Coins from your
 		    account. You have now have " . number_format($ir['bigbank']) . " Copper Coins left in your Federal Bank Account.", false);
@@ -66,8 +71,8 @@ if (isset($dojs))
 		document.getElementById('wallet').innerHTML = <?php echo "'" . number_format($ir['primary_currency']) . " Copper Coins'" ?>;
 		document.getElementById('bankacc').innerHTML = <?php echo "'" . number_format($ir['bigbank']) . " Copper Coins'" ?>;
 		document.getElementById('bankacc2').innerHTML = <?php echo "'" . number_format($ir['bigbank']) . "'" ?>;
-		document.getElementById("form_bank_acc").value = '0';
-		document.getElementById("form_bank_wallet").value = '0';
+		document.getElementById("form_bank_acc").value = <?php echo "'{$ir['bigbank']}'" ?>;
+		document.getElementById("form_bank_wallet").value = <?php echo "'{$ir['primary_currency']}'" ?>;
 	</script>
 	<?php
 }

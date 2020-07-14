@@ -54,6 +54,38 @@ $(document).ready(function () {
 		});
 		return false;
 	});
+	$('#fedDeposit').click(function()
+	{
+		$.post("js/script/big_bank.php", $("#fedBankDeposit").serialize(),  function(response) 
+		{   
+			 $('#banksuccess').html(response);
+		});
+		return false;
+	});
+	$('#fedWithdraw').click(function()
+	{
+		$.post("js/script/big_bank.php", $("#fedBankWithdraw").serialize(),  function(response) 
+		{   
+			 $('#banksuccess').html(response);
+		});
+		return false;
+	});
+	$('#vaultDeposit').click(function()
+	{
+		$.post("js/script/vault_bank.php", $("#vaultBankDeposit").serialize(),  function(response) 
+		{   
+			 $('#banksuccess').html(response);
+		});
+		return false;
+	});
+	$('#vaultWithdraw').click(function()
+	{
+		$.post("js/script/vault_bank.php", $("#vaultBankWithdraw").serialize(),  function(response) 
+		{   
+			 $('#banksuccess').html(response);
+		});
+		return false;
+	});
     $('#btnAdd').click(function () {
         var num = $('.clonedInput').length;
         var newNum = new Number(num + 1);

@@ -27,12 +27,6 @@ if ($ir['bigbank'] > -1) {
         $_GET['action'] = '';
     }
     switch ($_GET['action']) {
-        case "deposit":
-            deposit();
-            break;
-        case "withdraw":
-            withdraw();
-            break;
         default:
             index();
             break;
@@ -66,76 +60,57 @@ function index()
         $interest=2;
     else
         $interest=5;
-    echo "<b>You currently have " . number_format($ir['bigbank']) . " Copper Coins in your Federal Bank Account.</b><br />
+    echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['bigbank']) . "</span> Copper Coins in your Federal Bank Account.</b><br />
 				At the end of each and everyday, your balance will increase by {$interest}%. You will not gain interest if 
 				your balance is over " . number_format(returnMaxInterest($userid)* 10) . " Copper Coins. You must be active within the past 24 hours for this to 
 				effect you.<br />
-				<table class='table table-bordered'>
-					<tr>
-						<td width='50%'>
-							It'll cost you {$bank_feepercent}% of the money you deposit. (Max " . number_format($bank_maxfee) . ")
-							<form action='?action=deposit' method='post'>
-								<b>Copper Coins</b><br />
-								<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' required='1' name='deposit' value='{$ir['primary_currency']}'><br />
-								<input type='submit' value='Deposit' class='btn btn-primary'>
-							</form>
-						</td>
-						<td>
-							It doesn't cost you anything to withdraw from your account.
-							<form action='?action=withdraw' method='post'>
-								<b>Account Balance</b><br />
-								<input type='number' min='1' max='{$ir['bigbank']}' class='form-control' required='1' name='withdraw' value='{$ir['bigbank']}'><br />
-								<input type='submit' value='Withdraw' class='btn btn-primary'>
-							</form>
-						</td>
-					</tr>
-				</table>";
-}
-
-function deposit()
-{
-    global $ir, $userid, $bank_maxfee, $bank_feepercent, $api;
-    $_POST['deposit'] = abs($_POST['deposit']);
-    //User is trying to deposit more than they have.
-    if ($_POST['deposit'] > $ir['primary_currency']) {
-        alert('danger', "Uh Oh!", "You are trying to deposit more cash than you current have!", true, 'bigbank.php');
-    } else {
-        $fee = ceil($_POST['deposit'] * $bank_feepercent / 100);
-        if ($fee > $bank_maxfee) {
-            $fee = $bank_maxfee;
-        }
-        //$gain is amount put into account after the fee is taken.
-        $gain = $_POST['deposit'] - $fee;
-        $ir['bigbank'] += $gain;
-		addToEconomyLog('Bank Fees', 'copper', ($fee)*-1);
-        //Update user's bank and Copper Coins info.
-        $api->UserTakeCurrency($userid, 'primary', $_POST['deposit']);
-        $api->UserInfoSetStatic($userid, "bigbank", $ir['bigbank']);
-        alert('success', "Success!", "You hand over " . number_format($_POST['deposit']) . " to be deposited. After the
-		    fee (" . number_format($fee) . " Copper Coins) is taken from your deposit, " . number_format($gain) . " is added to your
-		    bank account. You now have " . number_format($ir['bigbank']) . " in your account.", true, 'bigbank.php');
-        //Log bank transaction.
-        $api->SystemLogsAdd($userid, 'bank', "[Federal Bank] Deposited " . number_format($_POST['deposit']) . " Copper Coins.");
-    }
-}
-
-function withdraw()
-{
-    global $ir, $userid, $api;
-    $_POST['withdraw'] = abs($_POST['withdraw']);
-    //User is trying to withdraw more than they have stored.
-    if ($_POST['withdraw'] > $ir['bigbank']) {
-        alert('danger', "Uh Oh!", "You are trying to withdraw more cash than you currently have available in your account.", true, 'bank.php');
-    } else {
-        $gain = $_POST['withdraw'];
-        $ir['bigbank'] -= $gain;
-        //Update user's info.
-        $api->UserGiveCurrency($userid, 'primary', $_POST['withdraw']);
-        $api->UserInfoSetStatic($userid, "bigbank", $ir['bigbank']);
-        alert('success', "Success!", "You have successfully withdrew " . number_format($_POST['withdraw']) . " from your
-		    bank account. You have now have " . number_format($ir['bigbank']) . " left in your account.", true, 'bank.php');
-        //Log transaction.
-        $api->SystemLogsAdd($userid, 'bank', "[Federal Bank] Withdrew " . number_format($_POST['withdraw']) . " Copper Coins.");
-    }
+				<div id='banksuccess'></div>
+				<div class='row'>
+					<div class='col-lg'>
+						<div class='card'>
+							<div class='card-header'>
+								Deposit (<span id='wallet'>" . number_format($ir['primary_currency']) . " Copper Coins</span>)
+							</div>
+							<div class='card-body'>
+								<form method='post' id='fedBankDeposit' name='fedBankDeposit'>
+									<div class='row'>
+										<div class='col'>
+											<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' id='form_bank_wallet' required='1' name='deposit' value='{$ir['primary_currency']}'>
+										</div>
+										<div class='col-4 col-md-3'>
+											<input type='submit' value='Deposit' class='btn btn-primary' id='fedDeposit'>
+										</div>
+									</div>
+									<div class='row'>
+										<div class='col'>
+											<small><br />{$bank_feepercent}% fee, max " . number_format($bank_maxfee) . " Copper Coins</small>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<br />
+					</div>
+					<div class='col-lg'>
+						<div class='card'>
+							<div class='card-header'>
+								Withdraw (<span id='bankacc'>" . number_format($ir['bigbank']) . " Copper Coins</span>)
+							</div>
+							<div class='card-body'>
+								<form method='post' id='fedBankWithdraw' name='fedBankWithdraw'>
+									<div class='row'>
+										<div class='col'>
+											<input type='number' min='1' max='{$ir['bigbank']}' class='form-control' required='1' id='form_bank_acc' name='withdraw' value='{$ir['bigbank']}'>
+										</div>
+										<div class='col-4 col-md-3'>
+											<input type='submit' value='Withdraw' class='btn btn-primary' id='fedWithdraw'>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<br />
+					</div>
+				</div>";
 }
 $h->endpage();
