@@ -122,20 +122,20 @@ if (!empty($username)) {
         $db->query("UPDATE `users` SET `brave`='10',`maxbrave`='10',`hp`='100',
 					`maxhp`='100',`maxwill`='100',`will`='100',`energy`='24',
 					`maxenergy`='24' WHERE `userid`={$i}");
-        if ($e_class == 'Warrior') {
-            $db->query(
-                "INSERT INTO `userstats`
-					 VALUES({$i}, 1100, 1000, 900, 1000, 1000, 100)");
+        if ($e_class == 'Warrior') 
+		{
+			$api->UserGiveItem($i,365,1);
+            $db->query("INSERT INTO `userstats` VALUES({$i}, 1500, 1000, 500, 1000, 1000, 100)");
         }
-        if ($e_class == 'Rogue') {
-            $db->query(
-                "INSERT INTO `userstats`
-					 VALUES({$i}, 900, 1100, 1000, 1000, 1000, 100)");
+        if ($e_class == 'Rogue') 
+		{
+			$api->UserGiveItem($i,366,1);
+            $db->query("INSERT INTO `userstats` VALUES({$i}, 500, 1500, 1000, 1000, 1000, 100)");
         }
-        if ($e_class == 'Guardian') {
-            $db->query(
-                "INSERT INTO `userstats`
-					 VALUES({$i}, 1000, 900, 1100, 1000, 1000, 100)");
+        if ($e_class == 'Guardian') 
+		{
+			$api->UserGiveItem($i,367,1);
+            $db->query("INSERT INTO `userstats` VALUES({$i}, 1000, 500, 1500, 1000, 1000, 100)");
         }
         if ($_POST['ref']) {
             $api->UserGiveItem($_POST['ref'],18,10);
