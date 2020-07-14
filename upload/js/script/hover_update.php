@@ -16,6 +16,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD'])) 
         exit;
     }
 }
+//require_once('../../global_func.php');
 if (!is_ajax()) {
     header('HTTP/1.1 400 Bad Request');
     exit;
@@ -49,7 +50,7 @@ $ir['announcements'] = $db->fetch_single(
 <?php
 if ($ir['mail'] > 0) 
 {
-	echo "<div class='col-lg'>";
+	echo "<div class='col-md'>";
 		alert('info', "", "You have " . number_format($ir['mail']) . " unread messages.", true, 'inbox.php', "View");
 	echo "</div>";
 	?>
@@ -62,7 +63,7 @@ if ($ir['mail'] > 0)
 //Tell user they have unread notifcations when they do.
 if ($ir['notifications'] > 0) 
 {
-	echo "<div class='col-lg'>";
+	echo "<div class='col-md'>";
 		alert('info', "", "You have " . number_format($ir['notifications']) . " unread notifications.", true, 'notifications.php', "View");
 	echo "</div>";
 	?>
@@ -75,7 +76,7 @@ if ($ir['notifications'] > 0)
 //Tell user they have unread game announcements when they do.
 if ($ir['announcements'] > 0) 
 {
-	echo "<div class='col-lg'>";
+	echo "<div class='col-md'>";
 		alert('info', "", "You have {$ir['announcements']} unread announcements.", true, 'announcements.php', "View");
 	echo "</div>";
 }
