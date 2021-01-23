@@ -71,7 +71,7 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$brave}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'>
+                    <div class='progress-bar bg-secondary progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$brave}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'>
 						<span>
 							{$brave}% (" . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . ")
 						</span>
@@ -90,7 +90,7 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$will}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'>
+                    <div class='progress-bar bg-info progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$will}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'>
 						<span>
 							{$will}% (" . number_format($ir['will']) . " / " . number_format($ir['maxwill']). ")
 						</span>
@@ -116,7 +116,7 @@ echo "
             </div>
         </div>
         <div class='progress' style='height: 1rem;'>
-            <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'>
+            <div class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'>
 				<span>
 					{$hp}% (" . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . ")
 				</span>
@@ -135,107 +135,184 @@ echo "
 			</div>
         </div>
         <hr />
-        <div class='container-fluid'>
-            <div class='row'>
-                Copper Coins: 
-                " . number_format($ir['primary_currency']) . " [<a href='allbank.php'>Bank</a>]
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                Chivalry Tokens:
-                " . number_format($ir['secondary_currency']) . " [<a href='alltoken.php'>Bank</a>]
-            </div>
-        </div>
-        <hr />
-        <div class='row'>
-			<div class='col-8' align='left'>
-				Level: {$ir['level']}
+		<div class='row'>
+			<div class='col-6'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Copper Coins</b> [<a href='allbank.php'>Bank</a>]</small>
+					</div>
+					<div class='col-12'>
+						<span id='ui_copper'>" . number_format($ir['primary_currency']) . "</span>
+					</div>
+				</div>  
+			</div>
+			<div class='col-6'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Chivalry Tokens</b> [<a href='alltoken.php'>Bank</a>]</small>
+					</div>
+					<div class='col-12'>
+						<span id='ui_token'>" . number_format($ir['secondary_currency']) . "</span>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class='container-fluid'>
-            <div class='row'>
-                Prestiege: 
-                " . number_format($actualReset) . " (-{$resetGains}% XP Required)
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                VIP Days: 
-                " . number_format($ir['vip_days']) . "
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                Kills/Deaths: 
-                {$ir['kills']} / {$ir['deaths']}
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                Busts: 
-                {$ir['busts']}
-            </div>
-        </div>
-		<div class='container-fluid'>
-            <div class='row'>
-                Location: 
-                {$api->SystemTownIDtoName($ir['location'])}
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                [<a href='skills.php'>View Skills</a>]
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                [<a href='notepad.php'>View Notes</a>]
-            </div>
-        </div>
         <hr />
-        <div class='container-fluid'>
-            <div class='row'>
-                Strength: 
-                " . number_format($ir['strength']) . " (Ranked: {$StrengthRank})
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                Agility: 
-                " . number_format($ir['agility']) . " (Ranked: {$AgilityRank})
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                Guard: 
-                " . number_format($ir['guard']) . " (Ranked: {$GuardRank})
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                Labor: 
-                " . number_format($ir['labor']) . " (Ranked: {$LaborRank})
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                IQ: 
-                " . number_format($ir['iq']) . " (Ranked: {$IQRank})
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                Total Stats: 
-                " . number_format($ir['total_stats']) . " (Ranked: {$AllStatRank}) 
-            </div>
-        </div>
-        <div class='container-fluid'>
-            <div class='row'>
-                Luck
-                " . number_format($ir['luck']) . "%
-            </div>
-        </div>
+		<div class='row'>
+			<div class='col-4 col-sm-3 col-md-2'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Level</b></small>
+					</div>
+					<div class='col-12'>
+						 " . number_format($ir['level']) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-6 col-sm-4'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Prestiege</b> (-{$resetGains}% XP)</small>
+					</div>
+					<div class='col-12'>
+						 " . number_format($actualReset) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-4 col-sm-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>VIP Days</b></small>
+					</div>
+					<div class='col-12'>
+						 " . number_format($ir['vip_days']) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-4 col-sm-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>KDR</b></small>
+					</div>
+					<div class='col-12'>
+						 " . number_format($ir['kills']) . " / " . number_format($ir['deaths']) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-4 col-sm-3 col-md-2'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Busts</b></small>
+					</div>
+					<div class='col-12'>
+						 " . number_format($ir['busts']) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-4 col-sm-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Location</b></small>
+					</div>
+					<div class='col-12'>
+						 {$api->SystemTownIDtoName($ir['location'])}
+					</div>
+				</div>
+			</div>
+			<div class='col-4 col-sm-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Skills</b></small>
+					</div>
+					<div class='col-12'>
+						 [<a href='skills.php'>View Skills</a>]
+					</div>
+				</div>
+			</div>
+			<div class='col-4 col-sm-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Notes</b></small>
+					</div>
+					<div class='col-12'>
+						[<a href='notepad.php'>View Notes</a>]
+					</div>
+				</div>
+			</div>
+		</div>
+        <hr />
+		<div class='row'>
+			<div class='col-6 col-sm-4 col-lg-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Strength (Ranked: {$StrengthRank})</b></small>
+					</div>
+					<div class='col-12'>
+						" . number_format($ir['strength']) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-6 col-sm-4 col-lg-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Agility (Ranked: {$AgilityRank})</b></small>
+					</div>
+					<div class='col-12'>
+						" . number_format($ir['agility']) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-6 col-sm-4 col-lg-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Guard (Ranked: {$GuardRank})</b></small>
+					</div>
+					<div class='col-12'>
+						" . number_format($ir['guard']) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-6 col-sm-4 col-lg-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>IQ (Ranked: {$IQRank})</b></small>
+					</div>
+					<div class='col-12'>
+						" . number_format($ir['iq']) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-6 col-sm-4 col-lg-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Labor (Ranked: {$LaborRank})</b></small>
+					</div>
+					<div class='col-12'>
+						" . number_format($ir['labor']) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-6 col-sm-4 col-lg-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Total (Ranked: {$AllStatRank})</b></small>
+					</div>
+					<div class='col-12'>
+						" . number_format($ir['total_stats']) . "
+					</div>
+				</div>
+			</div>
+			<div class='col-6 col-sm-4 col-lg-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Luck</b></small>
+					</div>
+					<div class='col-12'>
+						" . number_format($ir['luck']) . "%
+					</div>
+				</div>
+			</div>
+		</div>
       </div>
     </div>
   </div>

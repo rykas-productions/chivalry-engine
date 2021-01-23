@@ -92,10 +92,12 @@ if (!empty($username)) {
         $_POST['ref'] = (isset($_POST['ref']) && is_numeric($_POST['ref'])) ? abs($_POST['ref']) : '';
         $IP = $db->escape($_SERVER['REMOTE_ADDR']);
         //If the registrating user was referred to the game by someone.
-        if ($_POST['ref']) {
+        if ($_POST['ref']) 
+		{
             $q = $db->query("/*qc=on*/SELECT `lastip` FROM `users` WHERE `userid` = {$_POST['ref']}");
             //If referring does not exist.
-            if ($db->num_rows($q) == 0) {
+            if ($db->num_rows($q) == 0) 
+			{
                 $db->free_result($q);
                 alert('danger', "Uh Oh!", "The user who referred you does not exist.");
                 die($h->endpage());
@@ -103,7 +105,8 @@ if (!empty($username)) {
             $rem_IP = $db->fetch_single($q);
             $db->free_result($q);
             //If referring user has the same IP as the registering one.
-            if ($rem_IP == $_SERVER['REMOTE_ADDR']) {
+            if ($rem_IP == $_SERVER['REMOTE_ADDR']) 
+			{
                 alert('danger', "Uh Oh!", "You cannot use a referral ID from someone on your IP.");
                 die($h->endpage());
             }
@@ -137,15 +140,17 @@ if (!empty($username)) {
 			$api->UserGiveItem($i,367,1);
             $db->query("INSERT INTO `userstats` VALUES({$i}, 1000, 500, 1500, 1000, 1000, 100)");
         }
-        if ($_POST['ref']) {
+        if ($_POST['ref']) 
+		{
             $api->UserGiveItem($_POST['ref'],18,10);
             $api->UserGiveItem($i,18,10);
             $api->UserGiveItem($_POST['ref'],210,1);
-            notification_add($_POST['ref'], "For referring {$e_username} to the game, you have earned 10 Chivalry Gym Scrolls!");
+            notification_add($_POST['ref'], "Thank you for referring <a href='profile.php?user={$i}'>{$e_username}</a> to {$set['WebsiteName']}! We have given you 10 Chivalry Gym Scrolls as appreciation.");
             $e_rip = $db->escape($rem_IP);
             $db->query("INSERT INTO `referals`
 			VALUES (NULL, {$_POST['ref']}, '{$e_rip}', {$i}, '{$IP}',{$CurrentTime})");
 			$db->query("UPDATE `user_settings` SET `ref_count` = `ref_count` + 1 WHERE `userid` = {$_POST['ref']}");
+			sendRefferalEmail($_POST['ref'],$i,$e_username);
         }
         $db->query("INSERT INTO `infirmary`
 			(`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) 
@@ -175,22 +180,27 @@ if (!empty($username)) {
                     $pcrr = $db->fetch_row($promocodereal);
                     item_add($i, $pcrr['promo_item'], 1);
                     $db->query("UPDATE `promo_codes` SET `promo_use` = `promo_use` + 1 WHERE `promo_code` = '{$code}'");
-                    $api->GameAddNotification($i, "Your promotion code was valid! Check your inventory for your item!");
+                    $api->GameAddNotification($i, "Your promotion code was valid! Check your inventory for your {$api->SystemItemIDtoName($pcrr['promo_item'])}!");
                 } else {
                     $api->GameAddNotification($i, "Your promotion code was invalid.");
                 }
             }
         }
 		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$_SESSION['userid']}')");
+		$eid = buyEstate($i, 1);
         $randophrase=randomizer();
         $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}', `theme` = 7 WHERE `userid` = {$_SESSION['userid']}");
         $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
-        $db->query("UPDATE `users` SET `loginip` = '$IP', `last_login` = '{$CurrentTime}', `laston` = '{$CurrentTime}' WHERE `userid` = {$i}");
+        $db->query("UPDATE `users` 
+					SET `loginip` = '$IP', 
+					`last_login` = '{$CurrentTime}',
+					`laston` = '{$CurrentTime}',
+					`estate` = {$eid}
+					WHERE `userid` = {$i}");
         //User registered, lets log them in.
         alert('success', "Success!", "You have successfully signed up to play {$set['WebsiteName']}. Click here to <a href='explore.php'>Sign In</a>", false);
         $url=determine_game_urlbase();
-        $WelcomeMSGEmail="Welcome to Chivalry is Dead, {$e_username}!<br />We hope you enjoy our lovely game and stick around for a while! If you have any questions or concerns, please contact a staff member in-game!<br />Thank you!<br /> -{$set['WebsiteName']}<br /><a href='https://{$url}'>https://{$url}</a>";
-        $api->SystemSendEmail($e_email,$WelcomeMSGEmail,"{$set['WebsiteName']} Registration",$set['sending_email']);
+        sendRegistrationEmail($e_email);
 		$api->GameAddMail($i,"Welcome to Chivalry is Dead",$mail,1);
         die($h->endpage());
     }

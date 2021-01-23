@@ -102,12 +102,14 @@ else {
     $login_failed = false;
     $login_failed = !(verify_user_password($raw_password, $mem['password']));
     //Login failed
-    if ($login_failed) {
+    if ($login_failed) 
+	{
         //Log login attempt.
         $db->query("INSERT INTO `login_attempts` (`ip`, `userid`, `timestamp`) VALUES ('{$IP}', '{$mem['userid']}', '{$CurrentTime}');");
         notification_add($mem['userid'], "Someone has just recently attempted to gain access to your account and failed.
 		    If this was you, you do not need to do anything. However, if this was not, you should change your password
 		    immediately!", 'fas fa-exclamation-circle', 'red');
+		sendLoginFailEmail($mem['userid']);
         die("<h3>{$set['WebsiteName']} Error</h3> Invalid Email and/or Password.<br /> <a href='login.php'>Back</a>");
 
     }

@@ -127,28 +127,29 @@ function shop()
 						<h2 class='mb-0'>
 							<button class='btn btn-block btn-block text-left' type='button' data-toggle='collapse' data-target='#collapse{$r['itmid']}' aria-expanded='true' aria-controls='collapse{$r['itmid']}'>
 								<div class='row'>
-									<div class='col-md-1'>
+									<div class='col-2 col-md-1'>
 										{$rcon}
 									</div>
-									<div class='col-md'>
+									<div class='col-10 col-sm-5 col-md-7'>
 										<div class='row'>
 											<div class='col'>
 												{$r['itmname']}
 											</div>
 											<div class='col'>
 												<b>Price</b><br />
-												<small>" . number_format($r['itmbuyprice']) . " Copper Coins</small>
+												<small>" . number_format($r['itmbuyprice']) . " Copper</small>
 											</div>
 											<br />
 										</div>
 									</div>
-									<div class='col-md'>
+									<div class='col'>
 										<form action='?action=buy&ID={$r['sitemID']}' method='post'>
 											<div class='row'>
 												<div class='col'>
-													<input class='form-control' type='number' min='1' name='qty' placeholder='Purchase quantity' />
+													<span class='sr-only'>Buy Quantity: </span>
+													<input class='form-control' type='number' min='1' name='qty' placeholder='Buy quantity' aria-label='Buy Quantity' title='Input buy quantity' />
 												</div>
-												<div class='col-3'>
+												<div class='col-sm-3 col-4'>
 														<input class='btn btn-primary' type='submit' value='Buy' />
 													</form>
 												</div>

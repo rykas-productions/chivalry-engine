@@ -1,14 +1,8 @@
 <?php
 require('globals.php');
-if (time() < 1575176400)
+if (date('n') != 12)
 {
-	$until=TimeUntil_Parse(1575176400);
-	alert("danger","Uh Oh!","The advent calender cannot be used for another {$until}.",true,'explore.php');
-	die($h->endpage());
-}
-if (time() > 1577336400)
-{
-	alert("danger","Uh Oh!","The advent calender cannot be used after Christmas.",true,'explore.php');
+	alert("danger","Uh Oh!","Its not the holidays...",true,'explore.php');
 	die($h->endpage());
 }
 if (!isset($_GET['day'])) {
@@ -97,7 +91,7 @@ switch ($_GET['day']) {
 function home()
 {
 	global $h;
-	echo "Find today's date, and open the spot for your prize!
+	echo "Find today's date, and open the spot for your prize! You may not see the image on either Castle or Sunset themes.
 	<br />
 	<table height='600' width='996' class='table table-bordered' background='https://farmeramaaid.files.wordpress.com/2011/11/advent-calendar-wallpaper.jpg'>
 		<tr>
@@ -187,6 +181,7 @@ function home()
 		</tr>
 	</table>";
 	$h->endpage();
+	//clearTable();
 }
 function day($today)
 {
@@ -207,8 +202,8 @@ function day($today)
 	$db->query("INSERT INTO `advent_calender` (`userid`, `day`) VALUES ('{$userid}', '{$day}')");
 	if ($day == 1)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 25 Pumpkin Pie.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,60,25);
+		alert('success',"Success!","You open up today's calender spot and receive a bonus 25 Will at your current estate.",true,'adventcalender.php');
+		increaseMaxWill($userid, 25);
 	}
 	if ($day == 2)
 	{
@@ -227,8 +222,8 @@ function day($today)
 	}
 	if ($day == 5)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 10,000,000 Copper Coins.",true,'adventcalender.php');
-		$api->UserGiveCurrency($userid,'primary',10000000);
+		alert('success',"Success!","You open up today's calender spot and receive 50,000,000 Copper Coins.",true,'adventcalender.php');
+		$api->UserGiveCurrency($userid,'primary',50000000);
 	}
 	if ($day == 6)
 	{
@@ -237,13 +232,13 @@ function day($today)
 	}
 	if ($day == 7)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 3 Will Stimulant Potions.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,263,3);
+		alert('success',"Success!","You open up today's calender spot and receive a bonus 50 Will at your current estate.",true,'adventcalender.php');
+		increaseMaxWill($userid, 50);
 	}
 	if ($day == 8)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 1,000 Iron Flakes.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,57,1000);
+		alert('success',"Success!","You open up today's calender spot and receive a bonus 100 Will at your current estate.",true,'adventcalender.php');
+		increaseMaxWill($userid, 100);
 	}
 	if ($day == 9)
 	{
@@ -272,8 +267,8 @@ function day($today)
 	}
 	if ($day == 14)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 14 Turkey Legs.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,87,14);
+		alert('success',"Success!","You open up today's calender spot and receive a bonus 150 Will at your current estate.",true,'adventcalender.php');
+		increaseMaxWill($userid, 150);
 	}
 	if ($day == 15)
 	{
@@ -322,8 +317,8 @@ function day($today)
 	}
 	if ($day == 24)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive 5,000 Boxes of Random.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,33,5000);
+		alert('success',"Success!","You open up today's calender spot and receive a bonus 325 Will at your current estate.",true,'adventcalender.php');
+		increaseMaxWill($userid, 325);
 	}
 	if ($day == 25)
 	{
@@ -331,4 +326,10 @@ function day($today)
 		$api->UserGiveItem($userid,12,2);
 	}
 	$h->endpage();
+}
+
+function clearTable()
+{
+	global $db;
+	$db->query("TRUNCATE TABLE `advent_calender`");
 }

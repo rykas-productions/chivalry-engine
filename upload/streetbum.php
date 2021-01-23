@@ -44,7 +44,7 @@ function dobum()
 	}
 	$db->query("UPDATE `user_settings` SET `searchtown` = `searchtown` - 1 WHERE `userid` = {$userid}");
 	$ir['searchtown']--;
-	$rand=Random(1,10);
+	$rand=Random(1,18);
 	if ($rand <= 5)
 	{
 		$copper=Random(200,950);
@@ -61,11 +61,47 @@ function dobum()
 		addToEconomyLog('Begging', 'token', $copper);
 		$api->SystemLogsAdd($userid,"begging","Received " . number_format($copper) . " Chivalry Tokens.");
 	}
+	elseif ($rand == 9)
+	{
+		$txt = "While laying out in the street, someone smacks you with a rotten fish, simply because you smelled like rotten fish. You shoo 'em off and get a nice fish to nom down on.";
+		$api->UserGiveItem($userid,107,1);
+		$api->SystemLogsAdd($userid,"begging","Received {$api->SystemItemIDtoName(107)}.");
+	}
+	elseif ($rand == 10)
+	{
+		$txt = "You sneak behind a market and snag yourself a half-eaten apple. I guess beggars can't be choosers.";
+		$api->UserGiveItem($userid,111,1);
+		$api->SystemLogsAdd($userid,"begging","Received {$api->SystemItemIDtoName(111)}.");
+	}
+	elseif ($rand == 11)
+	{
+		$txt = "While exploring, you notice a pompous asshole throwing out a perfectly fine piece of ham. You snag it after he disposes of it.";
+		$api->UserGiveItem($userid,109,1);
+		$api->SystemLogsAdd($userid,"begging","Received {$api->SystemItemIDtoName(109)}.");
+	}
+	elseif ($rand == 12)
+	{
+		$txt = "While down on your luck, a very sweet little girl walks by and gives you a piece of chocolate. How sweet.";
+		$api->UserGiveItem($userid,139,1);
+		$api->SystemLogsAdd($userid,"begging","Received {$api->SystemItemIDtoName(139)}.");
+	}
+	elseif ($rand == 13)
+	{
+		$txt = "You begin to beg, but trip on a Heavy Rock. What a coincidence, you wanted one!";
+		$api->UserGiveItem($userid,2,1);
+		$api->SystemLogsAdd($userid,"begging","Received {$api->SystemItemIDtoName(2)}.");
+	}
+	elseif ($rand == 14)
+	{
+		$txt = "You should go urinate before you beg... you stand near a bush and let 'er rip. Once done, you notice a stick. Its yours now, you exhibitionist, you!";
+		$api->UserGiveItem($userid,1,1);
+		$api->SystemLogsAdd($userid,"begging","Received {$api->SystemItemIDtoName(1)}.");
+	}
 	else
 	{
 		$txt = "You did not receive anything while begging.";
 	}
-	echo $txt . " <b>You can beg {$ir['searchtown']} more times this hour.</b><hr />
+	echo $txt . " <b>You can beg " . number_format($ir['searchtown']) . " more times this hour.</b><hr />
 	<div class='row'>
 		<div class='col'>
 			<a href='?action=beg' class='btn btn-primary'>Beg Again</a>

@@ -65,6 +65,7 @@ if (isset($dojs))
 		document.getElementById('bankacc2').innerHTML = <?php echo "'" . number_format($ir['tokenbank']) . "'" ?>;
 		document.getElementById("form_bank_acc").value = <?php echo "'{$ir['tokenbank']}'" ?>;
 		document.getElementById("form_bank_wallet").value = <?php echo "'{$ir['secondary_currency']}'" ?>;
+		document.getElementById('ui_token').innerHTML = <?php echo "'" . number_format($ir['secondary_currency']) . "'" ?>;
 	</script>
 	<?php
 }

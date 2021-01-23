@@ -42,10 +42,16 @@ if (isset($_POST['open']))
 	$number=0;
 	$copper=0;
 	$tokens=0;
+	$fish=0;
+	$apple=0;
+	$choco=0;
+	$ham=0;
+	$stick=0;
+	$rock=0;
 	while($number < $_POST['open'])
 	{
 		$number=$number+1;
-		$chance=Random(1,10);
+		$chance=Random(1,18);
 		if ($chance <= 5)
 		{
 			$copper = $copper + Random(200, 950);
@@ -54,18 +60,62 @@ if (isset($_POST['open']))
 		{
 			$tokens = $tokens + Random(10, 24);
 		}
+		elseif ($chance == 9)
+		{
+			$fish++;
+		}
+		elseif ($chance == 10)
+		{
+			$apple++;
+		}
+		elseif ($chance == 11)
+		{
+			$ham++;
+		}
+		elseif ($chance == 12)
+		{
+			$choco++;
+		}
+		elseif ($chance == 13)
+		{
+			$rock++;
+		}
+		elseif ($chance == 14)
+		{
+			$stick++;
+		}
 	}
 	$db->query("UPDATE `user_settings` SET `autobum` = `autobum` - {$_POST['open']}, `searchtown` = `searchtown` - {$_POST['open']} WHERE `userid` = {$userid}");
 	echo "After beggings on the streets {$number} times, you have gained the following:<br />
 		" . number_format($copper) . " Copper Coins<br />
-		" . number_format($tokens) . " Chivalry Tokens";
+		" . number_format($tokens) . " Chivalry Tokens<br />
+		" . number_format($fish) . " Fish<br />
+		" . number_format($apple) . " Apple(s)<br />
+		" . number_format($ham) . " Ham Shank(s)<br />
+		" . number_format($choco) . " Chocolate Bar(s)<br />
+		" . number_format($rock) . " Heavy Rock(s)<br />
+		" . number_format($stick) . " Sharpened Sticks<br />";
+	
+	//Give rewards
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
+	$api->UserGiveItem($userid,107,$fish);
+	$api->UserGiveItem($userid,111,$apple);
+	$api->UserGiveItem($userid,109,$ham);
+	$api->UserGiveItem($userid,139,$choco);
+	$api->UserGiveItem($userid,2,$rock);
+	$api->UserGiveItem($userid,1,$stick);
+	
+	//Eco logs
 	addToEconomyLog('Begging', 'copper', $copper);
 	addToEconomyLog('Begging', 'token', $tokens);
 	//Logs
 	$api->SystemLogsAdd($userid,"begging","Received " . number_format($copper) . " Copper Coins.");
 	$api->SystemLogsAdd($userid,"begging","Received " . number_format($tokens) . " Chivalry Tokens.");
+	$api->SystemLogsAdd($userid,"begging","Received " . number_format($fish) . " Fish.");
+	$api->SystemLogsAdd($userid,"begging","Received " . number_format($apple) . " Apple(s).");
+	$api->SystemLogsAdd($userid,"begging","Received " . number_format($ham) . " Ham Shank(s).");
+	$api->SystemLogsAdd($userid,"begging","Received " . number_format($choco) . " Chocolate Bar(s).");
 }
 else
 {

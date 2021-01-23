@@ -121,26 +121,6 @@ function idx()
                      FROM `forum_forums`
                      WHERE `ff_auth` = 'public'
                      ORDER BY `ff_id` ASC");
-    ?>
-    <table class='table table-bordered table-hover table-striped'>
-    <thead>
-    <tr>
-        <th>
-            <?php echo "Category"; ?>
-        </th>
-        <th class='hidden-xs-down'>
-            <?php echo "Posts"; ?>
-        </th>
-        <th class='hidden-xs-down'>
-            <?php echo "Topics"; ?>
-        </th>
-        <th>
-            <?php echo "Latest Post"; ?>
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php
     while ($r = $db->fetch_row($q)) {
         $t = DateTime_Parse($r['ff_lp_time'], true, true);
         $username = parseUsername($r['ff_lp_poster_id']);
@@ -157,26 +137,38 @@ function idx()
             $topicname = substr($topicname,0,32);
             $topicname = "{$topicname}...";
         }
-        
-        echo "<tr>
-					<td width='50%'>
-						<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
-						<small class='hidden-xs-down'><br />{$r['ff_desc']}</small>
-					</td>
-					<td class='hidden-xs-down'>
-						{$posts}
-					</td>
-					<td class='hidden-xs-down'>
-						{$topics}
-					</td>
-					<td width='25%'>
-						{$t}<br />
-						In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
-						By <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
-					</td>
-              </tr>";
+        echo "<div class='row'>
+					<div class='col-12'>
+						<div class='card'>
+							<div class='card-body'>
+								<div class='col-12'>
+									<div class='row'>
+										<div class='col-12 col-md-6 col-xl-7'>
+											<div class='row'>
+												<div class='col-12'>
+													<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
+												</div>
+												<div class='col-12'>
+													<small><i>{$r['ff_desc']}</i></small>
+												</div>
+											</div>
+										</div>
+										<div class='col-4 col-sm-5 col-md-3 col-lg-2'>
+											Posts: {$posts}<br />
+											Topics: {$topics}
+										</div>
+										<div class='col-8 col-sm-7 col-md-3 col-lg-4 col-xl-3'>
+											Last Post: {$t}<br />
+											In: <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
+											By: <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>";
     }
-    echo "</table>";
     $db->free_result($q);
     if ($api->UserMemberLevelGet($userid, 'forum moderator')) {
         echo "<hr /><h3>Staff Only Forums</h3><hr />";
@@ -188,26 +180,7 @@ function idx()
                      FROM `forum_forums`
                      WHERE `ff_auth` = 'staff'
                      ORDER BY `ff_id` ASC");
-        ?>
-        <table class='table table-bordered table-hover table-striped'>
-        <thead>
-        <tr>
-            <th>
-                <?php echo "Category"; ?>
-            </th>
-            <th class='hidden-xs-down'>
-                <?php echo "Posts"; ?>
-            </th>
-            <th class='hidden-xs-down'>
-                <?php echo "Topics"; ?>
-            </th>
-            <th>
-                <?php echo "Latest Post"; ?>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
+
         while ($r = $db->fetch_row($q)) {
             $t = DateTime_Parse($r['ff_lp_time'], true, true);
             $username = parseUsername($r['ff_lp_poster_id']);
@@ -219,25 +192,38 @@ function idx()
             $topics = $db->fetch_single($topicsq);
 
             $topicname = $db->fetch_single($db->query("/*qc=on*/SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
-            echo "<tr>
-        		<td>
-        			<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
-        			<small class='hidden-xs-down'><br />{$r['ff_desc']}</small>
-        		</td>
-        		<td class='hidden-xs-down'>
-					{$posts}
-				</td>
-        		<td class='hidden-xs-down'>
-					{$topics}
-				</td>
-        		<td>
-					{$t}<br />
-					In <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
-					By <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
-                </td>
-              </tr>";
+             echo "<div class='row'>
+					<div class='col-12'>
+						<div class='card'>
+							<div class='card-body'>
+								<div class='col-12'>
+									<div class='row'>
+										<div class='col-12 col-md-6 col-xl-7'>
+											<div class='row'>
+												<div class='col-12'>
+													<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
+												</div>
+												<div class='col-12'>
+													<small><i>{$r['ff_desc']}</i></small>
+												</div>
+											</div>
+										</div>
+										<div class='col-4 col-sm-5 col-md-3 col-lg-2'>
+											Posts: {$posts}<br />
+											Topics: {$topics}
+										</div>
+										<div class='col-8 col-sm-7 col-md-3 col-lg-4 col-xl-3'>
+											Last Post: {$t}<br />
+											In: <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
+											By: <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>";
         }
-        echo "</tbody></table>";
         $db->free_result($q);
     }
 }
@@ -300,29 +286,6 @@ function viewforum()
 													`ft_forum_id` = {$_GET['viewforum']}"));
     $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
     echo pagination($topicView, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
-    ?>
-    <table class='table table-bordered table-hover table-striped'>
-    <thead>
-    <tr>
-		<th>
-            Rating
-        </th>
-        <th>
-            Topic
-        </th>
-        <th class='hidden-xs-down'>
-            Posts
-        </th>
-        <th class='hidden-xs-down'>
-            Creation
-        </th>
-        <th>
-            Last Active
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php
     $q =
         $db->query(
             "/*qc=on*/SELECT `ft_start_time`, `ft_last_time`, `ft_pinned`,
@@ -357,30 +320,50 @@ function viewforum()
 			$type='danger';
 		elseif ($uservote == 0)
 			$type='primary';
-        echo "<tr>
-				<td>
-					<a href='?viewforum={$_GET['viewforum']}&rate=up&topic={$r2['ft_id']}'>+</a> 
-						<span class='badge badge-pill badge-{$type}'>
-							<a href='?viewforum={$_GET['viewforum']}&rate=none&topic={$r2['ft_id']}' class='text-white'>{$votes}</a>
-						</span> 
-					<a href='?viewforum={$_GET['viewforum']}&rate=down&topic={$r2['ft_id']}'>-</a>
-				</td>
-        		<td>
-					{$pt} <a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a> {$lt}<br />
-					<small class='hidden-xs-down'>{$r2['ft_desc']}</small>
-				</td>
-				<td class='hidden-xs-down'>{$pc}</td>
-				<td class='hidden-xs-down'> 
-					{$t1}<br />
-					By <a href='profile.php?user={$r2['ft_owner_id']}'>{$pn1['username']}</a>
-                </td>
-                <td>
-					{$t2}<br />
-                    By <a href='profile.php?user={$r2['ft_last_id']}'>{$pn2['username']}</a>
-                </td>
-              </tr>\n";
+		echo "
+			<div class='row'>
+				<div class='col-12'>
+					<div class='card'>
+						<div class='card-body'>
+							<div class='col-12'>
+								<div class='row'>
+									<div class='col-1'>
+										{$pt}
+									</div>
+									<div class='col-8 col-sm-7 col-md-4'>
+										<div class='row'>
+											<a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a>
+										</div>
+										<div class='row'><small>";
+											if (!empty($r2['ft_desc']))
+											{
+												echo "{$r2['ft_desc']}<br />";
+											}
+											echo"Rating: <a href='?viewforum={$_GET['viewforum']}&rate=up&topic={$r2['ft_id']}'>+</a> 
+												<span class='badge badge-pill badge-{$type}'>
+													<a href='?viewforum={$_GET['viewforum']}&rate=none&topic={$r2['ft_id']}' class='text-white'>{$votes}</a>
+												</span> 
+											<a href='?viewforum={$_GET['viewforum']}&rate=down&topic={$r2['ft_id']}'>-</a></small>
+										</div>
+									</div>
+									<div class='col-1'>
+										{$lt}
+									</div>
+									<div class='col-6 col-md-3'>
+										{$t1}<br />
+										<small><a href='profile.php?user={$r2['ft_owner_id']}'>{$pn1['username']}</a></small>
+									</div>
+									<div class='col-6 col-md-3'>
+										{$t2}<br />
+										<small><a href='profile.php?user={$r2['ft_last_id']}'>{$pn2['username']}</a></small>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>";
     }
-    echo "</tbody></table>";
     echo pagination($topicView, $posts_topic, $st, "?viewforum={$_GET['viewforum']}&amp;st=");
     $db->free_result($q);
 }
@@ -509,7 +492,6 @@ function viewtopic()
 			</div>";
 		}
 	}*/
-    echo "<table class='table table-bordered table-striped'>";
     $q3 =
         $db->query(
             "/*qc=on*/SELECT `fp_editor_time`, `fp_editor_id`, `fp_edit_count`,
@@ -522,23 +504,23 @@ function viewtopic()
     while ($r = $db->fetch_row($q3)) {
         $PN['username'] = parseUsername($r['fp_poster_id']);
 
-        $qlink = "<a class='btn btn-primary btn-sm' href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'><i class='fas fa-quote-right'></i></a> ";
+        $qlink = "<a class='btn btn-primary btn-block' href='?act=quote&viewtopic={$_GET['viewtopic']}&quotename={$r['fp_poster_id']}&fpid={$r['fp_id']}'><i class='fas fa-quote-right'></i></a>";
         if ($api->UserMemberLevelGet($userid, 'forum moderator') || $userid == $r['fp_poster_id']) {
             $elink =
-                "<a class='btn btn-primary btn-sm' href='?act=edit&post={$r['fp_id']}&topic={$_GET['viewtopic']}'><i class='fas fa-edit'></i></a> ";
+                "<a class='btn btn-primary btn-block' href='?act=edit&post={$r['fp_id']}&topic={$_GET['viewtopic']}'><i class='fas fa-edit'></i></a>";
         } else {
             $elink = "";
         }
         $no++;
         if ($no > 1 and ($api->UserMemberLevelGet($userid, 'forum moderator'))) {
             $dlink =
-                "<a class='btn btn-primary btn-sm' href='?act=delepost&post={$r['fp_id']}'><i class='fas fa-trash-alt'></i></a> ";
+                "<a class='btn btn-primary btn-block' href='?act=delepost&post={$r['fp_id']}'><i class='fas fa-trash-alt'></i></a>";
         } else {
             $dlink = "";
         }
         if ($api->UserMemberLevelGet($userid, 'forum moderator')) {
-            $wlink = "<a class='btn btn-primary btn-sm' href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'><i class='fas fa-exclamation'></i></a> ";
-            $blink = "<a class='btn btn-primary btn-sm' href='staff/staff_punish.php?action=forumban&user={$r['fp_poster_id']}'><i class='fas fa-ban'></i></a> ";
+            $wlink = "<a class='btn btn-primary btn-block' href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'><i class='fas fa-exclamation'></i></a>";
+            $blink = "<a class='btn btn-primary btn-block' href='staff/staff_punish.php?action=forumban&user={$r['fp_poster_id']}'><i class='fas fa-ban'></i></a>";
         } else {
             $wlink = "";
             $blink = "";
@@ -579,18 +561,44 @@ function viewtopic()
             $memb['signature'] = $parser->parse($memb['signature']);
             $memb['signature'] = $parser->getAsHtml($memb['signature']);
         }
-		$rlink="<a class='btn btn-primary btn-sm' href='playerreport.php?userid={$r['fp_poster_id']}'><i class='fas fa-flag'></i></a>";
+		$rlink="<a class='btn btn-primary btn-block' href='playerreport.php?userid={$r['fp_poster_id']}'><i class='fas fa-flag'></i></a>";
         //$r['fp_text']=replaceMentions($r['fp_text']);
 		$r['fp_text']=$parser->parse($r['fp_text']);
         $r['fp_text'] = $parser->getAsHtml();
-        echo "<tr>
-				<td width='25%' align='left'><b>Post #{$no}</b></td>
-				<td align='left'>
-					<b>Posted {$t} {$qlink} {$elink} {$dlink} {$wlink} {$blink} {$rlink}</b>
-				</td>
-			 </tr>
-			 <tr>
-				<td valign='top'>";
+		echo "<div class='row'>
+					<div class='col-12'>
+						<div class='card'>
+							<div class='card-header'>
+								<div class='row'>
+									<div class='col-4 col-md-2'>
+										Post #{$no}
+									</div>
+									<div class='col-8 col-md-6 col-lg-4'>
+										Posted {$t}
+									</div>
+									<div class='col-2 col-md-1'>
+										{$qlink}
+									</div>
+									<div class='col-2 col-md-1'>
+										{$elink}
+									</div>
+									<div class='col-2 col-md-1'>
+										{$dlink} 
+									</div>
+									<div class='col-2 col-md-1'>
+										{$wlink}
+									</div>
+									<div class='col-2 col-md-1'>
+										{$blink}
+									</div>
+									<div class='col-2 col-md-1'>
+										{$rlink}
+									</div>
+								</div>
+							</div>
+						<div class='card-body'>
+							<div class='col-12'>
+								<div class='row'>";
         if ($memb['userid'] > 0) {
             $userpostsq = $db->query("/*qc=on*/SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$r['fp_poster_id']}");
             $userposts = $db->fetch_single($userpostsq);
@@ -599,33 +607,54 @@ function viewtopic()
             $usertopics = $db->fetch_single($usertopicsq);
 			$infirm = ($api->UserStatus($r['fp_poster_id'], 'infirmary')) ? "<i class='game-icon game-icon-hospital-cross'></i>" : "" ;
             $dung = ($api->UserStatus($r['fp_poster_id'], 'dungeon')) ? "<i class='game-icon game-icon-cage'></i>" : "" ;
-			print
-                "<div class='hidden-xs-down'>{$av}</div><a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a>
-                    	[{$r['fp_poster_id']}]<br />
-                     <b>Rank:</b> {$memb['user_level']}<br />
-					 <b>Post Count:</b> {$userposts}<br />
-					 <b>Topic Count:</b> {$usertopics}<br />
-					 {$dung} {$infirm}";
+			echo "
+				<div class='row'>
+				<div class='col-12 col-lg-5 col-xl-4'>
+					<div class='row'>
+						<div class='col-12'>
+							{$av}
+						</div>
+						<div class='col-6'>
+							<a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a> [{$r['fp_poster_id']}]
+						</div>
+						<div class='col-6'>
+							<b>Rank</b> {$memb['user_level']}
+						</div>
+						<div class='col-6'>
+							<b>Posts</b> {$userposts}
+						</div>
+						<div class='col-6'>
+							<b>Topics</b> {$usertopics}
+						</div>
+						<div class='col-6'>
+						{$dung}
+						</div>
+						<div class='col-6'>
+							{$infirm}
+						</div>
+					</div>
+				</div>";
         } else {
-            print "<b>Non-existent User</b>";
+            print "<div class='col-12 col-lg-5 col-xl-4'><b>Deleted user.</b></div>";
         }
-        print
-            "</td>
-			   	 <td align='left'>
-                    {$r['fp_text']}
-                    {$edittext}<br />
-					<hr />
-                    {$memb['signature']}
-                 </td>
-		</tr>";
+		echo "<div class='col-12 col-lg-7 col-xl-8'>
+			{$r['fp_text']}
+			{$edittext}
+			<hr />
+			{$memb['signature']}
+		</div>";
+		echo "	</div>
+					</div>
+				</div>
+			</div>
+		</div>";
     }
     $db->free_result($q3);
-    echo "</table>";
     echo pagination($postView, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
     if ($topic['ft_locked'] == 0) {
 		if (permission("CanReplyForum",$userid))
 		{
-			echo "<br />
+			echo "
 			<br />
 			<form action='?reply={$topic['ft_id']}' method='post'>
 				<table class='table'>

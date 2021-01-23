@@ -59,9 +59,9 @@ function attacking()
             alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}&ref={$ref}");
             die($h->endpage());
         }
-		if ($ir['protection'] > time())
+		if (userHasEffect($userid, "basic_protection"))
 		{
-			$db->query("UPDATE `user_settings` SET `protection` = 0 WHERE `userid` = {$userid}");
+			userRemoveEffect($userid, "basic_protection");
 			alert('warning',"Warning!","For attacking this user, you have lost your protection.",false);
 		}
         //Set RNG
@@ -92,8 +92,11 @@ function attacking()
 	}
 	else if ($_GET['user'] == 21)
 	{
-		alert("danger", "Uh Oh!", "Due to kingdom wide laws, turkeys may only be hunted on Thanksgiving.", true, "{$ref}.php");
-        die($h->endpage());
+		if (date('n') != 11)
+		{
+			alert("danger", "Uh Oh!", "Due to kingdom wide laws, turkeys may only be hunted during Novemeber.", true, "{$ref}.php");
+			die($h->endpage());
+		}
 	}
 	else if ($ir['att_dg'] == 1 && $_GET['user'] == 20)
 	{
@@ -104,7 +107,7 @@ function attacking()
     $laston = time() - 900;
     $q = $db->query("/*qc=on*/SELECT `u`.`userid`, `hp`, `equip_armor`, `username`,
 	       `equip_primary`, `equip_secondary`, `equip_potion`, `guild`, `location`, `maxhp`, `class`, 
-	       `guard`, `agility`, `strength`, `gender`, `level`, `laston`, `protection`, `display_pic`
+	       `guard`, `agility`, `strength`, `gender`, `level`, `laston`, `display_pic`
 			FROM `users` AS `u`
 			INNER JOIN `userstats` AS `us` ON `u`.`userid` = `us`.`userid`
 			LEFT JOIN `user_settings` AS `uas` ON `u`.`userid` = `uas`.`userid`
@@ -194,6 +197,7 @@ function attacking()
 					SET `hp` = {$ir['maxhp']}, `maxhp` = {$ir['maxhp']}
 					WHERE `userid` = 20");
 	}
+	//Doppleganger
 	if ($_GET['user'] == 20)
 	{
 		$statrandom=Random(1,3);
@@ -228,6 +232,34 @@ function attacking()
 					`level` = {$ir['level']}
 					WHERE `userid` = 20");
 	}
+	//Check if the attacked user is, in fact, an active boss.
+	$bossq=$db->query("SELECT * FROM `activeBosses` WHERE `boss_user` = {$_GET['user']}");
+	if ($db->num_rows($bossq) > 0)
+	{
+		$bossr=$db->fetch_row($bossq);
+		$scales = (Random(-3,3) + $bossr['boss_stat_scale']) / 100;
+		$scalea = (Random(-3,3) + $bossr['boss_stat_scale']) / 100;
+		$scaleg = (Random(-3,3) + $bossr['boss_stat_scale']) / 100;
+		$str = $ir['strength'] * $scales;
+		$agl = $ir['agility'] * $scalea;
+		$grd = $ir['guard'] * $scaleg;
+		
+		//Set stats for this boss to be relative to the player.
+		$db->query("UPDATE `userstats` SET 
+					`strength` = {$str},
+					`agility` = {$agl},
+					`guard` = {$grd}
+					WHERE `userid` = {$_GET['user']}");
+		
+		//Set the boss to have same level and gear as the person attacking them.
+		$db->query("UPDATE `users` 
+					SET `equip_armor` = {$ir['equip_armor']},
+					`equip_primary` = {$ir['equip_primary']},
+					`equip_secondary` = {$ir['equip_secondary']},
+					`equip_potion` = {$ir['equip_potion']},
+					`level` = {$ir['level']}
+					WHERE `userid` = {$_GET['user']}");
+	}
     //Check that the opponent has 1 health point.
     if ($odata['hp'] == 1) {
         $_SESSION['attacking'] = 0;
@@ -247,12 +279,15 @@ function attacking()
     }
 	//Check if opponnent has at least 1/2 health
 	else if (($api->UserInfoGet($_GET['user'],'hp',true) < 50) && $ir['attacking'] == 0) {
-		$_SESSION['attacking'] = 0;
-		$_SESSION['attack_scroll'] = 0;
-        $ir['attacking'] = 0;
-        $api->UserInfoSetStatic($userid, "attacking", 0);
-        alert("danger", "Uh Oh!", "{$odata['username']} does not have at least half their health.", true, "{$ref}.php");
-        die($h->endpage());
+		if ($db->num_rows($bossq) == 0)
+		{
+			$_SESSION['attacking'] = 0;
+			$_SESSION['attack_scroll'] = 0;
+			$ir['attacking'] = 0;
+			$api->UserInfoSetStatic($userid, "attacking", 0);
+			alert("danger", "Uh Oh!", "{$odata['username']} does not have at least half their health.", true, "{$ref}.php");
+			die($h->endpage());
+		}
 	}
 	//Check if the current user is in the infirmary.
     else if ($api->UserStatus($ir['userid'], 'infirmary') == true) {
@@ -303,7 +338,7 @@ function attacking()
         alert("danger", "Uh Oh!", "You cannot attack online players who are level two or below.", true, "{$ref}.php");
         die($h->endpage());
     }	//User has protection
-	else if ($odata['protection'] > time())
+	else if (userHasEffect($_GET['user'], "basic_protection"))
 	{
 		$_SESSION['attacking'] = 0;
 		$_SESSION['attack_scroll'] = 0;
@@ -421,40 +456,9 @@ function attacking()
 					$ir['equip_secondary'] = 0;
 					$slot='equip_secondary';
 				}
-				$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$slot}'");
-				$statloss='';
-				if ($db->num_rows($sbq) > 0)
-				{
-					$statloss .= "You have lost ";
-					while ($sbr=$db->fetch_row($sbq))
-					{
-						if ($sbr['direction'] == 'pos')
-						{
-							if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-								$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-							} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-								$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-							}
-						}
-						else
-						{
-							if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-								$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-							} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-								$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-							}
-						}
-						$ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
-						$statloss .= "{$sbr['number']} {$sbr['stat']}, ";
-						$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$slot}'");
-					}
-					$statloss .= "when you unequipped this item.";
-				}
-				alert('danger',"Uh Oh!","You need at least one {$api->SystemItemIDtoName($r1['ammo'])} to use your {$api->SystemItemIDtoName($_GET['weapon'])}. {$statloss} It has been unequipped and moved to your inventory.",false);
+				unequipUserSlot($userid, $slot);
+				alert('danger',"Uh Oh!","You need at least one {$api->SystemItemIDtoName($r1['ammo'])} to use your {$api->SystemItemIDtoName($_GET['weapon'])}. It has been unequipped and moved to your inventory.",false);
 				$dodamage=false;
-				$db->query("UPDATE `users` SET `equip_primary` = 0 WHERE `equip_primary` = {$_GET['weapon']} AND `userid` = {$userid}");
-				$db->query("UPDATE `users` SET `equip_secondary` = 0 WHERE `equip_secondary` = {$_GET['weapon']} AND `userid` = {$userid}");
-				$api->UserGiveItem($userid,$_GET['weapon'],1);
 			}
 			else
 			{
@@ -544,10 +548,18 @@ function attacking()
                 {$odata['username']} dealing " . number_format($mydamage) . " damage. Your opponent has " . number_format($odata['hp']) . " HP remaining.", false, '', true);
                 $_SESSION['attackdmg'] += $mydamage;
                 user_log($userid,'dmgdone',$mydamage);
+				//Check if the attacked user is, in fact, an active boss.
+				$bossq=$db->query("SELECT * FROM `activeBosses` WHERE `boss_user` = {$_GET['user']}");
+				if ($db->num_rows($bossq) > 0)
+				{
+					$bossr=$db->fetch_row($bossq);
+					logBossDmg($userid,$bossr['boss_id'],$mydamage);
+				}
             }
         }
         else
         {
+			//@TODO: Make item consuming into a single function
             if ($api->UserHasItem($userid,$_GET['weapon'],1))
             {
                 for ($enum = 1; $enum <= 3; $enum++) {
@@ -616,7 +628,7 @@ function attacking()
             else
             {
                 alert('warning',"Warning!","You do not have enough of {$api->SystemItemIDtoName($_GET['weapon'])} to use.",false);
-                $db->query("UPDATE `users` SET `equip_potion` = 0 WHERE `userid` = {$userid}");
+                unequipUserSlot($userid, "equip_potion");
             }
         }
         //Win fight because opponent's health is 0 or lower.
@@ -683,54 +695,24 @@ function attacking()
                         {
                             $slot = 'equip_potion';
                         }
-                        $sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$_GET['user']} and `slot` = '{$slot}'");
-                        $statloss='';
-                        if ($db->num_rows($sbq) > 0)
-                        {
-                            $statloss .= "You have lost ";
-                            while ($sbr=$db->fetch_row($sbq))
-                            {
-                                if ($sbr['direction'] == 'pos')
-                                {
-                                    if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-                                        $db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$_GET['user']}");
-                                    } elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-                                        $db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$_GET['user']}");
-                                    }
-                                }
-                                else
-                                {
-                                    if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-                                        $db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-                                    } elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-                                        $db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-                                    }
-                                }
-                                $ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
-                                $statloss .= "{$sbr['number']} {$sbr['stat']}, ";
-                                $db->query("DELETE FROM `equip_gains` WHERE `userid` = {$_GET['user']} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$slot}'");
-                            }
-                            $statloss .= "when you unequipped this item.";
-                            $db->query("UPDATE `users` SET `equip_primary` = 0 WHERE `equip_primary` = {$enweps[$weptouse]['itmid']} AND `userid` = {$_GET['user']}");
-                            $db->query("UPDATE `users` SET `equip_secondary` = 0 WHERE `equip_secondary` = {$enweps[$weptouse]['itmid']} AND `userid` = {$_GET['user']}");
-                            $api->UserGiveItem($_GET['user'],$enweps[$weptouse]['itmid'],1);
-                            $api->GameAddNotification($_GET['user'],"You have ran out of ammo for your {$wep}. {$statloss} It has been unequipped and moved to your inventory.", 'game-icon game-icon-ammo-box', 'red');
-                        }
-                        else
-                        {
-                            //Ammo dispensery skill
-                            if (getSkillLevel($_GET['user'],7) == 0)
-                                $api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
-                            else
-                            {
-                                if (Random(1,4) != 1)
-                                {
-                                    $api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
-                                }
-                            }
-                        }
-                    }
-                }
+                        unequipUserSlot($userid, "equip_potion");
+						$api->GameAddNotification($_GET['user'],"You have ran out of ammo for one of your weapons during combat. Its been unequipped and return to your inventory.", 'game-icon game-icon-ammo-box', 'red');
+                        
+					}
+					else
+					{
+						//Ammo dispensery skill
+						if (getSkillLevel($_GET['user'],7) == 0)
+							$api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
+						else
+						{
+							if (Random(1,4) != 1)
+							{
+								$api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
+							}
+						}
+					}
+				}
             }
                 $miss=0;
                 if ($theydodmg)
@@ -886,7 +868,7 @@ function attacking()
                     {
                         $api->GameAddNotification($_GET['user'],"You ran out of your potion in combat.", 'fas fa-exclamation-circle', 'red');
                         alert('info', "", "<b>Attempt {$ns})</b> {$odata['username']} attempted to strike you, but missed. You have " . number_format($youdata['hp']) . " HP remaining.", false);
-                        $db->query("UPDATE `users` SET `equip_potion` = 0 WHERE `userid` = {$_GET['user']}");
+                        unequipUserSlot($_GET['user'], "equip_potion");
                     }
                 }
                 //User has no HP left, redirect to loss.
@@ -981,10 +963,9 @@ function attacking()
 				{
                     $type = "Potion Item";
                 }
-				echo "<div class='col-sm'>
-				<b>{$type}</b><br />
-					" . returnIcon($r['itmid'],5) . "<br />
-					<a href='?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}&ref={$ref}'>{$r['itmname']}</a>
+				echo "<div class='col'>
+				<a href='?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}&ref={$ref}'><b>{$type}</b><br />
+					" . returnIcon($r['itmid'],5) . "</a>
 				</div>";
             }
         } //If no weapons equipped, tell him to get back!
@@ -997,13 +978,13 @@ function attacking()
 		$yourpic = ($ir['display_pic']) ? "<img src='{$ir['display_pic']}' class='img-thumbnail img-responsive' width='125'>" : "";
 		$theirpic = ($odata['display_pic']) ? "<img src='{$odata['display_pic']}' class='img-thumbnail img-responsive' width='125'>" : "";
         echo "<div class='row'>
-				<div class='col-md-3'>
+				<div class='col-3'>
 					{$yourpic}<br />
 					{$ir['username']}
 				</div>
-				<div class='col-md'>
+				<div class='col'>
 					<div class='progress' style='height: 1rem;'>
-						<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars['hpperc']}' style='width:{$vars['hpperc']}%' aria-valuemin='0' aria-valuemax='{$youdata['maxhp']}'>
+						<div class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars['hpperc']}' style='width:{$vars['hpperc']}%' aria-valuemin='0' aria-valuemax='{$youdata['maxhp']}'>
 							<span>{$vars['hpperc']}% (" . number_format($youdata['hp']) . " / " .  number_format($youdata['maxhp']) . ")</span>
 						</div>
 					</div>
@@ -1011,13 +992,13 @@ function attacking()
 			</div>
 			<hr />
 			<div class='row'>
-				<div class='col-md-3'>
+				<div class='col-3'>
 					{$theirpic}<br />
 					{$odata['username']}
 				</div>
-				<div class='col-md'>
+				<div class='col'>
 					<div class='progress' style='height: 1rem;'>
-						<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars2['hpperc']}' style='width:{$vars2['hpperc']}%' aria-valuemin='0' aria-valuemax='{$odata['maxhp']}'>
+						<div class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars2['hpperc']}' style='width:{$vars2['hpperc']}%' aria-valuemin='0' aria-valuemax='{$odata['maxhp']}'>
 							<span>
 								{$vars2['hpperc']}% (" . number_format($odata['hp']) . " / " . number_format($odata['maxhp']) . ")
 							</span>
@@ -1137,17 +1118,40 @@ function beat()
 
         }
 		if ($r['userid'] == 20)
+		{
+			$api->UserGiveItem($userid,187,1);
+			$api->UserGiveCurrency($userid,'primary',500000);
+			$api->UserGiveCurrency($userid,'secondary',500);
+			$db->query("UPDATE `user_settings` SET `att_dg` = 1 WHERE `userid` = {$userid}");
+			addToEconomyLog('Vote Rewards', 'copper', 500000);
+			$api->GameAddNotification($userid,"For slaying Your Doppleganger in battle, you've received a unique badge, 500,000 Copper Coins and 500 Chivalry Tokens.",'game-icon game-icon-backup','purple');
+		}
+		//Check if the attacked user is, in fact, an active boss.
+		$bossq=$db->query("SELECT * FROM `activeBosses` WHERE `boss_user` = {$r['userid']}");
+		if ($db->num_rows($bossq) > 0)
+		{
+			$bossr=$db->fetch_row($bossq);
+			if ($bossr['boss_do_announce'])
 			{
-				$api->UserGiveItem($userid,187,1);
-				$api->UserGiveCurrency($userid,'primary',500000);
-				$api->UserGiveCurrency($userid,'secondary',500);
-				$db->query("UPDATE `user_settings` SET `att_dg` = 1 WHERE `userid` = {$userid}");
-				addToEconomyLog('Vote Rewards', 'copper', 500000);
-				$api->GameAddNotification($userid,"For slaying Your Doppleganger in battle, you've received a unique badge, 500,000 Copper Coins and 500 Chivalry Tokens.",'game-icon game-icon-backup','purple');
+				$api->GameAddAnnouncement("<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] has just slain {$api->SystemUserIDtoName($r['userid'])} in combat and received a {$api->SystemItemIDtoName($bossr['boss_item_drop'])}. Such a high honor!");
 			}
+			$api->GameAddNotification($userid,"For defeating the {$api->SystemUserIDtoName($r['userid'])} boss in combat, you've received a {$api->SystemItemIDtoName($bossr['boss_item_drop'])}. Thank you for your service.");
+			$api->UserGiveItem($userid,$bossr['boss_item_drop'],1);
+			$api->SystemLogsAdd($userid, 'boss', "Defeated {$api->SystemUserIDtoName($r['userid'])}, got {$api->SystemItemIDtoName($bossr['boss_item_drop'])}.");
+			$db->query("DELETE FROM `activeBosses` WHERE `boss_user` = {$r['userid']}");
+			
+		}
 		if ($r['userid'] == 21)
 		{
-			$feathers=Random(10,50);
+			$turkeyKills=getCurrentUserPref('2020turkeyKills',0);
+			$gotBadge=getCurrentUserPref('2020turkeyBadge',0);
+			if ($gotBadge == 0)
+			{
+				$api->UserGiveItem($userid,386,1);
+				setCurrentUserPref('2020turkeyBadge',1);
+			}
+			setCurrentUserPref('2020turkeyKills',$turkeyKills+1);
+			$feathers=Random(20,100);
 			$api->UserGiveItem($userid,197,$feathers);
 			$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
 		}
@@ -1422,9 +1426,32 @@ function xp()
 				addToEconomyLog('Vote Rewards', 'token', 500);
 				$api->GameAddNotification($userid,"For slaying Your Doppleganger in battle, you've received a unique badge, 500,000 Copper Coins and 500 Chivalry Tokens.",'game-icon game-icon-backup','purple');
 			}
+			//Check if the attacked user is, in fact, an active boss.
+			$bossq=$db->query("SELECT * FROM `activeBosses` WHERE `boss_user` = {$r['userid']}");
+			if ($db->num_rows($bossq) > 0)
+			{
+				$bossr=$db->fetch_row($bossq);
+				if ($bossr['boss_do_announce'])
+				{
+					$api->GameAddAnnouncement("<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] has just slain {$api->SystemUserIDtoName($r['userid'])} in combat and received a {$api->SystemItemIDtoName($bossr['boss_item_drop'])}. Such a high honor!");
+				}
+				$api->GameAddNotification($userid,"For defeating the {$api->SystemUserIDtoName($r['userid'])} boss in combat, you've received a {$api->SystemItemIDtoName($bossr['boss_item_drop'])}. Thank you for your service.");
+				$api->UserGiveItem($userid,$bossr['boss_item_drop'],1);
+				$api->SystemLogsAdd($userid, 'boss', "Defeated {$api->SystemUserIDtoName($r['userid'])}, got {$api->SystemItemIDtoName($bossr['boss_item_drop'])}.");
+				$db->query("DELETE FROM `activeBosses` WHERE `boss_user` = {$r['userid']}");
+				
+			}
 			if ($r['userid'] == 21)
 			{
-				$feathers=Random(10,50);
+				$turkeyKills=getCurrentUserPref('2020turkeyKills',0);
+				$gotBadge=getCurrentUserPref('2020turkeyBadge',0);
+				if ($gotBadge == 0)
+				{
+					$api->UserGiveItem($userid,386,1);
+					setCurrentUserPref('2020turkeyBadge',1);
+				}
+				setCurrentUserPref('2020turkeyKills',$turkeyKills+1);
+				$feathers=Random(20,100);
 				$api->UserGiveItem($userid,197,$feathers);
 				$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
 			}
@@ -1553,9 +1580,32 @@ function mug()
 				addToEconomyLog('Vote Rewards', 'token', 500);
 				$api->GameAddNotification($userid,"For slaying Your Doppleganger in battle, you've received a unique badge, 500,000 Copper Coins and 500 Chivalry Tokens.",'game-icon game-icon-backup','purple');
 			}
+			//Check if the attacked user is, in fact, an active boss.
+			$bossq=$db->query("SELECT * FROM `activeBosses` WHERE `boss_user` = {$r['userid']}");
+			if ($db->num_rows($bossq) > 0)
+			{
+				$bossr=$db->fetch_row($bossq);
+				if ($bossr['boss_do_announce'])
+				{
+					$api->GameAddAnnouncement("<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] has just slain {$api->SystemUserIDtoName($r['userid'])} in combat and received a {$api->SystemItemIDtoName($bossr['boss_item_drop'])}. Such a high honor!");
+				}
+				$api->GameAddNotification($userid,"For defeating the {$api->SystemUserIDtoName($r['userid'])} boss in combat, you've received a {$api->SystemItemIDtoName($bossr['boss_item_drop'])}. Thank you for your service.");
+				$api->UserGiveItem($userid,$bossr['boss_item_drop'],1);
+				$api->SystemLogsAdd($userid, 'boss', "Defeated {$api->SystemUserIDtoName($r['userid'])}, got {$api->SystemItemIDtoName($bossr['boss_item_drop'])}.");
+				$db->query("DELETE FROM `activeBosses` WHERE `boss_user` = {$r['userid']}");
+				
+			}
 			if ($r['userid'] == 21)
 			{
-				$feathers=Random(10,50);
+				$turkeyKills=getCurrentUserPref('2020turkeyKills',0);
+				$gotBadge=getCurrentUserPref('2020turkeyBadge',0);
+				if ($gotBadge == 0)
+				{
+					$api->UserGiveItem($userid,386,1);
+					setCurrentUserPref('2020turkeyBadge',1);
+				}
+				setCurrentUserPref('2020turkeyKills',$turkeyKills+1);
+				$feathers=Random(20,100);
 				$api->UserGiveItem($userid,197,$feathers);
 				$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
 			}
@@ -1627,6 +1677,16 @@ function doExtraBomb($user, $infirm)
 	}
 	else
 		return false;
+}
+
+function logBossDmg($userid, $boss_id, $dmg)
+{
+	global $db;
+	$q=$db->query("SELECT * FROM `bossDamage` WHERE `userid` = {$userid} AND `boss_id` = {$boss_id}");
+	if ($db->num_rows($q) == 0)
+		$db->query("INSERT INTO `bossDamage` (`userid`, `boss_id`, `dmg`) VALUES ('{$userid}', '{$boss_id}', '{$dmg}')");
+	else
+		$db->query("UPDATE `bossDamage` SET `dmg` = `dmg` + {$dmg} WHERE `userid` = {$userid} AND `boss_id` = {$boss_id}");
 }
 
 $h->endpage();

@@ -18,7 +18,7 @@ echo "<h3><i class='game-icon game-icon-guards'></i> NPC Battle List</h3><hr />W
     an item. These items may or may not be useful in your adventures. To deter players getting massive amounts of items,
     you can only attack these NPCs every so often. Their cooldown is listed here as well. To receive the item, you must
     mug the bot.<hr />";
-$query = $db->query("/*qc=on*/SELECT * FROM `botlist`");
+$query = $db->query("/*qc=on*/SELECT * FROM `botlist` ORDER BY `botuser` ASC");
 //List all the bots.
 while ($result = $db->fetch_row($query)) 
 {
@@ -40,16 +40,13 @@ while ($result = $db->fetch_row($query))
         $attack = "Cooldown Remaining: " . ParseTimestamp($cooldown);
     } //Player CAN attack the bot.
     else {
-        $attack = "<form action='attack.php'>
-					<input type='hidden' name='user' value='{$result['botuser']}'>
-					<input type='hidden' name='ref' value='bottent'>
-					<input type='submit' class='btn btn-danger' value='Attack {$botname}'>
-					</form>
-					(Odds of Victory {$chance}%)";
+		$attack = "<a href='attack.php?user={$result['botuser']}&ref=bottent' class='btn btn-danger' style='font-size: 1.75rem;'>
+						<i class='game-icon game-icon-swords-emblem'></i>
+					</a><br />(Odds of Victory {$chance}%)";
     }
 	echo "
 	<div class='row'>
-		<div class='col-sm'>
+		<div class='col'>
 			<a href='profile.php?user={$result['botuser']}'>{$botname}</a> [{$result['botuser']}]<br />
 			<small>
 			Level: " . $api->UserInfoGet($result['botuser'], 'level') . "<br />
@@ -57,7 +54,7 @@ while ($result = $db->fetch_row($query))
 			Drop: " . $api->SystemItemIDtoName($result['botitem']) . "
 			</small>
 		</div>
-		<div class='col-sm'>
+		<div class='col'>
 			{$attack}
 		</div>
 	</div>

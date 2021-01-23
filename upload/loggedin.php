@@ -52,11 +52,11 @@ if (isset($_POST['pn_update'])) {
     }
 }
 echo "<div class='row'>
-	<div class='col'>";
+	<div class='col-md'>";
 		alert('info','',"Welcome back, {$ir['username']}!!",false);
 		echo"
 	</div>
-	<div class='col'>";
+	<div class='col-md'>";
 		alert('info','',"You were last active {$lv}!",false);
 		echo"
 	</div>
@@ -70,7 +70,7 @@ echo "
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-						<div class='col-3'>
+						<div class='col-4 col-md-3'>
 							<b>Level</b>
 						</div>
 						<div class='col'>
@@ -78,15 +78,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-3'>
-							<b>XP</b>
-						</div>
-						<div class='col'>
-							" . number_format($ir['xp'], 2) . " / " . number_format($ir['xp_needed'], 2) . " ({$experc}%)
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-3'>
+						<div class='col-5 col-md-3'>
 							<b>VIP Days</b>
 						</div>
 						<div class='col'>
@@ -94,7 +86,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-3'>
+						<div class='col-4 col-md-3'>
 							<b>Class</b>
 						</div>
 						<div class='col'>
@@ -102,7 +94,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-3'>
+						<div class='col-md-3 col-4'>
 							<b>Busts</b>
 						</div>
 						<div class='col'>
@@ -118,7 +110,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-3'>
+						<div class='col-5'>
 							<a href='skills.php' class='btn btn-primary'>Skills</a>
 						</div>
 						<div class='col'>
@@ -136,7 +128,7 @@ echo "
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-						<div class='col-5'>
+						<div class='col-12 col-md-5'>
 							<b>Copper Coins</b>
 						</div>
 						<div class='col'>
@@ -144,7 +136,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-5'>
+						<div class='col-12 col-md-5'>
 							<b>Chivalry Tokens</b>
 						</div>
 						<div class='col'>
@@ -152,7 +144,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-5'>
+						<div class='col-12 col-md-5'>
 							<b>City Bank</b>
 						</div>
 						<div class='col'>
@@ -160,7 +152,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-5'>
+						<div class='col-12 col-md-5'>
 							<b>Federal Bank</b>
 						</div>
 						<div class='col'>
@@ -168,7 +160,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-5'>
+						<div class='col-12 col-md-5'>
 							<b>Vault Bank</b>
 						</div>
 						<div class='col'>
@@ -176,7 +168,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-5'>
+						<div class='col-12 col-md-5'>
 							<b>Chivalry Token Bank</b>
 						</div>
 						<div class='col'>
@@ -196,55 +188,77 @@ echo "
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-						<div class='col-3'>
-							<b>Health</b>
-						</div>
-						<div class='col'>
-							" . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . " ({$hpperc}%)
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-3'>
+						<div class='col-12 col-md-3'>
 							<b>Energy</b>
 						</div>
-						<div class='col'>
-							" . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) . " ({$enperc}%)
+						<div class='col' style='height:12px'>
+							<div class='progress' style='height: 1rem;'>
+								<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['energy']}' style='width:{$enperc}%' aria-valuemin='0' aria-valuemax='{$ir['maxenergy']}'>
+									<span>
+										{$enperc}% (" . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) . ")
+									</span>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-3'>
-							<b>VIP Days</b>
-						</div>
-						<div class='col'>
-							" . number_format($ir['vip_days']) . "
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-3'>
-							<b>Class</b>
-						</div>
-						<div class='col'>
-							{$ir['class']}
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-3'>
+						<div class='col-12 col-md-3'>
 							<b>Will</b>
 						</div>
-						<div class='col'>
-							" . number_format($ir['will']) . " / " . number_format($ir['maxwill']) . " ({$wiperc}%)
+						<div class='col' style='height:12px'>
+							<div class='progress' style='height: 1rem;'>
+								<div class='progress-bar bg-info progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$wiperc}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'>
+									<span>
+										{$wiperc}% (" . number_format($ir['will']) . " / " . number_format($ir['maxwill']) . ")
+									</span>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-3'>
+						<div class='col-12 col-md-3'>
 							<b>Brave</b>
 						</div>
-						<div class='col'>
-							" . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . " ({$brperc}%)
+						<div class='col' style='height:12px'>
+							<div class='progress' style='height: 1rem;'>
+								<div class='progress-bar bg-secondary progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$hpperc}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'>
+									<span>
+										{$brperc}% (" . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . ")
+									</span>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-3'>
+						<div class='col-12 col-md-3'>
+							<b>Health</b>
+						</div>
+						<div class='col' style='height:12px'>
+							<div class='progress' style='height: 1rem;'>
+								<div class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hpperc}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'>
+									<span>
+										{$hpperc}% (" . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . ")
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-12 col-md-3'>
+							<b>XP</b>
+						</div>
+						<div class='col' style='height:12px'>
+							<div class='progress' style='height: 1rem;'>
+								<div class='progress-bar bg-warning progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['xp']}' style='width:{$experc}%' aria-valuemin='0' aria-valuemax='{$ir['xp_needed']}'>
+									<span>
+										{$experc}% (" . number_format($ir['xp']) . " / " . number_format($ir['xp_needed']) . ")
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-4 col-md-3'>
 							<b>Luck</b>
 						</div>
 						<div class='col'>
@@ -261,7 +275,7 @@ echo "
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-						<div class='col-4'>
+						<div class='col-12 col-md-3'>
 							<b>Strength</b>
 						</div>
 						<div class='col'>
@@ -269,7 +283,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-4'>
+						<div class='col-12 col-md-3'>
 							<b>Agility</b>
 						</div>
 						<div class='col'>
@@ -277,7 +291,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-4'>
+						<div class='col-12 col-md-3'>
 							<b>Guard</b>
 						</div>
 						<div class='col'>
@@ -285,7 +299,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-4'>
+						<div class='col-12 col-md-3'>
 							<b>Labor</b>
 						</div>
 						<div class='col'>
@@ -293,7 +307,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-4'>
+						<div class='col-12 col-md-3'>
 							<b>IQ</b>
 						</div>
 						<div class='col'>
@@ -301,7 +315,7 @@ echo "
 						</div>
 					</div>
 					<div class='row'>
-						<div class='col-4'>
+						<div class='col-12 col-md-3'>
 							<b>Total</b>
 						</div>
 						<div class='col'>
@@ -313,8 +327,7 @@ echo "
 		</div>
 		<br />
 	</div>
-	<br />";
-echo "
+	<br />
 <form method='post'>
     <div class='form-group'>
         <label for='pn_update'>Personal Notepad</label>

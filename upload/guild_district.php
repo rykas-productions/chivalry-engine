@@ -2442,7 +2442,7 @@ function fortify()
 		$db->query("UPDATE `guild` SET `guild_seccurr` = `guild_seccurr` - {$neededTokens} WHERE `guild_id` = {$ir['guild']}");
 		addToEconomyLog('Districts','token', $neededTokens*-1);
 		$db->query("UPDATE `guild_districts` SET `district_fortify` = `district_fortify` + 1 WHERE `district_id` = {$attack_to}");
-		alert('success',"","You have successfully fortified this tile at the cost of " . number_format($neededXP) . " Guild XP and " . number_format($neededTokens) . " Chivalry Tokens.");
+		alert('success',"","You have successfully fortified this tile at the cost of " . number_format($neededXP) . " Guild XP and " . number_format($neededTokens) . " Chivalry Tokens.",true,'guild_district.php');
 	}
 	else
 	{

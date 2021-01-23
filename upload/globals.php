@@ -61,7 +61,6 @@ if (isset($_SESSION['last_active']) && ($time - $_SESSION['last_active'] > 1800)
 //Update last active time.
 $_SESSION['last_active'] = $time;
 $userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
-require "header.php";
 include "config.php";
 define("MONO_ON", 1);
 //Require the database wrapper and connect to database.
@@ -144,6 +143,11 @@ if (isset($jobquery) && $jobquery) {
 }
 //Put user's data into friendly variable.
 $ir = $db->fetch_row($is);
+$userUI=getCurrentUserPref('oldUI',0);
+if ($userUI == 1)
+	require "header_old.php";
+elseif ($userUI == 0)
+	require "header.php";
 //Put user's current theme to cookie.
 if (!isset($_COOKIE['theme'])) {
     setcookie('theme', $ir['theme'], time() + 86400);
@@ -183,7 +187,8 @@ require('global_func_farm.php');
 include("class/class_form.php");
 $form = new form;
 //If requested file doesn't want the header hidden.
-if (isset($nohdr) == false || !$nohdr) {
+if (isset($nohdr) == false || !$nohdr) 
+{
     $h->startheaders();
     $fm = number_format($ir['primary_currency']);
     $cm = number_format($ir['secondary_currency']);

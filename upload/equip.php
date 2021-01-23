@@ -74,129 +74,11 @@ function weapon()
         }
         //Check to see if the chosen slot has a weapon equipped to it already. If true, give them their item back, and
         //log the unequip.
-        if ($ir[$_POST['type']] > 0) {
-            $api->UserGiveItem($userid, $ir[$_POST['type']], 1);
-            $slot = ($_POST['type'] == 'equip_primary') ? 'Primary Weapon' : 'Secondary Weapon';
-			$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_POST['type']}'");
-			$statloss='';
-			if ($db->num_rows($sbq) > 0)
-			{
-				while ($sbr=$db->fetch_row($sbq))
-				{
-                    $stats =
-					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-					if ($sbr['direction'] == 'pos')
-					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-						}
-                        $mod='lost';
-						$ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
-					}
-					else
-					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-						}
-                        $mod='gained';
-						$ir[$sbr['stat']] = $ir[$sbr['stat']]+$sbr['number'];
-					}
-                    if (empty($statloss))
-                        $statloss .= "{$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
-                    else
-                        $statloss .= ", {$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
-					$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$_POST['type']}'");
-				}
-				alert('info',"Information!","You have {$statloss} when you unequipped your weapon.",false);
-			}
-            $weapname = $db->fetch_single($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$ir[$_POST['type']]}"));
-            $api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} as their {$slot}");
-        }
-        //Make the slot name friendly for the logger and user.
-        if ($_POST['type'] == "equip_primary") {
-            $slot_name = "Primary Weapon";
-            $slot = 'Primary Weapon';
-        } else {
-            $slot_name = "Secondary Weapon";
-            $slot = 'Secondary Weapon';
-        }
-		$txt='';
-		for ($enum = 1; $enum <= 3; $enum++) {
-            if ($r["effect{$enum}_on"] == 'true') {
-                $stats =
-					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-                $einfo = unserialize($r["effect{$enum}"]);
-                if ($einfo['inc_type'] == "percent") {
-                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                        $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
-						$einfo['stat'] = 'max' . $einfo['stat'];
-                    }
-					else {
-                        $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
-                    }
-                } else {
-                    $inc = $einfo['inc_amount'];
-                }
-                if ($einfo['dir'] == "pos") {
-                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                        $ir['max' . $einfo['stat']] = $ir['max' . $einfo['stat']] + $einfo['inc_amount'];
-						$einfo['stat'] = 'max' . $einfo['stat'];
-                    } else {
-                        $ir[$einfo['stat']] += $inc;
-                    }
-                } else {
-						if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-							$ir[$einfo['stat']] = min($ir[$einfo['stat']] + $inc, $ir['max' . $einfo['stat']]);
-							$einfo['stat'] = 'max' . $einfo['stat'];
-						}
-						else
-						{
-							$ir[$einfo['stat']] = max($ir[$einfo['stat']] - $inc, 0);
-						}
-                    }
-                if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                    $upd = $ir[$einfo['stat']];
-                }
-                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-                    $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                    $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                }
-				$db->query("INSERT INTO `equip_gains` VALUES ('{$userid}', '{$einfo['stat']}', '{$einfo['dir']}', '{$inc}', '{$_POST['type']}')");
-				$dir= ($einfo['dir'] == 'pos') ? "gained" : "lost" ;
-                if (empty($txt))
-                    $txt.=" {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
-                else
-                    $txt.=", {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
-			}
-        }
-        //Remove the item from their inventory, and equip it! Lets log that they equipped it, and give the user a friendly
-        //event saying they equipped their item as a weapon.
-        $api->UserTakeItem($userid, $r['itmid'], 1);
-        $db->query("UPDATE `users` SET `{$_POST['type']}` = {$r['itmid']} WHERE `userid` = {$userid}");
-        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their {$slot}.");
-        alert('success', "Success!", "You have successfully equipped {$r['itmname']} as your weapon in your {$slot_name}
-		    slot. You have {$txt} while you have this weapon equipped.", true, 'inventory.php', 'Back', true);
+		$slot = equipSlotParser($_POST['type']);
+        if ($ir[$_POST['type']] > 0) 
+			unequipUserSlot($userid, $_POST['type']);
+		equipUserSlot($userid, $_POST['type'], $r['itmid']);
+        alert('success', "Success!", "You have successfully equipped {$r['itmname']} as your {$slot}.", true, 'inventory.php', 'Back', true);
     } else {
         //Form to select what slot to equip the weapon to.
         echo "<h3>Equip a Weapon Form</h3>
@@ -254,120 +136,11 @@ function armor()
         }
         //Check that the user has an armor already equipped. If true, give them their old armor back, and log that it
         //was unequipped.
-        if ($ir['equip_armor'] > 0) {
-            $api->UserGiveItem($userid, $ir['equip_armor'], 1);
-			$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_POST['type']}'");
-			$statloss='';
-			$armorname = $db->fetch_single($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
-			if ($db->num_rows($sbq) > 0)
-			{
-				while ($sbr=$db->fetch_row($sbq))
-				{
-                    $stats =
-					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-					if ($sbr['direction'] == 'pos')
-					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-						}
-                        $mod='lost';
-                        $ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
-					}
-					else
-					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labour', 'iq'))) {
-							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-						}
-                        $mod='gained';
-                        $ir[$sbr['stat']] = $ir[$sbr['stat']]+$sbr['number'];
-					}
-					if (empty($statloss))
-                        $statloss .= "{$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
-                    else
-                        $statloss .= ", {$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
-					$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$_POST['type']}'");
-				}
-				alert('info',"Information!","You have {$statloss} when you unequipped your {$armorname}.",false);
-			}
-            $api->SystemLogsAdd($userid, 'equip', "Unequipped {$armorname} as their armor.");
-        }
-		$txt='';
-		for ($enum = 1; $enum <= 3; $enum++) {
-            if ($r["effect{$enum}_on"] == 'true') {
-                $stats =
-					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-                $einfo = unserialize($r["effect{$enum}"]);
-                if ($einfo['inc_type'] == "percent") {
-                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                        $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
-						$einfo['stat'] = 'max' . $einfo['stat'];
-                    }
-					else {
-                        $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
-                    }
-                } else {
-                    $inc = $einfo['inc_amount'];
-                }
-                if ($einfo['dir'] == "pos") {
-                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                        $ir['max' . $einfo['stat']] = $ir['max' . $einfo['stat']] + $einfo['inc_amount'];
-						$einfo['stat'] = 'max' . $einfo['stat'];
-                    } else {
-                        $ir[$einfo['stat']] += $inc;
-                    }
-                } else {
-						if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-							$ir[$einfo['stat']] = min($ir[$einfo['stat']] + $inc, $ir['max' . $einfo['stat']]);
-							$einfo['stat'] = 'max' . $einfo['stat'];
-						}
-						else
-						{
-							$ir[$einfo['stat']] = max($ir[$einfo['stat']] - $inc, 0);
-						}
-                    }
-                if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                    $upd = $ir[$einfo['stat']];
-                }
-                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-                    $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                    $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                }
-				$db->query("INSERT INTO `equip_gains` VALUES ('{$userid}', '{$einfo['stat']}', '{$einfo['dir']}', '{$inc}', '{$_POST['type']}')");
-				$dir= ($einfo['dir'] == 'pos') ? "gained" : "lost" ;
-				if (empty($txt))
-                    $txt.=" {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
-                else
-                    $txt.=", {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
-			}
-        }
-        //Take the item from their inventory, equip it, log that it was equipped, and give a sucecss message to the player.
-        $api->UserTakeItem($userid, $r['itmid'], 1);
-        $db->query("UPDATE `users`
-				  SET `equip_armor` = {$r['itmid']}
-				  WHERE `userid` = {$userid}");
-        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their armor.");
-        alert('success', "Success!", "You have equipped your {$r['itmname']} into your armor slot. You have {$txt} while you have this armor equipped.", true, 'inventory.php', 'Back', true);
+		$slot = equipSlotParser($_POST['type']);
+        if ($ir['equip_armor'] > 0) 
+			unequipUserSlot($userid, $_POST['type']);
+		equipUserSlot($userid, $_POST['type'], $r['itmid']);
+        alert('success', "Success!", "You have successfully equipped {$r['itmname']} as your {$slot}.", true, 'inventory.php', 'Back', true);
     } else {
         //Equip armor form.
         echo "<h3>Equip Armor Form</h3><hr />
@@ -433,11 +206,11 @@ function potion()
             alert('danger', "Uh Oh!", "You may not equip this item in your potion slot.", true, 'inventory.php');
             die($h->endpage());
         }
-        $db->query("UPDATE `users`
-				  SET `equip_potion` = {$r['itmid']}
-				  WHERE `userid` = {$userid}");
-        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their potion.");
-        alert('success',"Success!","You have successfully equipped {$r['itmname']} as your combat potion.",true,'inventory.php');
+		$slot = equipSlotParser($_POST['type']);
+		if ($ir[$_POST['type']] > 0) 
+			unequipUserSlot($userid, $_POST['type']);
+		equipUserSlot($userid, $_POST['type'], $r['itmid']);
+        alert('success',"Success!","You have successfully equipped {$r['itmname']} as your {$slot}.",true,'inventory.php');
         die($h->endpage());
     }
     else
@@ -492,14 +265,11 @@ function badge()
 			alert('danger', "Uh Oh!", "Cannot equip this item to your badge slot.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		if ($ir['equip_badge'] > 0)
-			item_add($userid,$ir['equip_badge'],1);
-		item_remove($userid,$r['itmid'],1);
-        $db->query("UPDATE `users`
-				  SET `equip_badge` = {$r['itmid']}
-				  WHERE `userid` = {$userid}");
-        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their badge.");
-        alert('success',"Success!","You have successfully equipped {$r['itmname']} as your badge.",true,'inventory.php');
+		$slot = equipSlotParser($_POST['type']);
+		if ($ir[$_POST['type']] > 0) 
+			unequipUserSlot($userid, $_POST['type']);
+		equipUserSlot($userid, $_POST['type'], $r['itmid']);
+        alert('success',"Success!","You have successfully equipped {$r['itmname']} as your {$slot}.",true,'inventory.php');
         die($h->endpage());
     }
     else
@@ -553,141 +323,11 @@ function ring()
 		$eir=$db->fetch_row($db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid} AND `equip_slot` = '{$_POST['type']}'"));
         //Check to see if the chosen slot has a weapon equipped to it already. If true, give them their item back, and
         //log the unequip.
-        if ($eir['itemid'] > 0) {
-            $api->UserGiveItem($userid, $eir['itemid'], 1);
-            $slot = ($_POST['type'] == 'equip_primary_ring') ? 'Primary Ring' : 'Secondary Ring';
-			$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_POST['type']}'");
-			$statloss='';
-			if ($db->num_rows($sbq) > 0)
-			{
-				while ($sbr=$db->fetch_row($sbq))
-				{
-                    $stats =
-					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-					if ($sbr['direction'] == 'pos')
-					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-						}
-                        $mod='lost';
-						$ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
-					}
-					else
-					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-						}
-                        $mod='gained';
-						$ir[$sbr['stat']] = $ir[$sbr['stat']]+$sbr['number'];
-					}
-                    if (empty($statloss))
-                        $statloss .= "{$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
-                    else
-                        $statloss .= ", {$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
-					$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$_POST['type']}'");
-				}
-				alert('info',"Information!","You have {$statloss} when you unequipped your ring.",false);
-			}
-            $weapname = $db->fetch_single($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$eir['itemid']}"));
-            $api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} as their {$slot}");
-        }
-        //Make the slot name friendly for the logger and user.
-        if ($_POST['type'] == "equip_ring_primary") {
-            $slot_name = "Primary Ring";
-            $slot = 'Primary Ring';
-        } else {
-            $slot_name = "Secondary Ring";
-            $slot = 'Secondary Ring';
-        }
-		$txt='';
-		$doend=0;
-		for ($enum = 1; $enum <= 3; $enum++) {
-            if ($r["effect{$enum}_on"] == 'true') {
-				if (empty($txt))
-				{
-					$doend=1;
-					$txt='You have ';
-				}
-                $stats =
-					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-                $einfo = unserialize($r["effect{$enum}"]);
-                if ($einfo['inc_type'] == "percent") {
-                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                        $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
-						$einfo['stat'] = 'max' . $einfo['stat'];
-                    }
-					else {
-                        $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
-                    }
-                } else {
-                    $inc = $einfo['inc_amount'];
-                }
-                if ($einfo['dir'] == "pos") {
-                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                        $ir['max' . $einfo['stat']] = $ir['max' . $einfo['stat']] + $einfo['inc_amount'];
-						$einfo['stat'] = 'max' . $einfo['stat'];
-                    } else {
-                        $ir[$einfo['stat']] += $inc;
-                    }
-                } else {
-						if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-							$ir[$einfo['stat']] = min($ir[$einfo['stat']] + $inc, $ir['max' . $einfo['stat']]);
-							$einfo['stat'] = 'max' . $einfo['stat'];
-						}
-						else
-						{
-							$ir[$einfo['stat']] = max($ir[$einfo['stat']] - $inc, 0);
-						}
-                    }
-                if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                    $upd = $ir[$einfo['stat']];
-                }
-                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-                    $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                    $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                }
-				$db->query("INSERT INTO `equip_gains` VALUES ('{$userid}', '{$einfo['stat']}', '{$einfo['dir']}', '{$inc}', '{$_POST['type']}')");
-				$dir= ($einfo['dir'] == 'pos') ? "gained" : "lost" ;
-                if ($doend == 1)
-                    $txt.=" {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
-                else
-                    $txt.=", {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
-			}
-			if ($doend == 1)
-			{
-				$txt.=' with this ring equipped.';
-				$doend=0;
-			}
-        }
-        //Remove the item from their inventory, and equip it! Lets log that they equipped it, and give the user a friendly
-        //event saying they equipped their item as a weapon.
-        $api->UserTakeItem($userid, $r['itmid'], 1);
-		$db->query("DELETE FROM `user_equips` WHERE `userid` = {$userid} AND `equip_slot` = '{$_POST['type']}'");
-        $db->query("INSERT INTO `user_equips` (`userid`, `equip_slot`, `itemid`) VALUES ('{$userid}', '{$_POST['type']}', '{$r['itmid']}')");
-        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their {$slot}.");
-        alert('success', "Success!", "You have successfully equipped {$r['itmname']} as your weapon in your {$slot_name}
-		    slot. {$txt}", true, 'inventory.php', 'Back', true);
+		$slot = equipSlotParser($_POST['type']);
+        if ($eir['itemid'] > 0) 
+            unequipUserSlot($userid, $_POST['type']);
+        equipUserSlot($userid, $_POST['type'], $r['itmid']);
+        alert('success', "Success!", "You have successfully equipped {$api->SystemItemIDtoName($r['itmid'])} as your {$slot}.", true, 'inventory.php', 'Back', true);
     } else {
         //Form to select what slot to equip the weapon to.
         echo "<h3>Equip Ring Form</h3>
@@ -744,132 +384,11 @@ function necklace()
         $eir=$db->fetch_row($db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid} AND `equip_slot` = '{$_POST['type']}'"));
         //Check to see if the chosen slot has a weapon equipped to it already. If true, give them their item back, and
         //log the unequip.
-        if ($eir['itemid'] > 0) {
-            $api->UserGiveItem($userid, $eir['itemid'], 1);
-            $slot = 'Necklace';
-			$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_POST['type']}'");
-			$statloss='';
-			if ($db->num_rows($sbq) > 0)
-			{
-				while ($sbr=$db->fetch_row($sbq))
-				{
-                    $stats =
-					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-					if ($sbr['direction'] == 'pos')
-					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-						}
-                        $mod='lost';
-						$ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
-					}
-					else
-					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-						}
-                        $mod='gained';
-						$ir[$sbr['stat']] = $ir[$sbr['stat']]+$sbr['number'];
-					}
-                    if (empty($statloss))
-                        $statloss .= "{$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
-                    else
-                        $statloss .= ", {$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
-					$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$_POST['type']}'");
-				}
-				alert('info',"Information!","You have {$statloss} when you unequipped your necklace.",false);
-			}
-            $weapname = $db->fetch_single($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$eir['itemid']}"));
-            $api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} as their {$slot}");
-        }
-		$txt='';
-		$doend=0;
-		for ($enum = 1; $enum <= 3; $enum++) {
-            if ($r["effect{$enum}_on"] == 'true') {
-				if (empty($txt))
-				{
-					$doend=1;
-					$txt='You have ';
-				}
-                $stats =
-					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-                $einfo = unserialize($r["effect{$enum}"]);
-                if ($einfo['inc_type'] == "percent") {
-                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                        $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
-						$einfo['stat'] = 'max' . $einfo['stat'];
-                    }
-					else {
-                        $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
-                    }
-                } else {
-                    $inc = $einfo['inc_amount'];
-                }
-                if ($einfo['dir'] == "pos") {
-                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                        $ir['max' . $einfo['stat']] = $ir['max' . $einfo['stat']] + $einfo['inc_amount'];
-						$einfo['stat'] = 'max' . $einfo['stat'];
-                    } else {
-                        $ir[$einfo['stat']] += $inc;
-                    }
-                } else {
-						if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-							$ir[$einfo['stat']] = min($ir[$einfo['stat']] + $inc, $ir['max' . $einfo['stat']]);
-							$einfo['stat'] = 'max' . $einfo['stat'];
-						}
-						else
-						{
-							$ir[$einfo['stat']] = max($ir[$einfo['stat']] - $inc, 0);
-						}
-                    }
-                if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                    $upd = $ir[$einfo['stat']];
-                }
-                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-                    $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                    $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                }
-				$db->query("INSERT INTO `equip_gains` VALUES ('{$userid}', '{$einfo['stat']}', '{$einfo['dir']}', '{$inc}', '{$_POST['type']}')");
-				$dir= ($einfo['dir'] == 'pos') ? "gained" : "lost" ;
-                if ($doend == 1)
-                    $txt.=" {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
-                else
-                    $txt.=", {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
-			}
-			if ($doend == 1)
-			{
-				$txt.=' with this ring equipped.';
-				$doend=0;
-			}
-        }
-        //Remove the item from their inventory, and equip it! Lets log that they equipped it, and give the user a friendly
-        //event saying they equipped their item as a weapon.
-        $api->UserTakeItem($userid, $r['itmid'], 1);
-		$db->query("DELETE FROM `user_equips` WHERE `userid` = {$userid} AND `equip_slot` = '{$_POST['type']}'");
-        $db->query("INSERT INTO `user_equips` (`userid`, `equip_slot`, `itemid`) VALUES ('{$userid}', '{$_POST['type']}', '{$r['itmid']}')");
-        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their necklace.");
-        alert('success', "Success!", "You have successfully equipped {$r['itmname']} as your necklace. {$txt}", true, 'inventory.php', 'Back', true);
+        $slot = equipSlotParser($_POST['type']);
+        if ($eir['itemid'] > 0) 
+            unequipUserSlot($userid, $_POST['type']);
+        equipUserSlot($userid, $_POST['type'], $r['itmid']);
+        alert('success', "Success!", "You have successfully equipped {$api->SystemItemIDtoName($r['itmid'])} as your {$slot}.", true, 'inventory.php', 'Back', true);
     } else {
         //Equip armor form.
         echo "<h3>Equip Necklace Form</h3><hr />
@@ -921,132 +440,11 @@ function pendant()
         $eir=$db->fetch_row($db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid} AND `equip_slot` = '{$_POST['type']}'"));
         //Check to see if the chosen slot has a weapon equipped to it already. If true, give them their item back, and
         //log the unequip.
-        if ($eir['itemid'] > 0) {
-            $api->UserGiveItem($userid, $eir['itemid'], 1);
-            $slot = 'Pendant';
-			$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$userid} and `slot` = '{$_POST['type']}'");
-			$statloss='';
-			if ($db->num_rows($sbq) > 0)
-			{
-				while ($sbr=$db->fetch_row($sbq))
-				{
-                    $stats =
-					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-					if ($sbr['direction'] == 'pos')
-					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$userid}");
-						}
-                        $mod='lost';
-						$ir[$sbr['stat']] = $ir[$sbr['stat']]-$sbr['number'];
-					}
-					else
-					{
-						if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-							$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-						} elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) {
-							$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$userid}");
-						}
-                        $mod='gained';
-						$ir[$sbr['stat']] = $ir[$sbr['stat']]+$sbr['number'];
-					}
-                    if (empty($statloss))
-                        $statloss .= "{$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
-                    else
-                        $statloss .= ", {$mod} " . number_format($sbr['number']) . " {$stats[$sbr['stat']]}";
-					$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$_POST['type']}'");
-				}
-				alert('info',"Information!","You have {$statloss} when you unequipped your necklace.",false);
-			}
-            $weapname = $db->fetch_single($db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid` = {$eir['itemid']}"));
-            $api->SystemLogsAdd($userid, 'equip', "Unequipped {$weapname} as their {$slot}");
-        }
-		$txt='';
-		$doend=0;
-		for ($enum = 1; $enum <= 3; $enum++) {
-            if ($r["effect{$enum}_on"] == 'true') {
-				if (empty($txt))
-				{
-					$doend=1;
-					$txt='You have ';
-				}
-                $stats =
-					array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-                $einfo = unserialize($r["effect{$enum}"]);
-                if ($einfo['inc_type'] == "percent") {
-                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                        $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
-						$einfo['stat'] = 'max' . $einfo['stat'];
-                    }
-					else {
-                        $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
-                    }
-                } else {
-                    $inc = $einfo['inc_amount'];
-                }
-                if ($einfo['dir'] == "pos") {
-                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                        $ir['max' . $einfo['stat']] = $ir['max' . $einfo['stat']] + $einfo['inc_amount'];
-						$einfo['stat'] = 'max' . $einfo['stat'];
-                    } else {
-                        $ir[$einfo['stat']] += $inc;
-                    }
-                } else {
-						if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-							$ir[$einfo['stat']] = min($ir[$einfo['stat']] + $inc, $ir['max' . $einfo['stat']]);
-							$einfo['stat'] = 'max' . $einfo['stat'];
-						}
-						else
-						{
-							$ir[$einfo['stat']] = max($ir[$einfo['stat']] - $inc, 0);
-						}
-                    }
-                if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                    $upd = $ir[$einfo['stat']];
-                }
-                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) {
-                    $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                    $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                }
-				$db->query("INSERT INTO `equip_gains` VALUES ('{$userid}', '{$einfo['stat']}', '{$einfo['dir']}', '{$inc}', '{$_POST['type']}')");
-				$dir= ($einfo['dir'] == 'pos') ? "gained" : "lost" ;
-                if ($doend == 1)
-                    $txt.=" {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
-                else
-                    $txt.=", {$dir} " . number_format($inc) . " {$stats[$einfo['stat']]}";
-			}
-			if ($doend == 1)
-			{
-				$txt.=' with this pendant equipped.';
-				$doend=0;
-			}
-        }
-        //Remove the item from their inventory, and equip it! Lets log that they equipped it, and give the user a friendly
-        //event saying they equipped their item as a weapon.
-        $api->UserTakeItem($userid, $r['itmid'], 1);
-		$db->query("DELETE FROM `user_equips` WHERE `userid` = {$userid} AND `equip_slot` = '{$_POST['type']}'");
-        $db->query("INSERT INTO `user_equips` (`userid`, `equip_slot`, `itemid`) VALUES ('{$userid}', '{$_POST['type']}', '{$r['itmid']}')");
-        $api->SystemLogsAdd($userid, 'equip', "Equipped {$r['itmname']} as their pendant.");
-        alert('success', "Success!", "You have successfully equipped {$r['itmname']} as your pendant. {$txt}", true, 'inventory.php', 'Back', true);
+        $slot = equipSlotParser($_POST['type']);
+        if ($eir['itemid'] > 0) 
+            unequipUserSlot($userid, $_POST['type']);
+        equipUserSlot($userid, $_POST['type'], $r['itmid']);
+        alert('success', "Success!", "You have successfully equipped {$api->SystemItemIDtoName($r['itmid'])} as your {$slot}.", true, 'inventory.php', 'Back', true);
     } else {
         //Equip armor form.
         echo "<h3>Equip Pendant Form</h3><hr />

@@ -1,4 +1,6 @@
 <?php
+$expMod=1.0;
+$macropage = ('mine.php');
 require('globals.php');
 echo "<h3>Farmlands</h3><hr />";
 if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
@@ -87,7 +89,7 @@ echo "
 		</div>
 		<div class='col-sm'>
 			<div class='progress' style='height: 1rem;'>
-				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$FU['farm_xp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$frmexp}%'>
+				<div class='progress-bar bg-warning progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$FU['farm_xp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$frmexp}%'>
 					<span>
 						{$frmexp}% (" . number_format($FU['farm_xp']) . " / " . number_format($FU['xp_needed']) . ")
 					</span>
@@ -384,7 +386,7 @@ function fertilize()
 }
 function harvest()
 {
-	global $db,$userid,$api,$h,$ir,$farmconfig,$FU;
+	global $db,$userid,$api,$h,$ir,$farmconfig,$FU,$expMod;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
     if (empty($_GET['id'])) 
 	{
@@ -413,7 +415,7 @@ function harvest()
 			die($h->endpage());
 		}
 		$cropOutput = round(Random($sr['seed_qty']/2, $sr['seed_qty']*2));
-		$xp = round($cropOutput * $sr['seed_xp']);
+		$xp = round(($cropOutput * $sr['seed_xp']) * $expMod);
 		$api->UserGiveItem($userid, $sr['seed_output'], $cropOutput);
 		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$xp} WHERE `userid` = {$userid}");
 		if (($r['farm_wellness']-$farmconfig['wellnessPerHarv']) <= 0)

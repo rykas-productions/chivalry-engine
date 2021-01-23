@@ -32,9 +32,17 @@ function index()
     global $db, $userid, $api;
     echo "
 	<form>
-		Search Item Requests
-		" . itemrequest_dropdown('item') . "
-		<input type='submit' value='Search' class='btn btn-primary'>
+		<div class='row'>
+			<div class='col-3'>
+				Search Item Requests
+			</div>
+			<div class='col'>
+				" . itemrequest_dropdown('item') . "
+			</div>
+			<div class='col-2'>
+				<input type='submit' value='Search' class='btn btn-primary'>
+			</div>
+		</div>
 	</form>
 	<hr />
 	[<a href='?action=add'>Add Request</a>]
@@ -357,11 +365,11 @@ function add()
         $first = 1;
     }
     while ($r = $db->fetch_row($q)) {
-        $ret .= "\n<option value='{$r['itmid']}'";
-		if (!isset($count[$r['itmid']]))
-			$count[$r['itmid']]=0;
+        if (!isset($count[$r['itmid']]))
+            $count[$r['itmid']]=0;
 		if ($count[$r['itmid']] == 0)
 		{
+            $ret .= "\n<option value='{$r['itmid']}'";
 			if ($selected == $r['itmid'] || $first == 0) {
 				$ret .= " selected='selected'";
 				$first = 1;

@@ -112,7 +112,10 @@ if (!$itmid) {
 								while ($sr=$db->fetch_row($sq))
 								{
 									$shop2=$sr['mine_location'];
-									$towns.= "<a href='travel.php?to={$shop}'>{$api->SystemTownIDtoName($shop)}</a>, ";
+									if (empty($towns))
+										$towns.= "<a href='travel.php?to={$shop2}'>{$api->SystemTownIDtoName($shop2)}</a>";
+									else
+										$towns.= "; <a href='travel.php?to={$shop2}'>{$api->SystemTownIDtoName($shop2)}</a>";
 								}
 								echo "{$towns}</div>
 							</div><br />";

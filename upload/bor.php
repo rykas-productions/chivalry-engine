@@ -8,7 +8,7 @@
 */
 require('globals.php');
 $tresder = Random(100, 999);
-$multipler=1.25;
+$multipler=1.0;
 echo "<h3>Box of Random</h3><hr />";
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
@@ -179,7 +179,13 @@ else
     $api->SystemLogsAdd($userid,"bor","Received nothing.");
 }
 echo " You can open another {$left} Boxes of Random today.<hr />
-<a href='?tresde={$tresder}'>Open Another</a><br />
-<a href='explore.php'>Back to Town</a>";
+<div class='row'>
+	<div class='col'>
+		<a href='?tresde={$tresder}' class='btn btn-primary'>Open Another</a>
+	</div>
+	<div class='col'>
+		<a href='inventory' class='btn btn-danger'>Inventory</a>
+	</div>
+</div>";
 $api->SystemLogsAdd($userid, 'itemuse', "Used Box of Random.");
 $h->endpage();

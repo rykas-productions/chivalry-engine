@@ -59,8 +59,7 @@ if ($ir['rewarded'] == 0)
 	}
 	elseif ($reward <= 64 && $reward > 60)
 	{
-		$endtime=time()+($guardTime*60);
-		$db->query("UPDATE `user_settings` SET `protection` = {$endtime} WHERE `userid` = {$userid}");
+		userGiveEffect($userid, "basic_protection", ($guardTime*60));
 		$api->GameAddNotification($userid,"We got your back {$ir['username']}! Someone was about to hit on you, so we bought you some protection. Its your login gift for the day. Thanks for playing CID!");
 		$api->SystemLogsAdd($userid, "loginreward", "Received {$guardTime} minutes of Protection.");
 	}
@@ -158,17 +157,28 @@ if ($ir['rewarded'] == 0)
 			$api->UserGiveCurrency($userid,'secondary',750);
 		addToEconomyLog('Daily Reward', 'token', 750);
 	}
+	$month = date('n');
+	$day = date('j');
 	// Month = April
-	if (date('n') == 4)
+	if ($month == 4)
 	{
 		
 	}
-	//Give login rewards for 2020 big bang event.
-	if ((time() < 1591401600))
+	//Month = October
+	if ($month == 10)
 	{
-		$api->UserGiveItem($userid, 351, 1);
-		$api->UserGiveItem($userid, 352, 1);
+		//Halloween
+		if ($day == 31)
+		{
+
+		}
+	}
+	if ($month == 11)
+	{
+		if ($day == 26 || $day == 27 || $day == 28 || $day == 29 || $day == 30)
+		{
+
+		}
 	}
 	$db->query("UPDATE `users` SET `rewarded` = 1 WHERE `userid` = {$userid}");
-	
 }

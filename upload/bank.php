@@ -75,7 +75,7 @@ function index()
 										<div class='col'>
 											<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' id='form_bank_wallet' required='1' name='deposit' value='{$ir['primary_currency']}'>
 										</div>
-										<div class='col-4 col-md-3'>
+										<div class='col-5 col-sm-4 col-md-3'>
 											<input type='submit' value='Deposit' class='btn btn-primary' id='cityDeposit'>
 										</div>
 									</div>
@@ -95,7 +95,7 @@ function index()
 										<div class='col'>
 											<input type='number' min='1' max='{$ir['bank']}' class='form-control' required='1' id='form_bank_acc' name='withdraw' value='{$ir['bank']}'>
 										</div>
-										<div class='col-4 col-md-3'>
+										<div class='col-6 col-sm-4 col-md-3'>
 											<input type='submit' value='Withdraw' class='btn btn-primary' id='cityWithdraw'>
 										</div>
 									</div>
@@ -106,29 +106,36 @@ function index()
 					</div>
 				</div>";
 	$q=$db->query("/*qc=on*/SELECT * FROM `bank_investments` WHERE `userid` = {$userid}");
-	if ($db->num_rows($q) == 0)
+	$calculatedMax = ceil(1 * levelMultiplier($ir['level']));
+	while ($r = $db->fetch_row($q))
 	{
-		echo "[<a href='investment.php'>Start Investment</a>]";
+		echo "
+		<div class='row'>
+			<div class='col-lg'>
+				<div class='card'>
+					<div class='card-body'>
+						<div class='row'>
+							<div class='col-8 col-sm-6 col-md-4'>
+								" . number_format($r['amount']) . " Copper Coins
+							</div>
+							<div class='col-4 col-sm-2'>
+								{$r['interest']}%
+							</div>
+							<div class='col-12 col-sm-4 col-md-3'>
+								{$r['days_left']} Days Left
+							</div>
+							<div class='col-12 col-md-3'>
+								<a href='investment.php?terminate={$r['invest_id']}' class='btn btn-danger btn-block'>Terminate</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>";
 	}
-	else
+	if ($db->num_rows($q) < $calculatedMax)
 	{
-		$r=$db->fetch_row($q);
-		echo "<table class='table table-bordered'>
-				<tr>
-					<td>
-						" . number_format($r['amount']) . " Copper Coins
-					</td>
-					<td>
-						{$r['interest']}%
-					</td>
-					<td>
-						{$r['days_left']} Days Left
-					</td>
-					<td>
-						<a href='investment.php?terminate'>Terminate Investment</a>
-					</td>
-				</tr>
-			</table>";
+		echo "<hr /><a href='investment.php' class='btn btn-success btn-block'>Start Investment</a>";
 	}
 }
 $h->endpage();

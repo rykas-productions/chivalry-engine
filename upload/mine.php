@@ -67,26 +67,31 @@ switch ($_GET['action']) {
 }
 function home()
 {
-    global $MUS, $db, $api, $ir;
+    global $MUS, $db, $api, $ir, $userid;
     $mineen = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
     $minexp = min(round($MUS['miningxp'] / $MUS['xp_needed'] * 100), 100);
-	if ($MUS['mine_boost'] > time())
+	if (userHasEffect($userid, "mining_xp_boost"))
 	{
-		$xpboostendtime=TimeUntil_Parse($MUS['mine_boost']);
+		$xpboostendtime=TimeUntil_Parse(returnEffectDone($userid, "mining_xp_boost"));
 		alert('info',"Experience Boost!","You have increased experience gains while mining for the next {$xpboostendtime}!",false);
 	}
     echo "Welcome to the dangerous mines, brainless moron! If you're lucky, you'll strike riches. If not... the mine
         will eat you alive.
 	<hr />
 	<div class='row'>
-        <div class='col-sm-3' align='left'>
+        <div class='col-md-4 col-xl-3'>
 			Mining Energy - {$mineen}%<br />
-			<small>
-				[<a href='?action=buypower'>Buy Power Sets</a>]<br />
-				[<a href='?action=potion'>Drink Mining Potion</a>]
+			<small><div class='row'>
+				<div class='col'>
+					[<a href='?action=buypower'>Buy Power Sets</a>]
+				</div>
+				<div class='col'>
+					[<a href='?action=potion'>Drink Mining Potion</a>]
+				</div>
+			</div>
 			</small>
 		</div>
-		<div class='col-sm'>
+		<div class='col'>
 			<div class='progress' style='height: 1rem;'>
 				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningpower']}' style='width:{$mineen}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'>
 					<span>
@@ -98,11 +103,17 @@ function home()
 	</div>
 	<hr />
 	<div class='row'>
-        <div class='col-sm-3' align='left'>
+        <div class='col-md-4 col-xl-3'>
 			Mining Experience - {$minexp}%<br />
 			<small>
-				Mining Level {$MUS['mining_level']}<br />
-				[<a href='?action=herb'>Use Mining Herb</a>]
+				<div class='row'>
+					<div class='col'>
+						Mining Level {$MUS['mining_level']}
+					</div>
+					<div class='col'>
+						[<a href='?action=herb'>Use Mining Herb</a>]
+					</div>
+				</div>
 			</small>
 		</div>
 		<div class='col-sm'>
@@ -114,47 +125,55 @@ function home()
 				</div>
 			</div>
 		</div>
-	</div>
-	<hr />
-    <div class='row'>
-		<div class='col-sm'>
-			<h4>Location</h4>
-		</div>
-		<div class='col-sm'>
-			<h4>Requirements</h4>
-		</div>
-		<div class='col-sm'>
-			<h4>Mine</h4>
-		</div>
-	</div>
-	<hr />";
+	</div>";
     $minesql = $db->query("/*qc=on*/SELECT * FROM `mining_data` ORDER BY `mine_level` ASC");
     while ($mines = $db->fetch_row($minesql)) 
 	{
 		$specialnumber=((getSkillLevel($ir['userid'],15)*10)/100);
 		$mines['mine_iq']=$mines['mine_iq']-($mines['mine_iq']*$specialnumber);
 		
-		$mininglevel = ($MUS['mining_level'] >= $mines['mine_level']) ? "<span class='text-success'>Mining Level: {$mines['mine_level']}</span>" : "<span class='text-danger'>Mining Level: {$mines['mine_level']}</span>";
-		$iq = ($ir['iq'] >= $mines['mine_iq']) ? "<span class='text-success'>Minimum IQ: " . number_format($mines['mine_iq']) . "</span>" : "<span class='text-danger'>Minimum IQ: " . number_format($mines['mine_iq']) . "</span>";
-		$pickaxe = ($api->UserHasItem($ir['userid'],$mines['mine_pickaxe'],1)) ? "<span class='text-success'>Required Pickaxe: " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>" : "<span class='text-danger'>Required Pickaxe: " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>";
+		$mininglevel = ($MUS['mining_level'] >= $mines['mine_level']) ? "<span class='text-success'>Level: {$mines['mine_level']}</span>" : "<span class='text-danger'>Level: {$mines['mine_level']}</span>";
+		$iq = ($ir['iq'] >= $mines['mine_iq']) ? "<span class='text-success'>IQ: " . number_format($mines['mine_iq']) . "</span>" : "<span class='text-danger'>IQ: " . number_format($mines['mine_iq']) . "</span>";
+		$pickaxe = ($api->UserHasItem($ir['userid'],$mines['mine_pickaxe'],1)) ? "<span class='text-success'>Pickaxe: " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>" : "<span class='text-danger'>Pickaxe: " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>";
 		$town = ($ir['location'] == $mines['mine_location']) ? "<span class='text-success'>" . $api->SystemTownIDtoName($mines['mine_location']) . "</span>" : "<span class='text-danger'>" . $api->SystemTownIDtoName($mines['mine_location']) . "</span>";
 		
-		echo "<div class='row'>";
-		echo "<div class='col-sm'>
-				{$town}<br />
-				<small><a href='travel.php?to={$mines['mine_location']}'>Travel To</a></small>
+		echo "<div class='row'>
+				<div class='col-12'>
+					<div class='card'>
+						<div class='card-body'>
+							<div class='row'>
+								<div class='col-lg-2'>
+									<div class='row'>
+										<div class='col-8 col-lg-12'>
+											{$town}
+										</div>
+										<div class='col-4 col-lg-12'>
+											<small><a href='travel.php?to={$mines['mine_location']}'>Travel</a></small>
+										</div>
+									</div>
+								</div>
+								
+								<div class='col-lg-8'>
+									<div class='row'>
+										<div class='col-6 col-lg'>
+											{$mininglevel}
+										</div>
+										<div class='col-6 col-lg'>
+											{$iq}
+										</div>
+										<div class='col-12 col-lg'>
+											{$pickaxe}
+										</div>
+									</div>									
+								</div>
+								<div class='col-lg-2'>
+									<a href='?action=mine&spot={$mines['mine_id']}' class='btn btn-primary btn-block'>Mine</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>";
-			echo "
-			<div class='col-sm'>
-				{$mininglevel}<br />
-				{$iq}<br />
-				{$pickaxe}
-			</div>";
-			echo "
-			<div class='col-sm'>
-				<a href='?action=mine&spot={$mines['mine_id']}'>Mine</a>
-			</div>";
-			echo "</div><hr />";
     }
 
 }
@@ -287,8 +306,10 @@ function mine()
 					$flakes = $flakes + ($flakes * $itemmulti);
 					$xpgain = (($flakes * 0.35) * $spot)*$expMod;
 					$flakes = round($flakes);
-					if ($MUS['mine_boost'] > time())
-						$xpgain = $xpgain*2;
+					if (userHasEffect($userid, "mining_xp_boost"))
+					{
+						$xpgain = $xpgain * (returnEffectMultiplier($userid, "mining_xp_boost") + 1);
+					}
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']) . ". You have gained " . number_format($xpgain) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_copper_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$flakes} x {$api->SystemItemIDtoName($MSI['mine_copper_item'])}.");
@@ -302,8 +323,10 @@ function mine()
 					$flakes = $flakes + ($flakes * $itemmulti);
 					$xpgain = (($flakes * 0.55) * $spot)*$expMod;
 					$flakes = round($flakes);
-					if ($MUS['mine_boost'] > time())
-						$xpgain = $xpgain*2;
+					if (userHasEffect($userid, "mining_xp_boost"))
+					{
+						$xpgain = $xpgain * (returnEffectMultiplier($userid, "mining_xp_boost") + 1);
+					}
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_silver_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$flakes} x {$api->SystemItemIDtoName($MSI['mine_silver_item'])}.");
@@ -316,8 +339,10 @@ function mine()
 					$flakes = $flakes + ($flakes * $itemmulti);
 					$xpgain = (($flakes * 0.75) * $spot)*$expMod;
 					$flakes = round($flakes);
-					if ($MUS['mine_boost'] > time())
-						$xpgain = $xpgain*2;
+					if (userHasEffect($userid, "mining_xp_boost"))
+					{
+						$xpgain = $xpgain * (returnEffectMultiplier($userid, "mining_xp_boost") + 1);
+					}
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_gold_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$flakes} x {$api->SystemItemIDtoName($MSI['mine_gold_item'])}.");
@@ -328,6 +353,10 @@ function mine()
 					$itemgive = 2;
 				$formula=(14 * $MUS['mining_level'])*$expMod;
 				$xpgain = round(Random($formula/2,$formula*2), 2);
+				if (userHasEffect($userid, "mining_xp_boost"))
+				{
+					$xpgain = $xpgain * (returnEffectMultiplier($userid, "mining_xp_boost") + 1);
+				}
 				if ($MUS['mine_boost'] > time())
 						$xpgain = $xpgain*2;
                 alert('success', "Success!", "You have carefully excavated out {$itemgive} " . $api->SystemItemIDtoName($MSI['mine_gem_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
@@ -369,16 +398,15 @@ function mining_levelup()
 function mine_item()
 {
 	global $db, $userid, $api, $h, $MUS;
-	if ($MUS['mine_boost'] > time())
+	if (userHasEffect($userid, "mining_xp_boost"))
 	{
 		alert('danger',"Uh Oh!","Please let the affects of the herb wear off before consuming another. Results could be... dangerous...",true,'inventory.php');
 		die($h->endpage());
 	}
 	if ($api->UserHasItem($userid, 177, 1))
 	{
-		alert('success',"Success!","You've consumed a set of herbs and feel strangely relaxed, but ready to learn more while you mine! The affects will wear off in an hour.",true,'inventory.php');
-		$wornofftime=time()+3600;
-		$db->query("UPDATE `mining` SET `mine_boost` = {$wornofftime} WHERE `userid` = {$userid}");
+		alert('success',"Success!","You've consumed a set of herbs and feel strangely relaxed, but ready to learn more while you mine! The effects will wear off in an hour.",true,'inventory.php');
+		userGiveEffect($userid, "mining_xp_boost", 3600);
 		$api->UserTakeItem($userid, 177, 1);
 	}
 	else

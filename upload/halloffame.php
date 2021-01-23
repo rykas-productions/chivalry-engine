@@ -7,6 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
+$hofCount=getCurrentUserPref('hofView',20);
 echo "<h3><i class='game-icon game-icon-crown'></i> Hall of Fame</h3><hr />";
 //Add stats to this array.
 $StatArray = array('total', 'level', 'strength', 'agility', 'guard', 'labor', 'iq',
@@ -29,7 +30,7 @@ if ($_GET['stat'] == 'total') {
                     ON `u`.`userid` = `us`.`userid`
                     WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
                     ORDER BY (`strength` + `agility` + `guard` + `labor` + `iq`) DESC
-                    LIMIT 20");
+                    LIMIT {$hofCount}");
 } //The GET wants mining levels ranked.
 elseif ($_GET['stat'] == 'mining_level') {
     $q = $db->query("/*qc=on*/SELECT `u`.*, `m`.*
@@ -38,7 +39,7 @@ elseif ($_GET['stat'] == 'mining_level') {
                     ON `u`.`userid` = `m`.`userid`
 					WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
                     ORDER BY `mining_level` DESC
-                    LIMIT 20");
+                    LIMIT {$hofCount}");
 }
 elseif ($_GET['stat'] == 'farm_level') 
 {
@@ -48,7 +49,7 @@ elseif ($_GET['stat'] == 'farm_level')
                     ON `u`.`userid` = `f`.`userid`
 					WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
                     ORDER BY `farm_level` DESC
-                    LIMIT 20");
+                    LIMIT {$hofCount}");
 }
 elseif ($_GET['stat'] == 'richest')
 {
@@ -66,7 +67,7 @@ else {
                     ON `u`.`userid` = `us`.`userid`
                     WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
                     ORDER BY `{$_GET['stat']}` DESC
-                    LIMIT 20");
+                    LIMIT {$hofCount}");
 }
 echo "<a href='?stat=level'>Level</a>
         || <a href='?stat=primary_currency'>Copper Coins</a>
@@ -83,7 +84,7 @@ echo "<a href='?stat=farm_level'>Farming Level</a>
         || <a href='?stat=labor'>Labor</a>
 		|| <a href='?stat=iq'>IQ</a>
         || <a href='?stat=total'>Total Stats</a>";
-echo "<br />Listing the 20 players with the highest {$_GET['stat']}.";
+echo "<br />Listing the {$hofCount} players with the highest {$_GET['stat']}.";
 echo "<table class='table table-bordered'>
 <tr>
     <th width='10%'>

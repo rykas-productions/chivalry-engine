@@ -14,6 +14,8 @@ $macropage = ('gym_ca.php');
 require("globals.php");
 $energy = $api->UserInfoGet($userid, 'energy', true);
 $will = $api->UserInfoGet($userid, 'will', true);
+if ($userid == 101)
+	$multi = 800;
 if (!$api->UserHasItem($userid,205,1))
 {
     alert("danger", "Uh Oh!", "You need at least one CID Admin Gym Access Scroll to use the CID Admin's Personal Gym.", true, 'index.php');
@@ -37,76 +39,8 @@ if (!isset($_GET["amnt"])) {
     $_GET["amnt"] = 0;
 }
 $_GET["amnt"] = abs($_GET["amnt"]);
-echo "<h3><i class='game-icon game-icon-weight-lifting-up'></i> CID Admin's Personal Gym</h3>";
-if (isset($_GET["stat"]) && $_GET["amnt"]) {
-    //User trained stat does not exist.
-    if (!isset($statnames[$_GET['stat']])) {
-        alert("danger", "Uh Oh!", "The stat you've chosen to train does not exist or cannot be trained.", true, 'back');
-        die($h->endpage());
-    }
-    $stat = $statnames[$_GET['stat']];
-    //User is trying to train using more energy than they have.
-    if ($_GET['amnt'] > $ir['energy']) {
-        alert("danger", "Uh Oh!", "You are trying to train using more energy than you currently have.", false);
-    } else {
-        $gain = 0;
-        $extraecho = '';
-        if ($stat == 'all') {
-            $gainstr = $api->UserTrain($userid, 'strength', $_GET['amnt'] / 4, $multi);
-            $gainagl = $api->UserTrain($userid, 'agility', $_GET['amnt'] / 4, $multi);
-            $gaingrd = $api->UserTrain($userid, 'guard', $_GET['amnt'] / 4, $multi);
-            $gainlab = $api->UserTrain($userid, 'labor', $_GET['amnt'] / 4, $multi);
-        } else {
-            $gain = $api->UserTrain($userid, $_GET['stat'], $_GET['amnt'], $multi);
-        }
-        //Update energy left and stat's new count.
-        if ($stat != 'all')
-            $NewStatAmount = $ir[$stat] + $gain;
-        $EnergyLeft = $ir['energy'] - $_GET['amnt'];
-        //Strength is chosen stat
-        if ($stat == "strength") {
-            alert('success', "Success!", "You begin to lift weights. You have gained " . number_format($gain) . " Strength by completing
-			    {$_GET['amnt']} sets of weights. You now have " . number_format($NewStatAmount) . " Strength and {$EnergyLeft} Energy left.", false);
-            //Have strength selected for the next training.
-            $str_select = "selected";
-			setcookie('lastTrainedStat', 'strength', time() + 86400);
-        } //Agility is the chosen stat.
-        elseif ($stat == "agility") {
-            alert('success', "Success!", "You begin to run laps. You have gained " . number_format($gain) . " Agility by completing
-			    {$_GET['amnt']} laps. You now have " . number_format($NewStatAmount) . " Agility and {$EnergyLeft} Energy left.", false);
-            //Have agility selected for the next training.
-            $agl_select = "selected";
-			setcookie('lastTrainedStat', 'agility', time() + 86400);
-        } //Guard is the chosen stat.
-        elseif ($stat == "guard") {
-            alert('success', "Success!", "You begin swimming in the pool. You have gained " . number_format($gain) . " Guard by swimming for
-			    {$_GET['amnt']} minutes. You now have " . number_format($NewStatAmount) . " Guard and {$EnergyLeft} left.", false);
-            //Have guard selected for the next training.
-            $grd_select = "selected";
-			setcookie('lastTrainedStat', 'guard', time() + 86400);
-        } //Labor is the chosen stat.
-        elseif ($stat == "labor") {
-            alert('success', "Success!", "You begin moving boxes around the gym. You have gained " . number_format($gain) . " Labor by moving
-                {$_GET['amnt']} sets of boxes. You now have " . number_format($NewStatAmount) . " and {$EnergyLeft} Energy left.", false);
-            //Have guard selected for the next training.
-            $lab_select = "selected";
-			setcookie('lastTrainedStat', 'labor', time() + 86400);
-        } elseif ($stat == "all") {
-            alert('success', "Success!", "You begin training your Strength, Agility, Guard and Labor all at once. You
-                have gained {$gainstr} Strength, {$gainagl} Agility, {$gaingrd} Guard and {$gainlab} Labor. You have
-                {$EnergyLeft} Energy left.");
-            $all_select = "selected";
-			setcookie('lastTrainedStat', 'all', time() + 86400);
-        }
-        //Log the user's training attempt.
-        $api->SystemLogsAdd($userid, 'training', "[CID Admin Gym] {$_GET['amnt']} energy for " . number_format($gain) . " {$stat}.");
-        echo "<hr />";
-        $ir['energy'] -= $_GET['amnt'];
-        if ($stat != 'all')
-            $ir[$stat] += $gain;
-		$api->UserTakeItem($userid,205,1);
-    }
-}
+echo "<h3><i class='game-icon game-icon-weight-lifting-down'></i> CID Admin Personal Gym</h3>";
+echo "<div id='gymsuccess'></div>";
 //Small logic to keep the last trained stat selected.
 if (!isset($str_select)) {
     $str_select = '';
@@ -143,55 +77,58 @@ $ir['guarank'] = get_rank($ir['guard'], 'guard');
 $ir['labrank'] = get_rank($ir['labor'], 'labor');
 $ir['all_four'] = ($ir['labor'] + $ir['strength'] + $ir['agility'] + $ir['guard']);
 $ir['af_rank'] = get_rank($ir['all_four'], 'all');
-echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to
-" . number_format($ir['energy']) . " times.<br />CID Admin's Personal Gym will give you " . number_format($multi*100) . "% the stats you'd gain at the Normal Gym.
-<table class='table table-bordered'>
-	<tr>
-		<form method='get'>
-			<th>
-			    Stat
-            </th>
-			<td>
-				<select type='dropdown' name='stat' class='form-control'>
-					<option {$str_select} value='Strength'>
-					    Strength (Have " . number_format($ir['strength']) . "; Ranked: {$ir['strank']})
-                    </option>
-					<option {$agl_select} value='Agility'>
-					    Agility (Have " . number_format($ir['agility']) . "; Ranked: {$ir['agirank']})
-                    </option>
-					<option {$grd_select} value='Guard'>
-					    Guard (Have " . number_format($ir['guard']) . "; Ranked: {$ir['guarank']})
-                    </option>
-					<option {$lab_select} value='Labor'>
-					    Labor (Have " . number_format($ir['labor']) . "; Ranked: {$ir['labrank']})
-                    </option>
-					<option {$all_select} value='All'>
-					    All Four (Have " . number_format($ir['all_four']) . "; Ranked: {$ir['af_rank']})
-                    </option>
-				</select>
-			</td>
-	</tr>
-	<tr>
-		<th>
-		    Training Duration
-        </th>
-		<td>
-		    <input type='number' class='form-control' min='1' max='{$ir['energy']}' name='amnt' value='{$ir['energy']}' />
-        </td>
-	</tr>
-	<tr>
-		<td colspan='2'>
-		    <input type='submit' class='btn btn-primary' value='Train' />
-        </td>
-	</tr>
-	<tr>
-		<td>
-		    <a href='temple.php?action=energy' class='btn btn-primary'>Refill Energy ({$energy}%)</a>
-        </td>
-        <td>
-		    <a href='temple.php?action=will' class='btn btn-primary'>Regen Will ({$will}%)</a>
-        </td>
-	</tr>
-	    </form>
-</table>";
+echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to <span id='trainTimesTotal'>" . number_format($ir['energy']) . "</span> times.<br />
+The CID Admin Personal Gym will give you " . number_format($multi*100) . "% the stats you'd gain at the Normal Gym.
+<form method='post' id='gymTrainCA'>
+	<div class='card'>
+		<div class='card-body'>
+			<div class='row'>
+				<div class='col-12 col-sm-3 col-lg-2'>
+					<b>Stat</b>
+				</div>
+				<div class='col-12 col-sm-9 col-lg-10'>
+					<select type='dropdown' name='stat' class='form-control'>
+						<option {$str_select} value='Strength'>
+							Strength (Have " . number_format($ir['strength']) . "; Ranked: {$ir['strank']})
+						</option>
+						<option {$agl_select} value='Agility'>
+							Agility (Have " . number_format($ir['agility']) . "; Ranked: {$ir['agirank']})
+						</option>
+						<option {$grd_select} value='Guard'>
+							Guard (Have " . number_format($ir['guard']) . "; Ranked: {$ir['guarank']})
+						</option>
+						<option {$lab_select} value='Labor'>
+							Labor (Have " . number_format($ir['labor']) . "; Ranked: {$ir['labrank']})
+						</option>
+						<option {$all_select} value='All'>
+							All Four (Have " . number_format($ir['all_four']) . "; Ranked: {$ir['af_rank']})
+						</option>
+					</select>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-12 col-sm-3 col-lg-2'>
+					<b>Energy</b>
+				</div>
+				<div class='col-12 col-sm-9 col-lg-10'>
+					<input type='number' class='form-control' min='1' max='{$ir['energy']}' name='amnt' value='{$ir['energy']}' id='trainTimes' /><br />
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-12 col-sm-6 col-md-2 col-lg-6 col-xl-2'>
+					<input type='submit' class='btn btn-success btn-block' value='Train' id='trainCA' /><br />
+				</div>
+				<div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+					<a href='#' class='btn btn-primary btn-block' id='gymRefillEnergy'>Refill Energy (<span id='gymEnergy'>{$energy}</span>%)</a><br />
+				</div>
+				<div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+					<a href='#' class='btn btn-primary btn-block'id='gymRefillWill'>Regen Will (<span id='gymWill'>{$will}</span>%)</a><br />
+				</div>
+				<div class='col-12 col-sm-6 col-md-2 col-lg-6 col-xl-2'>
+					<a href='#' class='btn btn-secondary btn-block'id='gymFillWill'>Fill Will</a><br />
+				</div>
+			</div>
+		</div>
+	</div>
+</form>";
 $h->endpage();

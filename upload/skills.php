@@ -134,21 +134,21 @@ function home()
                     <tr>
                         <td {$locked[1]} width='33%'>
                             Perfection (1 Point)<br />
-                            <small>+3% Class Stat effectiveness in combat per level.<br /></small>
+                            <small>+3% Class Stat effectiveness in combat.<br /></small>
                             " . getSkillLevel($userid,1) . " / 5
                             <br />
                             {$button['1']}
                         </td>
                         <td {$locked[2]} width='33%'>
                             Conditioning (1 Point)<br />
-                            <small>+2.5% Class Weak stat, -1% Class Strong Stat per level.<br /></small>
+                            <small>+2.5% Class Weak stat, -1% Class Strong Stat.<br /></small>
                             " . getSkillLevel($userid,2) . " / 5
                             <br />
                             {$button['2']}
                         </td>
                         <td {$locked[3]} width='33%'>
                             Potent Potion (1 Point)<br />
-                            <small>+1.5% more potion ability when used in combat, per level.<br /></small>
+                            <small>+1.5% more potion ability when used in combat.<br /></small>
                             " . getSkillLevel($userid,3) . " / 5
                             <br />
                             {$button['3']}
@@ -171,7 +171,7 @@ function home()
                         </td>
                         <td {$locked[6]}>
                             Thickened Skin (3 Points)<br />
-                            <small>+6.5% Armor Value, per level.<br /></small>
+                            <small>+6.5% Armor Value.<br /></small>
                             " . getSkillLevel($userid,6) . " / 3
                             <br />
                             {$button['6']}
@@ -209,14 +209,14 @@ function home()
                     <tr>
                         <td {$locked[11]} width='33%'>
                             Token Hoarder (1 Point)<br />
-                            <small>+5% extra Chivalry Tokens gained with BOR/Hexbags, per level.<br /></small>
+                            <small>+5% extra Chivalry Tokens gained with BOR/Hexbags.<br /></small>
                             " . getSkillLevel($userid,11) . " / 5
                             <br />
                             {$button['11']}
                         </td>
                         <td {$locked[12]} width='33%'>
                             Deep Reading (1 Point)<br />
-                            <small>+5% IQ purchased at Temple of Fortune, per level.<br /></small>
+                            <small>+5% IQ purchased at Temple of Fortune.<br /></small>
                             " . getSkillLevel($userid,12) . " / 5
                             <br />
                             {$button['12']}
@@ -232,21 +232,21 @@ function home()
                     <tr>
                         <td {$locked[14]}>
                             Thievery (3 Points)<br />
-                            <small>+5% Copper Coins stolen when mug/rob, per level.<br /></small>
+                            <small>+5% Copper Coins stolen when mug/rob.<br /></small>
                             " . getSkillLevel($userid,14) . " / 3
                             <br />
                             {$button['14']}
                         </td>
                         <td {$locked[15]}>
                             Intelligent Miner (3 Points)<br />
-                            <small>-10% IQ Requirement when mining, per level.<br /></small>
+                            <small>-10% IQ Requirement when mining.<br /></small>
                             " . getSkillLevel($userid,15) . " / 3
                             <br />
                             {$button['15']}
                         </td>
                         <td {$locked[16]}>
                             Scammer (3 Points)<br />
-                            <small>+2% price when selling items to the game, per level.<br /></small>
+                            <small>+2% price when selling items to the game.<br /></small>
                             " . getSkillLevel($userid,16) . " / 3
                             <br />
                             {$button['16']}
@@ -298,7 +298,7 @@ function home()
                         </td>
                         <td {$locked[23]} width='25%'>
                             Overworked (1 Point)<br />
-                            <small>+3% Gains when you train Labor at the Chivalry Gym, per level.<br /></small>
+                            <small>+5% Gains when you train at the Chivalry Gym.<br /></small>
                             " . getSkillLevel($userid,23) . " / 5
                             <br />
                             {$button['23']}
@@ -314,7 +314,7 @@ function home()
                     <tr>
                         <td {$locked[24]}>
                             Flirty Words (3 Points)<br />
-                            <small>+2% chance that sending your spouse a love letter will increase marriage happiness, per level.<br /></small>
+                            <small>+2% chance that sending your spouse a love letter will increase marriage happiness.<br /></small>
                             " . getSkillLevel($userid,24) . " / 3
                             <br />
                             {$button['24']}
@@ -335,7 +335,7 @@ function home()
                         </td>
 						<td {$locked[33]} width='25%'>
                             Careful Tending (3 Points)<br />
-                            <small>-25% Wellness when interacting with plots, per level.<br /></small>
+                            <small>-25% Wellness when interacting with plots.<br /></small>
                             " . getSkillLevel($userid,33) . " / 3
                             <br />
                             {$button['33']}

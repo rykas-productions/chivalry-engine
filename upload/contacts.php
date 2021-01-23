@@ -12,25 +12,25 @@ echo "
     <table class='table table-bordered'>
         <tr>
             <td>
-                <a href='inbox.php'><i class='fas fa-fw fa-inbox'></i><br />Inbox</a>
+                <a href='inbox.php' class='updateHoverBtn'><i class='fas fa-fw fa-inbox'></i><br />Inbox</a>
             </td>
             <td>
-                <a href='inbox.php?action=outbox'><i class='fas fa-fw fa-envelope'></i><br />Outbox</a>
+                <a href='inbox.php?action=outbox' class='updateHoverBtn'><i class='fas fa-fw fa-envelope'></i><br />Outbox</a>
             </td>
             <td>
-                <a href='inbox.php?action=compose'><i class='fas fa-fw fa-file'></i><br />Compose</a>
+                <a href='inbox.php?action=compose' class='updateHoverBtn'><i class='fas fa-fw fa-file'></i><br />Compose</a>
             </td>
             <td>
-                <a href='blocklist.php'><i class='fas fa-fw fa-ban'></i><br />Blocklist</a>
+                <a href='blocklist.php' class='updateHoverBtn'><i class='fas fa-fw fa-ban'></i><br />Blocklist</a>
             </td>
             <td>
-                <a href='inbox.php?action=delall'><i class='fas fa-fw fa-trash-alt'></i><br />Delete All</a>
+                <a href='inbox.php?action=delall' class='updateHoverBtn'><i class='fas fa-fw fa-trash-alt'></i><br />Delete All</a>
             </td>
             <td>
-                <a href='inbox.php?action=archive'><i class='fas fa-fw fa-save'></i><br />Archive</a>
+                <a href='inbox.php?action=archive' class='updateHoverBtn'><i class='fas fa-fw fa-save'></i><br />Archive</a>
             </td>
             <td>
-                <a href='contacts.php'><i class='fas fa-fw fa-address-book'></i><br />Contacts</a>
+                <a href='contacts.php' class='updateHoverBtn'><i class='fas fa-fw fa-address-book'></i><br />Contacts</a>
             </td>
         </tr>
     </table>
@@ -52,42 +52,34 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $userid;
-    echo "<a href='?action=add'>Add Contact</a><br />
+    echo "<a href='?action=add' class='updateHoverBtn'>Add Contact</a><br />
 	These are the players you've added to your contact list.
-	<br />
-	<table class='table table-bordered table-striped'>
-		<tr>
-			<th>
-				User
-			</th>
-			<th>
-				Message
-			</th>
-			<th>
-				Remove
-			</th>
-		</tr>";
+	<br />";
     $q = $db->query("/*qc=on*/SELECT `c`.`c_ID`, `u`.`vip_days`, `username`, `userid`, `vipcolor` FROM `contact_list` AS `c`
                      LEFT JOIN `users` AS `u` ON `c`.`c_ADDED` = `u`.`userid` WHERE `c`.`c_ADDER` = $userid
                      ORDER BY `u`.`username` ASC");
     //List the user's contact list.
-    while ($r = $db->fetch_row($q)) {
+    while ($r = $db->fetch_row($q)) 
+	{
         $r['username'] = parseUsername($r['userid']);
-        echo "
-		<tr>
-			<td>
-				<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
-			</td>
-			<td>
-				<a href='inbox.php?action=compose&user={$r['userid']}'>Message</a>
-			</td>
-			<td>
-				<a href='?action=remove&contact={$r['c_ID']}'>Remove Contact</a>
-			</td>
-		</tr>";
+		echo "
+			<div class='card'>
+				<div class='card-header bg-transparent'>
+					<div class='row'>
+						<div class='col'>
+							<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+						</div>
+						<div class='col'>
+							<a href='inbox.php?action=compose&user={$r['userid']}'>Message</a>
+						</div>
+						<div class='col'>
+							<a href='?action=remove&contact={$r['c_ID']}'>Remove Contact</a>
+						</div>
+					</div>
+				</div>
+			</div>";
     }
     $db->free_result($q);
-    echo '</table>';
 }
 
 function add()
@@ -116,6 +108,7 @@ function add()
             $db->free_result($q);
             alert('success', "Success!", "You have successfully added " . $api->SystemUserIDtoName($_POST['user']) . "
 			    to your contact list.", true, 'contacts.php');
+			home();
         }
     } else {
         if (!isset($_GET['user'])) {
@@ -123,28 +116,27 @@ function add()
         } else {
             $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
         }
-        echo "<table class='table table-bordered'>
+        echo "
 		<form action='?action=add' method='post'>
-			<tr>
-				<th colspan='2'>
-				Add Contact Form
-				</th>
-			</tr>
-			<tr>
-				<th>
-					Select User
-				</th>
-				<td>
-					" . user_dropdown('user',$_GET['user']) . "
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' value='Add Contact' class='btn btn-primary'>
-				</td>
-			</tr>
-		</form>
-		</table>";
+		<div class='card'>
+			<div class='card-header bg-transparent'>
+				<div class='row'>
+					<div class='col-md-2 col-sm-3 col-6'>
+						<b>Contact</b>
+					</div>
+					<div class='col-md-10 col-sm-9'>
+						" . user_dropdown('user',$_GET['user']) . "
+					</div>
+				</div>
+				<br />
+				<div class='row'>
+					<div class='col'>
+						<input type='submit' value='Add Contact' class='btn btn-primary btn-block'>
+					</div>
+				</div>
+			</div>
+		</div>
+		</form>";
     }
 }
 
@@ -167,7 +159,8 @@ function remove()
     }
     //Remove from list.
     $db->query("DELETE FROM `contact_list` WHERE `c_ID` = {$_GET['contact']} AND `c_ADDER` = {$userid}");
-    alert('success', "Success!", "You have successfully removed this user from your contact list.", true, 'contacts.php');
+    alert('success', "Success!", "You have successfully removed this user from your contact list.", false);
+	home();
 }
 
 $h->endpage();

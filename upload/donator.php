@@ -43,14 +43,13 @@ if (isset($_GET['user']))
 					ON `itmid` = `vip_item`
 					ORDER BY `vip_cost` ASC");
 	//List the donator packages.
+	echo "<div class='row'>";
 	while ($r = $db->fetch_row($q)) {
 		//Put the VIP Cost in a currency number. (Ex. $1.54)
 		$r['vip_cost'] = sprintf("%0.2f", $r['vip_cost']*$percentoff);
 		$amount = ($r['vip_qty'] > 1) ? "{$r['vip_qty']} x " : '';
-		if ($count == 0)
-			echo "<div class='row'>";
 		echo "
-				<div class='col-sm-4'>
+				<div class='col-md-6 col-xl-4'>
 				<div class='card'>
 					<div class='card-header box-shadow'>
 						{$amount} <a href='iteminfo.php?ID={$r['vip_item']}'>{$r['itmname']}</a><br />
@@ -82,40 +81,40 @@ if (isset($_GET['user']))
 				$uhoh++;
 			}
 			if ($uhoh == 3) {
-				echo "{$r['itmdesc']}";
+				echo "{$r['itmdesc']}<br />";
 			}
 		}
+		echo "<b>Enter Quantity</b>";
 		//The form handles a lot of the internals for the pack info.
 		//You should only need to change the currency_code.
 		//Proceed at your own caution.
 		echo "
-                <form action='https://www.paypal.com/cgi-bin/webscr' method='post'>
-                    <input type='hidden' name='cmd' value='_xclick' />
-                    <input type='hidden' name='business' value='{$set['PaypalEmail']}' />
-                    <input type='hidden' name='item_name' value='{$domain}|VIP|{$r['vip_id']}|{$_GET['user']}|{$userid}' />
-                    <input type='hidden' name='amount' value='{$r['vip_cost']}' />
-                    <input type='hidden' name='no_shipping' value='1' />
-                    <input type='hidden' name='return' value='https://{$domain}/donatordone.php?action=done' />
-                    <input type='hidden' name='cancel_return' value='http://{$domain}/donatordone.php?action=cancel' />
-                    <input type='hidden' name='notify_url' value='https://{$domain}/donator_ipn.php' />
-                    <input type='hidden' name='cn' value='Your Player ID' />
-                    <input type='hidden' name='currency_code' value='USD' />
-                    <input type='hidden' name='tax' value='0' />
-                    <input type='hidden' name='rm' value='2'>
-					<b>Enter Quantity</b>
-                    <input type='number' min='1' max='100' value='1' name='quantity' class='form-control' required='1' placeholder='Quantity'>
-                        <button class='btn btn-primary' type='submit'><i class='fab fa-paypal'></i> Pay with PayPal</button>
-                </form>
+		<form action='https://www.paypal.com/cgi-bin/webscr' method='post'>
+		<div class='row'>
+			<div class='col-8 col-md-7'>
+				<input type='hidden' name='cmd' value='_xclick' />
+				<input type='hidden' name='business' value='{$set['PaypalEmail']}' />
+				<input type='hidden' name='item_name' value='{$domain}|VIP|{$r['vip_id']}|{$_GET['user']}|{$userid}' />
+				<input type='hidden' name='amount' value='{$r['vip_cost']}' />
+				<input type='hidden' name='no_shipping' value='1' />
+				<input type='hidden' name='return' value='https://{$domain}/donatordone.php?action=done' />
+				<input type='hidden' name='cancel_return' value='http://{$domain}/donatordone.php?action=cancel' />
+				<input type='hidden' name='notify_url' value='https://{$domain}/donator_ipn.php' />
+				<input type='hidden' name='cn' value='Your Player ID' />
+				<input type='hidden' name='currency_code' value='USD' />
+				<input type='hidden' name='tax' value='0' />
+				<input type='hidden' name='rm' value='2'>
+				<input type='number' min='1' max='100' value='1' name='quantity' class='form-control' required='1' placeholder='Quantity'>
+			</div>
+			<div class='col-4 col-md-5'>
+				<button class='btn btn-primary btn-block' type='submit'><i class='fab fa-paypal'></i> PayPal</button>
+			</div>
+		</div>
+		</form>
 		</div>
 		</div>
 		</div>
 		";
-		if ($count == 2)
-		{
-			$count=-1;
-			echo "</div>";
-		}
-		$count=$count+1;
 	}
 	echo "</div><hr /><p class='text-muted'><small>*VIP Days grant the following benefits:<br />
 	33% Energy Refill every 5 Minutes; 5% bank interest; Access to Friends List; Access to Enemies List; Access to VIP Logs;

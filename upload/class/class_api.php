@@ -843,14 +843,6 @@ class api
                 $gain *= (0.5 + $nmodifier);
             }
         }
-		if ($stat == 'labor')
-		{
-			if ($multiplier == 4)
-			{
-				$labgain=((getSkillLevel($userid,23)*3)/100);
-				$gain=$gain+($gain*$labgain);
-			}
-		}
         //Add multiplier, if needed.
         $gain *= $multiplier;
         //Round the gained stats.

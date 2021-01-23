@@ -1,6 +1,6 @@
 <?php
 $macropage = ('autobor.php');
-$multipler=1.25;
+$multipler=1.0;
 require('globals.php');
 if ($ir['bor'] == 0)
 {
@@ -172,61 +172,248 @@ if (isset($_POST['open']))
 	}
 	$db->query("UPDATE `users` SET `bor` = `bor` - {$_POST['open']} WHERE `userid` = {$userid}");
 	$db->query("UPDATE `user_settings` SET `autobor` = `autobor` - {$_POST['open']} WHERE `userid` = {$userid}");
-	echo "After automatically opening {$number} Boxes of Random, you have gained the following:<br />
-		" . number_format($copper) . " Copper Coins.<br />
-		" . number_format($tokens) . " Chivalry Tokens.<br />
-		" . number_format($infirmary) . " minutes in the infirmary.<br />
-		" . number_format($wraps) . " Linen Wraps<br />
-		" . number_format($keys) . " Dungeon Keys.<br />
-		" . number_format($bread) . " Bread.<br />
-		" . number_format($venison) . " Venison.<br />
-		" . number_format($potion) . " Small Health Potion(s).<br />
-		" . number_format($explosives) . " Small Explosive(s).<br />
-		" . number_format($gymscroll) . " Chivalry Gym Pass(s)<br />
-		" . number_format($attackscroll) . " Distant Attack Scroll(s)<br />
-        " . number_format($needle) . " Acupuncture Needle(s)<br />
-        " . number_format($mystery) . " Mysterious Potion(s)<br />
-		" . number_format($hexbags) . " extra Hexbag(s)<br />
-		" . number_format($rickitybomb) . " Rickity Bomb(s)<br />
-		" . number_format($herbofminer) . " Herb of the Enlightened Miner(s)<br />
-		" . number_format($nothing) . " Boxes of Random had nothing in them.";
-	$api->UserGiveCurrency($userid,'primary',$copper);
-	$api->UserGiveCurrency($userid,'secondary',$tokens);
-	addToEconomyLog('BOR', 'copper', $copper);
-	addToEconomyLog('BOR', 'token', $tokens);
-	$api->UserStatusSet($userid,'infirmary',$infirmary,"Ticking Box");
-	$api->UserGiveItem($userid,6,$wraps);
-	$api->UserGiveItem($userid,30,$keys);
-	$api->UserGiveItem($userid,19,$bread);
-	$api->UserGiveItem($userid,20,$venison);
-	$api->UserGiveItem($userid,7,$potion);
-	$api->UserGiveItem($userid,28,$explosives);
-	$api->UserGiveItem($userid,18,$gymscroll);
-	$api->UserGiveItem($userid,90,$attackscroll);
-    $api->UserGiveItem($userid,123,$mystery);
-    $api->UserGiveItem($userid,100,$needle);
-	$api->UserGiveItem($userid,149,$rickitybomb);
-	$api->UserGiveItem($userid,177,$herbofminer);
-	$db->query("UPDATE `users` SET `hexbags` = `hexbags` + {$hexbags} WHERE `userid` = {$userid}");
+	alert('success',"Success!","You've opened " . number_format($_POST['open']) . " Boxes of Random in an automated fashion and receieved the following items.",false);
+	echo "<div class='row'>";
+	if ($copper > 0)
+	{
+		echo "<div class='col-md-3'>
+			<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(157, 8) . "<br />
+				" . number_format($copper) . " Copper Coins.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveCurrency($userid,'primary',$copper);
+		$api->SystemLogsAdd($userid,"bor","Received {$copper} Copper Coins.");
+		addToEconomyLog('BOR', 'copper', $copper);
+	}
+	if ($tokens > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(156, 8) . "<br />
+				" . number_format($tokens) . " Chivalry Tokens.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveCurrency($userid,'secondary',$tokens);
+		$api->SystemLogsAdd($userid,"bor","Received {$tokens} Chivalry Tokens.");
+		addToEconomyLog('BOR', 'token', $tokens);
+	}
+	if ($infirmary > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(207, 8) . "<br />
+				" . number_format($infirmary) . " minutes in the infirmary.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserStatusSet($userid,'infirmary',$infirmary,"Ticking Box");
+		$api->SystemLogsAdd($userid,"bor","Received {$infirmary} infirmary.");
+	}
+	if ($wraps > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(6, 8) . "<br />
+				" . number_format($wraps) . " Linen Wraps
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,6,$wraps);
+		$api->SystemLogsAdd($userid,"bor","Received {$wraps} Linen Wraps.");
+	}
+	if ($keys > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(30, 8) . "<br />
+				" . number_format($keys) . " Dungeon Keys.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,30,$keys);
+		$api->SystemLogsAdd($userid,"bor","Received {$keys} Dungeon Keys.");
+	}
+	if ($bread > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(19, 8) . "<br />
+				" . number_format($bread) . " Bread.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,19,$bread);
+		$api->SystemLogsAdd($userid,"bor","Received {$bread} Bread.");
+	}
+	if ($venison > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(20, 8) . "<br />
+				" . number_format($venison) . " Venison.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,20,$venison);
+		$api->SystemLogsAdd($userid,"bor","Received {$venison} Venison.");
+	}
+	if ($potion > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(7, 8) . "<br />
+				" . number_format($potion) . " Small Health Potions.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,7,$potion);
+		$api->SystemLogsAdd($userid,"bor","Received {$potion} Small Health Potion(s).");
+	}
+	if ($explosives > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(28, 8) . "<br />
+				" . number_format($explosives) . " Small Explosives.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,28,$explosives);
+		$api->SystemLogsAdd($userid,"bor","Received {$explosives} Small Explosives.");
+	}
+	if ($gymscroll > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(18, 8) . "<br />
+				" . number_format($gymscroll) . " Chivalry Gym Scrolls.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,18,$gymscroll);
+		$api->SystemLogsAdd($userid,"bor","Received {$gymscroll} Chivalry Gym Scrolls.");
+	}
+	if ($attackscroll > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(90, 8) . "<br />
+				" . number_format($attackscroll) . " Distant Attack Scrolls.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,90,$attackscroll);
+		$api->SystemLogsAdd($userid,"bor","Received {$attackscroll} Distant Attack Scrolls.");
+	}
+	if ($needle > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(90, 8) . "<br />
+				" . number_format($needle) . " Acupuncture Needles.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,100,$needle);
+		$api->SystemLogsAdd($userid,"bor","Received {$needle} Acupuncture Needles.");
+	}
+	if ($mystery > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(123, 8) . "<br />
+				" . number_format($mystery) . " Mysterious Potions.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,123,$mystery);
+		$api->SystemLogsAdd($userid,"bor","Received {$mystery} Mysterious Potions.");
+	}
+	if ($hexbags > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				<i class='game-icon game-icon-open-treasure-chest' style='font-size:8rem;'></i><br />
+				" . number_format($hexbags) . " extra Hexbags.
+			</div>
+		</div>
+		</div>
+		<br />";
+		$db->query("UPDATE `users` SET `hexbags` = `hexbags` + {$hexbags} WHERE `userid` = {$userid}");
+		$api->SystemLogsAdd($userid,"bor","Received {$hexbags} Hexbags.");
+	}
+	if ($rickitybomb > 0)
+	{
+		echo "<div class='col-md-3'>
+		<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(149, 8) . "<br />
+				" . number_format($rickitybomb) . " Rickity Bombs.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,149,$rickitybomb);
+		$api->SystemLogsAdd($userid,"bor","Received {$rickitybomb} Rickity Bomb(s).");
+	}
+	if ($herbofminer > 0)
+	{
+		echo "<div class='col-md-3'>
+			<div class='card'>
+			<div class='card-body'>
+				" . returnIcon(177, 8) . "<br />
+				" . number_format($herbofminer) . " Herbs of the Enlightened Miner.
+			</div>
+			</div>
+		</div>
+		<br />";
+		$api->UserGiveItem($userid,177,$herbofminer);
+		$api->SystemLogsAdd($userid,"bor","Received {$herbofminer} Herbs of the Enlightened Miner.");
+	}
+	if ($nothing > 0)
+	{
+		echo "<div class='col-md-3'>
+			<div class='card'>
+			<div class='card-body'>
+				" . number_format($nothing) . " boxes of random had no contents.
+			</div>
+			</div>
+		</div>
+		<br />";
+	}
+	echo "</div>";
 	$api->UserTakeItem($userid,33,$_POST['open']);
 	//Logs here
-	$api->SystemLogsAdd($userid,"bor","Received {$nothing} nothing(s).");
-	$api->SystemLogsAdd($userid,"bor","Received {$needle} Acupuncture Needle(s).");
-	$api->SystemLogsAdd($userid,"bor","Received {$mystery} Mysterious Potion(s).");
-	$api->SystemLogsAdd($userid,"bor","Received {$attackscroll} Distant Attack Scroll(s).");
-	$api->SystemLogsAdd($userid,"bor","Received {$gymscroll} Chivalry Gym Pass(s).");
-	$api->SystemLogsAdd($userid,"bor","Received {$explosives} Small Explosives.");
-	$api->SystemLogsAdd($userid,"bor","Received {$keys} Dungeon Keys.");
-	$api->SystemLogsAdd($userid,"bor","Received {$wraps} Linen Wraps.");
-	$api->SystemLogsAdd($userid,"bor","Received {$infirmary} infirmary.");
-	$api->SystemLogsAdd($userid,"bor","Received {$copper} Copper Coins.");
-	$api->SystemLogsAdd($userid,"bor","Received {$tokens} Chivalry Tokens.");
-	$api->SystemLogsAdd($userid,"bor","Received {$bread} Bread(s).");
-	$api->SystemLogsAdd($userid,"bor","Received {$venison} Venison.");
-	$api->SystemLogsAdd($userid,"bor","Received {$potion} Small Health Potion(s).");
-	$api->SystemLogsAdd($userid,"bor","Received {$hexbags} Hexbag(s).");
-	$api->SystemLogsAdd($userid,"bor","Received {$rickitybomb} Rickity Bomb(s).");
-	$api->SystemLogsAdd($userid,"bor","Received {$herbofminer} Herb of the Enlightened Miner(s).");
 	
 }
 else

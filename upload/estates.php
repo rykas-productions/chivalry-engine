@@ -19,7 +19,8 @@ $mpq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_will` = {$ir['m
 $mp = $db->fetch_row($mpq);
 $db->free_result($mpq);
 //User is trying to buy an estate.
-if (isset($_GET['property']) && is_numeric($_GET['property'])) {
+if (isset($_GET['property']) && is_numeric($_GET['property'])) 
+{
     $_GET['property'] = abs($_GET['property']);
     $npq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_id` = {$_GET['property']}");
     //Estate does not exist.
@@ -53,16 +54,43 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
     else {
         //Update user's max will, remove currency, and set will to 0.
         $db->query("UPDATE `users`
-                    SET `primary_currency` = `primary_currency` - {$np['house_price']} ,
-                    `will` = 0, `maxwill` = {$np['house_will']}
+                    SET `primary_currency` = `primary_currency` - {$np['house_price']},
+					`maxwill` = {$np['house_will']}
                     WHERE `userid` = $userid");
         alert('success', "Success!", "You have successfully bought the {$np['house_name']} estate for
             " . number_format($np['house_price']) . "!", true, 'estates.php');
 			addToEconomyLog('Estates', 'copper', $np['house_price']*-1);
         die($h->endpage());
     }
-} else {
+} 
+elseif (isset($_GET['sell']))
+{
+	if ($ir['maxwill'] == 100)
+	{
+		alert('danger', "Uh Oh!", "You can't sell this estate.", true, 'estates.php');
+        die($h->endpage());
+	}
+	$npq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_will` = {$ir['maxwill']}");
+	if ($db->num_rows($npq) == 0) 
+	{
+        $db->free_result($npq);
+        alert('danger', "Uh Oh!", "You cannot sell an estate that does not exist...", true, 'estates.php');
+        die($h->endpage());
+    }
+    $np = $db->fetch_row($npq);
+    $db->free_result($npq);
+	$returned = round($np['house_price'] * 0.55);
+	$db->query("UPDATE `users` 
+				SET `maxwill` = 100, `will` = 100, 
+				`primary_currency` = `primary_currency` + {$returned} 
+				WHERE `userid` = {$userid}");
+	alert('success', "Success!", "You've sold your {$np['house_name']} for " . number_format($returned) . " Copper Coins and now have nothing.", true, 'estates.php');
+	die($h->endpage());
+}
+else 
+{
     echo "Your current estate is the <b>{$mp['house_name']}</b>.<br />
+		Click <a href='?sell'>here</a> to sell your estate for 55% of its value!<br /> 
 		The houses you can buy are listed below. Click a house to buy it. Your Will helps determine how much you
 		gain while training, and it helps with committing crimes.<br />";
     $hq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_will` > {$ir['maxwill']} ORDER BY `house_will` ASC");
@@ -84,7 +112,7 @@ if (isset($_GET['property']) && is_numeric($_GET['property'])) {
             <div class='card-body'>
                 <span {$level}>Level Required: " . number_format($r['house_level']) . "</span><br />
 				<span {$cost}>Price: " . number_format($r['house_price']) . " Copper Coins</span><br />
-				Will: " . number_format($r['house_will']) . " (+ " . number_format($willdif) . ")
+				Will: " . number_format($r['house_will']) . " (+" . number_format($willdif) . ")
             </div>
         </div>
 		<br />

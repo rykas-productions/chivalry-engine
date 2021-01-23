@@ -242,6 +242,14 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						" . number_format($TotalBankandSC) . "
 					</div>
 				</div>
+				<div class='row'>
+					<div class='col'>
+						Average Sell Price
+					</div>
+					<div class='col'>
+						{$avgprice}
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

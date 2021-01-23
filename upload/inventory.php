@@ -23,9 +23,16 @@ echo "
 			<div class='card-body'>";
 if (!empty($ir['equip_primary'])) {
 	$dam=$db->fetch_single($db->query("/*qc=on*/SELECT `weapon` FROM `items` WHERE `itmid` = {$ir['equip_primary']}"));
-    echo "" . returnIcon($ir['equip_primary'],4) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom' title='Weapon Rating: {$dam}'>{$api->SystemItemIDtoName($ir['equip_primary'])}</a><br />";
+    echo "<div class='row'>
+		<div class='col-3'>
+			" . returnIcon($ir['equip_primary'],4) . "
+		</div>
+		<div class='col-9'>
+			<a href='#' data-toggle='tooltip' data-placement='bottom' title='Weapon Rating: {$dam}'>{$api->SystemItemIDtoName($ir['equip_primary'])}</a>
+		</div>
+	</div>";
 } else {
-    echo "No Weapon";
+    echo "No weapon equipped.";
 }
 echo "
 			</div>
@@ -44,9 +51,16 @@ echo "
 			<div class='card-body'>";
 if (!empty($ir['equip_secondary'])) {
 	$dam2=$db->fetch_single($db->query("/*qc=on*/SELECT `weapon` FROM `items` WHERE `itmid` = {$ir['equip_secondary']}"));
-    echo "" . returnIcon($ir['equip_secondary'],4) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom' title='Weapon Rating: {$dam2}'>{$api->SystemItemIDtoName($ir['equip_secondary'])}</a><br />";
+	echo "<div class='row'>
+		<div class='col-3'>
+			" . returnIcon($ir['equip_secondary'],4) . "
+		</div>
+		<div class='col-9'>
+			<a href='#' data-toggle='tooltip' data-placement='bottom' title='Weapon Rating: {$dam2}'>{$api->SystemItemIDtoName($ir['equip_secondary'])}</a>
+		</div>
+	</div>";	
 } else {
-    echo "No Weapon";
+    echo "No weapon equipped.";
 }
 echo "
 			</div>
@@ -65,9 +79,16 @@ echo "
 			<div class='card-body'>";
 if (!empty($ir['equip_armor'])) {
 	$armor=$db->fetch_single($db->query("/*qc=on*/SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
-    echo "" . returnIcon($ir['equip_armor'],4) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom' title='Armor Rating: {$armor}'>{$api->SystemItemIDtoName($ir['equip_armor'])}</a><br />";
+	echo "<div class='row'>
+		<div class='col-3'>
+			" . returnIcon($ir['equip_armor'],4) . "
+		</div>
+		<div class='col-9'>
+			<a href='#' data-toggle='tooltip' data-placement='bottom' title='Armor Rating: {$armor}'>{$api->SystemItemIDtoName($ir['equip_armor'])}</a>
+		</div>
+	</div>";
 } else {
-    echo "No Armor";
+    echo "No armor equipped.";
 }
 echo "
 			</div>
@@ -85,9 +106,16 @@ echo "
 			</div>
 			<div class='card-body'>";
 if (!empty($ir['equip_potion'])) {
-    echo "" . returnIcon($ir['equip_potion'],4) . "<br /><a href='#' data-toggle='tooltip' data-placement='bottom'>{$api->SystemItemIDtoName($ir['equip_potion'])}</a><br />";
+	echo "<div class='row'>
+		<div class='col-3'>
+			" . returnIcon($ir['equip_potion'],4) . "
+		</div>
+		<div class='col-9'>
+			<a href='#' data-toggle='tooltip' data-placement='bottom'>{$api->SystemItemIDtoName($ir['equip_potion'])}</a>
+		</div>
+	</div>";
 } else {
-    echo "No Potion";
+    echo "No potion equipped.";
 }
 echo "
 			</div>
@@ -97,18 +125,24 @@ echo "
 $trinkq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid}");
 if ($db->num_rows($trinkq) > 0)
 {
-	echo "<hr /><div class='row'>";
+	echo "<hr class='hidden-xs-down' /><div class='row'>";
 }
 while ($r=$db->fetch_row($trinkq))
 {
 	echo "<div class='col-md'>
 	<div class='card'>
 			<div class='card-header'>
-			" . friendlyTrinketName($r['equip_slot']) .  " (<a href='unequip2.php?type={$r['equip_slot']}'>Unequip</a>)
+			" . friendlyTrinketName($r['equip_slot']) .  " (<a href='unequip.php?type={$r['equip_slot']}'>Unequip</a>)
 			</div>
 			<div class='card-body'>
-				" . returnIcon($r['itemid'],4) . "<br />
-				<a href='#' data-toggle='tooltip' data-placement='bottom'>{$api->SystemItemIDtoName($r['itemid'])}</a>
+				<div class='row'>
+					<div class='col-3'>
+						" . returnIcon($r['itemid'],4) . "
+					</div>
+					<div class='col-9'>
+						<a href='#' data-toggle='tooltip' data-placement='bottom'>{$api->SystemItemIDtoName($r['itemid'])}</a>
+					</div>
+				</div>
 			</div>
 		</div>
 		</div>";
@@ -164,10 +198,10 @@ while ($i = $db->fetch_row($inv))
 			<h2 class='mb-0'>
 				<button class='btn btn-block btn-block text-left' type='button' data-toggle='collapse' data-target='#collapse{$i['itmid']}' aria-expanded='true' aria-controls='collapse{$i['itmid']}'>
 					<div class='row'>
-						<div class='col-1'>
+						<div class='col-2 col-sm-1'>
 							{$icon}
 						</div>
-						<div class='col-5 col-md-7'>
+						<div class='col-10 col-sm-5 col-md-7'>
 							{$i['itmname']}";
 							if ($i['inv_qty'] > 1) 
 								echo "<b> x " . number_format($i['inv_qty']) . "</b>";
@@ -375,6 +409,14 @@ while ($i = $db->fetch_row($inv))
 													<i class='game-icon game-icon-pouring-chalice'></i>
 												</a><br />";
 										}
+										//2019 Easter Scratch Ticket
+										if ($i['itmid'] == 230)
+										{
+					
+											echo "<a title='Scratch {$i['itmname']}.' href='2019easter.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-check-mark'></i>
+												</a><br />";
+										}
 										//Sepll Tome Key
 										if ($i['itmid'] == 250)
 										{
@@ -428,6 +470,22 @@ while ($i = $db->fetch_row($inv))
 										{
 					
 											echo "<a title='Redeem {$i['itmname']}.' href='vipitem.php?item=autobum' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-check-mark'></i>
+												</a><br />";
+										}
+										//2020 Halloween Scratch Ticket
+										if ($i['itmid'] == 376)
+										{
+					
+											echo "<a title='Scratch {$i['itmname']}.' href='2020halloween.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-check-mark'></i>
+												</a><br />";
+										}
+										//2020 Thanksgiving Scratch Ticket
+										if ($i['itmid'] == 391)
+										{
+					
+											echo "<a title='Scratch {$i['itmname']}.' href='2020thanksgiving.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
 													<i class='game-icon game-icon-check-mark'></i>
 												</a><br />";
 										}
@@ -558,19 +616,19 @@ while ($i = $db->fetch_row($inv))
 				</div>
 				<hr />
 				<div class='row'>
-					<div class='col'>
+					<div class='col-6 col-md'>
 						<b>Buy</b><br />
 						<small>" . number_format($i['itmbuyprice']) . "</small>
 					</div>
-					<div class='col'>
+					<div class='col-6 col-md'>
 						<b>Sell</b><br />
 						<small>" . number_format($i['itmsellprice']) . "</small>
 					</div>
-					<div class='col'>
+					<div class='col-6 col-md'>
 						<b>Total Value</b><br />
 						<small>" . number_format($i['inv_qty_value']) . "</small>
 					</div>
-					<div class='col'>
+					<div class='col-6 col-md'>
 						<b>Circulating</b><br />
 						<small>" . number_format($total) . "</small>
 					</div>

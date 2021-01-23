@@ -24,25 +24,25 @@ echo "
 <table class='table table-bordered'>
 	<tr>
 		<td>
-			<a href='inbox.php'><i class='fas fa-fw fa-inbox'></i><br />Inbox</a>
+			<a href='inbox.php' class='updateHoverBtn'><i class='fas fa-fw fa-inbox'></i><br />Inbox</a>
 		</td>
 		<td>
-			<a href='?action=outbox'><i class='fas fa-fw fa-envelope'></i><br />Outbox</a>
+			<a href='?action=outbox' class='updateHoverBtn'><i class='fas fa-fw fa-envelope'></i><br />Outbox</a>
 		</td>
 		<td>
-			<a href='?action=compose'><i class='fas fa-fw fa-file'></i><br />Compose</a>
+			<a href='?action=compose' class='updateHoverBtn'><i class='fas fa-fw fa-file'></i><br />Compose</a>
 		</td>
 		<td>
-			<a href='blocklist.php'><i class='fas fa-fw fa-ban'></i><br />Blocklist</a>
+			<a href='blocklist.php' class='updateHoverBtn'><i class='fas fa-fw fa-ban'></i><br />Blocklist</a>
 		</td>
 		<td>
-			<a href='?action=delall'><i class='fas fa-fw fa-trash-alt'></i><br />Delete All</a>
+			<a href='?action=delall' class='updateHoverBtn'><i class='fas fa-fw fa-trash-alt'></i><br />Delete All</a>
 		</td>
 		<td>
-			<a href='?action=archive'><i class='fas fa-fw fa-save'></i><br />Archive</a>
+			<a href='?action=archive' class='updateHoverBtn'><i class='fas fa-fw fa-save'></i><br />Archive</a>
 		</td>
 		<td>
-			<a href='contacts.php'><i class='fas fa-fw fa-address-book'></i><br />Contacts</a>
+			<a href='contacts.php' class='updateHoverBtn'><i class='fas fa-fw fa-address-book'></i><br />Contacts</a>
 		</td>
 	</tr>
 </table>
@@ -98,18 +98,6 @@ function home()
 		$info="Showing your unread messages.";
 	}
 	echo "<b>{$info}</b>";
-    echo "<table class='table table-bordered table-striped'>
-	<tr>
-		<th>
-			Message Info
-		</th>
-		<th width='45%'>
-			Subject
-		</th>
-		<th width='15%'>
-			Actions
-		</th>
-	</tr>";
     while ($r = $db->fetch_row($MailQuery)) {
         //Bind their picture to a variable... if they have one.
         //Bind if the message has been previously read or not.
@@ -125,35 +113,37 @@ function home()
 		}
         //Grab the first 50 characters of the message for the message preview.
         //BBCode parse the preview.
-		
-        echo "<tr>
-				<td>
-					<a href='profile.php?user={$r['mail_from']}'>
-						{$un1['username']}
-					</a> [{$r['mail_from']}]<br />
-						<small>" . DateTime_Parse($r['mail_time']) . "</small>
-				</td>
-				<td>
-					<a href='?action=read&msg={$r['mail_id']}'>{$sub}</a>
-				</td>
-				<td>
-					<div class='row'>
-						<div class='col-md'>
-							<a class='btn btn-primary btn-sm' href='?action=read&msg={$r['mail_id']}'><i class='far fa-envelope-open'></i></a>
-						</div>
-						<div class='col-md'>
-							<a class='btn btn-primary btn-sm' href='playerreport.php?userid={$r['mail_from']}'><i class='fas fa-flag'></i></a>
-						</div>
-						<div class='col-md'>
-							<a class='btn btn-primary btn-sm' href='?action=delete&msg={$r['mail_id']}'><i class='fas fa-trash-alt'></i></a>
+		echo "<div class='card'>
+			<div class='card-header bg-transparent'>
+				<div class='row'>
+					<div class='col-md-2 col-sm-4 col-6'>
+						<a href='profile.php?user={$r['mail_from']}' class='updateHoverBtn'>{$un1['username']}</a> [{$r['mail_from']}]
+					</div>
+					<div class='col-md-3 text-muted hidden-sm-down'>
+						" . DateTime_Parse($r['mail_time']) . "
+					</div>
+					<div class='col-6 col-sm-4'>
+						<i><a href='?action=read&msg={$r['mail_id']}' class='updateHoverBtn'>{$sub}</a></i>
+					</div>
+					<div class='col-md-3 col-sm-4 col-6 hidden-xs-down'>
+						<div class='row'>
+							<div class='col'>
+								<a class='btn btn-primary btn-sm updateHoverBtn' href='?action=read&msg={$r['mail_id']}'><i class='far fa-envelope-open'></i></a>
+							</div>
+							<div class='col'>
+								<a class='btn btn-primary btn-sm updateHoverBtn' href='playerreport.php?userid={$r['mail_from']}'><i class='fas fa-flag'></i></a>
+							</div>
+							<div class='col'>
+								<a class='btn btn-primary btn-sm updateHoverBtn' href='?action=delete&msg={$r['mail_id']}'><i class='fas fa-trash-alt'></i></a>
+							</div>
 						</div>
 					</div>
-				</td>
-			</tr>";
+				</div>
+			</div>
+		</div>";
     }
-    echo "</table>
-	<form action='?action=markread' method='post'>
-	<input type='submit' class='btn btn-primary' value='Mark All as Read'>
+    echo "<br /><form action='?action=markread' method='post'>
+	<input type='submit' class='btn btn-primary btn-block' value='Mark All as Read'>
 	</form>";
 }
 
@@ -189,69 +179,67 @@ function read()
 	$urmsg=$parser->parse(html_entity_decode(decrypt_message($lstmsg['mail_text'],$userid,$msg['mail_from'])));
 	$urmsg=$parser->getAsHtml();
     //Show sender's picture... if they have one.
-    $pic = (empty($un1['display_pic'])) ? "" :
-        "<center><img src='" . parseImage(parseDisplayPic($msg['mail_from'])) . "' class='img-fluid hidden-xs' width='175' alt='{$un1['username']}&#39;s display picture' title='{$un1['username']}&#39;s display picture'></center>";
-	$urpic = (empty($ir['display_pic'])) ? "" :
-        "<center><img src='" . parseImage(parseDisplayPic($userid)) . "' class='img-fluid hidden-xs' width='175' alt='Your display picture.' title='Your display picture'></center>";
-    echo "<table class='table table-bordered'>
-	<tr>
-		<th width='33%'>
-			Sender Info
-		</th>
-		<th>
-			Subject: {$msg['mail_subject']}
-		</th>
-	</tr>
-	<tr>
-		<td>
-			{$pic}
-			<a href='profile.php?user={$msg['mail_from']}'>{$un1['usernames']}</a><br />
-			" . DateTime_Parse($msg['mail_time']) . "
-		</td>
-		<td>";
-    echo $currentmsg;
-    echo "
-		</td>
-	</tr>
-	</table>";
-    //Permission check to see if the current player can reply to messages. If they can, show the reply form.
-    if (permission('CanReplyMail', $userid)) {
-        echo "Quick Reply Form<br />
-		<form method='post' action='?action=send'>
-		<table class='table table-bordered'>
-		<tr>
-			<th>
-				To
-			</th>
-			<td>
-				<input type='text' class='form-control' readonly='1' name='sendto' required='1' value='{$un1['username']}'>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				Subject
-			</th>
-			<td>
-				<input type='text' class='form-control' maxlength='50' name='subject' value='{$msg['mail_subject']}'>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				Message
-			</th>
-			<td>
-				<textarea class='form-control' required='1' maxlength='65655' name='msg'></textarea>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='2'>
-				<button class='btn btn-primary' type='submit'><i class='fas fa-reply'></i> Reply to {$un1['username']}</button>
-			</td>
-		</tr>
-		</table>
-		<input type='hidden' name='verf' value='{$code}' />
-		</form>";
-    }
+	$pic = "<img src='" . parseDisplayPic($msg['mail_from']) . "' height='75' alt='{$un1['username']}&#39;s Display picture.' title='{$un1['username']}&#39;s Display picture'>";
+	echo "
+	<div class='card'>
+		<div class='card-header bg-transparent'>
+			<div class='row'>
+				<div class='col-md-1 col-4'>
+					{$pic}
+				</div>
+				<div class='col-md-3 col-8'>
+					<a href='profile.php?user={$msg['mail_from']}' class='updateHoverBtn'>{$un1['usernames']}</a> [{$msg['mail_from']}]<br />
+					" . DateTime_Parse($msg['mail_time']) . "
+				</div>
+				<div class='col-md-8'>
+					<hr class='hidden-md-up'>
+					<b>Subject: {$msg['mail_subject']}</b><br />
+					{$currentmsg}
+				</div>
+			</div>";
+			if (permission('CanReplyMail', $userid)) 
+			{
+				echo"
+				<form method='post' action='?action=send'>
+				<hr />
+				<div class='row'>
+					<div class='col-md-2 col-sm-3 col-6'>
+						<b>Recipient</b>
+					</div>
+					<div class='col-md-10 col-sm-9'>
+						<input type='text' class='form-control' readonly='1' name='sendto' required='1' value='{$un1['username']}'>
+					</div>
+				</div>
+				<br />
+				<div class='row'>
+					<div class='col-md-2 col-sm-3 col-6'>
+						<b>Subject</b>
+					</div>
+					<div class='col-md-10 col-sm-9'>
+						<input type='text' class='form-control' maxlength='50' name='subject' value='{$msg['mail_subject']}'>
+					</div>
+				</div>
+				<br />
+				<div class='row'>
+					<div class='col-md-2 col-sm-3 col-6'>
+						<b>Response</b>
+					</div>
+					<div class='col-md-10 col-sm-9'>
+						<textarea class='form-control' required='1' maxlength='65655' name='msg'></textarea>
+					</div>
+				</div>
+				<br />
+				<div class='row'>
+					<div class='col'>
+						<button class='btn btn-primary btn-block' type='submit'><i class='fas fa-reply'></i> Reply to {$un1['username']}</button>
+					</div>
+				</div>
+				<input type='hidden' name='verf' value='{$code}' />
+				</form>";
+			}
+			echo"
+		</div>
+	</div>";
 }
 
 function send()
@@ -343,16 +331,25 @@ function delall()
 {
     global $db, $userid;
     //Display the form to delete everything.
-    if (empty($_POST['delete'])) {
+    if (empty($_POST['delete'])) 
+	{
         echo "Are you sure you want to empty your inbox? This cannot be undone.";
-        echo "<br />
-		<form method='post'>
-			<input type='submit' name='delete' class='btn btn-primary' value='Delete Inbox'>
-		</form>
-		<form method='post' action='inbox.php'>
-			<input type='submit' class='btn btn-danger' value='Nevermind'>
-		</form>";
-    } else {
+        echo "<br />";
+		echo "<div class='row'>
+			<div class='col'>
+				<form method='post'>
+					<input type='submit' name='delete' class='btn btn-primary btn-block' value='Delete Inbox'>
+				</form>
+			</div>
+			<div class='col'>
+				<form method='post' action='inbox.php'>
+					<input type='submit' class='btn btn-danger btn-block' value='Nevermind'>
+				</form>
+			</div>
+		</div>";
+    } 
+	else 
+	{
         //Delete all messages that were sent to the current player.
         $db->query("DELETE FROM `mail` WHERE `mail_to` = {$userid}");
         alert('success', "Success!", "You have successfully cleaned out your inbox.", true, 'inbox.php');
@@ -362,17 +359,6 @@ function delall()
 function outbox()
 {
     global $db, $userid, $parser;
-    echo "
-    <table class='table table-bordered table-hover table-striped'>
-        <thead>
-            <th width='33%'>
-                Message Info
-            </th>
-            <th>
-                Subject/Message
-            </th>
-        </thead>
-        <tbody>";
     //Grab all the messages the current player has writen and display them to the user.
     $query = $db->query("/*qc=on*/SELECT * FROM `mail` WHERE `mail_from` = {$userid} ORDER BY `mail_time` desc LIMIT 15");
     while ($msg = $db->fetch_row($query)) {
@@ -384,24 +370,33 @@ function outbox()
         $msg['mail_text']=decrypt_message($msg['mail_text'],$userid,$msg['mail_to']);
         $parser->parse($msg['mail_text']);
         $status = ($msg['mail_status'] == 'unread') ?
-            "<span class='badge badge-pill badge-danger'><i class='fas fa-times'></i></span>" :
-            "<span class='badge badge-pill badge-success'><i class='fas fa-check'></i></span>";
-        echo "
-        <tr>
-            <td>
-                <a href='profile.php?user={$msg['mail_to']}'>{$sentto}</a><br />
-                {$sent}<br />
-                {$status}<br />
-            </td>
-            <td>
-                {$sub}";
-        //Parse message BBCode
-        echo $parser->getAsHtml();
-        echo "
-            </td>
-        </tr>";
+            "<span class='badge badge-pill badge-danger'>Unread</span>" :
+            "<span class='badge badge-pill badge-success'>Read</span>";
+	echo "
+		<div class='card'>
+			<div class='card-header bg-transparent'>
+				<div class='row'>
+					<div class='col'>
+						{$sub}
+						" . $parser->getAsHtml() . "
+					</div>
+				</div>
+				<small>
+				<div class='row text-muted'>
+						<div class='col'>
+							<a href='profile.php?user={$msg['mail_to']}'>{$sentto}</a>
+						</div>
+						<div class='col'>
+							{$sent}
+						</div>
+						<div class='col'>
+							{$status}
+						</div>
+				</div>
+				</small>
+			</div>
+		</div>";
     }
-    echo "</tbody></table>";
 }
 
 function compose()
@@ -417,41 +412,44 @@ function compose()
     if (permission('CanReplyMail', $userid)) {
         //Request CSRF Code and display the message composer form.
         $code = request_csrf_code('inbox_send');
-		if ($_GET['user'] == 1)
-			alert('info',"NOTICE","Before mailing the game owner, have you tried visiting the tutorial, forums or asking someone else? The hours per day spent responding to these messages could be used to improve the game.",false);
-        echo "
+		echo "
 		<form method='post' action='?action=send'>
-		<table class='table table-bordered'>
-		<tr>
-			<th>
-				Recipient
-			</th>
-			<td>
-				<input type='text' class='form-control' value='{$username}' name='sendto' required='1'>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				Subject
-			</th>
-			<td>
-				<input type='text' class='form-control' maxlength='50' name='subject'>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				Message
-			</th>
-			<td>
-				<textarea class='form-control' rows='5' required='1' maxlength='65655' name='msg'></textarea>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='2'>
-				<input type='submit' class='btn btn-primary'  value='Send Message'>
-			</td>
-		</tr>
-		</table>
+		<div class='card'>
+			<div class='card-header bg-transparent'>
+				<div class='row'>
+					<div class='col-md-2 col-sm-3 col-6'>
+						<b>Recipient</b>
+					</div>
+					<div class='col-md-10 col-sm-9'>
+						<input type='text' class='form-control' value='{$username}' name='sendto' required='1'>
+					</div>
+				</div>
+				<br />
+				<div class='row'>
+					<div class='col-md-2 col-sm-3 col-6'>
+						<b>Subject</b>
+					</div>
+					<div class='col-md-10 col-sm-9'>
+						<input type='text' class='form-control' maxlength='50' name='subject'>
+					</div>
+				</div>
+				<br />
+				<div class='row'>
+					<div class='col-md-2 col-sm-3 col-6'>
+						<b>Message</b>
+					</div>
+					<div class='col-md-10 col-sm-9'>
+						<textarea class='form-control' rows='5' required='1' maxlength='65655' name='msg'></textarea>
+					</div>
+				</div>
+				<br />
+				<div class='row'>
+					<div class='col'>
+						<input type='submit' class='btn btn-primary btn-block'  value='Send Message'>
+					</div>
+				</div>
+			</div>
+		</div>
 		<input type='hidden' name='verf' value='{$code}' />
 		</form>";
     }
@@ -459,27 +457,22 @@ function compose()
 
 function archive()
 {
-    echo "<table class='table table-bordered'>
-	<tr>
-		<th colspan='2'>
-			Select which archive you wish to download.
-		</th>
-	</tr>
-	<tr>
-		<td>
+	echo "
+	We at Chivalry is Dead delete read messages when they're 30 days old. Here, you may save your messages for whatever reason. We don't care why.
+	<div class='row'>
+		<div class='col'>
 			<form method='post' action='dlarchive.php'>
 				<input type='hidden' name='archive' value='inbox' />
-				<input type='submit' value='Inbox' class='btn btn-primary'>
+				<input type='submit' value='Inbox' class='btn btn-primary btn-block'>
 			</form>
-		</td>
-		<td>
+		</div>
+		<div class='col'>
 			<form method='post' action='dlarchive.php'>
 				<input type='hidden' name='archive' value='outbox' />
-				<input type='submit' value='Outbox' class='btn btn-primary'>
+				<input type='submit' value='Outbox' class='btn btn-primary btn-block'>
 			</form>
-		</td>
-	</tr>
-	</table>";
+		</div>
+	</div>";
 }
 
 function delete()

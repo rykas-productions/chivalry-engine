@@ -10,6 +10,10 @@ require('global_func_user.php');
 require('global_func_dropdown.php');
 require('global_func_guild.php');
 require('global_func_trinket.php');
+require('global_func_district.php');
+require('global_func_item.php');
+require('global_func_estates.php');
+require('global_func_email.php');
 /*
 	Parses the time since the timestamp given.
 	@param int $time_stamp for time since.
@@ -286,10 +290,12 @@ function updateAcademy()
 
 function checkGuildCrimes()
 {
-	global $db, $time, $ir;
+	global $db, $ir;
+	$time = time();
 	//Check guild crimes!
-    $guildcrime = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_crime` > 0 AND `guild_crime_done` < {$time}");
-    while ($r = $db->fetch_row($guildcrime)) {
+    $guildcrime = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_crime` > 0 AND `guild_crime_done` <= {$time}");
+    while ($r = $db->fetch_row($guildcrime)) 
+	{
 		$last_on = time() - (24 * (60 * 60));
 		$q = $db->query("SELECT `userid` FROM `users` WHERE `laston` > {$last_on} AND `guild` = {$r['guild_id']}");
 		if ($db->num_rows($q) == 0)
@@ -356,6 +362,11 @@ function check_data()
 	checkGuildCrimes();
 	missionCheck();
 	checkGuildVault();
+	removeOldEffects();
+	if (isset($ir))
+	{
+		maxWillCheck();
+	}
 }
 
 function checkGuildVault()
@@ -535,7 +546,7 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
 	if ((empty($title)) && ($doredirect))
 	{
 		echo "<div class='alert alert-{$type}' role='alert'>
-						{$text} > <a href='{$redirect}' class='alert-link'>{$redirecttext}</a>
+						{$text} > <a href='{$redirect}' class='alert-link updateHoverBtn'>{$redirecttext}</a>
 				</div>";
 	}
 	elseif (empty($title))
@@ -548,7 +559,7 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
         echo "<div class='alert alert-{$type}' role='alert'>
 				<h5 class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
 					{$title}</h5> 
-						{$text} > <a href='{$redirect}' class='alert-link'>{$redirecttext}</a>
+						{$text} > <a href='{$redirect}' class='alert-link updateHoverBtn'>{$redirecttext}</a>
 				</div>";
     }
 	else 
@@ -1025,40 +1036,6 @@ function pagination($perpage, $total, $currentpage, $url)
     return $output;
 }
 
-function returnIcon($item,$size=1)
-{
-	global $db, $ir;
-	if ($ir['icons'] == 1)
-	{
-		$q = $db->fetch_row($db->query("/*qc=on*/SELECT `icon`,`color` FROM `items` WHERE `itmid` = {$item}"));
-		$imageIcons=array(262,337,322);
-		if (empty($q['icon']))
-		{
-			return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
-		}
-		elseif ($q['color'] == 'img')
-		{
-			return "<img src='{$q['icon']}' style='width:{$size}rem;'>";
-		}
-		else
-		{
-			if (!empty($q['color']))
-			{
-				return "<i class='{$q['icon']}' style='font-size:{$size}rem; color: {$q['color']};'></i>";
-			}
-			else
-			{
-				return "<i class='{$q['icon']}' style='font-size:{$size}rem;'></i>";
-			}
-			
-		}
-	}
-	else
-	{
-		return;
-	}
-}
-
 function cslog($type='log',$txt)
 {
 	echo "<script>console.{$type}('{$txt}');</script>";
@@ -1220,55 +1197,6 @@ function toast($title,$txt,$time=-1,$icon='https://res.cloudinary.com/dydidizue/
         </div>";
 }
 
-function updateMostUsersCount()
-{
-	global $db, $set;
-	$cutOff=time()-900;	//15 Minutes
-	$countUsers=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$cutOff}"));
-	if ($set['mostUsersOn'] <= $countUsers)
-	{
-		$currentTime=time();
-		$db->query("UPDATE `settings` SET `setting_value` = {$currentTime} WHERE `setting_name` = 'mostUsersOnTime'");
-		$db->query("UPDATE `settings` SET `setting_value` = {$countUsers} WHERE `setting_name` = 'mostUsersOn'");
-	}
-}
-
-function parseDungeonItemName($dungItem)
-{
-	global $api;
-	if ($dungItem == 1)
-		return $api->SystemItemIDtoName(29);
-	elseif ($dungItem == 2)
-		return $api->SystemItemIDtoName(30);
-	elseif ($dungItem == 3)
-		return $api->SystemItemIDtoName(31);
-	elseif ($dungItem == 4)
-		return $api->SystemItemIDtoName(206);
-	else
-		return "N/A";
-}
-
-function parseInfirmaryItemName($infirmItem)
-{
-	global $api;
-	if ($infirmItem == 1)
-		return $api->SystemItemIDtoName(5);
-	elseif ($infirmItem == 2)
-		return $api->SystemItemIDtoName(6);
-	elseif ($infirmItem == 3)
-		return $api->SystemItemIDtoName(100);
-	elseif ($infirmItem == 4)
-		return $api->SystemItemIDtoName(98);
-	elseif ($infirmItem == 5)
-		return $api->SystemItemIDtoName(207);
-	elseif ($infirmItem == 6)
-		return $api->SystemItemIDtoName(206);
-	elseif ($infirmItem == 7)
-		return $api->SystemItemIDtoName(216);
-	else
-		return "N/A";
-}
-
 function addToEconomyLog($type = 'Misc', $curr = 'copper', $change = 0)
 {
 	global $db;
@@ -1369,118 +1297,27 @@ function addToEconomyLogDate($type = 'Misc', $curr = 'copper', $change = 0, $dat
 function backupDatabase()
 {
 	global $_CONFIG;
-	$filename='cid_backup_'.date('y-m-d').'.sql';
+	$filename='cid_backup_'.date('y-m-d').'-'.date('H-i-s').'.sql';
 	$result=exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/mysql/".$filename,$output);
 }
 
-function doDailyDistrictTick()
+function sendRefferalEmail($sendToUserID, $newUserID, $newUserName)
 {
-	global $db, $api;
-	$districtConfig['WarriorCostDaily'] = 500;
-	$districtConfig['ArcherCostDaily'] = 1000;
-	$districtConfig['GeneralCostDaily'] = 12500;
-	$db->query("UPDATE `guild_district_info` SET `warriors_bought` = 0, `archers_bought` = 0, `moves` = 2");
-	$q=$db->query("SELECT * FROM `guild_district_info`");
-	while ($r=$db->fetch_row($q))
-	{
-		$upkeepFee=0;
-		$warriors = countDeployedWarriors($r['guild_id']);
-		$archers = countDeployedArchers($r['guild_id']);
-		$generals = countDeployedGenerals($r['guild_id']);
-		if ($warriors > 0)
-			$upkeepFee=$upkeepFee + ($warriors * $districtConfig['WarriorCostDaily']);
-		if ($archers > 0)
-			$upkeepFee=$upkeepFee + ($archers * $districtConfig['ArcherCostDaily']);
-		if ($generals > 0)
-			$upkeepFee=$upkeepFee + ($generals * $districtConfig['GeneralCostDaily']);
-		if ($upkeepFee > 0)
-		{
-			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$upkeepFee} WHERE `guild_id` = {$r['guild_id']}");
-			addToEconomyLog('Guild Upkeep', 'copper', $upkeepFee*-1);
-			$api->GuildAddNotification($r['guild_id'],"Your guild has been charged a district's upkeep fee of " . number_format($upkeepFee) . " Copper Coins.");
-		}
-	}
-	districtRewards();
-}
-function countActiveGuildMembers24Hr($guild_id)
-{
-	global $db;
-	$last_on = time() - (1440*60);
-	$q = $db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `guild` = {$guild_id} AND `laston` > {$last_on}");
-	return $db->num_rows($q);
-}
-function countDeployedWarriors($guild_id)
-{
-	global $db;
-	$q=$db->query("SELECT SUM(`district_melee`) FROM `guild_districts` WHERE `district_owner` = {$guild_id}");
-	return $db->fetch_single($q);
-}
-function countDeployedArchers($guild_id)
-{
-	global $db;
-	$q=$db->query("SELECT SUM(`district_range`) FROM `guild_districts` WHERE `district_owner` = {$guild_id}");
-	return $db->fetch_single($q);
-}
-function countDeployedGenerals($guild_id)
-{
-	global $db;
-	$q=$db->query("SELECT SUM(`district_general`) FROM `guild_districts` WHERE `district_owner` = {$guild_id}");
-	return $db->fetch_single($q);
-}
-function districtRewards()
-{
-	districtRewardMostControlledTiles();
-	districtRewardMostDeployedUnits();
+	global $db, $api, $set;
+	$st = $db->fetch_row($db->query("SELECT `username`, `email` FROM `users` WHERE `userid` = {$sendToUserID}"));
+	$WelcomeMSGEmail = "Hey {$st['username']}!<br />We just wanted to thank you for referring your friend, {$newUserName} [{$newUserID}], to Chivalry is Dead. Make sure you log in and give them a warm welcome.";
+	$api->SystemSendEmail($st['email'],$WelcomeMSGEmail,$set['WebsiteName'] . " Referral", $set['sending_email']);
 }
 
-function districtRewardMostDeployedUnits()
+function isDevEnv()
 {
-	global $db, $api;
-	$winnerguild = 0;
-	$currentmax = 0;
-	$q = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` != 1 AND `guild_id` != 16");
-	while ($r = $db->fetch_row($q))
-	{
-		$currentGuildID = $r['guild_id'];
-		$currentGuild = 0;
-		$q2 = $db->query("SELECT `district_melee`, `district_range` FROM `guild_districts` WHERE `district_owner` = {$r['guild_id']}");
-		while ($r2 = $db->fetch_row($q2))
-		{
-			$currentGuild = $currentGuild + ($r2['district_melee'] + $r2['district_range']);
-		}
-		if ($currentGuild > $currentmax)
-		{
-			$currentmax = $currentGuild;
-			$winnerguild = $currentGuildID;
-		}
-	}
-	$api->GameAddNotification(1,"{$winnerguild} with {$currentmax}.");
-	$api->GuildAddItem($winnerguild,205,2);
-	$api->GuildAddNotification($winnerguild, "Your guild has the most deployed units on the guild districts and received two {$api->SystemItemIDtoName(205)} to your armory.");
+	if (determine_game_urlbase() != "chivalryisdeadgame.com")
+		return true;
 }
 
-function districtRewardMostControlledTiles()
+function removeOldEffects()
 {
-	global $db, $api;
-	$winnerguild = 0;
-	$currentmax = 0;
-	$q = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` != 1 AND `guild_id` != 16");
-	while ($r = $db->fetch_row($q))
-	{
-		$currentGuildID = $r['guild_id'];
-		$currentGuild = 0;
-		$q2 = $db->query("SELECT `district_owner` FROM `guild_districts` WHERE `district_owner` = {$r['guild_id']}");
-		while ($r2 = $db->fetch_row($q2))
-		{
-			$currentGuild = $currentGuild + 1;
-		}
-		if ($currentGuild > $currentmax)
-		{
-			$currentmax = $currentGuild;
-			$winnerguild = $currentGuildID;
-		}
-	}
-	$api->GameAddNotification(1,"{$winnerguild} with {$currentmax}.");
-	$api->GuildAddItem($winnerguild,205,2);
-	$api->GuildAddNotification($winnerguild, "Your guild has the most controlled tiles on the guild districts and received two {$api->SystemItemIDtoName(205)} to your armory.");
+	global $db;
+	$time = time();
+	$db->query("DELETE FROM `users_effects` WHERE `effectTimeOut` < {$time}");
 }

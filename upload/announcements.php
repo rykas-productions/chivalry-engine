@@ -8,10 +8,11 @@
 */
 require("globals.php");
 require('lib/bbcode_engine.php');
+$viewcount=getCurrentUserPref('announceView',1000);
 ///How many announcements the user hasn't read.
 $AnnouncementCount = $ir['announcements'];
 //Select all data from the announcements data table.
-$q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC");
+$q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC LIMIT {$viewcount}");
 while ($r = $db->fetch_row($q)) {
     //If announcements unread is greater than 0, show unread badge.
     if ($AnnouncementCount > 0) {

@@ -26,6 +26,9 @@ if (Random(1,100) == 6)
     alert('danger',"Uh Oh!","While walking up to the Temple of Fortune, you trip up the stairs and fall all the way down. You need to go to the infirmary.",true,'infirmary.php');
     die($h->endpage());
 }
+$month = date('n');
+$day = date('j');
+//$set['energy_refill_cost'] = floor($set['energy_refill_cost'] * 0.75);
 echo "<h3><i class='game-icon game-icon-mayan-pyramid'></i> Temple of Fortune</h3><hr />";
 //Set the GET to nothing if not set.
 if (!isset($_GET['action'])) {
@@ -310,7 +313,7 @@ function iq()
 function protection()
 {
 	global $ir,$userid,$api,$h,$db;
-	if ($ir['protection'] > time())
+	if (userHasEffect($userid, "basic_protection"))
 	{
 		alert('danger',"Uh Oh!","You cannot buy more protection while you already have an existing contract in place.",true,'temple.php');
 		die($h->endpage());
@@ -338,8 +341,7 @@ function protection()
 			alert('danger',"Uh Oh!","You need {$cost} Chivalry Tokens for {$protection} minutes of protection. You only have {$ir['secondary_currency']}.");
 			die($h->endpage());
 		}
-		$endtime=time()+($protection*60);
-		$db->query("UPDATE `user_settings` SET `protection` = {$endtime} WHERE `userid` = {$userid}");
+		userGiveEffect($userid, "basic_protection", ($protection*60));
 		alert('success',"Success!","You have successfully traded {$cost} Chivalry Tokens for {$protection} minutes of protection.",true,'temple.php');
 		$api->SystemLogsAdd($userid, 'temple', "Traded {$cost} Chivalry Tokens for {$protection} minutes of protection.");
 		$api->UserTakeCurrency($userid,'secondary',$cost);

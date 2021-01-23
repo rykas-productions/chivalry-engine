@@ -12,13 +12,13 @@ if (!isset($_GET['action'])) {
 }
 switch ($_GET['action']) {
     case "createuser":
-        createuser();
+        usercreate();
         break;
     case "edituser":
         edituser();
         break;
     case "deleteuser":
-        deleteuser();
+        userdelete();
         break;
     case "logout":
         logout();
@@ -37,7 +37,7 @@ switch ($_GET['action']) {
         die($h->endpage());
         break;
 }
-function createuser()
+function usercreate()
 {
     global $db, $h, $api, $userid;
     if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
@@ -54,6 +54,14 @@ function createuser()
 						<th colspan='2'>
 							Create a user by filling out this form.
 						</th>
+					</tr>
+					<tr>
+						<th>
+							User ID
+						</th>
+						<td>
+							<input type='number' id='userid' class='form-control' name='userid' value='0'>
+						</td>
 					</tr>
 					<tr>
 						<th>
@@ -257,6 +265,7 @@ function createuser()
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
         }
+		$uid = (isset($_POST['userid']) && is_numeric($_POST['userid'])) ? abs(intval($_POST['userid'])) : 0;
         $username = (isset($_POST['username']) && is_string($_POST['username'])) ? stripslashes($_POST['username']) : '';
         $pw = (isset($_POST['password']) && is_string($_POST['password'])) ? stripslashes($_POST['password']) : '';
         $pw2 = (isset($_POST['cpw']) && is_string($_POST['cpw'])) ? stripslashes($_POST['cpw']) : '';
@@ -348,25 +357,36 @@ function createuser()
             alert('danger', "Uh Oh!", "Password confirmation failed.");
             die($h->endpage());
         } else {
+			if ($uid == 0)
+				$insert = 'NULL';
+			else
+				$insert = $uid;
             $HP = (50) + $_POST['level'] * 50;
             $Energy = (22) + $_POST['level'] * 2;
             $Brave = (8) + $_POST['level'] * 2;
             $time = time();
             $encpsw = encode_password($pw);
             $e_encpsw = $db->escape($encpsw);
-            $db->query("INSERT INTO `users`
-			(`userid`, `username`, `user_level`, `email`, `password`, `level`, 
-			`xp`, `gender`, `class`, `lastip`, `loginip`, `registerip`, `laston`, `last_login`, 
-			`registertime`, `will`, `maxwill`, `hp`, `maxhp`, `energy`, `maxenergy`, `brave`, 
-			`maxbrave`, `primary_currency`, `secondary_currency`, `bank`, `attacking`, 
-			`vip_days`, `force_logout`, `display_pic`, `personal_notes`, `announcements`, `equip_primary`, 
-			`equip_secondary`, `equip_armor`, `guild`, `fedjail`, `staff_notes`, `location`, `timezone`) 
+			$db->query("INSERT INTO `users` 
+			(`userid`, `username`, `user_level`, `email`, `password`, 
+			`level`, `gender`, `class`, `lastip`, `loginip`, 
+			`registerip`, `laston`, `last_login`, `registertime`, 
+			`hp`, `maxhp`, `energy`, `maxenergy`, 
+			`brave`, `maxbrave`, `primary_currency`, `secondary_currency`, 
+			`vip_days`, `display_pic`, `signature`, `personal_notes`,  
+			`staff_notes`, `location`, `description`,
+			`equip_primary`, `equip_secondary`, `equip_armor`) 
 			VALUES 
-			(NULL, '{$e_username}', '{$_POST['userlevel']}', '{$e_email}', '{$e_encpsw}', '{$_POST['level']}', '0', '{$_POST['gender']}', 
-			'{$_POST['class']}', '127.0.0.1', '', '127.0.0.1', '', '', '{$time}', '100', '100', '{$HP}', '{$HP}', '{$Energy}', '{$Energy}', '{$Brave}', '{$Brave}', 
-			 '{$Money}', '{$Money2}', '-1', '0', '{$VIP}', 'false', '', '', '', '{$equip_prim}', '{$equip_sec}', '{$equip_armor}', '0', '0', '', '{$city}', 'Europe/London');");
-            $i = $db->insert_id();
-            $db->query("INSERT INTO `userstats` VALUES($i, {$Strength}, {$Agility}, {$Guard}, {$IQ}, {$Labor})");
+			('{$insert}', '{$e_username}', '{$_POST['userlevel']}', '{$e_email}', '{$e_encpsw}', 
+			'{$_POST['level']}', '{$_POST['gender']}', '{$_POST['class']}', '127.0.0.1', '127.0.0.1', 
+			'127.0.0.1', '{$time}', '{$time}', '{$time}', 
+			'{$HP}', '{$HP}', '{$Energy}', '{$Energy}', 
+			'{$Brave}', '{$Brave}', '{$Money}', '{$Money2}', 
+			'{$VIP}', '', '', '', 
+			'', '{$city}', '',
+			'{$equip_prim}', '{$equip_sec}', '{$equip_armor}')");
+			$i = $db->insert_id();
+            $db->query("INSERT INTO `userstats` VALUES($i, {$Strength}, {$Agility}, {$Guard}, {$IQ}, {$Labor}, 100)");
             $db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
             $db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
             alert('success', "Success!", "You have successfully created the user named {$e_username}.", true, 'index.php');
@@ -775,7 +795,7 @@ function edituser()
     }
 }
 
-function deleteuser()
+function userdelete()
 {
     global $db, $userid, $h, $api, $ir;
     if ($api->UserMemberLevelGet($userid, 'Admin') == false) {

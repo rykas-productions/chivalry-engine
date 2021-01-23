@@ -38,6 +38,7 @@ function addestate()
         $name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
         $will = (isset($_POST['will']) && is_numeric($_POST['will'])) ? abs(intval($_POST['will'])) : 100;
         $cost = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : 0;
+		$upgrades = (isset($_POST['upgrades']) && is_numeric($_POST['upgrades'])) ? abs($_POST['upgrades']) : 0;
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_addestate', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
             die($h->endpage());
@@ -64,7 +65,7 @@ function addestate()
         }
         $api->SystemLogsAdd($userid, 'staff', "Created an estate named {$name}.");
         alert('success', "Success!", "You have successfully created the {$name} Estate.", true, 'index.php');
-        $db->query("INSERT INTO `estates` (`house_name`, `house_price`, `house_will`, `house_level`) VALUES ('{$name}', '{$cost}', '{$will}', '{$lvl}')");
+        $db->query("INSERT INTO `estates` (`house_name`, `house_price`, `house_will`, `house_level`, `upgradeLevel`) VALUES ('{$name}', '{$cost}', '{$will}', '{$lvl}', '{$upgrades}')");
     } else {
         $csrf = request_csrf_html('staff_addestate');
         echo "<form action='?action=addestate' method='post'>
@@ -104,6 +105,14 @@ function addestate()
 				</th>
 				<td>
 					<input type='number' name='will' min='101' required='1' class='form-control'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Upgrades
+				</th>
+				<td>
+					<input type='number' name='upgrades' min='0' max='100' required='1' class='form-control'>
 				</td>
 			</tr>
 			<tr>
@@ -183,6 +192,7 @@ function editestate()
         $name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
         $will = (isset($_POST['will']) && is_numeric($_POST['will'])) ? abs(intval($_POST['will'])) : 100;
         $cost = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : 0;
+		$upgrades = (isset($_POST['upgrade']) && is_numeric($_POST['upgrade'])) ? abs($_POST['upgrade']) : 0;
         $_POST['id'] = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : 0;
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_editestate2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
@@ -211,9 +221,11 @@ function editestate()
             die($h->endpage());
         }
         $db->query("UPDATE `estates` SET `house_will` = {$will}, `house_price` = {$cost},
-					`house_name` = '{$name}', `house_level` = {$lvl} WHERE `house_id` = {$_POST['id']}");
-        $db->query("UPDATE `users` SET `maxwill` = {$will}, `will` = LEAST(`will`, {$will})
+					`house_name` = '{$name}', `house_level` = {$lvl}, `upgradeLevel` = {$upgrades} WHERE `house_id` = {$_POST['id']}");
+        //TODO REDO THIS TO USE NEW ESTATE SYSTEM
+		$db->query("UPDATE `users` SET `maxwill` = {$will}, `will` = LEAST(`will`, {$will})
 					WHERE `maxwill` = {$oldwill}");
+		trigger_error("Update query for updating will on estates and users.");
         alert('success', "Success!", "You have successfully updated the {$name} estate.", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited the {$name} estate.");
         die($h->endpage());
@@ -270,6 +282,14 @@ function editestate()
 				</th>
 				<td>
 					<input type='number' name='will' min='100' required='1' class='form-control' value='{$old['house_will']}'>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Upgrades
+				</th>
+				<td>
+					<input type='number' name='upgrade' min='0' max='100' required='1' class='form-control' value='{$old['upgradeLevel']}'>
 				</td>
 			</tr>
 			<tr>

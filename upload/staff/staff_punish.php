@@ -41,6 +41,9 @@ switch ($_GET['action']) {
     case 'massmail':
         massmail();
         break;
+	case 'massnotif':
+        massnotif();
+        break;
     case 'massemail':
         massemail();
         break;
@@ -882,6 +885,70 @@ function massmail()
 			</th>
 			<td>
 				<textarea class='form-control' name='msg' required='1'></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<input type='submit' class='btn btn-primary' value='Send Mass Mail'>
+			</td>
+		</tr>
+		{$csrf}
+		</form>
+		</table>";
+    }
+}
+
+function massnotif()
+{
+    global $db, $userid, $h, $api, $set, $ir;
+    echo "<h3>Mass Mailer</h3><hr>";
+    if (isset($_POST['msg'])) {
+        $msg = $_POST['msg'];
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_massmail', stripslashes($_POST['verf']))) {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
+            die($h->endpage());
+        }
+        if (empty($msg)) {
+            alert('danger', "Uh Oh!", "Please fill in the previous form completely before submitting again.");
+            die($h->endpage());
+        }
+        if (strlen($msg) > 65655) {
+            alert('danger', "Uh Oh!", "Sent messages can only be, at maximum, 65,655 characters in length.");
+            die($h->endpage());
+        }
+        $q = $db->query("/*qc=on*/SELECT `userid`,`user_level` FROM `users`");
+        $sent = 0;
+        while ($r = $db->fetch_row($q)) {
+            echo "Sending Mail to {$api->SystemUserIDtoName($r['userid'])} ...";
+            if ($r['user_level'] == 'NPC') {
+                echo "... Failed.";
+            } else {
+                if ($api->GameAddNotification($r['userid'], "<b>Important game notification:</b> " .$msg . " --{$ir['username']} [{$userid}]") == true) {
+                    echo "... Success.";
+                    $sent = $sent + 1;
+                } else {
+                    echo "... Failed.";
+                }
+            }
+            echo "<br />";
+        }
+        alert('success', "Success!", "You successfully sent a mass notification to {$sent} players", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Sent a mass notification.");
+    } else {
+        $csrf = request_csrf_html('staff_massmail');
+        echo "<table class='table table-bordered'>
+		<form method='post'>
+		<tr>
+			<th colspan='2'>
+				Mass notification, for reasons.
+			</th>
+		</tr>
+		<tr>
+			<th>
+				Message
+			</th>
+			<td>
+				<input type='text' class='form-control' name='msg' required='1'>
 			</td>
 		</tr>
 		<tr>

@@ -40,7 +40,7 @@ if (empty($_GET['to'])) {
 	{
 		$guild_owner = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r['town_guild_owner']}"));
 		$level = ($ir['level'] > $r['town_min_level']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
-		$name = ($r['town_guild_owner'] > 0) ? "Guild Owner: <a href='guilds.php?action=biew&id={$r['town_guild_owner']}'>{$guild_owner}</a><br />" : "" ;
+		$name = ($r['town_guild_owner'] > 0) ? "Guild Owner: <a href='guilds.php?action=view&id={$r['town_guild_owner']}'>{$guild_owner}</a><br />" : "" ;
 		$tax = ($r['town_tax'] > 0) ? "Town Tax: {$r['town_tax']}%<br />" : "" ;
 		$guildcolor = ($ir['guild'] == $r['town_guild_owner']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
 		$population = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$r['town_id']}"));

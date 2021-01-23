@@ -45,7 +45,8 @@ while ($riq = $db->fetch_row($biq))
 	$investment=$riq['amount']+$add;
 	$db->query("UPDATE `users` SET `bank`=`bank`+{$investment} WHERE `userid` = {$riq['userid']}");
 	$api->GameAddNotification($riq['userid'],"Your bank investment of " . number_format($riq['amount']) . " Copper Coins has finished. " . number_format($investment) . " Copper Coins have been added to your bank account.");
-	$db->query("DELETE FROM `bank_investments` WHERE `userid` = {$riq['userid']}");
+	$db->query("DELETE FROM `bank_investments` WHERE `userid` = {$riq['userid']} AND `invest_id` = {$riq['invest_id']}");
+	addToEconomyLog('Bank Investments', 'copper', $add);
 }
 $fiveday=Random(3,9);
 $tenday=Random(7,20);

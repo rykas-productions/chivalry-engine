@@ -222,3 +222,4 @@ upload/cache/
 upload/test.php
 upload/chat/install.php
 upload/chat/lib/data/users.php
+upload/chat/lib/config.php.example

@@ -9,6 +9,7 @@
 $menuhide = 1;
 $nohdr=true;
 require_once('../../globals.php');
+date_default_timezone_set($set['game_time']);
 if (isset($_SERVER['REQUEST_METHOD']) && is_string($_SERVER['REQUEST_METHOD'])) {
     if (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST') {
         // Ignore a GET request
@@ -44,39 +45,42 @@ $ir['announcements'] = $db->fetch_single(
 								WHERE `userid` = {$ir['userid']}"));
 ?>
 	<script>
-		var div = document.getElementById("socialRow");
-		div.innerHTML = "";
+		document.getElementById("socialRow").innerHTML = "";
+		document.getElementById('ui_token').innerHTML = <?php echo "'" . number_format($ir['secondary_currency']) . "'"; ?>;
+		document.getElementById('ui_copper').innerHTML = <?php echo "'" . number_format($ir['primary_currency']) . "'"; ?>;
+		document.getElementById('ui_mail').innerHTML = <?php echo "'" . number_format($ir['mail']) . "'"; ?>;
+		document.getElementById('ui_notif').innerHTML = <?php echo "'" . number_format($ir['notifications']) . "'"; ?>;
+		document.getElementById('ui_announce').innerHTML = <?php echo "'" . number_format($ir['announcements']) . "'"; ?>;
+		document.getElementById('ui_time').innerHTML = <?php echo "'" .  date('F j, Y') . " " . date('g:i:s a') . "'"; ?>
 	</script>
 <?php
 if ($ir['mail'] > 0) 
 {
-	echo "<div class='col-md'>";
+	echo "<div class='col-lg'>";
 		alert('info', "", "You have " . number_format($ir['mail']) . " unread messages.", true, 'inbox.php', "View");
 	echo "</div>";
 	?>
 	<script>
-		var div = document.getElementById('inboxTop');
-		div.innerHTML = <?php echo "' " . number_format($ir['mail']) . "'"; ?>
+		document.getElementById('inboxTop').innerHTML = <?php echo "' " . number_format($ir['mail']) . "'"; ?>
 	</script>
 	<?php
 }
 //Tell user they have unread notifcations when they do.
 if ($ir['notifications'] > 0) 
 {
-	echo "<div class='col-md'>";
+	echo "<div class='col-lg'>";
 		alert('info', "", "You have " . number_format($ir['notifications']) . " unread notifications.", true, 'notifications.php', "View");
 	echo "</div>";
 	?>
 	<script>
-		var div = document.getElementById('notifTop');
-		div.innerHTML = <?php echo "' " . number_format($ir['notifications']) . "'"; ?>
+		document.getElementById('notifTop').innerHTML = <?php echo "' " . number_format($ir['notifications']) . "'"; ?>
 	</script>
 	<?php
 }
 //Tell user they have unread game announcements when they do.
 if ($ir['announcements'] > 0) 
 {
-	echo "<div class='col-md'>";
+	echo "<div class='col-lg'>";
 		alert('info', "", "You have {$ir['announcements']} unread announcements.", true, 'announcements.php', "View");
 	echo "</div>";
 }

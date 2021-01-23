@@ -41,21 +41,22 @@ function home()
     }
     $db->free_result($q2);
     $q = $db->query("/*qc=on*/SELECT `cgID`, `cgNAME` FROM `crimegroups` ORDER BY `cgORDER` ASC");
-    echo "
-	<table class='table table-bordered'>
-		<tr>
-			<th>
-				Crime
-			</th>
-			<th>
-				Bravery Cost
-			</th>
-			<th>
-				Commit
-			</th>
-		</tr>";
+	echo "<div class='row'>
+			<div class='col'>
+				<h5>Crime</h5>
+			</div>
+			<div class='col'>
+				<h5>Success Chance</h5>
+			</div>
+		</div>
+		<hr />";
     while ($r = $db->fetch_row($q)) {
-        echo "<tr><td colspan='3' class='h'>{$r['cgNAME']} Crimes</td></tr>";
+        echo "<div class='row'>
+				<div class='col'>
+					<h3>{$r['cgNAME']} Crimes</h3> 
+				</div>
+			</div>
+			<hr />";
         foreach ($crimes as $v) {
             if ($v['crimeGROUP'] == $r['cgID']) {
 				//Fix from Kyle Massacre. Thanks!
@@ -94,25 +95,26 @@ function home()
 				if ($v['sucrate'] > 100)
 					$v['sucrate']=100;
 				$v['sucrate']=round($v['sucrate']);
-                echo "<tr>
-						<td>
-							{$v['crimeNAME']}<br />
-							Success Chance: {$v['sucrate']}%
-						</td>
-						<td>
-							{$v['crimeBRAVE']}
-						</td>
-						<td>
-							<a href='?action=crime&c={$v['crimeID']}'>
-								Commit Crime
-							</a>
-						</td>
-					</tr>";
+				echo "<div class='row'>
+			<div class='col'>
+				<a href='?action=crime&c={$v['crimeID']}'>{$v['crimeNAME']}</a><br />
+				Needed Brave: {$v['crimeBRAVE']}
+			</div>
+			<div class='col'>
+				<div class='progress' style='height: 1rem;'>
+					<div class='progress-bar bg-primary' role='progressbar' aria-valuenow='{$v['sucrate']}' style='width:{$v['sucrate']}%' aria-valuemin='0' aria-valuemax='100'>
+						<span>
+							{$v['sucrate']}%
+						</span>
+					</div>
+				</div>
+			</div>
+			</div>
+			<hr />";
             }
         }
     }
     $db->free_result($q);
-    echo "</table>";
     $h->endpage();
 }
 

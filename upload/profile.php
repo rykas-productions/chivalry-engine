@@ -27,8 +27,10 @@ $q = $db->query(
 					ON `u`.`userid` = `i`.`infirmary_user`
 					LEFT JOIN `dungeon` AS `d`
 					ON `u`.`userid` = `d`.`dungeon_user`
-                    INNER JOIN `estates` AS `e`
-                    ON `u`.`maxwill` = e.`house_will`
+                    INNER JOIN `user_estates` AS `e`
+                    ON `u`.`estate` = e.`ue_id`
+					INNER JOIN `estates` AS `eh`
+                    ON `e`.`estate` = eh.`house_id`
                     LEFT JOIN `guild` AS `g`
                     ON `g`.`guild_id` = `u`.`guild`
                     LEFT JOIN `fedjail` AS `f`
@@ -268,7 +270,14 @@ else
 	$genderClr = "text-muted";
 }
 $rhpperc = round($r['hp'] / $r['maxhp'] * 100);
-
+if ($_GET['user'] == 21)
+{
+	if (date('n') == 11)
+	{
+		$turkeyKills=getCurrentUserPref('2020turkeyKills',0);
+		alert("info","","You have hunted " . number_format($turkeyKills) . " turkey this year.",false);
+	}
+}
 echo "<h3>{$user_name}'s Profile</h3>
 <div class='row'>
 	<div class='col-lg-7'>
@@ -282,17 +291,24 @@ echo "<h3>{$user_name}'s Profile</h3>
 						{$displaypic}
 					</div>
 					<div class='col-md'>
-						<h6>Level</h6>
-						<h2>" . number_format($r['level']) . "</h2>
-						<br />
-						<h6>Class</h6>
-						<h2>{$r['class']}</h2>
-						<br />
-						<h6>Mastery Rank</h6>
-						<h2>" . formatMasteryRank($r['reset']) . "</h2>
-						<br />
-						<h6>Age</h6>
-						<h2>{$r['daysold']}</h2>
+						<div class='row'>
+							<div class='col-6 col-sm-12'>
+								<h6>Level</h6>
+								<h2>" . number_format($r['level']) . "</h2>
+							</div>
+							<div class='col-6 col-sm-12'>
+								<h6>Class</h6>
+								<h2>{$r['class']}</h2>
+							</div>
+							<div class='col-6 col-sm-12'>
+								<h6>Mastery Rank</h6>
+								<h2>" . formatMasteryRank($r['reset']) . "</h2>
+							</div>
+							<div class='col-6 col-sm-12'>
+								<h6>Age</h6>
+								<h2>{$r['daysold']}</h2>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -53,7 +53,7 @@ echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['tokenbank
 						<div class='col'>
 							<input type='number' min='1' max='{$ir['secondary_currency']}' class='form-control' id='form_bank_wallet' required='1' name='deposit' value='{$ir['secondary_currency']}'>
 						</div>
-						<div class='col-4 col-md-3'>
+						<div class='col-5 col-sm-4 col-md-3'>
 							<input type='submit' value='Deposit' class='btn btn-primary' id='tokenDeposit'>
 						</div>
 					</div>
@@ -73,7 +73,7 @@ echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['tokenbank
 						<div class='col'>
 							<input type='number' min='1' max='{$ir['tokenbank']}' class='form-control' required='1' id='form_bank_acc' name='withdraw' value='{$ir['tokenbank']}'>
 						</div>
-						<div class='col-4 col-md-3'>
+						<div class='col-6 col-sm-4 col-md-3'>
 							<input type='submit' value='Withdraw' class='btn btn-primary' id='tokenWithdraw'>
 						</div>
 					</div>

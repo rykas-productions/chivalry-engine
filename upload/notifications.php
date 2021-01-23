@@ -36,9 +36,7 @@ if ($_GET['deleteall'] > 0) {
     alert('success', "Success!", "You have successfully deleted all your notifications.", false);
 }
 echo "
-<b>Last {$viewCount} notifications</b>
-<table class='table table-bordered table-hover table-striped'>
-<tbody>";
+<b>Last {$viewCount} notifications</b>";
 $query = $db->query("/*qc=on*/SELECT *
                 FROM `notifications`
                 WHERE `notif_user` = $userid
@@ -68,20 +66,33 @@ while ($notif = $db->fetch_row($query)) {
 		
 	}
     echo "
-	<tr>
-		<td align='left'>
-			" . stripslashes($notif['notif_text']) . "<br />
-			<small>{$NotificationTime}</small>
-		</td>
-		<td>
-			{$Status} <a class='btn btn-primary btn-sm' href='?delete={$notif['notif_id']}'><i class='fas fa-trash-alt'></i></a>
-		</td>
-	</tr>";
+	<div class='card'>
+		<div class='card-header bg-transparent'>
+			<div class='row'>
+				<div class='col-12'>
+					" . stripslashes($notif['notif_text']) . "<br />
+					<small class='text-muted'>
+						<div class='row'>
+							<div class='col-1'>
+								{$Status}
+							</div>
+							<div class='col-9'>
+								{$NotificationTime}
+							</div>
+							<div class='col-1'>
+								<a class='btn btn-primary btn-sm' href='?delete={$notif['notif_id']}'><i class='fas fa-trash-alt'></i></a>
+							</div>
+						</div>
+					</small>
+				</div>
+			</div>
+		</div>
+	</div>";
 }
 $db->query(
     "UPDATE `notifications`
     		 SET `notif_status` = 'read'
     		 WHERE `notif_user` = {$userid}");
-echo "</tbody></table>
-<a class='btn btn-primary' href='?deleteall=1'>Delete All Notifications</a>";
+echo "<br />
+<a class='btn btn-primary btn-block' href='?deleteall=1'>Delete All Notifications</a>";
 $h->endpage();

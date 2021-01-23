@@ -38,11 +38,8 @@ if ($verified) {
 	$payer = abs((int)$packr[4]);
     $for = $buyer;
 	
-	$msg="Dear {$api->SystemUserIDtoName($payer)} [{$payer}]<br />
-	We wanted to thank you for your recent donation of \${$payment_amount}. Your donation should be processed within 24-48 hours. If not, please contact CID Admin [1] in-game as soon as possible.<br />
-	Your donation will be used to fund the game costs, which typically include hosting, domain costs, and advertising campaigns. We do appreciate it!!";
-	$email=$db->fetch_single($db->query("SELECT `email` FROM `users` WHERE `userid` = {$payer}"));
-	$api->SystemSendEmail($email, $msg, "Your Chivalry is Dead Donation", $set['sending_email']);
+	//Send donation received.
+	sendDonateStartEmail($payer, $payment_amount);
 
     //Is payment completed?
     if ($payment_status != "Completed") {
@@ -104,12 +101,13 @@ if ($verified) {
 	//$api->UserGiveItem($buyer,89,$vipticketgiven);
     $api->SystemLogsAdd($payer, 'donate', "{$payer_email} donated \${$payment_amount} for {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . ".");
 	$mailtext="{$api->SystemUserIDtoName($payer)} [{$payer}] spent \${$payment_amount} for {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . "(s) and sent them to you! You should go thank them!";
-	$api->GameAddNotification($payer,"Your \${$payment_amount} donation for your {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . " item has been successfully credited to {$api->SystemUserIDtoName($for)} [{$for}].");
 	if ($payer != $for)
+	{
 		$api->GameAddMail($for,"Chivalry is Dead Donation",$mailtext,1);
-	$msg="Dear {$api->SystemUserIDtoName($payer)} [{$payer}]<br />
-	Your donation of \${$payment_amount} has been accepted, and your {$fpi['vip_qty']} x {$api->SystemItemIDtoName($fpi['vip_item'])}(s) have been credited. We appreciate your donation, as it helps the game.";
-	$api->SystemSendEmail($email, $msg, "Your Chivalry is Dead Donation", $set['sending_email']);
+		sendDonateGiftEmail($for, $payer);
+	}
+	sendDonateGoodEmail($payer, $payment_amount);
+	$api->GameAddNotification($payer,"Your \${$payment_amount} donation for your {$fpi['vip_qty']} x " . $api->SystemItemIDtoName($fpi['vip_item']) . " item has been successfully credited to {$api->SystemUserIDtoName($for)} [{$for}].");
 }
 // Reply with an empty 200 response to indicate to PayPal the IPN was received correctly.
 header("HTTP/1.1 200 OK");

@@ -31,44 +31,35 @@ function home()
     echo "<h3><i class='game-icon game-icon-hospital-cross'></i> The Infirmary</h3><hr />
 	<small>There's currently " . number_format($PlayerCount) . " users in the infirmary.</small>
 	<hr />";
-	
-	echo "<div class='row'>
-			<div class='col-md-4'>
-				<h3>Player</h3>
-			</div>
-			<div class='col-md-4'>
-				<h3>Infirmary Status</h3>
-			</div>
-			<div class='col-md-4'>
-				<h3>Actions</h3>
-			</div>
-		</div>
-		<hr />";
     $query = $db->query("/*qc=on*/SELECT * FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime} ORDER BY `infirmary_out` DESC");
     while ($Infirmary = $db->fetch_row($query)) 
 	{
 		$displaypic = "<img src='" . parseImage(parseDisplayPic($Infirmary['infirmary_user'])) . "' height='75' alt='' title=''>";
-		echo "<div class='row'>
-			<div class='col-md-4'>
+		echo "
+		<div class='card'>
+			<div class='card-body'>
 				<div class='row'>
-					<div class='col-md'>
+					<div class='col-6 col-sm-4 col-md-3 col-lg-2'>
 						{$displaypic}
 					</div>
-					<div class='col-md'>
+					<div class='col-6 col-sm-4 col-md-3'>
 						<a href='profile.php?user={$Infirmary['infirmary_user']}'> " . parseUsername($Infirmary['infirmary_user']) . " </a> 
 						[{$Infirmary['infirmary_user']}]
 					</div>
+					<div class='col-12 col-md-6 col-lg'>
+						<div class='row'>
+							<div class='col-12 col-lg-6'>
+								Reason: <i>{$Infirmary['infirmary_reason']}</i><br />
+								Release: " . TimeUntil_Parse($Infirmary['infirmary_out']) . "
+							</div>
+							<div class='col col-lg-6'>
+								<a class='btn btn-primary btn-block' href='?action=heal&user={$Infirmary['infirmary_user']}'>Heal {$api->SystemUserIDtoName($Infirmary['infirmary_user'])}</a>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class='col-md-4'>
-				Reason: <i>{$Infirmary['infirmary_reason']}</i><br />
-				Release: " . TimeUntil_Parse($Infirmary['infirmary_out']) . "
-			</div>
-			<div class='col-md-4'>
-				<a class='btn btn-primary' href='?action=heal&user={$Infirmary['infirmary_user']}'>Heal {$api->SystemUserIDtoName($Infirmary['infirmary_user'])}</a>
-			</div>
-		</div>
-		<hr />";
+		</div>";
     }
 }
 

@@ -79,6 +79,16 @@ if (isset($_GET['dungeon'])) {
 		alert('success', "Success!", "Negative Begone was used successfully. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
+	//bust
+	if ($ir['ditem'] == 5)
+	{
+		header("Location: dungeon.php?action=bust&user={$userid}");
+	}
+	//bail
+	if ($ir['ditem'] == 6)
+	{
+		header("Location: dungeon.php?action=bail&user={$userid}");
+	}
 } 
 elseif (isset($_GET['infirmary'])) 
 {

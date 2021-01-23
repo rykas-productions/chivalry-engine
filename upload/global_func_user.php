@@ -238,77 +238,6 @@ function get_rank($stat, $mykey)
     //Return the count from earlier.
     return $result;
 }
-/**
- * Give a particular user a particular quantity of some item.
- * @param int $user The user ID who is to be given the item
- * @param int $itemid The item ID which is to be given
- * @param int $qty The item quantity to be given
- * @param int $notid [optional] If specified and greater than zero, prevents the item given database entry combining with inventory id $notid.
- */
-function item_add($user, $itemid, $qty, $notid = 0)
-{
-    global $db;
-    //Select $itemid's item name.
-    $ie = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`itmname`) FROM `items` WHERE `itmid` = {$itemid}"));
-    //If the name returns, continue
-    if ($ie > 0) {
-        //We want $itemid to go into its own stack. Select the inventory ID to make sure this doesn't happen.
-        if ($notid > 0) {
-            $q = $db->query("/*qc=on*/SELECT `inv_id` FROM `inventory` WHERE `inv_userid` = {$user} AND `inv_itemid` = {$itemid}
-							 AND `inv_id` != {$notid} LIMIT 1");
-        } //We don't care if the $itemid merges into an existing inventory stack. Let's select the first stack then.
-        else {
-            $q = $db->query("/*qc=on*/SELECT `inv_id` FROM `inventory` WHERE `inv_userid` = {$user} AND `inv_itemid` = {$itemid}
-							 LIMIT 1");
-        }
-        //If the inventory stack exists, add $qty to it and return true to signify we succeeded at adding the item.
-        if ($db->num_rows($q) > 0) {
-            $r = $db->fetch_row($q);
-            $db->query("UPDATE `inventory` SET `inv_qty` = `inv_qty` + {$qty} WHERE `inv_id` = {$r['inv_id']}");
-            return true;
-        }
-        //The inventory does not exist and/or we don't want $itemid to merge into an inventory stack, so lets create
-        //a new one and return true.
-        else {
-            $db->query("INSERT INTO `inventory` (`inv_itemid`, `inv_userid`, `inv_qty`) VALUES ({$itemid}, {$user}, {$qty})");
-            return true;
-        }
-    }
-}
-
-/**
- * Take away from a particular user a particular quantity of some item.<br />
- * If they don't have enough of that item to be taken, takes away any that they do have.
- * @param int $user The user ID who is to lose the item
- * @param int $itemid The item ID which is to be taken
- * @param int $qty The item quantity to be taken
- */
-function item_remove($user, $itemid, $qty)
-{
-    global $db;
-    //Select $itemid's item name.
-    $ie = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`itmname`) FROM `items` WHERE `itmid` = {$itemid}"));
-    //If $itemid actually exists, it'll return a name, so lets continue if that's the case.
-    if ($ie > 0) {
-        //Select the inventory ID number where $itemid's is stored for $user.
-        $q = $db->query("/*qc=on*/SELECT `inv_id`, `inv_qty` FROM `inventory` WHERE `inv_userid` = {$user}
-						 AND `inv_itemid` = {$itemid} LIMIT 1");
-        //User has an inventory id for $itemid!
-        if ($db->num_rows($q) > 0) {
-            $r = $db->fetch_row($q);
-            //$user's $itemid quantity is greater than $qty, so remove only $qty and return true.
-            if ($r['inv_qty'] > $qty) {
-                $db->query("UPDATE `inventory` SET `inv_qty` = `inv_qty` - {$qty} WHERE `inv_id` = {$r['inv_id']}");
-                return true;
-            } //$user's $itemid quantity is lower than $qty, so delete the inventory ID entirely and return true.
-            else {
-                $db->query("DELETE FROM `inventory` WHERE `inv_id` = {$r['inv_id']}");
-                return true;
-            }
-        }
-    }
-    $db->free_result($q);
-}
 
 function parseUsername($id)
 {
@@ -332,12 +261,17 @@ function parseUsername($id)
 	{
 		if ($r['equip_badge'] == 0)
 			$r['equip_badge'] = 159;
-		$username = "<span class='{$r['vipcolor']} font-weight-bold' data-toggle='tooltip' data-placement='bottom' title='" . number_format($r['vip_days']) . " VIP Days remaining.'>{$r['username']} " . returnIcon($r['equip_badge']) . "</span>";
+		$username = "<span class='font-weight-bold' style='color:{$r['vipcolor']}' data-toggle='tooltip' data-placement='top' title='" . number_format($r['vip_days']) . " VIP Days remaining.'>{$r['username']} " . returnIcon($r['equip_badge']) . "</span>";
 	}
 	else
 	{
 		$username = $r['username'];
 	}
+	//Now for dungeon and infirmary icons
+	if (user_dungeon($id))
+		$username .= " <i class='fas fa-unlock-alt text-danger' data-toggle='tooltip' data-placement='top' title='{$r['username']} is currently in the dungeon.'></i>";
+	if (user_infirmary($id))
+		$username .= " <i class='fas fa-hospital text-danger' data-toggle='tooltip' data-placement='top' title='{$r['username']} is currently in the infirmary.'></i>";
     return $username;
 }
 
@@ -366,8 +300,10 @@ function levelMultiplier($level)
 		return 1.5;
 	elseif (($level >= 150) && ($level < 250))
 		return 1.75;
-	elseif (($level >= 250) && ($level < 400))
+	elseif (($level >= 250) && ($level < 325))
 		return 2.25;
+	elseif (($level >= 325) && ($level < 400))
+		return 2.5;
     elseif (($level >= 400) && ($level < 500))
 		return 2.75;
     elseif (($level >= 500) && ($level < 600))
@@ -512,3 +448,505 @@ function parseActivity($user)
 	}
 	return "<span class='{$activeColor}'>{$activeText}</span>";
 }
+
+function updateMostUsersCount()
+{
+	global $db, $set;
+	$currentTime=time();
+	$cutOff=$currentTime-900;	//15 Minutes
+	$countUsers=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$cutOff}"));
+	if ($set['mostUsersOn'] <= $countUsers)
+	{
+		$db->query("UPDATE `settings` SET `setting_value` = {$currentTime} WHERE `setting_name` = 'mostUsersOnTime'");
+		$db->query("UPDATE `settings` SET `setting_value` = {$countUsers} WHERE `setting_name` = 'mostUsersOn'");
+	}
+}
+
+function userGiveEffect($user, $effect, $time = 30, $multiplier = 1)
+{
+	//just in case
+	//CREATE TABLE `users_effects` ( `userid` INT(11) UNSIGNED NOT NULL , `effectName` VARCHAR(255) NOT NULL , `effectMulti` VARCHAR(255) NOT NULL , `effectTimeOut` INT(11) UNSIGNED NOT NULL ) ENGINE = InnoDB;
+	global $db;
+	$q = $db->query("SELECT * FROM `users_effects` WHERE `userid` = {$user} AND `effectName` = '{$effect}'");
+	if ($db->num_rows($q) == 0)
+	{
+		$timeout = time() + $time;
+		$db->query("INSERT INTO `users_effects` 
+				(`userid`, `effectName`, 
+				`effectMulti`, `effectTimeOut`) 
+				VALUES ('{$user}', '{$effect}', 
+				 '{$multiplier}', '{$timeout}')");
+	}
+	else
+	{
+		userUpdateEffect($user, $effect, $time, $multiplier);
+	}
+}
+
+function userRemoveEffect($user, $effect)
+{
+	global $db;
+	if (userHasEffect($user, $effect))
+		$db->query("DELETE FROM `users_effects` WHERE `userid` = {$user} AND `effectName` = '{$effect}'");
+}
+
+function userUpdateEffect($user, $effect, $time = 30, $multiplier = 0)
+{
+	global $db;
+	if (userHasEffect($user, $effect))
+	{
+		$r=$db->fetch_row($db->query("SELECT * FROM `users_effects` WHERE `userid` = {$user} AND `effectName` = '{$effect}'"));
+		$multi = ($multiplier == 0) ? $r['effectMulti'] : $multiplier;
+		$newtime = $r['effectTimeOut'] + ($time);
+		$db->query("UPDATE `users_effects` 
+					SET `effectTimeOut` = {$newtime}, 
+					`effectMulti` = {$multi} 
+					WHERE `userid` = {$user}
+					AND `effectName` = '{$effect}'");
+	}
+}
+
+function userHasEffect($user, $effect)
+{
+	global $db;
+	$q = $db->query("SELECT * FROM `users_effects` WHERE `userid` = {$user} AND `effectName` = '{$effect}'");
+	if ($db->num_rows($q) == 0)
+		return false;
+	else
+		return true;
+}
+
+function returnEffectDone($user, $effect)
+{
+	global $db;
+	return $db->fetch_single($db->query("SELECT `effectTimeOut` FROM `users_effects` WHERE `userid` = {$user} AND `effectName` = '{$effect}'"));
+}
+
+function returnEffectMultiplier($user, $effect)
+{
+	global $db;
+	return $db->fetch_single($db->query("SELECT `effectMulti` FROM `users_effects` WHERE `userid` = {$user} AND `effectName` = '{$effect}'"));
+}
+
+function deleteUser($user)
+{
+	global $db;
+	$db->query("DELETE FROM `2fa_table` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `2018_christmas_tree` WHERE `userid_from` = {$user}");
+	$db->query("DELETE FROM `2018_christmas_tree` WHERE `userid_to` = {$user}");
+	$db->query("DELETE FROM `2018_christmas_wishes` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `2018_halloween_chuck` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `2018_halloween_tot` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `2018_halloween_tot` WHERE `visited` = {$user}");
+	$db->query("DELETE FROM `2019_bigbang` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `academy_done` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `achievements_done` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `activeBosses` WHERE `boss_user` = {$user}");
+	$db->query("DELETE FROM `advent_calender` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `achievements_done` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `artifacts` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `attack_logs` WHERE `attacker` = {$user}");
+	$db->query("DELETE FROM `attack_logs` WHERE `attacked` = {$user}");
+	$db->query("DELETE FROM `auto_login` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `bank_investments` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `blocklist` WHERE `blocked` = {$user}");
+	$db->query("DELETE FROM `blocklist` WHERE `blocker` = {$user}");
+	$db->query("DELETE FROM `botlist` WHERE `botuser` = {$user}");
+	$db->query("DELETE FROM `botlist_hits` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `botlist_hits` WHERE `botid` = {$user}");
+	$db->query("DELETE FROM `bounty_hunter` WHERE `bh_creator` = {$user}");
+	$db->query("DELETE FROM `bounty_hunter` WHERE `bh_user` = {$user}");
+	$db->query("DELETE FROM `chat` WHERE `chat_user` = {$user}");
+	$db->query("DELETE FROM `comments` WHERE `cRECEIVE` = {$user}");
+	$db->query("DELETE FROM `comments` WHERE `cSEND` = {$user}");
+	$db->query("DELETE FROM `contact_list` WHERE `c_ADDED` = {$user}");
+	$db->query("DELETE FROM `contact_list` WHERE `c_ADDER` = {$user}");
+	$db->query("DELETE FROM `crime_logs` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `dungeon` WHERE `dungeon_user` = {$user}");
+	$db->query("DELETE FROM `enemy` WHERE `enemy_user` = {$user}");
+	$db->query("DELETE FROM `enemy` WHERE `enemy_adder` = {$user}");
+	$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `farm_data` WHERE `farm_owner` = {$user}");
+	$db->query("DELETE FROM `farm_users` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$user}");
+	$db->query("DELETE FROM `fedjail_appeals` WHERE `fja_user` = {$user}");
+	$db->query("DELETE FROM `fedjail_appeals` WHERE `fja_responder` = {$user}");
+	$db->query("DELETE FROM `forum_bans` WHERE `fb_user` = {$user}");
+	$db->query("DELETE FROM `forum_posts` WHERE `fp_poster_id` = {$user}");
+	$db->query("DELETE FROM `forum_topics` WHERE `ft_owner_id` = {$user}");
+	$db->query("DELETE FROM `forum_tops_rating` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `friends` WHERE `friended` = {$user}");
+	$db->query("DELETE FROM `friends` WHERE `friender` = {$user}");
+	$db->query("DELETE FROM `guild_applications` WHERE `ga_user` = {$user}");
+	$db->query("DELETE FROM `guild_donations` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `infirmary` WHERE `infirmary_user` = {$user}");
+	$db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$user}");
+	$db->query("DELETE FROM `itemauction` WHERE `ia_adder` = {$user}");
+	$db->query("DELETE FROM `itemmarket` WHERE `imADDER` = {$user}");
+	$db->query("DELETE FROM `itemrequest` WHERE `irUSER` = {$user}");
+	$db->query("DELETE FROM `login_attempts` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `logs` WHERE `log_user` = {$user}");
+	$db->query("DELETE FROM `mail` WHERE `mail_from` = {$user}");
+	$db->query("DELETE FROM `mail` WHERE `mail_to` = {$user}");
+	$db->query("DELETE FROM `mail_bans` WHERE `mbUSER` = {$user}");
+	$db->query("DELETE FROM `marriage_tmg` WHERE `proposer_id` = {$user}");
+	$db->query("DELETE FROM `marriage_tmg` WHERE `proposed_id` = {$user}");
+	$db->query("DELETE FROM `mining` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `missions` WHERE `mission_userid` = {$user}");
+	$db->query("DELETE FROM `newspaper_ads` WHERE `news_owner` = {$user}");
+	$db->query("DELETE FROM `notepads` WHERE `np_owner` = {$user}");
+	$db->query("DELETE FROM `notifications` WHERE `notif_user` = {$user}");
+	$db->query("DELETE FROM `permissions` WHERE `perm_user` = {$user}");
+	$db->query("DELETE FROM `referals` WHERE `referal_userid` = {$user}");
+	$db->query("DELETE FROM `referals` WHERE `refered_id` = {$user}");
+	$db->query("DELETE FROM `reports` WHERE `reporter_id` = {$user}");
+	$db->query("DELETE FROM `reports` WHERE `reportee_id` = {$user}");
+	$db->query("DELETE FROM `russian_roulette` WHERE `challengee` = {$user}");
+	$db->query("DELETE FROM `russian_roulette` WHERE `challenger` = {$user}");
+	$db->query("DELETE FROM `sec_market` WHERE `sec_user` = {$user}");
+	$db->query("DELETE FROM `shortcut` WHERE `sc_userid` = {$user}");
+	$db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user` = {$user}");
+	$db->query("DELETE FROM `spy_advantage` WHERE `user` = {$user}");
+	$db->query("DELETE FROM `spy_advantage` WHERE `spied` = {$user}");
+	$db->query("DELETE FROM `steam_account_link` WHERE `steam_linked` = {$user}");
+	$db->query("DELETE FROM `tcl_userdata` WHERE `tsl_userid` = {$user}");
+	$db->query("DELETE FROM `thanksgiving_trivia` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `trading` WHERE `tradeusera` = {$user}");
+	$db->query("DELETE FROM `trading` WHERE `tradeuserb` = {$user}");
+	$db->query("DELETE FROM `tsl_user_mercs` WHERE `tsl_userid` = {$user}");
+	$db->query("DELETE FROM `userdata` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `users` WHERE `tradeusera` = {$user}");
+	$db->query("DELETE FROM `userstats` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `users_effects` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `uservotes` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `user_equips` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `user_logging` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `user_pref` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `user_settings` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `user_skills` WHERE `userid` = {$user}");
+	$db->query("DELETE FROM `vip_market` WHERE `vip_user` = {$user}");
+	$db->query("DELETE FROM `vips_accepted` WHERE `vipBUYER` = {$user}");
+	$db->query("DELETE FROM `vips_accepted` WHERE `vipFOR` = {$user}");
+}
+
+function createUser($name,$email,$pw,$gender='Male',$class='Warrior')
+{
+	global $db, $api;
+	$IP = $db->escape($_SERVER['REMOTE_ADDR']);
+	$CurrentTime = time();
+	$profilepic = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($email))) . "?s=250.jpg";
+	$db->query("INSERT INTO `users`
+					(`username`,`email`,`password`,`level`,`gender`,`class`,
+					`lastip`,`registerip`,`registertime`,`loginip`,`display_pic`,`vip_days`)
+					VALUES ('{$name}','{$email}','{$pw}','1','{$gender}',
+					'{$class}','{$IP}','{$IP}','{$CurrentTime}', '{$IP}', 
+					'{$profilepic}','3')");
+	$i = $db->insert_id();
+	$db->query("UPDATE `users` SET `brave`='10',`maxbrave`='10',`hp`='100',
+					`maxhp`='100',`maxwill`='100',`will`='100',`energy`='24',
+					`maxenergy`='24' WHERE `userid`={$i}");
+	if ($class == 'Warrior') 
+		$api->UserGiveItem($i,365,1);
+	if ($class == 'Rogue') 
+		$api->UserGiveItem($i,366,1);
+	if ($class == 'Guardian') 
+		$api->UserGiveItem($i,367,1);
+	$db->query("INSERT INTO `userstats` VALUES({$i}, 1000, 1000, 1000, 1000, 1000, 100)");
+	$db->query("INSERT INTO `infirmary`
+			(`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) 
+			VALUES ('{$i}', 'N/A', '0', '0');");
+        $db->query("INSERT INTO `dungeon`
+			(`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) 
+			VALUES ('{$i}', 'N/A', '0', '0');");
+	//Give starter items.
+	$api->UserGiveItem($i,6,50);
+	$api->UserGiveItem($i,30,50);
+	$api->UserGiveItem($i,33,3000);
+	$api->UserGiveCurrency($i,'primary',10000);
+	$api->UserGiveCurrency($i,'secondary',50);
+	
+	$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$i}')");
+        $randophrase=randomizer();
+        $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}', `theme` = 7 WHERE `userid` = {$i}");
+	return $i;
+}
+function equipUserSlot($user, $slot, $itemID)
+{
+	global $db, $api;
+	//Very dirty work around because I'm lazy :D
+	$wepArray = array("equip_armor", "equip_badge", "equip_primary", "equip_secondary", "equip_potion");
+	if (!in_array($slot, $wepArray))
+	{
+		equipUserWearable($user, $slot, $itemID);
+	}
+	else
+	{
+		$userInfo = $db->fetch_row($db->query("SELECT `{$slot}` FROM `users` WHERE `userid` = {$user}"));
+		$userGains = $db->fetch_row($db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$user} AND `slot` = '{$slot}'"));
+		$itemInfo = $db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$itemID}"));
+		if ($userInfo[$slot] > 0)
+		{
+			unequipUserSlot($user, $slot);
+		}
+		else
+		{
+			if (($slot != "equip_potion") && ($slot != "equip_badge"))
+				setEquipGains($user, $slot, $itemID);
+			if ($slot != "equip_potion")
+				$api->UserTakeItem($user, $itemID, 1);
+			$db->query("UPDATE `users` SET `{$slot}` = {$itemID} WHERE `userid` = {$user}");
+			$api->SystemLogsAdd($user, 'equip', "Equipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
+		}
+	}
+}
+function equipUserWearable($user, $slot, $itemID)
+{
+	global $db, $api;
+	//Very dirty work around because I'm lazy :D
+	$wepArray = array("equip_armor", "equip_badge", "equip_primary", "equip_secondary", "equip_potion");
+	if (in_array($slot, $wepArray))
+	{
+		equipUserSlot($user, $slot, $itemID);
+	}
+	else
+	{
+		$userInfo = $db->fetch_single($db->query("SELECT `itemid` FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'"));
+		$userGains = $db->fetch_row($db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$user} AND `slot` = '{$slot}'"));
+		$itemInfo = $db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$itemID}"));
+		if ($userInfo > 0)
+		{
+			unequipUserWearable($user, $slot);
+		}
+		else
+		{
+			setEquipGains($user, $slot, $itemID);
+			$api->UserTakeItem($user, $itemID, 1);
+			$db->query("DELETE FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'");
+			$db->query("INSERT INTO `user_equips` (`userid`, `equip_slot`, `itemid`) VALUES ('{$user}', '{$slot}', '{$itemID}')");
+			$api->SystemLogsAdd($user, 'equip', "Equipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
+		}
+	}
+}
+
+function unequipUserWearable($user, $slot)
+{
+	global $db, $api;
+	$wepArray = array("equip_armor", "equip_badge", "equip_primary", "equip_secondary", "equip_potion");
+	if (in_array($slot, $wepArray))
+	{
+		unequipUserSlot($user, $slot);
+	}
+	else
+	{
+		$itemID = getUserItemEquippedSlot($user,$slot);
+		$userInfo = $db->fetch_single($db->query("SELECT `itemid` FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'"));
+		$itemInfo = $db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$itemID}"));
+		if ($userInfo != 0)
+		{
+			undoEquipGains($user, $slot);
+			$api->UserGiveItem($user, $itemID, 1);
+			$db->query("DELETE FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'");
+			$api->SystemLogsAdd($user, 'equip', "Unequipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
+			return true;
+		}
+	}
+}
+
+function unequipUserSlot($user, $slot)
+{
+	global $db, $api;
+	//Very dirty work around because I'm lazy :D
+	$wepArray = array("equip_armor", "equip_badge", "equip_primary", "equip_secondary", "equip_potion");
+	if (!in_array($slot, $wepArray))
+	{
+		unequipUserWearable($user, $slot);
+	}
+	else
+	{
+		$itemID = getUserItemEquippedSlot($user,$slot);
+		$userInfo = $db->fetch_row($db->query("SELECT `{$slot}` FROM `users` WHERE `userid` = {$user}"));
+		$itemInfo = $db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$itemID}"));
+		if ($userInfo[$slot] != 0)
+		{
+			undoEquipGains($user, $slot);
+			$db->query("UPDATE `users` SET `{$slot}` = 0 WHERE `userid` = {$user}");
+			if ($slot != "equip_potion")
+				$api->UserGiveItem($user, $userInfo[$slot], 1);
+			$api->SystemLogsAdd($user, 'equip', "Unequipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
+			return true;
+		}
+	}
+}
+
+function undoEquipGains($user, $slot)
+{
+	global $db, $api;
+	$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$user} and `slot` = '{$slot}'");
+	if ($db->num_rows($sbq) > 0)
+	{
+		$statloss="";
+		while ($sbr=$db->fetch_row($sbq))
+		{
+			if ($sbr['direction'] == 'pos')
+			{
+				if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) 
+				{
+					$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$user}");
+				} 
+				elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) 
+				{
+					$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$user}");
+				}
+				$mod='lost';
+			}
+			else
+			{
+				if (in_array($sbr['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) 
+				{
+					$db->query("UPDATE `userstats` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$user}");
+				} 
+				elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) 
+				{
+					$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$user}");
+				}
+				$mod='gained';
+			}
+			if (empty($statloss))
+					$statloss .= "{$mod} " . number_format($sbr['number']) . " " . statParser($sbr['stat']);
+			else
+					$statloss .= ", {$mod} " . number_format($sbr['number']) . " " . statParser($sbr['stat']);
+			$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$user} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$slot}'");
+		}
+		if (!empty($statloss))
+		{
+			$itmname = $api->SystemItemIDtoName(getUserItemEquippedSlot($user,$slot));
+			$api->GameAddNotification($user, "By unequipping the {$itmname} as your " . equipSlotParser($slot) . ", you have {$statloss}.");
+		}
+	}
+}
+
+function setEquipGains($user, $slot, $item)
+{
+	global $db, $api;
+	$q = $db->query("/*qc=on*/SELECT `itmid`, `itmname`, `effect1`, `effect2`, 
+					`effect3`,  `effect1_on`, `effect2_on`, `effect3_on`
+					FROM `items` AS `it`
+					WHERE `itmid` = {$item}");
+	$uiq =
+        $db->query(
+            "/*qc=on*/SELECT `u`.*, `us`.*
+                     FROM `users` AS `u`
+                     INNER JOIN `userstats` AS `us`
+                     ON `u`.`userid`=`us`.`userid`
+                     WHERE `u`.`userid` = {$user}
+                     LIMIT 1");
+	$ur = $db->fetch_row($uiq);
+	$r = $db->fetch_row($q);
+	$txt='';
+	for ($enum = 1; $enum <= 3; $enum++) 
+	{
+		if ($r["effect{$enum}_on"] == 'true') 
+		{
+			$einfo = unserialize($r["effect{$enum}"]);
+			if ($einfo['inc_type'] == "percent") 
+			{
+				if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) 
+				{
+					$inc = round($ur['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
+					$einfo['stat'] = 'max' . $einfo['stat'];
+				}
+				else
+				{
+					$inc = round($ur[$einfo['stat']] / 100 * $einfo['inc_amount']);
+				}
+			}
+			else
+			{
+			 $inc = $einfo['inc_amount'];
+			}
+			if ($einfo['dir'] == "pos") 
+			{
+				if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) 
+				{
+					$ur['max' . $einfo['stat']] = $ur['max' . $einfo['stat']] + $einfo['inc_amount'];
+					$einfo['stat'] = 'max' . $einfo['stat'];
+				} 
+				else 
+				{
+					$ur[$einfo['stat']] += $inc;
+				}
+			}
+			else
+			{
+				if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) 
+				{
+					$ur[$einfo['stat']] = min($ur[$einfo['stat']] + $inc, $ur['max' . $einfo['stat']]);
+					$einfo['stat'] = 'max' . $einfo['stat'];
+				}
+				else
+				{
+					$ur[$einfo['stat']] = max($ur[$einfo['stat']] - $inc, 0);
+				}
+			}
+			if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) 
+			{
+				$upd = $ur[$einfo['stat']];
+			}
+			if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq'))) 
+			{
+                    $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$user}");
+			} 
+			elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) 
+			{
+				$db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$user}");
+			}
+			$dir = ($einfo['dir'] == 'pos') ? "gained" : "lost";
+			if (empty($txt))
+                    $txt.=" {$dir} " . number_format($inc) . " " . statParser($einfo['stat']);
+                else
+                    $txt.=", {$dir} " . number_format($inc) . " " . statParser($einfo['stat']);
+			$db->query("INSERT INTO `equip_gains` VALUES ('{$user}', '{$einfo['stat']}', '{$einfo['dir']}', '{$inc}', '{$slot}')");
+		}
+	}
+	if (!empty($txt))
+		$api->GameAddNotification($user, "By equipping the {$r['itmname']} in your " . equipSlotParser($slot) . " slot, you have {$txt}.");	
+}
+
+function statParser($stat)
+{
+	$statNamesArray = array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
+						"maxbrave" => "Maximum Bravery", "level" => "Level",
+						"maxhp" => "Maximum Health", "strength" => "Strength",
+						"agility" => "Agility", "guard" => "Guard",
+						"labor" => "Labor", "iq" => "IQ",
+						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+						"primary_currency" => "Copper Coins", "secondary_currency"
+					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+						"VIP Days");
+	return $statNamesArray[$stat];
+}
+
+function equipSlotParser($slot)
+{
+	$slotNamesArray = array("equip_primary" => "Primary Weapon", 
+							"equip_secondary" => "Secondary Weapon",
+							"equip_armor" => "Armor",
+							"equip_potion" => "Combat Potion",
+							"equip_badge" => "Profile Badge", 
+							"equip_ring_primary" => "Primary Ring",
+							"equip_ring_secondary" => "Secondary Ring",
+							"equip_pendant" => "Pendant",
+							"equip_necklace" => "Necklace");
+	return $slotNamesArray[$slot];
+}
+
+function getUserItemEquippedSlot($user,$slot)
+{
+	global $db;
+	$wepArray = array("equip_armor", "equip_badge", "equip_primary", "equip_secondary", "equip_potion");
+	if (in_array($slot, $wepArray))
+		return $db->fetch_single($db->query("SELECT `{$slot}` FROM `users` WHERE `userid` = {$user}"));
+	else
+		return $db->fetch_single($db->query("SELECT `itemid` FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'"));
+}
+

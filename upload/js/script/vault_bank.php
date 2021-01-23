@@ -73,6 +73,7 @@ if (isset($dojs))
 		document.getElementById('bankacc2').innerHTML = <?php echo "'" . number_format($ir['vaultbank']) . "'" ?>;
 		document.getElementById("form_bank_acc").value = <?php echo "'{$ir['vaultbank']}'" ?>;
 		document.getElementById("form_bank_wallet").value = <?php echo "'{$ir['primary_currency']}'" ?>;
+		document.getElementById('ui_copper').innerHTML = <?php echo "'" . number_format($ir['primary_currency']) . "'" ?>;
 	</script>
 	<?php
 }

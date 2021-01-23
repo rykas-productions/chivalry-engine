@@ -103,7 +103,7 @@ function lottery_play()
 		//Sets the pot back to the minimum.
 		$db->query("UPDATE `settings` SET `setting_value` = {$minimumpot} WHERE `setting_id` = {$lotteryid}");
 		$userLink="<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}]";
-		$text = "The Chivalry is Dead Raffle has been won by {$userLink}. They received " . number_format($winnings) . " Copper Coins. We've started a new raffle that begins at " . number_format($minimumpot) . " Copper Coins. Best of luck!";
+		$text = "The Chivalry is Dead Raffle has been won by {$userLink}. They received {$winnings} Copper Coins. We've started a new raffle that begins at " . number_format($minimumpot) . " Copper Coins. Best of luck!";
 		$api->GameAddAnnouncement($text);
 		$db->query("UPDATE `settings` SET `setting_value` = 1000 WHERE `setting_name` = 'raffle_chance'");
         $db->query("UPDATE `settings` SET `setting_value` = {$userid} WHERE `setting_name` = 'raffle_last_winner'");\

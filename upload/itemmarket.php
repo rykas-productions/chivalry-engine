@@ -35,21 +35,20 @@ function index()
     global $db, $userid, $api;
     echo "
 	<form>
-		Search Item Market
-		" . itemmarket_dropdown('item') . "
-		<input type='submit' value='Search' class='btn btn-primary'>
+		<div class='row'>
+			<div class='col-12 col-sm-2 col-md-1'>
+				Search
+			</div>
+			<div class='col'>
+				" . itemmarket_dropdown('item') . "
+			</div>
+			<div class='col-sm-3 col'>
+				<input type='submit' value='Search' class='btn btn-primary btn-block'>
+			</div>
+		</div>
 	</form>
 	<hr />
 	[<a href='?action=add'>Add Your Own Listing</a>]
-	<br />
-	<table class='table table-bordered table-hover table-striped'>
-		<tr>
-			<th>Listing Owner</th>
-			<th>Item x Quantity</th>
-			<th>Price/Item</th>
-			<th>Total Price</th>
-			<th>Links</th>
-		</tr>
    ";
    if (isset($_GET['item']))
    {
@@ -59,7 +58,7 @@ function index()
 	   $q =
         $db->query(
             "/*qc=on*/SELECT `imPRICE`, `imQTY`, `imCURRENCY`, `imADDER`,
-                     `imID`, `itmid`, `itmname`, `userid`,`username`, `itmdesc`,
+                     `imID`, `i`.*, `userid`,`username`, `itmdesc`,
                      `itmtypename`
                      FROM `itemmarket` AS `im`
                      INNER JOIN `items` AS `i`
@@ -76,7 +75,7 @@ function index()
 		   $q =
 			$db->query(
             "/*qc=on*/SELECT `imPRICE`, `imQTY`, `imCURRENCY`, `imADDER`,
-                     `imID`, `itmid`, `itmname`, `userid`,`username`, `itmdesc`,
+                     `imID`, `i`.*, `userid`,`username`, `itmdesc`,
                      `itmtypename`
                      FROM `itemmarket` AS `im`
                      INNER JOIN `items` AS `i`
@@ -93,7 +92,7 @@ function index()
 		$q =
         $db->query(
             "/*qc=on*/SELECT `imPRICE`, `imQTY`, `imCURRENCY`, `imADDER`,
-                     `imID`, `itmid`, `itmname`, `userid`,`username`, `itmdesc`,
+                     `imID`, `i`.*, `userid`,`username`, `itmdesc`,
                      `itmtypename`
                      FROM `itemmarket` AS `im`
                      INNER JOIN `items` AS `i`
@@ -106,12 +105,19 @@ function index()
    }
     $cblah = 1;
     $lt = "";
-    while ($r = $db->fetch_row($q)) {
-        if ($lt != $r['itmtypename']) {
+	echo "<div class='accordion' id='inventoryAccordian'>";
+    while ($r = $db->fetch_row($q)) 
+	{
+        if ($lt != $r['itmtypename']) 
+		{
             $lt = $r['itmtypename'];
-            echo "<tr>
-					<td colspan='5' align='center'><b>{$lt}</b></td>
-				</tr>";
+            echo "<div class='card'>
+					<div class='card-body' id='heading{$r['itmid']}'>
+						<h4 class='mb-0'>
+							{$lt}
+						</h4>
+					</div>
+				</div>";
         }
         $ctprice = ($r['imPRICE'] * $r['imQTY']);
         if ($r['imCURRENCY'] == 'primary') {
@@ -123,38 +129,163 @@ function index()
         }
         if ($r['imADDER'] == $userid) {
             $link =
-                "<a class='btn btn-primary btn-sm' href='?action=remove&ID={$r['imID']}'><i class='far fa-trash-alt'></i></a>";
+                "<div class='col'>
+					<a class='btn btn-primary btn-block' href='?action=remove&ID={$r['imID']}'><i class='far fa-trash-alt'></i></a>
+				</div>";
         } else {
             $link =
-                "<a class='btn btn-primary btn-sm' href='?action=buy&ID={$r['imID']}'><i class='fas fa-dollar-sign'></i></a>
-                    <a class='btn btn-primary btn-sm' href='?action=gift&ID={$r['imID']}'><i class='fas fa-gift'></i></a>";
+                "<div class='col'>
+					<a class='btn btn-primary btn-block' href='?action=buy&ID={$r['imID']}'><i class='fas fa-dollar-sign'></i></a>
+                </div>
+				<div class='col'>
+					<a class='btn btn-primary btn-block' href='?action=gift&ID={$r['imID']}'><i class='fas fa-gift'></i></a>
+				</div>";
         }
-        $r['itmdesc'] = htmlentities($r['itmdesc'], ENT_QUOTES);
-		$icon = returnIcon($r['itmid']);
-        echo "
-		<tr>
-			<td>
-				<a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a> [{$r['userid']}]
-			</td>
-			<td>
-				{$icon} <a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip' data-placement='right' title='{$r['itmdesc']}'>{$r['itmname']}</a>";
-        if ($r['imQTY'] > 1) {
-            echo " x {$r['imQTY']}";
-        }
-        echo "</td>
-			<td>
-				{$price}
-			</td>
-			<td>
-				{$tprice}
-			</td>
-			<td>
-				{$link}
-			</td>
-		</tr>";
-    }
-    $db->free_result($q);
-    echo "</table>";
+				$r['itmdesc'] = htmlentities($r['itmdesc'], ENT_QUOTES);
+				$rcon = returnIcon($r['itmid'],2);
+				$r['username'] = parseUsername($r['userid']);
+				$displaypic = "<img src='" . parseDisplayPic($r['userid']) . "' height='75' alt='Display picture.' title='Display picture'>";
+				$armory=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$r['itmid']} AND `gaGUILD` != 1"));
+				$rnvent=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$r['itmid']} AND `inv_userid` != 1"));
+				$market=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`imQTY`) FROM `itemmarket` WHERE `imITEM` = {$r['itmid']}"));
+				$primary=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_primary`) FROM `users` WHERE `equip_primary` = {$r['itmid']} AND `userid` != 1"));
+				$secondary=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_secondary`) FROM `users` WHERE `equip_secondary` = {$r['itmid']} AND `userid` != 1"));
+				$armor=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_armor`) FROM `users` WHERE `equip_armor` = {$r['itmid']} AND `userid` != 1"));
+				$badge=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_badge`) FROM `users` WHERE `equip_badge` = {$r['itmid']} AND `userid` != 1"));
+				$trink=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_slot`) FROM `user_equips` WHERE `itemid` = {$r['itmid']}"));
+				$total=$rnvent+$armory+$market+$primary+$secondary+$armor+$badge+$trink;
+				echo "
+				<div class='card'>
+					<div class='card-header' id='heading{$r['imID']}'>
+						<h2 class='mb-0'>
+							<button class='btn btn-block btn-block text-left' type='button' data-toggle='collapse' data-target='#collapse{$r['imID']}' aria-expanded='true' aria-controls='collapse{$r['imID']}'>
+								<div class='row'>
+									<div class='col'>
+										{$rcon}
+									</div>
+									<div class='col-10 col-sm-9 col-md-3'>";
+										if ($r['imQTY'] > 1)
+										{
+											echo $r['imQTY'] . " x ";
+										}
+										echo "{$r['itmname']}
+									</div>
+									<div class='col-12 col-md-3'>
+										<div class='row'>
+											<div class='col-12'>
+												<b>Price</b>
+											</div>
+											<div class='col-6'>
+												<small>{$price}</small>
+											</div>
+											<div class='col-6'>
+												<small>{$tprice}</small>
+											</div>
+										</div>
+									</div>
+									<div class='col-12 col-md-3'>
+										<div class='row'>
+											<div class='col-4 hidden-md-down'>
+												{$displaypic}
+											</div>
+											<div class='col'>
+												<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+											</div>
+										</div>
+									</div>
+									<div class='col'>
+										<div class='row'>
+											{$link}
+										</div>
+									</div>
+								</div>
+							</button>
+						</h2>
+					</div>
+					<div id='collapse{$r['imID']}' class='collapse' aria-labelledby='heading{$r['itmid']}' data-parent='#inventoryAccordian'>
+					<div class='card-body'>
+						<div class='row'>
+							<div class='col-md-1'>
+								" . returnIcon($r['itmid'],3.5) . "
+							</div>
+							<div class='col-md-8 text-left'>
+								<b>{$r['itmname']}</b> is a {$lt} item.<br />
+								<i>{$r['itmdesc']}</i>";
+								$start=0;
+								for ($enum = 1; $enum <= 3; $enum++) 
+								{
+									if ($r["effect{$enum}_on"] == 'true') 
+									{
+										if ($start == 0)
+										{
+											echo "<br /><b>Effect</b> ";
+											$start = 1;
+										}
+										$einfo = unserialize($r["effect{$enum}"]);
+										$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
+										$einfo['dir'] = ($einfo['dir'] == 'pos') ? '+' : '-';
+										$stats =
+											array("energy" => "Energy", "will" => "Will",
+												"brave" => "Bravery", "level" => "Level",
+												"hp" => "Health", "strength" => "Strength",
+												"agility" => "Agility", "guard" => "Guard",
+												"labor" => "Labor", "iq" => "IQ",
+												"infirmary" => "Infirmary minutes", "dungeon" => "Dungeon minutes",
+												"primary_currency" => "Copper Coins", "secondary_currency"
+											=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+												"VIP Days", "luck" => "Luck", "premium_currency" => "Mutton");
+										$statformatted = $stats["{$einfo['stat']}"];
+										echo "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted}.";
+									}
+								}
+					echo "</div>";
+					echo"	
+					</div>
+						<hr />
+						<div class='row'>
+							<div class='col'>
+								<b>Sell</b><br />
+								<small>" . number_format($r['itmsellprice']) . " Copper Coins</small>
+							</div>
+							<div class='col'>
+								<b>Circulating</b><br />
+								<small>" . number_format($total) . "</small>
+							</div>";
+							if ($r['weapon'] > 0)
+							{
+								echo "
+								<div class='col'>
+									<b>Weapon</b><br />
+									<small>" . number_format($r['weapon']) . "</small>
+								</div>";
+							}
+							if ($r['ammo'] > 0)
+							{
+								echo "
+								<div class='col'>
+									<b>Projectile</b><br />
+									<small><a href='iteminfo.php?ID={$r['ammo']}'>{$api->SystemItemIDtoName($r['ammo'])}</a></small>
+								</div>";
+							}
+							if ($r['armor'] > 0)
+							{
+								echo "
+								<div class='col'>
+									<b>Armor</b><br />
+									<small>" . number_format($r['armor']) . "</small>
+								</div>";
+							}
+							echo"
+						</div>
+						<hr />
+						<div class='row'>
+						</div>
+					</div>
+				</div>
+			</div>";
+            }
+            $db->free_result($q);
+            echo "</div>";
 }
 
 function remove()

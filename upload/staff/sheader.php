@@ -319,7 +319,13 @@ class headers
 		global $set;
 		cslog('log',"CSS is loading.");
 		echo "<link rel='stylesheet' href='../css/game-{$set['game_css_version']}.css'>
-				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css'>";
+				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css'>
+				<style>
+					body {
+					  min-height: 75rem;
+					  padding-top: 4.5rem;
+					}									
+				</style>";
 		
 	}
 	

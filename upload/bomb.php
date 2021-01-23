@@ -72,9 +72,7 @@ function small()
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q2 = $db->query("/*qc=on*/SELECT `protection` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
-		$r=$db->fetch_single($q2);
-		if ($r > time())
+		if (userHasEffect($_POST['user'], "basic_protection"))
 		{
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that has protection.", true, 'inventory.php');
 			die($h->endpage());
@@ -91,7 +89,7 @@ function small()
 
 	} else {
 		$csrf = request_csrf_html('bomb_form');
-		echo "Enter the User ID whom you wish to bomb. They will be notified and put into the infirmary.<br />
+		echo "Please select the player whom you wish to bomb. They will be notified and put into the infirmary.<br />
 		<form method='post'>
 			" . user_dropdown('user',$userid) . "
 			{$csrf}
@@ -133,9 +131,7 @@ function medium()
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q2 = $db->query("/*qc=on*/SELECT `protection` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
-		$r=$db->fetch_single($q2);
-		if ($r > time())
+		if (userHasEffect($_POST['user'], "basic_protection"))
 		{
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that has protection.", true, 'inventory.php');
 			die($h->endpage());
@@ -152,7 +148,7 @@ function medium()
 
 	} else {
 		$csrf = request_csrf_html('bomb_form');
-		echo "Enter the User ID whom you wish to bomb. They will be notified and put into the infirmary.<br />
+		echo "Please select the player whom you wish to bomb. They will be notified and put into the infirmary.<br />
 		<form method='post'>
 			" . user_dropdown('user',$userid) . "
 			{$csrf}
@@ -228,7 +224,7 @@ function large()
 
 	} else {
 		$csrf = request_csrf_html('bomb_form');
-		echo "Enter the User ID whom you wish to bomb. They will be notified and put into the infirmary.<br />
+		echo "Please select the player whom you wish to bomb. They will be notified and put into the infirmary.<br />
 		<form method='post'>
 			" . user_dropdown('user',$userid) . "
 			{$csrf}
@@ -270,9 +266,7 @@ function pumpkin()
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q2 = $db->query("/*qc=on*/SELECT `protection` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
-		$r=$db->fetch_single($q2);
-		if ($r > time())
+		if (userHasEffect($_POST['user'], "basic_protection"))
 		{
 			alert('danger', "Uh Oh!", "You are trying to toss a pumpkin at a user that has protection.", true, 'inventory.php');
 			die($h->endpage());
@@ -288,7 +282,7 @@ function pumpkin()
 
 	} else {
 		$csrf = request_csrf_html('bomb_form');
-		echo "Enter the User ID whom you wish to toss a pumpkin at. They will be notified and put into the infirmary.<br />
+		echo "Please select the player whom you wish to toss a pumpkin at. They will be notified and put into the infirmary.<br />
 		<form method='post'>
 			" . user_dropdown('user',$userid) . "
 			{$csrf}
@@ -338,7 +332,7 @@ function snowball()
 
 	} else {
 		$csrf = request_csrf_html('bomb_form');
-		echo "Enter the User ID whom you wish to toss a snowball at.<br />
+		echo "Please select the player whom you wish to toss a snowball at. Hope they don't get cold.<br />
 		<form method='post'>
 			" . user_dropdown('user',$userid) . "
 			{$csrf}
@@ -378,9 +372,7 @@ function rickroll()
 			alert('danger', "Uh Oh!", "You are trying to rick-roll a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		$q2 = $db->query("/*qc=on*/SELECT `protection`,`rickroll` FROM `user_settings` WHERE `userid` = {$_POST['user']}");
-		$r=$db->fetch_row($q2);
-		if ($r['protection'] > time())
+		if (userHasEffect($_POST['user'], "basic_protection"))
 		{
 			alert('danger', "Uh Oh!", "You are trying to rick-roll a user that has protection.", true, 'inventory.php');
 			die($h->endpage());
@@ -401,7 +393,7 @@ function rickroll()
 
 	} else {
 		$csrf = request_csrf_html('bomb_form');
-		echo "Enter the User ID whom you wish to rick-roll. They will receive their punishment on their next action.<br />
+		echo "Please select the player whom you wish to rick-roll. They will receive their punishment on their next action.<br />
 		<form method='post'>
 			" . user_dropdown('user',$userid) . "
 			{$csrf}
@@ -456,7 +448,7 @@ function assassin()
 
 	} else {
 		$csrf = request_csrf_html('bomb_form');
-		echo "Enter the User ID whom you wish to assassinated. They will be notified and put into the infirmary.<br />
+		echo "Select your mark...<br />
 		<form method='post'>
 			" . user_dropdown('user',$userid) . "
 			{$csrf}

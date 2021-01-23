@@ -70,6 +70,7 @@ $bigbank = ($ir['bigbank'] > -1) ? number_format($ir['bigbank']) : "N/A";
 $vaultbank = ($ir['vaultbank'] > -1) ? number_format($ir['vaultbank']) : "N/A";
 $tbank = ($ir['tokenbank'] > -1) ? number_format($ir['tokenbank']) : "N/A";
 $guildcount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`guild_id`) FROM `guild`"));
+$estates = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`em_id`) FROM `estate_market`"));
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 $miningenergy = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
 if (empty($dung_count)) {
@@ -148,6 +149,7 @@ echo "
                     <a href='itemweekshop.php' class='{$txtClass}'>Item of the Week</a><br />
                     <a href='votestore.php'>Vote Point Store <span class='badge badge-pill badge-primary'>" . number_format($ir['vote_points']) . "</span></a><br />
 					<a href='vipmarket.php'>VIP Days Market <span class='badge badge-pill badge-primary'>" . number_format($vipMarket) . "</span></a><br />
+					<a href='estate_management.php?action=estateMarket'>Estate Market <span class='badge badge-pill badge-primary'>" . number_format($estates) . "</span></a><br />
 				</div>
 			</div>
 		</div>
@@ -164,7 +166,7 @@ if ($ir['level'] > 174) {
 }
 echo "
 					<a href='tokenbank.php' class='{$txtClass}'><i class='game-icon game-icon-chest'></i> Chivalry Token Bank <span class='badge badge-pill badge-primary'>{$tbank}</span></a><br />
-					<a href='estates.php' class='{$txtClass}'><i class='game-icon game-icon-house'></i> Estate Agent</a><br />
+					<a href='estate_management.php' class='{$txtClass}'><i class='game-icon game-icon-house'></i> Estate Agent</a><br />
 					<a href='travel.php' class='{$txtClass}'><i class='game-icon game-icon-horseshoe'></i> Travel Agent</a><br />
 					<a href='temple.php' class='{$txtClass}'><i class='game-icon game-icon-mayan-pyramid'></i> Temple of Fortune</a><br />
 				</div>
@@ -220,7 +222,7 @@ echo "
 if ($ir['autohex'] > 0)
     echo "<a href='autohex.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Auto Hexbags <span class='badge badge-pill badge-primary'>" . number_format($ir['autohex']) . "</span></a><br />";
 echo "
-					<a href='raffle.php' class='{$txtClass}'><i class='fas fa-ticket-alt'></i> CID Raffle <span class='badge badge-pill badge-primary'>" . number_format($set['lotterycash']) . "</span></a><br />
+					<a href='raffle.php' class='{$txtClass}'><i class='fas fa-ticket-alt'></i> CID Raffle <span class='badge badge-pill badge-primary'>" . number_format($set['lotterycash']) . "</span></a>
 				</div>
 			</div>
 		</div>

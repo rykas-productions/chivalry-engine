@@ -29,9 +29,6 @@ switch ($_GET['action']) {
     case 'emailchange':
         emailchange();
         break;
-    case 'notifoff':
-        notifoff();
-        break;
 	case 'descchange':
         descchange();
         break;
@@ -74,20 +71,11 @@ switch ($_GET['action']) {
 	case 'loginlogs':
         loginlogs();
         break;
-	case 'forumtopic':
-        forumtopic();
+	case 'newui':
+		newui();
         break;
-	case 'forumpost':
-        forumpost();
-        break;
-	case 'inboxcount':
-		mailcount();
-        break;
-	case 'notifcount':
-		notifcount();
-        break;
-	case 'guildxp':
-		guildautoxp();
+	case 'counthome':
+		homecount();
         break;
     default:
         prefs_home();
@@ -123,14 +111,11 @@ function prefs_home()
 				<a href='?action=sigchange'>Change Forum Signature</a>
 			</div>
 			<div class='col-md'>
-				<a href='?action=notifoff'>Disable Alerts</a>
+				<a href='?action=descchange'>Change Player Description</a>
 			</div>
 		</div>
 		<hr />
 		<div class='row'>
-			<div class='col-md'>
-				<a href='?action=descchange'>Change Player Description</a>
-			</div>
 			<div class='col-md'>
 				<a href='?action=quicklink'>Change Quick-Use Items</a>
 			</div>
@@ -140,12 +125,12 @@ function prefs_home()
 			<div class='col-md'>
 				<a href='?action=userdropdown'>User Input Setting</a>
 			</div>
-		</div>
-		<hr />
-		<div class='row'>
 			<div class='col-md'>
 				<a href='?action=themechange'>Change Theme</a>
 			</div>
+		</div>
+		<hr />
+		<div class='row'>
 			<div class='col-md'>
 				<a href='?action=classreset'>Class Reset</a>
 			</div>
@@ -155,12 +140,12 @@ function prefs_home()
 			<div class='col-md'>
 				<a href='?action=icontoggle'>Toggle Item Icons</a>
 			</div>
-		</div>
-		<hr />
-		<div class='row'>
 			<div class='col-md'>
 				<a href='?action=steamlink'>Link Steam Account</a>
 			</div>
+		</div>
+		<hr />
+		<div class='row'>
 			<div class='col-md'>
 				<a href='?action=loginlogs'>Login Logs</a>
 			</div>
@@ -168,22 +153,7 @@ function prefs_home()
 				<a href='?action=reset'>Account Reset</a>
 			</div>
 			<div class='col-md'>
-				<a href='?action=forumtopic'>Change Viewable Topic Count</a>
-			</div>
-		</div>
-		<hr />
-		<div class='row'>
-			<div class='col-md'>
-				<a href='?action=forumpost'>Change Viewable Post Count</a>
-			</div>
-			<div class='col-md'>
-				<a href='?action=inboxcount'>Change Viewable Mail</a>
-			</div>
-			<div class='col-md'>
-				<a href='?action=notifcount'>Change Viewable Notifications</a>
-			</div>
-			<div class='col-md'>
-				<a href='?action=guildxp'>Auto Donate XP to Guild</a>
+				<a href='?action=counthome'>Change Counts</a>
 			</div>
 		</div>
 		<br />";
@@ -563,40 +533,6 @@ function changeemail()
         </form>";
     }
 }
-
-function notifoff()
-{
-	global $db,$userid,$api,$h;
-    if (isset($_POST['do']))
-    {
-		if ($_POST['do'] == 'disable')
-		{
-			$db->query("UPDATE `user_settings` SET `disable_alerts` = 1 WHERE `userid` = {$userid}");
-			alert('success',"Success!","You have successfully disabled the notification alerts.",true,'preferences.php');
-            $api->SystemLogsAdd($userid, 'preferences', "Disabled notification pop up.");
-		}
-		else
-		{
-			$db->query("UPDATE `user_settings` SET `disable_alerts` = 0 WHERE `userid` = {$userid}");
-			alert('success',"Success!","You have successfully enabled the notification alerts.",true,'preferences.php');
-            $api->SystemLogsAdd($userid, 'preferences', "Enabled notification pop up.");
-		}
-    }
-    else
-    {
-        echo "You can choose to enable or disable the toast notifications. These are the things that show how many 
-		unread mail or notifications you may have.<br />
-        <form method='post'>
-            <input type='hidden' value='disable' name='do'>
-            <input type='submit' class='btn btn-primary' value='Disable Alerts'>
-        </form>
-		<form method='post'>
-            <input type='hidden' value='enable' name='do'>
-            <input type='submit' class='btn btn-primary' value='Enable Alerts'>
-        </form>";
-    }
-}
-
 function descchange()
 {
 	global $db, $h, $userid, $ir, $api;
@@ -658,7 +594,7 @@ function quicklinks()
 	{
 		$dungeon = (isset($_POST['dungeon']) && is_numeric($_POST['dungeon'])) ? abs($_POST['dungeon']) : 1;
 		$infirmary = (isset($_POST['infirmary']) && is_numeric($_POST['infirmary'])) ? abs($_POST['infirmary']) : 1;
-		if ($dungeon < 1 || $dungeon > 4)
+		if ($dungeon < 1 || $dungeon > 6)
 		{
 			alert("danger","Uh Oh!","You have selected an invalid dungeon item.");
 			die($h->endpage());
@@ -680,6 +616,8 @@ function quicklinks()
 				<div class='col-md-6'>
 					Dungeon Item
 					<select name='dungeon' class='form-control'>
+						<option value='6'>Bail Self</option>
+						<option value='5'>Bust Self</option>
 						<option value='1'>Lockpick</option>
 						<option value='2'>Dungeon Key</option>
 						<option value='3'>Dungeon Key Set</option>
@@ -961,7 +899,7 @@ function themechange()
             die($h->endpage());
         }
     } else {
-        echo "/*qc=on*/SELECT the theme you wish to see as you play Chivalry is Dead.
+        echo "Select the theme you wish to see as you play Chivalry is Dead. Not a fan of your UI? You can change it <a href='?action=newui'>here</a>.
 		<hr />
 		<div class='row'>
 			<div class='col-md'>
@@ -1107,6 +1045,7 @@ function resetacc()
 		$hex=$ir['autohex'];
 		$bor=$ir['autobor'];
 		$reset=$ir['reset'];
+		$bum=$ir['autobum'];
 		echo "Deleting your inventory... ";
 			if ($db->query("DELETE FROM `inventory` WHERE `inv_userid` = {$userid}"))
 				echo "...inventory deleted.";
@@ -1141,7 +1080,7 @@ function resetacc()
 		$db->query("DELETE FROM `user_settings` WHERE `userid` = {$userid}");
 		$db->query("DELETE FROM `user_logging` WHERE `userid` = {$userid}");
 		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$userid}')");
-        $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}', `theme` = 7, `autobor` = {$bor} + 3000, `autohex` = {$hex} + 300 WHERE `userid` = {$userid}");
+        $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}', `theme` = 7, `autobor` = {$bor} + 3000, `autohex` = {$hex} + 300, `autobum` = {$bum} WHERE `userid` = {$userid}");
 		echo "...done<br />Giving starter items... ";
 			//Give starter items.
 			$api->UserGiveItem($userid,6,50);
@@ -1256,154 +1195,219 @@ function loginlogs()
     </table>";
 	$api->SystemLogsAdd($userid, 'preferences', "Viewed their login logs.");
 }
-function forumtopic()
+function newui()
 {
     global $db,$userid,$api,$h;
-	$userCount=getCurrentUserPref('topicView',20);
-	if (isset($_POST['topics'])) {
-			$_POST['topics'] = (isset($_POST['topics']) && is_numeric($_POST['topics'])) ? abs($_POST['topics']) : 20;
-			if ($_POST['topics'] < 1)
-			{
-				alert('danger', "Uh Oh!", "You need to be able to view at least one topic.");
-				die($h->endpage());
-			}
-			if ($_POST['topics'] > 100)
-			{
-				alert('danger', "Uh Oh!", "For lag reasons, we've capped this at 100 for now.");
-				die($h->endpage());
-			}
-            alert('success', "Success!", "You have successfully set your forum topic view count to {$_POST['topics']}.", true, 'preferences.php');
-            setCurrentUserPref('topicView',$_POST['topics']);
-            $api->SystemLogsAdd($userid, 'preferences', "Changed forum topic view count to {$_POST['topics']}.");
-            die($h->endpage());
-    } else {
-		echo "<h3>Forum Topic View Count</h3><hr />
-		How many topics would you like to see on a page, maximum. Default is 20.<br />
-		<form method='post'>
-			<input type='number' min='1' max='100' name='topics' value='{$userCount}' class='form-control'>
-			<input type='submit' class='btn btn-primary' value='Set Count'>
-		</form>";
-	}
-	
-}
-function forumpost()
-{
-    global $db,$userid,$api,$h;
-	$userCount=getCurrentUserPref('postView',20);
-	if (isset($_POST['topics'])) {
-			$_POST['topics'] = (isset($_POST['topics']) && is_numeric($_POST['topics'])) ? abs($_POST['topics']) : 20;
-            if ($_POST['topics'] < 1)
-			{
-				alert('danger', "Uh Oh!", "You need to be able to view at least one post.");
-				die($h->endpage());
-			}
-			if ($_POST['topics'] > 100)
-			{
-				alert('danger', "Uh Oh!", "For lag reasons, we've capped this at 100 for now.");
-				die($h->endpage());
-			}
-			alert('success', "Success!", "You have successfully set your forum post view count to {$_POST['topics']}.", true, 'preferences.php');
-            setCurrentUserPref('postView',$_POST['topics']);
-            $api->SystemLogsAdd($userid, 'preferences', "Changed forum post view count to {$_POST['topics']}.");
-            die($h->endpage());
-    } else {
-		echo "<h3>Forum Post View Count</h3><hr />
-		How many replies would you like to see on a page, maximum. Default is 20.<br />
-		<form method='post'>
-			<input type='number' min='1' max='100' name='topics' value='{$userCount}' class='form-control'>
-			<input type='submit' class='btn btn-primary' value='Set Count'>
-		</form>";
-	}
-	
-}
-function mailcount()
-{
-    global $db,$userid,$api,$h;
-	$userCount=getCurrentUserPref('mailView',15);
-	if (isset($_POST['topics'])) {
-			$_POST['topics'] = (isset($_POST['topics']) && is_numeric($_POST['topics'])) ? abs($_POST['topics']) : 15;
-			if ($_POST['topics'] < 1)
-			{
-				alert('danger', "Uh Oh!", "You need to be able to view at least one message.");
-				die($h->endpage());
-			}
-			if ($_POST['topics'] > 100)
-			{
-				alert('danger', "Uh Oh!", "For lag reasons, we've capped this at 100 for now.");
-				die($h->endpage());
-			}
-            alert('success', "Success!", "You have successfully set your mail view count to {$_POST['topics']}.", true, 'preferences.php');
-            setCurrentUserPref('mailView',$_POST['topics']);
-            $api->SystemLogsAdd($userid, 'preferences', "Changed mail view count to {$_POST['topics']}.");
-            die($h->endpage());
-    } else {
-		echo "<h3>Mail View Count</h3><hr />
-		How many messages would you like to see in your inbox at once. Default is 15.<br />
-		<form method='post'>
-			<input type='number' min='1' max='100' name='topics' value='{$userCount}' class='form-control'>
-			<input type='submit' class='btn btn-primary' value='Set Count'>
-		</form>";
-	}
-	
-}
-function notifcount()
-{
-    global $db,$userid,$api,$h;
-	$userCount=getCurrentUserPref('notifView',15);
-	if (isset($_POST['topics'])) {
-			$_POST['topics'] = (isset($_POST['topics']) && is_numeric($_POST['topics'])) ? abs($_POST['topics']) : 15;
-			if ($_POST['topics'] < 1)
-			{
-				alert('danger', "Uh Oh!", "You need to be able to view at least one notification.");
-				die($h->endpage());
-			}
-			if ($_POST['topics'] > 100)
-			{
-				alert('danger', "Uh Oh!", "For lag reasons, we've capped this at 100 for now.");
-				die($h->endpage());
-			}
-            alert('success', "Success!", "You have successfully set your notification view count to {$_POST['topics']}.", true, 'preferences.php');
-            setCurrentUserPref('notifView',$_POST['topics']);
-            $api->SystemLogsAdd($userid, 'preferences', "Changed notification view count to {$_POST['topics']}.");
-            die($h->endpage());
-    } else {
-		echo "<h3>Notification View Count</h3><hr />
-		How many notifications would you like to see at once on your notifications page?. Default is 15.<br />
-		<form method='post'>
-			<input type='number' min='1' max='100' name='topics' value='{$userCount}' class='form-control'>
-			<input type='submit' class='btn btn-primary' value='Set Count'>
-		</form>";
-	}
-	
-}
-function guildautoxp()
-{
-    global $db,$userid,$api,$h;
-	$userCount=getCurrentUserPref('autoDonateXP',0);
+	$userCount=getCurrentUserPref('oldUI',0);
 	if (isset($_POST['topics'])) {
 			$_POST['topics'] = (isset($_POST['topics']) && is_numeric($_POST['topics'])) ? abs($_POST['topics']) : 0;
-			if ($_POST['topics'] < 0)
+			if (($_POST['topics'] != 1) && ($_POST['topics'] != 0))
 			{
-				alert('danger', "Uh Oh!", "You need to be able to view at least one notification.");
+				alert('danger', "Uh Oh!", "You've specified an invalid option.", true, 'preferences.php');
 				die($h->endpage());
 			}
-			if ($_POST['topics'] > 50)
-			{
-				alert('danger', "Uh Oh!", "You may only donate, at maximum, 50% of your total experience earned.");
-				die($h->endpage());
-			}
-            alert('success', "Success!", "You have successfully set your experience to auto-donate to your guild at {$_POST['topics']}%.", true, 'preferences.php');
-            setCurrentUserPref('autoDonateXP',$_POST['topics']);
+            alert('success', "Success!", "You have successfully updated this preference. Your results will update on the next page load.", true, 'preferences.php');
+            setCurrentUserPref('oldUI',$_POST['topics']);
             $api->SystemLogsAdd($userid, 'preferences', "Changed guild xp auto donate to {$_POST['topics']}%.");
             die($h->endpage());
     } else {
-		echo "<h3>Guild Experience Auto Donate</h3><hr />
-		How much experience would you like to automatically donate to your guild? The maximum is 50%. Default is 0%.<br />
-		<form method='post'>
-			<input type='number' min='0' max='50' name='topics' value='{$userCount}' class='form-control'>
-			<input type='submit' class='btn btn-primary' value='Set XP Percentage'>
-		</form>";
+		echo "<h3>UI Toggle</h3><hr />
+		Select the UI type you wish to have. Note, that the game will be developed with the current actively developed UI.<br />
+		<div class='row'>
+			<div class='col-sm'>
+				<form method='post'>
+					<input type='hidden' name='topics' value='0'>
+					<input type='submit' class='btn btn-primary' value='New UI'>
+				</form>
+			</div>
+			<div class='col-sm'>
+				<form method='post'>
+					<input type='hidden' name='topics' value='1'>
+					<input type='submit' class='btn btn-primary' value='Old UI (Phased out 08/20)'>
+				</form>
+			</div>
+		</div>";
 	}
 	
+}
+function homecount()
+{
+	global $db,$userid,$api,$h;
+	$autoDonateXP=getCurrentUserPref('autoDonateXP',0);
+	$notifCount=getCurrentUserPref('notifView',15);
+	$mailCount=getCurrentUserPref('mailView',15);
+	$postCount=getCurrentUserPref('postView',20);
+	$topicCount=getCurrentUserPref('topicView',20);
+	$vipLogCount=getCurrentUserPref('vipLogView',5);
+	$hofCount=getCurrentUserPref('hofView',20);
+	$announceCount=getCurrentUserPref('announceView',1000);
+	$guildNotifCount=getCurrentUserPref('guildNotifView',10);
+	if (isset($_POST['submit']))
+	{
+		$_POST['mailCount'] = (isset($_POST['mailCount']) && is_numeric($_POST['mailCount'])) ? abs($_POST['mailCount']) : $mailCount;
+		$_POST['notifCount'] = (isset($_POST['notifCount']) && is_numeric($_POST['notifCount'])) ? abs($_POST['notifCount']) : $notifCount;
+		$_POST['guildXpCount'] = (isset($_POST['guildXpCount']) && is_numeric($_POST['guildXpCount'])) ? abs($_POST['guildXpCount']) : $autoDonateXP;
+		$_POST['postCount'] = (isset($_POST['postCount']) && is_numeric($_POST['postCount'])) ? abs($_POST['postCount']) : $postCount;
+		$_POST['topicCount'] = (isset($_POST['topicCount']) && is_numeric($_POST['topicCount'])) ? abs($_POST['topicCount']) : $topicCount;
+		$_POST['vipLogCount'] = (isset($_POST['vipLogCount']) && is_numeric($_POST['vipLogCount'])) ? abs($_POST['vipLogCount']) : $vipLogCount;
+		$_POST['hofCount'] = (isset($_POST['hofCount']) && is_numeric($_POST['hofCount'])) ? abs($_POST['hofCount']) : $hofCount;
+		$_POST['announceCount'] = (isset($_POST['announceCount']) && is_numeric($_POST['announceCount'])) ? abs($_POST['announceCount']) : $announceCount;
+		$_POST['guildNotifCount'] = (isset($_POST['guildNotifCount']) && is_numeric($_POST['guildNotifCount'])) ? abs($_POST['guildNotifCount']) : $guildNotifCount;
+		//check mail count
+		if (($_POST['mailCount'] < 0) || ($_POST['mailCount'] > 100))
+		{
+			alert('danger', "Uh Oh!", "Mail view count must be greater than 0, and less than 50.");
+			die($h->endpage());
+		}
+		//check notif count
+		if (($_POST['notifCount'] < 0) || ($_POST['notifCount'] > 100))
+		{
+			alert('danger', "Uh Oh!", "Notification view count must be greater than 0, and less than 100.");
+			die($h->endpage());
+		}
+		//check post count
+		if (($_POST['postCount'] < 0) || ($_POST['postCount'] > 100))
+		{
+			alert('danger', "Uh Oh!", "Forum reply view count must be greater than 0, and less than 100.");
+			die($h->endpage());
+		}
+		//check post count
+		if (($_POST['topicCount'] < 0) || ($_POST['topicCount'] > 100))
+		{
+			alert('danger', "Uh Oh!", "Forum topic view count must be greater than 0, and less than 100.");
+			die($h->endpage());
+		}
+		//check guild xp auto donate
+		if (($_POST['guildXpCount'] < 0) || ($_POST['guildXpCount'] > 50))
+		{
+			alert('danger', "Uh Oh!", "You may only donate up to 50% of your total experience to your guild.");
+			die($h->endpage());
+		}
+		//check vip log count
+		if (($_POST['mailCount'] < 0) || ($_POST['mailCount'] > 24))
+		{
+			alert('danger', "Uh Oh!", "VIP Logs view count must be greater than 0, and less than 24.");
+			die($h->endpage());
+		}
+		//check hall of fame count
+		if (($_POST['hofCount'] < 5) || ($_POST['hofCount'] > 100))
+		{
+			alert('danger', "Uh Oh!", "Hall of Fame view count must be greater than 5, and less than 100.");
+			die($h->endpage());
+		}
+		//check announce count
+		if (($_POST['announceCount'] < 1) || ($_POST['announceCount'] > 1000))
+		{
+			alert('danger', "Uh Oh!", "Announcements view count must be greater than 1 and less than 1,000.");
+			die($h->endpage());
+		}
+		//check notif count
+		if (($_POST['guildNotifCount'] < 0) || ($_POST['guildNotifCount'] > 100))
+		{
+			alert('danger', "Uh Oh!", "Guild Notification view count must be greater than 0, and less than 100.");
+			die($h->endpage());
+		}
+		setCurrentUserPref('autoDonateXP',$_POST['guildXpCount']);
+		setCurrentUserPref('mailView',$_POST['mailCount']);
+		setCurrentUserPref('notifView',$_POST['notifCount']);
+		setCurrentUserPref('postView',$_POST['postCount']);
+		setCurrentUserPref('topicView',$_POST['topicCount']);
+		setCurrentUserPref('vipLogView',$_POST['vipLogCount']);
+		setCurrentUserPref('hofView',$_POST['hofCount']);
+		setCurrentUserPref('announceView',$_POST['announceCount']);
+		setCurrentUserPref('guildNotifView',$_POST['guildNotifCount']);
+		alert('success', "Success!", "You have successfully updated your view count preference.", true, 'preferences.php');
+		$api->SystemLogsAdd($userid, 'preferences', "Updated view count preference.");
+	}
+	else
+	{
+		echo "<form method='post'>";
+		echo "
+		<div class='row'>
+			<div class='col-sm'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>Mail Count</h5>
+						<input type='number' name='mailCount' value='{$mailCount}' min='1' max='100' required='1' class='form-control' placeholder='Default = 15'>
+					</div>
+				</div>
+			</div>
+			<div class='col-sm'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>Notification Count</h5>
+						<input type='number' name='notifCount' value='{$notifCount}' min='1' max='100' required='1' class='form-control' placeholder='Default = 15'>
+					</div>
+				</div>
+			</div>
+			<div class='col-sm'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>Guild XP Auto Donate</h5>
+						<input type='number' name='guildXpCount' value='{$autoDonateXP}' min='0' max='50' required='1' class='form-control' placeholder='Default = 0'>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br />
+		<div class='row'>
+			<div class='col-sm'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>Forum Post Count</h5>
+						<input type='number' name='postCount' value='{$postCount}' min='1' max='100' required='1' class='form-control' placeholder='Default = 20'>
+					</div>
+				</div>
+			</div>
+			<div class='col-sm'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>Forum Topic Count</h5>
+						<input type='number' name='topicCount' value='{$topicCount}' min='1' max='100' required='1' class='form-control' placeholder='Default = 20'>
+					</div>
+				</div>
+			</div>
+			<div class='col-sm'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>VIP Log Count</h5>
+						<input type='number' name='vipLogCount' value='{$vipLogCount}' min='1' max='24' required='1' class='form-control' placeholder='Default = 5'>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br />
+		<div class='row'>
+			<div class='col-sm'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>Hall of Fame Count</h5>
+						<input type='number' name='hofCount' value='{$hofCount}' min='5' max='100' required='1' class='form-control' placeholder='Default = 20'>
+					</div>
+				</div>
+			</div>
+			<div class='col-sm'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>Announcement Count</h5>
+						<input type='number' name='announceCount' value='{$announceCount}' min='1' max='1000' required='1' class='form-control' placeholder='Default = 1000'>
+					</div>
+				</div>
+			</div>
+			<div class='col-sm'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>Guild Notif Count</h5>
+						<input type='number' name='guildNotifCount' value='{$guildNotifCount}' min='1' max='1000' required='1' class='form-control' placeholder='Default = 10'>
+					</div>
+				</div>
+			</div>
+		</div>";
+		echo "
+		<hr />
+		<input type='submit' class='btn btn-primary' name='Change Counts'>
+		<input type='hidden' value='1' name='submit'>
+		</form>";
+	}
 }
 $h->endpage();

@@ -384,8 +384,7 @@ function deleteitem()
         $itemname = $db->fetch_single($d);
         $db->free_result($d);
         $api->SystemLogsAdd($userid, 'staff', "Deleted item {$itemname}.");
-        $db->query("DELETE FROM `items` WHERE `itmid` = {$_POST['item']}");
-        $db->query("DELETE FROM `inventory` WHERE `inv_itemid` = {$_POST['item']}");
+        forceDeleteItem($_POST['item']);
         alert("success", "Success!", "You have successfully deleted the {$itemname} item from the game.", true, 'index.php');
         die($h->endpage());
     }

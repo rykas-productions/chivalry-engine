@@ -159,12 +159,13 @@ function home()
 	{
 		alert('dark','',"<b>Guild Announcement</b><br />{$gd['guild_announcement']}",false);
 	}
+	$viewCount=getCurrentUserPref('guildNotifView', 10);
 	echo"
 	<hr />
-	<b>Last 10 Guild Notifications</b>
+	<b>Last {$viewCount} Guild Notifications</b>
 	<hr />
    	";
-    $q = $db->query("/*qc=on*/SELECT * FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']} ORDER BY `gn_time` DESC  LIMIT 10");
+    $q = $db->query("/*qc=on*/SELECT * FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']} ORDER BY `gn_time` DESC  LIMIT {$viewCount}");
     while ($r = $db->fetch_row($q)) 
 	{
 		echo "
@@ -292,7 +293,7 @@ function summary()
 							<b>Chivalry Tokens</b>
 						</div>
 						<div class='col'>
-							" . number_format($gd['guild_seccurr']) . "
+							" . number_format($gd['guild_seccurr']) . " / " . number_format((($gd['guild_level'] * $set['GUILD_PRICE']) / 125)) . "
 						</div>
 					</div>
 				</div>
@@ -493,10 +494,17 @@ function donate()
             alert('danger', "Uh Oh!", "You are trying to donate more Chivalry Tokens than you currently have.");
             die($h->endpage());
             //Donation amount would fill up the guild's vault.
-        } else if ($_POST['primary'] + $gd['guild_primcurr'] > (($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) {
+        } else if ($_POST['primary'] + $gd['guild_primcurr'] > (($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) 
+		{
             alert('danger', "Uh Oh!", "Your guild's vault can only hold " . number_format(($gd['guild_level'] * $set['GUILD_PRICE']) * 20) . " Copper Coins.");
             die($h->endpage());
-        } else {
+        } 
+		else if ($_POST['secondary'] + $gd['guild_seccurr'] > (($gd['guild_level'] * $set['GUILD_PRICE']) / 125)) 
+		{
+            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . number_format(($gd['guild_level'] * $set['GUILD_PRICE']) / 125) . " Chivalry Tokens.");
+            die($h->endpage());
+        } 
+		else {
             //Donate the currencies!
             $api->UserTakeCurrency($userid, 'primary', $_POST['primary']);
             $api->UserTakeCurrency($userid, 'secondary', $_POST['secondary']);
@@ -916,14 +924,25 @@ function armory()
 
 function gym()
 {
-	global $db, $gd, $h, $api, $ir, $userid, $multi;
+	global $db, $gd, $h, $api, $ir, $userid, $multi, $ir;
+	$energy = $api->UserInfoGet($userid, 'energy', true);
+	$will = $api->UserInfoGet($userid, 'will', true);
 	$macropage = ('viewguild.php?action=gym');
 	if ($gd['guild_bonus_time'] > time())
+	{
 		$multiplier = (1.95+(($gd['guild_level']/100)*6.25)*$multi);
+	}
 	else
+	{
 		$multiplier = (1.25+(($gd['guild_level']/100)*6.25)*$multi);
+	}
 	if ($multiplier > (2.5*$multi))
-		$multiplier = (2.5*$multi);
+	{
+		if ($gd['guild_bonus_time'] > time())
+			$multiplier = (3*$multi);
+		else
+			$multiplier = (2.5*$multi);
+	}
 	if ($gd['guild_level'] < 3)
 	{
 		alert('danger',"Uh Oh!","You guild needs to be at least level 3 to access the guild gym!",true,'viewguild.php');
@@ -946,121 +965,54 @@ function gym()
 		$_GET["amnt"] = 0;
 	}
 	$_GET["amnt"] = abs($_GET["amnt"]);
-	if (isset($_GET["stat"]) && $_GET["amnt"]) {
-		//User trained stat does not exist.
-		if (!isset($statnames[$_GET['stat']])) {
-			alert("danger", "Uh Oh!", "The stat you've chosen to train does not exist or cannot be trained.", true, 'back');
-			die($h->endpage());
-		}
-		$stat = $statnames[$_GET['stat']];
-		//User is trying to train using more energy than they have.
-		if ($_GET['amnt'] > $ir['energy']) {
-			alert("danger", "Uh Oh!", "You are trying to train using more energy than you currently have.", false);
-		} else {
-			$gain = 0;
-			$extraecho = '';
-			if ($stat == 'all') {
-				$gainstr = $api->UserTrain($userid, 'strength', $_GET['amnt'] / 4, $multiplier);
-				$gainagl = $api->UserTrain($userid, 'agility', $_GET['amnt'] / 4, $multiplier);
-				$gaingrd = $api->UserTrain($userid, 'guard', $_GET['amnt'] / 4, $multiplier);
-				$gainlab = $api->UserTrain($userid, 'labor', $_GET['amnt'] / 4, $multiplier);
-			} else {
-				$gain = $api->UserTrain($userid, $_GET['stat'], $_GET['amnt'], $multiplier);
-			}
-			//Update energy left and stat's new count.
-			if ($stat != 'all')
-				$NewStatAmount = $ir[$stat] + $gain;
-			$EnergyLeft = $ir['energy'] - $_GET['amnt'];
-			//Strength is chosen stat
-			if ($stat == "strength") {
-				alert('success', "Success!", "You begin to lift weights. You have gained " . number_format($gain) . " Strength by completing
-					{$_GET['amnt']} sets of weights. You now have " . number_format($NewStatAmount) . " Strength and {$EnergyLeft} Energy left.", false);
-				//Have strength selected for the next training.
-				$str_select = "selected";
-				setcookie('lastTrainedStat', 'strength', time() + 86400);
-			} //Agility is the chosen stat.
-			elseif ($stat == "agility") {
-				alert('success', "Success!", "You begin to run laps. You have gained " . number_format($gain) . " Agility by completing
-					{$_GET['amnt']} laps. You now have " . number_format($NewStatAmount) . " Agility and {$EnergyLeft} Energy left.", false);
-				//Have agility selected for the next training.
-				$agl_select = "selected";
-				setcookie('lastTrainedStat', 'agility', time() + 86400);
-			} //Guard is the chosen stat.
-			elseif ($stat == "guard") {
-				alert('success', "Success!", "You begin swimming in the pool. You have gained " . number_format($gain) . " Guard by swimming for
-					{$_GET['amnt']} minutes. You now have " . number_format($NewStatAmount) . " Guard and {$EnergyLeft} left.", false);
-				//Have guard selected for the next training.
-				$grd_select = "selected";
-				setcookie('lastTrainedStat', 'guard', time() + 86400);
-			} //Labor is the chosen stat.
-			elseif ($stat == "labor") {
-				alert('success', "Success!", "You begin moving boxes around the gym. You have gained " . number_format($gain) . " Labor by moving
-					{$_GET['amnt']} sets of boxes. You now have " . number_format($NewStatAmount) . " and {$EnergyLeft} Energy left.", false);
-				//Have guard selected for the next training.
-				$lab_select = "selected";
-				setcookie('lastTrainedStat', 'labor', time() + 86400);
-			} elseif ($stat == "all") {
-				alert('success', "Success!", "You begin training your Strength, Agility, Guard and Labor all at once. You
-					have gained {$gainstr} Strength, {$gainagl} Agility, {$gaingrd} Guard and {$gainlab} Labor. You have
-					{$EnergyLeft} Energy left.");
-				$all_select = "selected";
-				setcookie('lastTrainedStat', 'all', time() + 86400);
-			}
-			//Log the user's training attempt.
-			$api->SystemLogsAdd($userid, 'training', "[Guild Gym] {$_GET['amnt']} energy for " . number_format($gain) . " {$stat}.");
-			echo "<hr />";
-			$ir['energy'] -= $_GET['amnt'];
-			if ($stat != 'all')
-				$ir[$stat] += $gain;
-			}
-		}
-		//Small logic to keep the last trained stat selected.
-		if (!isset($str_select)) {
-			$str_select = '';
-		}
-		if (!isset($agl_select)) {
-			$agl_select = '';
-		}
-		if (!isset($grd_select)) {
-			$grd_select = '';
-		}
-		if (!isset($lab_select)) {
-			$lab_select = '';
-		}
-		if (!isset($all_select)) {
-			$all_select = '';
-		}
-		if (isset($_COOKIE['lastTrainedStat']))
-		{
-			if ($_COOKIE['lastTrainedStat'] == "strength")
-				$str_select = 'selected';
-			elseif ($_COOKIE['lastTrainedStat'] == "agility")
-				$agl_select = 'selected';
-			elseif ($_COOKIE['lastTrainedStat'] == "guard")
-				$grd_select = 'selected';
-			elseif ($_COOKIE['lastTrainedStat'] == "labor")
-				$lab_select = 'selected';
-			elseif ($_COOKIE['lastTrainedStat'] == "all")
-				$all_select = 'selected';
-		}
-		//Grab the user's stat ranks.
-		$ir['strank'] = get_rank($ir['strength'], 'strength');
-		$ir['agirank'] = get_rank($ir['agility'], 'agility');
-		$ir['guarank'] = get_rank($ir['guard'], 'guard');
-		$ir['labrank'] = get_rank($ir['labor'], 'labor');
-		$ir['all_four'] = ($ir['labor'] + $ir['strength'] + $ir['agility'] + $ir['guard']);
-		$ir['af_rank'] = get_rank($ir['all_four'], 'all');
-		echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to
-		" . number_format($ir['energy']) . " times. <br />
-		The guild gym will give you " . number_format($multiplier*100) . "% the stats you'd gain at the Normal Gym.
-		<table class='table table-bordered'>
-			<tr>
-				<form method='get'>
-					<input type='hidden' name='action' value='gym'>
-					<th>
-						Stat
-					</th>
-					<td>
+	echo "<h3><i class='game-icon game-icon-weight-lifting-down'></i> The Gym</h3>";
+	echo "<div id='gymsuccess'></div>";
+	//Small logic to keep the last trained stat selected.
+	if (!isset($str_select)) {
+		$str_select = '';
+	}
+	if (!isset($agl_select)) {
+		$agl_select = '';
+	}
+	if (!isset($grd_select)) {
+		$grd_select = '';
+	}
+	if (!isset($lab_select)) {
+		$lab_select = '';
+	}
+	if (!isset($all_select)) {
+		$all_select = '';
+	}
+	if (isset($_COOKIE['lastTrainedStat']))
+	{
+		if ($_COOKIE['lastTrainedStat'] == "strength")
+			$str_select = 'selected';
+		elseif ($_COOKIE['lastTrainedStat'] == "agility")
+			$agl_select = 'selected';
+		elseif ($_COOKIE['lastTrainedStat'] == "guard")
+			$grd_select = 'selected';
+		elseif ($_COOKIE['lastTrainedStat'] == "labor")
+			$lab_select = 'selected';
+		elseif ($_COOKIE['lastTrainedStat'] == "all")
+			$all_select = 'selected';
+	}
+	//Grab the user's stat ranks.
+	$ir['strank'] = get_rank($ir['strength'], 'strength');
+	$ir['agirank'] = get_rank($ir['agility'], 'agility');
+	$ir['guarank'] = get_rank($ir['guard'], 'guard');
+	$ir['labrank'] = get_rank($ir['labor'], 'labor');
+	$ir['all_four'] = ($ir['labor'] + $ir['strength'] + $ir['agility'] + $ir['guard']);
+	$ir['af_rank'] = get_rank($ir['all_four'], 'all');
+	echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to <span id='trainTimesTotal'>" . number_format($ir['energy']) . "</span> times.<br />
+	Your guild's gym will give you " . number_format($multiplier*100) . "% the stats you'd gain at the Normal Gym.
+	<form method='post' id='gymTrainGuild'>
+		<div class='card'>
+			<div class='card-body'>
+				<div class='row'>
+					<div class='col-12 col-sm-3 col-lg-2'>
+						<b>Stat</b>
+					</div>
+					<div class='col-12 col-sm-9 col-lg-10'>
 						<select type='dropdown' name='stat' class='form-control'>
 							<option {$str_select} value='Strength'>
 								Strength (Have " . number_format($ir['strength']) . "; Ranked: {$ir['strank']})
@@ -1078,31 +1030,33 @@ function gym()
 								All Four (Have " . number_format($ir['all_four']) . "; Ranked: {$ir['af_rank']})
 							</option>
 						</select>
-					</td>
-			</tr>
-			<tr>
-				<th>
-					Training Duration
-				</th>
-				<td>
-					<input type='number' class='form-control' min='1' max='{$ir['energy']}' name='amnt' value='{$ir['energy']}' />
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='Train' />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a href='temple.php?action=energy' class='btn btn-primary'>Refill Energy</a>
-				</td>
-				<td>
-					<a href='temple.php?action=will' class='btn btn-primary'>Regen Will</a>
-				</td>
-			</tr>
-				</form>
-		</table>";
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-12 col-sm-3 col-lg-2'>
+						<b>Energy</b>
+					</div>
+					<div class='col-12 col-sm-9 col-lg-10'>
+						<input type='number' class='form-control' min='1' max='{$ir['energy']}' name='amnt' value='{$ir['energy']}' id='trainTimes' /><br />
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-12 col-sm-6 col-md-2 col-lg-6 col-xl-2'>
+						<input type='submit' class='btn btn-success btn-block' value='Train' id='trainGuild' /><br />
+					</div>
+					<div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+						<a href='#' class='btn btn-primary btn-block' id='gymRefillEnergy'>Refill Energy (<span id='gymEnergy'>{$energy}</span>%)</a><br />
+					</div>
+					<div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+						<a href='#' class='btn btn-primary btn-block'id='gymRefillWill'>Regen Will (<span id='gymWill'>{$will}</span>%)</a><br />
+					</div>
+					<div class='col-12 col-sm-6 col-md-2 col-lg-6 col-xl-2'>
+						<a href='#' class='btn btn-secondary btn-block'id='gymFillWill'>Fill Will</a><br />
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>";
 }
 
 function adonate()
@@ -1485,6 +1439,12 @@ function staff()
 			case "rsword":
                 staff_sword_reroll();
                 break;
+			case "renamesword":
+                staff_sword_rename();
+                break;
+			case "picsword":
+                staff_sword_pic();
+                break;
             default:
                 staff_idx();
                 break;
@@ -1498,92 +1458,231 @@ function staff()
 function staff_idx()
 {
     global $db, $userid, $gd;
-    echo "<table class='table table-bordered'>";
-	if (isGuildLeadership())
+	//
+	if (isGuildStaff())
 	{
-		echo "<tr align='left'>";
-		if (isGuildCoLeader())
-		{
-			echo "
-				<td colspan='3'>
-					<b>Guild Co-Leader</b><br />
-					<a href='?action=staff&act2=coowner'>Transfer Co-Leader</a><br />
-					<a href='?action=staff&act2=ament'>Change Guild Announcement</a><br />
-					<a href='?action=staff&act2=pic'>Change Guild Picture</a><br />
-					<a href='?action=staff&act2=massmail'>Mass Mail Guild</a><br />
-					<a href='?action=staff&act2=levelup'>Level Up Guild</a><br />
-					<a href='?action=staff&act2=addpoll'>Start Poll</a><br />
-					<a href='?action=staff&act2=endpoll'>End Poll</a><br />
-					<a href='?action=staff&act2=boost'>Enable Boost</a><br />
-					<a href='?action=staff&act2=upsword'>Upgrade Guild Sword</a><br />
-					<a href='?action=staff&act2=rsword'>Re-Roll Guild Sword Boosts</a><br />
-				</td>";
-		}
+		echo "<div class='row'>";
 		if (isGuildLeader())
 		{
 			echo "
-				<td colspan='3'>
-					<b>Guild Leader</b><br />
-					<a href='?action=staff&act2=leader'>Transfer Leader</a><br />
-					<a href='?action=staff&act2=name'>Change Guild Name</a><br />
-					<a href='?action=staff&act2=desc'>Change Guild Description</a><br />
-					<a href='?action=staff&act2=town'>Change Guild Town</a><br />";
-					if ($db->fetch_single($db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) 
-					{
-						echo "<a href='?action=staff&act2=untown'>Surrender Guild Town</a><br />
-							<a href='?action=staff&act2=tax'>Change Town Tax</a><br />";
-					}
-				echo "<a href='?action=staff&act2=doally'>Declare Alliance</a><br />
-				<a href='?action=staff&act2=viewrally'>View Alliance Requests</a><br />
-				<a href='?action=staff&act2=viewallies'>View Allies</a><br />
-				<a href='?action=staff&act2=declarewar'>Declare War</a><br />
-				<a href='?action=staff&act2=dissolve'>Dissolve Guild</a><br />
-				<a href='?action=staff&act2=swords'>Guild-Branded Swords</a><br />
-				<a href='?action=staff&act2=dsword'>Decommission Guild-Branded Swords</a><br />
-				</td>";
+				<div class='col-12 col-lg-6'>
+					<div class='card'>
+						<div class='card-header'>
+							<div class='row'>
+								<div class='col'>
+									Guild Leader
+								</div>
+								<div class='col'>
+									<a href='profile.php?user={$gd['guild_owner']}'>" . parseUsername($gd['guild_owner']) . "</a> [{$gd['guild_owner']}]
+								</div>
+							</div>
+						</div>
+						<div class='card-body'>
+							<div class='row'>
+								<a href='?action=staff&act2=leader'>Transfer Leader</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=name'>Change Guild Name</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=desc'>Change Guild Description</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=town'>Change Guild Town</a>
+							</div>";
+							if ($db->fetch_single($db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) 
+							{
+								echo "
+								<div class='row'>
+									<a href='?action=staff&act2=untown'>Surrender Guild Town</a>
+								</div>
+								<div class='row'>
+									<a href='?action=staff&act2=tax'>Change Town Tax</a>
+								</div>";
+							}
+							echo"
+							<div class='row'>
+								<a href='?action=staff&act2=doally'>Declare Alliance</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=viewrally'>View Alliance Requests</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=viewallies'>View Allies</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=declarewar'>Declare War</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=dissolve'>Dissolve Guild</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=swords'>Guild Weapons</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=dsword'>Decommission Guild Weapons</a>
+							</div>
+						</div>
+					</div>
+				</div>";
 		}
-		echo "</tr>";
-	}
-	if (isGuildStaff())
-	{
-		echo "<tr align='left'>";
+		if (isGuildCoLeader())
+		{
+			echo "
+				<div class='col-12 col-lg-6'>
+					<div class='card'>
+						<div class='card-header'>
+							<div class='row'>
+								<div class='col'>
+									Guild Co-Leader
+								</div>
+								<div class='col'>
+									<a href='profile.php?user={$gd['guild_coowner']}'>" . parseUsername($gd['guild_coowner']) . "</a> [{$gd['guild_coowner']}]
+								</div>
+							</div>
+						</div>
+						<div class='card-body'>
+							<div class='row'>
+								<a href='?action=staff&act2=coowner'>Transfer Co-Leader</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=ament'>Change Guild Announcement</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=pic'>Change Guild Picture</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=massmail'>Mass Mail Guild</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=levelup'>Level Up Guild</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=addpoll'>Start Poll</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=endpoll'>End Poll</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=boost'>Enable Boost</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=upsword'>Upgrade Guild Weapon</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=rsword'>Re-Roll Guild Weapon Boosts</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=renamesword'>Rename Guild Weapon</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=picsword'>Change Guild Weapon Image</a>
+							</div>
+						</div>
+					</div>
+				</div>";
+		}
 		if (isGuildAppManager())
 		{
 			echo "
-			<td colspan='2'>
-				<b>Guild Application Manager</b><br />
-				<a href='?action=staff&act2=apps'>Application Management</a><br />
-				<a href='?action=staff&act2=intromsg'>Introductory Message</a><br />
-				<a href='?action=staff&act2=blockapps'>Block Applications</a><br />
-				<a href='?action=staff&act2=massmail'>Mass Mail Guild</a><br />
-				<a href='?action=staff&act2=appmngr'>Change Application Manager</a><br />
-			</td>";
+				<div class='col-12 col-lg-6'>
+					<div class='card'>
+						<div class='card-header'>
+							<div class='row'>
+								<div class='col'>
+									Guild App Manager
+								</div>
+								<div class='col'>
+									<a href='profile.php?user={$gd['guild_app_manager']}'>" . parseUsername($gd['guild_app_manager']) . "</a> [{$gd['guild_app_manager']}]
+								</div>
+							</div>
+						</div>
+						<div class='card-body'>
+							<div class='row'>
+								<a href='?action=staff&act2=apps'>Application Management</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=intromsg'>Introductory Message</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=blockapps'>Block Applications</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=massmail'>Mass Mail Guild</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=appmngr'>Change Application Manager</a>
+							</div>
+						</div>
+					</div>
+				</div>";
 		}
 		if (isGuildVaultManager())
 		{
 			echo "
-			<td colspan='2'>
-				<b>Guild Vault Manager</b><br />
-				<a href='?action=staff&act2=vault'>Vault Management</a><br />
-				<a href='?action=staff&act2=armory'>Armory Management</a><br />
-				<a href='?action=staff&act2=massmail'>Mass Mail Guild</a><br />
-				<a href='?action=staff&act2=masspay'>Mass Pay Guild</a><br />
-				<a href='?action=staff&act2=vaultmngr'>Change Vault Manager</a><br />
-			</td>";
+				<div class='col-12 col-lg-6'>
+					<div class='card'>
+						<div class='card-header'>
+							<div class='row'>
+								<div class='col'>
+									Guild Vault Manager
+								</div>
+								<div class='col'>
+									<a href='profile.php?user={$gd['guild_vault_manager']}'>" . parseUsername($gd['guild_vault_manager']) . "</a> [{$gd['guild_vault_manager']}]
+								</div>
+							</div>
+						</div>
+						<div class='card-body'>
+							<div class='row'>
+								<a href='?action=staff&act2=vault'>Vault Management</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=armory'>Armory Management</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=masspay'>Mass Pay Guild</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=massmail'>Mass Mail Guild</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=vaultmngr'>Change Vault Manager</a>
+							</div>
+						</div>
+					</div>
+				</div>";
 		}
 		if (isGuildCrimeLord())
 		{
 			echo "
-			<td colspan='2'>
-				<b>Guild Crime Lord</b><br />
-				<a href='?action=staff&act2=crimes'>Guild Crimes</a><br />
-				<a href='?action=staff&act2=massmail'>Mass Mail Guild</a><br />
-				<a href='?action=staff&act2=crimelord'>Change Crime Lord</a><br />
-			</td>";
+				<div class='col-12 col-lg-6'>
+					<div class='card'>
+						<div class='card-header'>
+							<div class='row'>
+								<div class='col'>
+									Guild Crime Lord
+								</div>
+								<div class='col'>
+									<a href='profile.php?user={$gd['guild_crime_lord']}'>" . parseUsername($gd['guild_crime_lord']) . "</a> [{$gd['guild_crime_lord']}]
+								</div>
+							</div>
+						</div>
+						<div class='card-body'>
+							<div class='row'>
+								<a href='?action=staff&act2=crimes'>Guild Crimes</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=massmail'>Mass Mail Guild</a>
+							</div>
+							<div class='row'>
+								<a href='?action=staff&act2=crimelord'>Change Crime Lord</a>
+							</div>
+						</div>
+					</div>
+				</div>";
 		}
-		echo "</tr>";
 	}
-    echo "</table>
+    echo "</div>
 	<a href='viewguild.php'>Go Back</a>";
 }
 
@@ -3840,7 +3939,7 @@ function staff_sword_guild()
 {
 	global $db,$gd,$userid,$api,$ir,$h;
 	//Check if user is the owner of the guild.
-	echo "<h4>Guild Branded Swords</h4><hr />";
+	echo "<h4>Guild Branded Weapons</h4><hr />";
     if (isGuildLeader()) 
 	{
 		if (isset($_POST['buyswords']))
@@ -3849,13 +3948,13 @@ function staff_sword_guild()
 			$swordID=$gd['guild_sword_item'];
 			if ($gd['guild_primcurr'] < 10000000)
 			{
-				alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to buy Guild-Branded Swords.", true, '?action=staff&act2=idx');
+				alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to buy Guild Weapons.", true, '?action=staff&act2=idx');
 				die($h->endpage());
 			}
 			if ($gd['guild_sword_item'] == 0)
 			{
 				$name="{$gd['guild_name']}-Branded Sword";
-				$desc="A sword created for the {$gd['guild_name']} guild. This sword was created " . date('l, F j, Y g:i:s a') . ".";
+				$desc="A weapon created for the {$gd['guild_name']} guild. This weapon was created " . date('l, F j, Y g:i:s a') . ".";
 				for ($i = 1; $i <= 3; $i++) 
 				{
 					$statRND=Random(1,5);
@@ -3889,23 +3988,23 @@ function staff_sword_guild()
 				$db->query("UPDATE `guild` SET `guild_sword_item` = {$swordID} WHERE `guild_id` = {$gd['guild_id']}");
 				addToEconomyLog('Guild Fees', 'copper', -10000000);
 			}
-			$api->GuildAddNotification($gd['guild_id'], "Your leader, <a href='profile.php?user={$userid}'>{$ir['username']}</a>, has spent 10,000,000 Copper Coins and ordered 5 Guild-Branded swords to the armory.");
+			$api->GuildAddNotification($gd['guild_id'], "Your leader, <a href='profile.php?user={$userid}'>{$ir['username']}</a>, has spent 10,000,000 Copper Coins and ordered 5 guild weapons to the armory.");
 			$api->GuildAddItem($gd['guild_id'],$swordID,5);
 			$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - 10000000 WHERE `guild_id` = {$gd['guild_id']}");
-			alert('success', "Success!", "You have successfully ordered five Guild-Branded swords to the guild armory for 10,000,000 Copper Coins.", true, '?action=staff&act2=idx');
+			alert('success', "Success!", "You have successfully ordered five guild weapons to the guild armory for 10,000,000 Copper Coins.", true, '?action=staff&act2=idx');
 		}
 		else
 		{
-			echo "Guild-branded swords aren't meant to be over-powered. They're supposed to be a
+			echo "Guild weapons aren't meant to be over-powered. They're supposed to be a
 			historical relic that your guild existed. If that's worth anything is totally up to how 
-			your guild is today. Take pride in your guild with these swords.<br />
-			Guild Swords are not cheap by any means. It costs your guild 10M Copper Coins to have a 
-			set of five swords created.<br />
-			Would you like a set to be created? It'll cost you 10M Copper Coins for 5 Swords. The swords will 
+			your guild is today. Take pride in your guild with these weapons.<br />
+			Guild Weapons are not cheap by any means. It costs your guild 10M Copper Coins to have a 
+			set of five weapons created.<br />
+			Would you like a set to be created? It'll cost you 10M Copper Coins for 5 weapons. The weapons will 
 			deposit into your guild armory.<br />
 			<form method='post'>
 				<input type='hidden' name='buyswords' value='1'>
-				<input type='submit' class='btn btn-success' value='Buy Swords'>
+				<input type='submit' class='btn btn-success' value='Buy Weapons'>
 				<a href='?action=staff' class='btn btn-danger'>No Thanks</a>
 			</form>";
 		}
@@ -3918,7 +4017,7 @@ function staff_sword_guild()
 function staff_upgrade_sword()
 {
     global $db,$gd,$userid,$api,$ir,$h;
-	echo "<h4>Upgrade Guild Sword</h4><hr />";
+	echo "<h4>Upgrade Guild Weapon</h4><hr />";
 	if (!isGuildLeader())
 	{
 		alert('danger',"Uh Oh!","You do not have permission to be here.",true,'?action=staff&act2=idx');
@@ -3926,13 +4025,13 @@ function staff_upgrade_sword()
 	}
 	if ($gd['guild_sword_item'] == 0)
 	{
-		alert('danger',"Uh Oh!","Your guild does not have a guild sword to be upgraded.",true,'?action=staff&act2=idx');
+		alert('danger',"Uh Oh!","Your guild does not have a guild weapon to be upgraded.",true,'?action=staff&act2=idx');
 		die($h->endpage());
 	}
 	$r=$db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$gd['guild_sword_item']}"));
 	if ($r['itmbuyprice'] >= 750000)
 	{
-		alert('danger',"Uh Oh!","You have upgraded your guild's sword to the maximum it can be upgraded.",true,'?action=staff&act2=idx');
+		alert('danger',"Uh Oh!","You have upgraded your guild's weapon to the maximum it can be upgraded.",true,'?action=staff&act2=idx');
 		die($h->endpage());
 	}
 	if (isset($_POST['upgrade']))
@@ -3944,7 +4043,7 @@ function staff_upgrade_sword()
 		$newSell = $newCost / 2;
 		if ($gd['guild_primcurr'] < 10000000)
 		{
-			alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to upgrade your swords right now.", true, '?action=staff&act2=idx');
+			alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to upgrade your guild's weapon right now.", true, '?action=staff&act2=idx');
 			die($h->endpage());
 		}
 		addToEconomyLog('Guild Fees', 'copper', -10000000);
@@ -3954,14 +4053,14 @@ function staff_upgrade_sword()
 					`itmbuyprice` = '{$newCost}',
 					`itmsellprice` = '{$newSell}'
 					WHERE `itmid` = {$gd['guild_sword_item']}");
-		$api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a>, one of your guild owners, has spent 10,000,000 Copper Coins to upgrade your Guild-Branded Swords.");
-		alert('success',"Success!","You have successfully upgraded your guild's sword for 10,000,000 Copper Coins.",true,'?action=staff&act2=idx');
+		$api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a>, one of your guild owners, has spent 10,000,000 Copper Coins to upgrade your guild weapon.");
+		alert('success',"Success!","You have successfully upgraded your guild's weapon for 10,000,000 Copper Coins.",true,'?action=staff&act2=idx');
 	}
 	else
 	{
-		echo "Upgrading your guild sword will make it stronger and increase its item value. Upgrades will
-		affect all swords that currently exist, and will effect those made in the future. This will not change 
-		your creation costs. You may upgrade your guild's sword until its item buy value reaches 
+		echo "Upgrading your guild weapon will make it stronger and increase its item value. Upgrades will
+		affect all weapons that currently exist, and will effect those made in the future. This will not change 
+		your creation costs. You may upgrade your guild's weapon until its item buy value reaches 
 		750,000 Copper Coins.<br />
 		Each upgrade costs 10M Copper Coins.<br />
 		Each upgrade will increase your sword's weapon rating by 5-15%.<br />
@@ -3969,7 +4068,7 @@ function staff_upgrade_sword()
 		Do you wish to upgrade your guild's sword?
 			<form method='post'>
 				<input type='hidden' name='upgrade' value='1'>
-				<input type='submit' class='btn btn-success' value='Upgrade Swords'>
+				<input type='submit' class='btn btn-success' value='Upgrade Weapons'>
 				<a href='?action=staff' class='btn btn-danger'>No Thanks</a>
 			</form>";
 	}
@@ -3977,7 +4076,7 @@ function staff_upgrade_sword()
 function staff_decommission_sword()
 {
     global $db,$gd,$userid,$api,$ir,$h;
-	echo "<h4>Decommission Guild Sword</h4><hr />";
+	echo "<h4>Decommission Guild Weapon</h4><hr />";
 	if (!isGuildLeader())
 	{
 		alert('danger',"Uh Oh!","You do not have permission to be here.",true,'?action=staff&act2=idx');
@@ -3985,7 +4084,7 @@ function staff_decommission_sword()
 	}
 	if ($gd['guild_sword_item'] == 0)
 	{
-		alert('danger',"Uh Oh!","Your guild does not have a guild sword to be decommissioned.",true,'?action=staff&act2=idx');
+		alert('danger',"Uh Oh!","Your guild does not have a guild weapon to be decommissioned.",true,'?action=staff&act2=idx');
 		die($h->endpage());
 	}
 	if (isset($_POST['decommission']))
@@ -3994,27 +4093,27 @@ function staff_decommission_sword()
 		$newName="{$r['itmname']} (Decommissioned)";
 		$newWep = $r['weapon'] / 2;
 		$newDesc="{$r['itmdesc']} (Decommissioned " . date('l, F j, Y g:i:s a') . ").";
-		if ($gd['guild_primcurr'] < 50000000)
+		if ($gd['guild_primcurr'] < 5000000)
 		{
-			alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to upgrade your swords right now.", true, '?action=staff&act2=idx');
+			alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to decomission your weapons right now.", true, '?action=staff&act2=idx');
 			die($h->endpage());
 		}
-		addToEconomyLog('Guild Fees', 'copper', -50000000);
+		addToEconomyLog('Guild Fees', 'copper', -5000000);
 		$db->query("UPDATE `items` SET `itmname` = '{$newName}', `itmdesc` = '{$newDesc}', `weapon` = '{$newWep}', `itmbuyable` = 'false' WHERE `itmid` = {$r['itmid']}");
-		$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - 50000000, `guild_sword_item` = 0 WHERE `guild_id` = {$gd['guild_id']}");
-		$api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a>, your guild owner, has spent 50,000,000 Copper Coins to decommission your Guild-Branded Swords.");
-		alert('success',"Success!","You have successfully decommissioned your guild's sword for 50,000,000 Copper Coins.",true,'?action=staff&act2=idx');
+		$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - 5000000, `guild_sword_item` = 0 WHERE `guild_id` = {$gd['guild_id']}");
+		$api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a>, your guild owner, has spent 5,000,000 Copper Coins to decommission your guild's weapons.");
+		alert('success',"Success!","You have successfully decommissioned your guild's weapon for 5,000,000 Copper Coins.",true,'?action=staff&act2=idx');
 	}
 	else
 	{
-		echo "You may decommission your guild's current sword here. Since you are stopping production runs early, the 
-		blacksmith who was creating your swords is charging you a 50M fee to break the deal.<br />
-		Decommssioned swords will be labeled as such, and will have its decommision date noted. Swords are 100% final once 
-		decommissioned. Guild-Branded swords get their power from being a official guild relic. Don't be surprised if the sword 
-		feels... weaker... once its been decommissioned. Decommissioned swords will not show up on the Item Appendix either.
+		echo "You may decommission your guild's current weapon here. Since you are stopping production runs early, the 
+		blacksmith who was creating your weapons is charging you a 5M fee to break the deal.<br />
+		Decommssioned weapons will be labeled as such, and will have its decommision date noted. Weapons are 100% final once 
+		decommissioned. Guild weapons get their power from being a official guild relic. Don't be surprised if the weapon 
+		feels... weaker... once its been decommissioned. Decommissioned weapon will not show up on the Item Appendix either.
 			<form method='post'>
 				<input type='hidden' name='decommission' value='1'>
-				<input type='submit' class='btn btn-success' value='Decomission Sword'>
+				<input type='submit' class='btn btn-success' value='Decomission Weapon'>
 				<a href='?action=staff' class='btn btn-danger'>No Thanks</a>
 			</form>";
 	}
@@ -4023,12 +4122,12 @@ function staff_sword_reroll()
 {
 	global $db,$gd,$userid,$api,$ir,$h;
 	//Check if user is the owner of the guild.
-	echo "<h4>Guild Sword Stat Re-Roll</h4><hr />";
+	echo "<h4>Guild Weapon Stat Re-Roll</h4><hr />";
     if (isGuildLeader()) 
 	{
 		if ($gd['guild_sword_item'] == 0)
 	{
-		alert('danger',"Uh Oh!","Your guild does not have a guild sword to have its stats re-rolled.",true,'?action=staff&act2=idx');
+		alert('danger',"Uh Oh!","Your guild does not have a guild weapon to have its stats re-rolled.",true,'?action=staff&act2=idx');
 		die($h->endpage());
 	}
 		if (isset($_POST['reroll']))
@@ -4041,12 +4140,12 @@ function staff_sword_reroll()
 			$newSell = $newCost / 2;
 			if ($gd['guild_primcurr'] < 25000000)
 			{
-				alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to re-roll your Guild Swords stat boosts.", true, '?action=staff&act2=idx');
+				alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to re-roll your Guild Weapon's stat boosts.", true, '?action=staff&act2=idx');
 				die($h->endpage());
 			}
 			if ($r['itmbuyprice'] >= 750000)
 			{
-				alert('danger',"Uh Oh!","You cannot re-roll the stats on your Guild-Branded Sword if its value exceeds over 750,000 Copper Coins.",true,'?action=staff&act2=idx');
+				alert('danger',"Uh Oh!","You cannot re-roll the stats on your guild's weapon if its value exceeds over 750,000 Copper Coins.",true,'?action=staff&act2=idx');
 				die($h->endpage());
 			}
 			for ($i = 1; $i <= 3; $i++) 
@@ -4077,14 +4176,14 @@ function staff_sword_reroll()
 						`itmsellprice` = '{$newSell}'
 						WHERE `itmid` = {$swordID}");
 			addToEconomyLog('Guild Fees', 'copper', -25000000);
-			$api->GuildAddNotification($gd['guild_id'], "Your leader, <a href='profile.php?user={$userid}'>{$ir['username']}</a>, has spent 25,000,000 Copper Coins re-roll the stat boosts on your Guild-Branded Swords.");
+			$api->GuildAddNotification($gd['guild_id'], "Your leader, <a href='profile.php?user={$userid}'>{$ir['username']}</a>, has spent 25,000,000 Copper Coins re-roll the stat boosts on your guild's weapons.");
 			$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - 25000000 WHERE `guild_id` = {$gd['guild_id']}");
-			alert('success', "Success!", "You have successfully re-rolled the stat boosts on your Guild-Branded Swords for 25,000,000 Copper Coins.", true, '?action=staff&act2=idx');
+			alert('success', "Success!", "You have successfully re-rolled the stat boosts on your guild's weapons for 25,000,000 Copper Coins.", true, '?action=staff&act2=idx');
 		}
 		else
 		{
-			echo "Don't like the stat boosts you got on your Guild-Branded Sword? Need not worry! You can re-roll them for 25M Copper Coins! This will 
-			increase the Sword's buy value by 5-15%.
+			echo "Don't like the stat boosts you got on your guild's weapon? Need not worry! You can re-roll them for 25M Copper Coins! This will 
+			increase the weapon's buy value by 5-15%.
 			<form method='post'>
 				<input type='hidden' name='reroll' value='1'>
 				<input type='submit' class='btn btn-success' value='Re-Roll Stat Boosts'>
@@ -4095,6 +4194,149 @@ function staff_sword_reroll()
 	else
 	{
 		alert('danger', "Uh Oh!", "You can only be here if you're the guild's leader.", true, '?action=staff&act2=idx');
+	}
+}
+function staff_sword_rename()
+{
+    global $db,$gd,$userid,$api,$ir,$h;
+	$vipitem = 394;
+	echo "<h4>Rename Guild Weapon</h4><hr />";
+	if (!isGuildLeader())
+	{
+		alert('danger',"Uh Oh!","You do not have permission to be here.",true,'?action=staff&act2=idx');
+		die($h->endpage());
+	}
+	if ($gd['guild_sword_item'] == 0)
+	{
+		alert('danger',"Uh Oh!","Your guild does not have a guild weapon to be renamed.",true,'?action=staff&act2=idx');
+		die($h->endpage());
+	}
+	if (isset($_POST['rename']))
+	{
+		$itmname = (isset($_POST['rename']) && is_string($_POST['rename'])) ? $db->escape(strip_tags(stripslashes($_POST['rename']))) : '';
+		if (empty($itmname))
+		{
+			alert('danger',"Uh Oh!","You input an invalid item name. Go back and try again.");
+			die($h->endpage());
+		}
+		$inq = $db->query("/*qc=on*/SELECT `itmid` FROM `items` WHERE `itmname` = '{$itmname}'");
+        if ($db->num_rows($inq) > 0) 
+		{
+            alert('danger', "Uh Oh!", "An item with the same name already exists. Go back and try again.");
+            die($h->endpage());
+        }
+		$user="<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}]";
+		if ($api->GuildHasItem($gd['guild_id'], $vipitem))
+		{
+			$api->GuildRemoveItem($gd['guild_id'], $vipitem, 1);
+			$api->GuildAddNotification($gd['guild_id'],"{$user} traded a {$api->SystemItemIDtoName($vipitem)} and submitted a request to have your guild's weapon renamed.");
+			alert('success',"Success!","Request was submitted successfully. One {$api->SystemItemIDtoName($vipitem)} has been taken from your guild's armory.",true,'?action=staff&act2=idx');
+		}
+		elseif ($gd['guild_primcurr'] < 35000000)
+		{
+			alert('danger', "Uh Oh!", "It costs 35,000,000 Copper Coins to rename your guild's weapon. Go back and try again.");
+            die($h->endpage());
+		}
+		else
+		{
+			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000000 WHERE `guild_id` = {$ir['guild']}");
+			$api->GuildAddNotification($gd['guild_id'],"{$user} paid 35,000,000 Copper Coins and submitted a request to have your guild's weapon renamed.");
+			alert('success',"Success!","Request was submitted successfully. 35,000,000 Copper Coins have been taken from your guild's vault.",true,'?action=staff&act2=idx');
+		}
+		submitToModeration($gd['guild_sword_item'], "guild_sword_name", $itmname, $userid);
+		die($h->endpage());
+	}
+	else
+	{
+		$itemname=$db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gd['guild_sword_item']}"));
+		echo "
+		Submit a request to rename your guild's weapon. Requests will go to a staff moderation team 
+		and will be approved or denied from there. It costs 35,000,000 Copper Coins, and if your request 
+		is denied, you will not be given your Copper Coins back. This is to deter wasting the modeation team's 
+		time. If your guild has a {$api->SystemItemIDtoName($vipitem)} in its armory, we'll take that before 
+		we take from the vault. <b>Please ensure that whatever you name your weapon, it fits the theme of Medieval Europe. Guns, lasers, 
+		and robotics won't be found here. Requests that do not fit Medieval Europe will be declined regardless.</b>
+		<hr />
+		<form method='post'>
+			<div class='row'>
+				<div class='col-12 col-lg-6 col-xl-4'>
+					What would you like your guild sword to be named?
+				</div>
+				<div class='col-12 col-lg-6 col-xl-8'>
+					<input type='text' class='form-control' name='rename' required='1' value='{$itemname}'>
+				</div>
+			</div>
+			<br />
+			<div class='row'>
+				<div class='col-12'>
+					<input type='submit' class='btn btn-primary btn-block' value='Submit for Approval'>
+				</div>
+			</div>
+		</form>";
+	}
+}
+
+function staff_sword_pic()
+{
+    global $db,$gd,$userid,$api,$ir,$h;
+	echo "<h4>Guild Weapon Pic</h4><hr />";
+	if (!isGuildLeader())
+	{
+		alert('danger',"Uh Oh!","You do not have permission to be here.",true,'?action=staff&act2=idx');
+		die($h->endpage());
+	}
+	if ($gd['guild_sword_item'] == 0)
+	{
+		alert('danger',"Uh Oh!","Your guild does not have a guild weapon to set a new picture for.",true,'?action=staff&act2=idx');
+		die($h->endpage());
+	}
+	if (isset($_POST['rename']))
+	{
+		$itmname = (isset($_POST['rename']) && is_string($_POST['rename'])) ? $db->escape(strip_tags(stripslashes($_POST['rename']))) : '';
+		if (empty($itmname))
+		{
+			alert('danger',"Uh Oh!","You input an invalid item name. Go back and try again.");
+			die($h->endpage());
+		}
+		if ($gd['guild_primcurr'] < 35000000)
+		{
+			alert('danger', "Uh Oh!", "It costs 35,000,000 Copper Coins to rename your sword. Go back and try again.");
+            die($h->endpage());
+		}
+		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 35000000 WHERE `guild_id` = {$ir['guild']}");
+		submitToModeration($gd['guild_sword_item'], "guild_sword_pic", $itmname, $userid);
+		$user="<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}]";
+		$api->GuildAddNotification($gd['guild_id'],"{$user} paid 35,000,000 Copper Coins and submitted a request to change the picture of your guild's weapon..");
+		alert('success',"Success!","Request was submitted successfully. 35,000,000 Copper Coins have been taken from your guild's vault.",true,'?action=staff&act2=idx');
+		die($h->endpage());
+	}
+	else
+	{
+		$itemname=$db->fetch_single($db->query("SELECT `icon` FROM `items` WHERE `itmid` = {$gd['guild_sword_item']}"));
+		echo "
+		Submit a request to change the picture your guild's weapon. Requests will go to a staff moderation team 
+		and will be approved or denied from there. It costs 35,000,000 Copper Coins, and if your request 
+		is denied, you will not be given your Copper Coins back. This is to deter wasting the modeation team's 
+		time. <b>Please ensure that whatever pic you choose for your your weapon, it fits the theme of Medieval Europe. 
+		Guns, lasers, and robotics won't be found here. Requests that do not fit Medieval Europe will be declined 
+		regardless.</b>
+		<hr />
+		<form method='post'>
+			<div class='row'>
+				<div class='col-12 col-lg-6 col-xl-4'>
+					What would you like your guild sword to be named?
+				</div>
+				<div class='col-12 col-lg-6 col-xl-8'>
+					<input type='text' class='form-control' name='rename' required='1' value='{$itemname}'>
+				</div>
+			</div>
+			<br />
+			<div class='row'>
+				<div class='col-12'>
+					<input type='submit' class='btn btn-primary btn-block' value='Submit for Approval'>
+				</div>
+			</div>
+		</form>";
 	}
 }
 function calculateUpkeep()
@@ -4108,7 +4350,7 @@ function calculateUpkeep()
 	$q=$db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}");
 	while ($r=$db->fetch_row($q))
 	{
-		$upkeepFee=0;
+		$upkeepFee=$upkeepFee;
 		$warriors = countDeployedWarriors($r['guild_id']);
 		$archers = countDeployedArchers($r['guild_id']);
 		$generals = countDeployedGenerals($r['guild_id']);
@@ -4118,7 +4360,7 @@ function calculateUpkeep()
 			$upkeepFee=$upkeepFee + ($archers * $districtConfig['ArcherCostDaily']);
 		if ($generals > 0)
 			$upkeepFee=$upkeepFee + ($generals * $districtConfig['GeneralCostDaily']);
-		return $upkeepFee;
 	}
+	return $upkeepFee;
 }
 $h->endpage();

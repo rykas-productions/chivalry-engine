@@ -61,10 +61,10 @@ function home()
                 $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
                 if (isset($ir['voted'][$r['id']])) {
                      echo "<hr /><div class='row'>
-								<div class='col-sm-3'>
+								<div class='col-3'>
 									<h3>Poll Question</h3>
 								</div>
-								<div class='col-sm'>
+								<div class='col'>
 									<h6>{$r['question']}</h6>
 								</div>
 							</div>
@@ -80,13 +80,13 @@ function home()
                                     $perc = 0;
                                 }
                                 echo "<div class='row'>
-										<div class='col-sm-3'>
+										<div class='col-3'>
 											{$r[$k]}
 										</div>
-										<div class='col-sm-1'>
+										<div class='col-1'>
 											{$r[$ke]}
 										</div>
-										<div class='col-sm'>
+										<div class='col'>
 											<div class='progress' style='height: 1rem;'>
 												<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'><span>{$perc}%</span></div>
 											</div>
@@ -97,7 +97,7 @@ function home()
                         }
                     } else {
                         echo "<div class='row'>
-							<div class='col-sm-3'>
+							<div class='col-3'>
 								<h5>Results hidden.</h5>
 							</div>
 						</div>
@@ -105,16 +105,16 @@ function home()
                     }
                     $myvote = $r['choice' . $ir['voted'][$r['id']]];
 				echo "<div class='row'>
-							<div class='col-sm-3'>
+							<div class='col-3'>
 								<h5>Total Votes</h5>
 							</div>
-							<div class='col-sm-1'>
+							<div class='col-1'>
 								<h6>" . number_format($r['votes']) . "</h6>
 							</div>
-							<div class='col-sm-3'>
+							<div class='col-3'>
 								<h5>Your Vote</h5>
 							</div>
-							<div class='col-sm-3'>
+							<div class='col-3'>
 								<i>{$myvote}</i>
 							</div>
 						</div>
@@ -125,10 +125,10 @@ function home()
 					<input type='hidden' name='poll' value='{$r['id']}' />
 					<hr />
 					<div class='row'>
-						<div class='col-sm-3'>
+						<div class='col-3'>
 							<h3>Poll Question</h3>
 						</div>
-						<div class='col-sm'>
+						<div class='col'>
 							<h6>{$r['question']}</h6>
 						</div>
 					</div>
@@ -142,10 +142,10 @@ function home()
                                 $c = "";
                             }
 							echo "<div class='row'>
-								<div class='col-sm-3'>
+								<div class='col-3'>
 									{$r[$k]}
 								</div>
-								<div class='col-sm'>
+								<div class='col'>
 										<input type='radio' class='form-control' name='choice' value='{$i}' {$c} />
 									</div>
 							</div>
@@ -153,7 +153,7 @@ function home()
                         }
                     }
                     echo "<div class='row'>
-							<div class='col-sm'>
+							<div class='col'>
 								<input type='submit' class='btn btn-primary' value='Cast Vote' />
 							</div>
 							</div>
@@ -179,10 +179,10 @@ function viewpolls()
             $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
             echo "
 			<hr /><div class='row'>
-				<div class='col-sm-3'>
+				<div class='col-3'>
 					<h3>Poll Question</h3>
 				</div>
-				<div class='col-sm'>
+				<div class='col'>
 					<h6>{$r['question']}</h6>
 				</div>
 			</div>
@@ -197,13 +197,13 @@ function viewpolls()
                         $perc = 0;
                     }
 					echo "<div class='row'>
-							<div class='col-sm-3'>
+							<div class='col-3'>
 								{$r[$k]}
 							</div>
-							<div class='col-sm-1'>
+							<div class='col-1'>
 								{$r[$ke]}
 							</div>
-							<div class='col-sm'>
+							<div class='col'>
 								<div class='progress' style='height: 1rem;'>
 									<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'><span>{$perc}%</span></div>
 								</div>
@@ -213,10 +213,10 @@ function viewpolls()
                 }
             }
 			echo "<div class='row'>
-							<div class='col-sm-3'>
+							<div class='col-3'>
 								<h5>Total Votes</h5>
 							</div>
-							<div class='col-sm-1'>
+							<div class='col-1'>
 								<h6>" . number_format($r['votes']) . "</h6>
 							</div>
 						</div>

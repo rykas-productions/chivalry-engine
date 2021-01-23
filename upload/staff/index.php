@@ -56,6 +56,14 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 					{$api->SystemReturnAPIVersion()}
 				</td>
 			</tr>
+			<tr>
+				<th>
+					<a href='staff_moderation.php?action=listall'>Moderation Logs</a>
+				</th>
+				<td align='left'>
+					" . number_format($db->fetch_single($db->query("SELECT COUNT(`mod_id`) FROM `staff_moderation_board`"))) . "
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<hr />";
@@ -532,6 +540,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 							if ($api->UserMemberLevelGet($userid, 'admin')) {
 								echo "<a href='staff_punish.php?action=massemail'>Send Mass Email</a><br />
 										<a href='staff_punish.php?action=massmail'>Send Mass Mail</a><br />
+										<a href='staff_punish.php?action=massnotif'>Send Mass Notif</a><br />
 										<a href='staff_punish.php?action=banip'>Ban IP Address</a><br />
 										<a href='staff_punish.php?action=unbanip'>Pardon IP Address</a><br />";
 							}

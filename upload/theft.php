@@ -27,6 +27,11 @@ if ($_GET['user'] == $userid) {
     alert('danger', "Uh Oh!", "You cannot rob yourself.", true, 'index.php');
     die($h->endpage());
 }
+if (userHasEffect($userid, "basic_protection"))
+{
+	alert('danger', "Uh Oh!", "This user has bodyguard protection at this moment. You decide it is wiser to wait them out.", true, 'index.php');
+    die($h->endpage());
+}
 if ($api->UserHasItem($_GET['user'], 32, 1)) {
     alert('danger', "Uh Oh!", "This user has theft protection and thus, cannot be robbed.", true, 'index.php');
     die($h->endpage());

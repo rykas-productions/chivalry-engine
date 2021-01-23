@@ -24,6 +24,6 @@ else
 	alert('success', "Success!", "You hand over " . number_format($ir['primary_currency']) . " Copper Coins to be deposited. You now have " . number_format($ir['bank']) . " Copper Coins 
 	in your City Bank.", true, 'bank.php');
 	//Log bank transaction.
-	$api->SystemLogsAdd($userid, 'bank', "Deposited " . number_format($ir['primary_currency']) . ".");
+	$api->SystemLogsAdd($userid, 'bank', "[City Bank] Deposited " . number_format($ir['primary_currency']) . " Copper Coins.");
 	 die($h->endpage());
 }

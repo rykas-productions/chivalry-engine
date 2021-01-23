@@ -1,5 +1,7 @@
 <?php
 require("globals.php");
+if (!isset($MUS))
+	$MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -27,6 +29,18 @@ switch ($_GET['action']) {
         break;
 	case 'level8':
         level(500,51);
+        break;
+	case 'level9':
+        level(750,87);
+        break;
+	case 'level10':
+        level(1000,88);
+        break;
+	case 'level11':
+        level(1500,89);
+        break;
+	case 'level12':
+        level(2000,90);
         break;
 	case 'bust1':
         busts(25,6);
@@ -61,6 +75,18 @@ switch ($_GET['action']) {
     case 'mine6':
         mine(200,84);
         break;
+	case 'mine7':
+        mine(300,96);
+        break;
+	case 'mine8':
+        mine(500,97);
+        break;
+	case 'mine9':
+        mine(750,98);
+        break;
+	case 'mine10':
+        mine(1000,99);
+        break;
 	case 'kill1':
         kills(10,14);
         break;
@@ -75,6 +101,21 @@ switch ($_GET['action']) {
         break;
 	case 'kill5':
         kills(1000,18);
+        break;
+	case 'kill6':
+        kills(2500,100);
+        break;
+	case 'kill7':
+        kills(5000,101);
+        break;
+	case 'kill8':
+        kills(10000,102);
+        break;
+	case 'kill9':
+        kills(25000,103);
+        break;
+	case 'kill10':
+        kills(50000,104);
         break;
 	case 'death1':
 		deaths(10,19);
@@ -256,17 +297,41 @@ switch ($_GET['action']) {
     case 'course5':
         course(40,81);
         break;
+	case 'mastery':
+        masterrank(1,91);
+        break;
+	case 'mastery2':
+        masterrank(2,92);
+        break;
+	case 'mastery3':
+        masterrank(3,93);
+        break;
+	case 'mastery4':
+        masterrank(4,94);
+        break;
+	case 'mastery5':
+        masterrank(5,95);
+        break;
     default:
         home();
         break;
 }
 function home()
 {
-	global $h;
+	global $h, $ir, $db, $api, $MUS, $userid;
+	$ir['actual_reset'] = $ir['reset'] - 1;
+	$ir['courses_done']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `academy_done` WHERE `userid` = {$userid}"));
+	$ir['forum_posts']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$userid}"));
+	$ir['net_worth']=$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*1000)+($ir['tokenbank']*1000)+$ir['vaultbank'];
+	$ir['dmg_dlt']=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`value`) FROM `user_logging` WHERE `userid` = {$userid} AND `log_name` = 'dmgdone'"));
+	$ir['travel_times']=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`value`) FROM `user_logging` WHERE `userid` = {$userid} AND `log_name` = 'travel'"));
+	$ir['crime_copper']=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`crimecopper`) FROM `crime_logs` WHERE `userid` = {$userid}"));
+	$ir['referral_count']=$ref=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`referalid`) FROM `referals` WHERE `referal_userid` = {$userid}"));
+	
 	echo "Here's a list of in-game achievements. Click on an achievement to be rewarded with it. You may only 
 	be rewarded once per achievement. Each achievement you complete will get you 1 skill point.";
 	$count=1;
-	while ($count != 87)
+	while ($count != 105)
 	{
 		$class[$count]= (userHasAchievement($count)) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
 		$count=$count+1;
@@ -276,39 +341,80 @@ function home()
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Level
+					<div class='row'>
+						<div class='col-6'>
+							Level
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['level']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[1]} href='?action=level1'>Level 5</a><br />
-					<a {$class[2]} href='?action=level2'>Level 25</a><br />
-					<a {$class[49]} href='?action=level6'>Level 50</a><br />
-					<a {$class[3]} href='?action=level3'>Level 100</a><br />
-					<a {$class[50]} href='?action=level7'>Level 150</a><br />
-					<a {$class[4]} href='?action=level4'>Level 200</a><br />
-					<a {$class[5]} href='?action=level5'>Level 300</a><br />
-					<a {$class[51]} href='?action=level8'>Level 500</a><br />
+					<div class='row'>
+						<div class='col'>
+							<a {$class[1]} href='?action=level1'>Level 5</a><br />
+							<a {$class[2]} href='?action=level2'>Level 25</a><br />
+							<a {$class[49]} href='?action=level6'>Level 50</a><br />
+							<a {$class[3]} href='?action=level3'>Level 100</a><br />
+							<a {$class[50]} href='?action=level7'>Level 150</a><br />
+							<a {$class[4]} href='?action=level4'>Level 200</a><br />
+							<a {$class[5]} href='?action=level5'>Level 300</a>
+						</div>
+						<div class='col'>
+							<a {$class[51]} href='?action=level8'>Level 500</a><br />
+							<a {$class[87]} href='?action=level9'>Level 750</a><br />
+							<a {$class[88]} href='?action=level10'>Level 1,000</a><br />
+							<a {$class[89]} href='?action=level11'>Level 1,500</a><br />
+							<a {$class[90]} href='?action=level12'>Level 2,000</a><br />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Mining Level
+					<div class='row'>
+						<div class='col-6'>
+							Mining Level
+						</div>
+						<div class='col-6'>
+						" . number_format($MUS['mining_level']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[11]} href='?action=mine1'>Mining Level 10</a><br />
-					<a {$class[12]} href='?action=mine2'>Mining Level 20</a><br />
-					<a {$class[13]} href='?action=mine3'>Mining Level 50</a><br />
-					<a {$class[82]} href='?action=mine4'>Mining Level 75</a><br />
-					<a {$class[83]} href='?action=mine5'>Mining Level 100</a><br />
-					<a {$class[84]} href='?action=mine6'>Mining Level 200</a><br />
+					<div class='row'>
+						<div class='col'>
+							<a {$class[11]} href='?action=mine1'>Mining Level 10</a><br />
+							<a {$class[12]} href='?action=mine2'>Mining Level 20</a><br />
+							<a {$class[13]} href='?action=mine3'>Mining Level 50</a><br />
+							<a {$class[82]} href='?action=mine4'>Mining Level 75</a><br />
+							<a {$class[83]} href='?action=mine5'>Mining Level 100</a><br />
+							<a {$class[84]} href='?action=mine6'>Mining Level 200</a><br />
+						</div>
+						<div class='col'>
+							<a {$class[96]} href='?action=mine7'>Mining Level 300</a><br />
+							<a {$class[97]} href='?action=mine8'>Mining Level 500</a><br />
+							<a {$class[98]} href='?action=mine9'>Mining Level 750</a><br />
+							<a {$class[99]} href='?action=mine8'>Mining Level 1,000</a><br />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Dungeon Busts
+					<div class='row'>
+						<div class='col-6'>
+							Dungeon Busts
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['busts']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[6]} href='?action=bust1'>25 Busts</a><br />
@@ -320,40 +426,80 @@ function home()
 			</div>
 		</div>
 	</div>
-	<hr />
+	<br />
 	<div class='row'>
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Opponents Killed
+					<div class='row'>
+						<div class='col-6'>
+							Kills
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['kills']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[14]} href='?action=kill1'>10 Kills</a><br />
-					<a {$class[15]} href='?action=kill2'>50 Kills</a><br />
-					<a {$class[16]} href='?action=kill3'>100 Kills</a><br />
-					<a {$class[17]} href='?action=kill4'>500 Kills</a><br />
-					<a {$class[18]} href='?action=kill5'>1,000 Kills</a><br />
+					<div class='row'>
+						<div class='col'>
+							<a {$class[14]} href='?action=kill1'>10 Kills</a><br />
+							<a {$class[15]} href='?action=kill2'>50 Kills</a><br />
+							<a {$class[16]} href='?action=kill3'>100 Kills</a><br />
+							<a {$class[17]} href='?action=kill4'>500 Kills</a><br />
+							<a {$class[18]} href='?action=kill5'>1,000 Kills</a><br />
+						</div>
+						<div class='col'>
+							<a {$class[100]} href='?action=kill6'>2,500 Kills</a><br />
+							<a {$class[101]} href='?action=kill7'>5,000 Kills</a><br />
+							<a {$class[102]} href='?action=kill8'>10,000 Kills</a><br />
+							<a {$class[103]} href='?action=kill9'>25,000 Kills</a><br />
+							<a {$class[104]} href='?action=kill10'>50,000 Kills</a><br />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Times Fallen
+					<div class='row'>
+						<div class='col-6'>
+							Deaths
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['deaths']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[19]} href='?action=death1'>10 Deaths</a><br />
-					<a {$class[20]} href='?action=death2'>50 Deaths</a><br />
-					<a {$class[21]} href='?action=death3'>100 Deaths</a><br />
-					<a {$class[22]} href='?action=death4'>500 Deaths</a><br />
-					<a {$class[23]} href='?action=death5'>1,000 Deaths</a><br />
+					<div class='row'>
+						<div class='col'>
+							<a {$class[19]} href='?action=death1'>10 Deaths</a><br />
+							<a {$class[20]} href='?action=death2'>50 Deaths</a><br />
+							<a {$class[21]} href='?action=death3'>100 Deaths</a><br />
+							<a {$class[22]} href='?action=death4'>500 Deaths</a><br />
+							<a {$class[23]} href='?action=death5'>1,000 Deaths</a><br />
+						</div>
+						
+						<div class='col'>
+						
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Warriors Referred to CID
+					<div class='row'>
+						<div class='col-6'>
+							Referrals
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['referral_count']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[24]} href='?action=refer1'>1 Referral</a><br />
@@ -365,12 +511,19 @@ function home()
 			</div>
 		</div>
 	</div>
-	<hr />
+	<br />
 	<div class='row'>
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Copper Coins Criminally Obtained
+					<div class='row'>
+						<div class='col-6'>
+							Crime Copper
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['crime_copper']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[29]} href='?action=crimec1'>500,000</a><br />
@@ -384,7 +537,14 @@ function home()
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Locations Travelled
+					<div class='row'>
+						<div class='col-6'>
+							Times Travelled
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['travel_times']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[34]} href='?action=travel1'>1 Time</a><br />
@@ -398,7 +558,14 @@ function home()
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Damage Dealt
+					<div class='row'>
+						<div class='col-6'>
+							Damage Dealt
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['dmg_dlt']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[39]} href='?action=dam1'>1,000 Damage</a><br />
@@ -410,12 +577,19 @@ function home()
 			</div>
 		</div>
 	</div>
-	<hr />
+	<br />
 	<div class='row'>
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Total Net Worth (Copper Coins)
+					<div class='row'>
+						<div class='col-6'>
+							Networth
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['net_worth']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[44]} href='?action=worth1'>500,000</a><br />
@@ -429,7 +603,14 @@ function home()
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Forum Post Count
+					<div class='row'>
+						<div class='col-6'>
+							Forum Posts
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['forum_posts']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[52]} href='?action=posts1'>5 Posts</a><br />
@@ -443,7 +624,14 @@ function home()
 		<div class='col-sm'>
             <div class='card'>
 				<div class='card-header'>
-					Consecutive Days Logged In
+					<div class='row'>
+						<div class='col-6'>
+							Days Logged In
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['dayslogged']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[57]} href='?action=dayslogged1'>7 Days</a><br />
@@ -455,12 +643,19 @@ function home()
 			</div>
 		</div>
 	</div>
-	<hr />
+	<br />
     <div class='row'>
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					IQ Stat
+					<div class='row'>
+						<div class='col-6'>
+							IQ
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['iq']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[62]} href='?action=iq1'>10,000 IQ</a><br />
@@ -474,7 +669,14 @@ function home()
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Current VIP Days
+					<div class='row'>
+						<div class='col-6'>
+							VIP Days
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['vip_days']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[67]} href='?action=vip1'>10 VIP Days</a><br />
@@ -488,7 +690,14 @@ function home()
 		<div class='col-sm'>
             <div class='card'>
 				<div class='card-header'>
-					Labor Stat
+					<div class='row'>
+						<div class='col-6'>
+							Labor
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['labor']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[72]} href='?action=labor1'>100,000 Labor</a><br />
@@ -500,12 +709,19 @@ function home()
 			</div>
 		</div>
 	</div>
-	<hr />
+	<br />
     <div class='row'>
 		<div class='col-sm'>
 			<div class='card'>
 				<div class='card-header'>
-					Academic Courses Completed
+					<div class='row'>
+						<div class='col-6'>
+							Courses Done
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['courses_done']) . "
+						</div>
+					</div>
 				</div>
 				<div class='card-body'>
 					<a {$class[77]} href='?action=course1'>1 Course</a><br />
@@ -513,6 +729,27 @@ function home()
 					<a {$class[79]} href='?action=course3'>10 Courses</a><br />
 					<a {$class[80]} href='?action=course4'>20 Courses</a><br />
 					<a {$class[81]} href='?action=course5'>40 Courses</a><br />
+				</div>
+			</div>
+		</div>
+		<div class='col-sm'>
+			<div class='card'>
+				<div class='card-header'>
+					<div class='row'>
+						<div class='col-6'>
+							Mastery Rank
+						</div>
+						<div class='col-6'>
+							" . number_format($ir['actual_reset']) . "
+						</div>
+					</div>
+				</div>
+				<div class='card-body'>
+					<a {$class[91]} href='?action=mastery'>Mastery Rank I</a><br />
+					<a {$class[92]} href='?action=mastery2'>Mastery Rank II</a><br />
+					<a {$class[93]} href='?action=mastery3'>Mastery Rank III</a><br />
+					<a {$class[94]} href='?action=mastery4'>Mastery Rank IV</a><br />
+					<a {$class[95]} href='?action=mastery5'>Mastery Rank V</a><br />
 				</div>
 			</div>
 		</div>
@@ -926,6 +1163,31 @@ function course($level,$id)
 	givePoint($userid);
 	addToEconomyLog('Achievements', 'copper', $tokens);
 	alert('success',"Success!","You have successfully achieved the " . number_format($level) . " courss completed achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
+	$h->endpage();
+}
+function masterrank($level,$id)
+{
+	global $db,$ir,$userid,$api,$h;
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	if ($db->num_rows($achieved) > 0)
+	{
+		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
+		die($h->endpage());
+	}
+    
+	$actualReset = $ir['reset'] - 1;
+	if ($actualReset < $level)
+	{
+		alert('danger',"Uh Oh!","You need to be Mastery Rank " . number_format($level) . " before you can accept this reward.",true,'achievements.php');
+		die($h->endpage());
+	}
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
+	$api->SystemLogsAdd($userid,'achievement',"Received achievement for Master Rank {$level}.");
+	$tokens=Random(25000,100000);
+	$api->UserGiveCurrency($userid,'primary',$tokens);
+	givePoint($userid);
+	addToEconomyLog('Achievements', 'copper', $tokens);
+	alert('success',"Success!","You have successfully achieved the Mastery Rank " . number_format($level) . " achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function givePoint($userid)

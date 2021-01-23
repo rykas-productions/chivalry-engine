@@ -58,16 +58,14 @@ while ($r = $db->fetch_row($q))
 	$un = $api->SystemUserIDtoName($r['userid']);
 	$displaypic = "<img src='" . parseDisplayPic($r['userid']) . "' height='75' alt='{$un}&#39;s Display picture.' title='{$un}&#39;s Display picture'>";
 	$active = parseActivity($r['userid']);
-	$infirm = (user_infirmary($r['userid'])) ? "<span class='text-danger'>Infirmary</span>" : "<span class='text-success'>Healthy</span>";
-	$dung = (user_dungeon($r['userid'])) ? "<span class='text-danger'>Dungeon</span>" : "<span class='text-success'>Free</span>";
     echo "
 	<div class='card'>
 		<div class='card-body'>
 			<div class='row'>
-				<div class='col-sm-2'>
+				<div class='col-sm-2 col'>
 					{$displaypic}
 				</div>
-				<div class='col-sm-2'>
+				<div class='col-sm-2 col'>
 					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
 				</div>
 				<div class='col-sm'>
@@ -82,12 +80,6 @@ while ($r = $db->fetch_row($q))
 						</div>
 						<div class='col'>
 							{$active}
-						</div>
-						<div class='col hidden-sm-down'>
-							{$infirm}
-						</div>
-						<div class='col hidden-sm-down'>
-							{$dung}
 						</div>
 					</div>
 				</div>

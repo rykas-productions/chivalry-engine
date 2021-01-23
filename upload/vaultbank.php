@@ -83,7 +83,7 @@ function index()
 										<div class='col'>
 											<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' id='form_bank_wallet' required='1' name='deposit' value='{$ir['primary_currency']}'>
 										</div>
-										<div class='col-4 col-md-3'>
+										<div class='col-5 col-sm-4 col-md-3'>
 											<input type='submit' value='Deposit' class='btn btn-primary' id='vaultDeposit'>
 										</div>
 									</div>
@@ -108,7 +108,7 @@ function index()
 										<div class='col'>
 											<input type='number' min='1' max='{$ir['vaultbank']}' class='form-control' required='1' id='form_bank_acc' name='withdraw' value='{$ir['vaultbank']}'>
 										</div>
-										<div class='col-4 col-md-3'>
+										<div class='col-6 col-sm-4 col-md-3'>
 											<input type='submit' value='Withdraw' class='btn btn-primary' id='vaultWithdraw'>
 										</div>
 									</div>

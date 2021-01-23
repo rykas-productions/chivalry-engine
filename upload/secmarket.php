@@ -112,7 +112,8 @@ function buy()
         " . number_format($r['sec_total']) . " Chivalry Tokens from the Chivalry Token Market for a total of " . number_format($taxed) . " Copper Coins.");
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
     alert('success', "Success!", "You have bought " . number_format($r['sec_total']) . " Chivalry Tokens for " . number_format($totalcost) . " Copper Coins.", true, 'secmarket.php');
-    die($h->endpage());
+    logMarketAvg($r['sec_total'],$totalcost);
+	die($h->endpage());
 }
 
 function remove()
@@ -137,7 +138,7 @@ function remove()
     $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
     alert('success', "Success!", "You have removed your listing for " . number_format($r['sec_total']) . " Chivalry Tokens from the market.", true, 'secmarket.php');
-    die($h->endpage());
+	die($h->endpage());
 }
 
 function add()
@@ -216,5 +217,10 @@ function add()
 		</form>";
     }
 }
-
+function logMarketAvg($bought,$total)
+{
+	global $db;
+	$time = time();
+	$db->query("INSERT INTO `token_market_avg` (`token_sold`, `token_total`, `token_time`) VALUES ('{$bought}', '{$total}', '{$time}')");
+}
 $h->endpage();

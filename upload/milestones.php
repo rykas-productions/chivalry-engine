@@ -19,7 +19,7 @@ The following is a list of milestones that players have accomplished inside of C
             2017 Thanksgiving Trivia Winner
         </td>
         <td>
-            <a href='profile.php?user=143'>Stats [143]</a>
+            <a href='profile.php?user=143'>" . parseUsername(143) . " [143]</a>
         </td>
     </tr>
     <tr>
@@ -27,7 +27,7 @@ The following is a list of milestones that players have accomplished inside of C
             2018 Referral Contest Winner
         </td>
         <td>
-            <a href='profile.php?user=161'>Miztic [161]</a>
+            <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
         </td>
     </tr>
     <tr>
@@ -35,7 +35,7 @@ The following is a list of milestones that players have accomplished inside of C
             2018 Thanksgiving Trivia Winner
         </td>
         <td>
-            <a href='profile.php?user=220'>Nil [220]</a>
+            <a href='profile.php?user=220'>" . parseUsername(220) . " [220]</a>
         </td>
     </tr>
     <tr>
@@ -43,9 +43,9 @@ The following is a list of milestones that players have accomplished inside of C
             2019 Big Bang Event Victims
         </td>
         <td>
-            <a href='profile.php?user=184'>Malice [184]</a><br />
-			<a href='profile.php?user=102'>SrnunuCneo [102]</a><br />
-			<a href='profile.php?user=161'>Miztic [161]</a>
+            <a href='profile.php?user=184'>" . parseUsername(184) . " [184]</a><br />
+			<a href='profile.php?user=102'>" . parseUsername(102) . " [102]</a><br />
+			<a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
         </td>
     </tr>
 	<tr>
@@ -53,9 +53,9 @@ The following is a list of milestones that players have accomplished inside of C
             2020 Big Bang Event Victims
         </td>
         <td>
-            <a href='profile.php?user=406'>Sarge [406]</a><br />
-			<a href='profile.php?user=433'>Hawkeye [433]</a><br />
-			<a href='profile.php?user=181'>Force Cruz [181]</a>
+            <a href='profile.php?user=406'>" . parseUsername(406) . " [406]</a><br />
+			<a href='profile.php?user=433'>" . parseUsername(433) . " [433]</a><br />
+			<a href='profile.php?user=181'>" . parseUsername(181) . " [181]</a>
         </td>
     </tr>
     <tr>
@@ -63,7 +63,7 @@ The following is a list of milestones that players have accomplished inside of C
             First Mastery Rank I
         </td>
         <td>
-            <a href='profile.php?user=161'>Miztic [161]</a>
+            <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
         </td>
     </tr>
 	<tr>
@@ -71,7 +71,7 @@ The following is a list of milestones that players have accomplished inside of C
             First Mastery Rank II
         </td>
         <td>
-            <a href='profile.php?user=161'>Miztic [161]</a>
+            <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
         </td>
     </tr>
 	<tr>
@@ -79,7 +79,7 @@ The following is a list of milestones that players have accomplished inside of C
             First Mastery Rank III
         </td>
         <td>
-            <a href='profile.php?user=161'>Miztic [161]</a>
+            <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
         </td>
     </tr>
 	<tr>
@@ -87,7 +87,7 @@ The following is a list of milestones that players have accomplished inside of C
             First Mastery Rank IV
         </td>
         <td>
-			<a href='profile.php?user=161'>Miztic [161]</a>
+			<a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
         </td>
     </tr>
 	<tr>
@@ -95,7 +95,7 @@ The following is a list of milestones that players have accomplished inside of C
             First Mastery Rank V
         </td>
         <td>
-			<a href='profile.php?user=161'>Miztic [161]</a>
+			<a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
         </td>
     </tr>
 	<tr>
@@ -103,7 +103,7 @@ The following is a list of milestones that players have accomplished inside of C
             First to Level 1,000
         </td>
         <td>
-            <a href='profile.php?user=161'>Miztic [161]</a>
+            <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
         </td>
     </tr>
 	<tr>
@@ -125,6 +125,30 @@ The following is a list of milestones that players have accomplished inside of C
 	<tr>
         <td>
             First <i>Enlightened Warrior</i> graduate
+        </td>
+        <td>
+            <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
+        </td>
+    </tr>
+	<tr>
+        <td>
+            1st Guild to level 10
+        </td>
+        <td>
+			<a href='guilds.php?action=view&id=8'>Purgatory [8]</a>
+        </td>
+    </tr>
+	<tr>
+        <td>
+            1st guild to level 20
+        </td>
+        <td>
+            <a href='guilds.php?action=view&id=8'>Purgatory [8]</a>
+        </td>
+    </tr>
+	<tr>
+        <td>
+            1st guild to level 50
         </td>
         <td>
             <i>null</i>

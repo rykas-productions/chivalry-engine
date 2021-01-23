@@ -46,22 +46,19 @@ function home()
         {
             $ud=$db->fetch_row($db->query("/*qc=on*/SELECT `username`, `vip_days`, `display_pic`, `vipcolor`, `level` FROM `users` WHERE `userid` = {$r['bh_user']}"));
             $ud['display_pic'] = ($ud['display_pic']) ? "<img src='" . parseImage($ud['display_pic']) . "' class='img-thumbnail img-fluid' width='75' alt='{$ud['username']}&#39;s display picture' title='{$ud['username']}&#39;s display picture'>" : '';
-            $ud['username'] = ($ud['vip_days']) ? "<span class='{$ud['vipcolor']}'>{$ud['username']} <i class='fas fa-shield-alt'
-            data-toggle='tooltip' title='{$ud['vip_days']} VIP Days remaining.'></i></span>" : $ud['username'];
+            $ud['username'] = parseUsername($r['bh_user']);
             if ($r['bh_creator'] != 0)
             {
                 $cd=$db->fetch_row($db->query("/*qc=on*/SELECT `username`, `vip_days`, `display_pic`, `vipcolor`, `level` FROM `users` WHERE `userid` = {$r['bh_creator']}"));
                 $cd['display_pic'] = ($cd['display_pic']) ? "<img src='" . parseImage($cd['display_pic']) . "' class='img-thumbnail img-fluid' width='75' alt='{$cd['username']}&#39;s display picture' title='{$cd['username']}&#39;s display picture'>" : '';
-                $cd['username'] = ($cd['vip_days']) ? "<span class='{$cd['vipcolor']}'>{$cd['username']} <i class='fas fa-shield-alt'
-                data-toggle='tooltip' title='{$cd['vip_days']} VIP Days remaining.'></i></span>" : $cd['username'];
+                $cd['username'] = parseUsername($r['bh_creator']);
             }
             else
             {
-                $cd['username']='N/A';
-                $cd['vip_days']=0;
+                $cd['username']='[Redacted]';
                 $cd['display_pic']='';
                 $cd['vip_color']='text-danger';
-                $cd['level']='????';
+                $cd['level']='Unknown';
             }
             echo "<tr>
             <td align='left'>
