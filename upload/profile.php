@@ -480,17 +480,22 @@ echo "<h3>{$user_name}'s Profile</h3>
 					}
 					if ($r['guild'] > 0)
 					{
-						$gR=$db->fetch_row($db->query("SELECT `guild_name`, `guild_owner`, `guild_coowner` from `guild` WHERE `guild_id` = {$r['guild']}"));
-						$guildName = $db->fetch_single($db->query("SELECT `guild_name` from `guild` WHERE `guild_id` = {$r['guild']}"));
+						$gR=$db->fetch_row($db->query("SELECT * from `guild` WHERE `guild_id` = {$r['guild']}"));
 						if ($gR['guild_owner'] == $r['userid'])
 							$guildRank = "Leader";
 						elseif ($gR['guild_coowner'] == $r['userid'])
 							$guildRank = "Co-Leader";
+						elseif ($gR['guild_app_manager'] == $r['userid'])
+							$guildRank = "Application Manager";
+						elseif ($gR['guild_vault_manager'] == $r['userid'])
+							$guildRank = "Vault Manager";
+						elseif ($gR['guild_crime_lord'] == $r['userid'])
+							$guildRank = "Crime Lord";
 						else
 							$guildRank = "Member";
 						echo "
 						<div class='col'>
-							<i class='fas fa-fist-raised' data-toggle='tooltip' data-placement='top' title='" . htmlentities("{$guildRank} of {$guildName}.", ENT_QUOTES) . "' style='font-size: 1.75rem; color: magenta;'></i>
+							<i class='fas fa-fist-raised' data-toggle='tooltip' data-placement='top' title='" . htmlentities("{$guildRank} of {$gR['guild_name']}.", ENT_QUOTES) . "' style='font-size: 1.75rem; color: magenta;'></i>
 						</div>";
 					}
 					if ($r['fedjail'])
