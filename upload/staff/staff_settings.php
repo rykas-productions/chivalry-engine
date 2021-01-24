@@ -345,6 +345,14 @@ function basicsettings()
 					<input type='text' name='game_js_version' class='form-control' required='1' value='{$set['game_js_version']}'>
 				</td>
 			</tr>
+            <tr>
+				<th>
+					Game Audio
+				</th>
+				<td>
+					<input type='text' name='game_audio_version' class='form-control' required='1' value='{$set['game_audio_version']}'>
+				</td>
+			</tr>
 			<tr>
 				<th>
 					jQuery
@@ -396,9 +404,10 @@ function basicsettings()
 		$_POST['popper_version'] = (isset($_POST['popper_version'])) ? $db->escape(strip_tags(stripslashes($_POST['popper_version']))) : '1.16.0';
 		$_POST['fontawesome_version'] = (isset($_POST['fontawesome_version'])) ? $db->escape(strip_tags(stripslashes($_POST['fontawesome_version']))) : '5.11.2';
 		$_POST['bshover_tabs_version'] = (isset($_POST['bshover_tabs_version'])) ? $db->escape(strip_tags(stripslashes($_POST['bshover_tabs_version']))) : '3.1.1';
-		$_POST['game_js_version'] = (isset($_POST['game_js_version'])) ? $db->escape(strip_tags(stripslashes($_POST['game_js_version']))) : '20.4.1';
+		$_POST['game_js_version'] = (isset($_POST['game_js_version'])) ? $db->escape(strip_tags(stripslashes($_POST['game_js_version']))) : '21.1.3';
 		$_POST['game_css_version'] = (isset($_POST['game_css_version'])) ? $db->escape(strip_tags(stripslashes($_POST['game_css_version']))) : '20.4.1';
 		$_POST['jquery_version'] = (isset($_POST['jquery_version'])) ? $db->escape(strip_tags(stripslashes($_POST['jquery_version']))) : '3.4.1';
+		$_POST['game_audio_version'] = (isset($_POST['game_audio_version'])) ? $db->escape(strip_tags(stripslashes($_POST['game_audio_version']))) : '21.1.1';
 		
 		$_POST['BuildNumber'] = (isset($_POST['BuildNumber'])) ? $db->escape(strip_tags(stripslashes($_POST['BuildNumber']))) : '0';
 		$_POST['Version_Number'] = (isset($_POST['Version_Number'])) ? $db->escape(strip_tags(stripslashes($_POST['Version_Number']))) : '1.0.0';
