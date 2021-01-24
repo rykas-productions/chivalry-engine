@@ -131,4 +131,7 @@ The CID Admin Personal Gym will give you " . number_format($multi*100) . "% the 
 		</div>
 	</div>
 </form>";
+if ($ir['vip_days'] > 0)
+    if (getCurrentUserPref('enableMusic', 'true'))
+        $sound->playBGM('traintrance');
 $h->endpage();

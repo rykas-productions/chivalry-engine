@@ -924,7 +924,7 @@ function armory()
 
 function gym()
 {
-	global $db, $gd, $h, $api, $ir, $userid, $multi, $ir;
+	global $db, $gd, $h, $api, $ir, $userid, $multi, $ir, $sound;
 	$energy = $api->UserInfoGet($userid, 'energy', true);
 	$will = $api->UserInfoGet($userid, 'will', true);
 	$macropage = ('viewguild.php?action=gym');
@@ -1057,6 +1057,9 @@ function gym()
 			</div>
 		</div>
 	</form>";
+	if ($ir['vip_days'] > 0)
+	    if (getCurrentUserPref('enableMusic', 'true'))
+	        $sound->playBGM('traintrance');
 }
 
 function adonate()
