@@ -126,6 +126,7 @@ function increaseMaxWill($userid, $increase)
 	$r=$db->fetch_single($db->query("SELECT `estate` FROM `users` WHERE `userid` = {$userid}"));
 	$db->query("UPDATE `user_estates` SET `bonusWill` = `bonusWill` + {$increase} WHERE `ue_id` = {$r}");
 }
+
 function increaseMaxWillPercent($userid, $increase)
 {
 	global $db;
@@ -135,4 +136,16 @@ function increaseMaxWillPercent($userid, $increase)
 	$increase = $increase / 100;
 	$newwill = $will * $increase;
 	$db->query("UPDATE `user_estates` SET `bonusWill` = `bonusWill` + {$newwill} WHERE `ue_id` = {$r}");
+}
+
+function getNameFromUserEstate(int $user)
+{
+    global $db;
+    $q=$db->query("SELECT * FROM `user_estates`
+	INNER JOIN `estates` as `e`
+	ON `estate` = `e`.`house_id`
+	WHERE `userid` = {$user}");
+    
+    $r = $db->fetch_row($q);
+    return $r['house_name'];
 }

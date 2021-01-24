@@ -227,10 +227,16 @@ function home_wed()
 	}
 	$p1['estate'] = $db->fetch_single($db->query("/*qc=on*/SELECT `house_name` FROM `estates` WHERE `house_will` = {$p1['maxwill']}"));
 	$p2['estate'] = $db->fetch_single($db->query("/*qc=on*/SELECT `house_name` FROM `estates` WHERE `house_will` = {$p2['maxwill']}"));
+	$p1['primary_currency'] = ($p1['primary_currency'] <= 0) ? 'Broke' : number_format($p1['primary_currency']);
+	$p2['primary_currency'] = ($p2['primary_currency'] <= 0) ? 'Broke' : number_format($p2['primary_currency']);
 	$p1['bank'] = ($p1['bank'] == -1) ? 'Unpurchased account' : number_format($p1['bank']);
 	$p2['bank'] = ($p2['bank'] == -1) ? 'Unpurchased account' : number_format($p2['bank']);
     $p1['bigbank'] = ($p1['bigbank'] == -1) ? 'Unpurchased account' : number_format($p1['bigbank']);
 	$p2['bigbank'] = ($p2['bigbank'] == -1) ? 'Unpurchased account' : number_format($p2['bigbank']);
+	$p1['vaultbank'] = ($p1['vaultbank'] == -1) ? 'Unpurchased account' : number_format($p1['vaultbank']);
+	$p2['vaultbank'] = ($p2['vaultbank'] == -1) ? 'Unpurchased account' : number_format($p2['vaultbank']);
+	$p1['tokenbank'] = ($p1['tokenbank'] == -1) ? 'Unpurchased account' : number_format($p1['tokenbank']);
+	$p2['tokenbank'] = ($p2['tokenbank'] == -1) ? 'Unpurchased account' : number_format($p2['tokenbank']);
 	if ($mt['happiness'] == 0)
 		$mt['happiness']=$mt['happiness'];
 	if ($mt['happiness'] < 0)
@@ -238,93 +244,205 @@ function home_wed()
 	if ($mt['happiness'] > 0)
 		$mt['happiness']="<span class='text-success'>{$mt['happiness']}</span>";
 	echo "
-	<table class='table table-bordered'>
-	<tr>
-		<th>
-		</th>
-		<th colspan='1.5'>
-			{$title1}'s Info
-		</th>
-		<th colspan='1.5'>
-			{$title2}'s Info
-		</th>
-	</tr>
-    <tr>
-		<td>
-			Copper Coins
-		</td>
-		<td align='center'>
-			" . number_format($p1['primary_currency']) . "
-		</td>
-		<td align='center'>
-			" . number_format($p2['primary_currency']) . "
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Bank Account
-		</td>
-		<td align='center'>
-			{$p1['bank']}
-		</td>
-		<td align='center'>
-			{$p2['bank']}
-		</td>
-	</tr>
-    <tr>
-		<td>
-			Federal Bank Account
-		</td>
-		<td align='center'>
-			{$p1['bigbank']}
-		</td>
-		<td align='center'>
-			{$p2['bigbank']}
-		</td>
-	</tr>
-    <tr>
-		<td>
-			Rings
-		</td>
-		<td align='center'>
-			{$api->SystemItemIDtoName($p1['ring'])}
-		</td>
-		<td align='center'>
-			{$api->SystemItemIDtoName($p2['ring'])}
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Estates
-		</td>
-		<td align='center'>
-			{$p1['estate']}
-		</td>
-		<td align='center'>
-			{$p2['estate']}
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Marriage Happiness
-		</td>
-		<td align='center' colspan='2'>
-			{$mt['happiness']}
-		</td>
-	</tr>
-	<tr>
-		<td>
-			Marriage Actions
-		</td>
-		<td align='center' colspan='2'>
-			<a href='?action=argue'>Argue With Spouse</a> |
-			<a href='?action=sleep'>Sleep With Spouse</a> |
-			<a href='?action=sendlove'>Send Love Letter</a> |
-			<a href='?action=divorce'>Divorce</a>
-		</td>
-	</tr>
-	</table>";
-	
+    <div class='row'>
+        <div class='col-12 col-md-6'>
+            <div class='card'>
+                <div class='card-header'>
+                    <b>{$title1}'s Info</b>
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Copper Coins</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$p1['primary_currency']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Bank</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$p1['bank']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Fed Bank</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$p1['bigbank']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Vault Bank</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$p1['vaultbank']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Token Bank</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$p1['tokenbank']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Ring</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$api->SystemItemIDtoName($p1['ring'])}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Estate</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    " . getNameFromUserEstate($p1['userid']) . "
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class='col-12 col-md-6'>
+            <div class='card'>
+                <div class='card-header'>
+                    <b>{$title2}'s Info</b>
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Copper Coins</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$p2['primary_currency']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Bank</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$p2['bank']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Fed Bank</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$p2['bigbank']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Vault Bank</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$p2['vaultbank']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Token Bank</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$p2['tokenbank']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Ring</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    {$api->SystemItemIDtoName($p2['ring'])}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-6 col-sm-12'>
+                                    <b>Estate</b>
+                                </div>
+                                <div class='col-6 col-sm-12'>
+                                    " . getNameFromUserEstate($p2['userid']) . "
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class='row'>
+        <div class='col-12'>
+            <div class='card'>
+                <div class='card-header'>
+                    <div class='row'>
+                        <div class='col-6'>
+                            <b>Marriage Actions</b>
+                        </div>
+                        <div class='col-6'>
+                            {$mt['happiness']}
+                        </div>
+                    </div>
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-6 col-xl-3'>
+                            <a href='?action=argue' class='btn btn-danger btn-block updateHoverBtn'>Argue With</a><br />
+                        </div>
+                        <div class='col-6 col-xl-3'>
+                            <a href='?action=sleep' class='btn btn-success btn-block updateHoverBtn'>Sleep With</a><br />
+                        </div>
+                        <div class='col-6 col-xl-3'>
+                            <a href='?action=sendlove' class='btn btn-primary btn-block updateHoverBtn'>Love Letter</a><br />
+                        </div>
+                        <div class='col-6 col-xl-3'>
+                            <a href='?action=divorce' class='btn btn-secondary btn-block updateHoverBtn'>Divorce</a><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />";
 }
 function argue()
 {

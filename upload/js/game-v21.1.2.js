@@ -182,6 +182,27 @@ $(document).ready(function () {
         if (newNum == 5)
             $('#btnAdd').attr('disabled', 'disabled');
     });
+    $("#close-sidebar").click(function() {
+        $(".page-wrapper").removeClass("toggled");
+			$.post('js/script/menu.php', { value: 1}, 
+				function(returnedData){
+					 console.log("Disabled sidebar.");
+			});
+		});
+		$("#overlay").click(function() {
+        $(".page-wrapper").removeClass("toggled");
+			$.post('js/script/menu.php', { value: 1}, 
+				function(returnedData){
+					 console.log("Disabled sidebar via overlay.");
+			});
+		});
+      $("#show-sidebar").click(function() {
+        $(".page-wrapper").addClass("toggled");
+		  $.post('js/script/menu.php', { value: 0}, 
+				function(returnedData){
+					 console.log("Enabled sidebar.");
+			});
+      });
     $('#btnDel').click(function () {
         var num = $('.clonedInput').length;
 

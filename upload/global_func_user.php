@@ -950,3 +950,9 @@ function getUserItemEquippedSlot($user,$slot)
 		return $db->fetch_single($db->query("SELECT `itemid` FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'"));
 }
 
+function getUserCurrentEstate(int $user)
+{
+    global $db;   
+    return $db->fetch_single($db->query("SELECT `estate` FROM `users` WHERE `userid` = {$user}"));
+}
+

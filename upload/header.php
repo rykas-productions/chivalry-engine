@@ -170,16 +170,37 @@ class headers
 								}
 								if ($api->UserMemberLevelGet($userid, 'forum moderator'))
 								{
-									?>
-								<li class="header-menu">
-									<span>Staff</span>
-								</li>
-								<li>
-									<a href="staff/index.php" class="updateHoverBtn">
-										<span class="menu-text"><i class='fas fa-users-cog'></i> Staff Panel</span>
-									</a>
-								</li>
-								<?php } ?>
+								    echo "
+                                    <li class='header-menu'>
+									   <span>Staff</span>
+								    </li>
+    								<li>
+    									<a href='staff/index.php' class='updateHoverBtn'>
+    										<span class='menu-text'><i class='fas fa-users-cog'></i> Staff Panel</span>
+    									</a>
+    								</li>
+                                    <li class='header-menu'>
+									   <span>Staff Online</span>
+								    </li>";
+								    $online_cutoff = time() - 900;
+								    $q =
+								    $db->query(
+								        "SELECT `userid`, `username`, `laston`
+                                         FROM `users`
+                                         WHERE `laston` > ({$online_cutoff})
+                                         AND `user_level` != 'NPC'
+                                         AND `user_level` != 'Member'
+                                         ORDER BY `userid` ASC");
+								    while ($r = $db->fetch_row($q))
+								    {
+								        echo "<li>
+    									<a href='profile.php?user={$r['userid']}' class='updateHoverBtn'>
+    										  <span class='menu-text'>{$r['username']} <span class='badge badge-pill badge-primary'>{$r['userid']}</span></span>
+        									</a>
+        								</li>";
+								    }
+								} 
+								?>
 								<li class="header-menu">
 									<span id='ui_time'><?php echo date('F j, Y') . " " . date('g:i:s a'); ?></span>
 								</li>
@@ -557,7 +578,6 @@ class headers
 	
 	function loadEssentialAssets()
 	{
-		global $ir, $set;
 		cslog('log',"Essential assets loading now.");
 		$this->loadCSS();
 		$this->loadEarlyJS();
@@ -605,31 +625,6 @@ class headers
 		?>
 		<script src="js/sidemenu.js"></script>
 		<script src="https://malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-        <script type="text/javascript">
-            jQuery(function ($) {
-            $("#close-sidebar").click(function() {
-              $(".page-wrapper").removeClass("toggled");
-				$.post('js/script/menu.php', { value: 1}, 
-					function(returnedData){
-						 console.log("Disabled sidebar.");
-				});
-			});
-			$("#overlay").click(function() {
-              $(".page-wrapper").removeClass("toggled");
-				$.post('js/script/menu.php', { value: 1}, 
-					function(returnedData){
-						 console.log("Disabled sidebar via overlay.");
-				});
-			});
-            $("#show-sidebar").click(function() {
-              $(".page-wrapper").addClass("toggled");
-			  $.post('js/script/menu.php', { value: 0}, 
-					function(returnedData){
-						 console.log("Enabled sidebar.");
-				});
-            });
-        });	
-        </script>
 		<?php
 	}
 	
@@ -642,6 +637,7 @@ class headers
                 <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
 				<meta name='author' content='{$set['WebsiteOwner']}'>
                 <meta name='description' content='{$set['Website_Description']}'>
+                <meta name='keywords' content='medieval europe, mmorpg, text rpg, rpg, multiplayer, game, video game, no download, mobile, free, chivalry is dead, cid'>
                 <meta property='og:title' content='{$set['WebsiteName']}'/>
                 <meta property='og:description' content='{$set['Website_Description']}'/>
                 <meta property='og:image' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_512/v1520819749/logo.png'/>
@@ -678,7 +674,7 @@ class headers
 		$paperads = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`news_id`) FROM `newspaper_ads` WHERE `news_end` > {$time}"));
 		if ($paperads == 0)
 		{
-			$news="Welcome to Chivalry is Dead. // You may post an ad by clicking <a href='newspaper.php?action=buyad'>here</a>.";
+			$news="Welcome to Chivalry is Dead. <b>//</b> You may post an ad by clicking <a href='newspaper.php?action=buyad'>here</a>.";
 		}
 		else
 		{
@@ -686,10 +682,10 @@ class headers
 			$npq=$db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$time} ORDER BY `news_cost` ASC");
 			while ($par=$db->fetch_row($npq))
 				{
-					$phrase = " " . parseUsername($par['news_owner']) . " [{$par['news_owner']}]: {$par['news_text']} //";
+					$phrase = " " . parseUsername($par['news_owner']) . " [{$par['news_owner']}]: {$par['news_text']} <b>//</b>";
 					$news.="{$phrase}";
 				}
-			$news.="//END";
+			$news.="<b>//END</b>";
 		}
 		echo "
 		<div class='marquee'>

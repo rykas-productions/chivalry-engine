@@ -361,7 +361,7 @@ echo "<h3>{$user_name}'s Profile</h3>
 								<a href='contacts.php?action=add&user={$r['userid']}' onmouseover='profileButtonContact(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-id-card'></i></a>
 							</div>
 							<div class='col'>
-								<a href='blocklist.php?action=add&user={$r['userid']}' onmouseover='profileButtonContact(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-trash-can'></i></a>
+								<a href='blocklist.php?action=add&user={$r['userid']}' onmouseover='profileButtonBlock(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-trash-can'></i></a>
 							</div>
 							<div class='col'>
 								<a href='playerreport.php?userid={$r['userid']}' onmouseover='profileButtonReport(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-hazard-sign'></i></a>
