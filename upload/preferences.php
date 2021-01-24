@@ -533,6 +533,7 @@ function changeemail()
         </form>";
     }
 }
+
 function descchange()
 {
 	global $db, $h, $userid, $ir, $api;
@@ -587,6 +588,7 @@ function descchange()
 		</form>";
     }
 }
+
 function quicklinks()
 {
 	global $db,$userid,$ir,$h,$api;
@@ -642,6 +644,7 @@ function quicklinks()
 		</form>";
 	}
 }
+
 function userdropdown()
 {
 	global $db,$h,$ir,$api,$userid;
@@ -851,6 +854,7 @@ function tuttoggle()
 		</div>";
 	}
 }
+
 function icontoggle()
 {
 	global $db,$userid,$api,$h;
@@ -975,6 +979,7 @@ function themechange()
 		</div>";
     }
 }
+
 function steamlink()
 {
     global $db,$userid,$api,$h;
@@ -1002,6 +1007,7 @@ function steamlink()
         alert("success","Success!","You have successfully linked Steam Account ID: <b>{$steamprofile['steamid']}</b> to your Chivalry is Dead account. You may now use it to log in.",true,'preferences.php?action=menu');
     }
 }
+
 function resetacc()
 {
     global $db,$userid,$api,$h,$ir;
@@ -1158,6 +1164,7 @@ function resetacc()
 		</form>";
 	}
 }
+
 function loginlogs()
 {
     global $db,$userid,$api,$h;
@@ -1195,6 +1202,7 @@ function loginlogs()
     </table>";
 	$api->SystemLogsAdd($userid, 'preferences', "Viewed their login logs.");
 }
+
 function newui()
 {
     global $db,$userid,$api,$h;
@@ -1230,6 +1238,7 @@ function newui()
 	}
 	
 }
+
 function homecount()
 {
 	global $db,$userid,$api,$h;
