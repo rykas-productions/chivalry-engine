@@ -682,6 +682,7 @@ class headers
 			$npq=$db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$time} ORDER BY `news_cost` ASC");
 			while ($par=$db->fetch_row($npq))
 				{
+				    $par['news_text'] = str_replace("<br />", " ", $par['news_text']);
 					$phrase = " " . parseUsername($par['news_owner']) . " [{$par['news_owner']}]: {$par['news_text']} <b>//</b>";
 					$news.="{$phrase}";
 				}
