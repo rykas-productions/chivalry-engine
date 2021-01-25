@@ -478,6 +478,7 @@ class headers
 	{
 		global $set;
 		cslog('log',"User Theme ID: {$themeID}.");
+		echo "<link rel='stylesheet' href='css/sidebar-themes.css'>";
 		if ($themeID == 1)
 		{
 			echo "
@@ -551,8 +552,17 @@ class headers
 			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>
 			<style>
 			.default-theme .sidebar-wrapper {
-				background-color: rgba(0, 0, 0, .8); 
+				background-color: rgba(0, 0, 0, .8);
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
 			}
+            .default-theme.sidebar-bg .sidebar-wrapper:before {
+                background-color: rgba(0, 0, 0, .8);
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
+            }
+            .default-theme.sidebar-bg .sidebar-wrapper .sidebar-footer {
+                background-color: rgba(0, 0, 0, .8);
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
+            }
 			</style>";
 		}
 		if ($themeID == 8)
@@ -562,8 +572,17 @@ class headers
 			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>
 			<style>
 			.default-theme .sidebar-wrapper {
-				background-color: rgba(0, 0, 0, .8); 
+				background-color: rgba(0, 0, 0, .8);
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
 			}
+            .default-theme.sidebar-bg .sidebar-wrapper:before {
+                background-color: rgba(0, 0, 0, .8);
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
+            }
+            .default-theme.sidebar-bg .sidebar-wrapper .sidebar-footer {
+                background-color: rgba(0, 0, 0, .8);
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
+            }
 			</style>";
 		}
 	}
@@ -591,8 +610,7 @@ class headers
 		cslog('log',"CSS is loading.");
 		echo "<link rel='stylesheet' href='css/game-{$set['game_css_version']}.css'>
 				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css'>
-				<link rel='stylesheet' href='//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css'>
-                <link rel='stylesheet' href='css/sidebar-themes.css'>";
+				<link rel='stylesheet' href='//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css'>";
 		
 	}
 	
@@ -625,6 +643,31 @@ class headers
 		?>
 		<script src="js/sidemenu.js"></script>
 		<script src="https://malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+		<script type="text/javascript">
+            jQuery(function ($) {
+            $("#close-sidebar").click(function() {
+              $(".page-wrapper").removeClass("toggled");
+				$.post('js/script/menu.php', { value: 1}, 
+					function(returnedData){
+						 console.log("Disabled sidebar.");
+				});
+			});
+			$("#overlay").click(function() {
+              $(".page-wrapper").removeClass("toggled");
+				$.post('js/script/menu.php', { value: 1}, 
+					function(returnedData){
+						 console.log("Disabled sidebar via overlay.");
+				});
+			});
+            $("#show-sidebar").click(function() {
+              $(".page-wrapper").addClass("toggled");
+			  $.post('js/script/menu.php', { value: 0}, 
+					function(returnedData){
+						 console.log("Enabled sidebar.");
+				});
+            });
+        });	
+        </script>
 		<?php
 	}
 	
