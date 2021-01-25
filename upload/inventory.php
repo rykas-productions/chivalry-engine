@@ -214,7 +214,7 @@ while ($i = $db->fetch_row($inv))
 									if (($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' ||  $i['effect3_on'] == 'true') 
 										&& ($i['armor'] == 0 && $i['weapon'] == 0 && 
 									$i['itmtypename'] != 'Rings' && $i['itmtypename'] != 'Necklaces' 
-									&& $i['itmtypename'] != 'Pendants')) {
+										    && $i['itmtypename'] != 'Pendants' && $i['itmtypename'] != 'Badges')) {
 												echo "<a class='btn btn-block btn-primary btn-block' data-toggle='tooltip' data-placement='top' title='Use item.' href='itemuse.php?item={$i['inv_id']}'><i class='game-icon game-icon-check-mark'></i></a><br />";
 										}
 										//Box of Random
