@@ -690,10 +690,11 @@ function equipUserSlot($user, $slot, $itemID)
 		}
 		else
 		{
-			if (($slot != "equip_potion") && ($slot != "equip_badge"))
-				setEquipGains($user, $slot, $itemID);
 			if ($slot != "equip_potion")
+			{
 				$api->UserTakeItem($user, $itemID, 1);
+				setEquipGains($user, $slot, $itemID);
+			}
 			$db->query("UPDATE `users` SET `{$slot}` = {$itemID} WHERE `userid` = {$user}");
 			$api->SystemLogsAdd($user, 'equip', "Equipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
 		}
