@@ -280,31 +280,31 @@ if ($_GET['user'] == 21)
 }
 echo "<h3>{$user_name}'s Profile</h3>
 <div class='row'>
-	<div class='col-lg-7'>
+	<div class='col-lg-6 col-xl-7'>
 		<div class='card'>
 			<div class='card-header text-left'>
 				User info
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-md-7'>
+					<div class='col-12 col-xl-6'>
 						{$displaypic}
 					</div>
-					<div class='col-md'>
+					<div class='col-lg'>
 						<div class='row'>
-							<div class='col-6 col-sm-12'>
+							<div class='col-6 col-xl-12'>
 								<h6>Level</h6>
 								<h2>" . number_format($r['level']) . "</h2>
 							</div>
-							<div class='col-6 col-sm-12'>
+							<div class='col-6 col-xl-12'>
 								<h6>Class</h6>
 								<h2>{$r['class']}</h2>
 							</div>
-							<div class='col-6 col-sm-12'>
+							<div class='col-6 col-xl-12'>
 								<h6>Mastery Rank</h6>
 								<h2>" . formatMasteryRank($r['reset']) . "</h2>
 							</div>
-							<div class='col-6 col-sm-12'>
+							<div class='col-6 col-xl-12'>
 								<h6>Age</h6>
 								<h2>{$r['daysold']}</h2>
 							</div>
@@ -314,7 +314,7 @@ echo "<h3>{$user_name}'s Profile</h3>
 			</div>
 		</div>
 	</div>
-	<div class='col-lg-5'>
+	<div class='col-lg-6 col-xl-5'>
 		<div class='card'>
 			<div class='card-header text-left'>
 				Actions
@@ -402,11 +402,11 @@ echo "<h3>{$user_name}'s Profile</h3>
 				Social info
 			</div>
 			<div class='card-body'>
-				<div class='row text-left'>
-					<div class='col-md-2 col-lg-3'>
-						<a href='iteminfo.php?ID={$r['equip_badge']}' data-toggle='tooltip' data-placement='bottom' title='{$api->SystemItemIDtoName($r['equip_badge'])}'>" . returnIcon($r['equip_badge'],6) . "</a>
+				<div class='row'>
+					<div class='col-12 col-md-3'>
+						<a href='iteminfo.php?ID={$r['equip_badge']}' data-toggle='tooltip' data-placement='bottom' title='{$api->SystemItemIDtoName($r['equip_badge'])}'>" . returnIcon($r['equip_badge'],6) . "</a><br />
 					</div>
-					<div class='col'>
+					<div class='col-12 col-md-9'>
 						{$r['description']}
 					</div>
 				</div>
