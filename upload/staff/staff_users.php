@@ -414,7 +414,8 @@ function edituser()
         $d = $db->query("/*qc=on*/SELECT `i`.*, `d`.*, `username`,
 		`level`, `primary_currency`,`secondary_currency`, `equip_primary`,
 		`maxwill`, `bank`, `strength`, `agility`, `guard`, `equip_secondary`,
-		`labor`, `IQ`, `location`, `equip_armor`, `email`, `display_pic`
+		`labor`, `IQ`, `location`, `equip_armor`, `email`, `display_pic`, `equip_badge`,
+        `equip_potion`
 		 FROM `users` AS `u`
 		 INNER JOIN `userstats` AS `us`
 		 ON `u`.`userid` = `us`.`userid`
@@ -632,6 +633,22 @@ function edituser()
 					" . armor_dropdown("armor", $itemi['equip_armor']) . "
 				</td>
 			</tr>
+            <tr>
+				<th>
+					Profile Badge
+				</th>
+				<td>
+					" . item_dropdown("badge", $itemi['equip_badge']) . "
+				</td>
+			</tr>
+            <tr>
+				<th>
+					Combat Potion
+				</th>
+				<td>
+					" . item_dropdown("potion", $itemi['equip_potion']) . "
+				</td>
+			</tr>
 		</table>
     	{$csrf}
     	<input class='btn btn-primary' type='submit' value='Edit User' />
@@ -663,6 +680,9 @@ function edituser()
         $equip_prim = (isset($_POST['primary_weapon']) && is_numeric($_POST['primary_weapon'])) ? abs(intval($_POST['primary_weapon'])) : 0;
         $equip_sec = (isset($_POST['secondary_weapon']) && is_numeric($_POST['secondary_weapon'])) ? abs(intval($_POST['secondary_weapon'])) : 0;
         $equip_armor = (isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
+        $equip_pot = (isset($_POST['potion']) && is_numeric($_POST['potion'])) ? abs(intval($_POST['potion'])) : 0;
+        $equip_badge = (isset($_POST['badge']) && is_numeric($_POST['badge'])) ? abs(intval($_POST['badge'])) : 0;
+        
         $city = (isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : 1;
 
         if (empty($username) || empty($email)) {
@@ -714,6 +734,20 @@ function edituser()
                 die($h->endpage());
             }
         }
+        if ($equip_badge > 0) {
+            $aq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_badge}' AND `itmtype` = 13");
+            if ($db->fetch_single($aq) == 0) {
+                alert('danger', "Uh Oh!", "The badge selected does not exist.");
+                die($h->endpage());
+            }
+        }
+        if ($equip_pot > 0) {
+            $aq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_badge}' AND `itmtype` = 7 OR `itmtype` = 8");
+            if ($db->fetch_single($aq) == 0) {
+                alert('danger', "Uh Oh!", "The badge selected does not exist.");
+                die($h->endpage());
+            }
+        }
         $CityQuery = $db->query("/*qc=on*/SELECT COUNT(`town_id`) FROM `town` WHERE `town_id` = {$city}");
         if ($db->fetch_single($CityQuery) == 0) {
             alert('danger', "Uh Oh!", "The town you wish the user to be in does not exist.");
@@ -730,7 +764,7 @@ function edituser()
         $hp = 50 + ($_POST['level'] * 50);
         $db->query("UPDATE `users` SET `username` = '{$username}', `level` = {$level}, `primary_currency` = {$money}, `secondary_currency` = {$money2},
 		`energy` = {$energy}, `maxenergy` = {$energy}, `brave` = {$brave}, `maxbrave` = {$brave}, `hp` = {$hp}, `maxhp` = {$hp}, `bank` = {$bank},
-		`equip_armor` = {$equip_armor}, `equip_primary` = {$equip_prim}, `equip_secondary` = {$equip_sec}, `location` = {$city}, `will`= {$will}, `maxwill` = {$maxwill},
+		 `location` = {$city}, `will`= {$will}, `maxwill` = {$maxwill},
 		`email` = '{$email}', `display_pic` = '{$displayPic}' WHERE `userid` = {$user}");
         $db->query("UPDATE `userstats` SET `strength` = {$strength}, `agility` = {$agility}, `guard` = {$guard}, `iq` = {$iq}, `labor` = {$labor} WHERE `userid` = {$user}");
         if ($_POST['infirmary'] > 0) {
@@ -739,6 +773,11 @@ function edituser()
         if ($_POST['dungeon'] > 0) {
             $api->UserStatusSet($user, 'dungeon', $_POST['dungeon'], $dungeonr);
         }
+        equipUserSlot($user, "equip_primary", $equip_prim);
+        equipUserSlot($user, "equip_secondary", $equip_sec);
+        equipUserSlot($user, "equip_armor", $equip_armor);
+        equipUserSlot($user, "equip_potion", $equip_pot);
+        equipUserSlot($user, "equip_badge", $equip_badge);
         alert('success', "Success!", "You have successfully edited {$username}'s account.", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
     } else {

@@ -688,16 +688,13 @@ function equipUserSlot($user, $slot, $itemID)
 		{
 			unequipUserSlot($user, $slot);
 		}
-		else
+        if ($slot != "equip_potion")
 		{
-			if ($slot != "equip_potion")
-			{
-				$api->UserTakeItem($user, $itemID, 1);
-				setEquipGains($user, $slot, $itemID);
-			}
-			$db->query("UPDATE `users` SET `{$slot}` = {$itemID} WHERE `userid` = {$user}");
-			$api->SystemLogsAdd($user, 'equip', "Equipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
+			$api->UserTakeItem($user, $itemID, 1);
+			setEquipGains($user, $slot, $itemID);
 		}
+		$db->query("UPDATE `users` SET `{$slot}` = {$itemID} WHERE `userid` = {$user}");
+		$api->SystemLogsAdd($user, 'equip', "Equipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
 	}
 }
 function equipUserWearable($user, $slot, $itemID)
@@ -718,14 +715,11 @@ function equipUserWearable($user, $slot, $itemID)
 		{
 			unequipUserWearable($user, $slot);
 		}
-		else
-		{
-			setEquipGains($user, $slot, $itemID);
-			$api->UserTakeItem($user, $itemID, 1);
-			$db->query("DELETE FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'");
-			$db->query("INSERT INTO `user_equips` (`userid`, `equip_slot`, `itemid`) VALUES ('{$user}', '{$slot}', '{$itemID}')");
-			$api->SystemLogsAdd($user, 'equip', "Equipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
-		}
+        setEquipGains($user, $slot, $itemID);
+		$api->UserTakeItem($user, $itemID, 1);
+		$db->query("DELETE FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'");
+		$db->query("INSERT INTO `user_equips` (`userid`, `equip_slot`, `itemid`) VALUES ('{$user}', '{$slot}', '{$itemID}')");
+		$api->SystemLogsAdd($user, 'equip', "Equipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
 	}
 }
 
