@@ -166,6 +166,54 @@ $(document).ready(function () {
 		});
 		return false;
 	});
+	$('#farmWellFillSingle').click(function()
+	{
+		$.get("js/script/farm_quick.php?action=bucket1",  function(response) 
+		{   
+			 $('#wellSuccess').html(response);
+		});
+		return false;
+	});
+	$('#farmWellFillFive').click(function()
+	{
+		$.get("js/script/farm_quick.php?action=bucket5",  function(response) 
+		{   
+			 $('#wellSuccess').html(response);
+		});
+		return false;
+	});
+	$('#farmWellFillTen').click(function()
+	{
+		$.get("js/script/farm_quick.php?action=bucket10",  function(response) 
+		{   
+			 $('#wellSuccess').html(response);
+		});
+		return false;
+	});
+	$('#farmWellFillTwentyFive').click(function()
+	{
+		$.get("js/script/farm_quick.php?action=bucket25",  function(response) 
+		{   
+			 $('#wellSuccess').html(response);
+		});
+		return false;
+	});
+	$('#farmWellFillFifty').click(function()
+	{
+		$.get("js/script/farm_quick.php?action=bucket50",  function(response) 
+		{   
+			 $('#wellSuccess').html(response);
+		});
+		return false;
+	});
+	$('#farmWellFillHundred').click(function()
+	{
+		$.get("js/script/farm_quick.php?action=bucket100",  function(response) 
+		{   
+			 $('#wellSuccess').html(response);
+		});
+		return false;
+	});
     $('#btnAdd').click(function () {
         var num = $('.clonedInput').length;
         var newNum = new Number(num + 1);

@@ -1,6 +1,6 @@
 <?php
 $expMod=1.0;
-$macropage = ('mine.php');
+$macropage = ('farm.php');
 require('globals.php');
 echo "<h3>Farmlands</h3><hr />";
 if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
@@ -63,16 +63,16 @@ $frmeen = min(round($FU['farm_water_available'] / $FU['farm_water_max'] * 100), 
 $frmexp = min(round($FU['farm_xp'] / $FU['xp_needed'] * 100), 100);
 echo "
 	<div class='row'>
-        <div class='col-sm-3' align='left'>
-			Well Capacity - {$frmeen}%<br />
+        <div class='col-md-4' align='left'>
+			Well Capacity - <span id='wellPercent'>{$frmeen}%</span><br />
 			<small>
 				[<a href='?action=fill'>Fill Bucket</a>]
 			</small>
 		</div>
-		<div class='col-sm'>
+		<div class='col-md'>
 			<div class='progress' style='height: 1rem;'>
-				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$FU['farm_water_available']}' aria-valuemin='0' aria-valuemax='100' style='width:{$frmeen}%'>
-					<span>
+				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' id='wellBar' aria-valuenow='{$FU['farm_water_available']}' aria-valuemin='0' aria-valuemax='100' style='width:{$frmeen}%'>
+					<span id='wellBarInfo'>
 						{$frmeen}% (" . number_format($FU['farm_water_available']) . " Buckets / " . number_format($FU['farm_water_max']) . " Buckets)
 					</span>
 				</div>
@@ -81,13 +81,13 @@ echo "
 	</div>
 	<hr />
 	<div class='row'>
-        <div class='col-sm-3' align='left'>
+        <div class='col-sm-6 col-md-4' align='left'>
 			Farming Experience - {$frmexp}%<br />
 			<small>
 				Farming Level {$FU['farm_level']}
 			</small>
 		</div>
-		<div class='col-sm'>
+		<div class='col-md'>
 			<div class='progress' style='height: 1rem;'>
 				<div class='progress-bar bg-warning progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$FU['farm_xp']}' aria-valuemin='0' aria-valuemax='100' style='width:{$frmexp}%'>
 					<span>
@@ -275,6 +275,8 @@ function plantland()
 		$stagesafetime=$stagetime+$sr['seed_safe_time'];
 		$db->query("UPDATE `farm_data` SET `farm_seed` = {$_POST['seed']}, `farm_time` = {$stagetime}, `farm_stage` = 1, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerPlant']} WHERE `farm_id` = {$_GET['id']}");
 		$api->UserTakeItem($userid,$_POST['seed'],1);
+		$random = Random(2,8);
+		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
 		alert('success', "Success!", "Seed has been planted!", true, 'farm.php');
 		
 	}
@@ -326,6 +328,7 @@ function waterland()
 			$db->query("UPDATE `farm_data` SET `farm_wellness` = `farm_wellness` + {$random} WHERE `farm_id` = {$_GET['id']}");
 			if ($r['farm_time'] > 0)
 				removeStageTime($_GET['id'],$timegone);
+			$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
 			alert('success', "Success", "You have successfully watered this farmland, increasing its wellness by {$random}%.", true, 'farm.php');
 		}
 	}
@@ -371,6 +374,7 @@ function fertilize()
 		{
 			$random=Random(6,18);
 			$db->query("UPDATE `farm_data` SET `farm_wellness` = `farm_wellness` + {$random} WHERE `farm_id` = {$_GET['id']}");
+			$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
 			$api->UserTakeItem($userid,311,1);
 			alert('success', "Success", "You have successfully fertilized this farmland, increasing its wellness by {$random}%.", true, 'farm.php');
 		}
@@ -438,7 +442,7 @@ function harvest()
 
 function collect()
 {
-	global $db,$userid,$api,$h,$ir,$farmconfig,$FU;
+	global $db,$userid,$api,$h,$ir,$farmconfig,$FU,$expMod;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
     if (empty($_GET['id'])) 
 	{
@@ -467,6 +471,8 @@ function collect()
 			die($h->endpage());
 		}
 		$cropOutput = round(Random($sr['seed_qty'], $sr['seed_qty']*1.25));
+		$xp = round(($cropOutput * ($sr['seed_xp']*0.25)) * $expMod);
+		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$xp} WHERE `userid` = {$userid}");
 		$api->UserGiveItem($userid, $r['farm_seed'], $cropOutput);
 		if (($r['farm_wellness']-$farmconfig['wellnessPerHarv']) <= 0)
 			$farmconfig['wellnessPerHarv']=$r['farm_wellness'];
@@ -563,29 +569,28 @@ function tend()
 function fillbucket()
 {
 	global $db,$userid,$api,$h,$ir,$farmconfig,$FU;
-	if (isset($_GET['fill']))
-	{
-		if ($FU['farm_water_available'] == 0)
-		{
-			alert('danger', "Uh Oh!", "Your well has dried up. It'll refill 5 buckets every five minutes.", true, 'farm.php');
-			die($h->endpage());
-		}
-		if (!$api->UserHasItem($userid,$api->SystemItemNameToID("Empty Bucket"),1))
-		{
-			alert('danger', "Uh Oh!", "You do not have an Empty Bucket to fill up with water!", true, 'farm.php');
-			die($h->endpage());
-		}
-		$api->UserGiveItem($userid,$api->SystemItemNameToID("Bucket of Water"),1);
-		$api->UserTakeItem($userid,$api->SystemItemNameToID("Empty Bucket"),1);
-		$db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_available` - 1 WHERE `userid` = {$userid}");
-		alert('success', "Success!", "You have filled up a bucket with water.", true, 'farm.php');
-	}
-	else
-	{
-		echo "You may fill up a bucket with water, which may be used as long term storage. When watering your fields, we'll use the well first, then use your stockpile in your inventory.<br />
-			<a href='?action=fill&fill=1' class='btn btn-primary'>Fill Bucket</a> 
-			<a href='farm.php' class='btn btn-danger'>Go Back</a>";
-	}
+	echo "
+    <span id='wellSuccess'></span>
+    <div class='row'>
+        <div class='col-6 col-md-4 col-xl-3'>
+            <a id='farmWellFillSingle' class='btn btn-primary btn-block'>Fill 1 Bucket</a><br />
+        </div>
+        <div class='col-6 col-md-4 col-xl-3'>
+            <a id='farmWellFillFive' class='btn btn-primary btn-block'>Fill 5 Buckets</a><br />
+        </div>
+        <div class='col-6 col-md-4 col-xl-3'>
+            <a id='farmWellFillTen' class='btn btn-primary btn-block'>Fill 10 Buckets</a><br />
+        </div>
+        <div class='col-6 col-md-4 col-xl-3'>
+            <a id='farmWellFillTwentyFive' class='btn btn-primary btn-block'>Fill 25 Buckets</a><br />
+        </div>
+        <div class='col-6 col-md-4 col-xl-3'>
+            <a id='farmWellFillFifty' class='btn btn-primary btn-block'>Fill 50 Buckets</a><br />
+        </div>
+        <div class='col-6 col-md-4 col-xl-3'>
+            <a id='farmWellFillHundred' class='btn btn-primary btn-block'>Fill 100 Buckets</a><br />
+        </div>
+    </div>";
 	$h->endpage();
 }
 
