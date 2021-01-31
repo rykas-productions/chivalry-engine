@@ -216,6 +216,11 @@ elseif (isset($_GET['infirmary']))
 		alert('success', "Success!", "Medical Package was used successfully. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
 	}
+	//token heal
+	if ($ir['iitem'] == 8)
+	{
+	    header("Location: infirmary.php?action=heal&user={$userid}");
+	}
 } else {
     //Nope
     alert('danger',"Uh Oh!","No action specified.",true,'index.php');

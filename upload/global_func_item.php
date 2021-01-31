@@ -69,6 +69,8 @@ function parseInfirmaryItemName($infirmItem)
 		return $api->SystemItemIDtoName(206);
 	elseif ($infirmItem == 7)
 		return $api->SystemItemIDtoName(216);
+	elseif ($infirmItem == 8)
+		return "Infirmary Heal";
 	else
 		return "N/A";
 }

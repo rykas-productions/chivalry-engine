@@ -601,7 +601,7 @@ function quicklinks()
 			alert("danger","Uh Oh!","You have selected an invalid dungeon item.");
 			die($h->endpage());
 		}
-		if ($infirmary < 1 || $infirmary > 7)
+		if ($infirmary < 1 || $infirmary > 8)
 		{
 			alert("danger","Uh Oh!","You have selected an invalid infirmary item.");
 			die($h->endpage());
@@ -636,6 +636,7 @@ function quicklinks()
                         <option value='5'>Priority Voucher</option>
                         <option value='6'>Negative Begone</option>
 						<option value='7'>Medical Package</option>
+                        <option value='8'>Infirmary Heal</option>
 					</select>
 				</div>
 			</div>

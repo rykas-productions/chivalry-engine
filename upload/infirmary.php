@@ -90,7 +90,8 @@ function heal()
 	$api->UserStatusSet($_GET['user'], 'infirmary', (($sets * 30) * -1), 'Not read');
 	addToEconomyLog('Infirmary', 'token', ($cost)*-1);
 	$api->UserTakeCurrency($userid, 'secondary', $cost);
-	$api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . number_format($cost) . " Chivlary Tokens to discharge you from the infirmary.");
+	if ($_GET['user'] != $userid)
+	   $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . number_format($cost) . " Chivlary Tokens to discharge you from the infirmary.");
     $api->SystemLogsAdd($userid, 'heal', "Spent " . number_format($cost) . " Chivalry Tokens to heal {$api->SystemUserIDtoName($_GET['user'])}.");
 	alert('success', "Success!", "You have spent " . number_format($cost) . " Chivalry Tokens to heal out {$api->SystemUserIDtoName($_GET['user'])} of the infirmary.", true, 'index.php');
 }
