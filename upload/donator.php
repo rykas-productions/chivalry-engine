@@ -113,6 +113,7 @@ if (isset($_GET['user']))
 		</form>
 		</div>
 		</div>
+        <br />
 		</div>
 		";
 	}
