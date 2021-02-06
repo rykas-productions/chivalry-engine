@@ -49,6 +49,8 @@ switch ($_GET['action'])
 function bucket($howmany)
 {
     global $db,$userid,$api,$h,$ir,$farmconfig,$FU;
+    $farmCooldown = (userHasEffect($userid, "farm_well_less_cooldown")) ? 1 : 2; //Seconds, per bucket.
+    $noCooldown = (userHasEffect($userid, "farm_well_cooldown_cutoff")) ? 5 : 1; // >= this number gives cooldown.
     if (userHasEffect($userid, "farm_well_cooldown"))
     {
         $nextTime = returnEffectDone($userid, "farm_well_cooldown");
@@ -64,17 +66,34 @@ function bucket($howmany)
     }
     else
     {
-        if ($howmany > 1)
+        if ($howmany > $noCooldown)
         {
-            userGiveEffect($userid, "farm_well_cooldown", ($howmany*2));
+            userGiveEffect($userid, "farm_well_cooldown", ($howmany*$farmCooldown));
+        }
+        if (!userHasEffect($userid, "farm_well_less_cooldown"))
+        {
+            if (Random(1,6151) == 2567)
+            {
+                userGiveEffect($userid, "farm_well_less_cooldown", PHP_INT_MAX);
+                $api->GameAddNotification($userid, "You've learned how to fill up buckets faster! Your Well cooldown time has decreased to 1 second, from 2 seconds.");
+            }
+        }
+        if (!userHasEffect($userid, "farm_well_cooldown_cutoff"))
+        {
+            if (Random(1,6151) == 2567)
+            {
+                userGiveEffect($userid, "farm_well_cooldown_cutoff", PHP_INT_MAX);
+                $api->GameAddNotification($userid, "You've learned how to fill up buckets faster! You may now fill up to five buckets before you are given a cooldown.");
+            }
         }
         $FU['farm_water_available'] = $FU['farm_water_available'] - $howmany;
         $frmeen = min(round($FU['farm_water_available'] / $FU['farm_water_max'] * 100), 100);
         
-        $api->UserGiveItem($userid,$api->SystemItemNameToID("Bucket of Water"),1);
-        $api->UserTakeItem($userid,$api->SystemItemNameToID("Empty Bucket"),1);
+        $api->UserGiveItem($userid,$api->SystemItemNameToID("Bucket of Water"), $howmany);
+        $api->UserTakeItem($userid,$api->SystemItemNameToID("Empty Bucket"), $howmany);
         $db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_available` - {$howmany} WHERE `userid` = {$userid}");
         alert('success', "Success!", "You have filled up " . number_format($howmany) . " Bucket(s) with Water.", false);
+        $api->SystemLogsAdd($userid, "farm", "Filled " . number_format($howmany) . " Buckets of Water.");
         ?>
     		<script>
     			document.getElementById('wellPercent').innerHTML = "<?php echo "{$frmeen}%"; ?>";

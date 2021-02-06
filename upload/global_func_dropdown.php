@@ -866,3 +866,139 @@ function armory_dropdown($ddname = "item", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
+
+function potion_dropdown($ddname = "potion", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+    $db->query(
+        "/*qc=on*/SELECT `itmid`, `itmname`
+    				 FROM `items` WHERE `itmtype` = 8
+                     AND `itmtype` = 7
+    				 ORDER BY `itmid` ASC");
+    if ($selected < 1) {
+        $ret .= "<option value='0' selected='selected'>-- None --</option>";
+    } else {
+        $ret .= "<option value='0'>-- None --</option>";
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['itmid']}'";
+        if ($selected == $r['itmid']) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['itmname']} [ID: {$r['itmid']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
+
+function badge_dropdown($ddname = "badge", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+    $db->query(
+        "/*qc=on*/SELECT `itmid`, `itmname`
+    				 FROM `items` WHERE `itmtype` = 13
+    				 ORDER BY `itmid` ASC");
+    if ($selected < 1) {
+        $ret .= "<option value='0' selected='selected'>-- None --</option>";
+    } else {
+        $ret .= "<option value='0'>-- None --</option>";
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['itmid']}'";
+        if ($selected == $r['itmid']) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['itmname']} [ID: {$r['itmid']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
+
+function ring_dropdown($ddname = "ring", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+    $db->query(
+        "/*qc=on*/SELECT `itmid`, `itmname`
+    				 FROM `items` WHERE `itmtype` = 15
+    				 ORDER BY `itmid` ASC");
+    if ($selected < 1) {
+        $ret .= "<option value='0' selected='selected'>-- None --</option>";
+    } else {
+        $ret .= "<option value='0'>-- None --</option>";
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['itmid']}'";
+        if ($selected == $r['itmid']) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['itmname']} [ID: {$r['itmid']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
+
+function necklace_dropdown($ddname = "necklace", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+    $db->query(
+        "/*qc=on*/SELECT `itmid`, `itmname`
+    				 FROM `items` WHERE `itmtype` = 16
+    				 ORDER BY `itmid` ASC");
+    if ($selected < 1) {
+        $ret .= "<option value='0' selected='selected'>-- None --</option>";
+    } else {
+        $ret .= "<option value='0'>-- None --</option>";
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['itmid']}'";
+        if ($selected == $r['itmid']) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['itmname']} [ID: {$r['itmid']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
+
+function pendant_dropdown($ddname = "pendant", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+    $db->query(
+        "/*qc=on*/SELECT `itmid`, `itmname`
+    				 FROM `items` WHERE `itmtype` = 18
+    				 ORDER BY `itmid` ASC");
+    if ($selected < 1) {
+        $ret .= "<option value='0' selected='selected'>-- None --</option>";
+    } else {
+        $ret .= "<option value='0'>-- None --</option>";
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['itmid']}'";
+        if ($selected == $r['itmid']) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['itmname']} [ID: {$r['itmid']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}

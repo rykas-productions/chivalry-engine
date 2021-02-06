@@ -67,6 +67,14 @@ function sendDonateGiftEmail($for, $payer)
 		{$username2} has gifted you a VIP Pack! Log in now to use it! Make sure you say thanks!";
 	return $api->SystemSendEmail($email,$body);
 }
+
+function sendRefferalEmail($sendToUserID, $newUserID, $newUserName)
+{
+    global $db, $api, $set;
+    $st = $db->fetch_row($db->query("SELECT `username`, `email` FROM `users` WHERE `userid` = {$sendToUserID}"));
+    $WelcomeMSGEmail = "Hey {$st['username']}!<br />We just wanted to thank you for referring your friend, {$newUserName} [{$newUserID}], to Chivalry is Dead. Make sure you log in and give them a warm welcome.";
+    $api->SystemSendEmail($st['email'],$WelcomeMSGEmail,$set['WebsiteName'] . " Referral", $set['sending_email']);
+}
 //Helper functions
 function emailToUsername($email)
 {

@@ -552,6 +552,8 @@ function tend()
 			$db->query("UPDATE `farm_data` SET `farm_time` = {$stagetime}, `farm_stage` = `farm_stage` + 1, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerTend']} WHERE `farm_id` = {$_GET['id']}");
 			alert('success', "Success!", "You've tended this plot.", true, 'farm.php');
 		}
+		$random=Random(2,6);
+		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
 	}
 	else
 	{
@@ -573,22 +575,22 @@ function fillbucket()
     <span id='wellSuccess'></span>
     <div class='row'>
         <div class='col-6 col-md-4 col-xl-3'>
-            <a id='farmWellFillSingle' class='btn btn-primary btn-block'>Fill 1 Bucket</a><br />
+            <a id='farmWellFillSingle' class='btn btn-primary btn-block updateHoverBtn'>Fill 1 Bucket</a><br />
         </div>
         <div class='col-6 col-md-4 col-xl-3'>
-            <a id='farmWellFillFive' class='btn btn-primary btn-block'>Fill 5 Buckets</a><br />
+            <a id='farmWellFillFive' class='btn btn-primary btn-block updateHoverBtn'>Fill 5 Buckets</a><br />
         </div>
         <div class='col-6 col-md-4 col-xl-3'>
-            <a id='farmWellFillTen' class='btn btn-primary btn-block'>Fill 10 Buckets</a><br />
+            <a id='farmWellFillTen' class='btn btn-primary btn-block updateHoverBtn'>Fill 10 Buckets</a><br />
         </div>
         <div class='col-6 col-md-4 col-xl-3'>
-            <a id='farmWellFillTwentyFive' class='btn btn-primary btn-block'>Fill 25 Buckets</a><br />
+            <a id='farmWellFillTwentyFive' class='btn btn-primary btn-block updateHoverBtn'>Fill 25 Buckets</a><br />
         </div>
         <div class='col-6 col-md-4 col-xl-3'>
-            <a id='farmWellFillFifty' class='btn btn-primary btn-block'>Fill 50 Buckets</a><br />
+            <a id='farmWellFillFifty' class='btn btn-primary btn-block updateHoverBtn'>Fill 50 Buckets</a><br />
         </div>
         <div class='col-6 col-md-4 col-xl-3'>
-            <a id='farmWellFillHundred' class='btn btn-primary btn-block'>Fill 100 Buckets</a><br />
+            <a id='farmWellFillHundred' class='btn btn-primary btn-block updateHoverBtn'>Fill 100 Buckets</a><br />
         </div>
     </div>";
 	$h->endpage();

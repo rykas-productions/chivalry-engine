@@ -1301,14 +1301,6 @@ function backupDatabase()
 	$result=exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/mysql/".$filename,$output);
 }
 
-function sendRefferalEmail($sendToUserID, $newUserID, $newUserName)
-{
-	global $db, $api, $set;
-	$st = $db->fetch_row($db->query("SELECT `username`, `email` FROM `users` WHERE `userid` = {$sendToUserID}"));
-	$WelcomeMSGEmail = "Hey {$st['username']}!<br />We just wanted to thank you for referring your friend, {$newUserName} [{$newUserID}], to Chivalry is Dead. Make sure you log in and give them a warm welcome.";
-	$api->SystemSendEmail($st['email'],$WelcomeMSGEmail,$set['WebsiteName'] . " Referral", $set['sending_email']);
-}
-
 function isDevEnv()
 {
 	if (determine_game_urlbase() != "chivalryisdeadgame.com")
@@ -1320,4 +1312,9 @@ function removeOldEffects()
 	global $db;
 	$time = time();
 	$db->query("DELETE FROM `users_effects` WHERE `effectTimeOut` < {$time}");
+}
+
+function clamp($currentValue, $minValue, $maxValue)
+{
+    return max($minValue, (min($maxValue, $currentValue)));
 }

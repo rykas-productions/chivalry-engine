@@ -670,6 +670,7 @@ function createUser($name,$email,$pw,$gender='Male',$class='Warrior')
         $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}', `theme` = 7 WHERE `userid` = {$i}");
 	return $i;
 }
+
 function equipUserSlot($user, $slot, $itemID)
 {
 	global $db, $api;
@@ -697,6 +698,7 @@ function equipUserSlot($user, $slot, $itemID)
 		$api->SystemLogsAdd($user, 'equip', "Equipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
 	}
 }
+
 function equipUserWearable($user, $slot, $itemID)
 {
 	global $db, $api;
@@ -907,33 +909,6 @@ function setEquipGains($user, $slot, $item)
 		$api->GameAddNotification($user, "By equipping the {$r['itmname']} in your " . equipSlotParser($slot) . " slot, you have {$txt}.");	
 }
 
-function statParser($stat)
-{
-	$statNamesArray = array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
-						"maxbrave" => "Maximum Bravery", "level" => "Level",
-						"maxhp" => "Maximum Health", "strength" => "Strength",
-						"agility" => "Agility", "guard" => "Guard",
-						"labor" => "Labor", "iq" => "IQ",
-						"infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-						"primary_currency" => "Copper Coins", "secondary_currency"
-					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-						"VIP Days");
-	return $statNamesArray[$stat];
-}
-
-function equipSlotParser($slot)
-{
-	$slotNamesArray = array("equip_primary" => "Primary Weapon", 
-							"equip_secondary" => "Secondary Weapon",
-							"equip_armor" => "Armor",
-							"equip_potion" => "Combat Potion",
-							"equip_badge" => "Profile Badge", 
-							"equip_ring_primary" => "Primary Ring",
-							"equip_ring_secondary" => "Secondary Ring",
-							"equip_pendant" => "Pendant",
-							"equip_necklace" => "Necklace");
-	return $slotNamesArray[$slot];
-}
 
 function getUserItemEquippedSlot($user,$slot)
 {
