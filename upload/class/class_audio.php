@@ -28,12 +28,18 @@ class sound
 	{
 		echo "<script>
 				soundManager.onready(function() {
-					soundManager.play('{$soundID}',{volume:50});
+					soundManager.play('{$soundID}',{volume:{$vol}});
 				});
 		</script>";
 	}
+	
 	function playBGM($soundID)
 	{
-		$this->play($soundID, 15);
+	    global $userid;
+	    $audioBGM = 15;
+	    if (!empty($userid))
+            $audioBGM=getCurrentUserPref('audioBGM', 15);
+	    if ($audioBGM != 0)
+	       $this->play($soundID, $audioBGM);
 	}
 }

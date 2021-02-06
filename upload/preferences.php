@@ -77,6 +77,9 @@ switch ($_GET['action']) {
 	case 'counthome':
 		homecount();
         break;
+	case 'sounds':
+	    prefsound();
+	    break;
     default:
         prefs_home();
         break;
@@ -84,79 +87,90 @@ switch ($_GET['action']) {
 function prefs_home()
 {
     global $ir;
-    echo "Welcome to your account settings, {$ir['username']}. Here you can change many options concerning your account.<br />
+    alert('info','',"Welcome to your account settings, <b>{$ir['username']} [{$ir['userid']}]</b>! Here you can change many options concerning your account.",false);
+    echo "
 		<div class='row'>
-			<div class='col-md'>
-				<a href='?action=namechange'>Change Name</a>
+			<div class='col-6 col-md-6 col-lg-4'>
+				<a class='btn btn-primary btn-block' href='?action=namechange'>Change Name</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=pwchange'>Change Password</a>
+			<div class='col-6 col-md-6 col-lg-4'>
+				<a class='btn btn-danger btn-block' href='?action=pwchange'>Change Password</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=changeemail'>Change Email Address</a>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-4'>
+				<a class='btn btn-danger btn-block' href='?action=changeemail'>Change Email Address</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=emailchange'>Change Email Opt-Setting</a>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+				<a class='btn btn-primary btn-block' href='?action=emailchange'>Change Email Opt-Setting</a>
+                <br />
 			</div>
-		</div>
-		<hr />
-		<div class='row'>
-			<div class='col-md'>
-				<a href='?action=picchange'>Change Display Picture</a>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+				<a class='btn btn-primary btn-block' href='?action=picchange'>Change Display Picture</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=sexchange'>Change Gender</a>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+				<a class='btn btn-primary btn-block' href='?action=sexchange'>Change Gender</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=sigchange'>Change Forum Signature</a>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+				<a class='btn btn-primary btn-block' href='?action=sigchange'>Change Forum Signature</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=descchange'>Change Player Description</a>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+				<a class='btn btn-primary btn-block' href='?action=descchange'>Change Player Description</a>
+                <br />
 			</div>
-		</div>
-		<hr />
-		<div class='row'>
-			<div class='col-md'>
-				<a href='?action=quicklink'>Change Quick-Use Items</a>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+				<a class='btn btn-primary btn-block' href='?action=quicklink'>Change Quick-Use Items</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=forumalert'>Forum Notifications</a>
+			<div class='col-6 col-md-6 col-xl-4'>
+				<a class='btn btn-primary btn-block' href='?action=forumalert'>Forum Notifications</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=userdropdown'>User Input Setting</a>
+			<div class='col-6 col-xl-4'>
+				<a class='btn btn-primary btn-block' href='?action=userdropdown'>User Input Setting</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=themechange'>Change Theme</a>
+			<div class='col-6 col-md-6 col-lg-4'>
+				<a class='btn btn-primary btn-block' href='?action=themechange'>Change Theme</a>
+                <br />
 			</div>
-		</div>
-		<hr />
-		<div class='row'>
-			<div class='col-md'>
-				<a href='?action=classreset'>Class Reset</a>
+			<div class='col-6 col-md-6 col-lg-4'>
+				<a class='btn btn-primary btn-block' href='?action=classreset'>Class Reset</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=tuttoggle'>Tutorial Toggle</a>
+			<div class='col-6 col-md-6 col-lg-4'>
+				<a class='btn btn-info btn-block' href='?action=tuttoggle'>Tutorial Toggle</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=icontoggle'>Toggle Item Icons</a>
+			<div class='col-6 col-xl-4'>
+				<a class='btn btn-primary btn-block' href='?action=icontoggle'>Toggle Item Icons</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=steamlink'>Link Steam Account</a>
+			<div class='col-6 col-xl-4'>
+				<a class='btn btn-danger btn-block' href='?action=steamlink'>Link Steam Account</a>
+                <br />
 			</div>
-		</div>
-		<hr />
-		<div class='row'>
-			<div class='col-md'>
-				<a href='?action=loginlogs'>Login Logs</a>
+			<div class='col-6 col-md-6 col-lg-4'>
+				<a class='btn btn-info btn-block' href='?action=loginlogs'>Login Logs</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=reset'>Account Reset</a>
+			<div class='col-6 col-md-6 col-lg-4'>
+				<a class='btn btn-danger btn-block' href='?action=reset'>Account Reset</a>
+                <br />
 			</div>
-			<div class='col-md'>
-				<a href='?action=counthome'>Change Counts</a>
+			<div class='col-6 col-md-6 col-lg-4'>
+				<a class='btn btn-primary btn-block' href='?action=counthome'>Change Counts</a>
+                <br />
 			</div>
-		</div>
-		<br />";
+            <div class='col-6 col-md-6 col-lg-4'>
+				<a class='btn btn-primary btn-block' href='?action=sounds'>Audio Settings</a>
+                <br />
+			</div>
+		</div>";
 }
 
 function name_change()
@@ -1419,5 +1433,55 @@ function homecount()
 		<input type='hidden' value='1' name='submit'>
 		</form>";
 	}
+}
+
+function prefsound()
+{
+    global $db, $api, $userid, $set;
+    $audioBGM=getCurrentUserPref('audioBGM', 15);
+    $audioMaster=getCurrentUserPref('audioMaster', 100);
+    alert('info',"","The {$set['WebsiteName']} Audio system is still a WIP. It doesn't work on all devices/browsers yet. {$api->SystemUserIDtoName(1)} 
+    makes no guarantees that the audio system works for you.",false);
+    if (isset($_POST['submit']))
+    {
+        $_POST['audioBGM'] = (isset($_POST['audioBGM']) && is_numeric($_POST['audioBGM'])) ? abs($_POST['audioBGM']) : $audioBGM;
+        $_POST['audioMaster'] = (isset($_POST['audioMaster']) && is_numeric($_POST['audioMaster'])) ? abs($_POST['audioMaster']) : $audioMaster;
+        
+        $_POST['audioBGM'] = clamp($_POST['audioBGM'], 0, 100);
+        $_POST['audioMaster'] = clamp($_POST['audioMaster'], 0, 100);
+        
+        setCurrentUserPref('audioBGM', $_POST['audioBGM']);
+        setCurrentUserPref('audioMaster', $_POST['audioMaster']);
+        
+        alert('success', "Success!", "You have successfully updated your audio settings.", false);
+        $api->SystemLogsAdd($userid, 'preferences', "Updated audio settings.");
+        
+        $audioBGM = $_POST['audioBGM'];
+        $audioMaster = $_POST['audioMaster'];
+    }
+    echo "<form method='post'>
+		<div class='row'>
+            <div class='col-md col-lg-6 col-xl-4'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>Master Volume</h5>
+						<input type='number' name='audioMaster' value='{$audioMaster}' min='1' max='100' required='1' class='form-control' placeholder='Default = 100'>
+					</div>
+				</div>
+			</div>
+			<div class='col-md col-lg-6 col-xl-4'>
+				<div class='card'>
+					<div class='card-body'>
+						<h5 class='card-title'>Background Music</h5>
+						<input type='number' name='audioBGM' value='{$audioBGM}' min='0' max='100' required='1' class='form-control' placeholder='Default = 15'>
+					</div>
+				</div>
+			</div>
+		</div>";
+        echo "
+		<hr />
+		<input type='submit' class='btn btn-primary' value='Update Audio'>
+		<input type='hidden' value='1' name='submit'>
+		</form>";
 }
 $h->endpage();
