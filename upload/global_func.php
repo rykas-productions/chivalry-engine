@@ -1298,7 +1298,7 @@ function backupDatabase()
 {
 	global $_CONFIG;
 	$filename='cid_backup_'.date('y-m-d').'-'.date('H-i-s').'.sql';
-	$result=exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/mysql/".$filename,$output);
+	$result=exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/chivalryisdeadgame.com/mysql/".$filename,$output);
 }
 
 function isDevEnv()
