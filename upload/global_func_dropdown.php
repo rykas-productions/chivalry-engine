@@ -875,7 +875,7 @@ function potion_dropdown($ddname = "potion", $selected = -1)
     $db->query(
         "/*qc=on*/SELECT `itmid`, `itmname`
     				 FROM `items` WHERE `itmtype` = 8
-                     AND `itmtype` = 7
+                     OR `itmtype` = 7
     				 ORDER BY `itmid` ASC");
     if ($selected < 1) {
         $ret .= "<option value='0' selected='selected'>-- None --</option>";

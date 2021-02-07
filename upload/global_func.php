@@ -1318,3 +1318,31 @@ function clamp($currentValue, $minValue, $maxValue)
 {
     return max($minValue, (min($maxValue, $currentValue)));
 }
+
+function statParser($stat)
+{
+    $statNamesArray = array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
+        "maxbrave" => "Maximum Bravery", "level" => "Level",
+        "maxhp" => "Maximum Health", "strength" => "Strength",
+        "agility" => "Agility", "guard" => "Guard",
+        "labor" => "Labor", "iq" => "IQ",
+        "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+        "primary_currency" => "Copper Coins", "secondary_currency"
+        => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+        "VIP Days");
+        return $statNamesArray[$stat];
+}
+
+function equipSlotParser($slot)
+{
+    $slotNamesArray = array("equip_primary" => "Primary Weapon",
+        "equip_secondary" => "Secondary Weapon",
+        "equip_armor" => "Armor",
+        "equip_potion" => "Combat Potion",
+        "equip_badge" => "Profile Badge",
+        "equip_ring_primary" => "Primary Ring",
+        "equip_ring_secondary" => "Secondary Ring",
+        "equip_pendant" => "Pendant",
+        "equip_necklace" => "Necklace");
+    return $slotNamesArray[$slot];
+}

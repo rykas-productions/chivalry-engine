@@ -143,8 +143,8 @@ function item_remove($user, $itemid, $qty)
                 return true;
             }
         }
+        $db->free_result($q);
     }
-    $db->free_result($q);
 }
 
 function submitToModeration($itmid, $type, $value, $user)

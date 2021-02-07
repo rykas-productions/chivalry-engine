@@ -445,6 +445,13 @@ function edituser()
         if ($itemi['dungeon'] < 0) {
             $itemi['dungeon'] = 0;
         }
+        $trinkq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$_POST['user']}");
+        while ($tr = $db->fetch_row($trinkq))
+        {
+            if (empty($tr['itemid']))
+                $tr['itemid'] = 0;
+            $itemi[$tr['equip_slot']] = $tr['itemid'];
+        }
         $csrf = request_csrf_html('staff_edituser2');
         echo "<form method='post'>
 		<table class='table table-bordered'>
@@ -638,7 +645,7 @@ function edituser()
 					Profile Badge
 				</th>
 				<td>
-					" . item_dropdown("badge", $itemi['equip_badge']) . "
+					" . badge_dropdown("badge", $itemi['equip_badge']) . "
 				</td>
 			</tr>
             <tr>
@@ -646,7 +653,39 @@ function edituser()
 					Combat Potion
 				</th>
 				<td>
-					" . item_dropdown("potion", $itemi['equip_potion']) . "
+					" . potion_dropdown("potion", $itemi['equip_potion']) . "
+				</td>
+			</tr>
+            <tr>
+				<th>
+					Primary Ring
+				</th>
+				<td>
+					" . ring_dropdown("ring_primary", $itemi['equip_ring_primary']) . "
+				</td>
+			</tr>
+            <tr>
+				<th>
+					Secondary Ring
+				</th>
+				<td>
+					" . ring_dropdown("ring_secondary", $itemi['equip_ring_secondary']) . "
+				</td>
+			</tr>
+            <tr>
+				<th>
+					Necklace
+				</th>
+				<td>
+					" . necklace_dropdown("necklace", $itemi['equip_necklace']) . "
+				</td>
+			</tr>
+            <tr>
+				<th>
+					Pendant
+				</th>
+				<td>
+					" . pendant_dropdown("pendant", $itemi['equip_pendant']) . "
 				</td>
 			</tr>
 		</table>
@@ -682,6 +721,10 @@ function edituser()
         $equip_armor = (isset($_POST['armor']) && is_numeric($_POST['armor'])) ? abs(intval($_POST['armor'])) : 0;
         $equip_pot = (isset($_POST['potion']) && is_numeric($_POST['potion'])) ? abs(intval($_POST['potion'])) : 0;
         $equip_badge = (isset($_POST['badge']) && is_numeric($_POST['badge'])) ? abs(intval($_POST['badge'])) : 0;
+        $equip_ring_prim = (isset($_POST['ring_primary']) && is_numeric($_POST['ring_primary'])) ? abs(intval($_POST['ring_primary'])) : 0;
+        $equip_ring_sec = (isset($_POST['ring_secondary']) && is_numeric($_POST['ring_secondary'])) ? abs(intval($_POST['ring_secondary'])) : 0;
+        $equip_necklace = (isset($_POST['necklace']) && is_numeric($_POST['necklace'])) ? abs(intval($_POST['necklace'])) : 0;
+        $equip_pendant = (isset($_POST['pendant']) && is_numeric($_POST['pendant'])) ? abs(intval($_POST['pendant'])) : 0;
         
         $city = (isset($_POST['city']) && is_numeric($_POST['city'])) ? abs(intval($_POST['city'])) : 1;
 
@@ -744,7 +787,35 @@ function edituser()
         if ($equip_pot > 0) {
             $aq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_badge}' AND `itmtype` = 7 OR `itmtype` = 8");
             if ($db->fetch_single($aq) == 0) {
-                alert('danger', "Uh Oh!", "The badge selected does not exist.");
+                alert('danger', "Uh Oh!", "The potion selected does not exist.");
+                die($h->endpage());
+            }
+        }
+        if ($equip_ring_prim > 0) {
+            $aq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_ring_prim}' AND `itmtype` = 15");
+            if ($db->fetch_single($aq) == 0) {
+                alert('danger', "Uh Oh!", "The primary ring selected does not exist.");
+                die($h->endpage());
+            }
+        }
+        if ($equip_ring_sec > 0) {
+            $aq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_ring_sec}' AND `itmtype` = 15");
+            if ($db->fetch_single($aq) == 0) {
+                alert('danger', "Uh Oh!", "The secondary ring selected does not exist.");
+                die($h->endpage());
+            }
+        }
+        if ($equip_necklace > 0) {
+            $aq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_necklace}' AND `itmtype` = 16");
+            if ($db->fetch_single($aq) == 0) {
+                alert('danger', "Uh Oh!", "The necklace selected does not exist.");
+                die($h->endpage());
+            }
+        }
+        if ($equip_pendant > 0) {
+            $aq = $db->query("/*qc=on*/SELECT COUNT(`itmid`) FROM `items` WHERE `itmid` = '{$equip_pendant}' AND `itmtype` = 18");
+            if ($db->fetch_single($aq) == 0) {
+                alert('danger', "Uh Oh!", "The pendant selected does not exist.");
                 die($h->endpage());
             }
         }
@@ -778,6 +849,10 @@ function edituser()
         equipUserSlot($user, "equip_armor", $equip_armor);
         equipUserSlot($user, "equip_potion", $equip_pot);
         equipUserSlot($user, "equip_badge", $equip_badge);
+        equipUserSlot($user, "equip_ring_primary", $equip_ring_prim);
+        equipUserSlot($user, "equip_ring_secondary", $equip_ring_sec);
+        equipUserSlot($user, "equip_necklace", $equip_necklace);
+        equipUserSlot($user, "equip_pendant", $equip_pendant);
         alert('success', "Success!", "You have successfully edited {$username}'s account.", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited user <a href='../profile.php?user={$user}'>{$username}</a>.");
     } else {
