@@ -13,14 +13,21 @@ if ($db->num_rows($am) == 0)
 	{
 		$days=Random(1,3);
 		$kills=(Random(5,15)+Random($ir['level']/4,$ir['level']/2))*$days;
-		$reward=$kills*Random(4500,8000);
+		$reward = 0;
+		$loops = 0;
+		while ($loops != $kills)
+		{
+		    $random = Random(4000, 20000);
+		    $reward = $reward + round($random + ($random * levelMultiplier($ir['level'])));
+		    $loops++;
+		}
 		$endtime=time()+($days*86400);
 		$db->query("INSERT INTO `missions` 
 		(`mission_userid`, `mission_kills`, 
 		`mission_end`, `mission_kill_count`, `mission_reward`) 
 		VALUES ('{$userid}', '{$kills}', '{$endtime}', '0', '{$reward}')");
 		echo "Your current mission:<br />
-		Kills Required: {$kills}<br />
+		Kills Required: " . number_format($kills) . "<br />
 		Kill Count: 0<br />
 		Reward: " . number_format($reward) . " Copper Coins<br />
 		Time Left: " . TimeUntil_Parse($endtime) ."<br />";
@@ -38,8 +45,8 @@ else
 {
 	$mr=$db->fetch_row($am);
 	echo "Your current mission:<br />
-		Kills Required: {$mr['mission_kills']}<br />
-		Kill Count: {$mr['mission_kill_count']}<br />
+		Kills Required: " . number_format($mr['mission_kills']) . "<br />
+		Kill Count: " . number_format($mr['mission_kill_count']) . "<br />
 		Reward: " . number_format($mr['mission_reward']) . " Copper Coins<br />
 		Time Left: " . TimeUntil_Parse($mr['mission_end']) ."<br />";
 }
