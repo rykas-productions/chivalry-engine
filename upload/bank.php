@@ -54,13 +54,16 @@ else {
 function index()
 {
     global $ir, $bank_maxfee, $bank_feepercent, $db, $userid;
+    $interest = 5;
+    $cutoff = 72;
     if ($ir['vip_days'] == 0)
+    {
         $interest=2;
-    else
-        $interest=5;
+        $cutoff = 24;
+    }
     echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['bank']) . "</span> in your City Bank account.</b><br />
 				At the end of each and everyday, your balance will increase by {$interest}%. You will not gain interest if 
-				your balance is over " . number_format(returnMaxInterest($userid)) . " Copper Coins. You must be active within the past 24 hours for this to 
+				your balance is over " . number_format(returnMaxInterest($userid)) . " Copper Coins. You must be active within the past {$cutoff} hours for this to 
 				effect you.
 				<div id='banksuccess'></div>
 				<div class='row'>

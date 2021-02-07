@@ -1346,3 +1346,130 @@ function equipSlotParser($slot)
         "equip_necklace" => "Necklace");
     return $slotNamesArray[$slot];
 }
+
+function doDailyBankInterest()
+{
+    global $db;
+    $last72 = time() - (86400*3);
+    $bankQuery=$db->query("SELECT `userid`, `bank`, `vip_days`, `laston` FROM `users` WHERE `bank` > 0 AND `laston` > '{$last72}'");
+    while ($r = $db->fetch_row($bankQuery))
+    {
+        $maxBank = returnMaxInterest($r['userid']);
+        if ($r['bank'] <= ($maxBank+1))
+        {
+            $cutoff = $last72;
+            $perc = 20;
+            if ($r['vip_days'] == 0)
+            {
+                $perc = 50;
+                $cutoff = $cutoff - (86400*2);
+            }
+            if ($r['laston'] > $cutoff)
+            {
+                $addedAmount = $r['bank'] / $perc;
+                $db->query("UPDATE `users` SET `bank` = `bank` + {$addedAmount} WHERE `userid` = {$r['userid']}");
+                addToEconomyLog('Bank Interest', 'copper', $addedAmount);
+            }
+                    
+        }
+    }
+}
+
+function doDailyFedBankInterest()
+{
+    global $db;
+    $last72 = time() - (86400*3);
+    $bankQuery=$db->query("SELECT `userid`, `bigbank`, `vip_days`, `laston` FROM `users` WHERE `bigbank` > 0 AND `laston` > '{$last72}'");
+    while ($r = $db->fetch_row($bankQuery))
+    {
+        $maxBank = returnMaxInterest($r['userid'])*10;
+        if ($r['bigbank'] <= ($maxBank+1))
+        {
+            $cutoff = $last72;
+            $perc = 20;
+            if ($r['vip_days'] == 0)
+            {
+                $perc = 50;
+                $cutoff = $cutoff - (86400*2);
+            }
+            if ($r['laston'] > $cutoff)
+            {
+                $addedAmount = $r['bigbank'] / $perc;
+                $db->query("UPDATE `users` SET `bigbank` = `bigbank` + {$addedAmount} WHERE `userid` = {$r['userid']}");
+                addToEconomyLog('Bank Interest', 'copper', $addedAmount);
+            }
+                    
+        }
+    }
+}
+
+function doDailyVaultBankInterest()
+{
+    global $db;
+    $last72 = time() - (86400*3);
+    $bankQuery=$db->query("SELECT `userid`, `vaultbank`, `vip_days`, `laston` FROM `users` WHERE `vaultbank` > 0 AND `laston` > '{$last72}'");
+    while ($r = $db->fetch_row($bankQuery))
+    {
+        $maxBank = returnMaxInterest($r['userid'])*50;
+        if ($r['vaultbank'] <= ($maxBank+1))
+        {
+            $cutoff = $last72;
+            $perc = 20;
+            if ($r['vip_days'] == 0)
+            {
+                $perc = 50;
+                $cutoff = $cutoff - (86400*2);
+            }
+            if ($r['laston'] > $cutoff)
+            {
+                $addedAmount = $r['vaultbank'] / $perc;
+                $db->query("UPDATE `users` SET `vaultbank` = `vaultbank` + {$addedAmount} WHERE `userid` = {$r['userid']}");
+                addToEconomyLog('Bank Interest', 'copper', $addedAmount);
+            }
+                    
+        }
+    }
+}
+
+function doDailyGuildFee()
+{
+    global $db;
+    $gdfq=$db->query("/*qc=on*/SELECT * FROM `guild`");
+    while ($gfr=$db->fetch_row($gdfq))
+    {
+        $warquery=$db->query("/*qc=on*/SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gfr['guild_id']} OR `gw_declaree` = {$gfr['guild_id']}");
+        if ($db->num_rows($warquery) == 0)
+        {
+            if ($gfr['guild_primcurr'] < 100000)
+            {
+                $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
+                $db->query("UPDATE `guild` SET `guild_debt_time` = {$plussevenday} WHERE `guild_id` = {$gfr['guild_id']} AND `guild_debt_time` = 0");
+                $api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep, but has gone into debt.");
+                $api->GameAddNotification($gfr['guild_owner'], "Your guild has gone into debt!");
+                $api->GameAddNotification($gfr['guild_coowner'], "Your guild has gone into debt!");
+            }
+            else
+            {
+                $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
+                $api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep.");
+            }
+            addToEconomyLog('Guild Upkeep', 'copper', -100000);
+        }
+    }
+}
+
+function purgeOldLogs()
+{
+    global $db;
+    $ThirtyDaysAgo = time() - 2592000;
+    $db->query("DELETE FROM `logs` WHERE `log_time` < {$ThirtyDaysAgo}");
+    $db->query("DELETE FROM `mail` WHERE `mail_time` < {$ThirtyDaysAgo}");
+    $db->query("DELETE FROM `notifications` WHERE `notif_time` < {$ThirtyDaysAgo}");
+    $db->query("DELETE FROM `notifications` WHERE `notif_time` < {$lastweek} AND `notif_status` = 'read'");
+    $db->query("DELETE FROM `guild_notifications` WHERE `gn_time` < {$ThirtyDaysAgo}");
+    $db->query("DELETE FROM `comments` WHERE `cTIME` < {$ThirtyDaysAgo}");
+    $db->query("DELETE FROM `fedjail_appeals` WHERE `fja_time` < {$ThirtyDaysAgo}");
+    $db->query("DELETE FROM `guild_crime_log` WHERE `gclTIME` < {$ThirtyDaysAgo}");
+    $db->query("DELETE FROM `login_attempts` WHERE `timestamp` < {$lastweek}");
+    $db->query("DELETE FROM `attack_logs` WHERE `attack_time` < {$ThirtyDaysAgo}");
+}

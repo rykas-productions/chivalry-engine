@@ -58,80 +58,12 @@ $db->query("UPDATE `settings` SET `setting_value` = '{$twentyday}' WHERE `settin
 $db->query("UPDATE `settings` SET `setting_value` = '{$thirtyday}' WHERE `setting_name` = '30day'");
 $db->query("TRUNCATE TABLE `votes`");
 doDailyDistrictTick();
-//Guild daily fee
-$gdfq=$db->query("/*qc=on*/SELECT * FROM `guild`");
-while ($gfr=$db->fetch_row($gdfq))
-{
-	$warquery=$db->query("/*qc=on*/SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gfr['guild_id']} OR `gw_declaree` = {$gfr['guild_id']}");
-	if ($db->num_rows($warquery) == 0)
-	{
-		if ($gfr['guild_primcurr'] < 100000)
-		{
-			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
-			$db->query("UPDATE `guild` SET `guild_debt_time` = {$plussevenday} WHERE `guild_id` = {$gfr['guild_id']} AND `guild_debt_time` = 0");
-			$api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep, but has gone into debt.");
-			$api->GameAddNotification($gfr['guild_owner'], "Your guild has gone into debt!");
-			$api->GameAddNotification($gfr['guild_coowner'], "Your guild has gone into debt!");
-		}
-		else
-		{
-			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
-			$api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep.");
-		}
-		addToEconomyLog('Guild Upkeep', 'copper', -100000);
-	}
-}
-//Bank daily interest
-$bankQuery=$db->query("SELECT `userid`, `bank`, `vip_days` FROM `users` WHERE `bank` > 0 AND `laston` > '{$last24}'");
-while ($r = $db->fetch_row($bankQuery))
-{
-	$maxBank = returnMaxInterest($r['userid']);
-	if ($r['bank'] <= ($maxBank+1))
-	{
-		if ($r['vip_days'] == 0)
-			$perc = 50;
-		else
-			$perc = 20;
-		$addedAmount = $r['bank'] / $perc;
-		$db->query("UPDATE `users` SET `bank` = `bank` + {$addedAmount} WHERE `userid` = {$r['userid']}");
-		addToEconomyLog('Bank Interest', 'copper', $addedAmount);
-		
-	}
-}
-//Big Bank daily interest
-$bankQuery=$db->query("SELECT `userid`, `bigbank`, `vip_days` FROM `users` WHERE `bigbank` > 0 AND `laston` > '{$last24}'");
-while ($r = $db->fetch_row($bankQuery))
-{
-	$maxBank = returnMaxInterest($r['userid'])*10;
-	if ($r['bigbank'] <= ($maxBank+1))
-	{
-		if ($r['vip_days'] == 0)
-			$perc = 50;
-		else
-			$perc = 20;
-		$addedAmount = $r['bigbank'] / $perc;
-		$db->query("UPDATE `users` SET `bigbank` = `bigbank` + {$addedAmount} WHERE `userid` = {$r['userid']}");
-		addToEconomyLog('Bank Interest', 'copper', $addedAmount);
-		
-	}
-}
-//Vault Bank daily interest
-$bankQuery=$db->query("SELECT `userid`, `vaultbank`, `vip_days` FROM `users` WHERE `vaultbank` > 0 AND `laston` > '{$last24}'");
-while ($r = $db->fetch_row($bankQuery))
-{
-	$maxBank = returnMaxInterest($r['userid'])*50;
-	if ($r['vaultbank'] <= ($maxBank+1))
-	{
-		if ($r['vip_days'] == 0)
-			$perc = 50;
-		else
-			$perc = 20;
-		$addedAmount = $r['vaultbank'] / $perc;
-		$db->query("UPDATE `users` SET `vaultbank` = `vaultbank` + {$addedAmount} WHERE `userid` = {$r['userid']}");
-		addToEconomyLog('Bank Interest', 'copper', $addedAmount);
-		
-	}
-}
+doDailyGuildFee();
+//Banks daily interest
+doDailyBankInterest();
+doDailyFedBankInterest();
+doDailyVaultBankInterest();
+
 
 //Random player showcase
 /*$cutoff = time() - 86400;
@@ -140,4 +72,5 @@ $ur=$db->fetch_single($uq);
 //$api->GameAddNotification($ur,"You have been chosen as the Player of the Day! Your profile will be displayed on the login page, and you've received a unique badge in your inventory.");
 item_add($ur,154,1);*/
 backupDatabase();
+purgeOldLogs();
 ?>
