@@ -68,16 +68,7 @@ function energy()
 	{
         alert('danger', "Uh Oh!", "You do not have enough Chivalry Tokens to refill your energy.", false);
     }
-	?>
-	<script>
-		document.getElementById('gymEnergy').innerHTML = <?php echo $api->UserInfoGet($userid, 'energy', true); ?>;
-		document.getElementById('gymWill').innerHTML = <?php echo $api->UserInfoGet($userid, 'will', true); ?>;
-		document.getElementById('trainTimes').value = <?php echo $api->UserInfoGet($userid, 'energy'); ?>;
-		document.getElementById('trainTimes').max = <?php echo $api->UserInfoGet($userid, 'energy'); ?>;
-		document.getElementById('trainTimesTotal').innerHTML = <?php echo number_format($api->UserInfoGet($userid, 'energy')); ?>;
-		document.getElementById('ui_token').innerHTML = <?php echo "'" . number_format($ir['secondary_currency']) . "'"; ?>;
-	</script>
-	<?php
+	updateUserInfo();
 }
 
 function brave()
@@ -109,16 +100,7 @@ function brave()
     } else {
         alert('danger', "Uh Oh!", "You do not have enough Chivalry Tokens to refill your Bravery.", false);
     }
-	?>
-	<script>
-		document.getElementById('gymEnergy').innerHTML = <?php echo $api->UserInfoGet($userid, 'energy', true); ?>;
-		document.getElementById('gymWill').innerHTML = <?php echo $api->UserInfoGet($userid, 'will', true); ?>;
-		document.getElementById('trainTimes').value = <?php echo $api->UserInfoGet($userid, 'energy'); ?>;
-		document.getElementById('trainTimes').max = <?php echo $api->UserInfoGet($userid, 'energy'); ?>;
-		document.getElementById('trainTimesTotal').innerHTML = <?php echo number_format($api->UserInfoGet($userid, 'energy')); ?>;
-		document.getElementById('ui_token').innerHTML = <?php echo "'" . number_format($ir['secondary_currency']) . "'"; ?>;
-	</script>
-	<?php
+    updateUserInfo();
 }
 
 function will()
@@ -152,16 +134,7 @@ function will()
     } else {
         alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", false);
     }
-	?>
-	<script>
-		document.getElementById('gymEnergy').innerHTML = <?php echo $api->UserInfoGet($userid, 'energy', true); ?>;
-		document.getElementById('gymWill').innerHTML = <?php echo $api->UserInfoGet($userid, 'will', true); ?>;
-		document.getElementById('trainTimes').value = <?php echo $api->UserInfoGet($userid, 'energy'); ?>;
-		document.getElementById('trainTimes').max = <?php echo $api->UserInfoGet($userid, 'energy'); ?>;
-		document.getElementById('trainTimesTotal').innerHTML = <?php echo number_format($api->UserInfoGet($userid, 'energy')); ?>;
-		document.getElementById('ui_token').innerHTML = <?php echo "'" . number_format($ir['secondary_currency']) . "'"; ?>;
-	</script>
-	<?php
+	updateUserInfo();
 }
 
 function willall()
@@ -192,14 +165,40 @@ function willall()
     } else {
         alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", false);
     }
-	?>
+    updateUserInfo();
+}
+
+function updateUserInfo()
+{
+    global $ir, $api, $userid;
+    $newEnergyPerc = $api->UserInfoGet($userid, 'energy', true);
+    $newEnergy = $api->UserInfoGet($userid, 'energy');
+    
+    $newWillPerc = $api->UserInfoGet($userid, 'will', true);
+    $newWill = $api->UserInfoGet($userid, 'will');
+    
+    $newBravePerc = $api->UserInfoGet($userid, 'brave', true);
+    $newBrave = $api->UserInfoGet($userid, 'brave');
+    ?>
 	<script>
-		document.getElementById('gymEnergy').innerHTML = <?php echo $api->UserInfoGet($userid, 'energy', true); ?>;
-		document.getElementById('gymWill').innerHTML = <?php echo $api->UserInfoGet($userid, 'will', true); ?>;
-		document.getElementById('trainTimes').value = <?php echo $api->UserInfoGet($userid, 'energy'); ?>;
-		document.getElementById('trainTimes').max = <?php echo $api->UserInfoGet($userid, 'energy'); ?>;
-		document.getElementById('trainTimesTotal').innerHTML = <?php echo number_format($api->UserInfoGet($userid, 'energy')); ?>;
+		document.getElementById('gymEnergy').innerHTML = <?php echo $newEnergyPerc; ?>;
+		document.getElementById('gymWill').innerHTML = <?php echo $newWillPerc; ?>;
+		document.getElementById('trainTimes').value = <?php echo $newEnergy; ?>;
+		document.getElementById('trainTimes').max = <?php echo $newEnergy; ?>;
+		document.getElementById('trainTimesTotal').innerHTML = <?php echo number_format($newEnergy); ?>;
 		document.getElementById('ui_token').innerHTML = <?php echo "'" . number_format($ir['secondary_currency']) . "'"; ?>;
+
+		document.getElementById('ui_energy_perc').innerHTML = "<?php echo "{$newEnergyPerc}%"; ?>";
+		document.getElementById('ui_energy_bar').style.width = "<?php echo "{$newEnergyPerc}%"; ?>";
+		document.getElementById('ui_energy_bar_info').innerHTML = "<?php echo "{$newEnergyPerc}% (" . number_format($newEnergy) . " / " . number_format($ir['maxenergy']) . ")"; ?>";
+
+		document.getElementById('ui_will_perc').innerHTML = "<?php echo "{$newWillPerc}%"; ?>";
+		document.getElementById('ui_will_bar').style.width = "<?php echo "{$newWillPerc}%"; ?>";
+		document.getElementById('ui_will_bar_info').innerHTML = "<?php echo "{$newWillPerc}% (" . number_format($newWill) . " / " . number_format($ir['maxwill']) . ")"; ?>";
+
+		document.getElementById('ui_brave_perc').innerHTML = "<?php echo "{$newBravePerc}%"; ?>";
+		document.getElementById('ui_brave_bar').style.width = "<?php echo "{$newBravePerc}%"; ?>";
+		document.getElementById('ui_brave_bar_info').innerHTML = "<?php echo "{$newBravePerc}% (" . number_format($newBrave) . " / " . number_format($ir['maxbrave']) . ")"; ?>";		
 	</script>
 	<?php
 }

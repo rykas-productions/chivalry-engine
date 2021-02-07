@@ -43,7 +43,7 @@ echo "
       <div class='modal-body'>
         <div class='row'>
             <div class='col-8' align='left'>
-                Energy {$energy}%
+                Energy <span id='ui_energy_perc'>{$energy}%</span>
             </div>
             <div class='col-4'>
                 <a href='temple.php?action=energy'><i class='fas fa-sync'></i></a>
@@ -52,8 +52,8 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['energy']}' style='width:{$energy}%' aria-valuemin='0' aria-valuemax='{$ir['maxenergy']}'>
-						<span>
+                    <div id='ui_energy_bar' class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['energy']}' style='width:{$energy}%' aria-valuemin='0' aria-valuemax='{$ir['maxenergy']}'>
+						<span id='ui_energy_bar_info'>
 							{$energy}% (" . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) .")
 						</span>
 					</div>
@@ -62,7 +62,7 @@ echo "
         </div>
         <div class='row'>
             <div class='col-8' align='left'>
-                Brave {$brave}%
+                Brave <span id='ui_brave_perc'>{$brave}%</span>
             </div>
             <div class='col-4'>
                 <a href='temple.php?action=brave'><i class='fas fa-sync'></i></a>
@@ -71,8 +71,8 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-secondary progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$brave}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'>
-						<span>
+                    <div id='ui_brave_bar' class='progress-bar bg-secondary progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$brave}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'>
+						<span id='ui_brave_bar_info'>
 							{$brave}% (" . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . ")
 						</span>
 					</div>
@@ -81,7 +81,7 @@ echo "
         </div>
             <div class='row'>
                 <div class='col-8' align='left'>
-                    Will {$will}%
+                    Will <span id='ui_will_perc'>{$will}%</span>
                 </div>
                 <div class='col-4'>
                     <a href='temple.php?action=will'><i class='fas fa-sync'></i></a>
@@ -90,8 +90,8 @@ echo "
         <div class='row'>
             <div class='col-12'>
                 <div class='progress' style='height: 1rem;'>
-                    <div class='progress-bar bg-info progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$will}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'>
-						<span>
+                    <div id='ui_will_bar' class='progress-bar bg-info progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$will}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'>
+						<span id='ui_will_bar_info'>
 							{$will}% (" . number_format($ir['will']) . " / " . number_format($ir['maxwill']). ")
 						</span>
 					</div>
@@ -100,24 +100,24 @@ echo "
         </div>
         <div class='row'>
             <div class='col-8' align='left'>
-                XP {$xp}%
+                XP <span id='ui_xp_perc'>{$xp}%</span>
             </div>
         </div>
         <div class='progress' style='height: 1rem;'>
-            <div class='progress-bar bg-warning progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['xp']}' style='width:{$xp}%' aria-valuemin='0' aria-valuemax='{$ir['xp_needed']}'>
-				<span>
+            <div id='ui_xp_bar' class='progress-bar bg-warning progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['xp']}' style='width:{$xp}%' aria-valuemin='0' aria-valuemax='{$ir['xp_needed']}'>
+				<span id='ui_xp_bar_info'>
 					{$xp}% (" . number_format($ir['xp']) . " / " . number_format($ir['xp_needed']) . ")
 				</span>
 			</div>
         </div>
         <div class='row'>
             <div class='col-8' align='left'>
-                HP {$hp}%
+                HP <span id='ui_hp_perc'>{$hp}%</span>
             </div>
         </div>
         <div class='progress' style='height: 1rem;'>
-            <div class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'>
-				<span>
+            <div id='ui_hp_bar' class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'>
+				<span id='ui_hp_bar_info'>
 					{$hp}% (" . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . ")
 				</span>
 			</div>

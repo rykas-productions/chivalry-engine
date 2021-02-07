@@ -107,13 +107,25 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
         if ($stat != 'all')
             $ir[$stat] += $gain;
 		$api->UserTakeItem($userid, 18, 1);
+		$newEnergyPerc = $api->UserInfoGet($userid, 'energy', true);
+		$newWillPerc = $api->UserInfoGet($userid, 'will', true);
+		$newEnergy = $api->UserInfoGet($userid, 'energy');
+		$newWill = $api->UserInfoGet($userid, 'will');
 		?>
 		<script>
-			document.getElementById('gymEnergy').innerHTML = <?php echo $api->UserInfoGet($userid, 'energy', true); ?>;
-			document.getElementById('gymWill').innerHTML = <?php echo $api->UserInfoGet($userid, 'will', true); ?>;
-			document.getElementById('trainTimes').value = <?php echo $api->UserInfoGet($userid, 'energy') ?>;
-			document.getElementById('trainTimes').max = <?php echo $api->UserInfoGet($userid, 'energy') ?>;
-			document.getElementById('trainTimesTotal').innerHTML = <?php echo number_format($api->UserInfoGet($userid, 'energy')) ?>;
+			document.getElementById('gymEnergy').innerHTML = <?php echo $newEnergyPerc ?>;
+			document.getElementById('gymWill').innerHTML = <?php echo $newWillPerc; ?>;
+			document.getElementById('trainTimes').value = <?php echo $newEnergy; ?>;
+			document.getElementById('trainTimes').max = <?php echo $newEnergy; ?>;
+			document.getElementById('trainTimesTotal').innerHTML = <?php echo $newEnergy; ?>;
+			
+			document.getElementById('ui_energy_perc').innerHTML = "<?php echo "{$newEnergyPerc}%"; ?>";
+			document.getElementById('ui_energy_bar').style.width = "<?php echo "{$newEnergyPerc}%"; ?>";
+			document.getElementById('ui_energy_bar_info').innerHTML = "<?php echo "{$newEnergyPerc}% (" . number_format($newEnergy) . " / " . number_format($ir['maxenergy']) . ")"; ?>";
+
+			document.getElementById('ui_will_perc').innerHTML = "<?php echo "{$newWillPerc}%"; ?>";
+			document.getElementById('ui_will_bar').style.width = "<?php echo "{$newWillPerc}%"; ?>";
+			document.getElementById('ui_will_bar_info').innerHTML = "<?php echo "{$newWillPerc}% (" . number_format($newWill) . " / " . number_format($ir['maxwill']) . ")"; ?>";
 		</script>
 		<?php
 	}
