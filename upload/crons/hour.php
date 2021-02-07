@@ -27,19 +27,7 @@ if ((date('G') >= 9) && (date('G') <= 17))
 		`u`.`secondary_currency` = `u`.`secondary_currency` + `jr`.`jrSECONDARY` 
 		WHERE `u`.`job` > 0 AND `u`.`jobrank` > 0");
 }
-$ThirtyDaysAgo = time() - 2592000;
-$plussevenday=time() + 604800;
-$lastweek = time() - 604800;
-$db->query("DELETE FROM `logs` WHERE `log_time` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `mail` WHERE `mail_time` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `notifications` WHERE `notif_time` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `notifications` WHERE `notif_time` < {$lastweek} AND `notif_status` = 'read'");
-$db->query("DELETE FROM `guild_notifications` WHERE `gn_time` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `comments` WHERE `cTIME` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `fedjail_appeals` WHERE `fja_time` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `guild_crime_log` WHERE `gclTIME` < {$ThirtyDaysAgo}");
-$db->query("DELETE FROM `login_attempts` WHERE `timestamp` < {$lastweek}");
-$db->query("DELETE FROM `attack_logs` WHERE `attack_time` < {$ThirtyDaysAgo}");
+
 $db->query("UPDATE `user_settings` SET `winnings_this_hour` = 0");
 $db->query("UPDATE `settings` SET `setting_value` = `setting_value` - 1 WHERE `setting_name` = 'raffle_chance' AND `setting_value` > 10");
 $db->query("UPDATE `settings` SET `setting_value` = `setting_value` + 60000 WHERE `setting_id` = 28");
