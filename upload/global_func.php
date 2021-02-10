@@ -1465,11 +1465,10 @@ function purgeOldLogs()
     $db->query("DELETE FROM `logs` WHERE `log_time` < {$ThirtyDaysAgo}");
     $db->query("DELETE FROM `mail` WHERE `mail_time` < {$ThirtyDaysAgo}");
     $db->query("DELETE FROM `notifications` WHERE `notif_time` < {$ThirtyDaysAgo}");
-    $db->query("DELETE FROM `notifications` WHERE `notif_time` < {$lastweek} AND `notif_status` = 'read'");
     $db->query("DELETE FROM `guild_notifications` WHERE `gn_time` < {$ThirtyDaysAgo}");
     $db->query("DELETE FROM `comments` WHERE `cTIME` < {$ThirtyDaysAgo}");
     $db->query("DELETE FROM `fedjail_appeals` WHERE `fja_time` < {$ThirtyDaysAgo}");
     $db->query("DELETE FROM `guild_crime_log` WHERE `gclTIME` < {$ThirtyDaysAgo}");
-    $db->query("DELETE FROM `login_attempts` WHERE `timestamp` < {$lastweek}");
+    $db->query("DELETE FROM `login_attempts` WHERE `timestamp` < {$ThirtyDaysAgo}");
     $db->query("DELETE FROM `attack_logs` WHERE `attack_time` < {$ThirtyDaysAgo}");
 }
