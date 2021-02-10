@@ -20,6 +20,9 @@ switch ($_GET['action']) {
     case 'backupdb':
         backupdb();
         break;
+    case 'bankint':
+        bankinterest();
+        break;
     default:
         home();
         break;
@@ -33,6 +36,9 @@ function home()
         </div>
         <div class='col'>
             <a href='?action=backupdb' class='btn btn-danger btn-block'>Manual Database Backup</a>
+        </div>
+        <div class='col'>
+            <a href='?action=bankint' class='btn btn-primary btn-block'>Run Bank Interest</a>
         </div>
     </div>
 	";
@@ -63,5 +69,16 @@ function backupdb()
     backupDatabase();
     alert("success","Success!","You have successfully created a backup of the game's database.",false);
     $api->SystemLogsAdd($userid, "staff", "Manually backed-up database.");
+    home();
+}
+
+function bankinterest()
+{
+    global $api, $userid;
+    doDailyBankInterest();
+    doDailyFedBankInterest();
+    doDailyVaultBankInterest();
+    alert("success","Success!","You have successfully ran interest on all bank accounts.",false);
+    $api->SystemLogsAdd($userid, "staff", "Manually ran interest on bank accounts.");
     home();
 }
