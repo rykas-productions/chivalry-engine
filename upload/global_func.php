@@ -1433,7 +1433,8 @@ function doDailyVaultBankInterest()
 
 function doDailyGuildFee()
 {
-    global $db;
+    global $db, $api;
+    $plussevenday = time() + 604800;
     $gdfq=$db->query("/*qc=on*/SELECT * FROM `guild`");
     while ($gfr=$db->fetch_row($gdfq))
     {
