@@ -482,7 +482,7 @@ class headers
 		if ($themeID == 1)
 		{
 			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/css/bootstrap.min.css'>
+			<link rel='stylesheet' href='css/themes/default-21.2.1.css'>
 			<meta name='theme-color' content='#333'>
 			<style>
 			.default-theme .sidebar-wrapper {
@@ -493,7 +493,7 @@ class headers
 		if ($themeID == 2)
 		{
 			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/darkly/bootstrap.min.css'>
+			<link rel='stylesheet' href='css/themes/darkly-21.2.1.css'>
 			<meta name='theme-color' content='#303030'>
 			<style>
 			.default-theme .sidebar-wrapper {
@@ -515,7 +515,7 @@ class headers
 		if ($themeID == 4)
 		{
 			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/cyborg/bootstrap.min.css'>
+			<link rel='stylesheet' href='css/themes/cyborg-21.2.1.css'>
 			<meta name='theme-color' content='#060606'>
 			<style>
 			.default-theme .sidebar-wrapper {
@@ -526,7 +526,7 @@ class headers
 		if ($themeID == 5)
 		{
 			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/united/bootstrap.min.css'>
+			<link rel='stylesheet' href='css/themes/united-21.2.1.css'>
 			<meta name='theme-color' content='#772953'>
 			<style>
 			.default-theme .sidebar-wrapper {
