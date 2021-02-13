@@ -20,7 +20,6 @@ if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 }
 //Delete things from more than 30 days ago
 $last24 = time() - 86400;
-$plussevenday = time() + 604800;
 
 $db->query("UPDATE `users` SET `vip_days`=`vip_days`-1 WHERE `vip_days` > 0");
 
