@@ -13,32 +13,37 @@ require('globals.php');
 //Different options for different time periods. The GET is in minutes.
 echo "<h3><i class='fas fa-toggle-on'></i> Users Online</h3><hr />
 <div class='row'>
-	<div class='col-3'>
-		<a href='?act=5' class='btn btn-primary'>5 minutes</a>
+	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+		<a href='?act=5' class='btn btn-primary btn-block'>5 minutes</a>
+        <br />
 	</div>
-	<div class='col-3'>
-		<a href='?act=15' class='btn btn-primary'>15 minutes</a>
+	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+		<a href='?act=15' class='btn btn-primary btn-block'>15 minutes</a>
+        <br />
 	</div>
-	<div class='col-3'>
-		<a href='?act=60' class='btn btn-primary'>1 hour</a>
+	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+		<a href='?act=60' class='btn btn-primary btn-block'>1 hour</a>
+        <br />
 	</div>
-	<div class='col-3'>
-		<a href='?act=1440' class='btn btn-primary'>24 hours</a>
+	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+		<a href='?act=1440' class='btn btn-primary btn-block'>24 hours</a>
+        <br />
 	</div>
-</div>
-<br />
-<div class='row'>
-	<div class='col-3'>
-		<a href='?act=10080' class='btn btn-primary'>1 Week</a>
+	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+		<a href='?act=10080' class='btn btn-primary btn-block'>1 Week</a>
+        <br />
 	</div>
-	<div class='col-3'>
-		<a href='?act=43200' class='btn btn-primary'>1 Month</a>
+	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+		<a href='?act=43200' class='btn btn-primary btn-block'>1 Month</a>
+        <br />
 	</div>
-	<div class='col-3'>
-		<a href='?act=131400' class='btn btn-primary'>90 Days</a>
+	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+		<a href='?act=131400' class='btn btn-primary btn-block'>90 Days</a>
+        <br />
 	</div>
-	<div class='col-3'>
-		<a href='?act=525600' class='btn btn-primary'>1 Year</a>
+	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+		<a href='?act=525600' class='btn btn-primary btn-block'>1 Year</a>
+        <br />
 	</div>
 </div>
 <hr />";
