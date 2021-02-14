@@ -90,83 +90,83 @@ function prefs_home()
     alert('info','',"Welcome to your account settings, <b>{$ir['username']} [{$ir['userid']}]</b>! Here you can change many options concerning your account.",false);
     echo "
 		<div class='row'>
-			<div class='col-6 col-md-6 col-lg-4'>
+			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=namechange'>Change Name</a>
                 <br />
 			</div>
-			<div class='col-6 col-md-6 col-lg-4'>
+			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-danger btn-block' href='?action=pwchange'>Change Password</a>
                 <br />
 			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-4'>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-danger btn-block' href='?action=changeemail'>Change Email Address</a>
                 <br />
 			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=emailchange'>Change Email Opt-Setting</a>
                 <br />
 			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=picchange'>Change Display Picture</a>
                 <br />
 			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=sexchange'>Change Gender</a>
                 <br />
 			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=sigchange'>Change Forum Signature</a>
                 <br />
 			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=descchange'>Change Player Description</a>
                 <br />
 			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4'>
+			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=quicklink'>Change Quick-Use Items</a>
                 <br />
 			</div>
-			<div class='col-6 col-md-6 col-xl-4'>
+			<div class='col-6 col-md-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=forumalert'>Forum Notifications</a>
                 <br />
 			</div>
-			<div class='col-6 col-xl-4'>
+			<div class='col-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=userdropdown'>User Input Setting</a>
                 <br />
 			</div>
-			<div class='col-6 col-md-6 col-lg-4'>
+			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=themechange'>Change Theme</a>
                 <br />
 			</div>
-			<div class='col-6 col-md-6 col-lg-4'>
+			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=classreset'>Class Reset</a>
                 <br />
 			</div>
-			<div class='col-6 col-md-6 col-lg-4'>
+			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-info btn-block' href='?action=tuttoggle'>Tutorial Toggle</a>
                 <br />
 			</div>
-			<div class='col-6 col-xl-4'>
+			<div class='col-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=icontoggle'>Toggle Item Icons</a>
                 <br />
 			</div>
-			<div class='col-6 col-xl-4'>
+			<div class='col-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-danger btn-block' href='?action=steamlink'>Link Steam Account</a>
                 <br />
 			</div>
-			<div class='col-6 col-md-6 col-lg-4'>
+			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-info btn-block' href='?action=loginlogs'>Login Logs</a>
                 <br />
 			</div>
-			<div class='col-6 col-md-6 col-lg-4'>
+			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-danger btn-block' href='?action=reset'>Account Reset</a>
                 <br />
 			</div>
-			<div class='col-6 col-md-6 col-lg-4'>
+			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=counthome'>Change Counts</a>
                 <br />
 			</div>
-            <div class='col-6 col-md-6 col-lg-4'>
+            <div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
 				<a class='btn btn-primary btn-block' href='?action=sounds'>Audio Settings</a>
                 <br />
 			</div>
@@ -1348,7 +1348,7 @@ function homecount()
 		echo "<form method='post'>";
 		echo "
 		<div class='row'>
-			<div class='col-sm'>
+			<div class='col-sm-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<div class='card'>
 					<div class='card-body'>
 						<h5 class='card-title'>Mail Count</h5>
@@ -1356,7 +1356,8 @@ function homecount()
 					</div>
 				</div>
 			</div>
-			<div class='col-sm'>
+            <br />
+			<div class='col-sm-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<div class='card'>
 					<div class='card-body'>
 						<h5 class='card-title'>Notification Count</h5>
@@ -1364,7 +1365,8 @@ function homecount()
 					</div>
 				</div>
 			</div>
-			<div class='col-sm'>
+            <br />
+			<div class='col-sm-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl-3'>
 				<div class='card'>
 					<div class='card-body'>
 						<h5 class='card-title'>Guild XP Auto Donate</h5>
@@ -1372,10 +1374,8 @@ function homecount()
 					</div>
 				</div>
 			</div>
-		</div>
-		<br />
-		<div class='row'>
-			<div class='col-sm'>
+            <br />
+			<div class='col-sm-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<div class='card'>
 					<div class='card-body'>
 						<h5 class='card-title'>Forum Post Count</h5>
@@ -1383,7 +1383,8 @@ function homecount()
 					</div>
 				</div>
 			</div>
-			<div class='col-sm'>
+            <br />
+			<div class='col-sm-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<div class='card'>
 					<div class='card-body'>
 						<h5 class='card-title'>Forum Topic Count</h5>
@@ -1391,7 +1392,8 @@ function homecount()
 					</div>
 				</div>
 			</div>
-			<div class='col-sm'>
+            <br />
+			<div class='col-sm-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<div class='card'>
 					<div class='card-body'>
 						<h5 class='card-title'>VIP Log Count</h5>
@@ -1399,10 +1401,8 @@ function homecount()
 					</div>
 				</div>
 			</div>
-		</div>
-		<br />
-		<div class='row'>
-			<div class='col-sm'>
+            <br />
+			<div class='col-sm-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<div class='card'>
 					<div class='card-body'>
 						<h5 class='card-title'>Hall of Fame Count</h5>
@@ -1410,7 +1410,8 @@ function homecount()
 					</div>
 				</div>
 			</div>
-			<div class='col-sm'>
+            <br />
+			<div class='col-sm-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl-3'>
 				<div class='card'>
 					<div class='card-body'>
 						<h5 class='card-title'>Announcement Count</h5>
@@ -1418,7 +1419,8 @@ function homecount()
 					</div>
 				</div>
 			</div>
-			<div class='col-sm'>
+            <br />
+			<div class='col-sm-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 				<div class='card'>
 					<div class='card-body'>
 						<h5 class='card-title'>Guild Notif Count</h5>
@@ -1426,10 +1428,11 @@ function homecount()
 					</div>
 				</div>
 			</div>
+            <br />
 		</div>";
 		echo "
 		<hr />
-		<input type='submit' class='btn btn-primary' name='Change Counts'>
+		<input type='submit' class='btn btn-primary btn-block' value='Change Counts'>
 		<input type='hidden' value='1' name='submit'>
 		</form>";
 	}

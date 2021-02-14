@@ -373,13 +373,13 @@ echo"
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-12 col-sm-4 col-lg-6 col-xxxl-6'>
+					<div class='col-12 col-sm-4 col-lg-6 col-xxxl-4'>
 						<a href='friends.php'><i class='far fa-fw fa-smile'></i> Friends</a>
 					</div>
-					<div class='col-12 col-sm-4 col-lg-6 col-xxxl-6'>
+					<div class='col-12 col-sm-4 col-lg-6 col-xxxl-4'>
 						<a href='enemy.php'><i class='far fa-fw fa-frown'></i> Enemies</a>
 					</div>
-					<div class='col-12 col-sm-4 col-lg-6 col-xxxl-6'>
+					<div class='col-12 col-sm-4 col-lg-6 col-xxxl-4'>
 						<a href='userlogs.php'><i class='fas fa-book fa-fw'></i> VIP Logs</a>
 					</div>
 				</div>
@@ -393,7 +393,7 @@ echo"
 echo "	<div class='row'>
 			<div class='col-md-12'>
 				Share your referral link to gain 10 Chivalry Gym Scrolls every time a friend joins!<br />
-				<code>chivalryisdeadgame.com/register.php?REF={$userid}</code>
+				<code>https://www.chivalryisdeadgame.com/register.php?REF={$userid}</code>
 			</div>
 		</div>";
 $h->endpage();
