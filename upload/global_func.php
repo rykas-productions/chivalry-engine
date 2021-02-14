@@ -1443,11 +1443,12 @@ function doDailyGuildFee()
         {
             if ($gfr['guild_primcurr'] < 100000)
             {
+                $debtText = "Your guild has gone into debt. You must pay the debt off in seven days, otherwise your guild will dissolve.";
                 $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
                 $db->query("UPDATE `guild` SET `guild_debt_time` = {$plussevenday} WHERE `guild_id` = {$gfr['guild_id']} AND `guild_debt_time` = 0");
                 $api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep, but has gone into debt.");
-                $api->GameAddNotification($gfr['guild_owner'], "Your guild has gone into debt!");
-                $api->GameAddNotification($gfr['guild_coowner'], "Your guild has gone into debt!");
+                $api->GameAddNotification($gfr['guild_owner'], $debtText);
+                $api->GameAddNotification($gfr['guild_coowner'], $debtText);
             }
             else
             {
@@ -1472,4 +1473,9 @@ function purgeOldLogs()
     $db->query("DELETE FROM `guild_crime_log` WHERE `gclTIME` < {$ThirtyDaysAgo}");
     $db->query("DELETE FROM `login_attempts` WHERE `timestamp` < {$ThirtyDaysAgo}");
     $db->query("DELETE FROM `attack_logs` WHERE `attack_time` < {$ThirtyDaysAgo}");
+}
+
+function getCurrentPage()
+{
+    return $_SERVER['REQUEST_URI'];
 }
