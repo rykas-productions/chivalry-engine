@@ -146,6 +146,13 @@ else {
     //Remove login attempts for this account.
     $db->query("DELETE FROM `login_attempts` WHERE `userid` = {$_SESSION['userid']}");
     $loggedin_url = 'explore.php';
+    //Login somewhere else eyyyy
+    if (isset($_COOKIE['loginRedirect']))
+    {
+        $loggedin_url = $_COOKIE['loginRedirect'];
+        unset($_COOKIE['loginRedirect']);
+        setcookie('loginRedirect', '', time() - 3600);
+    }
     //Log that the user logged in successfully.
     $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
     //Delete password recovery attempts from DB if they exist for this user.

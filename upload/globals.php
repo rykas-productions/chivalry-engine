@@ -50,6 +50,7 @@ $domain = determine_game_urlbase();
 //If user is not logged in, redirect to login page.
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) {
 	$login_url = "login.php";
+	setcookie('loginRedirect', getCurrentPage(), time() + 3600);
     header("Location: {$login_url}");
     exit;
 }
