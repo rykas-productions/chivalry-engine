@@ -294,7 +294,7 @@ function basicsettings()
 					Chivalry Engine Build Number
 				</th>
 				<td>
-					<input type='text' name='BuildNumber' class='form-control' required='1' value='{$set['BuildNumber']}'>
+					<input type='number' name='BuildNumber' class='form-control' required='1' value='{$set['BuildNumber']}'>
 				</td>
 			</tr>
 			<tr>
@@ -361,6 +361,29 @@ function basicsettings()
 					<input type='text' name='jquery_version' class='form-control' required='1' value='{$set['jquery_version']}'>
 				</td>
 			</tr>
+            <tr>
+				<th colspan='2'>
+					Version Control
+				</th>
+			</tr>
+            <tr>
+				<th>
+					Chivalry Token Minimum Price<br />
+                    <small>Min. to sell/buy. Caps Temple/Market.</small>
+				</th>
+				<td>
+					<input type='number' name='token_minimum' class='form-control' required='1' value='{$set['token_minimum']}'>
+				</td>
+			</tr>
+            <tr>
+				<th>
+					Chivalry Token Maximum Price<br />
+                    <small>Max to sell/buy. Caps Temple/Market.</small>
+				</th>
+				<td>
+					<input type='number' name='token_maximum' class='form-control' required='1' value='{$set['token_maximum']}'>
+				</td>
+			</tr>
 		</table>
 		</div>";
 
@@ -415,7 +438,10 @@ function basicsettings()
 		$_POST['lotterycash'] = (isset($_POST['lotterycash']) && is_numeric($_POST['lotterycash'])) ? abs(intval($_POST['lotterycash'])) : 100000;
 		$_POST['raffle_last_winner'] = (isset($_POST['raffle_last_winner']) && is_numeric($_POST['raffle_last_winner'])) ? abs(intval($_POST['raffle_last_winner'])) : 1;
 		
-		$_POST['game_time'] = (isset($_POST['game_time'])) ? $db->escape(strip_tags(stripslashes($_POST['game_time']))) : 'Amerca/New_York';
+		$_POST['game_time'] = (isset($_POST['game_time'])) ? $db->escape(strip_tags(stripslashes($_POST['game_time']))) : 'America/New_York';
+		
+		$_POST['token_maximum'] = (isset($_POST['token_maximum']) && is_numeric($_POST['token_maximum'])) ? abs(intval($_POST['iq_per_sec'])) : 50000;
+		$_POST['token_minimum'] = (isset($_POST['token_minimum']) && is_numeric($_POST['token_minimum'])) ? abs(intval($_POST['token_minimum'])) : 50000;
 		
 		if (empty($_POST['WebsiteName'])) {
             alert('danger', "Uh Oh!", "Please specify a game name.");

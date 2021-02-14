@@ -97,10 +97,10 @@ function home()
 			<a href='?action=protection'>Buy Protection</a><br /><small>5 Chivalry Tokens per Minute</small>
 		</div>
 		<div class='col-sm'>
-			<a href='?action=coppertotoken'>Buy Chivalry Tokens</a><br /><small>50k Copper -> 1 Chivalry Token</small>
+			<a href='?action=coppertotoken'>Buy Chivalry Tokens</a><br /><small>" . number_format($set['token_maximum']) . " Copper Coins -> 1 Chivalry Token</small>
 		</div>
 		<div class='col-sm'>
-			<a href='?action=tokentocopper'>Buy Copper Coins</a><br /><small>1 Chivalry Token -> 1K Copper</small>
+			<a href='?action=tokentocopper'>Buy Copper Coins</a><br /><small>1 Chivalry Token -> " . number_format($set['token_minimum']) . " Copper Coins</small>
 		</div>
 	</div>
 	<hr />
@@ -202,6 +202,7 @@ function will()
         alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", true, 'temple.php');
     }
 }
+
 function willall()
 {
     global $api, $userid, $set;
@@ -232,6 +233,7 @@ function willall()
         alert('danger', "Uh Oh!", "You do have have enough Chivalry Tokens to refill your Will.", true, 'temple.php');
     }
 }
+
 /*function willall2()
 {
     global $api, $userid, $set, $ir, $db, $h;
@@ -310,6 +312,7 @@ function iq()
 		*=You will receive an extra {$extraiq}% IQ per Token because of your skills.";
     }
 }
+
 function protection()
 {
 	global $ir,$userid,$api,$h,$db;
@@ -366,7 +369,7 @@ function protection()
 
 function coppertotoken()
 {
-	global $db,$userid,$api,$h;
+	global $db,$userid,$api,$h,$set;
 	if (isset($_POST['token']))
 	{
 		$token = (isset($_POST['token']) && is_numeric($_POST['token'])) ? abs($_POST['token']) : 0;
@@ -379,23 +382,23 @@ function coppertotoken()
 			alert('danger',"Uh Oh!","Please specify how many tokens you wish to purchase.");
 			die($h->endpage());
 		}
-		$cost=$token*50000;
+		$cost=$token*$set['token_maximum'];
 		if (!$api->UserHasCurrency($userid,'primary',$cost))
 		{
-			alert('danger',"Uh Oh!","You do not have enough Copper Coins to exchange for {$token} Chivalry Tokens. You need {$cost} Copper Coins.");
+			alert('danger',"Uh Oh!","You do not have enough Copper Coins to exchange for " . number_format($token) . " Chivalry Tokens. You need " . number_format($cost) . " Copper Coins.");
 			die($h->endpage());
 		}
 		addToEconomyLog('Temple of Fortune', 'copper', ($cost)*-1);
 		addToEconomyLog('Temple of Fortune', 'token', $token);
 		$api->UserTakeCurrency($userid,'primary',$cost);
 		$api->UserGiveCurrency($userid,'secondary',$token);
-		$api->SystemLogsAdd($userid, 'temple', "Traded {$cost} Copper Coins for {$token} Chivalry Tokens.");
-		alert('success',"Success!","You have successfully traded {$cost} Copper Coins for {$token} Chivalry Tokens.",true,'temple.php');
+		$api->SystemLogsAdd($userid, 'temple', "Traded " . number_format($cost) . " Copper Coins for " . number_format($token) . " Chivalry Tokens.");
+		alert('success',"Success!","You have successfully traded " . number_format($cost) . " Copper Coins for " . number_format($token) . " Chivalry Tokens.",true,'temple.php');
 	}
 	else
 	{
 		$csrf=request_csrf_html('token');
-		echo "You may convert your Copper Coins to Chivalry Tokens at 50,000 Copper Coins per Token. This is to 
+		echo "You may convert your Copper Coins to Chivalry Tokens at " . number_format($set['token_maximum']) . " Copper Coins per Token. This is to 
 		limit the maximum value of Chivalry Tokens when taking in account for inflation in the game. This price 
 		is very likely to change as the game progresses. How many tokens would you like to receive?
 		<form method='post'>
@@ -405,9 +408,10 @@ function coppertotoken()
 		</form>";
 	}
 }
+
 function tokentocopper()
 {
-	global $db,$userid,$api,$h,$ir;
+	global $db,$userid,$api,$h,$ir,$set;
 	if (isset($_POST['token']))
 	{
 		$token = (isset($_POST['token']) && is_numeric($_POST['token'])) ? abs($_POST['token']) : 0;
@@ -420,23 +424,23 @@ function tokentocopper()
 			alert('danger',"Uh Oh!","Please specify how many tokens you wish to exchange for Copper Coins.");
 			die($h->endpage());
 		}
-		$cost=$token*1000;
+		$cost=$token*$set['token_minimum'];
 		if (!$api->UserHasCurrency($userid,'secondary',$token))
 		{
-			alert('danger',"Uh Oh!","You do not have enough Chivalry Tokens to exchange for {$cost} Copper Coins. You need {$token} Chivalry Tokens.");
+			alert('danger',"Uh Oh!","You do not have enough Chivalry Tokens to exchange for " . number_format($cost) . " Copper Coins. You need " . number_format($token) . " Chivalry Tokens.");
 			die($h->endpage());
 		}
 		$api->UserGiveCurrency($userid,'primary',$cost);
 		$api->UserTakeCurrency($userid,'secondary',$token);
 		addToEconomyLog('Temple of Fortune', 'copper', $cost);
 		addToEconomyLog('Temple of Fortune', 'token', ($token)*-1);
-		$api->SystemLogsAdd($userid, 'temple', "Traded {$token} Chivalry Tokens for {$cost} Copper Coins.");
-		alert('success',"Success!","You have successfully traded {$token} Chivalry Tokens for {$cost} Copper Coins.",true,'temple.php');
+		$api->SystemLogsAdd($userid, 'temple', "Traded {$token} Chivalry Tokens for " . number_format($cost) . " Copper Coins.");
+		alert('success',"Success!","You have successfully traded " . number_format($token) . " Chivalry Tokens for " . number_format($cost) . " Copper Coins.",true,'temple.php');
 	}
 	else
 	{
 		$csrf=request_csrf_html('copper');
-		echo "You may convert your Chivalry Tokens to Copper Coins at 1,000 Copper Coins per Token. This is to 
+		echo "You may convert your Chivalry Tokens to Copper Coins at " . number_format($set['token_minimum']) . " Copper Coins per Token. This is to 
 		limit the minimum value of Chivalry Tokens when taking in account for inflation in the game. This price 
 		is very likely to change as the game progresses. How many tokens would you like to exchange?
 		<form method='post'>

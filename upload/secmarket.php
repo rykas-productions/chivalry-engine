@@ -8,6 +8,10 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
+//Avg token price
+$totalcost=$db->fetch_single($db->query("SELECT SUM(`token_total`) FROM `token_market_avg`"));
+$totaltokens=$db->fetch_single($db->query("SELECT SUM(`token_sold`) FROM `token_market_avg`"));
+$avgprice = round($totalcost / $totaltokens);
 echo "<h3><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
@@ -28,8 +32,25 @@ switch ($_GET['action']) {
 }
 function home()
 {
-    global $db, $api, $userid;
-    echo "<a href='?action=add'>Add Your Own Listing</a><hr />
+    global $db, $api, $userid, $avgprice;
+    echo "
+    <div class='row'>
+        <div class='col-12 col-md-6 col-lg-4'>
+            <a href='?action=add' class='btn btn-primary btn-block'>Add Listing</a>
+            <br />
+        </div>
+        <div class='col-12 col-md-6 col-lg-8'>
+            <div class='row'>
+                <div class='col col-lg-4'>
+                    <b>Market Average</b>
+                </div>
+                <div class='col col-lg-8'>
+                    " . number_format($avgprice) . " Copper Coins
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
 	<table class='table table-bordered table-striped'>
 		<tr>
 			<th>
@@ -143,7 +164,7 @@ function remove()
 
 function add()
 {
-    global $db, $h, $userid, $api, $ir;
+    global $db, $h, $userid, $api, $ir, $set, $avgprice;
     if (isset($_POST['qty']) && isset($_POST['cost'])) {
         $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : '';
         $_POST['cost'] = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : '';
@@ -156,14 +177,14 @@ function add()
             alert('danger', "Uh Oh!", "You are trying to add more Chivalry Tokens than you currently have.");
             die($h->endpage());
         }
-		if ($_POST['cost'] > 50000)
+		if ($_POST['cost'] > $set['token_maximum'])
 		{
-			alert('danger', "Uh Oh!", "The pricing you set is too expensive.");
+			alert('danger', "Uh Oh!", "The pricing you set is too expensive. The maximum price is " . number_format($set['token_maximum']) . " Copper Coins per Chivalry Token.");
             die($h->endpage());
 		}
-		if ($_POST['cost'] < 1000)
+		if ($_POST['cost'] < $set['token_minimum'])
 		{
-			alert('danger', "Uh Oh!", "The pricing you set is too cheap.");
+		    alert('danger', "Uh Oh!", "The pricing you set is too cheap. The minimum price is " . number_format($set['token_minimum']) . " Copper Coins per Chivalry Token.");
             die($h->endpage());
 		}
         $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`, `sec_deposit`)
@@ -193,7 +214,7 @@ function add()
 						<small>Subject to a 2% market fee.</small>
 					</th>
 					<td>
-						<input type='number' name='cost' class='form-control' required='1' min='1000' max='50000' value='1000'>
+						<input type='number' name='cost' class='form-control' required='1' min='{$set['token_minimum']}' max='{$set['token_maximum']}' value='{$avgprice}'>
 					</td>
 				</tr>
 				<tr>
