@@ -22,4 +22,8 @@ $container-max-widths: (
   xxxl: 1900px
 );
 
+.default-theme .sidebar-wrapper {
+	background-color: #000000; 
+}
+
 @import "../node_modules/bootstrap/scss/bootstrap";

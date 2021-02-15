@@ -1,0 +1,117 @@
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 567px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1440px,
+  xxxl: 1900px
+);
+
+$container-max-widths: (
+  sm: 567px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1440px,
+  xxxl: 1900px
+);
+
+$blue: #00008B;
+$red: #D8000C;
+$cyan: #00529B;
+$green: #4F8A10;
+$yellow: gold;
+$body-bg: gray;
+$body-color: gold;
+$light: rgba(128, 128, 128, 0.75);
+$dark: rgba(0, 0, 0, 0.8);
+
+$colors: (
+  "blue": #00008B,
+  "indigo": $indigo,
+  "purple": $purple,
+  "pink": $pink,
+  "red": #D8000C,
+  "orange": $orange,
+  "yellow": gold,
+  "green": #4F8A10,
+  "teal": $teal,
+  "cyan": #00529B,
+  "white": $white,
+  "gray": $gray-600,
+  "gray-dark": $gray-800
+) !default;
+
+$card-bg: rgba(0, 0, 0, 0.8);
+$card-cap-bg: rgba(128, 128, 128, 0.55);
+
+$link-color: #fff;
+$link-hover-color: gold;
+
+$thumbnail-bg: rgba(0, 0, 0, 0.8);
+$thumbnail-border-width: 0px;
+
+$table-color: inherent;
+$table-bg: rgba(0, 0, 0, 0.8);
+$table-head-bg: rgba(128, 128, 128, 0.55);
+$table-border-width: 1px;
+$table-border-color: rgba(0, 0, 0, 0.8);
+
+$modal-content-bg: rgba(64, 64, 64, 1);
+
+$progress-bg: rgba(0, 0, 0, 0.8);
+
+$pagination-bg: rgba(0, 0, 0, 0.8);
+$pagination-color: gold;
+$pagination-border-color: rgba(0, 0, 0, 0.8);
+$pagination-hover-color:  #fff;
+$pagination-hover-bg: rgba(128, 128, 128, 0.55);
+$pagination-hover-border-color: rgba(128, 128, 128, 0.55);
+$pagination-disabled-bg: rgba(64, 64, 64, 1);
+$pagination-disabled-border-color: rgba(128, 128, 128, 0.55);
+$pagination-active-color: #fff;
+$pagination-active-bg: gold;
+$pagination-active-border-color: rgba(128, 128, 128, 0.55);
+
+$input-disabled-bg: #6C757D;
+
+$box-shadow-sm: 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
+$box-shadow: 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
+$box-shadow-lg: 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
+
+$breadcrumb-bg: rgba(0, 0, 0, 0.8);
+$breadcrumb-active-color: gold;
+
+body {
+  color: gold;
+  background-color: #343a40;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-attachment: fixed;
+  background-image: url("https://res.cloudinary.com/dydidizue/image/upload/c_scale,e_blur:400,q_auto:eco,w_1920/v1522703123/wallpaper-castle-fantasy-art-dark-moon-balint-images-blint-cross-hands-castles-candles-cloud-raven-budai-coffin-ghost-welcome-wallwuzz-array.jpg");
+  background-size: cover;
+  -webkit-background-size: cover;
+  -o-background-size: cover;
+  -moz-background-size: cover;
+}
+
+.default-theme .sidebar-wrapper {
+	background-color: rgba(0, 0, 0, .8);
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
+}
+.default-theme.sidebar-bg .sidebar-wrapper:before {
+	background-color: rgba(0, 0, 0, .8);
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
+}
+.default-theme.sidebar-bg .sidebar-wrapper .sidebar-footer {
+	background-color: rgba(0, 0, 0, .8);
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
+}
+.marquee {
+    background: rgba(128, 128, 128, 0.55);
+}
+@import "../node_modules/bootstrap/scss/bootstrap";

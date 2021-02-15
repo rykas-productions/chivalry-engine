@@ -50,8 +50,8 @@ class headers
 					$notificon = "fas fa-bell";
 				else
 					$notificon = "fas fa-bell-slash";
-				$this->loadUserTheme($ir['theme']);
 				$this->loadEssentialAssets();
+				$this->loadUserTheme($ir['theme']);
 				$this->returnMetadata();
 				$hdr=$this->getThemeNavbarColor($ir['theme']);
 				$sound->loadSystem();
@@ -482,7 +482,7 @@ class headers
 		if ($themeID == 1)
 		{
 			echo "
-			<link rel='stylesheet' href='css/themes/default-21.2.1.css'>
+			<link rel='stylesheet' href='css/themes/default-21.2.2.css'>
 			<meta name='theme-color' content='#333'>
 			<style>
 			.default-theme .sidebar-wrapper {
@@ -493,13 +493,8 @@ class headers
 		if ($themeID == 2)
 		{
 			echo "
-			<link rel='stylesheet' href='css/themes/darkly-21.2.1.css'>
-			<meta name='theme-color' content='#303030'>
-			<style>
-			.default-theme .sidebar-wrapper {
-				background-color: #000000; 
-			}
-			</style>";
+			<link rel='stylesheet' href='css/themes/darkly-21.2.2.css'>
+			<meta name='theme-color' content='#303030'>";
 		}
 		if ($themeID == 3)
 		{
@@ -515,24 +510,14 @@ class headers
 		if ($themeID == 4)
 		{
 			echo "
-			<link rel='stylesheet' href='css/themes/cyborg-21.2.1.css'>
-			<meta name='theme-color' content='#060606'>
-			<style>
-			.default-theme .sidebar-wrapper {
-				background-color: #060606; 
-			}
-			</style>";
+			<link rel='stylesheet' href='css/themes/cyborg-21.2.2.css'>
+			<meta name='theme-color' content='#060606'>";
 		}
 		if ($themeID == 5)
 		{
 			echo "
-			<link rel='stylesheet' href='css/themes/united-21.2.1.css'>
-			<meta name='theme-color' content='#772953'>
-			<style>
-			.default-theme .sidebar-wrapper {
-				background-color: #772953; 
-			}
-			</style>";
+			<link rel='stylesheet' href='css/themes/united-21.2.2.css'>
+			<meta name='theme-color' content='#772953'>";
 		}
 		if ($themeID == 6)
 		{
@@ -548,42 +533,14 @@ class headers
 		if ($themeID == 7)
 		{
 			echo "
-			<link rel='stylesheet' href='css/castle-v{$set['bootstrap_version']}.css'>
-			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>
-			<style>
-			.default-theme .sidebar-wrapper {
-				background-color: rgba(0, 0, 0, .8);
-                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
-			}
-            .default-theme.sidebar-bg .sidebar-wrapper:before {
-                background-color: rgba(0, 0, 0, .8);
-                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
-            }
-            .default-theme.sidebar-bg .sidebar-wrapper .sidebar-footer {
-                background-color: rgba(0, 0, 0, .8);
-                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
-            }
-			</style>";
+			<link rel='stylesheet' href='css/themes/castle-21.2.1.css'>
+			<meta name='theme-color' content='rgba(0, 0, 0, 0.8)'>";
 		}
 		if ($themeID == 8)
 		{
 			echo "
-			<link rel='stylesheet' href='css/sunset-v{$set['bootstrap_version']}.css'>
-			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>
-			<style>
-			.default-theme .sidebar-wrapper {
-				background-color: rgba(0, 0, 0, .8);
-                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
-			}
-            .default-theme.sidebar-bg .sidebar-wrapper:before {
-                background-color: rgba(0, 0, 0, .8);
-                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
-            }
-            .default-theme.sidebar-bg .sidebar-wrapper .sidebar-footer {
-                background-color: rgba(0, 0, 0, .8);
-                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02), 0 0 5px rgba(0, 0, 0, .7);
-            }
-			</style>";
+			<link rel='stylesheet' href='css/themes/sunset-21.2.1.css'>
+			<meta name='theme-color' content='rgba(64, 0, 0, 0.8)'>";
 		}
 	}
 	
