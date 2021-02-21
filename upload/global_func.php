@@ -1101,6 +1101,7 @@ function staffnotes_entry($user,$text,$whodo=-1)
 	$sql="{$text}{$notes}";
 	$db->query("UPDATE `users` SET `staff_notes` = '{$sql}' WHERE `userid` = {$user}");
 }
+
 function parseImage($url)
 {
 	if (strpos($url, 'https://') !== false) 
@@ -1113,6 +1114,7 @@ function parseImage($url)
 		return "https://images.weserv.nl/?url={$url}&errorredirect=ssl:{$url}";
 	}
 }
+
 function removeFrontTag($url)
 {
 	$url=str_replace("http://","",$url);
@@ -1120,6 +1122,7 @@ function removeFrontTag($url)
 	$url=str_replace("www.","",$url);
 	return $url;
 }
+
 function user_log($user,$logname,$value=1)
 {
 	global $db;
@@ -1141,6 +1144,7 @@ function isApp()
         if ($ir['os'] == 'Android')
             return true;
 }
+
 function isMobile()
 {
 	global $ir;
@@ -1478,4 +1482,9 @@ function purgeOldLogs()
 function getCurrentPage()
 {
     return $_SERVER['REQUEST_URI'];
+}
+
+function loadImageAsset($img, $size = 1)
+{   
+    return "<img src='./assets/img/{$img}' style='width:{$size}rem;'></img>";
 }

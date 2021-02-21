@@ -79,22 +79,6 @@ switch ($_GET['action']) {
 function menu()
 {
     global $db, $userid, $ir;
-    echo "<table class='table table-bordered table-hover'>
-		<thead>
-			<tr>
-				<th width='45%'>
-					Course
-				</th>
-				<th width='35%'>
-					Description
-				</th>
-				<th width='25%'>
-                    Action
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-	   ";
     //Select the courses from in-game.
     $acadq = $db->query("/*qc=on*/SELECT * FROM `academy` ORDER BY `ac_level` ASC, `ac_cost` ASC");
     while ($academy = $db->fetch_row($acadq)) {
@@ -107,31 +91,55 @@ function menu()
                              WHERE `course` = {$academy['ac_id']}"));
         //If user has already completed the course.
         if ($db->fetch_single($cdo) > 0)
-            $do = "<i>Graduated</i>";
-		elseif ($ir['level'] < $academy['ac_level'])
-			$do = "<span class='text-danger'>Level too low to start.</span>";
+            $do = "<a href='#' class='disabled btn-success btn btn-block'>Graduated</a>";
 		elseif ($ir['primary_currency'] < $academy['ac_cost'])
-			$do = "<span class='text-danger'>Not enough copper coins.</span>";
+			$do = "<a href='#' class='disabled btn-danger btn btn-block'>Not enough Copper</a>";
+		elseif ($ir['level'] < $academy['ac_level'])
+			$do = "<a href='#' class='disabled btn-danger btn btn-block'>Level too low</a>";
 		else
-            $do = "<a href='?action=start&id={$academy['ac_id']}'>Start Course</a>";
-        echo "<tr>
-		<td>
-			{$academy['ac_name']}<br />
-			<small><i>{$academy['ac_desc']}</i></small>
-		</td>
-		<td>
-				Cost: " . number_format($academy['ac_cost']) . " Copper Coins<br />
-				Graduates: " . number_format($graduates) . "<br />
-				Course Length: " . number_format($academy['ac_days']) . " Days<br />";
-				if (!empty($academy['ac_level'])) 
-					echo "Level Required: {$academy['ac_level']}";
-				echo "
-		</td>
-		<td>
-			{$do}
-		</td>";
+            $do = "<a href='?action=start&id={$academy['ac_id']}' class='btn btn-primary btn-block'>Start Course</a>";
+		echo "
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-lg-8 col-xl-9'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b>{$academy['ac_name']}</b>
+                                    </div>
+                                    <div class='col-12'>
+                                        <small><i>{$academy['ac_desc']}</i></small>
+                                    </div>
+                                    <div class='col-6 col-md-3 col-lg-6 col-xl-3'>
+                                        <small><i>Graduates " . number_format($graduates) . "</i></small>
+                                    </div>
+                                    <div class='col-6 col-md-3 col-lg-6 col-xl-4'>
+                                        <small><i>Course Length " . number_format($academy['ac_days']) . " Days</i></small>
+                                    </div>
+                                    <div class='col col-md-4 col-lg'>
+                                        <small><i>Cost " . number_format($academy['ac_cost']) . " Copper Coins</i></small>
+                                    </div>";
+                                    if (!empty($academy['ac_level']))
+                                    {
+                                        echo "
+                                        <div class='col-4 col-sm-6 col-md-2 col-lg-4 col-xxl-2'>
+                                            <small><i>Level " . number_format($academy['ac_level']) . "</i></small>
+                                        </div>";
+                                    }
+                                echo"
+                                </div>
+                            </div>
+                            <div class='col-12 col-lg-4 col-xl-3'>
+                                {$do}
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>";
     }
-    echo "</tbody></table>";
 }
 
 function start()
