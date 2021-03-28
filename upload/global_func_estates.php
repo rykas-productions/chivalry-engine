@@ -164,7 +164,6 @@ function sleepTick()
                 WHERE `effectName` = 'sleep'");
     while ($r = $db->fetch_row($q))
     {
-        var_dump($r);
         $inc = calcSleepEfficiency($r['sleepUpgrade'], $r['house_will']);
         $db->query("UPDATE `users` SET `hp` = `hp` + {$inc} WHERE `userid` = {$r['userid']}");
         $db->query("UPDATE `users` SET `brave` = `brave` + {$inc} WHERE `userid` = {$r['userid']}");
