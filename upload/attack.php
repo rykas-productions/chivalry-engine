@@ -25,6 +25,9 @@ switch ($_GET['action']) {
     case 'beat':
         beat();
         break;
+    case 'homeinvade':
+        home_invasion();
+        break;
     default:
         attacking();
         break;
@@ -51,14 +54,14 @@ function attacking()
             $_SESSION['tresde'] = 0;
         }
         //If RNG is not the same number stored in session
-        if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
+        /*if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
             $_SESSION['attacking'] = 0;
             $_SESSION['attack_scroll'] = 0;
             $ir['attacking'] = 0;
             $api->UserInfoSetStatic($userid, "attacking", 0);
             alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}&ref={$ref}");
             die($h->endpage());
-        }
+        }*/
 		if (userHasEffect($userid, "basic_protection"))
 		{
 			userRemoveEffect($userid, "basic_protection");
@@ -636,11 +639,40 @@ function attacking()
             $odata['hp'] = 0;
             $_SESSION['attackwon'] = $_GET['user'];
             $api->UserInfoSet($_GET['user'], 'hp', 0);
-            echo "<br />
-			<b>You have struck down {$odata['username']}. What do you wish to do to them now?</b><br />
-			<form action='?action=mug&ID={$_GET['user']}&ref={$ref}' method='post'><input class='btn btn-primary' type='submit' value='Rob Them' /></form><br />
-			<form action='?action=beat&ID={$_GET['user']}&ref={$ref}' method='post'><input class='btn btn-primary' type='submit' value='Increase Infirmary Time' /></form><br />
-			<form action='?action=xp&ID={$_GET['user']}&ref={$ref}' method='post'><input class='btn btn-primary' type='submit' value='Gain Experience' /></form>";
+            echo "<br />";
+            alert('info',"","You have struck down {$odata['username']}. What do you wish to do to them now?",false);
+            if (!userHasEffect($_GET['user'], "sleep"))
+            {
+    			echo"
+                <div class='row'>
+                    <div class='col-12 col-sm-6 col-md-3 col-xxl-4'>
+                        <form action='?action=mug&ID={$_GET['user']}&ref={$ref}' method='post'>
+                            <input class='btn btn-primary btn-block' type='submit' value='Rob Them' /><br />
+                        </form>
+                    </div>
+                    <div class='col-12 col-sm-6 col-lg-5 col-xxl-4'>
+                        <form action='?action=beat&ID={$_GET['user']}&ref={$ref}' method='post'>
+                            <input class='btn btn-danger btn-block' type='submit' value='Increase Infirmary Time' /><br />
+                        </form>
+                    </div>
+                    <div class='col-12 col-md-3 col-lg-4'>
+                        <form action='?action=xp&ID={$_GET['user']}&ref={$ref}' method='post'>
+                            <input class='btn btn-success btn-block' type='submit' value='Gain Experience' /><br />
+                        </form>
+                    </div>
+                </div>";
+            }
+            else
+            {
+                echo"
+                <div class='row'>
+                    <div class='col-12'>
+                        <form action='?action=homeinvade&ID={$_GET['user']}&ref={$ref}' method='post'>
+                            <input class='btn btn-danger btn-block' type='submit' value='Home Invasion' /><br />
+                        </form>
+                    </div>
+                </div>";
+            }
         } //The opponent is not down... he gets to attack.
         else {
             $eq = $db->query("/*qc=on*/SELECT `itmname`,`weapon`,`ammo`,`itmid`,`itmtype`, `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on` FROM  `items` WHERE `itmid` IN({$odata['equip_primary']}, {$odata['equip_secondary']}, {$odata['equip_potion']})");
@@ -1015,7 +1047,12 @@ function beat()
     global $db, $userid, $ir, $h, $api;
     $_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$ref = (isset($_GET['ref']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_GET['ref'])) ? $db->escape(strip_tags(stripslashes($_GET['ref']))) : 'index';
-    $_SESSION['attacking'] = 0;
+	if (userHasEffect($_GET['ID'], "sleep"))
+	{
+	    header("Location: ?action=homeinvade&ID={$_GET['ID']}&ref={$ref}");
+	    exit;
+	}
+	$_SESSION['attacking'] = 0;
 	$_SESSION['attack_scroll'] = 0;
     $ir['attacking'] = 0;
     $api->UserInfoSetStatic($userid, "attacking", 0);
@@ -1273,7 +1310,12 @@ function xp()
     global $db, $userid, $ir, $h, $api;
     $_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$ref = (isset($_GET['ref']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_GET['ref'])) ? $db->escape(strip_tags(stripslashes($_GET['ref']))) : 'index';
-    $_SESSION['attacking'] = 0;
+	if (userHasEffect($_GET['ID'], "sleep"))
+	{
+	    header("Location: ?action=homeinvade&ID={$_GET['ID']}&ref={$ref}");
+	    exit;
+	}
+	$_SESSION['attacking'] = 0;
 	$_SESSION['attack_scroll'] = 0;
     $ir['attacking'] = 0;
     $api->UserInfoSetStatic($userid, "attacking", 0);
@@ -1641,6 +1683,119 @@ function mug()
 			doExtraBomb($userid, $r['userid']);
 	}
 }
+
+function home_invasion()
+{
+    global $db, $userid, $ir, $h, $api;
+    $_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
+    $ref = (isset($_GET['ref']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_GET['ref'])) ? $db->escape(strip_tags(stripslashes($_GET['ref']))) : 'index';
+    if (!userHasEffect($_GET['ID'], "sleep"))
+    {
+        header("Location: ?action=mug&ID={$_GET['ID']}&ref={$ref}");
+        exit;
+    }
+    $_SESSION['attacking'] = 0;
+    $_SESSION['attack_scroll'] = 0;
+    $ir['attacking'] = 0;
+    $api->UserInfoSetStatic($userid, "attacking", 0);
+    $od = $db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$_GET['ID']}");
+    //User did not win fight, or won fight against someone else.
+    if (!isset($_SESSION['attackwon']) || $_SESSION['attackwon'] != $_GET['ID']) {
+        $api->UserInfoSet($userid, "xp", 0);
+        alert("danger", "Security Issue!", "You didn't win the fight against this opponent. You've lost all your
+		    experience.", true, "{$ref}.php");
+        die($h->endpage());
+    }
+    //Opponent does not exist.
+    if (!$db->num_rows($od)) {
+        alert('danger', "Uh Oh!", "You are trying to attack a non-existent user.", true, "{$ref}.php");
+        exit($h->endpage());
+    }
+    if ($db->num_rows($od) > 0) {
+        $r = $db->fetch_row($od);
+        $db->free_result($od);
+        //Opponent's HP is 1, meaning fight has already concluded.
+        if ($r['hp'] == 1) {
+            $api->UserInfoSet($userid, "xp", 0);
+            alert('danger', "Uh Oh!", "Stop trying to abuse bugs, dude. You've lost all your experience.", true, "{$ref}.php");
+            exit($h->endpage());
+        } else {
+            $userEstate = $db->fetch_single($db->query("SELECT `estate` FROM `users` WHERE `userid` = {$_GET['ID']}"));
+            $userVault = $db->fetch_single($db->query("SELECT `vault` FROM `user_estates` WHERE `ue_id` = {$userEstate}"));
+            attacklog($userid,$_GET['ID'],'mugged');
+            $minimum=round($userVault*0.02);
+            $maximum=round($userVault*0.2);
+            $specialnumber=((getSkillLevel($userid,14)*5)/100);
+            $stole = Random($minimum,$maximum);
+            $stole = $stole+($stole*$specialnumber);
+            $hosptime = Random(40, 95) + floor($ir['level'] / 6);
+            $hospreason = $db->escape("Home invasion by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
+            //Set opponent HP to 1.
+            $api->UserInfoSet($r['userid'], "hp", 1);
+            //Take opponent's Copper Coins and give it to user.
+            $db->query("UPDATE `user_estates` SET `vault` = `vault` - {$stole} WHERE `ue_id` = {$userEstate}");
+            $api->UserGiveCurrency($userid, 'primary', $stole);
+            //Place opponent in infirmary.
+            $api->UserStatusSet($r['userid'], 'infirmary', $hosptime, $hospreason);
+            //Tell opponent they were mugged, and for how much, by user.
+            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> started a home invasion while you were sleeping. You were harmed in the process and they stole " . number_format($stole) . " Copper Coins from your estate's vault.", 'game-icon game-icon-robber', 'red');
+            //Log that the user won and stole some Copper Coins, and that
+            //the opponent lost and lost Copper Coins.
+            $api->SystemLogsAdd($userid, 'attacking', "Home invasioned <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole " . number_format($stole) . " Copper Coins.");
+            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Home invasioned by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost " . number_format($stole) . " Copper Coins.");
+            $_SESSION['attackwon'] = 0;
+            $additionaltext = "";
+            //Both players are in a guild.
+            if ($ir['guild'] > 0 && $r['guild'] > 0) {
+                $oppguild = $db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$r['guild']} LIMIT 1");
+                if ($db->num_rows($oppguild) > 0) {
+                    $warq = $db->query("/*qc=on*/SELECT `gw_id` FROM `guild_wars`
+				    WHERE `gw_winner` = 0 AND (`gw_declarer` = {$ir['guild']} AND `gw_declaree` = {$r['guild']})
+				    OR (`gw_declaree` = {$ir['guild']} AND `gw_declarer` = {$r['guild']})");
+                    //Both players' guilds are at war with each other.
+                    if ($db->num_rows($warq) > 0) {
+                        $wr = $db->fetch_single($warq);
+                        $whoswho = $db->fetch_row($db->query("/*qc=on*/SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
+                        //Give user's guild a point.
+                        if ($whoswho['gw_declarer'] == $ir['guild']) {
+                            $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 2 WHERE `gw_id` = {$wr}");
+                        } else {
+                            $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 2 WHERE `gw_id` = {$wr}");
+                        }
+                        $additionaltext = "For winning this fight, you've won your guild 1 point.";
+                        guilddebt($ir['guild'],$r['guild']);
+                    }
+                }
+                
+            }
+            $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$userid}");
+            $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$r['userid']}");
+            //Mission update
+            $am=$db->query("SELECT * FROM `missions` WHERE `mission_userid` = {$userid}");
+            if ($db->num_rows($am) > 0)
+            {
+                $db->query("UPDATE `missions` SET `mission_kill_count` = `mission_kill_count` + 1 WHERE `mission_userid` = {$userid}");
+            }
+            //Credit badge if needed.
+            $ir['kills']=$ir['kills']+1;
+            if ($ir['kills'] == 3000)
+            {
+                $api->UserGiveItem($userid,161,1);
+            }
+            //Opponent is NPC, so remove infirmary time and refill HP.
+            if ($r['user_level'] == 'NPC') {
+                $db->query("UPDATE `users` SET `hp` = `maxhp`  WHERE `userid` = {$r['userid']}");
+                $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` ={$r['userid']}");
+            }
+        }
+        //Tell user they won the fight, and how much currency they took.
+        alert('success', "You have bested {$r['username']}!", "{$r['username']} is asleep while you attack them, 
+            so you decide its best to help yourself to their vault, taking " . number_format($stole) . " Copper Coins! 
+            {$additionaltext}", true, "{$ref}.php");
+        doExtraBomb($userid, $r['userid']);
+    }
+}
+
 function attacklog($attacker,$attacked,$result)
 {
 	global $db;
