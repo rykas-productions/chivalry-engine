@@ -823,12 +823,13 @@ function doSleep()
     {
         $fxt = (60*60)*8;
         userGiveEffect($userid, "sleep", $fxt);
-        alert("success","Success!", "You have chosen to go to sleep.");
+        alert("success","Success!", "You have chosen to go to sleep. You may wake up manually, or automatically in 8 hours.");
     }
     else
     {
         echo "Are you sure you wish to sleep? Your sleeping quarters has an effiency of " . calcSleepEfficiency(($gardenLevel), $edb['house_will']) . "
-         / Minute. You will not be able to do most actions until you wake up. You will sleep for 8 hours, however, you may make yourself up at any time.
+         / Minute. You will not be able to do most actions until you wake up. You will sleep for 8 hours, however, you may make yourself up at any time.<br />
+        Being attacked while sleeping opens the possiblity to property damage or losses.
 		<hr />
 		<form method='post'>
 		<input type='hidden' name='construct' value='yes'>
