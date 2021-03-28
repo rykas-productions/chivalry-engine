@@ -265,6 +265,20 @@ class headers
         echo "<b><a href='vote.php' class='text-success updateHoverBtn'>[Vote for {$set['WebsiteName']}<span class='hidden-sm-down'> at various Voting Websites and be rewarded</span>.]</a></b><br />";
 	echo "<b><a href='donator.php' class='text-danger updateHoverBtn'>[Donate to {$set['WebsiteName']}.<span class='hidden-sm-down'> Packs start at $1 and you receive tons of benefits.</span>]</a></b><br />";
     $this->loadNewsScroller();
+    if (userHasEffect($userid, "sleep"))
+    {
+        $protDone = returnEffectDone($userid, "sleep");
+        if (isset($_GET['wakeup']))
+        {
+            userRemoveEffect($userid, "sleep");
+            alert("success","Rise and Shine!", "You've successfully woken up. Nothing like the smell of the blood of your fallen prey in the morning.", true, 'index.php');
+        }
+        else
+        {
+            alert("info","Nighty night!", "You're currently sleeping and will wake up in " . TimeUntil_Parse($protDone) . ". Your stats will replenish each minute you sleep.", true, '?wakeup', "Wake Up");
+            die($h->endpage());
+        }
+    }
 	if (userHasEffect($userid, "basic_protection"))
 	{
 		$protDone = returnEffectDone($userid, "basic_protection");

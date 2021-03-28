@@ -91,7 +91,7 @@ function maxWillCheck()
 
 function buyEstate($userid, $estate_id)
 {
-	global $db;
+	global $db, $api;
 	$db->query("INSERT INTO `user_estates` 
 				(`userid`, `estate`, `vault`, 
 				`vaultUpgrade`, `gardenUpgrade`, 
@@ -148,4 +148,27 @@ function getNameFromUserEstate(int $user)
     
     $r = $db->fetch_row($q);
     return $r['house_name'];
+}
+
+function sleepTick()
+{
+    global $db, $api;
+    $q = $db->query("SELECT `ue`.*, `u`.`estate`, `ue_id`, `uest`.`sleepUpgrade`, `e`.`house_will`
+                FROM `users_effects` `ue`
+                INNER JOIN `users` AS `u`
+                ON `ue`.`userid` = `u`.`userid`
+                INNER JOIN `user_estates` AS `uest`
+                ON `u`.`estate` = `uest`.`ue_id`
+                INNER JOIN `estates` AS `e`
+                ON `e`.`house_id` = `uest`.`estate`
+                WHERE `effectName` = 'sleep'");
+    while ($r = $db->fetch_row($q))
+    {
+        var_dump($r);
+        $inc = calcSleepEfficiency($r['sleepUpgrade'], $r['house_will']);
+        $db->query("UPDATE `users` SET `hp` = `hp` + {$inc} WHERE `userid` = {$r['userid']}");
+        $db->query("UPDATE `users` SET `brave` = `brave` + {$inc} WHERE `userid` = {$r['userid']}");
+        $db->query("UPDATE `users` SET `will` = `will` + {$inc} WHERE `userid` = {$r['userid']}");
+        $db->query("UPDATE `users` SET `energy` = `energy` + {$inc} WHERE `userid` = {$r['userid']}");
+    }
 }
