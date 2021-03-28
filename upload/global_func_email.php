@@ -75,6 +75,14 @@ function sendRefferalEmail($sendToUserID, $newUserID, $newUserName)
     $WelcomeMSGEmail = "Hey {$st['username']}!<br />We just wanted to thank you for referring your friend, {$newUserName} [{$newUserID}], to Chivalry is Dead. Make sure you log in and give them a warm welcome.";
     $api->SystemSendEmail($st['email'],$WelcomeMSGEmail,$set['WebsiteName'] . " Referral", $set['sending_email']);
 }
+
+function sendEmergencyEmail($userid, $txt)
+{
+    global $api, $set;
+    $subj = $set['WebsiteName'] . " Emergency Message from User ID {$userid}";
+    $api->SystemSendEmail("ryan.roach.1997@hotmail.com",$txt ,$subj, $set['sending_email']);
+}
+
 //Helper functions
 function emailToUsername($email)
 {

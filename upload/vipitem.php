@@ -25,6 +25,9 @@ switch ($_GET['item']) {
 	case 'willstim':
         willovercharge2();
         break;
+	case 'contact':
+	    contact();
+	    break;
     default:
         alert("danger","Uh Oh!","Please specify a valid VIP Item to use!",true,'inventory.php');
 		$h->endpage();
@@ -187,4 +190,50 @@ function willovercharge2()
 		alert('danger',"Uh Oh!","You do not have the required item to use this page!",true,'inventory.php');
 	}
 	$h->endpage();
+}
+
+function contact()
+{
+    global $h,$api, $userid;
+    if (!$api->UserHasItem($userid,407))
+    {
+        alert('danger',"Uh Oh!","You do not have the required item to be here.", true, 'inventory.php');
+        die($h->endpage());
+    }
+    else
+    {
+        if (isset($_POST['contact']))
+        {
+            if (empty($_POST['contact']))
+            {
+                alert('danger',"Uh Oh!","Please fill out the form completely.", true);
+                die($h->endpage());
+            }
+            sendEmergencyEmail($userid, $_POST['contact']);
+            alert('success',"Success!","You've successfully contacted CID Admin.", true, 'inventory.php');
+        }
+        else 
+        {
+            echo"
+				<form method='post'>
+                    Use this form to contact CID Admin in a more direct way. Do not abuse this form. Only select players will have access to this form.
+				<hr />
+				<div class='row'>
+					<div class='col-md-2 col-sm-3 col-6'>
+						<b>Response</b>
+					</div>
+					<div class='col-md-10 col-sm-9'>
+						<textarea class='form-control' required='1' maxlength='65655' name='contact'></textarea>
+					</div>
+				</div>
+				<br />
+				<div class='row'>
+					<div class='col'>
+						<button class='btn btn-primary btn-block' type='submit'><i class='fas fa-reply'></i> Submit Emergency</button>
+					</div>
+				</div>
+				</form>";
+        }
+    }
+    $h->endpage();
 }

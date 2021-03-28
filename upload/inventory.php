@@ -489,6 +489,14 @@ while ($i = $db->fetch_row($inv))
 													<i class='game-icon game-icon-check-mark'></i>
 												</a><br />";
 										}
+										//CID Admin Contact Prayer to God
+										if ($i['itmid'] == 407)
+										{
+										    
+										    echo "<a title='Pray to CID Admin.' href='vipitem.php?item=contact' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-check-mark'></i>
+												</a><br />";
+										}
 										//Rings to not be equipped.
 										$ringsarray=array(113,114,115,116,125,126,127);
 										//Rings that are allowed to be equipped.
