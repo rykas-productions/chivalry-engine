@@ -49,7 +49,29 @@ $districtConfig['maxFortify'] = 5;
 
 require('globals.php');
 echo "<h3>Guild Districts</h3><hr />
-	[<a href='#' data-toggle='modal' data-target='#district_info'>Info</a>] || [<a href='guild_district.php'>Home</a>] || [<a href='?action=guildinfo'>Your Guild Info</a>] || [<a href='?action=buy'>Buy Troops</a>] || [<a href='?action=general'>Hire General</a>]<hr />";
+    <div class='row'>
+        <div class='col-12 col-sm-6 col-md-4 col-xl-12 col-xxl'>
+            <a href='#' data-toggle='modal' data-target='#district_info' class='btn btn-info btn-block'>Info</a>
+            <br />
+        </div>
+        <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
+            <a href='guild_district.php' class='btn btn-primary btn-block'>Home</a>
+            <br />
+        </div>
+        <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
+            <a href='?action=guildinfo' class='btn btn-success btn-block'>Your Guild Info</a>
+            <br />
+        </div>
+        <div class='col-12  col-sm-6 col-xl-3 col-xxl'>
+            <a href='?action=buy' class='btn btn-danger btn-block'>Buy Troops</a>
+            <br />
+        </div>
+        <div class='col-12  col-sm-12 col-md-6 col-xl-3 col-xxl'>
+            <a href='?action=general' class='btn btn-secondary btn-block'>Hire General</a>
+            <br />
+        </div>
+    </div>
+    <hr />";
 if ($ir['guild'] > 0)
 {
 	$distQ=$db->query("/*qc=on*/SELECT * FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}");
@@ -2555,20 +2577,135 @@ function guild_info()
 		die($h->endpage());
 	}
 	$districtOwn=$db->num_rows($db->query("SELECT `district_id` FROM `guild_districts` WHERE `district_owner` = {$gdi['guild_id']}"));
-	echo "<b>Barracks Warriors:</b> " . number_format($gdi['barracks_warriors']) . "<br />
-	<b>Barracks Archers:</b> " . number_format($gdi['barracks_archers']) . "<br />
-	<b>Barracks Generals:</b> " . number_format($gdi['barracks_generals']) . "<br />
-	<b>Moves Available:</b> " . number_format($gdi['moves']) . "<br />
-	<b>Districts Controlled:</b> " . number_format($districtOwn) . "<br />
-	<b>Warriors Bought:</b> " . number_format($gdi['warriors_bought']) . "<br />
-	<b>Archers Bought:</b> " . number_format($gdi['archers_bought']) . "<br />
-	<b>Deployed Warriors:</b> " . number_format(countDeployedWarriors($gdi['guild_id'])) . "<br />
-	<b>Deployed Archers:</b> " . number_format(countDeployedArchers($gdi['guild_id'])) . "<br />
-	<b>Active Generals:</b> " . number_format(countDeployedGenerals($gdi['guild_id'])) . "<br />
-	<b>Warrior Upkeep Cost:</b> " . number_format(countDeployedWarriors($gdi['guild_id']) * $districtConfig['WarriorCostDaily']) . " Copper Coins<br />
-	<b>Archer Upkeep Cost:</b> " . number_format(countDeployedArchers($gdi['guild_id']) * $districtConfig['ArcherCostDaily']) . " Copper Coins<br />
-	<b>General Upkeep Cost:</b> " . number_format(countDeployedGenerals($gdi['guild_id']) * $districtConfig['GeneralCostDaily']) . " Copper Coins<br />";
-	
+	echo "
+    <div class='row'>
+        <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+            <div class='card'>
+                <div class='card-header'>
+                    Barracks
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-3 col-md-6'>
+                            Warriors
+                        </div>
+                        <div class='col-3 col-md-6'>
+                            " . number_format($gdi['barracks_warriors']) . "
+                        </div>
+                        <div class='col-3 col-md-6'>
+                            Archers
+                        </div>
+                        <div class='col-3 col-md-6'>
+                            " . number_format($gdi['barracks_archers']) . "
+                        </div>
+                        <div class='col-3 col-md-6'>
+                            Generals
+                        </div>
+                        <div class='col-3 col-md-6'>
+                            " . number_format($gdi['barracks_generals']) . "
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+        <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+            <div class='card'>
+                <div class='card-header'>
+                    Upkeep
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-4'>
+                            Warriors
+                        </div>
+                        <div class='col-8'>
+                            " . number_format(countDeployedWarriors($gdi['guild_id']) * $districtConfig['WarriorCostDaily']) . " Copper
+                        </div>
+                        <div class='col-4'>
+                            Archers
+                        </div>
+                        <div class='col-8'>
+                            " . number_format(countDeployedArchers($gdi['guild_id']) * $districtConfig['ArcherCostDaily']) . " Copper
+                        </div>
+                        <div class='col-4'>
+                            Generals
+                        </div>
+                        <div class='col-8'>
+                            " . number_format(countDeployedGenerals($gdi['guild_id']) * $districtConfig['GeneralCostDaily']) . " Copper
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+        <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+            <div class='card'>
+                <div class='card-header'>
+                    Active Troops
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-4 col-sm-6'>
+                            Warriors
+                        </div>
+                        <div class='col-8 col-sm-6'>
+                            " . number_format(countDeployedWarriors($gdi['guild_id'])) . "
+                        </div>
+                        <div class='col-4 col-sm-6'>
+                            Archers
+                        </div>
+                        <div class='col-8 col-sm-6'>
+                            " . number_format(countDeployedArchers($gdi['guild_id'])) . "
+                        </div>
+                        <div class='col-4 col-sm-6'>
+                            Generals
+                        </div>
+                        <div class='col-8 col-sm-6'>
+                            " . number_format(countDeployedGenerals($gdi['guild_id'])) . "
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+        <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+            <div class='card'>
+                <div class='card-header'>
+                    Daily Info
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
+                            Moves Available
+                        </div>
+                        <div class='col-6 col-md-5 col-lg-4 col-xl-2 col-xxl-4'>
+                            " . number_format($gdi['moves']) . "
+                        </div>
+                        <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
+                            Districts Controlled
+                        </div>
+                        <div class='col-6 col-md-5 col-lg-4 col-xl-3 col-xxl-4'>
+                            " . number_format($districtOwn) . "
+                        </div>
+                        <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
+                            Warriors Bought
+                        </div>
+                        <div class='col-6 col-md-5 col-lg-4'>
+                            " . number_format($gdi['warriors_bought']) . "
+                        </div>
+                        <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
+                            Archers Bought
+                        </div>
+                        <div class='col-6 col-md-5 col-lg-4'>
+                            " . number_format($gdi['archers_bought']) . "
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+    </div>";
 }
 
 function guild_buy()
@@ -2673,14 +2810,49 @@ function guild_buy()
 	}
 	else
 	{
-		echo "How many troops do you wish to buy? Fill and submit the form to confirm. Your guild has " . number_format($gi['guild_primcurr']) . " Copper Coins in its vault.<br />
-		<form method='post'>
-			<b>Warriors</b> (" . number_format($districtConfig['WarriorCost']) . " Copper Coins each)<br />
-			<input type='number' name='warriors' value='{$currentBuyWarriors}' max='{$currentBuyWarriors}' min='0' required='1' class='form-control'>
-			<b>Archers</b> (" . number_format($districtConfig['ArcherCost']) . " Copper Coins each)<br />
-			<input type='number' name='archers' value='{$currentBuyArchers}' max='{$currentBuyArchers}' min='0' required='1' class='form-control'>
-			<input type='submit' value='Buy Troops' class='btn btn-success'>
-		</form>";
+		echo "
+        <form method='post'>
+		<div class='row'>
+            <div class='col'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Purchase Troops
+                    </div>
+                    <div class='card-body'>
+                        How many troops do you wish to buy? Fill and submit the form to confirm. Your guild 
+                        has " . number_format($gi['guild_primcurr']) . " Copper Coins in its vault. Warriors have 
+                        a daily upkeep fee of " . number_format($districtConfig['WarriorCostDaily']) . " Copper Coins, and
+                        Archers have a daily upkeep fee of " . number_format($districtConfig['ArcherCostDaily']) . " Copper Coins.
+                        This fee is taken from your guild's vault every day at midnight gametime.
+                        <hr />
+                        <div class='row'>
+                            <div class='col-4 col-md-2'>
+                                Warriors
+                            </div>
+                            <div class='col-8 col-md-4 col-xl-3'>
+                                <small>" . number_format($districtConfig['WarriorCost']) . " Copper Coins each</small>
+                            </div>
+                            <div class='col-12 col-md-6 col-xl-7'>
+                                <input type='number' name='warriors' value='{$currentBuyWarriors}' max='{$currentBuyWarriors}' min='0' required='1' class='form-control'>
+                            </div>
+                            <div class='col-4 col-md-2'>
+                                Archers
+                            </div>
+                            <div class='col-8 col-md-4 col-xl-3'>
+                                <small>" . number_format($districtConfig['ArcherCost']) . " Copper Coins each</small>
+                            </div>
+                            <div class='col-12 col-md-6 col-xl-7'>
+                                <input type='number' name='archers' value='{$currentBuyArchers}' max='{$currentBuyArchers}' min='0' required='1' class='form-control'>
+                            </div>
+                            <div class='col-12'>
+                                <input type='submit' value='Buy Troops' class='btn btn-success btn-block'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>";
 	}
 	
 }
@@ -2729,12 +2901,42 @@ function hireGeneral()
 	}
 	else
 	{
-		echo "How many generals do you wish to hire? You may hire {$availableGenerals} at this time.. Your guild has " . number_format($gi['guild_primcurr']) . " Copper Coins in its vault.<br />
-		<form method='post'>
-			<b>Generals</b> (" . number_format($districtConfig['GeneralCost']) . " Copper Coins each)<br />
-			<input type='number' name='warriors' value='{$availableGenerals}' max='{$availableGenerals}' min='0' required='1' class='form-control'>
-			<input type='submit' value='Hire General' class='btn btn-success'>
-		</form>";
+        echo "
+        <form method='post'>
+		<div class='row'>
+            <div class='col'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Hire General
+                    </div>
+                    <div class='card-body'>
+                        Generals are a purely defensive unit. You may place them on tiles you own for a 
+                        " . round($districtConfig['GeneralBuff']*100) . "% defensive buff. You may only place {$districtConfig['maxGenerals']}
+                        Generals on a tile at a time. If the tile is lost, your general will be executed.
+                        How many generals do you wish to hire? You may hire {$availableGenerals} at this time. Your guild has 
+                        " . number_format($gi['guild_primcurr']) . " Copper Coins in its vault. Generals have 
+                        a daily upkeep fee of " . number_format($districtConfig['GeneralCostDaily']) . " Copper Coins.
+                        This fee is taken from your guild's vault every day at midnight gametime.
+                        <hr />
+                        <div class='row'>
+                            <div class='col-4 col-md-2'>
+                                Warriors
+                            </div>
+                            <div class='col-8 col-md-4 col-xl-3'>
+                                <small>" . number_format($districtConfig['GeneralCost']) . " Copper Coins each</small>
+                            </div>
+                            <div class='col-12 col-md-6 col-xl-7'>
+                                <input type='number' name='warriors' value='{$availableGenerals}' max='{$availableGenerals}' min='0' required='1' class='form-control'>
+                            </div>
+                            <div class='col-12'>
+                                <input type='submit' value='Hire General' class='btn btn-success btn-block'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>";
 	}
 }
 include('forms/district_popup.php');
