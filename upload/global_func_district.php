@@ -80,9 +80,8 @@ function districtRewardMostDeployedUnits()
 			$winnerguild = $currentGuildID;
 		}
 	}
-	$api->GameAddNotification(1,"{$winnerguild} with {$currentmax}.");
 	$api->GuildAddItem($winnerguild,205,2);
-	$api->GuildAddNotification($winnerguild, "Your guild has the most deployed units on the guild districts and received two {$api->SystemItemIDtoName(205)} to your armory.");
+	$api->GuildAddNotification($winnerguild, "Your guild has the most deployed units on the guild districts and has received two {$api->SystemItemIDtoName(205)} to your armory.");
 }
 
 function districtRewardMostControlledTiles()
@@ -106,7 +105,6 @@ function districtRewardMostControlledTiles()
 			$winnerguild = $currentGuildID;
 		}
 	}
-	$api->GameAddNotification(1,"{$winnerguild} with {$currentmax}.");
 	$api->GuildAddItem($winnerguild,205,2);
-	$api->GuildAddNotification($winnerguild, "Your guild has the most controlled tiles on the guild districts and received two {$api->SystemItemIDtoName(205)} to your armory.");
+	$api->GuildAddNotification($winnerguild, "Your guild has the most controlled tiles on the guild districts and has received two {$api->SystemItemIDtoName(205)} to your armory.");
 }
