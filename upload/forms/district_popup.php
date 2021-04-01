@@ -8,22 +8,22 @@
                 </button>
             </div>
             <div class="modal-body">
-				<b>Guild District Beta</b><br />
-				Very simply, there's a couple mechanics not yet implemented. This is mainly to test the structure of the mod itself to 
-				be sure it is capabale of what we already have asked of it. <br />
-				We haven't implemented any rewards yet, in case this mod ends up being super game breaking. Note, however, guilds that participate 
-				in the beta will be rewarded handsomely by CID Admin once it becomes stable.
-				<hr />
                 Think of the districts just like the game of Risk. The districts are played on a guild-level, and everything 
 				is funded from the guilt itself. To advance and become a powerful contender on the guild districts board, 
 				you must have a very active guild, lots of members. The goal is to reward both the well established players, 
 				and those who strive really hard to be the best.<hr />
+				<b>Getting Started</b><br />
+				The board itself is a <?php echo $districtConfig['MaxSizeX']; ?> x <?php echo $districtConfig['MaxSizeY']; ?> grid. To get on the board, you must attack the outside tiles, and then make your way in. You may attack in any direction 
+				from a tile.<br />
+				Recruit troops for your guild via Guild Info. The amount of troops you may recruit per day is limited by 
+				your guild's level, up to a maximum of 400/200 troops a day.
+				<hr />
 				<b>Units</b><br />
 				There's three units in the districts: Warriors, Archers and Generals. Warriors are melee units, who get up and 
 				personal with the enemy. Without proper archer cover, however, they're good as gone. Likewise, archers without a 
 				frontline of Warriors are toast.<br />
-				Generals are a purely defensive unit which may be assigned to tiles you own. This grants that tile an extra 20% defense 
-				buff. You may only place two generals on a single tile at a time.
+				Generals are a purely defensive unit which may be assigned to tiles you own. This grants that tile an extra <?php echo round($districtConfig['GeneralBuff']*100); ?>% defense 
+				buff. You may only place <?php echo $districtConfig['maxGenerals']; ?> generals on a single tile at a time.
 				<hr />
 				<b>District Tiles</b><br />
 				Tiles can very easily be identified by the color of their background and border.<br />
@@ -37,15 +37,9 @@
 				Blue border - Market (-15% troop cost, stacks)<br />
 				Purple border - Outpost (+15% troops per day, stacks)
 				<hr />
-				<b>Getting Started</b><br />
-				To get on the board, you must attack the outside tiles, and then make your way in. You may attack in any direction 
-				from a tile.<br />
-				Recruit troops for your guild via Guild Info. The amount of troops you may recruit per day is limited by 
-				your guild's level, up to a maximum of 400/200 troops a day.
-				<hr />
 				<b>Recruiting Troops</b><br />
-				Recruiting troops helps strength your army. Stronger units cost more. Warriors cost 5,000 Copper Coins; Archers 
-				charge 8,500 Copper Coins; Generals charge 125,000 Copper Coins. Warriors are melee, Archers are ranged, Generals 
+				Recruiting troops helps strength your army. Stronger units cost more. Warriors cost <?php echo number_format($districtConfig['WarriorCost']); ?> Copper Coins; Archers 
+				charge <?php echo number_format($districtConfig['ArcherCost']); ?> Copper Coins; Generals charge <?php echo number_format($districtConfig['GeneralCost']); ?> Copper Coins. Warriors are melee, Archers are ranged, Generals 
 				are defensive supportive.<br />
 				<br />
 				If you lose a tile with a general on it, your general will be executed by the enemy guild.<br />
@@ -58,12 +52,11 @@
 				<hr />
 				<b>Upkeep</b><br />
 				Units actively on duty cost your guild! You will be charged for each unit currently on the board. Warriors on 
-				cost your guild 500 Copper Coins, Archers cost your guild 1,000 Copper Coins, and Generals cost your guild 
-				12,500 Copper Coins. This is taken from your guild's vault once a day. <u>There are plans to get tiles owned 
-				factored into the daily upkeep cost, but that is not the case in the beta.</u>
+				cost your guild <?php echo number_format($districtConfig['WarriorCostDaily']); ?> Copper Coins, Archers cost your guild <?php echo number_format($districtConfig['WarriorCostDaily']); ?> Copper Coins, and Generals cost your guild 
+				<?php echo number_format($districtConfig['GeneralCostDaily']); ?> Copper Coins. This is taken from your guild's vault once a day.
 				<hr />
 				<b>Fortification</b><br />
-				District tiles may be fortified up to 5 times. Fortification increases your defensive value by 12% per 
+				District tiles may be fortified up to <?php echo $districtConfig['maxFortify']; ?> times. Fortification increases your defensive value by <?php echo ceil($districtConfig['fortifyBuffMulti']*100); ?>% per 
 				fortification level. A fortification level requires the following: Guild Experience and Chivalry Tokens, both of 
 				which scale with the district's fortication level. These must be in your guild's vault/armory. 
 				Fortifications are lost when you lose ownership of the tile it was on.
