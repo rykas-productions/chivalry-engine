@@ -8,32 +8,35 @@
 */
 require('globals.php');
 echo "
-<div class='table-responsive'>
-    <table class='table table-bordered'>
-        <tr>
-            <td>
-                <a href='inbox.php' class='updateHoverBtn'><i class='fas fa-fw fa-inbox'></i><br />Inbox</a>
-            </td>
-            <td>
-                <a href='inbox.php?action=outbox' class='updateHoverBtn'><i class='fas fa-fw fa-envelope'></i><br />Outbox</a>
-            </td>
-            <td>
-                <a href='inbox.php?action=compose' class='updateHoverBtn'><i class='fas fa-fw fa-file'></i><br />Compose</a>
-            </td>
-            <td>
-                <a href='blocklist.php' class='updateHoverBtn'><i class='fas fa-fw fa-ban'></i><br />Blocklist</a>
-            </td>
-            <td>
-                <a href='inbox.php?action=delall' class='updateHoverBtn'><i class='fas fa-fw fa-trash-alt'></i><br />Delete All</a>
-            </td>
-            <td>
-                <a href='inbox.php?action=archive' class='updateHoverBtn'><i class='fas fa-fw fa-save'></i><br />Archive</a>
-            </td>
-            <td>
-                <a href='contacts.php' class='updateHoverBtn'><i class='fas fa-fw fa-address-book'></i><br />Contacts</a>
-            </td>
-        </tr>
-    </table>
+<div class='row'>
+    <div class='col-6 col-sm-4 col-md-3 col-xxl'>
+        <a href='inbox.php' class='updateHoverBtn btn btn-primary btn-block'><i class='fas fa-fw fa-inbox'></i> Inbox</a>
+        <br />
+    </div>
+    <div class='col-6 col-sm-4 col-md-3 col-xxl'>
+        <a href='inbox.php?action=outbox' class='updateHoverBtn btn btn-warning btn-block'><i class='fas fa-fw fa-envelope'></i> Outbox</a>
+        <br />
+    </div>
+    <div class='col-6 col-sm-4 col-md-3 col-xxl'>
+        <a href='inbox.php?action=compose' class='updateHoverBtn btn btn-success btn-block'><i class='fas fa-fw fa-file'></i> Compose</a>
+        <br />
+    </div>
+    <div class='col-6 col-sm-4 col-md-3 col-xxl'>
+        <a href='blocklist.php' class='updateHoverBtn btn btn-secondary btn-block'><i class='fas fa-fw fa-ban'></i> Blocklist</a>
+        <br />
+    </div>
+    <div class='col-6 col-sm-4 col-xxl'>
+        <a href='inbox.php?action=delall' class='updateHoverBtn btn btn-danger btn-block'><i class='fas fa-fw fa-trash-alt'></i> Delete All</a>
+        <br />
+    </div>
+    <div class='col-6 col-sm-4 col-xxl'>
+        <a href='inbox.php?action=archive' class='updateHoverBtn btn btn-dark btn-block'><i class='fas fa-fw fa-save'></i> Archive</a>
+        <br />
+    </div>
+    <div class='col-12 col-md-4 col-xxl'>
+        <a href='contacts.php' class='updateHoverBtn btn btn-info btn-block'><i class='fas fa-fw fa-address-book'></i> Contacts</a>
+        <br />
+    </div>
 </div>";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
