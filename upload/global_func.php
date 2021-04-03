@@ -14,6 +14,9 @@ require('global_func_district.php');
 require('global_func_item.php');
 require('global_func_estates.php');
 require('global_func_email.php');
+
+//Constants
+require('const/const_effect.php');
 /*
 	Parses the time since the timestamp given.
 	@param int $time_stamp for time since.

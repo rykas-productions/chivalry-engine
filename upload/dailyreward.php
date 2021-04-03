@@ -29,7 +29,7 @@ if ($ir['rewarded'] == 0)
 	elseif ($reward <= 98 && $reward > 90)
 	{
 		$api->UserGiveItem($userid,207,$medReward);
-		$api->GameAddNotification($userid,"While logging into Chivalry is Dead today, you were gifted {$medReward} Priority Vouchers, used at the infirmary. Consider it a gift from us. 😉");
+		$api->GameAddNotification($userid,"While logging into Chivalry is Dead today, you were gifted {$medReward} Priority Vouchers, used at the infirmary. Consider it a gift from us. ðŸ˜‰");
 		$api->SystemLogsAdd($userid, "loginreward", "Received {$medReward} Priority Vouchers.");
 	}
 	elseif ($reward <= 89 && $reward > 85)
@@ -48,7 +48,7 @@ if ($ir['rewarded'] == 0)
 	elseif ($reward <= 74 && $reward > 70)
 	{
 		$api->UserGiveItem($userid,259,1);
-		$api->GameAddNotification($userid,"For logging into Chivalry is Dead today, we gave you a Marriage Rose. Hint, hint. :) We love you {$ir['username']}. We love you. ❤");
+		$api->GameAddNotification($userid,"For logging into Chivalry is Dead today, we gave you a Marriage Rose. Hint, hint. :) We love you {$ir['username']}. We love you. â�¤");
 		$api->SystemLogsAdd($userid, "loginreward", "Received Marriage Rose.");
 	}
 	elseif ($reward <= 69 && $reward > 65)
@@ -162,7 +162,13 @@ if ($ir['rewarded'] == 0)
 	// Month = April
 	if ($month == 4)
 	{
-		
+	    //Easter
+		if ($day == 4)
+		{
+		    $effectTime = strtotime("12:00am April 5 2021") - time();
+		    userGiveEffect($userid, "holiday_mine_energy", constant("holiday_mining_energy"));
+		    $api->GameAddNotification($userid, "For logging into Chivalry is Dead on Easter, we've given you 20% reduced energy needs while mining. If you're lucky, this reduction may increase as you play today.");
+		}
 	}
 	//Month = October
 	if ($month == 10)

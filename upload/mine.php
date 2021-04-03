@@ -70,12 +70,24 @@ function home()
     global $MUS, $db, $api, $ir, $userid;
     $mineen = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
     $minexp = min(round($MUS['miningxp'] / $MUS['xp_needed'] * 100), 100);
-	if (userHasEffect($userid, "mining_xp_boost"))
+    echo "<div class='row'>";
+    if (userHasEffect($userid, constant("mining_xp_boost")))
 	{
-		$xpboostendtime=TimeUntil_Parse(returnEffectDone($userid, "mining_xp_boost"));
-		alert('info',"Experience Boost!","You have increased experience gains while mining for the next {$xpboostendtime}!",false);
+	    echo "<div class='col-12 col-xxxl'>";
+	    $xpboostendtime=TimeUntil_Parse(returnEffectDone($userid, constant("mining_xp_boost")));
+		alert('info',"","You have increased experience gains while mining for the next {$xpboostendtime}!",false);
+		echo "</div>";
 	}
-    echo "Welcome to the dangerous mines, brainless moron! If you're lucky, you'll strike riches. If not... the mine
+	if (userHasEffect($userid, constant("holiday_mining_energy")))
+	{
+	    $perc = (returnEffectMultiplier($userid, constant("holiday_mining_energy")) * 20);
+	    echo "<div class='col-12 col-xxxl'>";
+	    $xpboostendtime=TimeUntil_Parse(returnEffectDone($userid, constant("holiday_mining_energy")));
+	    alert('info',"","You require {$perc}% less mining energy per attempt. This effect wears off in {$xpboostendtime}.",false);
+	    echo "</div>";
+	}
+    echo "</div>
+    Welcome to the dangerous mines, brainless moron! If you're lucky, you'll strike riches. If not... the mine
         will eat you alive.
 	<hr />
 	<div class='row'>
@@ -227,6 +239,8 @@ function mine()
             die($h->endpage());
         } else {
             $MSI = $db->fetch_row($mineinfo);
+            if (userHasEffect($userid, constant("holiday_mining_energy")))
+                $energyCost = $energyCost - (returnEffectMultiplier($userid, constant("holiday_mining_energy") * 0.2));
 			$MSI['mine_power_use']=$MSI['mine_power_use']*$energyCost;
 			$nextspot=$spot+1;
 			$nextmineslevel = $db->fetch_single($db->query("SELECT `mine_level` FROM `mining_data` WHERE `mine_id` = {$nextspot}"));
@@ -306,9 +320,9 @@ function mine()
 					$flakes = $flakes + ($flakes * $itemmulti);
 					$xpgain = (($flakes * 0.35) * $spot)*$expMod;
 					$flakes = round($flakes);
-					if (userHasEffect($userid, "mining_xp_boost"))
+					if (userHasEffect($userid, constant("mining_xp_boost")))
 					{
-						$xpgain = $xpgain * (returnEffectMultiplier($userid, "mining_xp_boost") + 1);
+					    $xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 					}
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']) . ". You have gained " . number_format($xpgain) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_copper_item'], $flakes);
@@ -323,9 +337,9 @@ function mine()
 					$flakes = $flakes + ($flakes * $itemmulti);
 					$xpgain = (($flakes * 0.55) * $spot)*$expMod;
 					$flakes = round($flakes);
-					if (userHasEffect($userid, "mining_xp_boost"))
+					if (userHasEffect($userid, constant("mining_xp_boost")))
 					{
-						$xpgain = $xpgain * (returnEffectMultiplier($userid, "mining_xp_boost") + 1);
+						$xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 					}
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_silver_item'], $flakes);
@@ -339,9 +353,9 @@ function mine()
 					$flakes = $flakes + ($flakes * $itemmulti);
 					$xpgain = (($flakes * 0.75) * $spot)*$expMod;
 					$flakes = round($flakes);
-					if (userHasEffect($userid, "mining_xp_boost"))
+					if (userHasEffect($userid, constant("mining_xp_boost")))
 					{
-						$xpgain = $xpgain * (returnEffectMultiplier($userid, "mining_xp_boost") + 1);
+					    $xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 					}
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_gold_item'], $flakes);
@@ -353,9 +367,9 @@ function mine()
 					$itemgive = 2;
 				$formula=(14 * $MUS['mining_level'])*$expMod;
 				$xpgain = round(Random($formula/2,$formula*2), 2);
-				if (userHasEffect($userid, "mining_xp_boost"))
+				if (userHasEffect($userid, constant("mining_xp_boost")))
 				{
-					$xpgain = $xpgain * (returnEffectMultiplier($userid, "mining_xp_boost") + 1);
+				    $xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 				}
 				if ($MUS['mine_boost'] > time())
 						$xpgain = $xpgain*2;
@@ -398,7 +412,7 @@ function mining_levelup()
 function mine_item()
 {
 	global $db, $userid, $api, $h, $MUS;
-	if (userHasEffect($userid, "mining_xp_boost"))
+	if (userHasEffect($userid, constant("mining_xp_boost")))
 	{
 		alert('danger',"Uh Oh!","Please let the affects of the herb wear off before consuming another. Results could be... dangerous...",true,'inventory.php');
 		die($h->endpage());
@@ -406,7 +420,7 @@ function mine_item()
 	if ($api->UserHasItem($userid, 177, 1))
 	{
 		alert('success',"Success!","You've consumed a set of herbs and feel strangely relaxed, but ready to learn more while you mine! The effects will wear off in an hour.",true,'inventory.php');
-		userGiveEffect($userid, "mining_xp_boost", 3600);
+		userGiveEffect($userid, constant("mining_xp_boost"), 3600);
 		$api->UserTakeItem($userid, 177, 1);
 	}
 	else
