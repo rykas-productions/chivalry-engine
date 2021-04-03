@@ -95,7 +95,7 @@ if ($ir['rewarded'] == 0)
 	{
 		$api->UserGiveItem($userid,286,1);
 		$api->GameAddNotification($userid,"You've received a Potion of Everlasting Speed for logging into Chivalry is Dead today. Thanks a lot!");
-		$api->SystemLogsAdd($userid, "loginreward", "Received Potion of Everlastin Speed.");
+		$api->SystemLogsAdd($userid, "loginreward", "Received Potion of Everlasting Speed.");
 	}
 	elseif ($reward <= 43 && $reward > 41)
 	{
