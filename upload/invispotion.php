@@ -2,15 +2,11 @@
 require('globals.php');
 if ($api->UserHasItem($userid,68,1))
 {
-	if ($ir['invis'] > time())
-	{
-		$db->query("UPDATE `user_settings` SET `invis` = `invis` + 10800 WHERE `userid` = {$userid}");
-	}
+    $effect = constant("invisibility");
+    if (userHasEffect($userid, $effect))
+	    userUpdateEffect($userid, $effect, (3600*3));
 	else
-	{
-		$time=time()+(3600*3);
-		$db->query("UPDATE `user_settings` SET `invis` = {$time} WHERE `userid` = {$userid}");
-	}
+		userGiveEffect($userid, $effect, (3600*3));
 	alert('success',"Success!","You have successfully used your {$api->SystemItemIDtoName(68)}!",true,'invispotion.php',"Use Another");
 	$api->UserTakeItem($userid, 68, 1);
 	$api->SystemLogsAdd($userid, 'itemuse', "Used {$api->SystemItemIDtoName(68)}.");

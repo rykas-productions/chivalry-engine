@@ -73,16 +73,12 @@ if ($ir['rewarded'] == 0)
 	{
 		$newTime=(60*60)*0.25;
 		$formatTime = $newTime / 60;
-		if ($ir['invis'] > time())
-		{
-			$db->query("UPDATE `user_settings` SET `invis` = `invis` + {$newTime} WHERE `userid` = {$userid}");
-		}
-		else
-		{
-			$time=time()+$newTime;
-			$db->query("UPDATE `user_settings` SET `invis` = {$time} WHERE `userid` = {$userid}");
-		}
-		$api->GameAddNotification($userid,"We've given you {$formatTime} minutes ofinvisibility for your daily log in reward.");
+		$effect = constant("invisibility");
+		if (userHasEffect($userid, $effect))
+		    userUpdateEffect($userid, $effect, $newTime);
+		    else
+		        userGiveEffect($userid, $effect, $newTime);
+		$api->GameAddNotification($userid,"We've given you {$formatTime} minutes of invisibility for your daily log in reward.");
 		$api->SystemLogsAdd($userid, "loginreward", "Received {$formatTime} minutes invisibility.");
 	}
 	elseif ($reward <= 49 && $reward > 47)

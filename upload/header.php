@@ -284,9 +284,10 @@ class headers
 		$protDone = returnEffectDone($userid, "basic_protection");
 		echo "<b><span class='text-info'>You have protection active for the next " . TimeUntil_Parse($protDone) . ".</span></b><br />";
 	}
-    if ($ir['invis'] > time())
+	if (userHasEffect($userid, constant("invisibility")))
 	{
-		echo "<b><span class='text-info'>You have invisibility active for the next " . TimeUntil_Parse($ir['invis']) . ".</span></b><br />";
+	    $effctDone = returnEffectDone($userid, constant("invisibility"));
+	    echo "<b><span class='text-info'>You have invisibility active for the next " . TimeUntil_Parse($effctDone) . ".</span></b><br />";
 	}
 	if ($ir['will_overcharge'] > time())
 	{
@@ -299,7 +300,7 @@ class headers
         if ($db->num_rows($tq) > 0)
         {
             $tr=$db->fetch_row($tq);
-            alert('info',"Tutorial!",$tr['tutorial'],true,'preferences.php?action=tuttoggle',"Disable Tutorial");
+            alert('info',"",$tr['tutorial'],true,'preferences.php?action=tuttoggle',"Disable Tutorial");
         }
     }
 
@@ -729,7 +730,7 @@ class headers
         global $db, $userid, $api, $ir;
         $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 		$time=time();
-		if ($ir['invis'] < time())
+		if (!userHasEffect($userid, constant("invisibility")))
 		{
 			//Update the user as they browse the game.
 			$db->query("UPDATE `users`
