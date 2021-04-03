@@ -217,7 +217,7 @@ function name_change()
         $api->UserTakeCurrency($userid,'secondary',5);
         $_POST['newname'] = $db->escape(htmlentities($_POST['newname'], ENT_QUOTES, 'ISO-8859-1'));
         $db->query("UPDATE `users` SET `username` = '{$_POST['newname']}'  WHERE `userid` = $userid");
-        alert('success', "Success!", "You have changed your username to {$_POST['newname']}.", true, 'preferences.php');
+        alert('success', "Success!", "You have changed your username to {$_POST['newname']} for 5 Chivalry Tokens.", true, 'preferences.php');
         $api->SystemLogsAdd($userid, 'preferences', "Changed username from {$ir['username']} to {$_POST['newname']}.");
     }
 }
@@ -235,7 +235,7 @@ function pw_change()
 		{
 			$nrandomizer=randomizer();
             $db->query("UPDATE `user_settings` SET `security_key` = '{$nrandomizer}' WHERE `userid` = {$ir['userid']}");
-			alert('success',"Success!","New encryption key generated.",false);
+			alert('success',"","New encryption key generated.",false);
             $api->SystemLogsAdd($userid, 'preferences', "Generated new encryption key.");
 		}
 	}
@@ -921,75 +921,77 @@ function themechange()
         echo "Select the theme you wish to see as you play Chivalry is Dead. Not a fan of your UI? You can change it <a href='?action=newui'>here</a>.
 		<hr />
 		<div class='row'>
-			<div class='col-md'>
-				Original<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464837/themes/2020-default.png' class='img-thumbnail img-responsive'>
+			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
+				<img src='./assets/img/themes/2020-default.png' class='img-thumbnail img-responsive'>
+                <br />
 				<form method='post'>
 					<input type='hidden' value='1' name='theme'>
-					<input type='submit' class='btn btn-primary' value='Original'>
+					<input type='submit' class='btn btn-primary btn-block' value='Original'>
 				</form>
+                <br />
 			</div>
-			<div class='col-md'>
-				Darkly<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464838/themes/2020-darkly.png' class='img-thumbnail img-responsive'>
+			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
+				<img src='./assets/img/themes/2020-darkly.png' class='img-thumbnail img-responsive'>
+                <br />
 				<form method='post'>
 					<input type='hidden' value='2' name='theme'>
-					<input type='submit' class='btn btn-primary' value='Darkly'>
+					<input type='submit' class='btn btn-primary btn-block' value='Darkly'>
 				</form>
+                <br />
 			</div>
-			<div class='col-md'>
-				Cerulean<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464837/themes/2020-cerulean.png' class='img-thumbnail img-responsive'>
+			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
+				<img src='./assets/img/themes/2020-cerulean.png' class='img-thumbnail img-responsive'>
+                <br />
 					<form method='post'>
 						<input type='hidden' value='6' name='theme'>
-						<input type='submit' class='btn btn-primary' value='Cerulean'>
+						<input type='submit' class='btn btn-primary btn-block' value='Cerulean'>
 					</form>
+                <br />
 			</div>
-		</div>
-		<hr />
-		<div class='row'>
-			<div class='col-md'>
-				Cyborg<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464837/themes/2020-cyborg.png' class='img-thumbnail img-responsive'>
+			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
+				<img src='./assets/img/themes/2020-cyborg.png' class='img-thumbnail img-responsive'>
+                <br />
 					<form method='post'>
 						<input type='hidden' value='4' name='theme'>
-						<input type='submit' class='btn btn-primary' value='Cyborg'>
+						<input type='submit' class='btn btn-primary btn-block' value='Cyborg'>
 					</form>
+                <br />
 			</div>
-			<div class='col-md'>
-				United<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464839/themes/2020-united.png' class='img-thumbnail img-responsive'>
+			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
+				<img src='./assets/img/themes/2020-united.png' class='img-thumbnail img-responsive'>
+                <br />
 					<form method='post'>
 						<input type='hidden' value='5' name='theme'>
-						<input type='submit' class='btn btn-primary' value='United'>
+						<input type='submit' class='btn btn-primary btn-block' value='United'>
 					</form>
+                <br />
 			</div>
-			<div class='col-md'>
-				Slate<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464839/themes/2020-slate.png' class='img-thumbnail img-responsive'>
+			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
+				<img src='./assets/img/themes/2020-slate.png' class='img-thumbnail img-responsive'>
+                <br />
 					<form method='post'>
 						<input type='hidden' value='3' name='theme'>
-						<input type='submit' class='btn btn-primary' value='Slate'>
+						<input type='submit' class='btn btn-primary btn-block' value='Slate'>
 					</form>
+                <br />
 			</div>
-		</div>
-		<hr />
-		<div class='row'>
-			<div class='col-md'>
-				Castle<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464839/themes/2020-castle.png' class='img-thumbnail img-responsive'>
+			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
+				<img src='./assets/img/themes/2020-castle.png' class='img-thumbnail img-responsive'>
+                <br />
 					<form method='post'>
 						<input type='hidden' value='7' name='theme'>
-						<input type='submit' class='btn btn-primary' value='Castle'>
+						<input type='submit' class='btn btn-primary btn-block' value='Castle'>
 					</form>
+                <br />
 			</div>
-			<div class='col-md'>
-				Sunset<br />
-				<img src='https://res.cloudinary.com/dydidizue/image/upload/v1590464841/themes/2020-sunset.png' class='img-thumbnail img-responsive'>
+			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
+                <img src='./assets/img/themes/2020-sunset.png' class='img-thumbnail img-responsive'>
+                <br />
 					<form method='post'>
 						<input type='hidden' value='8' name='theme'>
-						<input type='submit' class='btn btn-primary' value='Sunset'>
+						<input type='submit' class='btn btn-primary btn-block' value='Sunset'>
 					</form>
+                <br />
 			</div>
 		</div>";
     }
