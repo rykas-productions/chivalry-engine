@@ -159,13 +159,13 @@ if ($ir['rewarded'] == 0)
 	if ($month == 4)
 	{
 	    //Easter
-		if ($day == 4)
+		/*if ($day == 4)
 		{
 		    $effectTime = strtotime("12:00am April 5 2021") - time();
 		    userGiveEffect($userid, constant("holiday_mining_energy"), $effectTime);
 		    $api->UserGiveItem($userid, 408, 1);
 		    $api->GameAddNotification($userid, "For logging into Chivalry is Dead on Easter, we've given you 20% reduced energy needs while mining. If you're lucky, this reduction may increase as you play today.");
-		}
+		}*/
 	}
 	//Month = October
 	if ($month == 10)
