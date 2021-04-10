@@ -240,7 +240,7 @@ function mine()
         } else {
             $MSI = $db->fetch_row($mineinfo);
             if (userHasEffect($userid, constant("holiday_mining_energy")))
-                $energyCost = $energyCost - (returnEffectMultiplier($userid, constant("holiday_mining_energy") * 0.2));
+                $energyCost = $energyCost - (returnEffectMultiplier($userid, constant("holiday_mining_energy")) * 0.2);
 			$MSI['mine_power_use']=$MSI['mine_power_use']*$energyCost;
 			$nextspot=$spot+1;
 			$nextmineslevel = $db->fetch_single($db->query("SELECT `mine_level` FROM `mining_data` WHERE `mine_id` = {$nextspot}"));
