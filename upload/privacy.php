@@ -1,7 +1,9 @@
 <?php
 require('globals_nonauth.php');
 echo "<h3>{$set['WebsiteName']} Privacy Policy</h3><hr />";
-echo "{$set['WebsiteName']} is seriously committed towards protecting the privacy of its users when processing personal
+echo "<div class='card'>
+      <div class='card-body'>
+        {$set['WebsiteName']} is seriously committed towards protecting the privacy of its users when processing personal
     data and considers this for all business practices. {$set['WebsiteName']} observes the pertinent data
     protection guidelines. These data protection provisions apply to all services offered on websites operated by
     {$set['WebsiteName']} as well as to portals and to all online games offered by {$set['WebsiteName']} ('Website')
@@ -162,5 +164,7 @@ echo "<h4>8. Questions on Data Protection and Contact / Information, Correction,
     as their origin and recipient and the purpose it was stored for. If you have any questions about data protection or
     if you wish to correct, block or delete your profile or any of your personal data, or if you would like to revoke
     a granted authorization regarding the use of your customer data or e-mail address, please send an in-game message
-    to any in-game staff member and also provide your username and your e-mail address.";
+    to any in-game staff member and also provide your username and your e-mail address.
+    </div>
+    </div>";
 $h->endpage();

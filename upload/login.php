@@ -19,38 +19,45 @@ $domain = determine_game_urlbase();
 $csrf = request_csrf_html('login');
 echo "
 <div class='row'>
-    <div class='col-lg-4'>
+    <div class='col-md-6 col-lg-5 col-xl-4 col-xxl-3'>
         <div class='card'>
-            <div class='card-header bg-dark text-white'>
-                Sign In <a href='pwreset.php'>Forgot Password?</a>
+            <div class='card-header'>
+                <div class='row'>
+                <div class='col'>
+                        Sign In
+                    </div>
+                <div class='col'>
+                     <a href='pwreset.php'>Forgot Password?</a>
+                    </div>
+                </div>
             </div>
             <div class='card-body'>
                 <form method='post' action='authenticate.php'>
                     {$csrf}
                     <input type='email' name='email' class='form-control' required='true' placeholder='Your email address'><br />
                     <input type='password' name='password' class='form-control' required='true' placeholder='Your password'><br />
-                    <input type='submit' class='btn btn-primary' value='Sign In'><br />
+                    <input type='submit' class='btn btn-primary btn-block' value='Sign In'><br />
                     New here? <a href='register.php'>Sign up</a> for an account!
                 </form>";
 				loginbutton("rectangle");
             echo "</div>
         </div>
+        <br />
     </div>
-    <div class='col-lg-8'>
+    <div class='col-md-6 col-lg-7 col-xl-8 col-xxl-4'>
         <div class='card'>
-            <div class='card-header bg-dark text-white'>
-            {$set['WebsiteName']} Info
+            <div class='card-header'>
+            Warrior with no empathy
             </div>
             <div class='card-body'>
                 {$set['Website_Description']}
             </div>
         </div>
     </div>
-</div>
-<div class='row'>
-    <div class='col-lg-4'>
+    <br />
+    <div class='col-md-6 col-lg-4 col-xxl-5'>
         <div class='card'>
-            <div class='card-header bg-dark text-white'>
+            <div class='card-header'>
                 Highest Ranked Players
             </div>
             <div class='card-body'>";
@@ -67,15 +74,26 @@ echo "
                                 LIMIT 10");
                 while ($pdata = $db->fetch_row($RankPlayerQuery)) {
                     $Rank = $Rank + 1;
-                    echo "{$Rank}) {$pdata['username']} [{$pdata['userid']}] (Level {$pdata['level']})<br />";
+                    echo "<div class='row'>
+                        <div class='col col-md-2'>
+                            {$Rank}
+                        </div>
+                        <div class='col'>
+                            " . parseUsername($pdata['userid']) . " [{$pdata['userid']}]
+                        </div>
+                        <div class='col col-4'>
+                            Level " . number_format($pdata['level']) . "
+                        </div>
+                    </div>";
                 }
                 echo"
             </div>
         </div>
+        <br />
     </div>
-	<div class='col-lg-8'>
+	<div class='col-md-6 col-lg-7 col-xl-8 col-xxl-4'>
         <div class='card'>
-            <div class='card-header bg-dark text-white'>
+            <div class='card-header'>
             Gameplay
             </div>
             <div class='card-body'>
@@ -86,11 +104,10 @@ echo "
             </div>
         </div>
     </div>
-</div>
-<div class='row'>
-    <div class='col-lg-4'>
+    <br />
+    <div class='col-md-6 col-lg-5 col-xl-4 col-xxl-3'>
         <div class='card'>
-            <div class='card-header bg-dark text-white'>
+            <div class='card-header'>
                 No Installation Required!
             </div>
             <div class='card-body'>
@@ -101,9 +118,9 @@ echo "
             </div>
         </div>
     </div>
-	<div class='col-lg-8'>
+	<div class='col-md-6 col-lg-7 col-xl-8 col-xxl-5'>
         <div class='card'>
-            <div class='card-header bg-dark text-white'>
+            <div class='card-header'>
                 Latest Announcement
             </div>
             <div class='card-body'>

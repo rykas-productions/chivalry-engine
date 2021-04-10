@@ -207,12 +207,16 @@ if (!empty($username)) {
     $h->endpage();
 } else {
     echo "
+    <div class='card'>
+    <div class='card-header'>
+        {$set['WebsiteName']} Registration Form
+    </div>
+    <div class='card-body'>
 	<form method='post'>
-	<h3>{$set['WebsiteName']} Registration Form</h3>
 		<div class='row text-left'>
 			<div class='col-md-4'>
 				<h5>Username</h5>
-				<small>This is used to identify yourself around the game.<br />Don't worry, you can change this.</small>
+				<small>This is used to identify yourself around the game.<br />Don't worry, you can change this later.</small>
 			</div>
 			<div class='col-md-8'>
 				<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='3-20 characters in length' onkeyup='CheckUsername(this.value);' required>
@@ -307,17 +311,19 @@ if (!empty($username)) {
 		<hr />
 		<div class='row align-left text-left'>
 		<div class='col-md-9'>";
-		alert("info","","By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a>
+		alert("dark","","By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a>
 						and our <a href='privacy.php'>Privacy Policy</a>. You also agree that you wish to opt-in to our
 						game newsletter. You may opt-out at anytime by checking your in-game settings.",false);
 		echo "
 		</div>
 		<div class='col-md-3 text-center'>
-			<input type='submit' class='btn btn-primary' value='Register' />
+			<input type='submit' class='btn btn-primary btn-block' value='Register' />
 		</div>
 		</div>
 		<hr />
 	</form>
-	&gt; <a href='login.php'>Login Page</a>";
+	<a href='login.php' class='btn btn-danger btn-block'>Login Page</a>
+    </div>
+    </div>";
 }
 $h->endpage();

@@ -52,8 +52,8 @@ class headers
 
 				<!— Windows 8.1 + IE11 and above —>
 				<meta name='msapplication-config' content='assets/browserconfig.xml' />
-                <link rel="stylesheet" href="css/sunset-v4.5.0.css">
-				<meta name="theme-color" content="rgba(0, 0, 0, .8)">
+                <link rel='stylesheet' href='css/themes/sunset-21.2.1.css'>
+				<meta name='theme-color' content='#dc3545'>
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']} - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; 
 				include('ads/ad_all.php');
@@ -65,10 +65,10 @@ class headers
             $csrf = request_csrf_html('login');
             ?>
             <!-- Navigation -->
-            <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+            <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-danger">
                 <a class="navbar-brand" href="index.php">
 					<?php 
-						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_30/v1520819749/logo.png' alt=''>
+						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_30/v1520819749/logo.png' alt='Chivalry is Dead logo.'>
 						{$set['WebsiteName']}"; 
 					?>
 				</a>
