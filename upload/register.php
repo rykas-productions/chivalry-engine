@@ -113,7 +113,7 @@ if (!empty($username)) {
         }
         $encpsw = encode_password($base_pw);    //Encode the password.
         $e_encpsw = $db->escape($encpsw);
-        $profilepic = "https://www.gravatar.com/avatar/" . md5(strtolower(trim($e_email))) . "?s=250.jpg";
+        $profilepic = "https://gravatar.com/avatar/" . md5(strtolower(trim($e_email))) . "?s=250.jpg";
         $CurrentTime = time();
         $db->query("INSERT INTO `users`
 					(`username`,`email`,`password`,`level`,`gender`,`class`,
