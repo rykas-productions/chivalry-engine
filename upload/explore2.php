@@ -206,6 +206,7 @@ echo "
 					<a href='announcements.php'><i class='fas fa-bullhorn'></i> Announcements <span class='badge badge-pill badge-primary'>" . number_format($ir['announcements']) . "</span></a><br />
 					<a href='itemappendix.php'><i class='fas fa-list'></i> Item Appendix</a><br />
 					<a href='milestones.php'>Milestones</a><br />
+                    <a href=promo.php'>Promo Codes</a><br />
 				</div>
 			</div>
 		</div>

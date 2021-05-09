@@ -263,6 +263,9 @@ echo"
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
 						<a href='milestones.php'>" . loadImageAsset("explore/milestone.svg") . " Milestones</a>
 					</div>
+                    <div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
+						<a href='promo.php'> Promo Codes</a>
+					</div>
 				</div>
 			</div>
 		</div>
