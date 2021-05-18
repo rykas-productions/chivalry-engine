@@ -29,7 +29,7 @@ if ($ir['rewarded'] == 0)
 	elseif ($reward <= 98 && $reward > 90)
 	{
 		$api->UserGiveItem($userid,207,$medReward);
-		$api->GameAddNotification($userid,"While logging into Chivalry is Dead today, you were gifted {$medReward} Priority Vouchers, used at the infirmary. Consider it a gift from us. ðŸ˜‰");
+		$api->GameAddNotification($userid,"While logging into Chivalry is Dead today, you were gifted {$medReward} Priority Vouchers, used at the infirmary. Consider it a gift from us. ;)");
 		$api->SystemLogsAdd($userid, "loginreward", "Received {$medReward} Priority Vouchers.");
 	}
 	elseif ($reward <= 89 && $reward > 85)
@@ -48,7 +48,7 @@ if ($ir['rewarded'] == 0)
 	elseif ($reward <= 74 && $reward > 70)
 	{
 		$api->UserGiveItem($userid,259,1);
-		$api->GameAddNotification($userid,"For logging into Chivalry is Dead today, we gave you a Marriage Rose. Hint, hint. :) We love you {$ir['username']}. We love you. â�¤");
+		$api->GameAddNotification($userid,"For logging into Chivalry is Dead today, we gave you a Marriage Rose. Hint, hint. :) We love you {$ir['username']}. We love you. < 3");
 		$api->SystemLogsAdd($userid, "loginreward", "Received Marriage Rose.");
 	}
 	elseif ($reward <= 69 && $reward > 65)
@@ -126,10 +126,41 @@ if ($ir['rewarded'] == 0)
 	}
 	elseif ($reward <= 10 && $reward > 8)
 	{
-		$newAddToken = $ir['tokenbank']/50; 
-		$db->query("UPDATE `users` SET `tokenbank`=`tokenbank`+(`tokenbank`/50) WHERE `tokenbank`>0 AND `userid` = {$userid}");
-		$api->GameAddNotification($userid,"We <i>accidentally</i> ran 2% interest on your Chivalry Token account. Sorry! However, for the mess up, we'll allow you to keep the extra Chivalry Tokens in the account. Thanks for playing Chivalry is Dead!");
-		$api->SystemLogsAdd($userid, "loginreward", "Received 2% Token Bank account interest.");
+	    if ($ir['tokenbank'] == -1)
+	    {
+	        $newAddToken = 100;
+	        $api->UserGiveCurrency($userid, "secondary", $newAddToken);
+	        $api->GameAddNotification($userid,"We were going to run interest on your Chivalry Token account, but you don't have one. So, we're giving you {$newAddToken} Chivalry Tokens instead.");
+	        $api->SystemLogsAdd($userid, "loginreward", "Received {$newAddToken} Chivalry Tokens.");
+	    }
+	    elseif ($ir['tokenbank'] == 0)
+	    {
+	        $newAddToken = 100;
+	        $api->UserGiveCurrency($userid, "secondary", $newAddToken);
+	        $api->GameAddNotification($userid,"We were going to run interest on your Chivalry Token account, but you don't have any tokens in the account. So, we're giving you {$newAddToken} Chivalry Tokens instead.");
+	        $api->SystemLogsAdd($userid, "loginreward", "Received {$newAddToken} Chivalry Tokens.");
+	    }
+		elseif ($ir['tokenbank'] <= 100000)
+		{
+		    $newAddToken = $ir['tokenbank']/50;
+    		$db->query("UPDATE `users` SET `tokenbank`=`tokenbank`+(`tokenbank`/50) WHERE `tokenbank`>0 AND `userid` = {$userid}");
+    		$api->GameAddNotification($userid,"We <i>accidentally</i> ran 2% interest on your Chivalry Token account. Sorry! However, for the mess up, we'll allow you to keep the extra Chivalry Tokens in the account. Thanks for playing Chivalry is Dead!");
+    		$api->SystemLogsAdd($userid, "loginreward", "Received 2% Token Bank account interest.");
+		}
+		elseif (($ir['tokenbank'] > 100000) && ($ir['tokenbank'] <= 500000))
+		{
+		    $newAddToken = $ir['tokenbank']/100;
+		    $db->query("UPDATE `users` SET `tokenbank`=`tokenbank`+(`tokenbank`/100) WHERE `tokenbank`>0 AND `userid` = {$userid}");
+		    $api->GameAddNotification($userid,"We <i>accidentally</i> ran 1% interest on your Chivalry Token account. Sorry! However, for the mess up, we'll allow you to keep the extra Chivalry Tokens in the account. Thanks for playing Chivalry is Dead!");
+		    $api->SystemLogsAdd($userid, "loginreward", "Received 1% Token Bank account interest.");
+		}
+		else
+		{
+		    $newAddToken = 5000;
+		    $db->query("UPDATE `users` SET `tokenbank`=`tokenbank`+5000 WHERE `tokenbank`>0 AND `userid` = {$userid}");
+		    $api->GameAddNotification($userid,"We've given you 5,000 Chivalry Tokens to your Chivalry Token bank account, just for logging into the game! Thank you!");
+		    $api->SystemLogsAdd($userid, "loginreward", "Received 5,000 Chivalry Tokens to their Chivalry Token account.");
+		}
 		addToEconomyLog('Daily Reward', 'token', $newAddToken);
 	}
 	elseif ($reward <= 7 && $reward > 1)
