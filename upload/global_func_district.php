@@ -478,3 +478,229 @@ function logBattle($attacker, $defender, $att_war, $att_range, $att_war_lost, $a
 		'{$def_range}', '{$def_range_lost}', '{$def_general}', '{$fortify}', '{$time}')");
     return $db->insert_id();
 }
+
+function parseTile(int $districtID, $extra = '')
+{
+    global $db, $ir, $api;
+    $id=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$districtID}");
+    if ($db->num_rows($id) > 0)
+    {
+        $district_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
+        $r=$db->fetch_row($id);
+        $color='#f5c6cb';
+        $border='#dee2e6';
+        $thicc='tiny';
+        if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
+            $color='#c3e6cb';
+            if ($r['district_type'] == 'river')
+            {
+                $color='#b8daff';
+            }
+            if ($r['district_type'] == 'elevated')
+            {
+                $thicc='medium';
+                $border='#ffc107';
+            }
+            if ($r['district_type'] == 'lowered')
+            {
+                $thicc='medium';
+                $border='#f8f9fa';
+            }
+            if ($r['district_type'] == 'market')
+            {
+                $border='#17a2b8';
+                $thicc='medium';
+            }
+            if ($r['district_type'] == 'outpost')
+            {
+                $thicc='medium';
+                $border='#9a6790';
+            }
+            if ($r['district_fortify'] > 0)
+            {
+                if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
+                    $border='#28a745';
+                    else
+                        $border='#343a40';
+                        
+                        $thicc='medium';
+            }
+            echo "
+			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
+				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
+				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
+            if (isDistrictAccessible($r['district_id']))
+            {
+                echo "Warriors: " . number_format($r['district_melee']) . "<br />
+					Archers: " . number_format($r['district_range']) . "<br />
+					Generals: " . number_format($r['district_general']) . "<br />
+					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
+                    if ($extra == "attack")
+                    {
+                        if (isGuildDistrict($r['district_id']))
+                        {
+                            if (isAccessibleFromTile($r['district_id'], $district_id))
+                                echo "<a href='?action=attackform&from={$r['district_id']}&to={$district_id}' class='btn btn-danger'>Attack from Here</a>";
+                        }
+                        if ($district_id == $r['district_id'])
+                            echo "<a href='?action=attackformbarracks&to={$district_id}' class='btn btn-danger'>Attack from Barracks</a>";
+                    }
+                    if ($extra == "moveto")
+                    {
+                        if (isGuildDistrict($r['district_id']) && ($district_id != $r['district_id']))
+                        {
+                            if (isAccessibleFromTile($r['district_id'], $district_id))
+                                echo "<a href='?action=moveform&from={$r['district_id']}&to={$district_id}' class='btn btn-warning'>Move to Here</a>";
+                        }
+                        if ($district_id == $r['district_id'])
+                            echo "<i><b>Moving troops from here...</b></i>";
+                    }
+                    if ($extra == "info")
+                    {
+                        if ($district_id == $r['district_id'])
+                        {
+                            if (!isGuildDistrict($r['district_id']))
+                                echo "<a href='?action=attack&id={$r['district_id']}' class='btn btn-danger'>Attack Tile</a><br />";
+                                if (isGuildDistrict($r['district_id']))
+                                {
+                                    echo "<a href='?action=moveto&id={$r['district_id']}' class='btn btn-warning'>Move Troops</a><br />
+            						<a href='?action=movebarracks&id={$r['district_id']}' class='btn btn-secondary'>Move from Barracks</a><br />
+            						<a href='?action=fortify&id={$r['district_id']}' class='btn btn-success'>Fortify</a><br />";
+                                }
+                        }
+                        else
+                        {
+                            echo "<a href='?action=view&id={$r['district_id']}' class='btn btn-primary'>View Info</a>";
+                        }
+                    }
+            }
+            "</td>";
+    }
+}
+
+function parseNWtile(int $districtID, $extra = '')
+{
+    global $db;
+    $id=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$districtID}");
+    if ($db->num_rows($id) > 0)
+    {
+        $r=$db->fetch_row($id);
+        $NW=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} - 1) AND `district_y` = ({$r['district_y']} - 1)");
+        if ($db->num_rows($NW) > 0)
+        {
+            $r2=$db->fetch_row($NW);
+            parseTile($r2['district_id'], $extra);
+        }
+    }
+}
+
+function parseNtile(int $districtID, $extra = '')
+{
+    global $db;
+    $id=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$districtID}");
+    if ($db->num_rows($id) > 0)
+    {
+        $r=$db->fetch_row($id);
+        $NW=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']}) AND `district_y` = ({$r['district_y']} - 1)");
+        if ($db->num_rows($NW) > 0)
+        {
+            $r2=$db->fetch_row($NW);
+            parseTile($r2['district_id'], $extra);
+        }
+    }
+}
+
+function parseNEtile(int $districtID, $extra = '')
+{
+    global $db;
+    $id=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$districtID}");
+    if ($db->num_rows($id) > 0)
+    {
+        $r=$db->fetch_row($id);
+        $NW=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} + 1) AND `district_y` = ({$r['district_y']} - 1)");
+        if ($db->num_rows($NW) > 0)
+        {
+            $r2=$db->fetch_row($NW);
+            parseTile($r2['district_id'], $extra);
+        }
+    }
+}
+function parseWtile(int $districtID, $extra = '')
+{
+    global $db;
+    $id=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$districtID}");
+    if ($db->num_rows($id) > 0)
+    {
+        $r=$db->fetch_row($id);
+        $NW=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} - 1) AND `district_y` = ({$r['district_y']})");
+        if ($db->num_rows($NW) > 0)
+        {
+            $r2=$db->fetch_row($NW);
+            parseTile($r2['district_id'], $extra);
+        }
+    }
+}
+
+function parseEtile(int $districtID, $extra = '')
+{
+    global $db;
+    $id=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$districtID}");
+    if ($db->num_rows($id) > 0)
+    {
+        $r=$db->fetch_row($id);
+        $NW=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} + 1) AND `district_y` = ({$r['district_y']})");
+        if ($db->num_rows($NW) > 0)
+        {
+            $r2=$db->fetch_row($NW);
+            parseTile($r2['district_id'], $extra);
+        }
+    }
+}
+
+function parseSWtile(int $districtID, $extra = '')
+{
+    global $db;
+    $id=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$districtID}");
+    if ($db->num_rows($id) > 0)
+    {
+        $r=$db->fetch_row($id);
+        $NW=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} - 1) AND `district_y` = ({$r['district_y']} + 1)");
+        if ($db->num_rows($NW) > 0)
+        {
+            $r2=$db->fetch_row($NW);
+            parseTile($r2['district_id'], $extra);
+        }
+    }
+}
+
+function parseStile(int $districtID, $extra = '')
+{
+    global $db;
+    $id=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$districtID}");
+    if ($db->num_rows($id) > 0)
+    {
+        $r=$db->fetch_row($id);
+        $NW=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']}) AND `district_y` = ({$r['district_y']} + 1)");
+        if ($db->num_rows($NW) > 0)
+        {
+            $r2=$db->fetch_row($NW);
+            parseTile($r2['district_id'], $extra);
+        }
+    }
+}
+
+function parseSEtile(int $districtID, $extra = '')
+{
+    global $db;
+    $id=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$districtID}");
+    if ($db->num_rows($id) > 0)
+    {
+        $r=$db->fetch_row($id);
+        $NW=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} + 1) AND `district_y` = ({$r['district_y']} + 1)");
+        if ($db->num_rows($NW) > 0)
+        {
+            $r2=$db->fetch_row($NW);
+            parseTile($r2['district_id'], $extra);
+        }
+    }
+}
