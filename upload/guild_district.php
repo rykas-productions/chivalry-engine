@@ -1431,7 +1431,7 @@ function movefromtile()
                                 <b>Generals (Have " . number_format($r2['district_general']) . ")</b>
                             </div>
                             <div class='col-12'>
-                                <input type='number' name='archers' class='form-control' value='{$gdi['barracks_generals']}' max='{$gdi['barracks_generals']}' min='0'>
+                                <input type='number' name='generals' class='form-control' value='{$gdi['barracks_generals']}' max='{$gdi['barracks_generals']}' min='0'>
                             </div>
                         </div>
                     </div>
@@ -1644,7 +1644,7 @@ function movefrombarracks()
                                 <b>Generals (Have " . number_format($gdi['barracks_generals']) . ")</b>
                             </div>
                             <div class='col-12'>
-                                <input type='number' name='archers' class='form-control' value='{$gdi['barracks_generals']}' max='{$gdi['barracks_generals']}' min='0'>
+                                <input type='number' name='generals' class='form-control' value='{$gdi['barracks_generals']}' max='{$gdi['barracks_generals']}' min='0'>
                             </div>
                         </div>
                     </div>
