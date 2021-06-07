@@ -17,7 +17,7 @@ while ($r = $db->fetch_row($q)) {
     //If announcements unread is greater than 0, show unread badge.
     if ($AnnouncementCount > 0) {
         $AnnouncementCount--;
-        $new = "<span class='badge badge-pill badge-danger'>New!</span>";
+        $new = "<span class='badge badge-pill badge-danger'>New!</span><br />";
     } //Else... show the read badge.
     else {
         $new = "";
@@ -34,11 +34,11 @@ while ($r = $db->fetch_row($q)) {
     
         echo "
         <div class='card'>
-            <div class='card-header'>
-                Posted By <a href='profile.php?user={$r['ann_poster']}'>{$Poster}</a> {$AnnouncementTime} {$new}
-            </div>
             <div class='card-body'>
-                <p class='card-text'>" . $parser->getAsHtml() . "</p>
+                <p class='card-text'>{$new}" . $parser->getAsHtml() . "</p><hr />
+                <p class='card-text text-muted'><small><i>
+                    Posted By <a href='profile.php?user={$r['ann_poster']}'>{$Poster}</a> {$AnnouncementTime}
+                    </small></i></p>
             </div>
         </div><br />";
 }
