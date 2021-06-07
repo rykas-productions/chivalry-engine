@@ -490,6 +490,7 @@ function parseTile(int $districtID, $extra = '')
         $color='#f5c6cb';
         $border='#dee2e6';
         $thicc='tiny';
+        //@todo investigate possibility of redoing the type system to be more clear.
         if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
             $color='#c3e6cb';
             if ($r['district_type'] == 'river')
@@ -498,7 +499,7 @@ function parseTile(int $districtID, $extra = '')
             }
             if ($r['district_type'] == 'elevated')
             {
-                $thicc='medium';
+                $thicc='1px';
                 $border='#ffc107';
             }
             if ($r['district_type'] == 'lowered')
@@ -523,7 +524,7 @@ function parseTile(int $districtID, $extra = '')
                     else
                         $border='#343a40';
                         
-                        $thicc='medium';
+                        $thicc="{$r['district_fortify']}px";
             }
             echo "
 			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
