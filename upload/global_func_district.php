@@ -561,13 +561,16 @@ function parseTile(int $districtID, $extra = '')
                         if ($district_id == $r['district_id'])
                         {
                             if (!isGuildDistrict($r['district_id']))
-                                echo "<a href='?action=attack&id={$r['district_id']}' class='btn btn-danger'>Attack Tile</a><br />";
-                                if (isGuildDistrict($r['district_id']))
-                                {
-                                    echo "<a href='?action=moveto&id={$r['district_id']}' class='btn btn-warning'>Move Troops</a><br />
-            						<a href='?action=movebarracks&id={$r['district_id']}' class='btn btn-secondary'>Move from Barracks</a><br />
-            						<a href='?action=fortify&id={$r['district_id']}' class='btn btn-success'>Fortify</a><br />";
-                                }
+                            {
+                                echo "<a href='?action=attack&id={$r['district_id']}' class='btn btn-danger'>Attack Tile</a><br />
+                                    <a href='?action=sabotage&id={$r['district_id']}' class='btn btn-secondary'>Sabotage Tile</a><br />";
+                            }
+                            if (isGuildDistrict($r['district_id']))
+                            {
+                                echo "<a href='?action=moveto&id={$r['district_id']}' class='btn btn-warning'>Move Troops</a><br />
+        						<a href='?action=movebarracks&id={$r['district_id']}' class='btn btn-secondary'>Move from Barracks</a><br />
+        						<a href='?action=fortify&id={$r['district_id']}' class='btn btn-success'>Fortify</a><br />";
+                            }
                         }
                         else
                         {
