@@ -132,6 +132,9 @@ switch ($_GET['action'])
 	case 'viewreport':
 		battlereport();
         break;
+	case 'sabotage':
+	    explodedistrict();
+	    break;
 	default:
         home();
         break;
@@ -347,544 +350,94 @@ function attack()
 function explodedistrict()
 {
     global $districtConfig, $userid, $db, $api, $h, $ir, $gdi;
-    $district_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
-    if (!isset($gdi))
+    $attack_to = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
+    if (blockAccess($ir['guild']))
     {
-        alert('danger',"Uh Oh!","You cannot attack while not in a guild.",true,'guild_district.php');
+        alert('danger',"Uh Oh!","You cannot sabotage a tile while not in a guild.",true,'guild_district.php');
         die($h->endpage());
     }
     if (!isGuildLeaders($ir['guild'], $userid))
     {
-        alert('danger',"Uh Oh!","You must be a guild leader or co-leader to coordinate attacks.",true,'guild_district.php');
+        alert('danger',"Uh Oh!","You must be a guild leader or co-leader to sabotage tiles.",true,'guild_district.php');
         die($h->endpage());
     }
-    if (blockAccess($ir['guild']))
+    if (empty($attack_to))
     {
-        alert('danger',"Uh Oh!","You cannot attack while not in a guild.",true,'guild_district.php');
+        alert('danger',"Uh Oh!","You are attempting to interact with an invalid district.",true,'guild_district.php');
         die($h->endpage());
     }
-    if (empty($district_id))
+    $c=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$attack_to}");
+    if ($db->num_rows($c) == 0)
     {
-        alert('danger',"Uh Oh!","You are attempting to attack an invalid district.",true,'guild_district.php');
+        alert('danger',"Uh Oh!","You are attempting to interact with a non-existent district.",true,'guild_district.php');
         die($h->endpage());
     }
-    $central=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$district_id}");
-    if ($db->num_rows($central) == 0)
+    if (!isDistrictAccessible($attack_to))
     {
-        alert('danger',"Uh Oh!","You are attempting to attack a non-existent district.",true,'guild_district.php');
+        alert('danger',"Uh Oh!","You do not have direct access to this tile. Please ensure that you're interacting with tiles on the outer border first, and then tiles adjacent to ones your guild owns.",true,'guild_district.php');
         die($h->endpage());
     }
-    if (isGuildDistrict($district_id))
+    if ($gdi['moves'] == 0)
     {
-        alert('danger',"Uh Oh!","You cannot attack a friendly district.",true,'guild_district.php');
+        alert('danger',"Uh Oh!","You have ran out of moves for today. Try again tomorrow.",true,'guild_district.php');
         die($h->endpage());
     }
-    $r=$db->fetch_row($central);
-    $NW=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} - 1) AND `district_y` = ({$r['district_y']} - 1)");
-    $N=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = {$r['district_x']} AND `district_y` = ({$r['district_y']} - 1)");
-    $NE=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} + 1) AND `district_y` = ({$r['district_y']} - 1)");
-    
-    $W=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} - 1) AND `district_y` = {$r['district_y']}");
-    $C=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = {$r['district_x']} AND `district_y` = {$r['district_y']}");
-    $E=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} + 1) AND `district_y` = {$r['district_y']}");
-    
-    $SW=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} - 1) AND `district_y` = ({$r['district_y']} + 1)");
-    $S=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = {$r['district_x']} AND `district_y` = ({$r['district_y']} + 1)");
-    $SE=$db->query("SELECT * FROM `guild_districts` WHERE `district_x` = ({$r['district_x']} + 1) AND `district_y` = ({$r['district_y']} + 1)");
-    
-    echo "<table class='table table-bordered table-dark'>";
-    //Top
-    echo "<tr>";
-    //North West
-    if ($db->num_rows($NW) > 0)
+    $q2=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$attack_to}");
+    $r2=$db->fetch_row($q2);
+    $guildcurr = $db->fetch_single($db->query("SELECT `guild_seccurr` FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
+    if (isset($_POST['warriors']))
     {
-        $r=$db->fetch_row($NW);
-        $color='#f5c6cb';
-        $border='#dee2e6';
-        $thicc='tiny';
-        if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-            $color='#c3e6cb';
-            if ($r['district_type'] == 'river')
-            {
-                $color='#b8daff';
-            }
-            if ($r['district_type'] == 'elevated')
-            {
-                $thicc='medium';
-                $border='#ffc107';
-            }
-            if ($r['district_type'] == 'lowered')
-            {
-                $thicc='medium';
-                $border='#f8f9fa';
-            }
-            if ($r['district_type'] == 'market')
-            {
-                $border='#17a2b8';
-                $thicc='medium';
-            }
-            if ($r['district_type'] == 'outpost')
-            {
-                $thicc='medium';
-                $border='#9a6790';
-            }
-            if ($r['district_fortify'] > 0)
-            {
-                if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-                    $border='#28a745';
-                    else
-                        $border='#343a40';
-                        
-                        $thicc='medium';
-            }
-            echo "
-			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
-				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
-            if (isDistrictAccessible($r['district_id']))
-            {
-                echo "Warriors: " . number_format($r['district_melee']) . "<br />
-					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />
-					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
-                if (isGuildDistrict($r['district_id']))
-                {
-                    if (isAccessibleFromTile($r['district_id'], $district_id))
-                        echo "[<a href='?action=attackform&from={$r['district_id']}&to={$district_id}'>Attack from Here</a>]";
-                }
-            }
-            "</td>";
+        if ($r2['district_fortify'] == 0)
+        {
+            alert('danger',"Uh Oh!","You cannot sabotage this district tile, as it isn't fortified.",true,'guild_district.php');
+            die($h->endpage());
+        }
+        if ($guildcurr < 25000)
+        {
+            alert('danger',"Uh Oh!","Your guild needs 25,000 Chivalry Tokens before you can fortify this district.",true,'guild_district.php');
+            die($h->endpage());
+        }
+        $random = Random(1,100);
+        if ($random <= 60)
+        {
+            $db->query("UPDATE `guild_districts` SET `district_fortify` = `district_fortify` - 1 WHERE `district_id` = {$attack_to}");
+            alert('success',"","You have successfully sabotage this tile (" . resolveCoordinates($attack_to) .") at the cost of 25K Chivalry Tokens.",true,'guild_district.php');
+            $api->GuildAddNotification($r2['district_owner'], "Your guild has suffered a sabotage at (" . resolveCoordinates($attack_to) .") in the guild districts. You've lost a fortification level.");
+        }
+        else
+        {
+            alert('success',"","You have paid 25K Chivlary Tokens and have failed to sabotage this tile (" . resolveCoordinates($attack_to) .").",true,'guild_district.php');
+            $api->GuildAddNotification($r2['district_owner'], "Your guild has has stopped an attempted a sabotage at (" . resolveCoordinates($attack_to) .") in the guild districts.");
+        }
+        $api->SystemLogsAdd($userid,"district","Spent 25,000 Chivalry Tokens to attempt a sabotage on tile " . resolveCoordinates($attack_to) .".");
+        $db->query("UPDATE `guild` SET `guild_seccurr` = `guild_seccurr` - 25000 WHERE `guild_id` = {$ir['guild']}");
+        addToEconomyLog('Districts','token', -25000);
+        $db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
+        $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . "</a> has spent 25K Chivalry Tokens to sabotage district tile ( " . resolveCoordinates($attack_to) ." ).");
     }
-    //North
-    if ($db->num_rows($N) > 0)
+    else
     {
-        $r=$db->fetch_row($N);
-        $color='#f5c6cb';
-        $border='#dee2e6';
-        $thicc='tiny';
-        if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-            $color='#c3e6cb';
-            if ($r['district_type'] == 'river')
-            {
-                $color='#b8daff';
-            }
-            if ($r['district_type'] == 'elevated')
-            {
-                $thicc='medium';
-                $border='#ffc107';
-            }
-            if ($r['district_type'] == 'lowered')
-            {
-                $thicc='medium';
-                $border='#f8f9fa';
-            }
-            if ($r['district_type'] == 'market')
-            {
-                $border='#17a2b8';
-                $thicc='medium';
-            }
-            if ($r['district_type'] == 'outpost')
-            {
-                $thicc='medium';
-                $border='#9a6790';
-            }
-            if ($r['district_fortify'] > 0)
-            {
-                if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-                    $border='#28a745';
-                    else
-                        $border='#343a40';
-                        
-                        $thicc='medium';
-            }
-            echo "
-			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
-				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
-            if (isDistrictAccessible($r['district_id']))
-            {
-                echo "Warriors: " . number_format($r['district_melee']) . "<br />
-					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />
-					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
-            }
-            if (isGuildDistrict($r['district_id']))
-            {
-                if (isAccessibleFromTile($r['district_id'], $district_id))
-                    echo "[<a href='?action=attackform&from={$r['district_id']}&to={$district_id}'>Attack from Here</a>]";
-            }
-            "</td>";
+        echo "
+        <div class='card'>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-12'>
+                        You are attempting to sabotage this tile. Please click the button to confirm.<br />
+                		It costs 25K Chivalry Tokens to sabotage a tile. Success is not guaranteed.<br />
+                        Sabotaging a tile may drop its fortification level or troop count.
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12'>
+                        <form method='post'>
+                			<input type='hidden' name='warriors' value='true'>
+                			<input type='submit' class='btn btn-success btn-block' value='Sabotage'>
+                		</form>
+                    </div>
+                </div>
+            </div>
+        </div>";
     }
-    //North East
-    if ($db->num_rows($NE) > 0)
-    {
-        $r=$db->fetch_row($NE);
-        $color='#f5c6cb';
-        $border='#dee2e6';
-        $thicc='tiny';
-        if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-            $color='#c3e6cb';
-            if ($r['district_type'] == 'river')
-            {
-                $color='#b8daff';
-            }
-            if ($r['district_type'] == 'elevated')
-            {
-                $thicc='medium';
-                $border='#ffc107';
-            }
-            if ($r['district_type'] == 'lowered')
-            {
-                $thicc='medium';
-                $border='#f8f9fa';
-            }
-            if ($r['district_type'] == 'market')
-            {
-                $border='#17a2b8';
-                $thicc='medium';
-            }
-            if ($r['district_type'] == 'outpost')
-            {
-                $thicc='medium';
-                $border='#9a6790';
-            }
-            if ($r['district_fortify'] > 0)
-            {
-                if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-                    $border='#28a745';
-                    else
-                        $border='#343a40';
-                        
-                        $thicc='medium';
-            }
-            echo "
-			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
-				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
-            if (isDistrictAccessible($r['district_id']))
-            {
-                echo "Warriors: " . number_format($r['district_melee']) . "<br />
-					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />
-					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
-                if (isGuildDistrict($r['district_id']))
-                {
-                    if (isAccessibleFromTile($r['district_id'], $district_id))
-                        echo "[<a href='?action=attackform&from={$r['district_id']}&to={$district_id}'>Attack from Here</a>]";
-                }
-            }
-            "</td>";
-    }
-    echo "</tr>";
-    //Center
-    echo"<tr>";
-    //West
-    if ($db->num_rows($W) > 0)
-    {
-        $r=$db->fetch_row($W);
-        $color='#f5c6cb';
-        $border='#dee2e6';
-        $thicc='tiny';
-        if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-            $color='#c3e6cb';
-            if ($r['district_type'] == 'river')
-            {
-                $color='#b8daff';
-            }
-            if ($r['district_type'] == 'elevated')
-            {
-                $thicc='medium';
-                $border='#ffc107';
-            }
-            if ($r['district_type'] == 'lowered')
-            {
-                $thicc='medium';
-                $border='#f8f9fa';
-            }
-            if ($r['district_type'] == 'market')
-            {
-                $border='#17a2b8';
-                $thicc='medium';
-            }
-            if ($r['district_type'] == 'outpost')
-            {
-                $thicc='medium';
-                $border='#9a6790';
-            }
-            if ($r['district_fortify'] > 0)
-            {
-                if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-                    $border='#28a745';
-                    else
-                        $border='#343a40';
-                        
-                        $thicc='medium';
-            }
-            echo "
-			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
-				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
-            if (isDistrictAccessible($r['district_id']))
-            {
-                echo "Warriors: " . number_format($r['district_melee']) . "<br />
-					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />
-					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
-                if (isGuildDistrict($r['district_id']))
-                {
-                    if (isAccessibleFromTile($r['district_id'], $district_id))
-                        echo "[<a href='?action=attackform&from={$r['district_id']}&to={$district_id}'>Attack from Here</a>]";
-                }
-            }
-            "</td>";
-    }
-    //central
-    parseTile($district_id);
-    //East
-    if ($db->num_rows($E) > 0)
-    {
-        $r=$db->fetch_row($E);
-        $color='#f5c6cb';
-        $border='#dee2e6';
-        $thicc='tiny';
-        if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-            $color='#c3e6cb';
-            if ($r['district_type'] == 'river')
-            {
-                $color='#b8daff';
-            }
-            if ($r['district_type'] == 'elevated')
-            {
-                $thicc='medium';
-                $border='#ffc107';
-            }
-            if ($r['district_type'] == 'lowered')
-            {
-                $thicc='medium';
-                $border='#f8f9fa';
-            }
-            if ($r['district_type'] == 'market')
-            {
-                $border='#17a2b8';
-                $thicc='medium';
-            }
-            if ($r['district_type'] == 'outpost')
-            {
-                $thicc='medium';
-                $border='#9a6790';
-            }
-            if ($r['district_fortify'] > 0)
-            {
-                if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-                    $border='#28a745';
-                    else
-                        $border='#343a40';
-                        
-                        $thicc='medium';
-            }
-            echo "
-			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
-				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
-            if (isDistrictAccessible($r['district_id']))
-            {
-                echo "Warriors: " . number_format($r['district_melee']) . "<br />
-					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />
-					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
-                if (isGuildDistrict($r['district_id']))
-                {
-                    if (isAccessibleFromTile($r['district_id'], $district_id))
-                        echo "[<a href='?action=attackform&from={$r['district_id']}&to={$district_id}'>Attack from Here</a>]";
-                }
-            }
-            "</td>";
-    }
-    echo "</tr>";
-    //Bottom
-    echo "<tr>";
-    //South West
-    if ($db->num_rows($SW) > 0)
-    {
-        $r=$db->fetch_row($SW);
-        $color='#f5c6cb';
-        $border='#dee2e6';
-        $thicc='tiny';
-        if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-            $color='#c3e6cb';
-            if ($r['district_type'] == 'river')
-            {
-                $color='#b8daff';
-            }
-            if ($r['district_type'] == 'elevated')
-            {
-                $thicc='medium';
-                $border='#ffc107';
-            }
-            if ($r['district_type'] == 'lowered')
-            {
-                $thicc='medium';
-                $border='#f8f9fa';
-            }
-            if ($r['district_type'] == 'market')
-            {
-                $border='#17a2b8';
-                $thicc='medium';
-            }
-            if ($r['district_type'] == 'outpost')
-            {
-                $thicc='medium';
-                $border='#9a6790';
-            }
-            if ($r['district_fortify'] > 0)
-            {
-                if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-                    $border='#28a745';
-                    else
-                        $border='#343a40';
-                        
-                        $thicc='medium';
-            }
-            echo "
-			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
-				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
-            if (isDistrictAccessible($r['district_id']))
-            {
-                echo "Warriors: " . number_format($r['district_melee']) . "<br />
-					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />
-					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
-                if (isGuildDistrict($r['district_id']))
-                {
-                    if (isAccessibleFromTile($r['district_id'], $district_id))
-                        echo "[<a href='?action=attackform&from={$r['district_id']}&to={$district_id}'>Attack from Here</a>]";
-                }
-            }
-            "</td>";
-    }
-    //South
-    if ($db->num_rows($S) > 0)
-    {
-        $r=$db->fetch_row($S);
-        $color='#f5c6cb';
-        $border='#dee2e6';
-        $thicc='tiny';
-        if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-            $color='#c3e6cb';
-            if ($r['district_type'] == 'river')
-            {
-                $color='#b8daff';
-            }
-            if ($r['district_type'] == 'elevated')
-            {
-                $thicc='medium';
-                $border='#ffc107';
-            }
-            if ($r['district_type'] == 'lowered')
-            {
-                $thicc='medium';
-                $border='#f8f9fa';
-            }
-            if ($r['district_type'] == 'market')
-            {
-                $border='#17a2b8';
-                $thicc='medium';
-            }
-            if ($r['district_type'] == 'outpost')
-            {
-                $thicc='medium';
-                $border='#9a6790';
-            }
-            if ($r['district_fortify'] > 0)
-            {
-                if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-                    $border='#28a745';
-                    else
-                        $border='#343a40';
-                        
-                        $thicc='medium';
-            }
-            echo "
-			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
-				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
-            if (isDistrictAccessible($r['district_id']))
-            {
-                echo "Warriors: " . number_format($r['district_melee']) . "<br />
-					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />
-					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
-                if (isGuildDistrict($r['district_id']))
-                {
-                    if (isAccessibleFromTile($r['district_id'], $district_id))
-                        echo "[<a href='?action=attackform&from={$r['district_id']}&to={$district_id}'>Attack from Here</a>]";
-                }
-            }
-            "</td>";
-    }
-    //South East
-    if ($db->num_rows($SE) > 0)
-    {
-        $r=$db->fetch_row($SE);
-        $color='#f5c6cb';
-        $border='#dee2e6';
-        $thicc='tiny';
-        if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-            $color='#c3e6cb';
-            if ($r['district_type'] == 'river')
-            {
-                $color='#b8daff';
-            }
-            if ($r['district_type'] == 'elevated')
-            {
-                $thicc='medium';
-                $border='#ffc107';
-            }
-            if ($r['district_type'] == 'lowered')
-            {
-                $thicc='medium';
-                $border='#f8f9fa';
-            }
-            if ($r['district_type'] == 'market')
-            {
-                $border='#17a2b8';
-                $thicc='medium';
-            }
-            if ($r['district_type'] == 'outpost')
-            {
-                $thicc='medium';
-                $border='#9a6790';
-            }
-            if ($r['district_fortify'] > 0)
-            {
-                if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-                    $border='#28a745';
-                    else
-                        $border='#343a40';
-                        
-                        $thicc='medium';
-            }
-            echo "
-			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
-				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
-            if (isDistrictAccessible($r['district_id']))
-            {
-                echo "Warriors: " . number_format($r['district_melee']) . "<br />
-					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />
-					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
-                if (isGuildDistrict($r['district_id']))
-                {
-                    if (isAccessibleFromTile($r['district_id'], $district_id))
-                        echo "[<a href='?action=attackform&from={$r['district_id']}&to={$district_id}'>Attack from Here</a>]";
-                }
-            }
-            "</td>";
-    }
-    echo "</tr>";
-    echo "</table>";
     
 }
 function attackfromtile()
@@ -931,12 +484,12 @@ function attackfromtile()
 	}
 	if (!isDistrictAccessible($attack_to))
 	{
-		alert('danger',"Uh Oh!","You do not have access to this tile!.",true,'guild_district.php');
+		alert('danger',"Uh Oh!","You do not have direct access to this tile. Please ensure that you're interacting with tiles on the outer border first, and then tiles adjacent to ones your guild owns.",true,'guild_district.php');
 		die($h->endpage());
 	}
 	if (!isAccessibleFromTile($attack_from, $attack_to))
 	{
-		alert('danger',"Uh Oh!","You do not have access to this tile!.",true,'guild_district.php');
+		alert('danger',"Uh Oh!","You do not have direct access to this tile. Please ensure that you're interacting with tiles on the outer border first, and then tiles adjacent to ones your guild owns.",true,'guild_district.php');
 		die($h->endpage());
 	}
 	if (isGuildDistrict($attack_to))
@@ -1115,7 +668,7 @@ function attackfrombarracks()
 	}
 	if (!isDistrictAccessible($attack_to))
 	{
-		alert('danger',"Uh Oh!","You do not have access to this tile!.",true,'guild_district.php');
+		alert('danger',"Uh Oh!","You do not have direct access to this tile. Please ensure that you're interacting with tiles on the outer border first, and then tiles adjacent to ones your guild owns.",true,'guild_district.php');
 		die($h->endpage());
 	}
 	if (isGuildDistrict($attack_to))
@@ -1342,12 +895,12 @@ function movefromtile()
 	}
 	if (!isDistrictAccessible($attack_to))
 	{
-		alert('danger',"Uh Oh!","You do not have access to this tile!.",true,'guild_district.php');
+		alert('danger',"Uh Oh!","You do not have direct access to this tile. Please ensure that you're interacting with tiles on the outer border first, and then tiles adjacent to ones your guild owns.",true,'guild_district.php');
 		die($h->endpage());
 	}
 	if (!isAccessibleFromTile($attack_from, $attack_to))
 	{
-		alert('danger',"Uh Oh!","You do not have access to this tile!.",true,'guild_district.php');
+		alert('danger',"Uh Oh!","You do not have direct access to this tile. Please ensure that you're interacting with tiles on the outer border first, and then tiles adjacent to ones your guild owns.",true,'guild_district.php');
 		die($h->endpage());
 	}
 	$q=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$attack_from}");
@@ -1476,8 +1029,13 @@ function fortify()
 	}
 	if (!isDistrictAccessible($attack_to))
 	{
-		alert('danger',"Uh Oh!","You do not have access to this tile!.",true,'guild_district.php');
+		alert('danger',"Uh Oh!","You do not have direct access to this tile. Please ensure that you're interacting with tiles on the outer border first, and then tiles adjacent to ones your guild owns.",true,'guild_district.php');
 		die($h->endpage());
+	}
+	if ($gdi['moves'] == 0)
+	{
+	    alert('danger',"Uh Oh!","You have ran out of moves for today. Try again tomorrow.",true,'guild_district.php');
+	    die($h->endpage());
 	}
 	$q2=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$attack_to}");
 	$r2=$db->fetch_row($q2);
@@ -1501,6 +1059,7 @@ function fortify()
 			alert('danger',"Uh Oh!","Your guild needs " . number_format($neededXP) . " Guild Experience before you can fortify this district.",true,'guild_district.php');
 			die($h->endpage());
 		}
+		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		$api->SystemLogsAdd($userid,"district","Spent " . number_format($neededXP) . " Guild Experience and " . number_format($neededTokens) . " Chivalry Tokens to fortify tile " . resolveCoordinates($attack_to) .".");
 		$api->GuildRemoveXP($ir['guild'],$neededXP);
 		$db->query("UPDATE `guild` SET `guild_seccurr` = `guild_seccurr` - {$neededTokens} WHERE `guild_id` = {$ir['guild']}");
@@ -1517,7 +1076,8 @@ function fortify()
                     <div class='col-12'>
                         You are attempting to fortify this tile. Please click the button to confirm.<br />
                 		For this district, you will need " . number_format($neededXP) . " Guild XP and " . number_format($neededTokens) . " Chivalry Tokens. This is taken from your guild's vault.<br />
-                		Districts may be fortified up to a maximum of {$districtConfig['maxFortify']} times.
+                		Districts may be fortified up to a maximum of {$districtConfig['maxFortify']} times.<br />
+                        Fortifying will also cost your guild one movement.
                     </div>
                 </div>
                 <div class='row'>
@@ -1565,7 +1125,7 @@ function movefrombarracks()
 	}
 	if (!isDistrictAccessible($attack_to))
 	{
-		alert('danger',"Uh Oh!","You do not have access to this tile!.",true,'guild_district.php');
+		alert('danger',"Uh Oh!","You do not have direct access to this tile. Please ensure that you're interacting with tiles on the outer border first, and then tiles adjacent to ones your guild owns.",true,'guild_district.php');
 		die($h->endpage());
 	}
 	$q2=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$attack_to}");
@@ -1881,7 +1441,7 @@ function guild_buy()
 		}
 		if ($archers > $currentBuyArchers)
 		{
-			alert('danger',"Uh Oh!","You cannot buy " . number_format($archers) . " Warriors right now. You may only buy " . number_format($currentBuyArchers) . " Archers right now.",true,'guild_district.php');
+			alert('danger',"Uh Oh!","You cannot buy " . number_format($archers) . "Archers right now. You may only buy " . number_format($currentBuyArchers) . " Archers right now.",true,'guild_district.php');
 			die($h->endpage());
 		}
 		$archerTotal=$archers*$districtConfig['ArcherCost'];
