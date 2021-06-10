@@ -45,6 +45,7 @@ $districtConfig['attackDmgStrength']=1.04901724;
 $districtConfig['attackDefenseAdvantage']=1.1582412;
 $districtConfig['maxGenerals'] = 2;
 $districtConfig['maxFortify'] = 5;
+$districtConfig['sabotageCost'] = 25000;
 //end module config
 
 require('globals.php');
@@ -392,28 +393,28 @@ function explodedistrict()
             alert('danger',"Uh Oh!","You cannot sabotage this district tile, as it isn't fortified.",true,'guild_district.php');
             die($h->endpage());
         }
-        if ($guildcurr < 25000)
+        if ($guildcurr < $districtConfig['sabotageCost'])
         {
-            alert('danger',"Uh Oh!","Your guild needs 25,000 Chivalry Tokens before you can fortify this district.",true,'guild_district.php');
+            alert('danger',"Uh Oh!","Your guild needs " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens before you can fortify this district.",true,'guild_district.php');
             die($h->endpage());
         }
         $random = Random(1,100);
         if ($random <= 60)
         {
             $db->query("UPDATE `guild_districts` SET `district_fortify` = `district_fortify` - 1 WHERE `district_id` = {$attack_to}");
-            alert('success',"","You have successfully sabotage this tile (" . resolveCoordinates($attack_to) .") at the cost of 25K Chivalry Tokens.",true,'guild_district.php');
+            alert('success',"","You have successfully sabotage this tile (" . resolveCoordinates($attack_to) .") at the cost of " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens.",true,'guild_district.php');
             $api->GuildAddNotification($r2['district_owner'], "Your guild has suffered a sabotage at (" . resolveCoordinates($attack_to) .") in the guild districts. You've lost a fortification level.");
         }
         else
         {
-            alert('success',"","You have paid 25K Chivlary Tokens and have failed to sabotage this tile (" . resolveCoordinates($attack_to) .").",true,'guild_district.php');
+            alert('success',"","You have paid " . number_format($districtConfig['sabotageCost']) . " Chivlary Tokens and have failed to sabotage this tile (" . resolveCoordinates($attack_to) .").",true,'guild_district.php');
             $api->GuildAddNotification($r2['district_owner'], "Your guild has has stopped an attempted a sabotage at (" . resolveCoordinates($attack_to) .") in the guild districts.");
         }
-        $api->SystemLogsAdd($userid,"district","Spent 25,000 Chivalry Tokens to attempt a sabotage on tile " . resolveCoordinates($attack_to) .".");
-        $db->query("UPDATE `guild` SET `guild_seccurr` = `guild_seccurr` - 25000 WHERE `guild_id` = {$ir['guild']}");
-        addToEconomyLog('Districts','token', -25000);
+        $api->SystemLogsAdd($userid,"district","Spent " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens to attempt a sabotage on tile " . resolveCoordinates($attack_to) .".");
+        $db->query("UPDATE `guild` SET `guild_seccurr` = `guild_seccurr` - {$districtConfig['sabotageCost']} WHERE `guild_id` = {$ir['guild']}");
+        addToEconomyLog('Districts','token', $districtConfig['sabotageCost']*-1);
         $db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
-        $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . "</a> has spent 25K Chivalry Tokens to sabotage district tile ( " . resolveCoordinates($attack_to) ." ).");
+        $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . "</a> has spent " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens to sabotage district tile ( " . resolveCoordinates($attack_to) ." ).");
     }
     else
     {
@@ -423,7 +424,7 @@ function explodedistrict()
                 <div class='row'>
                     <div class='col-12'>
                         You are attempting to sabotage this tile. Please click the button to confirm.<br />
-                		It costs 25K Chivalry Tokens to sabotage a tile. Success is not guaranteed.<br />
+                		It costs " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens to sabotage a tile. Success is not guaranteed.<br />
                         Sabotaging a tile may drop its fortification level or troop count.
                     </div>
                 </div>
