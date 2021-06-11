@@ -95,7 +95,7 @@ function shortNumberParse($n)
         $n_format = number_format($n / 1000000000, 1) . "B";
     elseif ($n < 1000000000000000)
         $n_format = number_format($n / 1000000000000, 1) . "T";
-    return $n_format;
+        return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . "'>{$n_format}</span>";
 }
 
 /*
