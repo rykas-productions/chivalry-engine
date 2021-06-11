@@ -74,4 +74,4 @@ $TotalBankandSC = $TotalBankToken + $TotalSecondaryCurrency + $TotalGuildSC;
 //Avg token price
 $totalcost=$db->fetch_single($db->query("SELECT SUM(`token_total`) FROM `token_market_avg`"));
 $totaltokens=$db->fetch_single($db->query("SELECT SUM(`token_sold`) FROM `token_market_avg`"));
-$avgprice = number_format($totalcost / $totaltokens);
+$avgprice = shortNumberParse($totalcost / $totaltokens);

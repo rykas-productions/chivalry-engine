@@ -126,7 +126,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Withdrawn Copper Coins
 					</div>
 					<div class='col'>
-						" . number_format($TotalPrimaryCurrency) . "
+						" . shortNumberParse($TotalPrimaryCurrency) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -134,7 +134,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Copper in City Bank
 					</div>
 					<div class='col'>
-						" . number_format($TotalBank) . "
+						" . shortNumberParse($TotalBank) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -142,7 +142,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Copper in Federal Bank
 					</div>
 					<div class='col'>
-						" . number_format($TotalBigBank) . "
+						" . shortNumberParse($TotalBigBank) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -150,7 +150,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Copper in Vault
 					</div>
 					<div class='col'>
-						" . number_format($TotalVaultBank) . "
+						" . shortNumberParse($TotalVaultBank) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -158,7 +158,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Average Copper
 					</div>
 					<div class='col'>
-						" . number_format($AveragePrimaryCurrencyPerPlayer) . "
+						" . shortNumberParse($AveragePrimaryCurrencyPerPlayer) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -166,7 +166,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Average City Bank Balance
 					</div>
 					<div class='col'>
-						" . number_format($AverageBank) . "
+						" . shortNumberParse($AverageBank) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -174,7 +174,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Average Federal Bank Balance
 					</div>
 					<div class='col'>
-						" . number_format($AverageBigBank) . "
+						" . shortNumberParse($AverageBigBank) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -182,7 +182,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Average Vault Balance
 					</div>
 					<div class='col'>
-						" . number_format($AverageVaultBank) . "
+						" . shortNumberParse($AverageVaultBank) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -190,7 +190,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Total Copper Coins
 					</div>
 					<div class='col'>
-						" . number_format($TotalBankandPC) . "
+						" . shortNumberParse($TotalBankandPC) . "
 					</div>
 				</div>
 			</div>
@@ -207,7 +207,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Withdrawn Chivalry Tokens
 					</div>
 					<div class='col'>
-						" . number_format($TotalSecondaryCurrency) . "
+						" . shortNumberParse($TotalSecondaryCurrency) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -215,7 +215,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Banked Chivalry Tokens
 					</div>
 					<div class='col'>
-						" . number_format($TotalBankToken) . "
+						" . shortNumberParse($TotalBankToken) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -223,7 +223,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Average Chivalry Tokens
 					</div>
 					<div class='col'>
-						" . number_format($AverageSecondaryCurrencyPerPlayer) . "
+						" . shortNumberParse($AverageSecondaryCurrencyPerPlayer) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -231,7 +231,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Average Chivalry Tokens Banked
 					</div>
 					<div class='col'>
-						" . number_format($AverageTokenBank) . "
+						" . shortNumberParse($AverageTokenBank) . "
 					</div>
 				</div>
 				<div class='row'>
@@ -239,7 +239,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						Total Chivalry Tokens
 					</div>
 					<div class='col'>
-						" . number_format($TotalBankandSC) . "
+						" . shortNumberParse($TotalBankandSC) . "
 					</div>
 				</div>
 				<div class='row'>

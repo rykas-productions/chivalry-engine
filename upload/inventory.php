@@ -204,7 +204,7 @@ while ($i = $db->fetch_row($inv))
 						<div class='col-10 col-sm-5 col-md-7'>
 							{$i['itmname']}";
 							if ($i['inv_qty'] > 1) 
-								echo "<b> x " . number_format($i['inv_qty']) . "</b>";
+							    echo "<b> x " . shortNumberParse($i['inv_qty']) . "</b>";
 							echo "
 						</div>
 						<div class='col'>
@@ -626,19 +626,19 @@ while ($i = $db->fetch_row($inv))
 				<div class='row'>
 					<div class='col-6 col-md'>
 						<b>Buy</b><br />
-						<small>" . number_format($i['itmbuyprice']) . "</small>
+						<small>" . shortNumberParse($i['itmbuyprice']) . "</small>
 					</div>
 					<div class='col-6 col-md'>
 						<b>Sell</b><br />
-						<small>" . number_format($i['itmsellprice']) . "</small>
+						<small>" . shortNumberParse($i['itmsellprice']) . "</small>
 					</div>
 					<div class='col-6 col-md'>
 						<b>Total Value</b><br />
-						<small>" . number_format($i['inv_qty_value']) . "</small>
+						<small>" . shortNumberParse($i['inv_qty_value']) . "</small>
 					</div>
 					<div class='col-6 col-md'>
 						<b>Circulating</b><br />
-						<small>" . number_format($total) . "</small>
+						<small>" . shortNumberParse($total) . "</small>
 					</div>
 				</div>
 				<hr />
