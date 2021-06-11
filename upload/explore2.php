@@ -65,10 +65,10 @@ $userson = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`us
 $userstown = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$ir['location']}")));
 $paperads = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`news_id`) FROM `newspaper_ads` WHERE `news_end` > {$time}"));
 $rr = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`challenger`) FROM `russian_roulette` WHERE `challengee` = {$userid}"));
-$bank = ($ir['bank'] > -1) ? number_format($ir['bank']) : "N/A";
-$bigbank = ($ir['bigbank'] > -1) ? number_format($ir['bigbank']) : "N/A";
-$vaultbank = ($ir['vaultbank'] > -1) ? number_format($ir['vaultbank']) : "N/A";
-$tbank = ($ir['tokenbank'] > -1) ? number_format($ir['tokenbank']) : "N/A";
+$bank = ($ir['bank'] > -1) ? shortNumberParse($ir['bank']) : "N/A";
+$bigbank = ($ir['bigbank'] > -1) ? shortNumberParse($ir['bigbank']) : "N/A";
+$vaultbank = ($ir['vaultbank'] > -1) ? shortNumberParse($ir['vaultbank']) : "N/A";
+$tbank = ($ir['tokenbank'] > -1) ? shortNumberParse($ir['tokenbank']) : "N/A";
 $guildcount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`guild_id`) FROM `guild`"));
 $estates = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`em_id`) FROM `estate_market`"));
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));

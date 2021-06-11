@@ -79,6 +79,25 @@ function TimeUntil_Parse($time_stamp)
     return $date;
 }
 
+function shortNumberParse($n)
+{
+    if ($n < 1000)
+        $n_format = number_format($n);
+    elseif ($n < 10000)
+        $n_format = number_format($n / 1000, 2) . "K";
+    elseif ($n < 100000)
+        $n_format = number_format($n / 1000, 1) . "K";
+    elseif ($n < 1000000)
+        $n_format = number_format($n / 1000, 1) . "K";
+    elseif ($n < 1000000000)
+        $n_format = number_format($n / 1000000, 1) . "M";
+    elseif ($n < 1000000000000)
+        $n_format = number_format($n / 1000000000, 1) . "B";
+    elseif ($n < 1000000000000000)
+        $n_format = number_format($n / 1000000000000, 1) . "T";
+    return $n_format;
+}
+
 /*
 	Parses the timestamp into a human friendly number.
 */
