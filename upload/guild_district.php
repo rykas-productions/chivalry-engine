@@ -46,6 +46,8 @@ $districtConfig['attackDefenseAdvantage']=1.1582412;
 $districtConfig['maxGenerals'] = 2;
 $districtConfig['maxFortify'] = 5;
 $districtConfig['sabotageCost'] = 25000;
+$districtConfig['townLessCost'] = 0.15;
+$districtConfig['outpostExtraTroops'] = 0.15;
 //end module config
 
 require('globals.php');
@@ -414,7 +416,7 @@ function explodedistrict()
         $db->query("UPDATE `guild` SET `guild_seccurr` = `guild_seccurr` - {$districtConfig['sabotageCost']} WHERE `guild_id` = {$ir['guild']}");
         addToEconomyLog('Districts','token', $districtConfig['sabotageCost']*-1);
         $db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
-        $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . "</a> has spent " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens to sabotage district tile ( " . resolveCoordinates($attack_to) ." ).");
+        $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . "</a> has spent " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens to sabotage district tile (" . resolveCoordinates($attack_to) .").");
     }
     else
     {
@@ -580,15 +582,15 @@ function attackfromtile()
 			$db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 2 WHERE `guild_id` = {$ir['guild']}");
 			echo "<i>This tile now belongs to your guild. Remember to move troops to this tile or it may be conquered from you.</i>";
 			setTileOwnership($r2['district_id'], $ir['guild']);
-			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and emerged victorious! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
-			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and lost. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($ir['guild'],"Your guild attacked district tile (" . resolveCoordinates($r2['district_id']) . ") and emerged victorious! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($r2['district_owner'],"A tile controlled by your guild (" . resolveCoordinates($r2['district_id']) . ") was attacked and lost.  View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
 			$api->SystemLogsAdd($userid,"district","Conquered tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r['district_id']) . ". Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
 		}
 		if ($status == 'lost')
 		{
 			echo "<i>You have failed to capture this tile. Rebuild your army and try again.</i>";
-			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and lost! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
-			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and  and your guild emerged victorious. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($ir['guild'],"Your guild attacked district tile (" . resolveCoordinates($r2['district_id']) . ") and lost! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($r2['district_owner'],"A tile controlled by your guild (" . resolveCoordinates($r2['district_id']) . ") was attacked and  and your guild emerged victorious. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
 			$api->SystemLogsAdd($userid,"district","Lost attacking tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . " . Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
 		}
 	}
@@ -749,15 +751,15 @@ function attackfrombarracks()
 			$db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 2 WHERE `guild_id` = {$ir['guild']}");
 			echo "<i>This tile now belongs to your guild. Remember to move troops to this tile or it may be conquered from you.</i>";
 			setTileOwnership($r2['district_id'], $ir['guild']);
-			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and emerged victorious! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
-			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and lost. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($ir['guild'],"Your guild attacked a tile (" . resolveCoordinates($r2['district_id']) . ") and emerged victorious! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($r2['district_owner'],"Your guild's tile (" . resolveCoordinates($r2['district_id']) . ") attacked and lost. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
 			$api->SystemLogsAdd($userid,"district","Conquered tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . ". Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
 		}
 		if ($status == 'lost')
 		{
 			echo "<i>You have failed to capture this tile. Rebuild your army and try again.</i>";
-			$api->GuildAddNotification($ir['guild'],"Your guild attacked a district and lost! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
-			$api->GuildAddNotification($r2['district_owner'],"A district owned by your guild was attacked and  and your guild emerged victorious. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($ir['guild'],"Your guild attacked a tile (" . resolveCoordinates($r2['district_id']) . ") and lost! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
+			$api->GuildAddNotification($r2['district_owner'],"Your guild's tile (" . resolveCoordinates($r2['district_id']) . ") was attacked and your guild emerged victorious. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
 			$api->SystemLogsAdd($userid,"district","Lost attacking tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . " . Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
 		}
 	}
@@ -945,7 +947,8 @@ function movefromtile()
 		$api->SystemLogsAdd($userid,"district","Moved " . number_format($warriors) . " Warriors, " . number_format($archers) . " Archers and  " . number_format($generals) . " Generals from Tile " . resolveCoordinates($r2['district_id']) . " to Tile " . resolveCoordinates($r['district_id']) .".");
 		updateTileTroops($r2['district_id'], $warriors*-1, $archers*-1, $generals*-1);
 		updateTileTroops($r['district_id'], $warriors, $archers, $generals);
-		alert('success',"","You have successfully moved " . number_format($warriors) . " Warriors, " . number_format($archers) . " Archers and " . number_format($generals) . " Generals to this tile.");
+		alert('success',"","You have successfully moved " . number_format($warriors) . " Warriors, 
+                " . number_format($archers) . " Archers and " . number_format($generals) . " Generals to (" . resolveCoordinates($r['district_id']) . ") from (" . resolveCoordinates($r2['district_id']) . ").");
 	}
 	else
 	{
@@ -1067,6 +1070,7 @@ function fortify()
 		addToEconomyLog('Districts','token', $neededTokens*-1);
 		$db->query("UPDATE `guild_districts` SET `district_fortify` = `district_fortify` + 1 WHERE `district_id` = {$attack_to}");
 		alert('success',"","You have successfully fortified this tile at the cost of " . number_format($neededXP) . " Guild XP and " . number_format($neededTokens) . " Chivalry Tokens.",true,'guild_district.php');
+	   $api->GuildAddNotification($ir['guild'], "Your guild has spent " . number_format($neededTokens) . " Chivalry Tokens and " . number_format($neededXP) . " Guild Experience to fortify district tile (" . resolveCoordinates($attack_to) .").");
 	}
 	else
 	{
@@ -1380,8 +1384,8 @@ function guild_buy()
 	$gi = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
 	if (countTowns() > 0)
 	{
-		$districtConfig['ArcherCost'] = round($districtConfig['ArcherCost'] - ($districtConfig['ArcherCost']*(0.15*countTowns())));
-		$districtConfig['WarriorCost'] = round($districtConfig['WarriorCost'] - ($districtConfig['WarriorCost']*(0.15*countTowns())));
+	    $districtConfig['ArcherCost'] = round($districtConfig['ArcherCost'] - ($districtConfig['ArcherCost']*($districtConfig['townLessCost']*countTowns())));
+	    $districtConfig['WarriorCost'] = round($districtConfig['WarriorCost'] - ($districtConfig['WarriorCost']*($districtConfig['townLessCost']*countTowns())));
 	}
 	$maxDailyWarriors = 400;
 	$maxDailyArchers = $maxDailyWarriors / 2;
@@ -1396,8 +1400,8 @@ function guild_buy()
 	
 	if (countOutposts() > 0)
 	{
-		$dailyBuyWarriors = round($dailyBuyWarriors + ($dailyBuyWarriors * (0.15 * countOutposts())));
-		$dailyBuyArchers = round($dailyBuyArchers + ($dailyBuyArchers * (0.15 * countOutposts())));
+	    $dailyBuyWarriors = round($dailyBuyWarriors + ($dailyBuyWarriors * ($districtConfig['outpostExtraTroops'] * countOutposts())));
+	    $dailyBuyArchers = round($dailyBuyArchers + ($dailyBuyArchers * ($districtConfig['outpostExtraTroops'] * countOutposts())));
 	}
 	
 	$currentBuyWarriors = $dailyBuyWarriors - $gdi['warriors_bought'];
@@ -1531,7 +1535,7 @@ function hireGeneral()
 	if ($availableGenerals < 0)
 		$availableGenerals = 0;
 	if (countTowns() > 0)
-		$districtConfig['GeneralCost'] = round($districtConfig['GeneralCost'] - ($districtConfig['GeneralCost']*(0.15*countTowns())));
+	    $districtConfig['GeneralCost'] = round($districtConfig['GeneralCost'] - ($districtConfig['GeneralCost']*($districtConfig['townLessCost']*countTowns())));
 	if (isset($_POST['warriors']))
 	{
 	

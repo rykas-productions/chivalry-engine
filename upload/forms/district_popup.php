@@ -34,8 +34,8 @@
 				Red border - Fortified tile owned by other guild.<br />
 				Yellow border - High ground. (+25% defense)<br />
 				White border - Low ground (-25% defense)<br />
-				Blue border - Market (-15% troop cost, stacks)<br />
-				Purple border - Outpost (+15% troops per day, stacks)
+				Blue border - Market (-<?php echo number_format($districtConfig['townLessCost'] * 100); ?>% troop cost, stacks)<br />
+				Purple border - Outpost (+<?php echo number_format($districtConfig['outpostExtraTroops'] * 100); ?>% troops per day, stacks)
 				<hr />
 				<b>Recruiting Troops</b><br />
 				Recruiting troops helps strength your army. Stronger units cost more. Warriors cost <?php echo number_format($districtConfig['WarriorCost']); ?> Copper Coins; Archers 
