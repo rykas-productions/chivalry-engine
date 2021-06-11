@@ -36,7 +36,7 @@ if ($chance <= 35)
 {
     $cash=Random(500,3500)*$multipler;
 	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
-    echo "You open this hexbag and pull out " . number_format($cash) . " Copper Coins.";
+	echo "You open this hexbag and pull out " . shortNumberParse($cash) . " Copper Coins.";
     $api->UserGiveCurrency($userid,'primary',$cash);
     $api->SystemLogsAdd($userid,"hexbags","Received " . number_format($cash) . " Copper Coins.");
 	addToEconomyLog('Hexbags', 'copper', $cash);

@@ -48,7 +48,7 @@ if ($chance <= 33)
 {
     $cash=Random(750,2250)*$multipler;
 	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
-    echo "You open this Box of Random and pull out " . number_format($cash) . " Copper Coins. Cool!";
+	echo "You open this Box of Random and pull out " . shortNumberParse($cash) . " Copper Coins. Cool!";
     $api->UserGiveCurrency($userid,'primary',$cash);
     $api->SystemLogsAdd($userid,"bor","Received {$cash} Copper Coins.");
 	addToEconomyLog('BOR', 'copper', $cash);

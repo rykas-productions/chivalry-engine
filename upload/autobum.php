@@ -87,8 +87,8 @@ if (isset($_POST['open']))
 	}
 	$db->query("UPDATE `user_settings` SET `autobum` = `autobum` - {$_POST['open']}, `searchtown` = `searchtown` - {$_POST['open']} WHERE `userid` = {$userid}");
 	echo "After beggings on the streets {$number} times, you have gained the following:<br />
-		" . number_format($copper) . " Copper Coins<br />
-		" . number_format($tokens) . " Chivalry Tokens<br />
+		" . shortNumberParse($copper) . " Copper Coins<br />
+		" . shortNumberParse($tokens) . " Chivalry Tokens<br />
 		" . number_format($fish) . " Fish<br />
 		" . number_format($apple) . " Apple(s)<br />
 		" . number_format($ham) . " Ham Shank(s)<br />

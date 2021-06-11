@@ -146,8 +146,8 @@ if (isset($_POST['open']))
 	$db->query("UPDATE `users` SET `hexbags` = `hexbags` - {$_POST['open']} WHERE `userid` = {$userid}");
 	$db->query("UPDATE `user_settings` SET `autohex` = `autohex` - {$_POST['open']} WHERE `userid` = {$userid}");
 	echo "After automatically opening {$number} Hexbags, you have gained the following:<br />
-		" . number_format($copper) . " Copper Coins<br />
-		" . number_format($tokens) . " Chivalry Tokens<br />
+		" . shortNumberParse($copper) . " Copper Coins<br />
+		" . shortNumberParse($tokens) . " Chivalry Tokens<br />
 		" . number_format($dungeon) . " minutes in the dungeon.<br />
 		" . number_format($infirmary) . " minutes in the infirmary.<br />
 		" . number_format($leeches) . " Leeches<br />

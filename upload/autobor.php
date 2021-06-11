@@ -180,7 +180,7 @@ if (isset($_POST['open']))
 			<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(157, 8) . "<br />
-				" . number_format($copper) . " Copper Coins.
+				" . shortNumberParse($copper) . " Copper Coins.
 			</div>
 			</div>
 		</div>
@@ -195,7 +195,7 @@ if (isset($_POST['open']))
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(156, 8) . "<br />
-				" . number_format($tokens) . " Chivalry Tokens.
+				" . shortNumberParse($tokens) . " Chivalry Tokens.
 			</div>
 			</div>
 		</div>
