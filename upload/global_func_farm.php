@@ -11,8 +11,11 @@ function fiveMinuteFarm()
 	$q=$db->query("/*qc=on*/SELECT * FROM `farm_data` WHERE `farm_stage` > 0");
 	while ($r = $db->fetch_row($q))
 	{
-		$wellnessLost=Random(1,2);
-		$db->query("UPDATE `farm_data` SET `farm_wellness` = `farm_wellness` - {$wellnessLost} WHERE `farm_id` = {$r['farm_id']}");
+	    if (Random(1, 25) == 11)
+	    {
+    		$wellnessLost=Random(1,2);
+    		$db->query("UPDATE `farm_data` SET `farm_wellness` = `farm_wellness` - {$wellnessLost} WHERE `farm_id` = {$r['farm_id']}");
+	    }
 	}
 }
 //Catch for lazy programming
