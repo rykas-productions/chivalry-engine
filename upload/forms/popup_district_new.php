@@ -13,16 +13,19 @@
                 <hr />
             	<h3>Additions</h3>
                 <hr />
-                *Sabotaging enemy tiles. Costs 1 Move and 25K Tokens. Success is not guaranteed, but high enough.<br />
+                *Sabotaging enemy tiles. Costs 1 Move and 1 Large Explosive. Success is not guaranteed, but is high enough.<br />
                 *Fortifying a tile now increases the thickness of the border.<br />
+                *Unowned tiles are now a different color.<br />
+                *Different, unique borders for each unique tile type.<br />
                 <hr />
                 <h3>Changes</h3>
                 <hr />
                 *You need generals on tile to upgrade past level 2 fortifications.<br />
                 *Fortifying a district costs one move.<br />
-                *Different, unique borders for each unique tile type.<br />
-                *Borders are now colored to match its owner.<br />
-                *Unowned tiles are now a different color.<br />
+                *Generals nerfed by 0.3%<br />
+                *Warriors cost 4.5K to recruit, and 550/day.<br />
+                *Archers cost 8K to recruit and 1.1K/day.<br />
+                *Generals cost 250k to recruit and 30k/day.<br />
             </div>
         </div>
     </div>
