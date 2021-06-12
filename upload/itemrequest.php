@@ -118,7 +118,7 @@ function index()
 				</tr>";
         }
         $ctprice = ($r['irCOST'] * $r['irQTY']);
-        $price = number_format($r['irCOST']) . " Copper Coins";
+        $price = shortNumberParse($r['irCOST']) . " Copper Coins";
         if ($r['irUSER'] == $userid) {
             $link =
                 "[<a href='?action=remove&ID={$r['irID']}'>Remove</a>]";

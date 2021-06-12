@@ -39,7 +39,7 @@ if (permission('CanSellToGame', $userid) == true) {
                 $price = $price+($price*$specialnumber);
                 $api->UserTakeItem($userid, $r['itmid'], $_POST['qty']);
                 $api->UserGiveCurrency($userid, 'primary', $price);
-                $priceh = number_format($price);
+                $priceh = shortNumberParse($price);
                 alert('success', "Success!", "You have successfully sold {$_POST['qty']} {$r['itmname']}(s) back to the
 				    game for {$priceh} Copper Coins.", true, 'inventory.php');
                 $is_log = $db->escape("{$ir['username']} sold {$_POST['qty']} {$r['itmname']}(s) for {$priceh}");

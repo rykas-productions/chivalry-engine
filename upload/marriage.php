@@ -227,16 +227,16 @@ function home_wed()
 	}
 	$p1['estate'] = $db->fetch_single($db->query("/*qc=on*/SELECT `house_name` FROM `estates` WHERE `house_will` = {$p1['maxwill']}"));
 	$p2['estate'] = $db->fetch_single($db->query("/*qc=on*/SELECT `house_name` FROM `estates` WHERE `house_will` = {$p2['maxwill']}"));
-	$p1['primary_currency'] = ($p1['primary_currency'] <= 0) ? 'Broke' : number_format($p1['primary_currency']);
-	$p2['primary_currency'] = ($p2['primary_currency'] <= 0) ? 'Broke' : number_format($p2['primary_currency']);
-	$p1['bank'] = ($p1['bank'] == -1) ? 'Unpurchased account' : number_format($p1['bank']);
-	$p2['bank'] = ($p2['bank'] == -1) ? 'Unpurchased account' : number_format($p2['bank']);
-    $p1['bigbank'] = ($p1['bigbank'] == -1) ? 'Unpurchased account' : number_format($p1['bigbank']);
-	$p2['bigbank'] = ($p2['bigbank'] == -1) ? 'Unpurchased account' : number_format($p2['bigbank']);
-	$p1['vaultbank'] = ($p1['vaultbank'] == -1) ? 'Unpurchased account' : number_format($p1['vaultbank']);
-	$p2['vaultbank'] = ($p2['vaultbank'] == -1) ? 'Unpurchased account' : number_format($p2['vaultbank']);
-	$p1['tokenbank'] = ($p1['tokenbank'] == -1) ? 'Unpurchased account' : number_format($p1['tokenbank']);
-	$p2['tokenbank'] = ($p2['tokenbank'] == -1) ? 'Unpurchased account' : number_format($p2['tokenbank']);
+	$p1['primary_currency'] = ($p1['primary_currency'] <= 0) ? 'Broke' : shortNumberParse($p1['primary_currency']);
+	$p2['primary_currency'] = ($p2['primary_currency'] <= 0) ? 'Broke' : shortNumberParse($p2['primary_currency']);
+	$p1['bank'] = ($p1['bank'] == -1) ? 'Unpurchased account' : shortNumberParse($p1['bank']);
+	$p2['bank'] = ($p2['bank'] == -1) ? 'Unpurchased account' : shortNumberParse($p2['bank']);
+	$p1['bigbank'] = ($p1['bigbank'] == -1) ? 'Unpurchased account' : shortNumberParse($p1['bigbank']);
+	$p2['bigbank'] = ($p2['bigbank'] == -1) ? 'Unpurchased account' : shortNumberParse($p2['bigbank']);
+	$p1['vaultbank'] = ($p1['vaultbank'] == -1) ? 'Unpurchased account' : shortNumberParse($p1['vaultbank']);
+	$p2['vaultbank'] = ($p2['vaultbank'] == -1) ? 'Unpurchased account' : shortNumberParse($p2['vaultbank']);
+	$p1['tokenbank'] = ($p1['tokenbank'] == -1) ? 'Unpurchased account' : shortNumberParse($p1['tokenbank']);
+	$p2['tokenbank'] = ($p2['tokenbank'] == -1) ? 'Unpurchased account' : shortNumberParse($p2['tokenbank']);
 	if ($mt['happiness'] == 0)
 		$mt['happiness']=$mt['happiness'];
 	if ($mt['happiness'] < 0)

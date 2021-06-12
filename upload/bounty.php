@@ -102,9 +102,9 @@ function add_bounty()
             alert('danger',"Uh Oh!","Bounty postings must have a payout of, at least, 250,000 Copper Coins.",true);
             die($h->endpage());
         }
-        if ($_POST['payout'] > 1500000)
+        if ($_POST['payout'] > 150000000)
         {
-            alert('danger',"Uh Oh!","Bounty postings must have a payout of, at most, 1,500,000 Copper Coins.",true);
+            alert('danger',"Uh Oh!","Bounty postings must have a payout of, at most, 150,000,000 Copper Coins.",true);
             die($h->endpage());
         }
         $cost=$_POST['payout']+($_POST['hide']*500000);

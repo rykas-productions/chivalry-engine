@@ -109,7 +109,7 @@ function home()
                 " . parseUsername($r['challengee']) . " [{$r['challengee']}]
             </td>
             <td>
-                " . number_format($r['reward']) . " Copper Coins
+                " . shortNumberParse($r['reward']) . " Copper Coins
             </td>
             <td>
                 {$link}

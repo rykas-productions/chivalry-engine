@@ -121,11 +121,11 @@ function index()
         }
         $ctprice = ($r['imPRICE'] * $r['imQTY']);
         if ($r['imCURRENCY'] == 'primary') {
-            $price = number_format($r['imPRICE']) . " Copper Coins";
-            $tprice = number_format($ctprice) . " Copper Coins";
+            $price = shortNumberParse($r['imPRICE']) . " Copper Coins";
+            $tprice = shortNumberParse($ctprice) . " Copper Coins";
         } else {
-            $price = number_format($r['imPRICE']) . " Chivalry Tokens";
-            $tprice = number_format($ctprice) . " Chivalry Tokens";
+            $price = shortNumberParse($r['imPRICE']) . " Chivalry Tokens";
+            $tprice = shortNumberParse($ctprice) . " Chivalry Tokens";
         }
         if ($r['imADDER'] == $userid) {
             $link =
@@ -209,7 +209,7 @@ function index()
 								" . returnIcon($r['itmid'],3.5) . "
 							</div>
 							<div class='col-md-8 text-left'>
-								<b>{$r['itmname']}</b> is a {$lt} item.<br />
+								<b><a href='iteminfo.php?ID={$r['itmid']}'>{$r['itmname']}</a></b> is a {$lt} item.<br />
 								<i>{$r['itmdesc']}</i>";
 								$start=0;
 								for ($enum = 1; $enum <= 3; $enum++) 
@@ -241,45 +241,6 @@ function index()
 					echo "</div>";
 					echo"	
 					</div>
-						<hr />
-						<div class='row'>
-							<div class='col'>
-								<b>Sell</b><br />
-								<small>" . number_format($r['itmsellprice']) . " Copper Coins</small>
-							</div>
-							<div class='col'>
-								<b>Circulating</b><br />
-								<small>" . number_format($total) . "</small>
-							</div>";
-							if ($r['weapon'] > 0)
-							{
-								echo "
-								<div class='col'>
-									<b>Weapon</b><br />
-									<small>" . number_format($r['weapon']) . "</small>
-								</div>";
-							}
-							if ($r['ammo'] > 0)
-							{
-								echo "
-								<div class='col'>
-									<b>Projectile</b><br />
-									<small><a href='iteminfo.php?ID={$r['ammo']}'>{$api->SystemItemIDtoName($r['ammo'])}</a></small>
-								</div>";
-							}
-							if ($r['armor'] > 0)
-							{
-								echo "
-								<div class='col'>
-									<b>Armor</b><br />
-									<small>" . number_format($r['armor']) . "</small>
-								</div>";
-							}
-							echo"
-						</div>
-						<hr />
-						<div class='row'>
-						</div>
 					</div>
 				</div>
 			</div>";
@@ -413,7 +374,7 @@ function buy()
         $db->query("UPDATE `users` SET `$curr` = `$curr` - {$final_price} WHERE `userid` = $userid");
         $db->query("UPDATE `users` SET `$curr` = `$curr` + {$taxed} WHERE `userid` = {$r['imADDER']}");
         notification_add($r['imADDER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> bought
-                " . number_format($_POST['QTY']) . " x {$r['itmname']}(s) from the market for " . number_format($taxed) . " {$curre}.");
+                " . number_format($_POST['QTY']) . " x {$r['itmname']}(s) from the market for " . shortNumberParse($taxed) . " {$curre}.");
         $imb_log = $db->escape("Bought {$r['itmname']} x " . number_format($_POST['QTY']) . " from the item market for
 			    " . number_format($final_price) . " {$curre} from User ID {$r['imADDER']}");
         alert('success', "Success!", "You have successfully bought {$r['itmname']} x " . number_format($_POST['QTY']) . " from the item

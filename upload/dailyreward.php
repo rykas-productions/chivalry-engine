@@ -42,7 +42,7 @@ if ($ir['rewarded'] == 0)
 	{
 		$db->query("UPDATE `user_settings` SET `rickroll` = {$userid} WHERE `userid` = {$userid}");
 		$api->UserGiveItem($userid,33,$bor);
-		$api->GameAddNotification($userid,"You may have just been rickrolled, but we've given you " . number_format($bor) . " Boxes of Random. Just cuz! Thanks for playing Chivalry is Dead.");
+		$api->GameAddNotification($userid,"You may have just been rickrolled, but we've given you " . shortNumberParse($bor) . " Boxes of Random. Just cuz! Thanks for playing Chivalry is Dead.");
 		$api->SystemLogsAdd($userid, "loginreward", "Received " . number_format($bor) . " Boxes of Random and a Rick Roll.");
 	}
 	elseif ($reward <= 74 && $reward > 70)
@@ -108,7 +108,7 @@ if ($ir['rewarded'] == 0)
 	elseif ($reward <= 37 && $reward > 26)
 	{
 		$api->UserGiveCurrency($userid,'secondary',$tokenreward);
-		$api->GameAddNotification($userid,"We've given you " . number_format($tokenreward) . " Chivalry Tokens for logging into Chivalry is Dead today. Thanks~");
+		$api->GameAddNotification($userid,"We've given you " . shortNumberParse($tokenreward) . " Chivalry Tokens for logging into Chivalry is Dead today. Thanks~");
 		$api->SystemLogsAdd($userid, "loginreward", "Received " . number_format($tokenreward) . " Chivalry Tokens.");
 	}
 	elseif ($reward <= 25 && $reward > 23)
@@ -120,7 +120,7 @@ if ($ir['rewarded'] == 0)
 	elseif ($reward <= 22 && $reward > 11)
 	{
 		$api->UserGiveCurrency($userid,'primary',$copper);
-		$api->GameAddNotification($userid,"Here's a flat " . number_format($copper) . " Copper Coins just for logging into Chivalry is Dead today. Thanks babe!");
+		$api->GameAddNotification($userid,"Here's a flat " . shortNumberParse($copper) . " Copper Coins just for logging into Chivalry is Dead today. Thanks babe!");
 		$api->SystemLogsAdd($userid, "loginreward", "Received " . number_format($copper) . " Copper Coins.");
 		addToEconomyLog('Daily Reward', 'copper', $copper);
 	}
@@ -166,7 +166,7 @@ if ($ir['rewarded'] == 0)
 	elseif ($reward <= 7 && $reward > 1)
 	{
 		$db->query("INSERT INTO `russian_roulette` (`challengee`, `challenger`, `reward`) VALUES ('{$userid}', '1', '{$rrBet}');");
-		$api->GameAddNotification($userid,"We've issued you a Russian Roulette challenge. If you win, you get " . number_format($rrBet) . " Copper Coins! Consider this a fun, risky login reward.");
+		$api->GameAddNotification($userid,"We've issued you a Russian Roulette challenge. If you win, you get " . shortNumberParse($rrBet) . " Copper Coins! Consider this a fun, risky login reward.");
 		$api->SystemLogsAdd($userid, "loginreward", "Received Russian Roulette challenges.");
 		addToEconomyLog('Daily Reward', 'copper', $rrBet);
 	}

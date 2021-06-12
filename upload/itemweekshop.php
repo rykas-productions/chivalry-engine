@@ -67,7 +67,7 @@ echo "	<div class='col-md'>
 				<div class='card-header'>
 					<div class='row'>
 						<div class='col'>
-							Price - " . number_format($item1price) . " Copper Coins
+							Price - " . shortNumberParse($item1price) . " Copper Coins
 						</div>
 					</div>
 				</div>
@@ -121,7 +121,7 @@ echo "	<div class='col-md'>
 				<div class='card-header'>
 					<div class='row'>
 						<div class='col'>
-							Price - " . number_format($item2price) . " Copper Coins
+							Price - " . shortNumberParse($item2price) . " Copper Coins
 						</div>
 					</div>
 				</div>
@@ -175,7 +175,7 @@ echo "	<div class='col-md'>
 				<div class='card-header'>
 					<div class='row'>
 						<div class='col'>
-							Price - " . number_format($item3price) . " Copper Coins
+							Price - " . shortNumberParse($item3price) . " Copper Coins
 						</div>
 					</div>
 				</div>
