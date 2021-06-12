@@ -261,9 +261,19 @@ class headers
     }
     $fed = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
     $votecount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`voted`) FROM `votes` WHERE `userid` = {$userid}"));
-    if ($votecount < 5) 
-        echo "<b><a href='vote.php' class='text-success updateHoverBtn'>[Vote for {$set['WebsiteName']}<span class='hidden-sm-down'> at various Voting Websites and be rewarded</span>.]</a></b><br />";
-	echo "<b><a href='donator.php' class='text-danger updateHoverBtn'>[Donate to {$set['WebsiteName']}.<span class='hidden-sm-down'> Packs start at $1 and you receive tons of benefits.</span>]</a></b><br />";
+    echo "<div class='row'>";
+        if ($votecount < 5)
+        {
+            echo"
+            <div class='col-12 col-sm col-lg-12 col-xxl'>
+                <b><a href='vote.php' class='text-success updateHoverBtn'>[Vote for {$set['WebsiteName']}<span class='hidden-md-down'> at various Voting Websites and be rewarded</span>.]</a></b>
+            </div>";
+        }
+        echo"
+        <div class='col-12 col-sm col-lg-12 col-xxl'>
+            <b><a href='donator.php' class='text-danger updateHoverBtn'>[Donate to {$set['WebsiteName']}.<span class='hidden-md-down'> Packs start at $1 and you receive tons of benefits.</span>]</a></b>
+        </div>
+    </div>";
     $this->loadNewsScroller();
     if (userHasEffect($userid, "sleep"))
     {
