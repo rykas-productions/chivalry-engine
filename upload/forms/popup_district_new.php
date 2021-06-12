@@ -13,7 +13,16 @@
                 <hr />
             	<h3>Additions</h3>
                 <hr />
-                *Sabotaging enemy tiles. Costs 1 Move and 25K Tokens. Success is not guaranteed, but high enough.
+                *Sabotaging enemy tiles. Costs 1 Move and 25K Tokens. Success is not guaranteed, but high enough.<br />
+                *Fortifying a tile now increases the thickness of the border.<br />
+                <hr />
+                <h3>Changes</h3>
+                <hr />
+                *You need generals on tile to upgrade past level 2 fortifications.<br />
+                *Fortifying a district costs one move.<br />
+                *Different, unique borders for each unique tile type.<br />
+                *Borders are now colored to match its owner.<br />
+                *Unowned tiles are now a different color.<br />
             </div>
         </div>
     </div>

@@ -30,12 +30,13 @@
 				Blue Tiles - Water.<br />
 				Green tiles - Tile owned by your guild.<br />
 				Red tiles - Tile owned by others.<br />
-				Green Border - Fortified tile owned by your guild.<br />
+				Tan tiles - Tiles unowned.<br />
+				Green border - Fortified tile owned by your guild.<br />
 				Red border - Fortified tile owned by other guild.<br />
-				Yellow border - High ground. (+25% defense)<br />
-				White border - Low ground (-25% defense)<br />
-				Blue border - Market (-<?php echo number_format($districtConfig['townLessCost'] * 100); ?>% troop cost, stacks)<br />
-				Purple border - Outpost (+<?php echo number_format($districtConfig['outpostExtraTroops'] * 100); ?>% troops per day, stacks)
+				Inset border - High ground. Increases tile's attack/defense by 25%.<br />
+				Ridge border - Low ground. Decreases tile's attack/defense by 25%.<br />
+				Dashed border - Market (-<?php echo number_format($districtConfig['townLessCost'] * 100); ?>% troop cost, stacks)<br />
+				Dotted border - Outpost (+<?php echo number_format($districtConfig['outpostExtraTroops'] * 100); ?>% troops per day, stacks)
 				<hr />
 				<b>Recruiting Troops</b><br />
 				Recruiting troops helps strength your army. Stronger units cost more. Warriors cost <?php echo number_format($districtConfig['WarriorCost']); ?> Copper Coins; Archers 

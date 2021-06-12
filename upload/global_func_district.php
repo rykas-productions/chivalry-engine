@@ -413,7 +413,7 @@ function returnForticationLevel($district_id)
         elseif ($q == 3)
         return "III";
         elseif ($q == 4)
-        return "VI";
+        return "IV";
         elseif ($q == 5)
         return "V";
         elseif ($q == 6)
@@ -487,47 +487,9 @@ function parseTile(int $districtID, $extra = '')
     {
         $district_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
         $r=$db->fetch_row($id);
-        $color='#f5c6cb';
-        $border='#dee2e6';
-        $thicc='tiny';
-        //@todo investigate possibility of redoing the type system to be more clear.
-        if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-            $color='#c3e6cb';
-            if ($r['district_type'] == 'river')
-            {
-                $color='#b8daff';
-            }
-            if ($r['district_type'] == 'elevated')
-            {
-                $thicc='1px';
-                $border='#ffc107';
-            }
-            if ($r['district_type'] == 'lowered')
-            {
-                $thicc='medium';
-                $border='#f8f9fa';
-            }
-            if ($r['district_type'] == 'market')
-            {
-                $border='#17a2b8';
-                $thicc='medium';
-            }
-            if ($r['district_type'] == 'outpost')
-            {
-                $thicc='medium';
-                $border='#9a6790';
-            }
-            if ($r['district_fortify'] > 0)
-            {
-                if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-                    $border='#28a745';
-                    else
-                        $border='#343a40';
-                        
-                        $thicc="{$r['district_fortify']}px";
-            }
+        $class = returnTileClass($r['district_id']);
             echo "
-			<td width='33%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
+			<td width='33%' class='{$class}'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
 				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
             if (isDistrictAccessible($r['district_id']))
@@ -707,4 +669,32 @@ function parseSEtile(int $districtID, $extra = '')
             parseTile($r2['district_id'], $extra);
         }
     }
+}
+
+function returnTileClass($district)
+{
+    global $db, $ir;
+    $q=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$district}");
+    $r=$db->fetch_row($q);
+    
+    if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
+        $class="friendly";
+    elseif ($r['district_owner'] == 0)
+        $class="vacant";
+    elseif (($r['district_owner'] != $ir['guild']) && ($ir['guild'] != 0))
+        $class="enemy";
+    
+    if ($r['district_type'] == 'river')
+        $class .= ' river';
+    if ($r['district_type'] == 'elevated')
+        $class .= " elevated";
+    if ($r['district_type'] == 'lowered')
+        $class .= " lowered";
+    if ($r['district_type'] == 'market')
+        $class .= " town";
+    if ($r['district_type'] == 'outpost')
+        $class .= " outpost";
+    if ($r['district_fortify'] > 0)
+        $class .= " fortify_{$r['district_fortify']}";
+    return $class;
 }

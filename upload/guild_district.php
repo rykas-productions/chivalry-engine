@@ -168,46 +168,9 @@ function home()
 		$q=$db->query("SELECT * FROM `guild_districts` WHERE `district_y` = {$currentY} ORDER BY `district_x` ASC LIMIT {$districtConfig['MaxSizeX']}");
 		while ($r=$db->fetch_row($q))
 		{
-			$color='#f5c6cb';
-			$border='#dee2e6';
-			$thicc='tiny';
-			if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-				$color='#c3e6cb';
-			if ($r['district_type'] == 'river')
-			{
-				$color='#b8daff';
-			}
-			if ($r['district_type'] == 'elevated')
-			{
-				$thicc='medium';
-				$border='#ffc107';
-			}
-			if ($r['district_type'] == 'outpost')
-			{
-				$thicc='medium';
-				$border='#9a6790';
-			}
-			if ($r['district_type'] == 'lowered')
-			{
-				$thicc='medium';
-				$border='#f8f9fa';
-			}
-			if ($r['district_type'] == 'market')
-			{
-				$border='#17a2b8';
-				$thicc='medium';
-			}
-			if ($r['district_fortify'] > 0)
-			{
-				if (($r['district_owner'] == $ir['guild']) && ($ir['guild'] != 0))
-					$border='#28a745';
-				else
-					$border='#343a40';
-				
-				$thicc='medium';
-			}
+		    $class = returnTileClass($r['district_id']);
 			echo "
-			<td width='20%' style='background-color:{$color}; border-color:{$border}; border-width:{$thicc};'>
+			<td width='20%' class='{$class}'>
 				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
 				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />
 				<a href='?action=view&id={$r['district_id']}' class='btn btn-info btn-sm'>View Info</a>
@@ -1627,5 +1590,5 @@ function hireGeneral()
 include('forms/district_popup.php');
 include('forms/popup_district_new.php');
 $h->endpage();
-
+echo "<link rel='stylesheet' href='css/modules/districts.css'>";
 //Functions needed to make the module work.

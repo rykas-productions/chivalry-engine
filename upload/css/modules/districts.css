@@ -1,0 +1,118 @@
+/*
+CSS for the districts
+*/
+
+.town {
+	border-style: dashed !important;
+	border-width: 2px !important;
+}
+
+.outpost {
+	border-style: dotted !important;
+	border-width: 2px !important;
+}
+
+.elevated {
+	border-style: inset !important;
+	border-width: 2px !important;
+}
+
+.lowered {
+	border-style: ridge !important;
+	border-width: 2px !important;
+}
+
+.river {
+	background-color: #b8daff !important;
+}
+
+.friendly {
+	background-color: #c3e6cb;
+}
+
+.enemy {
+	background-color: #f5c6cb;
+}
+
+.vacant {
+	background-color: #dfc8ca;
+}
+
+.fortify_5 {
+	border-width: 12px !important;
+}
+
+.fortify_4 {
+	border-width: 10px !important;
+}
+
+.fortify_3 {
+	border-width: 8px !important;
+}
+
+.fortify_2 {
+	border-width: 4px !important;
+}
+
+.fortify_1 {
+	border-width: 2px !important;
+}
+
+.fortify_1.enemy {
+	border-color: red;
+}
+
+.fortify_2.enemy {
+	border-color: red;
+}
+
+.fortify_3.enemy {
+	border-color: red;
+}
+
+.fortify_4.enemy {
+	border-color: red;
+}
+
+.fortify_5.enemy {
+	border-color: red;
+}
+
+.fortify_1.friendly {
+	border-color: green;
+}
+
+.fortify_2.friendly {
+	border-color: green;
+}
+
+.fortify_3.friendly {
+	border-color: green;
+}
+
+.fortify_4.friendly {
+	border-color: green;
+}
+
+.fortify_5.friendly {
+	border-color: green;
+}
+.fortify_1.vacant {
+	border-color: gray;
+}
+
+.fortify_2.vacant {
+	border-color: gray;
+}
+
+.fortify_3.vacant {
+	border-color: gray;
+}
+
+.fortify_4.vacant {
+	border-color: gray;
+}
+
+.fortify_5.vacant {
+	border-color: gray;
+}
