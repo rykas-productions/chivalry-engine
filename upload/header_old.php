@@ -153,9 +153,9 @@ class headers
         echo "<b><a href='vote.php' class='text-success'>[Vote for {$set['WebsiteName']}<span class='hidden-sm-down'> at various Voting Websites and be rewarded</span>.]</a></b><br />";
 	echo "<b><a href='donator.php' class='text-danger'>[Donate to {$set['WebsiteName']}.<span class='hidden-sm-down'> Packs start at $1 and you receive tons of benefits.</span>]</a></b><br />";
     $this->loadNewsScroller();
-	if (userHasEffect($userid, "basic_protection"))
+    if (userHasEffect($userid, constant("basic_protection")))
 	{
-		$protDone = returnEffectDone($userid, "basic_protection");
+	    $protDone = returnEffectDone($userid, constant("basic_protection"));
 		echo "<b><span class='text-info'>You have protection active for the next " . TimeUntil_Parse($protDone) . ".</span></b><br />";
 	}
     if ($ir['invis'] > time())

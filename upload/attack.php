@@ -62,9 +62,9 @@ function attacking()
             alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}&ref={$ref}");
             die($h->endpage());
         }*/
-		if (userHasEffect($userid, "basic_protection"))
+		if (userHasEffect($userid, constant("basic_protection")))
 		{
-			userRemoveEffect($userid, "basic_protection");
+		    userRemoveEffect($userid, constant("basic_protection"));
 			alert('warning',"Warning!","For attacking this user, you have lost your protection.",false);
 		}
         //Set RNG
@@ -341,7 +341,7 @@ function attacking()
         alert("danger", "Uh Oh!", "You cannot attack online players who are level two or below.", true, "{$ref}.php");
         die($h->endpage());
     }	//User has protection
-	else if (userHasEffect($_GET['user'], "basic_protection"))
+    else if (userHasEffect($_GET['user'], constant("basic_protection")))
 	{
 		$_SESSION['attacking'] = 0;
 		$_SESSION['attack_scroll'] = 0;
@@ -641,7 +641,7 @@ function attacking()
             $api->UserInfoSet($_GET['user'], 'hp', 0);
             echo "<br />";
             alert('info',"","You have struck down {$odata['username']}. What do you wish to do to them now?",false);
-            if (!userHasEffect($_GET['user'], "sleep"))
+            if (!userHasEffect($_GET['user'], constant("sleep")))
             {
     			echo"
                 <div class='row'>
@@ -1047,7 +1047,7 @@ function beat()
     global $db, $userid, $ir, $h, $api;
     $_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$ref = (isset($_GET['ref']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_GET['ref'])) ? $db->escape(strip_tags(stripslashes($_GET['ref']))) : 'index';
-	if (userHasEffect($_GET['ID'], "sleep"))
+	if (userHasEffect($_GET['ID'], constant("sleep")))
 	{
 	    header("Location: ?action=homeinvade&ID={$_GET['ID']}&ref={$ref}");
 	    exit;
@@ -1310,7 +1310,7 @@ function xp()
     global $db, $userid, $ir, $h, $api;
     $_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
 	$ref = (isset($_GET['ref']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_GET['ref'])) ? $db->escape(strip_tags(stripslashes($_GET['ref']))) : 'index';
-	if (userHasEffect($_GET['ID'], "sleep"))
+	if (userHasEffect($_GET['ID'], constant("sleep")))
 	{
 	    header("Location: ?action=homeinvade&ID={$_GET['ID']}&ref={$ref}");
 	    exit;
@@ -1689,7 +1689,7 @@ function home_invasion()
     global $db, $userid, $ir, $h, $api;
     $_GET['ID'] = isset($_GET['ID']) && ctype_digit($_GET['ID']) ? $_GET['ID'] : 0;
     $ref = (isset($_GET['ref']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_GET['ref'])) ? $db->escape(strip_tags(stripslashes($_GET['ref']))) : 'index';
-    if (!userHasEffect($_GET['ID'], "sleep"))
+    if (!userHasEffect($_GET['ID'], constant("sleep")))
     {
         header("Location: ?action=mug&ID={$_GET['ID']}&ref={$ref}");
         exit;

@@ -275,12 +275,12 @@ class headers
         </div>
     </div>";
     $this->loadNewsScroller();
-    if (userHasEffect($userid, "sleep"))
+    if (userHasEffect($userid, constant("sleep")))
     {
-        $protDone = returnEffectDone($userid, "sleep");
+        $protDone = returnEffectDone($userid, constant("sleep"));
         if (isset($_GET['wakeup']))
         {
-            userRemoveEffect($userid, "sleep");
+            userRemoveEffect($userid, constant("sleep"));
             alert("success","Rise and Shine!", "You've successfully woken up. Nothing like the smell of the blood of your fallen prey in the morning.", true, 'index.php');
         }
         else
@@ -289,9 +289,9 @@ class headers
             die($h->endpage());
         }
     }
-	if (userHasEffect($userid, "basic_protection"))
+    if (userHasEffect($userid, constant("basic_protection")))
 	{
-		$protDone = returnEffectDone($userid, "basic_protection");
+	    $protDone = returnEffectDone($userid, constant("basic_protection"));
 		echo "<b><span class='text-info'>You have protection active for the next " . TimeUntil_Parse($protDone) . ".</span></b><br />";
 	}
 	if (userHasEffect($userid, constant("invisibility")))
@@ -434,8 +434,7 @@ class headers
 			    //easter 2021 (april 4th)
 			    if (date('n') == 4 && date('j') == 4)
 			    {
-			        $effct = constant("holiday_mining_energy");
-			        if (returnEffectMultiplier($userid, $effct) < 4)
+			        if (returnEffectMultiplier($userid, constant("holiday_mining_energy")) < 4)
 			        {
 			            $_SESSION['lucked_out']=time()+Random(1800,2400);
 			            alert('info','',"Your holiday mining energy requirement has been reduced by another 20%.",false);

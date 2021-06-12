@@ -72,7 +72,7 @@ function small()
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		if (userHasEffect($_POST['user'], "basic_protection"))
+		if (userHasEffect($_POST['user'], constant("basic_protection")))
 		{
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that has protection.", true, 'inventory.php');
 			die($h->endpage());
@@ -131,7 +131,7 @@ function medium()
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		if (userHasEffect($_POST['user'], "basic_protection"))
+		if (userHasEffect($_POST['user'], constant("basic_protection")))
 		{
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that has protection.", true, 'inventory.php');
 			die($h->endpage());
@@ -266,7 +266,7 @@ function pumpkin()
 			alert('danger', "Uh Oh!", "You are trying to bomb a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		if (userHasEffect($_POST['user'], "basic_protection"))
+		if (userHasEffect($_POST['user'], constant("basic_protection")))
 		{
 			alert('danger', "Uh Oh!", "You are trying to toss a pumpkin at a user that has protection.", true, 'inventory.php');
 			die($h->endpage());
@@ -372,7 +372,7 @@ function rickroll()
 			alert('danger', "Uh Oh!", "You are trying to rick-roll a user that does not exist.", true, 'inventory.php');
 			die($h->endpage());
 		}
-		if (userHasEffect($_POST['user'], "basic_protection"))
+		if (userHasEffect($_POST['user'], constant("basic_protection")))
 		{
 			alert('danger', "Uh Oh!", "You are trying to rick-roll a user that has protection.", true, 'inventory.php');
 			die($h->endpage());

@@ -316,7 +316,7 @@ function iq()
 function protection()
 {
 	global $ir,$userid,$api,$h,$db;
-	if (userHasEffect($userid, "basic_protection"))
+	if (userHasEffect($userid, constant("basic_protection")))
 	{
 		alert('danger',"Uh Oh!","You cannot buy more protection while you already have an existing contract in place.",true,'temple.php');
 		die($h->endpage());

@@ -822,7 +822,7 @@ function doSleep()
     if (isset($_POST['construct']))
     {
         $fxt = (60*60)*8;
-        userGiveEffect($userid, "sleep", $fxt);
+        userGiveEffect($userid, constant("sleep"), $fxt);
         alert("success","Success!", "You have chosen to go to sleep. You may wake up manually, or automatically in 8 hours.");
     }
     else

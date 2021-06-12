@@ -59,7 +59,7 @@ if ($ir['rewarded'] == 0)
 	}
 	elseif ($reward <= 64 && $reward > 60)
 	{
-		userGiveEffect($userid, "basic_protection", ($guardTime*60));
+	    userGiveEffect($userid, constant("basic_protection"), ($guardTime*60));
 		$api->GameAddNotification($userid,"We got your back {$ir['username']}! Someone was about to hit on you, so we bought you some protection. Its your login gift for the day. Thanks for playing CID!");
 		$api->SystemLogsAdd($userid, "loginreward", "Received {$guardTime} minutes of Protection.");
 	}
@@ -73,11 +73,10 @@ if ($ir['rewarded'] == 0)
 	{
 		$newTime=(60*60)*0.25;
 		$formatTime = $newTime / 60;
-		$effect = constant("invisibility");
 		if (userHasEffect($userid, $effect))
 		    userUpdateEffect($userid, $effect, $newTime);
 		    else
-		        userGiveEffect($userid, $effect, $newTime);
+		        userGiveEffect($userid, constant("invisibility"), $newTime);
 		$api->GameAddNotification($userid,"We've given you {$formatTime} minutes of invisibility for your daily log in reward.");
 		$api->SystemLogsAdd($userid, "loginreward", "Received {$formatTime} minutes invisibility.");
 	}
