@@ -65,12 +65,16 @@ echo "<h3>Guild Districts</h3><hr />
             <a href='?action=guildinfo' class='btn btn-success btn-block'>Your Guild Info</a>
             <br />
         </div>
-        <div class='col-12  col-sm-6 col-xl-3 col-xxl'>
+        <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
             <a href='?action=buy' class='btn btn-danger btn-block'>Buy Troops</a>
             <br />
         </div>
-        <div class='col-12  col-sm-12 col-md-6 col-xl-3 col-xxl'>
+        <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
             <a href='?action=general' class='btn btn-secondary btn-block'>Hire General</a>
+            <br />
+        </div>
+        <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
+            <a href='#' data-toggle='modal' data-target='#district_info_new' class='btn btn-info btn-block'>In-Dev</a>
             <br />
         </div>
     </div>
@@ -848,7 +852,7 @@ function battlereport()
         			Warriors: " . number_format($r['defend_war']) . " <span class='text-danger'>(-" . number_format($r['defend_war_lost']) . ")</span><br />
         			Archers: " . number_format($r['defend_arch']) . " <span class='text-danger'>(-" . number_format($r['defend_archer_lost']) . ")</span><br />
         			Generals: " . number_format($r['defend_general']) . "<br />
-        			Fortification Level: " . number_format($r['defend_fortify']) . "
+        			Fortification Level: " . ($r['defend_fortify']) . "
         		</div>
         	</div>
         </div>
@@ -1048,7 +1052,8 @@ function fortify()
 	$neededXP = round($districtConfig['xpPerFortify'] * (($r2['district_fortify'] + 1) * $districtConfig['xpPerFortifyMulti']));
 	if (isset($_POST['warriors']))
 	{
-		if (($r2['district_fortify'] + 1) >= $districtConfig['maxFortify'])
+	    $newLvl = ($r2['district_fortify'] + 1);
+	    if ($newLvl > $districtConfig['maxFortify'])
 		{
 			alert('danger',"Uh Oh!","You cannot fortify this tile anymore.",true,'guild_district.php');
 			die($h->endpage());
@@ -1062,6 +1067,25 @@ function fortify()
 		{
 			alert('danger',"Uh Oh!","Your guild needs " . number_format($neededXP) . " Guild Experience before you can fortify this district.",true,'guild_district.php');
 			die($h->endpage());
+		}
+		if ($newLvl >= 3)
+		{
+		    if ($newLvl < 4)
+		    {
+		        if ($r2['district_general'] < 1)
+		        {
+		            alert('danger',"Uh Oh!","Your guild must have at least one general on this tile to fortify any further.",true,'guild_district.php');
+		            die($h->endpage());
+		        }
+		    }
+		    else 
+		    {
+		        if ($r2['district_general'] < 2)
+		        {
+		            alert('danger',"Uh Oh!","Your guild must have at least two generals on this tile to fortify any further.",true,'guild_district.php');
+		            die($h->endpage());
+		        }
+		    }
 		}
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		$api->SystemLogsAdd($userid,"district","Spent " . number_format($neededXP) . " Guild Experience and " . number_format($neededTokens) . " Chivalry Tokens to fortify tile " . resolveCoordinates($attack_to) .".");
@@ -1170,6 +1194,7 @@ function movefrombarracks()
 		updateTileTroops($attack_to, $warriors, $archers, $generals);
 		alert('success',"","You have successfully moved " . number_format($warriors) . " Warriors, " . number_format($archers) . " Archers and " . number_format($generals) . " Generals from your barracks to this tile.", true, 'guild_district.php');
 		$api->SystemLogsAdd($userid,"district","Moved " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers to Tile " . resolveCoordinates($attack_to) . " from their barracks.");
+		$api->GuildAddNotification($ir['guild'], "<a href='profile.php?user=1'>{$ir['username']}</a> has moved " . number_format($warriors) . " Warriors, " . number_format($archers) . " Archers and " . number_format($generals) . " Generals to Tile " . resolveCoordinates($attack_to) . " from the barracks.");
 	}
 	else
 	{
@@ -1600,6 +1625,7 @@ function hireGeneral()
 	}
 }
 include('forms/district_popup.php');
+include('forms/popup_district_new.php');
 $h->endpage();
 
 //Functions needed to make the module work.

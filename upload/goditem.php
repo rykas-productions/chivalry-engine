@@ -23,6 +23,9 @@ switch ($_GET['action']) {
     case 'bankint':
         bankinterest();
         break;
+    case 'givemoves':
+        giveMoves();
+        break;
     default:
         home();
         break;
@@ -39,6 +42,9 @@ function home()
         </div>
         <div class='col'>
             <a href='?action=bankint' class='btn btn-primary btn-block'>Run Bank Interest</a>
+        </div>
+        <div class='col'>
+            <a href='?action=givemoves' class='btn btn-primary btn-block'>Give District Moves</a>
         </div>
     </div>
 	";
@@ -80,5 +86,14 @@ function bankinterest()
     doDailyVaultBankInterest();
     alert("success","Success!","You have successfully ran interest on all bank accounts.",false);
     $api->SystemLogsAdd($userid, "staff", "Manually ran interest on bank accounts.");
+    home();
+}
+
+function giveMoves()
+{
+    global $api, $userid, $db, $ir;
+    $db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 2 WHERE `guild_id` = {$ir['guild']}");
+    alert("success","Success!","You have given your guild 2 more district moves.",false);
+    $api->SystemLogsAdd($userid, "staff", "Gave guild +2 district moves.");
     home();
 }
