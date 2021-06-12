@@ -1,10 +1,35 @@
 <?php
+//Module config
+$districtConfig['MaxSizeX'] = 5;
+$districtConfig['MaxSizeY'] = 5;
+$districtConfig['BarracksMaxWarriors'] = 3000;
+$districtConfig['BarracksMaxArchers'] = 1500;
+$districtConfig['GeneralBuff'] = 0.1821715;
+$districtConfig['GeneralTroops'] = 2500;
+$districtConfig['GeneralCost'] = 250000;
+$districtConfig['GeneralCostDaily'] = 30000;
+$districtConfig['WarriorCost'] = 4500;
+$districtConfig['WarriorCostDaily'] = 550;
+$districtConfig['ArcherCost'] = 8000;
+$districtConfig['ArcherCostDaily'] = 1100;
+$districtConfig['copperPerFortify']=5000;
+$districtConfig['xpPerFortify']=125;
+$districtConfig['xpPerFortifyMulti']=2.2578721;
+$districtConfig['fortifyBuffMulti']=0.0613655;
+$districtConfig['attackRangeDmgMulti']=1.194115;
+$districtConfig['attackDmgWeakeness']=0.741294;
+$districtConfig['attackDmgStrength']=1.04901724;
+$districtConfig['attackDefenseAdvantage']=1.1582412;
+$districtConfig['maxGenerals'] = 2;
+$districtConfig['maxFortify'] = 5;
+$districtConfig['sabotageItem'] = 62;
+$districtConfig['townLessCost'] = 0.15;
+$districtConfig['outpostExtraTroops'] = 0.15;
+//end module config
+
 function doDailyDistrictTick()
 {
-	global $db, $api;
-	$districtConfig['WarriorCostDaily'] = 500;
-	$districtConfig['ArcherCostDaily'] = 1000;
-	$districtConfig['GeneralCostDaily'] = 12500;
+	global $db, $api, $districtConfig;
 	$db->query("UPDATE `guild_district_info` SET `warriors_bought` = 0, `archers_bought` = 0, `moves` = 2");
 	$q=$db->query("SELECT * FROM `guild_district_info`");
 	while ($r=$db->fetch_row($q))

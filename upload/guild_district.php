@@ -22,34 +22,6 @@ CREATE TABLE `guild_districts`
 	UNIQUE (`district_id`)
 	) ENGINE = InnoDB;
 */
-//Module config
-$districtConfig['MaxSizeX'] = 5;
-$districtConfig['MaxSizeY'] = 5;
-$districtConfig['BarracksMaxWarriors'] = 3000;
-$districtConfig['BarracksMaxArchers'] = 1500;
-$districtConfig['GeneralBuff'] = 0.1851715;
-$districtConfig['GeneralTroops'] = 2500;
-$districtConfig['GeneralCost'] = 125000;
-$districtConfig['GeneralCostDaily'] = 12500;
-$districtConfig['WarriorCost'] = 5000;
-$districtConfig['WarriorCostDaily'] = 500;
-$districtConfig['ArcherCost'] = 8500;
-$districtConfig['ArcherCostDaily'] = 1000;
-$districtConfig['copperPerFortify']=5000;
-$districtConfig['xpPerFortify']=125;
-$districtConfig['xpPerFortifyMulti']=2.2578721;
-$districtConfig['fortifyBuffMulti']=0.0613655;
-$districtConfig['attackRangeDmgMulti']=1.194115;
-$districtConfig['attackDmgWeakeness']=0.741294;
-$districtConfig['attackDmgStrength']=1.04901724;
-$districtConfig['attackDefenseAdvantage']=1.1582412;
-$districtConfig['maxGenerals'] = 2;
-$districtConfig['maxFortify'] = 5;
-$districtConfig['sabotageCost'] = 25000;
-$districtConfig['townLessCost'] = 0.15;
-$districtConfig['outpostExtraTroops'] = 0.15;
-//end module config
-
 require('globals.php');
 echo "<h3>Guild Districts</h3><hr />
     <div class='row'>
@@ -362,28 +334,27 @@ function explodedistrict()
             alert('danger',"Uh Oh!","You cannot sabotage this district tile, as it isn't fortified.",true,'guild_district.php');
             die($h->endpage());
         }
-        if ($guildcurr < $districtConfig['sabotageCost'])
+        if (!$api->GuildHasItem($ir['guild'], $districtConfig['sabotageItem']))
         {
-            alert('danger',"Uh Oh!","Your guild needs " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens before you can fortify this district.",true,'guild_district.php');
+            alert('danger',"","You do not have any large explosives in your guild's armory to use.");
             die($h->endpage());
         }
         $random = Random(1,100);
         if ($random <= 60)
         {
             $db->query("UPDATE `guild_districts` SET `district_fortify` = `district_fortify` - 1 WHERE `district_id` = {$attack_to}");
-            alert('success',"","You have successfully sabotage this tile (" . resolveCoordinates($attack_to) .") at the cost of " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens.",true,'guild_district.php');
+            alert('success',"","You have successfully sabotage this tile (" . resolveCoordinates($attack_to) .") using a large explosive.",true,'guild_district.php');
             $api->GuildAddNotification($r2['district_owner'], "Your guild has suffered a sabotage at (" . resolveCoordinates($attack_to) .") in the guild districts. You've lost a fortification level.");
         }
         else
         {
-            alert('success',"","You have paid " . number_format($districtConfig['sabotageCost']) . " Chivlary Tokens and have failed to sabotage this tile (" . resolveCoordinates($attack_to) .").",true,'guild_district.php');
+            alert('success',"","You have used a large explosive and have failed to sabotage this tile (" . resolveCoordinates($attack_to) .").",true,'guild_district.php');
             $api->GuildAddNotification($r2['district_owner'], "Your guild has has stopped an attempted a sabotage at (" . resolveCoordinates($attack_to) .") in the guild districts.");
         }
-        $api->SystemLogsAdd($userid,"district","Spent " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens to attempt a sabotage on tile " . resolveCoordinates($attack_to) .".");
-        $db->query("UPDATE `guild` SET `guild_seccurr` = `guild_seccurr` - {$districtConfig['sabotageCost']} WHERE `guild_id` = {$ir['guild']}");
-        addToEconomyLog('Districts','token', $districtConfig['sabotageCost']*-1);
+        $api->SystemLogsAdd($userid,"district","Used a large explosive to attempt a sabotage on tile " . resolveCoordinates($attack_to) .".");
         $db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
-        $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . "</a> has spent " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens to sabotage district tile (" . resolveCoordinates($attack_to) .").");
+        $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . "</a> has used one Large Explosive from your guild's armory to sabotage district tile (" . resolveCoordinates($attack_to) .").");
+        $api->GuildRemoveItem($ir['guild'], 62, 1);
     }
     else
     {
@@ -393,7 +364,8 @@ function explodedistrict()
                 <div class='row'>
                     <div class='col-12'>
                         You are attempting to sabotage this tile. Please click the button to confirm.<br />
-                		It costs " . number_format($districtConfig['sabotageCost']) . " Chivalry Tokens to sabotage a tile. Success is not guaranteed.<br />
+                		Your guild needs at least one <a href='iteminfo.php?ID=62'>Large Explosive</a> in 
+                        its armory to sabotage another district. Success is not guaranteed.<br />
                         Sabotaging a tile may drop its fortification level or troop count.
                     </div>
                 </div>
@@ -1225,6 +1197,10 @@ function guild_info()
 		die($h->endpage());
 	}
 	$districtOwn=$db->num_rows($db->query("SELECT `district_id` FROM `guild_districts` WHERE `district_owner` = {$gdi['guild_id']}"));
+	$warriorCost = countDeployedWarriors($gdi['guild_id']) * $districtConfig['WarriorCostDaily'];
+	$archerCost = countDeployedArchers($gdi['guild_id']) * $districtConfig['ArcherCostDaily'];
+	$generalCost = countDeployedGenerals($gdi['guild_id']) * $districtConfig['GeneralCostDaily'];
+	$totalDailyCost = $generalCost + $archerCost + $warriorCost;
 	echo "
     <div class='row'>
         <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
@@ -1268,19 +1244,25 @@ function guild_info()
                             Warriors
                         </div>
                         <div class='col-8'>
-                            " . number_format(countDeployedWarriors($gdi['guild_id']) * $districtConfig['WarriorCostDaily']) . " Copper
+                            " . shortNumberParse($warriorCost) . " Copper
                         </div>
                         <div class='col-4'>
                             Archers
                         </div>
                         <div class='col-8'>
-                            " . number_format(countDeployedArchers($gdi['guild_id']) * $districtConfig['ArcherCostDaily']) . " Copper
+                            " . shortNumberParse($archerCost) . " Copper
                         </div>
                         <div class='col-4'>
                             Generals
                         </div>
                         <div class='col-8'>
-                            " . number_format(countDeployedGenerals($gdi['guild_id']) * $districtConfig['GeneralCostDaily']) . " Copper
+                            " . shortNumberParse($generalCost) . " Copper
+                        </div>
+                        <div class='col-4'>
+                            Total
+                        </div>
+                        <div class='col-8'>
+                            " . shortNumberParse($totalDailyCost) . " Copper
                         </div>
                     </div>
                 </div>
@@ -1468,7 +1450,7 @@ function guild_buy()
                     </div>
                     <div class='card-body'>
                         How many troops do you wish to buy? Fill and submit the form to confirm. Your guild 
-                        has " . number_format($gi['guild_primcurr']) . " Copper Coins in its vault. Warriors have 
+                        has " . shortNumberParse($gi['guild_primcurr']) . " Copper Coins in its vault. Warriors have 
                         a daily upkeep fee of " . number_format($districtConfig['WarriorCostDaily']) . " Copper Coins, and
                         Archers have a daily upkeep fee of " . number_format($districtConfig['ArcherCostDaily']) . " Copper Coins.
                         This fee is taken from your guild's vault every day at midnight gametime.
@@ -1519,6 +1501,7 @@ function hireGeneral()
 		die($h->endpage());
 	}
 	$gi = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
+	//active troops divided by troops required per general, then subtract current active generals from that.
 	$availableGenerals = (floor(countActiveTroops() / $districtConfig['GeneralTroops']) - countGenerals());
 	if ($availableGenerals < 0)
 		$availableGenerals = 0;
@@ -1562,16 +1545,17 @@ function hireGeneral()
                         " . round($districtConfig['GeneralBuff']*100) . "% defensive buff. You may only place {$districtConfig['maxGenerals']}
                         Generals on a tile at a time. If the tile is lost, your general will be executed.
                         How many generals do you wish to hire? You may hire {$availableGenerals} at this time. Your guild has 
-                        " . number_format($gi['guild_primcurr']) . " Copper Coins in its vault. Generals have 
+                        " . shortNumberParse($gi['guild_primcurr']) . " Copper Coins in its vault. Generals have 
                         a daily upkeep fee of " . number_format($districtConfig['GeneralCostDaily']) . " Copper Coins.
-                        This fee is taken from your guild's vault every day at midnight gametime.
+                        This fee is taken from your guild's vault every day at midnight gametime. 
+                        <b>At this time, you may hire {$availableGenerals} generals.</b>
                         <hr />
                         <div class='row'>
                             <div class='col-4 col-md-2'>
                                 General
                             </div>
                             <div class='col-8 col-md-4 col-xl-3'>
-                                <small>" . number_format($districtConfig['GeneralCost']) . " Copper Coins each</small>
+                                <small>" . shortNumberParse($districtConfig['GeneralCost']) . " Copper Coins each</small>
                             </div>
                             <div class='col-12 col-md-6 col-xl-7'>
                                 <input type='number' name='warriors' value='{$availableGenerals}' max='{$availableGenerals}' min='0' required='1' class='form-control'>
