@@ -21,6 +21,9 @@ CREATE TABLE `guild_districts`
 	`district_fortify` INT(11) NOT NULL DEFAULT '0' , 
 	UNIQUE (`district_id`)
 	) ENGINE = InnoDB;
+	
+	ALTER TABLE `guild_district_battlelog` ADD `attack_captains` INT(11) UNSIGNED NOT NULL AFTER `attack_arch_lost`;
+	ALTER TABLE `guild_district_info` ADD `barracks_captains` INT(11) UNSIGNED NOT NULL AFTER `barracks_generals`;
 */
 require('globals.php');
 echo "<h3>Guild Districts</h3><hr />
@@ -42,11 +45,7 @@ echo "<h3>Guild Districts</h3><hr />
             <br />
         </div>
         <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
-            <a href='?action=general' class='btn btn-secondary btn-block'>Hire General</a>
-            <br />
-        </div>
-        <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
-            <a href='#' data-toggle='modal' data-target='#district_info_new' class='btn btn-info btn-block'>In-Dev</a>
+            <a href='?action=general' class='btn btn-secondary btn-block'>Unique Units</a>
             <br />
         </div>
     </div>
@@ -61,7 +60,8 @@ if ($ir['guild'] > 0)
 					VALUES 
 					('{$ir['guild']}', '0', '0', '0', '2')");
 	}
-	$gdi = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}")));
+	$gdi = ($db->fetch_row($db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}")));
+	$gi = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
 }
 if (!isset($_GET['action'])) 
 {
@@ -384,7 +384,7 @@ function explodedistrict()
 }
 function attackfromtile()
 {
-	global $districtConfig, $userid, $db, $api, $h, $ir, $gdi;
+	global $districtConfig, $userid, $db, $api, $h, $ir, $gdi, $gi;
 	$attack_from = (isset($_GET['from']) && is_numeric($_GET['from'])) ? abs($_GET['from']) : '';
 	$attack_to = (isset($_GET['to']) && is_numeric($_GET['to'])) ? abs($_GET['to']) : '';
 	if (blockAccess($ir['guild']))
@@ -447,6 +447,7 @@ function attackfromtile()
 	{
 		$archers = (isset($_POST['archers']) && is_numeric($_POST['archers'])) ? abs($_POST['archers']) : 0;
 		$warriors = (isset($_POST['warriors']) && is_numeric($_POST['warriors'])) ? abs($_POST['warriors']) : 0;
+		$captains = (isset($_POST['captains']) && is_numeric($_POST['captains'])) ? abs($_POST['captains']) : 0;
 		if ($warriors > $r['district_melee'])
 		{
 			alert('danger',"Uh Oh!","You do not have that many Warriors on that tile!",true,'guild_district.php');
@@ -457,10 +458,28 @@ function attackfromtile()
 			alert('danger',"Uh Oh!","You do not have that many Archers on that tile!",true,'guild_district.php');
 			die($h->endpage());
 		}
+		if ($captains > $gdi['barracks_captains'])
+		{
+		    alert('danger',"Uh Oh!","You do not have that many Captains in your barracks!",true,'guild_district.php');
+		    die($h->endpage());
+		}
 		if (($archers + $warriors) == 0)
 		{
-			alert('danger',"Uh Oh!","You must attack with at least one unit.",true,'guild_district.php');
-			die($h->endpage());
+		    alert('danger',"Uh Oh!","You must attack with at least one unit.",true,'guild_district.php');
+		    die($h->endpage());
+		}
+		if ($captains > 0)
+		{
+		    $costToCaptain = $captains * $districtConfig['CaptainCostUse'];
+		    if ($gi['guild_primcurr'] < $costToCaptain)
+		    {
+		        alert('danger',"Uh Oh!","You need at least " . shortNumberParse($costToCaptain) . " Copper Coins in your vault before you can deploy that many captains.",true,'guild_district.php');
+		        die($h->endpage());
+		    }
+		    else
+		    {
+		        $api->GuildRemoveCurrency($ir['guild'], "primary", $costToCaptain);
+		    }
 		}
 		$attBuff = 1.0;
 		$defBuff = 1.0;
@@ -484,7 +503,7 @@ function attackfromtile()
 		{
 			$defBuff = $defBuff + ($r2['district_fortify'] * $districtConfig['fortifyBuffMulti']);
 		}
-		$results=json_decode(doAttack($warriors,$archers,$r2['district_melee'],$r2['district_range'], $r2['district_general'], $attBuff, $defBuff), true);
+		$results=json_decode(doAttack($warriors,$archers,$captains,$r2['district_melee'],$r2['district_range'], $r2['district_general'], $attBuff, $defBuff), true);
 		updateTileTroops($r2['district_id'],
 					$results['defense_warrior_lost']*-1,
 					$results['defense_archer_lost']*-1,
@@ -492,6 +511,7 @@ function attackfromtile()
 		updateTileTroops($r['district_id'],
 					$results['attack_warrior_lost']*-1,
 					$results['attack_archer_lost']*-1, 0);
+		updateBarracksTroops($ir['guild'], 0, 0, 0, $results['attack_captain_lost']*-1);
 		if ($results['winner'] == 'attack')
 		{
 			$status = "won";
@@ -502,16 +522,17 @@ function attackfromtile()
 			$status = "lost";
 			$winner = 'defender';
 		}
-		$i=logBattle($ir['guild'], $r2['district_owner'], $warriors, $archers, $results['attack_warrior_lost'], 
-		$results['attack_archer_lost'], $r2['district_melee'], $r2['district_range'], $results['defense_warrior_lost'], 
-		$results['defense_archer_lost'], $r2['district_general'], $r2['district_fortify'], $winner);
-		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers to take on 
-		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers. There is 
+		$i=logBattle($ir['guild'], $r2['district_owner'], $warriors, $archers, $results['attack_warrior_lost'],
+		    $results['attack_archer_lost'], $r2['district_melee'], $r2['district_range'], $results['defense_warrior_lost'],
+		    $results['defense_archer_lost'], $r2['district_general'], $r2['district_fortify'], $winner, $captains);
+		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers, lead by " . number_format($captains) . " Captains, to take on
+		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers. There is
 		" . number_format($r2['district_general']) . " enemy generals on the battlefield today.<br />
 		<b>Battle-log</b><br />
 		<i>You {$status}!</i><br />
 		Friendly Warriors Killed: " . number_format($results['attack_warrior_lost']) . "<br />
 		Friendly Archers Killed: " . number_format($results['attack_archer_lost']) . "<br />
+        Friendly Captains Executed: " . number_format($results['attack_captain_lost']) . "<br />
 		Enemy Warriors Killed: " . number_format($results['defense_warrior_lost']) . "<br />
 		Enemy Archers Killed: " . number_format($results['defense_archer_lost']) . "<br />
 		Enemy Generals Executed: " . number_format($results['defense_general_lost']) . "<br />";
@@ -544,7 +565,7 @@ function attackfromtile()
                     </div>
                 </div>
                 <div class='row'>
-                    <div class='col-12 col-md-6'>
+                    <div class='col-12 col-md-6 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
                                 <b>Warriors (vs " . number_format($r2['district_melee']) . ")</b>
@@ -554,13 +575,23 @@ function attackfromtile()
                             </div>
                         </div>
                     </div>
-                    <div class='col-12 col-md-6'>
+                    <div class='col-12 col-md-6 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
                                 <b>Archers (vs " . number_format($r2['district_range']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='archers' class='form-control' value='{$r['district_range']}' max='{$r['district_range']}' min='0'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-xl-4'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <b>Captains</b>
+                            </div>
+                            <div class='col-12'>
+                                <input type='number' name='captains' class='form-control' value='{$gdi['barracks_captains']}' max='{$gdi['barracks_captains']}' min='0'>
                             </div>
                         </div>
                     </div>
@@ -580,7 +611,7 @@ function attackfromtile()
 }
 function attackfrombarracks()
 {
-	global $districtConfig, $userid, $db, $api, $h, $ir, $gdi;
+	global $districtConfig, $userid, $db, $api, $h, $ir, $gdi, $gi;
 	$attack_to = (isset($_GET['to']) && is_numeric($_GET['to'])) ? abs($_GET['to']) : '';
 	if (blockAccess($ir['guild']))
 	{
@@ -624,20 +655,39 @@ function attackfrombarracks()
 	{
 		$archers = (isset($_POST['archers']) && is_numeric($_POST['archers'])) ? abs($_POST['archers']) : 0;
 		$warriors = (isset($_POST['warriors']) && is_numeric($_POST['warriors'])) ? abs($_POST['warriors']) : 0;
+		$captains = (isset($_POST['captains']) && is_numeric($_POST['captains'])) ? abs($_POST['captains']) : 0;
 		if ($warriors > $gdi['barracks_warriors'])
 		{
 			alert('danger',"Uh Oh!","You do not have that many Warriors in your barracks!",true,'guild_district.php');
 			die($h->endpage());
 		}
-		if ($archers > $gdi['barracks_warriors'])
+		if ($archers > $gdi['barracks_archers'])
 		{
 			alert('danger',"Uh Oh!","You do not have that many Archers in your barracks!",true,'guild_district.php');
 			die($h->endpage());
+		}
+		if ($captains > $gdi['barracks_captains'])
+		{
+		    alert('danger',"Uh Oh!","You do not have that many Captains in your barracks!",true,'guild_district.php');
+		    die($h->endpage());
 		}
 		if (($archers + $warriors) == 0)
 		{
 			alert('danger',"Uh Oh!","You must attack with at least one unit.",true,'guild_district.php');
 			die($h->endpage());
+		}
+		if ($captains > 0)
+		{
+		    $costToCaptain = $captains * $districtConfig['CaptainCostUse'];
+		    if ($gi['guild_primcurr'] < $costToCaptain)
+		    {
+		        alert('danger',"Uh Oh!","You need at least " . shortNumberParse($costToCaptain) . " Copper Coins in your vault before you can deploy that many captains.",true,'guild_district.php');
+		        die($h->endpage());
+		    }
+		    else
+		    {
+		         $api->GuildRemoveCurrency($ir['guild'], "primary", $costToCaptain);
+		    }
 		}
 		$attBuff = 1.0;
 		$defBuff = 1.0;
@@ -653,14 +703,15 @@ function attackfrombarracks()
 		{
 			$defBuff = $defBuff + ($r2['district_fortify'] * $districtConfig['fortifyBuffMulti']);
 		}
-		$results=json_decode(doAttack($warriors,$archers,$r2['district_melee'],$r2['district_range'], $r2['district_general'], $attBuff, $defBuff), true);
+		$results=json_decode(doAttack($warriors,$archers,$captains,$r2['district_melee'],$r2['district_range'], $r2['district_general'], $attBuff, $defBuff), true);
 		updateTileTroops($r2['district_id'],
 					$results['defense_warrior_lost']*-1,
 					$results['defense_archer_lost']*-1,
 					$results['defense_general_lost']*-1);
 		updateBarracksTroops($ir['guild'],
 					$results['attack_warrior_lost']*-1,
-					$results['attack_archer_lost']*-1, 0);
+					$results['attack_archer_lost']*-1, 0,
+		            $results['attack_captain_lost']*-1);
 		if ($results['winner'] == 'attack')
 		{
 			$status = "won";
@@ -673,14 +724,15 @@ function attackfrombarracks()
 		}
 		$i=logBattle($ir['guild'], $r2['district_owner'], $warriors, $archers, $results['attack_warrior_lost'], 
 		$results['attack_archer_lost'], $r2['district_melee'], $r2['district_range'], $results['defense_warrior_lost'], 
-		$results['defense_archer_lost'], $r2['district_general'], $r2['district_fortify'], $winner);
-		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers to take on 
+		    $results['defense_archer_lost'], $r2['district_general'], $r2['district_fortify'], $winner, $captains);
+		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers, lead by " . number_format($captains) . " Captains, to take on 
 		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers. There is 
 		" . number_format($r2['district_general']) . " enemy generals on the battlefield today.<br />
 		<b>Battle-log</b><br />
 		<i>You {$status}!</i><br />
 		Friendly Warriors Killed: " . number_format($results['attack_warrior_lost']) . "<br />
 		Friendly Archers Killed: " . number_format($results['attack_archer_lost']) . "<br />
+        Friendly Captains Executed: " . number_format($results['attack_captain_lost']) . "<br />
 		Enemy Warriors Killed: " . number_format($results['defense_warrior_lost']) . "<br />
 		Enemy Archers Killed: " . number_format($results['defense_archer_lost']) . "<br />
 		Enemy Generals Executed: " . number_format($results['defense_general_lost']) . "<br />";
@@ -713,7 +765,7 @@ function attackfrombarracks()
                     </div>
                 </div>
                 <div class='row'>
-                    <div class='col-12 col-md-6'>
+                    <div class='col-12 col-md-6 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
                                 <b>Warriors (vs " . number_format($r2['district_melee']) . ")</b>
@@ -723,13 +775,23 @@ function attackfrombarracks()
                             </div>
                         </div>
                     </div>
-                    <div class='col-12 col-md-6'>
+                    <div class='col-12 col-md-6 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
                                 <b>Archers (vs " . number_format($r2['district_range']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='archers' class='form-control' value='{$gdi['barracks_archers']}' max='{$gdi['barracks_archers']}' min='0'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-md-6 col-xl-4'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <b>Captains</b>
+                            </div>
+                            <div class='col-12'>
+                                <input type='number' name='captains' class='form-control' value='{$gdi['barracks_captains']}' max='{$gdi['barracks_captains']}' min='0'>
                             </div>
                         </div>
                     </div>
@@ -749,7 +811,7 @@ function attackfrombarracks()
 }
 function battlereport()
 {
-	global $districtConfig, $userid, $db, $api, $h, $ir, $gdi;
+	global $db, $api, $h, $ir, $gdi, $districtConfig;
 	$id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs(intval($_GET['id'])) : 0;
 	if (blockAccess($ir['guild']))
 	{
@@ -780,14 +842,28 @@ function battlereport()
         			Attacker: <a href='guilds.php?action=view&id={$r['attacker']}'>{$api->GuildFetchInfo($r['attacker'],'guild_name')}</a><br />
         			Warriors: " . number_format($r['attack_war']) . " <span class='text-danger'>(-" . number_format($r['attack_war_lost']) . ")</span><br />
         			Archers: " . number_format($r['attack_arch']) . " <span class='text-danger'>(-" . number_format($r['attack_arch_lost']) . ")</span><br />
-        			Time: " . DateTime_Parse($r['log_time']) . "
+                    Captains: " . number_format($r['attack_captains']) . "<br />
+                    Captain Cost: " . shortNumberParse($r['attack_captains'] * $districtConfig['CaptainCostUse']) . " Copper Coins<br />
+        			Time: " . DateTime_Parse($r['log_time']) . "<br />";
+                	if ($r['winner'] == 'defender')
+                	{
+                	    if ($r['attack_captains'] > 0)
+                	        echo "<span class='text-danger'>Captains have been executed.</span>";
+                	}
+	echo "
         		</div>
         		<div class='col-md'>
         			Defender: <a href='guilds.php?action=view&id={$r['defender']}'>{$def}</a><br />
         			Warriors: " . number_format($r['defend_war']) . " <span class='text-danger'>(-" . number_format($r['defend_war_lost']) . ")</span><br />
         			Archers: " . number_format($r['defend_arch']) . " <span class='text-danger'>(-" . number_format($r['defend_archer_lost']) . ")</span><br />
         			Generals: " . number_format($r['defend_general']) . "<br />
-        			Fortification Level: " . ($r['defend_fortify']) . "
+        			Fortification Level: " . ($r['defend_fortify']) . "<br />";
+                    if ($r['winner'] == 'attacker')
+                    {
+                        if ($r['defend_general'] > 0)
+                            echo "<span class='text-danger'>Generals have been executed.</span>";
+                    }
+                    echo "
         		</div>
         	</div>
         </div>
@@ -1125,7 +1201,7 @@ function movefrombarracks()
 			die($h->endpage());
 		}
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
-		updateBarracksTroops($ir['guild'], $warriors*-1, $archers*-1, $generals*-1);
+		updateBarracksTroops($ir['guild'], $warriors*-1, $archers*-1, $generals*-1, 0);
 		updateTileTroops($attack_to, $warriors, $archers, $generals);
 		alert('success',"","You have successfully moved " . number_format($warriors) . " Warriors, " . number_format($archers) . " Archers and " . number_format($generals) . " Generals from your barracks to this tile.", true, 'guild_district.php');
 		$api->SystemLogsAdd($userid,"district","Moved " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers to Tile " . resolveCoordinates($attack_to) . " from their barracks.");
@@ -1196,11 +1272,12 @@ function guild_info()
 		alert('danger',"Uh Oh!","You cannot view information about your guild if you're not in a guild.",true,'guild_district.php');
 		die($h->endpage());
 	}
-	$districtOwn=$db->num_rows($db->query("SELECT `district_id` FROM `guild_districts` WHERE `district_owner` = {$gdi['guild_id']}"));
+	$districtOwn=countOwnedDistricts($gdi['guild_id']);
 	$warriorCost = countDeployedWarriors($gdi['guild_id']) * $districtConfig['WarriorCostDaily'];
 	$archerCost = countDeployedArchers($gdi['guild_id']) * $districtConfig['ArcherCostDaily'];
 	$generalCost = countDeployedGenerals($gdi['guild_id']) * $districtConfig['GeneralCostDaily'];
-	$totalDailyCost = $generalCost + $archerCost + $warriorCost;
+	$tileCost = countOwnedDistricts($gdi['guild_id']) * $districtConfig['upkeepPerTile'];
+	$totalDailyCost = $generalCost + $archerCost + $warriorCost + $tileCost;
 	echo "
     <div class='row'>
         <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
@@ -1227,6 +1304,15 @@ function guild_info()
                         </div>
                         <div class='col-3 col-md-6'>
                             " . number_format($gdi['barracks_generals']) . "
+                        </div>
+                        <div class='col-3 col-md-6'>
+                            Captains
+                        </div>
+                        <div class='col-3 col-md-6'>
+                            " . number_format($gdi['barracks_captains']) . "
+                        </div>
+                        <div class='col-12'>
+                            <span class='text-muted'><i><small>Troops in the barracks don't count towards daily upkeep.</small></i></span>
                         </div>
                     </div>
                 </div>
@@ -1257,6 +1343,18 @@ function guild_info()
                         </div>
                         <div class='col-8'>
                             " . shortNumberParse($generalCost) . " Copper
+                        </div>
+                        <div class='col-4'>
+                            Captains
+                        </div>
+                        <div class='col-8'>
+                            0 Copper
+                        </div>
+                        <div class='col-4'>
+                            Tiles
+                        </div>
+                        <div class='col-8'>
+                            " . shortNumberParse($tileCost) . " Copper
                         </div>
                         <div class='col-4'>
                             Total
@@ -1340,7 +1438,7 @@ function guild_info()
 
 function guild_buy()
 {
-	global $db, $api, $userid, $ir, $gdi, $districtConfig, $h;
+	global $db, $api, $userid, $ir, $gdi, $districtConfig, $h, $gi;
 	if (blockAccess($ir['guild']))
 	{
 		alert('danger',"Uh Oh!","You cannot purchase units while not in a guild.",true,'guild_district.php');
@@ -1351,7 +1449,6 @@ function guild_buy()
 		alert('danger',"Uh Oh!","You must be a guild leader or co-leader to purchase troops.",true,'guild_district.php');
 		die($h->endpage());
 	}
-	$gi = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
 	if (countTowns() > 0)
 	{
 	    $districtConfig['ArcherCost'] = round($districtConfig['ArcherCost'] - ($districtConfig['ArcherCost']*($districtConfig['townLessCost']*countTowns())));
@@ -1431,7 +1528,7 @@ function guild_buy()
 					`warriors_bought` = `warriors_bought` + {$warriors},
 					`archers_bought` = `archers_bought` + {$archers}
 					WHERE `guild_id` = {$ir['guild']}");
-		updateBarracksTroops($ir['guild'], $warriors, $archers, 0);
+		updateBarracksTroops($ir['guild'], $warriors, $archers, 0, 0);
 		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$allTotal} WHERE `guild_id` = {$ir['guild']}");
 		alert('success',"Success!","You have spent " . number_format($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers for your guild.",true,'guild_district.php');
 		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . number_format($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers.");
@@ -1489,7 +1586,7 @@ function guild_buy()
 
 function hireGeneral()
 {
-	global $db, $api, $userid, $ir, $gdi, $districtConfig, $h;
+	global $db, $api, $userid, $ir, $gdi, $districtConfig, $h, $gi;
 	if (blockAccess($ir['guild']))
 	{
 		alert('danger',"Uh Oh!","You cannot purchase units while not in a guild.",true,'guild_district.php');
@@ -1500,34 +1597,52 @@ function hireGeneral()
 		alert('danger',"Uh Oh!","You must be a guild leader or co-leader to purchase troops.",true,'guild_district.php');
 		die($h->endpage());
 	}
-	$gi = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
 	//active troops divided by troops required per general, then subtract current active generals from that.
 	$availableGenerals = (floor(countActiveTroops() / $districtConfig['GeneralTroops']) - countGenerals());
 	if ($availableGenerals < 0)
 		$availableGenerals = 0;
+	$availableCaptains = (floor(countActiveTroops() / $districtConfig['CaptainTroops']) - countCaptains());
+	if ($availableCaptains < 0)
+	    $availableCaptains = 0;
 	if (countTowns() > 0)
+	{
 	    $districtConfig['GeneralCost'] = round($districtConfig['GeneralCost'] - ($districtConfig['GeneralCost']*($districtConfig['townLessCost']*countTowns())));
+	    $districtConfig['CaptainCost'] = round($districtConfig['CaptainCost'] - ($districtConfig['CaptainCost']*($districtConfig['townLessCost']*countTowns())));
+	}
 	if (isset($_POST['warriors']))
 	{
 	
 		$generals = (isset($_POST['warriors']) && is_numeric($_POST['warriors'])) ? abs($_POST['warriors']) : 0;
+		$captains = (isset($_POST['captains']) && is_numeric($_POST['captains'])) ? abs($_POST['captains']) : 0;
 		//is the form completely submitted?
-		if ($generals == 0)
+		if ($generals == 0 && $captains == 0)
 		{
 			alert('danger',"Uh Oh!","Please fill out the form completely before submitting.",true,'guild_district.php');
 			die($h->endpage());
 		}
-		$generalsTotal=$generals*$districtConfig['GeneralCost'];
-		if ($gi['guild_primcurr'] < $generalsTotal)
+		if ($generals > $availableGenerals)
 		{
-			alert('danger',"Uh Oh!","Your guild needs " . number_format($generalsTotal) . " Copper Coins in it's vault before you can hire that many generals.",true,'guild_district.php');
-			die($h->endpage());
+		    alert('danger',"Uh Oh!","You cannot hire that many generals at this time.",true,'guild_district.php');
+		    die($h->endpage());
 		}
-		updateBarracksTroops($ir['guild'], 0, 0, $generals);
+		if ($captains > $availableCaptains)
+		{
+		    alert('danger',"Uh Oh!","You cannot hire that many captains at this time.",true,'guild_district.php');
+		    die($h->endpage());
+		}
+		$generalsTotal=$generals*$districtConfig['GeneralCost'];
+		$captainsTotal=$captains*$districtConfig['CaptainCost'];
+		$totalCost = $captainsTotal + $generalsTotal;
+		if ($gi['guild_primcurr'] < $totalCost)
+		{
+		    alert('danger',"Uh Oh!","Your guild needs " . shortNumberParse($totalCost) . " Copper Coins in it's vault before you can hire that many unique units.",true,'guild_district.php');
+		    die($h->endpage());
+		}
+		updateBarracksTroops($ir['guild'], 0, 0, $generals, $captains);
 		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$generalsTotal} WHERE `guild_id` = {$ir['guild']}");
-		alert('success',"Success!","You have spent " . number_format($generalsTotal) . " Copper Coins and hired " . number_format($generals) . " Warriors for your guild.",true,'guild_district.php');
-		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . number_format($generalsTotal) . " Copper Coins and hired" . number_format($generals) . " Generals for your Guild District.");
-		$api->SystemLogsAdd($userid,"district","Spent " . number_format($generalsTotal) . " Copper Coins for " . number_format($generals) . " Generals.");
+		alert('success',"Success!","You have spent " . number_format($generalsTotal) . " Copper Coins and hired " . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your guild.",true,'guild_district.php');
+		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . shortNumberParse($totalCost) . " Copper Coins and hired" . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your Guild District.");
+		$api->SystemLogsAdd($userid,"district","Spent " . shortNumberParse($totalCost) . " Copper Coins for " . number_format($generals) . " Generals and " . number_format($captains) . " Captains.");
 		addToEconomyLog('Districts', 'copper', $generalsTotal*-1);
 	}
 	else
@@ -1538,17 +1653,23 @@ function hireGeneral()
             <div class='col'>
                 <div class='card'>
                     <div class='card-header'>
-                        Hire General
+                        Hire Specialized Units
                     </div>
                     <div class='card-body'>
                         Generals are a purely defensive unit. You may place them on tiles you own for a 
                         " . round($districtConfig['GeneralBuff']*100) . "% defensive buff. You may only place {$districtConfig['maxGenerals']}
                         Generals on a tile at a time. If the tile is lost, your general will be executed.
-                        How many generals do you wish to hire? You may hire {$availableGenerals} at this time. Your guild has 
-                        " . shortNumberParse($gi['guild_primcurr']) . " Copper Coins in its vault. Generals have 
-                        a daily upkeep fee of " . number_format($districtConfig['GeneralCostDaily']) . " Copper Coins.
-                        This fee is taken from your guild's vault every day at midnight gametime. 
-                        <b>At this time, you may hire {$availableGenerals} generals.</b>
+                        Generals have a daily upkeep fee of " . shortNumberParse($districtConfig['GeneralCostDaily']) . " Copper Coins.<hr />
+                        Captains are purely offensive units. Captains increase your army's offensive abilities by " . round($districtConfig['CaptainBuff']*100) . "%. 
+                        Captains do not have a daily upkeep fee, seeing as they spend their time relaxing in the barracks when not in battle.  Captains are lost 
+                        when their attack fails. Captains cost " . shortNumberParse($districtConfig['CaptainCost']) . " Copper Coins to recruit, and 
+                        " . shortNumberParse($districtConfig['CaptainCostUse']) . " Copper Coins per battle used.
+                        <hr />
+                        Your guild has 
+                        " . shortNumberParse($gi['guild_primcurr']) . " Copper Coins in its vault.
+                        Upkeep fees are taken from your guild's vault every day at midnight gametime.
+                        <br />
+                        You may hire {$availableCaptains} Captains and {$availableGenerals} Generals at this time.
                         <hr />
                         <div class='row'>
                             <div class='col-4 col-md-2'>
@@ -1560,8 +1681,17 @@ function hireGeneral()
                             <div class='col-12 col-md-6 col-xl-7'>
                                 <input type='number' name='warriors' value='{$availableGenerals}' max='{$availableGenerals}' min='0' required='1' class='form-control'>
                             </div>
+                            <div class='col-4 col-md-2'>
+                                Captain
+                            </div>
+                            <div class='col-8 col-md-4 col-xl-3'>
+                                <small>" . shortNumberParse($districtConfig['CaptainCost']) . " Copper Coins each</small>
+                            </div>
+                            <div class='col-12 col-md-6 col-xl-7'>
+                                <input type='number' name='captains' value='{$availableCaptains}' max='{$availableCaptains}' min='0' required='1' class='form-control'>
+                            </div>
                             <div class='col-12'>
-                                <input type='submit' value='Hire General' class='btn btn-success btn-block'>
+                                <input type='submit' value='Hire Units' class='btn btn-success btn-block'>
                             </div>
                         </div>
                     </div>

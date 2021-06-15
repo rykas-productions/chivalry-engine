@@ -19,11 +19,14 @@
 				your guild's level, up to a maximum of 400/200 troops a day.
 				<hr />
 				<b>Units</b><br />
-				There's three units in the districts: Warriors, Archers and Generals. Warriors are melee units, who get up and 
-				personal with the enemy. Without proper archer cover, however, they're good as gone. Likewise, archers without a 
+				There's four units in the districts: Warriors, Archers, Generals and Captains. <b>Warriors</b> are melee units, who get up and 
+				personal with the enemy. Without proper archer cover, however, they're good as gone. Likewise, <b>archers</b> without a 
 				frontline of Warriors are toast.<br />
-				Generals are a purely defensive unit which may be assigned to tiles you own. This grants that tile an extra <?php echo round($districtConfig['GeneralBuff']*100); ?>% defense 
-				buff. You may only place <?php echo $districtConfig['maxGenerals']; ?> generals on a single tile at a time.
+				<b>Generals</b> are a purely defensive unit which may be assigned to tiles you own. This grants that tile an extra <?php echo round($districtConfig['GeneralBuff']*100); ?>% defense 
+				buff. You may only place <?php echo $districtConfig['maxGenerals']; ?> generals on a single tile at a time.<br />
+				<b>Captains</b>, on the flip side, are an offensive unit. Each battle a captain particpates in increases offesnive abilities 
+				by <?php echo round($districtConfig['GeneralBuff']*100); ?>%. Note that Captains charge <?php echo number_format($districtConfig['CaptainCostUse']) ?> Copper Coins 
+				per battle they're involved.
 				<hr />
 				<b>District Tiles</b><br />
 				Tiles can very easily be identified by the color of their background and border.<br />
@@ -40,8 +43,9 @@
 				<hr />
 				<b>Recruiting Troops</b><br />
 				Recruiting troops helps strength your army. Stronger units cost more. Warriors cost <?php echo number_format($districtConfig['WarriorCost']); ?> Copper Coins; Archers 
-				charge <?php echo number_format($districtConfig['ArcherCost']); ?> Copper Coins; Generals charge <?php echo number_format($districtConfig['GeneralCost']); ?> Copper Coins. Warriors are melee, Archers are ranged, Generals 
-				are defensive supportive.<br />
+				charge <?php echo number_format($districtConfig['ArcherCost']); ?> Copper Coins; Generals charge <?php echo number_format($districtConfig['GeneralCost']); ?> Copper Coins; 
+				Captains charge <?php echo number_format($districtConfig['CaptainCost']); ?> Copper Coins. Warriors are melee, Archers are ranged, Generals 
+				are defensive supportive, Captains are offensive support.<br />
 				<br />
 				If you lose a tile with a general on it, your general will be executed by the enemy guild.<br />
 				<u>There may be more units in the future depending on how they fit and balance.</u>
@@ -59,7 +63,8 @@
 				<b>Fortification</b><br />
 				District tiles may be fortified up to <?php echo $districtConfig['maxFortify']; ?> times. Fortification increases your defensive value by <?php echo ceil($districtConfig['fortifyBuffMulti']*100); ?>% per 
 				fortification level. A fortification level requires the following: Guild Experience and Chivalry Tokens, both of 
-				which scale with the district's fortication level. These must be in your guild's vault/armory. 
+				which scale with the district's fortication level. These must be in your guild's vault/armory. Later fortification levels 
+				will require Generals on the tile before you can upgrade! 
 				Fortifications are lost when you lose ownership of the tile it was on.
 				<hr />
 				<b>Tips</b><br />

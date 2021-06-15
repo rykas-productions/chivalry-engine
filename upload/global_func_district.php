@@ -25,6 +25,12 @@ $districtConfig['maxFortify'] = 5;
 $districtConfig['sabotageItem'] = 62;
 $districtConfig['townLessCost'] = 0.15;
 $districtConfig['outpostExtraTroops'] = 0.15;
+$districtConfig['CaptainBuff'] = 0.211240;
+$districtConfig['CaptainCost'] = 175000;
+$districtConfig['CaptainCostUse'] = 25000;
+$districtConfig['CaptainTroops'] = $districtConfig['GeneralTroops'];
+$districtConfig['upkeepPerTile'] = 10000;
+
 //end module config
 
 function doDailyDistrictTick()
@@ -38,12 +44,15 @@ function doDailyDistrictTick()
 		$warriors = countDeployedWarriors($r['guild_id']);
 		$archers = countDeployedArchers($r['guild_id']);
 		$generals = countDeployedGenerals($r['guild_id']);
+		$tiles = countOwnedDistricts($r['guild_id']);
 		if ($warriors > 0)
 			$upkeepFee=$upkeepFee + ($warriors * $districtConfig['WarriorCostDaily']);
 		if ($archers > 0)
 			$upkeepFee=$upkeepFee + ($archers * $districtConfig['ArcherCostDaily']);
 		if ($generals > 0)
 			$upkeepFee=$upkeepFee + ($generals * $districtConfig['GeneralCostDaily']);
+		if ($tiles > 0)
+		    $upkeepFee=$upkeepFee + ($tiles * $districtConfig['upkeepPerTile']);
 		if ($upkeepFee > 0)
 		{
 			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$upkeepFee} WHERE `guild_id` = {$r['guild_id']}");
@@ -78,6 +87,11 @@ function countDeployedGenerals($guild_id)
 	$q=$db->query("SELECT SUM(`district_general`) FROM `guild_districts` WHERE `district_owner` = {$guild_id}");
 	return $db->fetch_single($q);
 }
+function countOwnedDistricts($guild_id)
+{
+    global $db;
+    return $db->num_rows($db->query("SELECT `district_id` FROM `guild_districts` WHERE `district_owner` = {$guild_id}"));
+}
 function districtRewards()
 {
 	districtRewardMostControlledTiles();
@@ -105,8 +119,8 @@ function districtRewardMostDeployedUnits()
 			$winnerguild = $currentGuildID;
 		}
 	}
-	$api->GuildAddItem($winnerguild,205,2);
-	$api->GuildAddNotification($winnerguild, "Your guild has the most deployed units on the guild districts and has received two {$api->SystemItemIDtoName(205)} to your armory.");
+	$api->GuildAddItem($winnerguild,205,5);
+	$api->GuildAddNotification($winnerguild, "Your guild has the most deployed units on the guild districts and has received 5 {$api->SystemItemIDtoName(205)} to your armory.");
 }
 
 function districtRewardMostControlledTiles()
@@ -130,8 +144,8 @@ function districtRewardMostControlledTiles()
 			$winnerguild = $currentGuildID;
 		}
 	}
-	$api->GuildAddItem($winnerguild,205,2);
-	$api->GuildAddNotification($winnerguild, "Your guild has the most controlled tiles on the guild districts and has received two {$api->SystemItemIDtoName(205)} to your armory.");
+	$api->GuildAddItem($winnerguild,205,5);
+	$api->GuildAddNotification($winnerguild, "Your guild has the most controlled tiles on the guild districts and has received 5 {$api->SystemItemIDtoName(205)} to your armory.");
 }
 function isDistrictAccessible($district_id)
 {
@@ -185,7 +199,7 @@ function isGuildDistrict($district_id)
                     return false;
 }
 
-function doAttack($attackWarrior, $attackArcher, $defenseWarrior, $defenseArcher, $defenseGeneral = 0, $attackBuff = 1.0, $defenseBuff = 1.0)
+function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior, $defenseArcher, $defenseGeneral = 0, $attackBuff = 1.0, $defenseBuff = 1.0)
 {
     global $api, $userid, $districtConfig;
     
@@ -197,6 +211,7 @@ function doAttack($attackWarrior, $attackArcher, $defenseWarrior, $defenseArcher
     $result['winner'] = '';
     $result['attack_warrior_lost'] = 0;
     $result['attack_archer_lost'] = 0;
+    $result['attack_captain_lost'] = 0;
     $result['defense_warrior_lost'] = 0;
     $result['defense_archer_lost'] = 0;
     $result['defense_general_lost'] = 0;
@@ -255,6 +270,7 @@ function doAttack($attackWarrior, $attackArcher, $defenseWarrior, $defenseArcher
                         $defenderRating = mt_rand(100,300) * $defenseBuff;
                         $defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*$districtConfig['GeneralBuff']));
                         $attackerRating = mt_rand(100,300) * $attackBuff;
+                        $attackerRating = mt_rand(100,300) + ($attackBuff * ($attackCaptain*$districtConfig['CaptainBuff']));
                         //Attacker warrior beats defender warrior
                         if ($attackerRating >= $defenderRating)
                         {
@@ -276,6 +292,7 @@ function doAttack($attackWarrior, $attackArcher, $defenseWarrior, $defenseArcher
                         $defenderRating = mt_rand(50,268) * $defenseBuff;
                         $defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*$districtConfig['GeneralBuff']));
                         $attackerRating = mt_rand(50,268) * $attackBuff;
+                        $attackerRating = mt_rand(100,300) + ($attackBuff * ($attackCaptain*$districtConfig['CaptainBuff']));
                         //Attacker warrior beats defender archer
                         if ($attackerRating >= $defenderRating)
                         {
@@ -344,6 +361,7 @@ function doAttack($attackWarrior, $attackArcher, $defenseWarrior, $defenseArcher
             {
                 //defender wins battle
                 $result['winner'] = 'defense';
+                $result['attack_captain_lost'] = $attackCaptain;
                 $winner=true;
             }
         }
@@ -391,13 +409,14 @@ function updateTileTroops($district_id, $warriorChange, $archerChange, $generalC
 				`district_general` = `district_general` + ({$generalChange})
 				WHERE `district_id` = {$district_id}");
 }
-function updateBarracksTroops($guild_id, $warriorChange, $archerChange, $generalChange)
+function updateBarracksTroops($guild_id, $warriorChange, $archerChange, $generalChange, $captainChange)
 {
     global $db;
     $db->query("UPDATE `guild_district_info`
 				SET `barracks_warriors` = `barracks_warriors` + ({$warriorChange}),
 				`barracks_archers` = `barracks_archers` + ({$archerChange}),
-				`barracks_generals` = `barracks_generals` + ({$generalChange})
+				`barracks_generals` = `barracks_generals` + ({$generalChange}),
+                `barracks_captains` = `barracks_captains` + ({$captainChange})
 				WHERE `guild_id` = {$guild_id}");
 }
 function blockAccess($guild)
@@ -488,18 +507,25 @@ function countGenerals()
     return $deployed + $barracks;
 }
 
-function logBattle($attacker, $defender, $att_war, $att_range, $att_war_lost, $att_range_lost, $def_war, $def_range, $def_war_lost, $def_range_lost, $def_general, $fortify, $winner)
+function countCaptains()
+{
+    global $db, $ir;
+    $barracks = $db->fetch_single($db->query("SELECT SUM(`barracks_captains`) FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}"));
+    return $barracks;
+}
+
+function logBattle($attacker, $defender, $att_war, $att_range, $att_war_lost, $att_range_lost, $def_war, $def_range, $def_war_lost, $def_range_lost, $def_general, $fortify, $winner, $att_capt)
 {
     global $db;
     $time = time();
     $db->query("INSERT INTO `guild_district_battlelog`
 		(`attacker`, `defender`, `winner`, `attack_war`,
-		`attack_war_lost`, `attack_arch`, `attack_arch_lost`,
+		`attack_war_lost`, `attack_arch`, `attack_arch_lost`, `attack_captains`, 
 		`defend_war`, `defend_war_lost`, `defend_arch`,
 		`defend_archer_lost`, `defend_general`, `defend_fortify`,
 		`log_time`)
-		VALUES ('{$attacker}', '{$defender}', '{$winner}', '{$att_war}', '{$att_war_lost}',
-		'{$att_range}', '{$att_range_lost}', '{$def_war}', '{$def_war_lost}',
+		VALUES ('{$attacker}', '{$defender}', '{$winner}', '{$att_war}', '{$att_war_lost}', 
+		'{$att_range}', '{$att_range_lost}', '{$att_capt}', '{$def_war}', '{$def_war_lost}',
 		'{$def_range}', '{$def_range_lost}', '{$def_general}', '{$fortify}', '{$time}')");
     return $db->insert_id();
 }
