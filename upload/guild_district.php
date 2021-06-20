@@ -983,7 +983,7 @@ function movefromtile()
                                 <b>Warriors (Have " . number_format($r2['district_melee']) . ")</b>
                             </div>
                             <div class='col-12'>
-                                <input type='number' name='warriors' class='form-control' value='{$gdi['barracks_warriors']}' max='{$gdi['barracks_warriors']}' min='0'>
+                                <input type='number' name='warriors' class='form-control' value='{$r2['district_melee']}' max='{$r2['district_melee']}' min='0'>
                             </div>
                         </div>
                     </div>
@@ -993,7 +993,7 @@ function movefromtile()
                                 <b>Archers (Have " . number_format($r2['district_range']) . ")</b>
                             </div>
                             <div class='col-12'>
-                                <input type='number' name='archers' class='form-control' value='{$gdi['barracks_archers']}' max='{$gdi['barracks_archers']}' min='0'>
+                                <input type='number' name='archers' class='form-control' value='{$r2['district_range']}' max='{$r2['district_range']}' min='0'>
                             </div>
                         </div>
                     </div>
@@ -1003,7 +1003,7 @@ function movefromtile()
                                 <b>Generals (Have " . number_format($r2['district_general']) . ")</b>
                             </div>
                             <div class='col-12'>
-                                <input type='number' name='generals' class='form-control' value='{$gdi['barracks_generals']}' max='{$gdi['barracks_generals']}' min='0'>
+                                <input type='number' name='generals' class='form-control' value='{$r2['district_general']}' max='{$r2['district_general']}' min='0'>
                             </div>
                         </div>
                     </div>
@@ -1639,8 +1639,8 @@ function hireGeneral()
 		    die($h->endpage());
 		}
 		updateBarracksTroops($ir['guild'], 0, 0, $generals, $captains);
-		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$generalsTotal} WHERE `guild_id` = {$ir['guild']}");
-		alert('success',"Success!","You have spent " . number_format($generalsTotal) . " Copper Coins and hired " . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your guild.",true,'guild_district.php');
+		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$totalCost} WHERE `guild_id` = {$ir['guild']}");
+		alert('success',"Success!","You have spent " . number_format($totalCost) . " Copper Coins and hired " . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your guild.",true,'guild_district.php');
 		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . shortNumberParse($totalCost) . " Copper Coins and hired" . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your Guild District.");
 		$api->SystemLogsAdd($userid,"district","Spent " . shortNumberParse($totalCost) . " Copper Coins for " . number_format($generals) . " Generals and " . number_format($captains) . " Captains.");
 		addToEconomyLog('Districts', 'copper', $generalsTotal*-1);
