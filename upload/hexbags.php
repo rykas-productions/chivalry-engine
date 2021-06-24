@@ -17,7 +17,7 @@ if (!isset($_SESSION['tresde'])) {
 $left=$ir['hexbags']-1;
 if ($ir['hexbags'] == 0)
 {
-    alert('danger',"Uh Oh!","You've already opened all your hexbags for the day. Go vote or come back tomorrow.",true,'explore.php');
+    alert('danger',"Uh Oh!","You've already opened all your hexbags for the day. Go vote or come back in " . TimeUntil_Parse(getNextDayReset()) .".",true,'explore.php');
     die($h->endpage());
 }
 if ($api->UserStatus($userid,'dungeon'))

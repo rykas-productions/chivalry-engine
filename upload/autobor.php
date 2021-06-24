@@ -4,7 +4,7 @@ $multipler=1.0;
 require('globals.php');
 if ($ir['bor'] == 0)
 {
-    alert('danger',"Uh Oh!","You cannot open anymore Boxes of Random today.",true,'explore.php');
+    alert('danger',"Uh Oh!","You cannot open anymore Boxes of Random today. Try again in " . TimeUntil_Parse(getNextDayReset()) .".",true,'explore.php');
     die($h->endpage());
 }
 if ($ir['autobor'] == 0)

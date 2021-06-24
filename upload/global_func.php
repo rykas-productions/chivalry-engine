@@ -1510,3 +1510,8 @@ function loadImageAsset($img, $size = 1)
 {   
     return "<img src='./assets/img/{$img}' style='width:{$size}rem;'></img>";
 }
+
+function getNextDayReset()
+{
+    return strtotime("tomorrow");
+}
