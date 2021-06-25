@@ -207,6 +207,21 @@ switch ($_GET['action']) {
 	case 'worth5':
         worth(1000000000,48);
         break;
+	case 'worth6':
+	    worth(5000000000,105);
+	    break;
+	case 'worth7':
+	    worth(10000000000,106);
+	    break;
+	case 'worth8':
+	    worth(25000000000,107);
+	    break;
+	case 'worth9':
+	    worth(10000000000,108);
+	    break;
+	case 'worth10':
+	    worth(100000000000,109);
+	    break;
 	case 'posts1':
         posts(5,52);
         break;
@@ -331,7 +346,8 @@ function home()
 	echo "Here's a list of in-game achievements. Click on an achievement to be rewarded with it. You may only 
 	be rewarded once per achievement. Each achievement you complete will get you 1 skill point.";
 	$count=1;
-	while ($count != 105)
+	//this # for next achievement number
+	while ($count != 110)
 	{
 		$class[$count]= (userHasAchievement($count)) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
 		$count=$count+1;
@@ -592,11 +608,22 @@ function home()
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[44]} href='?action=worth1'>500,000</a><br />
-					<a {$class[45]} href='?action=worth2'>5,000,000</a><br />
-					<a {$class[46]} href='?action=worth3'>50,000,000</a><br />
-					<a {$class[47]} href='?action=worth4'>500,000,000</a><br />
-					<a {$class[48]} href='?action=worth5'>1,000,000,000</a><br />
+                    <div class='row'>
+						<div class='col'>
+        					<a {$class[44]} href='?action=worth1'>500K</a><br />
+        					<a {$class[45]} href='?action=worth2'>5M</a><br />
+        					<a {$class[46]} href='?action=worth3'>50M</a><br />
+        					<a {$class[47]} href='?action=worth4'>500M</a><br />
+        					<a {$class[48]} href='?action=worth5'>1B</a><br />
+                        </div>
+                        <div class='col'>
+                            <a {$class[105]} href='?action=worth6'>5B</a><br />
+        					<a {$class[106]} href='?action=worth7'>10B</a><br />
+        					<a {$class[107]} href='?action=worth8'>25B</a><br />
+                            <a {$class[108]} href='?action=worth9'>100B</a><br />
+                            <a {$class[109]} href='?action=worth10'>1T</a><br />
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
@@ -984,14 +1011,15 @@ function damage($level,$id)
 }
 function worth($level,$id)
 {
-	global $db,$ir,$userid,$api,$h;
+	global $db,$ir,$userid,$api,$h,$set;
 	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
 	if ($db->num_rows($achieved) > 0)
 	{
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
 		die($h->endpage());
 	}
-	$worth=$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*1000)+($ir['tokenbank']*1000)+$ir['vaultbank'];
+	$estates = $db->fetch_single($db->query("SELECT SUM(`vault`) FROM `user_estates` WHERE `userid` = {$userid}"));
+	$worth=$estates+$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*$set['token_minimum'])+($ir['tokenbank']*$set['token_minimum'])+$ir['vaultbank'];
 	if (empty($worth))
 		$worth=0;
 	if ($worth < $level)
