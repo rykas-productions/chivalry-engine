@@ -1479,7 +1479,7 @@ function doDailyGuildFee()
             else
             {
                 $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
-                $api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep.");
+                $api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in general maintanance and upkeep fees.");
             }
             addToEconomyLog('Guild Upkeep', 'copper', -100000);
         }
