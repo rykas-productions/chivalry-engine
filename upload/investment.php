@@ -28,7 +28,7 @@ $duration=array(5,10,20,30);
 if ($_POST['step'] == 0)
 {
 	$set['5day'] = ($ir['vip_days'] > 0) ? $set['5day'] + 5 : $set['5day'];
-	$set['10day'] = ($ir['vip_days'] > 0) ? $set['10day'] + 5 : $set['10day'];
+	$set['10day'] = ($ir['vip_days'] > 0) ? $set['10day'] + 10 : $set['10day'];
 	$set['20day'] = ($ir['vip_days'] > 0) ? $set['20day'] + 20 : $set['20day'];
 	$set['30day'] = ($ir['vip_days'] > 0) ? $set['30day'] + 30 : $set['30day'];
 	echo "Please select how long you wish to invest your Copper Coins for. The interest rate is shown the button. You receive better rates if you have VIP Days.<br />
@@ -113,7 +113,7 @@ if ($_POST['step'] == 2)
 	if ($_POST['duration'] == 5)
 		$percent = ($ir['vip_days'] > 0) ? $set['5day'] + 5 : $set['5day'];
 	if ($_POST['duration'] == 10)
-		$percent = ($ir['vip_days'] > 0) ? $set['10day'] + 5 : $set['10day'];
+		$percent = ($ir['vip_days'] > 0) ? $set['10day'] + 10 : $set['10day'];
 	if ($_POST['duration'] == 20)
 		$percent = ($ir['vip_days'] > 0) ? $set['20day'] + 20 : $set['20day'];
 	if ($_POST['duration'] == 30)
