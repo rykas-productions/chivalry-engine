@@ -169,6 +169,7 @@ echo "
 					<a href='estate_management.php' class='{$txtClass}'><i class='game-icon game-icon-house'></i> Estate Agent</a><br />
 					<a href='travel.php' class='{$txtClass}'><i class='game-icon game-icon-horseshoe'></i> Travel Agent</a><br />
 					<a href='temple.php' class='{$txtClass}'><i class='game-icon game-icon-mayan-pyramid'></i> Temple of Fortune</a><br />
+                    <a href='investmarket.php' class='{$txtClass}'>Asset Investing</a><br />
 				</div>
 			</div>
 		</div>

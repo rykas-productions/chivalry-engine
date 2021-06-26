@@ -173,6 +173,9 @@ echo"
 					<div class='col-12 col-sm-6 col-md-6 col-lg-12 col-xxxl-6'>
 						<a href='temple.php' class='{$txtClass}'>" . loadImageAsset("explore/temple_fortune.svg") . " Temple of Fortune</a>
 					</div>
+                    <div class='col-12 col-sm-6 col-md-6 col-lg-12 col-xxxl-6'>
+						<a href='investmarket.php' class='{$txtClass}'>Asset Investment</a>
+					</div>
 				</div>
 			</div>
 		</div>

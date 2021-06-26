@@ -14,6 +14,7 @@ require('global_func_district.php');
 require('global_func_item.php');
 require('global_func_estates.php');
 require('global_func_email.php');
+require('global_func_stock.php');
 
 //Constants
 require('const/const_effect.php');

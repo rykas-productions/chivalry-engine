@@ -39,4 +39,5 @@ $db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_availab
 $db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_max` WHERE `farm_water_available` > `farm_water_max`");
 
 fiveMinuteFarm();
+runMarketTick(4);   //med-high risk market
 ?>

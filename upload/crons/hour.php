@@ -37,4 +37,8 @@ addToEconomyLog('Gambling', 'copper', 60000);
 //Street Bum
 $db->query("UPDATE `user_settings` SET `searchtown` = `searchtown` + 25");
 $db->query("UPDATE `user_settings` SET `searchtown` = 100 WHERE `searchtown` > 100");
+
+runMarketTick(3);   //med risk market
+if ((date('G') == 6) || (date('G') == 12))
+    runMarketTick(2);   //lower risk
 ?>

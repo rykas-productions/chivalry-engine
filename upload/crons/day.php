@@ -70,6 +70,7 @@ $uq=$db->query("SELECT `userid` FROM `users` WHERE `userid` != 1 AND `laston` > 
 $ur=$db->fetch_single($uq);
 //$api->GameAddNotification($ur,"You have been chosen as the Player of the Day! Your profile will be displayed on the login page, and you've received a unique badge in your inventory.");
 item_add($ur,154,1);*/
+runMarketTick(1);   //low risk market
 backupDatabase();
 purgeOldLogs();
 ?>

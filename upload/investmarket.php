@@ -1,0 +1,504 @@
+<?php
+//Copper Coin Stock Market
+
+/*
+ * CREATE TABLE `asset_market` ( 
+    `am_id` INT(11) UNSIGNED NULL DEFAULT NULL , 
+    `am_name` TEXT NOT NULL , 
+    `am_min` INT(11) UNSIGNED NOT NULL , 
+    `am_max` INT(11) UNSIGNED NOT NULL , 
+    `am_start` INT(11) UNSIGNED NOT NULL , 
+    `am_cost` INT(11) UNSIGNED NOT NULL , 
+    `am_change` INT(11) UNSIGNED NOT NULL , 
+    UNIQUE (`am_id`)) ENGINE = MyISAM;
+    
+    CREATE TABLE `asset_market_owned` ( 
+     `userid` INT(11) UNSIGNED NOT NULL , 
+     `am_id` INT(11) UNSIGNED NOT NULL , 
+     `shares_owned` INT(11) UNSIGNED NOT NULL , 
+     `shares_cost` INT(11) UNSIGNED NOT NULL ) 
+     ENGINE = MyISAM;
+     
+     CREATE TABLE `asset_market_history` ( 
+        `am_id` INT(11) UNSIGNED NOT NULL , 
+        `old_value` INT(11) UNSIGNED NOT NULL , 
+        `difference` INT(11) NOT NULL , 
+        `new_value` INT(11) UNSIGNED NOT NULL 
+        ) ENGINE = MyISAM;
+     
+     ALTER TABLE `asset_market` CHANGE `am_id` `am_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT;
+     ALTER TABLE `asset_market` ADD `am_risk` TINYINT(11) UNSIGNED NOT NULL AFTER `am_change`;
+     ALTER TABLE `asset_market` CHANGE `am_risk` `am_risk` TINYINT(11) UNSIGNED NOT NULL DEFAULT '1';
+     ALTER TABLE `asset_market_owned` ADD `amo_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT FIRST, ADD UNIQUE (`amo_id`);
+     ALTER TABLE `asset_market_history` ADD `amh_id` BIGINT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT FIRST, ADD UNIQUE (`amh_id`);
+     ALTER TABLE `asset_market_history` ADD `timestamp` BIGINT(11) UNSIGNED NOT NULL AFTER `new_value`;
+ */
+$macropage = ('investmarket.php');
+require('globals.php');
+if (user_infirmary($userid))
+{
+    alert('danger',"Uh Oh!","You cannot use the Asset Investment market if you're in the infirmary.",true,'infirmary.php');
+    die($h->endpage());
+}
+if (user_dungeon($userid))
+{
+    alert('danger',"Uh Oh!","You cannot use the Asset Investment market if you're in the dungeon.",true,'dungeon.php');
+    die($h->endpage());
+}
+echo "<h3>Asset Investing</h3><hr />
+    <div class='row'>
+        <div class='col-12 col-sm'>
+            <a href='#' data-toggle='modal' data-target='#investment_info' class='btn btn-info btn-block'>Info</a>
+            <br />
+        </div>
+        <div class='col-12  col-sm'>
+            <a href='investmarket.php' class='btn btn-primary btn-block'>Home</a>
+            <br />
+        </div>";
+        if ($ir['user_level'] == 'Admin')
+        {
+            echo "<div class='col-12 col-sm'>
+            <a href='?action=staffadd' class='btn btn-danger btn-block'>Add Stock</a>
+            <br />
+            </div>";
+        }
+        echo"
+    </div>
+    <hr />";
+if (!isset($_GET['action']))
+{
+    $_GET['action'] = '';
+}
+switch ($_GET['action'])
+{
+    case 'buy':
+        buy();
+        break;
+    case 'history':
+        history();
+        break;
+    case 'sell':
+        sell();
+        break;
+    case 'staffadd':
+        staffadd();
+        break;
+    default:
+        home();
+        break;
+}
+function home()
+{
+    global $db,$ir,$userid,$api,$h;
+    alert('warning',"","This is a list of all assets you may purchase stock of. Please read the info page before you invest.", false);
+    $q = $db->query("SELECT * FROM `asset_market`");
+    echo "<div class='card'>
+    <div class='card-body'>";
+    while ($r = $db->fetch_row($q))
+    {
+        echo "<div class='row'>
+            <div class='col-6 col-lg-2'>
+                {$r['am_name']}
+            </div>
+            <div class='col-6 col-lg-4'>
+                <div class='col-12'>
+                    Current Value
+                </div>
+                <div class='col-12'>
+                    <small>" . shortNumberParse($r['am_cost']) . " Copper Coins</small>
+                </div>
+            </div>
+            <div class='col-12 col-lg-6'>
+                <div class='row'>
+                    <div class='col-12 col-sm-4 col-lg'>
+                        <a href='?action=buy&id={$r['am_id']}' class='btn btn-success btn-block'>Buy</a><br />
+                    </div>
+                    <div class='col-12 col-sm-4 col-lg'>
+                        <a href='?action=sell&id={$r['am_id']}' class='btn btn-danger btn-block'>Sell</a><br />
+                    </div>
+                    <div class='col-12 col-sm-4 col-lg'>
+                        <a href='?action=history&id={$r['am_id']}' class='btn btn-info btn-block'>History</a><br />
+                    </div>
+                </div>
+            </div>
+        </div>";
+    }
+    echo "</div></div>";
+}
+
+function buy()
+{
+    global $db, $userid, $api, $h, $ir;
+    $stock_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
+    if (empty($stock_id))
+    {
+        alert('danger',"Uh Oh!","Please input a valid asset to view.",true,'investmarket.php');
+        die($h->endpage());
+    }
+    $q=$db->query("SELECT * FROM `asset_market` WHERE `am_id` = {$stock_id}");
+    if ($db->num_rows($q) == 0)
+    {
+        $db->free_result($q);
+        alert('danger',"Uh Oh!","You are attempting to purchase an asset that does not exist.",true,'investmarket.php');
+        die($h->endpage());
+    }
+    $r=$db->fetch_row($q);
+    if (isset($_POST['buy']))
+    {
+        $purchase_amount = (isset($_POST['buy']) && is_numeric($_POST['buy'])) ? abs($_POST['buy']) : '';
+        if (empty($purchase_amount))
+        {
+            alert('danger',"Uh Oh!","Please input a valid number of shares to purchase.");
+            die($h->endpage());
+        }
+        $totalCost = $purchase_amount * $r['am_cost'];
+        if ($ir['primary_currency'] < $totalCost)
+        {
+            alert('danger', "Uh Oh!", "You need " . shortNumberParse($totalCost) . " Copper Coins to purchase " . number_format($purchase_amount) . " shares of the {$r['am_name']} asset.");
+            die($h->endpage());
+        }
+        $api->UserTakeCurrency($userid, "primary", $totalCost);
+        setUserShares($userid, $r['am_id'], $r['am_cost'], $purchase_amount);
+        $api->SystemLogsAdd($userid, "asset_market", "Purchased " . number_format($purchase_amount) . " shares of the {$r['am_name']} asset for " . number_format($totalCost) . " Copper Coins.");
+        alert('success','Success!',"You have successfully purchased " . number_format($purchase_amount) . " shares of the {$r['am_name']} asset for " . shortNumberParse($totalCost) . " Copper Coins.", false);
+        addToEconomyLog('Asset Market', 'copper', $totalCost * -1);
+        home();
+    }
+    else
+    {
+        echo "<div class='card'>
+            <div class='card-body'>
+                You are attemping to buy shares of the {$r['am_name']} asset. {$r['am_name']} is a Risk {$r['am_risk']} asset. Shares currently 
+                cost " . number_format($r['am_cost']) . " Copper Coins each. You currently have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.
+                How many shares would you like to purchase of {$r['am_name']}?<hr />
+                <form method='post'>
+                    <div class='row'>
+                    <div class='col-12 col-md-6'>
+                        <input type='number' min='0' class='form-control' required='1' name='buy' placeholder='Shares to purchase'>
+                    </div>
+                    <div class='col-12 col-md-6'>
+                        <input type='submit' class='btn btn-success btn-block' value='Purchase Shares'>
+                    </div>
+                </div>
+                </form>
+        </div>
+        </div>";
+    }
+}
+
+function sell()
+{
+    global $db, $userid, $api, $h, $ir;
+    $stock_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
+    if (empty($stock_id))
+    {
+        alert('danger',"Uh Oh!","Please input a valid asset to view.",true,'investmarket.php');
+        die($h->endpage());
+    }
+    $q=$db->query("SELECT * FROM `asset_market` WHERE `am_id` = {$stock_id}");
+    if ($db->num_rows($q) == 0)
+    {
+        $db->free_result($q);
+        alert('danger',"Uh Oh!","You are attempting to sell an asset that does not exist.",true,'investmarket.php');
+        die($h->endpage());
+    }
+    $q2=$db->query("SELECT * FROM `asset_market_owned` WHERE `am_id` = {$stock_id} AND `userid` = {$userid}");
+    if ($db->num_rows($q2) == 0)
+    {
+        $db->free_result($q2);
+        alert('danger',"Uh Oh!","You do not own any of this asset, which means you cannot sell it.",true,'investmarket.php');
+        die($h->endpage());
+    }
+    $r=$db->fetch_row($q);  //asset data
+    $sharesTotal = 0;
+    $totalCost = 0;
+    while ($r2 = $db->fetch_row($q2))
+    {
+        $sharesTotal = $r2['shares_owned'] + $sharesTotal;
+        $totalCost = $totalCost + ($r2['shares_owned'] * $r2['shares_cost']);
+    }
+    $avgCost = round($totalCost / $sharesTotal);
+    $sellValue = $sharesTotal * $r['am_cost'];
+    if (isset($_POST['sell']))
+    {
+        $sell_amount = (isset($_POST['sell']) && is_numeric($_POST['sell'])) ? abs($_POST['sell']) : '';
+        if (empty($sell_amount))
+        {
+            alert('danger',"Uh Oh!","Please input a valid number of shares to sell.");
+            die($h->endpage());
+        }
+        if ($sell_amount > $sharesTotal)
+        {
+            alert('danger',"Uh Oh!","You cannot sell " . number_format($sell_amount) . " shares of the {$r['am_name']} asset, 
+            as you only have " . number_format($sharesTotal) . " shares.");
+            die($h->endpage());
+        }
+        $marketValue = $sell_amount * $r['am_cost'];
+        $toPlayer = $marketValue * 0.98;
+        $marketTax = $marketValue * 0.02;
+        setUserShares($userid, $r['am_id'], $r['am_cost'], $sell_amount * -1);
+        alert('success', "Success!", "You have sold " . shortNumberParse($sell_amount) . " shares of the 
+            {$r['am_name']} asset at " . shortNumberParse($r['am_cost']) . " Copper Coins a share, for a total of 
+            " . shortNumberParse($toPlayer) . " Copper Coins. " . shortNumberParse($marketTax) . " Copper Coins was 
+            taken as a transaction fee.", false);
+        $api->UserGiveCurrency($userid, "primary", $toPlayer);
+        addToEconomyLog('Market Fees', 'copper', $marketTax * -1);
+        addToEconomyLog('Asset Market', 'copper', $toPlayer);
+        home();
+    }
+    else
+    {
+        $text = ($sellValue < $totalCost) ? "text-danger" : "text-success";
+        $text2 = ($r['am_cost'] < $avgCost) ? "text-danger" : "text-success";
+        echo "<div class='card'>
+            <div class='card-body'>
+                You are attemping to sell your " . number_format($sharesTotal) . " shares of the {$r['am_name']} asset. {$r['am_name']} shares currently
+                cost <span class='{$text2}'>" . shortNumberParse($r['am_cost']) . "</span> Copper Coins. Your share cost average is " . shortNumberParse($avgCost) . " Copper Coins. Your 
+                initial investment of " . shortNumberParse($totalCost) . " Copper Coins is now worth <span class='{$text}'>" . shortNumberParse($sellValue) . "</span> Copper Coins 
+                in the current market conditions. How many shares would you like to sell? Please note that there is a 2% processing fee for selling assets.<hr />
+                <form method='post'>
+                    <div class='row'>
+                    <div class='col-12 col-md-6'>
+                        <input type='number' min='0' max='{$sharesTotal}' value='{$sharesTotal}' class='form-control' required='1' name='sell' placeholder='Shares to sell'>
+                    </div>
+                    <div class='col-12 col-md-6'>
+                        <input type='submit' class='btn btn-success btn-block' value='Sell Shares'>
+                    </div>
+                </div>
+                </form>
+        </div>
+        </div>";
+    }
+}
+
+function history()
+{
+    global $db, $h;
+    $stock_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
+    if (empty($stock_id))
+    {
+        alert('danger',"Uh Oh!","Please input a valid asset to view.",true,'investmarket.php');
+        die($h->endpage());
+    }
+    $q=$db->query("SELECT * FROM `asset_market` WHERE `am_id` = {$stock_id}");
+    if ($db->num_rows($q) == 0)
+    {
+        $db->free_result($q);
+        alert('danger',"Uh Oh!","You are attempting to view the history of an asset that does not exist.",true,'investmarket.php');
+        die($h->endpage());
+    }
+    $q2=$db->query("SELECT * FROM `asset_market_history` WHERE `am_id` = {$stock_id} ORDER BY `timestamp` DESC LIMIT 50");
+    if ($db->num_rows($q2) == 0)
+    {
+        $db->free_result($q2);
+        alert('danger',"Uh Oh!","This asset does not have any history at this time.",true,'investmarket.php');
+        die($h->endpage());
+    }
+    $r = $db->fetch_row($q);
+    echo "<div class='card'>
+            <div class='card-header'>
+                Last 50 ticks for the {$r['am_name']} asset.
+            </div>
+            <div class='card-body'>";
+                while ($r2 = $db->fetch_row($q2))
+                {
+                    $val = "";
+                    $change = ($r2['old_value'] < $r2['new_value']) ? "text-success" : "text-danger";
+                    if ($r2['old_value'] == $r['am_min'])
+                        $val = "text-danger font-weight-bold";
+                    if ($r2['old_value'] == $r['am_max'])
+                            $val = "text-success font-weight-bold";
+                    echo "<div class='row'>
+                            <div class='col-6 col-md-3 col-xl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        Time
+                                    </div>
+                                    <div class='col-12'>
+                                        <small>" . DateTime_Parse($r2['timestamp']) . "</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-6 col-md-3 col-xl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        Value
+                                    </div>
+                                    <div class='col-12'>
+                                        <small><span class='{$val}'>" . shortNumberParse($r2['old_value']) . "</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-6 col-md-3 col-xl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        Change
+                                    </div>
+                                    <div class='col-12'>
+                                        <small><span class='{$change}'>" . shortNumberParse($r2['difference']) . "</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-6 col-md-3 col-xl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        New Value
+                                    </div>
+                                    <div class='col-12'>
+                                        <small><span class='{$change}'>" . shortNumberParse($r2['new_value']) . "</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                            <hr />";
+                }
+            echo"</div>
+            </div>";
+}
+
+function staffadd()
+{
+    global $db, $ir, $userid, $api, $h;
+    if ($ir['user_level'] != 'Admin')
+    {
+        alert('danger',"Uh Oh!","Invalid access.",false);
+        home();
+    }
+    if (isset($_POST['name']))
+    {
+        $stock_name = (isset($_POST['name']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['name'])) ? $db->escape(strip_tags(stripslashes($_POST['name']))) : '';
+        $stock_cost = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : '';
+        $stock_change = (isset($_POST['change']) && is_numeric($_POST['change'])) ? abs($_POST['change']) : '';
+        $stock_risk = (isset($_POST['risk']) && is_numeric($_POST['risk'])) ? abs($_POST['risk']) : '';
+        $stock_floor = (isset($_POST['floor']) && is_numeric($_POST['floor'])) ? abs($_POST['floor']) : '';
+        $stock_ceiling = (isset($_POST['ceiling']) && is_numeric($_POST['ceiling'])) ? abs($_POST['ceiling']) : '';
+        if (empty($stock_name)) 
+        {
+            alert('danger', "Uh Oh!", "Invalid asset name entered. Go back and remove any and all symbols and spaces.");
+            die($h->endpage());
+        }
+        if (empty($stock_cost))
+        {
+            alert('danger', "Uh Oh!", "Please specify a valid starting cost for this asset.");
+            die($h->endpage());
+        }
+        if (empty($stock_change))
+        {
+            alert('danger', "Uh Oh!", "Please specify a valid tick change for this asset.");
+            die($h->endpage());
+        }
+        if (empty($stock_risk))
+        {
+            alert('danger', "Uh Oh!", "Please specify a risk level for this asset.");
+            die($h->endpage());
+        }
+        if (empty($stock_floor))
+        {
+            alert('danger', "Uh Oh!", "Please specify a valid minimum floor for this asset.");
+            die($h->endpage());
+        }
+        if (empty($stock_ceiling))
+        {
+            alert('danger', "Uh Oh!", "Please specify a valid maximum ceiling for this asset.");
+            die($h->endpage());
+        }
+        if (($stock_risk < 1) || ($stock_risk > 5))
+        {
+            alert('danger', "Uh Oh!", "You've specified an invalid risk level for this asset. Maximum is 5, minimum is 1.");
+            die($h->endpage());
+        }
+        if ($stock_floor >= $stock_ceiling)
+        {
+            alert('danger', "Uh Oh!", "The asset's minimum floor must be less than it's maximum ceiling.");
+            die($h->endpage());
+        }
+        $check_ex = $db->query("SELECT `am_id` FROM `asset_market` WHERE `am_name` = '{$stock_name}'");
+        if ($db->num_rows($check_ex) > 0) 
+        {
+            alert('danger', "Uh Oh!", "The asset name you've chosen is already in use by another asset.");
+            die($h->endpage());
+        }
+        createStockAsset($stock_name, $stock_cost, $stock_change, $stock_risk, $stock_floor, $stock_ceiling);
+        alert('success',"Success","Successfully created a new asset to invest in.", false);
+        home();
+    }
+    else
+    {
+        echo "<form method='post'>
+    <div class='card'>
+        <div class='card-header'>
+                Adding Asset
+        </div>
+        <div class='card-body'>
+            <div class='row'>
+                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Asset Name</small>
+                        </div>
+                        <div class='col-12'>
+                            <input type='text' class='form-control' required='1' name='name' placeholder='Asset name'>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Asset Cost</small>
+                        </div>
+                        <div class='col-12'>
+                            <input type='number' class='form-control' required='1' name='cost' placeholder='Asset starting cost' min='0'>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Asset Change</small>
+                        </div>
+                        <div class='col-12'>
+                            <input type='number' class='form-control' required='1' name='change' placeholder='Asset tick change' min='0'>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Asset Risk</small>
+                        </div>
+                        <div class='col-12'>
+                            <input type='number' class='form-control' required='1' name='risk' placeholder='Asset risk level' min='0'>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Asset Floor</small>
+                        </div>
+                        <div class='col-12'>
+                            <input type='number' class='form-control' required='1' name='floor' placeholder='Minimum this asset can drop.' min='0'>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Asset Ceiling</small>
+                        </div>
+                        <div class='col-12'>
+                            <input type='number' class='form-control' required='1' name='ceiling' placeholder='Maximum asset can reach.' min='1' max='" . PHP_INT_MAX . "'>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-xxl-6 col-xxxl-12'>
+                    <input type='submit' class='btn btn-success btn-block' value='Create Asset'>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>";
+    }
+}
+include('forms/popup_invest.php');
+$h->endpage();
