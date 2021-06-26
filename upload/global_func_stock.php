@@ -34,7 +34,7 @@ function addUserShares($userid, $assetID, $costPerShare, $totalShares)
         $r=$db->fetch_single($q);
         $db->query("UPDATE `asset_market_owned` 
                     SET `shares_owned` = `shares_owned` + {$totalShares} 
-                    WHERE `amo_id` = {$r['amo_id']}");
+                    WHERE `am_id` = {$r['amo_id']}");
     }
 }
 
