@@ -113,3 +113,9 @@ function createStockAsset($name, $cost, $change, $risk, $min, $max)
         (`am_name`, `am_min`, `am_max`, `am_start`, `am_cost`, `am_change`, `am_risk`) 
         VALUES ('{$name}', '{$min}', '{$max}', '{$cost}', '{$cost}', '{$change}', '{$risk}')");
 }
+
+function logAssetProfit($userid, $profit)
+{
+    global $db;
+    $db->query("INSERT INTO `asset_market_profit` (`userid`, `profit`) VALUES ('{$userid}', '{$profit}')");
+}

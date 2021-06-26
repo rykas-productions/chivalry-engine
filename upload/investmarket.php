@@ -25,6 +25,11 @@
         `difference` INT(11) NOT NULL , 
         `new_value` INT(11) UNSIGNED NOT NULL 
         ) ENGINE = MyISAM;
+        
+     CREATE TABLE `asset_market_profit` ( 
+        `userid` BIGINT(11) UNSIGNED NOT NULL , 
+        `profit` BIGINT(11) NOT NULL ) 
+        ENGINE = MyISAM;
      
      ALTER TABLE `asset_market` CHANGE `am_id` `am_id` INT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT;
      ALTER TABLE `asset_market` ADD `am_risk` TINYINT(11) UNSIGNED NOT NULL AFTER `am_change`;
@@ -234,6 +239,7 @@ function sell()
             die($h->endpage());
         }
         $marketValue = $sell_amount * $r['am_cost'];
+        $profit = $sellValue - $totalCost;
         $toPlayer = $marketValue * 0.98;
         $marketTax = $marketValue * 0.02;
         setUserShares($userid, $r['am_id'], $r['am_cost'], $sell_amount * -1);
@@ -244,6 +250,7 @@ function sell()
         $api->UserGiveCurrency($userid, "primary", $toPlayer);
         addToEconomyLog('Market Fees', 'copper', $marketTax * -1);
         addToEconomyLog('Asset Market', 'copper', $toPlayer);
+        logAssetProfit($userid, $profit);
         home();
     }
     else
