@@ -37,6 +37,11 @@
      ALTER TABLE `asset_market_owned` ADD `amo_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT FIRST, ADD UNIQUE (`amo_id`);
      ALTER TABLE `asset_market_history` ADD `amh_id` BIGINT(11) UNSIGNED NULL DEFAULT NULL AUTO_INCREMENT FIRST, ADD UNIQUE (`amh_id`);
      ALTER TABLE `asset_market_history` ADD `timestamp` BIGINT(11) UNSIGNED NOT NULL AFTER `new_value`;
+    
+    DELETE FROM `asset_market_profit` WHERE `userid` = 161
+    INSERT INTO `asset_market_profit` (`userid`, `profit`) VALUES ('161', '4431550000')
+    
+ *
  */
 $macropage = ('investmarket.php');
 require('globals.php');
@@ -101,6 +106,9 @@ function home()
     <div class='card-body'>";
     while ($r = $db->fetch_row($q))
     {
+        $q2=$db->query("SELECT * FROM `asset_market_history` WHERE `am_id` = {$r['am_id']} ORDER BY `timestamp` DESC LIMIT 1");
+        $r2=$db->fetch_row($q2);
+        $change = ($r2['old_value'] < $r2['new_value']) ? "text-success" : "text-danger";
         echo "<div class='row'>
             <div class='col-6 col-lg-2'>
                 {$r['am_name']}
@@ -110,7 +118,7 @@ function home()
                     Current Value
                 </div>
                 <div class='col-12'>
-                    <small>" . shortNumberParse($r['am_cost']) . " Copper Coins</small>
+                    <small>" . shortNumberParse($r['am_cost']) . " Copper Coins <span class='{$change}'>(" . number_format($r2['difference']) . ")</span></small>
                 </div>
             </div>
             <div class='col-12 col-lg-6'>
@@ -147,6 +155,7 @@ function buy()
         alert('danger',"Uh Oh!","You are attempting to purchase an asset that does not exist.",true,'investmarket.php');
         die($h->endpage());
     }
+    $maxShares = returnUserMaxShares($userid);
     $r=$db->fetch_row($q);
     if (isset($_POST['buy']))
     {
@@ -162,6 +171,13 @@ function buy()
             alert('danger', "Uh Oh!", "You need " . shortNumberParse($totalCost) . " Copper Coins to purchase " . number_format($purchase_amount) . " shares of the {$r['am_name']} asset.");
             die($h->endpage());
         }
+        //if user has over the maximum shares for their progress.
+        $currentShares = returnUserAssetShares($userid, $r['am_id']);
+        if (($purchase_amount + $currentShares) > $maxShares)
+        {
+            alert('danger', "Uh Oh!", "You are attempting to purchase more shares than allowed with your current progress in CID. You may only own " . number_format($maxShares) . " shares per asset at your current progress.");
+            die($h->endpage());
+        }
         $api->UserTakeCurrency($userid, "primary", $totalCost);
         setUserShares($userid, $r['am_id'], $r['am_cost'], $purchase_amount);
         $api->SystemLogsAdd($userid, "asset_market", "Purchased " . number_format($purchase_amount) . " shares of the {$r['am_name']} asset for " . number_format($totalCost) . " Copper Coins.");
@@ -173,8 +189,9 @@ function buy()
     {
         echo "<div class='card'>
             <div class='card-body'>
-                You are attemping to buy shares of the {$r['am_name']} asset. {$r['am_name']} is a Risk {$r['am_risk']} asset. Shares currently 
-                cost " . number_format($r['am_cost']) . " Copper Coins each. You currently have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.
+                You are attempting to buy shares of the {$r['am_name']} asset. {$r['am_name']} is a Risk {$r['am_risk']} asset. Shares currently 
+                cost " . number_format($r['am_cost']) . " Copper Coins each. You currently have " . shortNumberParse($ir['primary_currency']) . " Copper Coins. Note, you are 
+                currently restricted to owning only " . number_format($maxShares) . " shares of an asset at a time.
                 How many shares would you like to purchase of {$r['am_name']}?<hr />
                 <form method='post'>
                     <div class='row'>
@@ -215,13 +232,8 @@ function sell()
         die($h->endpage());
     }
     $r=$db->fetch_row($q);  //asset data
-    $sharesTotal = 0;
-    $totalCost = 0;
-    while ($r2 = $db->fetch_row($q2))
-    {
-        $sharesTotal = $r2['shares_owned'] + $sharesTotal;
-        $totalCost = $totalCost + ($r2['shares_owned'] * $r2['shares_cost']);
-    }
+    $sharesTotal = returnUserAssetShares($userid, $r['am_id']);
+    $totalCost = returnUserAssetCosts($userid, $r['am_id']);
     $avgCost = round($totalCost / $sharesTotal);
     $sellValue = $sharesTotal * $r['am_cost'];
     if (isset($_POST['sell']))

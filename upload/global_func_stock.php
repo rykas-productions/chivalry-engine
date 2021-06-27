@@ -31,7 +31,7 @@ function addUserShares($userid, $assetID, $costPerShare, $totalShares)
     }
     else
     {
-        $r=$db->fetch_single($q);
+        $r=$db->fetch_row($q);
         $db->query("UPDATE `asset_market_owned` 
                     SET `shares_owned` = `shares_owned` + {$totalShares} 
                     WHERE `am_id` = {$r['amo_id']}");
@@ -84,12 +84,28 @@ function runMarketTick($riskLevel)
     {
         while ($r = $db->fetch_row($q))
         {
-            if ($r['am_cost'] == $r['am_min'])
-                $change = Random($r['am_change'] * 0.1, $r['am_change']);   //This way it always goes up when it bottoms out.
-            elseif ($r['am_cost'] == $r['am_max'])
-                $change = Random($r['am_change'] * -1, $r['am_change'] * -0.1); //Goes down when it maxes out.
+            $RNG = Random(1,100);
+            if ($RNG <= 5)   //market crash
+            {
+                $min = $r['am_cost'] * 0.55;
+                $max = $r['am_cost'] * 0.75;
+                $change = Random($min, $max) * -1;
+            }
+            else if ($RNG >= 95) //market bubble
+            {
+                $min = $r['am_cost'] * 0.10;
+                $max = $r['am_cost'] * 0.33;
+                $change = Random($min, $max);
+            }
             else
-                $change = Random($r['am_change'] * -1, $r['am_change']);    //normal formula
+            {
+                if ($r['am_cost'] == $r['am_min'])
+                    $change = Random($r['am_change'] * 0.1, $r['am_change']);   //This way it always goes up when it bottoms out.
+                elseif ($r['am_cost'] == $r['am_max'])
+                    $change = Random($r['am_change'] * -1, $r['am_change'] * -0.1); //Goes down when it maxes out.
+                else
+                    $change = Random($r['am_change'] * -1, $r['am_change']);    //normal formula
+            }
             $newVal = clamp(($r['am_cost'] + $change), $r['am_min'], $r['am_max']);
             $db->query("UPDATE `asset_market` SET `am_cost` = {$newVal} WHERE `am_id` = {$r['am_id']}");
             logAssetChange($r['am_id'], $r['am_cost'], $change, $newVal);
@@ -117,5 +133,44 @@ function createStockAsset($name, $cost, $change, $risk, $min, $max)
 function logAssetProfit($userid, $profit)
 {
     global $db;
-    $db->query("INSERT INTO `asset_market_profit` (`userid`, `profit`) VALUES ('{$userid}', '{$profit}')");
+    $q = $db->query("SELECT * FROM `asset_market_profit` WHERE `userid` = {$userid}");
+    if ($db->num_rows($q) == 0)
+        $db->query("INSERT INTO `asset_market_profit` (`userid`, `profit`) VALUES ('{$userid}', '{$profit}')");
+    else
+        $db->query("UPDATE `asset_market_profit` SET `profit` = `profit` + ({$profit}) WHERE `userid` = {$userid}");
+}
+
+function returnUserMaxShares($userid)
+{
+    global $db, $api;
+    $level = $api->UserInfoGet($userid, "level");
+    $masterRank = $db->fetch_single($db->query("SELECT `reset` FROM `user_settings` WHERE `userid` = {$userid}"));
+    
+    $ret = 5000;
+    $ret = $ret * levelMultiplier($level);
+    $ret = $ret * $masterRank;
+    
+    return $ret;
+}
+
+function returnUserAssetShares($userid, $assetID)
+{
+    global $db;
+    $q = $db->query("SELECT SUM(`shares_owned`) FROM `asset_market_owned` WHERE `am_id` = {$assetID} AND `userid` = {$userid}");
+    return $db->fetch_single($q);
+}
+
+function returnUserAssetCosts($userid, $assetID)
+{
+    global $db;
+    $q = $db->query("SELECT SUM(`shares_cost`) FROM `asset_market_owned` WHERE `am_id` = {$assetID} AND `userid` = {$userid}");
+    return $db->fetch_single($q);
+}
+
+function calculateUserCurrentAssetValue($userid, $assetID)
+{
+    global $db;
+    $totalShares = returnUserAssetShares($userid, $assetID);
+    $currentVal = $db->fetch_single($db->query("SELECT `am_cost` FROM `asset_market` WHERE `am_id` = {$assetID}"));
+    return $totalShares * $currentVal;
 }
