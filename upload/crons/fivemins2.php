@@ -39,9 +39,9 @@ $db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_availab
 $db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_max` WHERE `farm_water_available` > `farm_water_max`");
 
 //Wood Cutter
-$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + (`setting_value`/10) WHERE `setting_name` = 'cutter_capacity'");
-if ($set['cutter_capacity'] > $set['cutter_capacity_max'])
-    $db->query("UPDATE `settings` SET `setting_value` = {$set['cutter_capacity']} WHERE `setting_name` = 'cutter_capacity'");
+$increase = $set['cutter_capacity_max'] / 10;
+$db->query("UPDATE `settings` SET `setting_value` =  `setting_value` + {$increase} WHERE `setting_name` = 'cutter_capacity'");
+$db->query("UPDATE `settings` SET `setting_value` = {$set['cutter_capacity_max']} WHERE `setting_name` = 'cutter_capacity' AND `setting_value` > {$set['cutter_capacity_max']}");
 
 fiveMinuteFarm();
 runMarketTick(4);   //med-high risk market

@@ -92,7 +92,7 @@ function home()
 
 function cutwood()
 {
-    global $db, $userid, $api, $h, $set;
+    global $db, $userid, $api, $h, $set, $ir;
     $log = (isset($_POST['logs']) && is_numeric($_POST['logs'])) ? abs($_POST['logs']) : '';
     $woodLogID = $api->SystemItemNametoID("Wood Log");
     $woodCount = $api->UserCountItem($userid, $woodLogID);
