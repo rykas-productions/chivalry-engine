@@ -153,6 +153,14 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 						" . shortNumberParse($TotalVaultBank) . "
 					</div>
 				</div>
+                <div class='row'>
+					<div class='col'>
+						Copper in Estates
+					</div>
+					<div class='col'>
+						" . shortNumberParse($TotalEstateVault) . "
+					</div>
+				</div>
 				<div class='row'>
 					<div class='col'>
 						Average Copper

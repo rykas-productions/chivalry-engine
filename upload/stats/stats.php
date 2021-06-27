@@ -36,6 +36,7 @@ $TotalBank = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`bank`) FROM `use
 $TotalBankToken = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`tokenbank`) FROM `users` WHERE `user_level` != 'NPC' AND `tokenbank` > -1  AND `userid` != 1"));
 $TotalBigBank = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`bigbank`) FROM `users` WHERE `user_level` != 'NPC' AND `bigbank` > -1  AND `userid` != 1"));
 $TotalVaultBank = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`vaultbank`) FROM `users` WHERE `user_level` != 'NPC' AND `bigbank` > -1  AND `userid` != 1"));
+$TotalEstateVault = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`vault`) FROM `user_estates`"));
 
 //Select total count of register users.
 $TotalUserCount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `user_level` != 'NPC'  AND `userid` != 1"));
@@ -68,7 +69,7 @@ $Castle = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `us
 $Sunset = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 8"));
 
 //All the primary currency
-$TotalBankandPC = $TotalBank + $TotalPrimaryCurrency + $TotalInvestmentPC + $TotalGuildPC + $TotalBigBank + $TotalVaultBank;
+$TotalBankandPC = $TotalBank + $TotalPrimaryCurrency + $TotalInvestmentPC + $TotalGuildPC + $TotalBigBank + $TotalVaultBank + $TotalEstateVault;
 $TotalBankandSC = $TotalBankToken + $TotalSecondaryCurrency + $TotalGuildSC;
 
 //Avg token price
