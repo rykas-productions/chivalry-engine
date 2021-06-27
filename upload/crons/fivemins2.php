@@ -39,7 +39,7 @@ $db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_availab
 $db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_max` WHERE `farm_water_available` > `farm_water_max`");
 
 //Wood Cutter
-$increase = $set['cutter_capacity_max'] / 10;
+$increase = $set['cutter_capacity_max'] * 0.02;
 $db->query("UPDATE `settings` SET `setting_value` =  `setting_value` + {$increase} WHERE `setting_name` = 'cutter_capacity'");
 $db->query("UPDATE `settings` SET `setting_value` = {$set['cutter_capacity_max']} WHERE `setting_name` = 'cutter_capacity' AND `setting_value` > {$set['cutter_capacity_max']}");
 
