@@ -333,11 +333,12 @@ switch ($_GET['action']) {
 }
 function home()
 {
-	global $h, $ir, $db, $api, $MUS, $userid;
+	global $h, $ir, $db, $api, $MUS, $userid, $set;
 	$ir['actual_reset'] = $ir['reset'] - 1;
 	$ir['courses_done']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `academy_done` WHERE `userid` = {$userid}"));
 	$ir['forum_posts']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$userid}"));
-	$ir['net_worth']=$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*1000)+($ir['tokenbank']*1000)+$ir['vaultbank'];
+	$estates = $db->fetch_single($db->query("SELECT SUM(`vault`) FROM `user_estates` WHERE `userid` = {$userid}"));
+	$ir['net_worth']=$estates+$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*$set['token_minimum'])+($ir['tokenbank']*$set['token_minimum'])+$ir['vaultbank'];
 	$ir['dmg_dlt']=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`value`) FROM `user_logging` WHERE `userid` = {$userid} AND `log_name` = 'dmgdone'"));
 	$ir['travel_times']=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`value`) FROM `user_logging` WHERE `userid` = {$userid} AND `log_name` = 'travel'"));
 	$ir['crime_copper']=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`crimecopper`) FROM `crime_logs` WHERE `userid` = {$userid}"));
