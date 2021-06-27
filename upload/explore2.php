@@ -191,6 +191,7 @@ echo "
 					<a href='achievements.php'><i class='game-icon game-icon-achievement'></i> Achievements</a><br />
                     <a href='bounty.php' class='{$txtClass}'><i class='game-icon game-icon-game-icon game-icon-shadow-grasp'></i> Bounty Hunter <span class='badge badge-pill badge-primary'>{$bounty_count}</span></a><br />
 					<a href='missions.php' class='{$txtClass}'><i class='game-icon game-icon-game-icon game-icon-stabbed-note'></i> Missions</a><br />
+                    <a href='woodcut.php' class='{$txtClass}'>Wood Cutter</a><br />
 				</div>
 			</div>
 		</div>

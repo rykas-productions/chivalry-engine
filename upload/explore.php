@@ -225,6 +225,9 @@ echo"
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
 						<a href='achievements.php'>" . loadImageAsset("explore/achievements.svg") . "  Achievements</a>
 					</div>
+                    <div class='col-12 col-sm-6 col-md-6 col-lg-12 col-xxxl-6'>
+						<a href='woodcut.php' class='{$txtClass}'>Wood Cutter</a>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -7,6 +7,7 @@ define('holiday_mining_energy','holiday_mining_energy');
 define('invisibility','invisibility');
 define('basic_protection','basic_protection');
 define('sleep','sleep');
+define('wood_cut_cooldown','wood_cut_cooldown');
 
 //Farming
 define('farm_well_cooldown','farm_well_cooldown');
