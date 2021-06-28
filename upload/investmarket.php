@@ -57,17 +57,21 @@ if (user_dungeon($userid))
 }
 echo "<h3>Asset Investing</h3><hr />
     <div class='row'>
-        <div class='col-12 col-sm'>
+        <div class='col-12 col-sm-6 col-md'>
             <a href='#' data-toggle='modal' data-target='#investment_info' class='btn btn-info btn-block'>Info</a>
             <br />
         </div>
-        <div class='col-12  col-sm'>
+        <div class='col-12 col-sm-6 col-md'>
             <a href='investmarket.php' class='btn btn-primary btn-block'>Home</a>
+            <br />
+        </div>
+        <div class='col-12 col-sm col-md'>
+            <a href='?action=portfolio' class='btn btn-success btn-block'>Portfolio</a>
             <br />
         </div>";
         if ($ir['user_level'] == 'Admin')
         {
-            echo "<div class='col-12 col-sm'>
+            echo "<div class='col-12 col-sm-6 col-md'>
             <a href='?action=staffadd' class='btn btn-danger btn-block'>Add Stock</a>
             <br />
             </div>";
@@ -89,6 +93,9 @@ switch ($_GET['action'])
         break;
     case 'sell':
         sell();
+        break;
+    case 'portfolio':
+        portfolio();
         break;
     case 'staffadd':
         staffadd();
@@ -518,6 +525,132 @@ function staffadd()
     </div>
 </form>";
     }
+}
+
+function portfolio()
+{
+    global $db, $api, $userid, $h;
+    $totalShares = returnUserAllAssetShares($userid);
+    $totalInvested = returnUserAllAssetCosts($userid);
+    $totalValue = returnUserCurrentValueAllAsset($userid);
+    echo "<div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Portfolio
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Total Shares</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . number_format($totalShares) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Total Invested</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($totalInvested) . " Copper Coins
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Portfolio Value</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($totalValue) . " Copper Coins
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Your Assets
+                    </div>
+                    <div class='card-body'>";
+                            $q = $db->query("SELECT * FROM `asset_market`");
+                            while ($r = $db->fetch_row($q))
+                            {
+                                $sharesTotal = returnUserAssetShares($userid, $r['am_id']);
+                                $totalCost = returnUserAssetCosts($userid, $r['am_id']);
+                                $currentValue = $sharesTotal * $r['am_cost'];
+                                $avgCost = 0;
+                                if ($sharesTotal > 0)
+                                    $avgCost = round($totalCost / $sharesTotal);
+                                echo "
+                                <div class='row'>
+                                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Asset Name</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            {$r['am_name']}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Assets Owned</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            " . number_format($sharesTotal) . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Avg Cost</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            " . shortNumberParse($avgCost) . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Invested</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            " . shortNumberParse($totalCost) . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Current Value</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            " . shortNumberParse($currentValue) . "
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <hr />";
+                            }
+                            echo"
+                    </div>
+                </div>
+            </div>
+    </div>";
 }
 include('forms/popup_invest.php');
 $h->endpage();
