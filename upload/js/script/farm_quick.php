@@ -70,20 +70,25 @@ function bucket($howmany)
         {
             userGiveEffect($userid,  constant("farm_well_cooldown"), ($howmany*$farmCooldown));
         }
-        if (!userHasEffect($userid, constant("farm_well_less_cooldown")))
+        $counted = 0;
+        while ($counted < $howmany)
         {
-            if (Random(1,6151) == 2567)
+            $counted++;
+            if (!userHasEffect($userid, constant("farm_well_less_cooldown")))
             {
-                userGiveEffect($userid, "farm_well_less_cooldown", PHP_INT_MAX);
-                $api->GameAddNotification($userid, "You've learned how to fill up buckets faster! Your Well cooldown time has decreased to 1 second, from 2 seconds.");
+                if (Random(1,6151) == 2567)
+                {
+                    userGiveEffect($userid, "farm_well_less_cooldown", PHP_INT_MAX);
+                    $api->GameAddNotification($userid, "You've learned how to fill up buckets faster! Your Well cooldown time has decreased to 1 second, from 2 seconds.");
+                }
             }
-        }
-        if (!userHasEffect($userid, constant("farm_well_cooldown_cutoff")))
-        {
-            if (Random(1,6151) == 2567)
+            if (!userHasEffect($userid, constant("farm_well_cooldown_cutoff")))
             {
-                userGiveEffect($userid, constant("farm_well_cooldown_cutoff"), PHP_INT_MAX);
-                $api->GameAddNotification($userid, "You've learned how to fill up buckets faster! You may now fill up to five buckets before you are given a cooldown.");
+                if (Random(1,6151) == 2567)
+                {
+                    userGiveEffect($userid, constant("farm_well_cooldown_cutoff"), PHP_INT_MAX);
+                    $api->GameAddNotification($userid, "You've learned how to fill up buckets faster! You may now fill up to five buckets before you are given a cooldown.");
+                }
             }
         }
         $FU['farm_water_available'] = $FU['farm_water_available'] - $howmany;
