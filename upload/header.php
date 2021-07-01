@@ -665,6 +665,7 @@ class headers
             });
         });	
         </script>
+        <script src='js/jquery.canvasjs.min.js'></script>
 		<?php
 	}
 	

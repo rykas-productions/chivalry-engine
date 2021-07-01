@@ -104,7 +104,7 @@ function runMarketTick($riskLevel)
                 elseif ($r['am_cost'] == $r['am_max'])
                     $change = Random($r['am_change'] * -1, $r['am_change'] * -0.1); //Goes down when it maxes out.
                 else
-                    $change = Random($r['am_change'] * -1, $r['am_change'] / 2);    //normal formula
+                    $change = Random($r['am_change'] * -1, $r['am_change']);    //normal formula
             }
             $newVal = clamp(($r['am_cost'] + $change), $r['am_min'], $r['am_max']);
             //Force sell on crash.

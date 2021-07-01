@@ -321,65 +321,50 @@ function history()
         die($h->endpage());
     }
     $r = $db->fetch_row($q);
-    echo "<div class='card'>
-            <div class='card-header'>
-                Last 50 ticks for the {$r['am_name']} asset.
-            </div>
-            <div class='card-body'>";
-                while ($r2 = $db->fetch_row($q2))
-                {
-                    $val = "";
-                    $change = ($r2['old_value'] < $r2['new_value']) ? "text-success" : "text-danger";
-                    if ($r2['old_value'] == $r['am_min'])
-                        $val = "text-danger font-weight-bold";
-                    if ($r2['old_value'] == $r['am_max'])
-                            $val = "text-success font-weight-bold";
-                    echo "<div class='row'>
-                            <div class='col-6 col-md-3 col-xl'>
-                                <div class='row'>
-                                    <div class='col-12'>
-                                        Time
-                                    </div>
-                                    <div class='col-12'>
-                                        <small>" . DateTime_Parse($r2['timestamp']) . "</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class='col-6 col-md-3 col-xl'>
-                                <div class='row'>
-                                    <div class='col-12'>
-                                        Value
-                                    </div>
-                                    <div class='col-12'>
-                                        <small><span class='{$val}'>" . shortNumberParse($r2['old_value']) . "</span></small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class='col-6 col-md-3 col-xl'>
-                                <div class='row'>
-                                    <div class='col-12'>
-                                        Change
-                                    </div>
-                                    <div class='col-12'>
-                                        <small><span class='{$change}'>" . shortNumberParse($r2['difference']) . "</span></small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class='col-6 col-md-3 col-xl'>
-                                <div class='row'>
-                                    <div class='col-12'>
-                                        New Value
-                                    </div>
-                                    <div class='col-12'>
-                                        <small><span class='{$change}'>" . shortNumberParse($r2['new_value']) . "</span></small>
-                                    </div>
-                                </div>
-                            </div>
-                          </div>
-                            <hr />";
-                }
-            echo"</div>
-            </div>";
+    $dataPoints = array();
+    $x = 0;
+    while ($r2 = $db->fetch_row($q2))
+    {
+        $x--;
+        $y = $r2['new_value'];
+        array_push($dataPoints, array("x" => $x, "y" => $y));
+    }
+    ?>
+    <script>
+        window.onload = function () {
+        	
+        var data = [{
+        		type: "line",                
+        		dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+        	}];
+        	
+        //Better to construct options first and then pass it as a parameter
+        var options = {
+        	zoomEnabled: true,
+        	animationEnabled: true,
+        	title: {
+        		text: "<?php echo $r['am_name']; ?>"
+        	},
+        	axisY: {
+        		title: "Asset Value",
+        		lineThickness: 1,
+        		suffix: " Copper Coins"
+        	},
+        	data: data  // random data
+        };
+         
+        var chart = new CanvasJS.Chart("chartContainer", options);
+        chart.render();
+         
+        }
+        </script>
+        <div class='card'>
+        	<div class='card-body'>
+            	<div id="chartContainer" style="height: 370px; width: 100%;">
+            	</div>
+        	</div>
+        </div>
+        <?php
 }
 
 function staffadd()
