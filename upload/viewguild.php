@@ -4346,7 +4346,7 @@ function calculateUpkeep()
 {
 	global $db, $gd, $set, $ir, $api;
 	//Default starter upkeep. before the districts.
-	$upkeepFee = 100000;
+	$upkeepFee = $set['GUILD_PRICE'];
 	$districtConfig['WarriorCostDaily'] = 500;
 	$districtConfig['ArcherCostDaily'] = 1000;
 	$districtConfig['GeneralCostDaily'] = 12500;

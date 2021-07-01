@@ -33,9 +33,9 @@ switch ($_GET['action']) {
 }
 function menu()
 {
-    global $db;
+    global $db, $set;
     echo "<h3><i class='game-icon game-icon-dozen'></i> Guild Listing</h3>
-	<a href='?action=create'>Create a Guild - 500K Copper</a><hr />";
+	<a href='?action=create'>Create a Guild - " . shortNumberParse($set['GUILD_PRICE']) . " Copper</a><hr />";
     echo "<table class='table table-bordered table-striped'>
     <thead>
 	<tr align='left'>
@@ -171,7 +171,7 @@ function create()
 				</tr>
 				<tr>
 					<td colspan='2'>
-						<input type='submit' value='Create Guild for " . number_format($cg_price) . " Copper Coins' class='btn btn-primary'>
+						<input type='submit' value='Create Guild for " . shortNumberParse($cg_price) . " Copper Coins' class='btn btn-primary'>
 					</td>
 				</tr>
 				{$csrf}

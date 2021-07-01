@@ -1460,7 +1460,7 @@ function doDailyVaultBankInterest()
 
 function doDailyGuildFee()
 {
-    global $db, $api;
+    global $db, $api, $set;
     $plussevenday = time() + 604800;
     $gdfq=$db->query("/*qc=on*/SELECT * FROM `guild`");
     while ($gfr=$db->fetch_row($gdfq))
@@ -1468,21 +1468,21 @@ function doDailyGuildFee()
         $warquery=$db->query("/*qc=on*/SELECT `gw_id` FROM `guild_wars` WHERE `gw_declarer` = {$gfr['guild_id']} OR `gw_declaree` = {$gfr['guild_id']}");
         if ($db->num_rows($warquery) == 0)
         {
-            if ($gfr['guild_primcurr'] < 100000)
+            if ($gfr['guild_primcurr'] < $set['GUILD_PRICE'])
             {
                 $debtText = "Your guild has gone into debt. You must pay the debt off in seven days, otherwise your guild will dissolve.";
-                $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
+                $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$set['GUILD_PRICE']} WHERE `guild_id` = {$gfr['guild_id']}");
                 $db->query("UPDATE `guild` SET `guild_debt_time` = {$plussevenday} WHERE `guild_id` = {$gfr['guild_id']} AND `guild_debt_time` = 0");
-                $api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in upkeep, but has gone into debt.");
+                $api->GuildAddNotification($gfr['guild_id'], "Your guild has paid " . shortNumberParse($set['GUILD_PRICE']) . " Copper Coins in upkeep, but has gone into debt.");
                 $api->GameAddNotification($gfr['guild_owner'], $debtText);
                 $api->GameAddNotification($gfr['guild_coowner'], $debtText);
             }
             else
             {
-                $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000 WHERE `guild_id` = {$gfr['guild_id']}");
-                $api->GuildAddNotification($gfr['guild_id'], "Your guild has paid 100,000 Copper Coins in general maintanance and upkeep fees.");
+                $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$set['GUILD_PRICE']} WHERE `guild_id` = {$gfr['guild_id']}");
+                $api->GuildAddNotification($gfr['guild_id'], "Your guild has paid " . shortNumberParse($set['GUILD_PRICE']) . " Copper Coins in general maintanance and upkeep fees.");
             }
-            addToEconomyLog('Guild Upkeep', 'copper', -100000);
+            addToEconomyLog('Guild Upkeep', 'copper', $set['GUILD_PRICE'] * -1);
         }
     }
 }
