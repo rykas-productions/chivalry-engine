@@ -61,7 +61,8 @@ if ($FU['farm_water_max'] == 0)
 doFarmTick();
 $frmeen = min(round($FU['farm_water_available'] / $FU['farm_water_max'] * 100), 100);
 $frmexp = min(round($FU['farm_xp'] / $FU['xp_needed'] * 100), 100);
-echo "
+echo "<div class='card'>
+        <div class='card-body'>
 	<div class='row'>
         <div class='col-md-4' align='left'>
 			Well Capacity - <span id='wellPercent'>{$frmeen}%</span><br />
@@ -97,6 +98,8 @@ echo "
 			</div>
 		</div>
 	</div>
+</div>
+</div>
 	<hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
