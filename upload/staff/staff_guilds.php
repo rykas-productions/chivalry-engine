@@ -230,8 +230,8 @@ function creditguild()
                     WHERE `guild_id` = {$guild}");
 
         //Put both numbers in a friendly format.
-        $secf = number_format($sec);
-        $primf = number_format($prim);
+        $secf = shortNumberParse($sec);
+        $primf = shortNumberParse($prim);
 
         //Notify the guild they've received some cash!
         $api->GuildAddNotification($guild, "The game administration has credited your guild {$primf} Copper Coins
@@ -622,14 +622,7 @@ function delguild()
         }
 
         //Delete all the things.
-        $db->query("DELETE FROM `guild` WHERE `guild_id` = {$guild}");
-        $db->query("DELETE FROM `guild_applications` WHERE `ga_guild` = {$guild}");
-        $db->query("DELETE FROM `guild_armory` WHERE `gaGUILD` = {$guild}");
-        $db->query("DELETE FROM `guild_wars` WHERE `gw_declarer` = {$guild}");
-        $db->query("DELETE FROM `guild_wars` WHERE `gw_declaree` = {$guild}");
-        $db->query("DELETE FROM `guild_notifications` WHERE `gn_id` = {$guild}");
-        $db->query("DELETE FROM `guild_crime_log` WHERE `gclGUILD` = {$guild}");
-        $db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$guild}");
+        deleteGuild($guild);
 
         //Alert user and log!
         alert('success', "Success!", "You have successfully deleted Guild ID {$guild}.");
@@ -640,7 +633,7 @@ function delguild()
         echo "<form method='post'>
         Please select the guild you wish to delete. This will delete EVERYTHING and cannot be reversed.<br />
         {$csrf}
-        " . guilds_dropdown() . "<br />
+        " . guilds_dropdown('guild') . "<br />
         <input type='submit' value='Delete Guild' class='btn btn-primary'>
         </form>";
         $h->endpage();

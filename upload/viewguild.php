@@ -371,7 +371,7 @@ function summary()
 							<b>Daily Upkeep</b>
 						</div>
 						<div class='col'>
-							" . number_format(calculateUpkeep()) . " Copper Coins
+							" . number_format(calculateUpkeep($ir['guild'])) . " Copper Coins
 						</div>
 					</div>
 				</div>
@@ -4341,29 +4341,5 @@ function staff_sword_pic()
 			</div>
 		</form>";
 	}
-}
-function calculateUpkeep()
-{
-	global $db, $gd, $set, $ir, $api;
-	//Default starter upkeep. before the districts.
-	$upkeepFee = $set['GUILD_PRICE'];
-	$districtConfig['WarriorCostDaily'] = 500;
-	$districtConfig['ArcherCostDaily'] = 1000;
-	$districtConfig['GeneralCostDaily'] = 12500;
-	$q=$db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}");
-	while ($r=$db->fetch_row($q))
-	{
-		$upkeepFee=$upkeepFee;
-		$warriors = countDeployedWarriors($r['guild_id']);
-		$archers = countDeployedArchers($r['guild_id']);
-		$generals = countDeployedGenerals($r['guild_id']);
-		if ($warriors > 0)
-			$upkeepFee=$upkeepFee + ($warriors * $districtConfig['WarriorCostDaily']);
-		if ($archers > 0)
-			$upkeepFee=$upkeepFee + ($archers * $districtConfig['ArcherCostDaily']);
-		if ($generals > 0)
-			$upkeepFee=$upkeepFee + ($generals * $districtConfig['GeneralCostDaily']);
-	}
-	return $upkeepFee;
 }
 $h->endpage();
