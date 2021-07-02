@@ -189,6 +189,7 @@ function creditguild()
         $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
         $prim = (isset($_POST['primary']) && is_numeric($_POST['primary'])) ? abs(intval($_POST['primary'])) : 0;
         $sec = (isset($_POST['secondary']) && is_numeric($_POST['secondary'])) ? abs(intval($_POST['secondary'])) : 0;
+        $xp = (isset($_POST['xp']) && is_numeric($_POST['xp'])) ? abs(intval($_POST['xp'])) : 0;
         $reason = (isset($_POST['reason'])) ? $db->escape(strip_tags(stripslashes($_POST['reason']))) : '';
 
         //Validate successful CSRF
@@ -204,8 +205,8 @@ function creditguild()
         }
 
         //Make sure the primary/Chivalry Tokens is input.
-        if ((empty($prim)) && (empty($sec))) {
-            alert('danger', "Uh Oh!", "Please input how much Copper Coins and/or Chivalry Tokens you wish to
+        if ((empty($prim)) && (empty($sec)) && (empty($xp))) {
+            alert('danger', "Uh Oh!", "Please input how much Copper Coins, Chivalry Tokens or Guild Experience you wish to
             credit to this guild.");
             die($h->endpage());
         }
@@ -226,24 +227,23 @@ function creditguild()
         //Credit the guild
         $db->query("UPDATE `guild`
                     SET `guild_primcurr` = `guild_primcurr` + {$prim},
-                    `guild_seccurr` = `guild_seccurr` + {$sec}
+                    `guild_seccurr` = `guild_seccurr` + {$sec},
+                    `guild_xp` = `guild_xp` + {$xp}
                     WHERE `guild_id` = {$guild}");
 
         //Put both numbers in a friendly format.
         $secf = shortNumberParse($sec);
         $primf = shortNumberParse($prim);
+        $xpf = shortNumberParse($xp);
 
         //Notify the guild they've received some cash!
-        $api->GuildAddNotification($guild, "The game administration has credited your guild {$primf} Copper Coins
-        and/or {$secf} Chivalry Tokens for reason: {$reason}.");
+        $api->GuildAddNotification($guild, "The game administration has credited your guild {$primf} Copper Coins, {$secf} Chivalry Tokens, and {$xpf} Guild Experience for reason: {$reason}.");
 
         //Log the entry
-        $api->SystemLogsAdd($userid, 'staff', "Credited Guild ID {$guild} with {$primf} Copper Coins and/or {$secf}
-        Chivalry Tokens with reason '{$reason}'.");
+        $api->SystemLogsAdd($userid, 'staff', "Credited Guild ID {$guild} with {$primf} Copper Coins, {$secf} Chivalry Tokens, and {$xpf} with reason '{$reason}'.");
 
         //Success to the end user.
-        alert('success', "Success!", "You have successfully credited Guild ID {$guild} with {$primf} Copper Coins
-        and/or {$secf} Chivalry Tokens with reason '{$reason}'.", true, 'index.php');
+        alert('success', "Success!", "You have successfully credited Guild ID {$guild} with {$primf} Copper Coins, {$secf} Chivalry Tokens, and {$xpf} with reason '{$reason}'.", true, 'index.php');
         $h->endpage();
     } else {
         //Form to credit a guild.
@@ -274,6 +274,14 @@ function creditguild()
             </th>
             <td>
                 <input type='number' name='secondary' value='0' required='1' min='0' class='form-control'>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Guild XP
+            </th>
+            <td>
+                <input type='number' name='xp' value='0' required='1' min='0' class='form-control'>
             </td>
         </tr>
         <tr>

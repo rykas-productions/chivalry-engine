@@ -424,7 +424,7 @@ function guild_donatexp()
 		Experience Point. You currently have " . number_format($ir['xp']) . " experience points which you can donate. <b>This tool will only take even 
 		amounts of experience (Only in groups of " . number_format($xpformula) . ".)</b> How many do you wish to donate to your guild? Experience points donate cannot be given back.<br />
 		<form method='post'>
-			<input type='number' name='xp' min='{$xpformula}' value='{$ir['xp']}' step='{$xpformula}' class='form-control'>
+			<input type='number' name='xp' min='{$xpformula}' value='{$ir['xp']}' class='form-control'>
 			<input type='submit' class='btn btn-primary' value='Donate XP'>
 		</form>";
 	}
@@ -3947,16 +3947,17 @@ function staff_view_alliances()
 
 function staff_sword_guild()
 {
-	global $db,$gd,$userid,$api,$ir,$h;
+	global $db,$gd,$userid,$api,$ir,$h,$set;
 	//Check if user is the owner of the guild.
 	echo "<h4>Guild Branded Weapons</h4><hr />";
+	$cost = $set['GUILD_PRICE'] * 100;
     if (isGuildLeader()) 
 	{
 		if (isset($_POST['buyswords']))
 		{
 			//Create the sword item
 			$swordID=$gd['guild_sword_item'];
-			if ($gd['guild_primcurr'] < 10000000)
+			if ($gd['guild_primcurr'] < $cost)
 			{
 				alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to buy Guild Weapons.", true, '?action=staff&act2=idx');
 				die($h->endpage());
@@ -3996,21 +3997,21 @@ function staff_sword_guild()
 					{$dmgValue}, 0, 'game-icon game-icon-fragmented-sword enchanted_glow', 0, '')");
 				$swordID = $db->insert_id();
 				$db->query("UPDATE `guild` SET `guild_sword_item` = {$swordID} WHERE `guild_id` = {$gd['guild_id']}");
-				addToEconomyLog('Guild Fees', 'copper', -10000000);
+				addToEconomyLog('Guild Fees', 'copper', $cost * -1);
 			}
 			$api->GuildAddNotification($gd['guild_id'], "Your leader, <a href='profile.php?user={$userid}'>{$ir['username']}</a>, has spent 10,000,000 Copper Coins and ordered 5 guild weapons to the armory.");
 			$api->GuildAddItem($gd['guild_id'],$swordID,5);
-			$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - 10000000 WHERE `guild_id` = {$gd['guild_id']}");
-			alert('success', "Success!", "You have successfully ordered five guild weapons to the guild armory for 10,000,000 Copper Coins.", true, '?action=staff&act2=idx');
+			$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - {$cost} WHERE `guild_id` = {$gd['guild_id']}");
+			alert('success', "Success!", "You have successfully ordered five guild weapons to the guild armory for " . shortNumberParse($cost) . " Copper Coins.", true, '?action=staff&act2=idx');
 		}
 		else
 		{
 			echo "Guild weapons aren't meant to be over-powered. They're supposed to be a
 			historical relic that your guild existed. If that's worth anything is totally up to how 
 			your guild is today. Take pride in your guild with these weapons.<br />
-			Guild Weapons are not cheap by any means. It costs your guild 10M Copper Coins to have a 
+			Guild Weapons are not cheap by any means. It costs your guild " . shortNumberParse($cost) . " Copper Coins to have a 
 			set of five weapons created.<br />
-			Would you like a set to be created? It'll cost you 10M Copper Coins for 5 weapons. The weapons will 
+			Would you like a set to be created? It'll cost you " . shortNumberParse($cost) . " Copper Coins for 5 weapons. The weapons will 
 			deposit into your guild armory.<br />
 			<form method='post'>
 				<input type='hidden' name='buyswords' value='1'>
@@ -4026,8 +4027,9 @@ function staff_sword_guild()
 }
 function staff_upgrade_sword()
 {
-    global $db,$gd,$userid,$api,$ir,$h;
+    global $db,$gd,$userid,$api,$ir,$h,$set;
 	echo "<h4>Upgrade Guild Weapon</h4><hr />";
+	$cost = $set['GUILD_PRICE'] * 100;
 	if (!isGuildLeader())
 	{
 		alert('danger',"Uh Oh!","You do not have permission to be here.",true,'?action=staff&act2=idx');
@@ -4039,7 +4041,7 @@ function staff_upgrade_sword()
 		die($h->endpage());
 	}
 	$r=$db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$gd['guild_sword_item']}"));
-	if ($r['itmbuyprice'] >= 750000)
+	if ($r['itmbuyprice'] >= 1500000)
 	{
 		alert('danger',"Uh Oh!","You have upgraded your guild's weapon to the maximum it can be upgraded.",true,'?action=staff&act2=idx');
 		die($h->endpage());
@@ -4051,28 +4053,28 @@ function staff_upgrade_sword()
 		$newWep = $r['weapon'] * ($wepIncrease / 100);
 		$newCost = $r['itmbuyprice'] * ($costIncrease / 100);
 		$newSell = $newCost / 2;
-		if ($gd['guild_primcurr'] < 10000000)
+		if ($gd['guild_primcurr'] < $cost)
 		{
 			alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to upgrade your guild's weapon right now.", true, '?action=staff&act2=idx');
 			die($h->endpage());
 		}
-		addToEconomyLog('Guild Fees', 'copper', -10000000);
-		$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - 10000000 WHERE `guild_id` = {$gd['guild_id']}");
+		addToEconomyLog('Guild Fees', 'copper', $cost * -1);
+		$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - {$cost} WHERE `guild_id` = {$gd['guild_id']}");
 		$db->query("UPDATE `items` 
 					SET `weapon` = '{$newWep}',
 					`itmbuyprice` = '{$newCost}',
 					`itmsellprice` = '{$newSell}'
 					WHERE `itmid` = {$gd['guild_sword_item']}");
-		$api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a>, one of your guild owners, has spent 10,000,000 Copper Coins to upgrade your guild weapon.");
-		alert('success',"Success!","You have successfully upgraded your guild's weapon for 10,000,000 Copper Coins.",true,'?action=staff&act2=idx');
+		$api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a>, one of your guild owners, has spent " . shortNumberParse($cost) . " Copper Coins to upgrade your guild weapon.");
+		alert('success',"Success!","You have successfully upgraded your guild's weapon for " . shortNumberParse($cost) . " Copper Coins.",true,'?action=staff&act2=idx');
 	}
 	else
 	{
 		echo "Upgrading your guild weapon will make it stronger and increase its item value. Upgrades will
 		affect all weapons that currently exist, and will effect those made in the future. This will not change 
 		your creation costs. You may upgrade your guild's weapon until its item buy value reaches 
-		750,000 Copper Coins.<br />
-		Each upgrade costs 10M Copper Coins.<br />
+		1.5M Copper Coins.<br />
+		Each upgrade costs " . shortNumberParse($cost) . " Copper Coins.<br />
 		Each upgrade will increase your sword's weapon rating by 5-15%.<br />
 		Each upgrade will increase your sword's item buy value by 10-30%.<br />
 		Do you wish to upgrade your guild's sword?
@@ -4085,8 +4087,9 @@ function staff_upgrade_sword()
 }
 function staff_decommission_sword()
 {
-    global $db,$gd,$userid,$api,$ir,$h;
+    global $db,$gd,$userid,$api,$ir,$h,$set;
 	echo "<h4>Decommission Guild Weapon</h4><hr />";
+	$cost = $set['GUILD_PRICE'] * 50;
 	if (!isGuildLeader())
 	{
 		alert('danger',"Uh Oh!","You do not have permission to be here.",true,'?action=staff&act2=idx');
@@ -4103,21 +4106,21 @@ function staff_decommission_sword()
 		$newName="{$r['itmname']} (Decommissioned)";
 		$newWep = $r['weapon'] / 2;
 		$newDesc="{$r['itmdesc']} (Decommissioned " . date('l, F j, Y g:i:s a') . ").";
-		if ($gd['guild_primcurr'] < 5000000)
+		if ($gd['guild_primcurr'] < $cost)
 		{
 			alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to decomission your weapons right now.", true, '?action=staff&act2=idx');
 			die($h->endpage());
 		}
-		addToEconomyLog('Guild Fees', 'copper', -5000000);
+		addToEconomyLog('Guild Fees', 'copper', $cost * -1);
 		$db->query("UPDATE `items` SET `itmname` = '{$newName}', `itmdesc` = '{$newDesc}', `weapon` = '{$newWep}', `itmbuyable` = 'false' WHERE `itmid` = {$r['itmid']}");
 		$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - 5000000, `guild_sword_item` = 0 WHERE `guild_id` = {$gd['guild_id']}");
-		$api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a>, your guild owner, has spent 5,000,000 Copper Coins to decommission your guild's weapons.");
-		alert('success',"Success!","You have successfully decommissioned your guild's weapon for 5,000,000 Copper Coins.",true,'?action=staff&act2=idx');
+		$api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a>, your guild owner, has spent " . shortNumberParse($cost) . " Copper Coins to decommission your guild's weapons.");
+		alert('success',"Success!","You have successfully decommissioned your guild's weapon for " . shortNumberParse($cost) . " Copper Coins.",true,'?action=staff&act2=idx');
 	}
 	else
 	{
 		echo "You may decommission your guild's current weapon here. Since you are stopping production runs early, the 
-		blacksmith who was creating your weapons is charging you a 5M fee to break the deal.<br />
+		blacksmith who was creating your weapons is charging you a " . shortNumberParse($cost) . " fee to break the deal.<br />
 		Decommssioned weapons will be labeled as such, and will have its decommision date noted. Weapons are 100% final once 
 		decommissioned. Guild weapons get their power from being a official guild relic. Don't be surprised if the weapon 
 		feels... weaker... once its been decommissioned. Decommissioned weapon will not show up on the Item Appendix either.
@@ -4130,9 +4133,10 @@ function staff_decommission_sword()
 }
 function staff_sword_reroll()
 {
-	global $db,$gd,$userid,$api,$ir,$h;
+	global $db,$gd,$userid,$api,$ir,$h,$set;
 	//Check if user is the owner of the guild.
 	echo "<h4>Guild Weapon Stat Re-Roll</h4><hr />";
+	$cost = $set['GUILD_PRICE'] * 250;
     if (isGuildLeader()) 
 	{
 		if ($gd['guild_sword_item'] == 0)
@@ -4148,14 +4152,14 @@ function staff_sword_reroll()
 			$costIncrease = Random(105,115);
 			$newCost = $r['itmbuyprice'] * ($costIncrease / 100);
 			$newSell = $newCost / 2;
-			if ($gd['guild_primcurr'] < 25000000)
+			if ($gd['guild_primcurr'] < $cost)
 			{
 				alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to re-roll your Guild Weapon's stat boosts.", true, '?action=staff&act2=idx');
 				die($h->endpage());
 			}
-			if ($r['itmbuyprice'] >= 750000)
+			if ($r['itmbuyprice'] >= 1500000)
 			{
-				alert('danger',"Uh Oh!","You cannot re-roll the stats on your guild's weapon if its value exceeds over 750,000 Copper Coins.",true,'?action=staff&act2=idx');
+				alert('danger',"Uh Oh!","You cannot re-roll the stats on your guild's weapon if its value exceeds over 1,500,000 Copper Coins.",true,'?action=staff&act2=idx');
 				die($h->endpage());
 			}
 			for ($i = 1; $i <= 3; $i++) 
@@ -4185,14 +4189,14 @@ function staff_sword_reroll()
 						`itmbuyprice` = '{$newCost}',
 						`itmsellprice` = '{$newSell}'
 						WHERE `itmid` = {$swordID}");
-			addToEconomyLog('Guild Fees', 'copper', -25000000);
-			$api->GuildAddNotification($gd['guild_id'], "Your leader, <a href='profile.php?user={$userid}'>{$ir['username']}</a>, has spent 25,000,000 Copper Coins re-roll the stat boosts on your guild's weapons.");
-			$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - 25000000 WHERE `guild_id` = {$gd['guild_id']}");
-			alert('success', "Success!", "You have successfully re-rolled the stat boosts on your guild's weapons for 25,000,000 Copper Coins.", true, '?action=staff&act2=idx');
+			addToEconomyLog('Guild Fees', 'copper', $cost * -1);
+			$api->GuildAddNotification($gd['guild_id'], "Your leader, <a href='profile.php?user={$userid}'>{$ir['username']}</a>, has spent " . shortNumberParse($cost) . " Copper Coins re-roll the stat boosts on your guild's weapons.");
+			$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - {$cost} WHERE `guild_id` = {$gd['guild_id']}");
+			alert('success', "Success!", "You have successfully re-rolled the stat boosts on your guild's weapons for " . shortNumberParse($cost) . " Copper Coins.", true, '?action=staff&act2=idx');
 		}
 		else
 		{
-			echo "Don't like the stat boosts you got on your guild's weapon? Need not worry! You can re-roll them for 25M Copper Coins! This will 
+			echo "Don't like the stat boosts you got on your guild's weapon? Need not worry! You can re-roll them for " . shortNumberParse($cost) . " Copper Coins! This will 
 			increase the weapon's buy value by 5-15%.
 			<form method='post'>
 				<input type='hidden' name='reroll' value='1'>
@@ -4242,16 +4246,16 @@ function staff_sword_rename()
 			$api->GuildAddNotification($gd['guild_id'],"{$user} traded a {$api->SystemItemIDtoName($vipitem)} and submitted a request to have your guild's weapon renamed.");
 			alert('success',"Success!","Request was submitted successfully. One {$api->SystemItemIDtoName($vipitem)} has been taken from your guild's armory.",true,'?action=staff&act2=idx');
 		}
-		elseif ($gd['guild_primcurr'] < 35000000)
+		elseif ($gd['guild_primcurr'] < 10000000)
 		{
-			alert('danger', "Uh Oh!", "It costs 35,000,000 Copper Coins to rename your guild's weapon. Go back and try again.");
+			alert('danger', "Uh Oh!", "It costs 10,000,000 Copper Coins to rename your guild's weapon. Go back and try again.");
             die($h->endpage());
 		}
 		else
 		{
-			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 100000000 WHERE `guild_id` = {$ir['guild']}");
-			$api->GuildAddNotification($gd['guild_id'],"{$user} paid 35,000,000 Copper Coins and submitted a request to have your guild's weapon renamed.");
-			alert('success',"Success!","Request was submitted successfully. 35,000,000 Copper Coins have been taken from your guild's vault.",true,'?action=staff&act2=idx');
+			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 10000000 WHERE `guild_id` = {$ir['guild']}");
+			$api->GuildAddNotification($gd['guild_id'],"{$user} paid 10,000,000 Copper Coins and submitted a request to have your guild's weapon renamed.");
+			alert('success',"Success!","Request was submitted successfully. 10,000,000 Copper Coins have been taken from your guild's vault.",true,'?action=staff&act2=idx');
 		}
 		submitToModeration($gd['guild_sword_item'], "guild_sword_name", $itmname, $userid);
 		die($h->endpage());
@@ -4261,7 +4265,7 @@ function staff_sword_rename()
 		$itemname=$db->fetch_single($db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$gd['guild_sword_item']}"));
 		echo "
 		Submit a request to rename your guild's weapon. Requests will go to a staff moderation team 
-		and will be approved or denied from there. It costs 35,000,000 Copper Coins, and if your request 
+		and will be approved or denied from there. It costs 10,000,000 Copper Coins, and if your request 
 		is denied, you will not be given your Copper Coins back. This is to deter wasting the modeation team's 
 		time. If your guild has a {$api->SystemItemIDtoName($vipitem)} in its armory, we'll take that before 
 		we take from the vault. <b>Please ensure that whatever you name your weapon, it fits the theme of Medieval Europe. Guns, lasers, 
@@ -4308,16 +4312,16 @@ function staff_sword_pic()
 			alert('danger',"Uh Oh!","You input an invalid item name. Go back and try again.");
 			die($h->endpage());
 		}
-		if ($gd['guild_primcurr'] < 35000000)
+		if ($gd['guild_primcurr'] < 10000000)
 		{
-			alert('danger', "Uh Oh!", "It costs 35,000,000 Copper Coins to rename your sword. Go back and try again.");
+			alert('danger', "Uh Oh!", "It costs 10,000,000 Copper Coins to rename your sword. Go back and try again.");
             die($h->endpage());
 		}
-		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 35000000 WHERE `guild_id` = {$ir['guild']}");
+		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 10000000 WHERE `guild_id` = {$ir['guild']}");
 		submitToModeration($gd['guild_sword_item'], "guild_sword_pic", $itmname, $userid);
 		$user="<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}]";
-		$api->GuildAddNotification($gd['guild_id'],"{$user} paid 35,000,000 Copper Coins and submitted a request to change the picture of your guild's weapon..");
-		alert('success',"Success!","Request was submitted successfully. 35,000,000 Copper Coins have been taken from your guild's vault.",true,'?action=staff&act2=idx');
+		$api->GuildAddNotification($gd['guild_id'],"{$user} paid 10,000,000 Copper Coins and submitted a request to change the picture of your guild's weapon..");
+		alert('success',"Success!","Request was submitted successfully. 10,000,000 Copper Coins have been taken from your guild's vault.",true,'?action=staff&act2=idx');
 		die($h->endpage());
 	}
 	else
@@ -4325,7 +4329,7 @@ function staff_sword_pic()
 		$itemname=$db->fetch_single($db->query("SELECT `icon` FROM `items` WHERE `itmid` = {$gd['guild_sword_item']}"));
 		echo "
 		Submit a request to change the picture your guild's weapon. Requests will go to a staff moderation team 
-		and will be approved or denied from there. It costs 35,000,000 Copper Coins, and if your request 
+		and will be approved or denied from there. It costs 10,000,000 Copper Coins, and if your request 
 		is denied, you will not be given your Copper Coins back. This is to deter wasting the modeation team's 
 		time. <b>Please ensure that whatever pic you choose for your your weapon, it fits the theme of Medieval Europe. 
 		Guns, lasers, and robotics won't be found here. Requests that do not fit Medieval Europe will be declined 
