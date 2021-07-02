@@ -424,7 +424,7 @@ function guild_donatexp()
 		Experience Point. You currently have " . number_format($ir['xp']) . " experience points which you can donate. <b>This tool will only take even 
 		amounts of experience (Only in groups of " . number_format($xpformula) . ".)</b> How many do you wish to donate to your guild? Experience points donate cannot be given back.<br />
 		<form method='post'>
-			<input type='number' name='xp' min='{$xpformula}' value='{$ir['xp']}' class='form-control'>
+			<input type='number' name='xp' min='{$xpformula}' value='{$ir['xp']}' step='{$xpformula}' class='form-control'>
 			<input type='submit' class='btn btn-primary' value='Donate XP'>
 		</form>";
 	}
@@ -3052,18 +3052,26 @@ function staff_declare()
 					$otheralliance=$ar['alliance_b'];
 				else
 					$otheralliance=$ar['alliance_a'];
+				$allyName = $api->GuildFetchInfo($otheralliance, 'guild_name');
 				if ($ar['alliance_type'] == 2)
 				{
-					$api->GuildAddNotification($ir['guild'],"Your guild has broken the alliance with {$api->GuildFetchInfo($otheralliance)} by declaring war.");
+					$api->GuildAddNotification($ir['guild'],"Your guild has broken the alliance with {$allyName} by declaring war.");
 					$api->GuildAddNotification($otheralliance,"{$gd['guild_name']} has broken the alliance with your guild by declaring war.");
 					$db->query("DELETE FROM `guild_alliances` WHERE `alliance_id` = {$ar['alliance_id']}");
+					guildSendLeadersNotif($otheralliance, "{$gd['guild_name']} has broken the alliance with your guild by declaring war on a 3rd party.");
 				}
 				else
 				{
+				    $db->query("INSERT INTO `guild_wars` VALUES (NULL, {$otheralliance}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
+				    
 					$api->GuildAddNotification($otheralliance,"{$gd['guild_name']} has declared war on {$r['guild_name']}, bringing in your guild to help fight.");
-					$api->GameAddNotification($r['guild_owner'], "The {$api->GuildFetchInfo($otheralliance)} guild has declared war on your guild.");
-					$api->GuildAddNotification($_POST['guild'], "The {$api->GuildFetchInfo($otheralliance)} guild has declared war on your guild.");
-					$db->query("INSERT INTO `guild_wars` VALUES (NULL, {$otheralliance}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
+			
+					guildSendLeadersNotif($otheralliance, "{$gd['guild_name']} has declared war on {$r['guild_name']}, bringing in your guild to help fight.");
+					guildSendMembersNotif($otheralliance, "Your guild has declared war on {$r['guild_name']}.");
+					
+					$api->GuildAddNotification($_POST['guild'], "The {$allyName} guild has declared war on your guild.");
+					guildSendLeadersNotif($_POST['guild'], "{$allyName} was an ally of  {$gd['guild_name']}, declaring war on your guild.");
+					guildSendMembersNotif($_POST['guild'], "{$allyName} has declared war on your guild.");
 				}
 			}
 			
@@ -3074,12 +3082,18 @@ function staff_declare()
 					$otheralliance=$ar['alliance_b'];
 				else
 					$otheralliance=$ar['alliance_a'];
+				$allyName = $api->GuildFetchInfo($otheralliance, 'guild_name');
 				$api->GuildAddNotification($otheralliance,"{$r['guild_name']} had war declared upon them by {$gd['guild_name']}, bringing in your guild to help fight.");
-				$api->GameAddNotification($userid, "The {$api->GuildFetchInfo($otheralliance)} guild has declared war on your guild.");
-				$api->GuildAddNotification($ir['guild'], "The {$api->GuildFetchInfo($otheralliance)} guild has declared war on your guild.");
+				guildSendLeadersNotif($otheralliance, "{$gd['guild_name']} has declared war on {$r['guild_name']}, bringing in your guild to help fight.");
+				guildSendMembersNotif($otheralliance, "Your guild has declared war on {$r['guild_name']}.");
+				
+				$api->GuildAddNotification($ir['guild'], "The {$allyName} guild has declared war on your guild.");
+				guildSendLeadersNotif($ir['guild'], "{$allyName} was an ally of  {$gd['guild_name']}, declaring war on your guild.");
+				guildSendMembersNotif($ir['guild'], "{$allyName} has declared war on your guild.");
 				$db->query("INSERT INTO `guild_wars` VALUES (NULL, {$otheralliance}, {$ir['guild']}, 0, 0, {$endtime}, 0)");
 			}
 			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 500000 WHERE `guild_id` = {$ir['guild']}");
+			guildSendMembersNotif($ir['guild'], "Your guild has declared war on {$r['guild_name']}.");
             $api->SystemLogsAdd($userid, 'guilds', "Declared war on {$r['guild_name']} [{$_POST['guild']}]");
             alert('success', "Success!", "You have declared war on {$r['guild_name']}.", true, '?action=staff&act2=idx');
         } else {
@@ -3137,8 +3151,8 @@ function staff_levelup()
     } else {
         echo "You may level up your guild. Your guild will need the minimum required Experience to do this. You may gain
         guild Experience by going to war with another guild and gaining points in war. At your guild's level, your
-        guild will need " . number_format($xprequired) . " Guild Experience to level up. Your guild currently has
-        {$gd['guild_xp']} Experience. Do you wish to attempt to level up?<br />
+        guild will need " . shortNumberParse($xprequired) . " Guild Experience to level up. Your guild currently has
+        " . shortNumberParse($gd['guild_xp']) . " Experience. Do you wish to attempt to level up?<br />
 		<form method='post'>
 			<input type='hidden' name='do' value='yes'>
 			<input type='submit' value='Level Up' class='btn btn-success'>
@@ -3238,20 +3252,7 @@ function staff_dissolve()
             $api->SystemLogsAdd($userid, 'guilds', "Dissolved Guild ID {$ir['guild']}");
 
             //Delete everything.
-            $db->query("DELETE FROM `guild_applications` WHERE `ga_guild` = {$ir['guild']}");
-            $db->query("DELETE FROM `guild_armory` WHERE `gaGUILD` = {$ir['guild']}");
-            $db->query("DELETE FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']}");
-            $db->query("DELETE FROM `guild_wars` WHERE `gw_declarer` = {$ir['guild']}");
-            $db->query("DELETE FROM `guild_wars` WHERE `gw_declaree` = {$ir['guild']}");
-            $db->query("DELETE FROM `guild` WHERE `guild_id` = {$ir['guild']}");
-			$db->query("DELETE FROM `guild_alliances` WHERE `alliance_a` = {$ir['guild']}");
-			$db->query("DELETE FROM `guild_alliances` WHERE `alliance_b` = {$ir['guild']}");
-			$db->query("DELETE FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}");
-			$db->query("DELETE FROM `guild_district_battlelog` WHERE `attacker` = {$ir['guild']}");
-			$db->query("DELETE FROM `guild_district_battlelog` WHERE `defender` = {$ir['guild']}");
-			$db->query("UPDATE `guild_districts` SET `district_owner` = 16 WHERE `district_owner` = {$ir['guild']}");
-            $db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$ir['guild']}");
-            $db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$ir['guild']}");
+            deleteGuild($ir['guild']);
 			addToEconomyLog('Guild Fees', 'copper', $gd['guild_primcurr']*-1);
 			addToEconomyLog('Guild Fees', 'token', $gd['guild_seccurr']*-1);
             alert("success", "Success!", "You have successfully dissolved your guild.", true, 'index.php');
@@ -3400,8 +3401,10 @@ function staff_bonus()
 				die($h->endpage());
 			}
 			$bonustime=time()+((60*60)*3);
+			$notif = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has paid " . number_format($cost) . " Copper Coins to enable training boost in your guild's gym for the next 3 hours.";
 			$db->query("UPDATE `guild` SET `guild_bonus_time` = {$bonustime}, `guild_primcurr` = `guild_primcurr` - {$cost} WHERE `guild_id` = {$gd['guild_id']}");
-			$api->GuildAddNotification($gd['guild_id'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has paid " . number_format($cost) . " Copper Coins to enable training boost in your guild's gym for the next 3 hours.");
+			$api->GuildAddNotification($gd['guild_id'],$notif);
+			guildSendMemberNotif($ir['guild'], $notif);
 			alert('success',"Success!","You successfully enabled training boost for all your guild members that use your guild's gym. Reminder, that this boost is only affective in your guild's gym, and will end 3 hours from now.",true,'?action=staff&act2=idx');
 		}
 	}
@@ -3679,9 +3682,11 @@ function staff_ally()
 				alert('danger',"Uh Oh!","It appears you already have an outstanding alliance request, or are already allied with this guild.");
 				die($h->endpage());
 			}
+			$txt = "{$gd['guild_name']} has sent an alliance request.";
 			$type = ($_POST['type'] == 'traditional') ? 1 : 2;
 			$api->GuildAddNotification($ir['guild'],"Your guild has sent an alliance request to {$api->GuildFetchInfo($_POST['guild'],'guild_name')}.");
-			$api->GuildAddNotification($_POST['guild'],"{$gd['guild_name']} has sent an alliance request.");
+			$api->GuildAddNotification($_POST['guild'],$txt);
+			guildSendLeadersNotif($_POST['guild'], $txt);
 			$db->query("INSERT INTO `guild_alliances` (`alliance_a`, `alliance_b`, `alliance_type`, `alliance_true`) VALUES ('{$ir['guild']}', '{$_POST['guild']}', '{$type}', '0')");
 			alert('success',"Success!","Alliance request has been sent successfully.",true,'?action=staff&act2=idx');
 		}
@@ -3882,10 +3887,12 @@ function staff_view_alliances()
 				{
 					$broked=$re['alliance_a'];
 				}
+				$notif = "{$gd['guild_name']} has broke their alliance with your guild.";
 				alert('success',"Success!","Alliance was successfully destroyed.",false);
 				$db->query("DELETE FROM `guild_alliances` WHERE `alliance_id` = {$_GET['delete']}");
 				$api->GuildAddNotification($ir['guild'],"Your guild has broke their alliance with {$api->GuildFetchInfo($re['alliance_a'],'guild_name')}.");
-				$api->GuildAddNotification($broked,"{$gd['guild_name']} has broke their alliance with your guild.");
+				$api->GuildAddNotification($broked,$notif);
+				guildSendLeadersNotif($broked, $notif);
 			}
 		}
 		echo "These are the alliances your guild has. Traditional alliance 

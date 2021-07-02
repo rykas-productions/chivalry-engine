@@ -387,12 +387,7 @@ function apply()
             die($h->endpage());
         }
         //Tell the guild's owner and co-owner that the user has sent an application.
-        if ($gd['guild_owner'] == $gd['guild_coowner']) {
-            $api->GameAddNotification($gd['guild_owner'], "{$ir['username']} has filled and submitted an application to join your guild.");
-        } else {
-            $api->GameAddNotification($gd['guild_owner'], "{$ir['username']} has filled and submitted an application to join your guild.");
-            $api->GameAddNotification($gd['guild_coowner'], "{$ir['username']} has filled and submitted an application to join your guild.");
-        }
+        guildSendStaffNotif($_GET['id'], "{$ir['username']} has filled out an app to join your guild.");
         $time = time();
         $application = (isset($_POST['application']) && is_string($_POST['application'])) ? $db->escape(htmlentities(stripslashes($_POST['application']), ENT_QUOTES, 'ISO-8859-1')) : '';
         //Insert the application, notify the guild and tell the user they were successful.

@@ -77,6 +77,7 @@ function deleteGuild($guild)
     $db->query("DELETE FROM `guild_notifications` WHERE `gn_id` = {$guild}");
     $db->query("DELETE FROM `guild_crime_log` WHERE `gclGUILD` = {$guild}");
     $db->query("UPDATE `users` SET `guild` = 0 WHERE `guild` = {$guild}");
+    $db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$guild}");
 }
 
 function doDailyGuildFee()
@@ -275,5 +276,34 @@ function checkGuildVault()
             if ($r['guild_seccurr'] > ($maxtoken+1))
                 $db->query("UPDATE `guild` SET `guild_seccurr` = {$maxtoken} WHERE `guild_id` = {$r['guild_id']}");
         }
+    }
+}
+
+function guildSendLeadersNotif($guild_id, $notif)
+{
+    global $db, $api;
+    $r = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}"));
+    $api->GameAddNotification($r['guild_owner'], $notif);
+    $api->GameAddNotification($r['guild_coowner'], $notif);
+    
+}
+
+function guildSendStaffNotif($guild_id, $notif)
+{
+    global $db, $api;
+    $r = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}"));
+    guildSendLeadersNotif($guild_id, $notif);
+    $api->GameAddNotification($r['guild_app_manager'], $notif);
+    $api->GameAddNotification($r['guild_vault_manager'], $notif);
+    $api->GameAddNotification($r['guild_crime_lord'], $notif);
+}
+
+function guildSendMemberNotif($guild_id, $notif)
+{
+    global $db, $api;
+    $q = $db->query("SELECT `userid` FROM `users` WHERE `guild` = {$guild_id}");
+    while ($r = $db->fetch_row($q))
+    {
+        $api->GameAddNotification($r['userid'], $notif);
     }
 }
