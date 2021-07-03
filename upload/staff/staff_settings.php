@@ -276,6 +276,15 @@ function basicsettings()
 					<input type='text' name='game_time' class='form-control' required='1' value='{$set['game_time']}'>
 				</td>
 			</tr>
+            <tr>
+				<th>
+					VIP Pack Cost<br />
+                    <small>100% is full price</small>
+				</th>
+				<td>
+					<input type='number' name='viprate' class='form-control' required='1' value='{$set['viprate']}'>
+				</td>
+			</tr>
 			<tr>
 				<th colspan='2'>
 					Version Control
@@ -443,6 +452,8 @@ function basicsettings()
 		$_POST['token_maximum'] = (isset($_POST['token_maximum']) && is_numeric($_POST['token_maximum'])) ? abs(intval($_POST['token_maximum'])) : 50000;
 		$_POST['token_minimum'] = (isset($_POST['token_minimum']) && is_numeric($_POST['token_minimum'])) ? abs(intval($_POST['token_minimum'])) : 1000;
 		
+		$_POST['viprate'] = (isset($_POST['viprate']) && is_numeric($_POST['viprate'])) ? abs(intval($_POST['viprate'])) : 100;
+		
 		if (empty($_POST['WebsiteName'])) {
             alert('danger', "Uh Oh!", "Please specify a game name.");
             die($h->endpage());
@@ -479,7 +490,15 @@ function basicsettings()
         } elseif ($_POST['Revalidate_Time'] < 300) {
             alert('danger', "Uh Oh!", "Please specify a ReCaptcha time that isn't less than 5 minutes.");
             die($h->endpage());
-        } else {
+        } elseif ($_POST['viprate'] < 0) {
+            alert('danger', "Uh Oh!", "Minimum VIP Pack price is 1%.");
+            die($h->endpage());
+        }
+        elseif ($_POST['viprate'] > 100) {
+            alert('danger', "Uh Oh!", "Maximum VIP pack price is 100%.");
+            die($h->endpage());
+        }
+        else {
 			foreach ($_POST as $k => $v)
 			{
 				$db->query(

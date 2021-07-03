@@ -8,7 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 $menuhide=1;
-$percentoff=1;
+$percentoff=$set['viprate'] / 100;
 require_once('globals_nonauth.php');
 require('class/PaypalIPN.php');
 $wantedcurrency = "USD";
