@@ -83,6 +83,17 @@ function sendEmergencyEmail($userid, $txt)
     $api->SystemSendEmail("ryan.roach.1997@hotmail.com",$txt ,$subj, $set['sending_email']);
 }
 
+function sendGuildDebtEmail($userid)
+{
+    global $api, $db;
+    $email = userIDtoEmail($userid);
+    $username = emailToUsername($email);
+    $body = "Greetings {$username}<br />
+	Your guild has gone into debt. You have 7 days to pay off the debt, or your guild will dissolve. Make sure to log in, 
+    and donate copper coins to your guild vault to pay it off.";
+    return $api->SystemSendEmail($email,$body);
+}
+
 //Helper functions
 function emailToUsername($email)
 {

@@ -98,6 +98,9 @@ function doDailyGuildFee()
                 $api->GuildAddNotification($gfr['guild_id'], "Your guild has paid " . shortNumberParse($set['GUILD_PRICE']) . " Copper Coins in upkeep, but has gone into debt.");
                 $api->GameAddNotification($gfr['guild_owner'], $debtText);
                 $api->GameAddNotification($gfr['guild_coowner'], $debtText);
+                
+                sendGuildDebtEmail($gfr['guild_owner']);
+                sendGuildDebtEmail($gfr['guild_coowner']);
             }
             else
             {
