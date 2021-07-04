@@ -49,7 +49,7 @@ switch ($_GET['action']) {
 }
 function viewguild()
 {
-    global $db, $userid, $api, $h;
+    global $db, $userid, $api, $h, $set;
     if (isset($_POST['guild'])) {
         //Make sure input is safe.
         $guild = (isset($_POST['guild']) && is_numeric($_POST['guild'])) ? abs(intval($_POST['guild'])) : 0;
@@ -119,7 +119,7 @@ function viewguild()
                 Copper Coins
             </th>
             <td>
-                " . number_format($r['guild_primcurr']) . "
+                " . shortNumberParse($r['guild_primcurr']) . " / " . shortNumberParse((($r['guild_level'] * $set['GUILD_PRICE']) * 20)) . "
             </td>
         </tr>
         <tr>
@@ -127,7 +127,7 @@ function viewguild()
                 Chivalry Tokens
             </th>
             <td>
-                " . number_format($r['guild_seccurr']) . "
+                " . shortNumberParse($r['guild_seccurr']) . " / " . shortNumberParse((($r['guild_level'] * $set['GUILD_PRICE']) / 125)) . "
             </td>
         </tr>
         <tr>
@@ -390,7 +390,7 @@ function endwar()
 
 function editguild()
 {
-    global $db, $userid, $api, $h;
+    global $db, $userid, $api, $h, $set;
     //Set the first step so it goes to the correct page.
     if (!isset($_POST['step'])) {
         $_POST['step'] = 0;
@@ -442,6 +442,8 @@ function editguild()
 
         //CSRF request
         $csrf = request_csrf_html('staff_editguild_2');
+        $r['guild_max_copper'] = (($r['guild_level'] * $set['GUILD_PRICE']) * 20);
+        $r['guild_max_token'] = (($r['guild_level'] * $set['GUILD_PRICE']) / 125);
 
         //Load the editing form
         echo "<table class='table table-bordered'><form method='post'>
@@ -498,10 +500,26 @@ function editguild()
         </tr>
         <tr>
             <th>
+                Max Vault
+            </th>
+            <td>
+                <input type='number' disabled='1' class='form-control' value='{$r['guild_max_copper']}'>
+            </td>
+        </tr>
+        <tr>
+            <th>
                 Chivalry Tokens
             </th>
             <td>
                 <input type='number' min='0' name='secondary' class='form-control' value='{$r['guild_seccurr']}'>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Max Tokens
+            </th>
+            <td>
+                <input type='number' disabled='1' class='form-control' value='{$r['guild_max_token']}'>
             </td>
         </tr>
         <tr>

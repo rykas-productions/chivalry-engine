@@ -88,7 +88,10 @@ function create()
 					Purchasable?
 				</th>
 				<td>
-					<input type='checkbox' class='form-control' checked='checked' name='itembuyable'>
+                    <select name='itembuyable' type='dropdown' class='form-control'>
+                        <option value='on'>Purchasable</option>
+						<option value='off'>Not Purchasable</option>
+                    </select>
 				</td>
 			</tr>
 			<tr>
@@ -558,7 +561,10 @@ function edititem()
 					Purchasable?
 				</th>
 				<td>
-					<input type='checkbox' class='form-control' checked='checked' name='itembuyable'>
+					<select name='itembuyable' type='dropdown' class='form-control'>
+                        <option value='on'>Purchasable</option>
+						<option value='off'>Not Purchasable</option>
+                    </select>
 				</td>
 			</tr>
 			<tr>
@@ -755,7 +761,9 @@ function edititem()
 						`effect1_on` = '{$_POST['effect1on']}', `effect1` = '{$effects[1]}',
 						`effect2_on` = '{$_POST['effect2on']}', `effect2` = '{$effects[2]}',
 						`effect3_on` = '{$_POST['effect3on']}', `effect3` = '{$effects[3]}',
-						`weapon` = {$weapon}, `armor` = {$armor}, `icon` = '{$itmicon}', `color` = '{$itmcolor}', `ammo` = '{$ammo}' WHERE `itmid` = {$itemid }");
+                        `itmbuyable` = '{$itmbuy}', `weapon` = {$weapon}, `armor` = {$armor}, 
+                        `icon` = '{$itmicon}', `color` = '{$itmcolor}', `ammo` = '{$ammo}' 
+                        WHERE `itmid` = {$itemid }");
         alert('success', "Success!", "You successfully have edited the {$api->SystemItemIDtoName($itemid)} item.", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited Item {$api->SystemItemIDtoName($itemid)}.");
     } else {
