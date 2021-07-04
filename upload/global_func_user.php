@@ -926,3 +926,56 @@ function getUserCurrentEstate(int $user)
     return $db->fetch_single($db->query("SELECT `estate` FROM `users` WHERE `userid` = {$user}"));
 }
 
+function calculateTotalXP($user)
+{
+    global $db;
+    $q=$db->query("
+		SELECT `level`, `reset`
+		FROM `users` `u`
+		LEFT JOIN `user_settings` AS `us`
+		ON `u`.`userid` = `us`.`userid`
+		WHERE `u`.`userid` = {$user}");
+    //$q=$db->query("SELECT `u`.`level`,`us`.`reset` FROM `users` AS `u` INNER JOIN `user_settings` AS `us` ON `u`.`userid` = `us`.`userid` WHERE `us`.`userid` = {$user}");
+    $r=$db->fetch_row($q);
+    if (!isset($r['reset']))
+        $r['reset'] = 1;
+    if ($r['reset'] == 1)
+        $total = round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2);
+    if ($r['reset'] == 2)
+    {
+        $total = round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
+        $total = $total + round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2) / 2;
+    }
+    if ($r['reset'] == 3)
+    {
+        $total = round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
+        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 2;
+        $total = $total + round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2) / 3;
+    }
+    if ($r['reset'] == 4)
+    {
+        $total = round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
+        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 2;
+        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 3;
+        $total = $total + round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2) / 4;
+    }
+    if ($r['reset'] == 5)
+    {
+        $total = round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
+        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 2;
+        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 3;
+        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 4;
+        $total = $total + round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2) / 5;
+    }
+    if ($r['reset'] == 6)
+    {
+        $total = round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
+        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 2;
+        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 3;
+        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 4;
+        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 5;
+        $total = $total + round(($r['level'] + 1) * ($r['level']+ 1) * ($r['level'] + 1) * 2.2) / 6;
+    }
+    return $total;
+}
+
