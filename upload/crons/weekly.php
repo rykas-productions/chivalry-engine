@@ -16,6 +16,7 @@ $maxitem=$db->query("/*qc=on*/SELECT `itmid` FROM `items`
 					AND `itmtype` != 13 
 					AND `itmtype` != 14 
 					AND `itmtype` != 10
+                    AND `itmbuyable` = 'true'
 					ORDER BY `itmid` DESC LIMIT 1");
 $item=$db->fetch_single($maxitem);
 $success = 0;
