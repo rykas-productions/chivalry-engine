@@ -264,18 +264,15 @@ function checkGuildDebt()
 function checkGuildVault()
 {
     global $db, $set, $ir;
-    if (isset($ir['guild']))
+    $q = $db->query("SELECT * FROM `guild`");
+    while ($r = $db->fetch_row($q))
     {
-        $q = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']} AND `guild_id` != 0");
-        while ($r = $db->fetch_row($q))
-        {
-            $maxvault = (($r['guild_level'] * $set['GUILD_PRICE']) * 20);
-            $maxtoken = (($r['guild_level'] * $set['GUILD_PRICE']) / 125);
-            if ($r['guild_primcurr'] > ($maxvault+1))
-                $db->query("UPDATE `guild` SET `guild_primcurr` = {$maxvault} WHERE `guild_id` = {$r['guild_id']}");
-            if ($r['guild_seccurr'] > ($maxtoken+1))
-                $db->query("UPDATE `guild` SET `guild_seccurr` = {$maxtoken} WHERE `guild_id` = {$r['guild_id']}");
-        }
+        $maxvault = (($r['guild_level'] * $set['GUILD_PRICE']) * 20);
+        $maxtoken = (($r['guild_level'] * $set['GUILD_PRICE']) / 125);
+        if ($r['guild_primcurr'] > $maxvault)
+            $db->query("UPDATE `guild` SET `guild_primcurr` = {$maxvault} WHERE `guild_id` = {$r['guild_id']}");
+        if ($r['guild_seccurr'] > $maxtoken)
+            $db->query("UPDATE `guild` SET `guild_seccurr` = {$maxtoken} WHERE `guild_id` = {$r['guild_id']}");
     }
 }
 
