@@ -111,6 +111,7 @@ function guildwepname()
 	//Approve
 	if ($_GET['do'] == 'approve')
 	{
+	    $r['mod_change']=$db->escape(strip_tags(stripslashes($r['mod_change'])));
 		$db->query("UPDATE `items` SET `{$fieldToEdit}` = '{$r['mod_change']}' WHERE `itmid` = {$r['mod_item']}");
 		$api->GameAddNotification($r['mod_user'],"Your request to rename your guild's weapon has been approved.");
 		if ($userGuild > 0)

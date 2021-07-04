@@ -1161,7 +1161,7 @@ function resetacc()
 			$api->UserGiveItem($userid,348,1);
 			$api->UserGiveItem($userid,349,1);
 		}
-		if ($realReset == 3)
+		if ($realReset == 5)
 		{
 			$api->UserGiveItem($userid,346,1);
 			$api->UserGiveItem($userid,347,1);
@@ -1310,7 +1310,7 @@ function homecount()
 			die($h->endpage());
 		}
 		//check vip log count
-		if (($_POST['mailCount'] < 0) || ($_POST['mailCount'] > 24))
+		if (($_POST['vipLogCount'] < 0) || ($_POST['vipLogCount'] > 24))
 		{
 			alert('danger', "Uh Oh!", "VIP Logs view count must be greater than 0, and less than 24.");
 			die($h->endpage());

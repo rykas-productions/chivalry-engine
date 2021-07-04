@@ -4309,7 +4309,7 @@ function staff_sword_pic()
 		$itmname = (isset($_POST['rename']) && is_string($_POST['rename'])) ? $db->escape(strip_tags(stripslashes($_POST['rename']))) : '';
 		if (empty($itmname))
 		{
-			alert('danger',"Uh Oh!","You input an invalid item name. Go back and try again.");
+			alert('danger',"Uh Oh!","You input an invalid picture. Go back and try again.");
 			die($h->endpage());
 		}
 		if ($gd['guild_primcurr'] < 10000000)
@@ -4338,7 +4338,7 @@ function staff_sword_pic()
 		<form method='post'>
 			<div class='row'>
 				<div class='col-12 col-lg-6 col-xl-4'>
-					What would you like your guild sword to be named?
+					URL to Pic
 				</div>
 				<div class='col-12 col-lg-6 col-xl-8'>
 					<input type='text' class='form-control' name='rename' required='1' value='{$itemname}'>
