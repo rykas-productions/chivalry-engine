@@ -114,6 +114,9 @@ switch ($_GET['action']) {
 	case 'createseed':
         createseed();
         break;
+	case 'editseed':
+	    editseed();
+	    break;
 	case 'water':
         waterland();
         break;
@@ -327,10 +330,13 @@ function waterland()
 		else
 		{
 			$random=Random(2,6);
-			$timegone=Random(300,800);
-			$db->query("UPDATE `farm_data` SET `farm_wellness` = `farm_wellness` + {$random} WHERE `farm_id` = {$_GET['id']}");
-			if ($r['farm_time'] > 0)
-				removeStageTime($_GET['id'],$timegone);
+			if (Random(1, 100) == 64)
+			{
+			     $timegone=Random(30,100);
+			     if ($r['farm_time'] > 0)
+			         removeStageTime($_GET['id'],$timegone);
+			}
+				$db->query("UPDATE `farm_data` SET `farm_wellness` = `farm_wellness` + {$random} WHERE `farm_id` = {$_GET['id']}");
 			$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
 			alert('success', "Success", "You have successfully watered this farmland, increasing its wellness by {$random}%.", true, 'farm.php');
 		}
@@ -375,6 +381,9 @@ function fertilize()
 		}
 		else
 		{
+		    $timegone=Random(300,800);
+		    if ($r['farm_time'] > 0)
+		        removeStageTime($_GET['id'],$timegone);
 			$random=Random(6,18);
 			$db->query("UPDATE `farm_data` SET `farm_wellness` = `farm_wellness` + {$random} WHERE `farm_id` = {$_GET['id']}");
 			$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
@@ -802,4 +811,254 @@ function createseed()
 	
 	}
 	$h->endpage();
+}
+
+function editseed()
+{
+    global $db, $api, $userid, $ir, $h;
+    if ($ir['user_level'] != 'Admin')
+    {
+        alert('danger',"Uh Oh!","You do not have access to this place.", true, 'farm.php');
+        die($h->endpage());
+    }
+    if (!isset($_POST['step']))
+        $_POST['step'] = 0;
+    if ($_POST['step'] == 1)
+    {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editseed1', stripslashes($_POST['verf']))) 
+        {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
+            die($h->endpage());
+        }
+        $seed = (isset($_POST['seed']) && is_numeric($_POST['seed'])) ? abs(intval($_POST['seed'])) : 0;
+        if (empty($seed)) 
+        {
+            alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.");
+            die($h->endpage());
+        }
+        $q = $db->query("SELECT * FROM `farm_produce` WHERE `seed_item` = {$seed}");
+        if ($db->num_rows($q) == 0)
+        {
+            alert('danger', "Uh Oh!", "The seed you selected is not set up as a valid seed.");
+            die($h->endpage());
+        }
+        $r = $db->fetch_row($q);
+        $csrf = request_csrf_html('staff_editseed2');
+        echo "<div class='card'>
+            <div class='card-header'>
+                Editing {$api->SystemItemIDtoName($r['seed_item'])}...
+            </div>
+            <form method='post'>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <small>Seed Output</small>
+                    </div>
+                    <div class='col-12'>
+                        " . item_dropdown("output", $r['seed_output']) . "
+                    </div>
+                    <div class='col-12'>
+                        <small>Seed Output Qty</small>
+                    </div>
+                    <div class='col-12'>
+                        <input type='number' name='seed_qty' value='{$r['seed_qty']}' class='form-control'>
+                    </div>
+                    <div class='col-12'>
+                        <small>Seed Stages</small>
+                    </div>
+                    <div class='col-12'>
+                        <input type='number' name='seed_stages' value='{$r['seed_stages']}' class='form-control'>
+                    </div>
+                    <div class='col-12'>
+                        <small>Seed Stage Duration</small>
+                    </div>
+                    <div class='col-12'>
+                        <input type='number' name='seed_time' value='{$r['seed_time']}' class='form-control'>
+                    </div>
+                    <div class='col-12'>
+                        <small>Seed Safe Time</small>
+                    </div>
+                    <div class='col-12'>
+                        <input type='number' name='seed_safe_time' value='{$r['seed_safe_time']}' class='form-control'>
+                    </div>
+                    <div class='col-12'>
+                        <small>Seed Min. Level</small>
+                    </div>
+                    <div class='col-12'>
+                        <input type='number' name='seed_lvl_requirement' value='{$r['seed_lvl_requirement']}' class='form-control'>
+                    </div>
+                    <div class='col-12'>
+                        <small>Seed Min. Wellness</small>
+                    </div>
+                    <div class='col-12'>
+                        <input type='number' name='seed_wellness_plant' value='{$r['seed_wellness_plant']}' class='form-control'>
+                    </div>
+                    <div class='col-12'>
+                        <small>Seed Rotten</small>
+                    </div>
+                    <div class='col-12'>
+                        <input type='number' name='seed_wellness_bad' value='{$r['seed_wellness_bad']}' class='form-control'>
+                    </div>
+                    <div class='col-12'>
+                        <small>Seed XP</small>
+                    </div>
+                    <div class='col-12'>
+                        <input type='number' name='seed_xp' value='{$r['seed_xp']}' class='form-control'>
+                    </div>
+                    <div class='col-12'>
+                        <input type='submit' value='Edit Seed' class='btn btn-primary btn-block'>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {$csrf}
+        <input type='hidden' value='2' name='step'>
+        <input type='hidden' value='{$r['seed_item']}' name='seed'>
+        </form>";
+    }
+    elseif ($_POST['step'] == 2)
+    {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_editseed2', stripslashes($_POST['verf'])))
+        {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
+            die($h->endpage());
+        }
+        $seed = (isset($_POST['seed']) && is_numeric($_POST['seed'])) ? abs(intval($_POST['seed'])) : 0;
+        $output = (isset($_POST['output']) && is_numeric($_POST['output'])) ? abs(intval($_POST['output'])) : 0;
+        $qty = (isset($_POST['seed_qty']) && is_numeric($_POST['seed_qty'])) ? abs(intval($_POST['seed_qty'])) : 0;
+        $stages = (isset($_POST['seed_stages']) && is_numeric($_POST['seed_stages'])) ? abs(intval($_POST['seed_stages'])) : 0;
+        $time = (isset($_POST['seed_time']) && is_numeric($_POST['seed_time'])) ? abs(intval($_POST['seed_time'])) : 0;
+        $safe_time = (isset($_POST['seed_safe_time']) && is_numeric($_POST['seed_safe_time'])) ? abs(intval($_POST['seed_safe_time'])) : 0;
+        $lvl_requirement = (isset($_POST['seed_lvl_requirement']) && is_numeric($_POST['seed_lvl_requirement'])) ? abs(intval($_POST['seed_lvl_requirement'])) : 0;
+        $wellness_plant = (isset($_POST['seed_wellness_plant']) && is_numeric($_POST['seed_wellness_plant'])) ? abs(intval($_POST['seed_wellness_plant'])) : 0;
+        $wellness_bad = (isset($_POST['seed_wellness_bad']) && is_numeric($_POST['seed_wellness_bad'])) ? abs(intval($_POST['seed_wellness_bad'])) : 0;
+        $xp = (isset($_POST['seed_xp']) && is_numeric($_POST['seed_xp'])) ? abs(intval($_POST['seed_xp'])) : 0;
+        
+        if (empty($seed))
+        {
+            alert('danger', "Uh Oh!", "Please make sure the form isn't broken before you submit it.");
+            die($h->endpage());
+        }
+        if (empty($output))
+        {
+            alert('danger', "Uh Oh!", "You specified an invalid crop output item.");
+            die($h->endpage());
+        }
+        if (empty($qty))
+        {
+            alert('danger', "Uh Oh!", "You have specified an invalid crop output quantity.");
+            die($h->endpage());
+        }
+        if (empty($stages))
+        {
+            alert('danger', "Uh Oh!", "You have specified an invalid amount of stages.");
+            die($h->endpage());
+        }
+        if (empty($time))
+        {
+            alert('danger', "Uh Oh!", "You have specified an invalid amount of seed stage time.");
+            die($h->endpage());
+        }
+        if (empty($safe_time))
+        {
+            alert('danger', "Uh Oh!", "You have specified an invalid safe time for seed's finishing their stage.");
+            die($h->endpage());
+        }
+        if (empty($lvl_requirement))
+        {
+            alert('danger', "Uh Oh!", "You have specified an invalid level requirement.");
+            die($h->endpage());
+        }
+        if (empty($wellness_bad))
+        {
+            alert('danger', "Uh Oh!", "You have specified an invalid crop rotten level.");
+            die($h->endpage());
+        }
+        if (empty($wellness_plant))
+        {
+            alert('danger', "Uh Oh!", "You have input an invalid minimum wellness plant requirement for this seed.");
+            die($h->endpage());
+        }
+        if (empty($xp))
+        {
+            alert('danger', "Uh Oh!", "Invalid XP per seed specified.");
+            die($h->endpage());
+        }
+        $q = $db->query("SELECT * FROM `farm_produce` WHERE `seed_item` = {$seed}");
+        if ($db->num_rows($q) == 0)
+        {
+            alert('danger', "Uh Oh!", "The seed you selected is not set up as a valid seed.");
+            die($h->endpage());
+        }
+        if (!$api->SystemItemIDtoName($output))
+        {
+            alert('danger', "Uh Oh!", "The item you've selected as a crop output does not exist.");
+            die($h->endpage());
+        }
+        elseif (($qty < 1) || ($qty > 1024))
+        {
+            alert("danger","Uh Oh!","Crop output must be at least 1, and at most, 1024.");
+        }
+        elseif (($stages < 1) || ($stages > 1024))
+        {
+            alert("danger","Uh Oh!","Crop stage count must be at least 1, and at most, 1024.");
+        }
+        elseif ($time < 60)
+        {
+            alert("danger","Uh Oh!","Crop stage count must be at least 60 seconds.");
+        }
+        elseif ($safe_time < 60)
+        {
+            alert("danger","Uh Oh!","Crop stage count must be at least 60 seconds.");
+        }
+        elseif ($lvl_requirement < 1)
+        {
+            alert("danger","Uh Oh!","Seed minimum level must be at least 1.");
+        }
+        elseif ($wellness_bad < 0)
+        {
+            alert("danger","Uh Oh!","Seed wellness rotten percent must be at least 0.");
+        }
+        elseif ($wellness_plant < 0)
+        {
+            alert("danger","Uh Oh!","Seed wellness plant percent must be at least 0.");
+        }
+        elseif ($xp < 1)
+        {
+            alert("danger","Uh Oh!","Seed experience gain must be at least 1.");
+        }
+        $db->query("UPDATE `farm_produce` SET
+                    `seed_time` = {$time},
+                    `seed_safe_time` = {$safe_time},
+                    `seed_stages` = {$stages},
+                    `seed_output` = {$output},
+                    `seed_qty` = {$qty},
+                    `seed_lvl_requirement` = {$lvl_requirement},
+                    `seed_wellness_plant` = {$wellness_plant},
+                    `seed_wellness_bad` = {$wellness_bad},
+                    `seed_xp` = {$xp}
+                    WHERE `seed_item` = {$seed}");
+        alert('success',"Success!","You have successfully edited the {$api->SystemItemIDtoName($seed)} seed.", true, 'farm.php');
+        die($h->endpage());
+    }
+    elseif ($_POST['step'] == 0)
+    {
+        $csrf = request_csrf_html('staff_editseed1');
+        echo "<div class='card'>
+                <div class='card-body'>
+                    Select the seed from the dropdown you wish to edit.
+                    <form method='post'>
+                        <input type='hidden' name='step' value='1'>
+                        " . seed_dropdown() . "<br />
+                        <input type='submit' class='btn btn-primary btn-block' value='Edit Seed'>
+                        {$csrf}
+                    </form>
+                </div>
+            </div>";
+    }
+    else
+    {
+        alert('danger',"Uh Oh!","Invalid step specified.", true, '?action=editseed');
+        die($h->endpage());
+    }
 }

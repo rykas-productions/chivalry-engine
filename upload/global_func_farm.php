@@ -165,7 +165,7 @@ function seed_dropdown($ddname = "seed", $selected = -1)
                      FROM `farm_produce` AS `s`
                      INNER JOIN `items` AS `i`
                      ON `s`.`seed_item` = `i`.`itmid`
-                     ORDER BY `s`.`seed_item` ASC");
+                     ORDER BY `s`.`seed_lvl_requirement` ASC");
     if ($selected == -1) {
         $first = 0;
     } else {
