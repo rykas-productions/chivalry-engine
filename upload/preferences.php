@@ -1028,34 +1028,35 @@ function steamlink()
 function resetacc()
 {
     global $db,$userid,$api,$h,$ir;
+    $lvlRequired = 250 + (250 * $ir['reset']);
     if ($ir['reset'] == 6)
 	{
 		alert('danger',"Uh Oh!","You can only reset your account 5 times.",true,'preferences.php');
 		die($h->endpage());
 	}
-	if ($ir['level'] < 500)
+	if ($ir['level'] < $lvlRequired)
 	{
-		alert('danger',"Uh Oh!","You can only reset your account when you are over level 500.",true,'preferences.php');
-		die($h->endpage());
-	}
-	if (($ir['equip_armor'] + $ir['equip_primary'] + $ir['equip_secondary']) != 0) 
-	{
-		alert('danger',"Uh Oh!","You can only use this feature when you have no equipment on you.",true,'preferences.php');
-		die($h->endpage());
-	}
-	$tq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$ir['userid']}");
-	if ($db->num_rows($tq) > 0)
-	{
-		alert('danger',"Uh Oh!", "Please remove any and all trinkets before using this.");
+	    alert('danger',"Uh Oh!","You must be level " . number_format($lvlRequired) . " before you can reset your account.",true,'preferences.php');
 		die($h->endpage());
 	}
 	if (isset($_POST['reset']))
 	{
+	    unequipUserSlot($userid, "equip_primary");
+	    unequipUserSlot($userid, "equip_secondary");
+	    unequipUserSlot($userid, "equip_armor");
+	    unequipUserSlot($userid, "equip_potion");
+	    unequipUserSlot($userid, "equip_badge");
+	    
+	    unequipUserSlot($userid, "equip_ring_primary");
+	    unequipUserSlot($userid, "equip_ring_primary");
+	    unequipUserSlot($userid, "equip_necklace");
+	    unequipUserSlot($userid, "equip_pendant");
+	    
 		alert('info',"","Chivalry is Dead is attempting to reset your account... if you run into errors please contact staff.",false);
 		$accquery="UPDATE `users` SET `xp` = 0, `level` = 1, `will` = 100, `maxwill` = 100, `hp` = 100, `maxhp` = 100,
 		`energy` = 24, `maxenergy` = 24, `brave` = 10, `maxbrave` = 10, `vip_days` = `vip_days` + 3, `job` = 0, `jobrank` = 0, 
 		`primary_currency` = 0, `secondary_currency` = 0, `location` = 1, `course` = 0, `course_complete` = 0, `busts` = 0, `deaths` = 0,
-		`kills` = 0, `tokenbank` = -1, `bigbank` = -1, `bank` = -1, `vaultbank` = -1, `equip_potion` = 0
+		`kills` = 0, `tokenbank` = -1, `bigbank` = -1, `bank` = -1, `vaultbank` = -1
 		WHERE `userid` = {$userid}";
 		$statquery="UPDATE `userstats` SET `strength` = 1000, `agility` = 1000, `guard` = 1000, `iq` = 100, `labor` = 1000 WHERE `userid` = {$userid}";
 		$mail="Welcome to Chivalry is Dead, {$ir['username']}. We hope you stay a while and hang out. To get started,
@@ -1132,7 +1133,14 @@ function resetacc()
 				echo "...success!";
 			else
 				echo "...failed";
+		echo "Resetting user's estates...";
+			if ($db->query("DELETE FROM `user_estates` WHERE `userid` = {$userid}"))
+			    echo "...estates deleted.";
+	         else
+		        echo "...failed.";
 		echo "<br />Finishing up... we'll just be a moment.";
+		$eid = buyEstate($userid, 1);
+		doMoveIn($eid,$userid);
 			$api->GameAddMail($userid,"Welcome to Chivalry is Dead",$mail,1);
 			$db->query("DELETE FROM `mining` WHERE `userid` = {$userid}");
 			$db->query("UPDATE `user_settings` SET `reset` = {$reset} + 1 WHERE `userid` = {$userid}");
@@ -1174,7 +1182,7 @@ function resetacc()
 	else
 	{
 		echo "Everything about your account will reset. Items on the market will be removed. Your inventory will be wiped. Your stats will be reset. You will be cleared of any currency you may have. Consider it a fresh start.<br />
-		Would you like to go through with it? This cannot be undone for whatever reason.
+		Would you like to go through with it? This cannot be undone for whatever reason. You must be level " . number_format($lvlRequired) . " to reset your account.
 		<form method='post'>
 			<input type='hidden' value='yes' name='reset'>
 			<input type='submit' class='btn btn-danger' value='Yes, reset!'>
