@@ -142,10 +142,10 @@ if (!empty($username)) {
         }
         if ($_POST['ref']) 
 		{
-            $api->UserGiveItem($_POST['ref'],18,10);
-            $api->UserGiveItem($i,18,10);
+            $api->UserGiveItem($_POST['ref'],205,10);
             $api->UserGiveItem($_POST['ref'],210,1);
-            notification_add($_POST['ref'], "Thank you for referring <a href='profile.php?user={$i}'>{$e_username}</a> to {$set['WebsiteName']}! We have given you 10 Chivalry Gym Scrolls as appreciation.");
+            $db->query("UPDATE `users` SET `vip_days` = `vip_day` + 3 WHERE `userid` = {$_POST['ref']}");
+            notification_add($_POST['ref'], "Thank you for referring <a href='profile.php?user={$i}'>{$e_username}</a> to {$set['WebsiteName']}! We have given you 10 CID Admin Gym Scrolls, 3 VIP Days and a VIP Scratch Ticket.");
             $e_rip = $db->escape($rem_IP);
             $db->query("INSERT INTO `referals`
 			VALUES (NULL, {$_POST['ref']}, '{$e_rip}', {$i}, '{$IP}',{$CurrentTime})");

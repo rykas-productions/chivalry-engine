@@ -444,7 +444,7 @@ echo"
 //referral link.
 echo "	<div class='row'>
 			<div class='col-md-12'>
-				Share your referral link to gain 10 Chivalry Gym Scrolls every time a friend joins!<br />
+				Share your referral link to gain 10 CID Admin Gym Scrolls and 3 VIP Days every time a friend joins!<br />
 				<code>https://www.chivalryisdeadgame.com/register.php?REF={$userid}</code>
 			</div>
 		</div>";

@@ -289,7 +289,7 @@ echo "</div>
 //referral link.
 echo "	<div class='row'>
 			<div class='col-md-12'>
-				Share your referral link to gain 10 Chivalry Gym Scrolls every time a friend joins!<br />
+				Share your referral link to gain 10 CID Admin Gym Scrolls and 3 VIP Days every time a friend joins!<br />
 				<code>chivalryisdeadgame.com/register.php?REF={$userid}</code><br />
 				<div class='fb-like' data-href='https://www.facebook.com/officialcidgame' data-layout='button' data-action='like' data-size='large' data-show-faces='false' data-share='true'></div><br />
                 <a href='https://twitter.com/cidgame?ref_src=twsrc%5Etfw' class='twitter-follow-button' data-size='large' data-dnt='true' data-show-count='false'>Follow @cidgame</a><script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script>
