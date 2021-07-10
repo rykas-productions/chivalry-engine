@@ -181,7 +181,7 @@ while ($i = $db->fetch_row($inv))
 			</div>";
     }
 	$i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
-	$icon = returnIcon($i['itmid'],2);
+	$icon = ($ir['icons'] == 1) ? returnIcon($i['itmid'],2) : "";
 	$i['inv_qty_value']=$i['inv_qty']*$i['itmsellprice'];
 	$armory=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$i['itmid']} AND `gaGUILD` != 1"));
 	$invent=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$i['itmid']} AND `inv_userid` != 1"));

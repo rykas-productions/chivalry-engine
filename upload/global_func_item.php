@@ -1,35 +1,34 @@
 <?php
 function returnIcon($item,$size=1)
 {
-	global $db, $ir;
-	if ($ir['icons'] == 1)
+	global $db;
+	$q = "/*qc=on*/SELECT `icon`,`color` FROM `items` WHERE `itmid` = {$item}";
+	$cache = fetchCachedItemIcon($q);
+	if (!empty($cache))
+	    $r = fetchCachedItemIcon($q);
+	else 
+	   $r = $db->fetch_row($db->query($q));
+	if (empty($r['icon']))
 	{
-		$q = $db->fetch_row($db->query("/*qc=on*/SELECT `icon`,`color` FROM `items` WHERE `itmid` = {$item}"));
-		$imageIcons=array(262,337,322);
-		if (empty($q['icon']))
-		{
-			return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
-		}
-		elseif ($q['color'] == 'img')
-		{
-			return "<img src='{$q['icon']}' style='width:{$size}rem;'>";
-		}
-		else
-		{
-			if (!empty($q['color']))
-			{
-				return "<i class='{$q['icon']}' style='font-size:{$size}rem; color: {$q['color']};'></i>";
-			}
-			else
-			{
-				return "<i class='{$q['icon']}' style='font-size:{$size}rem;'></i>";
-			}
-			
-		}
+		return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
+	}
+	elseif ($r['color'] == 'img')
+	{
+	    cacheItemIcon($q, $r);
+		return "<img src='{$r['icon']}' style='width:{$size}rem;'>";
 	}
 	else
 	{
-		return;
+	    cacheItemIcon($q, $r);
+		if (!empty($r['color']))
+		{
+			return "<i class='{$r['icon']}' style='font-size:{$size}rem; color: {$r['color']};'></i>";
+		}
+		else
+		{
+			return "<i class='{$r['icon']}' style='font-size:{$size}rem;'></i>";
+		}
+		
 	}
 }
 
@@ -208,3 +207,25 @@ function submitToModeration($itmid, $type, $value, $user)
 	
 	//Save for last, just in case?
 	$db->query("DELETE FROM `items` WHERE `itmid` = {$itmid}");}
+
+//helper function 
+function cacheItemIcon($query, $result)
+{
+    $serialzedData = serialize($result);
+    $cacheName = "./cache/items/" . md5($query);
+    file_put_contents($cacheName, $serialzedData);
+}
+
+function fetchCachedItemIcon($query)
+{
+    $ttl = (((60*60)*24)*30);
+    $cacheName = "./cache/items/" . md5($query);
+    if (file_exists($cacheName)) 
+    {
+        $file_time = filemtime($cacheName);
+        if ($ttl + $file_time <= time()) 
+        {
+            return unserialize(file_get_contents($cacheName));
+        }
+    }
+}
