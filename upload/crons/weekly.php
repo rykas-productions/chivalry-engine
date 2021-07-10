@@ -53,5 +53,6 @@ while ($success != 3)
         $db->query("UPDATE `settings` SET `setting_value` = {$random} WHERE `setting_name` = 'itemweek{$success}'");
     }
 }
+doPlayerofWeekTick();
 //$api->System
 //$api->GameAddAnouncement("Its a brand new week, so that means three new items are available to be purchased at a 50% discount at the Item of the Week shop on Explore. This week, we have the ")

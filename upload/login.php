@@ -19,7 +19,7 @@ $domain = determine_game_urlbase();
 $csrf = request_csrf_html('login');
 echo "
 <div class='row'>
-    <div class='col-md-6 col-lg-5 col-xl-4 col-xxl-3'>
+    <div class='col-md-6 col-lg-5 col-xxl-3'>
         <div class='card'>
             <div class='card-header'>
                 <div class='row'>
@@ -44,7 +44,7 @@ echo "
         </div>
         <br />
     </div>
-    <div class='col-md-6 col-lg-7 col-xl-8 col-xxl-4'>
+    <div class='col-md-6 col-lg-7 col-xl-7 col-xxl-4'>
         <div class='card'>
             <div class='card-header'>
             Warrior with no empathy
@@ -53,9 +53,9 @@ echo "
                 {$set['Website_Description']}
             </div>
         </div>
+        <br />
     </div>
-    <br />
-    <div class='col-md-6 col-lg-4 col-xxl-5'>
+    <div class='col-md-6 col-lg-5 col-xxl-5'>
         <div class='card'>
             <div class='card-header'>
                 Highest Ranked Players
@@ -91,7 +91,7 @@ echo "
         </div>
         <br />
     </div>
-	<div class='col-md-6 col-lg-7 col-xl-8 col-xxl-4'>
+	<div class='col-md-6 col-lg-7 col-xl-7 col-xxl-3'>
         <div class='card'>
             <div class='card-header'>
             Gameplay
@@ -103,9 +103,9 @@ echo "
 				Other warriors will attempt you from reaching the number one warrior spot... but are you really going to be stopped?
             </div>
         </div>
+        <br />
     </div>
-    <br />
-    <div class='col-md-6 col-lg-5 col-xl-4 col-xxl-3'>
+    <div class='col-md-6 col-lg-5 col-xl-5 col-xxl-3'>
         <div class='card'>
             <div class='card-header'>
                 No Installation Required!
@@ -117,8 +117,9 @@ echo "
 				Most Users Online: " . number_format($set['mostUsersOn']) . " Users<br />" . DateTime_Parse($set['mostUsersOnTime']) . "
             </div>
         </div>
+        <br />
     </div>
-	<div class='col-md-6 col-lg-7 col-xl-8 col-xxl-5'>
+	<div class='col-md-6 col-lg-7 col-xl-7 col-xxl-3'>
         <div class='card'>
             <div class='card-header'>
                 Latest Announcement
@@ -128,6 +129,28 @@ echo "
 				<small>" . DateTime_Parse($ANN['ann_time']) . "</small>
             </div>
         </div>
+        <br />
+    </div>";
+    $displaypic = "<img src='" . parseDisplayPic($set['random_player_showcase']) . "' class='img-thumbnail' height='75'>";
+echo"
+    <div class='col-md-6 col-lg-7 col-xl-4 col-xxl-3'>
+        <div class='card'>
+            <div class='card-header'>
+                Player of the Week
+            </div>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-12 col-sm-3'>
+                        {$displaypic}
+                    </div>
+                    <div class='col-12 col-sm'>
+                        {$api->SystemUserIDtoName($set['random_player_showcase'])} [{$set['random_player_showcase']}]
+                        Level: {$api->UserInfoGet($set['random_player_showcase'], "level")}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
     </div>
 </div>";
 $h->endpage();
