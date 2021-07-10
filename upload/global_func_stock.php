@@ -85,13 +85,14 @@ function runMarketTick($riskLevel)
         while ($r = $db->fetch_row($q))
         {
             $RNG = Random(1,100);
-            if ($RNG <= 5)   //market crash
+            $perc = $riskLevel / 100;
+            if ($RNG <= 3)   //market crash
             {
                 $min = $r['am_cost'] * 0.35;
                 $max = $r['am_cost'] * 0.75;
                 $change = Random($min, $max) * -1;
             }
-            else if ($RNG >= 95) //market bubble
+            else if ($RNG >= 98) //market bubble
             {
                 $min = $r['am_cost'] * 0.10;
                 $max = $r['am_cost'] * 0.45;
@@ -99,38 +100,34 @@ function runMarketTick($riskLevel)
             }
             else
             {
-                if ($r['am_cost'] == $r['am_min'])
-                    $change = Random($r['am_change'] * 0.1, $r['am_change']);   //This way it always goes up when it bottoms out.
-                elseif ($r['am_cost'] == $r['am_max'])
-                    $change = Random($r['am_change'] * -1, $r['am_change'] * -0.1); //Goes down when it maxes out.
-                else
-                    $change = Random($r['am_change'] * -1, $r['am_change']);    //normal formula
+                $maxChange = $r['am_cost'] * $perc;
+                if ($maxChange < 4)
+                    $maxChange == 4;
+                $change = Random($maxChange * -1, $maxChange);
             }
-            $newVal = clamp(($r['am_cost'] + $change), $r['am_min'], $r['am_max']);
+            $newVal = clamp(($r['am_cost'] + $change), 0, $r['am_max']);
             //Force sell on crash.
-            if ($newVal == $r['am_min'])
+            if ($newVal == 0)
             {
                 $q2 = $db->query("SELECT * FROM `asset_market_owned` WHERE `am_id` = {$r['am_id']}");
+                $alreadyNotif = array();
                 while ($r2 = $db->fetch_row($q2))
                 {
-                    $returned = $r2['shares_owned'] * $newVal;
-                    $playerKept = $returned * 0.98;
-                    $marketTax = $returned * 0.02;
-                    $totalCost = $r2['shares_owned'] * $r2['shares_cost'];
                     setUserShares($r2['userid'], $r['am_id'], 0, $r2['shares_owned'] * -1);
-                    $api->UserGiveCurrency($r2['userid'], "primary", $playerKept);
-                    $notifText = "The {$r['am_name']} asset has crashed and your " . number_format($r2['shares_owned']) . " shares 
-                        of {$r['am_name']} have been sold. Your original investment of " . shortNumberParse($totalCost) . " 
-                        Copper Coins is now worth " . shortNumberParse($playerKept) . " Copper Coins, which has been returned to 
-                        you. " . number_format($r2['shares_owned']) . " of your shares have been sold.";
-                    $api->GameAddNotification($r2['userid'], $notifText);
-                    addToEconomyLog("Asset Market", 'copper', $playerKept);
-                    addToEconomyLog("Market Fees", "copper", $marketTax * -1);
-                    
-                    $profit = $returned - $totalCost;
-                    logAssetProfit($r2['userid'], $profit);
+                    if (!in_array($r2['userid'], $alreadyNotif))
+                    {
+                        $notifText = "The {$r['am_name']} asset has crashed and your " . number_format($r2['shares_owned']) . " shares 
+                            of {$r['am_name']} have been voided and your original investment is lost";
+                        $api->GameAddNotification($r2['userid'], $notifText);
+                        array_push($alreadyNotif, $r2['userid']);
+                    }
                 }
                 resetAsset($r['am_id']);
+            }
+            
+            if (($newVal <= $r['am_min']) && ($newVal >= $r['am_min'] - (5 / 100)))
+            {
+                stockNotifDrop($r['am_id']);
             }
             
             $db->query("UPDATE `asset_market` SET `am_cost` = {$newVal} WHERE `am_id` = {$r['am_id']}");
@@ -236,4 +233,21 @@ function returnUserCurrentValueAllAsset($userid)
         }
     }
     return $return;
+}
+
+function stockNotifDrop($stock_id)
+{
+    global $db, $api;
+    $q2 = $db->query("SELECT * FROM `asset_market_owned` WHERE `am_id` = {$stock_id}");
+    $r['am_name'] = $db->fetch_single($db->query("SELECT `am_name` FROM `asset_market` WHERE `am_id` = {$stock_id}"));
+    $alreadyNotif = array();
+    while ($r2 = $db->fetch_row($q2))
+    {
+        if (!in_array($r2['userid'], $alreadyNotif))
+        {
+            $notifText = "The {$r['am_name']} asset is failing! Sell your assets before it does, or risk your investment!";
+            $api->GameAddNotification($r2['userid'], $notifText);
+            array_push($alreadyNotif, $r2['userid']);
+        }
+    }
 }
