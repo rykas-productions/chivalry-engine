@@ -126,6 +126,9 @@ switch ($_GET['action']) {
 	case 'harvest':
         harvest();
         break;
+	case 'torchland':
+	    torchland();
+	    break;
 	case 'tend':
         tend();
         break;
@@ -194,7 +197,8 @@ function home()
 }
 function buyland()
 {
-    global $db,$userid,$api,$h,$ir,$farmconfig;
+    global $userid,$api,$h,$ir,$farmconfig;
+    $farmconfig['farmlandCost'] = $farmconfig['farmlandCost'] + ((countFarmland($userid) * $farmconfig['farmlandCost']) * 2.2);
 	if (isset($_GET['buy']))
 	{
 		if (!($api->UserHasCurrency($userid,'primary',$farmconfig['farmlandCost'])))
@@ -399,6 +403,36 @@ function fertilize()
 	
 	}
 	$h->endpage();
+}
+
+function torchland()
+{
+    global $db,$userid,$api,$h,$ir,$farmconfig,$FU;
+    $_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
+    if (empty($_GET['id']))
+    {
+        alert('danger', "Uh Oh!", "Please specify the farm plot you wish to interact with.", true, 'farm.php');
+        die($h->endpage());
+    }
+    $q = $db->query("/*qc=on*/SELECT * FROM `farm_data` WHERE `farm_id` = {$_GET['id']} AND `farm_owner` = {$userid}");
+    if ($db->num_rows($q) == 0)
+    {
+        alert('danger', "Uh Oh!", "The farm plot you wish to interact with does not exist, or does not belong to you.", true, 'farm.php');
+        die($h->endpage());
+    }
+    $r = $db->fetch_row($q);
+    if (isset($_GET['do']))
+    {
+        deleteField($_GET['id']);
+        alert('success',"Success!","You have successfully torched this plot. It is now forever lost to the sands of time...",true,'farm.php');
+        die($h->endpage());
+    }
+    else
+    {
+        echo "Are you sure you wish to torch this plot? This will permanently delete this plot.<br />
+			<a href='?action=torchland&id={$_GET['id']}&do=1' class='btn btn-primary'>Buuuurn, baby buuuurn</a>
+			<a href='farm.php' class='btn btn-danger'>Go Back</a>";
+    }
 }
 function harvest()
 {
