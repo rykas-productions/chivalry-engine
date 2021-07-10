@@ -1048,7 +1048,7 @@ function resetacc()
 	    unequipUserSlot($userid, "equip_badge");
 	    
 	    unequipUserSlot($userid, "equip_ring_primary");
-	    unequipUserSlot($userid, "equip_ring_primary");
+	    unequipUserSlot($userid, "equip_ring_secondary");
 	    unequipUserSlot($userid, "equip_necklace");
 	    unequipUserSlot($userid, "equip_pendant");
 	    
@@ -1103,8 +1103,8 @@ function resetacc()
 		echo "<br />Updating user settings table to default... ";
 		$db->query("DELETE FROM `user_settings` WHERE `userid` = {$userid}");
 		$db->query("DELETE FROM `user_logging` WHERE `userid` = {$userid}");
-		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$userid}')");
-        $db->query("UPDATE `user_settings` SET `security_key` = '{$randophrase}', `theme` = 7, `autobor` = {$bor} + 3000, `autohex` = {$hex} + 300, `autobum` = {$bum} WHERE `userid` = {$userid}");
+		$db->query("INSERT INTO `user_settings` (`userid`, `security_key`) VALUES ('{$userid}',  '{$randophrase}')");
+        $db->query("UPDATE `user_settings` SET `theme` = 7, `autobor` = {$bor} + 3000, `autohex` = {$hex} + 300, `autobum` = {$bum} WHERE `userid` = {$userid}");
 		echo "...done<br />Giving starter items... ";
 			//Give starter items.
 			$api->UserGiveItem($userid,6,50);
@@ -1143,6 +1143,8 @@ function resetacc()
 		doMoveIn($eid,$userid);
 			$api->GameAddMail($userid,"Welcome to Chivalry is Dead",$mail,1);
 			$db->query("DELETE FROM `mining` WHERE `userid` = {$userid}");
+			$db->query("INSERT INTO `mining` (`userid`, `max_miningpower`, `miningpower`, `miningxp`, `buyable_power`, `mining_level`, `mine_boost`)
+    VALUES ('{$userid}', '100', '100', '0', '1', '1', '0');");
 			$db->query("UPDATE `user_settings` SET `reset` = {$reset} + 1 WHERE `userid` = {$userid}");
 		alert('success',"Success!","Your account has been reset. Please log in to continue.",true,'logout.php');
 		$api->SystemLogsAdd($userid, 'preferences', "Successfully reset account. (Reset # {$reset})");
@@ -1177,6 +1179,7 @@ function resetacc()
 			$api->UserGiveItem($userid,349,1);
 			$api->UserGiveItem($userid,350,1);
 		}
+		echo "All done sir!";
 		die();
 	}
 	else

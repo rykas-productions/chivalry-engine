@@ -118,7 +118,8 @@ else {
 	$uade=$db->query("/*qc=on*/SELECT * FROM `user_settings` WHERE `userid` = {$mem['userid']}");
 	if ($db->num_rows($uade) == 0)
 	{
-		$db->query("INSERT INTO `user_settings` (`userid`) VALUES ('{$mem['userid']}')");
+	    $randomPhrase = randomizer();
+		$db->query("INSERT INTO `user_settings` (`userid`, `security_key`) VALUES ('{$mem['userid']}', '{$randomPhrase}')");
 	}
 	$uadr=$db->fetch_row($uade);
 	$_SESSION['loggedin'] = 1;

@@ -8,6 +8,9 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 //Profiler start time
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 include('forms/include_top.php');
 if (!isset($disablespeed))
 {
@@ -218,8 +221,8 @@ if ($db->num_rows($get)) {
 }
 $UIDB = $db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid}");
 if (!($db->num_rows($UIDB))) {
-    $db->query("INSERT INTO `mining` (`userid`, `max_miningpower`, `miningpower`, `miningxp`, `buyable_power`, `mining_level`) 
-    VALUES ('{$userid}', '100', '100', '0', '1', '1');");
+    $db->query("INSERT INTO `mining` (`userid`, `max_miningpower`, `miningpower`, `miningxp`, `buyable_power`, `mining_level`, `mine_boost`) 
+    VALUES ('{$userid}', '100', '100', '0', '1', '1', '0');");
 }
 include('dailyreward.php');
 check_data();
