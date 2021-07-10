@@ -27,6 +27,10 @@ if (isset($_POST['code']))
             $api->SystemLogsAdd($userid, "promo", "Claimed promo code {$code} for a {$api->SystemItemIDtoName($pcrr['promo_item'])}.");
         }
     }
+    else
+    {
+        alert('danger','Uh Oh!',"That's not a valid code!", false);
+    }
 }
 echo "<form method='post'>
     <div class='card'>
