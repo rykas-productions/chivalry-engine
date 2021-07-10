@@ -102,6 +102,12 @@ function createField($user)
 	global $db;
 	$db->query("INSERT INTO `farm_data` (`farm_owner`, `farm_seed`, `farm_stage`, `farm_wellness`, `farm_time`) VALUES ('{$user}', '0', '0', '100', '0')");
 }
+
+function deleteField($field_id)
+{
+    global $db;
+    $db->query("DELETE FROM `farm_data` WHERE `farm_id` = {$field_id}");
+}
 function countFarmland($user)
 {
 	global $db;
@@ -114,18 +120,21 @@ function returnStageActions($stage,$fieldid,$stageTime,$seed)
 	{
 		return "[<a href='?action=plant&id={$fieldid}'>Plant</a>]<br />
 		[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]";
+			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
+            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
 	}
 	if ($stage == 1)
 	{
 		if (time() < $stageTime)
 			return TimeUntil_Parse($stageTime) . "<br />
 			[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]";
+			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
+            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
 		else
 			return "[<a href='?action=tend&id={$fieldid}'>Tend</a>]<br />
 		[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]";
+			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
+            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
 	}
 	if ($stage == 2)
 	{
@@ -133,14 +142,16 @@ function returnStageActions($stage,$fieldid,$stageTime,$seed)
 		{
 			return TimeUntil_Parse($stageTime) . "<br />
 			[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]";
+			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
+            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
 		}
 		else
 		{
 			return "[<a href='?action=harvest&id={$fieldid}'>Harvest</a>]<br />
 			[<a href='?action=collect&id={$fieldid}'>Seed Collection</a>]<br />
 			[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]";
+			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
+            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
 		}
 	}
 	if ($stage >= 10)
@@ -148,11 +159,13 @@ function returnStageActions($stage,$fieldid,$stageTime,$seed)
 		if (time() < $stageTime)
 			return TimeUntil_Parse($stageTime) . "<br />
 			[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]";
+			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
+            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
 		else
 			return "[<a href='?action=tend&id={$fieldid}'>Tend</a>]<br />
 		[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]";
+			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
+            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
 	}
 }
 function seed_dropdown($ddname = "seed", $selected = -1)
