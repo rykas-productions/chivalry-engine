@@ -60,7 +60,8 @@ function home()
             while ($r = $db->fetch_row($q)) {
                 $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
                 if (isset($ir['voted'][$r['id']])) {
-                     echo "<hr /><div class='row'>
+                     echo "<div class='card'>
+                            <div class='card-body'><div class='row'>
 								<div class='col-3'>
 									<h3>Poll Question</h3>
 								</div>
@@ -100,8 +101,7 @@ function home()
 							<div class='col-3'>
 								<h5>Results hidden.</h5>
 							</div>
-						</div>
-						<hr />";
+						</div>";
                     }
                     $myvote = $r['choice' . $ir['voted'][$r['id']]];
 				echo "<div class='row'>
@@ -117,13 +117,11 @@ function home()
 							<div class='col-3'>
 								<i>{$myvote}</i>
 							</div>
-						</div>
-						<hr />";
+						</div></div></div><br />";
                 } else {
-                    echo "<br />
+                    echo "<div class='card'><div class='card-body'>
 				<form method='post'>
 					<input type='hidden' name='poll' value='{$r['id']}' />
-					<hr />
 					<div class='row'>
 						<div class='col-3'>
 							<h3>Poll Question</h3>
@@ -158,7 +156,7 @@ function home()
 							</div>
 							</div>
 						</form>
-						<hr />";
+						</div></div><br />";
                 }
             }
         }
@@ -178,7 +176,8 @@ function viewpolls()
         while ($r = $db->fetch_row($q)) {
             $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
             echo "
-			<hr /><div class='row'>
+			<div class='card'>
+                <div class='card-body'><div class='row'>
 				<div class='col-3'>
 					<h3>Poll Question</h3>
 				</div>
@@ -220,7 +219,7 @@ function viewpolls()
 								<h6>" . number_format($r['votes']) . "</h6>
 							</div>
 						</div>
-						<hr />";
+						</div></div><br />";
         }
     }
     $db->free_result($q);

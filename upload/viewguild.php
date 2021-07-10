@@ -160,12 +160,12 @@ function home()
 		alert('dark','',"<b>Guild Announcement</b><br />{$gd['guild_announcement']}",false);
 	}
 	$viewCount=getCurrentUserPref('guildNotifView', 10);
-	echo"
-	<hr />
-	<b>Last {$viewCount} Guild Notifications</b>
-	<hr />
-   	";
     $q = $db->query("/*qc=on*/SELECT * FROM `guild_notifications` WHERE `gn_guild` = {$ir['guild']} ORDER BY `gn_time` DESC  LIMIT {$viewCount}");
+    echo "<div class='card'>
+        <div class='card-header'>
+            Last {$viewCount} Guild Notifications
+        </div>
+        <div class='card-body'>";
     while ($r = $db->fetch_row($q)) 
 	{
 		echo "
@@ -177,6 +177,7 @@ function home()
 		</div>
 		<hr />";
     }
+    echo "</div></div>";
     $db->free_result($q);
 }
 
@@ -1164,7 +1165,7 @@ function guild_polls()
             while ($r = $db->fetch_row($q)) {
                 $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
                 if (isset($ir['voted'][$r['id']])) {
-                    echo "<hr /><div class='row'>
+                    echo "<div class='card'><div class='card-body'><div class='row'>
 								<div class='col-sm-3'>
 									<h3>Poll Question</h3>
 								</div>
@@ -1196,7 +1197,7 @@ function guild_polls()
 											</div>
 										</div>
 									</div>
-									<hr />";
+									</div></div></br />";
                             }
                         }
                     } else {
@@ -1224,10 +1225,9 @@ function guild_polls()
 						</div>
 						<hr />";
                 } else {
-                    echo "<br />
+                    echo "<div class='card'><div class='card-body'>
 				<form method='post'>
 					<input type='hidden' name='poll' value='{$r['id']}' />
-					<hr />
 					<div class='row'>
 						<div class='col-sm-3'>
 							<h3>Poll Question</h3>
@@ -1262,7 +1262,7 @@ function guild_polls()
 							</div>
 							</div>
 						</form>
-						<hr />";
+						</div></div></br />";
                 }
             }
         }
@@ -1283,7 +1283,7 @@ function guild_oldpolls()
         while ($r = $db->fetch_row($q)) {
             $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
             echo "
-			<hr /><div class='row'>
+			<div class='card'><div class='card-body'><div class='row'>
 				<div class='col-sm-3'>
 					<h3>Poll Question</h3>
 				</div>
@@ -1325,7 +1325,7 @@ function guild_oldpolls()
 								<h6>" . number_format($r['votes']) . "</h6>
 							</div>
 						</div>
-						<hr />";
+						</div></div></br />";
         }
 		echo "> <a href='viewguild.php'>Go Back</a>";
     }
@@ -4088,8 +4088,8 @@ function staff_upgrade_sword()
 function staff_decommission_sword()
 {
     global $db,$gd,$userid,$api,$ir,$h,$set;
+    $cost = 500000;
 	echo "<h4>Decommission Guild Weapon</h4><hr />";
-	$cost = $set['GUILD_PRICE'] * 50;
 	if (!isGuildLeader())
 	{
 		alert('danger',"Uh Oh!","You do not have permission to be here.",true,'?action=staff&act2=idx');
@@ -4102,18 +4102,14 @@ function staff_decommission_sword()
 	}
 	if (isset($_POST['decommission']))
 	{
-		$r=$db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$gd['guild_sword_item']}"));
-		$newName="{$r['itmname']} (Decommissioned)";
-		$newWep = $r['weapon'] / 2;
-		$newDesc="{$r['itmdesc']} (Decommissioned " . date('l, F j, Y g:i:s a') . ").";
 		if ($gd['guild_primcurr'] < $cost)
 		{
 			alert('danger', "Uh Oh!", "Your guild does not have enough Copper Coins to decomission your weapons right now.", true, '?action=staff&act2=idx');
 			die($h->endpage());
 		}
 		addToEconomyLog('Guild Fees', 'copper', $cost * -1);
-		$db->query("UPDATE `items` SET `itmname` = '{$newName}', `itmdesc` = '{$newDesc}', `weapon` = '{$newWep}', `itmbuyable` = 'false' WHERE `itmid` = {$r['itmid']}");
 		$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - 5000000, `guild_sword_item` = 0 WHERE `guild_id` = {$gd['guild_id']}");
+		forceDeleteItem($gd['guild_sword_item']);
 		$api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a>, your guild owner, has spent " . shortNumberParse($cost) . " Copper Coins to decommission your guild's weapons.");
 		alert('success',"Success!","You have successfully decommissioned your guild's weapon for " . shortNumberParse($cost) . " Copper Coins.",true,'?action=staff&act2=idx');
 	}
@@ -4122,11 +4118,11 @@ function staff_decommission_sword()
 		echo "You may decommission your guild's current weapon here. Since you are stopping production runs early, the 
 		blacksmith who was creating your weapons is charging you a " . shortNumberParse($cost) . " fee to break the deal.<br />
 		Decommssioned weapons will be labeled as such, and will have its decommision date noted. Weapons are 100% final once 
-		decommissioned. Guild weapons get their power from being a official guild relic. Don't be surprised if the weapon 
-		feels... weaker... once its been decommissioned. Decommissioned weapon will not show up on the Item Appendix either.
+		decommissioned. Guild weapons get their power from being a official guild relic. These weapons will be permanently removed 
+        from the game.
 			<form method='post'>
 				<input type='hidden' name='decommission' value='1'>
-				<input type='submit' class='btn btn-success' value='Decomission Weapon'>
+				<input type='submit' class='btn btn-success' value='Decommission Weapon'>
 				<a href='?action=staff' class='btn btn-danger'>No Thanks</a>
 			</form>";
 	}
