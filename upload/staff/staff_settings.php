@@ -259,12 +259,12 @@ function basicsettings()
 					ReCaptcha Revalidate Time
 				</th>
 				<td>
-					<select name='recaptchatime' class='form-control' type='dropdown'>
+					<select name='Revalidate_Time' class='form-control' type='dropdown'>
 						<option value='300'>5 Minutes</option>
 						<option value='900'>15 Minutes</option>
 						<option value='3600'>1 Hour</option>
 						<option value='86400'>1 Day</option>
-						<option value='99999999999'>Never</option>
+						<option value='" . PHP_INT_MAX . "'>Never</option>
 					</select>
 				</td>
 			</tr>

@@ -372,30 +372,34 @@ class headers
 	$this->doArtifactRNG();
 	$this->doLuckRNG();
     //User needs to reverify with reCaptcha
-    if (($ir['last_verified'] < ($time - $set['Revalidate_Time'])) || ($ir['need_verify'] == 1))
-    {
-		//Script calls for reCaptcha to be loaded.
-		if (isset($macropage))
-		{
-			//Set User to need verified.
-			$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
-			echo "This is a needed evil. Please confirm you are not a bot. Please be sure Javascript is enabled.<br />"; ?>
-            <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-			<noscript>
-            <?php
-            //User doesn't have javascript turned on, so lets tell them.
-				alert('warning', "", "{$set['WebsiteName']}'s reCaptcha system needs you to enable Javascript to continue.", false);
-            ?>
-			</noscript>
-            <form action='macro.php' method='post' id='recaptchaForm'>
-				<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>' data-callback='enableRecaptchaBtn'></div>
-                <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
-                <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" id="recaptchabtn" disabled="disabled">
-            </form>
-            <?php
-            die($h->endpage());
-		}
-    }
+	$noCaptcha = PHP_INT_MAX;  //bypass for local dev
+	if ($set['Revalidate_Time'] != $noCaptcha)
+	{
+        if (($ir['last_verified'] < ($time - $set['Revalidate_Time'])) || ($ir['need_verify'] == 1))
+        {
+    		//Script calls for reCaptcha to be loaded.
+    		if (isset($macropage))
+    		{
+    			//Set User to need verified.
+    			$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
+    			echo "This is a needed evil. Please confirm you are not a bot. Please be sure Javascript is enabled.<br />"; ?>
+                <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+    			<noscript>
+                <?php
+                //User doesn't have javascript turned on, so lets tell them.
+    				alert('warning', "", "{$set['WebsiteName']}'s reCaptcha system needs you to enable Javascript to continue.", false);
+                ?>
+    			</noscript>
+                <form action='macro.php' method='post' id='recaptchaForm'>
+    				<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>' data-callback='enableRecaptchaBtn'></div>
+                    <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
+                    <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" id="recaptchabtn" disabled="disabled">
+                </form>
+                <?php
+                die($h->endpage());
+    		}
+        }
+	}
 	include('rickroll.php');
     }
     }
