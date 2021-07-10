@@ -44,7 +44,7 @@ function dobum()
 	}
 	$db->query("UPDATE `user_settings` SET `searchtown` = `searchtown` - 1 WHERE `userid` = {$userid}");
 	$ir['searchtown']--;
-	$rand=Random(1,18);
+	$rand=Random(1,20);
 	if ($rand <= 5)
 	{
 		$copper=Random(200,950);
@@ -96,6 +96,18 @@ function dobum()
 		$txt = "You should go urinate before you beg... you stand near a bush and let 'er rip. Once done, you notice a stick. Its yours now, you exhibitionist, you!";
 		$api->UserGiveItem($userid,1,1);
 		$api->SystemLogsAdd($userid,"begging","Received {$api->SystemItemIDtoName(1)}.");
+	}
+	elseif ($rand == 15)
+	{
+	    $txt = "You found an empty bucket while begging.";
+	    $api->UserGiveItem($userid,295,1);
+	    $api->SystemLogsAdd($userid,"begging","Received {$api->SystemItemIDtoName(295)}.");
+	}
+	elseif ($rand == 16)
+	{
+	    $txt = "You found two logs while begging!";
+	    $api->UserGiveItem($userid,410,2);
+	    $api->SystemLogsAdd($userid,"begging","Received 2 x {$api->SystemItemIDtoName(410)}.");
 	}
 	else
 	{
