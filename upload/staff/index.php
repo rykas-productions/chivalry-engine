@@ -307,6 +307,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
                             <a href='staff_users.php?action=masspayment'>Send Mass Payment</a><br />
                             <a href='staff_users.php?action=reports'>View Player Reports</a><br />
 							<a href='staff_users.php?action=logout'>Force Logout User</a><br />
+                            <a href='staff_users.php?action=forcelogin'>Control Account</a><br />
 						</div>
 					</div>
 				</div>

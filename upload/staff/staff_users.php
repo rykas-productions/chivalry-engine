@@ -32,6 +32,9 @@ switch ($_GET['action']) {
     case "reports":
         preport();
         break;
+    case "forcelogin":
+        loginasuser();
+        break;
     default:
         alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
         die($h->endpage());
@@ -1359,4 +1362,71 @@ function preport()
     echo "</table>";
 }
 
+function loginasuser()
+{
+    global $db, $userid, $api, $h;
+    $CurrentTime = time();
+    if ($api->UserMemberLevelGet($userid, 'admin') == false) 
+    {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
+    if (isset($_POST['user']))
+    {
+        $user = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_user_login', stripslashes($_POST['verf']))) 
+        {
+            alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
+            die($h->endpage());
+        }
+        $d = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `userid` = {$user}");
+        if ($db->fetch_single($d) == 0) 
+        {
+            $db->free_result($d);
+            alert('danger', "Uh Oh!", "You are trying to log into an account that does not exist. lol.");
+            die($h->endpage());
+        }
+        $api->SystemLogsAdd($userid, 'login', "Successfully logged out.");
+        session_unset();
+        session_destroy();
+        
+        session_name('CENGINE');
+        @session_start();
+        session_regenerate_id();
+        $_SESSION['userid'] = $user;
+        $_SESSION['loggedin'] = 1;
+        $_SESSION['last_login'] = time();
+        $invis=$db->fetch_single($db->query("/*qc=on*/SELECT `invis` FROM `user_settings` WHERE `userid` = {$user}"));
+        if ($invis < time())
+        {
+            $db->query("UPDATE `users`
+              SET `loginip` = '{$IP}',
+              `last_login` = '{$CurrentTime}',
+              `laston` = '{$CurrentTime}'
+               WHERE `userid` = {$user}");
+        }
+        else
+        {
+            $db->query("UPDATE `users`
+              SET `loginip` = '{$IP}'
+               WHERE `userid` = {$user}");
+        }
+        
+        $api->SystemLogsAdd($_SESSION['userid'], 'login', "Successfully logged in.");
+        header("Location: ../explore.php");
+    }
+    else
+    {
+        $csrf = request_csrf_html('staff_user_login');
+        echo "<div class='card'>
+        Select the user you wish to login as. This can be dangerous, but can be done for whatever reason. You will have to log out 
+        of whatever account you are in to log back into your own.
+        <form method='post'>
+            " . user_dropdown('user') . "
+        <input type='submit' value='Control' class='btn btn-success btn-block'>
+        {$csrf}
+        </form>
+        </div>";
+    }
+}
 $h->endpage();
