@@ -65,9 +65,10 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $userid, $api, $h, $set;
+    $logs = 25 + (round($set['cutter_level'] / 10));
     echo "<div class='card'>
         <div class='card-body'>
-            Here you may chop up your wood into sharpened sticks, if you so desire. You will receive 25 Sharpened Sticks per Log. 
+            Here you may chop up your wood into sharpened sticks, if you so desire. You will receive " . number_format($logs) . " Sharpened Sticks per Log. 
             It currently costs " . number_format($set['cutter_cost']) . " Copper Coins per log chopped.
             The maximum that can be cut at a time is set by the cutter's capacity. Each log cut takes one capacity away. Every player 
             in the game contributes to this number. Players may all contribute to upgrading this as well.<br />
@@ -123,7 +124,7 @@ function cutwood()
         alert('danger',"Uh Oh!","You need " . number_format($totalCost) . " Copper Coins to cut " . number_format($log) . " Wood Logs. You only have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.", false);
         die(home());
     }
-    $quantity = $log * 25;
+    $quantity = $log * (25 + (round($set['cutter_level'] / 10)));
     $api->UserTakeItem($userid, $woodLogID, $log);
     $api->UserGiveItem($userid, 1, $quantity);
     $api->UserTakeCurrency($userid, "primary", $totalCost);
