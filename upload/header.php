@@ -100,12 +100,12 @@ class headers
 								</li>
 								<li>
 									<a href='inventory.php' class='updateHoverBtn'>
-										<span class='menu-text'><i class='fas fa-box'></i> Inventory</span>
+										<span class='menu-text'>" . loadImageAsset("menu/inventory.svg") . " Inventory</span>
 									</a>
 								</li>
 								<li>
 									<a href='explore.php' class='updateHoverBtn'>
-										<span class='menu-text'><i class='fas fa-map-signs'></i> Explore</span>
+										<span class='menu-text'>" . loadImageAsset("explore/explore.svg") . " Explore</span>
 									</a>
 								</li>
 								<li class='header-menu'>
@@ -387,8 +387,8 @@ class headers
 				alert('warning', "", "{$set['WebsiteName']}'s reCaptcha system needs you to enable Javascript to continue.", false);
             ?>
 			</noscript>
-            <form action='macro.php' method='post'>
-				<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>' data-callback='enableBtn'></div>
+            <form action='macro.php' method='post' id='recaptchaForm'>
+				<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>' data-callback='enableRecaptchaBtn'></div>
                 <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
                 <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" id="recaptchabtn" disabled="disabled">
             </form>

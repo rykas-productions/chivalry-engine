@@ -346,7 +346,13 @@ function profileButtonBlock(user)
 {
 	document.getElementById("profileTxt").innerHTML = "Block contact with " + user + ".";
 }
- function enableBtn()
+//For the recaptcha system
+function enableRecaptchaBtn()
 {
    document.getElementById("recaptchabtn").disabled = false;
+   document.getElementById("recaptchaForm").submit();
 }
+function disableRecaptchaBtn()
+ {
+    document.getElementById("recaptchabtn").disabled = true;
+ }
