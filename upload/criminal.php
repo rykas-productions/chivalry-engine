@@ -41,7 +41,8 @@ function home()
     }
     $db->free_result($q2);
     $q = $db->query("/*qc=on*/SELECT `cgID`, `cgNAME` FROM `crimegroups` ORDER BY `cgORDER` ASC");
-	echo "<div class='row'>
+	echo "<div class='card'>
+        <div class='card-body'><div class='row'>
 			<div class='col'>
 				<h5>Crime</h5>
 			</div>
@@ -114,6 +115,8 @@ function home()
             }
         }
     }
+    echo "</div>
+			</div>";
     $db->free_result($q);
     $h->endpage();
 }
