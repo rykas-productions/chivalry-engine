@@ -52,8 +52,10 @@ function checkPlotInfo()
 }
 function checkFarmXP()
 {
-	global $db, $userid, $FU;
-    $FU['xp_needed'] = round(($FU['farm_level'] + 1.5) * ($FU['farm_level'] + 1.5) * ($FU['farm_level'] + 1.5) * 1.1);
+	global $db, $userid, $FU, $ir;
+	if (!isset($ir['reset']))
+	    $ir['reset'] = 0;
+	    $FU['xp_needed'] = round((($FU['farm_level'] + 1.5) * ($FU['farm_level'] + 1.5) * ($FU['farm_level'] + 1.5) * 1.1) * (1 - ($ir['reset'] * 0.1)));
     if ($FU['farm_xp'] >= $FU['xp_needed']) {
         $expu = $FU['farm_xp'] - $FU['xp_needed'];
         $FU['farm_level'] += 1;

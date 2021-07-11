@@ -1133,14 +1133,7 @@ function resetacc()
 				echo "...success!";
 			else
 				echo "...failed";
-		echo "Resetting user's estates...";
-			if ($db->query("DELETE FROM `user_estates` WHERE `userid` = {$userid}"))
-			    echo "...estates deleted.";
-	         else
-		        echo "...failed.";
 		echo "<br />Finishing up... we'll just be a moment.";
-		$eid = buyEstate($userid, 1);
-		doMoveIn($eid,$userid);
 			$api->GameAddMail($userid,"Welcome to Chivalry is Dead",$mail,1);
 			$db->query("DELETE FROM `mining` WHERE `userid` = {$userid}");
 			$db->query("INSERT INTO `mining` (`userid`, `max_miningpower`, `miningpower`, `miningxp`, `buyable_power`, `mining_level`, `mine_boost`)
@@ -1179,7 +1172,6 @@ function resetacc()
 			$api->UserGiveItem($userid,349,1);
 			$api->UserGiveItem($userid,350,1);
 		}
-		echo "All done sir!";
 		die();
 	}
 	else

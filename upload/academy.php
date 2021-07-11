@@ -188,6 +188,11 @@ function start()
 		$iq=$iq/100;
 		$timestamp=$timestamp*(1-$iq);
 	}
+	$actualReset = $ir['reset'] - 1;
+	if ($actualReset > 0)
+	{
+	    $timestamp = $timestamp - ($timestamp * ($actualReset * 0.08));
+	}
     $completed = time() + ($timestamp); //Current Time + (Academy days * seconds in a day)
     $db->query("UPDATE `users` SET `course` = {$_GET['id']},
                 `course_complete` = {$completed} 

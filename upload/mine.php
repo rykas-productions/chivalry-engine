@@ -396,7 +396,9 @@ function mine()
 function mining_levelup()
 {
     global $db, $userid, $MUS, $ir;
-    $MUS['xp_needed'] = (round(($MUS['mining_level'] + 0.67) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1)/$ir['reset']);
+    if (!isset($ir['reset']))
+        $ir['reset'] = 0;
+    $MUS['xp_needed'] = (round(($MUS['mining_level'] + 0.67) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1) * (1 - ($ir['reset'] * 0.1)));
     if ($MUS['miningxp'] >= $MUS['xp_needed']) {
         $expu = $MUS['miningxp'] - $MUS['xp_needed'];
         $MUS['mining_level'] += 1;
