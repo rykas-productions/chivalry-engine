@@ -105,11 +105,21 @@ function home()
 {
     global $ir,$userid,$api;
     $loop=1;
-    while ($loop != 37)
+    while ($loop != 39)
     {
-        $button[$loop] = (canGetSkill($loop)) ? "<a href='?action=skill{$loop}'>Unlock/Upgrade</a>" : "<span class='text-danger'>Locked</span>";
+        //$button[$loop] = (canGetSkill($loop)) ? "<a href='?action=skill{$loop}'>Unlock/Upgrade</a>" : "<span class='text-danger'>Locked</span>";
         $locked[$loop] = (getSkillLevel($userid,$loop) > 0) ? "class='table-active'" : "";
-        $loop=$loop+1;
+        if (getSkillLevel($userid,$loop) == returnMaxLevelSkill($loop))
+            $button[$loop] = "<span class='text-danger'><i>Maxed</i></span>";
+            elseif (!canGetSkill($loop))
+            $button[$loop] = "<span class='text-danger'><b>Locked</b></span>";
+            elseif (getSkillLevel($userid,$loop) == 0)
+            $button[$loop] = "<a href='?action=skill{$loop}' class='text-success'>Unlock</a>";
+            elseif (getSkillLevel($userid,$loop) > 0)
+            $button[$loop] = "<a href='?action=skill{$loop}'>Upgrade</a>";
+            else
+                $button[$loop] = "<span class='text-muted'>N/A</span>";
+                $loop=$loop+1;
     }
     echo "Here you may redeem your skill points for skills that will help you in-game. You can earn skill points by completing
 	<a href='achievements.php'>achievements</a>. You currently have {$ir['skill_points']} skill points.<br />
@@ -130,248 +140,588 @@ function home()
     <div class="tab-content">
         <div id="combat" class="tab-pane active">
             <?php
-                echo "<table class='table'>
-                    <tr>
-                        <td {$locked[1]} width='33%'>
-                            Perfection (1 Point)<br />
-                            <small>+3% Class Stat effectiveness in combat.<br /></small>
-                            " . getSkillLevel($userid,1) . " / 5
-                            <br />
-                            {$button['1']}
-                        </td>
-                        <td {$locked[2]} width='33%'>
-                            Conditioning (1 Point)<br />
-                            <small>+2.5% Class Weak stat, -1% Class Strong Stat.<br /></small>
-                            " . getSkillLevel($userid,2) . " / 5
-                            <br />
-                            {$button['2']}
-                        </td>
-                        <td {$locked[3]} width='33%'>
-                            Potent Potion (1 Point)<br />
-                            <small>+1.5% more potion ability when used in combat.<br /></small>
-                            " . getSkillLevel($userid,3) . " / 5
-                            <br />
-                            {$button['3']}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td {$locked[4]}>
-                            True Shot (3 Points)<br />
-                            <small>+5% damage increase with ranged weapons.<br /></small>
-                            " . getSkillLevel($userid,4) . " / 3
-                            <br />
-                            {$button['4']}
-                        </td>
-                        <td {$locked[5]}>
-                            Seasoned Warrior (3 Points)<br />
-                            <small>Increases experience gains when holding the Experience Coin.<br /></small>
-                            " . getSkillLevel($userid,5) . " / 3
-                            <br />
-                            {$button['5']}
-                        </td>
-                        <td {$locked[6]}>
-                            Thickened Skin (3 Points)<br />
-                            <small>+6.5% Armor Value.<br /></small>
-                            " . getSkillLevel($userid,6) . " / 3
-                            <br />
-                            {$button['6']}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td {$locked[7]}>
-                            Ammo Dispensery (5 Points)<br />
-                            <small>50% chance to not use ammo with ranged weapons.<br /></small>
-                            " . getSkillLevel($userid,7) . " / 1
-                            <br />
-                            {$button['7']}
-                        </td>
-                        <td {$locked[8]}>
-                            Optimized Training (5 Points)<br />
-                            <small>75% chance to not use Will per Energy Point trained.<br /></small>
-                            " . getSkillLevel($userid,8) . " / 1
-                            <br />
-                            {$button['8']}
-                        </td>
-                        <td {$locked[9]}>
-                            Sharper Blades (5 Points)<br />
-                            <small>+20% Weapon Value.<br /></small>
-                            " . getSkillLevel($userid,9) . " / 1
-                            <br />
-                            {$button['9']}
-                        </td>
-                    </tr>
-                </table>";
+            if ($ir['class'] == 'Warrior')
+            {
+                $statClass = 'strength';
+                $weakStat = "guard";
+            }
+            if ($ir['class'] == 'Rogue')
+            {
+                $statClass = 'agility';
+                $weakStat = "strength";
+            }
+            if ($ir['class'] == 'Guardian')
+            {
+                $statClass = 'guard';
+                $weakStat = "agility";
+            }
+                echo "<div class='row'>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Perfection (1 Point)
+                                </div>
+                                <div class='col-12'>
+                                    +3% {$statClass} effectiveness in combat per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['1']} (" . getSkillLevel($userid,1) . " / 5)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    True Shot (3 Points)
+                                </div>
+                                <div class='col-12'>
+                                    +5% damage increase with ranged weapons.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['4']} (" . getSkillLevel($userid,4) . " / 3)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Ammo Dispensery (5 Points)
+                                </div>
+                                <div class='col-12'>
+                                    50% chance to not use ammo with ranged weapons.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['7']} (" . getSkillLevel($userid,7) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Conditioning (1 Point)
+                                </div>
+                                <div class='col-12'>
+                                    +2.5% {$weakStat}, -1% {$statClass} while training, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['2']} (" . getSkillLevel($userid,2) . " / 5)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Seasoned Warrior (3 Points)
+                                </div>
+                                <div class='col-12'>
+                                    Increased experience gains while the Experience Coin is equipped.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['5']} (" . getSkillLevel($userid,5) . " / 3)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Optimized Training (5 Points)
+                                </div>
+                                <div class='col-12'>
+                                    75% chance for Will not to be consumed, per energy point trained.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['8']} (" . getSkillLevel($userid,8) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Potent Potion (1 Point)
+                                </div>
+                                <div class='col-12'>
+                                    +1.5% potion effectiveness when used in combat, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['3']} (" . getSkillLevel($userid,3) . " / 5)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-8'>
+                                    Thickened Skin (3 Points)
+                                </div>
+                                <div class='col-12'>
+                                    +6.5% armor value, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['6']} (" . getSkillLevel($userid,6) . " / 3)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-8'>
+                                    Sharper Blades (5 Points)
+                                </div>
+                                <div class='col-12'>
+                                    +20% Weapon value.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['9']} (" . getSkillLevel($userid,9) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                </div>";
             ?>
         </div>
         <div id="bartering" class="tab-pane">
             <?php
-                echo "<table class='table'>
-                    <tr>
-                        <td {$locked[11]} width='33%'>
-                            Token Hoarder (1 Point)<br />
-                            <small>+5% extra Chivalry Tokens gained with BOR/Hexbags.<br /></small>
-                            " . getSkillLevel($userid,11) . " / 5
-                            <br />
-                            {$button['11']}
-                        </td>
-                        <td {$locked[12]} width='33%'>
-                            Deep Reading (1 Point)<br />
-                            <small>+5% IQ purchased at Temple of Fortune.<br /></small>
-                            " . getSkillLevel($userid,12) . " / 5
-                            <br />
-                            {$button['12']}
-                        </td>
-                        <td {$locked[13]} width='33%'>
-                            Bargaining (1 Point)<br />
-                            <small>-5% prices at local shops.<br /></small>
-                            " . getSkillLevel($userid,13) . " / 5
-                            <br />
-                            {$button['13']}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td {$locked[14]}>
-                            Thievery (3 Points)<br />
-                            <small>+5% Copper Coins stolen when mug/rob.<br /></small>
-                            " . getSkillLevel($userid,14) . " / 3
-                            <br />
-                            {$button['14']}
-                        </td>
-                        <td {$locked[15]}>
-                            Intelligent Miner (3 Points)<br />
-                            <small>-10% IQ Requirement when mining.<br /></small>
-                            " . getSkillLevel($userid,15) . " / 3
-                            <br />
-                            {$button['15']}
-                        </td>
-                        <td {$locked[16]}>
-                            Scammer (3 Points)<br />
-                            <small>+2% price when selling items to the game.<br /></small>
-                            " . getSkillLevel($userid,16) . " / 3
-                            <br />
-                            {$button['16']}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td {$locked[17]}>
-                            Sneaky Bastard (5 Points)<br />
-                            <small>+20% Criminal success rate.<br /></small>
-                            " . getSkillLevel($userid,17) . " / 1
-                            <br />
-                            {$button['17']}
-                        </td>
-                        <td {$locked[18]}>
-                            Academic Potential (5 Points)<br />
-                            <small>For every 5,000 IQ you have, you decrease your course time by 1%, up to a maximum of 15%.<br /></small>
-                            " . getSkillLevel($userid,18) . " / 1
-                            <br />
-                            {$button['18']}
-                        </td>
-                        <td {$locked[19]}>
-                            Tax Free (5 Points)<br />
-                            <small>Removes the need to pay for Local Shop tax if you're in the same guild as the guild imposing the tax.<br /></small>
-                            " . getSkillLevel($userid,19) . " / 1
-                            <br />
-                            {$button['19']}
-                        </td>
-                    </tr>
-                </table>";
+            echo "<div class='row'>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Token Hoarder (1 Point)
+                                </div>
+                                <div class='col-12'>
+                                    +5 Chivalry Tokens from Hexbags/BOR per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['11']} (" . getSkillLevel($userid,11) . " / 5)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Thievery (3 Points)
+                                </div>
+                                <div class='col-12'>
+                                    +5% Copper Coins stolen when you mob or rob a player.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['14']} (" . getSkillLevel($userid,14) . " / 3)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Sneaky Bastard (5 Points)
+                                </div>
+                                <div class='col-12'>
+                                    +20% Criminal success rate.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['17']} (" . getSkillLevel($userid,17) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Deep Reading (1 Point)
+                                </div>
+                                <div class='col-12'>
+                                    +5% IQ per Token from the Temple, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['12']} (" . getSkillLevel($userid,12) . " / 5)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Intelligent Miner (3 Points)
+                                </div>
+                                <div class='col-12'>
+                                    -10% Mine IQ Requirement, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['15']} (" . getSkillLevel($userid,15) . " / 3)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Academic Potential (5 Points)
+                                </div>
+                                <div class='col-12'>
+                                    For every 5,000 IQ you have, you decrease your course time by 1%, up to a maximum of 15%.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['18']} (" . getSkillLevel($userid,18) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Bargaining (1 Point)
+                                </div>
+                                <div class='col-12'>
+                                    -5% Buy Price at local shops, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['13']} (" . getSkillLevel($userid,13) . " / 5)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-8'>
+                                    Scammer (3 Points)
+                                </div>
+                                <div class='col-12'>
+                                    +2% sell value when selling item to the game, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['16']} (" . getSkillLevel($userid,16) . " / 3)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-8'>
+                                    Tax Free (5 Points)
+                                </div>
+                                <div class='col-12'>
+                                    Removes the need to pay for Local Shop tax if you're in the same guild as the guild imposing the tax.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['19']} (" . getSkillLevel($userid,19) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                </div>";
             ?>
         </div>
         <div id="misc" class="tab-pane">
             <?php
-                echo "<table class='table'>
-                    <tr>
-                        <td {$locked[21]} width='25%'>
-                            Better Padding (1 Point)<br />
-                            <small>Increases chance of sleeping well with your spouse.<br /></small>
-                            " . getSkillLevel($userid,21) . " / 1
-                            <br />
-                            {$button['21']}
-                        </td>
-                        <td {$locked[22]} width='25%'>
-                            Time Reduction (1 Point)<br />
-                            <small>-5% Dungeon/Infirmary time, per level.<br /></small>
-                            " . getSkillLevel($userid,22) . " / 5
-                            <br />
-                            {$button['22']}
-                        </td>
-                        <td {$locked[23]} width='25%'>
-                            Overworked (1 Point)<br />
-                            <small>+5% Gains when you train at the Chivalry Gym.<br /></small>
-                            " . getSkillLevel($userid,23) . " / 5
-                            <br />
-                            {$button['23']}
-                        </td>
-						<td {$locked[30]} width='25%'>
-                            Well Capacity (1 Point)<br />
-                            <small>+5 Buckets per level.<br /></small>
-                            " . getSkillLevel($userid,30) . " / 5
-                            <br />
-                            {$button['30']}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td {$locked[24]}>
-                            Flirty Words (3 Points)<br />
-                            <small>+2% chance that sending your spouse a love letter will increase marriage happiness.<br /></small>
-                            " . getSkillLevel($userid,24) . " / 3
-                            <br />
-                            {$button['24']}
-                        </td>
-                        <td {$locked[25]}>
-                            Item Potency (3 Points)<br />
-                            <small>+3% item effect increase. (Doesn't stack with Potent Potion)<br /></small>
-                            " . getSkillLevel($userid,25) . " / 3
-                            <br />
-                            {$button['25']}
-                        </td>
-                        <td {$locked[26]}>
-                            Lucky Day (3 Points)<br />
-                            <small>+1% Minimum luck gained, per level.<br /></small>
-                            " . getSkillLevel($userid,26) . " / 3
-                            <br />
-                            {$button['26']}
-                        </td>
-						<td {$locked[33]} width='25%'>
-                            Careful Tending (3 Points)<br />
-                            <small>-25% Wellness when interacting with plots.<br /></small>
-                            " . getSkillLevel($userid,33) . " / 3
-                            <br />
-                            {$button['33']}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td {$locked[27]}>
-                            Enchanted Rings (5 Points)<br />
-                            <small>+10% effect when you and your spouse are online.<br /></small>
-                            " . getSkillLevel($userid,27) . " / 1
-                            <br />
-                            {$button['27']}
-                        </td>
-                        <td {$locked[28]}>
-                            Metabolism (5 Points)<br />
-                            <small>5% chance that eating food will increase your energy.<br /></small>
-                            " . getSkillLevel($userid,28) . " / 1
-                            <br />
-                            {$button['28']}
-                        </td>
-                        <td {$locked[29]}>
-                            Gambling Man (5 Points)<br />
-                            <small>+25% Maximum bet while gambling.<br /></small>
-                            " . getSkillLevel($userid,29) . " / 1
-                            <br />
-                            {$button['29']}
-                        </td>
-						<td {$locked[36]} width='25%'>
-                            Crop Rotation (5 Points)<br />
-                            <small>-50% Plot stage time<br /></small>
-                            " . getSkillLevel($userid,36) . " / 1
-                            <br />
-                            {$button['36']}
-                        </td>
-                    </tr>
-                </table>";
+            echo "<div class='row'>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Better Padding (1 Point)
+                                </div>
+                                <div class='col-12'>
+                                    Increases chance of sleeping well with your spouse.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['21']} (" . getSkillLevel($userid,21) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Flirty Words (3 Points)
+                                </div>
+                                <div class='col-12'>
+                                    2% chance sending a love letter will increase marriage happiness, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['24']} (" . getSkillLevel($userid,24) . " / 3)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Enchanted Rings (5 Points)
+                                </div>
+                                <div class='col-12'>
+                                    +10% ring effect when your spouse and you are online.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['27']} (" . getSkillLevel($userid,27) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Time Reduction (1 Point)
+                                </div>
+                                <div class='col-12'>
+                                    -5% Dungeon and Infirmary time, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['22']} (" . getSkillLevel($userid,22) . " / 5)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Item Potency (3 Points)
+                                </div>
+                                <div class='col-12'>
+                                    +3% item effect increase, doesn't stack with Potent Potion
+                                </div>
+                                <div class='col-12'>
+                                    {$button['25']} (" . getSkillLevel($userid,25) . " / 3)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Metabolism (5 Points)
+                                </div>
+                                <div class='col-12'>
+                                    5% chance that eating food will also increase your energy.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['28']} (" . getSkillLevel($userid,28) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Overworked (1 Point)
+                                </div>
+                                <div class='col-12'>
+                                    +5% gains when you train at the Chivalry Gym, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['23']} (" . getSkillLevel($userid,23) . " / 5)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-8'>
+                                    Lucky Day (3 Points)
+                                </div>
+                                <div class='col-12'>
+                                    +1% minimum luck gained, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['26']} (" . getSkillLevel($userid,26) . " / 3)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-8'>
+                                    Gambling Man (5 Points)
+                                </div>
+                                <div class='col-12'>
+                                    Increases max bet per hour by 25%.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['29']} (" . getSkillLevel($userid,29) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='row'>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Well Capacity (1 Point)
+                                </div>
+                                <div class='col-12'>
+                                    Receive an extra +5 well capacity each time your farming level increases, per point.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['30']} (" . getSkillLevel($userid,30) . " / 5)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-8'>
+                                    Careful Tending (3 Points)
+                                </div>
+                                <div class='col-12'>
+                                    Decreases maximum wellness change when interacting with plots by 25%.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['33']} (" . getSkillLevel($userid,33) . " / 3)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                    <div class='col-12 col-lg-6 col-xxl-4'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-8'>
+                                    Crop Rotation (5 Points)
+                                </div>
+                                <div class='col-12'>
+                                    -50% time required per plot stage.
+                                </div>
+                                <div class='col-12'>
+                                    {$button['36']} (" . getSkillLevel($userid,36) . " / 1)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    </div>
+                </div>";
             ?>
         </div>
     
