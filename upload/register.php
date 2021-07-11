@@ -305,7 +305,7 @@ if (!empty($username)) {
 				<small>This is optional. Promotional codes give you an extra boost when you sign up.</small>
 			</div>
 			<div class='col-md-8'>
-				<input type='text' class='form-control' id='promo' name='promo' value='REGISTRATIONBONUS' placeholder='Can be empty'>
+				<input type='text' class='form-control' id='promo' name='promo' value='2021CHIVALRY' placeholder='Can be empty'>
 			</div>
 		</div>
 		<hr />
