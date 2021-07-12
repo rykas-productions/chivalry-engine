@@ -101,6 +101,9 @@ switch ($_GET['act']) {
     case 'f0r(3d1337':
         emptyallforums();
         break;
+    case 'search':
+        forumsearch();
+        break;
     case 'recache':
         if (isset($_GET['forum'])) {
             recache_forum($_GET['forum']);
@@ -1566,5 +1569,95 @@ function get_string_between($string, $start, $end){
     $ini += strlen($start);
     $len = strpos($string, $end, $ini) - $ini;
     return substr($string, $ini, $len);
+}
+
+function forumsearch()
+{
+    echo "
+    <hr />
+    <div class='row'>
+        <div class='col-12 col-md-6 col-xl-4 col-xxl-6 col-xxxl-3'>
+            <div class='card'>
+                <div class='card-header'>
+                    <b>Search Topics</b>
+                </div>
+                <form method='post' action='searchtopic'>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-xxl-8'>
+                                <input type='text' name='topic' class='form-control' placeholder='Topic name or subject.'><br />
+                            </div>
+                            <div class='col-12 col-xxl-4'>
+                                <input type='submit' value='Search' class='btn btn-primary btn-block'>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <br />
+        </div>
+        <div class='col-12  col-md-6 col-xl-4 col-xxl-6 col-xxxl-3'>
+            <div class='card'>
+                <div class='card-header'>
+                    <b>Search Posts</b>
+                </div>
+                <form method='post' action='searchpost'>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-xxl-8'>
+                                <input type='text' name='post' class='form-control' placeholder='Text in replies.'><br />
+                            </div>
+                            <div class='col-12 col-xxl-4'>
+                                <input type='submit' value='Search' class='btn btn-primary btn-block'>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <br />
+        </div>
+        <div class='col-12  col-md-6 col-xl-4 col-xxl-6 col-xxxl-3'>
+            <div class='card'>
+                <div class='card-header'>
+                    <b>Search Author Name</b>
+                </div>
+                <form method='post' action='searchusername'>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-xxl-8'>
+                                <input type='text' name='username' class='form-control' placeholder='Player name.'><br />
+                            </div>
+                            <div class='col-12 col-xxl-4'>
+                                <input type='submit' value='Search' class='btn btn-primary btn-block'>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <br />
+        </div>
+        <div class='col-12  col-md-6 col-xl-4 col-xxl-6 col-xxxl-3'>
+            <div class='card'>
+                <div class='card-header'>
+                    <b>Search Author ID</b>
+                </div>
+                <form method='post' action='searchuserid'>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-xxl-8'>
+                                <input type='text' name='userid' class='form-control' placeholder='Player ID.'><br />
+                            </div>
+                            <div class='col-12 col-xxl-4'>
+                                <input type='submit' value='Search' class='btn btn-primary btn-block'>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <br />
+        </div>
+    </div>
+    <hr />";
+    idx();
 }
 $h->endpage();
