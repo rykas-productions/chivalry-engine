@@ -1344,11 +1344,11 @@ function returnGameTitle()
 {
     global $set;
     $prefix = "";
-    if (determine_game_urlbase() == "192.168.128.151/cid")
+    $url = determine_game_urlbase();
+    $devDomains = array("192.168.128.151/cid", "127.0.0.1", "localhost");   //add your directory to this list
+    if (in_array($url, $devDomains))
         $prefix = "[DEV]";
-    elseif (determine_game_urlbase() == "127.0.0.1")
-        $prefix = "[DEV]";
-    elseif (determine_game_urlbase() != "chivalryisdeadgame.com")
+    elseif ($url != "chivalryisdeadgame.com")
         $prefix = "[UNSUPPORTED]";
     return $prefix . " " . $set['WebsiteName'];
     
