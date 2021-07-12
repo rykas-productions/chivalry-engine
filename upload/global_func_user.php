@@ -1165,3 +1165,21 @@ function userUnequipAll($userid)
     unequipUserSlot($userid, "equip_pendant");
     unequipUserSlot($userid, "equip_potion");
 }
+
+function returnUserInfoRow($userid)
+{
+    global $db;
+    $is =
+    $db->query(
+        "/*qc=on*/SELECT `u`.*, `us`.*, `uas`.*
+                     FROM `users` AS `u`
+                     INNER JOIN `userstats` AS `us`
+                     ON `u`.`userid`=`us`.`userid`
+					 INNER JOIN `user_settings` AS `uas`
+                     ON `u`.`userid`=`uas`.`userid`
+					 LEFT JOIN `user_skills` AS `sk`
+					 ON `sk`.`userid` = `u`.`userid`
+                     WHERE `u`.`userid` = {$userid}
+                     LIMIT 1");
+    return $db->fetch_row($is);
+}

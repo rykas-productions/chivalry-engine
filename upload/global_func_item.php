@@ -229,3 +229,91 @@ function fetchCachedItemIcon($query)
         }
     }
 }
+
+function consumeItem($userid, $itemID, $qty = 1)
+{
+    global $db, $api;
+    $i = $db->query("/*qc=on*/SELECT `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on`,
+                     `itmname`, `weapon`, `armor` FROM `items` WHERE `itmid` = {$itemID}");
+    $consumed = 0;
+    $ir = returnUserInfoRow($userid);
+    $r = $db->fetch_row($i);
+    if (!$r['effect1_on'] && !$r['effect2_on'] && !$r['effect3_on'])
+        $consumed = -1;
+    elseif (($r['armor'] > 0) || ($r['weapon'] > 0))
+        $consumed = -2;
+    else
+    {
+        //We're looping this bitch until all is consumed lmao.
+        while ($consumed != $qty)
+        {
+            //Cycle through the three effect slots.
+            for ($enum = 1; $enum <= 3; $enum++) 
+            {
+                //Effect is active!
+                if ($r["effect{$enum}_on"] == 'true')
+                {
+                    $einfo = unserialize($r["effect{$enum}"]);  //effect data
+                    if ($einfo['inc_type'] == "percent")
+                    {
+                        if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) 
+                        {
+                            $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
+                            $inc=$inc+($inc*((getSkillLevel($userid,25)*3)/100));   //Item potency skill
+                        }
+                        elseif (in_array($einfo['stat'], array('dungeon', 'infirmary')))
+                        {
+                            $EndTime = $db->fetch_single($db->query("/*qc=on*/SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
+                            $inc = round((($EndTime - time()) / 100 * $einfo['inc_amount']) / 60);
+                            $inc=$inc+($inc*((getSkillLevel($userid,25)*3)/100));   //Item potency skill
+                        }
+                        else 
+                        {
+                            $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
+                            $inc=$inc+($inc*((getSkillLevel($userid,25)*3)/100));   //Item potency skill.
+                        }
+                    }
+                    else 
+                    {
+                        $inc = $einfo['inc_amount'];
+                        $inc=$inc+($inc*((getSkillLevel($userid,25)*3)/100));   //Item potency skill.
+                    }
+                    //Effect is positive
+                    if ($einfo['dir'] == "pos") 
+                    {
+                        if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) 
+                            $ir[$einfo['stat']] = min($ir[$einfo['stat']] + $inc, $ir['max' . $einfo['stat']]);
+                        elseif ($einfo['stat'] == 'infirmary') 
+                            put_infirmary($userid, $inc, 'Item Misuse');
+                        elseif ($einfo['stat'] == 'dungeon')
+                            put_dungeon($userid, $inc, 'Item Misuse');
+                        else
+                            $ir[$einfo['stat']] += $inc;
+                    }
+                    //Effect is negative.
+                    else 
+                    {
+                        if ($einfo['stat'] == 'infirmary') 
+                            if (user_infirmary($userid) == true) 
+                                remove_infirmary($userid, $inc);
+                        elseif ($einfo['stat'] == 'dungeon') 
+                            if (user_dungeon($userid) == true) 
+                                remove_dungeon($userid, $inc);
+                        else 
+                            $ir[$einfo['stat']] = max($ir[$einfo['stat']] - $inc, 0);
+                    }
+                    //Apply stat changes :))
+                    if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) 
+                        $upd = $ir[$einfo['stat']];
+                    if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq', 'luck'))) 
+                        $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
+                    elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) 
+                        $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
+                }
+            }
+            $consumed++;
+        }
+        $api->UserTakeItem($userid, $itemID, $qty);
+    }
+    return $consumed;
+}
