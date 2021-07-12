@@ -44,7 +44,7 @@ class headers
                 $ir['mail'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
                 //Select count of user's unread notifications.
                 $ir['notifications'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
-                $title = "{$set['WebsiteName']} - {$ir['username']}";
+                $title = returnGameTitle() . " - {$ir['username']}";
                 echo "<title>{$title}</title>";
 				if ($ir['disable_alerts'] == 0)
 					$notificon = "fas fa-bell";
@@ -683,7 +683,7 @@ class headers
 				<meta name='author' content='{$set['WebsiteOwner']}'>
                 <meta name='description' content='{$set['Website_Description']}'>
                 <meta name='keywords' content='medieval europe, mmorpg, text rpg, rpg, multiplayer, game, video game, no download, mobile, free, chivalry is dead, cid'>
-                <meta property='og:title' content='{$set['WebsiteName']}'/>
+                <meta property='og:title' content='" . returnGameTitle() . "'/>
                 <meta property='og:description' content='{$set['Website_Description']}'/>
                 <meta property='og:image' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_512/v1520819749/logo.png'/>
                 <link rel='shortcut icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png' type='image/x-icon'/>

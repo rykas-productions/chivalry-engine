@@ -22,7 +22,7 @@ class headers
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
                 <meta name="description" content="<?php echo $set['Website_Description']; ?>">
-                <meta property="og:title" content="<?php echo $set['WebsiteName']; ?>"/>
+                <meta property="og:title" content="<?php echo returnGameTitle(); ?>"/>
                 <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
                 <meta http-equiv="Cache-control" content="public">
 				<link rel="icon" sizes="192x192" href="https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png">
@@ -32,7 +32,7 @@ class headers
                 <link rel="stylesheet" href="css/floating-labels.css">
 				<meta name="theme-color" content="#772953">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
-                <?php echo "<title>{$set['WebsiteName']} - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; ?>
+                <?php echo "<title>" . returnGameTitle() . " - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; ?>
         </head>
         <body>
         <?php

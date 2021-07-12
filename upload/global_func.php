@@ -1339,3 +1339,17 @@ function getNextDayReset()
 {
     return strtotime("tomorrow");
 }
+
+function returnGameTitle()
+{
+    global $set;
+    $prefix = "";
+    if (determine_game_urlbase() == "192.168.128.151/cid")
+        $prefix = "[DEV]";
+    elseif (determine_game_urlbase() == "127.0.0.1")
+        $prefix = "[DEV]";
+    elseif (determine_game_urlbase() != "chivalryisdeadgame.com")
+        $prefix = "[UNSUPPORTED]";
+    return $prefix . " " . $set['WebsiteName'];
+    
+}

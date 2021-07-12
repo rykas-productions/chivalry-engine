@@ -34,7 +34,7 @@ class headers
                 $ir['mail'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
                 //Select count of user's unread notifications.
                 $ir['notifications'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
-                $title = "{$set['WebsiteName']} - {$ir['username']}";
+                $title = returnGameTitle() . " - {$ir['username']}";
                 echo "<title>{$title}</title>";
 				$notificon = "fas fa-bell";
 				$this->loadUserTheme($ir['theme']);
