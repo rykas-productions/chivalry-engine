@@ -664,11 +664,7 @@ function attacking()
                         {
                             $slot = 'equip_secondary';
                         }
-                        elseif ($enweps[$weptouse]['itmid'] == $our['equip_potion'])
-                        {
-                            $slot = 'equip_potion';
-                        }
-                        unequipUserSlot($userid, "equip_potion");
+                        unequipUserSlot($userid, $slot);
 						$api->GameAddNotification($_GET['user'],"You have ran out of ammo for one of your weapons during combat. Its been unequipped and return to your inventory.", 'game-icon game-icon-ammo-box', 'red');
                         
 					}
