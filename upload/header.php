@@ -787,6 +787,8 @@ class headers
         $query_extra = '';
         include('userinfo.php');
         include('marriage_perks.php');
+        if (isset($_GET['benchmark']))
+            include('forms/include_end.php');   //benchmark data
 		$this->loadJS();
 		cslog('warn',"Main script has finished executing. Wrapping up now.");
         //Set mysqldebug in the URL to get query debugging as an admin.
