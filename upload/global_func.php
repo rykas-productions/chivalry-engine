@@ -16,6 +16,7 @@ require('global_func_estates.php');
 require('global_func_email.php');
 require('global_func_stock.php');
 require('global_func_attack.php');
+require('global_func_cache.php');
 
 //Constants
 require('const/const_effect.php');

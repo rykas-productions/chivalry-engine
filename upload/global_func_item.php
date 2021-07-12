@@ -211,23 +211,12 @@ function submitToModeration($itmid, $type, $value, $user)
 //helper function 
 function cacheItemIcon($query, $result)
 {
-    $serialzedData = serialize($result);
-    $cacheName = "./cache/items/" . md5($query);
-    file_put_contents($cacheName, $serialzedData);
+    cacheQuery($query, $result, 'items');
 }
 
 function fetchCachedItemIcon($query)
 {
-    $ttl = (((60*60)*24)*30);
-    $cacheName = "./cache/items/" . md5($query);
-    if (file_exists($cacheName)) 
-    {
-        $file_time = filemtime($cacheName);
-        if ($ttl + $file_time <= time()) 
-        {
-            return unserialize(file_get_contents($cacheName));
-        }
-    }
+    return fetchCachedQuery($query, 'items', 2592000);
 }
 
 function consumeItem($userid, $itemID, $qty = 1)
