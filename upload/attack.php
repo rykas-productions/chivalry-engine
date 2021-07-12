@@ -562,7 +562,6 @@ function attacking()
         }
         else
         {
-			//@TODO: Make item consuming into a single function
             if ($api->UserHasItem($userid,$_GET['weapon'],1))
             {
                 consumeItem($userid, $_GET['weapon']);
