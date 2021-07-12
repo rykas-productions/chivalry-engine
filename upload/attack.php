@@ -565,66 +565,7 @@ function attacking()
 			//@TODO: Make item consuming into a single function
             if ($api->UserHasItem($userid,$_GET['weapon'],1))
             {
-                for ($enum = 1; $enum <= 3; $enum++) {
-                    if ($r1["effect{$enum}_on"] == 'true') {
-                        $einfo = unserialize($r1["effect{$enum}"]);
-                        if ($einfo['inc_type'] == "percent") {
-                            if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                                $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
-                                //Potent Potion
-                                $specialnumber=((getSkillLevel($userid,3)*1.5)/100);
-                                $inc=$inc+($inc*$specialnumber);
-                            } elseif (in_array($einfo['stat'], array('dungeon', 'infirmary'))) {
-                                $EndTime = $db->fetch_single($db->query("/*qc=on*/SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
-                                $inc = round((($EndTime - $Time) / 100 * $einfo['inc_amount']) / 60);
-                                //Potent Potion
-                                $specialnumber=((getSkillLevel($userid,3)*1.5)/100);
-                                $inc=$inc+($inc*$specialnumber);
-                            } else {
-                                $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
-                                //Potent Potion
-                                $specialnumber=((getSkillLevel($userid,3)*1.5)/100);
-                                $inc=$inc+($inc*$specialnumber);
-                            }
-                        } else {
-                            $inc = $einfo['inc_amount'];
-                            //Potent Potion
-                            $specialnumber=((getSkillLevel($userid,3)*1.5)/100);
-                            $inc=$inc+($inc*$specialnumber);
-                        }
-                        if ($einfo['dir'] == "pos") {
-                            if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                                $ir[$einfo['stat']] = min($ir[$einfo['stat']] + $inc, $ir['max' . $einfo['stat']]);
-                            } elseif ($einfo['stat'] == 'infirmary') {
-                                put_infirmary($userid, $inc, 'Item Misuse');
-                            } elseif ($einfo['stat'] == 'dungeon') {
-                                put_dungeon($userid, $inc, 'Item Misuse');
-                            } else {
-                                $ir[$einfo['stat']] += $inc;
-                            }
-                        } else {
-                            if ($einfo['stat'] == 'infirmary') {
-                                if (user_infirmary($userid) == true) {
-                                    remove_infirmary($userid, $inc);
-                                }
-                            } elseif ($einfo['stat'] == 'dungeon') {
-                                if (user_dungeon($userid) == true) {
-                                    remove_dungeon($userid, $inc);
-                                }
-                            } else {
-                                $ir[$einfo['stat']] = max($ir[$einfo['stat']] - $inc, 0);
-                            }
-                        }
-                        if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                            $upd = $ir[$einfo['stat']];
-                        }
-                        if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq', 'luck'))) {
-                            $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                        } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                            $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$userid}");
-                        }
-                    }
-                }
+                consumeItem($userid, $_GET['weapon']);
                 alert('success', "", "<b>Attempt {$_GET['nextstep']})</b> {$ttu} You consume your {$r1['itmname']}.", false, '', true);
                 $api->UserTakeItem($userid,$_GET['weapon'],1);
             }
@@ -833,66 +774,7 @@ function attacking()
                 {
                     if ($api->UserHasItem($_GET['user'],$enweps[$weptouse]['itmid'],1))
                     {
-                        for ($enum = 1; $enum <= 3; $enum++) {
-                            if ($enweps[$weptouse]["effect{$enum}_on"] == 'true') {
-                                $einfo = unserialize($enweps[$weptouse]["effect{$enum}"]);
-                                if ($einfo['inc_type'] == "percent") {
-                                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                                        $inc = round($odata['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
-                                        //Potent Potion
-                                        $specialnumber=((getSkillLevel($_GET['user'],3)*1.5)/100);
-                                        $inc=$inc+($inc*$specialnumber);
-                                    } elseif (in_array($einfo['stat'], array('dungeon', 'infirmary'))) {
-                                        $EndTime = $db->fetch_single($db->query("/*qc=on*/SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
-                                        $inc = round((($EndTime - $Time) / 100 * $einfo['inc_amount']) / 60);
-                                        //Potent Potion
-                                        $specialnumber=((getSkillLevel($_GET['user'],3)*1.5)/100);
-                                        $inc=$inc+($inc*$specialnumber);
-                                    } else {
-                                        $inc = round($odata[$einfo['stat']] / 100 * $einfo['inc_amount']);
-                                        //Potent Potion
-                                        $specialnumber=((getSkillLevel($_GET['user'],3)*1.5)/100);
-                                        $inc=$inc+($inc*$specialnumber);
-                                    }
-                                } else {
-                                    $inc = $einfo['inc_amount'];
-                                    //Potent Potion
-                                    $specialnumber=((getSkillLevel($_GET['user'],3)*1.5)/100);
-                                    $inc=$inc+($inc*$specialnumber);
-                                }
-                                if ($einfo['dir'] == "pos") {
-                                    if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) {
-                                        $odata[$einfo['stat']] = min($odata[$einfo['stat']] + $inc, $odata['max' . $einfo['stat']]);
-                                    } elseif ($einfo['stat'] == 'infirmary') {
-                                        put_infirmary($_GET['user'], $inc, 'Item Misuse');
-                                    } elseif ($einfo['stat'] == 'dungeon') {
-                                        put_dungeon($_GET['user'], $inc, 'Item Misuse');
-                                    } else {
-                                        $odata[$einfo['stat']] += $inc;
-                                    }
-                                } else {
-                                    if ($einfo['stat'] == 'infirmary') {
-                                        if (user_infirmary($_GET['user']) == true) {
-                                            remove_infirmary($_GET['user'], $inc);
-                                        }
-                                    } elseif ($einfo['stat'] == 'dungeon') {
-                                        if (user_dungeon($_GET['user']) == true) {
-                                            remove_dungeon($_GET['user'], $inc);
-                                        }
-                                    } else {
-                                        $odata[$einfo['stat']] = max($odata[$einfo['stat']] - $inc, 0);
-                                    }
-                                }
-                                if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                                    $upd = $odata[$einfo['stat']];
-                                }
-                                if (in_array($einfo['stat'], array('strength', 'agility', 'guard', 'labor', 'iq', 'luck'))) {
-                                    $db->query("UPDATE `userstats` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$_GET['user']}");
-                                } elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) {
-                                    $db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$_GET['user']}");
-                                }
-                            }
-                        }
+                        consumeItem($_GET['user'], $enweps[$weptouse]['itmid']);
                         alert('danger', "", "<b>Attempt {$ns})</b> {$odata['username']} consumes {$wep}!", false, '', true);
                         $api->UserTakeItem($_GET['user'],$enweps[$weptouse]['itmid'],1);
                     }
