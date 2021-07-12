@@ -54,14 +54,11 @@ function attacking()
             $_SESSION['tresde'] = 0;
         }
         //If RNG is not the same number stored in session
-        /*if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
-            $_SESSION['attacking'] = 0;
-            $_SESSION['attack_scroll'] = 0;
-            $ir['attacking'] = 0;
-            $api->UserInfoSetStatic($userid, "attacking", 0);
+        if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
+            resetAttackStatus()
             alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}&ref={$ref}");
             die($h->endpage());
-        }*/
+        }
 		if (userHasEffect($userid, constant("basic_protection")))
 		{
 		    userRemoveEffect($userid, constant("basic_protection"));

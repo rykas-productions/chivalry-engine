@@ -146,6 +146,17 @@ function notification_add($userid, $text, $icon='', $color='')
 /*
 	Internal Function: Used to update all sorts of things around the game
 */
+
+//anti f5
+function resetAttackStatus()
+{
+  global $userid, $api, $ir;
+  $_SESSION['attacking'] = 0;
+  $_SESSION['attack_scroll'] = 0;
+  $ir['attacking'] = 0;
+  $api->UserInfoSetStatic($userid, "attacking", 0);
+}
+
 function updateStats()
 {
 	global $db, $time, $ir;
