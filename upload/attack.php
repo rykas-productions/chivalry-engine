@@ -55,7 +55,7 @@ function attacking()
         }
         //If RNG is not the same number stored in session
         if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
-            resetAttackStatus()
+            resetAttackStatus();
             alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}&ref={$ref}");
             die($h->endpage());
         }
