@@ -10,6 +10,10 @@
 //Profiler start time
 include('forms/include_top.php');
 @ini_set('zlib.output_compression', 1);
+//Require the error handler.
+require "lib/basic_error_handler.php";
+set_error_handler('error_php');
+set_exception_handler("exception_handler");
 ob_implicit_flush(true);
 //Set user's timezone.
 date_default_timezone_set("America/New_York");
@@ -28,14 +32,11 @@ if (!isset($_SESSION['started'])) {
     $_SESSION['started'] = true;
 }
 ob_start();
-//Require the error handler.
-require "lib/basic_error_handler.php";
-set_error_handler('error_php');
 //Require styling.
 if (!isset($_GET['othermenu']))
 	require "header_nonauth.php";
 else
-		require "header_nonauth2.php";
+	require "header_nonauth2.php";
 include "config.php";
 define("MONO_ON", 1);
 //Connect to database.

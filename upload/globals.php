@@ -8,10 +8,10 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 //Profiler start time
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include('forms/include_top.php');
+require "lib/basic_error_handler.php";
+set_error_handler('error_php');
+set_exception_handler("exception_handler");
 if (!isset($disablespeed))
 {
 	@ini_set('zlib.output_compression', 1);
@@ -44,9 +44,7 @@ if (!isset($_COOKIE['theme'])) {
 ob_start();
 require('vendor/autoload.php');
 //Require the error handler and developer helper files.
-require "lib/basic_error_handler.php";
 require "lib/dev_help.php";
-set_error_handler('error_php');
 //Require main functions file.
 require "global_func.php";
 $domain = determine_game_urlbase();

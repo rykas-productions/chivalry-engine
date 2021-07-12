@@ -48,16 +48,19 @@ class database
 
     function connect()
     {
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         if (!$this->host) {
             $this->host = "localhost";
         }
         if (!$this->user) {
             $this->user = "root";
         }
-        $conn =
-            mysqli_connect($this->host, $this->user, $this->pass,
-                $this->database);
-        if (mysqli_connect_error()) {
+        try 
+        {
+            $conn = mysqli_connect($this->host, $this->user, $this->pass, $this->database);
+        }
+        catch (mysqli_sql_exception $ex)
+        {
             error_critical('Database connection failed',
                 mysqli_connect_errno() . ': ' . mysqli_connect_error(),
                 'Attempted to connect to database on ' . $this->host,
@@ -84,13 +87,15 @@ class database
         $this->last_query = $query;
         $this->queries[] = $query;
         $this->num_queries++;
-        $this->result =
-            mysqli_query($this->connection_id, $this->last_query);
-        if ($this->result === false) {
-            error_critical('Query failed',
-                mysqli_errno($this->connection_id) . ': '
-                . mysqli_error($this->connection_id),
-                'Attempted to execute query: ' . nl2br($this->last_query),
+        try
+        {
+            $this->result = mysqli_query($this->connection_id, $this->last_query);
+        }
+        catch (mysqli_sql_exception $ex)
+        {
+            error_critical('Database query failed.',
+                mysqli_errno($this->connection_id) . ': ' . mysqli_error($this->connection_id),
+                'Attempt to execute query: ' . $this->last_query . ' but failed.',
                 debug_backtrace(false));
         }
         return $this->result;

@@ -8,6 +8,9 @@
 */
 include('../forms/include_top.php');
 @ini_set('zlib.output_compression', 1);
+require "../lib/basic_error_handler.php";
+set_error_handler('error_php');
+set_exception_handler("exception_handler");
 ob_implicit_flush(true);
 if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false) {
     exit;
@@ -21,9 +24,7 @@ if (!isset($_SESSION['started'])) {
     $_SESSION['started'] = true;
 }
 ob_start();
-require "../lib/basic_error_handler.php";
 require "../lib/dev_help.php";
-set_error_handler('error_php');
 require "../global_func.php";
 $domain = determine_game_urlbase();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) {

@@ -9,7 +9,7 @@
 // Change to true to show the user more information (for development)
 define('DEBUG', true);
 define('CONTEXT_TRACE', false);
-define('SEND_DEBUG', true);
+define('SEND_DEBUG', false);
 define('DEBUG_RECEIVE', 1); //user id of player to receive the mails.
 
 function error_critical($human_error, $debug_error, $action, $context = array())
@@ -24,7 +24,7 @@ function error_critical($human_error, $debug_error, $action, $context = array())
     }
     if (DEBUG) 
     {
-        alert("danger","{$debug_error}","{$action}<hr />Check out Chivalry is 
+        alert("danger","","{$debug_error} {$action}<hr />Check out Chivalry is 
         Dead on <a href='https://www.facebook.com/officialcidgame/'>Facebook</a> or 
         <a href='https://twitter.com/cidgame'>Twitter</a> for more information if you cannot use the 
         game. ",false);
@@ -85,7 +85,14 @@ function error_php($errno, $errstr, $errfile = '', $errline = 0, $errcontext = a
             '<strong>Engine Warning:</strong> ' . $errstr . ' (' . $errno
             . ')', 'Line executed: ' . $errfile . ':' . $errline,
             $errcontext);
-    } 
+    }
+    else if ($errno == E_ERROR)
+    {
+        error_critical('',
+            '<strong>Engine Warning:</strong> ' . $errstr . ' (' . $errno
+            . ')', 'Line executed: ' . $errfile . ':' . $errline,
+            $errcontext);
+    }
     else 
     {
         if (DEBUG) 
@@ -137,4 +144,10 @@ function error_php($errno, $errstr, $errfile = '', $errline = 0, $errcontext = a
             }
         }
     }
+}
+
+function exception_handler($exception)
+{
+    $error = "<b>Fatal Error</b> {$exception->getMessage()}";
+    error_critical("", $error, $exception->getTraceAsString());
 }
