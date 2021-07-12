@@ -67,7 +67,7 @@ function check_level($disableLevelUp = false)
 			$ir['maxbrave'] += 2;
 			$ir['hp'] += 50;
 			$ir['maxhp'] += 50;
-			$ir['xp_needed'] = (round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2) * (1 - ($r['reset'] * 0.1)));
+			$ir['xp_needed'] = (round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2) * (1 - ($ir['reset'] * 0.1)));
 			//Increase user's everything.
 			$db->query("UPDATE `users` SET `xp` = '{$expu}' WHERE `userid` = {$userid}");
 			doLevelUpBonus($userid, $ir['reset']);
