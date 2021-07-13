@@ -9,7 +9,7 @@
 			</div>
 			<div class="modal-body">
                 <?php
-				$fg = json_decode(get_fg_cache($_SERVER['DOCUMENT_ROOT'] . "/cache/{$r['lastip']}.json", $r['lastip'], 65655), true);
+				$fg = json_decode(get_fg_cache($r['lastip'], 72), true);
 				$log = $db->fetch_single($db->query("/*qc=on*/SELECT `log_text` FROM `logs` WHERE `log_user` = {$r['userid']} ORDER BY `log_id` DESC"));
 				echo "
 				<div class='container'>

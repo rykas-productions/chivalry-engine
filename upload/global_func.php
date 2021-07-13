@@ -572,50 +572,6 @@ function get_filesize_remote($url)
 }
 
 /*
-	Gets the contents of a file if it exists, otherwise grabs and caches 
-*/
-function get_fg_cache($file, $ip, $hours = 1)
-{
-    $current_time = time();
-    $expire_time = $hours * 60 * 60;
-    if (!(filter_var($ip, FILTER_VALIDATE_IP)))
-        $ip='127.0.0.1';
-    if (file_exists($file)) {
-        $file_time = filemtime($file);
-        if ($current_time - $expire_time < $file_time) {
-            return file_get_contents($file);
-        } else {
-            $content = update_fg_info($ip);
-            file_put_contents($file, $content);
-            return $content;
-        }
-    } else {
-        $content = update_fg_info($ip);
-        file_put_contents($file, $content);
-        return $content;
-    }
-}
-
-/* 
-	Gets content from a URL via curl 
-*/
-function update_fg_info($ip)
-{
-    global $set;
-    if (!(filter_var($ip, FILTER_VALIDATE_IP)))
-        $ip='127.0.0.1';
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.fraudguard.io/ip/$ip",
-        CURLOPT_USERPWD => "{$set['FGUsername']}:{$set['FGPassword']}",
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_RETURNTRANSFER => true));
-    $content = curl_exec($curl);
-    curl_close($curl);
-    return $content;
-}
-
-/*
    Gets the user's operating system and inserts it into the database.
    @param string $uagent	User agent to test with.
 */
@@ -878,7 +834,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
 {
     global $set;
     $engine_version = $set['Version_Number'];
-    $json = json_decode(get_cached_file($url, __DIR__ . "/cache/update_check.txt"), true);
+    $json = json_decode(get_cached_file($url, __DIR__ . "/cache/update_check.json"), true);
     if (is_null($json))
         return "Update checker failed.";
     if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
