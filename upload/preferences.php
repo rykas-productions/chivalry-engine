@@ -1172,6 +1172,8 @@ function resetacc()
 			$api->UserGiveItem($userid,349,1);
 			$api->UserGiveItem($userid,350,1);
 		}
+		$db->query("DELETE FROM `asset_market_owned` WHERE `userid` = {$userid}");
+		$db->query("DELETE FROM `asset_market_profit` WHERE `userid` = {$userid}");
 		die();
 	}
 	else
