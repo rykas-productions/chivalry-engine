@@ -52,7 +52,7 @@ if ($db->num_rows($q) == 0)
 	die($h->endpage());
 }
 $r = $db->fetch_row($q);
-$fg = json_decode(get_fg_cache("cache/{$r['lastip']}.json", "{$r['lastip']}", 65655), true);
+$fg = json_decode(get_fg_cache($r['lastip']), true);
 $db->free_result($q);
 $lon = ($r['laston'] > 0) ? date('F j, Y g:i:s a', $r['laston']) : "Never";
 $ula = ($r['laston'] == 0) ? 'Never' : DateTime_Parse($r['laston']);
@@ -726,9 +726,7 @@ echo "<h3>{$user_name}'s Profile</h3>
 					else
 					{
 						$mb = $db->query("/*qc=on*/SELECT * FROM `mail_bans` WHERE `mbUSER` = {$userid}");
-						if ($db->num_rows($mb) != 0)
-						{ }
-						else
+						if ($db->num_rows($mb) == 0)
 						{
 							$csrf=request_csrf_html('comment');
 							echo"
