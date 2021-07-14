@@ -467,8 +467,8 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
  */
 function determine_game_urlbase()
 {
-    $domain = $_SERVER['HTTP_HOST'];
-    $turi = $_SERVER['REQUEST_URI'];
+    $domain = (!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : "";
+    $turi =(!empty($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : "";
     $turiq = '';
     for ($t = strlen($turi) - 1; $t >= 0; $t--) {
         if ($turi[$t] != '/') {
@@ -579,7 +579,7 @@ function getOS($uagent)
 {
     global $db, $userid, $ir;
 	$uagent = $db->escape(strip_tags(stripslashes($uagent)));
-	$os_platform = "Unknown OS Platform";
+	$os_platform = "Unknown OS";
 	$os_array = array(
 		'/windows nt 10/i' => 'Windows 10',
 		'/windows nt 6.3/i' => 'Windows 8.1',
