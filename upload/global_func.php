@@ -98,7 +98,7 @@ function shortNumberParse($n)
         $n_format = number_format($n / 1000000000, 1) . "B";
     elseif ($n < 1000000000000000)
         $n_format = number_format($n / 1000000000000, 1) . "T";
-        return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . "'>{$n_format}</span>";
+    return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . "'>{$n_format}</span>";
 }
 
 /*
@@ -1146,7 +1146,8 @@ function backupDatabase()
 {
 	global $_CONFIG;
 	$filename='cid_backup-'.date('y-m-d').'-'.date('H-i-s').'.sql';
-	$result=exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/mysql/".$filename,$output);
+	exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/mysql/".$filename,$output);
+	exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/chivalryisdeadgame.com/html/cache/latest.sql",$output);
 }
 
 function isDevEnv()
