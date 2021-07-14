@@ -13,3 +13,5 @@ define('wood_cut_cooldown','wood_cut_cooldown');
 define('farm_well_cooldown','farm_well_cooldown');
 define('farm_well_less_cooldown','farm_well_less_cooldown');
 define('farm_well_cooldown_cutoff','farm_well_cooldown_cutoff');
+
+define('effect_mysterious_potion', 'mysterious_potion');

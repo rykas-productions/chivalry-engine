@@ -1,9 +1,9 @@
 <?php
 require('globals.php');
 $time=time();
-if ($ir['potion_drink'] > ($time-3600))
+if (userHasEffect($userid, effect_mysterious_potion))
 {
-    $comebacktime=$ir['potion_drink']+3600;
+    $comebacktime=returnEffectDone($userid, effect_mysterious_potion);
     alert('danger',"Uh Oh!","You must wait for the potion to clear out of your system first before you drink another. Come back in " . TimeUntil_Parse($comebacktime) . ".",true,'inventory.php');
     die($h->endpage());
 }
@@ -85,7 +85,7 @@ if ($effect == 10)
     $db->query("UPDATE `users` SET `gender` = '{$gender}' WHERE `userid` = {$userid}");
 }
 
-$db->query("UPDATE `user_settings` SET `potion_drink` = {$time} WHERE `userid` = {$userid}");
+userGiveEffect($userid, effect_mysterious_potion, 3600);
 $api->UserTakeItem($userid,123,1);
 alert('success',"Success!","You drink one Mysterious Potion and {$effect}",true,'inventory.php');
 $api->SystemLogsAdd($userid, 'itemuse', "Used Mysterious Potion.");
