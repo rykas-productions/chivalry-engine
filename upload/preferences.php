@@ -1136,6 +1136,8 @@ function resetacc()
 		echo "<br />Finishing up... we'll just be a moment.";
 			$api->GameAddMail($userid,"Welcome to Chivalry is Dead",$mail,1);
 			$db->query("DELETE FROM `mining` WHERE `userid` = {$userid}");
+			$db->query("DELETE FROM `farm_users` WHERE `userid` = {$userid}");
+			$db->query("DELETE FROM `users_effects` WHERE `userid` = {$userid}");
 			$db->query("INSERT INTO `mining` (`userid`, `max_miningpower`, `miningpower`, `miningxp`, `buyable_power`, `mining_level`, `mine_boost`)
     VALUES ('{$userid}', '100', '100', '0', '1', '1', '0');");
 			$db->query("UPDATE `user_settings` SET `reset` = {$reset} + 1 WHERE `userid` = {$userid}");
