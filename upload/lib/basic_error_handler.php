@@ -133,7 +133,7 @@ function error_php($errno, $errstr, $errfile = '', $errline = 0, $errcontext = a
                     if (!isset($_SESSION['userid']))
                         $_SESSION['userid'] = 1;
                     $subj = "{$errname} ({$errno})";
-                    $msg = "{$errstr} on {$errfile}, line {$errline}.";
+                    $msg = "{$errstr} on {$errfile}, line {$errline}. (Called from " . basename(__FILE__) . ")";
                     $msg=encrypt_message($msg,$_SESSION['userid'], DEBUG_RECEIVE);
                     $time = time();
                     $db->query("INSERT INTO `mail`
