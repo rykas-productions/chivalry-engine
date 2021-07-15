@@ -171,3 +171,11 @@ function sleepTick()
         $db->query("UPDATE `users` SET `energy` = `energy` + {$inc} WHERE `userid` = {$r['userid']}");
     }
 }
+
+function countEstateTotalUpgrades($estate_id)
+{
+    global $db;
+    $q = $db->query("SELECT `vaultUpgrade`, `gardenUpgrade`, `sleepUpgrade` FROM `user_estates` WHERE `ue_id` = {$estate_id}");
+    $r = $db->fetch_row($q);
+    return $r['vaultUpgrade'] + $r['gardenUpgrade'] + $r['sleepUpgrade'];
+}

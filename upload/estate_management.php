@@ -124,6 +124,14 @@ function home()
 							" . number_format(calculateSellPrice($estate['ue_id'])) . " Copper Coins
 						</div>
 					</div>
+                    <div class='row'>
+						<div class='col-5'>
+							Total Upgrades
+						</div>
+						<div class='col-7'>
+							" . countEstateTotalUpgrades($estate['ue_id']) . " / {$edb['upgradeLevel']}
+						</div>
+					</div>
 				</div>
 			</div>
 			<br />
@@ -534,6 +542,11 @@ function upgrade_garden()
 		alert('danger',"Uh Oh!","You must purchase an estate before you can construct a garden.", true, 'estate_management.php');
 		die($h->endpage());
 	}
+	if (countEstateTotalUpgrades($estate['ue_id']) >= $edb['upgradeLevel'])
+	{
+	    alert('danger',"Uh Oh!","You may only install a maximum of {$edb['upgradeLevel']} total upgrades on this estate.", true, 'estate_management.php');
+	    die($h->endpage());
+	}
 	if (isset($_POST['construct']))
 	{
 		if (!$api->UserHasItem($userid, 296, $waterCost))
@@ -653,6 +666,11 @@ function upgrade_vault()
 		alert('danger',"Uh Oh!","You must purchase an estate before you can upgrade your vault.", true, 'estate_management.php');
 		die($h->endpage());
 	}
+	if (countEstateTotalUpgrades($estate['ue_id']) >= $edb['upgradeLevel'])
+	{
+	    alert('danger',"Uh Oh!","You may only install a maximum of {$edb['upgradeLevel']} total upgrades on this estate.", true, 'estate_management.php');
+	    die($h->endpage());
+	}
 	if (isset($_POST['construct']))
 	{
 		if (!$api->UserHasItem($userid, 23, $ironCost))
@@ -764,6 +782,11 @@ function upgrade_sleep()
     if ($estate['estate'] <= 1)
     {
         alert('danger',"Uh Oh!","You must purchase an estate before you can construct your sleeping quarters.", true, 'estate_management.php');
+        die($h->endpage());
+    }
+    if (countEstateTotalUpgrades($estate['ue_id']) >= $edb['upgradeLevel'])
+    {
+        alert('danger',"Uh Oh!","You may only install a maximum of {$edb['upgradeLevel']} total upgrades on this estate.", true, 'estate_management.php');
         die($h->endpage());
     }
     if (isset($_POST['construct']))
