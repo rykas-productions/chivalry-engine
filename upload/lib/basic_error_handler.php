@@ -20,14 +20,24 @@ function error_critical($human_error, $debug_error, $action, $context = array())
     {
         echo "<h1>Critical Error</h1>";
     } else {
-        echo '<h1>Internal Server Error</h1>';
+        echo '<h1>Chivalry is Dead Server Error</h1>';
     }
     if (DEBUG) 
     {
+        if (function_exists("alert"))
+        {
         alert("danger","","{$debug_error} {$action}<hr />Check out Chivalry is 
         Dead on <a href='https://www.facebook.com/officialcidgame/'>Facebook</a> or 
         <a href='https://twitter.com/cidgame'>Twitter</a> for more information if you cannot use the 
         game. ",false);
+        }
+        else
+        {
+            echo "{$debug_error} {$action}<hr />Check out Chivalry is 
+            Dead on <a href='https://www.facebook.com/officialcidgame/'>Facebook</a> or 
+            <a href='https://twitter.com/cidgame'>Twitter</a> for more information if you cannot use the 
+            game.";
+        }
         // Only uncomment the below if you know what you're doing,
         // for debug purposes.
         /*
