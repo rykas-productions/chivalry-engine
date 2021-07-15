@@ -585,17 +585,7 @@ while ($i = $db->fetch_row($inv))
 								$einfo = unserialize($i["effect{$enum}"]);
 								$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
 								$einfo['dir'] = ($einfo['dir'] == 'pos') ? '+' : '-';
-								$stats =
-									array("energy" => "Energy", "will" => "Will",
-										"brave" => "Bravery", "level" => "Level",
-										"hp" => "Health", "strength" => "Strength",
-										"agility" => "Agility", "guard" => "Guard",
-										"labor" => "Labor", "iq" => "IQ",
-										"infirmary" => "Infirmary minutes", "dungeon" => "Dungeon minutes",
-										"primary_currency" => "Copper Coins", "secondary_currency"
-									=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-										"VIP Days", "luck" => "Luck", "premium_currency" => "Mutton");
-								$statformatted = $stats["{$einfo['stat']}"];
+								$statformatted = statParser($einfo['stat']);
 								echo "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted}.";
 							}
 						}
