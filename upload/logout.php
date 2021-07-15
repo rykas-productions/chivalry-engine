@@ -7,12 +7,6 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
-session_name('CENGINE');
-session_start();
-if (!isset($_SESSION['started'])) {
-    session_regenerate_id();
-    $_SESSION['started'] = true;
-}
 require_once('globals_nonauth.php');
 if (isset($_SESSION['userid'])) {
     $sessid = abs($_SESSION['userid']);
@@ -32,7 +26,7 @@ if (isset($_SESSION['userid'])) {
     }
 }
 $api->SystemLogsAdd($sessid, 'login', "Successfully logged out.");
-//session_regenerate_id(true);
+session_regenerate_id(true);
 session_unset();
 session_destroy();
 $login_url = 'login.php';
