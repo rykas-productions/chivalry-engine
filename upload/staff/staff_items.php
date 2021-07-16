@@ -128,6 +128,7 @@ function create()
 					<b>Stat</b> <select name='effect{$i}stat' type='dropdown' class='form-control'>
 						<option value='energy'>Energy</option>
 						<option value='will'>Will</option>
+                        <option value='maxwill'>Max Will</option>
 						<option value='brave'>Bravery</option>
 						<option value='hp'>Health</option>
 						<option value='level'>Level</option>
@@ -238,7 +239,8 @@ function create()
                         array('energy', 'will', 'brave', 'hp', 'level',
                             'strength', 'agility', 'guard',
                             'labor', 'iq', 'infirmary', 'dungeon',
-                            'primary_currency', 'secondary_currency', 'xp', 'vip_days', 'luck', 'premium_currency')))
+                            'primary_currency', 'secondary_currency', 'xp', 
+                            'vip_days', 'luck', 'premium_currency', 'maxwill')))
                     ? $_POST[$efxkey . 'stat'] : 'energy';
             $_POST[$efxkey . 'dir'] =
                 (isset($_POST[$efxkey . 'dir'])
@@ -597,7 +599,9 @@ function edititem()
                 "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
                 "primary_currency" => "Copper Coins", "secondary_currency"
             => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-                "VIP Days", "luck" => "Luck", "premium_currency" => "Mutton");
+                "VIP Days", "luck" => "Luck", "premium_currency" => "Mutton", 
+                "maxwill" => "Max Will"
+        );
         for ($i = 1; $i <= 3; $i++) {
             if (!empty($itemi["effect" . $i])) {
                 $efx = unserialize($itemi["effect" . $i]);
@@ -725,7 +729,10 @@ function edititem()
                         array('energy', 'will', 'brave', 'hp',
                             'strength', 'agility', 'guard', 'level',
                             'labor', 'iq', 'infirmary', 'dungeon',
-                            'primary_currency', 'secondary_currency', 'xp', 'vip_days', 'luck', 'premium_currency')))
+                            'primary_currency', 'secondary_currency', 
+                            'xp', 'vip_days', 'luck', 'premium_currency',
+                            'maxwill'
+                        )))
                     ? $_POST[$efxkey . 'stat'] : 'energy';
             $_POST[$efxkey . 'dir'] =
                 (isset($_POST[$efxkey . 'dir'])
