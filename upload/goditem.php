@@ -26,6 +26,12 @@ switch ($_GET['action']) {
     case 'givemoves':
         giveMoves();
         break;
+    case 'givenpctroops':
+        giveNpcTroops();
+        break;
+    case 'giveyoutroops':
+        giveTroops();
+        break;
     default:
         home();
         break;
@@ -45,6 +51,12 @@ function home()
         </div>
         <div class='col'>
             <a href='?action=givemoves' class='btn btn-primary btn-block'>Give District Moves</a>
+        </div>
+        <div class='col'>
+            <a href='?action=giveyoutroops' class='btn btn-primary btn-block'>Give Guild Troops</a>
+        </div>
+        <div class='col'>
+            <a href='?action=givenpctroops' class='btn btn-primary btn-block'>Give NPC Guild Troops</a>
         </div>
     </div>
 	";
@@ -95,5 +107,32 @@ function giveMoves()
     $db->query("UPDATE `guild_district_info` SET `moves` = `moves` + 2 WHERE `guild_id` = {$ir['guild']}");
     alert("success","Success!","You have given your guild 2 more district moves.",false);
     $api->SystemLogsAdd($userid, "staff", "Gave guild +2 district moves.");
+    home();
+}
+function giveTroops()
+{
+    global $api, $userid, $db, $ir;
+    $db->query("UPDATE `guild_district_info` 
+                SET `barracks_warriors` = `barracks_warriors` + 200000,
+                `barracks_archers` = `barracks_archers` + 100000,
+                `barracks_generals` = `barracks_generals` + 100,
+                `barracks_captains` = `barracks_captains` + 200
+                 WHERE `guild_id` = {$ir['guild']}");
+    alert("success","Success!","You have your guild 200k Warriors, 100k Archers, 200 Captains and 100 Generals.",false);
+    $api->SystemLogsAdd($userid, "staff", "Gave their guild 200k/100k Warriors/Archers and  100/200 Generals/Captains.");
+    home();
+}
+
+function giveNpcTroops()
+{
+    global $api, $userid, $db, $ir;
+    $db->query("UPDATE `guild_district_info`
+                SET `barracks_warriors` = `barracks_warriors` + 200000,
+                `barracks_archers` = `barracks_archers` + 100000,
+                `barracks_generals` = `barracks_generals` + 100,
+                `barracks_captains` = `barracks_captains` + 200
+                 WHERE `guild_id` = 16");
+    alert("success","Success!","You have the NPC guild 200k Warriors, 100k Archers, 200 Captains and 100 Generals.",false);
+    $api->SystemLogsAdd($userid, "staff", "Gave NPC guild 200k/100k Warriors/Archers and  100/200 Generals/Captains.");
     home();
 }
