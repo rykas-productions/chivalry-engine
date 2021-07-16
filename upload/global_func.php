@@ -1322,3 +1322,18 @@ function returnGameTitle()
     return $prefix . " " . $set['WebsiteName'];
     
 }
+
+function attemptLoadModule($moduleID)
+{
+    global $ir, $h;
+    if (function_exists('initializeModule'))
+    {
+        initializeModule();
+    }
+    else
+    {
+        trigger_error("Module ID: <span class='font-weight-bold'><u>{$moduleID}</u></span> 
+        does not have the required `initializeModule();` function in file. Please create it.");
+    }
+    return getConfigForPHP($moduleID);
+}

@@ -227,3 +227,36 @@ updateMostUsersCount();
 
 //For chat, maybe?
 $_SESSION['userName']=$ir['username'];
+
+if (isset($moduleID) && !empty($moduleID))
+{
+    $moduleConfig = attemptLoadModule($moduleID);
+    if ((isset($_GET['config']) && ($ir['user_level'] == 'Admin')))
+    {
+        echo "<h3>Config for {$moduleID}</h3><hr />";
+        if (isset($_POST['formSubmitValue']))
+        {
+            $configArray = [];
+            foreach ($_POST as $k => $v)
+            {
+                if (!($k == 'formSubmitValue'))
+                {
+                    $configArray[$k] = makeSafeText($v);
+                }
+            }
+            writeConfigToDB($moduleID, formatConfig($configArray));
+            echo "Updated module config.";
+        }
+        else
+        {
+            $config=getConfigForPHP($moduleID);
+            $formArray=array();
+            foreach ($config as $k => $v)
+            {
+                array_push($formArray,array('text',$k,$k,$v));
+            }
+            createPostForm('?config',$formArray, 'Update Module Config');
+        }
+        die($h->endpage());
+    }
+}
