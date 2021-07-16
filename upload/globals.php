@@ -184,7 +184,6 @@ $api = new api;
 //Load game sound system
 include('class/class_audio.php');
 $sound = new sound;
-require('global_func_farm.php');
 //Include Forms file.
 include("class/class_form.php");
 $form = new form;

@@ -107,7 +107,6 @@ $api = new api;
 //Load game sound system
 include('../class/class_audio.php');
 $sound = new sound;
-include("../global_func_farm.php");
 if (!$api->UserMemberLevelGet($userid, 'forum moderator')) {
     $index = ('../index.php');
     header("Location: {$index}");
