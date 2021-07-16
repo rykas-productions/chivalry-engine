@@ -6,10 +6,32 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+$moduleID = "national_bank";
 require("globals.php");
-if ($ir['level'] < 75)
+function initializeModule()
 {
-    alert('danger',"Uh Oh!","You need to be at least level 75 to use the Federal Bank.",true,'explore.php');
+    global $moduleID;
+    if (!readConfigFromDB($moduleID))
+    {
+        $moduleConfigArray=array(
+            'moduleID' => $moduleID,
+            'moduleAuthor' => 'TheMasterGeneral',
+            'moduleURL' => 'https://github.com/rykas-productions/chivalry-engine',
+            'moduleVersion' => 1,
+            'bankOpeningFee' => 10000000,
+            'bankWithdrawPercent' => 250000,
+            'bankWithdrawMaxFee' => 15,
+            'bankLevelRequirement' => 75
+        );
+        $defaultConfig = formatConfig($moduleConfigArray);
+        writeConfigToDB($moduleID, $defaultConfig);
+        echo "Installing default config...";
+        header("bigbank.php");
+    }
+}
+if ($ir['level'] < $moduleConfig['bankLevelRequirement'])
+{
+    alert('danger',"Uh Oh!","You need to be at least level {$moduleConfig['bankLevelRequirement']} to use the Federal Bank.",true,'explore.php');
     die($h->endpage());
 }
 if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
@@ -17,9 +39,9 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	alert('danger',"Uh Oh!","You cannot visit the bank while in the infirmary or dungeon.",true,'index.php');
 	die($h->endpage());
 }
-$bank_cost = 10000000;
-$bank_maxfee = 250000;
-$bank_feepercent = 15;
+$bank_cost = $moduleConfig['bankOpeningFee'];
+$bank_maxfee = $moduleConfig['bankWithdrawMaxFee'];
+$bank_feepercent = $moduleConfig['bankWithdrawPercent'];
 echo "<h3><i class='game-icon game-icon-bank'></i> Federal Bank</h3>";
 //User has purchased a bank account.
 if ($ir['bigbank'] > -1) {
