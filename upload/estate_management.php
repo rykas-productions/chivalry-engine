@@ -292,6 +292,12 @@ function move_out()
 		alert('danger',"Uh Oh!","You cannot move out of homelessness.", true, 'estate_management.php');
 		die($h->endpage());
 	}
+	$eq = $db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = 'maxwill'");
+	if ($db->num_rows($eq) > 0)
+	{
+	    alert('danger',"Uh Oh!","You cannot move in or out of properties while you have an item equipped that changes your max will. Unequip it and try again.", true, 'estate_management.php');
+	    die($h->endpage());
+	}
 	doLeaveHouse($userid);
 	$api->SystemLogsAdd($userid, "estate", "Moved out of their current estate.");
 	alert("success","Success!","You have successfully moved out of this estate.",true, 'estate_management.php');
@@ -310,6 +316,12 @@ function move_in()
 	{
 		alert('danger',"Uh Oh!","You cannot move into an estate you do not own.", true, '?action=propertyList');
 		die($h->endpage());
+	}
+	$eq = $db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$userid} AND `stat` = 'maxwill'");
+	if ($db->num_rows($eq) > 0)
+	{
+	    alert('danger',"Uh Oh!","You cannot move in or out of properties while you have an item equipped that changes your max will. Unequip it and try again.", true, 'estate_management.php');
+	    die($h->endpage());
 	}
 	doMoveIn($_GET['id'],$userid);
 	$api->SystemLogsAdd($userid, "estate", "Moved into estate ID {$_GET['id']}.");
