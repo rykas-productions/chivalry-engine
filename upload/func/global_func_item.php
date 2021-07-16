@@ -248,25 +248,26 @@ function consumeItem($userid, $itemID, $qty = 1)
                         if (in_array($einfo['stat'], array('energy', 'will', 'brave', 'hp'))) 
                         {
                             $inc = round($ir['max' . $einfo['stat']] / 100 * $einfo['inc_amount']);
-                            $inc=$inc+($inc*((getSkillLevel($userid,25)*3)/100));   //Item potency skill
+                        }
+                        elseif (in_array($einfo['stat'], array('maxwill')))
+                        {
+                            $inc = round(($ir['maxwill'] / 100) / $einfo['inc_amount']);
                         }
                         elseif (in_array($einfo['stat'], array('dungeon', 'infirmary')))
                         {
                             $EndTime = $db->fetch_single($db->query("/*qc=on*/SELECT `{$einfo['stat']}_out` FROM `{$einfo['stat']}` WHERE `{$einfo['stat']}_user` = {$userid}"));
                             $inc = round((($EndTime - time()) / 100 * $einfo['inc_amount']) / 60);
-                            $inc=$inc+($inc*((getSkillLevel($userid,25)*3)/100));   //Item potency skill
                         }
                         else 
                         {
                             $inc = round($ir[$einfo['stat']] / 100 * $einfo['inc_amount']);
-                            $inc=$inc+($inc*((getSkillLevel($userid,25)*3)/100));   //Item potency skill.
                         }
                     }
                     else 
                     {
                         $inc = $einfo['inc_amount'];
-                        $inc=$inc+($inc*((getSkillLevel($userid,25)*3)/100));   //Item potency skill.
                     }
+                    $inc=$inc+($inc*((getSkillLevel($userid,25)*3)/100));   //Item potency skill.
                     //Effect is positive
                     if ($einfo['dir'] == "pos") 
                     {
@@ -277,7 +278,11 @@ function consumeItem($userid, $itemID, $qty = 1)
                         elseif ($einfo['stat'] == 'dungeon')
                             put_dungeon($userid, $inc, 'Item Misuse');
                         else
+                        {
                             $ir[$einfo['stat']] += $inc;
+                            if ($einfo['stat'] == "maxwill")
+                                increaseMaxWill($userid, $inc);
+                        }
                     }
                     //Effect is negative.
                     else 
@@ -289,7 +294,11 @@ function consumeItem($userid, $itemID, $qty = 1)
                             if (user_dungeon($userid) == true) 
                                 remove_dungeon($userid, $inc);
                         else 
+                        {
                             $ir[$einfo['stat']] = max($ir[$einfo['stat']] - $inc, 0);
+                            if ($einfo['stat'] == "maxwill")
+                                increaseMaxWill($userid, $inc * -1);
+                        }
                     }
                     //Apply stat changes :))
                     if (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) 

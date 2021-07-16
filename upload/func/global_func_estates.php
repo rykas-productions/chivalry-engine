@@ -124,7 +124,7 @@ function increaseMaxWill($userid, $increase)
 {
 	global $db;
 	$r=$db->fetch_single($db->query("SELECT `estate` FROM `users` WHERE `userid` = {$userid}"));
-	$db->query("UPDATE `user_estates` SET `bonusWill` = `bonusWill` + {$increase} WHERE `ue_id` = {$r}");
+	$db->query("UPDATE `user_estates` SET `bonusWill` = `bonusWill` + ({$increase}) WHERE `ue_id` = {$r}");
 }
 
 function increaseMaxWillPercent($userid, $increase)

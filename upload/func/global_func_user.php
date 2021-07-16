@@ -794,6 +794,8 @@ function undoEquipGains($user, $slot)
 				elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) 
 				{
 					$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` - {$sbr['number']} WHERE `userid` = {$user}");
+					if ($sbr['stat'] == "maxwill")
+					    increaseMaxWill($user, $sbr['number'] * -1);
 				}
 				$mod='lost';
 			}
@@ -806,6 +808,8 @@ function undoEquipGains($user, $slot)
 				elseif (!(in_array($sbr['stat'], array('dungeon', 'infirmary')))) 
 				{
 					$db->query("UPDATE `users` SET `{$sbr['stat']}` = `{$sbr['stat']}` + {$sbr['number']} WHERE `userid` = {$user}");
+					if ($sbr['stat'] == "maxwill")
+					    increaseMaxWill($user, $sbr['number']);
 				}
 				$mod='gained';
 			}
@@ -897,6 +901,8 @@ function setEquipGains($user, $slot, $item)
 			elseif (!(in_array($einfo['stat'], array('dungeon', 'infirmary')))) 
 			{
 				$db->query("UPDATE `users` SET `{$einfo['stat']}` = '{$upd}' WHERE `userid` = {$user}");
+				if ($einfo['stat'] == "maxwill")
+				    increaseMaxWill($user, $inc);
 			}
 			$dir = ($einfo['dir'] == 'pos') ? "gained" : "lost";
 			if (empty($txt))
