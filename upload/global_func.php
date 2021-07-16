@@ -6,17 +6,14 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
-require('global_func_user.php');
-require('global_func_dropdown.php');
-require('global_func_guild.php');
-require('global_func_trinket.php');
-require('global_func_district.php');
-require('global_func_item.php');
-require('global_func_estates.php');
-require('global_func_email.php');
-require('global_func_stock.php');
-require('global_func_attack.php');
-require('global_func_cache.php');
+$dir = scandir(dirname(__FILE__) . '/func/');
+foreach ($dir as $func)
+{
+    if (preg_match('/\.php$/', $func)) 
+    {
+        require_once dirname(__FILE__) . "/func/" . $func;
+    }
+}
 
 //Constants
 require('const/const_effect.php');
@@ -392,13 +389,14 @@ function verify_user_password($input, $pass)
 function encode_password($password,$lvl='Member')
 {
     global $set;
+    $pw = PASSWORD_DEFAULT;
     //Set the password cost via settings.
 	if ($lvl == 'Member')
 		$options = ['cost' => $set['Password_Effort'],];
 	else
 		$options = ['cost' => $set['Password_Effort']+1,];
     //Return the generated password.
-    return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_DEFAULT, $options);
+		return password_hash(base64_encode(hash('sha256', $password, true)), $pw, $options);
 }
 
 /**
@@ -1172,13 +1170,14 @@ function statParser($stat)
 {
     $statNamesArray = array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
         "maxbrave" => "Maximum Bravery", "level" => "Level",
+        "hp" => "Health", "energy" => "Energy", 
         "maxhp" => "Maximum Health", "strength" => "Strength",
         "agility" => "Agility", "guard" => "Guard",
         "labor" => "Labor", "iq" => "IQ",
         "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
         "primary_currency" => "Copper Coins", "secondary_currency"
         => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-        "VIP Days");
+        "VIP Days", "maxwill" => "Max Will");
         return $statNamesArray[$stat];
 }
 
