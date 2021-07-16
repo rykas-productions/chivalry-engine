@@ -50,7 +50,6 @@ $c = $db->connection_id;
 //Include API file.
 include("class/class_api.php");
 $api = new api;
-require('global_func_farm.php');
 $set = array();
 $settq = $db->query("/*qc=on*/SELECT *
 					 FROM `settings`");
