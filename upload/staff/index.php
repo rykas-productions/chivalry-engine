@@ -32,6 +32,14 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 					{$MySQLIVersion}
 				</td>
 			</tr>
+            <tr>
+				<th>
+					Apache Version
+				</th>
+				<td align='left'>
+					" . apache_get_version() . "
+				</td>
+			</tr>
 			<tr>
 				<th>
 					Chivalry Engine Version
