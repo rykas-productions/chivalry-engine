@@ -950,14 +950,14 @@ function movefromtile()
 			alert('danger',"Uh Oh!","You must move at least one unit.",true,'guild_district.php');
 			die($h->endpage());
 		}
-		if ($generals > 0)
+		/*if ($generals > 0)
 		{
 			if (($generals + $r['district_general']) > $districtConfig['maxGenerals'])
 			{
 				alert('danger',"Uh Oh!","You may only have {$districtConfig['maxGenerals']} Generals on a tile.",true,'guild_district.php');
 				die($h->endpage());
 			}
-		}
+		}*/
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		$api->SystemLogsAdd($userid,"district","Moved " . number_format($warriors) . " Warriors, " . number_format($archers) . " Archers and  " . number_format($generals) . " Generals from Tile " . resolveCoordinates($r2['district_id']) . " to Tile " . resolveCoordinates($r['district_id']) .".");
 		updateTileTroops($r2['district_id'], $warriors*-1, $archers*-1, $generals*-1);
@@ -1195,11 +1195,11 @@ function movefrombarracks()
 			alert('danger',"Uh Oh!","You must move at least one unit.",true,'guild_district.php');
 			die($h->endpage());
 		}
-		if (($generals + $r2['district_general']) > $districtConfig['maxGenerals'])
+		/*if (($generals + $r2['district_general']) > $districtConfig['maxGenerals'])
 		{
 			alert('danger',"Uh Oh!","You may only have {$districtConfig['maxGenerals']} Generals on a tile.",true,'guild_district.php');
 			die($h->endpage());
-		}
+		}*/
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		updateBarracksTroops($ir['guild'], $warriors*-1, $archers*-1, $generals*-1, 0);
 		updateTileTroops($attack_to, $warriors, $archers, $generals);
