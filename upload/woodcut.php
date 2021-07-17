@@ -66,6 +66,7 @@ function home()
 {
     global $db, $userid, $api, $h, $set;
     $logs = 25 + (round($set['cutter_level'] / 10));
+    $userLogs = $api->UserCountItem($userid, 410);
     echo "<div class='card'>
         <div class='card-body'>
             Here you may chop up your wood into sharpened sticks, if you so desire. You will receive " . number_format($logs) . " Sharpened Sticks per Log. 
@@ -77,7 +78,7 @@ function home()
             <form method='post' action='?action=cut'>
                 <div class='row'>
                     <div class='col-12'>
-                        <input type='number' name='logs' value='' required='1' class='form-control'><br />
+                        <input type='number' name='logs' value='{$userLogs}' min='1' max='{$userLogs}' required='1' class='form-control'><br />
                     </div>
                     <div class='col-12'>
                         <input type='submit' value='Cut Logs' class='btn btn-primary btn-block'><br />
