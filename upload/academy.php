@@ -25,6 +25,19 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
     $coud = $db->fetch_row($cd);
     $db->free_result($cd);
 	$daystoseconds=$coud['ac_days']*86400;
+	if (getSkillLevel($userid,18))
+	{
+	    $iq=round($ir['iq']/5000);
+	    if ($iq > 15)
+	        $iq=15;
+        $iq=$iq/100;
+        $daystoseconds=$daystoseconds*(1-$iq);
+	}
+	$actualReset = $ir['reset'] - 1;
+	if ($actualReset > 0)
+	{
+	    $daystoseconds = $daystoseconds - ($daystoseconds * ($actualReset * 0.08));
+	}
 	$starttime=time()-($ir['course_complete']-$daystoseconds);
 	$percentcomplete=round(($starttime/$daystoseconds)*100);
 	if (isset($_GET['dropout']))
@@ -119,7 +132,7 @@ function menu()
                                         <small><i>Course Length " . number_format($academy['ac_days']) . " Days</i></small>
                                     </div>
                                     <div class='col col-md-4 col-lg'>
-                                        <small><i>Cost " . number_format($academy['ac_cost']) . " Copper Coins</i></small>
+                                        <small><i>Cost " . shortNumberParse($academy['ac_cost']) . " Copper Coins</i></small>
                                     </div>";
                                     if (!empty($academy['ac_level']))
                                     {
