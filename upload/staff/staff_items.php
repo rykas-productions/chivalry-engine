@@ -514,6 +514,8 @@ function edititem()
         $itmdesc = addslashes($itemi['itmdesc']);
 		$itmicon = addslashes($itemi['icon']);
         $itmcolor = addslashes($itemi['color']);
+        var_dump($itemi['itmbuyable']);
+        $g = ($itemi['itmbuyable'] == 'true') ? "<option value='on'>Purchasable</option> <option value='off'>Non-Purchasable</option>" : "<option value='off'>Non-Purchasable</option><option value='on'>Purchasable</option>";
         echo "<form method='post'>
 					<input type='hidden' name='itemid' value='{$_POST['item']}' />
 					<input type='hidden' name='step' value='3' />
@@ -564,8 +566,7 @@ function edititem()
 				</th>
 				<td>
 					<select name='itembuyable' type='dropdown' class='form-control'>
-                        <option value='on'>Purchasable</option>
-						<option value='off'>Not Purchasable</option>
+                        {$g}
                     </select>
 				</td>
 			</tr>
