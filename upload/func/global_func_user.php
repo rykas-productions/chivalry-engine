@@ -674,7 +674,7 @@ function equipUserSlot($user, $slot, $itemID)
 {
 	global $db, $api;
 	//Very dirty work around because I'm lazy :D
-	$wepArray = array("equip_armor", "equip_badge", "equip_primary", "equip_secondary", "equip_potion");
+	$wepArray = array(slot_armor, slot_badge, slot_prim_wep, slot_second_wep, slot_potion);
 	if (!in_array($slot, $wepArray))
 	{
 		equipUserWearable($user, $slot, $itemID);
@@ -682,7 +682,6 @@ function equipUserSlot($user, $slot, $itemID)
 	else
 	{
 		$userInfo = $db->fetch_row($db->query("SELECT `{$slot}` FROM `users` WHERE `userid` = {$user}"));
-		$userGains = $db->fetch_row($db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$user} AND `slot` = '{$slot}'"));
 		$itemInfo = $db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$itemID}"));
 		if ($userInfo[$slot] > 0)
 		{
@@ -702,7 +701,7 @@ function equipUserWearable($user, $slot, $itemID)
 {
 	global $db, $api;
 	//Very dirty work around because I'm lazy :D
-	$wepArray = array("equip_armor", "equip_badge", "equip_primary", "equip_secondary", "equip_potion");
+	$wepArray = array(slot_armor, slot_badge, slot_prim_wep, slot_second_wep, slot_potion);
 	if (in_array($slot, $wepArray))
 	{
 		equipUserSlot($user, $slot, $itemID);
@@ -710,7 +709,6 @@ function equipUserWearable($user, $slot, $itemID)
 	else
 	{
 		$userInfo = $db->fetch_single($db->query("SELECT `itemid` FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'"));
-		$userGains = $db->fetch_row($db->query("SELECT * FROM `equip_gains` WHERE `userid` = {$user} AND `slot` = '{$slot}'"));
 		$itemInfo = $db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$itemID}"));
 		if ($userInfo > 0)
 		{
@@ -727,7 +725,7 @@ function equipUserWearable($user, $slot, $itemID)
 function unequipUserWearable($user, $slot)
 {
 	global $db, $api;
-	$wepArray = array("equip_armor", "equip_badge", "equip_primary", "equip_secondary", "equip_potion");
+	$wepArray = array(slot_armor, slot_badge, slot_prim_wep, slot_second_wep, slot_potion);
 	if (in_array($slot, $wepArray))
 	{
 		unequipUserSlot($user, $slot);
@@ -752,7 +750,7 @@ function unequipUserSlot($user, $slot)
 {
 	global $db, $api;
 	//Very dirty work around because I'm lazy :D
-	$wepArray = array("equip_armor", "equip_badge", "equip_primary", "equip_secondary", "equip_potion");
+	$wepArray = array(slot_armor, slot_badge, slot_prim_wep, slot_second_wep, slot_potion);
 	if (!in_array($slot, $wepArray))
 	{
 		unequipUserWearable($user, $slot);
@@ -920,7 +918,7 @@ function setEquipGains($user, $slot, $item)
 function getUserItemEquippedSlot($user,$slot)
 {
 	global $db;
-	$wepArray = array("equip_armor", "equip_badge", "equip_primary", "equip_secondary", "equip_potion");
+	$wepArray = array(slot_armor, slot_badge, slot_prim_wep, slot_second_wep, slot_potion);
 	if (in_array($slot, $wepArray))
 		return $db->fetch_single($db->query("SELECT `{$slot}` FROM `users` WHERE `userid` = {$user}"));
 	else
@@ -1188,4 +1186,26 @@ function returnUserInfoRow($userid)
                      WHERE `u`.`userid` = {$userid}
                      LIMIT 1");
     return $db->fetch_row($is);
+}
+
+function isUserMarried($userid)
+{
+    global $db;
+    $q = $db->query("
+        SELECT `marriage_id` FROM `marriage_tmg` 
+        WHERE (`proposer_id` = {$userid} OR `proposed_id` = {$userid}) 
+        AND `together` = 1");
+    $r = $db->num_rows($q);
+    $result = ($r > 0) ? true : false;
+    return $result;
+}
+
+function returnMarriageHappiness($userid)
+{
+    global $db;
+    $q = $db->query("SELECT `happiness` FROM `marriage_tmg` WHERE (`proposer_id` = {$userid} OR `proposed_id` = {$userid}) AND `together` = 1");
+    if ($db->num_rows($q) == 0)
+        return 0;
+    else
+        return $db->fetch_single($q);
 }
