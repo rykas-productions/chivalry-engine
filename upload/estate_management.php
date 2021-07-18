@@ -97,7 +97,7 @@ function home()
 							Base Will
 						</div>
 						<div class='col-6 col-sm-7'>
-							" . number_format($edb['house_will']) . "
+							" . shortNumberParse($edb['house_will']) . "
 						</div>
 					</div>
 					<div class='row'>
@@ -105,7 +105,7 @@ function home()
 							Max Will
 						</div>
 						<div class='col-6 col-sm-7'>
-							" . number_format($ir['maxwill']) . "
+							" . shortNumberParse($ir['maxwill']) . "
 						</div>
 					</div>
 					<div class='row'>
@@ -113,7 +113,7 @@ function home()
 							Buy Value
 						</div>
 						<div class='col-7'>
-							" . number_format($edb['house_price']) . " Copper Coins
+							" . shortNumberParse($edb['house_price']) . " Copper Coins
 						</div>
 					</div>
 					<div class='row'>
@@ -121,7 +121,7 @@ function home()
 							Current Value
 						</div>
 						<div class='col-7'>
-							" . number_format(calculateSellPrice($estate['ue_id'])) . " Copper Coins
+							" . shortNumberParse(calculateSellPrice($estate['ue_id'])) . " Copper Coins
 						</div>
 					</div>
                     <div class='row'>
@@ -166,7 +166,7 @@ function home()
 							Bonus Will
 						</div>
 						<div class='col-8'>
-							" . number_format(calcExtraWill($estate['gardenUpgrade'], $edb['house_will'])+$estate['bonusWill']) . "
+							" . shortNumberParse(calcExtraWill($estate['gardenUpgrade'], $edb['house_will'])+$estate['bonusWill']) . "
 						</div>
 					</div>
 				</div>
@@ -245,7 +245,7 @@ function home()
 							Stored
 						</div>
 						<div class='col-8'>
-							" . number_format($estate['vault']) . " Copper Coins
+							" . shortNumberParse($estate['vault']) . " Copper Coins
 						</div>
 					</div>
 					<div class='row'>
@@ -253,7 +253,7 @@ function home()
 							Capacity
 						</div>
 						<div class='col-8'>
-							" . number_format(calcVaultCapacity($estate['vaultUpgrade'], $edb['house_price'])) . " Copper Coins
+							" . shortNumberParse(calcVaultCapacity($estate['vaultUpgrade'], $edb['house_price'])) . " Copper Coins
 						</div>
 					</div>
 					<div class='row'>
@@ -325,7 +325,10 @@ function move_in()
 	}
 	doMoveIn($_GET['id'],$userid);
 	$api->SystemLogsAdd($userid, "estate", "Moved into estate ID {$_GET['id']}.");
-	alert("success","Success!","You have moved into this property!",true, 'estate_management.php');
+	alert("success","Success!","You have moved into your " . getNameFromEstateID($_GET['id']) . " estate!", false);
+	$estate=$db->fetch_row($db->query("SELECT * FROM `user_estates` WHERE `ue_id` = {$_GET['id']}"));
+	$edb=$db->fetch_row($db->query("SELECT * FROM `estates` WHERE `house_id` = {$estate['estate']}"));
+	home();
 }
 function property_list()
 {
@@ -397,7 +400,7 @@ function property_list()
 										<b>Base Will</b>
 									</div>
 									<div class='col-12'>
-										" . number_format($r['house_will']) . "
+										" . shortNumberParse($r['house_will']) . "
 									</div>
 								</div>
 								<div class='row'>
@@ -405,7 +408,7 @@ function property_list()
 										<b>Max Will</b>
 									</div>
 									<div class='col-12'>
-										" . number_format(calcExtraWill($r['gardenUpgrade'], $r['house_will'])+$r['house_will']+$r['bonusWill']) . "
+										" . shortNumberParse(calcExtraWill($r['gardenUpgrade'], $r['house_will'])+$r['house_will']+$r['bonusWill']) . "
 									</div>
 								</div>
 							</div>
@@ -439,7 +442,7 @@ function property_list()
 										<b>Current Value</b>
 									</div>
 									<div class='col-12 col-md-6'>
-										<small>" . number_format(calculateSellPrice($r['ue_id'])) . " Copper Coins</small>
+										<small>" . shortNumberParse(calculateSellPrice($r['ue_id'])) . " Copper Coins</small>
 									</div>
 								</div>
 							</div>
@@ -937,8 +940,8 @@ function buy_property()
 	$r=$db->fetch_row($q);
 	if (!$api->UserHasCurrency($userid, 'primary', $r['house_price']))
 	{
-		alert('danger',"Uh Oh!","You need " . number_format($r['house_price']) . " Copper Coins to purchase this property. 
-		You only have " . number_format($ir['primary_currency']) . " Copper Coins.", true, '?action=sellList');
+	    alert('danger',"Uh Oh!","You need " . shortNumberParse($r['house_price']) . " Copper Coins to purchase this property. 
+		You only have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.", true, '?action=sellList');
 		die($h->endpage());
 	}
 	if ($ir['level'] < $r['house_level'])
@@ -949,7 +952,7 @@ function buy_property()
 	}
 	buyEstate($userid, $_GET['id']);
 	$api->UserTakeCurrency($userid, 'primary', $r['house_price']);
-	alert('success',"Success!","You have successfully bought {$r['house_name']} for " . number_format($r['house_price']) . " 
+	alert('success',"Success!","You have successfully bought {$r['house_name']} for " . shortNumberParse($r['house_price']) . " 
 	Copper Coins. You may move into this property by checking your property list.", true, '?action=sellList');
 	addToEconomyLog('Estates', 'copper', $r['house_price']*-1);
 	die($h->endpage());
@@ -991,7 +994,7 @@ function sell_property()
 	if (isset($_POST['sell']))
 	{
 		$api->UserGiveCurrency($userid, 'primary', $sellPrice);
-		alert('success',"Success!","You have sold this property back to the game for " . number_format($sellPrice) . " Copper Coins.", true, '?action=propertyList');
+		alert('success',"Success!","You have sold this property back to the game for " . shortNumberParse($sellPrice) . " Copper Coins.", true, '?action=propertyList');
 		sellEstate($_GET['id']);
 		addToEconomyLog('Estates', 'copper', $sellPrice);
 	}
@@ -1019,14 +1022,21 @@ function game_properties()
 	global $db, $ir, $userid, $estate, $edb, $h, $api;
 	$hq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_will` > 100 ORDER BY `house_will` ASC");
 	echo "<div class='row'>
-			<div class='col-12 col-md-4'>
-				<a href='?action=propertyList' class='btn btn-block btn-success'>Your Properties</a>
+			<div class='col-12 col-md-6 col-lg-3'>
+				<a href='estate_management.php' class='btn btn-block btn-info'>Current Estate</a>
+				<br />
 			</div>
-			<div class='col-12 col-md-4'>
+			<div class='col-12 col-md-6 col-lg-3'>
+				<a href='?action=sellList' class='btn btn-block btn-primary'>Avaliable Properties</a>
+				<br />
+			</div>
+			<div class='col-12 col-md-6 col-lg-3'>
 				<a href='?action=estateMarket' class='btn btn-block btn-danger'>Player Properties</a>
+				<br />
 			</div>
-			<div class='col-12 col-md-4'>
+			<div class='col-12 col-md-6 col-lg-3'>
 				<a href='#' class='btn btn-block btn-warning disabled'>For Rent</a>
+				<br />
 			</div>
 		</div>
 		<hr />";
@@ -1051,7 +1061,7 @@ function game_properties()
 									Max Will
 								</div>
 								<div class='row'>
-									<small>" . number_format($r['house_will']) . "</small>
+									<small>" . shortNumberParse($r['house_will']) . "</small>
 								</div>
 							</div>
 							<div class='col-6 col-md-3 col-lg-1'>
@@ -1067,7 +1077,7 @@ function game_properties()
 									Cost
 								</div>
 								<div class='row'>
-									<small class='{$class}'>" . number_format($r['house_price']) . " Copper Coins</small>
+									<small class='{$class}'>" . shortNumberParse($r['house_price']) . " Copper Coins</small>
 								</div>
 							</div>
 							<div class='col-12 col-md-12 col-lg-2'>
@@ -1093,22 +1103,34 @@ function estate_market()
                      INNER JOIN `estates` AS `e`
                      ON `e`.`house_id` = `ue`.`estate`
                      ORDER BY `e`.`house_will`, `em`.`em_cost` ASC");
-	echo "<div class='row'>
-			<div class='col-12 col-md-4'>
-				<a href='?action=propertyList' class='btn btn-block btn-success'>Your Properties</a>
+        echo "<div class='row'>
+			<div class='col-12 col-md-6 col-lg-3'>
+				<a href='estate_management.php' class='btn btn-block btn-info'>Current Estate</a>
+				<br />
 			</div>
-			<div class='col-12 col-md-4'>
-				<a href='?action=sellList' class='btn btn-block btn-primary'>Available Properties</a>
+			<div class='col-12 col-md-6 col-lg-3'>
+				<a href='?action=sellList' class='btn btn-block btn-primary'>Avaliable Properties</a>
+				<br />
 			</div>
-			<div class='col-12 col-md-4'>
+			<div class='col-12 col-md-6 col-lg-3'>
+				<a href='?action=estateMarket' class='btn btn-block btn-danger'>Player Properties</a>
+				<br />
+			</div>
+			<div class='col-12 col-md-6 col-lg-3'>
 				<a href='#' class='btn btn-block btn-warning disabled'>For Rent</a>
+				<br />
 			</div>
 		</div>
 		<hr />";
+    if ($db->num_rows($q) == 0)
+    {
+        alert("danger","","There's no active estate market offers at this time.", true, 'estate_management.php');
+        die($h->endpage());
+    }
 	while ($r = $db->fetch_row($q)) 
 	{
 		$r['username'] = parseUsername($r['em_adder']);
-		$r['em_cost_style'] = ($ir['primary_currency'] >= $r['em_cost']) ? number_format($r['em_cost']) : "<span class='text-danger'>" . number_format($r['em_cost']) . "</span>";
+		$r['em_cost_style'] = ($ir['primary_currency'] >= $r['em_cost']) ? shortNumberParse($r['em_cost']) : "<span class='text-danger'>" . shortNumberParse($r['em_cost']) . "</span>";
 		$link = ($r['em_adder'] == $userid) ? "<a href='?action=marketRemove&id={$r['em_id']}' class='btn btn-danger btn-block'>Remove</a>" : "<a href='?action=marketBuy&id={$r['em_id']}' class='btn btn-primary btn-block'>Purchase</a>";
 		echo "<div class='row'>
 			<div class='col-12'>
@@ -1124,7 +1146,7 @@ function estate_market()
 										{$r['house_name']}
 									</div>
 									<div class='col-12'>
-										<small>Value " . number_format(calculateSellPrice($r['em_id'])) . " Copper Coins</small>
+										<small>Value " . shortNumberParse(calculateSellPrice($r['em_id'])) . " Copper Coins</small>
 									</div>
 								</div>
 							</div>
@@ -1202,15 +1224,15 @@ function estate_market_buy()
 		alert('danger',"Uh Oh!","You cannot purchase an estate from another player who shares an IP address with you.", true, '?action=estateMarket');
 		die($h->endpage());
 	}
-	$remove = 0.13;
+	$remove = 0.07;
 	$removePerc = $remove * 100;
 	$toRemove = $r['em_cost'] * $remove;
 	$toPlayer = $r['em_cost'] - $toRemove;
 	addToEconomyLog('Market Fees', 'copper', ($toRemove)*-1);
-	$api->GameAddNotification($r['em_adder'],"Your estate has been sold for " . number_format($r['em_cost']) . " Copper Coins. You were charged a {$removePerc}% fee of " . number_format($toRemove) . " Copper Coins. You received a total of " . number_format($toPlayer) . " Copper Coins.");
+	$api->GameAddNotification($r['em_adder'],"Your estate has been sold for " . shortNumberParse($r['em_cost']) . " Copper Coins. You were charged a {$removePerc}% fee of " . shortNumberParse($toRemove) . " Copper Coins. You received a total of " . shortNumberParse($toPlayer) . " Copper Coins.");
 	$api->UserTakeCurrency($userid, 'primary', $r['em_cost']);
 	$api->UserGiveCurrency($r['em_adder'], 'primary', $toPlayer);
-	alert('success',"Success!","You have purchased this property for " . number_format($r['em_cost']) . " Copper Coins! Congratulations!", true, '?action=estateMarket');
+	alert('success',"Success!","You have purchased this property for " . shortNumberParse($r['em_cost']) . " Copper Coins! Congratulations!", true, '?action=estateMarket');
 	$db->query("UPDATE `user_estates` SET `userid` = {$userid} WHERE `ue_id` = {$r['em_estate_id']}");
 	$db->query("DELETE FROM `estate_market` WHERE `em_id` = {$r['em_id']}");
 	estate_market();
@@ -1243,10 +1265,11 @@ function estate_market_sell()
 		(`em_adder`, `em_estate_id`, `em_cost`) VALUES 
 		('{$userid}', '{$_GET['id']}', '{$_POST['price']}')");
 		$db->query("UPDATE `user_estates` SET `userid` = 0 WHERE `ue_id` = {$_GET['id']}");
-		alert('success',"Success!","You have listed this property for " . number_format($_POST['price']) . " Copper Coins! You will be charged 13% upon selling this estate.", true, '?action=estateMarket');
+		alert('success',"Success!","You have listed this property for " . shortNumberParse($_POST['price']) . " Copper Coins! You will be charged 7% upon selling this estate.", true, '?action=estateMarket');
 	}
 	else
 	{
+	    $estateValue = calculateSellPrice($_GET['id']);
 		echo "
 		<form method='post'>
 			<div class='row'>
@@ -1254,14 +1277,16 @@ function estate_market_sell()
 					<div class='card'>
 						<div class='card-body'>
 							<div class='row'>
-								How much do you wish to list your property for? You will be charged a 13% fee upon a completed buy.
-							</div>
+                                <div class='col-12'>
+								    How much do you wish to list your property for? You will be charged a 7% fee upon a completed buy. Your estate has a value of " . shortNumberParse($estateValue) . " Copper Coins.
+							     </div>
+                            </div>
 							<div class='row'>
 								<div class='col-12'>
 									<b>Copper Coins</b>
 								</div>
 								<div class='col-8 col-md-9'>
-									<input type='number' class='form-control' required='1' name='price' id='price'>
+									<input type='number' class='form-control' required='1' min='1' value='{$estateValue}' name='price' id='price'>
 								</div>
 								<div class='col-4 col-md-3'>
 									<input type='submit' class='btn btn-secondary btn-block' value='Sell'>

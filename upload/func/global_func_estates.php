@@ -45,7 +45,7 @@ function calcIronCosts($vaultLevel, $estateCost)
 }
 function doLeaveHouse($user)
 {
-	global $db, $userid;
+	global $db;
 	$q=$db->query("SELECT * FROM `user_estates` WHERE `estate` = 1 AND `userid` = {$user}");
 	if ($db->num_rows($q) == 0)
 	{
@@ -61,7 +61,7 @@ function doLeaveHouse($user)
 		$r=$db->fetch_row($q);
 		$r2=$db->fetch_single($db->query("SELECT `house_will` FROM `estates` WHERE `house_id` = 1"));
 		$newWill=$r2+$r['bonusWill'];
-		$db->query("UPDATE `users` SET `maxwill` = 100, `estate` = {$r['ue_id']} WHERE `userid` = {$user}");
+		$db->query("UPDATE `users` SET `maxwill` = {$newWill}, `estate` = {$r['ue_id']} WHERE `userid` = {$user}");
 	}
 }
 function doMoveIn($estate,$user)
@@ -112,12 +112,12 @@ function calculateSellPrice($estate_id)
 	$r=$db->fetch_row($db->query("SELECT * FROM `user_estates` WHERE `ue_id` = {$estate_id}"));
 	$r2=$db->fetch_row($db->query("SELECT * FROM `estates` WHERE `house_id` = {$r['estate']}"));
 	$startPrice = $r2['house_price'];
-	$startSellPrice = $r2['house_price'] * 0.55;
+	$startSellPrice = $r2['house_price'] * 0.8;
 	$upgradeCount = $r['gardenUpgrade'] + $r['sleepUpgrade'] + $r['vaultUpgrade'];
-	$multi = 0.0585617821 * $upgradeCount;
+	$multi = 0.0725617821 * $upgradeCount;
 	$addToSell = $startPrice * $multi;
 	$finalSell = $addToSell + $startSellPrice;
-	return $finalSell;
+	return round($finalSell);
 }
 
 function increaseMaxWill($userid, $increase)
@@ -145,6 +145,18 @@ function getNameFromUserEstate(int $user)
 	INNER JOIN `estates` as `e`
 	ON `estate` = `e`.`house_id`
 	WHERE `userid` = {$user}");
+    
+    $r = $db->fetch_row($q);
+    return $r['house_name'];
+}
+
+function getNameFromEstateID(int $id)
+{
+    global $db;
+    $q=$db->query("SELECT * FROM `user_estates`
+	INNER JOIN `estates` as `e`
+	ON `estate` = `e`.`house_id`
+	WHERE `ue_id` = {$id}");
     
     $r = $db->fetch_row($q);
     return $r['house_name'];
