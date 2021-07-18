@@ -786,7 +786,6 @@ class headers
         global $db, $ir, $set, $userid, $api, $start;
         $query_extra = '';
         include('userinfo.php');
-        include('marriage_perks.php');
         if (isset($_GET['benchmark']))
             include('forms/include_end.php');   //benchmark data
 		$this->loadJS();

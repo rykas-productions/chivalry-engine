@@ -76,14 +76,14 @@ else
 		$p1=$ir;
 		$p2=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
 		$event=$p2;
-		$ring=$api->SystemItemIDtoName($mt['proposer_ring']);
+		$ring=$api->SystemItemIDtoName(getUserItemEquippedSlot($mt['proposer_id'],slot_wed_ring));
 	}
 	else
 	{
 		$p1=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 		$p2=$ir;
 		$event=$p1;
-		$ring=$api->SystemItemIDtoName($mt['proposed_ring']);
+		$ring=$api->SystemItemIDtoName(getUserItemEquippedSlot($mt['proposed_id'], slot_wed_ring));
 	}
 	$married="<a href='profile.php?user={$event['userid']}'>{$event['username']}</a>";
 }

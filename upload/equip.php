@@ -314,21 +314,44 @@ function ring()
         die($h->endpage());
     }
     //Check to be sure the user is trying to equip the item.
-    if (isset($_POST['type'])) {
+    if (isset($_POST['type'])) 
+    {
         //Check that the equipment slot is a valid slot. If not, lets stop them.
-        if (!in_array($_POST['type'], array("equip_ring_primary", "equip_ring_secondary"), true)) {
+        if (!in_array($_POST['type'], array(slot_prim_ring, slot_second_ring, slot_wed_ring), true)) 
+        {
             alert('danger', "Uh Oh!", "You cannot equip a ring to an invalid slot.", true, 'inventory.php');
             die($h->endpage());
         }
+        if ($_POST['type'] == slot_wed_ring)
+        {
+            if (!isUserMarried($userid))
+            {
+                alert('danger', "Uh Oh!", "You cannot wear a wedding ring when you are not married. Go back and try again.", true, 'inventory.php');
+                die($h->endpage());
+            }
+            if (returnMarriageHappiness($userid) < 10)
+            {
+                alert('danger', "Uh Oh!", "You must have at least 10 marriage happiness before you can equip a wedding ring.", true, 'inventory.php');
+                die($h->endpage());
+            }
+        }
 		$eir=$db->fetch_row($db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid} AND `equip_slot` = '{$_POST['type']}'"));
-        //Check to see if the chosen slot has a weapon equipped to it already. If true, give them their item back, and
-        //log the unequip.
+        //Check to see if the chosen slot has a weapon equipped to it already. 
+        //If true, give them their item back, and log the unequip.
 		$slot = equipSlotParser($_POST['type']);
         if ($eir['itemid'] > 0) 
             unequipUserSlot($userid, $_POST['type']);
         equipUserSlot($userid, $_POST['type'], $r['itmid']);
         alert('success', "Success!", "You have successfully equipped {$api->SystemItemIDtoName($r['itmid'])} as your {$slot}.", true, 'inventory.php', 'Back', true);
-    } else {
+    } 
+    else 
+    {
+        $form = "<option value='equip_ring_primary'>Primary Ring</option>
+				<option value='equip_ring_secondary'>Secondary Ring</option>";
+        if (isUserMarried($userid))
+        {
+            $form .= "<option value='equip_wedding_ring'>Wedding Ring</option>";
+        }
         //Form to select what slot to equip the weapon to.
         echo "<h3>Equip Ring Form</h3>
 		<hr />
@@ -336,8 +359,7 @@ function ring()
 		it'll be moved to your inventory.<br />
 		<form action='?slot=ring&ID={$_GET['ID']}' method='post'>
 			<select name='type' class='form-control' type='dropdown'>
-				<option value='equip_ring_primary'>Primary Ring</option>
-				<option value='equip_ring_secondary'>Secondary Ring</option>
+				{$form}
 			</select>
 			<input type='submit' value='Equip Ring' class='btn btn-primary'>
 		</form>

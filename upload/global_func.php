@@ -6,6 +6,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
+//Load additional function files from /func/ dir
 $dir = scandir(dirname(__FILE__) . '/func/');
 foreach ($dir as $func)
 {
@@ -15,8 +16,15 @@ foreach ($dir as $func)
     }
 }
 
-//Constants
-require('const/const_effect.php');
+//Load our constants from the /const/ dir
+$dir = scandir(dirname(__FILE__) . '/const/');
+foreach ($dir as $func)
+{
+    if (preg_match('/\.php$/', $func))
+    {
+        require_once dirname(__FILE__) . "/const/" . $func;
+    }
+}
 /*
 	Parses the time since the timestamp given.
 	@param int $time_stamp for time since.
@@ -95,6 +103,14 @@ function shortNumberParse($n)
         $n_format = number_format($n / 1000000000, 1) . "B";
     elseif ($n < 1000000000000000)
         $n_format = number_format($n / 1000000000000, 1) . "T";
+    elseif ($n < 1000000000000000000)
+        $n_format = number_format($n / 1000000000000000, 1) . " Quadrillion";
+    elseif ($n < 1000000000000000000000)
+        $n_format = number_format($n / 1000000000000000000, 1) . " Sextillion";
+    elseif ($n < 1000000000000000000000000)
+        $n_format = number_format($n / 1000000000000000000000, 1) . " Sextillion";
+    else
+        $n_format = number_format($n);
     return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . "'>{$n_format}</span>";
 }
 
@@ -1177,21 +1193,26 @@ function statParser($stat)
         "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
         "primary_currency" => "Copper Coins", "secondary_currency"
         => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-        "VIP Days", "maxwill" => "Max Will");
+        "VIP Days", "will" => "Will",
+        "luck" => "Luck", "brave" => "Bravery",
+        "energy" => "Energy"
+    );
         return $statNamesArray[$stat];
 }
 
 function equipSlotParser($slot)
 {
-    $slotNamesArray = array("equip_primary" => "Primary Weapon",
-        "equip_secondary" => "Secondary Weapon",
-        "equip_armor" => "Armor",
-        "equip_potion" => "Combat Potion",
-        "equip_badge" => "Profile Badge",
-        "equip_ring_primary" => "Primary Ring",
-        "equip_ring_secondary" => "Secondary Ring",
-        "equip_pendant" => "Pendant",
-        "equip_necklace" => "Necklace");
+    $slotNamesArray = array(slot_prim_wep => "Primary Weapon",
+        slot_second_wep => "Secondary Weapon",
+        slot_armor => "Armor",
+        slot_potion => "Combat Potion",
+        slot_badge => "Profile Badge",
+        slot_prim_ring => "Primary Ring",
+        slot_second_ring => "Secondary Ring",
+        slot_pendant => "Pendant",
+        slot_necklace => "Necklace",
+        slot_wed_ring => "Wedding Ring"
+    );
     return $slotNamesArray[$slot];
 }
 

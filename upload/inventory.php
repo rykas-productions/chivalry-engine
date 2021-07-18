@@ -11,7 +11,7 @@ require("globals.php");
 $tresder = (Random(100, 999));
 echo "<h3><i class='game-icon game-icon-swords-emblem'></i> Your Equipment</h3><hr />
 <div class='row'>
-	<div class='col-md'>
+	<div class='col-md-6 col-xxl-4 col-xxxl-3'>
 		<div class='card'>
 			<div class='card-header'>
 				Weapon ";
@@ -37,9 +37,10 @@ if (!empty($ir['equip_primary'])) {
 echo "
 			</div>
 		</div>
+    <br />
 	</div>";
 echo "
-	<div class='col-md'>
+	<div class='col-md-6 col-xxl-4 col-xxxl-3'>
 		<div class='card'>
 			<div class='card-header'>
 				Weapon ";
@@ -65,9 +66,10 @@ if (!empty($ir['equip_secondary'])) {
 echo "
 			</div>
 		</div>
+    <br />
 	</div>";
 echo "
-	<div class='col-md'>
+	<div class='col-md-6 col-xxl-4 col-xxxl-3'>
 		<div class='card'>
 			<div class='card-header'>
 				Armor ";
@@ -93,9 +95,10 @@ if (!empty($ir['equip_armor'])) {
 echo "
 			</div>
 		</div>
+    <br />
 	</div>";
     echo "
-	<div class='col-md'>
+	<div class='col-md-6 col-xxl-4 col-xxxl-3'>
 		<div class='card'>
 			<div class='card-header'>
 				Potion";
@@ -120,19 +123,15 @@ if (!empty($ir['equip_potion'])) {
 echo "
 			</div>
 		</div>
-	</div>
-</div>";
-$trinkq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid}");
-if ($db->num_rows($trinkq) > 0)
-{
-	echo "<hr class='hidden-xs-down' /><div class='row'>";
-}
+    <br />
+	</div>";
+$trinkq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid} AND `itemid` > 0");
 while ($r=$db->fetch_row($trinkq))
 {
-	echo "<div class='col-md'>
+	echo "<div class='col-md-6 col-xxl-4 col-xxxl-3'>
 	<div class='card'>
 			<div class='card-header'>
-			" . friendlyTrinketName($r['equip_slot']) .  " (<a href='unequip.php?type={$r['equip_slot']}'>Unequip</a>)
+			" . equipSlotParser($r['equip_slot']) .  " (<a href='unequip.php?type={$r['equip_slot']}'>Unequip</a>)
 			</div>
 			<div class='card-body'>
 				<div class='row'>
@@ -145,6 +144,7 @@ while ($r=$db->fetch_row($trinkq))
 				</div>
 			</div>
 		</div>
+        <br />
 		</div>";
 }
 if ($db->num_rows($trinkq) > 0)
@@ -497,15 +497,6 @@ while ($i = $db->fetch_row($inv))
 													<i class='game-icon game-icon-check-mark'></i>
 												</a><br />";
 										}
-										//Rings to not be equipped.
-										$ringsarray=array(113,114,115,116,125,126,127);
-										//Rings that are allowed to be equipped.
-										if (in_array($i['itmid'],$ringsarray))
-										{
-											echo "<a title='Wear {$i['itmname']}.' href='marriage.php?action=ring&ring={$i['itmid']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-ring'></i>
-												</a><br />";
-										}
 										//Weapons
 										if ($i['weapon'] > 0)
 										{
@@ -530,7 +521,7 @@ while ($i = $db->fetch_row($inv))
 										//Rings
 										if ($i['itmtypename'] == 'Rings')
 										{
-											echo "<a title='Equip {$i['itmname']} as ring trinet.' href='equip.php?slot=ring&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+											echo "<a title='Equip {$i['itmname']} as ring trinket.' href='equip.php?slot=ring&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
 													<i class='game-icon game-icon-ring'></i>
 												</a><br />";
 										}
@@ -667,15 +658,3 @@ echo "</div><br />
 <a href='inventdump.php' class='btn btn-block btn-danger'>Dump Inventory</a><br />";
 $db->free_result($inv);
 $h->endpage();
-
-function friendlyTrinketName($slot)
-{
-	if ($slot == 'equip_necklace')
-		return "Necklace";
-	if ($slot == 'equip_pendant')
-		return "Pendant"; 
-	if ($slot == 'equip_ring_primary')
-		return "Ring";
-	if ($slot == 'equip_ring_secondary')
-		return "Ring";
-}

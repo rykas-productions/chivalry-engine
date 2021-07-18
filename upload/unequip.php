@@ -8,11 +8,11 @@
 */
 require('globals.php');
 //Make sure user is trying to unequip a valid slot.
-$validSlots = array("equip_primary", "equip_secondary", 
-					"equip_armor", "equip_potion",
-					"equip_badge", "equip_ring_primary", 
-					"equip_ring_secondary", "equip_necklace", 
-					"equip_pendant");
+$validSlots = array(slot_prim_wep, slot_second_wep, 
+                    slot_armor, slot_potion,
+					slot_badge, slot_prim_ring, 
+					slot_second_ring, slot_necklace, 
+					slot_pendant, slot_wed_ring);
 if (!isset($_GET['type']) || !in_array($_GET['type'], $validSlots, true)) {
     alert('danger', "Uh Oh!", "You are trying to unequip from an invalid slot.", true, 'inventory.php');
     die($h->endpage());

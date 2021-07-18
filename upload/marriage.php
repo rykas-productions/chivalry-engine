@@ -45,9 +45,6 @@ else
 		case "divorce":
 			divorce();
 			break;
-       case "ring":
-			ring();
-			break;
 		default:
 			home_wed();
 			break;
@@ -103,7 +100,7 @@ function home_unwed()
 		else
 		{
 			$csrf=request_csrf_html('marriage_propose');
-			echo "Welcome to the marriage center {$ir['username']}. Do you wish to propose to someone today?<br />
+			echo "Welcome to the marriage center {$ir['username']}. Do you wish to propose marriage to someone today?<br />
 			<form method='post'>
 				" . user_dropdown('user',$userid) . "
 				{$csrf}
@@ -132,7 +129,7 @@ function home_unwed()
 			if ($_POST['action'] == 'decline')
 			{
 				alert('success',"Success!","You have successfully declined this marriage proposal.",true,'explore.php');
-				$api->GameAddNotification($p['proposer_id'],"{$ir['username']} has declined your marriage proposal.");
+				$api->GameAddNotification($p['proposer_id'],"{$ir['username']} has declined your marriage proposal. :(");
 				$db->query("DELETE FROM `marriage_tmg` WHERE `marriage_id` = {$proidq}");
 				die($h->endpage());
 			}
@@ -142,6 +139,7 @@ function home_unwed()
 				if ($db->num_rows($already_married) > 0)
 				{
 					alert('danger',"Uh Oh!","You cannot accept this proposal as the sender has already gotten married. We're going to remove this proposal for you.");
+					$api->GameAddNotification($p['proposer_id'],"{$ir['username']} wanted to acccept your marriage proposal, but you were already married, so... no.");
 					$db->query("DELETE FROM `marriage_tmg` WHERE `marriage_id` = {$proidq}");
 					die($h->endpage());
 				}
@@ -175,7 +173,7 @@ function home_unwed()
 	//If player has proposal outbound.
 	else
 	{
-		$un=$db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$p['proposed_id']}"));
+	    $un=parseUsername($p['proposed_id']);
 		if (isset($_POST['divorce']))
 		{
 			if (!isset($_POST['verf']) || !verify_csrf_code('marriage_cancel', stripslashes($_POST['verf'])))
@@ -184,14 +182,14 @@ function home_unwed()
 				die($h->endpage());
 			}
 			alert('success',"Success!","You have successfully withdrawn your proposal. Better luck next time.");
-			$api->GameAddNotification($p['proposed_id'],"{$ir['username']} has withdrawn their proposal.");
+			$api->GameAddNotification($p['proposed_id'],"{$ir['username']} has withdrawn their marriage proposal.");
 			$db->query("DELETE FROM `marriage_tmg` WHERE `marriage_id` = {$p['marriage_id']}");
 			die($h->endpage());
 		}
 		else
 		{
 			$csrf=request_csrf_html('marriage_cancel');
-			echo "You currently have a proposal sent out to {$un}. Do you wish to cancel it?<br />
+			echo "You currently have a proposal sent out to <a href='profile.php?user={$p['propose_id']}'>{$un}</a>. Do you wish to cancel it?<br />
 			<form method='post'>
 				{$csrf}
 				<input type='hidden' name='divorce' value='do'>
@@ -211,8 +209,8 @@ function home_wed()
 		$title2=$un;
 		$p1=$ir;
 		$p2=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposed_id']}"));
-        $p1['ring']=$mt['proposer_ring'];
-        $p2['ring']=$mt['proposed_ring'];
+		$p1['ring']=getUserItemEquippedSlot($mt['proposer_id'], slot_wed_ring);
+		$p2['ring']=getUserItemEquippedSlot($mt['proposed_id'], slot_wed_ring);
 	}
 	else
 	{
@@ -221,8 +219,8 @@ function home_wed()
 		$title2=$ir['username'];
 		$p1=$db->fetch_row($db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$mt['proposer_id']}"));
 		$p2=$ir;
-        $p2['ring']=$mt['proposer_ring'];
-        $p1['ring']=$mt['proposed_ring'];
+		$p2['ring']=getUserItemEquippedSlot($mt['proposer_id'], slot_wed_ring);
+        $p1['ring']=getUserItemEquippedSlot($mt['proposed_id'], slot_wed_ring);
         
 	}
 	$p1['estate'] = $db->fetch_single($db->query("/*qc=on*/SELECT `house_name` FROM `estates` WHERE `house_will` = {$p1['maxwill']}"));
@@ -665,13 +663,14 @@ function divorce()
 			alert('danger',"Uh Oh!","Your request has been blocked for your security. Try to be quicker next time.",true,'marriage.php');
 			die($h->endpage());
 		}
-        if ($mt['proposer_ring'] > 0)
-            $api->UserGiveItem($mt['proposer_id'],$mt['proposer_ring'],1);
-        if ($mt['proposed_ring'] > 0)
-            $api->UserGiveItem($mt['proposed_id'],$mt['proposed_ring'],1);
-		alert('success',"Success!","You have successfully divorced your spouse.",true,'index.php');
+		if (getUserItemEquippedSlot($mt['proposer_id'], slot_wed_ring) > 0)
+		    unequipUserSlot($mt['proposer_id'], slot_wed_ring);
+	    if (getUserItemEquippedSlot($mt['proposed_id'], slot_wed_ring) > 0)
+	        unequipUserSlot($mt['proposed_id'], slot_wed_ring);
+		alert('success',"Success!","You have successfully divorced your spouse. You have also removed your wedding ring.",true,'index.php');
 		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, has divorced you.");
-		$db->query("UPDATE `users` SET `will` = 0 WHERE `userid` = {$userid} AND `userid` = {$event}");
+		$api->UserInfoSetStatic($userid, "will", 0);
+		$api->UserInfoSetStatic($event, "will", 0);
 		$db->query("DELETE FROM `marriage_tmg` WHERE `marriage_id` = {$mt['marriage_id']}");
 	}
 	else
@@ -684,46 +683,5 @@ function divorce()
 			{$csrf}
 		</form>";
 	}
-}
-
-function ring()
-{
-    global $db,$ir,$userid,$h,$mi,$api;
-	$mt=$db->fetch_row($mi);
-    $ring = (isset($_GET['ring']) && is_numeric($_GET['ring'])) ? abs($_GET['ring']) : '';
-    $ringsarray=array(113,114,115,116,125,126,127);
-    if ($mt['happiness'] < 10)
-    {
-        alert('danger',"Uh Oh!","You may not equip a ring until your marriage happiness is at least 10.");
-        die($h->endpage());
-    }
-    if (!in_array($ring,$ringsarray))
-    {
-        alert('danger',"Uh Oh!","You are trying to wear an invalid ring.");
-        die($h->endpage());
-    }
-    if (!$api->UserHasItem($userid,$ring,1))
-    {
-        alert('danger',"Uh Oh!","You do not have this ring to wear.",true,'inventory.php');
-        die($h->endpage());
-    }
-	if ($mt['proposer_id'] == $userid)
-	{
-        if ($mt['proposer_ring'] > 0)
-        {
-            $api->UserGiveItem($userid,$mt['proposer_ring'],1);
-        }
-		$db->query("UPDATE `marriage_tmg` SET `proposer_ring` = {$ring} WHERE `marriage_id` = {$mt['marriage_id']}");
-	}
-	else
-	{
-        if ($mt['proposed_ring'] > 0)
-        {
-            $api->UserGiveItem($userid,$mt['proposed_ring'],1);
-        }
-		$db->query("UPDATE `marriage_tmg` SET `proposed_ring` = {$ring} WHERE `marriage_id` = {$mt['marriage_id']}");
-	}
-    $api->UserTakeItem($userid,$ring,1);
-    alert('success',"Success!","You put on your wedding ring.",true,'inventory.php');
 }
 $h->endpage();
