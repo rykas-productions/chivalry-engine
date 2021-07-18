@@ -141,13 +141,8 @@ function increaseMaxWillPercent($userid, $increase)
 function getNameFromUserEstate(int $user)
 {
     global $db;
-    $q=$db->query("SELECT * FROM `user_estates`
-	INNER JOIN `estates` as `e`
-	ON `estate` = `e`.`house_id`
-	WHERE `userid` = {$user}");
-    
-    $r = $db->fetch_row($q);
-    return $r['house_name'];
+    $estate = $db->fetch_single($db->query("SELECT `estate` FROM `users` WHERE `userid` = {$user}"));
+    return getNameFromEstateID($estate);
 }
 
 function getNameFromEstateID(int $id)
