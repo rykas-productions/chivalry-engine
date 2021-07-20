@@ -411,13 +411,19 @@ function sexchange()
             die($h->endpage());
         }
         if ($ir['gender'] == $_POST['gender']) {
-            alert('danger', "Uh Oh!", "You cannot turn yourself back into your current gender.");
+            alert('danger', "Uh Oh!", "Why would you want to change back into your current gender?");
+            die($h->endpage());
+        }
+        if (!$api->UserHasCurrency($userid, "secondary", 5))
+        {
+            alert('danger', "Uh Oh!", "You need at least 5 Chivalry Tokens before you can change your gender.");
             die($h->endpage());
         }
         $e_gender = $db->escape(stripslashes($_POST['gender']));
         $db->query("UPDATE `users` SET `gender` = '{$e_gender}' WHERE `userid` = {$userid}");
         alert('success', "Success!", "You have successfully changed your gender into {$_POST['gender']}.", true, 'preferences.php');
         $api->SystemLogsAdd($userid, 'preferences', "Changed gender to {$_POST['gender']}.");
+        $api->UserTakeCurrency($userid, "secondary", 5);
     } else {
         $g = "<option value='Male'>Male</option>
 				<option value='Female'>Female</option>
@@ -427,7 +433,7 @@ function sexchange()
 		<form method='post'>
 		<tr>
 			<th colspan='2'>
-				Use this form to change your gender. You currently identify as {$ir['gender']}.
+				At a cost of 5 Chivalry Tokens, you may change the gender you identify as. You currently identify as {$ir['gender']}.
 			</th>
 		</tr>
 		<tr>
