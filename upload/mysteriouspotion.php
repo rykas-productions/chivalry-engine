@@ -77,10 +77,8 @@ if ($effect == 9)
 }
 if ($effect == 10)
 {
-    if ($ir['gender'] == 'Male')
-        $gender='Female';
-    else
-        $gender='Male';
+    $genders = array('Male', 'Female', 'Other');
+    $gender = array_rand($genders);
     $effect="and had your gender changed to {$gender}.";
     $db->query("UPDATE `users` SET `gender` = '{$gender}' WHERE `userid` = {$userid}");
 }
