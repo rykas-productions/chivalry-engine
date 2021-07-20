@@ -6,7 +6,7 @@
 	Website: 	https://chivalryisdeadgame.com/
 */
 //Back ported from Chivalry Engine V3
-function readConfigFromDB($moduleName)
+function readConfigFromDB(string $moduleName)
 {
     global $db;
     $q=$db->query("SELECT `setting_value` FROM `settings` WHERE `setting_name` = '{$moduleName}_config'");
@@ -17,7 +17,7 @@ function readConfigFromDB($moduleName)
             
 }
 //Back ported from Chivalry Engine V3
-function writeConfigToDB($moduleName, $configJson)
+function writeConfigToDB(string $moduleName, $configJson)
 {
     global $db;
     $q=$db->query("SELECT `setting_value` FROM `settings` WHERE `setting_name` = '{$moduleName}_config'");
@@ -39,11 +39,11 @@ function formatConfig(array $string)
 
 /**
  * @desc Internal function to properly remove JSON formatting.
- * @param json $json json object to turn into a string.
- * @return json Config String
+ * @param array $json json object to turn into a string.
+ * @return array Config String
  */
 //Back ported from Chivalry Engine V3
-function unformatConfig($json)
+function unformatConfig(array $json)
 {
     return json_decode($json, true);
 }
