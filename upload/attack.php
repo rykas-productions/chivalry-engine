@@ -418,16 +418,12 @@ function attacking()
         $r1 = $db->fetch_row($qo);
         $db->free_result($qo);
 		$spied=$db->query("/*qc=on*/SELECT `user` FROM `spy_advantage` WHERE `user` = {$userid} and `spied` = {$_GET['user']}");
+		$r1['weapon'] = calcWeaponEffectiveness($_GET['weapon'], $userid);
 		if (($db->num_rows($spied) > 0) && ($_GET['nextstep'] == 1))
 		{
 			$ir['strength']=$ir['strength']+($ir['strength']*0.25);
 			$ir['agility']=$ir['agility']+($ir['agility']*0.25);
 		}
-		//Sharper blades skill
-		$specialnumber=((getSkillLevel($userid,9)*20)/100);
-		$r1['weapon']=$r1['weapon']+($r1['weapon']*$specialnumber);
-		if ($_GET['weapon'] == 235)
-			$r1['weapon']=($r1['weapon']*0.25) *$ir['level'];
 		$mydamage = round(($r1['weapon'] * $youdata['strength'] / ($odata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 		$hitratio = max(10, min(60 * $ir['agility'] / $odata['agility'], 95));
 		$ttu='';
@@ -628,11 +624,7 @@ function attacking()
                 $db->free_result($eq);
                 $weptouse = Random(0, $cnt - 1);    //Select opponent weapon to use.
                 $wep = $enweps[$weptouse]['itmname'];
-                //Sharper blades skill
-                $specialnumber=((getSkillLevel($_GET['user'],9)*13)/100);
-                $enweps[$weptouse]['weapon']=$enweps[$weptouse]['weapon']+($enweps[$weptouse]['weapon']*$specialnumber);
-				if ($enweps[$weptouse]['itmid'] == 235)
-					$enweps[$weptouse]['weapon']=round(($enweps[$weptouse]['weapon']*0.25)*$odata['level']);
+                $enweps[$weptouse]['weapon'] = calcWeaponEffectiveness($enweps[$weptouse]['itmid'],$_GET['user']);
                 $dam = round(($enweps[$weptouse]['weapon'] * $odata['strength'] / ($youdata['guard'] / 1.5)) * (Random(10000, 12000) / 10000));
 				//Item used is a potion... so don't do damage.
                 if (($enweps[$weptouse]['itmtype'] == 8) || ($enweps[$weptouse]['itmtype'] == 7))
@@ -671,7 +663,7 @@ function attacking()
 							$api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
 						else
 						{
-							if (Random(1,4) != 1)
+							if (Random(1,4) <= 2)
 							{
 								$api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
 							}
