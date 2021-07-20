@@ -774,7 +774,7 @@ function unequipUserSlot($user, $slot)
 	}
 }
 
-function undoEquipGains($user, $slot)
+function undoEquipGains($user, $slot, $notify = true)
 {
 	global $db, $api;
 	$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$user} and `slot` = '{$slot}'");
@@ -817,10 +817,13 @@ function undoEquipGains($user, $slot)
 					$statloss .= ", {$mod} " . number_format($sbr['number']) . " " . statParser($sbr['stat']);
 			$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$user} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$slot}'");
 		}
-		if (!empty($statloss))
+		if ($notify)
 		{
-			$itmname = $api->SystemItemIDtoName(getUserItemEquippedSlot($user,$slot));
-			$api->GameAddNotification($user, "By unequipping the {$itmname} as your " . equipSlotParser($slot) . ", you have {$statloss}.");
+    		if (!empty($statloss))
+    		{
+    			$itmname = $api->SystemItemIDtoName(getUserItemEquippedSlot($user,$slot));
+    			$api->GameAddNotification($user, "By unequipping the {$itmname} as your " . equipSlotParser($slot) . ", you have {$statloss}.");
+    		}
 		}
 	}
 }

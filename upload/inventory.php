@@ -15,25 +15,28 @@ echo "<h3><i class='game-icon game-icon-swords-emblem'></i> Your Equipment</h3><
 		<div class='card'>
 			<div class='card-header'>
 				Weapon ";
-if (!empty($ir['equip_primary'])) {
-    echo "(<a href='unequip.php?type=equip_primary'>Unequip</a>)";
-}
-echo "
-			</div>
+                if (!empty($ir['equip_primary'])) 
+                {
+                    echo "(<a href='unequip.php?type=equip_primary'>Unequip</a>)";
+                }
+            echo "</div>
 			<div class='card-body'>";
-if (!empty($ir['equip_primary'])) {
-	$dam=$db->fetch_single($db->query("/*qc=on*/SELECT `weapon` FROM `items` WHERE `itmid` = {$ir['equip_primary']}"));
-    echo "<div class='row'>
-		<div class='col-3'>
-			" . returnIcon($ir['equip_primary'],4) . "
-		</div>
-		<div class='col-9'>
-			<a href='#' data-toggle='tooltip' data-placement='bottom' title='Weapon Rating: {$dam}'>{$api->SystemItemIDtoName($ir['equip_primary'])}</a>
-		</div>
-	</div>";
-} else {
-    echo "No weapon equipped.";
-}
+                if (!empty($ir['equip_primary'])) 
+                {
+                	$dam=$db->fetch_single($db->query("/*qc=on*/SELECT `weapon` FROM `items` WHERE `itmid` = {$ir['equip_primary']}"));
+                    echo "<div class='row'>
+                		<div class='col-3'>
+                			" . returnIcon($ir['equip_primary'],4) . "
+                		</div>
+                		<div class='col-9'>
+                			<a href='#' data-toggle='tooltip' data-placement='bottom' title='Weapon Rating: {$dam}'>{$api->SystemItemIDtoName($ir['equip_primary'])}</a>
+                		</div>
+                	</div>";
+                } 
+                else 
+                {
+                    echo "No weapon equipped.";
+                }
 echo "
 			</div>
 		</div>
@@ -44,7 +47,8 @@ echo "
 		<div class='card'>
 			<div class='card-header'>
 				Weapon ";
-if (!empty($ir['equip_secondary'])) {
+if (!empty($ir['equip_secondary'])) 
+{
     echo "(<a href='unequip.php?type=equip_secondary'>Unequip</a>)";
 }
 echo "
@@ -147,11 +151,7 @@ while ($r=$db->fetch_row($trinkq))
         <br />
 		</div>";
 }
-if ($db->num_rows($trinkq) > 0)
-{
-	echo "</div>";
-}
-echo "<hr />
+echo "</div><hr />
 <h3><i class='fas fa-fw fa-briefcase'></i> Your Inventory</h3><hr />";
 $inv =
     $db->query(
