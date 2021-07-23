@@ -1,6 +1,12 @@
 <?php
 //Functions relating to the attack system...
 
+/**
+ * @internal
+ * Return's the current user's weapon effectiveness.
+ * @param int $weapID Item ID of the weapon.
+ * @param int $attacker User ID of the person wielding the weapon.
+ */
 function calcWeaponEffectiveness($weapID, $attacker)
 {
     global $db, $api;

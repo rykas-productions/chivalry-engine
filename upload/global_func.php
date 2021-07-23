@@ -87,7 +87,14 @@ function TimeUntil_Parse($time_stamp)
     return $date;
 }
 
-function shortNumberParse($n)
+
+/**
+ * Shortens the number input to a readable short number. (IE 1.2B) Will create a hoverable 
+ * HTML object that reveals the original number.
+ * @param int $n original number
+ * @return string Html containing shortened number and hoverable original number.
+ */
+function shortNumberParse(int $n)
 {
     if ($n < 1000)
         $n_format = number_format($n);
@@ -114,9 +121,11 @@ function shortNumberParse($n)
     return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . "'>{$n_format}</span>";
 }
 
-/*
-	Parses the timestamp into a human friendly number.
-*/
+/**
+ * Parses the input timestamp into a human readable number.
+ * @param int $time Unix timestamp (time())
+ * @return string
+ */
 function ParseTimestamp($time)
 {
     $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
@@ -133,10 +142,11 @@ function ParseTimestamp($time)
     return $date;
 }
 
-/*
-	The function for testing for a valid email.
-	@param text $email The email to test for.
-*/
+/**
+ * Test if input email is valid. Does not test if exists, but rather if it fits standard email formatting.
+ * @param string $email Email address to test
+ * @return bool
+ */
 function valid_email($email)
 {
     return (filter_var($email, FILTER_VALIDATE_EMAIL) === $email);
@@ -172,6 +182,10 @@ function resetAttackStatus()
   $api->UserInfoSetStatic($userid, "attacking", 0);
 }
 
+/**
+ * Internal function used to update the current auth'd user's information,
+ * usually to make sure they aren't over their max, and other small things.
+ */
 function updateStats()
 {
 	global $db, $time, $ir;
@@ -202,7 +216,10 @@ function updateStats()
 }
 
 
-
+/**
+ * Internal function used to check academic courses, and reward players 
+ * who have completed them.
+ */
 function updateAcademy()
 {
 	global $db, $time, $ir;
@@ -270,6 +287,10 @@ function updateAcademy()
     }
 }
 
+/**
+ * Internal function. Called directly by game. Place extra function in 
+ * this function to be called each page load.
+ */
 function check_data()
 {
     global $ir;
@@ -281,6 +302,8 @@ function check_data()
 	checkGuildVault();
 	removeOldEffects();
 	checkGuildDebt();
+	
+	//If user is auth'd, run max Will Check
 	if (isset($ir))
 	{
 		maxWillCheck();
@@ -324,7 +347,7 @@ function request_csrf_code($formid)
 
 /**
  * Request a randomly generated phrase.
- * Returns the randomly generated phrase.
+ * @return string Randomly generated string.
  */
 function randomizer()
 {
@@ -416,13 +439,13 @@ function encode_password($password,$lvl='Member')
 }
 
 /**
- * Easily outputs an alert to the client.
- * Text $type = Alert type. [Valid: danger, success, info, warning, primary, secondary, light, dark]
- * Text $title = Alert Title.
- * Text $text = Alert text.
- * Boolean $doredirect = Whether or not to actually redirect. [Default = true]
- * Text $redirect = File Name to redirect to. [Default = back] [back will reload current page]
- * Text $redirecttext = Text to be shown on the redirect link. [Default = Back]
+ * Easily outputs an alert to the client. May be broken into smaller functions...
+ * @param string $type Type of alert. [Valid: danger, success, info, warning, primary, secondary, light, dark]
+ * @param string $title Title of the alert.
+ * @param string $text = Text to be display in the alert.
+ * @param bool $doredirect = Redirect to a new page when link is clicked? [Default = true]
+ * @param string $redirect = URL to go on alert click. [Default = back] ('back' will reload current page)
+ * @param string $redirecttext = Redirect link text [Default = Back]
  */
 
 function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $redirecttext = 'Back', $mute=false)
@@ -585,10 +608,11 @@ function get_filesize_remote($url)
     return (int)$headers['content-length'];
 }
 
-/*
-   Gets the user's operating system and inserts it into the database.
-   @param string $uagent	User agent to test with.
-*/
+/**
+ * Get the operating system by way of Browser User Agent, then store it into the database for the current player.
+ * @param string $uagent Browser User Agent
+ * @return string Operating System
+ */
 function getOS($uagent)
 {
     global $db, $userid, $ir;
@@ -630,10 +654,11 @@ function getOS($uagent)
 	return $os_platform;
 }
 
-/*
-  Gets the user's browser and inserts it into the database.
-  @param string $uagent	User agent to test with.
-*/
+/**
+ * Get the browser by way of user agent, then store it to database for the current player.
+ * @param string $uagent Browser User Agent
+ * @return string Operating System
+ */
 function getBrowser($uagent)
 {
     global $db, $userid, $ir;
@@ -668,7 +693,12 @@ function getBrowser($uagent)
 	return $browser;
 }
 
-//Please use $api->SystemLogsAdd(); instead
+/**
+ * @deprecated
+ * Adds a log into the game logging system. Please use $api->SystemLogsAdd($user, $logtype, $input);
+ * @param string $uagent Browser User Agent
+ * @return string Operating System
+ */
 function SystemLogsAdd($user, $logtype, $input)
 {
     global $db;
@@ -683,7 +713,13 @@ function SystemLogsAdd($user, $logtype, $input)
 				(NULL, '{$logtype}', '{$user}', '{$time}', '{$input}', '{$IP}');");
 }
 
-//Fall back for PHP 7 functions on a PHP < 7 versions.
+/**
+ * Generate a random number, using the ranges input. Will be updated to use more  
+ * functions later, so use this function for random number generation.
+ * @param int $min = Minimum number to be picked randomly. [Default = 0]
+ * @param int $max = Maximum number to be picked randomly. [Default = PHP_INT_MAX]
+ * @return int
+ */
 function Random($min = 0, $max = PHP_INT_MAX)
 {
         return random_int($min, $max);
@@ -691,30 +727,45 @@ function Random($min = 0, $max = PHP_INT_MAX)
 /*
 	Gets the contents of a file if it exists, otherwise grabs and caches 
 */
+/**
+ * Reads/grabs data from a URL input, to be cached on the game's servers, to be updated less often.
+ * @param string $url URL to view and cache.
+ * @param string $file Dir/Filename to store the data as cache.$this
+ * @param int $hours Hours before we update our cache, default = 1.
+ * @return string Content from URL.
+ */
 function get_cached_file($url, $file, $hours = 1)
 {
     $current_time = time();
     $expire_time = $hours * 60 * 60;
-    if (file_exists($file)) {
+    if (file_exists($file)) 
+    {
         $file_time = filemtime($file);
-        if ($current_time - $expire_time < $file_time) {
+        if ($current_time - $expire_time < $file_time) 
+        {
             return file_get_contents($file);
-        } else {
-            $content = update_file($url, $file);
+        } 
+        else 
+        {
+            $content = curlOpenFile($url, $file);
             file_put_contents($file, $content);
             return $content;
         }
-    } else {
-        $content = update_file($url, $file);
+    } 
+    else
+    {
+        $content = curlOpenFile($url, $file);
         file_put_contents($file, $content);
         return $content;
     }
 }
 
-/* 
-	Gets content from a URL via curl 
-*/
-function update_file($url)
+/**
+ * Reads/grabs data from a URL input.
+ * @param string $url URL to view and cache.
+ * @return string Content from URL.
+ */
+function curlOpenFile($url)
 {
     $curl = curl_init();
     curl_setopt_array($curl, array(
@@ -726,9 +777,11 @@ function update_file($url)
     return $content;
 }
 
-/*
-	Function to recache the specified forum topic
-*/
+/**
+ * Internal function, used to update recache the latest posts/topics after a 
+ * forum topic gets moved or deleted.
+ * @param int $topic Forum topic to recache.
+ */
 function recache_topic($topic)
 {
     global $db;
@@ -770,9 +823,11 @@ function recache_topic($topic)
     echo " ... Recaching completed.<br />";
 }
 
-/*
-	Function to recache the specified forum
-*/
+/**
+ * Internal function, used to update recache the latest posts/topics after a 
+ * forum topic gets moved or deleted.
+ * @param int $forum Forum category to recache.
+ */
 function recache_forum($forum)
 {
     global $db;
@@ -810,6 +865,11 @@ function recache_forum($forum)
     echo " ... Recaching completed.<br />";
 }
 
+/**
+ * Test if the input URL is actually an image.
+ * @param string $url URL of image to test.
+ * @return bool
+ */
 function isImage($url)
 {
     $params = array('http' => array(
@@ -841,8 +901,10 @@ function isImage($url)
     return false;
 }
 
-/*
- * Function to fetch current version of Chivalry Engine
+/**
+ * Internal version check function for Chivalry Engine.
+ * @param string $url URL for version checker. (Default = https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json)
+ * @return string Update Status
  */
 function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
@@ -857,6 +919,14 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
         return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
 }
 
+/**
+ * Internal function for creating lists of pages easier.
+ * @param int $perpage Items displayed per page.
+ * @param int $total Total items to be displayed.
+ * @param int $currentpage Current page of items being viewed
+ * @param string $url File being viewed.
+ * @return string Pagination
+ */
 function pagination($perpage, $total, $currentpage, $url)
 {
     global $db;
@@ -894,11 +964,23 @@ function pagination($perpage, $total, $currentpage, $url)
     return $output;
 }
 
+/**
+ * Internal function to log in javascript
+ * @param string $tyoe Type of error.
+ * @param string $txt Error text.
+ */
 function cslog($type='log',$txt)
 {
 	echo "<script>console.{$type}('{$txt}');</script>";
 }
 
+/**
+ * Internal function encrypt messages sent between players.
+ * @param string $msg Message to be encrypted.
+ * @param int $sender User ID of the message composer.
+ * @param int $receiver USER of the message receiver.
+ * @return string Encrypted message to be stored in database.
+ */
 function encrypt_message($msg,$sender,$receiver)
 {
     global $db;
@@ -911,6 +993,13 @@ function encrypt_message($msg,$sender,$receiver)
 		return "<span class='text-danger'>Failed to encrypt message.</span>";
 }
 
+/**
+ * Internal function decrypt messages sent between players.
+ * @param string $msg Message text to be decrypt
+ * @param int $sender User ID of the message composer.
+ * @param int $receiver USER of the message receiver.
+ * @return string Decrypted message, good for displaying to client.
+ */
 function decrypt_message($msg,$sender,$receiver)
 {
     global $db;
@@ -923,6 +1012,13 @@ function decrypt_message($msg,$sender,$receiver)
 		return "<span class='text-danger'>Failed to decrypt message. This is likely due to either the sender or recipient changing their password.</span>";
 }
 
+/**
+ * Internal function to handle staff notes being edited on a player.
+ * @param int $user User ID of the player whom staff notes are being edited.
+ * @param string $text Text to be placed in the user's staff notes.
+ * @param int $whodo User ID of the player who edited the staff notes. [Default -1 (No one)]
+ * @return string Decrypted message, good for displaying to client.
+ */
 function staffnotes_entry($user,$text,$whodo=-1)
 {
 	global $db,$api,$userid,$ir;
@@ -960,12 +1056,15 @@ function staffnotes_entry($user,$text,$whodo=-1)
 	$db->query("UPDATE `users` SET `staff_notes` = '{$sql}' WHERE `userid` = {$user}");
 }
 
+/**
+ * Internal function to handle parsing images. This basically redirects non-HTTPs
+ * @param string $url URL of the image to display.
+ * @return string Image URL.
+ */
 function parseImage($url)
 {
-	if (strpos($url, 'https://') !== false) 
-	{
+	if (strpos($url, 'https://') !== false)
 		return $url;
-	}
 	else
 	{
 		$url=removeFrontTag($url);
@@ -973,6 +1072,11 @@ function parseImage($url)
 	}
 }
 
+/**
+ * Internal function to remove the front tags on the URL. (IE: www;htttp;https;etc.)
+ * @param string $url URL to remove from tags from.
+ * @return string URL without front tags.
+ */
 function removeFrontTag($url)
 {
 	$url=str_replace("http://","",$url);
@@ -995,6 +1099,10 @@ function user_log($user,$logname,$value=1)
 	}
 }
 
+/**
+ * Internal function to check if the current user is on the game app.
+ * @return bool
+ */
 function isApp()
 {
     global $ir;
@@ -1003,6 +1111,10 @@ function isApp()
             return true;
 }
 
+/**
+ * Internal function to check if the current user is on a mobile device.
+ * @return bool
+ */
 function isMobile()
 {
 	global $ir;
@@ -1020,6 +1132,10 @@ function isMobile()
 		return false;
 }
 
+/**
+ * Internal function to check the active missions and reward players who have completed 
+ * their missions.
+ */
 function missionCheck()
 {
 	global $db, $api;
@@ -1156,6 +1272,9 @@ function addToEconomyLogDate($type = 'Misc', $curr = 'copper', $change = 0, $dat
 	}
 }
 
+/**
+ * Internal function to backup the game database to file.
+ */
 function backupDatabase()
 {
 	global $_CONFIG;
@@ -1164,6 +1283,10 @@ function backupDatabase()
 	exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/chivalryisdeadgame.com/html/cache/latest.sql",$output);
 }
 
+/**
+ * Internal function to check if the game is being offline.
+ * @return bool
+ */
 function isDevEnv()
 {
 	if (determine_game_urlbase() != "chivalryisdeadgame.com")
@@ -1177,11 +1300,24 @@ function removeOldEffects()
 	$db->query("DELETE FROM `users_effects` WHERE `effectTimeOut` < {$time}");
 }
 
+/**
+ * Clamps an input integer to the range specified. Because PHP 
+ * doesn't have a convience function...
+ * @param int $currentValue Value to be clamped.
+ * @param int $minValue Minimum value.
+ * @param int $maxValue Maximum value.
+ * @return int
+ */
 function clamp($currentValue, $minValue, $maxValue)
 {
     return max($minValue, (min($maxValue, $currentValue)));
 }
 
+/**
+ * Internal function to parse internal stat names to their player friendly names.
+ * @param string $stat Internal stat name.
+ * @return string Player friendly stat name.
+ */
 function statParser($stat)
 {
     $statNamesArray = array("maxenergy" => "Maximum Energy", "maxwill" => "Maximum Will",
@@ -1200,6 +1336,11 @@ function statParser($stat)
         return $statNamesArray[$stat];
 }
 
+/**
+ * Internal function to parse internal equipment slot names to their player friendly names.
+ * @param string $slot Internal equipment slot name.
+ * @return string Player friendly equipment slot name.
+ */
 function equipSlotParser($slot)
 {
     $slotNamesArray = array(slot_prim_wep => "Primary Weapon",
@@ -1216,6 +1357,10 @@ function equipSlotParser($slot)
     return $slotNamesArray[$slot];
 }
 
+/**
+ * Internal function to calculate bank interest on all valid city bank accounts.
+ * @internal
+ */
 function doDailyBankInterest()
 {
     global $db;
@@ -1244,6 +1389,10 @@ function doDailyBankInterest()
     }
 }
 
+/**
+ * Internal function to calculate bank interest on all valid federal bank accounts.
+ * @internal
+ */
 function doDailyFedBankInterest()
 {
     global $db;
@@ -1272,6 +1421,10 @@ function doDailyFedBankInterest()
     }
 }
 
+/**
+ * Internal function to calculate bank interest on all valid vault bank accounts.
+ * @internal
+ */
 function doDailyVaultBankInterest()
 {
     global $db;
@@ -1300,6 +1453,10 @@ function doDailyVaultBankInterest()
     }
 }
 
+/**
+ * Internal function to delete all logs older than 30 days old.
+ * @internal
+ */
 function purgeOldLogs()
 {
     global $db;
@@ -1315,21 +1472,41 @@ function purgeOldLogs()
     $db->query("DELETE FROM `attack_logs` WHERE `attack_time` < {$ThirtyDaysAgo}");
 }
 
+/**
+ * Internal function to get the current page.
+ * @internal
+ */
 function getCurrentPage()
 {
     return $_SERVER['REQUEST_URI'];
 }
 
+/**
+ * Load images directly from the '/assets/img/' directory.
+ * @param string $img Name of image, including extension, to load.$this
+ * @param int $size Size of the image, based in rem. [Default = 1]
+ * @return string Image HTML of the asset.
+ */
 function loadImageAsset($img, $size = 1)
 {   
     return "<img src='./assets/img/{$img}' style='width:{$size}rem;'></img>";
 }
 
+/**
+ * Return the time of the next daily reset.
+ * @internal
+ * @return int Next daily reset
+ */
 function getNextDayReset()
 {
     return strtotime("tomorrow");
 }
 
+/**
+ * Internal function to load the game's title, adding extra data to it if needed in an unsupported or dev environment.
+ * @internal
+ * @return string Game's page titles.
+ */
 function returnGameTitle()
 {
     global $set;
@@ -1344,6 +1521,13 @@ function returnGameTitle()
     
 }
 
+/**
+ * Attempt to load a module from its module id. Valid modules must have a 'initializeModule()' function 
+ * or this will not work. This will return the module's configuration data.
+ * @internal
+ * @param string $moduleID 
+ * @return int Next daily reset
+ */
 function attemptLoadModule($moduleID)
 {
     global $ir, $h;

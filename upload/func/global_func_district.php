@@ -33,6 +33,10 @@ $districtConfig['upkeepPerTile'] = 10000;
 
 //end module config
 
+/**
+ * @internal
+ * Called daily to charge guilds their daily fees.
+ */
 function doDailyDistrictTick()
 {
 	global $db, $api, $districtConfig;
