@@ -241,7 +241,7 @@ if (isset($moduleID) && !empty($moduleID))
             {
                 if (!($k == 'formSubmitValue'))
                 {
-                    $configArray[$k] = makeSafeText($v);
+                    $configArray[$k] = $db->escape(htmlentities($v, ENT_QUOTES, 'ISO-8859-1'));
                 }
             }
             writeConfigToDB($moduleID, formatConfig($configArray));
