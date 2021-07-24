@@ -25,6 +25,14 @@ echo "<h3><i class='fas fa-toggle-on'></i> Users Online</h3><hr />
 		<a href='?act=60' class='btn btn-primary btn-block'>1 hour</a>
         <br />
 	</div>
+    <div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+		<a href='?act=360' class='btn btn-primary btn-block'>6 hours</a>
+        <br />
+	</div>
+    <div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+		<a href='?act=720' class='btn btn-primary btn-block'>12 hours</a>
+        <br />
+	</div>
 	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
 		<a href='?act=1440' class='btn btn-primary btn-block'>24 hours</a>
         <br />
@@ -35,14 +43,6 @@ echo "<h3><i class='fas fa-toggle-on'></i> Users Online</h3><hr />
 	</div>
 	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
 		<a href='?act=43200' class='btn btn-primary btn-block'>1 Month</a>
-        <br />
-	</div>
-	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
-		<a href='?act=131400' class='btn btn-primary btn-block'>90 Days</a>
-        <br />
-	</div>
-	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
-		<a href='?act=525600' class='btn btn-primary btn-block'>1 Year</a>
         <br />
 	</div>
 </div>
