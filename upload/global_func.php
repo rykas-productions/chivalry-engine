@@ -94,7 +94,7 @@ function TimeUntil_Parse($time_stamp)
  * @param int $n original number
  * @return string Html containing shortened number and hoverable original number.
  */
-function shortNumberParse(int $n)
+function shortNumberParse($n)
 {
     if ($n < 1000)
         $n_format = number_format($n);
