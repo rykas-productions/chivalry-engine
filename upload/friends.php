@@ -75,8 +75,7 @@ These are the people on your friends list. " . number_format($ir['friend_count']
                 ($r['laston'] >= $laston)
                         ? '<span class="text-success">Online</font>'
                         : '<span class="text-danger">Offline</font>';
-		$r['username'] = ($r['vip_days']) ? "<span class='{$r['vipcolor']}'>{$r['username']} <i class='fas fa-shield-alt'
-        data-toggle='tooltip' title='{$r['vip_days']} VIP Days remaining.'></i></span>" : $r['username'];
+        $r['username'] = parseUsername($r['userid']);
         if (!$r['comment'])
         {
             $r['comment'] = 'N/A';
