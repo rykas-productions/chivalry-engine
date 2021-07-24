@@ -1,4 +1,11 @@
 <?php
+/**
+ * @internal
+ * Stores the query into file, to be read from later. Stored in the ./cache/ directory.
+ * @param string $query Database query string.
+ * @param object $result Database query result
+ * @param string $dir Directory to store cache file, optional. Defaults to query.
+ */
 function cacheQuery($query, $result, $dir = 'query')
 {
     $serialzedData = serialize($result);
@@ -6,6 +13,12 @@ function cacheQuery($query, $result, $dir = 'query')
     file_put_contents($cacheName, $serialzedData);
 }
 
+/**
+ * Fetches a cached query from the cache directory, if possible.
+ * @param string $query Database query string.
+ * @param string $dir Directory to store cache file, optional. Defaults to query.
+ * @param int $ttl Cache expiration, in seconds. Default 86400, or 1 day.
+ */
 function fetchCachedQuery($query, $dir = 'query', $ttl = 86400)
 {
     $cacheName = "./cache/{$dir}/" . md5($query);

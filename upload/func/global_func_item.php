@@ -157,7 +157,12 @@ function submitToModeration($itmid, $type, $value, $user)
 				VALUES 
 				(NULL, '{$type}', '{$value}', 
 				'{$itmid}', '{$user}')");
-}function forceDeleteItem($itmid){	global $db;
+}/**
+ * Force deletes an item, removing it from the database as best as we can.
+ * @internal
+ * @param int $itmid Item ID to delete.
+ */
+function forceDeleteItem($itmid){	global $db;
 	$db->query("DELETE FROM `inventory` WHERE `inv_itemid` = {$itmid}");
 	$db->query("UPDATE `crimes` SET `crimeITEMSUC` = 0 WHERE `crimeITEMSUC` = {$itmid}");
 	$db->query("DELETE FROM `farm_produce` WHERE `seed_item` = {$itmid}");
@@ -219,6 +224,14 @@ function fetchCachedItemIcon($query)
     return fetchCachedQuery($query, 'items', 2592000);
 }
 
+/**
+ * Allows a user to consume an item, however many at a time. Note, this function will also remove the items 
+ * from the user's inventory.
+ * @param int $userid User ID to consume item.
+ * @param int $itemID Item ID to be consumed.
+ * @param number $qty Quantity to consume
+ * @return number Actual items consumed.
+ */
 function consumeItem($userid, $itemID, $qty = 1)
 {
     global $db, $api;

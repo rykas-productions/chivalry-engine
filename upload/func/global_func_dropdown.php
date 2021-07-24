@@ -694,9 +694,13 @@ function forum_dropdown($ddname = "forum", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
-/*
-	Creates a dropdown for smelting recipes.
-*/
+/**
+ * Constructs a drop-down listbox of all the smelt recipes in the game to let the user select one.
+ * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
 function smelt_dropdown($ddname = 'smelt', $selected = -1)
 {
     global $db, $api;
@@ -867,6 +871,13 @@ function armory_dropdown($ddname = "item", $selected = -1)
     return $ret;
 }
 
+/**
+ * Constructs a drop-down listbox of all the potion items in the game, and allows the user to select one.
+ * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
 function potion_dropdown($ddname = "potion", $selected = -1)
 {
     global $db;
@@ -895,6 +906,13 @@ function potion_dropdown($ddname = "potion", $selected = -1)
     return $ret;
 }
 
+/**
+ * Constructs a drop-down listbox of all the badges in the game, and allows the user to select one.
+ * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
 function badge_dropdown($ddname = "badge", $selected = -1)
 {
     global $db;
@@ -922,6 +940,13 @@ function badge_dropdown($ddname = "badge", $selected = -1)
     return $ret;
 }
 
+/**
+ * Constructs a drop-down listbox of all the ring items in the game to let the user select one.
+ * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
 function ring_dropdown($ddname = "ring", $selected = -1)
 {
     global $db;
@@ -949,6 +974,13 @@ function ring_dropdown($ddname = "ring", $selected = -1)
     return $ret;
 }
 
+/**
+ * Constructs a drop-down listbox of all the necklace items in the game to let the user select one.
+ * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
 function necklace_dropdown($ddname = "necklace", $selected = -1)
 {
     global $db;
@@ -976,6 +1008,13 @@ function necklace_dropdown($ddname = "necklace", $selected = -1)
     return $ret;
 }
 
+/**
+ * Constructs a drop-down listbox of all the pendant items in the game to let the user select one.
+ * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param int $selected [optional] The ID Number of the forum which should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first forum alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
 function pendant_dropdown($ddname = "pendant", $selected = -1)
 {
     global $db;
