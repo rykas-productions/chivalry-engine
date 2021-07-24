@@ -246,53 +246,69 @@ class headers
 	{
 		global $set;
 		cslog('log',"User Theme ID: {$themeID}.");
+		echo "<link rel='stylesheet' href='../css/sidebar-themes.css'>";
 		if ($themeID == 1)
 		{
-			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/css/bootstrap.min.css'>
-			<meta name='theme-color' content='#333'>";
+		    echo "
+			<link rel='stylesheet' href='../css/themes/default-21.2.2.css'>
+			<meta name='theme-color' content='#333'>
+			<style>
+			.default-theme .sidebar-wrapper {
+				background-color: #333;
+			}
+			</style>";
 		}
 		if ($themeID == 2)
 		{
-			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/darkly/bootstrap.min.css'>
+		    echo "
+			<link rel='stylesheet' href='../css/themes/darkly-21.2.2.css'>
 			<meta name='theme-color' content='#303030'>";
 		}
 		if ($themeID == 3)
 		{
-			echo "
+		    echo "
 			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/slate/bootstrap.min.css'>
-			<meta name='theme-color' content='#272B30'>";
+			<meta name='theme-color' content='#272B30'>
+			<style>
+			.default-theme .sidebar-wrapper {
+				background-color: #272B30;
+			}
+			</style>";
 		}
 		if ($themeID == 4)
 		{
-			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/cyborg/bootstrap.min.css'>
+		    echo "
+			<link rel='stylesheet' href='../css/themes/cyborg-21.2.2.css'>
 			<meta name='theme-color' content='#060606'>";
 		}
 		if ($themeID == 5)
 		{
-			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/united/bootstrap.min.css'>
+		    echo "
+			<link rel='stylesheet' href='../css/themes/united-21.2.2.css'>
 			<meta name='theme-color' content='#772953'>";
 		}
 		if ($themeID == 6)
 		{
-			echo "
+		    echo "
 			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/cerulean/bootstrap.min.css'>
-			<meta name='theme-color' content='#04519b'>";
+			<meta name='theme-color' content='#04519b'>
+			<style>
+			.default-theme .sidebar-wrapper {
+				background-color: #04519b;
+			}
+			</style>";
 		}
 		if ($themeID == 7)
 		{
-			echo "
-			<link rel='stylesheet' href='../css/castle-v{$set['bootstrap_version']}.css'>
-			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>";
+		    echo "
+			<link rel='stylesheet' href='../css/themes/castle-21.2.1.css'>
+			<meta name='theme-color' content='rgba(0, 0, 0, 0.8)'>";
 		}
 		if ($themeID == 8)
 		{
-			echo "
-			<link rel='stylesheet' href='../css/sunset-v{$set['bootstrap_version']}.css'>
-			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>";
+		    echo "
+			<link rel='stylesheet' href='../css/themes/sunset-21.2.1.css'>
+			<meta name='theme-color' content='rgba(64, 0, 0, 0.8)'>";
 		}
 	}
 	
