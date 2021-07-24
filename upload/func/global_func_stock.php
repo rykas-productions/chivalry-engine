@@ -88,24 +88,31 @@ function runMarketTick($riskLevel)
             $perc = $riskLevel / 100;
             if ($RNG <= 3)   //market crash
             {
-                $min = $r['am_cost'] * 0.35;
-                $max = $r['am_cost'] * 0.75;
-                $change = Random($min, $max) * -1;
+                $min = $r['am_cost'] * 0.25;
+                $max = $r['am_cost'] * 0.45;
+                $change = mt_rand($min, $max) * -1;
+                $api->GameAddNotification(1, "{$r['am_name']} has a market crash.");
             }
             else if ($RNG >= 98) //market bubble
             {
                 $min = $r['am_cost'] * 0.10;
                 $max = $r['am_cost'] * 0.45;
-                $change = Random($min, $max);
+                $change = mt_rand($min, $max);
+                $api->GameAddNotification(1, "{$r['am_name']} has a market bubble.");
             }
             else
             {
-                $maxChange = $r['am_cost'] * $perc;
-                if ($maxChange < 4)
-                    $maxChange == 4;
-                $change = Random($maxChange * -1, $maxChange);
+                
+                if ($r['am_cost'] <= 5)
+                    $maxChange = $r['am_cost'];
+                elseif (($r['am_cost'] > 5) && ($r['am_cost'] <= 10))
+                    $maxChange = $r['am_cost'] / 2;
+                else
+                    $maxChange = $r['am_cost'] * $perc;
+                $change = mt_rand($maxChange * -1, $maxChange);
             }
             $newVal = clamp(($r['am_cost'] + $change), 0, $r['am_max']);
+            $newVal = ($newVal == 0) ? $r['am_start'] : $newVal;
             //Force sell on crash.
             if ($newVal == 0)
             {
@@ -121,16 +128,17 @@ function runMarketTick($riskLevel)
                         $api->GameAddNotification($r2['userid'], $notifText);
                         array_push($alreadyNotif, $r2['userid']);
                     }
+                    $api->GameAddNotification(1, "{$r['am_name']} has crashed.");
                 }
-                resetAsset($r['am_id']);
             }
             
             if (($newVal <= $r['am_min']) && ($newVal >= $r['am_min'] - (5 / 100)))
             {
                 stockNotifDrop($r['am_id']);
+                $api->GameAddNotification(1, "{$r['am_name']} is failing.");
             }
             
-            $db->query("UPDATE `asset_market` SET `am_cost` = {$newVal} WHERE `am_id` = {$r['am_id']}");
+            $db->query("UPDATE `asset_market` SET `am_cost` = '{$newVal}' WHERE `am_id` = {$r['am_id']}");
             logAssetChange($r['am_id'], $r['am_cost'], $change, $newVal);
         }
     }
@@ -140,7 +148,7 @@ function logAssetChange($assetID, $oldVal, $change, $newVal)
 {
     global $db;
     $time = time();
-    $db->query("INSERT INTO `asset_market_history` 
+    return $db->query("INSERT INTO `asset_market_history` 
                 (`am_id`, `old_value`, `difference`, `new_value`, `timestamp`) 
                 VALUES ('{$assetID}', '{$oldVal}', '{$change}', '{$newVal}', '{$time}')");
 }
@@ -148,7 +156,7 @@ function logAssetChange($assetID, $oldVal, $change, $newVal)
 function createStockAsset($name, $cost, $change, $risk, $min, $max)
 {
     global $db;
-    $db->query("INSERT INTO `asset_market` 
+    return $db->query("INSERT INTO `asset_market` 
         (`am_name`, `am_min`, `am_max`, `am_start`, `am_cost`, `am_change`, `am_risk`) 
         VALUES ('{$name}', '{$min}', '{$max}', '{$cost}', '{$cost}', '{$change}', '{$risk}')");
 }
@@ -202,7 +210,7 @@ function calculateUserCurrentAssetValue($userid, $assetID)
 function resetAsset($assetID)
 {
     global $db;
-    $db->query("UPDATE `asset_market` SET `am_cost` = `am_start` WHERE `am_id` = {$assetID}");
+    return $db->query("UPDATE `asset_market` SET `am_cost` = `am_start` WHERE `am_id` = {$assetID}");
 }
 
 function returnUserAllAssetShares($userid)
