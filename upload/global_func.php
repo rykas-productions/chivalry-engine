@@ -738,6 +738,26 @@ function randomDecimal($min = 0, $max = PHP_INT_MAX)
 }
 
 /**
+ * Generate a random float, using the ranges input.
+ * @return float
+ */
+function randomFloat()
+{
+    return Random() / mt_getrandmax();
+}
+
+/**
+ * Round a float to whichever number of decimal places defined.
+ * @param float $float Original float.
+ * @param int $decimal Number of digitals in final float. [Default = 1]
+ * @return float
+ */
+function roundFloat($float, $decimal = 1)
+{
+    return round($float, $decimal);
+}
+
+/**
  * Reads/grabs data from a URL input, to be cached on the game's servers, to be updated less often.
  * @param string $url URL to view and cache.
  * @param string $file Dir/Filename to store the data as cache.$this
