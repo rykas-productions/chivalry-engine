@@ -77,9 +77,6 @@ if (empty($dung_count)) {
 if (empty($infirm_count)) {
     $infirm_count = 0;
 }
-if ($ir['location'] == 1)
-	if (Random(1,100) == 56)
-		alert('warning',"Mysterious Vibration!","You feel the ground shake underneathe you...",false);
 echo"
 <h4>You begin exploring {$api->SystemTownIDtoName($ir['location'])}. You find a few things that could keep you occupied.</h4>
 <div class='row'>
