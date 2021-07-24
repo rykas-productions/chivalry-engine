@@ -9,78 +9,94 @@
 require('sglobals.php');
 echo "<h2>Staff Panel Index</h2>
 	<hr />";
-if ($api->UserMemberLevelGet($userid, 'admin')) {
+if ($api->UserMemberLevelGet($userid, 'admin')) 
+{
     $versq = $db->query("/*qc=on*/SELECT VERSION()");
     $MySQLIVersion = $db->fetch_single($versq);
     $db->free_result($versq);
-    echo "
-	<table class='table table-bordered table-hover'>
-		<tbody>
-			<tr>
-				<th>
-					Server PHP Version
-				</th>
-				<td align='left'>
-					" . phpversion() . "
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Server Database Version
-				</th>
-				<td align='left'>
-					{$MySQLIVersion}
-				</td>
-			</tr>
-            <tr>
-				<th>
-					Apache Version
-				</th>
-				<td align='left'>
-					" . apache_get_version() . "
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine Version
-				</th>
-				<td align='left'>
-					{$set['Version_Number']}
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine Update Checker
-				</th>
-				<td align='left'>
-					" . version_json() . "
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine API Version
-				</th>
-				<td align='left'>
-					{$api->SystemReturnAPIVersion()}
-				</td>
-			</tr>
-			<tr>
-				<th>
-					<a href='staff_moderation.php?action=listall'>Moderation Logs</a>
-				</th>
-				<td align='left'>
-					" . number_format($db->fetch_single($db->query("SELECT COUNT(`mod_id`) FROM `staff_moderation_board`"))) . "
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<hr />";
+    echo "<div class='card'>
+        <div class='card-body'>
+            <div class='row'>
+                <div class='col-12 col-sm-6 col-lg-4 col-xl-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>PHP Version</small>
+                        </div>
+                        <div class='col-12'>
+                            " . phpversion() . "
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-sm-6 col-lg-4 col-xl-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Database Version</small>
+                        </div>
+                        <div class='col-12'>
+                            " . $MySQLIVersion . "
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-sm-6 col-lg-4 col-xl-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Apache Version</small>
+                        </div>
+                        <div class='col-12'>
+                            " . apache_get_version() . "
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-sm-6 col-lg-4 col-xl-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Chivalry Engine Version</small>
+                        </div>
+                        <div class='col-12'>
+                            {$set['Version_Number']}
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-sm-6 col-lg-4 col-xl-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>API Version</small>
+                        </div>
+                        <div class='col-12'>
+                            {$api->SystemReturnAPIVersion()}
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-sm-6 col-lg-4 col-xl-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Moderation Logs</small>
+                        </div>
+                        <div class='col-12'>
+                            <a href='staff_moderation.php?action=listall'>" . number_format($db->fetch_single($db->query("SELECT COUNT(`mod_id`) FROM `staff_moderation_board`"))) . "</a>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-xl-6'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>Engine Updates</small>
+                        </div>
+                        <div class='col-12'>
+                            " . version_json() . "
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>";
 }
 echo "
 </div>
 	<div class='col-md-4' align='left'>
 		<ul class='nav nav-pills flex-column'>";
-if ($api->UserMemberLevelGet($userid, 'admin')) {
+if ($api->UserMemberLevelGet($userid, 'admin')) 
+{
     echo "
 			<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#ADMIN'>Admin</a>
@@ -116,7 +132,8 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 				<a class='nav-link' data-toggle='tab' href='#PROMO'>Promo Codes</a>
 			</li>";
 }
-if ($api->UserMemberLevelGet($userid, 'assistant')) {
+if ($api->UserMemberLevelGet($userid, 'assistant')) 
+{
     echo "	<li class='nav-item'>
 				<a class='nav-link' data-toggle='tab' href='#FEDJAIL'>Federal Dungeon Appeals</a>
 			</li>
@@ -150,7 +167,8 @@ echo "
 	</div>
 	<div class='col-md-8' align='left'>
 		<div class='tab-content'>";
-if ($api->UserMemberLevelGet($userid, 'admin')) {
+if ($api->UserMemberLevelGet($userid, 'admin')) 
+{
     echo "<div id='ADMIN' class='tab-pane'>
 						<div class='card'>
 							<div class='card-body'>
@@ -253,7 +271,8 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 					</div>
 					";
 }
-if ($api->UserMemberLevelGet($userid, 'assistant')) {
+if ($api->UserMemberLevelGet($userid, 'assistant')) 
+{
     echo "<div id='GUILDS' class='tab-pane'>
 			<div class='card'>
 				<div class='card-body'>
@@ -275,16 +294,18 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 			</div>
 		</div>";
 }
-if ($api->UserMemberLevelGet($userid, 'assistant')) {
+if ($api->UserMemberLevelGet($userid, 'assistant')) 
+{
     echo "<div id='ITEMS' class='tab-pane'>
 					<div class='card'>
 						<div class='card-body'>";
-    if ($api->UserMemberLevelGet($userid, 'admin')) {
+    if ($api->UserMemberLevelGet($userid, 'admin')) 
+    {
         echo "
-								<a href='staff_items.php?action=createitmgroup'>Create Item Group</a><br />
-								<a href='staff_items.php?action=create'>Create Item</a><br />
-								<a href='staff_items.php?action=edit'>Edit Item</a><br />
-								<a href='staff_items.php?action=delete'>Delete Item</a><br />";
+			<a href='staff_items.php?action=createitmgroup'>Create Item Group</a><br />
+			<a href='staff_items.php?action=create'>Create Item</a><br />
+			<a href='staff_items.php?action=edit'>Edit Item</a><br />
+			<a href='staff_items.php?action=delete'>Delete Item</a><br />";
     }
     echo "
 							<a href='staff_items.php?action=giveitem'>Gift Item</a><br />
@@ -302,20 +323,21 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 				<div id='USERS' class='tab-pane'>
 					<div class='card'>
 						<div class='card-body'>";
-    if ($api->UserMemberLevelGet($userid, 'admin')) {
+    if ($api->UserMemberLevelGet($userid, 'admin')) 
+    {
         echo "
-								<a href='staff_users.php?action=createuser'>Create User</a><br />
-								<a href='staff_users.php?action=edituser'>Edit User</a><br />
-								<a href='staff_users.php?action=deleteuser'>Delete User</a><br />
-								<a href='staff_users.php?action=changepw'>Change User's Password</a><br />
-								<a href='staff_settings.php?action=restore'>Restore Users</a><br />
-								<a href='staff_settings.php?action=staff'>Set User Level</a><br />";
+			<a href='staff_users.php?action=createuser'>Create User</a><br />
+			<a href='staff_users.php?action=edituser'>Edit User</a><br />
+			<a href='staff_users.php?action=deleteuser'>Delete User</a><br />
+			<a href='staff_users.php?action=changepw'>Change User's Password</a><br />
+			<a href='staff_settings.php?action=restore'>Restore Users</a><br />
+			<a href='staff_settings.php?action=staff'>Set User Level</a><br />";
     }
     echo "
-                            <a href='staff_users.php?action=masspayment'>Send Mass Payment</a><br />
-                            <a href='staff_users.php?action=reports'>View Player Reports</a><br />
-							<a href='staff_users.php?action=logout'>Force Logout User</a><br />
-                            <a href='staff_users.php?action=forcelogin'>Control Account</a><br />
+        <a href='staff_users.php?action=masspayment'>Send Mass Payment</a><br />
+        <a href='staff_users.php?action=reports'>View Player Reports</a><br />
+		<a href='staff_users.php?action=logout'>Force Logout User</a><br />
+        <a href='staff_users.php?action=forcelogin'>Control Account</a><br />
 						</div>
 					</div>
 				</div>
@@ -568,28 +590,13 @@ echo "
 			</div>
 		</div>
 	</div>";
-if ($api->UserMemberLevelGet($userid, 'admin')) {
-    echo "
-				<div class='col-md-12'><hr />
-			<h3>Last 15 Staff Actions</h3><hr />
-			<table class='table table-bordered table-hover'>
-					<thead>
-					<tr>
-						<th>
-							Timestamp
-						</th>
-						<th>
-							Staff Member
-						</th>
-						<th>
-							Log
-						</th>
-						<th class='hidden-xs'>
-							IP Address
-						</th>
-					</tr>
-					</thead>
-					<tbody>";
+if ($api->UserMemberLevelGet($userid, 'admin')) 
+{
+    echo "<div class='col-12'><div class='card'>
+            <div class='card-header'>
+                Last 15 Staff Actions
+            </div>
+            <div class='card-body'>";
     $q =
         $db->query(
             "/*qc=on*/SELECT `log_user`, `log_text`, `log_time`, `log_ip`, `username`
@@ -599,25 +606,30 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 							 WHERE `log_type` = 'staff'
 							 ORDER BY `s`.`log_time` DESC
 							 LIMIT 15");
-    while ($r = $db->fetch_row($q)) {
+    while ($r = $db->fetch_row($q)) 
+    {
         echo "
-				<tr>
-					<td>
-						" . DateTime_Parse($r['log_time']) . "
-					</td>
-					<td>
-						<a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]
-					</td>
-					<td>
-						{$r['log_text']}
-					</td>
-					<td class='hidden-xs'>
-						{$r['log_ip']}
-					</td>
-				</tr>
-				";
+                <div class='row'>
+                    <div class='col-12 col-sm-6 col-md-4 col-lg-3'>
+                        " . DateTime_Parse($r['log_time']) . "
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-lg-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]
+                            </div>
+                            <div class='col-12'>
+                                <small><span class='text-muted'>IP: {$r['log_ip']}</span></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-md-4 col-lg'>
+                        {$r['log_text']}
+                    </div>
+                </div>
+                <hr />";
     }
     $db->free_result($q);
-    echo '</tbody></table></div>';
+    echo '</div></div></div>';
 }
 $h->endpage();
