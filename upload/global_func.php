@@ -724,9 +724,19 @@ function Random($min = 0, $max = PHP_INT_MAX)
 {
         return random_int($min, $max);
 }
-/*
-	Gets the contents of a file if it exists, otherwise grabs and caches 
-*/
+
+/**
+ * Generate a random decimal, using the ranges input. Uses the Random() function to generate
+ * the numbers.
+ * @param number $min = Minimum number to be picked randomly. [Default = 0]
+ * @param number $max = Maximum number to be picked randomly. [Default = PHP_INT_MAX]
+ * @return float
+ */
+function randomDecimal($min = 0, $max = PHP_INT_MAX)
+{
+    return Random($min * 10, $max * 10) / 10;
+}
+
 /**
  * Reads/grabs data from a URL input, to be cached on the game's servers, to be updated less often.
  * @param string $url URL to view and cache.
