@@ -1,4 +1,12 @@
 <?php
+/**
+ * Friendly function to adjust a player's assets shares. Fires assetsOwnedCleanup(); when 
+ * completed.
+ * @param int $userid User ID to tweak shares.
+ * @param int $assetID Asset ID of the asset to change shares of.
+ * @param int $costPerShare Average cost per share
+ * @param int $totalShares Total shares to be added or removed.
+ */
 function setUserShares($userid, $assetID, $costPerShare, $totalShares)
 {
     if ($totalShares > 0)
@@ -84,7 +92,7 @@ function runMarketTick($riskLevel)
     {
         while ($r = $db->fetch_row($q))
         {
-            $RNG = Random(1,100);
+            $RNG = Random(1,500);
             $perc = $riskLevel / 100;
             if ($RNG <= 3)   //market crash
             {
@@ -93,7 +101,7 @@ function runMarketTick($riskLevel)
                 $change = mt_rand($min, $max) * -1;
                 $api->GameAddNotification(1, "{$r['am_name']} has a market crash.");
             }
-            else if ($RNG >= 98) //market bubble
+            else if ($RNG >= 498) //market bubble
             {
                 $min = $r['am_cost'] * 0.10;
                 $max = $r['am_cost'] * 0.45;
@@ -107,6 +115,12 @@ function runMarketTick($riskLevel)
                     $maxChange = $r['am_cost'];
                 elseif (($r['am_cost'] > 5) && ($r['am_cost'] <= 10))
                     $maxChange = $r['am_cost'] / 2;
+                elseif (($r['am_cost'] > 10) && ($r['am_cost'] <= 20))
+                    $maxChange = $r['am_cost'] / 3;
+                elseif (($r['am_cost'] > 30) && ($r['am_cost'] <= 40))
+                    $maxChange = $r['am_cost'] / 4;
+                elseif (($r['am_cost'] > 40) && ($r['am_cost'] <= 50))
+                    $maxChange = $r['am_cost'] / 5;
                 else
                     $maxChange = $r['am_cost'] * $perc;
                 $change = mt_rand($maxChange * -1, $maxChange);
@@ -120,7 +134,7 @@ function runMarketTick($riskLevel)
                 $alreadyNotif = array();
                 while ($r2 = $db->fetch_row($q2))
                 {
-                    setUserShares($r2['userid'], $r['am_id'], 0, $r2['shares_owned'] * -1);
+                    removeUserShares($r2['userid'], $r['am_id'], $r2['shares_owned']);
                     if (!in_array($r2['userid'], $alreadyNotif))
                     {
                         $notifText = "The {$r['am_name']} asset has crashed and your " . number_format($r2['shares_owned']) . " shares 
