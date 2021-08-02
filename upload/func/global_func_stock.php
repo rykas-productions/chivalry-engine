@@ -117,7 +117,7 @@ function runMarketTick($riskLevel)
                     $maxChange = $r['am_cost'] / 2;
                 elseif (($r['am_cost'] > 10) && ($r['am_cost'] <= 20))
                     $maxChange = $r['am_cost'] / 3;
-                elseif (($r['am_cost'] > 30) && ($r['am_cost'] <= 40))
+                elseif (($r['am_cost'] > 20) && ($r['am_cost'] <= 40))
                     $maxChange = $r['am_cost'] / 4;
                 elseif (($r['am_cost'] > 40) && ($r['am_cost'] <= 50))
                     $maxChange = $r['am_cost'] / 5;
