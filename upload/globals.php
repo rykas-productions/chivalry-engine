@@ -42,7 +42,6 @@ if (!isset($_COOKIE['theme'])) {
     setcookie('theme', '1', time() + 86400);
 }
 ob_start();
-require('vendor/autoload.php');
 //Require the error handler and developer helper files.
 require "lib/dev_help.php";
 //Require main functions file.
