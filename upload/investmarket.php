@@ -164,6 +164,7 @@ function buy()
     }
     $maxShares = returnUserMaxShares($userid);
     $r=$db->fetch_row($q);
+    $currentShares = returnUserAssetShares($userid, $r['am_id']);
     if (isset($_POST['buy']))
     {
         $purchase_amount = (isset($_POST['buy']) && is_numeric($_POST['buy'])) ? abs($_POST['buy']) : '';
@@ -179,7 +180,6 @@ function buy()
             die($h->endpage());
         }
         //if user has over the maximum shares for their progress.
-        $currentShares = returnUserAssetShares($userid, $r['am_id']);
         if (($purchase_amount + $currentShares) > $maxShares)
         {
             alert('danger', "Uh Oh!", "You are attempting to purchase more shares than allowed with your current progress in CID. You may only own " . number_format($maxShares) . " shares per asset at your current progress.");
@@ -194,16 +194,17 @@ function buy()
     }
     else
     {
+        $maxToBuy = clamp($maxShares - $currentShares, 0, $maxShares);
         echo "<div class='card'>
             <div class='card-body'>
                 You are attempting to buy shares of the {$r['am_name']} asset. {$r['am_name']} is a Risk {$r['am_risk']} asset. Shares currently 
                 cost " . number_format($r['am_cost']) . " Copper Coins each. You currently have " . shortNumberParse($ir['primary_currency']) . " Copper Coins. Note, you are 
-                currently restricted to owning only " . number_format($maxShares) . " shares of an asset at a time.
+                currently restricted to owning only " . number_format($maxShares) . " shares of an asset at a time. You currently own " . number_format($currentShares) . " shares of this asset.
                 How many shares would you like to purchase of {$r['am_name']}?<hr />
                 <form method='post'>
                     <div class='row'>
                     <div class='col-12 col-md-6'>
-                        <input type='number' min='0' class='form-control' required='1' name='buy' placeholder='Shares to purchase'>
+                        <input type='number' min='0' class='form-control' required='1' value='{$maxToBuy}' max='{$maxToBuy}' name='buy' placeholder='Shares to purchase'>
                     </div>
                     <div class='col-12 col-md-6'>
                         <input type='submit' class='btn btn-success btn-block' value='Purchase Shares'>
