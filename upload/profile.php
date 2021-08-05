@@ -313,6 +313,7 @@ echo "<h3>{$user_name}'s Profile</h3>
 				</div>
 			</div>
 		</div>
+        <br />
 	</div>
 	<div class='col-lg-6 col-xl-5'>
 		<div class='card'>
@@ -324,54 +325,52 @@ echo "<h3>{$user_name}'s Profile</h3>
 					<div class='col-sm'>
 						<div id='profileTxt' class='text-left'>What would you like to do?</div><br />
 						<div class='row'>
-							<div class='col'>
-								<a href='attack.php?user={$r['userid']}' onmouseover='profileButtonAttack(\"{$r['username']}\", {$attbutton})' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-swords-emblem'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='attack.php?user={$r['userid']}' onmouseover='profileButtonAttack(\"{$r['username']}\", {$attbutton})' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-swords-emblem'></i></a><br />
 							</div>
-							<div class='col'>
-								<a href='sendcash.php?user={$r['userid']}' onmouseover='profileButtonCash(\"{$r['username']}\")' class='btn btn-primary ' style='font-size: 1.75rem;'><i class='game-icon game-icon-credits-currency'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='sendcash.php?user={$r['userid']}' onmouseover='profileButtonCash(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-credits-currency'></i></a><br />
 							</div>
-							<div class='col'>
-								<a href='inbox.php?action=compose&user={$r['userid']}' onmouseover='profileButtonMail(\"{$r['username']}\")' class='btn btn-primary ' style='font-size: 1.75rem;'><i class='game-icon game-icon-envelope'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='inbox.php?action=compose&user={$r['userid']}' onmouseover='profileButtonMail(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-envelope'></i></a><br />
 							</div>
-							<div class='col'>
-								<a href='hirespy.php?user={$r['userid']}' onmouseover='profileButtonSpy(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-spy'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='hirespy.php?user={$r['userid']}' onmouseover='profileButtonSpy(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-spy'></i></a><br />
 							</div>
-						</div>
-						<br />
-						<div class='row'>
-							<div class='col'>
-								<a href='bounty.php?action=addbounty&user={$r['userid']}' onmouseover='profileButtonBounty(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-wanted-reward'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='bounty.php?action=addbounty&user={$r['userid']}' onmouseover='profileButtonBounty(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-wanted-reward'></i></a><br />
 							</div>
-							<div class='col'>
-								<a href='theft.php?user={$r['userid']}' onmouseover='profileButtonTheft(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-profit'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='theft.php?user={$r['userid']}' onmouseover='profileButtonTheft(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-profit'></i></a><br />
 							</div>
-							<div class='col'>
-								<a href='poke.php?user={$r['userid']}' onmouseover='profileButtonPoke(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-pointing'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='poke.php?user={$r['userid']}' onmouseover='profileButtonPoke(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-pointing'></i></a><br />
 							</div>
-							<div class='col'>
-								<a href='friends.php?action=add&ID={$r['userid']}' onmouseover='profileButtonFriend(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-thumb-up'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='friends.php?action=add&ID={$r['userid']}' onmouseover='profileButtonFriend(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-thumb-up'></i></a><br />
 							</div>
-						</div>
-						<br />
-						<div class='row'>
-							<div class='col'>
-								<a href='enemy.php?action=add&user={$r['userid']}' onmouseover='profileButtonEnemy(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-thumb-down'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='enemy.php?action=add&user={$r['userid']}' onmouseover='profileButtonEnemy(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-thumb-down'></i></a><br />
 							</div>
-							<div class='col'>
-								<a href='contacts.php?action=add&user={$r['userid']}' onmouseover='profileButtonContact(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-id-card'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='contacts.php?action=add&user={$r['userid']}' onmouseover='profileButtonContact(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-id-card'></i></a><br />
 							</div>
-							<div class='col'>
-								<a href='blocklist.php?action=add&user={$r['userid']}' onmouseover='profileButtonBlock(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-trash-can'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='blocklist.php?action=add&user={$r['userid']}' onmouseover='profileButtonBlock(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-trash-can'></i></a><br />
 							</div>
-							<div class='col'>
-								<a href='playerreport.php?userid={$r['userid']}' onmouseover='profileButtonReport(\"{$r['username']}\")' class='btn btn-primary' style='font-size: 1.75rem;'><i class='game-icon game-icon-hazard-sign'></i></a>
+							<div class='col-6 col-sm-4'>
+								<a href='playerreport.php?userid={$r['userid']}' onmouseover='profileButtonReport(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-hazard-sign'></i></a><br />
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<br />
+    </div>
+</div>
+<br />
+<div class='row'>
+	<div class='col-lg-12'>
 		<div class='card'>
 			<div class='card-header text-left'>
 				Status info
@@ -404,7 +403,10 @@ echo "<h3>{$user_name}'s Profile</h3>
 			<div class='card-body'>
 				<div class='row'>
 					<div class='col-12 col-md-3'>
-						<a href='iteminfo.php?ID={$r['equip_badge']}' data-toggle='tooltip' data-placement='bottom' title='{$api->SystemItemIDtoName($r['equip_badge'])}'>" . returnIcon($r['equip_badge'],6) . "</a><br />
+						<a href='iteminfo.php?ID={$r['equip_badge']}' data-toggle='tooltip' data-placement='bottom' title='{$api->SystemItemIDtoName($r['equip_badge'])}'>" . returnIcon($r['equip_badge'],6) . "</a><br />";
+						if (($userid == $r['userid']) && ($r['equip_badge'] > 0))
+						    echo "<a class='btn btn-primary' href='unequip.php?type=equip_badge'>Unequip</a>";
+						echo"
 					</div>
 					<div class='col-12 col-md-9'>
 						{$r['description']}
@@ -522,127 +524,129 @@ echo "<h3>{$user_name}'s Profile</h3>
 					echo"
 				</div>
 				<hr />
-				<div class='row text-left'>
-					<div class='col-md'>
-						<b>Name</b>
-					</div>
-					<div class='col-md'>
-						<b>" . parseUsername($r['userid']) . " [{$r['userid']}]</b>
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Rank</b>
-					</div>
-					<div class='col'>
-						{$r['user_level']}
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Guild</b>
-					</div>
-					<div class='col'>";
-					if ($r['guild'] == 0)
-						echo "N/A";
-					else
-						echo "<a href='guilds.php?action=view&id={$r['guild']}'>{$gR['guild_name']}</a>";
-					echo"</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Job</b>
-					</div>
-					<div class='col'>";
-					if ($r['job'] == 0)
-						echo "N/A";
-					else
-						echo $jobTitle;
-					echo"</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Health</b>
-					</div>
-					<div class='col'>
-						" . number_format($r['hp']) . " / " . number_format($r['maxhp']) . "
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Property</b>
-					</div>
-					<div class='col'>
-						{$r['house_name']}
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Martial Status</b>
-					</div>
-					<div class='col'>";
-						if ($married == "N/A")
-							echo "Single";
-						else
-							echo "Married to {$married}";
-						if (isset($ring))
-							echo " ({$ring})";
-						echo"
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Achievements Completed</b>
-					</div>
-					<div class='col'>";
-					echo number_format($db->fetch_single($db->query("SELECT COUNT(`achievement`) FROM `achievements_done` WHERE `userid` = {$r['userid']}")));
-					echo "</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Friends</b>
-					</div>
-					<div class='col'>
-						" . number_format($friend) . "
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Enemies</b>
-					</div>
-					<div class='col'>
-						" . number_format($enemy) . "
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Referrals</b>
-					</div>
-					<div class='col'>
-						" . number_format($ref) . "
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Last Action</b>
-					</div>
-					<div class='col'>
-						{$ula}
-					</div>
-				</div>
+                    <div class='row'>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Name</small>
+                        </div>
+                        <div class='row'>
+                            " . parseUsername($r['userid']) . " [{$r['userid']}]
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Rank</small>
+                        </div>
+                        <div class='row'>
+                            {$r['user_level']}
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Guild</small>
+                        </div>
+                        <div class='row'>";
+					       if ($r['guild'] == 0)
+					           echo "N/A";
+					       else
+					           echo "<a href='guilds.php?action=view&id={$r['guild']}'>{$gR['guild_name']}</a>";
+					        echo"
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Job</small>
+                        </div>
+                        <div class='row'>";
+					        if ($r['job'] == 0)
+					            echo "N/A";
+				            else
+				                echo $jobTitle;
+					        echo"
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Health</small>
+                        </div>
+                        <div class='row'>
+                            " . number_format($r['hp']) . " / " . number_format($r['maxhp']) . "
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Property</small>
+                        </div>
+                        <div class='row'>
+                           {$r['house_name']}
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Marital Status</small>
+                        </div>
+                        <div class='row'>";
+                           if ($married == "N/A")
+                               echo "Single";
+                           else
+                               echo "Married to {$married}";
+                                   if (isset($ring))
+                                       echo " ({$ring})";
+                                   echo"
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Achievements</small>
+                        </div>
+                        <div class='row'>";
+                           echo number_format($db->fetch_single($db->query("SELECT COUNT(`achievement`) FROM `achievements_done` WHERE `userid` = {$r['userid']}")));
+                        echo"</div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Friends</small>
+                        </div>
+                        <div class='row'>
+                           " . number_format($friend) . "
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Enemies</small>
+                        </div>
+                        <div class='row'>
+                           " . number_format($enemy) . "
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Referrals</small>
+                        </div>
+                        <div class='row'>
+                           " . number_format($ref) . "
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Last Action</small>
+                        </div>
+                        <div class='row'>
+                           {$ula}
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Last Login</small>
+                        </div>
+                        <div class='row'>
+                           {$ull}
+                        </div>
+                    </div>
+                </div>
 			</div>
-		</div>
+        </div>
+        <br />
 	</div>
 	<div class='col-lg-5'>
 		<div class='card'>
@@ -651,52 +655,52 @@ echo "<h3>{$user_name}'s Profile</h3>
 			</div>
 			<div class='card-body'>
 				<div class='row text-left'>
-					<div class='col'>
-						<b>Copper Coins</b>
-					</div>
-					<div class='col'>
-						" . number_format($r['primary_currency']) . "
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Chivalry Tokens</b>
-					</div>
-					<div class='col'>
-						" . number_format($r['secondary_currency']) . "
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Location</b>
-					</div>
-					<div class='col'>
-						<a href='travel.php?to={$r['location']}' data-toggle='tooltip' data-placement='bottom' title='Minimum Level: {$r['town_min_level']}'>{$r['town_name']}</a>
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Origin Country</b>
-					</div>
-					<div class='col'>
-						" . ucfirst($fg['country']) . "
-					</div>
-				</div>
-				<hr />
-				<div class='row text-left'>
-					<div class='col'>
-						<b>Platform</b>
-					</div>
-					<div class='col'>
-						{$r['browser']} on {$r['os']}
-					</div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Copper Coins</small>
+                        </div>
+                        <div class='row'>
+                            " . shortNumberParse($r['primary_currency']) . "
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Chivalry Tokens</small>
+                        </div>
+                        <div class='row'>
+                            " . shortNumberParse($r['secondary_currency']) . "
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Location</small>
+                        </div>
+                        <div class='row'>
+                            <a href='travel.php?to={$r['location']}' data-toggle='tooltip' data-placement='bottom' title='Minimum Level: {$r['town_min_level']}'>{$r['town_name']}</a>
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <div class='row'>
+                            <small>Country</small>
+                        </div>
+                        <div class='row'>
+                            " . ucfirst($fg['country']) . "
+                        </div>
+                    </div>
+                    <div class='col-12'>
+                        <div class='row'>
+                            <small>Playing From</small>
+                        </div>
+                        <div class='row'>
+                            {$r['browser']} on {$r['os']}
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
-		<br />
+        	<br />
+      </div>
+        <div class='col-12'>
 		<div class='card'>
 			<div class='card-header text-left'>
 				Profile comments
