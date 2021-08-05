@@ -183,8 +183,8 @@ if (isset($_POST['open']))
 				" . shortNumberParse($copper) . " Copper Coins.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveCurrency($userid,'primary',$copper);
 		$api->SystemLogsAdd($userid,"bor","Received {$copper} Copper Coins.");
 		addToEconomyLog('BOR', 'copper', $copper);
@@ -198,8 +198,8 @@ if (isset($_POST['open']))
 				" . shortNumberParse($tokens) . " Chivalry Tokens.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveCurrency($userid,'secondary',$tokens);
 		$api->SystemLogsAdd($userid,"bor","Received {$tokens} Chivalry Tokens.");
 		addToEconomyLog('BOR', 'token', $tokens);
@@ -209,12 +209,12 @@ if (isset($_POST['open']))
 		echo "<div class='col-md-3'>
 		<div class='card'>
 			<div class='card-body'>
-				" . returnIcon(207, 8) . "<br />
+				" . loadImageAsset("explore/infirmary.svg", 8) . "<br />
 				" . number_format($infirmary) . " minutes in the infirmary.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserStatusSet($userid,'infirmary',$infirmary,"Ticking Box");
 		$api->SystemLogsAdd($userid,"bor","Received {$infirmary} infirmary.");
 	}
@@ -227,8 +227,8 @@ if (isset($_POST['open']))
 				" . number_format($wraps) . " Linen Wraps
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,6,$wraps);
 		$api->SystemLogsAdd($userid,"bor","Received {$wraps} Linen Wraps.");
 	}
@@ -241,8 +241,8 @@ if (isset($_POST['open']))
 				" . number_format($keys) . " Dungeon Keys.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,30,$keys);
 		$api->SystemLogsAdd($userid,"bor","Received {$keys} Dungeon Keys.");
 	}
@@ -255,8 +255,8 @@ if (isset($_POST['open']))
 				" . number_format($bread) . " Bread.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,19,$bread);
 		$api->SystemLogsAdd($userid,"bor","Received {$bread} Bread.");
 	}
@@ -269,8 +269,8 @@ if (isset($_POST['open']))
 				" . number_format($venison) . " Venison.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,20,$venison);
 		$api->SystemLogsAdd($userid,"bor","Received {$venison} Venison.");
 	}
@@ -283,8 +283,8 @@ if (isset($_POST['open']))
 				" . number_format($potion) . " Small Health Potions.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,7,$potion);
 		$api->SystemLogsAdd($userid,"bor","Received {$potion} Small Health Potion(s).");
 	}
@@ -297,8 +297,8 @@ if (isset($_POST['open']))
 				" . number_format($explosives) . " Small Explosives.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,28,$explosives);
 		$api->SystemLogsAdd($userid,"bor","Received {$explosives} Small Explosives.");
 	}
@@ -311,8 +311,8 @@ if (isset($_POST['open']))
 				" . number_format($gymscroll) . " Chivalry Gym Scrolls.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,18,$gymscroll);
 		$api->SystemLogsAdd($userid,"bor","Received {$gymscroll} Chivalry Gym Scrolls.");
 	}
@@ -325,8 +325,8 @@ if (isset($_POST['open']))
 				" . number_format($attackscroll) . " Distant Attack Scrolls.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,90,$attackscroll);
 		$api->SystemLogsAdd($userid,"bor","Received {$attackscroll} Distant Attack Scrolls.");
 	}
@@ -335,12 +335,12 @@ if (isset($_POST['open']))
 		echo "<div class='col-md-3'>
 		<div class='card'>
 			<div class='card-body'>
-				" . returnIcon(90, 8) . "<br />
+				" . returnIcon(100, 8) . "<br />
 				" . number_format($needle) . " Acupuncture Needles.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,100,$needle);
 		$api->SystemLogsAdd($userid,"bor","Received {$needle} Acupuncture Needles.");
 	}
@@ -353,8 +353,8 @@ if (isset($_POST['open']))
 				" . number_format($mystery) . " Mysterious Potions.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,123,$mystery);
 		$api->SystemLogsAdd($userid,"bor","Received {$mystery} Mysterious Potions.");
 	}
@@ -363,12 +363,12 @@ if (isset($_POST['open']))
 		echo "<div class='col-md-3'>
 		<div class='card'>
 			<div class='card-body'>
-				<i class='game-icon game-icon-open-treasure-chest' style='font-size:8rem;'></i><br />
+				" . loadImageAsset("explore/hexbags.svg") . "<br />
 				" . number_format($hexbags) . " extra Hexbags.
 			</div>
-		</div>
-		</div>
-		<br />";
+    		</div>
+            <br />
+		</div>";
 		$db->query("UPDATE `users` SET `hexbags` = `hexbags` + {$hexbags} WHERE `userid` = {$userid}");
 		$api->SystemLogsAdd($userid,"bor","Received {$hexbags} Hexbags.");
 	}
@@ -381,8 +381,8 @@ if (isset($_POST['open']))
 				" . number_format($rickitybomb) . " Rickity Bombs.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,149,$rickitybomb);
 		$api->SystemLogsAdd($userid,"bor","Received {$rickitybomb} Rickity Bomb(s).");
 	}
@@ -395,8 +395,8 @@ if (isset($_POST['open']))
 				" . number_format($herbofminer) . " Herbs of the Enlightened Miner.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 		$api->UserGiveItem($userid,177,$herbofminer);
 		$api->SystemLogsAdd($userid,"bor","Received {$herbofminer} Herbs of the Enlightened Miner.");
 	}
@@ -408,8 +408,8 @@ if (isset($_POST['open']))
 				" . number_format($nothing) . " boxes of random had no contents.
 			</div>
 			</div>
-		</div>
-		<br />";
+            <br />
+		</div>";
 	}
 	echo "</div>";
 	$api->UserTakeItem($userid,33,$_POST['open']);
