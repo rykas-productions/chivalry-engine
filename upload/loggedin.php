@@ -39,7 +39,7 @@ if (isset($_POST['pn_update'])) {
     //Sanitize the notepad entry
     $_POST['pn_update'] = (isset($_POST['pn_update'])) ? strip_tags(stripslashes($_POST['pn_update'])) : '';
     //Notepad update is too large for the database storage
-    if (strlen($_POST['pn_update']) > 65535) {
+    if (strlen($_POST['pn_update']) > max_unsign_short) {
         alert('danger', "Uh Oh!", "Your notepad is too big to update.", false);
     } else {
         //Update the notepad after escaping the data entered.
