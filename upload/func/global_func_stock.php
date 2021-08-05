@@ -99,14 +99,14 @@ function runMarketTick($riskLevel)
                 $min = $r['am_cost'] * 0.25;
                 $max = $r['am_cost'] * 0.45;
                 $change = mt_rand($min, $max) * -1;
-                $api->GameAddNotification(1, "{$r['am_name']} has a market crash.");
+                //$api->GameAddNotification(1, "{$r['am_name']} has a market crash.");
             }
             else if ($RNG >= 498) //market bubble
             {
                 $min = $r['am_cost'] * 0.10;
                 $max = $r['am_cost'] * 0.45;
                 $change = mt_rand($min, $max);
-                $api->GameAddNotification(1, "{$r['am_name']} has a market bubble.");
+                //$api->GameAddNotification(1, "{$r['am_name']} has a market bubble.");
             }
             else
             {
@@ -142,14 +142,14 @@ function runMarketTick($riskLevel)
                         $api->GameAddNotification($r2['userid'], $notifText);
                         array_push($alreadyNotif, $r2['userid']);
                     }
-                    $api->GameAddNotification(1, "{$r['am_name']} has crashed.");
+                    //$api->GameAddNotification(1, "{$r['am_name']} has crashed.");
                 }
             }
             
             if (($newVal <= $r['am_min']) && ($newVal >= $r['am_min'] - (5 / 100)))
             {
                 stockNotifDrop($r['am_id']);
-                $api->GameAddNotification(1, "{$r['am_name']} is failing.");
+                //$api->GameAddNotification(1, "{$r['am_name']} is failing.");
             }
             
             $db->query("UPDATE `asset_market` SET `am_cost` = '{$newVal}' WHERE `am_id` = {$r['am_id']}");
