@@ -304,6 +304,16 @@ echo "
 					</div>
 				</div>
 			</div>
+            <div class='col-6 col-sm-4 col-lg-3'>
+				<div class='row'>
+					<div class='col-12'>
+						<small><b>Status Effects</b></small>
+					</div>
+					<div class='col-12'>
+						[<a href='status.php'>View</a>]
+					</div>
+				</div>
+			</div>
 		</div>
       </div>
     </div>

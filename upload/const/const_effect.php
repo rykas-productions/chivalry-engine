@@ -1,4 +1,5 @@
 <?php
+//@TODO Convert this into datatable.
 //Mining effects
 define('mining_xp_boost','mining_xp_boost');
 define('holiday_mining_energy','holiday_mining_energy');
@@ -8,10 +9,13 @@ define('invisibility','invisibility');
 define('basic_protection','basic_protection');
 define('sleep','sleep');
 define('wood_cut_cooldown','wood_cut_cooldown');
+define('effect_mysterious_potion', 'mysterious_potion');
 
 //Farming
 define('farm_well_cooldown','farm_well_cooldown');
 define('farm_well_less_cooldown','farm_well_less_cooldown');
 define('farm_well_cooldown_cutoff','farm_well_cooldown_cutoff');
 
-define('effect_mysterious_potion', 'mysterious_potion');
+//Ticking
+define('effect_posion', 'posion');
+define('effect_regen', 'regeneration');
