@@ -554,15 +554,10 @@ function diagnostics()
 {
     global $h, $userid, $api;
     $dir = substr(__DIR__, 0, strpos(__DIR__, "\staff"));
-    if (version_compare(phpversion(), '5.5.0') < 0) {
-        $pv = "<span style='color: red'>Fail</span>";
-    } else {
-        $pv = "<span style='color: green'>Success</span>";
-    }
     if (is_writable('./')) {
-        $wv = "<span style='color: green'>Success</span>";
+        $wv = "<span style='color: green'>Writable.</span>";
     } else {
-        $wv = "<span style='color: red'>Fail</span>";
+        $wv = "<span style='color: red'>Not writable.</span>";
     }
     if (function_exists('mysqli_connect')) {
         $dv = "<span style='color: green'>Success</span>";
@@ -596,47 +591,49 @@ function diagnostics()
     } else {
         $fov = "<span style='color: red'>Fail</span>";
     }
-    echo "<table class='table table-bordered table-hover'>
-    		<tr>
-    			<td>Server PHP Version Greater than 5.5</td>
-    			<td>{$pv}</td>
-    		</tr>
-    		<tr>
-    			<td>Server Folder Writable</td>
-    			<td>{$wv}</td>
-    		</tr>
-			<tr>
-    			<td>PDO Detected?</td>
-    			<td>{$pdv}</td>
-    		</tr>
-    		<tr>
-    			<td>MySQLi Detected?</td>
-    			<td>{$dv}</td>
-    		</tr>
-			<tr>
-    			<td>Password Function Detected?</td>
-    			<td>{$hv}</td>
-    		</tr>
-			<tr>
-    			<td>OpenSSL Detected?</td>
-    			<td>{$ov}</td>
-    		</tr>
-			<tr>
-    			<td>cURL Detected?</td>
-    			<td>{$cuv}</td>
-    		</tr>
-			<tr>
-    			<td>fopen Detected?</td>
-    			<td>{$fov}</td>
-    		</tr>
-    		<tr>
-    			<td>Chivalry Engine Update Checker</td>
-    			<td>
-        			" . version_json() . "
-        		</td>
-        	</tr>
-    </table>
-       ";
+    echo "
+        <div class='row'>
+            <div class='col-12 col-xxxl-3'>
+                <div class='card'>
+                    <div class='card-header'>
+                        PHP Version
+                    </div>
+                    <div class='card-body'>
+                        " . phpversion() . "
+                    </div>
+                </div>
+            </div>
+            <div class='col-12 col-xxxl-3'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Game Dir Writable
+                    </div>
+                    <div class='card-body'>
+                        {$wv}
+                    </div>
+                </div>
+            </div>
+            <div class='col-12 col-xxxl-3'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Chivalry Engine Updates
+                    </div>
+                    <div class='card-body'>
+                        " . version_json() . "
+                    </div>
+                </div>
+            </div>
+            <div class='col-12 col-xxxl-3'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Chivalry Engine Updates
+                    </div>
+                    <div class='card-body'>
+                        " . numberToByteParse(disk_free_space("/")) . " / " . numberToByteParse(disk_total_space("/")) . "
+                    </div>
+                </div>
+            </div>
+        </div>";
     $api->SystemLogsAdd($userid, 'staff', "Viewed game diagnostics.");
     $h->endpage();
 }
