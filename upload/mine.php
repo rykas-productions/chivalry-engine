@@ -324,6 +324,8 @@ function mine()
 					{
 					    $xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 					}
+					if ($spot == 10)
+					    $xpgain = $xpgain / 4;
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']) . ". You have gained " . number_format($xpgain) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_copper_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$flakes} x {$api->SystemItemIDtoName($MSI['mine_copper_item'])}.");
@@ -341,6 +343,8 @@ function mine()
 					{
 						$xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 					}
+					if ($spot == 10)
+					    $xpgain = $xpgain / 4;
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_silver_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$flakes} x {$api->SystemItemIDtoName($MSI['mine_silver_item'])}.");
@@ -357,6 +361,8 @@ function mine()
 					{
 					    $xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 					}
+					if ($spot == 10)
+					    $xpgain = $xpgain / 4;
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_gold_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$flakes} x {$api->SystemItemIDtoName($MSI['mine_gold_item'])}.");
@@ -371,6 +377,8 @@ function mine()
 				{
 				    $xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 				}
+				if ($spot == 10)
+				    $xpgain = $xpgain / 4;
 				if ($MUS['mine_boost'] > time())
 						$xpgain = $xpgain*2;
                 alert('success', "Success!", "You have carefully excavated out {$itemgive} " . $api->SystemItemIDtoName($MSI['mine_gem_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
