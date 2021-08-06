@@ -72,8 +72,9 @@ function check_level($disableLevelUp = false)
 			$db->query("UPDATE `users` SET `xp` = '{$expu}' WHERE `userid` = {$userid}");
 			doLevelUpBonus($userid, $ir['reset']);
 			//Give the user some stats for leveling up.
-			$StatGain = round(($ir['level'] * Random(150,275)) / Random(2, 6));
+			$StatGain = $ir['level'] * Random(150,275) / Random(2, 6);
 			$StatGain = $StatGain+($StatGain*levelMultiplier($ir['level']));
+			$StatGain = round($StatGain + ($StatGain *(1 - ($ir['reset'] * 0.1))));
 			$StatGainFormat = number_format($StatGain);
 			//Assign the stat gain to the user's class of choice.
 			if ($ir['class'] == 'Warrior') {
@@ -525,6 +526,44 @@ function returnEffectMultiplier($user, $effect)
 {
 	global $db;
 	return $db->fetch_single($db->query("SELECT `effectMulti` FROM `users_effects` WHERE `userid` = {$user} AND `effectName` = '{$effect}'"));
+}
+
+function doEffectTick()
+{
+    posionTick();
+    regenTick();
+}
+
+function posionTick()
+{
+    global $db, $api;
+    $effectName = effect_posion;
+    $q=$db->query("SELECT * FROM `users_effects` WHERE `effectName` = '{$effectName}'");
+    while ($r = $db->fetch_row($q))
+    {
+        if (userHasEffect($r['userid'], $effectName))
+        {
+            $multipler = returnEffectMultiplier($r['userid'], $effectName);
+            $percDmgDone = 5 * $multipler;
+            $api->UserInfoSet($r['userid'], "hp", $percDmgDone * -1, true);
+        }
+    }
+}
+
+function regenTick()
+{
+    global $db, $api;
+    $effectName = effect_regen;
+    $q=$db->query("SELECT * FROM `users_effects` WHERE `effectName` = '{$effectName}'");
+    while ($r = $db->fetch_row($q))
+    {
+        if (userHasEffect($r['userid'], $effectName))
+        {
+            $multipler = returnEffectMultiplier($r['userid'], $effectName);
+            $percDmgDone = 5 * $multipler;
+            $api->UserInfoSet($r['userid'], "hp", $percDmgDone, true);
+        }
+    }
 }
 
 function deleteUser($user)
