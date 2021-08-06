@@ -100,8 +100,6 @@ function shortNumberParse($n)
         $n_format = number_format($n);
     elseif ($n < 10000)
         $n_format = number_format($n / 1000, 2) . "K";
-    elseif ($n < 100000)
-        $n_format = number_format($n / 1000, 1) . "K";
     elseif ($n < 1000000)
         $n_format = number_format($n / 1000, 1) . "K";
     elseif ($n < 1000000000)
@@ -119,6 +117,25 @@ function shortNumberParse($n)
     else
         $n_format = number_format($n);
     return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . "'>{$n_format}</span>";
+}
+
+function numberToByteParse($n)
+{
+    $kb = 1024;
+    $mb = $kb * 1024;
+    $gb = $mb * 1024;
+    $tb = $gb * 1024;
+    if ($n < $kb)
+        $n_format = number_format($n);
+    elseif ($n < $mb)
+        $n_format = number_format($n / $kb, 2) . "K";
+    elseif ($n < $gb)
+        $n_format = number_format($n / $mb, 1) . "M";
+    elseif ($n < $tb)
+        $n_format = number_format($n / $gb, 1) . "G";
+    elseif ($n > $tb)
+        $n_format = number_format($n / $tb, 2) . "T";
+    return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . " bytes'>{$n_format}B</span>";
 }
 
 /**
