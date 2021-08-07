@@ -2970,7 +2970,7 @@ function staff_declare()
                                       AND `gw_declaree` = {$_POST['guild']}
                                       AND `gw_end` > {$time}");
             if ($db->num_rows($iswarredon) > 0) {
-                alert('danger', "Uh Oh!", "You cannot declare war on this guild as you are already at war!");
+                alert('danger', "Uh Oh!", "You cannot declare war on this guild as your guild has already begun war with them.");
                 die($h->endpage());
             }
 
@@ -2981,7 +2981,7 @@ function staff_declare()
                                         AND `gw_declarer` = {$_POST['guild']}
                                         AND `gw_end` > {$time}");
             if ($db->num_rows($iswarredon1) > 0) {
-                alert('danger', "Uh Oh!", "You cannot declare war on this guild as you are already at war!");
+                alert('danger', "Uh Oh!", "You cannot declare war on this guild as they've already started war with your guild!");
                 die($h->endpage());
             }
 
@@ -2994,7 +2994,7 @@ function staff_declare()
                                                         ORDER BY `gw_id`DESC
                                                         LIMIT 1"));
             if ($istoosoon > $lastweek) {
-                alert('danger', "Uh Oh!", "You cannot declare war on this guild as its been less than a week since the last war concluded.");
+                alert('danger', "Uh Oh!", "You must wait at least one week before declaring war on this guild again.");
                 die($h->endpage());
             }
 
@@ -3006,21 +3006,21 @@ function staff_declare()
                                                         ORDER BY `gw_id` DESC
                                                         LIMIT 1"));
             if ($istoosoon1 > $lastweek) {
-                alert('danger', "Uh Oh!", "You cannot declare war on this guild as its been less than a week since the last war concluded.");
+                alert('danger', "Uh Oh!", "You must wait at least one week before declaring war on this guild again.");
                 die($h->endpage());
             }
             $yourcount = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `guild` = {$ir['guild']}");
             $theircount = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `guild` = {$_POST['guild']}");
 
             //Current guild does not have 5 members.
-            if ($db->num_rows($yourcount) < 5) {
-                alert('danger', "Uh Oh!", "You cannot declare war on another guild if you've got less than 5 members in your own guild.");
+            if ($db->num_rows($yourcount) < 2) {
+                alert('danger', "Uh Oh!", "You cannot declare war on another guild if you've got less than 2 members in your own guild.");
                 die($h->endpage());
             }
 
             //Current guild does not have 5 members.
-            if ($db->num_rows($theircount) < 5) {
-                alert('danger', "Uh Oh!", "You cannot declare war on this guild, as they do not have 5 members currently in their guild.");
+            if ($db->num_rows($theircount) < 2) {
+                alert('danger', "Uh Oh!", "You cannot declare war on this guild, as they do not have 2 members currently in their guild.");
                 die($h->endpage());
             }
 			
@@ -3037,7 +3037,7 @@ function staff_declare()
 				die($h->endpage());
 			}
             $r = $db->fetch_row($data_q);
-            $endtime = time() + 259200;
+            $endtime = time() + (86400 * 7);
 
             //Start the war, and notify all parties involved.
             $db->query("INSERT INTO `guild_wars` VALUES (NULL, {$gd['guild_id']}, {$_POST['guild']}, 0, 0, {$endtime}, 0)");
@@ -3103,8 +3103,9 @@ function staff_declare()
 			<form method='post'>
 				<tr>
 					<th colspan='2'>
-						It costs 500,000 Copper Coins to declare war on another guild. If you have allies, they will come to your aid. Note, however, 
-						if they have allies, they will declare war on your guild to protect their alliance.
+						It costs 500K Copper Coins to declare war on another guild. Wars last a week and your guild will be the winner if you rack up more points against your enemy. 
+                        If you have allies, they will come to your aid. Note, however, if your enemy has allies, they will declare war on your guild to protect their alliance. Note that 
+                        alliances deemed non-aggressive will dissolve once you declare war.
 					</th>
 				</tr>
 				<tr>

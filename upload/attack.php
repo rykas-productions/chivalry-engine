@@ -224,13 +224,21 @@ function attacking()
 					`agility` = {$agl},
 					`guard` = {$grd}
 					WHERE `userid` = 20");
-		$db->query("UPDATE `users` 
-					SET `equip_armor` = {$ir['equip_armor']},
-					`equip_primary` = {$ir['equip_primary']},
-					`equip_secondary` = {$ir['equip_secondary']},
-					`equip_potion` = {$ir['equip_potion']},
-					`level` = {$ir['level']}
-					WHERE `userid` = 20");
+		$db->query("UPDATE `users` SET `level` = {$ir['level']} WHERE `userid` = 20");
+		
+		$prim_ring = getUserItemEquippedSlot($userid, slot_prim_ring);
+		$sec_ring = getUserItemEquippedSlot($userid, slot_second_ring);
+		$neck = getUserItemEquippedSlot($userid, slot_necklace);
+		$pend = getUserItemEquippedSlot($userid, slot_pendant);
+		
+		equipUserSlot(20, slot_prim_wep, $ir['equip_primary']);
+		equipUserSlot(20, slot_second_wep, $ir['equip_secondary']);
+		equipUserSlot(20, slot_armor, $ir['equip_armor']);
+		equipUserSlot(20, slot_prim_ring, $prim_ring);
+		equipUserSlot(20, slot_second_ring, $sec_ring);
+		equipUserSlot(20, slot_necklace, $neck);
+		equipUserSlot(20, slot_pendant, $pend);
+		equipUserSlot(20, slot_potion, $ir['equip_potion']);
 	}
 	//Check if the attacked user is, in fact, an active boss.
 	$bossq=$db->query("SELECT * FROM `activeBosses` WHERE `boss_user` = {$_GET['user']}");
@@ -252,13 +260,21 @@ function attacking()
 					WHERE `userid` = {$_GET['user']}");
 		
 		//Set the boss to have same level and gear as the person attacking them.
-		$db->query("UPDATE `users` 
-					SET `equip_armor` = {$ir['equip_armor']},
-					`equip_primary` = {$ir['equip_primary']},
-					`equip_secondary` = {$ir['equip_secondary']},
-					`equip_potion` = {$ir['equip_potion']},
-					`level` = {$ir['level']}
-					WHERE `userid` = {$_GET['user']}");
+		$db->query("UPDATE `users` SET `level` = {$ir['level']} WHERE `userid` = {$_GET['user']}");
+		
+		$prim_ring = getUserItemEquippedSlot($userid, slot_prim_ring);
+		$sec_ring = getUserItemEquippedSlot($userid, slot_second_ring);
+		$neck = getUserItemEquippedSlot($userid, slot_necklace);
+		$pend = getUserItemEquippedSlot($userid, slot_pendant);
+		
+		equipUserSlot($_GET['user'], slot_prim_wep, $ir['equip_primary']);
+		equipUserSlot($_GET['user'], slot_second_wep, $ir['equip_secondary']);
+		equipUserSlot($_GET['user'], slot_armor, $ir['equip_armor']);
+		equipUserSlot($_GET['user'], slot_prim_ring, $prim_ring);
+		equipUserSlot($_GET['user'], slot_second_ring, $sec_ring);
+		equipUserSlot($_GET['user'], slot_necklace, $neck);
+		equipUserSlot($_GET['user'], slot_pendant, $pend);
+		equipUserSlot($_GET['user'], slot_potion, $ir['equip_potion']);
 	}
     //Check that the opponent has 1 health point.
     if ($odata['hp'] == 1) {
@@ -973,12 +989,11 @@ function beat()
                     $whoswho = $db->fetch_row($db->query("/*qc=on*/SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                     //Give points to user's guild.
                     if ($whoswho['gw_declarer'] == $ir['guild']) {
-                        $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 3 WHERE `gw_id` = {$wr}");
+                        $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 2 WHERE `gw_id` = {$wr}");
                     } else {
-                        $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 3 WHERE `gw_id` = {$wr}");
+                        $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 2 WHERE `gw_id` = {$wr}");
                     }
-                    $additionaltext .= "By winning this fight, you've earned your guild a point in the guild war.";
-					guilddebt($ir['guild'],$r['guild']);
+                    $additionaltext .= "By winning this fight, you've earned your guild two points in the guild war.";
                 }
             }
 
@@ -1142,12 +1157,11 @@ function lost()
                 $whoswho = $db->fetch_row($db->query("/*qc=on*/SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                 //Give opponent's guild a point.
                 if ($whoswho['gw_declarer'] == $ir['guild']) {
-                    $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 5 WHERE `gw_id` = {$wr}");
+                    $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 2 WHERE `gw_id` = {$wr}");
                 } else {
-                    $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 5 WHERE `gw_id` = {$wr}");
+                    $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 2 WHERE `gw_id` = {$wr}");
                 }
-                $additionaltext = "You have gained a point for your opponent's guild.";
-				guilddebt($r['guild'],$ir['guild']);
+                $additionaltext = "You have gained two points for your opponent's guild.";
             }
         }
     }
@@ -1275,7 +1289,6 @@ function xp()
                             $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 1 WHERE `gw_id` = {$wr}");
                         }
                         $additionaltext = "For winning this fight, you have gained your guild 1 point.";
-						guilddebt($ir['guild'],$r['guild']);
                     }
                 }
 
@@ -1449,12 +1462,11 @@ function mug()
                         $whoswho = $db->fetch_row($db->query("/*qc=on*/SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                         //Give user's guild a point.
                         if ($whoswho['gw_declarer'] == $ir['guild']) {
-                            $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 2 WHERE `gw_id` = {$wr}");
+                            $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 3 WHERE `gw_id` = {$wr}");
                         } else {
-                            $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 2 WHERE `gw_id` = {$wr}");
+                            $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 3 WHERE `gw_id` = {$wr}");
                         }
-                        $additionaltext = "For winning this fight, you've won your guild 1 point.";
-						guilddebt($ir['guild'],$r['guild']);
+                        $additionaltext = "For winning this fight, you've won your guild 3 points.";
                     }
                 }
 
@@ -1623,13 +1635,11 @@ function home_invasion()
                         $wr = $db->fetch_single($warq);
                         $whoswho = $db->fetch_row($db->query("/*qc=on*/SELECT `gw_declarer`, `gw_declaree` FROM `guild_wars` WHERE `gw_id` = {$wr}"));
                         //Give user's guild a point.
-                        if ($whoswho['gw_declarer'] == $ir['guild']) {
-                            $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 2 WHERE `gw_id` = {$wr}");
-                        } else {
-                            $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 2 WHERE `gw_id` = {$wr}");
-                        }
-                        $additionaltext = "For winning this fight, you've won your guild 1 point.";
-                        guilddebt($ir['guild'],$r['guild']);
+                        if ($whoswho['gw_declarer'] == $ir['guild']) 
+                            $db->query("UPDATE `guild_wars` SET `gw_drpoints` = `gw_drpoints` + 5 WHERE `gw_id` = {$wr}");
+                        else
+                            $db->query("UPDATE `guild_wars` SET `gw_depoints` = `gw_depoints` + 5 WHERE `gw_id` = {$wr}");
+                        $additionaltext = "For winning this fight, you've won your guild 5 point.";
                     }
                 }
                 
@@ -1661,53 +1671,4 @@ function home_invasion()
         doExtraBomb($userid, $r['userid']);
     }
 }
-
-function attacklog($attacker,$attacked,$result)
-{
-	global $db;
-	$time=time();
-	$db->query("INSERT INTO `attack_logs` (`attack_time`, `attacker`, `attacked`, `result`) VALUES ('{$time}', '{$attacker}', '{$attacked}', '{$result}')");
-}
-function guilddebt($winner,$loser)
-{
-	global $db;
-	$sevendays=time()+604800;
-	$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 15000  WHERE `guild_id` = {$winner}");
-	$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - 25000  WHERE `guild_id` = {$loser}");
-	$db->query("UPDATE `guild` SET `guild_debt_time` = {$sevendays} WHERE `guild_primcurr` < 0 AND `guild_debt_time` = 0");
-}
-
-function doExtraBomb($user, $infirm)
-{
-	global $api;
-	$doBomb = false;
-	$infirmTime = Random(30,60);
-	if ($api->UserEquippedItem($user, 'primary', 354))
-		$doBomb = true;
-	elseif ($api->UserEquippedItem($user, 'secondary', 354))
-		$doBomb = true;
-	if ($doBomb == true)
-	{
-		if (Random(1,100) == 29)
-		{
-			$api->UserStatusSet($infirm, 'infirmary', $infirmTime, '');
-			$api->GameAddNotification($infirm, "You were bombed while being escorted to the infirmary and need to stay {$infirmTime} minutes longer.");
-			$api->GameAddNotification($user, "You bombed {$api->SystemUserIDtoName($infirm)} while escorting them to the infirmary and did {$infirmTime} minutes of damage.");
-			return true;
-		}
-	}
-	else
-		return false;
-}
-
-function logBossDmg($userid, $boss_id, $dmg)
-{
-	global $db;
-	$q=$db->query("SELECT * FROM `bossDamage` WHERE `userid` = {$userid} AND `boss_id` = {$boss_id}");
-	if ($db->num_rows($q) == 0)
-		$db->query("INSERT INTO `bossDamage` (`userid`, `boss_id`, `dmg`) VALUES ('{$userid}', '{$boss_id}', '{$dmg}')");
-	else
-		$db->query("UPDATE `bossDamage` SET `dmg` = `dmg` + {$dmg} WHERE `userid` = {$userid} AND `boss_id` = {$boss_id}");
-}
-
 $h->endpage();

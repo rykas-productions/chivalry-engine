@@ -138,7 +138,8 @@ function updateGuildWars()
 {
     global $db, $time;
     $q3 = $db->query("/*qc=on*/SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} AND `gw_winner` = 0");
-    if ($db->num_rows($q3) > 0) {
+    if ($db->num_rows($q3) > 0) 
+    {
         $r3 = $db->fetch_row($q3);
         //Select guild war declarer's name
         $guild_declare = $db->fetch_single(
@@ -147,7 +148,8 @@ function updateGuildWars()
         $guild_declared = $db->fetch_single(
             $db->query("/*qc=on*/SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r3['gw_declaree']}"));
         //Guild War declarer has more points than the declaree.
-        if ($r3['gw_drpoints'] > $r3['gw_depoints']) {
+        if ($r3['gw_drpoints'] > $r3['gw_depoints']) 
+        {
             //Make the declarer the winner,
             $db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
             guildnotificationadd($r3['gw_declarer'], "Your guild has defeated the {$guild_declared} guild in battle.");
@@ -158,18 +160,19 @@ function updateGuildWars()
             $town2 = $db->fetch_single(
                 $db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declaree']}"));
             //If the declaree has a town under their control
-            if ($town2 > 0) {
+            if ($town2 > 0) 
+            {
                 //The declarer guild has no town of their own, so take from the declaree.
-                if ($town == 0) {
+                if ($town == 0) 
                     $db->query("UPDATE `town` SET `town_guild_owner` = {$r3['gw_declarer']}  WHERE `town_guild_owner` = {$r3['gw_declaree']}");
-                } //The declarer has their own town, so the declaree forfeits their control of their own town.
-                else {
+                //The declarer has their own town, so the declaree forfeits their control of their own town.
+                else
                     $db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$r3['gw_declaree']}");
-                }
             }
             
         } //Guild War declaree has more points than the declarer.
-        elseif ($r3['gw_drpoints'] < $r3['gw_depoints']) {
+        elseif ($r3['gw_drpoints'] < $r3['gw_depoints']) 
+        {
             //Make the declaree the winner,
             $db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
             guildnotificationadd($r3['gw_declaree'], "Your guild has defeated the {$guild_declare} guild in battle.");
@@ -182,21 +185,22 @@ function updateGuildWars()
             //If the declarer has a town under their control
             if ($town > 0) {
                 //The declaree does not have a town, so take it from the declarer.
-                if ($town2 == 0) {
+                if ($town2 == 0) 
                     $db->query("UPDATE `town` SET `town_guild_owner` = {$r3['gw_declaree']} WHERE `town_guild_owner` = {$r3['gw_declarer']}");
-                } //The declaree has their own town, so make the declarer forfeit theirs.
-                else {
+                else
                     $db->query("UPDATE `town` SET `town_guild_owner` = 0 WHERE `town_guild_owner` = {$r3['gw_declarer']}");
-                }
             }
         } //The war was tied. Tell both guilds they tied, and remove the war from the database.
-        else {
+        else 
+        {
             $db->query("DELETE FROM `guild_wars` WHERE `gw_id` = {$r3['gw_id']}");
             guildnotificationadd($r3['gw_declaree'], "Your guild has tied the {$guild_declare} guild in battle.");
             guildnotificationadd($r3['gw_declarer'], "Your guild has tied the {$guild_declared} guild in battle.");
         }
-        $r3['gw_drpoints']=$r3['gw_drpoints']*3;
-        $r3['gw_depoints']=$r3['gw_depoints']*3;
+        $guildDeclareLvl = $db->fetch_single($db->query("SELECT `guild_level` FROM `guild` WHERE `guild_id` = {$r3['gw_declarer']}"));
+        $guildDeclaredLvl = $db->fetch_single($db->query("SELECT `guild_level` FROM `guild` WHERE `guild_id` = {$r3['gw_declaree']}"));
+        $r3['gw_drpoints']=$r3['gw_drpoints'] * $guildDeclareLvl;
+        $r3['gw_depoints']=$r3['gw_depoints'] * $guildDeclaredLvl;
         //Update guild experience, if needed.
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} WHERE `guild_id` = {$r3['gw_declarer']}");
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} WHERE `guild_id` = {$r3['gw_declaree']}");
