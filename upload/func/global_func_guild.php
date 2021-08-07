@@ -136,7 +136,7 @@ function calculateUpkeep($guild)
 
 function updateGuildWars()
 {
-    global $db, $time;
+    global $db, $time, $api;
     $q3 = $db->query("/*qc=on*/SELECT * FROM `guild_wars` WHERE `gw_end` < {$time} AND `gw_winner` = 0");
     if ($db->num_rows($q3) > 0) 
     {
@@ -150,6 +150,7 @@ function updateGuildWars()
         //Guild War declarer has more points than the declaree.
         if ($r3['gw_drpoints'] > $r3['gw_depoints']) 
         {
+            $winner = $r3['gw_declarer'];
             //Make the declarer the winner,
             $db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
             guildnotificationadd($r3['gw_declarer'], "Your guild has defeated the {$guild_declared} guild in battle.");
@@ -173,8 +174,9 @@ function updateGuildWars()
         } //Guild War declaree has more points than the declarer.
         elseif ($r3['gw_drpoints'] < $r3['gw_depoints']) 
         {
+            $winner = $r3['gw_declaree'];
             //Make the declaree the winner,
-            $db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
+            $db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declaree']} WHERE `gw_id` = {$r3['gw_id']}");
             guildnotificationadd($r3['gw_declaree'], "Your guild has defeated the {$guild_declare} guild in battle.");
             guildnotificationadd($r3['gw_declarer'], "Your guild was defeated in battle by the {$guild_declared} guild.");
             //Select the town ID where the guilds own.
@@ -193,6 +195,7 @@ function updateGuildWars()
         } //The war was tied. Tell both guilds they tied, and remove the war from the database.
         else 
         {
+            $winner = 1;
             $db->query("DELETE FROM `guild_wars` WHERE `gw_id` = {$r3['gw_id']}");
             guildnotificationadd($r3['gw_declaree'], "Your guild has tied the {$guild_declare} guild in battle.");
             guildnotificationadd($r3['gw_declarer'], "Your guild has tied the {$guild_declared} guild in battle.");
@@ -204,6 +207,7 @@ function updateGuildWars()
         //Update guild experience, if needed.
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} WHERE `guild_id` = {$r3['gw_declarer']}");
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} WHERE `guild_id` = {$r3['gw_declaree']}");
+        $api->GuildAddItem($winner, 423, 1);
     }
 }
 
