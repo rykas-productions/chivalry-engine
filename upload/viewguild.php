@@ -89,69 +89,75 @@ if (!$ir['guild']) {
 function home()
 {
     global $db, $userid, $ir, $gd;
+    $guildPic = (empty($gd['guild_pic'])) ? "<i>Tell your guild leadership to set a guild profile picture!</i>" : "<img src='" . parseImage($gd['guild_pic']) . "' placeholder='The {$gd['guild_name']} guild picture.' width='300' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>";
     //The main guild index.
-	echo "<div class='row'>
-	<div class='col-lg'>";
-	if (!empty($gd['guild_pic']))
-	{
-		echo "
-			<img src='" . parseImage($gd['guild_pic']) . "' placeholder='The {$gd['guild_name']} guild picture.' width='300' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>";
-	}
-	else
-	{
-		alert('info','','Tell your guild leadership to set a guild profile picture!',false);
-	}
-		echo "</div><br />
-		<div class='col-lg'>
-			<div class='row'>
-				<div class='col-4'>
-					<a class='btn btn-primary' href='?action=summary'>Summary</a>
-				</div>
-				<div class='col-4'>
-					<a class='btn btn-primary' href='?action=donate'>Donate</a>
-				</div>
-				<div class='col-4'>
-					<a class='btn btn-primary' href='?action=members'>Members</a>
-				</div>
-			</div>
-			<hr />
-			<div class='row'>
-				<div class='col-4'>
-					<a class='btn btn-primary' href='?action=crimes'>Crimes</a>
-				</div>
-				<div class='col-4'>
-					<a class='btn btn-primary' href='?action=leave'>Leave Guild</a>
-				</div>
-				<div class='col-4'>
-					<a class='btn btn-primary' href='?action=atklogs'>Attack Logs</a>
-				</div>
-			</div>
-			<hr />
-			<div class='row'>
-				<div class='col-4'>
-					<a class='btn btn-primary' href='?action=armory'>Armory</a>
-				</div>
-				<div class='col-4'>
-					<a class='btn btn-primary' href='?action=forums'>Forums</a>
-				</div>
-				<div class='col-4'>
-					<a class='btn btn-primary' href='?action=viewpolls'>Guild Polls</a>
-				</div>
-			</div>
-			<hr />
-			<div class='row'>
-				<div class='col'>
-					<a class='btn btn-primary' href='?action=gym'>Guild Gym</a>
-				</div>";
-				if (isGuildStaff())
-				{
-					echo "
-						<div class='col'>
-							<a class='btn btn-primary' href='?action=staff&act2=idx'>Staff Room</a>
-						</div>";
-				}
-				echo"
-			</div>
+    echo "<div class='row'>
+        <div class='col-12 col-xl-4'>
+            <div class='card'>
+                <div class='card-header'>
+                    {$gd['guild_name']}
+                </div>
+                <div class='card-body'>
+                    {$guildPic}
+                </div>
+            </div>
+            <br />
+        </div>
+		<div class='col-12 col-xl-8'>
+            <div class='card'>
+                <div class='card-body'>
+                    <div class='row'>
+        				<div class='col-6 col-lg-4 col-xxl-3'>
+        					<a class='btn btn-info btn-block' href='?action=summary'>Summary</a>
+                            <br />
+        				</div>
+        				<div class='col-6 col-lg-4 col-xxl-3'>
+        					<a class='btn btn-success btn-block' href='?action=donate'>Donate</a>
+                            <br />
+        				</div>
+        				<div class='col-6 col-lg-4 col-xxl-3'>
+        					<a class='btn btn-primary btn-block' href='?action=members'>Members</a>
+                            <br />
+        				</div>
+        				<div class='col-6 col-lg-4 col-xxl-3'>
+        					<a class='btn btn-warning btn-block' href='?action=crimes'>Crimes</a>
+                            <br />
+        				</div>
+        				<div class='col-6 col-lg-4 col-xxl-3'>
+        					<a class='btn btn-danger btn-block' href='?action=leave'>Leave Guild</a>
+                            <br />
+        				</div>
+        				<div class='col-6 col-lg-4 col-xxl-3'>
+        					<a class='btn btn-dark btn-block' href='?action=atklogs'>Attack Logs</a>
+                            <br />
+        				</div>
+        				<div class='col-6 col-lg-4 col-xxl-3'>
+        					<a class='btn btn-secondary btn-block' href='?action=armory'>Armory</a>
+                            <br />
+        				</div>
+        				<div class='col-6 col-lg-4 col-xxl-3'>
+        					<a class='btn btn-primary btn-block' href='?action=forums'>Forums</a>
+                            <br />
+        				</div>
+        				<div class='col-6 col-lg-4 col-xxl-3'>
+        					<a class='btn btn-info btn-block' href='?action=viewpolls'>Guild Polls</a>
+                            <br />
+        				</div>
+        				<div class='col-6 col-lg-4 col-xxl-3'>
+        					<a class='btn btn-success btn-block' href='?action=gym'>Guild Gym</a>
+                            <br />
+        				</div>";
+        				if (isGuildStaff())
+        				{
+        					echo "
+        						<div class='col'>
+        							<a class='btn btn-danger btn-block' href='?action=staff&act2=idx'>Staff Room</a>
+        						</div>";
+        				}
+        				echo"
+                    </div>
+                </div>
+            </div>
 		</div>
 	</div>
 	<hr />";
@@ -257,7 +263,7 @@ function summary()
 							<b>Members</b>
 						</div>
 						<div class='col'>
-							" . number_format($db->fetch_single($cnt)) . " / " . number_format($gd['guild_level'] * 5) . "
+							" . shortNumberParse($db->fetch_single($cnt)) . " / " . shortNumberParse($gd['guild_level'] * 5) . "
 						</div>
 					</div>
 					<div class='row'>
@@ -265,7 +271,7 @@ function summary()
 							<b>Level</b>
 						</div>
 						<div class='col'>
-							" . number_format($gd['guild_level']) . "
+							" . shortNumberParse($gd['guild_level']) . "
 						</div>
 					</div>
 					<div class='row'>
@@ -273,7 +279,7 @@ function summary()
 							<b>XP</b>
 						</div>
 						<div class='col'>
-							" . number_format($gd['guild_xp']) . " / " . number_format($gd['xp_needed']) . "
+							" . shortNumberParse($gd['guild_xp']) . " / " . shortNumberParse($gd['xp_needed']) . "
 						</div>
 					</div>
 					<div class='row'>
@@ -286,7 +292,7 @@ function summary()
 							<b>Copper Coins*</b>
 						</div>
 						<div class='col'>
-							" . number_format($gd['guild_primcurr']) . " / " . number_format((($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) . "
+							" . shortNumberParse($gd['guild_primcurr']) . " / " . shortNumberParse((($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) . "
 						</div>
 					</div>
 					<div class='row'>
@@ -294,7 +300,7 @@ function summary()
 							<b>Chivalry Tokens</b>
 						</div>
 						<div class='col'>
-							" . number_format($gd['guild_seccurr']) . " / " . number_format((($gd['guild_level'] * $set['GUILD_PRICE']) / 125)) . "
+							" . shortNumberParse($gd['guild_seccurr']) . " / " . shortNumberParse((($gd['guild_level'] * $set['GUILD_PRICE']) / 125)) . "
 						</div>
 					</div>
 				</div>
@@ -372,7 +378,7 @@ function summary()
 							<b>Daily Upkeep</b>
 						</div>
 						<div class='col'>
-							" . number_format(calculateUpkeep($ir['guild'])) . " Copper Coins
+							" . shortNumberParse(calculateUpkeep($ir['guild'])) . " Copper Coins
 						</div>
 					</div>
 				</div>
@@ -415,15 +421,15 @@ function guild_donatexp()
 		updateDonations($gd['guild_id'],$userid,'xp',$xprequired);
 		updateDonations($gd['guild_id'],$userid,'guild_xp',$points);
 		$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$points} WHERE `guild_id` = {$gd['guild_id']}");
-		$event = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> exchanged " . number_format($xprequired) . " experience for " . number_format($points) . " guild experience.";
+		$event = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> exchanged " . shortNumberParse($xprequired) . " experience for " . shortNumberParse($points) . " guild experience.";
 		$api->GuildAddNotification($gd['guild_id'], $event);
-		alert('success',"Success!","You have successfully traded " . number_format($xprequired) . " experience for " . number_format($points) . " guild experience.");
+		alert('success',"Success!","You have successfully traded " . shortNumberParse($xprequired) . " experience for " . shortNumberParse($points) . " guild experience.");
 	}
 	else
 	{
-		echo "Here you may donate your experience points to your guild at a ratio of " . number_format($xpformula) . " experience points for 1 Guild 
-		Experience Point. You currently have " . number_format($ir['xp']) . " experience points which you can donate. <b>This tool will only take even 
-		amounts of experience (Only in groups of " . number_format($xpformula) . ".)</b> How many do you wish to donate to your guild? Experience points donate cannot be given back.<br />
+	    echo "Here you may donate your experience points to your guild at a ratio of " . shortNumberParse($xpformula) . " experience points for 1 Guild 
+		Experience Point. You currently have " . shortNumberParse($ir['xp']) . " experience points which you can donate. <b>This tool will only take even 
+		amounts of experience (Only in groups of " . shortNumberParse($xpformula) . ".)</b> How many do you wish to donate to your guild? Experience points donate cannot be given back.<br />
 		<form method='post'>
 			<input type='number' name='xp' min='{$xpformula}' value='{$ir['xp']}' class='form-control'>
 			<input type='submit' class='btn btn-primary' value='Donate XP'>
@@ -497,12 +503,12 @@ function donate()
             //Donation amount would fill up the guild's vault.
         } else if ($_POST['primary'] + $gd['guild_primcurr'] > (($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) 
 		{
-            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . number_format(($gd['guild_level'] * $set['GUILD_PRICE']) * 20) . " Copper Coins.");
+		    alert('danger', "Uh Oh!", "Your guild's vault can only hold " . shortNumberParse(($gd['guild_level'] * $set['GUILD_PRICE']) * 20) . " Copper Coins.");
             die($h->endpage());
         } 
 		else if ($_POST['secondary'] + $gd['guild_seccurr'] > (($gd['guild_level'] * $set['GUILD_PRICE']) / 125)) 
 		{
-            alert('danger', "Uh Oh!", "Your guild's vault can only hold " . number_format(($gd['guild_level'] * $set['GUILD_PRICE']) / 125) . " Chivalry Tokens.");
+		    alert('danger', "Uh Oh!", "Your guild's vault can only hold " . shortNumberParse(($gd['guild_level'] * $set['GUILD_PRICE']) / 125) . " Chivalry Tokens.");
             die($h->endpage());
         } 
 		else {
@@ -517,13 +523,11 @@ function donate()
 					    WHERE `guild_id` = {$gd['guild_id']}");
             $my_name = htmlentities($ir['username'], ENT_QUOTES, 'ISO-8859-1');
             $event = "<a href='profile.php?user={$userid}'>{$my_name}</a> donated
-									" . number_format($_POST['primary']) . " Copper Coins and/or
-									" . number_format($_POST['secondary']) . " Chivalry Tokens to the guild.";
+									" . shortNumberParse($_POST['primary']) . " Copper Coins and 
+									" . shortNumberParse($_POST['secondary']) . " Chivalry Tokens to the guild.";
             $api->GuildAddNotification($gd['guild_id'], $event);
-            $api->SystemLogsAdd($userid, 'guild_vault', "Donated " . number_format($_POST['primary']) . " Primary
-                Currency and/or " . number_format($_POST['secondary']) . " Chivalry Tokens to their guild.");
-            alert('success', "Success!", "You have successfully donated " . number_format($_POST['primary']) . " Primary
-			Currency and/or " . number_format($_POST['secondary']) . " Chivalry Tokens to your guild.", true, 'viewguild.php');
+            $api->SystemLogsAdd($userid, 'guild_vault', "Donated " . shortNumberParse($_POST['primary']) . " Copper and " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens to their guild.");
+            alert('success', "Success!", "You have successfully donated " . shortNumberParse($_POST['primary']) . " Copper Coins and " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens to your guild.", true, 'viewguild.php');
         }
     } else {
         $csrf = request_csrf_html('guild_donate');
@@ -532,18 +536,18 @@ function donate()
 			<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					Enter the amount of currency you wish to donate to your guild " . number_format($ir['primary_currency']) . "
-					Copper Coins and " . number_format($ir['secondary_currency']) . " Chivalry Tokens
+					Enter the amount of currency you wish to donate to your guild. You are currently holding " . shortNumberParse($ir['primary_currency']) . "
+					Copper Coins and " . shortNumberParse($ir['secondary_currency']) . " Chivalry Tokens
 				</th>
 			</tr>
     		<tr>
     			<td>
     				<b>Copper Coins</b><br />
-    				<input type='number' name='primary' value='0' required='1' max='{$ir['primary_currency']}' class='form-control' min='0' />
+    				<input type='number' name='primary' value='{$ir['primary_currency']}' required='1' max='{$ir['primary_currency']}' class='form-control' min='0' />
     			</td>
     			<td>
     				<b>Chivalry Tokens</b><br />
-    				<input type='number' name='secondary' required='1' max='{$ir['secondary_currency']}' class='form-control' value='0' min='0' />
+    				<input type='number' name='secondary' required='1' max='{$ir['secondary_currency']}' class='form-control' value='{$ir['secondary_currency']}' min='0' />
     			</td>
     		</tr>
     		<tr>
@@ -604,7 +608,7 @@ function members()
 			</div>
 			<div class='col-4'>
 				 Level: {$r['level']}<br />
-				Copper Coins: " . number_format($r['primary_currency']) . "<br />
+				Copper Coins: " . shortNumberParse($r['primary_currency']) . "<br />
 				 {$r['status']}";
 				 if (isGuildLeadership())
 				 {
@@ -618,10 +622,10 @@ function members()
 				 echo "
 			</div>
 			<div class='col-4'>
-				 Copper Coins: " . number_format($r2['copper']) . "<br />
-				Chivalry Tokens: " . number_format($r2['tokens']) . "<br />
-				Player XP: " . number_format($r2['xp']) . "<br />
-				Guild XP: " . number_format($r2['guild_xp']) . "**
+				 Copper Coins: " . shortNumberParse($r2['copper']) . "<br />
+				Chivalry Tokens: " . shortNumberParse($r2['tokens']) . "<br />
+				Player XP: " . shortNumberParse($r2['xp']) . "<br />
+				Guild XP: " . shortNumberParse($r2['guild_xp']) . "**
 			</div>
 		</div>
 		<hr />";
@@ -829,9 +833,7 @@ function warview()
     $wq = $db->query("/*qc=on*/SELECT * FROM `guild_wars` WHERE
 					(`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) 
 					AND `gw_winner` = 0");
-    echo "<b>These are the current wars your guild is participating in.</b> It costs your guild 15,000 Copper Coins per attack your guild 
-	wins, and 25,000 Copper Coins per attack your guild loses. This will be taken from your guild's vault following each attack. If your guild 
-	cannot afford this, your guild will go into debt. If you fail to pay your debt off in 7 days, your guild will be dissolved.<hr />
+    echo "<b>These are the current wars your guild is participating in.</b><hr />
 	<table class='table table-bordered'>
 		<tr align='left'>
 			<th>
@@ -913,11 +915,11 @@ function armory()
 						{$api->SystemItemIDtoName($i['itmid'])}
 					</a>";
             if ($i['gaQTY'] > 1) {
-                echo " (" . number_format($i['gaQTY']) . ")";
+                echo " (" . shortNumberParse($i['gaQTY']) . ")";
             }
             echo "</td>
-        	  <td class='hidden-xs-down'>" . number_format($i['itmsellprice']);
-            echo "  (" . number_format($i['itmsellprice'] * $i['gaQTY']) . ")</td></tr>";
+        	  <td class='hidden-xs-down'>" . shortNumberParse($i['itmsellprice']);
+            echo "  (" .shortNumberParse($i['itmsellprice'] * $i['gaQTY']) . ")</td></tr>";
         }
         echo "</table>";
     }
@@ -2114,23 +2116,23 @@ function staff_vault()
         $api->UserGiveCurrency($_POST['user'], 'secondary', $_POST['secondary']);
         $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$_POST['primary']},
                       `guild_seccurr` = `guild_seccurr` - {$_POST['secondary']} WHERE `guild_id` = {$gd['guild_id']}");
-        $api->GameAddNotification($_POST['user'], "You were given " . number_format($_POST['primary']) . " Primary
-            Currency and/or " . number_format($_POST['secondary']) . " Chivalry Tokens from your guild's vault.");
+        $api->GameAddNotification($_POST['user'], "You were given " . shortNumberParse($_POST['primary']) . " Primary
+            Currency and " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens from your guild's vault.");
         $api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>
             {$api->SystemUserIDtoName($userid)}</a> has given <a href='profile.php?user={$_POST['user']}'>
-            {$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . "
-            Copper Coins and/or " . number_format($_POST['secondary']) . " Chivalry Tokens from the guild's
+            {$api->SystemUserIDtoName($_POST['user'])}</a> " . shortNumberParse($_POST['primary']) . "
+            Copper Coins and/or " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens from the guild's
             vault.");
         alert('success', "Success!", "You have given {$api->SystemUserIDtoName($_POST['user'])} ", true, '?action=staff&act2=idx');
-        $api->SystemLogsAdd($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . number_format($_POST['primary']) . " Copper Coins and/or " . number_format($_POST['secondary']) . " Chivalry Tokens from their guild's vault.");
+        $api->SystemLogsAdd($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . shortNumberParse($_POST['primary']) . " Copper Coins and/or " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens from their guild's vault.");
     } else {
         $csrf = request_csrf_html('guild_staff_vault');
         echo "<form method='post'>
         <table class='table table-bordered'>
             <tr>
                 <th colspan='2'>
-                    You may give out currency from your guild's vault. Your vault currently has " . number_format($gd['guild_primcurr']) . " Copper Coins and
-                    " . number_format($gd['guild_seccurr']) . " Chivalry Tokens.
+                    You may give out currency from your guild's vault. Your vault currently has " . shortNumberParse($gd['guild_primcurr']) . " Copper Coins and
+                    " . shortNumberParse($gd['guild_seccurr']) . " Chivalry Tokens.
                 </th>
             </tr>
             <tr>
@@ -2580,9 +2582,9 @@ function staff_masspayment()
             }
             //Notify the user of the success and log everything.
             $db->query("UPDATE `guild` SET `guild_primcurr` = {$gd['guild_primcurr']} WHERE `guild_id` = {$gd['guild_id']}");
-            $notif = $db->escape("A mass payment of " . number_format($_POST['payment']) . " Copper Coins was sent out to the members of the guild.");
+            $notif = $db->escape("A mass payment of " . shortNumberParse($_POST['payment']) . " Copper Coins was sent out to the members of the guild.");
             $api->GuildAddNotification($gd['guild_id'], $notif);
-            $api->SystemLogsAdd($userid, 'guilds', "Sent a mass payment of " . number_format($_POST['payment']) . "to their guild.");
+            $api->SystemLogsAdd($userid, 'guilds', "Sent a mass payment of " . shortNumberParse($_POST['payment']) . "to their guild.");
             alert('success', "Success!", "Mass payment complete.", true, '?action=staff&act2=idx');
         }
     } else {
@@ -3302,7 +3304,7 @@ function staff_armory()
             alert('success', 'Success!', "You have successfully purchased an armory for your guild.");
             $api->SystemLogsAdd($userid, 'guilds', "Purchased guild armory.");
         } else {
-            echo "Your guild does not have an armory. It will cost your guild " . number_format($cost) . " Primary
+            echo "Your guild does not have an armory. It will cost your guild " . shortNumberParse($cost) . " Primary
             Currency to purchase an armory. Do you wish to purchase an armory for your guild?<br />
             <a href='?action=staff&act2=armory&buy=yes' class='btn btn-success'>Yes</a>
             <a href='?action=staff&act2=idx' class='btn btn-danger'>No</a>";
@@ -3402,7 +3404,7 @@ function staff_bonus()
 				die($h->endpage());
 			}
 			$bonustime=time()+((60*60)*3);
-			$notif = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has paid " . number_format($cost) . " Copper Coins to enable training boost in your guild's gym for the next 3 hours.";
+			$notif = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has paid " . shortNumberParse($cost) . " Copper Coins to enable training boost in your guild's gym for the next 3 hours.";
 			$db->query("UPDATE `guild` SET `guild_bonus_time` = {$bonustime}, `guild_primcurr` = `guild_primcurr` - {$cost} WHERE `guild_id` = {$gd['guild_id']}");
 			$api->GuildAddNotification($gd['guild_id'],$notif);
 			guildSendMemberNotif($ir['guild'], $notif);
@@ -3411,7 +3413,7 @@ function staff_bonus()
 	}
 	else
 	{
-		echo "Enable training boost for your guild? It'll cost your guild " . number_format($cost) . " Copper Coins. The Training Boost is only affective in 
+	    echo "Enable training boost for your guild? It'll cost your guild " . shortNumberParse($cost) . " Copper Coins. The Training Boost is only affective in 
 		your Guild's Gym. This boost will also only last for 3 hours.
 		<form method='post'>
 			<input type='hidden' name='action' value='enable'>
