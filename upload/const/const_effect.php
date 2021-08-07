@@ -28,3 +28,6 @@ define('effect_guard', 'guard');
 //Injuries
 define('effect_injure_prim_wep', "prim_weap_disable");
 define('effect_injure_sec_wep', "sec_weap_disable");
+
+//Mining
+define('effect_drill_jam', "jammed_drill");
