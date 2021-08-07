@@ -294,22 +294,42 @@ function mine()
                 $Rolls = Random(3, 15);
             }
 			$remainpower = $MUS['miningpower'] - $MSI['mine_power_use'];
-            if ($Rolls <= 3) {
-                $NegRolls = Random(1, 3);
+			//All the negative events are in here.
+            if ($Rolls <= 3) 
+            {
+                $NegRolls = Random(1, 38);
                 $NegTime = Random($CostForPower/2, $CostForPower*2);
-                if ($NegRolls == 1) {
+                if ($NegRolls <= 12) 
+                {
                     alert('danger', "Uh Oh!", "You begin to mine and touch off a natural gas leak. Kaboom. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] {$NegTime} minutes at Infirmary.");
                     $api->UserStatusSet($userid, 'infirmary', $NegTime, "Mining Explosion");
-                } elseif ($NegRolls == 2) {
+                } 
+                elseif (($NegRolls <= 24) && ($NegRolls > 12))
+                {
                     alert('danger', "Uh Oh!", "You hit a vein of gems, except a miner nearby gets jealous and tries to take your gems! You knock them out cold, and a guard arrests you. Wtf. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] {$NegTime} minutes at Dungeon.");
                     $api->UserStatusSet($userid, 'dungeon', $NegTime, "Mining Selfishness");
-                } else {
+                } 
+                elseif (($NegRolls <= 36) && ($NegRolls > 24))
+                {
                     alert('danger', "Uh Oh!", "You failed to mine anything of use. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Unsuccessful.");
                 }
-            } elseif ($Rolls >= 3 && $Rolls <= 14) {
+                else
+                {
+                    alert('danger', "Uh Oh!", "While mining away, you have accidentally struck your secondary hand, injuring it in the process. 
+                    Your secondary weapon has be unequipped and you will be unable to use a secondary weapon in combat for {$NegTime} minutes.
+                    <b>You have {$remainpower} mining power remaining.</b>", false);
+                    if ($ir['equip_secondary'] > 0)
+                        unequipUserSlot($userid, slot_second_wep);
+                    userGiveEffect($userid, effect_injure_sec_wep, $NegTime * 60);
+                    $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Ruined secondary hand.");
+                }
+            }
+            //Normal mine drop rolls.
+            elseif ($Rolls >= 3 && $Rolls <= 14) 
+            {
                 $PosRolls = Random(1, 3);
                 if ($PosRolls == 1) {
 					if (calculateLuck($userid))
@@ -325,7 +345,7 @@ function mine()
 					    $xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 					}
 					if ($spot == 10)
-					    $xpgain = $xpgain / 4;
+					    $xpgain = $xpgain / 7;
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_copper_item']) . ". You have gained " . number_format($xpgain) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_copper_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$flakes} x {$api->SystemItemIDtoName($MSI['mine_copper_item'])}.");
@@ -344,7 +364,7 @@ function mine()
 						$xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 					}
 					if ($spot == 10)
-					    $xpgain = $xpgain / 4;
+					    $xpgain = $xpgain / 7;
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_silver_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_silver_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$flakes} x {$api->SystemItemIDtoName($MSI['mine_silver_item'])}.");
@@ -362,12 +382,14 @@ function mine()
 					    $xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 					}
 					if ($spot == 10)
-					    $xpgain = $xpgain / 4;
+					    $xpgain = $xpgain / 7;
                     alert('success', "Success!", "You have successfully mined up " . number_format($flakes) . " " . $api->SystemItemIDtoName($MSI['mine_gold_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
                     $api->UserGiveItem($userid, $MSI['mine_gold_item'], $flakes);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$flakes} x {$api->SystemItemIDtoName($MSI['mine_gold_item'])}.");
                 }
-            } else {
+            } 
+            else 
+            {
 				$itemgive = 1;
 				if (hasNecklaceEquipped($userid,332))
 					$itemgive = 2;
@@ -378,7 +400,7 @@ function mine()
 				    $xpgain = $xpgain * (returnEffectMultiplier($userid, constant("mining_xp_boost")) + 1);
 				}
 				if ($spot == 10)
-				    $xpgain = $xpgain / 4;
+				    $xpgain = $xpgain / 7;
 				if ($MUS['mine_boost'] > time())
 						$xpgain = $xpgain*2;
                 alert('success', "Success!", "You have carefully excavated out {$itemgive} " . $api->SystemItemIDtoName($MSI['mine_gem_item']) . ". You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);

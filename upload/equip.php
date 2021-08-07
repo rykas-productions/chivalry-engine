@@ -68,9 +68,28 @@ function weapon()
     //Check to be sure the user is trying to equip the item.
     if (isset($_POST['type'])) {
         //Check that the equipment slot is a valid slot. If not, lets stop them.
-        if (!in_array($_POST['type'], array("equip_primary", "equip_secondary"), true)) {
+        if (!in_array($_POST['type'], array(slot_prim_wep, slot_second_wep), true)) 
+        {
             alert('danger', "Uh Oh!", "You cannot equip a weapon to an invalid slot.", true, 'inventory.php');
             die($h->endpage());
+        }
+        if ($_POST['type'] == slot_prim_wep)
+        {
+            if (userHasEffect($userid, effect_injure_prim_wep))
+            {
+                $remainTime = TimeUntil_Parse(returnEffectDone($userid, effect_injure_prim_wep));
+                alert('danger',"Uh Oh!","Your primary hand is injured and will not be usable for another {$remainTime}.", true, 'inventory.php');
+                die($h->endpage());
+            }
+        }
+        if ($_POST['type'] == slot_second_wep)
+        {
+            if (userHasEffect($userid, effect_injure_sec_wep))
+            {
+                $remainTime = TimeUntil_Parse(returnEffectDone($userid, effect_injure_sec_wep));
+                alert('danger',"Uh Oh!","Your secondary hand is injured and will not be usable for another {$remainTime}.", true, 'inventory.php');
+                die($h->endpage());
+            }
         }
         //Check to see if the chosen slot has a weapon equipped to it already. If true, give them their item back, and
         //log the unequip.

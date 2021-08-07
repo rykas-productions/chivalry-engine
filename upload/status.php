@@ -14,7 +14,7 @@ while ($r = $db->fetch_row($q))
     echo "<div class='col-12 col-md-6 col-xxl-4'>
                 <div class='card'>
                     <div class='card-body'>
-                        <h3>" . strtoupper(effectNameParser($r['effectName'])) . "</h3>
+                        <h3>" . strtoupper(effectNameParser($r['effectName'])) . " X {$r['effectMulti']}</h3>
                         " . effectDescParser($r['effectName'], $r['effectMulti']) . ".<br />
                         <small><span class='text-muted'>Wears off in " . TimeUntil_Parse($r['effectTimeOut']) . ".</span></small>
                     </div>
@@ -39,7 +39,12 @@ function effectNameParser($effectID)
         effect_regen => "Regeneration",
         farm_well_cooldown => "Well Cooldown",
         farm_well_less_cooldown => "Efficient Buckets",
-        farm_well_cooldown_cutoff => "Community Well"
+        farm_well_cooldown_cutoff => "Community Well",
+        effect_strength => "Strength",
+        effect_agility => "Agility",
+        effect_guard => "Guard",
+        effect_injure_prim_wep => "Primary Hand Injured",
+        effect_injure_sec_wep => "Secondary Hand Injured"
     );
     return $effectNameArray[$effectID];
 }
@@ -57,7 +62,12 @@ function effectDescParser($effectID, $effectMulti = 1)
         effect_regen => "Regenerating " . number_format($effectMulti * 5) . "% HP per minute",
         farm_well_cooldown => "Using the farming well excessively would be rude",
         farm_well_less_cooldown => "-50% cooldown time, per bucket, when filling from the well",
-        farm_well_cooldown_cutoff => "May now obtain up to five buckets before a cooldown with the well"
+        farm_well_cooldown_cutoff => "May now obtain up to five buckets before a cooldown with the well",
+        effect_strength => "Increases strength in combat by " . number_format($effectMulti * 5) . "%",
+        effect_agility => "Increases agility in combat by " . number_format($effectMulti * 5) . "%",
+        effect_guard => "Increases guard in combat by " . number_format($effectMulti * 5) . "%",
+        effect_injure_prim_wep => "Cannot equip primary weapon until healed",
+        effect_injure_sec_wep => "Cannot equip secondary weapon until healed"
     );
     return $effectNameArray[$effectID];
 }

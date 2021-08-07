@@ -19,3 +19,12 @@ define('farm_well_cooldown_cutoff','farm_well_cooldown_cutoff');
 //Ticking
 define('effect_posion', 'posion');
 define('effect_regen', 'regeneration');
+
+//Combat
+define('effect_strength', 'strength');
+define('effect_agility', 'guard');
+define('effect_guard', 'guard');
+
+//Injuries
+define('effect_injure_prim_wep', "prim_weap_disable");
+define('effect_injure_sec_wep', "sec_weap_disable");
