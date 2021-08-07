@@ -134,7 +134,7 @@ echo "
 						<small><b>Copper Coins</b> [<a href='allbank.php'>Bank</a>]</small>
 					</div>
 					<div class='col-12'>
-						<span id='ui_copper'>" . number_format($ir['primary_currency']) . "</span>
+						<span id='ui_copper'>" . shortNumberParse($ir['primary_currency']) . "</span>
 					</div>
 				</div>  
 			</div>
@@ -144,7 +144,7 @@ echo "
 						<small><b>Chivalry Tokens</b> [<a href='alltoken.php'>Bank</a>]</small>
 					</div>
 					<div class='col-12'>
-						<span id='ui_token'>" . number_format($ir['secondary_currency']) . "</span>
+						<span id='ui_token'>" . shortNumberParse($ir['secondary_currency']) . "</span>
 					</div>
 				</div>
 			</div>
@@ -157,7 +157,7 @@ echo "
 						<small><b>Level</b></small>
 					</div>
 					<div class='col-12'>
-						 " . number_format($ir['level']) . "
+						 " . shortNumberParse($ir['level']) . "
 					</div>
 				</div>
 			</div>
@@ -177,7 +177,7 @@ echo "
 						<small><b>VIP Days</b></small>
 					</div>
 					<div class='col-12'>
-						 " . number_format($ir['vip_days']) . "
+						 " . shortNumberParse($ir['vip_days']) . "
 					</div>
 				</div>
 			</div>
@@ -187,7 +187,7 @@ echo "
 						<small><b>KDR</b></small>
 					</div>
 					<div class='col-12'>
-						 " . number_format($ir['kills']) . " / " . number_format($ir['deaths']) . "
+						 " . shortNumberParse($ir['kills']) . " / " . shortNumberParse($ir['deaths']) . "
 					</div>
 				</div>
 			</div>
@@ -197,7 +197,7 @@ echo "
 						<small><b>Busts</b></small>
 					</div>
 					<div class='col-12'>
-						 " . number_format($ir['busts']) . "
+						 " . shortNumberParse($ir['busts']) . "
 					</div>
 				</div>
 			</div>
@@ -240,7 +240,7 @@ echo "
 						<small><b>Strength (Ranked: {$StrengthRank})</b></small>
 					</div>
 					<div class='col-12'>
-						" . number_format($ir['strength']) . "
+						" . shortNumberParse($ir['strength']) . "
 					</div>
 				</div>
 			</div>
@@ -250,7 +250,7 @@ echo "
 						<small><b>Agility (Ranked: {$AgilityRank})</b></small>
 					</div>
 					<div class='col-12'>
-						" . number_format($ir['agility']) . "
+						" . shortNumberParse($ir['agility']) . "
 					</div>
 				</div>
 			</div>
@@ -260,7 +260,7 @@ echo "
 						<small><b>Guard (Ranked: {$GuardRank})</b></small>
 					</div>
 					<div class='col-12'>
-						" . number_format($ir['guard']) . "
+						" . shortNumberParse($ir['guard']) . "
 					</div>
 				</div>
 			</div>
@@ -270,7 +270,7 @@ echo "
 						<small><b>IQ (Ranked: {$IQRank})</b></small>
 					</div>
 					<div class='col-12'>
-						" . number_format($ir['iq']) . "
+						" . shortNumberParse($ir['iq']) . "
 					</div>
 				</div>
 			</div>
@@ -280,7 +280,7 @@ echo "
 						<small><b>Labor (Ranked: {$LaborRank})</b></small>
 					</div>
 					<div class='col-12'>
-						" . number_format($ir['labor']) . "
+						" . shortNumberParse($ir['labor']) . "
 					</div>
 				</div>
 			</div>
@@ -290,7 +290,7 @@ echo "
 						<small><b>Total (Ranked: {$AllStatRank})</b></small>
 					</div>
 					<div class='col-12'>
-						" . number_format($ir['total_stats']) . "
+						" . shortNumberParse($ir['total_stats']) . "
 					</div>
 				</div>
 			</div>
