@@ -315,3 +315,26 @@ function guildSendMemberNotif($guild_id, $notif)
         $api->GameAddNotification($r['userid'], $notif);
     }
 }
+
+/**
+ * Sends a guild a notification, given their ID and the text.
+ * @param int $guild_id The guild ID to be sent the notification
+ * @param string $text The notification's text. This should be fully sanitized for HTML, but not pre-escaped for database insertion.
+ * @return true
+ */
+function guildnotificationadd($guild_id, $text)
+{
+    global $db;
+    $text = $db->escape($text);
+    $db->query(
+        "INSERT INTO `guild_notifications`
+             VALUES(NULL, {$guild_id}, " . time() . ", '{$text}')");
+    return true;
+}
+
+function removeOldEffects()
+{
+    global $db;
+    $time = time();
+    $db->query("DELETE FROM `users_effects` WHERE `effectTimeOut` < {$time}");
+}

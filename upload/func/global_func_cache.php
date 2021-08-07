@@ -82,3 +82,124 @@ function update_fg_info($ip)
     curl_close($curl);
     return $content;
 }
+
+/**
+ * Reads/grabs data from a URL input, to be cached on the game's servers, to be updated less often.
+ * @param string $url URL to view and cache.
+ * @param string $file Dir/Filename to store the data as cache.$this
+ * @param int $hours Hours before we update our cache, default = 1.
+ * @return string Content from URL.
+ */
+function get_cached_file($url, $file, $hours = 1)
+{
+    $current_time = time();
+    $expire_time = $hours * 60 * 60;
+    if (file_exists($file))
+    {
+        $file_time = filemtime($file);
+        if ($current_time - $expire_time < $file_time)
+        {
+            return file_get_contents($file);
+        }
+        else
+        {
+            $content = curlOpenFile($url, $file);
+            file_put_contents($file, $content);
+            return $content;
+        }
+    }
+    else
+    {
+        $content = curlOpenFile($url, $file);
+        file_put_contents($file, $content);
+        return $content;
+    }
+}
+
+/**
+ * Internal function, used to update recache the latest posts/topics after a
+ * forum topic gets moved or deleted.
+ * @param int $topic Forum topic to recache.
+ */
+function recache_topic($topic)
+{
+    global $db;
+    $topic = abs((int)$topic);
+    if ($topic <= 0) {
+        return;
+    }
+    echo "Recaching Topic ID #{$topic} ... ";
+    $q =
+    $db->query(
+        "/*qc=on*/SELECT `fp_poster_id`, `fp_poster_id`, `fp_time`
+                     FROM `forum_posts`
+                     WHERE `fp_topic_id` = {$topic}
+                     ORDER BY `fp_time` DESC
+                     LIMIT 1");
+    if ($db->num_rows($q) == 0) {
+        $db->free_result($q);
+        $db->query(
+            "UPDATE `forum_topics`
+                 SET `ft_last_id` = 0, `ft_last_time` = 0, `ft_posts` = 0
+                 WHERE `ft_id` = {$topic}");
+    } else {
+        $r = $db->fetch_row($q);
+        $db->free_result($q);
+        $posts_q =
+        $db->query(
+            "/*qc=on*/SELECT COUNT(`fp_id`)
+        					   FROM `forum_posts`
+        					   WHERE `fp_topic_id` = {$topic}");
+        $posts = $db->fetch_single($posts_q);
+        $db->free_result($posts_q);
+        $db->query(
+            "UPDATE `forum_topics`
+                 SET `ft_last_id` = {$r['fp_poster_id']},
+                 `ft_last_time` = {$r['fp_time']}, `ft_last_id` = '{$r['fp_poster_id']}',
+                 `ft_posts` = {$posts}
+                 WHERE `ft_id` = {$topic}");
+    }
+    echo " ... Recaching completed.<br />";
+}
+
+/**
+ * Internal function, used to update recache the latest posts/topics after a
+ * forum topic gets moved or deleted.
+ * @param int $forum Forum category to recache.
+ */
+function recache_forum($forum)
+{
+    global $db;
+    $forum = abs((int)$forum);
+    if ($forum <= 0) {
+        return;
+    }
+    echo "Recaching Forum ID #{$forum} ... ";
+    $q =
+    $db->query(
+        "/*qc=on*/SELECT `p`.*, `t`.*
+                     FROM `forum_posts` AS `p`
+                     LEFT JOIN `forum_topics` AS `t`
+                     ON `p`.`fp_topic_id` = `t`.`ft_id`
+                     WHERE `p`.`ff_id` = {$forum}
+                     ORDER BY `p`.`fp_time` DESC
+                     LIMIT 1");
+    if ($db->num_rows($q) == 0) {
+        $db->free_result($q);
+        $db->query(
+            "UPDATE `forum_forums`
+                 SET `ff_lp_time` = 0, `ff_lp_poster_id` = 0, `ff_lp_t_id` = 0,
+                 `ff_lp_t_id` = 0
+                  WHERE `ff_id` = {$forum}");
+    } else {
+        $r = $db->fetch_row($q);
+        $db->free_result($q);
+        $db->query(
+            "UPDATE `forum_forums`
+                 SET `ff_lp_time` = {$r['fp_time']},
+                 `ff_lp_poster_id` = {$r['fp_poster_id']},
+				 `ff_lp_t_id` = {$r['ft_id']}
+                 WHERE `ff_id` = {$forum}");
+    }
+    echo " ... Recaching completed.<br />";
+}

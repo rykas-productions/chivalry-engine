@@ -1251,3 +1251,144 @@ function returnMarriageHappiness($userid)
     else
         return $db->fetch_single($q);
 }
+
+/**
+ * Given a password input given by the user and their actual details,
+ * determine whether the password entered was correct.
+ *
+ * @param string $input The input password given by the user.
+ *                        Should be without slashes.
+ * @param string $pass The user's encrypted password
+ *
+ * @return boolean    true for equal, false for not (login failed etc)
+ *
+ */
+function verify_user_password($input, $pass)
+{
+    //Check that the password matches or not.
+    $return = (password_verify(base64_encode(hash('sha256', $input, true)), $pass)) ? true : false;
+    return $return;
+}
+
+/**
+ * Get the operating system by way of Browser User Agent, then store it into the database for the current player.
+ * @param string $uagent Browser User Agent
+ * @return string Operating System
+ */
+function getOS($uagent)
+{
+    global $db, $userid, $ir;
+    $uagent = $db->escape(strip_tags(stripslashes($uagent)));
+    $os_platform = "Unknown OS";
+    $os_array = array(
+        '/windows nt 10/i' => 'Windows 10',
+        '/windows nt 6.3/i' => 'Windows 8.1',
+        '/windows nt 6.2/i' => 'Windows 8',
+        '/windows nt 6.1/i' => 'Windows 7',
+        '/windows nt 6.0/i' => 'Windows Vista',
+        '/windows nt 5.1/i' => 'Windows XP',
+        '/windows phone 8.0/i' => 'Windows Phone',
+        '/windows xp/i' => 'Windows XP',
+        '/macintosh|mac os x/i' => 'Mac OS X',
+        '/mac_powerpc/i' => 'Mac OS 9',
+        '/linux/i' => 'Linux',
+        '/ubuntu/i' => 'Ubuntu',
+        '/iphone/i' => 'iPhone',
+        '/ipod/i' => 'iPod',
+        '/ipad/i' => 'iPad',
+        '/android/i' => 'Android',
+        '/blackberry/i' => 'BlackBerry',
+        '/cros/i' => 'Chrome OS',
+        '/playstation 4/i' => 'Playstation 4',
+        '/webos/i' => 'Mobile'
+    );
+    
+    foreach ($os_array as $regex => $value) {
+        if (preg_match($regex, $uagent)) {
+            $os_platform = $value;
+        }
+    }
+    $count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
+    if ($count == 0)
+        $db->query("INSERT INTO `userdata` (`userid`, `useragent`, `screensize`, `os`, `browser`) VALUES ({$userid}, '{$uagent}', '', '{$os_platform}', '')");
+        else
+            $db->query("UPDATE `userdata` SET `useragent` = '{$uagent}', `os` = '{$os_platform}' WHERE `userid` = {$userid}");
+            return $os_platform;
+}
+
+/**
+ * Get the browser by way of user agent, then store it to database for the current player.
+ * @param string $uagent Browser User Agent
+ * @return string Operating System
+ */
+function getBrowser($uagent)
+{
+    global $db, $userid, $ir;
+    $user_agent = $db->escape(strip_tags(stripslashes($uagent)));
+    $browser = "Unknown Browser";
+    $browser_array = array(
+        '/msie/i' => 'Internet Explorer',
+        '/trident/i' => 'Internet Explorer',
+        '/firefox/i' => 'Firefox',
+        '/safari/i' => 'Safari',
+        '/chrome/i' => 'Chrome',
+        '/edge/i' => 'Edge',
+        '/opera/i' => 'Opera',
+        '/netscape/i' => 'Netscape',
+        '/maxthon/i' => 'Maxthon',
+        '/konqueror/i' => 'Konqueror',
+        '/opr/i' => 'Opera',
+        '/mobile/i' => 'Handheld Browser',
+        '/playstation 4/i' => 'Playstation 4 Browser',
+        '/CEngine-App/i' => 'App'
+    );
+    foreach ($browser_array as $regex => $value) {
+        if (preg_match($regex, $user_agent)) {
+            $browser = $value;
+        }
+    }
+    $count = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `userdata` WHERE `userid` = {$userid}"));
+    if ($count == 0)
+        $db->query("INSERT INTO `userdata` (`userid`, `useragent`, `browser`) VALUES ({$userid}, '{$uagent}', '{$broswer}')");
+        else
+            $db->query("UPDATE `userdata` SET `useragent` = '{$user_agent}', `browser` = '{$browser}' WHERE `userid` = {$userid}");
+            return $browser;
+}
+
+function user_log($user,$logname,$value=1)
+{
+    global $db;
+    $q=$db->query("/*qc=on*/SELECT * FROM `user_logging` WHERE `userid` = {$user} AND `log_name` = '{$logname}'");
+    if ($db->num_rows($q) == 0)
+    {
+        $db->query("INSERT INTO `user_logging` (`userid`, `log_name`, `value`) VALUES ('{$user}', '{$logname}', '{$value}')");
+    }
+    else
+    {
+        $db->query("UPDATE `user_logging` SET `value` = `value` + {$value} WHERE `userid` = {$user} and `log_name` = '{$logname}'");
+    }
+}
+
+/**
+ * Internal function to check the active missions and reward players who have completed
+ * their missions.
+ */
+function missionCheck()
+{
+    global $db, $api;
+    $time=time();
+    $q=$db->query("/*qc=on*/SELECT * FROM `missions` WHERE `mission_end` < {$time}");
+    while ($r=$db->fetch_row($q))
+    {
+        if ($r['mission_kill_count'] < $r['mission_kills'])
+        {
+            notification_add($r['mission_userid'],"You have completely failed your mission. Better luck next time.");
+        }
+        else
+        {
+            notification_add($r['mission_userid'],"You have successfully completed your mission. You have been credited " . number_format($r['mission_reward']) . " Copper Coins.");
+            $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$r['mission_reward']} WHERE `userid` = {$r['mission_userid']}");
+        }
+        $db->query("DELETE FROM `missions` WHERE `mission_id` = {$r['mission_id']}");
+    }
+}
