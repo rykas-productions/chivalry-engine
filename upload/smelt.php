@@ -47,11 +47,14 @@ function home()
         $can_craft = TRUE;
         $ex = explode(",", $r['smelt_items']);
         $qty = explode(",", $r['smelt_quantity']);
+        $smltTime = ($r['smelt_time'] == 0) ? "" : TimeUntil_Parse(time() + $r['smelt_time']);
         $n = 0;
 		$r['hasitem']=0;
-		foreach ($ex as $i) {
+		foreach ($ex as $i) 
+		{
 			$do_they_have = $db->query("/*qc=on*/SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i}");
-            if ($db->num_rows($do_they_have) > 0) {
+            if ($db->num_rows($do_they_have) > 0) 
+            {
 				$r['hasitem']=$r['hasitem']+1;
 			}
 		}
@@ -60,7 +63,12 @@ function home()
 			echo "
 			<tr>
 				<td>
-					<a href='iteminfo.php?ID={$r['smelt_output']}'>{$output_item}</a> x " . number_format($r['smelt_qty_output']) . "
+					<a href='iteminfo.php?ID={$r['smelt_output']}'>{$output_item}</a> x " . number_format($r['smelt_qty_output']);
+                    if ($r['smelt_time'] > 0)
+                    {
+                        echo "<br /><small>Smelt Time: {$smltTime}</small>";
+                    }
+                    echo"
 				</td>
 				<td>";
 			$n = 0;
@@ -80,9 +88,12 @@ function home()
 			echo "{$items_needed}
 				</td>
 				<td>";
-			if ($can_craft == TRUE) {
+			if ($can_craft == TRUE) 
+			{
 				echo "<a href='?action=smelt&id={$r['smelt_id']}'>Smelt Item</a>";
-			} else {
+			} 
+			else 
+			{
 				echo "<span class='text-danger'>Cannot Smelt</span>";
 			}
 			echo "
