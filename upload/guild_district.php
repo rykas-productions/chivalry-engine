@@ -1530,9 +1530,9 @@ function guild_buy()
 					WHERE `guild_id` = {$ir['guild']}");
 		updateBarracksTroops($ir['guild'], $warriors, $archers, 0, 0);
 		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$allTotal} WHERE `guild_id` = {$ir['guild']}");
-		alert('success',"Success!","You have spent " . number_format($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers for your guild.",true,'guild_district.php');
-		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . number_format($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers.");
-		$api->SystemLogsAdd($userid,"district","spent " . number_format($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers");
+		alert('success',"Success!","You have spent " . shortNumberParse($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers for your guild.",true,'guild_district.php');
+		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . shortNumberParse($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers.");
+		$api->SystemLogsAdd($userid,"district","spent " . shortNumberParse($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers");
 		addToEconomyLog('Districts', 'copper', $allTotal*-1);
 	}
 	else
@@ -1640,8 +1640,8 @@ function hireGeneral()
 		}
 		updateBarracksTroops($ir['guild'], 0, 0, $generals, $captains);
 		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$totalCost} WHERE `guild_id` = {$ir['guild']}");
-		alert('success',"Success!","You have spent " . number_format($totalCost) . " Copper Coins and hired " . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your guild.",true,'guild_district.php');
-		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . shortNumberParse($totalCost) . " Copper Coins and hired" . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your Guild District.");
+		alert('success',"Success!","You have spent " . shortNumberParse($totalCost) . " Copper Coins and hired " . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your guild.",true,'guild_district.php');
+		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . shortNumberParse($totalCost) . " Copper Coins and hired " . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your Guild District.");
 		$api->SystemLogsAdd($userid,"district","Spent " . shortNumberParse($totalCost) . " Copper Coins for " . number_format($generals) . " Generals and " . number_format($captains) . " Captains.");
 		addToEconomyLog('Districts', 'copper', $generalsTotal*-1);
 	}

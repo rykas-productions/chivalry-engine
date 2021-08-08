@@ -61,7 +61,7 @@ function doDailyDistrictTick()
 		{
 			$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$upkeepFee} WHERE `guild_id` = {$r['guild_id']}");
 			addToEconomyLog('Guild Upkeep', 'copper', $upkeepFee*-1);
-			$api->GuildAddNotification($r['guild_id'],"Your guild has been charged a district's upkeep fee of " . number_format($upkeepFee) . " Copper Coins.");
+			$api->GuildAddNotification($r['guild_id'],"Your guild has been charged a district's upkeep fee of " . shortNumberParse($upkeepFee) . " Copper Coins.");
 		}
 	}
 	districtRewards();
