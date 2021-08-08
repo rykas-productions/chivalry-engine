@@ -237,8 +237,13 @@ function returnUserAllAssetShares($userid)
 function returnUserAllAssetCosts($userid)
 {
     global $db;
-    $q = $db->query("SELECT SUM(`shares_cost`) FROM `asset_market_owned` WHERE `userid` = {$userid}");
-    return $db->fetch_single($q);
+    $return = 0;
+    $q = $db->query("SELECT * FROM `asset_market_owned` WHERE `userid` = {$userid}");
+    while ($r = $db->fetch_row($q))
+    {
+        $return = $return + ($r['shares_owned'] * $r['shares_cost']);
+    }
+    return $return;
 }
 
 function returnUserCurrentValueAllAsset($userid)
