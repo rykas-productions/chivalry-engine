@@ -288,6 +288,7 @@ function autominer()
             }
             $db->query("INSERT INTO `mining_auto` (`userid`, `miner_location`, `miner_time`) VALUES ('{$userid}', '{$mine}', '300')");
             alert('success',"Success!","You have succesfully placed a Powered Miner. It will self-destruct in about 5 hours.", true, 'inventory.php');
+            $api->UserTakeItem($userid, 424, 1);
         }
         else
         {
