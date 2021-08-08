@@ -497,6 +497,14 @@ while ($i = $db->fetch_row($inv))
 													<i class='game-icon game-icon-check-mark'></i>
 												</a><br />";
 										}
+										//Powered Miner
+										if ($i['itmid'] == 424)
+										{
+										    
+										    echo "<a title='Use powered miner' href='vipitem.php?item=autominer' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
+													<i class='game-icon game-icon-check-mark'></i>
+												</a><br />";
+										}
 										//Weapons
 										if ($i['weapon'] > 0)
 										{

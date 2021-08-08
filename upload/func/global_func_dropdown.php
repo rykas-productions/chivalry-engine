@@ -1041,3 +1041,31 @@ function pendant_dropdown($ddname = "pendant", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
+
+function mines_dropdown($ddname = "mine", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+    $db->query(
+        "/*qc=on*/SELECT `mine_id`, `mine_location`, `mine_level`
+                     FROM `mining_data`
+                     ORDER BY `mine_level` ASC");
+    if ($selected == -1) {
+        $first = 0;
+    } else {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q)) {
+        $CityName = $db->fetch_single($db->query("/*qc=on*/SELECT `town_name` FROM `town` WHERE `town_id` = {$r['mine_location']}"));
+        $ret .= "\n<option value='{$r['mine_id']}'";
+        if ($selected == $r['mine_id'] || $first == 0) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$CityName} - Level {$r['mine_level']}</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}

@@ -44,6 +44,9 @@ switch ($_GET['action']) {
 	case 'potion':
 		potion();
 		break;
+	case 'autominer':
+	    autominer();
+	    break;
     default:
         home();
         break;
@@ -53,6 +56,12 @@ function home()
     global $MUS, $db, $api, $ir, $userid;
     $mineen = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
     $minexp = min(round($MUS['miningxp'] / $MUS['xp_needed'] * 100), 100);
+    $amq = $db->query("SELECT * FROM `mining_auto` WHERE `userid` = {$userid}");
+    $amc = $db->num_rows($amq);
+    if ($amc > 0)
+    {
+        alert('warning',"","You have {$amc} Powered Miners active at this time.",true,'?action=autominer', 'View here');
+    }
     echo "<div class='row'>";
     if (userHasEffect($userid, constant("mining_xp_boost")))
 	{
@@ -232,18 +241,24 @@ function mine()
 				alert('danger',"Uh Oh!","This mine is too easy for you. Leave it for the newbies.",true,'mine.php');
 				die($h->endpage());
 			}*/
-			$specialnumber=((getSkillLevel($userid,15)*10)/100);
-			$MSI['mine_iq']=$MSI['mine_iq']-($MSI['mine_iq']*$specialnumber);
-            if ($MUS['mining_level'] < $MSI['mine_level']) {
+			$MSI['mine_iq'] = calcMineIQ($userid, $spot);
+            if ($MUS['mining_level'] < $MSI['mine_level']) 
+            {
                 alert('danger', "Uh Oh!", "You are too low level to mine here. You need mining level {$MSI['mine_level']} to mine here.", true, 'mine.php');
                 die($h->endpage());
-            } elseif ($ir['location'] != $MSI['mine_location']) {
+            } 
+            elseif ($ir['location'] != $MSI['mine_location']) 
+            {
                 alert('danger', "Uh Oh!", "To mine at a mine, you need to be in the same town its located.", true, 'mine.php');
                 die($h->endpage());
-            } elseif ($ir['iq'] < $MSI['mine_iq']) {
+            } 
+            elseif ($ir['iq'] < $MSI['mine_iq']) 
+            {
                 alert('danger', "Uh Oh!", "Your IQ is too low to mine here. You need " . number_format($MSI['mine_iq']) . " IQ.", true, 'mine.php');
                 die($h->endpage());
-            } elseif ($MUS['miningpower'] < $MSI['mine_power_use']) {
+            } 
+            elseif ($MUS['miningpower'] < $MSI['mine_power_use']) 
+            {
                 alert('danger', "Uh Oh!", "You do not have enough mining power to mine here. You need {$MSI['mine_power_use']}.", true, 'mine.php');
                 die($h->endpage());
             }
@@ -313,8 +328,8 @@ function mine()
                 $dropList = json_decode(getMineDrop($spot, 4), true);
                 $drops = randMineDropCalc($userid, $spot, 4);
                 $xpgain = calcMineXPGains($userid, $spot, 4, $drops);
-                alert('success', "Success!", "You have carefully excavated out a single " . $api->SystemItemIDtoName($dropList['itemDrop']) . ". You have gained " . number_format($xpgain) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
-                $api->UserGiveItem($userid, $dropList['itemDrop'], 1);
+                alert('success', "Success!", "You have carefully excavated out {$drops} " . $api->SystemItemIDtoName($dropList['itemDrop']) . "(s). You have gained " . number_format($xpgain) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
+                $api->UserGiveItem($userid, $dropList['itemDrop'], $drops);
                 $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$api->SystemItemIDtoName($dropList['itemDrop'])}.");
                 $db->query("UPDATE `mining` SET `miningxp`=`miningxp`+ {$xpgain} WHERE `userid` = {$userid}");
             }
@@ -377,6 +392,52 @@ function potion()
 		alert('danger',"Uh Oh!","You do not have the required item to be here.",true,'inventory.php');
 		die($h->endpage());
 	}
+}
+
+function autominer()
+{
+    global $db, $userid, $api, $h, $MUS;
+    $q = $db->query("SELECT * FROM `mining_auto` WHERE `userid` = {$userid}");
+    if ($db->num_rows($q) == 0)
+    {
+        alert('danger', "Uh Oh!", "You don't have any Powered Miners active at this time.", true, 'mine.php');
+        die($h->endpage());
+    }
+    echo "<div class='card'>
+            <div class='card-header'>
+                Active Powered Miners
+            </div>
+            <div class='card-body'>";
+    while ($r = $db->fetch_row($q))
+    {
+        $townID = $db->fetch_single($db->query("SELECT `mine_location` FROM `mining_data` WHERE `mine_id` = {$r['miner_location']}"));
+        $townName = $db->fetch_single($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$townID}"));
+        echo "<div class='row'>
+            <div class='col-12 col-sm-6'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <small>Location</small>
+                    </div>
+                    <div class='col-12'>
+                        {$townName}
+                    </div>
+                </div>  
+            </div>
+            <div class='col-12 col-sm-6'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <small>Durability</small>
+                    </div>
+                    <div class='col-12'>
+                        {$r['miner_time']} minutes
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />";
+    }
+    echo "</div>
+    </div>";
 }
 
 $h->endpage();

@@ -28,6 +28,9 @@ switch ($_GET['item']) {
 	case 'contact':
 	    contact();
 	    break;
+	case 'autominer':
+	    autominer();
+	    break;
     default:
         alert("danger","Uh Oh!","Please specify a valid VIP Item to use!",true,'inventory.php');
 		$h->endpage();
@@ -140,6 +143,7 @@ function vipcolor()
         $api->UserTakeItem($userid,128,1);
         alert('success',"Success!","You have successfully changed your VIP Color!",true,'inventory.php');
         $api->SystemLogsAdd($userid, 'itemuse', "Used VIP Color Changer.");
+        $api->UserTakeItem($userid, 424, 1);
     }
     else
     {
@@ -224,6 +228,82 @@ function contact()
 					</div>
 					<div class='col-md-10 col-sm-9'>
 						<textarea class='form-control' required='1' maxlength='65655' name='contact'></textarea>
+					</div>
+				</div>
+				<br />
+				<div class='row'>
+					<div class='col'>
+						<button class='btn btn-primary btn-block' type='submit'><i class='fas fa-reply'></i> Submit Emergency</button>
+					</div>
+				</div>
+				</form>";
+        }
+    }
+    $h->endpage();
+}
+
+function autominer()
+{
+    global $h, $api, $userid, $db, $ir;
+    $itmName = $api->SystemItemIDtoName(424);
+    if (!$api->UserHasItem($userid,424))
+    {
+        alert('danger',"Uh Oh!","You need at least one {$itmName} to use this page.", true, 'inventory.php');
+        die($h->endpage());
+    }
+    else
+    {
+        if (isset($_POST['mine']))
+        {
+            $mine = (isset($_POST['mine']) && is_numeric($_POST['mine'])) ? abs(intval($_POST['mine'])) : '';
+            if (empty($mine))
+            {
+                alert('danger',"Uh Oh!","Please fill out the form completely.");
+                die($h->endpage());
+            }
+            $q = $db->query("SELECT * FROM `mining_data` WHERE `mine_id` = {$mine}");
+            if ($db->num_rows($q) == 0) 
+            {
+                
+                alert('danger', "Uh Oh!", "You are trying to edit a non-existent mine.");
+                die($h->endpage());
+            }
+            $r = $db->fetch_row($q);
+            if (getUserMiningLevel($userid) < $r['mine_level']) 
+            {
+                alert('danger', "Uh Oh!", "You need a mining level of {$r['mine_level']} before you can place a Powered Miner here.");
+                die($h->endpage());
+            }
+            $iqRequired = calcMineIQ($userid, $mine);
+            if ($ir['iq'] < $iqRequired)
+            {
+                alert('danger', "Uh Oh!", "You need at least " . shortNumberParse($iqRequired) . " IQ to place a Powered Miner here. You only have " . shortNumberParse($ir['iq']) . " IQ.");
+                die($h->endpage());
+            }
+            $q2 = $db->query("SELECT * FROM `mining_auto` WHERE `userid` = {$userid} AND `miner_location` = {$mine}");
+            if ($db->num_rows($q2) > 0)
+            {
+                alert('danger', "Uh Oh!", "You cannot place more than one Powered Miner at a mine.");
+                die($h->endpage());
+            }
+            $db->query("INSERT INTO `mining_auto` (`userid`, `miner_location`, `miner_time`) VALUES ('{$userid}', '{$mine}', '300')");
+            alert('success',"Success!","You have succesfully placed a Powered Miner. It will self-destruct in about 5 hours.", true, 'inventory.php');
+        }
+        else
+        {
+            echo"
+				<form method='post'>
+                    Select the mine you wish to place your {$itmName} at. You may only have one {$itmName} per mine. {$itmName}s only mine once 
+                    per minute, and may jam occasionally. If one of any of your {$itmName} jam, they all stop working until the one is unjammed. 
+                    This won't give you mining experience, or dungeon and infirmary time. Just resources. {$itmName} last for a total of 5 hours.
+                    Note, {$itmName} only lose durability when they mine. If they aren't mining, they won't lose durability...
+				<hr />
+				<div class='row'>
+					<div class='col-md-2 col-sm-3 col-6'>
+						<b>Mine</b>
+					</div>
+					<div class='col-md-10 col-sm-9'>
+						" . mines_dropdown("mine") . "
 					</div>
 				</div>
 				<br />

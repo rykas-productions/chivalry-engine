@@ -10,14 +10,14 @@ function doAutoMiner()
     //CREATE TABLE `mining_auto` ( `userid` INT(11) UNSIGNED NULL , `miner_location` INT(11) UNSIGNED NULL , `miner_time` INT(11) UNSIGNED NOT NULL ) ENGINE = InnoDB;
     global $db, $api;
     $q = $db->query("SELECT * FROM `mining_auto`");
+    $api->GameAddNotification(1, "Auto miner tick");
     while ($r = $db->fetch_row($q))
     {
         if (!userHasEffect($r['userid'], effect_drill_jam))
         {
             $mineinfo = $db->query("/*qc=on*/SELECT * FROM `mining_data` WHERE `mine_id` = {$r['miner_location']}");
             $MSI = $db->fetch_row($mineinfo);
-            $specialnumber = ((getSkillLevel($r['userid'], 15) * 10) / 100);
-            $MSI['mine_iq'] = $MSI['mine_iq'] - ($MSI['mine_iq'] * $specialnumber); //set mine minimum iq if user has the correct skill.
+            $MSI['mine_iq'] = calcMineIQ($r['userid'], $r['miner_location']);
             $Rolls = getMineRolls($r['userid'], $MSI['mine_iq']);
             if ($Rolls <= 3)
             {
@@ -36,7 +36,8 @@ function doAutoMiner()
             else
             {
                 $dropList = json_decode(getMineDrop($r['miner_location'], 4), true);
-                $api->UserGiveItem($r['userid'], $dropList['itemDrop'], 1);
+                $drops = randMineDropCalc($r['userid'], $r['miner_location'], 4);
+                $api->UserGiveItem($r['userid'], $dropList['itemDrop'], $drops);
             }
             $db->query("UPDATE `mining_auto` SET `miner_time` = `miner_time` - 1 WHERE `userid` = {$r['userid']} AND `miner_location` = {$r['miner_location']}");
         }
@@ -128,11 +129,11 @@ function getMineDrop($mineID, $dropID)
 function randMineDropCalc($userid, $mineID, $dropID)
 {
     global $db;
+    $itemMultipler = 1.0;
     if ($dropID < 4)
     {
-        $itemMultipler = 0;
         if (hasNecklaceEquipped($userid, 332))
-            $itemMultipler = 0.05;
+            $itemMultipler += 0.05;
         $drop = json_decode(getMineDrop($mineID, $dropID), true);
         if (calculateLuck($userid))
             $drops = Random($drop['minDrop']+($drop['minDrop']/4), $drop['maxDrop']+($drop['maxDrop']/4));
@@ -143,12 +144,13 @@ function randMineDropCalc($userid, $mineID, $dropID)
         $drops = $drops + ($drops * $itemMultipler);
     }
     else
-        $drops = 1;
+        $drops = 1 * $itemMultipler;
     return $drops;
 }
 
 function calcMineXPGains($userid, $mineID, $dropID, $dropCount)
 {
+    $xpMultiplier = 1.0;
     $gainedXP = 0;
     if ($dropID == 1)
         $baseXP = 0.35;
@@ -162,9 +164,21 @@ function calcMineXPGains($userid, $mineID, $dropID, $dropCount)
     if (userHasEffect($userid, mining_xp_boost))
         $gainedXP = $gainedXP * returnEffectMultiplier($userid, mining_xp_boost);
         if ($mineID == 10)
-    $gainedXP = $gainedXP / 7;
     $gainedXP = $gainedXP * $mineID;
+    $gainedXP = $gainedXP / 7;
+    $gainedXP = $gainedXP * $xpMultiplier;
     return $gainedXP;
+}
+
+function calcMineIQ($userid, $mineID)
+{
+    global $db;
+    $specialnumber = ((getSkillLevel($userid, 15) * 10) / 100); //less mining iq skill
+    $mineIQ = $db->fetch_single($db->query("SELECT `mine_iq` FROM `mining_data` WHERE `mine_id` = {$mineID}"));
+    
+    $mineIQ = $mineIQ - ($mineIQ * $specialnumber);
+    
+    return $mineIQ;
 }
 
 function mining_levelup()
@@ -172,7 +186,7 @@ function mining_levelup()
     global $db, $userid, $MUS, $ir;
     if (!isset($ir['reset']))
         $ir['reset'] = 0;
-        $MUS['xp_needed'] = (round(($MUS['mining_level'] + 0.67) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1) * (1 - ($ir['reset'] * 0.1)));
+        $MUS['xp_needed'] = (round(($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1) * (1 - ($ir['reset'] * 0.1)));
         if ($MUS['miningxp'] >= $MUS['xp_needed']) {
             $expu = $MUS['miningxp'] - $MUS['xp_needed'];
             $MUS['mining_level'] += 1;
