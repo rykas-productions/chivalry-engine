@@ -347,9 +347,11 @@ function history()
         		text: "<?php echo $r['am_name']; ?>"
         	},
         	axisY: {
-        		title: "Asset Value",
-        		lineThickness: 1,
-        		suffix: " Copper Coins"
+        		title: "Asset Value (Copper Coins)",
+        		lineThickness: 1
+        	},
+        	axisX: {
+        		title: "Market Ticks"
         	},
         	data: data  // random data
         };
@@ -519,6 +521,7 @@ function portfolio()
     $totalShares = returnUserAllAssetShares($userid);
     $totalInvested = returnUserAllAssetCosts($userid);
     $totalValue = returnUserCurrentValueAllAsset($userid);
+    $totalValueClass = (($totalValue >= $totalInvested) && ($totalInvested > 0)) ? "text-success" : "text-danger";
     echo "<div class='row'>
             <div class='col-12'>
                 <div class='card'>
@@ -552,7 +555,7 @@ function portfolio()
                                     <div class='col-12'>
                                         <small>Portfolio Value</small>
                                     </div>
-                                    <div class='col-12'>
+                                    <div class='col-12 {$totalValueClass}'>
                                         " . shortNumberParse($totalValue) . " Copper Coins
                                     </div>
                                 </div>
@@ -574,6 +577,8 @@ function portfolio()
                                 $sharesTotal = returnUserAssetShares($userid, $r['am_id']);
                                 $totalCost = returnUserAssetCosts($userid, $r['am_id']);
                                 $currentValue = $sharesTotal * $r['am_cost'];
+                                
+                                $valueClass = (($currentValue >= $totalCost) && ($totalCost > 0)) ? "text-success" : "text-danger";
                                 $avgCost = 0;
                                 if ($sharesTotal > 0)
                                     $avgCost = round($totalCost / $sharesTotal);
@@ -585,7 +590,7 @@ function portfolio()
                                             <small>Asset Name</small>
                                         </div>
                                         <div class='col-12'>
-                                            {$r['am_name']}
+                                            <a href='?action=history&id={$r['am_id']}'>{$r['am_name']}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -624,7 +629,7 @@ function portfolio()
                                         <div class='col-12'>
                                             <small>Current Value</small>
                                         </div>
-                                        <div class='col-12'>
+                                        <div class='col-12 {$valueClass}'>
                                             " . shortNumberParse($currentValue) . "
                                         </div>
                                     </div>
