@@ -10,7 +10,7 @@ function doAutoMiner()
     //CREATE TABLE `mining_auto` ( `userid` INT(11) UNSIGNED NULL , `miner_location` INT(11) UNSIGNED NULL , `miner_time` INT(11) UNSIGNED NOT NULL ) ENGINE = InnoDB;
     global $db, $api;
     $q = $db->query("SELECT * FROM `mining_auto`");
-    $api->GameAddNotification(1, "Auto miner tick");
+    //$api->GameAddNotification(1, "Auto miner tick");
     while ($r = $db->fetch_row($q))
     {
         if (!userHasEffect($r['userid'], effect_drill_jam))
@@ -21,7 +21,7 @@ function doAutoMiner()
             $Rolls = getMineRolls($r['userid'], $MSI['mine_iq']);
             if ($Rolls <= 3)
             {
-                $negTime = Random(20,40);
+                $negTime = Random(5,15);
                 //negative event
                 $api->GameAddNotification($r['userid'], "One of your powered miners has jammed, and the crews managing your miners have stopped working until they can resolve why the one miner jammed. Should be fixed in about {$negTime} minutes!");
                 userGiveEffect($r['userid'], effect_drill_jam, $negTime * 60);
@@ -197,4 +197,10 @@ function mining_levelup()
             $db->query("UPDATE `mining` SET `mining_level` = `mining_level` + 1, `miningxp` = {$expu},
                  `buyable_power` = `buyable_power` + 1 WHERE `userid` = {$userid}");
         }
+}
+
+function countUserAutoMiners($userid)
+{
+    global $db;
+    return $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `mining_auto` WHERE `userid` = {$userid}"));
 }
