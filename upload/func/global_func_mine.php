@@ -19,7 +19,7 @@ function doAutoMiner()
             $MSI = $db->fetch_row($mineinfo);
             $MSI['mine_iq'] = calcMineIQ($r['userid'], $r['miner_location']);
             $Rolls = getMineRolls($r['userid'], $MSI['mine_iq']);
-            if ($Rolls <= 3)
+            if ($Rolls <= 2)
             {
                 $negTime = Random(5,15);
                 //negative event
