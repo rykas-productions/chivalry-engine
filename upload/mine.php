@@ -56,8 +56,7 @@ function home()
     global $MUS, $db, $api, $ir, $userid;
     $mineen = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
     $minexp = min(round($MUS['miningxp'] / $MUS['xp_needed'] * 100), 100);
-    $amq = $db->query("SELECT * FROM `mining_auto` WHERE `userid` = {$userid}");
-    $amc = $db->num_rows($amq);
+    $amc = countUserAutoMiners($userid);
     if ($amc > 0)
     {
         alert('warning',"","You have {$amc} Powered Miners active at this time.",true,'?action=autominer', 'View here');
