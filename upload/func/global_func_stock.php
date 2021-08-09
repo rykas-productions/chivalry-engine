@@ -96,15 +96,15 @@ function runMarketTick($riskLevel)
             $perc = $riskLevel / 100;
             if ($RNG <= 3)   //market crash
             {
-                $min = $r['am_cost'] * 0.25;
-                $max = $r['am_cost'] * 0.45;
+                $min = $r['am_cost'] * 0.15;
+                $max = $r['am_cost'] * 0.40;
                 $change = mt_rand($min, $max) * -1;
                 //$api->GameAddNotification(1, "{$r['am_name']} has a market crash.");
             }
             else if ($RNG >= 498) //market bubble
             {
                 $min = $r['am_cost'] * 0.10;
-                $max = $r['am_cost'] * 0.45;
+                $max = $r['am_cost'] * 0.35;
                 $change = mt_rand($min, $max);
                 //$api->GameAddNotification(1, "{$r['am_name']} has a market bubble.");
             }
