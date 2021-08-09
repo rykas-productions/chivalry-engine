@@ -1392,3 +1392,34 @@ function missionCheck()
         $db->query("DELETE FROM `missions` WHERE `mission_id` = {$r['mission_id']}");
     }
 }
+
+function giveUserSkillPoint($userid, $point = 1)
+{
+    global $db,$userid;
+    $db->query("UPDATE `user_settings` SET `skill_points` = `skill_points` + ({$point}) WHERE `userid` = {$userid}");
+}
+
+function userHasAchievement($id)
+{
+    global $db,$userid;
+    $achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+    if ($db->num_rows($achieved) > 0)
+        return true;
+}
+
+function userCompleteAchievement($userid, $achievementID)
+{
+    global $db;
+    $db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$achievementID}')");
+}
+
+function resetAchievementsByID($achievementID)
+{
+    global $db;
+    $q = $db->query("SELECT * FROM `achievements_done` WHERE `achievement` = {$achievementID}");
+    while ($r = $db->fetch_row($q))
+    {
+        giveUserSkillPoint($r['userid'], -1);
+    }
+    $db->query("DELETE FROM `achievements_done` WHERE `achievement` = {$achievementID}");
+}
