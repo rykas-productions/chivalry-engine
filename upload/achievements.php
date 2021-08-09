@@ -808,7 +808,7 @@ function level($level,$id)
 		alert('danger',"Uh Oh!","Your level is too low to receive this achievement. You need to be level {$level}. You are level {$ir['level']}.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for level {$level}.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -831,7 +831,7 @@ function busts($level,$id)
 		alert('danger',"Uh Oh!","Your bust count is too low to receive this achievement. You need to have at least " . number_format($level) . " busts. You only have {$ir['busts']} dungeon busts.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for total busts {$level}.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -855,11 +855,13 @@ function mine($level,$id)
 		alert('danger',"Uh Oh!","Your mining level is too low to receive this achievement. You need to be mining level {$level}. You have a mining level of {$minelvl}.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for mining level {$level}.");
+	$tokens=Random(25000,100000);
+	$api->UserGiveCurrency($userid,'primary',$tokens);
 	givePoint($userid);
-	$api->UserGiveItem($userid, 424, 1);
-	alert('success',"Success!","You have successfully achieved the Mining Level {$level} achievement and were rewarded a Powered Miner!",true,'achievements.php');
+	addToEconomyLog('Achievements', 'copper', $tokens);
+	alert('success',"Success!","You have successfully achieved the Mining Level {$level} achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
 function kills($level,$id)
@@ -876,7 +878,7 @@ function kills($level,$id)
 		alert('danger',"Uh Oh!","Your kill count is too low to receive this achievement. You need to have at least " . number_format($level) . " kills. You only have " . number_format($ir['kills']) . " kills.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} kills.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -899,7 +901,7 @@ function deaths($level,$id)
 		alert('danger',"Uh Oh!","Your death count is too low to receive this achievement. You need to have at least " . number_format($level) . " deaths. You only have " . number_format($ir['deaths']) . " deaths.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} deaths.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -923,7 +925,7 @@ function refers($level,$id)
 		alert('danger',"Uh Oh!","Your referral count is too low to receive this achievement. You need to have at least " . number_format($level) . " referrals. You only have " . number_format($ref) . " referrals.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} referrals.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -947,7 +949,7 @@ function crimecopper($level,$id)
 		alert('danger',"Uh Oh!","You haven't gained enough Copper Coins from crimes yet to receive this achievement. You've only stolen " . number_format($crimecopper) . " Copper Coins.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for copper crimers {$level}.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -973,7 +975,7 @@ function travel($level,$id)
 		alert('danger',"Uh Oh!","You haven't traveled enough yet to receive this achievement. You've only traveled " . number_format($crimecopper) . " times.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for traveling {$level} times.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -999,7 +1001,7 @@ function damage($level,$id)
 		alert('danger',"Uh Oh!","You haven't dealt out enough damage yet to receive this achievement. You've only dealt out " . number_format($crimecopper) . " damage.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} damage dealt.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -1026,7 +1028,7 @@ function worth($level,$id)
 		alert('danger',"Uh Oh!","Your worth is too low to recieve this achievement. You only have " . number_format($worth) . " net worth. Remember, this only values Chivalry Tokens at 1,000 Copper Coins each. This also counts your held Copper Coins and Chivalry Tokens, along with all in your bank accounts.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} Net Worth.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -1052,7 +1054,7 @@ function posts($level,$id)
 		alert('danger',"Uh Oh!","You haven't posted enough to receive this achievement. You've only posted " . number_format($posts) . " times.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} forum posts.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -1078,7 +1080,7 @@ function dayslogged($level,$id)
 		alert('danger',"Uh Oh!","You do not have enough days logged in consecutively to receive this award. Your current record is " . number_format($posts) . " days.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} days logged in consecutively.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -1104,7 +1106,7 @@ function iq($level,$id)
 		alert('danger',"Uh Oh!","You do not have enough IQ to receive this award. You only have " . number_format($posts) . " IQ.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} IQ.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -1130,7 +1132,7 @@ function vip($level,$id)
 		alert('danger',"Uh Oh!","You do not have enough VIP Days to receive this award. You only have " . number_format($posts) . " VIP Days.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} VIP Days.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -1156,7 +1158,7 @@ function labor($level,$id)
 		alert('danger',"Uh Oh!","You do not have enough labor to receive this award. You only have " . number_format($posts) . " labor.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} labor.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -1183,7 +1185,7 @@ function course($level,$id)
 		alert('danger',"Uh Oh!","You do not have enough completed courses to receive this award. You only have " . number_format($posts) . " courses completed.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for {$level} completed courses.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -1208,7 +1210,7 @@ function masterrank($level,$id)
 		alert('danger',"Uh Oh!","You need to be Mastery Rank " . number_format($level) . " before you can accept this reward.",true,'achievements.php');
 		die($h->endpage());
 	}
-	userCompleteAchievement($userid, $id);
+	$db->query("INSERT INTO `achievements_done` (`userid`, `achievement`) VALUES ('{$userid}', '{$id}')");
 	$api->SystemLogsAdd($userid,'achievement',"Received achievement for Master Rank {$level}.");
 	$tokens=Random(25000,100000);
 	$api->UserGiveCurrency($userid,'primary',$tokens);
@@ -1217,12 +1219,15 @@ function masterrank($level,$id)
 	alert('success',"Success!","You have successfully achieved the Mastery Rank " . number_format($level) . " achievement and were rewarded " . number_format($tokens) . " Copper Coins.",true,'achievements.php');
 	$h->endpage();
 }
-
-/**
- * @param int $userid
- * @deprecated
- */
 function givePoint($userid)
 {
-    giveUserSkillPoint($userid);
+	global $db,$userid;
+	$db->query("UPDATE `user_settings` SET `skill_points` = `skill_points` + 1 WHERE `userid` = {$userid}");
+}
+function userHasAchievement($id)
+{
+	global $db,$userid;
+	$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = {$id}");
+	if ($db->num_rows($achieved) > 0)
+		return true;
 }
