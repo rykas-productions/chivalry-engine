@@ -790,18 +790,17 @@ class api
         $userdata = $db->fetch_row($udq);
         $gain = 0;
 		$reset = $db->fetch_single($db->query("SELECT `reset` FROM `user_settings` WHERE `userid` = {$userid}"));
+		$optTraining = getSkillLevel($userid, 8);
         //Do while value is less than the user's energy input, then add one to value.
-        for ($i = 0; $i < $times; $i++) {
-            //(1-4)/(600-1000)*(500-1000)*((User's Will+25)/175)
-            $gain +=
-                Random(1, 4) / Random(600, 1000) * Random(500, 1000) * (($userdata['will'] + 25) / 175);
-            //Subtract a random number from user's will.
-                if (getSkillLevel($userid,8) == 0)
-                    $userdata['will'] -= Random(1, 3);
+        for ($i = 0; $i < $times; $i++) 
+        {
+            $gain += mt_rand(1, 4) / mt_rand(600, 1000) * mt_rand(500, 1000) * (($userdata['will'] + 25) / 175);
+                if ($optTraining == 0)
+                    $userdata['will'] -= mt_rand(1, 3);
                 else
                 {
-                    if (Random(1,2) != 1)
-                        $userdata['will'] -= Random(1, 3);
+                    if (mt_rand(1,2) != 1)
+                        $userdata['will'] -= mt_rand(1, 3);
                 }
             //User's will ends up negative, set to zero.
             if ($userdata['will'] < 0) {
