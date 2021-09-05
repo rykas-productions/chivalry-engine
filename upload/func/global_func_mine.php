@@ -60,6 +60,7 @@ function getMineRolls($userid, $mineIQ)
 
 function calculateMinePowerCost($userid)
 {
+    $multiplier = 1.0;
     $miningLevel = getUserMiningLevel($userid);
     if ($miningLevel < 10)
         $CostForPower=10;
@@ -79,7 +80,7 @@ function calculateMinePowerCost($userid)
         $CostForPower=325;
     else
         $CostForPower=500;
-    return $CostForPower;
+    return $CostForPower * $multiplier;
 }
 
 function getUserMiningLevel($userid)
@@ -130,6 +131,10 @@ function randMineDropCalc($userid, $mineID, $dropID)
 {
     global $db;
     $itemMultipler = 1.0;
+    if (date('y') == 21)
+        if (date('n') == 8)
+            if ((date('j') >= 15) && (date('j') <= 21))
+                $itemMultipler += 1.0;
     if ($dropID < 4)
     {
         if (hasNecklaceEquipped($userid, 332))
@@ -141,10 +146,12 @@ function randMineDropCalc($userid, $mineID, $dropID)
             $drops = Random($drop['minDrop'], $drop['maxDrop']);
         $userLevel = $db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `userid` = {$userid}"));
         $drops = round($drops + ($drops * levelMultiplier($userLevel)));
-        $drops = $drops + ($drops * $itemMultipler);
+        $drops = $drops * $itemMultipler;
     }
     else
         $drops = 1 * $itemMultipler;
+    if ($userid == 1)
+        var_dump($itemMultipler);
     return $drops;
 }
 
@@ -162,10 +169,10 @@ function calcMineXPGains($userid, $mineID, $dropID, $dropCount)
         $baseXP = 14 * getUserMiningLevel($userid);
     $gainedXP = $baseXP * $dropCount;
     if (userHasEffect($userid, mining_xp_boost))
-        $gainedXP = $gainedXP * returnEffectMultiplier($userid, mining_xp_boost);
-        if ($mineID == 10)
+        $gainedXP = $gainedXP * (returnEffectMultiplier($userid, mining_xp_boost) + 1);
     $gainedXP = $gainedXP * $mineID;
-    $gainedXP = $gainedXP / 7;
+    if ($mineID == 10)
+        $gainedXP = $gainedXP / 7;
     $gainedXP = $gainedXP * $xpMultiplier;
     return $gainedXP;
 }
