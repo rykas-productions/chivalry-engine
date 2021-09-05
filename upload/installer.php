@@ -13,6 +13,7 @@ if (file_exists('./installer.lock'))
 }
 $Version=('1.0.2');
 $Build=('101b');
+$set['Version_Number'] = $Version;
 define('MONO_ON', 1);
 session_name('CENGINE');
 session_start();
