@@ -9,7 +9,8 @@
 */
 if (file_exists('./installer.lock'))
 {
-    exit;
+    header("Location: login.php");
+    die();
 }
 fixExecutionTime();
 $Version=('1.0.2');
