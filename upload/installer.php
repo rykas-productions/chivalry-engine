@@ -128,6 +128,11 @@ function diagnostics()
 		$pdv = '<span style="color: red">No acceptable database handler found. Installer will not continue.</span>';
         $pdf = 0;
 	}
+	$maxTimeOut = ini_get('max_execution_time');
+	if ($maxTimeOut <= 30)
+	    $toclass = "danger";
+	elseif ($maxTimeOut > 60)
+	   $toclass = "success";
 	$dbFetch = (fetchCIDDB(24)) ? "Database downloaded" : "Could not download";
     echo "
     <h3>Basic Diagnostic Results:</h3>
@@ -147,6 +152,12 @@ function diagnostics()
 			<tr>
     			<td>Password_Hash avaliable?</td>
     			<td>{$hv}</td>
+    		</tr>
+            <tr>
+    			<td>PHP Execution Timeout<br />
+                <small><i>https://stackoverflow.com/questions/3829403/how-to-increase-the-execution-timeout-in-php</i></small></td>
+    			<td><span class='text-{$toclass}'>{$maxTimeOut} seconds</span><br />
+                <small>Want to be higher than 30 seconds.</small></td>
     		</tr>
 			<tr>
     			<td>OpenSSL Random Pseudo Bytes avaliable?</td>
