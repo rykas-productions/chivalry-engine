@@ -711,24 +711,6 @@ function isImage($url)
 }
 
 /**
- * Internal version check function for Chivalry Engine.
- * @param string $url URL for version checker. (Default = https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json)
- * @return string Update Status
- */
-function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
-{
-    global $set;
-    $engine_version = $set['Version_Number'];
-    $json = json_decode(get_cached_file($url, __DIR__ . "/cache/update_check.json"), true);
-    if (is_null($json))
-        return "Update checker failed.";
-    if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
-        return "Chivalry Engine is up to date.";
-    else
-        return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
-}
-
-/**
  * Internal function for creating lists of pages easier.
  * @param int $perpage Items displayed per page.
  * @param int $total Total items to be displayed.
