@@ -136,7 +136,7 @@ function diagnostics()
 	   $toclass = "success";
 	else
 	    $toclass="";
-	$dbFetch = (fetchCIDDB(24)) ? "Database downloaded" : "Could not download";
+	$dbFetch = (fetchCIDDB()) ? "Database downloaded" : "Could not download";
     echo "
     <h3>Basic Diagnostic Results:</h3>
     <table class='table table-bordered table-hover'>
@@ -390,22 +390,14 @@ EOF;
     fclose($f);
     echo '... file written.<br />';
     echo 'Writing base database schema...';
-    $fo = fopen("./cache/latest.sql", "r");
-    $query = '';
-    $lines = explode("\n", fread($fo, 1024768));
-    fclose($fo);
-    foreach ($lines as $line)
-    {
-        if (!(strpos($line, "--") === 0) && trim($line) != '')
-        {
-            $query .= $line;
-            if (!(strpos($line, ";") === FALSE))
-            {
-                $db->query($query);
-                $query = '';
-            }
-        }
-    }
+    $command = 'mysql'
+        . ' --host=' . $db_hostname
+        . ' --user=' . $db_username
+        . ' --password=' . $db_password
+        . ' --database=' . $db_database
+        . ' --execute="SOURCE ' . dirname(__FILE__)
+        ;
+    $output = shell_exec($command . '/cache/latest.sql"');
     echo '... done.<br />';
     if ($_POST['analytics'] == 'true')
     {

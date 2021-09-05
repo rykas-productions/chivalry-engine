@@ -222,7 +222,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
                 return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
 }
 
-function fetchCIDDB($hours)
+function fetchCIDDB()
 {
     return get_cached_file("https://chivalryisdeadgame.com/cache/latest.sql", "./cache/latest.sql", 24);
 }
