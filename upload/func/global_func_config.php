@@ -32,7 +32,7 @@ function writeConfigToDB(string $moduleName, $configJson)
  * @return string Config JSON
  */
 //Back ported from Chivalry Engine V3
-function formatConfig(array $string)
+function formatConfig($string)
 {
     return json_encode($string, JSON_FORCE_OBJECT);
 }
@@ -43,7 +43,7 @@ function formatConfig(array $string)
  * @return array Config String
  */
 //Back ported from Chivalry Engine V3
-function unformatConfig(array $json)
+function unformatConfig($json)
 {
     return json_decode($json, true);
 }
