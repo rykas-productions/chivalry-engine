@@ -417,9 +417,6 @@ EOF;
 	@unlink('installer_head.php');
     @unlink('installer_foot.php');
 	@unlink('password_benchmark.php');
-	$CronsStart=strtotime("midnight tomorrow");
-	$db->query("INSERT INTO `crons` (`file`, `nextUpdate`) VALUES ('crons/minute.php', $CronsStart),
-	('crons/fivemins.php', $CronsStart), ('crons/day.php', $CronsStart), ('crons/hour.php', $CronsStart);");
     if (file_exists('installer.php'))
 	{
 		$success = false;
