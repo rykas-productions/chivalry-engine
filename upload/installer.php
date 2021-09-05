@@ -11,6 +11,7 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
+fixExecutionTime();
 $Version=('1.0.2');
 $Build=('101b');
 $set['Version_Number'] = $Version;
@@ -131,8 +132,10 @@ function diagnostics()
 	$maxTimeOut = ini_get('max_execution_time');
 	if ($maxTimeOut <= 30)
 	    $toclass = "danger";
-	elseif ($maxTimeOut > 60)
+	elseif ($maxTimeOut >= 60)
 	   $toclass = "success";
+	else
+	    $toclass="";
 	$dbFetch = (fetchCIDDB(24)) ? "Database downloaded" : "Could not download";
     echo "
     <h3>Basic Diagnostic Results:</h3>
@@ -505,4 +508,11 @@ function getGameURL()
         $domain .= str_replace($turiq, '', $turi);
     }
     return $domain;
+}
+
+function fixExecutionTime()
+{
+    $maxTime = ini_get('max_execution_time');
+    if ($maxTime < 60)
+        ini_set('max_execution_time', 60);
 }
