@@ -760,7 +760,7 @@ function pagination($perpage, $total, $currentpage, $url)
  * @param string $tyoe Type of error.
  * @param string $txt Error text.
  */
-function cslog($type='log',$txt)
+function cslog($type,$txt)
 {
 	echo "<script>console.{$type}('{$txt}');</script>";
 }
