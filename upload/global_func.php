@@ -1300,7 +1300,7 @@ function attemptLoadModule($moduleID)
 //method 3: use PDO exec
 
 //It tries them in that order and checks to make sure they WILL work based on various requirements of those options
-function execute_sql($file, $database, $hostname, $username, $password)
+function execute_sql($file, $db_database, $hostname, $username, $password)
 {
     //1st method; directly via mysql
     $mysql_paths = array();
@@ -1322,10 +1322,10 @@ function execute_sql($file, $database, $hostname, $username, $password)
     $mysql_paths[] = '/usr/local/bin/mysql'; //Linux
     $mysql_paths[] = '/usr/mysql/bin/mysql'; //Linux
     
-    $database = escapeshellarg($this->db->database);
-    $db_hostname = escapeshellarg($this->db->hostname);
-    $db_username= escapeshellarg($this->db->username);
-    $db_password = escapeshellarg($this->db->password);
+    $database = escapeshellarg($db_database);
+    $db_hostname = escapeshellarg($hostname);
+    $db_username= escapeshellarg($username);
+    $db_password = escapeshellarg($password);
     $file_to_execute = escapeshellarg($file);
     foreach($mysql_paths as $mysql)
     {
