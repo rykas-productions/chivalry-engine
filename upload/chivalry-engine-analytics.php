@@ -1,11 +1,11 @@
 <?php
 $menuhide=1;
 require('globals_nonauth.php');
-$gameName = (isset($_GET['gamename'])) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_GET['gamename']) ? $db->escape(strip_tags(stripslashes($_GET['gamename']))) : '';
-$gameURL = (isset($_GET['domain'])) ? $db->escape(stripslashes(strip_tags($_GET['domain']))) : "";
-$gameVersion = (isset($_GET['version'])) ? $db->escape(stripslashes(strip_tags($_GET['version']))) : "";
-$gameDB = (isset($_GET['dbtype'])) ? $db->escape(stripslashes(strip_tags($_GET['dbtype']))) : "";
-$gameInstall = (isset($_GET['install'])) && is_numeric($_GET['install']) ? abs($_GET['install']) : '';
+$gameName = (isset($_POST['gamename'])) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['gamename']) ? $db->escape(strip_tags(stripslashes($_POST['gamename']))) : '';
+$gameURL = (isset($_POST['domain'])) ? $db->escape(stripslashes(strip_tags($_POST['domain']))) : "";
+$gameVersion = (isset($_POST['version'])) ? $db->escape(stripslashes(strip_tags($_POST['version']))) : "";
+$gameDB = (isset($_POST['dbtype'])) ? $db->escape(stripslashes(strip_tags($_POST['dbtype']))) : "";
+$gameInstall = (isset($_POST['install'])) && is_numeric($_POST['install']) ? abs($_POST['install']) : '';
 $validDB = array('pdo', 'mysqli');
 if (!in_array($gameDB, $validDB))
 	$gameDB = "Unknown";
@@ -27,4 +27,3 @@ if ($error == 0)
 				VALUES 
 				('{$gameURL}', '{$gameInstall}', '{$gameVersion}', '{$gameName}', '{$gameDB}')");
 }
-var_dump($_GET);
