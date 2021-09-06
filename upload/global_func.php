@@ -1300,7 +1300,7 @@ function attemptLoadModule($moduleID)
 //method 3: use PDO exec
 
 //It tries them in that order and checks to make sure they WILL work based on various requirements of those options
-function execute_sql($file, $db_database, $hostname, $username, $password)
+function execute_sql($file, $db_database, $hostname, $username, $password, $driver, $connectionID)
 {
     //1st method; directly via mysql
     $mysql_paths = array();
@@ -1338,12 +1338,12 @@ function execute_sql($file, $db_database, $hostname, $username, $password)
         }
     }
     
-    if ($this->db->dbdriver == 'mysqli')
+    if ($driver == 'mysqli')
     {
         //2nd method; using mysqli
-        mysqli_multi_query($this->db->conn_id,file_get_contents($file));
+        mysqli_multi_query($connectionID,file_get_contents($file));
         //Make sure this keeps php waiting for queries to be done
-        do{} while(mysqli_more_results($this->db->conn_id) && mysqli_next_result($this->db->conn_id));
+        do{} while(mysqli_more_results($connectionID) && mysqli_next_result($connectionID));
         return TRUE;
     }
     
@@ -1353,10 +1353,10 @@ function execute_sql($file, $db_database, $hostname, $username, $password)
     
     if ($mysqlnd && version_compare(PHP_VERSION, '5.3.0') >= 0)
     {
-        $database = $this->db->database;
-        $db_hostname = $this->db->hostname;
-        $db_username= $this->db->username;
-        $db_password = $this->db->password;
+        $database = $db_database;
+        $db_hostname = $hostname;
+        $db_username= $username;
+        $db_password = $password;
         
         $dsn = "mysql:dbname=$database;host=$db_hostname";
         $db = new PDO($dsn, $db_username, $db_password);

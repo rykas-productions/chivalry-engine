@@ -392,7 +392,7 @@ EOF;
     echo '... file written.<br />';
     echo 'Writing base database schema...';
     $sql = fetchCIDDB();
-    execute_sql($sql, $db_database, $db_hostname, $db_username, $db_password);
+    execute_sql($sql, $db_database, $db_hostname, $db_username, $db_password, $db_driver, $c);
     echo '... done.<br />';
     if ($_POST['analytics'] == 'true')
     {
