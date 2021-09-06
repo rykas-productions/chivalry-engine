@@ -360,8 +360,6 @@ function install()
     $c = $db->connection_id;
     // Done, move on
     echo '... Successful.<br />';
-    $db->query("set GLOBAL sql_mode='ONLY_FULL_GROUP_BY,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
-    
     echo 'Writing game config file...';
     echo 'Write Config...';
     $code = sha1(openssl_random_pseudo_bytes(64));
