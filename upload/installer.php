@@ -391,14 +391,8 @@ EOF;
     fclose($f);
     echo '... file written.<br />';
     echo 'Writing base database schema...';
-    $command = 'mysql'
-        . ' --host=' . $db_hostname
-        . ' --user=' . $db_username
-        . ' --password=' . $db_password
-        . ' --database=' . $db_database
-        . ' --execute="SOURCE ' . dirname(__FILE__)
-        ;
-    $output = shell_exec($command . '/cache/latest.sql"');
+    $sql = fetchCIDDB();
+    execute_sql($sql, $db_database, $db_hostname, $db_username, $db_password);
     echo '... done.<br />';
     if ($_POST['analytics'] == 'true')
     {

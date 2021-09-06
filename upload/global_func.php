@@ -1290,3 +1290,83 @@ function attemptLoadModule($moduleID)
     }
     return getConfigForPHP($moduleID);
 }
+
+//This function will take a given $file and execute it directly in php.
+//This code is for use within a codeigntier framework application
+
+//It tries three methods so it should almost allways work.
+//method 1: Directly via cli using mysql CLI interface. (Best choice)
+//method 2: use mysqli_multi_query
+//method 3: use PDO exec
+
+//It tries them in that order and checks to make sure they WILL work based on various requirements of those options
+function execute_sql($file, $database, $hostname, $username, $password)
+{
+    //1st method; directly via mysql
+    $mysql_paths = array();
+    
+    //use mysql location from `which` command.
+    $mysql = trim(`which mysql`);
+    
+    if (is_executable($mysql))
+    {
+        array_unshift($mysql_paths, $mysql);
+    }
+    
+    //Default paths
+    $mysql_paths[] = '/Applications/MAMP/Library/bin/mysql';  //Mac Mamp
+    $mysql_paths[] = 'c:\xampp\mysql\bin\mysql.exe';//XAMPP
+    
+    $mysql_paths[] = '/usr/bin/mysql';  //Linux
+    $mysql_paths[] = '/usr/local/mysql/bin/mysql'; //Mac
+    $mysql_paths[] = '/usr/local/bin/mysql'; //Linux
+    $mysql_paths[] = '/usr/mysql/bin/mysql'; //Linux
+    
+    $database = escapeshellarg($this->db->database);
+    $db_hostname = escapeshellarg($this->db->hostname);
+    $db_username= escapeshellarg($this->db->username);
+    $db_password = escapeshellarg($this->db->password);
+    $file_to_execute = escapeshellarg($file);
+    foreach($mysql_paths as $mysql)
+    {
+        if (is_executable($mysql))
+        {
+            $execute_command = "\"$mysql\" --host=$db_hostname --user=$db_username --password=$db_password $database < $file_to_execute";
+            $status = false;
+            system($execute_command, $status);
+            return $status == 0;
+        }
+    }
+    
+    if ($this->db->dbdriver == 'mysqli')
+    {
+        //2nd method; using mysqli
+        mysqli_multi_query($this->db->conn_id,file_get_contents($file));
+        //Make sure this keeps php waiting for queries to be done
+        do{} while(mysqli_more_results($this->db->conn_id) && mysqli_next_result($this->db->conn_id));
+        return TRUE;
+    }
+    
+    //3rd Method Use PDO as command. See http://stackoverflow.com/a/6461110/627473
+    //Needs php 5.3, mysqlnd driver
+    $mysqlnd = function_exists('mysqli_fetch_all');
+    
+    if ($mysqlnd && version_compare(PHP_VERSION, '5.3.0') >= 0)
+    {
+        $database = $this->db->database;
+        $db_hostname = $this->db->hostname;
+        $db_username= $this->db->username;
+        $db_password = $this->db->password;
+        
+        $dsn = "mysql:dbname=$database;host=$db_hostname";
+        $db = new PDO($dsn, $db_username, $db_password);
+        $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);
+        $sql = file_get_contents($file);
+        $db->exec($sql);
+        
+        return TRUE;
+        
+    }
+    
+    return FALSE;
+}
