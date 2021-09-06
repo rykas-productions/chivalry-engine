@@ -391,7 +391,7 @@ EOF;
     fclose($f);
     echo '... file written.<br />';
     echo 'Writing base database schema...';
-    $sql = "./cache/latest.sql";
+    $sql = "./cache/latest.sql"; 
     execute_sql($sql, $db_database, $db_hostname, $db_username, $db_password, $db_driver, $c);
     echo '... done.<br />';
     if ($_POST['analytics'] == 'true')
