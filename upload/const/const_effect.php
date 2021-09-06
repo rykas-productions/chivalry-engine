@@ -31,3 +31,4 @@ define('effect_injure_sec_wep', "sec_weap_disable");
 
 //Mining
 define('effect_drill_jam', "jammed_drill");
+define('effect_mining_fear', "mining_fear");
