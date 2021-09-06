@@ -881,6 +881,7 @@ class api
     function SystemSendEmail($to, $body, $subject = '', $from = '')
     {
         global $set;
+        $attemptSendEmail = false;   //hotfix for blueberry
         if (empty($from))
             $from = $set['sending_email'];
         if (empty($subject))
@@ -891,7 +892,10 @@ class api
 		$htmlhdr="<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png' width='64' height='64'><br /><h4>Chivalry is Dead</h4><hr />";
 		$htmlftr="<hr /> -CID Admin, Chivalry is Dead Developer.<br /><a href='https://www.chivalryisdeadgame.com/'>https://www.chivalryisdeadgame.com/</a>";
 		$realBody= $htmlhdr . $body . $htmlftr;
-        return mail($to, $subject, $realBody, implode("\r\n", $headers));
+		if ($attemptSendEmail)
+            return mail($to, $subject, $realBody, implode("\r\n", $headers));
+		else
+		    return false;
     }
 
     /*
