@@ -16,6 +16,11 @@ if ((!isCourseComplete($userid, 23)) && ($userid != 1))
 	alert('danger', "Uh Oh!", "Please complete the Precious Metals academic course before you first attempt mining.", true, 'explore.php');
     die($h->endpage());
 }
+if (userHasEffect($userid, effect_mining_fear))
+{
+    alert('danger', "Uh Oh!", "You are too tripped out to go mining right now.", true, 'explore.php');
+    die($h->endpage());
+}
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 mining_levelup();
 echo "<h2><i class='game-icon game-icon-mining'></i> Dangerous Mines</h2><hr />";
@@ -353,15 +358,30 @@ function mine()
 function mine_item()
 {
 	global $db, $userid, $api, $h, $MUS;
-	if (userHasEffect($userid, constant("mining_xp_boost")))
-	{
-		alert('danger',"Uh Oh!","Please let the affects of the herb wear off before consuming another. Results could be... dangerous...",true,'inventory.php');
-		die($h->endpage());
-	}
 	if ($api->UserHasItem($userid, 177, 1))
-	{
+	{	
+		if (userHasEffect($userid, mining_xp_boost))
+		{
+		    $effectLvl = returnEffectMultiplier($userid, mining_xp_boost);
+		    if ($effectLvl > 3)
+		    {
+		        if (Random(1, 3) == 2)
+		        {
+		            $api->UserTakeItem($userid, 177, 1);
+		            alert('danger', "Uh Oh!", "You consume these herbs and start to trip balls, man. You decide its best to not mine until you clear your head...", true, 'explore.php');
+		            userGiveEffect($userid, effect_mining_fear, Random(600,3600));
+		            userRemoveEffect($userid, mining_xp_boost);
+		            die($h->endpage());
+		        }
+		    }
+		    $newtime = 3600 / ($effectLvl + 1);
+		    userUpdateEffect($userid, mining_xp_boost, $newtime, $effectLvl+1);
+		}
+		else 
+		{
+		    userGiveEffect($userid, constant("mining_xp_boost"), 3600);
+		}
 		alert('success',"Success!","You've consumed a set of herbs and feel strangely relaxed, but ready to learn more while you mine! The effects will wear off in an hour.",true,'inventory.php');
-		userGiveEffect($userid, constant("mining_xp_boost"), 3600);
 		$api->UserTakeItem($userid, 177, 1);
 	}
 	else
