@@ -45,7 +45,8 @@ function effectNameParser($effectID)
         effect_guard => "Guard",
         effect_injure_prim_wep => "Primary Hand Injured",
         effect_injure_sec_wep => "Secondary Hand Injured",
-        effect_drill_jam => "Power Miner Jam"
+        effect_drill_jam => "Power Miner Jam",
+        effect_mining_fear => "Mining Fear"
     );
     return $effectNameArray[$effectID];
 }
@@ -69,7 +70,8 @@ function effectDescParser($effectID, $effectMulti = 1)
         effect_guard => "Increases guard in combat by " . number_format($effectMulti * 5) . "%",
         effect_injure_prim_wep => "Cannot equip primary weapon until healed",
         effect_injure_sec_wep => "Cannot equip secondary weapon until healed",
-        effect_drill_jam => "Powered miners are jammed and no resources are being made right now."
+        effect_drill_jam => "Powered miners are jammed and no resources are being made right now.",
+        effect_mining_fear => "Too tripped out to go mining right now."
     );
     return $effectNameArray[$effectID];
 }
