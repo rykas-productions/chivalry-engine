@@ -67,42 +67,9 @@ function attacking()
         //Set RNG
         $_SESSION['tresde'] = $_GET['tresde'];
     }
-    //If user is not specified.
-    if (!$_GET['user']) {
-        alert("danger", "Uh Oh!", "You've chosen to attack a non-existent user. Check your source and try again.", true, "{$ref}.php");
-        die($h->endpage());
-    } //If the user is trying to attack himself.
-    else if ($_GET['user'] == $userid) {
-        alert("danger", "Uh Oh!", "Depressed or not, you cannot attack yourself.", true, "{$ref}.php");
-        die($h->endpage());
-    } //If the user has no HP, and is not already attacking.
-    else if ($ir['hp'] <= 1 && $ir['attacking'] == 0) {
-        alert("danger", "Uh Oh!", "You have no HP, so you cannot attack. Come back when your HP has refilled.", true, "{$ref}.php");
-        die($h->endpage());
-    } //If the user has left a previous after losing.
-    else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] > 1) {
-        $_SESSION['attacklost'] = 0;
-        alert("danger", "Uh Oh!", "You cannot start another attack after you ran from the last one.", true, "{$ref}.php");
-        die($h->endpage());
-    }
-	else if ($_GET['user'] == 20 && $votecount != 5)
-	{
-		alert("danger", "Uh Oh!", "You cannot attack Your Doppleganger until you've voted completely for the day.", true, "{$ref}.php");
-        die($h->endpage());
-	}
-	else if ($_GET['user'] == 21)
-	{
-		if (date('n') != 11)
-		{
-			alert("danger", "Uh Oh!", "Due to kingdom wide laws, turkeys may only be hunted during Novemeber.", true, "{$ref}.php");
-			die($h->endpage());
-		}
-	}
-	else if ($ir['att_dg'] == 1 && $_GET['user'] == 20)
-	{
-		alert("danger", "Uh Oh!", "You've already attacked your doppleganger for the day.", true, "{$ref}.php");
-        die($h->endpage());
-	}
+
+    specifyUser($userid,$votecount,$ir,$ref);
+
     $youdata = $ir;
     $laston = time() - 900;
     $q = $db->query("/*qc=on*/SELECT `u`.`userid`, `hp`, `equip_armor`, `username`,
@@ -126,7 +93,9 @@ function attacking()
         alert("danger", "Uh Oh!", "An unknown error has occurred. Please try again, or contact the admin team.", true, "{$ref}.php");
         $api->UserInfoSetStatic($userid, "attacking", 0);
         die($h->endpage());
-    }
+        }
+
+
 	if ($_GET['scroll'] == 1)
 	{
 		if (($ir['location'] + 2) < $odata['location'])
