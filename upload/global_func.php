@@ -912,21 +912,9 @@ function isMobile()
 
 function toast($title,$txt,$time=-1,$icon='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png')
 {
-    if ($time == -1)
-        $time=time();
-    echo "<div class='toast' role='alert' aria-live='assertive' aria-atomic='true' id='toast' data-delay='3000' style='z-index: 1000; position: absolute; top: 0; right: 0;'>
-            <div class='toast-header'>
-                <img src='{$icon}' class='rounded mr-2'>
-                    <strong class='mr-auto'>{$title}</strong>
-                    <small>" . DateTime_Parse($time) . "</small>
-                    <button type='button' class='ml-2 mb-1 close' data-dismiss='toast' aria-label='Close'>
-                        <span aria-hidden='true'>&times;</span>
-                    </button>
-            </div>
-          <div class='toast-body'>
-            {$txt}
-          </div>
-        </div>";
+    echo "<div class='alert alert-primary cidToast fade show' role='alert' data-dismiss='alert' >
+		        <strong><i>{$txt}</i></strong>
+            </div>";
 }
 
 function addToEconomyLog($type = 'Misc', $curr = 'copper', $change = 0)

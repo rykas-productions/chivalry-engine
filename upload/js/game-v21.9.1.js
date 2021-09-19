@@ -271,6 +271,7 @@ $(document).ready(function () {
 			 $('#socialRow2').html(response);
 		});
 	});
+	setTimeout(function(){$('.cidToast').alert('close');}, 5000);
 
 });
 $(function () {
