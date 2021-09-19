@@ -87,24 +87,28 @@ function logBossDmg($userid, $boss_id, $dmg)
             $db->query("UPDATE `bossDamage` SET `dmg` = `dmg` + {$dmg} WHERE `userid` = {$userid} AND `boss_id` = {$boss_id}");
 }
 
-function specifyUser($userid,$votecount,$ir,$ref)
+function preFightChecks()
 {
-global $h;
+    global $h, $ir, $ref, $userid, $votecount;  //you can use variables from outside the scope if defined here.
 
     //If user is not specified.
-    if (!$_GET['user']) {
+    if (!$_GET['user']) 
+    {
         alert("danger", "Uh Oh!", "You've chosen to attack a non-existent user. Check your source and try again.", true, "{$ref}.php");
         die($h->endpage());
     } //If the user is trying to attack himself.
-    else if ($_GET['user'] == $userid) {
+    else if ($_GET['user'] == $userid) 
+    {
         alert("danger", "Uh Oh!", "Depressed or not, you cannot attack yourself.", true, "{$ref}.php");
         die($h->endpage());
     } //If the user has no HP, and is not already attacking.
-    else if ($ir['hp'] <= 1 && $ir['attacking'] == 0) {
+    else if ($ir['hp'] <= 1 && $ir['attacking'] == 0) 
+    {
         alert("danger", "Uh Oh!", "You have no HP, so you cannot attack. Come back when your HP has refilled.", true, "{$ref}.php");
         die($h->endpage());
     } //If the user has left a previous after losing.
-    else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] > 1) {
+    else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] > 1) 
+    {
         $_SESSION['attacklost'] = 0;
         alert("danger", "Uh Oh!", "You cannot start another attack after you ran from the last one.", true, "{$ref}.php");
         die($h->endpage());

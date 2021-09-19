@@ -68,7 +68,7 @@ function attacking()
         $_SESSION['tresde'] = $_GET['tresde'];
     }
 
-    specifyUser($userid,$votecount,$ir,$ref);
+    preFightChecks();
 
     $youdata = $ir;
     $laston = time() - 900;
