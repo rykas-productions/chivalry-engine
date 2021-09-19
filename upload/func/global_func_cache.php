@@ -9,7 +9,7 @@
 function cacheQuery($query, $result, $dir = 'query')
 {
     $serialzedData = serialize($result);
-    $cacheName = "./cache/{$dir}/" . md5($query);
+    $cacheName = dirname(__DIR__) . "/cache/{$dir}/" . md5($query);
     file_put_contents($cacheName, $serialzedData);
 }
 
@@ -21,7 +21,7 @@ function cacheQuery($query, $result, $dir = 'query')
  */
 function fetchCachedQuery($query, $dir = 'query', $ttl = 86400)
 {
-    $cacheName = "./cache/{$dir}/" . md5($query);
+    $cacheName = dirname(__DIR__) . "/cache/{$dir}/" . md5($query);
     if (file_exists($cacheName))
     {
         $file_time = filemtime($cacheName);
@@ -41,7 +41,7 @@ function get_fg_cache($ip, $hours = 1)
     $expire_time = $hours * 60 * 60;
     if (!(filter_var($ip, FILTER_VALIDATE_IP)))
         $ip='127.0.0.1';
-    $file = "./cache/ip/{$ip}.json";
+        $file = dirname(__DIR__) . "/cache/ip/{$ip}.json";
     if (file_exists($file)) 
     {
         $file_time = filemtime($file);
@@ -213,7 +213,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
 {
     global $set;
     $engine_version = $set['Version_Number'];
-    $json = json_decode(get_cached_file($url, "./cache/update_check.json"), true);
+    $json = json_decode(get_cached_file($url, dirname(__DIR__) . "/cache/update_check.json"), true);
     if (is_null($json))
         return "Update checker failed.";
         if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
