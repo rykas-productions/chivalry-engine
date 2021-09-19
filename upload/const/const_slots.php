@@ -17,3 +17,7 @@ define('slot_necklace','equip_necklace');
 define('slot_pendant','equip_pendant');
 
 define('slot_wed_ring','equip_wedding_ring');
+
+//Define weapon and armor types here.
+define('weapType', array("weap1h","weap2h","weapRanged"));
+define('armorType', array("armorShield","armorBody","armorHelmet","armorCosmetic"));
