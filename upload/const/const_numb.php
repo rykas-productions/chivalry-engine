@@ -11,3 +11,4 @@ define('max_int', PHP_INT_MAX);
 define('min_short', -32768);
 define('max_short', 32767);
 define('max_unsign_short', 65535);
+define('sun_p_size_in_inch', 0.12);
