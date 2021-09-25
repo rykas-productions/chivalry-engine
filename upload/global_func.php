@@ -618,9 +618,16 @@ function Random($min = 0, $max = PHP_INT_MAX)
  * @param number $max = Maximum number to be picked randomly. [Default = PHP_INT_MAX]
  * @return float
  */
-function randomDecimal($min = 0, $max = PHP_INT_MAX)
+function randomDecimal($min = 0, $max = PHP_INT_MAX, $decimalPlaces = 1)
 {
-    return Random($min * 10, $max * 10) / 10;
+    $loop = 0;
+    $start = 1;
+    while ($loop != $decimalPlaces)
+    {
+        $start *= 10;
+        $loop++;
+    }
+    return Random($min * $start, $max * $start) / $start;
 }
 
 /**
