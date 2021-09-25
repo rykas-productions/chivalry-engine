@@ -104,7 +104,7 @@ function preFightChecks()
     } //If the user has no HP, and is not already attacking.
     else if ($ir['hp'] <= 1 && $ir['attacking'] == 0) 
     {
-        alert("danger", "Uh Oh!", "You have no HP, so you cannot attack. Come back when your HP has refilled.", true, "{$ref}.php");
+        alert("danger", "Uh Oh!", "You have no health, so you cannot attack. Come back when your health has refilled.", true, "{$ref}.php");
         die($h->endpage());
     } //If the user has left a previous after losing.
     else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] > 1) 
@@ -141,4 +141,77 @@ function resetAttackStatus()
     $_SESSION['attack_scroll'] = 0;
     $ir['attacking'] = 0;
     $api->UserInfoSetStatic($userid, "attacking", 0);
+}
+
+function handleAttackScrollLogic()
+{
+    global $api, $h, $odata, $ir, $ref, $userid;
+    if ($_GET['scroll'] == 1)
+    {
+        if (($ir['location'] + 2) < $odata['location'])
+        {
+            alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(90)}!",true,"{$ref}.php");
+            die($h->endpage());
+        }
+        elseif (($ir['location'] - 2) > $odata['location'])
+        {
+            alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(90)}!",true,"{$ref}.php");
+            die($h->endpage());
+        }
+        else
+        {
+            $_SESSION['attack_scroll']=1;
+            $api->UserTakeItem($userid,90,1);
+        }
+        
+    }
+    if ($_GET['scroll'] == 2)
+    {
+        if (($ir['location'] + 5) < $odata['location'])
+        {
+            alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(247)}!",true,"{$ref}.php");
+            die($h->endpage());
+        }
+        elseif (($ir['location'] - 5) > $odata['location'])
+        {
+            alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(247)}!",true,"{$ref}.php");
+            die($h->endpage());
+        }
+        else
+        {
+            $_SESSION['attack_scroll']=1;
+            $api->UserTakeItem($userid,247,1);
+        }
+        
+    }
+    if ($_GET['scroll'] == 3)
+    {
+        $_SESSION['attack_scroll']=1;
+        if (Random(1,1000) == 512)
+        {
+            $api->UserTakeItem($userid,266,1);
+            $api->GameAddNotification($userid,"Your {$api->SystemItemIDtoName(266)} has shattered.");
+        }
+        
+    }
+}
+
+function handlePerfectionStatBonuses()
+{
+    global $ir, $userid, $odata;
+    $specialnumber=((getSkillLevel($userid,1)*3)/100);
+    if ($ir['class'] == 'Warrior')
+        $ir['strength'] += ($ir['strength']*$specialnumber);
+    if ($ir['class'] == 'Rogue')
+        $ir['agility'] += ($ir['agility']*$specialnumber);
+    if ($ir['class'] == 'Guardian')
+        $ir['guard'] += $ir['guard']*$specialnumber;
+    
+    $specialnumber2=((getSkillLevel($odata['userid'],1)*3)/100);
+    if ($odata['class'] == 'Warrior')
+        $odata['strength'] += ($odata['strength']*$specialnumber2);
+    if ($odata['class'] == 'Rogue')
+        $odata['agility'] += ($odata['agility']*$specialnumber2);
+    if ($odata['class'] == 'Guardian')
+        $odata['guard'] += ($odata['guard']*$specialnumber2);
 }

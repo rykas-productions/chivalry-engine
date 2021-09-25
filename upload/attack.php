@@ -36,25 +36,27 @@ function attacking()
 {
     global $db, $userid, $ir, $h, $api, $set, $atkpage, $votecount;
 	$_SESSION['attack_scroll']=0;
-    $menuhide = 1;                    //Hide the menu so players cannot load other pages,
-    //and lessens the chance of a misclick and losing XP.
+    $menuhide = 1;      //Hide the menu so players cannot load other pages,
+                        //and lessens the chance of a misclick and losing XP.
     $atkpage = 1;
     $tresder = Random(100, 999);    //RNG to prevent refreshing while attacking, thus
-    //breaking progression of the attack system.
+                                    //breaking progression of the attack system.
     $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
 	$_GET['scroll'] = (isset($_GET['scroll']) && is_numeric($_GET['scroll'])) ? abs($_GET['scroll']) : '';
 	$ref = (isset($_GET['ref']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_GET['ref'])) ? $db->escape(strip_tags(stripslashes($_GET['ref']))) : 'index';
-    if (empty($_GET['nextstep'])) {
+    if (empty($_GET['nextstep']))
         $_GET['nextstep'] = -1;
-    }
-    if ($_GET['nextstep'] > 0) {
+    if ($_GET['nextstep'] > 0) 
+    {
         $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
         //If RNG is not set, set it to 0.
-        if (!isset($_SESSION['tresde'])) {
+        if (!isset($_SESSION['tresde'])) 
+        {
             $_SESSION['tresde'] = 0;
         }
         //If RNG is not the same number stored in session
-        if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
+        if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) 
+        {
             resetAttackStatus();
             alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}&ref={$ref}");
             die($h->endpage());
@@ -95,71 +97,9 @@ function attacking()
         die($h->endpage());
         }
 
-
-	if ($_GET['scroll'] == 1)
-	{
-		if (($ir['location'] + 2) < $odata['location'])
-		{
-			alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(90)}!",true,"{$ref}.php");
-			die($h->endpage());
-		}
-		elseif (($ir['location'] - 2) > $odata['location'])
-		{
-			alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(90)}!",true,"{$ref}.php");
-			die($h->endpage());
-		}
-		else
-		{
-			$_SESSION['attack_scroll']=1;
-			$api->UserTakeItem($userid,90,1);
-		}
-		
-	}
-	if ($_GET['scroll'] == 2)
-	{
-		if (($ir['location'] + 5) < $odata['location'])
-		{
-			alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(247)}!",true,"{$ref}.php");
-			die($h->endpage());
-		}
-		elseif (($ir['location'] - 5) > $odata['location'])
-		{
-			alert('danger',"Uh Oh!","This user is too far away to use a {$api->SystemItemIDtoName(247)}!",true,"{$ref}.php");
-			die($h->endpage());
-		}
-		else
-		{
-			$_SESSION['attack_scroll']=1;
-			$api->UserTakeItem($userid,247,1);
-		}
-		
-	}
-	if ($_GET['scroll'] == 3)
-	{
-		$_SESSION['attack_scroll']=1;
-		if (Random(1,1000) == 512)
-		{
-			$api->UserTakeItem($userid,266,1);
-			$api->GameAddNotification($userid,"Your {$api->SystemItemIDtoName(266)} has shattered.");
-		}
-		
-	}
+    handleAttackScrollLogic();
+    handlePerfectionStatBonuses();
 	$npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$_GET['user']}");
-	//Perfection skill
-	$specialnumber=((getSkillLevel($userid,1)*3)/100);
-	if ($ir['class'] == 'Warrior')
-		$ir['strength']=$ir['strength']+($ir['strength']*$specialnumber);
-	if ($ir['class'] == 'Rogue')
-		$ir['agility']=$ir['agility']+($ir['agility']*$specialnumber);
-	if ($ir['class'] == 'Guardian')
-		$ir['guard']=$ir['guard']+($ir['guard']*$specialnumber);
-	$specialnumber2=((getSkillLevel($odata['userid'],1)*3)/100);
-	if ($odata['class'] == 'Warrior')
-		$odata['strength']=$odata['strength']+($odata['strength']*$specialnumber2);
-	if ($odata['class'] == 'Rogue')
-		$odata['agility']=$odata['agility']+($odata['agility']*$specialnumber2);
-	if ($odata['class'] == 'Guardian')
-		$odata['guard']=$odata['guard']+($odata['guard']*$specialnumber2);
 	if ($_GET['user'] == 20 && $_SESSION['attacking'] == 0)
 	{
 		$db->query("UPDATE `users` 
