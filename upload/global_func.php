@@ -185,20 +185,6 @@ function notification_add($userid, $text, $icon='', $color='')
     return true;
 }
 
-/*
-	Internal Function: Used to update all sorts of things around the game
-*/
-
-//anti f5
-function resetAttackStatus()
-{
-  global $userid, $api, $ir;
-  $_SESSION['attacking'] = 0;
-  $_SESSION['attack_scroll'] = 0;
-  $ir['attacking'] = 0;
-  $api->UserInfoSetStatic($userid, "attacking", 0);
-}
-
 /**
  * Internal function used to update the current auth'd user's information,
  * usually to make sure they aren't over their max, and other small things.

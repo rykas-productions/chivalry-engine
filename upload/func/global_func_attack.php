@@ -133,3 +133,12 @@ function preFightChecks()
 	}
 
 }
+
+function resetAttackStatus()
+{
+    global $userid, $api, $ir;
+    $_SESSION['attacking'] = 0;
+    $_SESSION['attack_scroll'] = 0;
+    $ir['attacking'] = 0;
+    $api->UserInfoSetStatic($userid, "attacking", 0);
+}
