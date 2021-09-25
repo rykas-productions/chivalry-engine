@@ -21,3 +21,4 @@ define('slot_wed_ring','equip_wedding_ring');
 //Define weapon and armor types here.
 define('weapType', array("weap1h","weap2h","weapRanged"));
 define('armorType', array("armorShield","armorBody","armorHelmet","armorCosmetic"));
+define('damgType', array("blunt","pierce","smash","magic","snipe"));
