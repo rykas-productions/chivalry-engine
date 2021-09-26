@@ -106,198 +106,93 @@ function attacking()
 					SET `hp` = {$ir['maxhp']}, `maxhp` = {$ir['maxhp']}
 					WHERE `userid` = 20");
 	}
-	//Doppleganger
-	if ($_GET['user'] == 20)
-	{
-		$statrandom=Random(1,3);
-		if ($statrandom == 1)
-		{
-			$str=$ir['strength']*1.15;
-			$agl=$ir['agility']*1.15;
-			$grd=$ir['guard']*1.15;
-		}
-		if ($statrandom == 2)
-		{
-			$agl=$ir['strength']*1.5;
-			$grd=$ir['agility']*1.5;
-			$str=$ir['guard']*1.5;
-		}
-		if ($statrandom == 3)
-		{
-			$grd=$ir['strength']*0.9;
-			$str=$ir['agility']*0.9;
-			$agl=$ir['guard']*0.9;
-		}
-		$db->query("UPDATE `userstats` 
-					SET `strength` = {$str},
-					`agility` = {$agl},
-					`guard` = {$grd}
-					WHERE `userid` = 20");
-		$db->query("UPDATE `users` SET `level` = {$ir['level']} WHERE `userid` = 20");
-		
-		$prim_ring = getUserItemEquippedSlot($userid, slot_prim_ring);
-		$sec_ring = getUserItemEquippedSlot($userid, slot_second_ring);
-		$neck = getUserItemEquippedSlot($userid, slot_necklace);
-		$pend = getUserItemEquippedSlot($userid, slot_pendant);
-		
-		equipUserSlot(20, slot_prim_wep, $ir['equip_primary']);
-		equipUserSlot(20, slot_second_wep, $ir['equip_secondary']);
-		equipUserSlot(20, slot_armor, $ir['equip_armor']);
-		equipUserSlot(20, slot_prim_ring, $prim_ring);
-		equipUserSlot(20, slot_second_ring, $sec_ring);
-		equipUserSlot(20, slot_necklace, $neck);
-		equipUserSlot(20, slot_pendant, $pend);
-		equipUserSlot(20, slot_potion, $ir['equip_potion']);
-	}
-	//Check if the attacked user is, in fact, an active boss.
-	$bossq=$db->query("SELECT * FROM `activeBosses` WHERE `boss_user` = {$_GET['user']}");
-	if ($db->num_rows($bossq) > 0)
-	{
-		$bossr=$db->fetch_row($bossq);
-		$scales = (Random(-3,3) + $bossr['boss_stat_scale']) / 100;
-		$scalea = (Random(-3,3) + $bossr['boss_stat_scale']) / 100;
-		$scaleg = (Random(-3,3) + $bossr['boss_stat_scale']) / 100;
-		$str = $ir['strength'] * $scales;
-		$agl = $ir['agility'] * $scalea;
-		$grd = $ir['guard'] * $scaleg;
-		
-		//Set stats for this boss to be relative to the player.
-		$db->query("UPDATE `userstats` SET 
-					`strength` = {$str},
-					`agility` = {$agl},
-					`guard` = {$grd}
-					WHERE `userid` = {$_GET['user']}");
-		
-		//Set the boss to have same level and gear as the person attacking them.
-		$db->query("UPDATE `users` SET `level` = {$ir['level']} WHERE `userid` = {$_GET['user']}");
-		
-		$prim_ring = getUserItemEquippedSlot($userid, slot_prim_ring);
-		$sec_ring = getUserItemEquippedSlot($userid, slot_second_ring);
-		$neck = getUserItemEquippedSlot($userid, slot_necklace);
-		$pend = getUserItemEquippedSlot($userid, slot_pendant);
-		
-		equipUserSlot($_GET['user'], slot_prim_wep, $ir['equip_primary']);
-		equipUserSlot($_GET['user'], slot_second_wep, $ir['equip_secondary']);
-		equipUserSlot($_GET['user'], slot_armor, $ir['equip_armor']);
-		equipUserSlot($_GET['user'], slot_prim_ring, $prim_ring);
-		equipUserSlot($_GET['user'], slot_second_ring, $sec_ring);
-		equipUserSlot($_GET['user'], slot_necklace, $neck);
-		equipUserSlot($_GET['user'], slot_pendant, $pend);
-		equipUserSlot($_GET['user'], slot_potion, $ir['equip_potion']);
-	}
+    handleDopplegangerLogic();
+    $bossq=$db->query("SELECT * FROM `activeBosses` WHERE `boss_user` = {$_GET['user']}");
+	handleBossLogic();
+	
     //Check that the opponent has 1 health point.
     if ($odata['hp'] == 1) {
-        $_SESSION['attacking'] = 0;
-		$_SESSION['attack_scroll'] = 0;
-        $ir['attacking'] = 0;
-        $api->UserInfoSetStatic($userid, "attacking", 0);
+        resetAttackStatus();
         alert("danger", "Uh Oh!", "{$odata['username']} doesn't have health to be attacked.", true, "{$ref}.php");
         die($h->endpage());
     } //Check if the opponent is currently in the infirmary.
     else if ($api->UserStatus($_GET['user'], 'infirmary') == true) {
-        $_SESSION['attacking'] = 0;
-		$_SESSION['attack_scroll'] = 0;
-        $ir['attacking'] = 0;
-        $api->UserInfoSetStatic($userid, "attacking", 0);
+        resetAttackStatus();
         alert("danger", "Uh Oh!", "{$odata['username']} is currently in the infirmary. Try again later.", true, "{$ref}.php");
         die($h->endpage());
     }
 	//Check if opponnent has at least 1/2 health
-	else if (($api->UserInfoGet($_GET['user'],'hp',true) < 50) && $ir['attacking'] == 0) {
+	else if (($api->UserInfoGet($_GET['user'],'hp',true) < 50) && $ir['attacking'] == 0) 
+	{
 		if ($db->num_rows($bossq) == 0)
 		{
-			$_SESSION['attacking'] = 0;
-			$_SESSION['attack_scroll'] = 0;
-			$ir['attacking'] = 0;
-			$api->UserInfoSetStatic($userid, "attacking", 0);
+		    resetAttackStatus();
 			alert("danger", "Uh Oh!", "{$odata['username']} does not have at least half their health.", true, "{$ref}.php");
 			die($h->endpage());
 		}
 	}
 	//Check if the current user is in the infirmary.
     else if ($api->UserStatus($ir['userid'], 'infirmary') == true) {
-        $_SESSION['attacking'] = 0;
-		$_SESSION['attack_scroll'] = 0;
-        $ir['attacking'] = 0;
-        $api->UserInfoSetStatic($userid, "attacking", 0);
+        resetAttackStatus();
         alert("danger", "Uh Oh!", "You are currently in the infirmary. Try again after you heal out.", true, "{$ref}.php");
         die($h->endpage());
     } //Check if the opponent is in the dungeon.
     else if ($api->UserStatus($_GET['user'], 'dungeon') == true) {
-        $_SESSION['attacking'] = 0;
-		$_SESSION['attack_scroll'] = 0;
-        $ir['attacking'] = 0;
-        $api->UserInfoSetStatic($userid, "attacking", 0);
+        resetAttackStatus();
         alert("danger", "Uh Oh!", "{$odata['username']} is currently in the dungeon. Try again later.", true, "{$ref}.php");
         die($h->endpage());
     } //Check if the current user is in the dungeon.
     else if ($api->UserStatus($userid, 'dungeon') == true) {
-        $_SESSION['attacking'] = 0;
-		$_SESSION['attack_scroll'] = 0;
-        $ir['attacking'] = 0;
-        $api->UserInfoSetStatic($userid, "attacking", 0);
+        resetAttackStatus();
         alert("danger", "Uh Oh!", "You are currently in the dungeon. Try again after you've paid your debt to society.", true, "{$ref}.php");
         die($h->endpage());
     } //Check if opponent has permission to be attacked.
     else if (permission('CanBeAttack', $_GET['user']) == false) {
-        $_SESSION['attacking'] = 0;
-		$_SESSION['attack_scroll'] = 0;
-        $ir['attacking'] = 0;
-        $api->UserInfoSetStatic($userid, "attacking", 0);
+        resetAttackStatus();
         alert("danger", "Uh Oh!", "Your opponent cannot be attacked this way.", true, "{$ref}.php");
         die($h->endpage());
     } //Check if the current player has permission to attack.
     else if (permission('CanAttack', $userid) == false) {
-        $_SESSION['attacking'] = 0;
-		$_SESSION['attack_scroll'] = 0;
-        $ir['attacking'] = 0;
-        $api->UserInfoSetStatic($userid, "attacking", 0);
+        resetAttackStatus();
         alert("danger", "Uh Oh!", "A magical force keeps you from attacking your opponent. (Or anyone, for that matter)", true, "{$ref}.php");
         die($h->endpage());
     } //Check if the opponent is level 2 or lower, and has been on in the last 15 minutes.
     else if ($odata['level'] < 3 && $odata['laston'] > $laston) {
-        $_SESSION['attacking'] = 0;
-		$_SESSION['attack_scroll'] = 0;
-        $ir['attacking'] = 0;
-        $api->UserInfoSetStatic($userid, "attacking", 0);
+        resetAttackStatus();
         alert("danger", "Uh Oh!", "You cannot attack online players who are level two or below.", true, "{$ref}.php");
         die($h->endpage());
     }	//User has protection
     else if (userHasEffect($_GET['user'], constant("basic_protection")))
 	{
-		$_SESSION['attacking'] = 0;
-		$_SESSION['attack_scroll'] = 0;
-        $ir['attacking'] = 0;
-        $api->UserInfoSetStatic($userid, "attacking", 0);
+	    resetAttackStatus();
         alert("danger", "Uh Oh!", "You cannot attack this player as they have protection.", true, "{$ref}.php");
         die($h->endpage());
 	}
-	else if ($db->num_rows($npcquery) > 0) {
-		$results2 = $db->fetch_row($npcquery);
+	else if ($db->num_rows($npcquery) > 0) 
+	{
 		$timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$_GET['user']}");
 		$time2query = $db->query("/*qc=on*/SELECT `botcooldown` FROM `botlist` WHERE `botuser` = {$_GET['user']}");
 		$r2 = $db->fetch_single($timequery);
 		$r3 = $db->fetch_single($time2query);
 		//Opponent's drop has already been collected and the time hasn't reset.
 		//if time <= (last hit + bot cooldown) AND `last hit` > 0
-		if ((time() <= ($r2 + $r3)) && ($r2 > 0)) {
-			$_SESSION['attacking'] = 0;
-			$_SESSION['attack_scroll'] = 0;
+		if ((time() <= ($r2 + $r3)) && ($r2 > 0)) 
+		{
+		    resetAttackStatus();
 			$cooldown = ($r2 + $r3) - time();
-			$ir['attacking'] = 0;
-			$api->UserInfoSetStatic($userid, "attacking", 0);
 			alert('danger',"Uh Oh!","You cannot attack this NPC at this time. Try again in " . ParseTimestamp($cooldown) . ".",true,"{$ref}.php");
 			die($h->endpage());
 		}
 	}
     $_GET['weapon'] = (isset($_GET['weapon']) && is_numeric($_GET['weapon'])) ? abs($_GET['weapon']) : '';
     //If weapon is specified via $_GET, attack!!
-    if ($_GET['weapon']) {
-        if (!$_GET['nextstep']) {
+    if ($_GET['weapon']) 
+    {
+        if (!$_GET['nextstep']) 
             $_GET['nextstep'] = 1;
-        }
         //Check for if current step is greater than the maximum attacks per session.
-        if ($_GET['nextstep'] >= $set['MaxAttacksPerSession']) {
+        if ($_GET['nextstep'] >= $set['MaxAttacksPerSession']) 
+        {
             $_SESSION['attacking'] = 0;
 			$_SESSION['attack_scroll'] = 0;
             $ir['attacking'] = 0;
@@ -306,15 +201,18 @@ function attacking()
             die($h->endpage());
         }
         //Check if the attack is currently stored in session.
-        if ($_SESSION['attacking'] == 0 && $ir['attacking'] == 0) {
+        if ($_SESSION['attacking'] == 0 && $ir['attacking'] == 0) 
+        {
             //Check if the current user has enough energy for this attack.
-            if ($youdata['energy'] >= $youdata['maxenergy'] / $set['AttackEnergyCost']) {
+            if ($youdata['energy'] >= $youdata['maxenergy'] / $set['AttackEnergyCost']) 
+            {
                 $youdata['energy'] -= floor($youdata['maxenergy'] / $set['AttackEnergyCost']);
                 $cost = floor($youdata['maxenergy'] / $set['AttackEnergyCost']);
                 $api->UserInfoSet($userid, 'energy', "-{$cost}");
                 $_SESSION['attackdmg'] = 0;
             } //If not enough energy, stop the fight.
-            else {
+            else 
+            {
                 $EnergyPercent = floor(100 / $set['AttackEnergyCost']);
                 $UserCurrentEnergy = $api->UserInfoGet($userid,'energy',true);
                 alert("danger", "Uh Oh!", "Attacking someone requires you to have {$EnergyPercent}% Energy. You currently
@@ -322,12 +220,11 @@ function attacking()
                 die($h->endpage());
             }
         }
-        $_SESSION['attacking'] = $odata['userid'];
-        $ir['attacking'] = $odata['userid'];
-        $api->UserInfoSetStatic($userid, "attacking", $ir['attacking']);
+        setAttackStatus();
         $_GET['nextstep'] = (isset($_GET['nextstep']) && is_numeric($_GET['nextstep'])) ? abs($_GET['nextstep']) : '';
         //Check if the current user is attacking with a weapon that they have equipped.
-        if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary'] && $_GET['weapon'] != $ir['equip_potion']) {
+        if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary'] && $_GET['weapon'] != $ir['equip_potion']) 
+        {
             alert("danger", "Security Issue!", "You cannot attack with a weapon you don't have equipped... You lost your
 			                                experience for that.", true, "{$ref}.php");
             die($h->endpage());
@@ -335,7 +232,8 @@ function attacking()
         $winfo_sql = "/*qc=on*/SELECT `itmname`, `weapon`, `ammo`, `itmtype`, `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on` FROM `items` WHERE `itmid` = {$_GET['weapon']} LIMIT 1";
         $qo = $db->query($winfo_sql);
         //If the weapon chosen is not a valid weapon.
-        if ($db->num_rows($qo) == 0) {
+        if ($db->num_rows($qo) == 0) 
+        {
             alert("danger", "Uh Oh!", "The weapon you're trying to attack with isn't valid. This likely means the weapon
 			                        you chosen doesn't have a weapon value. Contact the admin team.", true, "{$ref}.php");
             die($h->endpage());

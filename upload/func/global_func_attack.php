@@ -215,3 +215,77 @@ function handlePerfectionStatBonuses()
     if ($odata['class'] == 'Guardian')
         $odata['guard'] += ($odata['guard']*$specialnumber2);
 }
+
+function mirrorEquipsToDefender()
+{
+    global $userid, $ir;
+    $prim_ring = getUserItemEquippedSlot($userid, slot_prim_ring);
+    $sec_ring = getUserItemEquippedSlot($userid, slot_second_ring);
+    $neck = getUserItemEquippedSlot($userid, slot_necklace);
+    $pend = getUserItemEquippedSlot($userid, slot_pendant);
+    
+    equipUserSlot($_GET['user'], slot_prim_wep, $ir['equip_primary']);
+    equipUserSlot($_GET['user'], slot_second_wep, $ir['equip_secondary']);
+    equipUserSlot($_GET['user'], slot_armor, $ir['equip_armor']);
+    equipUserSlot($_GET['user'], slot_prim_ring, $prim_ring);
+    equipUserSlot($_GET['user'], slot_second_ring, $sec_ring);
+    equipUserSlot($_GET['user'], slot_necklace, $neck);
+    equipUserSlot($_GET['user'], slot_pendant, $pend);
+    equipUserSlot($_GET['user'], slot_potion, $ir['equip_potion']);
+}
+
+function handleBossLogic()
+{
+    global $ir, $db, $bossq;
+    if ($db->num_rows($bossq) > 0)
+    {
+        $bossr=$db->fetch_row($bossq);
+        $scales = (Random(-5,5) + $bossr['boss_stat_scale']) / 100;
+        $scalea = (Random(-5,5) + $bossr['boss_stat_scale']) / 100;
+        $scaleg = (Random(-5,5) + $bossr['boss_stat_scale']) / 100;
+        $str = $ir['strength'] * $scales;
+        $agl = $ir['agility'] * $scalea;
+        $grd = $ir['guard'] * $scaleg;
+        
+        //Set stats for this boss to be relative to the player.
+        $db->query("UPDATE `userstats` SET
+					`strength` = {$str},
+					`agility` = {$agl},
+					`guard` = {$grd}
+					WHERE `userid` = {$_GET['user']}");
+        
+        //Set the boss to have same level and gear as the person attacking them.
+        $db->query("UPDATE `users` SET `level` = {$ir['level']} WHERE `userid` = {$_GET['user']}");
+        mirrorEquipsToDefender();
+    }
+}
+
+function handleDopplegangerLogic()
+{
+    global $db, $ir;
+    //Doppleganger
+    if ($_GET['user'] == 20)
+    {
+        $float = randomDecimal(0.90,1.15,2);
+        $str=$ir['strength']*$float;
+        $agl=$ir['agility']*$float;
+        $grd=$ir['guard']*$float;
+        
+        $db->query("UPDATE `userstats`
+					SET `strength` = {$str},
+					`agility` = {$agl},
+					`guard` = {$grd}
+					WHERE `userid` = 20");
+        $db->query("UPDATE `users` SET `level` = {$ir['level']} WHERE `userid` = 20");
+        
+        mirrorEquipsToDefender();
+    }
+}
+
+function setAttackStatus()
+{
+    global $odata, $ir, $userid, $api;
+    $_SESSION['attacking'] = $odata['userid'];
+    $ir['attacking'] = $odata['userid'];
+    $api->UserInfoSetStatic($userid, "attacking", $ir['attacking']);
+}
