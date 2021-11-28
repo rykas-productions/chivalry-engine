@@ -50,13 +50,19 @@ final class DiscordMsg implements Msg
         string $avatar = null
     )
     {
+        //MasterGeneral156 left his bot auth'd in here because he is the dumb.
+        //He has since invalidated this bot's token.
+        //Other games could send announcements to the Chivalry is Dead discord,
+        //which isn't a good thing. My bad.
+        
+        //Make sure to input the proper webhook url below. I'm not going to help you
+        //if you're still using the old, invalid URL.
         $this->msg = $msg;
         $this->url = $url ??
-            'https://discordapp.com/api/webhooks/555819163642494997/' .
-            'h__5N-UP7ncA_A9DWSwHgRzoAaPEHTclKhpU-4He7sH6SQGav8BpOE4GQCOKIQKY7rur';
-        $this->username = $username ?? 'CID Announcements';
+            'PASTE YOUR WEBHOOK URL HERE';
+        $this->username = $username ?? 'Bot Name';
         $this->avatar = $avatar ??
-            'https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo.png';
+            'Bot Image, URL';
     }
 
     /**
