@@ -8,9 +8,15 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 $energyCost=1.0;
-$expMod=1.0;
+
 $macropage = ('mine.php');
 require('globals.php');
+//2021 Halloween event
+$month = date('n');
+$day = date('j');
+if ($month == 10)
+    if (($day >= 24) && ($day <= 31))
+        $energyCost -= 0.5;
 if ((!isCourseComplete($userid, 23)) && ($userid != 1))
 {
 	alert('danger', "Uh Oh!", "Please complete the Precious Metals academic course before you first attempt mining.", true, 'explore.php');
@@ -223,7 +229,7 @@ function buypower()
 
 function mine()
 {
-    global $db, $MUS, $ir, $userid, $api, $h, $CostForPower, $energyCost, $expMod;
+    global $db, $MUS, $ir, $userid, $api, $h, $CostForPower, $energyCost;
     if (!isset($_GET['spot']) || empty($_GET['spot'])) {
         alert('danger', "Uh Oh!", "Please select the mine you wish to mine at.", true, 'mine.php');
         die($h->endpage());
@@ -237,7 +243,7 @@ function mine()
             $MSI = $db->fetch_row($mineinfo);
             if (userHasEffect($userid, constant("holiday_mining_energy")))
                 $energyCost = $energyCost - (returnEffectMultiplier($userid, constant("holiday_mining_energy")) * 0.2);
-			$MSI['mine_power_use']=$MSI['mine_power_use']*$energyCost;
+			$MSI['mine_power_use'] = $MSI['mine_power_use'] * $energyCost;
 			$nextspot=$spot+1;
 			$nextmineslevel = $db->fetch_single($db->query("SELECT `mine_level` FROM `mining_data` WHERE `mine_id` = {$nextspot}"));
 			/*if ($MSI['mine_level'] >= $nextmineslevel)

@@ -61,6 +61,12 @@ function getMineRolls($userid, $mineIQ)
 function calculateMinePowerCost($userid)
 {
     $multiplier = 1.0;
+    $month = date('n');
+    $day = date('j');
+    //halloween
+    if ($month == 10)
+        if (($day >= 24) && ($day <= 31))
+            $multiplier -= 0.5;
     $miningLevel = getUserMiningLevel($userid);
     if ($miningLevel < 10)
         $CostForPower=10;
@@ -131,10 +137,12 @@ function randMineDropCalc($userid, $mineID, $dropID)
 {
     global $db;
     $itemMultipler = 1.0;
-    if (date('y') == 21)
-        if (date('n') == 8)
-            if ((date('j') >= 15) && (date('j') <= 21))
-                $itemMultipler += 1.0;
+    $month = date('n');
+    $day = date('j');
+    //halloween
+    if ($month == 10)
+        if (($day >= 24) && ($day <= 31))
+            $itemMultipler += 0.15;
     if ($dropID < 4)
     {
         if (hasNecklaceEquipped($userid, 332))
@@ -150,14 +158,18 @@ function randMineDropCalc($userid, $mineID, $dropID)
     }
     else
         $drops = 1 * $itemMultipler;
-    if ($userid == 1)
-        var_dump($itemMultipler);
     return $drops;
 }
 
 function calcMineXPGains($userid, $mineID, $dropID, $dropCount)
 {
     $xpMultiplier = 1.0;
+    $month = date('n');
+    $day = date('j');
+    //halloween
+    if ($month == 10)
+        if (($day >= 24) && ($day <= 31))
+            $xpMultiplier += 1.05;
     $gainedXP = 0;
     if ($dropID == 1)
         $baseXP = 0.35;
