@@ -62,7 +62,7 @@ function newshop()
                 die($h->endpage());
             }
             $db->free_result($q);
-            $db->query("INSERT INTO `shops` VALUES(NULL, {$_POST['sl']}, '{$_POST['sn']}', '{$_POST['sd']}')");
+            $db->query("INSERT INTO `shops` VALUES(NULL, {$_POST['sl']}, '{$_POST['sn']}', '{$_POST['sd']}', '0', '0')");
             $api->SystemLogsAdd($userid, 'staff', "Created shop {$_POST['sn']}.");
             alert('success', "Success!", "You have successfully created the {$_POST['sn']} shop.", true, 'index.php');
             die($h->endpage());
