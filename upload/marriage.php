@@ -189,7 +189,7 @@ function home_unwed()
 		else
 		{
 			$csrf=request_csrf_html('marriage_cancel');
-			echo "You currently have a proposal sent out to <a href='profile.php?user={$p['propose_id']}'>{$un}</a>. Do you wish to cancel it?<br />
+			echo "You currently have a proposal sent out to <a href='profile.php?user={$p['proposed_id']}'>{$un}</a>. Do you wish to cancel it?<br />
 			<form method='post'>
 				{$csrf}
 				<input type='hidden' name='divorce' value='do'>
