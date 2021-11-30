@@ -179,9 +179,20 @@ function notification_add($userid, $text, $icon='', $color='')
 {
     global $db;
     $text = $db->escape($text);
-    $db->query(
-        "INSERT INTO `notifications`
-             VALUES(NULL, $userid, " . time() . ", 'unread', '$text', '{$icon}', '{$color}')");
+    $time = time();
+    $q = $db->query("SELECT * FROM `notifications` 
+                    WHERE `notif_user` = {$userid}
+                    AND `notif_text` = '{$text}' 
+                    AND `notif_status` = 'unread'");
+    if ($db->num_rows($q) > 0)
+    {
+        $r = $db->fetch_row($q);
+        $db->query("UPDATE `notifications` SET `notif_time` = {$time} WHERE `notif_id` = {$r['notif_id']}");
+    }
+    else
+    {
+        $db->query("INSERT INTO `notifications` VALUES(NULL, {$userid}, {$time}, 'unread', '{$text}', '{$icon}', '{$color}')");
+    }
     return true;
 }
 
