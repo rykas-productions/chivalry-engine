@@ -522,6 +522,9 @@ function portfolio()
     $totalInvested = returnUserAllAssetCosts($userid);
     $totalValue = returnUserCurrentValueAllAsset($userid);
     $totalValueClass = (($totalValue >= $totalInvested) && ($totalInvested > 0)) ? "text-success" : "text-danger";
+    $qLifeTimeProfit = $db->query("/*qc=on*/SELECT `profit` FROM `asset_market_profit` WHERE `userid` = {$userid}");
+    $lifeTimeProfit = $db->fetch_single($qLifeTimeProfit);
+    $totalProfitClass = ($lifeTimeProfit > 0) ? "text-success" : "text-danger";
     echo "<div class='row'>
             <div class='col-12'>
                 <div class='card'>
@@ -530,33 +533,43 @@ function portfolio()
                     </div>
                     <div class='card-body'>
                         <div class='row'>
-                            <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl'>
                                 <div class='row'>
                                     <div class='col-12'>
-                                        <small>Total Shares</small>
+                                        <small><b>Total Shares</b></small>
                                     </div>
                                     <div class='col-12'>
                                         " . number_format($totalShares) . "
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl'>
                                 <div class='row'>
                                     <div class='col-12'>
-                                        <small>Total Invested</small>
+                                        <small><b>Total Invested</b></small>
                                     </div>
                                     <div class='col-12'>
                                         " . shortNumberParse($totalInvested) . " Copper Coins
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl'>
                                 <div class='row'>
                                     <div class='col-12'>
-                                        <small>Portfolio Value</small>
+                                        <small><b>Portfolio Value</b></small>
                                     </div>
                                     <div class='col-12 {$totalValueClass}'>
                                         " . shortNumberParse($totalValue) . " Copper Coins
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Lifetime Profit</b></small>
+                                    </div>
+                                    <div class='col-12 {$totalProfitClass}'>
+                                        " . shortNumberParse($lifeTimeProfit) . " Copper Coins
                                     </div>
                                 </div>
                             </div>
@@ -584,50 +597,50 @@ function portfolio()
                                     $avgCost = round($totalCost / $sharesTotal);
                                 echo "
                                 <div class='row'>
-                                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='col-12 col-sm-8 col-xl-4 col-xxl-3 col-xxxl'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            <small>Asset Name</small>
+                                            <small><b>Asset Name</b></small>
                                         </div>
                                         <div class='col-12'>
                                             <a href='?action=history&id={$r['am_id']}'>{$r['am_name']}</a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            <small>Assets Owned</small>
+                                            <small><b>Assets Owned</b></small>
                                         </div>
                                         <div class='col-12'>
                                             " . number_format($sharesTotal) . "
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            <small>Avg Cost</small>
+                                            <small><b>Avg Cost</b></small>
                                         </div>
                                         <div class='col-12'>
                                             " . shortNumberParse($avgCost) . "
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            <small>Invested</small>
+                                            <small><b>Invested</b></small>
                                         </div>
                                         <div class='col-12'>
                                             " . shortNumberParse($totalCost) . "
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-md-6 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            <small>Current Value</small>
+                                            <small><b>Current Value</b></small>
                                         </div>
                                         <div class='col-12 {$valueClass}'>
                                             " . shortNumberParse($currentValue) . "
