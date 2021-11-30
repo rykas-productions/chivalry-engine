@@ -68,6 +68,7 @@ class headers
 			$will = $api->UserInfoGet($userid, 'will', true);
 			$xp = round($ir['xp'] / $ir['xp_needed'] * 100);
 			$hp = $api->UserInfoGet($userid, 'hp', true);
+			$urPic = "<img src='" . parseDisplayPic($userid) . "' height='18.4' alt='Your profile picture.' title='Your profile picture.'>";
 			if ($ir['sidemenu'] == 0)
 				$toggle='toggled';
 			else
@@ -151,7 +152,7 @@ class headers
 								</li>
 								<li>
 									<a href='profile.php?user={$userid}' class='updateHoverBtn'>
-										<span class='menu-text'><i class='fas fa-user-circle'></i> Your Profile</span>
+										<span class='menu-text'>{$urPic} Your Profile</span>
 									</a>
 								</li>
 								<li>
