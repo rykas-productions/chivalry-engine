@@ -144,7 +144,8 @@ function upgrade()
         echo "<div class='card'>
             <div class='card-body'>
                 All warriors from around the kingdom contribute Chivalry Tokens to the Wood Cutter, to increase its cutting capacity.
-                Cutting capacity is what allows warriors to continue to cut wood, as its shared amongs all warriors.
+                Cutting capacity is what allows warriors to continue to cut wood, as its shared amongs all warriors. At level 
+                " . number_format($set['cutter_level'] + 1) . ", an additional " . shortNumberParse($set['cutter_capacity_max']*0.1256) . " cutting capacity will be gained for the kindom.
                 <form method='post'>
                 <div class='row'>
                     <div class='col-12'>
@@ -194,7 +195,7 @@ function cutterUpgrade()
     {
         $db->query("UPDATE `settings` SET `setting_value` = `setting_value` - {$set['cutter_xp_needed']} WHERE `setting_name` = 'cutter_upgrade'");
         $db->query("UPDATE `settings` SET `setting_value` = `setting_value` + 1 WHERE `setting_name` = 'cutter_level'");
-        $db->query("UPDATE `settings` SET `setting_value` = `setting_value` + (`setting_value`/10) WHERE `setting_name` = 'cutter_capacity_max'");
+        $db->query("UPDATE `settings` SET `setting_value` = `setting_value` + (`setting_value` * 0.1256) WHERE `setting_name` = 'cutter_capacity_max'");
     }
 }
 $h->endpage();
