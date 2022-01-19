@@ -38,19 +38,9 @@ switch ($_GET['action']) {
         reorder_crimegroups();
         break;
     default:
-        home();
+        alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
+        die($h->endpage());
         break;
-}
-function home()
-{
-    echo "
-	<a href='?action=newcrimegroup'>Create Crime Group</a><br />
-	<a href='?action=newcrime'>Create Crime</a><br />
-	<a href='?action=editcrime'>Edit Crime</a><br />
-	<a href='?action=delcrime'>Delete Crime</a><br />
-	<a href='?action=editcrimegroup'>Edit Crime Group</a><br />
-	<a href='?action=delcrimegroup'>Delete Crime Group</a><br />
-	";
 }
 
 function new_crime()
