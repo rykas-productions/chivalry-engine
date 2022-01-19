@@ -41,8 +41,20 @@ switch ($_GET['action'])
     case 'bucket50':
         bucket(50);
         break;
+    case 'bucket75':
+        bucket(75);
+        break;
     case 'bucket100':
         bucket(100);
+        break;
+    case 'bucket150':
+        bucket(150);
+        break;
+    case 'bucket200':
+        bucket(200);
+        break;
+    case 'bucket500':
+        bucket(500);
         break;
 }
 
@@ -87,7 +99,7 @@ function bucket($howmany)
                 if (Random(1,6151) == 2567)
                 {
                     userGiveEffect($userid, constant("farm_well_cooldown_cutoff"), PHP_INT_MAX);
-                    $api->GameAddNotification($userid, "You've learned how to fill up buckets faster! You may now fill up to five buckets before you are given a cooldown.");
+                    $api->GameAddNotification($userid, "You've become a regular at the well! You may now fill up to five buckets before you are given a cooldown.");
                 }
             }
         }

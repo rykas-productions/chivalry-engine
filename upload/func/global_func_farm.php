@@ -11,7 +11,7 @@ function fiveMinuteFarm()
 	$q=$db->query("/*qc=on*/SELECT * FROM `farm_data` WHERE `farm_stage` > 0");
 	while ($r = $db->fetch_row($q))
 	{
-	    if (Random(1, 25) == 11)
+	    if (Random(1, 20) == 11)
 	    {
     		$wellnessLost=Random(1,2);
     		$db->query("UPDATE `farm_data` SET `farm_wellness` = `farm_wellness` - {$wellnessLost} WHERE `farm_id` = {$r['farm_id']}");
@@ -70,33 +70,29 @@ function checkFarmXP()
 					WHERE `userid` = {$userid}");
     }
 }
-function returnStageDetail($stageInt, $stageTime, $seedSafeTime)
+function returnStageDetail($stageInt, $stageTime, $seedSafeTime, $farmID)
 {
-	if ($stageInt == 0)
-		return "Empty";
+    if ($stageInt == 0)
+    {
+        return;
+    }
+    $wiltTime = $seedSafeTime+$stageTime;
+    $timeRemain = $wiltTime - time();
+    $timeRemainPerc = $timeRemain / $seedSafeTime * 100;
 	if ($stageInt == 1)
 	{
-		if (time() < $stageTime)
-			return "Planting";
-		else
-			return "<b>Planted</b><br />
-		Wilt Time: " . TimeUntil_Parse($seedSafeTime+$stageTime) . "";
+	    if (time() > $stageTime)
+	        return createWiltBar($timeRemainPerc, "Wilt Time: " . TimeUntil_Parse($wiltTime));
 	}
 	if ($stageInt == 2)
 	{
-		if (time() < $stageTime)
-			return "Harvesting";
-		else
-			return "<b>Harvested</b><br />
-		Wilt Time: " . TimeUntil_Parse($seedSafeTime+$stageTime) . "";
+	    if (time() > $stageTime)
+	        return createWiltBar($timeRemainPerc, "Wilt Time: " . TimeUntil_Parse($wiltTime));
 	}
 	if ($stageInt >= 10)
 	{
-		if (time() < $stageTime)
-			return "Tending";
-		else
-			return "<b>Tended</b><br />
-		Wilt Time: " . TimeUntil_Parse($seedSafeTime+$stageTime) . "";
+		if (time() > $stageTime)
+			return createWiltBar($timeRemainPerc, "Wilt Time: " . TimeUntil_Parse($wiltTime));
 	}
 }
 function createField($user)
@@ -118,57 +114,100 @@ function countFarmland($user)
 }
 function returnStageActions($stage,$fieldid,$stageTime,$seed)
 {
+    global $db;
+    if ($seed > 0)
+    {
+        $seedStageTime = $db->fetch_single($db->query("SELECT `seed_time` FROM `farm_produce` WHERE `seed_item` = {$seed}"));
+        $timeRemain = $stageTime - time();
+        $timeRemainPerc = $timeRemain / $seedStageTime * 100;
+    }
+    $links = "";
+    $hotlink = "";
 	if ($stage == 0)
 	{
-		return "[<a href='?action=plant&id={$fieldid}'>Plant</a>]<br />
-		[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
-            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
+	    //see below
+	    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=plant&id={$fieldid}' class='btn btn-success btn-block'>Plant</a><br /></div>";
 	}
 	if ($stage == 1)
 	{
 		if (time() < $stageTime)
-			return TimeUntil_Parse($stageTime) . "<br />
-			[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
-            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
+		{
+		    $links .= "
+            <div class='row'>
+            <div class='col-12'>
+    			<div class='progress' style='height: 1rem;'>
+    				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$timeRemainPerc}' style='width:{$timeRemainPerc}%' aria-valuemin='0' aria-valuemax='100'>
+    					<span>
+    						" . TimeUntil_Parse($stageTime) . "
+    					</span>
+    				</div>
+    			</div>
+                <br />
+    		</div>
+            </div>";
+		}
 		else
-			return "[<a href='?action=tend&id={$fieldid}'>Tend</a>]<br />
-		[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
-            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
+		    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=tend&id={$fieldid}' class='btn btn-success btn-block'>Tend</a><br /></div>";
 	}
 	if ($stage == 2)
 	{
 		if (time() < $stageTime)
 		{
-			return TimeUntil_Parse($stageTime) . "<br />
-			[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
-            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
+		    $links .= "
+            <div class='row'>
+            <div class='col-12'>
+    			<div class='progress' style='height: 1rem;'>
+    				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$timeRemainPerc}' style='width:{$timeRemainPerc}%' aria-valuemin='0' aria-valuemax='100'>
+    					<span>
+    						" . TimeUntil_Parse($stageTime) . "
+    					</span>
+    				</div>
+    			</div>
+                <br />
+    		</div>
+            </div>";
 		}
 		else
 		{
-			return "[<a href='?action=harvest&id={$fieldid}'>Harvest</a>]<br />
-			[<a href='?action=collect&id={$fieldid}'>Seed Collection</a>]<br />
-			[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
-            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
+		    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=harvest&id={$fieldid}' class='btn btn-success btn-block'>Harvest</a><br /></div>
+			<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=collect&id={$fieldid}' class='btn btn-success btn-block'>Seed Collection</a><br /></div>";
 		}
 	}
 	if ($stage >= 10)
 	{
 		if (time() < $stageTime)
-			return TimeUntil_Parse($stageTime) . "<br />
-			[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
-            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
+		{
+		    $links .= "
+            <div class='row'>
+            <div class='col-12'>
+    			<div class='progress' style='height: 1rem;'>
+    				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$timeRemainPerc}' style='width:{$timeRemainPerc}%' aria-valuemin='0' aria-valuemax='100'>
+    					<span>
+    						" . TimeUntil_Parse($stageTime) . "
+    					</span>
+    				</div>
+    			</div>
+                <br />
+    		</div>
+            </div>";
+		}
 		else
-			return "[<a href='?action=tend&id={$fieldid}'>Tend</a>]<br />
-		[<a href='?action=water&id={$fieldid}'>Water</a>]<br />
-			[<a href='?action=fertilize&id={$fieldid}'>Fertilize</a>]<br />
-            [<a href='?action=torchland&id={$fieldid}'>Torch Land</a>]";
+		    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=tend&id={$fieldid}' class='btn btn-success btn-block'>Tend</a><br /></div>";
 	}
+	$links .= "
+            <div class='row'>
+                {$hotlink}
+                <div class='col-12 col-sm-6 col-lg-4 col-xxl-3'>
+                    <a href='?action=water&id={$fieldid}' class='btn btn-primary btn-block'>Water</a><br />
+                </div>
+                <div class='col-12 col-sm-6 col-lg-4 col-xxl-3'>
+			         <a href='?action=fertilize&id={$fieldid}' class='btn btn-info btn-block'>Fertilize</a><br />
+                </div>
+                <div class='col-12 col-sm-6 col-lg-4 col-xxl-3'>
+                    <a href='?action=torchland&id={$fieldid}' class='btn btn-danger btn-block'>Torch Land</a><br />
+                </div>
+            </div>";
+	return $links;
 }
 function seed_dropdown($ddname = "seed", $selected = -1)
 {
@@ -273,4 +312,96 @@ function returnCurrentStage($plotID)
 	else
 		return $r['farm_stage'];
 		
+}
+
+function createWellnessBar($wellness)
+{
+    if ($wellness < 34)
+        $bg = 'danger';
+    elseif ($wellness < 67)
+        $bg = 'warning';
+    elseif ($wellness <= 100)
+        $bg = 'success';
+    elseif ($wellness > 100)
+        $bg = 'info';
+    $bar = "<div class='progress' style='height: 1rem;'>
+	           <div class='progress-bar bg-{$bg} progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$wellness}' style='width:{$wellness}%' aria-valuemin='0' aria-valuemax='100'>
+			     <span>
+					Wellness ({$wellness}%)
+				</span>
+			</div>
+		  </div>
+            <br />";
+    return $bar;
+}
+
+function createWiltBar($percent, $txt)
+{
+    $percent = round($percent);
+    if ($percent < 15)
+        $bg = 'dark';
+    elseif ($percent < 34)
+        $bg = 'danger';
+    elseif ($percent < 67)
+        $bg = 'warning';
+    elseif ($percent <= 100)
+        $bg = 'success';
+    $bar = "<div class='progress' style='height: 1rem;'>
+	           <div class='progress-bar bg-{$bg} progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$percent}' style='width:{$percent}%' aria-valuemin='0' aria-valuemax='100'>
+			     <span>
+					{$txt} ({$percent}%)
+				</span>
+			</div>
+		  </div>
+            <br />";
+    return $bar;
+}
+
+function createFarmStageBar($currentStage, $maxStage, $txt)
+{
+    $percent = round($currentStage / $maxStage * 100);
+    if ($percent < 15)
+        $bg = 'dark';
+    elseif ($percent < 34)
+        $bg = 'danger';
+    elseif ($percent < 67)
+        $bg = 'warning';
+    elseif ($percent <= 100)
+        $bg = 'success';
+    $bar = "<div class='progress' style='height: 1rem;'>
+           <div class='progress-bar bg-{$bg} progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$percent}' style='width:{$percent}%' aria-valuemin='0' aria-valuemax='100'>
+		     <span>
+				{$txt} ({$currentStage}/{$maxStage})
+			</span>
+		</div>
+	  </div>
+        <br />";
+	return $bar;
+}
+
+function returnStagebyID($stageInt, $stageTime)
+{
+    if ($stageInt == 0)
+        return "Empty";
+    if ($stageInt == 1)
+    {
+        if (time() < $stageTime)
+            return "Planting";
+        else
+            return "Planted";
+    }
+    if ($stageInt == 2)
+    {
+        if (time() < $stageTime)
+            return "Harvesting";
+        else
+            return "Harvested";
+    }
+    if ($stageInt >= 10)
+    {
+        if (time() < $stageTime)
+            return "Tending";
+        else
+            return "Tended";
+    }
 }

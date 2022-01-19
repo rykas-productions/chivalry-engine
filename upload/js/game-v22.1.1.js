@@ -214,6 +214,38 @@ $(document).ready(function () {
 		});
 		return false;
 	});
+	$('#farmWellFillSeventyFive').click(function()
+	{
+		$.get("js/script/farm_quick.php?action=bucket75",  function(response) 
+		{   
+			 $('#wellSuccess').html(response);
+		});
+		return false;
+	});
+	$('#farmWellFillOneFifty').click(function()
+	{
+		$.get("js/script/farm_quick.php?action=bucket150",  function(response) 
+		{   
+			 $('#wellSuccess').html(response);
+		});
+		return false;
+	});
+	$('#farmWellFillTwoHundred').click(function()
+	{
+		$.get("js/script/farm_quick.php?action=bucket200",  function(response) 
+		{   
+			 $('#wellSuccess').html(response);
+		});
+		return false;
+	});
+	$('#farmWellFillFiveHundred').click(function()
+	{
+		$.get("js/script/farm_quick.php?action=bucket500",  function(response) 
+		{   
+			 $('#wellSuccess').html(response);
+		});
+		return false;
+	});
     $('#btnAdd').click(function () {
         var num = $('.clonedInput').length;
         var newNum = new Number(num + 1);
