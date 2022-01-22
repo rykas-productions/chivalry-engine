@@ -507,7 +507,7 @@ function construct_garden()
 			die($h->endpage());
 		}
 		$newWill = calcExtraWill($gardenLevel+1, $edb['house_will']);
-		$api->UserTakeItem($userid, 296, $waterCost);
+		consumeBucket($userid, 296, $waterCost);
 		$api->UserTakeItem($userid, 2, $stoneCost);
 		$api->UserTakeItem($userid, 1, $stickCost);
 		$db->query("UPDATE `user_estates` SET `gardenUpgrade` = 1 WHERE `ue_id` = {$estate['ue_id']}");
@@ -580,7 +580,7 @@ function upgrade_garden()
 			die($h->endpage());
 		}
 		$newWill = calcExtraWill($gardenLevel+1, $edb['house_will']);
-		$api->UserTakeItem($userid, 296, $waterCost);
+		consumeBucket($userid, 296, $waterCost);
 		$api->UserTakeItem($userid, 2, $stoneCost);
 		$api->UserTakeItem($userid, 1, $stickCost);
 		$db->query("UPDATE `users` SET `maxwill` = `maxwill` + {$newWill} WHERE `userid` = {$userid}");

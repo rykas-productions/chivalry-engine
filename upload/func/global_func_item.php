@@ -327,4 +327,12 @@ function consumeItem($userid, $itemID, $qty = 1)
         $api->UserTakeItem($userid, $itemID, $qty);
     }
     return $consumed;
+}      
+
+function consumeBucket($player, $consumedBucketID, $consumedQty)
+{
+    global $api;
+    $bucketID = 295;    //empty bucket id
+    $api->UserTakeItem($player, $consumedBucketID, $consumedQty);
+    $api->UserGiveItem($player, $bucketID, $consumedQty);
 }

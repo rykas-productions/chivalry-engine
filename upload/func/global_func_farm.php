@@ -245,14 +245,15 @@ function doWaterAttempt($userid)
 	if ($db->num_rows($q) == 0)
 		$db->query("INSERT INTO `farm_users` (`userid`) VALUES ('{$userid}')");
 	$FU = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `farm_users` WHERE `userid` = {$userid}")));
+	$waterBucketID = $api->SystemItemNameToID("Bucket of Water");
 	if ($FU['farm_water_available'] > 0)
 	{
 		$db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_available` - 1 WHERE `userid` = {$userid}");
 		return true;
 	}
-	elseif ($api->UserHasItem($userid,$api->SystemItemNameToID("Bucket of Water"),1))
+	elseif ($api->UserHasItem($userid, $waterBucketID, 1))
 	{
-		$api->UserTakeItem($userid,$api->SystemItemNameToID("Bucket of Water"),1);
+	    consumeBucket($userid, $waterBucketID, 1);
 		return true;
 	}
 	else
