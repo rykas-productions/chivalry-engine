@@ -332,9 +332,39 @@ function guildnotificationadd($guild_id, $text)
     return true;
 }
 
-function removeOldEffects()
+function calculateGuildMemberCapacity($guild_id)
 {
     global $db;
-    $time = time();
-    $db->query("DELETE FROM `users_effects` WHERE `effectTimeOut` < {$time}");
+    $guild_level = $db->fetch_single($db->query("SELECT `guild_level` FROM `guild` WHERE `guild_id` = {$guild_id}"));
+    return $guild_level * 5;
+}
+
+function countGuildMembers($guild_id)
+{
+    global $db;
+    $memberCount = $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$guild_id}"));
+    return $memberCount;
+}
+
+function calculateGuildGymBonus($guild_id)
+{
+    global $db;
+    $multi = 1.0;   //additional
+    $gd = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}"));
+    if ($gd['guild_bonus_time'] > time())
+    {
+        $multiplier = (1.95 + (($gd['guild_level'] / 100) * 6.25) * $multi);
+    }
+    else
+    {
+        $multiplier = (1.25 + (($gd['guild_level'] / 100) * 6.25) * $multi);
+    }
+    if ($multiplier > (2.5 * $multi))
+    {
+        if ($gd['guild_bonus_time'] > time())
+            $multiplier = (3 * $multi);
+        else
+            $multiplier = (2.5 * $multi);
+    }
+    return $multiplier;
 }

@@ -1423,3 +1423,10 @@ function resetAchievementsByID($achievementID)
     }
     $db->query("DELETE FROM `achievements_done` WHERE `achievement` = {$achievementID}");
 }
+
+function removeOldEffects()
+{
+    global $db;
+    $time = time();
+    $db->query("DELETE FROM `users_effects` WHERE `effectTimeOut` < {$time}");
+}

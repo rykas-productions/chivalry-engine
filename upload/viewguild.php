@@ -927,28 +927,14 @@ function armory()
 
 function gym()
 {
-	global $db, $gd, $h, $api, $ir, $userid, $multi, $ir, $sound;
+	global $gd, $h, $api, $ir, $userid, $multi, $ir, $sound;
 	$energy = $api->UserInfoGet($userid, 'energy', true);
 	$will = $api->UserInfoGet($userid, 'will', true);
 	$macropage = ('viewguild.php?action=gym');
-	if ($gd['guild_bonus_time'] > time())
-	{
-		$multiplier = (1.95+(($gd['guild_level']/100)*6.25)*$multi);
-	}
-	else
-	{
-		$multiplier = (1.25+(($gd['guild_level']/100)*6.25)*$multi);
-	}
-	if ($multiplier > (2.5*$multi))
-	{
-		if ($gd['guild_bonus_time'] > time())
-			$multiplier = (3*$multi);
-		else
-			$multiplier = (2.5*$multi);
-	}
+	$multiplier = calculateGuildGymBonus($gd['guild_id']);
 	if ($gd['guild_level'] < 3)
 	{
-		alert('danger',"Uh Oh!","You guild needs to be at least level 3 to access the guild gym!",true,'viewguild.php');
+		alert('danger',"Uh Oh!","Your guild needs to be at least level 3 to access the guild gym!",true,'viewguild.php');
 		die($h->endpage());
 	}
 	//User is in the infirmary

@@ -55,7 +55,7 @@ function menu()
 			ORDER BY `g`.`guild_id` ASC");
     //List all the in-game guilds.
     while ($gd = $db->fetch_row($gq)) {
-		$gd['guild_capacity']=$gd['guild_level']*5;
+		$gd['guild_capacity']=calculateGuildMemberCapacity($gd['guild_id']);
         $hasarmory = ($gd['guild_hasarmory'] == 'true') ? "<span class='text-success'>Armory</span>" : "<span class='text-danger'>No Armory</span>";
         $appacc = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Accepting Applications</span>" : "<span class='text-danger'>Recruitment Closed.</span>";
         $indebt = ($gd['guild_primcurr'] > 0) ? "" : "<span class='text-danger'>In Debt</span>";
@@ -183,7 +183,7 @@ function create()
 
 function view()
 {
-    global $db, $h, $api;
+    global $db, $h, $api, $ir;
     $_GET['id'] = abs($_GET['id']);
     //Guild ID has not been entered, so redirect them to main guild listing.
     if (empty($_GET['id'])) {
@@ -197,106 +197,221 @@ function view()
         }
         //List all the guild's information.
         $gd = $db->fetch_row($gq);
-        echo "<h3>{$gd['guild_name']} Guild</h3>";
-		if (!empty($gd['guild_pic']))
-		{
-			echo 
-			"<div class='container'>
-				<div class='row'>
-					<div class='col-lg-6 mx-auto'>
-						<img src='" . parseImage($gd['guild_pic']) . "' placeholder='The {$gd['guild_name']} guild picture.' width='300' class='img-fluid' title='The {$gd['guild_name']} guild picture.'>
-					</div>
-				</div>
-			</div>";
-		}
-		$gd['guild_capacity']=$gd['guild_level']*5;
-        echo "
-		<table class='table table-bordered'>
-            <tr>
-				<th colspan='2'>
-					{$gd['guild_name']} Description
-				</th>
-			</tr>
-            <tr>
-                <td colspan='2'>
-					{$gd['guild_desc']}
-				</td>
-            </tr>
-			<tr align='left'>
-				<th>
-					Guild Leader
-				</th>
-				<td>
-					<a href='profile.php?user={$gd['guild_owner']}'> " . parseUsername($gd['guild_owner']) . "</a>
-				</td>
-			</tr>
-			<tr align='left'>
-				<th>
-					Guild Co-Leader
-				</th>
-				<td>
-					<a href='profile.php?user={$gd['guild_coowner']}'> " . parseUsername($gd['guild_coowner']) . "</a>
-				</td>
-			</tr>
-			<tr align='left'>
-				<th>
-					Guild Level
-				</th>
-				<td>
-					" . number_format($gd['guild_level']) . "
-				</td>
-			</tr>
-			<tr align='left'>
-				<th>
-					Members
-				</th>
-				<td>";
-        //Count players in this guild.
-        $cnt = number_format($db->fetch_single
-        ($db->query("/*qc=on*/SELECT COUNT(`userid`)
-										FROM `users` 
-										WHERE `guild` = {$_GET['id']}")));
-        echo number_format($cnt) . " / " . number_format($gd['guild_capacity']) . "
-				</td>
-			</tr>
-			<tr align='left'>
-				<th>
-					Guild Location
-				</th>
-				<td>";
-        echo $api->SystemTownIDtoName($gd['guild_town_id']) . "
-				</td>
-			</tr>
-			<tr align='left'>
-		<th>
-			Allies
-		</th>
-		<td>";
-			$q=$db->query("/*qc=on*/SELECT * 
-							FROM `guild_alliances` 
-							WHERE (`alliance_a` = {$_GET['id']} OR `alliance_b` = {$_GET['id']})
+        $maxMembers = calculateGuildMemberCapacity($gd['guild_id']);
+        $memberCount = countGuildMembers($gd['guild_id']);
+        $gymBonus = calculateGuildGymBonus($gd['guild_id']);
+        $appDisabled = ($ir['guild'] != 0) ? "disabled" : "";
+        $toQuery = $db->query("SELECT * FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}");
+        if ($db->num_rows($toQuery) == 0)
+            $townOwned = "N/A";
+        else
+        {
+            $toRow = $db->fetch_row($toQuery);
+            $townOwned = "<a href='travel.php?to={$toRow['town_id']}'>{$toRow['town_name']}</a>";
+        }
+        
+        $hasArmory = ($gd['guild_hasarmory'] == 'true') ? "<span class='text-success'>Yes</span>" : "<span class='text-danger'>No</span>";
+        $acceptApps = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Open</span>" : "<span class='text-danger'>Closed</span>";
+        $inDebt = ($gd['guild_primcurr'] > 0) ? "<span class='text-success'>Good</span>" : "<span class='text-danger'>Bad</span>";
+        
+        $allyQ=$db->query("/*qc=on*/SELECT *
+							FROM `guild_alliances`
+							WHERE (`alliance_a` = {$gd['guild_id']} OR `alliance_b` = {$gd['guild_id']})
 							AND `alliance_true` = 1");
-			while ($r=$db->fetch_row($q))
-			{
-				$type = ($r['alliance_type'] == 1) ? "Traditional" : "Non-aggressive";
-				if ($r['alliance_a'] == $_GET['id'])
-					$otheralliance=$r['alliance_b'];
-				else
-					$otheralliance=$r['alliance_a'];
-				echo "<a href='?action=view&id={$otheralliance}'>{$api->GuildFetchInfo($otheralliance,'guild_name')}</a><br />";
-			}
-		
-		echo"</td>
-	</tr>
-			<tr align='left'>
-				<th>
-					<a href='?action=memberlist&id={$_GET['id']}'>View Members</a>
-				</th>
-				<td>
-					<a href='?action=apply&id={$_GET['id']}'>Apply</a>
-				</td>
-			</tr>
-		</table>";
+        echo "<h3>{$gd['guild_name']} Guild</h3>";
+        echo "
+        <div class='row'>
+            <div class='col-12 col-xl-6 col-xxxl-3'>
+                <div class='card'>
+                    <div class='card-header'>
+                        {$gd['guild_name']} Guild
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>";
+                        if (!empty($gd['guild_pic']))
+                        {
+                            echo "<div class='col-12'>
+                                <img src='" . parseImage($gd['guild_pic']) . "' 
+                                    placeholder='The {$gd['guild_name']} guild picture.' 
+                                    title='The {$gd['guild_name']} guild picture.' class='img-fluid'><br />
+                            </div>";
+                        }
+                        echo "<div class='col-12'>
+                                {$gd['guild_desc']}
+                            </div>
+                            <div class='col-12 col-sm-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Leader</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <a href='profile.php?user={$gd['guild_owner']}'> " . parseUsername($gd['guild_owner']) . "</a> [{$gd['guild_owner']}]
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Co-leader</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <a href='profile.php?user={$gd['guild_coowner']}'> " . parseUsername($gd['guild_coowner']) . "</a> [{$gd['guild_coowner']}]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class='col-12 col-xl-6 col-xxxl-4'>
+                <div class='card'>
+                    <div class='card-header'>
+                        {$gd['guild_name']} Information
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Level</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . number_format($gd['guild_level']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Members</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . number_format($memberCount) . " / " . number_format($maxMembers) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Town Owned</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$townOwned}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Has Armory</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$hasArmory}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Recruitment</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$acceptApps}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Finances</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$inDebt}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Gym Bonus</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . $gymBonus * 100 . "%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>";
+            if ($db->num_rows($allyQ) > 0)
+            {
+                echo "
+                <div class='col-12 col-xl-6 col-xxxl-3'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            {$gd['guild_name']} Alliances
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>";
+                                while ($r=$db->fetch_row($allyQ))
+                                {
+                                    $type = ($r['alliance_type'] == 1) ? "Alliance" : "Non-aggressive";
+                                    if ($r['alliance_a'] == $_GET['id'])
+                                        $otheralliance=$r['alliance_b'];
+                                    else
+                                        $otheralliance=$r['alliance_a'];
+                                    echo "
+                                    <div class='col-12 col-sm-6'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small>{$type}</small>
+                                            </div>
+                                            <div class='col-12'>
+                                                <a href='?action=view&id={$otheralliance}'>{$api->GuildFetchInfo($otheralliance,'guild_name')}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-sm-6'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small>Guild Members</small>
+                                            </div>
+                                            <div class='col-12'>
+                                                " . number_format(countGuildMembers($otheralliance)) . "
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />";
+                                }
+                                echo "
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>";
+            }
+        echo"<div class='col-12 col-xl-6 col-xxxl-2'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Actions
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-6 col-xxxl-12'>
+                                <a href='?action=memberlist&id={$gd['guild_id']}' class='btn btn-primary btn-block'>View Members</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-xxxl-12'>
+                                <a href='?action=apply&id={$gd['guild_id']}' class='btn btn-success btn-block {$appDisabled}'>Send Application</a><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>";
     }
 }
 
