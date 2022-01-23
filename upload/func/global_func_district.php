@@ -969,6 +969,8 @@ function returnTileClass($district)
         $class="vacant";
     elseif (($r['district_owner'] != $ir['guild']) && ($ir['guild'] != 0))
         $class="enemy";
+    else
+        $class="enemy";
     
     if ($r['district_type'] == 'river')
         $class .= ' river';
