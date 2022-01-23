@@ -52,6 +52,8 @@ if ($FU['farm_water_max'] == 0)
 				createField($userid);
 				$loop=$loop+1;
 			}
+			$api->SystemLogsAdd($userid, "farm", "Constructed well for 500 Heavy Rocks.");
+			$api->SystemLogsAdd($userid, "farm", "Purchased {$farmconfig['startingFields']} fields for 0 Copper Coins.");
             die($h->endpage());
         }
     }
@@ -208,6 +210,7 @@ function buyland()
 			createField($userid);
 			alert('success',"Success!", "You have purchased a plot of farmland for " . shortNumberParse($farmconfig['farmlandCost']) . " Copper Coins!", true, 'farm.php');
 			$api->UserTakeCurrency($userid,'primary',$farmconfig['farmlandCost']);
+			$api->SystemLogsAdd($userid, "farm", "Purchased farmland for " . shortNumberParse($farmconfig['farmlandCost']) . " Copper Coins.");
 		}
 	}
 	else
@@ -295,12 +298,14 @@ function plantland()
 		if (getSkillLevel($userid, 36) > 0)
 			$sr['seed_time']=$sr['seed_time']/2;
 		$stagetime=time()+$sr['seed_time'];
-		$stagesafetime=$stagetime+$sr['seed_safe_time'];
+		
 		$db->query("UPDATE `farm_data` SET `farm_seed` = {$_POST['seed']}, `farm_time` = {$stagetime}, `farm_stage` = 1, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerPlant']} WHERE `farm_id` = {$_GET['id']}");
 		$api->UserTakeItem($userid,$_POST['seed'],1);
 		$random = Random(2,8);
 		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
 		alert('success', "Success!", "You have successfully planted a {$cropSeedName} in this plot.", false, 'farm.php');
+		
+		$api->SystemLogsAdd($userid, "farm", "Planted {$cropSeedName} in on plot # {$_GET['id']}");
 		die(home());
 	}
 	else
@@ -373,6 +378,7 @@ function waterland()
 			$db->query("UPDATE `farm_data` SET `farm_wellness` = `farm_wellness` + {$random} WHERE `farm_id` = {$_GET['id']}");
 		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
 		alert('success', "Success", "You have successfully watered this farmland, increasing its wellness by {$random}%.", false);
+		$api->SystemLogsAdd($userid, "farm", "Planted plot # {$_GET['id']} (+{$random}% Wellness)");
 		die(home());
 	}
 	$h->endpage();
@@ -416,6 +422,7 @@ function fertilize()
 			$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
 			$api->UserTakeItem($userid,311,1);
 			alert('success', "Success", "You have successfully fertilized this farmland, increasing its wellness by {$random}%.", false);
+			$api->SystemLogsAdd($userid, "farm", "Fertilized plot # {$_GET['id']} (+{$random}% Wellness)");
 			die(home());
 		}
 	}
@@ -467,6 +474,7 @@ function torchland()
     {
         deleteField($_GET['id']);
         alert('success',"Success!","You have successfully torched this plot. It is now forever lost to the sands of time...", false);
+        $api->SystemLogsAdd($userid, "farm", "Torched plot # {$_GET['id']}.");
         die(home());
     }
     else
@@ -535,6 +543,7 @@ function harvest()
 			$farmconfig['wellnessPerHarv']=$r['farm_wellness'];
 		$db->query("UPDATE `farm_data` SET `farm_time` = 0, `farm_stage` = 0, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerHarv']}, `farm_seed` = 0 WHERE `farm_id` = {$_GET['id']}");
 		alert('success', "Success!", "You have successfully harvested your {$cropSeedName} and received {$cropOutput} {$api->SystemItemIDtoName($sr['seed_output'])}s and " . number_format($xp) . " farming experience.", false);
+		$api->SystemLogsAdd($userid, "farm", "Collected seeds on plot # {$_GET['id']} (Received {$cropOutput} {$api->SystemItemIDtoName($sr['seed_output'])})");
 		die(home());
 	}
 	else
@@ -609,6 +618,7 @@ function collect()
 			$farmconfig['wellnessPerHarv']=$r['farm_wellness'];
 		$db->query("UPDATE `farm_data` SET `farm_time` = 0, `farm_stage` = 0, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerHarv']}, `farm_seed` = 0 WHERE `farm_id` = {$_GET['id']}");
 		alert('success', "Success!", "You have successfully harvested this plot and received {$cropOutput} {$api->SystemItemIDtoName($r['farm_seed'])}(s).", false);
+		$api->SystemLogsAdd($userid, "farm", "Collected seeds on plot # {$_GET['id']} (Received {$cropOutput} {$api->SystemItemIDtoName($r['farm_seed'])})");
 		die(home());
 	}
 	else
@@ -685,26 +695,24 @@ function tend()
 		if (($r['farm_stage'] - 1) == 10)
 		{
 			$stagetime=time()+$sr['seed_time'];
-			$stagesafetime=$stagetime+$sr['seed_safe_time'];
 			$db->query("UPDATE `farm_data` SET `farm_time` = {$stagetime}, `farm_stage` = 2, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerTend']} WHERE `farm_id` = {$_GET['id']}");
 			alert('success', "Success!", "You've tended your {$cropSeedName}. It appears you're closing in on the final harvest.", true, 'farm.php');
 		}
 		elseif ($r['farm_stage'] == 1)
 		{
 			$stagetime=time()+$sr['seed_time'];
-			$stagesafetime=$stagetime+$sr['seed_safe_time'];
 			$db->query("UPDATE `farm_data` SET `farm_time` = {$stagetime}, `farm_stage` = 10, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerTend']} WHERE `farm_id` = {$_GET['id']}");
 			alert('success', "Success!", "You've tended your {$cropSeedName}. You will seriously maximize your harvest by keeping up with tending the plot.", true, 'farm.php');
 		}
 		else
 		{
 			$stagetime=time()+$sr['seed_time'];
-			$stagesafetime=$stagetime+$sr['seed_safe_time'];
 			$db->query("UPDATE `farm_data` SET `farm_time` = {$stagetime}, `farm_stage` = `farm_stage` + 1, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerTend']} WHERE `farm_id` = {$_GET['id']}");
 			alert('success', "Success!", "You've tended your {$cropSeedName}. Remember to keep up with the TLC.", true, 'farm.php');
 		}
 		$random=Random(2 * $r['farm_stage'], 6 * $r['farm_stage']);
 		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
+		$api->SystemLogsAdd($userid, "farm", "Tended plot # {$_GET['id']}.");
 		die(home());
 	}
 	else
@@ -1208,6 +1216,7 @@ function editseed()
                     `seed_xp` = {$xp}
                     WHERE `seed_item` = {$seed}");
         alert('success',"Success!","You have successfully edited the {$api->SystemItemIDtoName($seed)} seed.", true, 'farm.php');
+        $api->SystemLogsAdd($userid, "staff", "Edited {$api->SystemItemIDtoName($seed)} crop.");
         die($h->endpage());
     }
     elseif ($_POST['step'] == 0)
