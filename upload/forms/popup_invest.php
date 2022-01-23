@@ -30,7 +30,7 @@ Level 5: Once a Minute<hr />
 You can view an asset's history to see how it's performing. When the value of the tick is bold and green, it means it's reached 
 the maximum it can go, and will drop. If its red and bold, it's value has bottomed out, and will only go up. Consider it a safe net on us. ;)<hr />
 <h3>Fees</h3>
-Note that there is only a 2% fee when you sell your assets off.
+Note that there is only a 0.02% selling fee when you sell off your assets.
 </div>
 
 </div>

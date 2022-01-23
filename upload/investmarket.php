@@ -106,7 +106,7 @@ switch ($_GET['action'])
 }
 function home()
 {
-    global $db,$ir,$userid,$api,$h;
+    global $db;
     alert('warning',"","This is a list of all assets you may purchase stock of. Please read the info page before you invest.", false);
     $q = $db->query("SELECT * FROM `asset_market`");
     echo "<div class='card'>
@@ -218,7 +218,7 @@ function buy()
 
 function sell()
 {
-    global $db, $userid, $api, $h, $ir;
+    global $db, $userid, $api, $h;
     $stock_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
     if (empty($stock_id))
     {
@@ -260,8 +260,8 @@ function sell()
         }
         $marketValue = $sell_amount * $r['am_cost'];
         $profit = $sellValue - $totalCost;
-        $toPlayer = $marketValue * 0.98;
-        $marketTax = $marketValue * 0.02;
+        $toPlayer = $marketValue * 0.9998;
+        $marketTax = $marketValue * 0.0002;
         setUserShares($userid, $r['am_id'], $r['am_cost'], $sell_amount * -1);
         alert('success', "Success!", "You have sold " . shortNumberParse($sell_amount) . " shares of the 
             {$r['am_name']} asset at " . shortNumberParse($r['am_cost']) . " Copper Coins a share, for a total of 
@@ -271,6 +271,9 @@ function sell()
         addToEconomyLog('Market Fees', 'copper', $marketTax * -1);
         addToEconomyLog('Asset Market', 'copper', $toPlayer);
         logAssetProfit($userid, $profit);
+        $api->SystemLogsAdd($userid, "asset", "Sold " . shortNumberParse($sell_amount) . " shares of the 
+            {$r['am_name']} asset at " . shortNumberParse($r['am_cost']) . " Copper Coins a share, for a total of 
+            " . shortNumberParse($toPlayer) . " Copper Coins.");
         home();
     }
     else
@@ -300,7 +303,7 @@ function sell()
 
 function history()
 {
-    global $db, $h;
+    global $db, $h, $userid;
     $stock_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
     if (empty($stock_id))
     {
@@ -330,6 +333,14 @@ function history()
         $y = $r2['new_value'];
         array_push($dataPoints, array("x" => $x, "y" => $y));
     }
+    $sharesTotal = returnUserAssetShares($userid, $r['am_id']);
+    $totalCost = returnUserAssetCosts($userid, $r['am_id']);
+    $currentValue = $sharesTotal * $r['am_cost'];
+    
+    $valueClass = (($currentValue >= $totalCost) && ($totalCost > 0)) ? "text-success" : "text-danger";
+    $avgCost = 0;
+    if ($sharesTotal > 0)
+        $avgCost = round($totalCost / $sharesTotal);
     ?>
     <script>
         window.onload = function () {
@@ -367,7 +378,71 @@ function history()
             	</div>
         	</div>
         </div>
+        <br />
         <?php
+        echo "
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Your Info
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Assets Owned</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . number_format($sharesTotal) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Avg Cost</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($avgCost) . " Copper
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Current Value</b></small>
+                                    </div>
+                                    <div class='col-12 {$valueClass}'>
+                                        " . shortNumberParse($currentValue) . " Copper
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Actions
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-6'>
+                                <a href='?action=buy&id={$r['am_id']}' class='btn btn-success btn-block'>Buy</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6'>
+                                <a href='?action=sell&id={$r['am_id']}' class='btn btn-danger btn-block'>Sell</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>";
 }
 
 function staffadd()
@@ -433,6 +508,7 @@ function staffadd()
             die($h->endpage());
         }
         createStockAsset($stock_name, $stock_cost, $stock_change, $stock_risk, $stock_floor, $stock_ceiling);
+        $api->SystemLogsAdd($userid, "staff", "Created {$stock_name} asset.");
         alert('success',"Success","Successfully created a new asset to invest in.", false);
         home();
     }
@@ -481,7 +557,7 @@ function staffadd()
                             <small>Asset Risk</small>
                         </div>
                         <div class='col-12'>
-                            <input type='number' class='form-control' required='1' name='risk' placeholder='Asset risk level' min='0'>
+                            <input type='number' class='form-control' required='1' name='risk' placeholder='Asset risk level' min='0' max='5'>
                         </div>
                     </div>
                 </div>
