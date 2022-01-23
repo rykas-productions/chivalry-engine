@@ -1069,3 +1069,39 @@ function mines_dropdown($ddname = "mine", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
+
+/**
+ * Constructs a drop-down listbox of all the NPC bosses in the game to let the user select one.
+ * @param string $ddname The "name" attribute the <select> attribute should have
+ * @param int $selected [optional] The ID Number of the bot who should be selected by default.<br />
+ * Not specifying this or setting it to -1 makes the first bot alphabetically be selected.
+ * @return string The HTML code for the listbox, to be inserted in a form.
+ */
+function npcboss_dropdown($ddname = "bot", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+    $db->query(
+        "/*qc=on*/SELECT `u`.`userid`, `u`.`username`
+                     FROM `activeBosses` AS `ab`
+                     INNER JOIN `users` AS `u`
+                     ON `ab`.`boss_user` = `u`.`userid`
+                     ORDER BY `u`.`userid` ASC");
+    if ($selected == -1) {
+        $first = 0;
+    } else {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['userid']}'";
+        if ($selected == $r['userid'] || $first == 0) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['username']} [{$r['userid']}]</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}
