@@ -58,30 +58,49 @@ while ($r = $db->fetch_row($q))
 	$un = $api->SystemUserIDtoName($r['userid']);
 	$displaypic = "<img src='" . parseDisplayPic($r['userid']) . "' height='75' alt='{$un}&#39;s Display picture.' title='{$un}&#39;s Display picture'>";
 	$active = parseActivity($r['userid']);
-    echo "
+	echo "
 	<div class='card'>
 		<div class='card-body'>
 			<div class='row'>
-				<div class='col-sm-2 col'>
-					{$displaypic}
+				<div class='col-12 col-sm-4'>
+                    <div class='row'>
+                        <div class='col-12'>
+				            {$displaypic}
+                        </div>
+                        <div class='col-12'>
+				            <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+                        </div>
+                    </div>
 				</div>
-				<div class='col-sm-2 col'>
-					<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
-				</div>
-				<div class='col-sm'>
+                <div class='col-12 col-sm-2'>
 					<div class='row'>
-						<div class='col'>
-							Level<br />
-							" . number_format($r['level']) . "<br />
-						</div>
-						<div class='col'>
-							Copper Coins<br />
-							" . number_format($r['primary_currency']) . "
-						</div>
-						<div class='col'>
-							{$active}
-						</div>
-					</div>
+                        <div class='col-12'>
+				            <small>Level</small>
+                        </div>
+                        <div class='col-12'>
+				            " . number_format($r['level']) . "
+                        </div>
+                    </div>
+				</div>
+                <div class='col-12 col-sm-3'>
+					<div class='row'>
+                        <div class='col-12'>
+				            <small>Copper Coins</small>
+                        </div>
+                        <div class='col-12'>
+				            " . shortNumberParse($r['primary_currency']) . "
+                        </div>
+                    </div>
+				</div>
+                <div class='col-12 col-sm-3'>
+					<div class='row'>
+                        <div class='col-12'>
+				            <small>Activity</small>
+                        </div>
+                        <div class='col-12'>
+				            {$active}
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
