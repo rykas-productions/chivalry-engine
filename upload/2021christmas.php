@@ -126,7 +126,7 @@ function wishing()
         }
         else
         {
-            echo "It appears you wish to make a wish for Christmas! Jolly Ol Saint Nick will try to fulfill your request, but if its too much, you might 
+            echo "It appears you wish to make a wish for Christmas! Jolly Ol Saint CID Admin will try to fulfill your request, but if its too much, you might 
             be added to the Naughty List and only receive a Lump of Coal. That's no fun for anyone.<br />
             So, fill out the form to submit your wish to Santa! Don't ask for too much.<br />
             <form method='post'>
@@ -141,7 +141,7 @@ function wishing()
 function tree()
 {
     global $db,$userid,$api,$h;
-    echo "<h3>Christmas Tree</h3><hr />
+    echo "<h3>CID Christmas Tree</h3><hr />
     Here's the Chivalry is Dead Christmas tree. You can place gifts under the tree for your friends to open on/after Christmas Day. 
     You may place a gift <a href='?action=gift'>here</a>.<hr />
     <h5>Gifts Under the Tree</h5><hr />";
@@ -193,26 +193,26 @@ function tree()
 function open()
 {
     global $db,$userid,$api,$h,$ir;
-	$xmasTime = 1577250000;
+    $xmasTime = 1640390400;
     if (time() < $xmasTime)
     {
-        alert('danger',"Uh Oh!","You may only open your gifts on/after Christmas Day.",true,'2018christmas.php?action=tree');
+        alert('danger',"Uh Oh!","You may only open your gifts on/after Christmas Day.",true,'?action=tree');
         die($h->endpage());
     }
     $_GET['gift'] = (isset($_GET['gift']) && is_numeric($_GET['gift'])) ? abs($_GET['gift']) : '';
     if (empty($_GET['gift']))
     {
-        alert('danger', "Uh Oh!", "Please select a valid gift you wish to open", true, '2018christmas.php?action=tree');
+        alert('danger', "Uh Oh!", "Please select a valid gift you wish to open", true, '?action=tree');
         die($h->endpage());
     }
     $q=$db->query("SELECT * FROM `2018_christmas_tree` WHERE `gift_id` = {$_GET['gift']} AND `userid_to` = {$userid}");
     if ($db->num_rows($q) == 0)
     {
-        alert('danger', "Uh Oh!", "Gift either does not exist, or isn't yours to open.", true, '2018christmas.php?action=tree');
+        alert('danger', "Uh Oh!", "Gift either does not exist, or isn't yours to open.", true, '?action=tree');
         die($h->endpage());
     }
     $r=$db->fetch_row($q);
-    alert('success',"Merry Christmas!","You've opened your gift from {$api->SystemUserIDtoName($r['userid_from'])} and received {$r['qty']} x {$api->SystemItemIDtoName($r['item'])}(s)!",true,'2018christmas.php?action=tree');
+    alert('success',"Merry Christmas!","You've opened your gift from {$api->SystemUserIDtoName($r['userid_from'])} and received {$r['qty']} x {$api->SystemItemIDtoName($r['item'])}(s)!",true,'?action=tree');
     $api->UserGiveItem($userid,$r['item'],$r['qty']);
     $log = $db->escape("Sent {$r['qty']} {$api->SystemItemIDtoName($r['item'])}(s) to {$ir['username']} [{$userid}].");
     $api->SystemLogsAdd($r['userid_from'], 'itemsend', $log);
@@ -258,7 +258,7 @@ function gift()
         }
         $api->UserTakeItem($userid,$_POST['item'],$_POST['qty']);
         $db->query("INSERT INTO `2018_christmas_tree` (`userid_from`, `userid_to`, `item`, `qty`) VALUES ('{$userid}', '{$_POST['user']}', '{$_POST['item']}', '{$_POST['qty']}')");
-        alert('success',"Success!","You have successfully placed your gift under the Christmas tree.",true,'2018christmas.php?action=tree');
+        alert('success',"Success!","You have successfully placed your gift under the Christmas tree.",true,'?action=tree');
     }
     else
     {

@@ -73,4 +73,12 @@ item_add($ur,154,1);*/
 runMarketTick(1);   //low risk market
 backupDatabase();
 purgeOldLogs();
+
+if (date('n') == 12)
+{
+    if (date('j') == 1)
+    {
+        $api->GameAddAnnouncement("Hey folks! The Advent Calendar is now available on Explore. Make sure you log in every day to get your rewards! Happy holidays!");
+    }
+}
 ?>
