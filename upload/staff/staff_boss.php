@@ -76,6 +76,7 @@ function addboss()
 					VALUES ('{$user}', '{$announce}', '{$multi}', '{$item}')");
 		$db->query("UPDATE `users` SET `hp` = {$health}, `maxhp` = {$health} WHERE `userid` = {$user}");
 		alert('success',"Success!","You have successfully created a boss!!",true,'index.php');
+		$api->SystemLogsAdd($userid, 'staff', "Spawned User ID {$user} as a boss!!");
 		die($h->endpage());
 	}
 	else
@@ -140,4 +141,51 @@ function addboss()
 		{$csrf}
 		</form>";
 	}
+}
+
+function delboss()
+{
+    global $db, $api, $h, $userid;
+    if (isset($_POST['user']))
+    {
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_boss_del', stripslashes($_POST['verf'])))
+        {
+            alert('danger', "Action Blocked!", "Forms expire fairly quickly. Try again, but be quicker!");
+            die($h->endpage());
+        }
+        $boss = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+        if (empty($boss)) {
+            alert('danger', "Uh Oh!", "Invalid or unspecified boss to remove. Please go back and try again.");
+            die($h->endpage());
+        }
+        $q = $db->query("/*qc=on*/SELECT `boss_id` FROM `activeBosses` WHERE `boss_user` = {$boss}");
+        if ($db->num_rows($q) == 0) {
+            $db->free_result($q);
+            alert('danger', "Uh Oh!", "The user you've chosen is not an active boss at this time, and cannot have that status taken away from them.");
+            die($h->endpage());
+        }
+        $db->query("DELETE FROM `activeBosses` WHERE `boss_user` = {$boss}");
+        alert('success', "Success!", "You have despawned this boss.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Despawned Boss User ID # {$boss}.");
+    }
+    else
+    {
+        $csrf = request_csrf_html('staff_boss_del');
+        echo "
+        <div class='col-12'>
+            <div class='card'>
+                <div class='card-header'>
+                    Delete Boss
+                </div>
+                <div class='card-body'>
+                    Please select the boss you wish to despawn.
+                    <form method='post'>
+                        " . npcboss_dropdown("user") . "<br />
+                        <input type='submit' class='btn btn-primary btn-block' value='Delete Boss'>
+                        {$csrf}
+                    </form>
+                </div>
+            </div>
+        </div>";
+    }
 }
