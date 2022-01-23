@@ -20,7 +20,7 @@ function initializeModule()
             'moduleVersion' => 1,
             'bankOpeningFee' => 50000000,
             'bankWithdrawPercent' => 5000000,
-            'bankWithdrawMaxFee' => 15,
+            'bankWithdrawMaxFee' => 7.5,
             'bankLevelRequirement' => 175
         );
         $defaultConfig = formatConfig($moduleConfigArray);
@@ -105,18 +105,16 @@ function index()
 							<div class='card-body'>
 								<form method='post' id='vaultBankDeposit' name='vaultBankDeposit'>
 									<div class='row'>
-										<div class='col'>
-											<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' id='form_bank_wallet' required='1' name='deposit' value='{$ir['primary_currency']}'>
+										<div class='col-12 col-sm-6 col-md-8'>
+											<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' id='form_bank_wallet' required='1' name='deposit' value='{$ir['primary_currency']}'><br />
 										</div>
-										<div class='col-5 col-sm-4 col-md-3'>
-											<input type='submit' value='Deposit' class='btn btn-primary' id='vaultDeposit'>
+										<div class='col-12 col-sm-6 col-md-4'>
+											<input type='submit' value='Deposit' class='btn btn-primary btn-block' id='vaultDeposit'>
 										</div>
-									</div>
-									<div class='row'>
-										<div class='col'>
-											<small><br />{$bank_feepercent}% fee, max " . number_format($bank_maxfee) . " Copper Coins</small>
-										</div>
-									</div>
+									   <div class='col-12'>
+										  <small><br />{$bank_feepercent}% fee, max " . number_format($bank_maxfee) . " Copper Coins</small>
+									   </div>
+                                    </div>
 								</form>
 							</div>
 						</div>
@@ -130,11 +128,11 @@ function index()
 							<div class='card-body'>
 								<form method='post' id='vaultBankWithdraw' name='vaultBankWithdraw'>
 									<div class='row'>
-										<div class='col'>
-											<input type='number' min='1' max='{$ir['vaultbank']}' class='form-control' required='1' id='form_bank_acc' name='withdraw' value='{$ir['vaultbank']}'>
+										<div class='col-12 col-sm-6 col-md-8'>
+											<input type='number' min='1' max='{$ir['vaultbank']}' class='form-control' required='1' id='form_bank_acc' name='withdraw' value='{$ir['vaultbank']}'><br />
 										</div>
-										<div class='col-6 col-sm-4 col-md-3'>
-											<input type='submit' value='Withdraw' class='btn btn-primary' id='vaultWithdraw'>
+										<div class='col-12 col-sm-6 col-md-4'>
+											<input type='submit' value='Withdraw' class='btn btn-primary btn-block' id='vaultWithdraw'>
 										</div>
 									</div>
 								</form>
