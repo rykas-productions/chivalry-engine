@@ -99,18 +99,17 @@ function index()
 							<div class='card-body'>
 								<form method='post' id='fedBankDeposit' name='fedBankDeposit'>
 									<div class='row'>
-										<div class='col'>
+										<div class='col-12 col-sm-6 col-md-8'>
 											<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' id='form_bank_wallet' required='1' name='deposit' value='{$ir['primary_currency']}'>
+										    <br />
+                                        </div>
+										<div class='col-12 col-sm-6 col-md-4'>
+											<input type='submit' value='Deposit' class='btn btn-primary btn-block' id='fedDeposit'>
 										</div>
-										<div class='col-5 col-sm-4 col-md-3'>
-											<input type='submit' value='Deposit' class='btn btn-primary' id='fedDeposit'>
-										</div>
-									</div>
-									<div class='row'>
-										<div class='col'>
-											<small><br />{$bank_feepercent}% fee, max " . number_format($bank_maxfee) . " Copper Coins</small>
-										</div>
-									</div>
+    									<div class='col-12'>
+    										<small><br />{$bank_feepercent}% fee, max " . number_format($bank_maxfee) . " Copper Coins</small>
+									    </div>
+                                    </div>
 								</form>
 							</div>
 						</div>
@@ -124,11 +123,12 @@ function index()
 							<div class='card-body'>
 								<form method='post' id='fedBankWithdraw' name='fedBankWithdraw'>
 									<div class='row'>
-										<div class='col'>
+										<div class='col-12 col-sm-6 col-md-8'>
 											<input type='number' min='1' max='{$ir['bigbank']}' class='form-control' required='1' id='form_bank_acc' name='withdraw' value='{$ir['bigbank']}'>
-										</div>
-										<div class='col-6 col-sm-4 col-md-3'>
-											<input type='submit' value='Withdraw' class='btn btn-primary' id='fedWithdraw'>
+										    <br />
+                                        </div>
+										<div class='col-12 col-sm-6 col-md-4'>
+											<input type='submit' value='Withdraw' class='btn btn-primary btn-block' id='fedWithdraw'>
 										</div>
 									</div>
 								</form>
