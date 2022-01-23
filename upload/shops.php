@@ -99,6 +99,7 @@ function shop()
             while ($r = $db->fetch_row($qtwo)) 
 			{
 				$r['itmbuyprice']=$r['itmbuyprice']-($r['itmbuyprice']*$specialnumber);
+				$r['itmbuyprice'] = $api->SystemReturnTax($r['itmbuyprice']);
                 if ($lt != $r['itmtypename']) 
 				{
 					$lt = $r['itmtypename'];
@@ -137,7 +138,7 @@ function shop()
 											</div>
 											<div class='col'>
 												<b>Price</b><br />
-												<small>" . number_format($r['itmbuyprice']) . " Copper</small>
+												<small>" . shortNumberParse($r['itmbuyprice']) . " Copper Coins</small>
 											</div>
 											<br />
 										</div>
@@ -213,11 +214,11 @@ function shop()
 						<div class='row'>
 							<div class='col'>
 								<b>Sell</b><br />
-								<small>" . number_format($r['itmsellprice']) . " Copper Coins</small>
+								<small>" . shortNumberParse($r['itmsellprice']) . " Copper Coins</small>
 							</div>
 							<div class='col'>
 								<b>Circulating</b><br />
-								<small>" . number_format($total) . "</small>
+								<small>" . shortNumberParse($total) . "</small>
 							</div>";
 							if ($r['weapon'] > 0)
 							{
