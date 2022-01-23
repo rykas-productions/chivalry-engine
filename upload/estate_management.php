@@ -5,6 +5,7 @@ if (!isset($_GET['action'])) {
 }
 $estate=$db->fetch_row($db->query("SELECT * FROM `user_estates` WHERE `ue_id` = {$ir['estate']}"));
 $edb=$db->fetch_row($db->query("SELECT * FROM `estates` WHERE `house_id` = {$estate['estate']}"));
+$edb['upgradeLevel'] = round($edb['upgradeLevel'] + ($edb['upgradeLevel'] * levelMultiplier($ir['level'])));
 echo "<h4>Estate Management</h3><hr/>";
 switch ($_GET['action']) {
     case 'constructGarden':
