@@ -89,16 +89,7 @@ function add()
 						Completion Time
 					</th>
 					<td>
-						<select class='form-control' name='timetocomplete'>
-							<option value='0'>Instantly</option>
-							<option value='5'>5 Seconds</option>
-							<option value='30'>30 Seconds</option>
-							<option value='60'>1 Minute</option>
-							<option value='300'>5 Minutes</option>
-							<option value='600'>10 Minutes</option>
-							<option value='3600'>1 Hour</option>
-							<option value='86400'>1 Day</option>
-						</select>
+                        <input type='number' value='' placeholder='Time in seconds.' required='1' name='timetocomplete' class='form-control'>
 					</td>
 				</tr>
 					<tr>

@@ -29,19 +29,16 @@ function home()
 {
     global $db, $userid, $api;
     $q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` ORDER BY `smelt_output` ASC");
-    echo "<table class='table table-bordered table-striped'>
-	<tr>
-		<th>
-			Item
-		</th>
-		<th>
-			Required Materials
-		</th>
-		<th>
-			Action
-		</th>
-	</tr>";
-    while ($r = $db->fetch_row($q)) {
+    echo "
+    <div class='row'>
+        <div class='col-12'>
+            <div class='card'>
+                <div class='card-header'>
+                    Craftable Recipes
+                </div>
+                <div class='card-body'>";
+    while ($r = $db->fetch_row($q)) 
+    {
         $output_item = $api->SystemItemIDtoName($r['smelt_output']);
         $items_needed = '';
         $can_craft = TRUE;
@@ -58,50 +55,63 @@ function home()
 				$r['hasitem']=$r['hasitem']+1;
 			}
 		}
-		if ($r['hasitem'] > 0)
-		{
-			echo "
-			<tr>
-				<td>
-					<a href='iteminfo.php?ID={$r['smelt_output']}'>{$output_item}</a> x " . number_format($r['smelt_qty_output']);
-                    if ($r['smelt_time'] > 0)
-                    {
-                        echo "<br /><small>Smelt Time: {$smltTime}</small>";
-                    }
-                    echo"
-				</td>
-				<td>";
-			$n = 0;
-			foreach ($ex as $i) {
-				$get_items_needed = $db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid`={$i}");
-				$t = $db->fetch_row($get_items_needed);
-
-				$do_they_have = $db->query("/*qc=on*/SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i} AND `inv_qty`>={$qty[$n]}");
-				if ($db->num_rows($do_they_have) == 0) {
-					$t['itmname'] = "<span class='text-danger'>" . $t['itmname'] . "";
-					$can_craft = FALSE;
-				}
-				$items_needed .= "<a href='iteminfo.php?ID={$i}'>" .$t['itmname'] . "</a> x " . number_format($qty[$n]) . " (Have " . number_format($api->UserCountItem($userid, $i)) . ")</span><br />";
-				$n++;
-			}
-			unset($n);
-			echo "{$items_needed}
-				</td>
-				<td>";
-			if ($can_craft == TRUE) 
-			{
-				echo "<a href='?action=smelt&id={$r['smelt_id']}'>Smelt Item</a>";
-			} 
-			else 
-			{
-				echo "<span class='text-danger'>Cannot Smelt</span>";
-			}
-			echo "
-				</td>
-			</tr>";
-		}
+	    $rcon = returnIcon($r['smelt_output'], 4);
+	    echo "
+        <div class='row'>
+            <div class='col-12 col-lg-4'>
+                <div class='row'>
+                    <div class='col-12 col-sm-4 col-lg-12 col-xxl-4'>
+                        {$rcon}
+                    </div>
+                    <div class='col-12 col-sm-8 col-lg-12 col-xxl-8'>
+                        " . number_format($r['smelt_qty_output']) . " x <a href='iteminfo.php?ID={$r['smelt_output']}'>{$output_item}</a>
+                    </div>
+                </div>
+            </div>
+            <div class='col-12 col-lg-5'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <b>Requirements</b>
+                    </div>";
+		    $n = 0;
+		    foreach ($ex as $i) {
+		        $get_items_needed = $db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid`={$i}");
+		        $t = $db->fetch_row($get_items_needed);
+		        
+		        $do_they_have = $db->query("/*qc=on*/SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i} AND `inv_qty`>={$qty[$n]}");
+		        if ($db->num_rows($do_they_have) == 0) 
+		        {
+		            $t['itmname'] = "<span class='text-danger'>" . $t['itmname'] . "</span>";
+		            $can_craft = FALSE;
+		        }
+		        $items_needed .= "<div class='col-12 col-sm-6 col-lg-12 col-xxl-6'>" . shortNumberParse($qty[$n]) . " x <a href='iteminfo.php?ID={$i}'>" .$t['itmname'] . "</a></span></div>";
+		        $n++;
+		    }
+		    unset($n);
+		    echo "{$items_needed}";
+		    if ($r['smelt_time'] > 0)
+		    {
+		        echo"<div class='col-12 col-sm-6 col-lg-12 col-xxl-6'>
+                            Time: {$smltTime}
+                            </div>";
+		    }
+		    echo"
+                </div>
+            </div>
+            <div class='col-12 col-lg-3'>";
+    		    if ($can_craft == TRUE)
+    		    {
+    		        echo "<a href='?action=smelt&id={$r['smelt_id']}' class='btn btn-block btn-primary'>Craft Item</a>";
+    		    }
+    		    else
+    		    {
+    		        echo "<a href='#' class='disabled btn btn-block btn-danger'>Cannot Craft</a>";
+    		    }
+    		    echo"
+                <hr />
+            </div>
+        </div>";
     }
-    echo "</table>";
 }
 
 function smelt()
@@ -137,7 +147,8 @@ function smelt()
     }
     unset($n);
     if ($can_craft) {
-        if ($r['smelt_time'] > 0) {
+        if ($r['smelt_time'] > 0) 
+         {
             $rcomplete = time() + $r['smelt_time'];
             $db->query("INSERT INTO `smelt_inprogress` (
 				`sip_user`, `sip_recipe`, `sip_time`) 
