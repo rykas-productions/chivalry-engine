@@ -207,7 +207,7 @@ function handlePerfectionStatBonuses()
     if ($ir['class'] == 'Guardian')
         $ir['guard'] += $ir['guard']*$specialnumber;
     
-    $specialnumber2=((getSkillLevel($odata['userid'],1)*3)/100);
+    $specialnumber2=((getSkillLevel($odata['userid'],1)*3)/100);    //this is the problem line e_e
     if ($odata['class'] == 'Warrior')
         $odata['strength'] += ($odata['strength']*$specialnumber2);
     if ($odata['class'] == 'Rogue')
