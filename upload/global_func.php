@@ -265,31 +265,31 @@ function updateAcademy()
         if ($coud['ac_str'] > 0) 
 		{
             $upd .= ", us.strength = us.strength + {$coud['ac_str']}";
-            $ev .= "; " . number_format($coud['ac_str']) . " Strength";
+            $ev .= "; " . shortNumberParse($coud['ac_str']) . " Strength";
         }
         //Course credits guard, so add onto the query.
         if ($coud['ac_grd'] > 0) 
 		{
             $upd .= ", us.guard = us.guard + {$coud['ac_grd']}";
-            $ev .= "; " . number_format($coud['ac_grd']) . " Guard";
+            $ev .= "; " . shortNumberParse($coud['ac_grd']) . " Guard";
         }
         //Course credits labor, so add onto the query.
         if ($coud['ac_lab'] > 0) 
 		{
             $upd .= ", us.labor = us.labor + {$coud['ac_lab']}";
-            $ev .= "; " . number_format($coud['ac_lab']) . " Labor";
+            $ev .= "; " . shortNumberParse($coud['ac_lab']) . " Labor";
         }
         //Course credits agility, so add onto the query.
         if ($coud['ac_agl'] > 0) 
 		{
             $upd .= ", us.agility = us.agility + {$coud['ac_agl']}";
-            $ev .= "; " . number_format($coud['ac_agl']) . " Agility";
+            $ev .= "; " . shortNumberParse($coud['ac_agl']) . " Agility";
         }
         //Course credits IQ, so add onto the query.
         if ($coud['ac_iq'] > 0) 
 		{
             $upd .= ", us.IQ = us.IQ + {$coud['ac_iq']}";
-            $ev .= "; " . number_format($coud['ac_iq']) . " IQ";
+            $ev .= "; " . shortNumberParse($coud['ac_iq']) . " IQ";
         }
         //Merge all $ev into a comma seperated event.
         $ev = substr($ev, 1);
@@ -591,8 +591,8 @@ function get_filesize_remote($url)
 
 
 /**
- * @deprecated
- * Adds a log into the game logging system. Please use $api->SystemLogsAdd($user, $logtype, $input);
+ * @deprecated Please use $api->SystemLogsAdd($user, $logtype, $input);
+ * Adds a log into the game logging system. 
  * @param string $uagent Browser User Agent
  * @return string Operating System
  */
@@ -1252,7 +1252,9 @@ function returnGameTitle()
     $prefix = "";
     $url = determine_game_urlbase();
     $devDomains = array("192.168.128.151/cid", "127.0.0.1", 
-                        "localhost", "192.168.128.74/cid");   //add your directory to this list
+                        "localhost", "192.168.128.74/cid",
+                        "192.168.137.218/cid"
+    );   //add your directory to this list
     if (in_array($url, $devDomains))
         $prefix = "[DEV]";
     elseif ($url != "chivalryisdeadgame.com")

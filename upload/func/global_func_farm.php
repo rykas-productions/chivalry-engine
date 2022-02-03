@@ -53,16 +53,19 @@ function checkPlotInfo()
 function checkFarmXP()
 {
 	global $db, $userid, $FU, $ir;
+	$wellSkill = getSkillLevel($userid,30);
 	if (!isset($ir['reset']))
 	    $ir['reset'] = 0;
-	    $FU['xp_needed'] = round((($FU['farm_level'] + 1.5) * ($FU['farm_level'] + 1.5) * ($FU['farm_level'] + 1.5) * 1.1) * (1 - ($ir['reset'] * 0.1)));
-    if ($FU['farm_xp'] >= $FU['xp_needed']) {
+	    $FU['xp_needed'] = round((($FU['farm_level'] + 1.1) * ($FU['farm_level'] + 1.1) * ($FU['farm_level'] + 1.1) * 0.8) * (1 - ($ir['reset'] * 0.1)));
+    if ($FU['farm_xp'] >= $FU['xp_needed'])
+    {
+        $extraWell = 0 + ($wellSkill * 5);
         $expu = $FU['farm_xp'] - $FU['xp_needed'];
         $FU['farm_level'] += 1;
         $FU['farm_xp'] = $expu;
 		$FU['farm_water_max'] += 5;
-        $FU['xp_needed'] =
-            round(($FU['farm_level'] + 1.5) * ($FU['farm_level'] +1.5) * ($FU['farm_level'] + 1.5) * 1.1);
+		$FU['farm_water_max'] += $extraWell;
+		$FU['xp_needed'] = round((($FU['farm_level'] + 1.1) * ($FU['farm_level'] +1.1) * ($FU['farm_level'] + 1.1) * 0.8) * (1 - ($ir['reset'] * 0.1)));
         $db->query("UPDATE `farm_users` SET 
 					`farm_level` = {$FU['farm_level']},
 					`farm_xp` = {$FU['farm_xp']},

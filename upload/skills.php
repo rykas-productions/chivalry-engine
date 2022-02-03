@@ -746,8 +746,6 @@ function skill($id,$cost)
 		alert('danger',"Uh Oh!","Please unlock the previous skill before attempting to unlock this one.",true,'skills.php');
 		die($h->endpage());
 	}
-	if ($id == 30)
-		$db->query("UPDATE `farm_users` SET `farm_water_max` = `farm_water_max` + 5 WHERE `userid` = {$userid}");
 	giftSkill($id,$cost);
 	alert('success',"Success!","Skill point was spent successfully.",true,'skills.php');
 	
