@@ -31,7 +31,13 @@ if (empty($_GET['to'])) {
     echo "Welcome to the horse stable. You can travel to other cities here, but at a cost. Where would you like to
 	travel today? Note that as you progress further in the game, more locations will be made available to you.
 	It will cost you " . number_format($cost_of_travel) . " Chivalry Tokens to travel today.
-	<div class='row'>";
+	<div class='row'>
+        <div class='col-12'>
+            <div class='card'>
+                <div class='card-header'>
+                    {$set['WebsiteName']} Towns
+                </div>
+                <div class='card-body'> ";
     //Select the towns that are not the current user's town, order them by level requirement
     $q = $db->query("/*qc=on*/SELECT * FROM `town` WHERE `town_id` != {$ir['location']} ORDER BY `town_min_level` ASC");
 
@@ -40,36 +46,66 @@ if (empty($_GET['to'])) {
 	{
 		$guild_owner = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_name` FROM `guild` WHERE `guild_id` = {$r['town_guild_owner']}"));
 		$level = ($ir['level'] > $r['town_min_level']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
-		$name = ($r['town_guild_owner'] > 0) ? "Guild Owner: <a href='guilds.php?action=view&id={$r['town_guild_owner']}'>{$guild_owner}</a><br />" : "" ;
-		$tax = ($r['town_tax'] > 0) ? "Town Tax: {$r['town_tax']}%<br />" : "" ;
+		$name = ($r['town_guild_owner'] > 0) ? "<a href='guilds.php?action=view&id={$r['town_guild_owner']}'>{$guild_owner}</a><br />" : "" ;
+		$tax = ($r['town_tax'] > 0) ? "{$r['town_tax']}%" : "0%" ;
 		$guildcolor = ($ir['guild'] == $r['town_guild_owner']) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
 		$population = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$r['town_id']}"));
-		echo "
-		<div class='col-md-4'>
-		<div class='card'>
-            <div class='card-header'>
-               <a href='?to={$r['town_id']}'>{$r['town_name']}</a>
+		echo "<div class='row'>
+                <div class='col-12 col-sm-6 col-md-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                             <a href='?to={$r['town_id']}'>{$r['town_name']}</a>
+                        </div>
+                        <div class='col-12'>
+                            <small>Population " . number_format($population) . "</small>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-sm-6 col-md-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                             <small>Level Required</small>
+                        </div>
+                        <div class='col-12'>
+                            " . number_format($r['town_min_level']) . "
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-sm-6 col-md-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                             <small>Tax Rate</small>
+                        </div>
+                        <div class='col-12'>
+                            {$tax}
+                        </div>
+                    </div>
+                </div>";
+        		if ($r['town_guild_owner'] > 0)
+        		{
+        		    echo "
+                    <div class='col-12 col-sm-6 col-md-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                 <small>Town Guild</small>
+                            </div>
+                            <div class='col-12'>
+                                {$name}
+                            </div>
+                        </div>
+                    </div>";
+        		}
+        		echo"
             </div>
-            <div class='card-body'>
-				<span>
-					Population: " . number_format($population) . "<br />
-				</span>
-                <span {$level}>
-					Level Required: " . number_format($r['town_min_level']) . "<br />
-				</span>
-				<span {$guildcolor}>
-					{$name}
-				</span>
-				<span>
-					{$tax}
-				</span>
+            <br />";
+    }
+    echo "
+            </div>
+            <div class='col-12'>
+                <img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819397/horse-stable-travel.jpg' class='img-thumbnail img-responsive'>
             </div>
         </div>
-		<br />
-		</div>";
-    }
-    echo "</div>
-	<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819397/horse-stable-travel.jpg' class='img-thumbnail img-responsive'>";
+    </div>";
 } else {
     //User does not have enough cash to travel to this city.
     if ($ir['secondary_currency'] < $cost_of_travel) {
