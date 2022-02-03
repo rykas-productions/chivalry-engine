@@ -210,10 +210,10 @@ $get = $db->query("/*qc=on*/SELECT `sip_recipe`,`sip_user` FROM `smelt_inprogres
 //Select completed smelting recipes and give to the user.
 if ($db->num_rows($get)) {
     $r = $db->fetch_row($get);
-    $r2 = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r}"));
-    $api->UserGiveItem($r['user'], $r2['smelt_output'], $r2['smelt_qty_output']);
-    $api->GameAddNotification($r['user'], "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
-    $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`={$r['user']} AND `sip_time` < {$time}");
+    $r2 = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r['sip_recipe']}"));
+    $api->UserGiveItem($r['sip_user'], $r2['smelt_output'], $r2['smelt_qty_output']);
+    $api->GameAddNotification($r['sip_user'], "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
+    $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`= {$r['sip_user']} AND `sip_time` < {$time}");
 }
 $UIDB = $db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid}");
 if (!($db->num_rows($UIDB))) {
