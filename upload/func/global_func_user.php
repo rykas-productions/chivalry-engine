@@ -1430,3 +1430,17 @@ function removeOldEffects()
     $time = time();
     $db->query("DELETE FROM `users_effects` WHERE `effectTimeOut` < {$time}");
 }
+
+function calculateUserMaxBet($userid)
+{
+    global $db;
+    $r = $db->fetch_row($db->query("SELECT `level` FROM `users` WHERE `userid` = {$userid}"));
+    $gamblingManBuff = ((getSkillLevel($userid, 29) * 25) / 100);
+    $maxbet = 0;
+    $maxbet += $r['level'] * 500;   //base
+    $maxbet += ($maxbet * $gamblingManBuff);    //buff for gambling man
+    $maxbet += ($maxbet * levelMultiplier($r['level']));    //add level multipler at the end.
+    
+    
+    return round($maxbet);
+}

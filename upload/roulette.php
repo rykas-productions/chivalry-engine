@@ -14,11 +14,7 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	die($h->endpage());
 }
 $tresder = (Random(100, 999));
-$maxbet = $ir['level'] * 500;
-if ($maxbet > 125000)
-	$maxbet = 125000;
-$specialnumber=((getSkillLevel($userid,29)*25)/100);
-$maxbet=$maxbet+($maxbet*$specialnumber);
+$maxbet = calculateUserMaxBet($userid);
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
@@ -26,11 +22,6 @@ if (!isset($_SESSION['tresde'])) {
 if ($ir['winnings_this_hour'] >= (($maxbet*15)*20))
 {
 	alert('danger', "Uh Oh!", "The casino's run out of cash to give you. Come back in an hour.", true, "explore.php");
-    die($h->endpage());
-}
-if ($ir['winnings_this_hour'] <= ((($maxbet*15)*7.5)*-1))
-{
-	alert('danger', "Uh Oh!", "You are too deep in the hole. Come back next hour to try again.", true, "explore.php");
     die($h->endpage());
 }
 if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {

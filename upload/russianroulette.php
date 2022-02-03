@@ -8,6 +8,7 @@
 */
 $macropage = ('russianroulette.php');
 require("globals.php");
+$maxbet = calculateUserMaxBet($userid);
 echo "<h3><i class='game-icon game-icon-revolver'></i> Russian Roulette</h3><hr />";
 //Do not allow the user to play Russian Roulette if they're in the dungeon/infirmary.
 if ($api->UserStatus($userid, 'dungeon')) {
@@ -41,14 +42,14 @@ switch ($_GET['action']) {
 }
 function home()
 {
-    global $db, $api, $h, $userid;
+    global $db, $api, $h, $userid, $maxbet;
     echo "
     <form method='post' action='?action=bet'>
     <table class='table table-bordered'>
         <tr>
             <th colspan='2'>
                 Welcome to Russian Roulette, good sir! Who would you like to challenge? Remember, the Russian Roulette center
-                takes a 10% fee on all winnings.
+                takes a 10% fee on all winnings. You may bet up to " . shortNumberParse($maxbet) . " Copper Coins.
             </th>
         </tr>
         <tr>
@@ -64,7 +65,7 @@ function home()
                  Bet
             </th>
             <td>
-                <input type='number' name='bet' min='0' value='0' required='1' class='form-control'>
+                <input type='number' name='bet' min='0' value='0' max='{$maxbet}' required='1' class='form-control'>
             </td>
         </tr>
         <tr>
@@ -122,7 +123,7 @@ function home()
 
 function bet()
 {
-    global $db, $api, $h, $userid, $ir;
+    global $db, $api, $h, $userid, $ir, $maxbet;
     $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
     $_POST['bet'] = (isset($_POST['bet']) && is_numeric($_POST['bet'])) ? abs($_POST['bet']) : '';
     //User to bet is empty.
@@ -145,7 +146,12 @@ function bet()
     }
     //Current player does not have enough Copper Coins for their bet.
     if (!$api->UserHasCurrency($userid, 'primary', $_POST['bet'])) {
-        alert('danger', "Uh Oh!", "You do not have enough Copper Coins to bet {$_POST['bet']}. You only have {$ir['primary_currency']}.", true, 'russianroulette.php');
+        alert('danger', "Uh Oh!", "You do not have enough Copper Coins to bet " . shortNumberParse($_POST['bet']) . ". You only have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.", true, 'russianroulette.php');
+        die($h->endpage());
+    }
+    if ($_POST['bet'] > $maxbet)
+    {
+        alert('danger', "Uh Oh!", "You may only bet up to a maximum of " . shortNumberParse($maxbet) . " Copper Coins at this time.", true, 'russianroulette.php');
         die($h->endpage());
     }
     //All checks pass, so lets add it to the database, logs, and whatnot...

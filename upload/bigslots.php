@@ -19,12 +19,8 @@ if ($ir['level'] < 50)
     die($h->endpage());
 }
 $tresder = (Random(100, 999));
-$maxbet = $ir['level'] * 750;
-$minbet = $ir['level'] * 250;
-if ($maxbet > 250000)
-	$maxbet = 250000;
-$specialnumber=((getSkillLevel($userid,29)*25)/100);
-$maxbet=round($maxbet+($maxbet*$specialnumber));
+$maxbet = calculateUserMaxBet($userid) * 10;
+$minbet = round($maxbet / 25);
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
@@ -32,11 +28,6 @@ if (!isset($_SESSION['tresde'])) {
 if ($ir['winnings_this_hour'] >= (($maxbet*15)*5))
 {
 	alert('danger', "Uh Oh!", "The casino's run out of cash to give you. Come back in an hour.", true, "explore.php");
-    die($h->endpage());
-}
-if ($ir['winnings_this_hour'] <= ((($maxbet*15)*7.5)*-1))
-{
-	alert('danger', "Uh Oh!", "You are too deep in the hole. Come back next hour to try again.", true, "explore.php");
     die($h->endpage());
 }
 if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
@@ -51,14 +42,14 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         alert('danger', "Uh Oh!", "You cannot bet more than you currently have.", true, "?tresde={$tresder}");
         die($h->endpage());
     } else if ($_POST['bet'] > $maxbet) {
-        alert('danger', "Uh Oh!", "You cannot bet more than your max bet of " . number_format($maxbet) . ".", true, "?tresde={$tresder}");
+        alert('danger', "Uh Oh!", "You cannot bet more than your max bet of " . shortNumberParse($maxbet) . " Copper Coins.", true, "?tresde={$tresder}");
         die($h->endpage());
     } else if ($_POST['bet'] < 0) {
         alert('danger', "Uh Oh!", "You must specify a bet.", true, "?tresde={$tresder}");
         die($h->endpage());
     }
     else if ($_POST['bet'] < $minbet) {
-        alert('danger', "Uh Oh!", "You must specify a bet higher than " . number_format($minbet) . " Copper Coins.", true, "?tresde={$tresder}");
+        alert('danger', "Uh Oh!", "You must specify a bet higher than " . shortNumberParse($minbet) . " Copper Coins.", true, "?tresde={$tresder}");
         die($h->endpage());
     }
     $slot = array();
@@ -99,7 +90,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $title = "Success!";
         $alerttype = 'success';
         $win = 1;
-        $phrase = "All five line up. Jack pot! You win an extra " . number_format($gain);
+        $phrase = "All five line up. Jack pot! You win an extra " . shortNumberParse($gain) . " Copper Coins!";
 		addToEconomyLog('Gambling', 'copper', $gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in federal slots.");
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
@@ -110,7 +101,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
         $title = "Success!";
         $alerttype = 'success';
         $win = 1;
-        $phrase = "Three numbers line up. Jack pot! You win an extra " . number_format($gain);
+        $phrase = "Three numbers line up. Jack pot! You win an extra " . shortNumberParse($gain) . " Copper Coins!";
 		addToEconomyLog('Gambling', 'copper', $gain);
         $api->SystemLogsAdd($userid, 'gambling', "Bet {$_POST['bet']} and won {$gain} in federal slots.");
 		$db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + {$gain} WHERE `userid` = {$userid}");
@@ -145,8 +136,8 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet'])) {
 		<tr>
 			<th colspan='2'>
 				Welcome to the Federal Slots. Bet some of your hard earned cash for a slim chance to win big! At your
-				level, we've imposed a betting restriction of " . number_format($maxbet) . " Copper Coins. You must bet at least 
-                " . number_format($minbet) . " Copper Coins to bet here. All five numbers lining up gets you the best prize, where three gets you a small prize.
+				level, we've imposed a betting restriction of " . shortNumberParse($maxbet) . " Copper Coins. You must bet at least 
+                " . shortNumberParse($minbet) . " Copper Coins to bet here. All five numbers lining up gets you the best prize, where three gets you a small prize.
 			</th>
 		</tr>
 		<tr>
