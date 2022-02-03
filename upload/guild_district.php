@@ -114,8 +114,11 @@ switch ($_GET['action'])
 	case 'sabotage':
 	    explodedistrict();
 	    break;
+	case 'homeBeta':
+	     home2();
+	     break;
 	default:
-        home();
+        home2();
         break;
 }
 function test()
@@ -129,33 +132,54 @@ function test()
 	$db->query("UPDATE `guild_districts` SET `district_owner` = 0, `district_melee` = 2000, `district_range` = 1000, `district_general` = 0, `district_fortify` = 0");
 	$db->query("TRUNCATE `guild_district_info`");
 }
-function home()
+
+function home2()
 {
-	global $districtConfig, $userid, $db, $api, $h, $ir;
-	$currentY=1;
-	echo "<table class='table table-bordered table-dark'>";
-	while ($currentY <= $districtConfig['MaxSizeY'])
-	{
-		echo "<tr>";
-		$q=$db->query("SELECT * FROM `guild_districts` WHERE `district_y` = {$currentY} ORDER BY `district_x` ASC LIMIT {$districtConfig['MaxSizeX']}");
-		while ($r=$db->fetch_row($q))
-		{
-		    $class = returnTileClass($r['district_id']);
-			echo "
-			<td width='20%' class='{$class}'>
-				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />
-				<a href='?action=view&id={$r['district_id']}' class='btn btn-info btn-sm'>View Info</a>
-			</td>";
-		}
-		echo "</tr>";
-		$currentY++;
-	}
-	echo "</table>";
+    global $districtConfig, $db, $api;
+    $currentY=1;
+    while ($currentY <= $districtConfig['MaxSizeY'])
+    {
+        echo "
+        <div class='card'>
+            <div class='card-body'>
+                <div class='row'>";
+        $q=$db->query("SELECT * FROM `guild_districts` WHERE `district_y` = {$currentY} ORDER BY `district_x` ASC LIMIT {$districtConfig['MaxSizeX']}");
+        while ($r=$db->fetch_row($q))
+        {
+            $class = returnTileClass($r['district_id']);
+            echo "<div class='col-12 col-sm-6 col-md-4 col-xl'>
+                    <div class='card {$class} text-muted'>
+                        <div class='card-header'>
+                            Y: {$r['district_y']}; X: {$r['district_x']}
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12 col-xxxl-4'>
+                                    Guild
+                                </div>
+                                <div class='col-12 col-xxxl-8'>
+                                    <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <a href='?action=view&id={$r['district_id']}' class='btn btn-info btn-sm btn-block'>View Info</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>";
+        }
+            echo "</div>
+            </div>
+        </div>";
+        $currentY++;
+    }
 }
 function view()
 {
-	global $districtConfig, $userid, $db, $api, $h, $ir;
+	global $db, $h;
 	$district_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
 	if (empty($district_id))
 	{
@@ -168,25 +192,44 @@ function view()
 		alert('danger',"Uh Oh!","You are attempting to view a non-existent district.",true,'guild_district.php');
 		die($h->endpage());
 	}
-	
-	echo "<table class='table table-bordered table-dark'>";
-	echo "<tr>";
-    	parseNWtile($district_id, "info");
-    	parseNtile($district_id, "info");
-    	parseNEtile($district_id, "info");
-	echo "</tr><tr>";
-    	parseWtile($district_id, "info");
-    	parseTile($district_id, "info");
-    	parseEtile($district_id, "info");
-	echo "</tr><tr>";
-    	parseSWtile($district_id, "info");
-    	parseStile($district_id, "info");
-    	parseSEtile($district_id, "info");
-	echo"</tr></table>";
+	echo "<div class='card'>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-12 col-lg'>";
+                	   parseNWtile($district_id, "info");
+                	echo "</div><div class='col-12 col-lg'>";
+                	   parseNTile($district_id, "info");
+            	   echo "</div><div class='col-12 col-lg'>";
+                	parseNEtile($district_id, "info");
+	echo"          <br />
+                   </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg'>";
+                	   parseWtile($district_id, "info");
+                	echo "</div><div class='col-12 col-lg'>";
+                	   parseTile($district_id, "info");
+            	   echo "</div><div class='col-12 col-lg'>";
+                	parseEtile($district_id, "info");
+	echo"          <br />
+                   </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg'>";
+                	   parseSWtile($district_id, "info");
+                	echo "</div><div class='col-12 col-lg'>";
+                	   parseSTile($district_id, "info");
+            	   echo "</div><div class='col-12 col-lg'>";
+                	parseSEtile($district_id, "info");
+	echo"          <br />
+                   </div>
+                </div>
+            </div>
+        </div>";
 }
 function moveto()
 {
-	global $districtConfig, $userid, $db, $api, $h, $ir, $gdi;
+	global $userid, $db, $h, $ir, $gdi;
 	$district_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
 	if (!isset($gdi))
 	{
@@ -219,27 +262,44 @@ function moveto()
 		alert('danger',"Uh Oh!","This district is not your's to control.",true,'guild_district.php');
 		die($h->endpage());
 	}
-	
-	echo "<table class='table table-bordered table-dark'>";
-	echo "<tr>";
-    	parseNWtile($district_id, "moveto");
-    	parseNtile($district_id, "moveto");
-    	parseNEtile($district_id, "moveto");
-	echo "</tr><tr>";
-    	parseWtile($district_id, "moveto");
-    	parseTile($district_id, "moveto");
-    	parseEtile($district_id, "moveto");
-	echo "</tr><tr>";
-    	parseSWtile($district_id, "moveto");
-    	parseStile($district_id, "moveto");
-    	parseSEtile($district_id, "moveto");
-	echo"</tr></table>";
-	
-	
+	echo "<div class='card'>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-12 col-lg'>";
+                    	parseNWtile($district_id, "moveto");
+                    	echo "</div><div class='col-12 col-lg'>";
+                    	parseNTile($district_id, "moveto");
+                    	echo "</div><div class='col-12 col-lg'>";
+                    	parseNEtile($district_id, "moveto");
+                    	echo"          <br />
+                   </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg'>";
+                    	parseWtile($district_id, "moveto");
+                    	echo "</div><div class='col-12 col-lg'>";
+                    	parseTile($district_id, "moveto");
+                    	echo "</div><div class='col-12 col-lg'>";
+                    	parseEtile($district_id, "moveto");
+                    	echo"          <br />
+                   </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg'>";
+                    	parseSWtile($district_id, "moveto");
+                    	echo "</div><div class='col-12 col-lg'>";
+                    	parseSTile($district_id, "moveto");
+                    	echo "</div><div class='col-12 col-lg'>";
+                    	parseSEtile($district_id, "moveto");
+	echo"          <br />
+                   </div>
+                </div>
+            </div>
+        </div>";
 }
 function attack()
 {
-	global $districtConfig, $userid, $db, $api, $h, $ir, $gdi;
+	global $userid, $db, $api, $h, $ir, $gdi;
 	$district_id = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
 	if (!isset($gdi))
 	{
@@ -272,22 +332,40 @@ function attack()
 		alert('danger',"Uh Oh!","You cannot attack a friendly district.",true,'guild_district.php');
 		die($h->endpage());
 	}
-	
-	echo "<table class='table table-bordered table-dark'>";
-	echo "<tr>";
-    	parseNWtile($district_id, "attack");
-    	parseNtile($district_id, "attack");
-    	parseNEtile($district_id, "attack");
-	echo "</tr><tr>";
-    	parseWtile($district_id, "attack");
-    	parseTile($district_id, "attack");
-    	parseEtile($district_id, "attack");
-	echo "</tr><tr>";
-    	parseSWtile($district_id, "attack");
-    	parseStile($district_id, "attack");
-    	parseSEtile($district_id, "attack");
-	echo"</tr></table>";
-	
+	echo "<div class='card'>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-12 col-lg'>";
+                    	parseNWtile($district_id, "attack");
+                    	echo "</div><div class='col-12 col-lg'>";
+                    	parseNTile($district_id, "attack");
+                    	echo "</div><div class='col-12 col-lg'>";
+                    	parseNEtile($district_id, "attack");
+                    	echo"          <br />
+                   </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg'>";
+                    	parseWtile($district_id, "attack");
+                    	echo "</div><div class='col-12 col-lg'>";
+                    	parseTile($district_id, "attack");
+                    	echo "</div><div class='col-12 col-lg'>";
+                    	parseEtile($district_id, "attack");
+                    	echo"          <br />
+                   </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-lg'>";
+                	parseSWtile($district_id, "attack");
+                	echo "</div><div class='col-12 col-lg'>";
+                	parseSTile($district_id, "attack");
+                	echo "</div><div class='col-12 col-lg'>";
+                	parseSEtile($district_id, "attack");
+                	echo"          <br />
+                   </div>
+                </div>
+            </div>
+        </div>";
 }
 function explodedistrict()
 {
@@ -517,17 +595,22 @@ function attackfromtile()
 			$status = "won";
 			$winner = 'attacker';
 		}
-		else
+		elseif ($results['winner'] == 'defense')
 		{
 			$status = "lost";
 			$winner = 'defender';
+		}
+		elseif ($results['winner'] == 'draw')
+		{
+		    $status = "draw";
+		    $winner = '';
 		}
 		$i=logBattle($ir['guild'], $r2['district_owner'], $warriors, $archers, $results['attack_warrior_lost'],
 		    $results['attack_archer_lost'], $r2['district_melee'], $r2['district_range'], $results['defense_warrior_lost'],
 		    $results['defense_archer_lost'], $r2['district_general'], $r2['district_fortify'], $winner, $captains);
 		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers, lead by " . number_format($captains) . " Captains, to take on
-		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers. There is
-		" . number_format($r2['district_general']) . " enemy generals on the battlefield today.<br />
+		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers and 
+		" . number_format($r2['district_general']) . " enemy generals.<br />
 		<b>Battle-log</b><br />
 		<i>You {$status}!</i><br />
 		Friendly Warriors Killed: " . number_format($results['attack_warrior_lost']) . "<br />
@@ -871,7 +954,7 @@ function battlereport()
 }
 function movefromtile()
 {
-	global $districtConfig, $userid, $db, $api, $h, $ir, $gdi;
+	global $userid, $db, $api, $h, $ir, $gdi;
 	$attack_from = (isset($_GET['from']) && is_numeric($_GET['from'])) ? abs($_GET['from']) : '';
 	$attack_to = (isset($_GET['to']) && is_numeric($_GET['to'])) ? abs($_GET['to']) : '';
 	if (blockAccess($ir['guild']))
@@ -1071,12 +1154,12 @@ function fortify()
 		}
 		if ($guildcurr < $neededTokens)
 		{
-			alert('danger',"Uh Oh!","Your guild needs " . number_format($neededTokens) . " Chivalry Tokens before you can fortify this district.",true,'guild_district.php');
+		    alert('danger',"Uh Oh!","Your guild needs " . shortNumberParse($neededTokens) . " Chivalry Tokens before you can fortify this district. Your guild only has " . shortNumberParse($guildcurr) . " Chivalry Tokens in its vault.",true,'guild_district.php');
 			die($h->endpage());
 		}
 		if (!($api->GuildHasXP($ir['guild'], $neededXP)))
 		{
-			alert('danger',"Uh Oh!","Your guild needs " . number_format($neededXP) . " Guild Experience before you can fortify this district.",true,'guild_district.php');
+		    alert('danger',"Uh Oh!","Your guild needs " . shortNumberParse($neededXP) . " Guild Experience before you can fortify this district.",true,'guild_district.php');
 			die($h->endpage());
 		}
 		if ($newLvl >= 3)
@@ -1115,7 +1198,8 @@ function fortify()
                 <div class='row'>
                     <div class='col-12'>
                         You are attempting to fortify this tile. Please click the button to confirm.<br />
-                		For this district, you will need " . number_format($neededXP) . " Guild XP and " . number_format($neededTokens) . " Chivalry Tokens. This is taken from your guild's vault.<br />
+                		For this district, you will need " . shortNumberParse($neededXP) . " Guild XP and " . shortNumberParse($neededTokens) . " 
+                        Chivalry Tokens. This is taken from your guild's vault.<br />
                 		Districts may be fortified up to a maximum of {$districtConfig['maxFortify']} times.<br />
                         Fortifying will also cost your guild one movement.
                     </div>
@@ -1135,7 +1219,7 @@ function fortify()
 }
 function movefrombarracks()
 {
-	global $districtConfig, $userid, $db, $api, $h, $ir, $gdi;
+	global $userid, $db, $api, $h, $ir, $gdi;
 	$attack_to = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
 	if (blockAccess($ir['guild']))
 	{

@@ -10,8 +10,16 @@ $districtConfig['GeneralCost'] = 250000;
 $districtConfig['GeneralCostDaily'] = 30000;
 $districtConfig['WarriorCost'] = 4500;
 $districtConfig['WarriorCostDaily'] = 550;
+$districtConfig['WarriorMeleeDmg'] = 200;
+$districtConfig['WarriorRngDmg'] = 0;
+$districtConfig['WarriorMeleeProt'] = 125;
+$districtConfig['WarriorRngProt'] = 0;
 $districtConfig['ArcherCost'] = 8000;
 $districtConfig['ArcherCostDaily'] = 1100;
+$districtConfig['ArcherMeleeDmg'] = 0;
+$districtConfig['ArcherRngDmg'] = 225;
+$districtConfig['ArcherMeleeProt'] = 0;
+$districtConfig['ArcherRngProt'] = 175;
 $districtConfig['copperPerFortify']=5000;
 $districtConfig['xpPerFortify']=125;
 $districtConfig['xpPerFortifyMulti']=2.2578721;
@@ -273,6 +281,12 @@ function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior
     $attackTotal = $attackWarrior + $attackArcher;
     $defenseTotal = $defenseWarrior + $defenseArcher;
     
+    $luck = Random(-30,30) / 100;
+    //$luck = 0;
+    
+    $attackBuff += $luck;
+    $defenseBuff += $luck;
+    
     //results
     $result = array();
     $result['winner'] = '';
@@ -283,173 +297,139 @@ function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior
     $result['defense_archer_lost'] = 0;
     $result['defense_general_lost'] = 0;
     
-    //We will continue to loop while a winner is still undecided.
+    //Starting values
+    $attMeleeRating = ($attackWarrior * $districtConfig['WarriorMeleeDmg']) + ($attackArcher * $districtConfig['ArcherMeleeDmg']);
+    $attRangeRating = ($attackWarrior * $districtConfig['WarriorRngDmg']) + ($attackArcher * $districtConfig['ArcherRngDmg']);
+    $defMeleeRating = ($defenseWarrior * $districtConfig['WarriorMeleeProt']) + ($defenseArcher * $districtConfig['ArcherMeleeProt']);
+    $defRangeRating = ($defenseWarrior * $districtConfig['WarriorRngProt']) + ($defenseArcher * $districtConfig['ArcherRngProt']);
+    
+    //Captain buffs to attack
+    if ($attackCaptain > 0)
+    {
+        $attMeleeRating *= ($attackCaptain * $districtConfig['CaptainBuff']);
+        $attRangeRating *= ($attackCaptain * $districtConfig['CaptainBuff']);
+    }
+    //General buffs to defense
+    if ($defenseGeneral > 0)
+    {
+        $defMeleeRating *= ($defenseGeneral * $districtConfig['GeneralBuff']);
+        $defRangeRating *= ($defenseGeneral * $districtConfig['GeneralBuff']);
+    }
+    
+    //Add attack/defense buffs
+    $attMeleeRating *= $attackBuff;
+    $attRangeRating *= $attackBuff;
+    $defMeleeRating *= $defenseBuff;
+    $defRangeRating *= $defenseBuff;
+    
+    $attMeleeStart = $attMeleeRating;
+    $attRangeStart = $attRangeRating;
+    $defMeleeStart = $defMeleeRating;
+    $defRangeStart = $defRangeRating;
+    
+    $attMeleePerRating = ($attMeleeRating > 0) ? $attMeleeRating / $attackWarrior : 0;
+    $attRangePerRating = ($attRangeRating > 0) ? $attRangeRating / $attackArcher : 0;
+    $defMeleePerRating = ($defMeleeRating > 0) ? $defMeleeRating / $defenseWarrior : 0;
+    $defRangePerRating = ($defRangeRating > 0) ? $defRangeRating / $defenseArcher : 0;
+    
+    //Calculate losses
+    $itt=0;
     while (empty($result['winner']))
     {
-        $defenderRating=0;
-        $attackerRating=0;
-        $dfndr=0;
-        $fght=0;
-        
-        /*
-         * Logic to handle which units for the defense to use in this skirmish. 
-         * Has fail overs for just in case they're missing a type 
-         * of unit.
-         */
-        if (($defenseWarrior > 0) && ($defenseArcher > 0))
+        $itt++;
+        if ($attMeleeRating > $defMeleeRating)  //attacker melee stronger than defending melee
         {
-            $dfndr=mt_rand(1,2);
+            $attMeleeRating -= $defMeleeRating;
+            $defMeleeRating = 0;
         }
-        elseif (($defenseArcher == 0) && ($defenseWarrior > 0))
+        elseif ($attMeleeRating < $defMeleeRating)  //attacker melee weaker than defending melee
         {
-            $dfndr = 1;
+            $defMeleeRating -= $attMeleeRating;
+            $attMeleeRating = 0;
         }
-        elseif (($defenseArcher > 0) && ($defenseWarrior == 0))
+        elseif (($defMeleeRating == $attMeleeRating) && ($defMeleeRating != 0)) //even melee rating on both sides
         {
-            $dfndr = 2;
-        }
-        else
-        {
-            $dfndr = 0;
+            $defMeleeRating -= 0;
+            $attMeleeRating = 0;
         }
         
-        if ($dfndr > 0)
+        if ($attRangeRating > $defRangeRating)  //attacker ranged stronger than defender range
         {
-            /*
-             * Logic to handle which units for the attack to use in this skirmish.
-             * Has fail overs for just in case they're missing a type
-             * of unit.
-             */
-            if (($attackWarrior > 0) && ($attackArcher > 0))
+            $attRangeRating -= $defRangeRating;
+            $defRangeRating = 0;
+        }
+        elseif ($attRangeRating < $defRangeRating)  //attacker range weaker than defender range
+        {
+            $defRangeRating -= $attRangeRating;
+            $attRangeRating = 0;
+        }
+        elseif (($defRangeRating == $attRangeRating) && ($defRangeRating != 0)) //even ranged on both sides
+        {
+            $defRangeRating = 0;
+            $attRangeRating = 0;
+        }
+        
+        if (($attMeleeRating <= 0) && ($attRangeRating > 0))  //attacker warriors are dead.
+        {
+            if (($attRangeRating * 0.75) > ($defMeleeRating))    //attack range is better than def melee
             {
-                $fght=mt_rand(1,2);
+                $attRangeRating -= $defMeleeRating;
+                $defMeleeRating = 0;
             }
-            elseif (($attackArcher == 0) && ($attackWarrior > 0))
+            elseif (($attRangeRating * 0.75) < ($defMeleeRating))    //attack range is better than def melee
             {
-                $fght = 1;
+                $defMeleeRating -= $defMeleeRating * 0.75;
+                $attRangeRating = 0;
             }
-            elseif (($attackArcher > 0) && ($attackWarrior == 0))
+            elseif ((($attRangeRating * 0.75) == ($defMeleeRating)) && ($defMeleeRating != 0))  //attack range = defense melee
             {
-                $fght = 2;
-            }
-            else
-            {
-                $fght = 0;
-            }
-            if ($fght > 0)
-            {
-                //attacker is warrior
-                if ($fght == 1)
-                {
-                    //defender is warrior
-                    if ($dfndr == 1)
-                    {
-                        $defenderRating = mt_rand(100,300) * $defenseBuff;
-                        $defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*$districtConfig['GeneralBuff']));
-                        $attackerRating = mt_rand(100,300) * $attackBuff;
-                        $attackerRating = mt_rand(100,300) + ($attackBuff * ($attackCaptain*$districtConfig['CaptainBuff']));
-                        //Attacker warrior beats defender warrior
-                        if ($attackerRating >= $defenderRating)
-                        {
-                            $defenseWarrior--;
-                            $defenseTotal--;
-                            $result['defense_warrior_lost']++;
-                        }
-                        //Attack warrior loses to defender warrior
-                        else
-                        {
-                            $attackWarrior--;
-                            $attackTotal--;
-                            $result['attack_warrior_lost']++;
-                        }
-                    }
-                    //defender is archer
-                    else
-                    {
-                        $defenderRating = mt_rand(50,268) * $defenseBuff;
-                        $defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*$districtConfig['GeneralBuff']));
-                        $attackerRating = mt_rand(50,268) * $attackBuff;
-                        $attackerRating = mt_rand(100,300) + ($attackBuff * ($attackCaptain*$districtConfig['CaptainBuff']));
-                        //Attacker warrior beats defender archer
-                        if ($attackerRating >= $defenderRating)
-                        {
-                            $defenseArcher--;
-                            $defenseTotal--;
-                            $result['defense_archer_lost']++;
-                        }
-                        //Attack warrior loses to defender archer
-                        else
-                        {
-                            $attackWarrior--;
-                            $attackTotal--;
-                            $result['attack_warrior_lost']++;
-                        }
-                    }
-                    
-                }
-                //attacker is archer
-                else
-                {
-                    //defender is warrior
-                    if ($dfndr == 1)
-                    {
-                        $defenderRating = mt_rand(150,350) * $defenseBuff;
-                        $defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral* $districtConfig['GeneralBuff']));
-                        $attackerRating = mt_rand(75,400) * $attackBuff;
-                        //Attacker warrior beats defender warrior
-                        if ($attackerRating >= $defenderRating)
-                        {
-                            $defenseWarrior--;
-                            $defenseTotal--;
-                            $result['defense_warrior_lost']++;
-                        }
-                        //Attack archer loses to defender warrior
-                        else
-                        {
-                            $attackArcher--;
-                            $attackTotal--;
-                            $result['attack_archer_lost']++;
-                        }
-                    }
-                    //defender is archer
-                    else
-                    {
-                        $defenderRating = mt_rand(75,400) * $defenseBuff;
-                        $defenderRating = $defenderRating + ($defenderRating * ($defenseGeneral*$districtConfig['GeneralBuff']));
-                        $attackerRating = mt_rand(150,350) * $attackBuff;
-                        //Attacker archer beats defender archer
-                        if ($attackerRating >= $defenderRating)
-                        {
-                            $defenseArcher--;
-                            $defenseTotal--;
-                            $result['defense_archer_lost']++;
-                        }
-                        //Attack archer loses to defender archer
-                        else
-                        {
-                            $attackArcher--;
-                            $attackTotal--;
-                            $result['attack_archer_lost']++;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //defender wins battle
-                $result['winner'] = 'defense';
-                $result['attack_captain_lost'] = $attackCaptain;
-                $winner=true;
+                $defRangeRating = 0;
+                $attRangeRating = 0;
             }
         }
-        else
+        
+        
+        if (($attRangeRating <= 0) && ($attMeleeRating > 0))  //attacker warriors are dead.
         {
-            //attacker wins battle
+            if (($attMeleeRating) > ($defMeleeRating * 0.75))    //attack range is better than def melee
+            {
+                $attRangeRating -= $defMeleeRating;
+                $defMeleeRating = 0;
+            }
+            elseif (($attMeleeRating) < ($defRangeRating * 0.75))    //attack range is better than def melee
+            {
+                $defMeleeRating -= $defMeleeRating * 0.75;
+                $attRangeRating = 0;
+            }
+            elseif ((($attMeleeRating) == ($defRangeRating * 0.75)) && ($defRangeRating != 0))  //attack range = defense melee
+            {
+                $defRangeRating = 0;
+                $attRangeRating = 0;
+            }
+        }
+        $attTotalRating = $attMeleeRating + $attRangeRating;
+        $defTotalRating = $defMeleeRating + $defRangeRating;
+        
+        if ($attTotalRating <= 0)
+        {
+            $result['winner'] = 'defense';
+            $result['attack_captain_lost'] = $attackCaptain;
+        }
+        elseif ($defTotalRating <= 0)
+        {
             $result['winner'] = 'attack';
             $result['defense_general_lost'] = $defenseGeneral;
-            $winner=true;
+        }
+        if ($itt == 30)
+        {
+            $result['winner'] = 'draw';
         }
     }
+    $result['attack_warrior_lost'] = ($attMeleeStart > 0) ? round(($attMeleeRating - $attMeleeStart) / $attMeleePerRating) * -1 : 0;
+    $result['attack_archer_lost'] = ($attRangeStart > 0) ? round(($attRangeRating - $attRangeStart) / $attRangePerRating) * -1 : 0;
+    $result['defense_warrior_lost'] = ($defMeleeStart > 0) ? round(($defMeleeRating - $defMeleeStart) / $defMeleePerRating) * -1 : 0;
+    $result['defense_archer_lost'] = ($defRangeStart > 0) ? round(($defRangeRating - $defRangeStart) / $defRangePerRating) * -1 : 0;
+    //We will continue to loop while a winner is still undecided.
     return json_encode($result);
 }
 
@@ -731,58 +711,141 @@ function parseTile(int $districtID, $extra = '')
         $r=$db->fetch_row($id);
         $class = returnTileClass($r['district_id']);
             echo "
-			<td width='33%' class='{$class}'>
-				<b>Y: {$r['district_y']}; X: {$r['district_x']}</b><br />
-				Guild: <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a><br />";
-            if (isDistrictAccessible($r['district_id']))
-            {
-                echo "Warriors: " . number_format($r['district_melee']) . "<br />
-					Archers: " . number_format($r['district_range']) . "<br />
-					Generals: " . number_format($r['district_general']) . "<br />
-					Fortification: " . returnForticationLevel($r['district_id']) . "<br />";
-                    if ($extra == "attack")
-                    {
-                        if (isGuildDistrict($r['district_id']))
+            <div class='card {$class} text-muted'>
+                <div class='card-header'>
+                    Y: {$r['district_y']}; X: {$r['district_x']}
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Guild
+                                </div>
+                                <div class='col-12'>
+                                    <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a>
+                                </div>
+                            </div>
+                        </div>";
+                        if (isDistrictAccessible($r['district_id']))
                         {
-                            if (isAccessibleFromTile($r['district_id'], $district_id))
-                                echo "<a href='?action=attackform&from={$r['district_id']}&to={$district_id}' class='btn btn-danger'>Attack from Here</a>";
+                            echo "<div class='col-12 col-xl-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            Warriors
+                                        </div>
+                                        <div class='col-12'>
+                                            " . shortNumberParse($r['district_melee']) . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-xl-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            Archers
+                                        </div>
+                                        <div class='col-12'>
+                                            " . shortNumberParse($r['district_range']) . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-xl-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            Generals
+                                        </div>
+                                        <div class='col-12'>
+                                            " . shortNumberParse($r['district_general']) . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-xl-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            Fortification
+                                        </div>
+                                        <div class='col-12'>
+                                            " . returnForticationLevel($r['district_id']) . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>";
+                                if ($extra == "attack")
+                                {
+                                    if (isGuildDistrict($r['district_id']))
+                                    {
+                                        if (isAccessibleFromTile($r['district_id'], $district_id))
+                                        {
+                                            echo "<div class='col-12 col-xl'>
+                                                    <a href='?action=attackform&from={$r['district_id']}&to={$district_id}' class='btn btn-danger'>Attack from Here</a>
+                                                  </div>";
+                                        }
+                                    }
+                                    if ($district_id == $r['district_id'])
+                                    {
+                                        echo "<div class='col-12 col-xl'>
+                                                <a href='?action=attackformbarracks&to={$district_id}' class='btn btn-danger'>Barracks Attack</a>
+                                              </div>";
+                                    }
+                                }
+                                if ($extra == "info")
+                                {
+                                    if ($district_id == $r['district_id'])
+                                    {
+                                        if (!isGuildDistrict($r['district_id']))
+                                        {
+                                            echo "<div class='col-12 col-xl'>
+                                                    <a href='?action=attack&id={$r['district_id']}' class='btn btn-danger btn-block'>Attack</a>
+                                                  </div>
+                                                  <div class='col-12 col-xl'>
+                                                    <a href='?action=sabotage&id={$r['district_id']}' class='btn btn-secondary btn-block'>Sabotage</a>
+                                                  </div>";
+                                        }
+                                        if (isGuildDistrict($r['district_id']))
+                                        {
+                                            echo "  <div class='col-12 col-xl-6'>
+                                                        <a href='?action=moveto&id={$r['district_id']}' class='btn btn-warning btn-block'>Move Troops</a>
+                                                    </div>
+                                                    <div class='col-12 col-xl col-xl-6'>
+        						                        <a href='?action=movebarracks&id={$r['district_id']}' class='btn btn-secondary btn-block'>Barracks Move</a>
+                                                    </div>
+                                                    <div class='col-12 col-xl col-xl-6'>
+        						                          <a href='?action=fortify&id={$r['district_id']}' class='btn btn-success btn-block'>Fortify</a>
+                                                    </div>";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        echo "<div class='col-12 col-xl'>
+                                                <a href='?action=view&id={$r['district_id']}' class='btn btn-primary btn-block'>View Info</a>
+                                              </div>";
+                                    }
+                                }
+                                if ($extra == "moveto")
+                                {
+                                    if (isGuildDistrict($r['district_id']) && ($district_id != $r['district_id']))
+                                    {
+                                        if (isAccessibleFromTile($r['district_id'], $district_id))
+                                        {
+                                            echo "<div class='col-12 col-xl'>
+                                                    <a href='?action=moveform&from={$r['district_id']}&to={$district_id}' class='btn btn-warning btn-block'>Move to Here</a>
+                                                </div>";
+                                        }
+                                    }
+                                    if ($district_id == $r['district_id'])
+                                    {
+                                        echo "<div class='col-12'>";
+                                        alert('info',"","Moving troops from this tile...",false);
+                                        echo "</div>";
+                                    }
+                                }
+                                echo "</div></div>";
                         }
-                        if ($district_id == $r['district_id'])
-                            echo "<a href='?action=attackformbarracks&to={$district_id}' class='btn btn-danger'>Attack from Barracks</a>";
-                    }
-                    if ($extra == "moveto")
-                    {
-                        if (isGuildDistrict($r['district_id']) && ($district_id != $r['district_id']))
-                        {
-                            if (isAccessibleFromTile($r['district_id'], $district_id))
-                                echo "<a href='?action=moveform&from={$r['district_id']}&to={$district_id}' class='btn btn-warning'>Move to Here</a>";
-                        }
-                        if ($district_id == $r['district_id'])
-                            echo "<i><b>Moving troops from here...</b></i>";
-                    }
-                    if ($extra == "info")
-                    {
-                        if ($district_id == $r['district_id'])
-                        {
-                            if (!isGuildDistrict($r['district_id']))
-                            {
-                                echo "<a href='?action=attack&id={$r['district_id']}' class='btn btn-danger'>Attack Tile</a><br />
-                                    <a href='?action=sabotage&id={$r['district_id']}' class='btn btn-secondary'>Sabotage Tile</a><br />";
-                            }
-                            if (isGuildDistrict($r['district_id']))
-                            {
-                                echo "<a href='?action=moveto&id={$r['district_id']}' class='btn btn-warning'>Move Troops</a><br />
-        						<a href='?action=movebarracks&id={$r['district_id']}' class='btn btn-secondary'>Move from Barracks</a><br />
-        						<a href='?action=fortify&id={$r['district_id']}' class='btn btn-success'>Fortify</a><br />";
-                            }
-                        }
-                        else
-                        {
-                            echo "<a href='?action=view&id={$r['district_id']}' class='btn btn-primary'>View Info</a>";
-                        }
-                    }
-            }
-            "</td>";
+                        echo "
+                            </div>
+                        </div>
+                    </div>";
     }
 }
 
