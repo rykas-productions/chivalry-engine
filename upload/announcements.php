@@ -35,7 +35,7 @@ while ($r = $db->fetch_row($q)) {
         echo "
         <div class='card'>
             <div class='card-body'>
-                <p class='card-text'>{$new}" . $parser->getAsHtml() . "</p><hr />
+                <p class='card-text'>{$new}" . $parser->getAsHtml() . "</p>
                 <p class='card-text text-muted'><small><i>
                     Posted By <a href='profile.php?user={$r['ann_poster']}'>{$Poster}</a> {$AnnouncementTime}
                     </small></i></p>
