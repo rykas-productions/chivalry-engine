@@ -185,6 +185,7 @@ if ($ir['rewarded'] == 0)
 	}
 	$month = date('n');
 	$day = date('j');
+	$year = date('Y');
 	// Month = April
 	if ($month == 4)
 	{
@@ -201,17 +202,28 @@ if ($ir['rewarded'] == 0)
 	if ($month == 10)
 	{
 		//Halloween
-		if ($day == 31)
+	    if (($day >= 24) && ($day <= 31))
 		{
 
 		}
 	}
+	//November
 	if ($month == 11)
 	{
+	    //Thanksgiving weekend
 		if ($day == 26 || $day == 27 || $day == 28 || $day == 29 || $day == 30)
 		{
 
 		}
+	}
+	//because of our fuck up :D
+	if ($month == 2 && $day == 2)
+	{
+	    $db->query("UPDATE `users` 
+                    SET `hexbags` = `hexbags` + 100, 
+                    `bor` = `bor` + 1000, 
+                    `vip_days` = `vip_days` + 1 
+                    WHERE `userid` = {$userid}");
 	}
 	$db->query("UPDATE `users` SET `rewarded` = 1 WHERE `userid` = {$userid}");
 }
