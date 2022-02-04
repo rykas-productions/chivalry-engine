@@ -42,163 +42,238 @@ function create()
     if (!isset($_POST['itemname'])) {
         $csrf = request_csrf_html('staff_newitem');
         echo "<form method='post'>
-		<table class='table table-bordered'>
-			<tr>
-				<th width='33%'>
-					Item Name
-				</th>
-				<td>
-					<input type='text' required='1' name='itemname' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Description
-				</th>
-				<td>
-					<input type='text' required='1' name='itemdesc' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Icon
-				</th>
-				<td>
-					<input type='text' name='itemicon' class='form-control'>
-				</td>
-			</tr>
-            <tr>
-				<th width='33%'>
-					Color
-				</th>
-				<td>
-					<input type='text' name='itemcolor' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Item Type
-				</th>
-				<td>
-					" . itemtype_dropdown('itmtype') . "
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Purchasable?
-				</th>
-				<td>
-                    <select name='itembuyable' type='dropdown' class='form-control'>
-                        <option value='on'>Purchasable</option>
-						<option value='off'>Not Purchasable</option>
-                    </select>
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Buying Price
-				</th>
-				<td>
-					<input type='number' required='1' name='itembuy' min='0' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Selling Price
-				</th>
-				<td>
-					<input type='number' required='1' name='itemsell' min='0' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<h4>Item Usage</h4>
-				</td>
-			</tr>";
-        for ($i = 1; $i <= 3; $i++) {
-            echo "
-				<tr>
-					<th>
-						<b><u>Effect #{$i}</u></b>
-					</th>
-					<td>
-						<input type='radio' class='form-control' name='effect{$i}on' value='true' /> Enable Effect
-						<input type='radio' class='form-control' name='effect{$i}on' value='false' checked='checked' /> Disable Effect
-					<br />
-					<b>Stat</b> <select name='effect{$i}stat' type='dropdown' class='form-control'>
-						<option value='energy'>Energy</option>
-						<option value='will'>Will</option>
-                        <option value='maxwill'>Max Will</option>
-						<option value='brave'>Bravery</option>
-						<option value='hp'>Health</option>
-						<option value='level'>Level</option>
-						<option value='strength'>Strength</option>
-						<option value='agility'>Agility</option>
-						<option value='guard'>Guard</option>
-						<option value='labor'>Labor</option>
-						<option value='iq'>IQ</option>
-						<option value='luck'>Luck</option>
-						<option value='infirmary'>Infirmary Time</option>
-						<option value='dungeon'>Dungeon Time</option>
-						<option value='primary_currency'>Copper Coins</option>
-						<option value='secondary_currency'>Chivalry Tokens</option>
-						<option value='xp'>Experience</option>
-						<option value='vip_days'>VIP Days</option>
-						<option value='premium_currency'>Mutton</option>
-					</select>
-					<br />
-					<b>Direction</b> <select name='effect{$i}dir' class='form-control' type='dropdown'>
-						<option value='pos'>Increase/Add</option>
-						<option value='neg'>Decrease/Remove</option>
-					</select>
-					<br />
-					<b>Amount</b> <input type='number' min='0' class='form-control' name='effect{$i}amount' value='0' />
-					<select name='effect{$i}type' class='form-control' type='dropdown'>
-						<option value='figure'>Value</option>
-						<option value='percent'>Percentage</option>
-					</select>
-					</td>
-				</tr>";
-        }
-
-        echo "
-			<tr>
-				<td colspan='2'>
-					<h4>Equipment Stats</h4>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Weapon Strength
-				</th>
-				<td>
-					<input type='number' class='form-control' name='weapon' min='0' value='0' />
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Armor Defense
-				</th>
-				<td>
-					<input type='number' class='form-control' name='armor' min='0' value='0' />
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Required Ammo
-				</th>
-				<td>
-					" . item_dropdown('ammo') . "
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' value='Create Item' class='btn btn-primary'>
-				</td>
-			</tr>
-		</table>
-		{$csrf}
-		</form>";
+                <div class='row'>
+                    <div class='col-12'>
+                        <div class='card'>
+                            <div class='card-header'>
+                                Creating Item
+                            </div>
+                            <div class='card-body'>
+                                <div class='row'>
+                                    <div class='col-12 col-md-4 col-lg-3'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small><b>Item Name</b></small>
+                                            </div>
+                                            <div class='col-12'>
+                                                <input type='text' required='1' name='itemname' class='form-control'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-md-8 col-lg-9 col-xl-5'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Description</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' required='1' name='itemdesc' class='form-control'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-8 col-xl-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Icon / URL</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='itemicon' class='form-control'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Icon Type</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='itemcolor' class='form-control' placeholder='Use .img for URL images'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Item Type</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            " . itemtype_dropdown('itmtype') . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Can Buy</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <select name='itembuyable' type='dropdown' class='form-control'>
+                                                <option value='on'>Purchasable</option>
+                                                <option value='off'>Non-Purchasable</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Buy Price</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' required='1' name='itembuy' min='0' class='form-control'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Sell Price</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' required='1' name='itemsell' min='0' class='form-control'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <h3>Item Effects</h3>
+                                </div>";
+                                for ($i = 1; $i <= 3; $i++) 
+                                {
+                                    echo "
+                                        <div class='col-12 col-sm-6 col-md-3 col-lg'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Effect #{$i} Toggle</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <select class='form-control' name='effect{$i}on'>
+                                                        <option value='true'>Enabled</option>
+                                                        <option value='false' selected='selected'>Disabled</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-3 col-lg'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Increase / Decrease</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <select class='form-control' name='effect{$i}on'>
+                                                        <option value='pos'>Increased</option>
+				                                        <option value='neg'>Decrease</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-3 col-lg'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Effect Stat</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <select name='effect{$i}stat' type='dropdown' class='form-control'>
+                                						<option value='energy'>Energy</option>
+                                						<option value='will'>Will</option>
+                                                        <option value='maxwill'>Max Will</option>
+                                						<option value='brave'>Bravery</option>
+                                						<option value='hp'>Health</option>
+                                						<option value='level'>Level</option>
+                                						<option value='strength'>Strength</option>
+                                						<option value='agility'>Agility</option>
+                                						<option value='guard'>Guard</option>
+                                						<option value='labor'>Labor</option>
+                                						<option value='iq'>IQ</option>
+                                						<option value='luck'>Luck</option>
+                                						<option value='infirmary'>Infirmary Time</option>
+                                						<option value='dungeon'>Dungeon Time</option>
+                                						<option value='primary_currency'>Copper Coins</option>
+                                						<option value='secondary_currency'>Chivalry Tokens</option>
+                                						<option value='xp'>Experience</option>
+                                						<option value='vip_days'>VIP Days</option>
+                                					</select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-3 col-lg'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Change Value</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <input type='number' min='0' class='form-control' name='effect{$i}amount' value='0' />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-3 col-lg'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Absolute Value?</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <select name='effect{$i}type' class='form-control' type='dropdown'>
+                                						<option value='figure'>Value</option>
+                                						<option value='percent'>Percentage</option>
+                                					</select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12'>
+                                            <hr />
+                                        </div>";
+                                }
+                            echo "
+                            </div>
+                            <hr />
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <h3>Combat Info</h3>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Weapon Value</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' class='form-control' name='weapon' min='0' value='0' />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Armor Value</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' class='form-control' name='armor' min='0' value='0' />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Ammo Required</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            " . item_dropdown('ammo') . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <hr />
+                                </div>
+                                <div class='col-12'>
+                                    <hr />
+                                    <input type='submit' value='Create Item' class='btn btn-primary btn-block'>
+                                    {$csrf}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>";
     } else {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_newitem', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
@@ -472,9 +547,9 @@ function giveitem()
                 $db->free_result($q);
                 $db->free_result($q2);
                 $api->UserGiveItem($_POST['user'], $_POST['item'], $_POST['qty']);
-                $api->GameAddNotification($_POST['user'], "The administration has gifted you {$_POST['qty']} {$item['itmname']}(s) to your inventory.");
-                $api->SystemLogsAdd($userid, 'staff', "Gave {$_POST['qty']} <a href='../iteminfo.php?ID={$_POST['item']}'>{$item['itmname']}</a>(s) to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
-                alert('success', "Success!", "You have successfully given {$_POST['qty']} {$item['itmname']}(s) to {$user['username']}.", true, 'index.php');
+                $api->GameAddNotification($_POST['user'], "The administration has gifted you " . shortNumberParse($_POST['qty']) . " {$item['itmname']}(s) to your inventory.");
+                $api->SystemLogsAdd($userid, 'staff', "Gave " . shortNumberParse($_POST['qty']) . " <a href='../iteminfo.php?ID={$_POST['item']}'>{$item['itmname']}</a>(s) to <a href='../profile.php?user={$_POST['user']}'>{$user['username']}</a>.");
+                alert('success', "Success!", "You have successfully given " . shortNumberParse($_POST['qty']) . " {$item['itmname']}(s) to {$user['username']}.", true, 'index.php');
                 die($h->endpage());
             }
         }
@@ -517,178 +592,254 @@ function edititem()
         var_dump($itemi['itmbuyable']);
         $g = ($itemi['itmbuyable'] == 'true') ? "<option value='on'>Purchasable</option> <option value='off'>Non-Purchasable</option>" : "<option value='off'>Non-Purchasable</option><option value='on'>Purchasable</option>";
         echo "<form method='post'>
-					<input type='hidden' name='itemid' value='{$_POST['item']}' />
-					<input type='hidden' name='step' value='3' />
-		<table class='table table-bordered'>
-			<tr>
-				<th width='33%'>
-					Item Name
-				</th>
-				<td>
-					<input type='text' required='1' name='itemname' value='{$itmname}' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Description
-				</th>
-				<td>
-					<input type='text' required='1' name='itemdesc' value='{$itmdesc}' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Icon
-				</th>
-				<td>
-					<input type='text' name='itemicon' value='{$itmicon}' class='form-control'>
-				</td>
-			</tr>
-            <tr>
-				<th width='33%'>
-					Color
-				</th>
-				<td>
-					<input type='text' name='itemcolor' value='{$itmcolor}' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Item Type
-				</th>
-				<td>
-					" . itemtype_dropdown('itmtype', $itemi['itmtype']) . "
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Purchasable?
-				</th>
-				<td>
-					<select name='itembuyable' type='dropdown' class='form-control'>
-                        {$g}
-                    </select>
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Buying Price
-				</th>
-				<td>
-					<input type='number' required='1' name='itembuy' min='0' value='{$itemi['itmbuyprice']}' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<th width='33%'>
-					Selling Price
-				</th>
-				<td>
-					<input type='number' required='1' name='itemsell' min='0' value='{$itemi['itmsellprice']}' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<h4>Item Usage</h4>
-				</td>
-			</tr>";
-        $stats =
-            array("energy" => "Energy", "will" => "Will",
-                "brave" => "Bravery", "level" => "Level",
-                "hp" => "Health", "strength" => "Strength",
-                "agility" => "Agility", "guard" => "Guard",
-                "labor" => "Labor", "iq" => "IQ",
-                "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
-                "primary_currency" => "Copper Coins", "secondary_currency"
-            => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
-                "VIP Days", "luck" => "Luck", "premium_currency" => "Mutton", 
-                "maxwill" => "Max Will"
-        );
-        for ($i = 1; $i <= 3; $i++) {
-            if (!empty($itemi["effect" . $i])) {
-                $efx = unserialize($itemi["effect" . $i]);
-            } else {
-                $efx = array("inc_amount" => 0);
-            }
-            $switch1 =
-                ($itemi['effect' . $i . '_on'] == 'true') ? " checked='checked'" : "";
-            $switch2 =
-                ($itemi['effect' . $i . '_on'] == 'true') ? "" : " checked='checked'";
-            echo "
-				<tr>
-					<th>
-						<b><u>Effect #{$i}</u></b>
-					</th>
-					<td>
-						<input type='radio' class='form-control' name='effect{$i}on' value='true'$switch1 /> Enable Effect
-						<input type='radio' class='form-control' name='effect{$i}on' value='false'$switch2 /> Disable Effect
-						<br /><b>Stat</b> <select class='form-control' name='effect{$i}stat' type='dropdown'>";
-            foreach ($stats as $k => $v) {
-                echo ($k == $efx['stat'])
-                    ? '<option value="' . $k . '" selected="/*qc=on*/SELECTed">' . $v
-                    . '</option>'
-                    : '<option value="' . $k . '">' . $v . '</option>';
-            }
-            $str =
-                ($efx['dir'] == "neg")
-                    ? "<option value='pos'>Increase/Add</option>
-									<option value='neg' selected='selected'>Decrease/Remove</option>"
-                    : "<option value='pos' selected='selected'>Increase/Add</option>
-									<option value='neg'>Decrease/Remove</option>";
-            $str2 =
-                ($efx['inc_type'] == "percent")
-                    ? "<option value='figure'>Value</option>
-									<option value='percent' selected='selected'>Percentage</option>"
-                    : "<option value='figure' selected='selected'>Value</option>
-									<option value='percent'>Percentage</option>";
-
-            echo "
-				</select>
-				<br />
-					<b>Direction</b> <select class='form-control' name='effect{$i}dir' type='dropdown'> {$str} </select>
-				<br />
-					<b>Amount</b> <input type='text' class='form-control' name='effect{$i}amount' value='{$efx['inc_amount']}' />
-						<select name='effect{$i}type' class='form-control' type='dropdown'>{$str2}</select>
-				</td></tr>
-				   ";
-        }
-        echo "
-			<tr>
-				<td colspan='2'>
-					<h4>Equipment Stats</h4>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Weapon Strength
-				</th>
-				<td>
-					<input type='number' class='form-control' value='{$itemi['weapon']}' name='weapon' min='0' value='0' />
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Armor Defense
-				</th>
-				<td>
-					<input type='number' class='form-control' value='{$itemi['armor']}' name='armor' min='0' value='0' />
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Required Ammo
-				</th>
-				<td>
-					" . item_dropdown('ammo') . "
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' value='Edit Item' class='btn btn-primary'>
-				</td>
-			</tr>
-		</table>
-		{$csrf}
-		</form>";
+            <input type='hidden' name='itemid' value='{$_POST['item']}' />
+			<input type='hidden' name='step' value='3' />
+            <div class='row'>
+                <div class='col-12'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            Editing Item ID {$_POST['item']} ({$itmname})
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12 col-md-4 col-lg-3'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Item Name</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' required='1' name='itemname' value='{$itmname}' class='form-control'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-8 col-lg-9 col-xl-5'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Description</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' required='1' name='itemdesc' value='{$itmdesc}' class='form-control'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-8 col-xl-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Icon / URL</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='itemicon' value='{$itmicon}' class='form-control'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Icon Type</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='itemcolor' value='{$itmcolor}' class='form-control' placeholder='Use .img for URL images'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Item Type</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            " . itemtype_dropdown('itmtype', $itemi['itmtype']) . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Can Buy</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <select name='itembuyable' type='dropdown' class='form-control'>
+                                                {$g}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Buy Price</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' required='1' name='itembuy' min='0' value='{$itemi['itmbuyprice']}' class='form-control'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><b>Sell Price</b></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' required='1' name='itemsell' min='0' value='{$itemi['itmsellprice']}' class='form-control'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <h3>Item Effects</h3>
+                                </div>";
+                                    $stats =
+                                    array("energy" => "Energy", "will" => "Will",
+                                        "brave" => "Bravery", "level" => "Level",
+                                        "hp" => "Health", "strength" => "Strength",
+                                        "agility" => "Agility", "guard" => "Guard",
+                                        "labor" => "Labor", "iq" => "IQ",
+                                        "infirmary" => "Infirmary Time", "dungeon" => "Dungeon Time",
+                                        "primary_currency" => "Copper Coins", "secondary_currency"
+                                        => "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+                                        "VIP Days", "luck" => "Luck", "premium_currency" => "Mutton",
+                                        "maxwill" => "Max Will"
+                                    );
+                                    for ($i = 1; $i <= 3; $i++) 
+                                    {
+                                        if (!empty($itemi["effect" . $i]))
+                                            $efx = unserialize($itemi["effect" . $i]);
+                                        else
+                                            $efx = array("inc_amount" => 0);
+                                        
+                                        $selected = ($itemi['effect' . $i . '_on'] == 'true') ? "selected": "";
+                                        $selected2 = ($itemi['effect' . $i . '_on'] == 'false') ? "selected": "";
+                                        $str = ($efx['dir'] == "neg") ? "<option value='pos'>Increase</option>
+                                                                         <option value='neg' selected='selected'>Decrease</option>" : 
+                                                                         "<option value='pos' selected='selected'>Increase</option>
+									                                      <option value='neg'>Decrease</option>";
+                                        $str2 = ($efx['inc_type'] == "percent") ? "<option value='figure'>Value</option>
+									                                               <option value='percent' selected='selected'>Percentage</option>" : 
+									                                               "<option value='figure' selected='selected'>Value</option>
+									                                               <option value='percent'>Percentage</option>";
+                                        echo "
+                                        <div class='col-12 col-sm-6 col-md-3 col-lg'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Effect #{$i} Toggle</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <select class='form-control' name='effect{$i}on'>
+                                                        <option value='true' {$selected}>Enabled</option>
+                                                        <option value='false' {$selected2}>Disabled</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-3 col-lg'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Increase / Decrease</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <select class='form-control' name='effect{$i}on'>
+                                                        {$str}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-3 col-lg'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Effect Stat</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <select class='form-control' name='effect{$i}stat' type='dropdown'>";
+                                                        foreach ($stats as $k => $v) 
+                                                        {
+                                                            echo ($k == $efx['stat'])
+                                                            ? '<option value="' . $k . '" selected="selected">' . $v
+                                                            . '</option>'
+                                                                : '<option value="' . $k . '">' . $v . '</option>';
+                                                        }
+                                                    echo"
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-3 col-lg'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Change Value</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <input type='number' min='0' class='form-control' name='effect{$i}amount' value='{$efx['inc_amount']}' />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-3 col-lg'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Absolute Value?</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <select class='form-control' name='effect{$i}type'>
+                                                        {$str2}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12'>
+                                            <hr />
+                                        </div>";
+                                    }
+                        echo "</div>
+                              <hr />
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <h3>Combat Info</h3>
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-md-4'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small><b>Weapon Value</b></small>
+                                            </div>
+                                            <div class='col-12'>
+                                                <input type='number' class='form-control' value='{$itemi['weapon']}' name='weapon' min='0' value='0' />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-md-4'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small><b>Armor Value</b></small>
+                                            </div>
+                                            <div class='col-12'>
+                                                <input type='number' class='form-control' value='{$itemi['armor']}' name='armor' min='0' value='0' />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-md-4'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small><b>Ammo Required</b></small>
+                                            </div>
+                                            <div class='col-12'>
+                                                " . item_dropdown('ammo') . "
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <hr />
+                                        <input type='submit' value='Edit Item' class='btn btn-primary btn-block'>
+                                        {$csrf}
+                                    </div>
+                                </div>
+                            </div>                 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>";
     } elseif ($_POST['step'] == 3) {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_edititem2', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Forms expire fairly quickly after opening them. Go back and submit the form quicker!");
