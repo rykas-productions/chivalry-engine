@@ -94,7 +94,6 @@ function menu()
 function create()
 {
     global $db, $userid, $api, $ir, $set, $h;
-    echo "<h3>Create a Guild</h3><hr />";
     $cg_price = $set['GUILD_PRICE'];
     $cg_level = $set['GUILD_LEVEL'];
     //User does not have the minimum required Copper Coins.
@@ -123,60 +122,64 @@ function create()
             $name = $db->escape(htmlentities(stripslashes($_POST['name']), ENT_QUOTES, 'ISO-8859-1'));
             $desc = $db->escape(htmlentities(stripslashes($_POST['desc']), ENT_QUOTES, 'ISO-8859-1'));
             //Guild name is already in use.
-            if ($db->num_rows($db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}'")) > 0) {
+            if ($db->num_rows($db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_name` = '{$name}'")) > 0) 
+            {
                 alert("danger", "Uh Oh!", "A guild with the name you've chosen already exists!", true, 'back');
                 die($h->endpage());
             }
-            $db->query("INSERT INTO `guild`
-						(`guild_town_id`, `guild_owner`, `guild_coowner`, `guild_primcurr`, 
-						`guild_seccurr`, `guild_hasarmory`, `guild_capacity`, `guild_name`, `guild_desc`, 
-						`guild_level`, `guild_xp`) 
-						VALUES ('{$ir['location']}', '{$userid}', '{$userid}', '0', '0', 'false', '5', 
-						'{$name}', '{$desc}', '1', '0')");
-            $i = $db->insert_id();
-            //Take user's Copper Coins, and have player join the guild.
+            $i = createGuild($name, $desc, $userid);
             $api->UserTakeCurrency($userid, 'primary', $cg_price);
-            $db->query("UPDATE `users` SET `guild` = {$i} WHERE `userid` = {$userid}");
+            
             //Tell user they've created a guild.
-            alert('success', "Success!", "You have successfully created a guild.", true, "viewguild.php");
+            alert('success', "Success!", "You have successfully created a guild for " . shortNumberParse($cg_price) . " Copper Coins.", true, "viewguild.php", "View Guild");
             //Log the purchase, and that they've joined a guild.
             $api->SystemLogsAdd($userid, 'guilds', "Purchased a guild.");
             $api->SystemLogsAdd($userid, 'guilds', "Joined Guild ID {$i}");
+            $api->GuildAddNotification($i, "Your guild was created!");
+            addToEconomyLog("Guild Upkeep", "copper", $cg_price * -1);
         } else {
             //Request the CSRF form.
             $csrf = request_csrf_html('createguild');
-            echo "<form action='?action=create' method='post'>";
-            echo "
-			<table class='table table-bordered'>
-				<tr>
-					<th colspan='2'>
-						Creating a guild. Guilds cost " . number_format($cg_price) . " Copper Coins
-					</th>
-				</tr>
-				<tr>
-					<th>
-						Guild Name
-					</th>
-					<td>
-						<input type='text' required='1' class='form-control' name='name' />
-					</td>
-				</tr>
-				<tr>
-					<th>
-						Guild Description
-					</th>
-					<td>
-						<textarea name='desc' required='1' class='form-control' cols='40' rows='7'></textarea>
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'>
-						<input type='submit' value='Create Guild for " . shortNumberParse($cg_price) . " Copper Coins' class='btn btn-primary'>
-					</td>
-				</tr>
-				{$csrf}
-			</table>
-			</form>";
+            echo "<form action='?action=create' method='post'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <div class='card'>
+                                <div class='card-header'>
+                                    Creating Guild for " . shortNumberParse($cg_price) . " Copper Coins
+                                </div>
+                                <div class='card-body'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <b><small>Guild Name</small></b>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <input type='text' required='1' class='form-control' name='name' />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <b><small>Guild Description</small></b>
+                                                </div>
+                                                <div class='col-12'>
+                                                    <textarea name='desc' required='1' class='form-control'></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-12'>
+                                            <hr />
+                                            <input type='submit' value='Create Guild' class='btn btn-primary btn-block'>
+                                            {$csrf}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </form>";
         }
     }
 }

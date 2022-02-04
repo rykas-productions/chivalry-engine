@@ -368,3 +368,28 @@ function calculateGuildGymBonus($guild_id)
     }
     return $multiplier;
 }
+
+function createGuild($guildName, $guildDesc, $owner, $level = 1)
+{
+    global $db;
+    $db->query("INSERT INTO `guild` 
+                (`guild_town_id`, `guild_owner`, `guild_coowner`, 
+                `guild_primcurr`, `guild_seccurr`, `guild_hasarmory`, 
+                `guild_capacity`, `guild_name`, `guild_desc`, 
+                `guild_level`, `guild_xp`, `guild_announcement`, 
+                `guild_crime`, `guild_crime_done`, `guild_app_manager`, 
+                `guild_vault_manager`, `guild_crime_lord`, `guild_pic`, 
+                `guild_intromsg`, `guild_ba`, `guild_debt_time`, 
+                `guild_bonus_time`, `guild_sword_item`) 
+                 VALUES 
+                ('0', '{$owner}', '{$owner}', '0', '0', 'false', 
+                 '5', '{$guildName}', '{$guildDesc}', 
+                 '{$level}', '0', '', '0', '0', '{$owner}', 
+                 '{$owner}', '{$owner}', '', '', '0', '0', 
+                 '0', '0')");
+    $i = $db->insert_id();
+    $capacity = calculateGuildMemberCapacity($i);
+    $db->query("UPDATE `guild` SET `guild_capacity` = {$capacity} WHERE `guild_id` = {$i}");
+    $db->query("UPDATE `users` SET `guild` = {$i} WHERE `userid` = {$owner}");
+    return $i;
+}
