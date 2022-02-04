@@ -316,8 +316,14 @@ function levelMultiplier($level)
 		return 4.5;
 	elseif (($level >= 900) && ($level < 1000))
 		return 4.75;
-	else
+	elseif (($level >= 1000) && ($level < 1100))
 		return 5;
+	elseif (($level >= 1100) && ($level < 1500))
+		return 5.5;
+	elseif (($level >= 1500) && ($level < 2000))
+		return 6;
+	else
+		return 10;
 }
 
 function returnMaxInterest($user)
@@ -946,9 +952,9 @@ function setEquipGains($user, $slot, $item)
 			}
 			$dir = ($einfo['dir'] == 'pos') ? "gained" : "lost";
 			if (empty($txt))
-                    $txt.=" {$dir} " . number_format($inc) . " " . statParser($einfo['stat']);
+                    $txt.=" {$dir} " . shortNumberParse($inc) . " " . statParser($einfo['stat']);
                 else
-                    $txt.=", {$dir} " . number_format($inc) . " " . statParser($einfo['stat']);
+                    $txt.=", {$dir} " . shortNumberParse($inc) . " " . statParser($einfo['stat']);
 			$db->query("INSERT INTO `equip_gains` VALUES ('{$user}', '{$einfo['stat']}', '{$einfo['dir']}', '{$inc}', '{$slot}')");
 		}
 	}
@@ -1201,15 +1207,16 @@ function fixMRUserStats()
 
 function userUnequipAll($userid)
 {
-    unequipUserSlot($userid, "equip_primary");
-    unequipUserSlot($userid, "equip_secondary");
-    unequipUserSlot($userid, "equip_armor");
-    unequipUserSlot($userid, "equip_badge");
-    unequipUserSlot($userid, "equip_primary_ring");
-    unequipUserSlot($userid, "equip_secondary_ring");
-    unequipUserSlot($userid, "equip_necklace");
-    unequipUserSlot($userid, "equip_pendant");
-    unequipUserSlot($userid, "equip_potion");
+    unequipUserSlot($userid, slot_prim_wep);
+    unequipUserSlot($userid, slot_second_wep);
+    unequipUserSlot($userid, slot_armor);
+    unequipUserSlot($userid, slot_badge);
+    unequipUserSlot($userid, slot_second_ring);
+    unequipUserSlot($userid, slot_prim_ring);
+    unequipUserSlot($userid, slot_necklace);
+    unequipUserSlot($userid, slot_pendant);
+    unequipUserSlot($userid, slot_potion);
+    unequipUserSlot($userid, slot_wed_ring);
 }
 
 function returnUserInfoRow($userid)
