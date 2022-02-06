@@ -73,9 +73,8 @@ function check_level($disableLevelUp = false)
 			doLevelUpBonus($userid, $ir['reset']);
 			//Give the user some stats for leveling up.
 			$StatGain = $ir['level'] * Random(150,275) / Random(2, 6);
-			$StatGain = $StatGain+($StatGain*levelMultiplier($ir['level']));
-			$StatGain = round($StatGain + ($StatGain *(1 - ($ir['reset'] * 0.1))));
-			$StatGainFormat = number_format($StatGain);
+			$StatGain = $StatGain+($StatGain*levelMultiplier($ir['level'], $ir['reset']));
+			$StatGainFormat = shortNumberParse($StatGain);
 			//Assign the stat gain to the user's class of choice.
 			if ($ir['class'] == 'Warrior') {
 				$Stat = 'strength';
@@ -292,45 +291,50 @@ function getGravatarPic($id)
 	return $link;
 }
 
-function levelMultiplier($level)
+function levelMultiplier($level, $reset = 1)
 {
-	if ($level < 100)
-		return 1;
-	elseif (($level >= 100) && ($level < 150))
-		return 1.5;
+    $actualReset = $reset - 1;
+    $multiplier = 1;
+	if (($level >= 100) && ($level < 150))
+		$multiplier += 0.5;
 	elseif (($level >= 150) && ($level < 250))
-		return 1.75;
+	   $multiplier += 0.75;
 	elseif (($level >= 250) && ($level < 325))
-		return 2.25;
+	   $multiplier += 1.25;
 	elseif (($level >= 325) && ($level < 400))
-		return 2.5;
+		$multiplier += 1.5;
     elseif (($level >= 400) && ($level < 500))
-		return 2.75;
+		$multiplier += 1.75;
     elseif (($level >= 500) && ($level < 600))
-		return 3;
+        $multiplier +=2;
     elseif (($level >= 600) && ($level < 700))
-		return 3.5;
+		$multiplier += 2.5;
     elseif (($level >= 700) && ($level < 800))
-		return 4.25;
+        $multiplier += 3.25;
 	elseif (($level >= 800) && ($level < 900))
-		return 4.5;
+		$multiplier += 3.5;
 	elseif (($level >= 900) && ($level < 1000))
-		return 4.75;
+		$multiplier += 3.75;
 	elseif (($level >= 1000) && ($level < 1100))
-		return 5;
+		$multiplier += 4;
 	elseif (($level >= 1100) && ($level < 1500))
-		return 5.5;
+	   $multiplier += 4.5;
 	elseif (($level >= 1500) && ($level < 2000))
-		return 6;
+	   $multiplier += 5;
 	else
-		return 10;
+	    $multiplier += 5.5;
+	if ($actualReset > 0)
+	{
+	    $multiplier += ($actualReset * 1.25);
+	}
+	return $multiplier;
 }
 
 function returnMaxInterest($user)
 {
 	global $db;
 	$level=$db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `userid` = {$user}"));
-	return round(20000000*levelMultiplier($level));
+	return round(20000000 * levelMultiplier($level, getUserResetCount($user)));
 }
 
 function getCurrentUserPref($prefName, $defaultValue)
@@ -979,178 +983,6 @@ function getUserCurrentEstate(int $user)
     return $db->fetch_single($db->query("SELECT `estate` FROM `users` WHERE `userid` = {$user}"));
 }
 
-//Old function do not use.
-function calculateTotalXP($user)
-{
-    global $db;
-    $q=$db->query("
-		SELECT `level`, `reset`
-		FROM `users` `u`
-		LEFT JOIN `user_settings` AS `us`
-		ON `u`.`userid` = `us`.`userid`
-		WHERE `u`.`userid` = {$user}");
-    //$q=$db->query("SELECT `u`.`level`,`us`.`reset` FROM `users` AS `u` INNER JOIN `user_settings` AS `us` ON `u`.`userid` = `us`.`userid` WHERE `us`.`userid` = {$user}");
-    $r=$db->fetch_row($q);
-    if (!isset($r['reset']))
-        $r['reset'] = 1;
-    if ($r['reset'] == 1)
-        $total = round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2);
-    if ($r['reset'] == 2)
-    {
-        $total = round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
-        $total = $total + round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2) / 2;
-    }
-    if ($r['reset'] == 3)
-    {
-        $total = round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
-        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 2;
-        $total = $total + round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2) / 3;
-    }
-    if ($r['reset'] == 4)
-    {
-        $total = round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
-        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 2;
-        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 3;
-        $total = $total + round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2) / 4;
-    }
-    if ($r['reset'] == 5)
-    {
-        $total = round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
-        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 2;
-        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 3;
-        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 4;
-        $total = $total + round(($r['level'] + 1) * ($r['level'] + 1) * ($r['level'] + 1) * 2.2) / 5;
-    }
-    if ($r['reset'] == 6)
-    {
-        $total = round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
-        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 2;
-        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 3;
-        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 4;
-        $total = $total + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 5;
-        $total = $total + round(($r['level'] + 1) * ($r['level']+ 1) * ($r['level'] + 1) * 2.2) / 6;
-    }
-    return $total;
-}
-
-//Old function, do not use.
-function calcUserMRbyXP($user)
-{
-    $MR1=round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
-    $MR2 = $MR1 + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 2;
-    $MR3 = $MR2 + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 3;
-    $MR4 = $MR3 + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 4;
-    $MR5 = $MR4 + round((500 + 1) * (500 + 1) * (500 + 1) * 2.2) / 5;
-    
-    $totalXP = calculateTotalXP($user);
-    if ($totalXP < $MR1)
-        return 0;
-    elseif (($totalXP >= $MR1) && ($totalXP < $MR2))
-        return 1;
-    elseif (($totalXP >= $MR2) && ($totalXP < $MR3))
-        return 2;
-    elseif (($totalXP >= $MR3) && ($totalXP < $MR4))
-        return 3;
-    elseif (($totalXP >= $MR4) && ($totalXP < $MR5))
-        return 4;
-    elseif ($totalXP >= $MR5)
-        return 5;
-}
-
-function calcUserNewMRbyXP($user)
-{
-    $MR1=round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
-    $MR2 = $MR1 + round((750 + 1) * (750 + 1) * (750 + 1) * 2.2) * 0.9;
-    $MR3 = $MR2 + round((1000 + 1) * (1000 + 1) * (1000 + 1) * 2.2) * 0.8;
-    $MR4 = $MR3 + round((1250 + 1) * (1250 + 1) * (1250 + 1) * 2.2) * 0.7;
-    $MR5 = $MR4 + round((1500 + 1) * (1500 + 1) * (1500 + 1) * 2.2) * 0.6;
-    
-    $totalXP = calculateTotalXP($user);
-    
-    if ($totalXP < $MR1)
-        return 0;
-    elseif (($totalXP >= $MR1) && ($totalXP < $MR2))
-        return 1;
-    elseif (($totalXP >= $MR2) && ($totalXP < $MR3))
-        return 2;
-    elseif (($totalXP >= $MR3) && ($totalXP < $MR4))
-        return 3;
-    elseif (($totalXP >= $MR4) && ($totalXP < $MR5))
-        return 4;
-    elseif ($totalXP >= $MR5)
-        return 5;
-}
-
-function calcUserXPafterMR($user)
-{
-    $MR1=round((500 + 1) * (500 + 1) * (500 + 1) * 2.2);
-    $MR2 = $MR1 + round((750 + 1) * (750 + 1) * (750 + 1) * 2.2) * 0.9;
-    $MR3 = $MR2 + round((1000 + 1) * (1000 + 1) * (1000 + 1) * 2.2) * 0.8;
-    $MR4 = $MR3 + round((1250 + 1) * (1250 + 1) * (1250 + 1) * 2.2) * 0.7;
-    $MR5 = $MR4 + round((1500 + 1) * (1500 + 1) * (1500 + 1) * 2.2) * 0.6;
-    
-    $totalXP = calculateTotalXP($user);
-    
-    if ($totalXP < $MR1)
-        return $totalXP;
-    elseif (($totalXP >= $MR1) && ($totalXP < $MR2))
-        return $totalXP - $MR1;
-    elseif (($totalXP >= $MR2) && ($totalXP < $MR3))
-        return $totalXP - $MR2;
-    elseif (($totalXP >= $MR3) && ($totalXP < $MR4))
-        return $totalXP - $MR3;
-    elseif (($totalXP >= $MR4) && ($totalXP < $MR5))
-        return $totalXP - $MR4;
-    elseif ($totalXP >= $MR5)
-        return $totalXP - $MR5;
-}
-
-function convertToNewMR()
-{
-    global $db;
-    $q=$db->query("SELECT `us`.`userid`, `u`.* 
-                    FROM `user_settings` AS `us` 
-                    LEFT JOIN `users` AS `u`
-                    ON `u`.`userid` = `us`.`userid`
-                    WHERE `us`.`reset` > 1");
-    if ($db->num_rows($q) > 0)
-    {
-        while ($r = $db->fetch_row($q))
-        {
-            $newMR = calcUserNewMRbyXP($r['userid']);
-            $newXP = calcUserXPafterMR($r['userid']);
-            $newLvl = calcUserLevelFromXP($r['userid']);
-            echo $newMR . "<br />";
-            echo $newXP . "<br />";
-            echo $newLvl['lvl'] . "<br />";
-            $db->query("UPDATE `users` SET `level` = {$newLvl['lvl']}, `xp` = 0 WHERE `userid` = {$r['userid']}");
-            $db->query("UPDATE `user_settings` SET `reset` = {$newMR} WHERE `userid` = {$r['userid']}");
-        }
-        //fixMRUserStats();
-    }
-}
-
-function calcUserLevelFromXP($user)
-{
-    global $db;
-    $totalXP = calcUserXPafterMR($user);
-    $q=$db->query("SELECT `us`.*, `u`.*
-                    FROM `user_settings` AS `us`
-                    LEFT JOIN `users` AS `u`
-                    ON `u`.`userid` = `us`.`userid`
-                    WHERE `us`.`reset` > 1");
-    $r = $db->fetch_row($q);
-    
-    $return['lvl'] = 1;
-    $xp_needed = calculateXPNeededByLevel($return['lvl'], $r['reset'] - 1);
-    while ($totalXP > $xp_needed)
-    {
-        $return['lvl']++;
-        $xp_needed = calculateXPNeededByLevel($return['lvl'], $r['reset'] - 1);
-    }
-    return $return;
-}
-
 function doPlayerofWeekTick()
 {
     global $db, $set, $api;
@@ -1182,27 +1014,6 @@ function doLevelUpBonus($userid, $mr)
     $db->query("UPDATE `users` SET `level` = `level` + 1, `energy` = `energy` + {$bonusEnergy},
 						`brave` = `brave` + {$bonusBrave}, `maxenergy` = `maxenergy` + {$bonusEnergy}, `maxbrave` = `maxbrave` + {$bonusBrave},
 						`hp` = `hp` + {$bonusHP}, `maxhp` = `maxhp` + {$bonusHP} WHERE `userid` = {$userid}");
-}
-
-function fixMRUserStats()
-{
-    global $db;
-    $q=$db->query("SELECT `us`.*, `u`.*
-                    FROM `user_settings` AS `us`
-                    LEFT JOIN `users` AS `u`
-                    ON `u`.`userid` = `us`.`userid`
-                    WHERE `us`.`reset` > 1");
-    while ($r = $db->fetch_row($q))
-    {
-        userUnequipAll($r['userid']);
-        $newBrave = ($r['level'] * 2) + (($r['reset']-1) * 2) + 8;
-        $newEnergy = ($r['level'] * 2) + (($r['reset']-1) * 2) + 22;
-        $newHP = ($r['level'] * 50) + (($r['reset']-1) * 50) + 50;
-        
-        $db->query("UPDATE `users` SET `energy` = '{$newEnergy}',
-						`brave` = '{$newBrave}', `maxenergy` = '{$newEnergy}', `maxbrave` = '{$newBrave}',
-						`hp` = '{$newHP}', `maxhp` = '{$newHP}' WHERE `userid` = {$r['userid']}");
-    }
 }
 
 function userUnequipAll($userid)
@@ -1288,6 +1099,7 @@ function getOS($uagent)
     $uagent = $db->escape(strip_tags(stripslashes($uagent)));
     $os_platform = "Unknown OS";
     $os_array = array(
+        '/windows nt 11/i' => 'Windows 10',
         '/windows nt 10/i' => 'Windows 10',
         '/windows nt 6.3/i' => 'Windows 8.1',
         '/windows nt 6.2/i' => 'Windows 8',
@@ -1307,6 +1119,7 @@ function getOS($uagent)
         '/blackberry/i' => 'BlackBerry',
         '/cros/i' => 'Chrome OS',
         '/playstation 4/i' => 'Playstation 4',
+        '/playstation 5/i' => 'Playstation 5',
         '/webos/i' => 'Mobile'
     );
     
@@ -1450,4 +1263,16 @@ function calculateUserMaxBet($userid)
     
     
     return round($maxbet);
+}
+
+function getUserMasteryRank($user)
+{
+    return getUserResetCount($user) - 1;
+}
+
+function getUserResetCount($user)
+{
+    global $db;
+    $mr = $db->fetch_row($db->query("SELECT `reset` FROM `user_settings` WHERE `userid` = {$user}"));
+    return $mr['reset'];
 }

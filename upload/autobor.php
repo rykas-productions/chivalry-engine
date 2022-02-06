@@ -50,7 +50,7 @@ if (isset($_POST['open']))
 		alert('danger',"Uh Oh!","You do not have that many Boxes of Random in your inventory to open that many.");
 		die($h->endpage());
 	}
-	$lvlmultiplier=levelMultiplier($ir['level']);
+	$lvlmultiplier=levelMultiplier($ir['level'], $ir['reset']);
 	$number=0;
 	$copper=0;
 	$tokens=0;
@@ -419,7 +419,7 @@ if (isset($_POST['open']))
 else
 {
 	$maxnumber = ($ir['autobor'] > $ir['bor']) ? $ir['bor'] : $ir['autobor'] ;
-	echo "How many Boxes of Random would you like to open in an automated fashion? You can open {$ir['bor']} Boxes of Random today. You 
+	echo "How many Boxes of Random would you like to open in an automated fashion? You can open {$maxnumber} Boxes of Random today. You 
 	currently have {$ir['autobor']} uses left on your Auto Box of Random Opener.
 	<br />
 	<form method='post'>

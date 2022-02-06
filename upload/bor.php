@@ -47,7 +47,7 @@ $chance=Random(1,87);
 if ($chance <= 33)
 {
     $cash=Random(750,2250)*$multipler;
-	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+	$cash=round($cash+($cash*levelMultiplier($ir['level'], $ir['reset'])));
 	echo "You open this Box of Random and pull out " . shortNumberParse($cash) . " Copper Coins. Cool!";
     $api->UserGiveCurrency($userid,'primary',$cash);
     $api->SystemLogsAdd($userid,"bor","Received {$cash} Copper Coins.");
@@ -58,7 +58,7 @@ elseif (($chance > 35) && ($chance <= 40))
     $cash=Random(5,20)*$multipler;
 	$specialnumber=((getSkillLevel($userid,11)*5)/100);
 	$cash=round($cash+($cash*$specialnumber));
-	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+	$cash=round($cash+($cash*levelMultiplier($ir['level'], $ir['reset'])));
     echo "You quickly open this Box of Random and pull out {$cash} Chivalry Tokens. Neat!";
 	$api->UserGiveCurrency($userid,'secondary',$cash);
     $api->SystemLogsAdd($userid,"bor","Received {$cash} Chivalry Tokens.");
@@ -67,7 +67,7 @@ elseif (($chance > 35) && ($chance <= 40))
 elseif (($chance > 45) && ($chance <= 50))
 {
     $cash=Random(1,3)*$multipler;
-	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+    $cash=round($cash+($cash*levelMultiplier($ir['level'], $ir['reset'])));
     echo "Tick, tock. Ka-boom!";
     $api->UserStatusSet($userid,'infirmary',$cash,"Ticking Box");
     $api->SystemLogsAdd($userid,"bor","Received {$cash} Infirmary minutes.");
@@ -93,7 +93,7 @@ elseif (($chance > 60) && ($chance <= 65))
 elseif (($chance > 65) && ($chance <= 70))
 {
 	$rng=Random(2,4)*$multipler;
-	$rng=round($rng+($rng*levelMultiplier($ir['level'])));
+	$rng=round($rng+($rng*levelMultiplier($ir['level'], $ir['reset'])));
     echo "You open this Box of Random and find yourself {$rng} Linen Wraps! Nifty!";
     $api->UserGiveItem($userid,6,$rng);
     $api->SystemLogsAdd($userid,"bor","Received {$rng} Linen Wraps.");
@@ -101,7 +101,7 @@ elseif (($chance > 65) && ($chance <= 70))
 elseif (($chance > 70) && ($chance <= 75))
 {
 	$rng=Random(2,4)*$multipler;
-	$rng=round($rng+($rng*levelMultiplier($ir['level'])));
+	$rng=round($rng+($rng*levelMultiplier($ir['level'], $ir['reset'])));
     echo "You open this Box of Random and find yourself {$rng} Dungeon Keys! Nifty!";
     $api->UserGiveItem($userid,30,$rng);
     $api->SystemLogsAdd($userid,"bor","Received {$rng} Dungeon Keys.");
@@ -109,7 +109,7 @@ elseif (($chance > 70) && ($chance <= 75))
 elseif (($chance > 75) && ($chance <= 78))
 {
 	$rng=Random(1,2)*$multipler;
-	$rng=round($rng+($rng*levelMultiplier($ir['level'])));
+	$rng=round($rng+($rng*levelMultiplier($ir['level'], $ir['reset'])));
     echo "You open this Box of Random and find yourself {$rng} Explosives.";
     $api->UserGiveItem($userid,28,$rng);
     $api->SystemLogsAdd($userid,"bor","Received {$rng} Small Explosives.");

@@ -40,7 +40,7 @@ if (isset($_POST['open']))
 		alert('danger',"Uh Oh!","You are trying to open more Hexbags than you currently have redeemed on your account.");
 		die($h->endpage());
 	}
-	$lvlmultiplier=levelMultiplier($ir['level']);
+	$lvlmultiplier=levelMultiplier($ir['level'], $ir['reset']);
 	$number=0;
 	$copper=0;
 	$tokens=0;
@@ -154,9 +154,9 @@ if (isset($_POST['open']))
 		" . number_format($lockpicks) . " Lockpicks.<br />
         " . number_format($rocks) . " Heavy Rocks.<br />
 		" . number_format($sticks) . " Sharpened Sticks.<br />
-		" . number_format($strength) . " strength.<br />
-		" . number_format($agility) . " agility.<br />
-		" . number_format($guard) . " guard.<br />
+		" . shortNumberParse($strength) . " strength.<br />
+		" . shortNumberParse($agility) . " agility.<br />
+		" . shortNumberParse($guard) . " guard.<br />
 		" . number_format($borg) . " Boxes of Random.<br />
         " . number_format($notes) . " Assassination Notes.<br />
 		" . number_format($nothing) . " Hexbags had nothing in them.";

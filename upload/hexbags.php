@@ -47,7 +47,7 @@ elseif (($chance > 35) && ($chance <= 46))
     $cash=Random(5,20)*$multipler;
 	$specialnumber=((getSkillLevel($userid,11)*5)/100);
 	$cash=round($cash+($cash*$specialnumber));
-	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+	$cash=round($cash+($cash*levelMultiplier($ir['level'], $ir['reset'])));
 	$string = "You quickly open this hexbag and pull out " . number_format($cash) . " Chivalry Tokens.";
 	$api->UserGiveCurrency($userid,'secondary',$cash);
     $api->SystemLogsAdd($userid,"hexbags","Received " . number_format($cash) . " Chivalry Tokens.");
@@ -56,7 +56,7 @@ elseif (($chance > 35) && ($chance <= 46))
 elseif (($chance > 45) && ($chance <= 50))
 {
     $cash=Random(5,15)*$multipler;
-	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+    $cash=round($cash+($cash*levelMultiplier($ir['level'], $ir['reset'])));
 	$string =  "You greedy bastard. You attempt to snatch a handful of hexbags and run. You get stopped and escorted to the
     dungeon.";
     $api->UserStatusSet($userid,'dungeon',$cash,"Hexbag Theft");
@@ -65,7 +65,7 @@ elseif (($chance > 45) && ($chance <= 50))
 elseif (($chance > 50) && ($chance <= 55))
 {
     $cash=Random(5,15)*$multipler;
-	$cash=round($cash+($cash*levelMultiplier($ir['level'])));
+    $cash=round($cash+($cash*levelMultiplier($ir['level'], $ir['reset'])));
 	$string =  "You reach your hand into this hexbag without looking and stick yourself with a dirty needle. To the infirmary
     you go.";
     $api->UserStatusSet($userid,'infirmary',$cash,"Dirty Needle");
@@ -74,7 +74,7 @@ elseif (($chance > 50) && ($chance <= 55))
 elseif (($chance > 55) && ($chance <= 60))
 {
 	$rng=Random(2,5)*$multipler;
-	$rng=round($rng+($rng*levelMultiplier($ir['level'])));
+	$rng=round($rng+($rng*levelMultiplier($ir['level'], $ir['reset'])));
 	$string =  "You open this hexbag and find yourself " . number_format($rng) . " Leeches.";
     $api->UserGiveItem($userid,5,$rng);
     $api->SystemLogsAdd($userid,"hexbags","Received " . number_format($rng) . " Leeches.");
@@ -82,7 +82,7 @@ elseif (($chance > 55) && ($chance <= 60))
 elseif (($chance > 60) && ($chance <= 65))
 {
 	$rng=Random(2,5)*$multipler;
-	$rng=round($rng+($rng*levelMultiplier($ir['level'])));
+	$rng=round($rng+($rng*levelMultiplier($ir['level'], $ir['reset'])));
 	$string =  "You open this hexbag and find yourself " . number_format($rng) . " Lockpicks.";
     $api->UserGiveItem($userid,29,$rng);
     $api->SystemLogsAdd($userid,"hexbags","Received " . number_format($rng) . " Lockpicks.");
@@ -90,7 +90,7 @@ elseif (($chance > 60) && ($chance <= 65))
 elseif (($chance > 65) && ($chance <= 68))
 {
     $gain=(Random(1,10)*$ir['level'])*$multipler;
-	$gain=round($gain+($gain*levelMultiplier($ir['level'])));
+    $gain=round($gain+($gain*levelMultiplier($ir['level'], $ir['reset'])));
 	$string =  "You open this hexbag and rip it in half. Your Strength increases by " . shortNumberParse($gain) . ".";
     $db->query("UPDATE `userstats` SET `strength` = `strength` + {$gain} WHERE `userid` = {$userid}");
     $api->SystemLogsAdd($userid,"hexbags","Received " . shortNumberParse($gain) . " Strength.");
@@ -98,7 +98,7 @@ elseif (($chance > 65) && ($chance <= 68))
 elseif (($chance > 68) && ($chance <= 71))
 {
     $gain=(Random(1,10)*$ir['level'])*$multipler;
-	$gain=round($gain+($gain*levelMultiplier($ir['level'])));
+    $gain=round($gain+($gain*levelMultiplier($ir['level'], $ir['reset'])));
 	$string =  "You open this hexbag quickly. Your Agility increases by " . shortNumberParse($gain) . ".";
     $db->query("UPDATE `userstats` SET `agility` = `agility` + {$gain} WHERE `userid` = {$userid}");
     $api->SystemLogsAdd($userid,"hexbags","Received " . shortNumberParse($gain) . " Agility.");
@@ -106,7 +106,7 @@ elseif (($chance > 68) && ($chance <= 71))
 elseif (($chance > 71) && ($chance <= 74))
 {
     $gain=(Random(1,10)*$ir['level'])*$multipler;
-	$gain=round($gain+($gain*levelMultiplier($ir['level'])));
+    $gain=round($gain+($gain*levelMultiplier($ir['level'], $ir['reset'])));
 	$string =  "You open this hexbag and get a paper cut and you shrug off the pain. Your Guard increases by " . shortNumberParse($gain) . ".";
     $db->query("UPDATE `userstats` SET `guard` = `guard` + {$gain} WHERE `userid` = {$userid}");
     $api->SystemLogsAdd($userid,"hexbags","Received " . shortNumberParse($gain) . " Guard.");
@@ -114,7 +114,7 @@ elseif (($chance > 71) && ($chance <= 74))
 elseif (($chance > 74) && ($chance <= 80))
 {
     $rocks=Random(2,10)*$multipler;
-	$rocks=round($rocks+($rocks*levelMultiplier($ir['level'])));
+    $rocks=round($rocks+($rocks*levelMultiplier($ir['level'], $ir['reset'])));
 	$string =  "You open this hexbag and find " . number_format($rocks) . " Heavy Rocks. They're in your inventory.";
     $api->UserGiveItem($userid,2,$rocks);
     $api->SystemLogsAdd($userid,"hexbags","Received " . number_format($rocks) . " Heavy Rocks.");
@@ -122,7 +122,7 @@ elseif (($chance > 74) && ($chance <= 80))
 elseif (($chance > 80) && ($chance <= 86))
 {
     $rocks=Random(2,10)*$multipler;
-	$rocks=round($rocks+($rocks*levelMultiplier($ir['level'])));
+    $rocks=round($rocks+($rocks*levelMultiplier($ir['level'], $ir['reset'])));
 	$string = "You open this hexbag and find " . number_format($rocks) . " Sharpened Sticks. They're in your inventory.";
     $api->UserGiveItem($userid,1,$rocks);
     $api->SystemLogsAdd($userid,"hexbags","Received " . number_format($rocks) . " Sharpened Sticks.");
@@ -130,7 +130,7 @@ elseif (($chance > 80) && ($chance <= 86))
 elseif (($chance > 86) && ($chance <= 93))
 {
     $bor=Random(2,15)*$multipler;
-	$bor=round($bor+($bor*levelMultiplier($ir['level'])));
+    $bor=round($bor+($bor*levelMultiplier($ir['level'], $ir['reset'])));
 	$string = "You open this hexbag and find " . number_format($bor) . " of Boxes of Randoms. They're in your inventory.";
     $api->UserGiveItem($userid,33,$bor);
     $api->SystemLogsAdd($userid,"hexbags","Received " . number_format($bor) . " Boxes of Random.");
