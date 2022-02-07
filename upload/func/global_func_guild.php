@@ -393,3 +393,15 @@ function createGuild($guildName, $guildDesc, $owner, $level = 1)
     $db->query("UPDATE `users` SET `guild` = {$i} WHERE `userid` = {$owner}");
     return $i;
 }
+
+function calculateMaxGuildVaultCopper($guild_level)
+{
+    global $set;
+    return ($guild_level * $set['GUILD_PRICE']) * 20;
+}
+
+function calculateMaxGuildVaultTokens($guild_level)
+{
+    global $set;
+    return ($guild_level * $set['GUILD_PRICE']) / 125;
+}

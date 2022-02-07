@@ -292,7 +292,7 @@ function summary()
 							<b>Copper Coins*</b>
 						</div>
 						<div class='col'>
-							" . shortNumberParse($gd['guild_primcurr']) . " / " . shortNumberParse((($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) . "
+							" . shortNumberParse($gd['guild_primcurr']) . " / " . shortNumberParse(calculateMaxGuildVaultCopper($gd['guild_level'])) . "
 						</div>
 					</div>
 					<div class='row'>
@@ -300,7 +300,7 @@ function summary()
 							<b>Chivalry Tokens</b>
 						</div>
 						<div class='col'>
-							" . shortNumberParse($gd['guild_seccurr']) . " / " . shortNumberParse((($gd['guild_level'] * $set['GUILD_PRICE']) / 125)) . "
+							" . shortNumberParse($gd['guild_seccurr']) . " / " . shortNumberParse(calculateMaxGuildVaultTokens($gd['guild_level'])) . "
 						</div>
 					</div>
 				</div>
@@ -501,14 +501,14 @@ function donate()
             alert('danger', "Uh Oh!", "You are trying to donate more Chivalry Tokens than you currently have.");
             die($h->endpage());
             //Donation amount would fill up the guild's vault.
-        } else if ($_POST['primary'] + $gd['guild_primcurr'] > (($gd['guild_level'] * $set['GUILD_PRICE']) * 20)) 
+        } else if ($_POST['primary'] + $gd['guild_primcurr'] > calculateMaxGuildVaultCopper($gd['guild_level'])) 
 		{
-		    alert('danger', "Uh Oh!", "Your guild's vault can only hold " . shortNumberParse(($gd['guild_level'] * $set['GUILD_PRICE']) * 20) . " Copper Coins.");
+		    alert('danger', "Uh Oh!", "Your guild's vault can only hold " . shortNumberParse(calculateMaxGuildVaultCopper($gd['guild_level'])) . " Copper Coins.");
             die($h->endpage());
         } 
-		else if ($_POST['secondary'] + $gd['guild_seccurr'] > (($gd['guild_level'] * $set['GUILD_PRICE']) / 125)) 
+        else if ($_POST['secondary'] + $gd['guild_seccurr'] > calculateMaxGuildVaultTokens($gd['guild_level']))
 		{
-		    alert('danger', "Uh Oh!", "Your guild's vault can only hold " . shortNumberParse(($gd['guild_level'] * $set['GUILD_PRICE']) / 125) . " Chivalry Tokens.");
+		    alert('danger', "Uh Oh!", "Your guild's vault can only hold " . shortNumberParse(calculateMaxGuildVaultTokens($gd['guild_level'])) . " Chivalry Tokens.");
             die($h->endpage());
         } 
 		else {
@@ -530,43 +530,73 @@ function donate()
             alert('success', "Success!", "You have successfully donated " . shortNumberParse($_POST['primary']) . " Copper Coins and " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens to your guild.", true, 'viewguild.php');
         }
     } else {
+        $copperCapacity = calculateMaxGuildVaultCopper($gd['guild_level']) - $gd['guild_primcurr'];
+        $tokenCapacity = calculateMaxGuildVaultTokens($gd['guild_level']) - $gd['guild_seccurr'];
+        $maxCopper = ($ir['primary_currency'] > $copperCapacity) ? $copperCapacity : $ir['primary_currency'];
+        $maxTokens = ($ir['secondary_currency'] > $tokenCapacity) ? $tokenCapacity : $ir['secondary_currency'];
         $csrf = request_csrf_html('guild_donate');
-        echo "
-		<form action='?action=donate' method='post'>
-			<table class='table table-bordered'>
-			<tr>
-				<th colspan='2'>
-					Enter the amount of currency you wish to donate to your guild. You are currently holding " . shortNumberParse($ir['primary_currency']) . "
-					Copper Coins and " . shortNumberParse($ir['secondary_currency']) . " Chivalry Tokens
-				</th>
-			</tr>
-    		<tr>
-    			<td>
-    				<b>Copper Coins</b><br />
-    				<input type='number' name='primary' value='{$ir['primary_currency']}' required='1' max='{$ir['primary_currency']}' class='form-control' min='0' />
-    			</td>
-    			<td>
-    				<b>Chivalry Tokens</b><br />
-    				<input type='number' name='secondary' required='1' max='{$ir['secondary_currency']}' class='form-control' value='{$ir['secondary_currency']}' min='0' />
-    			</td>
-    		</tr>
-    		<tr>
-    			<td colspan='2' align='center'>
-    			    {$csrf}
-    				<input type='submit' class='btn btn-primary' value='Donate' />
-    			</td>
-    		</tr>
-			<tr>
-    			<td align='center'>
-					<a href='?action=donatexp' class='btn btn-primary'>Donate Exp</a>
-    			</td>
-				<td align='center'>
-					<a href='?action=adonate' class='btn btn-primary'>Donate Items</a>
-    			</td>
-    		</tr>
-    	</table>
-		</form>
-		<a href='viewguild.php'>Go Back</a>";
+        echo "<form action='?action=donate' method='post'>
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Donating to Guild
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                You may donate up to " . shortNumberParse($maxCopper) . " Copper Coins 
+                                and " . shortNumberParse($maxTokens) . " Chivalry Tokens to your guild at this time.
+                            </div>
+                            <div class='col-12 col-md-6 col-xl-4 col-xxl-5'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Copper Coins</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='number' name='primary' value='{$maxCopper}' required='1' max='{$maxCopper}' class='form-control' min='0' />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-md-6 col-xl-4 col-xxl-5'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Chivalry Tokens</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='number' name='secondary' required='1' max='{$maxTokens}' class='form-control' value='{$maxTokens}' min='0' />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-xl-4 col-xxl-2'>
+                                <div class='col-12'>
+                                    <b><small><br /></small></b>
+                                </div>
+                                <div class='col-12'>
+                                    <input type='submit' class='btn btn-primary btn-block' value='Donate to Vault' />
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <hr />
+                                <div class='row'>
+                                    <div class='col-12 col-md-4'>
+                                        <a href='viewguild.php' class='btn btn-block btn-danger'>Go Back</a><br />
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-md-4'>
+                                        <a href='?action=donatexp' class='btn btn-primary btn-block'>Donate Experience</a><br />
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-md-4'>
+                                        <a href='?action=adonate' class='btn btn-primary btn-block'>Donate Items</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {$csrf}
+        </form>";
     }
 }
 
