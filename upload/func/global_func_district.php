@@ -153,7 +153,7 @@ function districtRewardMostDeployedUnits()
 	global $db, $api;
 	$winnerguild = 0;
 	$currentmax = 0;
-	$q = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` != 1 AND `guild_id` != 16");
+	$q = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` != 20 AND `guild_id` != 16");
 	while ($r = $db->fetch_row($q))
 	{
 		$currentGuildID = $r['guild_id'];
@@ -182,7 +182,7 @@ function districtRewardMostControlledTiles()
 	global $db, $api;
 	$winnerguild = 0;
 	$currentmax = 0;
-	$q = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` != 1 AND `guild_id` != 16");
+	$q = $db->query("SELECT `guild_id` FROM `guild` WHERE `guild_id` != 20 AND `guild_id` != 16");
 	while ($r = $db->fetch_row($q))
 	{
 		$currentGuildID = $r['guild_id'];
