@@ -217,11 +217,8 @@ echo "
 				<div class='card-body'>
 					<a href='russianroulette.php' class='{$txtClass}'><i class='game-icon game-icon-revolver'></i> Russian Roulette <span class='badge badge-pill badge-primary'>{$rr}</span></a><br />
 					<a href='roulette.php?tresde={$tresder}' class='{$txtClass}'><i class='game-icon game-icon-table'></i> Roulette Table</a><br />
-					<a href='slots.php?tresde={$tresder}' class='{$txtClass}'><i class='game-icon game-icon-pokecog spinner'></i> Slot Machines</a><br />";
-if ($ir['level'] > 49)
-    echo "<a href='bigslots.php?tresde={$tresder}' class='{$txtClass}'><i class='game-icon game-icon-pokecog'></i> Federal Slots</a><br />";
-echo "
-					<a href='hexbags.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags <span class='badge badge-pill badge-primary'>" . number_format($ir['hexbags']) . "</span></a><br />";
+					<a href='slots.php?tresde={$tresder}' class='{$txtClass}'><i class='game-icon game-icon-pokecog spinner'></i> Slot Machines</a><br />
+                    <a href='hexbags.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags <span class='badge badge-pill badge-primary'>" . number_format($ir['hexbags']) . "</span></a><br />";
 if ($ir['autohex'] > 0)
     echo "<a href='autohex.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Auto Hexbags <span class='badge badge-pill badge-primary'>" . number_format($ir['autohex']) . "</span></a><br />";
 echo "

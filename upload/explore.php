@@ -288,15 +288,7 @@ echo"
 					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xxxl-6'>
 						<a href='slots.php?tresde={$tresder}' class='{$txtClass}'>" . loadImageAsset("explore/slots.svg") . " Slots</a>
-					</div>";
-					if ($ir['level'] > 49)
-					{
-						echo"
-					<div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-12 col-xxxl-6'>
-						<a href='bigslots.php?tresde={$tresder}' class='{$txtClass}'>" . loadImageAsset("explore/slots_fed.svg") . " Federal Slots</a>
-					</div>";
-					}
-					echo"
+					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
 						<a href='hexbags.php' class='{$txtClass}'>" . loadImageAsset("explore/hexbags.svg") . " Hexbags <span class='badge badge-pill badge-primary'>" . number_format($ir['hexbags']) . "</span></a>
 					</div>";
