@@ -56,9 +56,10 @@ if ($ir['guild'] > 0)
 	if ($db->num_rows($distQ) == 0)
 	{
 		$db->query("INSERT INTO `guild_district_info` 
-					(`guild_id`, `barracks_warriors`, `barracks_archers`, `barracks_generals`, `moves`) 
+					(`guild_id`, `barracks_warriors`, `barracks_archers`, 
+                        `barracks_generals`, `moves`, `barracks_captains`) 
 					VALUES 
-					('{$ir['guild']}', '0', '0', '0', '2')");
+					('{$ir['guild']}', '0', '0', '0', '2', '0')");
 	}
 	$gdi = ($db->fetch_row($db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}")));
 	$gi = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
