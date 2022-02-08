@@ -41,7 +41,7 @@ if (isset($_POST['password'])) {
         $cost++;
         echo "<br />Testing cost value of {$cost}: ";
         $time = benchmark($password, $cost);
-        echo " {$time} milliseconds";
+        echo " {$time} seconds";
     } while ($time < ($mSec / 1000));
     echo "<br /><br /><b>Ideal cost is {$cost}.</b> Testing cost {$cost} 100 times to check the average...";
     $start = microtime(true);
@@ -49,10 +49,12 @@ if (isset($_POST['password'])) {
     for ($i = 1; $i <= 100; $i++) {
         $times[] = benchmark($password, $cost);
     }
-    echo "<br /><br />Benchmark completed in " . (microtime(true) - $start) . " milliseconds.<br />";
-    echo "<br />Slowest time: " . max($times) . " milliseconds.";
-    echo "<br />Fastest time: " . min($times) . " milliseconds.";
-    echo "<br />Average time: " . (array_sum($times) / count($times)) . " milliseconds.";
+    $end = (microtime(true) - $start);
+    echo "<br /><br />Benchmark completed in {$end} seconds.<br />";
+    echo "<br />Slowest time: " . max($times) . " seconds.";
+    echo "<br />Fastest time: " . min($times) . " seconds.";
+    echo "<br />Average time: " . (array_sum($times) / count($times)) . " seconds.";
+    echo "<br /><br />Score: " . number_format(($cost * 10000) / $end);
     echo "<br /><br />Finished. Ideal cost is {$cost}<br />";
 } else {
     echo "Password Hash benchmark. Lets figure out the ideal time for your server. The default values are recommended values. Change them if you must.<br />
