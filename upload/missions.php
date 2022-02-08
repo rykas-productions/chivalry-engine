@@ -18,7 +18,7 @@ if ($db->num_rows($am) == 0)
 		while ($loops != $kills)
 		{
 		    $random = Random(4000, 20000);
-		    $reward = $reward + round($random + ($random * levelMultiplier($ir['level'])));
+		    $reward = $reward + round($random + ($random * levelMultiplier($ir['level'], $ir['reset'])));
 		    $loops++;
 		}
 		$endtime=time()+($days*86400);
