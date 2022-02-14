@@ -9,7 +9,7 @@
 function cacheQuery($query, $result, $dir = 'query')
 {
     $serialzedData = serialize($result);
-    $cacheName = dirname(__DIR__) . "/cache/{$dir}/" . md5($query);
+    $cacheName = returnCacheDir() . "{$dir}/" . md5($query);
     file_put_contents($cacheName, $serialzedData);
 }
 
@@ -21,7 +21,7 @@ function cacheQuery($query, $result, $dir = 'query')
  */
 function fetchCachedQuery($query, $dir = 'query', $ttl = 86400)
 {
-    $cacheName = dirname(__DIR__) . "/cache/{$dir}/" . md5($query);
+    $cacheName = returnCacheDir() . "{$dir}/" . md5($query);
     if (file_exists($cacheName))
     {
         $file_time = filemtime($cacheName);
@@ -41,7 +41,7 @@ function get_fg_cache($ip, $hours = 1)
     $expire_time = $hours * 60 * 60;
     if (!(filter_var($ip, FILTER_VALIDATE_IP)))
         $ip='127.0.0.1';
-        $file = dirname(__DIR__) . "/cache/ip/{$ip}.json";
+    $file = returnCacheDir() . "ip/{$ip}.json";
     if (file_exists($file)) 
     {
         $file_time = filemtime($file);
@@ -213,7 +213,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
 {
     global $set;
     $engine_version = $set['Version_Number'];
-    $json = json_decode(get_cached_file($url, dirname(__DIR__) . "/cache/update_check.json"), true);
+    $json = json_decode(get_cached_file($url, returnCacheDir() . "update_check.json"), true);
     if (is_null($json))
         return "Update checker failed.";
         if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
@@ -224,5 +224,65 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
 
 function fetchCIDDB()
 {
-    return get_cached_file("https://chivalryisdeadgame.com/cache/latest.sql", "./cache/latest.sql", 24);
+    return get_cached_file("https://chivalryisdeadgame.com/cache/latest.sql", dirname(__DIR__) . "/cache/latest.sql", 24);
+}
+
+function getVPSData()
+{
+    global $_CONFIG;
+    $cacheFile = returnCacheDir() . "/serv/vps.json";
+    if (file_exists($cacheFile))
+    {
+        $file_time = filemtime($cacheFile);
+        if (time() - 3600 < $file_time)
+        {
+            $return =  file_get_contents($cacheFile);
+        }
+        else
+        {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://api.vps.net/ssd_virtual_machines/259426.api10json",
+                CURLOPT_USERPWD => $_CONFIG['vpsAuth'],
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_HTTPHEADER => array("Accept: application/json"),
+                CURLOPT_RETURNTRANSFER => true));
+            $content = curl_exec($curl);
+            file_put_contents($cacheFile, $content);
+            $return =  file_get_contents($cacheFile);
+            curl_close($curl);
+        }
+    }
+    else
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.vps.net/ssd_virtual_machines/259426.api10json",
+            CURLOPT_USERPWD => $_CONFIG['vpsAuth'],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_HTTPHEADER => array("Accept: application/json"),
+            CURLOPT_RETURNTRANSFER => true));
+        $content = curl_exec($curl);
+        file_put_contents($cacheFile, $content);
+        $return =  file_get_contents($cacheFile);
+        curl_close($curl);
+    }
+    return $return;
+}
+
+function returnVPSInfo()
+{
+    $vpsJson = json_decode(getVPSData(), true);
+    return $vpsJson['virtual_machine'];
+}
+
+function returnVPSBandwidth()
+{
+    $vpsJson = json_decode(getVPSData(), true);
+    return $vpsJson['virtual_machine']['bandwidth_used'] * 1024;
+}
+
+function returnCacheDir()
+{
+    return dirname(__DIR__) . "/cache/";
 }
