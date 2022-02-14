@@ -593,8 +593,6 @@ function get_filesize_remote($url)
 /**
  * @deprecated Please use $api->SystemLogsAdd($user, $logtype, $input);
  * Adds a log into the game logging system. 
- * @param string $uagent Browser User Agent
- * @return string Operating System
  */
 function SystemLogsAdd($user, $logtype, $input)
 {
