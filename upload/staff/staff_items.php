@@ -149,8 +149,8 @@ function create()
                                                 </div>
                                                 <div class='col-12'>
                                                     <select class='form-control' name='effect{$i}on'>
+                                                        <option value='false'>Disabled</option>
                                                         <option value='true'>Enabled</option>
-                                                        <option value='false' selected='selected'>Disabled</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -161,7 +161,7 @@ function create()
                                                     <small><b>Increase / Decrease</b></small>
                                                 </div>
                                                 <div class='col-12'>
-                                                    <select class='form-control' name='effect{$i}on'>
+                                                    <select class='form-control' name='effect{$i}dir'>
                                                         <option value='pos'>Increased</option>
 				                                        <option value='neg'>Decrease</option>
                                                     </select>
@@ -589,7 +589,6 @@ function edititem()
         $itmdesc = addslashes($itemi['itmdesc']);
 		$itmicon = addslashes($itemi['icon']);
         $itmcolor = addslashes($itemi['color']);
-        var_dump($itemi['itmbuyable']);
         $g = ($itemi['itmbuyable'] == 'true') ? "<option value='on'>Purchasable</option> <option value='off'>Non-Purchasable</option>" : "<option value='off'>Non-Purchasable</option><option value='on'>Purchasable</option>";
         echo "<form method='post'>
             <input type='hidden' name='itemid' value='{$_POST['item']}' />
@@ -709,15 +708,17 @@ function edititem()
                                         else
                                             $efx = array("inc_amount" => 0);
                                         
-                                        $selected = ($itemi['effect' . $i . '_on'] == 'true') ? "selected": "";
-                                        $selected2 = ($itemi['effect' . $i . '_on'] == 'false') ? "selected": "";
-                                        $str = ($efx['dir'] == "neg") ? "<option value='pos'>Increase</option>
-                                                                         <option value='neg' selected='selected'>Decrease</option>" : 
-                                                                         "<option value='pos' selected='selected'>Increase</option>
+                                        $enabled = ($itemi['effect' . $i . '_on'] == 'true') ? " <option value='true'>Enabled</option>
+                                                                                                <option value='false'>Disabled</option>" :
+                                                                                            "<option value='false'>Disabled</option>
+                                                                                                <option value='true'>Enabled</option>";
+                                        $str = ($efx['dir'] == "neg") ? "<option value='neg'>Decrease</option>
+                                                                            <option value='pos'>Increase</option>" : 
+                                                                         "<option value='pos'>Increase</option>
 									                                      <option value='neg'>Decrease</option>";
-                                        $str2 = ($efx['inc_type'] == "percent") ? "<option value='figure'>Value</option>
-									                                               <option value='percent' selected='selected'>Percentage</option>" : 
-									                                               "<option value='figure' selected='selected'>Value</option>
+                                        $str2 = ($efx['inc_type'] == "percent") ? "<option value='percent'>Percentage</option>
+                                                                                    <option value='figure'>Value</option>" : 
+									                                               "<option value='figure'>Value</option>
 									                                               <option value='percent'>Percentage</option>";
                                         echo "
                                         <div class='col-12 col-sm-6 col-md-3 col-lg'>
@@ -727,8 +728,7 @@ function edititem()
                                                 </div>
                                                 <div class='col-12'>
                                                     <select class='form-control' name='effect{$i}on'>
-                                                        <option value='true' {$selected}>Enabled</option>
-                                                        <option value='false' {$selected2}>Disabled</option>
+                                                        {$enabled}
                                                     </select>
                                                 </div>
                                             </div>
@@ -739,7 +739,7 @@ function edititem()
                                                     <small><b>Increase / Decrease</b></small>
                                                 </div>
                                                 <div class='col-12'>
-                                                    <select class='form-control' name='effect{$i}on'>
+                                                    <select class='form-control' name='effect{$i}dir'>
                                                         {$str}
                                                     </select>
                                                 </div>
@@ -874,9 +874,7 @@ function edititem()
         }
         $itmbuy = ($_POST['itembuyable'] == 'on') ? 'true' : 'false';
         for ($i = 1; $i <= 3; $i++) {
-            $efxkey = "effect{$i}";
-            $_POST[$efxkey . 'stat'] =
-                (isset($_POST[$efxkey . 'stat'])
+            $efxkey = "effect{$i}";  $_POST[$efxkey . 'stat'] = (isset($_POST[$efxkey . 'stat'])
                     && in_array($_POST[$efxkey . 'stat'],
                         array('energy', 'will', 'brave', 'hp',
                             'strength', 'agility', 'guard', 'level',
@@ -884,26 +882,11 @@ function edititem()
                             'primary_currency', 'secondary_currency', 
                             'xp', 'vip_days', 'luck', 'premium_currency',
                             'maxwill'
-                        )))
-                    ? $_POST[$efxkey . 'stat'] : 'energy';
-            $_POST[$efxkey . 'dir'] =
-                (isset($_POST[$efxkey . 'dir'])
-                    && in_array($_POST[$efxkey . 'dir'],
-                        array('pos', 'neg'))) ? $_POST[$efxkey . 'dir']
-                    : 'pos';
-            $_POST[$efxkey . 'type'] =
-                (isset($_POST[$efxkey . 'type'])
-                    && in_array($_POST[$efxkey . 'type'],
-                        array('figure', 'percent')))
-                    ? $_POST[$efxkey . 'type'] : 'figure';
-            $_POST[$efxkey . 'amount'] =
-                (isset($_POST[$efxkey . 'amount'])
-                    && is_numeric($_POST[$efxkey . 'amount']))
-                    ? abs(intval($_POST[$efxkey . 'amount'])) : 0;
-            $_POST[$efxkey . 'on'] =
-                (isset($_POST[$efxkey . 'on'])
-                    && in_array($_POST[$efxkey . 'on'], array('true', 'false')))
-                    ? $_POST[$efxkey . 'on'] : 0;
+                        ))) ? $_POST[$efxkey . 'stat'] : 'energy';
+            $_POST[$efxkey . 'dir'] = (isset($_POST[$efxkey . 'dir']) && in_array($_POST[$efxkey . 'dir'], array('pos', 'neg'))) ? $_POST[$efxkey . 'dir'] : 'pos';
+            $_POST[$efxkey . 'type'] = (isset($_POST[$efxkey . 'type']) && in_array($_POST[$efxkey . 'type'], array('figure', 'percent'))) ? $_POST[$efxkey . 'type'] : 'figure';
+            $_POST[$efxkey . 'amount'] = (isset($_POST[$efxkey . 'amount']) && is_numeric($_POST[$efxkey . 'amount'])) ? abs(intval($_POST[$efxkey . 'amount'])) : 0;
+            $_POST[$efxkey . 'on'] = (isset($_POST[$efxkey . 'on']) && in_array($_POST[$efxkey . 'on'], array('true', 'false'))) ? $_POST[$efxkey . 'on'] : 0;
             $effects[$i] =
                 $db->escape(
                     serialize(
