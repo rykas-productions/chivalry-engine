@@ -404,18 +404,18 @@ function home()
 				<div class='card-body'>
 					<div class='row'>
 						<div class='col'>
-							<a {$class[11]} href='?action=mine1'>Mining Level 10</a><br />
-							<a {$class[12]} href='?action=mine2'>Mining Level 20</a><br />
-							<a {$class[13]} href='?action=mine3'>Mining Level 50</a><br />
-							<a {$class[82]} href='?action=mine4'>Mining Level 75</a><br />
-							<a {$class[83]} href='?action=mine5'>Mining Level 100</a><br />
-							<a {$class[84]} href='?action=mine6'>Mining Level 200</a><br />
+							<a {$class[11]} href='?action=mine1'>Level 10</a><br />
+							<a {$class[12]} href='?action=mine2'>Level 20</a><br />
+							<a {$class[13]} href='?action=mine3'>Level 50</a><br />
+							<a {$class[82]} href='?action=mine4'>Level 75</a><br />
+							<a {$class[83]} href='?action=mine5'>Level 100</a><br />
+							<a {$class[84]} href='?action=mine6'>Level 200</a><br />
 						</div>
 						<div class='col'>
-							<a {$class[96]} href='?action=mine7'>Mining Level 300</a><br />
-							<a {$class[97]} href='?action=mine8'>Mining Level 500</a><br />
-							<a {$class[98]} href='?action=mine9'>Mining Level 750</a><br />
-							<a {$class[99]} href='?action=mine8'>Mining Level 1,000</a><br />
+							<a {$class[96]} href='?action=mine7'>Level 300</a><br />
+							<a {$class[97]} href='?action=mine8'>Level 500</a><br />
+							<a {$class[98]} href='?action=mine9'>Level 750</a><br />
+							<a {$class[99]} href='?action=mine8'>Level 1,000</a><br />
 						</div>
 					</div>
 				</div>
@@ -543,11 +543,11 @@ function home()
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[29]} href='?action=crimec1'>500,000</a><br />
-					<a {$class[30]} href='?action=crimec2'>1,000,000</a><br />
-					<a {$class[31]} href='?action=crimec3'>5,000,000</a><br />
-					<a {$class[32]} href='?action=crimec4'>25,000,000</a><br />
-					<a {$class[33]} href='?action=crimec5'>100,000,000</a><br />
+					<a {$class[29]} href='?action=crimec1'>500K</a><br />
+					<a {$class[30]} href='?action=crimec2'>1M</a><br />
+					<a {$class[31]} href='?action=crimec3'>5M</a><br />
+					<a {$class[32]} href='?action=crimec4'>25M</a><br />
+					<a {$class[33]} href='?action=crimec5'>100M</a><br />
 				</div>
 			</div>
 		</div>
@@ -585,11 +585,11 @@ function home()
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[39]} href='?action=dam1'>1,000 Damage</a><br />
-					<a {$class[40]} href='?action=dam2'>25,000 Damage</a><br />
-					<a {$class[41]} href='?action=dam3'>100,000 Damage</a><br />
-					<a {$class[42]} href='?action=dam4'>1,000,000 Damage</a><br />
-					<a {$class[43]} href='?action=dam5'>25,000,000 Damage</a><br />
+					<a {$class[39]} href='?action=dam1'>1K</a><br />
+					<a {$class[40]} href='?action=dam2'>2K</a><br />
+					<a {$class[41]} href='?action=dam3'>1K</a><br />
+					<a {$class[42]} href='?action=dam4'>1M</a><br />
+					<a {$class[43]} href='?action=dam5'>25M</a><br />
 				</div>
 			</div>
 		</div>
@@ -686,11 +686,11 @@ function home()
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[62]} href='?action=iq1'>10,000 IQ</a><br />
-					<a {$class[63]} href='?action=iq2'>25,000 IQ</a><br />
-					<a {$class[64]} href='?action=iq3'>100,000 IQ</a><br />
-					<a {$class[65]} href='?action=iq4'>1,000,000 IQ</a><br />
-					<a {$class[66]} href='?action=iq5'>5,000,000 IQ</a><br />
+					<a {$class[62]} href='?action=iq1'>10KQ</a><br />
+					<a {$class[63]} href='?action=iq2'>25K</a><br />
+					<a {$class[64]} href='?action=iq3'>100K</a><br />
+					<a {$class[65]} href='?action=iq4'>1M</a><br />
+					<a {$class[66]} href='?action=iq5'>5M</a><br />
 				</div>
 			</div>
 		</div>
@@ -728,11 +728,11 @@ function home()
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[72]} href='?action=labor1'>100,000 Labor</a><br />
-					<a {$class[73]} href='?action=labor2'>500,000 Labor</a><br />
-					<a {$class[74]} href='?action=labor3'>1,000,000 Labor</a><br />
-					<a {$class[75]} href='?action=labor4'>10,000,000 Labor</a><br />
-					<a {$class[76]} href='?action=labor5'>50,000,000 Labor</a><br />
+					<a {$class[72]} href='?action=labor1'>100Kr</a><br />
+					<a {$class[73]} href='?action=labor2'>500K</a><br />
+					<a {$class[74]} href='?action=labor3'>1M</a><br />
+					<a {$class[75]} href='?action=labor4'>10M</a><br />
+					<a {$class[76]} href='?action=labor5'>50M</a><br />
 				</div>
 			</div>
 		</div>
