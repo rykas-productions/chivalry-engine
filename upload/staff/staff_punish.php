@@ -605,6 +605,7 @@ function ipsearch()
 		</form>";
     } else {
         $csrf = request_csrf_html('staff_ipsearch');
+        $formValue = (isset($_GET['ip'])) ? addslashes($_GET['ip']) : "...";
         echo "
 		<form method='post'>
 			<table class='table table-bordered'>
@@ -618,7 +619,7 @@ function ipsearch()
 						IP Address
 					</th>
 					<td>
-						<input type='text' class='form-control' required='1' name='ip' value='...'>
+						<input type='text' class='form-control' required='1' name='ip' value='{$formValue}'>
 					</td>
 				</tr>
 				<tr>
