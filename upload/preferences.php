@@ -89,88 +89,113 @@ function prefs_home()
     global $ir;
     alert('info','',"Welcome to your account settings, <b>{$ir['username']} [{$ir['userid']}]</b>! Here you can change many options concerning your account.",false);
     echo "
-		<div class='row'>
-			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=namechange'>Change Name</a>
+        <div class='row'>
+            <div class='col-12 col-lg-6 col-xl-4 col-xxxl'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Account Settings
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=namechange'>Change Name</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-danger btn-block' href='?action=pwchange'>Change Password</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-danger btn-block' href='?action=changeemail'>Change Email Address</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=classreset'>Class Reset</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-info btn-block' href='?action=loginlogs'>Login Logs</a><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <br />
-			</div>
-			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-danger btn-block' href='?action=pwchange'>Change Password</a>
+            </div>
+            <div class='col-12 col-lg-6 col-xl-4 col-xxxl'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Player Customization
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=sexchange'>Gender</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=themechange'>Theme/Template</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=picchange'>Profile Pic</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=descchange'>Player Description</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=sigchange'>Forum Signature</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=quicklink'>Quick-Use Items</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-success btn-block' href='?action=reset'>Mastery Rank</a><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <br />
-			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-danger btn-block' href='?action=changeemail'>Change Email Address</a>
+            </div>
+            <div class='col-12 col-lg-6 col-xl-4 col-xxxl'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Game Settings
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=sounds'>Audio Settings</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-info btn-block' href='?action=tuttoggle'>Tutorial Toggle</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=icontoggle'>Toggle Item Icons</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=userdropdown'>User Input Setting</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=forumalert'>Forum Notifications</a><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <br />
-			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=emailchange'>Change Email Opt-Setting</a>
+            </div>
+            <div class='col-12 col-lg-6 col-xl-4 col-xxxl'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Integration / Social
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=emailchange'>Email Opt Setting</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-danger btn-block' href='?action=steamlink'>Link Steam Account</a><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <br />
-			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=picchange'>Change Display Picture</a>
-                <br />
-			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=sexchange'>Change Gender</a>
-                <br />
-			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=sigchange'>Change Forum Signature</a>
-                <br />
-			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=descchange'>Change Player Description</a>
-                <br />
-			</div>
-			<div class='col-12 col-sm-6 col-md-12 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=quicklink'>Change Quick-Use Items</a>
-                <br />
-			</div>
-			<div class='col-6 col-md-6 col-xl-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=forumalert'>Forum Notifications</a>
-                <br />
-			</div>
-			<div class='col-6 col-xl-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=userdropdown'>User Input Setting</a>
-                <br />
-			</div>
-			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=themechange'>Change Theme</a>
-                <br />
-			</div>
-			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=classreset'>Class Reset</a>
-                <br />
-			</div>
-			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-info btn-block' href='?action=tuttoggle'>Tutorial Toggle</a>
-                <br />
-			</div>
-			<div class='col-6 col-xl-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=icontoggle'>Toggle Item Icons</a>
-                <br />
-			</div>
-			<div class='col-6 col-xl-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-danger btn-block' href='?action=steamlink'>Link Steam Account</a>
-                <br />
-			</div>
-			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-info btn-block' href='?action=loginlogs'>Login Logs</a>
-                <br />
-			</div>
-			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-danger btn-block' href='?action=reset'>Account Reset</a>
-                <br />
-			</div>
-			<div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=counthome'>Change Counts</a>
-                <br />
-			</div>
-            <div class='col-6 col-md-6 col-lg-4 col-xxl-3 col-xxxl-2'>
-				<a class='btn btn-primary btn-block' href='?action=sounds'>Audio Settings</a>
-                <br />
-			</div>
-		</div>";
+            </div>
+        </div>";
 }
 
 function name_change()
@@ -178,18 +203,43 @@ function name_change()
     global $db, $ir, $userid, $h, $api;
     if (empty($_POST['newname'])) {
         $csrf = request_csrf_html('prefs_namechange');
-        echo "<br />
-		<h3>Username Change</h3>
-		Here you can change your name that is shown throughout the game. It will cost you 5 Chivalry Tokens to change your name.<br />
-		<div class='form-group'>
-		<form method='post'>
-			<input type='text' class='form-control' minlength='3' maxlength='20' id='username' required='1' value='{$ir['username']}' name='newname' onkeyup='CheckUsername(this.value);' />
-			<br />
-			{$csrf}
-			<input type='submit' class='btn btn-primary' value='Change Username' />
-			</div>
-            <div id='usernameresult' class='invalid-feedback'></div>
-		</form>";
+        echo "
+        <form method='post'>
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Change your name
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                Change your in-game name for a cost of 5 Chivalry Tokens. You cannot use a name already in use, or a name that implies you are game staff.
+                            </div>
+                            <div class='col-12 col-xl-9'>
+                                <div class='row'>
+                                    <div class='col-12 col-xl-3'>
+                                        <b><small>New Name</small></b>
+                                    </div>
+                                    <div class='col-12 col-xl'>
+                                        <input type='text' class='form-control' minlength='3' maxlength='32' id='username' required='1' value='{$ir['username']}' name='newname'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-xl-3'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <input type='submit' class='btn btn-primary btn-block' value='Change Name' />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {$csrf}
+        </form>";
     } else {
         if (!isset($_POST['verf']) || !verify_csrf_code('prefs_namechange', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
@@ -199,7 +249,7 @@ function name_change()
         if (empty($_POST['newname'])) {
             alert('danger', "Uh Oh!", "Invalid username specified. Please fill out the form and try again.");
             die($h->endpage());
-        } elseif (((strlen($_POST['newname']) > 20) OR (strlen($_POST['newname']) < 3))) {
+        } elseif (((strlen($_POST['newname']) > 32) OR (strlen($_POST['newname']) < 3))) {
             alert('danger', "Uh Oh!", "Usernames must be at least 3 characters in length, and a maximum of 20.");
             die($h->endpage());
         }
@@ -210,7 +260,7 @@ function name_change()
         }
         if (!$api->UserHasCurrency($userid,'secondary',5))
         {
-            alert('danger',"Uh Oh!","You do nto have enough Chivalry Tokens to change your name.");
+            alert('danger',"Uh Oh!","You do not have enough Chivalry Tokens to change your name.");
             die($h->endpage());
         }
 		addToEconomyLog('Misc', 'token', -5);
@@ -317,7 +367,7 @@ function pic_change()
         echo "
 		<h3>Change Display Picture</h3>
 		<hr />
-		Your images must be externally hosted.<br />
+		Your images must be externally hosted. Image must be, at most, 8MB in size.<br />
 		New Picture Link<br />
 		<form method='post'>
 			<input type='url' name='newpic' class='form-control' value='{$ir['display_pic']}' />
@@ -334,8 +384,8 @@ function pic_change()
         $npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
         if (!empty($npic)) {
             $sz = get_filesize_remote($npic);
-            if ($sz <= 0 || $sz >= 15000000) {
-                alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 15MB.");
+            if ($sz <= 0 || $sz >= 8388608) {
+                alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 8MB.");
                 $h->endpage();
                 exit;
             }
@@ -734,7 +784,6 @@ function forumalert()
 function classreset()
 {
     global $db,$userid,$api,$h,$ir;
-    echo "<h3>Class Change</h3><hr />";
     if (isset($_POST['class']))
     {
         if ($_POST['class'] == $ir['class'])
@@ -750,17 +799,6 @@ function classreset()
         if ($ir['iq'] < 50000)
         {
             alert('danger',"Uh Oh!","You need at least 50,000 IQ to change your class.");
-            die($h->endpage());
-        }
-		$tq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$ir['userid']}");
-		if ($db->num_rows($tq) > 0)
-		{
-			alert('danger',"Uh Oh!", "Please remove any and all trinkets before using this.");
-            die($h->endpage());
-		}
-        if (($ir['equip_primary'] + $ir['equip_secondary'] + $ir['equip_armor']) != 0)
-        {
-            alert('danger',"Uh Oh!", "Please remove your equipment before using this feature.");
             die($h->endpage());
         }
         if ($ir['class'] == 'Guardian')
@@ -819,27 +857,197 @@ function classreset()
                     WHERE `userid` = {$userid}");
         $db->query("UPDATE `users` SET `class` = '{$_POST['class']}' WHERE `userid` = {$userid}");
         $api->SystemLogsAdd($userid, 'preferences', "Changed class to {$_POST['class']}.");
-        alert('success',"Success!","You have successfully changed your class to {$_POST['class']}.",true,'preferences.php');
+        alert('success',"Success!","You have successfully changed your class to {$_POST['class']} for 50K IQ.",true,'preferences.php');
     }
     else
     {
-        echo "Don't like the class you chose at registration? No problem! Here you may change your class. However, 
-        there are a few catches. Your stats will be changed to reflect the class you change yourself into. If you're becoming a 
-        Warrior from a Guardian, Your Strength will become your Agility, your Agility will become your Guard, and your Guard will become your 
-        Strength. If this seems confusing to you, please contact staff before you act. You will also receive a 25% reduction on 
-        your stats. You must also have at least 50,000 IQ to use this feature. You must also have no armor or weapons equipped.
-        <br /> <b>You are currently part of the {$ir['class']} class.</b><br />
-        Warrior: Extra Strength, Normal Agility, Less Guard<br />
-        Rogue: Less Strength, Extra Agility, Normal Guard<br />
-        Guardian: Normal Strength, Less Agility, Extra Guard<br />
-        <form method='post'>
-            <select name='class' id='class' class='form-control' type='dropdown'>
-                <option value='Warrior'>Warrior</option>
-                <option value='Rogue'>Rogue</option>
-                <option value='Guardian'>Guardian</option>
-            </select>
-            <input type='submit' value='Change Class' class='btn btn-primary'>
-        </form>";
+        if ($ir['class'] == 'Warrior')
+        {
+            $warr['strength'] = $ir['strength'] * 0.75;
+            $warr['agility'] = $ir['agility'] * 0.75;
+            $warr['guard'] = $ir['guard'] * 0.75;
+            
+            $rog['strength'] = $ir['guard'] * 0.75;
+            $rog['agility'] = $ir['strength'] * 0.75;
+            $rog['guard'] = $ir['agility'] * 0.75;
+            
+            $gurd['strength'] = $ir['agility'] * 0.75;
+            $gurd['agility'] = $ir['guard'] * 0.75;
+            $gurd['guard'] = $ir['strength'] * 0.75;
+        }
+        elseif ($ir['class'] == 'Rogue')
+        {
+            $warr['strength'] = $ir['agility'] * 0.75;
+            $warr['agility'] = $ir['guard'] * 0.75;
+            $warr['guard'] = $ir['strength'] * 0.75;
+            
+            $rog['strength'] = $ir['strength'] * 0.75;
+            $rog['agility'] = $ir['agility'] * 0.75;
+            $rog['guard'] = $ir['guard'] * 0.75;
+            
+            $gurd['strength'] = $ir['guard'] * 0.75;
+            $gurd['agility'] = $ir['strength'] * 0.75;
+            $gurd['guard'] = $ir['agility'] * 0.75;
+        }
+        elseif ($ir['class'] == 'Guardian')
+        {
+            $warr['strength'] = $ir['guard'] * 0.75;
+            $warr['agility'] = $ir['strength'] * 0.75;
+            $warr['guard'] = $ir['agility'] * 0.75;
+            
+            $rog['strength'] = $ir['agility'] * 0.75;
+            $rog['agility'] = $ir['guard'] * 0.75;
+            $rog['guard'] = $ir['strength'] * 0.75;
+            
+            $gurd['strength'] = $ir['strength'] * 0.75;
+            $gurd['agility'] = $ir['agility'] * 0.75;
+            $gurd['guard'] = $ir['guard'] * 0.75;
+        }
+        echo "<div class='row'>
+            <div class='col-12 col-xxxl-3'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Change your class (Currently {$ir['class']})
+                    </div>
+                    <div class='card-body'>
+                        This function will change your class, along with your stats. Note your stats will be docked 25% to 
+                        deter switching on the fly. You must have at least 50K IQ to use this feature. We recommend reading 
+                        below to see what your new stats will be.
+                        <form method='post'>
+                            <select name='class' id='class' class='form-control' type='dropdown'>
+                                <option value='Warrior'>Warrior</option>
+                                <option value='Rogue'>Rogue</option>
+                                <option value='Guardian'>Guardian</option>
+                            </select>
+                            <input type='submit' value='Change Class' class='btn btn-primary btn-block'>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class='col-12 col-md-4 col-xxxl-3'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Warrior Stats
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-4 col-md-6 col-xl-4 text-success'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Strength</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($warr['strength']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-md-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Agility</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($warr['agility']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-md-6 col-xl-4 text-danger'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Guard</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($warr['guard']) . "
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='col-12 col-md-4 col-xxxl-3'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Rogue Stats
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-4 col-md-6 col-xl-4 text-danger'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Strength</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($rog['strength']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-md-6 col-xl-4 text-success'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Agility</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($rog['agility']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-md-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Guard</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($rog['guard']) . "
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='col-12 col-md-4 col-xxxl-3'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Guardian Stats
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-4 col-md-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Strength</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($gurd['strength']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-md-6 col-xl-4 text-danger'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Agility</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($gurd['agility']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-md-6 col-xl-4 text-success'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Guard</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($gurd['guard']) . "
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>";
     }
 }
 
@@ -1047,16 +1255,17 @@ function resetacc()
 	}
 	if (isset($_POST['reset']))
 	{
-	    unequipUserSlot($userid, "equip_primary");
-	    unequipUserSlot($userid, "equip_secondary");
-	    unequipUserSlot($userid, "equip_armor");
-	    unequipUserSlot($userid, "equip_potion");
-	    unequipUserSlot($userid, "equip_badge");
+	    unequipUserSlot($userid, slot_prim_wep);
+	    unequipUserSlot($userid, slot_second_wep);
+	    unequipUserSlot($userid, slot_armor);
+	    unequipUserSlot($userid, slot_potion);
+	    unequipUserSlot($userid, slot_badge);
 	    
-	    unequipUserSlot($userid, "equip_ring_primary");
-	    unequipUserSlot($userid, "equip_ring_secondary");
-	    unequipUserSlot($userid, "equip_necklace");
-	    unequipUserSlot($userid, "equip_pendant");
+	    unequipUserSlot($userid, slot_prim_ring);
+	    unequipUserSlot($userid, slot_second_ring);
+	    unequipUserSlot($userid, slot_necklace);
+	    unequipUserSlot($userid, slot_pendant);
+	    unequipUserSlot($userid, slot_wed_ring);
 	    
 		alert('info',"","Chivalry is Dead is attempting to reset your account... if you run into errors please contact staff.",false);
 		$accquery="UPDATE `users` SET `xp` = 0, `level` = 1, `will` = 100, `maxwill` = 100, `hp` = 100, `maxhp` = 100,
@@ -1186,12 +1395,40 @@ function resetacc()
 	}
 	else
 	{
-		echo "Everything about your account will reset. Items on the market will be removed. Your inventory will be wiped. Your stats will be reset. You will be cleared of any currency you may have. Consider it a fresh start.<br />
-		Would you like to go through with it? This cannot be undone for whatever reason. You must be level " . number_format($lvlRequired) . " to reset your account.
-		<form method='post'>
-			<input type='hidden' value='yes' name='reset'>
-			<input type='submit' class='btn btn-danger' value='Yes, reset!'>
-		</form>";
+	    $csrf = request_csrf_html('pref_mastery_rank');
+	    echo "<form method='post'>
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        You are currently Mastery Rank " . number_format($ir['reset'] - 1) . ".
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                This will reset your account level to 1, wipe your inventory/assets/stats/banks/markets. You are 
+                                keeping your estates, don't worry. (Maybe fill them up with currency before you reset?)
+                                Note, that you will receive a unique badge for each Mastery Rank. Each Mastery Rank will 
+                                decrease your experience required by 10%, along with more gains from Hexbags and Boxes of Random.
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12 col-sm-6'>
+                                        <input type='submit' class='btn btn-success btn-block' value='Rank Up'>
+                                        <br />
+                                    </div>
+                                    <div class='col-12 col-sm-6'>
+                                        <a href='preferences.php' class='btn btn-block btn-danger'>Go Back</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type='hidden' value='yes' name='reset'>
+        </form>";
 	}
 }
 

@@ -47,8 +47,8 @@ if (!empty($username)) {
 
     }
     //If the username is less than 3 characters and more than 20.
-    if (((strlen($username) > 20) OR (strlen($username) < 3))) {
-        alert('danger', "Uh Oh!", "Your username can only be 3 through 20 characters in length.");
+    if (((strlen($username) > 32) OR (strlen($username) < 3))) {
+        alert('danger', "Uh Oh!", "Your username can only be 3 through 32 characters in length.");
         die($h->endpage());
 
     }
@@ -219,7 +219,7 @@ if (!empty($username)) {
 				<small>This is used to identify yourself around the game.<br />Don't worry, you can change this later.</small>
 			</div>
 			<div class='col-md-8'>
-				<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='20' placeholder='3-20 characters in length' onkeyup='CheckUsername(this.value);' required>
+				<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='32' placeholder='3-32 characters in length' onkeyup='CheckUsername(this.value);' required>
 				<div id='usernameresult' class='invalid-feedback'></div>
 			</div>
 		</div>

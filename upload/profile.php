@@ -185,15 +185,30 @@ if (isset($_GET['del']))
 	}
 	else
 	{
-		$dc=$db->query("/*qc=on*/SELECT * FROM `comments` WHERE `cID` = {$comment} AND `cRECEIVE` = {$userid}");
+		$dc=$db->query("/*qc=on*/SELECT * FROM `comments` WHERE `cID` = {$comment}");
 		if ($db->num_rows($dc) == 0)
 		{
-			alert('danger',"Uh Oh!","This comment does not exist, or does not belong to you.",false);
+			alert('danger',"Uh Oh!","This comment does not exist, or has already been deleted.",false);
+		}
+		$comRes = $db->fetch_row($dc);
+        if ($comRes['cRECEIVE'] == $userid)
+        {
+            $db->query("DELETE FROM `comments` WHERE `cID` = {$comment}");
+            alert('success',"Success!","Comment has been deleted successfully.",false);
+        }
+        elseif ($comRes['cSEND'] == $userid)
+		{
+		    $db->query("DELETE FROM `comments` WHERE `cID` = {$comment}");
+		    alert('success',"Success!","Comment has been deleted successfully.",false);
+		}
+		elseif ($api->UserMemberLevelGet($userid, 'assistant'))
+		{
+		    $db->query("DELETE FROM `comments` WHERE `cID` = {$comment}");
+		    alert('success',"Success!","Comment has been deleted successfully.",false);
 		}
 		else
 		{
-			$db->query("DELETE FROM `comments` WHERE `cID` = {$comment}");
-			alert('success',"Success!","Comment has been deleted successfully.",false);
+		    alert('danger',"Uh Oh!","You do not have permission to delete this comment.",false);
 		}
 	}
 }
@@ -525,7 +540,7 @@ echo "<h3>{$user_name}'s Profile</h3>
 				</div>
 				<hr />
                     <div class='row'>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xxxl'>
                         <div class='row'>
                             <small>Name</small>
                         </div>
@@ -533,7 +548,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                             " . parseUsername($r['userid']) . " [{$r['userid']}]
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl-3'>
                         <div class='row'>
                             <small>Rank</small>
                         </div>
@@ -541,7 +556,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                             {$r['user_level']}
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl-3'>
                         <div class='row'>
                             <small>Guild</small>
                         </div>
@@ -553,7 +568,7 @@ echo "<h3>{$user_name}'s Profile</h3>
 					        echo"
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl-3'>
                         <div class='row'>
                             <small>Job</small>
                         </div>
@@ -565,15 +580,15 @@ echo "<h3>{$user_name}'s Profile</h3>
 					        echo"
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl-3'>
                         <div class='row'>
                             <small>Health</small>
                         </div>
                         <div class='row'>
-                            " . number_format($r['hp']) . " / " . number_format($r['maxhp']) . "
+                            " . shortNumberParse($r['hp']) . " / " . shortNumberParse($r['maxhp']) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl-6 col-xxxl-3'>
                         <div class='row'>
                             <small>Property</small>
                         </div>
@@ -581,7 +596,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                            {$r['house_name']}
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl-5 col-xxxl-4'>
                         <div class='row'>
                             <small>Marital Status</small>
                         </div>
@@ -595,7 +610,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                                    echo"
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-2'>
                         <div class='row'>
                             <small>Achievements</small>
                         </div>
@@ -603,7 +618,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                            echo number_format($db->fetch_single($db->query("SELECT COUNT(`achievement`) FROM `achievements_done` WHERE `userid` = {$r['userid']}")));
                         echo"</div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl'>
                         <div class='row'>
                             <small>Friends</small>
                         </div>
@@ -611,7 +626,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                            " . number_format($friend) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl'>
                         <div class='row'>
                             <small>Enemies</small>
                         </div>
@@ -619,7 +634,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                            " . number_format($enemy) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl'>
                         <div class='row'>
                             <small>Referrals</small>
                         </div>
@@ -627,7 +642,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                            " . number_format($ref) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl-6'>
                         <div class='row'>
                             <small>Last Action</small>
                         </div>
@@ -635,7 +650,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                            {$ula}
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl-6'>
                         <div class='row'>
                             <small>Last Login</small>
                         </div>
@@ -655,7 +670,7 @@ echo "<h3>{$user_name}'s Profile</h3>
 			</div>
 			<div class='card-body'>
 				<div class='row text-left'>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl'>
                         <div class='row'>
                             <small>Copper Coins</small>
                         </div>
@@ -663,7 +678,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                             " . shortNumberParse($r['primary_currency']) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl'>
                         <div class='row'>
                             <small>Chivalry Tokens</small>
                         </div>
@@ -671,7 +686,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                             " . shortNumberParse($r['secondary_currency']) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl'>
                         <div class='row'>
                             <small>Location</small>
                         </div>
@@ -679,7 +694,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                             <a href='travel.php?to={$r['location']}' data-toggle='tooltip' data-placement='bottom' title='Minimum Level: {$r['town_min_level']}'>{$r['town_name']}</a>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6'>
+                    <div class='col-12 col-sm-6 col-xl'>
                         <div class='row'>
                             <small>Country</small>
                         </div>
@@ -710,15 +725,17 @@ echo "<h3>{$user_name}'s Profile</h3>
 				while ($cr = $db->fetch_row($cq))
 				{
 					$ci['username']=parseUsername($cr['cSEND']);
-					echo "<div class='row'><div class='col'>
-						<a href='profile.php?user={$cr['cSEND']}'>{$ci['username']}</a><br />
+					echo "<div class='row'>
+                            <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+						      <a href='profile.php?user={$cr['cSEND']}'>{$ci['username']}</a><br />
 						<small>" . DateTime_Parse($cr['cTIME']);
-						if ($userid == $_GET['user'])
+						if (($userid == $_GET['user']) || ($cr['cSEND'] == $userid) || ($api->UserMemberLevelGet($userid, "assistant")))
 						{
-							echo "<br /><a href='profile.php?user={$userid}&del={$cr['cID']}'>Delete</a>";
+							echo "<br /><a href='profile.php?user={$_GET['user']}&del={$cr['cID']}'>Delete</a>";
 						}
-						echo "</small></div>";
-						echo "<div class='col'>" .html_entity_decode($cr['cTEXT']) . "</div>";
+						echo "</small>
+                        </div>";
+						echo "<div class='col-12 col-sm-6 col-md-8 col-xxl'>" .html_entity_decode($cr['cTEXT']) . "</div>";
 						echo"</div><hr />";
 				}
 				if ($userid != $_GET['user'] && empty($justposted))
@@ -738,7 +755,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                                 <textarea class='form-control' name='comment'></textarea>
 								{$csrf}
 								<br />
-								<button class='btn btn-primary' type='submit'><i class='far fa-comment'></i> Post Comment</button>
+								<button class='btn btn-primary btn-block' type='submit'><i class='far fa-comment'></i> Post Comment</button>
 							</form>";
 						}
 					}
