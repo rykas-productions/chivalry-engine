@@ -3530,8 +3530,8 @@ function staff_pic()
         $npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
         if (!empty($npic)) {
             $sz = get_filesize_remote($npic);
-            if ($sz <= 0 || $sz >= 1048576) {
-                alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 1MB.");
+            if ($sz <= 0 || $sz >= 15728640) {
+                alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 15MB.");
                 $h->endpage();
                 exit;
             }
@@ -3552,7 +3552,7 @@ function staff_pic()
         echo "
 		<h3>Change Guild Picture</h3>
 		<hr />
-		Your images must be externally hosted. Any images that are not 500x500 will be scaled accordingly.<br />
+		Your images must be externally hosted. Any images that are not 500x500 will be scaled accordingly. Images must not exceed 15MB in size.<br />
 		New Picture Link<br />
 		<form method='post'>
 			<input type='url' name='newpic' class='form-control' value='{$gd['guild_pic']}' />
