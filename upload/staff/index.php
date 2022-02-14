@@ -47,6 +47,16 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6'>
                             <div class='row'>
                                 <div class='col-12'>
+                                    <small>Apache Version</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . apache_get_version() . "
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-12'>
                                     <small>Disk Free</small>
                                 </div>
                                 <div class='col-12'>
@@ -57,10 +67,10 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Apache Version</small>
+                                    <small>Bandwidth Transferred</small>
                                 </div>
                                 <div class='col-12'>
-                                    " . apache_get_version() . "
+                                    " . numberToByteParse(returnVPSBandwidth()) . "
                                 </div>
                             </div>
                         </div>
