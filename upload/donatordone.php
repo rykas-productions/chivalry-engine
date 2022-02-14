@@ -24,6 +24,6 @@ else if ($_GET['action'] == "done") {
 	$api->SystemSendEmail($ir['email'], $msg, "Your Chivalry is Dead Donation", $set['sending_email']);
 	
     alert("success", "Thank you for Donating to {$set['WebsiteName']}", "We greatly appreciate your donation. Your pack will
-        be credited to you in the next 24 hours. If not, please contact an admin so your order can be double checked.");
+        be credited to you in the next 24 hours. If not, please contact an admin so your order can be double checked.", true, 'index.php');
 }
 $h->endpage();
