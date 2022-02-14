@@ -1276,3 +1276,20 @@ function getUserResetCount($user)
     $mr = $db->fetch_row($db->query("SELECT `reset` FROM `user_settings` WHERE `userid` = {$user}"));
     return $mr['reset'];
 }
+
+function parseFraudGuardRisk($risk_level)
+{
+    switch ($risk_level) 
+    {
+        case 2:
+            return "Spam";
+        case 3:
+            return "Open Public Proxy";
+        case 4:
+            return "Tor Node";
+        case 5:
+            return "Honeypot / Botnet / DDOS Attack";
+        default:
+            return "No Risk";
+    }
+}

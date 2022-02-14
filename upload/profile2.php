@@ -406,7 +406,7 @@ if (!$_GET['user']) {
 							</tr>
 							<tr>
 								<td>Risk Level</td>
-								<td>" . parse_risk($fg['risk_level']) . "</td>
+								<td>" . parseFraudGuardRisk($fg['risk_level']) . "</td>
 							</tr>
 							<tr>
 								<td>Last Hit</td>
@@ -510,21 +510,6 @@ if (!$_GET['user']) {
 				  </div>
                 </div>
 		</div>";
-    }
-}
-function parse_risk($risk_level)
-{
-    switch ($risk_level) {
-        case 2:
-            return "Spam";
-        case 3:
-            return "Open Public Proxy";
-        case 4:
-            return "Tor Node";
-        case 5:
-            return "Honeypot / Botnet / DDOS Attack";
-        default:
-            return "No Risk";
     }
 }
 include('forms/sendcash.php');
