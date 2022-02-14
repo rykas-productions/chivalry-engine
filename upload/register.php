@@ -7,6 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals_nonauth.php");
+$activePromo = 'CHIVALRY2022';
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 //Check if someone is already registered on this IP.
 /*if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1) {
@@ -14,13 +15,7 @@ $IP = $db->escape($_SERVER['REMOTE_ADDR']);
     die($h->endpage());
 
 }*/
-if (!isset($_GET['REF'])) {
-    $_GET['REF'] = 0;
-}
-$_GET['REF'] = abs($_GET['REF']);
-if ($_GET['REF']) {
-    $_GET['REF'] = $_GET['REF'];
-}
+$ref = (isset($_GET['REF'])) ? $_GET['REF'] : 0;
 $username = (isset($_POST['username']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_POST['username'])) ? $db->escape(strip_tags(stripslashes($_POST['username']))) : '';
 if (!empty($username)) {
     //If the registration captcha is enabled.
@@ -213,116 +208,145 @@ if (!empty($username)) {
     </div>
     <div class='card-body'>
 	<form method='post'>
-		<div class='row text-left'>
-			<div class='col-md-4'>
-				<h5>Username</h5>
-				<small>This is used to identify yourself around the game.<br />Don't worry, you can change this later.</small>
-			</div>
-			<div class='col-md-8'>
-				<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='32' placeholder='3-32 characters in length' onkeyup='CheckUsername(this.value);' required>
-				<div id='usernameresult' class='invalid-feedback'></div>
-			</div>
-		</div>
-		<hr />
-		<div class='row text-left'>
-			<div class='col-md-4'>
-				<h5>Email</h5>
-				<small>Used to sign into the game and receive game updates!<br />
-				Your email is used soley for authentication and communications between you and us.</small>
-			</div>
-			<div class='col-md-8'>
-				<input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
-				<div id='emailresult' class='invalid-feedback'></div>
-			</div>
-		</div>
-		<hr />
-		<div class='row text-left'>
-			<div class='col-md-4'>
-				<h5>Password</h5>
-				<small>We do our best to keep it safe and secure.<br />
-				Make sure you pick something random!</small>
-			</div>
-			<div class='col-md-8'>
-				<input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='Unique passwords recommended' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
-				<div id='passwordresult'></div>
-			</div>
-		</div>
-		<hr />
-		<div class='row text-left'>
-			<div class='col-md-4'>
-				<h5>Confirm Password</h5>
-				<small>Make sure you type it exactly as before.</small>
-			</div>
-			<div class='col-md-8'>
-				<input type='password' class='form-control' id='cpassword' name='cpassword' minlength='3' maxlength='256' placeholder='Confirm password entered previously' onkeyup='PasswordMatch();' required>
-				<div id='cpasswordresult'></div>
-			</div>
-		</div>
-		<hr />
-		<div class='row text-left'>
-			<div class='col-md-4'>
-				<h5>Gender</h5>
-				<small>What's your player's gender?<br />This can be changed anytime.</small>
-			</div>
-			<div class='col-md-8'>
-				<select name='gender' class='form-control' type='dropdown'>
-					<option value='Male'>Male</option>
-					<option value='Female'>Female</option>
-					<option value='Other'>Other</option>
-				</select>
-			</div>
-		</div>
-		<hr />
-		<div class='row text-left'>
-			<div class='col-md-4'>
-				<h5>Fighting Class</h5>
-				<small>What best suits your fighting style?</small>
-			</div>
-			<div class='col-md-8'>
-				<select name='class' id='class' class='form-control' onchange='OutputTeam(this)' type='dropdown'>
-					<option></option>
-					<option value='Warrior'>Brute Force</option>
-					<option value='Rogue'>Hit Quicker</option>
-					<option value='Guardian'>Damage Tanking</option>
-				</select>
-				<div id='teamresult'></div>
-			</div>
-		</div>
-		<hr />
-		<div class='row text-left'>
-			<div class='col-md-4'>
-				<h5>Referral Code</h5>
-				<small>Did you get a referral code from a friend?</small>
-			</div>
-			<div class='col-md-8'>
-				<input type='number' value='{$_GET['REF']}' class='form-control' id='ref' name='ref' min='0' placeholder='Can be empty. This is a User ID.'>
-			</div>
-		</div>
-		<hr />
-		<div class='row text-left'>
-			<div class='col-md-4'>
-				<h5>Promotional Codes</h5>
-				<small>This is optional. Promotional codes give you an extra boost when you sign up.</small>
-			</div>
-			<div class='col-md-8'>
-				<input type='text' class='form-control' id='promo' name='promo' value='2021CHIVALRY' placeholder='Can be empty'>
-			</div>
-		</div>
-		<hr />
-		<div class='row align-left text-left'>
-		<div class='col-md-9'>";
-		alert("dark","","By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a>
+		<div class='row'>
+            <div class='col-12 col-md-6 col-lg-5 col-xl-6 col-xxl-4 col-xxxl-3'>
+                <div class='row'>
+                    <div class='col-12 col-md'>
+        				<b>Username</b>
+        			</div>
+                    <div class='col-12 col-md-12'>
+				        This is used to identify yourself around the game.
+        			</div>
+        			<div class='col-12 col-md'>
+        				<input type='text' class='form-control' id='username' name='username' minlength='3' maxlength='32' placeholder='3-32 characters in length' onkeyup='CheckUsername(this.value);' required>
+        				<div id='usernameresult' class='invalid-feedback'></div>
+        			</div>
+                </div>
+            </div>
+            <div class='col-12 col-md-6 col-lg-7 col-xl-6 col-xxl-5 col-xxxl-4'>
+                <div class='row'>
+                    <div class='col-12 col-md'>
+        				<b>Email</b>
+        			</div>
+                    <div class='col-12 col-md-12'>
+				        Your email is used soley for login and communication between us.
+        			</div>
+        			<div class='col-12 col-md'>
+        				<input type='email' class='form-control' id='email' name='email' minlength='3' maxlength='256' placeholder='You will use this to sign in' onkeyup='CheckEmail(this.value);' required>
+				        <div id='emailresult' class='invalid-feedback'></div>
+        			</div>
+                </div>
+            </div>
+            <div class='col-12 col-md-6 col-lg-5 col-xl-6 col-xxl-3 col-xxxl-3'>
+                <div class='row'>
+                    <div class='col-12 col-md'>
+        				<b>Password</b>
+        			</div>
+                    <div class='col-12 col-md-12'>
+				        We try our best to keep it safe and secure!
+        			</div>
+        			<div class='col-12 col-md'>
+        				<input type='password' class='form-control' id='password' name='password' minlength='3' maxlength='256' placeholder='Unique passwords recommended' onkeyup='CheckPasswords(this.value);PasswordMatch();' required>
+				        <div id='passwordresult'></div>
+        			</div>
+                </div>
+            </div>
+            <div class='col-12 col-md-6 col-lg-7 col-xl-6 col-xxl-4 col-xxxl-2'>
+                <div class='row'>
+                    <div class='col-12 col-md'>
+        				<b>Confirm Password</b>
+        			</div>
+                    <div class='col-12 col-md-12'>
+				        Make sure you type it exactly as before.
+        			</div>
+        			<div class='col-12 col-md'>
+        				<input type='password' class='form-control' id='cpassword' name='cpassword' minlength='3' maxlength='256' placeholder='Confirm password entered previously' onkeyup='PasswordMatch();' required>
+				        <div id='cpasswordresult'></div>
+        			</div>
+                </div>
+            </div>
+            <div class='col-12 col-md-6 col-lg-5 col-xl-6 col-xxl-4 col-xxxl'>
+                <div class='row'>
+                    <div class='col-12 col-md'>
+        				<b>Gender</b>
+        			</div>
+                    <div class='col-12 col-md-12'>
+				       What's your player's gender?
+        			</div>
+        			<div class='col-12 col-md'>
+        				<select name='gender' class='form-control' type='dropdown'>
+        					<option value='Male'>Male</option>
+        					<option value='Female'>Female</option>
+        					<option value='Other'>Other</option>
+        				</select>
+        			</div>
+                </div>
+            </div>
+            <div class='col-12 col-md-6 col-lg-7 col-xl-6 col-xxl-4 col-xxxl'>
+                <div class='row'>
+                    <div class='col-12 col-md'>
+        				<b>Fighting Class</b>
+        			</div>
+                    <div class='col-12 col-md-12'>
+				       What best suits your fighting style?
+        			</div>
+        			<div class='col-12 col-md'>
+        				<select name='class' id='class' class='form-control' onchange='OutputTeam(this)' type='dropdown'>
+        					<option></option>
+        					<option value='Warrior'>Brute Force</option>
+        					<option value='Rogue'>Hit Quicker</option>
+        					<option value='Guardian'>Damage Tanking</option>
+        				</select>
+                        <div id='teamresult'></div>
+        			</div>
+                </div>
+            </div>
+            <div class='col-12 col-md-6 col-lg-5 col-xl-6 col-xxxl'>
+                <div class='row'>
+                    <div class='col-12 col-md'>
+        				<b>Referral Code</b>
+        			</div>
+                    <div class='col-12 col-md-12'>
+				       Did you get a referral code from a friend?
+        			</div>
+        			<div class='col-12 col-md'>
+        				<input type='number' value='{$ref}' class='form-control' id='ref' name='ref' min='0' placeholder='Can be empty. This is a User ID.'>
+        			</div>
+                </div>
+            </div>
+            <div class='col-12 col-md-6 col-lg-7 col-xl-6 col-xxxl'>
+                <div class='row'>
+                    <div class='col-12 col-md'>
+        				<b>Promo Code</b>
+        			</div>
+                    <div class='col-12 col-md-12'>
+				       Promotional codes give you an extra boost.
+        			</div>
+        			<div class='col-12 col-md'>
+        				<input type='text' class='form-control' id='promo' name='promo' value='{$activePromo}' placeholder='Can be empty'>
+        			</div>
+                </div>
+            </div>
+            <div class='col-12'>
+                <div class='row'>
+                    <div class='col-12 col-md'>
+        				<b>&nbsp;</b>
+        			</div>
+                    <div class='col-12 col-md-12'>";
+                        alert("info","","By clicking Register, you accept you have read the <a href='gamerules2.php'>Game Rules</a>
 						and our <a href='privacy.php'>Privacy Policy</a>. You also agree that you wish to opt-in to our
 						game newsletter. You may opt-out at anytime by checking your in-game settings.",false);
-		echo "
+                        echo"
+        			</div>
+        			<div class='col-12 col-md'>
+        				<input type='submit' class='btn btn-primary btn-block' value='Register' />
+        			</div>
+                </div>
+            </div>
 		</div>
-		<div class='col-md-3 text-center'>
-			<input type='submit' class='btn btn-primary btn-block' value='Register' />
-		</div>
-		</div>
-		<hr />
 	</form>
-	<a href='login.php' class='btn btn-danger btn-block'>Login Page</a>
+    <br />
+	<a href='login.php' class='btn btn-danger btn-block'>Return to Login</a>
     </div>
     </div>";
 }
