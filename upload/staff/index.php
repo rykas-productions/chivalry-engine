@@ -618,6 +618,30 @@ if ($api->UserMemberLevelGet($userid, 'assistant'))
                 </div>
             </div>
             <br />
+         </div>
+         <div class='col-12 col-lg-6 col-xxl-4 col-xxxl-2'>
+            <div class='card'>
+                <div class='card-header'>
+                    Guilds
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xxxl-12'>
+                            <a href='staff_guilds.php?action=viewguild' class='btn btn-success btn-block'>View Guild</a><br />
+                        </div>
+                        <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xxxl-12'>
+                            <a href='staff_guilds.php?action=creditguild' class='btn btn-primary btn-block'>Credit Guild</a><br />
+                        </div>
+                        <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xxxl-12'>
+                            <a href='staff_guilds.php?action=viewwars' class='btn btn-danger btn-block'>View Wars</a><br />
+                        </div>
+                        <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xxxl-12'>
+                            <a href='staff_guilds.php?action=editguild' class='btn btn-success btn-block'>Edit Guild</a><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
          </div>";
 }
 //end assistant only functions
