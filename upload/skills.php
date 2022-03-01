@@ -111,15 +111,30 @@ function home()
         $locked[$loop] = (getSkillLevel($userid,$loop) > 0) ? "class='table-active'" : "";
         if (getSkillLevel($userid,$loop) == returnMaxLevelSkill($loop))
             $button[$loop] = "<span class='text-danger'><i>Maxed</i></span>";
-            elseif (!canGetSkill($loop))
+        elseif (!canGetSkill($loop))
             $button[$loop] = "<span class='text-danger'><b>Locked</b></span>";
-            elseif (getSkillLevel($userid,$loop) == 0)
+        elseif (getSkillLevel($userid,$loop) == 0)
             $button[$loop] = "<a href='?action=skill{$loop}' class='text-success'>Unlock</a>";
-            elseif (getSkillLevel($userid,$loop) > 0)
+        elseif (getSkillLevel($userid,$loop) > 0)
             $button[$loop] = "<a href='?action=skill{$loop}'>Upgrade</a>";
-            else
-                $button[$loop] = "<span class='text-muted'>N/A</span>";
-                $loop=$loop+1;
+        else
+            $button[$loop] = "<span class='text-muted'>N/A</span>";
+            $loop=$loop+1;
+    }
+    if ($ir['class'] == 'Warrior')
+    {
+        $statClass = 'strength';
+        $weakStat = "guard";
+    }
+    if ($ir['class'] == 'Rogue')
+    {
+        $statClass = 'agility';
+        $weakStat = "strength";
+    }
+    if ($ir['class'] == 'Guardian')
+    {
+        $statClass = 'guard';
+        $weakStat = "agility";
     }
     echo "Here you may redeem your skill points for skills that will help you in-game. You can earn skill points by completing
 	<a href='achievements.php'>achievements</a>. You currently have {$ir['skill_points']} skill points.<br />
@@ -140,21 +155,6 @@ function home()
     <div class="tab-content">
         <div id="combat" class="tab-pane active">
             <?php
-            if ($ir['class'] == 'Warrior')
-            {
-                $statClass = 'strength';
-                $weakStat = "guard";
-            }
-            if ($ir['class'] == 'Rogue')
-            {
-                $statClass = 'agility';
-                $weakStat = "strength";
-            }
-            if ($ir['class'] == 'Guardian')
-            {
-                $statClass = 'guard';
-                $weakStat = "agility";
-            }
                 echo "<div class='row'>
                     <div class='col-12 col-lg-6 col-xxl-4'>
                     <div class='card'>
@@ -336,7 +336,7 @@ function home()
                                     Token Hoarder (1 Point)
                                 </div>
                                 <div class='col-12'>
-                                    +5 Chivalry Tokens from Hexbags/BOR per point.
+                                    +5% Chivalry Tokens from Hexbags/BOR per point.
                                 </div>
                                 <div class='col-12'>
                                     {$button['11']} (" . getSkillLevel($userid,11) . " / 5)
@@ -656,7 +656,7 @@ function home()
                                     Gambling Man (5 Points)
                                 </div>
                                 <div class='col-12'>
-                                    Increases max bet per hour by 25%.
+                                    Increases maximum bet when gambling by 33%.
                                 </div>
                                 <div class='col-12'>
                                     {$button['29']} (" . getSkillLevel($userid,29) . " / 1)

@@ -1255,7 +1255,7 @@ function calculateUserMaxBet($userid)
 {
     global $db;
     $r = $db->fetch_row($db->query("SELECT `level` FROM `users` WHERE `userid` = {$userid}"));
-    $gamblingManBuff = ((getSkillLevel($userid, 29) * 25) / 100);
+    $gamblingManBuff = ((getSkillLevel($userid, 29) * 33) / 100);
     $maxbet = 0;
     $maxbet += $r['level'] * 500;   //base
     $maxbet += ($maxbet * $gamblingManBuff);    //buff for gambling man
