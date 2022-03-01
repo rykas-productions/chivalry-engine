@@ -79,12 +79,19 @@ function viewguild()
         //Select member count from database.
         $membcount = countGuildMembers($guild);
         
+        $gdi = ($db->fetch_row($db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$guild}")));
+        
         $armory = ($r['guild_hasarmory']) ? "<span class='text-success'>Purchased</span>" : "<span class='text-danger'>Unpurchased</span>";
         $recruit = ($r['guild_ba'] == 0) ? "<span class='text-success'>Recruiting</span>" : "<span class='text-danger'>Not recruiting</span>";
         $debt = ($r['guild_primcurr'] > 0) ? "<span class='text-success'>No debt</span>" : "<span class='text-danger'>In debt</span>" ;
         $wars = ($db->fetch_single($wq) == 0) ? "<span class='text-success'>No active wars</span>" : "<span class='text-danger'> " . number_format($db->fetch_single($wq)) . " active wars</span>";
         $gymBonus = calculateGuildGymBonus($guild);
         $gymBonusTime = ($r['guild_bonus_time'] > time()) ? "<span class='text-success'>" . TimeUntil_Parse($r['guild_bonus_time']) . " remain</span>" : "<span class='text-danger'>Not active</span>";
+        
+        $districtsOwned = countOwnedDistricts($guild);
+        $warriorsDeployed = countDeployedWarriors($guild);
+        $archersDeployed = countDeployedArchers($guild);
+        $generalsDeployed = countDeployedGenerals($guild);
         
         $guildPic = (empty($r['guild_pic'])) ? "<i>No guild pic</i>" : "<img src='" . parseImage($r['guild_pic']) . "' placeholder='The {$r['guild_name']} guild picture.' width='300' class='img-fluid' title='The {$r['guild_name']} guild picture.'>";
 
@@ -302,6 +309,98 @@ function viewguild()
                                     </div>
                                     <div class='col-12'>
                                         {$gymBonusTime}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class='col-12 col-lg-6 col-xxl-4'>
+                <div class='card'>
+                    <div class='card-header'>
+                        District Info for {$r['guild_name']}
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Barracks Warriors</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($gdi['barracks_warriors']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Barracks Archers</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($gdi['barracks_archers']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Barracks Generals</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($gdi['barracks_generals']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Barracks Captains</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($gdi['barracks_captains']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Warriors Active</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($warriorsDeployed) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Archers Active</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($archersDeployed) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Generals Active</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($generalsDeployed) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Tiles Owned</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . number_format($districtsOwned) . "
                                     </div>
                                 </div>
                             </div>
@@ -736,8 +835,10 @@ function editguild()
 
         //CSRF request
         $csrf = request_csrf_html('staff_editguild_2');
-        $r['guild_max_copper'] = (($r['guild_level'] * $set['GUILD_PRICE']) * 20);
-        $r['guild_max_token'] = (($r['guild_level'] * $set['GUILD_PRICE']) / 125);
+        $r['guild_max_copper'] = calculateMaxGuildVaultCopper($r['guild_level']);
+        $r['guild_max_token'] = calculateMaxGuildVaultTokens($r['guild_level']);
+        
+        $gdi = ($db->fetch_row($db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$r['guild_id']}")));
 
         //Load the editing form
         echo "<form method='post'>
@@ -891,6 +992,56 @@ function editguild()
                                             </div>
                                         </div>
                                     </div>
+                                    <div class='col-12 col-sm-6 col-md-4 col-xxl-2'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <b><small>Barracks Warriors</small></b>
+                                            </div>
+                                            <div class='col-12'>
+                                                <input type='number' min='0' name='warriors' class='form-control' value='{$gdi['barracks_warriors']}'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-md-4 col-xxl-2'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <b><small>Barracks Archers</small></b>
+                                            </div>
+                                            <div class='col-12'>
+                                                <input type='number' min='0' name='archers' class='form-control' value='{$gdi['barracks_archers']}'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-md-4 col-xxl-2'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <b><small>Barracks Generals</small></b>
+                                            </div>
+                                            <div class='col-12'>
+                                                <input type='number' min='0' name='generals' class='form-control' value='{$gdi['barracks_generals']}'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-md-4 col-xxl-2'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <b><small>Barracks Captains</small></b>
+                                            </div>
+                                            <div class='col-12'>
+                                                <input type='number' min='0' name='captains' class='form-control' value='{$gdi['barracks_captains']}'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-md-4 col-xxl-2'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <b><small>District Moves</small></b>
+                                            </div>
+                                            <div class='col-12'>
+                                                <input type='number' min='0' name='moves' class='form-control' value='{$gdi['moves']}'>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class='col-12'>
                                         <div class='row'>
                                             <div class='col-12'>
@@ -927,6 +1078,13 @@ function editguild()
         $announcement = $db->escape(htmlentities(stripslashes($_POST['announcement']), ENT_QUOTES, 'ISO-8859-1'));
         $armory = $_POST['armory'];
         $npic = (isset($_POST['pic']) && is_string($_POST['pic'])) ? stripslashes($_POST['pic']) : '';
+        
+        //District stuff
+        $barWarriors = (isset($_POST['warriors']) && is_numeric($_POST['warriors'])) ? abs(intval($_POST['warriors'])) : 0;
+        $barArchers = (isset($_POST['archers']) && is_numeric($_POST['archers'])) ? abs(intval($_POST['archers'])) : 0;
+        $barGenerals = (isset($_POST['generals']) && is_numeric($_POST['generals'])) ? abs(intval($_POST['generals'])) : 0;
+        $barCaptains = (isset($_POST['captains']) && is_numeric($_POST['captains'])) ? abs(intval($_POST['captains'])) : 0;
+        $moves = (isset($_POST['moves']) && is_numeric($_POST['moves'])) ? abs(intval($_POST['moves'])) : 0;
 
         //Validate CSRF check.
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_editguild_2', stripslashes($_POST['verf']))) {
@@ -1012,6 +1170,13 @@ function editguild()
                     `guild_seccurr` = {$secondary}, `guild_level` = {$lvl}, `guild_xp` = {$xp},
                     `guild_hasarmory` = '{$armory}', `guild_pic` = '{$npic}', `guild_app_manager` = {$appman},
                     `guild_vault_manager` = {$vaultman}, `guild_crime_lord` = {$crimelord}
+                    WHERE `guild_id` = {$guild}");
+        $db->query("UPDATE `guild_district_info` 
+                    SET `barracks_warriors` = {$barWarriors},
+                    `barracks_archers` = {$barArchers},
+                    `barracks_generals` = {$barGenerals},
+                    `barracks_captains` = {$barCaptains},
+                    `moves` = {$moves}
                     WHERE `guild_id` = {$guild}");
         alert('success', 'Success!', "You have successfully edited the {$name} guild!", true, 'index.php');
         $api->SystemLogsAdd($userid, 'staff', "Edited the <a href='../guilds.php?action=view&id={$guild}'>{$name}</a> Guild.");
