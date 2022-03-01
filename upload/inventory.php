@@ -10,11 +10,17 @@
 require("globals.php");
 $tresder = (Random(100, 999));
 $primWeap = ($ir['equip_primary'] > 0) ? $api->SystemItemIDtoName($ir['equip_primary']) : "<i>Unarmed</i>";
-$primWeapDam = $db->fetch_single($db->query("/*qc=on*/SELECT `weapon` FROM `items` WHERE `itmid` = {$ir['equip_primary']}"));
+$primWeapDam = 0;
+$secWeapDam = 0;
+$armorRating = 0;
+if ($ir['equip_primary'] > 0)
+    $primWeapDam = calcWeaponEffectiveness($ir['equip_primary'], $userid);
 $secWeap = ($ir['equip_secondary'] > 0) ? $api->SystemItemIDtoName($ir['equip_secondary']) : "<i>Unarmed</i>";
-$secWeapDam = $db->fetch_single($db->query("/*qc=on*/SELECT `weapon` FROM `items` WHERE `itmid` = {$ir['equip_secondary']}"));
+if ($ir['equip_secondary'] > 0)
+    $secWeapDam = calcWeaponEffectiveness($ir['equip_secondary'], $userid);
 $armor = ($ir['equip_armor'] > 0) ? $api->SystemItemIDtoName($ir['equip_armor']) : "<i>No armor</i>";
-$armorRating = $db->fetch_single($db->query("/*qc=on*/SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']}"));
+if ($ir['equip_armor'] > 0)
+    $armorRating = calcArmorEffectiveness($ir['equip_armor'], $userid);
 $potion = ($ir['equip_potion'] > 0) ? $api->SystemItemIDtoName($ir['equip_potion']) : "<i>No potion</i>";
 $badge = ($ir['equip_badge'] > 0) ? $api->SystemItemIDtoName($ir['equip_badge']) : "<i>No badge</i>";
 echo "
