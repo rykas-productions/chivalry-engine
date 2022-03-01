@@ -145,6 +145,9 @@ function prefs_home()
                             <div class='col-12 col-sm-6 col-lg-12'>
                                 <a class='btn btn-success btn-block' href='?action=reset'>Mastery Rank</a><br />
                             </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=counthome'>Change Counts</a><br />
+                            </div>
                         </div>
                     </div>
                 </div>
