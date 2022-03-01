@@ -1293,3 +1293,26 @@ function parseFraudGuardRisk($risk_level)
             return "No Risk";
     }
 }
+
+function doHourlyJobRewards()
+{
+    global $db, $api;
+    if ((date('G') >= 8) && (date('G') <= 18))
+    {
+        $q = $db->query("SELECT * FROM `users` WHERE `jobrank` > 0 AND `job` > 0");
+        while ($r = $db->fetch_row($q))
+        {
+            $jr = $db->fetch_row($db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$r['jobrank']}"));
+            if ($jr['jrPRIMPAY'] > 0)
+            {
+                $api->UserGiveCurrency($r['userid'], "primary", $jr['jrPRIMPAY']);
+                addToEconomyLog('Job', 'copper', $jr['jrPRIMPAY']);
+            }
+            if ($jr['jrSECONDARY'] > 0)
+            {
+                $api->UserGiveCurrency($r['userid'], "secondary", $jr['jrSECONDARY']);
+                addToEconomyLog('Job', 'token', $jr['jrSECONDARY']);
+            }
+        }
+    }
+}

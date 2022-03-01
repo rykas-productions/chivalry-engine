@@ -18,15 +18,7 @@ if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 {
     exit;
 }
-if ((date('G') >= 9) && (date('G') <= 17))
-{
-	//Job crons!
-	$db->query("UPDATE `users` AS `u`
-		LEFT JOIN `job_ranks` as `jr` ON `jr`.`jrID` = `u`.`jobrank`
-		SET `u`.`primary_currency` = `u`.`primary_currency` + `jr`.`jrPRIMPAY`,
-		`u`.`secondary_currency` = `u`.`secondary_currency` + `jr`.`jrSECONDARY` 
-		WHERE `u`.`job` > 0 AND `u`.`jobrank` > 0");
-}
+doHourlyJobRewards();
 
 $db->query("UPDATE `user_settings` SET `winnings_this_hour` = 0");
 $db->query("UPDATE `settings` SET `setting_value` = `setting_value` - 1 WHERE `setting_name` = 'raffle_chance' AND `setting_value` > 10");
@@ -39,6 +31,6 @@ $db->query("UPDATE `user_settings` SET `searchtown` = `searchtown` + 25");
 $db->query("UPDATE `user_settings` SET `searchtown` = 100 WHERE `searchtown` > 100");
 
 runMarketTick(3);   //med risk market
-if ((date('G') == 6) || (date('G') == 12))
+if ((date('G') == 6) || (date('G') == 12) || (date('G') == 18))
     runMarketTick(2);   //lower risk
 ?>
