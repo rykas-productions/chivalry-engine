@@ -145,3 +145,15 @@ $parser->addCodeDefinition($builder->build());
 //Rainbow
 $builder = new JBBCode\CodeDefinitionBuilder('rainbow', '<span class="rainbow">{param}</span>');
 $parser->addCodeDefinition($builder->build());
+
+$builder = new JBBCode\CodeDefinitionBuilder('small', '<small>{param}</small>');
+$parser->addCodeDefinition($builder->build());
+
+$builder = new JBBCode\CodeDefinitionBuilder('sub', '<sub>{param}</sub>');
+$parser->addCodeDefinition($builder->build());
+
+$builder = new JBBCode\CodeDefinitionBuilder('sup', '<sup>{param}</sup>');
+$parser->addCodeDefinition($builder->build());
+
+$builder = new JBBCode\CodeDefinitionBuilder('rtl', '<bdo dir="rtl">{param}</bdo>');
+$parser->addCodeDefinition($builder->build());
