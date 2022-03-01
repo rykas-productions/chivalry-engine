@@ -19,6 +19,23 @@ function calcWeaponEffectiveness($weapID, $attacker)
     return $r['weapon'];
 }
 
+/**
+ * @internal
+ * Return's the current user's armor effectiveness.
+ * @param int $weapID Item ID of the armor.
+ * @param int $attacker User ID of the person wielding the armor.
+ */
+function calcArmorEffectiveness($armorID, $attacker)
+{
+    global $db;
+    $q1 = $db->query("SELECT `armor`, `ammo` FROM `items` WHERE `itmid` = {$armorID}");
+    $r = $db->fetch_row($q1);
+    $thickenedSkinSkill = ((getSkillLevel($attacker, 6) * 6.5) / 100);  //6.5% per skill level
+    $r['armor'] += ($r['armor'] * $thickenedSkinSkill);
+    return $r['armor'];
+    
+}
+
 function returnEffectiveUserStrength($userid)
 {
     return returnUserEffectiveStat($userid, "strength");
