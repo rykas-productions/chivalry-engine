@@ -363,7 +363,7 @@ function home()
 							Level
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['level']) . "
+							" . shortNumberParse($ir['level']) . "
 						</div>
 					</div>
 				</div>
@@ -397,7 +397,7 @@ function home()
 							Mining Level
 						</div>
 						<div class='col-6'>
-						" . number_format($MUS['mining_level']) . "
+						" . shortNumberParse($MUS['mining_level']) . "
 						</div>
 					</div>
 				</div>
@@ -429,7 +429,7 @@ function home()
 							Dungeon Busts
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['busts']) . "
+							" . shortNumberParse($ir['busts']) . "
 						</div>
 					</div>
 				</div>
@@ -453,7 +453,7 @@ function home()
 							Kills
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['kills']) . "
+							" . shortNumberParse($ir['kills']) . "
 						</div>
 					</div>
 				</div>
@@ -485,7 +485,7 @@ function home()
 							Deaths
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['deaths']) . "
+							" . shortNumberParse($ir['deaths']) . "
 						</div>
 					</div>
 				</div>
@@ -514,7 +514,7 @@ function home()
 							Referrals
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['referral_count']) . "
+							" . shortNumberParse($ir['referral_count']) . "
 						</div>
 					</div>
 				</div>
@@ -538,7 +538,7 @@ function home()
 							Crime Copper
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['crime_copper']) . "
+							" . shortNumberParse($ir['crime_copper']) . "
 						</div>
 					</div>
 				</div>
@@ -559,7 +559,7 @@ function home()
 							Times Travelled
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['travel_times']) . "
+							" . shortNumberParse($ir['travel_times']) . "
 						</div>
 					</div>
 				</div>
@@ -580,7 +580,7 @@ function home()
 							Damage Dealt
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['dmg_dlt']) . "
+							" . shortNumberParse($ir['dmg_dlt']) . "
 						</div>
 					</div>
 				</div>
@@ -604,7 +604,7 @@ function home()
 							Networth
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['net_worth']) . "
+							" . shortNumberParse($ir['net_worth']) . "
 						</div>
 					</div>
 				</div>
@@ -636,7 +636,7 @@ function home()
 							Forum Posts
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['forum_posts']) . "
+							" . shortNumberParse($ir['forum_posts']) . "
 						</div>
 					</div>
 				</div>
@@ -657,7 +657,7 @@ function home()
 							Days Logged In
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['dayslogged']) . "
+							" . shortNumberParse($ir['dayslogged']) . "
 						</div>
 					</div>
 				</div>
@@ -681,12 +681,12 @@ function home()
 							IQ
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['iq']) . "
+							" . shortNumberParse($ir['iq']) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[62]} href='?action=iq1'>10KQ</a><br />
+					<a {$class[62]} href='?action=iq1'>10K</a><br />
 					<a {$class[63]} href='?action=iq2'>25K</a><br />
 					<a {$class[64]} href='?action=iq3'>100K</a><br />
 					<a {$class[65]} href='?action=iq4'>1M</a><br />
@@ -702,7 +702,7 @@ function home()
 							VIP Days
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['vip_days']) . "
+							" . shortNumberParse($ir['vip_days']) . "
 						</div>
 					</div>
 				</div>
@@ -723,12 +723,12 @@ function home()
 							Labor
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['labor']) . "
+							" . shortNumberParse($ir['labor']) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[72]} href='?action=labor1'>100Kr</a><br />
+					<a {$class[72]} href='?action=labor1'>100K</a><br />
 					<a {$class[73]} href='?action=labor2'>500K</a><br />
 					<a {$class[74]} href='?action=labor3'>1M</a><br />
 					<a {$class[75]} href='?action=labor4'>10M</a><br />
@@ -747,7 +747,7 @@ function home()
 							Courses Done
 						</div>
 						<div class='col-6'>
-							" . number_format($ir['courses_done']) . "
+							" . shortNumberParse($ir['courses_done']) . "
 						</div>
 					</div>
 				</div>
