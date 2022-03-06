@@ -341,40 +341,40 @@ echo "<h3>{$user_name}'s Profile</h3>
 						<div id='profileTxt' class='text-left'>What would you like to do?</div><br />
 						<div class='row'>
 							<div class='col-6 col-sm-4'>
-								<a href='attack.php?user={$r['userid']}' onmouseover='profileButtonAttack(\"{$r['username']}\", {$attbutton})' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-swords-emblem'></i></a><br />
+								<a href='attack.php?user={$r['userid']}' onmouseover='profileButtonAttack(\"{$r['username']}\", {$attbutton})' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/attack-btn.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='sendcash.php?user={$r['userid']}' onmouseover='profileButtonCash(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-credits-currency'></i></a><br />
+								<a href='sendcash.php?user={$r['userid']}' onmouseover='profileButtonCash(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/send-cash-btn.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='inbox.php?action=compose&user={$r['userid']}' onmouseover='profileButtonMail(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-envelope'></i></a><br />
+								<a href='inbox.php?action=compose&user={$r['userid']}' onmouseover='profileButtonMail(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/inbox-btn.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='hirespy.php?user={$r['userid']}' onmouseover='profileButtonSpy(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-spy'></i></a><br />
+								<a href='hirespy.php?user={$r['userid']}' onmouseover='profileButtonSpy(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/spy-btn.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='bounty.php?action=addbounty&user={$r['userid']}' onmouseover='profileButtonBounty(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-wanted-reward'></i></a><br />
+								<a href='bounty.php?action=addbounty&user={$r['userid']}' onmouseover='profileButtonBounty(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("explore/bounty_hunter.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='theft.php?user={$r['userid']}' onmouseover='profileButtonTheft(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-profit'></i></a><br />
+								<a href='theft.php?user={$r['userid']}' onmouseover='profileButtonTheft(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/rob-btn.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='poke.php?user={$r['userid']}' onmouseover='profileButtonPoke(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-pointing'></i></a><br />
+								<a href='poke.php?user={$r['userid']}' onmouseover='profileButtonPoke(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/poke-btn.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='friends.php?action=add&ID={$r['userid']}' onmouseover='profileButtonFriend(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-thumb-up'></i></a><br />
+								<a href='friends.php?action=add&ID={$r['userid']}' onmouseover='profileButtonFriend(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/friend-btn.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='enemy.php?action=add&user={$r['userid']}' onmouseover='profileButtonEnemy(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-thumb-down'></i></a><br />
+								<a href='enemy.php?action=add&user={$r['userid']}' onmouseover='profileButtonEnemy(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/enemy-btn.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='contacts.php?action=add&user={$r['userid']}' onmouseover='profileButtonContact(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-id-card'></i></a><br />
+								<a href='contacts.php?action=add&user={$r['userid']}' onmouseover='profileButtonContact(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/contact-btn.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='blocklist.php?action=add&user={$r['userid']}' onmouseover='profileButtonBlock(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-trash-can'></i></a><br />
+								<a href='blocklist.php?action=add&user={$r['userid']}' onmouseover='profileButtonBlock(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/block-btn.svg", 1.75) . "</a><br />
 							</div>
 							<div class='col-6 col-sm-4'>
-								<a href='playerreport.php?userid={$r['userid']}' onmouseover='profileButtonReport(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'><i class='game-icon game-icon-hazard-sign'></i></a><br />
+								<a href='playerreport.php?userid={$r['userid']}' onmouseover='profileButtonReport(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/report-btn.svg", 1.75) . "</a><br />
 							</div>
 						</div>
 					</div>
