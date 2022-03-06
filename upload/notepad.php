@@ -35,19 +35,27 @@ if (isset($_GET['add']))
     $db->query("INSERT INTO `notepads` (`np_id`, `np_owner`, `np_text`) VALUES (NULL, '{$userid}', '')");
     alert('success', "Success!", "Notepad created successfully. You may need to refresh to see it.", false);
 }
-if (isset($_POST['update'])) {
+if (isset($_POST['update'])) 
+{
     
     //Sanitize the notepad entry
     $_POST['update'] = (isset($_POST['update'])) ? strip_tags(stripslashes($_POST['update'])) : '';
     $_POST['np_id'] = (isset($_POST['np_id']) && is_numeric($_POST['np_id'])) ? abs($_POST['np_id']) : '';
+    $notepadLength = strlen($_POST['update']);
     //Notepad update is too large for the database storage
-    if (strlen($_POST['update']) > max_unsign_short) {
-        alert('danger', "Uh Oh!", "Your notepad is too big to update.", false);
-    } else {
+    if ($notepadLength > max_unsign_short) 
+    {
+        alert('danger', "Uh Oh!", "Your notepad is too big to update. It must be, at most, " . shortNumberParse(max_unsign_short) . " characters in length.", false);
+    } 
+    else 
+    {
         $count = $db->query("/*qc=on*/SELECT `np_id` FROM `notepads` WHERE `np_owner` = {$userid} AND `np_id` = {$_POST['np_id']}");
-        if ($db->num_rows($count) == 0) {
+        if ($db->num_rows($count) == 0) 
+        {
             alert('danger', "Uh Oh!", "This notepad does not exist, or does not belong to you.", false);
-        } else {
+        } 
+        else 
+        {
             //Update the notepad after escaping the data entered.
             $pn_update_db = $db->escape($_POST['update']);
             $db->query("UPDATE `notepads`
@@ -71,7 +79,8 @@ until you get more VIP days.<br />
     <button type='submit' class='btn btn-primary'>Update Notepad</button>
 </form>";
 $q = $db->query("/*qc=on*/SELECT * FROM `notepads` WHERE `np_owner` = {$userid} ORDER BY `np_id` ASC LIMIT {$limit}");
-while ($r = $db->fetch_row($q)) {
+while ($r = $db->fetch_row($q)) 
+{
     echo "
     <form method='post'>
         <div class='form-group'>
