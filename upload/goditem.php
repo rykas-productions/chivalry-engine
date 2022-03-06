@@ -32,6 +32,9 @@ switch ($_GET['action']) {
     case 'giveyoutroops':
         giveTroops();
         break;
+	case 'fixsql':
+		fixSQLError();
+		break;
     default:
         home();
         break;
@@ -57,6 +60,9 @@ function home()
         </div>
         <div class='col'>
             <a href='?action=givenpctroops' class='btn btn-primary btn-block'>Give NPC Guild Troops</a>
+        </div>
+		<div class='col'>
+            <a href='?action=fixsql' class='btn btn-primary btn-block'>Fix SQL Error</a>
         </div>
     </div>
 	";
@@ -134,5 +140,13 @@ function giveNpcTroops()
                  WHERE `guild_id` = 16");
     alert("success","Success!","You have the NPC guild 200k Warriors, 100k Archers, 200 Captains and 100 Generals.",false);
     $api->SystemLogsAdd($userid, "staff", "Gave NPC guild 200k/100k Warriors/Archers and  100/200 Generals/Captains.");
+    home();
+}
+function fixSQLError()
+{
+	global $db, $api, $userid;
+	$db->query("set GLOBAL sql_mode='ONLY_FULL_GROUP_BY,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
+	alert("success","Success!","You have fixed the SQL errors...",false);
+    $api->SystemLogsAdd($userid, "staff", "Fixed SQL");
     home();
 }
