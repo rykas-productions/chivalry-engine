@@ -46,7 +46,7 @@ if (isset($_GET['user'])) {
         }
         $userformat = "<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}]";
         $user2format = "<a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> [{$_POST['user']}]";
-        $cashformat = number_format($_POST['send']);
+        $cashformat = shortNumberParse($_POST['send']);
         $api->GameAddNotification($_POST['user'], "{$userformat} has sent you {$cashformat} Copper Coins.");
         $api->UserGiveCurrency($_POST['user'], 'primary', $_POST['send']);
         $api->UserTakeCurrency($userid, 'primary', $_POST['send']);
@@ -55,7 +55,7 @@ if (isset($_GET['user'])) {
 		$h->endpage();
     } else {
         echo "You are attempting to send Copper Coins to {$api->SystemUserIDtoName($_GET['user'])}. You have
-        " . number_format($ir['primary_currency']) . " Copper Coins you can send. How much do you wish to send?";
+        " . shortNumberParse($ir['primary_currency']) . " Copper Coins you can send. How much do you wish to send?";
         $csrf = request_csrf_html("sendcash_{$_GET['user']}");
         echo "<form method='post' action='?user={$_GET['user']}'>
             <input type='hidden' value='{$_GET['user']}' name='user'>
