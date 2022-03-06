@@ -176,4 +176,8 @@ function smelt()
     }
 }
 
+function in_progress()
+{
+    global $db, $userid, $api, $h;
+}
 $h->endpage();
