@@ -194,9 +194,12 @@ if (isset($nohdr) == false || !$nohdr)
     $cm = number_format($ir['secondary_currency']);
     $lv = date('F j, Y, g:i a', $ir['laston']);
     global $atkpage;
-    if ($atkpage) {
+    if ($atkpage) 
+    {
         $h->userdata($ir, 0);
-    } else {
+    } 
+    else 
+    {
         $h->userdata($ir);
     }
     global $menuhide;
@@ -206,15 +209,6 @@ cslog('log',"You are using {$browser} on {$os}.");
 /*foreach (glob("crons/*.php") as $filename) {
     include $filename;
 }*/
-$get = $db->query("/*qc=on*/SELECT `sip_recipe`,`sip_user` FROM `smelt_inprogress` WHERE `sip_time` < {$time}");
-//Select completed smelting recipes and give to the user.
-if ($db->num_rows($get)) {
-    $r = $db->fetch_row($get);
-    $r2 = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r['sip_recipe']}"));
-    $api->UserGiveItem($r['sip_user'], $r2['smelt_output'], $r2['smelt_qty_output']);
-    $api->GameAddNotification($r['sip_user'], "You have successfully smelted your {$r2['smelt_qty_output']} " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s).");
-    $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_user`= {$r['sip_user']} AND `sip_time` < {$time}");
-}
 $UIDB = $db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid}");
 if (!($db->num_rows($UIDB))) {
     $db->query("INSERT INTO `mining` (`userid`, `max_miningpower`, `miningpower`, `miningxp`, `buyable_power`, `mining_level`, `mine_boost`) 

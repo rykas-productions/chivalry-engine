@@ -180,19 +180,7 @@ function notification_add($userid, $text, $icon='', $color='')
     global $db;
     $text = $db->escape($text);
     $time = time();
-    $q = $db->query("SELECT * FROM `notifications` 
-                    WHERE `notif_user` = {$userid}
-                    AND `notif_text` = '{$text}' 
-                    AND `notif_status` = 'unread'");
-    if ($db->num_rows($q) > 0)
-    {
-        $r = $db->fetch_row($q);
-        $db->query("UPDATE `notifications` SET `notif_time` = {$time} WHERE `notif_id` = {$r['notif_id']}");
-    }
-    else
-    {
-        $db->query("INSERT INTO `notifications` VALUES(NULL, {$userid}, {$time}, 'unread', '{$text}', '{$icon}', '{$color}')");
-    }
+    $db->query("INSERT INTO `notifications` VALUES(NULL, {$userid}, {$time}, 'unread', '{$text}', '{$icon}', '{$color}')");
     return true;
 }
 
@@ -316,6 +304,7 @@ function check_data()
 	checkGuildVault();
 	removeOldEffects();
 	checkGuildDebt();
+	doBlacksmithCheck();
 	
 	//If user is auth'd, run max Will Check
 	if (isset($ir))
@@ -1226,7 +1215,8 @@ function getCurrentPage()
  */
 function loadImageAsset($img, $size = 1)
 {   
-    return "<img src='./assets/img/{$img}' style='width:{$size}rem;'></img>";
+    $rootAssetDir = "./assets/";
+    return "<img src='{$rootAssetDir}img/{$img}' style='width:{$size}rem;'></img>";
 }
 
 /**
@@ -1361,4 +1351,22 @@ function execute_sql($file, $db_database, $hostname, $username, $password, $driv
     }
     
     return FALSE;
+}
+
+function doBlacksmithCheck()
+{
+    global $db, $api;
+    $time = time();
+    $q = $db->query("SELECT * FROM `smelt_inprogress` WHERE `sip_time` <= {$time}");
+    if ($db->num_rows($q) > 0)
+    {
+        while ($r = $db->fetch_row($q))
+        {
+            $smeltRecipe = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$r['sip_recipe']}");
+            $r2 = $db->fetch_row($smeltRecipe);
+            $api->UserGiveItem($r['sip_user'], $r2['smelt_output'], $r2['smelt_qty_output']);
+            $api->GameAddNotification($r['sip_user'], "Your {$r2['smelt_qty_output']} x " . $api->SystemItemIDtoName($r2['smelt_output']) . "(s) have finished being smelted and have been added to your inventory.");
+            $db->query("DELETE FROM `smelt_inprogress` WHERE `sip_id`= {$r['sip_id']}");
+        }
+    }
 }
