@@ -1297,21 +1297,25 @@ function parseFraudGuardRisk($risk_level)
 function doHourlyJobRewards()
 {
     global $db, $api;
+    $lastHr = time() - 3600;
     if ((date('G') >= 8) && (date('G') <= 18))
     {
         $q = $db->query("SELECT * FROM `users` WHERE `jobrank` > 0 AND `job` > 0");
         while ($r = $db->fetch_row($q))
         {
+            $multi = 1.0;
+            if ($r['laston'] > $lastHr)
+                $multi = $multi + 0.33;
             $jr = $db->fetch_row($db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$r['jobrank']}"));
             if ($jr['jrPRIMPAY'] > 0)
             {
-                $api->UserGiveCurrency($r['userid'], "primary", $jr['jrPRIMPAY']);
-                addToEconomyLog('Job', 'copper', $jr['jrPRIMPAY']);
+                $api->UserGiveCurrency($r['userid'], "primary", $jr['jrPRIMPAY'] * $multi);
+                addToEconomyLog('Job', 'copper', $jr['jrPRIMPAY'] * $multi);
             }
             if ($jr['jrSECONDARY'] > 0)
             {
-                $api->UserGiveCurrency($r['userid'], "secondary", $jr['jrSECONDARY']);
-                addToEconomyLog('Job', 'token', $jr['jrSECONDARY']);
+                $api->UserGiveCurrency($r['userid'], "secondary", $jr['jrSECONDARY'] * $multi);
+                addToEconomyLog('Job', 'token', $jr['jrSECONDARY'] * $multi);
             }
         }
     }
