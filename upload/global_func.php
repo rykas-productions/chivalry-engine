@@ -912,23 +912,9 @@ function addToEconomyLog($type = 'Misc', $curr = 'copper', $change = 0)
 {
 	global $db;
 	$todayLogID = date('Ymd');
-	$monthLogID = date('Ym--');
-	$yearLogID = date('Y----');
 	$q=$db->query("SELECT *
 					FROM `economy_log` 
 					WHERE `ecDate` = '{$todayLogID}' 
-					AND `ecSource` = '{$type}' 
-					AND `ecCurrency` = '{$curr}' 
-					LIMIT 1");
-	$q2=$db->query("SELECT *
-					FROM `economy_log` 
-					WHERE `ecDate` = '{$monthLogID}' 
-					AND `ecSource` = '{$type}' 
-					AND `ecCurrency` = '{$curr}' 
-					LIMIT 1");
-	$q3=$db->query("SELECT *
-					FROM `economy_log` 
-					WHERE `ecDate` = '{$yearLogID}' 
 					AND `ecSource` = '{$type}' 
 					AND `ecCurrency` = '{$curr}' 
 					LIMIT 1");
@@ -943,36 +929,6 @@ function addToEconomyLog($type = 'Misc', $curr = 'copper', $change = 0)
 		$db->query("UPDATE `economy_log` 
 					SET `ecChange` = `ecChange` + '{$change}' 
 					WHERE `ecDate` = '{$todayLogID}' 
-					AND `ecSource` = '{$type}' 
-					AND `ecCurrency` = '{$curr}' 
-					LIMIT 1");
-	}
-	//Insert month
-	if ($db->num_rows($q) == 0)
-	{
-		$db->query("INSERT INTO `economy_log` (`ecDate`, `ecSource`, `ecCurrency`, `ecChange`) VALUES 
-		('{$monthLogID}', '{$type}', '{$curr}', '{$change}')");
-	}
-	else
-	{
-		$db->query("UPDATE `economy_log` 
-					SET `ecChange` = `ecChange` + '{$change}' 
-					WHERE `ecDate` = '{$monthLogID}' 
-					AND `ecSource` = '{$type}' 
-					AND `ecCurrency` = '{$curr}' 
-					LIMIT 1");
-	}
-	//Insert year
-	if ($db->num_rows($q) == 0)
-	{
-		$db->query("INSERT INTO `economy_log` (`ecDate`, `ecSource`, `ecCurrency`, `ecChange`) VALUES 
-		('{$yearLogID}', '{$type}', '{$curr}', '{$change}')");
-	}
-	else
-	{
-		$db->query("UPDATE `economy_log` 
-					SET `ecChange` = `ecChange` + '{$change}' 
-					WHERE `ecDate` = '{$yearLogID}' 
 					AND `ecSource` = '{$type}' 
 					AND `ecCurrency` = '{$curr}' 
 					LIMIT 1");
