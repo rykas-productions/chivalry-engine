@@ -13,8 +13,8 @@ if (empty($_GET['user'])) {
     alert('danger', "Uh Oh!", "Please specify the user you wish to rob.", true, 'index.php');
     die($h->endpage());
 }
-if ($api->UserInfoGet($userid, 'brave', true) < 25) {
-    alert('danger', "Uh Oh!", "You need 25% Brave to rob someone.", true, 'index.php');
+if ($api->UserInfoGet($userid, 'brave', true) < 10) {
+    alert('danger', "Uh Oh!", "You need 10% Brave to rob someone.", true, 'index.php');
     die($h->endpage());
 }
 $q = $db->query("/*qc=on*/SELECT `primary_currency` FROM `users` WHERE `userid` = {$_GET['user']}");
@@ -33,11 +33,11 @@ if (userHasEffect($userid, constant("basic_protection")))
     die($h->endpage());
 }
 if ($api->UserHasItem($_GET['user'], 32, 1)) {
-    alert('danger', "Uh Oh!", "This user has theft protection and thus, cannot be robbed.", true, 'index.php');
+    alert('danger', "Uh Oh!", "This user has Theft Protection and thus, cannot be robbed.", true, 'index.php');
     die($h->endpage());
 }
 if ($r < 10) {
-    alert('danger', "Uh Oh!", "This user does not have the minimum required cash out to be robbed.", true, 'index.php');
+    alert('danger', "Uh Oh!", "This user does not have the minimum required Copper Coins out to be robbed.", true, 'index.php');
     die($h->endpage());
 }
 if ($api->UserInfoGet($_GET['user'], 'level') < 10) {
@@ -51,13 +51,13 @@ if (isset($_POST['rob'])) {
         fairly quickly. Be sure to be quicker next time.");
         die($h->endpage());
     }
-    $api->UserInfoSet($userid, 'brave', -25, true);
+    $api->UserInfoSet($userid, 'brave', -10, true);
     $minimum = round($r * 0.05);
     $maximum = round($r * 0.1);
 	$specialnumber=((getSkillLevel($userid,14)*5)/100);
     $stolen = Random($minimum, $maximum);
 	$stolen = $stolen+($stolen*$specialnumber);
-	$stolenn = number_format($stolen);
+	$stolenn = shortNumberParse($stolen);
     if ($chance == 1) {
         alert('danger', "Uh Oh!", "You attempted to rob {$robbed}, but got destroyed by their over-protective step mother.", true, 'dungeon.php');
         $api->SystemLogsAdd($userid, 'theft', "Robbed {$robbed} [{$_GET['user']}] but failed.");
@@ -73,7 +73,7 @@ if (isset($_POST['rob'])) {
 
 } else {
     $csrf = request_csrf_html("rob_{$_GET['user']}");
-    echo "Are you sure you want to rob {$robbed}? It will cost you 25% Brave to do so.<br />
+    echo "Are you sure you want to rob {$robbed}? It will cost you 10% Brave to do so.<br />
     <form method='post'>
         <input type='hidden' name='rob' value='yes'>
         {$csrf}
