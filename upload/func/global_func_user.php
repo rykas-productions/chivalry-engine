@@ -75,20 +75,14 @@ function check_level($disableLevelUp = false)
 			$StatGain = $ir['level'] * Random(150,275) / Random(2, 6);
 			$StatGain = $StatGain+($StatGain*levelMultiplier($ir['level'], $ir['reset']));
 			$StatGainFormat = shortNumberParse($StatGain);
-			//Assign the stat gain to the user's class of choice.
-			if ($ir['class'] == 'Warrior') {
-				$Stat = 'strength';
-			} elseif ($ir['class'] == 'Rogue') {
-				$Stat = 'agility';
-			} else {
-				$Stat = 'guard';
-			}
+			$statArray = array("strength","guard","agility");
+			$Stat = array_rand($statArray);
 			//Credit the stat gain.
-			$db->query("UPDATE `userstats` SET `{$Stat}` = `{$Stat}` + {$StatGain} WHERE `userid` = {$userid}");
+			$db->query("UPDATE `userstats` SET `{$statArray[$Stat]}` = `{$statArray[$Stat]}` + {$StatGain} WHERE `userid` = {$userid}");
 			//Tell the user they've gained some stats.
-			notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$Stat}.", "game-icon game-icon-corporal");
+			notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$statArray[$Stat]}.", "game-icon game-icon-corporal");
 			//Log the level up, along with the stats gained.
-			SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$Stat}.");
+			SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$statArray[$Stat]}.");
 		}
 	}
 }
@@ -295,7 +289,9 @@ function levelMultiplier($level, $reset = 1)
 {
     $actualReset = $reset - 1;
     $multiplier = 1;
-	if (($level >= 100) && ($level < 150))
+    if ($level < 100)
+        $multiplier += 0;
+	elseif (($level >= 100) && ($level < 150))
 		$multiplier += 0.5;
 	elseif (($level >= 150) && ($level < 250))
 	   $multiplier += 0.75;
@@ -384,9 +380,9 @@ function autoDonateXP($user, $xp, $guild)
 				updateDonations($guild,$user,'xp',$xprequired);
 				updateDonations($guild,$user,'guild_xp',$points);
 				$db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$points} WHERE `guild_id` = {$guild}");
-				$event = "<a href='profile.php?user={$user}'>{$api->SystemUserIDtoName($user)}</a> exchanged " . number_format($xprequired) . " experience for " . number_format($points) . " guild experience.";
+				$event = "<a href='profile.php?user={$user}'>{$api->SystemUserIDtoName($user)}</a> exchanged " . shortNumberParse($xprequired) . " experience for " . shortNumberParse($points) . " guild experience.";
 				$api->GuildAddNotification($guild, $event);
-				$api->SystemLogsAdd($user, 'xp_gain', "-" . number_format($xprequired) . "XP");
+				$api->SystemLogsAdd($user, 'xp_gain', "-" . shortNumberParse($xprequired) . "XP");
 				return $xp - $toDonate;
 			}
 		}
@@ -861,9 +857,9 @@ function undoEquipGains($user, $slot, $notify = true)
 				$mod='gained';
 			}
 			if (empty($statloss))
-					$statloss .= "{$mod} " . number_format($sbr['number']) . " " . statParser($sbr['stat']);
+					$statloss .= "{$mod} " . shortNumberParse($sbr['number']) . " " . statParser($sbr['stat']);
 			else
-					$statloss .= ", {$mod} " . number_format($sbr['number']) . " " . statParser($sbr['stat']);
+			    $statloss .= ", {$mod} " . shortNumberParse($sbr['number']) . " " . statParser($sbr['stat']);
 			$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$user} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$slot}'");
 		}
 		if ($notify)
@@ -1206,7 +1202,7 @@ function missionCheck()
         }
         else
         {
-            notification_add($r['mission_userid'],"You have successfully completed your mission. You have been credited " . number_format($r['mission_reward']) . " Copper Coins.");
+            notification_add($r['mission_userid'],"You have successfully completed your mission. You have been credited " . shortNumberParse($r['mission_reward']) . " Copper Coins.");
             $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + {$r['mission_reward']} WHERE `userid` = {$r['mission_userid']}");
         }
         $db->query("DELETE FROM `missions` WHERE `mission_id` = {$r['mission_id']}");
