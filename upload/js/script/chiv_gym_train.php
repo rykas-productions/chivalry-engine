@@ -53,11 +53,17 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
 	{
 		$gain = 0;
         $extraecho = '';
-        if ($stat == 'all') {
-            $gainstr = $api->UserTrain($userid, 'strength', $_POST['amnt'] / 4, $multi);
-            $gainagl = $api->UserTrain($userid, 'agility', $_POST['amnt'] / 4, $multi);
-            $gaingrd = $api->UserTrain($userid, 'guard', $_POST['amnt'] / 4, $multi);
-            $gainlab = $api->UserTrain($userid, 'labor', $_POST['amnt'] / 4, $multi);
+        if ($stat == 'all')
+        {
+            $strengthSplit=getCurrentUserPref('strengthSplit', 25);
+            $agilitySplit=getCurrentUserPref('agilitySplit', 25);
+            $guardSplit=getCurrentUserPref('guardSplit', 25);
+            $laborSplit=getCurrentUserPref('laborSplit', 25);
+            
+            $gainstr = $api->UserTrain($userid, 'strength', $_POST['amnt'] / (100 /$strengthSplit), $multi);
+            $gainagl = $api->UserTrain($userid, 'agility', $_POST['amnt'] / (100 /$agilitySplit), $multi);
+            $gaingrd = $api->UserTrain($userid, 'guard', $_POST['amnt'] / (100 /$guardSplit), $multi);
+            $gainlab = $api->UserTrain($userid, 'labor', $_POST['amnt'] / (100 /$laborSplit), $multi);
         } else {
             $gain = $api->UserTrain($userid, $_POST['stat'], $_POST['amnt'], $multi);
         }

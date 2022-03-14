@@ -80,6 +80,9 @@ switch ($_GET['action']) {
 	case 'sounds':
 	    prefsound();
 	    break;
+	case 'gymsplit':
+	    gymSplit();
+	    break;
     default:
         prefs_home();
         break;
@@ -164,6 +167,9 @@ function prefs_home()
                                 <a class='btn btn-primary btn-block' href='?action=sounds'>Audio Settings</a><br />
                             </div>
                             <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-success btn-block' href='?action=gymsplit'>Training Focus</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
                                 <a class='btn btn-info btn-block' href='?action=tuttoggle'>Tutorial Toggle</a><br />
                             </div>
                             <div class='col-12 col-sm-6 col-lg-12'>
@@ -171,9 +177,6 @@ function prefs_home()
                             </div>
                             <div class='col-12 col-sm-6 col-lg-12'>
                                 <a class='btn btn-primary btn-block' href='?action=userdropdown'>User Input Setting</a><br />
-                            </div>
-                            <div class='col-12 col-sm-6 col-lg-12'>
-                                <a class='btn btn-primary btn-block' href='?action=forumalert'>Forum Notifications</a><br />
                             </div>
                         </div>
                     </div>
@@ -187,6 +190,9 @@ function prefs_home()
                     </div>
                     <div class='card-body'>
                         <div class='row'>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=forumalert'>Forum Notifications</a><br />
+                            </div>
                             <div class='col-12 col-sm-6 col-lg-12'>
                                 <a class='btn btn-primary btn-block' href='?action=emailchange'>Email Opt Setting</a><br />
                             </div>
@@ -1739,6 +1745,116 @@ function prefsound()
         echo "
 		<hr />
 		<input type='submit' class='btn btn-primary' value='Update Audio'>
+		<input type='hidden' value='1' name='submit'>
+		</form>";
+}
+
+function gymSplit()
+{
+    global $api, $userid;
+    $strengthSplit=getCurrentUserPref('strengthSplit', 25);
+    $agilitySplit=getCurrentUserPref('agilitySplit', 25);
+    $guardSplit=getCurrentUserPref('guardSplit', 25);
+    $laborSplit=getCurrentUserPref('laborSplit', 25);
+    if (isset($_POST['submit']))
+    {
+        $_POST['strength'] = (isset($_POST['strength']) && is_numeric($_POST['strength'])) ? abs($_POST['strength']) : $strengthSplit;
+        $_POST['agility'] = (isset($_POST['agility']) && is_numeric($_POST['agility'])) ? abs($_POST['agility']) : $agilitySplit;
+        $_POST['guard'] = (isset($_POST['guard']) && is_numeric($_POST['guard'])) ? abs($_POST['guard']) : $guardSplit;
+        $_POST['labor'] = (isset($_POST['labor']) && is_numeric($_POST['labor'])) ? abs($_POST['labor']) : $laborSplit;
+        
+        $_POST['strength'] = clamp($_POST['strength'], 1, 100);
+        $_POST['agility'] = clamp($_POST['agility'], 1, 100);
+        $_POST['guard'] = clamp($_POST['guard'], 1, 100);
+        $_POST['labor'] = clamp($_POST['labor'], 1, 100);
+        
+        if (($_POST['strength'] + $_POST['agility'] + $_POST['guard'] + $_POST['labor']) != 100)
+        {
+           alert('danger', "Uh Oh", "The total percentages must equal 100%.", false);
+        }
+        else 
+        {
+            setCurrentUserPref('strengthSplit', $_POST['strength']);
+            setCurrentUserPref('agilitySplit', $_POST['agility']);
+            setCurrentUserPref('guardSplit', $_POST['guard']);
+            setCurrentUserPref('laborSplit', $_POST['labor']);
+            
+            alert('success', "Success!", "You have successfully updated your training focuses.", false);
+            $api->SystemLogsAdd($userid, 'preferences', "Updated training focuses.");
+            
+            $strengthSplit = $_POST['strength'];
+            $agilitySplit = $_POST['agility'];
+            $guardSplit = $_POST['guard'];
+            $laborSplit = $_POST['labor'];
+        }
+    }
+    echo "<form method='post'>
+		<div class='row'>
+            <div class='col-12'>
+				<div class='card'>
+                    <div class='card-header'>
+                        Training Focus
+                    </div>
+					<div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>";
+                                    alert('info',"","Here you may split your training focus at the gym. Note that each stat must have at least 1% focused into it. The total focus <u><b>MUST</b></u> be equal to 100%. This only effects whem training all four stats at once.",false);
+                                echo "</div>
+                                <div class='col-12 col-sm-6 col-md-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <b><small>Strength %</small></b>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='strength' value='{$strengthSplit}' min='1' max='100' required='1' class='form-control' placeholder='Default = 25'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <b><small>Agility %</small></b>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='agility' value='{$agilitySplit}' min='1' max='100' required='1' class='form-control' placeholder='Default = 25'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <b><small>Guard %</small></b>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='guard' value='{$guardSplit}' min='1' max='100' required='1' class='form-control' placeholder='Default = 25'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-3 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <b><small>Labor %</small></b>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='labor' value='{$laborSplit}' min='1' max='100' required='1' class='form-control' placeholder='Default = 25'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <b><small><br /></small></b>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='submit' class='btn btn-primary btn-block' value='Update Training Focus'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<input type='hidden' value='1' name='submit'>
 		</form>";
 }

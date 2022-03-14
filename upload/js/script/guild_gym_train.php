@@ -76,12 +76,18 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
 	{
 		$gain = 0;
         $extraecho = '';
-        if ($stat == 'all') {
-            $gainstr = $api->UserTrain($userid, 'strength', $_POST['amnt'] / 4, $multiplier);
-            $gainagl = $api->UserTrain($userid, 'agility', $_POST['amnt'] / 4, $multiplier);
-            $gaingrd = $api->UserTrain($userid, 'guard', $_POST['amnt'] / 4, $multiplier);
-            $gainlab = $api->UserTrain($userid, 'labor', $_POST['amnt'] / 4, $multiplier);
-        } else {
+        if ($stat == 'all')
+        {
+            $strengthSplit=getCurrentUserPref('strengthSplit', 25);
+            $agilitySplit=getCurrentUserPref('agilitySplit', 25);
+            $guardSplit=getCurrentUserPref('guardSplit', 25);
+            $laborSplit=getCurrentUserPref('laborSplit', 25);
+            
+            $gainstr = $api->UserTrain($userid, 'strength', $_POST['amnt'] / (100 /$strengthSplit), $multiplier);
+            $gainagl = $api->UserTrain($userid, 'agility', $_POST['amnt'] / (100 /$agilitySplit), $multiplier);
+            $gaingrd = $api->UserTrain($userid, 'guard', $_POST['amnt'] / (100 /$guardSplit), $multiplier);
+            $gainlab = $api->UserTrain($userid, 'labor', $_POST['amnt'] / (100 /$laborSplit), $multiplier);
+        }else {
             $gain = $api->UserTrain($userid, $_POST['stat'], $_POST['amnt'], $multiplier);
         }
         //Update energy left and stat's new count.
