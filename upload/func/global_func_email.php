@@ -19,7 +19,6 @@ function sendRegistrationEmail($email)
 	Thank you!";
 	return $api->SystemSendEmail($email,$WelcomeMSG);
 }
-
 function sendLoginFailEmail($userid)
 {
 	global $api, $db;
@@ -34,7 +33,6 @@ function sendLoginFailEmail($userid)
 	and change your password.";
 	return $api->SystemSendEmail($email,$body);
 }
-
 function sendDonateStartEmail($userid, $donated)
 {
 	global $api;
