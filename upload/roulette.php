@@ -53,7 +53,7 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
     {
         alert('danger', "Uh Oh!", "You may not bet " . shortNumberParse($_POST['bet']) . " Copper Coins at this 
             time, as you only have " . shortNumberParse($ir['primary_currency']) . " Copper Coins on you at 
-            this time.", true, "?tresde={$tresder}");
+            this time.", true, "roulette.php?tresde={$tresder}");
         die($h->endpage());
     }
     //player bets more than their max bet
@@ -61,26 +61,26 @@ if (isset($_POST['bet']) && is_numeric($_POST['bet']))
     {
         alert('danger', "Uh Oh!", "You are restricted to a maximum bet of " . shortNumberParse($maxbet) . " Copper 
         Coins. You may not bet " . shortNumberParse($_POST['bet']) . " Copper Coins at this time.", true,
-            "?tresde={$tresder}");
+            "roulette.php?tresde={$tresder}");
         die($h->endpage());
     }
     //player doesn't bet anything
     else if ($_POST['bet'] <= 0) 
     {
-        alert('danger', "Uh Oh!", "You must bet at least 1 Copper Coin.", true, "?tresde={$tresder}");
+        alert('danger', "Uh Oh!", "You must bet at least 1 Copper Coin.", true, "roulette.php?tresde={$tresder}");
         die($h->endpage());
     }
     //player doesn't input a valid option to bet upon
     elseif ((empty($_POST['number'])) && (empty($_POST['altbet'])))
     {
         alert('danger', "Uh Oh!", "Please input what you are betting on the roulette table.", true, 
-            "?tresde={$tresder}");
+            "roulette.php?tresde={$tresder}");
         die($h->endpage());
     }
     elseif ((!empty($_POST['number'])) && (!empty($_POST['altbet'])))
     {
         alert('danger', "Uh Oh!", "Please only bet on a number, or an option from the previous dropdown menu, not both.", 
-            true, "?tresde={$tresder}");
+            true, "roulette.php?tresde={$tresder}");
         die($h->endpage());
     }
     $slot = array();
