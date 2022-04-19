@@ -166,7 +166,7 @@ function index()
 									<div class='col-10 col-sm-9 col-md-3'>";
 										if ($r['imQTY'] > 1)
 										{
-											echo $r['imQTY'] . " x ";
+											echo shortNumberParse($r['imQTY']) . " x ";
 										}
 										echo "{$r['itmname']}
 									</div>
