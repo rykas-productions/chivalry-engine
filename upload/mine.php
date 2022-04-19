@@ -437,8 +437,9 @@ function autominer()
     {
         $townID = $db->fetch_single($db->query("SELECT `mine_location` FROM `mining_data` WHERE `mine_id` = {$r['miner_location']}"));
         $townName = $db->fetch_single($db->query("SELECT `town_name` FROM `town` WHERE `town_id` = {$townID}"));
+		$perc = min(round($r['miner_time'] / 300 * 100), 100);
         echo "<div class='row'>
-            <div class='col-12 col-sm-6'>
+            <div class='col-12 col-sm-6 col-md-4'>
                 <div class='row'>
                     <div class='col-12'>
                         <small>Location</small>
@@ -448,13 +449,19 @@ function autominer()
                     </div>
                 </div>  
             </div>
-            <div class='col-12 col-sm-6'>
+            <div class='col-12 col-sm-6 col-md-8'>
                 <div class='row'>
                     <div class='col-12'>
                         <small>Durability</small>
                     </div>
                     <div class='col-12'>
-                        {$r['miner_time']} minutes
+						<div class='progress' style='height: 1rem;'>
+							<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$r['miner_time']}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='300'>
+								<span>
+									{$perc}% ({$r['miner_time']} / 300)
+								</span>
+							</div>
+						</div>
                     </div>
                 </div>
             </div>
