@@ -3552,7 +3552,7 @@ function staff_pic()
         echo "
 		<h3>Change Guild Picture</h3>
 		<hr />
-		Your images must be externally hosted. Any images that are not 500x500 will be scaled accordingly. Images must not exceed 15MB in size.<br />
+		Your images must be externally hosted. Any images that are not 500x500 will be scaled accordingly.<br />
 		New Picture Link<br />
 		<form method='post'>
 			<input type='url' name='newpic' class='form-control' value='{$gd['guild_pic']}' />
