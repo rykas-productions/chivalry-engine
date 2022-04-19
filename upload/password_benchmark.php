@@ -54,7 +54,7 @@ if (isset($_POST['password'])) {
     echo "<br />Slowest time: " . max($times) . " seconds.";
     echo "<br />Fastest time: " . min($times) . " seconds.";
     echo "<br />Average time: " . (array_sum($times) / count($times)) . " seconds.";
-    echo "<br /><br />Score: " . number_format(($cost * 10000) / $end);
+    echo "<br /><br />Score: " . number_format(($cost * 10000) / $end) . "<br />";
     echo "<br /><br />Finished. Ideal cost is {$cost}<br />";
 } else {
     echo "Password Hash benchmark. Lets figure out the ideal time for your server. The default values are recommended values. Change them if you must.<br />
