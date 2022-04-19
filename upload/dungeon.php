@@ -125,7 +125,7 @@ function bail()
         //User does not have enough Copper Coins to bail this user out.
         if ($api->UserHasCurrency($userid, 'primary', $cost) == false) {
             alert('danger', "Uh Oh!", "You do not have enough Copper Coins to bail this user out. You need
-			    " . number_format($cost) . " Copper Coins.", true, 'dungeon.php');
+			    " . shortNumberParse($cost) . " Copper Coins.", true, 'dungeon.php');
             die($h->endpage());
         }
         //Person specified is bailed out. Take user's currency, log the action, and tell the person what happened.
@@ -135,8 +135,9 @@ function bail()
 			$api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
 				successfully bailed you out of the dungeon.");
 		}
-        alert('success', "Success!", "You have successfully bailed out {$api->SystemUserIDtoName($_GET['user'])} for " . number_format($cost) . " Copper Coins.", true, 'dungeon.php');
+        alert('success', "Success!", "You have successfully bailed out {$api->SystemUserIDtoName($_GET['user'])} for " . shortNumberParse($cost) . " Copper Coins.", true, 'dungeon.php');
         $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$_GET['user']}");
+		addToEconomyLog('Dungeon Bail', 'copper', ($cost)*-1);
         die($h->endpage());
     } else {
         alert('danger', "Uh Oh!", "You must select a person to bail out.", true, 'dungeon.php');
