@@ -15,10 +15,10 @@ if ($db->num_rows($q) > 0)
 {
 	$r=$db->fetch_row($q);
 	$r['username'] = parseUsername($r['userid']);
-	$announcement = "<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}] has won this month's voting raffle. They received 25 CID Admin Gym Scrolls. Thanks for voting! The raffle has been reset, and everyone now has an equal shot to win this month's raffle!!";
+	$announcement = "<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}] has won this month's voting raffle and received a $3 VIP Pack. Thanks for voting! The raffle has been reset, and everyone now has an equal shot to win this month's raffle!!";
 	$api->GameAddAnnouncement($announcement, 1);
-	$api->UserGiveItem($r['userid'],205,25);
-	$api->GameAddNotification($r['userid'],"You were selected as the Monthly Vote Raffle winner! You've received 25 CID Admin Gym Scrolls to your inventory!");
+	$api->UserGiveItem($r['userid'],13,1);
+	$api->GameAddNotification($r['userid'],"You were selected as the Monthly Vote Raffle winner! You've received a $3 VIP Pack to your inventory!");
 	$db->query("TRUNCATE TABLE `vote_raffle`");
 }
 $db->query("UPDATE `settings` SET `setting_value` = '0.00' WHERE `setting_name` = 'MonthlyDonationGoal'");
