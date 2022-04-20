@@ -74,11 +74,29 @@ runMarketTick(1);   //low risk market
 backupDatabase();
 purgeOldLogs();
 
-if (date('n') == 12)
+$month = date('n');
+$day = date('j');
+$year = date('Y');
+
+if ($month == 12)
 {
-    if (date('j') == 1)
+    if ($day == 1)
     {
-        $api->GameAddAnnouncement("Hey folks! The Advent Calendar is now available on Explore. Make sure you log in every day to get your rewards! Happy holidays!");
+        $api->GameAddAnnouncement("Hey folks! The Advent Calendar is now available on Explore. Make sure you log 
+                                    in every day to get your rewards! Happy holidays!");
+    }
+}
+
+if ($month == 4)
+{
+    if ($day == 20)
+    {
+        $api->GameAddAnnouncement("Greetings warriors! I know today isn't techincally a holiday, but it is sorta a 
+                                    holiday to some. I figured, to make up for missing Easter and St. Patties 
+                                    (life, sorry!), I'd throw in a small, unexpected event today.<br />
+                                    I know it isn't much, but logging in will give you a new badge, and a 
+                                    random amount of Copper Coins and Chivalry Tokens. I can't stress enough, I appreciate 
+                                    and thank each and everyone who logs in and plays Chivalry is Dead.");
     }
 }
 ?>
