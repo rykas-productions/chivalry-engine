@@ -21,10 +21,10 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	$minimumpot = mt_rand(125000, 350000);			//Minimum pot.
 	$costtoplay = 10000;			//Cost to get a ticket.
 	$addedtopot = 8500;				//How much, out of per ticket, is added to the pot.
-	$add2potformat = number_format($addedtopot);
-	$cost2playformat = number_format($costtoplay);
-	$minimumpotformat = number_format($minimumpot);
-	$currentwinnings = number_format($set['lotterycash']);
+	$add2potformat = shortNumberParse($addedtopot);
+	$cost2playformat = shortNumberParse($costtoplay);
+	$minimumpotformat = shortNumberParse($minimumpot);
+	$currentwinnings = shortNumberParse($set['lotterycash']);
 	$lotteryid = 28; 				//The Id of conf_id for lotterycash. (Settings table)
 //End config
 
@@ -49,7 +49,7 @@ function lottery_home()
     $winchance=round((1/$set['raffle_chance'])*100,2);
 	echo 
 		"<h3>Raffle</h3><hr />
-		The pot starts between 125,000 and 350,000 Copper Coins. It costs {$cost2playformat} Copper Coins to play. {$add2potformat} Copper Coins is deducted from your 
+		The pot starts between 125K and 350K Copper Coins. It costs {$cost2playformat} Copper Coins to play. {$add2potformat} Copper Coins is deducted from your 
 		ticket and added into the pot. Whoever gets the lucky ticket will get all the cash in the pot, along with a <a href='iteminfo.php?ID=160'>Badge of Luck</a>. 
 		<u>You have a {$winchance}% chance to win the raffle.</u> Chances are increased very occasionally as you play.<br />
 		<br />
@@ -95,15 +95,15 @@ function lottery_play()
 	$csrf=request_csrf_code('lottery_buy');
 	if ($chance == 1)	//Winner, winner, chicken dinner!!
 	{
-		$winnings=number_format($set['lotterycash']);
+	    $winnings=shortNumberParse($set['lotterycash']);
 		$api->UserGiveItem($userid,160,1);
-		alert('success',"Success!","You paid the fee and won the raffle's prize pot ({$winnings} Copper Coins)! Congratulations!",true,"?action=play&verf={$csrf}","Play Again");
+		alert('success',"Success!","You paid the fee and won the raffle's prize pot of {$winnings} Copper Coins! Congratulations!",true,"?action=play&verf={$csrf}","Play Again");
 		//Adds money!
 		$api->UserGiveCurrency($userid, 'primary', $set['lotterycash']);
 		//Sets the pot back to the minimum.
 		$db->query("UPDATE `settings` SET `setting_value` = {$minimumpot} WHERE `setting_id` = {$lotteryid}");
 		$userLink="<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}]";
-		$text = "The Chivalry is Dead Raffle has been won by {$userLink}. They received {$winnings} Copper Coins. We've started a new raffle that begins at " . number_format($minimumpot) . " Copper Coins. Best of luck!";
+		$text = "The Chivalry is Dead Raffle has been won by {$userLink}. They received {$winnings} Copper Coins. A new raffle has started, beginning at " . shortNumberParse($minimumpot) . " Copper Coins. Best of luck to everyone!";
 		$api->GameAddAnnouncement($text);
 		$db->query("UPDATE `settings` SET `setting_value` = 1000 WHERE `setting_name` = 'raffle_chance'");
         $db->query("UPDATE `settings` SET `setting_value` = {$userid} WHERE `setting_name` = 'raffle_last_winner'");\
