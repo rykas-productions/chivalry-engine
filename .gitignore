@@ -3,3 +3,4 @@ upload/test.php
 .idea/
 *.log
 upload/cache/
+/.metadata/
