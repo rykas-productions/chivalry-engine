@@ -51,5 +51,5 @@ function makeSafeInt(int $int)
  */
 function stripAll(string $text)
 {
-	return strip_tags(stripslashes($text));
+	return $db->escape(strip_tags(stripslashes($text)));
 }
