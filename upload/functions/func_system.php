@@ -35,10 +35,10 @@ function getEngineVersion()
  */
 function getEngineUpdate(string $currentVersion, string $url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
-    $json = json_decode(getCachedFile($url, "cev3_update.json"), true);
+    $json = json_decode(getRemoteFile($url, "cev3_update.json"), true);
     if (is_null($json))
         return "Update checker failed.";
-    if (version_compare($currentVersion, $json['latest-v3']) == 0 || version_compare($currentVersion, $json['latest-v2']) == 1)
+    if (version_compare($currentVersion, $json['latest-v3']) == 0 || version_compare($currentVersion, $json['latest-v3']) == 1)
         return "Chivalry Engine is up to date.";
     else
         return "Chivalry Engine version {$json['latest-v3']} available. Download it <a href='{$json['download-latest']}'>here</a>.";
