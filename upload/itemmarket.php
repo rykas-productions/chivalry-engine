@@ -556,14 +556,15 @@ function add()
             item_remove($userid, $_POST['ID'], $_POST['QTY']);
             $itemname=$api->SystemItemIDtoName($_POST['ID']);
 			$curre = ($_POST['currency'] == 'primary') ? 'Copper Coins' : 'Chivalry Tokens';
-            $imadd_log = $db->escape("Listed {$_POST['QTY']} {$itemname}(s) on the item market for {$_POST['price']} {$curre}.");
+			$num_format=shortNumberParse($_POST['price']);
+            $imadd_log = $db->escape("Listed " . shortNumberParse($_POST['QTY']) . " {$itemname}(s) on the item market for {$num_format} {$curre}.");
             $api->SystemLogsAdd($userid, 'imarket', $imadd_log);
-			$num_format=number_format($_POST['price']);
-            alert('success', "Success!", "You have successfully listed {$_POST['QTY']} {$itemname}(s) on the item
+            alert('success', "Success!", "You have successfully listed " . shortNumberParse($_POST['QTY']) . " {$itemname}(s) on the item
 			    market for {$num_format} {$curre}.", true, 'itemmarket.php');
         }
     } else {
         $csrf = request_csrf_html("imadd_form");
+        $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : 0;
         echo "<form method='post' action='?action=add'>
 		<table class='table table-bordered'>
 			<tr>
@@ -576,7 +577,7 @@ function add()
 					Item
 				</th>
 				<td>
-					" . inventory_dropdown('ID') . "
+					" . inventory_dropdown('ID', $_GET['ID']) . "
 				</th>
 			</tr>
 			<tr>

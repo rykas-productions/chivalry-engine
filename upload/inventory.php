@@ -8,6 +8,15 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+$potionexclusion=array(17,123,68,138,95,96,148,177,227,286,285,258,287);
+if (isset($_POST['itemUse']))
+{
+    if (!empty($_POST['itemUse']))
+    {
+        $redir = $db->escape($_POST['itemUse']);
+        header("Location: {$redir}");
+    }
+}
 $tresder = (Random(100, 999));
 $primWeap = ($ir['equip_primary'] > 0) ? $api->SystemItemIDtoName($ir['equip_primary']) : "<i>Unarmed</i>";
 $primWeapDam = 0;
@@ -315,16 +324,17 @@ while ($i = $db->fetch_row($inv))
 	$badge=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_badge`) FROM `users` WHERE `equip_badge` = {$i['itmid']} AND `userid` != 1"));
 	$trink=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_slot`) FROM `user_equips` WHERE `itemid` = {$i['itmid']}"));
 	$total=$invent+$armory+$market+$primary+$secondary+$armor+$badge+$trink;
+	$itemUse = array();
 	echo "
 	<div class='card'>
 		<div class='card-header bg-transparent' id='heading{$i['itmid']}'>
 			<h2 class='mb-0'>
 				<button class='btn btn-block btn-block text-left' type='button' data-toggle='collapse' data-target='#collapse{$i['itmid']}' aria-expanded='true' aria-controls='collapse{$i['itmid']}'>
 					<div class='row'>
-						<div class='col-2 col-sm-1'>
+						<div class='col-2 col-md-1'>
 							{$icon}
 						</div>
-						<div class='col-10 col-sm-5 col-md-7'>
+						<div class='col-10 col-md-5'>
 							{$i['itmname']}";
 							if ($i['inv_qty'] > 1) 
 							    echo "<b> x " . shortNumberParse($i['inv_qty']) . "</b>";
@@ -332,353 +342,251 @@ while ($i = $db->fetch_row($inv))
 						</div>
 						<div class='col'>
 							<div class='row'>
-								<div class='col-4'>";
+								<div class='col-12 col-sm-8 col-md-7 col-xl-8'>
+                                    <form method='post'>";
 								//Item has a normal use button
 									if (($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' ||  $i['effect3_on'] == 'true') 
-										&& ($i['armor'] == 0 && $i['weapon'] == 0 && 
-									$i['itmtypename'] != 'Rings' && $i['itmtypename'] != 'Necklaces' 
-										    && $i['itmtypename'] != 'Pendants' && $i['itmtypename'] != 'Badges')) {
-												echo "<a class='btn btn-block btn-primary btn-block' data-toggle='tooltip' data-placement='top' title='Use item.' href='itemuse.php?item={$i['inv_id']}'><i class='game-icon game-icon-check-mark'></i></a><br />";
-										}
-										//Box of Random
-										if ($i['itmid'] == 33)
+										&& ($i['armor'] == 0 && $i['weapon'] == 0 && $i['itmtypename'] != 'Rings' && $i['itmtypename'] != 'Necklaces' 
+										    && $i['itmtypename'] != 'Pendants' && $i['itmtypename'] != 'Badges')) 
+									{
+										array_push($itemUse, array("itemuse.php?item={$i['inv_id']}", "Use {$i['itmname']}"));
+									}
+									//Box of Random
+									if ($i['itmid'] == 33)
+									{
+										array_push($itemUse, array("bor.php?tresde={$tresder}", "Open {$i['itmname']}"));
+										if ($ir['autobor'] > 0)
 										{
-											
-											echo "<a title='Open {$i['itmname']}.' href='bor.php?tresde={$tresder}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-												<i class='game-icon game-icon-open-chest'></i>
-											</a><br />";
+										    array_push($itemUse, array("autobor.php", "Auto Open {$i['itmname']}"));
 										}
-										//Bomb
-										if ($i['itmid'] == 28)
-										{
-					
-											echo "<a title='Set charge.' href='bomb.php?action=small' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-mushroom-cloud'></i>
-												</a><br />";
-										}
-										//Medium Bomb
-										if ($i['itmid'] == 61)
-										{
-					
-											echo "<a title='Set charge.' href='bomb.php?action=medium' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-mushroom-cloud'></i>
-												</a><br />";
-										}
-										//Large  bomb
-										if ($i['itmid'] == 62)
-										{
-					
-											echo "<a title='Set charge.' href='bomb.php?action=large' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-mushroom-cloud'></i>
-												</a><br />";
-										}
-										//2017 Halloween Scratch Ticket
-										if ($i['itmid'] == 63)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='2017halloween.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//Pumpkin
-										if ($i['itmid'] == 64)
-										{
-					
-											echo "<a title='Chuck {$i['itmname']}.' href='bomb.php?action=pumpkin' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-throwing-nall'></i>
-												</a><br />";
-										}
-										//Invis Potion
-										if ($i['itmid'] == 68)
-										{
-					
-											echo "<a title='Drink {$i['itmname']}.' href='invispotion.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-pouring-chalice'></i>
-												</a><br />";
-										}
-										//2017 Halloween Scratch Ticket
-										if ($i['itmid'] == 69)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='2017thanksgiving.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//VIP Scratch Ticket
-										if ($i['itmid'] == 89)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='vipticket.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-open-treasure-chest'></i>
-												</a><br />";
-										}
-										//Auto Hexbag Opener
-										if ($i['itmid'] == 91)
-										{
-					
-											echo "<a title='Redeem {$i['itmname']}.' href='vipitem.php?item=autohex' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-open-treasure-chest'></i>
-												</a><br />";
-										}
-										//Auto BOR Opener
-										if ($i['itmid'] == 92)
-										{
-					
-											echo "<a title='Redeem {$i['itmname']}.' href='vipitem.php?item=autobor' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-open-treasure-chest'></i>
-												</a><br />";
-										}
-										//Mysterious Potion
-										if ($i['itmid'] == 123)
-										{
-					
-											echo "<a title='Drink {$i['itmname']}.' href='mysteriouspotion.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-pouring-chalice'></i>
-												</a><br />";
-										}
-										//VIP Color Changer
-										if ($i['itmid'] == 128)
-										{
-					
-											echo "<a title='Use {$i['itmname']}.' href='vipitem.php?item=vipcolor' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-open-treasure-chest'></i>
-												</a><br />";
-										}
-										//2018 St Patties Scratch Ticket
-										if ($i['itmid'] == 137)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='2018stpatties.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//Rick roll
-										if ($i['itmid'] == 149)
-										{
-					
-											echo "<a title='Set rickroll.' href='bomb.php?action=rickroll' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//Mining Herb
-										if ($i['itmid'] == 177)
-										{
-					
-											echo "<a title='Consume {$i['itmname']}.' href='mine.php?action=herb' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-flame'></i>
-												</a><br />";
-										}
-										//2018 Halloween Scratch Ticket
-										if ($i['itmid'] == 189)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='2018halloween.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//2018 Thanks Giving Scratch Ticket
-										if ($i['itmid'] == 195)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='2018thanksgiving.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//Snowball
-										if ($i['itmid'] == 202)
-										{
-					
-											echo "<a title='Toss {$i['itmname']}.' href='bomb.php?action=snowball' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-throwing-ball'></i>
-												</a><br />";
-										}
-										//2018 Christmas Scratch Ticket
-										if ($i['itmid'] == 203)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='2018christmas.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//CID Gym Access Scroll
-										if ($i['itmid'] == 205)
-										{
-					
-											echo "<a title='Train with {$i['itmname']}.' href='gym_ca.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-weight-lifting-down'></i>
-												</a><br />";
-										}
-										//CID Scratch Ticket
-										if ($i['itmid'] == 210)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='scratchticket.php?action=cidticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//Assassination Note
-										if ($i['itmid'] == 222)
-										{
-					
-											echo "<a title='Complete {$i['itmname']}.' href='bomb.php?action=assassin' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-quill'></i>
-												</a><br />";
-										}
-										//Mining Energy Potion
-										if ($i['itmid'] == 227)
-										{
-					
-											echo "<a title='Consume {$i['itmname']}.' href='mine.php?action=potion' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-pouring-chalice'></i>
-												</a><br />";
-										}
-										//2019 Easter Scratch Ticket
-										if ($i['itmid'] == 230)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='2019easter.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//Sepll Tome Key
-										if ($i['itmid'] == 250)
-										{
-					
-											echo "<a title='Unlock tome.' href='spellbook.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-padlock-open'></i>
-												</a><br />";
-										}
-										//Will Stimulant
-										if ($i['itmid'] == 263)
-										{
-					
-											echo "<a title='Convert {$i['itmname']}.' href='vipitem.php?item=willstim' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//2019 Halloween Scratch Ticket
-										if ($i['itmid'] == 264)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='2019halloween.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//2nd Year Ann Scratch Ticket
-										if ($i['itmid'] == 268)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='scratchticket.php?action=2ndyearann' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//Scroll of the Adminly
-										if ($i['itmid'] == 320)
-										{
-					
-											echo "<a title='Eat Potato.' href='goditem.php' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//2020 Big Bang Scratch Ticket
-										if ($i['itmid'] == 352)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='scratchticket.php?action=2020bang' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//Auto Street Begger VIP
-										if ($i['itmid'] == 364)
-										{
-					
-											echo "<a title='Redeem {$i['itmname']}.' href='vipitem.php?item=autobum' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//2020 Halloween Scratch Ticket
-										if ($i['itmid'] == 376)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='2020halloween.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//2020 Thanksgiving Scratch Ticket
-										if ($i['itmid'] == 391)
-										{
-					
-											echo "<a title='Scratch {$i['itmname']}.' href='2020thanksgiving.php?action=ticket' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//CID Admin Contact Prayer to God
-										if ($i['itmid'] == 407)
-										{
-										    
-										    echo "<a title='Pray to CID Admin.' href='vipitem.php?item=contact' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//Powered Miner
-										if ($i['itmid'] == 424)
-										{
-										    
-										    echo "<a title='Use powered miner' href='vipitem.php?item=autominer' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-check-mark'></i>
-												</a><br />";
-										}
-										//Weapons
-										if ($i['weapon'] > 0)
-										{
-											echo "<a title='Equip {$i['itmname']} as weapon.' href='equip.php?slot=weapon&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-all-for-one'></i>
-												</a><br />";
-										}
-										//Armor
-										if ($i['armor'] > 0)
-										{
-											echo "<a title='Equip {$i['itmname']} as armor.' href='equip.php?slot=armor&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-armor-upgrade'></i>
-												</a><br />";
-										}
-										//Badges
-										if ($i['itmtypename'] == 'Badges')
-										{
-											echo "<a title='Equip {$i['itmname']} as profile badge.' href='equip.php?slot=badge&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-pin'></i>
-												</a><br />";
-										}
-										//Rings
-										if ($i['itmtypename'] == 'Rings')
-										{
-											echo "<a title='Equip {$i['itmname']} as ring trinket.' href='equip.php?slot=ring&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-ring'></i>
-												</a><br />";
-										}
-										//Necklaces
-										if ($i['itmtypename'] == 'Necklaces')
-										{
-											echo "<a title='Equip {$i['itmname']} as necklace trinket.' href='equip.php?slot=necklace&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-emerald-necklace'></i>
-												</a><br />";
-										}
-										//Pendants
-										if ($i['itmtypename'] == 'Pendants')
-										{
-											echo "<a title='Equip {$i['itmname']} as pendant trinket.' href='equip.php?slot=pendant&ID={$i['inv_id']}' class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top'>
-													<i class='game-icon game-icon-ribbon-medal'></i>
-												</a><br />";
-										}
-									echo "
+									}
+									//Bomb
+									if ($i['itmid'] == 28)
+									{
+										array_push($itemUse, array("bomb.php?action=small", "Set Charge"));
+									}
+									//Medium Bomb
+									if ($i['itmid'] == 61)
+									{
+										array_push($itemUse, array("bomb.php?action=medium", "Set Charge"));
+									}
+									//Large  bomb
+									if ($i['itmid'] == 62)
+									{
+										array_push($itemUse, array("bomb.php?action=large", "Set Charge"));
+									}
+									//2017 Halloween Scratch Ticket
+									if ($i['itmid'] == 63)
+									{
+										array_push($itemUse, array("2017halloween.php?action=ticket", "Scratch {$i['itmname']}"));
+									}
+									//Pumpkin
+									if ($i['itmid'] == 64)
+									{
+										array_push($itemUse, array("bomb.php?action=pumpkin", "Chuck {$i['itmname']}"));
+									}
+									//Invis Potion
+									if ($i['itmid'] == 68)
+									{
+										array_push($itemUse, array("invispotion.php", "Drink {$i['itmname']}"));
+									}
+									//2017 Halloween Scratch Ticket
+									if ($i['itmid'] == 69)
+									{
+										array_push($itemUse, array("2017thanksgiving.php?action=ticket", "Scratch {$i['itmname']}"));
+									}
+									//VIP Scratch Ticket
+									if ($i['itmid'] == 89)
+									{
+										array_push($itemUse, array("vipticket.php", "Scratch {$i['itmname']}"));
+									}
+									//Auto Hexbag Opener
+									if ($i['itmid'] == 91)
+									{
+										array_push($itemUse, array("vipitem.php?item=autohex", "Redeem {$i['itmname']}"));
+									}
+									//Auto BOR Opener
+									if ($i['itmid'] == 92)
+									{
+										array_push($itemUse, array("vipitem.php?item=autobor", "Redeem {$i['itmname']}"));
+									}
+									//Mysterious Potion
+									if ($i['itmid'] == 123)
+									{
+										array_push($itemUse, array("mysteriouspotion.php", "Consume {$i['itmname']}"));
+									}
+									//VIP Color Changer
+									if ($i['itmid'] == 128)
+									{
+										array_push($itemUse, array("vipitem.php?item=vipcolor", "Change Color"));
+									}
+									//2018 St Patties Scratch Ticket
+									if ($i['itmid'] == 137)
+									{
+										array_push($itemUse, array("2018stpatties.php?action=ticket", "Scratch {$i['itmname']}"));
+									}
+									//Rick roll
+									if ($i['itmid'] == 149)
+									{
+										array_push($itemUse, array("bomb.php?action=rickroll", "Use Rickroll"));
+									}
+									//Mining Herb
+									if ($i['itmid'] == 177)
+									{
+										array_push($itemUse, array("mine.php?action=herb", "Consume {$i['itmname']}"));
+									}
+									//2018 Halloween Scratch Ticket
+									if ($i['itmid'] == 189)
+									{
+										array_push($itemUse, array("2018halloween.php?action=ticket", "Scratch {$i['itmname']}"));
+									}
+									//2018 Thanks Giving Scratch Ticket
+									if ($i['itmid'] == 195)
+									{
+										array_push($itemUse, array("2018thanksgiving.php?action=ticket", "Scratch {$i['itmname']}"));
+									}
+									//Snowball
+									if ($i['itmid'] == 202)
+									{
+										array_push($itemUse, array("bomb.php?action=snowball", "Toss {$i['itmname']}"));
+									}
+									//2018 Christmas Scratch Ticket
+									if ($i['itmid'] == 203)
+									{
+										array_push($itemUse, array("2018christmas.php?action=ticket", "Scratch {$i['itmname']}"));
+									}
+									//CID Gym Access Scroll
+									if ($i['itmid'] == 205)
+									{
+										array_push($itemUse, array("gym_ca.php", "Train with {$i['itmname']}"));
+									}
+									//CID Scratch Ticket
+									if ($i['itmid'] == 210)
+									{
+										array_push($itemUse, array("scratchticket.php?action=cidticket", "Scratch {$i['itmname']}"));
+									}
+									//Assassination Note
+									if ($i['itmid'] == 222)
+									{
+										array_push($itemUse, array("bomb.php?action=assassin", "File {$i['itmname']}"));
+									}
+									//Mining Energy Potion
+									if ($i['itmid'] == 227)
+									{
+										array_push($itemUse, array("mine.php?action=potion", "Drink {$i['itmname']}"));
+									}
+									//2019 Easter Scratch Ticket
+									if ($i['itmid'] == 230)
+									{
+										array_push($itemUse, array("2019easter.php?action=ticket", "Scratch {$i['itmname']}"));
+									}
+									//Sepll Tome Key
+									if ($i['itmid'] == 250)
+									{
+										array_push($itemUse, array("spellbook.php", "Unlock Tome"));
+									}
+									//Will Stimulant
+									if ($i['itmid'] == 263)
+									{
+										array_push($itemUse, array("vipitem.php?item=willstim", "Convert {$i['itmname']}"));
+									}
+									//2019 Halloween Scratch Ticket
+									if ($i['itmid'] == 264)
+									{
+										array_push($itemUse, array("2019halloween.php?action=ticket", "Scratch {$i['itmname']}"));
+									}
+									//2nd Year Ann Scratch Ticket
+									if ($i['itmid'] == 268)
+									{
+										array_push($itemUse, array("scratchticket.php?action=2ndyearann", "Scratch {$i['itmname']}"));
+									}
+									//Scroll of the Adminly
+									if ($i['itmid'] == 320)
+									{
+										array_push($itemUse, array("goditem.php", "Eat Potato"));
+									}
+									//2020 Big Bang Scratch Ticket
+									if ($i['itmid'] == 352)
+									{
+										array_push($itemUse, array("scratchticket.php?action=2020bang", "Scratch {$i['itmname']}"));
+									}
+									//Auto Street Begger VIP
+									if ($i['itmid'] == 364)
+									{
+										array_push($itemUse, array("vipitem.php?item=autobum", "Redeem {$i['itmname']}"));
+									}
+									//2020 Halloween Scratch Ticket
+									if ($i['itmid'] == 376)
+									{
+										array_push($itemUse, array("2020halloween.php?action=ticket", "Scratch {$i['itmname']}"));
+									}
+									//2020 Thanksgiving Scratch Ticket
+									if ($i['itmid'] == 391)
+									{
+										array_push($itemUse, array("2020thanksgiving.php?action=ticket", "Scratch {$i['itmname']}"));
+									}
+									//CID Admin Contact Prayer to God
+									if ($i['itmid'] == 407)
+									{
+									    array_push($itemUse, array("vipitem.php?item=contact", "Pray to CID Admin"));
+									}
+									//Powered Miner
+									if ($i['itmid'] == 424)
+									{
+									    array_push($itemUse, array("vipitem.php?item=autominer", "Setup {$i['itmname']}"));
+									}
+									//Weapons
+									if ($i['weapon'] > 0)
+									{
+										array_push($itemUse, array("equip.php?slot=weapon&ID={$i['inv_id']}", "Equip {$i['itmname']} as Weapon"));
+									}
+									//Armor
+									if ($i['armor'] > 0)
+									{
+										array_push($itemUse, array("equip.php?slot=armor&ID={$i['inv_id']}", "Equip {$i['itmname']} as Armor"));
+									}
+									//Badges
+									if ($i['itmtypename'] == 'Badges')
+									{
+										array_push($itemUse, array("equip.php?slot=badge&ID={$i['inv_id']}", "Equip {$i['itmname']} as Badge"));
+									}
+									//Rings
+									if ($i['itmtypename'] == 'Rings')
+									{
+										array_push($itemUse, array("equip.php?slot=ring&ID={$i['inv_id']}", "Equip {$i['itmname']} as Ring"));
+									}
+									//Necklaces
+									if ($i['itmtypename'] == 'Necklaces')
+									{
+										array_push($itemUse, array("equip.php?slot=necklace&ID={$i['inv_id']}", "Equip {$i['itmname']} as Necklace"));
+									}
+									//Pendants
+									if ($i['itmtypename'] == 'Pendants')
+									{
+										array_push($itemUse, array("equip.php?slot=pendant&ID={$i['inv_id']}", "Equip {$i['itmname']} as Pendant"));
+									}
+									//Potion equipping.
+									if ((($i['itmtypename'] == 'Potions') || ($i['itmtypename'] == 'Food')) && (!in_array($i['itmid'],$potionexclusion)))
+									{
+									    array_push($itemUse, array("equip.php?slot=potion&ID={$i['inv_id']}", "Equip {$i['itmname']} as Potion"));
+									}
+									array_push($itemUse, array("itemsend.php?ID={$i['inv_id']}", "Send {$i['itmname']}"));
+									array_push($itemUse, array("itemmarket.php?action=add&ID={$i['itmid']}", "List {$i['itmname']} on Market"));
+									array_push($itemUse, array("itemsell.php?ID={$i['inv_id']}", "Sell {$i['itmname']}"));
+									$options = "";
+									foreach ($itemUse as $k => $v)
+									{
+									    $options .= "<option value='{$v[0]}'>{$v[1]}</option>";
+									}
+									echo
+									"  <select name='itemUse' class='form-control' type='dropdown'>
+							                 $options
+                                       </select>
 								</div>
-								<div class='col-4'>
-									<a class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top' title='Send item.' href='itemsend.php?ID={$i['inv_id']}'><i class='game-icon game-icon-paper-plane'></i></a><br />
+								<div class='col-12 col-sm-4 col-md-5 col-xl-4'>
+									<input type='submit' class='btn btn-primary btn-block' value='Confirm'>
 								</div>
-								<div class='col-4'>
-									<a class='btn btn-block btn-primary' data-toggle='tooltip' data-placement='top' title='Sell item.' href='itemsell.php?ID={$i['inv_id']}'><i class='game-icon game-icon-credits-currency'></i></a><br />
-								</div>
-								
+                                </form>
 							</div>
 						</div>
 					</div>
@@ -688,10 +596,10 @@ while ($i = $db->fetch_row($inv))
 		<div id='collapse{$i['itmid']}' class='collapse' aria-labelledby='heading{$i['itmid']}' data-parent='#inventoryAccordian'>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-2 col-md-1'>
+					<div class='col-2 col-lg-1'>
 						" . returnIcon($i['itmid'],3.5) . "
 					</div>
-					<div class='col-8 text-left'>
+					<div class='col text-left'>
 						<b><a href='iteminfo.php?ID={$i['itmid']}'>{$i['itmname']}</a></b> is a {$lt} item.<br />
 						<i>{$i['itmdesc']}</i>";
 						$start=0;
@@ -712,55 +620,37 @@ while ($i = $db->fetch_row($inv))
 							}
 						}
 					echo "</div>
-					<div class='col-3'>";
-					//Potion equipping.
-						$potionexclusion=array(17,123,68,138,95,96,148,177);
-						if ((($i['itmtypename'] == 'Potions') || ($i['itmtypename'] == 'Food')) && (!in_array($i['itmid'],$potionexclusion)))
-						{
-							echo "<a title='Equip {$i['itmname']} as potion.' href='equip.php?slot=potion&ID={$i['inv_id']}' class='btn btn-block btn-info' data-toggle='tooltip' data-placement='top'>
-									<i class='game-icon game-icon-check-mark'></i>
-								</a><br />";
-						}
-						//Box of Random
-						if ($i['itmid'] == 33)
-						{
-							if ($ir['autobor'] > 0)
-							{
-								echo "<a title='Open {$i['itmname']}s automatically.' href='autobor.php' class='btn btn-block btn-info' data-toggle='tooltip' data-placement='top'>
-									<i class='game-icon game-icon-check-mark'></i>
-								</a><br />";
-							}
-						}
-						echo"
-					</div>
 				</div>
 				<hr />
 				<div class='row'>
 					<div class='col-6 col-md'>
 						<b>Buy</b><br />
-						<small>" . shortNumberParse($i['itmbuyprice']) . "</small>
+						<small>" . shortNumberParse($i['itmbuyprice']) . " Copper Coins</small>
 					</div>
 					<div class='col-6 col-md'>
 						<b>Sell</b><br />
-						<small>" . shortNumberParse($i['itmsellprice']) . "</small>
+						<small>" . shortNumberParse($i['itmsellprice']) . " Copper Coins</small>
 					</div>
 					<div class='col-6 col-md'>
 						<b>Total Value</b><br />
-						<small>" . shortNumberParse($i['inv_qty_value']) . "</small>
+						<small>" . shortNumberParse($i['inv_qty_value']) . " Copper Coins</small>
 					</div>
 					<div class='col-6 col-md'>
 						<b>Circulating</b><br />
 						<small>" . shortNumberParse($total) . "</small>
 					</div>
-				</div>
-				<hr />
-				<div class='row'>";
+				</div>";
+					if (($i['weapon'] > 0) || ($i['ammo'] > 0) || ($i['armor'] > 0))
+			    {
+				    echo"
+				    <hr />
+				    <div class='row'>";
 					if ($i['weapon'] > 0)
 					{
 						echo "
 						<div class='col'>
 							<b>Weapon</b><br />
-							<small>" . number_format($i['weapon']) . "</small>
+							<small>" . shortNumberParse($i['weapon']) . "</small>
 						</div>";
 					}
 					if ($i['ammo'] > 0)
@@ -776,11 +666,13 @@ while ($i = $db->fetch_row($inv))
 						echo "
 						<div class='col'>
 							<b>Armor</b><br />
-							<small>" . number_format($i['armor']) . "</small>
+							<small>" . shortNumberParse($i['armor']) . "</small>
 						</div>";
 					}
 					echo "
-				</div>
+				</div>";
+			    }
+					echo"
 			</div>
 		</div>
 	</div>";
