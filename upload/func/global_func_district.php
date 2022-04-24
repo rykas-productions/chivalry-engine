@@ -281,11 +281,12 @@ function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior
     $attackTotal = $attackWarrior + $attackArcher;
     $defenseTotal = $defenseWarrior + $defenseArcher;
     
-    $luck = Random(-30,30) / 100;
+    $attackluck = Random(-30,30) / 100;
+    $defenseluck = Random(-30,30) / 100;
     //$luck = 0;
     
-    $attackBuff += $luck;
-    $defenseBuff += $luck;
+    $attackBuff += $attackluck;
+    $defenseBuff += $defenseluck;
     
     //results
     $result = array();
@@ -420,15 +421,17 @@ function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior
             $result['winner'] = 'attack';
             $result['defense_general_lost'] = $defenseGeneral;
         }
-        if ($itt == 30)
+        if ($itt == 50)
         {
             $result['winner'] = 'draw';
         }
     }
     $result['attack_warrior_lost'] = ($attMeleeStart > 0) ? round(($attMeleeRating - $attMeleeStart) / $attMeleePerRating) * -1 : 0;
     $result['attack_archer_lost'] = ($attRangeStart > 0) ? round(($attRangeRating - $attRangeStart) / $attRangePerRating) * -1 : 0;
+    $result['attack_luck'] = $attackluck * 100 . "%";
     $result['defense_warrior_lost'] = ($defMeleeStart > 0) ? round(($defMeleeRating - $defMeleeStart) / $defMeleePerRating) * -1 : 0;
     $result['defense_archer_lost'] = ($defRangeStart > 0) ? round(($defRangeRating - $defRangeStart) / $defRangePerRating) * -1 : 0;
+    $result['defense_luck'] = $defenseluck * 100 . "%";
     //We will continue to loop while a winner is still undecided.
     return json_encode($result);
 }
@@ -692,6 +695,42 @@ function logBattle($attacker, $defender, $att_war, $att_range, $att_war_lost, $a
 		VALUES ('{$attacker}', '{$defender}', '{$winner}', '{$att_war}', '{$att_war_lost}', 
 		'{$att_range}', '{$att_range_lost}', '{$att_capt}', '{$def_war}', '{$def_war_lost}',
 		'{$def_range}', '{$def_range_lost}', '{$def_general}', '{$fortify}', '{$time}')");
+    return $db->insert_id();
+}
+
+function newLogBattle($attacker, $defender, $winner, $att_war, $att_range, $att_war_lost, 
+    $att_range_lost, $att_capt, $att_luck, $def_war, $def_range, $def_war_lost, 
+    $def_range_lost, $def_general, $def_fortify, $def_luck)
+{
+    global $db;
+    $time = time();
+    $result = array();
+    $result['attack_warrior'] = $att_war;
+    $result['attack_archer'] = $att_range;
+    $result['attack_warrior_lost'] = $att_war_lost;
+    $result['attack_archer_lost'] = $att_range_lost;
+    $result['attack_captain'] = $att_capt;
+    $result['attack_captain_lost'] = 0;
+    $result['attack_luck'] = $att_luck;
+    $result['defense_warrior'] = $def_war;
+    $result['defense_archer'] = $def_range;
+    $result['defense_warrior_lost'] = $def_war_lost;
+    $result['defense_archer_lost'] = $def_range_lost;
+    $result['defense_general'] = $def_general;
+    $result['defense_general_lost'] = 0;
+    $result['defense_fortify'] = $def_fortify;
+    $result['defense_luck'] = $def_luck;
+    
+    if ($winner == $attacker)
+        $result['defense_general_lost'] = $def_general;
+    elseif ($winner == $defender)
+        $result['attack_captain_lost'] = $att_capt;
+    
+    $json_result = json_encode($result);
+    $db->query("INSERT INTO `guild_district_attacklogs` 
+                (`attacker`, `defender`, `time`, `winner`, `battle_json_info`)
+                 VALUES 
+                ('{$attacker}', '{$defender}', '{$time}', '{$winner}', '{$json_result}')");
     return $db->insert_id();
 }
 
