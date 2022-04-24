@@ -22,8 +22,22 @@ CREATE TABLE `guild_districts`
 	UNIQUE (`district_id`)
 	) ENGINE = InnoDB;
 	
-	ALTER TABLE `guild_district_battlelog` ADD `attack_captains` INT(11) UNSIGNED NOT NULL AFTER `attack_arch_lost`;
-	ALTER TABLE `guild_district_info` ADD `barracks_captains` INT(11) UNSIGNED NOT NULL AFTER `barracks_generals`;
+CREATE TABLE `guild_district_attacklogs` (
+  `log_ig` bigint(11) UNSIGNED NOT NULL,
+  `attacker` bigint(11) UNSIGNED NOT NULL,
+  `defender` bigint(11) UNSIGNED NOT NULL,
+  `time` bigint(11) UNSIGNED NOT NULL,
+  `winner` text NOT NULL,
+  `battle_json_info` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	
+ALTER TABLE `guild_district_attacklogs`
+  ADD UNIQUE KEY `log_ig` (`log_ig`);
+ALTER TABLE `guild_district_attacklogs`
+  MODIFY `log_ig` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `guild_district_battlelog` ADD `attack_captains` INT(11) UNSIGNED NOT NULL AFTER `attack_arch_lost`;
+ALTER TABLE `guild_district_info` ADD `barracks_captains` INT(11) UNSIGNED NOT NULL AFTER `barracks_generals`;
 */
 require('globals.php');
 echo "<h3>Guild Districts</h3><hr />
@@ -605,9 +619,11 @@ function attackfromtile()
 		    $status = "draw";
 		    $winner = '';
 		}
-		$i=logBattle($ir['guild'], $r2['district_owner'], $warriors, $archers, $results['attack_warrior_lost'],
-		    $results['attack_archer_lost'], $r2['district_melee'], $r2['district_range'], $results['defense_warrior_lost'],
-		    $results['defense_archer_lost'], $r2['district_general'], $r2['district_fortify'], $winner, $captains);
+		$i=newLogBattle($ir['guild'], $r2['district_owner'], $winner, $warriors, $archers, $results['attack_warrior_lost'],
+		    $results['attack_archer_lost'], $captains, $results['attack_luck'], $r2['district_melee'], 
+		    $r2['district_range'], $results['defense_warrior_lost'], $results['defense_archer_lost'], 
+		    $r2['district_general'], $r2['district_fortify'], $results['defense_luck']);
+		
 		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers, lead by " . number_format($captains) . " Captains, to take on
 		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers and 
 		" . number_format($r2['district_general']) . " enemy generals.<br />
@@ -805,9 +821,11 @@ function attackfrombarracks()
 			$status = "lost";
 			$winner = 'defender';
 		}
-		$i=logBattle($ir['guild'], $r2['district_owner'], $warriors, $archers, $results['attack_warrior_lost'], 
-		$results['attack_archer_lost'], $r2['district_melee'], $r2['district_range'], $results['defense_warrior_lost'], 
-		    $results['defense_archer_lost'], $r2['district_general'], $r2['district_fortify'], $winner, $captains);
+		$i=newLogBattle($ir['guild'], $r2['district_owner'], $winner, $warriors, $archers, $results['attack_warrior_lost'],
+		    $results['attack_archer_lost'], $captains, $results['attack_luck'], $r2['district_melee'],
+		    $r2['district_range'], $results['defense_warrior_lost'], $results['defense_archer_lost'],
+		    $r2['district_general'], $r2['district_fortify'], $results['defense_luck']);
+		
 		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers, lead by " . number_format($captains) . " Captains, to take on 
 		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers. There is 
 		" . number_format($r2['district_general']) . " enemy generals on the battlefield today.<br />
@@ -906,13 +924,14 @@ function battlereport()
 		alert('danger', "Uh Oh!", "Please specify the battle log you wish to view.", true, 'guild_district.php');
 		die($h->endpage());
 	}
-	$q = $db->query("/*qc=on*/SELECT * FROM `guild_district_battlelog` WHERE `log_id` = {$id} AND (`attacker` = {$ir['guild']} OR `defender` = {$ir['guild']})");
+	$q = $db->query("/*qc=on*/SELECT * FROM `guild_district_attacklogs` WHERE `log_ig` = {$id} AND (`attacker` = {$ir['guild']} OR `defender` = {$ir['guild']})");
 	if ($db->num_rows($q) == 0) 
 	{
 		alert('danger', "Uh Oh!", "This battle report does not exist, or does not involve your guild.", true, 'index.php');
 		die($h->endpage());
 	}
 	$r = $db->fetch_row($q);
+	$result = json_decode($r['battle_json_info'], true);
 	$db->free_result($q);
 	$def=$api->GuildFetchInfo($r['defender'],'guild_name');
 	if (empty($def))
@@ -923,27 +942,29 @@ function battlereport()
         	<div class='row'>
         		<div class='col-md'>
         			Attacker: <a href='guilds.php?action=view&id={$r['attacker']}'>{$api->GuildFetchInfo($r['attacker'],'guild_name')}</a><br />
-        			Warriors: " . number_format($r['attack_war']) . " <span class='text-danger'>(-" . number_format($r['attack_war_lost']) . ")</span><br />
-        			Archers: " . number_format($r['attack_arch']) . " <span class='text-danger'>(-" . number_format($r['attack_arch_lost']) . ")</span><br />
-                    Captains: " . number_format($r['attack_captains']) . "<br />
-                    Captain Cost: " . shortNumberParse($r['attack_captains'] * $districtConfig['CaptainCostUse']) . " Copper Coins<br />
-        			Time: " . DateTime_Parse($r['log_time']) . "<br />";
+        			Warriors: " . shortNumberParse($result['attack_warrior']) . " <span class='text-danger'>(-" . shortNumberParse($result['attack_warrior_lost']) . ")</span><br />
+        			Archers: " . shortNumberParse($result['attack_archer']) . " <span class='text-danger'>(-" . shortNumberParse($result['attack_archer_lost']) . ")</span><br />
+                    Captains: " . shortNumberParse($result['attack_captain']) . "<br />
+                    Luck: {$result['attack_luck']}<br />
+                    Captain Cost: " . shortNumberParse($result['attack_captain'] * $districtConfig['CaptainCostUse']) . " Copper Coins<br />
+        			Time: " . DateTime_Parse($r['time']) . "<br />";
                 	if ($r['winner'] == 'defender')
                 	{
-                	    if ($r['attack_captains'] > 0)
+                	    if ($result['attack_captain'] > 0)
                 	        echo "<span class='text-danger'>Captains have been executed.</span>";
                 	}
 	echo "
         		</div>
         		<div class='col-md'>
         			Defender: <a href='guilds.php?action=view&id={$r['defender']}'>{$def}</a><br />
-        			Warriors: " . number_format($r['defend_war']) . " <span class='text-danger'>(-" . number_format($r['defend_war_lost']) . ")</span><br />
-        			Archers: " . number_format($r['defend_arch']) . " <span class='text-danger'>(-" . number_format($r['defend_archer_lost']) . ")</span><br />
-        			Generals: " . number_format($r['defend_general']) . "<br />
-        			Fortification Level: " . ($r['defend_fortify']) . "<br />";
+        			Warriors: " . shortNumberParse($result['defense_warrior']) . " <span class='text-danger'>(-" . shortNumberParse($result['defense_warrior_lost']) . ")</span><br />
+        			Archers: " . shortNumberParse($result['defense_archer']) . " <span class='text-danger'>(-" . shortNumberParse($result['defense_archer_lost']) . ")</span><br />
+        			Generals: " . shortNumberParse($result['defense_general']) . "<br />
+                    Luck: {$result['defense_luck']}<br />
+        			Fortification Level: " . ($result['defense_fortify']) . "<br />";
                     if ($r['winner'] == 'attacker')
                     {
-                        if ($r['defend_general'] > 0)
+                        if ($result['defense_general'] > 0)
                             echo "<span class='text-danger'>Generals have been executed.</span>";
                     }
                     echo "
