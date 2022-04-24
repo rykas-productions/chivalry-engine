@@ -42,6 +42,9 @@ switch ($_GET['action']) {
     case "delcrime":
         delcrime();
         break;
+    case "createasset":
+        createguildasset();
+        break;
     default:
         alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
         die($h->endpage());
@@ -218,7 +221,7 @@ function viewguild()
                                         <small><b>Guild Copper Coins</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        " . shortNumberParse($r['guild_primcurr']) . " / " . shortNumberParse(calculateMaxGuildVaultCopper($r['guild_level'])) . "
+                                        " . shortNumberParse($r['guild_primcurr']) . " / " . shortNumberParse(calculateMaxGuildVaultCopper($guild)) . "
                                     </div>
                                 </div>
                             </div>
@@ -228,7 +231,7 @@ function viewguild()
                                         <small><b>Guild Chivalry Tokens</b></small>
                                     </div>
                                     <div class='col-12'>
-                                         " . shortNumberParse($r['guild_seccurr']) . " / " . shortNumberParse(calculateMaxGuildVaultTokens($r['guild_level'])) . "
+                                         " . shortNumberParse($r['guild_seccurr']) . " / " . shortNumberParse(calculateMaxGuildVaultTokens($guild)) . "
                                     </div>
                                 </div>
                             </div>
@@ -835,8 +838,8 @@ function editguild()
 
         //CSRF request
         $csrf = request_csrf_html('staff_editguild_2');
-        $r['guild_max_copper'] = calculateMaxGuildVaultCopper($r['guild_level']);
-        $r['guild_max_token'] = calculateMaxGuildVaultTokens($r['guild_level']);
+        $r['guild_max_copper'] = calculateMaxGuildVaultCopper($r['guild_id']);
+        $r['guild_max_token'] = calculateMaxGuildVaultTokens($r['guild_id']);
         
         $gdi = ($db->fetch_row($db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$r['guild_id']}")));
 

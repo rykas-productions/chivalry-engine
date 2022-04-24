@@ -153,8 +153,8 @@ function updateGuildWars()
             $winner = $r3['gw_declarer'];
             //Make the declarer the winner,
             $db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declarer']} WHERE `gw_id` = {$r3['gw_id']}");
-            guildnotificationadd($r3['gw_declarer'], "Your guild has defeated the {$guild_declared} guild in battle.");
-            guildnotificationadd($r3['gw_declaree'], "Your guild was defeated in battle by the {$guild_declare} guild.");
+            $api->GuildAddNotification($r3['gw_declarer'], "Your guild has defeated the {$guild_declared} guild in battle.");
+            $api->GuildAddNotification($r3['gw_declaree'], "Your guild was defeated in battle by the {$guild_declare} guild.");
             //Select the town ID where the guilds own.
             $town = $db->fetch_single(
                 $db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
@@ -177,8 +177,9 @@ function updateGuildWars()
             $winner = $r3['gw_declaree'];
             //Make the declaree the winner,
             $db->query("UPDATE `guild_wars` SET `gw_winner` = {$r3['gw_declaree']} WHERE `gw_id` = {$r3['gw_id']}");
-            guildnotificationadd($r3['gw_declaree'], "Your guild has defeated the {$guild_declare} guild in battle.");
-            guildnotificationadd($r3['gw_declarer'], "Your guild was defeated in battle by the {$guild_declared} guild.");
+            $api->GuildAddNotification($r3['gw_declaree'], "Your guild has defeated the {$guild_declared} guild in battle.");
+            $api->GuildAddNotification($r3['gw_declarer'], "Your guild was defeated in battle by the {$guild_declare} guild.");
+            
             //Select the town ID where the guilds own.
             $town = $db->fetch_single(
                 $db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$r3['gw_declarer']}"));
@@ -208,6 +209,11 @@ function updateGuildWars()
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_drpoints']} WHERE `guild_id` = {$r3['gw_declarer']}");
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$r3['gw_depoints']} WHERE `guild_id` = {$r3['gw_declaree']}");
         $api->GuildAddItem($winner, 423, 1);
+        if (!guildOwnsAsset($winner, "guild_upgrade_vault1"))
+        {
+            $api->GuildAddNotification($winner, "Your guild has unlocked the 'Deeper Vaults' Guild asset by winning your first guild war.");
+            guildPurchaseAsset($winner, "guild_upgrade_vault1");
+        }
     }
 }
 
@@ -274,12 +280,12 @@ function checkGuildDebt()
 
 function checkGuildVault()
 {
-    global $db, $set, $ir;
+    global $db;
     $q = $db->query("SELECT * FROM `guild`");
     while ($r = $db->fetch_row($q))
     {
-        $maxvault = (($r['guild_level'] * $set['GUILD_PRICE']) * 20);
-        $maxtoken = (($r['guild_level'] * $set['GUILD_PRICE']) / 125);
+        $maxvault = calculateMaxGuildVaultCopper($r['guild_id']);
+        $maxtoken = calculateMaxGuildVaultTokens($r['guild_id']);
         if ($r['guild_primcurr'] > $maxvault)
             $db->query("UPDATE `guild` SET `guild_primcurr` = {$maxvault} WHERE `guild_id` = {$r['guild_id']}");
         if ($r['guild_seccurr'] > $maxtoken)
@@ -394,14 +400,49 @@ function createGuild($guildName, $guildDesc, $owner, $level = 1)
     return $i;
 }
 
-function calculateMaxGuildVaultCopper($guild_level)
+function calculateMaxGuildVaultCopper($guild_id)
 {
-    global $set;
-    return ($guild_level * $set['GUILD_PRICE']) * 20;
+    global $set, $db;
+    $guild_level = $db->fetch_single($db->query("SELECT `guild_level` FROM `guild` WHERE `guild_id` = {$guild_id}"));
+    $return = ($guild_level * $set['GUILD_PRICE']) * 20;
+    if (guildOwnsAsset($guild_id, "guild_upgrade_vault1"))
+    {
+        $return = $return * 1.08;
+    }
+    return $return;
 }
 
-function calculateMaxGuildVaultTokens($guild_level)
+function calculateMaxGuildVaultTokens($guild_id)
 {
-    global $set;
-    return ($guild_level * $set['GUILD_PRICE']) / 125;
+    global $set, $db;
+    $guild_level = $db->fetch_single($db->query("SELECT `guild_level` FROM `guild` WHERE `guild_id` = {$guild_id}"));
+    $return = ($guild_level * $set['GUILD_PRICE']) / 125;
+    if (guildOwnsAsset($guild_id, "guild_upgrade_vault1"))
+    {
+        $return = $return * 1.08;
+    }
+    return $return;
+}
+
+function guildOwnsAsset($guild_id, $asset_name)
+{
+    global $db;
+    $q = $db->query("SELECT * FROM `guild_owned_assets` WHERE `guild_id` = {$guild_id} AND `asset_id` = '{$asset_name}'");
+    if ($db->num_rows($q) == 0)
+        return false;
+    else
+        return true;
+}
+
+function guildPurchaseAsset($guild_id, $asset_name)
+{
+    global $db;
+    $db->query("INSERT INTO `guild_owned_assets` (`guild_id`, `asset_id`, `asset_data_json`) VALUES ('{$guild_id}', '{$asset_name}', '{}')");
+    return $db->insert_id();
+}
+
+function guildRemoveAsset($guild_id, $asset_name)
+{
+    global $db;
+    $db->query("DELETE FROM `guild_owned_assets` WHERE `guild_id` = {$guild_id} AND `asset_id` = '{$asset_name}'");
 }

@@ -5,22 +5,40 @@
 	Info: 		Allows users to view their guild and do various actions.
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+	
+	CREATE TABLE `guild_owned_assets` (
+  `owned_id` bigint(11) UNSIGNED NOT NULL,
+  `guild_id` bigint(11) UNSIGNED NOT NULL,
+  `asset_id` text NOT NULL,
+  `asset_data_json` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `guild_owned_assets`
+  ADD PRIMARY KEY (`owned_id`);
+  
+  ALTER TABLE `guild_owned_assets`
+  MODIFY `owned_id` bigint(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 */
 $voterquery = 1;
 $multi = 1.0;
 require('globals.php');
-if (!$ir['guild']) {
+if (!$ir['guild']) 
+{
     alert('danger', "Uh Oh!", "You are not in a guild.", true, 'index.php');
-} else {
+} 
+else 
+{
     $gq = $db->query("/*qc=on*/SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}");
-    if ($db->num_rows($gq) == 0) {
+    if ($db->num_rows($gq) == 0) 
+    {
         alert('danger', "Uh Oh!", "Your guild's data could not be selected. Please contact an admin immediately.");
         die($h->endpage());
     }
     $gd = $db->fetch_row($gq);
     $db->free_result($gq);
     $wq = $db->query("/*qc=on*/SELECT COUNT(`gw_id`) FROM `guild_wars` WHERE (`gw_declarer` = {$ir['guild']} OR `gw_declaree` = {$ir['guild']}) AND `gw_winner` = 0");
-    if ($db->fetch_single($wq) > 0) {
+    if ($db->fetch_single($wq) > 0) 
+    {
         alert('warning', "Guild Wars in Progress", "Your guild is in {$db->fetch_single($wq)} wars. View active wars <a href='?action=warview'>here</a>.", false);
     }
 	$gd['xp_needed'] = round(($gd['guild_level'] + 1) * ($gd['guild_level'] + 1) * ($gd['guild_level'] + 1) * 2.2);
@@ -29,6 +47,16 @@ if (!$ir['guild']) {
     echo "
 	<h3><u>Your Guild, {$gd['guild_name']}</u></h3>
    	";
+    if ($ir['guild'] <= 20)
+    {
+        if (!guildOwnsAsset($ir['guild'], "guild_gym"))
+            guildPurchaseAsset($ir['guild'], "guild_gym");
+    }
+    if ($gd['guild_hasarmory'])
+    {
+        if (!guildOwnsAsset($ir['guild'], "guild_armory"))
+            guildPurchaseAsset($ir['guild'], "guild_armory");
+    }
     if (!isset($_GET['action'])) {
         $_GET['action'] = '';
     }
@@ -189,14 +217,15 @@ function home()
 
 function summary()
 {
-    global $db, $gd, $set, $ir, $api, $wq;
+    global $db, $gd, $ir, $api, $wq;
 	$cnt = $db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `guild` = {$gd['guild_id']}");
 	$ldrnm = parseUsername($gd['guild_owner']);
 	$vldrnm = parseUsername($gd['guild_coowner']);
 	$appnm = parseUsername($gd['guild_app_manager']);
 	$vaultnm = parseUsername($gd['guild_vault_manager']);
 	$crlonm = parseUsername($gd['guild_crime_lord']);
-	$armory = ($gd['guild_hasarmory']) ? "<span class='text-success'>Purchased</span>" : "<span class='text-danger'>Unpurchased</span>";
+	$armory = (guildOwnsAsset($gd['guild_id'], "guild_armory")) ? "<span class='text-success'>Purchased</span>" : "<span class='text-danger'>Not purchased</span>";
+	$gym = (guildOwnsAsset($gd['guild_id'], "guild_gym")) ? "<span class='text-success'>Purchased</span>" : "<span class='text-danger'>Not purchased</span>";
 	$recruit = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Open</span>" : "<span class='text-danger'>Closed</span>";
 	$debt = ($gd['guild_primcurr'] > 0) ? "<span class='text-success'>No Debt</span>" : "<span class='text-danger'>In Debt!!</span>" ;
 	$wars = ($db->fetch_single($wq) == 0) ? "<span class='text-success'>No active wars</span>" : "<span class='text-danger'> " . number_format($db->fetch_single($wq)) . " active wars</span>";
@@ -292,7 +321,7 @@ function summary()
 							<b>Copper Coins*</b>
 						</div>
 						<div class='col'>
-							" . shortNumberParse($gd['guild_primcurr']) . " / " . shortNumberParse(calculateMaxGuildVaultCopper($gd['guild_level'])) . "
+							" . shortNumberParse($gd['guild_primcurr']) . " / " . shortNumberParse(calculateMaxGuildVaultCopper($ir['guild'])) . "
 						</div>
 					</div>
 					<div class='row'>
@@ -300,7 +329,7 @@ function summary()
 							<b>Chivalry Tokens</b>
 						</div>
 						<div class='col'>
-							" . shortNumberParse($gd['guild_seccurr']) . " / " . shortNumberParse(calculateMaxGuildVaultTokens($gd['guild_level'])) . "
+							" . shortNumberParse($gd['guild_seccurr']) . " / " . shortNumberParse(calculateMaxGuildVaultTokens($ir['guild'])) . "
 						</div>
 					</div>
 				</div>
@@ -338,7 +367,7 @@ function summary()
 		<div class='col-md'>
 			<div class='card'>
 				<div class='card-header'>
-					Guild Bonus
+					Guild Misc
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
@@ -347,6 +376,14 @@ function summary()
 						</div>
 						<div class='col'>
 							{$armory}
+						</div>
+					</div>
+                    <div class='row'>
+						<div class='col'>
+							<b>Gym</b>
+						</div>
+						<div class='col'>
+							{$gym}
 						</div>
 					</div>
 					<div class='row'>
@@ -501,14 +538,14 @@ function donate()
             alert('danger', "Uh Oh!", "You are trying to donate more Chivalry Tokens than you currently have.");
             die($h->endpage());
             //Donation amount would fill up the guild's vault.
-        } else if ($_POST['primary'] + $gd['guild_primcurr'] > calculateMaxGuildVaultCopper($gd['guild_level'])) 
+        } else if ($_POST['primary'] + $gd['guild_primcurr'] > calculateMaxGuildVaultCopper($ir['guild'])) 
 		{
-		    alert('danger', "Uh Oh!", "Your guild's vault can only hold " . shortNumberParse(calculateMaxGuildVaultCopper($gd['guild_level'])) . " Copper Coins.");
+		    alert('danger', "Uh Oh!", "Your guild's vault can only hold " . shortNumberParse(calculateMaxGuildVaultCopper($ir['guild'])) . " Copper Coins.");
             die($h->endpage());
         } 
-        else if ($_POST['secondary'] + $gd['guild_seccurr'] > calculateMaxGuildVaultTokens($gd['guild_level']))
+        else if ($_POST['secondary'] + $gd['guild_seccurr'] > calculateMaxGuildVaultTokens($ir['guild']))
 		{
-		    alert('danger', "Uh Oh!", "Your guild's vault can only hold " . shortNumberParse(calculateMaxGuildVaultTokens($gd['guild_level'])) . " Chivalry Tokens.");
+		    alert('danger', "Uh Oh!", "Your guild's vault can only hold " . shortNumberParse(calculateMaxGuildVaultTokens($ir['guild'])) . " Chivalry Tokens.");
             die($h->endpage());
         } 
 		else {
@@ -530,8 +567,8 @@ function donate()
             alert('success', "Success!", "You have successfully donated " . shortNumberParse($_POST['primary']) . " Copper Coins and " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens to your guild.", true, 'viewguild.php');
         }
     } else {
-        $copperCapacity = calculateMaxGuildVaultCopper($gd['guild_level']) - $gd['guild_primcurr'];
-        $tokenCapacity = calculateMaxGuildVaultTokens($gd['guild_level']) - $gd['guild_seccurr'];
+        $copperCapacity = calculateMaxGuildVaultCopper($ir['guild']) - $gd['guild_primcurr'];
+        $tokenCapacity = calculateMaxGuildVaultTokens($ir['guild']) - $gd['guild_seccurr'];
         $maxCopper = ($ir['primary_currency'] > $copperCapacity) ? $copperCapacity : $ir['primary_currency'];
         $maxTokens = ($ir['secondary_currency'] > $tokenCapacity) ? $tokenCapacity : $ir['secondary_currency'];
         $csrf = request_csrf_html('guild_donate');
@@ -898,7 +935,7 @@ function armory()
 {
     global $db, $gd, $h, $api, $ir;
     //Guild has not purchased the armory
-    if ($gd['guild_hasarmory'] == 'false') {
+    if (!guildOwnsAsset($ir['guild'], "guild_armory")) {
         alert('danger', "Uh Oh!", "Your guild has yet to purchase an armory. Come back after your guild has purchased an armory.", true, 'viewguild.php');
         die($h->endpage());
     } else {
@@ -957,16 +994,49 @@ function armory()
 
 function gym()
 {
-	global $gd, $h, $api, $ir, $userid, $multi, $ir, $sound;
+	global $gd, $h, $api, $ir, $userid, $multi, $ir, $sound, $set, $db;
 	$energy = $api->UserInfoGet($userid, 'energy', true);
 	$will = $api->UserInfoGet($userid, 'will', true);
 	$macropage = ('viewguild.php?action=gym');
 	$multiplier = calculateGuildGymBonus($gd['guild_id']);
-	if ($gd['guild_level'] < 3)
-	{
-		alert('danger',"Uh Oh!","Your guild needs to be at least level 3 to access the guild gym!",true,'viewguild.php');
-		die($h->endpage());
-	}
+	$gymCost = $set['GUILD_PRICE'] * 10;
+    if (!guildOwnsAsset($ir['guild'], "guild_gym"))
+    {
+        if (!isset($_GET['purchase']))
+        {
+            alert('danger',"Uh Oh!","Your guild needs to purchase the guild gym before you can train at it.",true,'viewguild.php');
+            
+            if (isGuildCoLeader())
+            {
+                alert('info',"Purchase Guild Gym!","If your guild is level 3 or better, you may purchase a Guild Gym for 
+                                " . shortNumberParse($gymCost) . " Copper Coins, taken from the guild vault.",true,'?action=gym&purchase', 'Purchase Gym');
+            }
+            die($h->endpage());
+        }
+        else
+        {
+            if (!isGuildCoLeader())
+            {
+                alert('danger',"Uh Oh!","You cannot buy a guild gym unless you are ranked co-leader or better.",true,'?action=gym&purchase');
+                die($h->endpage());
+            }
+            elseif ($gd['guild_primcurr'] < $gymCost)
+            {
+                alert('danger',"Uh Oh!","Your guild vault only has " . shortNumberParse($gd['guild_primcurr']) . " Copper Coins, 
+                        but you need " . shortNumberParse($gymCost) . " Copper Coins to purchase the Gym.",true,'viewguild.php');
+                die($h->endpage());
+            }
+            elseif (guildOwnsAsset($ir['guild'], "guild_gym"))
+            {
+                alert('danger',"Uh Oh!","Your guild already owns the Guild Gym. No reason to purchase it again. ",true,'viewguild.php');
+                die($h->endpage());
+            }
+            alert('success',"Success!","You have purchased the Guild Gym for " . shortNumberParse($gymCost) . " Copper Coins.",true,'viewguild.php');
+            $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>" .parseUsername($userid) . "</a> [{$userid}] has purchased the Guild Gym for " . shortNumberParse($gymCost) . " Copper Coins.");
+            guildPurchaseAsset($ir['guild'], "guild_gym");
+            $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$gymCost} WHERE `guild_id` = {$ir['guild']}");
+        }
+    }
 	//User is in the infirmary
 	if ($api->UserStatus($ir['userid'], 'infirmary')) {
 		alert("danger", "Unconscious!", "You cannot train while you're in the infirmary.", true, 'index.php');
@@ -1084,7 +1154,8 @@ function gym()
 function adonate()
 {
     global $api, $userid, $h, $ir, $gd;
-    if ($gd['guild_hasarmory'] == 'false') {
+    if (!guildOwnsAsset($ir['guild'], "guild_armory")) 
+    {
         alert('danger', "Uh Oh!", "Your guild has yet to purchase an armory. Come back after your guild has purchased an armory.", true, 'viewguild.php');
         die($h->endpage());
     } else {
@@ -1466,6 +1537,9 @@ function staff()
 			case "picsword":
                 staff_sword_pic();
                 break;
+			case "guildassets":
+			    staff_asset_management();
+			    break;
             default:
                 staff_idx();
                 break;
@@ -1486,7 +1560,7 @@ function staff_idx()
 		if (isGuildLeader())
 		{
 			echo "
-				<div class='col-12 col-lg-6'>
+				<div class='col-12 col-xl-6'>
 					<div class='card'>
 						<div class='card-header'>
 							<div class='row'>
@@ -1500,57 +1574,60 @@ function staff_idx()
 						</div>
 						<div class='card-body'>
 							<div class='row'>
-								<a href='?action=staff&act2=leader'>Transfer Leader</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=name'>Change Guild Name</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=desc'>Change Guild Description</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=town'>Change Guild Town</a>
-							</div>";
-							if ($db->fetch_single($db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0) 
-							{
-								echo "
-								<div class='row'>
-									<a href='?action=staff&act2=untown'>Surrender Guild Town</a>
-								</div>
-								<div class='row'>
-									<a href='?action=staff&act2=tax'>Change Town Tax</a>
-								</div>";
-							}
-							echo"
-							<div class='row'>
-								<a href='?action=staff&act2=doally'>Declare Alliance</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=viewrally'>View Alliance Requests</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=viewallies'>View Allies</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=declarewar'>Declare War</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=dissolve'>Dissolve Guild</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=swords'>Guild Weapons</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=dsword'>Decommission Guild Weapons</a>
-							</div>
+                                <div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+								    <a href='?action=staff&act2=leader' class='btn btn-block btn-danger'>Transfer Leader</a><br />
+                                </div>
+                                <div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+								    <a href='?action=staff&act2=name' class='btn btn-block btn-primary'>Change Name</a><br />
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-xl-12 col-xxl-6 col-xxxl-4'>
+								    <a href='?action=staff&act2=desc' class='btn btn-block btn-primary'>Change Description</a><br />
+                                </div>
+                                <div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+								    <a href='?action=staff&act2=town' class='btn btn-block btn-primary'>Change Town</a><br />
+                                </div>";
+                    			if ($db->fetch_single($db->query("/*qc=on*/SELECT `town_id` FROM `town` WHERE `town_guild_owner` = {$gd['guild_id']}")) > 0)
+                    			{
+                    			    echo "
+        								<div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+        									<a href='?action=staff&act2=untown' class='btn btn-block btn-danger'>Surrender Town</a><br />
+        								</div>
+        								<div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+        									<a href='?action=staff&act2=tax' class='btn btn-block btn-primary'>Change Tax</a><br />
+        								</div>";
+                    			}
+			                 echo"
+    							<div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=doally' class='btn btn-block btn-primary'>Declare Ally</a><br />
+    							</div>
+    							<div class='col-12 col-sm-6 col-md-4 col-xl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=viewrally' class='btn btn-block btn-primary'>View Ally Requests</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=viewallies' class='btn btn-block btn-primary'>View Allies</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=declarewar' class='btn btn-block btn-primary'>Declare War</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=dissolve' class='btn btn-block btn-danger'>Dissolve Guild</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=swords' class='btn btn-block btn-primary'>Guild Weapons</a><br />
+    							</div>
+    							<div class='col-12'>
+    								<a href='?action=staff&act2=dsword' class='btn btn-block btn-danger'>Decommission Guild Weapons</a><br />
+    							</div>
+                            </div>
 						</div>
 					</div>
+                    <br />
 				</div>";
 		}
 		if (isGuildCoLeader())
 		{
 			echo "
-				<div class='col-12 col-lg-6'>
+				<div class='col-12 col-xl-6'>
 					<div class='card'>
 						<div class='card-header'>
 							<div class='row'>
@@ -1564,49 +1641,55 @@ function staff_idx()
 						</div>
 						<div class='card-body'>
 							<div class='row'>
-								<a href='?action=staff&act2=coowner'>Transfer Co-Leader</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=ament'>Change Guild Announcement</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=pic'>Change Guild Picture</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=massmail'>Mass Mail Guild</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=levelup'>Level Up Guild</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=addpoll'>Start Poll</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=endpoll'>End Poll</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=boost'>Enable Boost</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=upsword'>Upgrade Guild Weapon</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=rsword'>Re-Roll Guild Weapon Boosts</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=renamesword'>Rename Guild Weapon</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=picsword'>Change Guild Weapon Image</a>
-							</div>
+                                <div class='col-12 col-sm-6 col-xl-12 col-xxl-6 col-xxxl-4'>
+								    <a href='?action=staff&act2=coowner' class='btn btn-block btn-danger'>Transfer Co-Leader</a><br />
+							    </div>
+    							<div class='col-12 col-sm-6 col-xl-12 col-xxl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=ament' class='btn btn-block btn-primary'>Change Announcement</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxl-4'>
+    								<a href='?action=staff&act2=pic' class='btn btn-block btn-primary'>Change Picture</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxl-4'>
+    								<a href='?action=staff&act2=massmail' class='btn btn-block btn-primary'>Mass Mail Guild</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxl-4'>
+    								<a href='?action=staff&act2=levelup' class='btn btn-block btn-primary'>Level Up</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxl-4'>
+    								<a href='?action=staff&act2=addpoll' class='btn btn-block btn-primary'>Start Poll</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxl-4'>
+    								<a href='?action=staff&act2=endpoll' class='btn btn-block btn-primary'>End Poll</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxl-4'>
+    								<a href='?action=staff&act2=boost' class='btn btn-block btn-primary'>Enable Boost</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=upsword' class='btn btn-block btn-primary'>Upgrade Weapon</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-xl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=renamesword' class='btn btn-block btn-primary'>Rename Weapon</a><br />
+    							</div>
+                                <div class='col-12 col-md-6 col-xl-12 col-xxl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=rsword' class='btn btn-block btn-primary'>Re-Roll Weapon Boost</a><br />
+    							</div>
+    							<div class='col-12 col-md-6 col-xl-12 col-xxl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=picsword' class='btn btn-block btn-primary'>Change Weapon Image</a><br />
+    							</div>
+                                <div class='col-12 col-md-6 col-xl-12 col-xxl-6 col-xxxl-4'>
+    								<a href='?action=staff&act2=guildassets' class='btn btn-block btn-primary'>Guild Assets</a><br />
+    							</div>
+                            </div>
 						</div>
 					</div>
+                    <br />
 				</div>";
 		}
 		if (isGuildAppManager())
 		{
 			echo "
-				<div class='col-12 col-lg-6'>
+				<div class='col-12 col-lg-6 col-xxxl-4'>
 					<div class='card'>
 						<div class='card-header'>
 							<div class='row'>
@@ -1620,28 +1703,31 @@ function staff_idx()
 						</div>
 						<div class='card-body'>
 							<div class='row'>
-								<a href='?action=staff&act2=apps'>Application Management</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=intromsg'>Introductory Message</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=blockapps'>Block Applications</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=massmail'>Mass Mail Guild</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=appmngr'>Change Application Manager</a>
-							</div>
+                                <div class='col-6 col-md-4 col-lg-12 col-xl-6'>
+								    <a href='?action=staff&act2=apps' class='btn btn-block btn-primary'>Applications</a><br />
+                                </div>
+    							<div class='col-6 col-md-4 col-lg-12 col-xl-6'>
+    								<a href='?action=staff&act2=intromsg' class='btn btn-block btn-primary'>Intro Message</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-lg-12 col-xl-6'>
+    								<a href='?action=staff&act2=blockapps' class='btn btn-block btn-danger'>Block Applications</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-lg-12 col-xl-6'>
+    								<a href='?action=staff&act2=massmail' class='btn btn-block btn-primary'>Mass Mail Guild</a><br />
+    							</div>
+    							<div class='col-12 col-md-8 col-lg-12'>
+    								<a href='?action=staff&act2=appmngr' class='btn btn-block btn-danger'>Change Application Manager</a><br />
+    							</div>
+                            </div>
 						</div>
 					</div>
+                    <br />
 				</div>";
 		}
 		if (isGuildVaultManager())
 		{
 			echo "
-				<div class='col-12 col-lg-6'>
+				<div class='col-12 col-lg-6 col-xxxl-4'>
 					<div class='card'>
 						<div class='card-header'>
 							<div class='row'>
@@ -1655,28 +1741,31 @@ function staff_idx()
 						</div>
 						<div class='card-body'>
 							<div class='row'>
-								<a href='?action=staff&act2=vault'>Vault Management</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=armory'>Armory Management</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=masspay'>Mass Pay Guild</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=massmail'>Mass Mail Guild</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=vaultmngr'>Change Vault Manager</a>
-							</div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
+								    <a href='?action=staff&act2=vault' class='btn btn-block btn-primary'>Vault Management</a><br />
+                                </div>
+    							<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
+    								<a href='?action=staff&act2=armory' class='btn btn-block btn-primary'>Armory Management</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-lg-12 col-xl-6'>
+    								<a href='?action=staff&act2=masspay' class='btn btn-block btn-primary'>Mass Pay Guild</a><br />
+    							</div>
+    							<div class='col-6 col-md-4 col-lg-12 col-xl-6'>
+    								<a href='?action=staff&act2=massmail' class='btn btn-block btn-primary'>Mass Mail Guild</a><br />
+    							</div>
+    							<div class='col-12 col-md-8 col-lg-12'>
+    								<a href='?action=staff&act2=vaultmngr' class='btn btn-block btn-danger'>Change Vault Manager</a><br />
+    							</div>
+                            </div>
 						</div>
 					</div>
+                    <br />
 				</div>";
 		}
 		if (isGuildCrimeLord())
 		{
 			echo "
-				<div class='col-12 col-lg-6'>
+				<div class='col-12 col-xxxl-4'>
 					<div class='card'>
 						<div class='card-header'>
 							<div class='row'>
@@ -1690,21 +1779,24 @@ function staff_idx()
 						</div>
 						<div class='card-body'>
 							<div class='row'>
-								<a href='?action=staff&act2=crimes'>Guild Crimes</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=massmail'>Mass Mail Guild</a>
-							</div>
-							<div class='row'>
-								<a href='?action=staff&act2=crimelord'>Change Crime Lord</a>
-							</div>
+                                <div class='col-6 col-md-4 col-xxxl-6'>
+								    <a href='?action=staff&act2=crimes' class='btn btn-block btn-primary'>Guild Crimes</a><br />
+                                </div>
+    							<div class='col-6 col-md-4 col-xxxl-6'>
+    								<a href='?action=staff&act2=massmail' class='btn btn-block btn-primary'>Mass Mail Guild</a><br />
+    							</div>
+    							<div class='col-12 col-md-4 col-xxxl-12'>
+    								<a href='?action=staff&act2=crimelord' class='btn btn-block btn-danger'>Change Crime Lord</a><br />
+    							</div>
+                            </div>
 						</div>
 					</div>
+                    <br />
 				</div>";
 		}
 	}
     echo "</div>
-	<a href='viewguild.php'>Go Back</a>";
+	<a href='viewguild.php' class='btn btn-primary btn-block'>Go Back</a>";
 }
 
 function add_poll()
@@ -3300,7 +3392,8 @@ function staff_armory()
 		die($h->endpage());
 	}
     //Check to see if the guild has bought the armory.
-    if ($gd['guild_hasarmory'] == 'false') {
+    if (!guildOwnsAsset($ir['guild'], "guild_armory")) 
+    {
 
         //Set the cost to varaible for ease of use.
         $cost = $set['GUILD_PRICE'] * 4;
@@ -3319,13 +3412,17 @@ function staff_armory()
             //Log
             alert('success', 'Success!', "You have successfully purchased an armory for your guild.");
             $api->SystemLogsAdd($userid, 'guilds', "Purchased guild armory.");
-        } else {
+        } 
+        else 
+        {
             echo "Your guild does not have an armory. It will cost your guild " . shortNumberParse($cost) . " Primary
             Currency to purchase an armory. Do you wish to purchase an armory for your guild?<br />
             <a href='?action=staff&act2=armory&buy=yes' class='btn btn-success'>Yes</a>
             <a href='?action=staff&act2=idx' class='btn btn-danger'>No</a>";
         }
-    } else {
+    } 
+    else 
+    {
         if (isset($_POST['user'])) {
             //Make sure every variable is safe to work with.
             $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
@@ -3387,7 +3484,9 @@ function staff_armory()
             $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has given {$_POST['qty']} {$item}(s) from your guild's armory to <a href='profile.php?user={$_POST['user']}'>{$user}</a>.");
             alert('success', "Success!", "You have successfully given {$_POST['qty']} {$item}(s) from your guild's armory to {$user}.", true, "?action=staff&act2=idx");
             $api->SystemLogsAdd($userid, 'guilds', "Gave {$user} {$_POST['qty']} {$item}(s) from their armory.");
-        } else {
+        } 
+        else 
+        {
             //Giving item form.
             $csrf = request_csrf_html('guild_give_item');
             echo "Fill out the form below completely to give out items from your armory.<br />
@@ -4367,5 +4466,122 @@ function staff_sword_pic()
 			</div>
 		</form>";
 	}
+}
+
+function staff_asset_management()
+{
+    global $db,$gd,$userid,$api,$ir,$h;
+    $gymOwned = (guildOwnsAsset($ir['guild'], "guild_gym")) ? "<span class='text-success'>Owned</span>" : "<span class='text-danger'>Not owned</span>";
+    $armoryOwned = (guildOwnsAsset($ir['guild'], "guild_armory")) ? "<span class='text-success'>Owned</span>" : "<span class='text-danger'>Not owned</span>";
+    $vaultUpgrade1Owned = (guildOwnsAsset($ir['guild'], "guild_upgrade_vault1")) ? "<span class='text-success'>Owned</span>" : "<span class='text-danger'>Not owned</span>";
+    echo "<div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        {$gd['guild_name']}'s Ownable Assets
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Name</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        Guild Gym
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Description</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        <i>Allows members of the guild access to a new gym, to train more efficiently.</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Ownership</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$gymOwned}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class='row'>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Name</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        Guild Armory
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Description</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        <i>Allows members of the guild to store and share items in a central location.</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Ownership</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$armoryOwned}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class='row'>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Name</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        Deeper Vault
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Description</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        <i>Increases the guild's vault capacity by 8%.</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Ownership</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$vaultUpgrade1Owned}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>";
 }
 $h->endpage();

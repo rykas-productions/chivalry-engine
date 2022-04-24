@@ -56,7 +56,7 @@ function menu()
     //List all the in-game guilds.
     while ($gd = $db->fetch_row($gq)) {
 		$gd['guild_capacity']=calculateGuildMemberCapacity($gd['guild_id']);
-        $hasarmory = ($gd['guild_hasarmory'] == 'true') ? "<span class='text-success'>Armory</span>" : "<span class='text-danger'>No Armory</span>";
+		$hasarmory = (guildOwnsAsset($gd['guild_id'], "guild_armory")) ? "<span class='text-success'>Armory</span>" : "<span class='text-danger'>No Armory</span>";
         $appacc = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Accepting Applications</span>" : "<span class='text-danger'>Recruitment Closed.</span>";
         $indebt = ($gd['guild_primcurr'] > 0) ? "" : "<span class='text-danger'>In Debt</span>";
 		$gd['guild_pic'] = ($gd['guild_pic']) ? "<img src='" . parseImage($gd['guild_pic']) . "' class='img-fluid' style='max-width: 75px;'>" : '';
@@ -213,7 +213,9 @@ function view()
             $townOwned = "<a href='travel.php?to={$toRow['town_id']}'>{$toRow['town_name']}</a>";
         }
         
-        $hasArmory = ($gd['guild_hasarmory'] == 'true') ? "<span class='text-success'>Yes</span>" : "<span class='text-danger'>No</span>";
+        $hasArmory = (guildOwnsAsset($gd['guild_id'], "guild_armory")) ? "<span class='text-success'>Yes</span>" : "<span class='text-danger'>No</span>";
+        $hasGym = (guildOwnsAsset($gd['guild_id'], "guild_gym")) ? "<span class='text-success'>Yes</span>" : "<span class='text-danger'>No</span>";
+        
         $acceptApps = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Open</span>" : "<span class='text-danger'>Closed</span>";
         $inDebt = ($gd['guild_primcurr'] > 0) ? "<span class='text-success'>Good</span>" : "<span class='text-danger'>Bad</span>";
         
@@ -311,6 +313,16 @@ function view()
                                     </div>
                                     <div class='col-12'>
                                         {$hasArmory}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Has Gym</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$hasGym}
                                     </div>
                                 </div>
                             </div>
