@@ -13,6 +13,9 @@ if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
 switch ($_GET['action']) {
+    case 'attacking':
+        attacking();
+        break;
     case 'xp':
         xp();
         break;
@@ -29,8 +32,342 @@ switch ($_GET['action']) {
         home_invasion();
         break;
     default:
-        attacking();
+        landingpage();
         break;
+}
+
+function landingpage()
+{
+    global $db, $userid, $ir, $h, $api, $set, $atkpage, $votecount;
+    $menuhide = 1;      //Hide the menu so players cannot load other pages,
+                        //and lessens the chance of a misclick and losing XP.
+    $tresder = Random(100, 999);    //RNG to prevent refreshing while attacking, thus
+                                    //breaking progression of the attack system.
+    $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
+    $ref = (isset($_GET['ref']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])*$/i", $_GET['ref'])) ? $db->escape(strip_tags(stripslashes($_GET['ref']))) : 'index';
+
+    if (!$_GET['user']) //If user is not specified.
+    {
+        alert("danger", "Uh Oh!", "You've chosen to attack a non-existent user. Check your source and try again.", true, "{$ref}.php");
+        die($h->endpage());
+    } 
+    else if ($_GET['user'] == $userid)  //If the user is trying to attack himself.
+    {
+        alert("danger", "Uh Oh!", "Depressed or not, you cannot attack yourself.", true, "{$ref}.php");
+        die($h->endpage());
+    }
+    $q = $db->query("/*qc=on*/SELECT `u`.`userid`, `hp`, `equip_armor`, `username`,
+	       `equip_primary`, `equip_secondary`, `equip_potion`, `guild`, `location`, `maxhp`, `class`,
+	       `guard`, `agility`, `strength`, `gender`, `level`, `laston`, `display_pic`
+			FROM `users` AS `u`
+			INNER JOIN `userstats` AS `us` ON `u`.`userid` = `us`.`userid`
+			LEFT JOIN `user_settings` AS `uas` ON `u`.`userid` = `uas`.`userid`
+			WHERE `u`.`userid` = {$_GET['user']}
+			LIMIT 1");
+    //Test for if the specified user is a valid and registered user.
+    if ($db->num_rows($q) == 0) {
+        alert("danger", "Uh Oh!", "The user you are trying to attack does not exist.", true, "{$ref}.php");
+        die($h->endpage());
+    }
+    
+    $odata = $db->fetch_row($q);
+    $displaypic = "<img src='" . parseDisplayPic($ir['userid']) . "' width='80' class='img-thumbnail' alt='{$ir['username']}&#39;s display picture' title='{$ir['username']}&#39;s display picture'>";
+    $odisplaypic = "<img src='" . parseDisplayPic($odata['userid']) . "' width='80' class='img-thumbnail' alt='{$odata['username']}&#39;s display picture' title='{$odata['username']}&#39;s display picture'>";
+    $travelCost = round(15 * levelMultiplier($ir['level'], $ir['reset']));
+    $npcquery = $db->query("/*qc=on*/SELECT * FROM `botlist` WHERE `botuser` = {$odata['userid']}");
+    if ($travelCost > 50)
+        $travelCost=50;
+    $energy = $api->UserInfoGet($userid, 'energy', true);
+    $hp = $api->UserInfoGet($userid, 'hp', true);
+    $ohp = $api->UserInfoGet($odata['userid'], 'hp', true);
+    $db->free_result($q);
+    $attackable = "Yes";
+    $attBool = true;
+    $textClass = 'text-success';
+    $disableButton = "";
+    $energyButton = "disabled";
+    $travelButton = "disabled";
+    $travelClass = 'text-success';
+    $levelClass = ($ir['level'] >= $odata['level']) ? "text-success" : "text-danger";
+    if ($_GET['user'] == 20)
+    {
+        if ($votecount != 5)
+        {
+            $attackable = "Vote 5 times.";
+            $attBool = false;
+        }
+        elseif ($ir['att_dg'] == 1)
+        {
+            $attackable = "Attackable once a day";
+            $attBool = false;
+        }
+    }
+    elseif (!($ir['energy'] >= $ir['maxenergy'] / $set['AttackEnergyCost']))
+    {
+        $attackable = "Not enough energy";
+        $attBool = false;
+        $energyButton = "";
+    }
+    elseif ($_GET['user'] == 21)
+    {
+        if (date('n') != 11)
+        {
+            $attackable = "Can't hunt outside of Novemeber";
+            $attBool = false;
+        }
+    }
+    elseif ($odata['hp'] == 1) 
+    {
+        $attackable = "Unconscious";
+        $attBool = false;
+    }
+    elseif ($ir['hp'] == 1)
+    {
+        $attackable = "You're unconscious";
+        $attBool = false;
+    }
+    elseif ($api->UserStatus($_GET['user'], 'infirmary'))
+    {
+        $attackable = "In infirmary";
+        $attBool = false;
+    }
+    elseif ($api->UserStatus($_GET['user'], 'dungeon'))
+    {
+        $attackable = "In dungeon"; 
+        $attBool = false;
+    }
+    elseif ($api->UserStatus($ir['userid'], 'infirmary'))
+    {
+        $attackable = "You're in infirmary";
+        $attBool = false;
+    }
+    elseif ($api->UserStatus($ir['userid'], 'dungeon'))
+    {
+        $attackable = "You're in dungeon";
+        $attBool = false;
+    }
+    elseif (!permission('CanBeAttack', $_GET['user']))
+    {
+        $attackable = "Invunlerable";
+        $attBool = false;
+    }
+    elseif ($odata['level'] < 3 && $odata['laston'] > $ir['laston'])
+    {
+        $attackable = "Can't attack active newbies";
+        $attBool = false;
+    }
+    elseif (userHasEffect($_GET['user'], basic_protection))
+    {
+        $attackable = "Has protection";
+        $attBool = false;
+    }
+    elseif ($db->num_rows($npcquery) > 0)
+    {
+        $timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$_GET['user']}");
+        $time2query = $db->query("/*qc=on*/SELECT `botcooldown` FROM `botlist` WHERE `botuser` = {$_GET['user']}");
+        $r2 = $db->fetch_single($timequery);
+        $r3 = $db->fetch_single($time2query);
+        //Opponent's drop has already been collected and the time hasn't reset.
+        //if time <= (last hit + bot cooldown) AND `last hit` > 0
+        if ((time() <= ($r2 + $r3)) && ($r2 > 0))
+        {
+            $attackable = "NPC cooldown";
+            $attBool = false;
+        }
+    }
+    elseif ($ir['location'] != $odata['location'])
+    {
+        $travelClass = 'text-danger';
+        $travelButton = "";
+    }
+    if (!$attBool)
+    {
+        $textClass = 'text-danger';
+        $disableButton = 'disabled';
+    }
+    echo "<form method='post' id='hiddenQuickTravelForm'>
+            <input type='hidden' name='to' value='{$odata['location']}'>
+        </form>";
+    echo "<div id='gymsuccess'></div>
+            <div id='quickTravelResult'></div>
+        <div class='row'>
+            <div class='col'>
+                <div class='card text-center'>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-xl-6'>
+                                <div class='row'>
+                                    <div class='col-12 col-sm-6 col-xl-3'>
+                                        {$displaypic}
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-xl'>
+                                        {$ir['username']} [{$userid}]
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-12 col-xl-6'>
+                                        <div class='progress' style='height: 1rem;'>
+                                            <div id='ui_energy_bar' class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['energy']}' style='width:{$energy}%' aria-valuemin='0' aria-valuemax='{$ir['maxenergy']}'>
+                        						<span id='ui_energy_bar_info'>
+                        							Energy {$energy}%
+                        						</span>
+                        					</div>
+                                        </div>
+                                    </div>
+                                    <div class='col-12 col-xl-6'>
+                                        <div class='progress' style='height: 1rem;'>
+                                            <div id='ui_hp_bar' class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'>
+                                				<span id='ui_hp_bar_info'>
+                                					Health {$hp}%
+                                				</span>
+                                			</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='row'>";
+                                    if ($ir['equip_primary'] > 0)
+                                    {
+                                        $primWeap = $api->SystemItemIDtoName($ir['equip_primary']);
+                                        echo"
+                                        <div class='col-6 col-xxl-4 col-xxxl'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small>{$primWeap}</small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    " . returnIcon($ir['equip_primary'], 2) . "
+                                                </div>
+                                            </div>
+                                        </div>";
+                                    }
+                                    if ($ir['equip_secondary'] > 0)
+                                    {
+                                        $secWeap = $api->SystemItemIDtoName($ir['equip_secondary']);
+                                        echo"
+                                        <div class='col-6 col-xxl-4 col-xxxl'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small>{$secWeap}</small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    " . returnIcon($ir['equip_secondary'], 2) . "
+                                                </div>
+                                            </div>
+                                        </div>";
+                                    }
+                                    if ($ir['equip_armor'] > 0)
+                                    {
+                                        $armor = $api->SystemItemIDtoName($ir['equip_armor']);
+                                        echo"<div class='col-6 col-xxl-4 col-xxxl'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small>{$armor}</small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    " . returnIcon($ir['equip_armor'], 2) . "
+                                                </div>
+                                            </div>
+                                        </div>";
+                                    }
+                                    if ($ir['equip_potion'] > 0)
+                                    {
+                                        $potion = $api->SystemItemIDtoName($ir['equip_potion']);
+                                        echo"<div class='col-6 col-xxl-4 col-xxxl'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small>{$potion}</small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    " . returnIcon($ir['equip_potion'], 2) . "
+                                                </div>
+                                            </div>
+                                        </div>";
+                                    }
+                                    echo "
+                                </div>
+                                <div class='row'>
+                                    <div class='col-12 col-xxl-6'>
+                                        <a href='temple.php?action=energy' class='btn btn-block btn-success {$energyButton}' id='gymRefillEnergy'>Refill Energy - {$set['energy_refill_cost']} Tokens</a>
+                                    </div>
+                                    <div class='col-12 col-xxl-6'>
+                                        <a href='travel.php?to={$odata['location']}' class='btn btn-block btn-primary {$travelButton}' id='quickTravelBtn'>Travel - {$travelCost} Tokens</a>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                            <div class='col-12 col-xl-6'>
+                                <div class='row'>
+                                    <div class='col-12 col-sm-6 col-xl-2'>
+                                        {$odisplaypic}
+                                    </div>
+                                    <div class='col-12 col-sm-6 col-xl'>
+                                        {$odata['username']} [{$odata['userid']}]
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <div class='progress' style='height: 1rem;'>
+                                            <div id='ui_hp_bar' class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$odata['hp']}' style='width:{$ohp}%' aria-valuemin='0' aria-valuemax='{$odata['maxhp']}'>
+                                				<span id='ui_hp_bar_info'>
+                                					Health {$ohp}%
+                                				</span>
+                                			</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-6 col-sm-4 col-xxxl'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small>Town</small>
+                                            </div>
+                                            <div class='col-12'>
+                                                <span class='{$travelClass}'>{$api->SystemTownIDtoName($odata['location'])}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-6 col-sm-4 col-xxxl-1'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small>Level</small>
+                                            </div>
+                                            <div class='col-12'>
+                                                <span class='{$levelClass}'>" . number_format($odata['level']) . "</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-6 col-sm-4 col-xxxl-2'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small>Guild</small>
+                                            </div>
+                                            <div class='col-12'>
+                                                <a href='guilds.php?action=view&id={$odata['guild']}'>{$api->GuildFetchInfo($odata['guild'], "guild_name")}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='col-6 col-sm'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small>Attackable?</small>
+                                            </div>
+                                            <div class='col-12'>
+                                                <span class='{$textClass}' {$disableButton}>{$attackable}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col'>
+                                        <a href='attack.php?action=attacking&user={$odata['userid']}' class='btn btn-block btn-danger'>Attack {$odata['username']}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>";
 }
 function attacking()
 {
@@ -61,10 +398,10 @@ function attacking()
             alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}&ref={$ref}");
             die($h->endpage());
         }
-		if (userHasEffect($userid, constant("basic_protection")))
+		if (userHasEffect($userid, basic_protection))
 		{
-		    userRemoveEffect($userid, constant("basic_protection"));
-			alert('warning',"Warning!","For attacking this user, you have lost your protection.",false);
+		    userRemoveEffect($userid, basic_protection);
+			alert('warning',"Protection Void!","You've begun attacking {$odata['username']} and your bodyguards have resigned.",false);
 		}
         //Set RNG
         $_SESSION['tresde'] = $_GET['tresde'];
@@ -162,7 +499,7 @@ function attacking()
         alert("danger", "Uh Oh!", "You cannot attack online players who are level two or below.", true, "{$ref}.php");
         die($h->endpage());
     }	//User has protection
-    else if (userHasEffect($_GET['user'], constant("basic_protection")))
+    else if (userHasEffect($_GET['user'], basic_protection))
 	{
 	    resetAttackStatus();
         alert("danger", "Uh Oh!", "You cannot attack this player as they have protection.", true, "{$ref}.php");
@@ -587,7 +924,7 @@ function attacking()
                     }
                     else
                     {
-                        $api->GameAddNotification($_GET['user'],"You ran out of your potion in combat.", 'fas fa-exclamation-circle', 'red');
+                        $api->GameAddNotification($_GET['user'],"You ran out of {$wep} while in combat.", 'fas fa-exclamation-circle', 'red');
                         alert('info', "", "<b>Attempt {$ns})</b> {$odata['username']} attempted to strike you, but missed. You have " . number_format($youdata['hp']) . " HP remaining.", false);
                         unequipUserSlot($_GET['user'], "equip_potion");
                     }
@@ -636,20 +973,20 @@ function attacking()
 		echo "<div class='row'>";
         if ($api->UserHasItem($userid,90,1))
 		{
-			echo "<div class='col-md'><a href='?user={$_GET['user']}&scroll=1&ref={$ref}'>" . returnIcon(90,5) . "</a><br />
-					[<a href='?user={$_GET['user']}&scroll=1'>Use {$api->SystemItemIDtoName(90)}</a>]
+			echo "<div class='col-md'><a href='?action=attacking&user={$_GET['user']}&scroll=1&ref={$ref}'>" . returnIcon(90,5) . "</a><br />
+					[<a href='?action=attacking&user={$_GET['user']}&scroll=1'>Use {$api->SystemItemIDtoName(90)}</a>]
 				</div>";
 		}
 		if ($api->UserHasItem($userid,247,1))
 		{
-			echo "<div class='col-md'><a href='?user={$_GET['user']}&scroll=2&ref={$ref}'>" . returnIcon(247,5) . "</a><br />
-					[<a href='?user={$_GET['user']}&scroll=2'>Use {$api->SystemItemIDtoName(247)}</a>]
+			echo "<div class='col-md'><a href='?action=attacking&user={$_GET['user']}&scroll=2&ref={$ref}'>" . returnIcon(247,5) . "</a><br />
+					[<a href='?action=attacking&user={$_GET['user']}&scroll=2'>Use {$api->SystemItemIDtoName(247)}</a>]
 				</div>";
 		}
 		if ($api->UserHasItem($userid,266,1))
 		{
-			echo "<div class='col-md'><a href='?user={$_GET['user']}&scroll=3&ref={$ref}'>" . returnIcon(266,5) . "</a><br />
-					[<a href='?user={$_GET['user']}&scroll=3'>Use {$api->SystemItemIDtoName(266)}</a>]
+			echo "<div class='col-md'><a href='?action=attacking&user={$_GET['user']}&scroll=3&ref={$ref}'>" . returnIcon(266,5) . "</a><br />
+					[<a href='?action=attacking&user={$_GET['user']}&scroll=3'>Use {$api->SystemItemIDtoName(266)}</a>]
 				</div>";
 		}
 		echo "</div>";
@@ -685,7 +1022,7 @@ function attacking()
                     $type = "Potion Item";
                 }
 				echo "<div class='col'>
-				<a href='?nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}&ref={$ref}'><b>{$type}</b><br />
+				<a href='?action=attacking&nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}&ref={$ref}'><b>{$type}</b><br />
 					" . returnIcon($r['itmid'],5) . "</a>
 				</div>";
             }
