@@ -125,10 +125,18 @@ function menu()
             $do = "<a href='#' class='disabled btn-success btn btn-block'>Graduated</a>";
         elseif ($ir['level'] < $academy['ac_level'])
             $do = "<a href='#' class='disabled btn-danger btn btn-block'>Level too low</a>";
+            
 		elseif ($ir['primary_currency'] < $academy['ac_cost'])
 			$do = "<a href='#' class='disabled btn-danger btn btn-block'>Not enough Copper</a>";
 		else
             $do = "<a href='?action=start&id={$academy['ac_id']}' class='btn btn-primary btn-block'>Start Course</a>";
+		
+        $costClass='';
+        $lvlClass='';
+        if ($ir['level'] < $academy['ac_level'])
+            $lvlClass = "class='text-danger'";
+        if ($ir['primary_currency'] < $academy['ac_cost'])
+            $costClass = "class='text-danger'";
 		echo "
         <div class='row'>
             <div class='col-12'>
@@ -150,13 +158,13 @@ function menu()
                                         <small><i>Course Length " . number_format($academy['ac_days']) . " Days</i></small>
                                     </div>
                                     <div class='col col-md-4 col-lg'>
-                                        <small><i>Cost " . shortNumberParse($academy['ac_cost']) . " Copper Coins</i></small>
+                                        <small><i {$costClass}>Cost " . shortNumberParse($academy['ac_cost']) . " Copper Coins</i></small>
                                     </div>";
                                     if (!empty($academy['ac_level']))
                                     {
                                         echo "
                                         <div class='col-4 col-sm-6 col-md-2 col-lg-4 col-xxl-2'>
-                                            <small><i>Level " . number_format($academy['ac_level']) . "</i></small>
+                                            <small><i {$lvlClass}>Level " . number_format($academy['ac_level']) . "</i></small>
                                         </div>";
                                     }
                                 echo"
