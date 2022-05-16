@@ -30,13 +30,13 @@ function error_critical($human_error, $debug_error, $action, $context = array())
         game. ",false);
         // Only uncomment the below if you know what you're doing,
         // for debug purposes.
-        /*
-		if (is_array($context) && count($context) > 0)
+        if (CONTEXT_TRACE) 
         {
-            echo '<strong>Context at error time:</strong> ' . '<br /><br />'
-                    . nl2br(print_r($context, true));
+    		if (is_array($context) && count($context) > 0)
+            {
+                        alert('info',"<strong>Error context</strong>", nl2br(print_r($context, true)), false);
+            }
         }
-		*/
     } 
     else 
     {
