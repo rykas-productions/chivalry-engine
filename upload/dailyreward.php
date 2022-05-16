@@ -59,7 +59,7 @@ if ($ir['rewarded'] == 0)
     }
     elseif ($reward <= 64 && $reward > 60)
     {
-        userGiveEffect($userid, constant("basic_protection"), ($guardTime*60));
+        userGiveEffect($userid, basic_protection, ($guardTime*60));
         $api->GameAddNotification($userid,"We got your back {$ir['username']}! Someone was about to hit on you, so we bought you some protection. Its your login gift for the day. Thanks for playing CID!");
         $api->SystemLogsAdd($userid, "loginreward", "Received {$guardTime} minutes of Protection.");
     }
@@ -203,6 +203,11 @@ if ($ir['rewarded'] == 0)
     //Month = October
     if ($month == 10)
     {
+        if ($day == 20)
+        {
+            $api->UserGiveItem($userid, 178, 15);
+            $api->GameAddNotification($userid, "On this day in 2017, Chivalry is Dead launched. Thank you for many great years! We've given you some Birthday cake to your inventory.");
+        }
         //Halloween
         if (($day >= 24) && ($day <= 31))
         {
@@ -216,6 +221,14 @@ if ($ir['rewarded'] == 0)
         if ($day == 26 || $day == 27 || $day == 28 || $day == 29 || $day == 30)
         {
             
+        }
+    }
+    if ($month == 12)
+    {
+        if ($day == 26)
+        {
+            $api->UserGiveItem($userid, 449, 10);
+            $api->GameAddNotification($userid, "Thank you for logging into CID on CID Admin's birthday! We've given you some Birthday cake in your inventory.");
         }
     }
     $db->query("UPDATE `users` SET `rewarded` = 1 WHERE `userid` = {$userid}");
