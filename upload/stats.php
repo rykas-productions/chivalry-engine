@@ -15,251 +15,333 @@ require("stats/stats.php");
 //This is... messy.
 echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 <div class='row'>
-	<div class='col-md'>
+	<div class='col-12 col-lg-6'>
 		<div class='card'>
 			<div class='card-header'>
-					Player Stats
+				Player Stats
 			</div>
 			<div class='card-body text-left'>
 				<div class='row'>
-					<div class='col'>
-						Registered Players
-					</div>
-					<div class='col'>
-						" . number_format($TotalUserCount) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Males
-					</div>
-					<div class='col'>
-						" . number_format($Male) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Females
-					</div>
-					<div class='col'>
-						" . number_format($Female) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Other
-					</div>
-					<div class='col'>
-						" . number_format($OtherGender) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Warriors
-					</div>
-					<div class='col'>
-						" . number_format($Warrior) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Rogues
-					</div>
-					<div class='col'>
-						" . number_format($Rogue) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Guardian
-					</div>
-					<div class='col'>
-						" . number_format($Defender) . "
-					</div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Known Players</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . number_format($TotalUserCount) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Males</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . number_format($Male) . "
+                            </div>
+                        </div>
+                    </div>
+					<div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+        						<small><b>Females</b></small>
+        					</div>
+                            <div class='col-12'>
+        						" . number_format($Female) . "
+        					</div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+        						<small><b>Other</b></small>
+        					</div>
+                            <div class='col-12'>
+        						" . number_format($OtherGender) . "
+        					</div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+        						<small><b>Owned Estates</b></small>
+        					</div>
+                            <div class='col-12'>
+        						" . number_format($TotalEstatesOwned) . "
+        					</div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+        						<small><b>Warriors</b></small>
+        					</div>
+                            <div class='col-12'>
+        						" . number_format($Warrior) . "
+        					</div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+        						<small><b>Rogues</b></small>
+        					</div>
+                            <div class='col-12'>
+        						" . number_format($Rogue) . "
+        					</div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+        						<small><b>Guardians</b></small>
+        					</div>
+                            <div class='col-12'>
+        						" . number_format($Defender) . "
+        					</div>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
+        <br />
 	</div>
-	<div class='col-md'>
+	<div class='col-12 col-lg-6'>
 		<div class='card'>
 			<div class='card-header'>
 					Game Stats
 			</div>
 			<div class='card-body text-left'>
-				<div class='row'>
-					<div class='col'>
-						Notifications
-					</div>
-					<div class='col'>
-						" . number_format($TotalNotif) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Messages
-					</div>
-					<div class='col'>
-						" . number_format($TotalMail) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Guilds
-					</div>
-					<div class='col'>
-						" . number_format($TotalGuildCount) . "
-					</div>
-				</div>
+                <div class='row'>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Notifications</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalNotif) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Messages</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalMail) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Guilds</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalGuildCount) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Day Reset</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . TimeUntil_Parse(getNextDayReset()) ."
+                            </div>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</div>
+        <br />
 	</div>
-</div>
-<div class='row'>
-	<div class='col-md'>
+    <div class='col-12 col-lg-6'>
 		<div class='card'>
 			<div class='card-header'>
 					Copper Coins
 			</div>
 			<div class='card-body text-left'>
-				<div class='row'>
-					<div class='col'>
-						Withdrawn Copper Coins
-					</div>
-					<div class='col'>
-						" . shortNumberParse($TotalPrimaryCurrency) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Copper in City Bank
-					</div>
-					<div class='col'>
-						" . shortNumberParse($TotalBank) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Copper in Federal Bank
-					</div>
-					<div class='col'>
-						" . shortNumberParse($TotalBigBank) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Copper in Vault
-					</div>
-					<div class='col'>
-						" . shortNumberParse($TotalVaultBank) . "
-					</div>
-				</div>
                 <div class='row'>
-					<div class='col'>
-						Copper in Estates
-					</div>
-					<div class='col'>
-						" . shortNumberParse($TotalEstateVault) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Average Copper
-					</div>
-					<div class='col'>
-						" . shortNumberParse($AveragePrimaryCurrencyPerPlayer) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Average City Bank Balance
-					</div>
-					<div class='col'>
-						" . shortNumberParse($AverageBank) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Average Federal Bank Balance
-					</div>
-					<div class='col'>
-						" . shortNumberParse($AverageBigBank) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Average Vault Balance
-					</div>
-					<div class='col'>
-						" . shortNumberParse($AverageVaultBank) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Total Copper Coins
-					</div>
-					<div class='col'>
-						" . shortNumberParse($TotalBankandPC) . "
-					</div>
-				</div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Withdrawn</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalPrimaryCurrency) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Avg Withdrawn</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalMail) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>City Bank</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalBank) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Avg City Bank</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($AverageBank) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Federal Bank</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalBigBank) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Avg Fed Bank</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($AverageBigBank) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Vault Bank</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalVaultBank) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Avg Vault Bank</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($AverageVaultBank) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Estate Vaults</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalEstateVault) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xxl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Total Circulating</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalBankandPC) . "
+                            </div>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</div>
+        <br />
 	</div>
-	<div class='col-md'>
+    <div class='col-12 col-lg-6'>
 		<div class='card'>
 			<div class='card-header'>
 					Chivalry Tokens
 			</div>
 			<div class='card-body text-left'>
-				<div class='row'>
-					<div class='col'>
-						Withdrawn Chivalry Tokens
-					</div>
-					<div class='col'>
-						" . shortNumberParse($TotalSecondaryCurrency) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Banked Chivalry Tokens
-					</div>
-					<div class='col'>
-						" . shortNumberParse($TotalBankToken) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Average Chivalry Tokens
-					</div>
-					<div class='col'>
-						" . shortNumberParse($AverageSecondaryCurrencyPerPlayer) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Average Chivalry Tokens Banked
-					</div>
-					<div class='col'>
-						" . shortNumberParse($AverageTokenBank) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Total Chivalry Tokens
-					</div>
-					<div class='col'>
-						" . shortNumberParse($TotalBankandSC) . "
-					</div>
-				</div>
-				<div class='row'>
-					<div class='col'>
-						Average Sell Price
-					</div>
-					<div class='col'>
-						{$avgprice}
-					</div>
-				</div>
+                <div class='row'>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Withdrawn</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalSecondaryCurrency) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Avg Withdrawn</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($AverageSecondaryCurrencyPerPlayer) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Token Vault</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalBankToken) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Avg Token Vault</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($AverageTokenBank) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xxl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Avg Market Price</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($avgprice) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xxl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Total Circulating</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalBankandSC) . "
+                            </div>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</div>
+        <br />
 	</div>
 </div>";
 $h->endpage();

@@ -6,10 +6,6 @@
 	Author: TheMasterGeneral
 	Website: https://github.com/MasterGeneral156/chivalry-engine
 */
-//Select count of players with and without a bank account
-$NotOwnedBank = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `bank` = '-1' AND `user_level` != 'NPC' AND `userid` != 1"));
-$OwnedBank = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `bank` > '-1' AND `user_level` != 'NPC'  AND `userid` != 1"));
-
 //Select count of players's gender
 $Male = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `gender` = 'Male' AND `user_level` != 'NPC'  AND `userid` != 1"));
 $Female = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `gender` = 'Female' AND `user_level` != 'NPC'  AND `userid` != 1"));
@@ -22,8 +18,8 @@ $Defender = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `
 
 //Select the Total Primary Currency in the game.
 $TotalPrimaryCurrency = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`primary_currency`) FROM `users` WHERE `user_level` != 'NPC'  AND `userid` != 1"));
-$TotalGuildPC = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`guild_primcurr`) FROM `guild` WHERE `guild_id` != 1"));
-$TotalGuildSC = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`guild_seccurr`) FROM `guild` WHERE `guild_id` != 1"));
+$TotalGuildPC = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`guild_primcurr`) FROM `guild` WHERE `guild_id` != 20"));
+$TotalGuildSC = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`guild_seccurr`) FROM `guild` WHERE `guild_id` != 20"));
 $TotalInvestmentPC = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`amount`) FROM `bank_investments` WHERE `userid` != 1"));
 
 //Select the Total Secondary Currency in the game.
@@ -58,16 +54,6 @@ $TotalGuildCount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`guild_id
 $TotalNotif = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`notif_id`) FROM `notifications`"));
 $TotalMail = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`mail_id`) FROM `mail`"));
 
-//Theme Choice
-$Default = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 1"));
-$Darkly = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 2"));
-$Slate = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 3"));
-$Cyborg = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 4"));
-$United = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 5"));
-$Cerulean = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 6"));
-$Castle = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 7"));
-$Sunset = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `user_settings` WHERE `theme` = 8"));
-
 //All the primary currency
 $TotalBankandPC = $TotalBank + $TotalPrimaryCurrency + $TotalInvestmentPC + $TotalGuildPC + $TotalBigBank + $TotalVaultBank + $TotalEstateVault;
 $TotalBankandSC = $TotalBankToken + $TotalSecondaryCurrency + $TotalGuildSC;
@@ -75,4 +61,7 @@ $TotalBankandSC = $TotalBankToken + $TotalSecondaryCurrency + $TotalGuildSC;
 //Avg token price
 $totalcost=$db->fetch_single($db->query("SELECT SUM(`token_total`) FROM `token_market_avg`"));
 $totaltokens=$db->fetch_single($db->query("SELECT SUM(`token_sold`) FROM `token_market_avg`"));
-$avgprice = shortNumberParse($totalcost / $totaltokens);
+$avgprice = $totalcost / $totaltokens;
+
+//total estates owned
+$TotalEstatesOwned = $db->fetch_single($db->query("SELECT COUNT(`ue_id`) FROM `user_estates` WHERE `estate` > 1"));
