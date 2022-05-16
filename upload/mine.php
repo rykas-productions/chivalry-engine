@@ -106,13 +106,7 @@ function home()
 			</small>
 		</div>
 		<div class='col'>
-			<div class='progress' style='height: 1rem;'>
-				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningpower']}' style='width:{$mineen}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'>
-					<span>
-						{$mineen}% (" . number_format($MUS['miningpower']) . " / " . number_format($MUS['max_miningpower']). ")
-					</span>
-				</div>
-			</div>
+			" . scaledColorProgressBar($MUS['miningpower'], 0, $MUS['max_miningpower']) . "
 		</div>
 	</div>
 	<hr />

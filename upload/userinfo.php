@@ -43,13 +43,7 @@ echo "
         </div>
         <div class='row'>
             <div class='col-12'>
-                <div class='progress' style='height: 1rem;'>
-                    <div id='ui_energy_bar' class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['energy']}' style='width:{$energy}%' aria-valuemin='0' aria-valuemax='{$ir['maxenergy']}'>
-						<span id='ui_energy_bar_info'>
-							{$energy}% (" . number_format($ir['energy']) . " / " . number_format($ir['maxenergy']) .")
-						</span>
-					</div>
-                </div>
+                " . scaledColorProgressBar($ir['energy'], 0, $ir['maxenergy']) . "
             </div>
         </div>
         <div class='row'>
@@ -62,32 +56,20 @@ echo "
         </div>
         <div class='row'>
             <div class='col-12'>
-                <div class='progress' style='height: 1rem;'>
-                    <div id='ui_brave_bar' class='progress-bar bg-secondary progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['brave']}' style='width:{$brave}%' aria-valuemin='0' aria-valuemax='{$ir['maxbrave']}'>
-						<span id='ui_brave_bar_info'>
-							{$brave}% (" . number_format($ir['brave']) . " / " . number_format($ir['maxbrave']) . ")
-						</span>
-					</div>
-                </div>
+                " . scaledColorProgressBar($ir['brave'], 0, $ir['maxbrave']) . "
             </div>
         </div>
-            <div class='row'>
-                <div class='col-8' align='left'>
-                    Will <span id='ui_will_perc'>{$will}%</span>
-                </div>
-                <div class='col-4'>
-                    <a href='temple.php?action=will'><i class='fas fa-sync'></i></a>
-                </div>
+        <div class='row'>
+            <div class='col-8' align='left'>
+                Will <span id='ui_will_perc'>{$will}%</span>
             </div>
+            <div class='col-4'>
+                <a href='temple.php?action=will'><i class='fas fa-sync'></i></a>
+            </div>
+        </div>
         <div class='row'>
             <div class='col-12'>
-                <div class='progress' style='height: 1rem;'>
-                    <div id='ui_will_bar' class='progress-bar bg-info progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['will']}' style='width:{$will}%' aria-valuemin='0' aria-valuemax='{$ir['maxwill']}'>
-						<span id='ui_will_bar_info'>
-							{$will}% (" . number_format($ir['will']) . " / " . number_format($ir['maxwill']). ")
-						</span>
-					</div>
-                </div>
+                " . scaledColorProgressBar($ir['will'], 0, $ir['maxwill']) . "
             </div>
         </div>
         <div class='row'>
@@ -95,36 +77,30 @@ echo "
                 XP <span id='ui_xp_perc'>{$xp}%</span>
             </div>
         </div>
-        <div class='progress' style='height: 1rem;'>
-            <div id='ui_xp_bar' class='progress-bar bg-warning progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['xp']}' style='width:{$xp}%' aria-valuemin='0' aria-valuemax='{$ir['xp_needed']}'>
-				<span id='ui_xp_bar_info'>
-					{$xp}% (" . number_format($ir['xp']) . " / " . number_format($ir['xp_needed']) . ")
-				</span>
-			</div>
+        <div class='row'>
+            <div class='col-12'>
+                " . warningProgressBar($ir['xp'], 0, $ir['xp_needed']) . "
+            </div>
         </div>
         <div class='row'>
             <div class='col-8' align='left'>
                 HP <span id='ui_hp_perc'>{$hp}%</span>
             </div>
         </div>
-        <div class='progress' style='height: 1rem;'>
-            <div id='ui_hp_bar' class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$ir['hp']}' style='width:{$hp}%' aria-valuemin='0' aria-valuemax='{$ir['maxhp']}'>
-				<span id='ui_hp_bar_info'>
-					{$hp}% (" . number_format($ir['hp']) . " / " . number_format($ir['maxhp']) . ")
-				</span>
-			</div>
+        <div class='row'>
+            <div class='col-12'>
+                " . scaledColorProgressBar($ir['hp'], 0, $ir['maxhp']) . "
+            </div>
         </div>
 		<div class='row'>
             <div class='col-8' align='left'>
                 Mining Energy {$mine}%
             </div>
         </div>
-        <div class='progress' style='height: 1rem;'>
-            <div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningpower']}' style='width:{$mine}%' aria-valuemin='0' aria-valuemax='{$MUS['max_miningpower']}'>
-				<span>
-					{$mine}% (" . number_format($MUS['miningpower']) . " / " . number_format($MUS['max_miningpower']) . ")
-				</span>
-			</div>
+        <div class='row'>
+            <div class='col-12'>
+                " . scaledColorProgressBar($MUS['miningpower'], 0, $MUS['max_miningpower']) . "
+            </div>
         </div>
         <hr />
 		<div class='row'>
