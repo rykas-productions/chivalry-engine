@@ -1326,3 +1326,10 @@ function doBlacksmithCheck()
         }
     }
 }
+
+function logTokenMarketAvg($bought,$total)
+{
+    global $db;
+    $time = time();
+    $db->query("INSERT INTO `token_market_avg` (`token_sold`, `token_total`, `token_time`) VALUES ('{$bought}', '{$total}', '{$time}')");
+}

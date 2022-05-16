@@ -175,7 +175,7 @@ function buy()
         " . number_format($r['sec_total']) . " Chivalry Tokens from the Chivalry Token Market for a total of " . shortNumberParse($taxed) . " Copper Coins.");
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
     alert('success', "Success!", "You have bought " . shortNumberParse($r['sec_total']) . " Chivalry Tokens for " . shortNumberParse($totalcost) . " Copper Coins.", true, 'secmarket.php');
-    logMarketAvg($r['sec_total'],$totalcost);
+    logTokenMarketAvg($r['sec_total'],$totalcost);
 	die($h->endpage());
 }
 
@@ -306,11 +306,5 @@ function add()
             </div>
         </form>";
     }
-}
-function logMarketAvg($bought,$total)
-{
-	global $db;
-	$time = time();
-	$db->query("INSERT INTO `token_market_avg` (`token_sold`, `token_total`, `token_time`) VALUES ('{$bought}', '{$total}', '{$time}')");
 }
 $h->endpage();
