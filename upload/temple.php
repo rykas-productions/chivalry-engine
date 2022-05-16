@@ -28,7 +28,21 @@ if (Random(1,100) == 6)
 }
 $month = date('n');
 $day = date('j');
-//$set['energy_refill_cost'] = floor($set['energy_refill_cost'] * 0.75);
+
+$extraiq=(getSkillLevel($userid,12)*5)/100;
+$set['iq_per_sec'] = $set['iq_per_sec'] + ($set['iq_per_sec'] * $extraiq);
+
+$totalcost=$db->fetch_single($db->query("SELECT SUM(`token_total`) FROM `token_market_avg`"));
+$totaltokens=$db->fetch_single($db->query("SELECT SUM(`token_sold`) FROM `token_market_avg`"));
+$avgprice = $totalcost / $totaltokens;
+$gameBuyPrice = round($avgprice + ($avgprice * 0.33));
+$gameSellPrice = round($avgprice - ($avgprice * 0.25));
+
+if ($gameBuyPrice > $set['token_maximum'])
+    $gameBuyPrice = $set['token_maximum'];
+if ($gameSellPrice < $set['token_minimum'])
+    $gameSellPrice = $set['token_minimum'];
+
 echo "<h3><i class='game-icon game-icon-mayan-pyramid'></i> Temple of Fortune</h3><hr />";
 //Set the GET to nothing if not set.
 if (!isset($_GET['action'])) {
@@ -70,41 +84,49 @@ switch ($_GET['action']) {
 function home()
 {
     //Main index.
-    global $set,$userid;
-	$extraiq=(getSkillLevel($userid,12)*5);
-    echo "Welcome to the Temple of Fortune. Here you may spend your Chivalry Tokens as you see fit!";
-    echo "<br />
-	<div class='row'>
-		<div class='col-sm'>
-			<a href='?action=energy'>Refill Energy</a><br /><small>" . number_format($set['energy_refill_cost']) . " Chivalry Tokens</small>
-		</div>
-		<div class='col-sm'>
-			<a href='?action=brave'>Regenerate 5% Bravery</a><br /><small>" . number_format($set['brave_refill_cost']) . " Chivalry Tokens</small>
-		</div>
-		<div class='col-sm'>
-			<a href='?action=will'>Regenerate 5% Will</a><br /><small>" . number_format($set['will_refill_cost']) . " Chivalry Tokens</small>
-		</div>
-		<div class='col-sm'>
-			<a href='?action=willall'>Regenerate 100% Will</a><br /><small>" . number_format($set['will_refill_cost']*20) . " Chivalry Tokens</small>
-		</div>
-	</div>
-	<hr />
-	<div class='row'>
-		<div class='col-sm'>
-			<a href='?action=iq'>Buy IQ</a><br /><small>" . number_format($set['iq_per_sec']) . "* IQ Per Token</small>
-		</div>
-		<div class='col-sm'>
-			<a href='?action=protection'>Buy Protection</a><br /><small>5 Chivalry Tokens per Minute</small>
-		</div>
-		<div class='col-sm'>
-			<a href='?action=coppertotoken'>Buy Chivalry Tokens</a><br /><small>" . number_format($set['token_maximum']) . " Copper Coins -> 1 Chivalry Token</small>
-		</div>
-		<div class='col-sm'>
-			<a href='?action=tokentocopper'>Buy Copper Coins</a><br /><small>1 Chivalry Token -> " . number_format($set['token_minimum']) . " Copper Coins</small>
-		</div>
-	</div>
-	<hr />
-	*=You will receive an extra {$extraiq}% IQ per Token because of your skills.";
+    global $set,$userid,$ir;
+	echo " <b></b><hr />
+<div class='row'>
+    <div class='col-12'>
+        <div class='card'>
+            <div class='card-header'>
+               Welcome to the Temple of Fortune. You may spend your " . shortNumberParse($ir['secondary_currency']) . " Chivalry Tokens here as you see fit.
+            </div>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <div class='row'>
+                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                                <a href='?action=energy' class='btn btn-primary btn-block'>Refill Energy - " . number_format($set['energy_refill_cost']) . " Tokens</a><br />
+                            </div>
+                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                                <a href='?action=brave' class='btn btn-primary btn-block'>Refill 5% Bravery - " . number_format($set['brave_refill_cost']) . " Tokens</a><br />
+                            </div>
+                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                                <a href='?action=will' class='btn btn-primary btn-block'>Refill 5% Will - " . number_format($set['will_refill_cost']) . " Tokens</a><br />
+                            </div>
+                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                                <a href='?action=willall' class='btn btn-primary btn-block'>Refill 100% Will - " . number_format($set['will_refill_cost']*20) . " Tokens</a><br />
+                            </div>
+                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                                <a href='?action=iq' class='btn btn-primary btn-block'>Buy IQ - " . round($set['iq_per_sec'], 2) . " IQ/Token</a><br />
+                            </div>
+                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                                <a href='?action=protection' class='btn btn-primary btn-block'>Buy Protection - 5 Tokens/Min</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-xxl col-xxxl-3'>
+                                <a href='?action=coppertotoken' class='btn btn-success btn-block'>Buy Tokens</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-xxl col-xxxl-3'>
+                                <a href='?action=tokentocopper' class='btn btn-danger btn-block'>Sell Tokens</a><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>";
 }
 
 function energy()
@@ -276,40 +298,51 @@ function iq()
         $totalcost = $_POST['iq'] * $set['iq_per_sec'];
 
         //User does not have enough Chivalry Tokens to exchange for how much they said they wanted in IQ.
-        if ($api->UserHasCurrency($userid, 'secondary', $_POST['iq']) == false) {
+        if (!$api->UserHasCurrency($userid, 'secondary', $_POST['iq'])) {
             alert('danger', "Uh Oh!", "You do not have enough Chivalry Tokens to buy that much IQ.");
             die($h->endpage());
         }
-		$specialnumber=((getSkillLevel($userid,12)*5)/100);
-		$totalcost=$totalcost+($totalcost*$specialnumber);
+
 		addToEconomyLog('Temple of Fortune', 'token', ($_POST['iq'])*-1);
         //Take the currency and give the user some IQ.
         $api->UserTakeCurrency($userid, 'secondary', $_POST['iq']);
         $db->query("UPDATE `userstats` SET `iq` = `iq` + {$totalcost} WHERE `userid` = {$userid}");
-        alert('success', "Success!", "You have successfully traded " . number_format($_POST['iq']) . " Chivalry Tokens for " . number_format($totalcost) . " IQ Points.", true, 'temple.php');
-        $api->SystemLogsAdd($userid, 'temple', "Traded {$_POST['iq']} Chivalry Tokens for {$totalcost} IQ.");
+        alert('success', "Success!", "You have successfully traded " . shortNumberParse($_POST['iq']) . " Chivalry Tokens for " . shortNumberParse($totalcost) . " IQ Points.", true, 'temple.php');
+        $api->SystemLogsAdd($userid, 'temple', "Traded " . shortNumberParse($_POST['iq']) . " Chivalry Tokens for " . shortNumberParse($totalcost) . " IQ.");
     } else {
-		$extraiq=(getSkillLevel($userid,12)*5);
-        alert('info', "Information!", "You can trade in your Chivalry Tokens for IQ at a ratio of {$set['iq_per_sec']}*
-		per Chivalry Tokens. You currently have " . number_format($ir['secondary_currency']) . " Chivalry Tokens.", false);
-        echo "<table class='table table-bordered'>
+        echo "
 			<form method='post'>
-			<tr>
-				<th>
-					Chivalry Tokens
-				</th>
-				<td>
-					<input type='number' class='form-control' name='iq' min='1' max='{$ir['secondary_currency']}' required='1'>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='Trade for IQ'>
-				</td>
-			</tr>
-			</form>
-		</table>
-		*=You will receive an extra {$extraiq}% IQ per Token because of your skills.";
+            <div class='card'>
+                <div class='card-header'>
+                    You can trade in your Chivalry Tokens for IQ at a ratio of {$set['iq_per_sec']} IQ per Chivalry Token. You currently have " . shortNumberParse($ir['secondary_currency']) . " Chivalry Tokens.
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Chivalry Tokens</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <input type='number' class='form-control' name='iq' min='1' max='{$ir['secondary_currency']}' required='1'>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col'>
+                                    <a href='temple.php' class='btn btn-danger btn-block'>Go Back</a>
+                                </div>
+                                <div class='col'>
+                                    <input type='submit' class='btn btn-primary btn-block' value='Trade Tokens'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>";
     }
 }
 
@@ -341,11 +374,11 @@ function protection()
 		$cost=$protection*5;
 		if (!($api->UserHasCurrency($userid,'secondary',$cost)))
 		{
-			alert('danger',"Uh Oh!","You need {$cost} Chivalry Tokens for {$protection} minutes of protection. You only have {$ir['secondary_currency']}.");
+		    alert('danger',"Uh Oh!","You need " . shortNumberParse($cost) . " Chivalry Tokens for {$protection} minutes of protection. You only have " . shortNumberParse($ir['secondary_currency']) . ".");
 			die($h->endpage());
 		}
 		userGiveEffect($userid, "basic_protection", ($protection*60));
-		alert('success',"Success!","You have successfully traded {$cost} Chivalry Tokens for {$protection} minutes of protection.",true,'temple.php');
+		alert('success',"Success!","You have successfully traded " . shortNumberParse($cost) . " Chivalry Tokens for {$protection} minutes of protection.",true,'temple.php');
 		$api->SystemLogsAdd($userid, 'temple', "Traded {$cost} Chivalry Tokens for {$protection} minutes of protection.");
 		$api->UserTakeCurrency($userid,'secondary',$cost);
 		addToEconomyLog('Temple of Fortune', 'token', ($cost)*-1);
@@ -354,22 +387,49 @@ function protection()
 	else
 	{
 		$csrf=request_csrf_html('protection');
-		echo "Write some checks with your mouth that your ass cannot cash? Buying protection might be for you!
+			alert("info","","Write some checks with your mouth that your ass cannot cash? Buying protection might be for you!
 		Protection will make it so you cannot be bombed with small or medium explosives, or be attacked. However, 
-		if you attack another player, you will lose your protection. Its quite simple. <br /><b>Each minute of protection 
-		will cost you 5 Chivalry Tokens.</b> You may not buy more than 60 minutes at a time. So, how many minutes of 
-		protection would you like to buy?<br />
-		<form method='post'>
-			<input type='number' min='1' name='protection' max='60' class='form-control' required='1'>
-			<input type='submit' class='btn btn-primary' value='Buy Protection'>
-			{$csrf}
-		</form>";
+		if you attack another player, you will lose your protection.",false);
+			echo "
+			<form method='post'>
+            <div class='card'>
+                <div class='card-header'>
+                    Each minute of protection will cost you 5 Chivalry Tokens, and you cannot have protection for more than 60 minutes at a time. You currently have " . shortNumberParse($ir['secondary_currency']) . " Chivalry Tokens.
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Protection Time</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <input type='number' min='1' name='protection' max='60' class='form-control' required='1'>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col'>
+                                    <a href='temple.php' class='btn btn-danger btn-block'>Go Back</a>
+                                </div>
+                                <div class='col'>
+                                    <input type='submit' class='btn btn-primary btn-block' value='Buy Protection'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {$csrf}
+            </form>";
 	}
 }
 
 function coppertotoken()
 {
-	global $db,$userid,$api,$h,$set;
+	global $db,$userid,$api,$h,$set,$ir,$gameBuyPrice;
 	if (isset($_POST['token']))
 	{
 		$token = (isset($_POST['token']) && is_numeric($_POST['token'])) ? abs($_POST['token']) : 0;
@@ -382,36 +442,63 @@ function coppertotoken()
 			alert('danger',"Uh Oh!","Please specify how many tokens you wish to purchase.");
 			die($h->endpage());
 		}
-		$cost=$token*$set['token_maximum'];
+		$cost=$token*$gameBuyPrice;
 		if (!$api->UserHasCurrency($userid,'primary',$cost))
 		{
-			alert('danger',"Uh Oh!","You do not have enough Copper Coins to exchange for " . number_format($token) . " Chivalry Tokens. You need " . number_format($cost) . " Copper Coins.");
+		    alert('danger',"Uh Oh!","You do not have enough Copper Coins to exchange for " . shortNumberParse($token) . " Chivalry Tokens. You need " . shortNumberParse($cost) . " Copper Coins.");
 			die($h->endpage());
 		}
 		addToEconomyLog('Temple of Fortune', 'copper', ($cost)*-1);
 		addToEconomyLog('Temple of Fortune', 'token', $token);
+		logTokenMarketAvg($token, $cost);
 		$api->UserTakeCurrency($userid,'primary',$cost);
 		$api->UserGiveCurrency($userid,'secondary',$token);
-		$api->SystemLogsAdd($userid, 'temple', "Traded " . number_format($cost) . " Copper Coins for " . number_format($token) . " Chivalry Tokens.");
-		alert('success',"Success!","You have successfully traded " . number_format($cost) . " Copper Coins for " . number_format($token) . " Chivalry Tokens.",true,'temple.php');
+		$api->SystemLogsAdd($userid, 'temple', "Traded " . shortNumberParse($cost) . " Copper Coins for " . shortNumberParse($token) . " Chivalry Tokens.");
+		alert('success',"Success!","You have successfully traded " . shortNumberParse($cost) . " Copper Coins for " . shortNumberParse($token) . " Chivalry Tokens.",true,'temple.php');
 	}
 	else
 	{
 		$csrf=request_csrf_html('token');
-		echo "You may convert your Copper Coins to Chivalry Tokens at " . number_format($set['token_maximum']) . " Copper Coins per Token. This is to 
-		limit the maximum value of Chivalry Tokens when taking in account for inflation in the game. This price 
-		is very likely to change as the game progresses. How many tokens would you like to receive?
+		echo "
 		<form method='post'>
-			<input type='number' min='1' name='token' class='form-control' required='1'>
-			<input type='submit' class='btn btn-primary' value='Convert to Tokens'>
-			{$csrf}
-		</form>";
+        <div class='card'>
+            <div class='card-header'>
+                You can buy Chivalry Tokens at a price of " . shortNumberParse($gameBuyPrice) . " Copper Coins each. You currently have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.
+            </div>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Chivalry Tokens</b></small>
+                            </div>
+                            <div class='col-12'>
+                                <input type='number' min='1' name='token' class='form-control' required='1'>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                    <div class='col-12'>
+                        <div class='row'>
+                            <div class='col'>
+                                <a href='temple.php' class='btn btn-danger btn-block'>Go Back</a>
+                            </div>
+                            <div class='col'>
+                                <input type='submit' class='btn btn-primary btn-block' value='Buy Tokens'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {$csrf}
+        </form>";
 	}
 }
 
 function tokentocopper()
 {
-	global $db,$userid,$api,$h,$ir,$set;
+	global $db,$userid,$api,$h,$ir,$set,$gameSellPrice;
 	if (isset($_POST['token']))
 	{
 		$token = (isset($_POST['token']) && is_numeric($_POST['token'])) ? abs($_POST['token']) : 0;
@@ -424,30 +511,57 @@ function tokentocopper()
 			alert('danger',"Uh Oh!","Please specify how many tokens you wish to exchange for Copper Coins.");
 			die($h->endpage());
 		}
-		$cost=$token*$set['token_minimum'];
+		$cost=$token*$gameSellPrice;
 		if (!$api->UserHasCurrency($userid,'secondary',$token))
 		{
-			alert('danger',"Uh Oh!","You do not have enough Chivalry Tokens to exchange for " . number_format($cost) . " Copper Coins. You need " . number_format($token) . " Chivalry Tokens.");
+		    alert('danger',"Uh Oh!","You do not have enough Chivalry Tokens to exchange for " . shortNumberParse($cost) . " Copper Coins. You need " . shortNumberParse($token) . " Chivalry Tokens.");
 			die($h->endpage());
 		}
 		$api->UserGiveCurrency($userid,'primary',$cost);
 		$api->UserTakeCurrency($userid,'secondary',$token);
 		addToEconomyLog('Temple of Fortune', 'copper', $cost);
 		addToEconomyLog('Temple of Fortune', 'token', ($token)*-1);
-		$api->SystemLogsAdd($userid, 'temple', "Traded {$token} Chivalry Tokens for " . number_format($cost) . " Copper Coins.");
-		alert('success',"Success!","You have successfully traded " . number_format($token) . " Chivalry Tokens for " . number_format($cost) . " Copper Coins.",true,'temple.php');
+		logTokenMarketAvg($token, $cost);
+		$api->SystemLogsAdd($userid, 'temple', "Traded " . shortNumberParse($token) . " Chivalry Tokens for " . shortNumberParse($cost) . " Copper Coins.");
+		alert('success',"Success!","You have successfully traded " . shortNumberParse($token) . " Chivalry Tokens for " . shortNumberParse($cost) . " Copper Coins.",true,'temple.php');
 	}
 	else
 	{
 		$csrf=request_csrf_html('copper');
-		echo "You may convert your Chivalry Tokens to Copper Coins at " . number_format($set['token_minimum']) . " Copper Coins per Token. This is to 
-		limit the minimum value of Chivalry Tokens when taking in account for inflation in the game. This price 
-		is very likely to change as the game progresses. How many tokens would you like to exchange?
+		echo "
 		<form method='post'>
-			<input type='number' min='1' name='token' max='{$ir['secondary_currency']}' value='{$ir['secondary_currency']}' class='form-control' required='1'>
-			<input type='submit' class='btn btn-primary' value='Convert to Copper'>
-			{$csrf}
-		</form>";
+        <div class='card'>
+            <div class='card-header'>
+                Here you may sell your Chivalry Tokens to the game for " . shortNumberParse($gameSellPrice) . " Copper Coins each. You currently have " . shortNumberParse($ir['secondary_currency']) . " Chivalry Tokens.
+            </div>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Chivalry Tokens</b></small>
+                            </div>
+                            <div class='col-12'>
+                                <input type='number' min='1' name='token' max='{$ir['secondary_currency']}' value='{$ir['secondary_currency']}' class='form-control' required='1'>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                    <div class='col-12'>
+                        <div class='row'>
+                            <div class='col'>
+                                <a href='temple.php' class='btn btn-danger btn-block'>Go Back</a>
+                            </div>
+                            <div class='col'>
+                                <input type='submit' class='btn btn-primary btn-block' value='Sell Tokens'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {$csrf}
+        </form>";
 	}
 }
 
