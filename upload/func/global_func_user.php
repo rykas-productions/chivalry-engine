@@ -715,14 +715,14 @@ function createUser($name,$email,$pw,$gender='Male',$class='Warrior')
 	return $i;
 }
 
-function equipUserSlot($user, $slot, $itemID)
+function equipUserSlot($user, $slot, $itemID, $hush = false)
 {
 	global $db, $api;
 	//Very dirty work around because I'm lazy :D
 	$wepArray = array(slot_armor, slot_badge, slot_prim_wep, slot_second_wep, slot_potion);
 	if (!in_array($slot, $wepArray))
 	{
-		equipUserWearable($user, $slot, $itemID);
+		equipUserWearable($user, $slot, $itemID, $hush);
 	}
 	else
 	{
@@ -730,26 +730,26 @@ function equipUserSlot($user, $slot, $itemID)
 		$itemInfo = $db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$itemID}"));
 		if ($userInfo[$slot] > 0)
 		{
-			unequipUserSlot($user, $slot);
+			unequipUserSlot($user, $slot, $hush);
 		}
         if ($slot != "equip_potion")
 		{
 			$api->UserTakeItem($user, $itemID, 1);
-			setEquipGains($user, $slot, $itemID);
+			setEquipGains($user, $slot, $itemID, $hush);
 		}
 		$db->query("UPDATE `users` SET `{$slot}` = {$itemID} WHERE `userid` = {$user}");
 		$api->SystemLogsAdd($user, 'equip', "Equipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
 	}
 }
 
-function equipUserWearable($user, $slot, $itemID)
+function equipUserWearable($user, $slot, $itemID, $hush = false)
 {
 	global $db, $api;
 	//Very dirty work around because I'm lazy :D
 	$wepArray = array(slot_armor, slot_badge, slot_prim_wep, slot_second_wep, slot_potion);
 	if (in_array($slot, $wepArray))
 	{
-		equipUserSlot($user, $slot, $itemID);
+		equipUserSlot($user, $slot, $itemID, $hush);
 	}
 	else
 	{
@@ -757,9 +757,9 @@ function equipUserWearable($user, $slot, $itemID)
 		$itemInfo = $db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$itemID}"));
 		if ($userInfo > 0)
 		{
-			unequipUserWearable($user, $slot);
+			unequipUserWearable($user, $slot, $hush);
 		}
-        setEquipGains($user, $slot, $itemID);
+        setEquipGains($user, $slot, $itemID, $hush);
 		$api->UserTakeItem($user, $itemID, 1);
 		$db->query("DELETE FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'");
 		$db->query("INSERT INTO `user_equips` (`userid`, `equip_slot`, `itemid`) VALUES ('{$user}', '{$slot}', '{$itemID}')");
@@ -767,13 +767,13 @@ function equipUserWearable($user, $slot, $itemID)
 	}
 }
 
-function unequipUserWearable($user, $slot)
+function unequipUserWearable($user, $slot, $hush = false)
 {
 	global $db, $api;
 	$wepArray = array(slot_armor, slot_badge, slot_prim_wep, slot_second_wep, slot_potion);
 	if (in_array($slot, $wepArray))
 	{
-		unequipUserSlot($user, $slot);
+		unequipUserSlot($user, $slot, $hush);
 	}
 	else
 	{
@@ -782,7 +782,7 @@ function unequipUserWearable($user, $slot)
 		if ($userInfo != 0)
 		{
 		    $itemInfo = $db->fetch_row($db->query("SELECT * FROM `items` WHERE `itmid` = {$itemID}"));
-			undoEquipGains($user, $slot);
+			undoEquipGains($user, $slot, $hush);
 			$api->UserGiveItem($user, $itemID, 1);
 			$db->query("DELETE FROM `user_equips` WHERE `userid` = {$user} AND `equip_slot` = '{$slot}'");
 			$api->SystemLogsAdd($user, 'equip', "Unequipped {$itemInfo['itmname']} as their " . equipSlotParser($slot) . ".");
@@ -791,14 +791,14 @@ function unequipUserWearable($user, $slot)
 	}
 }
 
-function unequipUserSlot($user, $slot)
+function unequipUserSlot($user, $slot, $hush = false)
 {
 	global $db, $api;
 	//Very dirty work around because I'm lazy :D
 	$wepArray = array(slot_armor, slot_badge, slot_prim_wep, slot_second_wep, slot_potion);
 	if (!in_array($slot, $wepArray))
 	{
-		unequipUserWearable($user, $slot);
+		unequipUserWearable($user, $slot, $hush);
 	}
 	else
 	{
@@ -819,7 +819,7 @@ function unequipUserSlot($user, $slot)
 	}
 }
 
-function undoEquipGains($user, $slot, $notify = true)
+function undoEquipGains($user, $slot, $hush = false)
 {
 	global $db, $api;
 	$sbq=$db->query("/*qc=on*/SELECT * FROM `equip_gains` WHERE `userid` = {$user} and `slot` = '{$slot}'");
@@ -862,7 +862,7 @@ function undoEquipGains($user, $slot, $notify = true)
 			    $statloss .= ", {$mod} " . shortNumberParse($sbr['number']) . " " . statParser($sbr['stat']);
 			$db->query("DELETE FROM `equip_gains` WHERE `userid` = {$user} AND `stat` = '{$sbr['stat']}' AND `slot` = '{$slot}'");
 		}
-		if ($notify)
+		if (!$hush)
 		{
     		if (!empty($statloss))
     		{
@@ -873,7 +873,7 @@ function undoEquipGains($user, $slot, $notify = true)
 	}
 }
 
-function setEquipGains($user, $slot, $item)
+function setEquipGains($user, $slot, $item, $hush = false)
 {
 	global $db, $api;
 	$q = $db->query("/*qc=on*/SELECT `itmid`, `itmname`, `effect1`, `effect2`, 
@@ -958,8 +958,9 @@ function setEquipGains($user, $slot, $item)
 			$db->query("INSERT INTO `equip_gains` VALUES ('{$user}', '{$einfo['stat']}', '{$einfo['dir']}', '{$inc}', '{$slot}')");
 		}
 	}
-	if (!empty($txt))
-		$api->GameAddNotification($user, "By equipping the {$r['itmname']} in your " . equipSlotParser($slot) . " slot, you have {$txt}.");	
+	if (!$hush)
+        if (!empty($txt))
+		  $api->GameAddNotification($user, "By equipping the {$r['itmname']} in your " . equipSlotParser($slot) . " slot, you have {$txt}.");	
 }
 
 
