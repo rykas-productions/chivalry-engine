@@ -9,7 +9,7 @@
 */
 require('globals.php');
 //Set cost to travel to a variable
-$cost_of_travel = 15 * levelMultiplier($ir['level'], $ir['reset']);
+$cost_of_travel = round(15 * levelMultiplier($ir['level'], $ir['reset']));
 if ($cost_of_travel > 50)
     $cost_of_travel=50;
 if ($api->UserHasItem($userid,269))
