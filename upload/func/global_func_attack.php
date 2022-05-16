@@ -216,7 +216,7 @@ function handleAttackScrollLogic()
 function handlePerfectionStatBonuses()
 {
     global $ir, $userid, $odata;
-    $specialnumber=((getSkillLevel($userid,1)*3)/100);
+    $specialnumber=((getSkillLevel($ir['userid'],1)*3)/100);
     if ($ir['class'] == 'Warrior')
         $ir['strength'] += ($ir['strength']*$specialnumber);
     if ($ir['class'] == 'Rogue')
@@ -224,7 +224,7 @@ function handlePerfectionStatBonuses()
     if ($ir['class'] == 'Guardian')
         $ir['guard'] += $ir['guard']*$specialnumber;
     
-    $specialnumber2=((getSkillLevel($odata['userid'],1)*3)/100);    //this is the problem line e_e
+    $specialnumber2=((getSkillLevel($_GET['user'],1)*3)/100);    //this is the problem line e_e
     if ($odata['class'] == 'Warrior')
         $odata['strength'] += ($odata['strength']*$specialnumber2);
     if ($odata['class'] == 'Rogue')
@@ -238,6 +238,7 @@ function mirrorEquipsToDefender()
     global $userid, $ir;
     $prim_ring = getUserItemEquippedSlot($userid, slot_prim_ring);
     $sec_ring = getUserItemEquippedSlot($userid, slot_second_ring);
+    $wed_ring = getUserItemEquippedSlot($userid, slot_wed_ring);
     $neck = getUserItemEquippedSlot($userid, slot_necklace);
     $pend = getUserItemEquippedSlot($userid, slot_pendant);
     
@@ -246,6 +247,7 @@ function mirrorEquipsToDefender()
     equipUserSlot($_GET['user'], slot_armor, $ir['equip_armor']);
     equipUserSlot($_GET['user'], slot_prim_ring, $prim_ring);
     equipUserSlot($_GET['user'], slot_second_ring, $sec_ring);
+    equipUserSlot($_GET['user'], slot_wed_ring, $wed_ring);
     equipUserSlot($_GET['user'], slot_necklace, $neck);
     equipUserSlot($_GET['user'], slot_pendant, $pend);
     equipUserSlot($_GET['user'], slot_potion, $ir['equip_potion']);
@@ -301,8 +303,8 @@ function handleDopplegangerLogic()
 
 function setAttackStatus()
 {
-    global $odata, $ir, $userid, $api;
-    $_SESSION['attacking'] = $odata['userid'];
-    $ir['attacking'] = $odata['userid'];
+    global $ir, $userid, $api;
+    $_SESSION['attacking'] = $_GET['user'];
+    $ir['attacking'] = $_GET['user'];
     $api->UserInfoSetStatic($userid, "attacking", $ir['attacking']);
 }
