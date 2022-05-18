@@ -325,22 +325,61 @@ function history()
         die($h->endpage());
     }
     $r = $db->fetch_row($q);
+    if (($r['am_risk'] == 5) || ($r['am_risk'] == 4))
+    {
+        $tick = "Minute";
+        $mp = 1;
+    }
+    if ($r['am_risk'] == 4)
+    {
+        $tick = "Minute";
+        $mp = 5;
+    }
+    if ($r['am_risk'] == 3)
+    {
+        $tick = "Hour";
+        $mp = 1;
+    }
+    if ($r['am_risk'] == 2)
+    {
+        $tick = "Hour";
+        $mp = 6;
+    }
+    if ($r['am_risk'] == 1)
+    {
+        $tick = "Day";
+        $mp = 1;
+    }
     $dataPoints = array();
     $x = 0;
     while ($r2 = $db->fetch_row($q2))
     {
         $x--;
         $y = $r2['new_value'];
-        array_push($dataPoints, array("x" => $x, "y" => $y));
+        array_push($dataPoints, array("x" => $x * $mp, "y" => $y));
     }
     $sharesTotal = returnUserAssetShares($userid, $r['am_id']);
     $totalCost = returnUserAssetCosts($userid, $r['am_id']);
     $currentValue = $sharesTotal * $r['am_cost'];
     
+    //asset info
+    $assetQuery = $db->query("SELECT `shares_owned`, `shares_cost` FROM `asset_market_owned` WHERE `am_id` = {$r['am_id']}");
+    $totalOwned = 0;
+    $totalShareCost = 0;
+    $avgShrCost = 0;
+    while ($rs = $db->fetch_row($assetQuery))
+    {
+        $totalOwned = $totalOwned + $rs['shares_owned'];
+        $totalShareCost = $totalShareCost + ($rs['shares_cost'] * $rs['shares_owned']);
+        
+    }
+    
     $valueClass = (($currentValue >= $totalCost) && ($totalCost > 0)) ? "text-success" : "text-danger";
     $avgCost = 0;
     if ($sharesTotal > 0)
         $avgCost = round($totalCost / $sharesTotal);
+    if ($totalOwned > 0)
+        $avgShrCost = round($totalShareCost / $totalOwned);
     ?>
     <script>
         window.onload = function () {
@@ -362,7 +401,7 @@ function history()
         		lineThickness: 1
         	},
         	axisX: {
-        		title: "Market Ticks"
+        		title: "<?php echo $tick; ?>s ago"
         	},
         	data: data  // random data
         };
@@ -372,30 +411,48 @@ function history()
          
         }
         </script>
-        <div class='card'>
-        	<div class='card-body'>
-            	<div id="chartContainer" style="height: 370px; width: 100%;">
-            	</div>
-        	</div>
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                	<div class='card-body'>
+                		<div class='row'>
+                    		<div class='col-12'>
+                            	<div id="chartContainer" style="height: 370px; width: 100%;">
+                            	</div>
+                    		</div>
+                		</div>
+                	</div>
+                </div>
+            </div>
         </div>
         <br />
         <?php
         echo "
         <div class='row'>
-            <div class='col-12'>
+            <div class='col-12 col-xxl-6'>
                 <div class='card'>
                     <div class='card-header'>
-                        Your Info
+                        {$r['am_name']} Info
                     </div>
                     <div class='card-body'>
                         <div class='row'>
                             <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
                                 <div class='row'>
                                     <div class='col-12'>
-                                        <small><b>Assets Owned</b></small>
+                                        <small><b>Total Shares</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        " . number_format($sharesTotal) . "
+                                        " . shortNumberParse($totalOwned) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Risk Level</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . number_format($r['am_risk']) . "
                                     </div>
                                 </div>
                             </div>
@@ -405,7 +462,7 @@ function history()
                                         <small><b>Avg Cost</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        " . shortNumberParse($avgCost) . " Copper
+                                        " . shortNumberParse($avgShrCost) . " Copper
                                     </div>
                                 </div>
                             </div>
@@ -413,6 +470,58 @@ function history()
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Current Value</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($r['am_cost']) . " Copper
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-xl-4 col-xxl-4 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Total Value</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($totalShareCost) . " Copper
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class='col-12 col-xxl-6'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Your Info
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-4 col-xl-4 col-xxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Assets Owned</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($sharesTotal) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-xl-4 col-xxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Avg Cost</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($avgCost) . " Copper
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-4 col-xl-4 col-xxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Total Value</b></small>
                                     </div>
                                     <div class='col-12 {$valueClass}'>
                                         " . shortNumberParse($currentValue) . " Copper

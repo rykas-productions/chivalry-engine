@@ -151,7 +151,7 @@ function shop()
 													<input class='form-control' type='number' min='1' name='qty' placeholder='Buy quantity' aria-label='Buy Quantity' title='Input buy quantity' />
 												</div>
 												<div class='col-sm-3 col-4'>
-														<input class='btn btn-primary' type='submit' value='Buy' />
+														<input class='btn btn-primary btn-block' type='submit' value='Buy' />
 													</form>
 												</div>
 											</div>

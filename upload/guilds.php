@@ -36,17 +36,13 @@ function menu()
     global $db, $set;
     echo "<h3><i class='game-icon game-icon-dozen'></i> Guild Listing</h3>
 	<a href='?action=create'>Create a Guild - " . shortNumberParse($set['GUILD_PRICE']) . " Copper</a><hr />";
-    echo "<table class='table table-bordered table-striped'>
-    <thead>
-	<tr align='left'>
-		<th width='15%'>Guild</th>
-		<th>Level</th>
-		<th>Members</th>
-		<th>Leader</th>
-        <th>Misc Info</th>
-	</tr>
-    </thead>
-    <tbody>";
+    echo "<div class='row'>
+            <div class='col'>
+            <div class='card'>
+                <div class='card-header'>
+                    Known Guilds
+                </div>
+                <div class='card-body'>";
     $gq = $db->query(
         "/*qc=on*/SELECT `guild_id`, `guild_town_id`, `guild_owner`, `guild_name`, `guild_debt_time`, `guild_primcurr`,
 			`userid`, `username`, `guild_level`, `guild_capacity`, `guild_pic`, `guild_hasarmory`, `guild_ba`
@@ -54,40 +50,103 @@ function menu()
 			LEFT JOIN `users` AS `u` ON `g`.`guild_owner` = `u`.`userid`
 			ORDER BY `g`.`guild_id` ASC");
     //List all the in-game guilds.
-    while ($gd = $db->fetch_row($gq)) {
+    while ($gd = $db->fetch_row($gq)) 
+    {
 		$gd['guild_capacity']=calculateGuildMemberCapacity($gd['guild_id']);
-		$hasarmory = (guildOwnsAsset($gd['guild_id'], "guild_armory")) ? "<span class='text-success'>Armory</span>" : "<span class='text-danger'>No Armory</span>";
+		$hasarmory = (guildOwnsAsset($gd['guild_id'], "guild_armory")) ? "<span class='text-success'>Owns Armory</span>" : "<span class='text-danger'>No Armory</span>";
         $appacc = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Accepting Applications</span>" : "<span class='text-danger'>Recruitment Closed.</span>";
         $indebt = ($gd['guild_primcurr'] > 0) ? "" : "<span class='text-danger'>In Debt</span>";
 		$gd['guild_pic'] = ($gd['guild_pic']) ? "<img src='" . parseImage($gd['guild_pic']) . "' class='img-fluid' style='max-width: 75px;'>" : '';
-        echo "
-		<tr align='left'>
-			<td>
-				{$gd['guild_pic']}<br />
-                <a href='?action=view&id={$gd['guild_id']}'>{$gd['guild_name']}</a>
-			</td>
-			<td>
-				{$gd['guild_level']}
-			</td>
-			<td>";
-        $cnt = number_format($db->fetch_single
-        ($db->query("/*qc=on*/SELECT COUNT(`userid`)
-										FROM `users` 
-										WHERE `guild` = {$gd['guild_id']}")));
-        echo "{$cnt} / {$gd['guild_capacity']}";
-        $gd['username']=parseUsername($gd['userid']);
-        echo "</td>
-			<td>
-				<a href='profile.php?user={$gd['userid']}'>{$gd['username']}</a>
-			</td>
-            <td>
-                {$appacc}<br />
-                {$hasarmory}<br />
-                {$indebt}
-            </td>
-		</tr>";
+		$cnt = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`)
+                    										FROM `users`
+                    										WHERE `guild` = {$gd['guild_id']}")));
+		$gd['username']=parseUsername($gd['userid']);
+        echo "<div class='row'>
+                <div class='col-12 col-md-3 col-xl-2'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <b><small>Guild Name</small></b>
+                        </div>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col col-xl-12'>
+                                    {$gd['guild_pic']}
+                                </div>
+                                <div class='col col-xl-12'>
+                                    <a href='?action=view&id={$gd['guild_id']}'>{$gd['guild_name']}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='col col-xl-2'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <b><small>Guild Level</small></b>
+                        </div>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    {$gd['guild_level']}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='col col-xl-2'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <b><small>Guild Members</small></b>
+                        </div>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    {$cnt} / {$gd['guild_capacity']}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-md col-xl-2'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <b><small>Guild Leader</small></b>
+                        </div>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <a href='profile.php?user={$gd['userid']}'>{$gd['username']}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-xl'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <b><small>Quick Glimpse</small></b>
+                        </div>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-6 col-xl-12'>
+                                    {$appacc}
+                                </div>
+                                <div class='col-6 col-xl-12'>
+                                    {$hasarmory}
+                                </div>
+                                <div class='col-6 col-xl-12'>
+                                    {$indebt}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>";
     }
-    echo "</tbody></table>";
+    echo "</div>
+            </div>
+            </div>
+        </div>";
 
 }
 
