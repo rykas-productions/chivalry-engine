@@ -95,7 +95,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
 			setcookie('lastTrainedStat', 'labor', time() + 86400);
         } elseif ($stat == "all") {
             alert('success', "Success!", "You begin training your Strength, Agility, Guard and Labor all at once. You
-                have gained " . shortNumberParse($gainstr) . " Strength, " . shortNumberParse($gainagl) . " Agility, 
+                have gained " . shortNumberParse($gainstr) . " Strength, " . shortNumberParse($gainagl) . " Agility,
                 " . shortNumberParse($gaingrd) . " Guard and " . shortNumberParse($gainlab) . " Labor. You have
                 {$EnergyLeft} Energy left.");
             $all_select = "selected";
