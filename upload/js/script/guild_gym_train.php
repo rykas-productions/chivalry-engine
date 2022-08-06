@@ -56,6 +56,8 @@ if ($multiplier > (2.5*$multi))
 	else
 		$multiplier = (2.5*$multi);
 }
+if (userHasEffect($userid, effect_daily_gym_bonus))
+    $multiplier = $multiplier + (returnEffectMultiplier($userid, effect_daily_gym_bonus) / 100);
 $statnames = array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor", "All" => "all");
 if (isset($_POST["stat"]) && $_POST["amnt"]) 
 {

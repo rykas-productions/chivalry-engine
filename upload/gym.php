@@ -32,6 +32,16 @@ if (!isset($_GET["amnt"])) {
 }
 $_GET["amnt"] = abs($_GET["amnt"]);
 echo "<h3><i class='game-icon game-icon-weight-lifting-down'></i> The Gym</h3>";
+if ((isset($_GET['daybonus'])) && (!userHasEffect($userid, effect_daily_gym_bonus)))
+{
+    $bonus = Random(1,25);
+    userGiveEffect($userid, effect_daily_gym_bonus, getNextDayReset(), $bonus);
+    alert('success',"","You have received a {$bonus}% training bonus for the day.", false);
+}
+if (!userHasEffect($userid, effect_daily_gym_bonus))
+    alert('warning',"","It appears you have not redeemed your Daily Gym Bonus for the day.",true, "?daybonus", "Redeem Bonus");
+else 
+    alert('primary',"","You are currently receiving a " . returnEffectMultiplier($userid, effect_daily_gym_bonus) . "% training boost until the end of the day.", false);
 echo "<div id='gymsuccess'></div>";
 //Small logic to keep the last trained stat selected.
 if (!isset($str_select)) {

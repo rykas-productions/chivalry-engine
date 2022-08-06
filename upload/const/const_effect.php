@@ -10,6 +10,7 @@ define('basic_protection','basic_protection');
 define('sleep','sleep');
 define('wood_cut_cooldown','wood_cut_cooldown');
 define('effect_mysterious_potion', 'mysterious_potion');
+define('effect_daily_gym_bonus', 'mysterious_potion');
 
 //Farming
 define('farm_well_cooldown','farm_well_cooldown');

@@ -52,6 +52,8 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
 	{
 		$gain = 0;
         $extraecho = '';
+        if (userHasEffect($userid, effect_daily_gym_bonus))
+            $multi = $multi + ((returnEffectMultiplier($userid, effect_daily_gym_bonus) / 100) * 8);
         if ($stat == 'all') 
         {
             $strengthSplit=getCurrentUserPref('strengthSplit', 25);
