@@ -111,16 +111,17 @@ function index()
 				</div>";
 	$q=$db->query("/*qc=on*/SELECT * FROM `bank_investments` WHERE `userid` = {$userid}");
 	$calculatedMax = ceil(1 * levelMultiplier($ir['level']));
-	while ($r = $db->fetch_row($q))
-	{
-		echo "
-		<div class='row'>
-			<div class='col-lg'>
-				<div class='card'>
-					<div class='card-body'>
-						<div class='row'>
+	echo "
+    <div class='card'>
+        <div class='card-header'>
+            Bank Investments (Max: {$calculatedMax})
+        </div>
+        <div class='card-body'>";
+        	while ($r = $db->fetch_row($q))
+        	{
+        	    echo "<div class='row'>
 							<div class='col-8 col-sm-6 col-md-4'>
-								" . number_format($r['amount']) . " Copper Coins
+								" . shortNumberParse($r['amount']) . " Copper Coins
 							</div>
 							<div class='col-4 col-sm-2'>
 								{$r['interest']}%
@@ -131,15 +132,14 @@ function index()
 							<div class='col-12 col-md-3'>
 								<a href='investment.php?terminate={$r['invest_id']}' class='btn btn-danger btn-block'>Terminate</a>
 							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>";
-	}
-	if ($db->num_rows($q) < $calculatedMax)
-	{
-		echo "<hr /><a href='investment.php' class='btn btn-success btn-block'>Start Investment</a>";
-	}
+						</div>";
+        	}
+        	if ($db->num_rows($q) < $calculatedMax)
+        	{
+        	    echo "<hr /><a href='investment.php' class='btn btn-success btn-block'>Start Investment</a>";
+        	}
+        	echo"
+        </div>
+    </div>";
 }
 $h->endpage();
