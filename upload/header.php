@@ -407,7 +407,7 @@ class headers
 	
 	function doLuckRNG()
 	{
-		global $db, $ir, $api, $userid;
+		global $db, $ir, $api, $userid, $set;
 		$luckrng=Random(1,200);
 		//$luckrng=69;
 		if (!isset($_SESSION['lucked_out']))
