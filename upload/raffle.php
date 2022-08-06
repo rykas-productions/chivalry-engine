@@ -18,13 +18,13 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 }
 
 //Config
-	$minimumpot = mt_rand(125000, 350000);			//Minimum pot.
-	$costtoplay = 10000;			//Cost to get a ticket.
-	$addedtopot = 8500;				//How much, out of per ticket, is added to the pot.
-	$add2potformat = shortNumberParse($addedtopot);
-	$cost2playformat = shortNumberParse($costtoplay);
-	$minimumpotformat = shortNumberParse($minimumpot);
-	$currentwinnings = shortNumberParse($set['lotterycash']);
+$minimumpot = mt_rand(125000, 350000);			//Minimum pot.
+$costtoplay = 10000;			//Cost to get a ticket.
+$addedtopot = 8500;				//How much, out of per ticket, is added to the pot.
+$add2potformat = shortNumberParse($addedtopot);
+$cost2playformat = shortNumberParse($costtoplay);
+$minimumpotformat = shortNumberParse($minimumpot);
+$currentwinnings = shortNumberParse($set['lotterycash']);
 	$lotteryid = 28; 				//The Id of conf_id for lotterycash. (Settings table)
 //End config
 
@@ -47,23 +47,61 @@ function lottery_home()
 	global $db, $ir, $c, $userid, $h, $minimumpotformat, $cost2playformat, $add2potformat, $set, $currentwinnings, $api;
 	$csrf=request_csrf_code('lottery_buy');
     $winchance=round((1/$set['raffle_chance'])*100,2);
-	echo 
-		"<h3>Raffle</h3><hr />
-		The pot starts between 125K and 350K Copper Coins. It costs {$cost2playformat} Copper Coins to play. {$add2potformat} Copper Coins is deducted from your 
-		ticket and added into the pot. Whoever gets the lucky ticket will get all the cash in the pot, along with a <a href='iteminfo.php?ID=160'>Badge of Luck</a>. 
-		<u>You have a {$winchance}% chance to win the raffle.</u> Chances are increased very occasionally as you play.<br />
-		<br />
-		<b>Current Pot:</b> {$currentwinnings} Copper Coins<br />
-        <b>Previous Winner:</b> <a href='profile.php?user={$set['raffle_last_winner']}'>" . parseUsername($set['raffle_last_winner']) . "</a> [{$set['raffle_last_winner']}]
-		<br />
-		[<a href='?action=play&verf={$csrf}'>Buy Ticket</a>]";
-		
+    echo "<div class='card'>
+        <div class='card-header'>
+            {$set['WebsiteName']} Raffle <b>(Chance: {$winchance}%)</b>
+        </div>
+        <div class='card-body'>
+            <div class='row'>
+                <div class='col-12'>
+                    The raffle's pot begins between 125K and 350K Copper Coins and increases as players play, a portion of their raffle bet 
+                    going back into the pot. It costs {$cost2playformat} Copper Coins to play, with {$add2potformat} Copper Coins going 
+                    towards the pot. The raffle winner will receive all the Copper Coins in the pot, a <a href='iteminfo.php?ID=160'>Badge of Luck</a>, 
+                    and an in-game announcement congratulating them. <u>Note, that winners cannot participate in the {$set['WebsiteName']} Raffle 
+                    until another winner is declared.</u>
+                </div>
+                <div class='col-12 col-sm-6 col-lg-4 col-xl-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Current Pot</b></small>
+                        </div>
+                        <div class='col-12'>
+                            {$currentwinnings} Copper Coins
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-sm-6 col-lg-4 col-xl'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Previous Winner</b></small>
+                        </div>
+                        <div class='col-12'>
+                            <a href='profile.php?user={$set['raffle_last_winner']}'>"
+                                . parseUsername($set['raffle_last_winner']) . "
+                            </a> [{$set['raffle_last_winner']}]
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-lg-4 col-xl'>
+                    <div class='row'>
+                        <div class='col-12 col-sm-6 col-lg'>
+                            <a href='?action=play&verf={$csrf}' class='btn btn-primary btn-block'>Buy Ticket</a>
+                        </div>
+                        <div class='col-12 col-sm-6 col-lg'>
+                            <a href='explore.php' class='btn btn-danger btn-block'>Explore</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>";
 }
 function lottery_play()
 {
 	global $db, $ir, $c, $userid, $api, $h, $minimumpot, $costtoplay, $addedtopot, $currency, $set, $lotteryid;
 	$chance = Random(1,$set['raffle_chance']);
-	echo "<h3>Raffle</h3>";
+	$winchance=round((1/$set['raffle_chance'])*100,2);
+	echo "<h3>{$set['WebsiteName']} Raffle <b>(Chance: {$winchance}%)</b></h3>";
 	if (!isset($_GET['verf']) || !verify_csrf_code('lottery_buy', stripslashes($_GET['verf'])))
 	{
 		alert('danger',"Uh Oh!","Please do not refresh while playing the raffle.",true,'raffle.php');
@@ -81,12 +119,8 @@ function lottery_play()
     }
 	$increase_chance=Random(1,2);
 	if ($increase_chance == 2)
-	{
 		if ($set['raffle_chance'] > 10)
-		{
 			$db->query("UPDATE `settings` SET `setting_value` = `setting_value` - 1 WHERE `setting_name` = 'raffle_chance'");
-		}
-	}
 	//Pay up, subtracts money from player's cash
 	//then adds {$addedtopot} to the pot.
 	$db->query("UPDATE `settings` SET `setting_value` = `setting_value` + {$addedtopot} WHERE `setting_id` = {$lotteryid}");
