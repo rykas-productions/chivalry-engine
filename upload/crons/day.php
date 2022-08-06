@@ -82,8 +82,7 @@ if ($month == 12)
 {
     if ($day == 1)
     {
-        $api->GameAddAnnouncement("Hey folks! The Advent Calendar is now available on Explore. Make sure you log 
-                                    in every day to get your rewards! Happy holidays!");
+        $api->GameAddAnnouncement("Hey folks! The Advent Calendar is now available on Explore. Make sure you log in every day to get your rewards! Happy holidays!");
     }
 }
 
