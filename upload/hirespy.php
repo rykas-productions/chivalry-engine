@@ -506,13 +506,29 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
     }
 } //Starting form.
 else {
-    echo "You are attempting to hire a spy on " . $api->SystemUserIDtoName($_GET['user']) .
-        ". Spies cost 500 Copper Coins multiplied by their level. (" . number_format(500 * $r['level']) . "
-	in this case.) Success is not guaranteed. If you're successful, you will have a 25% strength and agility buff on your 
-	first strike against " . $api->SystemUserIDtoName($_GET['user']) . ".<br />
-	<form action='?user={$_GET['user']}' method='post'>
-		<input type='hidden' name='do' value='yes'>
-		<input type='submit' class='btn btn-primary' value='Hire Spy'>
-	</form>";
+    echo "
+        <div class='card'>
+            <div class='card-header'>
+                Hiring Spy on " . $api->SystemUserIDtoName($_GET['user']) . " [{$_GET['user']}]
+            </div>
+            <div class='card-body'>
+                Spies are useful to gain information on your enemies, such as their stats or equipment. As such, a spy's 
+                price increases relative to the difficulty of the target. This price is 500 Copper Coins per level the 
+                target has. In the case of " . $api->SystemUserIDtoName($_GET['user']) . ", your cost will be 
+                " . shortNumberParse(500 * $r['level']) . " Copper Coins. Spies are not guaranteed to be successful, 
+                however if are, you will be granted a 25% Strength/Agility buff on your first strike against " . $api->SystemUserIDtoName($_GET['user']) . ".
+                <div class='row'>
+                    <div class='col-12 col-sm'>
+                        <form action='?user={$_GET['user']}' method='post'>
+                    		<input type='hidden' name='do' value='yes'>
+                    		<input type='submit' class='btn btn-primary btn-block' value='Hire Spy'>
+                    	</form>
+                    </div>
+                    <div class='col-12 col-sm'>
+                        <a href='profile.php?user={$_GET['user']}' class='btn btn-danger btn-block'>Go Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>";
 }
 $h->endpage();
