@@ -14,11 +14,14 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	alert('danger',"Uh Oh!","You cannot visit the NPC Battle List while in the infirmary or dungeon.",true,'explore.php');
 	die($h->endpage());
 }
-echo "<h3><i class='game-icon game-icon-guards'></i> NPC Battle List</h3><hr />Welcome to the Bot Tent. Here you may challenge NPCs to battle. If you win, you'll receive
-    an item. These items may or may not be useful in your adventures. To deter players getting massive amounts of items,
-    you can only attack these NPCs every so often. Their cooldown is listed here as well. To receive the item, you must
-    mug the bot.<hr />";
 $query = $db->query("/*qc=on*/SELECT * FROM `botlist` ORDER BY `botuser` ASC");
+echo "<div class='card'>
+    <div class='card-header'>
+        <i class='game-icon game-icon-guards'></i> NPC Battle List
+    </div>
+    <div class='card-body'>
+        This is a list of all known {$set['WebsiteName']} Challenge NPCs. Each bot drops an item to help you travels. There is 
+        a cooldown for item drops, which is also displayed on this list. The item drop is only received when you mug the NPC.<hr />";
 //List all the bots.
 while ($result = $db->fetch_row($query)) 
 {
@@ -40,25 +43,31 @@ while ($result = $db->fetch_row($query))
         $attack = "Cooldown Remaining: " . ParseTimestamp($cooldown);
     } //Player CAN attack the bot.
     else {
-		$attack = "<a href='attack.php?user={$result['botuser']}&ref=bottent' class='btn btn-danger' style='font-size: 1.75rem;'>
+		$attack = "<a href='attack.php?user={$result['botuser']}&ref=bottent' class='btn btn-danger btn-block' style='font-size: 1.75rem;'>
 						<i class='game-icon game-icon-swords-emblem'></i>
-					</a><br />(Odds of Victory {$chance}%)";
+					</a><small>Victory Odds: {$chance}%</small>";
     }
 	echo "
 	<div class='row'>
-		<div class='col'>
+		<div class='col-12 col-sm col-xl-3'>
 			<a href='profile.php?user={$result['botuser']}'>{$botname}</a> [{$result['botuser']}]<br />
-			<small>
-			Level: " . $api->UserInfoGet($result['botuser'], 'level') . "<br />
-			Cooldown: " . ParseTimestamp($result['botcooldown']) . "<br />
-			Drop: " . $api->SystemItemIDtoName($result['botitem']) . "
-			</small>
+            <small>Level: " . $api->UserInfoGet($result['botuser'], 'level') . "</small>
+        </div>
+		<div class='col-12 col-sm'>
+            <div class='row'>
+                <div class='col-12 col-xxxl'>
+		             Cooldown: " . ParseTimestamp($result['botcooldown']) . "
+                </div>
+                <div class='col-12 col-xxxl'>
+	               Drop: " . $api->SystemItemIDtoName($result['botitem']) . "   
+                </div>
+            </div>
 		</div>
-		<div class='col'>
+		<div class='col-12 col-lg-4 col-xl-4'>
 			{$attack}
 		</div>
 	</div>
 	<hr />";
 }
-echo "</table>";
+echo "</div></div>";
 $h->endpage();
