@@ -51,7 +51,7 @@ if (!$itmid) {
 								<h6>Buy (Copper Coins)</h6>
 								<h2>";
 								if ($id['itmbuyprice'] > 0) 
-									echo number_format($id['itmbuyprice']);
+									echo shortNumberParse($id['itmbuyprice']);
 								else
 									echo "N/A";
 								echo"</h2>
@@ -59,7 +59,7 @@ if (!$itmid) {
 								<h6>Sell (Copper Coins)</h6>
 								<h2>";
 								if ($id['itmsellprice'] > 0) 
-									echo number_format($id['itmsellprice']);
+								    echo shortNumberParse($id['itmsellprice']);
 								else
 									echo "N/A";
 								echo "</h2>
@@ -126,7 +126,7 @@ if (!$itmid) {
 								<b>Circulating</b>
 							</div>
 							<div class='col'>
-								" . number_format($total) . "
+								" . shortNumberParse($total) . "
 							</div>
 						</div><br />";
 						$start=0;
@@ -170,7 +170,7 @@ if (!$itmid) {
 									<b>Weapon Rating</b>
 								</div>
 								<div class='col'>
-									" . number_format($id['weapon']) . "
+									" . shortNumberParse($id['weapon']) . "
 								</div>
 							</div><br />";
 						}
@@ -194,7 +194,7 @@ if (!$itmid) {
 									<b>Armor Rating</b>
 								</div>
 								<div class='col'>
-									" . number_format($id['armor']) . "
+									" . shortNumberParse($id['armor']) . "
 								</div>
 							</div><br />";
 						}
