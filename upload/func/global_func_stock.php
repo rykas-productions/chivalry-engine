@@ -127,7 +127,6 @@ function runMarketTick($riskLevel)
             }
             $newVal = clamp(($r['am_cost'] + $change), 0, $r['am_max']);
             $newVal = ($newVal == 0) ? $r['am_start'] : $newVal;
-            $assetAlert = getUserPref($r2['userid'], 'assetAlert', 'true');
             //Force sell on crash.
             if ($newVal == 0)
             {
@@ -135,6 +134,7 @@ function runMarketTick($riskLevel)
                 $alreadyNotif = array();
                 while ($r2 = $db->fetch_row($q2))
                 {
+                    $assetAlert = getUserPref($r2['userid'], 'assetAlert', 'true');
                     removeUserShares($r2['userid'], $r['am_id'], $r2['shares_owned']);
                     if ($assetAlert == 'true')
                     {
