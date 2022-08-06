@@ -192,6 +192,8 @@ function buypower()
     if (isset($_POST['sets']) && ($_POST['sets'] > 0)) {
         $sets = abs($_POST['sets']);
         $totalcost = $sets * $CostForPower;
+        if (reachedMonthlyDonationGoal())
+            $totalcost = round($totalcost / 2);
         if ($sets > $MUS['buyable_power']) {
             alert('danger', "Uh Oh!", "You are trying to buy more sets of power than you currently have available to you.");
             die($h->endpage());
@@ -209,15 +211,24 @@ function buypower()
             alert('success', "Success!", "You have traded " . number_format($totalcost) . " Chivalry Tokens for {$sets} of mining power.", true, 'mine.php');
         }
     } else {
-        echo "You can buy {$MUS['buyable_power']} sets of mining power. One set is equal to 10 mining power. You unlock
-            more sets by leveling your mining level. Each set will cost you " . number_format($CostForPower) . " Chivalry Tokens.
-            How many do you wish to buy?";
-        echo "<br />
-        <form method='post'>
-            <input type='number' class='form-control' value='{$MUS['buyable_power']}' min='1' max='{$MUS['buyable_power']}' name='sets' required='1'>
-            <br />
-            <input type='submit' class='btn btn-primary' value='Buy Power'>
-        </form>";
+        echo"<div class='row'>
+            <div class='col-12'>
+            <div class='card'>
+                <div class='card-header'>
+                    Purchase Mining Power Sets <b>(Available: {$MUS['buyable_power']})</b>
+                </div>
+                <div class='card-body'>
+                    You may increase your maximum mining power by purchasing Mining Power Sets. Each set is equal to 10 Mining Power.
+                    More mining sets may be unlocked while mining or other game events. Each Mining Power Set will cost you 
+                    " . number_format($CostForPower) . " Chivlary Tokens. How many Mining Power Sets do you wish to buy?
+                    <form method='post'>
+                        <input type='number' class='form-control' value='{$MUS['buyable_power']}' min='1' max='{$MUS['buyable_power']}' name='sets' required='1'>
+                        <br />
+                        <input type='submit' class='btn btn-primary btn-block' value='Buy Power'>
+                    </form>
+                </div>
+            </div>
+    </div></div>";
     }
 }
 
@@ -238,6 +249,8 @@ function mine()
             if (userHasEffect($userid, constant("holiday_mining_energy")))
                 $energyCost = $energyCost - (returnEffectMultiplier($userid, constant("holiday_mining_energy")) * 0.2);
 			$MSI['mine_power_use'] = $MSI['mine_power_use'] * $energyCost;
+			if (reachedMonthlyDonationGoal())
+			    $MSI['mine_power_use'] = round($MSI['mine_power_use'] / 2);
 			$nextspot=$spot+1;
 			$nextmineslevel = $db->fetch_single($db->query("SELECT `mine_level` FROM `mining_data` WHERE `mine_id` = {$nextspot}"));
 			/*if ($MSI['mine_level'] >= $nextmineslevel)
