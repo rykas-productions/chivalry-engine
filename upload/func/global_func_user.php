@@ -335,24 +335,36 @@ function returnMaxInterest($user)
 
 function getCurrentUserPref($prefName, $defaultValue)
 {
-	global $userid, $db;
-	$q=$db->query("SELECT `value` FROM `user_pref` WHERE `preference` = '{$prefName}' AND `userid` = {$userid}");
-	if ($db->num_rows($q) == 0)
-	{
-		$db->query("INSERT INTO `user_pref` (`userid`, `preference`, `value`) VALUES ('{$userid}', '{$prefName}', '{$defaultValue}')");
-		return $defaultValue;
-	}
-	else
-	{
-		return $db->fetch_single($q);
-	}
+	global $userid;
+	return getUserPref($userid, $prefName, $defaultValue);
 }
 
 function setCurrentUserPref($prefName, $value)
 {
-	global $userid, $db;
-	getCurrentUserPref($prefName, $value);
-	$db->query("UPDATE `user_pref` SET `value` = '{$value}' WHERE `userid` = {$userid} AND `preference` = '{$prefName}'");
+	global $userid;
+	setUserPref($userid, $prefName, $value);
+}
+
+function getUserPref($user, $prefName, $defaultValue)
+{
+    global $db;
+    $q=$db->query("SELECT `value` FROM `user_pref` WHERE `preference` = '{$prefName}' AND `userid` = {$user}");
+    if ($db->num_rows($q) == 0)
+    {
+        $db->query("INSERT INTO `user_pref` (`userid`, `preference`, `value`) VALUES ('{$user}', '{$prefName}', '{$defaultValue}')");
+        return $defaultValue;
+    }
+    else
+    {
+        return $db->fetch_single($q);
+    }
+}
+
+function setUserPref($user, $prefName, $value)
+{
+    global $db;
+    getUserPref($user, $prefName, $value);
+    $db->query("UPDATE `user_pref` SET `value` = '{$value}' WHERE `userid` = {$user} AND `preference` = '{$prefName}'");
 }
 
 //Returns remaining XP to have inserted into the user's xp.
@@ -1303,6 +1315,8 @@ function doHourlyJobRewards()
             $multi = 1.0;
             if ($r['laston'] > $lastHr)
                 $multi = $multi + 0.33;
+            if (reachedMonthlyDonationGoal())
+                $multi = $multi + 0.5;
             $jr = $db->fetch_row($db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$r['jobrank']}"));
             if ($jr['jrPRIMPAY'] > 0)
             {
@@ -1316,4 +1330,66 @@ function doHourlyJobRewards()
             }
         }
     }
+}
+
+function doHealthRegenTick()
+{
+    global $db;
+    $q = $db->query("SELECT `userid`, `maxhp`, `hp` FROM `users` WHERE `hp` < `maxhp`");
+    while ($r = $db->fetch_row($q))
+    {
+        $q2 = $db->query("SELECT * FROM `activeBosses` WHERE `boss_user` = {$r['userid']}");
+        if ($db->num_rows($q2) == 0)
+        {
+            //HP Refill
+            $db->query("UPDATE `users` SET `hp` = `hp` + (`maxhp` / 2) WHERE `userid` = {$r['userid']}");
+        }
+    }
+    $db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `hp` > `maxhp`");
+}
+
+function generateMerchantData($userid)
+{
+    global $db;
+    $maxitem=$db->query("/*qc=on*/SELECT `itmid` FROM `items`
+					ORDER BY `itmid` DESC LIMIT 1");
+    $item=$db->fetch_single($maxitem);
+    $weapon = 0;
+    $armor = 0;
+    
+    
+    $stock = array();
+    //select a weapon for user
+    while ($weapon == 0)
+    {
+        $random=Random(1,$item);
+        $q=$db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmid` = {$random} AND `itmtype` = 1 AND `itmbuyable` = 'true'");
+        if ($db->num_rows($q) > 0)
+        {
+            $weapon = $random;
+        }
+    }
+    
+    //select armor for user
+    while ($armor == 0)
+    {
+        $random=Random(1,$item);
+        $q=$db->query("/*qc=on*/SELECT * FROM `items` WHERE `itmid` = {$random} AND `itmtype` = 2 AND `itmbuyable` = 'true'");
+        if ($db->num_rows($q) > 0)
+        {
+            $armor = $random;
+        }
+    }
+    
+    $time = time() + 8 * 60 * 60;
+    array_push($stock, array("item" => $weapon,"qty" => Random(1,3)), array("item" => $armor, "qty" => Random(1,3)), 
+        array("item" => -1,"qty" => Random(500,5000)), array("item" => 23,"qty" => Random(25,100)), 
+        array("item" => 296,"qty" => Random(15,75)), array("item" => 410,"qty" => Random(5,35)));
+    $stockJson = json_encode($stock);
+    $mercQuery = $db->query("SELECT * FROM `merchant_user_data` WHERE `mu_user` = {$userid}");
+    if ($db->num_rows($mercQuery) == 0)
+        $db->query("INSERT INTO `merchant_user_data` (`mu_user`, `mu_stage`, `mu_time`, `mu_stock`) VALUES ('{$userid}', '0', '{$time}', '{$stockJson}')");
+    else
+        $db->query("UPDATE `merchant_user_data` SET `mu_stock` = '{$stockJson}', `mu_time` = '{$time}', `mu_stage` = 0 WHERE `mu_user` = {$userid}");
+    return $stock;
 }
