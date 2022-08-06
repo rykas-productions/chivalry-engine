@@ -17,7 +17,7 @@ if (isset($_GET['user']))
 		alert('danger',"Uh Oh!","The user you're trying to donate for does not exist.");
 		die($h->endpage());
 	}
-	$goal=15;
+	$goal=$_CONFIG['donationGoal'];
 	$progress=round(($set['MonthlyDonationGoal']/$goal)*100);
 	$bg = ($set['MonthlyDonationGoal'] >= $goal) ? "bg-success" : "" ;
 	$set['MonthlyDonationGoal']=round($set['MonthlyDonationGoal'],2);
@@ -26,6 +26,9 @@ if (isset($_GET['user']))
         <div class='col-12'>
             <div class='card'>
                 <div class='card-body'>
+                    <div class='row'>
+                        This is the monthly donation goal. If we meet/exceed this value, numerous benefits will be unlocked for all players for the remainder of the month!
+                    </div>
                     <div class='progress' style='height: 1rem;'>
                 		<div class='progress-bar {$bg}' role='progressbar' aria-valuenow='{$set['MonthlyDonationGoal']}' aria-valuemin='0' aria-valuemax='{$goal}' style='width: {$progress}%'>
                 			<span>
