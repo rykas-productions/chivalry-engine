@@ -48,5 +48,25 @@ echo "<form method='post'>
             </div>
         </div>
     </div>
-</form>";
+</form><br />";
+$q2 = $db->query("SELECT * FROM `promo_codes_claimed` WHERE `userid` = {$userid}");
+if ($db->num_rows($q2) > 0)
+{
+    echo "<div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Redeemed Promo Codes
+                    </div>
+                    <div class='card-body'>";
+                            while ($r = $db->fetch_row($q2))
+                            {
+                                $promoname = $db->fetch_single($db->query("SELECT `promo_code` FROM `promo_codes` WHERE `promo_id` = {$r['promo_id']}"));
+                                echo "<div class='row'><div class='col-12'>" . strtoupper($promoname). "</div></div>"; 
+                            }
+                   echo" </div>
+                </div>
+            </div>
+           </div>";
+}
 $h->endpage();
