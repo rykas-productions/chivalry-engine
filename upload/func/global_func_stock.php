@@ -127,6 +127,7 @@ function runMarketTick($riskLevel)
             }
             $newVal = clamp(($r['am_cost'] + $change), 0, $r['am_max']);
             $newVal = ($newVal == 0) ? $r['am_start'] : $newVal;
+            $assetAlert = getUserPref($r2['userid'], 'assetAlert', 'true');
             //Force sell on crash.
             if ($newVal == 0)
             {
@@ -135,12 +136,15 @@ function runMarketTick($riskLevel)
                 while ($r2 = $db->fetch_row($q2))
                 {
                     removeUserShares($r2['userid'], $r['am_id'], $r2['shares_owned']);
-                    if (!in_array($r2['userid'], $alreadyNotif))
+                    if ($assetAlert == 'true')
                     {
-                        $notifText = "The {$r['am_name']} asset has crashed and your " . number_format($r2['shares_owned']) . " shares 
-                            of {$r['am_name']} have been voided and your original investment is lost";
-                        $api->GameAddNotification($r2['userid'], $notifText);
-                        array_push($alreadyNotif, $r2['userid']);
+                        if (!in_array($r2['userid'], $alreadyNotif))
+                        {
+                            $notifText = "The {$r['am_name']} asset has crashed and your " . number_format($r2['shares_owned']) . " shares 
+                                of {$r['am_name']} have been voided and your original investment is lost";
+                            $api->GameAddNotification($r2['userid'], $notifText);
+                            array_push($alreadyNotif, $r2['userid']);
+                        }
                     }
                     //$api->GameAddNotification(1, "{$r['am_name']} has crashed.");
                 }
@@ -148,7 +152,8 @@ function runMarketTick($riskLevel)
             
             if (($newVal <= $r['am_min']) && ($newVal >= $r['am_min'] - (5 / 100)))
             {
-                stockNotifDrop($r['am_id']);
+                if ($assetAlert == 'true')
+                    stockNotifDrop($r['am_id']);
                 //$api->GameAddNotification(1, "{$r['am_name']} is failing.");
             }
             
