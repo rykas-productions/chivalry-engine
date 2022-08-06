@@ -1257,14 +1257,15 @@ function masspay()
             die($h->endpage());
         }
         $q = $db->query("/*qc=on*/SELECT `userid`,`username` FROM `users` WHERE `user_level` != 'NPC'");
+        $paid = 0;
         while ($r = $db->fetch_row($q)) {
             $api->UserGiveCurrency($r['userid'], 'primary', $primary);
             $api->UserGiveCurrency($r['userid'], 'seconday', $secondary);
-            $api->GameAddNotification($r['userid'], "The administration has given a mass payment of {$primary} Copper Coins and/or {$secondary} Chivalry Tokens to the game.");
-            echo "Successfully paid {$r['username']}.<br />";
+            $api->GameAddNotification($r['userid'], "The administration has given a mass payment of " . shortNumberParse($primary) . " Copper Coins and/or " . shortNumberParse($secondary) . " Chivalry Tokens to the game.");
+            $paid++;
         }
-        alert('success', 'Success!', "You have successfully mass paid the game.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} Chivalry Tokens.");
+        alert('success', 'Success!', "You have successfully sent a mass payment of " . shortNumberParse($primary) . " Copper Coins and/or " . shortNumberParse($secondary) . " Chivalry Tokens to {$paid} players.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Sent mass payment of " . shortNumberParse($primary) . " Copper Coins and/or " . shortNumberParse($secondary) . " Chivalry Tokens to {$paid} players.");
     } else {
         $csrf = request_csrf_html('staff_masspay');
         echo "<table class='table table-bordered'>
