@@ -24,9 +24,7 @@ $db->query("UPDATE `mining` SET `miningpower`=`max_miningpower` WHERE `miningpow
 //Brave Refill
 $db->query("UPDATE `users` SET `brave`=`brave`+((`maxbrave`/10)+0.5) WHERE `brave`<`maxbrave`");
 $db->query("UPDATE `users` SET `brave`=`maxbrave` WHERE `brave`>`maxbrave`");
-//HP Refill
-$db->query("UPDATE users SET hp=hp+(maxhp/2) WHERE hp<maxhp");
-$db->query("UPDATE users SET hp=maxhp WHERE hp>maxhp");
+
 //Energy Refill
 $db->query("UPDATE users SET energy=energy+(maxenergy/(6)) WHERE energy<maxenergy AND vip_days=0");
 $db->query("UPDATE users SET energy=energy+(maxenergy/(3)) WHERE energy<maxenergy AND vip_days>0");
@@ -43,6 +41,7 @@ $increase = $set['cutter_capacity_max'] * 0.02;
 $db->query("UPDATE `settings` SET `setting_value` =  `setting_value` + {$increase} WHERE `setting_name` = 'cutter_capacity'");
 $db->query("UPDATE `settings` SET `setting_value` = {$set['cutter_capacity_max']} WHERE `setting_name` = 'cutter_capacity' AND `setting_value` > {$set['cutter_capacity_max']}");
 
+doHealthRegenTick();
 fiveMinuteFarm();
 runMarketTick(4);   //med-high risk market
 ?>
