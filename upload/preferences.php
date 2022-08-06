@@ -41,6 +41,9 @@ switch ($_GET['action']) {
 	case 'forumalert':
         forumalert();
         break;
+	case 'assetalert':
+	    assetalert();
+	    break;
     case 'tuttoggle':
         tuttoggle();
         break;
@@ -192,6 +195,9 @@ function prefs_home()
                         <div class='row'>
                             <div class='col-12 col-sm-6 col-lg-12'>
                                 <a class='btn btn-primary btn-block' href='?action=forumalert'>Forum Notifications</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=assetalert'>Asset Notifications</a><br />
                             </div>
                             <div class='col-12 col-sm-6 col-lg-12'>
                                 <a class='btn btn-primary btn-block' href='?action=emailchange'>Email Opt Setting</a><br />
@@ -787,6 +793,61 @@ function forumalert()
             <input type='hidden' value='enable' name='do'>
             <input type='submit' class='btn btn-primary' value='Enable Notifications'>
         </form>";
+    }
+}
+
+function assetalert()
+{
+    global $db,$userid,$api,$h;
+    $assetPref=getCurrentUserPref('assetAlerts', 'true');
+    if (isset($_POST['do']))
+    {
+        if ($_POST['do'] == 'disable')
+        {
+            setCurrentUserPref('assetAlerts', 'false');
+            alert('success',"Success!","You have successfully disabled asset market notifications.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Disabled asset notifications.");
+        }
+        else
+        {
+            $db->query("UPDATE `user_settings` SET `forum_alert` = 1 WHERE `userid` = {$userid}");
+            setCurrentUserPref('assetAlerts', 'true');
+            alert('success',"Success!","You have successfully enabled asset market notifications.",true,'preferences.php');
+            $api->SystemLogsAdd($userid, 'preferences', "Enabled asset notifications.");
+        }
+    }
+    else
+    {
+        $opt = ($assetPref == 'true') ? "in" : "out";
+        echo "
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Asset Notification Toggle
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                You may disable or enable the asset market notifications here. You are currently opt-{$opt} for asset notifications.
+                            </div>
+                            <div class='col-12 col-sm-6'>
+                                <form method='post'>
+                                    <input type='hidden' value='disable' name='do'>
+                                    <input type='submit' class='btn btn-danger btn-block' value='Disable Notifications'>
+                                </form>
+                            </div>
+                            <div class='col-12 col-sm-6'>
+                                <form method='post'>
+                                    <input type='hidden' value='enable' name='do'>
+                                    <input type='submit' class='btn btn-success btn-block' value='Enable Notifications'>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>";
     }
 }
 
