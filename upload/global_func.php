@@ -30,6 +30,15 @@ foreach ($dir as $func)
 	@param int $time_stamp for time since.
 	@param boolean $ago to display the "ago" after the string. (Default = true)
 */
+
+function reachedMonthlyDonationGoal()
+{
+    global $set, $_CONFIG;
+    if ($set['MonthlyDonationGoal'] <= $_CONFIG['donationGoal'])
+        return true;
+    else
+        return false;
+}
 function DateTime_Parse($time_stamp, $ago = true, $override = false)
 {
     //Check if $time_stamp is 0, if true, return N/A
