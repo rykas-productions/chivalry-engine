@@ -96,17 +96,43 @@ if (isset($_POST['open']))
 		}
 	}
 	$db->query("UPDATE `user_settings` SET `autobum` = `autobum` - {$_POST['open']}, `searchtown` = `searchtown` - {$_POST['open']} WHERE `userid` = {$userid}");
-	echo "After beggings on the streets {$number} times, you have gained the following:<br />
-		" . shortNumberParse($copper) . " Copper Coins<br />
-		" . shortNumberParse($tokens) . " Chivalry Tokens<br />
-		" . number_format($fish) . " Fish<br />
-		" . number_format($apple) . " Apple(s)<br />
-		" . number_format($ham) . " Ham Shank(s)<br />
-		" . number_format($choco) . " Chocolate Bar(s)<br />
-		" . number_format($rock) . " Heavy Rock(s)<br />
-		" . number_format($stick) . " Sharpened Sticks<br />
-		" . number_format($bucket) . " Empty Buckets<br />
-		" . number_format($log) . " Wood Logs<br />";
+	echo "<div class='card'>
+            <div class='card-header'>
+                After " . shortNumberParse($number) . " Street beg attempts...
+            </div>
+            <div class='card-body'>
+                <i>You've gained the following...</i>
+                <div class='row'>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($copper) . " Copper Coins
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($tokens) . " Chivalry Tokens
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($fish) . " Fish
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($apple) . " Apples
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                        " . shortNumberParse($ham) . " Ham Shanks
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                        " . shortNumberParse($choco) . " Chocolate Bars
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                        " . shortNumberParse($rock) . " Heavy Rocks
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($bucket) . " Empty Buckets
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+                        " . shortNumberParse($log) . " Wood Logs
+                    </div>
+                </div>
+            </div>
+    </div>";
 	
 	//Give rewards
 	$api->UserGiveCurrency($userid,'primary',$copper);
@@ -138,12 +164,24 @@ if (isset($_POST['open']))
 else
 {
 	$maxnumber = ($ir['autobum'] > $ir['searchtown']) ? $ir['searchtown'] : $ir['autobum'] ;
-	echo "You wanna bum automatically? Too lazy to actually beg, lol? You can beg " . number_format($ir['searchtown']) . " times as of this moment. You 
-	currently have " . number_format($ir['autobum']) . " automatic beggings left on your account.
-	<br />
-	<form method='post'>
-		<input type='number' min='1' max='{$maxnumber}' name='open' class='form-control' required='1' value='{$maxnumber}'>
-		<input type='submit' value='Beg' class='btn btn-primary'>
-	</form>";
+	echo "<div class='card'>
+            <div class='card-header'>
+                Auto Street Begger (" . shortNumberParse($ir['autobum']) . " remaining)
+            </div>
+            <div class='card-body'>
+                How many attempts do you wish to automatically street beg? You may beg up to a maximum of 
+                " . shortNumberParse($maxnumber) . " at this time.
+                <form method='post'>
+                <div class='row'>
+                    <div class='col-12 col-sm'>
+                        <input type='number' min='1' max='{$maxnumber}' name='open' class='form-control' required='1' value='{$maxnumber}'>
+                    </div>
+                    <div class='col-12 col-sm'>
+                        <input type='submit' value='Start Begging' class='btn btn-primary btn-block'>
+                    </div>
+                </div>
+                </form>
+            </div>
+    </div>";
 }
 $h->endpage();

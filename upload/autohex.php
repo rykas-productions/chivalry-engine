@@ -2,6 +2,8 @@
 $macropage = ('autohex.php');
 $multipler = 1.0;
 require('globals.php');
+if (reachedMonthlyDonationGoal())
+    $multipler = $multipler + 0.5;
 if ($ir['autohex'] == 0)
 {
 	alert('danger',"Uh Oh!","You need to have an Auto Hexbag Opener redeemed on your account to use this feature.",true,'explore.php');
@@ -135,31 +137,64 @@ if (isset($_POST['open']))
 			$borg=$borg+$bor;
 		}
         elseif ($chance == 94)
-		{
-			$notes=$notes+1;
-		}
+			$notes++;
 		else
-		{
-			$nothing=$nothing+1;
-		}
+			$nothing++;
 	}
 	$db->query("UPDATE `users` SET `hexbags` = `hexbags` - {$_POST['open']} WHERE `userid` = {$userid}");
 	$db->query("UPDATE `user_settings` SET `autohex` = `autohex` - {$_POST['open']} WHERE `userid` = {$userid}");
-	echo "After automatically opening {$number} Hexbags, you have gained the following:<br />
-		" . shortNumberParse($copper) . " Copper Coins<br />
-		" . shortNumberParse($tokens) . " Chivalry Tokens<br />
-		" . number_format($dungeon) . " minutes in the dungeon.<br />
-		" . number_format($infirmary) . " minutes in the infirmary.<br />
-		" . number_format($leeches) . " Leeches<br />
-		" . number_format($lockpicks) . " Lockpicks.<br />
-        " . number_format($rocks) . " Heavy Rocks.<br />
-		" . number_format($sticks) . " Sharpened Sticks.<br />
-		" . shortNumberParse($strength) . " strength.<br />
-		" . shortNumberParse($agility) . " agility.<br />
-		" . shortNumberParse($guard) . " guard.<br />
-		" . number_format($borg) . " Boxes of Random.<br />
-        " . number_format($notes) . " Assassination Notes.<br />
-		" . number_format($nothing) . " Hexbags had nothing in them.";
+	echo "<div class='card'>
+            <div class='card-header'>
+                Opening " . shortNumberParse($number) . " Hexbags...
+            </div>
+            <div class='card-body'>
+                <i>You've gained the following...</i>
+                <div class='row'>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($copper) . " Copper Coins
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($tokens) . " Chivalry Tokens
+                    </div>
+                    <div class='text-danger col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($dungeon) . " Dungeon minutes
+                    </div>
+                    <div class='text-danger col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($infirmary) . " Infirmary minutes
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                        " . shortNumberParse($leeches) . " Leeches
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                        " . shortNumberParse($lockpicks) . " Lockpicks
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                        " . shortNumberParse($rocks) . " Heavy Rocks
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($sticks) . " Sharpened Sticks
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+                        " . shortNumberParse($strength) . " Strength
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+                        " . shortNumberParse($agility) . " Agility
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+                        " . shortNumberParse($guard) . " Guard
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($borg) . " Boxes of Random
+                    </div>
+                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                        " . shortNumberParse($notes) . " Assassination Notes
+                    </div>
+                    <div class='text-danger col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                        " . shortNumberParse($nothing) . " Empty Hexbags
+                    </div>
+                </div>
+            </div>
+    </div>";
 	$api->UserGiveCurrency($userid,'primary',$copper);
 	$api->UserGiveCurrency($userid,'secondary',$tokens);
 	addToEconomyLog('Hexbags', 'copper', $copper);
@@ -196,12 +231,24 @@ if (isset($_POST['open']))
 else
 {
 	$maxnumber = ($ir['autohex'] > $ir['hexbags']) ? $ir['hexbags'] : $ir['autohex'] ;
-	echo "How many Hexbags would you like to open in an automated fashion? You can open {$ir['hexbags']} Hexbags today. You 
-	currently have {$ir['autohex']} uses left on your Auto Hexbag Opener.
-	<br />
-	<form method='post'>
-		<input type='number' min='1' max='{$maxnumber}' name='open' class='form-control' required='1' value='{$maxnumber}'>
-		<input type='submit' value='Open Hexbags' class='btn btn-primary'>
-	</form>";
+	echo "<div class='card'>
+            <div class='card-header'>
+                Auto Hexbag Opener (" . shortNumberParse($ir['autohex']) . " remaining)
+            </div>
+            <div class='card-body'>
+                How many Hexbags would you like to open in an automated fashion? You may open a maximum of 
+                " . shortNumberParse($maxnumber) . " Hexbags at this moment.
+                <form method='post'>
+                <div class='row'>
+                    <div class='col-12 col-sm'>
+                        <input type='number' min='1' max='{$maxnumber}' name='open' class='form-control' required='1' value='{$maxnumber}'>
+                    </div>
+                    <div class='col-12 col-sm'>
+                        <input type='submit' value='Open Hexbags' class='btn btn-primary btn-block'>
+                    </div>
+                </div>
+                </form>
+            </div>
+    </div>";
 }
 $h->endpage();
