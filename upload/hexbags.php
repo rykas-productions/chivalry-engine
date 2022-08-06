@@ -9,7 +9,8 @@
 $macropage = ('hexbags.php');
 $multipler=1.0;
 require('globals.php');
-echo "<h3><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags</h3><hr />";
+if (reachedMonthlyDonationGoal())
+    $multipler = $multipler + 0.5;
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
