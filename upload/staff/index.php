@@ -690,6 +690,9 @@ echo "<div class='col-12 col-lg-6 col-xxl-4 col-xxxl-2'>
                         if ($api->UserMemberLevelGet($userid, 'assistant')) 
                         {
                             echo "<div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xxxl-3'>
+                                    <a href='staff_fedjail.php?action=viewappeal' class='btn btn-primary btn-block'>Fed Dungeon Appeals</a><br />
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xxxl-3'>
                                     <a href='staff_punish.php?action=editfedjail' class='btn btn-warning btn-block'>Edit Fed Sentence</a><br />
                                 </div>
                                 <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xxxl-3'>
