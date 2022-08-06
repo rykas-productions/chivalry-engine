@@ -154,6 +154,16 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
+                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Active Polls</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($activePolls) . "
+                            </div>
+                        </div>
+                    </div>
                 </div>
 			</div>
 		</div>

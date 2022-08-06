@@ -65,3 +65,5 @@ $avgprice = $totalcost / $totaltokens;
 
 //total estates owned
 $TotalEstatesOwned = $db->fetch_single($db->query("SELECT COUNT(`ue_id`) FROM `user_estates` WHERE `estate` > 1"));
+//active polls
+$activePolls = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`id`) FROM `polls` WHERE `active` = '1' AND `visibility` = 0"));
