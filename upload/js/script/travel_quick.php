@@ -47,7 +47,7 @@ elseif ($ir['location'] == $destination)
     alert('danger', "Uh Oh!", "Why would you want to travel to the town you're already in.", false);
     die($h->endpage());
 }
-$q = $db->query("/*qc=on*/SELECT `town_name` FROM `town` WHERE `town_id` = {$_GET['to']} AND `town_min_level` <= {$ir['level']}");
+$q = $db->query("/*qc=on*/SELECT `town_name` FROM `town` WHERE `town_id` = {$_POST['to']} AND `town_min_level` <= {$ir['level']}");
 
 if (!$db->num_rows($q)) 
 {
@@ -55,7 +55,7 @@ if (!$db->num_rows($q))
     die($h->endpage());
 }
 $api->UserTakeCurrency($userid,'secondary',$cost_of_travel);
-$db->query("UPDATE `users` SET `location` = {$_GET['to']} WHERE `userid` = {$userid}");
+$db->query("UPDATE `users` SET `location` = {$_POST['to']} WHERE `userid` = {$userid}");
 $cityName = $db->fetch_single($q);
 //Tell user they have traveled successfully.
 alert('success', "Success!", "You have successfully paid " . number_format($cost_of_travel) . " Chivalry Tokens to take a horse to {$cityName}.", false);
