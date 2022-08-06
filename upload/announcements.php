@@ -13,6 +13,11 @@ $viewcount=getCurrentUserPref('announceView',1000);
 $AnnouncementCount = $ir['announcements'];
 //Select all data from the announcements data table.
 $q = $db->query("SELECT * FROM `announcements` ORDER BY `ann_time` DESC LIMIT {$viewcount}");
+echo "<div class='card'>
+    <div class='card-header'>
+        {$set['WebsiteName']} Announcements <span class='badge badge-pill badge-danger'>{$AnnouncementCount}</span>
+    </div>
+    <div class='card-body'>";
 while ($r = $db->fetch_row($q)) {
     //If announcements unread is greater than 0, show unread badge.
     if ($AnnouncementCount > 0) {
@@ -23,25 +28,25 @@ while ($r = $db->fetch_row($q)) {
         $new = "";
     }
     //Select announcement poster's name.
-    $PosterQuery = $db->query("SELECT `username`
-                                FROM `users` 
-                                WHERE `userid` = {$r['ann_poster']}");
+    $PosterQuery = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$r['ann_poster']}");
     $Poster = $db->fetch_single($PosterQuery);
     //Parse the announcement time into a user friendly timestamp.
     $AnnouncementTime = DateTime_Parse($r['ann_time']);
     //Make the announcement text safe for the users to read, in case of staff panel compromise.
     $parser->parse($r['ann_text']);
-    
-        echo "
-        <div class='card'>
-            <div class='card-body'>
-                <p class='card-text'>{$new}" . $parser->getAsHtml() . "</p>
-                <p class='card-text text-muted'><small><i>
+    echo "<div class='row'>
+            <div class='col-12'>
+                {$new}" . $parser->getAsHtml() . "
+            </div>
+            <div class='col-12'>
+                <small><i>
                     Posted By <a href='profile.php?user={$r['ann_poster']}'>{$Poster}</a> {$AnnouncementTime}
                     </small></i></p>
+                    <hr />
             </div>
-        </div><br />";
+        </div>";
 }
+echo "</div></div>";
 $db->free_result($q);
 //If the user's unread announcements are greater than 0, set back to 0.
 if ($ir['announcements'] > 0) {
