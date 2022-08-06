@@ -428,24 +428,11 @@ class headers
 					{
 						$thisrng=Random($minimumluck,7);
 					}
-					$_SESSION['lucked_out']=time()+3600;
+					$_SESSION['lucked_out']=time()+300;
 					//alert('info','Lucked Out!',"While walking around the kingdom, your luck has changed by {$thisrng}%.",false);
-					toast("Lucky Day!","While walking around the kingdom, your luck has changed by {$thisrng}%.");
+					toast("Lucky Day!","While walking around {$set['WebsiteName']}, your luck has increased by {$thisrng}%.");
 					$db->query("UPDATE `userstats` SET `luck` = `luck` + ({$thisrng}) WHERE `userid` = {$userid}");
 				}
-			}
-			if ($luckrng == 69)
-			{
-			    //easter 2021 (april 4th)
-			    if (date('n') == 4 && date('j') == 4)
-			    {
-			        if (returnEffectMultiplier($userid, constant("holiday_mining_energy")) < 4)
-			        {
-			            $_SESSION['lucked_out']=time()+Random(1800,2400);
-			            alert('info','',"Your holiday mining energy requirement has been reduced by another 20%.",false);
-			            $db->query("UPDATE `users_effects` SET `effectMulti` = `effectMulti` + 1 WHERE `userid` = {$userid} AND `effectName` = '{$effct}'");
-			        }
-			    }
 			}
 		}
 	}
