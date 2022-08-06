@@ -31,63 +31,81 @@ if ($_POST['step'] == 0)
 	$set['10day'] = ($ir['vip_days'] > 0) ? $set['10day'] + 10 : $set['10day'];
 	$set['20day'] = ($ir['vip_days'] > 0) ? $set['20day'] + 20 : $set['20day'];
 	$set['30day'] = ($ir['vip_days'] > 0) ? $set['30day'] + 30 : $set['30day'];
-	echo "Please select how long you wish to invest your Copper Coins for. The interest rate is shown the button. You receive better rates if you have VIP Days.<br />
-	<div class='row'>
-		<div class='col-6 col-sm-4 col-lg-3'>
-			<form method='post'>
-				<input type='hidden' name='step' value='1'>
-				<input type='hidden' name='duration' value='5'>
-				<input type='submit' class='btn btn-primary' value='5 Days - {$set['5day']}%'>
-			</form>
-			<br />
-		</div>
-		<div class='col-6 col-sm-4 col-lg-3'>
-			<form method='post'>
-				<input type='hidden' name='step' value='1'>
-				<input type='hidden' name='duration' value='10'>
-				<input type='submit' class='btn btn-primary' value='10 Days - {$set['10day']}%'>
-			</form>
-			<br />
-		</div>
-		<div class='col-6 col-sm-4 col-lg-3'>
-			<form method='post'>
-				<input type='hidden' name='step' value='1'>
-				<input type='hidden' name='duration' value='20'>
-				<input type='submit' class='btn btn-primary' value='20 Days - {$set['20day']}%'>
-			</form>
-			<br />
-		</div>
-		<div class='col-6 col-sm-4 col-lg-3'>
-			<form method='post'>
-				<input type='hidden' name='step' value='1'>
-				<input type='hidden' name='duration' value='30'>
-				<input type='submit' class='btn btn-primary' value='30 Days - {$set['30day']}%'>
-			</form>
-			<br />
-		</div>
-	</div>";
+	echo "<div class='card'>
+        <div class='card-header'>
+            Bank Investment
+        </div>
+        <div class='card-body'>
+            Please select how long you wish to invest your Copper Coins for. The rates shown change daily, and players with VIP will receive better rates.
+            <div class='row'>
+        		<div class='col-12 col-sm-6 col-lg'>
+        			<form method='post'>
+        				<input type='hidden' name='step' value='1'>
+        				<input type='hidden' name='duration' value='5'>
+        				<input type='submit' class='btn btn-primary btn-block' value='5 Days - {$set['5day']}%'>
+        			</form>
+        		</div>
+        		<div class='col-12 col-sm-6 col-lg'>
+        			<form method='post'>
+        				<input type='hidden' name='step' value='1'>
+        				<input type='hidden' name='duration' value='10'>
+        				<input type='submit' class='btn btn-primary btn-block' value='10 Days - {$set['10day']}%'>
+        			</form>
+        		</div>
+        		<div class='col-12 col-sm-6 col-lg'>
+        			<form method='post'>
+        				<input type='hidden' name='step' value='1'>
+        				<input type='hidden' name='duration' value='20'>
+        				<input type='submit' class='btn btn-primary btn-block' value='20 Days - {$set['20day']}%'>
+        			</form>
+        		</div>
+        		<div class='col-12 col-sm-6 col-lg'>
+        			<form method='post'>
+        				<input type='hidden' name='step' value='1'>
+        				<input type='hidden' name='duration' value='30'>
+        				<input type='submit' class='btn btn-primary btn-block' value='30 Days - {$set['30day']}%'>
+        			</form>
+        		</div>
+        	</div>
+        </div>
+    </div>";
+	echo "
+	";
 	$h->endpage();
 }
 if ($_POST['step'] == 1)
 {
 	$_POST['duration'] = abs($_POST['duration']);
 	$max=10000000*levelMultiplier($ir['level']);
-	$maxformat=number_format($max);
+	$maxformat=shortNumberParse($max);
 	if (!in_array($_POST['duration'],$duration))
 	{
 		alert('danger',"Uh Oh!","You are trying to invest at an invalid duration.");
 		die($h->endpage());
 	}
-	echo "Now, enter how many Copper Coins you wish to invest. You can only invest 
-	what's in your bank account. You may only invest up to {$maxformat} Copper Coins at 
-	this time. <b>You currently have " . number_format($ir['bank']) . " Copper Coins 
-	in your bank account.</b><br />
-	<form method='post'>
-		<input type='hidden' value='2' name='step'>
-		<input type='hidden' value='{$_POST['duration']}' name='duration'>
-		<input type='number' value='{$ir['bank']}' name='invest' min='1' max='{$max}' required='1' class='form-control'>
-		<input type='submit' class='btn btn-primary' value='Invest'>
-	</form>";
+	echo "<div class='card'>
+        <div class='card-header'>
+            Bank Investment
+        </div>
+        <div class='card-body'>
+            Please enter the amount of Copper Coins you wish to invest. You may only invest 
+            Copper Coins in your City Bank Account. Your maximum investment is {$maxformat} 
+            Copper Coins at this time. You have " . shortNumberParse($ir['bank']) . " Copper Coins 
+            in your City Bank.
+            <form method='post'>
+                <div class='row'>
+                    <div class='col-12 col-sm'>
+                		<input type='hidden' value='2' name='step'>
+                		<input type='hidden' value='{$_POST['duration']}' name='duration'>
+                		<input type='number' value='{$ir['bank']}' name='invest' min='1' max='{$max}' required='1' class='form-control'>
+                    </div>
+                    <div class='col-12 col-sm'>
+                		<input type='submit' class='btn btn-primary btn-block' value='Invest'>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>";
 	$h->endpage();
 }
 if ($_POST['step'] == 2)
@@ -104,7 +122,7 @@ if ($_POST['step'] == 2)
 		alert('danger',"Uh Oh!","You are trying to invest more Copper Coins than you currently have available to you.");
 		die($h->endpage());
 	}
-	$formatted=number_format(10000000*levelMultiplier($ir['level']));
+	$formatted=shortNumberParse(10000000*levelMultiplier($ir['level']));
 	if ($_POST['invest'] > (10000000*levelMultiplier($ir['level'])))
 	{
 		alert('danger',"Uh Oh!","You may only invest up to {$formatted} Copper Coins at a time.");
@@ -123,8 +141,8 @@ if ($_POST['step'] == 2)
 				VALUES 
 				('{$userid}', '{$_POST['invest']}', '{$percent}', '{$_POST['duration']}')");
 	$db->query("UPDATE `users` SET `bank` = `bank` - {$_POST['invest']} WHERE `userid` = {$userid}");
-	alert('success',"Success!","You have successfully invested {$_POST['invest']} Copper Coins at 
-	{$percent}% interest.  Your investment will finish in {$_POST['duration']} days. If you 
-	terminate the investment before its finished, you will only be refunded the cash you invested.",true,'bank.php');
+	alert('success',"Success!","You have successfully invested " . shortNumberParse($_POST['invest']) . " 
+    Copper Coins at {$percent}% interest for {$_POST['duration']} days. If you terminate the investment 
+    before its finished, you will only be refunded the cash you invested.",true,'bank.php');
 	$h->endpage();
 }
