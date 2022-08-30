@@ -23,7 +23,6 @@
 	SOFTWARE.
 */
 require('globals_nonauth.php');
-include('functions/func_auth.php');
 $safeEmail = makeSafeText($_POST['email']);
 $safePassword = makeSafeText($_POST['password']);
 $userid = checkValidEmail($safeEmail);
