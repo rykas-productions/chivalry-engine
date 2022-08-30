@@ -58,7 +58,7 @@ function writeConfigToFile($moduleName, $configJson)
  * @param string $string Config string to encode in JSON.
  * @return string Config JSON
  */
-function formatConfig(string $string)
+function formatConfig($string)
 {
 	return json_encode($string, JSON_FORCE_OBJECT);
 }
@@ -78,7 +78,7 @@ function unformatConfig($json)
  * @param string $moduleName Name of the module.
  * @return string $moduleConfig;
  */
-function getConfigForPHP(string $moduleName)
+function getConfigForPHP($moduleName)
 {
 	return unformatConfig(readConfigFromDB($moduleName));
 }
