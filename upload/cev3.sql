@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.6deb5
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 29, 2019 at 08:14 PM
--- Server version: 10.3.15-MariaDB-1
--- PHP Version: 7.3.4-2
+-- Generation Time: Aug 30, 2022 at 07:08 PM
+-- Server version: 10.3.31-MariaDB-0+deb10u1
+-- PHP Version: 7.3.27-1~deb10u1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -23,25 +24,52 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `game_announcements`
+--
+
+CREATE TABLE `game_announcements` (
+  `annId` int(11) UNSIGNED NOT NULL,
+  `annTime` int(11) UNSIGNED NOT NULL,
+  `annUser` varchar(512) NOT NULL,
+  `annText` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `game_settings`
+--
+
+CREATE TABLE `game_settings` (
+  `setting_id` int(11) UNSIGNED NOT NULL,
+  `setting_name` text NOT NULL,
+  `setting_value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mail`
 --
 
 CREATE TABLE `mail` (
   `mailID` int(10) UNSIGNED NOT NULL,
-  `mailFrom` int(10) UNSIGNED NOT NULL,
-  `mailTo` int(10) UNSIGNED NOT NULL,
+  `mailFrom` varchar(512) NOT NULL,
+  `mailTo` varchar(512) NOT NULL,
   `mailTime` int(11) NOT NULL,
   `mailSubject` text NOT NULL,
   `mailText` text NOT NULL,
   `mailReadTime` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
 -- Table structure for table `users_account_data`
 --
 
 CREATE TABLE `users_account_data` (
-  `userid` int(10) UNSIGNED NOT NULL,
+  `userid` varchar(512) NOT NULL,
   `loginTime` int(11) NOT NULL,
   `registrationTime` int(11) NOT NULL,
   `lastActionTime` int(11) NOT NULL,
@@ -49,7 +77,8 @@ CREATE TABLE `users_account_data` (
   `staffLevel` tinyint(4) NOT NULL DEFAULT 1,
   `loginIP` text NOT NULL,
   `registrationIP` text NOT NULL,
-  `lastActionIP` text NOT NULL
+  `lastActionIP` text NOT NULL,
+  `unreadAnnouncements` int(11) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -59,10 +88,22 @@ CREATE TABLE `users_account_data` (
 --
 
 CREATE TABLE `users_core` (
-  `userid` int(11) UNSIGNED NOT NULL COMMENT 'Account ID',
+  `userid` varchar(512) DEFAULT NULL COMMENT 'Account ID',
   `username` text NOT NULL COMMENT 'Account name',
   `email` text NOT NULL COMMENT 'Account Email',
   `password` text NOT NULL COMMENT 'Account password'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_infirmary`
+--
+
+CREATE TABLE `users_infirmary` (
+  `infirmaryUserid` varchar(512) NOT NULL,
+  `infirmaryOut` int(11) NOT NULL,
+  `infirmaryReason` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -73,17 +114,19 @@ CREATE TABLE `users_core` (
 
 CREATE TABLE `users_ips` (
   `userLogID` int(11) UNSIGNED NOT NULL,
-  `userID` int(10) UNSIGNED NOT NULL,
+  `userID` varchar(512) NOT NULL,
   `userIP` text NOT NULL,
   `userLastUsed` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `users_stats`
 --
 
 CREATE TABLE `users_stats` (
-  `userid` int(11) UNSIGNED NOT NULL,
+  `userid` varchar(512) NOT NULL,
   `level` int(11) UNSIGNED NOT NULL DEFAULT 1,
   `experience` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `strength` int(11) UNSIGNED NOT NULL DEFAULT 10,
@@ -108,11 +151,23 @@ CREATE TABLE `users_stats` (
 --
 
 --
+-- Indexes for table `game_announcements`
+--
+ALTER TABLE `game_announcements`
+  ADD PRIMARY KEY (`annId`);
+
+--
+-- Indexes for table `game_settings`
+--
+ALTER TABLE `game_settings`
+  ADD UNIQUE KEY `setting_id` (`setting_id`);
+
+--
 -- Indexes for table `mail`
 --
 ALTER TABLE `mail`
   ADD PRIMARY KEY (`mailID`);
-  
+
 --
 -- Indexes for table `users_account_data`
 --
@@ -124,6 +179,12 @@ ALTER TABLE `users_account_data`
 --
 ALTER TABLE `users_core`
   ADD UNIQUE KEY `userid` (`userid`);
+
+--
+-- Indexes for table `users_infirmary`
+--
+ALTER TABLE `users_infirmary`
+  ADD PRIMARY KEY (`infirmaryUserid`);
 
 --
 -- Indexes for table `users_ips`
@@ -142,26 +203,30 @@ ALTER TABLE `users_stats`
 --
 
 --
+-- AUTO_INCREMENT for table `game_announcements`
+--
+ALTER TABLE `game_announcements`
+  MODIFY `annId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `game_settings`
+--
+ALTER TABLE `game_settings`
+  MODIFY `setting_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `mail`
 --
 ALTER TABLE `mail`
   MODIFY `mailID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `users_core`
---
-ALTER TABLE `users_core`
-  MODIFY `userid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Account ID';
-  
---
 -- AUTO_INCREMENT for table `users_ips`
 --
 ALTER TABLE `users_ips`
   MODIFY `userLogID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-  
-ALTER TABLE `users_account_data` ADD `unreadAnnouncements` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `lastActionIP`;
-  
-CREATE TABLE `game_announcements` ( `annId` INT(11) UNSIGNED NULL AUTO_INCREMENT , `annTime` INT(11) UNSIGNED NOT NULL , `annUser` INT(11) UNSIGNED NOT NULL , `annText` TEXT NOT NULL , PRIMARY KEY (`annId`)) ENGINE = InnoDB;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
