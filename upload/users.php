@@ -25,9 +25,6 @@
 */
 
 require("globals_auth.php");
-//Require main functions file.
-require "global_func.php";
-
 
 //Page number
 $st = (isset($_GET['st']) && is_numeric($_GET['st'])) ? abs($_GET['st']) : 0;
