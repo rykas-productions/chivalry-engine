@@ -10,3 +10,4 @@ upload/cache/
 .settings/
 .metadata/
 upload/.vs/
+upload/.project
