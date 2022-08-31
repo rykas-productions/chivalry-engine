@@ -97,3 +97,23 @@ function returnFormattedAnnouncement()
 	else
 		return "<span class='text-danger'>You have {$ir['unreadAnnouncements']} unread announcements.</span><br />";
 }
+
+/**
+ * @desc Returns the primary currency in a nicely formatted fashion, including its name too.
+ * @param int $curr Unformatted Primary Currency
+ * @return string Formatted Primary Currency
+ */
+function primaryCurrencyFormatter(int $curr)
+{
+    return number_format($curr) . " " . primary_currency;
+}
+
+/**
+ * @desc Returns the secondary currency in a nicely formatted fashion, including its name too.
+ * @param int $curr Unformatted Secondary Currency
+ * @return string Formatted Secondary Currency
+ */
+function secondaryCurrencyFormatter(int $curr)
+{
+    return number_format($curr) . " " . secondary_currency;
+}
