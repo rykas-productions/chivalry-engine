@@ -11,3 +11,4 @@ upload/cache/
 .metadata/
 upload/.vs/
 upload/.project
+*.sqlite

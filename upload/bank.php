@@ -51,7 +51,9 @@ if ($ir['primaryCurrencyBank'] == -1)
 		if (returnPlayerPrimaryCurrency($userid) >= $moduleConfig['bankOpeningFee'])
 		{
 			removePlayerPrimaryCurrency($userid, $moduleConfig['bankOpeningFee']);
-			$db->query("UPDATE `user_stats` SET `primaryCurrencyBank` = 0 WHERE `userid` = {$userid}");
+			$db->query("UPDATE `users_stats` SET `primaryCurrencyHeld` = (`primaryCurrencyHeld` - 5000) WHERE `userid` = '{$userid}'");
+			#Need to add query to update bank so game doesn't keep '
+			$db->query("UPDATE `users_stats` SET `primaryCurrencyBank` = 0 WHERE `userid` = '{$userid}'");
 			successRedirect("You have successfully bought a bank account for " . number_format($moduleConfig['bankOpeningFee']) . " " . constant("primary_currency") . ".");
 			
 		}
@@ -112,8 +114,8 @@ function deposit()
 		$ir['primaryCurrencyBank'] += $deposit;
 		removePlayerPrimaryCurrency($ir['userid'], $deposit);
 		$db->query("UPDATE `users_stats` 
-					SET `primaryCurrencyBank` = `primaryCurrencyBank` + {$deposit} 
-					WHERE `userid` = {$ir['userid']}");
+					SET `primaryCurrencyBank` = (`primaryCurrencyBank` + {$deposit}) 
+					WHERE `userid` = '{$ir['userid']}'");
 		successRedirect("You have deposited " . number_format($deposit) . " into your bank account.","bank.php","Back");
 	}
 }
@@ -131,8 +133,8 @@ function withdraw()
 		$ir['primaryCurrencyBank'] -= $withdraw;
 		addPlayerPrimaryCurrency($ir['userid'], $withdraw);
 		$db->query("UPDATE `users_stats` 
-					SET `primaryCurrencyBank` = `primaryCurrencyBank` - {$withdraw} 
-					WHERE `userid` = {$ir['userid']}");
+					SET `primaryCurrencyBank` = (`primaryCurrencyBank` - {$withdraw}) 
+					WHERE `userid` = '{$ir['userid']}'");
 		successRedirect("You have withdrawn " . number_format($withdraw) . " from your bank account.","bank.php","Back");
 	}
 }

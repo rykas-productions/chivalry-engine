@@ -187,3 +187,14 @@ function pagination(int $perpage, int $total, int $currentpage, string $url)
     $output .= "</ul></nav>";
     return $output;
 }
+
+
+function returnPlayerPrimaryCurrency($userid)
+{
+
+	global $db;
+	$output = $db->fetch_single($db->query("SELECT primaryCurrencyHeld
+                FROM `users_stats`
+				where `userid` = '$userid'"));
+				return $output;
+}
