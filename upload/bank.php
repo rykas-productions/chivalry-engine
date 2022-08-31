@@ -51,8 +51,7 @@ if ($ir['primaryCurrencyBank'] == -1)
 		if (returnPlayerPrimaryCurrency($userid) >= $moduleConfig['bankOpeningFee'])
 		{
 			removePlayerPrimaryCurrency($userid, $moduleConfig['bankOpeningFee']);
-			$db->query("UPDATE `users_stats` SET `primaryCurrencyHeld` = (`primaryCurrencyHeld` - 5000) WHERE `userid` = '{$userid}'");
-			#Need to add query to update bank so game doesn't keep '
+			#$db->query("UPDATE `users_stats` SET `primaryCurrencyHeld` = (`primaryCurrencyHeld` - "  . number_format($moduleConfig['bankOpeningFee'], 2 ,'.', '') . ") WHERE `userid` = '{$userid}'");
 			$db->query("UPDATE `users_stats` SET `primaryCurrencyBank` = 0 WHERE `userid` = '{$userid}'");
 			successRedirect("You have successfully bought a bank account for " . number_format($moduleConfig['bankOpeningFee']) . " " . constant("primary_currency") . ".");
 			
