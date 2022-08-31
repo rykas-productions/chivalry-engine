@@ -42,7 +42,7 @@ function loadFunc()
 function doInstallerChecks()
 {
     $op=array();
-    $op['phpValidVersion'] = (version_compare(phpversion(), '7.0.0') > 0) ? true : false;
+    $op['phpValidVersion'] = (version_compare(phpversion(), '7.2.0') > 0) ? true : false;
     $op['writable'] = (is_writable('./')) ? true : false;
     $op['openssl'] = (function_exists('openssl_random_pseudo_bytes')) ? true : false;
     $op['password'] = (function_exists('password_hash')) ? true : false;
