@@ -34,10 +34,11 @@ function generatePassword(string $plainTextPassword)
 }
 
 /**
- * Create a user easily.
- * @param string $username
- * @param string $password
- * @param string $email
+ * @desc            Create a user easily.
+ * @param string    $username Name of the new user
+ * @param string    $password Password for the new user
+ * @param string    $email Email for the new user
+ * @internal        Chivalry Engine Internal Function.
  */
 function createAccount(string $username, string $password, string $email)
 {
@@ -53,9 +54,9 @@ function createAccount(string $username, string $password, string $email)
 }
 
 /**
- * Check if $email is not already in use.
- * @param string $email
- * @return boolean
+ * @desc            Check if input email address is not already in use.
+ * @param string    $email Email to test
+ * @return boolean  Email in use
  */
 function checkUsableEmail(string $email)
 {
@@ -68,9 +69,9 @@ function checkUsableEmail(string $email)
 }
 
 /**
- * Check if $username is not already in use.
- * @param string $username
- * @return boolean
+ * @desc            Check if input username is not already in use.
+ * @param string    $username Username to test
+ * @return boolean  Username is in use
  */
 function checkUsableUsername(string $username)
 {
@@ -84,10 +85,10 @@ function checkUsableUsername(string $username)
 }
 
 /**
- * Check that $password and $passwordConfirm are equal.
- * @param string $password
- * @param string $passwordConfirm
- * @return boolean
+ * @desc            Check that $password and $passwordConfirm are equal.
+ * @param string    $password First password
+ * @param string    $passwordConfirm Password confirmation
+ * @return boolean  Passwords are the same
  */
 function checkConfirmedPassword(string $password, string $passwordConfirm)
 {
@@ -95,9 +96,9 @@ function checkConfirmedPassword(string $password, string $passwordConfirm)
 }
 
 /** 
- * @desc Create's User Account Data.
- * @internal This is an internal function and you should never need to use it.
- * @param string $uuid
+ * @desc            Create's User Account Data.
+ * @internal        Chivalry Engine internal function and you should never need to use it.
+ * @param string    $uuid User UUID to create basic data for
  */
 function createUserData(string $uuid)
 {
@@ -108,9 +109,9 @@ function createUserData(string $uuid)
 }
 
 /**
- * @desc Creates the User Stat data.
- * @internal This is an internal function and you should never need to use it.
- * @param string $uuid
+ * @desc            Creates the User Stat data.
+ * @internal        Chivalry Engine internal function and you should never need to use it.
+ * @param string    $uuid User UUID to create basic stats for
  */
 function createUserStats(string $uuid)
 {
@@ -135,8 +136,8 @@ function getUserIP()
 }
 
 /**
- * @desc Internal Function - Check to see if the user is authenticated or not.
- * @internal This is an internal function and you should never need to use it.
+ * @desc            Check if the user is authenticated or not.
+ * @internal        Chivalry Engine internal function and you should never need to use it.
  */
 function autoSessionCheck()
 {
@@ -153,10 +154,10 @@ function autoSessionCheck()
 }
 
 /**
- * @desc Returns all database stored information for the current user.
- * @internal This is an internal function and you should never need to use it.
- * @param string $uuid
- * @return $ir User Data
+ * @desc            Returns all database stored information for the current user.
+ * @internal        Chivalry Engine internal function and you should never need to use it.
+ * @param string    $uuid
+ * @return $ir      User Data
  */
 function returnCurrentUserData(string $uuid)
 {
@@ -185,9 +186,9 @@ function returnUnreadMailCount(string $uuid = '')
 }
 
 /**
- * @desc Check if $uuid is in the infirmary.
- * @param string $uuid
- * @return boolean
+ * @desc            Check if $uuid is in the infirmary.
+ * @param string    $uuid User UUID
+ * @return boolean  User is in the infirmary
  */
  function checkInfirmary(string $uuid = '') 
  {
@@ -202,10 +203,10 @@ function returnUnreadMailCount(string $uuid = '')
 }
 
 /**
- * @desc Returns how many seconds $uuid has in the infirmary.
- * @If $uuid is undefined, will default to current user's UUID.
- * @param string $uuid
- * @return number
+ * @desc            Returns how many seconds $uuid has in the infirmary.
+ *                  If $uuid is undefined, will default to current user's UUID.
+ * @param string    $uuid User's UUID
+ * @return number   Time remaining in seconds
  */
 function returnRemainingInfirmaryTime(string $uuid = '')
 {
@@ -218,8 +219,9 @@ function returnRemainingInfirmaryTime(string $uuid = '')
 }
 
 /**
- * @desc Logs the current player's current IP address. This function will update its current use time.
- * @internal This is an internal function. Do not use.
+ * @desc            Logs the current player's current IP address. This 
+ *                  function will update its current use time.
+ * @internal        Chivalry Engine internal function. Do not call directly.
  */
 function logUserIP()
 {
@@ -234,9 +236,9 @@ function logUserIP()
 }
 
 /**
- * @desc Create a UUID for a user to be assigned to.
- * @internal This function is internal. Careless editing of this function will result in bricked games.
- * @return string UUID
+ * @desc            Create a UUID
+ * @internal        This function is internal. Do not edit.
+ * @return string   Randomly generated UUID
  */
 function createUserUUID() 
 {
@@ -251,8 +253,8 @@ function createUserUUID()
 
 /**
  * @desc Attempt to get a valid, unused User UUID.
- * @internal Internal function.
- * @return string UUID
+ * @internal Chivalry Engine Internal function.
+ * @return string Valid User UUID
  */
 //@TODO: Make this function work for all tables.
 function getValidUUID()
