@@ -27,9 +27,13 @@ function refuseInstall()
     if (file_exists('./installer.lock'))
         exit;
 }
+
+/**
+ * @deprecated
+ */
 function getInstallVersion()
 {
-    return "3.0.0-alpha2";
+    return getEngineVersion();
 }
 function loadFunc()
 {

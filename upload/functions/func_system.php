@@ -22,10 +22,9 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-//@todo Make this function
 function getEngineVersion()
 {
-    
+    return "3.0.0-alpha2";
 }
 
 /**

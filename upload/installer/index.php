@@ -52,7 +52,7 @@ switch ($_GET['code'])
 
 function diagnostics()
 {
-    global $op;
+    global $op, $version;
    echo "Welcome to Chivalry Engine V3 by Rykas Productions! We hope to walk you through 
     the engine installation. Its fairly easy! But first, we need to make sure your 
     server meets our requirements. While we do that, here's some server info for you! 
@@ -63,7 +63,7 @@ function diagnostics()
    echo "<hr />";
    createThreeCols("Server Name<br /><small>This is your server's name.</small>", "{$_SERVER['SERVER_NAME']}", "");
    echo "<hr />";
-   createThreeCols("Chivalry Engine Version<br /><small>Its recommended to run the latest version.</small>", getInstallVersion(), "");
+   createThreeCols("Chivalry Engine Version<br /><small>Its recommended to run the latest version.</small>", $version, "");
    echo "<hr />";
    createThreeCols("PHP Version<br /><small>Chivalry Engine needs PHP Version >= 7.0.0.</small>", phpversion(), checkPass($op['phpValidVersion']));
    echo "<hr />";
