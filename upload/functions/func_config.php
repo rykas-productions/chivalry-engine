@@ -65,8 +65,8 @@ function formatConfig($string)
 
 /**
  * @desc Internal function to properly remove JSON formatting.
- * @param json $json json object to turn into a string.
- * @return json Config String
+ * @param object $json json object to turn into a string.
+ * @return object Config String
  */
 function unformatConfig($json)
 {

@@ -22,13 +22,24 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-function addPlayerPrimaryCurrency($user,$primaryCurrency)
+/**
+ * @desc    Used to add Primary Currency to a user.
+ * @param   string $user User UUID to add primary currency onto
+ * @param   int $primaryCurrency Amount of primary currency to add to the user
+ */
+function addPlayerPrimaryCurrency($user, $primaryCurrency)
 {
 	global $db;
 	$db->query("UPDATE `users_stats` 
 				SET `primaryCurrencyHeld` = `primaryCurrencyHeld` + {$primaryCurrency} 
 				WHERE `userid` = '{$user}'");
 }
+
+/**
+ * @desc    Used to remove Primary Currency to a user.
+ * @param   string $user User UUID to remove primary currency onto
+ * @param   int $primaryCurrency Amount of primary currency to add to the user
+ */
 function removePlayerPrimaryCurrency($user, $primaryCurrency)
 {
 	global $db;
@@ -36,6 +47,32 @@ function removePlayerPrimaryCurrency($user, $primaryCurrency)
 				SET `primaryCurrencyHeld` = `primaryCurrencyHeld` - {$primaryCurrency} 
 				WHERE `userid` = '{$user}'");
 }
+
+/**
+ * @desc    Used to fetch a user's current Primary Currency.
+ * @param   string $user User UUID to get Primary Currency.
+ * @return  int User's current primary currency.
+ */
+function returnPlayerPrimaryCurrency($userid)
+{
+    
+    global $db;
+    $output = 
+        $db->fetch_single(
+            $db->query("SELECT primaryCurrencyHeld
+                        FROM `users_stats`
+        				where `userid` = '{$userid}'"));
+    return $output;
+}
+
+/**
+ * @desc    Train the player using the specified inputs.
+ * @param   string $userTrain User UUID to train
+ * @param   string $statToTrain Which stat to train (valid: strength/agility/guard/labor/iq)
+ * @param   number $energyToTrain Amount of energy points to spend while training
+ * @param   number $statMultiplier Multiplier for the stats gained
+ * @return  number|mixed Stats gained by the player.
+ */
 function simulateGym($userTrain, $statToTrain, $energyToTrain, $statMultiplier = 1)
 {
 	global $db;

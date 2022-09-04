@@ -22,6 +22,9 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createTwoCols($col1, $col2)
 {
 	echo "
@@ -35,6 +38,9 @@ function createTwoCols($col1, $col2)
 	</div>";
 }
 
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createThreeCols($col1, $col2, $col3)
 {
 	echo "
@@ -51,6 +57,9 @@ function createThreeCols($col1, $col2, $col3)
 	</div>";
 }
 
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createFourCols($col1, $col2, $col3, $col4)
 {
 	echo "
@@ -70,6 +79,9 @@ function createFourCols($col1, $col2, $col3, $col4)
 	</div>";
 }
 
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createFiveCols($col1, $col2, $col3, $col4, $col5)
 {
 	echo "
@@ -92,6 +104,9 @@ function createFiveCols($col1, $col2, $col3, $col4, $col5)
 	</div>";
 }
 
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createSixCols($col1, $col2, $col3, $col4, $col5, $col6)
 {
 	echo "
@@ -117,6 +132,9 @@ function createSixCols($col1, $col2, $col3, $col4, $col5, $col6)
 	</div>";
 }
 
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createCard($cardTitle,$cardBody)
 {
 	return "
@@ -128,6 +146,9 @@ function createCard($cardTitle,$cardBody)
 	</div>";
 }
 
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createTitlelessCard($cardBody)
 {
 	return "
@@ -138,11 +159,17 @@ function createTitlelessCard($cardBody)
 	</div>";
 }
 
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createProgressBar($filledPercentage)
 {
 	return createProgressBarLabel($filledPercentage, "{$filledPercentage}%");
 }
 
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createProgressBarLabel($filledPercentage, $label)
 {
 	return "
@@ -186,15 +213,4 @@ function pagination(int $perpage, int $total, int $currentpage, string $url)
     }
     $output .= "</ul></nav>";
     return $output;
-}
-
-
-function returnPlayerPrimaryCurrency($userid)
-{
-
-	global $db;
-	$output = $db->fetch_single($db->query("SELECT primaryCurrencyHeld
-                FROM `users_stats`
-				where `userid` = '$userid'"));
-				return $output;
 }
