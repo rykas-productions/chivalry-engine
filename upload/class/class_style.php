@@ -33,21 +33,31 @@ if (!function_exists('error_critical')) {
 
 class style
 {
+    /**
+     * @internal
+     * @desc            Create a card, optionally with a title. Please be 
+     *                  sure to call endCard(); to properly close a card.
+     * @param string    $cardTitle Title of card, shown to the player.
+     */
     function createCard($cardTitle = null)
     {
         if ($cardTitle != null)
         {
-            return "<div class='card'><div class='card-header'>{$cardTitle}</h5></div>
+            echo "<div class='card'><div class='card-header'>{$cardTitle}</h5></div>
                                         <div class='card-body'><p class='card-text'>";
         }
         else
         {
-            return "<div class='card'><div class='card-body'><p class='card-text'>";
+            echo "<div class='card'><div class='card-body'><p class='card-text'>";
         }
     }
     
+    /**
+     * @desc            End a card.
+     * @internal
+     */
     function endCard()
     {
-        return "</p></div></div>";
+        echo "</p></div></div>";
     }
 }
