@@ -83,7 +83,7 @@ if ($effect == 10)
     $db->query("UPDATE `users` SET `gender` = '{$gender}' WHERE `userid` = {$userid}");
 }
 
-userGiveEffect($userid, effect_mysterious_potion, 3600);
+userGiveEffect($userid, effect_mysterious_potion, 3600, 1);
 $api->UserTakeItem($userid,123,1);
 alert('success',"Success!","You drink one Mysterious Potion and {$effect}",true,'inventory.php');
 $api->SystemLogsAdd($userid, 'itemuse', "Used Mysterious Potion.");
