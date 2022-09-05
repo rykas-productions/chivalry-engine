@@ -153,7 +153,7 @@ function endHeaders()
 	//endFooter();
 }
 
-function sendData($gamename, $dbtype, $url='https://chivalryisdeadgame.com/chivalry-engine-analytics.php')
+function sendData($gamename, $dbtype, $url='https://chivalryisdeadgame.com/ce-analytics.php')
 {
     global $Version;
     $postdata = "domain=" . getGameURL() . "&install=" . time() ."&gamename={$gamename}&dbtype={$dbtype}&version={$Version}";
