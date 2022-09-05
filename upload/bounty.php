@@ -102,9 +102,9 @@ function add_bounty()
             alert('danger',"Uh Oh!","Bounty postings must have a payout of, at least, 250,000 Copper Coins.",true);
             die($h->endpage());
         }
-        if ($_POST['payout'] > 150000000)
+        if ($_POST['payout'] > 1500000000)
         {
-            alert('danger',"Uh Oh!","Bounty postings must have a payout of, at most, 150,000,000 Copper Coins.",true);
+            alert('danger',"Uh Oh!","Bounty postings must have a payout of, at most, 1.5B Copper Coins.",true);
             die($h->endpage());
         }
         $cost=$_POST['payout']+($_POST['hide']*500000);
@@ -112,7 +112,7 @@ function add_bounty()
         $prim_format=number_format($ir['primary_currency']);
         if ($ir['primary_currency'] < $cost)
         {
-            alert('danger',"Uh Oh!","You do not have enough Copper Coins to create this bounty. You need {$costnumber}, but only have {$prim_format}.",true);
+            alert('danger',"Uh Oh!","You do not have enough Copper Coins to create this bounty. You need " . shortNumberParse($costnumber) . ", but only have " . shortNumberParse($prim_format) . ".",true);
             die($h->endpage());
         }
         if ($_POST['user'] == $userid)
@@ -166,13 +166,13 @@ function add_bounty()
                         Payout
                     </th>
                     <td>
-                        <input type='number' min='250000' max='1500000' name='payout' class='form-control' value='{$ir['primary_currency']}' required='1'>
+                        <input type='number' min='250000' max='1500000000' name='payout' class='form-control' value='{$ir['primary_currency']}' required='1'>
                     </td>
                 </tr>
                 <tr>
                     <th>
                         Remove identification?<br />
-                        <small>Add 500,000 Copper Coins</small>
+                        <small>Add 500K Copper Coins</small>
                     </th>
                     <td align='left'>
                         <input type='radio' name='hide' value='0' checked> Don't Remove<br />
