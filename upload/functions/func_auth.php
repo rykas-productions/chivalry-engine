@@ -22,11 +22,6 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-//TODO: Wrap all login actions from authenticate.php into attemptAuth();
-function attemptAuth()
-{
-	global $db;
-}
 /**
  * @desc Check the email to see if its valid and then return the UUID of the player associated with it.
  * @param string $email
@@ -36,9 +31,10 @@ function attemptAuth()
 function checkValidEmail(string $email)
 {
 	global $db;
-	$q=$db->query("SELECT `userid` FROM `users_core` WHERE `email` = '{$email}'");
+	$q=$db->query("SELECT `userid` FROM `users_core` WHERE `email` = '{$email}' LIMIT 1");
 	if ($db->num_rows($q) == 1)
 	{
+	    
 		$r=$db->fetch_single($q);
 		return $r;
 	}
@@ -93,6 +89,7 @@ function setActiveSession(string $uuid)
 {
 	session_regenerate_id();
 	$_SESSION['loggedin'] = 1;
-	$_SESSION['userid'] = $uuid;
+	$_SESSION['uuid'] = stripAll($uuid);
 	$_SESSION['last_login'] = returnUnixTimestamp();
+	$_SESSION['last_active'] = returnUnixTimestamp();
 }

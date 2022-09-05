@@ -30,7 +30,14 @@
  */
 function generatePassword(string $plainTextPassword)
 {
-	return password_hash(base64_encode(hash('sha256', $plainTextPassword, true)), PASSWORD_BCRYPT);
+	return password_hash(base64_encode(hash('sha256', $plainTextPassword, true)), PASSWORD_ARGON2ID);
+}
+
+function updateAccountPassword(string $uuid, string $rawPW)
+{
+    global $db;
+    $encryptPW = generatePassword($rawPW);
+    $db->query("UPDATE `users_core` SET `password` = '{$encryptPW}' WHERE `userid` = '{$uuid}'");
 }
 
 /**
@@ -143,11 +150,17 @@ function autoSessionCheck()
 {
 	if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) 
 	{
+	    session_regenerate_id(true);
+	    session_unset();
+	    session_destroy();
 		headerRedirect('./login.php');
 		exit;
 	}
-	if (isset($_SESSION['last_active']) && (returnUnixTimestamp() - $_SESSION['last_active'] > constant('sessionTimeoutSeconds'))) 
+	if (isset($_SESSION['last_active']) && ((returnUnixTimestamp() - $_SESSION['last_active']) > sessionTimeoutSeconds)) 
 	{
+	    session_regenerate_id(true);
+	    session_unset();
+	    session_destroy();
 		headerRedirect('./login.php');
 		exit;
 	}

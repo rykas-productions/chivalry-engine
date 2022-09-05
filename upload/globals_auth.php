@@ -25,7 +25,7 @@
 require('./functions/func_startup.php');
 register_shutdown_function('shutdown');
 enableErrorOutput();    //Comment out to disable raw PHP errors.
-if (!checkDirectAccess('./globals_nonauth.php'))
+if (!checkDirectAccess('./globals_auth.php'))
 {
 	die('This file may not be accessed directly.');
 }
@@ -45,7 +45,7 @@ $db->connect();
 $dbConnectionID = $db->connection_id;
 autoSessionCheck();
 $_SESSION['last_active'] = returnUnixTimestamp();
-$userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
+$userid = isset($_SESSION['uuid']) ? $_SESSION['uuid'] : 0;
 $ir=returnCurrentUserData($userid);
 $h = new headers;
 $h->startHeaders();

@@ -59,3 +59,4 @@ createThreeCols("",
 							<a href='#'>Polling Center</a><br />
 							<a href='#'>Game Tutorial</a><br />"), 
                             "");
+$h->endHeaders();

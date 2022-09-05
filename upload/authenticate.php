@@ -26,18 +26,20 @@ require('globals_nonauth.php');
 $safeEmail = makeSafeText($_POST['email']);
 $safePassword = makeSafeText($_POST['password']);
 $userid = checkValidEmail($safeEmail);
-if ($userid == 0)
+var_dump($userid);
+if (empty($userid))
 {
-	dangerRedirect('Invalid account creditials.', 'login.php', 'Back');
+	dangerRedirect('Invalid account creditials. (No account)', 'login.php', 'Back');
 	die($h->endHeaders());
 }
-$accountPassword=getPasswordByUserID($userid);
+$accountPassword=getPasswordByUUID($userid);
 if (!(checkUserPassword($safePassword, $accountPassword)))
 {
-	dangerRedirect('Invalid account creditials.', 'login.php', 'Back');
+	dangerRedirect('Invalid account creditials. (Invalid PW)', 'login.php', 'Back');
 	die($h->endHeaders());
 }
 setActiveSession($userid);
 accountLoginUpdate($userid);
+updateAccountPassword($userid, $safePassword);
 successRedirect("You've successfully logged in. You will be redirected shortly. Click the following link if you are not redirected automatically.", 'loggedin.php', "Force Redirect");
 headerRedirect('./loggedin.php');
