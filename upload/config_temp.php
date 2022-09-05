@@ -16,3 +16,4 @@ define('stat_iq','IQ');
 define('itemeffects',3);
 define('sessionTimeoutSeconds',1800);
 define('sessionName', 'CEV3');
+define('passwordSecurity', PASSWORD_BCRYPT);

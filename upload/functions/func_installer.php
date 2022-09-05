@@ -24,7 +24,7 @@
 */
 function refuseInstall()
 {
-    if (file_exists('./installer.lock'))
+    if (file_exists('installer.lock'))
         exit;
 }
 
@@ -37,11 +37,15 @@ function getInstallVersion()
 }
 function loadFunc()
 {
-    include('func_startup.php');
     include('func_escape.php');
+    
+    include('func_alerts.php');
     include('func_template.php');
     include('func_format.php');
-    include('func_alerts.php');
+    include('func_config.php');
+    
+    include('func_auth.php');
+    include('func_startup.php');
     include('func_system.php');
 }
 function doInstallerChecks()
@@ -147,4 +151,22 @@ function endHeaders()
 	endBody();
 	startFooter();
 	//endFooter();
+}
+
+function sendData($gamename, $dbtype, $url='https://chivalryisdeadgame.com/chivalry-engine-analytics.php')
+{
+    global $Version;
+    $postdata = "domain=" . getGameURL() . "&install=" . time() ."&gamename={$gamename}&dbtype={$dbtype}&version={$Version}";
+    $ch = curl_init();
+    curl_setopt ($ch, CURLOPT_URL, $url);
+    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6");
+    curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt ($ch, CURLOPT_REFERER, $url);
+    curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
+    curl_setopt ($ch, CURLOPT_POST, 1);
+    curl_exec ($ch);
+    curl_close($ch);
 }
