@@ -139,7 +139,7 @@ function createUserStats(string $uuid)
  */
 function getUserIP()
 {
-	return makeSafeText($_SERVER['REMOTE_ADDR']);
+	return stripAll($_SERVER['REMOTE_ADDR']);
 }
 
 /**

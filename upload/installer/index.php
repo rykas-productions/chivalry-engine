@@ -223,8 +223,6 @@ function install()
     $db_password = isset($_POST['password']) ? stripAll($_POST['password']) : '';
     $db_database = isset($_POST['database']) ? stripAll($_POST['database']) : '';
     $db_driver = (isset($_POST['driver'])  && in_array($_POST['driver'], array('pdo', 'mysqli'), true)) ? $_POST['driver'] : 'mysqli';
-    var_dump($db_driver);
-    var_dump($_POST['driver']);
     $pwType = (isset($_POST['pwtype'])  && in_array($_POST['pwtype'], $pwArray, true)) ? $_POST['pwtype'] : PASSWORD_BCRYPT;
     
     $strength = (isset($_POST['strength'])) ? stripAll($_POST['strength']) : '';
@@ -272,8 +270,6 @@ function install()
         $errors[] = 'Invalid admin account name specified<br />';
     if (empty($adm_email))
         $errors[] = 'Invalid admin account email address specfied<br />';
-    var_dump($adm_cpw);
-    var_dump($adm_pw);
     if (empty($adm_pw) || empty($adm_cpw))
         $errors[] = 'Invalid admin account password specified<br />';
     elseif ($adm_pw !== $adm_cpw)
@@ -376,7 +372,23 @@ EOF;
     $db->query("INSERT INTO `game_settings` VALUES(NULL, 'chiv-eng:version', '" . getEngineVersion() . "')");
     echo "done!<br />";
     echo "Creating admin account...";
-    createAdminAccount($db->escape($adm_name), $db->escape($adm_pw), $db->escape($adm_email));
+    $UUID = createUserUUID();
+    $encodedPassword=generatePassword($adm_pw);
+    $db->query("INSERT INTO `users_core`
+				(`userid`, `username`, `email`, `password`)
+				VALUES
+				('{$UUID}', '{$adm_name}', '{$adm_email}', '{$encodedPassword}')");
+    $time=returnUnixTimestamp();
+    $IP=getUserIP();
+    $db->query("INSERT INTO `users_account_data` VALUES ('{$UUID}', '0', '{$time}', '{$time}', '', '1', '127.0.0.1', '{$IP}', '{$IP}', '0')");
+    $db->query("INSERT INTO `users_stats`
+		(`userid`, `level`, `experience`, `strength`, `agility`,
+		`guard`, `labor`, `iq`, `energy`, `maxEnergy`, `will`,
+		`maxWill`, `brave`, `maxBrave`, `hp`, `maxHP`,
+		`primaryCurrencyHeld`, `primaryCurrencyBank`)
+		VALUES ('{$UUID}', '1', '0', '10', '10', '10', '10',
+		'10', '10', '10', '100', '100', '5', '5', '100', '100',
+		'100', '-1')");
     echo "done!<br />";
     if ($_POST['analytics'])
     {
@@ -411,18 +423,5 @@ EOF;
             echo "Installer failed to be locked! You MUST remove /installer/index.php from your server immediately or other users could run the installer again.";
         }
     }
-}
-
-function createAdminAccount(string $username, string $password, string $email)
-{
-    global $db;
-    $UUID = createUserUUID();
-    $encodedPassword=generatePassword($password);
-    $db->query("INSERT INTO `users_core`
-				(`userid`, `username`, `email`, `password`)
-				VALUES
-				('{$UUID}', '{$username}', '{$email}', '{$encodedPassword}')");
-    createUserData($UUID);
-    createUserStats($UUID);
 }
 endHeaders();
