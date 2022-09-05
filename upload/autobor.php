@@ -1,7 +1,9 @@
-<?php
+in<?php
 $macropage = ('autobor.php');
 $multipler=1.0;
 require('globals.php');
+if (reachedMonthlyDonationGoal())
+    $multipler = $multipler + 0.5;
 if ($ir['bor'] == 0)
 {
     alert('danger',"Uh Oh!","You cannot open anymore Boxes of Random today. Try again in " . TimeUntil_Parse(getNextDayReset()) .".",true,'explore.php');
