@@ -285,10 +285,13 @@ function buy()
                 alert('danger', "Uh Oh!", "You are trying to buy from a non-existent shop.", true, "shops.php");
             } else {
                 $itemd = $db->fetch_row($q);
-				$specialnumber=((getSkillLevel($userid,13)*5)/100);
-				$itemd['itmbuyprice']=$itemd['itmbuyprice']-($itemd['itmbuyprice']*$specialnumber);
-                if ($ir['primary_currency'] < ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty'])) {
-                    alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy {$_POST['qty']} {$itemd['itmname']}(s).", true, "shops.php");
+				$specialnumber = ((getSkillLevel($userid, 13) * 5) / 100);
+				$itemd['itmbuyprice'] = $itemd['itmbuyprice'] - ($itemd['itmbuyprice'] * $specialnumber);
+				$price = ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty']);
+				if ($ir['primary_currency'] < $price) {
+				    alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy 
+                            " . shortNumberParse($_POST['qty']) . " {$itemd['itmname']}(s). You need 
+                            " . shortNumberParse($price) . " Copper coins, but only have ". shortNumberParse($ir['primary_currency']) . ".", true, "shops.php");
                     die($h->endpage());
                 }
                 if ($itemd['itmbuyable'] == 'false') {
@@ -300,15 +303,14 @@ function buy()
                     die($h->endpage());
                 }
 
-                $price = ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty']);
 				addToEconomyLog('Game Shops', 'copper', (($itemd['itmbuyprice'] * $_POST['qty'])*-1));
                 item_add($userid, $itemd['itmid'], $_POST['qty']);
                 $db->query(
                     "UPDATE `users`
 						 SET `primary_currency` = `primary_currency` - $price
 						 WHERE `userid` = $userid");
-                $ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price}");
-                alert('success', "Success!", "You have bought {$_POST['qty']} {$itemd['itmname']}(s) for {$price} Copper Coins.", true, "shops.php");
+                $ib_log = $db->escape("{$ir['username']} bought " . shortNumberParse($_POST['qty']) . " {$itemd['itmname']}(s) for " . shortNumberParse($price) . " Copper Coins.");
+                alert('success', "Success!", "You have bought " . shortNumberParse($_POST['qty']) . " {$itemd['itmname']}(s) for " . shortNumberParse($price) . " Copper Coins.", true, "shops.php");
                 $api->SystemLogsAdd($userid, 'itembuy', $ib_log);
                 $api->SystemCreditTax($api->SystemReturnTaxOnly($itemd['itmbuyprice']* $_POST['qty']), 1, -1);
             }
