@@ -1058,13 +1058,13 @@ function gym()
 	if ((isset($_GET['daybonus'])) && (!userHasEffect($userid, effect_daily_gym_bonus)))
 	{
 	    $bonus = Random(1,25);
-	    userGiveEffect($userid, effect_daily_gym_bonus, getNextDayReset(), $bonus);
+	    userGiveEffect($userid, effect_daily_gym_bonus, getNextDayReset() - time(), $bonus);
 	    alert('success',"","You have received a {$bonus}% training bonus for the day.", false);
 	}
 	if (!userHasEffect($userid, effect_daily_gym_bonus))
 	    alert('warning',"","It appears you have not redeemed your Daily Gym Bonus for the day.",true, "?action=gym&daybonus", "Redeem Bonus");
     else
-        alert('primary',"","You are currently receiving a " . returnEffectMultiplier($userid, effect_daily_gym_bonus) . "% training boost until the end of the day.", false);
+        alert('primary',"","You are currently receiving a " . returnEffectMultiplier($userid, effect_daily_gym_bonus) . "% training boost for the next " . TimeUntil_Parse(returnEffectDone($userid, effect_daily_gym_bonus)) . ".", false);
 	echo "<div id='gymsuccess'></div>";
 	//Small logic to keep the last trained stat selected.
 	if (!isset($str_select)) {
@@ -2234,14 +2234,15 @@ function staff_vault()
         $api->UserGiveCurrency($_POST['user'], 'secondary', $_POST['secondary']);
         $db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$_POST['primary']},
                       `guild_seccurr` = `guild_seccurr` - {$_POST['secondary']} WHERE `guild_id` = {$gd['guild_id']}");
-        $api->GameAddNotification($_POST['user'], "You were given " . shortNumberParse($_POST['primary']) . " Primary
-            Currency and " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens from your guild's vault.");
+        $api->GameAddNotification($_POST['user'], "You were given " . shortNumberParse($_POST['primary']) . " Copper Coins 
+         and " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens from your guild's vault.");
         $api->GuildAddNotification($gd['guild_id'], "<a href='profile.php?user={$userid}'>
             {$api->SystemUserIDtoName($userid)}</a> has given <a href='profile.php?user={$_POST['user']}'>
             {$api->SystemUserIDtoName($_POST['user'])}</a> " . shortNumberParse($_POST['primary']) . "
             Copper Coins and/or " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens from the guild's
             vault.");
-        alert('success', "Success!", "You have given {$api->SystemUserIDtoName($_POST['user'])} ", true, '?action=staff&act2=idx');
+        alert('success', "Success!", "You have given {$api->SystemUserIDtoName($_POST['user'])} " . shortNumberParse($_POST['primary']) . " Copper Coins 
+         and " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens from your guild's vault.", true, '?action=staff&act2=idx');
         $api->SystemLogsAdd($userid, "guild_vault", "Gave <a href='profile.php?user={$_POST['user']}'>{$api->SystemUserIDtoName($_POST['user'])}</a> " . shortNumberParse($_POST['primary']) . " Copper Coins and/or " . shortNumberParse($_POST['secondary']) . " Chivalry Tokens from their guild's vault.");
     } else {
         $csrf = request_csrf_html('guild_staff_vault');
@@ -2693,9 +2694,9 @@ function staff_masspayment()
                 } else {
                     //Pay everyone.
                     $gd['guild_primcurr'] -= $_POST['payment'];
-                    $api->GameAddNotification($r['userid'], "You were given a mass-payment of {$_POST['payment']} Copper Coins from your guild.");
+                    $api->GameAddNotification($r['userid'], "You were given a mass-payment of " . shortNumberParse($_POST['payment']) . " Copper Coins from your guild.");
                     $api->UserGiveCurrency($r['userid'], 'primary', $_POST['payment']);
-                    alert('success', "Success!", "{$r['username']} was paid {$_POST['payment']} Copper Coins.");
+                    alert('success', "Success!", "{$r['username']} was paid " . shortNumberParse($_POST['payment']) . " Copper Coins.");
                 }
             }
             //Notify the user of the success and log everything.
@@ -3425,8 +3426,8 @@ function staff_armory()
         } 
         else 
         {
-            echo "Your guild does not have an armory. It will cost your guild " . shortNumberParse($cost) . " Primary
-            Currency to purchase an armory. Do you wish to purchase an armory for your guild?<br />
+            echo "Your guild does not have an armory. It will cost your guild " . shortNumberParse($cost) . " Copper Coins
+            to purchase an armory. Do you wish to purchase an armory for your guild?<br />
             <a href='?action=staff&act2=armory&buy=yes' class='btn btn-success'>Yes</a>
             <a href='?action=staff&act2=idx' class='btn btn-danger'>No</a>";
         }
@@ -3471,7 +3472,7 @@ function staff_armory()
 			
 			if (!($api->GuildHasItem($ir['guild'],$_POST['item'],$_POST['qty'])))
 			{
-				alert('danger',"Uh Oh!","Your guild does not have " . number_format($_POST['qty']) . " {$api->SystemItemIDtoName($_POST['item'])} in its armory.",true,'guild_district.php');
+				alert('danger',"Uh Oh!","Your guild does not have " . number_format($_POST['qty']) . " {$api->SystemItemIDtoName($_POST['item'])}(s) in its armory.",true,'guild_district.php');
 				die($h->endpage());
 			}
 
@@ -3490,10 +3491,10 @@ function staff_armory()
             $user = $api->SystemUserIDtoName($_POST['user']);
 
             //Notification
-            $api->GameAddNotification($_POST['user'], "You have been given {$_POST['qty']} {$item}(s) from your guild's armory.");
-            $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has given {$_POST['qty']} {$item}(s) from your guild's armory to <a href='profile.php?user={$_POST['user']}'>{$user}</a>.");
-            alert('success', "Success!", "You have successfully given {$_POST['qty']} {$item}(s) from your guild's armory to {$user}.", true, "?action=staff&act2=idx");
-            $api->SystemLogsAdd($userid, 'guilds', "Gave {$user} {$_POST['qty']} {$item}(s) from their armory.");
+            $api->GameAddNotification($_POST['user'], "You have been given " . shortNumberParse($_POST['qty']) . " {$item}(s) from your guild's armory.");
+            $api->GuildAddNotification($ir['guild'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has given " . shortNumberParse($_POST['qty']) . " {$item}(s) from your guild's armory to <a href='profile.php?user={$_POST['user']}'>{$user}</a>.");
+            alert('success', "Success!", "You have successfully given " . shortNumberParse($_POST['qty']) . " {$item}(s) from your guild's armory to {$user}.", true, "?action=staff&act2=idx");
+            $api->SystemLogsAdd($userid, 'guilds', "Gave {$user} " . shortNumberParse($_POST['qty']) . " {$item}(s) from their armory.");
         } 
         else 
         {
