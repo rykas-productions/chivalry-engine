@@ -24,7 +24,7 @@ if ((!isCourseComplete($userid, 23)) && ($userid != 1))
 }
 if (userHasEffect($userid, effect_mining_fear))
 {
-    alert('danger', "Uh Oh!", "You are too tripped out to go mining right now.", true, 'explore.php');
+    alert('danger', "Uh Oh!", "You are too tripped out to go mining right now. Try again in " . TimeUntil_Parse(returnEffectDone($userid, effect_mining_fear)) . ".", true, 'explore.php');
     die($h->endpage());
 }
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
