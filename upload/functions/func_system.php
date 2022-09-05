@@ -95,3 +95,71 @@ function remoteConnect(string $url)
     curl_close($curl);
     return $content;
 }
+
+/**
+ * @internal
+ * @return string   Domain of the game
+ */
+function getGameURL()
+{
+    $domain = $_SERVER['HTTP_HOST'];
+    $turi = $_SERVER['REQUEST_URI'];
+    $turiq = '';
+    for ($t = strlen($turi) - 1; $t >= 0; $t--) {
+        if ($turi[$t] != '/') {
+            $turiq = $turi[$t] . $turiq;
+        } else {
+            break;
+        }
+    }
+    $turiq = '/' . $turiq;
+    if ($turiq == '/') {
+        $domain .= substr($turi, 0, -1);
+    } else {
+        $domain .= str_replace($turiq, '', $turi);
+    }
+    return $domain;
+}
+
+/**
+ * @desc            Fetches the current Unix Time.
+ * @return number   Current time.
+ */
+function returnUnixTimestamp()
+{
+    return time();
+}
+
+/**
+ * @desc            Redirect the user to another page gracefully.
+ * @param string    $location Page to redirect to.
+ */
+function headerRedirect($location)
+{
+    return header("Location: {$location}");
+}
+
+/**
+ * @desc            Helper function to generate the current percentage, assuming $min is
+ *                  the current value and $max is the maximum value.
+ * @param number    $min Lowest number
+ * @param number    $max Highest number
+ * @return int
+ */
+function returnPercentage($min, $max)
+{
+    return round($min / $max * 100);
+}
+
+/**
+ * @desc            Generates a random number using $min and $max as the minimum and
+ *                  maximum values. If left empty, will result to a random int between
+ *                  the minimum and maximum constants defined by PHP.
+ * @param int       $min Minimum number to randomly generate a number between
+ * @param int       $max Maximum number to randomly generate a number between
+ * @return number   Randomly generated integer
+ */
+function returnRandomNumber($min = PHP_INT_MIN, $max = PHP_INT_MAX)
+{
+    return random_int($min, $max);
+}
