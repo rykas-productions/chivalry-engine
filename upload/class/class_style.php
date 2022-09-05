@@ -36,7 +36,7 @@ class style
     /**
      * @internal
      * @desc            Create a card, optionally with a title. Please be 
-     *                  sure to call endCard(); to properly close a card.
+     *                  sure to call $styl->endCard(); to properly close a card.
      * @param string    $cardTitle Title of card, shown to the player.
      */
     function createCard($cardTitle = null)
@@ -53,7 +53,7 @@ class style
     }
     
     /**
-     * @desc            End a card.
+     * @desc            End a card. Required if calling $styl->createCard($cardTitle);
      * @internal
      */
     function endCard()
