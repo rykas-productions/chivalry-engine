@@ -70,7 +70,7 @@ function checkPass($bool)
 //Installer Styling functions
 function startHeaders()
 {
-        ?>
+       echo '
 		<!DOCTYPE html>
 			<html>
 				<head>
@@ -78,8 +78,7 @@ function startHeaders()
 				<meta charset="utf-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 				<!-- Site Properties -->
-				<title>Chivalry Engine Installer</title>
-    	<?php
+				<title>Chivalry Engine Installer (v' . getInstallVersion() . ')</title>';
     	loadCSS();
     	loadTopMenu();
 }
@@ -114,6 +113,9 @@ function loadTopMenu()
 			</button>
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+						<a class="nav-link" href="http://chivalryengine.com">Website</a>
+					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="https://github.com/rykas-productions/chivalry-engine/releases">Releases</a>
 					</li>
