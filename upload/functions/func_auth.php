@@ -57,17 +57,6 @@ function checkUserPassword(string $rawPassword, string $password)
     $return = (password_verify(base64_encode(hash('sha256', $rawPassword, true)), $password)) ? true : false;
     return $return;
 }
-/**
- * @desc Get the password for the specified UUID.
- * @param string $uuid Player UUID
- * @return string Player's password pulled from the database.
- * @deprecated Use {@link #getPasswordByUUID($uuid)}
- */
-function getPasswordByUserID(string $uuid)
-{
-	global $db;
-	return $db->fetch_single($db->query("SELECT `password` FROM `users_core` WHERE `userid` = '{$uuid}'"));
-}
 
 /**
  * @desc Get the password for the specified UUID.
