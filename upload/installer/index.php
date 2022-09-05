@@ -131,7 +131,6 @@ function diagnostics()
 function config()
 {
     //TODO: Move into the form class, somehow... maybe even expand the class.
-    //TODO: Update to Bootstrap 5 is it releases.
     $dboptions = "";
     if (function_exists('mysqli_connect'))
         $dboptions.="<option value='mysqli'>MySQLi Enhanced</option>";
@@ -167,6 +166,17 @@ function config()
     createTwoCols("Game Description<br /><small>Draw players into your game here.</small>", "<textarea name='gameDescription' class='form-control' required='1'></textarea>");
     echo "<hr />";
     createTwoCols("Paypal Address<br /><small>This is where donations will be sent.</small>", "<input type='email' name='paypal' class='form-control' required='1' />");
+    echo "<hr />";
+    $pwArray = "";
+    if (!is_null(constant('PASSWORD_BCRYPT')))
+        $pwArray .= "<option value='" . PASSWORD_BCRYPT . "'>BCRYPT</option>";
+    if (!is_null(constant('PASSWORD_ARGON2I')))
+        $pwArray .=  "<option value='" . PASSWORD_ARGON2I . "'>ARGON2I</option>";
+    if (!is_null(constant('PASSWORD_ARGON2ID')))
+        $pwArray .= "<option value='" . PASSWORD_ARGON2ID . "'>ARGON2ID</option>";
+    createTwoCols("Password Storage<br /><small>Select password storage type, better security</small>", "<select name='pwtype' class='form-control' required='1' type='dropdown'>.
+    				{$pwArray}
+            </select>");
     echo "<hr />
     <h3>Game Details</h3><hr />";
     createTwoCols("Primary Currency Name<br /><small>What's the name of your game's most common currency?</small>", "<input type='text' name='currencyPrimary' value='Primary Currency' class='form-control' required='1' />");
@@ -183,6 +193,78 @@ function config()
     echo "<hr />";
     createTwoCols("Intelligence Stat Name<br /><small>What's the name of the stat that determines your intelligence.</small>", "<input type='text' name='iq' value='IQ' class='form-control' required='1' />");
     echo "<hr />";
-    echo "</form>";
+    echo "<input type='submit' value='Install Chivalry Engine' class='btn btn-primary'></form>";
+}
+
+function install()
+{
+    $paypal = (isset($_POST['paypal']) && filter_input(INPUT_POST, 'paypal', FILTER_VALIDATE_EMAIL)) ? stripAll($_POST['paypal']) : '';
+    $description = (isset($_POST['gameDescription'])) ? stripAll($_POST['gameDescription']) : '';
+    $owner = (isset($_POST['game_owner']) && strlen($_POST['game_owner']) > 3) ? stripAll($_POST['gameOwner']) : '';
+    $gameName = (isset($_POST['gameName'])) ? stripAll($_POST['gameName']) : '';
+    $db_hostname = isset($_POST['hostname']) ? stripAll($_POST['hostname']) : '';
+    $db_username = isset($_POST['username']) ? stripAll($_POST['username']) : '';
+    $db_password = isset($_POST['password']) ? stripAll($_POST['password']) : '';
+    $db_database = isset($_POST['database']) ? stripAll($_POST['database']) : '';
+    $db_driver = (isset($_POST['driver'])  && in_array($_POST['driver'], array('pdo', 'mysqli'), true)) ? $_POST['driver'] : 'mysqli';
+    $errors = array();
+    if (empty($db_hostname))
+    {
+        $errors[] = 'No Database hostname specified<br />';
+    }
+    if (empty($db_username))
+    {
+        $errors[] = 'No Database username specified<br />';
+    }
+    if (empty($db_database))
+    {
+        $errors[] = 'No Database database specified<br />';
+    }
+    if ($db_driver = 'mysqli')
+    {
+        if (!function_exists($db_driver . '_connect'))
+        {
+            $errors[] = 'MySQLi is not a supported database wrapper<br />';
+        }
+    }
+    elseif ($db_driver = 'pdo')
+    {
+        if (!extension_loaded('pdo_mysql'))
+        {
+            $errors[] = 'PDO is not a supported database wrapper<br />';
+        }
+    }
+    else
+    {
+        $errors[] = 'Invalid database driver specified<br />';
+    }
+    if (empty($owner)  || !preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $owner))
+    {
+        $errors[] = 'Invalid game owner specified<br />';
+    }
+    if (empty($gameName))
+    {
+        $errors[] = 'Invalid game name specified<br />';
+    }
+    if (empty($description))
+    {
+        $errors[] = 'Invalid game description specified<br />';
+    }
+    if (empty($paypal))
+    {
+        $errors[] = 'Invalid PayPal donation address specified<br />';
+    }
+    if (count($errors) > 0)
+    {
+        danger("Chivalry Engine Installation failed with the following error(s)");
+        foreach ($errors as $error)
+        {
+            echo "<textarea class='form-control' disabled='1'>There were one or more problems with your input.
+                    ". stripAll($error) . "</textarea><br />";
+        }
+        info("Please go back and correct this information before installing again.");
+        echo "
+        &gt; <a href='?code=config'>Go back to config</a>";
+    }
 }
 endHeaders();
