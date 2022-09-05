@@ -88,7 +88,7 @@ function successRedirect(string $alertText, string $alertRedirectLinkLink = 'bac
  */
 function danger(string $alertText)
 {
-	alert('danger','Success!',$alertText, false);
+	alert('danger','Uh Oh!',$alertText, false);
 }
 
 /**
