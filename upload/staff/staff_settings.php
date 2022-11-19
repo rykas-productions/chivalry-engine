@@ -45,41 +45,308 @@ function basicsettings()
     if (!isset($_POST['WebsiteName'])) {
         $csrf = request_csrf_html('staff_sett_1');
         echo "
+        <div class='col-12'>
+            <div class='row'>
+                <div class='col-12'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            Basic Game Options
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12 col-md-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Game Name</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='WebsiteName' class='form-control' required='1' value='{$set['WebsiteName']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Game Owner</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='WebsiteOwner' class='form-control' required='1' value='{$set['WebsiteOwner']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Game Email</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='email' class='form-control' name='sending_email' value='{$set['sending_email']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Paypal Email</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='email' class='form-control' name='PaypalEmail' value='{$set['PaypalEmail']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Game Description</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <textarea name='Website_Description' required='1' class='form-control' rows='5'>{$set['Website_Description']}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Game Timezone</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='game_time' class='form-control' required='1' value='{$set['game_time']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            Security
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Password Effort</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='Password_Effort' min='5' max='20' class='form-control' value='{$set['Password_Effort']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>FraudGuard PubKey</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' class='form-control' name='FGUsername' value='{$set['FGUsername']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>FraudGuard PrivKey</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' class='form-control' name='FGPassword' value='{$set['FGPassword']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>ReCaptcha PubKey</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' class='form-control' name='reCaptcha_public' value='{$set['reCaptcha_public']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>ReCaptcha PrivKey</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' class='form-control' name='reCaptcha_private' value='{$set['reCaptcha_private']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            Temple Costs
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Energy Refill Cost</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='energy_refill_cost' class='form-control' min='1' required='1' value='{$set['energy_refill_cost']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Will Refill Cost</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='will_refill_cost' class='form-control' min='1' required='1' value='{$set['will_refill_cost']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Brave Refill Cost</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='brave_refill_cost' class='form-control' min='1' required='1' value='{$set['brave_refill_cost']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>IQ per Token</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='iq_per_sec' class='form-control' min='1' required='1' value='{$set['iq_per_sec']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            Version Control
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12 col-sm-6 col-md-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Chivalry Engine Version</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='Version_Number' class='form-control' required='1' value='{$set['Version_Number']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Chivalry Engine Build</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='BuildNumber' class='form-control' required='1' value='{$set['BuildNumber']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Bootstrap</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='bootstrap_version' class='form-control' required='1' value='{$set['bootstrap_version']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>BS Hover Tabs</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='bshover_tabs_version' class='form-control' required='1' value='{$set['bshover_tabs_version']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>PopperJS</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='popper_version' class='form-control' required='1' value='{$set['popper_version']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>FontAwesome</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='fontawesome_version' class='form-control' required='1' value='{$set['fontawesome_version']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>JQuery</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='jquery_version' class='form-control' required='1' value='{$set['jquery_version']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Game CSS</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='game_css_version' class='form-control' required='1' value='{$set['game_css_version']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Game JS</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='game_js_version' class='form-control' required='1' value='{$set['game_js_version']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-sm-6 col-md-4'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Game Sounds</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' name='game_js_version' class='form-control' required='1' value='{$set['game_audio_version']}'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>";
+        echo "
 		<div class='table-responsive'>
 		<form method='post'>
 		<table class='table table-bordered table-hover'>
-			<tr>
-				<th>
-					Game Name
-				</th>
-				<td width='75%'>
-					<input type='text' name='WebsiteName' class='form-control' required='1' value='{$set['WebsiteName']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Game Owner
-				</th>
-				<td>
-					<input type='text' name='WebsiteOwner' class='form-control' required='1' value='{$set['WebsiteOwner']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Game Description
-				</th>
-				<td>
-					<textarea name='Website_Description' required='1' class='form-control' rows='5'>{$set['Website_Description']}</textarea>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Referral Award
-				</th>
-				<td>
-					<input type='number' name='ReferalKickback' class='form-control' min='1' required='1' value='{$set['ReferalKickback']}'>
-				</td>
-			</tr>
 			<tr>
 				<th>
 					Attack Energy Usage<br />
@@ -95,66 +362,6 @@ function basicsettings()
 				</th>
 				<td>
 					<input type='number' name='MaxAttacksPerSession' class='form-control' min='1' required='1' value='{$set['MaxAttacksPerSession']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Password Effort<br />
-					<small>Lower is faster and less secure.</small>
-				</th>
-				<td>
-					<input type='number' name='Password_Effort' min='5' max='20' class='form-control' value='{$set['Password_Effort']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					PayPal Email
-				</th>
-				<td>
-					<input type='email' class='form-control' name='PaypalEmail' value='{$set['PaypalEmail']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Game Email Address<br />
-					<small>This is the email address used when emails are sent from the game.</small>
-				</th>
-				<td>
-					<input type='email' class='form-control' name='sending_email' value='{$set['sending_email']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Fraudguard IO Username<br />
-					<small>(<a href='https://fraudguard.io/'>http://bit.ly/2apOVX0</a>)</small>
-				</th>
-				<td>
-					<input type='text' class='form-control' name='FGUsername' value='{$set['FGUsername']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Fraudguard IO Password
-				</th>
-				<td>
-					<input type='text' class='form-control' name='FGPassword' value='{$set['FGPassword']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					ReCaptcha Public Key<br />
-					<small>(<a href='https://www.google.com/recaptcha/admin'>http://bit.ly/2oJ0Bus</a>)</small>
-				</th>
-				<td>
-					<input type='text' class='form-control' name='reCaptcha_public' value='{$set['reCaptcha_public']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					ReCaptcha Private Key
-				</th>
-				<td>
-					<input type='text' class='form-control' name='reCaptcha_private' value='{$set['reCaptcha_private']}'>
 				</td>
 			</tr>
 			<tr>
@@ -224,38 +431,6 @@ function basicsettings()
 			</tr>
 			<tr>
 				<th>
-					Energy Refill Cost
-				</th>
-				<td>
-					<input type='number' name='energy_refill_cost' class='form-control' min='1' required='1' value='{$set['energy_refill_cost']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Will Refill Cost
-				</th>
-				<td>
-					<input type='number' name='will_refill_cost' class='form-control' min='1' required='1' value='{$set['will_refill_cost']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Bravery Refill Cost
-				</th>
-				<td>
-					<input type='number' name='brave_refill_cost' class='form-control' min='1' required='1' value='{$set['brave_refill_cost']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					IQ per Chivalry Tokens
-				</th>
-				<td>
-					<input type='number' name='iq_per_sec' class='form-control' min='1' required='1' value='{$set['iq_per_sec']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
 					ReCaptcha Revalidate Time
 				</th>
 				<td>
@@ -268,14 +443,6 @@ function basicsettings()
 					</select>
 				</td>
 			</tr>
-			<tr>
-				<th>
-					Game Time Zone
-				</th>
-				<td>
-					<input type='text' name='game_time' class='form-control' required='1' value='{$set['game_time']}'>
-				</td>
-			</tr>
             <tr>
 				<th>
 					VIP Pack Cost<br />
@@ -283,114 +450,6 @@ function basicsettings()
 				</th>
 				<td>
 					<input type='number' name='viprate' class='form-control' required='1' value='{$set['viprate']}'>
-				</td>
-			</tr>
-			<tr>
-				<th colspan='2'>
-					Version Control
-				</th>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine Version
-				</th>
-				<td>
-					<input type='text' name='Version_Number' class='form-control' required='1' value='{$set['Version_Number']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Chivalry Engine Build Number
-				</th>
-				<td>
-					<input type='number' name='BuildNumber' class='form-control' required='1' value='{$set['BuildNumber']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Bootstrap
-				</th>
-				<td>
-					<input type='text' name='bootstrap_version' class='form-control' required='1' value='{$set['bootstrap_version']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Popper
-				</th>
-				<td>
-					<input type='text' name='popper_version' class='form-control' required='1' value='{$set['popper_version']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Font Awesome
-				</th>
-				<td>
-					<input type='text' name='fontawesome_version' class='form-control' required='1' value='{$set['fontawesome_version']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Bootstrap Hover Tabs
-				</th>
-				<td>
-					<input type='text' name='bshover_tabs_version' class='form-control' required='1' value='{$set['bshover_tabs_version']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Game CSS
-				</th>
-				<td>
-					<input type='text' name='game_css_version' class='form-control' required='1' value='{$set['game_css_version']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Game JS
-				</th>
-				<td>
-					<input type='text' name='game_js_version' class='form-control' required='1' value='{$set['game_js_version']}'>
-				</td>
-			</tr>
-            <tr>
-				<th>
-					Game Audio
-				</th>
-				<td>
-					<input type='text' name='game_audio_version' class='form-control' required='1' value='{$set['game_audio_version']}'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					jQuery
-				</th>
-				<td>
-					<input type='text' name='jquery_version' class='form-control' required='1' value='{$set['jquery_version']}'>
-				</td>
-			</tr>
-            <tr>
-				<th colspan='2'>
-					Version Control
-				</th>
-			</tr>
-            <tr>
-				<th>
-					Chivalry Token Minimum Price<br />
-                    <small>Min. to sell/buy. Caps Temple/Market.</small>
-				</th>
-				<td>
-					<input type='number' name='token_minimum' class='form-control' required='1' value='{$set['token_minimum']}'>
-				</td>
-			</tr>
-            <tr>
-				<th>
-					Chivalry Token Maximum Price<br />
-                    <small>Max to sell/buy. Caps Temple/Market.</small>
-				</th>
-				<td>
-					<input type='number' name='token_maximum' class='form-control' required='1' value='{$set['token_maximum']}'>
 				</td>
 			</tr>
 		</table>
@@ -448,9 +507,6 @@ function basicsettings()
 		$_POST['raffle_last_winner'] = (isset($_POST['raffle_last_winner']) && is_numeric($_POST['raffle_last_winner'])) ? abs(intval($_POST['raffle_last_winner'])) : 1;
 		
 		$_POST['game_time'] = (isset($_POST['game_time'])) ? $db->escape(strip_tags(stripslashes($_POST['game_time']))) : 'America/New_York';
-		
-		$_POST['token_maximum'] = (isset($_POST['token_maximum']) && is_numeric($_POST['token_maximum'])) ? abs(intval($_POST['token_maximum'])) : 50000;
-		$_POST['token_minimum'] = (isset($_POST['token_minimum']) && is_numeric($_POST['token_minimum'])) ? abs(intval($_POST['token_minimum'])) : 1000;
 		
 		$_POST['viprate'] = (isset($_POST['viprate']) && is_numeric($_POST['viprate'])) ? abs(intval($_POST['viprate'])) : 100;
 		
