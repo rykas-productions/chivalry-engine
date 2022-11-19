@@ -63,6 +63,7 @@ class api
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
         if (item_add($user, $item, $quantity)) {
             return true;
+            $this->SystemLogsAdd($user, "inventory", "Received " . shortNumberParse($quantity) . " x {$this->SystemItemIDtoName($item)}(s)");
         }
     }
 
@@ -82,6 +83,7 @@ class api
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
         if (item_remove($user, $item, $quantity)) {
             return true;
+            $this->SystemLogsAdd($user, "inventory", "Lost " . shortNumberParse($quantity) . " x {$this->SystemItemIDtoName($item)}(s)");
         }
     }
 
