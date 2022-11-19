@@ -1205,14 +1205,14 @@ function beat()
 		}
 		if ($r['userid'] == 21)
 		{
-			$turkeyKills=getCurrentUserPref('2020turkeyKills',0);
-			$gotBadge=getCurrentUserPref('2020turkeyBadge',0);
+			$turkeyKills=getCurrentUserPref('2022turkeyKills',0);
+			$gotBadge=getCurrentUserPref('2022turkeyBadge',0);
 			if ($gotBadge == 0)
 			{
-				$api->UserGiveItem($userid,386,1);
-				setCurrentUserPref('2020turkeyBadge',1);
+				$api->UserGiveItem($userid,455,1);
+				setCurrentUserPref('2022turkeyBadge',1);
 			}
-			setCurrentUserPref('2020turkeyKills',$turkeyKills+1);
+			setCurrentUserPref('2022turkeyKills',$turkeyKills+1);
 			$feathers=Random(20,100);
 			$api->UserGiveItem($userid,197,$feathers);
 			$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
@@ -1508,14 +1508,14 @@ function xp()
 			}
 			if ($r['userid'] == 21)
 			{
-				$turkeyKills=getCurrentUserPref('2020turkeyKills',0);
-				$gotBadge=getCurrentUserPref('2020turkeyBadge',0);
+				$turkeyKills=getCurrentUserPref('2022turkeyKills',0);
+				$gotBadge=getCurrentUserPref('2022turkeyBadge',0);
 				if ($gotBadge == 0)
 				{
-					$api->UserGiveItem($userid,386,1);
-					setCurrentUserPref('2020turkeyBadge',1);
+					$api->UserGiveItem($userid,455,1);
+					setCurrentUserPref('2022turkeyBadge',1);
 				}
-				setCurrentUserPref('2020turkeyKills',$turkeyKills+1);
+				setCurrentUserPref('2022turkeyKills',$turkeyKills+1);
 				$feathers=Random(20,100);
 				$api->UserGiveItem($userid,197,$feathers);
 				$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
@@ -1661,14 +1661,14 @@ function mug()
 			}
 			if ($r['userid'] == 21)
 			{
-				$turkeyKills=getCurrentUserPref('2020turkeyKills',0);
-				$gotBadge=getCurrentUserPref('2020turkeyBadge',0);
+				$turkeyKills=getCurrentUserPref('2022turkeyKills',0);
+				$gotBadge=getCurrentUserPref('2022turkeyBadge',0);
 				if ($gotBadge == 0)
 				{
-					$api->UserGiveItem($userid,386,1);
-					setCurrentUserPref('2020turkeyBadge',1);
+					$api->UserGiveItem($userid,455,1);
+					setCurrentUserPref('2022turkeyBadge',1);
 				}
-				setCurrentUserPref('2020turkeyKills',$turkeyKills+1);
+				setCurrentUserPref('2022turkeyKills',$turkeyKills+1);
 				$feathers=Random(20,100);
 				$api->UserGiveItem($userid,197,$feathers);
 				$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");

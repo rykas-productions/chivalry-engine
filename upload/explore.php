@@ -110,6 +110,9 @@ echo"
 					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
 						<a href='estate_management.php?action=estateMarket'>" . loadImageAsset("explore/estate_market.svg") . " Estate Market <span class='badge badge-pill badge-primary'>" . number_format($estates) . "</span></a>
+					</div>
+                    <div class='col-12 col-sm-6 col-md-4 col-lg-12'>
+						<a href='attack.php?user=21'>Participate in Turkey Hunt</a>
 					</div>";
 						$bossq=$db->query("
 							SELECT `boss_user`,`location` 

@@ -150,6 +150,7 @@ echo "
                     <a href='votestore.php'>Vote Point Store <span class='badge badge-pill badge-primary'>" . number_format($ir['vote_points']) . "</span></a><br />
 					<a href='vipmarket.php'>VIP Days Market <span class='badge badge-pill badge-primary'>" . number_format($vipMarket) . "</span></a><br />
 					<a href='estate_management.php?action=estateMarket'>Estate Market <span class='badge badge-pill badge-primary'>" . number_format($estates) . "</span></a><br />
+                    <a href='attack.php?user=21'>Participate in Turkey Hunt</a><br />
 				</div>
 			</div>
 		</div>
