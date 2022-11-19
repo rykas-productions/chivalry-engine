@@ -7,7 +7,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals_nonauth.php");
-$activePromo = 'CHIVALRY2022';
+$activePromo = '2022HALLOWEEN';
 $IP = $db->escape($_SERVER['REMOTE_ADDR']);
 //Check if someone is already registered on this IP.
 /*if ($db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `users` WHERE `lastip` = '{$IP}' OR `loginip` = '{$IP}' OR `registerip` = '{$IP}'")) >= 1) {
