@@ -418,7 +418,7 @@ while ($i = $db->fetch_row($inv))
 									//VIP Color Changer
 									if ($i['itmid'] == 128)
 									{
-										array_push($itemUse, array("vipitem.php?item=vipcolor", "Change Color"));
+										array_push($itemUse, array("vipitem.php?item=vipcolor", "Change VIP Color"));
 									}
 									//2018 St Patties Scratch Ticket
 									if ($i['itmid'] == 137)
@@ -534,6 +534,11 @@ while ($i = $db->fetch_row($inv))
 									if ($i['itmid'] == 424)
 									{
 									    array_push($itemUse, array("vipitem.php?item=autominer", "Setup {$i['itmname']}"));
+									}
+									//2022 Halloween ticket
+									if ($i['itmid'] == 449)
+									{
+									    array_push($itemUse, array("2022halloween.php?action=ticket", "Scratch {$i['itmname']}"));
 									}
 									//Weapons
 									if ($i['weapon'] > 0)
