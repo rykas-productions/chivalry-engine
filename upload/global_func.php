@@ -34,7 +34,7 @@ foreach ($dir as $func)
 function reachedMonthlyDonationGoal()
 {
     global $set, $_CONFIG;
-    if ($set['MonthlyDonationGoal'] <= $_CONFIG['donationGoal'])
+    if ($set['MonthlyDonationGoal'] >= $_CONFIG['donationGoal'])
         return true;
     else
         return false;
@@ -1204,9 +1204,8 @@ function returnGameTitle()
     global $set;
     $prefix = "";
     $url = determine_game_urlbase();
-    $devDomains = array("192.168.128.151/cid", "127.0.0.1", 
-                        "localhost", "192.168.128.74/cid",
-                        "192.168.137.218/cid"
+    $devDomains = array("192.168.1.30/cid", "127.0.0.1", 
+                        "localhost"
     );   //add your directory to this list
     if (in_array($url, $devDomains))
         $prefix = "[DEV]";
