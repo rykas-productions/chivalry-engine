@@ -209,9 +209,11 @@ if ($ir['rewarded'] == 0)
             $api->GameAddNotification($userid, "On this day in 2017, Chivalry is Dead launched. Thank you for many great years! We've given you some Birthday cake to your inventory.");
         }
         //Halloween
-        if (($day >= 24) && ($day <= 31))
+        if ($day == 31)
         {
-            
+            $api->UserGiveItem($userid, 449, 1);
+            $api->UserGiveItem($userid, 450, 1);
+            $api->GameAddNotification($userid, "We've given you a badge and a scratch-off ticket for logging into CID on Halloween!");
         }
     }
     //November
