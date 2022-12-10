@@ -4128,7 +4128,7 @@ function staff_sword_guild()
 				$db->query("UPDATE `guild` SET `guild_sword_item` = {$swordID} WHERE `guild_id` = {$gd['guild_id']}");
 				addToEconomyLog('Guild Fees', 'copper', $cost * -1);
 			}
-			$api->GuildAddNotification($gd['guild_id'], "Your leader, <a href='profile.php?user={$userid}'>{$ir['username']}</a>, has spent 10,000,000 Copper Coins and ordered 5 guild weapons to the armory.");
+			$api->GuildAddNotification($gd['guild_id'], "Your leader, <a href='profile.php?user={$userid}'>{$ir['username']}</a>, has spent " . shortNumberParse($cost) . " Copper Coins and ordered 5 guild weapons to the armory.");
 			$api->GuildAddItem($gd['guild_id'],$swordID,5);
 			$db->query("UPDATE `guild` set `guild_primcurr` = `guild_primcurr` - {$cost} WHERE `guild_id` = {$gd['guild_id']}");
 			alert('success', "Success!", "You have successfully ordered five guild weapons to the guild armory for " . shortNumberParse($cost) . " Copper Coins.", true, '?action=staff&act2=idx');
