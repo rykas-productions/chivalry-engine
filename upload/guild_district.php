@@ -46,6 +46,10 @@ echo "<h3>Guild Districts</h3><hr />
             <a href='#' data-toggle='modal' data-target='#district_info' class='btn btn-info btn-block'>Info</a>
             <br />
         </div>
+        <div class='col-12 col-sm-6 col-md-4 col-xl-12 col-xxl'>
+            <a href='#' data-toggle='modal' data-target='#district_stats' class='btn btn-info btn-block'>Stats</a>
+            <br />
+        </div>
         <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
             <a href='guild_district.php' class='btn btn-primary btn-block'>Home</a>
             <br />
@@ -1807,6 +1811,7 @@ function hireGeneral()
 	}
 }
 include('forms/district_popup.php');
+include('forms/district_stats.php');
 include('forms/popup_district_new.php');
 $h->endpage();
 echo "<link rel='stylesheet' href='css/modules/districts.css'>";
